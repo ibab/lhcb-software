@@ -1,7 +1,20 @@
-! $Id: release.notes,v 1.36 2002-12-16 11:47:57 witoldp Exp $
+! $Id: release.notes,v 1.37 2002-12-16 18:09:35 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-12-16 - Ivan Belyaev
+  update for new version of Geant4 (5.0) 
+ - src/component/GiGaGeo.cpp        - in "finalize" method DO NOT release 
+                                      any sensitive detector (now they are 
+                                      deleted explicitely by G4 itself)
+                                    - explicitely clear ALL detector stores
+                                      (logical volumes, physical volumes and 
+                                       solids)
+
+  - cmt/requirements                 - increase minor version.
+                                       Probably it is better to increase 
+                                       the major version 
 
 !========================= GiGaCnv v10r1 ================================
 

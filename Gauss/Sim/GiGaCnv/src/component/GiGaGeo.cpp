@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.3 2002-12-15 17:17:45 ibelyaev Exp $ 
+// $Id: GiGaGeo.cpp,v 1.4 2002-12-16 18:09:36 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/12/15 17:17:45  ibelyaev
+//  clear static G4 geoemtry stores / temporary fix
+//
 // Revision 1.2  2002/12/13 14:25:22  ibelyaev
 //  few trivial bug fixes
 //
@@ -480,16 +483,16 @@ StatusCode GiGaGeo::initialize()
 StatusCode GiGaGeo::finalize()   
 { 
   // release all created sensitive detectors 
-  std::for_each( m_SDs.begin () , 
-                 m_SDs.end   () , 
-                 std::mem_fun( &IInterface::release ) );
+//    std::for_each( m_SDs.begin () , 
+//                   m_SDs.end   () , 
+//                   std::mem_fun( &IGiGaSensDet::release  ) );
   m_SDs.clear() ;
   // finalize all created magnetic field objects 
   std::for_each( m_MFs.begin () , 
                  m_MFs.end   () , 
-                 std::mem_fun( &IInterface::release ) );
+                 std::mem_fun( &IGiGaMagField::release ) );
   m_MFs.clear() ;
-
+  
   // clear store of assemblies!
   StatusCode sc = GiGaAssemblyStore::store()->clear();
 
@@ -512,12 +515,12 @@ StatusCode GiGaGeo::finalize()
       Print( " G4PhysicalVolumeStore is cleaned "  ,
              MSG::VERBOSE , StatusCode::SUCCESS ) ;
       // ugly trick to "hide" some erros 
-      if( 0 != geo && ! geo->IsGeometryClosed() ) 
-        {
-          geo->CloseGeometry( false , false ) ;
-          Warning( " G4 Geometry is closed " + 
-                   std::string(" (temporary trick, to be fixed soon) " ) );
-        }
+//        if( 0 != geo && ! geo->IsGeometryClosed() ) 
+//          {
+//            geo->CloseGeometry( false , false ) ;
+//            Warning( " G4 Geometry is closed " + 
+//                     std::string(" (temporary trick, to be fixed soon) " ) );
+//          }
       G4SolidStore          :: Clean     () ;
       Print( " G4SolidStore          is cleaned only partially " , 
              MSG::VERBOSE , StatusCode::SUCCESS ) ;
