@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexFinderAlg.cpp,v 1.3 2002-07-26 19:27:57 gcorti Exp $
+// $Id: PrimaryVertexFinderAlg.cpp,v 1.4 2002-07-27 19:19:08 gcorti Exp $
 // Include files
 ///--------------------------------------------------------- 
 /// std c++ libs
@@ -188,8 +188,8 @@ StatusCode PrimaryVertexFinderAlg::execute() {
   //////////////////////////////////////////////////////////////////////
   ///< prepare table nzclose & nzweight
   long nbins = 500;
-  long nzclose[nbins];
-  double nweight[nbins];
+  long nzclose[500];
+  double nweight[500];
   double zmin = -m_zcut; // mm
   double zmax = m_zcut; // mm  
 

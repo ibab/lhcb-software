@@ -1,8 +1,11 @@
-// $Id: NeutralPPCreator.h,v 1.1 2002-07-15 19:27:09 ibelyaev Exp $
+// $Id: NeutralPPCreator.h,v 1.2 2002-07-27 19:24:05 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/07/15 19:27:09  ibelyaev
+//  add new algorithm for creation on Neutral ProtoParticles
+// 
 // ============================================================================
 #ifndef NEUTRALPPCREATOR_H 
 #define NEUTRALPPCREATOR_H 1
@@ -122,7 +125,7 @@ protected:
     for( Calos::const_iterator calo  = calos.begin() ; 
          calos.end() != calo ; ++calo ) 
       {
-        if( 0 == *calo ) { continue ; }
+        if( !(*calo) ) { continue ; }
         if( overlap( hypo , *calo ) ) { return true ; }
       }
     return false;
