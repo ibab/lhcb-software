@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.40 2004-04-29 15:34:17 gcorti Exp $ 
+# $Id: requirements,v 1.41 2004-06-16 08:05:56 ranjard Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package GaussTools
-version v10r5
+version v10r6
 
 # =============== package structure ===========================================
 branches          cmt src doc GaussTools

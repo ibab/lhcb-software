@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!===================== GaussTools v10r6 2004-06-15 ========================
 ! 2004-06-15 - Gloria CORTI
  - src/Components/TrCutsRunAction.cpp
    . as suggested by Witek apply killing of looping particles to gamma as
