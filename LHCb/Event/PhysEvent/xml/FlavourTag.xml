@@ -106,6 +106,13 @@
         type="TagType"
         />
 
+      <attribute
+        name="category"
+        desc="Category of tag (muon, electron, muon and SS K...)"
+        type="int"
+        init="-1"
+       />
+
       <!-- Unimplemented yet
       <attribute
         name="mistag"
@@ -121,3 +128,4 @@
          <arg name="s" type="StreamBuffer"/>
        </method>
     </class>
+ 

@@ -1,4 +1,4 @@
-// $Id: FlavourTag.cpp,v 1.3 2003-04-15 11:00:17 gcorti Exp $
+// $Id: FlavourTag.cpp,v 1.4 2004-03-05 13:42:50 pkoppenb Exp $
 // Include files 
 
 // STD and STL
@@ -21,8 +21,11 @@
 //=============================================================================
 FlavourTag::FlavourTag(const FlavourTag& tag)
   : KeyedObject<int>()
-  , m_decision(tag.decision()), m_type(tag.type())
-  , m_taggedB(tag.taggedB()), m_tagger(tag.tagger())
+  , m_decision(tag.decision())
+  , m_type(tag.type())
+  , m_category ( tag.category() )
+  , m_taggedB(tag.taggedB())
+  , m_tagger(tag.tagger())
 {
 }
 
@@ -45,6 +48,7 @@ FlavourTag &FlavourTag::operator=(const FlavourTag& orig) {
     m_tagger = orig.tagger();
     m_type = orig.type();
     m_decision = orig.decision();
+    m_category = orig.category();
   }
   return *this;
 }
@@ -91,13 +95,13 @@ StreamBuffer& FlavourTag::serialize( StreamBuffer& s ) {
   KeyedObject<int>::serialize(s);
   s >> l_decision
     >> l_type
+    >> m_category 
     >> m_taggedB(this)
     >> m_tagger(this);
+  
   m_decision = TagResult(l_decision);
   m_type = TagType(l_type);  
   return s;
 
 };
-
-
 //=============================================================================

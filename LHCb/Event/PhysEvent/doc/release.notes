@@ -1,12 +1,17 @@
-! $Id: release.notes,v 1.45 2004-03-03 17:50:48 pkoppenb Exp $
+! $Id: release.notes,v 1.46 2004-03-05 13:42:50 pkoppenb Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
 !======================== PhysEvent v8r2 2003-03-03 ========================
-! 2004-03-03 - P. Koppenburg
+! 2004-03-05 - P. Koppenburg
  - src/ProtoParticle.xml:
    . Add PhotonID to detectorPID enum for later use by Calorimeter group.
    . Add firstMeasured method, for Ks reconstruction usage.
+   . Adapted to new track naming (Downstream...)
+ - src/FlavourTag.cpp xml/FlavourTag.xml
+   . Added category and setCategory for future use by flavour tagging
+ - xml/SelResult.xml
+   . New: Store result of selection.
 
 !======================== PhysEvent v8r1 2003-02-09 ========================
 ! 2004-02-06 - Olivier Callot
