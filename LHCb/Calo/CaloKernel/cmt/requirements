@@ -1,11 +1,13 @@
-# $Id: requirements,v 1.23 2004-07-21 08:07:50 cattanem Exp $
+# $Id: requirements,v 1.24 2004-09-05 20:21:40 ibelyaev Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # Created    : 25/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru 
 # =============================================================================
 
 package           CaloKernel
-version           v3r1
+version           v3r2
 
 # =============== structure ===================================================
 branches          src cmt doc CaloKernel

@@ -1,26 +1,8 @@
-// $Id: CaloVector.h,v 1.3 2003-01-17 14:15:18 sponce Exp $ 
+// $Id: CaloVector.h,v 1.4 2004-09-05 20:21:40 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/03/18 18:16:21  ibelyaev
-//  small update for LHCbKernel package
-//
-// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
-// New Package: substitution of the  previous CaloGen package
-//
-// Revision 1.8  2001/10/30 11:30:04  ibelyaev
-// update for new compiler, CaloHypotheses namespace is added
-//
-// Revision 1.7  2001/07/12 21:52:05  ibelyaev
-// minor change to please Win2k
-//
-// Revision 1.6  2001/07/02 17:49:10  ibelyaev
-// update in CaloException and CaloVector
-//
-// Revision 1.5  2001/06/23 14:39:31  ibelyaev
-//  fix CVS-keywords and remove long lines
-//
 // ============================================================================
 #ifndef     CALOKERNEL_CALOVECTOR_H
 #define     CALOKERNEL_CALOVECTOR_H 1 
@@ -59,6 +41,7 @@ public:
   typedef typename Vector::const_iterator         const_iterator         ;
   typedef typename Vector::reverse_iterator       reverse_iterator       ;
   typedef typename Vector::const_reverse_iterator const_reverse_iterator ;
+  typedef std::vector<int>                        Indices                ;
   
 public: 
   
@@ -76,79 +59,103 @@ public:
   /// (virtual) destructor
   virtual ~CaloVector() { clear (); }
   
-  /** following lines from std::vector interface 
-   */
-
-  /// sequential access to content container 
-  inline iterator               begin ()       { return Vector::begin  (); }
+  /// following lines from std::vector interface 
+  
   /// sequential access to content container (const version!)
-  inline const_iterator         begin () const { return Vector::begin  (); }
-  /// sequential access to content container 
-  inline iterator               end   ()       { return Vector::end    (); }
+  const_iterator             begin () const { return Vector::begin  (); }
   /// sequential access to content container (const version!)
-  inline const_iterator         end   () const { return Vector::end    (); }
-  /// sequential access to content container 
-  inline reverse_iterator       rbegin()       { return Vector::rbegin (); }
+  const_iterator             end   () const { return Vector::end    (); }
   /// sequential access to content container (const version!)
-  inline const_reverse_iterator rbegin() const { return Vector::rbegin (); }
-  /// sequential access to content container 
-  inline reverse_iterator       rend  ()       { return Vector::rend   (); }
+  const_reverse_iterator     rbegin() const { return Vector::rbegin (); }
   /// sequential access to content container (const version!)
-  inline const_reverse_iterator rend  () const { return Vector::rend   (); }
+  const_reverse_iterator     rend  () const { return Vector::rend   (); }
   /// size of content container 
-  inline typename Vector::size_type size  () const { return Vector::size   (); }
+  typename Vector::size_type size  () const { return Vector::size   (); }
   /// clear the container 
-  inline void                   clear ()      
-  { Vector::clear() ;  m_index.clear(); }  
+  void clear () { Vector::clear() ;  m_index.clear(); }  
   
   /** returns the position in the vector, -1 if not present
    *  @param  id index 
    */
-  inline const int index( INDEX id ) const 
+  const int index ( INDEX id ) const 
   {
-    unsigned int indx = id.index();
+    const unsigned int indx = id.index();
     return ( ( m_index.size() > indx ) ? m_index[indx] : -1 ); 
   };
-
+  
   /** Access to the content itself using CaloCellID as index. 
    *  Check the boundaries of the index array. 
    *  @param id index 
    */                                         
   inline       Content& operator[]  ( INDEX id )       
   { 
-    int indx = index( id );
-    return ( (0 <= indx ) ? *(begin()+indx) : def() ); 
+    const int indx = index( id );
+    return ( ( 0 > indx ) ? def() : *(begin()+indx) ) ; 
   };
-
+  
   /** Access to the content itself using CaloCellID as index.
    *  (const version)
    *  Check the boundaries of the index array. 
    *  @param id index 
    */                                         
-  inline const Content& operator[]  ( INDEX id ) const { 
-    int indx = index( id );
-    return ( (0 <= indx ) ? *(begin()+indx) : def() ); 
+  inline const Content& operator[]  ( INDEX id ) const 
+  { 
+    const int indx = index( id );
+    return ( ( 0 > indx ) ? def() : *(begin()+indx) ) ; 
   };
+  
+  /** Access to the content itself using CaloCellID as index. 
+   *  Check the boundaries of the index array. 
+   *  @param id index 
+   */                                         
+  inline       Content& operator()  ( INDEX id )       
+  { return (*this)[ id ] ; };
+  
+  /** Access to the content itself using CaloCellID as index.
+   *  (const version)
+   *  Check the boundaries of the index array. 
+   *  @param id index 
+   */                                         
+  inline const Content& operator()  ( INDEX id ) const 
+  { return (*this)[ id ] ; };
   
   /** Add one entry. vector is extended, index vector is updated.
    *  @param content   value to be added into CaloVector 
    *  @param id        index 
    *  @return          status code 
    */
-  inline       StatusCode  addEntry ( const Content& content , INDEX id ) 
+  StatusCode  addEntry ( const Content& content , INDEX id ) 
   {
-    unsigned int indx = id.index() ; 
-    while( m_index.size() <= indx ) { m_index.push_back( -1 ); }
+    const unsigned int indx = id.index() ;
+    if ( m_index.size() <= indx  ) 
+    {
+      const Indices::size_type  num = indx + 1 - m_index.size() ;
+      const Indices::value_type val = -1 ;
+      m_index.insert ( m_index.end() , num  , val ) ; 
+    }
     m_index[indx] =  size();
     push_back( content );
     return StatusCode::SUCCESS;
   };
-
-  /** set size for intermediate container
-   *  standart "reserve" acts on base container!
-   */
-  inline void setSize( const unsigned int Num )
+  
+  /// set size for intermediate container
+  void setSize ( const unsigned int Num )
   { m_index.reserve( Num ) ; }
+  
+  /// extended "reserve" 
+  void reserve ( const unsigned int Num ) 
+  { Vector::reserve( Num ) ;  m_index.reserve( Num ) ; }
+
+public:
+  
+  /// sequential access to content container 
+  iterator               begin ()       { return Vector::begin  (); }
+  /// sequential access to content container 
+  iterator               end   ()       { return Vector::end    (); }
+  /// sequential access to content container 
+  reverse_iterator       rbegin()       { return Vector::rbegin (); }
+  /// sequential access to content container 
+  reverse_iterator       rend  ()       { return Vector::rend   (); }
   
 protected:
 
@@ -166,8 +173,8 @@ private:
   
 private: 
   
-  Content          m_cc_def ;   ///< default value 
-  std::vector<int> m_index  ;   ///< array of indices in the vector
+  Content  m_cc_def ;   ///< default value 
+  Indices  m_index  ;   ///< array of indices in the vector
 
 };
 
