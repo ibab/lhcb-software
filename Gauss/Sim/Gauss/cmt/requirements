@@ -45,7 +45,7 @@ use GeneratorModules    v4r*    Gen
 #use EvGen               v4r*    Sim 
 
 #geometry source 
-use XmlDDDB             v14r*   "$(LHCb_release_area)" 
+use XmlDDDB             v14r*   Det 
 
 # Outer Tracker
 use OTAlgorithms        v12r*   OT
