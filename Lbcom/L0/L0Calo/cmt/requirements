@@ -1,0 +1,27 @@
+package		L0Calo
+version 	v1
+
+# ================ structure =============================================
+branches	L0Calo src cmt doc options
+
+# ================ own includes ==========================================
+include_dirs	${L0CALOROOT}
+
+# ================ options ===============================================
+set L0CALOOPTS	${L0CALOROOT}/options
+
+# ================ used packages =========================================
+use CaloEvent	v4*	Event
+use CaloDet	v1*	Det
+
+# ================ component library =====================================
+library		L0Calo	../src/*.cpp
+
+apply_pattern	package_Clinkopts    
+apply_pattern	packageShr
+
+#================= private stuff =========================================
+private
+apply_pattern	package_Cshlibflags
+ignore_pattern	package_stamps
+
