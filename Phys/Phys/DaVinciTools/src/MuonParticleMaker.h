@@ -1,4 +1,4 @@
-// $Id: MuonParticleMaker.h,v 1.1 2002-07-27 20:22:29 gcorti Exp $
+// $Id: MuonParticleMaker.h,v 1.2 2002-09-11 16:45:11 gcorti Exp $
 #ifndef MUONPARTICLEMAKER_H 
 #define MUONPARTICLEMAKER_H 1
 
@@ -55,14 +55,11 @@ protected:
   
 private:
   
-  std::string m_input; /// Location for charged protoparticles in TES
-  
-  int m_muonPID; /// Pid code of muons
-  
+  std::string m_input; ///< Location for charged protoparticles in TES
+  int m_muonPID;       ///< Pid code of muons  
   double m_confLevel;  ///< Cut Value on the CL for muon hypothesis
   
   IParticlePropertySvc* m_ppSvc;  ///<  Reference to Particle Property Service
-  
   IDataProviderSvc* m_EDS;        ///<  Reference to Event Data Service
   
 };
