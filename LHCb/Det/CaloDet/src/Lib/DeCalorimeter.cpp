@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.cpp,v 1.18 2002-06-15 06:25:25 ocallot Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.19 2002-10-03 10:21:42 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.18  2002/06/15 06:25:25  ocallot
+// new user parameters for x/y cell size and central hole
+//
 // Revision 1.17  2002/04/02 14:55:16  ibelyaev
 //  add 'const' qualifier to DeCalorimeter::Cell method
 //
@@ -339,8 +342,8 @@ StatusCode DeCalorimeter::buildCells( ) {
                 CaloCellID id2( m_caloIndex, iArea , iRow , iColumn ) ;
  
                 if( cells[id2].valid() ) {
-                  if( ( abs( cells[id2].x() - x ) <= margin ) &&
-                      ( abs( cells[id2].y() - y ) <= margin )    ) {
+                  if( ( fabs( cells[id2].x() - x ) <= margin ) &&
+                      ( fabs( cells[id2].y() - y ) <= margin )    ) {
                     pCell->addNeighbor( id2 ) ;
                   }
                 }
