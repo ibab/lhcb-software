@@ -17,9 +17,9 @@ use GaudiPolicy v5r18
 
 #-- Gaudi libraries (from GAUDI_v15r1)
 use GaudiKernel		v16r1
-use GaudiSvc 		v12r2
+use GaudiSvc 		v12r2p1
 use GaudiAlg 		v8r0
-use GaudiPoolDb		v1r8
+use GaudiPoolDb		v1r8p1
 use GaudiObjDesc 	v6r3
 use HbookCnv 		v14r2
 
@@ -28,10 +28,10 @@ use XmlDDDB	v22r3	Det
 use ParamFiles	v3r8	-no_auto_imports
 use FieldMap	v4r5
 
-#-- LHCb libraries (from LHCB_v16r1)
-use LHCb	v16r1
+#-- LHCb libraries (from LHCB_v16r2)
+use LHCb	v16r2
 
-#-- BooleSys v6r1 packages
+#-- BooleSys v6r2 packages
 
 use DigiAlg		v3r0	Digi
 use AsctToLinker        v1r2    Rec
@@ -50,12 +50,10 @@ use CaloDigit           v1r6	Calo
 
 # Velo
 use VeloAlgorithms      v2r9p3	Velo
-use VeloDAQ		v1r0	Velo
 
 # Inner Tracker
 use ITAlgorithms        v14r3	IT
 use ITCheckers          v2r3	IT
-use STDAQ               v1r3    IT
 
 # Outer Tracker
 use OTAlgorithms        v13r4p1	OT
@@ -64,7 +62,6 @@ use OTDAQ               v2r0    OT
 # Muon
 use MuonAlgs            v5r6	Muon
 use MuonBackground	v1r8	Muon
-use MuonDAQ             v1r1    Muon
 
 # Rich
 use RichDigiQC	        v1r7  	Rich

@@ -32,31 +32,31 @@ ApplicationMgr.EvtMax = -1;
 // Input and output files. 
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "Pool411300.hbook";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "boole.hbook";  // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
   "xmlcatalog_file:NewCatalog.xml"
  ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
- ,"xmlcatalog_http://gcorti.home.cern.ch/gcorti/POOL/MyCatalog.xml"
 };
 
 //---------------------------------------------------------------------------
 // Spillover
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
- "DATAFILE='rfio:/castor/cern.ch/user/g/gcorti/Gauss/v15r4/000061.sim' TYP='POOL_ROOT' OPT='READ'" 
-}; // Gauss v15r4, XmlDDDB v22r1, Field045, evtype 61
+ "DATAFILE='rfio:/castor/cern.ch/lhcb/DC04/00000542_00000001_2.sim' TYP='POOL_ROOT' OPT='READ'" 
+,"DATAFILE='rfio:/castor/cern.ch/lhcb/DC04/00000542_00000001_3.sim' TYP='POOL_ROOT' OPT='READ'" 
+}; // DC04: Gauss v15r8, XmlDDDB v22r2, evtype 30000000 (minbias)
 
 
 //---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
- "DATAFILE='rfio:/castor/cern.ch/user/g/gcorti/Gauss/v15r4/411300.sim' TYP='POOL_ROOT' OPT='READ'" 
-}; // Gauss v15r4, XmlDDDB v22r1, Field045, evtype 411300
+ "DATAFILE='rfio:/castor/cern.ch/lhcb/DC04/00000542_00000001_1.sim' TYP='POOL_ROOT' OPT='READ'" 
+}; // DC04: Gauss v15r4, XmlDDDB v22r2, evttype 11144100 (Bd_JpsiKS,mm)
 
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-DigiWriter.Output = "DATAFILE='PFN:Pool411300.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:BooleTest.digi' TYP='POOL_ROOTTREE' OPT='REC'";
