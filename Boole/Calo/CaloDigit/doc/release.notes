@@ -4,6 +4,7 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!========================= CaloDigit v1r0 2002-11-15 =========================
 ! 2002-11-15 - Ivan Belyaev
  - options/Brunel.opts - remove explicit loading of DLL
                          "DLLs" statements are now only in top level packages
