@@ -1,9 +1,8 @@
-// $Id: SerializeStl.h,v 1.1 2002-11-07 17:23:40 jonrob Exp $
+// $Id: SerializeStl.h,v 1.2 2002-12-02 10:22:25 jonrob Exp $
 #ifndef RICHKERNEL_SERIALIZESTL_H 
 #define RICHKERNEL_SERIALIZESTL_H 1
 
 #include <map>
-
 #include "Kernel/SerializeStl.h"
 
 // Add methods for std::map

@@ -1,4 +1,4 @@
-// $Id: RichDetector.h,v 1.3 2002-11-07 17:23:39 jonrob Exp $
+// $Id: RichDetector.h,v 1.4 2002-12-02 10:22:25 jonrob Exp $
 #ifndef RICHKERNEL_RICHDETECTOR_H
 #define RICHKERNEL_RICHDETECTOR_H 1
 
@@ -19,6 +19,9 @@
  */
 
 namespace Rich {
+
+  /// Number of Rich detectors
+  static const int NRiches = 2;
 
   /// Enumeration for Rich detectors 1 and 2
   enum Detector {
