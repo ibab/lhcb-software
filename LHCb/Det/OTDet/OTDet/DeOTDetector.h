@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.9 2002-10-14 15:44:04 jvantilb Exp $
+// $Id: DeOTDetector.h,v 1.10 2002-11-11 11:40:39 jvantilb Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -100,6 +100,15 @@ public:
   /// get the vector of all OT layers
   std::vector<OTLayer*> allLayers() const { return m_layers; }
 
+  /// get the first of all channelIDs
+  OTChannelID beginChannel() const;
+
+  /// return the 'end' channel (= 0)
+  OTChannelID endChannel() const;
+
+  /// get the next channelID.
+  OTChannelID nextChannel(OTChannelID aChannel) const;
+
 private:
 
   double m_resolution;            ///< straw resolution
@@ -135,5 +144,14 @@ inline double DeOTDetector::driftDistance( const double driftTime) const
   return driftTime * m_cellRadius / m_maxDriftTime;
 }
 
+inline OTChannelID DeOTDetector::beginChannel() const
+{
+  return OTChannelID(m_firstOTStation,1,1,1);
+}
+
+inline OTChannelID DeOTDetector::endChannel() const
+{
+  return OTChannelID(0,0,0,0);
+}
 
 #endif  // OTDET_DEOTDETECTOR_H

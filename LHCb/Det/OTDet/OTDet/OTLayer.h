@@ -1,4 +1,4 @@
-// $Id: OTLayer.h,v 1.5 2002-10-14 15:44:07 jvantilb Exp $
+// $Id: OTLayer.h,v 1.6 2002-11-11 11:40:39 jvantilb Exp $
 #ifndef OTDET_OTLAYER_H
 #define OTDET_OTLAYER_H 1
 
@@ -116,6 +116,9 @@ public:
   /// Check if straw is in monolayer B
   bool monoLayerB(const int iModule, const int iStraw) const;
 
+  /// get the next channelID
+  OTChannelID nextChannel( OTChannelID aChannel) const;
+
 private:
 
   /// (x,y) -> (u,v) transformation
@@ -168,6 +171,27 @@ inline int OTLayer::nStrawsInModule(const int iModule) const {
     nStraw = 2*m_halfNumStraw[iModule];
   }
   return nStraw;
+}
+
+inline OTChannelID OTLayer::nextChannel( OTChannelID aChannel) const 
+{
+  unsigned int iModule  = aChannel.module();
+  unsigned int iLayer   = aChannel.layer();
+  int iStraw = aChannel.straw();
+
+  if (iStraw < this->nStrawsInModule(iModule)) {
+    ++iStraw;
+  }
+  else if (iModule < this->nbModules()) {
+    ++iModule;
+    iStraw = 1;
+  }
+  else {
+    ++iLayer;
+    iStraw = 1;
+    iModule = 1;
+  }
+  return OTChannelID(aChannel.station(), iLayer, iModule, iStraw);
 }
 
 #endif // OTDET_OTLAYER_H

@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.7 2002-10-14 15:44:07 jvantilb Exp $
+// $Id: DeOTDetector.cpp,v 1.8 2002-11-11 11:40:39 jvantilb Exp $
 
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -315,4 +315,20 @@ double DeOTDetector::driftDistance( const double driftTime,
 
   // inverse r-t relation
   return driftTime * m_cellRadius / maxDriftTime;  
+}
+
+
+// Get the next channelID.
+// In the future all this information should be cached inside the 
+// DeOTDetector class to speed up this process.
+OTChannelID DeOTDetector::nextChannel(OTChannelID aChannel) const
+{
+  OTLayer* aLayer = this->layer(aChannel);
+  OTChannelID nextChannel = aLayer->nextChannel(aChannel);
+  if (nextChannel.layer() > 4) { // hard-coded for the moment
+    unsigned int iStation = aChannel.station() + 1;
+    nextChannel = OTChannelID(iStation, 1,1,1);
+    if (iStation > m_numStations) nextChannel = OTChannelID(0,0,0,0);
+  }
+  return nextChannel;
 }
