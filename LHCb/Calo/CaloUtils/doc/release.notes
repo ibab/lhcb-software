@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.25 2003-07-16 11:46:26 cattanem Exp $
+! $Id: release.notes,v 1.26 2004-01-07 09:57:34 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+!========================= CaloUtils v4r6 2004-01-07 =====================
+! 2004-01-07 - Marco Cattaneo
+ - Move to Gaudi v14 (use CaloEvent v13r* in requirements)
 
 !========================= CaloUtils v4r5 2003-07-16 =====================
 ! 2003-07-16 - Marco Cattaneo
