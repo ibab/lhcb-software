@@ -48,7 +48,7 @@ use  RecoTools          v1r1     Rec
 # Utility tools
 use  TrExtrapolator     v2r12    Tr
 
-use  LoKi               v3r2     Tools  
+use  LoKi               v3r3     Tools  
 
 # Reconstruction tools 
 use  Utilities          v1r8p1   Tools

@@ -12,7 +12,7 @@ use  TrgChecker         v4r1     Trg
 use  TrgTools           v4r2     Trg
 use  TrgVeloTT          v4r1     Trg
 use  PrimVtx            v2r1p1   Rec
-use  LoKi               v3r2     Tools  
+use  LoKi               v3r3     Tools  
 use  Utilities          v1r8p1   Tools
 use  DaVinciTools       v10r2    Phys
 use  PhysSelections     v6r9     Phys
