@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.11 2001-11-09 08:37:11 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.12 2001-11-27 17:02:22 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -1190,29 +1190,31 @@ void DDFE::parseClass(DOM_Node node,
           {
             gddRelation->setGetMeth(false);
           }
+          
+		  
+		  gddRelation->setAddMeth(false);
+		  gddRelation->setRemMeth(false);
+
+		  if (gddRelationRatio.equals("*"))
+		  {
+            if (node.getAttributes().
+              getNamedItem(DOMString::transcode("addMeth")).
+              getNodeValue().equals("TRUE"))
+			{
+              gddRelation->setAddMeth(true);
+			}
             
-          if (node.getAttributes().
-            getNamedItem(DOMString::transcode("addMeth")).
-            getNodeValue().equals("TRUE"))
-          {
-            gddRelation->setAddMeth(true);
-          }
-          else
-          {
-            gddRelation->setAddMeth(false);
-          }
-            
-          if (node.getAttributes().
-            getNamedItem(DOMString::transcode("remMeth")).
-            getNodeValue().equals("TRUE"))
-          {
-            gddRelation->setRemMeth(true);
-          }
-          else
-          {
-            gddRelation->setRemMeth(false);
-          }
-            
+            if (node.getAttributes().
+              getNamedItem(DOMString::transcode("remMeth")).
+              getNodeValue().equals("TRUE"))
+			{
+              gddRelation->setRemMeth(true);
+			  gddClass->pushImpStdList("algorithm");
+			}
+		  }    
+
+
+
           if (node.getAttributes().
             getNamedItem(DOMString::transcode("clrMeth")).
             getNodeValue().equals("TRUE"))
