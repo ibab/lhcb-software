@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.3 2002-05-21 17:10:17 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.4 2002-05-21 17:15:38 gcorti Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -13,7 +13,7 @@
 #include "CLHEP/Units/PhysicalConstants.h"
 
 #include <cstdlib>
-#include <fstream.h>
+#include <fstream>
 
 /** @class MagneticFieldSvc MagneticFieldSvc.h
  *  A service for finding the magnetic field vector at a given
