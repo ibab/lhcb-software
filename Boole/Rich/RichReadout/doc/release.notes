@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2004-03-04 - Christopher Rob Jones
+ - Remove fix for energy deposit (Now in GaussRICH since Gauss v14r3)
+
 !========================= RichReadout v1r5 2004-02-05 =======================
 ! 2004-01-26 - Chris Jones
  - Remove SICB specialisations and dependencies (SICB/RiSicbGeom)

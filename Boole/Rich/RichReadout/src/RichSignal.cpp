@@ -147,10 +147,8 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
       mcDeposits->insert( newDeposit );
       newDeposit->setParentHit( *iHit );
 
-      // Fix for energy problem in Gauss. Remove when fixed
-      double energy = (*iHit)->energy();
-      if ( energy > 0.02 ) energy /= 10;
-      newDeposit->setEnergy( energy );
+      // energy
+      newDeposit->setEnergy( (*iHit)->energy() );
 
       // TOF
       double tof = tofOffset + (*iHit)->timeOfFlight();
