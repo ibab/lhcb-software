@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/25 17:19:32  ibelyaev
+/// all conversions now are moved from GiGa to GiGaCnv
+///
 /// Revision 1.4  2001/07/24 11:13:56  ibelyaev
 /// package restructurization(III) and update for newer GiGa
 ///
@@ -218,7 +221,7 @@ StatusCode GiGaMCParticleCnv::updateObj( IOpaqueAddress*  Address ,
   /// retrieve the  trajectory container from GiGa Service 
   G4TrajectoryContainer* trajectories = 0 ; 
   try
-    { 
+    {
       /// get trajectories from GiGa 
       *gigaSvc() >> trajectories ; 
       ///

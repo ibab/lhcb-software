@@ -1,13 +1,16 @@
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.9  2001/07/24 11:13:54  ibelyaev
+# package restructurization(III) and update for newer GiGa
+# 
 # =============================================================================
 
 package  GiGaCnv 
 version v2
 
-branches cmt src doc GiGaCnv 
+branches cmt src doc options GiGaCnv 
 
 include_dirs     $(GIGACNVROOT)
 

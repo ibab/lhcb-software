@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/25 17:19:32  ibelyaev
+/// all conversions now are moved from GiGa to GiGaCnv
+///
 /// Revision 1.4  2001/07/24 11:13:56  ibelyaev
 /// package restructurization(III) and update for newer GiGa
 ///
@@ -330,6 +333,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs( IOpaqueAddress*  Address ,
     GiGaCnvFunctors::MCVerticesLess  Less  ; 
     GiGaCnvFunctors::MCVerticesEqual Equal ;
     GiGaKineRefTable& table = kineSvc()->table();
+    
     ITV iVertex     = object       -> begin() ;
     ITT iTrajectory = trajectories -> begin() ;
     ITP iParticle   = particles    -> begin() ;
@@ -347,21 +351,22 @@ StatusCode GiGaMCVertexCnv::updateObjRefs( IOpaqueAddress*  Address ,
                          "*') could not be cast to GiGaTrajectory*" ) ; }
         /// own    MCParticle 
 	MCParticle* particle  = *iParticle ; 
+	if( 0 == particle ) { return Error("MCParticle* points to NULL!" ) ; } 
         /// index of particle 
         const int indxPart = iParticle - particles->begin();
         /// index of mother 
         GiGaKineRefTableEntry& entry = 
           table[ trajectory->parentID() ] ;
-        /// index of mother particle 
+        /// index of mother particle (could be -1) 
         const int   iMother = entry.index    () ;
-        /// mother MCParticle
+        /// mother MCParticle (could be NULL!)
         MCParticle* mother  = entry.particle () ;
-	if( 0 == mother ) { return Error("MCParticle* points to NULL!" ) ; } 
+        /// loop over trajectrory points (vertices)  
 	for( ITG iPoint = trajectory->begin() ; 
              trajectory->end() != iPoint ; ++iPoint )
 	  {
 	    if( 0 == *iPoint  ) 
-              { return Error("GiGaTrajectoryPoint* points to null!" ) ; }  
+              { return Error("GiGaTrajectoryPoint* points to MULL!" ) ; }  
 	    /// fill parameters of auxillary vertex                
 	    miscVertex.setPosition    ( (*iPoint) -> GetPosition () );
 	    miscVertex.setTimeOfFlight( (*iPoint) -> GetTime     () );
