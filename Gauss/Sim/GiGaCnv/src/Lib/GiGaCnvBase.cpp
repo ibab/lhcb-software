@@ -1,8 +1,11 @@
-// $Id: GiGaCnvBase.cpp,v 1.6 2002-01-22 18:24:42 ibelyaev Exp $ 
+// $Id: GiGaCnvBase.cpp,v 1.7 2002-05-01 18:33:18 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/01/22 18:24:42  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.5  2001/08/12 17:24:50  ibelyaev
 // improvements with Doxygen comments
 //
@@ -44,9 +47,10 @@
 // ============================================================================
 /// constructor 
 // ============================================================================
-GiGaCnvBase::GiGaCnvBase( const unsigned char  StorageType , 
-                          const CLID&          ClassType   , 
-                          ISvcLocator*         Locator     )  
+GiGaCnvBase::GiGaCnvBase
+( const unsigned char  StorageType , 
+  const CLID&          ClassType   , 
+  ISvcLocator*         Locator     )  
   : Converter( StorageType ,  ClassType , Locator     ) 
   ///
   , m_NameOfGiGaConversionService   ( "NotYetDefined" ) 
@@ -61,6 +65,9 @@ GiGaCnvBase::GiGaCnvBase( const unsigned char  StorageType ,
   , m_evtSvc                        (  0              ) 
   , m_detSvc                        (  0              ) 
   , m_chronoSvc                     (  0              ) 
+  , m_errors     ()
+  , m_warnings   ()
+  , m_exceptions ()
   ///
 {};
 
@@ -82,14 +89,15 @@ StatusCode GiGaCnvBase::Exception
 ( const std::string    & Message , 
   const GaudiException & Excp    ,
   const MSG::Level     & level   , 
-  const StatusCode     & Status )
+  const StatusCode     & Status  ) const 
 {
   Stat stat( chronoSvc() , Excp.tag() );
-  MsgStream log( msgSvc() , name() ); 
-  log << level << "Exception:" 
-      << Message << ":" << Excp << endreq ; 
+  Print( "GaudiExceptions: catch and re-throw " + Message ,  level , Status );
+  // increase counter of errrors 
+  m_exceptions [ Message ] += 1 ;
+  throw GiGaException( name() + "::" + Message , Excp , Status );
   return  Status;
-};  
+};
 
 // ============================================================================
 /** (re)-throw exception and print error message 
@@ -104,14 +112,16 @@ StatusCode GiGaCnvBase::Exception
 ( const std::string    & Message , 
   const std::exception & Excp    ,
   const MSG::Level     & level   , 
-  const StatusCode     & Status )
+  const StatusCode     & Status  ) const 
 {
   Stat stat( chronoSvc() , "std::exception" );
-  MsgStream log( msgSvc() , name() ); 
-  log << level << " Exception:" 
-      << Message << ":" << Excp.what() << endreq ; 
+  Print( "std::exception: catch and re-thrwo " + Message ,  level , Status );
+  // increase counter of errrors 
+  m_exceptions [ Message ] += 1 ;
+  throw GiGaException( name() + "::" + Message + " (" + 
+                       Excp.what() + ")", Status );
   return  Status;
-};  
+};
 
 // ============================================================================
 /** throw exception and print error message 
@@ -124,13 +134,15 @@ StatusCode GiGaCnvBase::Exception
 StatusCode GiGaCnvBase::Exception
 ( const std::string    & Message , 
   const MSG::Level     & level   , 
-  const StatusCode     & Status )
+  const StatusCode     & Status  ) const 
 {
-  Stat stat( chronoSvc() , "*UNKNOWN* exception" );
-  MsgStream log( msgSvc() , name() ); 
-  log << level << Message << ": UNKNOWN exception"  << endreq ; 
+  Stat stat( chronoSvc() , "*UNKNOWN Exception*" );
+  Print( "GiGaException throw " + Message ,  level , Status );
+  // increase counter of errrors 
+  m_exceptions [ Message ] += 1 ;
+  throw GiGaException( name() + "::" + Message , Status );
   return  Status;
-};  
+};
 
 // ============================================================================
 /** print and return the error
@@ -141,12 +153,47 @@ StatusCode GiGaCnvBase::Exception
 // ============================================================================
 StatusCode GiGaCnvBase::Error
 ( const std::string& Message , 
-  const StatusCode& status )
+  const StatusCode&  status  ) const 
+{  
+  Stat stat( chronoSvc() ,  name() + ":Error" );
+  // increase counter of errrors 
+  m_errors [ Message ] += 1 ;
+  return  Print( Message , MSG::ERROR  , status  ) ; 
+};  
+
+// ============================================================================
+/** print warning message and return status code
+ *  @param msg warning message 
+ *  @param sc  status code
+ *  @return statsu code 
+ */
+// ============================================================================
+StatusCode GiGaCnvBase::Warning
+( const std::string& Message , 
+  const StatusCode & Status  ) const 
 {
-  Stat stat( chronoSvc() , name() + ":Error" );
+  Stat stat( chronoSvc() ,  name() + ":Warning" );
+  // increase counter of errrors 
+  m_warnings [ Message ] += 1 ;
+  return  Print( Message , MSG::WARNING , Status ) ; 
+};
+
+// ============================================================================
+/** print the  message and return status code
+ *  @param msg error message 
+ *  @param lvl print level 
+ *  @param sc  status code
+ *  @return statsu code 
+ */
+// ============================================================================
+StatusCode GiGaCnvBase::Print
+( const std::string& Message , 
+  const MSG::Level & level   , 
+  const StatusCode & Status  ) const 
+{ 
   MsgStream log( msgSvc() , name() ); 
-  log << MSG::ERROR << Message << endreq; 
-  return status; 
+  log << level << Message << endreq   ; 
+  return  Status; 
 };
 
 // ============================================================================
@@ -249,6 +296,48 @@ StatusCode GiGaCnvBase::finalize ()
   ///
   m_leaves.clear();
   ///
+  /// error printout 
+  if( 0 != m_errors     .size() || 
+      0 != m_warnings   .size() || 
+      0 != m_exceptions .size()   ) 
+    {      
+      MsgStream log( msgSvc() , name() );
+      // format printout 
+      log << MSG::ALWAYS 
+          << " Exceptions/Errors/Warnings statistics:  " 
+          << m_exceptions .size () << "/"
+          << m_errors     .size () << "/"
+          << m_warnings   .size () << endreq ; 
+      // print exceptions counter 
+      for( Counter::const_iterator excp = m_exceptions.begin() ;
+           excp != m_exceptions.end() ; ++excp )
+        {
+          log << MSG::ALWAYS 
+              << " #EXCEPTIONS= " << excp->second  
+              << " Message='"     << excp->first    << "'" << endreq ; 
+        }  
+      // print errors counter 
+      for( Counter::const_iterator error = m_errors.begin() ;
+           error != m_errors.end() ; ++error )
+        {
+          log << MSG::ALWAYS 
+              << " #ERRORS    = " << error->second  
+              << " Message='"     << error->first    << "'" << endreq ; 
+        }  
+      // print warnings
+      for( Counter::const_iterator warning = m_warnings.begin() ;
+           warning != m_warnings.end() ; ++warning )
+        {
+          log << MSG::ALWAYS 
+              << " #WARNINGS  = " << warning->second  
+              << " Message='"     << warning->first  << "'" << endreq ; 
+        }  
+    }
+  ///
+  m_errors      .clear();
+  m_warnings    .clear();
+  m_exceptions  .clear();
+  ///
   return Converter::finalize() ; 
   ///
 };
@@ -268,6 +357,8 @@ StatusCode GiGaCnvBase::declareObject( const GiGaLeaf& leaf )
   return StatusCode::SUCCESS; 
 };
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

@@ -1,6 +1,9 @@
-// $Id: GiGaCnvBase.h,v 1.6 2002-01-22 18:24:41 ibelyaev Exp $ 
+// $Id: GiGaCnvBase.h,v 1.7 2002-05-01 18:33:18 ibelyaev Exp $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/01/22 18:24:41  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.5  2001/08/12 17:24:48  ibelyaev
 // improvements with Doxygen comments
 //
@@ -20,6 +23,7 @@
 // STL 
 #include <string> 
 #include <vector> 
+#include <map> 
 #include <exception> 
 // Gaudi base type  
 #include "GaudiKernel/Converter.h" 
@@ -74,15 +78,19 @@ protected:
 public: 
   
   /** initialization
+   *  @see  Converter 
+   *  @see IConverter 
    *  @return status code 
    */
   virtual StatusCode initialize () ; 
   
   /** finalization 
+   *  @see  Converter 
+   *  @see IConverter 
    *  @return status code 
    */
   virtual StatusCode finalize   () ;
-  ///  
+  
 protected: 
   
   /** accessor to own conversion service 
@@ -146,6 +154,17 @@ protected:
   inline IParticlePropertySvc* ppSvc     () const 
   { return 0 != kineSvc() ? kineSvc()->ppSvc   () : 0 ; }
   
+  /** print the  message and return status code
+   *  @param msg error message 
+   *  @param lvl print level 
+   *  @param sc  status code
+   *  @return statsu code 
+   */
+  StatusCode Print
+  ( const std::string& Message , 
+    const MSG::Level & level   , 
+    const StatusCode & Status  ) const ;
+  
   /** print and return the error
    *  @param Message message to be printed 
    *  @param status  status code to be returned 
@@ -153,7 +172,16 @@ protected:
    */
   StatusCode Error     
   ( const std::string& Message , 
-    const StatusCode& status = StatusCode::FAILURE );
+    const StatusCode& status = StatusCode::FAILURE ) const ;
+  
+  /** print and return warning
+   *  @param Message message to be printed 
+   *  @param status  status code to be returned 
+   *  @return status code 
+   */
+  StatusCode Warning     
+  ( const std::string& Message , 
+    const StatusCode& status = StatusCode::FAILURE ) const ;
   
   /** (re)-throw exception and print error message 
    *  @param msg  error message 
@@ -163,10 +191,10 @@ protected:
    *  @return statsu code 
    */
   StatusCode Exception 
-  ( const std::string    & msg                        ,   
-    const GaudiException & exc                        , 
-    const MSG::Level     & lvl = MSG::FATAL           ,
-    const StatusCode     & sc  = StatusCode::FAILURE );
+  ( const std::string    & msg                       ,   
+    const GaudiException & exc                       , 
+    const MSG::Level     & lvl = MSG::FATAL          ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
   
   /** (re)-throw exception and print error message 
    *  @param msg  error message 
@@ -176,10 +204,10 @@ protected:
    *  @return statsu code 
    */
   StatusCode Exception 
-  ( const std::string    & msg                        ,  
-    const std::exception & exc                        , 
-    const MSG::Level     & lvl = MSG::FATAL           ,
-    const StatusCode     & sc  = StatusCode::FAILURE );
+  ( const std::string    & msg                       ,  
+    const std::exception & exc                       , 
+    const MSG::Level     & lvl = MSG::FATAL          ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
   
   /** throw exception and print error message 
    *  @param msg  error message 
@@ -188,14 +216,37 @@ protected:
    *  @return statsu code 
    */
   StatusCode Exception 
-  ( const std::string    & msg                        ,  
-    const MSG::Level     & lvl = MSG::FATAL           ,
-    const StatusCode     & sc  = StatusCode::FAILURE );
+  ( const std::string    & msg                       ,  
+    const MSG::Level     & lvl = MSG::FATAL          ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
   
+  /** assertion 
+   *  @param assertion   assertion condition
+   *  @param msg         assertion message 
+   *  @param sc          assertion status code 
+   *  @return status code 
+   */
+  inline StatusCode Assert
+  ( bool  assertion                                  , 
+    const std::string& msg = "GiGaCnvBase::unknown"  , 
+    const StatusCode&  sc  = StatusCode::FAILURE     ) const ;
+  
+  /** assertion 
+   *  @param assertion   assertion condition
+   *  @param msg         assertion message 
+   *  @param sc          assertion status code 
+   *  @return status code 
+   */
+  inline StatusCode Assert
+  ( bool  assertion                              ,
+    const char*        msg                       ,
+    const StatusCode&  sc  = StatusCode::FAILURE ) const ;
+  
+
   /** Retrieve name of converter 
    *  @return converter name
    */
-  inline const std::string&  name     () { return m_ConverterName; } 
+  inline const std::string&  name     () const { return m_ConverterName; } 
 
   /// set name of own conversion service  
   inline void setNameOfGiGaConversionService
@@ -231,9 +282,49 @@ private:
   IDataProviderSvc*     m_detSvc                      ; 
   IChronoStatSvc*       m_chronoSvc                   ; 
   ///
-};
-///
+  typedef std::map<std::string,unsigned int> Counter;
+  /// counter of errors 
+  mutable Counter m_errors     ;
+  /// counter of warning 
+  mutable Counter m_warnings   ; 
+  /// counter of exceptions
+  mutable Counter m_exceptions ;
 
+};
+
+// ============================================================================
+/** assertion 
+ *  @param assertion   assertion condition
+ *  @param msg         assertion message 
+ *  @param sc          assertion status code 
+ */
+// ============================================================================
+inline StatusCode  GiGaCnvBase::Assert
+( bool               assertion , 
+  const std::string& msg       , 
+  const StatusCode&  sc        ) const 
+{  
+  StatusCode status = StatusCode::SUCCESS ;
+  return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
+};
+// ============================================================================
+
+// ============================================================================
+/** assertion 
+ *  @param assertion   assertion condition
+ *  @param msg         assertion message 
+ *  @param sc          assertion status code 
+ */
+// ============================================================================
+inline StatusCode  GiGaCnvBase::Assert
+( bool               assertion , 
+  const char*        msg       , 
+  const StatusCode&  sc        ) const 
+{ 
+  StatusCode status = StatusCode::SUCCESS ;
+  return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
+};
+// ============================================================================
 
 // ============================================================================
 // End 

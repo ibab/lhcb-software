@@ -1,23 +1,8 @@
-// $Id: GiGaMiscGetEventAlg.cpp,v 1.8 2002-04-24 14:50:30 ibelyaev Exp $ 
+// $Id: GiGaMiscGetEventAlg.cpp,v 1.9 2002-05-01 18:33:18 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2002/02/12 17:10:49  ibelyaev
-//  bug fix
-//
-// Revision 1.6  2002/01/22 18:24:44  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.5  2001/08/12 17:24:54  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.4  2001/07/25 17:19:32  ibelyaev
-// all conversions now are moved from GiGa to GiGaCnv
-//
-// Revision 1.3  2001/07/15 20:45:12  ibelyaev
-// the package restructurisation
-// 
 //  ===========================================================================
 #define GIGACNV_GIGAMISCGETEVENTALG_CPP
 // ============================================================================
@@ -69,8 +54,8 @@ GiGaMiscGetEventAlg::GiGaMiscGetEventAlg(const std::string& name,
                                          ISvcLocator* pSvcLocator) 
   ///
   : Algorithm( name , pSvcLocator) 
-  , m_particles   ( "/Event/MC/MCParticles" )
-  , m_vertices    ( "/Event/MC/MCVertices"  )
+  , m_particles   ( MCParticleLocation::Default )
+  , m_vertices    ( MCVertexLocation::Default   )
 { 
   declareProperty( "Particles" , m_particles  ); 
   declareProperty( "Vertices"  , m_vertices   ); 
@@ -100,8 +85,8 @@ StatusCode GiGaMiscGetEventAlg::initialize()
 StatusCode GiGaMiscGetEventAlg::execute() 
 {
   ///
-  typedef ObjectVector<MCParticle> Particles ;
-  typedef ObjectVector<MCVertex>   Vertices  ;
+  typedef MCParticles Particles ;
+  typedef MCVertices  Vertices  ;
   ///
   MsgStream log( msgSvc() , name() ) ;
   if( !m_particles.empty() )

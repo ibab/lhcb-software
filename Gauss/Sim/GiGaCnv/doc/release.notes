@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.15 2002-04-24 14:50:30 ibelyaev Exp $
+! $Id: release.notes,v 1.16 2002-05-01 18:33:18 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -7,8 +7,9 @@ Package Manager : Vanya Belyaev
 ! =============================================================================
 
 !==============================================================================
-! 24/04/2002  v5r0 Vanya Belyaev
-!  update for newer Gaudi and Geant4 versions
+! 1 May 2002  v5r0 Vanya Belyaev
+!1) GiGaMCParticleCnv and GiGaMCVertexCnv seems to beOK now 
+!2) import errors/warnings/exception counting technique from LHCb Calo software
 !==============================================================================
 
 !==============================================================================

@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.h,v 1.5 2002-01-22 18:24:41 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.h,v 1.6 2002-05-01 18:33:18 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/01/22 18:24:41  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.4  2001/08/12 17:24:49  ibelyaev
 // improvements with Doxygen comments
 //
@@ -244,7 +247,14 @@ private:
   ///
   std::string                          m_inName     ; 
   IIncidentSvc*                        m_incSvc     ;
-  ///  
+  /// 
+  typedef std::map<std::string,unsigned int> Counter;
+  /// counter of errors 
+  mutable Counter m_errors     ;
+  /// counter of warning 
+  mutable Counter m_warnings   ; 
+  /// counter of exceptions
+  mutable Counter m_exceptions ;
 };        
 ///
  

@@ -1,20 +1,8 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.6 2002-01-22 18:24:42 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.7 2002-05-01 18:33:18 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2001/08/12 17:24:51  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.4  2001/07/25 17:19:31  ibelyaev
-// all conversions now are moved from GiGa to GiGaCnv
-//
-// Revision 1.3  2001/07/24 11:13:54  ibelyaev
-// package restructurization(III) and update for newer GiGa
-//
-// Revision 1.2  2001/07/15 20:45:09  ibelyaev
-// the package restructurisation
-// 
 // ===========================================================================
 #define GIGACNV_GIGACNVSVCBASE_CPP 1  
 // ============================================================================
@@ -45,6 +33,7 @@
 #include "GiGa/IGiGaSvc.h"
 #include "GiGa/IGiGaSetUpSvc.h"
 #include "GiGa/GiGaUtil.h"
+#include "GiGa/GiGaException.h"
 /// GiGaCnv
 #include "GiGaCnv/IGiGaCnvSvc.h" 
 #include "GiGaCnv/GiGaCnvSvcBase.h"
@@ -85,6 +74,9 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
   , m_inName      ( "IncidentSvc"         )  
   , m_incSvc      (     0                 ) 
   ///
+  , m_errors      ()
+  , m_warnings    ()
+  , m_exceptions  ()
 { 
   declareProperty   ( "EventDataProviderService"        , m_evtName     );
   declareProperty   ( "DetectorDataProviderService"     , m_detName     );
@@ -114,6 +106,31 @@ StatusCode GiGaCnvSvcBase::initialize()
   StatusCode st = ConversionSvc::initialize() ; 
   if( st.isFailure()     )  
     { return Error("Could not initialize base class!", st); } 
+  ///
+  { /// print ALL properties 
+    typedef std::vector<Property*> Properties;
+    const Properties& properties = getProperties() ;
+    MsgStream log( msgSvc() , name ()  );
+    log << MSG::DEBUG 
+        << " List of ALL properties of "
+        << System::typeinfoName( typeid( *this ) ) << "/" 
+        << name ()           << "   #properties = " 
+        << properties.size() << endreq ;
+    const int   buffer_size  = 256 ;
+    char buffer[buffer_size]       ;
+    for( Properties::const_reverse_iterator property 
+           = properties.rbegin() ;
+         properties.rend() != property ; ++property )  
+      {
+        std::fill( buffer , buffer + buffer_size , 0 );
+        std::ostrstream ost ( buffer , buffer_size );
+        (*property)->nameAndValueAsStream( ost );
+        ost.freeze();
+        log << MSG::DEBUG
+            << "Property ['Name': Value] = " 
+            << ost.str() << endreq ;
+      }
+  }
   ///
   if( !m_dpName.empty() ) 
     {
@@ -284,6 +301,47 @@ StatusCode GiGaCnvSvcBase::finalize()
   if ( 0 != objMgr    () ) { objMgr    ()->release() ; m_objMgr    = 0 ; } 
   ///
   m_leaves.clear();
+  ///  
+  /// error printout 
+  if( 0 != m_errors     .size() || 
+      0 != m_warnings   .size() || 
+      0 != m_exceptions .size()   ) 
+    {      
+      MsgStream log( msgSvc() , name() );
+      // format printout 
+      log << MSG::ALWAYS 
+          << " Exceptions/Errors/Warnings statistics:  " 
+          << m_exceptions .size () << "/"
+          << m_errors     .size () << "/"
+          << m_warnings   .size () << endreq ; 
+      // print exceptions counter 
+      for( Counter::const_iterator excp = m_exceptions.begin() ;
+           excp != m_exceptions.end() ; ++excp )
+        {
+          log << MSG::ALWAYS 
+              << " #EXCEPTIONS= " << excp->second  
+              << " Message='"     << excp->first    << "'" << endreq ; 
+        }  
+      // print errors counter 
+      for( Counter::const_iterator error = m_errors.begin() ;
+           error != m_errors.end() ; ++error )
+        {
+          log << MSG::ALWAYS 
+              << " #ERRORS    = " << error->second  
+              << " Message='"     << error->first    << "'" << endreq ; 
+        }  
+      // print warnings
+      for( Counter::const_iterator warning = m_warnings.begin() ;
+           warning != m_warnings.end() ; ++warning )
+        {
+          log << MSG::ALWAYS 
+              << " #WARNINGS  = " << warning->second  
+              << " Message='"     << warning->first  << "'" << endreq ; 
+        }  
+    }
+  m_errors      .clear();
+  m_warnings    .clear();
+  m_exceptions  .clear();
   ///
   return ConversionSvc::finalize() ;
 };
@@ -352,6 +410,8 @@ StatusCode GiGaCnvSvcBase::Error
   const StatusCode & Status  ) const 
 {  
   Stat stat( chronoSvc() ,  name() + ":Error" );
+  // increase counter of errrors 
+  m_errors [ Message ] += 1 ;
   return  Print( Message , MSG::ERROR  , Status  ) ; 
 };  
 
@@ -367,6 +427,8 @@ StatusCode GiGaCnvSvcBase::Warning
   const StatusCode & Status  ) const 
 {
   Stat stat( chronoSvc() ,  name() + ":Warning" );
+  // increase counter of errrors 
+  m_warnings [ Message ] += 1 ;
   return  Print( Message , MSG::WARNING , Status ) ; 
 };
 
@@ -388,7 +450,6 @@ StatusCode GiGaCnvSvcBase::Print
   return  Status; 
 };
 
-
 // ============================================================================
 /** re-throw the exception 
  *  @param msg  message 
@@ -404,8 +465,10 @@ StatusCode GiGaCnvSvcBase::Exception
   const StatusCode     & Status  ) const 
 {
   Stat stat( chronoSvc() , Excp.tag() );
-  MsgStream log( msgSvc() , name() + ":"+Excp.tag() ); 
-  log << level << Message << ":" << Excp << endreq ; 
+  Print( "GaudiExceptions: catch and re-throw " + Message ,  level , Status );
+  // increase counter of errrors 
+  m_exceptions [ Message ] += 1 ;
+  throw GiGaException( name() + "::" + Message , Excp , Status );
   return  Status;
 };
 
@@ -424,9 +487,11 @@ StatusCode GiGaCnvSvcBase::Exception
   const StatusCode     & Status  ) const 
 {
   Stat stat( chronoSvc() , "std::exception" );
-  MsgStream log( msgSvc() , name() ); 
-  log << level << "Exception:" 
-      << Message << ":" << Excp.what() << endreq ; 
+  Print( "std::exception: catch and re-thrwo " + Message ,  level , Status );
+  // increase counter of errrors 
+  m_exceptions [ Message ] += 1 ;
+  throw GiGaException( name() + "::" + Message + " (" + 
+                       Excp.what() + ")", Status );
   return  Status;
 };
 
@@ -442,10 +507,11 @@ StatusCode GiGaCnvSvcBase::Exception
   const MSG::Level     & level   , 
   const StatusCode     & Status  ) const 
 {
-  Stat stat( chronoSvc() , "*UNKNOWN* exception" );
-  MsgStream log( msgSvc() , name() ); 
-  log << level   << "Exception:" 
-      << Message << ": UNKNOWN exception"  << endreq ; 
+  Stat stat( chronoSvc() , "*UNKNOWN Exception*" );
+  Print( "GiGaException throw " + Message ,  level , Status );
+  // increase counter of errrors 
+  m_exceptions [ Message ] += 1 ;
+  throw GiGaException( name() + "::" + Message , Status );
   return  Status;
 };
 

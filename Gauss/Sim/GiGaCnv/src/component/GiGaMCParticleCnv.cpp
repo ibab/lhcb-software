@@ -1,35 +1,8 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.12 2002-04-23 11:23:40 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.13 2002-05-01 18:33:18 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.11  2002/03/12 15:14:08  ibelyaev
-//  update of GiGaKineRefTable class
-//
-// Revision 1.10  2002/02/12 17:10:48  ibelyaev
-//  bug fix
-//
-// Revision 1.9  2002/01/22 18:24:44  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.8  2001/11/19 18:27:00  ibelyaev
-//  bux fix and the new converter for catalogs
-//
-// Revision 1.7  2001/08/12 17:24:53  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.6  2001/07/27 11:24:57  ibelyaev
-// bug fix in MCParticles<->MCVertices relations
-//
-// Revision 1.5  2001/07/25 17:19:32  ibelyaev
-// all conversions now are moved from GiGa to GiGaCnv
-//
-// Revision 1.4  2001/07/24 11:13:56  ibelyaev
-// package restructurization(III) and update for newer GiGa
-//
-// Revision 1.3  2001/07/15 20:45:11  ibelyaev
-// the package restructurisation
-// 
 //  ===========================================================================
 #define GIGACNV_GIGAMCPARTICLECNV_CPP 1 
 // ============================================================================
@@ -45,7 +18,7 @@
 #include "GaudiKernel/IOpaqueAddress.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-/// GaudiKernle
+/// GaudiKernel
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/LinkManager.h"
@@ -95,7 +68,7 @@ GiGaMCParticleCnv::GiGaMCParticleCnv( ISvcLocator* Locator )
   setNameOfGiGaConversionService( "GiGaKineCnvSvc" ); 
   setConverterName              ( "GiGaMCPCnv"     );
   ///
-  declareObject( GiGaLeaf( "/Event/MC/MCParticles", objType() ) );
+  declareObject( GiGaLeaf( MCParticleLocation::Default , objType() ) );
   ///
 }; 
 
@@ -108,7 +81,7 @@ GiGaMCParticleCnv::~GiGaMCParticleCnv(){};
 // Class ID
 // ======================================================================
 const CLID&         GiGaMCParticleCnv::classID     () 
-{ return Particles::classID(); }
+{ return MCParticles::classID(); }
 
 // ======================================================================
 // StorageType 
@@ -164,7 +137,7 @@ StatusCode GiGaMCParticleCnv::createObj
   if( 0 ==  address  ) 
     { return Error("IOpaqueAddress* points to NULL!" ) ; }
   ///
-  object        = new Particles();
+  object        = new MCParticles();
   /// 
   StatusCode sc = updateObj( address , object );
   if( sc.isFailure() ) 
@@ -189,7 +162,7 @@ StatusCode GiGaMCParticleCnv::fillObjRefs
 {
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL" );}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"     );}   
-  Particles* particles = dynamic_cast<Particles*> ( object ); 
+  MCParticles* particles = dynamic_cast<MCParticles*> ( object ); 
   if( 0 ==   particles ) { return Error(" DataObject* (of type '"       + 
                                         GiGaUtil::ObjTypeName( object ) + 
                                         "*') is not 'Particles*'!"      );}  
@@ -212,58 +185,58 @@ StatusCode GiGaMCParticleCnv::updateObj
   ///
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL");}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"    );}
-  Particles* particles = dynamic_cast<Particles*> ( object ); 
+  MCParticles* particles = dynamic_cast<MCParticles*> ( object ); 
   if( 0 ==   particles ) { return Error(" DataObject*(of type '"      + 
                                         GiGaUtil::ObjTypeName(object) + 
                                         "*') is not 'Particles*'! "   );}  
-  /// clear the object 
-  particles->erase( particles->begin() , particles->end() ); 
-  /// clear the references between MCParticles and Geant4 TrackIDs
+  // clear the object 
+  particles->clear(); 
+  
+  // clear the references between MCParticles and Geant4 TrackIDs
   GiGaKineRefTable& table = kineSvc()->table();
   table.clear();
-  /// retrieve the  trajectory container from GiGa Service 
+  // retrieve the  trajectory container from GiGa Service 
   G4TrajectoryContainer* trajectories = 0 ; 
   try
     {
-      /// get trajectories from GiGa 
+      // get trajectories from GiGa 
       *gigaSvc() >> trajectories ; 
-      ///
+      //
       if( 0 == trajectories ) 
         { return Error("No G4TrajectoryContainer* object is found!"); } 
-      /// reserve elements on object container 
+      // reserve elements on object container 
       particles->reserve( trajectories->size() );
-      /// reserve elements on reference table 
+      // reserve elements on reference table 
       table.resize( 4 * trajectories->size() );
-      /// create the conversion functor 
+      // create the conversion functor 
       Trajectory2Particle Cnv( ppSvc() );
-      /// perform the conversion itself  
+      // perform the conversion itself  
       for( G4TrajectoryContainer::const_iterator iTr = trajectories->begin() ;
            trajectories->end() != iTr ; ++iTr ) 
         {
           const GiGaTrajectory* trajectory = 
             ( 0 == *iTr ) ? (const GiGaTrajectory*) 0 : 
             dynamic_cast<const GiGaTrajectory*> (*iTr );
-          /// convert trajectory into particle and add it into container 
+          // convert the trajectory into particle and add it into container 
           MCParticle* mcp = Cnv( trajectory );
-          particles->push_back( mcp );
-          /// fill the reference table 
+          // insert the pacrtile to conatiner and fill the reference table 
           table( trajectory->trackID() ) =
-            GiGaKineRefTableEntry( mcp , particles->size() - 1 ) ;
+            GiGaKineRefTableEntry( mcp , particles->insert( mcp ) ) ;
         } 
     }
   catch( const GaudiException& Excp )
-    {      
-      particles->erase( particles->begin() , particles->end() ); table.clear();
+    {
+      particles->clear(); table.clear();
       return Exception("updateObj: " , Excp ) ;
     }  
   catch( const std::exception& Excp )
-    {      
-      particles->erase( particles->begin() , particles->end() ); table.clear();
+    {
+      particles->clear(); table.clear();
       return Exception("updateObj: " , Excp ) ;  
     }
   catch( ...  )
-    {      
-      particles->erase( particles->begin() , particles->end() ); table.clear();
+    {
+      particles->clear(); table.clear();
       return Exception("updateObj: " ) ;  
     }
   ///
@@ -283,7 +256,7 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
 {
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL " );}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"      );}
-  Particles* particles = dynamic_cast<Particles*> ( object ); 
+  MCParticles* particles = dynamic_cast<MCParticles*> ( object ); 
   if( 0 ==   particles ) { return Error(" DataObject*(of type '"      + 
                                         GiGaUtil::ObjTypeName(object) + 
                                         "*') is not 'Particles*'!"    );}  
@@ -304,8 +277,8 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
   IRegistry* parent  = 
     GiGaCnvUtils::parent( address->registry() , evtSvc() );
   if( 0 == parent ) { return Error( " Parent directory is not accessible!"); }
-  const std::string verticesPath( parent->identifier() + "/MCVertices" ) ;
-  SmartDataPtr<Vertices> vertices( evtSvc() , verticesPath );
+  const std::string verticesPath( parent->identifier() + "/Vertices" ) ;
+  SmartDataPtr<MCVertices> vertices( evtSvc() , verticesPath );
   if( !vertices ) 
     { return Error("Could not locate Vertices in '" + verticesPath + "'" ); }
   const long refID = object->linkMgr()->addLink( verticesPath ,  vertices );
@@ -320,8 +293,8 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
   MCVertex miscVertex; /// misc 
   GiGaCnvFunctors::MCVerticesLess  Less  ; 
   GiGaCnvFunctors::MCVerticesEqual Equal ;
-  Vertices::iterator                    iVertex     = vertices     -> begin() ;
-  Particles::iterator                   iParticle   = particles    -> begin() ; 
+  MCVertices::iterator                  iVertex     = vertices     -> begin() ;
+  MCParticles::iterator                 iParticle   = particles    -> begin() ; 
   G4TrajectoryContainer::const_iterator iTrajectory = trajectories -> begin() ;
   for( ; trajectories->end() != iTrajectory && particles->end() != iParticle ; 
        ++iTrajectory , ++iParticle  )
@@ -340,7 +313,7 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
            trajectory->end() != iPoint ; ++iPoint )
         {
           if( 0 == *iPoint ) 
-            { return Error("GiGaTrajectoryPoint* points to null!" ) ; } 
+            { return Error("GiGaTrajectoryPoint* points to NULL!" ) ; } 
           /// auxillary vertex 
           miscVertex.setPosition    ( (*iPoint)->GetPosition() );
           miscVertex.setTimeOfFlight( (*iPoint)->GetTime    () );
@@ -367,7 +340,7 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
               Ref origin( particle , refID , ivIndex , Vertex );
               particle->setOriginVertex( origin ) ;
             } 
-          else { return Error("OriginMCVertex is already set!") ; }
+          else { return Error("'OriginVertex' is already set!") ; }
         }
     } 
   ///
