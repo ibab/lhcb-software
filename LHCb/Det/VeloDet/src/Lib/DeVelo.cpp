@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.19 2002-06-24 08:17:56 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.20 2002-07-09 20:45:18 parkesb Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -21,6 +21,8 @@
 //
 // from Det/VeloDet
 #include "VeloDet/DeVelo.h"
+
+#include "VeloKernel/VeloRound.h"
 
 /** @file DeVelo.cpp
  *
@@ -827,7 +829,7 @@ VeloChannelID DeVelo::channelID (const HepPoint3D& point,
   int sensor    = sensorNumber( point );
   double strip  = stripNumber( sensor, point, pitch );
   if ( 0 <= strip ) {
-    int iStrip = (int) strip;
+    int iStrip = (VeloRound::round(strip));
     fraction = strip - (double) iStrip;
     return VeloChannelID( sensor, iStrip );
   } else {
