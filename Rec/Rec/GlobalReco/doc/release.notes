@@ -4,6 +4,17 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2003-02-07 - Gloria Corti
+ - Make file with list of default options NeutralPPsFromCPsAlg.opts
+
+! 2003-02-06 - Gloria Corti
+ - Remove first version of primary vertex calculation. A new version is
+   available in a new package (PrimVtx v2r0).
+   . Removed source of PrimaryVertexFinderAlg and PrimaryVertexFitterTool
+     as well as their declaration in GlobalReco_load 
+   . Removed options file PrimaryVertexFinderAlg.opts
+ - Clean up of options in ChargedProtoPAlg.opts
+
 ! 2003-01-19 - Ivan Belyaev
 
  - src/NeutralPPsFromCPsAlg.cpp        - (1) bug fix with incorrect default 
