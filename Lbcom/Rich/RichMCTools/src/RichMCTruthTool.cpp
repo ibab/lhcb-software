@@ -1,4 +1,4 @@
-// $Id: RichMCTruthTool.cpp,v 1.1 2004-06-02 21:37:22 jonesc Exp $
+// $Id: RichMCTruthTool.cpp,v 1.2 2004-06-02 22:04:11 jonesc Exp $
 
 // local
 #include "RichMCTruthTool.h"
@@ -55,6 +55,8 @@ StatusCode RichMCTruthTool::initialize()
   m_localID[ abs(ppSvc->find("pi+")->jetsetID()) ] = Rich::Pion;
   m_localID[ abs(ppSvc->find("K+")->jetsetID()) ]  = Rich::Kaon;
   m_localID[ abs(ppSvc->find("p+")->jetsetID()) ]  = Rich::Proton;
+
+  // release service since it is no longer needed
   release(ppSvc);
 
   // Setup incident services
@@ -85,26 +87,6 @@ void RichMCTruthTool::handle ( const Incident& incident )
       // Get new linkers for this event
       cleanUpLinkers();
     }
-}
-
-RichMCTruthTool::MCRichHitToPhoton * RichMCTruthTool::mcPhotonLinks() const
-{
-  if ( !m_mcPhotonLinks ) {
-    m_mcPhotonLinks =
-      new MCRichHitToPhoton( evtSvc(), msgSvc(),
-                             MCRichOpticalPhotonLocation::LinksFromMCRichHits );
-  }
-  return m_mcPhotonLinks;
-}
-
-RichMCTruthTool::MCPartToRichTracks * RichMCTruthTool::mcTrackLinks() const
-{
-  if ( !m_mcTrackLinks ) {
-    m_mcTrackLinks =
-      new MCPartToRichTracks( evtSvc(), msgSvc(),
-                              MCRichTrackLocation::LinksFromMCParticles );
-  }
-  return m_mcTrackLinks;
 }
 
 const MCRichDigits * RichMCTruthTool::mcRichDigits() const

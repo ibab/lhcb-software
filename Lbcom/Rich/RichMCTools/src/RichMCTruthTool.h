@@ -1,4 +1,4 @@
-// $Id: RichMCTruthTool.h,v 1.1 2004-06-02 21:37:22 jonesc Exp $
+// $Id: RichMCTruthTool.h,v 1.2 2004-06-02 22:04:11 jonesc Exp $
 #ifndef RICHMCTOOLS_RICHMCTRUTHTOOL_H
 #define RICHMCTOOLS_RICHMCTRUTHTOOL_H 1
 
@@ -134,6 +134,26 @@ private: // private data
   SmartRefVector<MCRichHit> m_emptyContainer;
 
 };
+
+inline RichMCTruthTool::MCRichHitToPhoton * RichMCTruthTool::mcPhotonLinks() const
+{
+  if ( !m_mcPhotonLinks ) {
+    m_mcPhotonLinks =
+      new MCRichHitToPhoton( evtSvc(), msgSvc(),
+                             MCRichOpticalPhotonLocation::LinksFromMCRichHits );
+  }
+  return m_mcPhotonLinks;
+}
+
+inline RichMCTruthTool::MCPartToRichTracks * RichMCTruthTool::mcTrackLinks() const
+{
+  if ( !m_mcTrackLinks ) {
+    m_mcTrackLinks =
+      new MCPartToRichTracks( evtSvc(), msgSvc(),
+                              MCRichTrackLocation::LinksFromMCParticles );
+  }
+  return m_mcTrackLinks;
+}
 
 inline void RichMCTruthTool::cleanUpLinkers()
 {
