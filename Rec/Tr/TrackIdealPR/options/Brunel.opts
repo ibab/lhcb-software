@@ -1,0 +1,29 @@
+//============================================================
+//  Options to run the ideal pattern recognition algorithm
+//  TracksCreator in Tr/TrackIdealPR/
+//  Author: Eduardo Rodrigues
+//============================================================
+
+ApplicationMgr.DLLs    += { "TrackIdealPR" };
+ApplicationMgr.TopAlg  += { "TracksCreator" };
+
+//TracksCreator.AddOTTimes      = true;
+//TracksCreator.AddITClusters   = true;
+//TracksCreator.AddVeloClusters = true;
+
+//TracksCreator.MinNHits = 6;
+//TracksCreator.HistogramFlag = false;
+//TracksCreator.TracksTESPath = "Rec/FitTrack/Ideal";
+
+//TracksCreator.OTGeometryPath   = "/dd/Structure/LHCb/Tracker/OT";
+//TracksCreator.ITGeometryPath"  = "/dd/Structure/LHCb/Tracker/IT";
+//TracksCreator.VeloGeometryPath = "/dd/Structure/LHCb/Velo";
+
+TracksCreator.OutputLevel   = 3;
+
+//ToolSvc.TrAcceptance.minNTTHits = 1;
+//ToolSvc.TrAcceptance.minNT1Hits = 1;
+//ToolSvc.TrAcceptance.minNT2Hits = 1;
+//ToolSvc.TrAcceptance.minNT3Hits = 1;
+//ToolSvc.TrAcceptance.minNVeloRHits   = 3;
+//ToolSvc.TrAcceptance.minNVeloPhiHits = 3;

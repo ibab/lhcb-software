@@ -1,0 +1,25 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackIdealPR
+! Responsible : Eduardo Rodrigues
+! Purpose     : Perfect pattern recognition
+!-----------------------------------------------------------------------------
+
+! 2005-03-03 - Eduardo Rodrigues
+ - code clean-up
+
+! 2005-03-02 - Eduardo Rodrigues
+ - adaptation to new OT event model (OTClusters -> OTTimes)
+ - adaptation to new IT detector element (DeITDetector -> DeSTDetector)
+ - dependance on old Checker/ITrJudge.h removed. Same functionality is given
+   by TrCheck/TrAcceptance.h
+ - dependance on old Checker/ITrStateCreator.h removed. Same functionality
+   given by TrCheck/ITrStateCreator.h
+ - the output are still TrFitTracks according to the old tracking model
+
+! 2005-02-25 - Eduardo Rodrigues
+ - adaptation to GaudiAlgorithm
+
+! 2005-02-23 - Eduardo Rodrigues
+ - package creation. Simple renaming of the Tr/IdealPR package of
+   Rutger van der Eijk. It will be adapted to the new tracking event
+   model.
