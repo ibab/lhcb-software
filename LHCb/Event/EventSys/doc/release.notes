@@ -1,9 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================= EventSys v18r0p1 2004-07-26 =======================
-! 2004-07-26 - Marco Cattaneo
- - Use CaloEvent v13r3
+!======================== EventSys v18r1 2004-07-28 ========================
+! 2004-07-28 - Marco Cattaneo
+ - Use TrgEvent v3r1, CaloEvent v13r3
+ - Remove HltEvent (obsolete)
 
 !======================== EventSys v18r0 2004-07-19 ========================
 ! 2004-07-19 - Marco Cattaneo
