@@ -1,0 +1,38 @@
+# $Id: requirements,v 1.1.1.1 2001-11-02 14:39:52 ibelyaev Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
+# =============================================================================
+# Created    : 02/11/2001
+# Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
+# =============================================================================
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+# =============================================================================
+package             CaloUtils
+version             v1
+
+# ================= structure =================================================
+branches            cmt doc src CaloUtils
+
+# ================= own includes ==============================================
+include_dirs        $(CALOUTILSROOT)
+
+# ================= dependencies ==============================================
+use CaloEvent       v7*   Event
+use CaloDet         v3*   Det 
+
+# ================= constituens: linker library ===============================
+library             CaloUtils    *.cpp
+
+# ================= mandatory patterns ========================================
+apply_pattern       package_linkopts
+apply_pattern       package_libraries 
+apply_pattern       ld_library_path 
+
+# ================= private stuff =============================================
+private
+apply_pattern       package_shlibflags
+macro_append        CaloUtils_shlibflags  $(use_linkopts)
+macro_remove        use_linkopts          $(CaloUtils_linkopts)

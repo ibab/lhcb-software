@@ -1,0 +1,220 @@
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2001/07/17 20:00:49  ibelyaev
+// modifications to improve Doxygen documentation
+//
+// Revision 1.1  2001/07/06 21:20:27  ibelyaev
+// new class CovarianceEstimator
+//
+// ===========================================================================
+#ifndef CALOALGS_COVARIANCEESTIMATOR_H
+#define CALOALGS_COVARIANCEESTIMATOR_H 1
+// ===========================================================================
+
+// Include files
+// STD & STL
+#include <functional>
+// GaudiKernel
+#include "GaudiKernel/StatusCode.h"
+// forward declaration
+class  CaloCluster;
+class  DeCalorimeter;
+
+
+/** @class CovarianceEstimator CovarianceEstimator.h
+ *
+ *  simple helper class for estimation of covariance matrix
+ *  for CaloCluster object.
+ *
+ *   Model:   ("M{}" means "expectation", "D{}" means "dispersion")
+ *
+ *   All cluster quantities could be calculated if one knows the matrix
+ *
+ *   Cov{i,j} = M{(e(i)-M{e(i)})*(e(j)-M{e(j)})}
+ *
+ *   where "e(i)" is energy deposited in cell with index "i":
+ *
+ *   e(i) =  Sg * E(i)  + Gain * ( noise1 + noise2 )
+ *
+ *   where: "Sg"     - relative gain fluctuations;
+ *          "E(i)"   - intrinsic energy (with stochastic flustuations);
+ *          "Gain"   - gain for given channel;
+ *          "noise1" - incoherent noise;
+ *          "noise2" - coherent noise;
+ *
+ *   This model results in following exporession for covariance matrix:
+ *   (diagonal elements)
+ *
+ *   Cov{i,i} =   D{e(i)} = M{(e(i)-M{e(i)})*(e(i)-M{e(i)})}
+ *
+ *            =   E(i)      * E(i)      * D{Sg}     +
+ *                M{Sg}     * M{Sg}     * D{E(i)}   +
+ *                M{Gain}   * M{Gain}   * D{noise1} +
+ *                M{Gain}   * M{Gain}   * D{noise2} +
+ *                M{noise1} * M{noise1} * M{Gain}   +
+ *                M{noise2} * M{noise2} * M{Gain}
+ *
+ *   for non-diagonal elements (i != j ) one has:
+ *
+ *   Cov{i,j} =   Cov{j,i} = M{(e(i)-M{e(i)})*(e(j)-M{e(j)})}
+ *
+ *            =   M{ Gain } * M{ Gain } * D(noise2)
+ *
+ *   According to the obvious definitions:
+ *
+ *      "M{ Sg     }"     = 1
+ *
+ *      "M{ noise1 }" = 0, "mean" value of noise is sero
+ *
+ *      "M{ noise2 }" = 0, "mean" value of noise is zero
+ *
+ *
+ *   other parameters could be extractes from external parametrisation:
+ *
+ *      "D{ E(i)   }" = E(i) * "A" * "A" * GeV
+ *
+ *      "D{ Sg     }" = relative gain sigma squared
+ *
+ *      "D{ noise1 }" = sigma of incoherent noise squared
+ *
+ *      "D{ noise2 }" = sigma on   coherent noise squared
+ *
+ *      "M{ Gain   }" is extracted for each cell from DeCalorimeter object
+ *
+ *  At next step one is able to calculate calculate intermediate values:
+ *
+ *     Total cluster energy         "Etot" = Sum_i{ 1.0  * e(i) }  
+ *
+ *     Energy weighted X            "Ex"   = Sum_i{ x(i) * e(i) } 
+ *
+ *     Energy weighted Y            "Ey"   = Sum_i{ y(i) * e(i) } 
+ *
+ *  Since transformation from "e(i)" to ("Etot","Ex","Ey")
+ *  id a linear transformation,  the covariance matrix 
+ *  for ("Etot","Ex","Ey") quantities could be calculated 
+ *  in an easy and transparent way: 
+ *
+ *  Cov{ Etot, Etot } = Sum_ij { 1.0  * Cov{i,j} * 1.0  }
+ *
+ *  Cov{ Etot, Ex   } = Sum_ij { x(i) * Cov{i,j} * 1.0  }
+ *
+ *  Cov{ Ex  , Ex   } = Sum_ij { x(i) * Cov{i,j} * x(i) }
+ *
+ *  Cov{ Etot, Ey   } = Sum_ij { y(i) * Cov{i,j} * 1.0  }
+ *
+ *  Cov{ Ex  , Ey   } = Sum_ij { x(i) * Cov{i,j} * y(i) }
+ *
+ *  Cov{ Ey  , Ey   } = Sum_ij { y(i) * Cov{i,j} * y(i) }
+ *
+ *  And the last step: we calculate the final quantities:
+ *
+ *   total energy of cluster:  "Ecl" = Etot              
+ *    
+ *   X-position of barycenter: "Xcl" = Ex/Etot          
+ * 
+ *   Y-position of barycenter: "Ycl" = Ey/Etot           
+ *   
+ *  The calculation of covariance matrix for final values 
+ *  is a little bit tedious, since transformation from 
+ *  ("Etot","Ex","Ey") to ("Ecl","Xcl","Ycl") is not linear,
+ *  but it could be done using analytical expansion:
+ * 
+ *  Cov{ Ecl , Ecl } =              Cov{ Etot , Etot }
+ *
+ *  Cov{ Ecl , Xcl } =              Cov{ Etot , Ex   } / Ecl -
+ *                            Xcl * Cov{Etot,Etot}/Ecl
+ *
+ *  Cov{ Xcl , Xcl } =              Cov{ Ex   , Ex   } / Ecl / Ecl +
+ *                      Xcl * Xcl * Cov{ Etot , Etot } / Ecl / Ecl -
+ *                            Xcl * Cov{ Etot , Ex   } / Ecl / Ecl -
+ *                            Xcl * Cov{ Etot , Ex   } / Ecl / Ecl
+ *
+ *  Cov{ Ecl , Ycl } =              Cov{ Etot , Ey   } / Ecl -
+ *                            Ycl * Cov{ Etot , Etot } / Ecl
+ *
+ *  Cov{ Xcl , Ycl } =              Cov{ Ex   , Ey   } / Ecl / Ecl +
+ *                      Xcl * Ycl * Cov{ Etot , Etot } / Ecl / Ecl -
+ *                            Xcl * Cov{ Etot , Ey   } / Ecl / Ecl -
+ *                            Ycl * Cov{ Etot , Ex   } / Ecl / Ecl
+ *
+ *  Cov{ Ycl , Ycl } =              Cov{ Ey   , Ey   } / Ecl / Ecl +
+ *                      Ycl * Ycl * Cov{ Etot , Etot } / Ecl / Ecl -
+ *                            Ycl * Cov{ Etot , Ey   } / Ecl / Ecl -
+ *                            Ycl * Cov{ Etot , Ey   } / Ecl / Ecl
+ *
+ *  @author Ivan Belyaev
+ *  @date   06/07/2001
+ */
+class CovarianceEstimator:
+  public std::unary_function<CaloCluster*,StatusCode>
+{
+public:
+
+  typedef DeCalorimeter* DET;
+  
+  /** standard constructor
+      @param  Det      pointer to DeCalorimeter object
+      @param  ResA     intrinsic calo resolution
+      @param  GainS    sigma relative error in gain
+      @param  NoiseIn  sigma on incoherent noise
+      @param  NoiseCo  sigma on coherent   noise
+  */
+  CovarianceEstimator( const DeCalorimeter* Det            ,
+                       const double         A       = 0.15 ,
+                       const double         GainS   = 0.0  ,
+                       const double         NoiseIn = 0.0  ,
+                       const double         NoiseCo = 0.0  );
+
+  /// (virtual) Destructor
+  virtual ~CovarianceEstimator();
+
+  /** calculation of covariance matrix for cluster 
+      @param pointer to cluster object 
+      @return status code
+  */
+  StatusCode operator()( CaloCluster* cluster ) const ;
+
+  /** calculate covariance matrix for cluster
+      @param pointer to cluster
+      @return status code
+  */
+  inline StatusCode calculateCovarianceMatrix ( CaloCluster* cluster ) const
+  { return (*this)( cluster ); }
+
+protected:
+
+  /// simple accessor to DeCalorimeter object
+  inline const DeCalorimeter* detector    () const
+  { return m_detector    ; }
+  /// calorimeter resolution (A*A*GeV)
+  inline double a2GeV        () const
+  { return m_a2GeV  ; }
+  /// dispersion  of relative gain error
+  inline double s2gain       () const
+  { return m_s2gain ; }
+  /// dispersion of noise (both coherent and incoherent
+  inline double s2noise      () const
+  { return ( m_s2coherent + m_s2incoherent ) ; }
+  /// dispersion of incoherent noise
+  inline double s2incoherent () const
+  { return m_s2incoherent ; }
+  /// dispersion of coherent   noise
+  inline double s2coherent   () const
+  { return m_s2coherent   ; }
+
+private:
+
+  const DeCalorimeter* m_detector ; ///< pointer to DeCalorimeter object
+  double m_a2GeV                  ; ///< calorimeter resolution ((A**2)*GeV)
+  double m_s2gain                 ; ///< relative gain dispersion
+  double m_s2incoherent           ; ///< incoherent noise dispersion
+  double m_s2coherent             ; ///< coherent noise dispersion
+
+};
+
+
+// ===========================================================================
+#endif ///< CALOALGS_COVARIANCEESTIMATOR_H
+// ===========================================================================
