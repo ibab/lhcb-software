@@ -1,32 +1,32 @@
-// $Id: CaloMergedPi0Alg.h,v 1.2 2004-03-17 16:32:22 ibelyaev Exp $
+// $Id: CaloMergedPi0Alg.h,v 1.3 2004-10-27 12:40:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2 2004/09/02 20:46:40  odescham 
-// - Transv. Shape parameters in option file 
-// - new parameters tuned for DC04
-//
-// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
-// new package 
-//
-// Revision 1.4  2002/07/05 10:03:13  ibelyaev
-//  new version of MergedPi0 algorithm
-//
 // ============================================================================
 #ifndef CALOEX_CaloMergedPi0Alg_H 
 #define CALOEX_CaloMergedPi0Alg_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 // from STL
+// ============================================================================
 #include <string>
 #include <vector>
+// ============================================================================
 // From GaudiKernel
+// ============================================================================
 #include "GaudiKernel/NTuple.h"
+// ============================================================================
 // from   CaloKernel
+// ============================================================================
 #include "CaloKernel/CaloAlgorithm.h"
+// ============================================================================
 // forward declarations
+// ============================================================================
 class    CaloCluster   ;
 class   ICaloHypoTool  ;
+// ============================================================================
 
 /** @class CaloMergedPi0Alg CaloMergedPi0Alg.h
  *  
@@ -139,6 +139,11 @@ private:
   Parameters LPar_Be2;
   Parameters LPar_Be3;
   Parameters LPar_z0;
+
+private:
+  
+  double m_eT_Cut  ;
+  int    m_mX_Iter ;
 };
 
 // ============================================================================

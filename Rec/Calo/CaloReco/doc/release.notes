@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.60 2004-10-26 20:35:58 ibelyaev Exp $
+! $Id: release.notes,v 1.61 2004-10-27 12:40:08 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,39 @@
 ! Responsible : Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2004-10-27 - Vanya BELYAEV
+ - src/CaloTrackAlg.h, src/CaloTrackAlg.cpp
+    the algorithm is modified to take advantage from 
+    new class TrTrackUse from Calo/CaloUtils package 
+ - src/CaloMergedPi0Alg.h, src/CaloMergedPi0Alg.cpp
+
+    new property "EtCut" is added to skip the processing of 
+    clusters with small transverse energy.
+    The default value of this oproperty is -100*GeV
+   (which implies "NO CUT", and "BACKWARD-COMPATIBILITY" 
+    in the sense of absolute reproducibility of results). 
+    The idea comes from Olivier Deschamps and Cristina Carloganu.
+
+    Another new property "MaxIterations" is added to reduce the 
+    number of iterations 
+    The default value (16) is "BACKWARD-COMPATIBLE"
+    The idea comes from Olivier Deschamps and Cristina Carloganu.
+
+    In addition few "tiny" modification are applied:
+      - remove "count" loop 
+      - location of spddigits and prs digits are moved from internal loop
+        to a top level 
+
+    The usage of EtCut=1.5*GeV and MaxIteration=6 togather with 
+    these 'technical' optimizations  
+    speeds up the execution of the algorithm approxmately 20 times.
+
+
+ The package *REQUIRES* : 
+  - Calo/CaloUtils with versions >= v4r8 
+  - Calo/CaloEvent with version  >= v13r6  
+
 
 ! 2004-10-26 - Vanya BELYAEV
  - src/CaloCluster2TrackAlg.h, src/CaloCluster2TrackAlg.cpp

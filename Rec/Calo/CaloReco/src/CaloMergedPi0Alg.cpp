@@ -1,12 +1,18 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.10 2004-07-20 12:06:26 ibelyaev Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.11 2004-10-27 12:40:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
 // Include files
+// ============================================================================
 // STD & STL 
+// ============================================================================
 #include <numeric>
 #include <algorithm>
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IToolSvc.h" 
@@ -16,22 +22,36 @@
 #include "GaudiKernel/SmartDataPtr.h" 
 #include "GaudiKernel/IChronoStatSvc.h"
 #include "GaudiKernel/Stat.h"
+// ============================================================================
 // Kernel
+// ============================================================================
 #include "Kernel/CaloHypotheses.h"
+// ============================================================================
 // CaloInterfaces 
+// ============================================================================
 #include "CaloInterfaces/ICaloClusterTool.h"
 #include "CaloInterfaces/ICaloHypoTool.h"
+// ============================================================================
 // CaloDet
+// ============================================================================
 #include "CaloDet/DeCalorimeter.h" 
+// ============================================================================
 // CaloEvent 
+// ============================================================================
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
-#include "Event/CaloDataFunctor.h"
 #include "Event/CaloPosition.h"
+#include "Event/CaloDataFunctor.h"
+#include "Event/CellID.h"
+// ============================================================================
 // Kernel
+// ============================================================================
 #include "CaloKernel/CaloCellID.h"
+// ============================================================================
 // local
+// ============================================================================
 #include "CaloMergedPi0Alg.h"
+// ============================================================================
 
 // ============================================================================
 /** @file CaloMergedPi0Alg.cpp
@@ -63,6 +83,7 @@ const        IAlgFactory&CaloMergedPi0AlgFactory = s_Factory ;
 CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
                                     ISvcLocator*       svcloc  )
   : CaloAlgorithm ( name , svcloc ) 
+  //
   , m_ntuple              ( 0                                   ) 
   , m_ntupleLUN           ( "FILE1"                             )
   , m_nameOfSplitPhotons  ( CaloHypoLocation::    SplitPhotons  )
@@ -76,6 +97,9 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   , TrShMid_spd ()
   , TrShInn_spd ()
   , SPar ()
+  //
+  , m_eT_Cut  ( -100 * GeV )
+  , m_mX_Iter ( 16         )
 {
   m_toolTypeNames.push_back( "CaloExtraDigits/SpdExtraG" ) ;
   m_toolTypeNames.push_back( "CaloExtraDigits/PrsExtraG" ) ;
@@ -100,7 +124,11 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   declareProperty ( "LPar_Be1"              , LPar_Be1 ) ;
   declareProperty ( "LPar_Be2"              , LPar_Be2 ) ;
   declareProperty ( "LPar_Be3"              , LPar_Be3 ) ;
-  declareProperty ( "LPar_z0"               , LPar_z0 ) ;
+  declareProperty ( "LPar_z0"               , LPar_z0  ) ;
+
+  // added by V.B. 2004-10-27
+  declareProperty ( "EtCut"                 , m_eT_Cut  ) ;
+  declareProperty ( "MaxIterations"         , m_mX_Iter ) ;
 
  
  // set the appropriate defaults for input    data 
@@ -393,33 +421,42 @@ StatusCode CaloMergedPi0Alg::execute()
   }
   
 
-  /// loop over all clusters  for counting
-  long cluscount=0;
-  for( Iterator iclus = clusters->begin() ;
-       clusters->end() != iclus ; ++iclus )
-    {
-      cluscount=cluscount+1;
-    }
-
+  // count all clusters 
+  // modified by V.B. 2004-10-27
+  const size_t cluscount = clusters->size() ;
   log << MSG::DEBUG << " -----> #cluster " << cluscount << endreq;
+  
+  // SpdHit in front of Cluster Seed (new 09/02/2004)
+  // (moved from internal loop)
+  CaloDigits* spds = get<CaloDigits>( CaloDigitLocation::Spd );
+  if( 0 == spds ) { return StatusCode::FAILURE ;}
+  
+  // Prs deposit in front of Cluster Seed (new 09/02/2004)
+  // (moved from internal loop)
+  CaloDigits* prss = get<CaloDigits>( CaloDigitLocation::Prs );
+  if( 0 == prss ) { return StatusCode::FAILURE ;}
+  
+  // added by V.B 2004-10-27: estimator of cluster transverse energy 
+  CaloDataFunctor::EnergyTransverse<const CaloCluster*,const DeCalorimeter*> eT ( detector ) ;
   
   /// loop over all clusters 
   for( Iterator icluster = clusters->begin() ;
        clusters->end() != icluster ; ++icluster )
-    {
-      CaloCluster* cluster = *icluster ;
-      if( 0 == cluster )                { continue ; }   ///< CONTINUE!
-
-      //----------------------//
-      //        My code       //
-      //----------------------//
-
-      /// Check # of digits/cells in this cluster 
-      int m_cluDigs;
-      m_cluDigs = cluster->entries().size() ;
-      if( 1 >= m_cluDigs )                { return 0; }   ///< CONTINUE!
-
-
+  {
+    CaloCluster* cluster = *icluster ;
+    if( 0 == cluster )                { continue ; }   ///< CONTINUE!
+    
+    // added by V.B. 2004-10-27
+    if ( 0 < m_eT_Cut &&  m_eT_Cut > eT( cluster ) ) { continue ; }
+    
+    //----------------------//
+    //        My code       //
+    //----------------------//
+    
+    /// Check # of digits/cells in this cluster 
+    int m_cluDigs;
+    m_cluDigs = cluster->entries().size() ;
+    if( 1 >= m_cluDigs )                { return 0; }   ///< CONTINUE!
 
 
       /// Find Cluster Seed 
@@ -434,15 +471,9 @@ StatusCode CaloMergedPi0Alg::execute()
       int seedrow  = idseed.row();
       int seedcol  = idseed.col();
       
-      // SpdHit in front of Cluster Seed (new 09/02/2004)
-      CaloDigits* spds = get<CaloDigits>( CaloDigitLocation::Spd );
-      if( 0 == spds ) { return StatusCode::FAILURE ;}
       double SpdHit = 0 ;
       const CaloDigit* spddigit = spds->object( seed->key() );
       if( 0 != spddigit ) { SpdHit = spddigit->e() ; }
-      // Prs deposit in front of Cluster Seed (new 09/02/2004)
-      CaloDigits* prss = get<CaloDigits>( CaloDigitLocation::Prs );
-      if( 0 == prss ) { return StatusCode::FAILURE ;}
       double PrsDep = 0 ;
       const CaloDigit* prsdigit = prss->object( seed->key() );
       if( 0 != prsdigit ) { PrsDep = prsdigit->e() ; }
@@ -624,7 +655,10 @@ StatusCode CaloMergedPi0Alg::execute()
       /// Iterative reconstruction of SubClusters
       log << MSG::DEBUG << " -----> Iterative reconstruction " << endreq;
       double SubSize[2],SubX[2],SubY[2],SubZ[2] ;
-      long mxiter=16;
+      
+      long mxiter = m_mX_Iter;
+      // long mxiter=16;
+
       long iter=0;
       for( long iterat = 0 ; iterat < mxiter ; ++iterat){
         // SubClusters X/Y/Z barycenter
@@ -995,18 +1029,14 @@ StatusCode CaloMergedPi0Alg::execute()
      - No correlations matrices
      - No Mass versus energy correction
    */ 
-
   
-  log << MSG::DEBUG
-      << " # of created MergedPi0 Hypos is  " << pi0s   -> size() << endreq ;
-  log << MSG::DEBUG
-      << " # of created Split Photons   is  " << phots  -> size() << endreq ;
-  log << MSG::DEBUG
-      << " # of created Split Clusters  is  " << clusts -> size() << endreq ;
-
-  
-
-   
+  if ( msgLevel ( MSG::DEBUG ) )  
+  { 
+    debug() << " # of created MergedPi0 Hypos is  " << pi0s   -> size() << endreq ;
+    debug() << " # of created Split Photons   is  " << phots  -> size() << endreq ;
+    debug() << " # of created Split Clusters  is  " << clusts -> size() << endreq ;
+  }
+       
   return StatusCode::SUCCESS;
 };
 
