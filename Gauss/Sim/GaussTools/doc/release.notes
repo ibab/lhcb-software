@@ -7,8 +7,8 @@
 
 !======================= GaussTools v9r0 =================================
 ! 2003-12-10 - Florence RANJARD
- - requirements - remove explicit version number to use GiGaCnv compatible 
-                  with Gaudi v13r0
+ - requirements - remove explicit version number to use GiGaCnv v14r0 
+                  compatible with Gaudi v13r0
 
 !======================== GaussTools v8r8 =================================
 - GiGaPhysListModular - removed obsolete production cuts, added flag for
