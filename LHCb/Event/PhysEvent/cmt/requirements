@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.49 2005-03-11 13:39:18 cattanem Exp $
+# $Id: requirements,v 1.50 2005-04-01 15:21:14 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -15,8 +15,8 @@ include_dirs $(PHYSEVENTROOT)
 
 # Used packages. 
 #============================================================================
-use RichEvent    v8r*  Event
-use MuonEvent    v3r*  Event
+use RichEvent    v*  Event
+use MuonEvent    v*  Event
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
