@@ -1,8 +1,11 @@
-// $Id: LoKi_Bs2PhiPhi.cpp,v 1.1.1.1 2003-07-24 16:43:50 ibelyaev Exp $
+// $Id: LoKi_Bs2PhiPhi.cpp,v 1.2 2004-03-03 14:17:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
+//  new package with LoKi examples 
+//
 // Revision 1.1  2003/03/27 12:23:00  ibelyaev
 //  new algorithm
 //
@@ -32,7 +35,6 @@ LOKI_ALGORITHM( LoKi_Bs2PhiPhi )
 
   
   const StatusCode ok    ( StatusCode::SUCCESS ) ;
-  const StatusCode error ( StatusCode::FAILURE ) ;
   
   
   // get all primary vertices 
@@ -49,7 +51,7 @@ LOKI_ALGORITHM( LoKi_Bs2PhiPhi )
   
   Cut dmass = abs( DMASS( "phi(1020)" , ppSvc() ) ) < 20 * MeV ;
   
-  Tuple tuple_1 = ntuple ( "Phi" ) ;
+  Tuple tuple_1 = nTuple ( "Phi" ) ;
   
   for( Loop phi = loop( "K+ K-" , 333 ) ; phi ; ++phi ) 
     {
@@ -71,7 +73,7 @@ LOKI_ALGORITHM( LoKi_Bs2PhiPhi )
   
   Range phis = selected( "phi" );
   
-  Tuple tuple_2 = ntuple ( "Bs" ) ;
+  Tuple tuple_2 = nTuple ( "Bs" ) ;
   for( Loop Bs = loop( "phi phi" , 531 ) ; Bs ; ++Bs )
     {
       if( Bs->mass(1,2) < 3 * GeV ) { continue ; }

@@ -1,8 +1,11 @@
-// $Id: LoKi_Pi0fromBdTo3pi.cpp,v 1.1.1.1 2003-07-24 16:43:50 ibelyaev Exp $
+// $Id: LoKi_Pi0fromBdTo3pi.cpp,v 1.2 2004-03-03 14:17:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
+//  new package with LoKi examples 
+//
 // Revision 1.1.1.1  2003/03/12 19:56:56  ibelyaev
 // the first CVS import of new package
 // 
@@ -39,30 +42,35 @@ LOKI_ALGORITHM( LoKi_Pi0fromBdTo3pi )
   
   Range gammas = select( "gamma" , 22 == ID ) ;
   
-  Tuple tuple = ntuple("My pi0 tuple");
+  Tuple tuple = nTuple("My pi0 tuple");
   for( Loop pi0 = loop( "gamma gamma" , "pi0" ) ; pi0 ; ++pi0 ) 
-    {
-      if( pi0->mass(1,2) > 200 * MeV ) { continue ; }
-      
-      tuple -> column("fmass" , pi0    -> mass     (1,2) ) ;
-      tuple -> column("pi0p"  , pi0    -> momentum ( 0 ) ) ;
-      tuple -> column("ph1"   , pi0(1) -> momentum ()    ) ;
-      tuple -> column("ph2"   , pi0(2) -> momentum ()    ) ;
-      
-      long m1  =
-        pi0s.end() - match->match( pi0(1) , pi0s.begin() , pi0s.end() ) ;
-      long m2  =
-        pi0s.end() - match->match( pi0(2) , pi0s.begin() , pi0s.end() ) ;
-      long m  =
-        pi0s.end() - match->match( pi0    , pi0s.begin() , pi0s.end() ) ;
-      
-      tuple->column( "m1"  , m1  ) ;
-      tuple->column( "m2"  , m2  ) ;
-      tuple->column( "m"   , m   ) ;
+  {
+    if( pi0->mass(1,2) > 200 * MeV ) { continue ; }
+    
+    tuple -> column ( "fmass" , pi0    -> mass     (1,2) ) ;
+    tuple -> column ( "pi0p"  , pi0    -> momentum ( 0 ) ) ;
+    tuple -> column ( "ph1"   , pi0(1) -> momentum ()    ) ;
+    tuple -> column ( "ph2"   , pi0(2) -> momentum ()    ) ;
+    
+    // the first photon from MC pi0 
+    bool m1  =
+      pi0s.end() != match->match ( pi0(1) , pi0s.begin() , pi0s.end() ) ;
 
-      tuple->write();
-      
-    };
+    // the second photon from MC pi0 
+    bool m2  =
+      pi0s.end() != match->match ( pi0(2) , pi0s.begin() , pi0s.end() ) ;
+    
+    // pi0 from MC pi0 
+    bool m   =
+      pi0s.end() != match->match ( pi0    , pi0s.begin() , pi0s.end() ) ;
+    
+    tuple->column ( "m1"  , m1  ) ;
+    tuple->column ( "m2"  , m2  ) ;
+    tuple->column ( "m"   , m   ) ;
+    
+    tuple->write();
+    
+  };
   
   return StatusCode::SUCCESS ;
 };

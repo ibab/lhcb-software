@@ -1,8 +1,11 @@
-// $Id: LoKi_Tuple.cpp,v 1.1.1.1 2003-07-24 16:43:50 ibelyaev Exp $
+// $Id: LoKi_Tuple.cpp,v 1.2 2004-03-03 14:17:29 ibelyaev Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
+//  new package with LoKi examples 
+//
 // Revision 1.3  2003/05/12 13:21:33  ibelyaev
 //  add the options files for all examples
 //
@@ -40,7 +43,7 @@ LOKI_ALGORITHM( LoKi_Tuple )
   Cut dmcut  = abs( dmass ) < 15 * MeV  ;
 
   // get the N-Tuple (book it if not yet done)
-  Tuple tuple1  = ntuple ( "The first N-Tuple (scalar columns)" ) ;
+  Tuple tuple1  = nTuple ( "The first N-Tuple (scalar columns)" ) ;
   for( Loop phi = loop( "K+ K-" , "phi(1020)" ) ; phi ; ++phi ) 
     {
       // put 4-momentum of phi 
@@ -67,7 +70,7 @@ LOKI_ALGORITHM( LoKi_Tuple )
     }
   
   // get the second ntuple 
-  Tuple tuple2 = ntuple( "The second N-Tuple (array-like columns)") ;
+  Tuple tuple2 = nTuple( "The second N-Tuple (array-like columns)") ;
   
   // get all saved phi 
   Range phis = selected("phi") ;
@@ -83,8 +86,7 @@ LOKI_ALGORITHM( LoKi_Tuple )
                      100            ) ;
   
   // add the event information to the N-Tuple 
-  const EventHeader* evt = 
-    get( eventSvc() , EventHeaderLocation::Default , evt );
+  const EventHeader* evt = get<EventHeader> ( EventHeaderLocation::Default );
   
   // add event header information to N-Tuple 
   tuple2 -> column ( "" , evt );

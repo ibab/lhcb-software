@@ -1,8 +1,11 @@
-// $Id: LoKi_Bd2KStarGamma.cpp,v 1.2 2003-11-30 16:37:52 ibelyaev Exp $
+// $Id: LoKi_Bd2KStarGamma.cpp,v 1.3 2004-03-03 14:17:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/11/30 16:37:52  ibelyaev
+//  update for Tools/LoKi v1r8
+//
 // Revision 1.1.1.1  2003/07/24 16:43:49  ibelyaev
 //  new package with LoKi examples 
 //
@@ -49,17 +52,17 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   const StatusCode error ( StatusCode::FAILURE ) ;
 //-----------------------------------------------------------------------------
   // The general information: event header, event address  
-
-  const EventHeader* hdr = get( eventSvc ()                  , 
-                                EventHeaderLocation::Default , hdr ) ;
+  
+  const EventHeader* hdr = get<EventHeader> ( EventHeaderLocation::Default ) ;
   if( 0 == hdr      ) { return StatusCode::FAILURE ; }
   
-  DataObject*     event    = get( eventSvc() , "/Event" , event );
+  DataObject*     event    = get<DataObject>( "/Event" );
   if( 0 == event    ) { return StatusCode::FAILURE ; }
   IRegistry*      registry = event->registry() ;
   if( 0 == registry ) { return StatusCode::FAILURE ; }
   IOpaqueAddress* address  = registry->address () ;
   if( 0 == address  ) { return StatusCode::FAILURE ; }
+
 //---------------------------------------------------------------    
   //  All Primary Vertices   
   VRange primaries =  vselect( "Primaries", VTYPE == Vertex::Primary ) ;
@@ -108,7 +111,7 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   size_t  combinations = 0 ;
   
   // get the tuple for analysis  
-  Tuple tuple = ntuple("Selection");
+  Tuple tuple = nTuple("Selection");
   // loop over K*0 gamma combinations 
   for ( Loop B0 = loop( "K*0 gamma" , "B0" , FitNone ) ; B0 ; ++B0 ) 
     {
@@ -225,7 +228,7 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   if( B0s.empty() ) { return StatusCode::SUCCESS ; }                // RETURN 
   
   // Event Tag collection
-  Tuple tags = evtCollection( "Tags" ) ;
+  Tuple tags = evtCol ( "Tags" ) ;
   // Tuple tags = ntuple ( "Tags" ) ;
   
   // put event /run into tags 

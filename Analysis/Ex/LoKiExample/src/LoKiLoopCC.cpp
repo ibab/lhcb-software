@@ -1,14 +1,19 @@
-// $Id: LoKiLoopCC.cpp,v 1.1.1.1 2003-07-24 16:43:49 ibelyaev Exp $
+// $Id: LoKiLoopCC.cpp,v 1.2 2004-03-03 14:17:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/07/24 16:43:49  ibelyaev
+//  new package with LoKi examples 
+// 
 // ============================================================================
 // local
 #include "LoKi/LoKi.h"
 
 /** @file 
- *  demo/test for LoopCC construction 
+ *
+ *  demo/test for LoopCC construction - 
+ *    "The loop over charge conjugate combinations"
  * 
  * @author Vanya  BELYAEV Ivan.Belyaev@cern.ch
  */
@@ -19,7 +24,7 @@ LOKI_ALGORITHM( LoKiLoopCC )
   using namespace LoKi       ;
   using namespace LoKi::Cuts ;
   using namespace LoKi::Fits ;
-
+  
   // mc truth 
   MCMatch mc     = mctruth() ;
   MCRange mcd0  = mc -> findDecays ( "D0  -> K- pi+" ) ;
@@ -36,23 +41,23 @@ LOKI_ALGORITHM( LoKiLoopCC )
   Range piminus = select ( "pi-" , "pi-" == ID ) ;
   Range piplus  = select ( "pi+" , "pi+" == ID ) ;
   
-  // normal loop 
+  // normal loop 1  
   for ( Loop l1 = loop ( "K- pi+" , "D0" , FitVertex )  ; l1 ; ++l1 ) 
-    {
-      if ( l1->mass(1,2) > 2.0 * GeV ) { continue ; }
-      if ( l1->mass(1,2) < 1.6 * GeV ) { continue ; }      
-      if ( !d0(l1)                   ) { continue ; }
-      plot ( "Loop1: K- pi+" , M(l1)/GeV , 1.6 , 2.0 , 400 ) ;
-    }
-
-  // normal loop 
+  {
+    if ( l1->mass(1,2) > 2.0 * GeV ) { continue ; }
+    if ( l1->mass(1,2) < 1.6 * GeV ) { continue ; }      
+    if ( !d0(l1)                   ) { continue ; }
+    plot ( M(l1)/GeV , "Loop1: K- pi+" , 1.6 , 2.0 , 400 ) ;
+  }
+  
+  // normal loop 2 
   for ( Loop l2 = loop ( "K+ pi-" , "D~0" , FitVertex )  ; l2 ; ++l2 ) 
-    {
-      if ( l2->mass(1,2) > 2.0 * GeV ) { continue ; }
-      if ( l2->mass(1,2) < 1.6 * GeV ) { continue ; }      
-      if ( !d0_(l2)                   ) { continue ; }
-      plot ( "Loop2: K+ pi-" , M(l2)/GeV , 1.6 , 2.0 , 400 ) ;
-    }
+  {
+    if ( l2->mass(1,2) > 2.0 * GeV ) { continue ; }
+    if ( l2->mass(1,2) < 1.6 * GeV ) { continue ; }      
+    if ( !d0_(l2)                   ) { continue ; }
+    plot ( M(l2)/GeV , "Loop2: K+ pi-" , 1.6 , 2.0 , 400 ) ;
+  }
   
   // CC-loop 
   CC ccK  ( "K-"  , "K+"  ) ;
@@ -60,12 +65,12 @@ LOKI_ALGORITHM( LoKiLoopCC )
   CC ccD0 ( "D0"  , "D~0" ) ;
   
   for ( LoopCC l = loop ( ccK + ccPi , ccD0 , FitVertex )  ; l ; ++l ) 
-    {
-      if ( l->mass(1,2) > 2.0 * GeV ) { continue ; }
-      if ( l->mass(1,2) < 1.6 * GeV ) { continue ; }      
-      if ( !d0mc(l)                 ) { continue ; }
-      plot ( "LoopCC: K pi" , M(l)/GeV , 1.6 , 2.0 , 400 ) ;
-    }
+  {
+    if ( l->mass(1,2) > 2.0 * GeV ) { continue ; }
+    if ( l->mass(1,2) < 1.6 * GeV ) { continue ; }      
+    if ( !d0mc(l)                 ) { continue ; }
+    plot ( M(l)/GeV , "LoopCC: K pi" , 1.6 , 2.0 , 400 ) ;
+  }
   
   
   return StatusCode::SUCCESS ;

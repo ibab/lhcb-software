@@ -1,8 +1,11 @@
-// $Id: LoKi_Bs2PhiGamma.cpp,v 1.1.1.1 2003-07-24 16:43:50 ibelyaev Exp $
+// $Id: LoKi_Bs2PhiGamma.cpp,v 1.2 2004-03-03 14:17:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
+//  new package with LoKi examples 
+//
 // Revision 1.2  2003/05/12 13:21:33  ibelyaev
 //  add the options files for all examples
 //
@@ -40,7 +43,8 @@ LOKI_ALGORITHM( LoKi_Bs2PhiGamma )
     vselect( "Good PVs" , 
              VTYPE == Vertex::Primary && VTRACKS > 4 && VCHI2 / VDOF < 10 );
   
-  plot( v1 , "Tracks per vertices " , VTRACKS , 0 , 20 , 20 );
+  plot ( VTRACKS , v1.begin() , v1.end() , 
+         "Tracks per vertices " , 0 , 20 , 20 );
   
   // select only 1 good PV with maximal number of tracks
   Vertex* pv = select_max( v1 , VTRACKS );
@@ -71,21 +75,21 @@ LOKI_ALGORITHM( LoKi_Bs2PhiGamma )
     {    
       if( phi->mass(1,2) > 1.1 * GeV ) { continue ; }
       if( VCHI2( phi )   > 49        ) { continue ; }
-      plot( "K+ K- mass " , M( phi ) / GeV , 0.950 , 1.100 , 60 );
+      plot ( M( phi ) / GeV ,  "K+ K- mass " , 0.950 , 1.100 , 60 );
       
       if( dm( phi ) ) phi->save( "phi" );
       
       if ( mc_phi( phi ) ) 
-        { plot( "(MC) K+ K- mass " , M( phi ) / GeV , 0.950 , 1.100 , 60 ); }
+      { plot ( M( phi ) / GeV ,  "(MC) K+ K- mass " , 0.950 , 1.100 , 60 ); }
     }
   
   Range phis = selected("phi");
-  plot( " number of phis " , phis.size() , 0 , 20 , 40 );
+  plot ( phis.size() ,  " number of phis " , phis.size() , 0 , 20 , 40 );
   
   // find high-pt photon
   Range gamma = select("gamma" , 1 * GeV < PT && ID == 22 );
-  plot( " number of gammas  " , gamma.size() , 0 , 20 , 40 );
-
+  plot (  gamma.size() , " number of gammas  " , gamma.size() , 0 , 20 , 40 );
+  
   // redefine gamma parameters 
   photonTool()->process( gamma.begin() , gamma.end() , pv );
   
@@ -93,41 +97,40 @@ LOKI_ALGORITHM( LoKi_Bs2PhiGamma )
   Fun time  = VDTIME( point( pv ) );
   Fun dist  = VDSIGN( point( pv ) );
   
-  const EventHeader* evthdr = get( eventSvc() , 
-                                   EventHeaderLocation::Default , evthdr );
+  const EventHeader* evthdr = get<EventHeader>( EventHeaderLocation::Default );
   if( 0 == evthdr ) { return StatusCode::SUCCESS ; }
   
-  Tuple tuple2 = ntuple(" my n-tuple number 2 ");
+  Tuple tuple2 = nTuple(" my n-tuple number 2 ");
   Loop Bs = loop ( "phi gamma" , "B_s0" , FitNone ) ;
   Bs->setPV( pv );
   for( ; Bs ; ++Bs ) 
-    {
+  {
+    
+    Bs->fit( FitDirection ) ; 
+    
+    child ( Bs , 2 , 1  ) ;
+    child ( Bs , 2 ) ;
+    plot(  M( Bs ) / GeV , "phi gamma mass " , 4.0 , 6.0  );
+    if( mc_bs( Bs ) ) 
+    { 
+      plot(  M( Bs ) / GeV , "(MC) phi gamma mass " , 4.0 , 6.0 ); 
       
-      Bs->fit( FitDirection ) ; 
+      tuple2->column ( "BsP"  , Bs->p()      ) ;
+      tuple2->column ( "tb"   , theta( Bs )  ) ;
+      tuple2->column ( "time" , time ( Bs )  ) ;
+      tuple2->column ( "dist" , dist ( Bs )  ) ;
+      tuple2->column ( "zpv"  , VZ( pv )     ) ;
       
-      child( Bs , 2 , 1  ) ;
-      child( Bs , 2 ) ;
-      plot( "phi gamma mass " , M( Bs ) / GeV , 4.0 , 6.0 , 100 );
-      if( mc_bs( Bs ) ) 
-        { 
-          plot( "(MC) phi gamma mass " , M( Bs ) / GeV , 4.0 , 6.0 , 100 ); 
-          
-          tuple2->column ( "BsP"  , Bs->p()      ) ;
-          tuple2->column ( "tb"   , theta( Bs )  ) ;
-          tuple2->column ( "time" , time ( Bs )  ) ;
-          tuple2->column ( "dist" , dist ( Bs )  ) ;
-          tuple2->column ( "zpv"  , VZ( pv )     ) ;
-          
-          tuple2->column ( "pv"   , pv->position() ) ;
-          
-          tuple2->column ( ""     , evthdr         ) ;
-          
-          Record rec     ( tuple2 , "vxb,vyb,vzb,vxpv,vypv,vzpv" , 
-                           VX( Bs ) , VY( Bs ) , VZ( Bs ) , 
-                           VX( pv ) , VY( pv ) , VZ( pv ) ) ;          
-          
-        }
+      tuple2->column ( "pv"   , pv->position() ) ;
+      
+      tuple2->column ( ""     , evthdr         ) ;
+      
+      Record rec     ( tuple2 , "vxb,vyb,vzb,vxpv,vypv,vzpv" , 
+                       VX( Bs ) , VY( Bs ) , VZ( Bs ) , 
+                       VX( pv ) , VY( pv ) , VZ( pv ) ) ;          
+      
     }
+  }
   
   return StatusCode::SUCCESS ;
 };

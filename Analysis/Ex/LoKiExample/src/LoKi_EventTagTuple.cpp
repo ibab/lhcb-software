@@ -1,8 +1,11 @@
-// $Id: LoKi_EventTagTuple.cpp,v 1.1.1.1 2003-07-24 16:43:50 ibelyaev Exp $
+// $Id: LoKi_EventTagTuple.cpp,v 1.2 2004-03-03 14:17:29 ibelyaev Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
+//  new package with LoKi examples 
+//
 // Revision 1.3  2003/05/12 13:21:33  ibelyaev
 //  add the options files for all examples
 //
@@ -60,7 +63,7 @@ LOKI_ALGORITHM( LoKi_EventTagTuple )
   if( phis.empty() ) { return StatusCode::SUCCESS ; } // RETURN 
   
   // get the event tag collection/ntuple 
-  Tuple tuple = evtCollection( "EvtCollection") ;
+  Tuple tuple = evtCol ( "EvtCollection") ;
   
   // fill the tuple 
   tuple -> farray( "M"    , M     , 
@@ -73,14 +76,13 @@ LOKI_ALGORITHM( LoKi_EventTagTuple )
                    100            ) ;
   
   // add the event information to the N-Tuple 
-  const EventHeader* evt = 
-    get( eventSvc() , EventHeaderLocation::Default , evt );
+  const EventHeader* evt = get<EventHeader> ( EventHeaderLocation::Default );
   
   // add event header information to N-Tuple 
   tuple -> column ( "" , evt );
   
   // get the event IOpaqueAddress  
-  DataObject* event = get( eventSvc() , "/Event" , event );
+  DataObject* event = get<DataObject>( "/Event" );
   
   // add event address to N-Tuple 
   tuple -> column ( "Address" , event->registry()->address() ) ;
