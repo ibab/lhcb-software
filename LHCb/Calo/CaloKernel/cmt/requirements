@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.8 2002-03-26 18:39:27 ibelyaev Exp $
+# $Id: requirements,v 1.9 2002-03-27 15:06:41 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2002/03/26 18:39:27  ibelyaev
+#  some restructurisation and map wrappers
+#
 # Revision 1.7  2002/03/26 18:37:06  ibelyaev
 #  some restructurisation and map wrappers
 #
@@ -55,15 +58,19 @@ apply_pattern     package_libraries
 # =============== private stuff ===============================================
 private
 apply_pattern     package_shlibflags    
-macro_append      CaloKernel_shlibflags  " $(LHCbKernel_linkopts) "
-macro_append      CaloKernel_shlibflags  " $(GaudiKernel_linkopts) "
-macro_append      CaloKernel_shlibflags  " $(CLHEP_linkopts) " 
+macro_append      CaloKernel_shlibflags " $(LHCbKernel_linkopts) "
+macro_append      CaloKernel_shlibflags " $(GaudiKernel_linkopts) "
+macro_append      CaloKernel_shlibflags " $(CLHEP_linkopts) "
 apply_pattern     application_path
 
 # =============== test application ============================================
 application       CaloKernelTest  -check Test/*.cpp 
 
+
 # =============== make the executable "visible" ===============================
 path_remove       PATH               "CaloKernel"
 path_prepend      PATH               ${CALOKERNELROOT}/${BINDIR}
- 
+
+# ============================================================================= 
+# The End 
+# ============================================================================= 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.6 2002-03-26 18:37:06 ibelyaev Exp $
+! $Id: release.notes,v 1.7 2002-03-27 15:06:41 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -8,6 +8,12 @@
 ! The package contains the general Calo Kernel classes and utilities, 
 ! which are essentially independent from Detector and Event models 
 ! =============================================================================
+
+!==============================================================================
+! 27/03/2002 - v2r0 Ivan Belyaev
+!  1) Improve OutputStreamIterator class
+!  2) rename in into OS_itrerator  
+! ============================================================================= 
 
 !==============================================================================
 ! 26/03/2002 - v2r0 Ivan Belyaev

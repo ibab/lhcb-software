@@ -1,8 +1,11 @@
-// $Id: CaloKernelTest.cpp,v 1.3 2002-03-26 18:37:06 ibelyaev Exp $ 
+// $Id: CaloKernelTest.cpp,v 1.4 2002-03-27 15:06:42 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/03/26 18:37:06  ibelyaev
+//  some restructurisation and map wrappers
+//
 // Revision 1.2  2002/03/20 15:49:09  ibelyaev
 //  add simple adaptor for std::map/HashTable classes
 //
@@ -10,9 +13,10 @@
 // New Package: substitution of the  previous CaloGen package
 //
 // ============================================================================
-//
+// STD & STL 
 #include <iostream>
-//
+#include <algorithm>
+// local 
 #include "CaloKernel/CaloCellCode.h"
 #include "CaloKernel/CaloCellID.h"
 #include "CaloKernel/CaloCollection.h"
@@ -123,7 +127,42 @@ int main()
               << "\t mm[1000000] ='" << hm[1000000] << "' " << std::endl
               << "\t mm[50]      ='" << hm[50]      << "' " << std::endl; 
   };
+
   
+  {
+    
+      std::vector<double> vint(10,  1.0e+10 / 3.0  ) ;
+    
+      
+    std::cout << "Test #1 of output stream iterators " << std::endl ;
+    
+    std::copy( vint.begin () ,
+               vint.end   () , 
+               OS_iterator<double,std::ostream> ( std::cout ) );
+    
+    std::cout << std::endl ;
+    std::cout << "end of Test #1 of output stream iterators " << std::endl ;
+    
+    std::cout << "Test #2 of output stream iterators " << std::endl ;
+    
+    std::copy( vint.begin () ,
+               vint.end   () , 
+               OS_iterator<double,std::ostream>( std::cerr , 
+                                                          std::endl ) );
+
+    std::cout << std::endl ;
+    std::cout << "end of Test #2 of output stream iterators " << std::endl ;
+    
+    std::cout << "Test #3 of output stream iterators " << std::endl ;
+    
+    std::copy( vint.begin () ,
+               vint.end   () , 
+               OS_iterator<double,std::ostream> 
+               ( std::cout , " some text here !" , std::endl ) );
+    
+    std::cout << std::endl ;
+    std::cout << "end of Test #3 of output stream iterators " << std::endl ;
+  };
   
   try
     {
