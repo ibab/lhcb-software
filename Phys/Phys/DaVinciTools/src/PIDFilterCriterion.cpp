@@ -1,9 +1,10 @@
-// $Id: PIDFilterCriterion.cpp,v 1.1 2002-03-27 20:35:00 gcorti Exp $
+// $Id: PIDFilterCriterion.cpp,v 1.2 2002-05-15 23:27:35 gcorti Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/MsgStream.h" 
+#include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -41,7 +42,13 @@ PIDFilterCriterion::PIDFilterCriterion( const std::string& type,
   m_ppSvc = 0;
   if ( serviceLocator() ) {
     StatusCode sc = StatusCode::FAILURE;
-    sc = serviceLocator()->service( "ParticlePropertySvc", m_ppSvc );
+    //    sc = serviceLocator()->service( "ParticlePropertySvc", m_ppSvc );
+    sc = service( "ParticlePropertySvc", m_ppSvc, true );
+    if( sc.isFailure ()) {
+      throw GaudiException("ParticlePropertySvc Not Found", 
+                           "FilterCriterionException", 
+                           StatusCode::FAILURE );
+    }
   }
 
 }
@@ -98,13 +105,28 @@ StatusCode PIDFilterCriterion::initialize() {
     }
   }
 
-  if ( m_confLevels.size() > 0 && m_partNames.size() != m_confLevels.size() ) {
-  log << MSG::ERROR << ">>>   PIDFilterCriterion::initialize() "
-      << endreq;
-  log << MSG::ERROR << ">>>   Wrong number of Confidence Levels provided "
-      << endreq;
-  return StatusCode::FAILURE;   
+  // Check CL vector is empty or not the same size as particles type
+  if ( m_confLevels.size() == 0 ) {
+    log << MSG::ERROR << " CL list is empty: you must set the size" 
+        << endreq;
+    return StatusCode::FAILURE;
   }
+
+  if ( m_confLevels.size() > 0 && m_partNames.size() != m_confLevels.size() ) {
+    log << MSG::ERROR << ">>>   PIDFilterCriterion::initialize() "
+        << endreq;
+    log << MSG::ERROR << ">>>   Wrong number of Confidence Levels provided "
+        << endreq;
+    return StatusCode::FAILURE;   
+  }
+
+  // if CL vector is empty, fill it with zero
+  //if ( m_confLevels.size() == 0 ) {
+  //  for ( unsigned int i = 0; i < m_partCodes.size(); i++ ) {
+  //    m_confLevels.push_back(0.0);
+  //  }
+  //}    
+
 
   log << MSG::DEBUG << ">>>   PIDFilterCriterion::initialize() " 
       << endreq;
@@ -127,10 +149,6 @@ StatusCode PIDFilterCriterion::initialize() {
     log << MSG::DEBUG << *icl << "  ";    
   }
   log << MSG::DEBUG << endreq;
-  //log << MSG::DEBUG << "test " << m_partCodes[0] << endreq;
-  //log << MSG::DEBUG << "test " << m_partCodes[1] << endreq;
-  //log << MSG::DEBUG << "test " << m_partCodes[2] << endreq;
-  
 
   return StatusCode::SUCCESS;
 }
@@ -143,8 +161,8 @@ bool PIDFilterCriterion::isSatisfied( const Particle* const & part ) {
   bool passed = false;  
 
   for ( unsigned int i = 0; i < m_partCodes.size(); i++ ) {
-    if ( part->particleID().id() == m_partCodes[i] &&
-         part->confLevel() > m_confLevels[i] ) passed = true;
+    if ( part->particleID().pid() == m_partCodes[i] &&
+         part->confLevel() >= m_confLevels[i] ) passed = true;
   }
 
   return passed;
@@ -159,8 +177,8 @@ bool PIDFilterCriterion::operator()( const Particle* const & part ) {
   bool passed = true;  
 
   for ( unsigned int i = 0; i < m_partCodes.size(); i++ ) {
-    if ( part->particleID().id() == m_partCodes[i] &&
-         part->confLevel() > m_confLevels[i] ) passed = true;
+    if ( part->particleID().pid() == m_partCodes[i] &&
+         part->confLevel() >= m_confLevels[i] ) passed = true;
   }
 
   return passed;
