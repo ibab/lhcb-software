@@ -4,6 +4,13 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2004-02-18 - Vanya BELYAEV
+ - remove old stuff
+ - make use of new package G4hadlists 
+ - make use of GiGaExtPhysics 
+    (former GiGaExternalPhyicsConstructor) utility
+ - cmt/requirements : increase the version to v3r0 
+
 !===================== GaussPhysics v2r6 ===================================
 ! 2003-12-15 - Witek Pokorski
  - updated for G4.6.0
