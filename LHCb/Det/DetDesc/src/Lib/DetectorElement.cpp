@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.20 2003-04-15 09:45:50 sponce Exp $ 
+// $Id: DetectorElement.cpp,v 1.21 2003-04-15 09:56:43 sponce Exp $ 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -80,19 +80,19 @@ DetectorElement::~DetectorElement()
   if ( 0 != m_de_iGeometry ) 
     { delete m_de_iGeometry     ;  m_de_iGeometry     = 0 ; } 
   // release alignment
-  if ( 0  ) 
+  if ( 0 != m_de_iAlignment ) 
     { delete m_de_iAlignment; m_de_iAlignment = 0; } 
   // release calibration
-  if ( 0  ) 
+  if ( 0 != m_de_iCalibration ) 
     { delete m_de_iCalibration; m_de_iCalibration = 0; }   
   // release readout
-  if ( 0  ) 
+  if ( 0 != m_de_iReadOut ) 
     { delete m_de_iReadOut; m_de_iReadOut = 0; } 
   // release slowcontrol
-  if ( 0  ) 
+  if ( 0 != m_de_iSlowControl ) 
     { delete m_de_iSlowControl; m_de_iSlowControl = 0; } 
   // release fastcontrol
-  if ( 0  ) 
+  if ( 0 != m_de_iFastControl ) 
     { delete m_de_iFastControl; m_de_iFastControl = 0; }
   // release validity
   if ( 0 != m_de_validSince ) {
