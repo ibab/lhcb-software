@@ -1,4 +1,16 @@
-// $Id: MCRichDigitsToRawBufferAlg.h,v 1.4 2004-06-17 12:00:04 cattanem Exp $
+
+/** @file MCRichDigitsToRawBufferAlg.h
+ *
+ *  Header file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
+ *
+ *  CVS Log :-
+ *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.5 2004-07-27 13:46:06 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-06
+ */
+
 #ifndef RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H
 #define RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H 1
 
@@ -39,21 +51,23 @@ public:
 
   virtual ~MCRichDigitsToRawBufferAlg( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize();    // Algorithm initialization
+  virtual StatusCode execute   ();    // Algorithm execution
+  virtual StatusCode finalize  ();    // Algorithm finalization
 
 private: // methods
 
   /// Fill the data bank for zero suppressed HPDs
-  void fillZeroSuppressed    ( RichSmartID pdID,
-                               RichDAQ::RAWBank & dataBank,
-                               const MCRichDigitVector & pdHits ) const;
+  void fillZeroSuppressed    ( RichSmartID pdID,                ///< Rich HPD identifier
+                               RichDAQ::RAWBank & dataBank,     ///< Data bank to fill
+                               const MCRichDigitVector & pdHits ///< Vector of MCRichDigits use as data
+                               ) const;
 
   /// Fill the data bank for non zero suppressed HPDs
-  void fillNonZeroSuppressed ( RichSmartID pdID,
-                               RichDAQ::RAWBank & dataBank,
-                               const MCRichDigitVector & pdHits ) const;
+  void fillNonZeroSuppressed ( RichSmartID pdID,            ///< Rich HPD identifier
+                               RichDAQ::RAWBank & dataBank, ///< Data bank to fill
+                               const MCRichDigitVector & pdHits ///< Vector of MCRichDigits use as data
+                               ) const;
 
 private: // data
 

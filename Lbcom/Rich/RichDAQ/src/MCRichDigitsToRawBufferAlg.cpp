@@ -1,5 +1,15 @@
-// $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.4 2004-04-20 13:33:01 jonesc Exp $
-// Include files
+
+/** @file MCRichDigitsToRawBufferAlg.cpp
+ *
+ *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
+ *
+ *  CVS Log :-
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.5 2004-07-27 13:46:06 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-09
+ */
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -8,10 +18,6 @@
 // local
 #include "MCRichDigitsToRawBufferAlg.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : MCRichDigitsToRawBufferAlg
-//
-// 2003-11-06 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -48,7 +54,7 @@ StatusCode MCRichDigitsToRawBufferAlg::initialize() {
           << " RawBuffer location                  = " << m_rawBuffLoc << endreq
           << " Max hits for zero-suppressed data   = " << m_zeroSuppresCut
           << endreq;
-  
+
   return StatusCode::SUCCESS;
 };
 

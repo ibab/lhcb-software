@@ -1,4 +1,16 @@
-// $Id: RichDAQDefinitions.h,v 1.6 2004-02-02 14:27:39 jonesc Exp $
+
+/** @file RichDAQDefinitions.h
+ *
+ *  Header file for RICH DAQ general definitions
+ *
+ *  CVS Log :-
+ *  $Id: RichDAQDefinitions.h,v 1.7 2004-07-27 13:46:06 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-06
+ */
+
 #ifndef RICHDAQ_RICHDAQDEFINITIONS_H 
 #define RICHDAQ_RICHDAQDEFINITIONS_H 1
 
@@ -15,6 +27,13 @@
 // Kernel
 #include "Kernel/RichSmartID.h"
 
+/** @namespace RichDAQ
+ *
+ *  Namespace for definitions related to Rich DAQ processing
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-06
+ */
 namespace RichDAQ {
 
   /// DAQ long type definition

@@ -1,4 +1,16 @@
-// $Id: RichNonZeroSuppData.h,v 1.10 2004-02-02 14:27:40 jonesc Exp $
+
+/** @file RichNonZeroSuppData.h
+ *
+ *  Header file for RICH DAQ utility class : RichNonZeroSuppData
+ *
+ *  CVS Log :-
+ *  $Id: RichNonZeroSuppData.h,v 1.11 2004-07-27 13:46:07 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-07
+ */
+
 #ifndef RICHDAQ_RICHNONZEROSUPPDATA_H
 #define RICHDAQ_RICHNONZEROSUPPDATA_H 1
 
@@ -8,6 +20,20 @@
 // local
 #include "RichDAQDefinitions.h"
 
+/** @namespace RichZSHitTripletCode
+ *
+ *  Namespace for definitions related to RichNonZeroSuppData
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-06
+ */
+namespace RichNonZeroSuppDataCode {
+
+  /// Maximum number of bits
+  static const RichDAQ::ShortType MaxBits = 32;
+
+}
+
 /** @class RichNonZeroSuppData RichNonZeroSuppData.h
  *
  *  The non zero-suppressed data format
@@ -15,13 +41,6 @@
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */
-
-// Namespace for definitions related to RichNonZeroSuppData
-namespace RichNonZeroSuppDataCode {
-
-  static const RichDAQ::ShortType MaxBits = 32;
-  
-}
 
 class RichNonZeroSuppData {
 
@@ -31,7 +50,7 @@ public:
   RichNonZeroSuppData() { initData(); }
 
   /// Constructor from a vector of RichSmartIDs
-  RichNonZeroSuppData( const RichDAQ::SmartIDs & digits )
+  explicit RichNonZeroSuppData( const RichDAQ::SmartIDs & digits )
   {
     initData();
     for ( RichDAQ::SmartIDs::const_iterator iDig = digits.begin();
@@ -41,7 +60,7 @@ public:
   }
 
   /// Constructor from a vector of MCRichDigits
-  RichNonZeroSuppData( const MCRichDigitVector & digits )
+  explicit RichNonZeroSuppData( const MCRichDigitVector & digits )
   {
     initData();
     for ( MCRichDigitVector::const_iterator iDig = digits.begin();
@@ -51,7 +70,7 @@ public:
   }
 
   /// Constructor from a RawBank
-  RichNonZeroSuppData( const RawBank & bank )
+  explicit RichNonZeroSuppData( const RawBank & bank )
   {
     initData();
     // Loop over data entries and set data.
@@ -62,17 +81,17 @@ public:
   }
 
   /// Destructor
-  virtual ~RichNonZeroSuppData() {}
+  ~RichNonZeroSuppData() {}
 
   /// Set a pixel as active
-  inline void setPixelActive( const RichDAQ::ShortType row, 
+  inline void setPixelActive( const RichDAQ::ShortType row,
                               const RichDAQ::ShortType col )
   {
     setBit( m_data[row], col );
   }
 
   /// Is a given pixel active ?
-  inline bool isPixelActive( const RichDAQ::ShortType row, 
+  inline bool isPixelActive( const RichDAQ::ShortType row,
                              const RichDAQ::ShortType col ) const
   {
     return isBitOn( m_data[row], col );
@@ -120,9 +139,6 @@ public:
     }
   }
 
-private: // definitions
-
-
 private: // methods
 
   /// Reset all data to zero
@@ -132,7 +148,7 @@ private: // methods
   }
 
   /// Test if a given bit in a word is set on
-  inline bool 
+  inline bool
   isBitOn( const RichDAQ::LongType data, const RichDAQ::ShortType pos ) const
   {
     return ( 0 != (data & (1<<pos)) );

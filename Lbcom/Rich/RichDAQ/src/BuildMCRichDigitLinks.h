@@ -1,5 +1,17 @@
-// $Id: BuildMCRichDigitLinks.h,v 1.2 2004-06-17 12:00:04 cattanem Exp $
-#ifndef RICHDAQ_BUILDMCRICHDIGITLINKS_H 
+
+/** @file BuildMCRichDigitLinks.h
+ *
+ *  Header file for RICH DAQ algorithm : BuildMCRichDigitLinks
+ *
+ *  CVS Log :-
+ *  $Id: BuildMCRichDigitLinks.h,v 1.3 2004-07-27 13:46:06 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-09
+ */
+
+#ifndef RICHDAQ_BUILDMCRICHDIGITLINKS_H
 #define RICHDAQ_BUILDMCRICHDIGITLINKS_H 1
 
 // base class
@@ -14,7 +26,7 @@
 #include "Event/MCTruth.h"
 
 /** @class BuildMCRichDigitLinks BuildMCRichDigitLinks.h
- *  
+ *
  *  Builds the links between MCRichDigits and RichDigits
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -30,9 +42,9 @@ public:
 
   virtual ~BuildMCRichDigitLinks( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize();    // Algorithm initialization
+  virtual StatusCode execute   ();    // Algorithm execution
+  virtual StatusCode finalize  ();    // Algorithm finalization
 
 private:
 
@@ -43,4 +55,5 @@ private:
   std::string m_richDigitsLocation;
 
 };
+
 #endif // RICHDAQ_BUILDMCRICHDIGITLINKS_H

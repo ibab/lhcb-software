@@ -1,4 +1,16 @@
-// $Id: RichZSHitTriplet.h,v 1.5 2004-06-29 19:32:03 jonrob Exp $
+
+/** @file RichZSHitTriplet.h
+ *
+ *  Header file for RICH DAQ utility class : RichZSHitTriplet
+ *
+ *  CVS Log :-
+ *  $Id: RichZSHitTriplet.h,v 1.6 2004-07-27 13:46:07 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-06
+ */
+
 #ifndef RICHDAQ_RICHZSHITTRIPLET_H
 #define RICHDAQ_RICHZSHITTRIPLET_H 1
 
@@ -11,18 +23,16 @@
 // local
 #include "RichDAQDefinitions.h"
 
-/** @class RichZSHitTriplet RichZSHitTriplet.h
+/** @namespace RichZSHitTripletCode
  *
- *  Utility class representing three hits packed into a single word
+ *  Namespace for definitions related to RichDAQHeaderPD
  *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
-
-// Namespace for definitions related to RichDAQHeaderPD
 namespace RichZSHitTripletCode {
 
-  // Define the number of bits for each field
+  /// Number of bits for each row or column number
   static const RichDAQ::ShortType BitsHit    = 5;
 
   // shift registers
@@ -46,6 +56,14 @@ namespace RichZSHitTripletCode {
 
 }
 
+/** @class RichZSHitTriplet RichZSHitTriplet.h
+ *
+ *  Utility class representing three hits packed into a single word
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-06
+ */
+
 class RichZSHitTriplet {
 
 public: // methods
@@ -59,10 +77,12 @@ public: // methods
   /// Constructor from RichDAQ::LongType
   RichZSHitTriplet( const RichDAQ::LongType data ) : m_data( data ) { }
 
-  /// Constructor from three hits
-  RichZSHitTriplet( const MCRichDigit * digOne,
-                    const MCRichDigit * digTwo,
-                    const MCRichDigit * digThree ) : m_data(0)
+  /// Constructor from three MCRichDigits
+  RichZSHitTriplet( const MCRichDigit * digOne,  ///< Pointer to first MCRichDigit to store
+                    const MCRichDigit * digTwo,  ///< Pointer to second MCRichDigit to store
+                    const MCRichDigit * digThree ///< Pointer to third MCRichDigit to store
+                    )
+    : m_data ( 0 )
   {
     if ( digOne ) {
       setRow0 ( digOne->key().pixelRow() );
@@ -79,7 +99,7 @@ public: // methods
   }
 
   /// Destructor
-  virtual ~RichZSHitTriplet( ) { }
+  ~RichZSHitTriplet( ) { }
 
   /// Retrieve the full value
   inline RichDAQ::LongType data() const { return m_data; }
@@ -94,7 +114,7 @@ public: // methods
   inline bool setRow0( const RichDAQ::ShortType row )
   {
     return ( dataInRange(row,RichZSHitTripletCode::MaxRowCol) ?
-             set( row, RichZSHitTripletCode::ShiftRow0, 
+             set( row, RichZSHitTripletCode::ShiftRow0,
                   RichZSHitTripletCode::MaskRow0 ) : false );
   }
 
@@ -102,7 +122,7 @@ public: // methods
   inline bool setCol0( const RichDAQ::ShortType col )
   {
     return ( dataInRange(col,RichZSHitTripletCode::MaxRowCol) ?
-             set( col, RichZSHitTripletCode::ShiftCol0, 
+             set( col, RichZSHitTripletCode::ShiftCol0,
                   RichZSHitTripletCode::MaskCol0 ) : false );
   }
 
@@ -110,7 +130,7 @@ public: // methods
   inline bool setRow1( const RichDAQ::ShortType row )
   {
     return ( dataInRange(row,RichZSHitTripletCode::MaxRowCol) ?
-             set( row, RichZSHitTripletCode::ShiftRow1, 
+             set( row, RichZSHitTripletCode::ShiftRow1,
                   RichZSHitTripletCode::MaskRow1 ) : false );
   }
 
@@ -118,7 +138,7 @@ public: // methods
   inline bool setCol1( const RichDAQ::ShortType col )
   {
     return ( dataInRange(col,RichZSHitTripletCode::MaxRowCol) ?
-             set( col, RichZSHitTripletCode::ShiftCol1, 
+             set( col, RichZSHitTripletCode::ShiftCol1,
                   RichZSHitTripletCode::MaskCol1 ) : false );
   }
 
@@ -126,7 +146,7 @@ public: // methods
   inline bool setRow2( const RichDAQ::ShortType row )
   {
     return ( dataInRange(row,RichZSHitTripletCode::MaxRowCol) ?
-             set( row, RichZSHitTripletCode::ShiftRow2, 
+             set( row, RichZSHitTripletCode::ShiftRow2,
                   RichZSHitTripletCode::MaskRow2 ) : false );
   }
 
@@ -134,7 +154,7 @@ public: // methods
   inline bool setCol2( const RichDAQ::ShortType col )
   {
     return ( dataInRange(col,RichZSHitTripletCode::MaxRowCol) ?
-             set( col, RichZSHitTripletCode::ShiftCol2, 
+             set( col, RichZSHitTripletCode::ShiftCol2,
                   RichZSHitTripletCode::MaskCol2 ) : false );
   }
 
@@ -176,6 +196,7 @@ public: // methods
 
 private: // methods
 
+  /// Set the data value for a given mask and shift value
   inline bool set( const RichDAQ::ShortType value,
                    const RichDAQ::ShortType shift,
                    const RichDAQ::LongType  mask )
@@ -184,7 +205,7 @@ private: // methods
     return true;
   }
 
-  // tests whether a given value is in range for a given data field
+  /// tests whether a given value is in range for a given data field
   inline bool dataInRange( const RichDAQ::ShortType value,
                            const RichDAQ::ShortType max ) const
   {
@@ -193,6 +214,7 @@ private: // methods
 
 private: // data
 
+  /// The data word
   RichDAQ::LongType m_data;
 
 };

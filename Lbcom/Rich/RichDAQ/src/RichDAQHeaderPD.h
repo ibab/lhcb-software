@@ -1,4 +1,16 @@
-// $Id: RichDAQHeaderPD.h,v 1.6 2004-06-29 19:32:03 jonrob Exp $
+
+/** @file RichDAQHeaderPD.h
+ *
+ *  Header file for RICH DAQ utility class : RichDAQHeaderPD
+ *
+ *  CVS Log :-
+ *  $Id: RichDAQHeaderPD.h,v 1.7 2004-07-27 13:46:06 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-06
+ */
+
 #ifndef RICHDAQ_RICHDAQHEADERPD_H
 #define RICHDAQ_RICHDAQHEADERPD_H 1
 
@@ -8,17 +20,13 @@
 // local
 #include "RichDAQDefinitions.h"
 
-// Include files
-
-/** @class RichDAQHeaderPD RichDAQHeaderPD.h
+/** @namespace RichZSHitTripletCode
  *
- *  Utility class representing the header word for HPD data
+ *  Namespace for definitions related to RichDAQHeaderPD
  *
- *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
-
-// Namespace for definitions related to RichDAQHeaderPD
 namespace RichDAQHeaderPDCode {
 
   // Define the number of bits for each field
@@ -46,6 +54,14 @@ namespace RichDAQHeaderPDCode {
 
 }
 
+/** @class RichDAQHeaderPD RichDAQHeaderPD.h
+ *
+ *  Utility class representing the header word for HPD data
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-06
+ */
+
 class RichDAQHeaderPD {
 
 public: // methods
@@ -54,16 +70,18 @@ public: // methods
   RichDAQHeaderPD() : m_data(0) { }
 
   /// Copy constructor
-  RichDAQHeaderPD( const RichDAQHeaderPD & header ) : m_data( header.data() ) { }
+  RichDAQHeaderPD ( const RichDAQHeaderPD & header ) : m_data( header.data() ) { }
 
   /// Constructor from RichDAQ::LongType
-  RichDAQHeaderPD( const RichDAQ::LongType data ) : m_data( data ) { }
+  RichDAQHeaderPD ( const RichDAQ::LongType data ) : m_data( data ) { }
 
   /// Constructor from all data
-  RichDAQHeaderPD( const bool zSupp,
-                   const RichDAQ::LongType linkN,
-                   const RichDAQ::ShortType hitCount,
-                   const RichDAQ::ShortType startPD = 1 ) : m_data(0)
+  RichDAQHeaderPD ( const bool zSupp,              ///< Flag indicating if the block is zero suppressed
+                    const RichDAQ::LongType linkN,     ///< The link number
+                    const RichDAQ::ShortType hitCount, ///< The number of hits in this block
+                    const RichDAQ::ShortType startPD = 1 ///< New HPD flag
+                    ) 
+    : m_data ( 0 )
   {
     setStartPD        ( startPD  );
     setZeroSuppressed ( zSupp    );
@@ -86,7 +104,7 @@ public: // methods
   /// Set new PD bit
   inline void setStartPD( const RichDAQ::ShortType value)
   {
-    set( value, RichDAQHeaderPDCode::ShiftStartPD, 
+    set( value, RichDAQHeaderPDCode::ShiftStartPD,
          RichDAQHeaderPDCode::MaskStartPD );
   }
 
@@ -100,7 +118,7 @@ public: // methods
   /// Retrieve the zero suppressed information
   inline bool zeroSuppressed() const
   {
-    return ( 0 != ( (data() & RichDAQHeaderPDCode::MaskZS) 
+    return ( 0 != ( (data() & RichDAQHeaderPDCode::MaskZS)
                     >> RichDAQHeaderPDCode::ShiftZS ) );
   }
 
@@ -108,14 +126,14 @@ public: // methods
   inline bool setLinkNumber( const RichDAQ::ShortType linkNum )
   {
     return ( dataInRange(linkNum,RichDAQHeaderPDCode::MaxLinkNum) ?
-             set( linkNum, RichDAQHeaderPDCode::ShiftLinkNum, 
+             set( linkNum, RichDAQHeaderPDCode::ShiftLinkNum,
                   RichDAQHeaderPDCode::MaskLinkNum ) : false );
   }
 
   /// Retrieve the link number
   inline RichDAQ::ShortType linkNumber() const
   {
-    return ( (data() & RichDAQHeaderPDCode::MaskLinkNum) 
+    return ( (data() & RichDAQHeaderPDCode::MaskLinkNum)
              >> RichDAQHeaderPDCode::ShiftLinkNum );
   }
 
@@ -123,19 +141,20 @@ public: // methods
   inline bool setHitCount( const RichDAQ::ShortType hitCount )
   {
     return ( dataInRange(hitCount,RichDAQHeaderPDCode::MaxHitCount) ?
-             set( hitCount, RichDAQHeaderPDCode::ShiftHitCount, 
+             set( hitCount, RichDAQHeaderPDCode::ShiftHitCount,
                   RichDAQHeaderPDCode::MaskHitCount ) : false );
   }
 
   /// Retrieve the hit count number
   inline RichDAQ::ShortType hitCount() const
   {
-    return ( (data() & RichDAQHeaderPDCode::MaskHitCount) 
+    return ( (data() & RichDAQHeaderPDCode::MaskHitCount)
              >> RichDAQHeaderPDCode::ShiftHitCount );
   }
 
 private: // methods
 
+  /// Set the data value using the given mask and shift values
   inline bool set( const RichDAQ::ShortType value,
                    const RichDAQ::ShortType shift,
                    const RichDAQ::LongType  mask )
@@ -144,7 +163,7 @@ private: // methods
     return true;
   }
 
-  // tests whether a given value is in range for a given data field
+  /// tests whether a given value is in range for a given data field
   inline bool dataInRange( const RichDAQ::ShortType value,
                            const RichDAQ::ShortType max ) const
   {

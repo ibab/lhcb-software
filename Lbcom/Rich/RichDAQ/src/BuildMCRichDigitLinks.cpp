@@ -1,5 +1,15 @@
-// $Id: BuildMCRichDigitLinks.cpp,v 1.5 2004-07-26 17:52:01 jonrob Exp $
-// Include files
+
+/** @file BuildMCRichDigitLinks.cpp
+ *
+ *  Implementation file for RICH DAQ algorithm : BuildMCRichDigitLinks
+ *
+ *  CVS Log :-
+ *  $Id: BuildMCRichDigitLinks.cpp,v 1.6 2004-07-27 13:46:06 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-09
+ */
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -8,10 +18,6 @@
 // local
 #include "BuildMCRichDigitLinks.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : BuildMCRichDigitLinks
-//
-// 2003-11-09 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory

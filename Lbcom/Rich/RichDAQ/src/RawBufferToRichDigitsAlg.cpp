@@ -1,4 +1,15 @@
-// $Id: RawBufferToRichDigitsAlg.cpp,v 1.6 2004-05-12 23:53:07 jonrob Exp $
+
+/** @file RawBufferToRichDigitsAlg.cpp
+ *
+ *  Implementation file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
+ *
+ *  CVS Log :-
+ *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.7 2004-07-27 13:46:06 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-09
+ */
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -7,10 +18,6 @@
 // local
 #include "RawBufferToRichDigitsAlg.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RawBufferToRichDigitsAlg
-//
-// 2003-11-06 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
