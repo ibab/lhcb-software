@@ -1,4 +1,4 @@
-// $Id: L0Monitor.cpp,v 1.3 2002-10-03 15:14:11 beneyton Exp $
+// $Id: L0Monitor.cpp,v 1.4 2003-02-03 11:16:10 ocallot Exp $
 // Include files
 #include "stdio.h"
 // from Gaudi
@@ -9,6 +9,12 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IToolSvc.h"
+
+#include "GaudiKernel/IAlgManager.h"
+#include "GaudiKernel/IProperty.h"
+#include "GaudiKernel/IAlgorithm.h"
+#include "GaudiKernel/PropertyMgr.h"
+
 // L0 info
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0MuonCandidate.h"
@@ -109,6 +115,35 @@ StatusCode L0Monitor::initialize() {
   m_exclPi0   = 0.;
   m_exclMuon  = 0.;
   m_exclSumMu = 0.;
+  m_minPeak2Veto = 3.;
+  
+
+  // Get the PuVeto configuration from DecisionUnit
+
+  IAlgManager* algmgr;
+  StatusCode sc = service( "ApplicationMgr", algmgr );
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Failed to locate algManager i/f of AppMgr" <<endmsg;
+    return sc;
+  }
+
+  IAlgorithm*  decisionUnit;
+  sc = algmgr->getAlgorithm( "DecisionUnit", decisionUnit );
+  if( !sc.isSuccess() ) {
+    log << MSG::DEBUG << "DecisionUnit algorithm  not found" << endmsg;
+  } else {
+    IProperty* duProp;
+    decisionUnit->queryInterface( IID_IProperty, (void**)&duProp );
+    DoubleProperty threshold = 0;
+    threshold.assign( duProp->getProperty( "SumPeak2Veto" ) );
+
+    m_minPeak2Veto = threshold;
+
+    decisionUnit->release();
+  }
+  algmgr->release();
+
+  log << MSG::DEBUG << "PuVeto Peak2 threshold " << m_minPeak2Veto << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -269,7 +304,7 @@ StatusCode L0Monitor::execute() {
   SmartDataPtr<L0PuVeto>  L0PileUp ( eventDataService(),
                                      L0PuVetoLocation::Default );
   if ( 0 != L0PileUp ) {
-    if ( 0 != L0PileUp->decision() ) {
+    if ( m_minPeak2Veto <= L0PileUp->sumPeak2() ) {
       pile = 1.;
       m_puVeto += 1.;
     }

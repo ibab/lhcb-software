@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.14 2003-01-31 09:33:23 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.15 2003-02-03 11:16:10 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -154,6 +154,7 @@ StatusCode DecisionUnit::initialize() {
   log << format( "SumMuon(%1d)  : %5.2f GeV", 
                  m_nMuSumMu,
                  m_eSumMuCut1/GeV ) << endreq;
+  log << format( "Veto peak2 >= %5.2f ", m_sumPeak2Veto ) << endreq;
   log << "=============================" << endreq;
   
   return StatusCode::SUCCESS;
