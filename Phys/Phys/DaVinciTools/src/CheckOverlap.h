@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.h,v 1.4 2005-02-21 08:56:42 pkoppenb Exp $
+// $Id: CheckOverlap.h,v 1.5 2005-02-24 09:01:35 pkoppenb Exp $
 #ifndef CHECKOVERLAP_H 
 #define CHECKOVERLAP_H 1
 
@@ -52,17 +52,10 @@ public:
   ///  Create an empty vector of pointers to protoparticles. 
   ///  Call the real check method.
   
-  bool foundOverlap( const Particle* particle1, 
-                     const Particle* particle2 );
-  
-  bool foundOverlap( const Particle* particle1, 
-                     const Particle* particle2, 
-                     const Particle* particle3);
-  
-  bool foundOverlap( const Particle* particle1,
-                     const Particle* particle2,
-                     const Particle* particle3,
-                     const Particle* particle4 );
+  bool foundOverlap( const Particle* );
+  bool foundOverlap( const Particle*,const Particle* );
+  bool foundOverlap( const Particle*,const Particle*,const Particle*);
+  bool foundOverlap( const Particle*,const Particle*,const Particle*,const Particle*);
   
   //===========================================================================
   /// Check for duplicate use of a protoparticle to produce particles.
@@ -78,8 +71,23 @@ public:
   bool foundOverlap( ConstParticleVector & parts,
                      std::vector<const ContainedObject* > & proto );
   
+  //===========================================================================
+  // Only look at protoparticles
+  //===========================================================================
+  bool foundOverlap( std::vector<const ContainedObject* > & proto );
+  
+  /// Check for duplicate use of a protoparticle to produce decay tree of
+  /// any particle in vector. Removes found particles from vector.
+  StatusCode removeOverlap( ParticleVector& ) ;
+
+  /// Check for duplicate use of a protoparticle to produce decay tree of
+  /// any particle in vector. Removes found particles from vector.
+  StatusCode removeOverlap( ConstParticleVector& ) ;
+
 protected:
   
+  StatusCode addOrigins( ConstParticleVector&, std::vector<const ContainedObject*>);
+
 private:
   
 }; // End of class header. 

@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.151 2005-02-21 08:41:12 pkoppenb Exp $
+! $Id: release.notes,v 1.152 2005-02-24 09:01:35 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-02-24- P. Koppenburg
+  - src/CheckOverlap.{h,cpp}
+    . Correct a few bugs
+    . Adapt again to new interface (see Phys/Kernel)
+    
 ! 2005-02-21 - P. Koppenburg
   - src/CheckOverlap.{h,cpp}
     . Adapt to new interface with const methods.

@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.4 2005-02-21 08:56:42 pkoppenb Exp $
+// $Id: CheckOverlap.cpp,v 1.5 2005-02-24 09:01:35 pkoppenb Exp $
 
 // Include files 
 
@@ -41,113 +41,138 @@ CheckOverlap::CheckOverlap( const std::string& type,
 //  If called directly by the user, it will continue a previous check, 
 //  not start a new one!
 //===========================================================================
- bool CheckOverlap::foundOverlap( ConstParticleVector & parts, 
+bool CheckOverlap::foundOverlap( ConstParticleVector & parts, 
                                  std::vector<const ContainedObject* > & proto ) {
   
-  ConstParticleVector::const_iterator iPart;
-  std::vector<const ContainedObject* >::const_iterator iProto;
+  StatusCode sc = addOrigins( parts, proto );
+  if (!sc){
+    Exception("Unable to get origin vector of particle vector");
+  }
+  return foundOverlap( proto );
+}
+//===========================================================================
+// Check duplicate entries
+//===========================================================================
+bool CheckOverlap::foundOverlap( std::vector<const ContainedObject* > & proto ) {
   
-  for (iPart=parts.begin(); iPart != parts.end(); ++iPart){
-    
-    verbose() << "Analysing particle " 
-        << (*iPart)->particleID().pid() 
-        << " with origin " << (*iPart)->origin() << endreq;
-    
-    if((*iPart)->origin() != 0 ){
-      // It its a simple particle made from protoparticle. Check.
-      for(iProto=proto.begin(); iProto != proto.end(); iProto++){
-        if ( (*iPart)->origin() == (*iProto) ) {
-          debug() << "Found duplicate use of "
-                  << "protoparticle " << *iProto << endreq;
-          
-          return true;
-        }
-      }
-      proto.push_back( (*iPart)->origin() );
-    } else{
-      // It is a composite particle. Analyse its products.
-      ConstParticleVector m_parts = toStdVector((*iPart)->endVertex()->products());
-      
-      if (foundOverlap( m_parts, proto ) ) return true;
-    }
-    
+  // It its a simple particle made from protoparticle. Check.
+  for (std::vector<const ContainedObject* >::const_iterator i = proto.begin(); 
+       i != proto.end()-1 ; ++i){
+    for (std::vector<const ContainedObject* >::const_iterator j = i+1 ; 
+         j != proto.end(); ++j){
+      if ( i==j ) return true ;
+    } 
   }
   return false;
 }
-
 //===========================================================================
-// 
+// Other interfaces to the same thing
 //===========================================================================
-
 bool CheckOverlap::foundOverlap( ParticleVector & parts ){
   
   ConstParticleVector cparts;
   for ( ParticleVector::const_iterator i = parts.begin() ; i!=parts.end();++i){
     cparts.push_back( *i );
   }
-
   return foundOverlap( cparts );
 }
 
+//===========================================================================
 bool CheckOverlap::foundOverlap( const ParticleVector & parts ){
   
   ConstParticleVector cparts;
   for ( ParticleVector::const_iterator i = parts.begin() ; i!=parts.end();++i){
     cparts.push_back( *i );
   }
-
   return foundOverlap( cparts );
-
 }
-
-
-bool CheckOverlap::foundOverlap( ConstParticleVector & parts ){
-  
+//===========================================================================
+bool CheckOverlap::foundOverlap( ConstParticleVector & parts ){  
   std::vector<const ContainedObject* > m_proto(0);
   return foundOverlap( parts, m_proto );
 }
-
+//===========================================================================
+bool CheckOverlap::foundOverlap( const Particle* particle1 ){ 
+  ConstParticleVector parts(1, particle1 );
+  std::vector<const ContainedObject* > m_proto(0);
+  return foundOverlap( parts, m_proto );
+}
+//===========================================================================
 bool CheckOverlap::foundOverlap( const Particle* particle1, 
-                                 const Particle* particle2 ){
-  
-  ConstParticleVector parts;
+                                 const Particle* particle2 ){  
+  ConstParticleVector parts(2);
   parts.push_back( particle1 );
   parts.push_back( particle2 );
-  
   std::vector<const ContainedObject* > m_proto(0);
   return foundOverlap( parts, m_proto );
 }
-
+//===========================================================================
 bool CheckOverlap::foundOverlap( const Particle* particle1, 
                                  const Particle* particle2, 
                                  const Particle* particle3){
-  
-  ConstParticleVector parts;
+  ConstParticleVector parts(3);
   parts.push_back( particle1 );
   parts.push_back( particle2 );
   parts.push_back( particle3 );
-  
   std::vector<const ContainedObject* > m_proto(0);
   return foundOverlap( parts, m_proto );
 }
-
+//===========================================================================
 bool CheckOverlap::foundOverlap( const Particle* particle1, 
                                  const Particle* particle2, 
                                  const Particle* particle3, 
                                  const Particle* particle4){
-  
-  ConstParticleVector parts;
+  ConstParticleVector parts(4);
   parts.push_back( particle1 );
   parts.push_back( particle2 );
   parts.push_back( particle3 );
   parts.push_back( particle4 );
-  
   std::vector<const ContainedObject* > m_proto(0);
   return foundOverlap( parts, m_proto );
 }
-
-
+//===========================================================================
+// Check for duplicate use of a protoparticle to produce decay tree of
+// any particle in vector. Removes found particles from vector.
+//===========================================================================
+StatusCode CheckOverlap::removeOverlap( ParticleVector& PV){
+  ParticleVector Out ;
+  for ( ParticleVector::const_iterator i = PV.begin() ; i!=PV.end() ; ++i){
+    if (!foundOverlap( *i )) Out.push_back(*i);
+  }
+  PV = Out ;
+  return StatusCode::SUCCESS ;
+} 
+//===========================================================================
+StatusCode CheckOverlap::removeOverlap( ConstParticleVector& PV){
+  ConstParticleVector Out ;
+  for ( ConstParticleVector::const_iterator i = PV.begin() ; i!=PV.end() ; ++i){
+    if (!foundOverlap( *i )) Out.push_back(*i);
+  }
+  PV = Out ;
+  return StatusCode::SUCCESS ;
+}
+//=============================================================================
+// Replace resonance by daughters in vector, helper to the Tree methods
+//=============================================================================
+StatusCode  CheckOverlap::addOrigins( ConstParticleVector& parts, 
+                                      std::vector<const ContainedObject* > protos){
+  for ( ConstParticleVector::iterator c = parts.begin() ; c !=  parts.end() ; ++c ){
+    if ( (*c)->origin() ){
+      protos.push_back((*c)->origin());
+    } else if ( (*c)->endVertex() ){
+      ConstParticleVector dau = toStdVector( (*c)->endVertex()->products() ) ;
+      StatusCode sc = addOrigins(dau, protos);
+      if (!sc) return sc ;
+    } else {
+      err() << "Particle " << (*c)->particleID().pid() << " has no origin nor endVertex" << endmsg ;
+      return StatusCode::FAILURE ;
+    } 
+  }
+  return StatusCode::SUCCESS ;
+}
+//===========================================================================
 // Auxiliary function to convert a SmartRefVector<T>& to a std::vector<T*>
+//===========================================================================
 template <class T> 
 std::vector<const T*> toStdVector( const SmartRefVector<T>& refvector ) {
   std::vector<const T*> tvector;
