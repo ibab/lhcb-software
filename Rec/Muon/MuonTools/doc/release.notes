@@ -1,10 +1,17 @@
-! $Id: release.notes,v 1.6 2002-04-04 08:34:44 dhcroft Exp $
+! $Id: release.notes,v 1.7 2002-04-10 12:38:34 dhcroft Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
+
+! ===========================================================================
+! 10/04/2002 David Hutchcroft
+  Rewrote the code to convert an x,y,z to a chamber/pad. Now reads the XML
+  to get twelfths of each region as boxes and checks these. This is more 
+  reliable than assuming it is almost what you would expect at the z of the 
+  station.
 
 ! ===========================================================================
 ! 04/04/2002 David Hutchcroft

@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.h,v 1.2 2002-03-20 18:07:59 dhcroft Exp $
+// $Id: MuonTileIDXYZ.h,v 1.3 2002-04-10 12:38:39 dhcroft Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -101,8 +101,12 @@ private:
                             double& y, double& deltay,
                             double& z, double& deltaz);
 
-  // fill the array with the position and size of the stations
+  /// fill the array with the position and size of the stations
   StatusCode fillStationExtent();
+
+  /// fill the array of the size and extent of the twelfths of each region
+  StatusCode fillTwelfthsExtent();
+
 
   /// get the chamber number (counts from 1) for the tile
   int getChamberNumber(const MuonTileID& tile);
@@ -130,6 +134,19 @@ private:
                                   MuonTileID& tile,
                                   DeMuonGasGap* &pGasGap);
 
+  /// returns the chamber number (same for each station) on the corner of
+  /// the region
+  int getTwelfthCorner(const int& region, 
+                       const int& twelfth,
+                       const int& chamberNum);
+
+  /// get the xIndex and yIndex of the corner chamber in the twelfth
+  void getTwelfthCornerIndex(const int& region, 
+                             const int& twelfth,
+                             const int& chamberNum,
+                             int &xPos, int &yPos);
+
+
   // store x,y,z,dx,dy,dz of chambers locally (Cached) to avoid multiple
   // TDS lookups (the other choice is to cache the smartpointers)
   class muonExtent_ {
@@ -142,7 +159,26 @@ private:
     double dz;
   } ;
 
-  muonExtent_ stationExtent[5];
+  // Muon Stations : box containing all points
+  muonExtent_ m_stationExtent[5];
+
+  // Muon twelfths : box containing all points in a twelfth of a region
+  // here the indexing in station, region, quater, twelfth
+  // numbering clockwise:
+  //  
+  //  +-------+ +-------+
+  //  | 2   1 | | 3   2 |    
+  //  |   +---+ +---+   |
+  //  | 3 | Q2   Q1 | 1 |
+  //  +---+         +---+
+  //  +---+         +---+
+  //  | 1 | Q3   Q4 | 3 |
+  //  |   +---+ +---+   |
+  //  | 2   3 | | 1   2 |    
+  //  +-------+ +-------+
+  
+
+  muonExtent_ m_twelfthExtent[5][4][12];
 
   class chamberExtent_ : public muonExtent_ {
   public:
@@ -151,10 +187,10 @@ private:
 
   // only split by region to save a little space 
   //(about 2000 copies of muonExtent)
-  chamberExtent_ chamR1[5][12];
-  chamberExtent_ chamR2[5][24];
-  chamberExtent_ chamR3[5][48];
-  chamberExtent_ chamR4[5][192];
+  chamberExtent_ m_chamR1[5][12];
+  chamberExtent_ m_chamR2[5][24];
+  chamberExtent_ m_chamR3[5][48];
+  chamberExtent_ m_chamR4[5][192];
 
   class gapExtent_ : public muonExtent_ {
   public:
@@ -162,12 +198,12 @@ private:
   };
 
   // R1, R2 all 4 gap MWPCs, R3 and R4 in M4 and M5 are 2 gap RPCs
-  gapExtent_ gapR1[5][12][4];
-  gapExtent_ gapR2[5][24][4]; 
-  gapExtent_ gapR3MWPC[3][48][4];
-  gapExtent_ gapR3RPC[2][48][2];
-  gapExtent_ gapR4MWPC[3][192][4];
-  gapExtent_ gapR4RPC[2][192][2];
+  gapExtent_ m_gapR1[5][12][4];
+  gapExtent_ m_gapR2[5][24][4]; 
+  gapExtent_ m_gapR3MWPC[3][48][4];
+  gapExtent_ m_gapR3RPC[2][48][2];
+  gapExtent_ m_gapR4MWPC[3][192][4];
+  gapExtent_ m_gapR4RPC[2][192][2];
  
   // store chamber layout locally
   MuonSystemLayout * m_chamberSystemLayout;

@@ -1,4 +1,4 @@
-// $Id: MuonGeometry.h,v 1.1 2002-03-21 16:48:17 dhcroft Exp $
+// $Id: MuonGeometry.h,v 1.2 2002-04-10 12:38:23 dhcroft Exp $
 #ifndef MUONGEOMETRY_H 
 #define MUONGEOMETRY_H 1
 
@@ -114,5 +114,6 @@ namespace MuonGeometry {
        2,  4,  6,  8, 10, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48}
     // x=7 column
   };
+
 };
 #endif // MUONGEOMETRY_H

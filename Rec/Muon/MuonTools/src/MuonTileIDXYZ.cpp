@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.6 2002-04-04 08:36:16 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.7 2002-04-10 12:38:39 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -69,25 +69,28 @@ MuonTileIDXYZ::MuonTileIDXYZ( const std::string& type,
   for(i=0;i<5;i++){
     //R1
     for(j=0;j<12;j++){
-      chamR1[i][j].z = -1000. ;
+      m_chamR1[i][j].z = -1000. ;
     }
     //R2
     for(j=0;j<24;j++){
-      chamR2[i][j].z = -1000. ;
+      m_chamR2[i][j].z = -1000. ;
     }
     //R3
     for(j=0;j<48;j++){
-      chamR3[i][j].z = -1000. ;
+      m_chamR3[i][j].z = -1000. ;
     }
     //R4
     for(j=0;j<192;j++){
-      chamR4[i][j].z = -1000. ;
+      m_chamR4[i][j].z = -1000. ;
     }
   }
   // same for station extents
   for(i=0; i<5; i++){
-    stationExtent[i].z = -1000. ;
+    m_stationExtent[i].z = -1000. ;
+    
   }
+
+  m_twelfthExtent[0][0][0].z = -1000.;
 
   // make the chamber layout 
 
@@ -219,7 +222,7 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
   // actually look in box defined by the extent of the active gas gaps
   MsgStream log(msgSvc(), name());
 
-  if( 0 >= stationExtent[0].z ){
+  if( 0 >= m_stationExtent[0].z ){
     // need to fill the stationExtent
     StatusCode sc = fillStationExtent();
     if(!sc.isSuccess()){
@@ -231,99 +234,55 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
   int station = 0;
   // add 1 mm for saftey against rounding errors
   while(station < 5 && 
-        ( fabs(stationExtent[station].z - z) >= 
-          1. + stationExtent[station].dz )){
+        ( fabs(m_stationExtent[station].z - z) >= 
+          1. + m_stationExtent[station].dz )){
     station++;
   }
   if(station == 5) {
     log << MSG::WARNING << "Could not locate z in a station" << endreq;
     return StatusCode::FAILURE;
   }
-  
-  // now come the potentially painful optimisation bit
-  //
-  // first estimate the chamber tile: this is prone to error and so hunting 
-  // around the tile may be required.
-  //
-  // quarter gets a 2 mm possible overlap due to in front chambers 
-  // (from 20cm fore/aft shift at 10mr projection)
-  // projecting into the next quarter, I said this would be painful
-  std::vector<int> tryQuarter;
-  if( x >= -2. && y >= -2. ) {
-    tryQuarter.push_back(0);
-  }
-  if( x >= -2. && y <= 2.){
-    tryQuarter.push_back(1);
-  }
-  if( x <= 2. && y <= 2.){
-    tryQuarter.push_back(2);
-  }
-  if( x <= 2. && y >= -2.) {
-    tryQuarter.push_back(3);
-  }
-  
-  log << MSG::DEBUG << " Found " << tryQuarter.size() << " quaters to search"
-      << endreq;  
-
-  // now guess the region: count in 8ths x/statio.dx 
-  double xFraction = 8. * fabs(x) / stationExtent[station].dx;
-  double yFraction = 8. * fabs(y) / stationExtent[station].dy;
-
-  // check not in beam pipe or outside area
-  if( 0.49 > xFraction && 0.49 > yFraction ) {
-    log << MSG::WARNING << " Found a point in the beam pipe! " << endreq;
-    return StatusCode::FAILURE;
+    
+  // now loop over the twelfths of the regions to find point
+  if( 0>= m_twelfthExtent[0][0][0].z ){
+    //need to fill regionExtent and twelfths
+    StatusCode sc = fillTwelfthsExtent();
+     if(!sc.isSuccess()){
+      log << MSG::ERROR << "Something went wrong getting Twelfths positions"
+          << endreq;
+      return sc;
+    }
   }
 
-  if( xFraction > 8.08 || yFraction > 8.08 ){
-    log << MSG::WARNING << " Found a point outside the active chambers! " 
-        << endreq;
-    return StatusCode::FAILURE;
-  }
+  // loop over regions to see if we can find one or more that matches
+  int region;
+  for( region=0; region<4; region++){
+    // look in twelfths for this region
+    int twelfth;
+    for( twelfth=0; twelfth<12; twelfth++){
+      // look if x,y is in the box extent +1mm for rounding
+      if( ( fabs(m_twelfthExtent[station][region][twelfth].x - x ) <= 
+            1. + m_twelfthExtent[station][region][twelfth].dx ) &&
+          ( fabs(m_twelfthExtent[station][region][twelfth].y - y ) <= 
+            1. + m_twelfthExtent[station][region][twelfth].dy ) ) {
+        // have a twelfth to try
 
-  std::vector<int> tryRegion;
-  // again allow about 1% overlap overly paranoid, but nessesary
-  if ( 1.01 > xFraction && 1.01 > yFraction ){
-    // region 1 is 1/8th in x and y
-    tryRegion.push_back(0);
-  }
-  if (  (2.02 > xFraction && 2.02 > yFraction) &&
-        (0.99 < xFraction || 0.99 < yFraction) ){
-    // region 2 is 1/4 in x and y (also check not in R1)
-    tryRegion.push_back(1);
-  }
-  if ( (4.04 > xFraction && 4.04 > yFraction) &&
-        (1.98 < xFraction || 1.98 < yFraction) ){
-    // region 3 is 1/2 in x and y (also check not in R2)
-    tryRegion.push_back(2);
-  }
-  if ( (8.08 > xFraction && 8.08 > yFraction) &&
-        (3.96 < xFraction || 3.96 < yFraction) ){
-    // region 4 is to outside in x and y (also check not in R3)
-    tryRegion.push_back(3);    
-  }
+        log << MSG::DEBUG << "Trying station:" << station
+            << " region:" << region 
+            << " twelfth:" << twelfth
+            << endreq;
 
-  log << MSG::DEBUG << " Found " << tryRegion.size() << " regions to search"
-      << endreq;
-
-  std::vector<int>::const_iterator iQuarter;
-  for(iQuarter = tryQuarter.begin() ; iQuarter != tryQuarter.end() ;
-      iQuarter++ ){
-    std::vector<int>::const_iterator iRegion;
-    for(iRegion = tryRegion.begin() ; iRegion != tryRegion.end() ;
-        iRegion++ ){
-      log << MSG::DEBUG << " Trying station " << station
-          << " region " << *iRegion
-          << " quarter " << *iQuarter << endreq;
-      StatusCode sc = locateGasGapFromXYZ(station,*iRegion,*iQuarter,
-                                           x,y,z,tile,pGasGap);
-      if( !sc.isSuccess() ) {
-        log << MSG::ERROR << "Problem locating chamber tile" << endreq;
-        return sc;
-      }
-      if( tile.isValid() ){
-        log << MSG::DEBUG << " Found tile for chamber " << endreq;
-        return StatusCode::SUCCESS;
+        StatusCode sc = locateGasGapFromXYZ(station,region,twelfth,
+                                            x,y,z,tile,pGasGap);
+        if( !sc.isSuccess() ) {
+          log << MSG::ERROR << "Problem locating chamber tile" << endreq;
+          return sc;
+        }
+        if( tile.isValid() ){
+          log << MSG::DEBUG << " Found tile for chamber " << endreq;
+          /***************** NOTE EXIT (SUCCESS) FROM ROUTINE IS HERE ******/
+          return StatusCode::SUCCESS;
+        }
       }
     }
   }
@@ -455,30 +414,30 @@ StatusCode MuonTileIDXYZ::getXYZAndCache(const int& station,
   // this pointer arimetic is just asking for trouble
 
   if( 0 == region ){
-    currCham = &(chamR1[station][chamberNum-1]);
+    currCham = &(m_chamR1[station][chamberNum-1]);
     nGap = 4;
-    currGapArray = gapR1[station][chamberNum-1];
+    currGapArray = m_gapR1[station][chamberNum-1];
   }else if( 1 == region ){
-    currCham = &(chamR2[station][chamberNum-1]);
+    currCham = &(m_chamR2[station][chamberNum-1]);
     nGap = 4;
-    currGapArray = gapR2[station][chamberNum-1];
+    currGapArray = m_gapR2[station][chamberNum-1];
   }else if( 2 == region ){
-    currCham = &(chamR3[station][chamberNum-1]);
+    currCham = &(m_chamR3[station][chamberNum-1]);
     if(station < 3){
       nGap = 4;
-      currGapArray = gapR3MWPC[station][chamberNum-1];
+      currGapArray = m_gapR3MWPC[station][chamberNum-1];
     }else{
       nGap = 2;
-      currGapArray = gapR3RPC[station-3][chamberNum-1];
+      currGapArray = m_gapR3RPC[station-3][chamberNum-1];
     }
   }else {
-    currCham = &(chamR4[station][chamberNum-1]);
+    currCham = &(m_chamR4[station][chamberNum-1]);
     if(station < 3){
       nGap = 4;
-      currGapArray = gapR4MWPC[station][chamberNum-1];
+      currGapArray = m_gapR4MWPC[station][chamberNum-1];
     }else{
       nGap = 2;
-      currGapArray = gapR4RPC[station-3][chamberNum-1];
+      currGapArray = m_gapR4RPC[station-3][chamberNum-1];
     }
   }
 
@@ -636,32 +595,193 @@ StatusCode MuonTileIDXYZ::fillStationExtent(){
       }
     }
     
-    stationExtent[station].x = ( xMax + xMin ) / 2.; // all these should
-    stationExtent[station].y = ( yMax + yMin ) / 2.; // be zero
-    stationExtent[station].z = ( zMax + zMin ) / 2.; // diff due to rounding
+    m_stationExtent[station].x = ( xMax + xMin ) / 2.; // all these should
+    m_stationExtent[station].y = ( yMax + yMin ) / 2.; // be zero
+    m_stationExtent[station].z = ( zMax + zMin ) / 2.; // diff due to rounding
 
-    stationExtent[station].dx = (( xMax - xMin ) / 2.) + dx;
-    stationExtent[station].dy = (( yMax - yMin ) / 2.) + dy;
-    stationExtent[station].dz = (( zMax - zMin ) / 2.) + dz;
+    m_stationExtent[station].dx = (( xMax - xMin ) / 2.) + dx;
+    m_stationExtent[station].dy = (( yMax - yMin ) / 2.) + dy;
+    m_stationExtent[station].dz = (( zMax - zMin ) / 2.) + dz;
 
     log << MSG::DEBUG 
         << " Station " << station
-        << " position x=" << stationExtent[station].x << "mm "
-        << "y =" << stationExtent[station].y << "mm "
-        << "z =" << stationExtent[station].z << "mm " 
+        << " position x=" << m_stationExtent[station].x << "mm "
+        << "y =" << m_stationExtent[station].y << "mm "
+        << "z =" << m_stationExtent[station].z << "mm " 
         << endreq;
 
     log << MSG::DEBUG 
         << " Station " << station
-        << " size x/2=" << stationExtent[station].dx << "mm "
-        << "y/2 =" << stationExtent[station].dy << "mm "
-        << "z/2 =" << stationExtent[station].dz << "mm " 
+        << " size x/2=" << m_stationExtent[station].dx << "mm "
+        << "y/2 =" << m_stationExtent[station].dy << "mm "
+        << "z/2 =" << m_stationExtent[station].dz << "mm " 
         << endreq;
   }
 
   return StatusCode::SUCCESS;
 }
 
+StatusCode MuonTileIDXYZ::fillTwelfthsExtent(){
+
+  MsgStream log(msgSvc(), name());
+  
+  // So get the TDS representations of the stations
+  // to fill twelfthsExtent and quaterExtent with the outer 
+  // edges of the chambers in the
+  // corners of the twelvths
+  
+  int station;
+  for(station = 0 ; station < 5 ; station++){
+
+    int region;
+    for(region = 0 ; region < 4 ; region++){
+
+      int twelfth;
+      for(twelfth = 0 ; twelfth < 12 ; twelfth++){
+          
+        double xMax,xMin,yMax,yMin,zMax,zMin;
+        double x,y,z;
+        double dx,dy,dz;
+        
+        int chamCorner; // only need 3 corners here
+        for( chamCorner = 0 ; chamCorner < 4 ; chamCorner++ ){
+          int nChamber = getTwelfthCorner(region,twelfth,chamCorner);
+          // get the chamber
+          StatusCode sc = 
+            getXYZChamber(station,region,nChamber,x,dx,y,dy,z,dz);
+          if(!sc.isSuccess()){
+            log << MSG::ERROR << "Could not get corner chamber" << endreq;
+            return sc;
+          }
+          
+          if(0 == chamCorner) {
+            xMax = x;
+            xMin = x;
+            yMax = y;
+            yMin = y;
+            zMax = z;
+            zMin = z;
+          }else{
+            if ( x > xMax ) { xMax = x; }
+            if ( x < xMin ) { xMin = x; }
+            if ( y > yMax ) { yMax = y; }
+            if ( y < yMin ) { yMin = y; }
+            if ( z > zMax ) { zMax = z; }
+            if ( z < zMin ) { zMin = z; }
+          }
+        } // end loop over chamCorner
+        
+          // strore the extent of the twelfth
+        m_twelfthExtent[station][region][twelfth].x = 
+          ( xMax + xMin ) / 2.; 
+        m_twelfthExtent[station][region][twelfth].y = 
+          ( yMax + yMin ) / 2.; 
+        m_twelfthExtent[station][region][twelfth].z = 
+          ( zMax + zMin ) / 2.; 
+          
+        m_twelfthExtent[station][region][twelfth].dx = 
+          (( xMax - xMin ) / 2.) + dx;
+        m_twelfthExtent[station][region][twelfth].dy = 
+          (( yMax - yMin ) / 2.) + dy;
+        m_twelfthExtent[station][region][twelfth].dz = 
+          (( zMax - zMin ) / 2.) + dz;
+          
+      }// end of loop over twelfths
+
+
+    }// end loop over regions
+
+  }//end loop over stations
+
+  return StatusCode::SUCCESS;
+}
+
+int MuonTileIDXYZ::getTwelfthCorner(const int& region, 
+                                    const int& twelfth,
+                                    const int& chamberNum){
+  int xPos=0;
+  int yPos=0;
+  getTwelfthCornerIndex(region,twelfth,chamberNum,xPos,yPos);
+  // get the actual chamber number
+  if(0 == region){
+    return MuonGeometry::chamberR1[xPos][yPos];
+  }else if(1 == region){
+    return MuonGeometry::chamberR2[xPos][yPos];
+  }else if(2 == region){
+    return MuonGeometry::chamberR3[xPos][yPos];
+  }else{
+    return MuonGeometry::chamberR4[xPos][yPos];
+  }
+}
+
+void MuonTileIDXYZ::getTwelfthCornerIndex(const int& region, 
+                                          const int& twelfth,
+                                          const int& chamberNum,
+                                          int &xPos, int &yPos){
+  // chambers defining the corners of the twelfths
+  // here the indexing in region, quater, twelfth
+  // numbering clockwise:
+  //  
+  //  +-------+ +-------+           ChamberNum
+  //  | 4   3 | | 2   1 |           counts (no particular reason) 
+  //  |   +---+ +---+   |           +------+
+  //  | 5 |         | 0 |           | 2  3 |
+  //  +---+         +---+           | 0  1 |
+  //  +---+         +---+           +------+
+  //  | 6 |         |11 |
+  //  |   +---+ +---+   |
+  //  | 7   8 | | 9  10 |    
+  //  +-------+ +-------+
+  // map to whole station numbering scheme
+
+  if(0 == twelfth){
+    xPos   = 3*MuonGeometry::chamberGridX[region];
+    yPos   = 2*MuonGeometry::chamberGridY[region];
+  }else if(1 == twelfth){
+    xPos   = 3*MuonGeometry::chamberGridX[region];
+    yPos   = 3*MuonGeometry::chamberGridY[region];
+  }else if(2 == twelfth){
+    xPos   = 2*MuonGeometry::chamberGridX[region];
+    yPos   = 3*MuonGeometry::chamberGridY[region];
+  }else if(3 == twelfth){
+    xPos   = 1*MuonGeometry::chamberGridX[region];
+    yPos   = 3*MuonGeometry::chamberGridY[region];
+  }else if(4 == twelfth){
+    xPos   = 0;
+    yPos   = 3*MuonGeometry::chamberGridY[region];
+  }else if(5 == twelfth){
+    xPos   = 0;
+    yPos   = 2*MuonGeometry::chamberGridY[region];
+  }else if(6 == twelfth){
+    xPos   = 0;
+    yPos   = 1*MuonGeometry::chamberGridY[region];
+  }else if(7 == twelfth){
+    xPos   = 0;
+    yPos   = 0;
+  }else if(8 == twelfth){
+    xPos   = 1*MuonGeometry::chamberGridX[region];
+    yPos   = 0;
+  }else if(9 == twelfth){
+    xPos   = 2*MuonGeometry::chamberGridX[region];
+    yPos   = 0;
+  }else if(10 == twelfth){
+    xPos   = 3*MuonGeometry::chamberGridX[region];
+    yPos   = 0;
+  }else{
+    xPos   = 3*MuonGeometry::chamberGridX[region];
+    yPos   = 1*MuonGeometry::chamberGridY[region];
+  }
+
+  // correct to positions of 1,2,3
+  if(1 == chamberNum){
+    xPos = xPos + (MuonGeometry::chamberGridX[region]-1);
+  }else if(2 == chamberNum){
+    yPos = yPos + (MuonGeometry::chamberGridY[region]-1);
+  }else if(3 == chamberNum){
+    xPos = xPos + (MuonGeometry::chamberGridX[region]-1);
+    yPos = yPos + (MuonGeometry::chamberGridY[region]-1);
+  }
+}
 
 int MuonTileIDXYZ::getChamberNumber(const MuonTileID& tile){
 
@@ -895,7 +1015,7 @@ StatusCode MuonTileIDXYZ::getXYZLogical(const MuonTileID& tile,
 
 StatusCode MuonTileIDXYZ::locateGasGapFromXYZ( const int& station,
                                                const int& region,
-                                               const int& quarter,
+                                               const int& twelfth,
                                                const double& x,
                                                const double& y,
                                                const double& z,
@@ -908,27 +1028,12 @@ StatusCode MuonTileIDXYZ::locateGasGapFromXYZ( const int& station,
   int iyBegin,iyEnd; // loop indices in Y
 
   // map to whole station numbering scheme
-  if(0 == quarter){
-    ixBegin   = 2*MuonGeometry::chamberGridX[region];
-    ixEnd     = 4*MuonGeometry::chamberGridX[region];
-    iyBegin   = 2*MuonGeometry::chamberGridY[region];
-    iyEnd     = 4*MuonGeometry::chamberGridY[region];
-  } else if ( 1 == quarter ){
-    ixBegin   = 2*MuonGeometry::chamberGridX[region];
-    ixEnd     = 4*MuonGeometry::chamberGridX[region];
-    iyBegin   = 0;
-    iyEnd     = 2*MuonGeometry::chamberGridY[region];
-  } else if ( 2 == quarter ){
-    ixBegin   = 0;
-    ixEnd     = 2*MuonGeometry::chamberGridX[region];
-    iyBegin   = 0;
-    iyEnd     = 2*MuonGeometry::chamberGridY[region];
-  } else if ( 3 == quarter ){
-    ixBegin   = 0;
-    ixEnd     = 2*MuonGeometry::chamberGridX[region];
-    iyBegin   = 2*MuonGeometry::chamberGridY[region];
-    iyEnd     = 4*MuonGeometry::chamberGridY[region];
-  }  
+  getTwelfthCornerIndex(region,twelfth,0,ixBegin,iyBegin);
+  getTwelfthCornerIndex(region,twelfth,3,ixEnd,iyEnd);
+
+  // correct to be after last chamber
+  ixEnd++;
+  iyEnd++;
 
   // loop over chamber indices
   int ix,iy;
@@ -944,12 +1049,6 @@ StatusCode MuonTileIDXYZ::locateGasGapFromXYZ( const int& station,
       }else{
         nCham = MuonGeometry::chamberR4[ix][iy];
       }
-
-      // check we are not in the hole in the middle of the region
-      // MuonGeometry:: has zeros there
-      if(!nCham) {
-        continue;
-      } 
       
       double chamX,chamY,chamZ;
       double chamDx,chamDy,chamDz;
@@ -971,16 +1070,22 @@ StatusCode MuonTileIDXYZ::locateGasGapFromXYZ( const int& station,
 
         int xTile,yTile;
         // need to do the reflections to quarter 1 again....
-        if(0 == quarter){
+        int quarter;
+        
+        if( 0 == twelfth || 1 == twelfth || 2 == twelfth){ // Q=0
+          quarter = 0;
           xTile = ix - (2*MuonGeometry::chamberGridX[region]);
           yTile = iy - (2*MuonGeometry::chamberGridY[region]);
-        } else if ( 1 == quarter ){
+        } else if ( 9 == twelfth || 10 == twelfth || 11 == twelfth){ // Q=1
+          quarter = 1;
           xTile = ix - (2*MuonGeometry::chamberGridX[region]);
           yTile = (2*MuonGeometry::chamberGridY[region]) - (1+iy);
-        } else if ( 2 == quarter ){
+        } else if ( 6 == twelfth || 7 == twelfth || 8 == twelfth){ // Q=2
+          quarter = 2;
           xTile = (2*MuonGeometry::chamberGridX[region]) - (1+ix);
           yTile = (2*MuonGeometry::chamberGridY[region]) - (1+iy);
-        } else if ( 3 == quarter ){
+        } else if ( 3 == twelfth || 4 == twelfth || 5 == twelfth){ // Q=3
+          quarter = 3;
           xTile = (2*MuonGeometry::chamberGridX[region]) - (1+ix);
           yTile = iy - (2*MuonGeometry::chamberGridY[region]);
         }  
@@ -1029,20 +1134,20 @@ StatusCode MuonTileIDXYZ::locateGasGapFromXYZ( const int& station,
                               xTile,
                               yTile);               
             if( 0 == region ){
-              pGasGap = gapR1[station][nCham-1][iGap].pGasGap;
+              pGasGap = m_gapR1[station][nCham-1][iGap].pGasGap;
             }else if( 1 == region ){
-              pGasGap = gapR2[station][nCham-1][iGap].pGasGap;
+              pGasGap = m_gapR2[station][nCham-1][iGap].pGasGap;
             }else if( 2 == region ){
               if(station < 3){
-                pGasGap = gapR3MWPC[station][nCham-1][iGap].pGasGap;
+                pGasGap = m_gapR3MWPC[station][nCham-1][iGap].pGasGap;
               }else{
-                pGasGap = gapR3RPC[station-3][nCham-1][iGap].pGasGap;
+                pGasGap = m_gapR3RPC[station-3][nCham-1][iGap].pGasGap;
               }
             }else {
               if(station < 3){
-                pGasGap = gapR4MWPC[station][nCham-1][iGap].pGasGap;
+                pGasGap = m_gapR4MWPC[station][nCham-1][iGap].pGasGap;
               }else{
-                pGasGap = gapR4RPC[station-3][nCham-1][iGap].pGasGap;
+                pGasGap = m_gapR4RPC[station-3][nCham-1][iGap].pGasGap;
               }
             }
             return StatusCode::SUCCESS;
