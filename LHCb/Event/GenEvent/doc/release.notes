@@ -1,16 +1,18 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski
 
-
-! >>>>>>>>>>>>>>>>> GenEvent v1r0 <<<<<<<<<<<<<<<<<<<<<
+!================== GenEvent v2r0 =====================
+! 2002-07-15 - Florence Ranjard
+  requirements - use HepMC v3r121p*
 
 ! 20020709 - GenEvent v2r0 - Witek Pokorski
   xml description created, included directory changed to Event (from GenEvent)
 
+! ================= GenEvent v1r0 =====================
 ! 20020423 - GenEvent v1r0 - Vanya Belyaev
     - use GaudiKernel v12
 
 ! 20020405 - GenEvent v1r0 - Witek Pokorski
     - New Package 
 
-!>>>>>>>>>>>>>>>>>> GenEvent v0r0 <<<<<<<<<<<<<<<<<<<<
+!================== GenEvent v0r0 ====================
