@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: TES.py,v 1.2 2004-08-05 12:20:34 ibelyaev Exp $
+# $Id: TES.py,v 1.3 2004-08-06 12:12:03 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -20,7 +20,6 @@ import sys
 # Specific physics analysis algorithm 
 # =============================================================================
 
-# create my own algorithm  
 class TES(Algo):
     " My own algorithm to demonstaret the direct manipulation with TES  "
     def analyse ( self ) :
@@ -50,48 +49,47 @@ class TES(Algo):
 ##                       #sel.decay() 
 
         l0 = self.get( address = '/Event/Trig/L0/Decision')
-        print  ' L0 desision ' , l0.decision()
-        
+        if l0 : self.Print( message = ' L0 desision ' + `l0.decision()` )  
         l1 = self.get( address = '/Event/Trig/L1/Decision')
-        print ' L1 decision ' , l1.decision()
-        
+        if l1 : self.Print( message = ' L1 desision ' + `l1.decision()` )  
+            
         return SUCCESS 
 
 # =============================================================================
-# Generic job configuration 
+# job configuration 
 # =============================================================================
+def configure() :
+    
+    bender.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,
+                               '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,
+                               '$BENDEREXAMPLEOPTS/Bd_DstA1.opts'      ] )
+    
+    # specific job configuration    
+    # create analysis algorithm and add it to the list of
+    alg = TES('TES')
+    alg = TES('TES1')
+    g.topAlg = [ 'TES' , 'TES1' ]
 
-bender.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ] )
-
-# define input data channel B0 -> ( D*- -> D0bar(K+ pi-) pi- ) pi+  
-g.readOptions('/afs/cern.ch/lhcb/project/web/cards/415000.opts')
-
-g.HistogramPersistency = "HBOOK" ;
-
-# =============================================================================
-# specific job configuration 
-# =============================================================================
-
-
-# create analysis algorithm and add it to the list of
-alg = TES('TES')
-alg = TES('TES1')
-g.topAlg = [ 'TES' , 'TES1' ]
-
+    return SUCCESS 
 
 # =============================================================================
 # job execution 
 # =============================================================================
 
-g.run(10) 
-
-g.exit()
-
+if __name__ == '__main__' :
+    import sys 
+    # analyse the options
+    nEvents = bender.getNEvents( sys.argv[1:] )
+    if not nEvents : nEvents = 10 
+    # configure the job
+    configure() 
+    # run job
+    g.run  ( nEvents )
+    # terminate the Application Manager 
+    g.exit ()
+    
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1  2004/07/24 14:06:38  ibelyaev
-#  v3r5
-#
 # =============================================================================
 # The END 
 # =============================================================================

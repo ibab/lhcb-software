@@ -1,0 +1,15 @@
+PoolDbCacheSvc.Catalog = 
+  {
+    // Ex/BenderExample
+    "xmlcatalog_file:$BENDEREXAMPLEOPTS/BenderExampleMutableCatalog.xml"  ,
+    "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_DstA1.xml"        ,
+    "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_JpsiKst.xml"      ,       
+    "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_JpsiKst.xml"      ,       
+    "xmlcatalog_file:$BENDEREXAMPLEOPTS/BBinclusive.xml"      ,       
+    // Ex/LoKiExample
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bd_Kstgamma_DC04.xml"  ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_Jpsiphimm_DC04.xml" ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phigamma_DC04.xml"  ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.xml"    ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Mixture_DC04.xml"
+  };

@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.8 2004-08-06 12:12:03 ibelyaev Exp $
+# $Id: Bs2PhiPhi.py,v 1.1 2004-08-06 12:12:03 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 # @file 
-# "Demo" algorithm for Python based phi -> K+ K- "analysis"
+# "Demo" algorithm for Bs->phi phi stripping 
 # =============================================================================
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date   2003-12-04
@@ -16,36 +16,66 @@ from   bendermodule  import *
 import benderconfig  as bender 
 import benderPreLoad as preload
 
-global h1 
 # =============================================================================
 # Specific physics analysis algorithm 
 # =============================================================================
 
-class Phi(Algo):
-    " My own analysis algorithm for selection of phi -> K+ K- "
+class Bs2PhiPhi(Algo):
+    """
+    Simple algorithm for Bs -> Phi Phi stripping
+    """
     def analyse ( self ) :
-        # get kaons 
-        kplus  = self.select( tag="K+" , cuts = 'K+' == ID )
-        kminus = self.select( tag="K-" , cuts = 'K-' == ID )
-        # create loop
-        phis   = self.loop( formula = "K+ K-" , pid = "phi(1020)" )
-        # loop over KK combinations 
-        for phi in phis:
-            if phi.mass(1,2) > 1050 * MeV : continue
-            global h1
-            h1 = self.plot ( title = "K+ K- mass"      ,
-                             value = M ( phi ) / MeV   ,
-                             low   = 1000              ,
-                             high  = 1050              )
-            phi.save('phi')
+        " The 'main' analyse method "
+        # reset filter
+        self.setFilterPassed ( FALSE )
+        # get all primary vertices
+        prims = self.vselect( tag = 'PVs' , cuts = VertexType.Primary == VTYPE )
+        if prims.empty() :
+            return self.Error ( message = "N Promary vertices found!" , code = SUCCESS )
+        
+        kplus  = self.select( tag = "K+" , cuts = -321 == ID ) ;
+        kminus = self.select( tag = "K-" , cuts = 321 == ID ) ;
+        
+        tuple1 = self.nTuple ( title   = "Phi" ) ;
+        phis   = self.loop   ( formula = "K+ K-" , pid = "phi(1020)" )
+        for phi in phis :
+            if phi.mass(1,2) > ( 1020 + 40 ) * MeV : continue
+            tuple1.column ( name = 'mass' , value = M     ( phi ) ) 
+            tuple1.column ( name = 'chi2' , value = VCHI2 ( phi ) )
+            tuple1.column ( name = 'p'    , value = P     ( phi ) )
+            tuple1.column ( name = 'pt'   , value = PT    ( phi ) )
+            tuple1.column ( name = 'lv01' , value = LV01  ( phi ) )
+            tuple1.write  () 
+            phi.save( "phi" ) ;
+
+        tuple2 = self.nTuple ( title = "Bs" ) ;
+        BSs    = self.loop   ( formula = "phi phi" , pid = "B_s0" )
+        for Bs in BSs :
+            mass = Bs.mass(1,2)
+            if mass < 4.0 * GeV        : continue
+            if mass > 7.0 * GeV        : continue
+            chi2 = VCHI2( Bs  )
+            if chi2 <   0              : continue
+            if chi2 > 100              : continue
+            tuple2.column ( name = "mass" , value = M    ( Bs ) / GeV )
+            tuple2.column ( name = "p"    , value = P    ( Bs ) / GeV )
+            tuple2.column ( name = "pt"   , value = PT   ( Bs ) / GeV )
+            tuple2.column ( name = "lv01" , value = LV01 ( Bs )       )
+            tuple2.column ( name = "chi2" , value = chi2              )
+            tuple2.write  ()
+            Bs.save( "Bs" )
+
+        BS = self.selected( "Bs" ) ;
+        if not BS.empty() : self.setFilterPassed( TRUE )
             
         return SUCCESS 
-        
+
 
 # =============================================================================
-# Generic job configuration 
+# job configuration
 # =============================================================================
-def configure() :
+def configure () :
+    # Generic job configuration & input data 
     bender.config( files   =
                    [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
                      '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
@@ -62,44 +92,44 @@ def configure() :
                      'EventSelector.PrintFreq   = 100  ' ] )
     
     # specific job configuration 
-    
     # preload algorithm(s)
     g.topAlg += ['LoKiPreLoad/Hadrons']
     preload.Hadrons( Particles = [ 'kaon' , 'pion'] )
     
     # create analysis algorithm and add it to the list of
-    phi = Phi('Phi')
+    bs = Bs2PhiPhi('Bs2PhiPhi')
     
-    g.topAlg += [ 'Phi' ]
+    g.topAlg += [ 'Bs2PhiPhi' ]
     
-    phi = gaudi.iProperty('Phi')
-    phi.OutputLevel = 5
-    
-    desktop                 = g.property('Phi.PhysDesktop')
+    bs = gaudi.iProperty('Bs2PhiPhi')
+    bs.OutputLevel = 5
+    bs.NTupleLUN  = "PHIPHI"
+    desktop                 = g.property('Bs2PhiPhi.PhysDesktop')
     desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
     
     # output histogram file 
     hsvc = g.property( 'HistogramPersistencySvc' )
     hsvc.OutputFile = 'phi.hbook'
+    nsvc = gaudi.iProperty( 'NTupleSvc' )
+    nsvc.Output += [ "PHIPHI DATAFILE='bs2phiphi_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
 
     return SUCCESS
 
 # =============================================================================
 # job execution 
 # =============================================================================
-
 if __name__ == '__main__' :
     import sys 
     # analyse the options
     nEvents = bender.getNEvents( sys.argv[1:] )
-    if not nEvents : nEvents = 1000
-    # configure the job
-    configure() 
-    # run job 
-    g.run  ( nEvents )
-    # terminate the Application Manager 
-    g.exit ()
-    
+    if not nEvents : nEvents = 1000 
+    # configure the job 
+    configure()
+    # execute 
+    g.run( nEvents )
+    # terminate 
+    g.exit()
+  
 # =============================================================================
 # $Log: not supported by cvs2svn $
 # =============================================================================

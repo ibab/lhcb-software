@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: runDaVinci.py,v 1.1 2004-08-05 12:20:34 ibelyaev Exp $
+# $Id: runDaVinci.py,v 1.2 2004-08-06 12:12:03 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -10,42 +10,50 @@
 # @date   2004-08-03 
 # =============================================================================
 
-import sys
-argv = sys.argv
-if len(argv) < 1 :raise TypeError, "job-options fiel is not specified!"
-jobopts = argv[1]
-print " runDaVinci.py: Job-options file to be executed: '" + jobopts + "'"
-
 # import the Bender itself
+import sys
 import gaudimodule   as gaudi 
 import benderconfig  as bender
+
+jobopts = bender.getDVoptions ( sys.argv[1:] )
+if not jobopts :
+    raise TypeError , "no DaVinci options fiel is specified! "
+
+
 # uncomment if some Bender-specific features need to be used 
-#from   bendermodule  import *
+# from   bendermodule  import *
 
 # =============================================================================
-# Generic job configuration 
+# job configuration 
 # =============================================================================
+def configure() : 
+    bender.config( files   = [ jobopts ] ,
+                   options = [ 'EventSelector.PrintFreq   =  50  ' ] )
+    
+    g = gaudi.AppMgr()
+    # histogram persistency from options file is ignored *NOW*
+    g.HistogramPersistency = "HBOOK" ;
 
-bender.config( files   = [ jobopts ] ,
-               options = [ 'EventSelector.PrintFreq   =  50  ' ] )
-
-g = gaudi.AppMgr()
-# histogram persistency from options file is ignored *NOW*
-g.HistogramPersistency = "HBOOK" ;
+    return SUCCESS
 
 # =============================================================================
 # job execution 
 # =============================================================================
 
+if __name__ == '__main__' :
+    import sys 
+    # analyse the options
+    nEvents = bender.getNEvents( sys.argv[1:] )
+    if not nEvents : nEvents = 1000 
+    # configure the job
+    configure() 
+    # run job 
+    g.run  ( nEvents )
+    # terminate the Application Manager 
+    g.exit ()
 
-evtMax = 100   
-
-g.run(evtMax) 
-
-g.exit()
-
-# =============================================================================
-# The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# =============================================================================
+# The END 
 # =============================================================================

@@ -1,8 +1,8 @@
-// $Id: BenderExample.opts,v 1.1 2004-03-16 09:42:22 ibelyaev Exp $ 
+// $Id: BenderExample.opts,v 1.2 2004-08-06 12:12:02 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 
 /** @file 
@@ -14,13 +14,11 @@
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2004-03-15
  */
-
 #pragma print off
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-
-#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
-
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
+#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+#pragma print on
 
 // Histogram persistency 
 ApplicationMgr.HistogramPersistency = "HBOOK";
@@ -37,18 +35,18 @@ ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
 ChargedProtoPAlg.OutputLevel            = 3;
 
-// Modify Message Format to print algorithm name with 40 characters
-MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+// event tag collections service 
+ApplicationMgr.ExtSvc += {"TagCollectionSvc/EvtTupleSvc"};
+
+ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
+
+// Modify Message Format to print algorithm name with 60 characters
+MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 
 // Number of events to process, skip and printing frequency
 ApplicationMgr.EvtMax    = 500;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
-
-// Sample input file 
-#include "$DAVINCIROOT/options/DaVinciTestData.opts"
-
-#pragma print on
 
 
 // ============================================================================

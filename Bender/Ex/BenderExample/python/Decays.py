@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: Decays.py,v 1.2 2004-07-11 15:54:54 ibelyaev Exp $
+# $Id: Decays.py,v 1.3 2004-08-06 12:12:03 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -20,94 +20,105 @@ import benderconfig as bender
 
 # create my own algorithm  
 class Decays(Algo):
-    " My own analysis algorithm for selection members of D0->(K- pi+) decay "
+    """
+    Simple algorithm to test variouse symbold in mc.find statements
+    """
     def analyse ( self ) :
         
         mc  = self.mctruth()
-        trees = mc.find ( decay = "[D0 -> K- pi+]cc" )
-        print " # of found decay trees          " , trees.size()
-        for p in trees :
-            print " MCID of the particle " , MCID( p )
-            
-        n1 = mc.find ( decay = "[D0 -> ^K- ^pi+]cc" )
-        print " # of found decay members (all)    " , n1.size()
-        for p in n1 :
-            print " MCID of the particle " , MCID( p )
-            
-        n2 = mc.find ( decay = "[D0 -> ^K- pi+]cc" )
-        print " # of found decay members (first)  " , n2.size()
-        for p in n2 :
-            print " MCID of the particle " , MCID( p )
-            
-        n3 = mc.find ( decay = "[D0 -> K- ^pi+]cc" )
-        print " # of found decay members (second) " , n3.size()
-        for p in n3 :
-            print " MCID of the particle " , MCID( p )            
-
-        n4 = mc.find ( decay = " K- : [D0 -> K- pi+]cc" )
-        print " # of found decay members (K-) "     , n4.size()
-        for p in n4 :
-            print " MCID of the particle " , MCID( p )
-
-        n5 = mc.find ( decay = " K+ : [D0 -> K- pi+]cc" )
-        print " # of found decay members (K+) "     , n5.size()
-        for p in n5 :
-            print " MCID of the particle " , MCID( p )
-
+        trees = mc.find ( decay = "       [D0 -> K- pi+]cc   " )
+        all   = mc.find ( decay = "       [D0 -> ^K- ^pi+]cc " )
+        p1    = mc.find ( decay = "       [D0 -> ^K- pi+]cc  " )
+        p2    = mc.find ( decay = "       [D0 -> K- ^pi+]cc  " )
+        k1    = mc.find ( decay = " K-  : [D0 -> K- pi+]cc   " )
+        k2    = mc.find ( decay = " K+  : [D0 -> K- pi+]cc   " )
+        pi1   = mc.find ( decay = " pi- : [D0 -> K- pi+]cc   " )
+        pi2   = mc.find ( decay = " pi+ : [D0 -> K- pi+]cc   " )
+        
+        self.plot ( value = trees.size() , title = " number of trees " ,
+                    high = 10 , bins = 20 )
+        self.plot ( value =   all.size() , title = " number of all   " ,
+                    high = 10 , bins = 20 )
+        self.plot ( value =    p1.size() , title = " number of p1    " ,
+                    high = 10 , bins = 20 )
+        self.plot ( value =    p2.size() , title = " number of p2    " ,
+                    high = 10 , bins = 20 )
+        self.plot ( value =    k1.size() , title = " number of k1    " ,
+                    high = 10 , bins = 20 )
+        self.plot ( value =    k2.size() , title = " number of k2    " ,
+                    high = 10 , bins = 20 )
+        self.plot ( value =   pi1.size() , title = " number of pi1   " ,
+                    high = 10 , bins = 20 )
+        self.plot ( value =   pi2.size() , title = " number of pi2   " ,
+                    high = 10 , bins = 20 )
+        
+        msg  = " MCDecays found : "
+        msg += "  trees = " + `trees.size()`
+        msg += " ,all   = " + `all.size()`
+        msg += " ,p1    = " + `p1.size()`
+        msg += " ,p2    = " + `p2.size()`
+        msg += " ,k1    = " + `k1.size()`
+        msg += " ,k2    = " + `k2.size()`
+        msg += " ,pi1   = " + `k1.size()`
+        msg += " ,pi2   = " + `k2.size()`
+        
+        self.Print( message = msg , level = MSG.ALWAYS )
+        
         return SUCCESS 
 
 # =============================================================================
-# Generic job configuration 
+# job configuration 
 # =============================================================================
-
-bender.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ] ,
-               options = [ 'EcalPIDmu.OutputLevel     =   5  ' ,
-                           'HcalPIDmu.OutputLevel     =   5  ' ,
-                           'EcalPIDe.OutputLevel      =   5  ' ,
-                           'HcalPIDe.OutputLevel      =   5  ' ,
-                           'BremPIDe.OutputLevel      =   5  ' ,
-                           'PrsPIDe.OutputLevel       =   5  ' ,
-                           'EventSelector.PrintFreq   =  50  ' ] )
-
-# define input data channel B0 -> ( D*- -> D0bar(K+ pi-) pi- ) pi+  
-g.readOptions('/afs/cern.ch/lhcb/project/web/cards/415000.opts')
-
-g.HistogramPersistency = "HBOOK" ;
-
-# =============================================================================
-# specific job configuration 
-# =============================================================================
-
-
-# create analysis algorithm and add it to the list of
-alg = Decays('Decays')
-g.topAlg += [ 'Decays' ]
-alg = gaudi.iProperty('Decays')
-alg.OutputLevel = 5
-alg.FilterCriteria = [ 'HybridFilterCriterion/Hybrid']
-
-# add 'similar' C++ algorithm from LoKiExample package
-g.DLLs   += [ "LoKiExample"            ]
-g.topAlg += [ 'LoKi_MCDecays/MCDecays' ]
-
-# output histogram file 
-hsvc = g.property( 'HistogramPersistencySvc' )
-hsvc.OutputFile = 'Decays.hbook'
-
+def configure () :    
+    # Generic job configuration     
+    bender.config( files   =
+                   [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
+                     '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
+                     '$BENDEREXAMPLEOPTS/Bd_DstA1.opts'      ] , # input data 
+                   options =                                     # extra options 
+                   [ 'EcalPIDmu.OutputLevel     =   5  ' , 
+                     'HcalPIDmu.OutputLevel     =   5  ' ,
+                     'EcalPIDe.OutputLevel      =   5  ' ,
+                     'HcalPIDe.OutputLevel      =   5  ' ,
+                     'BremPIDe.OutputLevel      =   5  ' ,
+                     'PrsPIDe.OutputLevel       =   5  ' ,
+                     'EventSelector.PrintFreq   =  50  ' ] )
+    
+    # specific job configuration 
+    # create analysis algorithm and add it to the list of
+    alg       = Decays('Decays')
+    g.topAlg  = [ 'Decays' ]
+    alg = gaudi.iProperty('Decays')
+    alg.OutputLevel = 5
+    alg.FilterCriteria = [ 'HybridFilterCriterion/Hybrid']
+    
+    # add 'similar' C++ algorithm from LoKiExample package
+    g.DLLs   += [ "LoKiExample"            ]
+    g.topAlg += [ 'LoKi_MCDecays/MCDecays' ]
+    
+    # output histogram file 
+    hsvc = g.property( 'HistogramPersistencySvc' )
+    hsvc.OutputFile = 'Decays.hbook'
+    
+    return SUCCESS 
 
 # =============================================================================
 # job execution 
 # =============================================================================
+if __name__ == '__main__' :
+    import sys 
+    # analyse the options
+    nEvents = bender.getNEvents( sys.argv[1:] )
+    if not nEvents : nEvents = 20 
+    # configure the job 
+    configure()
+    # execute 
+    g.run( nEvents )
+    # terminate 
+    g.exit()
 
-g.run(50) 
-
-g.exit()
-
-# =============================================================================
-# The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1  2004/06/29 06:41:52  ibelyaev
-#  add new algorithm
-#
+# =============================================================================
+# The END 
 # =============================================================================

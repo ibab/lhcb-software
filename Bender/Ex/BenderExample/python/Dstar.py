@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: Dstar.py,v 1.10 2004-06-29 06:41:52 ibelyaev Exp $
+# $Id: Dstar.py,v 1.11 2004-08-06 12:12:03 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -93,68 +93,69 @@ class Dstar(Algo):
             tup2.write()
             Dpi.save("D*+")
                           
-        # get all saved D0 
+        # get all saved D*+
         Dpi = self.selected( "D*+" )
         
         return SUCCESS 
 
-# =============================================================================
-# Generic job configuration 
-# =============================================================================
+def configure() :
+    # Generic job configuration 
+    bender.config( files   =
+                   [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
+                     '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
+                     '$BENDEREXAMPLEOPTS/Bd_DstA1.opts'      ] , # input data 
+                   options =                                     # extra options 
+                   [ 'EcalPIDmu.OutputLevel     =   5  ' , 
+                     'HcalPIDmu.OutputLevel     =   5  ' ,
+                     'EcalPIDe.OutputLevel      =   5  ' ,
+                     'HcalPIDe.OutputLevel      =   5  ' ,
+                     'BremPIDe.OutputLevel      =   5  ' ,
+                     'PrsPIDe.OutputLevel       =   5  ' ,
+                     'EventSelector.PrintFreq   =  50  ' ] )
+    
+    # specific job configuration 
+    # preload algorithm(s)
+    g.topAlg += ['LoKiPreLoad/Hadrons']
+    preload.Hadrons( Particles = [ 'kaon' , 'pion'] )
+    
+    # create analysis algorithm and add it to the list of
+    alg = Dstar('Dstar')
+    g.topAlg += [ 'Dstar' ]
+    alg = gaudi.iProperty('Dstar')
+    alg.OutputLevel = 5
+    alg.NTupleLUN    = 'DSTAR'
+    alg.OutputLocation = '/Event/Phys/Dstar2HH'
+    
+    desktop                 = g.property('Dstar.PhysDesktop')
+    desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
+    
+    # output histogram file 
+    hsvc = g.property( 'HistogramPersistencySvc' )
+    hsvc.OutputFile = 'dstar.hbook'
+    
+    nsvc = gaudi.iProperty( 'NTupleSvc' )
+    nsvc.Output =[ "DSTAR DATAFILE='dstar_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
 
-bender.config( files   = [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ] ,
-               options = [ 'EcalPIDmu.OutputLevel     =   5  ' ,
-                           'HcalPIDmu.OutputLevel     =   5  ' ,
-                           'EcalPIDe.OutputLevel      =   5  ' ,
-                           'HcalPIDe.OutputLevel      =   5  ' ,
-                           'BremPIDe.OutputLevel      =   5  ' ,
-                           'PrsPIDe.OutputLevel       =   5  ' ,
-                           'EventSelector.PrintFreq   =  50  ' ] )
-
-# define input data channel B0 -> ( D*- -> D0bar(K+ pi-) pi- ) pi+  
-g.readOptions('/afs/cern.ch/lhcb/project/web/cards/415000.opts')
-
-g.HistogramPersistency = "HBOOK" ;
-
-# =============================================================================
-# specific job configuration 
-# =============================================================================
-
-# preload algorithm(s)
-g.topAlg += ['LoKiPreLoad/Hadrons']
-preload.Hadrons( Particles = [ 'kaon' , 'pion'] )
-
-# create analysis algorithm and add it to the list of
-alg = Dstar('Dstar')
-g.topAlg += [ 'Dstar' ]
-alg = gaudi.iProperty('Dstar')
-alg.OutputLevel = 5
-alg.NTupleLUN    = 'DSTAR'
-alg.OutputLocation = '/Event/Phys/Dstar2HH'
-
-desktop                 = g.property('Dstar.PhysDesktop')
-desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
-
-# output histogram file 
-hsvc = g.property( 'HistogramPersistencySvc' )
-hsvc.OutputFile = 'dstar.hbook'
-
-nsvc = gaudi.iProperty( 'NTupleSvc' )
-nsvc.Output =[ "DSTAR DATAFILE='dstar_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
+    return SUCCESS
 
 # =============================================================================
 # job execution 
 # =============================================================================
 
-g.run(20) 
-
-g.exit()
-
-# =============================================================================
-# The END 
+if __name__ == '__main__' :
+    import sys 
+    # analyse the options
+    nEvents = bender.getNEvents( sys.argv[1:] )
+    if not nEvents : nEvents = 10000 
+    # configure the job
+    configure() 
+    # run job 
+    g.run  ( nEvents )
+    # terminate the Application Manager 
+    g.exit ()
+    
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.9  2004/03/17 10:18:18  ibelyaev
-#  add usage of benderPreLoad module
-#
+# =============================================================================
+# The END 
 # =============================================================================

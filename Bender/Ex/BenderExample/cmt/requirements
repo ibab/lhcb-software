@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.11 2004-08-05 12:20:34 ibelyaev Exp $ 
+# $Id: requirements,v 1.12 2004-08-06 12:12:01 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # ============================================================================
@@ -10,35 +10,30 @@ author           Vanya BELYAEV
 version          v3r6
 
 # ============== structure ===================================================
-branches         cmt doc src python options
+branches         cmt doc src python options jobs 
 
 # ============== environment =================================================
 set              BENDEREXAMPLEPYTHON  $(BENDEREXAMPLEROOT)/python
 set              BENDEREXAMPLEOPTS    $(BENDEREXAMPLEROOT)/options
+set              BENDEREXAMPLEJOBS    $(BENDEREXAMPLEROOT)/jobs 
 
 # ============== dependencies ================================================
-use              Bender      v*   Phys 
-use              BenderVis   v*   Vis  
-use              LoKiExample v*   Ex 
+use              Bender      v* Phys 
+use              BenderVis   v* Vis  
+use              LoKiExample v* Ex 
 
 use              LoKiHybrid  v* Tools 
 use              LoKiHlt     v* Tools 
 
 # ============== nesessary paths =============================================
-path_remove      PYTHONPATH "/BenderExample/"  WIN32  "\BenderExample\"
+path_remove      PYTHONPATH "BenderExample" 
 path_prepend     PYTHONPATH "$(BENDEREXAMPLEROOT)/python"
+path_remove      PATH        "BenderExample" 
+path_prepend     PATH        "$(BENDEREXAMPLEPYTHON)"
+path_prepend     PATH        "$(BENDEREXAMPLEJOBS)"
 
 # ============== patterns =====================================================
 apply_pattern    application_path 
-
-# path_remove   LD_LIBRARY_PATH "CaloEvent" 
-# path_remove   LD_LIBRARY_PATH "GaudiGSL" 
-# path_remove   LD_LIBRARY_PATH "BenderDict" 
-# path_remove   LD_LIBRARY_PATH "BenderDet" 
-# path_remove   LD_LIBRARY_PATH "LoKiHybrid" 
-
-# path_remove   LD_LIBRARY_PATH "PI" 
-# path_remove   LD_LIBRARY_PATH "AIDA" 
 
 # ============================================================================
 # $Log: not supported by cvs2svn $

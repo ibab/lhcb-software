@@ -1,0 +1,3 @@
+
+EventSelector.Input = 
+  { "COLLECTION='TagCreator/1' DATAFILE='PFN:EventTags.tags' TYP='POOL_ROOT' SEL='(nBs>0)' " };
