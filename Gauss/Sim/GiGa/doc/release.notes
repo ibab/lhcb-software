@@ -4,7 +4,7 @@ Package manager : N.N.
 !===========================================================================
 ! 20010310 - Vanya Belyaev
     new features:
-    GiGaTrajectory - not all steps are appended now to trajectory
+    GiGaTrajectory - not all steps are appended now to the trajectory
         1) first step is appended 
         2) last step is appended 
         3) if there are secondaies - step is appended
@@ -32,7 +32,7 @@ Package manager : N.N.
              - src/GiGaMCVertexCnv.cpp
      (2) To allow conversion, the stored trajectories MUST be of type
          GiGaTrajectory. 
-         New example class GiGaTrackActionSimple takes case about 
+         New example class GiGaTrackActionSimple takes care about 
          creation of correct GiGaTrajectories. It also takes case 
          that G4Track* object has valid G4VUserTrackInformation* 
          pointer to GiGaTrackInformation structure. 
