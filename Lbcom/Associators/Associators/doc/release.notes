@@ -1,6 +1,7 @@
 ! Package     : Associators
 ! Responsible : Rutger Hierck
 
+! ======================= Associators v1r0 2002-10-11 ===================
 ! 2002-10-09 - Rutger van der Eijk
  - MCParticle2MCHitAlg & MCParticle2MCVeloHitAlg: Remove uses of protected
    typedef of Associator class template.
@@ -9,8 +10,7 @@
  - Remove unused dependency on Tr packages (TrEvent etc..). Only needs to
    use VeloEvent to retrieve MCVeloHit s.
 
-! 20010912 - Associators v1
-! ====================================================================
+! 2002-09-12 - Associators v1
   - A new package where some general purpose associators are put
     In the future this package can centralise all the associators(IT/OT/Tr)
   - For now the only two which are in this package Associators/Asscociators :
