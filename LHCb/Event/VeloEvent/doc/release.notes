@@ -1,18 +1,19 @@
-! $Id: release.notes,v 1.12 2002-04-25 15:41:47 ocallot Exp $
+! $Id: release.notes,v 1.13 2002-04-30 08:39:57 cattanem Exp $
 package Event/VeloEvent
 package manager: C.Parkes
 
-!=============================================================================
+! >>>>>>>>>>>>>>>>>>>> VeloEvent v10r0 <<<<<<<<<<<<<<<<<<
+! 20020430 Marco Cattaneo
+  - requirements: remove run time dependency on GaudiIntrospection
+
 ! 25/04/2002 - Olivier Callot
   - Added a typedef for the MCVeloHit keyed container
   - Removed the "/Event/" prefix in all locations, to allow spillover.
 
-!=============================================================================
 ! 23/04/2002 - Olivier Callot
   - Changed the location of FullDigit and Cluster to /Raw from /Rec
   - Added specific location for PuVeto Hit and FE
 
-! >>>>>>>>>>>>>>>>>>>> VeloEvent v10r0 <<<<<<<<<<<<<<<<<<
 ! 20020418 (M.Cattaneo)
   - Move to Gaudi v10
   - Build separate library for dictionaries
