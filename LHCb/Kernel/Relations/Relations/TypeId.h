@@ -1,21 +1,24 @@
-// $Id: TypeId.h,v 1.1.1.1 2004-07-21 07:57:27 cattanem Exp $
+// $Id: TypeId.h,v 1.2 2004-12-08 17:46:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2002/05/10 12:29:43  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
-// 
 // ============================================================================
 #ifndef RELATIONS_TYPEID_H 
 #define RELATIONS_TYPEID_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 // relations 
+// ============================================================================
 #include "Relations/TypeIdAux.h"
 #include "Relations/TypeStorable.h"
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 #include "GaudiKernel/ClassID.h" 
 #include "GaudiKernel/System.h" 
+// ============================================================================
 
 namespace Relations
 {
@@ -52,11 +55,7 @@ namespace Relations
      *  @return unique identifier for type @p TYPE 
      */
     static const CLID& id() 
-#ifdef WIN32 
-    { return detail::TypeIdAux<TypeStorable<TYPE>::value>::ID<TYPE>::id() ; }
-#else
     { return detail::TypeIdAux<TypeStorable<TYPE>::value,TYPE>::id()      ; }
-#endif 
   };
   
 }; // end of the namespace Relations 

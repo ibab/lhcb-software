@@ -1,19 +1,20 @@
-// $Id: TypeSerializer.h,v 1.1.1.1 2004-07-21 07:57:27 cattanem Exp $
+// $Id: TypeSerializer.h,v 1.2 2004-12-08 17:46:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2002/05/10 12:29:43  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
-//
 // ============================================================================
 #ifndef RELATIONS_TYPESERIALIZER_H 
 #define RELATIONS_TYPESERIALIZER_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/PragmaWarnings.h"
 #include "Relations/TypePersistent.h"
-#include "Relations/TypeSerializers.h"
+// ============================================================================
 // forward declarations 
+// ============================================================================
+
 class StreamBuffer    ;    // from GaudiKernel Package
 
 /** @file TypeSerializer.h

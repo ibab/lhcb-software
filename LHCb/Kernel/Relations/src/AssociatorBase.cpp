@@ -1,11 +1,8 @@
-// $Id: AssociatorBase.cpp,v 1.3 2004-11-22 16:49:55 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.4 2004-12-08 17:46:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2004/11/19 15:01:22  ibelyaev
-//  substitute explict algorithm management by 'Data-On-Demand' service
-// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -30,9 +27,17 @@
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/System.h"
+#include "GaudiKernel/SmartRef.h"
 // ============================================================================
 // local
 // ============================================================================
+// #include "Relations/Less.h"
+// #include "Relations/Reserve.h"
+// #include "Relations/ObjectTypeTraitsStripped.h"
+// #include "Relations/TypeApplyAux.h"
+// #include "Relations/TypeApply.h"
+// #include "Relations/TypeId.h"
+// #include "Relations/TypeIdAux.h"
 #include "Relations/AssociatorBase.h"
 // ============================================================================
 

@@ -1,16 +1,15 @@
-// $Id: TypeSelect.h,v 1.1.1.1 2004-07-21 07:57:27 cattanem Exp $
+// $Id: TypeSelect.h,v 1.2 2004-12-08 17:46:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2002/05/10 12:29:43  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
-// 
 // ============================================================================
 #ifndef RELATIONS_TYPESELECT_H 
 #define RELATIONS_TYPESELECT_H 1
+// ============================================================================
 // Include files
-#include "Relations/TypeSelectAux.h"
+// ============================================================================
+
 namespace Relations
 { 
   /** @struct TypeSelect TypeSelect.h Relations/TypeSelect.h
@@ -38,16 +37,6 @@ namespace Relations
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   08/05/2002
    */
-#ifdef WIN32 
-  template <bool flag, class FIRST, class SECOND>
-  struct TypeSelect
-  {
-    // "mimic" partial template specialization through chained 
-    // full template specialization
-    typedef typename 
-    detail::TypeSelectAux<flag>::traits<FIRST,SECOND>::Result Result;
-  };
-#else
   template <bool flag, class FIRST, class SECOND>
   struct TypeSelect
   {
@@ -60,8 +49,8 @@ namespace Relations
     // partical specialization "selects" the first type 
     typedef FIRST    Result;
   };
-#endif
-};
+  
+}; // end of namespace Relations 
 
 // ============================================================================
 // The END 

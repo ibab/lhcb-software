@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.5 2004-11-22 16:49:55 ibelyaev Exp $ 
+! $Id: release.notes,v 1.6 2004-12-08 17:46:22 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,40 @@
 ! Responsible : Vanya BELYAEV ibelyaev@lapp.in2p3.fr 
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2004-12-08 - Vanya BELYAEV
+
+ - remove few obsolete tricks to unify GCC and Visual C++ 
+   these tricks were introduced for Visual C++ 6.0.
+   The main reason - the absence pf partical template specializations. 
+   Since the support of partial template specializations in Visual C++ 7.1 
+   is on the desired level, all onsolete lines can be eliminated.
+
+ - Relations/Less.h
+ - Relations/Reserve.h
+ - Relations/ObjectTypeTraitsStripped.h
+ - Relations/TypeApplyAux.h
+ - Relations/TypeSelect.h
+
+      remove WIN32 specific clause 
+
+ - Relations/TypeSelect.Aux.h 
+ - Relations/TypeSerializers.h 
+     
+      remove obsolete file 
+
+ - cmt/requirements 
+     
+      version increment to v2r1 
+
+  From *NOW*  the package is formally "platform-independent" 
+
+   Platform dependency now comes only:    
+
+    - indirectly through usage of 
+      boost::is_convertible structure in Relations/TypeConversion.h file 
+    - through #pragma directive in Relations/PragmaWarning.h file 
+
 
 !====================== Relations v2r0 2004-11-22 ============================
 ! 2004-11-19 - Vanya BELYAEV

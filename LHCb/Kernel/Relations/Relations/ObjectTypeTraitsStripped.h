@@ -1,16 +1,16 @@
-// $Id: ObjectTypeTraitsStripped.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: ObjectTypeTraitsStripped.h,v 1.2 2004-12-08 17:46:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2002/05/10 12:29:42  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
-// 
 // ============================================================================
 #ifndef RELATIONS_OBJECTTYPETRAITSSTRIPPED_H 
 #define RELATIONS_OBJECTTYPETRAITSSTRIPPED_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 #include "Relations/ObjectTypeTraits.h"
+// ============================================================================
 
 /** @file
  *  Partial specialization of general ObjectTypeTraits structure  
@@ -24,7 +24,6 @@ namespace Relations
   /// forward declaration of general template structure 
   template <class Object> struct ObjectTypeTraits ;
   
-#ifndef WIN32
   /** @struct ObjectTypeTraits<const OBJECT>
    *  partial specialization for "const" types
    *  @see ObjectTypeTraits
@@ -39,6 +38,7 @@ namespace Relations
     /// "traits'-provider 
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
   };
+
   /** @struct ObjectTypeTraits<OBJECT*>
    *  partial specialisation for pointers
    *  @see ObjectTypeTraits
@@ -54,6 +54,7 @@ namespace Relations
     /// "traits'-provider 
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
   };
+
   /** @struct ObjectTypeTraits<OBJECT&>
    *  partial specialisation for references
    *  @see ObjectTypeTraits
@@ -68,6 +69,7 @@ namespace Relations
     /// "traits'-provider 
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
   };
+
   /** @struct ObjectTypeTraits<const OBJECT*>
    *  partial specialisation for pointers to const
    *  @see ObjectTypeTraits
@@ -82,6 +84,7 @@ namespace Relations
     /// "traits'-provider 
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
   };
+
   /** @struct ObjectTypeTraits<const OBJECT&>
    *  partial specialisation for const references
    *  @see ObjectTypeTraits
@@ -96,6 +99,7 @@ namespace Relations
     /// "traits'-provider 
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
   };
+
   /** @struct ObjectTypeTraits<SmartRef<OBJECT>>
    *  partial specialisation for smart references
    *  @see ObjectTypeTraits
@@ -110,7 +114,6 @@ namespace Relations
     /// "traits'-provider 
     typedef ObjectTypeTraits<OBJECT>              Traits     ;
   };
-#endif 
   
 }; // end of namespace Relations 
 

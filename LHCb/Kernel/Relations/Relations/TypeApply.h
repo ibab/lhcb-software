@@ -1,25 +1,29 @@
-// $Id: TypeApply.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: TypeApply.h,v 1.2 2004-12-08 17:46:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2002/05/10 12:29:43  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
-//
 // ============================================================================
 #ifndef RELATIONS_TypeApply_H 
 #define RELATIONS_TypeApply_H 1
+// ============================================================================
 // Include files
+// ============================================================================
 // relations 
+// ============================================================================
 #include "Relations/PragmaWarnings.h"
 #include "Relations/TypePersistent.h"
 #include "Relations/TypeStorable.h"
 #include "Relations/TypeApplyAux.h"
+// ============================================================================
 // GaudiKernel
+// ============================================================================
 // forward declaration 
+// ============================================================================
 template <class TYPE> class SmartRef;
 class DataObject      ;
 class ContainedObject ;
+// ============================================================================
 
 /** @file TypeApply.h Relations/TypeApply.h
  *  
@@ -61,12 +65,7 @@ namespace Relations
     /// actual data type 
     typedef typename TypePersistent<TYPE>::Result      Type     ;
     /// actual "apply" operation
-#ifdef WIN32 
-    typedef typename 
-    detail::TypeApplyAux<TypeStorable<TYPE>::value>::Apply<Type>  ApplyAux ;
-#else 
-    typedef typename detail::TypeApplyAux<Type>                   ApplyAux ;
-#endif 
+    typedef typename detail::TypeApplyAux<Type>        ApplyAux ;
     /// "apply" during writing from data object    
     static const Type&   apply( const Type&            typ , 
                                 const DataObject*      obj ) 
