@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.8 2002-04-11 08:06:48 dhcroft Exp $
+! $Id: release.notes,v 1.9 2002-04-11 09:07:16 dhcroft Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
@@ -10,6 +10,9 @@
 ! 11/04/2002 David Hutchcroft
   Bug fix in MuonGeometry.h in region four I had misread (and so mistyped) 
   101 as 107 so chamber 107 was in region 4 twice and 101 not at all.
+  Another bug fix, the size of the station is now taken from each twelfth. 
+  The only effect is that the thin RPCs in M4 and M5 do not mean missing MWPC
+  gaps.
 
 ! ===========================================================================
 ! 10/04/2002 David Hutchcroft

@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.7 2002-04-10 12:38:39 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.8 2002-04-11 09:07:24 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -243,17 +243,6 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
     return StatusCode::FAILURE;
   }
     
-  // now loop over the twelfths of the regions to find point
-  if( 0>= m_twelfthExtent[0][0][0].z ){
-    //need to fill regionExtent and twelfths
-    StatusCode sc = fillTwelfthsExtent();
-     if(!sc.isSuccess()){
-      log << MSG::ERROR << "Something went wrong getting Twelfths positions"
-          << endreq;
-      return sc;
-    }
-  }
-
   // loop over regions to see if we can find one or more that matches
   int region;
   for( region=0; region<4; region++){
@@ -546,6 +535,16 @@ StatusCode MuonTileIDXYZ::fillStationExtent(){
 
   MsgStream log(msgSvc(), name());
   
+  // This uses the twelfths to get the size of the station
+  if( 0>= m_twelfthExtent[0][0][0].z ){
+    //need to fill twelfthExtent
+    StatusCode sc = fillTwelfthsExtent();
+     if(!sc.isSuccess()){
+      log << MSG::ERROR << "Something went wrong getting Twelfths positions"
+          << endreq;
+      return sc;
+    }
+  }
   // So get the TDS representations of the stations
   // to fill stationExtent with the outer edges of the chambers in the
   // corners of region 4
@@ -555,43 +554,41 @@ StatusCode MuonTileIDXYZ::fillStationExtent(){
 
     double xMax,xMin,yMax,yMin,zMax,zMin;
 
-    double x,y,z;
-    double dx,dy,dz;
+    int region;
+    for( region = 0 ; region < 4 ; region++ ){
 
-    int chamCorner;
-    for( chamCorner = 0 ; chamCorner < 4 ; chamCorner++ ){
-      int nChamber;
-      if( 0 == chamCorner ){
-        nChamber = MuonGeometry::chamberR4[0][0];
-      }else if( 1 == chamCorner ){
-        nChamber = MuonGeometry::chamberR4[7][0];
-      }else if( 2 == chamCorner ){
-        nChamber = MuonGeometry::chamberR4[0][31];
-      }else{
-        nChamber = MuonGeometry::chamberR4[7][31];
-      }
+      int twelfth;
+      for( twelfth = 0 ; twelfth < 12 ; twelfth++ ){
+        
+        // fill the local x,y,z mans/min for the twelfth
+        double txMax = m_twelfthExtent[station][region][twelfth].x + 
+          m_twelfthExtent[station][region][twelfth].dx;
+        double txMin = m_twelfthExtent[station][region][twelfth].x -
+          m_twelfthExtent[station][region][twelfth].dx;
+        double tyMax = m_twelfthExtent[station][region][twelfth].y + 
+          m_twelfthExtent[station][region][twelfth].dy;
+        double tyMin = m_twelfthExtent[station][region][twelfth].y -
+          m_twelfthExtent[station][region][twelfth].dy;
+        double tzMax = m_twelfthExtent[station][region][twelfth].z + 
+          m_twelfthExtent[station][region][twelfth].dz;
+        double tzMin = m_twelfthExtent[station][region][twelfth].z -
+          m_twelfthExtent[station][region][twelfth].dz;
 
-      // all of these are in region 4
-      StatusCode sc = getXYZChamber(station,3,nChamber,x,dx,y,dy,z,dz);
-      if(!sc.isSuccess()){
-        log << MSG::ERROR << "Could not get corner chamber" << endreq;
-        return sc;
-      }
-
-      if(0 == chamCorner) {
-        xMax = x;
-        xMin = x;
-        yMax = y;
-        yMin = y;
-        zMax = z;
-        zMin = z;
-      }else{
-        if ( x > xMax ) { xMax = x; }
-        if ( x < xMin ) { xMin = x; }
-        if ( y > yMax ) { yMax = y; }
-        if ( y < yMin ) { yMin = y; }
-        if ( z > zMax ) { zMax = z; }
-        if ( z < zMin ) { zMin = z; }
+        if(0 == twelfth && 0 == region) {
+          xMax = txMax;
+          xMin = txMin;
+          yMax = tyMax;
+          yMin = tyMin;
+          zMax = tzMax;
+          zMin = tzMin;
+        }else{
+          if ( txMax > xMax ) { xMax = txMax; }
+          if ( txMin < xMin ) { xMin = txMin; }
+          if ( tyMax > yMax ) { yMax = tyMax; }
+          if ( tyMin < yMin ) { yMin = tyMin; }
+          if ( tzMax > zMax ) { zMax = tzMax; }
+          if ( tzMin < zMin ) { zMin = tzMin; }
+        }
       }
     }
     
@@ -599,9 +596,9 @@ StatusCode MuonTileIDXYZ::fillStationExtent(){
     m_stationExtent[station].y = ( yMax + yMin ) / 2.; // be zero
     m_stationExtent[station].z = ( zMax + zMin ) / 2.; // diff due to rounding
 
-    m_stationExtent[station].dx = (( xMax - xMin ) / 2.) + dx;
-    m_stationExtent[station].dy = (( yMax - yMin ) / 2.) + dy;
-    m_stationExtent[station].dz = (( zMax - zMin ) / 2.) + dz;
+    m_stationExtent[station].dx = ( xMax - xMin ) / 2.;
+    m_stationExtent[station].dy = ( yMax - yMin ) / 2.;
+    m_stationExtent[station].dz = ( zMax - zMin ) / 2.;
 
     log << MSG::DEBUG 
         << " Station " << station
