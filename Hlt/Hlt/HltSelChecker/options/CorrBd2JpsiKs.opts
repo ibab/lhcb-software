@@ -8,7 +8,7 @@ Bd2JpsiKsAndTDR.AvoidSelResult = false ;
 HLTCorrelations.Members += { "SelResultCorrelations/CorrBd2JpsiKs" };
 CorrBd2JpsiKs.Algorithms = { "AllBd2JpsiKsTracks", 
                         "HLTDimuons", 
-                        "HLTHotJpsis", 
+                        "HLTFilterB2JpsiX", 
                         "TDRselBd2Jpsi2MuMu_Ks2PiPi",
                         "Bd2JpsiKsAndTDR" } ;
 

@@ -53,40 +53,6 @@ HLTLooseD02PiPi.MotherPlots.Maxima    = {  100.*MeV, -1., 20., 150*mm, 100., 20.
 HLTLooseD02PiPi.DaughterPlotsPath  = "D02PiPiIn" ;
 HLTLooseD02PiPi.MotherPlotsPath = "D02PiPiOut";
 
-// single muons
-HLTSingleMuons.MakePlots = true ;
-HLTSingleMuons.InputPlots.Variables =  { "P", "Pt", "IPs" } ;
-HLTSingleMuons.OutputPlots.Variables = { "P", "Pt", "IPs" } ;
-HLTSingleMuons.InputPlotsPath  = "MuonIn" ;
-HLTSingleMuons.OutputPlotsPath = "MuonOut";
-
-// dimuons
-HLTDimuons.MakePlots = true ;
-HLTDimuons.DaughterPlots.Variables = { "P", "Pt", "IPs" } ;
-HLTDimuons.MotherPlots.Variables =   { "WM",     "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
-HLTDimuons.MotherPlots.Minima    = { -3000.*MeV, -1., 0., -150*mm, 0.*GeV, 0.*GeV, 0., 0. };
-HLTDimuons.MotherPlots.Maxima    = {  7000.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
-HLTDimuons.DaughterPlotsPath = "MuMuIn" ;
-HLTDimuons.MotherPlotsPath   = "MuMuOut";
-
-// unbiased J/psis
-HLTUnbiasedJpsis.MakePlots = true ;
-HLTUnbiasedJpsis.InputPlots.Variables =  { "WM",     "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
-HLTUnbiasedJpsis.InputPlots.Minima    = { -3000.*MeV, -1., 0., -150*mm, 0.*GeV,   0.*GeV, 0., 0. };
-HLTUnbiasedJpsis.InputPlots.Maxima    = { 10000.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
-HLTUnbiasedJpsis.OutputPlots.Variables = { "WM",     "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
-HLTUnbiasedJpsis.OutputPlots.Minima    = { -600.*MeV, -1., 0., -150*mm, 0.*GeV, 0.*GeV, 0., 0. };
-HLTUnbiasedJpsis.OutputPlots.Maxima     = { 4400.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
-HLTUnbiasedJpsis.InputPlotsPath  = "JpsiIn" ;
-HLTUnbiasedJpsis.OutputPlotsPath = "JpsiOut";
-
-// biased J/psis
-HLTHotJpsis.MakePlots = true ;
-HLTHotJpsis.InputPlots.Variables =  { "M", "Chi2", "Vz", "P", "Pt", "IPs" } ;
-HLTHotJpsis.OutputPlots.Variables = { "WM", "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
-HLTHotJpsis.InputPlotsPath  = "HotJpsiIn" ;
-HLTHotJpsis.OutputPlotsPath = "HotJpsiOut";
-
 // D0 for D0 K*
 FilterD0ForHLTBd2D0Kstar.MakePlots = true ;
 FilterD0ForHLTBd2D0Kstar.InputPlots.Variables =  { "M", "Chi2", "Vz", "P", "Pt", "IPs" } ;
@@ -128,6 +94,13 @@ HLTDstarForBd2DstarPi.DaughterPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", 
 HLTDstarForBd2DstarPi.MotherPlots.Variables =   { "M", "DM", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
 HLTDstarForBd2DstarPi.DaughterPlotsPath = "Dstar4BdIn" ;
 HLTDstarForBd2DstarPi.MotherPlotsPath   = "Dstar4BdOut";
+
+// biased J/psis
+HLTFilterB2JpsiX.MakePlots = true ;
+HLTFilterB2JpsiX.InputPlots.Variables =  { "M", "Chi2", "Vz", "P", "Pt", "IPs" } ;
+HLTFilterB2JpsiX.OutputPlots.Variables = { "WM", "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
+HLTFilterB2JpsiX.InputPlotsPath  = "B2JpsiIn" ;
+HLTFilterB2JpsiX.OutputPlotsPath = "B2JpsiOut";
 
 // Selections
 HLTFilterB2HH.MakePlots = true ;

@@ -10,7 +10,7 @@ CorrBs2JpsiPhi.Algorithms = { "CheckHLTGeneric"
                               ,"AllBs2JpsiPhiTracks", 
                                "HLTSharedPhi", 
                                "HLTDimuons",
-                               "HLTHotJpsis",
+                               "HLTFilterB2JpsiX",
 //                               "HLTFilterBs2JpsiPhi", 
                                "TDRselBs2Jpsi2MuMu_Phi2KK",
                                "Bs2JpsiPhiAndTDR" } ;
@@ -20,9 +20,9 @@ HLTCorrelations.Members += { "GaudiSequencer/ShowFoundBs2JpsiPhi" };
 ShowFoundBs2JpsiPhi.Members += { "CheckSelResult/Bs2JpsiPhiIsFound",  "PrintTree/PrintFoundBs2JpsiPhi"};
 
 Bs2JpsiPhiIsFound.ANDmode = true ;
-Bs2JpsiPhiIsFound.Algorithms = { "HLTHotJpsis" } ; // , "AllBs2JpsiPhiTracks" } ;
+Bs2JpsiPhiIsFound.Algorithms = { "HLTFilterB2JpsiX" } ; // , "AllBs2JpsiPhiTracks" } ;
 Bs2JpsiPhiIsFound.AvoidSelResult = false ;
 
 PrintFoundBs2JpsiPhi.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
-PrintFoundBs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/HLTHotJpsis" } ;
+PrintFoundBs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/HLTFilterB2JpsiX" } ;
 PrintFoundBs2JpsiPhi.OutputLevel = 4 ;

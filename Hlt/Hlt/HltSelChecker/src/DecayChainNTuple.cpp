@@ -2,7 +2,7 @@
 #define MCCheck 1
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/NTuple.h"
 #include "GaudiKernel/INTupleSvc.h"
 #include "Kernel/IDecayFinder.h"
@@ -121,7 +121,7 @@ StatusCode DecayChainNTuple::initialize() {
   if(sc.isFailure()){
     err() << " Unable to retrieve PV Locator tool" << endreq;
     return sc;
-  }
+  } 
 
   m_PVContainer = m_PVLocator->getPVLocation() ;
   info() << "Getting PV from " << m_PVContainer << endreq ;

@@ -42,7 +42,7 @@ TrackNTuple.PhysDesktop.InputLocations  = {
                         , "Phys/HLTFilterBs2PhiGamma"
                         , "Phys/HLTFilterB2MuMu"
                         , "Phys/HLTFilterBd2MuMuKstar"
-                        , "Phys/HLTHotJpsis"
+                        , "Phys/HLTFilterB2JpsiX"
 };
 TrackNTuple.UseTruth = true ;
 
