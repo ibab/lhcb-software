@@ -1,5 +1,5 @@
 package Gauss
-version v15r5
+version v15r6
 
 # =============================================================================
 # structure 
@@ -14,27 +14,27 @@ apply_pattern GaussVersion
 #get information from DBASE and PARAM 
 use XmlDDDB             v22r1   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
-use DecFiles            v4r4    Gen   -no_auto_imports
-use ParamFiles          v3r4          -no_auto_imports
+use DecFiles            v5r0    Gen   -no_auto_imports
+use ParamFiles          v3r6          -no_auto_imports
 
 #========================================================================
 # generator
-use GeneratorModules    v11r4    Gen
+use GeneratorModules    v11r5   Gen
 
 #GiGa staff...
 use GiGaCnv             v15r3   Sim
-use GaussTools          v10r4	Sim
+use GaussTools          v10r5	Sim
 use GaussTracker        v3r1    Sim
 use GaussRICH           v4r7    Sim
 use GaussCalo           v7r0    Sim
-use GaussPhysics        v3r0    Sim
-use GaussAlgs		v1r0	Sim
+use GaussPhysics        v3r1    Sim
+use GaussAlgs		v1r1    Sim
 
 #optional visualisation and UI
 #use GiGaVisUI           v3r0    Sim
 
 #Monitoring
-use GaussMonitor        v1r0    Sim
+use GaussMonitor        v1r1    Sim
 
 #======================================================================
 # Main program and standard job options

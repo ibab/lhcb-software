@@ -1,5 +1,4 @@
-// $Id: GaussTape.opts,v 1.15 2004-04-07 16:29:02 gcorti Exp $ 
-
+// $Id: GaussTape.opts,v 1.16 2004-04-29 17:36:41 gcorti Exp $ 
 
 /// create and add the output stream 
 ApplicationMgr.OutStream +=  { "GaussTape" };
@@ -7,24 +6,25 @@ ApplicationMgr.OutStream +=  { "GaussTape" };
 /// content of Gauss.oosim 
 GaussTape.ItemList = 
   {  
-        // event Header
-    "/Event#1",      
-    "/Event/Header#1"
-        // Gen Header
+    // event Header
+    "/Event#1"      
+    ,"/Event/Header#1"
+    // Gen Node
     ,"/Event/Gen#1"
-    ,"/Event/Gen/Header#1"
-        // Generator hard process information
-    ,"/Event/Gen/HardProcesses#1" 
-        // Generated event
-    ,"/Event/Gen/HepMCEvents#1"
   };
 
 GaussTape.OptItemList =
   {
+    // Generator Header 
+    "/Event/Gen/Header#1"
+    // Generator hard process information
+    ,"/Event/Gen/HardProcesses#1" 
+    // Generated event
+    ,"/Event/Gen/HepMCEvents#1"
     // Collisions
-     "/Event/Gen/Collisions#1",
+    ,"/Event/Gen/Collisions#1"
     // MC Truth  
-     "/Event/MC#1"                     
+    ,"/Event/MC#1"                     
     ,"/Event/MC/Particles#1"         
     ,"/Event/MC/Vertices#1"          
     // MCHits
@@ -33,7 +33,10 @@ GaussTape.OptItemList =
     ,"/Event/MC/Velo/PuHits#1"
     ,"/Event/MC/Rich#1"
     ,"/Event/MC/Rich/Hits#1"
-     //,"/Event/MC/Rich/OpticalPhotons#1"
+    // Uncomment the following three lines if you want detailed RICH info 
+    //,"/Event/MC/Rich/OpticalPhotons#1"  // optional extra mc debug
+    //,"/Event/MC/Rich/Tracks#1"          // optional extra mc debug
+    //,"/Event/MC/Rich/Segments#1"        // optional extra mc debug  
     ,"/Event/MC/OT#1"
     ,"/Event/MC/OT/Hits#1"
     ,"/Event/MC/IT#1"

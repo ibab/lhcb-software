@@ -1,11 +1,12 @@
 // Generator Stand Alone job options
 //=========================================================================
 // include this file in Gauss.opts instead of Generator.opts
-// in Gauss.opts comment the line: 
+// in Gauss.opts comment the lines: 
 // ApplicationMgr.TopAlg += { "Sequencer/Simulation"};
+// #include "GAUSSOPTS/Simulation.opts"
 //===========================================================================
 
-Geneator.Members = {"SignalDecayAlg"} ;
+Generator.Members = {"SignalDecayAlg"} ;
 
 // 
 // If you want signal B hadrons produced at rest, comment the line below
@@ -15,12 +16,25 @@ Geneator.Members = {"SignalDecayAlg"} ;
 // 
 // If you want signal B hadrons to have the correct momentum distribution given
 // by Pythia, uncomment the line below.
+//
+Generator.Members += { "PythiaAlg", "SetDecayAlg", "EvtDecayAlg"};
+
+//
 // The available output containers will be 
 //     --- "/Event/Gen/SignalDecay" with the signal decay chain in the signal B rest frame
 //     --- "/Event/Gen/HepMCEvents" with the whole event 
 //     --- "/Event/Gen/BHadronTree" with only the B hadron decay tree in the lab frame.
-//
-Generator.Members += { "PythiaAlg", "SetDecayAlg", "EvtDecayAlg"};
+// Add those missing to the GaussTape by uncommenting the following:
+GaussTape.ItemList += { 
+  "/Event/Gen/SignalDecay"  
+};
+GaussTape.OptItemList += {
+  "/Event/Gen/BHadronTree"
+};
+
+// You can change where you are reading the data from in the monitor by
+// setting the following line:
+// GeneratorFullMonitor.Input = "/Event/Gen/SignalDecay";
 
 //
 // Comment the line below if you do not want "/Event/Gen/BHadronTree"

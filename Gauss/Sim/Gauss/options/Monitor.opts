@@ -1,9 +1,26 @@
-// $Id: Monitor.opts,v 1.1 2004-04-07 16:29:02 gcorti Exp $ 
+// Options to monitor/study the production
+//=========================================================================
 
-ApplicationMgr.DLLs += { "GaussMonitor" } ;
+ApplicationMgr.DLLs += { "MCTools", "GaussMonitor" };
 
+// Algorithm filling detailed info in an ntuple from HepMC
 Monitor.Members     = { "GeneratorFullMonitor" };
+
+// Algorithm filling detailed info in an ntuple from MCParticle
+// When running in GenStandAlone mode comment the following two members
 Monitor.Members    += { "MCTruthFullMonitor" };
+
+// Check MCSignal info (only for complete production)
+//Monitor.Members    += { "MCDecayCounter" };
+//MCDecayCounter.DetailedPrintOut = true;
+//MCDecayCounter.OutputLevel               = 2;
+//MCDecayCounter.MCDecayFinder.OutputLevel = 3;
+
+// Load the DLLs for histogram persistency
+ApplicationMgr.DLLs += { "HbookCnv" };
+ApplicationMgr.HistogramPersistency = "HBOOK";
 
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.hbook' TYP='HBOOK' OPT='NEW'"};
+HistogramPersistencySvc.OutputFile = "GaussHistos.hbook";
+
