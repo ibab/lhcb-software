@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.7 2001-07-26 13:24:37 cattanem Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.8 2001-10-04 16:27:38 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -69,7 +69,8 @@ StatusCode L0mTriggerProc::initialize()   {
                              m_foiXSize,
 			     m_foiYSize,
 			     m_extraM1,
-			     10.,10.,
+			     m_precision,
+			     m_bins,
 			     MuonTile());
 			     
     
@@ -162,14 +163,14 @@ StatusCode L0mTriggerProc::execute() {
   
   L0MuonCandidate* lcd;
   ObjectVector<L0mTower>::iterator it;
- 
+   
   for ( it=m_towers->begin(); it != m_towers->end(); it++ ) {
     if ((*it)->isFull()) {
       lcd = (*it)->createCandidate();
       if(lcd) {
-
 	//  Track found ! 
-
+	
+	
 	log << MSG::DEBUG << "Track found" << endreq;
 	(*it)->draw(log << MSG::DEBUG);
 	(*it)->pad(2)->print(log );
@@ -177,7 +178,9 @@ StatusCode L0mTriggerProc::execute() {
 	(*it)->pad(0)->print(log );
 	log << MSG::DEBUG << " Pt= "    << lcd->pt() 
 	                  << " Theta= " << lcd->theta() 
-			  << " Phi= "   << lcd->phi() << endreq; 	      
+			  << " Phi= "   << lcd->phi() << endreq; 	
+			        
+	(*it)->procUnit()->precisionPt(lcd);
 	cand->push_back(lcd); 	
       }
     } 
@@ -185,10 +188,7 @@ StatusCode L0mTriggerProc::execute() {
   
   // Make the final clean-up
   
-  if( m_mode != "Test" ) {
-    for ( it=m_towers->begin(); it != m_towers->end(); it++ ) {
-      delete *it;
-    }	  
+  if( m_mode != "Test" ) { 
     delete m_towers;
   } 
   
