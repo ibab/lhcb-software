@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2003-11-24 - Vanya Belyaev 
+  - Kernel/CaloCellIDOp.h 
+    src/CaloCellIDOp.cpp   - new files to resolve the compatibility problem 
+                             for "new" CaloCellID class 
 !======================= LHCbKernel v2r9 2003-11-24 =======================
 ! 2003-11-24 - Marco Cattaneo
  - Fix doxygen warnings

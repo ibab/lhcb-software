@@ -1,5 +1,5 @@
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.1 2003-11-24 14:17:30 ibelyaev Exp $
+  * $Id: CaloCellID.xml,v 1.2 2003-11-24 22:52:04 ibelyaev Exp $
   *****************************************************************************
   * CVS tag $Name: not supported by cvs2svn $                            
   *****************************************************************************
@@ -8,6 +8,9 @@
   * date:   2003-11-24                                                        *
   *****************************************************************************
   * $Log: not supported by cvs2svn $
+  * Revision 1.1  2003/11/24 14:17:30  ibelyaev
+  *  add XML description of CaloCellID class
+  *
   ************************************************************************* -->
 
   
@@ -25,6 +28,7 @@
   <import name = "GaudiKernel/StreamBuffer" />
   <import name = "GaudiKernel/MsgStream"    />
   <import name = "Kernel/CaloCellCode"      />
+  <import name = "Kernel/CaloCellIDOp"      />
     
   <typedef
     def    = "ContentType"
