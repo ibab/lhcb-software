@@ -58,9 +58,7 @@ DigiWriter.ItemList =
 , "/Event/Raw#2"
 , "/Event/Rec#1"
 , "/Event/Rec/Relations#1"
-, "/Event/Rec/Relations/ITDigits2MCHits#1"
-, "/Event/Rec/Relations/OTTimes2MCHits#1"
-, "/Event/Rec/Relations/VeloClusters2MCHits#1"
+, "/Event/Rec/Relations/ITDigits2MCHits#1" // Until diff with link understood
 , "/Event/MC/Rich/Digits#1" // Single hop to MCHit, instead of relations
 , "/Event/MC/Prs/Digits#1"  // Single hop to MCHit, instead of relations
 , "/Event/MC/Spd/Digits#1"  // Single hop to MCHit, instead of relations
@@ -79,4 +77,8 @@ DigiWriter.ItemList =
 , "/Event/Link/Raw/IT/Digits#1"
 , "/Event/Link/Raw/OT#1"
 , "/Event/Link/Raw/OT/Times#1"
+, "/Event/Link/ITDigits2MCHits#1"
+, "/Event/Link/OTTimes2MCHits#1"
+, "/Event/Link/VeloClusters2MCHits#1"
 };
+ITDigit2MCHitAlg.useLinker = false; // Until difference with Linker understood
