@@ -1,4 +1,4 @@
-# $Id: README,v 1.7 2001-10-29 17:07:12 andreav Exp $
+# $Id: README,v 1.8 2001-10-29 17:21:59 andreav Exp $
 
 ------------------------------------------------------------------------------
 Packages needed to run DetCondExample v1
@@ -243,6 +243,8 @@ cvs update -A; cvs add file/directory; cvs commit -m "" file/directory
 # To tag the HEAD files with a private tag (use private tags starting by "h")
 # [For instance, tag CONDDB v3r01 head version of 2001 Sep 17 by h20010917]
 cvs rtag h20010917 CONDDB
+# To force the tag (e.g. if a previous file version already received that tag):
+cvs rtag -F h20010917 CONDDB
 
 # To view the tags attached to the files contained in the package:
 cvs status -v

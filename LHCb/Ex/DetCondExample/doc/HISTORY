@@ -1,4 +1,4 @@
-# $Id: HISTORY,v 1.4 2001-10-29 17:07:12 andreav Exp $
+# $Id: HISTORY,v 1.5 2001-10-29 17:21:55 andreav Exp $
 
 ------------------------------------------------
 29.10.2001 Ex/DetCondExample v1 (LINUX only)
@@ -10,7 +10,7 @@ Main new feature: support for gcc2.95.2 (with Objectivity 6.1).
 - Make sure that you do not need to setup the LHCXX scripts in advance
 - Minor changes to the cleanup script machinery
 - Document CONDBDB debug levels
-Private tags: h20011029a.
+Private tags: h20011029.
 
 ------------------------------------------------
 17.09.2001 Ex/DetCondExample v1 (LINUX only)
