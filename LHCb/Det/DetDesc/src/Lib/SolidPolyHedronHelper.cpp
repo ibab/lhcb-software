@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/08/09 16:48:02  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #include "DetDesc/SolidPolyHedronHelper.h"
 
@@ -158,13 +161,13 @@ bool SolidPolyHedronHelper::addFace( const HepPoint3D& Point1 ,
   const HepVector3D v3( Point3 - cPoint ) ; 
   const HepVector3D v4( Point4 - cPoint ) ;
   ///
-  if     ( 0 != v1.cross( v2 ).dot( v3 ) ) 
+  if  ( 0.0001 < v1.cross( v2 ).dot( v3 ) ) 
     { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
-  else if( 0 != v2.cross( v3 ).dot( v4 ) ) 
+  else if( 0.0001 < v2.cross( v3 ).dot( v4 ) ) 
     { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
-  else if( 0 != v3.cross( v4 ).dot( v1 ) ) 
+  else if( 0.0001 < v3.cross( v4 ).dot( v1 ) ) 
     { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
-  else if( 0 != v4.cross( v1 ).dot( v2 ) ) 
+  else if( 0.0001 < v4.cross( v1 ).dot( v2 ) ) 
     { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
   ///
   if     ( addFace( Point1 , Point2 , Point3 ) ) { ;}
