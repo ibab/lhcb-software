@@ -91,7 +91,7 @@ use TrgEvent		v5r3	Event
 use TrgTools		v6r2	Trg
 use TrgVelo             v6r0p1  Trg
 use TrgVeloTT           v6r0    Trg
-use L1Reco              v6r0    Trg
+use L1Reco              v6r1    Trg
 use L1Decision          v4r2    Trg
 use TrgChecker          v6r0    Trg
 use TrgForward          v4r0    Trg

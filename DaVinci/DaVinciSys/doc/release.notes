@@ -631,6 +631,10 @@ use  DsSelector               v1r1p1   PhysSel
  - doc/L1Sorter.C
    . Guard against software Ip (require MCIp > 0.0001)
 
+!========================== L1Reco v6r1 2004-02-15 ===================
+! 2005-01-17 - Thomas Martin Schietinger (for Mariusz Witek)
+ - New tuning after VELO-TT bug fix.
+                                                                                                                                                          
 !========================== TrgCalo v1r0p2 2005-02-15 ===================
 ! 2005-01-10 - P. Koppenburg
  - src/TrgCaloUtils.{cpp,h}
