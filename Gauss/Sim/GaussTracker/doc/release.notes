@@ -5,7 +5,11 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
-!=========================== GaussTracker v2r4 2003-07-07 ===================
+!=========================== GaussTracker v2r5 2003-07-15 =====================
+! 2003-07-15 - Witek Pokorski
+ - GiGaMuonhitCnv - changed back to separate MxR3 and MxR4
+
+!=========================== GaussTracker v2r4 2003-07-07 =====================
 ! 2003-07-07 - Florence RANJARD
  - fix for gcc3.2 (S.Ponce)
 
