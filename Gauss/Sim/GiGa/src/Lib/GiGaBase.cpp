@@ -1,8 +1,11 @@
-// $Id: GiGaBase.cpp,v 1.12 2002-05-07 12:21:33 ibelyaev Exp $
+// $Id: GiGaBase.cpp,v 1.13 2002-12-04 12:57:00 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2002/05/07 12:21:33  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // Revision 1.11  2002/05/01 18:23:38  ibelyaev
 //  import errors/warnings/exception counterf from LHCb Calo software
 //
@@ -146,7 +149,6 @@ StatusCode GiGaBase::initialize()
         { return Error("Couldn't locate IChronoStatSvc="+ m_chronoName , sc );}
       if( 0 == chronoSvc () ) 
         { return Error("Couldn't locate IChronoStatSvc="+ m_chronoName      );}
-      chronoSvc()->addRef() ; 
     }
   else { Warning("Chrono & Stat Service is not requested to be located"); }
   ///
@@ -157,7 +159,6 @@ StatusCode GiGaBase::initialize()
         { return Error("Could not locate IGiGaSvc="+ m_gigaName , sc ) ; }
       if( 0 == gigaSvc () ) 
         { return Error("Could not locate IGiGaSvc="+ m_gigaName      ) ; }
-      gigaSvc()->addRef() ; 
     }
   else { Warning("GiGa Service is not requested to be located"); }
   ///
@@ -168,7 +169,6 @@ StatusCode GiGaBase::initialize()
         { return Error("Could not locate IGiGaSetUpSvc="+ m_setupName , sc ) ; }
       if( 0 == setupSvc  () ) 
         { return Error("Could not locate IGiGaSetUpSvc="+ m_setupName      ) ; }
-      setupSvc()->addRef() ; 
     }
   else { Warning("GiGaSetUp Service is not requested to be located"); }
   ///
@@ -179,7 +179,6 @@ StatusCode GiGaBase::initialize()
         { return Error("Could not locate IDataProviderSvc="+ m_evtName , sc );}
       if( 0 == evtSvc    () )
         { return Error("Could not locate IDataProviderSvc="+ m_evtName      );}
-      evtSvc()->addRef() ; 
     }
   else { Warning("Event Data  Service is not requested to be located"); }
   ///
@@ -190,7 +189,6 @@ StatusCode GiGaBase::initialize()
         { return Error("Couldn't locate IDataProviderSvc="+ m_detName , sc );}
       if( 0 == detSvc    () ) 
         { return Error("Couldn't locate IDataProviderSvc="+ m_detName      );}
-      detSvc()->addRef() ; 
     }
   else { Warning("Detector Data  Service is not requested to be located"); }
   ///
@@ -201,7 +199,6 @@ StatusCode GiGaBase::initialize()
         { return Error("Could not locate IIncidentSvc="+ m_incName , sc ) ; }
       if( 0 == incSvc    () ) 
         { return Error("Could not locate IIncidentSvc="+ m_incName      ) ; }
-      incSvc()->addRef() ; 
     }
   else { Print("Incident Service is not requested to be located"); }
   ///
@@ -212,7 +209,6 @@ StatusCode GiGaBase::initialize()
         { return Error("Could not locate IObjManager="+ m_omName , sc );}
       if( 0 == objMgr    () )
         { return Error("Could not locate IObjManager="+ m_omName      );}
-      objMgr()->addRef() ; 
     }
   else { Print("IObjManager is not required to be located"); }
   //

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.61 2002-12-04 08:02:18 ranjard Exp $
+! $Id: release.notes,v 1.62 2002-12-04 12:59:43 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2002-12-04 - Ivan Belyaev
+ - src/Lib/GiGaBase.cpp   - remove extra calls for "addRef" 
 
 !============================== GiGa v11r1 2002-12-04 =====================
 ! 2002-12-03 - Ivan Belyaev
