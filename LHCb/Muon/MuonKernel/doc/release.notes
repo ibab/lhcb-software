@@ -1,6 +1,10 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
+>>>>>>>>>>>>>>>>> MuonKernel v2r0 <<<<<<<<<<<<<<<<<
+! 20020418 M.Cattaneo
+  - Use GaudiKernel v12r* (Gaudi v10)
+
 ! 20020228 - MuonKernel v1r0 Andrei Tsaregorodtsev
 
   Muon/MuonKernel v1 can be compiled in the standalone mode (without

@@ -1,12 +1,12 @@
 package MuonKernel
 
-version v1r0
+version v2r0
 
 branches cmt src MuonKernel doc Test
 
 include_dirs $(MUONKERNELROOT)
 
-use GaudiKernel v11* 
+use GaudiKernel v12r* 
 
 #----------------------------------------------
 library MuonKernelLib ../src/*.cpp
