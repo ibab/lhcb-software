@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.35 2003-07-04 15:01:41 cattanem Exp $
+# $Id: requirements,v 1.36 2003-07-04 15:08:54 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : Gloria Corti
 #
@@ -15,7 +15,7 @@ include_dirs $(PHYSEVENTROOT)
 
 # Used packages. 
 #============================================================================
-use RichEvent    v6r*  Event
+use RichEvent    v5r*  Event
 use CaloEvent    v11r* Event
 use MuonEvent    v2r*  Event
 use GaudiObjDesc v5r*  -no_auto_imports
