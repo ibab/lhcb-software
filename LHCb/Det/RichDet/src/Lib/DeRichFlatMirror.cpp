@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichFlatMirror
  *
- *  $Id: DeRichFlatMirror.cpp,v 1.8 2005-02-09 13:39:26 cattanem Exp $
+ *  $Id: DeRichFlatMirror.cpp,v 1.9 2005-02-25 23:28:54 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -44,27 +44,32 @@ const CLID& DeRichFlatMirror::classID() {
 }
 
 
-StatusCode DeRichFlatMirror::initialize() {
+StatusCode DeRichFlatMirror::initialize() 
+{
+
+  const std::string::size_type pos2 = name().find("Rich");
+  m_name = ( std::string::npos != pos2 ? name().substr(pos2) : 
+             "DeRichFlatMirror_NO_NAME" );
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  MsgStream log(msgSvc(), "DeRichFlatMirror" );
-  log << MSG::DEBUG <<"Starting initialisation for DeRichFlatMirror"<< endreq;
-  this->printOut(log);
+  MsgStream msg( msgSvc(), myName() );
+  msg << MSG::DEBUG << "Initializing flat mirror" << endreq;
+  //this->printOut(msg);
 
   m_solid = geometry()->lvolume()->solid();
 
-  m_alignmentConstantX = userParameterAsDouble("AlignmentConstantX");
-  m_alignmentConstantY = userParameterAsDouble("AlignmentConstantY");
+  m_alignmentConstantX = userParameterAsDouble( "AlignmentConstantX" );
+  m_alignmentConstantY = userParameterAsDouble( "AlignmentConstantY" );
 
-  HepRotateX3D alignX(-m_alignmentConstantY);
-  HepRotateY3D alignY(m_alignmentConstantX);
+  const HepRotateX3D alignX(-m_alignmentConstantY);
+  const HepRotateY3D alignY(m_alignmentConstantX);
 
   // get the z half length, to find the centre on the mirror surface
   // where reflection will take place
   const ISolid* mysolid = geometry()->lvolume()->solid();
   const SolidBox* myBox = dynamic_cast<const SolidBox*>(mysolid);
-  double centreOnSurfaceZ = myBox->zHalfLength();
+  const double centreOnSurfaceZ = myBox->zHalfLength();
 
   HepPoint3D localCentre(0.0, 0.0, centreOnSurfaceZ);
   // in global coordinates
@@ -76,21 +81,14 @@ StatusCode DeRichFlatMirror::initialize() {
   // Rotating around X changes Y, while leaving X unchanged
   HepNormal3D alignedLocalNormal = localNormal;
   alignedLocalNormal.transform(alignY);
-  //cout << "X alignment: " << alignedLocalNormal  << std::endl;
-
   alignedLocalNormal.transform(alignX);
-  //cout << "Y alignment: " << alignedLocalNormal  << std::endl;
 
   // go back to the global coord system.
-  HepTransform3D localToGlobal = geometry()->matrixInv();
+  const HepTransform3D localToGlobal = geometry()->matrixInv();
   m_normalVector = alignedLocalNormal.transform(localToGlobal);
-  //cout << "Normal in glob coord: " << m_normalVector << std::endl;
-
 
   // create the mirror plane
-  HepPlane3D aPlane(m_normalVector, m_mirrorCentre);
-  m_mirrorPlane = aPlane;
-  //std::cout << "Mirror plane" << m_mirrorPlane << std::endl;
+  m_mirrorPlane = HepPlane3D(m_normalVector, m_mirrorCentre);
 
   // extract mirror number from detector element name
   const std::string::size_type pos = name().find(':');
@@ -98,14 +96,14 @@ StatusCode DeRichFlatMirror::initialize() {
     m_mirrorNumber = atoi( name().substr(pos + 1).c_str() );
   }
   else {
-    log << MSG::FATAL <<"A mirror without a number!"<< endreq;
+    msg << MSG::FATAL << "A mirror without a number!" << endreq;
     sc = StatusCode::FAILURE;
   }
   
-  log << MSG::DEBUG << "Mirror #" << m_mirrorNumber 
-      <<" Centre (on reflective surface) " << m_mirrorCentre  << endmsg;
-  log << MSG::DEBUG <<"Normal vector " << m_normalVector << endmsg;
-  log << MSG::DEBUG <<"Finished initialisation for DeRichFlatMirror"<< endmsg;
+  msg << MSG::DEBUG << "Mirror #" << m_mirrorNumber 
+      << " Centre (on reflective surface) " << m_mirrorCentre  << endmsg;
+  msg << MSG::DEBUG <<"Normal vector " << m_normalVector << endmsg;
+  msg << MSG::DEBUG <<"Finished initialisation for DeRichFlatMirror"<< endmsg;
 
   return sc;
 }
@@ -118,12 +116,12 @@ StatusCode DeRichFlatMirror::initialize() {
 StatusCode DeRichFlatMirror::intersects( const HepPoint3D& globalP,
                                          const HepVector3D& globalV) const
 {
-  //const HepPoint3D pLocal ( geometry()->toLocal(globalP) );
   HepVector3D vLocal = globalV;
   vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
-  const unsigned int noTicks = m_solid->intersectionTicks(geometry()->toLocal(globalP), vLocal, ticks);
+  const unsigned int noTicks = 
+    m_solid->intersectionTicks(geometry()->toLocal(globalP), vLocal, ticks);
 
   return ( 0 == noTicks ? StatusCode::FAILURE : StatusCode::SUCCESS );
 }

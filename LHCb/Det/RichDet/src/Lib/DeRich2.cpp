@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.14 2005-02-09 13:39:26 cattanem Exp $
+ *  $Id: DeRich2.cpp,v 1.15 2005-02-25 23:28:54 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -27,13 +27,14 @@
 const CLID& CLID_DERich2 = 12002;  // User defined
 
 // Standard Constructors
-DeRich2::DeRich2() {}
+DeRich2::DeRich2() { m_name = "DeRich2"; }
 
 // Standard Destructor
 DeRich2::~DeRich2() {}
 
 // Retrieve Pointer to class defininition structure
-const CLID& DeRich2::classID() {
+const CLID& DeRich2::classID() 
+{
   return CLID_DERich2;
 }
 
@@ -42,21 +43,18 @@ const CLID& DeRich2::classID() {
 StatusCode DeRich2::initialize()
 {
 
-  MsgStream log(msgSvc(), "DeRich2" );
-  log << MSG::DEBUG <<"Starting initialisation for DeRich2"<< endmsg;
+  MsgStream msg( msgSvc(), myName() );
+  msg << MSG::DEBUG << "Initialize" << endmsg;
 
-  StatusCode sc = StatusCode::SUCCESS;
-  StatusCode fail = StatusCode::FAILURE;
+  if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
-  if ( !DeRich::initialize() ) return fail;
-
-  std::vector<double> nominalCoC = paramVector("Rich2NominalCoC");
+  const std::vector<double> nominalCoC = paramVector("Rich2NominalCoC");
   m_nominalCentreOfCurvature =
     HepPoint3D( nominalCoC[0], nominalCoC[1], nominalCoC[2]);
   m_nominalCentreOfCurvatureRight =
     HepPoint3D( -nominalCoC[0], nominalCoC[1], nominalCoC[2]);
 
-  log << MSG::DEBUG << "Nominal centre of curvature"
+  msg << MSG::DEBUG << "Nominal centre of curvature"
       << m_nominalCentreOfCurvature << " ," << m_nominalCentreOfCurvatureRight
       << endmsg;
 
@@ -64,7 +62,7 @@ StatusCode DeRich2::initialize()
 
   // get the parameters of the nominal flat mirror plane in the form
   // Ax+By+Cz+D=0
-  std::vector<double> nominalFMirrorPlane = paramVector("Rich2NominalFlatMirrorPlane");
+  const std::vector<double> & nominalFMirrorPlane = paramVector("Rich2NominalFlatMirrorPlane");
   m_nominalPlaneLeft = HepPlane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
                                   nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
   m_nominalPlaneRight = HepPlane3D(-nominalFMirrorPlane[0],nominalFMirrorPlane[1],
@@ -75,7 +73,7 @@ StatusCode DeRich2::initialize()
   m_nominalNormal = m_nominalPlaneLeft.normal();
   m_nominalNormalRight = m_nominalPlaneRight.normal();
 
-  log << MSG::DEBUG << "Nominal normal " << HepVector3D( m_nominalNormal )
+  msg << MSG::DEBUG << "Nominal normal " << HepVector3D( m_nominalNormal )
       << HepVector3D( m_nominalNormalRight ) << endmsg;
 
   const IPVolume* pvGasWindow = geometry()->lvolume()->pvolume("pvRich2QuartzWindow:0");
@@ -98,34 +96,35 @@ StatusCode DeRich2::initialize()
       }
     }
   } else {
-    log << MSG::ERROR << "Could not find gas window properties" << endmsg;
-    return fail;
+    msg << MSG::ERROR << "Could not find gas window properties" << endmsg;
+    return StatusCode::FAILURE;
   }
 
   // get the nominal reflectivity of the spherical mirror
-  std::string sphMirrorReflLoc = "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceIdealReflectivityPT";
+  const std::string sphMirrorReflLoc = 
+    "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceIdealReflectivityPT";
   SmartDataPtr<TabulatedProperty> sphMirrorRefl( dataSvc(), sphMirrorReflLoc );
   if ( !sphMirrorRefl )
-    log << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
+    msg << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
   else {
     m_nominalSphMirrorRefl = sphMirrorRefl;
-    log << MSG::DEBUG << "Loaded spherical mirror reflectivity from:"
+    msg << MSG::DEBUG << "Loaded spherical mirror reflectivity from: "
         << sphMirrorReflLoc << endmsg;
   }
 
   // get the nominal reflectivity of the flat mirror
-  std::string flatMirrorReflLoc = "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceIdealReflectivityPT";
+  const std::string flatMirrorReflLoc = 
+    "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceIdealReflectivityPT";
   SmartDataPtr<TabulatedProperty> flatMirrorRefl(dataSvc(),flatMirrorReflLoc);
   if ( !flatMirrorRefl )
-    log << MSG::ERROR << "No info on flat mirror reflectivity" << endmsg;
+    msg << MSG::ERROR << "No info on flat mirror reflectivity" << endmsg;
   else {
     m_nominalFlatMirrorRefl = flatMirrorRefl;
-    log << MSG::DEBUG << "Loaded flat mirror reflectivity from:"
+    msg << MSG::DEBUG << "Loaded flat mirror reflectivity from: "
         << flatMirrorReflLoc << endmsg;
   }
 
-  log << MSG::DEBUG <<"Finished initialisation for DeRich2"<< endmsg;
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 const HepPoint3D & DeRich2::nominalCentreOfCurvature(const Rich::Side side) const

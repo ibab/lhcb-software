@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichFlatMirror
  *
  *  CVS Log :-
- *  $Id: DeRichFlatMirror.h,v 1.6 2004-10-20 16:16:36 jonrob Exp $
+ *  $Id: DeRichFlatMirror.h,v 1.7 2005-02-25 23:28:54 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/10/20 16:16:36  jonrob
+ *  More minor updates to functions (adding const etc.)
+ *
  *  Revision 1.5  2004/10/18 09:21:49  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -116,7 +119,13 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
    */
-  StatusCode intersects ( const HepPoint3D& globalP, const HepVector3D& globalV ) const;
+  StatusCode intersects ( const HepPoint3D& globalP, 
+                          const HepVector3D& globalV ) const;
+
+  /** Returns the name of this particular mirror
+   *  @return mirror name
+   */
+  inline const std::string & myName() const { return m_name; }
 
 private:
 
@@ -133,6 +142,7 @@ private:
 
   int m_mirrorNumber;           ///< mirror (segment) number
 
+  std::string m_name; ///< The name of this mirror
 
 };
 

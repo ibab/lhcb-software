@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichRadiator
  *
- *  $Id: DeRichRadiator.cpp,v 1.11 2005-02-23 10:26:00 jonrob Exp $
+ *  $Id: DeRichRadiator.cpp,v 1.12 2005-02-25 23:28:54 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -52,7 +52,7 @@ StatusCode DeRichRadiator::initialize()
     }
   }
 
-  msg << MSG::INFO << "Initializing Radiator : " << m_rich << " " << m_radiatorID << endreq;
+  msg << MSG::DEBUG << "Initializing Radiator : " << m_rich << " " << m_radiatorID << endreq;
 
   return StatusCode::SUCCESS;
 }

@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.8 2005-02-09 13:39:26 cattanem Exp $
+ *  $Id: DeRich.cpp,v 1.9 2005-02-25 23:28:54 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -24,44 +24,39 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-DeRich::DeRich(  ) {
+DeRich::DeRich()
+  : m_gasWinRefIndex        ( 0 ),
+    m_gasWinAbsLength       ( 0 ),
+    m_HPDQuantumEff         ( 0 ),
+    m_nominalSphMirrorRefl  ( 0 ),
+    m_nominalFlatMirrorRefl ( 0 ),
+    m_name                  ( "DeRich" )
+{ }
 
-}
 //=============================================================================
 // Destructor
 //=============================================================================
-DeRich::~DeRich() {};
+DeRich::~DeRich() {}
 
 
 //=========================================================================
 //  initialize
 //=========================================================================
-StatusCode DeRich::initialize ( ) {
-
-  //  StatusCode fail = StatusCode::FAILURE;
-
-  MsgStream log(msgSvc(), "DeRich" );
-  log << MSG::DEBUG << "Starting initialisation for DeRich" << endmsg;
-
-  m_gasWinRefIndex = 0;
-  m_gasWinAbsLength = 0;
-  m_HPDQuantumEff = 0;
-  m_nominalSphMirrorRefl = 0;
-  m_nominalFlatMirrorRefl = 0;
+StatusCode DeRich::initialize ( ) 
+{
 
   m_vectorNames = paramVectors();
   m_paramNames  = params();
 
-  if ( hasParam( "SphMirrorSegRows" ) ) {
-    m_sphMirrorSegRows = paramAsInt( "SphMirrorSegRows" );
-    m_sphMirrorSegCols = paramAsInt( "SphMirrorSegColumns" );
+  if ( hasParam( "SphMirrorSegRows" ) )
+  {
+    m_sphMirrorSegRows  = paramAsInt( "SphMirrorSegRows" );
+    m_sphMirrorSegCols  = paramAsInt( "SphMirrorSegColumns" );
     m_flatMirrorSegRows = paramAsInt( "FlatMirrorSegRows" );
     m_flatMirrorSegCols = paramAsInt( "FlatMirrorSegColumns" );
-
-    m_positionInfo = true;
+    m_positionInfo      = true;
   }
 
-  log << MSG::DEBUG << "Finished initialisation for DeRich" << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -73,20 +68,19 @@ RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
 
   RichMirrorSegPosition mirrorPos;
 
-  if ( m_positionInfo ) {
+  if ( m_positionInfo ) 
+  {
     int row = mirrorNumber / m_sphMirrorSegCols;
     if ( row >= m_sphMirrorSegRows ) row -= m_sphMirrorSegRows;
-
     mirrorPos.setRow( row );
     mirrorPos.setColumn( mirrorNumber % m_sphMirrorSegCols );
   }
   else {
-    MsgStream log(msgSvc(), "DeRich" );
-    log << MSG::ERROR << "No position information for mirrors" << endmsg;
+    MsgStream msg( msgSvc(), myName() );
+    msg << MSG::ERROR << "No position information for mirrors" << endmsg;
   }
 
   return mirrorPos;
-
 }
 
 //=========================================================================
@@ -104,8 +98,8 @@ RichMirrorSegPosition DeRich::flatMirrorSegPos( const int mirrorNumber ) const
     mirrorPos.setColumn( mirrorNumber % m_flatMirrorSegCols );
   }
   else {
-    MsgStream log(msgSvc(), "DeRich" );
-    log << MSG::ERROR << "No position information for mirrors" << endmsg;
+    MsgStream msg ( msgSvc(), myName() );
+    msg << MSG::ERROR << "No position information for mirrors" << endmsg;
   }
 
   return mirrorPos;

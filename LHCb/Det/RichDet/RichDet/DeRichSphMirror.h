@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichSphMirror
  *
  *  CVS Log :-
- *  $Id: DeRichSphMirror.h,v 1.8 2004-10-20 16:16:36 jonrob Exp $
+ *  $Id: DeRichSphMirror.h,v 1.9 2005-02-25 23:28:54 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2004/10/20 16:16:36  jonrob
+ *  More minor updates to functions (adding const etc.)
+ *
  *  Revision 1.7  2004/10/18 09:21:49  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -114,16 +117,22 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
    */
-  StatusCode intersects(const HepPoint3D& globalP, const HepVector3D& globalV) const;
+  StatusCode intersects ( const HepPoint3D & globalP, 
+                          const HepVector3D & globalV) const;
 
   /**
    * Checks if the direction intersects with the mirror and returns the
    * intersction point
    * @return Intersection point
    */
-  StatusCode intersects ( const HepPoint3D& globalP,
-                          const HepVector3D& globalV,
+  StatusCode intersects ( const HepPoint3D & globalP,
+                          const HepVector3D & globalV,
                           HepPoint3D& intersectionPoint ) const;
+
+  /** Returns the name of this particular mirror
+   *  @return mirror name
+   */
+  inline const std::string & myName() const { return m_name; }
 
 private:
 
@@ -140,6 +149,9 @@ private:
   double m_radius;                  ///< Spherical mirror radius
 
   int m_mirrorNumber;               ///< mirror (segment) number
+
+  std::string m_name; ///< The name of this mirror
+
 };
 
 #endif    //  RICHDET_DERICHSPHMIRROR_H

@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.26 2005-02-23 10:26:00 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.27 2005-02-25 23:28:54 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -47,7 +47,7 @@ StatusCode DeRichHPDPanel::initialize()
   const std::string::size_type pos = name().find("Rich");
   m_name = ( std::string::npos != pos ? name().substr(pos) : "DeRichHPDPanel_NO_NAME" );
 
-  MsgStream log ( msgSvc(), myName() );
+  MsgStream msg ( msgSvc(), myName() );
 
   // Work out what Rich/panel I am
   m_rich = Rich::InvalidDetector;
@@ -79,11 +79,12 @@ StatusCode DeRichHPDPanel::initialize()
   if ( m_rich == Rich::InvalidDetector ||
        m_side == Rich::InvalidSide )
   {
-    log << MSG::ERROR << "Error initializing HPD panel " << name() << endreq;
+    msg << MSG::ERROR << "Error initializing HPD panel " << name() << endreq;
     return StatusCode::FAILURE;
   }
 
-  log << MSG::INFO << "Initializing HPD Panel : " << rich() << " Panel" << (int)side() << endreq;
+  msg << MSG::DEBUG << "Initializing HPD Panel : " << rich() 
+      << " Panel" << (int)side() << endreq;
 
   SmartDataPtr<DetectorElement> deRich1(dataSvc(), DeRichLocation::Rich1);
   m_pixelSize = deRich1->userParameterAsDouble("RichHpdPixelXsize");
@@ -93,12 +94,12 @@ StatusCode DeRichHPDPanel::initialize()
 
   m_pixelColumns = deRich1->userParameterAsInt("RichHpdNumPixelCol");
   m_pixelRows = deRich1->userParameterAsInt("RichHpdNumPixelRow");
-  log << MSG::DEBUG << "pixelRows:" << m_pixelRows << " pixelColumns:"
+  msg << MSG::DEBUG << "pixelRows:" << m_pixelRows << " pixelColumns:"
       << m_pixelColumns << endreq;
 
   m_HPDRows = userParameterAsInt("PDRows");
   m_HPDColumns = userParameterAsInt("PDColumns");
-  log << MSG::DEBUG << "RichHpdPixelsize:" << m_pixelSize << " ActiveRadius:"
+  msg << MSG::DEBUG << "RichHpdPixelsize:" << m_pixelSize << " ActiveRadius:"
       << m_activeRadius << " PDRows:" << m_HPDRows << " PDColumns:"
       << m_HPDColumns << endreq;
 
@@ -112,7 +113,7 @@ StatusCode DeRichHPDPanel::initialize()
   TabulatedProperty::Table DeMagTable = HPDdeMag->table();
   m_deMagFactor[0] = DeMagTable[0].second;
   m_deMagFactor[1] = DeMagTable[1].second;
-  log << MSG::DEBUG << "DeMagFactor(0):" << m_deMagFactor[0]
+  msg << MSG::DEBUG << "DeMagFactor(0):" << m_deMagFactor[0]
       << " DeMagFactor(1):" << m_deMagFactor[1] << endreq;
 
   const HepPoint3D zero(0.0, 0.0, 0.0);
@@ -123,7 +124,7 @@ StatusCode DeRichHPDPanel::initialize()
   const IPVolume* pvSilicon0 = pvHPDSMaster0->lvolume()->pvolume(4);
 
   const ISolid* siliconSolid = pvSilicon0->lvolume()->solid();
-  log << MSG::DEBUG << "About to do a dynamic cast SolidBox" << endreq;
+  msg << MSG::DEBUG << "About to do a dynamic cast SolidBox" << endreq;
   const SolidBox* siliconBox = dynamic_cast<const SolidBox*>(siliconSolid);
 
   // assume same size for all silicon detectors
@@ -132,9 +133,9 @@ StatusCode DeRichHPDPanel::initialize()
 
   // HPD #0 coordinates
   m_HPD0Centre = pvHPDMaster0->toMother(zero);
-  log << MSG::DEBUG << "Centre of HPDPanel:" << geometry()->toGlobal(zero)
+  msg << MSG::DEBUG << "Centre of HPDPanel:" << geometry()->toGlobal(zero)
       <<endreq;
-  log << MSG::DEBUG<< "Centre of HPD#0:" << geometry()->toGlobal(m_HPD0Centre)
+  msg << MSG::DEBUG<< "Centre of HPD#0:" << geometry()->toGlobal(m_HPD0Centre)
       <<endreq;
 
   //get the next HPD. For Rich1 same row, for Rich2 same column
@@ -154,7 +155,7 @@ StatusCode DeRichHPDPanel::initialize()
     intersectionTicks(HepPoint3D(0.0, 0.0, 0.0),HepVector3D(0.0, 0.0, 1.0),
                       windowTicks);
   if (windowTicksSize != 2) {
-    log << MSG::FATAL << "Problem getting window radius" << endreq;
+    msg << MSG::FATAL << "Problem getting window radius" << endreq;
     return StatusCode::FAILURE;
   }
   m_winR = windowTicks[0];
@@ -215,25 +216,25 @@ StatusCode DeRichHPDPanel::initialize()
     const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPD);
     if ( !pvHPDMaster ) 
     { 
-      log << MSG::ERROR << "Failed to access HPDMaster" << endreq; 
+      msg << MSG::ERROR << "Failed to access HPDMaster" << endreq; 
       return  StatusCode::FAILURE; 
     }
     const IPVolume* pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
     if ( !pvHPDSMaster ) 
     { 
-      log << MSG::ERROR << "Failed to access HPDSMaster" << endreq; 
+      msg << MSG::ERROR << "Failed to access HPDSMaster" << endreq; 
       return  StatusCode::FAILURE; 
     }
     const IPVolume* pvWindow = pvHPDSMaster->lvolume()->pvolume(2);
     if ( !pvWindow ) 
     { 
-      log << MSG::ERROR << "Failed to access HPDWindow" << endreq; 
+      msg << MSG::ERROR << "Failed to access HPDWindow" << endreq; 
       return  StatusCode::FAILURE; 
     }
     const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume(4);
     if ( !pvSilicon ) 
     { 
-      log << MSG::ERROR << "Failed to access HPDSilicon" << endreq; 
+      msg << MSG::ERROR << "Failed to access HPDSilicon" << endreq; 
       return  StatusCode::FAILURE; 
     }
     m_pvHPDMaster.push_back( pvHPDMaster );
@@ -280,8 +281,8 @@ StatusCode DeRichHPDPanel::smartID ( const HepPoint3D& globalPoint,
 
   if ( (fabs(inSiliconX) - m_siliconHalfLengthX > 1E-3*mm) ||
        (fabs(inSiliconY) - m_siliconHalfLengthY > 1E-3*mm)   ) {
-    MsgStream log ( msgSvc(), myName() );
-    log << MSG::ERROR << "Point " << inSilicon << " is outside the silicon box "
+    MsgStream msg ( msgSvc(), myName() );
+    msg << MSG::ERROR << "Point " << inSilicon << " is outside the silicon box "
         << m_pvHPDMaster[HPDNumber]->name() << endreq;
     return StatusCode::FAILURE;
   }
@@ -407,8 +408,8 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
 
     // just in case
     if ( !pvHPDMaster ) {
-      MsgStream log(msgSvc(), myName() );
-      log << MSG::ERROR << "Inappropriate HPDNumber:" << HPDNumber
+      MsgStream msg(msgSvc(), myName() );
+      msg << MSG::ERROR << "Inappropriate HPDNumber:" << HPDNumber
           << " from HPDRow:" << id.pdRow() << " and HPDColumn:" << id.pdCol() << endreq
           << " x:" << panelIntersection.x()
           << " y:" << panelIntersection.y() <<  endreq;

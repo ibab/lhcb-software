@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.13 2005-02-09 13:39:26 cattanem Exp $
+ *  $Id: DeRich1.cpp,v 1.14 2005-02-25 23:28:54 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -27,13 +27,14 @@
 const CLID& CLID_DERich1 = 12001;  // User defined
 
 // Standard Constructors
-DeRich1::DeRich1() {}
+DeRich1::DeRich1() { m_name = "DeRich1"; }
 
 // Standard Destructor
 DeRich1::~DeRich1() {}
 
 // Retrieve Pointer to class defininition structure
-const CLID& DeRich1::classID() {
+const CLID& DeRich1::classID() 
+{
   return CLID_DERich1;
 }
 
@@ -42,30 +43,21 @@ const CLID& DeRich1::classID() {
 StatusCode DeRich1::initialize()
 {
 
-  MsgStream log(msgSvc(), "DeRich1" );
-  log << MSG::DEBUG << "Starting initialisation for DeRich1" << endmsg;
+  MsgStream msg( msgSvc(), myName() );
+  msg << MSG::DEBUG << "Initialize" << endmsg;
 
-  StatusCode sc = StatusCode::SUCCESS;
-  StatusCode fail = StatusCode::FAILURE;
+  if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
-  if ( !DeRich::initialize() ) return fail;
-
-  double nominalCoCX = userParameterAsDouble("Rich1Mirror1NominalCoCX");
-  double nominalCoCY = userParameterAsDouble("Rich1Mirror1NominalCoCY");
-  double nominalCoCZ = userParameterAsDouble("Rich1Mirror1NominalCoCZ");
+  const double nominalCoCX = userParameterAsDouble("Rich1Mirror1NominalCoCX");
+  const double nominalCoCY = userParameterAsDouble("Rich1Mirror1NominalCoCY");
+  const double nominalCoCZ = userParameterAsDouble("Rich1Mirror1NominalCoCZ");
 
   m_nominalCentreOfCurvature =
     HepPoint3D(nominalCoCX, nominalCoCY, nominalCoCZ);
   m_nominalCentreOfCurvatureBottom =
     HepPoint3D(nominalCoCX, -nominalCoCY, nominalCoCZ);
 
-  //  std::vector<double> nominalCoC = paramVector("Rich1NominalCoC");
-  //  m_nominalCentreOfCurvature =
-  //    HepPoint3D( nominalCoC[0], nominalCoC[1], nominalCoC[2]);
-  //  m_nominalCentreOfCurvatureBottom =
-  //    HepPoint3D( nominalCoC[0], -nominalCoC[1], nominalCoC[2]);
-
-  log << MSG::DEBUG << "Nominal centre of curvature"
+  msg << MSG::DEBUG << "Nominal centre of curvature"
       << m_nominalCentreOfCurvature << " ," << m_nominalCentreOfCurvatureBottom
       << endmsg;
 
@@ -73,7 +65,7 @@ StatusCode DeRich1::initialize()
 
   // get the parameters of the nominal flat mirror plane in the form
   // Ax+By+Cz+D=0
-  std::vector<double> nominalFMirrorPlane = paramVector("Rich1NominalFlatMirrorPlane");
+  const std::vector<double> & nominalFMirrorPlane = paramVector("Rich1NominalFlatMirrorPlane");
   m_nominalPlaneTop = HepPlane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
                                  nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
   m_nominalPlaneBottom = HepPlane3D(nominalFMirrorPlane[0],-nominalFMirrorPlane[1],
@@ -84,7 +76,7 @@ StatusCode DeRich1::initialize()
   m_nominalNormal = m_nominalPlaneTop.normal();
   m_nominalNormalBottom = m_nominalPlaneBottom.normal();
 
-  log << MSG::DEBUG << "Nominal normal " << HepVector3D( m_nominalNormal )
+  msg << MSG::DEBUG << "Nominal normal " << HepVector3D( m_nominalNormal )
       << HepVector3D( m_nominalNormalBottom ) << endmsg;
 
   const IPVolume* pvGasWindow = geometry()->lvolume()->
@@ -106,8 +98,8 @@ StatusCode DeRich1::initialize()
       }
     }
   } else {
-    log << MSG::ERROR << "Could not find gas window properties" << endmsg;
-    return fail;
+    msg << MSG::ERROR << "Could not find gas window properties" << endmsg;
+    return StatusCode::FAILURE;
   }
 
   // find the HPD quantum efficiency
@@ -119,36 +111,37 @@ StatusCode DeRich1::initialize()
 
   SmartDataPtr<TabulatedProperty> tabQE (dataSvc(), HPD_QETabPropLoc);
   if ( !tabQE )
-    log << MSG::ERROR << "No info on HPD Quantum Efficiency" << endmsg;
+    msg << MSG::ERROR << "No info on HPD Quantum Efficiency" << endmsg;
   else {
     m_HPDQuantumEff = tabQE;
-    log << MSG::DEBUG << "Loaded HPD QE from:" << HPD_QETabPropLoc << endmsg;
+    msg << MSG::DEBUG << "Loaded HPD QE from: " << HPD_QETabPropLoc << endmsg;
   }
 
   // get the nominal reflectivity of the spherical mirror
-  std::string sphMirrorReflLoc = "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT";
+  const std::string sphMirrorReflLoc = 
+    "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT";
   SmartDataPtr<TabulatedProperty> sphMirrorRefl( dataSvc(), sphMirrorReflLoc );
   if ( !sphMirrorRefl )
-    log << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
+    msg << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
   else {
     m_nominalSphMirrorRefl = sphMirrorRefl;
-    log << MSG::DEBUG << "Loaded spherical mirror reflectivity from:"
+    msg << MSG::DEBUG << "Loaded spherical mirror reflectivity from: "
         << sphMirrorReflLoc << endmsg;
   }
 
   // get the nominal reflectivity of the flat mirror
-  std::string flatMirrorReflLoc = "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT";
+  const std::string flatMirrorReflLoc = 
+    "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT";
   SmartDataPtr<TabulatedProperty> flatMirrorRefl(dataSvc(),flatMirrorReflLoc);
   if ( !flatMirrorRefl )
-    log << MSG::ERROR << "No info on flat mirror reflectivity" << endmsg;
+    msg << MSG::ERROR << "No info on flat mirror reflectivity" << endmsg;
   else {
     m_nominalFlatMirrorRefl = flatMirrorRefl;
-    log << MSG::DEBUG << "Loaded flat mirror reflectivity from:"
+    msg << MSG::DEBUG << "Loaded flat mirror reflectivity from: "
         << flatMirrorReflLoc << endmsg;
   }
 
-  log << MSG::DEBUG << "Finished initialisation for DeRich1" << endmsg;
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 const HepPoint3D & DeRich1::nominalCentreOfCurvature(const Rich::Side side) const

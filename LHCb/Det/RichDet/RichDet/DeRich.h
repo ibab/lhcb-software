@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.11 2004-10-20 22:41:54 jonrob Exp $
+ *  $Id: DeRich.h,v 1.12 2005-02-25 23:28:54 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/10/20 22:41:54  jonrob
+ *  Tidy up inline and virtual functions (whilst solving a windows problem)
+ *
  *  Revision 1.10  2004/10/20 16:16:36  jonrob
  *  More minor updates to functions (adding const etc.)
  *
@@ -227,6 +230,11 @@ public:
     return ( m_paramNames.end() != std::find(m_paramNames.begin(),m_paramNames.end(),paramName) );
   }
 
+  /** Returns the name of this particular detector
+   *  @return detector name
+   */
+  inline const std::string & myName() const { return m_name; }
+
 protected:
 
   /// vector of strings
@@ -262,6 +270,8 @@ protected:
   const TabulatedProperty* m_nominalSphMirrorRefl;
   /// flat mirror reflectivity
   const TabulatedProperty* m_nominalFlatMirrorRefl;
+
+  std::string m_name; ///< The name of this detector
 
 };
 
