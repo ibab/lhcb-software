@@ -3,7 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v21r2>2003-12-03 Brunel v21r2</A></H1><PRE>
+</PRE><H1><A NAME=v21r2>2003-12-04 Brunel v21r2</A></H1><PRE>
+** This version requires data produced by Boole v3r2 or greater **
 
 - New features
    . Additional monitoring histograms (ITCheckers v1r4)
@@ -13,6 +14,12 @@ Purpose: LHCb reconstruction program
    . Use circle method everywhere for ray tracing, gives further improvement in
      Rich time performance without loss of efficiency 
      (RichDetTools v3r3, RichRecSys v1r4)
+   . Introduction of OTQuarters in OT geometry (OTAlgorithms v13r4, OTDet v5r0
+     XmlDDDB v20r0, LongTrack v1r8p1, TrCheck v2r2)
+
+- Dst changes
+   . Backward incompatible change to bit definitions in OTChennelID
+     (LHCbKernel v12r10)
 
 - Bug fixes
    . Fix division by 0 for backward moving tracks (bug 1928) (TrCheck v2r2)
@@ -23,6 +30,9 @@ Purpose: LHCb reconstruction program
       TrCleanEx v2r7p1, TrIntraPR v2r6p1)
    . Changes to ITSignalToNoise tools ---> noise in e- or ADC 
      (ITAlgorithms v13r0, LongTrack v1r8p1, TrIntraPR v2r6p1, VeloTT v1r6p1)
+
+- Removed features
+   . Remove support for v256r0 geometry (not supported by OTDet v5r0)
 
 </PRE><H1><A NAME=v21r1>2003-11-28 Brunel v21r1</A></H1><PRE>
 ** This version requires data produced by Boole v3r1 or greater **

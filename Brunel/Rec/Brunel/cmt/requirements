@@ -33,7 +33,7 @@ use GaudiObjDesc 	v5r0
 use HbookCnv 		v13r4
 
 #-- Database
-use XmlDDDB		v19r1	Det
+use XmlDDDB		v20r0	Det
 use ParamFiles          v2r1    $(LHCb_release_area)/PARAM -no_auto_imports
 
 #-- LHCb libraries (from LHCB_v13r5)
@@ -62,7 +62,7 @@ use ITAlgorithms        v13r0	IT
 use ITCheckers          v1r4	IT
 
 # Outer Tracker
-use OTAlgorithms        v13r3 	OT
+use OTAlgorithms        v13r4	OT
 
 # Tracking
 use VeloTrack           v5r1  	Velo
