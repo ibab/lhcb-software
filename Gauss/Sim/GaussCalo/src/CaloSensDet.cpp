@@ -1,8 +1,14 @@
-// $Id: CaloSensDet.cpp,v 1.3 2003-05-14 08:43:42 robbep Exp $ 
+// $Id: CaloSensDet.cpp,v 1.4 2003-06-05 08:27:56 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/05/14 08:43:42  robbep
+// Addition of specific calo corrections in CaloSensDet :
+// - Birk's law
+// - timing
+// - local non uniformity
+//
 // Revision 1.2  2002/12/13 16:52:57  ibelyaev
 //  put updated versions of the packages
 //
@@ -487,11 +493,19 @@ double CaloSensDet::birkCorrection(G4Step* step)
       double density  = mat->GetDensity() ;
 
       // dEdx
+      //      double dEdx = G4EnergyLossTables::GetDEDX(
+      //                                        track->GetDefinition(),
+      //                                        track->GetKineticEnergy(),
+      //mat ) ;
+
+      const G4MaterialCutsCouple *aMaterialCut = 
+        track->GetMaterialCutsCouple() ;
+
       double dEdx = G4EnergyLossTables::GetDEDX(
-                                                track->GetDefinition(),
-                                                track->GetKineticEnergy(),
-                                                mat ) ;      
-      
+                                                track->GetDefinition() ,
+                                                track->GetKineticEnergy() ,
+                                                aMaterialCut ) ;
+
       result = 1./(1. + C1*dEdx/density + C2*dEdx*dEdx/density/density ) ;
     }
   }
