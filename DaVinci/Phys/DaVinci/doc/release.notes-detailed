@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================== DaVinci v12r1 2004-09-16 ===================
+! 2004-09-17 - P. Koppenburg
+  - options/Hlt.opts
+    . Restore TrgTrackToContainer/HltTrgTrackToContainer
+      Bug found by Luis Fernandez
+    
 ! 2004-09-15 - P. Koppenburg for Luisanna Tocco
   - options/L0Muon.opts
     . Use same options as Boole except for some details.

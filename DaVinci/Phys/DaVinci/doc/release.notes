@@ -34,57 +34,12 @@ Purpose     : LHCb analysis program
 ################################################################################
 #                               DAVINCI v12r1                                  #
 ################################################################################
-##################################### CALO #####################################
-!======================== CaloPIDs v2r4 2004-09-08 ======================
-! 2004-09-02 - Vanya BELYAEV
-   make the preparation for HLT/Trigger development 
- - update for modifier CaloInterfaces 
- - cmt/requirements 
-   version increment to v2r4 
-!======================= CaloReco v2r5 2004-09-08 ======================
-! 2004-09-08 - Marco Cattaneo
- - Remove associator factories from CaloReco_load.cpp, as these have been
-   move to Associators/Associators package
-
-! 2004-09-05 - Vanya BELYAEV
-  - src/CelAutoTaggedCell.h
-    src/CellularAutomaton.h
-    src/CellularAutomaton.cpp
-   trivial modification to obtain 25% CPU gain 
-
-! 2004-09-05 - Vanya BELYAEV
- - src/CaloCheckObjectsAlg.h(.cpp)
-   new trivial algorithm for checking the existence 
-   (and by product, the loading!) of objects in Gaudi transient store 
- - src/CaloReco_load.cpp
-   add the decalration of the new algorithm 
-
-! 2004-09-02 - Vanya BELYAEV
- - prepare for HLT/Trigger developments 
-
-###################################### IT ######################################
-###################################### L0 ######################################
-!=================== L0MuonTrigger v2r2 2004-09-14 =======================
-! 2004-09-14 - Luisanna Tocco
- - Fix new pT kick (1.39) in Boole.opts 
-##################################### PHYS #####################################
-!========================== CommonParticles v1r5p3 2004-09-16 ===================
-! 2004-09-02 - P. Koppenburg
- - src/<someAlgorithms>.cpp
-   . Remove getInput that is not in PhysDesktop anymore.
-
-!========================== DaVinciAssociators v5r2 2004-09-16===================
-! 2004-09-16 - P. Koppenburg
- - src/Particle2MCLink.cpp
-   . Temporary hack suggested by Olivier Callot that solved the TrgTrack association
-     problem. Not a definitive solution as it involes the hard-codeing of the 
-     container. A better solution is being implemented in the TrgParticleMaker.     
-! 2004-09-16 - P. Koppenburg
- - src/Particle2MCLink.cpp
-   . Try to check if origin() is a TrgTrack if it is not a ProtoParticle.
-     This does not allow yet to associate TrgTracks as they are not 
-     stored in a container at creation. 
 !========================== DaVinci v12r1 2004-09-16 ===================
+! 2004-09-17 - P. Koppenburg
+  - options/Hlt.opts
+    . Restore TrgTrackToContainer/HltTrgTrackToContainer
+      Bug found by Luis Fernandez
+    
 ! 2004-09-15 - P. Koppenburg for Luisanna Tocco
   - options/L0Muon.opts
     . Use same options as Boole except for some details.
@@ -167,6 +122,57 @@ Olivier writes:
   - job/DaVinci.job, job/Stripping.job
     . Use cmtuser directory
     
+##################################### CALO #####################################
+!======================== CaloPIDs v2r4 2004-09-08 ======================
+! 2004-09-02 - Vanya BELYAEV
+   make the preparation for HLT/Trigger development 
+ - update for modifier CaloInterfaces 
+ - cmt/requirements 
+   version increment to v2r4 
+!======================= CaloReco v2r5 2004-09-08 ======================
+! 2004-09-08 - Marco Cattaneo
+ - Remove associator factories from CaloReco_load.cpp, as these have been
+   move to Associators/Associators package
+
+! 2004-09-05 - Vanya BELYAEV
+  - src/CelAutoTaggedCell.h
+    src/CellularAutomaton.h
+    src/CellularAutomaton.cpp
+   trivial modification to obtain 25% CPU gain 
+
+! 2004-09-05 - Vanya BELYAEV
+ - src/CaloCheckObjectsAlg.h(.cpp)
+   new trivial algorithm for checking the existence 
+   (and by product, the loading!) of objects in Gaudi transient store 
+ - src/CaloReco_load.cpp
+   add the decalration of the new algorithm 
+
+! 2004-09-02 - Vanya BELYAEV
+ - prepare for HLT/Trigger developments 
+
+###################################### IT ######################################
+###################################### L0 ######################################
+!=================== L0MuonTrigger v2r2 2004-09-14 =======================
+! 2004-09-14 - Luisanna Tocco
+ - Fix new pT kick (1.39) in Boole.opts 
+##################################### PHYS #####################################
+!========================== CommonParticles v1r5p3 2004-09-16 ===================
+! 2004-09-02 - P. Koppenburg
+ - src/<someAlgorithms>.cpp
+   . Remove getInput that is not in PhysDesktop anymore.
+
+!========================== DaVinciAssociators v5r2 2004-09-16===================
+! 2004-09-16 - P. Koppenburg
+ - src/Particle2MCLink.cpp
+   . Temporary hack suggested by Olivier Callot that solved the TrgTrack association
+     problem. Not a definitive solution as it involes the hard-codeing of the 
+     container. A better solution is being implemented in the TrgParticleMaker.     
+! 2004-09-16 - P. Koppenburg
+ - src/Particle2MCLink.cpp
+   . Try to check if origin() is a TrgTrack if it is not a ProtoParticle.
+     This does not allow yet to associate TrgTracks as they are not 
+     stored in a container at creation. 
+
 !========================== DaVinciFilter v1r1 2004-09-16 ===================
 ! 2004-09-13 - P. Koppenburg
  - cmt/requirements
