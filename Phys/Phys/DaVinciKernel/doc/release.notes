@@ -2,6 +2,15 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2005-01-18 - P. Koppenburg
+  - DaVinciTools/IBestParticles.h
+  - DaVinciTools/IGeomVertexFitter.h
+  - DaVinciTools/IIDIPhotonFromMergedParams.h
+  - DaVinciTools/IIDIPhotonParams.h
+  - DaVinciTools/IKFFitTool.h
+  - DaVinciTools/IParticleMaker.h
+    . Definitively moved to Kernel.
+
 ! 2005-01-13 - P. Koppenburg
   - Kernel/IPlotTool
     . Add default argument std::string trailer = "" in fillPlots methods.
