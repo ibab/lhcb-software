@@ -60,6 +60,7 @@ use  B2XGamma        v1r0    PhysSel
 use  B2DD            v1r7    PhysSel
 use  B2HH            v1r5    PhysSel
 use  B2XGamma        v1r0    PhysSel
+use  Bd2a1Dstar      v1r1    PhysSel
 use  Bd2JpsiKstar    v1r2p3  PhysSel
 use  Bd2KPiPiPi      v1r2p1  PhysSel
 use  Bd2MuMuKstar    v1r3p1  PhysSel
@@ -83,7 +84,6 @@ use  Bs2PhiEtac      v1r4p2  PhysSel
 # use  Bs2DsH          v2r2    PhysSel
 # use  Bs2PhiPhi       v1r2    PhysSel
 # --- Don't compile on Windows
-# use  Bd2a1Dstar      v1r0    PhysSel
 # use  Bd2DstarPi      v1r5    PhysSel
 # --- Use DaVinciMCTools 
 # use  Bs2JpsiEta      v2r1p1  PhysSel
