@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-
 # =============================================================================
-# $Id: bendermodule.py,v 1.8 2004-07-11 15:47:06 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.9 2004-07-23 13:49:24 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
@@ -12,7 +11,7 @@
 # =============================================================================
 # @file
 #
-# defintion of all Lo?ki/Bender functions/cuts 
+# defintion of all LoKi/Bender functions/cuts 
 #
 # @date   2004-07-11
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru

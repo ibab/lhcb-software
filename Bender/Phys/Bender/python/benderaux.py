@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderaux.py,v 1.1 2004-07-11 15:47:05 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.2 2004-07-23 13:49:23 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/07/11 15:47:05  ibelyaev
+#  regular incrment
+#
 # =============================================================================
 
 
@@ -71,8 +74,7 @@ VertexType.Brem            = 5
 VertexType.Pair            = 6
 VertexType.Kink            = 7
 
-
-# extratc native ROOT histograms from AIDA
+# extract the native ROOT histograms from AIDA
 aida2root = gaudi.gbl.Bender.RootHelper.aida2root
 
 # import useful functions
@@ -83,6 +85,14 @@ select_min             = gbl.Bender.Select.select_min
 select_max             = gbl.Bender.Select.select_max
 SelectPrimaryVertexMin = gbl.Bender.Select.SelectPrimaryVertexMin
 SelectPrimaryVertexMax = gbl.Bender.Select.SelectPrimaryVertexMax
+
+pidFromName            = gbl.Bender.ParticleProperties.pidFromName
+ppFromName             = gbl.Bender.ParticleProperties.ppFromName
+ppFromPID              = gbl.Bender.ParticleProperties.ppFromPID
+massFromPID            = gbl.Bender.ParticleProperties.massFromPID
+massFromName           = gbl.Bender.ParticleProperties.massFromName
+ppService              = gbl.Bender.ParticleProperties.ppSvc
+
 
 # =============================================================================
 # The END 

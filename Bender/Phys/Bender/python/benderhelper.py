@@ -1,5 +1,4 @@
 import gaudimodule as gaudi
-import sys , string
 
 g = gaudi.AppMgr()
 g.loaddict('BenderDict')
