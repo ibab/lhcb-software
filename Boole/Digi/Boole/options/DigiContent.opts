@@ -52,19 +52,10 @@ DigiWriter.ItemList =
   //, "/Event/Trig/L1#1"
   //, "/Event/Trig/L1/Summary#1"  - to be replaced by new L1 trigger
   //, "/Event/Trig/L1/Decision#1" - to be replaced by new L1 trigger
-, "/Event/Raw#1"
-, "/Event/Raw/Velo#1"
+  // Keep the directory nodes of all Digits, even if stored as  RawBuffer
+, "/Event/Raw#2"
 , "/Event/Raw/Velo/Clusters#1"
-, "/Event/Raw/IT#1"
 , "/Event/Raw/IT/Digits#1"
-  // Keep the directory nodes of Digits available on the RawBuffer
-, "/Event/Raw/Rich#1"
-, "/Event/Raw/OT#1"
-, "/Event/Raw/Spd#1"
-, "/Event/Raw/Prs#1"
-, "/Event/Raw/Ecal#1"
-, "/Event/Raw/Hcal#1"
-, "/Event/Raw/Muon#1"
 , "/Event/Rec#1"
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITDigits2MCHits#1"
