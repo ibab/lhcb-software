@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTagging
-version           v4r2
+version           v4r3
 
 #============================================================================
 # Structure, i.e. directories to process. 

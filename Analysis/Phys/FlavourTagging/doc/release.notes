@@ -4,6 +4,7 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+!==================== FlavourTagging v4r3 2003-04-25 =====================
 ! 2003-04-10 - Olivier Dormond
  - Added a combined particle maker until one is available globally.
  - The FlavourTaggingAlgorithm now reports the statistical errors at the end
