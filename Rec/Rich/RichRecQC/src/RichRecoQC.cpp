@@ -1,4 +1,4 @@
-// $Id: RichRecoQC.cpp,v 1.3 2003-07-03 14:48:12 jonesc Exp $
+// $Id: RichRecoQC.cpp,v 1.4 2003-08-06 09:58:26 jonrob Exp $
 // Include files
 
 // local
@@ -40,7 +40,8 @@ StatusCode RichRecoQC::initialize() {
   if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
 
   // acquire tools
-  acquireTool("RichSegmentProperties", m_segProps);
+  acquireTool( "RichParticleProperties", m_richPartProp );
+  acquireTool( "RichCherenkovAngle",     m_ckAngle      );
 
   // Get pointer to MC Truth tool
   if ( !(toolSvc()->retrieveTool("RichRecMCTruthTool",m_richRecMCTruth) ) ) {
@@ -111,17 +112,17 @@ StatusCode RichRecoQC::execute() {
     Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
 
     // beta for true type
-    double beta = m_segProps->beta( segment, mcType );
+    double beta = m_richPartProp->beta( segment, mcType );
     if ( beta < m_minBeta ) continue; // skip non-saturated tracks
 
     // Expected Cherenkov theta angle for true particle type
     double thetaExpTrue = ( mcType != Rich::Unknown ?
-                            m_segProps->avgCherenkovTheta( segment, mcType ) : 0 );
+                            m_ckAngle->avgCherenkovTheta( segment, mcType ) : 0 );
 
     // loop over photons for this segment
     int truePhotons = 0;
-    SmartRefVector<RichRecPhoton> & photons = segment->richRecPhotons();
-    for ( SmartRefVector<RichRecPhoton>::iterator iPhot = photons.begin();
+    RichRecSegment::Photons & photons = segment->richRecPhotons();
+    for ( RichRecSegment::Photons::iterator iPhot = photons.begin();
           iPhot != photons.end();
           iPhot++ ) {
       RichRecPhoton * photon = *iPhot;
@@ -153,7 +154,8 @@ StatusCode RichRecoQC::finalize() {
 
   // release tools
   releaseTool( m_richRecMCTruth );
-  releaseTool( m_segProps );
+  releaseTool( m_richPartProp );
+  releaseTool( m_ckAngle );
 
   // Execute base class method
   return RichRecAlgBase::finalize();

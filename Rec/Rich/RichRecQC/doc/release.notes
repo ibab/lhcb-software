@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2003-08-06 - Chris Jones
+ - Changes for new RichRecBase package
+
 !======================== RichRecQC v1r0 2003-07-07 ========================
 ! 2003-07-08 - Marco Cattaneo
  - RichPIDQC.cpp: release service after use, fix a windows compilation problem

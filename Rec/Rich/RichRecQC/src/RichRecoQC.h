@@ -1,4 +1,4 @@
-// $Id: RichRecoQC.h,v 1.2 2003-07-03 13:12:16 jonesc Exp $
+// $Id: RichRecoQC.h,v 1.3 2003-08-06 09:58:26 jonrob Exp $
 #ifndef RICHRECQC_RICHRECOQC_H
 #define RICHRECQC_RICHRECOQC_H 1
 
@@ -28,7 +28,8 @@
 #include "AIDA/IHistogram2D.h"
 
 // interfaces
-#include "RichRecBase/IRichSegmentProperties.h"
+#include "RichRecBase/IRichParticleProperties.h"
+#include "RichRecBase/IRichCherenkovAngle.h"
 
 /** @class RichRecoQC RichRecoQC.h
  *
@@ -62,7 +63,8 @@ private: // methods
 private: // data
 
   // Pointers to tool instances
-  IRichSegmentProperties * m_segProps;
+  IRichParticleProperties * m_richPartProp;
+  IRichCherenkovAngle * m_ckAngle;
 
   /// Pointer to RichRecMCTruthTool interface
   IRichRecMCTruthTool* m_richRecMCTruth;
