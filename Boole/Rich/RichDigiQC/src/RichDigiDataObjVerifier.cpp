@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.4 2004-04-13 14:43:07 jonesc Exp $
+// $Id: RichDigiDataObjVerifier.cpp,v 1.5 2004-04-13 15:35:48 jonesc Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
@@ -53,9 +53,11 @@ void RichDigiDataObjVerifier::printHitsAt( const std::string & location ) const
           iHit != mcHits->end(); ++iHit ) {
       debug() << "MCRichHit key= " << (*iHit)->key() << endreq;
       MCParticle * mcPart = (*iHit)->mcParticle();
-      int mcPartKey = ( mcPart ? mcPart->key() : -1 );
-      debug() << "  Parent MCParticle key= "
-              << mcPartKey << endreq;
+      if ( mcPart ) {
+        debug() << "  Parent MCParticle key= " << mcPart->key() << endreq;
+      } else {
+        debug() << "  No parent MCParticle found !!" << endreq;
+      }
       std::cout << "   Data members " << **iHit << std::endl;
     }
   }
