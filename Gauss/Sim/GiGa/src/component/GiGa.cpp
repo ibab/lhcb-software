@@ -1,8 +1,11 @@
-// $Id: GiGa.cpp,v 1.8 2004-04-20 04:26:06 ibelyaev Exp $ 
+// $Id: GiGa.cpp,v 1.9 2004-08-02 13:13:47 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2004/04/20 04:26:06  ibelyaev
+//  fix bad interference between tools and Geant4
+//
 // Revision 1.7  2003/09/22 13:57:11  ibelyaev
 //  polishing of addRef/release/releaseTools/finalize
 //
@@ -153,7 +156,7 @@ GiGa::~GiGa(){};
 // ============================================================================
 StatusCode 
 GiGa::queryInterface
-( const IID& id , void** ppI  ) 
+( const InterfaceID& id , void** ppI  ) 
 {
   if       ( 0 == ppI  )               
     { return StatusCode::FAILURE                    ; } // RETURN !!!  

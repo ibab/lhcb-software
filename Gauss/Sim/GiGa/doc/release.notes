@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.104 2004-07-05 16:06:19 gcorti Exp $
+! $Id: release.notes,v 1.105 2004-08-02 13:13:47 gcorti Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+!======================= GiGa v17r1 =====================================
+! 2004-08-02 - Gloria CORTI
+ - requirements
+   . modify to replace use of GaudiTools with GaudiAlg to adapt to Gaudi v16
+ - GiGaBase.h 
+   . modify include for GaudiTools to adapt to new Gaudi v16
+ - GiGa.cpp
+   . modify to use InterfaceID instead of IID to adapt to Gaudi v16 
 
 ! 2004-07-05 - Gloria CORTI
  - GiGa/GiGaFieldMgrBase.h
