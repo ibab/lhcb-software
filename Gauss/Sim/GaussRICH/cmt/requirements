@@ -2,22 +2,25 @@
 # Created    : 2002-12-12
 # Maintainer : Sajan Easo
 #============================================================================
-# $Id: requirements,v 1.19 2004-07-30 13:42:13 jonrob Exp $
+# $Id: requirements,v 1.20 2004-08-02 13:30:31 gcorti Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.19  2004/07/30 13:42:13  jonrob
+# Add doxygen file documentation and CVS information
+#
 #============================================================================
 
 # =============================================================================
 package GaussRICH
-version v4r7
+version v4r8
 
 # =============== package structure ===========================================
 branches          cmt src doc
 
 # =============== explicit dependencies =======================================  
 use GaussTools    v*     Sim
-use AIDA          v*
+use AIDA          v*     LCG_Interfaces
 # =============== Event =======================================================
-use RichEvent     v*      Event
+use RichEvent     v*     Event
 
 # ============== component library ============================================
 library          GaussRICH    *.cpp             \

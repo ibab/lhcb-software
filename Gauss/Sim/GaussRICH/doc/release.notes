@@ -5,6 +5,10 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!========================= GaussRICH v4r8 =================================
+! 2004-08-02 - Gloria CORTI
+ - requirements, adapt to LCG interfaces
+
 ! 2004-07-30 - Chris Jones
  - Update doxygen comments in GiGa converters
 
