@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-///   Job options for Brunel for data produced with Boole v3r0 or greater   ///
-///          and with XmlDDDB geometry compatible with lhcb-200311          ///
+///   Job options for Brunel for data produced with Boole v3r1 or greater   ///
+/// and with XmlDDDB v19r0 or greater, geometry compatible with lhcb-200311 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BRUNELOPTS/Brunel.opts"          // Generic options for all jobs
@@ -11,9 +11,7 @@
 // Database specific options
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
-#include "$RICHRECSYSOPTS/BrunelRecoHPD.opts"
-#include "$RICHRECSYSOPTS/RecoParamForHPD.opts"
-#include "$VELOTTROOT/options/BrunelField043.opts"
+#include "$RICHRECSYSOPTS/RecoParam.opts"
 #pragma print on
 
 //---------------------------------------------------------------------------
@@ -24,9 +22,9 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
 // Finally, define input and output files, first event, number of events
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v3r0p1/370000_0111.oodigi' TYP='ROOT' opt='READ'" }; // evtype 370000
+  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v3r1/412400.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
 
-DstWriter.Output = "DATAFILE='370000_0111.dst' TYP='ROOT' OPT='NEW'";
-HistogramPersistencySvc.OutputFile = "370000_0111.hbook";  // Monitoring histos
+DstWriter.Output = "DATAFILE='412400.dst' TYP='ROOT' OPT='NEW'";
+HistogramPersistencySvc.OutputFile = "412400.hbook";  // Monitoring histos
 ApplicationMgr.EvtMax = 100;
 //////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-///  Job options for Brunel for data produced with Boole v3r0 or greater   ///
+///  Job options for Brunel for data produced with Boole v3r1 or greater   ///
 ///              and with dbase geometry compatible with v256r0            ///
 //////////////////////////////////////////////////////////////////////////////
 #pragma print off
@@ -11,9 +11,7 @@
 // Database specific options
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v256r0.xml";
-#include "$RICHRECSYSOPTS/BrunelRecoHPD.opts"
-#include "$RICHRECSYSOPTS/RecoParamForSICBHPD.opts"
-#include "$VELOTTROOT/options/BrunelField043.opts"
+#include "$RICHRECSYSOPTS/RecoParamSICB.opts"
 #pragma print on
 
 //---------------------------------------------------------------------------
@@ -24,7 +22,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v256r0.xml";
 // Finally, define input and output files, first event, number of events
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v3r0p1/00000335_00000001_4.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
+  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v3r1/00000335_00000001_4.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
 //EventSelector.FirstEvent = 11;
 DstWriter.Output = "DATAFILE='00000335_00000001_5.dst' TYP='ROOT' OPT='NEW'";
 HistogramPersistencySvc.OutputFile = "00000335_00000001_5.hbook";  // Monitoring histos

@@ -45,6 +45,7 @@ BrunelMoniRichSeq.Members += { "TrStoredTrackMCTruthAlg/Tr2MCP" };
 
 // Rich reconstruction
 ApplicationMgr.DLLs += { "RichRecQC", "RichRecMCTools" };
+BrunelMoniRICHSeq.Members += { "BuildMCRichDigitLinks" };
 #include "$RICHRECQCOPTS/RecQC_Brunel.opts"
 
 // detailed RICH reconstruction monitors

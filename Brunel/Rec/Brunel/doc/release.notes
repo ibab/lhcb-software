@@ -3,6 +3,28 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v21r1>2003-11-28 Brunel v21r1</A></H1><PRE>
+** This version requires data produced by Boole v3r1 or greater **
+
+- New features
+   . Calorimeter digits rebuilt from RawBuffer (CaloEvent v12r1)
+   . Rich digits rebuilt from RawBuffer (RichDAQ v1r0)
+   . Default OT monitoring now switched on
+
+- New tuning
+   . Improved Rich detector packages and new track cuts in Rich reconstruction.
+     Reduced the max track limit for the Global PID from 230 to 180 and 
+     increased it for the local PID to 300. Effect is very small drop in PID 
+     performance for large events, but much improved CPU time.
+     (RiSicbGeom v3r6, RichUtils v3r5, RichDetTools v3r2, RichRecSys v1r3)
+
+- DST changes
+   . Added DAQ/RawBuffer (GaudiConf v7r3)
+
+- Removed features
+   . Remove support for v254r1 (optimization TDR) geometry
+
+
 </PRE><H1><A NAME=v21r0p1>2003-11-10 Brunel v21r0p1</A></H1><PRE>
 
 - Bug fix

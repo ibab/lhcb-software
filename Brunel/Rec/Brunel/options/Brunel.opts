@@ -1,6 +1,6 @@
 // Default Brunel job Options.
 //
-// This file is included by the LHCBDBASE specific options files.
+// This file is included by the geometry dependent options files.
 //
 // This file defines, sequences and configures the algorithms to be executed
 // You only need to modify it if you want to add or remove algorithms
@@ -63,6 +63,7 @@ ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/particle.cdf"
 ApplicationMgr.DLLs += { "CaloReco"      , 
                          "CaloPIDs"     ,
                          "CaloEvent"     };
+BrunelRecoCALOSeq.Members += { "CaloDigitsFromRaw" };
 #include "$CALORECOOPTS/Brunel.opts"
 #include "$CALORECOOPTS/Reco.opts"
 #include "$CALORECOOPTS/Filters.opts"
@@ -120,15 +121,20 @@ BrunelRecoTrSeq.Members += { "TrTrackCloneKiller" };
 ApplicationMgr.DLLs += { "VeloTT" };
 BrunelRecoTrSeq.Members += { "VeloTTFind" };
 #include "$VELOTTROOT/options/Brunel.opts"
+#include "$VELOTTROOT/options/BrunelField043.opts"
 BrunelRecoTrSeq.Members += { "TrPrepareVelo" };
 
 BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
 #include "$TRCLEANEXROOT/options/Brunel.opts"
 TrTrackCloneKiller.flagMode = true;
 
-// Rich Reconstruction algorithms defined in database specific file
+// Rich
 ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecCommon",
- "RichUtils", "RichGlobalPID", "RichLocalPID", "RichRingRefit", "RichPIDMerge"};
+                         "RichUtils", "RichGlobalPID", "RichLocalPID", 
+                         "RichRingRefit", "RichPIDMerge", "RichDAQ" };
+
+BrunelRecoRICHSeq.Members += { "RawBufferToRichDigitsAlg" };
+#include "$RICHRECSYSOPTS/BrunelReco.opts"
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID" };
