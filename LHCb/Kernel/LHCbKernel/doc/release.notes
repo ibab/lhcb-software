@@ -3,8 +3,11 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020430 Vanya Belyaev
+  Kernel/CaloHash.h  bug fix for Win2K   
+  
 ! 20020430 Marco Cattaneo
-  - requirements: remove run time dependency on GaudiIntrospection
+- requirements: remove run time dependency on GaudiIntrospection
 
 ! 20020427 Vanya Belyaev
   - add CaloHash.h file for usage in CaloMap.h and CaloHashMaps.h 

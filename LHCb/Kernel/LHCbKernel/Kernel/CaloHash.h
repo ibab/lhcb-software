@@ -1,8 +1,11 @@
-// $Id: CaloHash.h,v 1.2 2002-04-27 16:26:24 ibelyaev Exp $
+// $Id: CaloHash.h,v 1.3 2002-04-30 16:18:16 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/27 16:26:24  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.1  2002/04/27 15:31:02  ibelyaev
 //  add CaloHash.h for efficient hashing on Win32 platform
 // 
@@ -27,7 +30,7 @@ struct CaloHash : public std::unary_function<TYPE,size_t>
     size_t res     = 0 ;
     size_t len     = sizeof(TYPE) ;
     const  char* p = reinterpret_cast<const char*>( &key );
-    while( len-- ) { res = ( res << 1 ) ^ p++ ; }  
+    while( len-- ) { res = ( res << 1 ) ^ *p++ ; }  
     return res;
   };
 };
