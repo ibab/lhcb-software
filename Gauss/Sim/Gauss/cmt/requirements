@@ -48,7 +48,7 @@ use GeneratorModules    v9r0    Gen
 use XmlDDDB             v18r0   Det   -no_auto_imports
 use FieldMap            v4r3          -no_auto_imports
 use DecFiles            v2r0    Gen   -no_auto_imports
-use ParamFiles          v2r0    $(LHCb_release_area)/PARAM   -no_auto_imports
+use ParamFiles          v2r1    $(LHCb_release_area)/PARAM   -no_auto_imports
 
 # =============================================================================
 # Essential environment variables 
