@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v17r1>2003-01-?? Brunel v17r1</A></H1><PRE>
+ - Bug fixes:
+   . Fix minor problems flagged by valgrind (TrExtrapolator v2r5)
+
 </PRE><H1><A NAME=v17r0>2003-01-09 Brunel v17r0</A></H1><PRE>
  - New tuning:
    . Change strip threshold to 7000e (PuVeto v5r3)

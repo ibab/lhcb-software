@@ -1,5 +1,5 @@
 package Brunel
-version v17r0
+version v17r1
 
 branches doc cmt job options
 
@@ -32,10 +32,10 @@ use HbookCnv 		v13r2p1
 #-- Database
 use XmlDDDB	v14r4	Det
 
-#-- LHCb libraries (from LHCB_v11r6)
-use LHCb	v11r6
+#-- LHCb libraries (from LHCB_v11r7)
+use LHCb	v11r7
 
-#-> SICB basic libraries (from LHCB_v11r6)
+#-> SICB basic libraries (from LHCB_v11r7)
 use SICBSys	v1r1	SICB
 
 #-- BrunelSys v16r4 packages
@@ -78,7 +78,7 @@ use VeloTrack           v4r4  	Velo
 use TrCheck             v1r3  	Tr
 use LongTrack           v1r5  	Tr
 use TrFitter            v3r5  	Tr
-use TrExtrapolator      v2r4  	Tr
+use TrExtrapolator      v2r5  	Tr
 use TrTools             v2r3  	Tr
 use Seeding             v2r4  	Tr 
 use TrMatching          v2r5  	Tr
