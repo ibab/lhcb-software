@@ -1,4 +1,4 @@
-//$Id: ConditionsDBAddress.cpp,v 1.4 2001-11-27 18:23:52 andreav Exp $
+//$Id: ConditionsDBAddress.cpp,v 1.5 2001-11-29 10:49:23 andreav Exp $
 
 #include "ConditionsDBAddress.h"
 
@@ -6,9 +6,9 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/TimePoint.h"
 
-/// If not specifed, type and classID are discovered at runtime in the CondDB
-/// Use invalid values as keywords: CLID_DataObject and TEST_StorageType
-const CLID&          ConditionsDBAddress_undefinedClassID   = CLID_DataObject;
+/// If not specifed, type and classID are discovered at runtime in the CondDB.
+/// Use invalid values as keywords: CLID_NULL and TEST_StorageType.
+const CLID&          ConditionsDBAddress_undefinedClassID   = CLID_NULL;
 const unsigned char& ConditionsDBAddress_undefinedStringType= TEST_StorageType;
 
 //---------------------------------------------------------------------------

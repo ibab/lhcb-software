@@ -1,10 +1,11 @@
-//$Id: ConditionDataSvc.cpp,v 1.5 2001-11-27 18:26:20 andreav Exp $
+//$Id: ConditionDataSvc.cpp,v 1.6 2001-11-29 10:50:29 andreav Exp $
 #include <string>
 
 #include "ConditionDataSvc.h"
 
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/DataSvc.h"
+#include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IValidity.h"
@@ -71,11 +72,13 @@ StatusCode ConditionDataSvc::finalize()
 StatusCode ConditionDataSvc::queryInterface(const IID& riid, 
 					    void** ppvInterface)
 {
-  if ( IID_IDetDataSvc == riid )  {
-    // With the highest priority return the specific interface of this service
+  // With the highest priority return the specific interfaces
+  // If interfaces are not directly available, try out a base class
+  if ( IID_IDetDataSvc == riid ) {
     *ppvInterface = (IDetDataSvc*)this;
-  } else  {
-    // Interface is not directly available: try out a base class
+  } else if ( IID_IIncidentListener == riid ) {
+    *ppvInterface = (IIncidentListener*)this;
+  } else {
     return DataSvc::queryInterface(riid, ppvInterface);
   }
   addRef();
@@ -106,6 +109,17 @@ const bool ConditionDataSvc::validEventTime ( ) const {
 /// Get the event time  
 const ITime& ConditionDataSvc::eventTime ( ) const { 
   return *m_eventTime; 
+}
+
+//----------------------------------------------------------------------------
+
+/// Inform that a new incident has occured
+void ConditionDataSvc::handle ( const Incident& inc ) { 
+  MsgStream log( msgSvc(), "ConditionDataSvc" );
+  log << MSG::DEBUG << "New incident received" << endreq;
+  log << MSG::DEBUG << "Incident source: " << inc.source() << endreq;
+  log << MSG::DEBUG << "Incident type: " << inc.type() << endreq;
+  return; 
 }
 
 //----------------------------------------------------------------------------

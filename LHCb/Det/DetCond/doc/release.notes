@@ -1,6 +1,12 @@
-# $Id: release.notes,v 1.6 2001-11-28 09:35:38 andreav Exp $
+# $Id: release.notes,v 1.7 2001-11-29 10:55:45 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+!20011129 - Andrea Valassi
+- Remove the IConditionsDBDataSvc special interface
+-> ConditionsDBDataSvc now does little more than ConditionDataSvc
+- Implement a dummy IIncidentListener interface in ConditionDataSvc
+- Redefine ConditionsDBAddress_undefinedClassID = CLID_NULL (it will disappear)
 
 !20011128 - Andrea Valassi
 - Move the global tag from the ConditionsDBDataSvc to the ConditionsDBCnvSvc
