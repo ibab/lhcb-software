@@ -145,6 +145,13 @@ Purpose: LHCb reconstruction program
   - Store the L0DUReport in the Transient store, this wasn't done !
 
 ! =================================================================
+</PRE><H1><A NAME=v5r2>20010913 Brunel v5r2</A></H1><PRE>
+
+   In cmt/requirements
+     use rechcal v6r1
+     - Modified hcl0_make to delete the existing map of cell references.
+
+! =================================================================
 </PRE><H1><A NAME=v5r1>20010824 Brunel v5r1</A></H1><PRE>
 
    In cmt/requirements
