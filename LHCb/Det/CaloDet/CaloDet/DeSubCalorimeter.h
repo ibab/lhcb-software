@@ -1,13 +1,11 @@
-#ifndef DDEXAMPLE_DESUBCALORIMETER_H
-#define DDEXAMPLE_DESUBCALORIMETER_H 1
+#ifndef __CALODET_DESUBCALORIMETER_H__
+#define __CALODET_DESUBCALORIMETER_H__ 1
 
 
 // Include files
 #include "DetDesc/DetectorElement.h"
 
-
-#include  "CaloDet/CLIDDeSubCalorimeter.h"
-
+#include "CaloDet/CLIDDeSubCalorimeter.h"
 
 
 //------------------------------------------------------------------------------
@@ -23,28 +21,28 @@ class DeSubCalorimeter: public DetectorElement {
   
 public:
 
-  //*** Constructors
+// ** Constructors
 
   DeSubCalorimeter( const std::string& name    = ""  );
 
-  //*** Destructor
+// ** Destructor
 
   ~DeSubCalorimeter();
 
-  //*** Retrieve refrence to class identifier
+// ** Retrieve refrence to class identifier
 
   virtual const CLID& clID   () const { return classID()             ; } 
   static  const CLID& classID()       { return CLID_DeSubCalorimeter ; } 
 
-  //*** Get/Set size
+// ** Get/Set size
 
   inline double size   ()            const    { return m_size; };
   inline void   setSize( double s )           { m_size = s;    };
 
 private:
 
-  double    m_size;      // Cell dimension
+  double    m_size;      // ** Cell dimension
 
 };
 
-#endif    // DDEXAMPLE_DESUBCALORIMETER_H
+#endif    // __CALODET_DESUBCALORIMETER_H__

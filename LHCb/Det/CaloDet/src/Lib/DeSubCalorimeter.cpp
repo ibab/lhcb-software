@@ -1,4 +1,4 @@
-#define DDEXAMPLE_DESUBCALORIMETER_CPP
+#define __CALODET_DESUBCALORIMETER_CPP__ 1 
 
 // Include files
 #include "CaloDet/DeSubCalorimeter.h"

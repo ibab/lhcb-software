@@ -37,45 +37,34 @@ void XmlDeCalorimeterCnv::uStartElement( const char* const name,
   
   log << MSG::DEBUG << ">" << endreq;
   
-  if(      "specific"   == tagName ) 
-    {
-    } 
-  else if( "CodingBit"  == tagName ) 
-    {
-      std::string value = attributes.getValue( "value" );
-      if( !value.empty() ) { m_dataObj->setCoding( atoi(value.c_str()) ); }
-    } 
-  else if( "EtInCenter" == tagName ) 
-    {
-      std::string value = attributes.getValue( "value" );
-      if( !value.empty() ) { m_dataObj->setEtInCenter( xmlSvc()->eval(value.c_str()) ); }
-    } 
-  else if( "EtSlope"  ==   tagName ) 
-    {
-      std::string value = attributes.getValue( "value" );
-      if( !value.empty() ) { m_dataObj->setEtSlope( xmlSvc()->eval(value.c_str()) ); }
-    } 
-  else if( "AdcMax"   ==   tagName ) 
-    {
-      std::string value = attributes.getValue( "value" );
-      if( !value.empty() ) { m_dataObj->setAdcMax( atoi(value.c_str()) ); }
-    } 
-  else if( "ActiveToTotal"   ==   tagName ) 
-    {
-      std::string value = attributes.getValue( "value" );
-      if( !value.empty() ) { m_dataObj->setActiveToTotal( atof(value.c_str()) ); }
-    } 
-  else 
-    { log << MSG::ERROR << "Unknown XML user tag " << tagName  << endreq; }
+  if(      "specific"   == tagName ) {
+  } else if( "CodingBit"  == tagName ) {
+    std::string value = attributes.getValue( "value" );
+    if( !value.empty() ) { m_dataObj->setCoding( atoi(value.c_str()) ); }
+  } else if( "EtInCenter" == tagName ) {
+    std::string value = attributes.getValue( "value" );
+    if( !value.empty() ) { 
+      m_dataObj->setEtInCenter( xmlSvc()->eval(value.c_str()) ); 
+    }
+  } else if( "EtSlope"  ==   tagName ) {
+    std::string value = attributes.getValue( "value" );
+    if( !value.empty() ) { 
+      m_dataObj->setEtSlope( xmlSvc()->eval(value.c_str()) ); 
+    }
+  } else if( "AdcMax"   ==   tagName ) {
+    std::string value = attributes.getValue( "value" );
+    if( !value.empty() ) { m_dataObj->setAdcMax( atoi(value.c_str()) ); }
+  } else if( "ActiveToTotal"   ==   tagName ) {
+    std::string value = attributes.getValue( "value" );
+    if( !value.empty() ) { m_dataObj->setActiveToTotal( atof(value.c_str()) );}
+  } else if( "ZShowerMax"   ==   tagName ) {
+    std::string value = attributes.getValue( "value" );
+    if( !value.empty() ) { m_dataObj->setZShowerMax( atof(value.c_str()) );}
+  } else { 
+    log << MSG::ERROR << "Unknown XML user tag " << tagName  << endreq; 
+  }
 };
 
-///
-/// End of the XML element callback
-/// void XmlDeCalorimeterCnv::uEndElement( const char* const name ) 
-/// {
-///   MsgStream log( messageService(), "XmlDeCalorimeterCnv" );
-///   log << MSG::DEBUG << "</" << name << ">" << endreq;
-///};
 
 
 
