@@ -1,4 +1,4 @@
-C $Id: common_hepevt.inc,v 1.1 2004-05-06 17:47:12 robbep Exp $
+C $Id: common_hepevt.inc,v 1.2 2004-07-12 16:29:26 robbep Exp $
 C----------------------------------------------------------------------
 C  Purpose : Common HEPEVT declaration to be used for Photos
 C
