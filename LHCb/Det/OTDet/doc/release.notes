@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.31 2004-11-02 07:12:43 cattanem Exp $
+! $Id: release.notes,v 1.32 2004-12-10 08:11:37 jnardull Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg & Jacopo Nardulli
+
+! 2004-12-06 - Jacopo Nardulli
+ - Fixing a default location for the DeOTDetector Element
 
 !========================== OTDet v5r4 2004-11-01 ==========================
 ! 2004-10-21 - Jacopo Nardulli

@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.15 2004-11-02 07:12:42 cattanem Exp $
+// $Id: DeOTDetector.h,v 1.16 2004-12-10 08:11:37 jnardull Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -28,6 +28,10 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl 
  *  @date   26-05-2002
  */
+
+namespace DeOTDetectorLocation{
+  static const std::string& Default = "/dd/Structure/LHCb/OT";
+};
 
 static const CLID& CLID_DeOTDetector = 8101;
 
