@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-01-12 - P. Koppenburg
+  - options/Correlations.opts
+    . New file that conatins all correlatins stuff
+
 ! 2005-01-10 - P. Koppenburg
   - options/Corr*.opts
   - options/Truth.opts

@@ -17,21 +17,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //==============================================================================
 // correlations
 //==============================================================================
-ApplicationMgr.TopAlg += { "GaudiSequencer/HLTCorrelations" };
-HLTCorrelations.IgnoreFilterPassed = true ;
-#include "$HLTSELCHECKERROOT/options/CorrB2HH.opts"
-#include "$HLTSELCHECKERROOT/options/CorrBd2D0Kstar.opts"
-#include "$HLTSELCHECKERROOT/options/CorrBd2DstarPi.opts"
-#include "$HLTSELCHECKERROOT/options/CorrBs2DsH.opts"
-#include "$HLTSELCHECKERROOT/options/CorrBs2PhiPhi.opts"
-#include "$HLTSELCHECKERROOT/options/CorrBs2PhiGamma.opts"
-#include "$HLTSELCHECKERROOT/options/CorrB2MuMu.opts"
-#include "$HLTSELCHECKERROOT/options/CorrBd2MuMuKstar.opts"
-#include "$HLTSELCHECKERROOT/options/CorrBs2JpsiPhi.opts"
-#include "$HLTSELCHECKERROOT/options/CorrBd2JpsiKs.opts"
-#include "$HLTSELCHECKERROOT/options/CorrDstar.opts"
-#include "$HLTSELCHECKERROOT/options/CorrDiMuons.opts"
-#include "$HLTSELCHECKERROOT/options/CorrHLTsels.opts"
+#include "$HLTSELCHECKERROOT/options/Correlations.opts"
 //==============================================================================
 // plots
 //==============================================================================
@@ -51,7 +37,8 @@ HLTCorrelations.IgnoreFilterPassed = true ;
 //EventSelector.Input   = {};
 //#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
 
-ApplicationMgr.EvtMax    = 1000 ;
+ApplicationMgr.EvtMax    = 10000 ;
+EventSelector.FirstEvent = 1 ;
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
 
@@ -74,7 +61,7 @@ PrintDstarTracks.OutputLevel = 4;
 PrintFoundDstar.OutputLevel = 4;
 PrintTDR.OutputLevel = 3;
 
-//#include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
+#include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 
 DaVinci.OutputLevel = 2 ;
 
@@ -90,3 +77,4 @@ HLTPreselKaons.OutputLevel = 2;
 //#include "$HLTGENERICROOT/options/HltGeneric.opts"
 // K-ID
 TrgParticleMaker.KaonDLLCut = 15 ; // default
+
