@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.24 2002-07-11 18:07:40 ocallot Exp $
+! $Id: release.notes,v 1.25 2002-07-18 19:37:55 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v7r0 2002-07-18 =========================
 ! 2002-07-11 - Olivier Callot
  - Correct various method to handle sensor number over 100, which is PuVeto
    sensors, for Velo/VeloAlgorithms. Removed the specialized methods for the
