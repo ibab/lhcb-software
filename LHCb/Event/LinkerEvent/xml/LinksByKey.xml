@@ -3,9 +3,7 @@
 <gdd>
   <package name="LinksByKey">
 
-
     <import name="GaudiKernel/SmartDataPtr"/>
-    <import name="Kernel/LHCbStreams"/>
 
     <class 
       name     = "LinkReference"
