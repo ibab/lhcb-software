@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiQC v1r5 2004-03-18 ========================
 ! 2004-03-14 - Chris Jones
  - Adapt to new Gaudi base classes
 
