@@ -33,3 +33,7 @@ ToolSvc.RichTrackCreatorMC.TrackMinPtotPerClass   = { 0,       0,     0,        
 
 // Configure the RichTrackSegment maker for MC tracks
 ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromMCRichTracks/RichDetTrSegMakerMC" };
+
+// which radiators to use
+ToolSvc.RichDetTrSegMaker.UseRadiators   = { true, true, true };
+ToolSvc.RichDetTrSegMakerMC.UseRadiators = { true, true, true };

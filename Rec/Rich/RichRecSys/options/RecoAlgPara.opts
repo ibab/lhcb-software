@@ -44,21 +44,21 @@ RichGloPIDIt2.MinSignalForAproxLLCalc     = 1e-5;
 // Ring Refit
 //RichRingRefit.TrackSelection              = { "unique", "forward", "match" };
 RichRingRefit.TrackSelection = { "unique","seed","match","forward","KsTrack" };
-// add tracks (previously ?) named upstream (like Ks starting in rich 1 volume)
 //                                             Aero   C4F10   CF4
-RichRingRefit.MinSignalPhotonProb         = {  999,   1e-2,  1.50e-3 };
-RichRingRefit.MinRefitPhotons             = {  999,    999,      7   }; 
-RichRingRefit.MaxBackgroundProb           = {  999,    999,    999   };
-RichRingRefit.MaxCandsPerPixel            = {    1,      1,      10  };
-RichRingRefit.MinFitProbability           = {  0.5,    0.5,   0.005  }; 
-RichRingRefit.nDist     = 2.00;
-RichRingRefit.NSigmaCut = 3;
+RichRingRefit.MinSignalPhotonProb         = {  999,   1e-2,  1.50e-3  };
+RichRingRefit.MinRefitPhotons             = {  999,    999,      7    };
+RichRingRefit.MaxBackgroundProb           = {  999,    999,    999    };
+RichRingRefit.MaxCandsPerPixel            = {    1,      1,      10   };
+RichRingRefit.MinFitProbability           = {  0.5,    0.5,   0.0005  };
+RichRingRefit.nDist          = 2.00;
+RichRingRefit.nDistFrwrd     = 2.00;
+RichRingRefit.nDistMatch     = 2.00;
+RichRingRefit.nDistSeed      = 2.20;
+RichRingRefit.nDistKshort    = 2.20;
+RichRingRefit.NSigmaCut      = 3.00;
 
-// Global Algorithm parameters - phase 3 : not used yet.
-/*
-RichGloPIDIt3.TrackMinDeltaLLPara         = { 0,10,    30,150,   -4,-3,  -2, -0.5 };
-RichGloPIDIt3.FreezeOutPara               = { 0,10,    30,150,    4, 3,   2,  1   };
-RichGloPIDIt3.LikelihoodThreshold         = -1e-3;
-RichGloPIDIt3.MinSignalForNoLLCalc        = 1e-25;
-RichGloPIDIt3.MinSignalForAproxLLCalc     = 1e-5;
-*/
+// PID merging
+MergeRichPIDs.UseRingRefitPIDs = false;
+MergeRichPIDs.UseLocalPIDs     = true;
+MergeRichPIDs.UseGlobalPIDs    = true;
+

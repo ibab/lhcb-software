@@ -15,3 +15,5 @@ ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrS
 ToolSvc.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrHerabExtrapolator";
 ToolSvc.RichDetTrSegMaker.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
 
+// which radiators to use
+ToolSvc.RichDetTrSegMaker.UseRadiators = { true, true, true };
