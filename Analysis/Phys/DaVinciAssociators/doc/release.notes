@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.56 2004-09-16 14:32:03 pkoppenb Exp $
+! $Id: release.notes,v 1.57 2004-11-16 16:11:51 pkoppenb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+! 2004-11-16 - P. Koppenburg
+ - src/Particle2MCLink.cpp
+   . Small hack to suppress the annoying message 
+     "cannot find container /Trg/Long..."
 !========================== DaVinciAssociators v5r2 2004-09-16===================
 ! 2004-09-16 - P. Koppenburg
  - src/Particle2MCLink.cpp

@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.17 2004-09-16 14:29:22 pkoppenb Exp $
+// $Id: Particle2MCLinks.cpp,v 1.18 2004-11-16 16:11:51 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -111,8 +111,11 @@ StatusCode Particle2MCLinks::execute() {
                       << " Particles retrieved from " << *inp << endreq;
     
     // PK: dirty hack from Olivier Callot <- to be removed
-    LinkedTo<MCParticle> myLink( evtSvc(), msgSvc(), TrgTrackLocation::Long );
-
+    LinkedTo<MCParticle> myLink( evtSvc(), msgSvc(), "" ) ;
+    if ( exist<TrgTracks>(TrgTrackLocation::Long)){      
+      myLink = LinkedTo<MCParticle>( evtSvc(), msgSvc(), TrgTrackLocation::Long );
+    } 
+    
     // loop on Parts and MCParts to match them
     for( Particles::const_iterator pIt=parts->begin() ;
          parts->end() != pIt; ++pIt ) {
@@ -144,7 +147,7 @@ StatusCode Particle2MCLinks::execute() {
                      << " -> remove dirty hack from Particle2MCLInks" << endreq ;
           } else {
             // PK: dirty hack from Olivier Callot <- to be removed 
-            mcPart = myLink.first( TrgT->key() );
+            if (!myLink.notFound()) mcPart = myLink.first( TrgT->key() );
           }
         } else {
           ifMsg(MSG::VERBOSE) << " from nothing";
