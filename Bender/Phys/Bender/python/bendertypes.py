@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-# =============================================================================
-# $Id: bendertypes.py,v 1.1 2004-07-11 15:47:06 ibelyaev Exp $ 
+# $Id: bendertypes.py,v 1.2 2004-11-23 17:13:23 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
-# $Log: not supported by cvs2svn $
-# =============================================================================
-
+"""
+Definitition of basic Bender 'Ranges' and operations
+"""
 
 # =============================================================================
 # @file
@@ -17,19 +15,16 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 
-import gaudimodule   as gaudi 
+import gaudimodule
 import benderhelper  as helper
 
-# global namespace 
-gbl   = gaudi.gbl
 # namespace LoKi
-loki  = gbl.LoKi
+loki  = gaudimodule.gbl.LoKi
 
-
-Range    = helper.loadRange  ( loki.Range_( 'std::vector<Particle*> '   ) )
-VRange   = helper.loadRange  ( loki.Range_( 'std::vector<Vertex*> '     ) )
-MCRange  = helper.loadRange  ( loki.Range_( 'std::vector<MCParticle*> ' ) )
-MCVRange = helper.loadRange  ( loki.Range_( 'std::vector<MCVertex*> '   ) )
+Range    = helper.loadRange  ( loki.NamedRange_( 'std::vector<Particle*> '   ) )
+VRange   = helper.loadRange  ( loki.NamedRange_( 'std::vector<Vertex*> '     ) )
+MCRange  = helper.loadRange  ( loki.NamedRange_( 'std::vector<MCParticle*> ' ) )
+MCVRange = helper.loadRange  ( loki.NamedRange_( 'std::vector<MCVertex*> '   ) )
 
 Range.list     = helper.range2list
 VRange.list    = helper.range2list
@@ -44,6 +39,8 @@ MCVRange.tuple = helper.range2tuple
 Seq2List       = helper.Seq2List
 Seq2Tuple      = helper.Seq2Tuple
 
+# =============================================================================
+# $Log: not supported by cvs2svn $
 # =============================================================================
 # The END 
 # =============================================================================

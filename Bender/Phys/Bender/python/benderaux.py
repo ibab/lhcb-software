@@ -1,15 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderaux.py,v 1.7 2004-10-13 17:51:04 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.8 2004-11-23 17:13:23 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.6  2004/08/26 19:34:36  ibelyaev
-#  remove explict PyLCGDict
-#
-# =============================================================================
-
+"""
+Helper module  to define the auxilalry 'enums' and constants 
+"""
 
 # =============================================================================
 # @file
@@ -18,11 +15,12 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 
-import gaudimodule as gaudi
+import gaudimodule
 
-gaudi.loaddict( 'BenderDict'    )
+# load bender dictionaries (if not done yet)
+gaudimodule.loaddict( 'BenderDict'    )
 # global namespaces
-gbl = gaudi.gbl
+gbl = gaudimodule.gbl
 
 SUCCESS  = gbl.StatusCode( 1 )
 FAILURE  = gbl.StatusCode( 0 )
@@ -56,26 +54,26 @@ class _MSG_Levels ( object ) :
     NUM_LEVELS
     };
     """
-    __slots__ = ( 'NIL'       ,
-                  'VERBOSE'   ,
-                  'DEBUG'     ,
-                  'INFO'      ,
-                  'WARNING'   ,
-                  'ERROR'     ,
-                  'FATAL'     ,
-                  'ALWAYS'    ,
-                  'NUM_LEVEL' )
-
+    __slots__ = ( 'NIL'        ,
+                  'VERBOSE'    ,
+                  'DEBUG'      ,
+                  'INFO'       ,
+                  'WARNING'    ,
+                  'ERROR'      ,
+                  'FATAL'      ,
+                  'ALWAYS'     ,
+                  'NUM_LEVELS' )
+    
 MSG = _MSG_Levels()
-MSG.NIL       = 0
-MSG.VERBOSE   = 1
-MSG.DEBUG     = 2
-MSG.INFO      = 3
-MSG.WARNING   = 4
-MSG.ERROR     = 5
-MSG.FATAL     = 6
-MSG.ALWAYS    = 7
-MSG.NUM_LEVEL = 8
+MSG.NIL        = 0
+MSG.VERBOSE    = 1
+MSG.DEBUG      = 2
+MSG.INFO       = 3
+MSG.WARNING    = 4
+MSG.ERROR      = 5
+MSG.FATAL      = 6
+MSG.ALWAYS     = 7
+MSG.NUM_LEVELS = 8
 
 # 'import' Vertex type enum 
 class _VertexType(object) :
@@ -134,6 +132,8 @@ muFromParticle         = gbl.Bender.Extract.muFromParticle
 richFromParticle       = gbl.Bender.Extract.richFromParticle
 
 
+# =============================================================================
+# $Log: not supported by cvs2svn $
 # =============================================================================
 # The END 
 # =============================================================================

@@ -117,7 +117,6 @@ def _config_( self , **args ) :
     # adjust Services 
     for svc in props.get ( 'ExtSvc', [] ) :
         if svc not in self.ExtSvc : self.ExtSvc += [svc]
-    print 'services : ', props.get('ExtSvc',[])
     if props.has_key('ExtSvc') : del props['ExtSvc']
     for key in props.keys() : self.__setattr__( key , props[key] ) 
     return gaudimodule.SUCCESS
@@ -163,6 +162,9 @@ def config( **args ) :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2004/11/09 09:59:05  ibelyaev
+#  minor update for backward compatibility
+#
 # =============================================================================
 # The END 
 # =============================================================================

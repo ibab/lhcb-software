@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.6 2004-11-08 17:06:52 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.7 2004-11-23 17:13:23 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2004/11/08 17:06:52  ibelyaev
+#  v4r2
+#
 # =============================================================================
 """
 The definition and implemenation of basic Bender' algorithm:
@@ -384,7 +387,7 @@ class Algo(BenderAlgo):
         message = args.get ( 'message' , 'Unspecified Error' )
         code    = args.get ( 'code'    ,  FAILURE            )
         prints  = args.get ( 'prints'  , 10                  ) 
-        return BenderAlgo.Error( self  , msg , code , prints )      #RETURN 
+        return BenderAlgo.Error( self  , message  , code , prints )      #RETURN 
     
     def Warning        ( self , **args ) :
         """

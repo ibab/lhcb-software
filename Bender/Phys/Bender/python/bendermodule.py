@@ -1,13 +1,16 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.14 2004-11-08 17:06:52 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.15 2004-11-23 17:13:23 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.14  2004/11/08 17:06:52  ibelyaev
+#  v4r2
+#
 # =============================================================================
 """
 This is a major Python Module for Bender application
-Author: Vanya BELYAEV Ivan.Belyaev@itep.ru
+Author:      Vanya BELYAEV Ivan.Belyaev@itep.ru
 """
 
 # =============================================================================
@@ -21,18 +24,23 @@ Author: Vanya BELYAEV Ivan.Belyaev@itep.ru
 
 import gaudimodule
 
-gaudimodule.loaddict( 'EventDict'     )
-gaudimodule.loaddict( 'PhysEventDict' )
-gaudimodule.loaddict( 'TrEventDict'   )
-gaudimodule.loaddict( 'RichEventDict' )
-gaudimodule.loaddict( 'MuonEventDict' )
-gaudimodule.loaddict( 'CaloEventDict' )
-gaudimodule.loaddict( 'VeloEventDict' )
-gaudimodule.loaddict( 'ITEventDict'   )
-gaudimodule.loaddict( 'OTEventDict'   )
-gaudimodule.loaddict( 'L0EventDict'   )
-gaudimodule.loaddict( 'TrgEventDict'  )
-gaudimodule.loaddict( 'BenderDict'    )
+_libs_ = ( ''     ,
+           'Phys' ,
+           'Tr'   ,
+           'Rich' ,
+           'Muon' ,
+           'Calo' ,
+           'Velo' ,
+           'IT'   ,
+           'OT'   ,
+           'L0'   ,
+           'Trg'  )
+for lib in _libs_ : gaudimodule.loaddict( lib + 'EventDict' )
+
+_libs_ = ( 'BenderDict'     ,
+           'LoKiHybridDict' )
+for lib in _libs_ : gaudimodule.loaddict( lib               )
+
 
 from   bendertypes   import *
 from   benderaux     import *
@@ -49,8 +57,14 @@ gaudi  = AppMgr()
 
 appMgr = gaudi     #
 g      = gaudi     # for 'backward compatibility'
-theApp = gaudi     # ATLAS style 
+theApp = gaudi     # ATLAS style
 
+
+_libs_ = ( 'LoKi'       ,
+           'LoKiHlt'    ,
+           'LoKiHybrid' )
+for lib in _libs_ :
+    if lib not in gaudi.DLLs : gaudi.DLLs += [ lib ]
 
 import benderstr
 import benderconfig
