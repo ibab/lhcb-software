@@ -1,8 +1,11 @@
-// $Id: VolumeCheckAlg.cpp,v 1.2 2004-03-01 15:03:44 ibelyaev Exp $
+// $Id: VolumeCheckAlg.cpp,v 1.3 2004-06-29 14:14:01 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/03/01 15:03:44  ibelyaev
+//  update of the package
+//
 // Revision 1.1.1.1  2002/05/26 12:47:06  ibelyaev
 // New package: collection of components for checks of Detector Description
 // 
@@ -127,7 +130,7 @@ StatusCode VolumeCheckAlg::initialize()
   if( 0 == detSvc  () )  
     { return Error( "  detSvc() points to NULL!" ); }
 
-  const ILVolume* m_volume = getDet<ILVolume>( m_volumeName ) ;
+  m_volume = getDet<ILVolume>( m_volumeName ) ;
 
   const std::string stars(80,'*');
   
@@ -422,17 +425,17 @@ StatusCode VolumeCheckAlg::execute()
         
         vect.setX( vect.x() * a ) ;
         vect.setY( vect.y() * a ) ;
-        
+
         ILVolume::Intersections intersections;
         m_volume->intersectLine ( m_vertex , vect , intersections , 0 );
-        
+
         const double radLength = 
           std::accumulate
           (  intersections.begin()                                  ,  
              intersections.end  ()                                  , 
              0.0                                                    ,  
              VolumeIntersectionIntervals::AccumulateIntersections() );
-        
+
         m_sphere     -> fill ( vect.phi   () / degree , 
                                vect.theta () / degree , radLength );
         m_sphereNorm -> fill ( vect.phi   () / degree , 

@@ -10,7 +10,7 @@ HistogramPersistencySvc.OutputFile = "histo.hbook";
 ApplicationMgr.EvtSel     = "NONE" ;
 ApplicationMgr.EvtMax     = 1 ;
 
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 
 MessageSvc.OutputLevel = 3;
 
@@ -29,17 +29,28 @@ VolumeCheckAlg.ShootsXY    =1000;
 VolumeCheckAlg.ShootsYZ    =1000;
 VolumeCheckAlg.ShootsZX    =1000;
 
-//VolumeCheckAlg.Volume = "/dd/Geometry/Pipe/BeamPipe";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Magnet/Magnet";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Prs/lvPrs";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Spd/lvSpd";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Rich2/lvRich2Master";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Tracker/lvTrackerVolume";
-VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo";
+VolumeCheckAlg.OutputLevel = 1;
+
+// Choose a master volume to scan.
+// N.B. Some volumes are very slow (Ecal, Hcal, Muon, Prs in this order)
+VolumeCheckAlg.Volume = "/dd/Geometry/Pipe/BeamPipe";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo2Rich1/lvVelo2Rich1";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Rich1/lvRich1Master";
-//VolumeCheckAlg.Volume = "/dd/Geometry/Muon/lvMuon";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Magnet/Magnet";
+//VolumeCheckAlg.Volume = "/dd/Geometry/IT/lvITVolume";
+//VolumeCheckAlg.Volume = "/dd/Geometry/OT/lvOT";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Rich2/lvRich2Master";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Spd/Installation/Spd";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Prs/Converter";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Prs/Installation/Prs";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Ecal/Installation/Ecal";
 //VolumeCheckAlg.Volume = "/dd/Geometry/Hcal/Installation/lvHcal";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Muon/lvMuon";
+
+/// Next one scans all the above...
+//VolumeCheckAlg.Volume = "/dd/Geometry/LHCb/lvLHCb";
+
 
 ////////////////////////////////////////////////////////////////////
 // MaterialBudgetAlg options: 

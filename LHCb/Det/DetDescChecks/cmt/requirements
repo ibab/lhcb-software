@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2004-06-28 16:12:38 ibelyaev Exp $
+# $Id: requirements,v 1.10 2004-06-29 14:14:00 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -14,14 +14,22 @@ branches          cmt doc src options
 # =============== dependencies ================================================
 use               DetDesc   v*  Det
 use               GaudiAlg  v*   	
-use               AIDA      v* -no_auto_imports
 	
 # =============== constituents ================================================
 library           DetDescChecks   *.cpp -import=AIDA
 
-
 # =============== patterns ====================================================
 apply_pattern     component_library library=DetDescChecks 
+
+# =============================================================================
+# Build an application
+# =============================================================================
+application DetDescCheck $(GAUDICONFROOT)/src/GaudiMain.cpp
+
+private
+use XmlDDDB v* Det
+macro DetDescCheck_linkopts "$(application_linkopts)"
+apply_pattern application_path
 
 # =============================================================================
 # The END 
