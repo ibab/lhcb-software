@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.5 2003-04-01 14:33:19 jonrob Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.6 2003-06-27 15:14:12 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -79,17 +79,19 @@ StatusCode RichRecMCTruthTool::initialize() {
   }
 
   // Retrieve particle property service
-  if ( !service( "ParticlePropertySvc", m_ppSvc) ) {
+  IParticlePropertySvc* ppSvc = 0;
+  if ( !service( "ParticlePropertySvc", ppSvc ) ) {
     log << MSG::WARNING << "Unable to retrieve ParticlePropertySvc" << endreq;
     sc = StatusCode::FAILURE;
   } else {
     // Setup the PDG code mappings
     m_localID[ 0 ] = Rich::Unknown;
-    m_localID[ abs(m_ppSvc->find("e+")->jetsetID()) ]  = Rich::Electron;
-    m_localID[ abs(m_ppSvc->find("mu+")->jetsetID()) ] = Rich::Muon;
-    m_localID[ abs(m_ppSvc->find("pi+")->jetsetID()) ] = Rich::Pion;
-    m_localID[ abs(m_ppSvc->find("K+")->jetsetID()) ]  = Rich::Kaon;
-    m_localID[ abs(m_ppSvc->find("p+")->jetsetID()) ]  = Rich::Proton;
+    m_localID[ abs(ppSvc->find("e+")->jetsetID()) ]  = Rich::Electron;
+    m_localID[ abs(ppSvc->find("mu+")->jetsetID()) ] = Rich::Muon;
+    m_localID[ abs(ppSvc->find("pi+")->jetsetID()) ] = Rich::Pion;
+    m_localID[ abs(ppSvc->find("K+")->jetsetID()) ]  = Rich::Kaon;
+    m_localID[ abs(ppSvc->find("p+")->jetsetID()) ]  = Rich::Proton;
+    ppSvc->release();
   }
 
   // Setup incident services
@@ -99,6 +101,7 @@ StatusCode RichRecMCTruthTool::initialize() {
     sc = StatusCode::FAILURE;
   } else {
     incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+    incSvc->release();
   }
 
   return sc;
@@ -109,11 +112,16 @@ StatusCode RichRecMCTruthTool::finalize() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  // Release all tools
+  // Release all tools ans services
   if ( m_trackToMCP )         toolSvc()->releaseTool( m_trackToMCP );
   if ( m_richRecTrackTool )   toolSvc()->releaseTool( m_richRecTrackTool );
   if ( m_richRecPixelTool )   toolSvc()->releaseTool( m_richRecPixelTool );
   if ( m_richRecSegmentTool ) toolSvc()->releaseTool( m_richRecSegmentTool );
+
+  if( 0 != m_evtDataSvc ) {
+    m_evtDataSvc->release();
+    m_evtDataSvc = 0;
+  }
   
   return StatusCode::SUCCESS;
 }

@@ -4,6 +4,10 @@
 ! Purpose     : Utility algorithms and tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v2r0p1 2003-04-15 =====================
+! 2003-06-27 - Marco Cattaneo
+ - Release services to please valgrind
+
 !====================== RichRecTools v2r0 2003-04-15 ======================
 ! 2003-04-14 - Marco Cattaneo
  - requirements: remove some unneccessary dependencies

@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.h,v 1.3 2003-04-11 18:13:28 jonrob Exp $
+// $Id: RichRecSegmentTool.h,v 1.4 2003-06-27 15:14:12 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -142,14 +142,8 @@ private:
   /// Pointer to event data service
   IDataProviderSvc* m_evtDataSvc;
 
-  /// Pointer to detector data service
-  IDataProviderSvc* m_detDataSvc;
-
   /// Pointer to RichDetInterface tool
   IRichDetInterface * m_richDetInterface;
-
-  /// Pointer to Particle property service
-  IParticlePropertySvc * m_ppSvc;
 
   /// Array containing particle masses
   std::vector<double> m_particleMass;

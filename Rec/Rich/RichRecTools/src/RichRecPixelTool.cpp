@@ -1,4 +1,4 @@
-// $Id: RichRecPixelTool.cpp,v 1.4 2003-04-11 16:11:57 jonrob Exp $
+// $Id: RichRecPixelTool.cpp,v 1.5 2003-06-27 15:14:12 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -67,6 +67,7 @@ StatusCode RichRecPixelTool::initialize() {
   } else {
     incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
     //incSvc->addListener( this, "EndEvent"   ); // Informed at the end of event
+    incSvc->release();
   }
 
   return sc;
@@ -77,8 +78,14 @@ StatusCode RichRecPixelTool::finalize() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  //Release the tools
+  //Release the tools ans services
   if ( m_pixelFinder ) toolSvc()->releaseTool( m_pixelFinder );
+  if ( m_richDetInterface ) toolSvc()->releaseTool( m_richDetInterface );
+
+  if( 0 != m_evtDataSvc ) {
+    m_evtDataSvc->release();
+    m_evtDataSvc = 0;
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -151,7 +158,7 @@ RichRecPixel * RichRecPixelTool::newPixel( RichDigit * digit ) {
       if ( m_sicbDigits ) {
         gPosition = 10.0 * (m_pixelFinder->globalPosition(id));
         lPosition = 10.0 * (m_pixelFinder->SICBlocalPosition(id));
-        m_pixelFinder->convertSmartID( id ); // convert smartID to OO conventions
+        m_pixelFinder->convertSmartID( id ); //convert smartID to OO conventions
       } else { // the glorious future!!!
         m_richDetInterface->globalPosition( id, gPosition );
         // no method for local position as yet !

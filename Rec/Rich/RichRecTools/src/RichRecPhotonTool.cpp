@@ -1,4 +1,4 @@
-// $Id: RichRecPhotonTool.cpp,v 1.6 2003-04-01 14:33:21 jonrob Exp $
+// $Id: RichRecPhotonTool.cpp,v 1.7 2003-06-27 15:14:12 cattanem Exp $
 #include <cmath>
 
 // from Gaudi
@@ -106,6 +106,7 @@ StatusCode RichRecPhotonTool::initialize() {
   } else {
     incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
     //incSvc->addListener( this, "EndEvent"   ); // Informed at the end of event
+    incSvc->release();
   }
 
   // Initialise some variables
@@ -143,6 +144,11 @@ StatusCode RichRecPhotonTool::finalize() {
   if ( m_richRecPixelTool )   toolSvc()->releaseTool( m_richRecPixelTool );
   if ( m_richDetInterface )   toolSvc()->releaseTool( m_richDetInterface );
 
+  if( 0 != m_evtDataSvc ) {
+    m_evtDataSvc->release();
+    m_evtDataSvc = 0;
+  }
+  
   return StatusCode::SUCCESS;
 }
 

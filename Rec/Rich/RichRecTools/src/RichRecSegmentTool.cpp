@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.cpp,v 1.9 2003-04-16 14:52:50 cattanem Exp $
+// $Id: RichRecSegmentTool.cpp,v 1.10 2003-06-27 15:14:12 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -151,7 +151,8 @@ StatusCode RichRecSegmentTool::initialize() {
   }
 
   // Retrieve particle property service
-  if ( !serviceLocator()->service( "ParticlePropertySvc", m_ppSvc ) ) {
+  IParticlePropertySvc* ppSvc = 0;
+  if ( !serviceLocator()->service( "ParticlePropertySvc", ppSvc ) ) {
     msg << MSG::ERROR << "ParticlePropertySvc not found" << endreq;
     sc = StatusCode::FAILURE;
   }
@@ -164,12 +165,7 @@ StatusCode RichRecSegmentTool::initialize() {
   } else {
     incSvc->addListener( this, "BeginEvent" );   // Informed of a new event
     //incSvc->addListener( this, "EndEvent"   ); // Informed at the end of event
-  }
-
-  // Get pointer to Detector Data service
-  if ( !serviceLocator()->service( "DetectorDataSvc", m_detDataSvc, true ) ) {
-    msg << MSG::ERROR << "DetectorDataSvc not found" << endreq;
-    sc = StatusCode::FAILURE;
+    incSvc->release();
   }
 
   // randomn number service
@@ -179,6 +175,7 @@ StatusCode RichRecSegmentTool::initialize() {
       msg << MSG::ERROR << "Unable to initialise randomn numbers" << endreq;
       sc = StatusCode::FAILURE;
     }
+    randSvc->release();
   } else {
     sc = StatusCode::FAILURE;
   }
@@ -222,11 +219,11 @@ StatusCode RichRecSegmentTool::initialize() {
   }
 
   // Retrieve particle masses
-  m_particleMass.push_back( m_ppSvc->find("e+" )->mass()/MeV );
-  m_particleMass.push_back( m_ppSvc->find("mu+")->mass()/MeV );
-  m_particleMass.push_back( m_ppSvc->find("pi+")->mass()/MeV );
-  m_particleMass.push_back( m_ppSvc->find("K+" )->mass()/MeV );
-  m_particleMass.push_back( m_ppSvc->find("p+" )->mass()/MeV );
+  m_particleMass.push_back( ppSvc->find("e+" )->mass()/MeV );
+  m_particleMass.push_back( ppSvc->find("mu+")->mass()/MeV );
+  m_particleMass.push_back( ppSvc->find("pi+")->mass()/MeV );
+  m_particleMass.push_back( ppSvc->find("K+" )->mass()/MeV );
+  m_particleMass.push_back( ppSvc->find("p+" )->mass()/MeV );
   // cache squares of masses
   m_particleMassSq.push_back( m_particleMass[ Rich::Electron ] *
                               m_particleMass[ Rich::Electron ] );
@@ -358,6 +355,9 @@ StatusCode RichRecSegmentTool::initialize() {
   // }
   //}
 
+  // release locally used services
+  ppSvc->release();
+
   return sc;
 }
 
@@ -366,8 +366,13 @@ StatusCode RichRecSegmentTool::finalize() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  // Release tools
+  // Release tools and services
   if ( m_richDetInterface ) toolSvc()->releaseTool( m_richDetInterface );
+
+  if( 0 != m_evtDataSvc ) {
+    m_evtDataSvc->release();
+    m_evtDataSvc = 0;
+  }  
 
   // Release the random generator
   m_uniDist.finalize();

@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.h,v 1.1 2003-04-01 14:33:20 jonrob Exp $
+// $Id: RichRecMCTruthTool.h,v 1.2 2003-06-27 15:14:12 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
 
@@ -108,9 +108,6 @@ private:
 
   /// Pointer to event data service
   IDataProviderSvc * m_evtDataSvc;
-
-  /// Pointer to Particle property service
-  IParticlePropertySvc* m_ppSvc;
 
   /// Pointer to MCRichDigits
   MCRichDigits * m_mcRichDigits;

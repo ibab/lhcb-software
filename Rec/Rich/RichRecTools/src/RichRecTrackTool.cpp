@@ -1,4 +1,4 @@
-// $Id: RichRecTrackTool.cpp,v 1.7 2003-04-01 16:05:37 jonrob Exp $
+// $Id: RichRecTrackTool.cpp,v 1.8 2003-06-27 15:14:12 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -66,6 +66,7 @@ StatusCode RichRecTrackTool::initialize() {
   } else {
     incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
     //incSvc->addListener( this, "EndEvent"   ); // Informed at the end of event
+    incSvc->release();
   }
 
   return sc;
@@ -76,10 +77,15 @@ StatusCode RichRecTrackTool::finalize() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  // Release the tools
+  // Release the tools and services
   if ( m_richRecSegmentTool ) toolSvc()->releaseTool( m_richRecSegmentTool );
   if ( m_richDetInterface )   toolSvc()->releaseTool( m_richDetInterface );
 
+  if( 0 != m_evtDataSvc ) {
+    m_evtDataSvc->release();
+    m_evtDataSvc = 0;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
