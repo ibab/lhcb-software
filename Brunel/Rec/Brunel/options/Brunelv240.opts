@@ -3,7 +3,9 @@
 #pragma print off
 #include "$BRUNELOPTS/Brunel.opts"
 
-// No database specific options for this database version
+// Database specific: inner tracker, to suppress TT1
+ToolSvc.ITGeometryTool.newCDF = false;
+ToolSvc.ITGeometryTool.newLayout = false;
 
 // Leave next two lines as last lines
 #pragma print on

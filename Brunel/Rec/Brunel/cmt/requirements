@@ -62,7 +62,7 @@ use VeloDet      v3r0   Det
 use L0Event     v10r0   Event
 use VeloEvent    v6r0   Event
 use L1Event      v6r0   Event
-use ITEvent      v7r0   Event
+use ITEvent      v7r1   Event
 use OTEvent      v7r0   Event
 use TrEvent      v7r1   Event
 use CaloEvent    v7r0   Event
@@ -93,7 +93,7 @@ use CaloAlgs       v4r1 Calo
 use CaloCA         v3r1 Calo
 
 # Tracking
-use ITAlgorithms v7r0   IT
+use ITAlgorithms v8r0   IT
 use OTAlgorithms v7r0	OT
 use TrAlgorithms v7r0   Tr
 

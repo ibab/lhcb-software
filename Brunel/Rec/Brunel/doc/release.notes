@@ -7,6 +7,8 @@ Purpose: LHCb reconstruction program
 </PRE><H1><A NAME=v9r0>20020131 Brunel v9r0</A></H1><PRE>
    Upgraded to use Gaudi v9
    Added VELO digitisation, VELO tracking, Forward tracking, Calo reconstruction
+   Added TT1 to IT reconstruction
+   --> Use this version to reconstruct data produced with dbase v240 to v243r*
 
    Functionality changes
    ---------------------

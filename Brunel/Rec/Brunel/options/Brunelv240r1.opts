@@ -17,6 +17,8 @@ trFit_trackFitter_extrapolator1.energyLoss = 50.0;
 trFit_trackFitter_extrapolator1.fms2 = 1.6;
 OTDigitChecker.numStations = 4;
 OTDigitChecker.firstOTStation = 1;
+ToolSvc.ITGeometryTool.newCDF = false;
+ToolSvc.ITGeometryTool.newLayout = false;
 
 // Database specific: forward tracking
 #include "$FWTRACKROOT/options/BrunelMinus.opts"
