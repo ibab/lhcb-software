@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.15 2001-06-22 10:15:15 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.16 2001-07-03 09:21:38 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -237,12 +237,18 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
     if (i < childNodes.getLength()) {
       childNode = childNodes.item(i);
       childElement = (DOM_Element &) childNode;
-      tagName = dom2Std (childElement.getNodeName());
-      if (isTransformation(tagName)) {
+      std::string  childTagName = dom2Std (childElement.getNodeName());
+      if (isTransformation(childTagName)) {
         // deal with the transformation itself
         HepTransform3D* transformation = dealWithTransformation (element, &i);
         // modifies the solid in consequence
         // TO BE IMPLEMENTED --- TODO
+        MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+        log << MSG::WARNING
+            << "In logvol " << volName << ", a transformation ("
+            << childTagName << ") is applied to the first solid (" << tagName
+            << "). This functionnality is not implemented yet. The "
+            << " transformation will be ignored." << endreq;
         // frees the memory
         delete (transformation);
         transformation = 0;
@@ -779,9 +785,17 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (DOM_Element element) {
     SolidUnion* unionResult = new SolidUnion (nameAttribute, placedSolid.solid);
     result = unionResult;
     // TO BE IMPLEMENTED -- TODO
-    // what about placedSolid.transformation ?
-    delete (placedSolid.transformation);
-    placedSolid.transformation = 0;
+    if (0 != placedSolid.transformation) {
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      log << MSG::WARNING
+          << "In union " << nameAttribute << ", a transformation"
+          << " is applied to the first solid."
+          << " This functionnality is not implemented yet. The "
+          << " transformation will be ignored." << endreq;
+      // what about placedSolid.transformation ?
+      delete (placedSolid.transformation);
+      placedSolid.transformation = 0;
+    }
     // add every child to the boolean solid
     while (!solids->empty()) {
       placedSolid = solids->front();
@@ -798,9 +812,17 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (DOM_Element element) {
       new SolidSubtraction (nameAttribute, placedSolid.solid);
     result = subtractionResult;
     // TO BE IMPLEMENTED -- TODO
-    // what about placedSolid.transformation ?
-    delete (placedSolid.transformation);
-    placedSolid.transformation = 0;
+    if (0 != placedSolid.transformation) {
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      log << MSG::WARNING
+          << "In subtraction " << nameAttribute << ", a transformation"
+          << " is applied to the first solid."
+          << " This functionnality is not implemented yet. The "
+          << " transformation will be ignored." << endreq;
+      // what about placedSolid.transformation ?
+      delete (placedSolid.transformation);
+      placedSolid.transformation = 0;
+    }
     // add every child to the boolean solid
     while (!solids->empty()) {
       placedSolid = solids->front();
@@ -817,9 +839,17 @@ SolidBoolean* XmlLVolumeCnv::dealWithBoolean (DOM_Element element) {
       new SolidIntersection (nameAttribute, placedSolid.solid);
     result = intersectionResult;
     // TO BE IMPLEMENTED -- TODO
-    // what about placedSolid.transformation ?
-    delete (placedSolid.transformation);
-    placedSolid.transformation = 0;
+    if (0 != placedSolid.transformation) {
+      MsgStream log(msgSvc(), "XmlLVolumeCnv" );
+      log << MSG::WARNING
+          << "In intersection " << nameAttribute << ", a transformation"
+          << " is applied to the first solid."
+          << " This functionnality is not implemented yet. The "
+          << " transformation will be ignored." << endreq;
+      // what about placedSolid.transformation ?
+      delete (placedSolid.transformation);
+      placedSolid.transformation = 0;
+    }
     // add every child to the boolean solid
     while (!solids->empty()) {
       placedSolid = solids->front();
