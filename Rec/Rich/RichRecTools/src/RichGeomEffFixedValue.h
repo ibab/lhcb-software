@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichGeomEffFixedValue.h
  *
  *  Header file for tool : RichGeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.h,v 1.4 2004-07-27 20:15:30 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichGeomEffFixedValue.h,v 1.5 2005-02-02 10:06:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHGEOMEFFFIXEDVALUE_H
 #define RICHRECTOOLS_RICHGEOMEFFFIXEDVALUE_H 1
@@ -23,16 +24,21 @@
 // interfaces
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichGeomEff.h"
+#include "RichRecBase/IRichRecGeomTool.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichGeomEffFixedValue RichGeomEffFixedValue.h
  *
  *  Tool to perform a fast determination of the geometrical efficiency for
- *  a given RichRecSegment and mass hypothesis. Uses a fixed value of the signal
- *  and scattered efficiencies
+ *  a given RichRecSegment and mass hypothesis. 
+ *
+ *  Uses a fixed value of the signal and scattered efficiencies on the HPD panel,
+ *  and also takes into account the HPD panel boundaries.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichGeomEffFixedValue : public RichRecToolBase,
                               virtual public IRichGeomEff {
@@ -66,10 +72,11 @@ public: // methods (and doxygen comments) inherited from public interface
 private: // Private data
 
   // Pointers to tool instances
-  IRichCherenkovAngle * m_ckAngle; ///< Cherenkov angle tool
+  IRichCherenkovAngle * m_ckAngle;   ///< Cherenkov angle tool
+  IRichRecGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
 
-  std::vector<double> m_fixedValue; ///< vector of fixed geometrical efficiency values
-  double m_fixedScatValue; ///< Scatter efficiency
+  std::vector<double> m_fixedValue;  ///< vector of fixed radiator geometrical efficiencies
+  double m_fixedScatValue;           ///< Scatter efficiency
 
 };
 
