@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.29 2003-08-19 10:00:33 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.30 2003-08-19 15:10:29 witoldp Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -39,7 +39,7 @@ ApplicationMgr.TopAlg          =
 GaussTape.Output = "DATAFILE='Gauss.oosim' TYP='ROOT' OPT='RECREATE'";
 
 // General global options  
-MessageSvc.OutputLevel    = 6; 
+MessageSvc.OutputLevel    = 3; 
 
 // skip some messages from Xml 
 MessageSvc.setWarning += { "XmlGenericCnv" };
@@ -47,7 +47,7 @@ MessageSvc.setWarning += { "XmlGenericCnv" };
 ApplicationMgr.EvtSel     = "NONE" ;
 
 // number of events to be processed, first event number and run number
-ApplicationMgr.EvtMax     = 5;
+ApplicationMgr.EvtMax     = 3;
 GaussInit.FirstEventNumber =1;
 GaussInit.RunNumber=1;
 
