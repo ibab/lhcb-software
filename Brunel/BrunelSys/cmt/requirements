@@ -16,8 +16,8 @@ use BrunelAlgs          v2r0    Rec
 use KsReco              v1r5	Rec
 
 # L0 trigger
-use L0Calo              v7r0    L0
-use L0Muon              v6r5    L0
+use L0Calo              v7r0p1	L0
+use L0Muon              v6r5p1	L0
 use PuVeto              v5r4    L0
 use L0DU                v6r5    L0
 
@@ -30,7 +30,7 @@ use CaloInterfaces      v2r4  	Calo
 use CaloUtils           v4r4  	Calo
 use CaloMonitor         v1r4  	Calo
 use CaloReco            v1r6    Calo
-use CaloDigit           v1r2  	Calo
+use CaloDigit           v1r2p1	Calo
 use CaloPIDs		v1r0	Calo
 
 # Velo
