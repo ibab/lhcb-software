@@ -4,9 +4,10 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
-!======================== BooleSys v6r1 2004-07-26 ========================
-! 2004-07-26 - Marco Cattaneo
+!======================== BooleSys v6r1 2004-07-29 ========================
+! 2004-07-29 - Marco Cattaneo
  - Same as v6r0, but built against Gaudi v15r1
+ - Packages modified: L0DU v6r7p1
 
 !======================== BooleSys v6r0 2004-07-22 ========================
 ! 2004-07-22 - Marco Cattaneo
