@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.cpp,v 1.6 2003-07-07 08:21:06 ibelyaev Exp $ 
+// $Id: CaloSensDet.cpp,v 1.7 2003-07-07 09:52:16 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/07/07 08:21:06  ibelyaev
+//  split the general CaloSensDet class
+//
 // ============================================================================
 /// SRD & STD 
 #include <algorithm>
@@ -503,7 +506,7 @@ double  CaloSensDet::birkCorrection
   
   const double alpha = dEdX/ density ;
   
-  return 1.0 / ( C1 * alpha + C2 * alpha * alpha ) ;
+  return 1.0 / ( 1.0 + C1 * alpha + C2 * alpha * alpha ) ;
 };
 // ============================================================================
 

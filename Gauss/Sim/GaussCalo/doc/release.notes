@@ -7,6 +7,9 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-07-07 - Vanya BELYAEV 
+  src/CaloSensDet.cpp   - remove the bug from my stupid implementation of Birk's law
+ 
 ! 2003-07-07 - Vanya BELYAEV
   - options/Calo.opts    adjust the location of input histogram file to 
                          $LHCBHOME/sim/data directory 
