@@ -1,4 +1,4 @@
-// $Id: L0mProcUnit.cpp,v 1.12 2003-01-31 13:13:52 atsareg Exp $
+// $Id: L0mProcUnit.cpp,v 1.13 2003-01-31 14:56:46 ooleroy Exp $
 
 #ifdef WIN32
 // Disable warning C4786 identifier truncated to 255 characters in debug info.
@@ -147,9 +147,14 @@ void L0mProcUnit::cleanAdjacentSeeds() {
   int nsize = m_towers.size();
   if(nsize<2) return;
   
-  // cout << "========= Removing seed clusters " << endl;  
+  //cout << "========= Removing seed clusters " << nsize << endl;  
   bool remove = false;
   std::vector<bool> flag(nsize,true);
+  //for (int k = 0; k<nsize; k++ ) {    
+  //  cout << "Before cleaning " << m_towers[k]->padM3() << 
+  //          " " << flag[k] << endl;
+  //}
+  
   for ( int i = 0; i<nsize-1; i++) {
     // cout << m_towers[i]->padM3() << endl;
     int nx1 = m_towers[i]->padM3().nX();
@@ -168,28 +173,43 @@ void L0mProcUnit::cleanAdjacentSeeds() {
 	} else if (ny1>ny2) {
 	  flag[i] = false;	  
 	} else {
-	  // std::cout << "Wrong selection logic !!!" << std::endl;
+    //std::cout << "Wrong selection logic !!!" << std::endl;
 	}
       }
     }
   }
-  // cout << m_towers[nsize-1]->padM3() << endl;
+  //cout << m_towers[nsize-1]->padM3() << endl;
   
   if (!remove) {
-    // cout << "===== Nothing removed" << endl;
+    //cout << "===== Nothing removed" << endl;
     return;
   } else {
-    // cout << "===== Removed seeds:" << endl;
+    //cout << "===== Removed seeds:" << endl;
   }
   std::vector<L0mTower*> tmp;
-  
+  std::vector<L0mTower*>::iterator itmp;
+
   for ( int it = 0; it<nsize; it++) {
     if (flag[it]) {
       tmp.push_back(m_towers[it]);
+      //cout << "Retained tower " << m_towers[it]->padM3() << endl;
     } else {
-      // cout << m_towers[it]->padM3() << endl;
+      //cout << "Rejected tower " << m_towers[it]->padM3() << endl;
     }  
   }
   m_towers.clear();
-  std::copy(tmp.begin(),tmp.end(),m_towers.begin());
+  //std::copy(tmp.begin(),tmp.end(),m_towers.begin());
+  for (itmp = tmp.begin(); itmp != tmp.end(); itmp ++) {
+    m_towers.push_back(*itmp);
+  }
+  
+
+  //nsize = m_towers.size();
+  //cout << "After cleaning nsize =" << nsize << endl;
+  //cout << "After cleaning nsize tmp=" << tmp.size() << endl;
+  
+
+  //for (int k1 = 0; k1<nsize; k1++ ) {    
+  //  cout << "After cleaning " << m_towers[k1]->padM3() << endl;   
+  //}
 }
