@@ -1,4 +1,4 @@
-// $Id: SolidBox.h,v 1.10 2002-10-02 13:24:21 cattanem Exp $
+// $Id: SolidBox.h,v 1.11 2002-10-29 13:49:36 ranjard Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDBOX_H
 #define     DETDESC_SOLIDBOX_H

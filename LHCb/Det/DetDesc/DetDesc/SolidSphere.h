@@ -1,8 +1,14 @@
-// $Id: SolidSphere.h,v 1.9 2002-05-21 17:02:57 ibelyaev Exp $ 
+// $Id: SolidSphere.h,v 1.10 2002-10-29 13:49:36 ranjard Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9.4.1  2002/10/29 13:29:34  ranjard
+// v10r5 - built on v10r3b branch - bug fix in SolidSphere.h
+//
+// Revision 1.9  2002/05/21 17:02:57  ibelyaev
+//  bug fix for SolidSphere
+//
 // Revision 1.8  2002/05/11 18:25:46  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 11 May 2002
 //
@@ -203,13 +209,13 @@ public:
    *  @return the end of phi angle of sphere segment 
    */
   inline       double  endPhiAngle    () const 
-  { return m_sphere_deltaPhiAngle   + m_sphere_deltaPhiAngle   ; }; 
+  { return m_sphere_startPhiAngle   + m_sphere_deltaPhiAngle   ; }; 
   
   /**  return the end of theta angle of sphere segment 
    *  @return the end of theta angle of sphere segment 
    */
   inline       double  endThetaAngle  () const 
-  { return m_sphere_deltaThetaAngle + m_sphere_deltaThetaAngle ; };
+  { return m_sphere_startThetaAngle + m_sphere_deltaThetaAngle ; };
   
   /** - serialization for reading
    *  - implementation of ISerialize abstract interface 
