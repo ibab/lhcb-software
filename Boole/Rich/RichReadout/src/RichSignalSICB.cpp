@@ -285,15 +285,12 @@ StatusCode RichSignalSICB::ProcessEvent( std::string hitLoc,
               exitloc.setY( local.y() + L1*localDirection.y() );
             }
 
-            double X;
-            double Y;
+            for ( int i = 0; i < nphotons; ++i ) {
 
-            for (int i = 0; i < nphotons; i++) {
-
-              X =   entryloc.x()
+              double X = entryloc.x()
                 + localDirection.x()*x[ iBin+1 ][ i ]
                 + localDirection.y()*y[ iBin+1 ][ i ];
-              Y =   entryloc.y()
+              double Y =   entryloc.y()
                 + localDirection.y()*x[ iBin+1 ][ i ]
                 - localDirection.x()*y[ iBin+1 ][ i ];
 
