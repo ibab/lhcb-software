@@ -6,7 +6,6 @@
 
 ApplicationMgr.DLLs += {"HltSelChecker"};
 
-// ApplicationMgr.TopAlg += {"GaudiSequencer/MBExSelectionsNTuples"};
 HLTSelections.Members += {"GaudiSequencer/MBExSelectionsNTuples"};
 
 MBExSelectionsNTuples.IgnoreFilterPassed = true; // make all
@@ -45,6 +44,8 @@ HTLSelTrees.Members = {"ResetPVLocation/SetHLTTreePV",
 SetHLTTreePV.PVLocation = "/Event/Phys/Trg/Vertices";
 HTLSelTrees.OutputLevel = 3;
 
+// Warning : check that you run the Trg Rich options when setting UseRichOnlinePID = true;
+
 //==============================================================================
 // B -> H H
 //==============================================================================
@@ -56,7 +57,8 @@ HLTB2HHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterB2HH"};
 HLTB2HHTree.Decay = "B0 -> ^pi+ ^pi-";
 HLTB2HHTree.NtupleName = "FILE1/HLTB2HH";
 HLTB2HHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTB2HHTree.UseRichPID = true;
+HLTB2HHTree.UseRichOnlinePID = false;
+HLTB2HHTree.GeomTool = "TrgDispCalculator";
 HLTB2HHTree.OutputLevel = 3;
 
 //==============================================================================
@@ -69,7 +71,8 @@ HLTBs2PhiPhiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2PhiPhi"};
 HLTBs2PhiPhiTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- ^K+)";
 HLTBs2PhiPhiTree.NtupleName = "FILE1/HLTBs2PhiPhi";
 HLTBs2PhiPhiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBs2PhiPhiTree.UseRichPID = true;
+HLTBs2PhiPhiTree.UseRichOnlinePID = false;
+HLTBs2PhiPhiTree.GeomTool = "TrgDispCalculator";
 HLTBs2PhiPhiTree.OutputLevel = 3;
 
 //==============================================================================
@@ -92,7 +95,8 @@ B~0 -> (^D0 -> ^K+ ^K-) (^K*(892)~0 -> ^K- ^pi+)
 }";
 HLTBd2D0KstarTree.NtupleName = "FILE1/HLTBd2D0Kstar";
 HLTBd2D0KstarTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBd2D0KstarTree.UseRichPID = true;
+HLTBd2D0KstarTree.UseRichOnlinePID = false;
+HLTBd2D0KstarTree.GeomTool = "TrgDispCalculator";
 HLTBd2D0KstarTree.OutputLevel = 3;
 
 //==============================================================================
@@ -115,7 +119,8 @@ B~0 -> (^D*(2010)+ -> (^D0 -> ^K+ ^K-)  ^pi+) ^pi-
 }";
 HLTBd2DstarPiTree.NtupleName = "FILE1/HLTBd2DstarPi";
 HLTBd2DstarPiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBd2DstarPiTree.UseRichPID = true;
+HLTBd2DstarPiTree.UseRichOnlinePID = false;
+HLTBd2DstarPiTree.GeomTool = "TrgDispCalculator";
 HLTBd2DstarPiTree.OutputLevel = 3;
 
 //==============================================================================
@@ -128,7 +133,8 @@ HLTBs2DsHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2DsH"};
 HLTBs2DsHTree.Decay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^pi-, B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-}";
 HLTBs2DsHTree.NtupleName = "FILE1/HLTBs2DsH";
 HLTBs2DsHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBs2DsHTree.UseRichPID = true;
+HLTBs2DsHTree.UseRichOnlinePID = false;
+HLTBs2DsHTree.GeomTool = "TrgDispCalculator";
 HLTBs2DsHTree.OutputLevel = 3;
 
 //==============================================================================
@@ -141,5 +147,6 @@ HLTBs2PhiGammaTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2PhiGamma"};
 HLTBs2PhiGammaTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma";
 HLTBs2PhiGammaTree.NtupleName = "FILE1/HLTBs2PhiGamma";
 HLTBs2PhiGammaTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBs2PhiGammaTree.UseRichPID = true;
+HLTBs2PhiGammaTree.UseRichOnlinePID = false;
+HLTBs2PhiGammaTree.GeomTool = "TrgDispCalculator";
 HLTBs2PhiGammaTree.OutputLevel = 3;

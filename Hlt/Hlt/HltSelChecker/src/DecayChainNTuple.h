@@ -76,6 +76,9 @@ class IMCDecayFinder;
  *  The primaries are retrieved with the PVLocator tool, default is offline
  *  -> must set PVLocation property of PVLocator tool to change it
  *  
+ *  Possibility to use the TrgDispCalculator tool for online particles
+ *  -> uses the approximated HLT covariance matrix for computation of IP, vertex separation, etc ...
+ * 
  *  TODO: 
  *  - adapt to gammas ...
  *  - for gammas: re-valuate 4-vector at at secondary vertex for online and offline
@@ -102,8 +105,9 @@ private:
   // Properties
   std::string m_Decay; // Decay for which the ntuple will be created 
   std::string m_ntupleName; // Name of the TDirectory
-  bool m_useRichPID;
-  std::string m_richPIDLocation;
+  bool m_useRichOnlinePID;
+  std::string m_richOnlinePIDLocation;
+  std::string m_geomToolName ; // Name of Geometrical Tool
 
   // Flag to book the NTuple only once
   bool m_bookedNTuple;
@@ -164,6 +168,7 @@ private:
 
   // NTuple global variables
   NTuple::Item<long> m_eventNumber,m_runNumber;
+  NTuple::Item<long> m_nRecoPV;
   NTuple::Item<long> m_L0Decision;
   NTuple::Item<long> m_L1Decision;
   NTuple::Item<long> m_L1Gen;
@@ -172,6 +177,11 @@ private:
   NTuple::Item<long> m_L1JPsi;
   NTuple::Item<long> m_L1Elec;
   NTuple::Item<long> m_L1Phot;
+  NTuple::Item<long> m_HLTDecision;
+
+#ifdef MCCheck
+  NTuple::Item<long> m_nMCPV;
+#endif
 
   //-----------------------------------------------------------------------------
   // HandleNTuple

@@ -44,9 +44,10 @@ OffBs2PhiPhiTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- 
 OffBs2PhiPhiTree.NtupleName = "FILE1/OffBs2PhiPhi";
 OffBs2PhiPhiTree.FillMCDecay = true;
 OffBs2PhiPhiTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
-OffBs2PhiPhiTree.UseRichPID = false;
 OffBs2PhiPhiTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
+
+// Warning : check that you run the Trg Rich options when setting UseRichOnlinePID = true;
 
 //------------------------------------------------------------------------------
 // Write Tree for HLT selection
@@ -66,6 +67,7 @@ HLTBs2PhiPhiTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- 
 HLTBs2PhiPhiTree.NtupleName = "FILE1/HLTBs2PhiPhi";
 HLTBs2PhiPhiTree.FillMCDecay = true;
 HLTBs2PhiPhiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
-HLTBs2PhiPhiTree.UseRichPID = true;
+HLTBs2PhiPhiTree.UseRichOnlinePID = false;
+HLTBs2PhiPhiTree.GeomTool = "TrgDispCalculator";
 HLTBs2PhiPhiTree.OutputLevel = 3;
 //------------------------------------------------------------------------------

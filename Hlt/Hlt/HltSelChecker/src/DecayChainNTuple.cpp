@@ -57,9 +57,9 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   declareProperty("FillMCDecay", m_FillMCDecay = false);
 #endif
   declareProperty("NtupleName", m_ntupleName = "FILE1/MySelection" );
-  declareProperty("UseRichPID", m_useRichPID = false);
-  declareProperty("RichPIDLocation", m_richPIDLocation = "Rec/Rich/TrgPIDs" );
-
+  declareProperty("UseRichOnlinePID", m_useRichOnlinePID = false); // For online tracks
+  declareProperty("RichOnlinePIDLocation", m_richOnlinePIDLocation = "Rec/Rich/TrgPIDs" );
+  declareProperty("GeomTool", m_geomToolName = "GeomDispCalculator"); // For online use TrgDispCalculator
 
 }
 //=============================================================================
@@ -75,22 +75,23 @@ StatusCode DecayChainNTuple::initialize() {
   // Retrieve the ParticlePropertySvc
   StatusCode sc = service("ParticlePropertySvc", m_ppSvc);
 
-  if( sc.isFailure() ) {
-    fatal() << "Unable to locate Particle Property Service" << endreq;
+  if(sc.isFailure()){
+    err() << "Unable to locate Particle Property Service" << endreq;
     return sc;
   }
 
   // Retrieve the DecayFinder
   m_pDKFinder = tool<IDecayFinder>("DecayFinder", this);
-  if(sc.isFailure()){
-    fatal() << "Unable to retrieve DecayFinder" << endreq;
+  if(!m_pDKFinder){
+    err() << "Unable to retrieve DecayFinder" << endreq;
     return sc;
   }
 
   // Retrieve the LifetimeFitter
+  // sc = toolSvc()->retrieveTool("LifetimeFitter", m_pLifetimeFitter, this);
   /*
-  sc = toolSvc()->retrieveTool("LifetimeFitter", m_pLifetimeFitter, this);
-  if(sc.isFailure()){
+  m_pLifetimeFitter = tool<ILifetimeFitter>("LifetimeFitter", this);
+  if(!m_pLifetimeFitter){
     err() << " Unable to retrieve LifetimeFitter tool" << endreq;
     return sc;
   }
@@ -100,14 +101,14 @@ StatusCode DecayChainNTuple::initialize() {
   m_pDKFinder->setDecay(m_Decay);
   info() << "Will look for the decay: "<< m_pDKFinder->decay() << endreq;
 
-  sc = toolSvc()->retrieveTool("GeomDispCalculator", m_IPTool, this);
-  if(sc.isFailure()){
+  m_IPTool = tool<IGeomDispCalculator>(m_geomToolName, m_IPTool, this);
+  if(!m_IPTool){
     err() << " Unable to retrieve GeomDispCalculator tool" << endreq;
     return sc;
   }
 
-  sc = toolSvc()->retrieveTool("PVLocator", m_PVLocator, this);
-  if(sc.isFailure()){
+  m_PVLocator = tool<IPVLocator>("PVLocator", m_PVLocator, this);
+  if(!m_PVLocator){
     err() << " Unable to retrieve PV Locator tool" << endreq;
     return sc;
   }
@@ -119,15 +120,15 @@ StatusCode DecayChainNTuple::initialize() {
   // Retrieve the data service
   sc = service("EventDataSvc", m_EDS, true);
   if( sc.isFailure() ) {
-    fatal() << "Unable to locate Event Data Service"<< endreq;
+    err() << "Unable to locate Event Data Service"<< endreq;
     return sc;
   }
 
 #ifdef MCCheck
   // Retrieve the MCDecayFinder
   m_pMCDKFinder = tool<IMCDecayFinder>("MCDecayFinder",this);
-  if(sc.isFailure()){
-    fatal() << "Unable to retrieve MCDecayFinder tool" << endreq;
+  if(!m_pMCDKFinder){
+    err() << "Unable to retrieve MCDecayFinder tool" << endreq;
     return sc;
   }
 
@@ -136,15 +137,19 @@ StatusCode DecayChainNTuple::initialize() {
   info() << "Will look for the MC decay: "<< m_pMCDKFinder->decay() << endreq;
   
   // Link associator
-  sc = toolSvc()->retrieveTool("Particle2MCLinksAsct", "LinkAsct", m_pAsctLinks, this);
-  if(sc.isFailure()){
-    fatal() << "Unable to retrieve the Particle2MCLinksAsct" << endreq;
+  m_pAsctLinks = tool<Particle2MCLinksAsct::IAsct>("Particle2MCLinksAsct", "LinkAsct", this);
+  if(!m_pAsctLinks){
+    err() << "Unable to retrieve the Particle2MCLinksAsct" << endreq;
     return sc;
   }
 #endif
 
   // Trigger
   m_dataProvider = tool<TrgDataProvider> ("TrgDataProvider");
+  if(!m_dataProvider){
+    err() << "Unable to retrieve the TrgDataProvider" << endreq;
+    return sc;
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -873,6 +878,10 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         // NTuple global variables
         sc = nt->addItem("Event", m_eventNumber);
         sc = nt->addItem("Run", m_runNumber);
+        sc = nt->addItem("nRecoPV", m_nRecoPV);
+#ifdef MCCheck
+        sc = nt->addItem("nMCPV", m_nMCPV);
+#endif
         sc = nt->addItem("L0Decision", m_L0Decision);
         sc = nt->addItem("L1Decision", m_L1Decision);
         sc = nt->addItem("L1Gen", m_L1Gen);
@@ -881,6 +890,7 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         sc = nt->addItem("L1JPsi", m_L1JPsi);
         sc = nt->addItem("L1Elec", m_L1Elec);
         sc = nt->addItem("L1Phot", m_L1Phot);
+        sc = nt->addItem("HLTDecision", m_HLTDecision);
 
         // Part of the keys and labels
         int forthekeymother = 0;
@@ -970,9 +980,21 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   sc = getPV(PVs);
   if (!sc.isSuccess()) return sc;
   if (PVs.empty()) return StatusCode::SUCCESS; // don't continue, but not an error
+  int nRecoPV = PVs.size();
+  debug() << "Number of reconstructed primaries " << nRecoPV << endreq;
   //---------------------------------------------
 
 #ifdef MCCheck
+  //---------------------------------------------
+  // An event is made up of several collisions
+  SmartDataPtr<Collisions> collisions (eventSvc(), CollisionLocation::Default);
+  if(!collisions ){
+    warning() << "No MC collisions retrieved" << endreq;
+  }
+  int nMCPV = collisions->size();
+  debug() << "Number of MC primaries " << nMCPV << endreq;
+  //---------------------------------------------
+
   //---------------------------------------------
   // Get the MCparticles
   SmartDataPtr<MCParticles> kmcparts(m_EDS, MCParticleLocation::Default );
@@ -994,10 +1016,10 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 
   //---------------------------------------------  
   RichPIDs* globalPIDs = NULL;
-  if (m_useRichPID){
-    globalPIDs = get<RichPIDs>( m_richPIDLocation );
+  if (m_useRichOnlinePID){
+    globalPIDs = get<RichPIDs>( m_richOnlinePIDLocation );
     if(globalPIDs){
-      debug() << "Found " << globalPIDs->size() << " RichPIDs at " << m_richPIDLocation << endreq;
+      debug() << "Found " << globalPIDs->size() << " RichPIDs at " << m_richOnlinePIDLocation << endreq;
     }
   }
   //---------------------------------------------  
@@ -1024,9 +1046,11 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   bool L1Elec     = false;
   bool L1Phot     = false;
   
-  if(m_dataProvider){
-    L1Score* score = m_dataProvider->l1Score();
-    if(score){
+  if(m_dataProvider != NULL){
+    // L1Score* score = m_dataProvider->l1Score(); // this is buggy
+    L1Score* score = get<L1Score>( L1ScoreLocation::Default );
+    if(score != NULL){
+
       L1Decision = score->decision();
       L1Gen      = score->decisionGen();
       L1SiMu     = score->decisionMu();
@@ -1046,12 +1070,23 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
       debug() << "Total:       " << L1Decision << endreq;
     }
   }
+
+  bool HLTDecision = false;
+  if (trg){
+    HLTDecision = trg->HLT();
+    debug() << "HLT decision: " << HLTDecision << endreq;
+  }
+
   //---------------------------------------------  
 
   //---------------------------------------------  
   // Fill NTuple global variables
   m_eventNumber = m_event;
   m_runNumber = m_run;
+  m_nRecoPV = long(nRecoPV);
+#ifdef MCCheck
+  m_nMCPV = long(nMCPV);
+#endif
   m_L0Decision = long(L0Decision);
   m_L1Decision = long(L1Decision);
   m_L1Gen = long(L1Gen);
@@ -1060,7 +1095,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   m_L1JPsi = long(L1JPsi);
   m_L1Elec = long(L1Elec);
   m_L1Phot = long(L1Phot);
-
+  m_HLTDecision = long(HLTDecision);
   //---------------------------------------------  
 
   //---------------------------------------------
@@ -1194,8 +1229,8 @@ StatusCode DecayChainNTuple::getPV(VertexVector& PVs) {
     return StatusCode::FAILURE; 
   }
 
-  debug() << "Number of primary vertices  = "
-          << vertices->size() << endreq;
+  verbose() << "Number of primary vertices  = "
+            << vertices->size() << endreq;
   
   Vertices::iterator ivert;
   for( ivert = vertices->begin(); ivert != vertices->end(); ivert++){
@@ -1264,7 +1299,7 @@ StatusCode DecayChainNTuple::WriteMCNTuple(std::vector<MCParticle*>& MCHead) {
 
   verbose() << "Entering WriteMCNTuple" << endreq;
   StatusCode sc = StatusCode::SUCCESS;
-
+  
   //---------------------------------------------
   // Mother (or head) of the decay
   std::vector<MCParticle*>::iterator imcmother;
