@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.6 2002-05-10 10:29:10 ranjard Exp $ 
+! $Id: release.notes,v 1.7 2002-05-23 12:48:44 ranjard Exp $ 
 ! =============================================================================
 Package : Gauss
 Package manager : Witek Pokorski
+
+! >>>>>>>>>>>>>>>>>>>>>>>>> Gauss v3r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 2002-05-23 - Witek Pokorski
+ - requirements - remove use of SicbCnv
+                  add use of Magnet
+ - options      - modify Simulation.opts and Gauss.opts accordingly
 
 ! >>>>>>>>>>>>>>>>>>>>>>>>>> Gauss v2r2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
