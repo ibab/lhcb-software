@@ -1,6 +1,6 @@
 #ifndef L0DU_L0DUREPORT_H
 #define L0DU_L0DUREPORT_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/L0DU/L0DUReport.h,v 1.3 2001-08-31 11:05:44 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/L0DU/L0DUReport.h,v 1.4 2001-10-01 08:32:02 nbrun Exp $
 
 // Include files
 #include <iostream>
@@ -49,6 +49,13 @@ const CLID& CLID_L0DUReport = 6004;
 class L0DUReport : public DataObject {
 
 public:
+
+/** Constructor empty 
+ * ( used by "generic" converter )
+ */
+
+  L0DUReport() :  m_typeL0Trig(0) {
+  }
 
 /** Constructors has many arguments
  *
