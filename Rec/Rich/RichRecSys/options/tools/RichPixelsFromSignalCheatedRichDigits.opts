@@ -12,3 +12,6 @@ ToolSvc.RichPixelCreator.DelegatedPixelCreator = "RichPixelCreatorMC";
 // Configure which tool to use to actually make the digits. 
 // Here, use the normal reconstruction tool
 ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromCheatedRichDigits/RichPixelCreatorMC" };
+
+// Choose which radiators to use            Aero   C4F10   CF4
+ToolSvc.RichPixelCreatorMC.UseRadiators = { true,  true,   true };

@@ -61,4 +61,4 @@ RichRingRefit.NSigmaCut      = 3.00;
 MergeRichPIDs.UseRingRefitPIDs = false;
 MergeRichPIDs.UseLocalPIDs     = true;
 MergeRichPIDs.UseGlobalPIDs    = true;
-
+//MergeRichPIDs.OutputPIDLocation = "Rec/Rich/NewPIDs";

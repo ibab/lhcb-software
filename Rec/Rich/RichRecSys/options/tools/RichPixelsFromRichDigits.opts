@@ -1,3 +1,6 @@
 
 // use the tool that uses RichDigits
 ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigits/RichPixelCreator" };
+
+// Which RICH detectors to use             RICH1   RICH2
+ToolSvc.RichPixelCreator.UseDetectors = {  true,   true   };

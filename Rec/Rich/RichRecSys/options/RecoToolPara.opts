@@ -28,6 +28,10 @@
 // and then cheats the hit position using MCRichOpticalPhotons
 //#include "$RICHRECSYSOPTS/tools/RichPixelsFromSignalCheatedRichDigits.opts"
 
+// Pixel creator that uses real events to form a cache of hits associated to single particles.
+// This cache is then used to add a specified number of background particles to each event
+//#include "$RICHRECSYSOPTS/tools/RichPixelsFromRichDigitsWithBg.opts"
+
 // ================================== Photon Creators ==========================================
 
 // Photon reconstruction using full reconstructed information (Default)
@@ -48,7 +52,7 @@ ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/RichMassHypoR
 
 // Cherenkov Cone ray tracing
 ToolSvc.RichToolRegistry.Tools += { "RichRayTraceCherenkovCone/RichRayTraceCKCone" };
-ToolSvc.RichRayTraceCKCone.NPhotonsRayTrace = 20;
+ToolSvc.RichRayTraceCKCone.NPhotonsRayTrace = 100;
 
 // Segment creator
 ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };

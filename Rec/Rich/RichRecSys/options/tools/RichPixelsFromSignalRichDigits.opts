@@ -11,3 +11,6 @@ ToolSvc.RichPixelCreator.DelegatedPixelCreator = "RichPixelCreatorReco";
 // Configure which tool to use to actually make the digits. 
 // Here, use the normal reconstruction tool
 ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigits/RichPixelCreatorReco" };
+
+// Which RICH detectors to use                 RICH1   RICH2
+ToolSvc.RichPixelCreatorReco.UseDetectors = {  true,   true   };

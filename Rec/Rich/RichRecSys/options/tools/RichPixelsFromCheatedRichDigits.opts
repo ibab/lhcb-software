@@ -3,3 +3,6 @@
 // HPD entrance window - obtained from the associated MCRichOpticalPhoton object
 
 ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromCheatedRichDigits/RichPixelCreator" };
+
+// Choose which radiators to use          Aero   C4F10   CF4
+ToolSvc.RichPixelCreator.UseRadiators = { true,  true,   true };

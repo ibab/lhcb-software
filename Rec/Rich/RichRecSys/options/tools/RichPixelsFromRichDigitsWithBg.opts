@@ -1,0 +1,13 @@
+
+// Pixel creator that uses real events to form a cache of hits associated to single particles.
+// This cache is then used to add a specified number of background particles to each event
+
+// use the tool that uses RichDigits
+ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigitsWithBg/RichPixelCreator" };
+
+// number of particles to add each event
+ToolSvc.RichPixelCreator.NumBgRingsToAdd = 5;
+
+// which radiators to use
+//                                        Aerogel  C4F10  CF4
+ToolSvc.RichPixelCreator.UseRadiators = { true,    true,  true };

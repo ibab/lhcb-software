@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2004-10-13 - Chris Jones
+ - Various new options in tool configurations
+
 !====================== RichRecSys v1r12 2004-07-22 ======================
 ! 2004-07-22 - Marco Cattaneo
  - Updates to packages for release with Gaudi v15

@@ -3,9 +3,14 @@
 // Define the RichRecTrack creator
 ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreator" };
 
-// selection cuts by tracking algorithm
-//                                                Forward  Match  Follow    Seed  VTT   KsTrack  Velo
-ToolSvc.RichTrackCreator.TrackMinPtotPerClass = { 0,       0,     0,        0,    1.0,  0.0,     999 };
+// Momentum cuts ( in the for tracktype/minP/maxP )
+ToolSvc.RichTrackCreator.TrackMomentumCuts = { "forward/0/9999999",
+                                               "match/0/9999999",
+                                               "follow/0/9999999",
+                                               "seed/0/9999999",
+                                               "veloTT/1/9999999",
+                                               "KsTrack/0/9999999",
+                                               "velo/999999/9999999" };
 
 // define the RichTrackSegment nickname to use
 ToolSvc.RichTrackCreator.TrackSegmentTool = "RichDetTrSegMaker";
