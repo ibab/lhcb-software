@@ -3,8 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v6r0>2004-07-16 Boole v6r0</A></H1><PRE>
-Development version
+</PRE><H1><A NAME=v6r0>2004-07-22 Boole v6r0</A></H1><PRE>
+This version uses Gaudi v15, needs CMT v1r16. It can process DC04 data
 
 - Modified functionality
   . GaudiAuditors no longer used for algorithm timing, uses GaudiSequencer
@@ -16,26 +16,26 @@ Development version
   . Initialize MuonGeometry tool completely at intialisation, not during first
     ~10 events (MuonTools v3r7)
   . New tuning and bug fixes in L0 Muon trigger simulation
-    (L0mConf v2r2p2, L0MuonKernel v2r1p1, L0MuonTrigger v2r1, ParamFiles v3r8)
+    (L0mConf v2r2p3, L0MuonKernel v2r1p1, L0MuonTrigger v2r1, ParamFiles v3r8)
 
 - New packaging
   . Use new GaudiSequencer base class for ProcessPhase (LHCbAlgs v1r0)
-  . Use new GaudiAlg and GaudiTools base classes
-    (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithms v14r3,
+  . Use new GaudiAlg base classes
+    (STDet v1r2, ITAssociators v2r9, STDAQ v1r3, ITAlgorithms v14r3,
      ITCheckers v2r3, RichReadout v1r9, RichDigiQC v1r7, RichTools v1r0,
      DigiAlg v2r4)
   . Converters of "Relations" to "Linker" MC truth tables moved to AsctToLinker
     package (from TrgChecker) (AsctToLinker v1r2)
-  . Removed dependency on GaudiAud package
+  . Removed dependency on GaudiAud, GaudiTools and GaudiDb packages
   . Removed dependency on Trg packages
   . Removed dependency on PYTHIA via HepMC (HepMC v4r121p0)
   . Use new LbAppInit instead of BooleInit (LHCbAlgs v1r0)
   . Use CreateL1Buffer and CreateRawBuffer (DAQEvent v4r4)
+  . Take external packages from LCG_Interfaces area
 
 - Bug fixes
   . Add protection for crazy MCHits in BuildMCTrackInfo (MCTools v1r6)
   . Removed fix from L0mConf v2r2p1, due to access violation on Windows
-    (revert to L0mConf v2r2)
 
 </PRE><H1><A NAME=v5r9>2004-05-24 Boole v5r9</A></H1><PRE>
 Version used for DC04
