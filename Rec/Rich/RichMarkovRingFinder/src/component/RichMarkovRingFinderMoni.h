@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.8 2004-09-23 16:52:53 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.9 2004-10-08 19:00:40 abuckley Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 
@@ -24,12 +24,6 @@
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IHistogram3D.h"
 
-using std::vector;
-using std::string;
-using std::map;
-using std::pair;
-using std::for_each;
-using std::mem_fun_ref;
 
 ///////////////////////////////////////////////////////////////////////////////
 /// @class RichMarkovRingFinderMoni
@@ -38,7 +32,7 @@ using std::mem_fun_ref;
 /// @author Chris Lester  lester@hep.phy.cam.ac.uk
 /// @author Chris Jones   Christopher.Rob.Jones@cern.ch
 /// @author Andy Buckley  buckley@hep.phy.cam.ac.uk
-/// @date   2003-12-04
+/// @date   2004-09-24
 ///
 /// The monitor runs after the ring finder algorithm and examines the rings
 /// made by it. The current monitor code histograms the properties of MC tracks
@@ -51,7 +45,7 @@ class RichMarkovRingFinderMoni : public RichRecAlgBase {
 public:
 
   /// Standard constructor
-  RichMarkovRingFinderMoni( const string& name, ISvcLocator* pSvcLocator );
+  RichMarkovRingFinderMoni( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~RichMarkovRingFinderMoni( ); ///< Destructor
 
@@ -85,39 +79,39 @@ private: // data
   IRichMCTrackInfoTool* m_mcTrackInfo;
 
   // Job options
-  string m_mcHistPth; ///< Output MC truth histogram path
-  string m_histPth;   ///< Output histogram path
+  std::string m_mcHistPth; ///< Output MC truth histogram path
+  std::string m_histPth;   ///< Output histogram path
 
   /// Fraction of MCParticles associated to Markov RichRecRing pixels which must 
   /// be exceeded for a track to be considered matched to a Markov ring
   double m_RingMatchFractionCutoff;
 
   // Histograms
-  map<string, IHistogram1D*> m_RingTrackMCType;
-  map<string, IHistogram1D*> m_RingTrackOriginInVeloVertexType;
-  map<string, IHistogram1D*> m_RingTrackOriginInVeloElectronVertexType;
+  std::map<std::string, IHistogram1D*> m_RingTrackMCType;
+  std::map<std::string, IHistogram1D*> m_RingTrackOriginInVeloVertexType;
+  std::map<std::string, IHistogram1D*> m_RingTrackOriginInVeloElectronVertexType;
 
-  map<string, IHistogram1D*> m_RingTrackOriginZ;
-  map<string, IHistogram1D*> m_RingTrackOriginZ1;
-  map<string, IHistogram2D*> m_RingTrackOriginXY1;
-  map<string, IHistogram2D*> m_RingTrackOriginXY2;
-  map<string, IHistogram2D*> m_RingTrackOriginXY3;
-  map<string, IHistogram2D*> m_RingTrackOriginRZ;
-  map<string, IHistogram2D*> m_RingTrackOriginRZ1;
-  map<string, IHistogram2D*> m_RingTrackOriginRZ1Zoom;
-  map<string, IHistogram2D*> m_RingTrackOriginRZ2;
-  map<string, IHistogram2D*> m_RingTrackOriginRZ3;
-  map<string, IHistogram3D*> m_RingTrackOrigin;
-  map<string, IHistogram3D*> m_RingTrackOrigin1Zoom;
+  std::map<std::string, IHistogram1D*> m_RingTrackOriginZ;
+  std::map<std::string, IHistogram1D*> m_RingTrackOriginZ1;
+  std::map<std::string, IHistogram2D*> m_RingTrackOriginXY1;
+  std::map<std::string, IHistogram2D*> m_RingTrackOriginXY2;
+  std::map<std::string, IHistogram2D*> m_RingTrackOriginXY3;
+  std::map<std::string, IHistogram2D*> m_RingTrackOriginRZ;
+  std::map<std::string, IHistogram2D*> m_RingTrackOriginRZ1;
+  std::map<std::string, IHistogram2D*> m_RingTrackOriginRZ1Zoom;
+  std::map<std::string, IHistogram2D*> m_RingTrackOriginRZ2;
+  std::map<std::string, IHistogram2D*> m_RingTrackOriginRZ3;
+  std::map<std::string, IHistogram3D*> m_RingTrackOrigin;
+  std::map<std::string, IHistogram3D*> m_RingTrackOrigin1Zoom;
 
-  map<string, IHistogram1D*> m_RingTrackDecayZ;
-  map<string, IHistogram1D*> m_RingTrackEndDecayZ;
-  map<string, IHistogram1D*> m_RingTrackEndNotDecayZ;
-  map<string, IHistogram1D*> m_RingTrackDecaysWithVeloOriginZ;
-  map<string, IHistogram2D*> m_RingTrackDecayRZ;
-  map<string, IHistogram2D*> m_RingTrackDecaysWithVeloOriginRZ;
-  map<string, IHistogram3D*> m_RingTrackDecay;
-  map<string, IHistogram3D*> m_RingTrackDecaysWithVeloOrigin;
+  std::map<std::string, IHistogram1D*> m_RingTrackDecayZ;
+  std::map<std::string, IHistogram1D*> m_RingTrackEndDecayZ;
+  std::map<std::string, IHistogram1D*> m_RingTrackEndNotDecayZ;
+  std::map<std::string, IHistogram1D*> m_RingTrackDecaysWithVeloOriginZ;
+  std::map<std::string, IHistogram2D*> m_RingTrackDecayRZ;
+  std::map<std::string, IHistogram2D*> m_RingTrackDecaysWithVeloOriginRZ;
+  std::map<std::string, IHistogram3D*> m_RingTrackDecay;
+  std::map<std::string, IHistogram3D*> m_RingTrackDecaysWithVeloOrigin;
 
 };
 #endif // COMPONENT_RICHMARKOVRINGFINDERMONI_H

@@ -5,6 +5,17 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+! 2004-10-08 - Andy Buckley
+ - src/component/*
+   . Changed the FinderAlg to associate hits to rings more carefully
+     by comparing association probability with the probabilities for all
+     other rings and making an initial cut on background-hit probability.
+   . FinderAlg now writes out the pixels and the matched rings/pixels to the
+     TES for visualisation purposes. This is inefficient in the general case
+     and needs a job option to control it.
+ - src/finder/ProbabilityUtils.h
+   . Optimised the reciprocal sum calculators in the finder
+
 ! 2004-08-24 - Andy Buckley
  - src/{finder,component}/*
    . Changed the Lester namespace to RichMarkov

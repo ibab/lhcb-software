@@ -1,4 +1,4 @@
-// $Id: RichPixelStrippingAlg.h,v 1.1 2004-06-25 11:53:07 buckley Exp $
+// $Id: RichPixelStrippingAlg.h,v 1.2 2004-10-08 19:00:40 abuckley Exp $
 #ifndef RICHPIXELSTRIPPINGALG_H
 #define RICHPIXELSTRIPPINGALG_H 1
 
@@ -31,6 +31,11 @@ public:
 protected:
 
 private:
+
+  bool m_StripUntrackedMCMCPixs;
+
+  bool m_savePreStrippedPixels;
+
 
 };
 #endif // RICHPIXELSTRIPPINGALG_H

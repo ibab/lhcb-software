@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.8 2004-09-23 16:52:53 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.9 2004-10-08 19:00:40 abuckley Exp $
 // Include files
 
 // from Gaudi
@@ -160,8 +160,8 @@ RichMarkovRingFinderMoni::execute()
 
 
         // Histogram the MC particle type
-        //cout << whichRichName + recOrNot << endl;
-        m_RingTrackMCType[whichRichName + recOrNot]->fill(mcType);
+        const string histosetID(whichRichName + recOrNot);
+        m_RingTrackMCType[histosetID]->fill(mcType);
 
 
         //SmartDataPtr<MCParticles> mcEvt(eventSvc(), MCParticleLocation::Default);
@@ -194,7 +194,7 @@ RichMarkovRingFinderMoni::execute()
           info() << "Origin vtx position = ("
                  << startPoint.x()/m << ", "
                  << startPoint.y()/m << ", "
-                 << startPoint.z()/m << ")m" << endreq;
+                 << startPoint.z()/m << ") m" << endreq;
 
 
           // Categorize which subdetector the origin falls within by z coord
@@ -211,27 +211,26 @@ RichMarkovRingFinderMoni::execute()
           // Get azimuthal radius
           const double rho(sqrt( startPoint.x() * startPoint.x() + startPoint.y() * startPoint.y() ));
 
-          //cout << "test" << endl;
 
           // Fill origin vertex position histos
-          m_RingTrackOriginZ[whichRichName + recOrNot]->fill( startPoint.z()/m );
-          m_RingTrackOriginRZ[whichRichName + recOrNot]->fill( startPoint.z()/m, rho/m );
-          m_RingTrackOrigin[whichRichName + recOrNot]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
+          m_RingTrackOriginZ[histosetID]->fill( startPoint.z()/m );
+          m_RingTrackOriginRZ[histosetID]->fill( startPoint.z()/m, rho/m );
+          m_RingTrackOrigin[histosetID]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
           // Subdetector-specific histos
           if (InVelo == originvertexlocation) {
-            m_RingTrackOrigin1Zoom[whichRichName + recOrNot]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginZ1[whichRichName + recOrNot]->fill( startPoint.z()/m );
-            m_RingTrackOriginXY1[whichRichName + recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginRZ1[whichRichName + recOrNot]->fill( startPoint.z()/m, rho/m );
-            m_RingTrackOriginRZ1Zoom[whichRichName + recOrNot]->fill( startPoint.z()/m, rho/m );
-            m_RingTrackOriginInVeloVertexType[whichRichName + recOrNot]->fill( mcpart->originVertex()->type() );
-            m_RingTrackOriginInVeloElectronVertexType[whichRichName + recOrNot]->fill( mcpart->originVertex()->type() );
+            m_RingTrackOrigin1Zoom[histosetID]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginZ1[histosetID]->fill( startPoint.z()/m );
+            m_RingTrackOriginXY1[histosetID]->fill( startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginRZ1[histosetID]->fill( startPoint.z()/m, rho/m );
+            m_RingTrackOriginRZ1Zoom[histosetID]->fill( startPoint.z()/m, rho/m );
+            m_RingTrackOriginInVeloVertexType[histosetID]->fill( mcpart->originVertex()->type() );
+            m_RingTrackOriginInVeloElectronVertexType[histosetID]->fill( mcpart->originVertex()->type() );
           } else if (InTT == originvertexlocation) {
-            m_RingTrackOriginXY2[whichRichName + recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginRZ2[whichRichName + recOrNot]->fill( startPoint.z()/m, rho/m );
+            m_RingTrackOriginXY2[histosetID]->fill( startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginRZ2[histosetID]->fill( startPoint.z()/m, rho/m );
           } else if (InT123 == originvertexlocation ) {
-            m_RingTrackOriginXY3[whichRichName + recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginRZ3[whichRichName + recOrNot]->fill( startPoint.z()/m, rho/m );
+            m_RingTrackOriginXY3[histosetID]->fill( startPoint.x()/m, startPoint.y()/m );
+            m_RingTrackOriginRZ3[histosetID]->fill( startPoint.z()/m, rho/m );
           }
 
 
@@ -265,14 +264,14 @@ RichMarkovRingFinderMoni::execute()
             double rho = sqrt( endPoint.x() * endPoint.x() + endPoint.y() * endPoint.y() );
 
             // Fill decay vertex position histos
-            m_RingTrackDecayZ[whichRichName + recOrNot]->fill( endPoint.z()/m );
-            m_RingTrackDecayRZ[whichRichName + recOrNot]->fill( endPoint.z()/m, rho/m );
-            m_RingTrackDecay[whichRichName + recOrNot]->fill( endPoint.z()/m, endPoint.x()/m, endPoint.y()/m );
+            m_RingTrackDecayZ[histosetID]->fill( endPoint.z()/m );
+            m_RingTrackDecayRZ[histosetID]->fill( endPoint.z()/m, rho/m );
+            m_RingTrackDecay[histosetID]->fill( endPoint.z()/m, endPoint.x()/m, endPoint.y()/m );
 
             if (  MCVertex::Decay == (*vtx)->type() ) {
-              m_RingTrackEndDecayZ[whichRichName + recOrNot]->fill( endPoint.z()/m );
+              m_RingTrackEndDecayZ[histosetID]->fill( endPoint.z()/m );
             } else {
-              m_RingTrackEndNotDecayZ[whichRichName + recOrNot]->fill( endPoint.z()/m );
+              m_RingTrackEndNotDecayZ[histosetID]->fill( endPoint.z()/m );
             }
 
             /*
@@ -325,7 +324,7 @@ RichMarkovRingFinderMoni::bookHistograms() {
   const int nbins1D(100), nbins2D(50), nbins3D(10);
   double rmax(0);
   const string recOrNot[2] = {"rec", "notRec"};
-  const string richType[2] = {"Rich1", "Rich2"};
+  const string richType[2] = {Rich::text(Rich::Rich1), Rich::text(Rich::Rich2)};
   const string trackingTitle[2] = {"tracking-matched MCMC rings", "MCMC rings not found by tracking"};
 
   for (int richNo = 0; richNo < 2; ++richNo) {
@@ -333,7 +332,7 @@ RichMarkovRingFinderMoni::bookHistograms() {
 
       const string index( richType[richNo] + recOrNot[recNo] );
       const string subtitle( richType[richNo] + " " + trackingTitle[recNo] );
-      const string histopath( m_histPth + "/" + richType[richNo] );
+      const string histopath( m_histPth + "/" + richType[richNo] + "/" + recOrNot[recNo] + "/" );
 
       // MC type IDs
       title = "MC type IDs of " + subtitle;

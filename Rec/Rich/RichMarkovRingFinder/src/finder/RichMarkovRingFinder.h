@@ -34,6 +34,11 @@ namespace RichMarkov {
 
     const Mode & getmode() const { return mode; }
 
+    inline double priorProbabilityOfHitDueToCircle( const Hep2Vector & p, const CircleParamsT & cp )
+    {
+      return RichPriors<Mode, mode>::priorProbabilityOfHitDueToCircle(p, cp);
+    }
+
   public:
 
     class FitFailed : public FinderExternalException {};

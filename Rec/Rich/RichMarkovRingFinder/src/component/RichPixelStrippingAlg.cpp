@@ -1,4 +1,4 @@
-// $Id: RichPixelStrippingAlg.cpp,v 1.4 2004-09-23 16:52:53 abuckley Exp $
+// $Id: RichPixelStrippingAlg.cpp,v 1.5 2004-10-08 19:00:40 abuckley Exp $
 
 // local
 #include "RichPixelStrippingAlg.h"
@@ -21,6 +21,10 @@ RichPixelStrippingAlg::RichPixelStrippingAlg( const std::string& name,
                                               ISvcLocator* pSvcLocator)
   : RichRecAlgBase ( name , pSvcLocator )
 {
+
+  declareProperty( "StripUntrackedMCMCPixs",  m_StripUntrackedMCMCPixs = false );
+
+  declareProperty( "SaveCopyOfPreStrippedPixels", m_savePreStrippedPixels = true );
 
 }
 //=============================================================================
@@ -47,6 +51,18 @@ StatusCode RichPixelStrippingAlg::execute()
 {
   debug() << "Execute" << endreq;
 
+  // if requested save copy of pixels before stripping
+  if ( m_savePreStrippedPixels ) {
+    RichRecPixels * oldPixs = new RichRecPixels();
+    for ( RichRecPixels::const_iterator iPix = richPixels()->begin(); iPix != richPixels()->end(); ++iPix ) {
+       oldPixs->insert( new RichRecPixel( **iPix ), (*iPix)->key() );
+    }
+    put( oldPixs, "Rec/Rich/RecoEvent/PreStrippingPixels" );
+  }
+
+  // Number of pixels before stripping
+  const unsigned int nPixBefore = richPixels()->size();
+
   // Locate RichRecRings from TES
   SmartDataPtr<RichRecRings> rings( eventSvc(), RichRecRingLocation::MarkovRings );
   if ( !rings ) {
@@ -60,9 +76,9 @@ StatusCode RichPixelStrippingAlg::execute()
     }
 
     // Create and initialise decision map for stripping out Markov-unassociated pixels
-    std::map<RichRecPixel*,bool> decisionMap;
+    std::map<RichRecPixel*,bool> decisionMap; // true means "keep", false means "strip"
     for ( RichRecPixels::const_iterator iPix = richPixels()->begin(); iPix != richPixels()->end(); ++iPix ) {
-      // Set true by default if in RICH1, otherwise false
+      // Set true by default if in RICH1, otherwise false (no R1 stripping yet)
       decisionMap[*iPix] = ( Rich::Rich1 == (*iPix)->smartID().rich() );
     }
 
@@ -73,7 +89,8 @@ StatusCode RichPixelStrippingAlg::execute()
       // Set "Markov-seen pixels" to be selected by stripping
       SmartRefVector<RichRecPixel> & pixels = (*iRing)->richRecPixels();
       for ( SmartRefVector<RichRecPixel>::iterator iPix = pixels.begin(); iPix != pixels.end(); ++iPix ) {
-        if ( (*iRing)->richRecSegment() ) // if the Markov ring corresponds to a non-null track segment...
+        if ( !m_StripUntrackedMCMCPixs || // if we're only stripping non-MCMC pixs
+             (*iRing)->richRecSegment() ) // if the Markov ring corresponds to a non-null track segment...
           decisionMap[*iPix] = true;
       }
     }
@@ -97,9 +114,12 @@ StatusCode RichPixelStrippingAlg::execute()
       if ( ! (*iP).second  ) richPixels()->remove( (*iP).first );
     }
 
-
   }
 
+  // Number of pixels after stripping
+  const unsigned int nPixAfter = richPixels()->size();
+
+  debug() << "Stripped " << nPixBefore << " starting pixels to " << nPixAfter << endreq;
 
   return StatusCode::SUCCESS;
 };

@@ -1,4 +1,3 @@
-
 #ifndef RICHMARKOV_RICH_PRIORS_H
 #define RICHMARKOV_RICH_PRIORS_H
 
@@ -26,20 +25,20 @@ namespace RichMarkov {
 
     static inline int sampleFromNumberOfCirclesDistribution() {
       return RandPoisson::shoot( mode.meanNumberOfRings() );
-    };
+    }
 
     static inline double priorProbabilityOfNumberOfCircles(const int n) {
       return poissonProb(n, mode.meanNumberOfRings() );
-    };
+    }
 
     static inline int sampleFromNumberOfHitsDueToCircle(const CircleParamsT & cp) {
       return RandPoisson::shoot(cp.meanNumberOfHits());
-    };
+    }
     // probability counterpart not yet implemented
 
     static inline int sampleFromNumberOfHitsDueToBackground() {
       return RandPoisson::shoot( mode.backgroundMeanParameter() );
-    };
+    }
     // probability counterpart not yet implemented
 
     static inline Hit sampleHitDueToBackground() {
@@ -47,7 +46,7 @@ namespace RichMarkov {
       const double y = RandGauss::shoot(0, mode.backgroundRadius() );
       const Hit h(x,y);
       return h;
-    };
+    }
 
     static inline double priorProbabilityOfHitDueToBackground(const Hep2Vector & p) {
       const double sigSq = mode.backgroundRadius() * mode.backgroundRadius();
@@ -56,7 +55,7 @@ namespace RichMarkov {
       const double one = 1;
       const double ans = (one / (MathsConstants::twopi*sigSq)) * exp(-half*rSqOnSigSq);
       return ans;
-    };
+    }
 
     static inline Hit sampleHitDueToCircle(const CircleParamsT & c)
     {
@@ -70,7 +69,7 @@ namespace RichMarkov {
       const double x        = rWobbled * cos(theta) + c.centre().x();
       const double y        = rWobbled * sin(theta) + c.centre().y();
       return Hit(x,y);
-    };
+    }
 
     // First version from lester
     static inline double priorProbabilityOfHitDueToCircle( const Hep2Vector & p,
@@ -87,9 +86,16 @@ namespace RichMarkov {
         const double r0      = cp.radius();
         const double r0Sq    = r0*r0;
         const double rOnR0Sq = rSq/r0Sq;
+
         if (false /* rOnR0 > 1.3  || rOnR0 < 0.3 */) {
+          // This can be used as a sanity cut on distance from the "active area" of 
+          // the function to avoid piddling around with tiny exponentials which are
+          // basically equal to zero
           return 0;
         } else {
+
+          // Alpha and epsilon parameters correct for the Gaussian width and the skewing
+          // due to evaluating in log space
           const double alpha   = Constants::circleProbabilityDistributionAlphaParameter;
           const double alphaSq = alpha*alpha;
           const double epsilon = Constants::circleProbabilityDistributionEpsilonParameter;
@@ -97,10 +103,14 @@ namespace RichMarkov {
           const double logg    = 0.5*log(rOnR0Sq); // hopefully the same as old val:  log(rOnR0);
           const double logsq   = logg*logg;
           const double two     = 2;
+
+          // This corrects for some sort of probability peaking in the centre of the
+          // Yorkshire Pudding function since the Gaussian is parameterised in log space
+          // to ensure it is well-defined, since [0, infty] in r -> [-infty, infty] in log r.
           const double substituteForPow = ( alpha == 2 ? 1 : pow(rOnR0Sq,0.5*(alpha-two)) );
           return ( 1.0/(MathsConstants::twopi) / sqrt(MathsConstants::twopi*epsSq)*
                    substituteForPow*exp(-0.5*(logsq/epsSq + alphaSq*epsSq )) / (rSq) );
-        };
+        }
 
       } else if ( Constants::topHat == Constants::probFuncType ) {
 
@@ -140,7 +150,7 @@ namespace RichMarkov {
                x <= mode.geometricThetaAcceptanceRightBound()  &&
                y >= mode.geometricThetaAcceptanceBottomBound() &&
                y <= mode.geometricThetaAcceptanceTopBound() );
-    };
+    }
 
     //static inline double circleGeometricAcceptanceCrude(const CircleParamsT & circ) {
     //  // returns a number bewteen 0 and 1 indicating what fraction of the ring lands on photo-detectors

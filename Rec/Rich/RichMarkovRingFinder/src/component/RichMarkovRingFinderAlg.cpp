@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.10 2004-09-23 16:52:53 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.11 2004-10-08 19:00:40 abuckley Exp $
 // Include files
 
 // local
@@ -25,6 +25,7 @@ static const  AlgFactory< Rich2LMarkovRingFinderAlg >        s_factoryR2L;
 const        IAlgFactory& Rich2LMarkovRingFinderAlgFactory = s_factoryR2L;
 
 
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -42,16 +43,23 @@ RichMarkovRingFinderAlg<MyFinder>::RichMarkovRingFinderAlg( const std::string& n
     m_finder       ( 0     )
 {
   declareProperty( "RingLocation", m_ringLocation = RichRecRingLocation::MarkovRings );
+  declareProperty( "MatchedRingLocation", m_matchedRingLocation = "Rec/Rich/Markov/MatchedRings" );
+  declareProperty( "PixelsLocation", m_pixelLocation = "Rec/Rich/Markov/Pixels" );
+  declareProperty( "MatchedPixelsLocation", m_matchedPixelLocation = "Rec/Rich/Markov/MatchedPixels" );
   declareProperty( "InitialiseUsingRich", m_useRichSeed = true );
   declareProperty( "HitOnCircleProbCutoff", m_CutoffHitOnCircleProbability = 0.1 );
   declareProperty( "SegPositionInRingCutoff", m_CutoffSegPositionInRing = 0.5 );
 }
 
+
+
 //=============================================================================
 // Destructor
 //=============================================================================
 template <class MyFinder>
-RichMarkovRingFinderAlg<MyFinder>::~RichMarkovRingFinderAlg() {};
+RichMarkovRingFinderAlg<MyFinder>::~RichMarkovRingFinderAlg() {}
+
+
 
 //=============================================================================
 // Initialisation
@@ -106,7 +114,8 @@ StatusCode RichMarkovRingFinderAlg<MyFinder>::initialize()
             << "Remove assertions and cout/cerr statements" << endreq;
 
   return StatusCode::SUCCESS;
-};
+}
+
 
 
 //=============================================================================
@@ -157,6 +166,7 @@ StatusCode RichMarkovRingFinderAlg<MyFinder>::execute() {
 };
 
 
+
 template <class MyFinder>
 const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
 
@@ -179,9 +189,10 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
   const typename MyFinder::RichParamsT bestRPSoFar = m_finder->bestFit();
   debug() << "Found " << bestRPSoFar.getCircles().size() << " ring candidates" << endreq;
 
-  // See if the ring container already exists
+
+  // See if the ring containers already exist
   SmartDataPtr<RichRecRings> tesRings( eventSvc(), m_ringLocation );
-  RichRecRings * rings = 0;
+  RichRecRings * rings(0);
   if ( !tesRings ) {
     // Make a new container of ring objects and register with Gaudi
     rings = new RichRecRings();
@@ -190,6 +201,37 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
     // ring container exists, so just add to it
     rings = tesRings;
   }
+  SmartDataPtr<RichRecRings> tesMatchedRings( eventSvc(), m_matchedRingLocation );
+  RichRecRings * matchedRings(0);
+  if ( !tesMatchedRings ) {
+    // Make a new container of ring objects and register with Gaudi
+    matchedRings = new RichRecRings();
+    put ( matchedRings, m_matchedRingLocation );
+  } else {
+    // ring container exists, so just add to it
+    matchedRings = tesMatchedRings;
+  }
+  SmartDataPtr<RichRecPixels> tesPixels( eventSvc(), m_pixelLocation );
+  RichRecPixels * pixels(0);
+  if ( !tesPixels ) {
+    // Make a new container of ring objects and register with Gaudi
+    pixels = new RichRecPixels();
+    put ( pixels, m_pixelLocation );
+  } else {
+    // ring container exists, so just add to it
+    pixels = tesPixels;
+  }
+  SmartDataPtr<RichRecPixels> tesMatchedPixels( eventSvc(), m_matchedPixelLocation );
+  RichRecPixels * matchedPixels(0);
+  if ( !tesMatchedPixels ) {
+    // Make a new container of ring objects and register with Gaudi
+    matchedPixels = new RichRecPixels();
+    put ( matchedPixels, m_matchedPixelLocation );
+  } else {
+    // ring container exists, so just add to it
+    matchedPixels = tesMatchedPixels;
+  }
+
 
   // Create final rings
   const typename MyFinder::DataT & myData = eio.data();
@@ -205,29 +247,57 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
 
     for ( typename MyFinder::DataT::Hits::const_iterator hIt = eio.data().hits.begin();
           hIt != eio.data().hits.end(); ++hIt ) {
-      const double prob = inf.probabilityHitWasMadeByGivenCircle(hIt, iCircle);
       // Semi-arbitrary cut on prob that hit is associated to a ring: needs
       // Markov-assigned probability to be greater than this for the hit to
       // be associated with that RichRecRing
-      if ( prob > m_CutoffHitOnCircleProbability ) hitsOnCircle.push_back(&(*hIt));
-    }
+
+      // Not good on its own since the probability is shared between rings
+      // if ( prob > m_CutoffHitOnCircleProbability )
+
+      const double prob( inf.probabilityHitWasMadeByGivenCircle(hIt, iCircle) );
+      const double bgprob( inf.probabilityHitWasMadeBySomethingOtherThanACircle(hIt) );
+
+      const double m_HitIsBgProbabilityLowCut(0.5); // move this to a class variable
+      if ( bgprob < m_HitIsBgProbabilityLowCut ) {
+        // Loop over all the circles to see if any match this hit better than the current ring
+        bool thisIsTheBestCircle(true);
+        for ( typename MyFinder::RichParamsT::Circs::const_iterator iCircle2 = bestRPSoFar.getCircles().begin();
+              iCircle2 != bestRPSoFar.getCircles().end(); ++iCircle2 ) {
+          if ( iCircle != iCircle2 &&
+               prob < inf.probabilityHitWasMadeByGivenCircle(hIt, iCircle2) ) 
+            { thisIsTheBestCircle = false; }
+        }
+        if (thisIsTheBestCircle) {
+          debug() << "Found a best circle for hit " << &(*hIt) << ": " << &(*iCircle) << endreq;
+          hitsOnCircle.push_back(&(*hIt));
+        }
+        
+        // or with a likelihood for this specific ring (ignoring others)
+        //const double likelihoodOfHitFromThisCircle( m_finder->priorProbabilityOfHitDueToCircle( *hIt, *iCircle ) );
+        //const double m_CutoffHitOnCircleLikelihood(0.5); // move this to a class variable
+        //debug() << "Likelihood of hit being from this circle: " << likelihoodOfHitFromThisCircle << endreq;
+        //if ( likelihoodOfHitFromThisCircle > m_CutoffHitOnCircleLikelihood )
+        //
+      }
+
+    } // loop over hits
+
 
     if (!hitsOnCircle.empty()) {
-
       debug() << "Creating RichRecRing with " << hitsOnCircle.size() << " pixels" << endreq;
 
       // New ring for this result
       RichRecRing * newRing = new RichRecRing();
       // insert in container
       rings->insert( newRing );
-
+      
+      
       // set center point and radius (same units as cherenkov angle)
       const HepPoint3D centreLocal ( (*iCircle).centre().x()/scale,
                                      (*iCircle).centre().y()/scale,
                                      0 );
       newRing->setCentrePointLocal  ( centreLocal  );
-      newRing->setCentrePointGlobal ( m_smartIDTool->globalPosition( centreLocal,
-                                                                     rich(), panel() ) );
+      newRing->setCentrePointGlobal ( m_smartIDTool->globalPosition( centreLocal, rich(), panel() ) );
 
       newRing->setRadius ( (*iCircle).radius() );
       const double ringRadiusOnPDPlane = newRing->radius() / scale;
@@ -245,11 +315,16 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
       // build the ring points
       buildRingPoints ( newRing, scale );
 
+      // Add the Markov pixels to the TES
+      for (SmartRefVector<RichRecPixel>::const_iterator pix = newRing->richRecPixels().begin();
+           pix != newRing->richRecPixels().end(); ++pix) {
+        if ( !pixels->object( (*pix)->key() ) )
+          pixels->insert( new RichRecPixel( **pix ), (*pix)->key() );
+      }
 
       // Identify which rings have no associated track within them
       RichRecSegment* chosenSeg(0);
       double currentBestNormSeparation( static_cast<double>( std::numeric_limits<int>::max() ) );
-      //double currentBestNormSeparation( static_cast<double>(numeric_limits<int>::max()) );
       for ( RichRecSegments::const_iterator iSeg = richSegments()->begin(); iSeg != richSegments()->end(); ++iSeg ) {
         if (*iSeg) {
           // Find the PD panel point corresponding to the track projection
@@ -260,7 +335,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
           
           // Do some ring-segment matching...
           const double normSeparation = segPoint.distance(centreLocal) / ringRadiusOnPDPlane;
-          // If the projected segment lies within the ring radius ...
+          // If the projected segment lies within the specified fraction of the ring radius ...
           if (normSeparation < m_CutoffSegPositionInRing) {
             // ... and it's a better match than we've seen so far ...
             if (normSeparation < currentBestNormSeparation) {
@@ -275,12 +350,24 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
       // set segment
       newRing->setRichRecSegment( chosenSeg );
 
+      // Add matched rings and pixels to TES containers
+      if ( newRing->richRecSegment() ) {
+        matchedRings->insert( new RichRecRing( *newRing ), newRing->key() );
+        for (SmartRefVector<RichRecPixel>::const_iterator matchpix = newRing->richRecPixels().begin();
+             matchpix != newRing->richRecPixels().end(); ++matchpix) {
+          if ( !matchedPixels->object( (*matchpix)->key() ) )
+            matchedPixels->insert( new RichRecPixel( **matchpix ), (*matchpix)->key() );
+        }
+      }
+
     }
 
-  }
+  } // loop over circles
 
   return StatusCode::SUCCESS;
 }
+
+
 
 template <class MyFinder>
 void RichMarkovRingFinderAlg<MyFinder>::buildRingPoints( RichRecRing * ring,
@@ -297,6 +384,8 @@ void RichMarkovRingFinderAlg<MyFinder>::buildRingPoints( RichRecRing * ring,
     ring->ringPoints().push_back( m_smartIDTool->globalPosition(pLocal,rich(),panel()) );
   } 
 }
+
+
 
 template <class MyFinder>
 template <class AnInitialisationObject>
@@ -326,6 +415,8 @@ RichMarkovRingFinderAlg<MyFinder>::addCircleSuggestions( AnInitialisationObject 
   return StatusCode::SUCCESS;
 }
 
+
+
 template <class MyFinder>
 template <class AnInitialisationObject>
 const StatusCode
@@ -349,6 +440,8 @@ RichMarkovRingFinderAlg<MyFinder>::addDataPoints( AnInitialisationObject & eio )
   return StatusCode::SUCCESS;
 }
 
+
+
 template <class MyFinder>
 const bool
 RichMarkovRingFinderAlg<MyFinder>::inCorrectArea( const RichRecSegment * segment ) const
@@ -361,6 +454,8 @@ RichMarkovRingFinderAlg<MyFinder>::inCorrectArea( const RichRecSegment * segment
            ( m_panel == Rich::top   ? pnt.y() > 0 : pnt.y() < 0 ) );
 }
 
+
+
 template <class MyFinder>
 const bool
 RichMarkovRingFinderAlg<MyFinder>::inCorrectArea( const RichRecPixel * pixel ) const
@@ -368,6 +463,8 @@ RichMarkovRingFinderAlg<MyFinder>::inCorrectArea( const RichRecPixel * pixel ) c
   return ( m_rich  == static_cast<Rich::DetectorType>( pixel->smartID().rich()) &&
            m_panel == pixel->smartID().panel() );
 }
+
+
 
 //=============================================================================
 //  Finalize

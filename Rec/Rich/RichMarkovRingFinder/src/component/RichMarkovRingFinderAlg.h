@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.9 2004-08-24 11:43:04 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.10 2004-10-08 19:00:40 abuckley Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -111,6 +111,15 @@ private: // data
 
   /// Location of output rings in TES
   std::string m_ringLocation;
+
+  /// Location of output pixels in TES
+  std::string m_pixelLocation;
+
+  /// Location of output matched rings in TES
+  std::string m_matchedRingLocation;
+
+  /// Location of output matched pixels in TES
+  std::string m_matchedPixelLocation;
 
   /// Probability of associating a hit to a Markov circle above 
   /// which counts as a positive association

@@ -21,15 +21,17 @@ namespace RichMarkov {
   public:
     typedef std::vector<CircleParamsT> Circs;
   public:
+
     class Alteration {
     private:
       virtual void printMyInnardsTo(std::ostream & os) const = 0;
+
     public:
       inline void printMeTo(std::ostream & os) const {
         os << "Alteration[";
         printMyInnardsTo(os);
         os << "]";
-      };
+      }
       virtual ~Alteration() {};
       virtual void modifyCacheVectorEtc(double & ans,
                                         std::vector<double> & cache,
@@ -39,18 +41,19 @@ namespace RichMarkov {
     public:
       static inline double bitToBeCached(const Hep2Vector & hit, const CircleParamsT & circle) {
         const double mu = circle.meanNumberOfHits();
-        const double bitToBeAdded = mu*RichPriorsT::priorProbabilityOfHitDueToCircle(hit, circle);
+        const double bitToBeAdded = mu * RichPriorsT::priorProbabilityOfHitDueToCircle(hit, circle);
         return bitToBeAdded;
-      };
+      }
     };
 
     class DidNothing : public Alteration {
     public:
-      DidNothing() {};
+      DidNothing() {}
     private:
       virtual void printMyInnardsTo(std::ostream & os) const {
         os << "Did nothing.";
-      };
+      }
+
       virtual void modifyCacheVectorEtc(double &,
                                         std::vector<double> &,
                                         const Hep2Vector &,
@@ -58,10 +61,13 @@ namespace RichMarkov {
         // Do absolutely nothing!
         static bool first = true;
         if (first) {
-          std::cerr << "Note that once things are working, a default implementation can be provided for Alterations::Alteration::modifyCacheVectorEtc(...) eliminating the need for Alterations::DidNothing to implement a do-nothing function." << std::endl;
+          std::cerr << "Note that once things are working, a default implementation " 
+                    << "can be provided for Alterations::Alteration::modifyCacheVectorEtc(...) "
+                    << "eliminating the need for Alterations::DidNothing to "
+                    << "implement a do-nothing function." << std::endl;
           first = false;
-        };
-      };
+        }
+      }
 
     };
 

@@ -2,8 +2,11 @@
 # Created    : 2003-12-02
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.3 2004-07-30 11:08:57 jonrob Exp $
+# $Id: requirements,v 1.4 2004-10-08 19:00:40 abuckley Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2004/07/30 11:08:57  jonrob
+# Add CVS log to requirements file
+#
 #============================================================================
 
 package           RichMarkovRingFinder
@@ -22,7 +25,7 @@ set RICHMARKOVRINGFINDEROPTS $(RICHMARKOVRINGFINDERROOT)/options
 #============================================================================
 # Usages
 #============================================================================
-use   AIDA             v*   -no_auto_imports
+use   AIDA             v*    LCG_Interfaces -no_auto_imports
 use   RichRecBase      v1r*  Rich
 
 #============================================================================

@@ -65,7 +65,8 @@ namespace RichMarkov {
                        const std::string & name ) 
       : richThetaSampler(name,dir),
         richThetaDistribution(name,dir),
-        richProbabilityThetaAbove(name,dir) { }
+        richProbabilityThetaAbove(name,dir)
+    { }
 
   };
 
