@@ -36,6 +36,7 @@ Complete OO-Dst output.
    . Fix problem of inconsistent Velo numbering between SICBMC and Brunel
      (VeloSim v2r1)
    . Fix multiple tool initialisations (RiSicbCnv v4r2, RiSicbGeom v4r2)
+   . Move a log message to save ~30ms per event (OTDet v2r1)
    . Latest Gaudi bug fixes (GaudiSvc v8r3)
 
 </PRE><H1><A NAME=v12r0>2002-07-19 Brunel v12r0</A></H1><PRE>
