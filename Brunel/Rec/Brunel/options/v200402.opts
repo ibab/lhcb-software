@@ -34,7 +34,7 @@ ApplicationMgr.EvtMax = 100;
 // - If the input files is GaudiDb, output file can be GaudiDb or POOL
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "411300.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "Pool411300.root";  // Monitoring histos
 
 //---------------------------------------------------------------------------
 // Event input
