@@ -112,3 +112,18 @@ ApplicationMgr.TopAlg += { "PreDV" };
 // compatible database is included from here.
 #include "$DAVINCIROOT/options/DaVinciDDDB.opts"
 
+/*---------------------------------------------------
+  TEMPORARY PATCH:
+  Because of a bug in MinimalEventLoopMgr.cpp,
+  an algorithm contained in two sequencers
+  is executed twice. This is the case of 
+  CaloDigitsFromRaw when both the Electrons 
+  and Neutrals sequences are called.
+  To avoid the problem, execute the algorithm
+  in DaVinciCommon.opts, hence in *all* events.
+  
+  !! Don't forget to restore the initial way when
+  a patched version of MinimalEventLoopMgr.cpp
+  comes out !!
+---------------------------------------------------*/
+ApplicationMgr.TopAlg += { "CaloDigitsFromRaw" };

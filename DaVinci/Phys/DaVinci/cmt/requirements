@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.150 2004-07-29 06:45:18 pkoppenb Exp $
+# $Id: requirements,v 1.151 2004-08-02 14:48:44 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -59,7 +59,7 @@ use LHCb        v15r14
 #=======================================================
 
 # Trigger packages
-use  L0DU               v6r7     L0
+use  L0DU               v6r7p1   L0
 use  L0Calo             v7r6     L0
 use  L0Checker          v2r1p1   L0
 use  L0MuonKernel 	v2r1p1   L0
@@ -67,7 +67,7 @@ use  L0MuonTrigger 	v2r1     L0
 use  L0mConf 		v2r2d2   L0
 
 use  L1Decision         v2r0     Trg
-use  L1Reco             v4r0     Trg
+use  L1Reco             v4r0p1   Trg
 use  TrgChecker         v4r0     Trg
 use  TrgForward         v2r0     Trg
 use  TrgMonitor         v2r0     Trg
@@ -111,11 +111,10 @@ use  Ks2PiPiSel         v1r4p1   Phys
 use  PhysSelections	v6r8p2   Phys
 
 # Physics MC packages
-use  DaVinciChecks      v2r4p1   Phys
 use  DaVinciAssociators v5r0p2   Phys
 use  DaVinciEff         v3r0p1   Phys
 use  DaVinciMCTools     v5r4     Phys
-use  DaVinciTest        v4r5p2   Phys
+use  DaVinciTest        v5r0     Phys
 
 # Physics selections
 use  PhysSelSys		v7r6     PhysSel

@@ -4,6 +4,23 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2004-08-02 - P. Koppenburg
+  - options/DaVinciCommon.opts 
+  - options/DaVinciElectrons.opts
+  - options/DaVinciNeutrals.opts
+    . TEMPORARY PATCH:
+      Because of a bug in MinimalEventLoopMgr.cpp,
+      an algorithm contained in two sequencers
+      is executed twice. This is the case of 
+      CaloDigitsFromRaw when both the Electrons 
+      and Neutrals sequences are called.
+      To avoid the problem, execute the algorithm
+      in DaVinciCommon.opts, hence in *all* events.
+  
+      !! Don't forget to restore the initial way when
+      a patched version of MinimalEventLoopMgr.cpp
+      comes out !!
+  
 ! 2004-07-29 - P. Koppenburg
   - cmt/requirements
     . Use LHCb v15r14

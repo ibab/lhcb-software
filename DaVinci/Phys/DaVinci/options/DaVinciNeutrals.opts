@@ -1,4 +1,4 @@
-// $Id: DaVinciNeutrals.opts,v 1.8 2004-07-27 13:30:28 pkoppenb Exp $
+// $Id: DaVinciNeutrals.opts,v 1.9 2004-08-02 14:48:53 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -15,8 +15,22 @@
 // The major algorith sequence for "neutrals"
 ApplicationMgr.TopAlg += { "Sequencer/Neutrals" };
 
+/*---------------------------------------------------
+  TEMPORARY PATCH:
+  Because of a bug in MinimalEventLoopMgr.cpp,
+  an algorithm contained in two sequencers
+  is executed twice. This is the case of 
+  CaloDigitsFromRaw when both the Electrons 
+  and Neutrals sequences are called.
+  To avoid the problem, execute the algorithm
+  in DaVinciCommon.opts, hence in *all* events.
+  
+  !! Don't forget to restore the initial way when
+  a patched version of MinimalEventLoopMgr.cpp
+  comes out !!
+---------------------------------------------------*/
 // Re-create CaloDigits from raw buffer 
-Neutrals.Members  = { "CaloDigitsFromRaw"    };  
+//Neutrals.Members  = { "CaloDigitsFromRaw" };  
 
 // correct 3x3 matrix 
 Neutrals.Members += {"CaloClusterCorrect3x3Position"};
