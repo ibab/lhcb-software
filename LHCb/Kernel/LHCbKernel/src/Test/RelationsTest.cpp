@@ -1,8 +1,11 @@
-// $Id: RelationsTest.cpp,v 1.2 2003-05-15 15:22:11 ibelyaev Exp $
+// $Id: RelationsTest.cpp,v 1.3 2003-05-15 16:25:58 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/05/15 15:22:11  ibelyaev
+//  few modification to conform SLT interface for 'Range' types
+//
 // Revision 1.1  2002/05/12 08:45:29  ibelyaev
 //  see $LHCBKERNELROOT/dc/release.notes 12 May 2002
 //
@@ -536,7 +539,7 @@ int main()
                     << rit->weight () << std::endl ;
         }
       std::cout << " loop using explicit correct index " << std::endl;
-      for( size_t index  = 0 ; index < r.size() ; ++index ) 
+      { for( size_t index  = 0 ; index < r.size() ; ++index ) 
         {
           std::cout << " by index " << index 
                     << ":  integer  " 
@@ -545,7 +548,7 @@ int main()
                     << r(index).to     () << "'"
                     << " \t with the weigth equal to "
                     << r(index).weight () << std::endl ;
-        }
+        } }
       std::cout << " loop using explicit invalid index " << std::endl;
       for( size_t index  = r.size() ; index < r.size() + 4 ; ++index ) 
         {
