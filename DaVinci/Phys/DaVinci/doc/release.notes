@@ -2,6 +2,46 @@
 Package     : DaVinci 
 Responsible : Gloria Corti
 Purpose     : LHCb analysis program 
+ - Use DaVinciTools v7r1 with new tool
+ - Use DaVinciEff v2r1
+ - Use FlavourTagging v4r1
+
+ 2002-19-02 - Gloria Corti
+ - Move in src/Main DaVinciHeader and include it from here
+ - Introduce L1Decision.opts to run L1 Decision (possible only on Brunel
+   v14r2 data, on Brunel v16r4 data is already present).
+ - Introduce in DaVinci.opts the algorithms configuration to be able to
+   run Bd->Kstar(Kpi) gamma (see PhysSelections)
+ - Introduce in DaVinci.opts the algorithms configuration to be able to
+   run Bd->D(Kpipi)D(Kpipi) and Bs->Ds(KKpi)Ds(KKpi) (see PhysSelections) 
+ - New DaVinciv253r0.opts for database dependent configuration for new
+   Xmas data. Rename DaVinciv248r2.opts as DaVinciv248r4.opts for old
+   data (they are the same for DaVinci, it is just to be consistent with
+   dbase in Brunel). Introduced in DaVinci.opts and DaVinciEff.opts
+ - Use PhysSelections v4r1 with new selections
+ - Modify DaVinciCommon.opts to use options from new CaloReco package for
+   Calobased particleIDs
+ - Use GlobalReco v2r2 with bug fixes in ChargedProtoPAlg and use of
+   veloBack tracks in PrimaryVertex. 
+
+ 2002-12-02 - Gloria Corti
+ - Use GaudiConf v6r4 that introduce units.opts 
+ - Use LHCbKernel v1r5 with modification to Relations 
+ - Use TrKernel v11r1, CaloKernel v2r1
+ - Use DetDesc v10r5, VeloDet v8r0 to handle also 45 degree strips,
+   ITDet v1r2, OTDet v3r2, CaloDet v5r2, CaloDetXmlCnv v2r1, MuonDet v4r2
+ - Use EventKernel v2r1 with copy of KeyedObject private, Event v2r1
+   (AlgUsedTime only for new OODST data), TrEvent v11r4 with new type of
+   VeloBack tracks, CaloEvent v11r3 with locations, L1Event v11r3 
+   (new L1Report), PhysEvent v7r2 with copy constructor for FlavourTag 
+   and new V0 class for Kshort results
+ - Use VeloAssociators v1r3, CaloAssociators v3r1, TrAssociators v3r3, 
+   TrFitEvent v3r4, L0Calo v6r2
+ - Remove obsolete CaloAlgs, CaloTools and introduce new CaloReco v1r0
+ - Use L1VeloTrack v3r3 for bouth 45 and 90 degrees, new package 
+   L1Decision to reprocess L1 decision
+ - Use TrExtrapolator v2r3
+ 
 
 </PRE><H1><A NAME=v6r1>2002-11-13 DaVinci v6r1</A></H1><PRE>
  2002-11-13 - Gloria Corti

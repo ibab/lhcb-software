@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.47 2002-11-13 17:56:36 gcorti Exp $
+# $Id: requirements,v 1.48 2002-12-19 21:11:17 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v6r1
+version           v6r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -41,79 +41,86 @@ use  HbookCnv           v12r0
 use  RootHistCnv        v8r0p2
 
 #--- LHCb common libraries
-use  GaudiConf      	v6r3
+use  GaudiConf      	v6r4
 use  BookKeeping    	v1r1   Tools
-use  LHCbKernel     	v1r4   Kernel
+use  LHCbKernel     	v1r5   Kernel
 
 #--- Subdetector Kernels ( add any other Kernel you need )
-use  VeloKernel   	v1r2    Velo
-use  RichKernel   	v1r2   Rich
-use  TrKernel     	v11r0  Tr
-use  CaloKernel   	v2r0   Calo
+use  VeloKernel   	v1r2   Velo
+use  RichKernel   	v1r3   Rich
+#use  RichKernel   	v2r0   Rich
+#use  RichRecKernel      v1r1   Rich
+use  TrKernel     	v11r1  Tr
+use  CaloKernel   	v2r1   Calo
 use  MuonKernel   	v2r1   Muon
 
 #--- Detector description ( add any other Det package you need )
-use  DetDesc        	v10r4   Det
+use  DetDesc        	v10r5   Det
 use  XmlDDDB        	v13r1   Det
-use  VeloDet        	v7r1    Det
+use  VeloDet        	v8r0    Det
 use  ITDet          	v1r1    Det
-use  OTDet          	v3r0    Det
-use  CaloDet        	v5r1    Det
-use  CaloDetXmlCnv  	v2r0    Det
+use  OTDet          	v3r2    Det
+use  CaloDet        	v5r2    Det
+use  CaloDetXmlCnv  	v2r1    Det
 use  Magnet         	v1r1    Det
-use  MuonDet        	v4r1    Det
+use  MuonDet        	v4r2    Det
 
 #--- Event Model
-use  EventKernel  	v2r0    Event
-use  Event        	v2r0    Event
+use  EventKernel  	v2r1    Event
+use  Event        	v2r1    Event
 use  VeloEvent    	v11r1   Event
 use  ITEvent      	v11r0   Event
 use  OTEvent      	v11r0   Event
-use  TrEvent      	v11r3   Event
-use  RichEvent    	v3r2    Event
-use  CaloEvent    	v11r2   Event
+use  TrEvent      	v11r4   Event
+#use  RichEvent    	v4r1    Event
+use RichEvent           v3r2    Event
+use  CaloEvent    	v11r3   Event
 use  MuonEvent    	v2r1    Event
 use  L0Event      	v12r2   Event
-use  L1Event      	v11r1   Event
-use  PhysEvent    	v7r0    Event
+use  L1Event      	v11r2   Event
+use  PhysEvent    	v7r2    Event
 use  DbCnv        	v7r0    Event
 
 #--- Associators
 use  ITAssociators      v2r1    IT
 use  OTAssociators      v2r2    OT
-use  VeloAssociators    v1r2    Velo
-use  CaloAssociators    v3r0    Calo
-use  CaloRec   		v2r4    Calo
+use  VeloAssociators    v1r3    Velo
+use  CaloAssociators    v3r1    Calo
 use  MuonAssociators    v1r0    Muon
-use  TrFitEvent         v3r2    Tr
-use  TrAssociators      v3r2    Tr
-use  L0Calo		v6r1	L0
-use  L1VeloTrack 	v3r1	L1
+use  TrFitEvent         v3r4    Tr
+use  TrAssociators      v3r3    Tr
+use  L0Calo		v6r3	L0
+use  L1VeloTrack 	v3r3	L1
 
 #--- Trigger
 use  L0DU          	v6r1	L0
+use  L1Decision         v1r2    L1
 
 #--- ProtoParticles 
-use  CaloInterfaces     v2r2   Calo
-use  CaloUtils 	        v4r2   Calo
-use  CaloTools          v4r4   Calo
-use  GlobalReco         v2r1   Rec
+use  CaloInterfaces     v2r3   Calo
+use  CaloUtils 	        v4r3   Calo
+use  CaloReco           v1r0   Calo
+use  GlobalReco         v2r2   Rec
 
-#--- Reprocessing
-use  CaloAlgs           v7r2   Calo
+#--- Reprocess Kshort
+use  KsReco             v1r2   Rec
 
 #--- Necessary tools
-use  TrExtrapolator     v2r2   Tr
+use  TrExtrapolator     v2r3   Tr
 
 #--- DaVinci packages
+#use  DaVinciTools       v7r1   Phys
 use  DaVinciTools       v7r0   Phys
 use  DaVinciAssociators v3r0   Phys
-use  DaVinciMCTools     v4r0   Phys
+use  DaVinciMCTools     v4r1   Phys
 use  DaVinciTest        v4r0   Phys
-use  PhysSelections     v4r0   Phys
+use  PhysSelections     v4r1   Phys
+#use  FlavourTagging     v4r1   Phys
 use  FlavourTagging     v4r0   Phys
+#use  DaVinciEff         v2r1   Phys
 use  DaVinciEff         v2r0   Phys
 use  DaVinciUser        v4r0   Phys
+use  DaVinciChecks      v2r0   Phys
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
@@ -129,5 +136,5 @@ macro DaVinci_linkopts    "${application_linkopts}"
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append cppflags " -DDaVinciVersion=600100 " \
-             VisualC  " /DDaVinciVersion=600100 "
+macro_append cppflags " -DDaVinciVersion=600200 " \
+             VisualC  " /DDaVinciVersion=600200 "
