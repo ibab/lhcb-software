@@ -68,7 +68,7 @@ void GiGaPhysConstructorHpd::ConstructHpdSiEnLoss()
     G4ProcessManager* pmanager = particle->GetProcessManager();
     //    G4cout<<"ConstructHpdSiEnLoss: Now at particle:  "<< particle->GetParticleName()<<G4endl;
 
-    pmanager-> SetVerboseLevel(4);
+    pmanager-> SetVerboseLevel(0);
     if( theRichHpdSiEnergyLossProcess->IsApplicable(*particle) ) {
     //    RichHpdSiEnergyLoss* theRichHpdSiEnergyLossProcess =
     //  new RichHpdSiEnergyLoss("RichHpdSiEnergyLossProcess");

@@ -27,7 +27,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   // the following Msgstream and verbose leevl may be 
   // modified inthe future.
 
-  HpdVerboseLevel=1;
+  HpdVerboseLevel=0;
 
   // First set the number of rich detectors.
 
