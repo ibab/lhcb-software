@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/07/04 09:34:05  kbeloous
+// new coefficients for 2TANH S-shape correction
+//
 // Revision 1.1  2002/06/21 11:02:45  ibelyaev
 //  update in S-,L- and E-corrections
 //
@@ -26,9 +29,10 @@
  *  
  *  @see CaloCorr2TANH
  *  @author Konstantin Beloous Konstantin.Beloous@cern.ch
- *  @date   4 Jul 2002
+ *  @date   14 Jun 2002
  */
 // ============================================================================
+
 ToolSvc.SShape2Tanh.AreaCorrections = 
 { "CaloCorr2TANH/Calo2TANH0" ,
   "CaloCorr2TANH/Calo2TANH1" ,
@@ -38,25 +42,25 @@ ToolSvc.SShape2Tanh.AreaCorrections =
 ToolSvc.SShape2Tanh.Detector = "/dd/Structure/LHCb/Ecal" ;
 
 ToolSvc.Calo2TANH0.XParameters =
-{ 0.26913, 21.164, 0.78194, 2.9447, 1.0, 0.0 };
+{ 0.92862, 3.9908, 0.15883, 17.055, 1.0, 0.0 };
 ToolSvc.Calo2TANH0.YParameters =
-{ 0.26913, 21.164, 0.78194, 2.9447, 1.0, 0.0 };
+{ 0.92862, 3.9908, 0.15883, 17.055, 1.0, 0.0 };
 ToolSvc.Calo2TANH0.CellSize    =   121.7;
 ToolSvc.Calo2TANH0.NewZ        = 12660.0;
 ToolSvc.Calo2TANH0.UpdateZ     =   true;
 
 ToolSvc.Calo2TANH1.XParameters =
-{ 0.60196, 6.4796, 225.52, 0.0029686, 1.0, 0.0 };
+{ 0.99731, 3.6969, 0.076326, 14.535, 1.0, 0.0 };
 ToolSvc.Calo2TANH1.YParameters =
-{ 0.60196, 6.4796, 225.52, 0.0029686, 1.0, 0.0 };
+{ 0.99731, 3.6969, 0.076326, 14.535, 1.0, 0.0 };
 ToolSvc.Calo2TANH1.CellSize    =    60.85;
 ToolSvc.Calo2TANH1.NewZ        = 12660.0;
 ToolSvc.Calo2TANH1.UpdateZ     =   true;
 
 ToolSvc.Calo2TANH2.XParameters =
-{ 0.70013, 4.9640, 57.158, 0.0093474, 1.0, 0.0 };
+{ 0.67504, 4.9134, 0.47574, 2.0000, 1.0, 0.0 };
 ToolSvc.Calo2TANH2.YParameters =
-{ 0.70013, 4.9640, 57.158, 0.0093474, 1.0, 0.0 };
+{ 0.67504, 4.9134, 0.47574, 2.0000, 1.0, 0.0 };
 ToolSvc.Calo2TANH2.CellSize    =    40.5667;
 ToolSvc.Calo2TANH2.NewZ        = 12660.0;
 ToolSvc.Calo2TANH2.UpdateZ     =   true;
