@@ -1,8 +1,11 @@
-// $Id: PhotonParticleMaker.h,v 1.1 2003-01-22 16:43:24 ibelyaev Exp $
+// $Id: PhotonParticleMaker.h,v 1.2 2003-04-08 17:22:28 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/01/22 16:43:24  ibelyaev
+//  new tools for Photons
+// 
 // ============================================================================
 #ifndef PHOTONPARTICLEMAKER_H 
 #define PHOTONPARTICLEMAKER_H 1
@@ -17,12 +20,13 @@
 #include "CaloKernel/CaloTool.h"
 class IPhotonParams ;  // DaVinciTools 
 class ProtoParticle ;  // PhysEvent 
+class CaloHypo      ;
 
 /** @class PhotonParticleMaker PhotonParticleMaker.h
  *  
  *  The specialized producer of photons 
  *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   2003-01-19
  */
 
@@ -81,8 +85,7 @@ protected:
   IDataProviderSvc*    evtSvc    () const { return m_evtSvc   ; }
   
   /// input data location 
-  const std::string&   inputData () const { return m_input    ; }
-  
+  const std::string&   inputData () const { return m_input    ; }  
   
   /**  evaluate Photon's "confidence level" from following quantities 
    * 
@@ -92,12 +95,17 @@ protected:
    *  <li>  <c> ClusterMass     </c> 
    *
    */
-  double confLevel( const ProtoParticle* pp ) const ;
+  double confLevel        ( const ProtoParticle* pp ) const ;
+  
+  /// change a flag for converted photons 
+  void   setConverted     ( const bool value ) { m_converted = value  ; }
+  /// change a flag for converted photons 
+  void   setUseAllPhotons ( const bool value ) { m_useAll    = value  ; }
   
 private:
   
   typedef std::vector<double>        Params             ;
-
+  
   // input data (ProtoParticles)  
   std::string                        m_input            ;
   
@@ -130,6 +138,11 @@ private:
 
   // cut on confidence level 
   double                             m_cut              ;
+  
+  // flag for converted photons 
+  bool                               m_converted        ;
+  // flag for ALL photons 
+  bool                               m_useAll           ;
   
 };
 

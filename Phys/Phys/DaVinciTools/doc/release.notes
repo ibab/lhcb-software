@@ -1,6 +1,26 @@
-! $Id: release.notes,v 1.47 2003-03-18 16:15:49 odie Exp $
+! $Id: release.notes,v 1.48 2003-04-08 17:22:27 ibelyaev Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2003-04-08 - Vanya BELYAEV
+
+ - src/PhotonParticleMaker.h,.cpp   
+      The Particle maker is updated to be able to produce 
+      separately converted and non-converted photons
+      If "UseAllPhotons"  (bbolean)property is activated
+      the tool produces *all* (both converted and non-converted 
+      photons). Otherwise only non-converted photons are produces.
+      The default value of this options is "false". 
+
+ - src/CnvPhotonParticleMaker.h,.cpp   
+      new particle maker for converted photons (indeed it is just a   
+      special consfiguration of PhotonParticleMaker).
+      It always produces only converted photons, and this behaviour
+      cannot be redefined through job-options.
+
+ - src/DaVinciTools_load.cpp      
+      Declare CnvPhotonParticleMaker factory.  
+
 
 ! 2003-03-18 - Olivier Dormond
  - src/recparser.*:

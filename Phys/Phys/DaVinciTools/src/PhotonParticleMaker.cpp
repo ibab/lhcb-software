@@ -1,8 +1,11 @@
-// $Id: PhotonParticleMaker.cpp,v 1.2 2003-02-12 19:33:31 gcorti Exp $
+// $Id: PhotonParticleMaker.cpp,v 1.3 2003-04-08 17:22:28 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/02/12 19:33:31  gcorti
+// remove std in front of endreq - win compilation
+//
 // Revision 1.1  2003/01/22 16:43:24  ibelyaev
 //  new tools for Photons
 // 
@@ -17,6 +20,9 @@
 // Event 
 #include "Event/Particle.h" 
 #include "Event/ProtoParticle.h" 
+#include "Event/CaloHypo.h" 
+// Det
+#include "CaloDet/DeCalorimeter.h"
 // DaVinciTools 
 #include "DaVinciTools/IPhotonParams.h"
 // local
@@ -31,6 +37,90 @@
  */
 
 // ============================================================================
+namespace PhotonParticleMakerLocal 
+{
+  // ==========================================================================
+  /** @class DigitFromCalo 
+   *  simple utility to count digits from certain calorimeter 
+   *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+   *  @date 31/03/2002 
+   */
+  // ==========================================================================
+  class DigitFromCalo 
+    : public std::unary_function<const CaloDigit*,bool>
+  { 
+  public:   
+    /** constructor
+     *  @parameter calo  calorimeter name 
+     */
+    explicit DigitFromCalo( const std::string& calo )
+      : m_calo( CaloCellCode::CaloNumFromName( calo ) ) {} ;
+    /** constructor
+     *  @parameter calo  calorimeter index 
+     */
+    explicit DigitFromCalo( const int  calo )
+      : m_calo(                                calo   ) {} ;
+    /** the only essential method
+     *  @param digit pointer to CaloDigit object 
+     *  @return true if digit belongs to the predefined calorimeter 
+     */
+    inline bool operator() ( const CaloDigit* digit ) const 
+    {
+      if( 0 == digit ) { return false ; }
+      return (int) digit->cellID().calo() == m_calo ;
+    };
+  private:
+    /// default constructor is private 
+    DigitFromCalo();
+  private:
+    int m_calo ;
+  };  
+  // ==========================================================================
+  /** @class PhotonCnv 
+   *  simple evaluator if the photon is converted or not 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2003-04-08
+   */
+  // ==========================================================================
+  class PhotonCnv
+  {
+  public:
+    /** constructor 
+     *  @param det detectro name 
+     */
+    PhotonCnv( const std::string& det = DeCalorimeterLocation::Spd )
+      : m_det ( det ) {}
+    /** the only one essential method 
+     *  @return status code 
+     */
+    inline StatusCode converted 
+    ( const CaloHypo* photon , 
+      bool&           cnv    ) const 
+    {
+      if ( 0 == photon ) 
+        { return StatusCode ( 300 ) ; }                        // RETURN 
+      if ( CaloHypotheses::Photon != photon->hypothesis() )   
+        { return StatusCode ( 301 ) ; }                        // RETURN  }
+      
+      // loop over all digits 
+      typedef CaloHypo::Digits Digits;
+      const Digits& digits = photon->digits();
+      for( Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d )
+        {
+          if( m_det( *d ) ) { cnv = true ; return StatusCode::SUCCESS ; } 
+        }
+      // no digits from spd 
+      cnv = false ;
+      return StatusCode::SUCCESS ;
+    };
+  private: 
+    DigitFromCalo m_det ;
+  };
+  // ==========================================================================
+}; // end of namespace PhotonParticleMaker
+// ============================================================================
+
+// ============================================================================
 /** @var PhotonParticleMakerFactory
  *  Declaration of mandatory  Tool Factory
  */
@@ -38,7 +128,6 @@
 static const  ToolFactory<PhotonParticleMaker>         s_Factory ;
 const        IToolFactory&PhotonParticleMakerFactory = s_Factory ; 
 // ============================================================================
-
 // ============================================================================
 /** Standard constructor
  *  @param type   tool type
@@ -71,7 +160,10 @@ PhotonParticleMaker::PhotonParticleMaker
   , m_useShowerShape   ( false )
   , m_useClusterMass   ( false )
   // cut 
-    , m_cut            ( -1.0  ) // no cut at all 
+  , m_cut              ( -1.0  ) // no cut at all 
+  // converted 
+  , m_converted        ( false ) 
+  , m_useAll           ( false ) 
 {
   declareProperty ( "Input"                      , m_input            ) ;
   declareProperty ( "PhotonParametersEvaluator"  , m_photParsName     ) ;
@@ -87,7 +179,9 @@ PhotonParticleMaker::PhotonParticleMaker
   declareProperty ( "UseShowerShape"             , m_useShowerShape   ) ;
   declareProperty ( "UseClusterMass"             , m_useClusterMass   ) ;
 
-  declareProperty ( "ConfLEvelCut"               , m_cut              ) ;
+  declareProperty ( "ConfLevelCut"               , m_cut              ) ;
+
+  declareProperty ( "UseAllPhotons"              , m_useAll           ) ;
   
   // declare new interface 
   declareInterface<IParticleMaker> (this);
@@ -194,6 +288,13 @@ StatusCode PhotonParticleMaker::initialize    ()
   if( m_useClusterMass    ) 
     { Warning( "  For ClusterMass assume exponential distribution (wrong?)"); }
   
+  if      ( m_useAll    ) 
+    { Warning( "\t         *ALL*     'ordinary' photons are to be created" ) ; }
+  else if ( m_converted ) 
+    { Warning( "\tOnly     converted 'ordinary' photons are to be created" ) ; }
+  else 
+    { Warning( "\tOnly non-converted 'ordinary' photons are to be created" ) ; }
+  
   return StatusCode::SUCCESS ;  
 };
 // ============================================================================
@@ -275,12 +376,15 @@ StatusCode PhotonParticleMaker::makeParticles ( ParticleVector & particles )
 
   unsigned long nAccepted = 0 ;
   
+  // evaluator of converted photons 
+  PhotonParticleMakerLocal::PhotonCnv phCnv; 
+
   for( ProtoParticles::const_iterator ipp = pps->begin() ; 
        pps->end() != ipp ; ++ipp ) 
     {
       ProtoParticle* pp = *ipp ;
       // skip invalid and charged 
-      if( 0 == pp || 0 != pp->track() )   { continue ; }        // CONTINUE
+      if ( 0 == pp || 0 != pp->track() )   { continue ; }        // CONTINUE
       
       // evaluate the Confidence Level
       const double CL = confLevel( pp );
@@ -289,10 +393,20 @@ StatusCode PhotonParticleMaker::makeParticles ( ParticleVector & particles )
       const Hypos& hypos = pp -> calo () ;
       Hypos::const_iterator ihypo = 
         std::find_if( hypos.begin() , hypos.end() , IsHypo( Photon ) ) ;
-      if( hypos.end() == ihypo        )   { continue ; }       // CONTINUE
+      if ( hypos.end() == ihypo        )   { continue ; }       // CONTINUE
 
+      const CaloHypo* hypo = *ihypo ;
+      if ( 0           ==  hypo        )   { continue ; }       // CONTINUE
+      
+      bool cnv = false ;
+      StatusCode sc = phCnv.converted( hypo , cnv ) ;
+      if( sc.isFailure() ){ Error("Error from PhotonCnv" , sc ) ; continue ; }
+      
+      // skip extra 
+      if( !m_useAll && m_converted  != cnv ) { continue ; }
+      
       // confidence level 
-      if( CL < m_cut                  )   { continue ; }         // CONTINUE 
+      if ( CL < m_cut                      ) { continue ; }    // CONTINUE 
       
       // counter 
       ++nAccepted ;
@@ -316,9 +430,9 @@ StatusCode PhotonParticleMaker::makeParticles ( ParticleVector & particles )
 
       // fill photon parameters :
       //   the 4-momentum, production vertex and their correlations 
-      StatusCode sc = photPars()->process( particle   , 
-                                           m_point    , 
-                                           m_pointErr ) ;
+      sc = photPars()->process( particle   , 
+                                m_point    , 
+                                m_pointErr ) ;
       if( sc.isFailure() ) 
         {
           Error("Unable to fill photon parameters, skip particle " , sc ) ;
@@ -333,7 +447,8 @@ StatusCode PhotonParticleMaker::makeParticles ( ParticleVector & particles )
   
   MsgStream log( msgSvc() , name() ) ;
   log << MSG::INFO 
-      << " Create " << nAccepted   << " Photons "  
+      << " Create " << nAccepted   << 
+    ( m_converted ? " Converted Photons " : "           Photons " )
       << " from   " << pps->size() << " ProtoParticles " << endreq ;
   
   return StatusCode::SUCCESS ;
