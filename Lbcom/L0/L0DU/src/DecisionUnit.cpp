@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.cpp,v 1.3 2001-06-25 13:09:30 nbrun Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/src/DecisionUnit.cpp,v 1.4 2001-06-27 13:21:32 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -14,6 +14,8 @@
 // CLHEP
 
 #include "CLHEP/Units/SystemOfUnits.h"
+
+#include "L0Event/Level0PileUpVeto.h"
 
 // Private
 
@@ -408,14 +410,28 @@ StatusCode DecisionUnit::execute() {
   //   if eSumEt >= eSumEtCut1 and downscaling
    
   bool L0SumEt = false;
-  bool L0NotVeto = true;
 
   if ( 0 != m_SumEt ) {
     if ( m_eSumEtCut1 <= m_SumEt->et() ) {
       L0SumEt = true;
     }
   }
- 
+
+  // Retrieve the Pile-Up VETO from FORTRAN
+
+  bool L0NotVeto = true;
+
+  SmartDataPtr<Level0PileUpVeto>  L0PileUp ( eventDataService(),
+                                             "/Event/FE/L0/PileUpVeto" );
+  if ( 0 != L0PileUp ) {
+    log << MSG::DEBUG << "Pile Up VETO : " << L0PileUp->decision() << endreq;
+    if ( 0 != L0PileUp->decision() ) {
+      L0NotVeto = false;
+    }
+  } else {
+    log << MSG::DEBUG << "Pile Up VETO not found " << endreq;
+  }
+  
   if ( L0SumEt && L0NotVeto ) {
 
     if ( 0 !=  m_Electron) {

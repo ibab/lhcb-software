@@ -1,6 +1,6 @@
 #ifndef L0DU_L0DUREPORT_H
 #define L0DU_L0DUREPORT_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/L0DU/L0DUReport.h,v 1.1.1.1 2001-06-15 11:58:18 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0DU/L0DU/L0DUReport.h,v 1.2 2001-06-27 13:21:31 ocallot Exp $
 
 // Include files
 #include <iostream>
@@ -91,79 +91,55 @@ private:
 // Returns the type as a string, for printing
 
 inline std::string L0DUReport::typeL0TrigName() const {
-  std::string mess;
-  std::string mess1 = "\n  Is trigger      ";
+  std::string mess = "";
   if ( 0 != ( ( 1 << L0Trig::Electron )  & m_typeL0Trig ) ) { 
-    mess1 += "Electron ";
+    mess += "Electron ";
   }
   if ( 0 != ( ( 1 << L0Trig::Photon )    & m_typeL0Trig ) ) {
-    mess1 += "Photon ";
+    mess += "Photon ";
   }
   if ( 0 != ( ( 1 <<  L0Trig::Hadron )   & m_typeL0Trig ) ) {
-    mess1 += "Hadron ";
+    mess += "Hadron ";
   }
-  mess = "";
   if ( 0 != ( ( 1 << L0Trig::Pi0Local )  & m_typeL0Trig ) ) {
     mess += "Pi0Local ";
   }
   if ( 0 != ( ( 1 << L0Trig::Pi0Global ) & m_typeL0Trig ) ) {
     mess += "Pi0Global ";
   }
-  if ( ( "\n  Is trigger      " != mess1 ) && ( "" != mess ) ) {
-    mess1 += "\n                  ";
-  }
-  mess1 += mess;
-  mess = "";
   if ( 0 != ( ( 1 << L0Trig::Mu1 )       & m_typeL0Trig ) ) {
     mess += "Mu1 ";
   }
   if ( 0 != ( ( 1 << L0Trig::SumMu )     & m_typeL0Trig ) ) {
     mess += "SumMu"; 
   }
-  if ( ( "\n  Is trigger      " != mess1 ) && ( "" != mess ) ) {
-    mess1 += "\n                  ";
-  }
-  mess1 += mess;
-  if ( "\n  Is trigger      " == mess1 ) {
-    mess1 = "\n  No trigger";
-  }
-  std::string mess2 = "\n  Is trigger_down ";
   if ( 0 != ( ( 1 << L0Trig::Electron_down )  & m_typeL0Trig ) ) { 
-    mess2 += "Electron_down ";
+    mess += "Electron_down ";
   }
   if ( 0 != ( ( 1 << L0Trig::Photon_down )    & m_typeL0Trig ) ) {
-    mess2 += "Photon_down ";
+    mess += "Photon_down ";
   }
   if ( 0 != ( ( 1 <<  L0Trig::Hadron_down )   & m_typeL0Trig ) ) {
-    mess2 += "Hadron_down ";
+    mess += "Hadron_down ";
   }
-  mess = "";
   if ( 0 != ( ( 1 << L0Trig::Pi0Local_down )  & m_typeL0Trig ) ) {
     mess += "Pi0Local_down ";
   }
   if ( 0 != ( ( 1 << L0Trig::Pi0Global_down ) & m_typeL0Trig ) ) {
     mess += "Pi0Global_down ";
   }
-  if ( ( "\n  Is trigger_down " != mess2 ) && ( "" != mess ) ) {
-    mess2 += "\n                  ";
-  }
-  mess2 += mess;
-  mess = "";
   if ( 0 != ( ( 1 << L0Trig::Mu1_down )       & m_typeL0Trig ) ) {
     mess += "Mu1_down ";
   }
   if ( 0 != ( ( 1 << L0Trig::SumMu_down )     & m_typeL0Trig ) ) {
     mess += "SumMu_down"; 
   }
-  if ( ( "\n  Is trigger_down " != mess2 ) && ( "" != mess ) ) {
-    mess2 += "\n                  ";
-  }
-  mess2 += mess;
-  if ( "\n  Is trigger_down " == mess2 ) {
-    mess2 = "\n  No trigger_down ";
+  
+  if ( "" == mess ) {
+    mess = "(no trigger)";
   }
   
-  return ( "LODUReport = " + mess1 + mess2 ) ;
+  return ( "LODUReport = " + mess ) ;
 }
 
 /// Serialize the object for reading

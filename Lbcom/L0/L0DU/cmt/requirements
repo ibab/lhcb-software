@@ -13,6 +13,7 @@ set L0DUOPTS	$(L0DUROOT)/options
 # ================ used packages =========================================
 use L0Calo	v1*	L0
 use L0Muon      v2*     L0
+use L0Event     v2*     Event
 
 # ================ component library =====================================
 library		L0DU	../src/*.cpp
