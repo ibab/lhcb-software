@@ -56,8 +56,6 @@ ApplicationMgr.DLLs += { "OTDet" };
 ApplicationMgr.DLLs += { "VeloDet" };
 DeVelo.Design = 1;  // 45 degree Velo sectors
 ApplicationMgr.DLLs += { "Magnet" };
-ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
-ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
 
 //--------------------------------------------------------------
 // Initialisation phase
@@ -78,12 +76,10 @@ ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
 
 // Silicon tracker reconstruction (clustering)
 ApplicationMgr.DLLs   += { "ITAlgorithms" };
-BrunelRecoITSeq.Members  ={ "RawBufferToSTDigitAlg"}; 
 BrunelRecoITSeq.Members +={"ITClusterCreator","ITSummaryCreator"};
 #include "$ITALGORITHMSROOT/options/itRec.opts"
 
-// Outer tracker reconstruction (clustering)
-//BrunelRecoOTSeq.Members += { "OTTimeCreator" };
+// Outer tracker reconstruction (clustering) done by RawBuffer decoding algorithm
 
 // Velo Tracking
 ApplicationMgr.DLLs += { "VeloTrack" };
@@ -139,11 +135,11 @@ TrTrackCloneKiller.flagMode = true;
 ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecCommon",
                          "RichGlobalPID", "RichLocalPID", 
                          "RichRingRefit", "RichPIDMerge" };
-#include "$RICHRECSYSOPTS/BrunelReco.opts"
+#include "$RICHRECSYSOPTS/RecoToolPara.opts"
+#include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID" };
-BrunelRecoMUONSeq.Members  = { "MuonRawBuffer2Digit" };
 BrunelRecoMUONSeq.Members += { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
 
@@ -155,14 +151,14 @@ BrunelRecoMUONSeq.Members += { "MuonRec", "MuonIDFOI" };
 //----------------------------------------------------------------------
 ApplicationMgr.DLLs += { "Associators" };
 #include "$ASSOCIATORSROOT/options/Brunel.opts"
-ApplicationMgr.DLLs += { "ITAssociators" };
-ApplicationMgr.DLLs += { "OTAssociators" };
-ApplicationMgr.DLLs += { "VeloAssociators" };
+#include "$VELOASSOCIATORSROOT/options/VeloAssociators.opts"
+#include "$ITASSOCIATORSROOT/options/ITAssociators.opts"
+#include "$OTASSOCIATORSROOT/options/OTAssociators.opts"
 #include "$TRASSOCIATORSROOT/options/Brunel.opts"
 #include "$CALOASSOCIATORSOPTS/CaloAssociators.opts"
+#include "$MUONASSOCIATORSROOT/options/MuonAssociators.opts"
 RelationsCaloSeq.Members += { "CaloReCreateMCLinks" };
 RelationsCaloSeq.Members += { "CaloClustersMCTruth5Alg/CCs2MCPs" };
-ApplicationMgr.DLLs += { "MuonAssociators" };
 ApplicationMgr.DLLs += { "AsctToLinker" };
 RelationsTrSeq.Members   += { "TrStoredTrackMCTruthAlg/Tr2MCP" };
 Tr2MCP.MakeLinker = true;

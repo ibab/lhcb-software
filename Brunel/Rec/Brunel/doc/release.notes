@@ -3,6 +3,53 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v25r1>2004-11-22 Brunel v25r1</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r1.
+Requires data produced by Boole v7r0 or later. It *cannot* process DC04 data
+
+- New functionality:
+  . Support for v200411 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout)
+    Not yet tested, needs new Gauss data (v200411.opts, XmlDDDB v23r0)
+  . Support for Data Quality checking. Data Quality reference files built from
+    DC04 log files are provided in $LHCBRELEASES/DBASE/DQ/BrunelDQ/v1r0. XML
+    descriptions of log file fields to be verified are in $BRUNELROOT/DQ.
+    To verify a log file, execute the command:
+      python2.2 $LHCBHOME/scripts/checklog.py $BRUNELROOT/DQ/Brunel_options.xml
+        <event-type> <log-file>
+
+- Modified functionality
+  . Improvement to initialisation of random numbers. Now three seeds are used
+    (run and event numbers, plus hash of string containing name, event number,
+    run number). Can optionally skip some random numbers before every event,
+    by setting job option Brunel.SkipFactor (default is zero). Can revert to
+    previous behaviour by setting job option Brunel.SingleSeed = true;
+    (LHCbAlgs v1r2)
+  . Use rootd (instead of rfio) to access castor files
+    (GaudiConf v8r1, v200402.opts)
+  . Remove explicit creation of MagneticFieldSvc and ParticlePropertySvc, now
+    created on demand (Brunel.opts, RichRecTools v1r12)
+  . Bug fix to finalisation order of services, allows to enable DataOnDemandSvc
+    decoding for all RawBuffer decoding algorithms (GaudiSvc v12r6, Brunel.opts)
+  . More accurate tuning of dE/dx correction (TrExtrapolator v2r14)
+  . Use new RichPID object format, add various new features not yet used by
+    default (RichRecSys v1r13)
+  . Improved decoding of Pixels from RawBuffer (RichRecTools v2r12)
+  . Use DataOnDemandSvc to instantiate associator algorithms 
+    (Relations v2r0, AssociatorsSys v2r1, TrFitAssociators v1r3)
+
+- Removed functionality:
+  . Removed support for 200402-TT-alt and Field043 geometries
+
+- DST changes
+  . /Rec/Rich/PIDs contains new backwards incompatble version of RichPID
+    (RichEvent v8r0)
+
+- Bug fixes
+  . Small fix in thick scatterer (TrExtrapolator v2r14)
+
+- Packaging changes
+  . Calo monitoring moved to new CaloMoniDst package
+
 </PRE><H1><A NAME=v25r0>2004-11-01 Brunel v25r0</A></H1><PRE>
 This version uses Gaudi v15r3, LHCb v17r0.
 Requires data produced by Boole v7r0 or later. It *cannot* process DC04 data

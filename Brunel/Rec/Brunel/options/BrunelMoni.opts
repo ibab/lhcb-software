@@ -33,7 +33,7 @@ BrunelMoniOTSeq.Members += { "OTTimeChecker" };
 //OTTimeChecker.fullDetail = true;
 
 // Tracking
-ApplicationMgr.DLLs += { "TrCheck", "TrFitAssociators" };
+ApplicationMgr.DLLs += { "TrCheck" };
 #include "$TRFITASSOCIATORSROOT/options/Brunel.opts"
 BrunelMoniTrSeq.Members += { "TrAnalyse" };
 BrunelMoniTrSeq.Members += { "KShortMonitor" };
@@ -43,7 +43,6 @@ BrunelMoniTrSeq.Members += { "TrChecker" };
 
 // Rich reconstruction
 ApplicationMgr.DLLs += { "RichRecQC", "RichMCTools", "RichRecMCTools" };
-BrunelMoniRICHSeq.Members += { "BuildMCRichDigitLinks" };
 #include "$RICHRECQCOPTS/RecQC_Brunel.opts"
 
 // detailed RICH reconstruction monitors
@@ -55,7 +54,7 @@ BrunelMoniRICHSeq.Members += { "BuildMCRichDigitLinks" };
 
 // Calorimeters
 //#include "$CALOMONITOROPTS/Brunel.opts" - remove digitization monitoring
-ApplicationMgr.DLLs += {"CaloMonitor"};
+ApplicationMgr.DLLs += {"CaloMoniDst"};
 BrunelMoniCALOSeq.Members +=
 {
    // monitoring of clusters
@@ -76,4 +75,4 @@ BrunelMoniCALOSeq.Members +=
   // MC truth monitoring
   "CaloClusterMCTruthMonitor/CaloMCTruthMoni"
 };
-#include "$CALOMONITOROPTS/Moni.opts"
+#include "$CALOMONIDSTOPTS/MoniDst.opts"

@@ -1,0 +1,23 @@
+ToolSvc.TrHerab...WARNING AxtTRkuta: transport impossible
+ToolSvc.TrHerab...WARNING curling track
+ToolSvc.TrFirst...WARNING Transport to
+ToolSvc.TrFirst...WARNING Protect against looping tracks:
+ToolSvc.RichDet...WARNING RichTrSegMakerFromTrStoredTracks TrHerabExtrapolator failed
+ToolSvc.RichGas...WARNING RichTabulatedGasQuartzWindowAbs Parameter
+RichLocPID        WARNING RichLocalPIDAlg Processing aborted -> Abort
+RichGloPIDTrSel   WARNING RichGlobalPIDTrTrackSel Max. number of RICH tracks exceeded
+RichGloPIDDigSel  WARNING RichGlobalPIDDigitSel Processing aborted -> Abort
+ElectronMatch     WARNING CaloHypo2TrackAlg Empty container of hypos
+fitSeed.Fitter    WARNING extrapolation of state to
+VeloTTFind.Fitter WARNING extrapolation of state to
+ToolSvc.RichDet...SUCCESS  #WARNINGS
+ToolSvc.RichGas...SUCCESS  #WARNINGS
+RichLocPID        SUCCESS  #WARNINGS
+RichGloPIDDigSel  SUCCESS  #WARNINGS
+RichGloPIDTrSel   SUCCESS  #WARNINGS
+ElectronMatch     SUCCESS  #WARNINGS
+
+HConverter        WARNING Truncated directory name to
+MuonLowEnergy     WARNING  impossible to add the requested hits in
+MCITDepositCreatorWARNING Too steep hit
+MuonFlatSpillover WARNING  impossible to add the requested hits in

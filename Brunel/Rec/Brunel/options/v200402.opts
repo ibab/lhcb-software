@@ -41,7 +41,7 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
- "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v7r0/BooleTest.digi' TYP='POOL_ROOT' OPT='READ'"
+ "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v7r0/BooleTest.digi' TYP='POOL_ROOT' OPT='READ'"
 }; // DC04 geometry: Boole v7r0,Gauss v15r4,XmlDDDB v22r2, evttype 11144100 (Bd_JpsiKS,mm)
 
 //---------------------------------------------------------------------------

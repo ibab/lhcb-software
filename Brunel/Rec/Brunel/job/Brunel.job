@@ -30,8 +30,8 @@ set MODE = $CMTCONFIG
 if ($#argv == 0 ) then
   echo "\nUsage: Brunel.job <options> [<mode>]"
   echo " where:"
-  echo "  <options> (mandatory) is name of options file (e.g. v200309)"
-  echo "  <mode>    (optional)  is execution mode (e.g. LinuxStatic)"
+  echo "  <options> (mandatory) is name of options file (e.g. v200411)"
+  echo "  <mode>    (optional)  is execution mode (e.g. $CMTDEB)"
   exit 0
 else
   set Dver = $1
@@ -42,14 +42,14 @@ else
   shift
 endif
 #   
-set Bversion = "v25r0"
+set Bversion = "v25r1"
 echo "Executing Brunel $Bversion using options file $Dver.opts"
 #
 
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
 # in BATCH, location of executable has to be given explicitly - e.g.:
-  setenv MYJOBROOT ~/newmycmt/Rec/Brunel/$Bversion
+  setenv MYJOBROOT ~/cmtuser/Rec/Brunel/$Bversion
 else
 # in interactive set WORKDIR to submission directory
   set WORKDIR = $PWD

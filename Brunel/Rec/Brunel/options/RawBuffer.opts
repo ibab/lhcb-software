@@ -18,9 +18,9 @@ DataOnDemandSvc.Algorithms +=
      "DATA='/Event/DAQ/RawEvent'       TYPE='CreateRawEvent'"
      //   , "DATA='/Event/Header'             TYPE='EventHeaderFromRaw'"
    , "DATA='/Event/Raw/Velo/Clusters'  TYPE='DecodeVeloRawBuffer'"
-     //   , "DATA='/Event/Raw/IT/Digits'      TYPE='RawBufferToSTDigitAlg'"
+   , "DATA='/Event/Raw/IT/Digits'      TYPE='RawBufferToSTDigitAlg'"
    , "DATA='/Event/Raw/OT/Times'       TYPE='OTTimeCreator'"
-   , "DATA='/Event/Raw/Rich/Digits'    TYPE='RawBufferToRichDigitsAlg'"
-     //   , "DATA='/Event/Raw/Muon/Digits'    TYPE='MuonRawBuffer2Digit'"
+   , "DATA='/Event/Raw/Muon/Digits'    TYPE='MuonRawBuffer2Digit'"
   };
+#include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
 #include "$CALOEVENTOPTS/CaloEvent.opts"
