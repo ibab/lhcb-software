@@ -20,6 +20,7 @@
 ! 2004-06-16 - Chris Jones
  - Remove dependency on RichMCTools package (errant, not really needed)
 
+!===================== RichRecBase v1r11p1 2004-06-30 ======================
 ! 2004-05-30 - Chris Jones
  - Update RichRecRing event model objects
  - Add new interfaces for RichRayTraceCherenkovCone,
