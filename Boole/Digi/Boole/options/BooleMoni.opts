@@ -39,8 +39,8 @@ MoniOTSeq.Members += { "OTDigitMonitor" };
 ApplicationMgr.DLLs += { "RichDigiQC" };
 #include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"    // standard monitoring
 // Particle properties service needed by Rich detailed monitoring
-ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
-#include "$RICHREADOUTOPTS/BooleDigiMoni.opts" // detailed monitoring
+//ApplicationMgr.ExtSvc += { "ParticlePropertySvc" };
+//#include "$RICHREADOUTOPTS/BooleDigiMoni.opts" // detailed monitoring
 
 // Calorimeters
 ApplicationMgr.DLLs += { "CaloMonitor" };

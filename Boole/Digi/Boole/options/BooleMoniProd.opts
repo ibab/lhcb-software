@@ -1,4 +1,1 @@
 // Switches off histograms that are too numerous for production jobs
-
-// Remove detailed Rich histos
-MoniRICHSeq.Members = { "RichDigitQC/RiDigitQC" }; // standard monitoring
