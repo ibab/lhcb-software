@@ -4,14 +4,16 @@
  *  Header file for Tool base class : RichToolBase
  *
  *  CVS Log :-
- *  $Id: RichToolBase.h,v 1.6 2004-08-19 13:55:58 jonrob Exp $
+ *  $Id: RichToolBase.h,v 1.7 2004-11-03 13:26:35 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/08/19 13:55:58  jonrob
+ *  Add new method to MC truth tool + various other things after CVS server switch
+ *
  *  Revision 1.5  2004/08/16 13:43:59  jonrob
  *  Update doxygen comments
  *
  *  Revision 1.4  2004/07/26 17:53:17  jonrob
  *  Various improvements to the doxygen comments
- *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -26,7 +28,7 @@
 // Interfaces
 #include "RichKernel/IRichToolRegistry.h"
 
-/** @class RichToolBase RichToolBase.h RichUtils/RichToolBase.h
+/** @class RichToolBase RichToolBase.h RichKernel/RichToolBase.h
  *
  *  Abstract base class for RICH tools providing
  *  some basic functionality.

@@ -1,10 +1,13 @@
+
 /** @file Rich1DTabFunc.h
  *
  *  Header file for utility class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.5 2004-07-26 17:53:17 jonrob Exp $ 
+ *  $Id: Rich1DTabFunc.h,v 1.6 2004-11-03 13:27:49 jonrob Exp $ 
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/26 17:53:17  jonrob
+ *  Various improvements to the doxygen comments
  *  
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -22,7 +25,7 @@
 #include "gsl/gsl_errno.h"
 #include "gsl/gsl_spline.h"
 
-/** @class Rich1DTabFunc Rich1DTabFunc.h RichUtils/Rich1DTabFunc.h
+/** @class Rich1DTabFunc Rich1DTabFunc.h RichKernel/Rich1DTabFunc.h
  *
  *  A class describing a function based on the interpolation of data points
  *  The interpolation is based on the GSL library, with the default interpolation

@@ -1,10 +1,14 @@
+
 /** @file RichAlgBase.h
  *
  *  Header file for algorithm base class : RichAlgBase
  *
  *  CVS Log :-
- *  $Id: RichAlgBase.h,v 1.5 2004-08-19 13:55:58 jonrob Exp $
+ *  $Id: RichAlgBase.h,v 1.6 2004-11-03 13:26:35 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/08/19 13:55:58  jonrob
+ *  Add new method to MC truth tool + various other things after CVS server switch
+ *
  *  Revision 1.4  2004/08/16 13:43:59  jonrob
  *  Update doxygen comments
  *
@@ -27,7 +31,7 @@
 // Interfaces
 #include "RichKernel/IRichToolRegistry.h"
 
-/** @class RichAlgBase RichAlgBase.h RichUtils/RichAlgBase.h
+/** @class RichAlgBase RichAlgBase.h RichKernel/RichAlgBase.h
  *
  *  Abstract base class for RICH algorithms providing
  *  some basic functionality.
