@@ -1,0 +1,14 @@
+!-----------------------------------------------------------------------------
+! Package     : Sim/GaussMonitor
+! Responsible : Gloria CORTI
+! Purpose     : Hold monitoring algorithms for Gauss
+!-----------------------------------------------------------------------------
+
+!========================= GaussMonitor v1r0 2004-04-07 =======================
+! 2004-04-07 - Gloria CORTI
+ - New package to hold generic monitors for Gauss. This first import
+   contains one algorihtm that fill ntuple with basic quantities for
+   MCParticles (MCTruthFullMonitor) and for HepMC (GeneratorFullMonitor by
+   Patrick ROBBE)
+!==============================================================================
+

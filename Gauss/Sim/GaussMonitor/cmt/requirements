@@ -1,0 +1,27 @@
+#============================================================================
+# Created    : 2004-01-27
+# Maintainer : Gloria CORTI
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           GaussMonitor
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options
+
+# Used packages.
+#============================================================================
+use   Event        v*      Event
+use   GenEvent     v*      Event
+use   DetDesc      v*      Det 
+
+# Component library building rule
+#============================================================================
+library          GaussMonitor    ../src/*.cpp
+
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=GaussMonitor
