@@ -1,6 +1,19 @@
-! $Id: release.notes,v 1.20 2002-07-18 17:41:21 gcorti Exp $
+! $Id: release.notes,v 1.21 2002-07-24 20:13:03 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 2002-07-24 - Gloria Corti
+ - Introduce copy constructor, clone method and assignment operator to the
+   ProtoParticle where in all cases original values are kept but keyed object
+   part is not copied. 
+ - Introduce assignment operator in Particle and Vertex class. Note that
+   they keep the original SmartRef to the other class and to ProtoParticles
+   This fix the problem of exceptions with keyed containers due to using the
+   ParticleTransporter on temporary copies of particles with an assigned key.
+   This problem appeared after modifications of the delete of KeyedObject. 
+ - Change copy constructor to use member initialization list in Particle
+   and Vertex classes. Note that both clone the Particle and Vertex to which
+   they are connected to but keep the original ProtoParticle SmartRef
 
 ! 2002-07-18 - Gloria Corti
  - Increase version number to v6r0 for backward inconsisten changes
