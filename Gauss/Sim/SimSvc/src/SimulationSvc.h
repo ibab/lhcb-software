@@ -43,8 +43,8 @@ public:
    */
   virtual ~SimulationSvc();
 
-  inline void operator delete (void* p) throw()
-  { operator delete( const_cast<void*> (p)) ; }
+  //  inline void operator delete (void* p) throw()
+  // { operator delete( const_cast<void*> (p)) ; }
   
   /**
    * Initializes the service

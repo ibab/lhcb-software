@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 !========================== SimSvc v3r1 ===========================
+! 2003-07-04 - Florence Ranjard
+ - Simulation.h - comment 2 lines introduced to compile on W2000 but create
+                  a segmentation faiult on Linux when finalizing SimSvc.
+
 ! 2003-07-01 - Florence RANJARD
  - Simulation.cpp - adapt to Xerces 2.2
 
