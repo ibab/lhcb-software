@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.19 2002-05-21 16:08:54 gcorti Exp $
+# $Id: requirements,v 1.20 2002-05-22 08:22:16 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -98,7 +98,7 @@ use DaVinciTools         v4r*   Phys
 use DaVinciAssociators   v1r*   Phys
 use DaVinciMCTools       v1r*   Phys
 #use PrimaryVertices     v1r*   Phys
-#use PhysSelections      v1r*   Phys
+use PhysSelections       v1r*   Phys
 #use FlavourTagging      v1r*   Phys
 use DaVinciTest          v1r*   Phys
 #use DaVinciUser         v1r*   Phys

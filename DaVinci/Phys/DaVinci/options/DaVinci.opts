@@ -47,7 +47,6 @@ ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
 //--------------------------------------------------------------
 
 ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
-//ApplicationMgr.TopAlg += { "FillParticleAlgorithm" };
 //ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
 ApplicationMgr.TopAlg += { "SelectJPsiMuMu"  };
 ApplicationMgr.TopAlg += { "SelectKsPiPi" };
@@ -95,7 +94,7 @@ PhysSelectAlgorithm.Histograms   = 1;
 //-----------------------------------------------------------------
 //#include "$PHYSSELECTIONSROOT/options/SelectJPsiMuMu.opts"
 //#include "$PHYSSELECTIONSROOT/options/SelectKsPiPi.opts"
-//#include "$PHYSSELECTIONSDAVINCIROOT/options/SelectB0JPsiKs.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectB0JPsiKs.opts"
 
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
