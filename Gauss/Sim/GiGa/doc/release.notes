@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.89 2004-01-29 13:39:38 ranjard Exp $
+! $Id: release.notes,v 1.90 2004-02-14 08:25:30 robbep Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2004-02-14 - Patrick Robbe
+ - GiGaTrajectory : add a boolean member function (hasOscillated() )to
+  indicate that the particle corresponding to the track has oscillated 
+  to be able to propagate the information to the MCParticle.
 
 !=========================== GiGa v15r1 =================================
 ! 2004-01-27 - Vanya BELYAEV

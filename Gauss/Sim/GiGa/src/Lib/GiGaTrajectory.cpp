@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.cpp,v 1.14 2004-01-29 14:21:42 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.15 2004-02-14 08:25:31 robbep Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2004/01/29 14:21:42  ibelyaev
+//  fix a bug
+//
 // ============================================================================
 #define  GIGA_GIGATRAJECTORY_CPP 1 
 // ============================================================================
@@ -84,6 +87,7 @@ GiGaTrajectory::GiGaTrajectory (   )
   , m_parentID                        ( 0 )
   , m_partDef                         ( 0 ) 
   , m_4vect                           (   )
+  , m_hasOscillated                   ( false )
 {
 #ifdef GIGA_DEBUG
   GiGaTrajectoryLocal::s_Counter.increment () ;
@@ -104,6 +108,7 @@ GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
     , m_partDef    ( aTrack->GetDefinition     ()                 ) 
     , m_4vect      ( aTrack->GetDynamicParticle()->Get4Momentum() )
     , m_processname("undefined")
+    , m_hasOscillated( false ) 
 {
   ///
   const double time = aTrack->GetGlobalTime() ;
@@ -133,6 +138,7 @@ GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
   , m_partDef                         ( right.partDef       ()       )
   , m_4vect                           ( right.fourMomentum  ()       )
   , m_processname                     ( right.processName   ()       )
+  , m_hasOscillated                   ( right.hasOscillated ()       )
 {
   clear();
   for( const_iterator it = right.begin() ; right.end() != it ; ++it ) 

@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.h,v 1.18 2003-10-09 08:57:28 witoldp Exp $ 
+// $Id: GiGaTrajectory.h,v 1.19 2004-02-14 08:25:26 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.18  2003/10/09 08:57:28  witoldp
+// added vertex types
+//
 // Revision 1.17  2003/03/11 09:34:55  ibelyaev
 //  remove invalid inline directives
 //
@@ -79,7 +82,11 @@ public:
   inline const HepLorentzVector&     momentum     () const 
   { return m_4vect        ; } 
   inline const HepLorentzVector&     Get4Momentum () const 
-  { return fourMomentum() ; } 
+  { return fourMomentum() ; }
+  /// 
+  bool                               hasOscillated() const
+  { return m_hasOscillated ; }
+  
   /// 
   G4int                              GetTrackID   () const 
   { return trackID ()     ; }
@@ -113,6 +120,9 @@ public:
     m_processname=procname;
   };
 
+  inline void setHasOscillated( bool flag ) 
+  {  m_hasOscillated = flag ;  }   
+
   std::string processName() const;
   
 
@@ -125,7 +135,8 @@ private:
   int                          m_parentID ;
   const G4ParticleDefinition*  m_partDef  ; 
   HepLorentzVector             m_4vect    ;   
-  std::string m_processname;
+  std::string m_processname ;
+  bool                         m_hasOscillated ;
   /// 
 };
 // ============================================================================
