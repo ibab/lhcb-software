@@ -25,6 +25,9 @@ use L0DU                v6r5    L0
 use L1VeloTrack         v5r1    L1
 use L1Decision		v2r1	L1
 
+# LHC background
+use DigiAlg		v1r0	Digi
+
 # Calorimeter
 use CaloInterfaces      v2r4  	Calo
 use CaloUtils           v4r4  	Calo
