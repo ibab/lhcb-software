@@ -4,6 +4,19 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+! 2004-04-16 - Marco Cattaneo
+ - Modified packages: GaudiConf v7r7, AssociatorsSys v1r13,
+                      MuonAssociators v1r3, VeloAssociators v1r10
+
+ - In GaudiConf v7r7:
+   . Update Gaudi.supp valgrind suppression file for Gaudi v14r4
+
+ - In MuonAssociators v1r3:
+   . Do not use Spillover hits in MuonCoord2MCParticleAlg
+
+ - In VeloAssociators v1r10:
+   . Retrieve VeloCluster2MCHitAsct tool only once at initialize
+
 !======================= LHCbSys v15r6 2004-04-07 =======================
 ! 2004-04-07 - Marco Cattaneo
   Built against Gaudi v14r4

@@ -1,14 +1,14 @@
 package LHCbSys
-version v15r6
+version v15r7
 
 branches doc cmt
 
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v15r6
+use LHCb		v15r7
 
-use GaudiConf		v7r6
+use GaudiConf		v7r7
 
 # External packages used by GenEvent
 use PYTHIA	v2r6205p3	Gen
@@ -59,14 +59,14 @@ use LinkerEvent         v1r2    Event
 use TrgEvent            v2r1    Event
 
 # Associators
-use AssociatorsSys	v1r12	Associators
+use AssociatorsSys	v1r13	Associators
 use Associators		v2r2	Associators
 use ITAssociators      	v2r8	IT
 use OTAssociators      	v2r7	OT
-use VeloAssociators    	v1r9	Velo
+use VeloAssociators    	v1r10	Velo
 use TrAssociators      	v4r0	Tr
 use CaloAssociators    	v4r1	Calo
-use MuonAssociators    	v1r2	Muon
+use MuonAssociators    	v1r3	Muon
 
 # Other stuff
 use MCTools		v1r5	Phys
