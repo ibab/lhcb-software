@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2004-07-14 13:07:13 cattanem Exp $
+# $Id: requirements,v 1.14 2004-07-14 16:00:52 cattanem Exp $
 package IOExample
 version v1r2
 
@@ -8,7 +8,7 @@ use GaudiSvc            v*
 use GaudiPoolDb         v*
 
 use GaudiConf           v*
-use LHCbAlgs            v* Kernel
+use MCTools		v* Phys
 use EventSys            v* Event
 use AssociatorsSys	v* Associators
 
