@@ -1,8 +1,11 @@
-// $Id: CaloTools_load.cpp,v 1.11 2002-06-21 11:29:33 beneyton Exp $
+// $Id: CaloTools_load.cpp,v 1.12 2002-07-15 18:50:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/06/21 11:29:33  beneyton
+// *** empty log message ***
+//
 // Revision 1.10  2002/06/14 17:46:05  ibelyaev
 //  new L-correction
 //
@@ -40,6 +43,8 @@ DECLARE_FACTORY_ENTRIES(CaloTools) {
   DECLARE_TOOL( CaloPhotonMomentumTool       ) ;
 
   DECLARE_TOOL( CaloClusterSOMSelector       ) ;
+
+  DECLARE_TOOL( CaloSingleGammaTool          ) ;
   
   DECLARE_TOOL( CaloLCorrectionSimple        ) ;
 

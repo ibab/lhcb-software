@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.11 2002-06-15 10:48:20 ibelyaev Exp $
+# $Id: requirements,v 1.12 2002-07-15 18:50:14 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package            CaloTools
-version            v4r0
+version            v4r1
 
 # ================ structure =================================================
 branches           cmt doc src options 

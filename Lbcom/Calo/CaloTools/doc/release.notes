@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.23 2002-07-09 18:15:14 cattanem Exp $
+! $Id: release.notes,v 1.24 2002-07-15 18:50:15 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : CaloTools
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2002-07-15 - Ivan Belyaev
+ - src/CaloSingleGammaTool.h,.cpp  new tool for combined SPD/PRS ID 
+                                   by Frederic Machefert 
 
 !========================= CaloTools v2r0 2002-07-09 ==========================
 ! 2002-07-09 - vanya belyaev 

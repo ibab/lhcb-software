@@ -1,8 +1,11 @@
-// $Id: CaloTools.opts,v 1.5 2002-06-21 11:02:41 ibelyaev Exp $ 
+// $Id: CaloTools.opts,v 1.6 2002-07-15 18:50:15 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/06/21 11:02:41  ibelyaev
+//  update in S-,L- and E-corrections
+//
 // ============================================================================
 
 /** @file 
@@ -35,4 +38,7 @@ ApplicationMgr.DLLs += { "CaloTools" };
 
 /// S-shape correction 'DoubleTanh'
 #include "$CALOTOOLSOPTS/SShape2Tanh.opts"
+
+/// CaloHypoLikelyhoodTool SpdPrsID 
+#include "$CALOTOOLSOPTS/SpdPrsID.opts"
 
