@@ -7,6 +7,14 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-07-07 - Vanya BELYAEV
+ - src/GaussSensPlaneHit.h,.cpp    :
+          new class for G4 hits in Calorimeter Sensitive plane
+ - src/GaussSensPlaneHitCnv.h,.cpp :
+          converter for Calorimeter Sensitive Plane hits  
+ - src/GaussCalo_load.cpp          : declare new converter 
+
+
 ! 2003-07-07 - Vanya BELYAEV 
   src/CaloSensDet.cpp   - remove the bug from my stupid implementation of Birk's law
  

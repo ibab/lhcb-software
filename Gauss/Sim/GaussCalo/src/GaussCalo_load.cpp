@@ -1,3 +1,8 @@
+// $Id: GaussCalo_load.cpp,v 1.3 2003-07-07 16:09:39 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 #define GAUSSCALO_GAUSSCALO_LOAD_CPP 1 
 // ============================================================================
@@ -15,15 +20,14 @@
 
 void GaussCalo_load() 
 { 
-  /// Sensitive Detector 
-  DECLARE_GiGaFactory     ( EcalSensDet    ) ;
-  /// Sensitive Detector 
-  DECLARE_GiGaFactory     ( HcalSensDet    ) ;
-  /// Sensitive Detector 
-  DECLARE_GiGaFactory     ( SpdPrsSensDet  ) ;
+  /// Sensitive detectors
+  DECLARE_GiGaFactory     ( EcalSensDet          ) ;
+  DECLARE_GiGaFactory     ( HcalSensDet          ) ;
+  DECLARE_GiGaFactory     ( SpdPrsSensDet        ) ;
   
   /// Converters 
-  DECLARE_CONVERTER       ( GiGaCaloHitCnv ) ;  
+  DECLARE_CONVERTER       ( GiGaCaloHitCnv       ) ;  
+  DECLARE_CONVERTER       ( GaussSensPlaneHitCnv ) ;  
 };
 // ============================================================================
 
