@@ -13,7 +13,7 @@ apply_pattern BooleVersion
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r15
 
-#-- External libraries (as defined in GAUDI_v14r5)
+#-- External libraries (as defined in GAUDI_v14r6)
 use ExternalLibs	v4r5
 use AIDA		v3r300		-no_auto_imports
 use BOOST		v2r1302p0	-no_auto_imports
@@ -28,11 +28,11 @@ use UUID		v1r32	        -no_auto_imports
 use SEAL		v1r134p0	-no_auto_imports
 use POOL		v1r163p0	-no_auto_imports
 
-#-- Gaudi libraries (from GAUDI_v14r5)
-use GaudiKernel		v15r3
-use GaudiSvc 		v11r6p1
+#-- Gaudi libraries (from GAUDI_v14r6)
+use GaudiKernel		v15r4
+use GaudiSvc 		v11r7
+use GaudiAlg 		v7r3
 use GaudiTools		v8r1
-use GaudiAud 		v6r4
 use GaudiDb 		v9r2
 use GaudiRootDb 	v9r4
 use GaudiPoolDb		v1r6p1
@@ -46,12 +46,11 @@ use FieldMap	v4r5
 
 #-- LHCb libraries (from LHCB_v16r0)
 use LHCb	v16r0
-use GaudiAlg 		v7r3
 
 #-- BooleSys v5r9 packages
 
 use DigiAlg		v2r3	Digi
-use LHCbTools		v1r1	Kernel
+use AssocToLinker       v1r0    Associators
 
 # L0 trigger
 use L0Calo              v7r6	L0
@@ -60,14 +59,6 @@ use L0DU                v6r7	L0
 use L0mConf		v2r2p1	L0
 use L0MuonKernel	v1r1	L0
 use L0MuonTrigger	v1r1p1	L0
-
-# L1 trigger
-use TrgTools		v3r1	Trg
-use TrgChecker		v3r0p1	Trg
-use TrgVelo		v3r0	Trg
-use TrgVeloTT		v3r1	Trg
-use L1Reco		v3r1	Trg
-use TrgMonitor		v1r0	Trg
 
 # Calorimeter
 use CaloMonitor         v2r2	Calo

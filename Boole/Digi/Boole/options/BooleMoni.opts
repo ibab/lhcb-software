@@ -11,7 +11,7 @@
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0", "Trg" };
+Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
@@ -30,7 +30,7 @@ ApplicationMgr.DLLs += {"ITCheckers"};
 MoniITSeq.Members += { "MCITDepositChecker" };
 MoniITSeq.Members += { "MCITDigitChecker" };
 MoniITSeq.Members += { "ITDigitChecker" };
-#include "$ITCHECKERSROOT/options/Boole.opts"
+//#include "$ITCHECKERSROOT/options/Boole.opts"
 
 // OT digitisation
 MoniOTSeq.Members += { "MCOTDepositMonitor" };
@@ -52,8 +52,8 @@ MoniCALOSeq.Members += { "CaloDigitMonitor/HcalMoni" };
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false
 //--------------------------------------------------------------
-ApplicationMgr.DLLs += { "GaudiAud" };
-AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
-NameAuditor.Enable   = false;
-ChronoAuditor.Enable = true;
-MemoryAuditor.Enable = false;
+//ApplicationMgr.DLLs += { "GaudiAud" };
+//AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+//NameAuditor.Enable   = false;
+//ChronoAuditor.Enable = true;
+//MemoryAuditor.Enable = false;

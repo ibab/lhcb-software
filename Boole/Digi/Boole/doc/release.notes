@@ -3,17 +3,27 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v6r0>2004-05-26 Boole v6r0</A></H1><PRE>
+</PRE><H1><A NAME=v6r0>2004-06-10 Boole v6r0</A></H1><PRE>
 Development version
+
+- Modified functionality
+  . GaudiAuditors no longer used for algorithm timing, uses GaudiSequencer
+    internal timing instead
+  . L1 trigger simulation removed (Trg packages can be executed on Boole output)
 
 - New tuning
   . Initialize MuonGeometry tool completely at intialisation, not during first
     ~10 events (MuonTools v3r7)
 
 - New packaging
+  . Use new GaudiSequencer base class for ProcessPhase (LHCbKernel v4r7)
   . Use new GaudiAlg and GaudiTools base classes
-    (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithmsv14r3,
+    (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithms v14r3,
      ITCheckers v2r3)
+  . Converters of "Relations" to "Linker" MC truth tables moved to AssocToLinker
+    package (from TrgChecker) (AssocToLinker v1r0)
+  . Removed dependency on GaudiAud package
+  . Removed dependency on Trg packages
 
 </PRE><H1><A NAME=v5r9>2004-05-24 Boole v5r9</A></H1><PRE>
 Version used for DC04

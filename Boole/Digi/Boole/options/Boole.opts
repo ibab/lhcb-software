@@ -38,8 +38,8 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
 //--------------------------------------------------------------
 Init.DetectorList += { "Boole", "Data" };
 Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
-Trigger.DetectorList = { "L0", "Trg" };
-Relations.DetectorList = { "VELO", "IT", "OT", "L0", "Trg" };
+Trigger.DetectorList = { "L0" };
+Relations.DetectorList = { "VELO", "IT", "OT", "L0", "Links" };
 
 //--------------------------------------------------------------
 // Geometry and magnetic field
@@ -75,10 +75,6 @@ TriggerL0Seq.Members += { "L0mTriggerAlgorithm/L0MuonTrigger" };
 TriggerL0Seq.Members += { "PuVetoAlg" };
 TriggerL0Seq.Members += { "DecisionUnit" };
 TriggerL0Seq.Members += { "PrepareL0DUL1Buffer" };
-
-// L1 trigger
-ApplicationMgr.DLLs += { "TrgTools" };
-#include "$BOOLEOPTS/L1WithTrg.opts"
 
 // Calorimeter digitisation and reconstruction
 ApplicationMgr.DLLs += { "CaloDigit", "CaloEvent" };
@@ -151,10 +147,12 @@ DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 // Relations to MC truth. Built unconditionally regardless of monitoring
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "Associators" };
+ApplicationMgr.DLLs += { "AssocToLinker" };
 ApplicationMgr.DLLs += { "VeloAssociators" };
 ApplicationMgr.DLLs += { "ITAssociators" };
 #include "$ITASSOCIATORSROOT/options/ITAssociators.opts"
 ApplicationMgr.DLLs += { "OTAssociators" };
+ApplicationMgr.DLLs += { "MCTools" };
 
 RelationsVeloSeq.Members += { "VeloCluster2MCHitAlg" };
 RelationsITSeq.Members   += { "ITDigit2MCHitAlg" };
@@ -163,3 +161,8 @@ RelationsOTSeq.Members   += { "OTDigit2MCHitAlg" };
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct" };
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
 L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
+
+RelationsLinksSeq.Members += { "VeloTruthFromCluster",
+                               "ITTruthFromDigit",
+                               "OTTruthFromDigit",
+                               "BuildMCTrackInfo" };
