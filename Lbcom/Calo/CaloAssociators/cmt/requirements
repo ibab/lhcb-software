@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.23 2004-09-06 13:05:31 cattanem Exp $
+# $Id: requirements,v 1.24 2004-11-23 14:13:21 cattanem Exp $
 # =============================================================================
 # Package which contains the essential ingredients to build/store/retrieve 
 # basic relations/associations between calorimter objects 
@@ -6,7 +6,7 @@
 # Package manager: Vanya BELYAEV Ivan.Belyaev@itep.ru 
 # =============================================================================
 package           CaloAssociators
-version           v4r3
+version           v4r4
         
 # =============== structure =================================================== 
 branches          src cmt doc options 
@@ -15,7 +15,7 @@ include_path      none
 # =============== used packages ===============================================
 use CaloEvent     v13r*  Event 
 use CaloDet       v6r*   Det
-use Relations	  v1r*   Kernel
+use Relations	  v2r*   Kernel
 
 # =============== own options =================================================
 set CALOASSOCIATORSOPTS  ${CALOASSOCIATORSROOT}/options

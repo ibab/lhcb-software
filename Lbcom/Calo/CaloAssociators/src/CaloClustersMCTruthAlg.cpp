@@ -1,4 +1,4 @@
-// $Id: CaloClustersMCTruthAlg.cpp,v 1.7 2004-02-17 12:11:33 ibelyaev Exp $
+// $Id: CaloClustersMCTruthAlg.cpp,v 1.8 2004-11-23 14:13:21 cattanem Exp $
 // ============================================================================
 // Include files
 // LHCbKernel 
@@ -6,7 +6,6 @@
 #include "Relations/RelationWeighted1D.h"
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 // Event 
 #include "Event/MCParticle.h"
 // CaloDet
@@ -18,7 +17,7 @@
 #include "CaloClustersMCTruthAlg.h"
 
 // ============================================================================
-/** @file CaloClusterMCTruthAlg.cpp
+/** @file CaloClustersMCTruthAlg.cpp
  * 
  *  Implementation file for class : CaloClustersMCTruthAlg
  *
@@ -76,8 +75,7 @@ StatusCode CaloClustersMCTruthAlg::execute()
   typedef const MCParticles                                Particles ;
   typedef RelationWeighted1D<CaloCluster,MCParticle,float> Table     ;
   
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+  debug() << "==> Execute" << endreq;
   
   // get input clusters 
   Clusters*   clusters  = get<Clusters> ( inputData () ) ;

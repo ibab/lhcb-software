@@ -1,8 +1,11 @@
-// $Id: CCs2MCPs_Alg2.opts,v 1.1 2003-04-02 14:46:53 ibelyaev Exp $ 
+// $Id: CCs2MCPs_Alg2.opts,v 1.2 2004-11-23 14:13:21 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Nam:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/02 14:46:53  ibelyaev
+//  add new MC truth association algorithms
+//
 // ============================================================================
 
 // ============================================================================
@@ -15,8 +18,8 @@
 // ============================================================================
 
 ToolSvc.CCs2MCPs.Location      = "Rec/Relations/EcalClusters2MCParticles" ;
-ToolSvc.CCs2MCPs.AlgorithmType = "CaloClustersMCTruth2Alg"                ;
-ToolSvc.CCs2MCPs.AlgorithmName = "CCs2MCPs"                               ; 
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Rec/Relations/EcalClusters2MCParticles'
+                                 TYPE='CaloClustersMCTruth2Alg/CCs2MCPs'"     };
 
 // ============================================================================
 // The END 

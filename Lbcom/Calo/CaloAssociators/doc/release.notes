@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.33 2004-09-06 13:05:31 cattanem Exp $
+! $Id: release.notes,v 1.34 2004-11-23 14:13:21 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+!===================== CaloAssociators v4r4 2004-11-22 =====================
+! 2004-11-22 - Marco Cattaneo
+ - Remove direct use of MsgStream from algorithms
+ - Adapt options to Relations v2r*
 
 !===================== CaloAssociators v4r3 2004-09-06 =====================
 ! 2004-07-31 - Ivan Belyaev

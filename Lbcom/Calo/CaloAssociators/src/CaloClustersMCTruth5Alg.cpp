@@ -1,4 +1,4 @@
-// $Id: CaloClustersMCTruth5Alg.cpp,v 1.4 2004-03-17 16:36:38 ibelyaev Exp $
+// $Id: CaloClustersMCTruth5Alg.cpp,v 1.5 2004-11-23 14:13:21 cattanem Exp $
 // ============================================================================
 // Include files
 // LHCbKernel 
@@ -6,7 +6,6 @@
 #include "Relations/RelationWeighted1D.h"
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 // Event 
 #include "Event/MCParticle.h"
 // CaloDet
