@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v7r1 2004-04-18 =========================
 ! 2004-04-18 - Chris Jones
  - Remove cout error messages
 
