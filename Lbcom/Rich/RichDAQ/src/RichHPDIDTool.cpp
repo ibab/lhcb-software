@@ -5,8 +5,11 @@
  *  Implementation file for class : RichHPDIDTool
  *
  *  CVS Log :-
- *  $Id: RichHPDIDTool.cpp,v 1.3 2005-01-14 16:56:45 jonrob Exp $
+ *  $Id: RichHPDIDTool.cpp,v 1.4 2005-01-22 13:38:49 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2005/01/14 16:56:45  jonrob
+ *  update doxygen comments and printout
+ *
  *  Revision 1.2  2005/01/13 13:10:14  jonrob
  *  Update mapping type
  *
@@ -59,7 +62,7 @@ StatusCode RichHPDIDTool::initialize()
 
   // Create temporary mapping between software and hardware numbering
   // Eventually, will need to come from some sort of data base
-  unsigned int hID = 1;
+  unsigned int hID = 0;
   std::vector< unsigned int > nHPDs( Rich::NRiches, 0 );
   for ( RichSmartID::Collection::const_iterator iID = pixels.begin(); iID != pixels.end(); ++iID ) 
   {
