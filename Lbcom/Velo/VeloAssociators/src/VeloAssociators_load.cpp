@@ -16,7 +16,7 @@ const       IToolFactory& VeloCluster2MCHitAsctFactory = s_VeloCluster2MCHitAsct
 
 // Relation factories
 IMPLEMENT_RelationW2D( VeloCluster , MCParticle , double );
-IMPLEMENT_RelationW2D( VeloCluster , MCHit , double );
+IMPLEMENT_RelationW2D( VeloCluster , MCVeloHit , double );
 
 
 // Declare  OBJECT / CONVERTER / ALGORITHM / TOOL using the macros DECLARE_xxx
@@ -33,7 +33,7 @@ DECLARE_FACTORY_ENTRIES( VeloAssociators ) {
   DECLARE_TOOL( VeloCluster2MCHitAsct ); 
 
   DECLARE_RelationW2D( VeloCluster , MCParticle , double );
-  DECLARE_RelationW2D( VeloCluster , MCHit , double );
+  DECLARE_RelationW2D( VeloCluster , MCVeloHit , double );
 
   DECLARE_ALGORITHM( VeloCluster2MCParticleAlg );
   DECLARE_ALGORITHM( VeloCluster2MCHitAlg );
