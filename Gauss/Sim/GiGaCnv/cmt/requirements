@@ -1,35 +1,35 @@
-# $Id: requirements,v 1.25 2002-07-17 08:29:46 ranjard Exp $ 
+# $Id: requirements,v 1.26 2002-09-26 18:07:46 ibelyaev Exp $ 
 # =============================================================================
-
+# CVS tag $Name: not supported by cvs2svn $ 
+# =============================================================================
 package  GiGaCnv 
-version  v7r0
+version  v8r0
 
-branches cmt src doc GiGaCnv 
+# ============== package structure ============================================
+branches         cmt src doc GiGaCnv 
 
-include_dirs     $(GIGACNVROOT)
-
-use DetDesc       v11r*	Det
+# ============== explicit dependencies ========================================
+use DetDesc      v11r*	      Det
         
-use HepMC         v3r121p0  Sim
-use GenEvent      v2r*   Event
+use HepMC        v3r121p0     Sim
+use GenEvent     v2r*         Event
 
-use GiGa          v9r*  Sim 
-use Event         v3r*	Event
+use GiGa         v10r*        Sim 
+use Event        v3r*	      Event
+
+# ============== standard includes ============================================
+include_dirs     $(GIGACNVROOT)
 
 # ============== linker library (base classes) ================================
 library          GiGaCnvLib            Lib/*.cpp
-apply_pattern    library_stamps library=GiGaCnvLib
-apply_pattern    library_path library=GiGaCnvLib
 
 # ============== component library ============================================
 library          GiGaCnv               component/*.cpp 	        
-apply_pattern    libraryShr library=GiGaCnv
 
-# ============== link options =================================================
-apply_pattern    library_Clinkopts library=GiGaCnv 
-apply_pattern    library_Llinkopts library=GiGaCnvLib
+# ============== standard patterns ============================================
+apply_pattern    component_library library=GiGaCnv 
+apply_pattern    linker_library    library=GiGaCnvLib 
 
-# ============== private stuff ================================================
-apply_pattern    library_Cshlibflags library=GiGaCnv
-apply_pattern    library_Lshlibflags library=GiGaCnvLib
-
+# =============================================================================
+# The END 
+# =============================================================================
