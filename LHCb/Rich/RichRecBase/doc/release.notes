@@ -10,7 +10,7 @@
  - Update includes for new packaging.
 
 ! 2004-06-16 - Chris Jones
- - Remove dependency on RichMCTools package (errant, not really neeed)
+ - Remove dependency on RichMCTools package (errant, not really needed)
 
 ! 2004-05-30 - Chris Jones
  - Update RichRecRing event model objects
