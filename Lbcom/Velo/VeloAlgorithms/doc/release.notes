@@ -1,8 +1,11 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
-!========================  VeloAlgorithms v1r0 2002-07-09 =====================
-! 2002-07-07 - Chris Parkes
+! 2002-07-09 - Chris Parkes
+ - remove bug in diffusion calculation
+ - add very simple charge simulation for testing
+
+! 2002-07-09 - Chris Parkes
  - Spillover FEs no longer have their MCVeloHits stored.
 
 ! 2002-07-07 - Chris Parkes
