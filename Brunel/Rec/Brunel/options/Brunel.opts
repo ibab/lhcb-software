@@ -44,7 +44,9 @@ BrunelReco.DetectorList = {"VELO","OT","IT","Tr","TRACK","RICH","CALO","MUON"};
 #include "$L0DUROOT/options/Brunel.opts"
 #include "$MUONTOOLSROOT/options/MuonTools.opts"
 
-// L1 trigger not yet available
+// L1 trigger
+ApplicationMgr.DLLs += { "L1VeloTrack" };
+BrunelTriggerTRIGGERSeq.Members += { "L1VeloTrackAlg" };
 
 // Calorimeter digitisation and reconstruction (clustering)
 ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
@@ -108,7 +110,7 @@ BrunelRecoTrSeq.Members += { "TrSeedEvent/seedEvent",
 ApplicationMgr.DLLs += { "TrMatching" }; 
 BrunelRecoTrSeq.Members += { "TrMatchVeloSeed/matchVeloSeed",
                              "TrEventTracksFitter/reFit" };
-reFit.TrackContainer = "Rec/Track/Match";
+reFit.TrackContainer = "Rec/FitTrack/Match";
 // Velo Matches must be stored on DST (instance of StoreTracks?) 
 
 // Track selection for other detectors and for DST (clone killer)
@@ -120,12 +122,12 @@ BrunelRecoRICHSeq.Members = { "TrStoredTrackToSicbCnv" };
 // Rich Fortran reconstruction and OO Pid creator 
 BrunelRecoRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
 BrunelRecoRICHSeq.Members += { "BrunelRecoRICH" };
-BrunelRecoRICHSeq.Members += { "RichPIDCnvVerifier" };
-
 
 // Muon Fortran digitisation, coordinate reconstruction, MuonID, cleaning
-ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet", "MuonRec", "MuonID" };
-BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
+ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet" };
+ApplicationMgr.DLLs += { "MuonAlgs",  "MuonRec", "MuonID" };
+BrunelDigiMUONSeq.Members = { "MuonDigitization" };
+#include "$MUONALGSROOT/options/MuonDigitization.opts"
 BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
 

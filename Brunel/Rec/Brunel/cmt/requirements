@@ -20,13 +20,14 @@ set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
 use GaudiPolicy  v5r5
 
 # External libraries - Gaudi v10r1
-use ExternalLibs   v3r6
-use AIDA           v2r2
-use CLHEP          v17r10p1
-use HTL            v13r10p1
-use NAGC           v5r0
-use XERCES         v16r0p1
-use CERNLIB        v2001
+use ExternalLibs   	v3r6
+use AIDA           	v2r2
+use CLHEP          	v17r10p1
+use HTL            	v13r10p1
+use NAGC           	v5r0
+use XERCES         	v16r0p1
+use CERNLIB        	v2001
+use ROOT		v3r01p1
 
 #---Gaudi libraries - Gaudi v10r1
 use GaudiKernel        v12r2
@@ -49,7 +50,7 @@ use Futio        v12r0  SICB
 # Subdetector kernels
 use CaloKernel   v2r0   Calo
 use MuonKernel   v2r1   Muon
-use RichKernel   v1r1   Rich
+use RichKernel   v1r2   Rich
 use TrKernel     v11r0  Tr
 
 # Detector description
@@ -70,10 +71,10 @@ use EventSys     v11r0  Event
 # SicB event data persistency
 use SicbCnv      v17r0  SICB
 use ITSicbGeom   v2r0   SICB
-use RiSicbGeom   v2r0   SICB
+use RiSicbGeom   v2r1   SICB
 use CaloSicbCnv  v7r0   SICB
 use MuonSicbCnv  v6r0   SICB
-use RiSicbCnv    v3r1   SICB
+use RiSicbCnv    v3r2   SICB
 use VSicbCnv     v8r0   SICB
 use TrSicbCnv    v6r1   SICB
 
@@ -83,10 +84,13 @@ use BrunelSicb   v4r0   Rec
 #use BrunelAlgs   v1r0   Rec
 
 # L0 trigger
-use L0Calo       v6r0   L0
-use L0Muon       v6r0   L0
-use PuVeto       v3r0   L0
-use L0DU         v6r0   L0
+use L0Calo              v6r0    L0
+use L0Muon              v6r0    L0
+use PuVeto              v3r0    L0
+use L0DU                v6r0    L0
+
+# L1 trigger
+use L1VeloTrack         v1r0    L1
 
 # Calorimeter
 use CaloInterfaces 	v2r1 	Calo
@@ -125,8 +129,9 @@ use Seeding	   v1r0  Tr
 use TrMatching     v1r0  Tr
 
 # Muon
-use MuonRec       v2r0   Muon
-use MuonID        v2r0   Muon
+use MuonAlgs	v2r1	Muon
+use MuonRec     v2r0	Muon
+use MuonID      v2r0	Muon
 
 # Rich
 use RichMonitor v1r0    Rich
@@ -135,8 +140,6 @@ use RichMonitor v1r0    Rich
 use Futil        v11r0  SICB
 use detdes       v17r0  SICB
 use recevt       v3r4   SICB
-
-use digmuon      v4     SICB
 use recrich      v6r0   SICB
 
 #

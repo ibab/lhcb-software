@@ -21,16 +21,18 @@ MessageSvc.OutputLevel = 3;
 
 // Suppress excessive messages from some algorithms/components
 ApplicationMgr.OutputLevel = 4;
+TransportSvc.OutputLevel = 6;
+RootEventCnvSvc.OutputLevel = 4;
 
 ToolSvc.TrFirstCleverExtrapolator.OutputLevel = 5;
 ToolSvc.TrHerabExtrapolator.OutputLevel = 5;
 fitSeed.OutputLevel = 5;
 fitSeed.Fitter.OutputLevel = 5;
-matchVeloSeed.OutputLevel = 5;
 reFit.Fitter.OutputLevel = 5;
 
 RichPIDMonitor.OutputLevel = 4;
-RichPIDCnvVrifier.OutputLevel = 4;
-RichMCDigitToDigitAlg.OutputLevel = 4;
 
-DetectorDataSvc.OutputLevel = 6;
+//FwtAnalyse.PrintEveryEvent = false;
+//MatchAnalyse.PrintEveryEvent = false;
+
+//DetectorDataSvc.OutputLevel = 6;

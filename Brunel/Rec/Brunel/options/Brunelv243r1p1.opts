@@ -24,6 +24,12 @@ BrunelDstWriter.Output = "DATAFILE='dst_86160.root' TYP='ROOT' OPT='NEW'";
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v243r1p1.xml";
 #include "$FWTRACKROOT/options/Brunelv243r1.opts" // Forward tracking
 
+// RICH not compatible with this version. 
+// To use it, remove these lines and use recrich v5r4 in requirements 
+BrunelDigi.DetectorList = { "VELO", "IT", "OT", "CALO", "MUON" };
+BrunelReco.DetectorList = { "VELO", "OT", "IT", "Tr", "TRACK", "CALO", "MUON" };
+BrunelMoni.DetectorList = { "IT","OT","Tr","TRACK","CALO","TRIGGER" };
+
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options
 //EventSelector.FirstEvent = 6;

@@ -20,31 +20,42 @@ BrunelMoni.DetectorList = { "IT","OT","Tr","TRACK","RICH","CALO","TRIGGER" };
 // Monitoring algorithms
 //--------------------------------------------------------------
 
+// Trigger
+BrunelMoniTRIGGERSeq.Members += { "L0Monitor" };
+//BrunelMoniTRIGGERSeq.Members += { "L1TrackMonitor" };
+
 // IT digitisation
-BrunelMoniITSeq.Members = 
-  { "MCITDepositChecker", "MCITDigitChecker", "ITDigitChecker" };
+BrunelMoniITSeq.Members += { "MCITDepositChecker" };
+BrunelMoniITSeq.Members += { "MCITDigitChecker" };
+BrunelMoniITSeq.Members += { "ITDigitChecker" };
 
 // IT reconstruction
 ApplicationMgr.DLLs += { "ITAssociators" };
 BrunelMoniITSeq.Members += { "ITClusterChecker" };
 
 // OT digitisation
-BrunelMoniOTSeq.Members += { "MCOTDepositMonitor", "OTDigitMonitor" };
+BrunelMoniOTSeq.Members += { "MCOTDepositMonitor" };
+BrunelMoniOTSeq.Members += { "OTDigitMonitor" };
 
 // OT reconstruction
 ApplicationMgr.DLLs += { "OTAssociators" };
 BrunelMoniOTSeq.Members += { "OTClusterMonitor" };
 BrunelMoniOTSeq.Members += { "OTClusterChecker" };
 
-// Forward tracking
+// Tracking
 #include "$TRASSOCIATORSROOT/options/Brunel.opts"
 ApplicationMgr.DLLs += { "VeloAssociators" };
 BrunelMoniTRACKSeq.Members += { "FwtAnalyse" };
+BrunelMoniTRACKSeq.Members += { "FwtAnalyse/MatchAnalyse" };
+MatchAnalyse.FitTrackContainer  = "Rec/FitTrack/Match" ;
+MatchAnalyse.FitTrackAssociator = "MatchTrackToMCP" ;
+MatchAnalyse.VeloTrackAssociator = "VeloMatchTrackToMCP" ;
 
 // Rich monitoring
 ApplicationMgr.DLLs += { "RichMonitor" };
+BrunelMoniRICHSeq.Members += { "RichDigitCnvVerifier" };
+BrunelMoniRICHSeq.Members += { "RichPIDCnvVerifier" };
 BrunelMoniRICHSeq.Members += { "RichPIDMonitor" };
-
 
 //BrunelMoniTrSeq.Members   = { "TrMonitor" };
 #pragma print off

@@ -49,8 +49,12 @@ BrunelDstWriter.ItemList =
 , "/Event/Trig/L0/Calo#1"
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
-, "/Event/Trig/L0/Decision#1"
-  // L1 stuff
+, "/Event/Trig/L0/Decision#1" 
+, "/Event/Trig/L1#1"
+, "/Event/Trig/L1/Tracks2d#1"
+, "/Event/Trig/L1/Tracks3d#1"
+, "/Event/Trig/L1/Vertices2d#1"
+  // L1 Clusters and MCTruth may be needed if there are no truth associators
 , "/Event/Raw#1"
 , "/Event/Raw/Velo#1"
 , "/Event/Raw/Velo/Clusters#1" // To be filtered
@@ -60,6 +64,8 @@ BrunelDstWriter.ItemList =
 , "/Event/Raw/Spd/Digits#1"  // Kept only if related to CaloHypos
 , "/Event/Raw/Prs#1"
 , "/Event/Raw/Prs/Digits#1"  // Kept only if related to CaloHypos
+, "/Event/Raw/Ecal#1"
+, "/Event/Raw/Ecal/Digits#1" // Kept only if "seeds" for stored clusters
 , "/Event/Rec#1"
 , "/Event/Rec/IT#1"
 , "/Event/Rec/IT/Summary#1"
@@ -67,13 +73,14 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/OT#1"
 , "/Event/Rec/OT/Clusters#1"  // To be filtered
 , "/Event/Rec/Tr#1"
-, "/Event/Rec/Tr/StoredTracks#1"
-  // Velo tracks, track seeds, matched tracks, and corresponding clusters+states
+, "/Event/Rec/Tr/Best#1" // Currently the forward tracks, from StoreTrack
+  //, "/Event/Rec/Tr/Forward#1"
+  //, "/Event/Rec/Tr/Seed#1"
+  //, "/Event/Rec/Tr/Match#1"
 , "/Event/Rec/Tr/ITClusters#1"
 , "/Event/Rec/Tr/OTClusters#1"
 , "/Event/Rec/Tr/VeloClusters#1"
 , "/Event/Rec/Tr/StatesP#1"
-  // Track selection by clone killer
 , "/Event/Rec/Rich#1"
 , "/Event/Rec/Rich/PIDs#1"
 , "/Event/Rec/Calo#1"
@@ -102,12 +109,13 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Relations/ITClusters2MCParticles#1" // To be filtered
 , "/Event/Rec/Relations/OTClusters2MCParticles#1" // To be filtered
 , "/Event/Rec/Relations/VeloClusters2MCParticles#1" // To be filtered
-, "/Event/Rec/Relations/CaloClusters2MCParticles"
+, "/Event/Rec/Relations/CaloClusters2MCParticles#1"
   // MuonCoords2MCParticles (needed by L0 study)
 , "/Event/Rec/Relations/TrStoredTracks#1" // add 2MCP to name!
   //, "/Event/Rec/Relations/FwTrack2MCP#1"
   //, "/Event/Rec/Relations/SeedTrack2MCP#1"
   //, "/Event/Rec/Relations/VeloFw2MCP#1"
   //, "/Event/Rec/Relations/VeloTr2MCP#1"
+  // L0 truth
   // L1 truth
 };

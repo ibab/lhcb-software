@@ -1,14 +1,12 @@
 //--------------------------------------------------------------
-// Job options for Brunel when using $LHCBDBASE version v245r0
-// ------ "Realistic LHCb light, split OT+IT TT1" detector -----
+// Job options for Brunel when using $LHCBDBASE version v246r0
+// ------ "Realistic LHCb light, IT only TT1, 2-gap M1" detector -----
 #pragma print off
 // --- Define input data. Spillover first (if required), then signal ---
-#include "$SICBCNVROOT/options/Brunel.opts"  // Uncomment for spillover
-SpillOverSelector.Input = {"JOBID='95716'"}; // evtype 61 RAWH2 for spillover
-//SpillOverSelector.Input = {"FILE='/shift/shd18/data11/z5/stage/mcv252.data_61P'"};
+//#include "$SICBCNVROOT/options/Brunel.opts"  // Uncomment for spillover
+//SpillOverSelector.Input = {"JOBID='95716'"}; // evtype 61 RAWH2 for spillover
 #pragma print on
-EventSelector.Input = {"JOBID='95774'"}; // evtype 411400 RAWH2 signal
-//EventSelector.Input = {"FILE='/shift/shd18/data11/z5/stage/mcv252.data'"};
+EventSelector.Input = {"JOBID='96324'"}; // evtype 411300 RAWH2 signal
 #pragma print off
 
 //--------------------------------------------------------------
@@ -16,21 +14,22 @@ EventSelector.Input = {"JOBID='95774'"}; // evtype 411400 RAWH2 signal
 //--------------------------------------------------------------
 
 // Define outputs
-HistogramPersistencySvc.OutputFile = "brunel_v245r0.hbook";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "brunel_v246r0.hbook";  // Monitoring histos
 #include "$BRUNELOPTS/BrunelDst.opts" // Enable DST output and define DST content
-BrunelDstWriter.Output = "DATAFILE='dst_v245.root' TYP='ROOT' OPT='NEW'";
+BrunelDstWriter.Output = "DATAFILE='dst_v246.root' TYP='ROOT' OPT='NEW'";
 
 //--------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v245r0.xml";
-#include "$FWTRACKROOT/options/Brunelv245r0.opts" // Forward tracking
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v246r0.xml";
+#include "$FWTRACKROOT/options/Brunelv246r0.opts" // Forward tracking
+MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
 
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options
 //EventSelector.FirstEvent = 6;
 #pragma print on
-ApplicationMgr.EvtMax = 12;
+ApplicationMgr.EvtMax = 10;
 //--------------------------------------------------------------
 #pragma print off
 //ApplicationMgr.DLLs = {"NONE"}; // Uncomment if static link, must be last line 
