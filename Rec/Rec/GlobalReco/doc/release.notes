@@ -4,8 +4,15 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2002-12-19 - Gloria Corti
+ - PrimaryVertexFinderAlg use tracks with veloBack flag introduced in new data
+ - Fix bug reported by Vincenzo Vagnoni of duplicate info when events do not
+   have any RichInfo in ChargedProtoPAlg
+ - Fix bug reported by Igor Katchaev of flag for non availability of CaloID
+   tables and rich/muon data in ChargedProtoPAlg
+
 ! 2002-11-21 - Ivan Belyaev
- - options/GlobalReco.opts         - remove obsolete references to Matching relations
+ - options/GlobalReco.opts - remove obsolete references to Matching relations
 
 ! 2002-11-20 - Ivan Belyaev
  - src/NeutralPPsFromCPsAlg.h,cpp  - new algorithm for creation of 
