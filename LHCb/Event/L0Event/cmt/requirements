@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.9 2002-01-30 16:18:46 ocallot Exp $
+# $Id: requirements,v 1.10 2002-02-01 14:40:57 ocallot Exp $
 package L0Event
 version v10r0
 
-branches Event src cmt doc xml
+branches Event cmt doc xml
 
 include_dirs $(L0EVENTROOT)
 
@@ -10,19 +10,14 @@ use 	GaudiObjDesc	v3r*
 use     EventKernel     v1r*    Event
 use 	LHCbEvent 	v12r* 	Event
 
-# component library
+# Make header from XML
 
 document obj2doth L0EventObj2Doth ../xml/*.xml
-
-library         L0Event ../src/*.cpp 
 
 document obj2dict L0EventObj2Dict -group=dict ../xml/L0Event.xml
 library L0EventDict -group=dict ../dict/*.cpp
 macro L0EventDict+shlibflag "$(use_linkopts) $(libraryshr_linkopts)"
 
-apply_pattern   package_Cshlibflags
-apply_pattern   package_Clinkopts
-apply_pattern   packageShr
 
 
 
