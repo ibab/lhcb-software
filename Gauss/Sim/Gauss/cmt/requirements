@@ -1,5 +1,5 @@
 package Gauss
-version v3r0
+version v3r1
 
 # =============================================================================
 # structure 
@@ -19,8 +19,8 @@ use GaudiConf     v6*
 use GaudiSys      v10r*
 
 # ROOT event persistency
-use GaudiRootDb   v7r*
-use DbCnv         v6r* Event 
+use GaudiRootDb   v8r*
+use DbCnv         v7r* Event 
 
 # Histogram persistency
 use HbookCnv      v12r*
@@ -37,7 +37,7 @@ use GaussImports  v1r*  Sim
 #use EvGen         v3r*  Sim 
 
 #geometry source 
-use XmlDDDB       v11r*   Det 
+use XmlDDDB       v12r*   Det 
 
 # =============================================================================
 # Essential environment variables 
