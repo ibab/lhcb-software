@@ -4,6 +4,7 @@
 ! Purpose     : Provides magnetic field map
 !-----------------------------------------------------------------------------
 
+!======================== Magnet v1r1 update 2002-05-31 ======================
 ! 2002-05-31 - Edgar De Oliveira
  - Fix a Bug pointed by Rutger Hierck: When position y was set to zero
    the service was returning zero for By component of the field, what is not 
@@ -13,7 +14,7 @@
    now returns void instead of a StatusCode that was not tested in any 
    circunstance. 
 
-! >>>>>>>>>>>>>>>>>>>>>  Magnet v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+!======================== Magnet v1r0 release 2002-05-23 =====================
 ! 2002-05-23 - Olivier Callot
  - Fix a bug : When x>0, Y<0, the Y component of the field was inverted instead
    of the x component !
