@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.15 2003-06-26 16:50:09 gcorti Exp $
+// $
 // Include files 
 #include <memory>
 
@@ -52,6 +52,10 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   , m_trackClassCut( 0.4 )
   , m_chiSqITracks( 500.0 )
   , m_chiSqOTracks( 100.0 )
+  , m_chiSqVTT( 5.0 )
+  , m_chiSqUps( 5.0 )
+  , m_minTTx( 40. * mm )
+  , m_minTTy( 40. * mm )
   , m_photonMatch(0)
   , m_electronMatch(0)
   , m_bremMatch(0)
@@ -91,9 +95,14 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   declareProperty("UpstreamsTracks",  m_upstream );
   declareProperty("VeloTTTracks",     m_velott );
   declareProperty("ITFracTrackClass", m_trackClassCut );
-  declareProperty("Chi2NdFofITracks", m_chiSqOTracks );
-  declareProperty("Chi2NdFofOTracks", m_chiSqITracks );
+  declareProperty("Chi2NdFofITracks", m_chiSqITracks );
+  declareProperty("Chi2NdFofOTracks", m_chiSqOTracks );
+  declareProperty("Chi2NdFofVTT",     m_chiSqVTT );
+  declareProperty("Chi2NdFofUps",     m_chiSqUps );
+  declareProperty( "minTTx",          m_minTTx );
+  declareProperty( "minTTy",          m_minTTy );
   
+
   // Monitor
   declareProperty("Monitor", m_monitor );
 
@@ -591,7 +600,25 @@ int ChargedProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
     }
   }
 
-  if( track->veloTT() ) return reject;
+  if( track->veloTT() ) {
+    int nTotMeas = track->measurements().size();
+    double chi2NoF = (track->lastChiSq())/((double)nTotMeas - 5);
+    if( chi2NoF >= m_chiSqVTT ) {
+      reject = Chi2Cut;
+    }
+    return reject;
+  }  
+
+  if( track->upstream() ) {
+    int nTotMeas = track->measurements().size();
+    double chi2NoF = (track->lastChiSq())/((double)nTotMeas - 5);
+    if( chi2NoF >= m_chiSqUps )  return Chi2Cut;
+    double xAtTT=9999.;
+    double yAtTT=9999.;
+    ProjectSeed2TT(track,xAtTT,yAtTT);
+    if(fabs(xAtTT)<m_minTTx && fabs(yAtTT)<m_minTTy) return Other;
+  }
+
 
   if( !reject ) {
     int nIT = 0;
@@ -925,5 +952,39 @@ StatusCode ChargedProtoPAlg::muonProbDLL( ProtoParticle* proto,
   return StatusCode::SUCCESS;
 
 }  
+
+//=============================================================================
+// Project Seed to TT plane to reject ghost upstream tracks
+//=============================================================================
+void ChargedProtoPAlg::ProjectSeed2TT(const TrStoredTrack* ttt, 
+				      double& xAtTT, double& yAtTT)
+{
+  double zTT=2450;
+
+  double mag_par0=5454.55;
+  double mag_par1=-2209.30;
+  double mag_par2=542.057 ;
+  double mag_par3=  -12.1427e-6;
+
+  TrState* state = const_cast<TrState*>( ttt->closestState( 10000. ));
+  TrStateP *statep = dynamic_cast<TrStateP*>( state );
+
+  double zXRef  = 9500.;
+  double xSeed = statep->x() + (zXRef-statep->z()) * statep->tx();
+  double zMag =
+    mag_par0 +
+    mag_par1 * pow( statep->ty(), 2 ) +
+    mag_par2 * pow( statep->tx(), 2 ) +
+    mag_par3 * pow( xSeed, 2 );
+
+  double xMag = statep->x() + (zMag - statep->z()) * statep->tx();
+  double slopeX = xMag / zMag;
+  xAtTT= xMag+ (zTT-zMag ) * slopeX;
+
+  double zYRef  = 8000.;
+  double yAtRef = statep->y() + (zYRef-statep->z()) * statep->ty();
+  yAtTT= zTT/zYRef * yAtRef;
+
+}
 
 //=============================================================================

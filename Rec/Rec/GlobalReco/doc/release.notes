@@ -4,6 +4,14 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2003-07-16 - Yuehong Xie
+ - src/ChargedProtoPAlg.cpp src/ChargedProtoPAlg.h
+   . correct confusion with Property "Chi2NdFofITracks" and "Chi2NdFofOTracks"
+   . added Chi2NdF cut for VTT and upstream tracks, controled by 
+     Properties "Chi2NdFofVTT" and "Chi2NdFofUps" 
+   . added beampipe cut on TT plane for upstream tracks, controled by 
+     Properties "minTTx" and "minTTy"
+
 !===================== GlobalReco v4r0p2 2003-06-26 =========================
 ! 2003-06-26 - Gloria CORTI
  - src/ChargedProtoPAlg.cpp

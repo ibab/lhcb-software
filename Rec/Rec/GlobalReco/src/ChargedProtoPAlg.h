@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.h,v 1.7 2003-05-30 09:34:00 gcorti Exp $
+// $
 #ifndef CHARGEDPROTOPALG_H 
 #define CHARGEDPROTOPALG_H 1
 
@@ -29,7 +29,7 @@
 class ChargedProtoPAlg : public Algorithm {
 public:
 
-  enum TrkRejectType { KeepTrack=0, NoTrack, NoTrackType, Chi2Cut };
+  enum TrkRejectType { KeepTrack=0, NoTrack, NoTrackType, Chi2Cut, Other };
   enum ProtoType { TrackProto=0, RichProto, MuonProto, ElectronProto };
   
   /// Standard constructor
@@ -70,6 +70,7 @@ protected:
                       CombinedDLL* combDLL );
   StatusCode caloPIDTools();
   StatusCode muonProbDLL( ProtoParticle* proto, CombinedDLL* combDLL );
+  void ProjectSeed2TT(const TrStoredTrack* ttt, double& xAtTT, double& yAtTT);
   
 private:
 
@@ -100,7 +101,12 @@ private:
   double m_trackClassCut;  ///< Fraction of IT clusters to separate Tracks types
   double m_chiSqITracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
   double m_chiSqOTracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
+  double m_chiSqVTT   ;    ///< Max Chi2/NoF to make ProtoP from VTT Tracks
+  double m_chiSqUps;   ///< Max Chi2/NoF to make ProtoP from upstream Tracks
+  double m_minTTx;    ///<  TT hole x cut
+  double m_minTTy;    ///<  TT hole y cut
   
+
  
   int m_idElectron;           ///< PDG id of e+/-
   int m_idMuon;               ///< PDG id of mu+/mu-
