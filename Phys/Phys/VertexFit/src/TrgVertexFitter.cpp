@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.5 2005-02-22 16:02:49 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.6 2005-02-24 12:52:49 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -321,8 +321,8 @@ StatusCode TrgVertexFitter::doFit(std::vector<const Particle*>& partsToFit, Vert
 
   // Initialize summatories and arrays
   double iMX, iMY, iX0, iY0, iInvSig2X, iInvSig2Y;
-  std::vector<double> X0Array(nPartsToFit),  Y0Array(nPartsToFit), MXArray(nPartsToFit) ;
-  std::vector<double> MYArray(nPartsToFit), InvSig2XArray(nPartsToFit), InvSig2YArray(nPartsToFit);
+  std::vector<double> X0Array,  Y0Array, MXArray ;
+  std::vector<double> MYArray, InvSig2XArray, InvSig2YArray;
   double AX = 0, BX = 0, CX = 0, DX = 0, EX = 0 , AY = 0, BY = 0, CY = 0, DY = 0, EY = 0;
 
   // Compute relevant summatories

@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.21 2005-02-22 16:02:49 pkoppenb Exp $
+! $Id: release.notes,v 1.22 2005-02-24 12:52:49 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie, P. Koppenburg
 
+! 2005-02-24 - P. Koppenburg fro Hugo Ruiz
+  - src/TrgVertexFitter.{cpp,h}
+    . Do not fix vector sizes
 ! 2005-02-21 - P. Koppenburg fro Hugo Ruiz
   - src/TrgVertexFitter.{cpp,h}
     . Fixes for resonant states and photons.
