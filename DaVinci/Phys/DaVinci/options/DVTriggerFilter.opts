@@ -15,22 +15,29 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #pragma print on
 
-#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
-#include "$DAVINCIROOT/options/DaVinciReco.opts"
+//#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
+//#include "$DAVINCIROOT/options/DaVinciReco.opts"
 //#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 
-// use preloadparticles to make particles
+//--------------------------------------------------------------
+// Re-run L0 and L1 Trigger with DC04 tuning - FOR EXPERTS! 
+#include "$DAVINCIROOT/options/L0.opts"
+#include "$DAVINCIROOT/options/L1Decision.opts"
+// Run Hlt triggers
+// #include "$DAVINCIROOT/options/Hlt.opts"
 
-ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" };
-Combined.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
-//Combined.OutputLevel = 1 ;
+ApplicationMgr.TopAlg += { "Sequencer/L0L1Seq" };
+L0L1Seq.Members = { "L0Filter", "PrintHeader/PassedL0" , "L1Filter", "PrintHeader/PassedL1" };
+PassedL0.OutputLevel = 2;
+PassedL1.OutputLevel = 2;
 
-// explicitly create links
-ApplicationMgr.TopAlg += { "Particle2MCLinks" };
-Particle2MCLinks.InputData = {"/Event/Phys/Combined/Particles" };
-
-#include "$DAVINCIROOT/options/DaVinciMiniDst.opts"
-
+#include "$DAVINCIROOT/options/DstContent.opts"
+DstWriter.ItemList += {"/Event/Phys#1"};
+DstWriter.RequireAlgs  = { "L0L1Seq" } ;
+DstWriter.Preload  = false ;
+DstWriter.Output = "DATAFILE='/scratch/pkoppenb/MBL0L1accepted.oodst' TYP='POOL_ROOTTREE' OPT='CREATE'" ;
+//DstWriter.OutputLevel = 1 ;
+ApplicationMgr.OutStream += { "DstWriter" } ;
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel                  = 3;
@@ -43,7 +50,7 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
 
-ApplicationMgr.EvtMax    = 20;
+ApplicationMgr.EvtMax    = 100000;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 //***************************************************************

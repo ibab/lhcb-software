@@ -6,7 +6,7 @@
 ApplicationMgr.OutStream = { "MiniDstWriter" };
 MiniDstWriter.PreLoad = false;
 
-DstWriter.OptItemList =
+MiniDstWriter.OptItemList =
 {
     "/Event/MC/Signal#1"
 }; 
