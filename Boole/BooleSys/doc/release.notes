@@ -3,6 +3,27 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v7r3>2005-01-14 Boole v7r3</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r3. Can process DC04 Gauss output.
+Output data incompatible with DC04 versions, needs Brunel v25r3 or greater
+
+- Packages modified: L0Calo v8r0, CaloDigit v1r8, OTSimulation v1r3
+
+- Modified functionality:
+  . CaloZSup now produces banks for the L0 Calo trigger. These (and CaloDigits) 
+    are also used as input by CaloFillRawBuffer and CaloFillPrsSpdRawBuffer
+    (L0Calo v8r0, CaloDigit v1r8, CaloDAQ v1r0)
+
+- Persistency changes:
+  . More compact coding of Prs/Ecal/Hcal energies in RawBuffer
+    (needs CaloDAQ v1r0 to decode)
+
+- Bug fixes:
+  . Protect against empty OT banks in RawBuffer (OTSimulation v1r3)
+
+- Packaging changes:
+  . Move to new algorithm base classes (L0Calo v8r0)
+
 </PRE><H1><A NAME=v7r2p1>2005-01-13 Boole v7r2p1</A></H1><PRE>
 Documentation moved to BooleSys package (from Digi/Boole):
  . These release notes
@@ -10,7 +31,7 @@ Documentation moved to BooleSys package (from Digi/Boole):
 
 </PRE><H1><A NAME=v7r2>2004-12-10 Boole v7r2</A></H1><PRE>
 This version uses Gaudi v15r3, LHCb v17r2. Can process DC04 Gauss output.
-Output data incompatible with DC04 versions, needs Brunel v25r2 or greater
+Output data incompatible with DC04 versions, needs Brunel v25r2
 
 - Packages modified: PuVeto v6r0, VeloAlgorithms v3r2, L0MuonKernel v2r3,
                      L0MuonTrigger v2r3p1, OTSimulation v1r2, OTMonitor v1r1

@@ -70,8 +70,8 @@ TriggerL0Seq.Members += { "PuVetoAlg" };
 TriggerL0Seq.Members += { "DecisionUnit" };
 TriggerL0Seq.Members += { "PrepareL0DUL1Buffer" };
 
-// Calorimeter digitisation and reconstruction
-ApplicationMgr.DLLs += { "CaloDigit", "CaloEvent" };
+// Calorimeter digitisation
+ApplicationMgr.DLLs += { "CaloDigit", "CaloEvent", "CaloDAQ" };
 DigiCALOSeq.Members = {
   "CaloSignalAlg/SpdSignal",
   "CaloSignalAlg/PrsSignal",
@@ -84,9 +84,11 @@ DigiCALOSeq.Members = {
   "CaloZSupAlg/SpdZSup",
   "CaloZSupAlg/PrsZSup",
   "CaloZSupAlg/EcalZSup",
-  "CaloZSupAlg/HcalZSup"
+  "CaloZSupAlg/HcalZSup",
+  "CaloFillPrsSpdRawBuffer",
+  "CaloFillRawBuffer/EcalFillRawBuffer",
+  "CaloFillRawBuffer/HcalFillRawBuffer"
 };
-//#include "$CALOASSOCIATORSOPTS/Brunel.opts"
 
 // Rich digitisation
 ApplicationMgr.DLLs += { "RichTools", "RichReadout", "RichDAQ"};

@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v7r3>2005-01-14 Boole v7r3</A></H1><PRE>
+- Release notes for Boole application are now in BooleSys package
+- Remove doxygen configuration files (moved to BooleSys)
+- Modify DigiCaloSeq in Boole.opts to use new CaloDAQ algorithms
+
 </PRE><H1><A NAME=v7r2>2004-12-10 Boole v7r2</A></H1><PRE>
 This version uses Gaudi v15r3, LHCb v17r2. Can process DC04 Gauss output.
 Output data incompatible with DC04 versions, needs Brunel v25r2 or greater

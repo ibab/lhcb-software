@@ -1,5 +1,5 @@
 package BooleSys
-version v7r2p1
+version v7r3
 
 branches cmt doc
  
@@ -8,12 +8,12 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v7r2	Digi
+use Boole		v7r3	Digi
 use DigiAlg		v3r0	Digi
 use AsctToLinker	v1r3	Rec
 
 # L0 trigger
-use L0Calo              v7r6	L0
+use L0Calo              v8r0	L0
 use PuVeto              v6r0	L0
 use L0DU                v6r7p2	L0
 use L0mConf             v2r2p3  L0
@@ -22,7 +22,7 @@ use L0MuonTrigger       v2r3p1  L0
 
 # Calorimeter
 use CaloMoniDigi        v1r0 	Calo
-use CaloDigit           v1r7	Calo
+use CaloDigit           v1r8	Calo
 
 # Velo
 use VeloAlgorithms      v3r2	Velo
@@ -32,7 +32,7 @@ use ITAlgorithms        v14r4	IT
 use ITCheckers          v2r3	IT
 
 # Outer Tracker
-use OTSimulation	v1r2	OT
+use OTSimulation	v1r3	OT
 use OTMonitor		v1r1	OT
 
 # Muon
