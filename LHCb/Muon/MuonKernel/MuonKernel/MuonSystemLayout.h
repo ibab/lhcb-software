@@ -1,4 +1,4 @@
-// $Id: MuonSystemLayout.h,v 1.6 2002-03-21 15:30:34 atsareg Exp $
+// $Id: MuonSystemLayout.h,v 1.7 2002-03-26 16:40:36 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONSYSTEMLAYOUT_H
 #define MUONKERNEL_MUONSYSTEMLAYOUT_H 1   
@@ -22,7 +22,7 @@
 class MuonTileID;
 class IMuonTile;
 
-class MuonSystemLayout : public IMuonLayout {
+class MuonSystemLayout : virtual public IMuonLayout {
 
 public:
   /// Default constructor
