@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
-/////    Job options for Brunel when using $LHCBDBASE version v248r4     /////
-/////    ----- "LHCb light detector for Summer 2002 production -----     /////
+//// Job options for Brunel when using $LHCBDBASE versions v248r4, v248r5 ////
+////     ----- "LHCb light detector for Summer 2002 production -----      ////
 //////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$SICBCNVROOT/options/Brunel.opts" // Comment to switch off spillover

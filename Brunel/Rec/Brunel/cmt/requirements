@@ -140,10 +140,10 @@ use RichRecEvent        v1r1    Rich
 use RichRecInterfaces	v1r0	Rich
 
 # SICBDST packages
-use Futil        v11r0  SICB
-use detdes       v17r0  SICB
+use Futil        v12r0  SICB
+use detdes       v19r0  SICB
 use recevt       v3r4   SICB
-use recrich      v7r2   SICB
+use recrich      v7r3   SICB
 
 #
 #===== build Brunel =========================

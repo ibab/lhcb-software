@@ -4,6 +4,11 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v15r2>2002-11-26 Brunel v15r2</A></H1><PRE>
+ N.B.: to take advantage of new Rich tuning, new dbase versions are needed:
+ To (re)process data produced with dbase v248r4, use dbase v248r5 and Brunelv248r5.opts
+ To (re)process data produced with dbase v250r0, use dbase v251r0 and Brunelv251r0.opts
+ To (re)process data produced with dbase v250r1, use dbase v251r1 and Brunelv251r1.opts
+
  - New tuning:
    . Modified the PuVeto peakValue method to improve peak finding (PuVeto v5r0)
    . Enable cluster filtering: Seeding does not use T station clusters already
@@ -15,10 +20,11 @@ Purpose: LHCb reconstruction program
    . Faster track cleaning (TrCleanEx v2r3)
    . Improvements to L0 Pi0 trigger (L0Calo v6r3)
    . Use TT1 for VTT and Upstream track association to MC (TrAssociators v3r3)
+   . New tuning for Rich, use VTT tracks (recrich v7r3, dbase v251r*/v248r5)
 
  - New features:
    . Add support for dbase v250r0, v250r1 (XmlDDDB v14r1, Seeding v2r3)
-   . Add support for dbase v251r0, v251r1 (new tuning for recrich)
+   . Add support for dbase v248r5, v251r0, v251r1 (new tuning for recrich)
    . Add L1 Decision code (L1Decision v1r1)
    . Fix OORich to also run on Windows 
      (RichRecKernel v1r1, RichRecEvent v1r1, RichRecAlgs v1r1)
@@ -33,6 +39,7 @@ Purpose: LHCb reconstruction program
    . Repackaging of OO Rich software to fix building of component libraries
      (RichRecInterfaces v1r0, RichRecTools v1r1, RichRecAlgs v1r1, 
       RichMonitor v2r1, Brunel.opts)
+   . Use latest versions of SICB packages (detdes v19r0, Futil v12r0)
 
 </PRE><H1><A NAME=v15r1>2002-11-19 Brunel v15r1</A></H1><PRE>
 
