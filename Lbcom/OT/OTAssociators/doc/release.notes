@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.21 2004-04-21 16:01:39 cattanem Exp $
+! $Id: release.notes,v 1.22 2004-07-21 08:03:11 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
+
+!====================== OTAssociators v2r9 2004-07-19 ======================
+! 2004-07-19 - Marco Cattaneo
+ - Add dependency to new Relations package
 
 !====================== OTAssociators v2r8 2004-04-19 ======================
 ! 2004-04-19 - Marco Cattaneo, Jeroen van Tilburg
