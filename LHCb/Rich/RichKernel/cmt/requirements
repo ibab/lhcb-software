@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.22 2004-02-02 14:15:22 jonesc Exp $
+# $Id: requirements,v 1.23 2004-03-16 13:34:53 jonesc Exp $
 # Maintainer : Christopher Rob Jones
 
 package RichKernel
-version v4r4
+version v4r5
 
 # ================ structure =================================================
 branches RichKernel cmt doc src

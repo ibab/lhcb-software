@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.cpp,v 1.11 2004-02-16 14:11:53 papanest Exp $
+// $Id: DeRichHPDPanel.cpp,v 1.12 2004-03-16 13:35:30 jonesc Exp $
 #define DERICHHPDPANEL_CPP
 
 // Include files
@@ -21,12 +21,10 @@
 //----------------------------------------------------------------------------
 
 // Standard Constructor
-DeRichHPDPanel::DeRichHPDPanel()
-{}
+DeRichHPDPanel::DeRichHPDPanel() {}
 
 // Standard Destructor
-DeRichHPDPanel::~DeRichHPDPanel() {
-}
+DeRichHPDPanel::~DeRichHPDPanel() {}
 
 //=========================================================================
 //  Initialize
@@ -46,7 +44,7 @@ StatusCode DeRichHPDPanel::initialize() {
 
   log << MSG::DEBUG <<"Initializing " << m_name << endreq;
 
-  SmartDataPtr<DetectorElement> deRich1(dataSvc(), "/dd/Structure/LHCb/Rich1");
+  SmartDataPtr<DetectorElement> deRich1(dataSvc(), DeRich1Location::Default);
   m_pixelSize = deRich1->userParameterAsDouble("RichHpdPixelXsize");
   m_subPixelSize = m_pixelSize/8;
   m_activeRadius = deRich1->userParameterAsDouble("RichHpdActiveInpRad");

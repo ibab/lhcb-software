@@ -1,4 +1,4 @@
-// $Id: RichTrackSelector.cpp,v 1.1 2003-10-13 16:10:54 jonrob Exp $
+// $Id: RichTrackSelector.cpp,v 1.2 2004-03-16 13:40:00 jonesc Exp $
 // Include files
 
 // local
@@ -16,12 +16,11 @@ RichTrackSelector::RichTrackSelector() :
   m_trBits       ( 0    ),
   m_uniqueTrOnly ( true ) {
 
-  m_trNames.push_back( "unique" );
-  m_trNames.push_back( "seed" );
-  m_trNames.push_back( "match" );
-  m_trNames.push_back( "forward" );
-  m_trNames.push_back( "upstream" );
-  m_trNames.push_back( "veloTT" );
+  // By default add all known track types to selector
+  m_trNames.push_back( "unique"  );
+  for ( int iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
+    m_trNames.push_back( Rich::text(static_cast<Rich::Track::Type>(iTk)) );
+  }
 
 }
 
@@ -37,11 +36,13 @@ bool RichTrackSelector::configureTrackTypes() {
     else if ( *iName == "seed"     ) { m_trBits += 4;   }
     else if ( *iName == "match"    ) { m_trBits += 8;   }
     else if ( *iName == "forward"  ) { m_trBits += 16;  }
-    else if ( *iName == "upstream" ) { m_trBits += 32;  }
+    else if ( *iName == "follow"   ) { m_trBits += 32;  }
     else if ( *iName == "veloTT"   ) { m_trBits += 64;  }
     else if ( *iName == "veloBack" ) { m_trBits += 128; }
+    else if ( *iName == "KsTrack"  ) { m_trBits += 256; }
     else {
-      std::cout << "ERROR : Unknown track type " << *iName << std::endl;
+      throw GaudiException( "Unknown track type '"+(*iName)+"'",
+                            "RichTrackSelector", StatusCode::FAILURE );
       return false;
     }
   }

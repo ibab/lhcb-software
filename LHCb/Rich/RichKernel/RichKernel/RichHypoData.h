@@ -1,4 +1,4 @@
-// $Id: RichHypoData.h,v 1.5 2004-02-02 14:15:21 jonesc Exp $
+// $Id: RichHypoData.h,v 1.6 2004-03-16 13:34:51 jonesc Exp $
 #ifndef RICHKERNEL_RICHHYPODATA_H
 #define RICHKERNEL_RICHHYPODATA_H 1
 
@@ -37,32 +37,23 @@ public:
   ~RichHypoData() { }
 
   /// Read access operator
-  inline const TYPE& operator [] ( const Rich::ParticleIDType type ) const
-  {
-    return m_data[type];
-  }
+  const TYPE operator[] ( const Rich::ParticleIDType type ) const;
 
-  /// Set the data vlaue for a given particle hypothesis
+  /// Set the data value for a given particle hypothesis
   void setData( const Rich::ParticleIDType type, const TYPE value );
 
   /// Reset all data
   void resetData( const TYPE value = static_cast<TYPE>(-1) );
 
   /// Reset data for given particle hypothesis
-  void resetData( const Rich::ParticleIDType type, 
+  void resetData( const Rich::ParticleIDType type,
                   const TYPE value = static_cast<TYPE>(-1) );
 
   /// Const Accessor to data array
-  inline const DataArray & dataArray() const
-  {
-    return m_data;
-  }
+  const DataArray & dataArray() const;
 
   /// Check whether a piece of data has been initialised
-  inline bool dataIsValid( const Rich::ParticleIDType type )
-  {
-    return m_valid[type];
-  }
+  bool dataIsValid( const Rich::ParticleIDType type );
 
 private:
 
@@ -73,11 +64,16 @@ private:
 };
 
 template <class TYPE>
+inline const TYPE RichHypoData<TYPE>::operator[] ( const Rich::ParticleIDType type ) const
+{
+  return m_data[type];
+}
+
+template <class TYPE>
 inline void RichHypoData<TYPE>::setData( const Rich::ParticleIDType type,
                                          const TYPE value )
 {
-  m_valid[type] = true;
-  m_data[type]  = value;
+  m_valid[type] = true; m_data[type]  = value;
 }
 
 template <class TYPE>
@@ -91,11 +87,22 @@ inline void RichHypoData<TYPE>::resetData( const TYPE value )
 }
 
 template <class TYPE>
-inline void RichHypoData<TYPE>::resetData( const Rich::ParticleIDType type, 
+inline void RichHypoData<TYPE>::resetData( const Rich::ParticleIDType type,
                                            const TYPE value )
 {
-  m_valid[type] = false;
-  m_data[type]  = value;
+  m_valid[type] = false; m_data[type]  = value;
+}
+
+template <class TYPE>
+inline const typename RichHypoData<TYPE>::DataArray & RichHypoData<TYPE>::dataArray() const
+{
+  return m_data;
+}
+
+template <class TYPE>
+inline bool RichHypoData<TYPE>::dataIsValid( const Rich::ParticleIDType type )
+{
+  return m_valid[type];
 }
 
 /// Implement textual ostream << method

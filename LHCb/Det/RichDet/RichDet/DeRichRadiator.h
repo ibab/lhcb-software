@@ -1,4 +1,4 @@
-// $Id: DeRichRadiator.h,v 1.4 2003-12-03 17:46:47 papanest Exp $
+// $Id: DeRichRadiator.h,v 1.5 2004-03-16 13:35:30 jonesc Exp $
 
 #ifndef RICHDET_DERICHRADIATOR_H
 #define RICHDET_DERICHRADIATOR_H 1
@@ -24,6 +24,16 @@
  * @author Antonis Papanestis
  */
 
+// Namespace for location in TDS
+namespace DeRichRadiatorLocation {
+  static const std::string& AerogelQ0 = "/dd/Structure/LHCb/Rich1/AerogelQ0";
+  static const std::string& AerogelQ1 = "/dd/Structure/LHCb/Rich1/AerogelQ1";
+  static const std::string& AerogelQ2 = "/dd/Structure/LHCb/Rich1/AerogelQ2";
+  static const std::string& AerogelQ3 = "/dd/Structure/LHCb/Rich1/AerogelQ3";
+  static const std::string& C4F10     = "/dd/Structure/LHCb/Rich1/C4F10";
+  static const std::string& CF4       = "/dd/Structure/LHCb/Rich2/CF4";
+}
+
 class DeRichRadiator: public DetectorElement {
 
 public:
@@ -45,7 +55,6 @@ public:
   inline virtual Rich::DetectorType rich() {
     return m_rich;
   }
-  
 
   /**
    * Finds the next intersection point with radiator.

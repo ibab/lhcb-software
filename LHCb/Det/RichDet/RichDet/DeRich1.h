@@ -1,4 +1,4 @@
-// $Id: DeRich1.h,v 1.5 2003-11-22 18:40:49 jonesc Exp $
+// $Id: DeRich1.h,v 1.6 2004-03-16 13:35:29 jonesc Exp $
 #ifndef RICHDET_DERICH1_H
 #define RICHDET_DERICH1_H 1
 
@@ -16,7 +16,12 @@ extern const CLID& CLID_DERich1;
  * @author Antonis Papanestis
  */
 
-class DeRich1: public DeRich {
+// Namespace for location in TDS
+namespace DeRich1Location {
+  static const std::string& Default = "/dd/Structure/LHCb/Rich1";
+}
+
+class DeRich1 : public DeRich {
 
 public:
 

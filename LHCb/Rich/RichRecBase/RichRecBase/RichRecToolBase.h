@@ -1,4 +1,4 @@
-// $Id: RichRecToolBase.h,v 1.10 2004-02-02 14:23:04 jonesc Exp $
+// $Id: RichRecToolBase.h,v 1.11 2004-03-16 13:39:58 jonesc Exp $
 #ifndef RICHRECALGS_RICHRECTOOLBASE_H
 #define RICHRECALGS_RICHRECTOOLBASE_H 1
 
@@ -80,6 +80,7 @@ protected:   // Protected methods
 
 private:   // Private data
 
+  // pointers to interfaces
   mutable IRichPixelCreator * m_pixTool;
   mutable IRichTrackCreator * m_tkTool;
   mutable IRichStatusCreator * m_statTool;

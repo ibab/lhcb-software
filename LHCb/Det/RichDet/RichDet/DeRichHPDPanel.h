@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.h,v 1.11 2004-02-16 14:11:52 papanest Exp $
+// $Id: DeRichHPDPanel.h,v 1.12 2004-03-16 13:35:30 jonesc Exp $
 
 #ifndef RICHDET_DERICHHPDPANEL_H
 #define RICHDET_DERICHHPDPANEL_H 1
@@ -17,12 +17,23 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
 
+// RichDet
+#include "RichDet/DeRich1.h"
+#include "RichDet/DeRich2.h"
+
 /** @class DeRichHPDPanel DeRichHPDPanel.h
  *
  * This is the definition of the Rich HPDPanel detector class
  *
  * @author Antonis Papanestis
  */
+
+namespace DeRichHPDPanelLocation {
+  static const std::string& Rich1Panel0 = "/dd/Structure/LHCb/Rich1/PDPanel0";
+  static const std::string& Rich1Panel1 = "/dd/Structure/LHCb/Rich1/PDPanel1";
+  static const std::string& Rich2Panel0 = "/dd/Structure/LHCb/Rich2/PDPanel0";
+  static const std::string& Rich2Panel1 = "/dd/Structure/LHCb/Rich2/PDPanel1";
+}
 
 class DeRichHPDPanel: public DetectorElement {
 

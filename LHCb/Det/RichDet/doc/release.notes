@@ -4,7 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
-!========================= RichDet v7r0 2004-02-16 =========================
+! 2004-03-15 - Chris Jones
+ - Add standard locations in TDS to Detector element header files
+
 ! 2004-02-16 - Antonis Papanestis
  - Removed DeRichPDPanel
  - Added local to global conversion for HPDPanel (globalPosition)

@@ -353,7 +353,32 @@
         <class author="Chris Jones    Christopher.Rob.Jones@cern.ch" desc="A ring candidate. A collection of RichRecPixels associated to a single Cherenkov ring" id="12426" location="Rec/Rich/Common/Rings" name="RichRecRing">
             <base name="KeyedObject&lt;long&gt;"/>
             <import name="GaudiKernel/ContainedObject"/>
+            <import name="Kernel/RichDetectorType"/>
+            <import name="Kernel/RichSide"/>
+            <import ignore="TRUE" name="Rich"/>
+            <import ignore="TRUE" name="DetectorType"/>
+            <import ignore="TRUE" name="Side"/>
             <location name="Markov" place="Rec/Rich/Markov/Rings"/>
+            <method const="FALSE" desc="Set the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="setRich" type="void">
+                <code>m_historyCode &amp;= ~richMask;
+m_historyCode |= (( static_cast&lt;unsigned&gt;(rich) &lt;&lt; richBits ) &amp; richMask );</code>
+                <arg const="TRUE" inout="BYVALUE" name="rich" type="Rich::DetectorType"/>
+            </method>
+            <method const="TRUE" desc="Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="rich" type="Rich::DetectorType">
+                <code>return static_cast&lt;Rich::DetectorType&gt;((m_historyCode &amp; richMask) &gt;&gt; richBits);</code>
+            </method>
+            <method const="FALSE" desc="Set the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="setPanel" type="void">
+                <code>m_historyCode &amp;= ~panelMask;
+m_historyCode |= (( static_cast&lt;unsigned&gt;(panel) &lt;&lt; panelBits ) &amp; panelMask );</code>
+                <arg const="TRUE" inout="BYVALUE" name="panel" type="Rich::Side"/>
+            </method>
+            <method const="TRUE" desc="Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="panel" type="Rich::Side">
+                <code>return static_cast&lt;Rich::Side&gt;((m_historyCode &amp; panelMask) &gt;&gt; panelBits);</code>
+            </method>
+            <attribute desc="Bit packed field containing RICH specific information" name="historyCode" type="bitfield">
+                <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2" getMeth="FALSE" length="1" name="rich" setMeth="FALSE"/>
+                <bitfield desc="The Rich panel. For Rich1(Rich2) either Rich::up(Rich::left) or Rich::down(Rich::right)" getMeth="FALSE" length="1" name="panel" setMeth="FALSE"/>
+            </attribute>
             <attribute desc="Reconstructed centre point in global coordinates on HPD panel" name="centrePointGlobal" type="HepPoint3D"/>
             <attribute desc="Reconstructed centre point in local coordinates on HPD panel" name="centrePointLocal" type="HepPoint3D"/>
             <attribute desc="The radius of the reconstructed ring, in radians" init="0" name="radius" type="double"/>

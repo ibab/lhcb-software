@@ -1,14 +1,16 @@
-// $Id: RichTrackID.h,v 1.4 2004-02-02 14:23:05 jonesc Exp $
+// $Id: RichTrackID.h,v 1.5 2004-03-16 13:39:58 jonesc Exp $
 #ifndef RICHRECBASE_RICHTRACKID_H
 #define RICHRECBASE_RICHTRACKID_H 1
 
 // Include files
 #include <string>
 #include <iostream>
+#include <sstream>
 
 // from Gaudi
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/GaudiException.h"
 
 // Event
 #include "Event/TrStoredTrack.h"
@@ -28,20 +30,34 @@ namespace Rich {
   namespace Track {
 
     /// Number of Track types
-    static const int NTrTypes = 6;
+    static const int NTrTypes = 7;
 
     enum Type {
-      Unknown = -2,
-      Unusable,
-      Forward,
-      Match,
-      UpStream,
-      Seed,
-      VeloTT,
-      Velo
+      Unknown  = -2,
+      Unusable = -1,
+      Forward  =  0,
+      Match    =  1,
+      Follow   =  2,
+      Seed     =  3,
+      VeloTT   =  4,
+      KsTrack  =  5,
+      Velo     =  6
     };
 
+    /// Returns the enumerated type for given TrStoredTrack
     Rich::Track::Type type( const TrStoredTrack * track );
+
+    /// Returns true if track is potentially usable for the RICH
+    inline bool isUsable( const Rich::Track::Type type )
+    {
+      return ( type != Rich::Track::Unusable );
+    }
+
+    /// Returns true if track is potentially usable for the RICH
+    inline bool isUsable( const TrStoredTrack * track )
+    {
+      return ( track ? Rich::Track::isUsable(Rich::Track::type(track)) : false );
+    }
 
   }
 
@@ -59,7 +75,9 @@ namespace Rich {
   /// Text conversion for Rich::Track::Type enumeration
   std::string text( const Rich::Track::Type track );
 
-  inline std::string text( const TrStoredTrack * track ) {
+  /// Returns the track type
+  inline std::string text( const TrStoredTrack * track )
+  {
     return Rich::text( Rich::Track::type(track) );
   }
 
@@ -73,11 +91,22 @@ public:
   RichTrackID()
     : m_tkType     ( Rich::Track::Unknown ),
       m_parentType ( Rich::TrackParent::Unknown ),
-      m_history    ( 0 ),
+      m_history    ( 0    ),
       m_unique     ( true ) { }
 
-  /// Constructor from a ContainedObject
-  RichTrackID( const ContainedObject * obj );
+  /// Constructor from a TrStoredTrack
+  RichTrackID( const TrStoredTrack * track )
+    : m_tkType     ( Rich::Track::type(track)         ),
+      m_parentType ( Rich::TrackParent::TrStoredTrack ),
+      m_history    ( track ? track->history() : 0     ),
+      m_unique     ( 0 != track->unique()             ) { }
+
+  /// Constructor from an MCParticle
+  RichTrackID( const MCParticle * mcPart )
+    : m_tkType     ( Rich::Track::Unknown ),
+      m_parentType ( Rich::TrackParent::MCParticle    ),
+      m_history    ( 0    ),
+      m_unique     ( true ) { }
 
   ~RichTrackID( ) {} ///< Destructor
 
@@ -106,10 +135,10 @@ public:
   void setUnique( bool unique ) { m_unique = unique; }
 
   /// Initialise from a TrStoredTrack
-  void initTrStoredTrack( const TrStoredTrack * track );
+  void initialiseFor( const TrStoredTrack * track );
 
   /// Initialise from a MCParticle
-  void initMCParticle( const MCParticle * track );
+  void initialiseFor( const MCParticle * track );
 
 private: // data
 
@@ -127,15 +156,15 @@ private: // data
 
 };
 
-inline void RichTrackID::initTrStoredTrack( const TrStoredTrack * track )
+inline void RichTrackID::initialiseFor( const TrStoredTrack * track )
 {
   setParentType ( Rich::TrackParent::TrStoredTrack );
   setTrackType  ( Rich::Track::type(track)         );
-  setHistory    ( track->history()                 );
+  setHistory    ( track ? track->history() : 0     );
   setUnique     ( 0 != track->unique()             );
 }
 
-inline void RichTrackID::initMCParticle( const MCParticle * )
+inline void RichTrackID::initialiseFor( const MCParticle * )
 {
   setParentType ( Rich::TrackParent::MCParticle );
 }

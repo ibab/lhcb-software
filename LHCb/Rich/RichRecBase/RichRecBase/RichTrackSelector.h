@@ -1,6 +1,9 @@
-// $Id: RichTrackSelector.h,v 1.2 2004-02-02 14:23:05 jonesc Exp $
+// $Id: RichTrackSelector.h,v 1.3 2004-03-16 13:39:58 jonesc Exp $
 #ifndef RICHRECBASE_RICHTRACKSELECTOR_H
 #define RICHRECBASE_RICHTRACKSELECTOR_H 1
+
+// from Gaudi
+#include "GaudiKernel/GaudiException.h"
 
 // Event model
 #include "Event/TrStoredTrack.h"
@@ -24,10 +27,10 @@ public:
   ~RichTrackSelector() {} ///< Destructor
 
   /// Test it the given TrStoredTrack is selected
-  bool trackSelected( const TrStoredTrack * trTrack );
+  bool trackSelected( const TrStoredTrack * trTrack ) const;
 
   /// Test it the given TrStoredTrack is selected
-  bool trackSelected( const RichRecTrack * track );
+  bool trackSelected( const RichRecTrack * track ) const;
 
   /// Returns vector of selected track types
   std::vector<std::string> & selectedTrackTypes() { return m_trNames; }
@@ -37,6 +40,9 @@ public:
 
   /// Configure the track selection
   bool configureTrackTypes();
+
+  /// Is a given track type configured to be selected
+  bool typeSelected( const Rich::Track::Type track ) const;
 
 private: // private data
 
@@ -52,18 +58,25 @@ private: // private data
 
 };
 
-inline bool RichTrackSelector::trackSelected( const TrStoredTrack * trTrack )
+inline bool RichTrackSelector::trackSelected( const TrStoredTrack * trTrack ) const
 {
-  return ( trTrack && 
+  return ( trTrack &&
            !(m_uniqueTrOnly && !trTrack->unique()) &&
            (trTrack->history() & m_trBits) );
 }
 
-inline bool RichTrackSelector::trackSelected( const RichRecTrack * track )
+inline bool RichTrackSelector::trackSelected( const RichRecTrack * track ) const
 {
-  return ( track && 
+  return ( track &&
            !(m_uniqueTrOnly && !track->trackID().unique()) &&
            (track->trackID().history() & m_trBits) );
+}
+
+inline bool RichTrackSelector::typeSelected( const Rich::Track::Type track ) const
+{
+  return ( m_trNames.end() != std::find( m_trNames.begin(),
+                                         m_trNames.end(),
+                                         Rich::text(track) ) );
 }
 
 #endif // RICHRECBASE_RICHTRACKSELECTOR_H

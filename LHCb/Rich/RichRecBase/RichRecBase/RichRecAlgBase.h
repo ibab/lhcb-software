@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.h,v 1.11 2004-02-02 14:23:04 jonesc Exp $
+// $Id: RichRecAlgBase.h,v 1.12 2004-03-16 13:39:57 jonesc Exp $
 #ifndef RICHRECALGS_RICHRECALGBASE_H
 #define RICHRECALGS_RICHRECALGBASE_H 1
 
@@ -110,44 +110,49 @@ protected:  // Protected methods
 
   // Pointers to data object creator tools
 
+  /// Returns pointer to RichRecPixel creator tool
+  inline const IRichPixelCreator * pixelCreator() const
+  {
+    //if ( !m_pixTool ) acquireTool( "RichPixelCreator", m_pixTool );
+    return m_pixTool;
+  }
+
   /// Returns pointer to RichRecTrack creator tool
   inline const IRichTrackCreator * trackCreator() const
   {
+    //if ( !m_tkTool ) acquireTool( "RichTrackCreator", m_tkTool );
     return m_tkTool;
   }
 
   /// Returns pointer to RichRecSegment creator tool
   inline const IRichSegmentCreator * segmentCreator() const
   {
+    //if ( !m_segTool ) acquireTool( "RichSegmentCreator", m_segTool );
     return m_segTool;
-  }
-
-  /// Returns pointer to RichRecPixel creator tool
-  inline const IRichPixelCreator * pixelCreator() const
-  {
-    return m_pixTool;
   }
 
   /// Returns pointer to RichRecPhoton creator tool
   inline const IRichPhotonCreator * photonCreator() const
   {
+    //if ( !m_photTool ) acquireTool( "RichPhotonCreator", m_photTool );
     return m_photTool;
   }
 
   /// Returns pointer to RichRecStatus creator tool
   inline const IRichStatusCreator * statusCreator() const
   {
+    //if ( !m_statTool ) acquireTool( "RichStatusCreator", m_statTool );
     return m_statTool;
   }
 
 private:   // Private data
 
-  // pointers to too interfaces
-  IRichPixelCreator * m_pixTool;
-  IRichTrackCreator * m_tkTool;
-  IRichStatusCreator * m_statTool;
-  IRichSegmentCreator * m_segTool;
-  IRichPhotonCreator * m_photTool;
+  // pointers to interfaces
+  mutable IRichPixelCreator *   m_pixTool;
+  mutable IRichTrackCreator *   m_tkTool;
+  mutable IRichSegmentCreator * m_segTool;
+  mutable IRichPhotonCreator *  m_photTool;
+  mutable IRichStatusCreator *  m_statTool;
 
 };
 

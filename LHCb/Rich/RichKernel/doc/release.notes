@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.34 2004-02-04 08:39:24 cattanem Exp $
+! $Id: release.notes,v 1.35 2004-03-16 13:34:53 jonesc Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2004-03-14 - Chris Jones
+ - Improvements to RichHypoData
 
 !======================= RichKernel v4r4 2004-02-04 =======================
 ! 2004-01-30 - Chris Jones

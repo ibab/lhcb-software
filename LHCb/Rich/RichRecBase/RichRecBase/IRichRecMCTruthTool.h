@@ -1,4 +1,4 @@
-// $Id: IRichRecMCTruthTool.h,v 1.6 2004-02-02 14:23:03 jonesc Exp $
+// $Id: IRichRecMCTruthTool.h,v 1.7 2004-03-16 13:39:57 jonesc Exp $
 #ifndef RICHRECTOOLS_IRICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_IRICHRECMCTRUTHTOOL_H 1
 
@@ -9,6 +9,7 @@ class MCRichTrack;
 class MCRichDigit;
 class MCParticle;
 class MCRichHit;
+class RichDigit;
 
 /** @class IRichRecMCTruthTool IRichRecMCTruthTool.h
  *
@@ -30,6 +31,9 @@ public:
 
   /// Find best MCParticle association for a given RichRecTrack
   virtual const MCParticle * mcParticle( const RichRecTrack * richTrack ) const = 0;
+
+  /// Find best MCParticle association for a given TrStoredTrack
+  virtual const MCParticle * mcParticle( const TrStoredTrack * track ) const = 0;
 
   /// Find best MCParticle association for a given RichRecSegment
   virtual const MCParticle * mcParticle( const RichRecSegment * richSegment ) const = 0;
@@ -99,8 +103,14 @@ public:
   /// Returns the MCRichTrack associated to a given RichRecTrack
   virtual const MCRichTrack * mcRichTrack( const RichRecTrack * track ) = 0;
 
+  /// Returns the MCRichTrack associated to a given TrStoredTrack
+  virtual const MCRichTrack * mcRichTrack( const TrStoredTrack * track ) = 0;
+
   /// Returns the MCRichTrack associated to a given RichRecSegment
   virtual const MCRichTrack * mcRichTrack( const RichRecSegment * segment ) = 0;
+
+  /// Returns the MCRichTrack associated to a given MCParticle
+  virtual const MCRichTrack * mcRichTrack( const MCParticle * mcPart ) = 0;
 
   /// Returns pointer to vector of MCRichSegments associated to a given RichRecTrack
   virtual const SmartRefVector<MCRichSegment> * mcRichSegments( const RichRecTrack * track ) = 0;
