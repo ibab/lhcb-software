@@ -1,9 +1,7 @@
-# $Id: requirements,v 1.64 2005-01-25 15:52:32 gcorti Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# $Id: requirements,v 1.65 2005-04-01 11:41:04 gcorti Exp $ 
 # =============================================================================
 package          GiGaCnv 
-version          v15r10
+version          v15r11
 
 # ============== package structure ============================================
 branches         cmt src doc GiGaCnv 
@@ -12,9 +10,7 @@ branches         cmt src doc GiGaCnv
 use              GaudiAlg     v*  
 
 use              GenEvent     v*     Event
-use              Event        v*     Event
 use              DetDesc      v*     Det        
-use              HepMC        v*     Sim
    
 use              GiGa         v*     Sim 
 
@@ -31,6 +27,4 @@ library          GiGaCnv               component/*.cpp
 apply_pattern    component_library library=GiGaCnv 
 apply_pattern    linker_library    library=GiGaCnvLib 
 
-# =============================================================================
-# The END 
 # =============================================================================

@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.28 2005-01-17 18:14:40 robbep Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.29 2005-04-01 11:41:04 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.28  2005/01/17 18:14:40  robbep
+// Use generator energy instead of Geant4 energy for short lived particles.
+//
 // Revision 1.27  2004/05/03 13:50:19  gcorti
 // set particle type for ions
 //
@@ -409,6 +412,7 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
                  {
                    // set the pointer to the collision in the vertex and 
                    // in all the daughters
+
                    PointToCollision(*iVertex, *colit);
                  }
              }
@@ -468,25 +472,20 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
 
 StatusCode GiGaMCParticleCnv::PointToCollision(MCVertex* vtx, Collision* collision)
 {
-  //
+
   vtx->setCollision(collision);
   
   SmartRefVector<MCParticle>& daughters = vtx->products();
   SmartRefVector<MCParticle>::iterator idau;  
   SmartRefVector<MCVertex>::iterator itv;
   
-  // propagate it to all the daughters (and vertices)
-  
-  for (idau=daughters.begin();idau != daughters.end();idau++)
-    {
-      (*idau)->setCollision(collision);
-      
-      for(itv=((*idau)->endVertices()).begin();
-          ((*idau)->endVertices()).end()!=itv;itv++)
-        {
-          PointToCollision(*itv, collision);
-        }
+  // propagate it to all the vertices in the tree hanging from a primary
+  for (idau=daughters.begin();idau != daughters.end();idau++) {
+    for( itv=((*idau)->endVertices()).begin();
+         ((*idau)->endVertices()).end()!=itv; itv++) {
+      PointToCollision(*itv, collision);
     }
+  }
   return StatusCode::SUCCESS;
 };
 

@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.93 2005-01-25 15:52:45 gcorti Exp $ 
+! $Id: release.notes,v 1.94 2005-04-01 11:41:04 gcorti Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2005-03-31 - Gloria Corti
+ - cmt/requirements
+   . remove explict use of Event and HepMC implicitely used by GenEvent
+   . increase version number
+ - src/componenet/GiGaMCParticleCnv.cpp
+   . remove setting to Collision in MCParticle (data member removed from
+     class see Event/Event v4r7) 
 
 !====================== GiGaCnv v15r10 2005-01-25 ===========================
 ! 2005-01-25 - Gloria CORTI
