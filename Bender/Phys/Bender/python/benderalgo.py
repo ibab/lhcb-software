@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.7 2004-11-23 17:13:23 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.8 2004-11-24 12:50:04 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2004/11/23 17:13:23  ibelyaev
+#  v4r4
+#
 # Revision 1.6  2004/11/08 17:06:52  ibelyaev
 #  v4r2
 #
@@ -87,9 +90,19 @@ class Algo(BenderAlgo):
         status = BenderAlgo.initialize_( self )
         if status.isFailure () :
             raise RuntimeError , 'Can not initialize base for ' + self.name()
-        self._evtSvc_   = gaudimodule.iDataSvc      ( BenderAlgo.evtSvc   ( self ) )
-        self._detSvc_   = gaudimodule.iDataSvc      ( BenderAlgo.detSvc   ( self ) )
-        self._histoSvc_ = gaudimodule.iHistogramSvc ( BenderAlgo.histoSvc ( self ) )
+
+        _e = BenderAlgo.evtSvc( self )
+        _s = gaudimodule.Interface(gaudimodule.gbl.IService).cast(_e)
+        self._evtSvc_    = gaudimodule.iDataSvc      ( _s.name() , _e )
+        
+        _d = BenderAlgo.detSvc( self )
+        _s = gaudimodule.Interface(gaudimodule.gbl.IService).cast(_d)
+        self._detSvc_    = gaudimodule.iDataSvc      ( _s.name() , _d )
+        
+        _h = BenderAlgo.histoSvc( self )
+        _s = gaudimodule.Interface(gaudimodule.gbl.IService).cast(_h)
+        self._histoSvc_  = gaudimodule.iHistogramSvc ( _s.name() , _h )
+        
         return status
     
     def analyse  ( self ) :

@@ -123,21 +123,21 @@ def _config_( self , **args ) :
 
 gaudimodule.AppMgr.config = _config_
 
-def _histofile_( self , name , persistency = None ) :
+def _histofile_( self , name , Type  = None ) :
     """
     The setter for output histogram name
     
     Usage:
     
     hsvc = gaudi.histoSvc()
-    hsvc.defineOutput( 'myfile', 'HBOOK' )
+    hsvc.defineOutput( 'myfile', Type = 'HBOOK' )
     
     """
     _g = gaudimodule.AppMgr()
     hsvc = _g.service('HistogramPersistencySvc')
-    hsvc.OutputFile = name 
-    if not persistency : pass
-    else : _g.HistogramPersistency = persistency
+    hsvc.OutputFile = name
+    # redefine the persistency 
+    if Type : _g.HistogramPersistency = Type
     return gaudimodule.SUCCESS
 
 gaudimodule.AppMgr.histoSvc             = gaudimodule.AppMgr.histSvc
@@ -162,6 +162,9 @@ def config( **args ) :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2004/11/23 17:13:23  ibelyaev
+#  v4r4
+#
 # Revision 1.5  2004/11/09 09:59:05  ibelyaev
 #  minor update for backward compatibility
 #
