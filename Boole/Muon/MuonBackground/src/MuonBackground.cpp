@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.17 2003-12-11 07:40:17 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.18 2004-04-09 16:09:38 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -204,9 +204,9 @@ StatusCode MuonBackground::execute() {
   msg << MSG::DEBUG << "==> Execute" << endreq;
   for (int ispill=0;ispill<=m_readSpilloverEvents;ispill++){    
     calculateNumberOfCollision(ispill);  
-    if(!collisions())return  StatusCode::SUCCESS;
+    //    if(!collisions())return  StatusCode::SUCCESS;
     //	 if(collisions()>1)return  StatusCode::SUCCESS;
-    
+      if(!collisions()) continue;
 
     msg << MSG::DEBUG << "==> collsion " << collisions()<<endreq;
 
@@ -239,7 +239,8 @@ StatusCode MuonBackground::execute() {
             if(numsta[station]=="M1"){
               floatHit=(startingHits*(m_safetyFactor[station]));   
               hitToAdd=howManyHit( floatHit);            
-            } else{          
+            } else{
+	msg<<MSG::DEBUG<<"adding "<<	index <<" "<<startingHits<<endreq;          
               int yy=(int)(m_correlation[index])->
                          giveRND(startingHits+0.5);
               
@@ -255,6 +256,7 @@ StatusCode MuonBackground::execute() {
                 " for multiplicity "<<multi<<" and collisions/spill "<<coll
                  <<" "<<ispill<<endreq;
             }            
+		 msg<<MSG::DEBUG<<" station "<<station<<endreq;
             for(int hitID=0;hitID< hitToAdd;hitID++){            
             createHit(hitsContainer, station,multi,ispill);            
             }
@@ -268,6 +270,8 @@ StatusCode MuonBackground::execute() {
         }        
       }      
     }else if(m_type==FlatSpillover){
+      if(ispill>0)break;
+      
       for(int station=0;station<m_stationNumber;station++){        
         for (int multi=0;multi<m_gaps;multi++){
           int index=station*m_gaps+multi;
@@ -1035,9 +1039,19 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
         pHit->setExit(HepPoint3D(xexit,yexit,zexit));
         
         double tofOfLight=(sqrt(x*x+ y*y+z*z))/300.0;
-        float shiftOfTOF=-ispill*m_BXTime;
+        //        float shiftOfTOF=-ispill*m_BXTime;
+        if(m_type==FlatSpillover){
+           float shiftOfTOF=-ispill*m_BXTime;
+         pHit->setTimeOfFlight(timeBest+tofOfLight+shiftOfTOF); 
+         msg<<MSG::DEBUG<<"time "<<
+           timeBest+shiftOfTOF<<" spill "<<ispill<<endreq;
+         
+        } else{
+          pHit->setTimeOfFlight(timeBest+tofOfLight);  
+        }
         
-        pHit->setTimeOfFlight(timeBest+tofOfLight+shiftOfTOF); 
+          
+        //pHit->setTimeOfFlight(timeBest+tofOfLight); 
         pHit->setVolumeID(chamberIndex,gapNumber+1);
         msg<<MSG::DEBUG<<"gap , time ,position "<<gapNumber<<" "<<
           timeBest+tofOfLight<<" "<<x<<" "<<y<<" "<<chamberGlobal<<endreq;
@@ -1156,8 +1170,17 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
               tofOfLight=(sqrt(xd*xd+ yd*yd+zd*zd))/300.0;
         
         
-              pHit->setTimeOfFlight(timeBest+tofOfLight+shiftOfTOF);
-      
+              // pHit->setTimeOfFlight(timeBest+tofOfLight+shiftOfTOF);
+              if(m_type==FlatSpillover){
+                float shiftOfTOF=-ispill*m_BXTime;
+                pHit->setTimeOfFlight(timeBest+tofOfLight+shiftOfTOF); 
+                msg<<MSG::DEBUG<<"time "<<
+                  timeBest+shiftOfTOF<<" spill "<<ispill<<endreq;
+                
+              } else{
+                pHit->setTimeOfFlight(timeBest+tofOfLight);  
+              }
+ //   pHit->setTimeOfFlight(timeBest+tofOfLight);
               //(hitsContainer[partition])->insert(pHit);
               correct=true;
               
