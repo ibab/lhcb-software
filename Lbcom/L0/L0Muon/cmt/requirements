@@ -1,6 +1,6 @@
 package L0Muon
 
-version v1
+version v1r1
 
 branches src doc options
 
@@ -20,6 +20,7 @@ apply_pattern packageShr
 private
 
 apply_pattern package_Cshlibflags  
+include_dirs ${L0MUONROOT}/src
 
 
 
