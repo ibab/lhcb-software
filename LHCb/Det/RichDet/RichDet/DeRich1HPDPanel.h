@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich1HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich1HPDPanel.h,v 1.11 2004-07-27 08:55:22 jonrob Exp $
+ *  $Id: DeRich1HPDPanel.h,v 1.12 2004-09-16 08:52:26 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/07/27 08:55:22  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -23,7 +26,17 @@ extern const CLID& CLID_DeRich1HPDPanel;
 
 /** @class DeRich1HPDPanel DeRich1HPDPanel.h
  *
- * This is the definition of the Rich1 HPDPanel detector class
+ * This is the definition of the Rich1 HPDPanel detector class.
+ * This HPD panel grows in rows, and each row has the same number
+ * of HPDs.  So, the numbering is a little like this:
+ *
+ * 00  01  02  03             
+ *   04  05  06  07
+ * 08  09  10  11
+ *   12  13  14  15  and so on..
+ *
+ * Numbers 00 04 08 12 ... belong to the same column.
+ * (please look at the actual .h file to see the correct layout of HPDs)
  *
  * @author Antonis Papanestis
  * @date   2004-06-18
@@ -105,14 +118,14 @@ protected:
    * Returns the HPD row in the panel, given the HPD number
    */
   inline unsigned int PDRow(unsigned int PD) {
-    return PD/m_HPDRows;
+    return PD/m_HPDColumns;
   }
 
   /**
    * Returns the HPD column in the panel, given the HPD number
    */
   inline unsigned int PDCol(unsigned int PD) {
-    return PD%m_HPDRows;
+    return PD%m_HPDColumns;
   }
 
   /**
