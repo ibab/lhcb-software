@@ -3,38 +3,41 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
-! 20020418 M.Cattaneo
- - add MuonTileID.h
+
+! 20020417 M.Cattaneo
+  - Package moved to Kernel/LHCbKernel
+  - use Gaudi v10
+  - Remove from SerializeStl.h stuff that has been moved to GaudiKernel
 
 ! 20020415 Chris Parkes
- - add VeloChannelID.xml
-
-! 20020409 Vanya Belyaev Ivan.Belyaev@itep.ru 
- - AssociatorBase.cpp: AssociatorBase::locateAlgorithm() 
-                       replace few clear and VALID lines with 
-                       smaller number of less clear and potentially 
-                       dangerouse lines to avoid misteriouse segmentation 
-                       faults. The solution is temporary. One need to 
-                       investigate it in detail later. 
-
- add "virtual" qualifier for public inheritance from "Relation*" - bases
- to following following classes:
- - Relation1D.h, 
- - Relation2D.h
- - RelationWeighted1D.h
- - RelationWeighted2D.h
-
-! 20020408 Vanya BElyaev Ivan.Belyaev@itep.ru 
- - new version of "Relations"-subpackage
- - rename *RelationTool*          into *Associator*
- - rename *RelationWeightedTool*  into *AssociatorWeighted* 
+  - add VeloChannelID.xml
 
 ! 20020409 M. Needham
- - add uniqueLayer/uniqueWafer members to ITChannelID.h
+  - add uniqueLayer/uniqueWafer members to ITChannelID.h
+
+! 20020409 Vanya Belyaev Ivan.Belyaev@itep.ru 
+  - AssociatorBase.cpp: AssociatorBase::locateAlgorithm() 
+                        replace few clear and VALID lines with 
+                        smaller number of less clear and potentially 
+                        dangerouse lines to avoid misteriouse segmentation 
+                        faults. The solution is temporary. One need to 
+                        investigate it in detail later. 
+
+  add "virtual" qualifier for public inheritance from "Relation*" - bases
+  to following following classes:
+  - Relation1D.h, 
+  - Relation2D.h
+  - RelationWeighted1D.h
+  - RelationWeighted2D.h
+
+! 20020408 Vanya Belyaev Ivan.Belyaev@itep.ru 
+  - new version of "Relations"-subpackage
+  - rename *RelationTool*          into *Associator*
+  - rename *RelationWeightedTool*  into *AssociatorWeighted* 
 
 ! 20020405 Stefan Roiser
- - operator-overloading for pairs added to SerializeStl.h
- - bugfix: ostream operator for vector
+  - operator-overloading for pairs added to SerializeStl.h
+  - bugfix: ostream operator for vector
 
 ! 20020403 M.Cattaneo
   - OTChannelID.xml added
@@ -50,7 +53,6 @@ Purpose: LHCb specific Kernel classes
 
 ! 18/03/2002 - Ivan Belyaev
   - add new directory Relations with implementation of relations 
-  >>>> ATTENTION! It works only on Linux now! <<<<
 
 ! 18/03/2002 - Vanya Belyaev  Ivan.Belyaev@itep.ru
   moved from CaloKernel package 

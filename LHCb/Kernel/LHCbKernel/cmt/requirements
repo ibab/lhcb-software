@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2002-04-08 14:26:02 ibelyaev Exp $
+# $Id: requirements,v 1.14 2002-04-19 11:16:44 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -10,13 +10,13 @@ version v1r0
 
 include_dirs $(LHCBKERNELROOT)
 
-# Dependency on GaudiKernel via GaudiObjDesc 
-use GaudiObjDesc       v3r*
-use CLHEP              v17r*
-
+use GaudiKernel  v12r*
+use CLHEP        v17r*
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================
+private
+use GaudiObjDesc v4r*
 macro LHCbKernelObj2Doth_GODflags " -o ../Kernel/ " \
       WIN32                       " -o ..\Kernel\ "
 document obj2doth LHCbKernelObj2Doth ../xml/LHCbKernel.xml
@@ -25,6 +25,7 @@ macro LHCbKernelObj2Dict_GODflags " -l Kernel/ " \
       WIN32                       " -l Kernel\ "
 document obj2dict LHCbKernelObj2Dict ../xml/LHCbKernel.xml
 
+public
 library LHCbKernel *.cpp \
                    ../dict/*.cpp
 
