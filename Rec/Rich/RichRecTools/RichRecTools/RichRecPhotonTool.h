@@ -1,9 +1,6 @@
-// $Id: RichRecPhotonTool.h,v 1.3 2002-11-20 09:04:08 jonrob Exp $
+// $Id: RichRecPhotonTool.h,v 1.4 2002-12-02 09:42:21 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECPHOTONTOOL_H
 #define RICHRECTOOLS_RICHRECPHOTONTOOL_H 1
-
-#include <string>
-#include <map>
 
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
@@ -58,10 +55,6 @@ public:
   RichRecPhoton * reconstructPhoton( RichRecSegment * segment,
                                      RichRecPixel * pixel );
 
-  /// Form a Photon candidate from a Segment and a pixel.
-  RichRecPhoton * buildPhoton( RichRecSegment * segment,
-                               RichRecPixel * pixel );
-
   /// Form all photon candidates for a given track and pixel
   SmartRefVector<RichRecPhoton> reconstructPhotons( RichRecTrack * track,
                                                     RichRecPixel * pixel );
@@ -79,22 +72,32 @@ public:
   void reconstructPhotons();
 
   /// Probability of observing a signal in associated pixel for given id
-  double pixelSignalProb( RichRecPhoton * photon, 
+  double pixelSignalProb( RichRecPhoton * photon,
                           const Rich::ParticleIDType id );
 
   /// Photon resolution
   double photonResolution( RichRecPhoton * photon,
                            const Rich::ParticleIDType id );
 
+  /// Returns square of distance seperating pixel and track hits on HPDs
+  double trackPixelHitSep2( const RichRecSegment * segment,
+                            const RichRecPixel * pixel );
+
+private:
+
+  /// Form a Photon candidate from a Segment and a pixel.
+  RichRecPhoton * buildPhoton( RichRecSegment * segment,
+                               RichRecPixel * pixel,
+                               RichRecPhotonKey & key );
 
 private:
 
   /// Pointer to RichRecTrackTool interface
   IRichRecTrackTool * m_richRecTrackTool;
-  
+
   /// Pointer to RichRecPixelTool interface
   IRichRecPixelTool * m_richRecPixelTool;
-  
+
   /// Pointer to RichRecSegmentTool interface
   IRichRecSegmentTool * m_richRecSegmentTool;
 
@@ -134,15 +137,19 @@ private:
   std::map< int, bool > m_photonDone;
 
   // Physics parameters
-  std::vector<double> m_maxROI; ///< Max hit radius of interest around track centres
-  std::vector<double> m_minROI; ///< Min hit radius of interest around track centres
+  std::vector<double> m_minROI;  ///< Min hit radius of interest around track centres
+  std::vector<double> m_maxROI;  ///< Max hit radius of interest around track centres
   std::vector<double> m_maxROI2; ///< Square of m_maxROI
+  std::vector<double> m_minROI2; ///< Square of m_minROI
 
   /// Max Cherenkov theta angle
   std::vector<double> m_maxCKtheta;
 
   /// Max Cherenkov theta angle
   std::vector<double> m_minCKtheta;
+
+  /// minimum cut value for pixel probability
+  double m_minPixelProb;
 
   /// Temporary local value for Radii of curvature
   std::map< Rich::Detector, double > m_radiusCurv;
@@ -158,9 +165,6 @@ private:
 
   /// Flag to say if all photons have been built or not
   bool m_allBuilt;
-
-  /// Working version of photon key
-  RichRecPhotonKey m_photonKey;
 
 };
 

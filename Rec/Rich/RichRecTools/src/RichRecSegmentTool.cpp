@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.cpp,v 1.2 2002-11-14 13:54:25 jonrob Exp $
+// $Id: RichRecSegmentTool.cpp,v 1.3 2002-12-02 09:42:21 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -37,13 +37,10 @@ RichRecSegmentTool::RichRecSegmentTool( const std::string& type,
   declareProperty( "RichRecSegmentLocation",
                    m_richRecSegmentLocation = RichRecSegmentLocation::Default );
   declareProperty( "NPhotonsGeomEffCalc", m_nGeomEff = 100 );
-  declareProperty( "NPhotonsGeomEffBailout", m_ngeomEffBailout = 10 );
+  declareProperty( "NPhotonsGeomEffBailout", m_ngeomEffBailout = 20 );
   declareProperty( "ChronoTiming", m_timing = false );
 
 }
-
-// Standard destructor
-RichRecSegmentTool::~RichRecSegmentTool() {}
 
 StatusCode RichRecSegmentTool::initialize() {
 
@@ -150,6 +147,8 @@ StatusCode RichRecSegmentTool::initialize() {
   log << MSG::WARNING;
   log << "Using private mirror reflectivities" << endreq;
   log << "No treatment of scattering as yet" << endreq;
+  log << "Using private implimentation of quartz window losses" << endreq;
+  log << "Apply hardcoded OO->SICB corrections to expected CKtheta" << endreq;
   //log << "Harding geom eff to 0.73 until HPD problems are sorted" << endreq;
 
   return sc;
@@ -251,7 +250,9 @@ double RichRecSegmentTool::emittedPhotons ( RichRecSegment * segment,
 
     // Scale by mirror reflectivity
     // Private implementation that should be moved elsewhere
-    spectrum *= m_detReflectorEff[ segment->trackSegment().rich() ];
+    // also scale by 1/100 to convert from percent to fractions
+    // also scale by 0.92 for quartz window losses
+    spectrum *= m_detReflectorEff[ segment->trackSegment().rich() ] * 0.0092;
 
     // Loop over bins to apply number of photons scaling
     int nBins = spectrum.energyBins();
@@ -311,7 +312,7 @@ RichRecSegmentTool::geomEfficiency ( RichRecSegment * segment,
     // Define rotation matrix
     HepVector3D z = trackSeg.exitPoint() - trackSeg.entryPoint();
     z.setMag(1.);
-    HepVector3D y = ( abs( z * HepVector3D(1.,0.,0.) ) < 1. ?
+    HepVector3D y = ( fabs( z * HepVector3D(1.,0.,0.) ) < 1. ?
                       z.cross( HepVector3D(0.,1.,0.) ) :
                       z.cross( HepVector3D(1.,0.,0.) ) );
     y.setMag(1.);
@@ -342,8 +343,6 @@ RichRecSegmentTool::geomEfficiency ( RichRecSegment * segment,
         segment->addToGeomEfficiencyPerHPD( id,
                                             (int)(photon.smartID().hpdID()),
                                             m_hpdInc );
-
-        // Need to find a better way of seting these variables
         if ( photon.detectionPoint().x() > 0 ) {
           segment->setPhotonsInXPlus(1);
         } else {
@@ -383,6 +382,16 @@ double RichRecSegmentTool::avgCherenkovTheta( RichRecSegment * segment,
       m_richDetInterface->refractiveIndex( segment->trackSegment().radiator() );
     double beta = this->beta( segment, id );
     angle = ( refIndex*beta > 1. ? acos( 1./(beta*refIndex) ) : 0.0 );
+
+    // Apply OO->SICB corrections
+    // This is a temporary fix until I have time to properly review this calculation
+    if ( segment->trackSegment().radiator() == Rich::Aerogel ) {
+      angle += 0.0175;
+    } else if ( segment->trackSegment().radiator() == Rich::C4F10 ) {
+      angle += 0.002;
+    } else if ( segment->trackSegment().radiator() == Rich::CF4 ) {
+      angle -= 0.0007;
+    }
 
     segment->setAverageCKTheta( id, angle );
 

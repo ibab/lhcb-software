@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.h,v 1.2 2002-11-20 09:04:08 jonrob Exp $
+// $Id: RichRecMCTruthTool.h,v 1.3 2002-12-02 09:42:21 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
 
@@ -32,6 +32,7 @@
 #include "RichRecInterfaces/IRichRecMCTruthTool.h"
 #include "RichRecInterfaces/IRichRecTrackTool.h"
 #include "RichRecInterfaces/IRichRecPixelTool.h"
+#include "RichRecInterfaces/IRichRecSegmentTool.h"
 
 // Forward declarations
 class IDataProviderSvc;
@@ -77,21 +78,34 @@ public:
   /// Truth particle type for given RichRecSegment
   Rich::ParticleIDType mcParticleType( const RichRecSegment * richSegment );
 
+  /// Truth particle type for given MCParticle
+  Rich::ParticleIDType mcParticleType( const MCParticle * mcPart );
+
   /// Find parent MCParticle association for a given RichRecPixel
   MCParticle * mcParticle( const RichRecPixel * richPixel );
 
   /// Find parent MCRichDigit association for a given RichRecPixel
   MCRichDigit * mcRichDigit( const RichRecPixel * richPixel );
 
+  /// Find parent MCRichOpticalPhoton association for a given RichRecPixel
+  MCRichOpticalPhoton * mcRichOpticalPhoton( const RichRecPixel * richPixel );
+
   /// If pixel and segment have the same MParticle returns pointer to parent,
   /// otherwise return NULL
   MCParticle * trueRecPhoton( const RichRecPhoton * photon );
 
+  /// Returns a vector of pointers to true Cherenkov pixels for this segment
+  RichRecPixelVector* trueCkPixels( const RichRecSegment * segment );
+
 private:
 
   MCRichDigits * mcRichDigits();
+  MCRichOpticalPhotons * mcRichOpticalPhotons();
 
-  bool mcRichDigitsDone;
+  bool m_mcRichDigitsDone;
+  bool m_mcRichOptPhotsDone;
+  bool m_mcTruePixelsDone;
+  std::map<const RichRecSegment*, RichRecPixelVector > m_mcPixelMap;
 
   /// Pointer to event data service
   IDataProviderSvc * m_evtDataSvc;
@@ -102,8 +116,14 @@ private:
   /// Pointer to MCRichDigits
   MCRichDigits * m_mcRichDigits;
 
+  /// Pointer to MCRichOpticalPhotons
+  MCRichOpticalPhotons * m_mcRichOpticalPhotons;
+
   /// Location of MCRichDigits in EDS
   std::string m_mcRichDigitsLocation;
+
+  /// Location of MCRichOpticalPhotons in EDS
+  std::string m_mcRichPhotonsLocation;
 
   /// PID information
   std::map<int,Rich::ParticleIDType> m_localID;
@@ -118,6 +138,9 @@ private:
 
   /// Pointer to RichRecPixelTool interface
   IRichRecPixelTool* m_richRecPixelTool;
+
+  /// Pointer to RichRecSegmentTool interface
+  IRichRecSegmentTool* m_richRecSegmentTool;
 
 };
 

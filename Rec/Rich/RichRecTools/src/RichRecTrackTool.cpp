@@ -1,4 +1,4 @@
-// $Id: RichRecTrackTool.cpp,v 1.2 2002-11-14 13:54:25 jonrob Exp $
+// $Id: RichRecTrackTool.cpp,v 1.3 2002-12-02 09:42:21 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -93,10 +93,9 @@ void RichRecTrackTool::handle ( const Incident& incident ) {
 
   if ( "BeginEvent" == incident.type() ) {
 
-    m_allDone = false;
-
     // Initialise navigation data
     m_trackDone.clear();
+    m_allDone = false;
 
     SmartDataPtr<RichRecTracks> tdsTracks( m_evtDataSvc,
                                            m_richRecTrackLocation );
@@ -179,8 +178,7 @@ RichRecTrackTool::newTrack ( TrStoredTrack * trTrack ) {
 
   // See if this RichRecTrack already exists
   if ( m_trackDone[key] ) {
-    RichRecTrack * tmpTrack = m_tracks->object( key );
-    return tmpTrack;
+    return (RichRecTrack*)(m_tracks->object(key));
   } else {
 
     // if (m_timing) m_chrono->chronoStart("RichRecTrackTool:newTrack");
@@ -225,16 +223,18 @@ RichRecTrackTool::newTrack ( TrStoredTrack * trTrack ) {
             if ( hypo == Rich::Electron ||
                  m_richRecSegmentTool->avgCherenkovTheta( newSegment,
                                                           hypo ) > 0.0 ) {
-              if ( m_richRecSegmentTool->geomEfficiency (newSegment,
-                                                         hypo ) > 0.0 ) {
+              if ( m_richRecSegmentTool->geomEfficiency ( newSegment,
+                                                          hypo ) > 0.0 ) {
                 keepSegment = true;
-                keepTrack = true;
                 break;
               }
             }
           }
 
           if ( keepSegment ) {
+
+            // keep track
+            keepTrack = true;
 
             // Save this segment
             m_richRecSegmentTool->saveSegment( newSegment );
@@ -253,7 +253,7 @@ RichRecTrackTool::newTrack ( TrStoredTrack * trTrack ) {
                                                                  trackDir,
                                                                  hitPoint ) ) {
 
-              log << MSG::WARNING << "Segment " << newSegment->key() 
+              log << MSG::WARNING << "Segment " << newSegment->key()
                   << " has no HPD panel impact point !!" << endreq;
 
             }
@@ -262,33 +262,35 @@ RichRecTrackTool::newTrack ( TrStoredTrack * trTrack ) {
                 << " in " << newSegment->trackSegment().radiator() << endreq;
 
           } else {
-            log << MSG::VERBOSE << "Segment in " 
-                << newSegment->trackSegment().radiator() 
-                << " has no Rich information. Rejecting" << endreq;
+            log << MSG::VERBOSE << "Segment in "
+                << newSegment->trackSegment().radiator()
+                << " has no Rich information. rejecting" << endreq;
             delete newSegment;
+            newSegment = NULL;
           }
 
         }
 
         if ( keepTrack ) {
 
-        // give to container
-        m_tracks->insert( newTrack, key );
+          // give to container
+          m_tracks->insert( newTrack, key );
 
-        log << MSG::VERBOSE << "New RichRichTrack with " << Nsegs 
-            << " radiator segments for TrTrack " << trTrack->key() << endreq;
+          log << MSG::VERBOSE << "New RichRichTrack with " << Nsegs
+              << " radiator segments for TrTrack " << trTrack->key() << endreq;
 
-        // Set vertex momentum
-        newTrack->setVertexMomentum( trackPState->p() );
+          // Set vertex momentum
+          newTrack->setVertexMomentum( trackPState->p() );
 
-        // Set parent information
-        newTrack->setParentTrack( trTrack );
-        newTrack->setParentType( Rich::RecTrack::TrStoredTrack );
+          // Set parent information
+          newTrack->setParentTrack( trTrack );
+          newTrack->setParentType( Rich::RecTrack::TrStoredTrack );
 
         } else {
-          log << MSG::VERBOSE 
-              << "Track has no Rich information. Rejecting" << endreq;
           delete newTrack;
+          newTrack = NULL;
+          log << MSG::VERBOSE
+              << "Track has no Rich information, rejecting." << endreq;
         }
 
       }

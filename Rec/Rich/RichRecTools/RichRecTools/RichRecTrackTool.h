@@ -1,4 +1,4 @@
-// $Id: RichRecTrackTool.h,v 1.3 2002-11-20 09:04:08 jonrob Exp $
+// $Id: RichRecTrackTool.h,v 1.4 2002-12-02 09:42:21 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECTRACKTOOL_H
 #define RICHRECTOOLS_RICHRECTRACKTOOL_H 1
 
@@ -53,7 +53,7 @@ public:
   /// Forms a new RichRecTrack object from a TrStoredTrack
   RichRecTrack * newTrack ( TrStoredTrack * trTrack );
 
-  /// Form all tracks for input TrStoredTracks
+  /// Form all tracks from input TrStoredTracks
   StatusCode newTracks();
 
   /// Expected number of observable signal photons for given track 
@@ -79,7 +79,7 @@ public:
                          const Rich::RadiatorType rad,
                          const Rich::ParticleIDType id = Rich::Electron );
 
-  /// Is it geometrically possible for this track to give Rich information
+  /// Is it possible for this track to give Rich information
   bool hasRichInfo( RichRecTrack * track );
 
   /// Return Pointer to RichRecTracks

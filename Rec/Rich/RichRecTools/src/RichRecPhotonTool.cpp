@@ -1,4 +1,4 @@
-// $Id: RichRecPhotonTool.cpp,v 1.3 2002-11-14 17:34:17 jonrob Exp $
+// $Id: RichRecPhotonTool.cpp,v 1.4 2002-12-02 09:42:21 jonrob Exp $
 #include <cmath>
 
 // from Gaudi
@@ -36,27 +36,30 @@ RichRecPhotonTool::RichRecPhotonTool( const std::string& type,
   // Define job option parameters
   declareProperty( "RichRecPhotonLocation",
                    m_richRecPhotonLocation = RichRecPhotonLocation::Default );
+
   declareProperty( "ChronoTiming", m_timing = false );
 
-  m_maxROI.push_back( 99990. ); // aerogel
-  m_maxROI.push_back( 70. );    // c4f10
-  m_maxROI.push_back( 160. );   // cf4
-  declareProperty( "MaxTrackROI", m_maxROI );
-
-  m_minROI.push_back( 0. ); // aerogel
-  m_minROI.push_back( 0. ); // c4f10
-  m_minROI.push_back( 0. ); // cf4
+  m_minROI.push_back( 130. );   // aerogel
+  m_minROI.push_back( 115. );   // c4f10
+  m_minROI.push_back(  55. );   // cf4
   declareProperty( "MinTrackROI", m_minROI );
 
-  m_maxCKtheta.push_back( 0.250 ); // aerogel
-  m_maxCKtheta.push_back( 0.055 ); // c4f10
-  m_maxCKtheta.push_back( 0.035 ); // cf4
+  m_maxROI.push_back( 375. );   // aerogel
+  m_maxROI.push_back( 170. );   // c4f10
+  m_maxROI.push_back( 195. );   // cf4
+  declareProperty( "MaxTrackROI", m_maxROI );
+
+  m_maxCKtheta.push_back( 0.300 ); // aerogel
+  m_maxCKtheta.push_back( 0.080 ); // c4f10
+  m_maxCKtheta.push_back( 0.050 ); // cf4
   declareProperty( "MaxCherenkovTheta", m_maxCKtheta );
 
-  m_minCKtheta.push_back( 0.075 ); // aerogel
+  m_minCKtheta.push_back( 0.0 );   // aerogel
   m_minCKtheta.push_back( 0.0 );   // c4f10
   m_minCKtheta.push_back( 0.0 );   // cf4
   declareProperty( "MinCherenkovTheta", m_minCKtheta );
+
+  declareProperty( "MinPixelProbability", m_minPixelProb = 1e-15 );
 
 }
 
@@ -116,7 +119,10 @@ StatusCode RichRecPhotonTool::initialize() {
     }
   }
 
-  // Initialise some variable
+  // Initialise some variables
+  m_minROI2.push_back( m_minROI[0]*m_minROI[0] );
+  m_minROI2.push_back( m_minROI[1]*m_minROI[1] );
+  m_minROI2.push_back( m_minROI[2]*m_minROI[2] );
   m_maxROI2.push_back( m_maxROI[0]*m_maxROI[0] );
   m_maxROI2.push_back( m_maxROI[1]*m_maxROI[1] );
   m_maxROI2.push_back( m_maxROI[2]*m_maxROI[2] );
@@ -217,20 +223,22 @@ RichRecPhotonTool::reconstructPhoton( RichRecSegment * segment,
   if ( !photonPossible(segment, pixel) ) return NULL;
 
   // Form the key for this photon
-  m_photonKey.setSegmentNumber( segment->key() );
-  m_photonKey.setPixelNumber( pixel->key() );
+  RichRecPhotonKey photonKey;
+  photonKey.setSegmentNumber( segment->key() );
+  photonKey.setPixelNumber( pixel->key() );
 
   // See if this photon already exists
-  if ( m_photonDone[(int)m_photonKey] ) {
-    return (RichRecPhoton*)(m_photons->object(m_photonKey));
+  if ( m_photonDone[(int)photonKey] ) {
+    return (RichRecPhoton*)(m_photons->object(photonKey));
   } else {
-    return buildPhoton( segment, pixel );
+    return buildPhoton( segment, pixel, photonKey );
   }
 
 }
 
 RichRecPhoton * RichRecPhotonTool::buildPhoton( RichRecSegment * segment,
-                                                RichRecPixel * pixel ) {
+                                                RichRecPixel * pixel,
+                                                RichRecPhotonKey & key ) {
 
   // if (m_timing) m_chrono->chronoStart("RichRecPhotonTool:buildPhoton");
 
@@ -238,84 +246,127 @@ RichRecPhoton * RichRecPhotonTool::buildPhoton( RichRecSegment * segment,
 
   // Reconstruct the Cherenkov angles
   RichGeomPhoton geomPhoton;
-  m_richDetInterface->reconstructPhoton( segment->trackSegment(),
-                                         pixel->globalPosition(),
-                                         geomPhoton );
+  if ( m_richDetInterface->reconstructPhoton( segment->trackSegment(),
+                                              pixel->globalPosition(),
+                                              geomPhoton ) != 0 ) {
 
-  // Form the key for this photon
-  m_photonKey.setSegmentNumber( segment->key() );
-  m_photonKey.setPixelNumber( pixel->key() );
+    if ( ( geomPhoton.CherenkovTheta() > 0. ||
+           geomPhoton.CherenkovPhi() > 0. ) &&
+         geomPhoton.CherenkovTheta() <
+         m_maxCKtheta[(int)segment->trackSegment().radiator()] &&
+         geomPhoton.CherenkovTheta() >
+         m_minCKtheta[(int)segment->trackSegment().radiator()] ) {
 
-  if ( ( geomPhoton.CherenkovTheta() > 0. ||
-         geomPhoton.CherenkovPhi() > 0. ) &&
-       geomPhoton.CherenkovTheta() <
-       m_maxCKtheta[(int)segment->trackSegment().radiator()] &&
-       geomPhoton.CherenkovTheta() >
-       m_minCKtheta[(int)segment->trackSegment().radiator()] ) {
+      newPhoton = new RichRecPhoton();
 
-    newPhoton = new RichRecPhoton();
+      // set geometrical photon information
+      newPhoton->setGeomPhoton( geomPhoton );
 
-    // Form a new RichRecPhoton and give to Gaudi
-    m_photons->insert( newPhoton, m_photonKey );
+      // Set various navigation info
+      newPhoton->setRichRecSegment( segment );
+      newPhoton->setRichRecPixel( pixel );
 
-    // set geometrical photon information
-    newPhoton->setGeomPhoton( geomPhoton );
+      // check photon has significant probability to be signal for any 
+      // hypothesis. If not then reject and delete
+      bool keepPhoton = false;
+      for ( Rich::ParticleIDType hypo = Rich::ParticleIDTypeFirst;
+            hypo <= Rich::ParticleIDTypeLast;
+            ++hypo ) {
+        if ( pixelSignalProb(newPhoton,hypo) > m_minPixelProb ) {
+          keepPhoton = true;
+          break;
+        }
+      }
+      
+      if ( keepPhoton ) {
 
-    // Set various navigation info
-    newPhoton->setRichRecSegment( segment );
-    newPhoton->setRichRecPixel( pixel );
-    segment->addToRichRecPixels( pixel );
-    segment->addToRichRecPhotons( newPhoton );
-    segment->richRecTrack()->addToRichRecPixels( pixel );
-    segment->richRecTrack()->addToRichRecPhotons( newPhoton );
-    pixel->addToRichRecPhotons( newPhoton );
-    pixel->addToRichRecTracks( segment->richRecTrack() );
+        m_photons->insert( newPhoton, key );
 
-    // Add shared ring fraction code here. Cannot do this
-    // until geomPhoton has reflection points
-  }
+        // add this photon to pixel/segment/track references
+        segment->addToRichRecPixels( pixel );
+        segment->addToRichRecPhotons( newPhoton );
+        segment->richRecTrack()->addToRichRecPhotons( newPhoton );
+        pixel->addToRichRecPhotons( newPhoton );
+        pixel->addToRichRecTracks( segment->richRecTrack() );
+        SmartRefVector<RichRecPixel> & tkPixs =
+          segment->richRecTrack()->richRecPixels();
+        bool notThere = true;
+        for ( SmartRefVector<RichRecPixel>::iterator pix = tkPixs.begin();
+              pix != tkPixs.end();
+              pix++ ) {
+          RichRecPixel* pPix = *pix;
+          if ( pPix == pixel ) {
+            notThere = false;
+            break;
+          }
+        }
+        if ( notThere ) segment->richRecTrack()->addToRichRecPixels( pixel );
+
+        // Add shared ring fraction code here. Cannot do this
+        // until geomPhoton has reflection points
+
+      } else {
+        delete newPhoton;
+        newPhoton = NULL;
+      }
+
+    } // end angles if
+  } // end reconstructPhoton method if
 
   // Add to reference map
-  m_photonDone[(int)m_photonKey] = true;
+  m_photonDone[(int)key] = true;
 
   // if (m_timing) m_chrono->chronoStop("RichRecPhotonTool:buildPhoton");
 
-  // Return pointer to this photon
+    // Return pointer to this photon
   return newPhoton;
 
 }
 
 void RichRecPhotonTool::reconstructPhotons() {
 
-  // This function skips checking if the photons already exist,
-  // so only do once per event at most
   if ( !m_allBuilt ) {
     m_allBuilt = true;
 
-    // Iterate over pixels
-    for ( RichRecPixels::iterator pixel =
-            m_richRecPixelTool->richPixels()->begin();
-          pixel != m_richRecPixelTool->richPixels()->end();
-          ++pixel ) {
+    bool noPhots = m_photons->empty();
 
-      // Iterate over all tracks
-      for ( RichRecTracks::iterator track =
-              m_richRecTrackTool->richTracks()->begin();
-            track != m_richRecTrackTool->richTracks()->end();
-            ++track ) {
+    // Iterate over all tracks
+    for ( RichRecTracks::iterator iTrack =
+            m_richRecTrackTool->richTracks()->begin();
+          iTrack != m_richRecTrackTool->richTracks()->end();
+          ++iTrack ) {
+      RichRecTrack * track = *iTrack;
+      if ( !track->inUse() ) continue; // skip tracks not "on"
+
+      // Iterate over pixels
+      for ( RichRecPixels::iterator iPixel =
+              m_richRecPixelTool->richPixels()->begin();
+            iPixel != m_richRecPixelTool->richPixels()->end();
+            ++iPixel ) {
+        RichRecPixel * pixel = *iPixel;
 
         // Iterate over segments
-        for ( SmartRefVector<RichRecSegment>::iterator segment =
-                (*track)->richRecSegments().begin();
-              segment != (*track)->richRecSegments().end();
-              ++segment) {
+        for ( SmartRefVector<RichRecSegment>::iterator iSegment =
+                track->richRecSegments().begin();
+              iSegment != track->richRecSegments().end();
+              ++iSegment) {
+          RichRecSegment * segment = *iSegment;
 
-          //if ( photonPossible(*segment, *pixel) ) buildPhoton(*segment, *pixel);
-          reconstructPhoton(*segment, *pixel);
+          // If container was empty, skip checks on if photon already exists
+          if ( noPhots ) {
+            if ( photonPossible( segment, pixel ) ) {
+              RichRecPhotonKey photonKey;
+              photonKey.setSegmentNumber( segment->key() );
+              photonKey.setPixelNumber( pixel->key() );
+              buildPhoton( segment, pixel, photonKey );
+            }
+          } else {
+            reconstructPhoton( segment, pixel );
+          }
 
         } // segment loop
-      } // track loop
-    } // pixel loop
+      } // pixel loop
+    } // track loop
 
   }
 
@@ -352,7 +403,10 @@ RichRecPhotonTool::reconstructPhotons( RichRecPixel * pixel ) {
   for ( RichRecTracks::iterator track =
           m_richRecTrackTool->richTracks()->begin();
         track != m_richRecTrackTool->richTracks()->end();
-        ++track ) { reconstructPhotons( *track, pixel ); }
+        ++track ) {
+    if ( !(*track)->inUse() ) continue;
+    reconstructPhotons( *track, pixel );
+  }
 
   return pixel->richRecPhotons();
 }
@@ -378,21 +432,28 @@ RichRecPhotonTool::reconstructPhotons( RichRecTrack * track,
   return photons;
 }
 
+// fast decision on whether a photon is possible
 bool RichRecPhotonTool::photonPossible( RichRecSegment * segment,
                                         RichRecPixel * pixel ) {
 
-  // fast decision on whether a photon is possible
+  // Are they in the same Rich detector ?
+  if ( segment->trackSegment().rich() != pixel->detector() ) return false;
 
-  const HepPoint3D & segMiddle = segment->trackSegment().middlePoint();
+  // Hit seperation criteria
+  const Rich::RadiatorType & rad = segment->trackSegment().radiator();
+  double sep = trackPixelHitSep2(segment, pixel);
+  if ( sep > m_maxROI2[(int)rad] ) return false;
+  if ( sep < m_minROI2[(int)rad] ) return false;
+
+  return true;
+}
+
+double RichRecPhotonTool::trackPixelHitSep2( const RichRecSegment * segment,
+                                             const RichRecPixel * pixel ) {
+
   const HepPoint3D & pixelPoint = pixel->globalPosition();
-
-  // Are they in the same Rich detector.
-  if ( fabs( segMiddle.z() - pixelPoint.z() ) > 500. ) return false;
-  //return true; // disable selection below for time being
-
   const HepPoint3D & segmentPoint = segment->hpdPanelHitPoint();
   const Rich::Detector & det = segment->trackSegment().rich();
-  const Rich::RadiatorType & rad = segment->trackSegment().radiator();
 
   float pixX = pixelPoint.x();
   float pixY = pixelPoint.y();
@@ -401,59 +462,42 @@ bool RichRecPhotonTool::photonPossible( RichRecSegment * segment,
   float segY = segmentPoint.y();
   float segZ = segmentPoint.z();
 
-  //  cout << "rad " << rad << endl;
-  // cout << " Hits " << segmentPoint << " " << pixelPoint << endl;
-  // cout << " seperation " << (segmentPoint-pixelPoint).mag()
-  //     << "/" << m_maxROI[(int)rad] << endl;
+  double rsep2 = 99999999.9;
 
-  // Logic copied directly from SICB. Need to work out a better solution
- double rsep2;
-  if ( ( Rich::Rich2 == det && pixX*segX > 0 ) ||
-       ( Rich::Rich1 == det && pixY*segY > 0 ) ) {
-
-    rsep2 = (pixX-segX)*(pixX-segX) +
-      (pixY-segY)*(pixY-segY) + (pixZ-segZ)*(pixZ-segZ);
-
-  } else if ( ( Rich::Rich2 == det && pixX*segX < 0 ) ||
-              ( Rich::Rich1 == det && pixY*segY < 0 ) ) {
-
-    if ( Rich::Rich2 == det &&
-         ( ( pixX > 0 && segment->photonsInXPlus() ) ||
-           ( pixX < 0 && segment->photonsInXMinus() ) ) ) {
-
-      rsep2 = (pixX+segX)*(pixX+segX) +
+  if ( Rich::Rich1 == det ) {
+    if ( pixY*segY > 0 ) {
+      rsep2 = (pixX-segX)*(pixX-segX) +
         (pixY-segY)*(pixY-segY) + (pixZ-segZ)*(pixZ-segZ);
-
-    } else if ( Rich::Rich1 == det &&
-                ( ( pixY > 0 && segment->photonsInYPlus() ) ||
-                  ( pixY < 0 && segment->photonsInYMinus() ) ) ) {
-
-      rsep2 = (pixX+segX)*(pixX+segX) +
-        (pixY-segY)*(pixY-segY) + (pixZ-segZ)*(pixZ-segZ);
-
-    } else {
-
-      rsep2 = 9990.0;
-
+    } else if ( ( pixY > 0 && segment->photonsInYPlus() ) ||
+                ( pixY < 0 && segment->photonsInYMinus() ) ) {
+      rsep2 = (pixX-segX)*(pixX-segX) +
+        (pixY+segY)*(pixY+segY) + (pixZ-segZ)*(pixZ-segZ);
     }
-
-  } else {
-
-    rsep2 = 0.0;
-
+  } else if ( Rich::Rich2 == det ) {
+    if ( pixX*segX > 0 ) {
+      rsep2 = (pixX-segX)*(pixX-segX) +
+        (pixY-segY)*(pixY-segY) + (pixZ-segZ)*(pixZ-segZ);
+    } else if ( ( pixX > 0 && segment->photonsInXPlus()  ) ||
+                ( pixX < 0 && segment->photonsInXMinus() ) ) {
+      rsep2 = (pixX+segX)*(pixX+segX) +
+        (pixY-segY)*(pixY-segY) + (pixZ-segZ)*(pixZ-segZ);
+    }
   }
 
-  //  if ( Rich::C4F10 == rad ) {
-  // cout << "photonPossible: " << det << " " << rad << " "
-  //     << rsep2 << " " << m_maxROI2[(int)rad] << " "
-  //    << (rsep2 > m_maxROI2[(int)rad]) << endl;
+  //rsep2 = (fabs(pixX)-fabs(segX))*(fabs(pixX)-fabs(segX)) +
+  //  (fabs(pixY)-fabs(segY))*(fabs(pixY)-fabs(segY)) +
+  //  (fabs(pixZ)-fabs(segZ))*(fabs(pixZ)-fabs(segZ));
+
+  //if ( sqrt(rsep2) > 999 ) {
+  //  cout << segment->key() << " " << pixel->key() << " : "
+  //       << det << " " << segment->trackSegment().radiator() << " : "
+  //       << segmentPoint << " : "
+  //       << segment->photonsInXPlus() << segment->photonsInXMinus()
+  //       << segment->photonsInYPlus() << segment->photonsInYMinus()
+  //       << " : " << pixelPoint << " " << sqrt(rsep2) << endl;
   // }
 
-  if ( rsep2 > m_maxROI2[(int)rad] ) return false;
-
-  //if ( rad == Rich::C4F10 ) cout << "Success !! " << endl;
-
-  return true;
+  return rsep2;
 }
 
 double RichRecPhotonTool::pixelSignalProb( RichRecPhoton * photon,

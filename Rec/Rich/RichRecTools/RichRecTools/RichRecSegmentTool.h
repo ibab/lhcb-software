@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.h,v 1.3 2002-11-20 09:04:08 jonrob Exp $
+// $Id: RichRecSegmentTool.h,v 1.4 2002-12-02 09:42:21 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -51,7 +51,7 @@ public:
                       const IInterface* parent );
 
   /// Destructor
-  ~RichRecSegmentTool();
+  virtual ~RichRecSegmentTool() {};
 
   /// Initialize method
   StatusCode initialize();
