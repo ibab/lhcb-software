@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.h,v 1.5 2005-01-12 09:14:33 ocallot Exp $ 
+// $Id: CaloZSupAlg.h,v 1.6 2005-01-18 12:41:58 ocallot Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
 
@@ -74,7 +74,6 @@ private:
   std::string m_triggerName       ; ///< Name of the trigegr bank
   bool        m_zsup2D            ; ///< do we use 2D-zero sup. scheme ?
   int         m_zsupThreshold     ; ///< Initial threshold, in ADC counts 
-  int         m_bankType          ; ///< BankType for RawBuffer
   double      m_energyScale       ; ///< To convert energy to RawBuffer
   double      m_triggerEtScale    ; ///< Scale for trigger ADC
   double      m_triggerThreshold  ; ///< Zero suppress for trigger

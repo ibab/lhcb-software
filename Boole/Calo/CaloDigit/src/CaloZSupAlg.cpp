@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.10 2005-01-14 15:45:51 cattanem Exp $
+// $Id: CaloZSupAlg.cpp,v 1.11 2005-01-18 12:41:58 ocallot Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -42,7 +42,7 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   , m_zsup2D            ( false )
   , m_zsupThreshold     ( 6     )
   , m_triggerEtScale    ( 20 * MeV )
-
+  , m_triggerThreshold  ( 0. )
 {
   //** Declare the algorithm's properties which can be set at run time and
   //** their default values
@@ -52,7 +52,8 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("InputMCData"     , m_inputMCData     ) ;
   declareProperty("ZsupMethod"      , m_zsupMethod      ) ;
   declareProperty("ZsupThreshold"   , m_zsupThreshold   ) ;
-  declareProperty("BankType"        , m_bankType        ) ;
+  declareProperty("TriggerThreshold", m_triggerThreshold) ;  
+  declareProperty("TriggerEtScale"  , m_triggerEtScale  ) ;
 
   //=== Default values according to the name of the algorithm !
   if ( "SpdZSup" == name ) {
@@ -63,7 +64,7 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     m_zsupThreshold  = 1;
     m_triggerName    = L0PrsSpdHitLocation::Spd;
     m_triggerThreshold = 0.1 * MeV;
-    m_triggerIsBit   = true;
+    m_triggerIsBit     = true;
   } else if ( "PrsZSup" == name ) {
     m_detectorName     = "/dd/Structure/LHCb/Prs";
     m_inputData        = CaloDigitLocation::FullPrs;
@@ -71,7 +72,8 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     m_inputMCData      = MCCaloDigitLocation::Prs;
     m_zsupThreshold    = 15;
     m_triggerName      = L0PrsSpdHitLocation::Prs;
-    m_triggerIsBit   = true;
+    m_triggerThreshold = 10. * MeV;
+    m_triggerIsBit     = true;
   } else if ( "EcalZSup" == name ) {
     m_detectorName     = "/dd/Structure/LHCb/Ecal";
     m_inputData        = CaloDigitLocation::FullEcal;
@@ -79,9 +81,8 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     m_inputMCData      = MCCaloDigitLocation::Ecal;
     m_zsupMethod       = "2D";
     m_zsupThreshold    = 20;
-    m_triggerThreshold = 0.;
     m_triggerName      = L0CaloAdcLocation::Ecal;
-    m_triggerIsBit   = false;
+    m_triggerIsBit     = false;
 
     m_corrArea.push_back( 1.00 );
     m_corrArea.push_back( 1.04 );
@@ -93,9 +94,8 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
     m_outputData       = CaloDigitLocation::Hcal;
     m_inputMCData      = MCCaloDigitLocation::Hcal;
     m_zsupThreshold    = 4;
-    m_triggerThreshold = 0.;
     m_triggerName      = L0CaloAdcLocation::Hcal;
-    m_triggerIsBit   = false;
+    m_triggerIsBit     = false;
 
     m_corrArea.push_back( 1.00 );
     m_corrArea.push_back( 1.05 );
