@@ -1,6 +1,9 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2004-10-08 - Patrick Robbe
+ - EvtDDalitz : update resonance parameters for D0-> K0 K+ K-
+
 ! 2004-09-07 - Patrick Robbe
  - EvtDDalitz: add D0 -> K0s K+ K- decay mode and measured resonances
 

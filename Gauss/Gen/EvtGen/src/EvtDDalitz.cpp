@@ -314,22 +314,23 @@ EvtComplex EvtDDalitz::amplDtoK0KK(EvtVector4R p4_p,  EvtVector4R moms1,
     EvtResonance DK0KKRes1( p4_p, moms2, moms3, 113.75, -40.0, 0.0043,
                             1.019456, 1 ) ;
     //a0(980)
-    EvtResonance DK0KKRes2( p4_p, moms2, moms3, 152.25, 69.0, 0.05 , 0.9847,
+    EvtResonance DK0KKRes2( p4_p, moms2, moms3, 152.25, 69.0, 0.1196 , 0.9847,
                             0 ) ;
     //f0(980)
-    EvtResonance DK0KKRes3( p4_p, moms2, moms3, 30.5, -201.0, 0.04, 0.980 , 
+    EvtResonance DK0KKRes3( p4_p, moms2, moms3, 30.5, -201.0, 0.05, 0.980 , 
                             0 ) ;
     //a0(980)+
-    EvtResonance DK0KKRes4( p4_p, moms1, moms2, 85.75, -93.0, 0.05 , 0.9847,
+    EvtResonance DK0KKRes4( p4_p, moms1, moms2, 85.75, -93.0, 0.1196 , 0.9847,
                             0 ) ;
     //a0(980)-
-    EvtResonance DK0KKRes5( p4_p, moms3, moms2, 8. , -53.0 ,0.05, 0.9847,
+    EvtResonance DK0KKRes5( p4_p, moms3, moms1, 8. , -53.0 ,0.1196, 0.9847,
                             0 ) ;
 
-    return EvtComplex(1.0,0.0) + 
+    return EvtComplex(1.0,0.0) +
       DK0KKRes1.resAmpl() + DK0KKRes2.resAmpl() +
       DK0KKRes3.resAmpl() + DK0KKRes4.resAmpl() + 
       DK0KKRes5.resAmpl() ;
+
 }
 
 
