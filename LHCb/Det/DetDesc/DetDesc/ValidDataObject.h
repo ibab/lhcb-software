@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.h,v 1.2 2001-12-13 19:02:03 andreav Exp $
+//$Id: ValidDataObject.h,v 1.3 2001-12-14 17:54:41 andreav Exp $
 #ifndef DETDESC_VALIDDATAOBJECT_H
 #define DETDESC_VALIDDATAOBJECT_H 1
 
@@ -40,8 +40,14 @@ class ValidDataObject : public DataObject,
   /// Copy constructor 
   ValidDataObject( ValidDataObject& obj );
   
-  /// Overloaded copy operator
+  /*
+  /// Overloaded copy operator: deep copy all contents (virtual!)
   virtual ValidDataObject& operator= ( ValidDataObject& obj );
+  */
+
+  /// Update using another instance of this class: deep copy all 
+  /// contents, except for the properties of a generic DataObject
+  virtual void update ( ValidDataObject& obj );
 
   /// Destructor 
   virtual ~ValidDataObject();

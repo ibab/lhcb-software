@@ -1,10 +1,17 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.62 2001-12-14 14:35:22 ranjard Exp $ 
+! $Id: release.notes,v 1.63 2001-12-14 17:59:14 andreav Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
+
+! =============================================================================
+! 20011214 - Andrea Valassi
+   Changes needed to use the "update" functionality for Condition objects.
+   - introduce Condition::update(Condition&) to deep copy a condition
+   - comment out the overloaded operator= (which also deep copies the
+     properties of a DataObject, like its registry and ref counts) 
 
 ! =============================================================================
 ! 20011213 - v9r0 - Andrea Valassi

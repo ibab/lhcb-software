@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.cpp,v 1.2 2001-12-13 19:01:56 andreav Exp $
+//$Id: ValidDataObject.cpp,v 1.3 2001-12-14 17:57:05 andreav Exp $
 #include <string> 
 
 #include "DetDesc/ValidDataObject.h"
@@ -45,16 +45,28 @@ ValidDataObject::ValidDataObject( ValidDataObject& obj )
 
 //---------------------------------------------------------------------------
 
-/// Copy operator.
+/*
+/// Copy operator (virtual!).
 /// Overloaded from DataObject to point to new TimePoint objects.
 ValidDataObject& ValidDataObject::operator= ( ValidDataObject& obj )
 {
   DataObject::operator= ( obj );
-  delete this->m_validSince;
-  delete this->m_validTill;
-  this->m_validSince = new TimePoint( obj.validSince() ) ;
-  this->m_validTill  = new TimePoint( obj.validTill()  ) ;
+  // Call virtual method update to deep copy all contents
+  update( obj );
   return *this;
+}; 
+*/
+
+//---------------------------------------------------------------------------
+
+/// Update using another instance of this class: deep copy all 
+/// contents, except for the properties of a generic DataObject
+void ValidDataObject::update ( ValidDataObject& obj )
+{
+  delete m_validSince;
+  delete m_validTill;
+  m_validSince = new TimePoint( obj.validSince() ) ;
+  m_validTill  = new TimePoint( obj.validTill()  ) ;
 }; 
 
 //---------------------------------------------------------------------------

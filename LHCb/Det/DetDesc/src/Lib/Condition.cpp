@@ -1,4 +1,4 @@
-//$Id: Condition.cpp,v 1.2 2001-12-13 18:58:30 andreav Exp $
+//$Id: Condition.cpp,v 1.3 2001-12-14 17:57:35 andreav Exp $
 #include <string> 
 
 #include "DetDesc/Condition.h"
@@ -37,13 +37,12 @@ Condition::Condition( Condition& obj )
 
 //---------------------------------------------------------------------------
 
-/// Copy operator.
-/// Overloaded from DataObject to point to new TimePoint objects.
-Condition& Condition::operator= ( Condition& obj )
+/// Update using another instance of this class: deep copy all 
+/// contents, except for the properties of a generic DataObject
+void Condition::update ( Condition& obj )
 {
-  ValidDataObject::operator= ( obj );
+  ValidDataObject::update ( obj );
   *(this->m_parameterSet) = (IUserParameterSet&)obj ;
-  return *this;
 }; 
 
 //---------------------------------------------------------------------------

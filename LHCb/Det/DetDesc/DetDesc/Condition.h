@@ -1,4 +1,4 @@
-//$Id: Condition.h,v 1.2 2001-12-13 18:58:55 andreav Exp $
+//$Id: Condition.h,v 1.3 2001-12-14 17:56:37 andreav Exp $
 #ifndef DETDESC_CONDITION_H
 #define DETDESC_CONDITION_H 1
 
@@ -40,8 +40,9 @@ class Condition : public ValidDataObject,
   /// Copy constructor 
   Condition( Condition& obj );
   
-  /// Overloaded copy operator
-  Condition& operator= ( Condition& obj );
+  /// Update using another Condition: deep copy all contents, 
+  /// except for the properties of a generic DataObject
+  virtual void update ( Condition& obj );
 
   /// Destructor 
   virtual ~Condition();
