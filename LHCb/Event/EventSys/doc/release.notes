@@ -1,9 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v13r6 2003-05-28 ========================
+!======================== EventSys v13r6 2003-06-02 ========================
 ! 2003-05-28 - Marco Cattaneo
- - Add HltEvent v2r0, use MuonEvent v2r3
+ - Add HltEvent v2r0, use MuonEvent v2r3, PhysEvent v7r4p1
 
 !======================== EventSys v13r5 2003-04-15 ========================
 ! 2003-04-15 - Marco Cattaneo
