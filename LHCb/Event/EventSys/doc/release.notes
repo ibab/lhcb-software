@@ -1,10 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v19r3 2005-01-14 ========================
-! 2005-01-14 - Marco Cattaneo
+!======================== EventSys v19r3 2005-01-17 ========================
+! 2005-01-17 - Marco Cattaneo
  - Remove obsolete doxygen configuration files
- - Use CaloEvent v13r8, L0Event v14r2
+ - Use CaloEvent v13r8, L0Event v14r2, TrgEvent v5r3
 
 !======================== EventSys v19r2 2004-12-15 ========================
 ! 2004-12-15 - Marco Cattaneo
