@@ -218,10 +218,12 @@ void RichSensDet::Initialize(G4HCofThisEvent* HCE ) {
 
   // G4String CurCollName;
   RichG4HitsCollection* CurColl;
+  m_RichHC.clear();
   for(int ihhc=0; ihhc<m_RichG4HCName->RichHCSize(); ihhc++) {
     //    CurCollName=collectionName[ihhc];   
     CurColl = 
       new  RichG4HitsCollection(SensitiveDetectorName,collectionName[ihhc]);
+    
     m_RichHC.push_back( CurColl);
   }
 
@@ -236,6 +238,7 @@ void RichSensDet::EndOfEvent(G4HCofThisEvent* HCE) {
         m_HpdHCID[ihid] = G4SDManager::GetSDMpointer()->
           GetCollectionID(collectionName[ihid]); 
       }
+    
     HCE->AddHitsCollection( m_HpdHCID[ihid] , m_RichHC[ihid]  ); 
   }
 
