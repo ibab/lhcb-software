@@ -1,4 +1,4 @@
-// $Id: OTCheckOTDigit.h,v 1.1.1.1 2004-02-03 09:49:17 jnardull Exp $
+// $Id: OTCheckOTDigit.h,v 1.2 2004-03-25 15:53:37 jnardull Exp $
 #ifndef OTDAQ_OTCHECKOTDIGIT_H 
 #define OTDAQ_OTCHECKOTDIGIT_H 1
 

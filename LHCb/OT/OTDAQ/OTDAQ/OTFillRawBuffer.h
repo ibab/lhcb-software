@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.h,v 1.1.1.1 2004-02-03 09:49:17 jnardull Exp $
+// $Id: OTFillRawBuffer.h,v 1.2 2004-03-25 15:53:37 jnardull Exp $
 #ifndef OTDAQ_OTFILLRAWBUFFER_H 
 #define OTDAQ_OTFILLRAWBUFFER_H 1
 
@@ -59,52 +59,58 @@ private:
   std::string m_OTDigitLoc;
   std::string m_otTrackerPath;
 
-  enum GOLIDMasks {golIDMask = 0x60000000, golSizeMask = 0x0000ffff };
-  ///< Bitmasks for bitfield channelID
+  typedef std::vector<OTDigit*> vDigi;
+  typedef std::vector<int> vInt;// tdc times
+  typedef std::map<int,vDigi*> mBank;// contains the bank vectors*
+  typedef std::map<int,vDigi*> mGol;// contains the Gol vectors*
+  typedef std::vector<raw_int> dataBank;
+  typedef std::vector<dataBank*> dataBuffer;
+
+  // detector geometry
+  DeOTDetector* m_otTracker;
+  RawBuffer* m_rawBuffer;
+  
+  // global pointer to vectors container
+  OTDigits* m_otdigit;
+  mBank* dataContainer;
+  mGol* goldatacontainer;
+  dataBuffer* finalBuf;
+  dataBank* aBank;
+
+  int numberOfBanks;
+  int numberOfGols;
+  
+ //Masks
+  enum GOLIDMasks {StationIDMask = 0x60000000,
+                   LayerIDMask = 0x18000000,
+                   QuarterIDMask = 0x06000000,
+                   ModuleIDMask = 0x01e00000,
+                   golSizeMask = 0x0000efff };
   enum datawordMasks {NextTimeMask =  0x000000ff, 
                       NextChannelMask = 0x00001f00, 
                       NextOtisMask = 0x00006000,
                       FirstTimeMask =  0x00ff0000, 
                       FirstChannelMask = 0x1f000000, 
                       FirstOtisMask = 0x60000000};
-  
-  
-
-  OTDigits* m_otdigit;
-
-  typedef std::vector<OTDigit*> vDigi;
-  typedef std::vector<vDigi*> vBank;
-  typedef std::vector<int> vInt;// tdc times
-  typedef std::map<int,vDigi*> mBank;// contains the bank vectors*
-  typedef std::vector<raw_int> dataBank;
-  typedef std::vector<dataBank*> dataBuffer;
-  
-
-  // detector geometry
-  DeOTDetector* m_otTracker;
-  RawBuffer* m_rawBuffer;
-  
-  // global pointer to bank vectors container
-  mBank* dataContainer;
-  dataBuffer* finalBuf;
-  
-  
-  int numberOfBanks;
-  
-  
-  
-  //StatusCode sortChannelsInGroups() {
 
   // converts channel ID number into bank number for sorting
   int chID2int(OTChannelID otChannel); // int is bank ID
   int chID2Otis(OTChannelID otChannel);
-  int chID2Gol(OTChannelID otChannel);
-
-  StatusCode sortDigitsIntoBanks();// sort OTDigits into banks
+ 
+  // sort OTDigits into banks
+  StatusCode sortDigitsIntoBanks();
+  // sort OTDigits into GOL
+  StatusCode sortDigitsIntoGol(vDigi* BankDigi, dataBank* aBank);
+  //Converting in raw_int format
   StatusCode convertToRAWDataBank(vDigi* vToConvert, dataBank* aBank);
+  //Decoding Stuff
   StatusCode rawInt2Decode(raw_int dataWord);
-  raw_int createGolHeader(int golID, int size);
-  
+  //To create the Gol Header
+  raw_int createGolHeader(long nStation, long nLayer, long nQuarter,
+                          long nModule, int size);
+  //To create the OTIS Header
+  raw_int createOtisHeader(long nStation, long nLayer, long nQuarter,
+                           long nModule ,int otisID);
 
 };
 #endif // OTDAQ_OTFILLRAWBUFFER_H

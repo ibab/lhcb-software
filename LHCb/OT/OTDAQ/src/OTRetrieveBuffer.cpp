@@ -1,4 +1,4 @@
-// $Id: OTRetrieveBuffer.cpp,v 1.2 2004-02-12 10:29:30 cattanem Exp $
+// $Id: OTRetrieveBuffer.cpp,v 1.3 2004-03-25 15:53:38 jnardull Exp $
 // Include files 
 
 // from Gaudi
@@ -36,7 +36,7 @@ OTRetrieveBuffer::OTRetrieveBuffer( const std::string& name,
   this->declareProperty( "RawEventLocation",
                          m_RawEventLoc = RawEventLocation::Default );
   this->declareProperty( "OutputLocation",
-                         m_digitLocation = OTDigitLocation::Default );
+                         m_digitLocation = "/Event/Rec/OT/checkDigits" );
   
 }
 //=============================================================================
@@ -51,9 +51,6 @@ StatusCode OTRetrieveBuffer::initialize() {
 
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Initialise" << endreq;
-
-  // fillBuffer = new OTRFillRawBuffer();
-  
   return StatusCode::SUCCESS;
 };
 
@@ -61,6 +58,9 @@ StatusCode OTRetrieveBuffer::initialize() {
 // Main execution
 //=============================================================================
 StatusCode OTRetrieveBuffer::execute() {
+
+  MsgStream  msg( msgSvc(), name() );
+  msg << MSG::DEBUG << "==> Execute" << endreq;
 
   // Retrieve the RawEvent:
   SmartDataPtr<RawEvent> rawEvent( eventSvc(), m_RawEventLoc );
@@ -71,25 +71,27 @@ StatusCode OTRetrieveBuffer::execute() {
         <<  m_RawEventLoc << endreq;
     return StatusCode::FAILURE;
   }
-
   //Get the buffers associated with OT
   const std::vector<RawBank>& OTBanks = rawEvent->banks( RawBuffer::OT );
-   // define the vector where the output goes
+  // define the vector where the output goes
   OTDigits* outputDigits = new OTDigits();
-   // register output buffer to TES
+  // register output buffer to TES
   eventSvc()->registerObject( m_digitLocation, outputDigits );
-  
+
   // Loop over vector of banks (The Buffer)
+  buffer = 1; // usefule buffer 
   std::vector<RawBank>::const_iterator ibank;
   for ( ibank = OTBanks.begin(); ibank != OTBanks.end(); ++ibank) {
-    //Getting the values of the number of banks and of the Bank size 
-    int nbank = (*ibank).bankSourceID();
+    //Getting the values of the number of bank and of the Bank size 
     long bankSize = (*ibank).dataSize();
     
-    // Some Initilisation
-    raw_int dataWord = 0;
+    // Some Useful Initilisation
+    raw_int dataWord = 999999999; //To avoid filling Digits with empty stuff
     raw_int golHeader = 0;
-    int GolID = 0;
+    int nStation = 0;
+    int nLayer = 0;
+    int nQuarter = 0;
+    int nModule = 0;  
 
     // The bank are vectors of raw int.
     //We get the information that are stored in each raw int. 
@@ -99,25 +101,38 @@ StatusCode OTRetrieveBuffer::execute() {
     for ( long i = 0; i < bankSize; ++i ) {
       raw_int aDataWord = data[i];
     
-      //Let's introduce the Golheader and the Data Word doing 
-      // a logical & between aDataWord and dataMask  
-      raw_int isData = dataMask & aDataWord;
-      
-      // We get an undefinedobject that is either the golHeader or the data Word
-      if ( isData != 0 ) {
+      /*Let's introduce the Golheader and the Data Word doing 
+       * a logical & between aDataWord and dataMask  
+       * We need two of them to skip the 4 Otis Headers 
+       * present after each Gol Header (They do not contan useful inf.)
+       */
+      raw_int isData1 = dataMask1 & aDataWord;
+      raw_int isData2 = dataMask2 & aDataWord;
+     
+      // We get two undefinedobjects that tell us if we 
+      // got a golHeader or a data Word
+
+      if((isData1 != 0 ) && (isData2 != 0 )){
         dataWord = aDataWord;
-      }   
-      else if ( isData == 0 ) {
-        golHeader = aDataWord;
-        
-        // given the gol header we get the Gol ID
-        GolID = raw2OTGolID ( golHeader );
-        continue;
       }
 
-      // Given Gol ID, Bank ID, and the Data Word, get the OT digit and
-      // put it in the output container
-      raw2OTDigit(nbank, GolID, dataWord, *outputDigits);
+      else if(( isData1 == 0 ) && (isData2 == 0)){
+        golHeader = aDataWord;
+        // Given Gol Header we Get Station, Layer, Quarter, Module Nr.
+        nStation = getStation (golHeader);
+        nLayer = getLayer (golHeader);
+        nQuarter = getQuarter (golHeader);
+        nModule = getModule (golHeader);
+        continue;
+      }
+      // Given Station, Layer, Quarter, Module Nr. and  Data Word, 
+      // get the OT digit and put it in the output container
+      
+      if(dataWord != 999999999){ //To avoid filling digit with Empty stuff
+        raw2OTDigit(nStation, nLayer, nQuarter, nModule, dataWord, 
+                    *outputDigits);
+        dataWord = 999999999;
+      } // To avoid useless Calling of Raw to OTDigit function 
       
     }// Loop over the data words inside the bank    
   }  // Loop over vector of banks (The Buffer)
@@ -137,13 +152,15 @@ StatusCode OTRetrieveBuffer::finalize() {
 }
 
 //=============================================================================
-
-StatusCode OTRetrieveBuffer::raw2OTDigit(int nbank, 
-                                         int GolID, 
-                                         raw_int dataWord,
+StatusCode OTRetrieveBuffer::raw2OTDigit(int Station, int Layer, int Quarter,
+                                         int Module, raw_int dataWord,
                                          OTDigits& vOTDs)
 {
-  //getting information using the mask
+  // Vector of Integers Times
+  std::vector<int> firstTimes;
+  std::vector<int> nextTimes;
+
+  //getting data word information using the mask
   int nextTime = dataWord & NextTimeMask;
   nextTime = nextTime >> 0;
   int nextChannelID = dataWord & NextChannelMask;
@@ -157,144 +174,198 @@ StatusCode OTRetrieveBuffer::raw2OTDigit(int nbank,
   int firstOtisID = dataWord & FirstOtisMask;
   firstOtisID = firstOtisID >> 29;
 
-  //First
-  OTChannelID fchannelID = this->getChannelID ( nbank, GolID, firstOtisID, 
-                                               firstChannelID);
+  int Fstraw = 0;
+  int Nstraw = 0;
+  int onlyOnceBuffer = 0;
 
-  // Vector 
-  std::vector<int> firstTimes;
-  firstTimes.push_back ( firstTime );
-  OTDigit* firstDigit = new OTDigit ( fchannelID, firstTimes);
-  vOTDs.add(firstDigit);
+   //Using Buffer Mask
+  raw_int dataWordBis = dataWord;
+  multiBuffer = dataWordBis & multiBuffMask;
+  multiBuffer = multiBuffer >> 0;
+  nextBuffBis = dataWordBis & nextBuffMaskBis;
+  nextBuffBis = nextBuffBis >> 8;
+  nextBuff = dataWordBis & nextBuffMask;
+  nextBuff = nextBuff >> 24;
+  //Again
+  raw_int dataWordBuffer = dataWord;
+  firstBuff = firstBuffMask & dataWordBuffer;
+  firstBuff = firstBuff  >> 16;
+  firstTimeBuffer = timeBuffMask & dataWordBuffer;
+  firstTimeBuffer = firstTimeBuffer >> 23;
 
-  //Next
-  if ( nextTime != 0 ) {
-    OTChannelID nchannelID  = this->getChannelID ( nbank, GolID, nextOtisID, 
-                                                   nextChannelID );
-    
-    // Filling the next vector of type OTDigit called nextDigit 
-    // with nextChannel and nextTime
-    std::vector<int> nextTimes;
-    nextTimes.push_back ( nextTime );
-    OTDigit* nextDigit = new OTDigit ( nchannelID, nextTimes);
-    vOTDs.add(nextDigit);
-    
+  //Multiple Hit 
+  //Checking the Multiple Hit
+  if((firstOtisID == nextOtisID) && (firstChannelID == nextChannelID) 
+     //Basilar requirment to have a multiple hit!
+     && (nextTime != 0) && (multiBuffer != 101) && (multiBuffer != 105)
+     && (buffer == 1)){
+    //It is Necessary to Check the NextTime Value, and that there is no 
+    //Multiple hit inside the first multiple hit
+    if((nextBuff != 100) || ((nextBuff == 100) && (nextBuff == nextBuffBis) 
+                             && (firstTime != 0) && (nextTime != 0))){
+      //If there is a M. Hit exactly on the Magic Value of the Next Buffer:100
+      if((firstBuff != 1) || 
+         ((firstBuff == 1) && (firstBuff == nextOtisID) 
+          && (firstOtisIDCopy == 1000))){
+        //If there is a M. Hit exactly on the Magic Value of the First Buffer: 
+        //Next Otis ID = 1.
+        firstChannelIDCopy = firstChannelID;
+        firstOtisIDCopy = firstOtisID;
+        firstTimeCopy = firstTime; //Copy the First and Next Time and then exit
+        nextTimeCopy = nextTime;
+        buffer = 0;
+        return StatusCode::SUCCESS;
+      } //First Digit Multiple Hit Check
+    } //Next Digit Multiple Hit Check
+  } // Multiple Hit Checking 
+
+  //Multiple Hit Filling the tim: First Digit 
+  if((firstBuff == 1) && ( firstOtisIDCopy != 1000)){
+    //Multiple Hit Get Straw numbers
+    Nstraw  = getStrawID (nextOtisID, nextChannelID);
+    Fstraw  = getStrawID (firstOtisIDCopy, firstChannelIDCopy);
+    //Pushing times
+    if(multiBuffer != 105){nextTimes.push_back( nextTime );}
+    firstTimes.push_back( firstTimeCopy );
+    firstTimes.push_back( nextTimeCopy );
+    firstTimes.push_back( firstTimeBuffer );
+    onlyOnceBuffer = 1;  
   }
-  return StatusCode::SUCCESS;
   
-}
- 
-//=============================================================================
-
-int OTRetrieveBuffer::raw2OTGolID(raw_int golHeader)
-{
-  // getting the information of the GolID using the mask
-  int GolID = golIDMask & golHeader;
-  GolID =  GolID >> 29;
-  return(GolID);
+ //Multiple Hit Filling the time Next Digit
+  if((nextBuff == 100) && ( firstOtisIDCopy != 1000) && (onlyOnceBuffer != 1)){
+    //Multiple Hit Get Straw numbers
+    Fstraw  = getStrawID (nextOtisID, nextChannelID); //Looks strange, 
+    Nstraw  = getStrawID (firstOtisIDCopy, firstChannelIDCopy); //but is correct
+    if(multiBuffer != 101){firstTimes.push_back(nextTime);}
+    //Pushing times
+    nextTimes.push_back( firstTimeCopy );
+    nextTimes.push_back( nextTimeCopy );
+    nextTimes.push_back( firstTime );
+    onlyOnceBuffer = 1;  
+  }     
+  // No Multiple Hit -- checking if statements
+    if(((firstBuff != 1) || (nextTime == 0) || ( firstOtisIDCopy == 1000)) 
+       && (onlyOnceBuffer != 1 )){
+      //Get Straw numbers
+      Fstraw  = getStrawID (firstOtisID, firstChannelID);
+      Nstraw  = getStrawID (nextOtisID, nextChannelID);
+      //Filling time --- in case of First Multiple Hit, it has already be filled
+      int null = 0;
+      firstTimes.push_back( firstTime ); //First Time
+      firstTimes.push_back( null );
+      firstTimes.push_back( null );
+      nextTimes.push_back ( nextTime ); //Next Time
+      nextTimes.push_back( null );
+      nextTimes.push_back( null );
+    }
+  //Get First ChannelID
+  if(multiBuffer != 101){
+    OTChannelID fchannelID = this->getChannelID(Station, Layer, 
+                                                Quarter, Module, Fstraw);
+    // New First OTDigit
+    OTDigit* firstDigit = new OTDigit ( fchannelID, firstTimes);
+    vOTDs.add(firstDigit);
+  }
+  //Next Hit 
+  if(multiBuffer != 105){
+    if ( nextTime != 0 ) { //To Check that this is not a No Channel Case
+      //Get Next ChannelID
+      OTChannelID nchannelID = this->getChannelID(Station, Layer, 
+                                                  Quarter, Module, Nstraw);
+      // Filling the next vector of type OTDigit called nextDigit 
+      // with nextChannel and nextTime
+      OTDigit* nextDigit = new OTDigit ( nchannelID, nextTimes);
+      vOTDs.add(nextDigit);
+    }
+  }
+  
+  //To restart the First Multiple Hit Loop
+  firstTimeCopy = 1000000;
+  nextTimeCopy = 1000000;
+  firstOtisIDCopy = 1000;
+  firstChannelIDCopy = 1000000;
+  nextBuffBis = 55;
+  nextBuff = 50;
+  multiBuffer = 51;
+  firstBuff = 0;
+  onlyOnceBuffer = 0;
+  buffer = 1; 
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Member functions
 //=============================================================================
 
-OTChannelID OTRetrieveBuffer::getChannelID ( int bank, int GolID, 
-                                           unsigned int OtisID, 
-                                           unsigned int bstraw )
+int OTRetrieveBuffer::getStation(raw_int golHeader)
+
+{    
+  //getting gol header information using the mask: Station
+  int nStation = golHeader & StationMask;
+  nStation = nStation >> 29;
+  return(nStation);
+}
+//=============================================================================
+// Member functions
+//=============================================================================
+int OTRetrieveBuffer::getLayer(raw_int golHeader)
+
+{    
+  //getting gol header information using the mask: Layer
+  int nLayer = golHeader & LayerMask;
+  nLayer = nLayer >> 27;
+  return(nLayer);
+}
+//=============================================================================
+// Member functions
+//=============================================================================
+int OTRetrieveBuffer::getQuarter(raw_int golHeader)
+
+{    
+  //getting gol header information using the mask: Quarter
+  int nQuarter = golHeader & QuarterMask;
+  nQuarter = nQuarter >> 25;
+  return(nQuarter);
+}
+//=============================================================================
+// Member functions
+//=============================================================================
+int OTRetrieveBuffer::getModule( raw_int golHeader)
+
+{    
+  //getting gol header information using the mask: Module
+  int nModule = golHeader & ModuleMask;
+  nModule = nModule >> 21;
+  return(nModule);  
+}
+//=============================================================================
+// Member functions
+//=============================================================================
+int OTRetrieveBuffer::getStrawID(int otisID , int channel)
+
+{    
+  int straw = 0;
+  int tempOtis = 0;
+  if((otisID == 0) || (otisID == 1)){
+    straw = (channel + 1) + otisID * 32;
+  } else if((otisID == 3) || (otisID == 2)){
+    int tempstraw = (31 - channel) ;
+      if(otisID == 2){tempOtis =  3 * 32;}
+      else if(otisID == 3){tempOtis =  2 * 32;}
+    straw = tempstraw + tempOtis + 1;
+  }
+  return(straw);
+}
+//=============================================================================
+// Member functions
+//=============================================================================
+OTChannelID OTRetrieveBuffer::getChannelID (int station, int layer, 
+                                            int quarter, int module, int straw)
 {
-  unsigned int station = 1;
-  unsigned int layer = 0;
-  unsigned int quarter = 0;
-  unsigned int module = 0;
-  unsigned int straw = 0;
-
-  straw = (bstraw + 1) + OtisID * 32;
-
-  while( bank > 36){
-    station += 1;
-    bank -= 36;
-  }
-  while(bank > 9){
-    layer += 1;
-    bank -= 9;
-  }
-  
-  if( bank == 1 ){
-    quarter = 0;
-    if (GolID == 0){ module = 1; }
-    else if (GolID == 1){ module = 2; }
-    else if (GolID == 2){ module = 3; }
-    else if (GolID == 3){ module = 4; }
-  }
-  else if( bank == 2 ){
-    quarter = 0;
-    if (GolID == 0){ module = 5; }
-    else if (GolID == 1){ module = 6; }
-    else if (GolID == 2){ module = 7; }
-    else if (GolID == 3){ module = 8; }
-  }
-  else if( bank == 3 ){
-    quarter = 1;
-    if (GolID == 0){ module = 1; }
-    else if (GolID == 1){ module = 2; }
-    else if (GolID == 2){ module = 3; }
-    else if (GolID == 3){ module = 4; }
-  }
-  else if( bank == 4 ){
-    quarter = 1;
-    if (GolID == 0){ module = 5; }
-    else if (GolID == 1){ module = 6; }
-    else if (GolID == 2){ module = 7; }
-    else if (GolID == 3){ module = 8; }
-  }
-  else if( bank == 5 ){
-    quarter = 2;
-    if (GolID == 0){ module = 1; }
-    else if (GolID == 1){ module = 2; }
-    else if (GolID == 2){ module = 3; }
-    else if (GolID == 3){ module = 4; }
-  }
-  else if( bank == 6 ){
-    quarter = 2;
-    if (GolID == 0){ module = 5; }
-    else if (GolID == 1){ module = 6; }
-    else if (GolID == 2){ module = 7; }
-    else if (GolID == 3){ module = 8; }
-  }
-  else if( bank == 7 ){
-    quarter = 3;
-    if (GolID == 0){ module = 1; }
-    else if (GolID == 1){ module = 2; }
-    else if (GolID == 2){ module = 3; }
-    else if (GolID == 3){ module = 4; }
-  }
-  else if( bank == 8 ){
-    quarter = 3;
-    if (GolID == 0){ module = 5; }
-    else if (GolID == 1){ module = 6; }
-    else if (GolID == 2){ module = 7; }
-    else if (GolID == 3){ module = 8; }
-  }
-  else if( bank == 9 ){
-    if (GolID == 0){
-      quarter = 0;
-      module = 9; 
-    } else if (GolID == 1){
-      quarter = 1;
-      module = 9; 
-    } else if (GolID == 2){
-      quarter = 2;
-      module = 9; 
-    } else if (GolID == 3){
-      quarter = 3;
-      module = 9; }   
-  }
   OTChannelID channel(station, layer, quarter, module, straw);
   return channel;
 }
-
-
-
 
 
 

@@ -1,6 +1,20 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
+!====================== OTDAQ v2r0 2004-03-25 ======================
+! 2004-03-25 - Jacopo Nardulli
+
+ Second version of the package OTDAQ. Principal modifications respect to the 
+ previous versions are:
+  - New general data structure with 24 banks instead of 108 and 18 GOL 
+    (instead of 4) per Bank.
+  - Reimplementation of the Gol Header.
+  - Introduction of the Otis Headers.  
+  - Implementation of the multiple hit capacity (maximum 3 hits per channel).
+  - Straw number encoded and decoded according to a different numbering scheme
+    (closer to the hardware eletronic scheme) inside the package.
+
+
 !====================== OTDAQ v1r1 2004-02-12 ======================
 ! 2004-02-12 - Marco Cattaneo
  - Fix the POOL crash of Brunel: a KeyedObject cannot belong to two containers,
