@@ -42,10 +42,10 @@ public:
 
   /// Method to load all tools. 
   /// The base class provides an instance of all type of tools
-  StatusCode loadTools();
+  StatusCode loadTools();       // to become private
 
   /// Method to release all tools
-  StatusCode releaseTools();
+  StatusCode releaseTools();    // to become private
   
   /// Accessor for PhysDesktop Tool
   IPhysDesktop* desktop() const; 

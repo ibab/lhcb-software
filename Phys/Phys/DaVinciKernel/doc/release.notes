@@ -2,10 +2,14 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciKernel v2r0 2004-10-27 ===================
 ! 2004-09-21 - P. Koppenburg
  - DaVinciTools/DVAlgorithm.h
  - src/DVAlgorithm.cpp
-   . Let DVAlgorithm inherit from GaudiTupleAlg.    
+   . Let DVAlgorithm inherit from GaudiTupleAlg (which inherits from 
+     GaudiHistoAlg). This change (as well as the one below) is fully
+     backward compatible with the old inheritence from GaudiAlgorithm,
+     but allows more features. It just requires to recompile all DaVinci.
 ! 2004-09-18 - P. Koppenburg
  - DaVinciTools/DVAlgorithm.h
  - src/DVAlgorithm.cpp
