@@ -38,4 +38,7 @@ GiGa.EventSeq.RichG4Event.RichG4EventHitReconUseMidRadiator=false;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
 GiGa.RunSeq.RichG4Run.DefineRichG4HistoTimer=true;
-
+// now switch on creation of rich debug verbose output convertors.
+//GetHits.RichOpticalPhotons = "";
+//GetHits.RichSegments       = "";
+//GetHits.RichTracks         = "";

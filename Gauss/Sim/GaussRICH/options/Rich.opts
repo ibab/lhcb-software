@@ -38,4 +38,7 @@ GiGa.EventSeq.RichG4Event.RichG4EventActivateCkvReconstruction=false;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2=true;
 // GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet3=false;
 GiGa.RunSeq.RichG4Run.DefineRichG4HistoTimer=true;
+GetHits.RichOpticalPhotons = "";
+GetHits.RichSegments       = "";
+GetHits.RichTracks         = "";
 
