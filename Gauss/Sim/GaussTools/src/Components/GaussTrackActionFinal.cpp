@@ -1,4 +1,4 @@
-// $Id: GaussTrackActionFinal.cpp,v 1.3 2004-02-23 08:19:16 ibelyaev Exp $ 
+// $Id: GaussTrackActionFinal.cpp,v 1.4 2004-02-23 08:21:51 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -88,14 +88,14 @@ void GaussTrackActionFinal::PreUserTrackingAction
 ( const G4Track* /* track */ ) 
 {
   // get the trajectory 
-  GaussTrajectory*       tr   = trajectory() ;  
+  GaussTrajectory*       tr   = trajectory () ;  
   // check the validity 
   if( 0 == tr   ) 
   { Error ( "Pre...: GaussTrajectory*       points to NULL" ) ; }
   // get the trajectory 
-  GaussTrackInformation* info = trackInfo() () ;  
+  GaussTrackInformation* info = trackInfo  () ;  
   // check the validity 
-  if( 0 == into ) 
+  if( 0 == info ) 
   { Error ( "Pre...: GaussTrackInformation* points to NULL" ) ; }
 
 };
