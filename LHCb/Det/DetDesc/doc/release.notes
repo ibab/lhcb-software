@@ -2,6 +2,11 @@ package DetDesc
 package manager : N.N 
 
 !===========================================================================
+! 20010430 - Gonzalo Gracia
+    Bug fixed in XmlLVolumeCnv.cpp (optical surfaces were not working properly).
+    Fix compilation warning on XmlMixtureCnv.cpp
+
+!===========================================================================
 ! 20010426 - Gonzalo Gracia
    Modified DetDesc_load.cpp to include: 
      DLL_DECL_CONVERTER( XmlSurfaceCnv           );
