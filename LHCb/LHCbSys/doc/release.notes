@@ -4,7 +4,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!====================== LHCbSys v12r0 2003-07-01 =============================
+!====================== LHCbSys v12r0 2003-07-03 =============================
 ! 2003-06-17 - Marco Cattaneo
  - Update all package versions for v12r0 release
  - Main changes:
@@ -14,6 +14,7 @@
    . Additional associators from OTDigit to MC truth (OTAssociators v2r5)
    . Support for Flat Spillover (MuonSicbCnv v5r6)
    . Add detInfo attribute to MCHit (Event v3r3)
+   . Various fixes for valgrind errors
 
 !====================== LHCbSys v11r12 2003-06-02 ============================
 ! 2003-05-28 - Marco Cattaneo
