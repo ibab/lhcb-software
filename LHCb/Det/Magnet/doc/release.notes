@@ -4,6 +4,12 @@
 ! Purpose     : Provides magnetic field map
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v2r5 2004-03-18 ==========================
+! 2004-03-18 - Florence RANJARD
+ - remove the use FieldMap v4r*
+   the use of FieldMap must be done in the application with an explicit
+   version number.
+
 !====================== Magnet v2r4 2002-12-16 ===========================
 ! 2003-12-16 - Marco Cattaneo
  - Move to Gaudi v14 (use GaudiKernel v15r* in requirements)

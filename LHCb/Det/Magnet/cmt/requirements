@@ -1,13 +1,12 @@
-# $Id: requirements,v 1.7 2003-12-18 15:31:32 cattanem Exp $
+# $Id: requirements,v 1.8 2004-03-18 08:17:36 ranjard Exp $
 #============================================================================
 package           Magnet
-version           v2r4
+version           v2r5
 
 branches          cmt doc src 
 
 use GaudiKernel v15r*
 use CLHEP       v*
-use FieldMap    v*
 
 library          Magnet    ../src/*.cpp
 
