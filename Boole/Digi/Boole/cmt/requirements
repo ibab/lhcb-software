@@ -48,6 +48,7 @@ use RiSicbGeom	v3r5	SICB
 #-- BooleSys v3r0 packages
 
 use DigiAlg		v2r1	Digi
+use LHCbTools		v1r0	Kernel
 
 # L0 trigger
 use L0Calo              v7r1	L0
@@ -56,7 +57,7 @@ use PuVeto              v5r4	L0
 use L0DU                v6r5    L0
 
 # L1 trigger
-use L1VeloTrack         v5r2	L1
+use L1VeloTrack         v5r3	L1
 use L1Decision		v2r2	L1
 
 # Calorimeter
@@ -90,11 +91,7 @@ use RichReadout		v1r1	Rich
 application Boole $(GAUDICONFROOT)/src/GaudiMain.cpp
 # ========================= set macros ============================
 
-macro Boole_linkopts    "$(application_linkopts)"
-
-macro_append Boole_linkopts " "\
-                Linux        " -g -Wl,--start-group "\
-                Linuxdbx     " -g -Wl,--start-group "
+macro Boole_linkopts    "${application_linkopts}"
 
 apply_pattern application_path
 

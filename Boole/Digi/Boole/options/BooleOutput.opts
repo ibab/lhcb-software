@@ -1,14 +1,6 @@
 // This file sets up the Boole output tape content
 // -----------------------------------------------
 
-// Instantiate phase to filter containers and create relations
-ApplicationMgr.TopAlg += { "ProcessPhase/Output" };
-Output.DetectorList = { "Asct" };
-ApplicationMgr.DLLs += { "VeloAssociators" };
-OutputAsctSeq.Members += { "VeloCluster2MCHitAlg" };
-ApplicationMgr.DLLs += { "OTAssociators" };
-OutputAsctSeq.Members += { "OTDigit2MCHitAlg" };
-
 // Define the output data content
 ApplicationMgr.OutStream += { "DigiWriter" };
 #include "$STDOPTS/DigiContent.opts"

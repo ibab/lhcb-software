@@ -3,7 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v3r0>2003-11-03 Boole v3r0</A></H1><PRE>
+</PRE><H1><A NAME=v3r0>2003-11-04 Boole v3r0</A></H1><PRE>
+
+- New features
+   - Add a new "Relations" phase, to create all Relations tables needed for the
+     output file, independent of whether Moni phase is executed
+   - Print a timing normalization at intialization (DigiAlg v2r1, LHCbTools v1r0)
+   - Move ITDigitToL1 and OTDigitToL1 to the IT/OT digitization sequences
 
 - New tuning
    - Changes to Rich HPD digitization
@@ -27,6 +33,8 @@ Purpose: LHCb Digitization program
      and "TotalCrossSection" taken from job options (DigiAlgs v2r1)
    - Remove dependency from CERNLIB for solution of quartic polynomial. Now done
      in private code, to be submitted to GSL (RichDetTools v3r1)
+   - Remove unneccessary usage of ITDigit2MCHit associator from ITDigitToL1
+     (L1veloTrack v5r3)
 
 </PRE><H1><A NAME=v2r1>2003-10-16 Boole v2r1</A></H1><PRE>
 

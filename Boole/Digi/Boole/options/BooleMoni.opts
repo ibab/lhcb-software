@@ -18,20 +18,18 @@ Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0", "L1" };
 //--------------------------------------------------------------
 
 // Trigger
-ApplicationMgr.DLLs += { "Associators" };
+//ApplicationMgr.DLLs += { "Associators" };
 MoniL0Seq.Members += { "L0CaloMonit" };
 MoniL0Seq.Members += { "L0Monitor" };
 MoniL1Seq.Members += { "L1TrackMonitor" };
 //MoniL1Seq.Members += { "Level1Check" }; // Uses Cluster2MCP associators
-#include "$L1VELOTRACKROOT/options/L1Track3dToMCP.opts"
 
 // Velo
 MoniVELOSeq.Members += { "VeloMonitor" };
 #include "$VELOALGORITHMSROOT/options/VeloMonitor.opts"
 
 // IT digitisation
-ApplicationMgr.DLLs += {"ITCheckers","ITAssociators"};
-#include "$ITASSOCIATORSROOT/options/ITAssociators.opts"
+ApplicationMgr.DLLs += {"ITCheckers"};
 MoniITSeq.Members += { "MCITDepositChecker" };
 MoniITSeq.Members += { "MCITDigitChecker" };
 MoniITSeq.Members += { "ITDigitChecker" };

@@ -8,7 +8,7 @@
 //==============================================================
 #units "$STDOPTS/units.opts"
 
-ApplicationMgr.DLLs += { "GaudiAlg", "DigiAlg" };
+ApplicationMgr.DLLs += { "GaudiAlg", "DigiAlg", "LHCbTools" };
 
 // ROOT Persistency
 ApplicationMgr.DLLs += { "GaudiDb", "GaudiRootDb", "DbCnv" };
@@ -30,6 +30,7 @@ ApplicationMgr.TopAlg += {
                            "BooleInit",
                            "ProcessPhase/Digi",
                            "ProcessPhase/Trigger" };
+ApplicationMgr.TopAlg += { "ProcessPhase/Relations" }; 
 ApplicationMgr.TopAlg += { "ProcessPhase/Moni" }; 
 #include "$BOOLEOPTS/BooleMoni.opts"
 //--------------------------------------------------------------
@@ -37,6 +38,7 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Moni" };
 //--------------------------------------------------------------
 Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 Trigger.DetectorList = { "L0", "L1" };
+Relations.DetectorList = { "VELO", "IT", "OT", "L0", "L1" };
 
 //--------------------------------------------------------------
 // Geometry and magnetic field
@@ -44,18 +46,15 @@ Trigger.DetectorList = { "L0", "L1" };
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
 ApplicationMgr.DLLs += { "RichDet" };
+ApplicationMgr.DLLs += { "RiSicbGeom" };
 ApplicationMgr.DLLs += { "MuonDet" };
 ApplicationMgr.DLLs += { "ITDet" };
 ApplicationMgr.DLLs += { "OTDet" };
 ApplicationMgr.DLLs += { "VeloDet" };
 ApplicationMgr.DLLs += { "Magnet" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
-
-//--------------------------------------------------------------
-// Sicb converters
-//--------------------------------------------------------------
-ApplicationMgr.DLLs += { "RiSicbGeom" };
-//, "RiSicbCnv" };
+// 45 degree Velo sectors
+DeVelo.Design = 1;
 
 //--------------------------------------------------------------
 // Spillover and LHC background (from DigiAlg DLL)
@@ -82,19 +81,9 @@ TriggerL0Seq.Members += { "DecisionUnit" };
 // L1 trigger
 TriggerL1Seq.Members = { "CreateL1Event" };
 ApplicationMgr.DLLs += { "L1VeloTrack" };
-TriggerL1Seq.Members += { "ITDigitToL1", "OTDigitToL1" };
 ApplicationMgr.DLLs += { "L1Decision" };
 TriggerL1Seq.Members += { "Level1" };
 Level1.minimizeL1ExeTime = false;
-
-// Trigger truth relation tables (used by monitoring and for DST)
-TriggerL0Seq.Members += { "L0CaloToMCParticleAsct" };
-TriggerL0Seq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
-L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
-L0CaloFullTruth.OutputTable    = "Rec/Relations/L0CaloFullCandidates";
-
-TriggerL1Seq.Members += { "L1Track2dTruth" };
-TriggerL1Seq.Members += { "L1Track3dTruth" };
 
 // Calorimeter digitisation and reconstruction
 ApplicationMgr.DLLs += { "CaloDigit", "CaloEvent" };
@@ -115,7 +104,7 @@ DigiCALOSeq.Members = {
 #include "$CALOASSOCIATORSOPTS/Brunel.opts"
 
 // Rich digitisation depends on dbase type, see dbase specific options
-ApplicationMgr.DLLs += { "RichDetTools", "RichReadout" };
+ApplicationMgr.DLLs += { "RichDetTools", "RichUtils", "RichReadout" };
 
 // Muon digitisation
 ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground" };
@@ -129,6 +118,7 @@ DigiMUONSeq.Members += { "MuonDigitization" };
 ApplicationMgr.DLLs   += { "ITAlgorithms" };
 DigiITSeq.Members += { "MCITDepositCreator", "MCITDigitCreator" };
 DigiITSeq.Members += { "ITDigitCreator" };
+DigiITSeq.Members += { "ITDigitToL1" };
 #include "$ITALGORITHMSROOT/options/itDigi.opts"
 
 // Outer tracker digitisation
@@ -137,6 +127,7 @@ ApplicationMgr.DLLs   += { "OTAlgorithms" };
 DigiOTSeq.Members += { "MCOTDepositCreator",
                        "MCOTDigitCreator",
                        "OTDigitCreator" };
+DigiOTSeq.Members += { "OTDigitToL1" };
 
 // Velo digitisation and clustering (also for PuVeto and trigger)
 ApplicationMgr.DLLs += { "VeloAlgorithms" };
@@ -144,10 +135,31 @@ DigiVELOSeq.Members += { "VeloSim" };
 DigiVELOSeq.Members += { "VeloDataProcessor" };
 DigiVELOSeq.Members += { "VeloClusterMaker" };
 DigiVELOSeq.Members += { "VeloFEToL1" };
-// 45 degree sectors
-DeVelo.Design = 1;
 
 // Modify printout defaults
 #include "$BOOLEOPTS/BooleMessage.opts"
+
+//--------------------------------------------------------------
+// Relations to MC truth. Built unconditionally regardless of monitoring
+//--------------------------------------------------------------
+ApplicationMgr.DLLs += { "Associators" };
+ApplicationMgr.DLLs += { "VeloAssociators" };
+ApplicationMgr.DLLs += { "ITAssociators" };
+#include "$ITASSOCIATORSROOT/options/ITAssociators.opts"
+ApplicationMgr.DLLs += { "OTAssociators" };
+
+RelationsVeloSeq.Members += { "VeloCluster2MCHitAlg" };
+RelationsITSeq.Members   += { "ITDigit2MCHitAlg" };
+RelationsOTSeq.Members   += { "OTDigit2MCHitAlg" };
+
+RelationsL0Seq.Members += { "L0CaloToMCParticleAsct" };
+RelationsL0Seq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
+L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
+L0CaloFullTruth.OutputTable    = "Rec/Relations/L0CaloFullCandidates";
+
+RelationsL1Seq.Members += { "L1Track2dTruth" };
+RelationsL1Seq.Members += { "L1Track3dTruth" };
+#include "$L1VELOTRACKROOT/options/L1Track3dToMCP.opts"
+
 
 // Should add a timing normalisation, as in TimingAlg

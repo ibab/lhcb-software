@@ -8,7 +8,6 @@ Digi.DetectorList += { "Bkg" };           // Comment to switch off LHC backgroun
 #include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
 #include "$BOOLEOPTS/BooleMoniProd.opts"  // Default monitoring for production
 #include "$BOOLEOPTS/BooleOutput.opts"    // Comment to switch off output
-
 //---------------------------------------------------------------------------
 // Database specific options
 //---------------------------------------------------------------------------
@@ -35,6 +34,6 @@ LHCBkgSelector.Input = {
   "DATAFILE='rfio:/castor/cern.ch/lhcb/background/LHC/oosim/00000310_00000004_5.oosim' TYP='ROOT' OPT='READ'" }; // Test file, "Maximal" LHC background 
 //LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events 
 DigiWriter.Output = "DATAFILE='360000_1310.oodigi' TYP='ROOT' OPT='NEW'";
-HistogramPersistencySvc.OutputFile = "360000_1310.hbook";  // Monitoring histos
-ApplicationMgr.EvtMax = 200;
+HistogramPersistencySvc.OutputFile = "360000_1310.root";  // Monitoring histos
+ApplicationMgr.EvtMax = -1;
 //////////////////////////////////////////////////////////////////////////////
