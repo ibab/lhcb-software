@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.46 2005-02-01 11:10:20 ibelyaev Exp $ 
+# $Id: requirements,v 1.47 2005-02-02 19:19:02 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,20 +6,21 @@
 #                 LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v4r5p1
+version       v4r6
 author        Vanya BELYAEV
 
 use           GaudiPython    v6r11
+use           LoKi           v3r8  Tools 
 
 # =========== Bender Application itself =======================================
-use           Bender         v4r5   Phys 
+use           Bender         v4r6   Phys 
 use           BenderGCC      v1r1   Tools 
 # =========== Bender Libraries ================================================
-use           BenderLibs     v4r5   Tools 
+use           BenderLibs     v4r6   Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDet      v4r5   Det 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDict     v4r5   Tools 
+use           BenderDict     v4r6   Tools 
 # =========== Bender & LoKi documentation =====================================
 use           BenderDoc      v4r5   Doc 
 use           LoKiDoc        v3r7   Doc 
@@ -28,7 +29,7 @@ use           BenderTutor    v4r5   Tutorial
 use           BenderTest     v4r5   Tests 
 use           LoKiTest       v3r7   Tests 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v4r5   Ex  
+use           BenderExample  v4r6   Ex  
 use           LoKiExample    v3r7   Ex 
 # =========== Test suit for Bender ============================================
 use           BenderVis      v4r5   Vis 
@@ -41,6 +42,9 @@ use           LoKiHybrid     v4r5   Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.46  2005/02/01 11:10:20  ibelyaev
+#  use DaVinci v12r7
+#
 # =============================================================================
 # The END 
 # =============================================================================
