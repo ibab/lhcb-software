@@ -1,4 +1,4 @@
-// $Id: RawBufferToRichDigitsAlg.cpp,v 1.5 2004-04-20 13:33:04 jonesc Exp $
+// $Id: RawBufferToRichDigitsAlg.cpp,v 1.6 2004-05-12 23:53:07 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -54,6 +54,12 @@ StatusCode RawBufferToRichDigitsAlg::execute() {
 
   // Get the banks for the RichDigits
   const RichDAQ::RAWBanks & richBanks = rawEvent->banks( RawBuffer::Rich );
+
+  // Check RichDigits don't already exist ?
+  SmartDataPtr<RichDigits> richDigitsTES( eventSvc(), m_richDigitsLoc );
+  if ( richDigitsTES ) {
+    return Warning( "RichDigits already exist - abort building", StatusCode::SUCCESS );
+  }
 
   // Make new container for RichDigits
   m_digits = new RichDigits();
