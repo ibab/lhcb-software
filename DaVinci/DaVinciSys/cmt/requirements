@@ -66,7 +66,7 @@ use  Bd2MuMuKstar    v1r3p1  PhysSel
 use  Bd2Pi0Pi0       v1r0p2  PhysSel
 use  Bs2JpsiPhi      v1r3    PhysSel
 use  Bs2MuMu         v1r4    PhysSel
-use  Bs2PhiEtac      v1r4p1  PhysSel
+use  Bs2PhiEtac      v1r4p2  PhysSel
 
 #============================================================================
 # Quarantine 
