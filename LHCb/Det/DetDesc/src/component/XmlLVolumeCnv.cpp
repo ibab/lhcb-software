@@ -1,8 +1,11 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.25 2003-04-01 13:41:07 sponce Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.26 2003-04-15 10:24:06 sponce Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.25  2003/04/01 13:41:07  sponce
+// add the possibility to use parameters for the indexes of physical volumes inside parametrized volumes; corrected new code for gcc 3.2
+//
 // Revision 1.24  2003/01/17 14:03:40  sponce
 // support for gcc 3.2
 //
@@ -40,6 +43,11 @@
 // This is for the definition of M_PI
 #include <CLHEP/config/CLHEP.h>
 
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
+#include <strstream> 
+#else
+#include <sstream>
+#endif
 #include <cstdlib>
 #include <float.h>
 #include <map>
