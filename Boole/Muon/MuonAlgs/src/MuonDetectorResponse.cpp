@@ -104,11 +104,18 @@ MuonDetectorResponse::~MuonDetectorResponse(){
       delete responseVector[readout][indexRegion];      
 		}
 	}
+  std::vector<Rndm::Numbers*>::iterator  iterJitter;
+  for(iterJitter=m_timeJitter.begin();iterJitter<m_timeJitter.end();
+      iterJitter++){
+    delete *iterJitter;    
+  }
+ 
   std::vector<Rndm::Numbers*>::iterator iterNoise;	
 	for(iterNoise=m_electronicNoise.begin();iterNoise<m_electronicNoise.end();
       iterNoise++){
     delete *iterNoise;
 	}
+
 }
 
 

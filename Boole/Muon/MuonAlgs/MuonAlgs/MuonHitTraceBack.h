@@ -15,7 +15,7 @@
 class MuonHitTraceBack
 {
 public:
-MuonHitTraceBack():m_hitArrivalTime(0){}; 
+MuonHitTraceBack(); 
 ~MuonHitTraceBack(){};
 
 void setMCMuonHit(SmartRef<MCMuonHit> value); 
