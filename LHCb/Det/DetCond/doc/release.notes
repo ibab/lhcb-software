@@ -1,6 +1,16 @@
-# $Id: release.notes,v 1.17 2002-04-05 16:25:15 andreav Exp $
+# $Id: release.notes,v 1.18 2002-04-17 15:55:13 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020417 - Andrea Valassi
+Upgrade to Gaudi v10
+- use RedHat7.2 tag rh72_gcc2952 (not rh72_gcc29521), defined in GaudiPolicy
+- dependency on Det/CondDBOracle changed from v3r10 to v3r10p1
+- dependency on CONDDB changed from v3r02p1 to v3r02p2 (bug fix)
+- adapt to new version of MsgStream.h in GaudiKernel for longlong printout
+- dependency on Det/DetDesc changed from v9r* to v10r*
+Requirements v3r0, private tag h20020417
 
 ==============================================================================
 !20020405 - Andrea Valassi

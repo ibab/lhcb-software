@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.10 2002-03-01 11:29:16 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.11 2002-04-17 15:55:14 andreav Exp $
 #include <string>
 #include <stdio.h>
 
@@ -267,7 +267,11 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
     ITime::AbsoluteTime absTime;
     absTime = m_detDataSvc->eventTime().absoluteTime();
     log << MSG::DEBUG
-	<< "Event time: " << absTime << endreq; 
+	<< "Event time: " << absTime 
+	<< "(0x" << std::hex 
+	<< absTime 
+	<< std::dec << ")" 
+	<< endreq; 
   }
 
   // Update the object according to folder, tag, time, clid, string type
@@ -288,8 +292,15 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
     return StatusCode::SUCCESS;
   }
   log << MSG::DEBUG << "Old condition DataObject was valid since "
-      << pValidity->validSince().absoluteTime() << " till "
-      << pValidity->validTill().absoluteTime()  << endreq;
+      << pValidity->validSince().absoluteTime() 
+      << "(0x" << std::hex 
+      << pValidity->validSince().absoluteTime() 
+      << std::dec << ")" 
+      << " till " << pValidity->validTill().absoluteTime()  
+      << "(0x" << std::hex 
+      << pValidity->validTill().absoluteTime() 
+      << std::dec << ")" 
+      << endreq;
   StatusCode sc;
   sc = updateConditionData( pObject, 
 			    pAddress->par()[0], 
@@ -311,8 +322,15 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
     return StatusCode::FAILURE;
   }
   log << MSG::DEBUG << "New condition DataObject is valid since "
-      << pValidity->validSince().absoluteTime() << " till "
-      << pValidity->validTill().absoluteTime()  << endreq;
+      << pValidity->validSince().absoluteTime() 
+      << "(0x" << std::hex 
+      << pValidity->validSince().absoluteTime() 
+      << std::dec << ")" 
+      << " till " << pValidity->validTill().absoluteTime()  
+      << "(0x" << std::hex 
+      << pValidity->validTill().absoluteTime() 
+      << std::dec << ")" 
+      << endreq;
 
   log << MSG::DEBUG << "Method updateObj exiting" << endreq;
   return StatusCode::SUCCESS;
@@ -619,14 +637,15 @@ ConditionsDBCnvSvc::updateConditionData( DataObject*          pObject,
 	<< "Persistency service could not create object" << endreq;
     return status;
   }
-  // Since the DataObject::operator= operator is not virtual, dynamic cast first!
-  // The overloaded virtual Condition::update() method must be properly defined!
+  // Since DataObject::operator= operator is not virtual, dynamic cast first!
+  // Overloaded virtual method Condition::update() must be properly defined!
   // The memory pointed to by the old pointer must contain the new object    
   Condition* pCond = dynamic_cast<Condition*>(pObject);
   Condition* pNewCond = dynamic_cast<Condition*>(pNewObject);
   if ( 0 == pCond || 0 == pNewCond ) {
     log << MSG::ERROR
-	<< "Cannot update objects other than Condition: update() must be defined!"
+	<< "Cannot update objects other than Condition: " 
+	<< "update() must be defined!"
 	<< endreq;
     return StatusCode::FAILURE;
   }

@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.cpp,v 1.9 2002-03-28 08:57:13 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.10 2002-04-17 15:55:14 andreav Exp $
 #include <string>
 
 #ifdef __CondDBObjy__
@@ -224,13 +224,21 @@ ConditionsDBGate::readCondDBObject      ( ITime&              refValidSince,
   MsgStream log(msgSvc(), "ConditionsDBGate" );
   log << MSG::DEBUG << "Retrieving CondDBObject from the CondDB" << endreq;
   log << MSG::DEBUG << "FolderName=" << folderName << endreq;
-  log << MSG::DEBUG << "AbsoluteTime=" << time.absoluteTime() << endreq; 
+  log << MSG::DEBUG << "AbsoluteTime=" << time.absoluteTime() 
+      << "(0x" << std::hex 
+      << time.absoluteTime() 
+      << std::dec << ")" 
+      << endreq; 
 
   // Convert ITime to CondDBKey
   CondDBKey key;
   StatusCode status = i_convertToKey ( key, time );
   if ( !status.isSuccess() ) return status;
-  log << MSG::DEBUG << "Key=" << key << endreq; 
+  log << MSG::DEBUG << "Key=" << key 
+      << "(0x" << std::hex 
+      << key
+      << std::dec << ")" 
+      << endreq; 
 
   // Create an object (must delete it at the end)
   ICondDBObject* aCondDBObject;
@@ -249,7 +257,13 @@ ConditionsDBGate::readCondDBObject      ( ITime&              refValidSince,
   log << MSG::DEBUG << "CondDBObject data succesfully read" << endreq;
   log << MSG::VERBOSE 
       << "In absTime = [" << refValidSince.absoluteTime()
+      << "(0x" << std::hex 
+      << refValidSince.absoluteTime()
+      << std::dec << ")" 
       << ","   << refValidTill.absoluteTime()
+      << "(0x" << std::hex 
+      << refValidTill.absoluteTime()
+      << std::dec << ")" 
       << "] :" << std::endl << data << endreq;
   return StatusCode::SUCCESS;
 
@@ -332,7 +346,13 @@ ConditionsDBGate::i_findCondDBObject ( ICondDBObject*&     refpCobject,
     refpCobject->data( data );
     log << MSG::ERROR 
 	<< "In key = [ " << refpCobject->validSince()
+	<< "(0x" << std::hex 
+	<< refpCobject->validSince()
+	<< std::dec << ")" 
 	<< " , "   << refpCobject->validTill()
+	<< "(0x" << std::hex 
+	<< refpCobject->validTill()
+	<< std::dec << ")" 
 	<< " ] : '" << data << "'" << endreq;
     refpCobject = 0;
     return StatusCode::FAILURE;
