@@ -1,4 +1,4 @@
-// $Id: DeRichRadiator.h,v 1.5 2004-03-16 13:35:30 jonesc Exp $
+// $Id: DeRichRadiator.h,v 1.6 2004-06-17 12:05:51 cattanem Exp $
 
 #ifndef RICHDET_DERICHRADIATOR_H
 #define RICHDET_DERICHRADIATOR_H 1
@@ -12,8 +12,8 @@
 #include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/Material.h"
 
-#include "RichKernel/RichRadiatorType.h"
-#include "RichKernel/RichDetectorType.h"
+#include "Kernel/RichRadiatorType.h"
+#include "Kernel/RichDetectorType.h"
 
 
 /** @class DeRichRadiator DeRichRadiator.h

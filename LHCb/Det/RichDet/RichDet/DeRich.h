@@ -1,4 +1,4 @@
-// $Id: DeRich.h,v 1.2 2003-11-22 18:40:48 jonesc Exp $
+// $Id: DeRich.h,v 1.3 2004-06-17 12:05:51 cattanem Exp $
 #ifndef DERICH_H
 #define DERICH_H 1
 
@@ -10,8 +10,8 @@
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Plane3D.h"
 
-// RichKernel
-#include "RichKernel/RichSide.h"
+// LHCbKernel
+#include "Kernel/RichSide.h"
 
 /** @class DeRich DeRich.h
  *
