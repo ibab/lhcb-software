@@ -11,7 +11,7 @@
 #units "$GAUDICONFROOT/options/units.opts"
 
 // Framework
-ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg" };
+ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg", "LHCbTools" };
 
 // ROOT Persistency
 #include "$STDOPTS/RootDb.opts"
@@ -104,8 +104,11 @@ BrunelRecoTrSeq.Members += { "TrMatchVeloSeed/matchVeloSeed",
 reFit.TrackContainer = "Rec/FitTrack/Match";
 
 // Upstream tracking
-ApplicationMgr.DLLs += { "UpstreamPR" };
-#include "$UPSTREAMPRROOT/options/Brunel.opts"
+ApplicationMgr.DLLs += { "TrKShort" };
+BrunelRecoTrSeq.Members += { "FindTrKShort"
+                           , "TrEventTracksFitter/KShortFit" };
+KShortFit.TrackContainer = "Rec/FitTrack/Upstream";
+KShortFit.Fitter.stateAtBeamLine = false;
 
 // Clone killer and converter to TrStoredTrack
 ApplicationMgr.DLLs += { "TrCleanEx" };

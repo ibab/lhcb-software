@@ -1,5 +1,5 @@
 package Brunel
-version v23r0
+version v23r1
 
 branches doc cmt job options
 
@@ -10,7 +10,7 @@ apply_pattern BrunelVersion
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r14
 
-#-- External libraries (as defined in GAUDI_v14r0)
+#-- External libraries (as defined in GAUDI_v14r1)
 use ExternalLibs	v4r4
 use AIDA		v3r300
 use CLHEP		v2r1810p0
@@ -21,18 +21,18 @@ use ROOT 		v2r31002p0
 use PI			v1r112
 use PCRE		v1r44
 use UUID		v1r32
-use SEAL		v1r133p0
-use POOL		v1r150p0
+use SEAL		v1r133p1
+use POOL		v1r150p1
 
-#-- Gaudi libraries (from GAUDI_v14r0)
-use GaudiKernel		v15r0
-use GaudiSvc 		v11r1
+#-- Gaudi libraries (from GAUDI_v14r1)
+use GaudiKernel		v15r1
+use GaudiSvc 		v11r2
 use GaudiAlg 		v6r5
 use GaudiAud 		v6r4
 use GaudiGSL		v5r0
 use GaudiDb 		v9r1
 use GaudiRootDb 	v9r4
-use GaudiPoolDb		v1r2
+use GaudiPoolDb		v1r4
 use GaudiObjDesc 	v6r2p1
 use RootHistCnv         v9r1
 
@@ -40,20 +40,18 @@ use RootHistCnv         v9r1
 use XmlDDDB		v20r1	Det
 use ParamFiles          v2r1    $(LHCb_release_area)/PARAM -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v15r0)
-use LHCb	v15r0
+#-- LHCb libraries (from LHCB_v15r1)
+use LHCb	v15r1
 
-#-- BrunelSys v23r0 packages
+#-- BrunelSys v23r1 packages
 
-# Phys utilities
-use MCTools		v1r1p1	Phys
+# Tools
+use LHCbTools		v1r0	Kernel
 
 # Brunel utilities
-use BrunelAlgs          v3r3	Rec
+use BrunelAlgs          v3r4	Rec
 
 # Calorimeter
-use CaloInterfaces      v3r1  	Calo
-use CaloUtils           v4r6  	Calo
 use CaloMonitor         v1r6  	Calo
 use CaloReco            v1r8	Calo
 use CaloPIDs		v1r2	Calo
@@ -62,7 +60,7 @@ use CaloPIDs		v1r2	Calo
 use VeloAlgorithms      v2r9  	Velo
 
 # Inner Tracker
-use ITAlgorithms        v13r1	IT
+use ITAlgorithms        v13r2	IT
 use ITCheckers          v1r4	IT
 
 # Outer Tracker
@@ -78,9 +76,8 @@ use TrTools             v2r5 	Tr
 use Seeding             v2r6	Tr 
 use TrMatching          v2r8	Tr
 use TrCleanEx           v2r7p2	Tr
-use TrIntraPR           v2r8	Tr
-use UpstreamPR          v2r9  	Tr
 use VeloTT              v1r6p1	Tr
+use TrKShort		v1r0	Tr
 
 # Muon
 use MuonUtils		v1r0	Muon
@@ -93,7 +90,6 @@ use RichDetTools	v3r5	Rich
 use RichRecSys		v1r6	Rich
 use RichRecQC		v1r4	Rich
 use RichRecMCTools	v1r1	Rich
-use RiSicbGeom          v3r8	SICB
 
 #
 #===== build Brunel =========================

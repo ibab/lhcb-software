@@ -37,6 +37,7 @@ BrunelMoniOTSeq.Members += { "OTClusterChecker" };
 ApplicationMgr.DLLs += { "VeloAssociators" };
 ApplicationMgr.DLLs += { "TrCheck" };
 BrunelMoniTrSeq.Members += { "TrAnalyse" };
+BrunelMoniTrSeq.Members += { "KShortMonitor" };
 BrunelMoniTrSeq.Members += { "TrChecker" };
 // MC-free track monitoring (contains 2D histos)
 // BrunelMoniTrSeq.Members += { "TrMonitor" };
@@ -79,9 +80,6 @@ BrunelMoniCALOSeq.Members +=
   "CaloClusterMCTruthMonitor/CaloMCTruthMoni"
 };
 #include "$CALOMONITOROPTS/Moni.opts"
-
-// Framework monitoring (only SICBEventSelector - to be put elsewhere...)
-// EventSelector_1.doHistos = true;
 
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false
