@@ -1,16 +1,14 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/ILVolume.h,v 1.1 2001-03-13 21:57:30 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/ILVolume.h,v 1.2 2001-03-15 12:43:38 ibelyaev Exp $
 #ifndef  DETDESC_ILVOLUME_H
-#define  DETDESC_ILVOLUME_H
-
-// Include files
-#include "DetDesc/ISolid.h"
-#include "GaudiKernel/IInspectable.h"
-
+#define  DETDESC_ILVOLUME_H 1 
+// STL
 #include <iostream> 
 #include <string> 
 #include <vector> 
-#include <deque> 
-
+// GaudiKernel 
+#include "GaudiKernel/IInspectable.h"
+// DetDesc 
+#include "DetDesc/ISolid.h"
 
 // Forward declarations
 class StatusCode;
@@ -20,8 +18,6 @@ class MsgStream;
 
 class Material; 
 class IPVolume;
-class ISolid;
-
 
 /** @class ILVolume ILVolume.h DetDesc/ILVolume.h
 
@@ -37,8 +33,8 @@ class ILVolume : virtual public IInspectable
   /// general typedefs 
   typedef  std::vector<IPVolume*>                        PVolumes;
   typedef  PVolumes::size_type                           ReplicaType;
-  typedef  std::deque<ReplicaType>                       ReplicaPath;
-  typedef  std::deque<IPVolume*>                         PVolumePath;
+  typedef  std::vector<ReplicaType>                      ReplicaPath;
+  typedef  std::vector<IPVolume*>                        PVolumePath;
   /// typedefs, specific for calculation of distance in the units of radiation length
   typedef std::pair<ISolid::Tick,ISolid::Tick>           Interval;  
   typedef std::pair<Interval,const Material*>            Intersection;

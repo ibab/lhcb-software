@@ -1,6 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IDetectorElement.h,v 1.1 2001-03-13 21:57:29 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IDetectorElement.h,v 1.2 2001-03-15 12:43:38 ibelyaev Exp $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
-#define  DETDESC_IDETECTORELEMENT_H
+#define  DETDESC_IDETECTORELEMENT_H 1 
 
 // Include files
 #include <iostream>
@@ -114,7 +114,7 @@ class IDetectorElement: virtual public IInspectable
   /// cast to const IFastControl&
   virtual operator const IFastControl& ()               const = 0; 
 
-  /// some functions to simplift the navigation 
+  /// some functions to simplify the navigation 
   /// (according to feedback after release 3) 
   /// pointer to parent IDetectorElement
   virtual       IDetectorElement*  parentIDetectorElement()        = 0 ;  
@@ -149,3 +149,12 @@ inline std::ostream& operator<<( std::ostream& os ,
 { return ( (0 == de) ? (os << "IDetectorElement* points to NULL") : ( os << *de ) ) ; };
 
 #endif  //    GAUDIKERNEL_IDETECTORELEMENT_H
+
+
+
+
+
+
+
+
+

@@ -1,6 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IGeometryInfo.h,v 1.1 2001-03-13 21:57:29 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IGeometryInfo.h,v 1.2 2001-03-15 12:43:38 ibelyaev Exp $
 #ifndef  DETDESC_IGEOMETRYINFO_H
-#define  DETDESC_IGEOMETRYINFO_H
+#define  DETDESC_IGEOMETRYINFO_H 1 
 
 // Include Files
 #include "GaudiKernel/IInspectable.h"
@@ -26,6 +26,7 @@ class IGeometryInfo : virtual public IInspectable
 {
 
 public:
+
   typedef  std::vector<IGeometryInfo*>  IGIChildrens;   
 
   /** Is the GeometyInfo object associated with Logical Volume? 
@@ -91,7 +92,7 @@ public:
    (II) 1) for regular case the defnition  *is inside* is trivial 
         2) for "orphan" case the definition is less trivial but also 
            can be defined in a proper way, e.g. by considering the 
-           point as  "local point". Within this approach the previos
+           point as  "local point". Within this approach the previous
            case is just the combination of transformation into local
            frame and then  *is inside* method for pseudo-orphan.  
         3) for "ghosts" only one formal definition can be done - 
@@ -99,11 +100,7 @@ public:
            daughter Geometry Elements. Obviously it triggers the 
            recursive calls. What to do if the ghost element has no 
            any descendants? The best way is just to return "false" - 
-           "something" can not be *inside* of "nothing".  :-)) 
-     
-        NB! obviously one has a choice in the implementation between    
-            findObject and retrieveObject. 
-  
+           "something" can not be *inside* of "nothing".  :-))   
   */
   virtual       bool          isInside( const HepPoint3D& GlobalPoint ) const = 0; 
   
@@ -122,7 +119,7 @@ public:
         2) look recursively through all levels 
         3) look recursively through certain amount of levels  only 
            (case intermediate between A.II.1 and A.II.2).
-       The dephth can be controlled either explicitly  
+           The dephth is to be controlled.  
   
        Therefore one can consider 3 possibilities/methods  
        and there exists 2(3?) ways of returning the results - 
@@ -151,12 +148,12 @@ public:
 						 const int         level ) = 0;
   
   /** Sometimes is is nesessary to know the exact full geometry location
-      of a Point in a more detailed way then DetectorElement tree allows.
+      of a Point in the most detailed way then DetectorElement tree allows.
       I see only one way to do it - just to go into the real geometry tree.
       This operation can be time consuming and therefore it is worth to 
       return an additinal information with it 
-      The depth can be controlled either explicitly via "level" parameter
-    
+      The depth can be controlled explicitly via "level" parameter 
+
       @param point input 3D point
       @param level number of levels to nagigate down the hierarchy
       @param start is the location (or path) of "nearest regular DetectorElement" 
@@ -330,7 +327,7 @@ inline std::ostream& operator<<( std::ostream& os , const IGeometryInfo* gi )
 inline StreamBuffer& operator<<( StreamBuffer& sb , const IGeometryInfo& gi ) { return gi.serialize(sb);};
 inline StreamBuffer& operator>>( StreamBuffer& sb ,       IGeometryInfo& gi ) { return gi.serialize(sb);};
 										  
-/**  @class IGeomteryInfo_isInside
+/**  @class IGeometryInfo_isInside
      useful predicate(functor) to be used in conjunction with STL algorithms.
 */                                     
 class IGeometryInfo_isInside : std::unary_function<const IGeometryInfo*,bool>
@@ -352,3 +349,5 @@ class IGeometryInfo_isInside : std::unary_function<const IGeometryInfo*,bool>
 };
 
 #endif  //   DETDESC__IGEOMETRYINFO_H
+
+

@@ -1,12 +1,7 @@
-#ifndef       __DETDESC_SOLID_SOLIDUNION_H__
-#define       __DETDESC_SOLID_SOLIDUNION_H__
-
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidUnion.h,v 1.5 2001-03-15 12:43:39 ibelyaev Exp $
+#ifndef       DETDESC_SOLIDUNION_H
+#define       DETDESC_SOLIDUNION_H 1 
 //
-//
-//
-
-
-#include <deque> 
 #include <algorithm>
 #include <functional> 
 
@@ -22,6 +17,7 @@ class HepTransform3D;
 class HepRotation;
 class HepPoint3D; 
 class ISolidFromStream;
+
 
 class SolidUnion: public SolidBoolean
 {
@@ -59,15 +55,11 @@ class SolidUnion: public SolidBoolean
 };
 
 //
-//
-//
 
 inline StatusCode  SolidUnion::unite( ISolid*                solid    , 
                                       const HepTransform3D*  mtrx     )
 {  return addChild( solid , mtrx ); };
 
-//
-//
 //
 
 inline StatusCode  SolidUnion::unite ( ISolid*               solid    , 
@@ -75,8 +67,6 @@ inline StatusCode  SolidUnion::unite ( ISolid*               solid    ,
                                        const HepRotation&    rotation )
 { return addChild( solid , position , rotation ) ; }; 
 
-//
-//
 //
 
 inline bool SolidUnion::isInside     ( const HepPoint3D   & point ) const 
@@ -91,11 +81,8 @@ inline bool SolidUnion::isInside     ( const HepPoint3D   & point ) const
   return ( childEnd() == ci ? false : true );   
 };
 
-//
-//
-//
 
 
-#endif  //    __DETDESC_SOLID_SOLIDUNION_H__
+#endif  //    DETDESC_SOLIDUNION_H
 
 

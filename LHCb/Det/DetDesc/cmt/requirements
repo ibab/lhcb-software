@@ -29,7 +29,6 @@ private
 apply_pattern package_Cshlibflags
 apply_pattern package_Lshlibflags
 macro_append DetDescLib_shlibflags "$(GaudiKernel_linkopts) $(CLHEP_linkopts)"
-
-
-
-
+# remove warnings form unused variables in XML-xerces headers 
+macro_append cppflags ""  \ 
+          Linux " -Wno-unused "     

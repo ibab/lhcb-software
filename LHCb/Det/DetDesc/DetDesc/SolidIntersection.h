@@ -1,7 +1,7 @@
-#ifndef       __DETDESC_SOLID_SOLISINTERSECTION_H__
-#define       __DETDESC_SOLID_SOLIDINTERSECTION_H__
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidIntersection.h,v 1.5 2001-03-15 12:43:39 ibelyaev Exp $
+#ifndef      DETDESC_SOLISINTERSECTION_H
+#define      DETDESC_SOLIDINTERSECTION_H 1 
 
-#include <deque> 
 #include <algorithm>
 #include <functional> 
 
@@ -97,7 +97,7 @@ inline StatusCode  SolidIntersection::intersect ( ISolid*               solid   
 //
 
 
-#endif  //    __DETDESC_SOLID_SOLIDINTERSECTION_H__
+#endif  //    DETDESC_SOLIDINTERSECTION_H
 
 
 

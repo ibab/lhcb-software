@@ -2,6 +2,12 @@ package DetDesc
 package manager : N.N 
 
 ===========================================================================
+! 20010315 - Vanya Belyaev
+    DetDesc/ISolid.h   - change std::deque to std::vector for gcc-2.91
+    DetDesc/ILVolume.h - remove std::deque
+    cmt/requirements   - add -Wno-unused flag for Linux to suppress warnings from XML-xerces
+
+===========================================================================
 ! 20010314 - Sebastien Ponce
  - Avoid non fatal error during parsing to stop the parsing
 

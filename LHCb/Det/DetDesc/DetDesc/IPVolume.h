@@ -1,6 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IPVolume.h,v 1.1 2001-03-13 21:57:30 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IPVolume.h,v 1.2 2001-03-15 12:43:38 ibelyaev Exp $
 #ifndef  DETDESC_IPVOLUME_H 
-#define  DETDESC_IPVOLUME_H 
+#define  DETDESC_IPVOLUME_H 1 
 
 // Include files
 #include "GaudiKernel/IInspectable.h"
@@ -23,11 +23,7 @@ class HepTransform3D;
     Interface to deal with the notion of "positioned Logical Volume" 
     (corresponds to Geant4 notion of "G4PhysicalVolume").
     This is the minimal interface for "physical volume".
-    It corresponds to Geant4 "Placement" philosophy and should be 
-    ( MUST BE!) extended to cover Geant4    
-    Replica and Parametrized concepts.
-    The extension will require the additional index the additional 
-    bool "is Replicated" 
+    It corresponds to Geant4 "Placement" philosophy.
 
     @author Vanya Belyaev
 */      

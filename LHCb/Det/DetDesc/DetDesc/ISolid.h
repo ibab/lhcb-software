@@ -1,18 +1,21 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/ISolid.h,v 1.1 2001-03-13 21:57:30 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/ISolid.h,v 1.2 2001-03-15 12:43:38 ibelyaev Exp $
 #ifndef DETDESC_ISOLID_H
-#define DETDESC_ISOLID_H 
+#define DETDESC_ISOLID_H 1 
+// STL
+#include  <iostream>
+#include  <string> 
+#include  <vector>
 
+#if defined(__GNUC__) &&  ( __GNUC__ == 2 ||  ___GNUC_MINOR__ == 91 )
+#include  <vector> 
+#else
+#include  <deque> 
+#endif 
 // Include files 
 #include "GaudiKernel/IInspectable.h" 
 #include "GaudiKernel/IInspector.h" 
 
-#include  <iostream>
-#include  <string> 
-#include  <vector> 
-#include  <deque> 
-#include  <map> 
-
-//forward declaration (from CLHEP)
+// forward declaration (from CLHEP)
 class HepPoint3D;  
 class HepVector3D;  
 class StreamBuffer;
@@ -28,9 +31,16 @@ class ISolid : public virtual IInspectable
 {
  public:
   
-  // define useful types for dealing with intersection with line 
-  typedef double             Tick  ;  // "tick"-type 
-  typedef std::deque<Tick>  Ticks ;
+  /// define useful types for dealing with intersection with line 
+  typedef double             Tick  ; 
+
+#if defined (__GNUC__) && ( __GNUC__ == 2 && __GNUC_MINOR__ == 91 )
+  /// define useful types for dealing with intersection with line 
+  typedef std::vector<Tick>  Ticks ;
+#else 
+  /// define useful types for dealing with intersection with line 
+  typedef std::deque<Tick>   Ticks ;
+#endif 
   
  public:
   
@@ -64,9 +74,9 @@ class ISolid : public virtual IInspectable
       @return the number of intersection points (=size of Ticks container)
   */
   virtual       unsigned int        intersectionTicks ( const HepPoint3D & Point  , 
-  						                                        	const HepVector3D& Vector , 
-  						                                         	Ticks            & ticks  ) const = 0 ; 
-
+							const HepVector3D& Vector , 
+							Ticks            & ticks  ) const = 0 ; 
+  
   /** calculate the intersection points("ticks") with a given line. 
       Input - line, paramterised by  x_vect = Point + Vector * T 
       "tick" is just a value of T, at which the intersection occurs 
@@ -79,10 +89,10 @@ class ISolid : public virtual IInspectable
               between tickMin and tickMax
   */
   virtual       unsigned int        intersectionTicks ( const HepPoint3D & Point   , 
-  					                                        		const HepVector3D& Vector  ,
+							const HepVector3D& Vector  ,
                                                         const Tick       & tickMin ,      
                                                         const Tick       & tickMax , 
-  		                                         					Ticks            & ticks   ) const = 0 ;
+							Ticks            & ticks   ) const = 0 ;
   
   /// destructor 
   virtual  ~ISolid(){};
@@ -109,4 +119,8 @@ inline StreamBuffer& operator>>( StreamBuffer& sb ,       ISolid& solid ) { retu
 
  
 #endif   // DETDESC_ISOLID_H
+
+
+
+
 

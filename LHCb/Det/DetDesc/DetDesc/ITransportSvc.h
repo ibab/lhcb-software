@@ -1,6 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/ITransportSvc.h,v 1.1 2001-03-13 21:57:30 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/ITransportSvc.h,v 1.2 2001-03-15 12:43:39 ibelyaev Exp $
 #ifndef DETDESC_ITRANSPORTSVC_H 
-#define DETDESC_ITRANSPORTSVC_H
+#define DETDESC_ITRANSPORTSVC_H 1
 
 // Framework include files
 #include "GaudiKernel/IService.h"
@@ -44,13 +44,13 @@ class ITransportSvc : virtual public IService
 
   /** general method ( returns the "full history" of the volume boundary intersections 
       with different material properties between 2 points )
-      @param Pointinitial point on the line
-      @param vector direction vector of the line 
+      @param Point   initial point on the line
+      @param vector  direction vector of the line 
       @param tickMin minimal value of line paramater
       @param TickMax maximal value of line parameter 
       @param intersept (output) container of intersections
       @param threshold threshold value
-      @param alternativeGeometry source of alternative geometry information
+      @param alternativeGeometry  source of alternative geometry information
       @param geometryGuess a guess for navigation
   */
   virtual unsigned long intersections( const HepPoint3D& point  ,
@@ -58,13 +58,20 @@ class ITransportSvc : virtual public IService
 				       const ISolid::Tick&      tickMin                 ,
 				       const ISolid::Tick&      tickMax                 ,
 				       ILVolume::Intersections& intersept               ,
-               double                   threshold           = 0 ,
-               IGeometryInfo*           alternativeGeometry = 0 ,
-               IGeometryInfo*           geometryGuess       = 0 ) = 0  ;
-
+				       double                   threshold           = 0 ,
+				       IGeometryInfo*           alternativeGeometry = 0 ,
+				       IGeometryInfo*           geometryGuess       = 0 ) = 0  ;
+  
   /// virtual destructor 
   virtual ~ITransportSvc(){}; 
 
 };
 
 #endif  //  GAUDIKERNEL_ITRANSPORTSVC_H
+
+
+
+
+
+
+

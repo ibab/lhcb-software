@@ -1,7 +1,7 @@
-#ifndef       __DETDESC_SOLID_SOLISSUBTRACTION_H__
-#define       __DETDESC_SOLID_SOLIDSUBTRACTION_H__
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/SolidSubtraction.h,v 1.5 2001-03-15 12:43:39 ibelyaev Exp $ 
+#ifndef       DETDESC_SOLISSUBTRACTION_H
+#define       DETDESC_SOLIDSUBTRACTION_H 1 
 
-#include <deque> 
 #include <algorithm>
 #include <functional> 
 
@@ -124,6 +124,6 @@ inline bool SolidSubtraction::isInside     ( const HepPoint3D   & point ) const
 //
 
 
-#endif  //    __DETDESC_SOLID_SOLIDSUBTRACTION_H__
+#endif  //   DETDESC_SOLIDSUBTRACTION_H
 
 
