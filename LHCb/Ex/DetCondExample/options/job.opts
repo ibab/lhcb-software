@@ -1,4 +1,4 @@
-//$Id: job.opts,v 1.5 2001-11-28 09:44:00 andreav Exp $
+//$Id: job.opts,v 1.6 2001-11-29 11:05:33 andreav Exp $
 //==============================================================
 // Standard Job options file
 //==============================================================
@@ -28,6 +28,7 @@ ApplicationMgr.TopAlg  = { "Sequencer/SequencerAlg" };
 SequencerAlg.Members   = { };
 SequencerAlg.Members  += { "PopulateDB/Alg__i_PopulateDB" };
 SequencerAlg.Members  += { "ClearDetectorStore/Alg_ii_ClearStore" };
+SequencerAlg.Members  += { "BootDetectorStore/Alg_iii_BootStore" };
 SequencerAlg.Members  += { "EvtClock/Alg_00_EvtClock" };
 SequencerAlg.Members  += 
   { "TestConditionsDBDataSvc/Alg_01_TestCondDBDataSvc" };
@@ -93,6 +94,10 @@ ApplicationMgr.EvtSel = "NONE";
 //--------------------------------------------------------------
 // Persistency and Conversion Services Private Options
 //--------------------------------------------------------------
+
+// Detector Data service setup: 
+DetectorDataSvc.ForceLeaves = { true };
+
 // Detector Persistency service setup: 
 DetectorPersistencySvc.CnvServices  = { "ConditionsDBCnvSvc" };
 DetectorPersistencySvc.CnvServices += { "XmlStringCnvSvc" };

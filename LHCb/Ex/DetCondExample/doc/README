@@ -1,4 +1,4 @@
-# $Id: README,v 1.10 2001-11-27 18:33:14 andreav Exp $
+# $Id: README,v 1.11 2001-11-29 11:08:33 andreav Exp $
 
 ------------------------------------------------------------------------------
 Packages needed to run DetCondExample v2
@@ -92,12 +92,11 @@ setenv COND_DB_DEBUG none
 /bin/rm -f job_next.log;  ../$CMTDEB/DetCondExample.exe >& job_next.log
 
 # Compare the output files to the standard ones
-diff job_first.log ../job
-diff job_next.log  ../job
+diff job_first.log ../job/job_first.log
+diff job_next.log  ../job/job_next.log 
 
 # To start again with an empty database:
-source ../cmt/cleanupDB.csh
-source ../cmt/setupDB.csh
+source ../cmt/cleanupDB.csh; source ../cmt/setupDB.csh
 
 # Debug the application using gdb
 # (NB gdb "run" executes .cshrc: you can NOT change LD_LIBRARY_PATH in .cshrc!)
@@ -232,29 +231,29 @@ cvs update -A; cvs add file/directory; cvs commit -m "" file/directory
 cvs update -A; cvs remove -f file/directory; cvs commit -m "" file/directory
 
 # To tag the HEAD files with a private tag (use private tags starting by "h")
-# [For instance, tag CONDDB v3r01 head version of 2001 Sep 17 by h20011123]
-cvs rtag h20011123 CONDDB
+# [For instance, tag CONDDB v3r01 head version of 2001 Sep 17 by h20011129]
+cvs rtag h20011129 CONDDB
 # To force the tag (e.g. if a previous file version already received that tag):
-cvs rtag -F h20011123 CONDDB
+cvs rtag -F h20011129 CONDDB
 
 # To view the tags attached to the files contained in the package:
 cvs status -v
 
 # To getpack a privately tagged version:
-# [For instance, get CONDDB v3r01 version tagged h20011123]
+# [For instance, get CONDDB v3r01 version tagged h20011129]
 # Either:
 	cd ~/newmycmt
-	getpack CONDDB h20011123
-	mv CONDDB/h20011123 CONDDB/v3r01
+	getpack CONDDB h20011129
+	mv CONDDB/h20011129 CONDDB/v3r01
 	cd CONDDB/v3r01/cmt
 	cmt config
 # Or:
 	cd ~/newmycmt
 	mkdir CONDDB
 	cd CONDDB
-	cvs co -d v3r01 -r h20011123 CONDDB
+	cvs co -d v3r01 -r h20011129 CONDDB
 	cd v3r01/cmt
 	cmt config
 
 # To compare a file to that from another version
-cvs diff -r h20011123 file
+cvs diff -r h20011129 file

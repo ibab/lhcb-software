@@ -1,6 +1,16 @@
-#$Id: release.notes,v 1.6 2001-11-28 09:44:00 andreav Exp $
+#$Id: release.notes,v 1.7 2001-11-29 11:08:33 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+!20011129 - Andrea Valassi
+- Remove the IConditionsDBDataSvc special interface
+-> BootDetectorStore bootstraps the detector data store 
+   > the association between folder names and path names is done here
+   > objects are registered using standard methods (need ForceLeaves=true)
+-> TestSmartDataPtr needs not call the IConditionsDBDataSvc to boot the store
+   > only TDS path names are used
+-> TestConditionsDBDataSvc has internal methods to test a normal data service
+   > only TDS path names are used
 
 !20011128 - Andrea Valassi
 -> move the global tag from the ConditionsDBDataSvc to the ConditionsDBCnvSvc

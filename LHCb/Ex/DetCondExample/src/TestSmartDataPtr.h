@@ -1,4 +1,4 @@
-//$Id: TestSmartDataPtr.h,v 1.2 2001-11-27 18:31:02 andreav Exp $
+//$Id: TestSmartDataPtr.h,v 1.3 2001-11-29 11:00:48 andreav Exp $
 #ifndef DETCONDEXAMPLE_TESTSMARTDATAPTR_H
 #define DETCONDEXAMPLE_TESTSMARTDATAPTR_H 1
 
@@ -7,7 +7,6 @@
 
 // Forward declarations
 class IDetDataSvc;
-class IConditionsDBDataSvc;
 
 ///---------------------------------------------------------------------------
 /** @class TestSmartDataPtr TestSmartDataPtr.h DetCondExample/TestSmartDataPtr.h
@@ -35,11 +34,9 @@ class TestSmartDataPtr : public Algorithm {
   /// IDetDataSvc interface of the detector data service
   IDetDataSvc*          m_detDataSvc;
 
-  /// IConditionsDBDataSvc interface of the detector data service
-  IConditionsDBDataSvc* m_conditionsDBDataSvc;
-
 };
 
 #endif    // DETCONDEXAMPLE_TESTSMARTDATAPTR_H
+
 
 

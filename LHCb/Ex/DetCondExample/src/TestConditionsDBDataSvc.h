@@ -1,4 +1,4 @@
-//$Id: TestConditionsDBDataSvc.h,v 1.2 2001-11-27 18:31:30 andreav Exp $
+//$Id: TestConditionsDBDataSvc.h,v 1.3 2001-11-29 11:04:32 andreav Exp $
 #ifndef DETCONDEXAMPLE_TESTCONDITIONSDBDATASVC_H
 #define DETCONDEXAMPLE_TESTCONDITIONSDBDATASVC_H 1
 
@@ -7,7 +7,6 @@
 
 // Forward declarations
 class IDetDataSvc;
-class IConditionsDBDataSvc;
 
 ///---------------------------------------------------------------------------
 /** @class TestConditionsDBDataSvc TestConditionsDBDataSvc.h DetCondExample/TestConditionsDBDataSvc.h
@@ -33,11 +32,16 @@ class TestConditionsDBDataSvc : public Algorithm {
   
  private:
 
+  /// Create a valid DataObject by folder name (for default tag and key),
+  /// then load it in the TDS using the implicit naming convention:
+  /// if the DataObject exists already, update it instead (if necessary).
+  StatusCode i_retrieveValidCondition  ( DataObject*&         refpObject,
+					 const std::string&   folderName );
+  
+ private:
+
   /// IDetDataSvc interface of the detector data service
   IDetDataSvc*          m_detDataSvc;
-
-  /// IConditionsDBDataSvc interface of the detector data service
-  IConditionsDBDataSvc* m_conditionsDBDataSvc;
 
 };
 

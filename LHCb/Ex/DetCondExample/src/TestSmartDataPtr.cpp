@@ -1,10 +1,8 @@
-//$Id: TestSmartDataPtr.cpp,v 1.3 2001-11-27 18:31:15 andreav Exp $
+//$Id: TestSmartDataPtr.cpp,v 1.4 2001-11-29 11:00:48 andreav Exp $
 #include <stdio.h>
 
 #include "ConditionData.h"
 #include "TestSmartDataPtr.h"
-
-#include "DetCond/IConditionsDBDataSvc.h"
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -58,20 +56,6 @@ StatusCode TestSmartDataPtr::initialize() {
 	<< endreq;
   }
 
-  // Query the IConditionsDBDataSvc interface of the detector data service
-  sc = detSvc()->queryInterface(IID_IConditionsDBDataSvc, 
-				(void**) &m_conditionsDBDataSvc);
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR 
-	<< "Could not query IConditionsDBDataSvc interface of DetectorDataSvc" 
-	<< endreq;
-    return sc;
-  } else {
-    log << MSG::DEBUG 
-	<< "Retrieved IConditionsDBDataSvc interface of DetectorDataSvc" 
-	<< endreq;
-  }
-
   log << MSG::INFO << "Initialization completed" << endreq;
   return StatusCode::SUCCESS;
 
@@ -82,53 +66,15 @@ StatusCode TestSmartDataPtr::initialize() {
 StatusCode TestSmartDataPtr::execute( ) {
 
   MsgStream log(msgSvc(), name());
-  StatusCode sc;
   log << MSG::INFO 
       << "************* new event  *******************************************"
       << endreq;
   log << MSG::INFO << "Execute()" << endreq;
 
-  std::string tdsName;
-  std::string folderName = "/Conditions/LHCb/Ecal/Slow/temp";
-  StatusCode status = 
-    m_conditionsDBDataSvc->getNameInStore( tdsName, folderName );
-  if ( !status.isSuccess() ) {
-    log << MSG::ERROR 
-	<< "Can't find name in store for folder " << folderName << endreq;
-    return StatusCode::FAILURE;
-  }
+  std::string tdsName = "/dd/Conditions/LHCb/Ecal/Slow/temp";
   log << MSG::INFO 
       << "Retrieve smart data pointer to path " << tdsName << endreq;
-  log << MSG::INFO 
-      << "Data come from CondDB folder " << folderName << endreq;
   
-  // HACK: init registry entries by ONE call to retrieveValidCondition
-  // This cannot be done in initialize() because the event time must be set
-  static bool first = true;
-  if ( first ) {
-    first = false;
-    log << MSG::INFO 
-	<< "Initialise registry entry tree for " 
-	<< tdsName << endreq;
-    DataObject* anObject;
-    log << MSG::DEBUG 
-	<< "Retrieve valid condition from folder" << folderName << endreq;
-    sc = m_conditionsDBDataSvc->retrieveValidCondition ( anObject, 
-							 folderName );
-    if( !sc.isSuccess() ) {
-      log << MSG::ERROR << "Could not retrieve DataObject" << endreq;
-      return sc;
-    } else {
-      log << MSG::DEBUG << "A DataObject was retrieved" << endreq;
-    }
-    ConditionData* aCondition = dynamic_cast<ConditionData*>(anObject);
-    if ( 0 == aCondition ) {
-      log << MSG::ERROR 
-	  << "Retrieved object is not a ConditionData" << endreq;
-      return StatusCode::FAILURE;
-    }
-  }
-
   // Now retrieve the pointers: NB you have to update them manually!
   SmartDataPtr<ConditionData> aCondition( detSvc(), tdsName );
   if( !aCondition ) {
