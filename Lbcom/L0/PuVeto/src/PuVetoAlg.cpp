@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.10 2002-12-20 12:39:50 mzupan Exp $
+// $Id: PuVetoAlg.cpp,v 1.11 2004-03-24 19:01:56 mzupan Exp $
 // Include files 
 #include <math.h>
 // from Gaudi
@@ -187,6 +187,18 @@ StatusCode PuVetoAlg::execute() {
   // strip coordinate, to be transformed in R later.
   //========================================================================
 
+
+  SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), RawBufferLocation::Default );
+  if ( 0 == rawBuffer ) {
+    logmsg << MSG::ERROR
+        << "Unable to retrieve Raw buffer from " <<RawBufferLocation::Default
+        << endreq;
+    return StatusCode::FAILURE;
+   }
+  std::vector<unsigned short int> rawpudata;
+  std::vector<raw_int> rawdatavec;
+  
+
   for ( MCVeloFEs::const_iterator itFe = fes->begin(); 
         fes->end() != itFe ; itFe++  ) {
     if ( m_threshold < (*itFe)->charge() ) {
@@ -198,6 +210,16 @@ StatusCode PuVetoAlg::execute() {
       }
       sensor -= 100;
       int fired           = 4 * ( (*itFe)->strip()/4 ) + 2;
+
+      
+
+      unsigned short int rawhit = rawEncode(sensor,(*itFe)->strip());
+      rawpudata.push_back(rawhit);
+      
+ 
+      logmsg << MSG::VERBOSE << sensor << " " << (*itFe)->strip() << " " 
+             << rawhit << endreq;
+
       std::vector<int>* strips = m_input[sensor].strips();
       bool toAdd = true;
 
@@ -217,6 +239,11 @@ StatusCode PuVetoAlg::execute() {
       logmsg << endreq;
     }
   }
+
+  raw_int header = 0;
+  rawVec(&rawpudata,&rawdatavec);
+  rawBuffer->addBank(header,RawBuffer::L0PU,rawdatavec);
+  
 
   fillHisto(  );
 
@@ -483,3 +510,36 @@ double PuVetoAlg::peakValue ( double& height, double& sum, double& width) {
   return pos;
 }
 //=============================================================================
+
+unsigned short int PuVetoAlg::rawEncode(int sensor, int strip) 
+{
+  unsigned short int temp;
+  
+  temp = strip;
+  temp+=sensor << 14;
+  return temp;
+}
+
+void PuVetoAlg::rawVec (std::vector<unsigned short int> *vecin,
+                        std::vector<raw_int> *vecout) 
+{
+  std::vector<unsigned short int>::iterator itraw = vecin->begin();
+  unsigned short int temp1,temp2;
+  raw_int tempraw;
+  
+  while (itraw != vecin->end()){
+    temp1 = (*itraw);
+    itraw++;
+    temp2 = 0;
+    if (itraw != vecin->end()) temp2 = (*itraw);
+    tempraw = temp2;
+    tempraw = tempraw << 16;
+    tempraw += temp1;
+    //std::cout << temp1 << " " << temp2 << " " << tempraw << std::endl;
+    vecout->push_back(tempraw);
+  }
+}
+
+    
+    
+      

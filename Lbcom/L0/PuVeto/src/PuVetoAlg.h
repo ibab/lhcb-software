@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.h,v 1.7 2002-11-28 09:06:44 mzupan Exp $
+// $Id: PuVetoAlg.h,v 1.8 2004-03-24 19:01:56 mzupan Exp $
 #ifndef PUVETOALG_H 
 #define PUVETOALG_H 1
 
@@ -11,7 +11,8 @@
 
 // from VeloEvent
 #include "Event/MCVeloFE.h"
-
+#include "Event/DAQTypes.h"
+#include "Event/RawBuffer.h"
 // from VeloDet
 #include "VeloDet/DeVelo.h"
 
@@ -81,6 +82,12 @@ protected:
 
   /// Mask the hits contributing to a peak at a given vertex position
   void maskHits( double zVertex, double zTol );
+  
+  unsigned short int rawEncode(int sensor, int strip);
+  void rawVec(std::vector<unsigned short int> *vecin,
+              std::vector<raw_int> *vecout);
+  
+
 
 private:
   std::string    m_inputContainer;
