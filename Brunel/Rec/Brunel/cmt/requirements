@@ -28,7 +28,6 @@ use POOL		v1r150p1
 use GaudiKernel		v15r2
 use GaudiSvc 		v11r4
 use GaudiAlg 		v7r1
-use GaudiTools          v8r0
 use GaudiAud 		v6r4
 use GaudiGSL		v5r1
 use GaudiDb 		v9r2
@@ -36,6 +35,9 @@ use GaudiRootDb 	v9r4
 use GaudiPoolDb		v1r5
 use GaudiObjDesc 	v6r2p1
 use RootHistCnv         v9r1
+
+# Temporarily from LHCb v15r4, bug fixes needed by Rich
+use GaudiTools          v8r1
 
 #-- Database
 use XmlDDDB		v22r0	Det

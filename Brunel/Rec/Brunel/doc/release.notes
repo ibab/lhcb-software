@@ -19,6 +19,8 @@ Purpose: LHCb reconstruction program
       CaloReco v2r0, CaloMonitor v2r0)
    . Decode ITDigits from RawBuffer (ITAlgorithms v14r1, STDAQ v1r0)
    . Decode VeloClusters from RawBuffer (VeloAlgorithms v2r9, VeloDAQ v1r0)
+   . Associator tools now inherit from GaudiTool. New printout for tools that
+     are not finalised (GaudiTools v8r1, LHCbKernel v4r4)
 
  - New tuning:
    . Recalibration of Ecal ActiveToTotal (XmlDDDB v22r0)
