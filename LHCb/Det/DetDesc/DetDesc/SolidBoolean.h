@@ -1,8 +1,11 @@
-// $Id: SolidBoolean.h,v 1.11 2002-05-11 18:25:46 ibelyaev Exp $ 
+// $Id: SolidBoolean.h,v 1.12 2002-05-26 10:47:12 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/05/11 18:25:46  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 #ifndef      DETDESC_SOLIDBOOLEAN_H 
 #define      DETDESC_SOLIDBOOLEAN_H  1 
@@ -82,9 +85,10 @@ class SolidBoolean: public virtual SolidBase
    *  @return the number of intersection points (=size of Ticks container)
    */
   virtual unsigned int 
-  intersectionTicks ( const HepPoint3D & Point  ,
-                      const HepVector3D& Vector ,
-                      ISolid::Ticks    & ticks  ) const ;
+  intersectionTicks 
+  ( const HepPoint3D & Point  ,
+    const HepVector3D& Vector ,
+    ISolid::Ticks    & ticks  ) const ;
   
   /** calculate the intersection points("ticks") with a given line.
    *  Input - line, paramterised by  x_vect = Point + Vector * T
@@ -98,12 +102,13 @@ class SolidBoolean: public virtual SolidBase
    *  between tickMin and tickMax
    */
   virtual unsigned int 
-  intersectionTicks ( const HepPoint3D  & Point   ,
-                      const HepVector3D & Vector  ,
-                      const ISolid::Tick& tickMin ,
-                      const ISolid::Tick& tickMax ,
-                      ISolid::Ticks   &   ticks   ) const ; 
-
+  intersectionTicks 
+  ( const HepPoint3D  & Point   ,
+    const HepVector3D & Vector  ,
+    const ISolid::Tick& tickMin ,
+    const ISolid::Tick& tickMax ,
+    ISolid::Ticks   &   ticks   ) const ; 
+  
   /** poiter to the "main"/"first" boolean 
    *  @return poiter to the "main"/"first" boolean 
    */
@@ -169,17 +174,20 @@ protected:
    *  @param mtrx  pointer to transformation 
    *  @return status code 
    */
-  StatusCode addChild   ( ISolid*               child , 
-                          const HepTransform3D* mtrx  );
+  StatusCode addChild   
+  ( ISolid*               child , 
+    const HepTransform3D* mtrx  );
   
   /** add child to daughter container 
    *  @param pointer to solid 
    *  @param position position 
    *  @param rotation rotation 
    */
-  StatusCode addChild   ( ISolid*               child    , 
-                          const HepPoint3D&     position , 
-                          const HepRotation&    rotation );
+  StatusCode addChild   
+  ( ISolid*               child    , 
+    const HepPoint3D&     position , 
+    const HepRotation&    rotation );
+
   /** acess to iterator
    *  @return "begin" iterator
    */

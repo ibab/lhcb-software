@@ -1,8 +1,11 @@
-// $Id: SolidBoolean.cpp,v 1.8 2002-05-11 18:25:47 ibelyaev Exp $
+// $Id: SolidBoolean.cpp,v 1.9 2002-05-26 10:47:14 ibelyaev Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/11 18:25:47  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 // STD & STL 
 #include <functional>
@@ -278,7 +281,7 @@ SolidBoolean::intersectionTicks
 {
   ///
   intersectionTicks( point , vect , ticks ); 
-  /// sort and remove adjancent and some EXTRA ticks and return 
+  // sort and remove adjancent and some EXTRA ticks and return 
   return 
     SolidTicks::RemoveAdjancentTicks( ticks , point , vect , 
                                       tickMin , tickMax , *this );  
@@ -292,10 +295,19 @@ SolidBoolean::intersectionTicks
 // ============================================================================
 std::ostream& SolidBoolean::printOut( std::ostream& os ) const 
 {
-  /// printout the base class 
+  // printout the base class 
   SolidBase::printOut( os );
-  return os;
+  os     << " ** 'Main' solid is " << std::endl ;
+  first()->printOut( os )  ;
+  for( SolidChildrens::const_iterator child = childBegin() ;
+       childEnd() != child ; ++child ) 
+    { 
+      os << " ** 'Booled' with "   << std::endl ;
+      (*child)->printOut( os ); 
+    }
+  return os << std::endl ;
 };
+// ============================================================================
 
 // ============================================================================
 /** printout to Gaudi  stream
@@ -305,9 +317,20 @@ std::ostream& SolidBoolean::printOut( std::ostream& os ) const
 // ============================================================================
 MsgStream&    SolidBoolean::printOut( MsgStream&    os ) const 
 {
-  /// printout the base class 
+  // printout the base class 
   SolidBase::printOut( os );
-  return os;
+  os     << " ** 'Main' solid is " << endreq;
+  first()->printOut( os )  ;
+  for( SolidChildrens::const_iterator child = childBegin() ;
+       childEnd() != child ; ++child ) 
+    { 
+      os << " ** 'Booled' with "   << endreq ;
+      (*child)->printOut( os ); 
+    }
+  return os << std::endl ;
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================

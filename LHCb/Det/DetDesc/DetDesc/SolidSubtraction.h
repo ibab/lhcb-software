@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/09 16:47:59  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 #ifndef       DETDESC_SOLISSUBTRACTION_H
 #define       DETDESC_SOLIDSUBTRACTION_H 1 
@@ -75,17 +78,19 @@ public:
    *  @param mtrx  pointer to transformation 
    *  @return status code 
    */
-  StatusCode subtract ( ISolid*               solid , 
-                        const HepTransform3D* mtrx  );
+  StatusCode subtract 
+  ( ISolid*               solid , 
+    const HepTransform3D* mtrx  );
   
   /** subtract child solid from  the solid 
    *  @param solid pointer to child solid 
    *  @param position position  
    *  @return status code 
    */
-  StatusCode subtract ( ISolid*               child                    , 
-                        const HepPoint3D&     position                 , 
-                        const HepRotation&    rotation = HepRotation() );
+  StatusCode subtract 
+  ( ISolid*               child                    , 
+    const HepPoint3D&     position                 , 
+    const HepRotation&    rotation = HepRotation() );
   
 protected:
   

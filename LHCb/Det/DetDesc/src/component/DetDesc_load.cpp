@@ -1,8 +1,11 @@
-// $Id: DetDesc_load.cpp,v 1.10 2002-05-04 13:13:25 ibelyaev Exp $
+// $Id: DetDesc_load.cpp,v 1.11 2002-05-26 10:47:14 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/05/04 13:13:25  ibelyaev
+//  see $DETDESCROOT/doc/release.notes ( 4 May 2002 )
+//
 // ============================================================================
 // Include files
 #include "GaudiKernel/ObjectFactory.h"
@@ -78,9 +81,6 @@ DECLARE_FACTORY_ENTRIES(DetDesc) {
   DECLARE_OBJECT(    Mixture                 ) ;
   DECLARE_OBJECT(    TabulatedProperty       ) ;
   DECLARE_OBJECT(    Surface                 ) ;
-  
-  // algorithms 
-  DECLARE_ALGORITHM( MaterialBudgetAlg       ) ;
   
   // solids 
   DECLARE_SOLID(     SolidBox                ) ;

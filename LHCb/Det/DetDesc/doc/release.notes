@@ -1,9 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.93 2002-05-24 15:28:24 sponce Exp $ 
+! $Id: release.notes,v 1.94 2002-05-26 10:47:13 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-05-26 - Vanya Belyaev
+ - src/Test/SolidsTest.cpp         : remove 
+ - cmt/requirements                : use new standard patterns
+
+! 2002-05-25 - Vanya Belyaev
+ - src/component/MaterialBudgetAlg : remove 
+ - src/Lib/SolidBoolean.cpp        : improve the printout  
 
 ! >>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 

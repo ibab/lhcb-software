@@ -1,8 +1,11 @@
-// $Id: SolidSubtraction.cpp,v 1.7 2002-05-11 18:25:48 ibelyaev Exp $
+// $Id: SolidSubtraction.cpp,v 1.8 2002-05-26 10:47:14 ibelyaev Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/11 18:25:48  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 /** STD & STL */
 #include <iostream> 
@@ -98,6 +101,9 @@ StatusCode  SolidSubtraction::subtract( ISolid*                solid    ,
 StatusCode  SolidSubtraction::subtract ( ISolid*               solid    , 
                                          const HepPoint3D&     position , 
                                          const HepRotation&    rotation )
-{ return addChild( solid , position , rotation ) ; }; 
+{ return addChild( solid , position , rotation ) ; };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================

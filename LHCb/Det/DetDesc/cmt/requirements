@@ -1,41 +1,26 @@
-# $Id: requirements,v 1.39 2002-05-24 15:28:18 sponce Exp $ 
-# =============================================================================
+# $Id: requirements,v 1.40 2002-05-26 10:47:13 ibelyaev Exp $ 
+# ==============================================================================
 # CVS tag $Name: not supported by cvs2svn $
-# =============================================================================
-package DetDesc
-version v10r2
+# ==============================================================================
+package       DetDesc
+version       v10r3
 
-branches DetDesc doc cmt src
+# =========== structure ========================================================
+branches      DetDesc doc cmt src
 
-include_dirs $(DETDESCROOT)
+# =========== own includes =====================================================
+include_dirs  $(DETDESCROOT)
 
-use GaudiKernel v12r*
-use CLHEP       v17r*
-use AIDA        v2r* 
-use XERCES      v16r*
+# =========== dependencies =====================================================
+use           GaudiKernel       v12r*
+use           CLHEP             v17r*
+use           XERCES            v16r*
 
-# build a Linker library
-library DetDescLib   Lib/*.cpp
-apply_pattern package_Lstamps
+# =========== constituents =====================================================
+library       DetDescLib        Lib/*.cpp
+library       DetDesc           component/*.cpp
 
-# build a component library
-library DetDesc      component/*.cpp
-
-apply_pattern package_Llinkopts
-
-apply_pattern linker_path
-
-#==================================================================
-private
-apply_pattern package_Lshlibflags
-apply_pattern package_Cshlibflags
-private
-macro_remove  use_linkopts "$(DetDesc_linkopts)"
-macro_append  DetDescLib_shlibflags " $(use_linkopts)" 
-
-private 
-application   SolidsTest -check  Test/SolidsTest.cpp 
-macro_prepend SolidsTestlinkopts " $(DetDesc_linkopts) "
-apply_pattern application_path
-path_remove   PATH                  "DetDesc"
-path_append   PATH                  ${DETDESCROOT}/${BINDIR}
+# =========== standard patterns (the order is essential!) ====================== 
+apply_pattern component_library library=DetDesc 
+apply_pattern linker_library    library=DetDescLib 
+apply_pattern library_stamps    library=DetDescLib 
