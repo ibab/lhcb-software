@@ -26,102 +26,225 @@
           desc = "the internal representation" name="lhcbID"
           type = "bitfield"
           setMeth = "FALSE" >
-            <bitfield desc="the detector specific bits" length="28" name="specific" />
-            <bitfield desc="the LHCb generic bits"      length="4"  name="common"   />
+            <bitfield desc='the LHCb detector type bits' length='4' name='detectorType' />
+            <bitfield desc='the detector channelID bits' length='24' name='channelID' setMeth='FALSE' getMeth='FALSE' />
+            <bitfield desc='the spare bits' length='4' name='spareBits' setMeth='FALSE' getMeth='FALSE' />
        </attribute>
 
-       <method type='bool' name='operator==' argList='const LHCbID chanID' const='TRUE' desc='comparison equality'>
-         <code> return (this->lhcbID() == chanID.lhcbID()); </code>
-       </method>
-
-       <constructor desc = "Constructor from VeloChannelID" initList = "m_lhcbID(0)" >
-          <arg const="TRUE" name="chanID" type="VeloChannelID" />
-          <code>
-            setSpecific( chanID );
-            setCommon( veloType );
-          </code>
-       </constructor>
-
-       <method type="bool" name="isVelo" const='TRUE' desc="return true if this is a Velo identifier">
-         <code>return (veloType == common()) ? true : false;</code>
-       </method>
-
-       <method type="VeloChannelID" name="veloID" const='TRUE' desc="return the VeloChannelID">
-	 <code>return isVelo() ? specific() : 0x0;</code>
-       </method>
-
-       <constructor desc = "Constructor from ITChannelID" initList = "m_lhcbID(0)" >
-          <arg const="TRUE" name="chanID" type="ITChannelID" />
-          <code>
-            setSpecific( ((chanID.uniqueWafer()-1)&gt;&gt;4) + (chanID.strip()-1) );
-            setCommon( stType );
-          </code>
-       </constructor>
-
-       <method type="bool" name="isST" const='TRUE' desc="return true if this is a Silicon Tracker identifier">
-         <code>return (stType == common()) ? true : false;</code>
-       </method>
-
-       <method type="ITChannelID" name="stID" const='TRUE' desc="return the ITChannelID">
-	 <code>return isST() ? ( ((specific()&amp;0xFFFF000)&lt;&lt;4)+(specific()&amp;0xFFF) ) : 0xF0000000;</code>
-       </method>
-
-
-       <constructor desc = "Constructor from OTChannelID" initList = "m_lhcbID(0)" >
-          <arg const="TRUE" name="chanID" type="OTChannelID" />
-          <code>
-            setSpecific( chanID );
-            setCommon( otType );
-          </code>
-       </constructor>
-
-       <method type="bool" name="isOT" const='TRUE' desc="return true if this is a Outer Tracker identifier">
-         <code>return (otType == common()) ? true : false;</code>
-       </method>
-
-       <method type="OTChannelID" name="otID" const='TRUE' desc="return the OTChannelID">
-	 <code>return isOT() ? specific() : 0xF0000000;</code>
-       </method>
-
-       <constructor desc = "Constructor from RichSmartID" initList = "m_lhcbID(0)" >
-          <arg const="TRUE" name="chanID" type="RichSmartID" />
-          <code>
-            unsigned int richData = chanID.dataBitsOnly();
-            if( chanID.pixelDataAreValid() ) richData += 0x8000000;
-            setSpecific( richData );
-            setCommon( richType );
-          </code>
-       </constructor>
-
-       <method type="bool" name="isRich" const='TRUE' desc="return true if this is a Rich identifier">
-         <code>return (richType == common()) ? true : false;</code>
-       </method>
-
-       <method type="RichSmartID" name="richID" const='TRUE' desc="return the richSmartID">
-	 <code>
-	   unsigned int rID = 0;
-	   if( isRich() ) {
-	     rID = specific() &amp; 0x7000000;
-	     if( specific() &amp;&amp; 0x8000000 ) rID += 0x7E000000;
-           }
-	   return rID;
+       <method
+         type    = 'bool'
+         name    = 'operator=='
+         argList = 'const LHCbID chanID'
+         const   = 'TRUE'
+         desc    = 'comparison equality'>
+         <code>
+  return (this->lhcbID() == chanID.lhcbID());
          </code>
        </method>
 
-       <constructor desc = "Constructor from CaloCellID" initList = "m_lhcbID(0)" >
-          <arg const="TRUE" name="chanID" type="CaloCellID" />
+       <constructor
+         desc     = "Constructor from VeloChannelID"
+         initList = "m_lhcbID(0)">
+          <arg const="TRUE" name="chanID" type="VeloChannelID" />
           <code>
-            setSpecific( chanID.ccid() );
-            setCommon( caloType );
+  setDetectorType( veloType );
+  setChannelID( chanID );
           </code>
        </constructor>
 
-       <method type="bool" name="isCalo" const='TRUE' desc="return true if this is a Calo identifier">
-         <code>return (caloType == common()) ? true : false;</code>
+       <method
+         type  = "bool"
+         name  = "isVelo"
+         const = 'TRUE'
+         desc  = "return true if this is a Velo identifier">
+         <code>
+  return (veloType == detectorType()) ? true : false;
+         </code>
        </method>
 
-       <method type="CaloCellID" name="caloID" const='TRUE' desc="return the CaloCellID">
-	 <code>return isCalo() ? specific() : 0xF0000000;</code>
+       <method
+         type  = "VeloChannelID"
+         name  = "veloID"
+         const = 'TRUE'
+         desc  = "return the VeloChannelID">
+	 <code>
+  return isVelo() ? channelID() : 0x0;
+         </code>
+       </method>
+
+       <constructor
+         desc     = "Constructor from ITChannelID"
+         initList = "m_lhcbID(0)" >
+          <arg const="TRUE" name="chanID" type="ITChannelID" />
+          <code>
+  setDetectorType( stType );
+  setChannelID( ((chanID.uniqueWafer()-1)&gt;&gt;4) + (chanID.strip()-1) );
+          </code>
+       </constructor>
+
+       <method
+         type  = "bool"
+         name  = "isST"
+         const = 'TRUE'
+         desc  = "return true if this is a Silicon Tracker identifier">
+         <code>
+  return (stType == detectorType()) ? true : false;
+         </code>
+       </method>
+
+       <method
+         type  = "ITChannelID"
+         name  = "stID"
+         const = 'TRUE'
+         desc  = "return the ITChannelID">
+	 <code>
+  return isST() ? ( ((channelID()&amp;0xFFFF000)&lt;&lt;4)+(channelID()&amp;0xFFF) ) : 0xF0000000;
+         </code>
+       </method>
+
+       <constructor
+         desc     = "Constructor from OTChannelID"
+         initList = "m_lhcbID(0)" >
+        <arg const="TRUE" name="chanID" type="OTChannelID" />
+        <code>
+  setDetectorType( otType );
+  setChannelID( chanID );
+        </code>
+       </constructor>
+
+       <method
+         type  = "bool"
+         name  = "isOT"
+         const = 'TRUE'
+         desc  = "return true if this is a Outer Tracker identifier">
+         <code>
+  return (otType == detectorType()) ? true : false;
+         </code>
+       </method>
+
+       <method
+         type  = "OTChannelID"
+         name  = "otID"
+         const = 'TRUE'
+         desc="return the OTChannelID">
+	 <code>
+  return isOT() ? channelID() : 0xF0000000;
+         </code>
+       </method>
+
+       <constructor
+         desc     = "Constructor from RichSmartID"
+         initList = "m_lhcbID(0)" >
+         <arg const="TRUE" name="chanID" type="RichSmartID" />
+         <code>
+  unsigned int richData = chanID.dataBitsOnly();
+  if( chanID.pixelDataAreValid() ) richData += 0x8000000;
+  setDetectorType( richType );
+  setChannelID( richData );
+         </code>
+       </constructor>
+
+       <method
+         type  = 'bool'
+         name  = 'isRich'
+         const = 'TRUE'
+         desc  = 'return true if this is a Rich identifier'>
+         <code>
+  return (richType == detectorType()) ? true : false;
+         </code>
+       </method>
+
+       <method
+         type  = "RichSmartID"
+         name  = "richID"
+         const = 'TRUE'
+         desc  = "return the richSmartID">
+	 <code>
+  unsigned int rID = 0;
+  if( isRich() ) {
+    rID = channelID() &amp; 0x7000000;
+    if( channelID() &amp;&amp; 0x8000000 ) rID += 0x7E000000;
+  }
+  return rID;
+         </code>
+       </method>
+
+       <constructor
+          desc     = "Constructor from CaloCellID"
+          initList = "m_lhcbID(0)" >
+          <arg const="TRUE" name="chanID" type="CaloCellID" />
+         <code>
+  setDetectorType( caloType );
+  setChannelID( chanID.ccid() );
+         </code>
+       </constructor>
+
+       <method
+         type  = "bool"
+         name  = "isCalo"
+         const = 'TRUE'
+         desc  = "return true if this is a Calo identifier">
+         <code>
+  return (caloType == detectorType()) ? true : false;
+         </code>
+       </method>
+
+       <method
+         type  = "CaloCellID"
+         name  = "caloID"
+         const = 'TRUE'
+         desc  = "return the CaloCellID">
+         <code>
+  return isCalo() ? channelID() : 0xF0000000;
+         </code>
+       </method>
+
+       <method
+         type  = 'unsigned int'
+         name  = 'spareBits'
+         const = 'TRUE'
+         desc  = 'retrieve the spare bits'>
+         <code>
+  if ( !( isVelo() || isOT() ) ) return 0;
+  return (unsigned int)((m_lhcbID &amp; spareBitsMask) &gt;&gt; spareBitsBits);
+         </code>
+       </method>
+
+       <method
+         name    = 'setSpareBits'
+         argList = 'unsigned int value'
+         desc    = 'set the spare bits'>
+         <code>
+  if ( !( isVelo() || isOT() ) ) return;
+  unsigned int val = (unsigned int)value;
+  m_lhcbID &amp;= ~spareBitsMask;
+  m_lhcbID |= ((((unsigned int)val) &lt;&lt; spareBitsBits) &amp; spareBitsMask);
+         </code>
+       </method>
+
+       <method
+         type  = 'unsigned int'
+         name  = 'channelID'
+         const = 'TRUE'
+         desc  = 'retrieve the channelID'>
+  <code>
+  unsigned int mask = channelIDMask | spareBitsMask;
+  if ( isVelo() || isOT() ) mask = channelIDMask;
+  return (unsigned int)((m_lhcbID &amp; mask) &gt;&gt; channelIDBits);
+         </code>
+       </method>
+
+       <method
+         name    = 'setChannelID'
+         argList = 'unsigned int value'
+         desc    = 'set the channelID'>
+         <code>
+  unsigned int mask = channelIDMask | spareBitsMask;
+  if ( isVelo() || isOT() ) mask = channelIDMask;
+  unsigned int val = (unsigned int)value;
+  m_lhcbID &amp;= ~mask;
+  m_lhcbID |= ((((unsigned int)val) &lt;&lt; channelIDBits) &amp; mask);
+         </code>
        </method>
 
     </class>

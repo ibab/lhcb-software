@@ -2,6 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-02-04 - Jose Hernando, Eduardo Rodrigues
+ - LHCbID class extended:
+   - backward incompatible changes to names of several methods
+   - first implementation to use spare bits where needed
+     (e.g. to store the ambiguity in OT)
+
 !====================== LHCbKernel v5r7 2005-01-20 ========================
 ! 2005-01-20 - Marco Cattaneo
  - Changes for Gaudi v16 and CLHEP 1.9
