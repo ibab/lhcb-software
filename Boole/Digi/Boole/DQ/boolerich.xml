@@ -3,4 +3,16 @@
   <unique string="RiDigitQC            INFO RICH1 digit multiplicity" pos='8' errorname='RICH1 digit multiplicity' varname='var2'/>  
   <unique string="RiDigitQC            INFO RICH2 digit multiplicity" pos='6' parname='RICH2 digit multiplicity' varname='var3'/>
   <unique string="RiDigitQC            INFO RICH2 digit multiplicity" pos='8' errorname='RICH2 digit multiplicity' varname='var4'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH1 Average  | L1 size =" pos='8' parname='RICH1 L1 size (hpd)' varname='var5'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH1 Average  | L1 size =" pos='10' errorname='RICH1 L1 size (hpd)' varname='var6'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH1 Average  | L1 size =" pos='13' parname='RICH1 L1 size (words)' varname='var7'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH1 Average  | L1 size =" pos='15' errorname='RICH1 L1 size (words)' varname='var8'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH1 Average  | L1 size =" pos='18' parname='RICH1 L1 size (hits)' varname='var9'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH1 Average  | L1 size =" pos='20' errorname='RICH1 L1 size (hits)' varname='var10'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH2 Average  | L1 size =" pos='8' parname='RICH2 L1 size (hpd)' varname='var11'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH2 Average  | L1 size =" pos='10' errorname='RICH2 L1 size (hpd)' varname='var12'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH2 Average  | L1 size =" pos='13' parname='RICH2 L1 size (words)' varname='var13'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH2 Average  | L1 size =" pos='15' errorname='RICH2 L1 size (words)' varname='var14'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH2 Average  | L1 size =" pos='18' parname='RICH2 L1 size (hits)' varname='var15'/>  
+  <unique string="ToolSvc.RichRaw...   INFO   RICH2 Average  | L1 size =" pos='20' errorname='RICH2 L1 size (hits)' varname='var16'/>  
 </subsystem>
