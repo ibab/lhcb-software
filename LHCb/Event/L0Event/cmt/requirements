@@ -1,15 +1,24 @@
+# $Id: requirements,v 1.9 2002-01-30 16:18:46 ocallot Exp $
 package L0Event
-version v4r0
+version v10r0
 
-branches L0Event src cmt doc
+branches Event src cmt doc xml
 
 include_dirs $(L0EVENTROOT)
 
-use LHCbEvent v12r* Event
+use 	GaudiObjDesc	v3r*
+use     EventKernel     v1r*    Event
+use 	LHCbEvent 	v12r* 	Event
 
 # component library
 
+document obj2doth L0EventObj2Doth ../xml/*.xml
+
 library         L0Event ../src/*.cpp 
+
+document obj2dict L0EventObj2Dict -group=dict ../xml/L0Event.xml
+library L0EventDict -group=dict ../dict/*.cpp
+macro L0EventDict+shlibflag "$(use_linkopts) $(libraryshr_linkopts)"
 
 apply_pattern   package_Cshlibflags
 apply_pattern   package_Clinkopts

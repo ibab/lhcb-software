@@ -1,6 +1,14 @@
-$Id: release.notes,v 1.6 2002-01-14 09:54:51 cattanem Exp $
+$Id: release.notes,v 1.7 2002-01-30 16:18:47 ocallot Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+!=============================================================================
+! 30/01/2002 - Olivier Callot
+  - Generate the header files from xml.
+  - Installed the L0Calo files : 
+	      L0CaloCandidate (was in L0/L0Calo)
+			  L0CaloAdc (new)
+			  L0PrsSpdHit (new)
 
 !=============================================================================
 ! 20020107 - L0Event v4r0 (MC)

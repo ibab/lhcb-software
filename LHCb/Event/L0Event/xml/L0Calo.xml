@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+    <package name="L0Event">
+        <namespace desc="L0 namespace" name="L0">
+            <enum desc="L0Type describes the type of candidate" name="L0Type" value="Electron=1, Photon, Hadron, Hadron2, SumEt, Pi0Local, Pi0Global"/>
+        </namespace>
+        <class author="Olivier Callot" desc="This class represents the input from the calorimeter to the L0 trigger" id="6001" name="L0CaloCandidate">
+            <base name="KeyedObject&lt;int&gt;"/>
+            <import name="CLHEP/Units/SystemOfUnits"/>
+            <import name="CaloKernel/CaloCellID"/>
+            <import name="Event/L0"/>
+            <constructor argList="int type, CaloCellID ID, int etCode, double et, HepPoint3D cellCenter, double cellSize" desc="special constructor" initList="KeyedObject&lt;int&gt;(type),m_type(type), m_ID(ID), m_etCode(etCode), m_et(et), m_position(cellCenter), m_posTol(cellSize)">
+                <code>  </code>
+            </constructor>
+            <method const="TRUE" desc="Returns the type of candidate as a string, for printing" name="typeName" type="std::string">
+                <code>  switch (m_type) {
+    case L0::Electron:  return &quot;electron&quot;;
+    case L0::Photon:    return &quot;photon  &quot;;
+    case L0::Hadron:    return &quot;hadron  &quot;;
+    case L0::Hadron2:   return &quot;hadron_2&quot;;
+    case L0::Pi0Local:  return &quot;Pi0 loc &quot;;
+    case L0::Pi0Global: return &quot;Pi0 glob&quot;;
+    case L0::SumEt:     return &quot;Sum Et  &quot;;
+    default:            return &quot;unknown &quot;; 
+  } </code>
+            </method>
+            <attribute desc="Type of trigger, from L0:L0Type" name="type" setMeth="FALSE" type="int"/>
+            <attribute desc="Calo Cell ID. To access MC information..." name="ID" setMeth="FALSE" type="CaloCellID"/>
+            <attribute desc="integer version of Et." name="etCode" setMeth="FALSE" type="int"/>
+            <attribute desc="Transverse energy" name="et" setMeth="FALSE" type="double"/>
+            <attribute desc="Position" name="position" setMeth="FALSE" type="HepPoint3D"/>
+            <attribute desc="Tolerance on x/y position = 1/2 cell size" name="posTol" setMeth="FALSE" type="double"/>
+        </class>
+        <class author="Olivier Callot" desc="Information for L0 Calo Trigger: CellID + 8-bit Et" id="6006" name="L0CaloAdc">
+            <base name="KeyedObject&lt;int&gt;"/>
+            <import name="CaloKernel/CaloCellID"/>
+            <attribute desc="Cell for which the information is given" name="cellID" setMeth="FALSE" type="CaloCellID"/>
+            <attribute desc="8-bit transverse energy" name="adc" setMeth="FALSE" type="int"/>
+            <constructor argList="CaloCellID&amp; ID, int adc" desc="Usual constructor, specifies the cell and Et" initList="KeyedObject&lt;int&gt;( ID.index() ), m_cellID(ID), m_adc(adc)">
+                <code> </code>
+            </constructor>
+        </class>
+        <class author="Olivier Callot" desc=" Fired cells in Prs or Spd." id="6007" name="L0PrsSpdHit" templateList="FALSE" templateVector="TRUE">
+            <base name="ContainedObject"/>
+            <import name="CaloKernel/CaloCellID"/>
+            <attribute desc="Fired cells" name="cellID" setMeth="FALSE" type="CaloCellID"/>
+            <constructor argList="CaloCellID ID" desc="Usual constructor, specifies the CellID" initList="m_cellID( ID )">
+                <code> </code>
+            </constructor>
+        </class>
+    </package>
+</gdd>
