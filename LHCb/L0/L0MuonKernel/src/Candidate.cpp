@@ -1,9 +1,9 @@
-// $Id: Candidate.cpp,v 1.1 2005-02-02 22:57:37 atsareg Exp $
+// $Id: Candidate.cpp,v 1.2 2005-02-03 19:49:16 atsareg Exp $
 
 #include <cmath>
 #include <vector>
 #include "L0MuonKernel/Candidate.h"
-#include "L0MuonKernel/L0MuonBase.h"
+//#include "L0MuonKernel/L0MuonBase.h"
 
 L0Muon::Candidate::Candidate(int status) {
   m_status = status;

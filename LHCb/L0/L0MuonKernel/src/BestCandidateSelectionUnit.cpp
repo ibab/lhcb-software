@@ -49,27 +49,20 @@ L0Muon::BestCandidateSelectionUnit::~BestCandidateSelectionUnit(){
   if (m_bcsul0bufferFile!=NULL) fclose(m_bcsul0bufferFile);  
 }
 
+
 void L0Muon::BestCandidateSelectionUnit::initialize()
 {
-
-}
-void L0Muon::BestCandidateSelectionUnit::initialize(MsgStream & log)
-{
-  log << MSG::DEBUG << "Initialize BCSU" << endreq;
+  //if (m_debug) std::cout << "Initialize BCSU" << std::endl;
   m_offsets.clear();
   m_candidates.clear();
 }
 
 void L0Muon::BestCandidateSelectionUnit::execute()
 {
-}
 
-void L0Muon::BestCandidateSelectionUnit::execute(MsgStream & log)
-{
+  if (m_debug) std::cout << "Execute BestCandidateSelectionUnit" << std::endl;
 
-  log << MSG::DEBUG << "Execute BestCandidateSelectionUnit" << endreq;
-
-  //dumpCandidates(log);
+  dumpCandidates();
   //dumpAddresses(log);
 
   // Sort ordered candidates and offsets
@@ -81,7 +74,7 @@ void L0Muon::BestCandidateSelectionUnit::execute(MsgStream & log)
 
 
   // Load ordered candidates and offsets in Crate 
-  for (std::vector<std::pair<L0MuonCandidate*, std::vector<int> > >::
+  for (std::vector<std::pair<Candidate*, std::vector<int> > >::
          iterator ioff =
          m_offsets.begin(); ioff < m_offsets.begin()+2; ioff++){
 
@@ -93,7 +86,7 @@ void L0Muon::BestCandidateSelectionUnit::execute(MsgStream & log)
   }
 
 
-  for (std::vector<L0MuonCandidate* >::iterator icand = m_candidates.begin();
+  for (std::vector<Candidate* >::iterator icand = m_candidates.begin();
        icand < m_candidates.begin()+2; icand++){
     
     cr->fillCandidates(*icand);
@@ -145,34 +138,38 @@ void L0Muon::BestCandidateSelectionUnit::setOutputFile(MuonTileID boardid)
 }
 
 
-void L0Muon::BestCandidateSelectionUnit::loadCandidates(L0MuonCandidate * cand)
+void L0Muon::BestCandidateSelectionUnit::loadCandidates(Candidate * cand)
 {
   m_candidates.push_back(cand);
 }
 
 // function for debug
-void L0Muon::BestCandidateSelectionUnit::dumpCandidates(MsgStream & log)
+void L0Muon::BestCandidateSelectionUnit::dumpCandidates()
 {
   if (m_candidates.size() > 0){
-    for (std::vector<L0MuonCandidate*>::iterator icand =
+    if (m_debug) std::cout << "BCSU: # of candidates " 
+                           << m_candidates.size() << std::endl;
+    for (std::vector<Candidate*>::iterator icand =
            m_candidates.begin(); icand != m_candidates.end();icand++){
-      log << MSG::DEBUG << (*icand)->pt() << endreq;
+      if ( (*icand)->status() == L0MuonStatus::OK ) {	   	   
+        if (m_debug) std::cout << "BCSU: " << (*icand)->pt() << std::endl;
+      } 	
     }
   } 
 }
 
 
-void L0Muon::BestCandidateSelectionUnit::dumpAddresses(MsgStream & log)
+void L0Muon::BestCandidateSelectionUnit::dumpAddresses()
 {
  std::map<std::string,L0Muon::Register*>::iterator ir;
  for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++) {
    // boost::dynamic_bitset<> bits = (*ir).second->getBitset();
-   log << MSG::DEBUG << (*ir).first << endreq;
+   if (m_debug) std::cout << "BCSU: " << (*ir).first << std::endl;
    boost::dynamic_bitset<> bits = (*ir).second->getBitset();
    for (boost::dynamic_bitset<>::size_type i =0; i < bits.size(); i++){
-     log << MSG::DEBUG << " " << bits[i] ;     
+     if (m_debug) std::cout << "BCSU: " << " " << bits[i] ;     
    }
-   log << MSG::DEBUG << endreq;
+   if (m_debug) std::cout << std::endl;
  }
 }
 
@@ -236,7 +233,7 @@ void L0Muon::BestCandidateSelectionUnit::fillInp()
   int imax = m_candidates.size();
   
   for (int i =0 ; i <imax; i++){
-    std::pair<L0MuonCandidate*, boost::dynamic_bitset<> > tmp = 
+    std::pair<Candidate*, boost::dynamic_bitset<> > tmp = 
       std::make_pair(m_candidates[i], m_addresses[i]);
     
     m_inp.push_back(tmp);
@@ -319,7 +316,7 @@ void L0Muon::BestCandidateSelectionUnit::setOutBCSU()
 
   // Bits 44-47 for status (0<= number of candidates <=8) 
   unsigned long icounter =0;
-  for (std::vector<L0MuonCandidate*>::iterator icand =
+  for (std::vector<Candidate*>::iterator icand =
          m_candidates.begin(); icand != m_candidates.end();icand++){
     if ( (*icand)->status() != L0MuonStatus::PU_EMPTY){
       icounter++;
@@ -353,9 +350,9 @@ void L0Muon::BestCandidateSelectionUnit::setInpBCSU()
     }
   }
 
-  // Get the pt from the L0MuonCandidates
+  // Get the pt from the Candidates
   std::vector<boost::dynamic_bitset<> > pts ;
-  for (std::vector<L0MuonCandidate*>::iterator icand =
+  for (std::vector<Candidate*>::iterator icand =
          m_candidates.begin(); icand != m_candidates.end();icand++){
     double pt = (*icand)->pt();
     boost::dynamic_bitset<> ptbits = codedPt(pt);
@@ -452,7 +449,7 @@ void L0Muon::BestCandidateSelectionUnit::dump(FILE *bcsul0bufferFile)
 
 boost::dynamic_bitset<> L0Muon::BestCandidateSelectionUnit::codedPt(double pt){
 
-  unsigned long p= int((fabs(pt)+L0MuonBase::PT_BIN_WIDTH/2.)/L0MuonBase::PT_BIN_WIDTH);
+  unsigned long p= int((fabs(pt)+20.)/40.);
 
   if (p>0xaf) p=0xaf;
   
@@ -465,7 +462,7 @@ boost::dynamic_bitset<> L0Muon::BestCandidateSelectionUnit::codedPt(double pt){
 }
 
 
-void L0Muon::BestCandidateSelectionUnit::loadOffsets(std::pair<L0MuonCandidate*,std::vector<int> > off)
+void L0Muon::BestCandidateSelectionUnit::loadOffsets(std::pair<Candidate*,std::vector<int> > off)
 {   
   m_offsets.push_back(off);
 }

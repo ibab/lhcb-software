@@ -1,4 +1,4 @@
-#include "GaudiKernel/MsgStream.h"
+#include <iostream>
 #include <boost/dynamic_bitset.hpp>
 #include "L0MuonKernel/CandidateTower.h"
 
@@ -12,6 +12,7 @@ L0Muon::CandidateTower::CandidateTower(){
     m_xyindex[sta] =seedind(999,999);
   }
   
+  m_debug = false;
 }
 
 L0Muon::CandidateTower::CandidateTower(std::pair<int, int> seedindex){
@@ -37,7 +38,7 @@ L0Muon::CandidateTower::seedind L0Muon::CandidateTower::getFoi(int sta) {
   return foiXY ;
 }
 
-void L0Muon::CandidateTower::setSeed(std::pair<int, int> &seedindex){
+void L0Muon::CandidateTower::setSeed(std::pair<int, int> seedindex){
   m_seed = seedindex ;
 }
 
@@ -419,25 +420,24 @@ boost::dynamic_bitset<>  L0Muon::CandidateTower::getBit(){
   return m_bits ;
 }
 
-//void L0Muon::CandidateTower::reset(int sta){   
 void L0Muon::CandidateTower::reset(){   
   m_bits.reset();
 
   for (int sta =0; sta<5;sta++){
-    m_xyindex[sta] =seedind(999,999);
+    m_xyindex[sta] = seedind(999,999);
   }
 }
 
 
-void L0Muon::CandidateTower::drawBits(int sta, MsgStream & log) {
+void L0Muon::CandidateTower::drawBits(int sta) {
 
-  log << MSG::DEBUG << "Bitset size in sta"<< " " << sta 
-       << " " << m_bits.size() << endreq;
+  if (m_debug) std::cout << "Bitset size in sta"<< " " << sta 
+       << " " << m_bits.size() << std::endl;
   
   for ( boost::dynamic_bitset<>::size_type ir = 0; ir < m_bits.size(); ir++) {
-    log << MSG::DEBUG << " " << m_bits[ir] ;
+    if (m_debug) std::cout << " " << m_bits[ir] ;
   }
-  log << MSG::DEBUG << endreq ;
+  if (m_debug) std::cout << std::endl ;
   
 
 }

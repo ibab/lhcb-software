@@ -200,23 +200,16 @@ void L0Muon::BuildL0BufferUnit::setL0buf(){
 }
 
 
-
 void L0Muon::BuildL0BufferUnit::initialize(){
-}
 
-void L0Muon::BuildL0BufferUnit::initialize(MsgStream & log){
-
-  log << MSG::DEBUG << "Initialize BuildL0Buffer" << endreq;
-  
+  if (m_debug) std::cout << "Initialize BuildL0Buffer" << std::endl;  
 
 }
+
 
 void L0Muon::BuildL0BufferUnit::execute(){
-}
-
-void L0Muon::BuildL0BufferUnit::execute(MsgStream & log){
   
-  log << MSG::DEBUG << "Write L0Buffer" << endreq;
+  if (m_debug) std::cout << "Write L0Buffer" << std::endl;
   
   setIdField();
   setInputField();

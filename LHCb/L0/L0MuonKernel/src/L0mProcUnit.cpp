@@ -14,8 +14,7 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
                                  std::vector<int> & foiy,
                                  double & precision,
                                  int & bits,
-                                 bool & writeL0buffer,
-                                 MsgStream & log) {
+                                 bool & writeL0buffer) {
 
   if ( ! m_units.empty() ) {
     m_units.clear();
@@ -35,7 +34,8 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
   
   m_puID = puNode.id();
   m_boardID =puNode.board();
-
+  
+  setName(puNode.name());
 
   m_cu = new CablingUnit();
   
@@ -59,6 +59,8 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
     m_l0b = 0;
   }
  
+
+  // Create optical link registers
 
   for ( int sta = 0; sta < 5; sta++) {
    
@@ -112,14 +114,14 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
     
       
       testalias = rfactory->createAlias(buf,bufalias);
-      log << MSG::DEBUG << "name for Register" <<" " << buf <<  endreq;
-      log << MSG::DEBUG << "alias for Register" <<" " << bufalias <<  endreq;
-      //*m_log << MSG::DEBUG << "tiles in reg" <<" " <<  endreq;
+      if (m_debug) std::cout << "name for Register" <<" " << buf <<  std::endl;
+      if (m_debug) std::cout << "alias for Register" <<" " << bufalias <<  std::endl;
+      //*m_if (m_debug) std::cout << "tiles in reg" <<" " <<  std::endl;
       //for (itlist =tlist.begin(); itlist < tlist.end(); itlist++){
       //*m_log<< MSG::DEBUG << " "  << (*itlist).quarter() << " "
       //      << (*itlist).region()  << " " 
       //      << (*itlist).nX() << " "
-      //      << (*itlist).nY() << endreq;
+      //      << (*itlist).nY() << std::endl;
       //}
 
       addInputRegister(reg);
@@ -209,15 +211,15 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
 
           regIn->setType("InputfieldNeigh");
 
-          log << MSG::DEBUG << "name for Register" <<" " << buf <<  endreq;
-          //*m_log << MSG::DEBUG << "tiles in input neigh reg" <<" " <<  endreq;
+          if (m_debug) std::cout << "name for Register" <<" " << buf <<  std::endl;
+          //*m_if (m_debug) std::cout << "tiles in input neigh reg" <<" " <<  std::endl;
          
           //std::vector<MuonTileID>::iterator imtl;
           // for (imtl =listoftiles.begin(); imtl < listoftiles.end(); imtl++){
           //*m_log<< MSG::DEBUG << " "  << (*imtl).quarter() << " "
           // << (*imtl).region()  << " " 
           // << (*imtl).nX() << " "
-          // << (*imtl).nY() << endreq;
+          // << (*imtl).nY() << std::endl;
           //}
 
           addInputRegister(regIn);	
@@ -255,8 +257,8 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
         for (itiles = tiles.begin(); itiles != tiles.end(); itiles++){
            
             listoftilesout.push_back(*itiles);
-            //*m_log << MSG::DEBUG << " list of tags"<< " " 
-            //<< (*itiles).tag() <<  endreq;                      
+            //*m_if (m_debug) std::cout << " list of tags"<< " " 
+            //<< (*itiles).tag() <<  std::endl;                      
             
         } // for (itiles = tiles.begin( 
         
@@ -282,15 +284,15 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
           
           addOutputRegister(nreg);	  
 
-          log << MSG::DEBUG << "name for Register" <<" " << buf <<  endreq;
-          //*m_log << MSG::DEBUG << "tiles in output neigh reg" <<" " <<  endreq;
+          if (m_debug) std::cout << "name for Register" <<" " << buf <<  std::endl;
+          //*m_if (m_debug) std::cout << "tiles in output neigh reg" <<" " <<  std::endl;
           //std::vector<MuonTileID>::iterator imtlout;
           //for (imtlout =listoftilesout.begin(); 
           // imtlout < listoftilesout.end(); imtlout++){
           //*m_log<< MSG::DEBUG << " "  << (*imtlout).quarter() << " "
           // << (*imtlout).region()  << " " 
           // << (*imtlout).nX() << " "
-          // << (*imtlout).nY() << endreq;
+          // << (*imtlout).nY() << std::endl;
           //} //for (imtlout 
           
           
@@ -351,56 +353,19 @@ L0Muon::L0mProcUnit::~L0mProcUnit() {
 
 }
 
-void L0Muon::L0mProcUnit::execute() {
-  L0Muon::Unit::execute();
-  
-}
 
-void L0Muon::L0mProcUnit::execute(MsgStream & log) {
-
- 
-  if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
-    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->execute(log);
-    }
-  }
-
-
-  
-}
-
-
-void L0Muon::L0mProcUnit::initialize() {
-  L0Muon::Unit::initialize();
-}
-
-void L0Muon::L0mProcUnit::initialize(MsgStream & log) {
-
- 
-   if ( ! m_units.empty() ) {
-     std::map<std::string,L0Muon::Unit*>::iterator iu;
-     for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {  
-
-       (*iu).second->initialize(log);
-     }
-          
-   } else {
-     return ;
-   }
-   
-       
-
-}
-
-
-void L0Muon::L0mProcUnit::finalize() {
-  L0Muon::Unit::finalize();
-  releaseRegisters();
-  
-  
- 
-}
+// void L0Muon::L0mProcUnit::initialize() {
+//   L0Muon::Unit::initialize();
+// }
+// 
+// void L0Muon::L0mProcUnit::execute() {
+//   L0Muon::Unit::execute();
+// }
+// 
+// void L0Muon::L0mProcUnit::finalize() {
+//   L0Muon::Unit::finalize();
+//   releaseRegisters();
+// }
 
  
 

@@ -14,17 +14,17 @@ L0Muon::FormattingUnit::~FormattingUnit() {}
 
 
 
-void L0Muon::FormattingUnit::makePads(MsgStream & log) {
+void L0Muon::FormattingUnit::makePads() {
 
 
   m_pads.clear();
 
   std::map<std::string,Register*>::iterator ir;
 
-  log << MSG::DEBUG << "Registers in input in FormattingUnit"  << endreq;
+  if (m_debug) std::cout << "Registers in input in FormattingUnit"  << std::endl;
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
-    log << MSG::DEBUG << " " << ir->first << " " <<endreq;
+    if (m_debug) std::cout << " " << ir->first << " " <<std::endl;
     
     std::vector<MuonTileID> tmp = itr->firedTiles();
 
@@ -35,32 +35,13 @@ void L0Muon::FormattingUnit::makePads(MsgStream & log) {
     for (ipads = pads.begin(); ipads != pads.end(); ipads++){
        
       m_pads.push_back(*ipads);
-     }
-    
-  }
-  
- 
-  
+    }    
+  }  
 }
-
-
-
-
- 
- 
- 
- 
 
 void L0Muon::FormattingUnit::initialize(){
-  L0Muon::Unit::initialize();
-}
-
-
-void L0Muon::FormattingUnit::initialize(MsgStream & log){
-
-
-    
-  makePads(log);
+   
+  makePads();
 
   std::map<std::string,Register*>::iterator out;
 
@@ -94,23 +75,14 @@ void L0Muon::FormattingUnit::initialize(MsgStream & log){
           }
         }
       }
-    }
-    
-  }
-  
+    }    
+  }  
 }
-
-
 
 
 void L0Muon::FormattingUnit::execute(){
-
-  
-}
-
-void L0Muon::FormattingUnit::execute(MsgStream & log){
  
-  log << MSG::DEBUG << "Execute Formatting" << endreq;
+  if (m_debug) std::cout << "Execute Formatting" << std::endl;
   
   
 }

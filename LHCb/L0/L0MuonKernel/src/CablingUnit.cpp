@@ -1,8 +1,9 @@
+#include <iostream>
+
 #include "L0MuonKernel/CablingUnit.h"
 #include "L0MuonKernel/CrateUnit.h"
 #include "L0MuonKernel/BuildL0BufferUnit.h"
 #include "L0MuonKernel/BestCandidateSelectionUnit.h"
-#include "MuonTools/IMuonTileXYZTool.h"
 
 
 L0Muon::CablingUnit::CablingUnit() {  
@@ -10,12 +11,11 @@ L0Muon::CablingUnit::CablingUnit() {
  
   m_status = 0;
  
- 
 }
     
 L0Muon::CablingUnit::~CablingUnit() {};  
 
-void L0Muon::CablingUnit::makePads(MsgStream & log) {
+void L0Muon::CablingUnit::makePads() {
   m_pads.clear();
  
   std::map<std::string,Register*>::iterator ir;
@@ -23,46 +23,35 @@ void L0Muon::CablingUnit::makePads(MsgStream & log) {
   
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
-    log << MSG::DEBUG << " " << ir->first << " " <<endreq;
-    boost::dynamic_bitset<> r = itr->getBitset();
-    log << MSG::DEBUG << " reg size" << " " <<r.size() << endreq;
-    std::vector<MuonTileID> tmp = itr->firedTiles();
-    std::vector<MuonTileID>::iterator itmp;
-    log << MSG::DEBUG << "Fired tiles " << endreq;
-    for (itmp = tmp.begin(); itmp!= tmp.end(); itmp++){
-      log << MSG::DEBUG << " " << (*itmp).quarter() << " " 
-          << (*itmp).region() << " " << (*itmp).nX() << " " 
-          << (*itmp).nY()
-          << endreq;
-    }
-    
- 
-    itr->makePads();
+    if ( ! itr->empty() ) {
+      std::cout << "Register name " << itr->name() << std::endl;
+      if (m_debug) std::cout << "Cabling: " << " " << ir->first << " " <<std::endl;
+      boost::dynamic_bitset<> r = itr->getBitset();
+      if (m_debug) std::cout << "Cabling: " << " reg size" << " " <<r.size() << std::endl;
+      std::vector<MuonTileID> tmp = itr->firedTiles();
+      std::vector<MuonTileID>::iterator itmp;
+      if (m_debug) std::cout << "Cabling: " << "Fired tiles: " << std::endl;
+      for (itmp = tmp.begin(); itmp!= tmp.end(); itmp++){
+	if (m_debug) std::cout << " " << (*itmp).quarter() << " " 
+            << (*itmp).region() << " " << (*itmp).nX() << " " 
+            << (*itmp).nY()
+            << std::endl;
+      }
 
-    std::vector<MuonTileID> pads = itr->Pads();
-    std::vector<MuonTileID>::iterator  ipads ;    
-    for (ipads = pads.begin(); ipads != pads.end(); ipads++){
-      m_pads.push_back(*ipads);
-      
-    }
-    
+      itr->makePads();
 
-       
+      std::vector<MuonTileID> pads = itr->Pads();
+      std::vector<MuonTileID>::iterator  ipads ;    
+      for (ipads = pads.begin(); ipads != pads.end(); ipads++){
+	m_pads.push_back(*ipads);
 
-    
-    
-  }
-  
-  
-  
+      }
+    }           
+  }      
 }
 
 
-
-
-
-
-void L0Muon::CablingUnit::makeTower(MsgStream & log) {
+void L0Muon::CablingUnit::makeTower() {
 
   unsigned int nreg = m_pu.region();
   MuonLayout layout(48,8);
@@ -78,30 +67,31 @@ void L0Muon::CablingUnit::makeTower(MsgStream & log) {
   
   for (ip=m_pads.begin(); ip != m_pads.end(); ip++) {
 
-    log << MSG::DEBUG << "pad" << " " << (*ip).quarter() <<" " 
-        << (*ip).region() << " " 
-        << (*ip).nX() << " " 
-        << (*ip).nY() << endreq;
+    if (m_debug) std::cout << "Cabling: " << "pad" << " " 
+                           << (*ip).quarter() <<" " 
+        		   << (*ip).region() << " " 
+        		   << (*ip).nX() << " " 
+        		   << (*ip).nY() << std::endl;
     int nsta = ip->station();
     std::vector<MuonTileID> tmp;
     
     
     if ( ip->region() == nreg ) {
-      log << MSG::DEBUG << "ip->region==nreg" << endreq;
+      // if (m_debug) std::cout << "Cabling: " << "ip->region==nreg" << std::endl;
       tmp = layout.tiles(*ip);
     } else if ( ip->region() != nreg){
-      log << MSG::DEBUG << "ip->region != nreg" << endreq;
-      log << MSG::DEBUG << "quarter " << (*ip).quarter() << " region " 
-          << (*ip).region() << " nreg " << nreg << endreq;
+      //if (m_debug) std::cout << "ip->region != nreg" << std::endl;
+      //if (m_debug) std::cout << "quarter " << (*ip).quarter() << " region " 
+      //    << (*ip).region() << " nreg " << nreg << std::endl;
       tmp = layout.tilesInRegion((*ip), nreg); 
     }
     
-    log << MSG::DEBUG << "tiles for this pad" << endreq;
+    if (m_debug) std::cout << "Cabling: " << "tiles for this pad" << std::endl;
     for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
-      log << MSG::DEBUG << "sta" << 
+      if (m_debug) std::cout << "sta" << 
         " " << nsta << " " << (*itmp).quarter() << " " 
           << (*itmp).region() << " " 
-          << (*itmp).nX() << " " << (*itmp).nY() << endreq;
+          << (*itmp).nX() << " " << (*itmp).nY() << std::endl;
     }
      
      
@@ -116,71 +106,36 @@ void L0Muon::CablingUnit::makeTower(MsgStream & log) {
        std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
 
      
-       m_tower.setBit(nsta, nYindex, nXindex, log);
+       m_tower.setBit(nsta, nYindex, nXindex );
 
-       //log << MSG::DEBUG << "XY" << " " << nXindex <<
+       //if (m_debug) std::cout << "XY" << " " << nXindex <<
        //" " <<  nYindex << " " << "sta" << 
        //" " << nsta << " " << (*itmp).quarter() << " " 
        ///  << (*itmp).region() << " " 
-       //<< (*itmp).nX() << " " << (*itmp).nY() << endreq;
+       //<< (*itmp).nX() << " " << (*itmp).nY() << std::endl;
        m_tower.setPadIdMap(nsta, yx, *ip);
-      
-       
-     }
-     
-     
-     
-  }
-  
-  
-  
-  
-    
-  
-  
+             
+     }     
+  } 
 }
 
 
 void L0Muon::CablingUnit::initialize() {
 
-  m_cand.clear();
-  m_offForCand.clear();
-  
-  
-  
   L0Muon::Unit::initialize();
-}
-
-void L0Muon::CablingUnit::initialize(MsgStream & log) {
-
   m_cand.clear();
   m_offForCand.clear();
-
-  if ( ! m_units.empty() ) {
-    
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
-    
-    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->initialize(log);
-      
-    }
-    
-  }
-  else {
-          
-    return ;
-    
-    
-  }
+  if (m_debug) m_tower.setDebugMode();
+  
   
 }
-
 
 void L0Muon::CablingUnit::execute() {
-  L0Muon::Unit::execute();
-}
 
-void L0Muon::CablingUnit::execute(MsgStream & log) {
+  if (m_debug) std::cout << "Cabling:" << std::endl;
+  if (m_debug) std::cout << "Cabling: executing PU " << m_parent->name() << std::endl; 
+
+  dump();
 
   Unit * myBoard = m_parent->parent();
   BoardUnit * bu = dynamic_cast<BoardUnit*>(myBoard);
@@ -194,53 +149,53 @@ void L0Muon::CablingUnit::execute(MsgStream & log) {
   
   m_tower.reset();
 
-  makePads(log);
-  makeTower(log);
+  makePads();
+  makeTower();
 
   
   L0mProcUnit * mpu = dynamic_cast<L0mProcUnit*>(m_parent);
   
   
    for (int ista=0; ista<5; ista++){
-     
-     m_tower.setXfoi(ista,mpu->xFoi(ista));
-     m_tower.setYfoi(ista,mpu->yFoi(ista));
+     std::cout << " Cabling Tower FOI " << ista 
+               << " " << mpu->xFoi(ista) << mpu->yFoi(ista) << std::endl;     
+     m_tower.setFoi(ista,mpu->xFoi(ista),mpu->yFoi(ista));
    }
    
    m_tower.setPtparam(mpu->ptParameters());
    m_tower.setIgnoreM1(mpu->ignoreM1());
 
-  IMuonTileXYZTool *iTileXYZTool = cr->getMuonTool();
+  //IMuonTileXYZTool *iTileXYZTool = cr->getMuonTool();
   
-  m_tower.setMuonToolInTower(iTileXYZTool);
-  m_tower.processTower(m_pu, log);
+  //m_tower.setMuonToolInTower(iTileXYZTool);
+  m_tower.processTower(m_pu);
   m_cand = m_tower.puCandidates();
 
   m_offForCand =m_tower.candOffset();
 
 
   // Debug
-  /*std::cout << "m_offForCand.size" << m_offForCand.size() << std::endl;
+  /*if (m_debug) std::cout << "m_offForCand.size" << m_offForCand.size() << std::endl;
  
-  std::vector< std::pair<L0MuonCandidate*, std::vector<int> > >::iterator ioff;  
+  std::vector< std::pair<Candidate*, std::vector<int> > >::iterator ioff;  
   for (ioff = m_offForCand.begin(); ioff != m_offForCand.end(); ioff++){
     
     std::vector<int> tmp =(*ioff).second;
     
 
-    std::cout << "Pt of the candidate = " << (*ioff).first->pt()
+    if (m_debug) std::cout << "Pt of the candidate = " << (*ioff).first->pt()
         << std::endl;
     
-    std::cout << "Offsets = " << tmp[0] << std::endl;
-    std::cout << "Offsets = " << tmp[1] << std::endl;
-    std::cout << "Offsets = " << tmp[2] << std::endl;
-    std::cout << "Offsets = " << tmp[3] << std::endl;
-    std::cout << "Offsets = " << tmp[4] << std::endl;
-    std::cout << "Offsets = " << tmp[5] << std::endl;
-    std::cout << "Offsets = " << tmp[6] << std::endl;
-    std::cout << "Offsets = " << tmp[7] << std::endl;
-    std::cout << "Offsets = " << tmp[8] << std::endl;
-    std::cout << "Offsets = " << tmp[9] << std::endl;
+    if (m_debug) std::cout << "Offsets = " << tmp[0] << std::endl;
+    if (m_debug) std::cout << "Offsets = " << tmp[1] << std::endl;
+    if (m_debug) std::cout << "Offsets = " << tmp[2] << std::endl;
+    if (m_debug) std::cout << "Offsets = " << tmp[3] << std::endl;
+    if (m_debug) std::cout << "Offsets = " << tmp[4] << std::endl;
+    if (m_debug) std::cout << "Offsets = " << tmp[5] << std::endl;
+    if (m_debug) std::cout << "Offsets = " << tmp[6] << std::endl;
+    if (m_debug) std::cout << "Offsets = " << tmp[7] << std::endl;
+    if (m_debug) std::cout << "Offsets = " << tmp[8] << std::endl;
+    if (m_debug) std::cout << "Offsets = " << tmp[9] << std::endl;
     
     
   }
@@ -252,8 +207,8 @@ void L0Muon::CablingUnit::execute(MsgStream & log) {
   } else if (m_cand.size()>2){
     m_status = L0MuonStatus::PU_OVERFLOW;
   }
-  log << MSG::DEBUG << "Number of Candidates" <<" " 
-      << m_cand.size() << endreq;
+  if (m_debug) std::cout << "Cabling: " << "Number of Candidates" <<" " 
+      << m_cand.size() << std::endl;
 
     //addresses for candidates (L0Buffers)
 
@@ -312,16 +267,16 @@ void L0Muon::CablingUnit::execute(MsgStream & log) {
     
      
         
-        // load L0MuonCandidates and Offsets in BCSU (the first two candidates are transmitted to BCSU
+        // load Candidates and Offsets in BCSU (the first two candidates are transmitted to BCSU
         if (m_cand.size()>0 && m_cand.size()<3){
-          for (std::vector<L0MuonCandidate*>::iterator icand= m_cand.begin();
+          for (std::vector<Candidate*>::iterator icand= m_cand.begin();
                icand < m_cand.end(); icand++){
             bcsu->loadCandidates(*icand);           
           }
           
 
           if (m_cand.size()==1){            
-            bcsu->loadCandidates(new L0MuonCandidate(L0MuonStatus::PU_EMPTY));            
+            bcsu->loadCandidates(new Candidate(L0MuonStatus::PU_EMPTY));            
           }
           
           bcsu->loadStatus(L0MuonStatus::OK);
@@ -329,7 +284,7 @@ void L0Muon::CablingUnit::execute(MsgStream & log) {
         }
         
         if (m_cand.size() >2){  
-          for (std::vector<L0MuonCandidate*>::iterator icand= m_cand.begin();
+          for (std::vector<Candidate*>::iterator icand= m_cand.begin();
                icand < m_cand.begin()+2; icand++){
             bcsu->loadCandidates(*icand);
             
@@ -339,8 +294,8 @@ void L0Muon::CablingUnit::execute(MsgStream & log) {
         
         if (m_cand.size()==0){
           m_status =0;
-          bcsu->loadCandidates(new L0MuonCandidate(L0MuonStatus::PU_EMPTY));
-          bcsu->loadCandidates(new L0MuonCandidate(L0MuonStatus::PU_EMPTY));
+          bcsu->loadCandidates(new Candidate(L0MuonStatus::PU_EMPTY));
+          bcsu->loadCandidates(new Candidate(L0MuonStatus::PU_EMPTY));
           bcsu->loadStatus(1);
           
         }
@@ -351,7 +306,7 @@ void L0Muon::CablingUnit::execute(MsgStream & log) {
         if (m_offForCand.size()>0 && m_offForCand.size()<3){
           
     
-          for (std::vector< std::pair<L0MuonCandidate*, 
+          for (std::vector< std::pair<Candidate*, 
                  std::vector<int> > >::iterator ioff= m_offForCand.begin();
                ioff < m_offForCand.end(); ioff++){
             
@@ -373,8 +328,8 @@ void L0Muon::CablingUnit::execute(MsgStream & log) {
           }
             
       
-          std::pair<L0MuonCandidate* , std::vector<int> > empty = 
-            std::make_pair(new L0MuonCandidate(L0MuonStatus::PU_EMPTY), tmp);
+          std::pair<Candidate* , std::vector<int> > empty = 
+            std::make_pair(new Candidate(L0MuonStatus::PU_EMPTY), tmp);
             
 
             bcsu->loadOffsets(empty);
@@ -395,7 +350,7 @@ void L0Muon::CablingUnit::execute(MsgStream & log) {
  
         if (m_offForCand.size()>2){
           
-          for (std::vector< std::pair<L0MuonCandidate*, 
+          for (std::vector< std::pair<Candidate*, 
                  std::vector<int> > >::iterator ioff= m_offForCand.begin();
                ioff < m_offForCand.begin()+2; ioff++){
             
@@ -417,8 +372,8 @@ void L0Muon::CablingUnit::execute(MsgStream & log) {
           }
           
           
-          std::pair<L0MuonCandidate* , std::vector<int> > empty = 
-            std::make_pair(new L0MuonCandidate(L0MuonStatus::PU_EMPTY), tmp);
+          std::pair<Candidate* , std::vector<int> > empty = 
+            std::make_pair(new Candidate(L0MuonStatus::PU_EMPTY), tmp);
           
           bcsu->loadOffsets(empty);
           

@@ -1,16 +1,17 @@
 //#include <time.h>
+#include <cmath>
 #include <set>
 #include <vector>
 #include <algorithm>
 
-#include "CLHEP/Vector/ThreeVector.h"
+//#include "CLHEP/Vector/ThreeVector.h"
 
-#include "GaudiKernel/IToolSvc.h" 
-#include "MuonTools/IMuonTileXYZTool.h"
+//#include "GaudiKernel/IToolSvc.h" 
+//#include "MuonTools/IMuonTileXYZTool.h"
 
-#include "L0MuonKernel/RegisterFactory.h"
+#include "ProcessorKernel/RegisterFactory.h"
 #include "L0MuonKernel/Tower.h"
-//#include "L0MuonKernel/Link.h"
+#include "L0MuonKernel/Candidate.h"
 
 
 L0Muon::Tower::Tower() {
@@ -66,6 +67,8 @@ L0Muon::Tower::Tower() {
 
   m_ignoreM1=false;
   
+  m_debug = false;
+  m_seeded = false;  
 }
 
 L0Muon::Tower::~Tower() {}
@@ -81,27 +84,28 @@ void L0Muon::Tower::reset() {
       m_bittable[sta][row].reset();
     }
   }
-  
+  m_seeded = false;
 }
 
 
-void L0Muon::Tower::setBit(int sta, int row, int col, MsgStream & log) {
+void L0Muon::Tower::setBit(int sta, int row, int col) {
   int xFoI = m_maxXFoI[sta];
   int yFoI = m_maxYFoI[sta];
   
   if (col < 0 || col >= (24+2* xFoI) ) {
-    log << MSG::DEBUG << "Column is not valid !" << endreq;
-    log << MSG::DEBUG << "Station: " << sta << " Col: " << col << endreq;
+    if (m_debug) std::cout << "Column is not valid !" << std::endl;
+    if (m_debug) std::cout << "Station: " << sta << " Col: " << col << std::endl;
     return;	      
   }
   if (row < 0 || row >= (4+2*yFoI) ) {
-    log << MSG::DEBUG << "Row is not valid ! " << endreq;
-    log << MSG::DEBUG << "Station: " << sta << " Row: " << row << endreq;
+    if (m_debug) std::cout << "Row is not valid ! " << std::endl;
+    if (m_debug) std::cout << "Station: " << sta << " Row: " << row << std::endl;
     return;	      
   }
   
   
   m_bittable[sta][row].set(col);
+  if (sta == 2) m_seeded = true;
   
 }
 
@@ -119,8 +123,7 @@ void L0Muon::Tower::setPadIdMap(int sta,
   
 }
 
-MuonTileID L0Muon::Tower::getPadIdMap(int sta, 
-                                std::pair<int, int> XY)
+MuonTileID L0Muon::Tower::getPadIdMap(int sta, std::pair<int, int> XY)
 {
       return m_idmap[sta].find(XY)->second ;
   
@@ -156,15 +159,16 @@ boost::dynamic_bitset<> L0Muon::Tower::getBits(int sta,
 
 }
 
-void L0Muon::Tower::draw(MsgStream & log) {
+void L0Muon::Tower::draw() {
 
   int sta;
-  for (sta=0; sta<5; sta++ ) {
-    drawStation(sta, log);
+  for (sta=4; sta>=0; sta-- ) {
+    drawStation(sta);
   }
+  std::cout << std::endl;
 }
 
-void L0Muon::Tower::drawStation(int sta, MsgStream & log) {
+void L0Muon::Tower::drawStation(int sta) {
 
   int xFoI = m_maxXFoI[sta];
   int yFoI = m_maxYFoI[sta];
@@ -176,38 +180,43 @@ void L0Muon::Tower::drawStation(int sta, MsgStream & log) {
 
   int ir;
   std::string blanc(offset,' ');
-  log << MSG::DEBUG << "Station: " << " " << (sta+1) << endreq;
+  std::cout << "Station: " << " " << (sta+1) << std::endl;
 
-
-  for( ir = 0; ir < rows; ir++) {
+  for( ir = rows - 1; ir >=0 ; ir--) {
+    std::cout <<  blanc;
     for( int ic = 0; ic < col; ic++) {
-      log << MSG::DEBUG << stmap[ir][ic] ;
-     
+      if (stmap[ir][ic]) {
+        std::cout <<  "X" ;
+      } else {
+        std::cout <<  "_" ;
+      }		     
     }
-     log << MSG::DEBUG << endreq;
-    
+    std::cout << std::endl;    
   }
 }
 
 
-void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
+void L0Muon::Tower::processTower(MuonTileID & puID){
 
-  log << MSG::DEBUG << "Process Tower for PU" 
+  if (m_debug) std::cout << "Process Tower for PU" 
    << " " << "R" << puID.region() << ","
    <<"Q" << puID.quarter() <<","
    << puID.nX() << "," 
    << puID.nY() <<" " <<
    m_xfoi[0] <<" " 
-   <<  m_yfoi[0] << endreq;
+   <<  m_yfoi[0] << std::endl;
 
   int ncand =0;
-
   int nseed =0;
   std::vector< boost::dynamic_bitset<> >::iterator irow;
   
-  log << MSG::DEBUG << "clean seeds" << endreq;
+  if (m_seeded && m_debug ) draw();
 
-  m_clean.cleanSeed(m_bittable[2]);
+  if (m_seeded) {
+    if (m_debug) std::cout << "Tower: cleaning seeds" << std::endl;
+    cleanSeed(m_bittable[2]);
+  }  
+  if (m_seeded && m_debug ) draw();
 
   m_puCandidates.clear();
   m_offForCand.clear();
@@ -221,130 +230,93 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
   }
   //======
 
+
+  // Start track search
   int row =0;
 
   for (irow =m_bittable[2].begin(); irow !=m_bittable[2].end();irow++){
-
     for (boost::dynamic_bitset<>::size_type icol = 0; 
-              icol < (*irow).size(); icol++){
-      
+              icol < (*irow).size(); icol++){      
       if ( (*irow).test(icol)){
 
         nseed++;
         int col =icol;
         std::pair<int, int> sd = std::make_pair(col,row);
-        for (int ista =0; ista<5;ista++){
-          m_ctower.reset();
-        }
-        
-
+	m_ctower.reset();
         m_ctower.setSeed(sd);
         
-         //Start Search for seed sd
+        //Start Search for seed sd
 
-        log << MSG::DEBUG << "start search for seed " 
-            << " " << sd.first << " " 
-            << sd.second << endreq;
-
+        if (m_debug) std::cout << "Tower: start search for seed " 
+            << " " << sd.first << "," << sd.second << std::endl;
 
         CandidateSearch * pCs = new CandidateSearch();
-
         pCs->ignoreM1(m_ignoreM1);
-        
-
         pCs->resetBits();
 
-        int minsta =0;
-        if ( m_ignoreM1 ){
-          minsta =1;
-        }
-
+        int minsta = (m_ignoreM1) ? 1 : 0;
          
-        for (int ista =4 ; ista >= 0; ista--){
+        // Should be done once at creation time
+	for (int ista =4 ; ista >= 0; ista--){
+	  std::cout << ista << m_xfoi[ista] << m_yfoi[ista] << std::endl;
           m_ctower.setFoi(ista, m_xfoi[ista], m_yfoi[ista]);
         }
-         
-
-        
-         // with M1
+                 
+        // with M1
         for (int ista =4 ; ista >= minsta; ista--){
-             // m_ctower.setFoi(ista, m_xfoi[ista], m_yfoi[ista]);
 
-          int offset=0;
-             
+          int offset=0;             
           if (ista ==0) { 
-
             offset = pCs->makeExtrapolation() ;
           }
 
           if (m_maxYFoI[ista]==0){
-
             m_ctower.setBit(ista, m_bittable[ista], m_maxXFoI[ista],
                                m_maxYFoI[ista], offset);
           } else {
-
             m_ctower.setOrderedBit(ista, m_bittable[ista], m_maxXFoI[ista],
                                       m_maxYFoI[ista], offset);
           }
-           
-         
-          drawStation(ista, log);
-
+                    
           boost::dynamic_bitset<> bits = m_ctower.getBit();
-
           pCs->searchInSta(ista, bits); 
-
           m_ctower.setOrderedPadIndex(ista,m_maxXFoI[ista], m_maxYFoI[ista],
                                       offset, pCs->getHitPos(ista));
-
-                  
+          
+	  std::cout << bits << std::endl;
+	  std::cout << "Found hit in station " << ista << " " << pCs->getHitPos(ista) << std::endl;
+	         
           if (pCs->hitFoundInSta(ista) == false) {
             break ;
           }
-        
-
-           
-          
         }
-        
-           
-        
-         
-         
-         
-         
 
         if (pCs->CandidateFound()) {
 
-           //*log << MSG::DEBUG << "candidate found for seed " 
-           //   << " " << sd.first << " " << sd.second << endreq;
+           //*if (m_debug) std::cout << "candidate found for seed " 
+           //   << " " << sd.first << " " << sd.second << std::endl;
            
-           //*log << MSG::DEBUG << "Tower for PU" 
+           //*if (m_debug) std::cout << "Tower for PU" 
            //   << " " << "R" << puID.region() << ","
            //   <<"Q" << puID.quarter() <<","
            //   << puID.nX() << "," 
-           //   << puID.nY() <<" " << endreq;
+           //   << puID.nY() <<" " << std::endl;
 
           //ncand = ncand++;
            //pCs->setCandidateAddrs(sd);
-          if (m_ignoreM1 ){
-           
+          if (m_ignoreM1 ){           
             ptcalcIgnoreM1();
 
            //m_pt =0;
            //m_theta =0;
            //m_phi =0;
           } else if ( ! m_ignoreM1){           
-
             ptcalc();
-
           }
            
-
            //boost::dynamic_bitset<> bitsset = pCs->getCandidateAddrs();
-          L0MuonCandidate * mycand =createCandidate(m_pt, m_theta ,m_phi, 
+          Candidate * mycand =createCandidate(m_pt, m_theta ,m_phi, 
                                                     L0MuonStatus::OK);
-
 
           m_puCandidates.push_back(mycand);
 
@@ -367,8 +339,8 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
 
           for (int ist = 0; ist <5; ist++){
 
-             //log << MSG::DEBUG << "Filling offsets for sta" << " " 
-             //   << ist << endreq;
+             //if (m_debug) std::cout << "Filling offsets for sta" << " " 
+             //   << ist << std::endl;
 
                
             if ( ist ==0){
@@ -379,14 +351,14 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
                                   (sd.first+m_maxXFoI[ist]));
                
                 offsetx.push_back(extrap);
-                 //*log << MSG::DEBUG << "pad x index" <<" " << 
-                 //tmp[ist].second << endreq;
+                 //*if (m_debug) std::cout << "pad x index" <<" " << 
+                 //tmp[ist].second << std::endl;
                  
-                 //*log << MSG::DEBUG << "pad y index" <<" " << 
-                 //tmp[ist].first << endreq;
+                 //*if (m_debug) std::cout << "pad y index" <<" " << 
+                 //tmp[ist].first << std::endl;
 
-                 //*log << MSG::DEBUG << "offset" <<" " << 
-                 //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< endreq;  
+                 //*if (m_debug) std::cout << "offset" <<" " << 
+                 //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;  
      
                 
               } else if ( m_ignoreM1 ){
@@ -405,14 +377,14 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
               tmp[ist] = m_ctower.getPadIndex(ist);
               offsetx.push_back(tmp[ist].second -
                                 (sd.first+m_maxXFoI[ist]));
-               //*log << MSG::DEBUG << "pad x index" <<" " << 
-               //tmp[ist].second << endreq;
+               //*if (m_debug) std::cout << "pad x index" <<" " << 
+               //tmp[ist].second << std::endl;
 
-               //*log << MSG::DEBUG << "pad y index" <<" " << 
-               //tmp[ist].first << endreq;
+               //*if (m_debug) std::cout << "pad y index" <<" " << 
+               //tmp[ist].first << std::endl;
 
-               //*log << MSG::DEBUG << "offset" <<" " << 
-               //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< endreq;
+               //*if (m_debug) std::cout << "offset" <<" " << 
+               //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
                
             }
              
@@ -428,27 +400,27 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
 
               tmp[ist] = m_ctower.getPadIndex(ist);
               int offy =tmp[ist].first -(sd.second);
-               //*log << MSG::DEBUG << "tmp.first" <<" " << tmp[ist].first
-               //<< endreq; 
-               //*log << MSG::DEBUG << "sd.second" <<" " << sd.second
-               //   << endreq;
-               //*log << MSG::DEBUG << "offsety" <<" " << 
-               //tmp[ist].first -sd.second<< endreq;
+               //*if (m_debug) std::cout << "tmp.first" <<" " << tmp[ist].first
+               //<< std::endl; 
+               //*if (m_debug) std::cout << "sd.second" <<" " << sd.second
+               //   << std::endl;
+               //*if (m_debug) std::cout << "offsety" <<" " << 
+               //tmp[ist].first -sd.second<< std::endl;
                //hit nella stessa linea del seme
               if (offy == 0){
                 offsetx.push_back(tmp[ist].second - 
                                   (sd.first+m_maxXFoI[ist]));
-                 //*log << MSG::DEBUG << "hit pos in bitset" << " " << 
-                 //       pCs->getHitPos(ist) << endreq;
+                 //*if (m_debug) std::cout << "hit pos in bitset" << " " << 
+                 //       pCs->getHitPos(ist) << std::endl;
                      
-                 //  *log << MSG::DEBUG << "pad x index" <<" " << 
-                 //    tmp[ist].second << endreq;
+                 //  *if (m_debug) std::cout << "pad x index" <<" " << 
+                 //    tmp[ist].second << std::endl;
 
-                 //   *log << MSG::DEBUG << "pad y index" <<" " <<
-                 //    tmp[ist].first << endreq;
+                 //   *if (m_debug) std::cout << "pad y index" <<" " <<
+                 //    tmp[ist].first << std::endl;
 
-                 //                     *log << MSG::DEBUG << "offset" <<" " << 
-                 //    tmp[ist].second -(sd.first+m_maxXFoI[ist])<< endreq;
+                 //                     *if (m_debug) std::cout << "offset" <<" " << 
+                 //    tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
 
 
                  
@@ -463,17 +435,17 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
                                   (sd.first+m_maxXFoI[ist]));
 
             
-               //*log << MSG::DEBUG << "hit pos in bitset" << " " << 
-               //pCs->getHitPos(ist) << endreq;
+               //*if (m_debug) std::cout << "hit pos in bitset" << " " << 
+               //pCs->getHitPos(ist) << std::endl;
                
-               //*log << MSG::DEBUG << "pad x index" <<" " << 
-               //tmp[ist].second << endreq;
+               //*if (m_debug) std::cout << "pad x index" <<" " << 
+               //tmp[ist].second << std::endl;
 
-               //*log << MSG::DEBUG << "pad y index" <<" " << 
-               //tmp[ist].first << endreq;
+               //*if (m_debug) std::cout << "pad y index" <<" " << 
+               //tmp[ist].first << std::endl;
 
-               //*log << MSG::DEBUG << "offset" <<" " << 
-               //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< endreq;
+               //*if (m_debug) std::cout << "offset" <<" " << 
+               //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
 
                
                 
@@ -485,17 +457,17 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
 
                 offsetx.push_back(999);
 
-                 //*log << MSG::DEBUG << "hit pos in bitset" << " " << 
-                 //pCs->getHitPos(ist) << endreq;
+                 //*if (m_debug) std::cout << "hit pos in bitset" << " " << 
+                 //pCs->getHitPos(ist) << std::endl;
                                  
-                 //*log << MSG::DEBUG << "pad x index" <<" " << 
-                 //tmp[ist].second << endreq;
+                 //*if (m_debug) std::cout << "pad x index" <<" " << 
+                 //tmp[ist].second << std::endl;
             
-                 //*log << MSG::DEBUG << "pad y index" <<" " << 
-                 //tmp[ist].first << endreq;
+                 //*if (m_debug) std::cout << "pad y index" <<" " << 
+                 //tmp[ist].first << std::endl;
                 
-                 // *log << MSG::DEBUG << "offset" <<" " << 
-                 //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< endreq;
+                 // *if (m_debug) std::cout << "offset" <<" " << 
+                 //tmp[ist].second -(sd.first+m_maxXFoI[ist])<< std::endl;
               }
               
                
@@ -546,7 +518,7 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream & log){
 
 
 
-L0MuonCandidate* L0Muon::Tower::createCandidate(double p, double th, 
+L0Muon::Candidate* L0Muon::Tower::createCandidate(double p, double th, 
                                                 double phi,int flag) {
 
   std::vector<MuonTileID> m_mtid;
@@ -595,13 +567,54 @@ L0MuonCandidate* L0Muon::Tower::createCandidate(double p, double th,
   //std::vector<MuonTileID>::iterator itmp;
   
 
-    L0MuonCandidate* lmc = new L0MuonCandidate(p,
+    Candidate* lmc = new Candidate(p,
                                                th, phi, m_mtid, flag) ;	   
     return lmc;
 }
 
 
+void L0Muon::Tower::xyFromPad(MuonTileID pad, double x, double y)  {
 
+  double dx = 1.2;
+  double dy = 1.0;
+  double l1 = m_ptparam[0];
+  double l2 = l1 + m_ptparam[1];
+  double l3 = l2 + m_ptparam[2];
+  
+  int ns = pad.station();
+  int nq = pad.quarter();
+  int nr = pad.region();
+  int nx = pad.nX();
+  int ny = pad.nY();
+  
+  int nreg = 1;
+  if ( nr == 1) {
+    nreg = 2;
+  } else if ( nr == 2) {
+    nreg = 4;
+  } else if ( nr == 3) {
+    nreg = 8;
+  }
+  
+  x = dx*(nx+0.5)*nreg;
+  y = dy*(ny+0.5)*nreg;
+  if ( ns == 1 ) {
+    x *= l2/l1;
+    y *= l2/l1;
+  } else if ( ns == 2 ) {
+    x *= l3/l1;
+    y *= l3/l1;
+  }
+  if ( nq == 1 ) {
+    y = -y;
+  } else if ( nq == 2 ) {
+    x = -x;
+    y = -y;
+  } else if ( nq == 2 ) {
+    x = -x;
+  }    
+    
+}
 
 
 double L0Muon::Tower::ptcalc() {
@@ -612,120 +625,17 @@ double L0Muon::Tower::ptcalc() {
   double d3 =m_ptparam[2];
   double alpha = m_ptparam[3];
 
-  int scode;
-
-  double x1;
-  double y1;
-  double x2;  
-  double dx,dy,y,z,dz;
-
- 
-  
-  std::pair<int, int> yxM1= m_ctower.getPadIndex(0);
- 
+  double x1=0., y1=0.;
+  double x2=0., y2=0. ;  
+    
+  std::pair<int, int> yxM1= m_ctower.getPadIndex(0); 
   MuonTileID p1 = getPadIdMap(0, yxM1);
-
-
-  MuonSystemLayout  layout=
-    MuonSystemLayout(MuonStationLayout(MuonLayout(24,8)),
-                     MuonStationLayout(MuonLayout(48,8)),
-                     MuonStationLayout(MuonLayout(48,8)),
-                     MuonStationLayout(MuonLayout(12,8)),
-                     MuonStationLayout(MuonLayout(12,8)));
-
-  std::vector<MuonTileID> tmp;
-
-  std::vector<MuonTileID>::iterator itmp;
-
-
-  if ( ! layout.isValidID(p1)){
-
-    //*log << MSG::DEBUG <<"layout for p1 is not valid" << endreq;
-     tmp = layout.tiles(p1);
-   
-
-     double mx =0.;
-     double my =0.;
-     int count = tmp.size();
-     //*log << MSG::DEBUG <<"tmp size" << " " << count << endreq;
-    
-
-     for (itmp = tmp.begin(); itmp != tmp.end(); itmp++){
-      MuonTileID p = layout.contains(*itmp);
-      
-
-      //*log << MSG::DEBUG <<"tiles contained in layout" << endreq;
-      //*log << MSG::DEBUG <<"quarter"<< " " << p.quarter() << endreq;
-      //*log << MSG::DEBUG <<"region"<< " " << p.region() << endreq;
-      //*log << MSG::DEBUG <<"nX"<< " " << p.nX() << endreq;
-      //*log << MSG::DEBUG <<"nY"<< " " << p.nY() << endreq;
-      scode = m_iTileXYZTool->calcTilePos(p,x1,dx,y1,dy,z,dz);  
-      mx += x1;
-      my += y1;
-   
-
-    }
-    x1 = mx/count;
-    y1 = my/count;
-    //*log << MSG::DEBUG << "x1 " << " " << x1 << endreq;
-    
-  } else if (layout.isValidID(p1)){
-  
-    // *log << MSG::DEBUG <<"layout for p1 is valid" << endreq;
-    scode = m_iTileXYZTool->calcTilePos(p1,x1,dx,y1,dy,z,dz);
-  
-  }
-  
-  
-
-  //*log << MSG::DEBUG << "xy " << yxM1.first << " " << yxM1.second  << " " 
-  //   << "MUONTILE ID IN M1 Q" << p1.quarter() << " R" << p1.region() << "  nx" << p1.nX() << " ny" << p1.nY()<< endreq;
-  //<< "MUONTILE ID IN M1" << p1 << endreq;
 
   std::pair<int, int> yxM2= m_ctower.getPadIndex(1);
   MuonTileID p2 = getPadIdMap(1, yxM2);
- 
- 
-  if ( ! layout.isValidID(p2)){
-    //*log << MSG::DEBUG <<"layout for p2 is not valid" << endreq;
-    tmp = layout.tiles(p2);
-    double mx =0.;
-    double my =0.;
-    int count = tmp.size();
-
-    //*log << MSG::DEBUG <<"tmp size" << " " << count << endreq;
-    
-    for (itmp = tmp.begin(); itmp != tmp.end(); itmp ++){
-      MuonTileID p = layout.contains(*itmp);
-      scode = m_iTileXYZTool->calcTilePos(p,x2,dx,y,dy,z,dz);  
-      mx += x2;
-      my += y;
-      
-    }
-    x2 = mx/count;
-    y = my/count;
-    
-  } else if (layout.isValidID(p2)) {
-    scode = m_iTileXYZTool->calcTilePos(p2,x2,dx,y,dy,z,dz);
-  }
   
-
-
-  //*log << MSG::DEBUG << "xy " << yxM2.first << " " << yxM2.second  << " " 
-  //   << "MUONTILE ID IN M2 Q" << p2.quarter() << " R" << p2.region() << "  nx" << p2.nX() << " ny" << p2.nY()<< endreq;
-  //<< "MUONTILE ID IN M2" << p2 << endreq;  
-
-  std::pair<int, int> yxM3= m_ctower.getPadIndex(2);
-  MuonTileID p3 = getPadIdMap(2, yxM3);
-
-  //*log << MSG::DEBUG << "xy " << yxM3.first << " " << yxM3.second  << " " 
-  //   << "MUONTILE ID IN M3 Q" << p3.quarter() << " R" << p3.region() << "  nx" << p3.nX() << " ny" << p3.nY()<< endreq;
-
-
-  x1 /= 10.;
-  y1 /= 10.;
-  x2 /= 10.;
-  
+  xyFromPad(p1,x1,y1);
+  xyFromPad(p2,x2,y2);
  
   double x0 = x1 - d2*(x2-x1)/d3;
   double y0 = y1*d1/(d1+d2);
@@ -749,13 +659,13 @@ double L0Muon::Tower::ptcalc() {
 
   // Pt should be in MeV
   m_pt = ptm*1000.;
-  Hep3Vector v(x0,y0,d1);
-  m_theta = v.theta();
-  m_phi = v.phi();
+  // Hep3Vector v(x0,y0,d1);
+//   m_theta = v.theta();
+//   m_phi = v.phi();
   
-  //*log << MSG::DEBUG <<"Momentum" <<  " " <<  m_pt << endreq;
-  //*log << MSG::DEBUG << "Theta" << " " << m_theta << endreq;
-  //*log << MSG::DEBUG << " Phi" << " " << m_phi << endreq;
+  //*if (m_debug) std::cout <<"Momentum" <<  " " <<  m_pt << std::endl;
+  //*if (m_debug) std::cout << "Theta" << " " << m_theta << std::endl;
+  //*if (m_debug) std::cout << " Phi" << " " << m_phi << std::endl;
 
 
   //m_pts.push_back(m_pt);
@@ -775,94 +685,17 @@ double L0Muon::Tower::ptcalcIgnoreM1() {
   double d3 =m_ptparam[4];
   double alpha = m_ptparam[3];
 
-  int scode;
+  double x1=0., y1=0.;
+  double x2=0., y2=0. ;  
+    
+  std::pair<int, int> yxM1= m_ctower.getPadIndex(0); 
+  MuonTileID p1 = getPadIdMap(1, yxM1);
 
-  double x1;
-  double y1;
-  double x2;  
-  double dx,dy,y,z,dz;
-
- 
-  
   std::pair<int, int> yxM2= m_ctower.getPadIndex(1);
- 
- 
-  MuonTileID p1 = getPadIdMap(1, yxM2);
-
-   
-  MuonSystemLayout  layout=
-    MuonSystemLayout(MuonStationLayout(MuonLayout(24,8)),
-                     MuonStationLayout(MuonLayout(48,8)),
-                     MuonStationLayout(MuonLayout(48,8)),
-                     MuonStationLayout(MuonLayout(12,8)),
-                     MuonStationLayout(MuonLayout(12,8)));
-
-  std::vector<MuonTileID> tmp;
-  std::vector<MuonTileID>::iterator itmp;
- 
-  if ( ! layout.isValidID(p1)){
-
-    //*log << MSG::DEBUG <<"layout for p1 is not valid" << endreq;
-     tmp = layout.tiles(p1);
-   
-     double mx =0.;
-     double my =0.;
-     int count = tmp.size();
-     //*log << MSG::DEBUG <<"tmp size" << " " << count << endreq;
-    
-
-     for (itmp = tmp.begin(); itmp != tmp.end(); itmp++){
-      MuonTileID p = layout.contains(*itmp);
-          
-      scode = m_iTileXYZTool->calcTilePos(p,x1,dx,y1,dy,z,dz);  
-      mx += x1;
-      my += y1;
-      
-    }
-    x1 = mx/count;
-    y1 = my/count;
-    //*log << MSG::DEBUG << "x1 " << " " << x1 << endreq;
-    
-  } else if (layout.isValidID(p1)){
-   
-    scode = m_iTileXYZTool->calcTilePos(p1,x1,dx,y1,dy,z,dz);
-  }
+  MuonTileID p2 = getPadIdMap(2, yxM2);
   
-  
-
- 
-
-  std::pair<int, int> yxM3= m_ctower.getPadIndex(2);
-  MuonTileID p2 = getPadIdMap(2, yxM3);
- 
- 
-  if ( ! layout.isValidID(p2)){
-    //*log << MSG::DEBUG <<"layout for p2 is not valid" << endreq;
-    tmp = layout.tiles(p2);
-    double mx =0.;
-    double my =0.;
-    int count = tmp.size();
-
-    //*log << MSG::DEBUG <<"tmp size" << " " << count << endreq;
-    
-    for (itmp = tmp.begin(); itmp != tmp.end(); itmp ++){
-      MuonTileID p = layout.contains(*itmp);
-      scode = m_iTileXYZTool->calcTilePos(p,x2,dx,y,dy,z,dz);  
-      mx += x2;
-      my += y;
-      
-    }
-    x2 = mx/count;
-    y = my/count;
-    
-  } else if (layout.isValidID(p2)) {
-    scode = m_iTileXYZTool->calcTilePos(p2,x2,dx,y,dy,z,dz);
-  }
- 
-
-  x1 /= 10.;
-  y1 /= 10.;
-  x2 /= 10.;
+  xyFromPad(p1,x1,y1);
+  xyFromPad(p2,x2,y2);
   
  
   double x0 = x1 - d2*(x2-x1)/d3;
@@ -887,15 +720,27 @@ double L0Muon::Tower::ptcalcIgnoreM1() {
 
   // Pt should be in MeV
   m_pt = ptm*1000.;
-  Hep3Vector v(x0,y0,d1);
-  m_theta = v.theta();
-  m_phi = v.phi();
+  // Hep3Vector v(x0,y0,d1);
+//   m_theta = v.theta();
+//   m_phi = v.phi();
   
-  //*log << MSG::DEBUG <<"Momentum" <<  " " <<  m_pt << endreq;
-  //*log << MSG::DEBUG << "Theta" << " " << m_theta << endreq;
-  //*log << MSG::DEBUG << " Phi" << " " << m_phi << endreq;
+  //*if (m_debug) std::cout <<"Momentum" <<  " " <<  m_pt << std::endl;
+  //*if (m_debug) std::cout << "Theta" << " " << m_theta << std::endl;
+  //*if (m_debug) std::cout << " Phi" << " " << m_phi << std::endl;
 
-  return m_pt;
+  return m_pt; 
+}
 
-  
+void L0Muon::Tower::cleanSeed(L0Muon::Tower::StationMap & map) {
+
+  std::vector< boost::dynamic_bitset<> >::iterator irow;
+
+  for (irow = map.begin(); irow != map.end(); irow ++){
+
+    for (boost::dynamic_bitset<>::size_type icol=(*irow).size(); icol >=2 ; icol--){
+      if ( (*irow).test(icol-2) ) {
+        (*irow).reset(icol-1);
+      }	        
+    }           
+  }              
 }
