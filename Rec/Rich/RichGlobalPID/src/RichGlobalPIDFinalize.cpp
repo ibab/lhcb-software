@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.cpp,v 1.6 2003-11-25 13:51:23 jonesc Exp $
+// $Id: RichGlobalPIDFinalize.cpp,v 1.7 2004-02-02 14:25:54 jonesc Exp $
 // Include files
 
 // local
@@ -85,8 +85,8 @@ StatusCode RichGlobalPIDFinalize::execute() {
     }
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
       if ( deltaLLs[iHypo] < 0 ) { deltaLLs[iHypo] = 0; }
-      double prob = 1.0 - gsl_sf_erf( sqrt(deltaLLs[iHypo]) );
-      pid->setParticleRawProb( (Rich::ParticleIDType)iHypo, prob );
+      const double prob = 1.0 - gsl_sf_erf( sqrt(deltaLLs[iHypo]) );
+      pid->setParticleRawProb( static_cast<Rich::ParticleIDType>(iHypo), prob );
     }
 
   }

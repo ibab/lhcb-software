@@ -1,4 +1,4 @@
-// $Id: RichTabulatedRayleighScatter.h,v 1.2 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichTabulatedRayleighScatter.h,v 1.3 2004-02-02 14:27:05 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHTABULATEDRAYLEIGHSCATTER_H
 #define RICHRECTOOLS_RICHTABULATEDRAYLEIGHSCATTER_H 1
 
@@ -54,7 +54,7 @@ public:
 
   /// Rayleigh scattering probability for given pathlength (segment) and photyon energy
   double photonScatteredProb( const RichRecSegment * segment,
-                              const double energy );
+                              const double energy ) const;
 
 private:  // Private data
 

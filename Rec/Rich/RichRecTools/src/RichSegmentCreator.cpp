@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.cpp,v 1.4 2003-11-25 14:06:41 jonrob Exp $
+// $Id: RichSegmentCreator.cpp,v 1.5 2004-02-02 14:27:03 jonesc Exp $
 
 // local
 #include "RichSegmentCreator.h"
@@ -115,7 +115,7 @@ void RichSegmentCreator::handle ( const Incident& incident ) {
 
 // Create a new RichRecSegment
 RichRecSegment * RichSegmentCreator::newSegment( RichTrackSegment& segment, 
-                                                 RichRecTrack* pTrk ) {
+                                                 RichRecTrack* pTrk ) const {
   return new RichRecSegment ( segment,
                               pTrk,
                               m_binsEn[segment.radiator()],
@@ -124,10 +124,10 @@ RichRecSegment * RichSegmentCreator::newSegment( RichTrackSegment& segment,
 }
 
 // Forms a new RichRecSegment object
-void RichSegmentCreator::saveSegment ( RichRecSegment * segment ) {
+void RichSegmentCreator::saveSegment ( RichRecSegment * segment ) const {
   m_segments->insert( segment );
 }
 
-RichRecSegments *& RichSegmentCreator::richSegments() {
+RichRecSegments * RichSegmentCreator::richSegments() const {
   return m_segments;
 }

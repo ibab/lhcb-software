@@ -1,4 +1,4 @@
-// $Id: RichCherenkovAngle.h,v 1.2 2003-11-02 21:51:23 jonrob Exp $
+// $Id: RichCherenkovAngle.h,v 1.3 2004-02-02 14:26:57 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHCHERENKOVANGLE_H
 #define RICHRECTOOLS_RICHCHERENKOVANGLE_H 1
 
@@ -43,7 +43,11 @@ public:
 
   /// Returns average Cherenkov angle for given particle hypothesis
   double avgCherenkovTheta( RichRecSegment * segment,
-                            const Rich::ParticleIDType id );
+                            const Rich::ParticleIDType id ) const;
+
+  /// Returns average Cherenkov angle for the current mass hypothesis
+  /// Assigned to the segment
+  double avgCherenkovTheta( RichRecSegment * segment ) const;
 
 private:  // Private data
 

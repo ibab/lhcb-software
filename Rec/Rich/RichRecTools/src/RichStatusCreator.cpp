@@ -1,4 +1,4 @@
-// $Id: RichStatusCreator.cpp,v 1.2 2003-11-25 14:06:41 jonrob Exp $
+// $Id: RichStatusCreator.cpp,v 1.3 2004-02-02 14:27:05 jonesc Exp $
 
 // local
 #include "RichStatusCreator.h"
@@ -79,7 +79,7 @@ void RichStatusCreator::handle ( const Incident& incident ) {
 
 }
 
-RichRecStatus *& RichStatusCreator::richStatus()
+RichRecStatus * RichStatusCreator::richStatus() const
 {
   return m_status;
 }

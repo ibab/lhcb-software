@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.5 2003-11-25 14:06:40 jonrob Exp $
+// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.6 2004-02-02 14:27:01 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromRichDigits.h"
@@ -17,7 +17,10 @@ const        IToolFactory& RichPixelCreatorFromRichDigitsFactory = s_factory ;
 RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::string& type,
                                                                 const std::string& name,
                                                                 const IInterface* parent )
-  : RichRecToolBase( type, name, parent ) {
+  : RichRecToolBase( type, name, parent ),
+    m_pixels      ( 0 ),
+    m_smartIDTool ( 0 )
+ {
 
   declareInterface<IRichPixelCreator>(this);
 
@@ -38,7 +41,7 @@ StatusCode RichPixelCreatorFromRichDigits::initialize() {
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
   // Acquire instances of tools
-  acquireTool("RichDetInterface", m_richDetInt);
+  acquireTool( "RichSmartIDTool", m_smartIDTool );
 
   // Setup incident services
   IIncidentSvc * incSvc;
@@ -63,7 +66,7 @@ StatusCode RichPixelCreatorFromRichDigits::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release services and tools
-  releaseTool( m_richDetInt );
+  releaseTool( m_smartIDTool );
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -103,8 +106,8 @@ void RichPixelCreatorFromRichDigits::handle ( const Incident& incident ) {
       for ( RichRecPixels::const_iterator iPixel = tdsPixels->begin();
             iPixel != tdsPixels->end();
             ++iPixel ) {
-        m_pixelExists[(long int)(*iPixel)->smartID()] = *iPixel;
-        m_pixelDone[(long int)(*iPixel)->smartID()] = true;
+        m_pixelExists[(*iPixel)->smartID()] = *iPixel;
+        m_pixelDone[(*iPixel)->smartID()] = true;
       }
 
     }
@@ -114,7 +117,8 @@ void RichPixelCreatorFromRichDigits::handle ( const Incident& incident ) {
 }
 
 // Forms a new RichRecPixel object from a RichDigit
-RichRecPixel * RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) {
+RichRecPixel * 
+RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const {
 
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
@@ -125,16 +129,16 @@ RichRecPixel * RichPixelCreatorFromRichDigits::newPixel( const ContainedObject *
   }
 
   // RichDigit key
-  RichSmartID id = digit->key();
+  const RichSmartID id = digit->key();
 
   // See if this RichRecPixel already exists
-  if ( m_pixelDone[(long int)id] ) {
-    return m_pixelExists[(long int)id];
+  if ( m_pixelDone[id] ) {
+    return m_pixelExists[id];
   } else {
 
     RichRecPixel * newPixel = NULL;
 
-    if ( id ) {
+    if ( id.isValid() ) {
 
       // Make a new RichRecPixel
       newPixel = new RichRecPixel();
@@ -142,9 +146,8 @@ RichRecPixel * RichPixelCreatorFromRichDigits::newPixel( const ContainedObject *
 
       // Positions
       HepPoint3D & gPosition = newPixel->globalPosition();
-      m_richDetInt->globalPosition( id, gPosition );
-      // no method for local position as yet !
-      //HepPoint3D & lPosition = newPixel->localPosition();
+      m_smartIDTool->globalPosition( id, gPosition );
+      newPixel->localPosition() = m_smartIDTool->globalToPDPanel(gPosition); 
 
       // Set smartID
       newPixel->setSmartID( id );
@@ -155,15 +158,15 @@ RichRecPixel * RichPixelCreatorFromRichDigits::newPixel( const ContainedObject *
     }
 
     // Add to reference map
-    m_pixelExists[ (long int)(digit->key()) ] = newPixel;
-    m_pixelDone  [ (long int)(digit->key()) ] = true;
+    m_pixelExists[ id ] = newPixel;
+    m_pixelDone  [ id ] = true;
 
     return newPixel;
   }
 
 }
 
-StatusCode RichPixelCreatorFromRichDigits::newPixels() {
+StatusCode RichPixelCreatorFromRichDigits::newPixels() const {
 
   if ( m_allDone ) return StatusCode::SUCCESS;
   m_allDone = true;
@@ -202,7 +205,7 @@ StatusCode RichPixelCreatorFromRichDigits::newPixels() {
   return StatusCode::SUCCESS;
 }
 
-RichRecPixels *& RichPixelCreatorFromRichDigits::richPixels()
+RichRecPixels * RichPixelCreatorFromRichDigits::richPixels() const
 {
   return m_pixels;
 }

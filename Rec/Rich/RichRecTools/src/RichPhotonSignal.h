@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.h,v 1.7 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichPhotonSignal.h,v 1.8 2004-02-02 14:27:01 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONSIGNAL_H
 #define RICHRECTOOLS_RICHPHOTONSIGNAL_H 1
 
@@ -57,14 +57,14 @@ public:
 
   /// Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
   double predictedPixelSignal( RichRecPhoton * photon,
-                               const Rich::ParticleIDType id );
+                               const Rich::ParticleIDType id ) const;
   /// Signal Probability for a given reconstructed photon under a given mass hypothesis
   double signalProb( RichRecPhoton * photon,
-                     const Rich::ParticleIDType id );
+                     const Rich::ParticleIDType id ) const;
 
   /// Scatter Probability for a given reconstructed photon under a given mass hypothesis
   double scatterProb( RichRecPhoton * photon,
-                      const Rich::ParticleIDType id );
+                      const Rich::ParticleIDType id ) const;
 
 private: // private data
 

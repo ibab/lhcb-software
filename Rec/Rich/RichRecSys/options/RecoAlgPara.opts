@@ -60,5 +60,35 @@ RichGloPIDIt3.LikelihoodThreshold         = -1e-3;
 RichGloPIDIt3.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt3.MinSignalForAproxLLCalc     = 1e-5;
 
-// PID output algorithm
-MergeRichPIDs.OutputPIDLocation = "Rec/Rich/PIDs";
+// ===================================================================
+// Ring finder : Under development
+
+/*
+Rich1P0RingFinder.Panel = 0; // panel 1
+Rich1P0RingFinder.DrawEvents = true;
+Rich1P0RingFinder.DrawAtX = 0;
+Rich1P0RingFinder.DrawAtY = 0;
+Rich1P0RingFinder.CanvasSize = 400;
+Rich1P0RingFinder.IntialiseUsingRich = true;
+
+Rich1P1RingFinder.Panel = 1; // panel 1
+Rich1P1RingFinder.DrawEvents = true;
+Rich1P1RingFinder.DrawAtX = 0;
+Rich1P1RingFinder.DrawAtY = 400;
+Rich1P1RingFinder.CanvasSize = 400;
+Rich1P1RingFinder.IntialiseUsingRich = true;
+*/
+
+Rich2P0RingFinder.Panel = 0; // panel 0
+Rich2P0RingFinder.DrawEvents = true;
+Rich2P0RingFinder.DrawAtX = 0;
+Rich2P0RingFinder.DrawAtY = 0;
+Rich2P0RingFinder.CanvasSize = 400;
+Rich2P0RingFinder.IntialiseUsingRich = true;
+
+Rich2P1RingFinder.Panel = 1; // panel 1
+Rich2P1RingFinder.DrawEvents = true;
+Rich2P1RingFinder.DrawAtX = 0;
+Rich2P1RingFinder.DrawAtY = 400;
+Rich2P1RingFinder.CanvasSize = 400;
+Rich2P1RingFinder.IntialiseUsingRich = true;

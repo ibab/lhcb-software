@@ -1,4 +1,4 @@
-// $Id: RichGeomEffPhotonTracing.h,v 1.2 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichGeomEffPhotonTracing.h,v 1.3 2004-02-02 14:26:59 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H
 #define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
 
@@ -19,7 +19,10 @@
 // interfaces
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichGeomEff.h"
-#include "RichDetTools/IRichDetInterface.h"
+#include "RichDetTools/IRichRayTracing.h"
+
+// GSL
+#include "gsl/gsl_math.h"
 
 /** @class RichGeomEffPhotonTracing RichGeomEffPhotonTracing.h
  *
@@ -51,16 +54,16 @@ public:
 
   /// Obtain geometrical efficiency for this track and hypothesis
   double geomEfficiency ( RichRecSegment * segment,
-                          const Rich::ParticleIDType id );
+                          const Rich::ParticleIDType id ) const;
 
   /// Obtain scattered geometrical efficiency for this track and hypothesis
   double geomEfficiencyScat ( RichRecSegment * segment,
-                              const Rich::ParticleIDType id );
+                              const Rich::ParticleIDType id ) const;
 
 private: // Private data
 
   // Pointers to tool instances
-  IRichDetInterface * m_richDetInt;
+  IRichRayTracing * m_rayTrace;
   IRichCherenkovAngle * m_ckAngle;
 
   /// Number of photons to use in geometrical efficiency calculation
@@ -76,13 +79,14 @@ private: // Private data
   /// Cherenkov phi incrementation
   double m_incPhi;
 
+  typedef std::vector<double> AngleVector;
   /// Cache Sin(angle) for geometrical efficiency calculation
-  std::vector<double> m_sinCkPhi;
+  AngleVector m_sinCkPhi;
   /// Cache Cos(angle) for geometrical efficiency calculation
-  std::vector<double> m_cosCkPhi;
+  AngleVector m_cosCkPhi;
 
   /// Flat Randomn distribution between 0 and 1
-  Rndm::Numbers m_uniDist;
+  mutable Rndm::Numbers m_uniDist;
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: RichParticleProperties.cpp,v 1.4 2003-10-13 16:32:31 jonrob Exp $
+// $Id: RichParticleProperties.cpp,v 1.5 2004-02-02 14:27:00 jonesc Exp $
 
 // local
 #include "RichParticleProperties.h"
@@ -49,26 +49,30 @@ StatusCode RichParticleProperties::initialize() {
   m_particleMass[Rich::Proton]   = ppSvc->find("p+" )->mass()/MeV;
  
   // cache squares of masses
-  m_particleMassSq[Rich::Electron] = pow( m_particleMass[Rich::Electron], 2 );
-  m_particleMassSq[Rich::Muon]     = pow( m_particleMass[Rich::Muon], 2 );
-  m_particleMassSq[Rich::Pion]     = pow( m_particleMass[Rich::Pion], 2 );
-  m_particleMassSq[Rich::Kaon]     = pow( m_particleMass[Rich::Kaon], 2 );
-  m_particleMassSq[Rich::Proton]   = pow( m_particleMass[Rich::Proton], 2 );
+  m_particleMassSq[Rich::Electron] = gsl_pow_2( m_particleMass[Rich::Electron] );
+  m_particleMassSq[Rich::Muon]     = gsl_pow_2( m_particleMass[Rich::Muon] );
+  m_particleMassSq[Rich::Pion]     = gsl_pow_2( m_particleMass[Rich::Pion] );
+  m_particleMassSq[Rich::Kaon]     = gsl_pow_2( m_particleMass[Rich::Kaon] );
+  m_particleMassSq[Rich::Proton]   = gsl_pow_2( m_particleMass[Rich::Proton] );
 
   // release service
   ppSvc->release();
-
-  // Setup momentum thresholds
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-      double refIndex = m_refIndex->refractiveIndex((Rich::RadiatorType)iRad);
-      m_momThres[iRad][iHypo] = m_particleMass[iHypo]/sqrt(refIndex*refIndex - 1.0);
-    }
-  }
   
   // Informational Printout
   msg << MSG::DEBUG
-      << " Particle masses (MeV/c^2)    = " << m_particleMass << endreq;
+      << " Particle masses (MeV/c^2)     = " << m_particleMass << endreq;
+
+  // Setup momentum thresholds
+  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
+    const Rich::RadiatorType rad = static_cast<Rich::RadiatorType>(iRad);
+    msg << MSG::DEBUG << " Particle thresholds (MeV/c^2) = Rad " << rad << " : ";
+    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
+      const double refIndex = m_refIndex->refractiveIndex(rad);
+      m_momThres[iRad][iHypo] = m_particleMass[iHypo]/sqrt(refIndex*refIndex - 1.0);
+      msg << m_momThres[iRad][iHypo] << " ";
+    }
+    msg << endreq;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -86,26 +90,25 @@ StatusCode RichParticleProperties::finalize() {
 }
 
 double RichParticleProperties::beta( RichRecSegment * segment,
-                                     const Rich::ParticleIDType id ) 
+                                     const Rich::ParticleIDType id ) const
 {
-  double momentum = segment->trackSegment().bestMomentumMag();
-  double Esquare = momentum*momentum + m_particleMassSq[id];
-
+  const double momentum = segment->trackSegment().bestMomentumMag();
+  const double Esquare = momentum*momentum + m_particleMassSq[id];
   return ( Esquare > 0 ? momentum/sqrt(Esquare) : 0 );
 }
 
-double RichParticleProperties::mass( const Rich::ParticleIDType id ) 
+double RichParticleProperties::mass( const Rich::ParticleIDType id ) const
 {
   return m_particleMass[id];
 }
 
-double RichParticleProperties::massSq( const Rich::ParticleIDType id ) 
+double RichParticleProperties::massSq( const Rich::ParticleIDType id ) const
 {
   return m_particleMassSq[id];
 }
 
 double RichParticleProperties::thresholdMomentum( const Rich::ParticleIDType id,
-                                                  const Rich::RadiatorType rad ) 
+                                                  const Rich::RadiatorType rad ) const
 {
   return m_momThres[rad][id];
 }

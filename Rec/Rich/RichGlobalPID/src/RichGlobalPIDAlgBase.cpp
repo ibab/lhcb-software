@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlgBase.cpp,v 1.1.1.1 2003-06-30 16:10:53 jonesc Exp $
+// $Id: RichGlobalPIDAlgBase.cpp,v 1.2 2004-02-02 14:25:53 jonesc Exp $
 // Include files 
 
 // local
@@ -31,7 +31,7 @@ RichGlobalPIDAlgBase::RichGlobalPIDAlgBase( const std::string& name,
 }
 
 // Destructor
-RichGlobalPIDAlgBase::~RichGlobalPIDAlgBase() {}
+RichGlobalPIDAlgBase::~RichGlobalPIDAlgBase() { }
 
 StatusCode RichGlobalPIDAlgBase::gpidTracks() 
 {  

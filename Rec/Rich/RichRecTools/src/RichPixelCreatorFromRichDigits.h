@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.h,v 1.3 2003-11-25 14:06:40 jonrob Exp $
+// $Id: RichPixelCreatorFromRichDigits.h,v 1.4 2004-02-02 14:27:01 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H 1
 
@@ -13,7 +13,7 @@
 
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
-#include "RichDetTools/IRichDetInterface.h"
+#include "RichDetTools/IRichSmartIDTool.h"
 
 // Event
 #include "Event/RichDigit.h"
@@ -53,22 +53,22 @@ public:
   
   /// Returns a RichRecPixel object pointer for given ContainedObject.
   /// If if it not possible NULL is return.
-  RichRecPixel * newPixel( const ContainedObject * obj );
+  RichRecPixel * newPixel( const ContainedObject * obj ) const;
   
   /// Form all possible RichRecPixels from input RichDigits.
   /// The most efficient way to make all RichRecPixel objects in the event.
-  StatusCode newPixels();
+  StatusCode newPixels() const;
   
   /// Returns a pointer to the RichRecPixels
-  RichRecPixels *& richPixels();
+  RichRecPixels * richPixels() const;
 
 private:
 
   /// Pointer to RichRecPixels
   RichRecPixels * m_pixels;
 
-  /// Pointer to RichDetInterface tool
-  IRichDetInterface * m_richDetInt;
+  /// Pointer to RichSmartID tool
+  IRichSmartIDTool * m_smartIDTool;
 
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;
@@ -77,11 +77,11 @@ private:
   std::string m_richRecPixelLocation;
 
   /// Flag to signify all pixels have been formed
-  bool m_allDone;
+  mutable bool m_allDone;
 
   /// Pointer to pixel map
-  std::map< long int, RichRecPixel* > m_pixelExists;
-  std::map< long int, bool > m_pixelDone;
+  mutable std::map< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
+  mutable std::map< RichSmartID::KeyType, bool > m_pixelDone;
 
 };
 

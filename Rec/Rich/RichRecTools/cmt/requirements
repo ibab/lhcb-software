@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.18 2003-12-11 16:33:36 cattanem Exp $
+# $Id: requirements,v 1.19 2004-02-02 14:26:56 jonesc Exp $
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones
 
 package RichRecTools
-version v2r6
+version v2r7
 
 # ================ structure ================================================
 branches src cmt doc
@@ -13,8 +13,6 @@ set RICHRECTOOLSOPTS $(RICHRECTOOLSROOT)/options
 
 # ================ dependencies =============================================
 use RichRecBase        v1r*   Rich
-# Temporary usage while SICB pixels used
-use RiSicbGeom         v3r*   SICB
 
 # ================ component library=========================================
 library          RichRecTools  ../src/*.cpp

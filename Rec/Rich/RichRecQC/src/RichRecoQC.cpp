@@ -1,4 +1,4 @@
-// $Id: RichRecoQC.cpp,v 1.7 2003-11-02 21:47:22 jonrob Exp $
+// $Id: RichRecoQC.cpp,v 1.8 2004-02-02 14:24:02 jonesc Exp $
 
 // local
 #include "RichRecoQC.h"
@@ -98,19 +98,19 @@ StatusCode RichRecoQC::execute() {
     RichRecSegment * segment = *iSeg;
 
     // Radiator info
-    Rich::RadiatorType rad = segment->trackSegment().radiator();
+    const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
     // True particle type
-    Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
+    const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
     if ( Rich::Unknown == mcType ) continue; // skip tracks with unknown MC type
 
     // beta for true type
-    double beta = m_richPartProp->beta( segment, mcType );
+    const double beta = m_richPartProp->beta( segment, mcType );
     if ( beta < m_minBeta ) continue; // skip non-saturated tracks
 
     // Expected Cherenkov theta angle for true particle type
-    double thetaExpTrue = ( mcType != Rich::Unknown ?
-                            m_ckAngle->avgCherenkovTheta( segment, mcType ) : 0 );
+    const double thetaExpTrue = ( mcType != Rich::Unknown ?
+                                  m_ckAngle->avgCherenkovTheta( segment, mcType ) : 0 );
 
     // loop over photons for this segment
     int truePhotons = 0;
@@ -118,7 +118,7 @@ StatusCode RichRecoQC::execute() {
           iPhot != segment->richRecPhotons().end(); ++iPhot ) {
       RichRecPhoton * photon = *iPhot;
 
-      double thetaRec = photon->geomPhoton().CherenkovTheta();
+      const double thetaRec = photon->geomPhoton().CherenkovTheta();
 
       // Is this a true photon ?
       const MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton( photon );

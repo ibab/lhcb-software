@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.h,v 1.9 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichPhotonCreator.h,v 1.10 2004-02-02 14:27:00 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
 
@@ -13,11 +13,9 @@
 
 // Interfaces
 #include "RichRecBase/IRichPhotonCreator.h"
-#include "RichRecBase/IRichTrackCreator.h"
-#include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichPhotonSignal.h"
-#include "RichDetTools/IRichDetInterface.h"
+#include "RichDetTools/IRichPhotonReconstruction.h"
 
 /** @class RichPhotonCreator RichPhotonCreator.h
  *
@@ -52,43 +50,41 @@ public:
   void handle( const Incident& incident );
 
   /// Return Pointer to RichRecPhotons
-  RichRecPhotons *& richPhotons();
+  RichRecPhotons * richPhotons() const;
 
   /// Form a Photon candidate from a Segment and a pixel.
   RichRecPhoton * reconstructPhoton( RichRecSegment * segment,
-                                     RichRecPixel * pixel );
+                                     RichRecPixel * pixel ) const;
 
   /// Form all photon candidates for a given track and pixel
   RichRecTrack::Photons reconstructPhotons( RichRecTrack * track,
-                                            RichRecPixel * pixel );
+                                            RichRecPixel * pixel ) const;
 
   /// Form all photon candidates for a given track, with all possible pixels.
-  RichRecTrack::Photons& reconstructPhotons( RichRecTrack * track );
+  const RichRecTrack::Photons & reconstructPhotons( RichRecTrack * track ) const;
 
   /// Form all photon candidates for a given pixel, with all possible tracks.
-  RichRecPixel::Photons& reconstructPhotons( RichRecPixel * pixel );
+  const RichRecPixel::Photons & reconstructPhotons( RichRecPixel * pixel ) const;
 
   /// Form all photon candidates for a given segment, with all possible pixels.
-  RichRecSegment::Photons & reconstructPhotons( RichRecSegment * segment );
+  const RichRecSegment::Photons & reconstructPhotons( RichRecSegment * segment ) const;
 
   /// Method to perform the reconstruction of all tracks and pixels
-  void reconstructPhotons();
+  void reconstructPhotons() const;
 
 private: // private methods
 
   /// Form a Photon candidate from a Segment and a pixel.
   RichRecPhoton * buildPhoton( RichRecSegment * segment,
                                RichRecPixel * pixel,
-                               RichRecPhotonKey & key );
+                               RichRecPhotonKey & key ) const;
 
 private: // private data
 
   // Pointers to tool instances
-  IRichTrackCreator * m_trackCreator; ///< Pointer to RichTrackCreator
-  IRichPixelCreator * m_pixelCreator; ///< Pointer to RichPixelCreator
   IRichPhotonPredictor * m_photonPredictor; ///< Pointer to RichPhotonPredictor
   IRichPhotonSignal * m_photonSignal; ///< Pointer to RichPhotonSignal
-  IRichDetInterface * m_richDetInt;   ///< Pointer to RichDetInterface
+  IRichPhotonReconstruction * m_photonReco; ///< Pointer to photon reconstruction tool
 
   /// Pointer to RichRecPhotons
   RichRecPhotons * m_photons;
@@ -97,7 +93,7 @@ private: // private data
   std::string m_richRecPhotonLocation;
 
   /// photon done map
-  std::map<int, bool> m_photonDone;
+  mutable std::map<int, bool> m_photonDone;
 
   /// Max Cherenkov theta angle
   std::vector<double> m_maxCKtheta;

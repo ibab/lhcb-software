@@ -1,4 +1,4 @@
-// $Id: RichTabulatedRayleighScatter.cpp,v 1.1 2003-08-26 14:40:21 jonrob Exp $
+// $Id: RichTabulatedRayleighScatter.cpp,v 1.2 2004-02-02 14:27:05 jonesc Exp $
 
 // local
 #include "RichTabulatedRayleighScatter.h"
@@ -65,7 +65,7 @@ StatusCode RichTabulatedRayleighScatter::finalize() {
 
 double 
 RichTabulatedRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
-                                                   const double energy ) {
+                                                   const double energy ) const {
 
   // check this is aerogel
   if ( segment->trackSegment().radiator() != Rich::Aerogel ) return 0;
@@ -74,10 +74,10 @@ RichTabulatedRayleighScatter::photonScatteredProb( const RichRecSegment * segmen
   if ( energy <= 0 ) return 0;
 
   // check path length is valid
-  double path = segment->trackSegment().pathLength();
+  const double path = segment->trackSegment().pathLength();
   if ( path <= 0 ) return 0;
 
   // compute and return prob
-  double scatLeng = (*m_rayScatL)[energy*eV];
+  const double scatLeng = (*m_rayScatL)[energy*eV];
   return ( 1 - (scatLeng/path)*(1. - exp(-1*path/scatLeng)) );
 }

@@ -1,5 +1,5 @@
 // RICH Reconstruction Tool parameters
-// Optimised for SICB
+// Optimised for Gauss
 
 // Track creator
 ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreator" };
@@ -17,22 +17,16 @@ ToolSvc.RichSegmentCreator.EnergyBins      = { 10,      10,     10   };
 ToolSvc.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator" };
 
 // Pixel creator
-ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromSICB/RichPixelCreator" };
-
-// Detector interface 
-ToolSvc.RichToolRegistry.Tools += { "RichDetInterface/RichDetInterface" };
-
-// SICB geometry (temporary)
-ToolSvc.RichToolRegistry.Tools += { "PixelFinder/SICBPixelGeom" };
+ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRichDigits/RichPixelCreator" };
 
 // Photon Creator
 ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator",
                                     "RichPhotonPredictor/RichPhotonPredictor" };
-ToolSvc.RichPhotonPredictor.MinTrackROI          = { 130.0,  0.0,   0.0  };
-ToolSvc.RichPhotonPredictor.MaxTrackROI          = { 350.0, 90.0, 250.0  };
-ToolSvc.RichPhotonCreator.MinCherenkovTheta      = { 0.1,  0.005, 0.005  };
-ToolSvc.RichPhotonCreator.MaxCherenkovTheta      = { 0.29, 0.075, 0.045  };
-ToolSvc.RichPhotonCreator.MinPhotonProbability   = { 1e-15, 1e-15, 1e-15 };
+ToolSvc.RichPhotonPredictor.MinTrackROI          = { 130.0,   0.0,    0.0  };
+ToolSvc.RichPhotonPredictor.MaxTrackROI          = { 350.0,  90.0,  250.0  };
+ToolSvc.RichPhotonCreator.MinCherenkovTheta      = { 0.1,   0.005,  0.005  };
+ToolSvc.RichPhotonCreator.MaxCherenkovTheta      = { 0.29,  0.075,  0.045  };
+ToolSvc.RichPhotonCreator.MinPhotonProbability   = { 1e-15,  1e-15,  1e-15 };
 
 // Geometrical efficiency from full ray tracing
 ToolSvc.RichToolRegistry.Tools += { "RichGeomEffPhotonTracing/RichGeomEff" };
@@ -52,10 +46,7 @@ ToolSvc.RichToolRegistry.Tools += { "RichPhotonSignal/RichPhotonSignal" };
 
 // Sellmeir function
 ToolSvc.RichToolRegistry.Tools += { "RichSellmeirFunc/RichSellmeirFunc" };
-ToolSvc.RichSellmeirFunc.WaveIndpTrans = 0.78;
-
-// Sellmeir function with SICB parameters hardcoded (temporary)
-//ToolSvc.RichToolRegistry.Tools += { "RichSellmeirFuncSICB/RichSellmeirFunc" };
+ToolSvc.RichSellmeirFunc.WaveIndpTrans = 1.0;
 
 // Cherenkov resolution - fixed binned implementation
 #include "$RICHRECSYSOPTS/tools/BinnedCherenkovRes.opts"
@@ -63,12 +54,16 @@ ToolSvc.RichSellmeirFunc.WaveIndpTrans = 0.78;
 // Interpolated cherenkov resolution function
 //#include "$RICHRECSYSOPTS/tools/InterpCherenkovRes.opts"
 
-//ToolSvc.RichToolRegistry.Tools += { "RichSignalDetectionEffSICB/RichSignalDetectionEff" };
-//ToolSvc.RichSignalDetectionEff.QETableLocation =
-//  "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
-
 // Photon detection efficiency using XML tabulation
-ToolSvc.RichToolRegistry.Tools += { "RichTabulatedSignalDetectionEffSICB/RichSignalDetectionEff" };
+ToolSvc.RichToolRegistry.Tools += { "RichTabulatedSignalDetectionEff/RichSignalDetectionEff" };
+//ToolSvc.RichSignalDetectionEff.RichSphMirrorLocations = {
+//  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceReflectivityPT",
+//  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceReflectivityPT"
+//};
+//ToolSvc.RichSignalDetectionEff.RichFlatMirrorLocations = {
+//  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceReflectivityPT",
+//  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceReflectivityPT"
+//};
 ToolSvc.RichSignalDetectionEff.RichSphMirrorLocations = {
   "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT",
   "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceIdealReflectivityPT"
@@ -79,11 +74,6 @@ ToolSvc.RichSignalDetectionEff.RichFlatMirrorLocations = {
 };
 ToolSvc.RichSignalDetectionEff.QETableLocation =
   "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
-
-// Refractive index using SICB hardcodings (temporary)
-//ToolSvc.RichToolRegistry.Tools += { "RichRefractiveIndexSICB/RichRefractiveIndex" };
-//ToolSvc.RichRefractiveIndex.QETableLocation =
-//  "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
 
 // Refractive index using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
@@ -96,13 +86,12 @@ ToolSvc.RichRefractiveIndex.QETableLocation =
   "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
 
 // Rayleigh scattering using XML tabulation
-//ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRayleighScatter/RichRayleighScatter" };
-//ToolSvc.RichRayleighScatter.RayScatLengthLocation = 
-//    "/dd/Materials/RichMaterialTabProperties/AerogelRayleighPT";
+ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRayleighScatter/RichRayleighScatter" };
+ToolSvc.RichRayleighScatter.RayScatLengthLocation =
+  "/dd/Materials/RichMaterialTabProperties/AerogelRayleighPT";
 
-// Rayleigh scattering using analytic function for SICB
-ToolSvc.RichToolRegistry.Tools += { "RichFunctionalRayleighScatterSICB/RichRayleighScatter" };
-ToolSvc.RichRayleighScatter.AeroClarity = 0.0006;
+// Rayleigh scattering using analytic function
+//ToolSvc.RichToolRegistry.Tools += { "RichFunctionalRayleighScatter/RichRayleighScatter" };
 
 // Expected Cherenkov angles
 ToolSvc.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
@@ -110,3 +99,8 @@ ToolSvc.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
 // Rich particle properties
 ToolSvc.RichToolRegistry.Tools += { "RichParticleProperties/RichParticleProperties" };
 
+// Detector tools
+ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
+ToolSvc.RichToolRegistry.Tools += { "CdfRayTracing/RichRayTracing" };
+ToolSvc.RichToolRegistry.Tools += { "CdfRichTrSegMaker/RichDetTrSegMaker" };
+ToolSvc.RichToolRegistry.Tools += { "CdfPhotonReco/RichDetPhotonReco" };

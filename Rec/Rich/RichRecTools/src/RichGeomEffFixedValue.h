@@ -1,4 +1,4 @@
-// $Id: RichGeomEffFixedValue.h,v 1.2 2003-11-25 14:06:40 jonrob Exp $
+// $Id: RichGeomEffFixedValue.h,v 1.3 2004-02-02 14:26:59 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHGEOMEFFFIXEDVALUE_H
 #define RICHRECTOOLS_RICHGEOMEFFFIXEDVALUE_H 1
 
@@ -45,11 +45,11 @@ public:
 
   /// Obtain geometrical efficiency for this track and hypothesis
   double geomEfficiency ( RichRecSegment * segment,
-                          const Rich::ParticleIDType id );
+                          const Rich::ParticleIDType id ) const;
 
   /// Obtain scattered geometrical efficiency for this track and hypothesis
   double geomEfficiencyScat ( RichRecSegment * segment,
-                              const Rich::ParticleIDType id );
+                              const Rich::ParticleIDType id ) const;
 
 private: // Private data
 

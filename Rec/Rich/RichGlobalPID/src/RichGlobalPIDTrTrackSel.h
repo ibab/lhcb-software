@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.h,v 1.6 2003-12-11 16:33:34 cattanem Exp $
+// $Id: RichGlobalPIDTrTrackSel.h,v 1.7 2004-02-02 14:25:54 jonesc Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H
 #define RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H 1
 
@@ -20,7 +20,6 @@
 #include "CLHEP/Units/PhysicalConstants.h"
 
 // interfaces
-#include "RichRecBase/IRichTrackCreator.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 
 /** @class RichGlobalPIDTrTrackSel RichGlobalPIDTrTrackSel.h
@@ -62,7 +61,6 @@ private:
   std::string m_procStatLocation;
 
   IRichExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal
-  IRichTrackCreator * m_trackCr;         ///< Pointer to RichTrackCreator
   
   // Selection cuts
   double m_minPhysPtot; ///< Minimum momentum for physics quality tracks

@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.2 2003-11-25 14:01:50 jonesc Exp $
+// $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.3 2004-02-02 14:24:40 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromCheatedRichDigits.h"
@@ -17,7 +17,11 @@ const        IToolFactory& RichPixelCreatorFromCheatedRichDigitsFactory = s_fact
 RichPixelCreatorFromCheatedRichDigits::RichPixelCreatorFromCheatedRichDigits( const std::string& type,
                                                                               const std::string& name,
                                                                               const IInterface* parent )
-  : RichRecToolBase( type, name, parent ) {
+  : RichRecToolBase( type, name, parent ),
+    m_pixels ( 0 ),
+    m_smartIDTool ( 0 ),
+    m_mcTool ( 0 )
+{
 
   declareInterface<IRichPixelCreator>(this);
 
@@ -37,14 +41,8 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::initialize() {
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
-  // Get pointer to EDS
-  if ( !serviceLocator()->service( "EventDataSvc", m_evtDataSvc, true ) ) {
-    msg << MSG::ERROR << "EventDataSvc not found" << endreq;
-    return StatusCode::FAILURE;
-  }
-
   // Acquire instances of tools
-  acquireTool( "RichDetInterface",   m_richDetInt );
+  acquireTool( "RichSmartIDTool", m_smartIDTool );
   acquireTool( "RichRecMCTruthTool", m_mcTool     );
 
   // Setup incident services
@@ -70,9 +68,8 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release services and tools
-  if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
-  releaseTool( m_richDetInt );
-  releaseTool( m_mcTool     );
+  releaseTool( m_smartIDTool );
+  releaseTool( m_mcTool      );
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -89,7 +86,7 @@ void RichPixelCreatorFromCheatedRichDigits::handle ( const Incident& incident ) 
     m_pixelExists.clear();
     m_pixelDone.clear();
 
-    SmartDataPtr<RichRecPixels> tdsPixels( m_evtDataSvc,
+    SmartDataPtr<RichRecPixels> tdsPixels( eventSvc(),
                                            m_richRecPixelLocation );
     if ( !tdsPixels ) {
 
@@ -97,7 +94,7 @@ void RichPixelCreatorFromCheatedRichDigits::handle ( const Incident& incident ) 
       m_pixels = new RichRecPixels();
 
       // Register new RichRecPhoton container to Gaudi data store
-      if ( !m_evtDataSvc->registerObject(m_richRecPixelLocation, m_pixels) ) {
+      if ( !eventSvc()->registerObject(m_richRecPixelLocation, m_pixels) ) {
         MsgStream msg( msgSvc(), name() );
         msg << MSG::ERROR << "Failed to register RichRecPixels at "
             << m_richRecPixelLocation << endreq;
@@ -112,8 +109,8 @@ void RichPixelCreatorFromCheatedRichDigits::handle ( const Incident& incident ) 
       for ( RichRecPixels::const_iterator iPixel = tdsPixels->begin();
             iPixel != tdsPixels->end();
             ++iPixel ) {
-        m_pixelExists[(long int)(*iPixel)->smartID()] = *iPixel;
-        m_pixelDone[(long int)(*iPixel)->smartID()] = true;
+        m_pixelExists[(*iPixel)->smartID()] = *iPixel;
+        m_pixelDone[(*iPixel)->smartID()] = true;
       }
 
     }
@@ -124,7 +121,7 @@ void RichPixelCreatorFromCheatedRichDigits::handle ( const Incident& incident ) 
 
 // Forms a new RichRecPixel object from a RichDigit
 RichRecPixel * 
-RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) {
+RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) const {
 
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
@@ -149,9 +146,9 @@ RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) {
 
 RichRecPixel * 
 RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
-                                                        const MCRichHit * hit ) {
+                                                        const MCRichHit * hit ) const {
 
-  long int hitKey = hit->key();
+  RichSmartID::KeyType hitKey = hit->key();
 
   // See if this RichRecPixel already exists
   if ( m_pixelDone[hitKey] ) {
@@ -163,7 +160,7 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
     if ( 0 != hitKey ) {
 
       RichSmartID id(0);
-      StatusCode sc = m_richDetInt->smartID( hit->entry(), id );
+      StatusCode sc = m_smartIDTool->smartID( hit->entry(), id );
       if ( sc.isSuccess() && id.isValid() ) {
 
         // Make a new RichRecPixel
@@ -195,13 +192,13 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
 
 }
 
-StatusCode RichPixelCreatorFromCheatedRichDigits::newPixels() {
+StatusCode RichPixelCreatorFromCheatedRichDigits::newPixels() const {
 
   if ( m_allDone ) return StatusCode::SUCCESS;
   m_allDone = true;
 
   // Obtain smart data pointer to RichDigits
-  SmartDataPtr<RichDigits> digits( m_evtDataSvc, m_recoDigitsLocation );
+  SmartDataPtr<RichDigits> digits( eventSvc(), m_recoDigitsLocation );
   if ( !digits ) {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::ERROR << "Failed to locate RichDigits at "
@@ -222,7 +219,7 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::newPixels() {
   return StatusCode::SUCCESS;
 }
 
-RichRecPixels *& RichPixelCreatorFromCheatedRichDigits::richPixels()
+RichRecPixels * RichPixelCreatorFromCheatedRichDigits::richPixels() const
 {
   return m_pixels;
 }

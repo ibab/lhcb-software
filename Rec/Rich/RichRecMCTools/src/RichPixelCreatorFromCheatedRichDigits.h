@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.1.1.1 2003-10-13 16:21:50 jonesc Exp $
+// $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.2 2004-02-02 14:24:40 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H 1
 
@@ -13,7 +13,7 @@
 
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
-#include "RichDetTools/IRichDetInterface.h"
+#include "RichDetTools/IRichSmartIDTool.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 
 // Event
@@ -57,30 +57,27 @@ public:
 
   /// Returns a RichRecPixel object pointer for given ContainedObject.
   /// If if it not possible NULL is return.
-  RichRecPixel * newPixel( const ContainedObject * obj );
+  RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
   /// Form all possible RichRecPixels from input RichDigits.
   /// The most efficient way to make all RichRecPixel objects in the event.
-  StatusCode newPixels();
+  StatusCode newPixels() const;
 
   /// Returns a pointer to the RichRecPixels
-  RichRecPixels *& richPixels();
+  RichRecPixels * richPixels() const;
 
 private: // methods
 
   RichRecPixel * newPixelFromHit( const RichDigit * digit,
-                                  const MCRichHit * hit );
+                                  const MCRichHit * hit ) const;
 
 private: // data
 
   /// Pointer to RichRecPixels
   RichRecPixels * m_pixels;
 
-  /// Pointer to event data service
-  IDataProviderSvc* m_evtDataSvc;
-
-  /// Pointer to RichDetInterface tool
-  IRichDetInterface * m_richDetInt;
+  /// Pointer to RichSmartID tool
+  IRichSmartIDTool * m_smartIDTool;
 
   /// MC Truth tool
   IRichRecMCTruthTool * m_mcTool;
@@ -92,11 +89,11 @@ private: // data
   std::string m_richRecPixelLocation;
 
   /// Flag to signify all pixels have been formed
-  bool m_allDone;
+  mutable bool m_allDone;
 
   /// Pointer to pixel map
-  std::map< long int, RichRecPixel* > m_pixelExists;
-  std::map< long int, bool > m_pixelDone;
+  mutable std::map< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
+  mutable std::map< RichSmartID::KeyType, bool > m_pixelDone;
 
 };
 

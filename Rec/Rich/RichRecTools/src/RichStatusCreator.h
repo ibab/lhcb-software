@@ -1,4 +1,4 @@
-// $Id: RichStatusCreator.h,v 1.2 2003-11-25 14:06:41 jonrob Exp $
+// $Id: RichStatusCreator.h,v 1.3 2004-02-02 14:27:05 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHSTATUSCREATOR_H
 #define RICHRECTOOLS_RICHSTATUSCREATOR_H 1
 
@@ -49,7 +49,7 @@ public:
   void handle( const Incident& incident );
 
   /// Returns a pointer to the RichRecStatus
-  RichRecStatus *& richStatus();
+  RichRecStatus * richStatus() const;
 
 private:
 

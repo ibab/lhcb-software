@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDDigitSel.h,v 1.2 2003-07-02 09:02:59 jonrob Exp $
+// $Id: RichGlobalPIDDigitSel.h,v 1.3 2004-02-02 14:25:54 jonesc Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDDIGITSEL_H
 #define RICHRECALGS_RICHGLOBALPIDDIGITSEL_H 1
 
@@ -12,9 +12,6 @@
 // Event
 #include "Event/ProcStatus.h"
 #include "Event/RichRecStatus.h"
-
-// interfaces
-#include "RichRecBase/IRichPixelCreator.h"
 
 /** @class RichGlobalPIDDigitSel RichGlobalPIDDigitSel.h
  *
@@ -39,9 +36,6 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private: // private data
-
-  // tool pointers
-  IRichPixelCreator * m_pixelCr;
 
   /// Maximum number of usable pixels
   int m_maxUsedPixels;

@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDDigitSel.cpp,v 1.7 2003-11-25 13:51:23 jonesc Exp $
+// $Id: RichGlobalPIDDigitSel.cpp,v 1.8 2004-02-02 14:25:53 jonesc Exp $
 // Include files
 
 // local
@@ -37,9 +37,6 @@ StatusCode RichGlobalPIDDigitSel::initialize() {
   // Sets up various tools and services
   if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
 
-  // Acquire tools
-  acquireTool("RichPixelCreator", m_pixelCr );
-
   msg << MSG::DEBUG << "Initialize" << endreq
       << " Max Pixels                   = " << m_maxUsedPixels << endreq;
 
@@ -74,7 +71,7 @@ StatusCode RichGlobalPIDDigitSel::execute() {
   }
 
   // Create all RichRecPixels
-  if ( !m_pixelCr->newPixels() ) return StatusCode::FAILURE;
+  if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
 
   if ( msgLevel(MSG::DEBUG) ) {
     MsgStream msg( msgSvc(), name() );
@@ -105,9 +102,6 @@ StatusCode RichGlobalPIDDigitSel::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release tools
-  releaseTool( m_pixelCr );
 
   // Execute base class method
   return RichRecAlgBase::finalize();

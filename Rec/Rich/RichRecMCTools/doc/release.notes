@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-01-26 - Chris Jones
+ - Add support for new MC debug objects
+ - Switch to new detector tools
+
 !====================== RichRecMCTools v1r1 2003-11-27 =====================
 ! 2003-11-25 - Chris Jones
  - Improvements to track and pixel creators

@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.h,v 1.4 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichSegmentCreator.h,v 1.5 2004-02-02 14:27:03 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -52,19 +52,19 @@ public:
   void handle( const Incident& incident );
 
   /// Save a new RichRecSegment in the container
-  void saveSegment( RichRecSegment * segment );
+  void saveSegment( RichRecSegment * segment ) const;
 
   /// Create a new RichRecSegment
   RichRecSegment * newSegment( RichTrackSegment& segment, 
-                               RichRecTrack* pTrk );
+                               RichRecTrack* pTrk ) const;
 
   /// Return a pointer to RichRecSegments
-  RichRecSegments *& richSegments();
+  RichRecSegments * richSegments() const;
 
 private:  // Private data
 
   /// Pointer to RichRecTracks
-  RichRecSegments * m_segments;
+  mutable RichRecSegments * m_segments;
 
   /// Location of RichRecSegments in TES
   std::string m_richRecSegmentLocation;

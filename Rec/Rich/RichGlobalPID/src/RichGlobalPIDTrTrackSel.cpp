@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.10 2003-11-25 13:51:24 jonesc Exp $
+// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.11 2004-02-02 14:25:54 jonesc Exp $
 // Include files
 
 // local
@@ -43,7 +43,6 @@ StatusCode RichGlobalPIDTrTrackSel::initialize() {
   if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
 
   // Acquire tools
-  acquireTool( "RichTrackCreator",        m_trackCr  );
   acquireTool( "RichExpectedTrackSignal", m_tkSignal );
 
   // Configure track selector
@@ -91,10 +90,10 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
   }
 
   // Check the number of input raw tracks
-  if ( m_trackCr->nInputTracks() > m_maxInputTracks ) {
+  if ( trackCreator()->nInputTracks() > m_maxInputTracks ) {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::INFO
-        << "Found " << m_trackCr->nInputTracks() << ">" << m_maxInputTracks
+        << "Found " << trackCreator()->nInputTracks() << ">" << m_maxInputTracks
         << " max input tracks -> RICH Global PID aborted" << endreq;
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedTrTrackLimit ); 
     deleteEvent();
@@ -102,7 +101,7 @@ StatusCode RichGlobalPIDTrTrackSel::execute() {
   }
 
   // Make sure RichRecTracks are available
-  if ( !m_trackCr->newTracks() ) return StatusCode::FAILURE;
+  if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
   if ( richTracks()->empty() ) {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::INFO << "No tracks selected -> RICH Global PID aborted" << endreq;
@@ -206,7 +205,7 @@ RichGlobalPIDTrTrackSel::trackStatus( RichRecTrack * track ) {
   if ( !m_trSelector.trackSelected(track) ) quality = Rich::GlobalPID::Unusable;
 
   // Momentum
-  double pTot = track->vertexMomentum();
+  const double pTot = track->vertexMomentum();
 
   // If below minimum momentum for use in LL, return false
   if ( pTot < m_minLLPtot ) return Rich::GlobalPID::Unusable;
@@ -233,7 +232,6 @@ StatusCode RichGlobalPIDTrTrackSel::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release tools
-  releaseTool( m_trackCr  );
   releaseTool( m_tkSignal );
 
   // Execute base class method

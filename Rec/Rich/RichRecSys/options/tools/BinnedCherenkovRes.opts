@@ -1,6 +1,9 @@
 
 // Cherenkov resolution - fixed binned implementation
-ToolSvc.RichToolRegistry.Tools += { "RichBinnedCherenkovResolution/RichCherenkovResolution" };
+ToolSvc.RichToolRegistry.Tools += 
+{ 
+  "RichBinnedCherenkovResolution/RichCherenkovResolution" 
+};
 ToolSvc.RichCherenkovResolution.NAerogelResBins    = { 0.2, 0.25 };
 ToolSvc.RichCherenkovResolution.AerogelForwardRes  = { 0.00304, 0.00239, 0.00221 };
 ToolSvc.RichCherenkovResolution.AerogelMatchRes    = { 0.00296, 0.00261, 0.00221 };

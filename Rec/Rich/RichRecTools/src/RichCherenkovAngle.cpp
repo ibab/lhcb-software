@@ -1,4 +1,4 @@
-// $Id: RichCherenkovAngle.cpp,v 1.4 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichCherenkovAngle.cpp,v 1.5 2004-02-02 14:26:57 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -62,7 +62,7 @@ StatusCode RichCherenkovAngle::finalize() {
 }
 
 double RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
-                                              const Rich::ParticleIDType id ) {
+                                              const Rich::ParticleIDType id ) const {
 
   if ( !segment->averageCKTheta().dataIsValid(id) ) {
     double angle = 0;
@@ -72,10 +72,10 @@ double RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
     if ( unscat > 0 ) {
 
       // which radiator
-      Rich::RadiatorType rad = segment->trackSegment().radiator();
+      const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
       // Beta for this segment
-      double beta = m_richPartProp->beta(segment, id);
+      const double beta = m_richPartProp->beta(segment, id);
 
       // loop over energy bins
       RichPhotonSpectra & sigSpectra = segment->signalPhotonSpectra();
@@ -94,4 +94,9 @@ double RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
   }
 
   return segment->averageCKTheta( id );
+}
+
+double  RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment ) const
+{
+  return avgCherenkovTheta( segment, segment->richRecTrack()->currentHypothesis() );
 }

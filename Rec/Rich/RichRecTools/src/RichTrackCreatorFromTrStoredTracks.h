@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.5 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.6 2004-02-02 14:27:07 jonesc Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -13,9 +13,10 @@
 
 // interfaces
 #include "RichRecBase/IRichTrackCreator.h"
-#include "RichRecBase/IRichSegmentCreator.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
-#include "RichDetTools/IRichDetInterface.h"
+#include "RichDetTools/IRichRayTracing.h"
+#include "RichDetTools/IRichSmartIDTool.h"
+#include "RichDetTools/IRichTrSegMaker.h"
 
 // Event
 #include "Event/TrStoredTrack.h"
@@ -60,21 +61,21 @@ public:
 
   /// Returns a RichRecTrack object pointer for given ContainedObject.
   /// In this implementation the ContainedObject must be a TrStoredTrack.
-  RichRecTrack * newTrack ( const ContainedObject * obj  );
+  RichRecTrack * newTrack ( const ContainedObject * obj ) const;
 
   /// Form all possible RichRecTracks from input TrStoredTracks
-  StatusCode newTracks();
+  const StatusCode newTracks() const;
 
   /// Return a pointer to the container of RichRecTracks
-  RichRecTracks *& richTracks();
+  RichRecTracks * richTracks() const;
 
   /// Returns the number of tracks in the input TrStoredTrack container.
-  long nInputTracks();
+  const long nInputTracks() const;
 
 private: // methods
 
   /// Load the TrStoredTracks
-  bool loadTrStoredTracks();
+  const bool loadTrStoredTracks() const;
 
 private: // data
 
@@ -82,13 +83,16 @@ private: // data
   RichRecTracks * m_tracks;
 
   /// Pointer to TrStoredTracks
-  TrStoredTracks * m_trTracks;
+  mutable TrStoredTracks * m_trTracks;
 
-  /// Pointer to the RichSegmentCreator tool
-  IRichSegmentCreator * m_segCr;
+  /// Pointer to the detector ray tracing tool
+  IRichRayTracing * m_rayTrace;
 
-  /// Pointer to the RichDetInterface tool
-  IRichDetInterface * m_richDetInt;
+  /// Pointer to RichSmartID tool
+  IRichSmartIDTool * m_smartIDTool;
+
+  /// Pointer to track segment maker
+  IRichTrSegMaker * m_segMaker;
 
   /// Pointer to RichExpectedTrackSignal interface
   IRichExpectedTrackSignal * m_signal;
@@ -103,12 +107,12 @@ private: // data
   bool m_skipNonUnique;
 
   // Flag to signify all tracks have been formed for current event
-  bool m_allDone;
+  mutable bool m_allDone;
 
   // Working object to keep track of formed objects
-  std::map<unsigned long, bool> m_trackDone;
+  mutable std::map<unsigned long, bool> m_trackDone;
 
-
+  // Momentum cut values for each track type
   std::vector<double> m_tkPcut;
 
 };

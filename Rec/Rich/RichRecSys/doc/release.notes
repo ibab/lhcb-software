@@ -4,6 +4,11 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2004-01-29 - Chris Jones
+ - Removal of SICB options and packages.
+ - New versions of RichRecBase, RichRecTools, RichRecCommon, RichGlobalPID,
+   RichLocalPID, RichRecMCTools, RichDAQ and RichRingRefit
+
 !======================= RichRecSys v1r6 2004-01-08 =======================
 ! 2004-01-08 - Marco Cattaneo
  - New versions of RichDAQ, RichRecBase for Gaudi v14r0, LHCB v15r0

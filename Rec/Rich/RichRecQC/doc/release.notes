@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2004-01-29 - Chris Jones
+ - Minor re-organisation of job option files + updates to PID monitor
+
 !======================== RichRecQC v1r4 2003-12-10 ========================
 ! 2003-12-10 - Marco Cattaneo
  - Remove #include RichKernel/MessageSvcStl.h, not needed for GAUDI v13

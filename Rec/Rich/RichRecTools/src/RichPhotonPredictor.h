@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictor.h,v 1.3 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichPhotonPredictor.h,v 1.4 2004-02-02 14:27:01 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTOR_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTOR_H 1
 
@@ -45,11 +45,11 @@ public:
 
   /// Returns square of distance seperating pixel and track hits on PDs
   double trackPixelHitSep2( const RichRecSegment * segment,
-                            const RichRecPixel * pixel );
+                            const RichRecPixel * pixel ) const;
 
   /// Is it possible to make a photon candidate using this segment and pixel.
   bool photonPossible( RichRecSegment * segment,
-                       RichRecPixel * pixel );
+                       RichRecPixel * pixel ) const;
 
 private: // private data
 

@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.h,v 1.5 2003-12-11 16:33:34 cattanem Exp $
+// $Id: RichGlobalPIDAlg.h,v 1.6 2004-02-02 14:25:53 jonesc Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDALG_H
 #define RICHRECALGS_RICHGLOBALPIDALG_H 1
 
@@ -13,7 +13,6 @@
 #include "Event/RichRecStatus.h"
 
 // interfaces
-#include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 
@@ -86,7 +85,6 @@ private:  // Private data members
 
   // tool pointers
   IRichExpectedTrackSignal * m_tkSignal;
-  IRichPhotonCreator * m_photonCr;
   IRichPhotonSignal * m_photonSig;
 
   /// Threshold for likelihood maximisation

@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictor.cpp,v 1.2 2003-10-13 16:32:31 jonrob Exp $
+// $Id: RichPhotonPredictor.cpp,v 1.3 2004-02-02 14:27:00 jonesc Exp $
 
 // local
 #include "RichPhotonPredictor.h"
@@ -68,13 +68,13 @@ StatusCode RichPhotonPredictor::finalize() {
 
 // fast decision on whether a photon is possible
 bool RichPhotonPredictor::photonPossible( RichRecSegment * segment,
-                                          RichRecPixel * pixel ) {
+                                          RichRecPixel * pixel ) const {
 
   // Are they in the same Rich detector ?
   if ( segment->trackSegment().rich() != pixel->detector() ) return false;
 
   // Hit seperation criteria
-  double sep = trackPixelHitSep2(segment, pixel);
+  const double sep = trackPixelHitSep2(segment, pixel);
   if ( sep > m_maxROI2[ segment->trackSegment().radiator() ] ) return false;
   if ( sep < m_minROI2[ segment->trackSegment().radiator() ] ) return false;
 
@@ -82,28 +82,32 @@ bool RichPhotonPredictor::photonPossible( RichRecSegment * segment,
 }
 
 double RichPhotonPredictor::trackPixelHitSep2( const RichRecSegment * segment,
-                                               const RichRecPixel * pixel ) {
+                                               const RichRecPixel * pixel ) const {
 
   if ( Rich::Rich1 == segment->trackSegment().rich() ) {
+
     if ( pixel->globalPosition().y() * segment->pdPanelHitPoint().y() > 0 ) {
       return pixel->globalPosition().distance2( segment->pdPanelHitPoint() );
     } else if ( ( pixel->globalPosition().y() > 0 && segment->photonsInYPlus() ) ||
                 ( pixel->globalPosition().y() < 0 && segment->photonsInYMinus() ) ) {
-      HepPoint3D temp( pixel->globalPosition().x(),
-                       -pixel->globalPosition().y(),
-                       pixel->globalPosition().z() );
+      const HepPoint3D temp( pixel->globalPosition().x(),
+                             -pixel->globalPosition().y(),
+                             pixel->globalPosition().z() );
       return temp.distance2( segment->pdPanelHitPoint() );
     }
+
   } else if ( Rich::Rich2 == segment->trackSegment().rich() ) {
+
     if ( pixel->globalPosition().x() * segment->pdPanelHitPoint().x() > 0 ) {
       return pixel->globalPosition().distance2( segment->pdPanelHitPoint() );
     } else if ( ( pixel->globalPosition().x() > 0 && segment->photonsInXPlus()  ) ||
                 ( pixel->globalPosition().x() < 0 && segment->photonsInXMinus() ) ) {
-      HepPoint3D temp( -pixel->globalPosition().x(),
-                       pixel->globalPosition().y(),
-                       pixel->globalPosition().z() );
+      const HepPoint3D temp( -pixel->globalPosition().x(),
+                             pixel->globalPosition().y(),
+                             pixel->globalPosition().z() );
       return temp.distance2( segment->pdPanelHitPoint() );
     }
+
   }
 
   return 99999999.9;

@@ -23,6 +23,7 @@ ToolSvc.RichSignalDetectionEff.OutputLevel = 2;
 ToolSvc.RichRecMCTruthTool.OutputLevel = 2;
 ToolSvc.RichToolRegistry.OutputLevel = 2;
 ToolSvc.RichRayleighScatter.OutputLevel = 2;
+ToolSvc.RichParticleProperties.OutputLevel = 2;
 
 // Ring Refit
 RichRingRefit.OutputLevel = 2;

@@ -1,4 +1,4 @@
-// $Id: RichFunctionalRayleighScatter.cpp,v 1.3 2003-11-25 14:06:39 jonrob Exp $
+// $Id: RichFunctionalRayleighScatter.cpp,v 1.4 2004-02-02 14:26:58 jonesc Exp $
 
 // local
 #include "RichFunctionalRayleighScatter.h"
@@ -60,7 +60,7 @@ StatusCode RichFunctionalRayleighScatter::finalize() {
 
 double 
 RichFunctionalRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
-                                                    const double energy ) {
+                                                    const double energy ) const {
 
   // check this is aerogel
   if ( segment->trackSegment().radiator() != Rich::Aerogel ) return 0;
@@ -69,12 +69,12 @@ RichFunctionalRayleighScatter::photonScatteredProb( const RichRecSegment * segme
   if ( energy <= 0 ) return 0;
 
   // check path length is valid
-  double path = segment->trackSegment().pathLength();
+  const double path = segment->trackSegment().pathLength();
   if ( path <= 0 ) return 0;
 
   // compute and return prob
-  double lambda   = m_eVToMicron/energy;
-  double scatLeng = lambda*lambda*lambda*lambda/m_AeroClarity;
+  const double lambda   = m_eVToMicron/energy;
+  const double scatLeng = lambda*lambda*lambda*lambda/m_AeroClarity;
 
   return 1 - (scatLeng/path)*(1-exp(-1*path/scatLeng));
 }

@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.h,v 1.1.1.1 2003-10-13 16:21:50 jonesc Exp $
+// $Id: RichRecMCTruthTool.h,v 1.2 2004-02-02 14:24:41 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
 
@@ -28,12 +28,11 @@
 #include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
 #include "Event/MCRichOpticalPhoton.h"
+#include "Event/MCRichSegment.h"
+#include "Event/MCRichTrack.h"
 
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
-#include "RichRecBase/IRichTrackCreator.h"
-#include "RichRecBase/IRichPixelCreator.h"
-#include "RichRecBase/IRichSegmentCreator.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -68,10 +67,10 @@ public:
   void handle( const Incident& incident );
 
   /// Find best MCParticle association for a given RichRecTrack
-  const MCParticle * mcParticle( const RichRecTrack * richTrack );
+  const MCParticle * mcParticle( const RichRecTrack * richTrack ) const;
 
   /// Find best MCParticle association for a given RichRecSegment
-  const MCParticle * mcParticle( const RichRecSegment * richSegment );
+  const MCParticle * mcParticle( const RichRecSegment * richSegment ) const;
 
   /// Truth particle type for given RichRecTrack
   Rich::ParticleIDType mcParticleType( const RichRecTrack * richTrack );
@@ -111,6 +110,12 @@ public:
   const MCParticle * trueRecPhoton( const RichRecSegment * segment,
                                     const RichRecPixel * pixel );
 
+  /// Returns the associated MCRichHit if given RichRecPhoton is true (null otherwise)
+  const MCRichHit * trueCherenkovHit( const RichRecPhoton * photon );
+
+  /// Returns the associated MCRichOpticalPhoton if given RichRecPhoton is true (null otherwise)
+  const MCRichOpticalPhoton * trueOpticalPhoton( const RichRecPhoton * photon );
+
   /// Is this a true Cherenkov photon candidate ?
   /// Do the associated segment and pixel have the same MC parent AND was the pixel
   /// the result of Cherenkov radiation from the relevant radiator
@@ -126,13 +131,27 @@ public:
   const MCParticle * trueCherenkovRadiation( const RichRecPixel * pixel,
                                              Rich::RadiatorType rad );
 
-  /// Returns a vector of pointers to true Cherenkov pixels for this segment
-  //RichRecPixelVector* trueCkPixels( const RichRecSegment * segment );
+  /// Returns the MCRichSegment associated to a given RichRecSegment
+  const MCRichSegment * mcRichSegment( const RichRecSegment * segment );
+
+  /// Returns the MCRichTrack associated to a given RichRecTrack
+  const MCRichTrack * mcRichTrack( const RichRecTrack * track );
+
+  /// Returns the MCRichTrack associated to a given RichRecSegment
+  const MCRichTrack * mcRichTrack( const RichRecSegment * segment );
+
+  /// Returns pointer to vector of MCRichSegments associated to a given RichRecTrack
+  const SmartRefVector<MCRichSegment> * mcRichSegments( const RichRecTrack * track );
+
+  /// Is this RichRecPixel background ?
+  bool isBackground( const RichRecPixel * pixel );
 
 private: // private methods
 
-  MCRichDigits * mcRichDigits();
-  MCRichOpticalPhotons * mcRichOpticalPhotons();
+  const MCRichDigits *         mcRichDigits();
+  const MCRichOpticalPhotons * mcRichOpticalPhotons();
+  const MCRichTracks *         mcRichTracks();
+  const MCRichSegments *       mcRichSegments();
 
 private: // private data
 
@@ -141,9 +160,8 @@ private: // private data
 
   bool m_mcRichDigitsDone;
   bool m_mcRichOptPhotsDone;
-
-  /// Pointer to event data service
-  IDataProviderSvc * m_evtDataSvc;
+  bool m_mcRichSegmentsDone;
+  bool m_mcRichTracksDone;
 
   /// Pointer to MCRichDigits
   MCRichDigits * m_mcRichDigits;
@@ -151,11 +169,23 @@ private: // private data
   /// Pointer to MCRichOpticalPhotons
   MCRichOpticalPhotons * m_mcRichOpticalPhotons;
 
+  /// Pointer to MCRichSegments
+  MCRichSegments * m_mcRichSegments;
+
+  /// Pointer to MCRichTracks
+  MCRichTracks * m_mcRichTracks;
+
   /// Location of MCRichDigits in EDS
   std::string m_mcRichDigitsLocation;
 
   /// Location of MCRichOpticalPhotons in EDS
   std::string m_mcRichPhotonsLocation;
+
+  /// Location of MCRichTracks in EDS
+  std::string m_mcRichTracksLocation;
+
+  /// Location of MCRichSegments in EDS
+  std::string m_mcRichSegmentsLocation;
 
   /// PID information
   std::map<int,Rich::ParticleIDType> m_localID;
@@ -164,15 +194,6 @@ private: // private data
   std::string m_trAsctName;
   std::string m_trAsctType;
   TrackAsct* m_trackToMCP;
-
-  /// Pointer to RichTrackCreator interface
-  IRichTrackCreator * m_trackCreator;
-
-  /// Pointer to RichRecPixelTool interface
-  IRichPixelCreator * m_pixelCreator;
-
-  /// Pointer to RichSegmentCreator
-  IRichSegmentCreator * m_segCreator;
 
   // Empty container for missing links
   SmartRefVector<MCRichHit> m_emptyContainer;

@@ -4,6 +4,11 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-01-26 - Chris Jones
+ - Minor changes related to changes in base packages
+ - Removal of SICB specific tools
+ - Convert to new Tools in RichDetTools package
+
 !====================== RichRecTools v2r6 2003-12-11 ======================
 ! 2003-12-11 - Marco Cattaneo
  - Remove references to RichKernel/MessageSvcStl.h (now in GAUDI v13)

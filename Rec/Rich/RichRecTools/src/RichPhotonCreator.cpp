@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.10 2003-12-01 09:52:54 jonesc Exp $
+// $Id: RichPhotonCreator.cpp,v 1.11 2004-02-02 14:27:00 jonesc Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -17,7 +17,11 @@ const        IToolFactory& RichPhotonCreatorFactory = s_factory ;
 RichPhotonCreator::RichPhotonCreator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : RichRecToolBase( type, name, parent ) {
+  : RichRecToolBase( type, name, parent ),
+    m_photonPredictor ( 0 ),
+    m_photonSignal    ( 0 ),
+    m_photonReco      ( 0 ),
+    m_photons         ( 0 ) {
 
   declareInterface<IRichPhotonCreator>(this);
 
@@ -50,11 +54,9 @@ StatusCode RichPhotonCreator::initialize() {
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
   // Acquire instances of tools
-  acquireTool("RichDetInterface",    m_richDetInt      );
-  acquireTool("RichTrackCreator",    m_trackCreator    );
-  acquireTool("RichPhotonSignal",    m_photonSignal    );
-  acquireTool("RichPixelCreator",    m_pixelCreator    );
-  acquireTool("RichPhotonPredictor", m_photonPredictor );
+  acquireTool( "RichDetPhotonReco",     m_photonReco      );
+  acquireTool( "RichPhotonSignal",      m_photonSignal    );
+  acquireTool( "RichPhotonPredictor",   m_photonPredictor );
 
   // Setup incident services
   IIncidentSvc * incSvc;
@@ -81,10 +83,8 @@ StatusCode RichPhotonCreator::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release services and tools
-  releaseTool( m_richDetInt      );
-  releaseTool( m_trackCreator    );
+  releaseTool( m_photonReco      );
   releaseTool( m_photonSignal    );
-  releaseTool( m_pixelCreator    );
   releaseTool( m_photonPredictor );
 
   // Execute base class method
@@ -133,7 +133,7 @@ void RichPhotonCreator::handle ( const Incident& incident ) {
 
 RichRecPhoton*
 RichPhotonCreator::reconstructPhoton( RichRecSegment * segment,
-                                      RichRecPixel * pixel ) {
+                                      RichRecPixel * pixel ) const {
 
   // check photon is possible before proceeding
   if ( !m_photonPredictor->photonPossible(segment, pixel) ) return NULL;
@@ -144,7 +144,7 @@ RichPhotonCreator::reconstructPhoton( RichRecSegment * segment,
   photonKey.setPixelNumber( pixel->key() );
 
   // See if this photon already exists
-  if ( m_photonDone[(int)photonKey] ) {
+  if ( m_photonDone[static_cast<int>(photonKey)] ) {
     return (RichRecPhoton*)(m_photons->object(photonKey));
   } else {
     return buildPhoton( segment, pixel, photonKey );
@@ -154,13 +154,13 @@ RichPhotonCreator::reconstructPhoton( RichRecSegment * segment,
 
 RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
                                                 RichRecPixel * pixel,
-                                                RichRecPhotonKey & key ) {
+                                                RichRecPhotonKey & key ) const {
 
   RichRecPhoton * newPhoton = NULL;
 
   // Reconstruct the Cherenkov angles
   RichGeomPhoton geomPhoton;
-  if ( m_richDetInt->reconstructPhoton( segment->trackSegment(),
+  if ( m_photonReco->reconstructPhoton( segment->trackSegment(),
                                         pixel->globalPosition(),
                                         geomPhoton ) != 0 ) {
 
@@ -222,14 +222,14 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
 
 }
 
-void RichPhotonCreator::reconstructPhotons() {
+void RichPhotonCreator::reconstructPhotons() const {
 
   bool noPhots = m_photons->empty();
 
   // Iterate over all tracks
-  for ( RichRecTracks::iterator iTrack =
-          m_trackCreator->richTracks()->begin();
-        iTrack != m_trackCreator->richTracks()->end();
+  for ( RichRecTracks::const_iterator iTrack =
+          trackCreator()->richTracks()->begin();
+        iTrack != trackCreator()->richTracks()->end();
         ++iTrack ) {
     RichRecTrack * track = *iTrack;
     if ( !track->inUse() ) continue; // skip tracks not "on"
@@ -237,7 +237,7 @@ void RichPhotonCreator::reconstructPhotons() {
     if ( !track->allPhotonsDone() ) {
 
       // Iterate over segments
-      for ( RichRecTrack::Segments::iterator iSegment =
+      for ( RichRecTrack::Segments::const_iterator iSegment =
               track->richRecSegments().begin();
             iSegment != track->richRecSegments().end();
             ++iSegment) {
@@ -246,9 +246,9 @@ void RichPhotonCreator::reconstructPhotons() {
         if ( !segment->allPhotonsDone() ) {
 
           // Iterate over pixels
-          for ( RichRecPixels::iterator iPixel =
-                  m_pixelCreator->richPixels()->begin();
-                iPixel != m_pixelCreator->richPixels()->end();
+          for ( RichRecPixels::const_iterator iPixel =
+                  pixelCreator()->richPixels()->begin();
+                iPixel != pixelCreator()->richPixels()->end();
                 ++iPixel ) {
             RichRecPixel * pixel = *iPixel;
 
@@ -278,8 +278,8 @@ void RichPhotonCreator::reconstructPhotons() {
 
 }
 
-RichRecTrack::Photons&
-RichPhotonCreator::reconstructPhotons( RichRecTrack * track ) {
+const RichRecTrack::Photons &
+RichPhotonCreator::reconstructPhotons( RichRecTrack * track ) const {
 
   if ( !track->allPhotonsDone() ) {
 
@@ -296,15 +296,15 @@ RichPhotonCreator::reconstructPhotons( RichRecTrack * track ) {
   return track->richRecPhotons();
 }
 
-RichRecSegment::Photons&
-RichPhotonCreator::reconstructPhotons( RichRecSegment * segment ) {
+const RichRecSegment::Photons &
+RichPhotonCreator::reconstructPhotons( RichRecSegment * segment ) const {
 
   if ( !segment->allPhotonsDone() ) {
 
     // Iterate over pixels
     for ( RichRecPixels::iterator pixel =
-            m_pixelCreator->richPixels()->begin();
-          pixel != m_pixelCreator->richPixels()->end();
+            pixelCreator()->richPixels()->begin();
+          pixel != pixelCreator()->richPixels()->end();
           ++pixel ) { reconstructPhoton( segment, *pixel ); }
 
     segment->setAllPhotonsDone(true);
@@ -313,13 +313,13 @@ RichPhotonCreator::reconstructPhotons( RichRecSegment * segment ) {
   return segment->richRecPhotons();
 }
 
-RichRecPixel::Photons&
-RichPhotonCreator::reconstructPhotons( RichRecPixel * pixel ) {
+const RichRecPixel::Photons &
+RichPhotonCreator::reconstructPhotons( RichRecPixel * pixel ) const {
 
   // Iterate over tracks
   for ( RichRecTracks::iterator track =
-          m_trackCreator->richTracks()->begin();
-        track != m_trackCreator->richTracks()->end();
+          trackCreator()->richTracks()->begin();
+        track != trackCreator()->richTracks()->end();
         ++track ) {
     if ( !(*track)->inUse() ) continue;
     reconstructPhotons( *track, pixel );
@@ -331,7 +331,7 @@ RichPhotonCreator::reconstructPhotons( RichRecPixel * pixel ) {
 // Note to self. Need to review what this method passes back
 RichRecTrack::Photons
 RichPhotonCreator::reconstructPhotons( RichRecTrack * track,
-                                       RichRecPixel * pixel ) {
+                                       RichRecPixel * pixel ) const {
 
   RichRecTrack::Photons photons;
 
@@ -349,6 +349,6 @@ RichPhotonCreator::reconstructPhotons( RichRecTrack * track,
   return photons;
 }
 
-RichRecPhotons *& RichPhotonCreator::richPhotons() {
+RichRecPhotons * RichPhotonCreator::richPhotons() const {
   return m_photons;
 }

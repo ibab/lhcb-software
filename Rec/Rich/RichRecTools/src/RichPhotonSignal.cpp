@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.cpp,v 1.8 2003-11-25 14:06:40 jonrob Exp $
+// $Id: RichPhotonSignal.cpp,v 1.9 2004-02-02 14:27:01 jonesc Exp $
 
 // local
 #include "RichPhotonSignal.h"
@@ -45,15 +45,14 @@ StatusCode RichPhotonSignal::initialize() {
   m_radiusCurv[Rich::Rich2] = Rich2DE->sphMirrorRadius();
 
   // area of pixel in mm^2
-  double xSize      = Rich1DE->userParameterAsDouble("RichHpdPixelXsize"); // 0.5*mm
-  double ySize      = Rich1DE->userParameterAsDouble("RichHpdPixelYsize"); // 0.5*mm
-  //double demagScale = Rich1DE->userParameterAsDouble("HPDDemagScaleFactor"); // 4.8
-  double demagScale = 4.8;
+  const double xSize      = Rich1DE->userParameterAsDouble("RichHpdPixelXsize"); // 0.5*mm
+  const double ySize      = Rich1DE->userParameterAsDouble("RichHpdPixelYsize"); // 0.5*mm
+  //const double demagScale       = Rich1DE->userParameterAsDouble("HPDDemagScaleFactor"); // 4.8
+  const double demagScale       = 4.8;
   m_pixelArea = demagScale*xSize * demagScale*ySize;
 
   // Informational Printout
   msg << MSG::DEBUG
-      << " Using HPD variant" << endreq
       << " Mirror radii of curvature    = "
       << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endreq
       << " Pixel area                   = " << m_pixelArea << endreq;
@@ -76,18 +75,18 @@ StatusCode RichPhotonSignal::finalize() {
 }
 
 double RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
-                                               const Rich::ParticleIDType id ) {
+                                               const Rich::ParticleIDType id ) const {
 
   if ( !photon->expPixelSignalPhots().dataIsValid(id) ) {
 
     // Which detector
-    Rich::DetectorType det = photon->richRecSegment()->trackSegment().rich();
+    const Rich::DetectorType det = photon->richRecSegment()->trackSegment().rich();
 
     // Reconstructed Cherenkov theta angle
-    double thetaReco = photon->geomPhoton().CherenkovTheta();
+    const double thetaReco = photon->geomPhoton().CherenkovTheta();
 
     // Compute the expected pixel contribution
-    double pixelSignal = photon->geomPhoton().activeSegmentFraction() *
+    const double pixelSignal = photon->geomPhoton().activeSegmentFraction() *
       ( ( signalProb(photon, id) *
           m_signal->nSignalPhotons(photon->richRecSegment(),id) ) +
         ( scatterProb(photon, id) *
@@ -103,17 +102,17 @@ double RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
 }
 
 double RichPhotonSignal::signalProb( RichRecPhoton * photon,
-                                     const Rich::ParticleIDType id ) {
+                                     const Rich::ParticleIDType id ) const {
 
   // Expected Cherenkov theta angle
-  double thetaExp = m_ckAngle->avgCherenkovTheta( photon->richRecSegment(), id );
+  const double thetaExp = m_ckAngle->avgCherenkovTheta( photon->richRecSegment(), id );
   if ( thetaExp < 0.000001 ) return 0.0;
 
   // Expected Cherenkov theta angle resolution
-  double thetaExpRes = m_ckRes->ckThetaResolution(photon->richRecSegment(),id);
+  const double thetaExpRes = m_ckRes->ckThetaResolution(photon->richRecSegment(),id);
 
   // The difference between reco and expected
-  double thetaDiff = photon->geomPhoton().CherenkovTheta() - thetaExp;
+  const double thetaDiff = photon->geomPhoton().CherenkovTheta() - thetaExp;
   if ( fabs(thetaDiff) > 30.0*thetaExpRes ) return 0.0;
 
   // return the probability
@@ -123,18 +122,16 @@ double RichPhotonSignal::signalProb( RichRecPhoton * photon,
 }
 
 double RichPhotonSignal::scatterProb( RichRecPhoton * photon,
-                                      const Rich::ParticleIDType id ) {
+                                      const Rich::ParticleIDType id ) const {
 
-  Rich::RadiatorType rad = photon->richRecSegment()->trackSegment().radiator();
-
-  if ( rad == Rich::Aerogel ) {
+  if ( Rich::Aerogel == photon->richRecSegment()->trackSegment().radiator() ) {
 
     // Expected Cherenkov theta angle
-    double thetaExp = m_ckAngle->avgCherenkovTheta( photon->richRecSegment(), id );
+    const double thetaExp = m_ckAngle->avgCherenkovTheta( photon->richRecSegment(), id );
     if ( thetaExp < 0.000001 ) return 0.0;
 
     // Reconstructed Cherenkov theta angle
-    double thetaRec = photon->geomPhoton().CherenkovTheta();
+    const double thetaRec = photon->geomPhoton().CherenkovTheta();
 
     // Compute the scattering
     double fbkg = 0.0;

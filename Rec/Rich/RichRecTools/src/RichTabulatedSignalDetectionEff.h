@@ -1,4 +1,4 @@
-// $Id: RichTabulatedSignalDetectionEff.h,v 1.2 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichTabulatedSignalDetectionEff.h,v 1.3 2004-02-02 14:27:06 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H
 #define RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H 1
 
@@ -55,7 +55,7 @@ public:
   StatusCode finalize();
 
   /// Returns the detection efficiency for a cherenkov photon of a given energy
-  double photonDetEfficiency( RichRecSegment * segment, double energy );
+  double photonDetEfficiency( RichRecSegment * segment, const double energy ) const;
 
 private:  // Private data
 
@@ -82,9 +82,6 @@ private:  // Private data
 
   /// Location of QE in XML
   std::string m_qeTableLoc;
-
-  /// temporary parameters to take into acount degraded performance for robustness tests
-  double m_photonEffScale;
 
 };
 

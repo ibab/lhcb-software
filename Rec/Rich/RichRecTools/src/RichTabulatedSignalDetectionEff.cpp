@@ -1,4 +1,4 @@
-// $Id: RichTabulatedSignalDetectionEff.cpp,v 1.1 2003-11-25 14:06:41 jonrob Exp $
+// $Id: RichTabulatedSignalDetectionEff.cpp,v 1.2 2004-02-02 14:27:06 jonesc Exp $
 
 // local
 #include "RichTabulatedSignalDetectionEff.h"
@@ -26,21 +26,22 @@ RichTabulatedSignalDetectionEff::RichTabulatedSignalDetectionEff ( const std::st
   // Define job option parameters
 
   // Spherical mirrors
-  m_sphMirReflLoc[Rich::Rich1] = "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceReflectivityPT";
-  m_sphMirReflLoc[Rich::Rich2] = "/dd/Geometry/Rich1/Rich2SurfaceTabProperties/Rich1Mirror1SurfaceReflectivityPT";
+  m_sphMirReflLoc[Rich::Rich1] = 
+    "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceReflectivityPT";
+  m_sphMirReflLoc[Rich::Rich2] = 
+    "/dd/Geometry/Rich1/Rich2SurfaceTabProperties/Rich1Mirror1SurfaceReflectivityPT";
   declareProperty( "RichSphMirrorLocations", m_sphMirReflLoc );
 
   // flat mirrors
-  m_flatMirReflLoc[Rich::Rich1] = "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceReflectivityPT";
-  m_flatMirReflLoc[Rich::Rich2] = "/dd/Geometry/Rich1/Rich2SurfaceTabProperties/Rich1Mirror2SurfaceReflectivityPT";
+  m_flatMirReflLoc[Rich::Rich1] = 
+    "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceReflectivityPT";
+  m_flatMirReflLoc[Rich::Rich2] = 
+    "/dd/Geometry/Rich1/Rich2SurfaceTabProperties/Rich1Mirror2SurfaceReflectivityPT";
   declareProperty( "RichFlatMirrorLocations", m_flatMirReflLoc );
 
   // Quantum efficiency
   declareProperty( "QETableLocation", m_qeTableLoc =
                    "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff" );
-
-  // temporary parameters to take into acount degraded performance for robustness tests
-  declareProperty( "ScalePhotonEff", m_photonEffScale = 1 );
 
 }
 
@@ -111,8 +112,7 @@ StatusCode RichTabulatedSignalDetectionEff::initialize() {
       << " Rich2 flat Mirror refl.      = " << m_flatMirReflLoc[Rich::Rich2] << endreq
       << " Quantum Efficiency           = " << m_qeTableLoc << endreq
       << " HPD quartz window efficiency = " << m_quartzWinEff << endreq
-      << " Digitisation pedestal eff.   = " << m_pedLoss << endreq
-      << " Robustness scaling           = " << m_photonEffScale << endreq;
+      << " Digitisation pedestal eff.   = " << m_pedLoss << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -139,12 +139,12 @@ StatusCode RichTabulatedSignalDetectionEff::finalize() {
 
 double
 RichTabulatedSignalDetectionEff::photonDetEfficiency( RichRecSegment * segment,
-                                                      double energy )
+                                                      const double energy ) const
 {
   // which detector
-  Rich::DetectorType det = segment->trackSegment().rich();
+  const Rich::DetectorType det = segment->trackSegment().rich();
 
   return (*m_QE)[energy*eV]/100 *
-    m_quartzWinEff * m_pedLoss * m_photonEffScale *
+    m_quartzWinEff * m_pedLoss *
     (*m_flatMirRefl[det])[energy*eV] * (*m_sphMirRefl[det])[energy*eV];
 }

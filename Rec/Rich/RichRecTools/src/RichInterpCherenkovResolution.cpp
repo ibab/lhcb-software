@@ -1,4 +1,4 @@
-// $Id: RichInterpCherenkovResolution.cpp,v 1.4 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichInterpCherenkovResolution.cpp,v 1.5 2004-02-02 14:26:59 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -86,8 +86,10 @@ StatusCode RichInterpCherenkovResolution::initialize() {
 
 StatusCode RichInterpCherenkovResolution::finalize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::DEBUG << "Finalize" << endreq;
+  }
 
   // release tools
   releaseTool( m_ckAngle );
@@ -98,22 +100,22 @@ StatusCode RichInterpCherenkovResolution::finalize() {
       if ( m_ckRes[iR][iT] ) { delete m_ckRes[iR][iT]; m_ckRes[iR][iT] = 0; }
     }
   }
-   
+
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 double
 RichInterpCherenkovResolution::ckThetaResolution( RichRecSegment * segment,
-                                                  const Rich::ParticleIDType id ) {
+                                                  const Rich::ParticleIDType id ) const {
 
   // Expected Cherenkov theta angle
-  double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
+  const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
   if ( thetaExp < 0.000001 ) return 0;
 
   // track and radiator type
-  Rich::RadiatorType rad = segment->trackSegment().radiator();
-  Rich::Track::Type type = segment->richRecTrack()->trackID().trackType();
+  const Rich::RadiatorType rad = segment->trackSegment().radiator();
+  const Rich::Track::Type type = segment->richRecTrack()->trackID().trackType();
 
   // compute the interpolated resolution
   return (m_ckRes[rad][type])->value(thetaExp);

@@ -1,4 +1,4 @@
-// $Id: RichInterpCherenkovResolution.h,v 1.2 2003-11-25 14:06:40 jonrob Exp $
+// $Id: RichInterpCherenkovResolution.h,v 1.3 2004-02-02 14:27:00 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHINTERPCHERENKOVRESOLUTION_H
 #define RICHRECTOOLS_RICHINTERPCHERENKOVRESOLUTION_H 1
 
@@ -44,7 +44,7 @@ public:
 
   /// Photon resolution
   double ckThetaResolution( RichRecSegment * segment,
-                            const Rich::ParticleIDType id = Rich::Pion );
+                            const Rich::ParticleIDType id = Rich::Pion ) const;
 
 private:  // Private data
 

@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.16 2003-11-03 16:56:48 jonrob Exp $
+// $Id: RichPIDQC.cpp,v 1.17 2004-02-02 14:24:02 jonesc Exp $
 // Include files
 
 // local
@@ -131,7 +131,7 @@ StatusCode RichPIDQC::bookHistograms() {
 
   if ( m_extraHistos ) {
 
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; iHypo++ ) {
+    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
       title =  hypothesis[iHypo] + " ID : raw probability";
       m_pRaw[iHypo] = histoSvc()->book( m_hstPth, 10 + iHypo+1, title, m_bins, 0, 1 );
       title =  hypothesis[iHypo] + " ID : normalised probability";
@@ -210,7 +210,7 @@ StatusCode RichPIDQC::execute() {
     if ( (*iTrk)->unique() ) ++multiplicity;
     if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
     TrStateP* pState = getTrStateP( *iTrk );
-    double tkPtot = ( pState ? pState->p()/GeV : 0 );
+    const double tkPtot = ( pState ? pState->p()/GeV : 0 );
     if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
     ++totalSelTracks;
   }
@@ -240,8 +240,8 @@ StatusCode RichPIDQC::execute() {
       if ( !m_trSelector.trackSelected( trTrack ) ) continue;
 
       // Track momentum in GeV/C
-      TrStateP* pState = getTrStateP( trTrack );
-      double tkPtot = ( pState ? pState->p()/GeV : 0 );
+      const TrStateP* pState = getTrStateP( trTrack );
+      const double tkPtot = ( pState ? pState->p()/GeV : 0 );
       if ( tkPtot > m_pMaxCut || tkPtot < m_pMinCut ) continue;
 
       // Count PIDS
@@ -270,7 +270,7 @@ StatusCode RichPIDQC::execute() {
       // MC Truth
       if ( m_truth && (0 != trTrack) ) {
 
-        MCParticle* mcPart = m_trackToMCP->associatedFrom( trTrack );
+        const MCParticle* mcPart = m_trackToMCP->associatedFrom( trTrack );
         Rich::ParticleIDType mcpid = Rich::Unknown;
         if ( mcPart ) {
           mcpid = m_localID[abs(mcPart->particleID().pid())];
@@ -283,11 +283,11 @@ StatusCode RichPIDQC::execute() {
         if ( mcpid>=0 && pid>=0 ) { m_sumTab[mcpid][pid] += 1; }
 
         // Momentum spectra
-        if ( mcpid != Rich::Unknown && 
+        if ( mcpid != Rich::Unknown &&
              pid   != Rich::Unknown ) {
           (m_ptotSpec[mcpid][pid])->fill(tkPtot);
         }
-        
+
         // Extra histograms
         if ( m_extraHistos ) {
 
@@ -319,7 +319,7 @@ StatusCode RichPIDQC::execute() {
 
       } else {
         msg << endreq;
-      } 
+      }
 
     } // end PID loop
   } // end empty if
@@ -332,7 +332,7 @@ StatusCode RichPIDQC::execute() {
   m_Nids->fill( pidCount );
   m_eventRate->fill( (m_richPIDs.empty() ? 0 : 1) );
   if ( totalSelTracks>0 ) {
-    m_pidRate->fill( (double)pidCount/(double)totalSelTracks );
+    m_pidRate->fill( static_cast<double>(pidCount) / static_cast<double>(totalSelTracks) );
   }
 
   return StatusCode::SUCCESS;

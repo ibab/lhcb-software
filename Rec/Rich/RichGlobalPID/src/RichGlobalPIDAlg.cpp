@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.12 2003-11-25 13:51:23 jonesc Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.13 2004-02-02 14:25:53 jonesc Exp $
 // Include files
 
 // local
@@ -65,7 +65,6 @@ StatusCode RichGlobalPIDAlg::initialize() {
   if ( !RichRecAlgBase::initialize() ) return StatusCode::FAILURE;
 
   // Acquire tools
-  acquireTool( "RichPhotonCreator",       m_photonCr  );
   acquireTool( "RichPhotonSignal",        m_photonSig );
   acquireTool( "RichExpectedTrackSignal", m_tkSignal  );
 
@@ -89,7 +88,6 @@ StatusCode RichGlobalPIDAlg::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release tools
-  releaseTool( m_photonCr );
   releaseTool( m_photonSig );
   releaseTool( m_tkSignal );
 
@@ -117,7 +115,7 @@ StatusCode RichGlobalPIDAlg::execute() {
   // Reconstruct all photons
   if ( !richPhotons() ) return StatusCode::FAILURE;
   if ( richPhotons()->empty() ) {
-    m_photonCr->reconstructPhotons();
+    photonCreator()->reconstructPhotons();
     if ( msgLevel(MSG::DEBUG) ) {
       MsgStream  msg( msgSvc(), name() );
       msg << MSG::DEBUG << "Reconstructed " << richPhotons()->size()
@@ -132,7 +130,7 @@ StatusCode RichGlobalPIDAlg::execute() {
   // Initial calculation of likelihood
   if ( !initMinLogLikelihood() ) return StatusCode::FAILURE;
 
-  double finalLL = logLikelihood();
+  const double finalLL = logLikelihood();
   if ( msgLevel(MSG::DEBUG) ) {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::DEBUG << "LogLL before/after initial minimisation = "
@@ -227,7 +225,7 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood() {
       if ( hypo == rRTrack->currentHypothesis() ) continue;
 
       // calculate delta logLikelihood for event with new track hypothesis
-      double deltaLogL = deltaLogLikelihood( rRTrack, hypo );
+      const double deltaLogL = deltaLogLikelihood( rRTrack, hypo );
 
       // Set the value for deltaLL for this hypothesis
       (*track)->globalPID()->setParticleDeltaLL( hypo, deltaLogL );
@@ -348,7 +346,7 @@ void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks ) {
       if ( hypothesis == rRTrack->currentHypothesis() ) continue;
 
       // calculate delta logLikelihood for event with new track hypothesis
-      double deltaLogL = deltaLogLikelihood( rRTrack, hypothesis );
+      const double deltaLogL = deltaLogLikelihood( rRTrack, hypothesis );
 
       // Set the value for deltaLL for this hypothesis
       gTrack->globalPID()->setParticleDeltaLL( hypothesis, deltaLogL );
@@ -436,7 +434,7 @@ double RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
 
       if ( !photon->richRecTrack()->inUse() ) continue;
 
-      double tmpOldSig =
+      const double tmpOldSig =
         photon->expPixelSignalPhots( photon->richRecTrack()->currentHypothesis() );
       oldSig += tmpOldSig;
       newSig += ( photon->richRecTrack() != track ? tmpOldSig :

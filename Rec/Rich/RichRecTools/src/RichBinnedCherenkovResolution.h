@@ -1,4 +1,4 @@
-// $Id: RichBinnedCherenkovResolution.h,v 1.2 2003-11-25 14:06:39 jonrob Exp $
+// $Id: RichBinnedCherenkovResolution.h,v 1.3 2004-02-02 14:26:57 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHBINNEDCHERENKOVRESOLUTION_H
 #define RICHRECTOOLS_RICHBINNEDCHERENKOVRESOLUTION_H 1
 
@@ -41,15 +41,18 @@ public:
 
   /// Photon resolution
   double ckThetaResolution( RichRecSegment * segment,
-                            const Rich::ParticleIDType id = Rich::Pion );
+                            const Rich::ParticleIDType id = Rich::Pion ) const;
 
 private:  // Private data
 
   /// Pointer to RichCherenkovAngle interface
   IRichCherenkovAngle * m_ckAngle;
 
+  /// The averged resolutions in each bin, for each track type
   std::vector<double> m_theerr[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
-  std::vector<double> m_thebin[Rich::NRadiatorTypes];
+
+  /// The boundaries for the resolution bins
+  std::vector<double> m_binEdges[Rich::NRadiatorTypes];
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFunc.h,v 1.4 2003-11-25 14:06:41 jonrob Exp $
+// $Id: RichSellmeirFunc.h,v 1.5 2004-02-02 14:27:03 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHSELLMEIRFUNC_H
 #define RICHRECTOOLS_RICHSELLMEIRFUNC_H 1
 
@@ -55,12 +55,12 @@ public:
   double photonsInEnergyRange( RichRecSegment * segment,
                                const Rich::ParticleIDType id,
                                double botEn,
-                               double topEn );
+                               double topEn ) const;
 
 private: // methods
 
   // internal calculation for photon yield
-  double paraW( const Rich::RadiatorType rad, const double energy );
+  double paraW( const Rich::RadiatorType rad, const double energy ) const;
 
 private: // data
 

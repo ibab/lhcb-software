@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFunc.cpp,v 1.5 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichSellmeirFunc.cpp,v 1.6 2004-02-02 14:27:03 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -30,7 +30,7 @@ RichSellmeirFunc::RichSellmeirFunc ( const std::string& type,
   declareInterface<IRichSellmeirFunc>(this);
 
   // Aerogel specific parameters... Should be in XML
-  declareProperty( "WaveIndpTrans", m_waveIndepTrans = 0.78 ); 
+  declareProperty( "WaveIndpTrans", m_waveIndepTrans = 0.78 );
 
 }
 
@@ -91,19 +91,19 @@ StatusCode RichSellmeirFunc::initialize() {
       RC3 = 3 * selLorGasFac * m_rho[rad] / m_molW[rad];
       RC2 = 2 * selLorGasFac * m_rho[rad] / m_molW[rad];
     }
-    double RF = m_selF1[rad] + m_selF2[rad];
-    double RE02 = ( m_selF1[rad]*m_selE2[rad]*m_selE2[rad] +
-                    m_selF2[rad]*m_selE1[rad]*m_selE1[rad] ) / RF;
-    double RE = ( m_selE2[rad]*m_selE2[rad] +
-                  m_selE1[rad]*m_selE1[rad] ) / RF;
-    double RG = ( m_selE1[rad]*m_selE1[rad] *
-                  m_selE2[rad]*m_selE2[rad] ) / (RF*RE02);
-    double RH = RE02/RF;
-    double RM = RE + RC2;
-    double RS = RG + RC2;
-    double RT = sqrt( 0.25*RM*RM - RH*RS );
-    double RXSP = sqrt( (RM/2. + RT)/RH );
-    double RXSM = sqrt( (RM/2. - RT)/RH );
+    const double RF = m_selF1[rad] + m_selF2[rad];
+    const double RE02 = ( m_selF1[rad]*m_selE2[rad]*m_selE2[rad] +
+                          m_selF2[rad]*m_selE1[rad]*m_selE1[rad] ) / RF;
+    const double RE = ( m_selE2[rad]*m_selE2[rad] +
+                        m_selE1[rad]*m_selE1[rad] ) / RF;
+    const double RG = ( m_selE1[rad]*m_selE1[rad] *
+                        m_selE2[rad]*m_selE2[rad] ) / (RF*RE02);
+    const double RH = RE02/RF;
+    const double RM = RE + RC2;
+    const double RS = RG + RC2;
+    const double RT = sqrt( 0.25*RM*RM - RH*RS );
+    const double RXSP = sqrt( (RM/2. + RT)/RH );
+    const double RXSM = sqrt( (RM/2. - RT)/RH );
     m_REP[rad] = sqrt(RE02) * RXSP;
     m_REM[rad] = sqrt(RE02) * RXSM;
     m_RXSPscale[rad] = (RXSP - 1./RXSP);
@@ -121,15 +121,15 @@ StatusCode RichSellmeirFunc::initialize() {
 double RichSellmeirFunc::photonsInEnergyRange( RichRecSegment * segment,
                                                const Rich::ParticleIDType id,
                                                double botEn,
-                                               double topEn ) {
+                                               double topEn ) const {
 
   // Some parameters of the segment
-  double momentum = segment->trackSegment().bestMomentumMag();
-  double Esq = momentum*momentum + m_particleMassSq[id];
-  double betaSq = ( Esq>0 ? momentum*momentum/Esq : 0 );
-  double gammaSq = Esq/m_particleMassSq[id];
-  double length = segment->trackSegment().pathLength();
-  Rich::RadiatorType rad = segment->trackSegment().radiator();
+  const double momentum = segment->trackSegment().bestMomentumMag();
+  const double Esq = momentum*momentum + m_particleMassSq[id];
+  const double betaSq = ( Esq>0 ? momentum*momentum/Esq : 0 );
+  const double gammaSq = Esq/m_particleMassSq[id];
+  const double length = segment->trackSegment().pathLength();
+  const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
   double nPhot = ( 37.0 * length / betaSq ) * ( paraW(rad,topEn) -
                                                 paraW(rad,botEn) -
@@ -138,11 +138,11 @@ double RichSellmeirFunc::photonsInEnergyRange( RichRecSegment * segment,
   return nPhot;
 }
 
-double RichSellmeirFunc::paraW ( const Rich::RadiatorType rad, 
-                                 const double energy ) {
+double RichSellmeirFunc::paraW ( const Rich::RadiatorType rad,
+                                 const double energy ) const {
 
-  double X = m_RXSPscale[rad] * log( (m_REP[rad]+energy)/(m_REP[rad]-energy) );
-  double Y = m_RXSMscale[rad] * log( (m_REM[rad]+energy)/(m_REM[rad]-energy) );
+  const double X = m_RXSPscale[rad] * log( (m_REP[rad]+energy)/(m_REP[rad]-energy) );
+  const double Y = m_RXSMscale[rad] * log( (m_REM[rad]+energy)/(m_REM[rad]-energy) );
 
   return m_X[rad] * (X-Y);
 }

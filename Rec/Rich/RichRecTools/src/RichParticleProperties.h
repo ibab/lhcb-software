@@ -1,4 +1,4 @@
-// $Id: RichParticleProperties.h,v 1.4 2003-12-11 16:33:36 cattanem Exp $
+// $Id: RichParticleProperties.h,v 1.5 2004-02-02 14:27:00 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPARTICLEPROPERTIES_H
 #define RICHRECTOOLS_RICHPARTICLEPROPERTIES_H 1
 
@@ -9,6 +9,9 @@
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
+
+// GSL
+#include "gsl/gsl_math.h"
 
 // Rich Kernel
 #include "RichKernel/BoostArray.h"
@@ -52,17 +55,17 @@ public:
   StatusCode finalize();
 
   /// Returns 'beta' for given particle hypothesis
-  double beta( RichRecSegment * segment, const Rich::ParticleIDType id );
+  double beta( RichRecSegment * segment, const Rich::ParticleIDType id ) const;
 
   /// Returns the nominal mass for a given particle type
-  double mass( const Rich::ParticleIDType id );
+  double mass( const Rich::ParticleIDType id ) const;
 
   /// Returns the nominal mass squared for a given particle type
-  double massSq( const Rich::ParticleIDType id );
+  double massSq( const Rich::ParticleIDType id ) const;
 
   /// Returns the threshold momentum for a given hypothesis in a given radiator
   double thresholdMomentum( const Rich::ParticleIDType id,
-                            const Rich::RadiatorType rad );
+                            const Rich::RadiatorType rad ) const;
   
 private:  // Private data
 
