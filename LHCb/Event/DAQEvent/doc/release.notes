@@ -3,6 +3,10 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, HLTBuffer, HLTEvent and 
          HLTBank classes.
 
+!=============== DAQEvent v4r1 2004-01-16 =============================
+! 2004-03-16 - Marco Cattaneo
+ - Add L0PU to RawBuffer::BankType enum
+
 !=============== DAQEvent v4r0 2004-01-13 =============================
 ! 2004-01-12 - Olivier Callot
  - Fix a bug when reading L1Buffer and RawBuffer: The size should be set as
