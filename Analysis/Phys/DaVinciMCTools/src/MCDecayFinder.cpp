@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.7 2003-03-07 11:03:03 odie Exp $
+// $Id: MCDecayFinder.cpp,v 1.8 2003-04-30 12:27:08 gcorti Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -271,7 +271,7 @@ bool MCDecayFinder::findDecay( const MCParticle *&previous_result )
 
 void MCDecayFinder::descendants( const MCParticle *head,
                                  std::vector<MCParticle *>&result,
-                                 bool leaf = false )
+                                 bool leaf )
 {
   bool term = true;
   SmartRefVector<MCVertex>::const_iterator vi;
@@ -378,7 +378,7 @@ std::string MCDecayFinder::Descriptor::describe( void )
 }
 
 bool MCDecayFinder::Descriptor::test( const MCParticle *part,
-                                      std::vector<MCParticle*> *collect=NULL )
+                                      std::vector<MCParticle*> *collect )
 {
   std::vector<MCParticle*> local_collect(0);
   std::vector<MCParticle*> *local = NULL;
@@ -421,7 +421,7 @@ bool MCDecayFinder::Descriptor::test( const MCParticle *part,
 
 bool
 MCDecayFinder::Descriptor::testDaughters(std::list<const MCParticle*> &parts,
-                                         std::vector<MCParticle*> *collect=NULL)
+                                         std::vector<MCParticle*> *collect)
 {
   std::vector<Descriptor *>::iterator di;
   for( di = daughters.begin();
@@ -765,7 +765,7 @@ static int thirdQuark( int id )
 
 bool
 MCDecayFinder::ParticleMatcher::test( const MCParticle *part,
-                                      std::vector<MCParticle*> *collect=NULL )
+                                      std::vector<MCParticle*> *collect )
 {
   bool result = false;
   switch( type ) {
