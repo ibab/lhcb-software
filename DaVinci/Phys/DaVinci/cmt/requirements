@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.240 2005-02-21 12:12:50 pkoppenb Exp $
+# $Id: requirements,v 1.241 2005-02-21 12:14:35 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -63,8 +63,8 @@ use RichRecQC                   v1r10    Rich
 
 #-- HLT trigger
 use HltGeneric                  v2r2     Hlt
-use HltSelections               v2r1     Hlt
-use HltSelChecker               v2r1     Hlt
+use HltSelections               v2r2     Hlt
+use HltSelChecker               v2r2     Hlt
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
