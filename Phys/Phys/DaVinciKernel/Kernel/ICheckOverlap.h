@@ -1,4 +1,4 @@
-// $Id: ICheckOverlap.h,v 1.2 2005-02-21 08:39:58 pkoppenb Exp $
+// $Id: ICheckOverlap.h,v 1.3 2005-02-21 08:56:36 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_ICHECKOVERLAP_H 
 #define DAVINCIKERNEL_ICHECKOVERLAP_H 1
 
@@ -40,9 +40,12 @@ public:
   
   virtual bool ICheckOverlap::foundOverlap( ConstParticleVector & parts  ) = 0;
   
-  /// backward-compatible method
+  /// backward-compatible methods
   virtual bool ICheckOverlap::foundOverlap( ParticleVector & parts  ) = 0;
+  /// backward-compatible methods
+  virtual bool ICheckOverlap::foundOverlap( const ParticleVector & parts  ) = 0;
   
+
   /// Check for duplicate use of a protoparticle to produce particles.
   /// Arguments: particle1 up to particle4 are pointers to particles.
   ///  Create a ParticleVector and fill it with the input particles.

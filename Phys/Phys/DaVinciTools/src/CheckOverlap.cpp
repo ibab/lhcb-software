@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.3 2005-02-21 08:41:12 pkoppenb Exp $
+// $Id: CheckOverlap.cpp,v 1.4 2005-02-21 08:56:42 pkoppenb Exp $
 
 // Include files 
 
@@ -88,6 +88,18 @@ bool CheckOverlap::foundOverlap( ParticleVector & parts ){
 
   return foundOverlap( cparts );
 }
+
+bool CheckOverlap::foundOverlap( const ParticleVector & parts ){
+  
+  ConstParticleVector cparts;
+  for ( ParticleVector::const_iterator i = parts.begin() ; i!=parts.end();++i){
+    cparts.push_back( *i );
+  }
+
+  return foundOverlap( cparts );
+
+}
+
 
 bool CheckOverlap::foundOverlap( ConstParticleVector & parts ){
   

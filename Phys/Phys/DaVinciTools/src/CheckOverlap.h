@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.h,v 1.3 2005-02-21 08:41:12 pkoppenb Exp $
+// $Id: CheckOverlap.h,v 1.4 2005-02-21 08:56:42 pkoppenb Exp $
 #ifndef CHECKOVERLAP_H 
 #define CHECKOVERLAP_H 1
 
@@ -42,6 +42,8 @@ public:
   
   /// backward-compatible method
   bool foundOverlap( ParticleVector & parts  );
+  /// backward-compatible method
+  bool foundOverlap( const ParticleVector & parts  );
 
   //===========================================================================
   /// Check for duplicate use of a protoparticle to produce particles.
