@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.8 2003-09-04 14:06:41 witoldp Exp $ 
+// $Id: GiGaGeo.cpp,v 1.9 2003-09-08 16:58:34 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2003/09/04 14:06:41  witoldp
+// fix to avoid the precision problem in G4
+//
 // Revision 1.7  2003/04/06 18:55:32  ibelyaev
 //  remove unnesessary dependencies and adapt for newer GiGa
 //
@@ -434,11 +437,11 @@ G4VSolid*  GiGaGeo::g4BoolSolid( const SolidBoolean* Sd )
                 Sd->name())  ; return 0; }
       if      ( 0 != sSub    ) 
         {          
-          double temp[3][3];
+          double temp[3][4];
           
           for(int i=0;i<3;i++)
-            for(int j=0;j<3;j++)
-              if(abs((child->matrix())[i][j])<0.00000000001)
+            for(int j=0;j<4;j++)
+              if(abs((child->matrix())[i][j])<0.0000001)
                 {
                   temp[i][j]=0.0;
                 }        
@@ -451,7 +454,9 @@ G4VSolid*  GiGaGeo::g4BoolSolid( const SolidBoolean* Sd )
           
           HepRotation newrot;
           newrot.set(trep);
-          HepTransform3D newtransf(newrot, Hep3Vector(temp[0][3],temp[1][3],temp[2][3]));
+          HepTransform3D newtransf(newrot, Hep3Vector(temp[0][3],
+                                                      temp[1][3],
+                                                      temp[2][3]));
           
           g4total = 
             new G4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , 
