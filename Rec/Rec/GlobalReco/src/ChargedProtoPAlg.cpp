@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.3 2002-07-18 17:58:09 gcorti Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.4 2002-07-25 19:41:14 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -42,6 +42,9 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
                       + std::string("/ElectronMatch") )
   , m_bremmatchPath( "AssociatorWeighted<CaloHypo,TrStoredTrack,float>"
                      + std::string("/BremMatch") ) 
+  , m_lastChiSqMax( 100 )
+  //, m_upstreamTracks( false )
+  //, m_zFirstPoint( 3000.0*mm )
 {
   
   //, m_trkmatch(0)
@@ -59,10 +62,14 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   declareProperty("CaloEMatching", m_caloematchPath );
   declareProperty("BremMatching", m_bremmatchPath );
   
-                  //                 
+  // Outputs
   declareProperty("OutputData",
                   m_protoPath = ProtoParticleLocation::Charged );
-  declareProperty("MaxChiSquare", m_lastChiSqMax = 100 );
+
+  // Selections
+  declareProperty("MaxChiSquare", m_lastChiSqMax );
+  //declareProperty("UpstreamsTracks", m_upstream );
+  //declareProperty("ZFirstState", m_zFirstPoint );
 
 }
 
@@ -252,6 +259,7 @@ StatusCode ChargedProtoPAlg::execute() {
             ProtoParticle::PIDDetPair iddet;
             iddet.first = ProtoParticle::MuonMuon;
             iddet.second = (*iMuon)->MuProb();
+            ProtoParticle::PIDDetVector& iddetvec = proto->pIDDetectors();
             iddetvec.push_back(iddet);
             proto->setMuonBit(1);
           }          
@@ -319,6 +327,11 @@ StatusCode ChargedProtoPAlg::execute() {
          (*ip)->pIDInfo().end()!=id; ++id ) {
       log << MSG::VERBOSE << "id = " << (*id).first << " , prob = " 
           << (*id).second  << endreq;
+    }
+    for( ProtoParticle::PIDDetVector::iterator idd = (*ip)->pIDDetectors().begin(); 
+         (*ip)->pIDDetectors().end()!=idd; ++idd ) {
+       log << MSG::VERBOSE << "det = " << (*idd).first << " , value = " 
+          << (*idd).second  << endreq;
     }
   }
   return StatusCode::SUCCESS;
