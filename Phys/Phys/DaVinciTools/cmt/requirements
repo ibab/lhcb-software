@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.42 2004-07-01 16:36:38 pkoppenb Exp $
+# $Id: requirements,v 1.43 2004-07-02 07:40:04 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -46,9 +46,16 @@ library          DaVinciToolsLib    ../Lib/*.cpp
 # Component library building rule
 #============================================================================
 library          DaVinciTools    ../src/*.cpp
+# define link options
+#============================================================================
+#
+macro_append BOOST_linkopts " -lboost_regex"\
+             Linux&debug " -lboost_regex_debug"\
+	     WIN32 " boost_regex_debug.lib" 
 
 # standard patterns (order is essential!)
 #============================================================================
 apply_pattern component_library library=DaVinciTools
 apply_pattern linker_library    library=DaVinciToolsLib
+	     
 
