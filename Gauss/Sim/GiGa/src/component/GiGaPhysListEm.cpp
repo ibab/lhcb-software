@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaPhysListEm.cpp,v 1.1 2001-04-23 08:52:05 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaPhysListEm.cpp,v 1.2 2001-04-26 21:01:16 ibelyaev Exp $
 
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
@@ -6,15 +6,8 @@
 #include "GiGa/GiGaPhysListFactory.h"
 // G4 
 #include "G4ParticleTypes.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleWithCuts.hh"
 #include "G4ProcessManager.hh"
 #include "G4ProcessVector.hh"
-#include "G4ParticleTypes.hh"
-#include "G4ParticleTable.hh"
-#include "G4Material.hh"
-#include "G4ios.hh"
-#include "g4std/iomanip"                
 // local
 #include "GiGaPhysListEm.h"
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaRunManager.cpp,v 1.3 2001-04-24 09:24:16 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaRunManager.cpp,v 1.4 2001-04-26 21:01:17 ibelyaev Exp $ 
 //
 #include <string> 
 #include <typeinfo> 
@@ -14,6 +14,10 @@
 #include  "GiGa/GiGaException.h"
 #include  "GiGa/IGiGaGeomCnvSvc.h" 
 //
+#include  "G4Wrapper/UISession.h"
+#include  "G4Wrapper/VisManager.h"
+#include  "G4Wrapper/Managers.h"
+//
 #include  "G4Timer.hh"
 #include  "G4StateManager.hh"
 #include  "G4VisManager.hh" 
@@ -23,40 +27,6 @@
 #include  "G4VUserPrimaryGeneratorAction.hh"
 #include  "G4VUserDetectorConstruction.hh"
 //
-#ifdef G4UI_USE_WO
-#include "G4UIWo.hh"   
-#endif // G4UI_USE_WO 
-//
-#ifdef G4UI_USE_GAG
-#include "G4UIGAG.hh" 
-#endif // G4UI_USE_GAG
-//
-#ifdef G4UI_USE_XM
-#include "G4UIXm.hh"  
-#endif // G4UI_USE_XM 
-//
-#ifdef G4UI_USE_XAW
-#include "G4UIXaw.hh"  
-#endif // G4UI_USE_XAW
-//
-#ifdef G4UI_USE_TERMINAL
-#include "G4UIterminal.hh"             
-#include "G4UItcsh.hh"             
-#include "G4UIcsh.hh"             
-#endif // G4UI_USE_TERMINAL 
-//
-#ifdef G4UI_USE
-#include "G4UIterminal.hh"             
-#include "G4UItcsh.hh"             
-#include "G4UIcsh.hh"             
-#endif // G4UI_USE
-//
-
-// these lines does not work on Win!!! why??? B.B. 
-//#ifdef G4UI_USE_WIN32
-//#include "G4Win32.hh"
-//#endif
-
 // local 
 #include  "GiGaRunManager.h" 
 
@@ -71,9 +41,9 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////
-static inline G4UImanager*    g4UImanager   () { return G4UImanager::GetUIpointer(); } ; 
+static inline G4UImanager*    g4UImanager   () { return G4Wrapper::getG4UImanager(); } ; 
 //////////////////////////////////////////////////////////////////////////////////
-static inline G4StateManager* g4StateManager() { return G4StateManager::GetStateManager(); } ; 
+static inline G4StateManager* g4StateManager() { return G4Wrapper::getG4StateManager(); } ; 
 //////////////////////////////////////////////////////////////////////////////////
 template <class TYPE> inline const std::string objType( TYPE* type)
 { 
@@ -142,6 +112,11 @@ GiGaRunManager::GiGaRunManager( const std::string & Name   ,
     if( 0 != m_cnvSvc ) { m_cnvSvc ->addRef() ; } 
   };
   ///
+  if( 0 == G4Wrapper::getG4RunManager() ) 
+    {
+      MsgStream log( msgSvc() , name() );
+      log << MSG::FATAL << " something wrong with dynamic loading! " << endreq; 
+    }
 };
 ///////////////////////////////////////////////////////////////////////////////////
 GiGaRunManager::~GiGaRunManager()
@@ -314,7 +289,7 @@ StatusCode  GiGaRunManager::initializeRun()
   ///
   if( !krn_Is_Initialized() )  {  return StatusCode::FAILURE; }      /// RETURN !!!
   ///
-  G4ApplicationState currentState = G4StateManager::GetStateManager()->GetCurrentState();
+  G4ApplicationState currentState = g4StateManager()->GetCurrentState();
   ///
   Assert( ( currentState == PreInit || currentState == Idle ) , 
           Tag +  " Wrong Geant4 State (must be PreInit or Idle)" ) ;  
@@ -348,7 +323,7 @@ StatusCode GiGaRunManager::initializeKernel()
   set_evt_Is_Prepared   ( false );
   set_evt_Is_Processed  ( false );
   //
-  G4ApplicationState    currentState = G4StateManager::GetStateManager()->GetCurrentState();
+  G4ApplicationState    currentState = g4StateManager()->GetCurrentState();
   //  
   if( 0 != m_g4UIsession  ) 
     { log << MSG::VERBOSE << " Geant4 User Interface        is     created " << endreq; }
@@ -445,8 +420,7 @@ StatusCode GiGaRunManager::declare( G4VUserPrimaryGeneratorAction  * obj )
   set_evt_Is_Prepared    ( false ) ; 
   set_evt_Is_Processed   ( false ) ; 
   ///
-  if( 0 != G4StateManager::GetStateManager() ) 
-    { G4StateManager::GetStateManager()->SetNewState(PreInit); } 
+  if( 0 != g4StateManager() ) { g4StateManager()->SetNewState(PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
 };
@@ -512,8 +486,7 @@ StatusCode GiGaRunManager::declare( G4VPhysicalVolume              * obj )
   set_evt_Is_Prepared    ( false ) ; 
   set_evt_Is_Processed   ( false ) ; 
   ///
-  if( 0 != G4StateManager::GetStateManager() ) 
-    { G4StateManager::GetStateManager()->SetNewState(PreInit); } 
+  if( 0 != g4StateManager() ) { g4StateManager()->SetNewState(PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
 };
@@ -542,8 +515,7 @@ StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
   set_evt_Is_Prepared    ( false ) ; 
   set_evt_Is_Processed   ( false ) ; 
   ///
-  if( 0 != G4StateManager::GetStateManager() ) 
-    { G4StateManager::GetStateManager()->SetNewState(PreInit); } 
+  if( 0 != g4StateManager() ) { g4StateManager()->SetNewState(PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
 };
@@ -628,18 +600,6 @@ StatusCode  GiGaRunManager::createUIsession()
   ///
   MsgStream log ( msgSvc() , name() + ".createUIsessions() " );
   ///
-#ifndef G4UI_USE
-  ///
-  ///
-  log << MSG::INFO 
-      << "::createUIsessions():: " 
-      << " No Geant4 UI sessions will be created! " << endreq;
-  ///
-  return StatusCode::SUCCESS ; 
-  ///
-#endif 
-  ///
-  ///
   if( 0 != m_g4UIsession ) { return StatusCode::FAILURE; } 
   ///
   if( uis_Is_Started()   ) { return StatusCode::FAILURE; } 
@@ -665,69 +625,29 @@ StatusCode  GiGaRunManager::createUIsession()
             << "\t" << "argv[0]=" << System::argv()[0] << endreq;
         ///
         if(       "Wo"        == session ) 
-          { 
-#ifdef G4UI_USE_WO
-            m_g4UIsession = new G4UIWo  ( System::argc() , System::argv() ) ; 
-#endif // G4UI_USE_WO
-          } 
-//  else if ( "G4UIWin32" == session )
-//#ifdef G4UI_USE_WIN32
-//    // GG  !!!!!!!!!
-//    // constructor requires some arguments !!! 
-//    m_g4UIsession = new G4UIWin32();
-//#endif
-//  }
+          { m_g4UIsession = G4Wrapper::createG4UIWo  ( System::argc() , System::argv() ) ; } 
         else if ( "GAG"       == session  )    
-          {
-#ifdef G4UI_USE_GAG
-            m_g4UIsession = new G4UIGAG () ; 
-#endif // G4UI_USE_GAG
-          }
+          { m_g4UIsession = G4Wrapper::createG4UIGAG () ; }
         else if ( "Xm"        == session  ) 
-          {
-#ifdef G4UI_USE_XM
-            m_g4UIsession = new G4UIXm  ( System::argc() , System::argv() ) ; 
-#endif // G4UI_USE_XM 
-          }
+          { m_g4UIsession = G4Wrapper::createG4UIXm  ( System::argc() , System::argv() ) ; }
         else if ( "Xaw"       == session  ) 
-          {
-#ifdef G4UI_USE_XAW
-            m_g4UIsession = new G4UIXaw ( System::argc() , System::argv() ) ; 
-#endif // G4UI_USE_XAW
-          }
+          { m_g4UIsession = G4Wrapper::createG4UIXaw ( System::argc() , System::argv() ) ; }
         else if ( "tcsh"  == session  ) 
-          {
-#ifdef G4UI_USE_TERMINAL
-            m_g4UIsession = new G4UIterminal( new G4UIcsh ()  ) ;
-#endif // G4UI_USE_TERMINAL 
-          }
+          { m_g4UIsession = G4Wrapper::createG4UItcsh() ; }
         else if ( "csh"  == session  ) 
-          {
-#ifdef G4UI_USE_TERMINAL
-            m_g4UIsession = new G4UIterminal( new G4UIcsh ()  ) ;
-#endif // G4UI_USE_TERMINAL 
-          }
+          { m_g4UIsession = G4Wrapper::createG4UIcsh() ;}
         else if ( "terminal"  == session  ) 
-          {
-#ifdef G4UI_USE_TERMINAL
-            m_g4UIsession = new G4UIterminal () ;           
-#endif // G4UI_USE_TERMINAL 
-          }
+          { m_g4UIsession = G4Wrapper::createG4UIterminal () ; }
       }
   }
   ///
-  ///
-  ///
-#ifdef G4UI_USE
-  if( 0 == m_g4UIsession ) { m_g4UIsession = new G4UIterminal () ; } 
-#endif // G4UI_USE 
-  ///
+  if( 0 == m_g4UIsession ) { m_g4UIsession = G4Wrapper::createG4UIterminal () ; } 
   ///
   if( 0 != m_g4UIsession ) 
     {
-// GG  On Nt  with session = terminal objType throws an exception!!!
-//      log << MSG::DEBUG << "::createUIsessions():: session=" 
-//          << objType( m_g4UIsession ) << " is created " << endreq; 
+      // GG  On Nt  with session = terminal objType throws an exception!!!
+      //      log << MSG::DEBUG << "::createUIsessions():: session=" 
+      //          << objType( m_g4UIsession ) << " is created " << endreq; 
     }
   else 
     {
@@ -735,7 +655,7 @@ StatusCode  GiGaRunManager::createUIsession()
           << endreq; 
     }
   ///
-  return ( 0 != m_g4UIsession)  ? StatusCode::SUCCESS : StatusCode::FAILURE ;   
+  return StatusCode::SUCCESS ;   
   ///
 }; 
 ///////////////////////////////////////////////////////////////////////////////////

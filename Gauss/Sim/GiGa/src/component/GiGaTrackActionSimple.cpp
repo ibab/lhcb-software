@@ -1,11 +1,12 @@
 /// CLHEP
 #include "CLHEP/Geometry/Point3D.h"
+/// G4Wrapper
+#include "G4Wrapper/Particle.h"
 /// Geant4 
 #include "G4Track.hh"
 #include "G4TrackVector.hh"
 #include "G4TrackingManager.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
@@ -86,11 +87,9 @@ StatusCode GiGaTrackActionSimple::initialize ()
   if( storeByOwnType() )
     {
       m_ownStoredTypes.clear();
-      G4ParticleTable* table = G4ParticleTable::GetParticleTable();
-      if( 0 == table ) { return Error("G4ParticleTable* points to NULL!" ) ; } 
       for( TypeNames::const_iterator it = m_ownStoredTypesNames.begin() ; m_ownStoredTypesNames.end() != it ; ++it )
 	{
-	  const G4ParticleDefinition* pd = table->FindParticle( *it ) ; 
+	  const G4ParticleDefinition* pd = G4Wrapper::getG4ParticleDefinition( *it ) ; 
 	  if( 0 == pd ) { return Error("could not find G4ParticleDefinition for particle name='"+*it+"'!"); }
           m_ownStoredTypes.push_back( pd ) ;   
 	}
@@ -105,11 +104,9 @@ StatusCode GiGaTrackActionSimple::initialize ()
   if( storeByChildType() )
     {
       m_childStoredTypes.clear();
-      G4ParticleTable* table = G4ParticleTable::GetParticleTable();
-      if( 0 == table ) { return Error("G4ParticleTable* points to NULL!" ) ; } 
       for( TypeNames::const_iterator it = m_childStoredTypesNames.begin() ; m_childStoredTypesNames.end() != it ; ++it )
 	{
-	  const G4ParticleDefinition* pd = table->FindParticle( *it ) ; 
+	  const G4ParticleDefinition* pd = G4Wrapper::getG4ParticleDefinition( *it ) ; 
 	  if( 0 == pd ) { return Error("could not find G4ParticleDefinition for particle name='"+*it+"'!"); }
           m_childStoredTypes.push_back( pd ) ;   
 	}

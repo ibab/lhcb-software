@@ -1,11 +1,5 @@
 #include "CLHEP/Geometry/Point3D.h"
 ///
-#include "G4Step.hh"
-#include "G4TouchableHistory.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4LogicalVolume.hh"
-///
-#include "GaudiKernel/MsgStream.h"
 /// GiGa 
 #include "GiGa/GiGaStepActionFactory.h"
 /// local

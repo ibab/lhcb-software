@@ -1,13 +1,5 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaTrackActionEmpty.cpp,v 1.1 2001-04-23 08:52:08 ibelyaev Exp $ 
-
-#include "CLHEP/Geometry/Point3D.h"
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaTrackActionEmpty.cpp,v 1.2 2001-04-26 21:01:17 ibelyaev Exp $ 
 ///
-#include "G4Step.hh"
-#include "G4TouchableHistory.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4LogicalVolume.hh"
-///
-#include "GaudiKernel/MsgStream.h"
 // GiGa 
 #include "GiGa/GiGaTrackActionFactory.h"
 /// local

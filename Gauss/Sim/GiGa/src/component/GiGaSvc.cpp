@@ -1,9 +1,10 @@
-//
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaSvc.cpp,v 1.3 2001-04-26 21:01:17 ibelyaev Exp $ 
+// STD & STL 
 #include <string>
 #include <list>
 #include <vector> 
 #include <algorithm> 
-//
+// 
 #include    "GaudiKernel/ISvcLocator.h"
 #include    "GaudiKernel/IMessageSvc.h"
 #include    "GaudiKernel/IChronoStatSvc.h"
@@ -11,34 +12,22 @@
 #include    "GaudiKernel/SvcFactory.h"
 #include    "GaudiKernel/MsgStream.h"
 #include    "GaudiKernel/ParticleProperty.h"
-//
 #include    "GaudiKernel/Bootstrap.h"
-
 // from GiGa
 #include    "GiGa/IGiGaPhysList.h"
 #include    "GiGa/IGiGaPhysListFactory.h"
-//
 #include    "GiGa/IGiGaStackAction.h"
 #include    "GiGa/IGiGaStackActionFactory.h"
-//
 #include    "GiGa/IGiGaTrackAction.h"
 #include    "GiGa/IGiGaTrackActionFactory.h"
-//
 #include    "GiGa/IGiGaStepAction.h"
 #include    "GiGa/IGiGaStepActionFactory.h"
-//
 #include    "GiGa/IGiGaEventAction.h"
 #include    "GiGa/IGiGaEventActionFactory.h"
-//
 #include    "GiGa/GiGaException.h"
-//
 #include    "GiGa/SplitTypeAndName.h"
-//
-
-/// visualization stuff I hope that it is temporary!
-#ifdef G4VIS_USE
-#include    "GiGaVisManager.h" 
-#endif // G4VIS_USE
+// G4Wrapper
+#include    "G4Wrapper/VisManager.h"
 
 // local 
 #include    "GiGaSvc.h"
@@ -251,7 +240,7 @@ StatusCode GiGaSvc::initialize()
       ///
 #ifdef G4VIS_USE
       ///
-      G4VisManager* VM = new GiGaVisManager(); 
+      G4VisManager* VM = G4Wrapper::createG4VisManager(); 
       ///
       try{ *this << VM ; } 
       catch ( const GaudiException& Excpt ) { return Exception( "VisManager" , Excpt ) ; } 

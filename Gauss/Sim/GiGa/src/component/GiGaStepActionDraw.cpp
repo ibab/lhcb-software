@@ -1,5 +1,7 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaStepActionDraw.cpp,v 1.1 2001-04-23 08:52:07 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaStepActionDraw.cpp,v 1.2 2001-04-26 21:01:17 ibelyaev Exp $ 
 #include "G4Step.hh"
+//
+#include "G4Wrapper/VisManager.h"
 //
 #include "G4VVisManager.hh"
 #include "G4Polyline.hh"
@@ -31,7 +33,7 @@ StatusCode GiGaStepActionDraw::finalize   () { return GiGaStepActionBase::initia
 void GiGaStepActionDraw::UserSteppingAction( const G4Step* step )
 {
   /// locate visual manager 
-  G4VVisManager* visMgr  = G4VVisManager::GetConcreteInstance();
+  G4VVisManager* visMgr  = G4Wrapper::getG4VVisManager();
   ///
   if      ( 0 == visMgr    ) { Error("Could not locate G4VVisManager* !" ) ; }
   else if ( 0 == step      ) { Error("G4Step* points to NULL!"           ) ; } 

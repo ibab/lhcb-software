@@ -1,6 +1,13 @@
+!=  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/doc/release.notes,v 1.24 2001-04-26 21:01:16 ibelyaev Exp $ 
+
 Package:          GiGa
 Package manager : N.N. 
 
+!===========================================================================
+! 20010426 - Vanya Belyaev
+    use new package Sim/G4Wrapper 
+    - set of wrapper methods over Geant4 tool kit to resolve 
+	problems with shared library on NT 
 !===========================================================================
 ! 20010420 - Vanya Belyaev
     Large restructiruzation 
