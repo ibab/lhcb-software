@@ -4,6 +4,12 @@ Package manager : Stefan Roiser
 
 ===============================GaudiObjDesc v7r1============================
 
+!20050126 - Stefan
+- genClassDicts.py: fix for dictionary (because of problems with persistency 
+  tools not handling the new 1.9.1.2 clhep classes). Attribute types and 
+  parameter/return types of methods will now be demangled by the compiler 
+  (through GaudiKernel/System::typeinfoName) if they are not fundamental
+
 !20050117 - Stefan
 - methods returning enums or taking enums as arguments now accept/return "int"s in the dictionary code
 - fix in dictionary code: methods returning or taking a SmartRef<T> will be described as T* in the dictionaries
