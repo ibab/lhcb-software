@@ -1,6 +1,9 @@
 package Event
 package manager: Marco Cattaneo
 
+! 20020114 - MC EventSys v4r0
+  requirements - Event Model consistent with Gaudi v9
+
 ! 20011108 - MC EventSys v3
   requirements - Event Model versions used by Brunel v8
 

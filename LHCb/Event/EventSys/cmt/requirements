@@ -1,22 +1,17 @@
 package EventSys
-version v3
+version v4r0
 
 branches doc cmt 
 
-#use GaudiSys   v8
-
 # LHCb Event libraries
-use LHCbEvent  v11  Event
-use CaloEvent  v6   Event
-use ITEvent    v6r1 Event
-use OTEvent    v6r1 Event
-use TrEvent    v6r1 Event
-use L0Event    v3   Event
-use L1Event    v5   Event
-use VeloEvent  v5   Event
-
-# Other libraries in the "Event" hat
-use DbCnv      v5   Event  
+use LHCbEvent  v12r1  Event
+use CaloEvent  v7r0   Event
+use ITEvent    v7r0   Event
+use OTEvent    v7r0   Event
+use TrEvent    v7r0   Event
+use L0Event    v4r0   Event
+use L1Event    v6r0   Event
+use VeloEvent  v6r0   Event
 
 
 
