@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.49 2004-02-03 16:54:48 mtobin Exp $
+! $Id: release.notes,v 1.50 2004-02-03 17:41:41 mtobin Exp $
 package VeloDet
 package manager : Velo Group
 
@@ -16,6 +16,8 @@ package manager : Velo Group
    VeloChannelID is centre of strip, fraction is +/-0.5 pitch
    Sensor numbering scheme also changed.
    0-41 are +ve x, 50-91 -ve x, > 100 pile up.
+   Removed no_auto_imports for VeloKernel from requirements file (couldn't 
+   use VeloRound otherwise).
 
 !========================= VeloDet v8r8 2003-12-16 =========================
 ! 2003-12-16 - Marco Cattaneo
