@@ -9,18 +9,21 @@ ApplicationMgr.DLLs       += { "GaudiDb" };
 
 ApplicationMgr.DLLs       += {"GaudiRootDb","DbCnv"};
 ApplicationMgr.DLLs       += {"GiGaCnv"};
-ApplicationMgr.DLLs       += {"GaussTools"};
+ApplicationMgr.DLLs       += {"GaussTools", "CaloDet", "CaloEvent"};
 
-
+ApplicationMgr.ExtSvc     += 
+{ "ParticlePropertySvc" 
+};
 
 ApplicationMgr.ExtSvc     += {"DbEventCnvSvc/RootEvtCnvSvc"};
+ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSROOT/data/particle.cdf" ;
 
 EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
 RootEvtCnvSvc.DbType = "ROOT";
 EventDataSvc.RootCLID = 1;
 
 
-EventSelector.Input = {"DATAFILE='Gauss.root' TYP='ROOT' OPT='READ'"}; 
+EventSelector.Input = {"DATAFILE='1006.root' TYP='ROOT' OPT='READ'"}; 
 
 
 //--------------------------------------------------------------
@@ -28,11 +31,12 @@ EventSelector.Input = {"DATAFILE='Gauss.root' TYP='ROOT' OPT='READ'"};
 //--------------------------------------------------------------
 
 
-ApplicationMgr.TopAlg  = {"GiGaMiscGetEventAlg/GetEvent"};
+//ApplicationMgr.TopAlg  = {"GiGaMiscGetEventAlg/GetEvent"};
+ApplicationMgr.TopAlg  = {"PrintEventAlg/PrintEvt"};
 ApplicationMgr.TopAlg += {"GetGiGaHitsAlg/GetHits"};
 //ApplicationMgr.TopAlg += {"DumpMC"};
 
-ApplicationMgr.EvtSel      ="'Gauss.root'";
+ApplicationMgr.EvtSel      ="'1006.root'";
 
 HistogramPersistencySvc.OutputFile = "test.hbook";  // Monitoring histos
 #include "$STDOPTS/Hbook.opts"

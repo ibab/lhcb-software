@@ -1,4 +1,4 @@
-// $Id: Digitisation.opts,v 1.7 2003-02-17 15:19:12 witoldp Exp $ 
+// $Id: Digitisation.opts,v 1.8 2003-06-18 11:39:07 witoldp Exp $ 
 
 
 HistogramPersistencySvc.OutputFile = "moni.hbook";  // Monitoring histos
@@ -70,6 +70,7 @@ VeloSim.OutputLevel=2;
 ApplicationMgr.DLLs += { "VeloAssociators" };
 Digitisation.Members += { "VeloMonitor"};
 
+VeloMonitor.DetailedMonitor     = true;
 VeloMonitor.TestMCVeloHit       = true;
 VeloMonitor.TestMCVeloFE        = true;
 VeloMonitor.TestVeloFullDigit = false;

@@ -1,8 +1,11 @@
-// $Id: GaussVis.opts,v 1.2 2003-03-14 17:32:02 ranjard Exp $ 
+// $Id: GaussVis.opts,v 1.3 2003-06-18 11:39:07 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/03/14 17:32:02  ranjard
+// v9r1 - update options for visualization
+//
 // Revision 1.1  2003/02/17 15:19:12  witoldp
 // new release
 // 
@@ -23,9 +26,9 @@ ApplicationMgr.DLLs += { "GiGaVisUI" } ;
 GiGa.VisManager = "GiGaVisManager/GiGaVis" ;
 //GiGa.UIsession  = "GiGaUIsession/GiGaUI"   ;
 
-//GiGa.StepSeq.Members  += { "GiGaStepActionDraw/DrawStep"} ;
+GiGa.StepSeq.Members  += { "GiGaStepActionDraw/DrawStep"} ;
 
-GiGa.EventSeq.Members += { "GiGaEventActionDraw/DrawEvent"} ;
+//GiGa.EventSeq.Members += { "GiGaEventActionDraw/DrawEvent"} ;
 GiGa.EventSeq.Members += { "GiGaEventActionCommand/VisEvtCmd"} ;
 GiGa.EventSeq.OutputLevel = 1 ;
 
