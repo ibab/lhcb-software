@@ -5,7 +5,7 @@ branches L0Event src cmt doc
 
 include_dirs $(L0EVENTROOT)
 
-use LHCbEvent v11* Event
+use LHCbEvent v10* Event
 
 # component library
 
