@@ -1,17 +1,14 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
-!====================== OTDAQ v2r0 2004-03-25 ======================
+!====================== OTDAQ v2r0 2004-03-30 ======================
 ! 2004-03-30 - Jacopo Nardulli
- 
   Small modifications: 
   - Fixing a bug related to the multiple hit capacity in OTRetrieveBuffer. 
   - Last version of the Algorithm OTChackOTDigit, which does not Run in Brunel.
     OTCheckOTDigit can be used with version  v23r2 of Brunel - Boole v5r2.
     
-!====================== OTDAQ v2r0 2004-03-25 ======================
 ! 2004-03-25 - Jacopo Nardulli
-
  Second version of the package OTDAQ. Principal modifications respect to the 
  previous versions are:
   - New general data structure with 24 banks instead of 108 and 18 GOL 
