@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.10 2003-06-06 16:23:26 witoldp Exp $ 
+// $Id: GaussTape.opts,v 1.11 2003-07-15 14:12:46 witoldp Exp $ 
 
 /// create and add the output stream 
 ApplicationMgr.OutStream +=  { "GaussTape" };
@@ -9,13 +9,17 @@ GaussTape.ItemList =
     // event Header
     "/Event#1",      
     "/Event/Header#1"
-    // Generated event
+    // Gen Header
     ,"/Event/Gen#1"
+    ,"/Event/Gen/Header#1"
+    // Generated event
     ,"/Event/Gen/HepMCEvents#1"
   };
 
 GaussTape.OptItemList =
   {
+    // Collisions
+     "/Event/Gen/Collisions#1",
     // MC Truth  
      "/Event/MC#1"                     
     ,"/Event/MC/Particles#1"         
