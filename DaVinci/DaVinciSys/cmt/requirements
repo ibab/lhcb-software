@@ -4,79 +4,19 @@ version v8r3p1
 branches doc cmt
 
 #=======================================================
-# packages included in the DAVINCI tree
+# new packages included in the DAVINCI_v8r3 tree
 #=======================================================
 
 # DaVinci application
 use  DaVinci             v8r3p1 Phys
 
-#--- DaVinci packages
-#    General Use
-use  MCTools             v1r1   Phys
-use  DaVinciTools        v8r1p2 Phys
-use  DaVinciAssociators  v4r2   Phys
-use  DaVinciMCTools      v5r0   Phys
-use  DaVinciTest         v4r1p1 Phys
-use  PhysSelections      v6r0p1 Phys
-use  FlavourTagging      v4r5   Phys
-use  DaVinciEff          v2r5   Phys
-use  DaVinciUser         v4r1   Phys
-
-#    Final Reconstruction
-use  GlobalReco          v4r0p2 Rec
-use  KsReco		 v1r4p1 Rec
-use  PrimVtx             v2r0p1 Rec
-use  RecoTools           v1r0p1 Rec
-
-#    Specific Selections
-use  PhysSelSys          v5r5   PhysSel
-use  B2DD                v1r2   PhysSel
+use  PhysSelSys 		 v5r5   PhysSel
 use  B2HH                v1r4   PhysSel
 use  Bd2D0Kstar          v2r0   PhysSel
-use  Bd2DstarPi          v1r1   PhysSel
-use  Bd2JpsiKs           v1r2   PhysSel
-use  Bd2JpsiKstar        v1r1   PhysSel
 use  Bd2KPiPiPi          v1r1   PhysSel
-use  Bd2KstarGamma       v1r1   PhysSel
-use  Bd2MuMuKstar        v1r1   PhysSel
-use  Bd2PhiKs            v1r1   PhysSel
-use  Bd2PiPiPi0          v1r2   PhysSel
-use  Bd2Pi0Pi0           v1r0   PhysSel
 use  Bs2DsH              v1r4   PhysSel
-use  Bs2JpsiEta          v1r0   PhysSel
-use  Bs2JpsiPhi          v1r2   PhysSel
-use  Bs2MuMu             v1r2   PhysSel
-use  Bs2PhiEtac          v1r2   PhysSel
-use  Bs2PhiGamma         v1r0p1 PhysSel
-use  Bs2PhiPhi           v1r0   PhysSel
-
-#--- Trigger
-use  L0DU                v6r5	L0
-use  L1Decision          v2r0   L1
-use  HltVeloTT		 v2r0   Hlt
-use  HltTools            v2r1   Hlt
-use  HltChecker          v2r0   Hlt
-use  HltVelo             v2r0   Hlt
-use  HltLongTrack        v2r1   Hlt
-
-#--- ProtoParticles 
-use  CaloInterfaces      v2r4   Calo
-use  CaloUtils           v4r4   Calo
-use  CaloReco	         v1r5   Calo
-
-#--- Particle ID
-use  CaloPIDs   	 v1r0   Calo
-use  MuonID              v3r6   Muon
-
-#--- Necessary for DaVinciTools
-use  TrExtrapolator      v2r5   Tr
-
-#--- TriggerFilter
-use  Utilities           v1r0   Tools
-use  TriggerFilter       v1r4   Tools
 
 #--- DecayPreselections
 use  DecayPresel         v1r5p1 Tools
 
-#--- Tools
-use  LoKi                v1r2   Tools
+
