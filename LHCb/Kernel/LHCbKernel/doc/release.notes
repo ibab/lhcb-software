@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-01-07 - Chris Jones
+ - Update RichSmartID. Improved constructors and messaging
+
 !====================== LHCbKernel v5r5 2004-12-08 ========================
 ! 2004-12-08 - Marco Cattaneo
  - Use GaudiObjDesc v7r*, to pick up new Python based version

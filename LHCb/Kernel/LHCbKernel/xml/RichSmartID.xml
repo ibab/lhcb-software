@@ -3,13 +3,16 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.11 2004-11-29 13:59:49 cattanem Exp $
+  * $Id: RichSmartID.xml,v 1.12 2005-01-07 12:29:18 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
   *****************************************************************************
   * $Log: not supported by cvs2svn $
+  * Revision 1.11  2004/11/29 13:59:49  cattanem
+  * fix missing dictionaries
+  *
   * Revision 1.10  2004/11/03 09:28:13  jonrob
   * Update RIchSmartID
   *
@@ -29,6 +32,7 @@
 
         &StlVector;
 
+        <import name = "GaudiKernel/GaudiException"               />
         <import name = "Kernel/RichDetectorType"                  />
         <import name = "Kernel/RichSide"                          />
         <import name = "Rich"                    ignore = "TRUE"  />
@@ -84,7 +88,7 @@
         </constructor>
 
         <constructor 
-            desc     = "Constructor from data fields including sub-pixel information" 
+            desc     = "Pixel level constructor including sub-pixel information" 
             initList = "m_key( 0 )">
             <arg  const="TRUE"  name="rich"      type="int"  />
             <arg  const="TRUE"  name="panel"     type="int"  />
@@ -105,7 +109,7 @@
         </constructor>
 
         <constructor 
-            desc     = "Constructor from data fields" 
+            desc     = "Pixel level constructor" 
             initList = "m_key( 0 )" >
             <arg  const="TRUE"  name="rich"      type="int"  />
             <arg  const="TRUE"  name="panel"     type="int"  />
@@ -120,6 +124,21 @@
               setPDCol( pdCol );
               setPixelRow( pixelRow );
               setPixelCol( pixelCol );
+            </code>
+        </constructor>
+
+        <constructor 
+            desc     = "HPD level constructor" 
+            initList = "m_key( 0 )" >
+            <arg  const="TRUE"  name="rich"      type="int"  />
+            <arg  const="TRUE"  name="panel"     type="int"  />
+            <arg  const="TRUE"  name="pdRow"     type="int"  />
+            <arg  const="TRUE"  name="pdCol"     type="int"  />
+            <code>
+              setRich( rich );
+              setPanel( panel );
+              setPDRow( pdRow );
+              setPDCol( pdCol );
             </code>
         </constructor>
 
@@ -165,7 +184,9 @@
                 name  = "shift" 
                 type  = "int"  />
             <code>
-              return ( value &lt; (1 &lt;&lt; shift) );
+              const bool ok = ( value &lt; (1 &lt;&lt; shift) );
+              if (!ok) throw GaudiException("Data out of value for given bit field","*RichSmartID*",StatusCode::FAILURE);
+              return ok;
             </code>
         </method>
 
@@ -399,6 +420,17 @@
             <code>
                return static_cast&lt;Rich::Side&gt;( (m_key &amp; panelMask) &gt;&gt; panelBits );
             </code>
+        </method>
+
+        <method 
+          name    = "fillStream" 
+          desc    = "Print this RichSmartID in a human readable way"
+          type    = "std::ostream&amp;" 
+          virtual = "TRUE" 
+          const   = "TRUE">
+          <arg 
+            type = "std::ostream" 
+            name = "s"/>
         </method>
 
     </class>
