@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.h,v 1.6 2004-07-15 15:47:24 jonrob Exp $
+// $Id: RichRayTracing.h,v 1.7 2004-07-15 17:04:57 jonrob Exp $
 #ifndef RICHTOOLS_RICHRAYTRACING_H
 #define RICHTOOLS_RICHRAYTRACING_H 1
 
@@ -70,17 +70,17 @@ public: // methods (and doxygen comments) inherited from interface
                               const HepVector3D& startDir,    
                               RichGeomPhoton& photon,         
                               const RichTraceMode mode = RichTraceMode(), 
-                              Rich::Side fSide = Rich::top ) const;
+                              Rich::Side forcedSide = Rich::top ) const;
 
   // For a given detector, raytraces a given direction from a given point to
   // the average photon detector plane (no HPD acceptance). Result is a HepPoint3D
   StatusCode
   traceToDetectorWithoutEff( Rich::DetectorType rich,  
-                             const HepPoint3D& position,   
-                             const HepVector3D& direction, 
-                             HepPoint3D& hiPosition,  
+                             const HepPoint3D& startPoint,   
+                             const HepVector3D& startDir, 
+                             HepPoint3D& hitPosition,  
                              const RichTraceMode mode = RichTraceMode(),
-                             Rich::Side fSide = Rich::top ) const;
+                             Rich::Side forcedSide = Rich::top ) const;
 
   // For a given detector, ray traces a given direction from a given point
   // to the average photo detector plane. Returns the result in the form
