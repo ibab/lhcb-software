@@ -1,4 +1,4 @@
-// $Id: OTTime2MCParticleAlg.h,v 1.3 2004-11-23 14:21:17 cattanem Exp $
+// $Id: OTTime2MCParticleAlg.h,v 1.4 2005-03-22 10:49:29 cattanem Exp $
 #ifndef OTASSOCIATORS_OTTIME2MCPARTICLEALG_H
 #define OTASSOCIATORS_OTTIME2MCPARTICLEALG_H 1
 
@@ -44,7 +44,11 @@ public:
 
   // associator function
   virtual StatusCode associateToTruth(const OTTime* aTime,
-                                      std::vector<MCParticle*>& partVector);
+                                    std::vector<const MCParticle*>& partVector);
+
+  // associator function via OTTimes2MCHits linker table
+  virtual StatusCode associateToTruthLinker(const OTTime* aTime,
+                                    std::vector<const MCParticle*>& partVector);
 
   /// path to put table
   std::string outputData() const;

@@ -1,4 +1,6 @@
-// $Id: OTTime2MCParticleAlg.cpp,v 1.3 2004-11-23 14:21:17 cattanem Exp $
+// $Id: OTTime2MCParticleAlg.cpp,v 1.4 2005-03-22 10:49:29 cattanem Exp $
+
+#include "Linker/LinkerTool.h"
 
 // local
 #include "OTTime2MCParticleAlg.h"
@@ -52,9 +54,10 @@ StatusCode OTTime2MCParticleAlg::execute()
   OTTimes::const_iterator iterTime;
   for ( iterTime = timeCont->begin(); 
         iterTime != timeCont->end(); ++iterTime){
-    std::vector<MCParticle*> partVector;
-    associateToTruth(*iterTime, partVector);
-    std::vector<MCParticle*>::iterator iPart = partVector.begin();
+    std::vector<const MCParticle*> partVector;
+    StatusCode sc = associateToTruthLinker(*iterTime, partVector);
+    if ( sc.isFailure() ) return sc; // error printed already by associateToTruth
+    std::vector<const MCParticle*>::iterator iPart = partVector.begin();
     while (iPart != partVector.end()) {
       aTable->relate(*iterTime, *iPart);
       ++iPart;
@@ -66,8 +69,37 @@ StatusCode OTTime2MCParticleAlg::execute()
 
 
 StatusCode 
+OTTime2MCParticleAlg::associateToTruthLinker(const OTTime* aTime,
+                      std::vector<const MCParticle*>& partVector){
+
+  // Retrieve linker table
+  LinkerTool<OTTime,MCHit> associator( evtSvc(), "OTTimes2MCHits" );
+  const LinkerTool<OTTime,MCHit>::DirectType* aTable = associator.direct();
+  if( 0 == aTable ) {
+    info() << "OTTimes2MCHits Linker not found, try Relations" << endmsg;
+    return associateToTruth( aTime, partVector );
+  }
+
+  LinkerTool<OTTime,MCHit>::DirectType::Range range = aTable->relations(aTime);
+  if ( 0 != range.size() ) {
+    LinkerTool<OTTime,MCHit>::DirectType::iterator iterHit;
+    for (iterHit = range.begin(); iterHit != range.end(); ++iterHit) {
+      const MCHit* aHit = iterHit->to();
+      if (0 != aHit) {
+        const MCParticle* aParticle = aHit->mcParticle();
+        if (0 != aParticle) {
+          partVector.push_back( aParticle );
+        }
+      }
+    }
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode 
 OTTime2MCParticleAlg::associateToTruth(const OTTime* aTime,
-                                       std::vector<MCParticle*>& partVector){
+                                     std::vector<const MCParticle*>& partVector){
 
   // make truth link to MCParticle and retrieve table
   OTTime2MCHitAsct::DirectType* aTable = m_hAsct->direct();

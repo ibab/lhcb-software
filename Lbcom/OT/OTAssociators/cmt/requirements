@@ -1,5 +1,5 @@
 package           OTAssociators
-version           v3r1
+version           v3r2
         
 # =============== structure =================================================== 
 branches          OTAssociators src cmt doc options 
@@ -8,6 +8,7 @@ include_dirs $(OTASSOCIATORSROOT)
 
 # =============== used packages ===============================================
 use OTEvent     v14r*   Event
+use LinkerEvent v*      Event
 use Relations	v2r*	Kernel
 
 # =============== own options =================================================

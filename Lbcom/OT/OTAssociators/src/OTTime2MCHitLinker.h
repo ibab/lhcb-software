@@ -1,6 +1,6 @@
-// $Id: OTTime2MCHitAlg.h,v 1.4 2005-03-22 10:49:29 cattanem Exp $
-#ifndef OTASSOCIATORS_OTTIME2MCHITALG_H
-#define OTASSOCIATORS_OTTIME2MCHITALG_H 1
+// $Id: OTTime2MCHitLinker.h,v 1.1 2005-03-22 10:49:29 cattanem Exp $
+#ifndef OTASSOCIATORS_OTTIME2MCHITLINKER_H
+#define OTASSOCIATORS_OTTIME2MCHITLINKER_H 1
 
 // Event
 #include "Event/OTTime.h"
@@ -19,7 +19,7 @@
 class OTTime;
 class MCHit;
 
-/** @class OTTime2MCHitAlg OTTime2MCHitAlg.h
+/** @class OTTime2MCHitLinker OTTime2MCHitLinker.h
  *  
  *  Algorithm which makes the association from OTTimes to MCHits. This
  *  is used by the associator tool. There is a flag to make relations with 
@@ -29,17 +29,17 @@ class MCHit;
  *  @date   15/06/2004
  */
 
-class OTTime2MCHitAlg : public GaudiAlgorithm {
+class OTTime2MCHitLinker : public GaudiAlgorithm {
 
-  friend class AlgFactory<OTTime2MCHitAlg>;
+  friend class AlgFactory<OTTime2MCHitLinker>;
   
 public:
 
   /// Standard constructor
-  OTTime2MCHitAlg( const std::string& name, ISvcLocator* pSvcLocator );
+  OTTime2MCHitLinker( const std::string& name, ISvcLocator* pSvcLocator );
 
   /// Destructor
-  virtual ~OTTime2MCHitAlg(); 
+  virtual ~OTTime2MCHitLinker(); 
 
   /// initialize
   virtual StatusCode initialize();    
@@ -49,11 +49,7 @@ public:
 
   /// find the MCHit given a OTTime
   virtual StatusCode associateToTruth(const OTTime* aTime,
-                                      std::vector<const MCHit*>& hitVector);
-
-  /// find the MCHit given a OTTime, using Linker table
-  virtual StatusCode associateToTruthLinker(const OTTime* aTime,
-                                          std::vector<const MCHit*>& hitVector);
+                                      std::vector<MCHit*>& hitVector);
 
   /// path to put relation table
   std::string outputData() const;
@@ -72,9 +68,9 @@ private:
   
 };
 
-inline std::string OTTime2MCHitAlg::outputData() const {
+inline std::string OTTime2MCHitLinker::outputData() const {
   return  m_outputData;
 }
 
 
-#endif // OTASSOCIATORS_OTTIME2MCHITALG_H
+#endif // OTASSOCIATORS_OTTIME2MCHITLINKER_H

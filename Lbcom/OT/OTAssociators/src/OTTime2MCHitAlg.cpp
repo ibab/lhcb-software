@@ -1,4 +1,6 @@
-// $Id: OTTime2MCHitAlg.cpp,v 1.3 2004-11-23 14:21:17 cattanem Exp $
+// $Id: OTTime2MCHitAlg.cpp,v 1.4 2005-03-22 10:49:29 cattanem Exp $
+
+#include "Linker/LinkerTool.h"
 
 // local
 #include "OTTime2MCHitAlg.h"
@@ -58,9 +60,10 @@ StatusCode OTTime2MCHitAlg::execute()
   OTTimes::const_iterator iterTime;
   for ( iterTime = timeCont->begin(); 
         iterTime != timeCont->end(); ++iterTime){
-    std::vector<MCHit*> hitVector;
-    associateToTruth(*iterTime, hitVector);
-    std::vector<MCHit*>::iterator iHit = hitVector.begin();
+    std::vector<const MCHit*> hitVector;
+    StatusCode sc = associateToTruthLinker(*iterTime, hitVector);
+    if ( sc.isFailure() ) return sc; // error printed already by associateToTruth
+    std::vector<const MCHit*>::iterator iHit = hitVector.begin();
     while (iHit != hitVector.end()) {
       aTable->relate(*iterTime, *iHit);
       ++iHit;
@@ -72,8 +75,33 @@ StatusCode OTTime2MCHitAlg::execute()
 
 
 StatusCode 
+OTTime2MCHitAlg::associateToTruthLinker(const OTTime* aTime,
+                                        std::vector<const MCHit*>& hitVector)
+  
+{
+    // Retrieve linker table
+  LinkerTool<OTTime,MCHit> associator( evtSvc(), "OTTimes2MCHits" );
+  const LinkerTool<OTTime,MCHit>::DirectType* aTable = associator.direct();
+  if( 0 == aTable ) {
+    info() << "OTTimes2MCHits Linker not found, build Relations" << endmsg;
+    return associateToTruth( aTime, hitVector );
+  }
+
+  LinkerTool<OTTime,MCHit>::DirectType::Range range = aTable->relations(aTime);
+  if ( 0 != range.size() ) {
+    LinkerTool<OTTime,MCHit>::DirectType::iterator iterHit;
+    for (iterHit = range.begin(); iterHit != range.end(); ++iterHit) {      
+      const MCHit* aHit = iterHit->to();
+      hitVector.push_back( aHit );
+    }
+  }
+  
+  return StatusCode::SUCCESS;
+}
+
+StatusCode 
 OTTime2MCHitAlg::associateToTruth(const OTTime* aTime,
-                                   std::vector<MCHit*>& hitVector)
+                                   std::vector<const MCHit*>& hitVector)
  
 {
   // make link to truth to MCHit and retrieve table
