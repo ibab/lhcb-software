@@ -30,7 +30,6 @@ use SicbCnv       v16r* SICB
 
 #GiGa staff...
 use GiGaCnv       v5r*  Sim
-#use EvGen         v2r*   Sim
 
 #geometry source 
 use XmlDDDB       v11r*   Det 
