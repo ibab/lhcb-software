@@ -5,9 +5,24 @@
 ! Purpose     : Package describing contents of Lbcom project.
 !-----------------------------------------------------------------------------
 
-!========================== LbCom v1r1 2005-03-02 ============================
-! 2005-03-02 - Marco Cattaneo
+!========================== LbCom v1r1 2005-03-07 ============================
+! 2005-03-07 - Marco Cattaneo
  - Move to Gaudi v16r2, LHCb v18r1
+ - Packages modified: CaloReco v2r7p1, RichTools v1r5, RichMCTools v2r5,
+     RichRecTools v2r14, RichRecMCTools v1r8, RichRecCommon v1r12, L0Calo v8r1,
+     L0DU v6r8, PuVeto v6r0p1
+
+ - In CaloReco v2r7p1
+   . Fix options for new associators
+
+ - In RichTools v1r5, RichMCTools v2r5, RichRecTools v2r14, RichRecMCTools v1r8
+   . Various minor improvements
+
+ - In RichRecCommon v1r12
+   . Adapt to RichEvent v8r2 changes
+
+ - In L0Calo v8r1, L0DU v6r8
+   . Adapt to new L1Buffer bank types from DAQEvent v5r0 (backward incompatible)
 
 !========================== LbCom v1r0 2005-02-16 ============================
 ! 2005-02-08 - Marco Cattaneo
