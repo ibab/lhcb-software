@@ -8,7 +8,7 @@
 
 // >>>>>>>>>>>>>> SPILLOVER <<<<<<<<<<<<<<<<
 // Uncomment next line if you want Brunel to add spillover events.
-// #include "$BRUNELOPTS/BrunelSpillOver.opts"
+// #include "$SICBCNVROOT/options/Brunel.opts"
 // Define input file for spillover events (SICBMC v241 minimum bias)
 // SpillOverSelector.JobInput = "FILE SICBMC_v241_mbias_1.rawh";
 
@@ -25,21 +25,17 @@
 
 // >>>>>>>>>>>>>> CALORIMETERS <<<<<<<<<<<<<
 // Uncomment next line to suppress Fortran digitisation
-// BrunelDigiCALOSeq.Members = { };
+BrunelDigiCALOSeq.Members = { };
 // Uncomment next two lines to enable C++ digitisation
 #include "$CALOALGSROOT/options/Brunel.opts"
 #include "$CALOSICBCNVROOT/options/CaloSicbCnv.opts"
-// Uncomment next 5 lines to convert C++ digits back to SICB bank
+// Uncomment next line to convert C++ digits back to SICB bank
 BrunelDigiCALOSeq.Members += { "CaloDigitToSicbConverter" };
-CaloDigitToSicbConverter.EcalData = "/Event/Raw/Ecal/Digit";
-CaloDigitToSicbConverter.HcalData = "/Event/Raw/Hcal/Digit";
-CaloDigitToSicbConverter.PrsData  = "/Event/Raw/Prs/Digit";
-CaloDigitToSicbConverter.SpdData  = "/Event/Raw/Spd/Digit";
 
 //--------------------------------------------------------------
 // Define the main event input data: SICBMC v241 (new CALO RAWH format)
 //--------------------------------------------------------------
-EventSelector.Input = {"FILE='$SITEROOT/lhcb/group/calo/ecal/vol1/SICBMC_v241/events_v241.20'"};
+EventSelector.Input = {"JOBID='45206'"};
 ApplicationMgr.EvtMax = 10;
 //EventSelector.FirstEvent = 6;
 
@@ -57,7 +53,7 @@ MessageSvc.OutputLevel = 3;
 //--------------------------------------------------------------
 NameAuditor.Enable   = false;
 ChronoAuditor.Enable = true;
-MemoryAuditor.Enable = true;
+MemoryAuditor.Enable = false;
 
 //--------------------------------------------------------------
 // Output some histograms

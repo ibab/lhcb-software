@@ -22,13 +22,13 @@ use GaudiConf v4*
 use GaudiSys v7*
 #
 # SicB event data persistency
-use SicbCnv v11*	SICB
+use SicbCnv v12*	SICB
 #
-use SICBDST v251*	SICB
+use SICBDST v252*	SICB
 #
 # Calorimeter digitisation
-use CaloAlgs    v1* Calo
-use CaloSicbCnv v2* SICB
+use CaloAlgs    v2* Calo
+use CaloSicbCnv v3* SICB
 
 # Detector description database
 use DetDesc     v6* Det

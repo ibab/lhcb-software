@@ -3,7 +3,7 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
-! 20010314 Brunel v2 (MC)
+! 20010327 Brunel v2 (MC)
   This version has been restructured as two packages. Rec/Brunel contains the
   statically linked code needed to run SICBDST routines. C++ components of the
   reconstruction framework have been moved to the package Rec/BrunelKernel
@@ -16,7 +16,8 @@ Purupose: LHCb reconstruction program
   Brunel/*.h, *.cpp - files renamed to remove multiple . in filenames (to please nmake)
   options/*.txt     - file extension changed to .opts to conform to new convention
                     - simplify file structure by using ApplicationMgr.DLLs = {"NONE"}; 
-                      option for static execution
+                    - option for static execution
+                    - Add new CALO digitisation
 ================================================================================
 ! 20001219 Brunel v1r6 (MC)
   requirements     - use SicbCnv v10 (spillover), SICBDST v235r3
