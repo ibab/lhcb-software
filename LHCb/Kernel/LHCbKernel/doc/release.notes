@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2004-07-28 - Vanya BELYAEV
+ - Kernel/CaloHash.h
+   fix a bug for Win32 platform, kindly reported by T.Ruf 
+
+
 ! 2004-07-27 - Vanya BELYAEV
   drastical simplification of "maps"
   - Kernel/CaloHash.h 

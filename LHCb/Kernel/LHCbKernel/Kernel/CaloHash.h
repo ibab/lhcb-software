@@ -1,8 +1,11 @@
-// $Id: CaloHash.h,v 1.4 2004-07-27 14:01:37 ibelyaev Exp $
+// $Id: CaloHash.h,v 1.5 2004-07-28 13:25:16 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/07/27 14:01:37  ibelyaev
+//  modification/simplification of classes CaloMap&CaloHashMap
+//
 // ============================================================================
 #ifndef KERNEL_CALOHASH_H 
 #define KERNEL_CALOHASH_H 1
@@ -75,6 +78,7 @@ struct CaloHash<std::string&>       : public CaloHash<std::string> {} ;
 template <>
 struct CaloHash<const std::string&> : public CaloHash<std::string> {} ;
 
+template <>
 struct CaloHash<char*>
   : public std::unary_function<char*,size_t>
 {
