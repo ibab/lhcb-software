@@ -1,0 +1,35 @@
+package L0Event
+version v1
+
+branches L0Event src cmt doc
+
+use GaudiKernel v* GaudiSys 
+use LHCbEvent v8 Event
+use CaloEvent v3 Event
+
+include_dirs ${L0EVENTROOT}
+
+# Linker library
+library L0EventLib       ../src/L0CLIDs.cpp
+
+apply_pattern package_Llinkopts
+
+# component library
+library L0Event          ../src/L0EventInstantiation.cpp \
+                         ../src/L0Event_dll.cpp
+
+macro_append L0Event_stamps "  " ${L0EventDir}/L0EventLib.stamp" 
+
+apply_pattern ld_library_path
+#=======================================================================
+private
+
+apply_pattern package_Lshlibflags
+macro_append L0EventLib_shlibflags "  $(Gaudi_linkopts) $(CLHEP_linkopts)"
+
+apply_pattern package_Cshlibflags
+
+
+
+
+ 
