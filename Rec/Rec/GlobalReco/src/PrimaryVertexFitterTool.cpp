@@ -1,4 +1,4 @@
-// $Id: PrimaryVertexFitterTool.cpp,v 1.3 2002-10-22 21:56:38 gcorti Exp $
+// $Id: PrimaryVertexFitterTool.cpp,v 1.4 2002-11-11 19:29:43 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -272,8 +272,9 @@ StatusCode PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
         
         double zlsq = pow(zl, 2);
         double zllsq = pow(zll, 2);
-        
-        err_geom = 0.0146 * sqrt(zlsq + zllsq);
+
+//          err_geom = 0.0146 * sqrt(zlsq + zllsq);
+        err_geom = 10 * micrometer * sqrt(zlsq + zllsq);
 
         double err_scat;
         double CosTheta = wtra->unitVect.z();
@@ -281,8 +282,10 @@ StatusCode PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
         double DistFromPV = fabs((wtra->pos.z() - vtx->pos.z()))
           / fabs(CosTheta);
       
-        err_scat = 0.0085 * 100.0 * 1000.0 * sqrt(X0) * 
-          DistFromPV / wtra->p / GeV;
+//          err_scat = 0.0085 * 100.0 * 1000.0 * sqrt(X0) * 
+//            DistFromPV / wtra->p / GeV;
+        err_scat = 16 * micrometer * sqrt(X0) * (DistFromPV / cm) /
+                   ( wtra->p / GeV );
 
         log << MSG::INFO
             << " err_geom " << err_geom 
@@ -290,7 +293,7 @@ StatusCode PrimaryVertexFitterTool::fitter(std::vector<MyTrack> m_tr,
             << endreq;
 
         wtra->errd0 = sqrt(err_geom * err_geom + err_scat * err_scat);
-
+        
         log << MSG::INFO 
             << "do # " << wtra->d0 
             << " err # " << wtra->errd0 << endreq;
