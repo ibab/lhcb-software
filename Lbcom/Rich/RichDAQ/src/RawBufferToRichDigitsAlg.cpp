@@ -1,4 +1,4 @@
-// $Id: RawBufferToRichDigitsAlg.cpp,v 1.4 2004-04-19 22:55:07 jonesc Exp $
+// $Id: RawBufferToRichDigitsAlg.cpp,v 1.5 2004-04-20 13:33:04 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -40,10 +40,6 @@ StatusCode RawBufferToRichDigitsAlg::initialize() {
   StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  debug() << "Initialise :-" << endreq
-          << " Input  RawEvent location   = " << m_rawEventLoc << endreq
-          << " Output RichDigits location = " << m_richDigitsLoc << endreq;
-
   return StatusCode::SUCCESS;
 };
 
@@ -80,9 +76,11 @@ StatusCode RawBufferToRichDigitsAlg::execute() {
 
   // Register new container of RichDigits to Gaudi data store
   put( m_digits, m_richDigitsLoc );
-  debug() << "Successfully registered " << m_digits->size()
-          << " RichDigits from " << richBanks.size() << " Raw banks at "
-          << m_richDigitsLoc << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    debug() << "Successfully registered " << m_digits->size()
+            << " RichDigits from " << richBanks.size() << " Raw banks at "
+            << m_richDigitsLoc << endreq;
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -102,9 +100,11 @@ RawBufferToRichDigitsAlg::decodeZeroSuppressedBank( const RawBank & bank ) const
   // How many digits do we expect to make
   RichDAQ::ShortType digitCount = bankHeader.hitCount();
 
-  verbose()  << "Decoding " << digitCount << " zero suppressed hits for PD "
-             << pdID << endreq
-             << " Header : " << bankHeader << endreq;
+  if ( msgLevel(MSG::VERBOSE) ) {
+    verbose()  << "Decoding " << digitCount << " zero suppressed hits for PD "
+               << pdID << endreq
+               << " Header : " << bankHeader << endreq;
+  }
 
   // Loop over data fields (Skip first header field)
   unsigned int nDigitsMade = 0;
@@ -112,7 +112,7 @@ RawBufferToRichDigitsAlg::decodeZeroSuppressedBank( const RawBank & bank ) const
 
     // Get triplet data
     RichZSHitTriplet triplet( bank.data()[iEntry] );
-    verbose() << " Decoding triplet " << triplet << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " Decoding triplet " << triplet << endreq;
 
     // Make first digit from triplet
     if ( nDigitsMade >= digitCount ) break;
@@ -161,9 +161,11 @@ RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) co
   // How many digits do we expect to make
   RichDAQ::ShortType digitCount = bankHeader.hitCount();
 
-  verbose() << "Decoding " << digitCount << " non-zero suppressed hits for PD "
-            << pdID << endreq
-            << " Header : " << bankHeader << endreq;
+  if ( msgLevel(MSG::VERBOSE) ) {
+    verbose() << "Decoding " << digitCount << " non-zero suppressed hits for PD "
+              << pdID << endreq
+              << " Header : " << bankHeader << endreq;
+  }
 
   // Create a block of non-zero suppressed data from RawBank
   RichNonZeroSuppData nonZSdata( bank );
@@ -176,7 +178,7 @@ RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) co
   // Create RichDigits with new RichSmartIDs
   for ( RichDAQ::SmartIDs::const_iterator iID = IDs.begin();
         iID != IDs.end(); ++iID ) {
-    verbose() << "  Hit " << *iID << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << "  Hit " << *iID << endreq;
     RichDigit * newDigit = new RichDigit();
     m_digits->insert( newDigit, *iID );
   }
@@ -185,7 +187,7 @@ RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) co
 }
 
 //  Finalize
-StatusCode RawBufferToRichDigitsAlg::finalize() 
+StatusCode RawBufferToRichDigitsAlg::finalize()
 {
   debug() << "Finalise" << endreq;
 
@@ -198,7 +200,7 @@ RawEvent * RawBufferToRichDigitsAlg::getRawEvent()
 
   // Try and load from TES. If it exists return, overwise try to create one
   SmartDataPtr<RawEvent> rawEventTES( eventSvc(), m_rawEventLoc );
-  if ( rawEventTES ) { return rawEventTES; } 
+  if ( rawEventTES ) { return rawEventTES; }
   else {
     debug() << "Creating RawEvent from RawBuffer" << endreq;
 

@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.3 2004-03-16 13:37:37 jonesc Exp $
+// $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.4 2004-04-20 13:33:01 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -111,9 +111,11 @@ MCRichDigitsToRawBufferAlg::fillZeroSuppressed( RichSmartID pdID,
   dataBank.push_back( pdHeader );
 
   // Some printout
-  verbose() << "PD " << pdID << " : Creating " << pdHits.size()
-            << " zero suppressed hits " << endreq
-            << " Header : " << pdHeader << endreq;
+  if ( msgLevel(MSG::VERBOSE) ) {
+    verbose() << "PD " << pdID << " : Creating " << pdHits.size()
+              << " zero suppressed hits " << endreq
+              << " Header : " << pdHeader << endreq;
+  }
 
   // Loop over digits and form groups of three
   MCRichDigitVector::const_iterator iDigit = pdHits.begin();
@@ -135,7 +137,7 @@ MCRichDigitsToRawBufferAlg::fillZeroSuppressed( RichSmartID pdID,
     // make a new triplet object and add to data bank
     RichZSHitTriplet triplet( one, two, three );
     dataBank.push_back( triplet );
-    verbose() << " Created triplet " << triplet << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " Created triplet " << triplet << endreq;
 
   } // end while loop
 
@@ -167,7 +169,7 @@ MCRichDigitsToRawBufferAlg::fillNonZeroSuppressed( RichSmartID pdID,
   nonZSdata.fillRAW( dataBank );
 
   // Printout of data array
-  verbose() << nonZSdata << endreq;
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << nonZSdata << endreq;
 
 }
 
