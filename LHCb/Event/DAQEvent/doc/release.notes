@@ -3,7 +3,7 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
-!=============== DAQEvent v5r0 2004-06-28 =============================
+!=============== DAQEvent v4r4 2004-06-28 =============================
 ! 2004-06-28 - Marco Cattaneo
  - Add a component library with trivial algorithms to create empty
    L1Buffer, RawBuffer, and L1Event, RawEvent from corresponding Buffer
