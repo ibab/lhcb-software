@@ -1,4 +1,4 @@
-// $Id: InstanceCounter.h,v 1.2 2004-07-26 08:54:27 ibelyaev Exp $
+// $Id: InstanceCounter.h,v 1.3 2004-08-26 15:15:56 ibelyaev Exp $
 #ifndef KERNEL_INSTANCECOUNTER_H 
 #define KERNEL_INSTANCECOUNTER_H 1
 
@@ -23,7 +23,7 @@ public:
   InstanceCounter() : m_count(0)   {
   }
   virtual ~InstanceCounter()   {
-    if ( 0 != m_cout ) 
+    if ( 0 != m_count ) 
     {
       std::cout << "Number of objects of type: "
                 << System::typeinfoName(typeid(T))

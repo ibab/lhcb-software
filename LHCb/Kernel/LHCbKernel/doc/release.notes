@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2004-08-26 - Vanya Belyaev
+ - Kernel/InstanceCounter.h
+   Fix a bug/typo in the member name.
+    only LoKi in debug mode is affected 
+
 ! 2004-08-17 - Chris Jones
  - Update RICH enumeration doxygen documentation
 
