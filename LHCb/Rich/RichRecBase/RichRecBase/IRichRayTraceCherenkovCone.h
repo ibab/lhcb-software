@@ -1,4 +1,4 @@
-// $Id: IRichRayTraceCherenkovCone.h,v 1.3 2004-06-18 09:44:08 jonesc Exp $
+// $Id: IRichRayTraceCherenkovCone.h,v 1.4 2004-07-02 14:17:02 jonrob Exp $
 #ifndef RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H
 #define RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H 1
 
@@ -30,13 +30,13 @@ public:
   virtual StatusCode rayTrace ( RichRecSegment * segment,
                                 const Rich::ParticleIDType id,
                                 std::vector<HepPoint3D> & points,
-                                const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
+                                const RichTraceMode mode = RichTraceMode() ) const = 0;
 
   /// Ray trace the Cherenkov cone for the given segment and cherenkov angle to the detector plane
   virtual StatusCode rayTrace ( RichRecSegment * segment,
                                 const double ckTheta,
                                 std::vector<HepPoint3D> & points,
-                                const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
+                                const RichTraceMode mode = RichTraceMode() ) const = 0;
 
   /// Ray trace the Cherenkov cone using the given emission point, direction and Cherenkov angle
   virtual StatusCode rayTrace ( const Rich::DetectorType rich,
@@ -44,16 +44,16 @@ public:
                                 const HepVector3D & direction,
                                 const double ckTheta,
                                 std::vector<HepPoint3D> & points,
-                                const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
+                                const RichTraceMode mode = RichTraceMode() ) const = 0;
 
   /// Ray trace the Cherenkov cone for the given ring to the detector plane, in Global coordinates
   virtual const std::vector<HepPoint3D> & rayTrace ( RichRecRing * ring,
-                                                     const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
-  
+                                                     const RichTraceMode mode = RichTraceMode() ) const = 0;
+
   /// Ray trace the Cherenkov cone for the given ring to the detector plane, in Local coordinates
   virtual const std::vector<HepPoint3D> & rayTraceLocal ( RichRecRing * ring,
-                                                          const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
-  
+                                                          const RichTraceMode mode = RichTraceMode() ) const = 0;
+
 };
 
 #endif // RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H

@@ -20,7 +20,7 @@ branches xml doc src cmt Event RichRecBase
 use   RichEvent      v7r*    Event
 # Temporary, until new versions of tools are available where RichDet
 # includes can be removed from the interface header files
-use   RichDet       v7r*     Det
+use   RichDet        v8r*     Det
 
 #============================================================================
 # Environment

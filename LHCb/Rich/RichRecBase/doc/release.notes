@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2004-07-02 - Chris Jones
+ - Update to new IRichRayTracing interface
+
 ! 2004-06-23 - Chris Jones
  - Update RichTrackID and RichTrackSelector to no longer require knowledge of 
    the bit structure in the TrStoredTrack "history" code. 

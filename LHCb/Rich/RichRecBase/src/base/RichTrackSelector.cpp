@@ -1,4 +1,4 @@
-// $Id: RichTrackSelector.cpp,v 1.4 2004-06-29 19:35:43 jonesc Exp $
+// $Id: RichTrackSelector.cpp,v 1.5 2004-07-02 14:17:03 jonrob Exp $
 // Include files
 
 // local
@@ -21,6 +21,7 @@ RichTrackSelector::RichTrackSelector() :
 
   // Setup default track selection criteria
   // ======================================
+
   m_trNames.push_back( "unique"   ); // unique tracks only
   m_trNames.push_back( "positive" ); // positively charged tracks
   m_trNames.push_back( "negative" ); // negatively charged tracks
@@ -35,6 +36,7 @@ RichTrackSelector::RichTrackSelector() :
 
 bool RichTrackSelector::configureTrackTypes()
 {
+
   // Initialise track selection criteria
   // ===================================
 
