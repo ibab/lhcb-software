@@ -9,9 +9,11 @@
 // DaVinciXXX.opts. Choose the appropriate one.
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 // For data produced with Brunel v13r1 or v14r2
-//  #include "$DAVINCIROOT/options/DaVinciv248r4.opts"
+//#include "$DAVINCIROOT/options/DaVinciv248r4.opts"
 // For data produced with Brunel v16r4
 #include "$DAVINCIROOT/options/DaVinciv253r0.opts"
+// For data produced with Brunel v17r4
+//#include "$DAVINCIROOT/options/DaVinciv254r1.opts"
 
 //--------------------------------------------------------------
 // Histogram persistency 
@@ -21,53 +23,62 @@
 //--------------------------------------------------------------
 #include "$STDOPTS/Hbook.opts"
 HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
-//  #include "$STDOPTS/RootHist.opts"
-//  HistogramPersistencySvc.OutputFile = "DVHistos.root";
+//#include "$STDOPTS/RootHist.opts"
+//HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 //--------------------------------------------------------------
 // Ntuples available by default. Comment to switch off
 //--------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
-//  NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
+//NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
 // DaVinci Algorithms
 //--------------------------------------------------------------
-// Redo L0 trigger decision (August 2002 tuning, only for Brunel v13r1 data)
-//  #include "$DAVINCIROOT/options/L0.opts"
-// Run L1 trigger decisions (only for Brunel v14r2 data, does not work for)
-//  #include "$DAVINCIROOT/options/L1Decision.opts"
-
-// Perfect ParticleID (switch off ChargedProtoPAlg when switching this on)
-//  ApplicationMgr.TopAlg += { "MCPIDProtoPAlg" };
+// Rerun L0 trigger decision (tuning as in Winter 2003 data)
+//#include "$DAVINCIROOT/options/L0.opts"
+// Rerun L1 trigger decisions (tuning as in Winter 2003 data)
+//#include "$DAVINCIROOT/options/L1Decision.opts"
 
 // Charged ProtoParticles
 ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
 
 // Recalibration for gammas (only for Brunel v13r1 data)
-//  #include "$DAVINCIROOT/options/CaloReCalibration.opts"
+//#include "$DAVINCIROOT/options/CaloReCalibration.opts"
 
 // Neutral ProtoParticles
-// (when reading data produced with Brunel v13r1 or v14r2)
-//  ApplicationMgr.TopAlg += { "NeutralPPCreator/NeutralProtoPAlg" };
-// (when reading data produced with Brunel v16r4)
-//  ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" }
+// (only available algorithm when reading data produced with Brunel v13r1
+//  or v14r2, it can be used with any version of OODST data)
+//ApplicationMgr.TopAlg += { "NeutralPPCreator/NeutralProtoPAlg" };
+// (when reading data produced with Brunel v16r4 or v17r4)
+//ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" };
 
 // Primary Vertices
-ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
+ApplicationMgr.TopAlg += { "PrimVtxFinder" };
 
 //--------------------------------------------------------------
 // Other additional algorithms to be executed, from public 
 // or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
+
 // The various selections algorithms compatible with OODST are 
 // listed here
 // EACH COMPLETE SELECTION HAS TO BE EXECUTED BY ITSELF
-//
+//--------------------------------------------------------------
+
+// Ks->pi+pi- with Upstream tracks
+//----------------------------------------------------------------
+// Read V0 as produced by Brunel and transform them into Particles
+//  ApplicationMgr.TopAlg += { "V0MakerAlg" };
+//  #include "$DAVINCITOOLSROOT/options/V0MakerAlg.opts"
+// Redo Ks in DaVinci as done in Brunel
+//  ApplicationMgr.TopAlg += { "UpstreamProtoPAlg", "SelectKs2pipi" };
+//  #include "$KSRECOROOT/options/KsReco.opts"
 
 // Bd->J/Psi(mu+mu-)Ks(pi+pi-)
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
 //                             "SelectKs2pipiForBd2JpsiKs",
 //                             "SelectBd2JpsiKs" };
@@ -76,10 +87,9 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2Jpsi2mumu_Ks2pipi.opts"
 //  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/411300.opts"
-//  // Data sets for this channel (Brunel v14r2)
-//  #include "$LHCBHOME/project/web/cards/411300_4.opts"
 
 // Bs -> J/Psi(mu+mu-) phi(KK)
+//------------------------------------------------------------------
 //  ApplicationMgr.TopAlg += { 
 //    "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi",
 //    "Select2ParticleDecay/Selectphi2KKForBs2Jpsiphi",
@@ -90,22 +100,33 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2Jpsi2mumu_phi2KK.opts"
 //  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/611300.opts"
-// Data sets for this channel (Brunel v14r2)
-//  #include "$LHCBHOME/project/web/cards/611300_4.opts"
+
+// Bs -> J/Psi(e+e-) phi(KK)
+//------------------------------------------------------------------
+//  ApplicationMgr.TopAlg += { 
+//    "Select2ParticleDecay/SelectJpsi2eeForBs2Jpsiphi",
+//    "Select2ParticleDecay/Selectphi2KKForBs2Jpsiphi",
+//    "Select2ParticleDecay/SelectBs2Jpsi2ee_phi2KK"
+//  };
+//  #include "$PHYSSELECTIONSOPTS/SelectJpsi2eeForBs2Jpsiphi.opts"
+//  #include "$PHYSSELECTIONSOPTS/Selectphi2KKForBs2Jpsiphi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBs2Jpsi2ee_phi2KK.opts"
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
+//  #include "$LHCBHOME/project/web/cards/611400.opts"
 
 // Bs ->Ds(KKpi) K
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += {
 //    "SelectDs2KKpi",
 //    "SelectBs2DsK"
 //  };
 //  #include "$PHYSSELECTIONSOPTS/SelectDs2KKpi.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2Ds2KKpi_K.opts"
-//  // Data sets for this channel (Brunel v16r2 - Xmas production)
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/613450.opts"
-//  // Data sets for this channel (Brunel v14r2)
-//  #include "$LHCBHOME/project/web/cards/613400_4.opts"
 
 // Bs ->Ds(KKpi) pi
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += {
 //    "SelectDs2KKpiForBs2Dspi",
 //    "SelectBs2Dspi"
@@ -114,10 +135,9 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2Ds2KKpi_pi.opts"
 //  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/613350.opts"
-//  // Data sets for this channel (Brunel v14r2)
-//  #include "$LHCBHOME/project/web/cards/613300_4.opts"
 
 // Bd -> mu mu Kstar(Kpi)
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += {
 //    "SelectMuMu",
 //    "SelectKstar2KPiForB02MuMuKstar",
@@ -130,14 +150,16 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$LHCBHOME/project/web/cards/411800.opts"
 
 // Bs -> mu mu
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += {
 //    "SelectBs2mumu"
 //  };
 //  #include "$PHYSSELECTIONSOPTS/SelectBs2mumu.opts"
-//  // Data sets for this channel (Brunel v16r4)
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/612200.opts"
 
 // Bd -> D0(Kpi) Kstar(Kpi)
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += {
 //    "SelectD0andKstar2Kpi",
 //    "SelectBd2KstarD0"
@@ -148,6 +170,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$LHCBHOME/project/web/cards/414500.opts"
 
 // Bd -> J/Psi(mumu) K*(Kpi)
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += {
 //    "SelectJpsi2mumuForBd2JpsiKstar",
 //    "SelectKstar2Kpi",
@@ -156,20 +179,20 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBd2JpsiKstar.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectKstar2Kpi.opts"
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2Jpsi2mumu_Kstar2Kpi.opts"
-//  // Data sets for this channel (Brunel v16r4)
+//  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/411500.opts"
 
 // Bd -> pi+pi-
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += {
 //    "SelectBd2pipi"
 //  };
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2pipi.opts"
 //  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/412100.opts"
-//  // Data sets for this channel (Brunel v14r2)
-//  #include "$LHCBHOME/project/web/cards/412100_4.opts"
 
 // Bd -> phi(KK) Ks(pipi)
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += {
 //    "Selectphi2KKForBd2phiKs",
 //    "SelectKs2pipiForBd2phiKs",
@@ -182,6 +205,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$LHCBHOME/project/web/cards/412000.opts"
 
 // Bd -> D+(K- pi+ pi+) D-(K+ pi- pi-)
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += {
 //    "SelectD2Kpipi/SelectDPlus2Kpipi",
 //    "SelectD2Kpipi/SelectDMinus2Kpipi", 
@@ -194,6 +218,7 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$LHCBHOME/project/web/cards/416100_4.opts"
 
 // Bs -> Ds+(K+ K- pi+) Ds-(K+ K- pi-)
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += {
 //    "SelectDs2KKpiForBs2DsDs/SelectDsPlus2KKpi",
 //    "SelectDs2KKpiForBs2DsDs/SelectDsMinus2KKpi", 
@@ -205,20 +230,21 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  // Data sets for this channel (Brunel v14r2)
 //  #include "$LHCBHOME/project/web/cards/516100_4.opts"
 
+//----------------------------------------------------------------
 // Channels with Neutrals
 // REMEMBER TO MAKE NEUTRAL PROTOPARTICLES and calibrate the calorimeter
 // for Brunel v13r1 data
-//
+//----------------------------------------------------------------
 
 // Resolved pi0
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
 //  #include "$PHYSSELECTIONSOPTS/ResolvedPi0Alg.opts"
 //  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/412800.opts"
-//  // Data sets for this channel (Brunel v13r1 - Summer production)
-//  #include "$LHCBHOME/project/web/cards/summer_412800.opts"
 
 // Bd -> Kstar(Kpi) gamma
+//----------------------------------------------------------------
 //  ApplicationMgr.TopAlg += { 
 //    "PreLoadParticles",
 //    "PreLoadParticles/PreLoadPhotons",
@@ -228,27 +254,24 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  #include "$PHYSSELECTIONSOPTS/SelectBd2Kstar2Kpi_gamma.opts"
 //  // Data sets for this channel (Brunel v16r4 - Xmas production)
 //  #include "$LHCBHOME/project/web/cards/412500.opts"
-//  // Data sets for this channel (Brunel v14r2)
-//  #include "$LHCBHOME/project/web/cards/412500_4.opts"
-//  // Data sets for this channel (Brunel v13r1 - Summer production)
-//  #include "$LHCBHOME/project/web/cards/summer_412500.opts"
+
+//----------------------------------------------------------------
 
 // Uncomment the following line to run the example UserAlgorithm
 //  ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
 
+//----------------------------------------------------------------
+
 // Private algorithm options can be listed here or included from
-// here.
-
-// Switch on to produce a miniDST file
-//  #include "$DAVINCIROOT/options/DaVinciMiniDst.opts"
-
-// Test data on disk
-#include "$DAVINCIROOT/options/DaVinciTestData.opts"
-//-----------------------------------------------------------------
-// Options for algorithms and tools in DaVinciTools library
-// can be added here to overwrite any of the default options
+// here. 
+// Options for algorithms and tools can be added here to overwrite
+// any of the default options
 // Examples are in the options subdirectory of the packages
-//-----------------------------------------------------------------
+
+//----------------------------------------------------------------
+// Switch on to produce a miniDST file
+//----------------------------------------------------------------
+//  #include "$DAVINCIROOT/options/DaVinciMiniDst.opts"
 
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -256,9 +279,6 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
-PrimaryVertexFinderAlg.OutputLevel      = 4;
-ChargedProtoPAlg.OutputLevel            = 3;
-MCPIDProtoPAlg.OutputLevel              = 3;
 
 // Modify Message Format to print algorithm name with 40 characters
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
@@ -270,5 +290,8 @@ ApplicationMgr.EvtMax    = 500;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
    
+// Test data
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+
 //################################################################
 

@@ -30,29 +30,34 @@ RootEvtCnvSvc.DbType  = "ROOT";
 ApplicationMgr.DLLs += { "ITAssociators", "OTAssociators" };
 ApplicationMgr.DLLs += { "VeloAssociators", "MuonAssociators" };
 ApplicationMgr.DLLs += { "CaloEvent", "CaloAssociators" };
-ApplicationMgr.DLLs += { "TrAssociators", "L0Calo", "L1VeloTrack" };
+ApplicationMgr.DLLs += { "TrAssociators" };
 ApplicationMgr.DLLs += { "DaVinciAssociators" };
+#include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
 
-// Physics packages and necessary dependent packages
+// ProtoParticles creation
 ApplicationMgr.DLLs += { "KsReco" };
 ApplicationMgr.DLLs += { "GlobalReco", "CaloReco" };
-ApplicationMgr.DLLs += { "DaVinciTools", "TrExtrapolator" };
-ApplicationMgr.DLLs += { "PhysSelections" };
-ApplicationMgr.DLLs += { "FlavourTagging" };
-//    ... for physics check on MC data
-ApplicationMgr.DLLs += { "DaVinciMCTools", "DaVinciEff" };
-ApplicationMgr.DLLs += { "DaVinciTest" };
-ApplicationMgr.DLLs += { "DaVinciUser" };
-
-// Options for ProtoParticles creation
 #include "$GLOBALRECOROOT/options/GlobalReco.opts"
 #include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
 #pragma print off
 #include "$CALORECOOPTS/Reco.opts"
 #pragma print on
 
+// Primary vertex
+ApplicationMgr.DLLs += { "PrimVtx" };
+#include "$PRIMVTXROOT/options/PrimVtx.opts"
+
+// Physics packages and necessary dependent packages
+ApplicationMgr.DLLs += { "DaVinciTools", "TrExtrapolator" };
+ApplicationMgr.DLLs += { "PhysSelections" };
+ApplicationMgr.DLLs += { "FlavourTagging" };
+//    ... for physics check on MC data
+ApplicationMgr.DLLs += { "MCTools" };
+ApplicationMgr.DLLs += { "DaVinciMCTools", "DaVinciEff" };
+ApplicationMgr.DLLs += { "DaVinciTest" };
+ApplicationMgr.DLLs += { "DaVinciUser" };
+
 // Options for Associators
-#include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
 
 // No Histogram persistency chosen at this point
 ApplicationMgr.HistogramPersistency = "NONE";
