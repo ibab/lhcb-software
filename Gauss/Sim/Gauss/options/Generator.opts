@@ -1,40 +1,44 @@
-// $Id: Generator.opts,v 1.28 2003-10-13 12:51:01 witoldp Exp $ 
+// $Id: Generator.opts,v 1.29 2003-10-31 16:34:37 witoldp Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
 // to use particle gun, uncomment the line below and comment out the other generators
 //Generator.Members += {"ParticleGun"};
 
-Generator.Members += {"PythiaAlg"};
-Generator.Members += {"SetDecayAlg","EvtDecayAlg"};
+Generator.Members += {"SignalDecayAlg", "PythiaAlg", "SetDecayAlg", "EvtDecayAlg"};
 Generator.Members += {"SmearVertexAlg"};
 //Generator.Members += {"DumpMC"};
 
 // any Pythia commands (flags) should be specified in the following form:
-//PythiaAlg.PythiaCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
+// PythiaAlg.PythiaCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
 
 // Particle Gun's options
-//ParticleGun.xVertex = 6.15949;	
-//ParticleGun.yVertex = 37.4604;	
-//ParticleGun.zVertex = 228.484;	
-ParticleGun.ThetaMin = 0.16;
-ParticleGun.ThetaMax = 0.16;
+ParticleGun.xVertexMin = 0.0;
+ParticleGun.xVertexMax = 0.0;
+ParticleGun.yVertexMin = 0.0;
+ParticleGun.yVertexMax = 0.0;
+ParticleGun.zVertexMin = 0.0;
+ParticleGun.zVertexMax = 0.0;
+
+ParticleGun.MomentumMax = 10.0;
+ParticleGun.MomentumMin = 10.0;
+ParticleGun.ThetaMin = 1.0;
+ParticleGun.ThetaMax = 1.0;
 ParticleGun.PhiMin = 0.0;
 ParticleGun.PhiMax = 0.0;
-ParticleGun.px = -0.156017;
-ParticleGun.py = -0.0303413;
-ParticleGun.pz = 0.515;
+
 ParticleGun.PdgCode = -211;
 ParticleGun.GunMode=1;
 ParticleGun.Mode=0;
 
 // in case you don't want to use the default decay file, uncomment the line below
 // and specify the alternative file name (not to be confused with the user decay file)
-//EvtDecayAlg.DecayFile = "$GAUSSROOT/data/decay.dec";
+// EvtDecayAlg.DecayFile = "$GAUSSROOT/data/decay.dec";
 
 // in order to generate specific decays put below the following line:
 // #include "$DECFILESROOT/options/event_type.opts" with event_type replaced by the
 // appropriete int
 
+//#include "$DECFILESROOT/options/412800.opts"
 //#include "$DECFILESROOT/options/370000.opts"
 //#include "$DECFILESROOT/options/411300.opts"
