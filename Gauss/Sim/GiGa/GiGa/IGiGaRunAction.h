@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/26 13:26:02  ibelyaev
+/// new abstract interface
+/// 
 /// ===========================================================================
 #ifndef GIGA_IGIGARUNACTION_H 
 #define GIGA_IGIGARUNACTION_H 1
@@ -11,7 +14,7 @@
 /// GiGa 
 #include "GiGa/IIDIGiGaRunAction.h"
 /// G4 
-#include "G4UserRunAction.h"
+#include "G4UserRunAction.hh"
 
 /** @class IGiGaRunAction IGiGaRunAction.h GiGa/IGiGaRunAction.h
  *  
@@ -22,7 +25,7 @@
  *  @date   26/07/2001
  */
 
-class IGiGaRunAction: virtual public G4UserEventAction ,  
+class IGiGaRunAction: virtual public G4UserRunAction ,  
                       virtual public IInterface          
 {
   
