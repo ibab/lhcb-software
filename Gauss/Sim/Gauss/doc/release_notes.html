@@ -6,7 +6,15 @@ Package manager : Witek Pokorski
 !========================================================================
 <H1><A NAME="v14r1">2004-01-29 - Gauss v14r1</A></H1><PRE>
  uses Gaudi v14r1, LHCb v15r1, XmlDDDB v20r1, DecFiles v4r1, ParamFiles v3r0
- no change in the code compare with v14r0
+
+ !=========================== GiGa v15r1 =================================
+! 2004-01-27 - Vanya BELYAEV
+ - src/Lib/GiGaTrajectory.cpp
+  add check for NaN/Infinity before the creation of GiGaTrajectoryPoint 
+  thrown GiGaException for NaN/Infinite
+
+! 2004-01-27 Florence Ranjard
+ - doc/Doxy* - remove Doxygen files
 
 !========================================================================
 <H1><A NAME="v14r0">2004-01-26 - Gauss v14r0</A></H1><PRE>

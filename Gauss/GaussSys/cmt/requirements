@@ -15,7 +15,7 @@ use EvtGen              v5r0    Gen
 use GeneratorModules    v10r4   Gen
 
 # GiGa stuff...
-use GiGa        	v15r0	Sim        
+use GiGa        	v15r1	Sim        
 use GiGaCnv     	v14r1   Sim
 use GiGaVisUI		v3r0	Sim
 
