@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.40 2003-10-10 16:38:34 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.41 2003-10-10 16:51:30 witoldp Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -41,7 +41,7 @@ Simulation.Members +=
   "GiGaInputStream/Geo"              ,   // load the geometry 
   "GiGaInputStream/Kine"                 // load the kinematics 
 //, "GiGaFlushAlgorithm/GiGaFlush"         // flush the event 
-, "PrintEventAlg"                        // get MCParticles/MCVertices
+//, "PrintEventAlg"                        // get MCParticles/MCVertices
 , "GetGiGaHitsAlg/GetHits"               // get MCHits
 };
 
