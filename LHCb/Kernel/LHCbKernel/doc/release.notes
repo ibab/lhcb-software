@@ -2,8 +2,13 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
+
+! 20020507 Vanya Belyaev
+ - Relations/Less.h
+ - Relations/ObjectTypeTraits.h - remove warnings on Linux 
+ 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
-! 20020507 Pere Mato
+! 20020507 Vanya Belyaev
 - src/CLHEPstreams.cpp
   1) modify the persistent representation of HepLorentzVector to
      preserve the 4-length of the vectror to be subjected truncation 

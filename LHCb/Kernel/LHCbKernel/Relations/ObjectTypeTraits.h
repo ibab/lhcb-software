@@ -1,8 +1,11 @@
-// $Id: ObjectTypeTraits.h,v 1.8 2002-04-27 09:48:03 ibelyaev Exp $
+// $Id: ObjectTypeTraits.h,v 1.9 2002-05-08 12:51:20 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/04/27 09:48:03  ibelyaev
+//  reorder includes and forward declarations
+//
 // ============================================================================
 #ifndef RELATIONS_ObjectTypeTraits_H
 #define RELATIONS_ObjectTypeTraits_H 1
@@ -15,6 +18,7 @@
 #include "Relations/TypeSerializer.h"
 #include "Relations/TypeApply.h"
 #include "Relations/RelationUtils.h"
+#include "Relations/Less.h"
 // forward declarations
 template <class TYPE> class SmartRef ; // from GaudiKernel package
 
@@ -54,7 +58,11 @@ namespace Relations
     /// "apply"
     typedef TypeApply<Type>                       Apply      ;
     /// comparison
+#ifdef WIN32
     typedef std::less<const OBJECT*>              Less       ;
+#else
+    typedef std::less<Type>                       Less       ;
+#endif  
     /// the unique class identification
     static  int id() { return  OBJECT::classID() ;}          ;
   };
