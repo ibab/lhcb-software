@@ -18,6 +18,8 @@
 //--------------------------------------------------------------
 #include "$STDOPTIONS"
 #include "$STDOPTS/DetDesc.opts"
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/dbase.xml";
+
 ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;

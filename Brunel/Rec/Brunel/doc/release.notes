@@ -31,6 +31,9 @@ Purpose: LHCb reconstruction program
         RICH digitisation and reconstruction.
         MUON digitisation.
 
+   Use DDDB/dbase.xml detector description by default
+   Suppressed BrunelFinalFit phase for the time being
+
    In job/Brunel.job
    - Script cleaned up, improved behaviour in interactive mode
 
