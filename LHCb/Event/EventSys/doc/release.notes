@@ -1,6 +1,10 @@
 package Event
-package manager: ?????
+package manager: Marco Cattaneo
 
+! 20011108 - MC EventSys v3
+  requirements - Event Model versions used by Brunel v8
+
+!===================================================================
 ! 20010710 - Flr
   requirements - use GaudiSys v8
 
