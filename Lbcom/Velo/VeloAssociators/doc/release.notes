@@ -1,6 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!======================== VeloAssociators v1r4 2002-12-05 =================
+! 2002-11-13 - Florence Ranjard
+ - requirements - use new versions
+
 !========================  VeloAssociators v1r3 2002-11-12 =====================
 ! 2002-11-12 - Marco Cattaneo
  - Use VeloDet v8r*
