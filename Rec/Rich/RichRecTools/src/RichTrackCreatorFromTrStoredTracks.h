@@ -1,23 +1,16 @@
 
+//-------------------------------------------------------------------------------------
 /** @file RichTrackCreatorFromTrStoredTracks.h
  *
  *  Header file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.19 2005-01-13 14:34:27 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.18  2004/11/11 16:51:32  jonrob
- *  Add separate unique and non-unique counts for debug
- *
- *  Revision 1.17  2004/10/13 09:52:41  jonrob
- *  Speed improvements + various minor changes
- *
- *  Revision 1.16  2004/07/27 20:15:33  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.20 2005-02-02 10:10:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-------------------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1

@@ -1,28 +1,21 @@
 
+//-------------------------------------------------------------------------------------
 /** @file RichTrackCreatorFromTrStoredTracks.cpp
  *
  *  Implementation file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.22 2005-01-13 14:34:27 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.21  2004/11/11 16:51:31  jonrob
- *  Add separate unique and non-unique counts for debug
- *
- *  Revision 1.20  2004/10/13 09:52:41  jonrob
- *  Speed improvements + various minor changes
- *
- *  Revision 1.19  2004/07/27 20:15:33  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.23 2005-02-02 10:10:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-------------------------------------------------------------------------------------
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
 
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichTrackCreatorFromTrStoredTracks>          s_factory ;
@@ -53,13 +46,10 @@ RichTrackCreatorFromTrStoredTracks( const std::string& type,
   declareInterface<IRichTrackCreator>(this);
 
   // job options
-
   declareProperty( "DoBookKeeping", m_bookKeep );
-
   // data locations
   declareProperty( "TrStoredTracksLocation",   m_trTracksLocation        );
   declareProperty( "RichRecTrackLocation",     m_richRecTrackLocation    );
-
   // tool options
   declareProperty( "BuildMassHypothesisRings", m_buildHypoRings          );
   declareProperty( "TrackSegmentTool",         m_trSegToolNickName       );
@@ -85,6 +75,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+  info() << "Selecting '" << m_trSelector.selectedTracksAsString() << "' tracks" << endreq;
 
   // Configure the ray-tracing mode
   m_traceMode.setDetPrecision      ( RichTraceMode::circle );
@@ -100,7 +91,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
@@ -152,7 +143,8 @@ void RichTrackCreatorFromTrStoredTracks::handle ( const Incident & incident )
   }
 }
 
-const StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() const {
+const StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() const
+{
 
   if ( ! m_allDone ) {
     m_allDone = true;
@@ -264,40 +256,51 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
                                                       (*iSeg).bestPoint(),
                                                       trackDir,
                                                       hitPoint,
-                                                      m_traceMode )
-               && m_signal->hasRichInfo(newSegment) ) {
-            if ( msgLevel(MSG::VERBOSE) )
-              verbose() << " TrackSegment in " << (*iSeg).radiator() << " selected" << endreq;
-
-            // keep track
-            keepTrack = true;
-
-            // Save this segment
-            segmentCreator()->saveSegment( newSegment );
-
-            // Add to the SmartRefVector of RichSegments for this RichRecTrack
-            newTrack->addToRichRecSegments( newSegment );
-
-            // set radiator info
-            const Rich::RadiatorType rad = (*iSeg).radiator();
-            if        ( Rich::Aerogel  == rad ) {
-              newTrack->setInRICH1(true); newTrack->setInAerogel(true);
-            } else if ( Rich::Rich1Gas == rad ) {
-              newTrack->setInRICH1(true); newTrack->setInGas1(true);
-            } else if ( Rich::Rich2Gas == rad ) {
-              newTrack->setInRICH2(true); newTrack->setInGas2(true);
-            }
+                                                      m_traceMode ) ) {
 
             // Get PD panel hit point in local coordinates
+            // need to for fixed-value geom-eff tool
+            // Need to make this "on demand"
             newSegment->pdPanelHitPointLocal() = m_smartIDTool->globalToPDPanel(hitPoint);
 
-            // Set the average photon energy (for default hypothesis)
-            newSegment->trackSegment()
-              .setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,
-                                                                newTrack->currentHypothesis()) );
+            if ( m_signal->hasRichInfo(newSegment) ) {
 
-            // make RichRecRings for the mass hypotheses if requested
-            if ( m_buildHypoRings ) m_massHypoRings->newMassHypoRings( newSegment );
+              if ( msgLevel(MSG::VERBOSE) )
+                verbose() << " TrackSegment in " << (*iSeg).radiator() << " selected" << endreq;
+
+              // keep track
+              keepTrack = true;
+
+              // Save this segment
+              segmentCreator()->saveSegment( newSegment );
+
+              // Add to the SmartRefVector of RichSegments for this RichRecTrack
+              newTrack->addToRichRecSegments( newSegment );
+
+              // set radiator info
+              const Rich::RadiatorType rad = (*iSeg).radiator();
+              if        ( Rich::Aerogel  == rad ) {
+                newTrack->setInRICH1(true); newTrack->setInAerogel(true);
+              } else if ( Rich::Rich1Gas == rad ) {
+                newTrack->setInRICH1(true); newTrack->setInGas1(true);
+              } else if ( Rich::Rich2Gas == rad ) {
+                newTrack->setInRICH2(true); newTrack->setInGas2(true);
+              }
+
+              // Set the average photon energy (for default hypothesis)
+              newSegment->trackSegment()
+                .setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,
+                                                                  newTrack->currentHypothesis()) );
+
+              // make RichRecRings for the mass hypotheses if requested
+              if ( m_buildHypoRings ) m_massHypoRings->newMassHypoRings( newSegment );
+
+            } else {
+              if ( msgLevel(MSG::VERBOSE) )
+                verbose() << " TrackSegment in " << (*iSeg).radiator() << " rejected" << endreq;
+              delete newSegment;
+              newSegment = NULL;
+            }
 
           } else {
             if ( msgLevel(MSG::VERBOSE) )
@@ -363,8 +366,11 @@ RichRecTracks * RichTrackCreatorFromTrStoredTracks::richTracks() const
 
     } else {
 
-      debug() << "Found " << tdsTracks->size() << " pre-existing RichRecTracks in TES at "
-              << m_richRecTrackLocation << endreq;
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Found " << tdsTracks->size() << " pre-existing RichRecTracks in TES at "
+                << m_richRecTrackLocation << endreq;
+      }
 
       // Set smartref to TES track container
       m_tracks = tdsTracks;
