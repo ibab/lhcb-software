@@ -6,11 +6,11 @@
 
 ApplicationMgr.DLLs += {"HltSelChecker"};
 
-ApplicationMgr.TopAlg += {"GaudiSequencer/MBExSelectionsNTuples"};
+// ApplicationMgr.TopAlg += {"GaudiSequencer/MBExSelectionsNTuples"};
+HLTSelections.Members += {"GaudiSequencer/MBExSelectionsNTuples"};
 
 MBExSelectionsNTuples.IgnoreFilterPassed = true; // make all
 MBExSelectionsNTuples.MeasureTime = false;
-
 
 MBExSelectionsNTuples.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                                  "TrgL1Filter", "PrintHeader/PassedL1",
@@ -34,13 +34,15 @@ MergeHLTSel.OutputLevel = 3;
 HTLSelTrees.IgnoreFilterPassed = true; // make all
 HTLSelTrees.MeasureTime = false;
 
-HTLSelTrees.Members ={"DecayChainNTuple/HLTB2HHTree",
-                      "DecayChainNTuple/HLTBs2PhiPhiTree",
-                      "DecayChainNTuple/HLTBd2D0KstarTree", 
-                      "DecayChainNTuple/HLTBd2DstarPiTree",
-                      "DecayChainNTuple/HLTBs2DsHTree",
-                      "DecayChainNTuple/HLTBs2PhiGammaTree"};
+HTLSelTrees.Members = {"ResetPVLocation/SetHLTTreePV",
+                       "DecayChainNTuple/HLTB2HHTree",
+                       "DecayChainNTuple/HLTBs2PhiPhiTree",
+                       "DecayChainNTuple/HLTBd2D0KstarTree", 
+                       "DecayChainNTuple/HLTBd2DstarPiTree",
+                       "DecayChainNTuple/HLTBs2DsHTree",
+                       "DecayChainNTuple/HLTBs2PhiGammaTree"};
 
+SetHLTTreePV.PVLocation = "/Event/Phys/Trg/Vertices";
 HTLSelTrees.OutputLevel = 3;
 
 //==============================================================================
