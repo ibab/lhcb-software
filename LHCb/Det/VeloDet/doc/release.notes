@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.9 2002-01-29 09:19:37 ocallot Exp $
+! $Id: release.notes,v 1.10 2002-03-19 08:58:08 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+!=============================================================================
+! 18/03/2002 - Olivier Callot
+  - Change the 'type' of the wafers, to handle properly the separation between
+    left and right detectors, this was not done for R and was incorrect for Phi.
+    The result was an inefficiency in the overlap region (vertical).
 
 !=============================================================================
 ! 29/01/2002 - Olivier Callot  v3r0

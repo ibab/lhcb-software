@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.4 2002-01-23 13:20:41 ocallot Exp $
+// $Id: DeVelo.h,v 1.5 2002-03-19 08:58:08 ocallot Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -45,11 +45,13 @@ public:
   
 private:
   int m_number;   ///< station number
-  int m_type;     ///< sector type: 0 = R, 1 = Phi droite, 2 = Phi gauche
+  /** The detector type describes if the detector is right or left (low bit)
+   *  and which type : R is 0/1, Phi with one stereo is 2/3, phi with the 
+   *  other stereo is 4/5
+   */
+  int m_type;     ///< detector type
   double m_z;     ///< Z position of silicium center
 };
-
-
 
 /** @class DeVelo DeVelo.h "VeloDet/DeVelo.h" 
  *

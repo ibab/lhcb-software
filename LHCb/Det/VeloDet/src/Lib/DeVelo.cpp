@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.8 2002-01-29 09:19:37 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.9 2002-03-19 08:58:08 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -176,6 +176,8 @@ StatusCode DeVelo::initialize() {
   double minZ = -200.*mm;
   bool inVeto = true;
   double z;
+  int rightLeft;
+  int phiType;
   
   IDetectorElement* stations = *childBegin();
 
@@ -198,6 +200,9 @@ StatusCode DeVelo::initialize() {
          (*child)->childEnd() != waf ; ++waf ) {
       int j = waf - (*child)->childBegin();
 
+      rightLeft = j/2;
+      phiType   = number%2 + 1;  // 1 or 2
+      
       IGeometryInfo* geoData = (*waf)->geometry();
       if ( 0 != geoData ) {
         pointGlobal = geoData->toGlobal( pointLocal );
@@ -207,15 +212,11 @@ StatusCode DeVelo::initialize() {
         wafer->setNumber( index++ );
         wafer->setZ( z );
         if ( !inVeto && (1 == j%2) ) {
-          if ( 0 == number%2 ) {
-            wafer->setType( j );    // Negative X
-          } else {
-            wafer->setType( j+1 );    // Positive X
-          }
+          wafer->setType( 2*phiType + rightLeft );
           loging << " Phi" << wafer->type() << " z=" << wafer->z();
         } else {
-          wafer->setType( 0 );
-          loging << " R z=" << wafer->z();
+          wafer->setType( rightLeft );
+          loging << " R " << wafer->type() << " z=" << wafer->z();
         }
         if ( inVeto ) {
           m_puWafer.push_back( wafer );
@@ -304,49 +305,51 @@ double DeVelo::stripNumberByType( int type,
 
   double radius = point.perp();
   double phi    = point.phi();
-  
-  if ( 0 == type ) {
 
-    // ** This is an R wafer.    
+  // Rotate the point if in the left part. Is in +- m_halfAngle
 
-    if ( halfpi < phi ) {
-      phi -= pi;
-    } else if ( -halfpi > phi ) {
-      phi += pi;
-    }
-    int zone     = (int) ( (phi+halfpi) / m_quarterAngle );
-    
-    if ( (m_innerRadius < radius ) && ( m_outerRadius > radius ) ) {
-      if ( m_fixPitchRadius > radius ) {
-        strip = ( radius - m_innerRadius ) / m_innerPitch;
-        pitch = m_innerPitch;
-      } else {
-        strip = log( 1. + m_pitchSlope * (radius - m_fixPitchRadius) / 
-                       m_innerPitch ) / m_logPitchStep + m_nbRFixedPitch;
-        pitch = m_innerPitch +  m_pitchSlope * (radius - m_fixPitchRadius);
-      }
-      if ( m_nbRInner < strip ) {
-        strip += m_nbRInner;            // get space for second inner part
-      } else {
-        if ( 0 != (zone % 2) ) { 
-          strip += m_nbRInner;          // second half of inner strips
-        }
-      }
-      if ( 1 < zone ) {
-        strip += 1024.;           // second half of the wafer
-      }
-    }
-    return strip;
-  }
-  // ** This is a phi wafer. Can be rotated or symmetrized
-  if ( 2 >= type ) {
+  if ( 0 == type%2 ) {
     if ( 0 < phi ) {
       phi = phi - pi;
     } else {
       phi = phi + pi;
     }
   }
-  if ( 0 == type % 2 ) {
+  
+  if ( 1 >= type ) {
+
+    // ** This is an R wafer.
+
+    if ( -m_halfAngle < phi ) {
+      int zone  = (int) ( ( phi + m_halfAngle ) / m_quarterAngle );
+      if ( 4 > phi ) {
+        if ( (m_innerRadius < radius ) && ( m_outerRadius > radius ) ) {
+          if ( m_fixPitchRadius > radius ) {
+            strip = ( radius - m_innerRadius ) / m_innerPitch;
+            pitch = m_innerPitch;
+          } else {
+            strip = log( 1. + m_pitchSlope * (radius - m_fixPitchRadius) / 
+                         m_innerPitch ) / m_logPitchStep + m_nbRFixedPitch;
+            pitch = m_innerPitch +  m_pitchSlope * (radius - m_fixPitchRadius);
+          }
+          if ( m_nbRInner < strip ) {
+            strip += m_nbRInner;            // get space for second inner part
+          } else {
+            if ( 0 != (zone % 2) ) { 
+              strip += m_nbRInner;          // second half of inner strips
+            }
+          }
+          if ( 1 < zone ) {
+            strip += 1024.;           // second half of the wafer
+          }
+        }
+      }
+    }
+    return strip;
+  }
+  // ** This is a phi wafer. Can symmetrized to handle th eother stereo...
+
+  if ( 3 < type ) {
     phi = - phi;
   }
   
@@ -387,7 +390,7 @@ double DeVelo::rOfStrip( double strip, int& phiZone ) {
     phiZone = 3;
   }
   
-  if ( m_nbRInner < localStrip ) {
+  if ( m_nbRInner < localStrip ) {     // two zones in the central part
     localStrip -= (int)m_nbRInner;
     phiZone += 1;
     if  ( m_nbRInner < localStrip ) {
@@ -413,7 +416,7 @@ double DeVelo::phiOfStrip ( double strip, double radius, int waferNb ) {
   // This version codes unphysical strips as SICBMC generates hits in semi-
   // circular wafer, not taking into accound the real Phi wafer shape. The 
   // non-official strips are coded as 2048 plus the strip number of the 
-  // wafer which covers this region in th enext half station.
+  // wafer which covers this region in the next half station.
 
   double stripLocal = strip;
   if ( 2048. <= strip ) {
@@ -436,13 +439,13 @@ double DeVelo::phiOfStrip ( double strip, double radius, int waferNb ) {
   }
   phiLocal -= halfpi;
 
-  if ( halfpi < phiLocal ) {
-    phiLocal -= pi;
-  } else if ( -halfpi > phiLocal ) {
-    phiLocal += pi;
-  }
+  //if ( halfpi < phiLocal ) {
+  //  phiLocal -= pi;
+  //} else if ( -halfpi > phiLocal ) {
+  //  phiLocal += pi;
+  //}
 
-  if ( 0 == ( m_wafer[waferNb]->type()%2 ) ) {
+  if ( 3 < ( m_wafer[waferNb]->type() ) ) {
     phiLocal = -phiLocal;
   }
   return phiLocal;
@@ -468,7 +471,7 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
   // check that the wafer types are valid
   int phiType =  m_wafer[PhiWaferNumber]->type();
   
-  if ( ( 0 != m_wafer[RWaferNumber]->type() ) || ( 0 == phiType ) ) {
+  if ( ( 1 < m_wafer[RWaferNumber]->type() ) || ( 2 > phiType ) ) {
     return false;
   }
 
@@ -531,12 +534,8 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
     }
   }
   
-  if ( 2 >= phiType ) {
-    if ( 0 < phiLocal ) {
-      phiLocal -= pi;
-    } else {
-      phiLocal += pi;
-    }
+  if ( 0 == phiType%2 ) {
+    phiLocal += pi;
   }
 
   point.setZ( zR );
