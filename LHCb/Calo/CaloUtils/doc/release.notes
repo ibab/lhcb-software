@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.16 2002-06-15 10:43:51 ibelyaev Exp $
+! $Id: release.notes,v 1.17 2002-07-09 18:16:39 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!========================= CaloUtils v4r0 2002-07-09 ==========================
 ! 2002-06-15 - Vanya Belyaev
  - version update for new CaloDet version 
 

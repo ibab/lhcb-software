@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.8 2002-05-23 09:41:37 ibelyaev Exp $
+! $Id: release.notes,v 1.9 2002-07-09 18:11:19 cattanem Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
@@ -6,23 +6,19 @@
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
-
+!=================== CaloInterfaces v2r1 2002-07-09 ==========================
 ! 2002-05-23 - Vanya Belyaev
  - cmt/requirements                    : increase the version to v2r1  
  - CaloInterfaces/ICaloTrackMatch.h    : add new method "state"
  - CaloInterfaces/IIDICaloTrackMatch.h : increase the interface major ID
 
-! =============================================================================
 ! 27/04/2002 Vanya Belyaev  
-! - update "Track"-interfaces 
-! =============================================================================
+ - update "Track"-interfaces 
 
-! =============================================================================
 ! 26/04/2002 Vanya Belyaev  
-! - ICaloLikelihood.h remove forward declaration of CaloHypotheses::Hypothesis 
-! =============================================================================
+ - ICaloLikelihood.h remove forward declaration of CaloHypotheses::Hypothesis 
 
-! >>>>>>>>>>>>>>>>>>>>>>>> CaloInterfaces v2r0 <<<<<<<<<<<<<<<<<<<<<<<
+!=================== CaloInterfaces v2r0 2002-04-19 ==========================
 ! 19/04/2002 Marco Cattaneo
   - Use GaudiKernel v12* (for Gaudi v10) 
 
