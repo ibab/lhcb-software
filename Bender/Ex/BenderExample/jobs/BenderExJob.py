@@ -67,8 +67,7 @@ def setEnvironment() :
     import cmt
 
     # set the project environment 
-    cmt.project( 'DaVinci' , 'v11r13' , os.environ['LHCBDEV'] )
-    cmt.project( 'Bender'  , 'v3r7'   , os.environ['Bender_release_area'])
+    cmt.project( 'Bender'  , 'v3r7'   )
 
     # show CMT paths 
     for p in cmt.showpath() : print  ' CMT path: ' + p
