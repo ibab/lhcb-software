@@ -1,4 +1,4 @@
-// $Id: L0mProcUnit.cpp,v 1.10 2002-09-25 16:02:36 cattanem Exp $
+// $Id: L0mProcUnit.cpp,v 1.11 2003-01-23 16:40:32 atsareg Exp $
 
 #ifdef WIN32
 // Disable warning C4786 identifier truncated to 255 characters in debug info.
@@ -12,6 +12,7 @@
 
 #include "L0Muon/L0mProcUnit.h"
 #include "L0Muon/L0mPad.h"
+#include "L0Muon/L0mCrate.h"
 
 L0mProcUnit::L0mProcUnit() {
 }
@@ -71,11 +72,13 @@ L0Muon::StatusCode L0mProcUnit::execute(MsgStream& log) {
     }
     
     if(nCandidate>2) {
-      // PU overflow. We are responsible to do the cleanup
-      for(ilmc=m_candidates.begin(); ilmc != m_candidates.end(); ilmc++) {
+      // PU overflow. Choose the 2 candidates with the highest Pt 
+      std::sort(m_candidates.begin(),m_candidates.end(),ComparePt());
+      // Erase candidates with smaller Pt
+      for (ilmc = m_candidates.end()-1;ilmc != m_candidates.begin()+1; ilmc--) {
         delete *ilmc;
+	m_candidates.erase(ilmc);
       }
-      m_candidates.clear();
       m_status = L0Muon::PU_OVERFLOW;  
       log << MSG::DEBUG << "PU overflow detected !" << endreq;    
     } else if ( nCandidate == 0 ) {

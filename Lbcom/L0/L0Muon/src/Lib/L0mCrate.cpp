@@ -1,4 +1,4 @@
-// $Id: L0mCrate.cpp,v 1.9 2002-08-02 10:46:29 atsareg Exp $
+// $Id: L0mCrate.cpp,v 1.10 2003-01-23 16:40:32 atsareg Exp $
 
 #ifdef WIN32
 // Disable warning C4786 identifier truncated to 255 characters in debug info.
@@ -75,8 +75,12 @@ L0Muon::StatusCode L0mCrate::execute(MsgStream& log) {
 	    m_candidates.insert(m_candidates.end(),lmc_pu.begin(),lmc_pu.end());
 	}
 	m_status = L0Muon::OK;
+	
+      // PU overflow is not an error condition	
+      } else if (lsc == L0Muon::PU_OVERFLOW ) {	
+        m_status = L0Muon::OK;
       // Error condition is detected: erase candidates and set status  
-      } else if (lsc == L0Muon::PU_OVERFLOW || lsc == L0Muon::PU_ERROR ) {
+      } else if (lsc == L0Muon::PU_ERROR ) {
 	clear();
 	for (ilmc = m_candidates.begin(); ilmc != m_candidates.end(); ilmc++) {
           delete *ilmc;
