@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v17r1 2004-01-26 ========================
+! 2004-01-26 - Marco Cattaneo
+ - Use L0Event v14r1, Event v4r1, LinkerEvent v1r1
+
 !======================== EventSys v17r0 2004-01-16 ========================
 ! 2004-01-16 - Marco Cattaneo
  - Added LinkerEvent and TrgEvent packages, and added them to PoolDicts.opts
