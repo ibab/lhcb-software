@@ -1,4 +1,4 @@
-// $Id: NsctVeloTransporter.cpp,v 1.2 2002-05-17 11:42:14 gcorti Exp $
+// $Id: NsctVeloTransporter.cpp,v 1.3 2002-05-20 23:13:45 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -68,9 +68,9 @@ IDataProviderSvc*  NsctVeloTransporter::detSvc() const {
 StatusCode NsctVeloTransporter::initialize(){
   MsgStream log(msgSvc(), name());
   
-  log << MSG::INFO << "NsctVeloTransporter Initialization starting..."
+  log << MSG::DEBUG << "NsctVeloTransporter Initialization starting..."
       << endreq;
-  log << MSG::INFO << "Retrieving now detector elements" << endreq;
+  log << MSG::DEBUG << "Retrieving now detector elements" << endreq;
   
   SmartDataPtr<IDetectorElement> vertex( detSvc(), "/dd/Structure/LHCb/Velo" );
   if( !vertex ) {
