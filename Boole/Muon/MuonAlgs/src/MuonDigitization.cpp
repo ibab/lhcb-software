@@ -34,7 +34,7 @@ MuonDigitization::MuonDigitization(const std::string& name,
 {
   //declareProperty("NmbOfSpilloverEvents" , m_numberOfSpilloverEvents=3) ;
   declareProperty("BXTime" , m_BXTime=25.0) ;
-  declareProperty("TimeGate" , m_gate=24.0) ;
+  declareProperty("TimeGate" , m_gate=20.0) ;
   declareProperty("VerboseDebug" , m_verboseDebug=false) ;
   declareProperty("ApplyTimeJitter" , m_applyTimeJitter=true) ;
   declareProperty("ApplyChamberNoise" , m_applyChamberNoise=true) ;

@@ -4,6 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+! 2003-04-14 - Marco Cattaneo
+ - Set MuonDigitisation timegate default to 20. for consistency with new low
+   energy background 
+
 ! 2003-04-09 - Marco Cattaneo
  - Fix some memory leaks
 
