@@ -141,7 +141,7 @@ void L0Muon::CablingUnit::execute() {
     dynamic_cast<BestCandidateSelectionUnit*> (bu->subUnit("bcsu"));
   
   // Get a pointer to the Crate Unit
-  CrateUnit * cr = dynamic_cast<CrateUnit*>(myBoard->parent());
+  //  CrateUnit * cr = dynamic_cast<CrateUnit*>(myBoard->parent());
 
   
   // Reset the tower
