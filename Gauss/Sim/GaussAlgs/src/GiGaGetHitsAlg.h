@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.h,v 1.1.1.1 2004-02-20 19:43:29 ibelyaev Exp $
+// $Id: GiGaGetHitsAlg.h,v 1.2 2004-04-29 15:12:57 gcorti Exp $
 #ifndef GETGIGAHITSALG_H 
 #define GETGIGAHITSALG_H 1
 
@@ -46,5 +46,7 @@ private:
   typedef std::vector<std::string> Addresses ;
   Addresses      m_caloHits    ;
   
+  bool           m_muonSummary;
+
 };
 #endif // GETGIGAHITSALG_H

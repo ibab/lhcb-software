@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.cpp,v 1.1.1.1 2004-02-20 19:43:29 ibelyaev Exp $
+// $Id: GiGaGetHitsAlg.cpp,v 1.2 2004-04-29 15:12:57 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -54,6 +54,7 @@ GiGaGetHitsAlg::GiGaGetHitsAlg( const std::string& name,
   , m_richsegments ( MCRichSegmentLocation::Default )
   , m_richtracks   ( MCRichTrackLocation::Default )
   , m_caloHits     ()
+  , m_muonSummary  ( true )
 {
   m_caloHits.push_back ( MCCaloHitLocation::Spd  ) ;
   m_caloHits.push_back ( MCCaloHitLocation::Prs  ) ;
@@ -70,6 +71,7 @@ GiGaGetHitsAlg::GiGaGetHitsAlg( const std::string& name,
   declareProperty( "RichTracks"  , m_richtracks  );
   declareProperty( "RichSegments"  , m_richsegments  );
   declareProperty( "CaloHits"  , m_caloHits   );
+  declareProperty( "MuonSummaryOnly", m_muonSummary );
 }
 
 //=============================================================================
@@ -224,19 +226,23 @@ StatusCode GiGaGetHitsAlg::execute() {
   if( !m_muonhits.empty() )
   {
 
+    unsigned int nTotMuonHits = 0;
     for ( int i=0; i<20; ++i)
     {
       SmartDataPtr<MCMuonHits> obj( eventSvc() ,
                                     MCMuonHitPath::MCMuonHitPath[i]) ;
       if( obj )
       {
-        log << MSG::INFO
-            << "Number of extracted Muonhits  '"
-            << MCMuonHitPath::MCMuonHitPath[i] << "'  \t"
-            << obj->size()
-            << endreq ;
+        nTotMuonHits += obj->size();
+        if( !m_muonSummary ) {
+          log << MSG::INFO
+              << "Number of extracted Muonhits  '"
+              << MCMuonHitPath::MCMuonHitPath[i] << "'  \t"
+              << obj->size()
+              << endreq ;
+        }
         Stat stat( chronoSvc() , "#hits" , obj->size() ) ;
-      }
+      }    
       else
       {
         log << MSG::INFO
@@ -246,6 +252,10 @@ StatusCode GiGaGetHitsAlg::execute() {
         ///
       }
     }
+    log << MSG::INFO
+        << "Number of extracted Muonhits in total "
+        << nTotMuonHits
+        << endreq;
   }
   ///
   if( !m_richhits.empty() )

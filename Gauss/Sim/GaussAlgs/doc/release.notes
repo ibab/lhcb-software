@@ -3,6 +3,13 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!===================== GaussAlgs v1r1 2004-04-29 =============================
+! 2004-04-29 - Gloria CORTI
+ - src/GiGaGetHitsAlg.{h,cpp}
+   . introduce new feature to print only sum of muon hits instead of one 
+     line for each container. The behaviour can cbe controlled via an option
+     if necessary to print all container contents (MuonSummaryOnly, def=true)
+
 !===================== GaussAlgs v1r0 ========================================
 ! 2004-02-19 - Vanya BELYAEV
  - new package with 4 algorithms from Sim/GaussTools :
