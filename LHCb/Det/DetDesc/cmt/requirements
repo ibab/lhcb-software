@@ -17,7 +17,7 @@ library DetDescLib   Lib/*.cpp
 library DetDesc      component/*.cpp
 
 ignore_pattern package_stamps
-macro DetDesc_stamps "${DETDESCROOT}/${BINDIR}/DetDescLib.stamp"
+macro DetDesc_stamps "$(DETDESCROOT)/$(BINDIR)/DetDescLib.stamp"
 
 apply_pattern package_Llinkopts
 

@@ -4,6 +4,10 @@ package manager : Vanya Belyaev
 
 
 !===========================================================================
+! 20010213 - Marco Cattaneo
+  requirements - replace {} with () in macros, to please nmake
+ 
+!===========================================================================
 ! 20010211 - Vanya Belyaev
       remove all *.*.* files to please some CMT macros 
 
