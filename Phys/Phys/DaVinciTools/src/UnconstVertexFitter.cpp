@@ -1,4 +1,4 @@
-
+// $Id: UnconstVertexFitter.cpp,v 1.2 2002-03-28 17:48:49 gcorti Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
