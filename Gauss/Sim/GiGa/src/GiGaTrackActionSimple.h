@@ -1,12 +1,16 @@
 #ifndef       GIGA_GiGaTrackActionSimple_H
 #define       GIGA_GiGaTrackActionSimple_H 1 
+/// STL 
+#include <string>
+#include <vector>
 /// GiGa
 #include "GiGa/GiGaTrackActionBase.h"
 ///
 template <class TA> 
 class GiGaTrackActionFactory;
 class G4Track;
-
+class G4particleDefinition;
+///
 
 /** @class GiGaTrackActionSimple GiGaTrackActionSimple.h GiGaTrackActionSimple.h
     
@@ -26,13 +30,18 @@ class GiGaTrackActionSimple: virtual public GiGaTrackActionBase
   ///
   friend class GiGaTrackActionFactory<GiGaTrackActionSimple>;
   ///
- protected:
+public: 
+  ///
+  typedef  std::vector<std::string>                  TypeNames; 
+  typedef  std::vector<const G4ParticleDefinition*>  PartDefs; 
+  ///
+protected:
   ///
   GiGaTrackActionSimple( const std::string& , ISvcLocator* );
   ///  
   virtual ~GiGaTrackActionSimple();
   ////
- public: 
+public: 
   ///
   virtual StatusCode initialize () ; 
   virtual StatusCode finalize   () ;
@@ -45,16 +54,87 @@ protected:
   inline G4TrackingManager* trackMgr() const 
   { return G4UserTrackingAction::fpTrackingManager; } 
   ///
+  /// Should all tracks to be stored?
+  inline const bool      storeAll             () const ; 
+  /// Should primaries be stored ? 
+  inline const bool      storePrimaries       () const ; 
+  /// Should tracks with kinetic energy over some threshold be stored ?  
+  inline const bool      storeByOwnEnergy     () const ; 
+  /// should tracks of some predefined types be stored ?
+  inline const bool      storeByOwnType       () const ; 
+  /// Should tracks which produce at least one child with kinetic energy over some threshold be stored ?  
+  inline const bool      storeByChildEnergy   () const ; 
+  /// Should tracks which produce at least one child of some predefined types be stored ?
+  inline const bool      storeByChildType     () const ; 
+  /// Should track which marked explicitely be stored ? 
+  inline const bool      storeMarkedTracks    () const ; 
+  /// Threshold for own   kinetic energy 
+  inline const double    ownEnergyThreshold   () const ; 
+  /// Threshold for child kinetic energy 
+  inline const double    childEnergyThreshold () const ; 
+  /// Own   particle types to be stored 
+  inline const PartDefs& ownStoredTypes       () const ; 
+  /// Child particle types to be stored 
+  inline const PartDefs& childStoredTypes     () const ; 
+  ///
 private:
   ///
   GiGaTrackActionSimple()                                         ; // no default constructor
   GiGaTrackActionSimple( const GiGaTrackActionSimple& )            ; // no copy constructor 
   GiGaTrackActionSimple& operator=( const GiGaTrackActionSimple& ) ; // no assignment 
   ///
- private:
+private:
+  ///
+  ///  Flags:
+  ///  all tracks to be stored         
+  bool            m_storeAll              ;
+  ///  all primaries are stored
+  bool            m_storePrimaries        ;
+  ///  all tracks  with kinetic energy over threshold are stored  
+  bool            m_storeByOwnEnergy      ; 
+  ///  all tracks  with given type are stored 
+  bool            m_storeByOwnType        ; 
+  ///  all tracks which has a daughter with kinetic energy over threshold are stored 
+  bool            m_storeByChildEnergy    ; 
+  ///  all tracks which has a daughter of given type are stored 
+  bool            m_storeByChildType      ; 
+  ///  all tracks which are explicitely marked to be stored are stored 
+  bool            m_storeMarkedTracks     ; 
+  /// 
+  /// threshold for own kinetic energy 
+  double          m_ownEnergyThreshold    ;
+  /// threshold for child kinetic energy 
+  double          m_childEnergyThreshold  ;
+  ///  
+  /// container of names of own   types 
+  TypeNames       m_ownStoredTypesNames   ;  
+  /// container of names of child types 
+  TypeNames       m_childStoredTypesNames ; 
+  ///
+  /// container of definitions of own   types 
+  PartDefs        m_ownStoredTypes        ; 
+  /// container of definitions  of child types 
+  PartDefs        m_childStoredTypes      ; 
   ///
 };
 ///
-
+#include "GiGaTrackActionSimple.icpp"
+///
 
 #endif  //    GIGA_GiGaTrackActionSimple_H
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

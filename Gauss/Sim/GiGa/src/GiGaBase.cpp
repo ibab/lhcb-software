@@ -75,7 +75,11 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   ///
 };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-GiGaBase::~GiGaBase() { if( 0 != m_propMgr ) { delete m_propMgr ; m_propMgr = 0 ; } } 
+GiGaBase::~GiGaBase() 
+{ 
+  if( m_init         ) { finalize() ; } 
+  if( 0 != m_propMgr ) { delete m_propMgr ; m_propMgr = 0 ; } 
+} 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaBase::queryInterface(const InterfaceID& riid , void** ppI )
 {
@@ -200,16 +204,23 @@ StatusCode GiGaBase::initialize()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaBase::finalize()
 {
-  /// reverse order !!!
-  if( 0 != mfSvc     () ) { mfSvc     ()->release() ; m_mfSvc     = 0 ; } 
-  if( 0 != ppSvc     () ) { ppSvc     ()->release() ; m_ppSvc     = 0 ; } 
-  if( 0 != incSvc    () ) { incSvc    ()->release() ; m_incSvc    = 0 ; } 
-  if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc    = 0 ; } 
-  if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc    = 0 ; } 
-  if( 0 != setupSvc  () ) { setupSvc  ()->release() ; m_setupSvc  = 0 ; } 
-  if( 0 != gigaSvc   () ) { gigaSvc   ()->release() ; m_gigaSvc   = 0 ; } 
-  if( 0 != chronoSvc () ) { chronoSvc ()->release() ; m_chronoSvc = 0 ; } 
-  if( 0 != msgSvc    () ) { msgSvc    ()->release() ; m_msgSvc    = 0 ; } 
+  ///
+  if ( m_init )
+    {
+      /// reverse order !!!
+      if( 0 != mfSvc     () ) { mfSvc     ()->release() ; m_mfSvc     = 0 ; } 
+      if( 0 != ppSvc     () ) { ppSvc     ()->release() ; m_ppSvc     = 0 ; } 
+      if( 0 != incSvc    () ) { incSvc    ()->release() ; m_incSvc    = 0 ; } 
+      if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc    = 0 ; } 
+      if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc    = 0 ; } 
+      if( 0 != setupSvc  () ) { setupSvc  ()->release() ; m_setupSvc  = 0 ; } 
+      if( 0 != gigaSvc   () ) { gigaSvc   ()->release() ; m_gigaSvc   = 0 ; } 
+      if( 0 != chronoSvc () ) { chronoSvc ()->release() ; m_chronoSvc = 0 ; } 
+      if( 0 != msgSvc    () ) { msgSvc    ()->release() ; m_msgSvc    = 0 ; } 
+      ///
+    }
+  ///
+  m_init = false ;
   ///
   return StatusCode::SUCCESS;
   ///
@@ -285,7 +296,7 @@ StreamBuffer& GiGaBase::serialize( StreamBuffer& S )
 { 
   ///
   if( 0 == m_propMgr ) { m_propMgr = new PropertyMgr() ;} 
-  ///
+  ///x
   S >> m_name  
     >> m_gigaName 
     >> m_setupName

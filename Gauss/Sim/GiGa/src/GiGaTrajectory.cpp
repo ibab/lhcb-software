@@ -7,12 +7,20 @@
 #include "G4VisAttributes.hh"
 #include "G4VVisManager.hh"
 ///
+#include "G4OpticalPhoton.hh"
+#include "G4Step.hh"
+#include "G4Track.hh"
+#include "G4SteppingManager.hh"
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 void GiGaTrajectory::DrawTrajectory  ( G4int i_mode ) const 
 {
   ///
+
+  std::cout << " draw trajectory method is invoked! " << std::endl ;
+
+
   G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
   G4ThreeVector pos;
   ///
@@ -49,4 +57,50 @@ void GiGaTrajectory::DrawTrajectory  ( G4int i_mode ) const
     }
 };
 //////////////////////////////////////////////////////////////////////////////////////////////
+void GiGaTrajectory::AppendStep      ( const G4Step*  step )       
+{
+  ///
+  bool append = false;
+  /// 
+  if     ( empty()                                       )  { append = true ; } 
+  /// if some information is not available, follow ordinary routine and just add the step
+  else if( 0 == step->GetTrack()                      || 
+	   0 == stepMgr()                             || 
+	   step != stepMgr()->GetStep()               || 
+	   step->GetTrack() != stepMgr()->GetTrack    () )  { append = true ; }   
+  /// if  it is the last step, the step must be appended 
+  else if ( fAlive != step->GetTrack()->GetTrackStatus() )  { append = true ; }
+  /// if  there are some secondaries, the step must be appended  
+  else if ( 0 != stepMgr()->GetSecondary()            && 
+	    0 != stepMgr()->GetSecondary()->entries   () )  { append = true ; }
+  /// for optical photons also the reflection/refraction step must be appended  
+  else if ( step->GetPostStepPoint()->GetStepStatus() == 
+	    fGeomBoundary &&
+	    step->GetTrack()->GetDefinition        () == 
+	    G4OpticalPhoton::OpticalPhoton         ()    )  { append = true ; }
+  ///
+  if( append && 
+      ( empty()                                                              || 
+	step->GetPostStepPoint()->GetGlobalTime () != back()->GetTime     () ||
+	step->GetPostStepPoint()->GetPosition   () != back()->GetPosition () ) ) 
+    {
+      GiGaTrajectoryPoint* p = 
+	new GiGaTrajectoryPoint( step->GetPostStepPoint()->GetPosition   () ,
+				 step->GetPostStepPoint()->GetGlobalTime () ) ; 
+      push_back( p );
+      ///
+    };
+  ///
+};
+//////////////////////////////////////////////////////////////////////////////////// 
+
+
+
+
+
+
+
+
+
+
 

@@ -10,6 +10,7 @@
 class G4ParticleDefinition;
 class G4Track;
 class G4Step;
+class G4SteppingManager;
 ///
 
 /** @class GiGaTrajectory GiGaTrajectory.h GiGa/GiGaTrajectory.h
@@ -52,10 +53,14 @@ public:
   virtual inline void ShowTrajectory  ()                 const ;
   virtual        void DrawTrajectory  ( G4int i_mode=0 ) const ;
   virtual inline void AppendStep      ( const G4Step*  )       ;
-  virtual inline void MergeTrajectory ( G4VTrajectory* )       ;
+  virtual        void MergeTrajectory ( G4VTrajectory* )       ;
   ///
   virtual int                 GetPointEntries(          ) const ;
   virtual G4VTrajectoryPoint* GetPoint       ( int indx ) const ;  
+  ///
+  ///
+  inline       void               setStepMgr( const G4SteppingManager* ) ; 
+  inline const G4SteppingManager*    stepMgr() const ; 
   ///
 private: 
   ///
@@ -64,12 +69,18 @@ private:
   const G4ParticleDefinition*  m_partDef  ; 
   HepLorentzVector             m_4vect    ;   
   /// 
+  const G4SteppingManager*     m_stepMgr  ; 
+  ///
 };
 ///
 #include "GiGa/GiGaTrajectory.icpp"
 ///
 
 #endif  // GIGA_GIGATRAJECTORY_H
+
+
+
+
 
 
 

@@ -31,12 +31,14 @@ public:
   ///
   virtual void Print() const;   /// from base class
   ///
-  inline GiGaTrackInformation&  setToBeStored ( bool )       ;
-  inline const bool             toBeStored    (      ) const ;  
+  /// track is forced to eb saved into trajectory 
+  inline GiGaTrackInformation&  setToBeStored               ( const bool ) ;
+  inline const bool             toBeStored                  () const ;  
   ///
 private:
   ///
-  bool m_toBeStored;
+  /// flag indicating that track is forced to be stored into trajectory  
+  bool           m_toBeStored;
   ///
 };
 ///

@@ -2,6 +2,14 @@ Package:          GiGa
 Package manager : N.N. 
 
 !===========================================================================
+! 20010310 - Vanya Belyaev
+    new features:
+    GiGaTrajectory - not all steps are appended now to trajectory
+        1) first step is appended 
+        2) last step is appended 
+        3) if there are secondaies - step is appended
+        4) if boundary condition and track is  optical photon - step is appended 
+!===========================================================================
 ! 20010307 - Vanya Belyaev
     (1) new converters for Surfaces 
     (2) all material converters are updated to convert tabulated properties 

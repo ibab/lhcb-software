@@ -98,7 +98,7 @@ StatusCode GiGaLVolumeCnv::updateRep( DataObject*     Object  , IOpaqueAddress* 
       G4LogicalVolume*    LV = geoSvc()->g4LVolume( pv->lvolumeName() ); 
       if( 0 == LV ) { return Error("updateRep:: Could not convert daughter LVolume for "+lv->name() );}
       G4VPhysicalVolume*  PV = 
-        ///        new G4PVPlacement( pv->matrix() , LV , lv->name()+"#"+pv->name() , G4LV , false , 0 );
+	///       new G4PVPlacement( pv->matrix() , LV , lv->name()+"#"+pv->name() , G4LV , false , 0 );
         new G4PVPlacement( pv->matrix().inverse() , LV , lv->name()+"#"+pv->name() , G4LV , false , iPV - lv->pvBegin() );
     }
   /// convert surfaces (if any) 

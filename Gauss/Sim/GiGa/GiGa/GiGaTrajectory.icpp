@@ -24,6 +24,7 @@ inline GiGaTrajectory::GiGaTrajectory (   )
   , m_parentID                        ( 0 )
   , m_partDef                         ( 0 ) 
   , m_4vect                           (   )
+  , m_stepMgr                         ( 0 )
 {};
 ///////////////////////////////////////////////////////////////////////////////////////////
 inline GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
@@ -33,6 +34,7 @@ inline GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
   , m_parentID   ( aTrack->GetParentID       ()                 )
   , m_partDef    ( aTrack->GetDefinition     ()                 ) 
   , m_4vect      ( aTrack->GetDynamicParticle()->Get4Momentum() )
+  , m_stepMgr    ( 0 )
 {
   ///
   GiGaTrajectoryPoint* firstPoint = 
@@ -48,6 +50,7 @@ inline GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
   , m_parentID                        ( right.parentID      ()       )
   , m_partDef                         ( right.partDef       ()       )
   , m_4vect                           ( right.fourMomentum  ()       )
+  , m_stepMgr                         ( right.stepMgr       ()       )
 {
   // does not work on NT
   // copy(through clone) points from right 
@@ -67,6 +70,8 @@ inline GiGaTrajectory::~GiGaTrajectory()
   /// clear container 
   clear();
   ///
+  m_stepMgr = 0 ;
+  ///
 };
 ////////////////////////////////////////////////////////////////////////////////////
 inline int GiGaTrajectory::GetPointEntries() const 
@@ -83,21 +88,6 @@ inline void  GiGaTrajectory::operator delete(void* aTrajectory)
 ////////////////////////////////////////////////////////////////////////////////////
 inline void GiGaTrajectory::ShowTrajectory  () const {};
 //////////////////////////////////////////////////////////////////////////////////// 
-inline void GiGaTrajectory::AppendStep      ( const G4Step*  aStep )       
-{
-  ///
-  if( empty() 
-      || aStep->GetPostStepPoint()->GetGlobalTime () != back()->GetTime     () 
-      || aStep->GetPostStepPoint()->GetPosition   () != back()->GetPosition () )
-    {
-      GiGaTrajectoryPoint* p = 
-        new GiGaTrajectoryPoint( aStep->GetPostStepPoint()->GetPosition   () ,
-                                 aStep->GetPostStepPoint()->GetGlobalTime () ) ; 
-      push_back( p );
-      ///
-    };
-};
-//////////////////////////////////////////////////////////////////////////////////// 
 inline void GiGaTrajectory::MergeTrajectory ( G4VTrajectory* st )       
 {
   if( 0 == st                    ) { return ; } 
@@ -112,7 +102,14 @@ inline void GiGaTrajectory::MergeTrajectory ( G4VTrajectory* st )
   ///
 };
 /////////////////////////////////////////////////////////////////////////////////// 
- 
+inline void GiGaTrajectory::setStepMgr( const G4SteppingManager* mgr ) 
+{ m_stepMgr = mgr ; } 
+/////////////////////////////////////////////////////////////////////////////////// 
+inline const G4SteppingManager* GiGaTrajectory::stepMgr() const  
+{ return m_stepMgr; } 
+/////////////////////////////////////////////////////////////////////////////////// 
+
+
 #endif  // GIGA_GIGATRAJECTORY_ICPP
 
 
