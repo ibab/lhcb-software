@@ -7,7 +7,7 @@
 !======================= LHCbSys v14r0 2003-12-08 =======================
 ! 2003-12-08 - Marco Cattaneo
 
- - Modified packages: HepMC v3r121p2, GenEvent v2r4p1,
+ - Modified packages: HepMC v3r121p2, GenEvent v2r4p1, PYTHIA v2r6205p3,
                       KernelSys v2r0, LHCbKernel v3r0, CaloKernel v2r4,
                                       RichKernel v4r2, MuonKernel v2r4,
                       EventSys v16r0, EventKernel v4r0, Event v3r7, DBCnv v8r0,

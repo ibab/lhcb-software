@@ -11,9 +11,9 @@ use LHCb		v14r0
 use GaudiConf		v7r4
 
 # External packages used by GenEvent
-use PYTHIA		v2r6205p2 Gen
+use PYTHIA	v2r6205p3	Gen
 use HepMC	v3r121p2	Sim
-use GenEvent     	v2r4p1	Event
+use GenEvent    v2r4p1		Event
 
 # Kernel packages
 use KernelSys   	v2r0	Kernel
