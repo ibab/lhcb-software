@@ -6,11 +6,12 @@
 // --- Define input data. Spillover first (if required), then signal ---
 #include "$SICBCNVROOT/options/Brunel.opts"  // Comment to switch off spillover
 SpillOverSelector.Input = {
-  "FILE='/castor/cern.ch/lhcb/mc/L278303'",  // JobID = 99378
-  "FILE='/castor/cern.ch/lhcb/mc/L278302'"   // JobID = 99377
+  "FILE='/castor/cern.ch/lhcb/mc/L280106'",  // JobID = 100818
+  "FILE='/castor/cern.ch/lhcb/mc/L280115'"   // JobID = 100820
  }; // evtype 61 RAWH2
 EventSelector.Input = {
-  "FILE='/castor/cern.ch/lhcb/mc/L278325'" }; // JobID=99397 evtype 411300 RAWH2
+  "FILE='/castor/cern.ch/lhcb/mc/L280705'" // JobID=102073 evtype 411300 RAWH2
+};
 
 //--------------------------------------------------------------
 #include "$BRUNELOPTS/Brunel.opts"  // Generic options for all jobs

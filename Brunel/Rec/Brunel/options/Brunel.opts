@@ -27,7 +27,8 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
 //--------------------------------------------------------------
-BrunelDigi.DetectorList = { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
+BrunelDigi.DetectorList  = { "SpillOver" };
+BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList = {"VELO","OT","IT","Tr","RICH","CALO","MUON","Timing"};
 

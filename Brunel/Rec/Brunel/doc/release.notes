@@ -11,6 +11,9 @@ Complete OO-Dst output.
 
  - Functionality changes:
    . Needs dbase v248r3 (Brunelv248r3.opts added, *v248r2.opts removed)
+     > Default input file changed (previous default had problem with PASS bank)
+   . SpillOverAlg executes as first algorithm in Digi phase 
+     (SicbCnv v17r1, Brunel.opts)
    . Add Spillover support to Rich 
      (EventSys v12r0, SicbCnv v17r1, RiSicbCnv v4r2, recrich v7r0, Brunel.opts)
    . Use all tracks except Velo-only for Rich PID 
