@@ -1,4 +1,4 @@
-# $Id: release.notes,v 1.13 2002-03-01 11:37:48 andreav Exp $
+# $Id: release.notes,v 1.14 2002-03-01 11:39:20 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
 
@@ -13,6 +13,7 @@ First version supported on Windows using an Oracle implementation of CondDB.
   > implementation specified in the requirements  is propagated via #ifdef's
   > new init string for the Oracle database including host, user and password
   > CondDBOracleMgrFactory or CondDBObjyDBMgrFactory called in either case
+Requirements v2r1, private tag h20020301.
 
 ==============================================================================
 !20020110 - Flr
