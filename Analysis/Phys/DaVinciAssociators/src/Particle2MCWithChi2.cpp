@@ -1,4 +1,4 @@
-// $Id: Part2MCChi2.cpp,v 1.1 2002-05-10 15:08:21 phicharp Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.1 2002-05-17 17:07:52 phicharp Exp $
 // Include files 
 #include <math.h>
 
@@ -8,51 +8,48 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
-
 // histograms
 #include  "GaudiKernel/IHistogramSvc.h"
 
 // local
-#include "Part2MCChi2.h"
+#include "Particle2MCWithChi2.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : Part2MCChi2
+// Implementation file for class : Particle2MCWithChi2
 //
 // 11/04/2002 : Philippe Charpentier
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<Part2MCChi2>          s_factory ;
-const        IAlgFactory& Part2MCChi2Factory = s_factory ; 
+static const  AlgFactory<Particle2MCWithChi2>          s_factory ;
+const        IAlgFactory& Particle2MCWithChi2Factory = s_factory ; 
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Part2MCChi2::Part2MCChi2( const std::string& name,
+Particle2MCWithChi2::Particle2MCWithChi2( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator ) 
   , m_inputData( ParticleLocation::Production )
-  , m_outputData( Part2MCPartAsctLocation )
-  , m_chi2( 100. )
+  , m_outputData( Particle2MCWithChi2AsctLocation )
   , m_histos( false )
 
 {
   declareProperty( "InputData", m_inputData );
   declareProperty( "OutputData", m_outputData );
-  declareProperty( "Chi2Cut", m_chi2 );
   declareProperty( "FillHistos", m_histos );
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-Part2MCChi2::~Part2MCChi2() {}; 
+Particle2MCWithChi2::~Particle2MCWithChi2() {}; 
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode Part2MCChi2::initialize() {
+StatusCode Particle2MCWithChi2::initialize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
@@ -71,7 +68,7 @@ StatusCode Part2MCChi2::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode Part2MCChi2::execute() {
+StatusCode Particle2MCWithChi2::execute() {
 
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
@@ -82,7 +79,10 @@ StatusCode Part2MCChi2::execute() {
     log << MSG::DEBUG << "    Particles retrieved" << endreq;
   }
   else {
-    log << MSG::FATAL << "    *** Could not retrieve Particles" << endreq;
+    log << MSG::FATAL 
+        << "    *** Could not retrieve Particles from " << m_inputData
+        << endreq;
+    return StatusCode::FAILURE;
   }
   
   SmartDataPtr<MCParticles> 
@@ -91,18 +91,13 @@ StatusCode Part2MCChi2::execute() {
     log << MSG::DEBUG << "    MCPart retrieved" << endreq;
   }
   else {
-    log << MSG::FATAL << "    *** Could not retrieve MCPart" << endreq;
+    log << MSG::FATAL << "    *** Could not retrieve MCPart from " 
+        << MCParticleLocation::Default << endreq;
+    return StatusCode::FAILURE;
   }
 
   // create an association table and register it in the TES
-  Part2MCPartAsct::Table* table = new Part2MCPartAsct::Table();
-  StatusCode sc = eventSvc()->registerObject( outputData(), table);
-  if( sc.isFailure() ) {
-    log << MSG::FATAL << "     *** Could not register " << outputData()
-        << endreq;
-    delete table;
-    return sc;
-  }
+  Particle2MCWithChi2Asct::Table* table = new Particle2MCWithChi2Asct::Table();
 
   // loop on Parts and MCParts to match them
   int nax = 0;
@@ -151,7 +146,7 @@ StatusCode Part2MCChi2::execute() {
         // Avoid long computations if momentum is too different
         //        if( fabs(mcpVector[5]-pVector[5]) > 10000. ) continue;
 
-        double chi2 = Part2MCPartChi2( pVector, mcpVector, cov );
+        double chi2 = Chi2ofParticle2MC( pVector, mcpVector, cov );
 
         if( chi2 > 0. && m_histos ) {
           m_hisChi2vsDiffP->fill( fabs(mcpVector[5]-pVector[5])/pVector[5], 
@@ -164,8 +159,8 @@ StatusCode Part2MCChi2::execute() {
         }
       }
 
-      if( minChi2 > 0 && minChi2 < m_chi2 ) {
-        table->relate( part, minMCPart);
+      if( minChi2 > 0 ) {
+        table->relate( part, minMCPart, minChi2);
       }
       if( m_histos ) {
         m_hisMinChi2vsDiffP->fill( fabs(minVector[5]-pVector[5])/pVector[5], 
@@ -178,14 +173,22 @@ StatusCode Part2MCChi2::execute() {
   log << MSG::DEBUG
       << parts->end() - parts->begin() << " Parts associated with "
       << mcParts->end() - mcParts->begin() << " MCParts" << endreq;
-  
+
+  // Now register the table in the TES
+  StatusCode sc = eventSvc()->registerObject( outputData(), table);
+  if( sc.isFailure() ) {
+    log << MSG::FATAL << "     *** Could not register table " << outputData()
+        << endreq;
+    delete table;
+    return sc;
+  }
   return StatusCode::SUCCESS;
 };
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode Part2MCChi2::finalize() {
+StatusCode Particle2MCWithChi2::finalize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
@@ -199,7 +202,7 @@ StatusCode Part2MCChi2::finalize() {
 //=============================================================================
 // Compute the chi2 between an part and an MCPart
 //=============================================================================
-double Part2MCChi2::Part2MCPartChi2(const HepVector& pVector, 
+double Particle2MCWithChi2::Chi2ofParticle2MC(const HepVector& pVector, 
                                            const HepVector& mcpVector,
                                            const HepSymMatrix& cov)
 {
@@ -211,7 +214,7 @@ double Part2MCChi2::Part2MCPartChi2(const HepVector& pVector,
   return dot( v, diff );
 }
 
-void Part2MCChi2::get6Vector( const Particle* part, 
+void Particle2MCWithChi2::get6Vector( const Particle* part, 
                                      HepVector& pVector)
 {
   // Now copy the vector from the Part
@@ -224,7 +227,7 @@ void Part2MCChi2::get6Vector( const Particle* part,
   
 }
 
-void Part2MCChi2::get6Vector( const MCParticle* mcPart, 
+void Particle2MCWithChi2::get6Vector( const MCParticle* mcPart, 
                                      HepVector& mcpVector, const double axz)
 {
   // Make the vector from the MCparticle

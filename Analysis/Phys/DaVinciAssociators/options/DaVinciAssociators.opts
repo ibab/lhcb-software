@@ -2,27 +2,42 @@
 // Default Associators options
 
 //
-// This is the default parameters for the Part2MCPart Associator with Chi2
+/* This is the default parameters for the Particle2MCWithChi2 Associator 
+   with Chi2 as a weight */
 //
-//Toolsvc.Part2MCPartAsct.Location      = "Phys/Relations/Part2MC";
-//ToolSvc.Part2MCPartAsct.AlgorithmType = "Part2MCChi2";
-//ToolSvc.Part2MCPartAsct.AlgorithmName = "Part2MC";
+//Toolsvc.Particle2MCWithChi2Asct.Location      = "Phys/Relations/Particle2MCWithChi2";
+//ToolSvc.Particle2MCWithChi2Asct.AlgorithmType = "Particle2MCWithChi2";
+//ToolSvc.Particle2MCWithChi2Asct.AlgorithmName = "Particle2MCWithChi2";
 //
 
 // ... and for the corresponding algorithm
 //
-//Part2MC.InputData  = "Phys/Production/Particles";
-Part2MC.OutputData  = "Phys/Relations/Part2MC";
-Part2MC.Chi2Cut = 100.;
-Part2MC.FillHistos = true;
+//Particle2MCWithChi2.InputData  = "Phys/Production/Particles";
+Particle2MCWithChi2.OutputData  = "Phys/Relations/Particle2MCWithChi2";
+Particle2MCWithChi2.FillHistos = true;
+
+/* This are the defaults for the non-weighted associator Particle2MCChi2
+   which uses the output of the previous one and applies a cut on Chi2
+*/
+//Toolsvc.Particle2MCAsct.Location      = "Phys/Relations/Particle2MC";
+//ToolSvc.Particle2MCAsct.AlgorithmType = "Particle2MCChi2";
+//ToolSvc.Particle2MCAsct.AlgorithmName = "Particle2MCChi2";
+//
+
+// ... and for the corresponding algorithm
+//
+//Particle2MCChi2.InputData  = "Phys/Production/Particles";
+Particle2MCChi2.OutputData  = "Phys/Relations/Particle2MC";
+Particle2MCChi2.Chi2Cut = 100.;
+
 
 /* Define specific parameters for another associator based on the same scheme
    but with a different algorithm
 */
-Toolsvc.LinkAsct.Location      = "Phys/Relations/Part2MCLink";
-ToolSvc.LinkAsct.AlgorithmType = "Part2MCLink";
-ToolSvc.LinkAsct.AlgorithmName = "Part2MCfromLinks";
+Toolsvc.LinkAsct.Location      = "Phys/Relations/Particle2MCLinks";
+ToolSvc.LinkAsct.AlgorithmType = "Particle2MCLinks";
+ToolSvc.LinkAsct.AlgorithmName = "Particle2MCLinks";
 
 // ... definition for the link algorithm
-//Part2MC.InputData  = "Phys/Production/Particles";
-Part2MCfromLinks.OutputData = "Phys/Relations/Part2MCLink";
+//Particle2MCLinks.InputData  = "Phys/Production/Particles";
+Particle2MCLinks.OutputData = "Phys/Relations/Particle2MCLinks";

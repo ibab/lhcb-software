@@ -1,4 +1,4 @@
-// $Id: Part2MCLink.cpp,v 1.1 2002-05-10 15:08:21 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.1 2002-05-17 17:07:51 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -8,26 +8,26 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // local
-#include "Part2MCLink.h"
+#include "Particle2MCLinks.h"
 
 // from event model
 #include "Event/AxPartCandidate.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : Part2MCLink
+// Implementation file for class : Particle2MCLinks
 //
 // 10/05/2002 : Philippe Charpentier
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<Part2MCLink>          s_factory ;
-const        IAlgFactory& Part2MCLinkFactory = s_factory ; 
+static const  AlgFactory<Particle2MCLinks>          s_factory ;
+const        IAlgFactory& Particle2MCLinksFactory = s_factory ; 
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Part2MCLink::Part2MCLink( const std::string& name,
+Particle2MCLinks::Particle2MCLinks( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
   , m_inputData( ParticleLocation::Production )
@@ -40,12 +40,12 @@ Part2MCLink::Part2MCLink( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Part2MCLink::~Part2MCLink() {}; 
+Particle2MCLinks::~Particle2MCLinks() {}; 
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode Part2MCLink::initialize() {
+StatusCode Particle2MCLinks::initialize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
@@ -56,7 +56,7 @@ StatusCode Part2MCLink::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode Part2MCLink::execute() {
+StatusCode Particle2MCLinks::execute() {
 
   static bool notFromAxPart = false;
   
@@ -81,14 +81,7 @@ StatusCode Part2MCLink::execute() {
     log << MSG::FATAL << "    *** Could not retrieve MCPart" << endreq;
   }
   // create an association table and register it in the TES
-  Part2MCPartAsct::Table* table = new Part2MCPartAsct::Table();
-  StatusCode sc = eventSvc()->registerObject( outputData(), table);
-  if( sc.isFailure() ) {
-    log << MSG::FATAL << "     *** Could not register " << outputData()
-        << endreq;
-    delete table;
-    return sc;
-  }
+  Particle2MCAsct::Table* table = new Particle2MCAsct::Table();
 
   // First loop on MCParticles to count how many there are for each collision
   Collision* currentColl = 0 ;
@@ -120,32 +113,39 @@ StatusCode Part2MCLink::execute() {
             << " Particles not originating from AxPartCandidate" << endreq ;
         notFromAxPart = true ;
       }
-      return StatusCode::SUCCESS ;
+    } else {
+      long truth = axPart->addrMCTruth() ;
+      long interaction = truth/10000 ;
+      long posInInter = truth % 10000 ;
+      
+      int mcPartSeq = nbMCPartIntegrated[interaction-1] + posInInter - 1 ;
+      
+      MCParticles::const_iterator mcIt=mcParts->begin() ;
+      mcIt += mcPartSeq;
+      MCParticle* mcPart = *mcIt ;
+      table->relate( *pIt, mcPart);
     }
-    
-    long truth = axPart->addrMCTruth() ;
-    long interaction = truth/10000 ;
-    long posInInter = truth % 10000 ;
-    
-    int mcPartSeq = nbMCPartIntegrated[interaction-1] + posInInter ;
-    
-    MCParticles::const_iterator mcIt=mcParts->begin() ;
-    mcIt += mcPartSeq;
-    MCParticle* mcPart = *mcIt ;
-    table->relate( *pIt, mcPart);
   }
   
   log << MSG::DEBUG
       << parts->end() - parts->begin() << " Parts associated with "
       << mcParts->end() - mcParts->begin() << " MCParts" << endreq;
 
+  // Register the table on the TES
+  StatusCode sc = eventSvc()->registerObject( outputData(), table);
+  if( sc.isFailure() ) {
+    log << MSG::FATAL << "     *** Could not register table " << outputData()
+        << endreq;
+    delete table;
+    return sc;
+  }
   return StatusCode::SUCCESS ;
 };
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode Part2MCLink::finalize() {
+StatusCode Particle2MCLinks::finalize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;

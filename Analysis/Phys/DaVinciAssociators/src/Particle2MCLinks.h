@@ -1,6 +1,6 @@
-// $Id: Part2MCLink.h,v 1.1 2002-05-10 15:08:21 phicharp Exp $
-#ifndef Part2MCLink_H 
-#define Part2MCLink_H 1
+// $Id: Particle2MCLinks.h,v 1.1 2002-05-17 17:07:52 phicharp Exp $
+#ifndef Particle2MCLinks_H 
+#define Particle2MCLinks_H 1
 
 // Include files
 // from STL
@@ -11,22 +11,22 @@
 
 
 // local
-#include "DaVinciAssociators/Part2MCPartAsct.h"
+#include "DaVinciAssociators/Particle2MCAsct.h"
 
-/** @class Part2MCLink Part2MCLink.h
+/** @class Particle2MCLinks Particle2MCLinks.h
  *  
  *
  *  @author Philippe Charpentier
  *  @date   10/05/2002
  */
-class Part2MCLink : public Algorithm {
-  friend AlgFactory<Part2MCLink>;
+class Particle2MCLinks : public Algorithm {
+  friend AlgFactory<Particle2MCLinks>;
   
 public:
   /// Standard constructor
-  Part2MCLink( const std::string& name, ISvcLocator* pSvcLocator );
+  Particle2MCLinks( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~Part2MCLink( ); ///< Destructor
+  virtual ~Particle2MCLinks( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -41,4 +41,4 @@ private:
   std::string m_inputData;  ///< location of Particles to associate
   std::string m_outputData; ///< location of relations table  
 };
-#endif // Part2MCLink_H
+#endif // Particle2MCLinks_H

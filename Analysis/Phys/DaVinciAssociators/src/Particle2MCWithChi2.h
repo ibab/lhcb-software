@@ -1,6 +1,6 @@
-// $Id: Part2MCChi2.h,v 1.1 2002-05-10 15:08:21 phicharp Exp $
-#ifndef Part2MCChi2_H 
-#define Part2MCChi2_H 1
+// $Id: Particle2MCWithChi2.h,v 1.1 2002-05-17 17:07:52 phicharp Exp $
+#ifndef Particle2MCWithChi2_H 
+#define Particle2MCWithChi2_H 1
 
 // Include files
 // from STL
@@ -20,23 +20,23 @@
 #include "GaudiKernel/Algorithm.h"
 
 // local
-#include "DaVinciAssociators/Part2MCPartAsct.h"
+#include "DaVinciAssociators/Particle2MCWithChi2Asct.h"
 
 #include "CLHEP/Units/PhysicalConstants.h"
-/** @class Part2MCChi2 Part2MCChi2.h
+/** @class Particle2MCWithChi2 Particle2MCWithChi2.h
  *  
  *
  *  @author Philippe Charpentier
  *  @date   11/04/2002
  */
-class Part2MCChi2 : public Algorithm {
-  friend AlgFactory<Part2MCChi2>;
+class Particle2MCWithChi2 : public Algorithm {
+  friend AlgFactory<Particle2MCWithChi2>;
   
 public:
   /// Standard constructor
-  Part2MCChi2( const std::string& name, ISvcLocator* pSvcLocator );
+  Particle2MCWithChi2( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~Part2MCChi2( ); ///< Destructor
+  virtual ~Particle2MCWithChi2( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -48,8 +48,9 @@ public:
 protected:
 
   /// Calculate Chi2 agreement
-  double Part2MCPartChi2( const HepVector& pVector, 
-                          const HepVector& mcpVector, const HepSymMatrix& cov);
+  double Chi2ofParticle2MC( const HepVector& pVector, 
+                            const HepVector& mcpVector, 
+                            const HepSymMatrix& cov);
 
   /// Fill vector of Particles parameters in "Track" state
   void get6Vector( const Particle* part, HepVector& pVector);
@@ -61,7 +62,6 @@ protected:
 private:
   std::string m_inputData;  ///< location of Particles to associate
   std::string m_outputData; ///< location of relations table 
-  double m_chi2;            ///< Chi2 maximum
   bool m_histos;            ///< Flag to fill histograms
 
   /// Histograms                    
@@ -70,4 +70,4 @@ private:
   IHistogram2D* m_hisMinChi2vsDiffP; ///< Min Chi2 vs Dp/p histo
 
 };
-#endif // Part2MCChi2_H
+#endif // Particle2MCWithChi2_H
