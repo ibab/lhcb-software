@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.h,v 1.16 2002-05-07 17:21:34 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.h,v 1.17 2002-10-29 13:18:03 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2002/05/07 17:21:34  ibelyaev
+//  bug fix for Win32
+//
 // ============================================================================
 #ifndef CALOKERNEL_CALOALGORITHM_H 
 #define CALOKERNEL_CALOALGORITHM_H 1
@@ -391,7 +394,7 @@ protected: ///< "technical" methods
   /** set address/location/name in Transient Store of detector data  
    *  @param  addr address/location/name in Transient Store of detector 
    */
-  void setDetData   ( const std::string& addr ) { m_inputData  = addr; }
+  void setDetData   ( const std::string& addr ) { m_detData  = addr; }
   
 private:
   

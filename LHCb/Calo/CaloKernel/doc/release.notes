@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.20 2002-05-07 17:21:35 ibelyaev Exp $
+! $Id: release.notes,v 1.21 2002-10-29 13:18:04 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -8,6 +8,10 @@
 ! The package contains the general Calo Kernel classes and utilities, 
 ! which are essentially independent from Detector and Event models 
 ! =============================================================================
+
+! 2002-10-29 - Ivan Belyaev
+ - CaloKernel/CaloAlgborithm.h
+  fix a bug, found by O.Callot in 'setDetData' method
 
 ! =============================================================================
 ! 2 May 2002 - Vanya Belyaev
