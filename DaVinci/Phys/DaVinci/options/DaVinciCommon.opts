@@ -3,6 +3,9 @@
 // and default properties for common algorithms/tools
 //=================================================================
 
+// Allow units to be used in jobOptions
+#units "$GAUDICONFROOT/options/units.opts"
+
 // Framework
 ApplicationMgr.ExtSvc = { "ParticlePropertySvc",
                           "EventSelector" };
@@ -12,7 +15,7 @@ ApplicationMgr.DLLs  += { "GaudiAud", "GaudiAlg" };
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 ApplicationMgr.DLLs   += { "Magnet" };
-ApplicationMgr.DLLs   += { "VeloDet", "ITDet", "OTDet" };
+ApplicationMgr.DLLs   += { "VeloDet", "ITDet", "OTDet", "MuonDet" };
 ApplicationMgr.DLLs   += { "CaloDet", "CaloDetXmlCnv" };
 
 // Persistency setup
@@ -26,12 +29,12 @@ RootEvtCnvSvc.DbType  = "ROOT";
 // Associators
 ApplicationMgr.DLLs += { "ITAssociators", "OTAssociators" };
 ApplicationMgr.DLLs += { "VeloAssociators", "MuonAssociators" };
-ApplicationMgr.DLLs += { "CaloEvent", "CaloAssociators", "CaloRec" };
+ApplicationMgr.DLLs += { "CaloEvent", "CaloAssociators" };
 ApplicationMgr.DLLs += { "TrAssociators", "L0Calo", "L1VeloTrack" };
 ApplicationMgr.DLLs += { "DaVinciAssociators" };
 
 // Physics packages and necessary dependent packages
-ApplicationMgr.DLLs += { "GlobalReco", "CaloTools" };
+ApplicationMgr.DLLs += { "GlobalReco", "CaloReco" };
 ApplicationMgr.DLLs += { "DaVinciTools", "TrExtrapolator" };
 ApplicationMgr.DLLs += { "PhysSelections" };
 ApplicationMgr.DLLs += { "FlavourTagging" };
@@ -43,6 +46,7 @@ ApplicationMgr.DLLs += { "DaVinciUser" };
 // Options for ProtoParticles creation
 #include "$GLOBALRECOROOT/options/GlobalReco.opts"
 #include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
+#include "$CALORECOOPTS/Reco.opts"
 
 // Options for Associators
 #include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
