@@ -1,4 +1,4 @@
-// $Id: RichPIDSimpleMerge.cpp,v 1.1.1.1 2003-06-30 16:35:39 jonesc Exp $
+// $Id: RichPIDSimpleMerge.cpp,v 1.2 2003-11-02 21:50:11 jonrob Exp $
 // Include files
 
 // local
@@ -18,7 +18,7 @@ const        IAlgFactory& RichPIDSimpleMergeFactory = s_factory ;
 // Standard constructor, initializes variables
 RichPIDSimpleMerge::RichPIDSimpleMerge( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator ) {
+  : RichAlgBase ( name , pSvcLocator ) {
 
   // Output location in TDS for RichPIDs
   declareProperty( "OutputPIDLocation",
@@ -42,6 +42,10 @@ RichPIDSimpleMerge::~RichPIDSimpleMerge() {};
 StatusCode RichPIDSimpleMerge::initialize() {
 
   MsgStream msg(msgSvc(), name());
+
+  // initialise base classclean
+  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+
   msg << MSG::DEBUG << "Initialize" << endreq
       << " Output RichPIDs location     = " << m_richPIDLocation << endreq;
 
@@ -61,22 +65,26 @@ StatusCode RichPIDSimpleMerge::execute() {
 
   // Obtain Global PID results
   SmartDataPtr<RichGlobalPIDs> gPIDs( eventSvc(), m_richGlobalPIDLocation );
-  if ( !gPIDs ) {
-    msg << MSG::DEBUG << "Cannot locate RichGlobalPIDs at "
-        << m_richGlobalPIDLocation << endreq;
-  } else {
-    msg << MSG::DEBUG << "Successfully located " << gPIDs->size()
-        << " RichGlobalPIDs at " << m_richGlobalPIDLocation << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    if ( !gPIDs ) {
+      msg << MSG::DEBUG << "Cannot locate RichGlobalPIDs at "
+          << m_richGlobalPIDLocation << endreq;
+    } else {
+      msg << MSG::DEBUG << "Successfully located " << gPIDs->size()
+          << " RichGlobalPIDs at " << m_richGlobalPIDLocation << endreq;
+    }
   }
 
   // Obtain Local PID results
   SmartDataPtr<RichLocalPIDs> lPIDs(eventSvc(), m_richLocalPIDLocation);
-  if ( !lPIDs ) {
-    msg << MSG::DEBUG << "Cannot locate RichLocalPIDs at "
-        << m_richLocalPIDLocation << endreq;
-  } else {
-    msg << MSG::DEBUG << "Successfully located " << lPIDs->size()
-        << " RichLocalPIDs at " << m_richLocalPIDLocation << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    if ( !lPIDs ) {
+      msg << MSG::DEBUG << "Cannot locate RichLocalPIDs at "
+          << m_richLocalPIDLocation << endreq;
+    } else {
+      msg << MSG::DEBUG << "Successfully located " << lPIDs->size()
+          << " RichLocalPIDs at " << m_richLocalPIDLocation << endreq;
+    }
   }
 
   // See if PIDs already exist at requested output location
@@ -161,21 +169,28 @@ StatusCode RichPIDSimpleMerge::execute() {
           << m_richPIDLocation << endreq;
       return StatusCode::FAILURE;
     } else {
-      msg << MSG::DEBUG << "Successfully registered " << newPIDs->size()
-          << " RichPIDs at " << m_richPIDLocation << endreq;
+      if ( msgLevel(MSG::DEBUG) ) {
+        msg << MSG::DEBUG << "Successfully registered " << newPIDs->size()
+            << " RichPIDs at " << m_richPIDLocation << endreq;
+      }
     }
   } else {
-    msg << MSG::DEBUG
-        << "Replaced " << originalSize << " pre-existing RichPIDs at "
-        << m_richPIDLocation << " with " << newPIDs->size()
-        << " new RichPIDs" << endreq;
+    if ( msgLevel(MSG::DEBUG) ) {
+      msg << MSG::DEBUG
+          << "Replaced " << originalSize << " pre-existing RichPIDs at "
+          << m_richPIDLocation << " with " << newPIDs->size()
+          << " new RichPIDs" << endreq;
+    }
   }
 
   // Update Rich status words
   procStat->addAlgorithmStatus( name()+":UsedGlobalPIDs", nUsedglobalPIDs );
   procStat->addAlgorithmStatus( name()+":UsedLocalPIDs", nUsedlocalPIDs );
-  msg << MSG::DEBUG << "Used " << nUsedglobalPIDs << " Global "
-      << nUsedlocalPIDs << " local RichPIDs" << endreq;
+
+  if ( msgLevel(MSG::DEBUG) ) {
+    msg << MSG::DEBUG << "Used " << nUsedglobalPIDs << " Global "
+        << nUsedlocalPIDs << " local RichPIDs" << endreq;
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -186,5 +201,6 @@ StatusCode RichPIDSimpleMerge::finalize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  return StatusCode::SUCCESS;
+  // base class finalise
+  return RichAlgBase::finalize();
 }

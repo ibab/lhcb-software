@@ -1,9 +1,12 @@
-// $Id: RichPIDSimpleMerge.h,v 1.1.1.1 2003-06-30 16:35:39 jonesc Exp $
+// $Id: RichPIDSimpleMerge.h,v 1.2 2003-11-02 21:50:11 jonrob Exp $
 #ifndef RICHPIDMERGE_RICHPIDSIMPLEMERGE_H
 #define RICHPIDMERGE_RICHPIDSIMPLEMERGE_H 1
 
+// base class
+#include "RichUtils/RichAlgBase.h"
+
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+//#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
 // event model
@@ -20,7 +23,7 @@
  *  @date   2002-07-10
  */
 
-class RichPIDSimpleMerge : public Algorithm {
+class RichPIDSimpleMerge : public RichAlgBase {
 
 public:
   /// Standard constructor
@@ -47,4 +50,5 @@ private:
   std::string m_richLocalPIDLocation;
 
 };
+
 #endif // RICHPIDMERGE_RICHPIDSIMPLEMERGE_H

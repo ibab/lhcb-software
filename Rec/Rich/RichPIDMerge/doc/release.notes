@@ -4,6 +4,10 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+! 2003-11-02 - Chris Jones
+ - Use RichLocalPID v2r0
+ - Updates due to RichUtils
+
 !======================= RichPIDMerge v1r0 2003-07-07 =======================
 ! 2003-05-11 - Chris Jones
  - First version
