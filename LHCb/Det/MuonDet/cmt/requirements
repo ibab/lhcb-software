@@ -1,17 +1,9 @@
 # =========================================================================
-#
-# $Log: not supported by cvs2svn $
-# Revision 1.2  2002/01/31 16:10:05  dhcroft
-# Changes to make windows linker happy
-#
-# Revision 1.1.1.1  2002/01/21 17:13:46  dhcroft
-# Creation of the MuonDet package
-#
-#
+# $Id: requirements,v 1.4 2002-03-25 16:16:14 cattanem Exp $
 # =========================================================================
 
 package MuonDet
-version  v1r1
+version  v2r0
 
 # =============== structure ===============================================
 branches         src cmt doc options MuonDet
@@ -44,6 +36,7 @@ private
 apply_pattern package_Cshlibflags
 apply_pattern package_Lshlibflags   
 
-macro_append  MuonDetLib_shlibflags "$(GaudiKernel_linkopts) $(CLHEP_linkopts) $(XML_linkopts) $(DetDesc_linkopts)"
+macro_remove use_linkopts $(Muondet_linkopts)
+macro MuonDetLib_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
 
-                                        
+#macro_append  MuonDetLib_shlibflags "$(GaudiKernel_linkopts) $(CLHEP_linkopts) $(XML_linkopts) $(DetDesc_linkopts)"

@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.6 2002-03-20 16:43:40 dhcroft Exp $
+! $Id: release.notes,v 1.7 2002-03-25 16:16:14 cattanem Exp $
 ! CVS tag $Name: not supported by cvs2svn $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
 
-! ============================================================================
+!>>>>>>>>>>>>>>>> MuonDet v2r0 <<<<<<<<<<<<<<<<<<<<<
 ! 20020320 - David Hutchcroft
   - Added code to read the Front end channel size from the XML 
     in src/Lib/XmlMuonRegionCnv.cpp
