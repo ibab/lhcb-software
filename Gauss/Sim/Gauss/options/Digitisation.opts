@@ -1,4 +1,4 @@
-// $Id: Digitisation.opts,v 1.5 2002-12-13 17:24:08 witoldp Exp $ 
+// $Id: Digitisation.opts,v 1.6 2002-12-18 12:46:02 witoldp Exp $ 
  
 ApplicationMgr.DLLs   += { "OTDet", "OTAlgorithms" };
 
@@ -51,4 +51,4 @@ VeloMonitor.TestVeloFullDigit = false;
 VeloMonitor.TestVeloCluster   = false;
 VeloMonitor.Resolution          = false;
 VeloMonitor.Printout            = 5;
-VeloMonitor.OutputLevel = 2;
+VeloMonitor.OutputLevel = 6;

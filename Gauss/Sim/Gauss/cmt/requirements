@@ -1,5 +1,5 @@
 package Gauss
-version v7r1
+version v8r0
 
 # =============================================================================
 # structure 
@@ -25,12 +25,12 @@ use HbookCnv            v13r*
 use Magnet              v2r*    Det
 
 #GiGa staff...
-use GiGaCnv             v10r1   Sim
-use GaussTools          v5r0    Sim
-use GaussTracker        v1r0    Sim
-use GaussRICH           v1r0    Sim
-use GaussCalo           v1r1    Sim
-use GaussPhysics        v1r0    Sim
+use GiGaCnv             v11r0   Sim
+use GaussTools          v6r0    Sim
+use GaussTracker        v2r0    Sim
+use GaussRICH           v2r0    Sim
+use GaussCalo           v2r0    Sim
+use GaussPhysics        v2r0    Sim
 use CaloDetXmlCnv       v2r2    Det 
 
 #optional visualisation and UI
@@ -40,7 +40,7 @@ use CaloDetXmlCnv       v2r2    Det
 #use GaussImports       v4r0    Sim
 
 # generator
-use GeneratorModules    v4r1    Gen
+use GeneratorModules    v4r2    Gen
 
 # optional generator: 
 #use EvGen              v4r0    Sim 
@@ -54,6 +54,7 @@ use OTAssociators       v2r3    OT
 use VeloAlgorithms      v2r5    Velo
 use VeloAssociators     v1r4    Velo
 use ITAlgorithms        v12r6   IT
+use ITCheckers          v1r2    IT
 
 #use GaussChecks          v1r0 Sim
 
@@ -77,7 +78,7 @@ set  G4VRML_PV_PICKABLE        "1"
 
 
 # == Main Program =============================================================
-application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp
+application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp 
 
 # ========================= set macros ========================================
 apply_pattern application_path 

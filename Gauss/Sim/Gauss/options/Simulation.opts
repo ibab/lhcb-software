@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.25 2002-12-16 11:00:29 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.26 2002-12-18 12:46:02 witoldp Exp $ 
 
 #include "$STDOPTS/DetDesc.opts"
 
@@ -82,9 +82,9 @@ GiGa.ModularPL.Cut           = 4.0;
 
 
 GiGa.ModularPL.PhysicsConstructors += {"GeneralPhysics"};
-GiGa.ModularPL.PhysicsConstructors += {"EMPhysics"};
+GiGa.ModularPL.PhysicsConstructors += {"EM_GNPhysics"};
 GiGa.ModularPL.PhysicsConstructors += {"MuonPhysics"};
-GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsLHEP"};
+GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsLHEP_GN"};
 //GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsQGSP"};
 GiGa.ModularPL.PhysicsConstructors += {"IonPhysics"};
 //GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp"};

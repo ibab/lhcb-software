@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.19 2002-12-13 17:24:08 witoldp Exp $ 
+// $Id: Gauss.opts,v 1.20 2002-12-18 12:46:02 witoldp Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -22,15 +22,16 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v249r0.xml";
 
 // 3 steps
 ApplicationMgr.TopAlg          =  
-{ "Sequencer/Generator"    , 
-  "Sequencer/Simulation"   ,
+{ "GaussInitialisation/GaussInit",
+  "Sequencer/Generator", 
+  "Sequencer/Simulation",
   "Sequencer/Digitisation" 
 };
 
 // read job options for various steps
 #include "$GAUSSOPTS/Generator.opts"
 #include "$GAUSSOPTS/Simulation.opts"
-//#include "$GAUSSOPTS/Digitisation.opts"
+#include "$GAUSSOPTS/Digitisation.opts"
 
 // write an output file
 //#include "$GAUSSOPTS/GaussRootIO.opts"
@@ -43,7 +44,7 @@ MessageSvc.OutputLevel    = 3 ;
 MessageSvc.setWarning += { "XmlGenericCnv" };
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 2 ;
+ApplicationMgr.EvtMax     = 100 ;
 
 
 // Modify Message Format to print algorithm name with 40 characters
