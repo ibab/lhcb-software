@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.2 2003-07-03 09:15:06 jonesc Exp $
+// $Id: RichPhotonCreator.cpp,v 1.3 2003-07-03 13:09:01 jonesc Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -61,8 +61,6 @@ StatusCode RichPhotonCreator::initialize() {
   acquireTool("RichPhotonSignal", m_photonSignal);
   acquireTool("RichPixelCreator", m_pixelCreator);
   acquireTool("RichPhotonPredictor", m_photonPredictor);
-  // temporary fix to make sure this tool is always in use
-  acquireTool("RichStatusCreator", m_richStat); 
 
   // Setup incident services
   IIncidentSvc * incSvc;

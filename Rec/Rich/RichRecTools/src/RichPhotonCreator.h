@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.h,v 1.2 2003-07-03 09:15:07 jonesc Exp $
+// $Id: RichPhotonCreator.h,v 1.3 2003-07-03 13:09:03 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
 
@@ -21,7 +21,6 @@
 #include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichTrackCreator.h"
 #include "RichRecBase/IRichPixelCreator.h"
-#include "RichRecBase/IRichStatusCreator.h"
 #include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "RichDetTools/IRichDetInterface.h"
@@ -99,7 +98,6 @@ private: // private data
   IRichPhotonPredictor * m_photonPredictor; ///< Pointer to RichPhotonPredictor
   IRichPhotonSignal * m_photonSignal; ///< Pointer to RichPhotonSignal
   IRichDetInterface * m_richDetInt;   ///< Pointer to RichDetInterface
-  IRichStatusCreator * m_richStat;    ///< Pointer to RichStatusCreator
 
   /// Pointer to RichRecPhotons
   RichRecPhotons * m_photons;

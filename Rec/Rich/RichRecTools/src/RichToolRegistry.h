@@ -1,4 +1,4 @@
-// $Id: RichToolRegistry.h,v 1.1 2003-06-30 15:47:06 jonrob Exp $
+// $Id: RichToolRegistry.h,v 1.2 2003-07-03 13:09:03 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHTOOLREGISTRY_H
 #define RICHRECTOOLS_RICHTOOLREGISTRY_H 1
 
@@ -17,8 +17,7 @@
 
 /** @class RichToolRegistry RichToolRegistry.h
  *
- *  Tool providing a sigle point of definition for all tool
- *  names and types.
+ *  Tool providing a mapping between tool names and types
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -40,34 +39,19 @@ public:
   StatusCode initialize();  ///< Initialize method
   StatusCode finalize();    ///< Finalize method
 
-  /// Method returning a pointer to  a particular tool
-  IAlgTool * acquireTool( std::string name );
-
-  /// Method to inform that a tool is no longer required
-  void releaseTool( std::string name );
-
-private: // private methods
-
-  void releaseTool( IAlgTool *& tool );
+  /// Method to return the tool type from the name
+  std::string toolType( std::string name );
 
 private: // private data
 
-  // Tool data from job options
   typedef std::vector<std::string> ToolList;
+  /// Tool data from job options
   ToolList m_names;
 
-  typedef std::pair< std::string, IAlgTool* > RichToolPair;
-  typedef std::map< std::string, RichToolPair > RichToolMap;
+  typedef std::map< std::string, std::string > RichToolMap;
+  /// The mapping between the tool name and type
   RichToolMap m_tools;
 
-  typedef std::map< std::string, int > ToolCount;
-  ToolCount m_refC;
-
 };
-
-inline void RichToolRegistry::releaseTool( IAlgTool *& tool )
-{
-  if (tool) { toolSvc()->releaseTool(tool); tool=NULL; }
-}
 
 #endif // RICHRECTOOLS_RICHTOOLREGISTRY_H
