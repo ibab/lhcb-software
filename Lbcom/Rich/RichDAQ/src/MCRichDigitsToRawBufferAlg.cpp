@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.2 2004-02-02 14:27:38 jonesc Exp $
+// $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.3 2004-03-16 13:37:37 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -39,46 +39,32 @@ MCRichDigitsToRawBufferAlg::~MCRichDigitsToRawBufferAlg() {};
 StatusCode MCRichDigitsToRawBufferAlg::initialize() {
 
   // intialise base
-  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::DEBUG << "Initialise :-" << endreq
-        << " MCRichDigit location                = " << m_digitsLoc << endreq
-        << " RawBuffer location                  = " << m_rawBuffLoc << endreq
-        << " Max hits for zero-suppressed data   = " << m_zeroSuppresCut
-        << endreq;
-  }
-
+  // Debug messages
+  debug() << "Initialise :-" << endreq
+          << " MCRichDigit location                = " << m_digitsLoc << endreq
+          << " RawBuffer location                  = " << m_rawBuffLoc << endreq
+          << " Max hits for zero-suppressed data   = " << m_zeroSuppresCut
+          << endreq;
+  
   return StatusCode::SUCCESS;
 };
 
 // Main execution
 StatusCode MCRichDigitsToRawBufferAlg::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Execute" << endreq;
-  }
+  // debug message
+  debug() << "Execute" << endreq;
 
   // Retrieve the RawBuffer
-  SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), m_rawBuffLoc );
-  if ( 0 == rawBuffer ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::ERROR
-        << "Unable to retrieve Raw buffer from " <<  m_rawBuffLoc << endreq;
-    return StatusCode::FAILURE;
-  }
+  RawBuffer * rawBuffer = get<RawBuffer>( m_rawBuffLoc );
 
   // Retrieve MCRichDigits
-  SmartDataPtr<MCRichDigits> digits( eventSvc(), m_digitsLoc );
-  if ( !digits ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::ERROR
-        << "Unable to retrieve MCRichDigits from " << m_digitsLoc << endreq;
-    return StatusCode::FAILURE;
-  }
+  MCRichDigits * digits = get<MCRichDigits>( m_digitsLoc );
 
+  // new rich data map
   RichDAQ::PDMap PDDigits;
 
   // Loop over digits and sort according to PD
@@ -107,12 +93,8 @@ StatusCode MCRichDigitsToRawBufferAlg::execute() {
 
   } // end photon detector loop
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::DEBUG
-        << "Created " << PDDigits.size() << " Rich banks for "
-        << digits->size() << " MCRichDigits in RawBuffer" << endreq;
-  }
+  debug() << "Created " << PDDigits.size() << " Rich banks for "
+          << digits->size() << " MCRichDigits in RawBuffer" << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -128,12 +110,10 @@ MCRichDigitsToRawBufferAlg::fillZeroSuppressed( RichSmartID pdID,
   RichDAQHeaderPD pdHeader( true, linkNumber, pdHits.size() );
   dataBank.push_back( pdHeader );
 
-  if ( msgLevel(MSG::VERBOSE) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::VERBOSE << "PD " << pdID << " : Creating " << pdHits.size()
-        << " zero suppressed hits " << endreq;
-    msg << MSG::VERBOSE << " Header : " << pdHeader << endreq;
-  }
+  // Some printout
+  verbose() << "PD " << pdID << " : Creating " << pdHits.size()
+            << " zero suppressed hits " << endreq
+            << " Header : " << pdHeader << endreq;
 
   // Loop over digits and form groups of three
   MCRichDigitVector::const_iterator iDigit = pdHits.begin();
@@ -155,10 +135,7 @@ MCRichDigitsToRawBufferAlg::fillZeroSuppressed( RichSmartID pdID,
     // make a new triplet object and add to data bank
     RichZSHitTriplet triplet( one, two, three );
     dataBank.push_back( triplet );
-    if ( msgLevel(MSG::VERBOSE) ) {
-      MsgStream  msg( msgSvc(), name() );
-      msg << MSG::VERBOSE << " Created triplet " << triplet << endreq;
-    }
+    verbose() << " Created triplet " << triplet << endreq;
 
   } // end while loop
 
@@ -176,13 +153,12 @@ MCRichDigitsToRawBufferAlg::fillNonZeroSuppressed( RichSmartID pdID,
   dataBank.push_back( pdHeader );
 
   if ( msgLevel(MSG::VERBOSE) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::VERBOSE << "PD " << pdID << " : Creating " << pdHits.size()
-        << " non-zero suppressed hits " << endreq;
-    msg << MSG::VERBOSE << " Header : " << pdHeader << endreq;
+    verbose() << "PD " << pdID << " : Creating " << pdHits.size()
+              << " non-zero suppressed hits " << endreq
+              << " Header : " << pdHeader << endreq;
     for ( MCRichDigitVector::const_iterator iDig = pdHits.begin();
           iDig != pdHits.end(); ++iDig ) {
-      msg << MSG::VERBOSE << " Hit " << (*iDig)->key() << endreq;
+      verbose() << " Hit " << (*iDig)->key() << endreq;
     }
   }
 
@@ -191,20 +167,14 @@ MCRichDigitsToRawBufferAlg::fillNonZeroSuppressed( RichSmartID pdID,
   nonZSdata.fillRAW( dataBank );
 
   // Printout of data array
-  if ( msgLevel(MSG::VERBOSE) ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::VERBOSE << nonZSdata << endreq;
-  }
+  verbose() << nonZSdata << endreq;
 
 }
 
 //  Finalize
 StatusCode MCRichDigitsToRawBufferAlg::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::DEBUG << "Finalise" << endreq;
-  }
+  debug() << "Finalise" << endreq;
 
   // finalise base
   return RichAlgBase::finalize();

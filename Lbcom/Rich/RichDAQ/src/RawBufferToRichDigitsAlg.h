@@ -1,4 +1,4 @@
-// $Id: RawBufferToRichDigitsAlg.h,v 1.2 2004-02-02 14:27:39 jonesc Exp $
+// $Id: RawBufferToRichDigitsAlg.h,v 1.3 2004-03-16 13:37:37 jonesc Exp $
 #ifndef RICHDAQ_RAWBUFFERTORICHDIGITSALG_H 
 #define RICHDAQ_RAWBUFFERTORICHDIGITSALG_H 1
 
@@ -15,7 +15,7 @@
 #include "RichDAQLinkNumber.h"
 #include "RichNonZeroSuppData.h"
 
-/** @class RawBuffeToRichDigitsAlg RawBufferToRichDigitsAlg.h
+/** @class RawBufferToRichDigitsAlg RawBufferToRichDigitsAlg.h
  *  
  *  Algorithm to create RichDigits from RawEvent object
  * 
@@ -43,6 +43,9 @@ private: // methods
 
   /// Decode a non-zero suppress data block
   unsigned int decodeNonZeroSuppressedBank( const RawBank & bank ) const; 
+
+  /// Retrieves the raw event. If not available tries to build one from RawBuffer
+  RawEvent * getRawEvent();
 
 private: // data
 

@@ -1,4 +1,4 @@
-// $Id: RichMCTrackInfoTool.cpp,v 1.2 2004-02-02 14:22:33 jonesc Exp $
+// $Id: RichMCTrackInfoTool.cpp,v 1.3 2004-03-16 13:39:16 jonesc Exp $
 
 // local
 #include "RichMCTrackInfoTool.h"
@@ -21,18 +21,16 @@ RichMCTrackInfoTool::RichMCTrackInfoTool( const std::string& type,
     m_rayTrace    ( 0 ),
     m_smartIDTool ( 0 )
 {
-
   declareInterface<IRichMCTrackInfoTool>(this);
-
 }
 
 StatusCode RichMCTrackInfoTool::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
-  if ( !RichToolBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichToolBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
   acquireTool( "RichRayTracing",   m_rayTrace    );
@@ -41,14 +39,9 @@ StatusCode RichMCTrackInfoTool::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichMCTrackInfoTool::finalize() {
-
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Finalize" << endreq;
-
-  // release services and tools
-  releaseTool( m_rayTrace    );
-  releaseTool( m_smartIDTool );
+StatusCode RichMCTrackInfoTool::finalize() 
+{
+  debug() << "Finalize" << endreq;
 
   // Execute base class method
   return RichToolBase::finalize();
@@ -61,7 +54,7 @@ const bool RichMCTrackInfoTool::panelIntersectGlobal( const MCRichSegment * segm
                                                segment->bestPoint(0.5),
                                                segment->bestMomentum(0.5),
                                                hitPoint,
-                                               DeRichPDPanel::loose ) ) return false;
+                                               DeRichHPDPanel::loose ) ) return false;
   return true; // all OK
 }
 

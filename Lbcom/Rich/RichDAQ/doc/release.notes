@@ -4,6 +4,14 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2004-03-03 - Chris Jones
+ - Add ability to try to create a RawEvent object from the RawBuffer in
+   cases where it has not been created by default. Needed for running
+   Rich Reconstruction in DaVinci environment.
+
+! 2004-02-20 - Chris Jones
+ - Adopt new GaudiAlgorithm base class conventions
+
 !========================== RichDAQ v1r2 2004-02-05 =========================
 ! 2004-01-29 - Chris Jones
  - replacement of #define with static variables

@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           RichMCTools
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure
@@ -21,8 +21,9 @@ include_dirs $(RICHMCTOOLSROOT)
 #============================================================================
 # Used packages.
 #============================================================================
-use   RichDetTools   v3r*    Rich
+use   RichDetTools   v4r*    Rich
 use   RichEvent      v7r*    Event
+use   LinkerEvent    v1r*    Event
 
 #============================================================================
 # Component library building rule

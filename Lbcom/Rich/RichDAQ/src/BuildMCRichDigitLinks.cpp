@@ -1,4 +1,4 @@
-// $Id: BuildMCRichDigitLinks.cpp,v 1.2 2003-11-25 14:10:12 jonrob Exp $
+// $Id: BuildMCRichDigitLinks.cpp,v 1.3 2004-03-16 13:37:36 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -43,11 +43,11 @@ BuildMCRichDigitLinks::~BuildMCRichDigitLinks() {};
 //=============================================================================
 StatusCode BuildMCRichDigitLinks::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "Initialise" << endreq;
+  debug() << "Initialise" << endreq;
 
   // intialise base
-  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
   return StatusCode::SUCCESS;
 };
@@ -57,38 +57,17 @@ StatusCode BuildMCRichDigitLinks::initialize() {
 //=============================================================================
 StatusCode BuildMCRichDigitLinks::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Execute" << endreq;
-  }
+  debug() << "Execute" << endreq;
 
   // locate MCRichDigits
-  SmartDataPtr<MCRichDigits> mcDigits( eventSvc(), m_mcRichDigitsLocation );
-  if ( !mcDigits ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::WARNING << "Cannot locate MCRichDigits at "
-        << m_mcRichDigitsLocation << endreq;
-    return StatusCode::FAILURE;
-  }
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Successfully located " << mcDigits->size()
-        << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
-  }
+  MCRichDigits * mcDigits = get<MCRichDigits>( m_mcRichDigitsLocation );
+  debug() << "Successfully located " << mcDigits->size()
+          << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
 
   // locate RichDigits
-  SmartDataPtr<RichDigits> digits( eventSvc(), m_richDigitsLocation );
-  if ( !digits ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::WARNING << "Cannot locate RichDigits at "
-        << m_richDigitsLocation << endreq;
-    return StatusCode::FAILURE;
-  }
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Successfully located " << digits->size()
-        << " RichDigits at " << m_richDigitsLocation << endreq;
-  }
+  RichDigits * digits = get<RichDigits>( m_richDigitsLocation );
+  debug() << "Successfully located " << digits->size()
+          << " RichDigits at " << m_richDigitsLocation << endreq;
 
   MCRichDigits::iterator mcdigit = mcDigits->begin();
   for ( RichDigits::iterator digit = digits->begin();
@@ -99,9 +78,8 @@ StatusCode BuildMCRichDigitLinks::execute() {
  
     // Set MCTruth
     if ( setMCTruth(*digit, mcDigit).isFailure() ) {
-      MsgStream  msg( msgSvc(), name() );
-      msg << MSG::WARNING << "Failed to set MCTruth for RichDigit "
-          << (*digit)->key() << " MCRichDigit " << mcDigit << endreq;
+      warning() << "Failed to set MCTruth for RichDigit "
+                << (*digit)->key() << " MCRichDigit " << mcDigit << endreq;
     }
 
   }
@@ -114,10 +92,7 @@ StatusCode BuildMCRichDigitLinks::execute() {
 //=============================================================================
 StatusCode BuildMCRichDigitLinks::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::DEBUG << "Finalize" << endreq;
-  }
+  debug() << "Finalize" << endreq;
 
   // finalise base
   return RichAlgBase::finalize();

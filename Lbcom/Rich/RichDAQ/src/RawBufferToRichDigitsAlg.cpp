@@ -1,4 +1,4 @@
-// $Id: RawBufferToRichDigitsAlg.cpp,v 1.2 2004-02-02 14:27:39 jonesc Exp $
+// $Id: RawBufferToRichDigitsAlg.cpp,v 1.3 2004-03-16 13:37:37 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -37,14 +37,12 @@ RawBufferToRichDigitsAlg::~RawBufferToRichDigitsAlg() {};
 StatusCode RawBufferToRichDigitsAlg::initialize() {
 
   // intialise base
-  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
+  StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) { return sc; }
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::DEBUG << "Initialise :-" << endreq
-        << " Input  RawEvent location   = " << m_rawEventLoc << endreq
-        << " Output RichDigits location = " << m_richDigitsLoc << endreq;
-  }
+  debug() << "Initialise :-" << endreq
+          << " Input  RawEvent location   = " << m_rawEventLoc << endreq
+          << " Output RichDigits location = " << m_richDigitsLoc << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -53,19 +51,10 @@ StatusCode RawBufferToRichDigitsAlg::initialize() {
 // Main execution
 StatusCode RawBufferToRichDigitsAlg::execute() {
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Execute" << endreq;
-  }
+  debug() << "Execute" << endreq;
 
   // Retrieve the RawEvent:
-  SmartDataPtr<RawEvent> rawEvent( eventSvc(), m_rawEventLoc );
-  if ( 0 == rawEvent ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::ERROR
-        << "Unable to retrieve RawEvent from " << m_rawEventLoc << endreq;
-    return StatusCode::FAILURE;
-  }
+  RawEvent * rawEvent = getRawEvent();
 
   // Get the banks for the RichDigits
   const RichDAQ::RAWBanks & richBanks = rawEvent->banks( RawBuffer::Rich );
@@ -90,19 +79,10 @@ StatusCode RawBufferToRichDigitsAlg::execute() {
   } // end loop over data banks
 
   // Register new container of RichDigits to Gaudi data store
-  if ( !eventSvc()->registerObject(m_richDigitsLoc,m_digits) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::ERROR << "Failed to register RichDigits at "
-        << m_richDigitsLoc << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Successfully registered " << m_digits->size()
-        << " RichDigits from " << richBanks.size() << " Raw banks at "
-        << m_richDigitsLoc << endreq;
-  }
+  put( m_digits, m_richDigitsLoc );
+  debug() << "Successfully registered " << m_digits->size()
+          << " RichDigits from " << richBanks.size() << " Raw banks at "
+          << m_richDigitsLoc << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -122,13 +102,9 @@ RawBufferToRichDigitsAlg::decodeZeroSuppressedBank( const RawBank & bank ) const
   // How many digits do we expect to make
   RichDAQ::ShortType digitCount = bankHeader.hitCount();
 
-  if ( msgLevel(MSG::VERBOSE) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::VERBOSE
-        << "Decoding " << digitCount << " zero suppressed hits for PD "
-        << pdID << endreq;
-    msg << MSG::VERBOSE << " Header : " << bankHeader << endreq;
-  }
+  verbose()  << "Decoding " << digitCount << " zero suppressed hits for PD "
+             << pdID << endreq
+             << " Header : " << bankHeader << endreq;
 
   // Loop over data fields (Skip first header field)
   unsigned int nDigitsMade = 0;
@@ -136,10 +112,7 @@ RawBufferToRichDigitsAlg::decodeZeroSuppressedBank( const RawBank & bank ) const
 
     // Get triplet data
     RichZSHitTriplet triplet( bank.data()[iEntry] );
-    if ( msgLevel(MSG::VERBOSE) ) {
-      MsgStream msg( msgSvc(), name() );
-      msg << MSG::VERBOSE << " Decoding triplet " << triplet << endreq;
-    }
+    verbose() << " Decoding triplet " << triplet << endreq;
 
     // Make first digit from triplet
     if ( nDigitsMade >= digitCount ) break;
@@ -188,13 +161,9 @@ RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) co
   // How many digits do we expect to make
   RichDAQ::ShortType digitCount = bankHeader.hitCount();
 
-  if ( msgLevel(MSG::VERBOSE) ) {
-    MsgStream  msg( msgSvc(), name() );
-    msg << MSG::VERBOSE
-        << "Decoding " << digitCount << " non-zero suppressed hits for PD "
-        << pdID << endreq;
-    msg << MSG::VERBOSE << " Header : " << bankHeader << endreq;
-  }
+  verbose() << "Decoding " << digitCount << " non-zero suppressed hits for PD "
+            << pdID << endreq
+            << " Header : " << bankHeader << endreq;
 
   // Create a block of non-zero suppressed data from RawBank
   RichNonZeroSuppData nonZSdata( bank );
@@ -207,10 +176,7 @@ RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) co
   // Create RichDigits with new RichSmartIDs
   for ( RichDAQ::SmartIDs::const_iterator iID = IDs.begin();
         iID != IDs.end(); ++iID ) {
-    if ( msgLevel(MSG::VERBOSE) ) {
-      MsgStream  msg( msgSvc(), name() );
-      msg << MSG::VERBOSE << "  Hit " << *iID << endreq;
-    }
+    verbose() << "  Hit " << *iID << endreq;
     RichDigit * newDigit = new RichDigit();
     m_digits->insert( newDigit, *iID );
   }
@@ -221,12 +187,33 @@ RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) co
 //  Finalize
 StatusCode RawBufferToRichDigitsAlg::finalize() {
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::DEBUG << "Finalise" << endreq;
-  }
+  debug() << "Finalise" << endreq;
 
   // finalise base
   return RichAlgBase::finalize();
 }
 
+RawEvent * RawBufferToRichDigitsAlg::getRawEvent()
+{
+
+  // Try and load from TES. If it exists return, overwise try to create one
+  SmartDataPtr<RawEvent> rawEventTES( eventSvc(), m_rawEventLoc );
+  if ( rawEventTES ) {
+    return rawEventTES;
+  } else {
+    debug() << "Manually creating RawEvent from RawBuffer" << endreq;
+
+    // Retrieve the RawBuffer
+    SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), RawBufferLocation::Default );
+    if ( !rawBuffer ) { Error("Unable to locate RawBuffer"); return 0; }
+
+    // make new RawEvent and put into TES
+    RawEvent * rawEvent = new RawEvent( rawBuffer );
+    if ( !rawEvent ) { Error( "Unable to allocate memory to RawEvent" ); return 0; }
+    put( rawEvent, RawEventLocation::Default );
+
+    return rawEvent;
+  }
+
+  return 0;
+};

@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToRawBufferAlg.h,v 1.2 2004-02-02 14:27:39 jonesc Exp $
+// $Id: MCRichDigitsToRawBufferAlg.h,v 1.3 2004-03-16 13:37:37 jonesc Exp $
 #ifndef RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H
 #define RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H 1
 
@@ -45,9 +45,12 @@ public:
 
 private: // methods
 
+  /// Fill the data bank for zero suppressed HPDs
   void fillZeroSuppressed    ( RichSmartID pdID,
                                RichDAQ::RAWBank & dataBank,
                                const MCRichDigitVector & pdHits ) const;
+
+  /// Fill the data bank for non zero suppressed HPDs
   void fillNonZeroSuppressed ( RichSmartID pdID,
                                RichDAQ::RAWBank & dataBank,
                                const MCRichDigitVector & pdHits ) const;
@@ -60,8 +63,7 @@ private: // data
   /// Location of input MCRichDigits in TES
   std::string m_digitsLoc;
 
-  /// The number of hits marking the transistion between zero and 
-  /// non-zero suppressed data
+  /// The number of hits marking the transistion between zero and non-zero suppressed data
   unsigned int m_zeroSuppresCut;
 
 };
