@@ -11,11 +11,12 @@ static std::string geoBase="/dd/Structure/LHCb/Muon/";
 
 
 
-void MuonDetectorResponse::initialize(IRndmGenSvc * randSvc,
+void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
                                       IDataProviderSvc* detSvc, 
                                       IMessageSvc * msgSvc){  
 	MsgStream log(msgSvc, "MuonDetectorResponse");
-  MuonDigitizationParameters::Parameters usefull;  
+  // MuonGeometryStore::Parameters usefull( toolSvc,detSvc, msgSvc);
+  usefullPointer= new MuonGeometryStore::Parameters( toolSvc,detSvc, msgSvc);
 	m_gaussDist.initialize( randSvc, Rndm::Gauss(0.0,1.0));
 	m_flatDist.initialize( randSvc, Rndm::Flat(0.0,1.0)); 
 	std::vector<double> alreadyInsertedValue;
@@ -52,12 +53,14 @@ void MuonDetectorResponse::initialize(IRndmGenSvc * randSvc,
     newMean=muReadout->chamberNoise(0)/100; //tranform from cm^2 to mm^2
     Rndm::Numbers*	poissonDist=new Rndm::Numbers;
     int readout=0;
-    double sizeOfChannel = usefull.getPhChannelSizeX(readout,indexRegion)*
-      usefull.getPhChannelSizeY(readout,indexRegion);
-    int numberOfChannels = usefull.getPhChannelNX(readout,indexRegion)*		
-      usefull.getPhChannelNY(readout,indexRegion);
+    double sizeOfChannel = usefullPointer->
+      getPhChannelSizeX(readout,indexRegion)*
+      usefullPointer->getPhChannelSizeY(readout,indexRegion);
+    int numberOfChannels = usefullPointer->
+      getPhChannelNX(readout,indexRegion)*		
+      usefullPointer->getPhChannelNY(readout,indexRegion);
     double areaOfChamber = sizeOfChannel* numberOfChannels;
-    int	 numberOfGaps=usefull.getGapPerRegion(indexRegion);
+    int	 numberOfGaps=usefullPointer->getGapPerRegion(indexRegion);
     double totalArea=areaOfChamber* numberOfGaps;
     double meanOfNoisePerChamber=newMean*totalArea*25*1.0E-9;
     log<<MSG::DEBUG<<"region name "<<regionName[indexRegion]
@@ -68,7 +71,7 @@ void MuonDetectorResponse::initialize(IRndmGenSvc * randSvc,
     MuonChamberResponse* responseOfChamber= new 
       MuonChamberResponse(&m_flatDist,poissonDist,newMean );
     responseChamber[indexRegion]=responseOfChamber;
-    {for(int readout=0;readout<=usefull.getReadoutNumber(indexRegion);
+    {for(int readout=0;readout<=usefullPointer->getReadoutNumber(indexRegion);
          readout++){
       double min,max; 
       std::vector<double> timeJitterPDF=muReadout->
@@ -83,8 +86,8 @@ void MuonDetectorResponse::initialize(IRndmGenSvc * randSvc,
       }
       Rndm::Numbers*	p_electronicNoise=new Rndm::Numbers;
       double noiseCounts=muReadout->electronicsNoise(readout)*
-        usefull.getPhChannelNX( readout, indexRegion)*
-        usefull.getPhChannelNY( readout, indexRegion)*25*1.0E-9;
+        usefullPointer->getPhChannelNX( readout, indexRegion)*
+        usefullPointer->getPhChannelNY( readout, indexRegion)*25*1.0E-9;
       p_electronicNoise->initialize( randSvc, Rndm::Poisson(noiseCounts));	
       m_electronicNoise.push_back(p_electronicNoise);	
       MuonPhysicalChannelResponse* response= new
@@ -99,7 +102,7 @@ MuonDetectorResponse::~MuonDetectorResponse(){
   for(int indexRegion=0;indexRegion<m_partition;indexRegion++){
 	  delete responseChamber[indexRegion];
 		delete m_poissonDist[indexRegion];
-    for(int readout=0;readout<=usefull.getReadoutNumber(indexRegion);
+    for(int readout=0;readout<=usefullPointer->getReadoutNumber(indexRegion);
         readout++){
       delete responseVector[readout][indexRegion];      
 		}
@@ -115,7 +118,8 @@ MuonDetectorResponse::~MuonDetectorResponse(){
       iterNoise++){
     delete *iterNoise;
 	}
-
+  delete usefullPointer;
+  
 }
 
 
@@ -124,8 +128,9 @@ MuonPhysicalChannelResponse* MuonDetectorResponse::getResponse(MuonPhChID&
   int partition=phChID.getStation()*4+phChID.getRegion();
   unsigned int readoutType=phChID.getReadout();
   int readout=-1;
-  for(int ireadout=0;ireadout<=usefull.getReadoutNumber(partition);ireadout++){
-    if(readoutType==usefull.getReadoutType(ireadout, partition)){
+  for(int ireadout=0;ireadout<=usefullPointer->
+        getReadoutNumber(partition);ireadout++){
+    if(readoutType==usefullPointer->getReadoutType(ireadout, partition)){
       readout=(int)ireadout;
     }   
   }

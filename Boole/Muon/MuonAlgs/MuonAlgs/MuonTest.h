@@ -39,7 +39,7 @@
 #include "Event/MuonOriginFlag.h"
 #include "GaudiKernel/INTupleSvc.h" 
 #include "GaudiKernel/NTuple.h" 
-#include "MuonAlgs/MuonDigitizationParameters.h"
+#include "MuonUtils/MuonGeometryStore.h"
 
 class MuonTest : public Algorithm {
 
@@ -90,6 +90,13 @@ public:
    NTuple::Array<long>            m_mcmuonhitalive;
    NTuple::Array<long>            m_mcmuonhitefficiency;
    NTuple::Array<float>           m_mcmuonhittime;
-	 	 
+
+   NTuple::Tuple*                 m_digit;
+   NTuple::Item<long>          	  m_digitnumber;
+   NTuple::Array<long>            m_digitpartition;
+   NTuple::Array<long>           m_digittime;
+   NTuple::Array<long>           m_digitnature;
+   NTuple::Array<long>           m_hitindigit;
+
 	 };
 #endif

@@ -1,4 +1,4 @@
-// $Id: MuonTest.cpp,v 1.2 2002-11-06 09:51:23 asatta Exp $
+// $Id: MuonTest.cpp,v 1.3 2003-04-04 09:04:05 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -49,8 +49,9 @@ StatusCode MuonTest::initialize() {
   log << MSG::DEBUG << "==> Initialise" << endreq;
   StatusCode sc=toolSvc()->retrieveTool("MuonTileIDXYZ",m_pMuonTileXYZ); 
   m_histoTiming=histoSvc()->book("/stat/muon/1"," (ms)",50,0.,10.0);
-  NTuplePtr nt(ntupleSvc(), "FILE1/100");
+  //NTuplePtr nt(ntupleSvc(), "FILE1/100");
   StatusCode status;
+  /*
   if ( !nt )  {
     nt = ntupleSvc()->book ("FILE1/100",CLID_ColumnWiseTuple  , 
                             "Test digitization");
@@ -111,7 +112,28 @@ StatusCode MuonTest::initialize() {
       m_mcdigit = ntMCDigit;
 	  }	
   }
+*/
 
+  NTuplePtr ntDigit(ntupleSvc(), "FILE1/110");
+  
+  if ( !ntDigit )  {
+    ntDigit = ntupleSvc()->book ("FILE1/110",CLID_ColumnWiseTuple  , 
+                                   "MuonDigit");
+    if ( ntDigit )    {
+		  status = ntDigit->addItem ("Digit",   m_digitnumber ,0, 4000);
+      status = ntDigit->addIndexedItem ("partition ", m_digitnumber, 
+                                          m_digitpartition);
+      status = ntDigit->addIndexedItem ("time ", m_digitnumber, 
+                                          m_digittime);			
+      status = ntDigit->addIndexedItem ("nature ", m_digitnumber, 
+                                          m_digitnature);			
+
+      status = ntDigit->addIndexedItem ("hits ", m_digitnumber, 
+                                          m_hitindigit);			
+
+      m_digit = ntDigit;
+	  }	
+  }
   return StatusCode::SUCCESS;
 };
 
@@ -123,8 +145,9 @@ StatusCode MuonTest::execute() {
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 //test poisson distribution
-
-
+  //StatusCode sc;
+  
+/*
 	Rndm::Numbers*	poissonDist=new Rndm::Numbers;
 	poissonDist->initialize( randSvc(), Rndm::Poisson(0.0231556));
   //	for(int jjj=0;jjj<1000000;jjj++){
@@ -324,10 +347,35 @@ StatusCode MuonTest::execute() {
 			it++;
  	  }
  	}
-	m_digiNtuple->write();
+  //	m_digiNtuple->write();
 //	m_digiError->write();
-	m_mcdigit->write();
+	//m_mcdigit->write();
+  */
+  m_digitnumber=0;
+  
+  SmartDataPtr<MCMuonDigits> mcdigit(eventSvc(),
+                                     MCMuonDigitLocation::MCMuonDigit);  	
 
+
+  SmartDataPtr<MuonDigits> digit(eventSvc(),
+                                     MuonDigitLocation::MuonDigit);  	
+  MuonDigits::const_iterator itedigit;
+	for(itedigit=digit->begin();itedigit<digit->end();itedigit++){
+  
+  m_digitpartition[m_digitnumber]=(*itedigit)->key().station()*4
+    +(*itedigit)->key().region();
+  m_digittime[m_digitnumber]=(*itedigit)->TimeStamp();
+  //		   m_digitnumber++;
+  ContainedObject* pippo=  mcdigit->containedObject((*itedigit)->key());
+  MCMuonDigit* alessia=dynamic_cast<MCMuonDigit *> (pippo);       
+  m_digitnature[m_digitnumber] = alessia->DigitInfo().natureOfHit();
+  //SmartRefVector<MCMuonHit>::iterator it;  
+	int hitsindigit 	=(alessia)->mcMuonHits().size();
+  m_hitindigit[m_digitnumber]=hitsindigit;
+  
+  m_digitnumber++;
+  }
+  m_digit->write();
   return StatusCode::SUCCESS;
 };
 
@@ -346,7 +394,9 @@ StatusCode MuonTest::finalize() {
 StatusCode MuonTest::locateMuonTileFromXYZ( double x,double y,double z,
                                             int& numberTileOutput, MuonTileID
                                             phChTileID[2], bool debug){
-  MuonDigitizationParameters::Parameters usefull;  
+  
+  MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
+
 	MsgStream log(msgSvc(), name());
   int layoutX[2][20]=
   {

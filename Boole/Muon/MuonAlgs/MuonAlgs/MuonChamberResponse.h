@@ -25,7 +25,7 @@
 #include "DetDesc/SolidBox.h"  
 
 #include "MuonTools/IMuonTileXYZTool.h"
-#include "MuonAlgs/MuonDigitizationParameters.h" 
+#include "MuonUtils/MuonGeometryStore.h" 
 #include "MuonKernel/MuonTile.h"
 #include "MuonAlgs/MuonPhChID.h"    
 #include "MuonDet/DeMuonRegion.h"

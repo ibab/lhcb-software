@@ -1,7 +1,7 @@
 // Uncomment to change the defaults
 //MuonDigitization.BXTime= 25 ;
 //MuonDigitization.TimeGate= 24 ;
-//MuonDigitization.VerboseDebug= true ;
+// MuonDigitization.VerboseDebug= true ;
 //MuonDigitization.ApplyTimeJitter=false;
 //MuonDigitization.ApplyChamberNoise=false;
 //MuonDigitization.ApplyElectronicNoise=false;

@@ -26,7 +26,7 @@
 #include "MuonTools/IMuonTileXYZTool.h"
 #include "MuonAlgs/MuonPhyChannelInput.h"
 #include "MuonAlgs/MuonPhPreInput.h"
-#include "MuonAlgs/MuonDigitizationParameters.h"
+#include "MuonUtils/MuonGeometryStore.h"
 #include "MuonAlgs/MuonDigitizationData.h"
 #include "MuonAlgs/MuonPhysicalChannel.h"
 #include "MuonKernel/MuonTile.h"

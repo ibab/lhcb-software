@@ -12,7 +12,7 @@
 #include "Event/Kernel.h"  
 #include "MuonAlgs/MuonHitTraceBack.h"
 #include "Event/MCMuonDigitInfo.h"
-#include "MuonAlgs/MuonDigitizationParameters.h"
+#include "MuonUtils/MuonGeometryStore.h"
 
 
 class MuonPhysicalChannelOutput: public KeyedObject<int>{
@@ -41,7 +41,8 @@ origHits):m_ID(origID),m_Hits(origHits){};
 	
 	void setFiringTime( double value);
 	double firingTime();
-	   void calculateTileID(int & numberOfTileInOutput,MuonTileID phChTileID[2]);
+  void calculateTileID(int & numberOfTileInOutput,MuonTileID phChTileID[2],
+                       MuonGeometryStore::Parameters *usefullPointer);
 private:
  MuonPhChID m_ID;
  std::vector<MuonHitTraceBack> m_Hits;

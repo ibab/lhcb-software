@@ -20,8 +20,9 @@ MuonPhysicalChannelOutput::MuonPhysicalChannelOutput
 
 
 void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput, 
-                                                 MuonTileID phChTileID[2]){  
-  MuonDigitizationParameters::Parameters usefull ;
+                                                 MuonTileID phChTileID[2],
+MuonGeometryStore::Parameters *usefullPointer){  
+  
   unsigned int station=phChID()->getStation();
   unsigned int region=phChID()->getRegion();
   unsigned int chamber=phChID()->getChamber();
@@ -50,13 +51,13 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
   //
 
   for(int partit=0; partit<partition; partit++){
-    chamberAbs=chamberAbs+usefull.getChamberPerRegion(partit);
+    chamberAbs=chamberAbs+usefullPointer->getChamberPerRegion(partit);
   }
   
   //
   // loop over FE channel readout
   //
-  for (int readoutNumber=0;readoutNumber<(int)usefull.
+  for (int readoutNumber=0;readoutNumber<(int)usefullPointer->
          getLogMapPerRegion(partition);readoutNumber++){
     //
     // check if current readout coincides with one of the LogMap readouts
@@ -64,19 +65,21 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
     //    cout<<"logmap type, readout "<<usefull.getLogMapRType
     //(readoutNumber,partition)<<" "<<readout<<" "<<readoutNumber<<endl;
     
-    if(usefull.getLogMapRType(readoutNumber,partition)==readout)
+    if(usefullPointer->getLogMapRType(readoutNumber,partition)==readout)
       {
         // define order of FE channel according to the MuonTileID 
         //conventions: from 0,0 left,bottom to radial coordinates
         //
         
-        for(int countReadout=0; countReadout<=usefull.
+        for(int countReadout=0; countReadout<=usefullPointer->
               getReadoutNumber(partition);countReadout++)
           {
-            if(  usefull.getLogMapRType(readoutNumber,partition)==
-                 usefull.getReadoutType(countReadout,partition)){
-              numberOfPCX=usefull.getPhChannelNX(countReadout,partition);
-              numberOfPCY=usefull.getPhChannelNY(countReadout,partition);
+            if(  usefullPointer->getLogMapRType(readoutNumber,partition)==
+                 usefullPointer->getReadoutType(countReadout,partition)){
+              numberOfPCX=usefullPointer->
+                getPhChannelNX(countReadout,partition);
+              numberOfPCY=usefullPointer->
+                getPhChannelNY(countReadout,partition);
             }
           }
         // 
@@ -100,25 +103,28 @@ void MuonPhysicalChannelOutput::calculateTileID( int& numberTileOutput,
         // FE ch address in the whole quadrant
         //
         
-        idXGlobal=newidX+usefull.getGridX(chamberAbs)*numberOfPCX;
-        idYGlobal=newidY+usefull.getGridY(chamberAbs)*numberOfPCY;
+        idXGlobal=newidX+usefullPointer->getGridX(chamberAbs)*numberOfPCX;
+        idYGlobal=newidY+usefullPointer->getGridY(chamberAbs)*numberOfPCY;
         
 
         //
         //  compute Logical Channel address now
         //
-        idLogX=idXGlobal/usefull.getLogMapMergex(readoutNumber,partition);    
-        idLogY=idYGlobal/usefull.getLogMapMergey(readoutNumber,partition);   
+        idLogX=idXGlobal/usefullPointer->
+          getLogMapMergex(readoutNumber,partition);    
+        idLogY=idYGlobal/usefullPointer->
+          getLogMapMergey(readoutNumber,partition);   
         //
         // create the tile of the phys chan
         //  
         ++numberTileOutput;
 
-        MuonLayout layout(usefull.getLayoutX(readoutNumber,partition),
-                          usefull.getLayoutY(readoutNumber,partition));   
+        MuonLayout layout(usefullPointer->getLayoutX(readoutNumber,partition),
+                          usefullPointer->
+                          getLayoutY(readoutNumber,partition));   
         phChTileID[numberOfTileCreated].setLayout(layout);
         phChTileID[numberOfTileCreated].setStation(station);
-        phChTileID[numberOfTileCreated].setReadout(usefull.
+        phChTileID[numberOfTileCreated].setReadout(usefullPointer->
                                                    getLogMapRType
                                                    (readoutNumber,partition));
         phChTileID[numberOfTileCreated].setRegion(region);

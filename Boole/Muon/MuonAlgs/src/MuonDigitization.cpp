@@ -96,11 +96,11 @@ StatusCode MuonDigitization::initialize()
   }
   m_partition=basegeometry.getPartitions();    
 
-  MuonDigitizationParameters::Parameters usefull( toolSvc(), 
+  MuonGeometryStore::Parameters usefull( toolSvc(), 
                                                   detSvc(), msgSvc());
   log<<MSG::DEBUG<<usefull.getChamberPerRegion(0)<<endreq;
   m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));	 
-  detectorResponse.initialize( randSvc(), detSvc(), msgSvc());
+  detectorResponse.initialize( toolSvc(),randSvc(), detSvc(), msgSvc());
   return StatusCode::SUCCESS;
 }
  
@@ -247,7 +247,8 @@ StatusCode MuonDigitization::finalize()
 
 StatusCode
 MuonDigitization::addChamberNoise(){
-  MuonDigitizationParameters::Parameters usefull;
+ MuonGeometryStore::Parameters usefull( toolSvc(), 
+                                                  detSvc(), msgSvc());
 	MsgStream log(msgSvc(), name()); 
   int container=1;
 	for (int ispill=0;ispill<m_numberOfEventsNeed;ispill++){
@@ -342,7 +343,9 @@ MuonDigitization::createInput(
                               PhyChaInput)
 {
   MsgStream log(msgSvc(), name()); 
-  MuonDigitizationParameters::Parameters usefull ;
+ MuonGeometryStore::Parameters usefull( toolSvc(), 
+                                                  detSvc(), msgSvc());
+  
   unsigned int chamberTillNow=0;		
   //loop over the containers
   for(int iterRegion=0;iterRegion<m_partition;iterRegion++){    
@@ -357,6 +360,7 @@ MuonDigitization::createInput(
           TESPathOfHitsContainer[container];
         if(m_verboseDebug) {log<<MSG::INFO<<"hit container path "<<
                               path<<endreq;}
+       
         SmartDataPtr<MCMuonHits> hitPointer(eventSvc(),path);
         MCMuonHits::const_iterator iter;	 
         if(hitPointer!=0){
@@ -895,8 +899,10 @@ fillPhysicalChannel(MuonDigitizationData<MuonPhysicalChannel>&
 StatusCode MuonDigitization::
 applyPhysicalEffects(MuonDigitizationData<MuonPhysicalChannel>&
                      PhysicalChannel){
-	MsgStream log(msgSvc(), name()); 						 
-  MuonDigitizationParameters::Parameters usefull ;
+	MsgStream log(msgSvc(), name()); 	
+					  MuonGeometryStore::Parameters usefull( toolSvc(), 
+                                                  detSvc(), msgSvc());
+  
   
   //loop over the 20 containers 
   
@@ -1011,6 +1017,7 @@ StatusCode MuonDigitization::
 createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
                      PhyChaOutput, MCMuonDigits& mcDigitContainer){
 	MsgStream log(msgSvc(), name()); 
+ MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
   //  int flag=0;
   int countDigits=0;
   for(int i=0; i<m_partition; i++){
@@ -1025,7 +1032,7 @@ createLogicalChannel(MuonDigitizationData<MuonPhysicalChannelOutput>&
       int numberOfTileID;  
       if(m_verboseDebug)log<<MSG::INFO<<"FE ID "<<
                           (*iter)->phChID()->getID()<<endreq;
-      (*iter)->calculateTileID(numberOfTileID,phChTileID);
+      (*iter)->calculateTileID(numberOfTileID,phChTileID,&usefull);
       if( m_verboseDebug)log<<MSG::INFO<<" after tile calculation " 
                             << numberOfTileID<<" "<<endreq;
       if( m_verboseDebug)log<<MSG::INFO<<" tile  " << 
@@ -1200,7 +1207,9 @@ createRAWFormat(MCMuonDigits& mcDigitContainer, MuonDigits& digitContainer){
 StatusCode MuonDigitization::
 addElectronicNoise(MuonDigitizationData
                    <MuonPhysicalChannel>& PhysicalChannel){
-  MuonDigitizationParameters::Parameters usefull;
+  
+ MuonGeometryStore::Parameters usefull( toolSvc(), 
+                                                  detSvc(), msgSvc());
 	MsgStream log(msgSvc(), name()); 
 	MuonPhysicalChannel* pFound;
   for(int ispill=0;ispill<m_numberOfEventsNeed;ispill++){

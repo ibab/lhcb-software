@@ -10,7 +10,7 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "AIDA/IHistogram1D.h"
 #include "CLHEP/Units/PhysicalConstants.h"
- 
+#include "GaudiKernel/IToolSvc.h"   
 /// Detector description classes
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
@@ -25,7 +25,7 @@
 #include "MuonTools/IMuonTileXYZTool.h"
 #include "MuonAlgs/MuonPhyChannelInput.h"
 #include "MuonAlgs/MuonPhPreInput.h"
-#include "MuonAlgs/MuonDigitizationParameters.h"
+#include "MuonUtils/MuonGeometryStore.h"
 #include "MuonAlgs/MuonDigitizationData.h"
  
 #include "MuonKernel/MuonTile.h"
@@ -51,7 +51,7 @@ class MuonDetectorResponse  {
 public:
 //constructor
 MuonDetectorResponse(){};
- void initialize(IRndmGenSvc * randSvc,
+ void initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
                       IDataProviderSvc* detSvc, IMessageSvc * msgSvc);
 ~MuonDetectorResponse();
 MuonPhysicalChannelResponse* getResponse(MuonPhChID& phChID);
@@ -63,7 +63,9 @@ private:
  std::vector<Rndm::Numbers*> m_poissonDist;
  std::vector<Rndm::Numbers*> m_electronicNoise;
  std::vector<Rndm::Numbers*> m_timeJitter;
-MuonDigitizationParameters::Parameters usefull;
+  MuonGeometryStore::Parameters* usefullPointer;
+  
+//(toolSvc, detSvc,msgSvc);
 MuonPhysicalChannelResponse* responseVector[2][20];
 MuonChamberResponse* responseChamber[20];
   int m_stationNumber;
