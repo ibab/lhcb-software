@@ -88,11 +88,11 @@ use PuVeto       v2r0   L0
 use L0DU         v5r0   L0
 
 # Calorimeter
-use CaloInterfaces v2r0 Calo
-use CaloUtils      v2r0 Calo
+use CaloInterfaces v2r1 Calo
+use CaloUtils      v2r1 Calo
 use CaloTools      v2r0 Calo
-use CaloAlgs       v5r0 Calo
-use CaloCA         v4r0 Calo
+use CaloAlgs       v5r1 Calo
+use CaloCA         v4r1 Calo
 
 # Velo
 use VeloDigit     v2r0   Velo
