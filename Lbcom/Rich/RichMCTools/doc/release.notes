@@ -4,6 +4,9 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2005-01-07 - Chris Jones
+ - Import algorithm BuildMCRichDigitLinks from RichDAQ
+
 !========================== RichMCTools v2r3 2004-11-22 ======================
 ! 2004-11-22 - Marco Cattaneo
  - Update usage to Relations v2r*
