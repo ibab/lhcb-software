@@ -28,7 +28,7 @@ use  Utilities          v1r2     Tools
 #    Physics packages
 use  CommonParticles    v1r0     Phys
 use  DaVinciAssociators v4r4     Phys
-use  DaVinciChecks      v2r1     Phys
+use  DaVinciChecks      v2r2     Phys
 use  DaVinciEff         v2r9     Phys
 use  DaVinciMCTools     v5r3     Phys
 use  DaVinciTest        v4r2     Phys

@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !====================  DaVinciSys v11r4 2004-03-23 ============================
+! 2004-03-24 -P. Koppenburg
+ - Adapted to new DVAlgorithm
+   . DaVinciChecks      v2r2     Phys
+   . PhysSelections     v6r3     Phys
+    
 ! 2004-03-23 -P. Koppenburg
  - Changes in Calo software
    . CaloPIDs           v2r1     Calo 
@@ -16,7 +21,6 @@
    # Bd2KstarGamma   v3r0    PhysSel
    # Bd2OmegaGamma   v3r0    PhysSel
    # Bs2PhiGamma     v3r0    PhysSel
-    
 ! 2004-03-16 -P. Koppenburg
  - Bug fixes in PreLoadParticles, *DecayFinder
    . DaVinciTools        v9r1     Phys

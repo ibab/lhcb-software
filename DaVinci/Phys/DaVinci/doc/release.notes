@@ -18,6 +18,10 @@ Purpose     : LHCb analysis program
  
  - New selection package B2XGamma replacing all other *Gamma
 
+ - Adapted Phys/DaVinciChecks to new DVAlgorithm
+
+ - Adapted Phys/PhysSelections to new DVAlgorithm
+
  - Version based on LHCb v15r4, refer to release notes of
    LHCb for details regarding those packages.
 
