@@ -3,8 +3,11 @@
  *  Header file for tool interface : IRichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: IRichSmartIDTool.h,v 1.4 2004-07-26 17:53:17 jonrob Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.5 2004-07-29 09:30:32 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/26 17:53:17  jonrob
+ *  Various improvements to the doxygen comments
+ *
  * 
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
@@ -30,7 +33,7 @@ class RichSmartID;
 /// Static Interface Identification
 static const InterfaceID IID_IRichSmartIDTool( "IRichSmartIDTool", 1, 0 );
 
-/** @class IRichSmartIDTool IRichSmartIDTool.h RichDetTools/IRichSmartIDTool.h
+/** @class IRichSmartIDTool IRichSmartIDTool.h RichKernel/IRichSmartIDTool.h
  *
  *  Interface to tools providing manipulation of RichSmartID channel identifiers
  *

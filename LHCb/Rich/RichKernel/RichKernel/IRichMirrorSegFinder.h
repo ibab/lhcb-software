@@ -1,10 +1,14 @@
+
 /** @file IRichMirrorSegFinder.h
  *
  *  Header file for tool interface : IRichMirrorSegFinder
  *
  *  CVS Log :-
- *  $Id: IRichMirrorSegFinder.h,v 1.5 2004-07-26 17:53:16 jonrob Exp $
+ *  $Id: IRichMirrorSegFinder.h,v 1.6 2004-07-29 09:30:32 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/26 17:53:16  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04

@@ -3,8 +3,11 @@
  *  Header file for tool interface : IRichDetParameters
  *
  *  CVS Log :-
- *  $Id: IRichDetParameters.h,v 1.4 2004-07-26 17:53:16 jonrob Exp $
+ *  $Id: IRichDetParameters.h,v 1.5 2004-07-29 09:30:32 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/26 17:53:16  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -22,7 +25,7 @@
 /// Static Interface Identification
 static const InterfaceID IID_IRichDetParameters( "IRichDetParameters", 1, 0 );
 
-/** @class IRichDetParameters IRichDetParameters.h RichDetTools/IRichDetParameters.h
+/** @class IRichDetParameters IRichDetParameters.h RichKernel/IRichDetParameters.h
  *
  *  Interface for tools providing access to useful detector parameters
  *

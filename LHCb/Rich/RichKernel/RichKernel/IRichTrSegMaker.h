@@ -1,10 +1,14 @@
+
 /** @file IRichTrSegMaker.h
  *
  *  Header file for tool interface : IRichTrSegMaker
  *
  *  CVS Log :-
- *  $Id: IRichTrSegMaker.h,v 1.4 2004-07-26 17:53:17 jonrob Exp $
+ *  $Id: IRichTrSegMaker.h,v 1.5 2004-07-29 09:30:32 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/26 17:53:17  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
@@ -27,7 +31,10 @@ class ContainedObject;
 // Rich Kernel
 class RichTrackSegment;
 
-/** @class IRichTrSegMaker IRichTrSegMaker.h RichDetTools/IRichTrSegMaker.h
+/// Static Interface Identification
+static const InterfaceID IID_IRichTrSegMaker( "IRichTrSegMaker", 1, 0 );
+
+/** @class IRichTrSegMaker IRichTrSegMaker.h RichKernel/IRichTrSegMaker.h
  *
  *  Interface for tools to create RichTrackSegments from various tracking objects.
  *
@@ -35,8 +42,6 @@ class RichTrackSegment;
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
  */
-
-static const InterfaceID IID_IRichTrSegMaker( "IRichTrSegMaker", 1, 0 );
 
 class IRichTrSegMaker : public virtual IAlgTool {
 

@@ -1,10 +1,14 @@
+
 /** @file IRichRayTracing.h
  *
  *  Header file for tool interface : IRichRayTracing
  *
  *  CVS Log :-
- *  $Id: IRichRayTracing.h,v 1.11 2004-07-26 17:53:17 jonrob Exp $
+ *  $Id: IRichRayTracing.h,v 1.12 2004-07-29 09:30:32 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/07/26 17:53:17  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -34,7 +38,7 @@ class RichGeomPhoton;
 /// Static Interface Identification
 static const InterfaceID IID_IRichRayTracing( "IRichRayTracing", 1, 0 );
 
-/** @class IRichRayTracing IRichRayTracing.h RichDetTools/IRichRayTracing.h
+/** @class IRichRayTracing IRichRayTracing.h RichKernel/IRichRayTracing.h
  *
  *  A tool to trace photons (or similar) from a point all the way to
  *  the photo detectors.
