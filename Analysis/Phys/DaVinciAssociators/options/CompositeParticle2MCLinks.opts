@@ -1,12 +1,18 @@
 ///////////////////////////////////////////////////////////////////////////////
+// Link associator for composite Particles (all componenent particles
+// must be linked
+///////////////////////////////////////////////////////////////////////////////
+ToolSvc.CompP2MCLinkAsct.Location      = "Phys/Relations/CompPart2MCfromLinks";
+ToolSvc.CompP2MCLinkAsct.AlgorithmType = "CompositeParticle2MCLinks";
+ToolSvc.CompP2MCLinkAsct.AlgorithmName = "CompositeParticle2MCLinks";
 
-/* Define specific parameters for an associator based on the same scheme
-   as the Chi2 one, but with a different algorithm
-*/
-Toolsvc.LinkAsct.Location      = "Phys/Relations/CompPart2MCfromLinks";
-ToolSvc.LinkAsct.AlgorithmType = "CompositeParticle2MCLinks";
-ToolSvc.LinkAsct.AlgorithmName = "CompositeParticle2MCLinks";
-
+// The properties of the associator (CompositeParticle2MCLinks.P2MCAsct) 
+// used by the algorithm CompositeParticle2MCLinks
+CompositeParticle2MCLinks.P2MCAsct.AlgorithmType = "Particle2MCLinks";
+CompositeParticle2MCLinks.P2MCAsct.AlgorithmName = "Particle2MCLinks";
 // ... definition for the link algorithm
-//Particle2MCLinks.InputData  = { "Phys/Prod/Particles" };
+//  Particle2MCLinks.InputData  = { "Phys/Prod/Particles" };
+// Use Particle2MCLinks and ChargedPP2MC standard properties
+//  #include "$DAVINCIASSOCIATORSROOT/options/Particle2MCLinks.opts"
+//  #include "$DAVINCIASSOCIATORSROOT/options/ChargedPP2MC.opts"
 //
