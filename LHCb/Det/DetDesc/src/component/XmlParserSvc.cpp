@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.4 2001-08-22 11:45:48 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.5 2001-10-05 12:17:24 sponce Exp $
 
 // Include Files
 #include <limits.h>
@@ -94,6 +94,8 @@ DOM_Document XmlParserSvc::parse (const char* fileName) {
     m_parser->reset();
     // parses the file
     m_parser->parse(fileName);
+    MsgStream log (msgSvc(), "XmlParserSvc");
+    log << MSG::INFO << "parsing file " << fileName << endreq;
     // if the document is not null, cache it
     if (m_parser->getDocument() != 0) {
       cacheItem (fileName, m_parser->getDocument());
