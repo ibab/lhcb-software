@@ -3,6 +3,28 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v5r4>2004-03-26 Boole v5r4</A></H1><PRE>
+
+Requires XmlDDDB v22r0 or greater
+Requires data produced by Gauss v14r3 or greater
+
+- New features
+  . Field045 map is available. To use it, add the option
+    MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field045.cdf";
+  . Disable addition of SICBMC generated LHC background, due to imcompatibilities
+    with current Gauss generated data
+  . Additional histograms for Velo detailed monitoring 
+    (VeloAlgorithms v2r9p2, VeloDet v8r8p2)
+
+- Persistency changes
+  . Add PuVeto raw hit output to RawBuffer (PuVeto v5r6)
+
+- Bug fixes
+  . Fix large memory leak (Savannah bug 2821) (L0mConf v2r2)
+  . Fix a compiler warning (L0MuonKernel v1r1)
+  . Use public instead of private tool (L0MuonTrigger v1r1)
+  . Add protection for dead regions on Velo sensor (VeloAlgorithms v2r9p2)
+
 </PRE><H1><A NAME=v5r3>2004-03-18 Boole v5r3</A></H1><PRE>
 
 Requires XmlDDDB v22r0 or greater

@@ -1,5 +1,5 @@
 package Boole
-version v5r3
+version v5r4
 
 branches doc cmt job options
 
@@ -39,29 +39,29 @@ use GaudiPoolDb		v1r5
 use GaudiObjDesc 	v6r2p1
 use HbookCnv 		v14r1
 
-# Temporarily from LHCb v15r4, bug fixes needed by Rich
+# Temporarily from LHCb v15r5, bug fixes needed by Rich
 use GaudiTools		v8r1
 
 #-- Databases
 use XmlDDDB	v22r0	Det
 use ParamFiles	v3r4	-no_auto_imports
-use FieldMap	v4r3
+use FieldMap	v4r5
 
-#-- LHCb libraries (from LHCB_v15r4)
-use LHCb	v15r4
+#-- LHCb libraries (from LHCB_v15r5)
+use LHCb	v15r5
 
-#-- BooleSys v5r3 packages
+#-- BooleSys v5r4 packages
 
 use DigiAlg		v2r3	Digi
 use LHCbTools		v1r0	Kernel
 
 # L0 trigger
-use L0Calo              v7r3	L0
-use PuVeto              v5r5	L0
+use L0Calo              v7r4	L0
+use PuVeto              v5r6	L0
 use L0DU                v6r7	L0
-use L0mConf		v2r1	L0
-use L0MuonKernel	v1r0	L0
-use L0MuonTrigger	v1r0	L0
+use L0mConf		v2r2	L0
+use L0MuonKernel	v1r1	L0
+use L0MuonTrigger	v1r1	L0
 
 # L1 trigger
 use TrgTools		v3r0	Trg
@@ -76,7 +76,7 @@ use CaloMonitor         v2r1	Calo
 use CaloDigit           v1r6	Calo
 
 # Velo
-use VeloAlgorithms      v2r9p1	Velo
+use VeloAlgorithms      v2r9p2	Velo
 use VeloDAQ		v1r0	Velo
 
 # Inner Tracker

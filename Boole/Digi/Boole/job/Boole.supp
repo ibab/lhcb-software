@@ -38,7 +38,7 @@
 
 {
   Root/ct_tally
-  MemCheck:Value4
+  Memcheck:Value4
   fun:R__ct_tally
   fun:R__Deflate_fast
   fun:R__Deflate
@@ -46,7 +46,7 @@
 
 {
   Root/compress_block
-  MemCheck:Value4
+  Memcheck:Value4
   fun:R__compress_block
   fun:R__flush_block
   fun:R__Deflate_fast
