@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.3 2001-06-11 06:43:01 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.4 2001-06-11 20:18:13 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -105,7 +105,7 @@ StatusCode L0mTriggerProcD::execute() {
     return StatusCode::FAILURE ;
   }
   
-  /// Register towers to the transient store onle in Test mode
+  /// Register towers to the transient store only in Test mode
   if( m_mode == "Test" ) {
     sc = eventSvc()->registerObject("/Event/MC/L0mTowers",m_towers);
     if(sc.isFailure() ) {
@@ -185,12 +185,12 @@ StatusCode L0mTriggerProcD::execute() {
   //======================================
   // Execution is over. Clean up towers
   //======================================
-  
-  ObjectVector<L0mTower>::iterator it;
+    
   if( m_mode != "Test" ) {
-    for ( it=m_towers->begin(); it != m_towers->end(); it++ ) {
-      delete *it;
-    }	  
+//     ObjectVector<L0mTower>::iterator it;
+//     for ( it=m_towers->begin(); it != m_towers->end(); it++ ) {
+//       delete *it;
+//     }	  
     delete m_towers;
   } 
   
