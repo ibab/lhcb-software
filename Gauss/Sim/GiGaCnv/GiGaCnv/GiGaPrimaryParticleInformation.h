@@ -1,8 +1,11 @@
-// $Id: GiGaPrimaryParticleInformation.h,v 1.3 2004-04-07 15:47:55 gcorti Exp $ 
+// $Id: GiGaPrimaryParticleInformation.h,v 1.4 2005-01-17 18:14:40 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/04/07 15:47:55  gcorti
+// signal info, extended collision, new vertex types
+//
 // Revision 1.2  2004/02/20 19:11:59  ibelyaev
 //  upgrade for newer GiGa
 // 
@@ -43,7 +46,7 @@ public:
     m_signalBarcode( -1    ) ,
     m_pHepMCEvent  (   0   ) { ; }  
 
-  /// Sets signal information
+  /// Sets link to HepMC Particle
   GiGaPrimaryParticleInformation( bool sig, int code, HepMCEvent *event ) :
     G4VUserPrimaryParticleInformation ( ),
     m_hasOscillated ( false ),

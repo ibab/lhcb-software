@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.27 2004-05-03 13:50:19 gcorti Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.28 2005-01-17 18:14:40 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.27  2004/05/03 13:50:19  gcorti
+// set particle type for ions
+//
 // Revision 1.26  2004/04/07 15:47:55  gcorti
 // signal info, extended collision, new vertex types
 //
@@ -259,7 +262,8 @@ StatusCode GiGaMCParticleCnv::updateObj
           // insert the particle to container and fill the reference table 
           const int index = trajectory->trackID() ;
           particles -> insert( mcp );
-          table( index )  = GiGaKineRefTableEntry( mcp , index );          
+          table( index )  = GiGaKineRefTableEntry( mcp , index );
+          
           // if trajectory has signal info print
           if( trajectory->isSignal() ) {
             // Create link between signal particle in HepMC and MCParticle

@@ -1,8 +1,11 @@
-// $Id: Trajectory2Particle.cpp,v 1.7 2004-05-03 13:50:19 gcorti Exp $ 
+// $Id: Trajectory2Particle.cpp,v 1.8 2005-01-17 18:14:41 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2004/05/03 13:50:19  gcorti
+// set particle type for ions
+//
 // Revision 1.6  2004/02/14 08:36:08  robbep
 // Propagate mixing information when converting from HepMC to G4PrimaryParticle
 // and from GiGaTrajectory to MCParticle.
@@ -24,9 +27,12 @@
 #include "GaudiKernel/ParticleProperty.h"
 /// LHCbEvent 
 #include "Event/MCParticle.h"
+#include "Event/HepMCEvent.h"
 /// GiGa 
 #include "GiGa/GiGaTrajectory.h"
 #include "GiGa/GiGaException.h"
+// HepMC
+#include "HepMC/GenEvent.h"
 /// G4 
 #include "G4ParticleDefinition.hh"
 // local
@@ -97,7 +103,16 @@ GiGaCnvFunctors::Trajectory2Particle::operator()
   
   // create and fill new MCparticle object 
   MCParticle* particle = new MCParticle();
-  particle->setMomentum     ( trajectory->fourMomentum()           ) ;
+  // if it is a resonance, take generator properties instead of
+  // G4Trajectories information (for broad resonances) 
+  if ( ( pDef -> IsShortLived() ) && ( 0 != trajectory -> pHepMCEvent() ) ) {
+    HepMC::GenEvent    * gEvt = trajectory -> pHepMCEvent() -> pGenEvt() ;
+    HepMC::GenParticle * gPart = 
+      gEvt -> barcode_to_particle( trajectory -> signalBarcode() ) ;
+    particle -> setMomentum( gPart -> momentum() ) ;
+  }
+  else particle->setMomentum     ( trajectory->fourMomentum()           ) ;
+  
   particle->setParticleID   ( ParticleID( pDef->GetPDGEncoding() ) ) ;
   particle->setHasOscillated( trajectory->hasOscillated()          ) ;
   // ions have zero as pdg encoding 

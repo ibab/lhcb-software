@@ -1,8 +1,11 @@
-// $Id: GiGaHepMCCnv.cpp,v 1.18 2004-04-30 09:46:54 robbep Exp $
+// $Id: GiGaHepMCCnv.cpp,v 1.19 2005-01-17 18:14:40 robbep Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.18  2004/04/30 09:46:54  robbep
+// Convert also photons to G4PrimaryParticles
+//
 // Revision 1.17  2004/04/07 15:47:55  gcorti
 // signal info, extended collision, new vertex types
 //
@@ -333,15 +336,14 @@ G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle,
                            particle->momentum().py()*GeV ,
                            particle->momentum().pz()*GeV );  
   
-  // Check if it is the signal particle, with forced decay
-  if ( particle -> status() == 889 ) {
-    // create a new User information to contain this information
-    GiGaPrimaryParticleInformation * gInfo =
-      new GiGaPrimaryParticleInformation( true,
-                                          particle -> barcode( ) ,
-                                          theEvent ) ;
-    Particle -> SetUserInformation( gInfo ) ;
-  }
+  // create a new User information to contain the link to the HepMC
+  // particle and signal information for particles with 889 status
+  bool isSignalParticle = ( 889 == particle -> status() ) ;
+  GiGaPrimaryParticleInformation * gInfo =
+    new GiGaPrimaryParticleInformation( isSignalParticle,
+                                        particle -> barcode( ) ,
+                                        theEvent ) ;
+  Particle -> SetUserInformation( gInfo ) ;
   
   if (particle->end_vertex()) 
     {

@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.91 2005-01-13 15:04:41 gcorti Exp $ 
+! $Id: release.notes,v 1.92 2005-01-17 18:14:40 robbep Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2005-01-17 - Patrick Robbe
+ - src/component/GiGaHepMCCnv.cpp
+ - src/component/GiGaMCParticleCnv.cpp
+   . add pointer to HepMC event and barcode of the associated HepMC particle
+     to be able to substitute to the G4 energy the real generated energy
+     by the generator phase in the final MCParticle.
 
 !====================== GiGaCnv v15r9 2005-01-13 ===========================
 ! 2005-01-13 - Gloria CORTI
