@@ -1,4 +1,4 @@
-// $Id: PhysEvent_load.cpp,v 1.7 2002-07-11 16:47:56 gcorti Exp $
+// $Id: PhysEvent_load.cpp,v 1.8 2002-07-18 17:40:29 gcorti Exp $
 
 // Include files
 #include "Event/EventFactoryDefs.h"
@@ -31,12 +31,12 @@ _ImplementDataObjectFactory( FlavourTags )
 
 /// ====================================================================
 #include "Event/PhysSel.h"
-_ImplementDataObjectFactory(PhysSel);
+_ImplementDataObjectFactory( PhysSel );
 
 // ===================================================================
-#include "Event/AxPartCandidate.h"
-_ImplementContainedObjectFactory( AxPartCandidate )
-_ImplementDataObjectFactory( AxPartCandidates )
+//#include "Event/AxPartCandidate.h"
+//_ImplementContainedObjectFactory( AxPartCandidate )
+//_ImplementDataObjectFactory( AxPartCandidates )
 
 // ===================================================================
 #include "Event/ProtoParticle.h"
@@ -62,8 +62,8 @@ void PhysEvent_load()  {
   DLL_DECL_OBJECTFACTORY( FlavourTag );
   DLL_DECL_OBJECTFACTORY( FlavourTags );
   
-  DLL_DECL_OBJECTFACTORY( AxPartCandidate );
-  DLL_DECL_OBJECTFACTORY( AxPartCandidates );
+  //DLL_DECL_OBJECTFACTORY( AxPartCandidate );
+  //DLL_DECL_OBJECTFACTORY( AxPartCandidates );
 
   DLL_DECL_OBJECTFACTORY( ProtoParticle );
   DLL_DECL_OBJECTFACTORY( ProtoParticles );
