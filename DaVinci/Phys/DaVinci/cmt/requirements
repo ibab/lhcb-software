@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.210 2004-11-23 07:36:34 pkoppenb Exp $
+# $Id: requirements,v 1.211 2004-11-29 12:26:55 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -101,7 +101,7 @@ use  VertexFit			v1r2     Phys
 use  DaVinciAssociators 	v5r2p1   Phys
 use  DaVinciEff         	v3r2     Phys
 use  DaVinciMCTools     	v5r7     Phys
-use  DaVinciTest        	v5r3     Phys
+use  DaVinciTest        	v5r4     Phys
 use  DaVinciUser        	v5r2     Phys
 
 # Stripping
