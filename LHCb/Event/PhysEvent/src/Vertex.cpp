@@ -1,9 +1,8 @@
-// $Id: Vertex.cpp,v 1.5 2003-04-15 11:00:18 gcorti Exp $
+// $Id: Vertex.cpp,v 1.6 2004-12-10 15:16:11 cattanem Exp $
 // Include files 
 
 // STD and STL
 #include <iostream> // from Gaudi
-#include "GaudiKernel/StreamBuffer.h" 
 
 // local
 #include "Event/Vertex.h"
@@ -88,28 +87,5 @@ void Vertex::setType(const Vertex::VertexType& value)
 {
   m_type = value;
 }
-
-
-//=============================================================================
-// Serialization for reading
-//=============================================================================
-StreamBuffer& Vertex::serialize( StreamBuffer& s ) {
-
-  float l_chi2;
-  unsigned l_type;
-  KeyedObject<int>::serialize(s);
-  s >> m_position
-    >> m_positionErr
-    >> l_chi2
-    >> m_nDoF
-    >> l_type
-    >> m_desktop
-    >> m_products(this);
-  m_chi2 = l_chi2;
-  m_type = VertexType(l_type);
-  return s;
-
-};
-
 
 //=============================================================================

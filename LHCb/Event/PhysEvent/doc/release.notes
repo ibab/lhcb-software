@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.54 2004-11-19 10:27:18 cattanem Exp $
+! $Id: release.notes,v 1.55 2004-12-10 15:16:11 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
+
+!======================== PhysEvent v8r7 2004-12-06 ========================
+! 2004-12-06 - Marco Cattaneo
+ - Remove obsolete serialize() methods for consistency with GaudiObjDesc v7r*
 
 !======================== PhysEvent v8r6 2004-11-19 ========================
 ! 2004-11-19 - Marco Cattaneo

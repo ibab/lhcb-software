@@ -1,11 +1,10 @@
-// $Id: ProtoParticle.cpp,v 1.9 2004-03-05 13:08:13 cattanem Exp $
+// $Id: ProtoParticle.cpp,v 1.10 2004-12-10 15:16:11 cattanem Exp $
 // Include files 
 
 // STD and STL
 #include <iostream> 
 // from Gaudi
-#include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/StreamBuffer.h" 
+//#include "GaudiKernel/Kernel.h"
 
 // local
 #include "Event/ProtoParticle.h"

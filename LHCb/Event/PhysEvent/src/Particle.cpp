@@ -1,9 +1,8 @@
-// $Id: Particle.cpp,v 1.10 2003-04-15 11:00:17 gcorti Exp $
+// $Id: Particle.cpp,v 1.11 2004-12-10 15:16:11 cattanem Exp $
 // Include files 
 
 // STD and STL
 #include <iostream> // from Gaudi
-#include "GaudiKernel/StreamBuffer.h" 
 
 // local
 #include "Event/Particle.h"

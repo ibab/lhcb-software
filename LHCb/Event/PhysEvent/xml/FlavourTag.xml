@@ -112,20 +112,5 @@
         type="int"
         init="-1"
        />
-
-      <!-- Unimplemented yet
-      <attribute
-        name="mistag"
-        type="double"
-        desc="The wrong tag fraction associated to the kind tagging used"
-        init="0.5"
-        /> -->
-       <method
-        name="serialize"
-        desc="Serialize the object for reading"
-        type="StreamBuffer&amp;"
-       >
-         <arg name="s" type="StreamBuffer"/>
-       </method>
     </class>
  

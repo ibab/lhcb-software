@@ -1,9 +1,8 @@
-// $Id: FlavourTag.cpp,v 1.4 2004-03-05 13:42:50 pkoppenb Exp $
+// $Id: FlavourTag.cpp,v 1.5 2004-12-10 15:16:11 cattanem Exp $
 // Include files 
 
 // STD and STL
 #include <iostream> // from Gaudi
-#include "GaudiKernel/StreamBuffer.h" 
 
 // local
 #include "Event/FlavourTag.h"
@@ -85,23 +84,4 @@ FlavourTag::TagType FlavourTag::type()
   return m_type;
 }
 
-//=============================================================================
-// Serialization for reading
-//=============================================================================
-StreamBuffer& FlavourTag::serialize( StreamBuffer& s ) {
-
-  unsigned l_decision;
-  unsigned l_type;  
-  KeyedObject<int>::serialize(s);
-  s >> l_decision
-    >> l_type
-    >> m_category 
-    >> m_taggedB(this)
-    >> m_tagger(this);
-  
-  m_decision = TagResult(l_decision);
-  m_type = TagType(l_type);  
-  return s;
-
-};
 //=============================================================================

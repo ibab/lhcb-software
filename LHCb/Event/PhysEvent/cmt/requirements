@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.45 2004-11-19 10:27:18 cattanem Exp $
+# $Id: requirements,v 1.46 2004-12-10 15:16:10 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
 package           PhysEvent
-version           v8r6
+version           v8r7
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -34,3 +34,6 @@ library     PhysEventDict ../dict/*.cpp
 apply_pattern component_library library=PhysEventDict
 apply_pattern linker_library    library=PhysEvent
 macro_append PhysEvent_linkopts "" WIN32 "/include:_PhysEvent_loadRef"
+
+private
+use GaudiObjDesc v*

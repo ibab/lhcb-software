@@ -102,13 +102,6 @@ m_desktop(0)"
         desc="Set how the vertex was made"
         argList="VertexType value"
        />
-       <method
-        name="serialize"
-        desc="Serialize the object for reading"
-        type="StreamBuffer&amp;"
-       >
-         <arg name="s" type="StreamBuffer"/>
-       </method>
        <relation
         name="products"
         desc="Reference to outgoing particles"
