@@ -1,8 +1,11 @@
-// $Id: NeutralPPMCTruthAlg.cpp,v 1.1 2002-09-04 15:16:14 ibelyaev Exp $
+// $Id: NeutralPPMCTruthAlg.cpp,v 1.2 2002-09-06 10:57:51 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/09/04 15:16:14  ibelyaev
+//  add new associator and it's algorithm
+//
 // Revision 1.1  2002/06/26 19:03:56  ibelyaev
 //  add one more new algorithm for MCTruth
 //
@@ -22,6 +25,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/SmartRefVector.h"
 #include "GaudiKernel/StreamBuffer.h"
 // Event 
 #include "Event/MCParticle.h"
@@ -174,7 +178,7 @@ StatusCode NeutralPPMCTruthAlg::execute()
            hypos.end() != hypo ; ++hypo)
         {
           // skip nulls
-          if( 0 == *hypo ) { continue ; }                         // CONTINUE 
+          if( *hypo == 0 ) { continue ; }                         // CONTINUE 
           // get all clusters
           const Clusters& clusters = (*hypo)->clusters();
           // loop over all clusters
@@ -182,7 +186,7 @@ StatusCode NeutralPPMCTruthAlg::execute()
                clusters.end() != cluster ; ++cluster ) 
             {
               // skip nulls 
-              if( 0 == *cluster ) { continue ; }                  // CONTINUE 
+              if( *cluster == 0 ) { continue ; }                  // CONTINUE 
               const Range range = mctable->relations( *cluster );
               for( relation rel = range.begin() ; range.end() != rel ; ++rel ) 
                 {
