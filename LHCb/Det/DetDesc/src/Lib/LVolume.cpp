@@ -1,8 +1,11 @@
-// $Id: LVolume.cpp,v 1.15 2002-04-24 10:52:39 ibelyaev Exp $ 
+// $Id: LVolume.cpp,v 1.16 2002-05-04 13:09:13 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2002/04/24 10:52:39  ibelyaev
+//  fix problems with TransportSvc ('LHCb Geane')
+//
 // Revision 1.14  2001/11/18 15:32:45  ibelyaev
 //  update for Logical Assemblies
 //
@@ -470,26 +473,26 @@ unsigned int LVolume::intersectBody
   ISolid::Tick             & tickMax       ,
   const double               Threshold     ) const 
 {
-  /// useful type definition 
+  // useful type definition 
   typedef std::vector<ILVolume::Interval>    Intervals;
   using namespace VolumeIntersectionIntervals;
-  /// clear the output container 
+  // clear the output container 
   intersections.clear();
-  /// check the valid tick values 
+  // check the valid tick values 
   if( tickMin >= tickMax ) { return 0 ;} 
   /** line with null direction vector 
    * is not able to intersect any volume
    */ 
   if( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!! 
-  /// length of tick unit 
+  // length of tick unit 
   const ISolid::Tick TickLength = Vector.mag(); 
-  /// assertion for material and solid 
+  // assertion for material and solid 
   if( 0 == material() || 0 == m_solid ) 
     { Assert( false , "LVolume::intersectBody(1): FATAL for" + name() ); }
-  /// define "top"
+  // define "top"
   const ISolid* pSolid = 
     ( "SolidUnion"  == m_solid->typeName() ) ? m_solid : m_solid->coverTop() ; 
-  ///  contribution of this volume is estimated in 3 steps:
+  //  contribution of this volume is estimated in 3 steps:
   bool useThisVolume      = true  ; 
   /**  (1) estimate the maximal possible constribution 
    *   of this volume using tickMin and tickMax 
@@ -622,36 +625,37 @@ unsigned int LVolume::intersectLine
   ILVolume::Intersections & intersections , 
   const double              Threshold     ) const 
 {
-  /// avoid long names 
+  // avoid long names 
   typedef std::vector<ILVolume::Interval>    Intervals; 
   using namespace VolumeIntersectionIntervals ;
-  /// clear the container 
+  // clear the container 
   intersections.clear();
-  /// line with null direction vector is not able to intersect any volume 
+  // line with null direction vector is not able to intersect any volume 
   if( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!!
-  /// intersections with own "volume body"
+
+  // intersections with own "volume body"
   ILVolume::Intersections own;
   intersectBody
     ( Point     , Vector    , own       , Threshold ); 
-  /// intersections with childrens 
+  // intersections with childrens 
   ILVolume::Intersections childrens; 
   intersectDaughters
     ( Point     , Vector    , childrens , Threshold );
-  /// here we'd like to fill the output container:
+  // here we'd like to fill the output container:
   if( own.empty() )    // the parent container is empty
     {
-      /// we have only child container just copy it to the output 
+      // we have only child container just copy it to the output 
       std::copy( childrens.begin() , childrens.end  () , 
                  std::back_inserter( intersections ) ) ;
       return intersections.size();  ///< RETURN!!!
     }
-  else /// own container is NOT empty!
+  else // own container is NOT empty!
     {
-      /// perform quite non trivial merging 
+      // perform quite non trivial merging 
       StatusCode sc = 
         MergeOwnAndChildContainers
         ( own , childrens , std::back_inserter( intersections ) );
-      /// check the result!!!
+      // check the result!!!
       if( sc.isFailure() )
         { Assert( false , "LVolumeIntersectLine FATAL! " + name() , sc ); }
     }
@@ -693,18 +697,32 @@ unsigned int LVolume::intersectLine
 {
   ISolid::Tick TickMin = tickMin ;
   ISolid::Tick TickMax = tickMax ;  
-  /// avoid long names 
+  // avoid long names 
   typedef std::vector<ILVolume::Interval>    Intervals;
   using namespace VolumeIntersectionIntervals;
-  /// clear the output container 
+  // clear the output container 
   intersections.clear();
-  /// check the valid tick values 
-  if( tickMin >= tickMax ) { return 0 ;} 
+  // check the valid tick values 
+  if( tickMin >= tickMax ) { return 0 ;}            // RETURN !!! 
   /** line with null direction vector 
    * is not able to intersect any volume
    */ 
-  if( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!!
-  /// own intersections
+  if( Vector.mag2() <= 0 ) { return 0 ; }           // RETURN !!!
+  // check the region TickMin tickMax 
+  { // the following lines are based on O.Callot's code  
+    // Check that the intersections are not all on the same side of the segment
+    const ISolid* pSolid =
+      ( "SolidUnion"  == m_solid->typeName() ) ? m_solid : m_solid->coverTop() ;
+    ISolid::Ticks ticks;
+    pSolid->intersectionTicks( Point , Vector , TickMin , TickMax , ticks ) ;
+    if ( 2 > ticks.size()         ) { return 0 ; }  // RETURN !!!
+    // redefine TickMin and TicMax
+    // NB: container of "ticks" is always sorted!
+    TickMin = ticks.front () ;
+    TickMax = ticks.back  () ;
+    if( TickMin >= TickMax        ) { return 0 ; }  // RETURN !!!
+  }
+  // own intersections
   ILVolume::Intersections own;
   intersectBody 
     ( Point , Vector , own       , TickMin , TickMax , Threshold ); 
@@ -715,27 +733,27 @@ unsigned int LVolume::intersectLine
   ILVolume::Intersections childrens; 
   intersectDaughters
     ( Point , Vector , childrens , TickMin , TickMax , Threshold  );
-  /// here we'd like to fill the output container:
+  // here we'd like to fill the output container:
   if( own.empty() )    // the parent container is empty
     {
-      /// we have only child container - just copy it to the output 
+      // we have only child container - just copy it to the output 
       std::copy( childrens.begin () , childrens.end  () , 
                  std::back_inserter( intersections ) ) ;
       return intersections.size();    ///< RETURN!!!
     }
-  else   /// own container is NOT empty!
+  else   // own container is NOT empty!
     {
-      /// perform quite non trivial merging 
+      // perform quite non trivial merging 
       StatusCode sc = 
         MergeOwnAndChildContainers
         ( own , childrens , std::back_inserter( intersections ) );
-      /// check the result!!!
+      // check the result!!!
       if( sc.isFailure() )
         { Assert( false , "LVolumeIntersectLine FATAL! " + name() , sc ); }
     }
-  ///  
+  //  
   return intersections.size(); 
-  ///
+  //
 };
 
 // ============================================================================

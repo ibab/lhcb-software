@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.34 2002-04-22 17:06:28 cattanem Exp $ 
+# $Id: requirements,v 1.35 2002-05-04 13:09:13 ibelyaev Exp $ 
 # =============================================================================
 package DetDesc
 version v10r0
@@ -9,6 +9,7 @@ include_dirs $(DETDESCROOT)
 
 use GaudiKernel v12r*
 use CLHEP       v17r*
+use AIDA        v2r* 
 use XERCES      v16r*
 
 # build a Linker library

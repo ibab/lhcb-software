@@ -1,132 +1,104 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.7  2001/11/18 15:32:45  ibelyaev
-///  update for Logical Assemblies
-///
-/// Revision 1.6  2001/10/25 14:04:05  ibelyaev
-/// New shape: SolidPolycone is added
-///
-/// Revision 1.5  2001/08/09 16:48:04  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ===========================================================================
-///@{
-/** GaudiKernel includes */
-#include "GaudiKernel/ICnvFactory.h"
-#include "GaudiKernel/ISvcFactory.h"
-#include "GaudiKernel/IAlgFactory.h"
-#include "GaudiKernel/IObjectFactory.h"
+// $Id: DetDesc_load.cpp,v 1.9 2002-05-04 13:09:13 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+// Include files
 #include "GaudiKernel/ObjectFactory.h"
-///@}
-/// DetDesc 
+#include "GaudiKernel/DeclareFactoryEntries.h"
+// DetDesc
 #include "DetDesc/ISolidFactory.h"
-
-
-/// ===========================================================================
-/** @file DetDesc_load.cpp 
- * 
- *  Implementation of <Package>_load routine. This routine 
- *  is needed for forcing the linker to load all the components
- *  of the library.. 
- */
-/// ===========================================================================
-
-
-#define DLL_DECL_SERVICE(x)       extern const ISvcFactory& x##Factory; \
-                                  x##Factory.addRef();
-#define DLL_DECL_CONVERTER(x)     extern const ICnvFactory& x##Factory; \
-                                  x##Factory.addRef();
-#define DLL_DECL_ALGORITHM(x)     extern const IAlgFactory& x##Factory; \
-                                  x##Factory.addRef();
-#define DLL_DECL_SOLID(x)         extern const ISolidFactory& x##Factory; \
-                                  x##Factory.addRef();
-
+// Objects from DetDesc package to be implemented:
 #include "DetDesc/LVolume.h"
-_ImplementDataObjectFactory( LVolume           ) ;  
-
 #include "DetDesc/LAssembly.h"
-_ImplementDataObjectFactory( LAssembly         ) ;  
-
 #include "DetDesc/DetectorElement.h"
-_ImplementDataObjectFactory( DetectorElement   ) ; 
-
 #include "DetDesc/Isotope.h"
-_ImplementDataObjectFactory( Isotope           ) ;  
-
 #include "DetDesc/Element.h"
-_ImplementDataObjectFactory( Element           ) ;  
-
 #include "DetDesc/Mixture.h"
-_ImplementDataObjectFactory( Mixture           ) ;  
-
 #include "DetDesc/TabulatedProperty.h"
-_ImplementDataObjectFactory( TabulatedProperty ) ; 
-
 #include "DetDesc/Surface.h"
-_ImplementDataObjectFactory( Surface           ) ; 
+
+// ============================================================================
+/** @file 
+ *  Implementation of Data Object Factories and declaration of ALL 
+ *  Factories from DetDesc package 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date xx/xx/xxxx 
+ */
+// ============================================================================
+
+// ============================================================================
+/** @def IMPLEMENT_OBJECT(x) 
+ *  Implement Data Object Factory
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 06 May 2002 
+ */
+#define IMPLEMENT_OBJECT(x) \
+ static const DataObjectFactory<##x##>         s_##x##Factory ;\
+ const                 IFactory&##x##Factory = s_##x##Factory ;
+// ============================================================================
+
+// ============================================================================
+IMPLEMENT_OBJECT( DetectorElement   ) ;
+IMPLEMENT_OBJECT( Isotope           ) ;
+IMPLEMENT_OBJECT( Mixture           ) ;
+IMPLEMENT_OBJECT( Element           ) ;
+IMPLEMENT_OBJECT( LVolume           ) ;
+IMPLEMENT_OBJECT( LAssembly         ) ;
+IMPLEMENT_OBJECT( Surface           ) ;
+IMPLEMENT_OBJECT( TabulatedProperty ) ;
+// ============================================================================
 
 
-void DetDesc_load() 
-{
+DECLARE_FACTORY_ENTRIES(DetDesc) {
   
-  ///@{
-  /** Declare services */ 
-  DLL_DECL_SERVICE( XmlCnvSvc    );
-  DLL_DECL_SERVICE( TransportSvc );
-  DLL_DECL_SERVICE( XmlParserSvc );
-  ///@}
+  // services  
+  DECLARE_SERVICE(   XmlCnvSvc               ) ;
+  DECLARE_SERVICE(   TransportSvc            ) ;
+  DECLARE_SERVICE(   XmlParserSvc            ) ;
   
-  ///@{
-  /** converters */
-  DLL_DECL_CONVERTER( XmlCatalogCnv           );
-  DLL_DECL_CONVERTER( XmlConditionCnv         );
-  DLL_DECL_CONVERTER( XmlDetectorElementCnv   );
-  DLL_DECL_CONVERTER( XmlLVolumeCnv           );
-  DLL_DECL_CONVERTER( XmlIsotopeCnv           );
-  DLL_DECL_CONVERTER( XmlElementCnv           );
-  DLL_DECL_CONVERTER( XmlMixtureCnv           );
-  DLL_DECL_CONVERTER( XmlTabulatedPropertyCnv );
-  DLL_DECL_CONVERTER( XmlSurfaceCnv           );
-  ///@}
-
-  ///@{
-  /** DataObject Factories */
-  DLL_DECL_OBJECTFACTORY( LVolume           );
-  DLL_DECL_OBJECTFACTORY( LAssembly         );
-  DLL_DECL_OBJECTFACTORY( DetectorElement   );
-  DLL_DECL_OBJECTFACTORY( Isotope           );
-  DLL_DECL_OBJECTFACTORY( Element           );
-  DLL_DECL_OBJECTFACTORY( Mixture           );
-  DLL_DECL_OBJECTFACTORY( TabulatedProperty );
-  DLL_DECL_OBJECTFACTORY( Surface           );
-  ///@}  
-
-  ///@{
-  /** Factories for instantiation of concrete solids */
-  DLL_DECL_SOLID( SolidBox           );
-  DLL_DECL_SOLID( SolidTubs          );
-  DLL_DECL_SOLID( SolidCons          );
-  DLL_DECL_SOLID( SolidSphere        );
-  DLL_DECL_SOLID( SolidTrd           );
-  DLL_DECL_SOLID( SolidTrap          );
-  DLL_DECL_SOLID( SolidPolycone      );
-  DLL_DECL_SOLID( SolidChild         );
-  DLL_DECL_SOLID( SolidIntersection  );
-  DLL_DECL_SOLID( SolidSubtraction   );
-  DLL_DECL_SOLID( SolidUnion         );
-  DLL_DECL_SOLID( SolidPolycone      );
-  ///@}
+  // converters  
+  DECLARE_CONVERTER( XmlCatalogCnv           ) ;
+  DECLARE_CONVERTER( XmlConditionCnv         ) ;
+  DECLARE_CONVERTER( XmlDetectorElementCnv   ) ;
+  DECLARE_CONVERTER( XmlLVolumeCnv           ) ;
+  DECLARE_CONVERTER( XmlIsotopeCnv           ) ;
+  DECLARE_CONVERTER( XmlElementCnv           ) ;
+  DECLARE_CONVERTER( XmlMixtureCnv           ) ;
+  DECLARE_CONVERTER( XmlTabulatedPropertyCnv ) ;
+  DECLARE_CONVERTER( XmlSurfaceCnv           ) ;
+  
+  // data objects 
+  DECLARE_OBJECT(    LVolume                 ) ;
+  DECLARE_OBJECT(    LAssembly               ) ;
+  DECLARE_OBJECT(    DetectorElement         ) ;
+  DECLARE_OBJECT(    Isotope                 ) ;
+  DECLARE_OBJECT(    Element                 ) ;
+  DECLARE_OBJECT(    Mixture                 ) ;
+  DECLARE_OBJECT(    TabulatedProperty       ) ;
+  DECLARE_OBJECT(    Surface                 ) ;
+  
+  // algorithms 
+  DECLARE_ALGORITHM( MaterialBudgetAlg       ) ;
+  
+  // solids 
+  DECLARE_SOLID(     SolidBox                ) ;
+  DECLARE_SOLID(     SolidTubs               ) ;
+  DECLARE_SOLID(     SolidCons               ) ;
+  DECLARE_SOLID(     SolidSphere             ) ;
+  DECLARE_SOLID(     SolidTrd                ) ;
+  DECLARE_SOLID(     SolidTrap               ) ;
+  DECLARE_SOLID(     SolidPolycone           ) ;
+  DECLARE_SOLID(     SolidChild              ) ;
+  DECLARE_SOLID(     SolidIntersection       ) ;
+  DECLARE_SOLID(     SolidSubtraction        ) ;
+  DECLARE_SOLID(     SolidUnion              ) ;
+  DECLARE_SOLID(     SolidPolycone           ) ;
   
 };
+// ============================================================================
 
-
-extern "C" void DetDesc_loadRef() { DetDesc_load(); }
-
-
-
-
-
-
-
+// ============================================================================
+// The END 
+// ============================================================================

@@ -1,10 +1,36 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.84 2002-05-02 12:05:50 sponce Exp $ 
+! $Id: release.notes,v 1.85 2002-05-04 13:09:13 ibelyaev Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
+
+! =============================================================================
+! 4 May 2002  Vanya Belyaev
+  - src/Lib/LVolume.cpp  
+    Implement a bright idea of O.Callot for major optimization 
+    of "LVolume::intersectLine" method
+  - src/component/MaterialBudgetAlg.h,.cpp  
+    new algorithm to evaluate the material budget 
+    between given point to given z-plane. It produces 2D histogram of 
+    the distance in radiation length units between teh initial point 
+    to the (xy)-point in the reference plane.
+  - cmt/requirements   
+    add explicit dependence on AIDA to allow the compilation
+    of Material Budget Algorithm. I know that it is not ideal 
+    solution, but the simplest one for a moment. 
+    Need to be revisited in the future. 
+  - src/component/DetDesc_load.cpp  
+    add declaration of Material Budget Algorithm and redesign tehoveral layout
+    to improve readability 
+  - DetDesc/ISolidFactory.h 
+    add MACRO DECLARE_SOLID for declaration of Solid Factories
+  - DetDesc/SolidFactory.h
+    add the MACRO IMPLEMENT_SOLID for implementation of Solid Factories
+  - src/component/SolidFactories.cpp
+    rewrite using new MACROs
+! =============================================================================
 
 ! 20020502 Sebastien Ponce
   - Bug fix concerning the checking for units when calling the expression

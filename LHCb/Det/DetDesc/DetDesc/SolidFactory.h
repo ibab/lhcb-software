@@ -1,8 +1,12 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
-/// ===========================================================================
+// $Id: SolidFactory.h,v 1.2 2002-05-04 13:09:13 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/08/09 16:47:58  ibelyaev
+// update in interfaces and redesign of solids
+// 
+// ===========================================================================
 #ifndef DETDESC_SOLIDFACTORY_H 
 #define DETDESC_SOLIDFACTORY_H 1
 /// include files 
@@ -16,7 +20,7 @@
  *  
  *  Templated class to instrantiate concreate Solids 
  *
- *  @author Ivan Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   02/08/2001
  */
 
@@ -98,6 +102,19 @@ private:
   //
 };
 
-/// ===========================================================================
+/** @def IMPLEMENT_SOLID
+ *  Useful MACRO to implement static Solid Factory
+ *  @see ISolidFactory
+ *  @see DECLARE_SOLID
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 4 May 2002 
+ */
+#define IMPLEMENT_SOLID(x) \
+ static const SolidFactory<##x##>         s_##x##Factory ; \
+ const       ISolidFactory&##x##Factory = s_##x##Factory ;
+
+// ===========================================================================
+// The END 
+// ===========================================================================
 #endif ///< DETDESC_SOLIDFACTORY_H
-/// ===========================================================================
+// ===========================================================================
