@@ -1,8 +1,11 @@
-// $Id: GiGaUIsession.cpp,v 1.3 2003-03-05 12:52:47 ranjard Exp $
+// $Id: GiGaUIsession.cpp,v 1.4 2003-03-11 09:54:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/03/05 12:52:47  ranjard
+// v1r2 - check if WIN32
+//
 // Revision 1.2  2003/02/18 08:14:04  ranjard
 // v1r2 - remove use of G4VIS_NONE and G4UI_NONE
 //
@@ -143,8 +146,8 @@ StatusCode GiGaUIsession::initialize  ()
       else if ( "tcsh"      == *session  ) 
         { m_session          = new G4UIterminal( new G4UItcsh ()  ) ; }
       else if ( "csh"       == *session  )
-#endif ///< WIN32 
         { m_session          = new G4UIterminal( new G4UIcsh ()  ) ; }
+#endif ///< WIN32 
       else if ( "terminal"  == *session  ) 
         { m_session          = new G4UIterminal                 () ; }
     }
