@@ -50,7 +50,7 @@ setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/$Dversion
 
 # == set the program environment
 set Dversion = "v11r8"
-source $LHCb_release_area/DaVinciEnv/$Dversion/cmt/setup.csh
+source $DaVinci_release_area/DaVinciEnv/$Dversion/cmt/setup.csh
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 
 # == set executable name
