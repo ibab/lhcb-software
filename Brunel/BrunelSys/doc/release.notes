@@ -12,11 +12,14 @@
                       VeloDAQ v1r0
 
    Packages modified: CaloMonitor v2r0, CaloReco v2r0, CaloPIDs v2r0, OTDAQ v1r1,
-                     ITAlgorithms v14r1, ITCheckers v2r1, TrCheck v2r4,
-                     TrCleanEx v2r9, TrKShort v1r2, TrFitter v3r7p1, VeloTT v1r8,
-                     VeloAlgorithms v2r9p1, AsctToLinker v1r1, MuonID v3r7p1,
-                     RichRecSys v1r7p1, RichRecBase v1r9p1, CaloMonitor v2r1,
-                     CaloReco v2r1, CaloPIDs v2r1
+     ITAlgorithms v14r1, ITCheckers v2r1, TrCheck v2r4, TrCleanEx v2r9, 
+     TrKShort v1r2, TrFitter v3r7p1, VeloTT v1r8, VeloAlgorithms v2r9p1, 
+     AsctToLinker v1r1, MuonID v3r7p1, RichUtils v3r8, RichDAQ v1r3, 
+     RichDetTools v4r0, RichMCTools v1r1, RichRecBase v1r10, RichRecQC v1r6, 
+     RichRecMCTools v1r3, RichRingRefit v1r6, RichLocalPID v1r6, 
+     RichGlobalPID v1r5, RichPIDMerge v1r3, RichRecCommon v1r5, 
+     RichRecTools v2r8, RichRecSys v1r8, CaloMonitor v2r1, CaloReco v2r1, 
+     CaloPIDs v2r1
 
 !======================= BrunelSys v23r2 2004-02-09 =======================
 ! 2004-02-06 - Marco Cattaneo

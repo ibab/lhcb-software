@@ -55,17 +55,17 @@ use MuonID              v3r7p1	Muon
 use MuonDAQ             v1r0    Muon
 
 # Rich
-use RichRecSys		v1r7p1	Rich
-use RichRecBase		v1r9p1	Rich
-use RichRecTools	v2r7	Rich
-use RichRecCommon	v1r4	Rich
-use RichRingRefit	v1r5	Rich
-use RichLocalPID	v1r5	Rich
-use RichGlobalPID	v1r4	Rich
-use RichPIDMerge	v1r2	Rich
-use RichUtils		v3r7	Rich
-use RichDetTools	v3r6	Rich
-use RichRecQC		v1r5	Rich
-use RichRecMCTools	v1r2	Rich
-use RichDAQ		v1r2	Rich
-use RichMCTools		v1r0	Rich
+use RichRecSys		v1r8	Rich
+use RichRecBase		v1r10	Rich
+use RichRecTools	v2r8	Rich
+use RichRecCommon	v1r5	Rich
+use RichRingRefit	v1r6	Rich
+use RichLocalPID	v1r6	Rich
+use RichGlobalPID	v1r5	Rich
+use RichPIDMerge	v1r3	Rich
+use RichUtils		v3r8	Rich
+use RichDetTools	v4r0	Rich
+use RichRecQC		v1r6	Rich
+use RichRecMCTools	v1r3	Rich
+use RichDAQ		v1r3	Rich
+use RichMCTools		v1r1	Rich
