@@ -1,16 +1,13 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaStackAction.h,v 1.3 2001-03-18 14:56:13 ibelyaev Exp $ 
 #ifndef     GIGA_IGIGASTACKACTION_H
 #define     GIGA_IGIGASTACKACTION_H 1 
-
-
+// STL 
 #include <string> 
-
-/// base classes from GaudiKernel  
+// base classes from GaudiKernel  
 #include "GaudiKernel/IInterface.h"
-
-/// base class from Geant4 
+// base class from Geant4 
 #include "G4UserStackingAction.hh"
-
-/// unique IID 
+// unique IID 
 #include "GiGa/IIDIGiGaStackAction.h"
 
 

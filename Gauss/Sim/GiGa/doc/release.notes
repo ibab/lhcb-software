@@ -2,6 +2,55 @@ Package:          GiGa
 Package manager : N.N. 
 
 !===========================================================================
+! 20010317 - Vanya Belyaev
+    new features:
+    (1) possibility to define "Event Action" with 2 methods: 
+        extarction form G4EventAction.hh file: 
+          //  This is the base class of one of the user's optional action classes.
+          // The two methods BeginOfEventAction() and EndOfEventAction() are invoked
+          // at the beginning and the end of one event processing. These methods are
+          // invoked by G4EventManager.
+          //  Be aware that BeginOfEventAction() is invoked when a G4Event object is
+          // sent to G4EventManager. Thus the primary vertexes/particles have already
+          // been made by the primary generator. In case the user wants to do something
+          // before generating primaries (i.e., store random number status), do it in
+          // the G4VUserPrimaryGeneratorAction concrete class.
+     (2) New interface IGiGaEventAction, and ocrresponding factory.
+     (3) 2 concrete event actions are implemented : "empty" and "draw". 
+         The "draw" event action performs event visualisation at teh end of 
+         the event. Trajectories, hits and digits are visualized. 
+
+     (4) New option "EventAction" for GiGaSvc
+ 
+     (5) Additional step action is implemented GiGaStepActionDraw, which 
+         performs visualization of step. NB: it is different from 
+         visualization of trajectories!
+     (6) remove some redundant printout for conversion services
+
+  GiGa/GiGaEventActionBase.icpp        - new file 
+  GiGa/IIDIGiGaEventAction.h           - new file 
+  GiGa/GiGaEventActionBase.h           - new file 
+  GiGa/IIDIGiGaEventActionFactory.h    - new file 
+  GiGa/IGiGaEventAction.h              - new file 
+  GiGa/IGiGaEventActionFactory.h       - new file 
+  GiGa/GiGaEventActionFactory.h        - new file 
+
+  src/GiGaCnvSvcBase.cpp               - updated 
+  src/GiGaPhysListEm.cpp               - updated
+  src/GiGaRunManager.cpp               - updated
+  src/GiGaSvc.cpp                      - updated
+  src/GiGaSvc.h                        - updated 
+  src/GiGa_load.cpp                    - updated 
+
+  src/GiGaStepActionDraw.cpp           - new file  
+  src/GiGaStepActionDraw.h             - new file 
+  src/GiGaEventActionBase.cpp          - new file 
+  src/GiGaEventActionEmpty.h           - new file 
+  src/GiGaEventActionEmpty.cpp         - new file 
+  src/GiGaEventActionDraw.h            - new file 
+  src/GiGaEventActionDraw.cpp          - new file 
+
+!===========================================================================
 ! 20010315 - Vanya Belyaev
     several changes to please NT compiler 
 !===========================================================================

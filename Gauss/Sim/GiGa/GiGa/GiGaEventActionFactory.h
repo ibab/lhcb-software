@@ -1,65 +1,68 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaTrackActionFactory.h,v 1.3 2001-03-18 14:56:13 ibelyaev Exp $ 
-#ifndef    GIGA_GiGaTrackActionFACTORY_H
-#define    GIGA_GiGaTrackActionFACTORY_H 1 
-// GaudiKernel
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaEventActionFactory.h,v 1.1 2001-03-18 14:56:12 ibelyaev Exp $
+#ifndef    GIGA_GiGaEventActionFACTORY_H
+#define    GIGA_GiGaEventActionFACTORY_H 1 
+
+
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/FactoryTable.h"
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/ISvcLocator.h"
-// GiGa 
-#include "GiGa/IGiGaTrackActionFactory.h" 
-// 
 
-/** @class GiGaTrackActionFactory     GiGaTrackActionFactory.h GiGa/GiGaTrackActionFactory.h
+///
+#include "GiGa/IGiGaEventActionFactory.h" 
+
+
+/** @class GiGaEventActionFactory     GiGaEventActionFactory.h GiGa/GiGaEventActionFactory.h
     
-    implementation of factory to create "Tracking Action" factory class
+    implementation of factory to create "Event Action" factory class
     
     @author Vanya Belyaev
+    @date   17/03/2001 
 */
 
 
-template <class ConcreteTA>
-class GiGaTrackActionFactory: public IGiGaTrackActionFactory
+template <class ConcreteEA>
+class GiGaEventActionFactory: public IGiGaEventActionFactory
 {
   ///
  public:
   /// Default constructor
-  GiGaTrackActionFactory() 
+  GiGaEventActionFactory() 
     {
       // Get the class name using the RTTI.
-      m_sdType     = System::typeinfoName( typeid( ConcreteTA ) );
-      m_ident      = m_sdType;
+      m_eaType     = System::typeinfoName( typeid( ConcreteEA ) );
+      m_ident      = m_eaType;
       FactoryTable::instance()->addFactory( this );
     };
   /// Default destructor
-  virtual ~GiGaTrackActionFactory(){};
+  virtual ~GiGaEventActionFactory(){};
   /// from IInterface  
   virtual unsigned long      addRef           ()       { return        1 ; }; 
   virtual unsigned long      release          ()       { return        1 ; }; 
   /// from IFactory 
   virtual unsigned long      addRef           () const { return        1 ; }; 
   virtual unsigned long      release          () const { return        1 ; }; 
-  /// GiGaTrackAction type name
-  virtual const std::string& trackActionType  () const { return m_sdType ; };  
+  /// GiGaEventAction type name
+  virtual const std::string& eventActionType  () const { return m_eaType ; };  
   virtual const std::string& ident            () const { return m_ident  ; };
   /// create the instance 
-  virtual IGiGaTrackAction*    instantiate( const std::string& name, ISvcLocator *svcloc) const 
-    { return new ConcreteTA(name, svcloc); }
+  virtual IGiGaEventAction*    instantiate( const std::string& name, ISvcLocator *svcloc) const 
+    { return new ConcreteEA(name, svcloc); }
   /// a little bit funny 
   virtual IInterface* instantiate( IInterface* parent                          ) const 
     {
       ISvcLocator* loc = 
         0 == parent                              ? Gaudi::svcLocator() : 
         0 == dynamic_cast<ISvcLocator*> (parent) ? Gaudi::svcLocator() : dynamic_cast<ISvcLocator*>(parent);
-      return new ConcreteTA( trackActionType() , loc ); 
+      return new ConcreteEA( eventActionType() , loc ); 
     }
   ///
   virtual StatusCode queryInterface(const InterfaceID& riid, void** ppI) 
     {
       if( 0 == ppI ) { return StatusCode::FAILURE; } 
       ppI = 0 ; 
-      if      ( IID_IGiGaTrackActionFactory == riid ) { *ppI = static_cast<IGiGaTrackActionFactory*> (this); }
+      if      ( IID_IGiGaEventActionFactory == riid ) { *ppI = static_cast<IGiGaEventActionFactory*> (this); }
       else if ( IID_IFactory                == riid ) { *ppI = static_cast<IFactory*>       (this); }
       else if ( IID_IInterface              == riid ) { *ppI = static_cast<IInterface*>     (this); }
       else                                            { return   StatusCode::FAILURE; } /// RETURN!!!
@@ -69,13 +72,13 @@ class GiGaTrackActionFactory: public IGiGaTrackActionFactory
   ///
  private:
   ///
-  std::string m_sdType;
+  std::string m_eaType;
   std::string m_ident;
   //
 };
 ///
 
-#endif  // GIGA_GiGaTrackActionFACTORY_H
+#endif  // GIGA_GiGaEventActionFACTORY_H
 
 
 

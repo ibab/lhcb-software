@@ -38,6 +38,9 @@
 ///
 #include "GiGa/IGiGaStepActionFactory.h"
 #define DLL_DECL_STEPFACTORY(x)   extern const IGiGaStepActionFactory& x##Factory; x##Factory.addRef();
+// 
+#include "GiGa/IGiGaEventActionFactory.h"
+#define DLL_DECL_EVENTFACTORY(x)  extern const IGiGaStepActionFactory& x##Factory; x##Factory.addRef();
 ///
 void GiGa_load() 
 { 
@@ -75,11 +78,17 @@ void GiGa_load()
   DLL_DECL_TRACKFACTORY (    GiGaTrackActionSimple   );
   /// stepping  action 
   DLL_DECL_STEPFACTORY  (    GiGaStepActionEmpty     );
+  DLL_DECL_STEPFACTORY  (    GiGaStepActionDraw      );
+  /// event action 
+  DLL_DECL_EVENTFACTORY (    GiGaEventActionEmpty    );
+  DLL_DECL_EVENTFACTORY (    GiGaEventActionDraw     );
   ///
 }; 
 /////////////////////////////////////////////////////////////
 extern "C" void GiGa_loadRef() { GiGa_load(); } ; 
 /////////////////////////////////////////////////////////////
+
+
 
 
 

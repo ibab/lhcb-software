@@ -1,10 +1,11 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaStepActionFactory.h,v 1.2 2001-03-18 14:56:13 ibelyaev Exp $ 
+
 #ifndef     GIGA_IGiGaStepActionFACTORY_H
 #define     GIGA_IGiGaStepActionFACTORY_H 1
 
-
-// 
+// GaudiKernel
 #include "GaudiKernel/IFactory.h"
-
+// GiGa 
 #include "GiGa/IIDIGiGaStepActionFactory.h"
 
 

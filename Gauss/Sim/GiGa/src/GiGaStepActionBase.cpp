@@ -1,6 +1,8 @@
-/// GiGa
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaStepActionBase.cpp,v 1.2 2001-03-18 14:56:15 ibelyaev Exp $ 
+
+// GiGa
 #include "GiGa/GiGaStepActionBase.h"
-///
+//
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 GiGaStepActionBase::GiGaStepActionBase( const std::string& nick , ISvcLocator* svc ) 
@@ -29,6 +31,8 @@ StatusCode GiGaStepActionBase::queryInterface( const InterfaceID& iid , void** p
   addRef();
   return StatusCode::SUCCESS;
 };
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+void GiGaStepActionBase::UserSteppingAction ( const G4Step* /* step */ ) {};
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

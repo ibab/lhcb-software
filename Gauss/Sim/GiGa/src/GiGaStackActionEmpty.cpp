@@ -1,19 +1,12 @@
-
-#include "CLHEP/Geometry/Point3D.h"
-
-#include "G4Step.hh"
-#include "G4TouchableHistory.hh"
-#include "G4VPhysicalVolume.hh"
-#include "G4LogicalVolume.hh"
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaStackActionEmpty.cpp,v 1.3 2001-03-18 14:56:15 ibelyaev Exp $ 
 
 //
+#include "G4Step.hh"
+//
 #include "GaudiKernel/MsgStream.h"
-
 // GiGa 
 #include "GiGa/GiGaStackActionFactory.h"
-
-
-/// local
+// local
 #include "GiGaStackActionEmpty.h"
 
 
@@ -35,3 +28,13 @@ StatusCode GiGaStackActionEmpty::initialize () { return GiGaStackActionBase::ini
 /////////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaStackActionEmpty::finalize   () { return GiGaStackActionBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////
+G4ClassificationOfNewTrack GiGaStackActionEmpty::ClassifyNewTrack ( const G4Track* /* track */ )
+{ 
+  Print("ClassifyNewTrack method in invoked") ;
+  return fUrgent; 
+};
+////////////////////////////////////////////////////////////////////////////////////////////////
+void GiGaStackActionEmpty::NewStage         (){ Print("New Stage method in invoked"       ) ; }; 
+////////////////////////////////////////////////////////////////////////////////////////////////
+void GiGaStackActionEmpty::PrepareNewEvent  (){ Print("PrepareNewEvent method is invoked" ) ; };
+////////////////////////////////////////////////////////////////////////////////////////////////

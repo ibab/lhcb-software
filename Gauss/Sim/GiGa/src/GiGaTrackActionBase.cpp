@@ -1,4 +1,7 @@
-/// GiGa
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaTrackActionBase.cpp,v 1.2 2001-03-18 14:56:15 ibelyaev Exp $ 
+
+
+// GiGa
 #include "GiGa/GiGaTrackActionBase.h"
 
 
@@ -30,9 +33,10 @@ inline StatusCode GiGaTrackActionBase::queryInterface( const InterfaceID& iid , 
   return StatusCode::SUCCESS;
 };
 ///////////////////////////////////////////////////////////////////////////////////////////
-
-
-
+void GiGaTrackActionBase::PreUserTrackingAction  ( const G4Track* /* track */ ) {};
+///////////////////////////////////////////////////////////////////////////////////////////
+void GiGaTrackActionBase::PostUserTrackingAction ( const G4Track* /* track */ ) {};
+///////////////////////////////////////////////////////////////////////////////////////////
 
 
 

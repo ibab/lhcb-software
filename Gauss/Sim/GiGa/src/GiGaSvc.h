@@ -1,5 +1,6 @@
-#ifndef     __GIGA_GIGASVC_GIGASVC_H__
-#define     __GIGA_GIGASVC_GIGASVC_H__ 1 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaSvc.h,v 1.5 2001-03-18 14:56:15 ibelyaev Exp $ 
+#ifndef       GIGA_GIGASVC_GIGASVC_H
+#define       GIGA_GIGASVC_GIGASVC_H   1 
 
 ///////////////////////////////////////////////////////////////////////////////////
 #include <string>
@@ -28,19 +29,16 @@ class     IGiGaPhysList;
 class     IGiGaStackAction;
 class     IGiGaTrackAction;
 class     IGiGaStepAction;
+class     IGiGaEventAction;
 
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-///                                                                             ///
-///    class GiGaSvc : implementation of abstract Interfaces IGiGaSvc           ///      
-///                    (for event-by-event communications with Geant4)          ///
-///                    and IGiGaSetUpSvc (for configuration of Geant4)          ///
-///                                                                             ///
-///    Author: Vanya Belyaev                                                    ///
-///                                                                             ///
-///////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////
-
+/**  @class GiGaSvc GiGaSvc.h 
+     
+     implementation of abstract Interfaces IGiGaSvc          
+     (for event-by-event communications with Geant4)         
+     and IGiGaSetUpSvc (for configuration of Geant4)         
+     
+     @author: Vanya Belyaev                                                   
+*/
 
 class GiGaSvc: public         Service       , 
                virtual public IGiGaSvc      ,
@@ -164,6 +162,9 @@ class GiGaSvc: public         Service       ,
   StatusCode stepAction    ( const std::string& TypeAndName , 
                              IGiGaStepAction*&  StepAction  ) ;
   /////////////////////////////////////////////////////////////////////////////////
+  StatusCode eventAction   ( const std::string& TypeAndName , 
+			     IGiGaEventAction*&  StepAction  ) ;
+  /////////////////////////////////////////////////////////////////////////////////
   
  private:
   
@@ -191,6 +192,8 @@ class GiGaSvc: public         Service       ,
   std::string                      m_GiGaTrackAction                 ;   /// type/name 
   /// Stepping Action Object 
   std::string                      m_GiGaStepAction                  ;   /// type/name 
+  /// Event    Action Object 
+  std::string                      m_GiGaEventAction                 ;   /// type/name 
   /////////////////////////////////////////////////////////////////////////////////
   bool                             m_UseVisManager                   ; 
   /////////////////////////////////////////////////////////////////////////////////

@@ -1,14 +1,13 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaStackActionFactory.h,v 1.3 2001-03-18 14:56:12 ibelyaev Exp $ 
 #ifndef    GIGA_GiGaStackActionFACTORY_H
 #define    GIGA_GiGaStackActionFACTORY_H 1 
-
-
+// GauidiKernel
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/FactoryTable.h"
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/ISvcLocator.h"
-
-///
+// GiGa 
 #include "GiGa/IGiGaStackActionFactory.h" 
 
 

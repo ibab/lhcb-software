@@ -27,6 +27,9 @@
 #include    "GiGa/IGiGaStepAction.h"
 #include    "GiGa/IGiGaStepActionFactory.h"
 //
+#include    "GiGa/IGiGaEventAction.h"
+#include    "GiGa/IGiGaEventActionFactory.h"
+//
 #include    "GiGa/GiGaException.h"
 //
 
@@ -81,6 +84,7 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   , m_GiGaStackAction      (                  )
   , m_GiGaTrackAction      (                  )
   , m_GiGaStepAction       (                  )
+  , m_GiGaEventAction      (                  )
   ///
   , m_UseVisManager        ( false            )
   ///
@@ -104,6 +108,8 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   declareProperty( "TrackingAction"         , m_GiGaTrackAction      ) ;
   /// type and Name of Stepping Action object 
   declareProperty( "SteppingAction"         , m_GiGaStepAction       ) ;
+  /// type and Name of Event Action object 
+  declareProperty( "EventAction"            , m_GiGaEventAction      ) ;
   /// flag for creation of Visualization Manager 
   declareProperty( "UseVisManager"          , m_UseVisManager        ) ;
   ///
@@ -221,6 +227,24 @@ StatusCode GiGaSvc::initialize()
     }
   else { Warning("Stepping Action Object is not required to be loaded") ; } 
   ///
+  /// try to locate Event    Action Object and make it known for GiGa 
+  if( !m_GiGaEventAction.empty() )
+    {
+      IGiGaEventAction* EA   = 0 ;
+      StatusCode sc = eventAction  ( m_GiGaEventAction , EA );
+      if( sc.isFailure() ) { return Error(" Unable to instantiate Event Action Object "+m_GiGaStepAction, sc );} 
+      if( 0 == EA        ) { return Error(" Unable to instantiate Event Action Object "+m_GiGaStepAction     );} 
+      ///
+      try   { *this << EA ; } 
+      catch ( const GaudiException& Excpt ) { return Exception( "EventAction" , Excpt ) ; } 
+      catch ( const std::exception& Excpt ) { return Exception( "EventAction" , Excpt ) ; } 
+      catch(...)                            { return Exception( "EventAction"         ) ; } 
+      ///
+      Print("Used Event Action Object is "+System::typeinfoName( typeid( *EA ) ) + "/"+EA->name() );
+    }
+  else { Warning("Event Action Object is not required to be loaded") ; } 
+  ///
+
   /// instantiate Visualisation Manager
   if( m_UseVisManager )
     {
@@ -473,6 +497,36 @@ StatusCode GiGaSvc::stepAction( const std::string& TypeName , IGiGaStepAction*& 
   SA->release(); delete SA ; SA = 0 ;  
   ///
   return Error("RetrieveStepAction: could not initialize IGiGaStepAction* Object "+Type+"/"+Name, sc) ;
+  ///
+};
+///////////////////////////////////////////////////////////////////////////////////
+StatusCode GiGaSvc::eventAction( const std::string& TypeName , IGiGaEventAction*& EA )
+{
+  EA = 0 ; /// reset output value 
+  if( 0 == objMgr()  ) { return Error("RetrieveEventAction:  IObjManager* points to NULL"); }
+  std::string Type , Name ; 
+  StatusCode sc = SplitTypeAndName( TypeName , Type , Name );
+  if( sc.isFailure() ) { return Error("RetrieveEventAction: Stepping Action Type/Name="+TypeName+" is unresolved!",sc);}
+  /// locate the factory
+  const IGiGaEventActionFactory* EAF = 0 ;  
+  {
+    bool exist = objMgr()->existsObjFactory( Type ); 
+    if( !exist   ) { return Error("RetrieveEventAction:  Factory  for "+Type+" is not located") ; }  
+    const IFactory* fac   = objMgr()->objFactory( Type );
+    if( 0 == fac ) { return Error("RetrieveEventAction: IFactory* for "+Type+" points to NULL" ); }
+    EAF = dynamic_cast<const IGiGaEventActionFactory*> ( fac ); 
+    if( 0 == EAF ) { return Error("RetrieveEventAction: IGiGaEventActionFactory* for "+Type+" points to NULL" );}
+  }
+  ///
+  EA = EAF->instantiate( Name , serviceLocator() ) ; 
+  if( 0 == EA    ) { return Error("RetrieveEventAction: could not instantiate IGiGaEventAction* Object "+Type+"/"+Name );} 
+  ///
+  EA->addRef(); 
+  if( EA->initialize().isSuccess() ) { return StatusCode::SUCCESS; } 
+  //// 
+  EA->release(); delete EA ; EA = 0 ;  
+  ///
+  return Error("RetrieveEventAction: could not initialize IGiGaEventAction* Object "+Type+"/"+Name, sc) ;
   ///
 };
 ///////////////////////////////////////////////////////////////////////////////////

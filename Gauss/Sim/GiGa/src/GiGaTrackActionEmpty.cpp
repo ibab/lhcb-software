@@ -1,3 +1,5 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaTrackActionEmpty.cpp,v 1.4 2001-03-18 14:56:15 ibelyaev Exp $ 
+
 #include "CLHEP/Geometry/Point3D.h"
 ///
 #include "G4Step.hh"
@@ -13,8 +15,8 @@
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-static const GiGaTrackActionFactory<GiGaTrackActionEmpty>                      s_GiGaTrackActionEmptyFactory;
-const       IGiGaTrackActionFactory&             GiGaTrackActionEmptyFactory = s_GiGaTrackActionEmptyFactory;
+static const GiGaTrackActionFactory<GiGaTrackActionEmpty>          s_GiGaTrackActionEmptyFactory;
+const       IGiGaTrackActionFactory& GiGaTrackActionEmptyFactory = s_GiGaTrackActionEmptyFactory;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,6 +29,12 @@ GiGaTrackActionEmpty::~GiGaTrackActionEmpty(){};
 StatusCode GiGaTrackActionEmpty::initialize () { return GiGaTrackActionBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaTrackActionEmpty::finalize   () { return GiGaTrackActionBase::initialize() ; } ;
+/////////////////////////////////////////////////////////////////////////////////////////////////
+void GiGaTrackActionEmpty::PreUserTrackingAction  ( const G4Track* /* track */ ) 
+{ Print("PreUserTrackingAction() is invoked"); };
+/////////////////////////////////////////////////////////////////////////////////////////////////
+void GiGaTrackActionEmpty::PostUserTrackingAction ( const G4Track* /* track */ )
+{ Print("PostUserTrackingAction() is invoked"); };
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 

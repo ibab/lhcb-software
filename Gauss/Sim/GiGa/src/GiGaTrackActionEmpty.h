@@ -1,8 +1,10 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaTrackActionEmpty.h,v 1.4 2001-03-18 14:56:16 ibelyaev Exp $ 
+
 #ifndef       GIGA_GiGaTrackActionEmpty_H
 #define       GIGA_GiGaTrackActionEmpty_H 1 
-/// GiGa
+// GiGa
 #include "GiGa/GiGaTrackActionBase.h"
-///
+//
 template <class TA> 
 class GiGaTrackActionFactory;
 
@@ -21,17 +23,22 @@ class GiGaTrackActionEmpty: virtual public GiGaTrackActionBase
   ///
   friend class GiGaTrackActionFactory<GiGaTrackActionEmpty>;
   ///
- protected:
+protected:
   ///
   GiGaTrackActionEmpty( const std::string& , ISvcLocator* );
   ///  
   virtual ~GiGaTrackActionEmpty();
   ////
- public: 
+public: 
   ///
   virtual StatusCode initialize () ; 
   virtual StatusCode finalize   () ;
-  ///    
+  ///   
+public:
+  ///  
+  virtual void PreUserTrackingAction  ( const G4Track* );
+  virtual void PostUserTrackingAction ( const G4Track* );
+  /// 
 private:
   ///
   GiGaTrackActionEmpty()                                         ; // no default constructor

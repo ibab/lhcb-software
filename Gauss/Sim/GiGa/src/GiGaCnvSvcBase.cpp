@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaCnvSvcBase.cpp,v 1.4 2001-03-15 19:29:25 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaCnvSvcBase.cpp,v 1.5 2001-03-18 14:56:14 ibelyaev Exp $
 // STL 
 #include <string> 
 #include <vector> 
@@ -268,26 +268,22 @@ void       GiGaCnvSvcBase::handle         ( const Incident& inc )
   ///
   for( Leaves::iterator it = m_leaves.begin() ; m_leaves.end() != it ; ++it ) 
     {
-      Print("handle incident! 8 "+it->path() );
       std::string name( it->path() );
       name.replace( name.find("/Event/G4/"),9,"");
       IOpaqueAddress* Address = 0 ; 
-
-      std::cout << " create address with clid = " << it->clid() << std::endl; 
-
+      
       sc = createAddress( repSvcType() , it->clid() , it->addr1() , it->addr2() , -1 , Address );   
       if( sc.isFailure() || 0 == Address ) 
         { Error("Could not create IOpaqueAddress for "+it->path()+" name="+name ); return ; }
       GenericAddress* GA = dynamic_cast<GenericAddress*> ( Address );
       GA->setObjectName( name );
-      std::cout << " name given is " << name << std::endl; 
+
       long st = gtop->add( name , Address );
       if( st != StatusCode::SUCCESS ) 
         { Error("Could not add IOpaqueAddress for "+it->path()+" name="+name ); return ; }
       RegistryEntry* dd = gtop->findLeaf( name ) ; 
       if( 0 == dd ) 
         { Error("Could not extarct RegistryEntry by name="+name ); return ; }
-      std::cout << " name extracted is =" << dd->name() << " CLID=" << Address->clID() << std::endl ;   
     }
   ///  
 };

@@ -1,16 +1,14 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaTrackActionFactory.h,v 1.2 2001-03-18 14:56:13 ibelyaev Exp $ 
 #ifndef     GIGA_IGiGaTrackActionFACTORY_H
 #define     GIGA_IGiGaTrackActionFACTORY_H 1
-
-
-// 
+// GaudiKernel
 #include "GaudiKernel/IFactory.h"
-
+// GiGa 
 #include "GiGa/IIDIGiGaTrackActionFactory.h"
-
-
+//
 class ISvcLocator;
 class IGiGaTrackAction;
-
+//
 
 /** @class IGiGaTrackActionFactory IGiGaTrackActionFactory.h GiGa/IGiGaTrackActionFactory.h
     

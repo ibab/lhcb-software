@@ -1,12 +1,15 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaTrackActionBase.h,v 1.4 2001-03-18 14:56:13 ibelyaev Exp $ 
 #ifndef     GIGA_GiGaTrackActionBase_H
 #define     GIGA_GiGaTrackActionBase_H 1 
 
-/// from STL
+// from STL
 #include <vector> 
-/// base class 
+// base class 
 #include "GiGa/IGiGaTrackAction.h" 
 #include "GiGa/GiGaBase.h" 
-
+//
+class G4Track;
+//
 
 /** @class GiGaTrackActionBase GiGaTrackActionBase.h GiGa/GiGaTrackActionBase.h
     
@@ -34,6 +37,11 @@ public:
   virtual StatusCode   finalize   () ; 
   /// Query Interface
   virtual StatusCode   queryInterface ( const InterfaceID& , void** ) ;
+  ///
+public:
+  ///
+  virtual void PreUserTrackingAction  ( const G4Track* );
+  virtual void PostUserTrackingAction ( const G4Track* );
   ///
 private:
   ///

@@ -58,13 +58,8 @@ void GiGaPhysListEm::SetCuts()
   //
 
   SetCutsWithDefault();
-  
-  std::cout << "!!!!!!!!!!!! I am here !!!!!!!!!!!!!!! " << std::endl; 
 
-  //  if (verboseLevel>0)
- DumpCutValuesTable();
-
-  std::cout << "!!!!!!!!!!!! I am here !!!!!!!!!!!!!!! " << std::endl; 
+  if (verboseLevel>0) { DumpCutValuesTable(); } 
 
 };
 ///////////////////////////////////////////////////////////////////////////////

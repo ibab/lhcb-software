@@ -1,17 +1,15 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaTrackAction.h,v 1.3 2001-03-18 14:56:13 ibelyaev Exp $ 
 #ifndef     GIGA_IGIGATrackACTION_H
 #define     GIGA_IGIGATrackACTION_H 1 
-
+// STL 
 #include <string>
-
-/// base classes from GaudiKernel  
+// base classes from GaudiKernel  
 #include "GaudiKernel/IInterface.h"
-
-/// base class from Geant4 
+// base class from Geant4 
 #include "G4UserTrackingAction.hh"
-
-/// unique IID 
+// unique IID 
 #include "GiGa/IIDIGiGaTrackAction.h"
-
+// 
 
 
 /** @class IGiGaTrackAction IGiGaTrackAction.h GiGa/IGiGaTrackAction.h

@@ -1,11 +1,15 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaStepActionBase.h,v 1.4 2001-03-18 14:56:12 ibelyaev Exp $ 
+
 #ifndef     GIGA_GiGaStepActionBase_H
 #define     GIGA_GiGaStepActionBase_H 1 
-/// STL
+// STL
 #include <vector> 
-/// GiGa
+// GiGa
 #include "GiGa/IGiGaStepAction.h" 
 #include "GiGa/GiGaBase.h" 
-
+//
+class G4Step;
+//
 
 /** @class GiGaStepActionBase GiGaStepActionBase.h GiGa/GiGaStepActionBase.h
     
@@ -33,6 +37,10 @@ public:
   virtual StatusCode          finalize   () ; 
   /// Query Interface
   virtual StatusCode          queryInterface(const InterfaceID& , void** ) ;
+  ///
+public:
+  ///
+  virtual void UserSteppingAction ( const G4Step* );
   ///
 protected:
   ///
