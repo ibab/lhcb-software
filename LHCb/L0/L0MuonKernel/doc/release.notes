@@ -4,7 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!======================= L0MuonKernel v2r4 2004-12-21 ========================
+!======================= L0MuonKernel v2r6 2004-12-21 ========================
 ! 2004-12-21 - Luisanna Tocco
  - Comments for doxygen documentation
  - Cleaning for compilation warnings (remaining warnings concerns L0mConf)

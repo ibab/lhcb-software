@@ -1,7 +1,7 @@
 
 package L0MuonKernel
 
-version v2r4
+version v2r6
 
 branches cmt doc src L0MuonKernel
 
