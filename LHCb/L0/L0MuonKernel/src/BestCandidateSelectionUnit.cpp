@@ -2,6 +2,7 @@
 #include "L0MuonKernel/CrateUnit.h"
 #include "Event/L0Muon.h"
 #include <stdio.h>
+#include <cmath>
 
 /* 3 fields:
 
