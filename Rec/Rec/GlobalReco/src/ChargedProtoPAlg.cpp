@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.8 2002-10-14 11:25:36 gcorti Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.9 2002-11-11 19:27:37 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -42,6 +42,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   , m_electronMatchName( "ElectronMatch" )
   , m_bremMatchName( "BremMatch" )
   , m_upstream( false )
+  , m_velott( false )
   , m_trackClassCut( 0.4 )
   , m_chiSqITracks( 500.0 )
   , m_chiSqOTracks( 100.0 )
@@ -67,6 +68,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
 
   // Selections
   declareProperty("UpstreamsTracks",  m_upstream );
+  declareProperty("VeloTTTracks",     m_velott );
   declareProperty("ITFracTrackClass", m_trackClassCut );
   declareProperty("Chi2NdFofITracks", m_chiSqOTracks );
   declareProperty("Chi2NdFofOTracks", m_chiSqITracks );
@@ -451,12 +453,17 @@ int ChargedProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
       if( m_upstream && (track->unique() && track->upstream()) ) {
         reject = KeepTrack; 
       }
+      if( m_velott && (track->unique() && track->veloTT()) ) {
+        reject = KeepTrack;
+      }
     }
     else {
       reject = NoTrackType;
     }
   }
-  
+
+  if( track->veloTT() ) return reject;
+
   if( !reject ) {
     int nIT = 0;
     int nOT = 0;

@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.h,v 1.5 2002-09-09 17:16:28 gcorti Exp $
+// $Id: ChargedProtoPAlg.h,v 1.6 2002-11-11 19:27:32 gcorti Exp $
 #ifndef CHARGEDPROTOPALG_H 
 #define CHARGEDPROTOPALG_H 1
 
@@ -59,6 +59,7 @@ private:
   std::string m_protoPath;    ///< Location in TES of output ProtoParticles
   
   bool   m_upstream;       ///< Use or not unique upstream tracks
+  bool   m_velott;         ///< Use or not unique velo-tt tracks
   double m_trackClassCut;  ///< Fraction of IT clusters to separate Tracks types
   double m_chiSqITracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
   double m_chiSqOTracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
