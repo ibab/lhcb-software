@@ -13,7 +13,7 @@ use TrEvent      v11r1   Event
 use RichEvent    v3r2    Event
 use CaloEvent    v11r1   Event
 use MuonEvent    v2r0    Event
-use L0Event      v12r0   Event
+use L0Event      v12r1   Event
 use L1Event      v11r0   Event
 use PhysEvent    v6r0    Event
 use DbCnv        v7r0    Event
