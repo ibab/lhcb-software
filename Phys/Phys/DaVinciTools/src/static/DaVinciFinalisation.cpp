@@ -1,4 +1,4 @@
-// $Id: DaVinciFinalisation.cpp,v 1.1.1.1 2001-07-09 09:28:42 gcorti Exp $
+// $Id: DaVinciFinalisation.cpp,v 1.2 2001-07-16 15:16:18 gcorti Exp $
 #define DAVINCI_FINALISATION_CPP
 
 // Include files
@@ -15,10 +15,16 @@
 // List of wrapped fortran 
 extern "C" {
 #ifdef WIN32
+  void __stdcall SUINIT( void );
   void __stdcall SUANAL( void );
+  void __stdcall SULAST( void );
 #else
+  void suinit_( void ); 
   void suanal_( void ); 
+  void sulast_( void ); 
+#define SUINIT   suinit_
 #define SUANAL   suanal_
+#define SULAST   sulast_
 #endif
 }
 
@@ -44,6 +50,10 @@ DaVinciFinalisation::~DaVinciFinalisation() {
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode DaVinciFinalisation::initialize() {
+
+  // SICB user analysis (dummy by default)
+  SUINIT();
+  
   return StatusCode::SUCCESS;
 }
 
@@ -56,7 +66,7 @@ StatusCode DaVinciFinalisation::execute() {
   SUANAL();
 
   MsgStream log( messageService(), name() );
-  log << MSG::DEBUG << "Event finalisation completed" << endreq;
+  log << MSG::DEBUG << "Event by event finalisation completed" << endreq;
   return StatusCode::SUCCESS;
 }
 
@@ -64,6 +74,9 @@ StatusCode DaVinciFinalisation::execute() {
 //  Finalize
 //=============================================================================
 StatusCode DaVinciFinalisation::finalize() {
+
+  // SICB user analysis (dummy by default)
+  SULAST();
 
   MsgStream log( messageService(), name() );
   log << MSG::DEBUG << "SICB finalisation completed" << endreq;
