@@ -1,6 +1,17 @@
-! $Id: release.notes,v 1.31 2002-10-21 21:34:56 gcorti Exp $
+! $Id: release.notes,v 1.32 2002-10-22 17:47:07 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-10-22 - Gloria Corti
+ - Modify UnconstVertexFitter to be able to set which Transporter to use
+   (CombinedTransporter beeing the default (as in v5r0)). An example of
+   how to do it can be found in the DaVinciTest package.
+ - Bug fix reported by M.Musy in ElectronParticleMaker that was setting
+   particleID swapped for e+/e- (H.Terrier)
+ - Modify UnconstVertexFitter to check if a particle is a resonace in which
+   case uses the daughters to perform the fit and fix error reported by
+   B.Viaud to use transported values of slopes and momentum and not only
+   positions.(S.Amato)
 
 ! 2002-10-21 - Gloria Corti
  - Changes in ElectronParticleMaker to compile on windows: remove std:: in
