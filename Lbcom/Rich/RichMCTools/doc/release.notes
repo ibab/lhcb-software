@@ -4,6 +4,7 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v1r1 2004-03-18 ======================
 ! 2004-02-20 - Chris Jones
  - Adapt to new base class
 
