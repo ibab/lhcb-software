@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!======================= RichRecSys v1r1 2003-10-17 =======================
 ! 2003-08-06 - Chris Jones
  - Various re-organisation and updates to reconstruction packages
  - Support for MaPMTs
