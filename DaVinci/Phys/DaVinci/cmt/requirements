@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.244 2005-03-02 17:00:13 pkoppenb Exp $
+# $Id: requirements,v 1.245 2005-03-03 15:03:27 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -110,7 +110,7 @@ use  DaVinciUser        	v5r2     Phys
 use  Stripping          	v1r7     Tools
 
 # Physics selections
-use  PhysSelSys			v7r15    PhysSel
+use  PhysSelSys			v7r16    PhysSel
 
 use GaudiPython v*
 

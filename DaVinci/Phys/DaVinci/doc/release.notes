@@ -4,9 +4,10 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v12r8 2005-03-03 ===================
 ! 2005-02-23 - P. Koppenburg
   - options/L0.opts
-    . Do not re-run L0Muon. It contains a 26KB/eveent memory leak.
+    . Do not re-run L0Muon. It contains a 26KB/event memory leak.
 !========================== DaVinci v12r7 2005-02-15 ===================
 ! 2005-02-15 - P. Koppenburg
   . Many changes in requirements
