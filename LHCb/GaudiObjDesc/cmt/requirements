@@ -18,5 +18,3 @@ make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
 
 application GODWriteCppHeader ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppHeader.cpp
 application GODWriteCppDict   ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppDict.cpp
-
-apply_pattern ld_library_path
