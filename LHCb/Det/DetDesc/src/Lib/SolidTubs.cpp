@@ -1,18 +1,21 @@
-// $Id: SolidTubs.cpp,v 1.7 2002-05-11 18:25:48 ibelyaev Exp $ 
+// $Id: SolidTubs.cpp,v 1.8 2002-05-13 18:29:54 ibelyaev Exp $ 
 // ============================================================================
 // CVStag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/11 18:25:48  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ============================================================================
-/// CLHEP
+// CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
-///@{
-/** DetDesc includes */ 
+// DetDesc includes 
+#include "DetDesc/DetDesc.h"
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidBox.h"
 #include "DetDesc/SolidTicks.h"
 #include "DetDesc/SolidException.h"
-///@}
+//
 
 // ============================================================================
 /** @file SolidTubs.cpp 
@@ -434,19 +437,18 @@ std::ostream&  SolidTubs::printOut      ( std::ostream&  os ) const
 {
   /// serialize the base
   SolidBase::printOut( os ) ;
-  return 
-    os << "["
-       << " sizeZ[mm]="        << zLength     () / millimeter 
-       << " outerRadius[mm]="  << outerRadius () / millimeter ;
+  os << "["
+     << " sizeZ[mm]="         << DetDesc::print( zLength     () / mm )
+     << " outerRadius[mm]="   << DetDesc::print( outerRadius () / mm ) ;
   if( 0 != innerRadius() ) 
-    { os << " innerRadius[mm]=" << innerRadius() / millimeter ; }
+    { os << " innerRadius[mm]=" << DetDesc::print( innerRadius () / mm ) ; }
   if( 0.0   * degree != startPhiAngle() || 
       360.0 * degree != deltaPhiAngle()   )
     {
-      os << " startPhiAngle[deg]=" << startPhiAngle () / degree 
-         << " deltaPhiAngle[deg]=" << deltaPhiAngle () / degree ;
-    }
-  return os << "]";
+      os << " startPhiAngle[deg]=" << DetDesc::print( startPhiAngle()/degree)
+         << " deltaPhiAngle[deg]=" << DetDesc::print( deltaPhiAngle()/degree) ;
+    };
+  return os << "]" << std::endl ;
 };
 
 // ============================================================================
@@ -463,19 +465,18 @@ MsgStream&     SolidTubs::printOut      ( MsgStream&     os ) const
 {
   /// serialize the base
   SolidBase::printOut( os ) ;
-  return 
-    os << "["
-       << " sizeZ[mm]="        << zLength     () / millimeter 
-       << " outerRadius[mm]="  << outerRadius () / millimeter ;
+  os << "["
+     << " sizeZ[mm]="         << DetDesc::print( zLength     () / mm )
+     << " outerRadius[mm]="   << DetDesc::print( outerRadius () / mm ) ;
   if( 0 != innerRadius() ) 
-    { os << " innerRadius[mm]=" << innerRadius() / millimeter ; }
+    { os << " innerRadius[mm]=" << DetDesc::print( innerRadius () / mm ) ; }
   if( 0.0   * degree != startPhiAngle() || 
       360.0 * degree != deltaPhiAngle()   )
     {
-      os << " startPhiAngle[deg]=" << startPhiAngle () / degree 
-         << " deltaPhiAngle[deg]=" << deltaPhiAngle () / degree ;
-    }
-  return os << "]";
+      os << " startPhiAngle[deg]=" << DetDesc::print( startPhiAngle()/degree)
+         << " deltaPhiAngle[deg]=" << DetDesc::print( deltaPhiAngle()/degree) ;
+    };
+  return os << "]" << endreq ;
 };
 
 // ============================================================================

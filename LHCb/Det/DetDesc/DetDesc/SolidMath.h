@@ -1,8 +1,11 @@
-// $Id: SolidMath.h,v 1.1 2002-05-11 18:25:46 ibelyaev Exp $
+// $Id: SolidMath.h,v 1.2 2002-05-13 18:29:53 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/05/11 18:25:46  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+// 
 // ============================================================================
 #ifndef DETDESC_SOLIDMATH_H 
 #define DETDESC_SOLIDMATH_H 1
@@ -327,6 +330,8 @@ namespace SolidTicks
    *  as Point + Vector * Tick with conical surface
    *  @author      Vanya Belyaev   Ivan.Belyaev@itep.ru 
    *  @date        10.02.2000 
+   *
+   *
    *  @param  point   point for line parametrisation 
    *  @param  vect    vector along the line 
    *  @param  r1      cone-parameter
@@ -359,7 +364,7 @@ namespace SolidTicks
      */
     const double drdz = (r2-r1)/(z2-z1)               ;
     const double p1   = r1 - z1*drdz + drdz*point.z() ;
-    const double p2   = drdz * point.z()              ;
+    const double p2   = drdz * vect.z()               ;
     
     double a = vect.x () * vect.x () + vect.y () * vect.y () ;
     a -= p2*p2 ; 

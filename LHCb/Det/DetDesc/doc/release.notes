@@ -1,9 +1,23 @@
-! $Id: release.notes,v 1.87 2002-05-13 11:35:20 ibelyaev Exp $ 
+! $Id: release.notes,v 1.88 2002-05-13 18:29:54 ibelyaev Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
+
+!=============================================================================
+!20020513 - Vanya Belyaev
+ DetDesc/SolidMath.h 
+        fix trivial bug in finding the intersection of the 
+        line and the conical surface 
+ src/Lib/SolidPolyHedronHelper.cpp 
+        fix the bug with constructor of the Plane3D from point and normal
+ SolidTrd, SolidTubs, SolidCons, SolidSphere 
+        improve a little bit the printout  
+ src/Test/SolidsTest.cpp 
+        primitive application to perform some tests of Solids. 
+ cmt/requirements 
+        add the test application  
 
 !=============================================================================
 ! 12/05/2002 - Vanya Belyaev

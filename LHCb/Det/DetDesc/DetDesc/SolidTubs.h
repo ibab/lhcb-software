@@ -1,8 +1,11 @@
-// $Id: SolidTubs.h,v 1.8 2002-05-11 18:25:46 ibelyaev Exp $
+// $Id: SolidTubs.h,v 1.9 2002-05-13 18:29:53 ibelyaev Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/11 18:25:46  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 #ifndef     DETDESC_SOLIDTUBS_H
 #define     DETDESC_SOLIDTUBS_H 1  
@@ -266,13 +269,13 @@ private:
 // ===========================================================================
 inline const bool SolidTubs::insideRho ( const HepPoint3D& point ) const 
 {
-    const double rho2 = point.perp2();
-    if( rho2 > outerRadius() * outerRadius() ) { return false ; }
-    if( 0    < innerRadius() && 
-        rho2 > innerRadius() * innerRadius() ) { return false ; }
-    // inside! 
-    return true ;
-  };
+  const double rho2 = point.perp2();
+  if( rho2 > outerRadius() * outerRadius() ) { return false ; }
+  if( 0    < innerRadius() && 
+      rho2 < innerRadius() * innerRadius() ) { return false ; }
+  // inside! 
+  return true ;
+};
 // ===========================================================================
 
 

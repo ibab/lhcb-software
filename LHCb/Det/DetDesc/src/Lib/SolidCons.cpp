@@ -1,8 +1,11 @@
-// $Id: SolidCons.cpp,v 1.8 2002-05-11 18:25:47 ibelyaev Exp $ 
+// $Id: SolidCons.cpp,v 1.9 2002-05-13 18:29:54 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/11 18:25:47  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -11,6 +14,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IInspector.h"
 // DetDesc
+#include "DetDesc/DetDesc.h"
 #include "DetDesc/SolidCons.h"
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidTrd.h"
@@ -201,7 +205,7 @@ SolidCons::SolidCons( const std::string& Name )
 // ============================================================================
 bool SolidCons::isInside (  const HepPoint3D& point ) const
 {  
-  if( !isOutBBox ( point )  ) { return false ; }
+  if(  isOutBBox ( point )  ) { return false ; }
   // check for phi 
   if( !insidePhi ( point )  ) { return false ; }
   // check for radius 
@@ -209,7 +213,7 @@ bool SolidCons::isInside (  const HepPoint3D& point ) const
   const double oR   = oR_z( point.z() ) ;
   if( rho2 > oR * oR        ) { return false ; }
   const double iR   = iR_z( point.z() ) ;
-  if( rho2 <  iR * iR       ) { return false ; }
+  if( rho2 < iR * iR        ) { return false ; }
   //
   return true ;
 };
@@ -405,7 +409,9 @@ SolidCons::intersectionTicks
   if( vect.mag2() <= 0 )  { return 0 ;}  ///< RETURN!!!
   
   // cross bounding cylinder ?
-  if( !crossBCylinder( point , vect ) ) { return 0 ; }
+  //if( !crossBCylinder( point , vect ) ) { return 0 ; }
+
+  ticks.clear();
   
   // intersect with z-planes 
   SolidTicks::LineIntersectsTheZ( point                       , 
@@ -416,6 +422,7 @@ SolidCons::intersectionTicks
                                   vect                        ,     
                                   zHalfLength()               , 
                                   std::back_inserter( ticks ) );   
+
   // intersect with phi 
   if( ( 0 != startPhiAngle() ) || ( 360 * degree != deltaPhiAngle() ) )
     {
@@ -428,6 +435,7 @@ SolidCons::intersectionTicks
                                         startPhiAngle() + deltaPhiAngle() , 
                                         std::back_inserter( ticks )       ); 
     }   
+
   /// intersect with outer conical surface
   SolidTicks::LineIntersectsTheCone( point                           , 
                                      vect                            , 
@@ -436,6 +444,7 @@ SolidCons::intersectionTicks
                                      -1.0 * zHalfLength ()           , 
                                      zHalfLength        ()           , 
                                      std::back_inserter( ticks )     );   
+
   /// intersect with inner conical surface
   if( ( 0 < innerRadiusAtPlusZ() ) || ( 0 < innerRadiusAtMinusZ() )  )
     {
@@ -447,6 +456,7 @@ SolidCons::intersectionTicks
                                          zHalfLength        ()       , 
                                          std::back_inserter( ticks ) );     
     }
+  
   /// sort and remove adjancent and some EXTRA ticks and return 
   return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
 };
@@ -463,20 +473,24 @@ std::ostream&  SolidCons::printOut      ( std::ostream&  os ) const
   SolidBase::printOut( os );
   /// serialize members
   os << "[" ;
-  os << " sizeZ[mm]"          <<  zLength()            / millimeter 
-     << " outerRadiusPZ[mm]=" << outerRadiusAtPlusZ () / millimeter  
-     << " outerRadiusMZ[mm]=" << outerRadiusAtMinusZ() / millimeter ;
+  os << " sizeZ[mm]"          << DetDesc::print( zLength()             / mm )
+     << " outerRadiusPZ[mm]=" << DetDesc::print( outerRadiusAtPlusZ () / mm )  
+     << " outerRadiusMZ[mm]=" << DetDesc::print( outerRadiusAtMinusZ() / mm ) ;
   if( 0 < innerRadiusAtPlusZ() ) 
-    { os << " innerRadiusPZ[mm]=" <<  innerRadiusAtPlusZ() / millimeter ; }
+    { os << " innerRadiusPZ[mm]=" 
+         << DetDesc::print( innerRadiusAtPlusZ () / mm ) ; }
   if( 0 < innerRadiusAtMinusZ() ) 
-    { os << " innerRadiusMZ[mm]=" <<  innerRadiusAtMinusZ() / millimeter ; }
+    { os << " innerRadiusMZ[mm]=" 
+         << DetDesc::print( innerRadiusAtMinusZ() / mm ) ; }
   if( 0 * degree != startPhiAngle() || 
       360 * degree != deltaPhiAngle()  ) 
     {
-      os << " startPhiAngle[deg]" << startPhiAngle() / degree ;
-      os << " deltaPhiAngle[deg]" << startPhiAngle() / degree ;
+      os << " startPhiAngle[deg]" 
+         << DetDesc::print( startPhiAngle() / degree ) ;
+      os << " deltaPhiAngle[deg]" 
+         << DetDesc::print( deltaPhiAngle() / degree ) ;
     }
-  return os << "]";
+  return os << "]" << std::endl;
 };
 
 // ============================================================================
@@ -491,20 +505,24 @@ MsgStream&     SolidCons::printOut      ( MsgStream&     os ) const
   SolidBase::printOut( os );
   /// serialize members
   os << "[" ;
-  os << " sizeZ[mm]"          <<  zLength()            / millimeter 
-     << " outerRadiusPZ[mm]=" << outerRadiusAtPlusZ () / millimeter  
-     << " outerRadiusMZ[mm]=" << outerRadiusAtMinusZ() / millimeter ;
+  os << " sizeZ[mm]"          << DetDesc::print( zLength()             / mm )
+     << " outerRadiusPZ[mm]=" << DetDesc::print( outerRadiusAtPlusZ () / mm )  
+     << " outerRadiusMZ[mm]=" << DetDesc::print( outerRadiusAtMinusZ() / mm ) ;
   if( 0 < innerRadiusAtPlusZ() ) 
-    { os << " innerRadiusPZ[mm]=" <<  innerRadiusAtPlusZ() / millimeter ; }
+    { os << " innerRadiusPZ[mm]=" 
+         << DetDesc::print( innerRadiusAtPlusZ () / mm ) ; }
   if( 0 < innerRadiusAtMinusZ() ) 
-    { os << " innerRadiusMZ[mm]=" <<  innerRadiusAtMinusZ() / millimeter ; }
+    { os << " innerRadiusMZ[mm]=" 
+         << DetDesc::print( innerRadiusAtMinusZ() / mm ) ; }
   if( 0 * degree != startPhiAngle() || 
       360 * degree != deltaPhiAngle()  ) 
     {
-      os << " startPhiAngle[deg]" << startPhiAngle() / degree ;
-      os << " deltaPhiAngle[deg]" << deltaPhiAngle() / degree ;
+      os << " startPhiAngle[deg]" 
+         << DetDesc::print( startPhiAngle() / degree ) ;
+      os << " deltaPhiAngle[deg]" 
+         << DetDesc::print( deltaPhiAngle() / degree ) ;
     }
-  return os << "]";
+  return os << "]" << endreq ;
 };
 
 // ============================================================================
@@ -567,5 +585,8 @@ SolidCons::intersectionTicks
                                         tickMax ,
                                         ticks   );
 };
+// ============================================================================
 
+// ============================================================================
+// The END
 // ============================================================================

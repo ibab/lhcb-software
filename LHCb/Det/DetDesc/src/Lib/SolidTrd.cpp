@@ -1,10 +1,11 @@
-// $Id: SolidTrd.cpp,v 1.9 2002-05-11 18:25:48 ibelyaev Exp $ 
+// $Id: SolidTrd.cpp,v 1.10 2002-05-13 18:29:54 ibelyaev Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log:
 // ===========================================================================
 // DetDesc
+#include "DetDesc/DetDesc.h" 
 #include "DetDesc/SolidTrd.h" 
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
@@ -20,7 +21,6 @@
  */
 // ============================================================================
 
-
 // ============================================================================
 /** constructor 
  *  @param name name of the solid object
@@ -32,12 +32,13 @@
  *  @exception SolidException wrong parameter range 
  */ 
 // ============================================================================
-SolidTrd::SolidTrd( const std::string& name              ,
-                    const double       ZHalfLength       ,
-                    const double       XHalfLength1      , 
-                    const double       YHalfLength1      , 
-                    const double       XHalfLength2      , 
-                    const double       YHalfLength2      ) 
+SolidTrd::SolidTrd
+( const std::string& name              ,
+  const double       ZHalfLength       ,
+  const double       XHalfLength1      , 
+  const double       YHalfLength1      , 
+  const double       XHalfLength2      , 
+  const double       YHalfLength2      ) 
   : SolidPolyHedronHelper ( name         ) 
   , SolidBase             ( name         )
   , m_trd_zHalfLength     ( ZHalfLength  )
@@ -239,31 +240,38 @@ void SolidTrd::makeAll()
   }
   if( 8 != m_ph_vertices.size() ) 
     { throw SolidException("SolidTrd::makeAll: wrong # vertices!"); } 
+
   /// make faces
   addFace( m_ph_vertices[0] , 
            m_ph_vertices[4] , 
            m_ph_vertices[5] , 
            m_ph_vertices[1] ) ;
+
   addFace( m_ph_vertices[2] , 
-           m_ph_vertices[3] , 
-           m_ph_vertices[7] , 
-           m_ph_vertices[6] ) ;
-  addFace( m_ph_vertices[1] , 
-           m_ph_vertices[2] , 
            m_ph_vertices[6] , 
-           m_ph_vertices[5] ) ;
+           m_ph_vertices[7] , 
+           m_ph_vertices[3] ) ;
+
+  addFace( m_ph_vertices[1] , 
+           m_ph_vertices[5] , 
+           m_ph_vertices[6] , 
+           m_ph_vertices[2] ) ;
+
   addFace( m_ph_vertices[0] , 
            m_ph_vertices[3] , 
            m_ph_vertices[7] , 
            m_ph_vertices[4] ) ;
+
   addFace( m_ph_vertices[0] , 
            m_ph_vertices[1] , 
-           m_ph_vertices[3] , 
-           m_ph_vertices[2] ) ; /// bottom face
-  addFace( m_ph_vertices[5] , 
-           m_ph_vertices[4] , 
+           m_ph_vertices[2] , 
+           m_ph_vertices[3] ) ; /// bottom face
+
+  addFace( m_ph_vertices[4] , 
+           m_ph_vertices[5] , 
            m_ph_vertices[6] , 
            m_ph_vertices[7] ) ; /// top    face
+
   ///
   if( 6 != planes().size() ) 
     { throw SolidException("SolidTrd::makeALL: wrong # faces"); } 
@@ -286,11 +294,12 @@ std::ostream&  SolidTrd::printOut      ( std::ostream&  os ) const
   SolidBase::printOut( os );
   return 
     os << "[" 
-       << " sizeZ[mm]="  << zLength  () / millimeter   
-       << " sizeX1[mm]=" << xLength1 () / millimeter 
-       << " sizeY1[mm]=" << yLength1 () / millimeter  
-       << " sizeX2[mm]=" << xLength2 () / millimeter 
-       << " sizeY2[mm]=" << yLength2 () / millimeter << "]" ;
+       << " sizeZ[mm]="  << DetDesc::print( zLength  () / mm )  
+       << " sizeX1[mm]=" << DetDesc::print( xLength1 () / mm )  
+       << " sizeY1[mm]=" << DetDesc::print( yLength1 () / mm )  
+       << " sizeX2[mm]=" << DetDesc::print( xLength2 () / mm ) 
+       << " sizeY2[mm]=" << DetDesc::print( yLength2 () / mm )
+       << "]" << std::endl ;
 };
 
 // ============================================================================
@@ -309,13 +318,17 @@ MsgStream&     SolidTrd::printOut      ( MsgStream&     os ) const
   SolidBase::printOut( os );
   return 
     os << "[" 
-       << " sizeZ[mm]="  << zLength  () / millimeter   
-       << " sizeX1[mm]=" << xLength1 () / millimeter 
-       << " sizeY1[mm]=" << yLength1 () / millimeter  
-       << " sizeX2[mm]=" << xLength2 () / millimeter 
-       << " sizeY2[mm]=" << yLength2 () / millimeter << "]" ;
+       << " sizeZ[mm]="  << DetDesc::print( zLength  () / mm )  
+       << " sizeX1[mm]=" << DetDesc::print( xLength1 () / mm )  
+       << " sizeY1[mm]=" << DetDesc::print( yLength1 () / mm )  
+       << " sizeX2[mm]=" << DetDesc::print( xLength2 () / mm ) 
+       << " sizeY2[mm]=" << DetDesc::print( yLength2 () / mm )
+       << "]" << endreq ;
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

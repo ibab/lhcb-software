@@ -1,8 +1,11 @@
-// $Id: SolidPolyHedronHelper.cpp,v 1.4 2002-05-11 18:25:47 ibelyaev Exp $ 
+// $Id: SolidPolyHedronHelper.cpp,v 1.5 2002-05-13 18:29:54 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/11 18:25:47  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 #include "DetDesc/SolidPolyHedronHelper.h"
 
@@ -163,15 +166,15 @@ bool SolidPolyHedronHelper::addFace
   const HepPoint3D& Point3 ) 
 {
   /// check for 3 points on the same line  
-  Hep3Vector p1( Point1 ) , p2( Point2 - Point1 ) , p3( Point3 - Point1); 
-  if( 0 == p1.cross( p2 ).mag2() || 
-      0 == p1.cross( p3 ).mag2() || 
-      0 == p2.cross( p3 ).mag2()   ) { return false; } 
+  HepVector3D v1( Point1 ) , v2( Point2 - Point1 ) , v3( Point3 - Point1); 
+  if( 0 == v1.cross( v2 ).mag2() || 
+      0 == v1.cross( v3 ).mag2() || 
+      0 == v2.cross( v3 ).mag2()   ) { return false; } 
   ///
   HepPlane3D Plane( Point1 , Point2 , Point3 ); 
-  /// 
+  /// invert face orientation if needed 
   if( !inside( HepPoint3D( 0 , 0 , 0 ) , Plane ) ) 
-    { Plane = HepPlane3D( Point1 , -Plane.normal() ) ; }
+    { Plane = HepPlane3D(  -Plane.normal() , Point1 ) ; }
   ///
   Plane.normalize();
   ///
@@ -202,25 +205,37 @@ bool SolidPolyHedronHelper::addFace
 {
   ///
   const HepPoint3D cPoint( ( Point1 + Point2 + Point3 + Point4 ) * 0.25 ) ; 
-  ///
+  /// 
   const HepVector3D v1( Point1 - cPoint ) ;
   const HepVector3D v2( Point2 - cPoint ) ;
   const HepVector3D v3( Point3 - cPoint ) ; 
   const HepVector3D v4( Point4 - cPoint ) ;
   ///
-  if     ( 0.0001 < fabs( v1.cross( v2 ).dot( v3 ) ) ) 
-    { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
-  else if( 0.0001 < fabs( v2.cross( v3 ).dot( v4 ) ) ) 
-    { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
-  else if( 0.0001 < fabs( v3.cross( v4 ).dot( v1 ) ) ) 
-    { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
-  else if( 0.0001 < fabs( v4.cross( v1 ).dot( v2 ) ) ) 
-    { throw SolidException("SolidPolyHedronHelper 'plane' is not planar!!") ; } 
+  const double t1   = v2.cross(  v3 ). dot( v4 )     ;
+  const double v234 = v2.mag() * v3.mag() * v4.mag() ;
+  const double t2   = v3.cross(  v4 ). dot( v1 )     ;
+  const double v341 = v3.mag() * v4.mag() * v1.mag() ;
+  const double t3   = v4.cross(  v1 ). dot( v2 )     ;
+  const double v412 = v4.mag() * v1.mag() * v2.mag() ;
+  const double t4   = v1.cross(  v2 ). dot( v3 )     ;
+  const double v123 = v1.mag() * v2.mag() * v3.mag() ;
+  
+  if      ( 0 != v234 && 1.e-6 < fabs( t1 / v234 ) )
+    { throw SolidException("SolidPolyHedronHelper 'plane' is not planar 1 ") ; }
+  else if ( 0 != v341 && 1.e-6 < fabs( t2 / v341 ) )
+    { throw SolidException("SolidPolyHedronHelper 'plane' is not planar 2 ") ; }
+  else if ( 0 != v412 && 1.e-6 < fabs( t3 / v412 ) )
+    { throw SolidException("SolidPolyHedronHelper 'plane' is not planar 3 ") ; }
+  else if ( 0 != v123 && 1.e-6 < fabs( t4 / v123 ) )
+    { throw SolidException("SolidPolyHedronHelper 'plane' is not planar 4 ") ; }
+ 
   ///
-  if     ( addFace( Point1 , Point2 , Point3 ) ) { ;}
-  else if( addFace( Point2 , Point3 , Point4 ) ) { ;}
-  else if( addFace( Point3 , Point4 , Point1 ) ) { ;}
-  else if( addFace( Point4 , Point1 , Point2 ) ) { ;}
+  if     ( addFace( cPoint , Point1 , Point2 ) ) { ;}
+  else if( addFace( cPoint , Point1 , Point3 ) ) { ;}
+  else if( addFace( cPoint , Point1 , Point4 ) ) { ;}
+  else if( addFace( cPoint , Point2 , Point3 ) ) { ;}
+  else if( addFace( cPoint , Point1 , Point4 ) ) { ;}
+  else if( addFace( cPoint , Point3 , Point4 ) ) { ;}
   else 
     { throw SolidException("SolidPolyHedronHelper:: no 3 points!") ; } 
   ///

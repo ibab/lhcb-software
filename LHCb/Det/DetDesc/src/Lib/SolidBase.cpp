@@ -1,8 +1,11 @@
-// $Id: SolidBase.cpp,v 1.4 2002-05-11 18:25:47 ibelyaev Exp $
+// $Id: SolidBase.cpp,v 1.5 2002-05-13 18:29:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/11 18:25:47  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ============================================================================
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -131,7 +134,8 @@ std::ostream& SolidBase::printOut ( std::ostream& st ) const
   return 
     st << " SolidType='"     << typeName () << "'" 
        << " \tname='"        << name     () << "'" 
-       << " \tBPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
+       << std::endl
+       << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
        << DetDesc::print(   xMin () / mm )  << "/" 
        << DetDesc::print(   xMax () / mm )  << "," 
        << DetDesc::print(   yMin () / mm )  << "/" 
@@ -154,7 +158,8 @@ MsgStream&    SolidBase::printOut ( MsgStream&    st ) const
   return 
     st << " SolidType='"     << typeName () << "'" 
        << " \tname='"        << name     () << "'" 
-       << " \tBPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
+       << std::endreq 
+       << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
        << DetDesc::print(   xMin () / mm )  << "/" 
        << DetDesc::print(   xMax () / mm )  << "," 
        << DetDesc::print(   yMin () / mm )  << "/" 

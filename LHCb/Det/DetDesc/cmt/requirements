@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.36 2002-05-04 13:13:24 ibelyaev Exp $ 
+# $Id: requirements,v 1.37 2002-05-13 18:29:53 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -32,3 +32,10 @@ apply_pattern package_Cshlibflags
 private
 macro_remove  use_linkopts "$(DetDesc_linkopts)"
 macro_append  DetDescLib_shlibflags " $(use_linkopts)" 
+
+private 
+application   SolidsTest -check  Test/SolidsTest.cpp 
+macro_prepend SolidsTestlinkopts " $(DetDesc_linkopts) "
+apply_pattern application_path
+path_remove   PATH                  "DetDesc"
+path_append   PATH                  ${DETDESCROOT}/${BINDIR}

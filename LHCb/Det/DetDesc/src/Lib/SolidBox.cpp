@@ -1,8 +1,11 @@
-// $Id: SolidBox.cpp,v 1.8 2002-05-11 18:25:47 ibelyaev Exp $ 
+// $Id: SolidBox.cpp,v 1.9 2002-05-13 18:29:54 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/11 18:25:47  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // Revision 1.7  2001/08/09 18:13:37  ibelyaev
 // modification for solid factories
 //
@@ -13,6 +16,7 @@
 // GaudiKernel
 #include "GaudiKernel/IInspector.h"
 // FDetDesc 
+#include "DetDesc/DetDesc.h" 
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h" 
@@ -246,9 +250,10 @@ std::ostream& SolidBox::printOut  ( std::ostream&  os ) const
   SolidBase::printOut( os );
   return
     os << "[" 
-       << " xsize[mm]=" << std::setw(12) << xsize() / millimeter
-       << " ysize[mm]=" << std::setw(12) << ysize() / millimeter 
-       << " zsize[mm]=" << std::setw(12) << zsize() / millimeter << "]" ;
+       << " xsize[mm]=" << DetDesc::print( xsize() / mm ) 
+       << " ysize[mm]=" << DetDesc::print( ysize() / mm ) 
+       << " zsize[mm]=" << DetDesc::print( zsize() / mm )  
+       << "]" << std::endl ;
 };
 // ============================================================================
 
@@ -264,9 +269,10 @@ MsgStream&    SolidBox::printOut  ( MsgStream&     os ) const
   SolidBase::printOut( os );
   return 
     os << "[" 
-       << " xsize[mm]=" << std::setw(12) << xsize() / millimeter
-       << " ysize[mm]=" << std::setw(12) << ysize() / millimeter 
-       << " zsize[mm]=" << std::setw(12) << zsize() / millimeter << "]" ;
+       << " xsize[mm]=" << DetDesc::print( xsize() / mm ) 
+       << " ysize[mm]=" << DetDesc::print( ysize() / mm ) 
+       << " zsize[mm]=" << DetDesc::print( zsize() / mm )  
+       << "]" << endreq ;
 };
 // ============================================================================
 
