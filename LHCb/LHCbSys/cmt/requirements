@@ -1,12 +1,12 @@
 package LHCbSys
-version v15r3
+version v15r4
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v15r3
+use LHCb		v15r4
 
 use GaudiConf		v7r6
 
@@ -59,9 +59,9 @@ use LinkerEvent         v1r2    Event
 use TrgEvent            v2r1    Event
 
 # Associators
-use AssociatorsSys	v1r11	Associators
+use AssociatorsSys	v1r12	Associators
 use Associators		v2r2	Associators
-use ITAssociators      	v2r7	IT
+use ITAssociators      	v2r8	IT
 use OTAssociators      	v2r7	OT
 use VeloAssociators    	v1r9	Velo
 use TrAssociators      	v4r0	Tr
