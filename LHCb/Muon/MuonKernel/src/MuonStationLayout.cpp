@@ -1,4 +1,4 @@
-// $Id: MuonStationLayout.cpp,v 1.5 2002-02-28 15:39:51 atsareg Exp $
+// $Id: MuonStationLayout.cpp,v 1.6 2002-03-21 15:30:45 atsareg Exp $
 // Include files
 #include <iostream>
 #include <algorithm>
@@ -177,6 +177,28 @@ MuonStationLayout::neighbours(const MuonTileID& pad,
   return result;
 }
 
+std::vector<MuonTileID> 
+MuonStationLayout::neighboursInArea(const MuonTileID& pad,
+                        	    int dirX,
+				    int dirY,
+				    int depthX,
+				    int depthY) const {
+				    
+  std::vector<MuonTileID> result;			      
+  std::vector<MuonTileID> vreg;
+  std::vector<MuonTileID>::iterator it;
+  			        
+  for ( unsigned int ireg = 0; ireg < 4; ireg++ ) {
+    vreg = m_layouts[ireg].neighboursInArea(pad,dirX,dirY,depthX,depthY);
+    for(it = vreg.begin(); it != vreg.end(); it++) {
+      if(it->region() == ireg) {
+	result.push_back(*it);
+      }  
+    }
+  }  		      
+  return result;
+}				    
+
 bool MuonStationLayout::isValidID(const MuonTileID& pad) const {
 
   int reg = pad.region();
@@ -187,5 +209,6 @@ MuonTileID MuonStationLayout::contains(const MuonTileID& pad) const {
   // It is responsibility of the user to assure that the pad
   // layout is finer than the containing layout
   int reg = pad.region();
-  return m_layouts[reg].contains(pad);
+  MuonTileID tile = m_layouts[reg].contains(pad);
+  return tile;
 } 

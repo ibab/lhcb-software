@@ -1,4 +1,4 @@
-// $Id: MuonSystemLayout.cpp,v 1.5 2002-02-28 15:39:52 atsareg Exp $
+// $Id: MuonSystemLayout.cpp,v 1.6 2002-03-21 15:30:45 atsareg Exp $
 // Include files
 #include <iostream>
 #include "MuonKernel/MuonSystemLayout.h"
@@ -155,6 +155,21 @@ MuonSystemLayout::neighbours(const MuonTileID& pad,
   std::vector<MuonTileID>::iterator it;
   
   result=m_station_layouts[st].neighbours(pad,dirX,dirY,depth);
+  for(it = result.begin(); it != result.end(); it++ ) {
+    it->setStation(st);
+  }
+  return result;    
+}
+
+std::vector<MuonTileID> 
+MuonSystemLayout::neighboursInArea(const MuonTileID& pad,
+                                   int dirX, int dirY, 
+				   int depthX, int depthY) const {
+  int st = pad.station();
+  std::vector<MuonTileID> result;
+  std::vector<MuonTileID>::iterator it;
+  
+  result=m_station_layouts[st].neighboursInArea(pad,dirX,dirY,depthX,depthY);
   for(it = result.begin(); it != result.end(); it++ ) {
     it->setStation(st);
   }
