@@ -27,9 +27,16 @@ Requires XmlDDDB v22r0 or greater
     . Disable use PuVeto, TrgTools, TrgChecker, TrgVelo, TrgVeloTT, L1Reco 
 >>>>
 
-- New functionality
-  - Changed bit definitions in VeloChannelID, and Velo station numbering
-    (XmlDDDB v22r0, VeloEvent v14r0, VeloDet v9r0, VeloAlgorithms v3r0)
+- Persistency changes
+  - Backwards incompatible change to encoding of VeloChannelID, including 
+    changed sensor numbering 
+    (XmlDDDB v22r0, LHCbKernel v4r3, VeloDet v9r0, VeloEvent v14r0)
+  - Remove OT Digits from Digi output 
+    (relations problem will be fixed in Brunel by using OTDAQ v1r1)
+
+- New tuning
+  - Adapt to changes in VeloDet and VeloChannelID (VeloAlgorithms v3r0)
+
 
 </PRE><H1><A NAME=v5r2>2004-02-10 Boole v5r2</A></H1><PRE>
 
