@@ -1,9 +1,0 @@
-// >>>>>>>>>>    options for L1 Trigger "Degraded VELO" test  <<<<<<<<<<<<<<
-// >>>>>>>>>>  to be included at the end of Brunelv254r1.opts <<<<<<<<<<<<<<
-
-// From Chris Parkes
-VeloSim.StripInefficiency=0.015;
-VeloDataProcessor.NoiseConstant = 900.;
-VeloSim.NoiseConstant = 900.;
-VeloSim.SmearPosition = 0.010;
-

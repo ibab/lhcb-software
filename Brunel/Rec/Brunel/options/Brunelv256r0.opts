@@ -1,2 +1,39 @@
-#include "$BRUNELOPTS/Brunelv254r1.opts"
+//////////////////////////////////////////////////////////////////////////////
+///      Job options for Brunel when using $LHCBDBASE version v256r0       ///
+///          To be used also for data produced with dbases v254r1          ///
+//////////////////////////////////////////////////////////////////////////////
+#pragma print off
+#include "$SICBCNVROOT/options/Brunel.opts" // Comment to switch off spillover
+#include "$BRUNELOPTS/Brunel.opts"          // Generic options for all jobs
+#include "$BRUNELOPTS/BrunelMoniProd.opts"  // Comment to switch on all histos
+#include "$BRUNELOPTS/BrunelDst.opts"       // Comment to switch off DST output
+
+//---------------------------------------------------------------------------
+// Database specific options
+//---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v256r0.xml";
+MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field043.cdf";
+#include "$VELOTTROOT/options/BrunelField043.opts"
+#pragma print on
+
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+//ApplicationMgr.DLLs = {"NONE"};             // Uncomment if static link
+
+//---------------------------------------------------------------------------
+// Finally, define input and output files, first event, number of events
+//---------------------------------------------------------------------------
+EventSelector.Input = {
+  "FILE='/castor/cern.ch/lhcb/prod/00000088_00000001_3.rawh'" 
+}; // RAWH2 evtype 411300
+//EventSelector.FirstEvent = 7; // Skip 6 events
+SpillOverSelector.Input = {
+  "FILE='/castor/cern.ch/lhcb/prod/00000088_00000001_1.rawh'"
+ ,"FILE='/castor/cern.ch/lhcb/prod/00000088_00000001_2.rawh'" 
+}; // evtype 61 RAWH2
+//SpillOverSelector.FirstEvent = 10; // Skip corresponding spillover events
+DstWriter.Output = "DATAFILE='v256r0.dst' TYP='ROOT' OPT='NEW'";
+HistogramPersistencySvc.OutputFile = "v256r0.hbook";  // Monitoring histos
+ApplicationMgr.EvtMax = 10;
+//////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,0 @@
-// Job options for use with dbase v255r4 "Degraded VELO test"
-
-#include "$BRUNELOPTS/Brunelv254r1.opts"
-#include "$BRUNELOPTS/Test6Robustness.opts"

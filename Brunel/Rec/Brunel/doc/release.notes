@@ -3,7 +3,34 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v18r1>2003-06-10 Brunel v18r1</A></H1><PRE>
+</PRE><H1><A NAME=v19r0>2003-06-19 Brunel v19r0</A></H1><PRE>
+- Development version for:
+   . Port to Gaudi v12
+   . Port to gcc 3.2
+   . Splitting off of Boole
+
+- Removed features:
+   . Removed support for dbase < v256r0. 
+     Data produced with dbase v254r1 (PDC1 winter 2003 production) can be 
+     reconstructed with dbase v256r0. 
+     Data produced with dbase v255r* (Robustness tests for optimization and
+     trigger TDRs) cannot be reconstructed with this version - use v18r1.
+
+- New features:
+   . Implementation of modules in OT description. Uses backwards incompatible
+     modification to OTDet, requires XmlDDDB from v16r0, dbase from v256r0
+     (OTAlgorithms v13r0, Seeding v2r4, LongTrack v1r7, TrIntraPR v2r4,
+      L1VeloTrack v5r1)
+   . New implementation of "flat spillover" in Muon chambers. Requires 
+     installation of the file $LHCBHOME/sim/data/flat-spillo-2.hbook
+     (MuonSicbCnv v7r1, MuonBackground v1r2)
+   . Added L0 veto on SPD and PuVeto multiplicity (L0DU v6r5)
+
+- New tuning:
+   . Use TDR L0 threshold settings (L0DU v6r5)
+   . New Muon ID tuning (MuonID v3r6)
+
+</PRE><H1><A NAME=v18r1>2003-06-?? Brunel v18r1</A></H1><PRE>
 - New features:
    . New algorithm MCEvTypeFilter to allow different DST definitions depending
      on event type (BrunelAlgs v2r0)
