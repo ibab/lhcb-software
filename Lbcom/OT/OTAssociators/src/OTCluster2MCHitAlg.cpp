@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCHitAlg.cpp,v 1.2 2002-05-27 11:38:35 cattanem Exp $
+// $Id: OTCluster2MCHitAlg.cpp,v 1.3 2002-05-29 12:00:07 cattanem Exp $
 // Include files 
 
 #include "Event/OTCluster.h"
@@ -108,7 +108,7 @@ StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
   const OTDigit* aDigit = aCluster->digit();
 
   if (0 == aDigit) {
-    cout << "strange... no digit associated with cluster" << endl;
+    log << MSG::WARNING << "No digit associated with cluster!" << endmsg;
     return StatusCode::FAILURE;
   }
 
