@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.cpp,v 1.1 2002-07-18 18:38:15 gcorti Exp $
+// $Id: MCPIDProtoPAlg.cpp,v 1.2 2002-07-25 21:05:39 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -267,6 +267,7 @@ StatusCode MCPIDProtoPAlg::execute() {
             ProtoParticle::PIDDetPair iddet;
             iddet.first = ProtoParticle::MuonMuon;
             iddet.second = (*iMuon)->MuProb();
+            ProtoParticle::PIDDetVector& iddetvec = proto->pIDDetectors();
             iddetvec.push_back(iddet);
             proto->setMuonBit(1);
           }          
@@ -318,6 +319,12 @@ StatusCode MCPIDProtoPAlg::execute() {
          (*ip)->pIDInfo().end()!=id; ++id ) {
       log << MSG::VERBOSE << "id = " << (*id).first << " , prob = " 
           << (*id).second  << endreq;
+    }
+    for( ProtoParticle::PIDDetVector::iterator 
+           idd = (*ip)->pIDDetectors().begin(); 
+         (*ip)->pIDDetectors().end()!=idd; ++idd ) {
+      log << MSG::VERBOSE << "idd = " << (*idd).first << " , value = " 
+          << (*idd).second  << endreq;
     }
   }
   return StatusCode::SUCCESS;
