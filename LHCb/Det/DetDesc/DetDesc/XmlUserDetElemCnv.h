@@ -14,7 +14,7 @@
 #include "DetDesc/IXmlSvc.h"
 
 
-/** @class XmlUserDetElemCnv XmlLVolumeCnv.h DetDesc/XmlUserDetElemCnv.h
+/** @class XmlUserDetElemCnv XmlUserDetElemCnv.h DetDesc/XmlUserDetElemCnv.h
  *
  * This is an empty, abstract, user specific, converter for DetectorElements.
  * Every actual specific convertor for DetectorElement should inherit from this
