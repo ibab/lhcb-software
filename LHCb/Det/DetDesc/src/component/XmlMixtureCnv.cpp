@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.4 2001-03-13 11:58:09 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.5 2001-03-21 11:00:49 ibelyaev Exp $
 
 // Headers
 #include "GaudiKernel/CnvFactory.h"
@@ -238,20 +238,14 @@ void XmlMixtureCnv::startElement( const char* const name,
         material->setAbsorptionLength( xmlSvc()->eval(tAtt) );
       }
     }
-    else if ( "tabprops" == tagName ) 
-      {
-        const std::string address = attributes.getValue( "address" );
-        long linkID = m_dataObj->addLink( address , 0 ) ;
+  }
+  else if ( "tabprops" == tagName ) 
+    {
+      const std::string address = attributes.getValue( "address" );
+      long linkID = m_dataObj->addLink( address , 0 ) ;
         SmartRef<TabulatedProperty> ref( m_dataObj, linkID );
         ((Material*) m_dataObj)->tabulatedProperties().push_back(ref); 
-      }
-    else                                                                   {
-      // This should not happen!
-      log << MSG::WARNING << "Ignoring material tag: "
-          << attributes.getValue( "name" ) << endreq;
     }
-  }
-
   else if( "materialref" == tagName || "elementref" == tagName  ) {
     StatusCode        stcod;
     
@@ -322,6 +316,7 @@ void XmlMixtureCnv::startElement( const char* const name,
   else {
     // Something goes wrong, does it?
   }
+
 }
 
 // -----------------------------------------------------------------------

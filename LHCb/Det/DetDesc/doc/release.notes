@@ -1,10 +1,14 @@
 package DetDesc
 package manager : N.N 
 
+!===========================================================================
+! 20010320 - Vanya Belyaev 
+ -  src/component/XmlMixtureCnv.cpp - bug fix 
+!===========================================================================
 ! 20010320 - Sebasties Ponce
  -  ISolid.h: Corrected mistype #ifdef logic to avoid using std::deque for gcc-2.91
 
-===========================================================================
+!===========================================================================
 ! 20010315 - Vanya Belyaev
     DetDesc/ISolid.h   - change std::deque to std::vector for gcc-2.91
     DetDesc/ILVolume.h - remove std::deque
