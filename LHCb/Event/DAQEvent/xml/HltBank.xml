@@ -1,10 +1,10 @@
 <!-- ****************************************************************
-     * HLTBank                                                    *
+     * HltBank                                                    *
      ****************************************************************-->
      <class 
       author="Helder Lopes"
-      desc="HLT bank"
-      name="HLTBank"
+      desc="Hlt bank"
+      name="HltBank"
       stdVectorTypeDef="TRUE"
       serializers="FALSE"
      >
@@ -24,23 +24,23 @@
        </constructor>
        <method
         desc="Return size of the data body part of the bank"
-        name="size"
+        name="dataSize"
         type="long"
         const="TRUE"
        >
-         <code> return m_data[0]; </code>
+         <code> return m_data[0] - 3; </code>
        </method>
        <method
-        desc="Return Class_ID of this bank "
-        name="bankClass_ID"
+        desc="Return bankType of this bank "
+        name="bankType"
         type="int"
         const="TRUE"
         >
         <code> return int(m_data[2]&amp;65535); </code>
        </method>     
        <method
-        desc="Return Source_ID of this bank "
-        name="bankSource_ID"
+        desc="Return SourceID of this bank "
+        name="bankSourceID"
         type="int"
         const="TRUE"
         >

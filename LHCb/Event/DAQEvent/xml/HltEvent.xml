@@ -1,0 +1,39 @@
+<!-- ****************************************************************
+     * HltEvent                                                    *
+     ****************************************************************-->
+     <import name="Event/HltBuffer"/>
+     <class 
+      author="Helder Lopes"
+      desc="HLT event"
+      name="HltEvent"
+      location="DAQ/HltEvent"
+      id="1002"
+      serializers="FALSE"
+     >
+       <base name="DataObject"/>
+       <attribute
+        desc="Map with HltBanks (values) for each bank type"
+        name="eventMap"
+        type="std::map &lt;int, std::vector&lt;HltBank&gt; &gt;"
+        getMeth="FALSE"
+        setMeth="FALSE"
+     />
+       <constructor
+        desc="Constructor from a map"
+       >
+         <arg name="eventMap" type="std::map &lt;int, std::vector&lt;HltBank&gt; &gt;"/>
+         <code>m_eventMap=eventMap ; </code>
+       </constructor>
+       <constructor desc="Constructor from HltBuffer">
+         <arg name="hltBuffer" type="HltBuffer"/>
+       </constructor>
+
+       <method
+        desc="accessor method to the vector of HLT banks for a given bank type"
+        name="banks"
+        type="const std::vector &lt;HltBank &gt; &amp; "
+        argList="int bankType"     
+       >
+         <code> return (m_eventMap[bankType]); </code>
+       </method>
+      </class>

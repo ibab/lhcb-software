@@ -3,9 +3,9 @@
      ****************************************************************-->
      <class 
       author="Helder Lopes"
-      desc="Raw event buffer"
-      name="HLTBuffer"
-      location="DAQ/HLTBuffer"
+      desc="Raw HLT event buffer"
+      name="HltBuffer"
+      location="DAQ/HltBuffer"
       id="1001"
       serializers="FALSE"
      >
@@ -71,8 +71,8 @@
         name="addBank"
         type="void"
        >
-       <arg type="int" name="source_ID" />
-       <arg type="int" name="class_ID"  />
+       <arg type="int" name="sourceID" />
+       <arg type="int" name="bankType"  />
        <arg type="hlt_int *" name="data"    />
        <arg type="long" name="dataSize"  />
          <code> 
@@ -82,7 +82,7 @@
   long size=m_currentSize;
   m_buffer[size++]=hlt_int(bankSize);
   m_buffer[size++]=m_magic;
-  m_buffer[size++]=(hlt_int(source_ID)&lt;&lt;16)+hlt_int(class_ID);
+  m_buffer[size++]=(hlt_int(sourceID)&lt;&lt;16)+hlt_int(bankType);
 
   for( long i =0; i&lt;dataSize;++i) m_buffer[size++] = *(data++);
   m_currentSize+=bankSize;
@@ -93,8 +93,8 @@
         name="addBank"
         type="void"
        >
-       <arg type="int" name="source_ID" />
-       <arg type="int" name="class_ID"  />
+       <arg type="int" name="sourceID" />
+       <arg type="int" name="bankType"  />
        <arg type="std::vector &lt;hlt_int&gt;" name="data"    />
          <code> 
   long bankSize = 3 + data.size() ;
@@ -103,7 +103,7 @@
   long size=m_currentSize;
   m_buffer[size++]=hlt_int(bankSize);
   m_buffer[size++]=m_magic;
-  m_buffer[size++]=(hlt_int(source_ID)&lt;&lt;16)+hlt_int(class_ID);
+  m_buffer[size++]=(hlt_int(sourceID)&lt;&lt;16)+hlt_int(bankType);
 
   for( std::vector&lt;hlt_int&gt;::iterator i =data.begin(); i!=data.end();++i) m_buffer[size++] = *i;
   m_currentSize+=bankSize;
