@@ -47,6 +47,8 @@ ParabolicTransporter::ParabolicTransporter( const std::string& type,
 //=============================================================================
 StatusCode ParabolicTransporter::initialize(){
   
+  StatusCode sc = GaudiTool::initialize() ;
+  if (!sc) return sc;
   info() << "ParabolicTransporter Initialization starting..." << endreq;
   
   m_pIMF = svc<IMagneticFieldSvc>("MagneticFieldSvc", true);

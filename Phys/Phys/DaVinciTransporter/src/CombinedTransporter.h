@@ -1,4 +1,4 @@
-// $Id: CombinedTransporter.h,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
+// $Id: CombinedTransporter.h,v 1.3 2005-01-06 10:58:17 pkoppenb Exp $
 #ifndef COMBINEDTRANSPORTER_H 
 #define COMBINEDTRANSPORTER_H 1
 
@@ -10,7 +10,7 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
-#include "DaVinciTools/IParticleTransporter.h"
+#include "Kernel/IParticleTransporter.h"
 
 /** @class CombinedTransporter CombinedTransporter.h 
  *  Transport the particle with one of the following possibilities:

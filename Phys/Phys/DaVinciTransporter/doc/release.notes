@@ -2,6 +2,9 @@
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, Yuehong Xie
 
+! 2005-01-05 - P. Koppenburg
+ - src/*.{cpp,h}
+   . Interfaces moved from DaVinciTools to Kernel/
 ! 2004-12-16 - P. Koppenburg
  - src/*.{cpp,h}
    . Reflect the new interface IParticleTransporter (see DaVinciKernel)

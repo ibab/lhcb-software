@@ -1,4 +1,4 @@
-// $Id: NsctVeloTransporter.h,v 1.2 2004-12-16 14:35:42 pkoppenb Exp $
+// $Id: NsctVeloTransporter.h,v 1.3 2005-01-06 10:58:17 pkoppenb Exp $
 #ifndef NSCTVELOTRANSPORTER_H 
 #define NSCTVELOTRANSPORTER_H 1
 
@@ -13,7 +13,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 
 // from DaVinciTools
-#include "DaVinciTools/IParticleTransporter.h"
+#include "Kernel/IParticleTransporter.h"
 
 /** @class NsctVeloTransporter NsctVeloTransporter.h 
  *  Transport the particle in the Velo region considering
