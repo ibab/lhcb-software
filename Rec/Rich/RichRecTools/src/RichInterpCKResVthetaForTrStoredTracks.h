@@ -1,4 +1,16 @@
-// $Id: RichInterpCKResVthetaForTrStoredTracks.h,v 1.2 2004-06-18 11:21:30 jonesc Exp $
+
+/** @file RichInterpCKResVthetaForTrStoredTracks.h
+ *
+ *  Header file for tool : RichInterpCKResVthetaForTrStoredTracks
+ *
+ *  CVS Log :-
+ *  $Id: RichInterpCKResVthetaForTrStoredTracks.h,v 1.3 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHINTERPCKRESVTHETAFORTRSTOREDTRACKS_H
 #define RICHRECTOOLS_RICHINTERPCKRESVTHETAFORTRSTOREDTRACKS_H 1
 
@@ -31,7 +43,7 @@
 class RichInterpCKResVthetaForTrStoredTracks : public RichRecToolBase,
                                                virtual public IRichCherenkovResolution {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichInterpCKResVthetaForTrStoredTracks( const std::string& type,
@@ -41,13 +53,15 @@ public:
   /// Destructor
   virtual ~RichInterpCKResVthetaForTrStoredTracks() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Photon resolution
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Photon resolution
   double ckThetaResolution( RichRecSegment * segment,
                             const Rich::ParticleIDType id = Rich::Pion ) const;
 

@@ -1,4 +1,15 @@
-// $Id: RichInterpCKResVthetaForTrStoredTracks.cpp,v 1.3 2004-07-12 14:32:06 jonrob Exp $
+
+/** @file RichInterpCKResVthetaForTrStoredTracks.cpp
+ *
+ *  Implementation file for tool : RichInterpCKResVthetaForTrStoredTracks
+ *
+ *  CVS Log :-
+ *  $Id: RichInterpCKResVthetaForTrStoredTracks.cpp,v 1.4 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -7,19 +18,16 @@
 #include "RichInterpCKResVthetaForTrStoredTracks.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichInterpCKResVthetaForTrStoredTracks
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichInterpCKResVthetaForTrStoredTracks>          s_factory ;
 const        IToolFactory& RichInterpCKResVthetaForTrStoredTracksFactory = s_factory ;
 
 // Standard constructor
-RichInterpCKResVthetaForTrStoredTracks::RichInterpCKResVthetaForTrStoredTracks ( const std::string& type,
-                                                                                 const std::string& name,
-                                                                                 const IInterface* parent )
+RichInterpCKResVthetaForTrStoredTracks::
+RichInterpCKResVthetaForTrStoredTracks ( const std::string& type,
+                                         const std::string& name,
+                                         const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_ckAngle ( 0 )
 {

@@ -1,13 +1,19 @@
-// $Id: RichSegmentCreator.cpp,v 1.10 2004-07-12 14:32:07 jonrob Exp $
+
+/** @file RichSegmentCreator.cpp
+ *
+ *  Implementation file for tool : RichSegmentCreator
+ *
+ *  CVS Log :-
+ *  $Id: RichSegmentCreator.cpp,v 1.11 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichSegmentCreator.h"
 
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichSegmentCreator
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

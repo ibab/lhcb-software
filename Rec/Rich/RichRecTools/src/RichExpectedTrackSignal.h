@@ -1,4 +1,16 @@
-// $Id: RichExpectedTrackSignal.h,v 1.7 2004-04-19 23:06:09 jonesc Exp $
+
+/** @file RichExpectedTrackSignal.h
+ *
+ *  Header file for tool : RichExpectedTrackSignal
+ *
+ *  CVS Log :-
+ *  $Id: RichExpectedTrackSignal.h,v 1.8 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H
 #define RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H 1
 
@@ -37,7 +49,7 @@
 class RichExpectedTrackSignal : public RichRecToolBase,
                                 virtual public IRichExpectedTrackSignal {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichExpectedTrackSignal( const std::string& type,
@@ -47,118 +59,120 @@ public:
   /// Destructor
   virtual ~RichExpectedTrackSignal() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Expected number of observable signal photons for given track and hypothesis
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Expected number of observable signal photons for given track and hypothesis
   double nSignalPhotons ( RichRecTrack * track,
                           const Rich::ParticleIDType id ) const;
 
-  /// Expected number of signal photons for given segment and hypothesis
+  // Expected number of signal photons for given segment and hypothesis
   double nSignalPhotons ( RichRecSegment * segment,
                           const Rich::ParticleIDType id ) const;
 
-  /// Expected number of observable signal photons for given track and hypothesis
+  // Expected number of observable signal photons for given track and hypothesis
   double nObservableSignalPhotons ( RichRecTrack * track,
                                     const Rich::ParticleIDType id ) const;
 
-  /// Expected number of observable signal photons for given segment and hypothesis
+  // Expected number of observable signal photons for given segment and hypothesis
   double nObservableSignalPhotons ( RichRecSegment * segment,
                                     const Rich::ParticleIDType id ) const;
 
-  /// Expected number of scattered photons for given track and hypothesis
+  // Expected number of scattered photons for given track and hypothesis
   double nScatteredPhotons ( RichRecTrack * track,
                              const Rich::ParticleIDType id ) const;
 
-  /// Expected number of scattered photons for given segment and hypothesis
+  // Expected number of scattered photons for given segment and hypothesis
   double nScatteredPhotons ( RichRecSegment * segment,
                              const Rich::ParticleIDType id ) const;
 
-  /// Expected number of observable scattered photons for given track and hypothesis
+  // Expected number of observable scattered photons for given track and hypothesis
   double nObservableScatteredPhotons ( RichRecTrack * track,
                                        const Rich::ParticleIDType id ) const;
 
-  /// Expected number of observable scattered photons for given segment and hypothesis
+  // Expected number of observable scattered photons for given segment and hypothesis
   double nObservableScatteredPhotons ( RichRecSegment * segment,
                                        const Rich::ParticleIDType id ) const;
 
-  /// Expected number of observable signal+scattered photons for
-  /// given track and hypothesis
+  // Expected number of observable signal and scattered photons for
+  //  the given track and hypothesis 
   double nTotalObservablePhotons ( RichRecTrack * track,
                                    const Rich::ParticleIDType id ) const;
 
-  /// Expected number of observable signal+scattered photons for given segment and hypothesis
+  // Expected number of observable signal+scattered photons for given segment and hypothesis
   double nTotalObservablePhotons ( RichRecSegment * segment,
                                    const Rich::ParticleIDType id ) const;
 
-  /// Expected number of emitted photons for given track and hypothesis
+  // Expected number of emitted photons for given track and hypothesis
   double nEmittedPhotons ( RichRecTrack * track,
                            const Rich::ParticleIDType id ) const;
 
-  /// Expected number of emitted photons for given segment and hypothesis
+  // Expected number of emitted photons for given segment and hypothesis
   double nEmittedPhotons ( RichRecSegment * segment,
                            const Rich::ParticleIDType id ) const;
 
-  /// Expected number of emitted photons for given segment and hypothesis,
-  /// scaled by the HPD quantum efficiency
+  // Expected number of emitted photons for given segment and hypothesis,
+  //  scaled by the HPD quantum efficiency 
   double nDetectablePhotons ( RichRecTrack * track,
                               const Rich::ParticleIDType id ) const;
 
-  /// Expected number of emitted photons for given segment and hypothesis,
-  /// scaled by the HPD quantum efficiency
+  //  Expected number of emitted photons for given segment and hypothesis,
+  //  scaled by the HPD quantum efficiency
   double nDetectablePhotons ( RichRecSegment * segment,
                               const Rich::ParticleIDType id ) const;
 
-  /// The average energy of signal Cherenkov photons
+  // The average energy of signal Cherenkov photons
   double avgSignalPhotEnergy( RichRecSegment * segment,
                               const Rich::ParticleIDType id ) const;
 
-  /// The average energy of emitted Cherenkov photons
+  // The average energy of emitted Cherenkov photons
   double avgEmitPhotEnergy( RichRecSegment * segment,
                             const Rich::ParticleIDType id ) const;
   
-  /// Is it possible for this track to give Rich information
+  // Is it possible for this track to give Rich information
   bool hasRichInfo( RichRecTrack * track ) const;
 
-  /// Is it geometrically possible for this segment to give Rich information
+  // Is it geometrically possible for this segment to give Rich information
   bool hasRichInfo( RichRecSegment * segment ) const;
 
-  /// Is this track above threshold for a given particle type
+  // Is this track above threshold for a given particle type
   bool aboveThreshold( RichRecTrack * track,
                        const Rich::ParticleIDType type ) const;
 
-  /// Is this track above threshold for a given particle type in a given radiator
+  // Is this track above threshold for a given particle type in a given radiator
   bool aboveThreshold( RichRecTrack * track,
                        const Rich::ParticleIDType type,
                        const Rich::RadiatorType radiator ) const;
 
-  /// Is this segment above threshold for a given particle hypothesis
+  // Is this segment above threshold for a given particle hypothesis
   bool aboveThreshold( RichRecSegment * segment,
                        const Rich::ParticleIDType type ) const;
 
-  /// Set the threshold information in a RichPID object for given track
+  // Set the threshold information in a RichPID object for given track
   void setThresholdInfo( RichRecTrack * track, RichPID * pid ) const;
 
-  /// Set the threshold information in a RichPID object for given segment
+  // Set the threshold information in a RichPID object for given segment
   void setThresholdInfo( RichRecSegment * segment, RichPID * pid ) const;
 
-  /// Is this track active in this radiator medium for given particle id
+  // Is this track active in this radiator medium for given particle id
   bool activeInRadiator( RichRecTrack * track,
                          const Rich::RadiatorType rad,
                          const Rich::ParticleIDType id = Rich::Electron ) const;
 
 private:  // Private data
 
-  /// Pointers to tool instances
-  IRichGeomEff * m_geomEff;
-  IRichSellmeirFunc * m_sellmeir;
-  IRichSignalDetectionEff * m_sigDetEff;
-  IRichParticleProperties * m_richPartProp;
-  IRichRayleighScatter * m_rayScat;
-  IRichGasQuartzWindowAbs * m_gasQuartzWin;
+  // Pointers to tool instances
+  IRichGeomEff * m_geomEff;                  ///< Geometrical efficiency tool
+  IRichSellmeirFunc * m_sellmeir;            ///< Sellmeir function
+  IRichSignalDetectionEff * m_sigDetEff;     ///< signal detection efficiency
+  IRichParticleProperties * m_richPartProp;  ///< General particle properties
+  IRichRayleighScatter * m_rayScat;          ///< Rayleigh scattering function
+  IRichGasQuartzWindowAbs * m_gasQuartzWin;  ///< Absorption at the quartz window
 
 };
 

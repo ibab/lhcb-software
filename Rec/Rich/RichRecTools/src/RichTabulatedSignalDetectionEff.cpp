@@ -1,12 +1,19 @@
-// $Id: RichTabulatedSignalDetectionEff.cpp,v 1.5 2004-07-02 14:30:31 jonrob Exp $
+
+/** @file RichTabulatedSignalDetectionEff.cpp
+ *
+ *  Implementation file for tool : RichTabulatedSignalDetectionEff
+ *
+ *  CVS Log :-
+ *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.6 2004-07-27 20:15:33 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichTabulatedSignalDetectionEff.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichTabulatedSignalDetectionEff
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -14,9 +21,10 @@ static const  ToolFactory<RichTabulatedSignalDetectionEff>          s_factory ;
 const        IToolFactory& RichTabulatedSignalDetectionEffFactory = s_factory ;
 
 // Standard constructor
-RichTabulatedSignalDetectionEff::RichTabulatedSignalDetectionEff ( const std::string& type,
-                                                                   const std::string& name,
-                                                                   const IInterface* parent )
+RichTabulatedSignalDetectionEff::
+RichTabulatedSignalDetectionEff ( const std::string& type,
+                                  const std::string& name,
+                                  const IInterface* parent )
   : RichRecToolBase  ( type, name, parent ),
     m_flatMirReflLoc ( Rich::NRiches      ),
     m_sphMirReflLoc  ( Rich::NRiches      ),
@@ -92,7 +100,7 @@ StatusCode RichTabulatedSignalDetectionEff::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichTabulatedSignalDetectionEff::finalize() 
+StatusCode RichTabulatedSignalDetectionEff::finalize()
 {
   // Tidy up
   for ( MirrorReflectivities::iterator iF = m_flatMirRefl.begin();

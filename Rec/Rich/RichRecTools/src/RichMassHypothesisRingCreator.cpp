@@ -1,12 +1,19 @@
-// $Id: RichMassHypothesisRingCreator.cpp,v 1.5 2004-07-12 14:32:06 jonrob Exp $
+
+/** @file RichMassHypothesisRingCreator.cpp
+ *
+ *  Implementation file for tool : RichMassHypothesisRingCreator
+ *
+ *  CVS Log :-
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.6 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichMassHypothesisRingCreator.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichMassHypothesisRingCreator
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

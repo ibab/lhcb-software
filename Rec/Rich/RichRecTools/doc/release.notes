@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-07-27 - Chris Jones
+ - Update doxygen comments
+
 !===================== RichRecTools v2r11 2004-07-22 ======================
 ! 2004-07-12 - Chris Jones
  - Minor changes to debug printout (now done from base class)

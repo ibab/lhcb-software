@@ -1,4 +1,15 @@
-// $Id: RichGeomEffFixedValue.cpp,v 1.6 2004-04-19 23:06:10 jonesc Exp $
+
+/** @file RichGeomEffFixedValue.cpp
+ *
+ *  Implementation file for tool : RichGeomEffFixedValue
+ *
+ *  CVS Log :-
+ *  $Id: RichGeomEffFixedValue.cpp,v 1.7 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -6,10 +17,6 @@
 // local
 #include "RichGeomEffFixedValue.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichGeomEffFixedValue
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

@@ -1,12 +1,19 @@
-// $Id: RichParticleProperties.cpp,v 1.7 2004-04-19 23:06:12 jonesc Exp $
+
+/** @file RichParticleProperties.cpp
+ *
+ *  Implementation file for tool : RichParticleProperties
+ *
+ *  CVS Log :-
+ *  $Id: RichParticleProperties.cpp,v 1.8 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichParticleProperties.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichParticleProperties
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

@@ -1,4 +1,16 @@
-// $Id: RichPhotonSignal.h,v 1.8 2004-02-02 14:27:01 jonesc Exp $
+
+/** @file RichPhotonSignal.h
+ *
+ *  Header file for tool : RichPhotonSignal
+ *
+ *  CVS Log :-
+ *  $Id: RichPhotonSignal.h,v 1.9 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHPHOTONSIGNAL_H
 #define RICHRECTOOLS_RICHPHOTONSIGNAL_H 1
 
@@ -39,7 +51,7 @@
 class RichPhotonSignal : public RichRecToolBase,
                          virtual public IRichPhotonSignal {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichPhotonSignal( const std::string& type,
@@ -49,20 +61,22 @@ public:
   /// Destructor
   virtual ~RichPhotonSignal(){}
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
   double predictedPixelSignal( RichRecPhoton * photon,
                                const Rich::ParticleIDType id ) const;
-  /// Signal Probability for a given reconstructed photon under a given mass hypothesis
+  // Signal Probability for a given reconstructed photon under a given mass hypothesis
   double signalProb( RichRecPhoton * photon,
                      const Rich::ParticleIDType id ) const;
 
-  /// Scatter Probability for a given reconstructed photon under a given mass hypothesis
+  // Scatter Probability for a given reconstructed photon under a given mass hypothesis
   double scatterProb( RichRecPhoton * photon,
                       const Rich::ParticleIDType id ) const;
 

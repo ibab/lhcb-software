@@ -1,4 +1,16 @@
-// $Id: RichTabulatedSignalDetectionEff.h,v 1.5 2004-06-18 11:21:32 jonesc Exp $
+
+/** @file RichTabulatedSignalDetectionEff.h
+ *
+ *  Header file for tool : RichTabulatedSignalDetectionEff
+ *
+ *  CVS Log :-
+ *  $Id: RichTabulatedSignalDetectionEff.h,v 1.6 2004-07-27 20:15:33 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H
 #define RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H 1
 
@@ -31,12 +43,14 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Add support for different QE curves for each HPD
  */
 
 class RichTabulatedSignalDetectionEff : public RichRecToolBase,
                                         virtual public IRichSignalDetectionEff {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichTabulatedSignalDetectionEff( const std::string& type,
@@ -46,14 +60,17 @@ public:
   /// Destructor
   virtual ~RichTabulatedSignalDetectionEff() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Returns the detection efficiency for a cherenkov photon of a given energy
-  double photonDetEfficiency( RichRecSegment * segment, const double energy ) const;
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Returns the detection efficiency for a cherenkov photon of a given energy
+  double photonDetEfficiency( RichRecSegment * segment, 
+                              const double energy ) const;
 
 private:  // Private data
 

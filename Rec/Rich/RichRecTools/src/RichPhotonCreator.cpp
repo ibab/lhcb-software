@@ -1,12 +1,19 @@
-// $Id: RichPhotonCreator.cpp,v 1.18 2004-07-12 14:32:06 jonrob Exp $
+
+/** @file RichPhotonCreator.cpp
+ *
+ *  Implementation file for tool : RichPhotonCreator
+ *
+ *  CVS Log :-
+ *  $Id: RichPhotonCreator.cpp,v 1.19 2004-07-27 20:15:31 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichPhotonCreator.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichPhotonCreator
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

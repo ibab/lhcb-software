@@ -1,4 +1,16 @@
-// $Id: RichBinnedCKResVthetaForTrStoredTracks.h,v 1.1 2004-04-19 23:06:07 jonesc Exp $
+
+/** @file RichBinnedCKResVthetaForTrStoredTracks.h
+ *
+ *  Header file for tool : RichBinnedCKResVthetaForTrStoredTracks
+ *
+ *  CVS Log :-
+ *  $Id: RichBinnedCKResVthetaForTrStoredTracks.h,v 1.2 2004-07-27 20:15:29 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHBINNEDCKRESVTHETAFORTRSTOREDTRACKS_H
 #define RICHRECTOOLS_RICHBINNEDCKRESVTHETAFORTRSTOREDTRACKS_H 1
 
@@ -14,9 +26,9 @@
 
 /** @class RichBinnedCKResVthetaForTrStoredTracks RichBinnedCKResVthetaForTrStoredTracks.h
  *
- *  Tool to calculate the Cherenkov angle resolution. This implementation is
- *  for TrStoredTracks and uses a approach uses simple bins in the
- *  cherenkov angle theta
+ *  Tool to calculate the Cherenkov angle resolution. This version is
+ *  for TrStoredTracks and implements an approach that uses simple bins in the
+ *  cherenkov angle theta space and also varies according to the track algorithm type.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,7 +37,7 @@
 class RichBinnedCKResVthetaForTrStoredTracks : public RichRecToolBase,
                                                virtual public IRichCherenkovResolution {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichBinnedCKResVthetaForTrStoredTracks( const std::string& type,
@@ -35,13 +47,15 @@ public:
   /// Destructor
   virtual ~RichBinnedCKResVthetaForTrStoredTracks() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Photon resolution
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Photon resolution
   double ckThetaResolution( RichRecSegment * segment,
                             const Rich::ParticleIDType id = Rich::Pion ) const;
 

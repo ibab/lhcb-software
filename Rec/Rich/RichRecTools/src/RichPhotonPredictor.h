@@ -1,4 +1,16 @@
-// $Id: RichPhotonPredictor.h,v 1.7 2004-07-09 17:38:44 jonrob Exp $
+
+/** @file RichPhotonPredictor.h
+ *
+ *  Header file for tool : RichPhotonPredictor
+ *
+ *  CVS Log :-
+ *  $Id: RichPhotonPredictor.h,v 1.8 2004-07-27 20:15:31 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTOR_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTOR_H 1
 
@@ -30,7 +42,7 @@
 class RichPhotonPredictor : public RichRecToolBase,
                             virtual public IRichPhotonPredictor {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichPhotonPredictor( const std::string& type,
@@ -40,13 +52,15 @@ public:
   /// Destructor
   virtual ~RichPhotonPredictor(){}
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Is it possible to make a photon candidate using this segment and pixel.
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Is it possible to make a photon candidate using this segment and pixel.
   bool photonPossible( RichRecSegment * segment,
                        RichRecPixel * pixel ) const;
 

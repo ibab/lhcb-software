@@ -1,4 +1,16 @@
-// $Id: RichDelegatedTrackCreatorFromTrStoredTracks.h,v 1.2 2004-06-29 19:53:37 jonesc Exp $
+
+/** @file RichDelegatedTrackCreatorFromTrStoredTracks.h
+ *
+ *  Header file for tool : RichDelegatedTrackCreatorFromTrStoredTracks
+ *
+ *  CVS Log :-
+ *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.h,v 1.3 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RichDelegatedTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichDelegatedTrackCreatorFromTrStoredTracks_H 1
 
@@ -34,7 +46,7 @@ class RichDelegatedTrackCreatorFromTrStoredTracks : public RichRecToolBase,
                                                     virtual public IRichTrackCreator,
                                                     virtual public IIncidentListener {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichDelegatedTrackCreatorFromTrStoredTracks( const std::string& type,
@@ -44,10 +56,10 @@ public:
   /// Destructor
   virtual ~RichDelegatedTrackCreatorFromTrStoredTracks() { }
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
   /// Implement the handle method for the Incident service.
@@ -55,17 +67,19 @@ public:
   /// a new container for the RichRecTracks
   void handle( const Incident& incident );
 
-  /// Returns a RichRecTrack object pointer for given ContainedObject.
-  /// In this implementation the ContainedObject must be a TrStoredTrack.
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Returns a RichRecTrack object pointer for given ContainedObject.
+  // In this implementation the ContainedObject must be a TrStoredTrack.
   RichRecTrack * newTrack ( const ContainedObject * obj ) const;
 
-  /// Form all possible RichRecTracks from input TrStoredTracks
+  // Form all possible RichRecTracks from input TrStoredTracks
   const StatusCode newTracks() const;
 
-  /// Return a pointer to the container of RichRecTracks
+  // Return a pointer to the container of RichRecTracks
   RichRecTracks * richTracks() const;
 
-  /// Returns the number of tracks in the input TrStoredTrack container.
+  // Returns the number of tracks in the input TrStoredTrack container.
   const long nInputTracks() const;
 
 private: // methods
@@ -96,10 +110,10 @@ private: // data
   /// Output location for RichRecTracks in TES
   std::string m_richRecTrackLocation;
 
-  // Flag to signify all tracks have been formed for current event
+  /// Flag to signify all tracks have been formed for current event
   mutable bool m_allDone;
 
-  // Working object to keep track of formed objects
+  /// Working object to keep track of formed objects
   mutable std::map<unsigned long, bool> m_trackDone;
 
   typedef std::vector<std::string> ToolList;

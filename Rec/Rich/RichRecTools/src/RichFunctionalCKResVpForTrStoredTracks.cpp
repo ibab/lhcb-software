@@ -1,4 +1,14 @@
-// $Id: RichFunctionalCKResVpForTrStoredTracks.cpp,v 1.1 2004-04-19 23:06:09 jonesc Exp $
+
+/** @file RichFunctionalCKResVpForTrStoredTracks.cpp
+ *
+ *  Implementation file for tool : RichFunctionalCKResVpForTrStoredTracks
+ *
+ *  $Id: RichFunctionalCKResVpForTrStoredTracks.cpp,v 1.2 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -6,10 +16,6 @@
 // local
 #include "RichFunctionalCKResVpForTrStoredTracks.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichFunctionalCKResVpForTrStoredTracks
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -46,6 +52,9 @@ RichFunctionalCKResVpForTrStoredTracks::ckThetaResolution( RichRecSegment * segm
                                                            const Rich::ParticleIDType /* id */ ) const
 {
 
+  // This method is un-finished - so throw an exception if called
+  Exception("Unfinished implementation - use another for the moment !");
+
   // Reference to track ID object
   const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
@@ -57,6 +66,5 @@ RichFunctionalCKResVpForTrStoredTracks::ckThetaResolution( RichRecSegment * segm
   // momentum for this segment
   //const double ptot = segment->trackSegment().bestMomentum().mag();
 
-  // return randomn variable for the moment
-  return 0.0001;
+  return 0;
 }

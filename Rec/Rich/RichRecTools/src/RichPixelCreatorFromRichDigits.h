@@ -1,4 +1,16 @@
-// $Id: RichPixelCreatorFromRichDigits.h,v 1.7 2004-06-18 11:21:31 jonesc Exp $
+
+/** @file RichPixelCreatorFromRichDigits.h
+ *
+ *  Header file for tool : RichPixelCreatorFromRichDigits
+ *
+ *  CVS Log :-
+ *  $Id: RichPixelCreatorFromRichDigits.h,v 1.8 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H 1
 
@@ -31,7 +43,7 @@ class RichPixelCreatorFromRichDigits : public RichRecToolBase,
                                        virtual public IRichPixelCreator,
                                        virtual public IIncidentListener {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichPixelCreatorFromRichDigits( const std::string& type,
@@ -41,25 +53,27 @@ public:
   /// Destructor
   virtual ~RichPixelCreatorFromRichDigits(){}
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Implement the handle method for the Incident service.
-  /// This is used to inform the tool of software incidents.
+  // Implement the handle method for the Incident service.
+  // This is used to inform the tool of software incidents.
   void handle( const Incident& incident );
 
-  /// Returns a RichRecPixel object pointer for given ContainedObject.
-  /// If if it not possible NULL is return.
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Returns a RichRecPixel object pointer for given ContainedObject.
+  // If if it not possible NULL is return.
   RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
-  /// Form all possible RichRecPixels from input RichDigits.
-  /// The most efficient way to make all RichRecPixel objects in the event.
+  // Form all possible RichRecPixels from input RichDigits.
+  // The most efficient way to make all RichRecPixel objects in the event.
   StatusCode newPixels() const;
 
-  /// Returns a pointer to the RichRecPixels
+  // Returns a pointer to the RichRecPixels
   RichRecPixels * richPixels() const;
 
 private: // methods

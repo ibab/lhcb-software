@@ -1,12 +1,19 @@
-// $Id: RichPhotonSignal.cpp,v 1.13 2004-07-02 14:30:31 jonrob Exp $
+
+/** @file RichPhotonSignal.cpp
+ *
+ *  Implementation file for tool : RichPhotonSignal
+ *
+ *  CVS Log :-
+ *  $Id: RichPhotonSignal.cpp,v 1.14 2004-07-27 20:15:31 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichPhotonSignal.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichPhotonSignal
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

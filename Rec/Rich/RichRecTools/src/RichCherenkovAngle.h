@@ -1,4 +1,16 @@
-// $Id: RichCherenkovAngle.h,v 1.4 2004-06-18 11:21:29 jonesc Exp $
+
+/** @file RichCherenkovAngle.h
+ *
+ *  Header file for tool : RichCherenkovAngle
+ *
+ *  CVS Log :-
+ *  $Id: RichCherenkovAngle.h,v 1.5 2004-07-27 20:15:29 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHCHERENKOVANGLE_H
 #define RICHRECTOOLS_RICHCHERENKOVANGLE_H 1
 
@@ -25,7 +37,7 @@
 class RichCherenkovAngle : public RichRecToolBase,
                            virtual public IRichCherenkovAngle {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichCherenkovAngle( const std::string& type,
@@ -35,18 +47,20 @@ public:
   /// Destructor
   virtual ~RichCherenkovAngle() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Returns average Cherenkov angle for given particle hypothesis
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Returns average Cherenkov angle for given particle hypothesis
   double avgCherenkovTheta( RichRecSegment * segment,
                             const Rich::ParticleIDType id ) const;
 
-  /// Returns average Cherenkov angle for the current mass hypothesis
-  /// Assigned to the segment
+  // Returns average Cherenkov angle for the current mass hypothesis
+  // Assigned to the segment
   double avgCherenkovTheta( RichRecSegment * segment ) const;
 
 private:  // Private data

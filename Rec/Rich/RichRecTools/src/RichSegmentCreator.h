@@ -1,4 +1,16 @@
-// $Id: RichSegmentCreator.h,v 1.9 2004-06-29 19:53:39 jonesc Exp $
+
+/** @file RichSegmentCreator.h
+ *
+ *  Header file for tool : RichSegmentCreator
+ *
+ *  CVS Log :-
+ *  $Id: RichSegmentCreator.h,v 1.10 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -31,7 +43,7 @@ class RichSegmentCreator : public RichRecToolBase,
                            virtual public IRichSegmentCreator,
                            virtual public IIncidentListener {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichSegmentCreator( const std::string& type,
@@ -41,10 +53,10 @@ public:
   /// Destructor
   virtual ~RichSegmentCreator() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
   /// Implement the handle method for the Incident service.
@@ -52,14 +64,16 @@ public:
   /// a new container for the RichRecTracks
   void handle( const Incident& incident );
 
-  /// Save a new RichRecSegment in the container
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Save a new RichRecSegment in the container
   void saveSegment( RichRecSegment * segment ) const;
 
-  /// Create a new RichRecSegment
+  // Create a new RichRecSegment
   RichRecSegment * newSegment( const RichTrackSegment& segment, 
                                RichRecTrack* pTrk ) const;
 
-  /// Return a pointer to RichRecSegments
+  // Return a pointer to RichRecSegments
   RichRecSegments * richSegments() const;
 
 private: // methods

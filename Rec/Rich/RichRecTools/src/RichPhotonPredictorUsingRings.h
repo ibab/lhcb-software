@@ -1,4 +1,16 @@
-// $Id: RichPhotonPredictorUsingRings.h,v 1.3 2004-07-09 17:38:44 jonrob Exp $
+
+/** @file RichPhotonPredictorUsingRings.h
+ *
+ *  Header file for tool : RichPhotonPredictorUsingRings
+ *
+ *  CVS Log :-
+ *  $Id: RichPhotonPredictorUsingRings.h,v 1.4 2004-07-27 20:15:31 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTORUSINGRINGS_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTORUSINGRINGS_H 1
 
@@ -35,7 +47,7 @@ class RichPhotonPredictorUsingRings : public RichRecToolBase,
                                       virtual public IRichPhotonPredictor,
                                       virtual public IIncidentListener {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichPhotonPredictorUsingRings( const std::string& type,
@@ -45,20 +57,22 @@ public:
   /// Destructor
   virtual ~RichPhotonPredictorUsingRings(){}
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Is it possible to make a photon candidate using this segment and pixel.
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Is it possible to make a photon candidate using this segment and pixel.
   bool photonPossible( RichRecSegment * segment,
                        RichRecPixel * pixel ) const;
 
-  /// Implement the handle method for the Incident service.
+  // Implement the handle method for the Incident service.
   void handle( const Incident& incident );
 
-private:
+private: // methods
 
   /// Initialise for a new event
   void InitNewEvent();

@@ -1,12 +1,19 @@
-// $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.3 2004-07-12 14:32:06 jonrob Exp $
+
+/** @file RichDelegatedTrackCreatorFromTrStoredTracks.cpp
+ *
+ *  Implementation file for tool : RichDelegatedTrackCreatorFromTrStoredTracks
+ *
+ *  CVS Log :-
+ *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.4 2004-07-27 20:15:29 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichDelegatedTrackCreatorFromTrStoredTracks.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichDelegatedTrackCreatorFromTrStoredTracks
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

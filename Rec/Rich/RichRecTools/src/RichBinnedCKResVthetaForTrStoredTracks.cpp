@@ -1,4 +1,15 @@
-// $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.3 2004-07-12 14:32:06 jonrob Exp $
+
+/** @file RichBinnedCKResVthetaForTrStoredTracks.cpp
+ *
+ *  Implementation file for tool : RichBinnedCKResVthetaForTrStoredTracks
+ *
+ *  CVS Log :-
+ *  $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.4 2004-07-27 20:15:29 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -12,19 +23,16 @@
 #include "CLHEP/Units/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichBinnedCKResVthetaForTrStoredTracks
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichBinnedCKResVthetaForTrStoredTracks>          s_factory ;
 const        IToolFactory& RichBinnedCKResVthetaForTrStoredTracksFactory = s_factory ;
 
 // Standard constructor
-RichBinnedCKResVthetaForTrStoredTracks::RichBinnedCKResVthetaForTrStoredTracks ( const std::string& type,
-                                                                                 const std::string& name,
-                                                                                 const IInterface* parent )
+RichBinnedCKResVthetaForTrStoredTracks::
+RichBinnedCKResVthetaForTrStoredTracks ( const std::string& type,
+                                         const std::string& name,
+                                         const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_ckAngle ( 0 )
 {
@@ -128,7 +136,7 @@ RichBinnedCKResVthetaForTrStoredTracks::RichBinnedCKResVthetaForTrStoredTracks (
 
 }
 
-StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize() 
+StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -158,7 +166,7 @@ StatusCode RichBinnedCKResVthetaForTrStoredTracks::finalize()
 
 double
 RichBinnedCKResVthetaForTrStoredTracks::ckThetaResolution( RichRecSegment * segment,
-                                                           const Rich::ParticleIDType id ) const 
+                                                           const Rich::ParticleIDType id ) const
 {
 
   // Reference to track ID object

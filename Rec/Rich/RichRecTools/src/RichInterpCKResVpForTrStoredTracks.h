@@ -1,4 +1,16 @@
-// $Id: RichInterpCKResVpForTrStoredTracks.h,v 1.2 2004-06-18 11:21:30 jonesc Exp $
+
+/** @file RichInterpCKResVpForTrStoredTracks.h
+ *
+ *  Header file for tool : RichInterpCKResVpForTrStoredTracks
+ *
+ *  CVS Log :-
+ *  $Id: RichInterpCKResVpForTrStoredTracks.h,v 1.3 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHINTERPCKRESVPFORTRSTOREDTRACKS_H
 #define RICHRECTOOLS_RICHINTERPCKRESVPFORTRSTOREDTRACKS_H 1
 
@@ -20,8 +32,8 @@
 /** @class RichInterpCKResVpForTrStoredTracks RichInterpCKResVpForTrStoredTracks.h
  *
  *  Tool to calculate the Cherenkov angle resolution. This implementation is
- *  for TrStoredTracks and uses an interpolation of the error against the
- *  segment momentum
+ *  for TrStoredTracks and uses an interpolation of the measured Cherenkov resolution
+ *  against the RichRecSegment momentum.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,7 +42,7 @@
 class RichInterpCKResVpForTrStoredTracks : public RichRecToolBase,
                                            virtual public IRichCherenkovResolution {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichInterpCKResVpForTrStoredTracks( const std::string& type,
@@ -40,13 +52,15 @@ public:
   /// Destructor
   virtual ~RichInterpCKResVpForTrStoredTracks() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Photon resolution
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Photon resolution
   double ckThetaResolution( RichRecSegment * segment,
                             const Rich::ParticleIDType id = Rich::Pion ) const;
 
@@ -56,7 +70,7 @@ private:  // Private data
   std::vector<double> m_theerr[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
   std::vector<double> m_thebin[Rich::NRadiatorTypes];
 
-  /// Interpolators
+  /// Interpolator for the CK resolution
   Rich1DTabFunc * m_ckRes[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
 
 };

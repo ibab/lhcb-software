@@ -1,4 +1,16 @@
-// $Id: RichPhotonCreator.h,v 1.14 2004-06-18 11:21:30 jonesc Exp $
+
+/** @file RichPhotonCreator.h
+ *
+ *  Header file for tool : RichPhotonCreator
+ *
+ *  CVS Log :-
+ *  $Id: RichPhotonCreator.h,v 1.15 2004-07-27 20:15:31 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
 
@@ -30,7 +42,7 @@ class RichPhotonCreator : public RichRecToolBase,
                           virtual public IRichPhotonCreator,
                           virtual public IIncidentListener {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichPhotonCreator( const std::string& type,
@@ -40,36 +52,38 @@ public:
   /// Destructor
   virtual ~RichPhotonCreator(){}
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Implement the handle method for the Incident service.
+  // Implement the handle method for the Incident service.
   void handle( const Incident& incident );
 
-  /// Return Pointer to RichRecPhotons
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Return Pointer to RichRecPhotons
   RichRecPhotons * richPhotons() const;
 
-  /// Form a Photon candidate from a Segment and a pixel.
+  // Form a Photon candidate from a Segment and a pixel.
   RichRecPhoton * reconstructPhoton( RichRecSegment * segment,
                                      RichRecPixel * pixel ) const;
 
-  /// Form all photon candidates for a given track and pixel
+  // Form all photon candidates for a given track and pixel
   RichRecTrack::Photons reconstructPhotons( RichRecTrack * track,
                                             RichRecPixel * pixel ) const;
 
-  /// Form all photon candidates for a given track, with all possible pixels.
+  // Form all photon candidates for a given track, with all possible pixels.
   const RichRecTrack::Photons & reconstructPhotons( RichRecTrack * track ) const;
 
-  /// Form all photon candidates for a given pixel, with all possible tracks.
+  // Form all photon candidates for a given pixel, with all possible tracks.
   const RichRecPixel::Photons & reconstructPhotons( RichRecPixel * pixel ) const;
 
-  /// Form all photon candidates for a given segment, with all possible pixels.
+  // Form all photon candidates for a given segment, with all possible pixels.
   const RichRecSegment::Photons & reconstructPhotons( RichRecSegment * segment ) const;
 
-  /// Method to perform the reconstruction of all tracks and pixels
+  // Method to perform the reconstruction of all tracks and pixels
   void reconstructPhotons() const;
 
 private: // private methods

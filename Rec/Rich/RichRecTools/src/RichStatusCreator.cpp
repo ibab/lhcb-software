@@ -1,12 +1,19 @@
-// $Id: RichStatusCreator.cpp,v 1.6 2004-07-12 14:32:07 jonrob Exp $
+
+/** @file RichStatusCreator.cpp
+ *
+ *  Implementation file for tool : RichStatusCreator
+ *
+ *  CVS Log :-
+ *  $Id: RichStatusCreator.cpp,v 1.7 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichStatusCreator.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichStatusCreator
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

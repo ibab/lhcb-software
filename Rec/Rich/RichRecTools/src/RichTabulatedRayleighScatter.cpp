@@ -1,12 +1,19 @@
-// $Id: RichTabulatedRayleighScatter.cpp,v 1.4 2004-04-19 23:06:16 jonesc Exp $
+
+/** @file RichTabulatedRayleighScatter.cpp
+ *
+ *  Implementation file for tool : RichTabulatedRayleighScatter
+ *
+ *  CVS Log :-
+ *  $Id: RichTabulatedRayleighScatter.cpp,v 1.5 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichTabulatedRayleighScatter.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichTabulatedRayleighScatter
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

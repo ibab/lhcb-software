@@ -1,4 +1,15 @@
-// $Id: RichSellmeirFunc.cpp,v 1.9 2004-07-02 14:30:31 jonrob Exp $
+
+/** @file RichSellmeirFunc.cpp
+ *
+ *  Implementation file for tool : RichSellmeirFunc
+ *
+ *  CVS Log :-
+ *  $Id: RichSellmeirFunc.cpp,v 1.10 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -11,10 +22,6 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichSellmeirFunc
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

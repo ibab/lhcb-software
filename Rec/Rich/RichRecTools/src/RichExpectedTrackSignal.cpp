@@ -1,12 +1,19 @@
-// $Id: RichExpectedTrackSignal.cpp,v 1.8 2004-07-12 14:32:06 jonrob Exp $
+
+/** @file RichExpectedTrackSignal.cpp
+ *
+ *  Implementation file for tool : RichExpectedTrackSignal
+ *
+ *  CVS Log :-
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.9 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichExpectedTrackSignal.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichExpectedTrackSignal
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

@@ -1,4 +1,16 @@
-// $Id: RichGeomEffPhotonTracing.h,v 1.5 2004-07-02 14:30:31 jonrob Exp $
+
+/** @file RichGeomEffPhotonTracing.h
+ *
+ *  Header file for tool : RichGeomEffPhotonTracing
+ *
+ *  CVS Log :-
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.6 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H
 #define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
 
@@ -38,7 +50,7 @@
 class RichGeomEffPhotonTracing : public RichRecToolBase,
                                  virtual public IRichGeomEff {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichGeomEffPhotonTracing( const std::string& type,
@@ -48,31 +60,33 @@ public:
   /// Destructor
   virtual ~RichGeomEffPhotonTracing() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Obtain geometrical efficiency for this track and hypothesis
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Obtain geometrical efficiency for this track and hypothesis
   double geomEfficiency ( RichRecSegment * segment,
                           const Rich::ParticleIDType id ) const;
 
-  /// Obtain scattered geometrical efficiency for this track and hypothesis
+  // Obtain scattered geometrical efficiency for this track and hypothesis
   double geomEfficiencyScat ( RichRecSegment * segment,
                               const Rich::ParticleIDType id ) const;
 
 private: // Private data
 
   // Pointers to tool instances
-  IRichRayTracing * m_rayTrace;
-  IRichCherenkovAngle * m_ckAngle;
+  IRichRayTracing * m_rayTrace;    ///< Ray tracking tool
+  IRichCherenkovAngle * m_ckAngle; ///< Cherenkov angle tool
 
   /// Number of photons to use in geometrical efficiency calculation
   int m_nGeomEff;
 
-  /// Number of photons to quit after in geometrical efficiency calculation
-  /// if all so far have failed
+  /** Number of photons to quit after in geometrical efficiency calculation
+   *  if all so far have failed */
   int m_nGeomEffBailout;
 
   /// Increment parameter for PD efficiencies
@@ -81,9 +95,12 @@ private: // Private data
   /// Cherenkov phi incrementation
   double m_incPhi;
 
+  /// Typedef of container type for cached angle parameters
   typedef std::vector<double> AngleVector;
+
   /// Cache Sin(angle) for geometrical efficiency calculation
   AngleVector m_sinCkPhi;
+
   /// Cache Cos(angle) for geometrical efficiency calculation
   AngleVector m_cosCkPhi;
 

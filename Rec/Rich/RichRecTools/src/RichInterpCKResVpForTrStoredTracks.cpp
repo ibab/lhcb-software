@@ -1,4 +1,15 @@
-// $Id: RichInterpCKResVpForTrStoredTracks.cpp,v 1.3 2004-07-12 14:32:06 jonrob Exp $
+
+/** @file RichInterpCKResVpForTrStoredTracks.cpp
+ *
+ *  Implementation file for tool : RichInterpCKResVpForTrStoredTracks
+ *
+ *  CVS Log :-
+ *  $Id: RichInterpCKResVpForTrStoredTracks.cpp,v 1.4 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -7,19 +18,16 @@
 #include "RichInterpCKResVpForTrStoredTracks.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichInterpCKResVpForTrStoredTracks
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichInterpCKResVpForTrStoredTracks>          s_factory ;
 const        IToolFactory& RichInterpCKResVpForTrStoredTracksFactory = s_factory ;
 
 // Standard constructor
-RichInterpCKResVpForTrStoredTracks::RichInterpCKResVpForTrStoredTracks ( const std::string& type,
-                                                                         const std::string& name,
-                                                                         const IInterface* parent )
+RichInterpCKResVpForTrStoredTracks::
+RichInterpCKResVpForTrStoredTracks ( const std::string& type,
+                                     const std::string& name,
+                                     const IInterface* parent )
   : RichRecToolBase( type, name, parent )
 {
 

@@ -1,4 +1,16 @@
-// $Id: RichFunctionalRayleighScatter.h,v 1.4 2004-03-16 13:45:02 jonesc Exp $
+
+/** @file RichFunctionalRayleighScatter.h
+ *
+ *  Header file for tool : RichFunctionalRayleighScatter
+ *
+ *  CVS Log :-
+ *  $Id: RichFunctionalRayleighScatter.h,v 1.5 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHFUNCTIONALRAYLEIGHSCATTER_H
 #define RICHRECTOOLS_RICHFUNCTIONALRAYLEIGHSCATTER_H 1
 
@@ -23,8 +35,8 @@
 
 /** @class RichFunctionalRayleighScatter RichFunctionalRayleighScatter.h
  *
- *  Tool to calculate quantities related to Rayleigh scattering using a
- *  analytic functional form
+ *  Tool to calculate quantities related to Rayleigh scattering using an
+ *  analytic functional form.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -33,7 +45,7 @@
 class RichFunctionalRayleighScatter : public RichRecToolBase,
                                       virtual public IRichRayleighScatter {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichFunctionalRayleighScatter( const std::string& type,
@@ -43,13 +55,15 @@ public:
   /// Destructor
   virtual ~RichFunctionalRayleighScatter() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Rayleigh scattering probability for given pathlength (segment) and photyon energy
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Rayleigh scattering probability for given pathlength (segment) and photyon energy
   double photonScatteredProb( const RichRecSegment * segment,
                               const double energy ) const;
 

@@ -1,4 +1,16 @@
-// $Id: RichSellmeirFunc.h,v 1.7 2004-06-18 11:21:31 jonesc Exp $
+
+/** @file RichSellmeirFunc.h
+ *
+ *  Header file for tool : RichSellmeirFunc
+ *
+ *  CVS Log :-
+ *  $Id: RichSellmeirFunc.h,v 1.8 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHSELLMEIRFUNC_H
 #define RICHRECTOOLS_RICHSELLMEIRFUNC_H 1
 
@@ -34,7 +46,7 @@
 class RichSellmeirFunc : public RichRecToolBase,
                          virtual public IRichSellmeirFunc {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichSellmeirFunc( const std::string& type,
@@ -44,14 +56,16 @@ public:
   /// Destructor
   virtual ~RichSellmeirFunc() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Computes the number of photons emitted in the given energy range for a
-  /// given RichRecSegment under a certain mass hypothesis
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Computes the number of photons emitted in the given energy range for a
+  // given RichRecSegment under a certain mass hypothesis
   double photonsInEnergyRange( RichRecSegment * segment,
                                const Rich::ParticleIDType id,
                                const double botEn,
@@ -59,7 +73,7 @@ public:
 
 private: // methods
 
-  // internal calculation for photon yield
+  /// internal calculation for photon yield
   double paraW( const Rich::RadiatorType rad, const double energy ) const;
 
 private: // data
@@ -82,7 +96,7 @@ private: // data
   double m_REM[Rich::NRadiatorTypes];
   double m_X[Rich::NRadiatorTypes];
 
-  /// particle hypothesis masses squared
+  // particle hypothesis masses squared
   boost::array<double,Rich::NParticleTypes> m_particleMassSq;
 
 };

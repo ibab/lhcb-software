@@ -1,4 +1,16 @@
-// $Id: RichParticleProperties.h,v 1.7 2004-06-18 11:21:30 jonesc Exp $
+
+/** @file RichParticleProperties.h
+ *
+ *  Header file for tool : RichParticleProperties
+ *
+ *  CVS Log :-
+ *  $Id: RichParticleProperties.h,v 1.8 2004-07-27 20:15:31 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHPARTICLEPROPERTIES_H
 #define RICHRECTOOLS_RICHPARTICLEPROPERTIES_H 1
 
@@ -38,7 +50,7 @@
 class RichParticleProperties : public RichRecToolBase,
                                virtual public IRichParticleProperties {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichParticleProperties( const std::string& type,
@@ -48,22 +60,24 @@ public:
   /// Destructor
   virtual ~RichParticleProperties() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Returns 'beta' for given particle hypothesis
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Returns 'beta' for given particle hypothesis
   double beta( RichRecSegment * segment, const Rich::ParticleIDType id ) const;
 
-  /// Returns the nominal mass for a given particle type
+  // Returns the nominal mass for a given particle type
   double mass( const Rich::ParticleIDType id ) const;
 
-  /// Returns the nominal mass squared for a given particle type
+  // Returns the nominal mass squared for a given particle type
   double massSq( const Rich::ParticleIDType id ) const;
 
-  /// Returns the threshold momentum for a given hypothesis in a given radiator
+  // Returns the threshold momentum for a given hypothesis in a given radiator
   double thresholdMomentum( const Rich::ParticleIDType id,
                             const Rich::RadiatorType rad ) const;
   

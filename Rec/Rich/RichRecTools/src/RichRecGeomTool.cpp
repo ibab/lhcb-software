@@ -1,12 +1,19 @@
-// $Id: RichRecGeomTool.cpp,v 1.1 2004-06-10 14:39:24 jonesc Exp $
+
+/** @file RichRecGeomTool.cpp
+ *
+ *  Implementation file for tool : RichRecGeomTool
+ *
+ *  CVS Log :-
+ *  $Id: RichRecGeomTool.cpp,v 1.2 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichRecGeomTool.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichRecGeomTool
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

@@ -1,4 +1,15 @@
-// $Id: RichCherenkovAngle.cpp,v 1.9 2004-07-12 14:32:06 jonrob Exp $
+
+/** @file RichCherenkovAngle.h
+ *
+ *  Header file for tool : RichCherenkovAngle
+ *
+ *  CVS Log :-
+ *  $Id: RichCherenkovAngle.cpp,v 1.10 2004-07-27 20:15:29 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -11,10 +22,6 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichCherenkovAngle
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

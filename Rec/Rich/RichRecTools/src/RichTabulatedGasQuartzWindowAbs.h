@@ -1,4 +1,16 @@
-// $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.2 2004-06-18 11:21:32 jonesc Exp $
+
+/** @file RichTabulatedGasQuartzWindowAbs.h
+ *
+ *  Header file for tool : RichTabulatedGasQuartzWindowAbs
+ *
+ *  CVS Log :-
+ *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.3 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHGASQUARTZWINDOWABS_H
 #define RICHRECTOOLS_RICHGASQUARTZWINDOWABS_H 1
 
@@ -30,7 +42,8 @@
 
 /** @class RichTabulatedGasQuartzWindowAbs RichTabulatedGasQuartzWindowAbs.h
  *
- *  Tool to calculate transmission properties for the gas quartz window
+ *  Tool to calculate transmission properties for the gas quartz window. Uses
+ *  the tabulated information stored in the XML database.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -39,7 +52,7 @@
 class RichTabulatedGasQuartzWindowAbs : public RichRecToolBase,
                                         virtual public IRichGasQuartzWindowAbs {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichTabulatedGasQuartzWindowAbs( const std::string& type,
@@ -49,13 +62,15 @@ public:
   /// Destructor
   virtual ~RichTabulatedGasQuartzWindowAbs() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Rayleigh scattering probability for given pathlength (segment) and photyon energy
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Rayleigh scattering probability for given pathlength (segment) and photon energy
   double photonTransProb( const RichRecSegment * segment,
                           const double energy ) const;
 

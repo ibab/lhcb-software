@@ -1,4 +1,16 @@
-// $Id: RichStatusCreator.h,v 1.4 2004-03-16 13:45:06 jonesc Exp $
+
+/** @file RichStatusCreator.h
+ *
+ *  Header file for tool : RichStatusCreator
+ *
+ *  CVS Log :-
+ *  $Id: RichStatusCreator.h,v 1.5 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHSTATUSCREATOR_H
 #define RICHRECTOOLS_RICHSTATUSCREATOR_H 1
 
@@ -14,8 +26,6 @@
 // interface
 #include "RichRecBase/IRichStatusCreator.h"
 
-// Event
-
 /** @class RichStatusCreator RichStatusCreator.h
  *
  *  Tool for the creation and book-keeping of the RichRecStatus object.
@@ -28,7 +38,7 @@ class RichStatusCreator : public RichRecToolBase,
                           virtual public IRichStatusCreator,
                           virtual public IIncidentListener {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichStatusCreator( const std::string& type,
@@ -38,17 +48,19 @@ public:
   /// Destructor
   virtual ~RichStatusCreator(){}
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Implement the handle method for the Incident service.
-  /// This is used to inform the tool of software incidents.
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Implement the handle method for the Incident service.
+  // This is used to inform the tool of software incidents.
   void handle( const Incident& incident );
 
-  /// Returns a pointer to the RichRecStatus
+  // Returns a pointer to the RichRecStatus
   RichRecStatus * richStatus() const;
 
 private: // methods

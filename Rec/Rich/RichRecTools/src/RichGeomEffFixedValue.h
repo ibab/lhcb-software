@@ -1,8 +1,18 @@
-// $Id: RichGeomEffFixedValue.h,v 1.3 2004-02-02 14:26:59 jonesc Exp $
+
+/** @file RichGeomEffFixedValue.h
+ *
+ *  Header file for tool : RichGeomEffFixedValue
+ *
+ *  CVS Log :-
+ *  $Id: RichGeomEffFixedValue.h,v 1.4 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHGEOMEFFFIXEDVALUE_H
 #define RICHRECTOOLS_RICHGEOMEFFFIXEDVALUE_H 1
-
-// from Gaudi
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -27,7 +37,7 @@
 class RichGeomEffFixedValue : public RichRecToolBase,
                               virtual public IRichGeomEff {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichGeomEffFixedValue( const std::string& type,
@@ -37,27 +47,29 @@ public:
   /// Destructor
   virtual ~RichGeomEffFixedValue() {};
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Obtain geometrical efficiency for this track and hypothesis
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Obtain geometrical efficiency for this track and hypothesis
   double geomEfficiency ( RichRecSegment * segment,
                           const Rich::ParticleIDType id ) const;
 
-  /// Obtain scattered geometrical efficiency for this track and hypothesis
+  // Obtain scattered geometrical efficiency for this track and hypothesis
   double geomEfficiencyScat ( RichRecSegment * segment,
                               const Rich::ParticleIDType id ) const;
 
 private: // Private data
 
   // Pointers to tool instances
-  IRichCherenkovAngle * m_ckAngle;
+  IRichCherenkovAngle * m_ckAngle; ///< Cherenkov angle tool
 
-  std::vector<double> m_fixedValue;
-  double m_fixedScatValue;
+  std::vector<double> m_fixedValue; ///< vector of fixed geometrical efficiency values
+  double m_fixedScatValue; ///< Scatter efficiency
 
 };
 

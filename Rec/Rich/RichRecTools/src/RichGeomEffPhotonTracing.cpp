@@ -1,12 +1,19 @@
-// $Id: RichGeomEffPhotonTracing.cpp,v 1.6 2004-07-02 14:30:31 jonrob Exp $
+
+/** @file RichGeomEffPhotonTracing.cpp
+ *
+ *  Implementation file for tool : RichGeomEffPhotonTracing
+ *
+ *  CVS Log :-
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.7 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichGeomEffPhotonTracing.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichGeomEffPhotonTracing
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

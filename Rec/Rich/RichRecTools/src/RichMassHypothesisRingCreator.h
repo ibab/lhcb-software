@@ -1,4 +1,16 @@
-// $Id: RichMassHypothesisRingCreator.h,v 1.2 2004-06-10 14:39:22 jonesc Exp $
+
+/** @file RichMassHypothesisRingCreator.h
+ *
+ *  Header file for tool : RichMassHypothesisRingCreator
+ *
+ *  CVS Log :-
+ *  $Id: RichMassHypothesisRingCreator.h,v 1.3 2004-07-27 20:15:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
+
 #ifndef RICHRECTOOLS_RICHMASSHYPOTHESISRINGCREATOR_H
 #define RICHRECTOOLS_RICHMASSHYPOTHESISRINGCREATOR_H 1
 
@@ -33,7 +45,7 @@ class RichMassHypothesisRingCreator : public RichRecToolBase,
                                       virtual public IRichMassHypothesisRingCreator,
                                       virtual public IIncidentListener {
 
-public:
+public: // Methods for Gaudi Framework
 
   /// Standard constructor
   RichMassHypothesisRingCreator( const std::string& type,
@@ -43,31 +55,33 @@ public:
   /// Destructor
   virtual ~RichMassHypothesisRingCreator(){}
 
-  /// Initialize method
+  // Initialize method
   StatusCode initialize();
 
-  /// Finalize method
+  // Finalize method
   StatusCode finalize();
 
-  /// Implement the handle method for the Incident service.
-  /// This is used to inform the tool of software incidents.
+public: // methods (and doxygen comments) inherited from public interface
+
+  // Implement the handle method for the Incident service.
+  // This is used to inform the tool of software incidents.
   void handle( const Incident& incident );
 
-  /// Returns the mas hypothesis ring for a given segment and mass hypothesis
+  // Returns the mas hypothesis ring for a given segment and mass hypothesis
   RichRecRing * newMassHypoRing( RichRecSegment * segment,
                                  const Rich::ParticleIDType id ) const;
 
-  /// Returns a new default RichRecRing object
-  /// It is the reponsibility of the user to save or delete the ring
+  // Returns a new default RichRecRing object
+  // It is the reponsibility of the user to save or delete the ring
   RichRecRing * newMassHypoRing() const;
 
-  /// Save the RichRecRing in the container
+  // Save the RichRecRing in the container
   void saveMassHypoRing( RichRecRing * ring ) const;
 
-  /// Builds the mass hypothesis rings for all mass hypotheses for given RichRecSegment
+  // Builds the mass hypothesis rings for all mass hypotheses for given RichRecSegment
   void newMassHypoRings( RichRecSegment * segment ) const;
 
-  /// Returns a pointer to all mass hypothesis rings
+  // Returns a pointer to all mass hypothesis rings
   RichRecRings * massHypoRings() const;
 
 private: // methods

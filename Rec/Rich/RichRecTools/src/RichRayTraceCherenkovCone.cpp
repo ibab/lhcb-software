@@ -1,12 +1,19 @@
-// $Id: RichRayTraceCherenkovCone.cpp,v 1.6 2004-07-02 14:30:31 jonrob Exp $
+
+/** @file RichRayTraceCherenkovCone.cpp
+ *
+ *  Implementation file for tool : RichRayTraceCherenkovCone
+ *
+ *  CVS Log :-
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.7 2004-07-27 20:15:32 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichRayTraceCherenkovCone.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichRayTraceCherenkovCone
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory

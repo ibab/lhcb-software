@@ -1,12 +1,19 @@
-// $Id: RichPhotonPredictorUsingRings.cpp,v 1.3 2004-07-12 14:32:07 jonrob Exp $
+
+/** @file RichPhotonPredictorUsingRings.cpp
+ *
+ *  Implementation file for tool : RichPhotonPredictorUsingRings
+ *
+ *  CVS Log :-
+ *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.4 2004-07-27 20:15:31 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   15/03/2002
+ */
 
 // local
 #include "RichPhotonPredictorUsingRings.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichPhotonPredictorUsingRings
-//
-// 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
