@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.47 2003-05-30 15:53:12 ibelyaev Exp $
+! $Id: release.notes,v 1.48 2003-06-18 09:00:15 witoldp Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!======================= GiGaCnv v12r1 ==============================
 
 ! 2003-05-30 - Ivan BELYAEV
  - GiGaCnv/GiGaVolumeUtils.h
