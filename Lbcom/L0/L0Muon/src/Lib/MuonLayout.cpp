@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonLayout.cpp,v 1.3 2001-07-09 19:12:04 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonLayout.cpp,v 1.4 2001-07-12 20:19:56 atsareg Exp $
 // Include files
 #include <iostream>
 #include "L0Muon/MuonLayout.h"
@@ -180,19 +180,56 @@ std::vector<MuonTile> MuonLayout::tiles(int iq, int ir) {
   
   std::vector<MuonTile> vmt;
   
-  for(int ix = 0; ix < 2*xGrid(); ix++) {
-    for(int iy = yGrid(); iy < 2*yGrid(); iy++) {
+  int ix; int iy;
+  for(ix = 0; ix < 2*xGrid(); ix++) {
+    for(iy = yGrid(); iy < 2*yGrid(); iy++) {
       vmt.push_back(MuonTile(iq,ir,ix,iy,*this));
     }
   }
-  for(int ix = xGrid(); ix < 2*xGrid(); ix++) {
-    for(int iy = 0; iy < yGrid(); iy++) {
+  for(ix = xGrid(); ix < 2*xGrid(); ix++) {
+    for(iy = 0; iy < yGrid(); iy++) {
       vmt.push_back(MuonTile(iq,ir,ix,iy,*this));
     }
   }
   
   return vmt;
   
+}
+
+std::vector<MuonTile> MuonLayout::tilesInRegion(const MuonTile& pad, 
+                                                int pregion) {
+    
+  int nr = pad.region();
+  int nq = pad.quarter();
+  
+  if(nr == pregion) {
+    return tiles(pad);    
+  } else {
+    std::vector<MuonTile> vmt = tiles(pad); 
+    std::vector<MuonTile>::iterator ivmt;
+    std::vector<MuonTile> nvmt;
+    // Bring the pads in vmt to the pregion definition
+    for (ivmt = vmt.begin(); ivmt != vmt.end(); ivmt++) {      
+      if(nr<pregion) {
+	int factor = rfactor(pregion)/rfactor(nr);
+	int newX = ivmt->nX()/factor;
+	int newY = ivmt->nY()/factor;
+	MuonTile tile(nq,pregion,newX,newY,*this);
+	nvmt.push_back(tile);
+      } else {
+        int factor = rfactor(nr)/rfactor(pregion);
+	int minX = ivmt->nX()*factor;
+	int minY = ivmt->nY()*factor;
+        for(int ix=0; ix<factor; ix++) {
+	  for(int iy=0; iy<factor; iy++) {
+	    MuonTile tile(nq,pregion,minX+ix,minY+iy,*this);
+	    nvmt.push_back(tile);
+	  }
+	}
+      }
+    }
+    return nvmt;
+  }
 }
 
 bool MuonLayout::validTile(const MuonTile& mt) {
