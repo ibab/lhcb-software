@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v19r0>2003-06-27 Brunel v19r0</A></H1><PRE>
+</PRE><H1><A NAME=v19r0>2003-07-01 Brunel v19r0</A></H1><PRE>
 - Development version for:
    . Port to Gaudi v12
    . Port to gcc 3.2
@@ -15,6 +15,7 @@ Purpose: LHCb reconstruction program
      reconstructed with dbase v256r0. 
      Data produced with dbase v255r* (Robustness tests for optimization and
      trigger TDRs) cannot be reconstructed with this version - use v18r1.
+   . Removed Rich Fortran reconstruction
 
 - New features:
    . Implementation of modules in OT description. Uses backwards incompatible
@@ -28,6 +29,11 @@ Purpose: LHCb reconstruction program
    . Redesign of L1 algorithm and packaging (L1Decision v2r1)
    . L1TTClusters used instead of offline clusters for L1 (L1Decision v2r1)
    . Detailed description of Spd and Prs, including converter! (XmlDDDB v16r1)
+   . Rich OO reconstruction is now the default
+
+- DST changes
+   . Rec/Rich/PIDs now contains result of Rich OO reconstruction. 
+     Rec/Rich/OOPIDs is no longer filled
 
 - New tuning:
    . Use TDR L0 threshold settings (L0DU v6r5)

@@ -49,12 +49,9 @@ BrunelMoniTrSeq.Members += { "TrAnalyse" };
 
 // Rich
 ApplicationMgr.DLLs += { "RichMonitor" };
-BrunelMoniRICHSeq.Members += { "RichDigitCnvVerifier", // SICB digit Cnv checks
-                               "RichPIDCnvVerifier" }; // SICB pid Cnv checks
+BrunelMoniRICHSeq.Members += { "RichDigitCnvVerifier" }; // SICB digit Cnv checks
 #include "$RICHMONITOROPTS/DigiMoni_Brunel.opts"    // Digitisation
 #include "$RICHMONITOROPTS/RichPIDMoni_Brunel.opts" // Monitor Rec/Rich/PIDs
-RichPIDCnvVerifier.InputPIDs = "Rec/Rich/PIDs";
-#include "$RICHMONITOROPTS/RichOOPIDMoni_Brunel.opts"  // Monitor Rec/Rich/OOPIDs
 
 // Calorimeters
 #include "$CALOMONITOROPTS/Brunel.opts"

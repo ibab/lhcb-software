@@ -7,7 +7,6 @@
 // !! Do not modify position or order of included files !!
 //==============================================================
 #include "$STDOPTIONS"
-ApplicationMgr.DLLs += { "XmlTools", "DetDescCnv" };
 
 ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg" };
 EventDataSvc.ForceLeaves = true;
@@ -32,7 +31,6 @@ BrunelDigi.DetectorList += { "Bkg" };
 BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList  = {"VELO","OT","IT","Tr","RICH","CALO","MUON" };
-BrunelReco.DetectorList += { "SICBRICH" }; // Old SICB Rich processing
 BrunelReco.DetectorList += { "V0" };
 BrunelReco.DetectorList += { "Timing" };
 
@@ -182,17 +180,9 @@ BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
 #include "$TRCLEANEXROOT/options/Brunel.opts"
 TrTrackCloneKiller.flagMode = true;
 
-// Old Rich Fortran reconstruction
-BrunelRecoRICHSeq.Members += { "TrToRichTrackAlg", "RichTrackToSicbCnv" };
-BrunelRecoRICHSeq.Members += { "BrunelRecoRICH" };
-BrunelRecoRICHSeq.Members += { "RichDSTPrepare" };
-TrToRichTrackAlg.EnableFiltering = "true"; // Select forward tracks from Tr/Best
-RichDSTPrepare.OutputPIDs = "Rec/Rich/PIDs";
-
 // Rich OO Reconstruction
 ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecAlgs" };
 #include "$RICHRECALGSOPTS/BrunelReco.opts"
-PrepareRichPIDs.OutputPIDLocation = "Rec/Rich/OOPIDs";
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
