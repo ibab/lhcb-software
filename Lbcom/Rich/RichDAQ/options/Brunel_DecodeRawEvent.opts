@@ -6,4 +6,3 @@
 DataOnDemandSvc.Algorithms += { 
   "DATA='/Event/Raw/Rich/Digits' TYPE='RawBufferToRichDigitsAlg/RichDecodeRawEvent'"
 };
-
