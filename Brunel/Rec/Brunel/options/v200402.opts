@@ -27,7 +27,7 @@ ApplicationMgr.EvtMax = 100;
 EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r2/411300.oodigi' TYP='ROOT' opt='READ'" }; // evtype 411300
 
 // Uncomment next 2 lines for POOL input. Input file must exist in MyCatalog.xml.
-//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r1/Pool412400.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 412400
+//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r2/Pool411300.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 412400
 //PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
 
 // Define output file - choose either GaudiDb or POOL
@@ -36,6 +36,6 @@ EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5
 DstWriter.Output = "DATAFILE='411300.oodst' TYP='ROOT' OPT='NEW'";
 
 // POOL output
-//DstWriter.Output = "DATAFILE='PFN:412400.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+//DstWriter.Output = "DATAFILE='PFN:Pool411300.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 
 //////////////////////////////////////////////////////////////////////////////

@@ -23,6 +23,8 @@ Purpose: LHCb reconstruction program
   . Remove all (old) L1 objects from Dst. To be replaced by new Trg
     (L1Decision not available, waiting for new code working in Trg framework)
   . Removed filtering of MCParticles/MCVertices (should be done in Gauss)
+  . Added OTDigits. This is because POOL crashes when writing the OTCluster
+    SmartRef to OTDigits, if the OTDigits are not also saved somewhere...
 
 - New tuning
   . Updated TT detector geometry (beam pipe hole, guard ring size etc.)
@@ -30,6 +32,10 @@ Purpose: LHCb reconstruction program
   . Adapt to changes in ST geometry 
     (ITAlgorithms v14r0, ITCheckers v2r0, LongTrack v1r10, Seeding v2r8,
      TrCheck v2r3, TrCleanEx v2r3, TrKShort v1r1, TrMatching v2r9, VeloTT v1r7)
+
+- New packaging
+  . Creation of relations and links tables for the DST moved to a new independent
+    Relations phase
 
 - Dropped functionality
   . Dropped support for pre-2004 geometries (removed v200311,opts, RiSicbGeom)
