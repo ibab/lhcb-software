@@ -21,7 +21,7 @@ use DAQEvent    v4r3    Event
 use GenEvent    v3r2    Event
 use EventAssoc  v1r1    Event
 use LinkerEvent v1r3    Event
-use TrgEvent    v2r3    Event
+use TrgEvent    v3r0    Event
 
 private
 

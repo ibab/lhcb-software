@@ -1,9 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================= EventSys v17r11 2004-06-10 ========================
-! 2004-06-10 - Marco Cattaneo
- - Use Event v4r4, DAQEvent v4r3
+!======================= EventSys v17r11 2004-06-11 ========================
+! 2004-06-11 - Marco Cattaneo
+ - Use Event v4r4, DAQEvent v4r3, TrgEvent v3r0
  - Add check for completeness of LCG dictionaries, executed when building
    Linux debug version
 
