@@ -1,8 +1,11 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.3 2002-02-01 18:02:14 dhcroft Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.4 2002-02-21 16:38:44 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/02/01 18:02:14  dhcroft
+// Fixed overrun errors in sprintf, thanks to Pere
+//
 // Revision 1.2  2002/01/31 10:00:10  dhcroft
 // Moved CLIDs to seperate files for Visual C linker
 //
@@ -90,7 +93,8 @@ private:
                                 std::string &gasGapSupport);
   
   StatusCode makeGasGapObjects(DataSvcHelpers::RegistryEntry* chamPath,
-                               std::string &chamberName,
+                               std::string &chamberName, 
+                               int &statNum, int &regNum, int &ChamNum,
                                int &gasGapNumber, int &gasGapOffset,
                                std::string &gasGapLogvol,
                                std::string &gasGapSupport);
@@ -340,43 +344,71 @@ XmlMuonRegionCnv::makeChamberObjects(DOM_Element &childElement,
   MsgStream log (msgSvc(), "XmlMuonRegionCnv");
   StatusCode sc;
 
+  // Use the TDS tree structure to determine the station and region numbers
+  DataSvcHelpers::RegistryEntry* regionEntry = 
+    dynamic_cast<DataSvcHelpers::RegistryEntry*> (address->registry()); 
+  DataSvcHelpers::RegistryEntry* stationEntry = 
+    dynamic_cast<DataSvcHelpers::RegistryEntry*> (regionEntry->parent());
+  DataSvcHelpers::RegistryEntry* muonEntry = 
+    dynamic_cast<DataSvcHelpers::RegistryEntry*> (stationEntry->parent());
+
+  DataSvcHelpers::RegistryEntry::Iterator itEntry = muonEntry->begin();
+  int statNum=1;
+  while( (*itEntry) != stationEntry && itEntry != muonEntry->end() ) {
+    itEntry++;
+    statNum++; 
+  }
+  if(itEntry == muonEntry->end()){
+    log << MSG::ERROR << "Could not find stationEntry from muonEntry"
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  itEntry = stationEntry->begin();
+  int regNum=1;
+  while( (*itEntry) != regionEntry && itEntry != stationEntry->end() ) {
+    itEntry++;
+    regNum++; 
+  }
+  if(itEntry == muonEntry->end()){
+    log << MSG::ERROR << "Could not find regionEntry from stationEntry"
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
   // Now create chamberNum identical chambers, differing only in position
-  int i;
-  for(i=1;i<=dataObj->chamberNum();i++){
+  int chamNum;
+  for(chamNum=1;chamNum<=dataObj->chamberNum();chamNum++){
     // NOTE: this is a "safe" new as this is passed to the transisent store
     DeMuonChamber *cChamber = 
-      new DeMuonChamber(padx,pady,gasGapNumber);
+      new DeMuonChamber(statNum,regNum,chamNum,padx,pady,gasGapNumber);
+
+    log << MSG::DEBUG << "Set padx=" << cChamber->padx()
+        << " and pady=" << cChamber->pady() << endreq;
     
     // add the readout to the chamber
     cChamber->createReadOut(readout);
     
-    log << MSG::DEBUG << "Set padx=" << cChamber->padx()
-        << " and pady=" << cChamber->pady() << endreq;
-
     // the position of this chamber is determined by a logical volume
     // in logvol, a support in support and is number (rpath) i
     // with the path npath="pvM5R4Cham190"
     // from the logical volume associated with 
-    // support="/dd/Structure/LHCb/Muon/M5/M5R4"
+    // support="/dd/Structure/LHCb/Muon/M5/R4"
     std::string logVolName = dom2Std (childElement.getAttribute ("logvol"));
     std::string support = dom2Std (childElement.getAttribute ("support"));
     ILVolume::ReplicaPath repPath;
-    repPath.push_back(static_cast<unsigned int>(i-1));
+    repPath.push_back(static_cast<unsigned int>(chamNum-1));
 	
     log << MSG::DEBUG << "GI Logical volume : " << logVolName  << endreq;
     log << MSG::DEBUG << "GI Support        : " << support     << endreq;
-    log << MSG::DEBUG << "GI rpath  : " << (i-1) << endreq;
+    log << MSG::DEBUG << "GI rpath  : " << (chamNum-1) << endreq;
     // add the geometry information
     cChamber->createGeometryInfo (logVolName,support,repPath);
 	  	
     // Name this chamber
     char Cham000[8];
-    sprintf(Cham000,"Cham%03i",i);
+    sprintf(Cham000,"Cham%03i",chamNum);
     
-    // get current path
-    DataSvcHelpers::RegistryEntry* currentEntry = 
-      dynamic_cast<DataSvcHelpers::RegistryEntry*> (address->registry()); 
-
     std::string chamberName = Cham000;
 
     // And register it to current data object directory
@@ -384,8 +416,7 @@ XmlMuonRegionCnv::makeChamberObjects(DOM_Element &childElement,
         <<	  endreq;
 
     // pass to tranisent store
-    sc = currentEntry->add(chamberName,cChamber);    
-    /*    sc = m_pDetDataSvc->registerObject(chamberFullName,cChamber); */
+    sc = regionEntry->add(chamberName,cChamber);    
     if(StatusCode::SUCCESS != sc) {
       log << MSG::WARNING << "The store rejected chamber "
           << chamberName << endreq;
@@ -396,8 +427,8 @@ XmlMuonRegionCnv::makeChamberObjects(DOM_Element &childElement,
     DataSvcHelpers::RegistryEntry* chamPath = 
       dynamic_cast<DataSvcHelpers::RegistryEntry*> (cChamber->registry()); 
 
-    sc= makeGasGapObjects(chamPath,
-                          chamberName,
+    sc= makeGasGapObjects(chamPath,chamberName,
+                          statNum,regNum,chamNum,
                           gasGapNumber,gasGapOffset,
                           gasGapLogvol,gasGapSupport);
     if(!sc.isSuccess()){
@@ -411,6 +442,8 @@ XmlMuonRegionCnv::makeChamberObjects(DOM_Element &childElement,
 StatusCode 
 XmlMuonRegionCnv::makeGasGapObjects(DataSvcHelpers::RegistryEntry* chamPath,
                                     std::string &chamberName,
+                                    int &statNum, int &regNum,
+                                    int &chamNum, 
                                     int &gasGapNumber, int &gasGapOffset,
                                     std::string &gasGapLogvol,
                                     std::string &gasGapSupport){
@@ -419,36 +452,34 @@ XmlMuonRegionCnv::makeGasGapObjects(DataSvcHelpers::RegistryEntry* chamPath,
   StatusCode sc;
   // Now make the gas gaps to go with the chambers
   
-  int j=0;
-  for(j=0; j < gasGapNumber; j++){
-    DeMuonGasGap *cGap = new DeMuonGasGap();
+  int gapNum;
+  for(gapNum=1; gapNum <= gasGapNumber; gapNum++){
+    DeMuonGasGap *cGap = new DeMuonGasGap(statNum,regNum,chamNum,gapNum);
     // now this gets very ugly.
     // for MWPC M1R1 chamber 1 the gas gaps are in
     // logvol=/dd/Geometry/Muon/M1R1Cham/lvGasGapLayer5
-    // support=/dd/Structure/LHCb/Muon/M1/M1R1/Cham001 
+    // support=/dd/Structure/LHCb/Muon/M1/R1/Cham001 
     // rpath=0/4, 1/4, 2/4 and 3/4
 
     std::string gapSupport = gasGapSupport + '/' + chamberName;
 
     ILVolume::ReplicaPath ggRepPath;
-    ggRepPath.push_back(static_cast<unsigned int>(j));
+    ggRepPath.push_back(static_cast<unsigned int>(gapNum-1));
     ggRepPath.push_back(static_cast<unsigned int>(gasGapOffset-1));
 
     log << MSG::DEBUG 
         << "GasGap Logvol " <<  gasGapLogvol
         << " support " <<  gapSupport
-        << " repPath " <<  j << "/" << gasGapOffset-1
+        << " repPath " <<  gapNum-1 << "/" << gasGapOffset-1
         << endreq;
 
     // add the geometry information
     cGap->createGeometryInfo (gasGapLogvol,gapSupport,
                               ggRepPath);
     char Gap0[5];
-    sprintf(Gap0,"Gap%1i",j+1);
+    sprintf(Gap0,"Gap%1i",gapNum);
     std::string gapName = Gap0;
 
-    /*    std::string gapFullName = chamberFullName + '/' + gapName; */
-    
     // And register it to current data object directory
     log << MSG::DEBUG << "Registering gap " 
         << gapName 
@@ -456,8 +487,6 @@ XmlMuonRegionCnv::makeGasGapObjects(DataSvcHelpers::RegistryEntry* chamPath,
     
     // pass to tranisent store
     sc = chamPath->add(gapName,cGap);
-    /*    sc = m_pDetDataSvc->registerObject(gapFullName,cGap);*/
-    
     if(!sc.isSuccess()) {
       log << MSG::WARNING << "The store rejected gap "
           << gapName << endreq;
