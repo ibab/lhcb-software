@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.15 2004-11-10 17:51:12 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.16 2004-11-12 19:11:50 abuckley Exp $
 // Include files
 
 // from Gaudi
@@ -58,6 +58,7 @@ StatusCode RichMarkovRingFinderMoni::initialize()
   acquireTool( "RichRayTracing",       m_raytrace          );
   acquireTool( "RichMCTrackInfoTool",  m_mcRichTrackInfo   );
   acquireTool( "MCEffReconstructible", m_mcReconstructible );
+  acquireTool( "DebugTool",            m_debugger          );
 
   // Book histograms
   if ( !bookHistograms() ) return StatusCode::FAILURE;
@@ -203,7 +204,7 @@ RichMarkovRingFinderMoni::execute()
 
       // Update list of seen MC particles
       for (MCParticleVector::const_iterator iMCP = thispixelMCParts.begin(); iMCP != thispixelMCParts.end(); ++iMCP) {
-        seenMCParts[*iMCP]++;
+        if (*iMCP) { seenMCParts[*iMCP]++; }
       }
 
 
@@ -231,15 +232,13 @@ RichMarkovRingFinderMoni::execute()
                 << pdBasisVectors.first << " and "
                 << pdBasisVectors.second << endreq;
       }
-
-
     } // loop over ring pixels
 
 
 
     // Start being selective: processing only those rings with associated MC tracks
     if (0 == seenMCParts.size()) {
-      // Hopefully very unusual!
+      // Very unusual!
       info() << "Found a ring with no associated MC track" << endreq;
     } else {
 
@@ -250,44 +249,65 @@ RichMarkovRingFinderMoni::execute()
       const size_t totalNoMatches( for_each(seenMCParts.begin(), seenMCParts.end(), CountMap<const MCParticle*>()) );
       const double bestMatchFraction( static_cast<double>(mostMatchedMCPNoMatches) / static_cast<double>(totalNoMatches) );
 
-
-      // Let's invent a measure of ring "quality"
-      // *** maybe a probability-weighted sum over pixs in rec mode?
-      const double ringquality( mostMatchedMCPNoMatches ); // normalising would be nice, but hey: can't have everything
-
-
       // Tell the world all about it...
       debug() << "No pixels = " << pixels.size()
               << " :: Total no assoc tracks = " << totalNoMatches
               << " :: No unique tracks = " << seenMCParts.size()
               << endreq;
       debug() << "Most matched MC particle for this ring is " << mostMatchedMCP
-             << " with " << mostMatchedMCPNoMatches << "/"
-             << totalNoMatches << " matches" << endreq;
+              << " with " << mostMatchedMCPNoMatches << "/"
+              << totalNoMatches << " matches" << endreq;
 
-
+      // Let's invent a measure of ring "quality"
+      // *** maybe a probability-weighted sum over pixs in rec mode?
+      const double ringquality( mostMatchedMCPNoMatches ); // normalising would be nice, but hey: can't have everything
+      
       // Histogram the best match fraction and absolute number
       m_MarkovRingBestMCMatchNumber[whichRich]->fill(mostMatchedMCPNoMatches);
       m_MarkovRingBestMCMatchFraction[whichRich]->fill(bestMatchFraction);
 
 
+
+      // pixMCPart is the MCParticle responsible for most rec pixels. MC type info:
+      // Options are Rich::Electron, Rich::Muon, Rich::Pion, Rich::Kaon, Rich::Proton or Rich::Unknown
+      // numerically 0               1           2           3           4               -1
+      const MCParticle* pixMCPart( mostMatchedMCP );
+      const Rich::ParticleIDType pixMCType( m_richMCTruth->mcParticleType(pixMCPart) );
+
+      // Get the MCParticle associated to the "best" reconstructed RichRecSegment for this ring
+      const MCParticle* segMCPart( m_richRecMCTruth->mcParticle( (*iRing)->richRecSegment() ) );
+
+
+      // Do the rec segment and the MC particle correspond to each other? (when neither is null)
+      if ( segMCPart && pixMCPart ) {
+        if ( pixMCPart != segMCPart ) {
+          info() << "Non-null geometry-matched (" << segMCPart 
+                 << ") and pixel-matched (" << pixMCPart 
+                 << ") MCParticles disagree for Markov ring " << *iRing << endreq;
+        } 
+        ++(m_numMcVsRecMatchAgreements[whichRich][pixMCPart!=segMCPart]);
+        info() << "Incremented MC vs rec agreement: " 
+                << Rich::text(whichRich) <<  "::" 
+                << boolalpha << (pixMCPart!=segMCPart) << " => "
+                << m_numMcVsRecMatchAgreements[whichRich][pixMCPart!=segMCPart] << " entries"
+                << endreq;
+      }
+
+
+      // Ring and event purity and efficiency
+      const double ringPurity(bestMatchFraction);
+      // *** ringEfficiency = number of pixels from MCPi (MC) in ringj / total number of pixels from MCPi (MC)
+      // *** eventMarkovPurity = number of true Markov rings / total number of Markov rings
+      // *** eventMarkovEfficiency = size of Markov MCParticle set / size of "reconstructible" MCParticle set
+
+
+
       // Decide whether this ring is to be considered "sufficiently uniquely matched" to the
       // best MCParticle candidate to be considered a successful Markov ring
       if (bestMatchFraction > m_RingMatchFractionCutoff) {
-        debug() << "Found ring with a single MC track causing >"
-               << 100 * m_RingMatchFractionCutoff << "% of hits" << endreq;
-
-
-        // MC type info
-        // Options are Rich::Electron, Rich::Muon, Rich::Pion, Rich::Kaon, Rich::Proton or Rich::Unknown
-        // numerically 0               1           2           3           4               -1
-        const MCParticle* mcpart( mostMatchedMCP );
-        const Rich::ParticleIDType mcType( m_richMCTruth->mcParticleType(mcpart) );
-        info() << "MC type: " << mcType << endreq;
-
-
-        // Get the MCParticle associated to the "best" reconstructed RichRecSegment for this ring
-        const MCParticle* segMCPart( m_richRecMCTruth->mcParticle((*iRing)->richRecSegment()) );
+        assert(0 != pixMCPart);
+        debug() << "Found ring with a single MC track causing >" 
+                << 100 * m_RingMatchFractionCutoff << "% of hits" << endreq;
 
 
         // Does this ring have a corresponding reconstructed track segment?
@@ -296,46 +316,29 @@ RichMarkovRingFinderMoni::execute()
         // The projected segment is the best match within the specified ring radius fraction
         // (the matching has already been done in the RichMarkovRingFinderAlg)
         if ( (*iRing)->richRecSegment() ) {
-          info() << "Found a ring with a fairly unique MC track and a rec track" << endreq;
+          debug() << "Found a ring with a rec track" << endreq;
         } else {
-          info() << "This ring has a good MCParticle match but isn't reconstructed!" << endreq;
           tempRecOrNot = notrec;
+          info() << "This ring has a good pixel MCParticle match (" 
+                 << 100*bestMatchFraction << "% of " 
+                 << totalNoMatches << " pix matches) but isn't reconstructed!" << endreq;
+          m_debugger->printTree( pixMCPart );
+          const MCParticle * mostMother(pixMCPart->mother()), * tmpMother(pixMCPart->mother());
+          while( tmpMother ) { mostMother = tmpMother; tmpMother = mostMother->mother(); }  
+          if ( mostMother ) {
+            info() << "Complete tree:" << endreq;
+            m_debugger->printTree( mostMother );
+          } else { info() << "No mothers" << endreq; }
+          info() << "origin vertex position of pixMCPart = " << pixMCPart->originVertex()->position() << endreq;
         }
         const RecType recOrNot(tempRecOrNot); // I want this to be const, thank you very much!
 
 
-
         // Histogram the MC particle type
-        m_RingTrackMCType[whichRich][recOrNot]->fill(mcType);
+        m_RingTrackMCType[whichRich][recOrNot]->fill(pixMCType);
 
 
-        // Do the rec segment and the MC particle correspond to each other? (when neither is null)
-        if ( segMCPart ) {
-          if ( mcpart != segMCPart ) {
-            info() << "Non-null geometry-matched (" << segMCPart 
-                   << ") and pixel-matched (" << mcpart 
-                   << ") MCParticles disagree for Markov ring " << *iRing << endreq;
-          } 
-          ++(m_numMcVsRecMatchAgreements[whichRich][mcpart!=segMCPart]);
-          debug() << "Incremented MC vs rec agreement: " 
-                  << Rich::text(whichRich) <<  "::" 
-                  << boolalpha << (mcpart!=segMCPart) << " => "
-                  << m_numMcVsRecMatchAgreements[whichRich][mcpart!=segMCPart] << " entries"
-                  << endreq;
-        }
-
-
-
-        // Ring and event purity and efficiency
-        const double ringPurity(bestMatchFraction);
-        // *** ringEfficiency = number of pixels from MCPi (MC) in ringj / total number of pixels from MCPi (MC)
-
-        // *** eventMarkovPurity = number of true Markov rings / total number of Markov rings
-        // *** eventMarkovEfficiency = size of Markov MCParticle set / size of "reconstructible" MCParticle set
-
-
-
-        // What's the true angle of incidence of this ring's photons on the detector plane? Principle axes?
+        // What's the true angle of incidence of this ring's photons on the detector plane?
         // Run over pixels and associated photons -> MC photons for this ring and get the true incidence angle
         HepVector3D& pdNormal = pdNormals[whichRich][whichSide];
         RichPanelBasis& pdBasis = pdBases[whichRich][whichSide];
@@ -367,7 +370,6 @@ RichMarkovRingFinderMoni::execute()
               m_MarkovRingMCPhotonReverseDirection [whichRich][whichSide]->fill( trueBackwardPhotonDirection.unit().x(),
                                                                                  trueBackwardPhotonDirection.unit().y(),
                                                                                  trueBackwardPhotonDirection.unit().z() );
-
             } else {
               debug() << "No real MC photon" << endreq;
             }
@@ -390,206 +392,180 @@ RichMarkovRingFinderMoni::execute()
                << meanEndPoint << ") in 'track' direction (" << meanEndDir << ")" << endreq;
 
 
-        // If the rec segment MCParticle and the pixel MCParticle match (rec-MC agreement)
-        if ( mcpart == segMCPart && segMCPart ) {
 
-        }
+        // *** get the segment associated to the pixel-matched MCParticle
 
 
-        if ( mcpart && segMCPart ) {
-          // Look at Markov pulls on distributions like Cerenkov angle and 
-          // centre posn. for pix&track-matched MCMC rings
-
-          // Get Cerenkov angle for MC-true mass hypothesis (from REC track, so not pure truth)
-          const double thetaExp( m_ckAngle->avgCherenkovTheta( (*iRing)->richRecSegment(), mcType ) );
-          const double thetaMarkov( (*iRing)->radius() );
-          info() << "Expected theta = " << thetaExp
-                 << " vs. Markov theta = " << thetaMarkov 
-                 << " (shift = " << thetaMarkov - thetaExp <<  ")"
-                 << endreq;
-          m_CkPull[whichRich][recOrNot]->fill(thetaMarkov - thetaExp);
-
-          debug() << "Test" << endreq;
-
-          // Compare ring centre positions
-          // *** get the segment associated to the pixel-matched MCParticle
-          const MCRichSegment* mcSegment( m_richRecMCTruth->mcRichSegment((*iRing)->richRecSegment()) );
-          if (mcSegment) {
-            HepPoint3D mcsegCentrePoint;
-            m_mcRichTrackInfo->panelIntersectGlobal(mcSegment, mcsegCentrePoint);
-            const HepPoint3D segCentrePoint( (*iRing)->richRecSegment()->pdPanelHitPoint() );
-            const HepPoint3D markovCentrePoint( (*iRing)->centrePointGlobal() );
-
-            const HepVector3D segToMcCentreVector( segCentrePoint - mcsegCentrePoint );
-            const HepVector3D markovToMcCentreVector( markovCentrePoint - mcsegCentrePoint );
-            m_RecSegPdPointError[whichRich][recOrNot]->fill( segToMcCentreVector.mag() );
-            m_MarkovSegPdPointError[whichRich][recOrNot]->fill( markovToMcCentreVector.mag() );
-
-
-            // Comparing the back-traced photons to the associated MCRichRecSegment
-            HepVector3D normalBacktracePointError( normalEndPoint - mcSegment->exitPoint() );
-            HepVector3D meanBacktracePointError  ( meanEndPoint   - mcSegment->exitPoint() );
-            // Take the best momentum estimate from halfway through the radiator volume
-            HepVector3D normalBacktraceSlopeError( normalEndDir.unit() - mcSegment->bestMomentum(0.5).unit() ); // *** probably not quite 
-            HepVector3D meanBacktraceSlopeError  ( meanEndDir.unit()   - mcSegment->bestMomentum(0.5).unit() ); // *** the right sort of qty!
-            double normalBacktraceAngleError( normalEndDir.angle( mcSegment->bestMomentum(0.5) ) );
-            double meanBacktraceAngleError  ( meanEndDir.angle(   mcSegment->bestMomentum(0.5) ) );
-
-            info() << "Exit point error = " << normalBacktracePointError.mag()
-                   << " and slope error = " << normalBacktraceSlopeError.mag()
-                   << " and angle error = " << normalBacktraceAngleError << " (normal)" << endreq;
-            
-            // And histogram qtys
-            // for exit points
-            m_normalBacktracePointErrorMag[whichRich][recOrNot]->fill( normalBacktracePointError.mag() );
-            m_meanBacktracePointErrorMag  [whichRich][recOrNot]->fill( meanBacktracePointError.mag() );
-            m_normalBacktracePointErrorX  [whichRich][recOrNot]->fill( normalBacktracePointError.x() );
-            m_meanBacktracePointErrorX    [whichRich][recOrNot]->fill( meanBacktracePointError.x() );
-            m_normalBacktracePointErrorY  [whichRich][recOrNot]->fill( normalBacktracePointError.y() );
-            m_meanBacktracePointErrorY    [whichRich][recOrNot]->fill( meanBacktracePointError.y() );
-            m_normalBacktracePointError   [whichRich][recOrNot]->fill( normalBacktracePointError.x(), normalBacktracePointError.y() );
-            m_meanBacktracePointError     [whichRich][recOrNot]->fill( meanBacktracePointError.x(),   meanBacktracePointError.y() );
-            // and for slopes
-            m_normalBacktraceSlopeErrorMag[whichRich][recOrNot]->fill( normalBacktraceSlopeError.mag() );
-            m_meanBacktraceSlopeErrorMag  [whichRich][recOrNot]->fill( meanBacktraceSlopeError.mag() );
-            m_normalBacktraceSlopeErrorX  [whichRich][recOrNot]->fill( normalBacktraceSlopeError.x() );
-            m_meanBacktraceSlopeErrorX    [whichRich][recOrNot]->fill( meanBacktraceSlopeError.x() );
-            m_normalBacktraceSlopeErrorY  [whichRich][recOrNot]->fill( normalBacktraceSlopeError.y() );
-            m_meanBacktraceSlopeErrorY    [whichRich][recOrNot]->fill( meanBacktraceSlopeError.y() );
-            m_normalBacktraceSlopeError   [whichRich][recOrNot]->fill( normalBacktraceSlopeError.x(), normalBacktraceSlopeError.y() );
-            m_meanBacktraceSlopeError     [whichRich][recOrNot]->fill( meanBacktraceSlopeError.x(),   meanBacktraceSlopeError.y() );
-            // and for angles
-            m_normalBacktraceAngleError   [whichRich][recOrNot]->fill( normalBacktraceAngleError );
-            m_meanBacktraceAngleError     [whichRich][recOrNot]->fill( meanBacktraceAngleError );
-          } // if valid MC segment
-        } // if valid MC particles (proj and pix)
-
-
-        // *** Get ring purity and efficiency numbers.
-
-
-
-        //SmartDataPtr<MCParticles> mcEvt(eventSvc(), MCParticleLocation::Default);
-        //sc = toolSvc()->retrieveTool( "DebugTool", m_pDebugTool, this );
-        //m_pDebugTool->printEventAsTree(mcEvt);
+        // Get Cerenkov angle for MC-true mass hypothesis (from REC track, so not pure truth)
+        const double thetaExp( m_ckAngle->avgCherenkovTheta( (*iRing)->richRecSegment(), pixMCType ) );
+        const double thetaMarkov( (*iRing)->radius() );
+        info() << "Expected theta = " << thetaExp
+               << " vs. Markov theta = " << thetaMarkov 
+               << " (shift = " << thetaMarkov - thetaExp <<  ")"
+               << endreq;
+        m_CkPull[whichRich][recOrNot]->fill(thetaMarkov - thetaExp);
+        
+        // Compare ring centre positions
+        const MCRichSegment* mcSegment( m_richRecMCTruth->mcRichSegment((*iRing)->richRecSegment()) );
+        if (mcSegment) {
+          HepPoint3D mcsegCentrePoint;
+          m_mcRichTrackInfo->panelIntersectGlobal(mcSegment, mcsegCentrePoint);
+          const HepPoint3D segCentrePoint( (*iRing)->richRecSegment()->pdPanelHitPoint() );
+          const HepPoint3D markovCentrePoint( (*iRing)->centrePointGlobal() );
+          
+          const HepVector3D segToMcCentreVector( segCentrePoint - mcsegCentrePoint );
+          const HepVector3D markovToMcCentreVector( markovCentrePoint - mcsegCentrePoint );
+          m_RecSegPdPointError[whichRich][recOrNot]->fill( segToMcCentreVector.mag() );
+          m_MarkovSegPdPointError[whichRich][recOrNot]->fill( markovToMcCentreVector.mag() );
+          
+          
+          // Comparing the back-traced photons to the associated MCRichRecSegment
+          HepVector3D normalBacktracePointError( normalEndPoint - mcSegment->exitPoint() );
+          HepVector3D meanBacktracePointError  ( meanEndPoint   - mcSegment->exitPoint() );
+          // Take the best momentum estimate from halfway through the radiator volume
+          HepVector3D normalBacktraceSlopeError( normalEndDir.unit() - mcSegment->bestMomentum(0.5).unit() ); // *** probably not quite 
+          HepVector3D meanBacktraceSlopeError  ( meanEndDir.unit()   - mcSegment->bestMomentum(0.5).unit() ); // *** the right sort of qty!
+          double normalBacktraceAngleError( normalEndDir.angle( mcSegment->bestMomentum(0.5) ) );
+          double meanBacktraceAngleError  ( meanEndDir.angle(   mcSegment->bestMomentum(0.5) ) );
+          
+          info() << "Exit point error = " << normalBacktracePointError.mag()
+                 << " and slope error = " << normalBacktraceSlopeError.mag()
+                 << " and angle error = " << normalBacktraceAngleError << " (normal)" << endreq;
+          
+          // And histogram qtys
+          // for exit points
+          m_normalBacktracePointErrorMag[whichRich][recOrNot]->fill( normalBacktracePointError.mag() );
+          m_meanBacktracePointErrorMag  [whichRich][recOrNot]->fill( meanBacktracePointError.mag() );
+          m_normalBacktracePointErrorX  [whichRich][recOrNot]->fill( normalBacktracePointError.x() );
+          m_meanBacktracePointErrorX    [whichRich][recOrNot]->fill( meanBacktracePointError.x() );
+          m_normalBacktracePointErrorY  [whichRich][recOrNot]->fill( normalBacktracePointError.y() );
+          m_meanBacktracePointErrorY    [whichRich][recOrNot]->fill( meanBacktracePointError.y() );
+          m_normalBacktracePointError   [whichRich][recOrNot]->fill( normalBacktracePointError.x(), normalBacktracePointError.y() );
+          m_meanBacktracePointError     [whichRich][recOrNot]->fill( meanBacktracePointError.x(),   meanBacktracePointError.y() );
+          // and for slopes
+          m_normalBacktraceSlopeErrorMag[whichRich][recOrNot]->fill( normalBacktraceSlopeError.mag() );
+          m_meanBacktraceSlopeErrorMag  [whichRich][recOrNot]->fill( meanBacktraceSlopeError.mag() );
+          m_normalBacktraceSlopeErrorX  [whichRich][recOrNot]->fill( normalBacktraceSlopeError.x() );
+          m_meanBacktraceSlopeErrorX    [whichRich][recOrNot]->fill( meanBacktraceSlopeError.x() );
+          m_normalBacktraceSlopeErrorY  [whichRich][recOrNot]->fill( normalBacktraceSlopeError.y() );
+          m_meanBacktraceSlopeErrorY    [whichRich][recOrNot]->fill( meanBacktraceSlopeError.y() );
+          m_normalBacktraceSlopeError   [whichRich][recOrNot]->fill( normalBacktraceSlopeError.x(), normalBacktraceSlopeError.y() );
+          m_meanBacktraceSlopeError     [whichRich][recOrNot]->fill( meanBacktraceSlopeError.x(),   meanBacktraceSlopeError.y() );
+          // and for angles
+          m_normalBacktraceAngleError   [whichRich][recOrNot]->fill( normalBacktraceAngleError );
+          m_meanBacktraceAngleError     [whichRich][recOrNot]->fill( meanBacktraceAngleError );
+        } // if valid MC segment
+        
 
 
         // Origin vertices
-        if (mcpart) {
-          // Examine the particle origin vertex type and position
-          const MCVertex::MCVertexType originvertextype( mcpart->originVertex()->type() );
-          string originvertextypename("Other");
-          if (MCVertex::ppCollision == originvertextype) {
-            originvertextypename = "Primary";
-          } else if (MCVertex::Decay == originvertextype) {
-            originvertextypename = "Decay";
-          } else if (MCVertex::Hadronic == originvertextype ||
-                     MCVertex::Pair == originvertextype ||
-                     MCVertex::Brem == originvertextype ||
-                     MCVertex::LHCHalo == originvertextype) {
-            originvertextypename = "Interaction";
-          } else if (MCVertex::Unknown == originvertextype) {
-            originvertextypename = "Unknown";
-          }
-          info() << "Origin vertex (MC) is " << originvertextypename << endreq;
-
-
-          // Get the particle origin vertex position
-          const HepPoint3D& startPoint = mcpart->originVertex()->position();
-          info() << "Origin vtx position = ("
-                 << startPoint.x()/m << ", "
-                 << startPoint.y()/m << ", "
-                 << startPoint.z()/m << ") m" << endreq;
-
-
-          // Categorize which subdetector the origin falls within by z coord
-          // Note that these numbers are NOT precise!
-          MCOriginLocation originvertexlocation(Other);
-          if (fabs(startPoint.z()/m) < 1.0) { originvertexlocation = InVelo; }
-          else if (startPoint.z() > 0.0) {
-            if (startPoint.z()/m < 1.9) { originvertexlocation = InRich1; }
-            else if (startPoint.z()/m < 3.5) { originvertexlocation = InTT; }
-            else if (startPoint.z()/m < 7.0) { originvertexlocation = InMagnet; }
-            else if (startPoint.z()/m < 10.0) { originvertexlocation = InT123; }
-            else if (startPoint.z()/m < 12.0) { originvertexlocation = InRich2; }
-          }
-          // Get azimuthal radius
-          const double rho(sqrt( startPoint.x() * startPoint.x() + startPoint.y() * startPoint.y() ));
-          
-          
-          // *** Need to track MC particle types from the PV and work out why
-          // *** they're still leaving rings in Rich2 but aren't tracked. MCTrackInfo, MCEffReconstructible
-          const IMCEffReconstructible::RecblCategory reconstructCategory( m_mcReconstructible->reconstructible(mcpart) );
-          m_RingTrackRecCategory[whichRich][recOrNot]->fill( reconstructCategory );
-          
-          // Fill origin vertex position histos
-          m_RingTrackOriginZ[whichRich][recOrNot]->fill( startPoint.z()/m );
-          m_RingTrackOriginRZ[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
-          m_RingTrackOrigin[whichRich][recOrNot]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
-          
-          
-          // Origin position (by subdetector) -specific histos
-          if (InVelo == originvertexlocation) {
-            m_RingTrackOrigin1Zoom[whichRich][recOrNot]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginZ1[whichRich][recOrNot]->fill( startPoint.z()/m );
-            m_RingTrackOriginXY1[whichRich][recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginRZ1[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
-            m_RingTrackOriginRZ1Zoom[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
-            m_RingTrackOriginInVeloVertexType[whichRich][recOrNot]->fill( mcpart->originVertex()->type() );
-            if (Rich::Electron == mcType) {
-              m_RingTrackOriginInVeloElectronVertexType[whichRich][recOrNot]->fill( mcpart->originVertex()->type() );
-            }
-            m_RingTrackOriginInVeloRecCategory[whichRich][recOrNot]->fill( reconstructCategory );
-          } else if (InTT == originvertexlocation) {
-            m_RingTrackOriginXY2[whichRich][recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginRZ2[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
-          } else if (InT123 == originvertexlocation ) {
-            m_RingTrackOriginXY3[whichRich][recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
-            m_RingTrackOriginRZ3[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
-          }
-
-
-          // Print out properties of the MC tracks origins clustered in the VELO
-          if (InVelo == originvertexlocation) { // in VELO
-            map<string, double> partProps;
-            partProps["momentum"] = mcpart->momentum().vect().mag();
-            partProps["momentum_t"] = mcpart->pt();
-            partProps["pseudorapidity"] = mcpart->pseudoRapidity();
-            // Just me playing with algorithms
-            //for_each(partProps.begin(), partProps.end(), printMap);
-          }
-
+        // Examine the particle origin vertex type and position
+        const MCVertex::MCVertexType originvertextype( pixMCPart->originVertex()->type() );
+        string originvertextypename("Other");
+        if (MCVertex::ppCollision == originvertextype) {
+          originvertextypename = "Primary";
+        } else if (MCVertex::Decay == originvertextype) {
+          originvertextypename = "Decay";
+        } else if (MCVertex::Hadronic == originvertextype ||
+                   MCVertex::Pair == originvertextype ||
+                   MCVertex::Brem == originvertextype ||
+                   MCVertex::LHCHalo == originvertextype) {
+          originvertextypename = "Interaction";
+        } else if (MCVertex::Unknown == originvertextype) {
+          originvertextypename = "Unknown";
         }
-
-
-        // -------------
-
-
-        // Decay vertices
-        if (mcpart) {
-          const SmartRefVector<MCVertex> endVertices = mcpart->endVertices();
-          for (SmartRefVector<MCVertex>::const_iterator vtx = endVertices.begin(); vtx != endVertices.end(); ++vtx) {
-            const HepPoint3D & endPoint = (*vtx)->position();
-            debug() << "Start vtx position = ("
-                    << endPoint.x()/m << "m, "
-                    << endPoint.y()/m << "m, "
-                    << endPoint.z()/m << "m)" << endreq;
-
-            // Get azimuthal distance
-            double rho = sqrt( endPoint.x() * endPoint.x() + endPoint.y() * endPoint.y() );
-
-            // Fill decay vertex position histos
-            m_RingTrackDecayZ[whichRich][recOrNot]->fill( endPoint.z()/m );
-            m_RingTrackDecayRZ[whichRich][recOrNot]->fill( endPoint.z()/m, rho/m );
-            m_RingTrackDecay[whichRich][recOrNot]->fill( endPoint.z()/m, endPoint.x()/m, endPoint.y()/m );
-
-            if (  MCVertex::Decay == (*vtx)->type() ) {
-              m_RingTrackEndDecayZ[whichRich][recOrNot]->fill( endPoint.z()/m );
-            } else {
-              m_RingTrackEndNotDecayZ[whichRich][recOrNot]->fill( endPoint.z()/m );
-            }
-
+        info() << "Origin vertex (MC) is " << originvertextypename << endreq;
+        
+        
+        // Get the particle origin vertex position
+        const HepPoint3D& startPoint = pixMCPart->originVertex()->position();
+        info() << "Origin vtx position = " << startPoint/m << endreq;
+        
+        
+        // Categorize which subdetector the origin falls within by z coord
+        // Note that these numbers are NOT precise!
+        MCOriginLocation originvertexlocation(Other);
+        if (fabs(startPoint.z()/m) < 1.0) { originvertexlocation = InVelo; }
+        else if (startPoint.z() > 0.0) {
+          if (startPoint.z()/m < 1.9) { originvertexlocation = InRich1; }
+          else if (startPoint.z()/m < 3.5) { originvertexlocation = InTT; }
+          else if (startPoint.z()/m < 7.0) { originvertexlocation = InMagnet; }
+          else if (startPoint.z()/m < 10.0) { originvertexlocation = InT123; }
+          else if (startPoint.z()/m < 12.0) { originvertexlocation = InRich2; }
+        }
+        // Get azimuthal radius
+        const double rho(sqrt( startPoint.x() * startPoint.x() + startPoint.y() * startPoint.y() ));
+        
+        
+        // *** Need to track MC particle types from the PV and work out why
+        // *** they're still leaving rings in Rich2 but aren't tracked. MCTrackInfo, MCEffReconstructible
+        const IMCEffReconstructible::RecblCategory reconstructCategory( m_mcReconstructible->reconstructible(pixMCPart) );
+        m_RingTrackRecCategory[whichRich][recOrNot]->fill( reconstructCategory );
+        
+        // Fill origin vertex position histos
+        m_RingTrackOriginZ[whichRich][recOrNot]->fill( startPoint.z()/m );
+        m_RingTrackOriginRZ[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
+        m_RingTrackOrigin[whichRich][recOrNot]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
+        
+        
+        // Origin position (by subdetector) -specific histos
+        if (InVelo == originvertexlocation) {
+          m_RingTrackOrigin1Zoom[whichRich][recOrNot]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
+          m_RingTrackOriginZ1[whichRich][recOrNot]->fill( startPoint.z()/m );
+          m_RingTrackOriginXY1[whichRich][recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
+          m_RingTrackOriginRZ1[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
+          m_RingTrackOriginRZ1Zoom[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
+          m_RingTrackOriginInVeloVertexType[whichRich][recOrNot]->fill( pixMCPart->originVertex()->type() );
+          if (Rich::Electron == pixMCType) {
+            m_RingTrackOriginInVeloElectronVertexType[whichRich][recOrNot]->fill( pixMCPart->originVertex()->type() );
           }
+          m_RingTrackOriginInVeloRecCategory[whichRich][recOrNot]->fill( reconstructCategory );
+        } else if (InTT == originvertexlocation) {
+          m_RingTrackOriginXY2[whichRich][recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
+          m_RingTrackOriginRZ2[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
+        } else if (InT123 == originvertexlocation ) {
+          m_RingTrackOriginXY3[whichRich][recOrNot]->fill( startPoint.x()/m, startPoint.y()/m );
+          m_RingTrackOriginRZ3[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
+        }
+        
+        
+        // Print out properties of the MC tracks origins clustered in the VELO
+        if (InVelo == originvertexlocation) { // in VELO
+          map<string, double> partProps;
+          partProps["momentum"] = pixMCPart->momentum().vect().mag();
+          partProps["momentum_t"] = pixMCPart->pt();
+          partProps["pseudorapidity"] = pixMCPart->pseudoRapidity();
+          // Just me playing with algorithms
+          //for_each(partProps.begin(), partProps.end(), printMap);
+        }
+        
+        
+        // -------------
+        
+        
+        // Decay vertices
+        const SmartRefVector<MCVertex> endVertices = pixMCPart->endVertices();
+        for (SmartRefVector<MCVertex>::const_iterator vtx = endVertices.begin(); vtx != endVertices.end(); ++vtx) {
+          const HepPoint3D & endPoint = (*vtx)->position();
+          debug() << "Start vtx position = ("
+                  << endPoint.x()/m << "m, "
+                  << endPoint.y()/m << "m, "
+                  << endPoint.z()/m << "m)" << endreq;
+          
+          // Get azimuthal distance
+          double rho = sqrt( endPoint.x() * endPoint.x() + endPoint.y() * endPoint.y() );
+          
+          // Fill decay vertex position histos
+          m_RingTrackDecayZ[whichRich][recOrNot]->fill( endPoint.z()/m );
+          m_RingTrackDecayRZ[whichRich][recOrNot]->fill( endPoint.z()/m, rho/m );
+          m_RingTrackDecay[whichRich][recOrNot]->fill( endPoint.z()/m, endPoint.x()/m, endPoint.y()/m );
+          
+          if (  MCVertex::Decay == (*vtx)->type() ) {
+            m_RingTrackEndDecayZ[whichRich][recOrNot]->fill( endPoint.z()/m );
+          } else {
+            m_RingTrackEndNotDecayZ[whichRich][recOrNot]->fill( endPoint.z()/m );
+          }
+          
         }
 
       } // ring passes best MCParticle match criterion?

@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.12 2004-10-28 18:29:22 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.13 2004-11-12 19:11:50 abuckley Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 
@@ -18,6 +18,7 @@
 #include "RichKernel/IRichMCTrackInfoTool.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "MCTools/IMCEffReconstructible.h"
+#include "RichKernel/IDebugTool.h"
 
 // base class
 #include "RichRecBase/RichRecAlgBase.h"
@@ -92,6 +93,7 @@ private: // data
   IRichRayTracing* m_raytrace; ///< Pointer to RichRaytracing tool interface
   IMCEffReconstructible* m_mcReconstructible; ///< Pointer to MCEffReconstructible tool interface
   IRichMCTrackInfoTool* m_mcRichTrackInfo; ///< Pointer to MCEffReconstructible tool interface
+  IDebugTool * m_debugger;
 
   // Job options
   std::string m_mcHistPth; ///< Output MC truth histogram path
