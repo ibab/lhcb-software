@@ -8,6 +8,7 @@
 !======================= LHCbSys v16r0 2004-06-14 =======================
 ! 2004-06-14 - Marco Cattaneo
  - New      packages: LHCbTools v1r1 (moved here from BooleSys, BrunelSys)
+                      LHCbAlgs v1r0 (for general purpose algorithms)
  - Removed  packages: L1Event. Obsolete, completely superseded by TrgEvent
 
  - Modified packages: KernelSys v3r7, LHCbKernel v4r7, 
@@ -16,6 +17,9 @@
                       Associators v2r2p1, MCTools v1r6
 
  - In LHCbKernel v4r7:
+   . Remove ProcessPhase (moved to LHCbAlgs)
+
+ - In LHCbAlgs v1r0:
    . Use GaudiSequencer as base class of ProcessPhase
 
  - In STDet v1r2:
