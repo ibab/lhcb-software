@@ -4,7 +4,9 @@
 ! Responsible	     : Witold Pokorski
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+! 2004-06-04 - Sajan Easo 
+  - Added additional protection to photon step points 
+    in RichG4StepAnalysis5.cpp for verbose mode running.
 ! 2004-06-04 - Chris Jones
  - Update GiGaMCRichOpticalPhotonCnv to use the mirror reflection points
 
