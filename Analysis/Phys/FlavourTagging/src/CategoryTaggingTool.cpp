@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.cpp,v 1.2 2003-06-16 07:11:56 odie Exp $
+// $Id: CategoryTaggingTool.cpp,v 1.3 2003-06-16 11:38:16 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -8,6 +8,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartDataPtr.h"
+#include "MCTools/IVisPrimVertTool.h"
 #include "Event/EventHeader.h"
 #include "Event/Collision.h"
 #include "Event/L0DUReport.h"
@@ -33,7 +34,7 @@ const        IToolFactory& CategoryTaggingToolFactory = s_factory ;
 CategoryTaggingTool::CategoryTaggingTool( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : AlgTool ( type, name , parent ), m_eventSvc(0),
+  : AlgTool ( type, name , parent ), m_eventSvc(0), m_visTool(0),
     m_nUntrigEvents(0), m_nL0Events(0), m_nL0L1Events(0),
     m_untrigCateg(), m_L0Categ(), m_L0L1Categ()
 {
@@ -80,6 +81,12 @@ StatusCode CategoryTaggingTool::initialize()
   if( sc.isFailure() ) {
     msg << MSG::FATAL << " Unable to locate Event Data Service" << endreq;
     return sc;
+  }
+
+  sc = toolSvc()->retrieveTool( "VisPrimVertTool", m_visTool, this );
+  if( sc.isFailure() ) {
+     msg << MSG::FATAL << "Unable to retrieve the VisPrimVertTool" << endreq;
+     return sc;
   }
 
   m_muonTT      = getTT(m_muonTTN);
@@ -206,7 +213,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 	
 	msg << MSG::INFO << "TAGGING SUMMARY "
 		  << evtHead->runNum() << ' '
-			<< setw(3) << evtHead->evtNum() << ' ';
+			<< setw(3) << evtHead->evtNum() << " : ";
 	if( l0 )
 		msg << (l0->decision() ? '1' : '0');
 	else
@@ -216,11 +223,17 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
 		msg << (l1->decision() ? '1' : '0');
 	else
 		msg << '-';
-	msg << ' ';
+	msg << " : ";
 	if( collisions )
 		msg << collisions->size();
 	else
 		msg << '-';
+  long v;
+  if( m_visTool->countVertices(v).isSuccess() )
+    msg << v;
+  else
+    msg << '-';
+
 	msg << " : ";
 	msg << setw(2) << int(muon_tag.decision()) << ' '
 			<< setw(2) << int(electron_tag.decision()) << ' '

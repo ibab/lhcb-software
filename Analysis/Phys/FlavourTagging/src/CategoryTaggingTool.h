@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.h,v 1.2 2003-06-16 07:11:56 odie Exp $
+// $Id: CategoryTaggingTool.h,v 1.3 2003-06-16 11:38:16 odie Exp $
 #ifndef CATEGORYTAGGINGTOOL_H 
 #define CATEGORYTAGGINGTOOL_H 1
 
@@ -14,6 +14,7 @@
 #include "FlavourTagging/IFlavourTaggingTool.h"
 
 class IDataProviderSvc;
+class IVisPrimVertTool;
 
 /** @class CategoryTaggingTool CategoryTaggingTool.h
  *  
@@ -95,6 +96,7 @@ private:
 	};
 	
 	IDataProviderSvc *m_eventSvc;
+  IVisPrimVertTool *m_visTool;
 	unsigned int m_nUntrigEvents;
   unsigned int m_nL0Events;
   unsigned int m_nL0L1Events;
