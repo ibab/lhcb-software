@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.10 2002-02-12 17:10:48 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.11 2002-03-12 15:14:08 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/02/12 17:10:48  ibelyaev
+//  bug fix
+//
 // Revision 1.9  2002/01/22 18:24:44  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -241,7 +244,7 @@ StatusCode GiGaMCParticleCnv::updateObj
           MCParticle* mcp = Cnv( trajectory );
           particles->push_back( mcp );
           /// fill the reference table 
-          table[ trajectory->trackID() ] =
+          table( trajectory->trackID() ) =
             GiGaKineRefTableEntry( mcp , particles->size() - 1 ) ;
         } 
     }

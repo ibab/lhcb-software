@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.10 2002-02-12 17:10:48 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.11 2002-03-12 15:14:08 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/02/12 17:10:48  ibelyaev
+//  bug fix
+//
 // Revision 1.9  2002/01/22 18:24:44  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -346,8 +349,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
         /// index of particle 
         const int indxPart = iParticle - particles->begin();
         /// index of mother 
-        GiGaKineRefTableEntry& entry = 
-          table[ trajectory->parentID() ] ;
+        GiGaKineRefTableEntry& entry = table( trajectory->parentID() ) ;
         /// index of mother particle (could be -1) 
         const int   iMother = entry.index    () ;
         /// mother MCParticle (could be NULL!)
