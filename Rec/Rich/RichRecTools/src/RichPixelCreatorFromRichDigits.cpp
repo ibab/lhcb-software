@@ -1,23 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPixelCreatorFromRichDigits.cpp
  *
  *  Implementation file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.16 2004-10-30 19:38:44 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.15  2004/10/27 14:39:41  jonrob
- *  Various updates
- *
- *  Revision 1.14  2004/10/13 09:52:41  jonrob
- *  Speed improvements + various minor changes
- *
- *  Revision 1.13  2004/07/27 20:15:32  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.17 2005-02-02 10:08:22 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichPixelCreatorFromRichDigits.h"
@@ -61,6 +54,10 @@ StatusCode RichPixelCreatorFromRichDigits::initialize()
   // Acquire instances of tools
   acquireTool( "RichSmartIDTool", m_idTool );
 
+  // Check which detectors to use
+  if ( !m_usedDets[Rich::Rich1] ) Warning("Pixels for RICH1 are disabled",StatusCode::SUCCESS);
+  if ( !m_usedDets[Rich::Rich2] ) Warning("Pixels for RICH2 are disabled",StatusCode::SUCCESS);
+
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
@@ -68,7 +65,7 @@ StatusCode RichPixelCreatorFromRichDigits::initialize()
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichPixelCreatorFromRichDigits::finalize()
