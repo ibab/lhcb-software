@@ -1,8 +1,7 @@
-// $Id: DeRichRadiator.h,v 1.2 2003-04-01 13:01:49 jonrob Exp $
+// $Id: DeRichRadiator.h,v 1.3 2003-11-22 18:40:50 jonesc Exp $
 
-#ifndef DERICHRADIATOR_H
-#define DERICHRADIATOR_H 1
-
+#ifndef RICHDET_DERICHRADIATOR_H
+#define RICHDET_DERICHRADIATOR_H 1
 
 // Include files
 #include "CLHEP/Geometry/Point3D.h"
@@ -88,4 +87,4 @@ private:
   
 };
 
-#endif    // DERICHRADIATOR_H
+#endif    // RICHDET_DERICHRADIATOR_H

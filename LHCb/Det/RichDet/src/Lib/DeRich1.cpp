@@ -1,4 +1,4 @@
-// $Id: DeRich1.cpp,v 1.5 2003-11-21 22:46:10 jonesc Exp $
+// $Id: DeRich1.cpp,v 1.6 2003-11-22 18:40:51 jonesc Exp $
 #define DERICH1_CPP
 
 // Include files
@@ -40,12 +40,15 @@ StatusCode DeRich1::initialize() {
 
   m_nominalCentreOfCurvature = 
     HepPoint3D(nominalCoCX, nominalCoCY, nominalCoCZ);
+  m_nominalCentreOfCurvatureBottom = 
+    HepPoint3D(nominalCoCX, -nominalCoCY, nominalCoCZ);
 
   double nominalNorX = userParameterAsDouble("Rich1NominalNorX");
   double nominalNorY = userParameterAsDouble("Rich1NominalNorY");
   double nominalNorZ = userParameterAsDouble("Rich1NominalNorZ");
   
   m_nominalNormal = HepVector3D(nominalNorX, nominalNorY, nominalNorZ);
+  m_nominalNormalBottom = HepVector3D(nominalNorX, -nominalNorY, nominalNorZ);
 
   m_sphMirrorRadius = userParameterAsDouble("Rich1SphMirror1Radius");
   m_sphMirrorMaxX = userParameterAsDouble("Rich1SphMirror1MaxX");
@@ -61,41 +64,4 @@ StatusCode DeRich1::initialize() {
 
   log << MSG::DEBUG << "Finished initialisation for DeRich1" << endreq;
   return sc;
-}
-
-//============================================================================
-
-HepPoint3D DeRich1::nominalCentreOfCurvature(Rich::Side side) const 
-{
-  
-  if ( Rich::bottom == side ) {
-    return HepPoint3D( m_nominalCentreOfCurvature.x(),
-                       -m_nominalCentreOfCurvature.y(),
-                       m_nominalCentreOfCurvature.z() );
-  } else {
-    return m_nominalCentreOfCurvature;
-  }
-
-}
-
-//============================================================================
-
-HepNormal3D DeRich1::nominalNormal(Rich::Side side) const
-{
-  
-  if ( Rich::bottom == side ) {
-    return HepNormal3D( m_nominalNormal.x(),
-                        -m_nominalNormal.y(),
-                        m_nominalNormal.z() );
-  } else {
-    return m_nominalNormal;
-  }
- 
-}
-
-//============================================================================
-
-HepPlane3D DeRich1::nominalPlane(Rich::Side side) const
-{
-  return ( Rich::top == side ? m_nominalPlaneTop :  m_nominalPlaneBottom );
 }

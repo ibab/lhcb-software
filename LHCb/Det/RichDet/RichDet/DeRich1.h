@@ -1,4 +1,4 @@
-// $Id: DeRich1.h,v 1.4 2003-11-21 17:23:24 papanest Exp $
+// $Id: DeRich1.h,v 1.5 2003-11-22 18:40:49 jonesc Exp $
 #ifndef RICHDET_DERICH1_H
 #define RICHDET_DERICH1_H 1
 
@@ -50,26 +50,36 @@ public:
    */
   virtual StatusCode initialize();
 
-
-  virtual HepPoint3D nominalCentreOfCurvature(Rich::Side side) const;
-
-  virtual HepNormal3D nominalNormal(Rich::Side side) const;
-
-  virtual HepPlane3D nominalPlane(Rich::Side side) const;
-
-  inline virtual Rich::Side side(HepPoint3D point) const {
-    if( point.y() >= 0.0 )
-      return Rich::top;
-    else
-      return Rich::bottom;
+  virtual inline const HepPoint3D & nominalCentreOfCurvature(Rich::Side side) const
+  {
+    return ( Rich::bottom == side ? m_nominalCentreOfCurvatureBottom :
+             m_nominalCentreOfCurvature );
   }
-  
-  
+
+  virtual inline const HepNormal3D & nominalNormal(Rich::Side side) const
+  {
+    return ( Rich::bottom == side ? m_nominalNormalBottom : m_nominalNormal );
+  }
+
+  virtual inline const HepPlane3D & nominalPlane(Rich::Side side) const
+  {
+    return ( Rich::top == side ? m_nominalPlaneTop : m_nominalPlaneBottom );
+  }
+
+  inline virtual Rich::Side side( const HepPoint3D & point) const 
+  {
+    return ( point.y() >= 0.0 ? Rich::top : Rich::bottom );
+  }
+
+
 private:
 
   HepPlane3D m_nominalPlaneTop;
   HepPlane3D m_nominalPlaneBottom;
 
+  HepPoint3D  m_nominalCentreOfCurvatureBottom;
+  HepNormal3D m_nominalNormalBottom;
+
 };
- 
+
 #endif    // RICHDET_DERICH1_H

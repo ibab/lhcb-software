@@ -1,4 +1,4 @@
-// $Id: DeRich2HPDPanel.h,v 1.6 2003-11-21 22:27:39 jonesc Exp $
+// $Id: DeRich2HPDPanel.h,v 1.7 2003-11-22 18:40:50 jonesc Exp $
 #ifndef RICHDET_RICHDET_DERICH2HPDPANEL_H
 #define RICHDET_RICHDET_DERICH2HPDPANEL_H 1
 
@@ -60,7 +60,7 @@ public:
    * HPDs (a plane resting on the HPDs touching the window).
    * @return HepPlane3D
    */
-  inline HepPlane3D detectionPlane() const { return m_detectionPlane; }
+  inline virtual const HepPlane3D & detectionPlane() const { return m_detectionPlane; }
   
 protected:
 

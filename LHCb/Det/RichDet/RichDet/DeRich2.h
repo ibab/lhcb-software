@@ -1,4 +1,4 @@
-// $Id: DeRich2.h,v 1.5 2003-11-21 22:46:10 jonesc Exp $
+// $Id: DeRich2.h,v 1.6 2003-11-22 18:40:50 jonesc Exp $
 #ifndef DERICH2_H
 #define DERICH2_H 1
 
@@ -48,19 +48,25 @@ public:
    */
   virtual StatusCode initialize();
 
-
-  virtual HepPoint3D nominalCentreOfCurvature(Rich::Side side) const;
-
-  virtual HepNormal3D nominalNormal(Rich::Side side) const;
-
-  virtual HepPlane3D nominalPlane(Rich::Side side) const;
-
-  inline virtual Rich::Side side(HepPoint3D point) const
+  virtual inline const HepPoint3D & nominalCentreOfCurvature(Rich::Side side) const
   {
-    if( point.x() >= 0.0 )
-      return Rich::left;
-    else
-      return Rich::right;
+    return ( Rich::right == side ? m_nominalCentreOfCurvatureRight :
+             m_nominalCentreOfCurvature );
+  }
+
+  virtual inline const HepNormal3D & nominalNormal(Rich::Side side) const
+  {
+    return ( Rich::right == side ? m_nominalNormalRight : m_nominalNormal );
+  }
+
+  virtual inline const HepPlane3D & nominalPlane(Rich::Side side) const
+  {
+    return ( Rich::left == side ? m_nominalPlaneLeft : m_nominalPlaneRight );
+  }
+
+  inline virtual Rich::Side side( const HepPoint3D & point ) const
+  {
+    return ( point.x() >= 0.0 ? Rich::left : Rich::right );
   }
 
 
@@ -68,6 +74,9 @@ private:
 
   HepPlane3D m_nominalPlaneLeft;
   HepPlane3D m_nominalPlaneRight;
+
+  HepPoint3D  m_nominalCentreOfCurvatureRight;
+  HepNormal3D m_nominalNormalRight;
 
 };
 

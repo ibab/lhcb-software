@@ -1,4 +1,4 @@
-// $Id: DeRich2.cpp,v 1.6 2003-11-21 17:23:26 papanest Exp $
+// $Id: DeRich2.cpp,v 1.7 2003-11-22 18:40:51 jonesc Exp $
 #define DERICH2_CPP
 
 // Include files
@@ -41,6 +41,8 @@ StatusCode DeRich2::initialize() {
 
   m_nominalCentreOfCurvature = 
     HepPoint3D(nominalCoCX, nominalCoCY, nominalCoCZ);
+  m_nominalCentreOfCurvatureRight =
+    HepPoint3D(-nominalCoCX, nominalCoCY, nominalCoCZ);
 
   //  std::vector<double> nominalCoC = paramVector("Rich2NominalCoC");
   //  m_nominalCentreOfCurvature = 
@@ -52,6 +54,7 @@ StatusCode DeRich2::initialize() {
   double nominalNorY = userParameterAsDouble("Rich2NominalNorY");
   double nominalNorZ = userParameterAsDouble("Rich2NominalNorZ");
   m_nominalNormal = HepVector3D(nominalNorX, nominalNorY, nominalNorZ);
+  m_nominalNormalRight = HepVector3D(-nominalNorX, nominalNorY, nominalNorZ);
 
   m_sphMirrorRadius = userParameterAsDouble("Rich2SphMirrorRadius");
   m_sphMirrorMaxX = userParameterAsDouble("Rich2SphMirrorMaxX");
@@ -77,41 +80,4 @@ StatusCode DeRich2::initialize() {
 
   log << MSG::DEBUG <<"Finished initialisation for DeRich2"<< endreq;
   return sc;
-}
-
-//============================================================================
-
-HepPoint3D DeRich2::nominalCentreOfCurvature(Rich::Side side) const
-{
-
-  if ( Rich::right == side ) {
-    return HepPoint3D( -m_nominalCentreOfCurvature.x(), 
-                       m_nominalCentreOfCurvature.y(),
-                       m_nominalCentreOfCurvature.z() );
-  } else {
-    return m_nominalCentreOfCurvature;
-  }
-  
-}
-
-//============================================================================
-
-HepNormal3D DeRich2::nominalNormal(Rich::Side side) const
-{
-  
-  if ( Rich::right == side ) {
-    return HepNormal3D( -m_nominalNormal.x(),
-                        m_nominalNormal.y(),
-                        m_nominalNormal.z() );
-  } else {
-    return m_nominalNormal;
-  }
-  
-}
-
-//============================================================================
-
-HepPlane3D DeRich2::nominalPlane(Rich::Side side) const
-{ 
-  return ( Rich::left == side ? m_nominalPlaneLeft : m_nominalPlaneRight );
 }

@@ -1,4 +1,4 @@
-// $Id: DeRich.h,v 1.1 2003-11-21 17:23:24 papanest Exp $
+// $Id: DeRich.h,v 1.2 2003-11-22 18:40:48 jonesc Exp $
 #ifndef DERICH_H
 #define DERICH_H 1
 
@@ -42,13 +42,13 @@ public:
   virtual StatusCode initialize() = 0;
 
 
-  virtual HepPoint3D nominalCentreOfCurvature(Rich::Side side) const = 0;
+  virtual const HepPoint3D & nominalCentreOfCurvature(Rich::Side side) const = 0;
 
-  virtual HepNormal3D nominalNormal(Rich::Side side) const = 0;
+  virtual const HepNormal3D & nominalNormal(Rich::Side side) const = 0;
 
-  virtual HepPlane3D nominalPlane(Rich::Side side) const = 0;
+  virtual const HepPlane3D & nominalPlane(Rich::Side side) const = 0;
 
-  virtual Rich::Side side(HepPoint3D point) const = 0;
+  virtual Rich::Side side( const HepPoint3D & point ) const = 0;
 
   inline virtual double sphMirrorRadius() const {
     return m_sphMirrorRadius;

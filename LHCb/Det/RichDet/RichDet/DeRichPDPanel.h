@@ -1,7 +1,7 @@
-// $Id: DeRichPDPanel.h,v 1.5 2003-11-21 22:27:39 jonesc Exp $
+// $Id: DeRichPDPanel.h,v 1.6 2003-11-22 18:40:50 jonesc Exp $
 
-#ifndef DERICHPDPANEL_H
-#define DERICHPDPANEL_H 1
+#ifndef RICHDET_DERICHPDPANEL_H
+#define RICHDET_DERICHPDPANEL_H 1
 
 
 // Include files
@@ -85,7 +85,7 @@ public:
    * PDs (a plane resting on the PDs touching the window).
    * @return HepPlane3D
    */
-  virtual HepPlane3D detectionPlane() const = 0;
+  virtual const HepPlane3D & detectionPlane() const = 0;
 
   /**
    * Returns a list with all the available readout channels, in form of
@@ -100,6 +100,7 @@ protected:
 
   /// detection plane in global coordinates
   HepPlane3D m_detectionPlane;
+
   /// detection plane in PDPanel coordinates
   HepPlane3D m_localPlane;
   HepVector3D m_localPlaneNormal;
@@ -115,4 +116,4 @@ protected:
 
 };
 
-#endif    // DERICHPDPANEL_H
+#endif    // RICHDET_DERICHPDPANEL_H

@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.h,v 1.7 2003-11-21 22:27:39 jonesc Exp $
+// $Id: DeRichHPDPanel.h,v 1.8 2003-11-22 18:40:50 jonesc Exp $
 
 #ifndef RICHDET_DERICHHPDPANEL_H
 #define RICHDET_DERICHHPDPANEL_H 1
@@ -43,8 +43,7 @@ public:
    * photo detectors (a plane resting on the PDs "touching" the 
    * INSIDE surface of the window).
    */
-  virtual HepPlane3D detectionPlane() const = 0;
-
+  virtual const HepPlane3D & detectionPlane() const = 0;
 
   /**
    * Converts a HepPoint3D in global coordinates to a RichSmartID.
