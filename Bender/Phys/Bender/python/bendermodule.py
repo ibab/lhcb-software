@@ -4,6 +4,7 @@ import PyLCGDict
 import gaudimodule        as gaudi
 import benderhelper       as helper
 
+
 gbl = PyLCGDict.makeNamespace('')
 
 MeV =          1.0
@@ -21,7 +22,7 @@ TRUE   = (1<2)
 # 'import' Vertex type enum 
 class _VertexType(object) :
     """
-    $OHYSEVENTROOT/xml/Vertex.xml:
+    $PHYSEVENTROOT/xml/Vertex.xml:
     <enum
     desc   = "Describe how a vertex was constructed"
     name   = "VertexType"
@@ -197,6 +198,12 @@ VDDTIME  = helper.loadFunP ( gbl.LoKi.Vertices.DotTimeDistance      )
 DTR      = helper.loadFunP ( gbl.LoKi.Vertices.ClosestApproach      ) 
 DTRCHI2  = helper.loadFunP ( gbl.LoKi.Vertices.ClosestApproachChi2  )
 
+PLTIME   = helper.loadFunP ( gbl.LoKi.Particles.LifeTime            )
+PLTERR   = helper.loadFunP ( gbl.LoKi.Particles.LifeTimeError       )
+PLTCHI2  = helper.loadFunP ( gbl.LoKi.Particles.LifeTimeChi2        )
+
+VXFUN    = helper.loadFunP ( gbl.LoKi.Adapters.VFuncAsFun           )
+
 #aliases
 CHI2DTR  = DTRCHI2
 
@@ -237,19 +244,59 @@ VPRONGS = helper.loadFunV ( gbl.LoKi.Vertices.VertexProngs  ) ()
 VTRACKS = helper.loadFunV ( gbl.LoKi.Vertices.VertexTracks  ) () 
 
 # functions
-CHILD   = helper.loadFunP ( gbl.LoKi.Particles.ChildFunction ) 
-MCTRUTH = helper.loadCutP ( gbl.LoKi.Particles.MCTruth       ) 
+CHILD     = helper.loadFunP ( gbl.LoKi.Particles.ChildFunction ) 
+MCTRUTH   = helper.loadCutP ( gbl.LoKi.Particles.MCTruth       ) 
+FROMTREE  = helper.loadCutP ( gbl.LoKi.Particles.FromDecayTree ) 
+NOOVERLAP = helper.loadCutP ( gbl.LoKi.Particles.NoOverlap     ) 
+FILTER    = helper.loadCutP ( gbl.LoKi.Adapters.FilterAsCut    ) 
+
+## TRFLAG    = helper.loadCutP ( gbl.LoKi.Particles.TrackFlags    ) 
+## TRALLFLAG = helper.loadCutP ( gbl.LoKi.Particles.AllTrackFlags )
+## # see $LOKIROOT/LoKi/Tracks.h
+## TRISLONG   = TRFLAG (   1 )
+## TRISUP     = TRFLAG (   2 )
+## TRISDOWN   = TRFLAG (   3 )
+## TRISVELO   = TRFLAG (   4 )
+## TRISBACK   = TRFLAG (   5 )
+## TRIST      = TRFLAG (   6 )
+## # 
+## TRUNIQUE   = TRFLAG ( 101 )
+## TRVELO     = TRFLAG ( 102 )
+## TRSEED     = TRFLAG ( 103 )
+## TRMATCH    = TRFLAG ( 104 )
+## TRFORWARD  = TRFLAG ( 105 )
+## TRFOLLOW   = TRFLAG ( 106 )
+## TRVELOTT   = TRFLAG ( 107 )
+## TRVELOBACK = TRFLAG ( 108 )
+## TRKSTRACK  = TRFLAG ( 109 )
 
 # MC functions
-MCP    = helper.loadFunMCP ( gbl.LoKi.MCParticles.Momentum           ) ()
-MCE    = helper.loadFunMCP ( gbl.LoKi.MCParticles.Energy             ) ()
-MCPT   = helper.loadFunMCP ( gbl.LoKi.MCParticles.TransverseMomentum ) ()
-MCPX   = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumX          ) ()
-MCPY   = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumY          ) ()
-MCPZ   = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumZ          ) ()
-MCID   = helper.loadFunMCP ( gbl.LoKi.MCParticles.Identifier         ) ()
-MC3Q   = helper.loadFunMCP ( gbl.LoKi.MCParticles.ThreeCharge        ) ()
-MCCTAU = helper.loadFunMCP ( gbl.LoKi.MCParticles.ProperLifeTime     ) ()
+MCP     = helper.loadFunMCP ( gbl.LoKi.MCParticles.Momentum           ) ()
+MCE     = helper.loadFunMCP ( gbl.LoKi.MCParticles.Energy             ) ()
+MCPT    = helper.loadFunMCP ( gbl.LoKi.MCParticles.TransverseMomentum ) ()
+MCPX    = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumX          ) ()
+MCPY    = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumY          ) ()
+MCPZ    = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumZ          ) ()
+MCID    = helper.loadFunMCP ( gbl.LoKi.MCParticles.Identifier         ) ()
+MCABSID = helper.loadFunMCP ( gbl.LoKi.MCParticles.AbsIdentifier      ) ()
+MC3Q    = helper.loadFunMCP ( gbl.LoKi.MCParticles.ThreeCharge        ) ()
+MCCTAU  = helper.loadFunMCP ( gbl.LoKi.MCParticles.ProperLifeTime     ) ()
+MCTIME  = MCCTAU
+
+MCQUARK = helper.loadCutMCP ( gbl.LoKi.MCParticles.HasQuark )
+BEAUTY  = MCQUARK( 5 ) 
+CHARM   = MCQUARK( 4 ) 
+STRANGE = MCQUARK( 4 )
+
+NEUTRAL = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsNeutral ) ()
+CHARGED = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsCharged ) ()
+LEPTON  = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsLepton  ) ()
+MESON   = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsMeson   ) ()
+BARYON  = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsBaryon  ) ()
+HADRON  = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsHadron  ) ()
+NUCLEUS = helper.loadCutMCP ( gbl.LoKi.MCParticles.IsNucleus ) ()
+
+
 
 # extratc native ROOT histograms from AIDA
 aida2root = gaudi.gbl.Bender.RootHelper.aida2root
@@ -454,7 +501,8 @@ class Algo(BenderAlgo):
          BenderAlgo.__init__( self , self , name )
          appMgr = gaudi.AppMgr()
          algMgr = appMgr._algmgr
-         sc     = algMgr.addAlgorithm( self.asAlgorithm() )
+         ia = self.asAlgorithm()
+         sc     = algMgr.addAlgorithm( ia )
          if sc.isFailure() :
              raise RuntimeError, 'Unable to add Algorithm "'+name+'"'         
          
@@ -517,10 +565,10 @@ class Algo(BenderAlgo):
          if args.has_key ( 'ID'    ) :
              ID    = args.get ( 'ID' )
              title = args.get ( 'title' , 'Plot #' + `ID` )
-             return BenderAlgo.plot( self , ID , title , value , low , high , bins , weight )
+             return BenderAlgo.plot( self , value , ID , title , low , high , bins , weight )
          if args.has_key ( 'title' ) :
              title = args.get('title')
-             return BenderAlgo.plot( self ,      title , value , low , high , bins , weight )
+             return BenderAlgo.plot( self , value ,      title , low , high , bins , weight )
          raise TypeError, " Neither 'ID' no 'title' for the histogram are specified "
      
      def select       ( self , **args   ) :
@@ -584,16 +632,14 @@ class Algo(BenderAlgo):
      
      def nTuple         ( self , **args ) :
          " Retrive/Book the Tuple oobject "
-         if not args.has_key( 'title' ) :
-             raise TypeError, "Tuple 'title' is not specified"
-         return Tuple( BenderAlgo.ntuple( self , args.get('title') ) )
+         if args.has_key ( 'ID'    ) :
+             _t = BenderAlgo.ntuple ( self , args.get ( 'ID' ) , args.get ( 'title' ,'' ) )
+             return Tuple ( _t ) ;
+         if args.has_key ( 'title' ) :
+             _t = BenderAlgo.ntuple ( self , args.get ( 'title' ) )
+             return Tuple ( _t ) ;
+         raise TypeError, "Tuple neither 'title' nor 'ID' is not specified"
      
-     def ntuple         ( self , **args ) :
-         " Retrive/Book the Tuple oobject "
-         if not args.has_key( 'title' ) :
-             raise TypeError, "Tuple 'title' is not specified"
-         return Tuple( BenderAlgo.ntuple( self , args.get('title') ) )
-          
      def evtCol         ( self , **args ) :
          " Retrive/Book the Event Tag Collection  object "
          if not args.has_key( 'title' ) :
