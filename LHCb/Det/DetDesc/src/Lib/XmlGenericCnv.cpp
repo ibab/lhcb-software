@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.5 2001-12-13 08:45:40 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.6 2001-12-18 11:19:36 sponce Exp $
 
 // Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -225,8 +225,11 @@ StatusCode XmlGenericCnv::internalCreateObj (DOM_Element element,
       IConverter* conv = this->conversionSvc()->converter(clsID);
       if (0 == conv) {
         log << MSG::WARNING
-            << "No proper converter found for classID "
-            << clsID << ", default converter will be used" << endreq;
+            << "No proper converter found for classID " << clsID
+            << ", the default converter for " << tagName
+            << " will be used. This message may be ignored in case you are "
+            << "fine with the default converter (ie you don't use the "
+            << "content of the specific part)." << endreq;
       } else {
         converter = dynamic_cast <XmlGenericCnv*> (conv);
         if (0 == converter) {

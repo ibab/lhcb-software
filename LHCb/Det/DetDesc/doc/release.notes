@@ -1,14 +1,15 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.64 2001-12-18 11:17:23 sponce Exp $ 
+! $Id: release.notes,v 1.65 2001-12-18 11:19:41 sponce Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
 
 ! =============================================================================
 ! 20011218 - Sebastien Ponce
-   Bug fix in the code for general trapezoids.
+   - improvement in some warning message
+   - Bug fix in the code for general trapezoids.
 
 ! =============================================================================
 ! 20011214 - Andrea Valassi
@@ -34,7 +35,7 @@ package manager : N.N
 ! =============================================================================
 ! 20011213 - Sebastien Ponce
    - bug fix : no exception should go out of createObj.
-   - improvement concerning a warming message which was not precise enough
+   - improvement concerning a warning message which was not precise enough
 
 ! =============================================================================
 ! 20011211 - Sebastien Ponce
