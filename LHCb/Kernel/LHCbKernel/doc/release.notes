@@ -3,6 +3,21 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 !=============================================================================
+! 10/05/2002 - Philippe Charpentier
+  - modified interface to Associators:
+    Added methods to retrieve ranges,   delegating to the table
+     StatusCode xxx( *, Range&)         returns FAILURE if no table
+     ToRange    xxx( * )                returns empty range if no table
+
+	  Relations/IAssociator[Weighted].h   Removed unsafe methods
+                                        Added methods [inv]range()
+                                        Method bool tableExists()
+                                         creates/accesses the table and returns
+                                         true if successful
+	  Relations/IAssociatorWeighted.h     Added methods with cuts on weight:
+                                         [inv]rangeWith{Low|High}Cut
+
+!=============================================================================
 ! 10/05/2002 - Vanya Belyaev  
 
   - new files in Relations subdirectory:

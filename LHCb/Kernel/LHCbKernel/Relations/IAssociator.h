@@ -1,8 +1,11 @@
-// $Id: IAssociator.h,v 1.4 2002-04-29 09:09:56 phicharp Exp $
+// $Id: IAssociator.h,v 1.5 2002-05-10 14:49:39 phicharp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/29 09:09:56  phicharp
+//  Make retrieve methods safer (2 new methods)
+//
 // Revision 1.3  2002/04/26 13:21:42  phicharp
 // Add typedefs and methods to IAssociator(s)
 //
@@ -54,12 +57,12 @@ public:
 
   /// another set of shortcuts which are may be more explicit (PhC)
   typedef OwnType                             IAsct;
-  typedef DirectType                          FromTable;
-  typedef FromTable::Range                    ToRange;
-  typedef FromTable::iterator                 ToIterator;
-  typedef InverseType                         ToTable;
-  typedef ToTable::Range                      FromRange;
-  typedef ToTable::iterator                   FromIterator;
+  typedef DirectType                          Table;
+  typedef Table::Range                        ToRange;
+  typedef Table::iterator                     ToIterator;
+  typedef InverseType                         InvTable;
+  typedef InvTable::Range                     FromRange;
+  typedef InvTable::iterator                  FromIterator;
 
 public:
 
@@ -116,46 +119,84 @@ public:
   };
 
   /** Method to retrieve a range associated to a given FROM element
+
+      @param FROM*& Pointer to a FROM object one want to retrieve associated 
+      range
+      @param ToRange& A range of associated objects. 
+      It is empty if no table was found
+      @return StatusCode Failure it no table was found
+
    */
-  ToRange directAsctRange( const FROM* from ) 
+  StatusCode range( const FROM* from, ToRange& range)
   {
-    return direct()->relations( from );
+    Table* table = direct();
+    if( 0 == table ) {
+      range = ToRange() ;
+      return StatusCode::FAILURE;
+    }
+    range = table->relations( from );
+    return StatusCode::SUCCESS;
   }
 
   /** Method to retrieve a range associated to a given TO element
-   */
-  FromRange inverseAsctRange( const TO* to )
-  {
-    return inverse()->relations( to );
-  }
 
-  /** Safer method to retrieve a range associated to a given FROM element
+      @param TO*& Pointer to a TO object one want to retrieve associated range
+      @param FromRange& A range of associated objects. 
+      It is empty if no table was found
+      @return StatusCode Failure it no table was found
+
    */
-  StatusCode retrieveRangeFrom( const FROM* from, ToRange& range)
+  StatusCode invRange( const TO* to, FromRange& range)
   {
-    FromTable* table = direct();
+    InvTable* table = inverse();
     if( 0 == table ) {
-      range = DirectType::Range() ;
+      range = InvTable::Range() ;
       return StatusCode::FAILURE;
     }
-    range = table->relation( from );
-    return StatusCode::SUCCESS;
-  }
-
-  /** Safer method to retrieve a range associated to a given TO element
-   */
-  StatusCode retrieveRangeTo( const TO* to, FromRange& range)
-  {
-    ToTable* table = inverse();
-    if( 0 == table ) {
-      range = InverseType::Range() ;
-      return StatusCode::FAILURE;
-    }
-    range = table->relation( to );
+    range = table->relations( to );
     return StatusCode::SUCCESS;
   }
   
- 
+  /** Method to retrieve a range associated to a given FROM element
+
+      @param from Pointer to a FROM object one want to retrieve associated 
+      range
+      @return A range of associated objects. 
+      It is empty if no table was found
+
+   */
+  ToRange range( const FROM* from )
+  {
+    Table* table = direct();
+    if (0 == table) {
+      return ToRange();
+    }
+    return table->relations( from );
+  }
+
+  /** Method to retrieve a range associated to a given TO element
+
+      @param TO*& Pointer to a TO object one want to retrieve associated range
+      @return FromRange& A range of associated objects. 
+      It is empty if no table was found
+
+   */
+  FromRange invRange( const TO* to )
+  {
+    InvTable* table = inverse();
+    if( 0 == table ) {
+      return FromRange() ;
+    }
+    return table->relations( to );
+  }
+  
+  /* Method to test if the table does exist or not
+   */
+  bool tableExists()
+  {
+    return 0 == direct() ? false : true ;
+  }
+
 protected:
   
   /// destructor (virtual and protected) 
