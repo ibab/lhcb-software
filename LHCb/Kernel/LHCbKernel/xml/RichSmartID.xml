@@ -3,13 +3,16 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.12 2005-01-07 12:29:18 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.13 2005-01-14 16:46:21 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
   *****************************************************************************
   * $Log: not supported by cvs2svn $
+  * Revision 1.12  2005/01/07 12:29:18  jonrob
+  * Update RichSmartID (backwards compatible)
+  *
   * Revision 1.11  2004/11/29 13:59:49  cattanem
   * fix missing dictionaries
   *
@@ -45,24 +48,24 @@
         <typedef access="PUBLIC" def="Collection" desc="Container of RichSmartIDs" type="std::vector&lt;RichSmartID&gt;"/>
 
         <attribute 
-            desc = "The internal data" 
+            desc = "The internal bit-packed data" 
             name = "key" 
             init = "0" 
-            type = "bitfield">
-            <bitfield desc="The RICH Detector"                   length="1"  name="rich"          setMeth="FALSE" getMeth="FALSE" />
-            <bitfield desc="The RICH panel"                      length="1"  name="panel"         setMeth="FALSE" getMeth="FALSE" />
-            <bitfield desc="The photon detector row number"      length="5"  name="PDRow"         setMeth="FALSE" />
-            <bitfield desc="The photon detector column number"   length="5"  name="PDCol"         setMeth="FALSE" />
-            <bitfield desc="The pixel column number"             length="5"  name="pixelRow"      setMeth="FALSE" />
-            <bitfield desc="The pixel row number"                length="5"  name="pixelCol"      setMeth="FALSE" />
-            <bitfield desc="The sub-pixel number"                length="3"  name="subPixel"      setMeth="FALSE" />
-            <bitfield desc="Rich field is Set"                   length="1"  name="richIsSet"     setMeth="FALSE" />
-            <bitfield desc="Panel field is set"                  length="1"  name="panelIsSet"    setMeth="FALSE" />
-            <bitfield desc="Photon detector row field is set"    length="1"  name="PDRowIsSet"    setMeth="FALSE" />
-            <bitfield desc="Photon detector column field is set" length="1"  name="PDColIsSet"    setMeth="FALSE" />
+            type = "bitfield">    
+            <bitfield desc="Sub-pixel field is set"              length="1"  name="subPixelIsSet" setMeth="FALSE" />
             <bitfield desc="Pixel row field is set"              length="1"  name="pixelRowIsSet" setMeth="FALSE" />
             <bitfield desc="Pixel column field is set"           length="1"  name="pixelColIsSet" setMeth="FALSE" />
-            <bitfield desc="Sub-pixel field is set"              length="1"  name="subPixelIsSet" setMeth="FALSE" />
+            <bitfield desc="Photon detector row field is set"    length="1"  name="PDRowIsSet"    setMeth="FALSE" />
+            <bitfield desc="Photon detector column field is set" length="1"  name="PDColIsSet"    setMeth="FALSE" />
+            <bitfield desc="Panel field is set"                  length="1"  name="panelIsSet"    setMeth="FALSE" />
+            <bitfield desc="Rich field is Set"                   length="1"  name="richIsSet"     setMeth="FALSE" />
+            <bitfield desc="The sub-pixel number"                length="3"  name="subPixel"      setMeth="FALSE" />
+            <bitfield desc="The pixel row number"                length="5"  name="pixelRow"      setMeth="FALSE" />
+            <bitfield desc="The pixel column number"             length="5"  name="pixelCol"      setMeth="FALSE" />
+            <bitfield desc="The photon detector row number"      length="5"  name="PDRow"         setMeth="FALSE" />
+            <bitfield desc="The photon detector column number"   length="5"  name="PDCol"         setMeth="FALSE" />
+            <bitfield desc="The RICH panel"                      length="1"  name="panel"         setMeth="FALSE" getMeth="FALSE" />
+            <bitfield desc="The RICH Detector"                   length="1"  name="rich"          setMeth="FALSE" getMeth="FALSE" />
         </attribute>
 
         <constructor 
@@ -185,7 +188,10 @@
                 type  = "int"  />
             <code>
               const bool ok = ( value &lt; (1 &lt;&lt; shift) );
-              if (!ok) throw GaudiException("Data out of value for given bit field","*RichSmartID*",StatusCode::FAILURE);
+              if (!ok) 
+              {
+                throw GaudiException("Data out of value for given bit field","*RichSmartID*",StatusCode::FAILURE);
+              }
               return ok;
             </code>
         </method>
@@ -221,7 +227,7 @@
                 name  = "rich" 
                 type  = "int"  />
             <code>
-              return ( checkRange(rich,panelBits-richBits) ?
+              return ( checkRange(rich,32-richBits) ?
                        setData( rich, richBits, richMask, richIsSetMask ) : false );
             </code>
         </method>
@@ -235,8 +241,22 @@
                 name  = "panel" 
                 type  = "int"  />
             <code>
-              return ( checkRange(panel,PDRowBits-panelBits) ?
+              return ( checkRange(panel,richBits-panelBits) ?
                        setData( panel, panelBits, panelMask, panelIsSetMask ) : false );
+            </code>
+        </method>
+
+        <method 
+            name = "setPDCol" 
+            desc = "Set the RICH photon detector column identifier" 
+            type = "bool">
+            <arg 
+                const = "TRUE" 
+                name  = "col" 
+                type  = "int"  />
+            <code>
+               return ( checkRange(col,panelBits-PDColBits) ?
+                        setData( col, PDColBits, PDColMask, PDColIsSetMask ) : false );
             </code>
         </method>
 
@@ -255,16 +275,16 @@
         </method>
 
         <method 
-            name = "setPDCol" 
-            desc = "Set the RICH photon detector column identifier" 
+            name = "setPixelCol"
+            desc = "Set the RICH photon detector pixel column identifier"  
             type = "bool">
             <arg 
                 const = "TRUE" 
                 name  = "col" 
                 type  = "int"  />
             <code>
-               return ( checkRange(col,pixelRowBits-PDColBits) ?
-                        setData( col, PDColBits, PDColMask, PDColIsSetMask ) : false );
+               return ( checkRange(col,PDRowBits-pixelColBits) ?
+                        setData( col, pixelColBits, pixelColMask, pixelColIsSetMask ) : false );
             </code>
         </method>
 
@@ -283,20 +303,6 @@
         </method>
 
         <method 
-            name = "setPixelCol"
-            desc = "Set the RICH photon detector pixel column identifier"  
-            type = "bool">
-            <arg 
-                const = "TRUE" 
-                name  = "col" 
-                type  = "int"  />
-            <code>
-               return ( checkRange(col,subPixelBits-pixelColBits) ?
-                        setData( col, pixelColBits, pixelColMask, pixelColIsSetMask ) : false );
-            </code>
-        </method>
-
-        <method 
             name = "setSubPixel"
             desc = "Set the RICH photon detector sub-pixel identifier"  
             type = "bool">
@@ -305,7 +311,7 @@
                 name  = "subpixel" 
                 type  = "int"  />
             <code>
-               return ( checkRange(subpixel,richIsSetBits-subPixelBits) ?
+               return ( checkRange(subpixel,pixelRowBits-subPixelBits) ?
                         setData( subpixel, subPixelBits, subPixelMask, subPixelIsSetMask ) : false );
             </code>
         </method>

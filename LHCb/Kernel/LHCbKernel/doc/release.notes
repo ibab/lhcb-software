@@ -3,7 +3,9 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
 ! 2005-01-07 - Chris Jones
- - Update RichSmartID. Improved constructors and messaging
+ - Update RichSmartID. 
+   + Improved constructors and messaging.
+   + Invert the bit packing order to facilitate easy sorting
 
 !====================== LHCbKernel v5r5 2004-12-08 ========================
 ! 2004-12-08 - Marco Cattaneo
