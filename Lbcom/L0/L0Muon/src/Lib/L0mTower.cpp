@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mTower.cpp,v 1.1 2001-06-07 16:35:55 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mTower.cpp,v 1.2 2001-06-07 19:33:02 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include "L0Muon/L0mTower.h"
@@ -125,10 +125,10 @@ L0mPad* L0mTower::findTrack(std::vector<int> foiX, std::vector<int> foiY) {
 
   HitIndex hd = searchStation(foundHit,4,foiX[4]);
   if(!foundHit) return 0;
-  m_indices[3] = hd;
+  m_indices[4] = hd;
   hd = searchStation(foundHit,3,foiX[3]);
   if(!foundHit) return 0;
-  m_indices[5] = hd;
+  m_indices[3] = hd;
     
   // find the nearest hit in M2
   
