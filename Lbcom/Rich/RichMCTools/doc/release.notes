@@ -4,6 +4,9 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2004-10-13 - Chris Jones
+ - Add new methods to RichMCTruthTool
+
 ! 2004-07-27 - Chris Jones
  - Add flags to turn off individual radiators in RichTrackSegment maker too
 

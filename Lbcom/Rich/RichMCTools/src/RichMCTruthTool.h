@@ -4,8 +4,11 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.9 2004-08-19 14:00:29 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.10 2004-10-13 09:23:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/08/19 14:00:29  jonrob
+ *   Add new method to RichMCTruthTool
+ *
  *  Revision 1.8  2004/07/26 17:56:09  jonrob
  *  Various improvements to the doxygen comments
  *
@@ -36,6 +39,7 @@
 
 // Event model
 #include "Event/TrStoredTrack.h"
+#include "Event/TrgTrack.h"
 #include "Event/MCParticle.h"
 #include "Event/MCTruth.h"
 #include "Event/RichDigit.h"
@@ -91,8 +95,14 @@ public: // methods (and doxygen comments) inherited from interface
   // Find best MCParticle association for a given TrStoredTrack
   const MCParticle * mcParticle( const TrStoredTrack * track ) const;
 
+  // Find best MCParticle association for a given TrgTrack
+  const MCParticle * mcParticle( const TrgTrack * track ) const;
+
   // Determines the particle mass hypothesis for a given TrStoredTrack
   Rich::ParticleIDType mcParticleType( const TrStoredTrack * track ) const;
+
+  // Determines the particle mass hypothesis for a given TrgTrack
+  Rich::ParticleIDType mcParticleType( const TrgTrack * track ) const;
 
   // Determines the particle mass hypothesis for a given MCParticle
   Rich::ParticleIDType mcParticleType( const MCParticle * mcPart ) const;
@@ -102,6 +112,9 @@ public: // methods (and doxygen comments) inherited from interface
 
   // Finds the MCRichTrack associated to a given TrStoredTrack
   const MCRichTrack * mcRichTrack( const TrStoredTrack * track ) const;
+
+  // Finds the MCRichTrack associated to a given TrgTrack
+  const MCRichTrack * mcRichTrack( const TrgTrack * track ) const;
 
   // Finds the MCRichTrack associated to a given MCParticle
   const MCRichTrack * mcRichTrack( const MCParticle * mcPart ) const;
@@ -115,16 +128,7 @@ public: // methods (and doxygen comments) inherited from interface
   // Checks if the given MCRichHit is the result of a background
   bool isBackground( const MCRichHit * hit ) const;
 
-private: // private methods
-
-  /// clean up current linker objects
-  void  cleanUpLinkers();
-
-  /** Loads the MCRichDigits into the TES
-   *
-   * @return Pointer to the MCRichDigits
-   */
-  const MCRichDigits * mcRichDigits() const;
+private: // definitions
 
   /// typedef of the Linker object for MCParticles to MCRichTracks
   typedef LinkedTo<MCRichTrack,MCParticle> MCPartToRichTracks;
@@ -135,6 +139,22 @@ private: // private methods
   typedef LinkedTo<MCRichOpticalPhoton,MCRichHit> MCRichHitToPhoton;
   /// Returns the linker object for MCRichHits to MCRichOpticalPhotons
   MCRichHitToPhoton * mcPhotonLinks() const;
+
+  /// typedef of the Linker object for TrgTracks to MCParticles
+  typedef LinkedTo<MCParticle,TrgTrack> TrgTrackToMCP;
+  ///  Returns the linker object for TrgTracks to MCParticles
+  TrgTrackToMCP * trgTrackToMCPLinks() const;
+
+private: // private methods
+
+  /// clean up current linker objects
+  void  cleanUpLinkers();
+
+  /** Loads the MCRichDigits into the TES
+   *
+   * @return Pointer to the MCRichDigits
+   */
+  const MCRichDigits * mcRichDigits() const;
 
   /// Initialise for a new event
   void InitNewEvent();
@@ -149,11 +169,14 @@ private: // private data
   /// Pointer to MCRichDigits
   mutable MCRichDigits * m_mcRichDigits;
 
-  /// Linker for MCRichTracks
+  /// Linker for MCParticles to MCRichTracks
   mutable MCPartToRichTracks * m_mcTrackLinks;
 
-  /// Linker for MCRichOpticalPhotons
+  /// Linker for MCRichHits to MCRichOpticalPhotons
   mutable MCRichHitToPhoton * m_mcPhotonLinks;
+
+  /// Linker for TrgTracks to MCParticles
+  mutable TrgTrackToMCP * m_trgTrToMCPLinks;
 
   /// Location of MCRichDigits in EDS
   std::string m_mcRichDigitsLocation;
@@ -188,10 +211,20 @@ inline RichMCTruthTool::MCPartToRichTracks * RichMCTruthTool::mcTrackLinks() con
   return m_mcTrackLinks;
 }
 
+inline RichMCTruthTool::TrgTrackToMCP * RichMCTruthTool::trgTrackToMCPLinks() const
+{
+  if ( !m_trgTrToMCPLinks ) {
+    m_trgTrToMCPLinks =
+      new TrgTrackToMCP( evtSvc(), msgSvc(), TrgTrackLocation::Long );
+  }
+  return m_trgTrToMCPLinks;
+}
+
 inline void RichMCTruthTool::cleanUpLinkers()
 {
-  if ( m_mcTrackLinks  ) { delete m_mcTrackLinks;  m_mcTrackLinks  = 0; }
-  if ( m_mcPhotonLinks ) { delete m_mcPhotonLinks; m_mcPhotonLinks = 0; }
+  if ( m_mcTrackLinks    ) { delete m_mcTrackLinks;    m_mcTrackLinks    = 0; }
+  if ( m_mcPhotonLinks   ) { delete m_mcPhotonLinks;   m_mcPhotonLinks   = 0; }
+  if ( m_trgTrToMCPLinks ) { delete m_trgTrToMCPLinks; m_trgTrToMCPLinks = 0; }
 }
 
 inline void RichMCTruthTool::InitNewEvent()

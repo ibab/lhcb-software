@@ -5,8 +5,11 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.5 2004-07-27 16:54:57 jonesc Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.6 2004-10-13 09:23:36 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.5  2004/07/27 16:54:57  jonesc
+ * Add option to turn off individual radiators in RichTrackSegment maker tool
+ *
  * Revision 1.4  2004/07/26 17:56:09  jonrob
  * Various improvements to the doxygen comments
  *
@@ -85,10 +88,7 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
 
   // get MCRichTrack
   const MCRichTrack * track = mcRichTrack(obj);
-  if ( !track ) {
-    Warning("MCRichTrack not available for input data object");
-    return 0;
-  }
+  if ( !track ) { return 0; }
 
   // loop over radiators
   for ( Radiators::const_iterator radiator = m_radiators.begin();
@@ -178,7 +178,9 @@ RichTrSegMakerFromMCRichTracks::mcRichTrack( const ContainedObject * obj ) const
       verbose() << "Input data is of type TrStoredTrack" << endreq;
       track = m_truth->mcRichTrack( trTrack );
     }
-  }
+  } 
+
+  if ( !track ) verbose() << "MCRichTrack not available for input data object" << endreq;
 
   // return final object
   return track;

@@ -5,8 +5,11 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.8 2004-08-20 14:49:24 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.9 2004-10-13 09:23:36 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.8  2004/08/20 14:49:24  jonrob
+ * Add more protection against bad data pointers
+ *
  * Revision 1.7  2004/08/19 14:00:29  jonrob
  *  Add new method to RichMCTruthTool
  *
@@ -34,7 +37,8 @@ RichMCTruthTool::RichMCTruthTool( const std::string& type,
     m_mcRichDigitsDone ( false ),
     m_mcRichDigits     ( 0     ),
     m_mcTrackLinks     ( 0     ),
-    m_mcPhotonLinks    ( 0     )
+    m_mcPhotonLinks    ( 0     ),
+    m_trgTrToMCPLinks  ( 0     )
 {
 
   declareInterface<IRichMCTruthTool>(this);
@@ -90,7 +94,7 @@ StatusCode RichMCTruthTool::finalize()
 }
 
 // Method that handles various Gaudi "software events"
-void RichMCTruthTool::handle ( const Incident& incident ) 
+void RichMCTruthTool::handle ( const Incident& incident )
 {
   if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
 }
@@ -121,11 +125,21 @@ const MCParticle *
 RichMCTruthTool::mcParticle( const TrStoredTrack * track ) const
 {
   if ( track ) {
-    const MCParticle* mcPart = m_trackToMCP->associatedFrom(track);
-    return mcPart;
-  } else { 
-    Warning ( "NULL TrStoredTrack in RichMCTruthTool::mcParticle" );
-    return NULL; 
+    return m_trackToMCP->associatedFrom(track);
+  } else {
+    Warning ( "::mcParticle : NULL TrStoredTrack pointer" );
+    return NULL;
+  }
+}
+
+const MCParticle *
+RichMCTruthTool::mcParticle( const TrgTrack * track ) const
+{
+  if ( track ) {
+    return trgTrackToMCPLinks()->first(track);
+  } else {
+    Warning ( "::mcParticle : NULL TrgTrack pointer" );
+    return NULL;
   }
 }
 
@@ -143,8 +157,14 @@ const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) cons
   return mcDigit;
 }
 
-Rich::ParticleIDType 
+Rich::ParticleIDType
 RichMCTruthTool::mcParticleType( const TrStoredTrack * track ) const
+{
+  return mcParticleType( mcParticle(track) );
+}
+
+Rich::ParticleIDType
+RichMCTruthTool::mcParticleType( const TrgTrack * track ) const
 {
   return mcParticleType( mcParticle(track) );
 }
@@ -162,12 +182,18 @@ RichMCTruthTool::mcRichTrack( const TrStoredTrack * track ) const
 }
 
 const MCRichTrack *
+RichMCTruthTool::mcRichTrack( const TrgTrack * track ) const
+{
+  return mcRichTrack( mcParticle(track) );
+}
+
+const MCRichTrack *
 RichMCTruthTool::mcRichTrack( const MCParticle * mcPart ) const
 {
   return ( mcPart ? mcTrackLinks()->first( mcPart ) : 0 );
 }
 
-const MCRichOpticalPhoton * 
+const MCRichOpticalPhoton *
 RichMCTruthTool::mcOpticalPhoton( const MCRichHit * mcHit ) const
 {
   return ( mcPhotonLinks() ? mcPhotonLinks()->first(mcHit) : 0 );
