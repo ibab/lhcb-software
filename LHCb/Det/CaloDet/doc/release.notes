@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.36 2003-10-06 09:08:12 cattanem Exp $ 
+! $Id: release.notes,v 1.37 2003-11-18 16:21:55 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!======================== CaloDet v6r6p1 2003-11-18 ========================
+! 2003-11-18 - Guy Barrand
+ - Use macro in CaloDet_dll.cpp, to compile on Mac OS X
 
 !========================= CaloDet v6r6 2003-10-06 =========================
 ! 2003-10-06 - Marco Cattaneo
