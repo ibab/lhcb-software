@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2002-09-12 12:16:11 gcorti Exp $
+# $Id: requirements,v 1.10 2003-01-07 08:35:40 ranjard Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciAssociators
-version           v3r0
+version           v3r1
 
 # This template is an example for a standard Algorithm package
 #
@@ -20,7 +20,7 @@ include_dirs     $(DAVINCIASSOCIATORSROOT)
 
 # Used packages. 
 #============================================================================
-use AIDA            v2r* 
+use AIDA            v* 
 use PhysEvent       v7r*   Event
 use TrAssociators   v3r*   Tr 
 use CaloAssociators v3r*   Calo  
