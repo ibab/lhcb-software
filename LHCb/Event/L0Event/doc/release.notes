@@ -1,8 +1,11 @@
-$Id: release.notes,v 1.16 2002-05-07 08:21:10 atsareg Exp $
+$Id: release.notes,v 1.17 2002-06-10 16:03:51 cattanem Exp $
 Package : L0Event
 Package manager : Olivier Callot
 
->>>>>>>>>>>>>>>> L0Event v11r0 <<<<<<<<<<<<<<<<<<<<<<<<
+! 2002-06-10 - Marco Cattaneo
+ - Change version to v12r0, to use EventKernel v2r*
+
+!===================== L0Event v11r0 2002-05-06 =========================
 ! 20020506 Andrei Tsaregorodtsev
   - minor bug fixed in L0MuonCandidate.cpp;
   - removed redundant constants from L0MuonBase.h 

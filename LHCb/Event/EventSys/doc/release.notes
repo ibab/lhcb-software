@@ -1,9 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+! 2002-06-10 - Marco Cattaneo
+ - Increase versions of all packages (changes to EventKernel)
 
-! >>>>>>>>>>>>>>>>>>>>>>>>> EventSys v10r1 <<<<<<<<<<<<<<<<<<<<<
-
+!========================== EventSys v10r1 2002-05-24 =====================
 ! 2002-05-24 - Gloria Corti
  - use Event/PhysEvent v4r1
 
