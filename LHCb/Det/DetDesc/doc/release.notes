@@ -1,14 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.150 2003-07-02 16:00:59 sponce Exp $ 
+! $Id: release.notes,v 1.151 2003-07-03 07:53:21 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
+!======================== DetDesc v12r0 2003-07-02 ========================
 ! 2003-07-02 - Sebastien Ponce
- - fix to avoid the last valgrind warning
+ - fix to avoid the last valgrind warning (fixes Savannah bug #1057)
 
-!======================== DetDesc v12r0 2003-06-30 ========================
 ! 2003-06-30 - Marco Cattaneo
  - Solid.cpp: release application manager after use
 
@@ -20,8 +20,8 @@
  - src/Lib/LVolume.cpp
  - src/Lib/LogVolBase.cpp
  - src/Lib/PVolume.cpp
-  Remove calls for virtal methods from destructors. It should fix the problem with 
-  Panoramix's crash.
+   Remove calls for virtal methods from destructors. 
+   It should fix the problem with Panoramix's crash.
 
 ! 2003-05-14 - Vanya BELYAEV 
  - src/Lib/Solid*.cpp  - remove call for virtual method reset() from destructors
