@@ -1,12 +1,12 @@
 package MuonKernel
 
-version v2r5
+version v2r6
 
 branches cmt src MuonKernel doc 
 
 include_dirs $(MUONKERNELROOT)
 
-use LHCbKernel		v4r*	Kernel
+use LHCbKernel		v5r*	Kernel
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================

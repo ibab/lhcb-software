@@ -1,6 +1,10 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
+!======================= MuonKernel v2r6 2004-07-19 =======================
+! 2004-07-19 - Marco Cattaneo
+ - Move to Gaudi v15 (use LHCbKernel v5r* in requirements)
+
 !======================= MuonKernel v2r5 2003-12-16 =======================
 ! 2003-12-16 - Marco Cattaneo
  - Move to Gaudi v14 (use GaudiKernel v15r* in requirements)
