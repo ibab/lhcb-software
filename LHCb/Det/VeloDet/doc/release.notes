@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.64 2004-12-03 17:48:37 dhcroft Exp $
+! $Id: release.notes,v 1.65 2004-12-06 08:21:05 cattanem Exp $
 package VeloDet
 package manager : Velo Group
+
+!========================= VeloDet v9r2 2004-12-06 =========================
+   >> Requires XmlDDDB v23r1 or greater <<
 
 ! 2004-12-03 - David Hutchcroft
  - Redid the interface again, last time hopefully.
