@@ -22,7 +22,7 @@ use GaudiObjDesc 	v7r3
 use RootHistCnv         v9r4
 
 #-- Database
-use XmlDDDB		v23r1	Det
+use XmlDDDB		v23r2	Det
 use FieldMap		v4r5
 use ParamFiles          v3r10   -no_auto_imports
 use BrunelDQ		v1r0	DQ
@@ -43,7 +43,7 @@ use ITAlgorithms        v14r4	IT
 use ITCheckers          v2r4p1	IT
 
 # Tracking
-use TrFitEvent          v4r8    Tr
+use TrFitEvent          v4r9    Tr
 use TrFitAssociators    v1r3    Tr    
 use TrCheck             v2r8	Tr
 use LongTrack           v1r14	Tr
@@ -57,7 +57,7 @@ use TrKShort		v1r5	Tr
 
 # Trg tracking in Velo
 use TrgTools            v7r1    Trg
-use TrgVelo             v7r0p1  Trg
+use TrgVelo             v7r1    Trg
 use TrgBrunel           v1r2    Trg
 
 # Muon

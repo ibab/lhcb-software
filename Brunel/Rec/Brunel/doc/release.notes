@@ -3,8 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v26r0>2005-02-03 Brunel v26r0</A></H1><PRE>
+</PRE><H1><A NAME=v26r0>2005-02-14 Brunel v26r0</A></H1><PRE>
 - Adapt requirements to Gaudi v16r0, Lbcom v1r0 and LHCb v18r0
+- Use ParamFiles v3r10 (latest version, no side effects for Brunel)
+- Use XmlDDDB v23r2 (fix to Velo sensor numbering)
+- Add VeloSpaceTracking.Offline = true; option to Brunel.opts
 
 </PRE><H1><A NAME=v25r3>2005-01-19 Brunel v25r3</A></H1><PRE>
 - Release notes for Brunel application are now in BrunelSys package

@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v26r0>2005-02-11 Brunel v26r0</A></H1><PRE>
+</PRE><H1><A NAME=v26r0>2005-02-14 Brunel v26r0</A></H1><PRE>
 This version uses Gaudi v16r0, LHCb v18r0 (also CLHEP 1.9, ROOT 4.0)
 Requires input data from Boole v8r* - Cannot process DC04 Boole output.
 Output data incompatible with DC04 versions
@@ -12,12 +12,19 @@ Output data incompatible with DC04 versions
                     OTMonitor, TrExtrapolator, CaloReco, CaloPIDs, RichRecCommon,
                     RichRecTools, RichRecMCTools, RichRecQC (now in LbcomSys)
 - Packages modified: LongTrack v1r14, ITCheckers v2r4p1, RichRecSys v1r15,
-                     TrgTools v7r1, TrgBrunel v1r2, TrCheck v2r8
+                     TrgTools v7r1, TrgBrunel v1r2, TrCheck v2r8, TrgVelo v7r1,
+                     TrFitEvent v4r8
+
+- New tuning:
+  . Use a "new" error matrix calculation in TrgVelo, based on the old one from
+    VeloTrack (TrgVelo v7r1, Brunel.opts) 
 
 - Bug fixes:
   . Changes to avoid duplicate entries in linker tables (AsctToLinker v1r4)
   . Correctly flag Ks tracks in TrAnalyse summary table (TrCheck v2r8)
   . Correctly recognise VeloBack tracks coming from new TrgVelo (TrgBrunel v1r2)
+  . Fix phi measurement in VeloPhiClusterOnTrack (TrFitEvent v4r8) 
+  . Use correct Velo sensor numbers (XmlDDDB v23r2)
 
 - Packaging changes:
   . Backward incompatible modifications for CLHEP 1.9 (LongTrack)
