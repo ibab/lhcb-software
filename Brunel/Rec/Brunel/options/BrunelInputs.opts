@@ -4,13 +4,13 @@
 // SPILLOVER: Uncomment next two lines to add spillover events.
 //--------------------------------------------------------------
 // #include "$SICBCNVROOT/options/Brunel.opts"
-// SpillOverSelector.Input = {"FILE='SICBMC_v245_mbias_1.rawh'"};
+// SpillOverSelector.Input = {"FILE='SICBMC_v247_mbias_1.rawh'"};
 //--------------------------------------------------------------
 // >>> PILEUP now done at generator level, no longer supported in Brunel <<<
 //--------------------------------------------------------------
-// Define the main event data: SICBMC >= v245
+// Define the main event data: SICBMC = v247
 //--------------------------------------------------------------
-EventSelector.Input = {"JOBID='52160'"};
+EventSelector.Input = {"JOBID='65356'"};
 ApplicationMgr.EvtMax = 10;
 //EventSelector.FirstEvent = 6;
 //--------------------------------------------------------------

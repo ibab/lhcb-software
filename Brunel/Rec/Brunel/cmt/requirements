@@ -17,41 +17,43 @@ version_strategy first_choice
 # Gaudi Configuration options
 use GaudiConf    v5
 
+# External libraries not in GaudiSys
+use CERNLIB      v2001
+
 # Gaudi Framework 
 use GaudiSys     v8
 use HbookCnv     v10r1
 
-# Additional external libraries
-use XML          v3r1
-use CERNLIB      v2001
-
 # Brunel utilities
 use BrunelKernel v2     Rec
+
+# Subdetector kernels
+use TrKernel     v5     Tr
+use CaloGen      v2     Calo
 
 # Detector description
 use DetDesc      v7     Det
 use XmlDDDB      v6r1   Det
 use CaloDet      v2r1   Det
-use dbase        v239   SICB
+use dbase        v240   SICB
 
 # Event Model
 use LHCbEvent    v11    Event
 use L0Event      v3     Event
-use ITEvent      v5     Event
-use OTEvent      v5     Event
-use TrEvent      v5     Event
-use CaloEvent    v6     Event
 use VeloEvent    v5     Event
+use ITEvent      v6     Event
+use OTEvent      v6     Event
+use TrEvent      v6     Event
+use CaloEvent    v6     Event
 
 # SicB event data persistency
+use Futio        v11    SICB
 use SicbCnv      v13r1  SICB
 use CaloSicbCnv  v4     SICB
 use L0SicbCnv    v3     SICB
 use MuonSicbCnv  v3     SICB
 use TrSicbCnv    v2     SICB
 use VSicbCnv     v5	SICB
-use Futio        v11    SICB
-use GDUMMY       v1r5   SICB
 
 # L0 trigger
 use L0Calo       v2     L0
@@ -59,18 +61,16 @@ use L0Muon       v3r1   L0
 use L0DU         v2     L0
 
 # Calorimeter digitisation
-use CaloGen      v2     Calo
 use CaloAlgs     v3     Calo
 
 # Tracking
-use TrKernel     v5     Tr
-use ITAlgorithms v5	IT
-use OTAlgorithms v5	OT
-use TrAlgorithms v5	Tr
+use ITAlgorithms v6	IT
+use OTAlgorithms v6	OT
+use TrAlgorithms v6	Tr
 
 # SICBDST packages
 use Futil        v10r3  SICB
-use detdes       v13    SICB
+use detdes       v14    SICB
 use recevt       v3r4   SICB
 
 use digmuon      v4     SICB

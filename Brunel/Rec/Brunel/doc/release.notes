@@ -3,6 +3,54 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
+! 20010830 Brunel v6 (MC)
+  This version is to be used for data produced with SICBMC v247/dbase v240
+  ("LHCB-classic", tracker cross-geometry)
+
+  In cmt/requirements
+
+  use dbase v240 SICB
+    20010821 - dbase v240
+     cdf/     changes for tracking cross geometry, 
+              increase thickness of OT stations to 3%,
+              remove stations 4 and 11,
+              add pipe7.22.cdf (new pipe from G.Corti)
+     standard.stream - reads pipe7.22.cdf             
+    20010625 - dbase v239r1
+     beamrawh3_v2.cdf   - this file must be read in to produce RAWH3: 
+                          the luminosity is fixed to 5.0x10^32
+     standard.stream    - reads beamrawh3_v2.cdf
+
+  use detdes v14 SICB
+   20010821 - detdes v14 (M.Needham)
+     backwards incompatible changes for new tracker cross geometry.
+
+  use ITEvent      v6     Event
+    Changes for new cross geometry
+    Remove triple gem code
+
+  use OTEvent      v6     Event 
+    backwards incomtpatible changes for cross geometry  
+    insure channels number from one everywhere
+    reserve space in internal vector of OTLayer object - should save time
+
+  use TrEvent      v6     Event
+    add copy constructer to TrTrueTrack
+    retune ITHitOnTrack error
+
+  use ITAlgorithms v6     IT
+    new version for cross geometry
+
+  use OTAlgorithms v6     OT
+    Changes for the cross geometry of OT
+    Remove some unnecessary calls to msgstream in tools
+    Changes in OTDigitize to speed things up (suggested by Markus)
+    Delegate new to tool in OTHitsCreator
+
+  use TrAlgorithms v6     Tr
+    Changes for cross geometry, clean-up of code
+
+! =================================================================
 ! 20010824 Brunel v5r1 (MC)
 
    In cmt/requirements
