@@ -81,9 +81,9 @@ VeloMonitor::VeloMonitor(const std::string& name, ISvcLocator* pSvcLocator)
 
 StatusCode VeloMonitor::initialize() {
   
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
 
-  log << MSG::INFO << ">>> Initialize" << endmsg;
+  log << MSG::DEBUG << ">>> Initialize" << endmsg;
 
   m_NEvent=0;
 
@@ -125,8 +125,8 @@ StatusCode VeloMonitor::initialize() {
 
 StatusCode VeloMonitor::execute() {
   
-  MsgStream log(messageService(), name());
-  log << MSG::INFO << ">>> execute" << endmsg;
+  MsgStream log(msgSvc(), name());
+  log << MSG::DEBUG << ">>> execute" << endmsg;
 
   m_NEvent++;
 
@@ -147,13 +147,13 @@ StatusCode VeloMonitor::execute() {
   } else {
     log << MSG::ERROR << ">>> Skipping monitor event loop" << endmsg;
   }
-  log << MSG::INFO << ">>> execute complete" << endmsg;
+  log << MSG::DEBUG << ">>> execute complete" << endmsg;
   return StatusCode::SUCCESS;
 }
 
 StatusCode VeloMonitor::finalize() {
   
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
   
   // Set printout level for following messages
   log << MSG::INFO;
@@ -167,25 +167,33 @@ StatusCode VeloMonitor::finalize() {
   m_nFD/=m_NEvent; m_nFD2/=m_NEvent; double errnFD=sqrt(m_nFD2-m_nFD);
   m_nVC/=m_NEvent; m_nVC2/=m_NEvent; double errnVC=sqrt(m_nVC2-m_nVC);
 
-  log << "-----------------------------------------------------------------" << endreq;
-  log << "       Velo Monitoring Table " << endreq;
-  log << "-----------------------------------------------------------------" << endreq;
-  log << "Number of Velo MCVeloHits   / Event " << m_nMCVH <<"+/-" << errnMCVH << endreq;
-  log << "Number of Pileup MCVeloHits / Event " << m_nMCPH <<"+/-" << errnMCPH << endreq;
-  log << "Number of MCVeloFEs         / Event " << m_nMCFE <<"+/-" << errnMCFE << endreq;
+  log << "-----------------------------------------------------------------"
+      << endmsg;
+  log << "       Velo Monitoring Table " << endmsg;
+  log << "-----------------------------------------------------------------"
+      << endmsg;
+  log << "Number of Velo MCVeloHits   / Event " << m_nMCVH <<"+/-" << errnMCVH
+      << endmsg;
+  log << "Number of Pileup MCVeloHits / Event " << m_nMCPH <<"+/-" << errnMCPH
+      << endmsg;
+  log << "Number of MCVeloFEs         / Event " << m_nMCFE <<"+/-" << errnMCFE
+      << endmsg;
   if ((m_nMCFEs+m_nMCFEn+m_nMCFEo)>0) {
     log << "FES from signal " << m_nMCFEs/(m_nMCFEs+m_nMCFEn+m_nMCFEo) << "%\n"
 	<< "                                    noise " 
 	<< m_nMCFEn/(m_nMCFEs+m_nMCFEn+m_nMCFEo) << "%\n"
 	<< "                     spillover / coupling " 
-	<< m_nMCFEo/(m_nMCFEs+m_nMCFEn+m_nMCFEo) << "%"<< endreq; 
+	<< m_nMCFEo/(m_nMCFEs+m_nMCFEn+m_nMCFEo) << "%"<< endmsg; 
   } else {
-    log << "No FEs found" << endreq;
+    log << "No FEs found" << endmsg;
   }
-  log << "Number of VeloFullDigits    / Event " << m_nFD <<"+/-" << errnFD << endreq;
-  log << "Number of VeloClusters      / Event " << m_nVC <<"+/-" << errnVC << endreq;
+  log << "Number of VeloFullDigits    / Event " << m_nFD <<"+/-" << errnFD
+      << endmsg;
+  log << "Number of VeloClusters      / Event " << m_nVC <<"+/-" << errnVC
+      << endmsg;
 
-  log << "-----------------------------------------------------------------"  << endreq;
+  log << "-----------------------------------------------------------------"
+      << endmsg;
 
 
   return StatusCode::SUCCESS;
@@ -198,7 +206,8 @@ StatusCode VeloMonitor::retrieveData() {
     m_mchits=hits;
     log << MSG::DEBUG << "Retrieving " << MCVeloHitLocation::Default << endmsg;
     if ( 0 ==m_mchits ) { 
-      log << MSG::ERROR << " ----  No MCVeloHits container retrieved --- " << endmsg;
+      log << MSG::ERROR << " ----  No MCVeloHits container retrieved --- "
+          << endmsg;
       m_testMCVeloHit=false;
     }
   }
@@ -208,7 +217,8 @@ StatusCode VeloMonitor::retrieveData() {
     m_pumchits=puhits;
     log << MSG::DEBUG << "Retrieving " << MCVeloHitLocation::PuVeto << endmsg;
     if ( 0 ==m_pumchits ) { 
-      log << MSG::ERROR << " ----  No PileUp MCVeloHits container retrieved --- " << endmsg;
+      log << MSG::ERROR <<" ----  No PileUp MCVeloHits container retrieved --- "
+          << endmsg;
       m_testPUMCVeloHit=false;
     }
   }
@@ -218,51 +228,70 @@ StatusCode VeloMonitor::retrieveData() {
     m_mcfes=fes;
     log << MSG::DEBUG << "Retrieving " << MCVeloFELocation::Default << endmsg;
     if ( 0 ==m_mcfes ) { 
-      log << MSG::ERROR << " ----  No MCVeloFEs container retrieved --- " << endmsg;
+      log << MSG::ERROR << " ----  No MCVeloFEs container retrieved --- "
+          << endmsg;
       m_testMCVeloFE=false;
     }
   }
   if (m_testVeloFullDigit) {
-    SmartDataPtr<VeloFullDigits> fulldigits(eventSvc(), VeloFullDigitLocation::Default );
+    SmartDataPtr<VeloFullDigits> fulldigits( eventSvc(),
+                                             VeloFullDigitLocation::Default );
     m_digits=fulldigits;
-    log << MSG::DEBUG << "Retrieving " << VeloFullDigitLocation::Default << endmsg;
+    log << MSG::DEBUG << "Retrieving " << VeloFullDigitLocation::Default
+        << endmsg;
     if ( 0 ==m_digits ) { 
-      log << MSG::ERROR << " ----  No VeloFullDigits container retrieved --- " << endmsg;
+      log << MSG::ERROR << " ----  No VeloFullDigits container retrieved --- "
+          << endmsg;
       m_testVeloFullDigit=false;
     }
   }
   if (m_testVeloCluster) {
-    SmartDataPtr<VeloClusters> clusters(eventSvc(), VeloClusterLocation::Default );
+    SmartDataPtr<VeloClusters> clusters( eventSvc(),
+                                         VeloClusterLocation::Default );
     m_clusters=clusters;
-    log << MSG::DEBUG << "Retrieving " << VeloClusterLocation::Default << endmsg;
+    log << MSG::DEBUG << "Retrieving " << VeloClusterLocation::Default <<endmsg;
     if ( 0 == m_clusters ) { 
-      log << MSG::ERROR << " ----  No VeloClusters container retrieved --- " << endmsg;
+      log << MSG::ERROR << " ----  No VeloClusters container retrieved --- "
+          << endmsg;
       m_testVeloCluster=false;
     }
   }
   
   if (m_printout>m_NEvent){
-    log << MSG::INFO << "***************************************************" << endmsg;
-    if (m_testMCVeloHit) log << MSG::INFO << "********* Number of MCVeloHits found        " <<m_mchits->size() << "**********" << endmsg;
-    if (m_testPUMCVeloHit) log << MSG::INFO << "********* Number of PileUp MCVeloHits found " <<m_pumchits->size() << "**********" << endmsg;
-    if (m_testMCVeloFE) log << MSG::INFO << "********* Number of MCVeloFEs found         " <<m_mcfes->size() << "**********" << endmsg;
-    if (m_testVeloFullDigit) log << MSG::INFO << "********* Number of VeloFullDigits found    " <<m_digits->size() << "**********" << endmsg;
-    if (m_testVeloCluster) log << MSG::INFO << "********* Number of VeloClusters found      " <<m_clusters->size() << "**********" << endmsg;
-    log << MSG::INFO << "***************************************************" << endmsg;
+    log << MSG::INFO << "***************************************************"
+        << endmsg;
+    if (m_testMCVeloHit) 
+      log << MSG::INFO << "********* Number of MCVeloHits found        " 
+          << m_mchits->size() << "**********" << endmsg;
+    if (m_testPUMCVeloHit) 
+      log << MSG::INFO << "********* Number of PileUp MCVeloHits found "
+          << m_pumchits->size() << "**********" << endmsg;
+    if (m_testMCVeloFE) 
+      log << MSG::INFO << "********* Number of MCVeloFEs found         "
+          << m_mcfes->size() << "**********" << endmsg;
+    if (m_testVeloFullDigit)
+      log << MSG::INFO << "********* Number of VeloFullDigits found    "
+          << m_digits->size() << "**********" << endmsg;
+    if (m_testVeloCluster)
+      log << MSG::INFO << "********* Number of VeloClusters found      "
+          << m_clusters->size() << "**********" << endmsg;
+    log << MSG::INFO << "***************************************************"
+        << endmsg;
   }
   return StatusCode::SUCCESS;
 }
 
 StatusCode VeloMonitor::bookHistograms() {
 
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
 
   if (m_testMCVeloHit) {
     // MCVeloHit
     m_MCVHNHits = histoSvc()->
       book("velo/1", "Number of MCVeloHits per event", 100, 0., 3000.);
     m_MCVHEntryZX = histoSvc()->
-      book("velo/4", "Particle entry point in Si ZX (cm)", 1000, -20., 80.,50,-10.,10.);
+      book("velo/4", "Particle entry point in Si ZX (cm)", 
+           1000, -20., 80.,50,-10.,10.);
     if (m_detailedMonitor) {
       m_MCVHEnergy = histoSvc()->
 	book("velo/2", "Energy deposited in Si (eV)", 100, 0., 300000.);
@@ -271,13 +300,13 @@ StatusCode VeloMonitor::bookHistograms() {
       m_Thomas2 = histoSvc()->
 	book("velo/1002", "Energy deposited in Si (MeV) Z=70cm", 1000, 0., 10.);
       m_MCVHEntryXY = histoSvc()->
-	book("velo/3", "Particle entry point in Si XY (cm)", 50, -10, 10.,50,-10.,10.);
+	book("velo/3", "Particle entry point in Si XY (cm)", 50, -10,10.,50,-10.,10.);
       m_MCVHExitXY = histoSvc()->
 	book("velo/5", "Particle exit point in Si XY (cm)", 50, -10, 10.,50,-10.,10.);
       m_MCVHExitZX = histoSvc()->
-	book("velo/6", "Particle exit point in Si ZX (cm)", 1000, -20., 80.,50,-10.,10.);
+	book("velo/6", "Particle exit point in Si ZX (cm)",1000,-20.,80.,50,-10.,10.);
       m_MCVHSensorZ = histoSvc()->
-	book("velo/7", "Z position and Sensor number (cm)", 1000, -20., 80.,200,0.,100.);
+	book("velo/7", "Z position and Sensor number (cm)",1000,-20.,80.,200,0.,100.);
       m_MCVHTOF = histoSvc()->
 	book("velo/8", "Time Of Flight (nS)", 100, 0., 5.);
       m_MCPEnergy = histoSvc()->
@@ -289,18 +318,23 @@ StatusCode VeloMonitor::bookHistograms() {
     m_MCVHPNHits = histoSvc()->
       book("velo/51", "PU:Number of MCVeloHits per event", 100, 0., 2000.);
     m_MCVHPEntryZX = histoSvc()->
-      book("velo/54", "PU:Particle entry point in Si ZX (cm)", 1000, -20., 80.,50,-10.,10.);
+      book("velo/54", "PU:Particle entry point in Si ZX (cm)",
+           1000, -20., 80.,50,-10.,10.);
     if (m_detailedMonitor) {
       m_MCVHPEnergy = histoSvc()->
 	book("velo/52", "PU:Energy deposited in Si (eV)", 100, 0., 300000.);
       m_MCVHPEntryXY = histoSvc()->
-	book("velo/53", "PU:Particle entry point in Si XY (cm)", 50, -10, 10.,50,-10.,10.);
+	book("velo/53", "PU:Particle entry point in Si XY (cm)",
+       50, -10, 10.,50,-10.,10.);
       m_MCVHPExitXY = histoSvc()->
-	book("velo/55", "PU:Particle exit point in Si XY (cm)", 50, -10, 10.,50,-10.,10.);
+	book("velo/55", "PU:Particle exit point in Si XY (cm)",
+       50, -10, 10.,50,-10.,10.);
       m_MCVHPExitZX = histoSvc()->
-	book("velo/56", "PU:Particle exit point in Si ZX (cm)", 1000, -20., 80.,50,-10.,10.);
+  book("velo/56", "PU:Particle exit point in Si ZX (cm)", 
+       1000, -20., 80.,50,-10.,10.);
       m_MCVHPSensorZ = histoSvc()->
-	book("velo/57", "PU:Z position and Sensor number (cm)", 1000, -20., 80.,200,0.,100.);
+	book("velo/57", "PU:Z position and Sensor number (cm)", 
+       1000, -20., 80.,200,0.,100.);
       m_MCVHPTOF = histoSvc()->
 	book("velo/58", "PU:Time Of Flight (nS)", 100, 0., 5.);
       m_MCPUPEnergy = histoSvc()->
@@ -317,49 +351,71 @@ StatusCode VeloMonitor::bookHistograms() {
     m_MCVFECharge = histoSvc()->
       book("velo/103", "Charge in Si strip (electrons)", 100, -10000., 50000.);
     m_MCVFECharge_s = histoSvc()->
-      book("velo/104", "signal dominated -  Charge in Si strip (electrons)", 100, -10000., 50000.);
+      book("velo/104", "signal dominated -  Charge in Si strip (electrons)", 
+           100, -10000., 50000.);
     m_MCVFECharge_n = histoSvc()->
-      book("velo/105", "noise dominated - Charge in Si strip (electrons)", 100, -10000., 50000.);
+      book("velo/105", "noise dominated - Charge in Si strip (electrons)",
+           100, -10000., 50000.);
     m_MCVFECharge_o = histoSvc()->
-      book("velo/106", "other dominated - Charge in Si strip (electrons)", 100, -10000., 50000.);
+      book("velo/106", "other dominated - Charge in Si strip (electrons)",
+           100, -10000., 50000.);
     m_MCVFESignal = histoSvc()->
-      book("velo/107", "Signal deposited in Si strip (electrons)", 100, 0., 50000.);
+      book("velo/107", "Signal deposited in Si strip (electrons)",
+           100, 0., 50000.);
     m_MCVFESignal_s = histoSvc()->
-      book("velo/108", "signal dominated - Signal deposited in Si strip (electrons)", 100, 0., 50000.);
+      book("velo/108", 
+           "signal dominated - Signal deposited in Si strip (electrons)",
+           100, 0., 50000.);
     m_MCVFESignal_n = histoSvc()->
-      book("velo/109", "noise dominated - Signal deposited in Si strip (electrons)", 100, 0., 50000.);
+      book("velo/109",
+           "noise dominated - Signal deposited in Si strip (electrons)",
+           100, 0., 50000.);
     m_MCVFESignal_o = histoSvc()->
-      book("velo/110", "other dominated - Signal deposited in Si strip (electrons)", 100, 0., 50000.);
+      book("velo/110",
+           "other dominated - Signal deposited in Si strip (electrons)",
+           100, 0., 50000.);
     m_MCVFENoise = histoSvc()->
-      book("velo/111", "Noise added in Si strip (electrons)", 100, -10000., 10000.);
+      book("velo/111", "Noise added in Si strip (electrons)",
+           100, -10000., 10000.);
     m_MCVFENoise_s = histoSvc()->
-      book("velo/112", "signal dominated - Noise added in Si strip (electrons)", 100, -10000., 10000.);
+      book("velo/112", "signal dominated - Noise added in Si strip (electrons)",
+           100, -10000., 10000.);
     m_MCVFENoise_n = histoSvc()->
-      book("velo/113", "noise dominated - Noise added in Si strip (electrons)", 100, -10000., 10000.);
+      book("velo/113", "noise dominated - Noise added in Si strip (electrons)",
+           100, -10000., 10000.);
     m_MCVFENoise_o = histoSvc()->
-      book("velo/114", "other dominated - Noise added in Si strip (electrons)", 100, -10000., 10000.);
+      book("velo/114", "other dominated - Noise added in Si strip (electrons)",
+           100, -10000., 10000.);
     m_MCVFECMNoise = histoSvc()->
-      book("velo/115", "CM noise added in Si strip (electrons)", 100, -20000., 20000.); 
+      book("velo/115", "CM noise added in Si strip (electrons)",
+           100, -20000., 20000.); 
     m_MCVFEPedestal = histoSvc()->
-      book("velo/116", "Pedestal added in Si strip (electrons)", 100, 0., 50000.);
+      book("velo/116", "Pedestal added in Si strip (electrons)",
+           100, 0., 50000.);
     m_MCVFESensorStrip = histoSvc()->
       book("velo/117", "Sensor and strip number", 100, 0., 100.,50,0.,5000.);
     m_MCVFESensorStrip_s = histoSvc()->
-      book("velo/118", "signal dominated - Sensor and strip number", 100, 0., 100.,50,0.,5000.);
+      book("velo/118", "signal dominated - Sensor and strip number",
+           100, 0., 100.,50,0.,5000.);
     m_MCVFESensorStrip_n = histoSvc()->
-      book("velo/119", "noise dominated - Sensor and strip number", 100, 0., 100.,50,0.,5000.);
+      book("velo/119", "noise dominated - Sensor and strip number",
+           100, 0., 100.,50,0.,5000.);
     m_MCVFESensorStrip_o = histoSvc()->
-      book("velo/120", "other dominated -  Sensor and strip number", 100, 0., 100.,50,0.,5000.);
+      book("velo/120", "other dominated -  Sensor and strip number",
+           100, 0., 100.,50,0.,5000.);
     m_MCVFEMCHitsSignal= histoSvc()->
       book("velo/121", "MC hit signal deposited in FE", 100, 0., 50000);
     m_MCVFEMCHitsTotalSignal= histoSvc()->
       book("velo/122", "MC total signal deposited in FE", 100, 0., 50000);
     m_MCVFEMCHitsTotalSignal_s= histoSvc()->
-      book("velo/123", "signal dominated - MC total signal deposited in FE", 100, 0., 50000);
+      book("velo/123", "signal dominated - MC total signal deposited in FE",
+           100, 0., 50000);
     m_MCVFEMCHitsTotalSignal_n= histoSvc()->
-      book("velo/124", "noise dominated -  MC total signal deposited in FE", 100, 0., 50000);
+      book("velo/124", "noise dominated -  MC total signal deposited in FE",
+           100, 0., 50000);
     m_MCVFEMCHitsTotalSignal_o= histoSvc()->
-      book("velo/125", "other dominated - MC total signal deposited in FE", 100, 0., 50000);
+      book("velo/125", "other dominated - MC total signal deposited in FE",
+           100, 0., 50000);
   }
   if (m_testVeloFullDigit && m_detailedMonitor) {
     // VeloFullDigit
@@ -392,16 +448,20 @@ StatusCode VeloMonitor::bookHistograms() {
     m_VCNHits = histoSvc()->
       book("velo/301", "Number of VeloClusters per event", 50, 0., 3000.);
     m_VCZR = histoSvc()->
-      book("velo/314", "Cluster R position vs. Z (cm)", 1000, -20., 80.,50,0.,5.);
+      book("velo/314", "Cluster R position vs. Z (cm)",1000,-20., 80.,50,0.,5.);
     m_VCZPhi = histoSvc()->
-      book("velo/315", "Cluster Phi position vs. Z (cm)", 1000, -20., 80.,60,-180.,180.);
+      book("velo/315", "Cluster Phi position vs. Z (cm)",
+           1000, -20., 80.,60,-180.,180.);
     if (m_detailedMonitor) {
       m_VCNHits_s = histoSvc()->
-	book("velo/302", "signal dominated - Number of VeloClusters per event", 50, 0., 3000.);
+	book("velo/302", "signal dominated - Number of VeloClusters per event",
+       50, 0., 3000.);
       m_VCNHits_n = histoSvc()->
-	book("velo/303", "noise dominated - Number of VeloClusters per event", 50, 0., 3000.);
+	book("velo/303", "noise dominated - Number of VeloClusters per event",
+       50, 0., 3000.);
       m_VCNHits_o = histoSvc()->
-	book("velo/304", "other dominated - Number of VeloClusters per event", 50, 0., 3000.);
+	book("velo/304", "other dominated - Number of VeloClusters per event",
+       50, 0., 3000.);
 
       m_VCADCSum = histoSvc()->
 	book("velo/305", "ADC sum", 256, -0.5, 255.5);
@@ -415,11 +475,11 @@ StatusCode VeloMonitor::bookHistograms() {
       m_VCSize = histoSvc()->
 	book("velo/309", "number of strips in cluster", 6, -0.5, 5.5);
       m_VCSize_s = histoSvc()->
-	book("velo/310", "signal dominated - number of strips in cluster", 6, -0.5, 5.5);
+	book("velo/310", "signal dominated - number of strips in cluster",6,-0.5,5.5);
       m_VCSize_n = histoSvc()->
-	book("velo/311", "noise dominated - number of strips in cluster", 6, -0.5, 5.5);
+	book("velo/311", "noise dominated - number of strips in cluster",6,-0.5, 5.5);
       m_VCSize_o = histoSvc()->
-	book("velo/312", "other dominated - number of strips in cluster", 6, -0.5, 5.5);
+	book("velo/312", "other dominated - number of strips in cluster",6,-0.5, 5.5);
 
       m_VCSensorStrip = histoSvc()->
 	book("velo/313", "Sensor and first strip number", 100, 0., 100.,50,0.,5000.);
@@ -433,11 +493,14 @@ StatusCode VeloMonitor::bookHistograms() {
     m_RResd = histoSvc()->
       book("velo/405", "R Sensor resolution (strip fraction)", 100, -5., +5.);
     m_RRes1s = histoSvc()->
-      book("velo/407", "R Sensor resolution 1 strip cluster (microns)", 50, -50., +50.);
+      book("velo/407", "R Sensor resolution 1 strip cluster (microns)",
+           50, -50., +50.);
     m_RRes2s = histoSvc()->
-      book("velo/408", "R Sensor resolution 2 strip cluster (microns)", 50, -50., +50.);
+      book("velo/408", "R Sensor resolution 2 strip cluster (microns)",
+           50, -50., +50.);
     m_RRes3s = histoSvc()->
-      book("velo/410", "R Sensor resolution 3 strip cluster (microns)", 50, -50., +50.);
+      book("velo/410", "R Sensor resolution 3 strip cluster (microns)",
+           50, -50., +50.);
     m_RCluster = histoSvc()->
       book("velo/409", "R Sensor N strips in cluster", 6, -0.5, 5.5);
 
@@ -455,16 +518,17 @@ StatusCode VeloMonitor::bookHistograms() {
       book("velo/424", "Track theta 3 strip (radians)", 50, 0., 0.75);
 
     m_RResAngle= histoSvc()->
-      book("velo/404", "R Sensor resolution vs track theta", 100, -20., +20., 10, -0.0, +0.25);
+      book("velo/404", "R Sensor resolution vs track theta",
+           100, -20., +20., 10, -0.0, +0.25);
 
   }
   return StatusCode::SUCCESS;
 }
 StatusCode VeloMonitor::testMCVeloHit() {
 
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
  
-  log << MSG::DEBUG << "testMCVeloHit" << endreq;
+  log << MSG::DEBUG << "testMCVeloHit" << endmsg;
   //  Define an iterator to the MC VELO hit vector and loop through it  
   MCVeloHits::iterator it;
 
@@ -524,7 +588,7 @@ StatusCode VeloMonitor::testMCVeloHit() {
 
 StatusCode VeloMonitor::testPileUpMCVeloHit() {
 
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
 
   //  Define an iterator to the MC VELO hit vector and loop through it  
   MCVeloHits::iterator it;
@@ -574,7 +638,7 @@ StatusCode VeloMonitor::testPileUpMCVeloHit() {
 
 StatusCode VeloMonitor::testMCVeloFE() {
 
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
 
   m_MCVFENHits->fill(m_mcfes->size(),1.);
   //  Define an iterator to the MC VELO FE vector and loop through it  
@@ -613,9 +677,12 @@ StatusCode VeloMonitor::testMCVeloFE() {
     m_MCVFECMNoise->fill((*itdv)->addedCMNoise(),1.);
     m_MCVFEPedestal->fill((*itdv)->addedPedestal(),1.);
     m_MCVFESensorStrip->fill((*itdv)->sensor(),(*itdv)->strip(),1.0);
-    if (signal) m_MCVFESensorStrip_s->fill((*itdv)->sensor(),(*itdv)->strip(),1.0);
-    if (noise)  m_MCVFESensorStrip_n->fill((*itdv)->sensor(),(*itdv)->strip(),1.0);
-    if (other)  m_MCVFESensorStrip_o->fill((*itdv)->sensor(),(*itdv)->strip(),1.0);
+    if (signal) m_MCVFESensorStrip_s->fill( (*itdv)->sensor(),
+                                            (*itdv)->strip(),1.0);
+    if (noise)  m_MCVFESensorStrip_n->fill( (*itdv)->sensor(),
+                                            (*itdv)->strip(),1.0);
+    if (other)  m_MCVFESensorStrip_o->fill( (*itdv)->sensor(),
+                                            (*itdv)->strip(),1.0);
 
     // access MCHit(s) from which MC FE was made and write out energy
     SmartRefVector<MCVeloHit> myMCVeloHits=(*itdv)->mcVeloHits();
@@ -628,9 +695,12 @@ StatusCode VeloMonitor::testMCVeloFE() {
 	"size " << myMCVeloHits.size() << endmsg; 
     }
     m_MCVFEMCHits->fill(myMCVeloHits.size(),1.);
-    if (signal) m_MCVFESensorStrip_s->fill((*itdv)->sensor(),(*itdv)->strip(),1.0);
-    if (noise)  m_MCVFESensorStrip_n->fill((*itdv)->sensor(),(*itdv)->strip(),1.0);
-    if (other)  m_MCVFESensorStrip_o->fill((*itdv)->sensor(),(*itdv)->strip(),1.0);
+    if (signal) m_MCVFESensorStrip_s->fill( (*itdv)->sensor(),
+                                            (*itdv)->strip(),1.0);
+    if (noise)  m_MCVFESensorStrip_n->fill( (*itdv)->sensor(),
+                                            (*itdv)->strip(),1.0);
+    if (other)  m_MCVFESensorStrip_o->fill( (*itdv)->sensor(),
+                                            (*itdv)->strip(),1.0);
 
     double totalSignal=0.;
     itch=myMCVeloHitscharge.begin();
@@ -655,7 +725,7 @@ StatusCode VeloMonitor::testMCVeloFE() {
 
 StatusCode VeloMonitor::testVeloFullDigit() {
 
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
 
   m_VDNHits->fill(m_digits->size(),1.);
 
@@ -692,7 +762,7 @@ StatusCode VeloMonitor::testVeloFullDigit() {
 
 StatusCode VeloMonitor::testVeloCluster() {
 
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
 
   //  Define an iterator to the VELO cluster vector and loop through it  
   VeloClusters::iterator itcv;
@@ -772,7 +842,7 @@ VeloChannelID VeloMonitor::weightedMean(VeloCluster* cluster, double& fraction){
 }
 
 StatusCode VeloMonitor::basicMonitor() {
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
 
   // fill a few basic histograms and store numbers for the monitoring table
 
@@ -780,10 +850,11 @@ StatusCode VeloMonitor::basicMonitor() {
   // MCVeloHits
   if (m_testMCVeloHit) {
     if ( 0 == m_mchits ) { 
-      log << MSG::ERROR << " ----  No MCVeloHits container retrieved --- " << endmsg;
+      log << MSG::ERROR << " ----  No MCVeloHits container retrieved --- "
+          << endmsg;
       return StatusCode::FAILURE;
     } else {
-      log << MSG::DEBUG << "Retrieved MCVeloHits in standatd monitor()" << endmsg;
+      log << MSG::DEBUG << "Retrieved MCVeloHits in standatd monitor()"<<endmsg;
     }
     size=m_mchits->size(); m_nMCVH+= size; m_nMCVH2+= size*size;
     m_MCVHNHits->fill(size,1.0);
@@ -795,10 +866,12 @@ StatusCode VeloMonitor::basicMonitor() {
   if (m_testPUMCVeloHit) {
     // MCVeloPileupHits
     if ( 0 == m_pumchits ) { 
-      log << MSG::ERROR << " ----  No PileUp MCVeloHits container retrieved --- " << endmsg;
+      log << MSG::ERROR <<" ----  No PileUp MCVeloHits container retrieved --- "
+          << endmsg;
       return StatusCode::FAILURE;
     } else {
-      log << MSG::DEBUG << "Retrieved PileUp MCVeloHits in standatd monitor()" << endmsg;
+      log << MSG::DEBUG << "Retrieved PileUp MCVeloHits in standatd monitor()"
+          << endmsg;
     }
     size=m_pumchits->size(); m_nMCPH+= size; m_nMCPH2+= size*size; 
     m_MCVHPNHits->fill(size,1.0);
@@ -810,10 +883,11 @@ StatusCode VeloMonitor::basicMonitor() {
   // MCVeloFEs
   if (m_testMCVeloFE) {
     if ( 0== m_mcfes ) { 
-      log << MSG::ERROR << " ----  No MCVeloFEs container retrieved --- " << endmsg;
+      log << MSG::ERROR << " ----  No MCVeloFEs container retrieved --- "
+          << endmsg;
       return StatusCode::FAILURE;
     } else {
-      log << MSG::DEBUG << "Retrieved MCVeloFEs in standatd monitor()" << endmsg;
+      log << MSG::DEBUG << "Retrieved MCVeloFEs in standatd monitor()" <<endmsg;
     }
     size=m_mcfes->size(); m_nMCFE+= size; m_nMCFE2+= size*size; 
     // split FEs into sub-categories
@@ -822,7 +896,8 @@ StatusCode VeloMonitor::basicMonitor() {
     for (itdv=m_mcfes->begin(); itdv!=m_mcfes->end(); itdv++) {
       // mainly signal or spillover/coupling or noise ?
       bool noise=false, signal=false, other=false;
-      if (fabs((*itdv)->addedNoise()) > fabs((*itdv)->addedSignal())) noise=true; // noise
+      if (fabs((*itdv)->addedNoise()) > fabs((*itdv)->addedSignal())) 
+        noise=true; // noise
       MCVeloFE* FE = (*itdv);
       FEType(FE, signal,noise,other); 
       if (signal) m_nMCFEs++; 
@@ -833,20 +908,24 @@ StatusCode VeloMonitor::basicMonitor() {
   //VeloFullDigits
   if (m_testVeloFullDigit) {
     if ( 0== m_digits ) { 
-      log << MSG::ERROR << " ----  No VeloFullDigits container retrieved --- " << endmsg;
+      log << MSG::ERROR << " ----  No VeloFullDigits container retrieved --- "
+          << endmsg;
       return StatusCode::FAILURE;
     } else {
-      log << MSG::DEBUG << "Retrieved VeloFullDigits in standatd monitor()" << endmsg;
+      log << MSG::DEBUG << "Retrieved VeloFullDigits in standatd monitor()"
+          << endmsg;
     }
     size=m_digits->size(); m_nFD+= size; m_nFD2+= size*size; 
   }
   //VeloClusters
   if (m_testVeloCluster) {
     if ( 0== m_clusters ) { 
-      log << MSG::ERROR << " ----  No VeloCluster container retrieved --- " << endmsg;
+      log << MSG::ERROR << " ----  No VeloCluster container retrieved --- "
+          << endmsg;
       return StatusCode::FAILURE;
     } else {
-      log << MSG::DEBUG << "Retrieved VeloClusters in standatd monitor()" << endmsg;
+      log << MSG::DEBUG << "Retrieved VeloClusters in standatd monitor()"
+          << endmsg;
     }
     size=m_clusters->size(); m_nVC+= size; m_nVC2+= size*size; 
     m_VCNHits->fill(size,1.);
@@ -872,8 +951,9 @@ StatusCode VeloMonitor::basicMonitor() {
  	m_VCZR->fill(sensorZ, testRadius/cm,1.0);
       } else {
 	double testRadius=20./mm;
-	double testPhi=m_velo->phiOfStrip(stripFractionCentW, testRadius, (*itcv)->sensor());
-	log << MSG::DEBUG << "sensorZ " << sensorZ << " testPhi " << testPhi << endmsg;
+	double testPhi=m_velo->phiOfStrip( stripFractionCentW, testRadius,
+                                     (*itcv)->sensor());
+	log << MSG::DEBUG << "sensorZ " << sensorZ << " testPhi " << testPhi <<endmsg;
 	m_VCZPhi->fill(sensorZ, testPhi/degree,1.0);
       }
     }
@@ -881,7 +961,8 @@ StatusCode VeloMonitor::basicMonitor() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode VeloMonitor::FEType(MCVeloFE* FE,bool& signal, bool& noise, bool& other){
+StatusCode VeloMonitor::FEType(MCVeloFE* FE, bool& signal, 
+                               bool& noise, bool& other ) {
   // mainly signal or spillover/coupling or noise ?
 
   if (fabs(FE->addedNoise()) > 0.0 && FE->addedSignal()==0.0) { 
@@ -899,7 +980,8 @@ StatusCode VeloMonitor::FEType(MCVeloFE* FE,bool& signal, bool& noise, bool& oth
   return StatusCode::FAILURE;
 }
 
-StatusCode VeloMonitor::clusterType(VeloCluster* aCluster,bool& signal, bool& noise, bool& other){
+StatusCode VeloMonitor::clusterType(VeloCluster* aCluster,bool& signal, 
+                                    bool& noise, bool& other ) {
   // mainly signal or spillover/coupling or noise ?
   //    noise=false, signal=false, other=false;
 
@@ -918,36 +1000,38 @@ StatusCode VeloMonitor::clusterType(VeloCluster* aCluster,bool& signal, bool& no
 }
 
 StatusCode VeloMonitor::detElement(){
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
 
   SmartDataPtr<DeVelo> velo( detDataService(), "/dd/Structure/LHCb/Velo" );
    
   if ( ! velo ) {
-    log << MSG::ERROR << "Unable to retrieve Velo detector element." << endreq;
+    log << MSG::ERROR << "Unable to retrieve Velo detector element." << endmsg;
     return StatusCode::FAILURE;
   }
   m_velo = velo;
   if (m_detElement) {
-    log << MSG::INFO << "===========================================" << endreq;
+    log << MSG::INFO << "===========================================" << endmsg;
     for (int Sensor=0; Sensor < m_velo->nbSensor(); Sensor++){
-      log << MSG::INFO << "Sensor " << Sensor << "  Z position " << m_velo->zSensor(Sensor)/mm << endreq;
+      log << MSG::INFO << "Sensor " << Sensor << "  Z position " 
+          << m_velo->zSensor(Sensor)/mm << endmsg;
     }
-    log << MSG::INFO << "===========================================" << endreq;
+    log << MSG::INFO << "===========================================" << endmsg;
   }
   return StatusCode::SUCCESS;
 }
 
 StatusCode VeloMonitor::resolution() {
-  MsgStream log(messageService(), name());
-  log << MSG::DEBUG << " resolution() " << endreq;
+  MsgStream log(msgSvc(), name());
+  log << MSG::DEBUG << " resolution() " << endmsg;
   if ( 0== m_clusters ) { 
-    log << MSG::ERROR << " ----  No VeloCluster container retrieved --- " << endreq;
+    log << MSG::ERROR << " ----  No VeloCluster container retrieved --- "
+        << endmsg;
     return StatusCode::FAILURE;
   }
 
   VeloClusters::iterator itcv;
   for (itcv=m_clusters->begin(); itcv!=m_clusters->end(); itcv++) {
-    log << MSG::DEBUG << "cluster loop" <<endreq;
+    log << MSG::DEBUG << "cluster loop" <<endmsg;
 
     // calculate weighted centre of cluster
     double  fractionCentW;
@@ -963,14 +1047,14 @@ StatusCode VeloMonitor::resolution() {
     MyAsct* associator = 0;
     StatusCode sc = toolSvc()->retrieveTool (Type, Name, associator);
     if ( sc.isFailure() ) { 
-      log << MSG::ERROR << " ----  MCHit Associator Not retrieved --- " << endreq;
+      log << MSG::ERROR << " ----  MCHit Associator Not retrieved --- "<<endmsg;
       return StatusCode::FAILURE;
     }
     const Table* table = associator->direct();
     if (0==table){ return StatusCode::FAILURE;}
 
     Range range1 = table->relations(*itcv);
-    for (iterator relation=range1.begin(); relation != range1.end(); relation++) {
+    for (iterator relation=range1.begin(); relation !=range1.end(); relation++){
       // loop over relations
       MCVeloHit * hit = relation->to ();
       // calculate distance between point and cluster
@@ -978,10 +1062,12 @@ StatusCode VeloMonitor::resolution() {
       point/=2.;
       bool valid;
       double pitch=0.,fraction=0.;
-      VeloChannelID entryChan=m_velo->channelID(point,fraction,pitch,valid); //calculate point on path
+      //calculate point on path
+      VeloChannelID entryChan=m_velo->channelID(point,fraction,pitch,valid);
       int IntChanDist=m_velo->neighbour(entryChan,IntCentW,valid);
       double distance=IntChanDist+(fractionCentW-fraction);
-      log << MSG::DEBUG << valid << " distance in strips " << distance << " in microns " << distance*pitch/micron << endreq;
+      log << MSG::DEBUG << valid << " distance in strips " << distance 
+          << " in microns " << distance*pitch/micron << endmsg;
       HepLorentzVector FMom = hit->mcParticle()->momentum();
       // fill resolution histograms
       if (m_velo->isRSensor((*itcv)->sensor())&&valid){
@@ -1016,7 +1102,7 @@ StatusCode VeloMonitor::resolution() {
 }
 
 StatusCode VeloMonitor::checkTests() {
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
   if (0==(  m_testMCVeloHit
 	    + m_testPUMCVeloHit
 	    + m_testMCVeloFE
