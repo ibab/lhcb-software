@@ -1,6 +1,20 @@
-#$Id: release.notes,v 1.11 2002-03-01 16:16:34 andreav Exp $
+#$Id: release.notes,v 1.12 2002-03-28 15:17:15 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020328 - Andrea Valassi
+First Oracle implementation ported to Linux (RedHat 7.2 only)
+See doc/README.RedHat72 in Ex/DetCondExample for more details
+Corresponds to Emil's first official release of ConditionsDB (0.3.1.0)
+- Det/DetCond depends on Det/CondDBOracle v3r10 for WIN32
+- Det/DetCond depends on Det/CondDBOracle v3r10 for rh72_gcc29521
+- Det/DetCond depends on CONDDB v3r02           for rh61_gcc29521
+Minor changes to configuration scripts and logfiles
+- Run appropriate setup and cleanup scripts for Oracle/Objectivity
+- Include logfiles for all 3 platforms (Windows, Linux61, Linux72)
+- Include logfiles for tests of Oracle across platforms (write on A, read on B)
+Requirements v2r1, private tag h20020328.
 
 ==============================================================================
 !20020301 - Andrea Valassi
