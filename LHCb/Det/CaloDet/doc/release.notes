@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.39 2003-12-09 10:14:43 cattanem Exp $ 
+! $Id: release.notes,v 1.40 2004-02-17 11:59:13 ibelyaev Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2004-02-15 - Vanya BELYAEV
+ - cmt/requirements    
+     1) make use of Calo/CaloKernel v3r*  
+     2) increase the version to v6r8 
 
 !========================= CaloDet v6r7 2003-12-08 =========================
 ! 2003-12-08 - Marco Cattaneo
