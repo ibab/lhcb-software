@@ -4,9 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : IRichRecMCTruthTool
  *
- *  CVS Log :-
- *  $Id: IRichRecMCTruthTool.h,v 1.10 2004-07-26 18:00:58 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: IRichRecMCTruthTool.h,v 1.11 2005-03-04 16:22:49 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -58,7 +56,7 @@ public:
 
   /** Find the best MCParticle association for a given RichRecSegment
    *
-   *  @param richTrack Pointer to the RichRecSegment
+   *  @param richSegment Pointer to the RichRecSegment
    *
    *  @return Pointer to associated MCParticle
    *  @retval NULL  No Monte Carlo association was possible
@@ -77,7 +75,7 @@ public:
 
   /** Truth particle type for given RichRecSegment
    *
-   *  @param richTrack Pointer to the RichRecSegment
+   *  @param richSegment Pointer to the RichRecSegment
    *
    *  @return True Particle type
    *  @retval Rich::Unknown if no Monte Carlo association was possible

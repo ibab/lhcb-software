@@ -4,12 +4,7 @@
  *
  * Header file for enumeration Rich::Rec::ProcStat
  *
- * CVS Log :-
- * $Id: RichRecProcCode.h,v 1.4 2004-11-20 12:30:24 jonrob Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.3  2004/07/26 18:00:58  jonrob
- * Various improvements to the doxygen comments
- *
+ * $Id: RichRecProcCode.h,v 1.5 2005-03-04 16:22:49 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-05-10
@@ -19,13 +14,6 @@
 #ifndef RICHRECBASE_RICHRECPROCCODE_H
 #define RICHRECBASE_RICHRECPROCCODE_H 1
 
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
 namespace Rich {
 
   /** @namespace Rich::Rec

@@ -4,8 +4,7 @@
  *
  * Header file for utility class : RichTrackID
  *
- * CVS Log :-
- * $Id: RichTrackID.h,v 1.12 2005-02-02 10:01:20 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.13 2005-03-04 16:22:49 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004
@@ -20,13 +19,6 @@
 #include "Event/TrgTrack.h"
 #include "Event/MCParticle.h"
 
-/** @namespace Rich
- *
- *  General namespace for RICH specific definitions
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   08/07/2004
- */
 namespace Rich {
 
   /** @namespace Rich::Track

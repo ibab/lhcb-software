@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v1r15 2005-03-04 =======================
+! 2005-03-04 - Marco Cattaneo
+ - Fix some doxygen warnings
+
 ! 2005-01-13 - Chris Jones
  - Very minor fix to RichTrackID
  - Add monitor algorithm and tool base classes

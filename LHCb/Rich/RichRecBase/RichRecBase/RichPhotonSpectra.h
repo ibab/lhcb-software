@@ -4,12 +4,7 @@
  *
  *  Header file for utility class : RichPhotonSpectra
  *
- *  CVS Log :-
- *  $Id: RichPhotonSpectra.h,v 1.10 2004-07-28 11:39:46 jonesc Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.9  2004/07/26 18:00:58  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: RichPhotonSpectra.h,v 1.11 2005-03-04 16:22:49 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-12
@@ -165,7 +160,7 @@ public: // methods
 
   /** multiply by another distribution
    *
-   *  @param The mass hypothesis distribution to act upon
+   *  @param id   The mass hypothesis distribution to act upon
    *  @param data The distribution to multiple by
    *
    *  @return Status of the operation

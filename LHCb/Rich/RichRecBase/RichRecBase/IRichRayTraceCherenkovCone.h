@@ -4,11 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : IRichRayTraceCherenkovCone
  *
- *  CVS Log :-
- *  $Id: IRichRayTraceCherenkovCone.h,v 1.6 2004-08-19 14:07:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/07/26 18:00:57  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: IRichRayTraceCherenkovCone.h,v 1.7 2005-03-04 16:22:49 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -113,6 +109,7 @@ public:
    *  in Global coordinates.
    *
    *  @param ring Point to the Ring object to use as the basis of the ray tracing
+   *  @param mode          The ray-tracing mode configuration object
    *
    *  @return Reference to a vector of points (in global coordinates)
    *          on the detector plane that lie on the Cherenkov ring.
@@ -124,6 +121,7 @@ public:
    *  in Local HPD panel coordinates
    *
    *  @param ring Point to the Ring object to use as the basis of the ray tracing
+   *  @param mode          The ray-tracing mode configuration object
    *
    *  @return Reference to a vector of points (in local HPD panel coordinates)
    *          on the detector plane that lie on the Cherenkov ring.
