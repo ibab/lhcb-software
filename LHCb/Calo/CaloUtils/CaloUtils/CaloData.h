@@ -1,8 +1,11 @@
-// $Id: CaloData.h,v 1.2 2001-11-25 15:26:20 ibelyaev Exp $ 
+// $Id: CaloData.h,v 1.3 2001-11-25 15:55:03 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/25 15:26:20  ibelyaev
+//  update for newer CaloKernel package
+//
 // Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
 // New package: The first commit into CVS
 //
@@ -23,7 +26,7 @@
 #include "GaudiKernel/StatusCode.h" 
 #include "GaudiKernel/SmartDataPtr.h"
 // from CaloKernel
-#include "CaloKernlel/CaloException.h"
+#include "CaloKernell/CaloException.h"
 // From CaloEvent 
 #include "CaloEvent/CaloDigit.h"
 
