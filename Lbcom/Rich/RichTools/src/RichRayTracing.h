@@ -4,8 +4,11 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.11 2004-07-26 18:03:05 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.12 2004-10-21 12:59:35 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/07/26 18:03:05  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *  Revision 1.10  2004/07/22 14:39:57  jonrob
  *  test CVS log in file
  *
@@ -80,41 +83,51 @@ public: // methods (and doxygen comments) inherited from interface
 
   // For a given detector, raytraces a given direction from a given point to
   // the photo detectors. Returns the result in the form of a RichGeomPhoton
-  StatusCode traceToDetector( const Rich::DetectorType rich, 
-                              const HepPoint3D& startPoint,  
-                              const HepVector3D& startDir,    
-                              RichGeomPhoton& photon,         
-                              const RichTraceMode mode = RichTraceMode(), 
+  StatusCode traceToDetector( const Rich::DetectorType rich,
+                              const HepPoint3D& startPoint,
+                              const HepVector3D& startDir,
+                              RichGeomPhoton& photon,
+                              const RichTraceMode mode = RichTraceMode(),
                               const Rich::Side forcedSide = Rich::top ) const;
 
   // For a given detector, raytraces a given direction from a given point to
   // the average photon detector plane (no HPD acceptance). Result is a HepPoint3D
   StatusCode
-  traceToDetectorWithoutEff( const Rich::DetectorType rich,  
-                             const HepPoint3D& startPoint,   
-                             const HepVector3D& startDir, 
-                             HepPoint3D& hitPosition,  
+  traceToDetectorWithoutEff( const Rich::DetectorType rich,
+                             const HepPoint3D& startPoint,
+                             const HepVector3D& startDir,
+                             HepPoint3D& hitPosition,
                              const RichTraceMode mode = RichTraceMode(),
                              const Rich::Side forcedSide = Rich::top ) const;
+
+
+  // Raytraces from a point in the detector panel back to the spherical mirror
+  // returning the mirror intersection point and the direction a track would have
+  // in order to hit that point in the detector panel.
+
+  virtual StatusCode traceBackFromDetector ( const HepPoint3D& startPoint,
+                                             const HepVector3D& startDir,
+                                             HepPoint3D& endPoint,
+                                             HepVector3D& endDir ) const;
 
   // For a given detector, ray traces a given direction from a given point
   // to the average photo detector plane. Returns the result in the form
   // of a RichGeomPhoton
   StatusCode intersectPDPanel( const Rich::DetectorType rich,
-                               const HepPoint3D& point, 
-                               const HepVector3D& dir, 
+                               const HepPoint3D& point,
+                               const HepVector3D& dir,
                                RichGeomPhoton& photon ) const;
 
   // Intersection a given direction, from a given point with a given plane.
-  StatusCode intersectPlane( const HepPoint3D& position,  
-                             const HepVector3D& direction, 
+  StatusCode intersectPlane( const HepPoint3D& position,
+                             const HepVector3D& direction,
                              const HepPlane3D& plane,
                              HepPoint3D& intersection ) const;
 
   // Reflect a given direction off a spherical mirror. Can be used for intersection.
-  StatusCode reflectSpherical ( HepPoint3D& position, 
-                                HepVector3D& direction, 
-                                const HepPoint3D& CoC, 
+  StatusCode reflectSpherical ( HepPoint3D& position,
+                                HepVector3D& direction,
+                                const HepPoint3D& CoC,
                                 const double radius ) const;
 
 private: // methods
@@ -138,7 +151,7 @@ private: // data
 
   /// Rich1 and Rich2
   DeRich* m_rich[Rich::NRiches];
-  
+
   // photodetector panels
   typedef boost::array<DeRichHPDPanel*, 2> HPDPanelsPerRich;
   boost::array<HPDPanelsPerRich, 2> m_photoDetPanels;
@@ -157,15 +170,24 @@ private: // data
   /// Mirror segment finder tool
   IRichMirrorSegFinder* m_mirrorSegFinder;
 
+  /// Histogram service
   mutable IHistogramSvc* m_HDS;
 
+  /// monitoring histograms (true/false)
   bool m_moni;
+  /// directory path for the histograms
   std::string m_histPth;
+  /// photons missed on the outer boundary of the spherical mirror
   IHistogram2D* m_sphMirMissedOut[2];
+  /// photons missed on the outer boundary of the flat mirror
   IHistogram2D* m_flatMirMissedOut[2];
+  /// photons missed in the gaps of the spherical mirror
   IHistogram2D* m_sphMirMissedGap[2];
+  /// photons missed in the gaps of the flat mirror
   IHistogram2D* m_flatMirMissedGap[2];
-  
+
+  /// a z point that separates Rich 1 from Rich2 (anything 3000-9000mm)
+  double m_RichDetSeparationPointZ;
 
 };
 

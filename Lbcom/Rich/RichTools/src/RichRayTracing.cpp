@@ -5,11 +5,14 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.10 2004-07-26 18:03:05 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.11 2004-10-21 12:59:35 papanest Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.10  2004/07/26 18:03:05  jonrob
+ * Various improvements to the doxygen comments
+ *
  *
  * @author Antonis Papanestis
- * @date 2003-11-14 
+ * @date 2003-11-14
  */
 //-----------------------------------------------------------------------------
 
@@ -45,6 +48,7 @@ RichRayTracing::RichRayTracing( const std::string& type,
 
   declareProperty( "Monitor", m_moni = false );
   declareProperty( "HistoPath", m_histPth = "RICH/TRACE_TEST/" );
+  declareProperty( "HistoPath", m_RichDetSeparationPointZ = 8000.0 );
 }
 
 //=============================================================================
@@ -111,14 +115,14 @@ StatusCode RichRayTracing::initialize()
     m_flatMirrorSegRows[Rich::Rich1] = rich1->paramAsInt( "FlatMirrorSegRows" );
     m_flatMirrorSegCols[Rich::Rich1] = rich1->paramAsInt( "FlatMirrorSegColumns" );
   }
-  
+
   if ( rich2->hasParam("SphMirrorSegRows") ) {
     m_sphMirrorSegRows[Rich::Rich2] = rich2->paramAsInt( "SphMirrorSegRows" );
     m_sphMirrorSegCols[Rich::Rich2] = rich2->paramAsInt( "SphMirrorSegColumns" );
     m_flatMirrorSegRows[Rich::Rich2] = rich2->paramAsInt( "FlatMirrorSegRows" );
     m_flatMirrorSegCols[Rich::Rich2] = rich2->paramAsInt( "FlatMirrorSegColumns" );
   }
-  
+
 
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
 
@@ -208,6 +212,7 @@ RichRayTracing::traceToDetectorWithoutEff( const Rich::DetectorType rich,
   const StatusCode sc =
     m_photoDetPanels[rich][side]->detPlanePoint(tmpPosition, tmpDirection,
                                                 hitPosition, mode );
+
   return sc;
 }
 
@@ -264,7 +269,7 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
       if (m_moni) m_sphMirMissedGap[rich]->fill(tmpPosition.x(), tmpPosition.y());
       return StatusCode::FAILURE;
     }
-    
+
   } else if (  mode.outMirrorBoundary() ) {
     // check the outside boundaries of the (whole) mirror
     if ( !sphSegment->intersects( position, direction ) ) {
@@ -280,19 +285,19 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
           fail = true;
       }
       if ( pos.column() == 0 ) {                 // right side
-        if ( tmpPosition.x() < mirCentre.x() ) 
+        if ( tmpPosition.x() < mirCentre.x() )
           fail = true;
       }
       if ( pos.column() == m_sphMirrorSegCols[rich]-1 ) {   // left side
-        if ( tmpPosition.x() > mirCentre.x() ) 
+        if ( tmpPosition.x() > mirCentre.x() )
           fail = true;
       }
       if (fail) {
         if (m_moni) m_sphMirMissedOut[rich]->fill(tmpPosition.x(), tmpPosition.y());
         return StatusCode::FAILURE;
-      }  
+      }
     }
-  }  
+  }
 
   // reset position, direction before trying again
   tmpPosition = position;
@@ -328,7 +333,7 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
       if (m_moni) m_flatMirMissedGap[rich]->fill(tmpPosition.x(), tmpPosition.y());
       return StatusCode::FAILURE;
     }
-    
+
   } else if (  mode.outMirrorBoundary() ) {
     // check the outside boundaries of the (whole) mirror
     if ( !flatSegment->intersects( storePosition, storeDirection ) ) {
@@ -344,21 +349,20 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
           fail = true;
       }
       if ( pos.column() == 0 ) {                 // right side
-        if ( tmpPosition.x() < mirCentre.x() ) 
+        if ( tmpPosition.x() < mirCentre.x() )
           fail = true;
       }
       if ( pos.column() == m_flatMirrorSegCols[rich]-1 ) {   // left side
-        if ( tmpPosition.x() > mirCentre.x() ) 
+        if ( tmpPosition.x() > mirCentre.x() )
           fail = true;
       }
       if (fail) {
         if (m_moni) m_flatMirMissedOut[rich]->fill(tmpPosition.x(), tmpPosition.y());
         return StatusCode::FAILURE;
-      }  
+      }
     }
-    
+
   }
-  
 
   tmpPosition = storePosition;
   tmpDirection = storeDirection;
@@ -376,6 +380,73 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
 
 }
 
+
+
+
+//=========================================================================
+// Raytraces from a point in the detector panel back to the spherical mirror
+// returning the mirror intersection point and the direction a track would
+// have in order to hit that point in the detector panel.
+//=========================================================================
+StatusCode
+RichRayTracing::traceBackFromDetector ( const HepPoint3D& startPoint,
+                                        const HepVector3D& startDir,
+                                        HepPoint3D& endPoint,
+                                        HepVector3D& endDir ) const
+{
+
+  HepPoint3D tmpStartPoint( startPoint );
+  HepVector3D tmpStartDir( startDir );
+
+  Rich::DetectorType rich;
+  if ( startPoint.z()/mm < m_RichDetSeparationPointZ )
+    rich = Rich::Rich1;
+  else
+    rich = Rich::Rich2;
+
+  Rich::Side side = m_rich[rich]->side(startPoint);
+
+  // flat mirror reflection with nominal parameters
+  if ( !reflectFlat( tmpStartPoint, tmpStartDir,
+                     m_nominalFlatMirrorPlane[rich][side]) )
+    return StatusCode::FAILURE;
+
+  // find segment
+  DeRichFlatMirror* flatSegment = m_mirrorSegFinder->
+    findFlatMirror(rich,side,tmpStartPoint);
+
+  tmpStartPoint = startPoint;
+  tmpStartDir = startDir;
+
+  if ( !reflectFlat( tmpStartPoint, tmpStartDir,
+                     flatSegment->mirrorPlane()) )
+    return StatusCode::FAILURE;
+
+  HepPoint3D storePoint( tmpStartPoint );
+  HepVector3D storeDir( tmpStartDir );
+
+  // Spherical mirror reflection with nominal parameters
+  if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
+                          m_nominalCoC[rich][side],
+                          m_nomSphMirrorRadius[rich]) )
+    return StatusCode::FAILURE;
+
+  // find segment
+  DeRichSphMirror* sphSegment = m_mirrorSegFinder->
+    findSphMirror( rich, side,tmpStartPoint );
+
+  // Spherical mirror reflection with exact parameters
+  if ( !reflectSpherical( storePoint, storeDir,
+                          sphSegment->centreOfCurvature(),
+                          sphSegment->radius() ) )
+    return StatusCode::FAILURE;
+
+  endPoint = storePoint;
+  endDir = storeDir;
+
+  return StatusCode::SUCCESS;
+
+}
 
 //=========================================================================
 //  reflect from a spherical mirror
@@ -457,7 +528,7 @@ StatusCode RichRayTracing::intersectPlane (const HepPoint3D& position,
 StatusCode RichRayTracing::bookHistos() {
 
   debug() << "Booking Histos" << endmsg;
-    
+
   m_sphMirMissedOut[0] = histoSvc()->
     book(m_histPth, 101, "Spherical Mirror missed out R1", 100, -700,
          700, 100, -800, 800);
@@ -485,7 +556,7 @@ StatusCode RichRayTracing::bookHistos() {
   m_flatMirMissedGap[1] = histoSvc()->
     book(m_histPth, 204, "Flat Mirror missed gap R2", 100, -3000,
          3000, 100, -1000, 1000);
-  
+
   return StatusCode::FAILURE;
 }
 

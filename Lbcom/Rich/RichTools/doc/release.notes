@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2004-10-21 - Antonis Papanestis
+ - Added method traceBackFromDetector to RichRayTracing
+
 ! 2004-07-27 - Chris Jones
  - Add flags to RichTrackSegment makers to turn off individual radiators
 
