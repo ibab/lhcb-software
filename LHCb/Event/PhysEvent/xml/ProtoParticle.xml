@@ -40,7 +40,7 @@
        <import name="Event/CaloHypo" soft="TRUE"/>
        <import name="Event/TrStoredTrack" soft="TRUE"/>
        <import name="Event/TrStateP" soft="TRUE"/>
-       <import name="Event/RichPID" soft="TRUE"/>
+       <import name="Event/RichPID"/>
        <import name="Event/MuonID" soft="TRUE"/>
        <enum
         desc="Store a detector specific particleID type or technique for which the likelyhood or discriminating value is then stored"
