@@ -1,69 +1,186 @@
-!-----------------------------------------------------------------------------
-! Package     : BrunelSys
-! Responsible : Marco Cattaneo
-! Purpose     : List of packages in Brunel project
-!-----------------------------------------------------------------------------
+<PRE>
+Package: Rec/Brunel
+Package Coordinator: Marco Cattaneo
+Purpose: LHCb reconstruction program
 
-!======================= BrunelSys v25r2 2004-12-13 =======================
-! 2004-12-13 - Marco Cattaneo
- - Modified requirements for Brunel v25r2
+</PRE><H1><A NAME=v25r2p1>2005-01-13 Brunel v25r2p1</A></H1><PRE>
+Documentation moved to BrunelSys package (from Rec/Brunel):
+ . These release notes
+ . doxygen configuration files
 
-   Packages removed:  VeloTrack (obsolete)
-   Packages added:    TrgTools, TrgVelo, TrgBrunel (replaces VeloTrack)
-   Packaged modified: TrFitEvent v4r8, TrCheck v2r7, RichRecSys v1r13p1,
+</PRE><H1><A NAME=v25r2>2004-12-10 Brunel v25r2</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r2.
+Requires data produced by Boole v7r2 or later. It *cannot* process DC04 data
+
+- Packages removed:  VeloTrack (obsolete)
+- Packages added:    TrgTools, TrgVelo, TrgBrunel (replaces VeloTrack)
+- Packaged modified: TrFitEvent v4r8, TrCheck v2r7, RichRecSys v1r13p1,
                       RichRecBase v1r14p1, RichLocalPID v1r9p1, 
                       OTSimulation v1r1, CaloReco v2r7
 
-!======================= BrunelSys v25r1 2004-11-25 =======================
-! 2004-11-25 - Marco Cattaneo
- - Modified requirements for Brunel v25r1
+- New functionality:
+  . Support for v200412 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout,
+                                  new Velo numbering)
+    Not yet tested, needs new Gauss data (v200412.opts, XmlDDDB v23r1)
 
-   Packages removed:  CaloMonitor (obsolete)
-   Packages added:    CaloMiniDst (replaces CaloMonitor)
-   Packages modified: RichGlobalPID v1r8, RichLocalPID v1r9, RichPIDMerge v1r5,
+- Modified functionality
+  . Uses new Velo detector element and geometry. Sensor numbering incompatible
+    with DC04 version. (LHCbKernel v5r5, VeloEvent v13r2, VeloDet v9r1,
+    VeloDAQ v2r1, TrFitEvent v4r8)
+  . "Offline" Velo tracking replaced by "Online" version
+    (TrgTools v7r0, TrgVelo v7r0, TrgBrunel v1r1)
+  . Improved handling of events with no pixels fired
+    (RichRecBase v1r14p1, RichLocalPID v1r9p1)
+
+- Removed functionality
+  . Support for v200411 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout)
+
+- Persistency changes
+  . New velo sensor numbering in RawBuffer, requires VeloDet v9r1, VeloDAQ v2r1
+    to decode
+
+- Packaging changes
+  . Move to new GaudiAlgorithm base classes (OTDAQ v3r2, OTMonitor v1r1)
+
+</PRE><H1><A NAME=v25r1>2004-11-22 Brunel v25r1</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r1.
+Requires data produced by Boole v7r0 or v7r1. It *cannot* process DC04 data
+
+- Packages removed:  CaloMonitor (obsolete)
+- Packages added:    CaloMiniDst (replaces CaloMonitor)
+- Packages modified: RichGlobalPID v1r8, RichLocalPID v1r9, RichPIDMerge v1r5,
      RichRecBase v1r14, RichRecCommon v1r10, RichRecMCTools v1r7,
      RichRecQC v1r10, RichRecSys v1r13, RichRecTools v2r12, RichRingRefit v1r9,
      TrExtrapolator v2r14, ITAlgorithms v14r4, TrFitAssociators v1r3
 
-!======================= BrunelSys v25r0 2004-10-28 =======================
-! 2004-10-28 - Marco Cattaneo
- - Modified requirements for Brunel v25r0
+- New functionality:
+  . Support for v200411 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout)
+    Not yet tested, needs new Gauss data (v200411.opts, XmlDDDB v23r0)
+  . Support for Data Quality checking. Data Quality reference files built from
+    DC04 log files are provided in $LHCBRELEASES/DBASE/DQ/BrunelDQ/v1r0. XML
+    descriptions of log file fields to be verified are in $BRUNELROOT/DQ.
+    To verify a log file, execute the command:
+      python2.2 $LHCBHOME/scripts/checklog.py $BRUNELROOT/DQ/Brunel_options.xml
+        <event-type> <log-file>
 
-   Packages removed:  OTDAQ (moved to LHCbSys)
-                      OTAlgorithms (obsolete)
-   Packages added:    OTMonitor v1r0
-   Packages modified: AsctToLinker v1r3, TrFitEvent v4r7, TrFitAssociators v1r2,
+- Modified functionality
+  . Improvement to initialisation of random numbers. Now three seeds are used
+    (run and event numbers, plus hash of string containing name, event number,
+    run number). Can optionally skip some random numbers before every event,
+    by setting job option Brunel.SkipFactor (default is zero). Can revert to
+    previous behaviour by setting job option Brunel.SingleSeed = true;
+    (LHCbAlgs v1r2)
+  . Use rootd (instead of rfio) to access castor files
+    (GaudiConf v8r1, v200402.opts)
+  . Remove explicit creation of MagneticFieldSvc and ParticlePropertySvc, now
+    created on demand (Brunel.opts, RichRecTools v1r12)
+  . Bug fix to finalisation order of services, allows to enable DataOnDemandSvc
+    decoding for all RawBuffer decoding algorithms (GaudiSvc v12r6, Brunel.opts)
+  . More accurate tuning of dE/dx correction (TrExtrapolator v2r14)
+  . Use new RichPID object format, add various new features not yet used by
+    default (RichRecSys v1r13)
+  . Improved decoding of Pixels from RawBuffer (RichRecTools v2r12)
+  . Use DataOnDemandSvc to instantiate associator algorithms 
+    (Relations v2r0, AssociatorsSys v2r1, TrFitAssociators v1r3)
+
+- Removed functionality:
+  . Removed support for 200402-TT-alt and Field043 geometries
+
+- DST changes
+  . /Rec/Rich/PIDs contains new backwards incompatble version of RichPID
+    (RichEvent v8r0)
+
+- Bug fixes
+  . Small fix in thick scatterer (TrExtrapolator v2r14)
+
+- Packaging changes
+  . Calo monitoring moved to new CaloMoniDst package
+
+</PRE><H1><A NAME=v25r0>2004-11-01 Brunel v25r0</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r0.
+Requires data produced by Boole v7r0 or later. It *cannot* process DC04 data
+
+- Packages removed:  OTDAQ (moved to LHCbSys)
+                     OTAlgorithms (obsolete)
+- Packages added:    OTMonitor v1r0
+- Packages modified: AsctToLinker v1r3, TrFitEvent v4r7, TrFitAssociators v1r2,
                       TrCheck v2r6, TrTools v2r6, Seeding v2r10, LongTrack v1r13,
                       TrCleanEx v2r11, TrExtrapolator v2r13p1, TrKShort v1r4p1
 
-!======================= BrunelSys v24r3 2004-10-27 =======================
- Built against Gaudi v15r3 on branch v24r2b
+- New or modified functionality
+  . New OT Event model: OTTime replaces OTDigit and OTCluster, plus backward 
+    incompatble changes to OTChannelID. Not compatible with DC04 data.
+    (LHCbKernel v5r3, OTEvent v14r0, OTDAQ v3r0, OTAssociators v3r0
+     Required simple adaptation of large number of tracking packages)
+  . Introduce OT beam tilt capability. Tilt angle currently set to 0.
+    (OTDet v5r3, MCTools v1r8, XmlDDDB v22r4)
 
-! 2004-10-27 - Marco Cattaneo
- - Modified requirements for Brunel v24r3
+- DST changes
+  . Link/Raw/OT/Times replaces Link/Raw/OT/Digits
+  . Link/Rec/OT/Clusters and Rec/OT removed
 
-   Packages modified: CaloReco v2r6
+</PRE><H1><A NAME=v24r3>2004-10-27 Brunel v24r3</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v16r3 and is built on v24r2b branch.
+It can process DC04 data
 
-!======================= BrunelSys v24r2 2004-09-08 =======================
-! 2004-09-08 - Marco Cattaneo
- - Modified requirements for Brunel v24r2
+- Packages modified: CaloReco v2r6
 
-   Packages removed:  VeloDAQ, STDAQ, MuonDAQ (moved to LHCbSys)
-   Packages modified: CaloPIDs v2r4, CaloReco v2r5, CaloMonitor v2r2p1,
-                      VeloTT v1r1
+- New or modified functionality
+  . RawBuffer is decoded using DataOnDemandSvc (RawBuffer.opts)
+    Not all banks are decoded in this way yet, due to a problem in Gaudi when
+    finalising data on demand algorithms that use tools
+  . EventHeader is rebuilt from RawBuffer when not on input file
+  . New features for Calo Reco (CaloReco v2r6)
 
-!======================= BrunelSys v24r1 2004-07-26 =======================
-! 2004-07-26 - Marco Cattaneo
- - Same as v24r0, but built against Gaudi v15r1
+- DST changes
+  . Event/Header removed (can be rebuilt from RawBuffer)
 
-!======================= BrunelSys v24r0 2004-07-22 =======================
-! 2004-07-22 - Marco Cattaneo
- - Modified requirements for Brunel v24r0
- 
-   Packages removed:  LHCbTools, RichDAQ (moved to LHCbSys)
+</PRE><H1><A NAME=v24r2>2004-09-22 Brunel v24r2</A></H1><PRE>
+This version uses Gaudi v15r2, needs CMT v1r16. It can process DC04 data
+
+- Packages removed:  VeloDAQ, STDAQ, MuonDAQ (moved to LHCbSys)
+- Packages modified: CaloPIDs v2r4, CaloReco v2r5, CaloMonitor v2r2p1, 
+                     VeloTT v1r1
+
+- New or modified functionality
+  . New test input data file taken from DC04 (v200402.opts)
+  . Enabled new Gaudi DataOnDemand service to allow automatic invocation of 
+    RawBuffer decoding algorithms. In this version it is used to decode the
+    Calorimeter banks (Brunel.opts, CaloEvent v13r5)
+  . Preparation for HLT developments (CaloPIDs v2r4, CaloReco v2r5)
+
+- New tuning
+  . Speed improvements in decoding of Calo RawBuffer banks (CaloEvent v13r5)
+  . Speed improvements in CellularAutomaton (CaloReco v2r5)
+
+- Code cleanups
+  . Z positions of TT stations taken from detector element rather than job
+    options (VeloTT v1r11)
+
+- Bug fixes
+  . Workaround for core dump on exit() (GaudiPoolDb v1r9)
+  . Various fixes for memory leaks (GaudiSvc v12r3, GaudiPoolDb v1r9)
+
+</PRE><H1><A NAME=v24r1>2004-07-26 Brunel v24r1</A></H1><PRE>
+This version uses Gaudi v15r1, needs CMT v1r16. It can process DC04 data
+
+- New or modified functionality
+  . Prefix numeric histogram IDs by "h" to facilitate manipulation in Root.
+    Controlled by the option RootHistSvc.ForceAlphaIds (RootHistCnv v9r3)
+
+- Bug fixes
+  . Fix EventSelector.FirstEvent, in v24r0 was skipping twice the requested 
+    events (GaudiSvc v12r2)
+  . Fix density of Rich2 mirror support (was 1*g/cm3, should be 0.24*g/cm3)
+    (XmlDDDB v22r3)
+
+</PRE><H1><A NAME=v24r0>2004-07-23 Brunel v24r0</A></H1><PRE>
+This version uses Gaudi v15r0, needs CMT v1r16. It can process DC04 data
+
+- Packages removed:  LHCbTools, RichDAQ (moved to LHCbSys)
                       RichDetTools (renamed RichTools, moved to LHCbSys)
                       BrunelAlgs (moved to LHCbAlgs and DAQEvent)
-   Packages modified: RichRecSys v1r12, RichRecBase v1r13, RichRecMCTools v1r6,
+- Packages modified: RichRecSys v1r12, RichRecBase v1r13, RichRecMCTools v1r6,
                       RichLocalPID v1r8, RichGlobalPID v1r7, RichPIDMerge v1r4,
                       RichRecCommon v1r9, RichRecTools v2r11, RichRecQC v1r9,
                       RichRingRefit v1r8, TrTools v2r5p1, TrFitEvent v4r6,
@@ -73,47 +190,169 @@
                       CaloReco v2r4, AsctToLinker v1r2, VeloTrack v5r2,
                       TrMatching v2r10p1, LongTrack v1r12
 
-!======================= BrunelSys v23r7 2004-04-23 =======================
-! 2004-04-28 - Marco Cattaneo
- - Modified requirements for Brunel v23r7
+- New or modified functionality
+  . GaudiAuditors no longer used for algorithm timing, uses GaudiSequencer
+    internal timing instead
+  . Remove obsolete TimingAlg
+  . Remove obsolete GaudiRootDb capability
+  . Added test1.opts to reproduce a known crash
 
-   Packages modified: CaloPIDs v2r3
+- DST changes
+  . Remove obsolete "/Event/Trig/AlgUsedTimes#1"
 
-!======================= BrunelSys v23r6 2004-04-22 =======================
-! 2004-04-22 - Marco Cattaneo
- - Modified requirements for Brunel v23r6
-   
-   Packages modified: CaloPIDs v2r2, CaloMonitor v2r2, RichUtils v3r9, 
+- New tuning
+  . Initialize MuonGeometry tool completely at initialisation, not during first
+    ~10 events (MuonTools v3r7)
+  . New Calo calibration for DC04 settings (XmlDDDB >= v22r2) (CaloReco v2r4)
+  . New parameterization of the dE/dx loss correction (TrExtrapolator v2r13)
+  . Speed improvements in MagneticFieldSvc (Magnet v2r7)
+  . Various minor updates to Rich code
+
+- New packaging and code cleanups
+  . Use new GaudiSequencer base class for ProcessPhase (LHCbAlgs v1r0)
+  . Use new GaudiAlg and GaudiTools base classes
+    (STDet v1r2, ITAssociators v2r9, STDAQ v1r3, ITAlgorithms v14r3,
+     ITCheckers v2r3, TrExtrapolator v2r13, TrFitter v4r0, RichRecSys v1r12,
+     RichRecQC v1r9)
+  . Move ITrFitter interface to TrFitEvent package, thus removing dependencies
+    on TrFitter package 
+    (TrFitEvent v4r6, TrFitter v4r0, TrCheck v2r5, TrCleanEx v2r10, VeloTT v1r10)
+  . Removed dependency on GaudiAud, GaudiDb, GaudiTools packages
+  . Removed dependency on CERNLIB (Seeding v2r9, HepMC v4r121p0)
+  . Remove BrunelAlgs package. BrunelInitialisation algorithm replaced by
+    common LbAppInit and CreateRawEvent (LHCbAlgs v1r0, DAQEvent v4r4) 
+  . Take external packages from LCG_Interfaces area
+
+- Bug fixes
+  . Fix an unprotected pointer in Rich detailed monitoring (RichRecCommon v1r9)
+  . Add a missing job option for detailed Calo monitoring (BrunelMoni.opts)
+  . Fix bug in evaluation of overlap of two rectangular areas (CaloUtils v4r7)
+  . Add fixes suggested by C.Jones for using Brunel.job in debug mode
+  . Fix in MS scattering correction (TrExtrapolator v2r12)
+  . Fix problem with 3-cell cluster at edge of calorimeter, where only one cell
+    has positive energy - was causing rare core dump in CaloMergedPi0Alg
+    (CaloReco v2r4)
+
+</PRE><H1><A NAME=v23r7>2004-04-29 Brunel v23r7</A></H1><PRE>
+Version used for DC04
+
+Requires data produced by Boole v5r6 or later (for signal)
+Requires data produced by Boole v5r7 or later (for B inclusive and minimum bias)
+
+- Packages modified: CaloPIDs v2r3
+
+- New tuning
+  . 12% correction to HCAL calibration coefficient  (XmlDDDB v22r2)
+  . 7.2% correction to ECAL calibration coefficient (XmlDDDB v22r2)
+
+- Bug fixes
+  . Make MC/Signal optional and Gen/HardProcesses mandatory on Dst definition
+
+</PRE><H1><A NAME=v23r6>2004-04-23 Brunel v23r6</A></H1><PRE>
+Requires data produced by Boole v5r6 or later
+
+- Packages modified: CaloPIDs v2r2, CaloMonitor v2r2, RichUtils v3r9, 
                       RichRecQC v1r7, RichDetTools v4r1, RichRecSys v1r9,
                       RichRecBase v1r11, RichDAQ v1r4, RichRecMCTools v1r4,
                       RichRingRefit v1r7, RichLocalPID v1r7, RichGlobalPID v1r6,
                       RichRecCommon v1r6, RichRecTools v2r9, TrMatching v2r10,
                       TrExtrapolator v2r11, TrKShort v1r4, TrFitEvent v4r5
 
-!======================= BrunelSys v23r5 2004-04-15 =======================
-! 2004-04-15 - Marco Cattaneo
- - Modified requirements for Brunel v23r5 (Move to Gaudi v14r4)
+- Functionality changes
+  . Disabled RichRecoQC, because it accesses Spillover hits, no longer available
+    on Boole output (RichRecQC v1r7)
 
-   Packages modified: LHCbTools v1r1, MuonDAQ v1r1
+- New tuning
+  . Update parameterisation for Photon ID (CaloPIDs v2r2)
+  . New Rich track state handling and tuning
+    (RichRecSys v1r9, RichUtils v3r9, RichDetTools v4r1) 
+  . Change match Chi2 cut to 500. (from 200.) (Matching v2r10)
+  . Remove multiple scattering fudge factor from extrapolation errors
+    (TrExtrapolator v2r11)
+  . Retune KShort tracking for higher efficiency (TrKShort v1r4)
+  . Update parameterization of Velo errors, scale factor is now 0.8
+    (TrFitEvent v4r5)
 
-!======================= BrunelSys v23r4 2004-03-31 =======================
-! 2004-03-31 - Marco Cattaneo
- - Modified requirements for Brunel v23r4
+- Persistency changes
+  . Added Gen/HepMCEvents, Gen/HardProcesses, MC/Signal
+    (produced by Gauss v15r4, propagated by Boole v5r6)
+  . Removed Velo,IT,OT clusters from DST. If needed they can be recreated from 
+    RawBuffer by rerunning the clustering
+  . Added intermediate directories of Digits paths, to avoid opening .digi
+    file when registering Digits re-created from RawBuffer in DaVinci
+  . use POOL_1_6_3
 
-   Packages removed:  VeloAlgorithms
+</PRE><H1><A NAME=v23r5>2004-04-15 Brunel v23r5</A></H1><PRE>
 
-   Packages modified: ITAlgorithms v14r2, ITCheckers v2r2, STDAQ v1r1,
+ Requires data produced by Boole v5r4 or later
+ Tuned for XmlDDDB v22r1
+
+- Packages modified: LHCbTools v1r1, MuonDAQ v1r1
+
+- New features
+  . Location of XmlDDDB file is printed at start of job (GaudiSvc v11r6)
+
+- Changed features
+  . PoolDbCacheSvc.InputCatalog and .OutputCatalog no longer supported:
+    use PoolDbCacheSvc.Catalog instead, with support for search list;
+    first catalog in list is read/write, others are read only. 
+    (POOL v1r162p0, GaudiPoolDb v1r6)
+
+- Persistency changes
+  . Using POOL_1_6_2. Fixes problem with Rich PIDs
+    (POOL v1r162p0, GaudiPoolDb v1r6)
+
+- Bug fixes
+  . All tools correctly released at end of job (GaudiSvc v11r6)
+  . Fix a typo in TimingTool::finalize (LHCbTools v1r1)
+  . Fix 1.5 cm shift of a TT ladders near the edge (XmlDDDB v22r1)
+
+</PRE><H1><A NAME=v23r4>2004-04-01 Brunel v23r4</A></H1><PRE>
+
+ Requires data produced by Boole v5r4 or later
+ Tuned for XmlDDDB v22r0
+
+- Packages removed:  VeloAlgorithms
+- Packages modified: ITAlgorithms v14r2, ITCheckers v2r2, STDAQ v1r1,
                       BrunelAlgs v3r4p1, CaloReco v2r1p1, OTDAQ v2r0,
                       TrKShort v1r3, LongTrack v1r11, VeloTT v1r9
 
-!======================= BrunelSys v23r3 2004-03-18 =======================
-! 2004-03-18 - Marco Cattaneo
- - Modified requirements for Brunel v23r3
+- New features
+  . Field045 map is the default. To process data produced with the old field
+    map, use v200402-Field043.opts instead of v200402.opts
+  . Added example job options (Copy.opts) for copying one or more files. Can be
+    used to merge several DSTs, or to produce reduced (or extended...) DSTs
 
-   Packages added:    TrFitEvent v4r4, TrFitAssociators v1r1, STDAQ v1r0,
-                      VeloDAQ v1r0
+- Persistency changes
+  . New version of RawBuffer for OT: new bank structure, multiple hit
+    capability, new straw numbering (OTDAQ v2r0)
+  . HepMC can now be made persistent also for POOL data (GenEvent v3r1)
+    Disabled from Dst content as it requires data produced with Gauss v15r4
+    or greater, not yet released.
 
-   Packages modified: CaloMonitor v2r0, CaloReco v2r0, CaloPIDs v2r0, OTDAQ v1r1,
+- New tuning
+  . Update signal to noise cuts to be consistent with Boole (ITAlgorithms v14r2)
+  . Tuning of tracking for Field045 (LongTrack v1r11, TrKShort v1r3, VeloTT v1r9)
+  . Add a dp/p cut for 4th hit wrt to hits in other TT half (VeloTT v1r9)
+
+- Bug fixes:
+  . Avoid multiple includes of job options files (CaloReco v2r1p1)
+  . Avoid linking with unnecessary libraries (requirements)
+  . Fix monitoring problems related to history flags of tracks (TrKShort v1r3)
+  . Fix range definition in TT, whole station is not tilted, only each wafer
+    (LongTrack v1r11)
+
+- Packaging changes:
+  . Remove unnecessary dependency on VeloAlgorithms
+
+</PRE><H1><A NAME=v23r3>2004-03-18 Brunel v23r3</A></H1><PRE>
+
+ Requires data produced by Boole v5r3 or later
+ Tuned for XmlDDDB v22r0
+
+- Packages added:    TrFitEvent v4r4, TrFitAssociators v1r1, STDAQ v1r0,
+                     VeloDAQ v1r0
+- Packages modified: CaloMonitor v2r0, CaloReco v2r0, CaloPIDs v2r0, OTDAQ v1r1,
      ITAlgorithms v14r1, ITCheckers v2r1, TrCheck v2r4, TrCleanEx v2r9, 
      TrKShort v1r2, TrFitter v3r7p1, VeloTT v1r8, VeloAlgorithms v2r9p1, 
      AsctToLinker v1r1, MuonID v3r7p1, RichUtils v3r8, RichDAQ v1r3, 
@@ -123,13 +362,59 @@
      RichRecTools v2r8, RichRecSys v1r8, CaloMonitor v2r1, CaloReco v2r1, 
      CaloPIDs v2r1
 
-!======================= BrunelSys v23r2 2004-02-09 =======================
-! 2004-02-06 - Marco Cattaneo
- - Modified requirements for Brunel v23r2
+ - New features:
+   . New base classes available for algorithms and tools 
+     (GaudiAlg v7r1, GaudiTools v8r0, CaloKernel v3r0)
+   . Use new version of ParticlePropertySvc (GaudiSvc v11r4, ParamFiles v3r4)
+   . New naming convention for tracks: Upstream renamed Follow,  KsTrack added,
+     track type Long, Upstream, Downstream aded
+     (TrEvent v13r1, TrFitEvent v4r4, TrFitAssociators v1r1, TrCheck v2r4,
+      TrCleanEx v2r9, TrKShort v1r2, RichRecBase v1r9p1, MuonID v3r7p1, 
+      CaloReco v2r0, CaloMonitor v2r0)
+   . Decode ITDigits from RawBuffer (ITAlgorithms v14r1, STDAQ v1r0)
+   . Decode VeloClusters from RawBuffer (VeloAlgorithms v2r9, VeloDAQ v1r0)
+   . Associator tools now inherit from GaudiTool. New printout for tools that
+     are not finalised (GaudiTools v8r1, LHCbKernel v4r4)
 
-   Packages added: RichMCTools v1r0, OTDAQ v1r0, MuonDAQ v1r0, AsctToLinker v1r0
+ - New tuning:
+   . Recalibration of Ecal ActiveToTotal (XmlDDDB v22r0)
+   . New Rich2 HPD layout (XmlDDDB v22r0)
+   . New Calo PID calibration histograms (CaloPIDs v2r1, ParamFiles v3r4)
+   . New corrections for photons and photons from merged pi0s (CaloReco v2r1)
+   . Adapt VeloTT tracking to new TT geometry (VeloTT v1r8)
 
-   Packages modified: ITAlgorithms v14r0, ITCheckers v2r0, LongTrack v1r10,
+ - Persistency changes:
+   . POOL persistency is now the default
+   . Backwards incompatible change to internal encoding of VeloChannelID
+     (LHCbKernel v4r3)
+   . Use VeloChannelID as key of VeloCluster (backwards incompatible)
+     (VeloEvent v13r0p1, AsctToLinker v1r1)
+   . Removed OTDigits from DST following fix to relations problem
+     (OTDAQ v1r1)
+   . Fix relations to CaloDigits
+     (GaudiDb v9r2, CaloReCreateMCLinks algorithm from CaloEvent v13r1)
+
+ - Bug fixes:
+   . Minor fix to IT clustering (ITAlgorithms v14r1)
+
+ - New packaging:
+   . Added explicit dependency on FieldMap v4r3. Change the requirements, or
+     the FIELDMAPROOT environment variable, to choose another field map
+   . Removed VeloRound, round() function now implemented in Kernel/LHCbMath.h
+     (LHCbKernel v4r3, VeloKernel v1r4, VeloDet v8r8p1, VeloAlgorithms v2r9p1)
+   . Adapted to new base classes for algorithms and tools. 
+     Adds printout of tools not finalised
+     (GaudiAlg v7r0, GaudiTools v8r1, LHCbKernel v4r4, CaloMonitor v2r0, 
+      CaloReco v2r0, CaloPIDs v2r0, RichMCTools v1r1, RichRecMCTools v1r3, 
+      RichRecQC v1r6, RichRecSys v1r8)
+   . Valgrind error suppression file for Gaudi and external package errors moved
+     to $STDOPTS/Gaudi.supp (GaudiConf v7r6, valgrind.job)
+
+
+</PRE><H1><A NAME=v23r2>2004-02-10 Brunel v23r2</A></H1><PRE>
+
+- Packages added: RichMCTools v1r0, OTDAQ v1r0, MuonDAQ v1r0, AsctToLinker v1r0
+- Packages modified: ITAlgorithms v14r0, ITCheckers v2r0, LongTrack v1r10,
                       Seeding v2r8, TrCheck v2r3, TrCleanEx v2r8, TrKShort v1r1,
                       TrMatching v2r9, VeloTT v1r7, RichUtils v3r7, 
                       RichDetTools v3r6, RichRecBase v1r9, RichRecQC v1r5, 
@@ -137,23 +422,66 @@
                       RichRecCommon v1r4, RichRecTools v2r7, RichDAQ v1r2,
                       RichRecSys v1r7
 
-!======================= BrunelSys v23r1 2004-01-27 =======================
-! 2004-01-27 - Marco Cattaneo
- - Modified requirements for Brunel v23r1
+- New functionality
+  . Support for new TT layouts (4-3-3-4: v200402.opts, 4-2-1-1-2-4: TT-alt.opts)
+    (XmlDDDB v21r0, STDet v1r0, ITAlgorithms v14r0, ITCheckers v2r0)
+  . Support for new Rich features (switched off by default)
+    (RichRecSys v1r7, RichDetTools v3r6, RichUtils v3r7)
+  . OT digits are rebuilt from RawBuffer (OTDAQ v1r0)
+  . Muon digits are rebuilt from RawBuffer (MuonDAQ v1r0)
 
-   Packages added:    TrKShort v1r0, LHCbTools v1r0
+- DST changes
+  . Replace old style "relations" with new style "links" for MC truth of 
+    ITClusters, OTClusters, VeloClusters, MuonCoords, L0Calo. Relations can be
+    rebuilt from links when reading the DST. (AsctToLinker v1r0)
+  . Add depositedCharge() to ITCluster (ITEvent v13r1, ITAlgorithms v14r0)
+  . Add one significant bit to time field of MuonDigit
+    (MuonEvent v3r1, MuonAlgs v5r1)
+  . Remove all (old) L1 objects from Dst. To be replaced by new Trg
+    (L1Decision not available, waiting for new code working in Trg framework)
+  . Removed filtering of MCParticles/MCVertices (should be done in Gauss)
+  . Added OTDigits. This is because POOL crashes when writing the OTCluster
+    SmartRef to OTDigits, if the OTDigits are not also saved somewhere...
 
-   Packages modified: ITAlgorithms v13r2, BrunelAlgs v3r4, Seeding v2r7
+- New tuning
+  . Updated TT detector geometry (beam pipe hole, guard ring size etc.)
+    (XmlDDDB v21r0)
+  . Adapt to changes in ST geometry 
+    (ITAlgorithms v14r0, ITCheckers v2r0, LongTrack v1r10, Seeding v2r8,
+     TrCheck v2r3, TrCleanEx v2r3, TrKShort v1r1, TrMatching v2r9, VeloTT v1r7)
 
-   Packages removed:  TrIntraPR, UpstreamPR (replaced by TrKShort)
+- New packaging
+  . Creation of relations and links tables for the DST moved to a new independent
+    Relations phase
+
+- Dropped functionality
+  . Dropped support for pre-2004 geometries (removed v200311,opts, RiSicbGeom)
+  . Dropped valgrind support for gcc 2.95.2 
+    (Brunel.supp.gcc32 renamed Brunel.supp)
+
+
+</PRE><H1><A NAME=v23r1>2004-01-28 Brunel v23r1</A></H1><PRE>
+
+- Packages added:    TrKShort v1r0, LHCbTools v1r0
+- Packages modified: ITAlgorithms v13r2, BrunelAlgs v3r4, Seeding v2r7
+- Packages removed:  TrIntraPR, UpstreamPR (replaced by TrKShort)
                       RiSicbGeom, CaloInterfaces, CaloUtils, MCTools 
                       (now in LHCB project)
 
-!======================= BrunelSys v23r0 2004-01-13 =======================
-! 2004-01-13 - Marco Cattaneo
- - Modified requirements for Brunel v23r0. Uses LHCB v15r0, GAUDI v14r0
+- New functionality
+  . New KShort tracking replaces old "upstream" tracking. See TrKShort
+    release notes for details (TrKShort v1r0). UpstreamPR and TrIntraPR removed
+  . All DST classes can now be written to POOL (LHCbKernel v4r1)
 
-   Packages modified: RiSicbGeom v3r8, ITAlgorithms v13r1, CaloInterfaces v3r1,
+- New tuning
+  . New normalisation for timingAlg, for consistency with Boole. Updated list of
+    algorithms to be timed (BrunelAlgs v3r4, LHCbTools v1r0)
+  . Adapt Seeding algorithm to latest IT+OT geometry (Seeding v2r7)
+
+</PRE><H1><A NAME=v23r0>2004-01-22 Brunel v23r0</A></H1><PRE>
+- Built against GAUDI v14r0
+
+- Packages modified: RiSicbGeom v3r8, ITAlgorithms v13r1, CaloInterfaces v3r1,
                       CaloUtils v4r6, CaloMonitor v1r6, VeloAlgorithms v2r9,
                       RichRecSys v1r6, RichDAQ v1r1, RichDetTools v3r5,
                       RichRecBase v1r8, BrunelAlgs v3r3, TrExtrapolator v2r10,
@@ -161,87 +489,264 @@
                       TrMatching v2r8, TrIntraPR v2r8, UpstreamPR v2r9,
                       CaloReco v1r8
 
-!======================= BrunelSys v22r0 2003-12-12 =======================
-! 2003-12-10 - Marco Cattaneo
- - Modified requirements for Brunel v22r0. Uses LHCB v14r0, GAUDI v13r0
+- New functionality
+  . Possibility to read POOL digi file and/or save POOL dst file. Only for
+    tests by experts. See examples in v200311.opts
+  . Monitoring histograms now saved to ROOT file by default. Saving to Hbook file
+    is still possible, see comments in BrunelMoni.opts
 
-   Packages modified: RiSicbGeom v3r7, CaloInterfaces v3r0, CaloMonitor v1r5,
+- New tuning
+  . New Ecal and Hcal calibration for "ActiveToTotal" parameter (XmlDDDB v20r1)
+
+- Dst changes
+  . Add file DstContent.opts to define dst content (Moved from GaudiConf)
+  . Remove L0/Calo and L0/FullCalo, can be rebuilt from RawBuffer
+  . Backwards incompatible update of CaloCluster - new seed attribute
+    (CaloEvent v13r0, CaloReco v1r8)
+  . Add HepMCEvents (written if present on Sim+Digi files)
+  . Add Link objects (MC truth of tracking digits used by Trg tracking)
+  . Add MCTrackInfo for "in Acceptance" and "Reconstructible" flags (Trg defn.)
+
+
+</PRE><H1><A NAME=v22r0>2003-12-12 Brunel v22r0</A></H1><PRE>
+- Built against GAUDI v13r0
+
+- Packages modified: RiSicbGeom v3r7, CaloInterfaces v3r0, CaloMonitor v1r5,
      RichUtils v3r6, ITAlgorithms v13r0p1, RichDetTools v3r4, CaloReco v1r7,
      CaloPIDs v1r2, TrExtrapolator v2r9, RichRecSys v1r5, RichRecBase v1r7,
      RichRecQC v1r4, RichRingRefit v1r4, RichRecTools v2r6, RichRecCommon v1r3,
      RichLocalPID v1r4, RichGlobalPID v1r3, RichDAQ v1r0p1, TrIntraPR v2r7p1
 
-!======================= BrunelSys v21r2 2003-12-03 =======================
-! 2003-12-03 - Marco Cattaneo
- - Modified requirements for Brunel v21r2. Uses LHCB v13r5
+</PRE><H1><A NAME=v21r2>2003-12-04 Brunel v21r2</A></H1><PRE>
+** This version requires data produced by Boole v3r2 or greater **
 
-   Packages modified: ITAlgorithms v13r0, ITCheckers v1r4, Seeding v2r6,
+- Packages modified: ITAlgorithms v13r0, ITCheckers v1r4, Seeding v2r6,
      LongTrack v1r9, TrCheck v2r2, TrCleanEx v2r7p1, TrIntraPR v2r7,
      VeloTT v1r6p1, RichDetTools v3r3, RichRecSys v1r4, RichRecBase v1r6,
      RichRecTools v2r5, OTAlgorithms v13r4
 
-!======================= BrunelSys v21r1 2003-11-27 =======================
-! 2003-11-27 - Marco Cattaneo
- - Modified requirements for Brunel v21r1. Uses LHCB v13r4
+- New features
+   . Additional monitoring histograms (ITCheckers v1r4)
 
-   Packages added:    RichDAQ v1r0
-   Packages modified: BrunelAlgs v3r2, CaloReco v1r6p1, TrCleanEx v2r7,
+- New tuning
+   . Changes to IT clustering cuts (ITAlgorithms v13r0)
+   . Use circle method everywhere for ray tracing, gives further improvement in
+     Rich time performance without loss of efficiency 
+     (RichDetTools v3r3, RichRecSys v1r4)
+   . Backwards incompatible change to OT geometry: introduction of OTQuarters,
+     new numbering for OT stations, layers, modules 
+     (XmlDDDB v20r0, OTDet v5r0, OTAlgorithms v13r4, TrAssociators v3r7,
+      LongTrack v1r9, TrCheck v2r2, TrIntraPR v2r7, Seeding v2r6)
+
+- Dst changes
+   . Backwards incompatible change to bit definitions in OTChannelID
+     (LHCbKernel v12r10)
+
+- Bug fixes
+   . Fix division by 0 for backward moving tracks (bug 1928) (TrCheck v2r2)
+
+- New packaging
+   . Changes to IT geometry tree structure 
+     (XmlDDDB v19r1, ITDet v1r7, Seeding v2r6, LongTrack v1r8p1, TrCheck v2r2,
+      TrCleanEx v2r7p1, TrIntraPR v2r7)
+   . Changes to ITSignalToNoise tools ---> noise in e- or ADC 
+     (ITAlgorithms v13r0, LongTrack v1r8p1, TrIntraPR v2r7, VeloTT v1r6p1)
+
+- Removed features
+   . Remove support for v256r0 geometry (not supported by OTDet v5r0)
+
+</PRE><H1><A NAME=v21r1>2003-11-28 Brunel v21r1</A></H1><PRE>
+** This version requires data produced by Boole v3r1 or greater **
+
+- Packages added:    RichDAQ v1r0
+- Packages modified: BrunelAlgs v3r2, CaloReco v1r6p1, TrCleanEx v2r7,
      RiSicbGeom v3r6, RichUtils v3r5, RichDetTools v3r2, RichRecBase v1r5,
      RichRecQC v1r3, RichRingRefit v1r3, RichLocalPID v1r3, RichGlobalPID v1r2,
      RichPIDMerge v1r2, RichRecCommon v1r2, RichRecMCTools v2r4, RichRecSys v1r3
  
-!====================== BrunelSys v21r0p1 2003-11-10 ======================
-! 2003-11-10 - Marco Cattaneo
- - Packages modified: BrunelAlgs v3r1p1, Brunel v21r0p1
+- New features
+   . Calorimeter digits rebuilt from RawBuffer (CaloEvent v12r1)
+   . Rich digits rebuilt from RawBuffer (RichDAQ v1r0)
+   . Default OT monitoring now switched on
 
-!======================= BrunelSys v21r0 2003-11-05 =======================
-! 2003-11-05 - Marco Cattaneo
- - Modified requirements for Brunel v21r0. Uses LHCB v13r3
+- New tuning
+   . Improved Rich detector packages and new track cuts in Rich reconstruction.
+     Reduced the max track limit for the Global PID from 230 to 180 and 
+     increased it for the local PID to 300. Effect is very small drop in PID 
+     performance for large events, but much improved CPU time.
+     (RiSicbGeom v3r6, RichUtils v3r5, RichDetTools v3r2, RichRecSys v1r3)
 
-   Packages modified: RiSicbGeom v3r5, RichUtils v3r4, RichDetTools v3r1,
+- DST changes
+   . Added DAQ/RawBuffer (GaudiConf v7r3)
+
+- Bug fixes
+   . Fix to off diagonal elements of TrStateP p covariance matrix (TrEvent v12r2)
+
+- Removed features
+   . Remove support for v254r1 (optimization TDR) geometry
+
+
+</PRE><H1><A NAME=v21r0p1>2003-11-10 Brunel v21r0p1</A></H1><PRE>
+
+- Packages modified: BrunelAlgs v3r1p1, Brunel v21r0p1
+
+- Bug fix
+   . Use correct serialization to read in HltBuffer and L1Buffer (DAQEvent v2r1)
+
+</PRE><H1><A NAME=v21r0>2003-11-05 Brunel v21r0</A></H1><PRE>
+ Version built against LHCB v13r3. Requires oodigi produced by Boole v3r0 or
+ later (due to backward incompatible change in Rich data and DAQEvent)
+
+- Packages modified: RiSicbGeom v3r5, RichUtils v3r4, RichDetTools v3r1,
      RichRecBase v1r4, RichRecQC v1r2, RichLocalPID v1r2, RichRingRefit v1r2,
      RichPIDMerge v1r1, RichRecTools v2r3, RichRecSys v1r2, BrunelAlgs v3r1,
      OTAlgorithms v13r3, TrCheck v2r1, TrFitter v3r7, TrExtrapolator v2r8
  
-!======================= BrunelSys v20r1 2003-10-17 =======================
-! 2003-10-14 - Marco Cattaneo
- - Modified requirements for Brunel v20r1
+- New tuning
+   . Changes to Rich monitoring (RichRecQC v1r2)
+   . Updates and new features in Rich ring refit (RichRingRefit v1r2)
+   . Implement fast refit with outlier removal. Default is five iterations, 
+     removing outliers at chi2 > 9. (TrFitter v3r7)
+   . New tuning of dE/dx and MS (TrExtrapolator v2r8)
 
-   Packages modified: VeloAlgorithms v2r8, ITCheckers v1r3p1, OTAlgorithms v13r2,
+- New feature
+   . Possibility to switch on detailed OT monitoring. 
+     Default is "fullDetail" = false (OTAlgorithms v13r3)
+
+- DST changes
+   . Requires oodigi produced by Boole v3r0 or later, due to backwards
+     incompatible changes to event model and oodigi content
+     (RichKernel v4r0, RichEvent v6r0, DAQEvent v2r0, GaudiConf v7r2)
+   . Reading program has to be linked with LHCB v13r3 or later due to backwards
+     incompatible change to Rich Event model (RichKernel v4r0, RichEvent v6r0)
+   . Add L1Buffer to DST (GaudiConf v7r2)
+
+- Geometry changes
+   - Renamed v200309-hpd.opts to v200311.opts
+   - Removed v256-MaPMT.opts and v200309.opts (MaPMT geometries)
+
+- Bug fixes
+   . Fixes to material description of IT frames, was not consistent with cdf
+     description (XmlDDDB v19r0)
+   . Fix uninitialised variables (bug 1673) (TrCheck v3r7)
+
+</PRE><H1><A NAME=v20r1>2003-10-17 Brunel v20r1</A></H1><PRE>
+
+- Packages modified: VeloAlgorithms v2r8, ITCheckers v1r3p1, OTAlgorithms v13r2,
      RichUtils v3r3, RichDetTools v3r0, RiSicbGeom v3r4, RichRecBase v1r3,
      RichRecQC v1r1, RichGlobalPID v1r1, RichLocalPID v1r1, RichRingRefit v1r1,
      RichRecCommon v1r1, RichRecTools v2r2, RichRecSys v1r1, TrExtrapolator v2r7,
      LongTrack v1r8, TrFitter v3r6, TrTools v2r5, VeloTrack v5r1, VeloTT v1r6,
      TrIntraPR v2r6, TrUpstreamPR v2r8, TrMatching v2r7, trCheck v2r0, 
      BrunelAlgs v3r0
- 
-   Packages added:    RichRecMCTools
-   Packages removed:  MuonAlgs
+- Packages added:    RichRecMCTools
+- Packages removed:  MuonAlgs
 
-!======================= BrunelSys v20r0 2003-07-17 =======================
-! 2003-07-17 - Marco Cattaneo
- - Modified requirements for Brunel v20r0 (removal of digitization to Boole)
+- New functionality
+   . Add Rich support for MaPMT and for Gauss data. Requires XmlDDDB v18r2
+     (RichDetTools v3r0, RichDet v6r0, RichKernel v3r3, RichRecSys v1r1)
+   . Add histograms to monitor memory usage (BrunelAlgs v3r0)
+   . Create HLTEvent from HLTBuffer at start of processing (BrunelAlgs v3r0)
 
-   Packages modified: BrunelAlgs v2r2, CaloUtils v4r5, OTAlgorithms v13r1, 
+- New tuning
+   . Improved handling of Rich tabulated properties (RichUtils v3r3)
+   . Improved ring refit algorithm (RichRingRefit v1r1)
+   . Use reference trajectory instead of dummy point on track to propagate
+     tracks between Velo and T stations
+     (TrFitEvent v4r0, LongTrack v1r8, VeloTrack v5r1)
+   . Increase TT signal to noise cut from 4. to 6. for VTT tracks (VeloTT v1r6)
+   . Add TT hits to "Matched" tracks (TrMatching v2r7, Brunel.opts)
+
+- New packaging
+   . Remove dependency on NAGC, use equivalent gsl functions instead
+     (VeloAlgorithms v2r8, ITCheckers v1r3p1, TrExtrapolator v2r7,
+      TrIntraPR v2r6, UpstreamPR v2r8)
+   . Remove dependency on MuonAlgs (contains only Muon digitization)
+   . Remove dependency on LHCBDBASE environment variable. Parameters are taken
+     from ParamFiles package. 
+   . Specialised BrunelMain.cpp no longer needed, use GaudiMain instead
+   . Introduce dependency on GaudiGSL and GSL
+   . Rename top level options files for consistency with new XmlDDDB scheme
+   . Update Brunel.job and valgrind.job for above changes
+
+</PRE><H1><A NAME=v20r0p1>2003-07-18 Brunel v20r0p1</A></H1><PRE>
+
+- Bug fix:
+   . Add workaround in BrunelMoni.opts to create Tr2MCP relation table for DST
+     when Rich Monitoring is skipped
+
+</PRE><H1><A NAME=v20r0>2003-07-17 Brunel v20r0</A></H1><PRE>
+ *** First version without digitisation. To be used on output of Boole v1r0 ***
+
+- Packages modified: BrunelAlgs v2r2, CaloUtils v4r5, OTAlgorithms v13r1, 
      TrTools v2r4p2, RichRecSys v1r0p1, RichLocalPID v1r0p1, CaloPIDs v1r1
-   Packages added: RiSicbGeom v3r3
-   Packages removed: BrunelSicb, L0Calo, L0Muon, PuVeto, L0DU, L1VeloTrack,
+- Packages added: RiSicbGeom v3r3
+- Packages removed: BrunelSicb, L0Calo, L0Muon, PuVeto, L0DU, L1VeloTrack,
      L1Decision, DigiAlg, CaloDigit, MuonBackground, RichDigiQC, recevt, recrich
  
-!======================= BrunelSys v19r1 2003-07-08 =======================
-! 2003-07-08 - Marco Cattaneo
- - Modified requirements for Brunel v19r1
-   Packages removed:  RichRecAlgs, RichMonitor, KsReco
-   Packages added:    RichRecSys, RichRecCommon, RichRingRefit, RichLocalPID,
+- Removed functionality:
+   . The digitisation and trigger phases have been removed (moved to Boole). 
+     This includes addition of spillover and background, now done in Boole
+   . The SICB initialization is removed. A reduced ZEBRA common block is still
+     present for HBOOK.
+
+- New functionality
+   . use also Seed and Upstream tracks for Calo PID matching (CaloPID v1r1)
+
+- New tuning
+   . Modify IT, OT, Velo Associators to work with Digit2MCHit relations stored
+     on oodigi tape. Identical behaviour as previously except for tiny 
+     additional association inefficiency for IT (few 10^-4) and TT (10^-3)
+
+- DST changes
+   . Rich and Calo Digits have been removed (it is possible to navigate to them
+     on the oodigi tape if required for special studies) (GaudiConf v7r0)
+
+- Bug fixes
+   . Correct a bug with rotation of TT stereo layers (ITDet v1r5)
+   . Fix for HCalE estimator (CaloPID v1r1)
+
+</PRE><H1><A NAME=v19r1>2003-07-08 Brunel v19r1</A></H1><PRE>
+- Packages removed:  RichRecAlgs, RichMonitor, KsReco
+- Packages added:    RichRecSys, RichRecCommon, RichRingRefit, RichLocalPID,
      RichGlobalPID, RichPIDMerge, RichDigiQC, RichRecQC
-   Packages modified: RichUtils v3r2, RichRecBase v1r2, RichRecTools v2r1,
+- Packages modified: RichUtils v3r2, RichRecBase v1r2, RichRecTools v2r1,
      RichDetTools v2r2, BrunelAlgs v2r1
 
-!======================= BrunelSys v19r0 2003-07-03 =======================
-! 2003-07-03 - Marco Cattaneo
- - Modified requirements for Brunel v19r0
-   Packages removed:  MuonTools (now taken from LHCB_v12r0)
-   Packages modified: KsReco v1r5, PuVeto v5r4, L0DU v6r4, L1VeloTrack v5r1,
+- New tuning:
+   . Update of Rich reconstruction software. Includes repackaging of algorithms.
+     (RichUtils v3r2, RichRecBase v1r2, RichGlobalPID v1r0, RichLocalPID v1r0,
+      RichRingRefit v1r0, RichPIDMerge v1r0, RichRecTools v2r1, RichRecSys v1r0)
+
+- New packaging:
+   . Split Rich monitoring into distinct Digi and Reco packages
+     (RichRecQC v1r0, RichDigiQC v1r0)
+
+- New functionality:
+   . Add MCRichHit class to Event model, for detector information from Gauss
+     (RichEvent v5r0, RiSicbCnv v6r0, Event v3r4, SicbCnv v17r7)
+   . Add support for valgrind 1.9.6 with gcc32 
+     (new file Brunel.supp.gcc32, invoked by valgrind.job)
+
+- Removed functionality:
+   . Remove V0 reconstruction ("upstream " KsReco package)
+     replaced by new DaVinci algorithm 
+
+- DST changes:
+   . Update list of algorithms to be timed with new Rich Global PID iterations
+     (BrunelAlgs v2r1)
+   . Remove V0s (GaudiConf v6r10)
+
+- Bug fixes
+   . Release services etc. after use, to please valgrind
+     (RiSicbCnv v6r0, RichRecBase v1r2)
+
+
+</PRE><H1><A NAME=v19r0>2003-07-03 Brunel v19r0</A></H1><PRE>
+  This version is built against Gaudi v12 and introduces support for gcc 3.2
+
+- Packages removed:  MuonTools (now taken from LHCB_v12r0)
+- Packages modified: KsReco v1r5, PuVeto v5r4, L0DU v6r4, L1VeloTrack v5r1,
    L1Decision v2r1, OTAlgorithms v13r0, TrCheck v1r4, LongTrack v1r7,
    TrExtrapolator v2r6, Seeding v2r5, TrIntraPR v2r5, TrTools v2r4p1,
    MuonID v3r6, MuonBackground v1r2, RichRecBase v1r1, RichUtils v3r1,
@@ -249,53 +754,1639 @@
    L0Calo v7r0p1, L0Muon v6r5p1, RichMonitor v3r0p1, RichRecAlgs v2r0p2, 
    RichRecTools v2r0p1, DigiAlg v1r0p1, L1VeloTrack v5r2, BrunelAlgs v2r0p1
 
-!======================= BrunelSys v18r1 2003-06-24 =======================
-! 2003-06-24 - Marco Cattaneo
- - Modified requirements for Brunel v18r1
-   Packages removed:  BrunelKernel
-   Packages added:    DigiAlg v1r0
-   Packages modified: BrunelAlgs v2r0, CaloReco v1r6, ITCheckers v1r3,
+- Removed features:
+   . Removed support for dbase < v256r0. 
+     Data produced with dbase v254r1 (PDC1 winter 2003 production) can be 
+     reconstructed with dbase v256r0. 
+     Data produced with dbase v255r* (Robustness tests for optimization and
+     trigger TDRs) cannot be reconstructed with this version - use v18r1.
+   . Removed Rich Fortran reconstruction
+
+- New features:
+   . Implementation of modules in OT description. Uses backwards incompatible
+     modification to OTDet, requires XmlDDDB from v16r0, dbase from v256r0
+     (OTAlgorithms v13r0, Seeding v2r4, LongTrack v1r7, TrIntraPR v2r5,
+      L1VeloTrack v5r1)
+   . New implementation of "flat spillover" in Muon chambers. Requires 
+     installation of the file $LHCBHOME/sim/data/flat-spillo-2.hbook
+     (MuonSicbCnv v7r1, MuonBackground v1r2)
+   . Added L0 veto on Spd and PuVeto multiplicity (L0DU v6r5)
+   . Redesign of L1 algorithm and packaging (L1Decision v2r1)
+   . L1TTClusters used instead of offline clusters for L1 (L1Decision v2r1)
+   . Detailed description of Spd and Prs, including converter! (XmlDDDB v16r1)
+   . Rich OO reconstruction is now the default
+
+- DST changes
+   . Rec/Rich/PIDs now contains result of Rich OO reconstruction. 
+     Rec/Rich/OOPIDs is no longer filled
+
+- New tuning:
+   . Use TDR L0 threshold settings (L0DU v6r5)
+   . New Muon ID tuning (MuonID v3r6)
+   . Final L1 calibration for TDR (L1Decision v2r1)
+   . TimingAlg normalisation loop increased by x 1.3 in case of gcc 3.2, to 
+     compensate effect of -o2 compiler flag (BrunelAlgs v2r0p1)
+
+- Bug fixes:
+   . Release application manager in BrunelMain.cpp, to please valgrind
+   . Release services etc. after use, to please valgrind
+     (ITAlgorithms v12r10, L1Decision v2r1, L1VeloTrack v5r1, OTAlgorithms v13r0,
+      MCTools v1r1p1, KsReco v1r5, RichMonitor v3r0p1, RichRecAlgs v2r0p2,
+      RichRecTools v2r0p1, TrCheck v1r4, TrIntraPR v2r5, TrTools v2r4p1)
+   . Remove IGeometryInfoException from DoxyFile.cfg, to fix doxygen doc
+
+</PRE><H1><A NAME=v18r1>2003-06-24 Brunel v18r1</A></H1><PRE>
+- Packages removed:  BrunelKernel
+- Packages added:    DigiAlg v1r0
+- Packages modified: BrunelAlgs v2r0, CaloReco v1r6, ITCheckers v1r3,
    ITAlgorithms v12r9p1, LongTrack v1r6, MuonBackground v1r1, RichRecAlgs v2r0p1,
    MuonAlgs v4r1
 
    Package included in this version only: MuonTools v3r5 (to over-ride v3r4 in
                                           LHCB_v1r12)
+- New features:
+   . Support addition of LHC background. Switched on by default
+     (Digi/DigiAlg v1r0, Muon/MuonAlgs v4r1, Muon/MuonTools v3r5)
+   . New algorithm MCEvTypeFilter to allow different DST definitions depending
+     on event type (BrunelAlgs v2r0)
+   . Enable default IT monitoring (ITCheckers v1r3)
 
-!======================= BrunelSys v18r0 2003-04-15 =======================
-! 2003-04-15 - Marco Cattaneo
- - Modified requirements for Brunel v18r0.
-   Packages added:    CaloPIDs v1r0, MuonUtils v1r0, MuonBackground v1r0,
-						          MCTools v1r1, RichRecBase v1r0
-   Packages removed:  RichRecKernel, RichRecEvent, RichRecInterfaces
-   Packages modified: BrunelAlgs v1r9, BrunelSicb v4r1, CaloDigit v1r2,
+- DST changes:
+   . L1OT(ST,TT)Clusters are present only on minimum bias events, as in the TDR
+     production with Brunel v17r4. In Brunel v18r0 they were present on all
+     events (GaudiConf v6r8, BrunelAlgs v2r0)
+
+- Bug fixes:
+   . Fix problem with handling of OT geometry in Y=0 overlap region. Improves
+     tracking efficiency by 0.3% (LongTrack v1r6)
+   . Fix run time problem on Windows (RichRecAlgs v2r0p1)
+   . Fix bug 425: processing aborted if bad cluster in Ecal (CaloReco v1r6)
+   . Fix bug 424: crashes due to rounding problem (MuonBackground v1r1)
+   . Fix bug 135: Solids deleted twice at finalisation (DetDesc v1r9p1)
+   . Fix some Rich1 overlaps reported by transport service (XmlDDDB v15r5)
+   . Fix uninitialised bin in IT charge sharing function (ITAlgorithms v12r9p1)
+
+- Packaging changes:
+   . BrunelInitialisation and BrunelPhase algorithms moved to BrunelAlgs
+     package, making BrunelKernel package obsolete (BrunelAlgs v2r0)
+
+</PRE><H1><A NAME=v18r0p3>2003-06-06 Brunel v18r0p3</A></H1><PRE>
+- New features:
+   . Add support for dbase v255r3
+
+</PRE><H1><A NAME=v18r0p2>2003-05-07 Brunel v18r0p2</A></H1><PRE>
+- New features:
+   . Add support for dbase v255r4 and "degraded Velo" robustness test
+- Bug fixes:
+   . Fix a character string length, causing crash on W2K (BrunelKernel v5r4p1)
+
+</PRE><H1><A NAME=v18r0p1>2003-04-24 Brunel v18r0p1</A></H1><PRE>
+- New features:
+   . Add support for dbase v255r2
+
+</PRE><H1><A NAME=v18r0>2003-04-17 Brunel v18r0</A></H1><PRE>
+- Packages added:    CaloPIDs v1r0, MuonUtils v1r0, MuonBackground v1r0,
+                     MCTools v1r1, RichRecBase v1r0
+- Packages removed:  RichRecKernel, RichRecEvent, RichRecInterfaces
+- Packages modified: BrunelAlgs v1r9, BrunelSicb v4r1, CaloDigit v1r2,
      CaloMonitor v1r4, CaloReco v1r4, ITAlgorithms v12r9, L0Calo v7r0,
      L0Muon v6r5, L1VeloTrack v5r0, MuonAlgs v4r0, OTAlgorithms v12r4,
      recrich v7r4, RichMonitor v3r0, RichRecTools v2r0, RichRecAlgs v2r0,
      RichUtils v3r0, VeloAlgorithms v2r7
 
-!======================= BrunelSys v17r4 2003-02-05 =======================
-! 2003-02-05 - Marco Cattaneo
- - Modified packages for Brunel v17r4:
-   CaloReco v1r3, L0DU v6r4, L1Decision v1r7
+- New features:
+   . DST content is now defined in GaudiConf package, not in BrunelDst.opts
+     As side-effect, OutputStream is now called DstWriter, not BrunelDstWriter
+   . Improved default monitoring for automatic data quality checks
+     (VeloAlgorithms v2r7, RichMonitor v3r0)
+   . Support for dead strips in Velo (zero dead strips by default)
+     (VeloAlgorithms v2r7, VeloTrack v5r0)
+   . Muon low energy background is no longer read from SICBMC RAWH file. 
+     Instead it is generated in the digitisation, using a parameterisation from
+     the histograms in $LHCBHOME/Sim/mubg1.hbook
+     (MuonAlgs v4r0, MuonUtils v1r0, MuonBackground v1r0, MuonSicbCnv v7r0) 
+   . Support for dead cells in Calorimeters (zero dead cells by default)
+     (CaloDigit v1r2)
+   . Support for IT cluster smearing, to simulate misaligment (zero smearing by 
+     default) (ITAlgorithms v12r9)
+   . Support for random noise in OT (no noise by default) (OTAlgorithms v12r4)
+   . Support for degraded efficiency and resolution (swiched off by default)
+     (RichRecTools v2r0, RichRecAlgs v2r0, recrich v7r4, BrunelSicb v4r1)
+   . Support for extra noise and smearing to mimic misalignment (off by default)
+     (VeloAlgorithms v2r7)
+   . Added a new options files for robustness tests. The different cases shown in
+     http://cern.ch/lhcb-phys/task_force/TDR_studies_2002-2003/robustness/
+     are implemented as follows:
+   
+     case 0: default settings for dbase v255r1, Brunelv255r1.opts
+     case 1: default settings, use Brunelv254r1.opts as is
+     case 2: add Test2Robustness.opts at end of Brunelv254r1.opts
+     case 3: Not yet implemented
+     case 4: independent of Brunel. Use Brunelv254r1.opts as is
+     case 5: independent of Brunel. Use Brunelv254r1.opts as is
+     case 6: Not yet implemented
 
-!======================= BrunelSys v17r3 2003-01-31 =======================
-! 2003-01-30 - Marco Cattaneo
- - Modified packages for Brunel v17r3:
-	 L0DU v6r3, L0Muon v6r4, L1VeloTrack v4r1
+	  . Added Brunelv255r0.opts, Brunelv255r1.opts to support new dbases 
 
-!===================== BrunelSys v17r2 2003-01-23 ============================
-! 2003-01-23 - Marco Cattaneo
- - Modified packages for Brunel v17r2:
-   CaloReco v1r2p1, L1Decision v1r6, L1VeloTrack v4r0, MuonAlgs v3r3,
-   RichDetTools v1r3, TrCleanEx v2r6, TrIntraPR v2r4, UpstreamPR v2r7, 
-   VeloTT v1r5, VeloTrack v4r5
 
-!===================== BrunelSys v17r1 2003-01-17 ============================
-! 2003-01-17 - Marco Cattaneo
- - Modified packages for Brunel v17r1:
+- Removed features:
+   . Removed support for data produced with dbase v253r99 (Xmas 02 production) 
+
+- New tuning:
+   . Random number is now initialised by hashing a string containing the 
+     complete run and event numbers (BrunelKernel v5r4)
+   . Faster Calo MC truth association (CaloEvent v11r5, CaloAssociators v1r3)
+   . New more efficient version of OO-Rich. OO reconstruction now similar or 
+     better efficiency than Fortran. (RichKernel v3r0, RichUtils v3r0,
+     RiSicbGeom v3r1, RichDet v4r1, RichDetTools v2r0, RichEvent v4r3,
+     RichRecBase v1r0, RichRecAlgs v2r0, RiSicbCnv v5r5, RichRecTools v2r0)
+   . Changed full scale of Prs and SPD (XmlDDDB v15r3)
+   . Changed default pe/Mev and Prs/Spd fractional correction (CaloDigit v1r2)
+   . Update S corrections (CaloReco v1r4, CaloPIDs v1r0)
+   . M3 seed cleaning no longer done in y direction, increases L0Muon efficiency
+     (L0Muon v6r5)
+
+- DST changes:
+   . Add VeloTrackAlg timing to Timing.opts - fixes bug 191 (BrunelAlgs v1r9)
+   . Do not filter MCParticles and MCVertices containers if relations 
+     between MCParticles and MCVertices are corrupt (checked with new tool
+     CheckMCEventTool) to protect against bug 208 (BrunelAlgs v1r9, MCTools v1r1)
+   . Add Trig/L1/TTClusters, ITClusters, OTClusters (GaudiConf v6r6) (These
+     were available in Winter 2003 production via additional job options in
+     production workflow) 
+   . ProcStat now contains information from the OO Rich reconstruction:
+     - for global and local algorithms, the number of PIDs produced, or the
+       (negative) error codes if the processing was aborted
+     - for the merging algorithm, the number of local and global results that
+       were used in the merged output container
+
+- Bug fixes:
+   . Brunel.job again analyses core dump file, also on RH7
+   . Bug 203: check array boundary for OT (L1VeloTrack v5r0)
+   . Bugs 191, 208: see DST changes above.
+   . Bug 305: fix initialisation of Calo monitoring (CaloMonitor v1r4)
+   . Bugs 138,139: valgrind errors disappeared with new version of Rich code
+   . Bug 396: memory leak reported by valgrind (DetDesc v11r9)
+   . Several fixes to geometry solids (DetDesc v11r9)
+   . Fix position of magnet material (XmlDDDB v15r3)
+   . Minor bug fixes in ITCrossTalk (ITAlgorithms v12r9)
+   . Fix clustering for merged pi zeros (CaloReco v1r4, CaloPIDs v1r0)
+   . Fix bug in a loop index (MuonTools v3r4)
+   . Use latest Gaudi bug fixes (Gaudi v11r5)
+
+</PRE><H1><A NAME=v17r4>2003-02-06 Brunel v17r4</A></H1><PRE>
+ - Packages modified: CaloReco v1r3, L0DU v6r4, L1Decision v1r7
+
+ - New tuning:
+   . L1 minimum bias parameterization (L1Decision v1r7)
+   . Updated version of single gamma tool (CaloReco v1r3)
+   . New calibration constants for electrons and photons (CaloReco v1r3)
+   . Update S and L corrections (CaloReco v1r3)
+
+ - New features:
+   . Repackaging of L1Decision to remove some dependencies (L1Decision v1r7)
+
+ - DST changes:
+   . Remove optional containers Rec/Calo/HcalIDe, HcalIDmu, PrsID, EcalID
+   . Add mandatory container Rec/Calo/EcalE
+   . Previously optional containers Rec/Calo/HcalE, PrsE now mandatory
+
+ - Bug fixes:
+   . BugID 136: fix a Rich1 volume overlap (XmlDDDB v15r2)
+   . Print correct L0 performance values (L0DU v6r4)
+   . Add missing factories for L1OTCluster and L1ITCluster (L1Event v11r6)
+
+</PRE><H1><A NAME=v17r3>2003-01-31 Brunel v17r3</A></H1><PRE>
+ - Packages modified: L0DU v6r3, L0Muon v6r4, L1VeloTrack v4r1
+
+ - New tuning:
+   . Changed logic for treating the L0 Muon PU overflow conditions: now  PU 
+     always returns 2 randomly chosen candidates if there are more than 2 
+     candidates found. No more the whole quarter of the processor is empty in 
+     this case (L0Muon v6r4)
+   . Default L0 Muon FoIs are set to reasonable values for the 125 KHz L0Muon
+     bandwidth (L0Muon v6r4)
+   . PuVeto decision taken on sum of second peak: 3 or more is vetoed (L0DU v6r3)
+   . L0 thresholds adjusted (L0DU v6r3)
+
+ - New features:
+   . L0Muon ghosts cleaned in L0Muon rather than L0DU (L0Muon v6r4, L0DU v6r3)
+
+ - Bug fixes:
+   . Fix a boundary problem in DeVelo (VeloDet v8r4)
+   . BugID 143: fix a rare duplicate key problem in VeloFEToL1 (L1VeloTrack v4r1)
+
+</PRE><H1><A NAME=v17r2>2003-01-23 Brunel v17r2</A></H1><PRE>
+ - Packages modified: VeloTT v1r5, VeloTrack v4r5,
+     CaloReco v1r2p1, L1Decision v1r6, L1VeloTrack v4r0, MuonAlgs v3r3,
+     RichDetTools v1r3, TrCleanEx v2r6, TrIntraPR v2r4, UpstreamPR v2r7
+
+ - New tuning:
+   . Raise IT clustering S/N cut to 3.2 sigma (from 3.0) (Brunel.opts)
+   . Tuning for new TT strip pitch and magnetic field, plus minor improvements
+     (L1Decision v1r6)
+   . Tuning of VTT tracking for field043 (VeloTT v1r5)
+   . Tuning of Upstream tracking for field043 (TrIntraPR v2r4, UpstreamPR v2r7)
+   . Improved agreement between Xml and CDF geometry for OO-Rich
+     (XmlDDDB v15r0, RichDet v4r0, RichDetTools v1r3, Brunel.opts)
+   . Fix HCAL and ECAL calibrations as result of time information in digitisation
+     (XmlDDDB v15r1)
+
+ - New features:
+   . Add support for dbase v254r1
+    (XmlDDDB v15r0, Brunelv254r1.opts - to be used also for dbase v254r0 and 
+     v253r1 test data)
+   . New algorithms to produce ST and OT trigger clusters
+     (L1VeloTrack v4r0, L1Event v11r5)
+   . Possibility to cut on IT S/N in Upstream tracking (TrIntraPR v2r4)
+
+ - DST changes:
+   . TrStateL of Velo and Veloback tracks is now given at Z of first measured
+     point (actually first used phi sensor) instead of Z=0 previously
+     (VeloTrack v4r5, TrCleanEx v2r6)
+
+ - Bug fixes:
+   . Fix valgrind problems (CaloDet v6r4, CaloReco v1r2p1, MuonAlgs v3r3)
+   . Introduce fix to inner tracker materials that was mistakenly left out in
+     XmlDDDB v14r1 (XmlDDDB v15r0)
+
+</PRE><H1><A NAME=v17r1>2003-01-17 Brunel v17r1</A></H1><PRE>
+ - Packages modified:
    ITAlgorithms v12r8, L0Calo v6r6, L1Decision v1r5, TrCleanEx v2r5, 
    TrExtrapolator v2r5, TrMatching v2r6, TrTools v2r4, VeloAlgorithms v2r6
 
-!===================== BrunelSys v17r0 2003-01-09 ============================
-! 2003-01-09 - Marco Cattaneo
- - Packages for Brunel v17r0
+ - New tuning:
+   . Tune Match tracking for field043 (TrTools v2r4, TrMatching v2r5)
+   . Use slope on x instead of atan(x/9450) in parabolic correction of pt-kick
+     tool (TrTools v2r4)
+
+ - New features:
+   . Drop support for dbases prior to v253r99, add support for v253r99, v254r0
+     > Use dbase v253r99 for data produced with dbase v253r0 (Xmas production)
+     > Use dbase v254r0 for field043 data (e.g. test data produced with v253r1)
+     > Data produced with dbase < v253r0 no longer supported
+   . New accessor for noise level in ITSignalToNoiseTool (ITAlgorithms v12r8)
+
+ - DST changes:
+   . add a TrStateP to velo and veloBack unique tracks (2nd state on the track)
+     at the Z closest to the beamline, assuming Pt=400 MeV/c and dp/p=0.1
+     (TrCleanEx v2r5, Brunel.opts - new algorithm TrPrepareVelo) 
+
+ - Bug fixes:
+   . Fix Pi0Local per validation card: The 2x2 energy was used, instead of the
+     total card energy (L0Calo v6r6)
+   . Protect against possibility of zero deposited energy in MCHit 
+     (VeloAlgorithms v2r6)
+   . Fix minor problems flagged by valgrind 
+     (TrExtrapolator v2r5, MuonSicbCnv v6r8)
+   . Fix uninitialised variable (L1Decision v1r5)
+
+</PRE><H1><A NAME=v17r0>2003-01-09 Brunel v17r0</A></H1><PRE>
+ - New tuning:
+   . Change strip threshold to 7000e (PuVeto v5r3)
+   . Add tuning for magnetic field043 (LongTrack v1r5) 
+
+ - New features:
+   . Add support for dbase v253r1
+   . Log inputs of L0Calo selection crate, for L1 studies
+     (CaloDet v6r3, L0Event v13r1, L0Calo v6r5, BrunelAlgs v1r8)
+
+ - DST changes:
+   . Add Rec/Relation/L0CaloFullCandidates, Raw/L0/FullCalo
+
+ - Bug fixes:
+   . Fix many minor problems flagged by valgrind (SicbCnv v17r5, MuonSicbCnv v6r7
+     OTAssociators v2r4, OTAlgorithms v12r3, ITAlgorithms v12r7, TrTools v2r3,
+     TrCleanEx v2r4, TrAssociators v3r4, TrCheck v1r3, MuonID v3r5,
+     MuonAlgs v3r2, RichRecInterfaces v2r0, RichRecTools v1r4, RiSicbCnv v5r4,
+     KsReco v1r4, TrIntraPR v2r3, UpstreamPR v2r6, RichRecAlgs v1r4,
+     RichMonitor v2r4, VeloDet v8r3, LongTrack v1r5, MuonTools v3r3)
+
+
+</PRE><H1><A NAME=v16r4>2002-12-11 Brunel v16r4</A></H1><PRE>
+ Essentially identical to v15r4, but using Gaudi v11 and DetDesc v11
+   >> Introduces CMT projects
+   >> Introduces support for RedHat 7.3
+   >> Fixes many memory leaks
+
+ - New tuning:
+   . New tuning of ST charge sharing and clustering to match test beam
+     (ITAlgorithms v12r6)
+   . Increase lateral size of Aerogel to better match CDF description
+     (XmlDDDB v14r4)
+
+ - New features:
+   . Re-enable OO-Rich by default (Brunel.opts)
+   . Add support for dbase v253
+
+ - DST changes:
+   . Add SelectKs2pipi, RichLocPID, RichGloPID to timed algorithms
+
+ - Bug fixes:
+   . Do not abort job if no track are found for K0 search (KsReco v1r3)
+   . Fixes to Electron and Photon algs (CaloReco v1r2)
+
+</PRE><H1><A NAME=v15r4>2002-12-04 Brunel v15r4</A></H1><PRE>
+  >>> This is the last version built against Gaudi v10 <<<
+  Next version (for Xmas pre-production) will use Gaudi v11 and CMT projects
+
+ - New tuning:
+   . Fine tuning of VTT tracking (VeloTT v1r4)
+   . Add material to central OT modules (XmlDDDB v14r3, v252r0 geometry)
+   . New velo clustering for L1. Includes common mode noise simulation and
+     correction (L1VeloTrack v3r4)
+   . Changes to Calorimeter corrections (CaloReco v1r1)
+   . Many fixes to OO-Rich (Rich/* packages)
+   . New parameterisation and tuning of ST charge sharing (ITAlgorithms v12r5) 
+   . Cut on max number of Velo tracks increased to 300 (from 200) (Brunel.opts)
+
+ - New features:
+   . Add support for dbase v252r0 (Brunelv252r0.opts)
+   . New tools for PID with HCAL (CaloReco v1r1) 
+   . Add OO-Rich LocalPID algorithm (RichRecAlgs v1r2)
+   . Add Ks reconstruction (KsReco v1r2, PhysEvent v7r2)
+
+ - DST changes:
+   . OO-Rich switched off for default production
+   . Add V0s
+
+ - Bug fixes:
+   . Fix edge problem in Velo detector element (VeloDet v8r1)
+   . Fix loop index range (found by valgrind) (PuVeto v5r1)
+   . Fix some mismatched new[]/delete to please valgrind (L1Decision v1r3)
+
+</PRE><H1><A NAME=v15r3>2002-11-28 Brunel v15r3</A></H1><PRE>
+ - New tuning:
+   . Tighten cut on signal/noise of TT clusters (>4) to reduce ghost rate
+     (VeloTT v1r3)
+   . Exclude backward Velo tracks as identified by VeloTrack, rather than by
+     private selection method (VeloTT v1r3)
+
+ - New features:
+   . More units supported in job options (GaudiConf v6r5)
+
+ - DST changes:
+   . Add ProcStatus to all events (BrunelKernel v5r2, BrunelDst.opts)
+
+ - Bug fixes:
+   . Fix typo (wrong array size used, found by valgrind) (MuonDet v4r2)
+   . Fix usage of uninitialised variable, found by valgrind 
+     (L1Decision v1r2, L1VeloTrack v3r4)
+   . Protect against missing L1 Vertex - causing very frequent core dumps
+     (L1Decision v1r2)
+   . Fix position of wakefield cone (XmlDDDB v14r2)
+
+ - Code cleanup:
+   . Remove obsolete component library (CaloSicbCnv v7r3)
+   . Release all tools at finalize (L1Decision v1r2)
+
+</PRE><H1><A NAME=v15r2>2002-11-26 Brunel v15r2</A></H1><PRE>
+ N.B.: to take advantage of new Rich tuning, new dbase versions are needed:
+ To (re)process data produced with dbase v248r4, use dbase v248r5 and Brunelv248r5.opts
+ To (re)process data produced with dbase v250r0, use dbase v251r0 and Brunelv251r0.opts
+ To (re)process data produced with dbase v250r1, use dbase v251r1 and Brunelv251r1.opts
+ The new Rich tuning is not supported for dbase v249r*
+
+ - New tuning:
+   . Modified the PuVeto peakValue method to improve peak finding (PuVeto v5r0)
+   . Enable cluster filtering: Seeding does not use T station clusters already
+     used by Forward tracking (Brunel.opts)
+   . Forward tracking: new tuning, two passes (less ghosts with similar 
+     efficiency), flag used velo tracks (LongTrack v1r4)
+   . Track matching: improve selection of seed and velo tracks, tune chi2 cut
+     (TrMatching v2r4)
+   . Faster track cleaning (TrCleanEx v2r3)
+   . Improvements to L0 Pi0 trigger (L0Calo v6r3)
+   . Use TT1 for VTT and Upstream track association to MC (TrAssociators v3r3)
+   . New tuning for Rich, use VTT tracks (recrich v7r3, dbase v251r*/v248r5)
+     (not available for test data produced with dbase v249r*)
+   . Do not pass Velo only tracks to Fortran Rich reco (RiSicbCnv v5r1)
+   . L1 Velo tracking adapted to 45 degree Velo sensors (L1VeloTrack v3r3)
+
+ - New features:
+   . Add support for dbase v250r0, v250r1 (XmlDDDB v14r1, Seeding v2r3)
+   . Add support for dbase v248r5, v251r0, v251r1 (new tuning for recrich)
+   . Add L1 Decision code (L1Decision v1r1)
+   . Fix OORich to also run on Windows 
+     (RichRecKernel v1r1, RichRecEvent v1r1, RichRecAlgs v1r1)
+   . Switch off all L1 histograms by default (L1VeloTrack v3r3)
+   . New L0+L1 summary table in Brunel log file (L1Decision v1r1)
+
+ - DST changes:
+   . Add /Event/Trig/L1/Decision
+   . Non-unique Velo, Seed tracks are removed by clone-killer (TrCleanEx v2r3)
+ 
+ - Code cleanup:
+   . Minimize printout of job options (*.opts)
+   . Repackaging of OO Rich software to fix building of component libraries
+     (RichRecInterfaces v1r0, RichRecTools v1r1, RichRecAlgs v1r1, 
+      RichMonitor v2r1, Brunel.opts)
+   . Use latest versions of SICB packages (detdes v19r0, Futil v12r0)
+
+</PRE><H1><A NAME=v15r1>2002-11-19 Brunel v15r1</A></H1><PRE>
+
+ - New tuning:
+   . Add OT straw inefficiency at y=0 (OTDet v3r2)
+   . Reoptimisation of Velo tracking (VeloTrack v4r3)
+   . New package for the whole chain of Calorimeter digitization, 
+     signal processing and zero suppression (CaloDigit v1r0)
+   . Use 4th TT hit when possible in VTT tracks (VeloTT v1r2)
+   . Improvements in calorimeter S&L corrections (CaloRec v1r0)
+   . New calorimeter energy calibration (VeloRec v1r0)
+   . Don't digitize unnecessarily 'Next' hits (ITAlgorithms v12r4)
+   . Changes in definitions for entries in efficiency table (TrCheck v1r2)
+   . Further tuning of forward tracks (LongTrack v1r3)
+
+ - Bug fixes:
+   . Fix NaN problem in case no primary vertex found (L1VeloTrack v3r3)
+
+ - New features:
+   . Possibility to use units in job options files (GaudiConf v6r4)
+   . Calorimeter algorithms and tools do not print the same message after a
+     maximum number of times. Default is 10 (CaloKernel v2r1)
+   . Take into account time information in Calo digitization (CaloDigit v1r0)
+   . Add e+/e- ID with PRS (CaloReco v1r0)
+   . Add TT occupancy histos (ITCheckers v1r1)
+   . New options file to define monitoring for production jobs (included by 
+     default) (BrunelMoniProd.opts)
+   . OO Rich global algorithm executed in parallel with Fortran (Linux only)
+
+ - DST changes:
+   . Updated list of algorithms in Trig/AlgUsedTimes and added elapsed time 
+     measurement. This last change is not backwards compatible: to read 
+     AlgUsedTimes from old DSTs must use Event/Event < v2r1
+     (Event v2r1, EventSys v12r9, BrunelAlgs v1r6)
+   . Add /Event/Rec/Calo/Particles and optional calorimeter ID objects
+     /Event/Rec/Calo/HcalE, HcalIDe, HcalIDmu, PrsE, PrsID, EcalID
+     These objects are used to build ProtoParticles and will be removed from
+     the DST when  ProtoParticle cration is moved to Brunel.
+   . Rename CaloClusters2MCParticles to EcalClusters2MCParticles
+     EcalCelAutoClusters to EcalClusters, SplitClusters to EcalSplitClusters
+   . Add /Event/Rec/Rich/OOPIDs for tests (Linux only, not useful for physics!)
+
+ - Bug fixes:
+   . Fix small memory leaks (MuonSicbCnv v6r6, TrIntraPR v2r2)
+   . Minor bug fixes for evaluation of cluster spread and covariances
+     (CaloUtils v4r3)
+   . Minor bug fixes (uninitialised variables) (ITDet v1r2)
+
+ - Code cleanup:
+   . Repackaging of Calo software
+     New packages: CaloDigit v1r0, CaloRec v1r0
+     Removed packages: CaloTools, CaloAlgs, CaloRec, CaloTrackTools  
+   . Add default locations and relations factories (CaloEvent v11r3)
+   . Version change to force recompilation 
+     (CaloSicbCnv v7r2, CaloDet v5r2, CaloDetXmlCnv v2r1, L0Calo v6r2)
+
+</PRE><H1><A NAME=v15r0>2002-11-11 Brunel v15r0</A></H1><PRE>
+ - New tuning:
+   . Change Silicon Tracker strip pitch from 238 to 198 microns
+     (XmlDDDB v14r0, ITAlgorithms v12r3)
+   . Add 0.135% random noise to ITDigits (ITAlgorithms v12r3)
+   . Cut on both strip threshold and total charge in cluster in ST clustering
+     (ITAlgorithms v12r3)
+   . Use sensible OT gas drift parameters in seed search (Seeding v2r2)
+   . Small changes to Velo Tracking (VeloTrack v4r2)
+
+ - New features:
+   . Prepare geometry support for C++ Rich reconstruction
+     (XmlDDDB v14r0, RichKernel v1r3, RichDet v3r0)
+   . New tool to get S/N of an ST cluster (can be used by tracking algorithms
+     to cut on S/N) (ITAlgorithms v12r3)
+   . Add support for variable number of Muon stations (L0Muon v6r2, 
+     MuonSicbCnv v6r5, MuonAlgs v3r0, MuonRec v2r3, MuonID v3r4, Brunel.opts)
+   . Add support for dbase v249r0 and v249r1
+   . Restructure options files to simplify switching on/off of monitoring and/or
+     DST output. Monitoring histograms off by default (*.opts, BrunelAlgs v1r5)
+   . Implement 45 degree Velo sectors. Currently hardwired for strip layout "1"
+	   (VeloDet v8r0, Brunel.opts)
+   . Possibility to add noise to OT (off by default) (OTAlgorithms v12r1)
+   . New methods in Relations (LHCbKernel v1r5)
+   . Add VeloBack track type (for backwards going Velo tracks)
+     (TrEvent v11r4,TrFitEvent v3r3,VeloTrack v4r2,TrCleanEx v2r3,CaloRec v2r5)
+   . Skip "error" tracks in Calo reconstruction (CaloRec v2r5) 
+
+ - Bug fixes:
+   . Small fixes in TrFirstCleverExtrapolator (TrExtrapolator v2r3)
+   . Small fixes in Velo geometry (VeloDet v8r0)
+   . Fix typo in track matching, removes large fraction of large chi2 tracks
+     (TrMatching v2r3)
+
+ - Code cleanup:
+   . Release all tools (ITAlgorithms v12r3, OTAlgorithms v12r1)
+   . Remove obsolete code and unneccessary calls to msgSvc (TrExtrapolator v2r3)
+   . Fix some valgrind warnings (VeloAlgorithms v2r4)
+   . Add private copy constructor to KeyedObject - keyed objects may not be
+     copied, as that leads to duplicate key (EventKernel v2r1, EventSys v12r8)
+   . New versions to use new VeloDet
+     (PuVeto v4r1, L1VeloTrack v3r2, VeloAssociators v1r3, TrCheck v1r1)
+
+</PRE><H1><A NAME=v14r2>2002-10-31 Brunel v14r2</A></H1><PRE>
+ - New tuning:
+   . Add dummy Velo state to Match track fit to fix bad chi2 (TrMatch v2r2)
+   . Speed up extrapolation using TrHerabExtrapolator instead of
+     TrFirstCleverExtrapolator (TrMatch v2r2)
+   . Tune forward tracking to find more high momentum tracks (LongTrack v1r2)
+   . Modify TrReconstructible definitions (TrAssociators v3r2)
+   . Reduce state z position tolerance from 100cm to 50mm (RiSicbCnv v4r6)
+
+ - New features
+   . Possibility to add TT hits to Match tracks - switched off in Brunel.opts
+     due to high rate of bad chi2 tracks (TrMatch v2r2)
+   . Add VeloTT tracks to TrAssociator (TrAssociators v3r2)
+   . Improved track monitoring (TrAnalyse replaces FwtAnalyse) (TrCheck v1r0)
+
+ - DST changes:
+   . Add L1 Summary to DST (BrunelDst.opts)
+   . Add L1VeloTrackAlg to algorithms being timed (BrunelAlgs v1r4)
+
+ - Bug fixes:
+   . Fix in SolidSphere (DetDesc v10r5)
+   . Fix in calculation of intersection of a line with a cone (DetDesc v10r5)
+   . Add missing factories (L1Event v11r1, EventSys v12r7)
+
+ - Code cleanup:
+   . Fix a mismatched new[]/delete reported by valgrind (VeloTT v1r1)
+   . Remove creation and deletion of an obsolete unused state (TrFitter v3r4)
+   . Remove unneccessary TrExtrapolator base class (TrKernel v11r1, 
+     TrExtrapolator v2r3, TrFitter v3r5, TrMatching v2r3, UpstreamPR v2r4)
+
+</PRE><H1><A NAME=v14r1p2>2002-10-25 Brunel v14r1p2</A></H1><PRE>
+ - Bug fix:
+   . Fix bug in TrFirTrack, causing poor efficiency for unique tracks
+     (TrFitEvent v3r2)
+
+</PRE><H1><A NAME=v14r1p1>2002-10-23 Brunel v14r1p1</A></H1><PRE>
+ - Bug fix:
+   . Fix crash when deleting a track after a fit failure (TrFitter v3r3)
+
+ - New feature:
+   . When running in batch, Brunel.job picks up executable from user's newmycmt
+     rather than from $LHCBSOFT
+
+</PRE><H1><A NAME=v14r1>2002-10-22 Brunel v14r1</A></H1><PRE>
+ - New tuning:
+   . Add 1% inefficiency in IT, due to dead strips (ITAlgorithms v12r2)
+   . Small changes to Velo noise processing (VeloAlgorithms v2r3)
+   . Allow association of OTCluster to many MCParticles (OTAssociators v2r2)
+   . Improved VeloClusterOnTrack errors (TrFitEvent v3r1)
+   . Add dummy state to track fit, to fix bad chi2 on 8% of long tracks
+     (TrEvent v11r3, TrFitEvent v3r1, LongTrack v1r1)
+   . Tune initial covariance matrix parameters for Kalman filter
+     (LongTrack v1r1, TrMatching v2r1)
+   . New cuts on estimated track errors, to recover efficiency (TrMatching v2r1)
+   . Do not extrapolate tracks outside LHCb volume (TrExtrapolator v2r2)
+   . Do not add state closest to beam line if new Z is downstream of first 
+     measured point or more than 200mm from Z=0. (TrFitter v3r2)
+   . Drop tracks with fit failures (TrCleanEx v2r2)
+
+ - New features:
+   . Prepare for dbase v249r* support (MuonDet v4r1, MuonTools v3r1, MuonID v3r3)
+   . Add VeloTT tracks (*BEWARE*: requires tuning) (EventSys v12r6, 
+     TrEvent v11r3, TrFitEvent v3r1, VeloTT v1r0, TrCleanEx v2r2, CaloRec v2r4) 
+   . Get OT digitization parameters from Xml
+     (XmlDDDB v13r1, OTDet v3r0, OTAlgorithms v12r0, TrFitEvent v3r1)
+   . Possibility to add Xtalk and Random noise to IT. Switched off by default
+     (ITAlgorithms v12r2)
+
+ - Bug fixes:
+   . Fix usage of uninitialised variables (L1VeloTrack v3r1)
+   . Fix a memory leak (LongTrack v1r1)
+   . Fix ZFATAL from spillover when no spillover event in first event
+     (SicbCnv v17r3)
+
+ - Packaging changes:
+   . IT monitoring moved to a new package (ITCheckers v1r0, BrunelMoni.opts)
+   . TrTrack moved out of TrEvent package into TrFitEvent package
+     (EventSys v12r6, TrEvent v11r3, TrFitEvent v3r1)
+
+</PRE><H1><A NAME=v14r0>2002-10-14 Brunel v14r0</A></H1><PRE>
+ - New tuning:
+   . Improvements to Forward tracking (LongTrack v1r0, Brunel.opts)
+   . Improvements to Velo tracking for K0s (VeloTrack v4r1)
+   . Tune Velo noise and signal/noise cuts
+     (VeloKernel v1r2, VeloAlgorithms v2r2, VeloTrack v4r1)
+   . Improvements in Upstream tracking 
+     (TrTools v2r1, TrIntraPR v2r1, UpstreamPR v2r2)
+   . Improved L1 Velo tracking algorithm (L1VeloTrack v3r0)
+   . ITAssociators allow MCParticles to share ITClusters (ITAssociators v2r1)
+
+ - New features:
+   . Add geometry support for Muon with MWPC, with/without M1
+     (XmlDDDB v13r0, MuonDet v4r0)
+   . Use latest versions of packages (changes not affecting Brunel)
+     (CaloAssociators v3r0)
+
+ - DST changes:
+   . Replace FwtFind with FindLongTrack in AlgUsedTimes (BrunelAlgs v1r3)
+   . Add a track state at the Z of nearest approach to the beam to Forward and
+     Match tracks (TrFitter v3r1, Brunel.opts)
+
+ - Bug fixes:
+   . Scan also L1Track2d2MCP when selecting MCParticles to be saved to DST. 
+     Should fix crashes when writing DST (15% of signal jobs) (BrunelAlgs v1r3)
+   . Fix VeloCluster to MCHit association ambiguity
+     (EventSys v12r5, VeloEvent v11r1, VeloAssociators v1r2, L1VeloTrack 2r3)
+   . Fix a bug in debug printout (MuonID v3r2) 
+   . Use same track state for Fortran back conversion and subsequent comparison 
+     (RiSicbCnv v4r5)
+   . Remove some wrong consistency checks (VeloDet v7r1)
+
+</PRE><H1><A NAME=v13r2>2002-10-08 Brunel v13r2</A></H1><PRE>
+Bug fix release for reprocessing of summer production
+Supported geometry: dbase v248r4 (can process data produced with dbase v248r*)
+
+ - New tuning:
+   . Tune L0 thresholds (L0DU v6r1)
+   . Change OT dead time from 30 to 50 ns (OTAlgorithms v11r1)
+   . Associate decaying tracks (TrAssociators v3r1)
+   . Select unique tracks for Rich reconstruction (RiSicbCnv v4r4) - should
+     reduce effect of cut on 300 tracks
+   . Tune spillover parameters for IT (ITAlgorithms v12r1)
+   . Allow for dead region between IT wafers (ITDet v1r1)
+
+ - New features:
+   . Support for valgrind memory checking tool (job/Brunel.supp, valgrind.job)
+   . Prepare for variable number of Muon stations in XML
+     (MuonTools v3r0, MuonSicbCnv v6r4, MuonID v3r1, L0Muon v6r1)
+
+ - Bug fixes:
+   . Random number engine initialisation (GaudiSvc v8r4).
+     With this fix, and with initialisation of random numbers at every event
+     (Brunel.opts) reconstruction is reproducible when starting at any event,
+     even when doing spillover
+   . Distance of stagger in wafers of TT1 layers was 2x too big (ITDet v1r1)
+   . Missing [] in delete (SicbCnv v17r2, RiSicbGeom v2r3, VeloTrack v4r0p1)
+   . Test iterator not at end before accessing it (TrCleanEx v2r1)
+   . Fix uninitialised variables in L0MuonCandidate 
+     (EventSys v12r4, L0Event v12r2)
+   . Test L0MuonCandidate status (L0DU v6r1)
+   . Remove uninitialised and unused variable (L1VeloTrack v2r2) 
+   . Fix ProcStatus default path and add to DST 
+     (EventSys v12r4,TrEvent v11r2, VeloTrack v4r0p1, Seeding v2r1, FwTrack v4r2)
+   . Fixes in Muon MC truth (SicbCnv v17r2, MuonSicbCnv v6r4)
+   . Fixes for Muon cross-talk calculation (MuonDet v3r2)
+   . Fixes to readout and layer bits in MuonTileID (MuonRec v2r2)
+   . Fix track fit 'smoother problem' (-ve covariances) (TrExtrapolator v2r1) 
+   . Use fabs instead of abs for doubles. Should fix overlapping volumes and 
+     other problems on Windows (DetDesc v10r4, RiSicbGeom v2r3, RiSicbCnv v4r4,
+     CaloDet v5r1, CaloUtils v4r2, CaloTools v4r4)
+   . Fixes to digitisation of IT stereo layers (ITDet v1r1, ITAlgorithms v12r1)
+   . Add protection against invalid argument to ACOS (recrich v7r2)
+   . Do not consider events where tracking is skipped (> 200 Velo tracks) 
+     for tracking efficiency statistics (FwTrack v4r2)
+
+ - Geometry changes (XmlDDDB v12r5):
+   . Fix overlap between Velo and Rich1
+   . Complete vertical Rich1 description
+   . Velo fixes and optimisation
+
+ - Fixed memory leaks:
+   . CaloHypo destructor was not deleting its CaloPosition and CaloMomentum
+     (EventSys v12r4, CaloEvent v11r2)
+
+ - Code cleanup:
+   . Apply coding conventions, document (OTDet v2r2, OTAssociators v2r1)
+   . OTCluster2MCHitAlg now uses OTCluster2MCDepositAlg (OTAssociators v2r1)
+   . Remove need for OTInitialization alg. (OTAlgorithms v11r1, Brunel.opts)
+   . Release tools at finalize (Seeding v2r1, FwTrack v4r2)
+
+</PRE><H1><A NAME=v13r1>2002-07-30 Brunel v13r1</A></H1><PRE>
+Release of Brunel for summer 2002 production.
+Supported geometry: dbase v248r4 (can process data produced with dbase v248r*)
+
+ - DST changes:
+   . MuonDigit::TimeStamp is now filled (MuonAlgs v2r2)
+
+ - Tuning
+   . Modify jitter in Muon MWPC readout (XmlDDDB v12r4)
+
+ - Fixes:
+   . Initialise random number once per job, using run number as seed
+     (BrunelKernel v5r1)
+   . Add protections against tracks with missing states
+     (RiSicbCnv v4r3, recrich v7r1)
+   . Fix double deletion of Calo Relations
+     (LHCbKernel v1r4, CaloAssociators v2r2, CaloRec v2r3)
+   . Small fixes to Muon Digitisation
+     (EventSys v12r2, MuonSicbCnv v6r2, MuonAlgs v2r2)
+   . Fix potential memory leaks, improve protections for pointer dereferencing
+     (RiSicbCnv v4r3, RichMonitor v1r2)
+
+
+</PRE><H1><A NAME=v13r0>2002-07-25 Brunel v13r0</A></H1><PRE>
+Third release of Brunel for summer 2002 pre-production.
+
+Supported geometry: dbase v248r4 (can process data produced with dbase v248r*)
+Complete OO-Dst output.
+
+ - Functionality changes:
+   . Needs dbase v248r4 (Brunelv248r4.opts added, *v248r2.opts removed)
+     > Default input file changed (previous default had problem with PASS bank)
+   . SpillOverAlg executes as first algorithm in Digi phase 
+     (SicbCnv v17r1, Brunel.opts)
+   . Add Spillover support to Rich 
+     (EventSys v12r0, SicbCnv v17r1, RiSicbCnv v4r2, recrich v7r0, Brunel.opts)
+   . Use all tracks except Velo-only for Rich PID 
+     (RiSicbCnv v4r2, recrich v7r0)
+   . Add histogram for virtual memory usage (SicbCnv v17r1)
+ 
+ - DST changes:
+   . 'err' on 2d tracks now means 45 degree subsector (L1VeloTrack v2r1) 
+   . Write all MuonCoords to DST (remove filtering), do not write MuonDigits
+     (BrunelAlgs v1r2, BrunelDst.opts)
+
+ - Fixes:
+   . Fix pi0 mass (CaloTools v4r2, CaloRec v2r2)
+   . Fix Rich2 position (XmlDDDB v12r3)
+   . Fix units for crosstalk region in Muon (XmlDDDB v12r3)
+   . Fix Pt encoding in L0MuonCandidate (EventSys v12r0)
+   . Fix memory leaks (RiSicbCnv v4r2, RiSicbGeom v2r2)
+   . Fixes to run on Windows
+     (CaloTools v4r2, UpstreamPR v2r1, MuonID v2r1, RiSicbCnv v4r2, FwTrack v4r1)
+   . Fix problem of inconsistent Velo numbering between SICBMC and Brunel
+     (VeloSim v2r1)
+   . Fix multiple tool initialisations (RiSicbCnv v4r2, RiSicbGeom v4r2)
+   . Move a log message to save ~30ms per event (OTDet v2r1)
+   . Latest Gaudi bug fixes (GaudiSvc v8r3)
+
+</PRE><H1><A NAME=v12r0>2002-07-19 Brunel v12r0</A></H1><PRE>
+Second release of Brunel for summer 2002 pre-production.
+
+Supported geometry: dbase v248r2
+Complete OO-Dst output.
+
+ - New Functionality:
+   . Add refit to upstream tracks (UpstreamPR v2r0)
+   . New ProcStatus class to hold the abort condition of an event, and
+     the list of algorithms with bad status (TrEvent v11r1, EventSys v11r1)
+     Processing aborted if:
+      > 200 VeloTracks found (and set ABORT flag) (VeloTrack v4r0)
+      > 1000 hits in a tracking sector (Seeding v2r0)
+     Do not process if ABORT flag set (Seeding v2r0, FwTrack v4r0)
+   . New Velo digitisation used also for PuVeto, remove PuVetoDigit 
+                                                 algorithm and VeloDigit DLL
+     (VeloAlgorithms v2r0, VeloDet v7r0, PuVeto v4r0, Brunel.opts)
+   . Improvements to Clone Killer (TrFitEvent v3r0, TrCleanEx v2r0)
+   . New tool for combined SPD/PRS single photon ID 
+     (CaloTools v4r1, CaloInterfaces v2r2)
+   . Use all track types for matching in Calo (CaloRec v2r1)
+   . Check that RichPIDs refer to correct track container (RichMonitor v1r1)
+
+ - DST changes:
+   . Save ProcStatus (BrunelDst.opts)
+   . Store PuVeto multiplicities in L0PuVeto::sTot (PuVeto v4r0)
+   . Save L1Track2d2MCP (BrunelDst.opts, BrunelMoni.opts)
+   . Save MuonDigits and MuonDigits2MCParticles (BrunalAlgs v1r1, BrunelDst.opts)
+   . New RichDSTPrepare algorithm to fix PID SmartRefs on DST
+     (RiSicbCnv v4r1, Brunel.opts)
+   . Set track charge according to sign of momentum 
+     (FwTrack v4r0, TrMatching v2r0)
+
+ - Tuning:
+   . Forward tracking, improved TT1 matching, monitor efficiency (FwTrack v4r0)
+   . Pt Kick tuned and now used (TrTools v2r0, Seeding v2r0)
+   . Adjust fit parameters to fix negative covariance 
+     (Seeding v2r0, TrMatching v2r0, UpsrteamPr v2r0))
+   . Matching (TrMatching v2r0)
+   . Velo digitisation (VeloKernel v1r1, VeloAlgorithms v2r0)
+   . L1VeloTrack parameters (L1VeloTrack v2r0)
+
+ - Fixes:
+   . Fix memory leaks and/or missing constructors/destructors in:
+       VeloSim (VeloAlgorithms v2r0)
+       TrSeedEvent (Seeding v2r0)
+       TrLayerPartition, RoI (TrIntraPR v2r0)
+       FwtFitParams (FwTrack v4r0)
+       Calo Event classes (CaloEvent v11r1)
+       CellularAutomaton, CaloDigitsFilterAlg (CaloAlgs v7r1)
+   . Fix for "looping" in upstream tracking (TrIntraPR v2r0) 
+   . Fix compilation on Windows (TrIntraPR v2r0, TrUpstreamPR v2r0)
+   . Fix crash when printing statistics for zero events (FwTrack v4r0) 
+   . Fix Velo numbering scheme (VeloDet v7r0, VeloTrack v4r0, L1VeloTrack v2r0)
+   . Change to AssociatorBase class to always produce output table at correct 
+     location (LHCbKernel v1r3)
+   . Bug fixes in Gaudi+ROOT I/O (ROOT v2r303p0, GaudiRootDb v9r0, GaudiDb v8r1) 
+   . Fixes to Velo, Muon, Rich1, Rich2 geometry overlaps (XmlDDDB v11r2)
+       TransportSvc reports any remaining overlaps (BrunelMessage.opts)
+   . Fixes to OutputLevel (many algorithms, and BrunelMessage.opts)
+
+ - Change requirements files for version consistency:
+   (VeloAssociators v1r1, TrAssociators v3r0, TrFitter v3r0, L0Calo v6r1, 
+    CaloSicbCnv v7r1, CaloAssociators v2r1, CaloUtils v4r1, CaloTrackTools v1r4,
+    CaloMonitor v1r1)
+
+
+</PRE><H1><A NAME=v11r0>2002-07-09 Brunel v11r0</A></H1><PRE>
+Release of Brunel for summer 2002 pre-production.
+
+Supported geometry: dbase v248r2
+Complete OO-Dst output.
+
+! 2002-07-09 - Marco Cattaneo
+ - Use latest improvements to recrich (v6r2)
+ - Drop Velo relations to MCParticles of Spillover events
+ - Add Brunelv248r2.opts, remove Brunelv248r1.opts
+
+! 2002-07-08 - Marco Cattaneo
+ - Add pre-selection of tracks for Rich (currently forward tracks from Tr/Best)
+ - Calo PID now uses Tr/Best tracks as input
+ - Tr/Forward container suppressed
+ - Fix L0 muon and muon PID efficiency (bug fix in muon digitization)
+ - Adapt tracking to ITDet Xml geometry
+ - Seeding only always returns best choice for L/R ambiguity on OT
+ - Track fit sorts measurements by increasing Z prior to fit
+ - Drop support for dbase < v248r0
+
+! 2002-07-05 - Marco Cattaneo
+ - Upstream tracks saved on DST in Tr/Best container
+ - MuonID performed on all "unique" long tracks in Tr/Best container
+ - IT Digitisation now uses XmlDDDB, can process data from new TT1
+ - Skip Rich reconstruction in events with more than 300 forward tracks
+
+   DST is now complete, except for:
+   . filtering of tracking clusters not used by tracks
+
+! 2002-07-04 - Marco Cattaneo
+ - Add upstream tracking. Algorithm executed but output not yet saved
+ - Fix and enable filtering of MCParticles/MCVertices
+ - Improve handling of Muon background in Sicb converters
+
+! 2002-07-02 - Marco Cattaneo
+ - Add TimingAlg in new Timing sequence at end of Reco phase
+ - use latest Gaudi bug fix release
+   (GaudiKernel v12r3, GaudiSvc v8r2, GaudiRootDb v8r1)
+ - Use latest version of TrAssociators, produces Tr2MCP relation
+
+! 2002-07-01 - Marco Cattaneo
+ - Add L1 monitoring and Truth information
+ - Add L0 Truth information
+ - Disable filtering of MCParticles/MCVertices (not working with Spillover)
+ - Output Tr/Best tracks in "flag" mode (contains a copy of all track types,
+   with clones flagged, not killed) and  suppress creation of Tr/Seed, Tr/Velo,
+   Tr/Match containers
+
+! 2002-06-28 - Marco Cattaneo
+ - Add "new" seeding algorithm
+ - Add filter of MCParticles and MCVertices
+ 
+! 2002-06-27 - Marco Cattaneo
+ - Add track clone killer. Currently all track types are saved, plus a
+   copy of these tracks as selected by the clone killer
+
+! 2002-06-25 - Marco Cattaneo
+ - Add Muon OO digitization, and remove Fortran version
+ - Add L1 tracking
+ - Add VeloMatch track monitoring
+ - Add support for dbase v246r0
+
+! 2002-06-21 - Marco Cattaneo
+ - Add latest Calorimeter code. 
+
+! 2002-06-19 - Marco Cattaneo
+ - Add Rich digitisation and reconstruction (only for dbase v245r0 or greater)
+
+! 2002-06-18 - Marco Cattaneo
+ - Add Track seeding and Velo Matching (without persistency for now)
+
+! 2002-06-11 - Marco Cattaneo
+ - Add a new BrunelOutput phase, in which to run algorithms that prepare the
+   data store for DST output (filters, relations etc.)
+
+! 2002-06-07 - Marco Cattaneo
+ - Change version to v11r0 to use new versions of Event Model, OTDet etc.
+ - Remove obsolete options files BrunelTrSiTT12.opts, BrunelTrOtItTT1.opts
+
+! 2002-06-07 - Marco Cattaneo
+ - Add support for dbase v245 (without RICH for now)
+
+</PRE><H1><A NAME=v10r0>2002-06-04 Brunel v10r0</A></H1><PRE>
+Pre-release of Brunel using new event model, in preparation for summer 2002
+production
+
+   >>>>>> Supported geometries:
+     - LHCb-Light detector with split TT1:
+           dbase v243r1p1 (Silicon only split TT1)
+           dbase v243r3   (IT+OT split TT1)
+       Previous databases are not supported.
+       Support for later databases will be added as data becomes available
+
+   >>>>>> Current functionality:
+     - Inner Tracker digitisation and clustering
+     - Outer Tracker digitisation and clustering
+     - Velo digitisation and standalone tracking
+     - Forward track finding, fitting, conversion to StoredTracks
+     - Conversion of StoredTracks to AXAT/AXTP banks (for RICH reconstruction) 
+     - RICH Digitisation (old SICB Fortran version)
+     - Calo digitisation and clustering
+     - MUON Digitisation (old SICB Fortran version), reconstruction, MuonID
+     - L0 trigger simulation
+     - OO-DST output
+
+   >>>>>> Missing functionality:
+     - L1 trigger simulation
+     - Upstream tracking
+     - Rich reconstruction and PID
+     - Calo PID
+     - Correct XML geometry for Rich1, Rich2
+
+   >>>>>> Existing DST content:
+     EventHeader, GenHeader
+     Collisions, MCParticles, MCVertices
+     L0CaloCandidates, L0MuonCandidates, L0PuVeto, L0DUReport
+     VeloClusters
+     RichDigits
+     ITSummary, ITClusters, ITClusters2MCParticles relation
+     OTClusters
+     TrStoredTracks and corresponding TrStates and TrMeasurements
+     EcalCelAutoClusters,EcalLocMaxClusters
+     MuonID, MuonCoords (filtered, only if used by MuonID)
+
+   >>>>>> Missing DST content/functionality:
+     L1 output
+     RICH PID
+     CALO PID
+     Filtering of MCParticles, MCVertices
+     Filtering of ITClusters, OTClusters
+     Relations to MCParticle (needed set to be decided)
+ 
+
+   Backwards incompatible version for use with the new event model.
+   All Fortran support removed, except for:
+        RICH digitisation and reconstruction.
+        MUON digitisation.
+
+   Suppressed BrunelFinalFit phase for the time being
+
+   In job/Brunel.job
+   - Script cleaned up, improved behaviour in interactive mode
+
+   In options
+   - All files touched to support new event model algorithms
+   - New file BrunelDst.opts to set up DST output
+   - All files corresponfin to unsupported dbases removed
+
+   In cmt/requirements
+   - use Gaudi    v10 and corresponding external packages
+   - use EventSys v10r0 Event (new Event model)
+   - remove all SICB dig*, tr*, rec* packages, except digmuon, recrich
+
+   - use ITAlgorithms  v10r0 IT
+   - use ITAssociators  v1r0 IT
+   - use OTAlgorithms  v10r0 OT
+   - use OTAssociators  v1r0 OT
+   - use VeloDigit      v2r0 Velo
+   - use VeloTrack      v2r0 Velo
+   - use TrFitEvent     v1r1 Tr 
+   - use TrAssociators  v1r0 Tr
+   - use FwTrack        v2r0 Tr
+   - use TrFitter       v1r0 Tr
+   - use TrExtrapolator v1r0 Tr
+   - use MuonTools      v2r0 Muon
+   - use MuonRec        v1r0 Muon
+   - use MuonID         v1r0 Muon
+   - use CaloInterfaces v2r1 Calo
+   - use CaloUtils      v2r2 Calo
+   - use CaloTools      v2r0 Calo
+   - use CaloAlgs       v5r1 Calo
+   - use L0Calo         v5r0 L0
+   - use L0Muon         v5r0 L0
+   - use PuVeto         v2r0 L0
+   - use L0DU           v5r0 L0
+
+! =================================================================
+</PRE><H1><A NAME=v9r1p1>20020419 Brunel v9r1p1</A></H1><PRE>
+   - Brunelv243r3.opts: fix typo in included filename
+     (#include "$BRUNELOPTS/BrunelTrOtItTT1.opts" was ItOt)
+
+! =================================================================
+</PRE><H1><A NAME=v9r1>20020320 Brunel v9r1</A></H1><PRE>
+   Adds support for dbases v243r3, v243r1p1 (comparative study of TT1 options). 
+   Includes several bug fixes (see below)
+ 
+   In options
+   - Brunelv243r3.opts, BrunelTrItOtTT1.opts: new files to support dbase v243r3
+   - Brunelv243r1p2.opts: new file to support dbase v243r1p2
+   - BrunelTr*.opts all touched to make them consistent with new files above
+   - Brunel.opts: enable Calorimeter OO reconstruction (without persistency)
+   - BrunelMoni.opts: disable ITDigitMonitor (crashes for dbase v243r3)
+
+   In requirements
+   - use LHCbEvent    v12r2 Event
+     AxPartCandidate.h - initialisation-value for m_fitCovariance set to (6,0).
+                         (needed by serializers)
+
+   - use ITEvent      v7r2  Event
+      Bug fixes in ITDetectionLayer and ITChannelID, should solve problem 
+      of missing hits reported by O. Callot
+   - use ITAlgorithms v8r1  IT
+      Bug fixes in ITDigitCreator, Add ITDigitEffMonitor class
+
+   - use CaloEvent    v7r1  Event
+      fix problems with std::maps on Win2K 
+   - use CaloAlgs     v4r3  Calo
+      fix problems with std::maps on Win2K
+      fix the CPU problems with sorting of very large containers 
+             (substutute std::sort with std::stable_sort)
+
+   - use Velodet      v3r1  Det
+    . Change the 'type' of the wafers, to handle properly the separation between
+      left and right detectors, this was not done for R and was incorrect for 
+      Phi. The result was an inefficiency in the overlap region (vertical).
+    . Fixes a few minor problems of boundary, by increasing tolerances to see
+      if a hit is compatible with a region of the other detector.
+    . When matching R-Phi, if the slope from the nominal vertex is too big,
+      one use an extrapolation parallel to the Z axis and an increased tolerance.
+
+   - use simmubg      v5r3  SICB
+      murwhits.F - Bug fix : The original (before muon background addition) 
+                   number of ATMC objects in the last partition (pile-up event) 
+                   is now correctly counted.
+      
+! =================================================================
+</PRE><H1><A NAME=v9r0>2002025 Brunel v9r0</A></H1><PRE>
+   Upgraded to use Gaudi v9
+   Added VELO digitisation, VELO tracking
+   Added Forward tracking
+   Added L0 pileup veto
+   Added TT1 to IT reconstruction
+   --> Use this version to reconstruct data produced with dbase v240 to v243r1
+
+   Functionality changes
+   ---------------------
+   In src
+   - BrunelMain.cpp: new main program, to set up job options path.
+       Job options path is set according to the following precedence rules:
+       1. argument given to Brunel.exe
+       2. value of JOBOPTPATH environment variable
+       3. "$BRUNELOPTS/Brunel"+dbver+".opts", where dbver is the SICB database
+          version number, taken from $LHCBDBASE
+ 
+   In options
+   - Restructuring of options files: one main file per supported database version
+     includes Brunel.opts, includes database specific files, and should be
+     modified for user definitions (including I/O specification)
+   - Brunel.opts: suppress printout of options from included subdetector files
+                  add BrunelSicbInit to TopAlg list
+                  add Calo reconstruction
+                  add Velo digitisation and tracking
+                  add PuVeto to L0 trigger
+                  Remove L0SicbCnv
+   - Brunel<dbver>.opts (dbver=v240, v240r1, v241, v242, v242r1, v243r1): 
+       Main options file for supported databases
+   - BrunelTrLight.opts, BrunelTrMinus.opts, 
+     BrunelTrCrossTT1.opts, BrunelTrTT1.opts, BrunelTrTT12.opts:
+       Database specific options for tracking
+   - BrunelInputs.opts, BrunelUser.opts, BrunelStatic.opts
+       Obsolete files, removed.
+
+   In BrunelSicb
+   - BrunelSicbInit: new algorithm with SICB specific initialisation.
+   - BrunelInitialisation: moved to Brunel Kernel
+   - BrunelInit.F: Seeds of SICB random number engine (RanEcu) initialised 
+                   at every event with run number and event number.
+   - btrigger.F: Fix timing problem with t1track code
+   - richprod.F: Local version, to remove call to axtrigger
+
+   In BrunelKernel
+   - BrunelInitialisation.cpp: 
+      . Seed of Gaudi random number engine (RanLux) initialised every event: 
+          100000*(event no. % 20000) + (Run no. % 100000)
+      . Create event data store directory nodes:
+         /Event/Raw, /Event/Rec, /Event/Trig, /Event/Trig/L0
+
+   First version of forward tracking. Currently executing in parallel to
+   standard tracking, output not saved. New packages:
+     use Det/VeloDet    v3r0
+     use Velo/VeloDigit v1r0
+     use Velo/VeloTrack v1r1
+     use Tr/FwTrack     v1r1
+   
+   Added C++ PileUp Veto code, uses Velo TDR geometry from XmlDDDB. 
+     use L0/PuVeto      v1r0
+
+   C++ L0 decision available in new event model (not yet persistent)
+     use Event/EventKernel v1r0
+     use Event/L0Event     v10r0
+     use L0/L0Calo         v4r0
+     use L0/L0DU           v4r0
+     Removed SICB/L0SicbCnv
+
+   Prepare for Calorimeter C++ reconstruction (not yet executed)
+     use Calo/CaloTools   v1r1
+     use Calo/CaloCA      v3r1
+     use Calo/CaloAlgs    v4r1
+
+   All Silicon TT1
+    use ITEvent      v7r1
+    use ITAlgorithms v8r0
+
+   Create empty containers if corresponding SICB banks are missing
+     use SICB/SicbCnv   v15r1
+     use SICB/VSicbCnv  v6r1
+
+   Additional changes for Gaudi v9 
+   -------------------------------
+   In job
+   - Brunel.job: pass job options path as argument to executable
+
+   In requirements
+    use GaudiConf    v6r2  (was v5)
+    use GaudiSys     v9r0  (was v8)
+    use HbookCnv     v11r0 (was v10r1)
+    use BrunelKernel v3r0  (was v2)
+    use BrunelSicb   v2r0  (was v1)
+    use TrKernel     v6r0  (was v5r1)
+    use CaloKernel   v1r0  (was CaloGen v2)
+    use DetDesc      v9r2  (was v7)
+    use XmlDDDB      v8    (was v6r1)
+    use CaloDet      v3r0  (was v3r0)
+    use LHCbEvent    v12r1 (was v11)
+    use VeloEvent    v6r0  (was v5)
+    use OTEvent      v7r0  (was v6r1)
+    use TrEvent      v7r1  (was v6r1)
+    use CaloEvent    v7r0  (was v6)
+    use CaloSicbCnv  v5r1  (was v4)
+    use MuonSicbCnv  v4r0  (was v3)
+    use TrSicbCnv    v4r0  (was v3)
+    use L0Muon       v4r0  (was v3r1)
+    use OTAlgorithms v7r0	 (was v6)
+    use TrAlgorithms v7r1  (was v6r2)
+     
+! =================================================================
+</PRE><H1><A NAME=v8>20011017 Brunel v8</A></H1><PRE>
+   Major repackaging, no major change in functionality:
+   - all source files have been removed and moved to new Rec/BrunelSicb package
+   - version number is set by a compiler define flag in the requirements file
+   - same Brunel version can read data produced with multiple dbase versions,
+     starting from dbase v240
+
+   In job
+   - Brunel.job: Remove unsetenv LD_LIBRARY_PATH
+
+   In options
+   - Remove LHCbLight.opts (moved to dbase v241)
+   - Brunel.opts: include $LHCBDBASE/options/Brunel.opts
+
+   In cmt/requirements
+   - remove use dbase ($LHCBDBASE to be set externally)
+   - add macro_append fflags
+
+   - use BrunelSicb   v1   Rec
+       in src/Lib/BrunelDigiMUON.cpp : default now to not add muon background.
+                                       Due to bug in MURMBG if background was 
+                                       already added by SICBMC
+   - use TrKernel     v5r1 Tr
+       remove virtual from state getZ member
+   - use ITEvent      v6r1 Event
+       Remove memory leak
+   - use OTEvent      v6r1 Event
+       bug fix - due to inconsistent numbering, wires were skipped at edge
+                 of a module
+   - use TrEvent      v6r1 Event
+       Reserve space in vectors of measurements/states inside track classes
+       Should save time
+   - use TrAlgorithms v6r2 Tr
+       remove obsolete fortran runga kutta routine
+       tidy the code up a bit
+       minor optimizations to speed up the code alittle
+   - use TrSicbCnv    v3   SICB
+       requirements - use TrEvent v6*
+! =================================================================
+</PRE><H1><A NAME=v7r1>20010913 Brunel v7r1</A></H1><PRE>
+
+   In cmt/requirements
+     use TrAlgorithms v6r1 Tr
+     - fix a memory leak in TrFitIntializer
+
+     use rechcal      v6r1 SICB
+     - Modified hcl0_make to delete the existing map of cell references.
+
+! =================================================================
+</PRE><H1><A NAME=v7>20010904 Brunel v7</A></H1><PRE>
+  This version is to be used for data produced with SICBMC v248/dbase v241
+  ("LHCb-Light")
+
+  It consists of the same code as v6, but uses a different geometry.
+
+  In options/
+   LHCbLight.opts - new file to set up LHCb-Light tracker geometry
+   Brunel.opts    - include LHCbLight.opts
+
+  In cmt/requirements
+  ===================
+  use dbase v241 SICB
+    standard.stream - use new pipe and velo
+      
+    vsrp.cdf and vpil.cdf - Thickness of the RF shield and 
+                            silicon detectors changed (J. Palacio)
+    field042.cdf - introduce field in Velo (G. Corti)
+    magnet.cdf   - remove rich 1 shielding plate (M. Needham)
+    rich.cdf     - remove aerogel, reduce radiation thickness of mirror 
+                   and supports (J. Libby)
+    witr.cdf, wotr.cdf, wsta.cdf - 
+                   reduce number of tracking stations to 4 (M. Needham)
+    pipe8.22.cdf - Be first section (G. Corti)
+
+! =================================================================
+</PRE><H1><A NAME=v6r1>20010913 Brunel v6r1</A></H1><PRE>
+   In cmt/requirements
+     use TrAlgorithms v6r1 Tr
+     - fix a memory leak in TrFitIntializer
+
+     use rechcal      v6r1 SICB
+     - Modified hcl0_make to delete the existing map of cell references.
+
+! =================================================================
+</PRE><H1><A NAME=v6>20010904 Brunel v6</A></H1><PRE>
+  This version is to be used for data produced with SICBMC v247/dbase v240
+  ("LHCB-classic", tracker cross-geometry)
+
+  In options/
+   Brunel.opts
+     Remove tracking ErrorMax options (fixed in tracking code)
+   BrunelMessage.opts
+     Name of TrEventTracksFitter algorithm changed to trFit
+
+  In cmt/requirements
+  ===================
+  use dbase v240 SICB
+    20010821 - dbase v240
+     cdf/     changes for tracking cross geometry, 
+              increase thickness of OT stations to 3%,
+              remove stations 4 and 11,
+              add pipe7.22.cdf (new pipe from G.Corti)
+     standard.stream - reads pipe7.22.cdf             
+    20010625 - dbase v239r1
+     beamrawh3_v2.cdf   - this file must be read in to produce RAWH3: 
+                          the luminosity is fixed to 5.0x10^32
+     standard.stream    - reads beamrawh3_v2.cdf
+
+  use detdes v14 SICB
+   20010821 - detdes v14 (M.Needham)
+     backwards incompatible changes for new tracker cross geometry.
+
+  use ITEvent      v6     Event
+    Changes for new cross geometry
+    Remove triple gem code
+
+  use OTEvent      v6     Event 
+    backwards incompatible changes for cross geometry  
+    insure channels number from one everywhere
+    reserve space in internal vector of OTLayer object - should save time
+
+  use TrEvent      v6     Event
+    add copy constructer to TrTrueTrack
+    retune ITHitOnTrack error
+
+  use ITAlgorithms v6     IT
+    new version for cross geometry
+
+  use OTAlgorithms v6     OT
+    Changes for the cross geometry of OT
+    Remove some unnecessary calls to msgstream in tools
+    Changes in OTDigitize to speed things up (suggested by Markus)
+    Delegate new to tool in OTHitsCreator
+
+  use TrAlgorithms v6     Tr
+    Changes for cross geometry, clean-up of code
+
+  use L0DU v2r1 L0
+  - Modify L0DUReport to be a DataObject (only one in the output)
+  - Store the L0DUReport in the Transient store, this wasn't done !
+
+! =================================================================
+</PRE><H1><A NAME=v5r2>20010913 Brunel v5r2</A></H1><PRE>
+
+   In cmt/requirements
+     use rechcal v6r1
+     - Modified hcl0_make to delete the existing map of cell references.
+
+! =================================================================
+</PRE><H1><A NAME=v5r1>20010824 Brunel v5r1</A></H1><PRE>
+
+   In cmt/requirements
+     use XmlDDDB v6r1
+     - Fix the SPD Et slope: Was 2 GeV, should be 2 MeV !!!!
+
+     use SicbCnv v13r1
+     - Protections in book-keeping database queries
+
+! =================================================================
+</PRE><H1><A NAME=v5>20010821 Brunel v5</A></H1><PRE>
+
+   In src/BrunelSicb/
+   -----------------
+   BrunelInitialisation.cpp - make sure Raw and Rec sub-event roots are created
+   dropbanks.F - do not drop E1RW bank (needed to generate MCSensPlaneHit)
+ 
+   In options/
+   -----------
+   BrunelMessage.opts - set global output level to WARNING or above, over-ride
+                        it for ChronoStatSvc to print final statistics
+                      - set output level of some tracking algorithms to ERROR,
+                        to suppress excessive printing in production
+   Brunel.opts - Set ErrorMax of tracking algorithms to 1000, to prevent
+                 program stopping wih 'missing container' on empty events
+
+   In cmt/requirements
+   -------------------
+   >>> Bug fixes and physics changes <<<
+
+   use trivert v5r3
+    vth1.F - Fix problem due to 90 degree roration on VELO. (Hans Dijkstra)
+
+   use XmlDDDB v6
+    - put correct calibration Hcal parameters (calculated by O.Iouchtchenko)
+    - Change the HCAL ActiveToTotal parameter form 55 to 40
+    - Fix the 'ActiveToTotal' parameter for Ecal, after calibration with 
+      SICBMC v241 data plus Signal and Digit processors
+
+   use L0Muon v3r1
+    - Fixed bug in the CreateTower procedure for the cases of crossing the 
+      boundary between regions; 
+    - All the numbering for quarters/regions/indices starts from 0. 
+  
+   use CaloAlgs v3 (was v2)
+    - Several bug fixes and reorganisation of histograms (see release notes)
+
+   use SicbCnv  v13
+    SicbMCEventCnv - set m_pileUp to number of PASS banks 
+  
+   use CaloSicbCnv  v4
+    - Fix bug in SicbCaloDigitCnv, SummedDeposit were not linked to the digits
+    
+
+   >>> Remaining changes are for upgrade to Gaudi v8, LHCb v8
+   >>> Should not affect physics functionality
+   >>> See corresponding release notes for details
+
+   use GaudiPolicy  v5     (was v4)
+   use GaudiSys     v8     (was v7r2)
+   use HbookCnv     v10r1  (was v9)
+   use CERNLIB      v2001  (was v2000)
+   use BrunelKernel v2     (was v1)
+   use DetDesc      v7     (was v6)
+   use XmlDDDB      v6     (was v5)
+   use CaloDet      v2r1   (was v1)
+   use LHCbEvent    v11    (was v10)
+   use L0Event      v3     (was v2)
+   use ITEvent      v5     (was v4)
+   use OTEvent      v5     (was v4)
+   use TrEvent      v5     (was v4r1)
+   use CaloEvent    v6     (was v5)
+   use VeloEvent    v5     (was v4)
+   use L0Calo       v2     (was v1)
+   use L0Muon       v3r1   (was v2)
+   use L0DU         v2     (was v1)
+   use CaloGen      v2     (was v1)
+   use CaloAlgs     v3     (was v2)
+   use TrKernel     v5     (was v4)
+   use ITAlgorithms v5     (was v4)
+   use OTAlgorithms v5     (was v4)
+   use TrAlgorithms v5     (was v4r1)
+   use SicbCnv      v13    (was v12)
+   use CaloSicbCnv  v4     (was v3)
+   use L0SicbCnv    v3     (was v2)
+   use MuonSicbCnv  v3     (was v2)
+   use TrSicbCnv    v2     (was v1)
+   use VSicbCnv     v5     (was v4)
+   use GDUMMY       v1r5   (was v1r4)
+
+! =================================================================
+</PRE><H1><A NAME=v4>20010629 Brunel v4</A></H1><PRE>
+   Add C++ L0 trigger simulation
+   Remove old L0_2x2 simulation
+
+   In options/
+   -----------
+   Brunel.opts     - include Brunel.opts from L0CALO, L0MUON, L0DU
+                     Add DLLs L0SicbCnv, MuonSicbCnv 
+   BrunelMoni.opts - Add CALO and TRIGGER to BrunelMoni.DetectorList 
+   
+   In src/BrunelSicb/
+   ------------------
+   trigger.F - remove call to L0_2X2
+
+   In cmt/requirements
+   -------------------
+   add  use of L0Calo (v1), L0Muon (v2), L0DU (v1), L0Event (v2)
+               L0SicbCnv (v2), MuonSicbCnv (v2)
+
+   use Futil v10r3
+>   ubdropobj - new routine to drop the LAST object in a given partition
+
+   use simmubg v5r2
+
+>  murmsingle.F  - all 4 routines now add the atmc references to the last
+>  murmmulti.F   - atmc partition.
+>  murmscomp.F   -   
+>  murmmcomp.F   -
+>
+>  The routine murmbg.F now uses a new Futil (v10r3) routine, mudropobj.F to
+>  correctly remove background ATMC objects.
+>
+>  murmbg.F      - Calls ubdropobj.F to remove background ATMC references.
+>
+>  murmsingle.F  - Extra debug messages added to catch problems 
+>  murmmulti.F   - with too many ATMC objects (>10000).
+>  murmscomp.F   -   
+>  murmmcomp.F   -
+
+
+===============================================================================
+</PRE><H1><A NAME=v3r3>20010625 Brunel v3r3</A></H1><PRE>
+   Add possibility to add muon background (switched on by default)
+
+   In src/BrunelSicb/
+   ------------------
+   BrunelDigiMUON.cpp - add conditional calls to MURMBG, MUBACKGROUND, steered
+                        by addBkg job option (called by default)
+   BrunelDigiMUON.h   - add private member m_addBkg
+
+   In options/Brunel.opts - add BrunelDigiMUON.addBkg = true;
+   ----------------------
+
+   In cmt/requirements
+   -------------------
+     use dbase v239
+>  standard.stream - new MUGB and MUBC muon background parametrization files
+>                    (P.Colrain)
+
+     use simmubg v5
+>  package to generate muon background
+===============================================================================
+</PRE><H1><A NAME=v3r2>20010620 Brunel v3r2</A></H1><PRE>
+   Same as v3r1, but using bug fixes from digvdet v2r3 and trivert v5r2
+
+   In cmt/requirements
+   -------------------
+     use digvdet v2r3
+>   vrp_get_strip_num.F, vrp_get_coord.F - fix the problem arising from the
+>           rotation of the VELO by 90d in phi.(M.McCubbin)
+
+     use trivert v5r2
+>   vertex_x_y.F - fix the problem arising from the
+>           rotation of the VELO by 90d in phi.(M.McCubbin)
+
+===============================================================================
+</PRE><H1><A NAME=v3r1>20010606 Brunel v3r1</A></H1><PRE>
+   This version reads SICBMC data starting from SICBMC v245, dbase v238
+   ** It is not backwards compatible with older RAWH formats and geometry **
+   ** It is no longer possible to do Pileup in Brunel                     **
+
+   New features relative to v3:
+   - RICH extended tracking executed for all events
+   - AXTK updated with PID information from extended tracking
+   - New VELO geometry description
+   - Drop some banks from DST (as with SICBDST)
+
+   In options/
+   ----------
+   BrunelInput.opts 
+     - Fix format of SpillOverSelector.Input option,
+     - New option BrunelFinish.DropDSTBanks to control call to DROPBANKS
+
+   Brunel.cards - Switch on RICH extended tracking for all events
+>    DIGI 'RICH' 2
+>    RECO 'RICH' 3
+
+   BrunelMessage.opts: Use default Gaudi message format
+
+   In src/BrunelSicb/
+   -----------------
+   BrunelInitialisation.cpp: 
+     - initialise SICB variable NPILEUP with value from PASS bank 
+       (to cope with RAWH2) - not compatible with SicbCnv PileUpAlg
+
+   BrunelFinalisation.cpp:   Add call to DROPBANKS
+   dropbanks.F:              New, to drop unwanted SICB banks from DST
+
+   In cmt/requirements
+   -------------------
+     use TrEvent      v4r1
+>  Fixes for new velo geometry
+
+     use TrAlgorithms v4r1
+>  Bug fix in job options
+
+     use dbase        v238
+>          new VELO geometry description
+> vsrp.cdf - modified
+> vpil.cdf - modified
+
+     use detdes   v13
+>  utnext.F - utnext("MATE") returns the next free material number
+>             utnext("TMED") returns the next free tracking medium number
+>  utmatm.F - uses utnext("TMED") to get the next free tmed #
+>  utmatn.F - uses utnext("MATE") to get the next free mat 
+>
+>  vrpigeom.F, vrpgeom.inc, vsvnam.inc - modified for new VELO geometry
+>                                        description.
+>  muginit2.F - replace GAPFRAMEPAR(IMATFR,IL,I)=NINT(Q(LP+5) with
+>                       GAPFRAMEPAR(IMATFR,IR,I)=NINT(Q(LP+5))
+>               IL was never set.
+
+     use Futil    v10r1
+>  src/axtrigger.F - put version by H.Dijkstra (same as in SICBDST/minidst)
+>     with values tuned for SICBDST v235
+
+     use axreclib v4r2
+>  src/aximperr.F - bug fix, introduced missing dummy argument in 
+>                   call to rmmlt routine (necessary to run on NT, gcorti)
+>  src/axpartid.F - use results from extended tracking (R.Forty)
+===============================================================================
+</PRE><H1><A NAME=v3>20010521 Brunel v3</A></H1><PRE>
+  This is the first version to be used for an official LHCB production 
+
+  This version has been restructured as two packages. Rec/Brunel contains the
+  statically linked code needed to run SICBDST routines. C++ components of the
+  reconstruction framework have been moved to the package Rec/BrunelKernel
+
+  There are two subdirectories in /src:
+    BrunelSicb   contains interface code to SICB (statically linked)
+    ObsoleteSicb contains interface code to SICB that is no longer used
+                 because SICB algorithms have been replaced by equivalent 
+                 C++ algorithms.
+  Files have been rename to avoid multiple . in filenames (to please nmake)
+
+  Job options file structure has been modified relative to Brunel v1r6
+
+  requirements use explicitly the SICB packages, no longer SICBDST
+
+  #### Physics changes with respect to SICBDST v252 ####
+  - Uses C++ tracking 
+    Intermediate tracking banks (e.g. WIDG, WODG) are not produced
+
+  - Uses C++ Calorimeter digitisation
+  
+  - Does not run old L1 track trigger (T1TRACK from trit1tr package)
+    TTR1 bank is not produced.
+===============================================================================
+</PRE><H1><A NAME=v1r6>20001219 Brunel v1r6</A></H1><PRE>
+  requirements     - use SicbCnv v10 (spillover), SICBDST v235r3
+  Brunel.Phase.cpp - fix bug in a log message (reported by O.Callot)
+  BrunelZebra.inc  - increase ZEBRA COMMON block size to 12M words
+
+===============================================================================
+</PRE><H1><A NAME=v1r5>20001120 Brunel v1r5</A></H1><PRE>
+  Brunel.Phase.cpp - No longer instantiates algorithms, instead it instantiates sequences
+                     This introduces modifications in the BrunelOptions.txt: all algorithms
+                     must now be declared as members of a sequence - see user guide for details
+  requirements     - Use Gaudi release 6, SICBDST v235r2
+  options          - New directory, containing structure of job options files - see user guide
+
+===============================================================================
+</PRE><H1><A NAME=v1r4>20001003 Brunel v1r4</A></H1><PRE>
+           to link a Brunel static application: gmake tag=LinuxStatic
+           to run a job in static mode remove the following line from
+           BrunelOptions.txt : ApplicationMgr.DLLs = {...}
+ 
+  requirements      - use the highest version of LHCbCMT (v3r3 to define
+                      package_tag pattern)
+                    - use SICBDST v235 before any Gaudi packages to make sure
+                      that Futio and Finclude version numbers are those set
+                      by SICBDST.
+                    - use SicbCnv v8r1 (to remove a fake main program)
+
+===============================================================================
+</PRE><H1><A NAME=v1r3>20000804 Brunel v1r3</A></H1><PRE>
+  requirements      - use SICBDST v235
+  jobOptions        - cleaned up
+
+===============================================================================
+</PRE><H1><A NAME=v1r2>20000726 Brunel v1r2</A></H1><PRE>
+  requirements      - use SICBDST v234r2 and GaudiSys v5
+  BrunelZebra.inc   - increase ZEBRA size to 9000000 (as for SICBDST)
+  *.cpp             - Changes for GaudiSys v5 (compulsory implementation of
+                      initialize(), finalize())
+  BrunelPhase.h,.cpp- Remove private member m_AlgList, now exists in 
+                      Algorithm base class
+
+===============================================================================
+</PRE><H1><A NAME=v1r1>20000626 Brunel v1r1</A></H1><PRE>
+  requirements      - use SicbCnv v7r3, link directly to $(SICBDSTROOT)/src/sicbvers.F
+  BrunelZebra.inc   - new, to over-ride size of ZEBRA COMMON (set to 8 000 000)
+  GetZebraSize.F    - new, over-rides routine of same name in SicbCnv 
+  Brunel.Trigger.TRIGGER.cpp - call TRLAST in finalise()
+
+===============================================================================
+</PRE><H1><A NAME=v1>20000529 Brunel v1</A></H1><PRE>
+  requirements      - use GaudiConf v1 and SICBDST v233r2 (Flr)
+  job/              - new directory which contains :      (Flr)
+  Brunel.job        - script to run Brunel, uses Brunel.cards and 
+                      BrunelOptions.txt
+  Brunel_lsf.job    - contains options for Gaudi and SICBDST,
+                      does not use Brunel.cards and BrunelOptions.txt
+  Brunel.cards      - SICBDST data cards file
+  BrunelOptions.txt - Gaudi jobOptions file
+  Brunel/             remove options.txt files (Flr)
+  udinit.F          - stop the job if SICBDST cards file is not found. (Flr)
+  Brunel.Init.F     - add printout of event number if DEBU card (Flr)
+    
+! 20000519 Brunel v1
+  First version of LHCb reconstruction program.
+
+  This version has the same functionality as SICBDST v233, containing only 
+  wrapped FORTRAN code
+</PRE>
