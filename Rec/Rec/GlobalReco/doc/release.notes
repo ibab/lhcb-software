@@ -11,7 +11,7 @@
    (by default not taken) in ChargedProtoPAlg
  - fix bug for assuming TrState() at z=0 and in iteration loop, use also
    velo unique tracks to make Primary Vertices (K.Ciba)
-
+ - use VeloDet v7r* 
 
 ! 2002-07-25 - Ivan Belyaev
  - src/NeutralPPCreator.cpp  remove artificial numerical temporary constants.
