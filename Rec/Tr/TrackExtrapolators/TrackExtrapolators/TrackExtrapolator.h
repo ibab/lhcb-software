@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.h,v 1.1 2005-03-10 14:41:03 hernando Exp $
+// $Id: TrackExtrapolator.h,v 1.2 2005-03-11 10:09:22 hernando Exp $
 #ifndef TRACKEXTRAPOLATORS_TREXTRAPOLATOR_H 
 #define TRACKEXTRAPOLATORS_TREXTRAPOLATOR_H 1
 
@@ -37,12 +37,24 @@ public:
   /// Propagate a state to a given z-position
   virtual StatusCode propagate( State& state,
                                 double z,
-                                ParticleID pid = ParticleID(211) );
+                                ParticleID pid = ParticleID(211) ) 
+  { 
+    warning() << " can not propagate " << pid.pid() 
+              << " state " << state.position() << " at " << z << endreq;
+    return StatusCode::FAILURE;
+  }
+  
 
   /// Propagate a state to the intersection point with a given plane
   virtual StatusCode propagate( State& state,
                                 const HepPlane3D& plane,
-                                ParticleID pid = ParticleID(211) );
+                                ParticleID pid = ParticleID(211) ) 
+  {
+    warning() << " can not propagate " << pid.pid() 
+              << "state " << state.position() << " at " << plane.normal() << endreq;
+    return StatusCode::FAILURE;
+  }
+  
 
   /** Retrieve the position and momentum vectors and the corresponding
       6D covariance matrix (pos:1->3,mom:4-6) of a track at a given z-position
