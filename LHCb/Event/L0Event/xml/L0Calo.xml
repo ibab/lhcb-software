@@ -6,13 +6,15 @@
     <namespace desc="L0 namespace" name="L0Calo">
       <enum desc="L0Type describes the type of candidate" name="L0Type" value="Electron=1, Photon, Hadron, Hadron2, SumEt, Pi0Local, Pi0Global, SpdMult"/>
     </namespace>
-    <class author="Olivier Callot" desc="This class represents the input from the calorimeter to the L0 trigger" id="6001" location="/Event/Trig/L0/Calo" name="L0CaloCandidate">
+    <class author="Olivier Callot" desc="This class represents the input from the calorimeter to the L0 trigger" id="6001" name="L0CaloCandidate">
       <base name="KeyedObject&lt;int&gt;"/>
       <import name="stdio.h" std="TRUE"/>
       <import name="CLHEP/Units/SystemOfUnits"/>
       <import name="Kernel/CaloCellID"/>
       <import name="Event/L0Calo"/>
-      <constructor argList="int type, CaloCellID ID, int etCode, double et, HepPoint3D cellCenter, double cellSize" desc="special constructor" initList="KeyedObject&lt;int&gt;(type),m_type(type), m_ID(ID), m_etCode(etCode), m_et(et), m_position(cellCenter), m_posTol(cellSize)">
+      <location name="Default" place="/Event/Trig/L0/Calo"/>
+      <location name="Full" place="/Event/Trig/L0/FullCalo"/>
+      <constructor argList="int type, CaloCellID ID, int etCode, double et, HepPoint3D cellCenter, double cellSize" desc="special constructor" initList="m_type(type), m_ID(ID), m_etCode(etCode), m_et(et), m_position(cellCenter), m_posTol(cellSize)">
         <code> </code>
       </constructor>
       <method const="TRUE" desc="Returns the type of candidate as a string, for printing" name="typeName" type="std::string">

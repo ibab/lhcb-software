@@ -1,6 +1,11 @@
-$Id: release.notes,v 1.24 2002-10-01 14:04:41 ranjard Exp $
+$Id: release.notes,v 1.25 2002-12-17 15:35:59 ocallot Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+! 2002-12-15 - Olivier Callot
+ - Remove the initialisation of the key of L0CaloCandidate to allow the list of
+   per validation card candidates.
+ - Add a "Full" location for L0CaloCandidates
 
 !======================= L0Event v13r0 2002-09-25 ==========================
 ! 2002-09-26 - Florence Ranjard
