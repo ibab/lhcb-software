@@ -4,15 +4,15 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v15r3 2004-03-02 =======================
-! 2004-03-02 - Marco Cattaneo
-  Built against Gaudi v14r2
+!======================= LHCbSys v15r3 2004-03-05 =======================
+! 2004-03-05 - Marco Cattaneo
+  Built against Gaudi v14r3
 
  - Modified packages: KernelSys v3r3, LHCbKernel v4r3, CaloKernel v3r0,
-     VeloKernel v1r4, DetSys v6r0, VeloDet v9r0, STDet v8r1, CaloDet v6r8, 
-     EventSys v18r0, VeloEvent v14r0,ITEvent v13r2,TrEvent v13r1,CaloEvent v13r1,
-     AssociatorsSys v1r11, VeloAssociators v1r8, Associators v2r3, 
-     TrAssociators v4r0, CaloAssociators v4r0, MCTools v1r4, IOExample v1r1,
+     VeloKernel v1r4, DetSys v5r1, VeloDet v8r8p1, STDet v8r1, CaloDet v6r8, 
+     EventSys v17r1, VeloEvent v13r1,ITEvent v13r2,TrEvent v13r1,CaloEvent v13r1,
+     PhysEvent v8r2, AssociatorsSys v1r11, VeloAssociators v1r9, 
+     TrAssociators v4r0, CaloAssociators v4r0, MCTools v1r4, IOExample v1r1, 
      GaudiConf v7r6
 
  - Removed packages: TrFitEvent (to be moved to BRUNEL project)
@@ -22,19 +22,15 @@
    . Add $STDOPTS/Gaudi.supp valgrind error suppression file
 
  - In LHCbKernel v4r3:
-   . Change in bit assignment of VeloChannelID
+   . Internal change to bit assignments of VeloChannelID
    . Add Kernel/LHCbMath.h, implementing LHCbMath::round( x ) to round double
      and float to nearest int.
 
  - In VeloKernel v1r4:
    . Remove VeloRound.h, use LHCbMath::round instead
 
- - In VeloDet v9r0:
-   . Total redesign of DeVelo interface, including backwards incompatible
-     change to sensor numbering. Requires XmlDDDB v22r0 or greater
-
- - In VeloEvent v14r0:
-   . Data content is backwards incompatible due to change in sensor numbering
+ - In VeloEvent v13r1:
+   . Adapt to changes in VeloChannelID
 
  - In ITEvent v13r2:
    . Add STL1Cluster class
@@ -46,8 +42,9 @@
    . Added track types to TrStoredTrack:
      isLong, isUpstream, isDownstream, isVelotrack, isBackward, isTtrack
 
- - In TrEvent v13r1, VeloAssociators v1r9, Associators v2r3, MCTools v1r4:
-   . Change dependency to VeloEvent v14r* and/or VeloDet v9r*
+ - In PhysEvent v8r2:
+   . Add PhotonID to detectorPID enum for later use by Calorimeter group.
+   . Add firstMeasured method, for Ks reconstruction usage.
 
  - In MCTools v1r4:
    . Fix infinite loop in BuildMCTrackInfo
