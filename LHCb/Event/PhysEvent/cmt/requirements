@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2002-06-10 16:10:52 cattanem Exp $
+# $Id: requirements,v 1.17 2002-06-19 13:22:18 roiser Exp $
 # Created      : 20/06/2001
 # Maintainer   : Gloria Corti
 #
@@ -16,7 +16,7 @@ include_dirs $(PHYSEVENTROOT)
 # Used packages. 
 #============================================================================
 use TrEvent      v11r* Event
-use GaudiObjDesc v4r3  -no_auto_imports
+use GaudiObjDesc v4r4  -no_auto_imports
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================

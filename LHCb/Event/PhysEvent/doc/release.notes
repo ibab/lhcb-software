@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.14 2002-06-10 16:10:52 cattanem Exp $
+! $Id: release.notes,v 1.15 2002-06-19 13:22:18 roiser Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 2002-06-18 - Stefan Roiser
+ - changed use-statement of GaudiObjDesc to v4r4
 
 ! 2002-06-10 - Marco Cattaneo
  - Increase version to v5r0 to use TrEvent v11r*

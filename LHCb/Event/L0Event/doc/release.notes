@@ -1,6 +1,11 @@
-$Id: release.notes,v 1.17 2002-06-10 16:03:51 cattanem Exp $
+$Id: release.notes,v 1.18 2002-06-19 13:21:29 roiser Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+! 2002-06-14 - Stefan Roiser
+ - changed type-attribute of operator-overloadings in L0Calo.xml
+ - uncommented dictionary-files production and compilation in requirements-file
+ - changed use-statement of GaudiObjDesc to v4r4
 
 ! 2002-06-10 - Marco Cattaneo
  - Change version to v12r0, to use EventKernel v2r*

@@ -27,14 +27,14 @@
 	<arg name="log" type="MsgStream" />
       </method>
 
-      <method desc="Print operator" name="operator&lt;&lt;" 
-        type="friend MsgStream&amp;">
+      <method friend="TRUE" desc="Print operator" name="operator&lt;&lt;" 
+        type="MsgStream&amp;">
 	<arg name="ms" type="MsgStream" />
 	<arg name="cand" type="L0CaloCandidate" const="TRUE" />
       </method>
 
-      <method desc="Print operator" name="operator&lt;&lt;" 
-        type="friend MsgStream&amp;">
+      <method friend="TRUE" desc="Print operator" name="operator&lt;&lt;" 
+        type="MsgStream&amp;">
 	<arg name="ms" type="MsgStream" />
 	<arg name="cand" type="L0CaloCandidate*" const="TRUE" />
       </method>

@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.18 2002-06-19 13:21:29 roiser Exp $
+# $Id: requirements,v 1.19 2002-06-19 13:26:23 roiser Exp $
 package L0Event
-version v12r0p1
+version v12r0
 
 branches Event cmt doc xml src
 
