@@ -234,20 +234,12 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
           mcPhoton->setCherenkovPhi   ( g4hit->PhiCkvAtProd()   );
 
           // Spherical mirror reflection point
-          if ( g4hit->Mirror1PhotonReflPosition().z() < 100 ) {
-            msg << MSG::WARNING << "Spherical mirror reflection point = "
-                << (HepPoint3D)g4hit->Mirror1PhotonReflPosition() << endreq;
-          }
           mcPhoton->setSphericalMirrorReflectPoint
             ( HepPoint3D( g4hit->Mirror1PhotonReflPosition().x(),
                           g4hit->Mirror1PhotonReflPosition().y(),
                           g4hit->Mirror1PhotonReflPosition().z() ) );
 
           // Flat mirror reflection point
-          if ( g4hit->Mirror2PhotonReflPosition().z() < 100 ) {
-            msg << MSG::WARNING << "Flat mirror reflection point = "
-                << (HepPoint3D)g4hit->Mirror2PhotonReflPosition() << endreq;
-          }
           mcPhoton->setFlatMirrorReflectPoint
             ( HepPoint3D( g4hit->Mirror2PhotonReflPosition().x(),
                           g4hit->Mirror2PhotonReflPosition().y(),
