@@ -1,4 +1,4 @@
-// $Id: DeRichSingleSolidRadiator.cpp,v 1.1 2003-12-03 17:46:48 papanest Exp $
+// $Id: DeRichSingleSolidRadiator.cpp,v 1.2 2004-07-01 11:02:52 papanest Exp $
 #define DERICHSINGLESOLIDRADIATOR_CPP
 
 // Include files
@@ -13,7 +13,6 @@
 #include "CLHEP/Geometry/Vector3D.h"
 
 /// Detector description classes
-#include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBoolean.h"
 #include "DetDesc/SolidTrd.h"
 

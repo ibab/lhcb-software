@@ -1,4 +1,4 @@
-// $Id: DeRich1.cpp,v 1.6 2003-11-22 18:40:51 jonesc Exp $
+// $Id: DeRich1.cpp,v 1.7 2004-07-01 11:02:52 papanest Exp $
 #define DERICH1_CPP
 
 // Include files
@@ -7,6 +7,7 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
+#include "Kernel/CLHEPStreams.h"
 //------------------------------------------------------------------------------
 //
 // Implementation of class :  DeRich1
@@ -30,10 +31,13 @@ const CLID& DeRich1::classID() {
 
 StatusCode DeRich1::initialize() {
   StatusCode sc = StatusCode::SUCCESS;
+  StatusCode fail = StatusCode::FAILURE;
+
+  if ( !DeRich::initialize() ) return fail;
 
   MsgStream log(msgSvc(), "DeRich1" );
   log << MSG::DEBUG << "Starting initialisation for DeRich1" << endreq;
-  
+
   double nominalCoCX = userParameterAsDouble("Rich1Mirror1NominalCoCX");
   double nominalCoCY = userParameterAsDouble("Rich1Mirror1NominalCoCY");
   double nominalCoCZ = userParameterAsDouble("Rich1Mirror1NominalCoCZ");
@@ -43,25 +47,33 @@ StatusCode DeRich1::initialize() {
   m_nominalCentreOfCurvatureBottom = 
     HepPoint3D(nominalCoCX, -nominalCoCY, nominalCoCZ);
 
-  double nominalNorX = userParameterAsDouble("Rich1NominalNorX");
-  double nominalNorY = userParameterAsDouble("Rich1NominalNorY");
-  double nominalNorZ = userParameterAsDouble("Rich1NominalNorZ");
-  
-  m_nominalNormal = HepVector3D(nominalNorX, nominalNorY, nominalNorZ);
-  m_nominalNormalBottom = HepVector3D(nominalNorX, -nominalNorY, nominalNorZ);
+  //  std::vector<double> nominalCoC = paramVector("Rich1NominalCoC");
+  //  m_nominalCentreOfCurvature = 
+  //    HepPoint3D( nominalCoC[0], nominalCoC[1], nominalCoC[2]);
+  //  m_nominalCentreOfCurvatureBottom = 
+  //    HepPoint3D( nominalCoC[0], -nominalCoC[1], nominalCoC[2]);
 
-  m_sphMirrorRadius = userParameterAsDouble("Rich1SphMirror1Radius");
-  m_sphMirrorMaxX = userParameterAsDouble("Rich1SphMirror1MaxX");
-  m_sphMirrorMaxY = userParameterAsDouble("Rich1SphMirror1MaxY");
+  log << MSG::DEBUG << "Nominal centre of curvature" 
+      << m_nominalCentreOfCurvature << " ," << m_nominalCentreOfCurvatureBottom
+      << endmsg;
 
-  double d = userParameterAsDouble("Rich1DParam");
+  m_sphMirrorRadius = paramAsDouble("Rich1SphMirror1Radius");
+
+  // get the parameters of the nominal flat mirror plane in the form
+  // Ax+By+Cz+D=0
+  std::vector<double> nominalFMirrorPlane = paramVector("Rich1NominalFlatMirrorPlane");
+  m_nominalPlaneTop = HepPlane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
+                                  nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
+  m_nominalPlaneBottom = HepPlane3D(nominalFMirrorPlane[0],-nominalFMirrorPlane[1],
+                                   nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
   
-  m_nominalPlaneTop = HepPlane3D(nominalNorX, nominalNorY, nominalNorZ, d);
-  m_nominalPlaneBottom = HepPlane3D(nominalNorX, -nominalNorY, nominalNorZ, d);
- 
   m_nominalPlaneTop.normalize();
   m_nominalPlaneBottom.normalize();
+  m_nominalNormal = m_nominalPlaneTop.normal();
+  m_nominalNormalBottom = m_nominalPlaneBottom.normal();
 
+  log << MSG::DEBUG << "Nominal normal " << HepVector3D( m_nominalNormal ) 
+      << HepVector3D( m_nominalNormalBottom ) << endmsg;
   log << MSG::DEBUG << "Finished initialisation for DeRich1" << endreq;
   return sc;
 }

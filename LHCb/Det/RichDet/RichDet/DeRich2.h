@@ -1,4 +1,4 @@
-// $Id: DeRich2.h,v 1.7 2004-03-16 13:35:29 jonesc Exp $
+// $Id: DeRich2.h,v 1.8 2004-07-01 11:02:51 papanest Exp $
 #ifndef DERICH2_H
 #define DERICH2_H 1
 
@@ -16,10 +16,6 @@ extern const CLID& CLID_DERich2;
  * @author Antonis Papanestis
  */
 
-// Namespace for location in TDS
-namespace DeRich2Location {
-  static const std::string& Default = "/dd/Structure/LHCb/Rich2";
-}
 
 class DeRich2: public DeRich {
 
@@ -74,7 +70,6 @@ public:
   {
     return ( point.x() >= 0.0 ? Rich::left : Rich::right );
   }
-
 
 private:
 

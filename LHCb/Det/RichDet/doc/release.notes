@@ -4,6 +4,13 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v8r0 2004-07-01 =========================
+! 2004-07-01 - Antonis Papanestis
+ - added RichMirrorSegPosition for row/column info on mirrors provided 
+   by the DeRich class
+ - changed method signature in HPDPanel to use RichTraceMode
+ - minor improvements here and there
+
 !========================= RichDet v7r2 2004-06-17 =========================
 ! 2004-06-10 - Chris Jones
  - Increase RichKernel usage to v5r*

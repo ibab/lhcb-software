@@ -1,4 +1,4 @@
-// $Id: DeRich1.h,v 1.6 2004-03-16 13:35:29 jonesc Exp $
+// $Id: DeRich1.h,v 1.7 2004-07-01 11:02:51 papanest Exp $
 #ifndef RICHDET_DERICH1_H
 #define RICHDET_DERICH1_H 1
 
@@ -16,10 +16,6 @@ extern const CLID& CLID_DERich1;
  * @author Antonis Papanestis
  */
 
-// Namespace for location in TDS
-namespace DeRich1Location {
-  static const std::string& Default = "/dd/Structure/LHCb/Rich1";
-}
 
 class DeRich1 : public DeRich {
 
@@ -75,8 +71,7 @@ public:
   {
     return ( point.y() >= 0.0 ? Rich::top : Rich::bottom );
   }
-
-
+  
 private:
 
   HepPlane3D m_nominalPlaneTop;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichFlatMirror.h,v 1.1 2002-07-16 16:02:35 papanest Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichFlatMirror.h,v 1.2 2004-07-01 11:02:51 papanest Exp $
 
 #ifndef DERICHFLATMIRROR_H
 #define DERICHFLATMIRROR_H 1
@@ -10,6 +10,7 @@
 #include "CLHEP/Geometry/Plane3D.h"
 
 #include "DetDesc/DetectorElement.h"
+#include "DetDesc/ISolid.h"
 
 
 // External declarations
@@ -87,6 +88,11 @@ public:
     return m_mirrorNumber;
   }
   
+  /**
+   * Checks if the direction intersects with the mirror
+   * @return StatusCode
+   */
+  StatusCode intersects(const HepPoint3D& globalP, const HepVector3D& globalV);
 
 private:
 
@@ -98,6 +104,8 @@ private:
   double m_alignmentConstantY;
 
   int m_mirrorNumber;
+  
+  const ISolid* m_solid;
   
 };
 

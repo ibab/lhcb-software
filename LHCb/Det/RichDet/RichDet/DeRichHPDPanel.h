@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.h,v 1.12 2004-03-16 13:35:30 jonesc Exp $
+// $Id: DeRichHPDPanel.h,v 1.13 2004-07-01 11:02:51 papanest Exp $
 
 #ifndef RICHDET_DERICHHPDPANEL_H
 #define RICHDET_DERICHHPDPANEL_H 1
@@ -16,6 +16,9 @@
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
+
+// RichKernel
+#include "RichKernel/RichTraceMode.h"
 
 // RichDet
 #include "RichDet/DeRich1.h"
@@ -38,16 +41,6 @@ namespace DeRichHPDPanelLocation {
 class DeRichHPDPanel: public DetectorElement {
 
 public:
-
-  /// traceMode is used in the methods detPlanePoint to set boundaries
-  /// and in PDWindow point to set whether the returned point is actualy
-  /// on the window surface, or a simple algorith is used.
-  enum traceMode {
-    loose = 0,
-    tight,
-    window = 0,
-    circle
-  };
 
   /**
    * Constructor for this class
@@ -109,7 +102,7 @@ public:
                                     const HepPoint3D& pGlobal, 
                                     HepPoint3D& windowPointGlobal, // return
                                     RichSmartID& smartID,
-                                    traceMode mode = circle );
+                                    RichTraceMode mode );
 
   /**
    * Returns the intersection point with the detector plane given a vector
@@ -120,7 +113,7 @@ public:
   virtual bool detPlanePoint( const HepPoint3D& pGlobal,
                               const HepVector3D& vGlobal,
                               HepPoint3D& hitPosition,
-                              traceMode mode = loose);
+                              RichTraceMode mode );
 
   /**
    * Converts a global position to the coordinate system of the
@@ -224,6 +217,8 @@ protected:
   double m_winRsq;
   
   double m_detPlaneZ;
+  ///< the z difference between the planes defined at the top and bottom of HPD window
+  double m_detPlaneZdiff; 
 
   double m_pixelSize;
   double m_subPixelSize;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichFlatMirror.cpp,v 1.3 2003-10-22 10:48:28 papanest Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichFlatMirror.cpp,v 1.4 2004-07-01 11:02:52 papanest Exp $
 
 #define DERICHFLATMIRROR_CPP
 
@@ -46,8 +46,9 @@ StatusCode DeRichFlatMirror::initialize() {
 
   MsgStream log(msgSvc(), "DeRichFlatMirror" );
   log << MSG::DEBUG <<"Starting initialisation for DeRichFlatMirror"<< endreq;
-  this->printOut(log);
-  
+  this->printOut(log);  
+
+  m_solid = geometry()->lvolume()->solid();
 
   m_alignmentConstantX = userParameterAsDouble("AlignmentConstantX");
   m_alignmentConstantY = userParameterAsDouble("AlignmentConstantY");
@@ -105,3 +106,25 @@ StatusCode DeRichFlatMirror::initialize() {
 }
 
 
+//=========================================================================
+//  intersection with solid
+//=========================================================================
+
+StatusCode DeRichFlatMirror:: intersects(const HepPoint3D& globalP, 
+                                         const HepVector3D& globalV)
+{
+  HepPoint3D pLocal = geometry()->toLocal(globalP);
+  HepVector3D vLocal = globalV;
+  vLocal.transform( geometry()->matrix() );
+
+  ISolid::Ticks ticks;
+  unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+  
+  if (0 == noTicks) {
+    return StatusCode::FAILURE;
+  }
+  else {
+    return StatusCode::SUCCESS;  
+  }
+  
+}

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichSphMirror.cpp,v 1.7 2003-12-19 15:52:43 papanest Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichSphMirror.cpp,v 1.8 2004-07-01 11:02:52 papanest Exp $
 #define DERICHSPHMIRROR_CPP
 
 // Include files
@@ -12,11 +12,10 @@
 /// Detector description classes
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidSphere.h"
-#include "DetDesc/SolidBoolean.h" 
+#include "DetDesc/SolidBoolean.h"
 
-
-//#include "RichDet/DeRichSphMirror.h"
 #include "RichDet/DeRichSphMirror.h"
+#include "RichDet/DeRich.h"
 
 
 //------------------------------------------------------------------------
@@ -49,11 +48,18 @@ StatusCode DeRichSphMirror::initialize() {
   MsgStream log(msgSvc(), "DeRichSphMirror" );
   log << MSG::DEBUG <<"Start initialisation for DeRichSphMirror" << endreq;
 
-  m_solid = geometry()->lvolume()->solid();
-  std::string type = m_solid->typeName();
+  SmartDataPtr<DeRich> deRich2(dataSvc(), DeRichLocation::Rich2);
 
-  double hexRadius = 510.0/2.0;
-  double flatToCentre = hexRadius*sin(60*degree);
+  m_solid = geometry()->lvolume()->solid();
+  const std::string type = m_solid->typeName();
+
+  double hexRadius;  
+  if ( deRich2->hasParam("Rich2SphMirrorHexDiameter") ) 
+    hexRadius = deRich2->userParameterAsDouble("Rich2SphMirrorHexDiameter")/2.0;
+  else
+    hexRadius = 510.0*mm;
+  
+  const double flatToCentre = hexRadius*sin(60*degree);
 
   const SolidSphere* sphereSolid = 0;
   // find the sphere of the spherical mirror
@@ -185,18 +191,18 @@ StatusCode DeRichSphMirror:: intersects(const HepPoint3D& globalP,
                                         const HepVector3D& globalV,
                                         HepPoint3D& intersectionPoint)
 {
-  HepPoint3D pLocal = geometry()->toLocal(globalP);
-  HepVector3D vLocal = globalV;
+  HepPoint3D pLocal( geometry()->toLocal(globalP) );
+  HepVector3D vLocal( globalV );
   vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
-  unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+  const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
   
   if (0 == noTicks) {
     return StatusCode::FAILURE;
   }
   else {
-    HepPoint3D tempPointLocal = pLocal + ticks[0] * vLocal;
+    const HepPoint3D tempPointLocal = pLocal + ticks[0] * vLocal;
     intersectionPoint = geometry()->toGlobal(tempPointLocal);
     return StatusCode::SUCCESS;  
   }
@@ -208,12 +214,12 @@ StatusCode DeRichSphMirror:: intersects(const HepPoint3D& globalP,
 StatusCode DeRichSphMirror:: intersects(const HepPoint3D& globalP, 
                                         const HepVector3D& globalV)
 {
-  HepPoint3D pLocal = geometry()->toLocal(globalP);
-  HepVector3D vLocal = globalV;
+  const HepPoint3D pLocal( geometry()->toLocal(globalP) );
+  HepVector3D vLocal( globalV );
   vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
-  unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
+  const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
   
   if (0 == noTicks) {
     return StatusCode::FAILURE;

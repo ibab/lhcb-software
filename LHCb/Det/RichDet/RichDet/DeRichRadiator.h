@@ -1,4 +1,4 @@
-// $Id: DeRichRadiator.h,v 1.6 2004-06-17 12:05:51 cattanem Exp $
+// $Id: DeRichRadiator.h,v 1.7 2004-07-01 11:02:52 papanest Exp $
 
 #ifndef RICHDET_DERICHRADIATOR_H
 #define RICHDET_DERICHRADIATOR_H 1
@@ -11,6 +11,7 @@
 #include "DetDesc/ISolid.h"
 #include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/Material.h"
+#include "DetDesc/IGeometryInfo.h"
 
 #include "Kernel/RichRadiatorType.h"
 #include "Kernel/RichDetectorType.h"
@@ -30,6 +31,7 @@ namespace DeRichRadiatorLocation {
   static const std::string& AerogelQ1 = "/dd/Structure/LHCb/Rich1/AerogelQ1";
   static const std::string& AerogelQ2 = "/dd/Structure/LHCb/Rich1/AerogelQ2";
   static const std::string& AerogelQ3 = "/dd/Structure/LHCb/Rich1/AerogelQ3";
+  static const std::string& Aerogel = "/dd/Structure/LHCb/Rich1/Aerogel";
   static const std::string& C4F10     = "/dd/Structure/LHCb/Rich1/C4F10";
   static const std::string& CF4       = "/dd/Structure/LHCb/Rich2/CF4";
 }
