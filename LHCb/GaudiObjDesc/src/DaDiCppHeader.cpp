@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.29 2002-01-29 11:26:55 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.30 2002-01-29 17:26:14 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -1322,6 +1322,7 @@ void printClass(std::ofstream& xmlOut,
       {
         xmlOut << "s << m_" 
           << gddClass->popDaDiRelation()->name().transcode() << "(this)";
+        seriAtt = true;
       }
       else
       {
@@ -1432,6 +1433,7 @@ void printClass(std::ofstream& xmlOut,
       {
         xmlOut << "s >> m_" 
           << gddClass->popDaDiRelation()->name().transcode() << "(this)";
+        seriAtt = true;
       }
       else
       {
