@@ -130,8 +130,7 @@ StatusCode RichSignal::SimpleTreatment( SmartDataPtr<MCHits> hits )
         iHit != hits->end(); ++iHit ) {
 
     // local position on HPD window
-    HepPoint3D entry = (*iHit)->entry();
-    HepPoint3D position( entry.x()/10.0, entry.y()/10.0, entry.z()/10.0  );
+    HepPoint3D position( (*iHit)->entry()/10  );
     HepPoint3D local = m_finder->localPosition(position);
 
     // ID of pixel mapping to this position
