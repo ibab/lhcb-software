@@ -15,14 +15,6 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
-# Boole errors
-#{
-#  RichReadout/v1r0/bug-1669
-#  Memcheck:Value8
-#  fun:_ZN17RichHPDSignalSICB12ProcessEventESsd
-#  fun:_ZN17RichHPDSignalSICB7executeEv
-#}
-
 
 # glibc/Gaudi problems (gcc 2.95.2 on rh7.3, Gaudi v11r4-v12r0) 
 {
@@ -102,6 +94,15 @@
   fun:__builtin_delete
   fun:*
   fun:_ZN11xercesc_2_215DOMDocumentImpl10deleteHeapEv
+}
+
+# New Root 3.05.04 / GaudiDb v8r4 error in Boole v3r0p1
+{
+  Root/uninitilized
+  MemCheck:Param
+  write(buf)
+  obj:/lib/i686/libc-2.2.5.so
+  fun:_ZN5TFile8SysWriteEiPKvi
 }
 
 # Root 3.05.04 errors (reported, known to Fons...)
