@@ -1,12 +1,12 @@
 package LHCbSys
-version v12r0
+version v12r1
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v12r0
+use LHCb		v12r1
 
 use GaudiConf		v6r9
 
@@ -18,12 +18,12 @@ use HepMC		v3r121p1  Sim
 use GenEvent     	v2r3p1    Event
 
 # Kernel packages
-use KernelSys   	v1r3    Kernel
+use KernelSys   	v1r4	Kernel
 use LHCbKernel  	v2r8    Kernel
 use CaloKernel  	v2r3    Calo
 use MuonKernel  	v2r3    Muon
 use TrKernel    	v11r2p1 Tr
-use RichKernel  	v3r0    Rich
+use RichKernel  	v3r1	Rich
 use VeloKernel  	v1r3    Velo
 
 # Detector description
@@ -42,14 +42,14 @@ use MuonTools      	v3r6	Muon
 use RichDet		v4r2	Det
 
 # Event data model
-use EventSys		v14r0	Event
+use EventSys		v14r1	Event
 use EventKernel  	v2r3    Event
-use Event        	v3r3    Event
+use Event        	v3r4    Event
 use VeloEvent    	v12r1   Event
 use ITEvent      	v12r1   Event
 use OTEvent      	v12r1   Event
 use TrEvent      	v12r1   Event
-use RichEvent    	v4r4    Event
+use RichEvent    	v5r0	Event
 use CaloEvent    	v11r6   Event
 use MuonEvent    	v2r4    Event
 use L0Event      	v13r2   Event
@@ -70,12 +70,12 @@ use TrAssociators      	v3r5    Tr
 use TrFitEvent         	v3r6    Tr
 
 # SICB Converters
-use SICBSys             v1r4    SICB
-use SicbCnv      	v17r6   SICB
-use RiSicbGeom   	v3r2    SICB
+use SICBSys             v1r5	SICB
+use SicbCnv      	v18r0	SICB
+use RiSicbGeom   	v3r3	SICB
 use CaloSicbCnv  	v7r4    SICB
 use MuonSicbCnv  	v7r1    SICB
-use RiSicbCnv    	v5r6    SICB
+use RiSicbCnv    	v6r0	SICB
 use VSicbCnv     	v8r1    SICB
 use Futio        	v13r1   SICB
 use Finclude     	v14r1   SICB

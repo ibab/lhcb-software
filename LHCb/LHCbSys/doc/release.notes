@@ -4,6 +4,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+! 2003-07-03 - Marco Cattaneo
+ - Modifications to Rich event model for Gauss and OO digitization
+ - Modified packages: 
+      EventSys v14r1, Event v3r4, RichEvent v5r0,
+      KernelSys v1r4, RichKernel v3r1,
+      SICBSys v1r5, RiSicbCnv v6r0, RiSicbGeom v3r3, SicbCnv v18r0
+
 !====================== LHCbSys v12r0 2003-07-03 =============================
 ! 2003-06-17 - Marco Cattaneo
  - Update all package versions for v12r0 release
