@@ -1,17 +1,11 @@
-// $Id: CaloDigit_load.cpp,v 1.4 2003-11-18 10:20:24 ocallot Exp $
+// $Id: CaloDigit_load.cpp,v 1.5 2004-01-07 09:57:33 cattanem Exp $
 // Include files 
 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/StreamBuffer.h"
-
 // Event
-#include "Event/KeyedObject.h"
 #include "Event/MCParticle.h"
-
-// TrFitEvent
 #include "Event/CaloDigit.h"
 
 // LHCbKernel
