@@ -7,6 +7,7 @@
 ! 2004-03-29 -P. Koppenburg
 > version v11r5
 > use  DaVinci            v11r5   Phys   
+> use  CaloReco           v2r1p1   Calo
 > use  DaVinciEff         v2r10    Phys
 > use  DaVinciMCTools     v5r4     Phys
 > use  DaVinciTest        v4r3     Phys

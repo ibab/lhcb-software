@@ -13,7 +13,7 @@ use  DaVinci            v11r5   Phys
 #=======================================================
 #    Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           v2r1     Calo 
-use  CaloReco           v2r1     Calo
+use  CaloReco           v2r1p1   Calo
 
 #    Muon PID
 use  MuonID             v3r7p1   Muon
