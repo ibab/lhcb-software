@@ -25,11 +25,10 @@
 * Output variables
       INTEGER ISTAT
 * Externals
-      INTEGER LENOCC 
+      INTEGER IUCOMC
 * Local variables
       INTEGER NDET, NFILE
-      INTEGER IUCOMC
-
+      INTEGER ISTEND
 *-----------------------------------------------------------------
 *
 * Set initial values in common block as in input arguments
@@ -48,7 +47,12 @@
         ENDIF
       ENDIF
       NFILE = INDFILE_F(NDET)
-      CHFILE_F(NFILE) = cdfFileName(1:LENOCC(cdfFileName))
+      ISTEND = INDEX(cdfFileName,'!')
+      IF( ISTEND.LE.0 ) THEN
+        ISTAT = 1
+      ELSE
+        CHFILE_F(NFILE) = cdfFileName(1:ISTEND-1)
+      ENDIF
 *
  999  RETURN
       END

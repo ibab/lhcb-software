@@ -1,4 +1,4 @@
-// $Id: PhysSelectAlgorithm.cpp,v 1.2 2001-07-16 15:15:47 gcorti Exp $
+// $Id: PhysSelectAlgorithm.cpp,v 1.3 2001-11-14 14:59:57 gcorti Exp $
 
 // Include files
 #include "GaudiKernel/Kernel.h"
@@ -143,23 +143,25 @@ StatusCode PhysSelectAlgorithm::initialize() {
   }
   
   AXSELCONFIG( &m_selMode, &m_selLevel, &m_selTag, &iselPrint, &m_selHisto,
-               m_decayName.data(), m_decayName.length() );
+               m_decayName.c_str(), m_decayName.length() );
 
   // Open the histogram file where to put axsel monitoring histograms
   int istatus = 0;
   if( 0 != m_selHisto ) {
+    log << MSG::DEBUG << "   Opening hbook file " << m_selHistFname << endreq;
+    m_selHistFname = m_selHistFname + "!";
 #ifdef WIN32
-    FHFILEOPEN( &istatus, m_decayName.data(), m_decayName.length(),
-                          m_selHistFname.data(), m_selHistFname.length() );
+    FHFILEOPEN( &istatus, m_decayName.c_str(), m_decayName.length(),
+                          m_selHistFname.c_str(), m_selHistFname.length() );
 #else
-    FHFILEOPEN( &istatus, m_decayName.data(), m_selHistFname.data(),
+    FHFILEOPEN( &istatus, m_decayName.c_str(), m_selHistFname.c_str(),
                           m_decayName.length(), m_selHistFname.length() );
 #endif    
     if( 0 != istatus ) {
       log << MSG::FATAL << "   Failed to initialize the AXSEL package" 
           << endreq;
       istatus = 2;
-      AXSELINERR( &istatus, m_decayName.data(), m_decayName.length() );
+      AXSELINERR( &istatus, m_decayName.c_str(), m_decayName.length() );
       return StatusCode::FAILURE;
     }
   }
@@ -168,11 +170,12 @@ StatusCode PhysSelectAlgorithm::initialize() {
   istatus = 0;
   if( "default" != m_selCutsFname ) { 
     log << MSG::DEBUG << "   Reading cuts from " << m_selCutsFname << endreq;
+    m_selCutsFname = m_selCutsFname + "!";
 #ifdef WIN32
-    SETCDFFNAME( &istatus, m_decayName.data(), m_decayName.length(), 
-                 m_selCutsFname.data(), m_selCutsFname.length() );
+    SETCDFFNAME( &istatus, m_decayName.c_str(), m_decayName.length(), 
+                 m_selCutsFname.c_str(), m_selCutsFname.length() );
 #else
-    SETCDFFNAME( &istatus, m_decayName.data(), m_selCutsFname.data(), 
+    SETCDFFNAME( &istatus, m_decayName.c_str(), m_selCutsFname.c_str(), 
                  m_decayName.length(), m_selCutsFname.length() );
 #endif
     if( 0 != istatus ) {
@@ -187,15 +190,15 @@ StatusCode PhysSelectAlgorithm::initialize() {
   if( istatus > 0 ) {
     log << MSG::FATAL << "    Failed to initialize the AXSEL package" << endreq;
     int istat = istatus;
-    AXSELINERR( &istat , m_decayName.data() , m_decayName.length() );
+    AXSELINERR( &istat , m_decayName.c_str() , m_decayName.length() );
     return StatusCode::FAILURE;
   }
   
   // Retrieve decay Code as used in bookkeeping database
 #ifdef WIN32
-  AXSELIDCODE( m_decayName.data(), m_decayName.length(), &m_decayCode );
+  AXSELIDCODE( m_decayName.c_str(), m_decayName.length(), &m_decayCode );
 #else
-  AXSELIDCODE( m_decayName.data(), &m_decayCode, m_decayName.length() );
+  AXSELIDCODE( m_decayName.c_str(), &m_decayCode, m_decayName.length() );
 #endif
 
   // Initialization terminated
@@ -291,7 +294,7 @@ StatusCode PhysSelectAlgorithm::finalize() {
 
   // Close histogram file if requested
   if( 0 != m_selHisto ) {
-    FHFILEEND( m_decayName.data(), m_decayName.length() );
+    FHFILEEND( m_decayName.c_str(), m_decayName.length() );
   }
  
   // End of finalization step
