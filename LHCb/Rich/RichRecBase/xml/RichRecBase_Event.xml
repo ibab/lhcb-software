@@ -177,7 +177,7 @@
             <import name="Event/RichRecRing"/>
             <typedef access="PUBLIC" def="PDGeomEffs" desc="Data containers for each hypothesis" type="RichMap&lt;RichSmartID::KeyType,double&gt;"/>
             <typedef access="PUBLIC" def="PDGeomEffsVector" desc="Data containers for each hypothesis" type="std::vector&lt; PDGeomEffs &gt;"/>
-            <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_hypothesisRings(0), m_richRecTrack(pTrk), m_allPhotonsDone(false)">
+            <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_hypothesisRings(NULL), m_richRecTrack(pTrk), m_allPhotonsDone(false)">
                 <arg const="TRUE" name="segment" type="RichTrackSegment"/>
                 <arg const="FALSE" inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
                 <arg const="TRUE" inout="BYVALUE" name="enBins" type="unsigned int"/>
