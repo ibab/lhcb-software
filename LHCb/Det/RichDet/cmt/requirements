@@ -6,7 +6,7 @@ branches src RichDet doc cmt
 include_dirs $(RICHDETROOT)
 
 # CRJ: Added RichRec here
-use RichRec    v1r4 Rich
+use RichRec    v2 Rich
 use SicbCnv    v13* SICB
 
 use RichEvent v1 Event
