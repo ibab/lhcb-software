@@ -1,8 +1,11 @@
-// $Id: GiGaGeomCnvSvc.cpp,v 1.11 2002-05-07 12:24:50 ibelyaev Exp $ 
+// $Id: GiGaGeomCnvSvc.cpp,v 1.12 2002-05-16 13:22:14 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/05/07 12:24:50  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes 7 May 2002
+//
 // Revision 1.10  2002/05/04 20:53:17  ibelyaev
 //  reduce the verbosity of printout
 //
@@ -47,6 +50,7 @@
 #include "G4VisAttributes.hh"
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
+#include "G4SDManager.hh"
 // from GiGa 
 #include "GiGa/IGiGaSensDet.h"
 #include "GiGa/IGiGaMagField.h"
@@ -620,6 +624,9 @@ StatusCode   GiGaGeomCnvSvc::sensitive
                    + Type + "'/'" + Nick + "'"      ) ; }
   //
   SD->addRef();
+  G4SDManager* SDman = G4SDManager::GetSDMpointer();
+  if(!SDman) {return Error("Could not locate G4SDManager");}
+  SDman->AddNewDetector(SD);
   //
   m_SDs.push_back( SD );
   //
