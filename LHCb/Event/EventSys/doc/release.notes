@@ -1,9 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v18r0 2004-02-12 ========================
-! 2004-02-12 - Marco Cattaneo
- - Use VeloEvent v14r0, ITEvent v13r2, TrEvent v13r1
+!======================== EventSys v18r0 2004-02-26 ========================
+! 2004-02-26 - Marco Cattaneo
+ - Use VeloEvent v14r0, ITEvent v13r2, TrEvent v13r1, CaloEvent v13r1
 
 !======================== EventSys v17r2 2004-02-10 ========================
 ! 2004-02-10 - Marco Cattaneo
