@@ -3,6 +3,7 @@
 # Maintainer : Pere Mato Vila
 #============================================================================
 package DIM
+version v1r0
 
 use LCG_Settings v*
 
