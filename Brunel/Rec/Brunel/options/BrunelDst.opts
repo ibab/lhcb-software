@@ -57,6 +57,7 @@ BrunelDstWriter.ItemList =
 , "/Event/Trig/AlgUsedTimes#1"
 , "/Event/Trig/L0#1"
 , "/Event/Trig/L0/Calo#1"
+, "/Event/Trig/L0/FullCalo#1"
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
 , "/Event/Trig/L0/Decision#1" 
@@ -129,6 +130,7 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Relations/MuonCoords2MCParticles#1"
 , "/Event/Rec/Relations/Tr2MCP#1"
 , "/Event/Rec/Relations/L0CaloCandidates#1"
+, "/Event/Rec/Relations/L0CaloFullCandidates#1"
 , "/Event/Rec/Relations/L1Track2d2MCP#1"
 , "/Event/Rec/Relations/L1Track3d2MCP#1"
 };

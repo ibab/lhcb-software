@@ -52,6 +52,10 @@ BrunelRecoL1Seq.Members += { "Level1" };
 
 // Trigger truth relation tables (used by monitoring and for DST)
 BrunelTriggerTRIGGERSeq.Members += { "L0CaloToMCParticleAsct" };
+BrunelTriggerTRIGGERSeq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
+L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
+L0CaloFullTruth.OutputTable    = "Rec/Relations/L0CaloFullCandidates";
+
 BrunelTriggerTRIGGERSeq.Members += { "L1Track2dTruth" };
 BrunelTriggerTRIGGERSeq.Members += { "L1Track3dTruth" };
 
@@ -171,10 +175,6 @@ BrunelRecoV0Seq.Members += { "UpstreamProtoPAlg", "SelectKs2pipi", "V0Reco" };
 ApplicationMgr.DLLs += { "BrunelAlgs" };
 BrunelRecoTimingSeq.Members += { "TimingAlg" };
 #include "$BRUNELALGSROOT/options/Timing.opts"
-// Algorithms to be timed not yet (BrunelAlgs v1r7) in Timing.opts
-TimingAlg.AlgoList += { "SelectKs2pipi" };
-TimingAlg.AlgoList += { "RichLocPID" };
-TimingAlg.AlgoList += { "RichGloPID" };
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"

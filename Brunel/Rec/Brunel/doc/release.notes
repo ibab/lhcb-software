@@ -4,8 +4,16 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v17r0>2003-01-?? Brunel v17r0</A></H1><PRE>
+ - New tuning:
+   . Change strip threshold to 7000e (PuVeto v5r3)
+
  - New features:
    . Add support for dbase v253r1
+   . Log inputs of L0Calo selection crate, for L1 studies
+     (CaloDet v6r3, L0Event v13r1, L0Calo v6r5, BrunelAlgs v1r8)
+
+ - DST changes:
+   . Add Rec/Relation/L0CaloFullCandidates, Raw/L0/FullCalo
 
  - Bug fixes:
    . Fix many minor problems flagged by valgrind (SicbCnv v17r5,
