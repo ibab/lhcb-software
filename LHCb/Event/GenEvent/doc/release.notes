@@ -4,6 +4,9 @@ package coordinator: W.Pokorski
 
 ! >>>>>>>>>>>>>>>>> GenEvent v1r0 <<<<<<<<<<<<<<<<<<<<<
 
+! 20020709 - GenEvent v2r0 - Witek Pokorski
+  xml description created, included directory changed to Event (from GenEvent)
+
 ! 20020423 - GenEvent v1r0 - Vanya Belyaev
     - use GaudiKernel v12
 
