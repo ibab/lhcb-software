@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.44 2004-06-03 06:04:23 ibelyaev Exp $
+! $Id: release.notes,v 1.45 2004-06-03 07:02:25 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!======================== CaloReco v2r3 2004-06-02 =======================
 ! 2004-06-03 - Ivan Belyaev
  - src/CaloE0Correction.cpp
   new version of energy corrections for DC04 
