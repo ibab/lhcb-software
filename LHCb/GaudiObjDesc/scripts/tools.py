@@ -20,7 +20,9 @@ class tools:
                            'ulonglong', 'long long unsigned', 'unsigned long long', 
                            'unsigned long long int', 'long long unsigned int']
     self.floatingPointT = ['float', 'double', 'long double']
-    self.stlT           = ['vector','list','deque','queue','stack','map','set','bitset','pair','string','utility']
+    self.stlT           = ['vector','list','deque','queue','stack','map','set',
+                           'bitset','pair','string','utility','istream','ostream',
+                           'iostream']
     self.cppKeywords    = ['and', 'and_eq', 'asm', 'auto', 'bitand', 'bitor',
                            'bool', 'break', 'case', 'catch', 'char', 'class',
                            'compl', 'const', 'const_cast', 'continue', 'default',

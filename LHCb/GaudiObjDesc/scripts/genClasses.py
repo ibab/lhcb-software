@@ -442,10 +442,12 @@ class genClasses(genSrcUtils.genSrcUtils):
     s = ''
     godAtt = godClass['attrs']
     if godAtt['templateVector'] == 'TRUE':
+      self.addInclude('ObjectVector')
       s += '// Definition of vector container type for %s\n' % godAtt['name']
       s += 'template <class TYPE> class ObjectVector;\n'
       s += 'typedef ObjectVector<%s> %sVector;\n\n' % (godAtt['name'], godAtt['name'])
     if godAtt['templateList'] == 'TRUE':
+      self.addInclude('ObjectList')
       s += '// Definition of all list container types for %s\n' % godAtt['name']
       s += 'template <class TYPE> class ObjectList;\n'
       s += 'typedef ObjectList<%s> %sList;\n\n' % (godAtt['name'], godAtt['name'])
@@ -469,6 +471,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     else :
       className += '::'
     if not self.isEventClass and self.genOStream:
+      self.addInclude('std::ostream')
       if className :
         s += 'inline '
         indent = ''
@@ -480,6 +483,7 @@ class genClasses(genSrcUtils.genSrcUtils):
       if className : s += '\n{\n  return obj.fillStream(str);\n}\n\n'
       else         : s += ';\n\n'
     if self.genFillStream:
+      self.addInclude('std::ostream')
       if className : s += 'inline '
       else : s += '  /// Fill the ASCII output stream\n  virtual '
       s += 'std::ostream& %sfillStream(std::ostream& s) const' % className

@@ -300,7 +300,6 @@
 
   <!-- classes of package Event -->
   <class name="CaloParticle" file="Event/CaloParticle"/>
-  <class name="private" file="Event/CaloParticle"/>
   <class name="RawBank" file="Event/RawBank"/>
   <class name="VeloCluster" file="Event/VeloCluster"/>
   <class name="ITClusterOnStoredTrack" file="Event/ITClusterOnStoredTrack"/>
@@ -421,6 +420,12 @@
   <class name="TrStateP" file="Event/TrStateP"/>
   <class name="TrStoredMeasurement" file="Event/TrStoredMeasurement"/>
   <class name="MCHit" file="Event/MCHit"/>
+  <class name="RichRecTrack" file="Event/RichRecTrack"/>
+  <class name="RichRecSegment" file="Event/RichRecSegment"/>
+  <class name="RichRecPhoton" file="Event/RichRecPhoton"/>
+  <class name="RichRecStatus" file="Event/RichRecStatus"/>
+  <class name="RichRecPixel" file="Event/RichRecPixel"/>
+  <class name="RichRecRing" file="Event/RichRecRing"/>
 
   <!-- classes of package FML -->
   <class name="LinearConstraint" file="FML/LinearConstraint"/>
@@ -544,9 +549,6 @@
   <class name="IDbFederation" file="GaudiDb/IOODataBase"/>
   <class name="IDbSession" file="GaudiDb/IOODataBase"/>
   <class name="IOODataBase" file="GaudiDb/IOODataBase"/>
-  <class name="Link" file="GaudiDb/IOODataBase"/>
-  <class name="Type" file="GaudiDb/IOODataBase"/>
-  <class name="declaration" file="GaudiDb/IOODataBase"/>
   <class name="DbTypeInfo" file="GaudiDb/DbTypeInfo"/>
   <class name="DbColumn" file="GaudiDb/DbColumn"/>
   <class name="DbBaseConverter" file="GaudiDb/DbBaseConverter"/>
@@ -1157,6 +1159,34 @@
   <class name="IRichMCTruthTool" file="RichKernel/IRichMCTruthTool"/>
   <class name="IRichRefractiveIndex" file="RichKernel/IRichRefractiveIndex"/>
   <class name="IRichMCTrackInfoTool" file="RichKernel/IRichMCTrackInfoTool"/>
+
+  <!-- classes of package RichRecBase -->
+  <class name="IRichRecGeomTool" file="RichRecBase/IRichRecGeomTool"/>
+  <class name="IRichExpectedTrackSignal" file="RichRecBase/IRichExpectedTrackSignal"/>
+  <class name="RichTrackSelector" file="RichRecBase/RichTrackSelector"/>
+  <class name="IRichMassHypothesisRingCreator" file="RichRecBase/IRichMassHypothesisRingCreator"/>
+  <class name="IRichSegmentCreator" file="RichRecBase/IRichSegmentCreator"/>
+  <class name="RichRecToolBase" file="RichRecBase/RichRecToolBase"/>
+  <class name="IRichTrackCreator" file="RichRecBase/IRichTrackCreator"/>
+  <class name="IRichGeomEff" file="RichRecBase/IRichGeomEff"/>
+  <class name="IRichPixelCreator" file="RichRecBase/IRichPixelCreator"/>
+  <class name="IRichCherenkovResolution" file="RichRecBase/IRichCherenkovResolution"/>
+  <class name="IRichRecMCTruthTool" file="RichRecBase/IRichRecMCTruthTool"/>
+  <class name="IRichPhotonSignal" file="RichRecBase/IRichPhotonSignal"/>
+  <class name="IRichGasQuartzWindowAbs" file="RichRecBase/IRichGasQuartzWindowAbs"/>
+  <class name="IRichParticleProperties" file="RichRecBase/IRichParticleProperties"/>
+  <class name="IRichPhotonPredictor" file="RichRecBase/IRichPhotonPredictor"/>
+  <class name="RichTrackID" file="RichRecBase/RichTrackID"/>
+  <class name="RichRecPhotonKey" file="RichRecBase/RichRecPhotonKey"/>
+  <class name="IRichRayleighScatter" file="RichRecBase/IRichRayleighScatter"/>
+  <class name="RichRecAlgBase" file="RichRecBase/RichRecAlgBase"/>
+  <class name="IRichCherenkovAngle" file="RichRecBase/IRichCherenkovAngle"/>
+  <class name="IRichSignalDetectionEff" file="RichRecBase/IRichSignalDetectionEff"/>
+  <class name="IRichSellmeirFunc" file="RichRecBase/IRichSellmeirFunc"/>
+  <class name="RichPhotonSpectra" file="RichRecBase/RichPhotonSpectra"/>
+  <class name="IRichRayTraceCherenkovCone" file="RichRecBase/IRichRayTraceCherenkovCone"/>
+  <class name="IRichStatusCreator" file="RichRecBase/IRichStatusCreator"/>
+  <class name="IRichPhotonCreator" file="RichRecBase/IRichPhotonCreator"/>
 
   <!-- classes of package STDAQ -->
   <class name="STDAQChannelID" file="STDAQ/STDAQChannelID"/>
