@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.cpp,v 1.2 2001-11-08 20:04:23 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.3 2001-11-22 16:02:34 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/08 20:04:23  ibelyaev
+//  update and bug fix
+//
 // Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
 // New package: The first commit into CVS
 //
@@ -16,7 +19,7 @@
 // new class CovarianceEstimator
 //
 // ============================================================================
-#define CALOALGS_COVARIANCEESTIMATOR_CPP 1 
+#define CALOUTILS_COVARIANCEESTIMATOR_CPP 1 
 // ============================================================================
 /// Include files
 /// STD & STL
@@ -84,6 +87,7 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   // the detector information is not available
   if( 0 == detector()           ) { return StatusCode(221)     ; }
   
+  ///// avoid long names 
   typedef CaloCluster::Digits::iterator       iterator;
   typedef CaloCluster::Digits::const_iterator const_iterator;
   
@@ -244,6 +248,8 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   
 };
 
+// ============================================================================
+// The End 
 // ============================================================================
 
 

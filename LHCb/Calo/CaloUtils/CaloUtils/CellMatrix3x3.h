@@ -1,8 +1,11 @@
-// $Id: CellMatrix3x3.h,v 1.2 2001-11-08 20:04:22 ibelyaev Exp $
+// $Id: CellMatrix3x3.h,v 1.3 2001-11-22 16:02:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/08 20:04:22  ibelyaev
+//  update and bug fix
+//
 // Revision 1.1  2001/11/07 17:24:48  ibelyaev
 //  new utilities for determination of relative positions of cells
 //
@@ -43,8 +46,9 @@ public:
    *  @return fraction of area of the second cell which fits inside 
    *          3x3 matrix aroud the seed cell
    */
-  inline double operator() ( const CaloCellID& seed , 
-                             const CaloCellID& cell ) const 
+  inline double operator()
+    ( const CaloCellID& seed , 
+      const CaloCellID& cell ) const 
   {
     /// the same cells
     if( seed             == cell             ) { return 1 ; } ///< RETURN

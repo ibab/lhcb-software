@@ -1,12 +1,13 @@
-// $Id: CellMatrix2x2.cpp,v 1.1 2001-11-07 17:24:49 ibelyaev Exp $
+// $Id: CellMatrix2x2.cpp,v 1.2 2001-11-22 16:02:34 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/07 17:24:49  ibelyaev
+//  new utilities for determination of relative positions of cells
+//
 // ============================================================================
 // Include files
-// CaloGen 
-#include "CaloGen/CaloException.h"
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
 // local
@@ -41,7 +42,7 @@ double CellMatrix2x2::treatDifferentAreas( const CaloCellID& seed ,
 {
   /// valid detector
   if( 0 == det() )
-    { throw CaloException("CellMatrix3x3::treatDifferentAreas: DeCalo=0!");}
+    { Exception("CellMatrix3x3::treatDifferentAreas: DeCalo=0!");}
   /// both cells are valid?
   if( !det()->valid( seed ) || !det()->valid( cell )  ) { return 0 ; }
   /// cell sizes
@@ -93,7 +94,7 @@ double CellMatrix2x2::treatDifferentAreas( const CaloCellID& seed ,
       return Area <= sizeMin ? 0 : Area / sizeCell / sizeCell ;
       break;
     default:
-      throw CaloException("CellMatrix2x2: unimplemented case!");
+      Exception("CellMatrix2x2: unimplemented case!");
       break;
     }
   ///
