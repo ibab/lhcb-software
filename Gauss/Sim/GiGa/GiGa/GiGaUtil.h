@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/25 17:18:08  ibelyaev
+/// move all conversions from GiGa to GiGaCnv
+///
 /// Revision 1.3  2001/07/24 09:05:36  ibelyaev
 /// bug fix
 ///
@@ -26,6 +29,7 @@ class IObjManager;
 class ISvcLocator;
 class IFactory;
 class IGiGaPhysList;
+class IGiGaRunAction;
 class IGiGaEventAction;
 class IGiGaStepAction;
 class IGiGaStackAction;
@@ -234,6 +238,38 @@ namespace GiGaUtil
     ///
   };
 
+  /** @class RunActionCreator 
+   *  
+   *  Helper class to make the instantiation of 
+   *  IGiGaRunAction object more transparent 
+   *  
+   *  @author Vanya Belyaev
+   *  @date 23/07/2001
+   */
+  class RunActionCreator: 
+    public GiGaUtil::Creator , public 
+  std::binary_function<const std::string&,const std::string&,IGiGaRunAction*>
+  {
+  public:
+    
+    /** constructor 
+     *  @param  ObjMgr   pointer to Object Manager 
+     *  @param  SvcLoc   pointer to Service Locator 
+     */
+    RunActionCreator( IObjManager* ObjMgr ,
+                      ISvcLocator* SvcLoc )
+      : Creator( ObjMgr , SvcLoc ) {};
+    
+    /** instantiate IGiGaRunAction object of given type and name 
+     *  @param type  type of the IGiGaRunAction object
+     *  @param name  name of the IGiGaRunAction object 
+     *  @return pointer to new IGiGaRunAction object 
+     */
+    IGiGaRunAction* operator() ( const std::string& type ,
+                                 const std::string& name ) const;
+    ///
+  };
+  
   /** @class EventActionCreator 
    *  
    *  Helper class to make the instantiation of 

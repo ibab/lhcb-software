@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/25 17:18:09  ibelyaev
+/// move all conversions from GiGa to GiGaCnv
+///
 /// Revision 1.1  2001/07/23 20:53:46  ibelyaev
 /// reorganization of GiGaUtil namespace
 /// 
@@ -15,6 +18,8 @@
 #include "GiGa/GiGaException.h"
 #include "GiGa/IGiGaPhysList.h"
 #include "GiGa/IGiGaPhysListFactory.h"
+#include "GiGa/IGiGaRunAction.h"
+#include "GiGa/IGiGaRunActionFactory.h"
 #include "GiGa/IGiGaEventAction.h"
 #include "GiGa/IGiGaEventActionFactory.h"
 #include "GiGa/IGiGaStepAction.h"
@@ -204,6 +209,37 @@ GiGaUtil::PhysListCreator::operator() ( const std::string& type ,
   return plFactory->instantiate( name , svcLoc() ) ;
 };
 
+/// ==========================================================================
+/** @class RunActionCreator 
+ *  
+ *  Helper class to make the instantiation of 
+ *  IGiGaRunAction object more transparent 
+ *  
+ *  @author Vanya Belyaev
+ *  @date 23/07/2001
+ */
+/// ===========================================================================
+/** instantiate IGiGaRunAction object of given type and name 
+ *  @param type  type of the IGiGaRunAction object
+ *  @param name  name of the IGiGaRunAction object 
+ *  @return pointer to new IGiGaRunAction object 
+ */
+/// ===========================================================================
+IGiGaRunAction* 
+GiGaUtil::RunActionCreator::operator() ( const std::string& type ,
+                                           const std::string& name ) const
+{ 
+  /// locate the factory
+  const IFactory* factory = Factory( type );
+  if( 0 == factory   ) { return 0 ; }                    ///< RETURN 
+  /// cast to right factory type 
+  const IGiGaRunActionFactory* raFactory = 
+    dynamic_cast<const IGiGaRunActionFactory*> ( factory ) ;
+  if( 0 == raFactory ) { return 0 ; }                    ///< RETURN
+  /// instantiate the EventAction object
+  return raFactory->instantiate( name , svcLoc() ) ;
+  ///
+};
 /// ==========================================================================
 /** @class EventActionCreator 
  *  

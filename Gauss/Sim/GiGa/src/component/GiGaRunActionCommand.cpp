@@ -2,21 +2,19 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/25 18:13:39  ibelyaev
-/// add new component GiGaEventActionCommand
 /// 
 /// ===========================================================================
 /// GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
-#include "GiGa/GiGaEventActionFactory.h"
+#include "GiGa/GiGaRunActionFactory.h"
 /// G4 
 #include "G4UImanager.hh"
 /// Local 
-#include "GiGaEventActionCommand.h"
+#include "GiGaRunActionCommand.h"
 
 /// ===========================================================================
-/** Implementation file for class : GiGaEventActionCommand
+/** Implementation file for class : GiGaRunActionCommand
  *
  *   @author Vanya  Belyaev
  *   @date 25/07/2001 
@@ -26,8 +24,8 @@
 /// ===========================================================================
 /// Factory business
 /// ===========================================================================
-static const GiGaEventActionFactory<GiGaEventActionCommand>         s_Factory;
-const       IGiGaEventActionFactory&GiGaEventActionCommandFactory = s_Factory;
+static const GiGaRunActionFactory<GiGaRunActionCommand>         s_Factory;
+const       IGiGaRunActionFactory&GiGaRunActionCommandFactory = s_Factory;
 
 /// ===========================================================================
 /** standard constructor
@@ -35,20 +33,20 @@ const       IGiGaEventActionFactory&GiGaEventActionCommandFactory = s_Factory;
  *  @param Loc   pointer to service locator 
  */
 /// ===========================================================================
-GiGaEventActionCommand::GiGaEventActionCommand( const std::string& Name ,
+GiGaRunActionCommand::GiGaRunActionCommand( const std::string& Name ,
                                                 ISvcLocator*       Loc  )
-  : GiGaEventActionBase( Name, Loc )
+  : GiGaRunActionBase( Name, Loc )
   , m_beginCmds ()   ///< empty default list! 
   , m_endCmds   ()   ///< empty default list! 
 {  
-  declareProperty("BeginOfEventCommands", m_beginCmds );
-  declareProperty("EndOfEventCommands"  , m_endCmds   );
+  declareProperty("BeginOfRunCommands", m_beginCmds );
+  declareProperty("EndOfRunCommands"  , m_endCmds   );
 };
 
 /// ===========================================================================
 /// destructor 
 /// ===========================================================================
-GiGaEventActionCommand::~GiGaEventActionCommand()
+GiGaRunActionCommand::~GiGaRunActionCommand()
 {
   m_beginCmds .clear();
   m_endCmds   .clear();
@@ -59,9 +57,9 @@ GiGaEventActionCommand::~GiGaEventActionCommand()
  *  @return status code
  */
 /// ===========================================================================
-StatusCode GiGaEventActionCommand::initialize()
+StatusCode GiGaRunActionCommand::initialize()
 {
-  StatusCode sc = GiGaEventActionBase::initialize();
+  StatusCode sc = GiGaRunActionBase::initialize();
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class", sc );}
   ///
@@ -78,25 +76,25 @@ StatusCode GiGaEventActionCommand::initialize()
  *  @return status code
  */
 /// ===========================================================================
-StatusCode GiGaEventActionCommand::finalize()
+StatusCode GiGaRunActionCommand::finalize()
 {
   /// finalize the base class 
-  return GiGaEventActionBase::finalize();
+  return GiGaRunActionBase::finalize();
 };
 
 /// ===========================================================================
-/** performe the action at the begin of each event 
- *  @param event pointer to Geant4 event object 
+/** performe the action at the begin of each run 
+ *  @param run pointer to Geant4 run object 
  */
 /// ===========================================================================
-void GiGaEventActionCommand::BeginOfEventAction( const G4Event* event )
+void GiGaRunActionCommand::BeginOfRunAction( const G4Run* run )
 {
-  if( 0 == event ) 
-    { Warning("BeginOfEventAction:: G4Event* points to NULL!") ; }
+  if( 0 == run ) 
+    { Warning("BeginOfRunAction:: G4Run* points to NULL!") ; }
   /// get Geant4 UI manager 
   G4UImanager* ui = G4UImanager::GetUIpointer() ;
   if( 0 == ui    ) 
-    { Error("BeginOfEventAction:: G4UImanager* points to NULL!") ; return ; }
+    { Error("BeginOfRunAction:: G4UImanager* points to NULL!") ; return ; }
   else 
     {
       COMMANDS::const_iterator iCmd = m_beginCmds.begin() ;
@@ -106,18 +104,18 @@ void GiGaEventActionCommand::BeginOfEventAction( const G4Event* event )
 };
 
 /// ===========================================================================
-/** performe the action at the end of each event 
- *  @param event pointer to Geant4 event object 
+/** performe the action at the end of each run 
+ *  @param run pointer to Geant4 run object 
  */
 /// ===========================================================================
-void GiGaEventActionCommand::EndOfEventAction( const G4Event* event )
+void GiGaRunActionCommand::EndOfRunAction( const G4Run* run )
 {
-  if( 0 == event ) 
-    { Warning("EndOfEventAction:: G4Event* points to NULL!") ; }
+  if( 0 == run ) 
+    { Warning("EndOfRunAction:: G4Run* points to NULL!") ; }
   /// get Geant4 UI manager 
   G4UImanager* ui = G4UImanager::GetUIpointer() ;
   if( 0 == ui    ) 
-    { Error("EndOfEventAction:: G4UImanager* points to NULL!") ; }
+    { Error("EndOfRunAction:: G4UImanager* points to NULL!") ; }
   else
     { 
       COMMANDS::const_iterator iCmd = m_beginCmds.begin() ;
