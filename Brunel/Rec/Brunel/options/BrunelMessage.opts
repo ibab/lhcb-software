@@ -42,5 +42,7 @@ TrLayerPartitioning.OutputLevel = 4;
 
 RichPIDMonitor.OutputLevel = 4;
 
+ToolSvc.CaloTrackMatchElectron.OutputLevel = 5;
+
 FwtAnalyse.PrintEveryEvent = false;
 MatchAnalyse.PrintEveryEvent = false;
