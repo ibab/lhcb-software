@@ -1,4 +1,4 @@
-// $Id: V0MakerAlg.cpp,v 1.1 2003-02-07 18:41:25 gcorti Exp $
+// $Id: V0MakerAlg.cpp,v 1.2 2003-02-12 19:31:24 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -141,23 +141,23 @@ StatusCode V0MakerAlg::execute() {
   for( V0s::const_iterator iks = kshortCnt->begin(); 
        kshortCnt->end() != iks; ++iks ) {
 
-    auto_ptr<ProtoParticle> protoPiP( new ProtoParticle() );
+    std::auto_ptr<ProtoParticle> protoPiP( new ProtoParticle() );
     fillProtoP( (*iks)->trackPos(),  protoPiP.get() );    
-    auto_ptr<Particle> piP( new Particle() );
+    std::auto_ptr<Particle> piP( new Particle() );
     fillParticle( protoPiP.get(), (*iks)->pIDPos().pid(), piP.get() );
     
-    auto_ptr<ProtoParticle> protoPiM( new ProtoParticle() );
+    std::auto_ptr<ProtoParticle> protoPiM( new ProtoParticle() );
     fillProtoP( (*iks)->trackNeg(),  protoPiM.get() );
-    auto_ptr<Particle> piM( new Particle() ); 
+    std::auto_ptr<Particle> piM( new Particle() ); 
     fillParticle( protoPiM.get(), (*iks)->pIDNeg().pid(), piM.get() );
     
-    auto_ptr<Vertex> vtx( new Vertex() );
+    std::auto_ptr<Vertex> vtx( new Vertex() );
     *vtx = *((*iks)->vertex());
     vtx->clearProducts();
     vtx->addToProducts(piP.get());
     vtx->addToProducts(piM.get());
 
-    auto_ptr<Particle> kshort( new Particle() );
+    std::auto_ptr<Particle> kshort( new Particle() );
     m_pStuffer->fillParticle( *(vtx.get()), *(kshort.get()), m_v0ID );
     
     ksProtoCnt->insert(protoPiP.release());
