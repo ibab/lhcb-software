@@ -7,13 +7,7 @@ set GIGAOPTIONS "${GIGAROOT}/options/GiGaOptions.txt"
 branches cmt src doc GiGa 
 
 # GaudiKernel
-use GaudiSys   v7*
-
-# Event object library
-use LHCbEvent     v9*	Event
-
-# Detector Description package
-use DetDesc       v6*	Det
+use GaudiKernel   v9*
 
 # Geant4 tool kit 
 use GEANT4        v3r0*	Sim
@@ -23,26 +17,20 @@ use GEANT4        v3r0*	Sim
 # * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * #
 ###########################################################################
 
-#document tex   GiGaGuide         ../doc/GiGa.tex
-#document tex   GiGaEvolution     ../doc/GiGaEvolution.tex
-
 include_dirs                     $(GIGAROOT)
 
 # component library
-library        GiGa  ../src/*.cpp 	        
+library        GiGaLib   Lib/*.cpp 	        
+library        GiGa      component/*.cpp 	        
 
-apply_pattern package_Clinkopts
-
-# link GiGa statically on NT
-#macro_append  GiGa_linkopts ""\
-#              WIN32         '$(GiGaDir)/GiGa.arc /include:"_GiGa_loadRef"'
-
-apply_pattern packageShr
+apply_pattern package_Llinkopts
+apply_pattern ld_library_path 
 #=====================================================================
 
 private
 
 apply_pattern package_Cshlibflags
+macro_append GiGaLib_shlibflags "$(GaudiKernel_linkopts) $(GEANT4_linkopts)"
 
 # to reduce number of warnings 
 macro_remove cppflags "-Wall "
@@ -50,6 +38,7 @@ macro_remove cppflags "-Wall "
 # to reduce number of warnings from G4 
 macro_append GiGa_cppflags   " " \ 
           Linux           "-Wno-unused " 
+
 
 
 

@@ -2,6 +2,20 @@ Package:          GiGa
 Package manager : N.N. 
 
 !===========================================================================
+! 20010420 - Vanya Belyaev
+    Large restructiruzation 
+    (1) GiGa v4 is splitted into 2 packages
+           GiGa v5 and GiGaCnv v1 
+       The first one is EXPERIMENT neutral and therefore 
+       depends only on GaudiKernel and GEANT4 packages  
+       The second package containes conversion services, 
+       converters and base class for sensitive detector and 
+       it depends on LHCbEvent and DetDesc package. Thus it is 
+       "LHCb" -specific but still "subdetector-neutral". 
+    (2)  GiGa itself is splitted into 2 libraries 
+          component library GiGa and 
+          linker    library         GiGaLib, which containes base classes.  
+!===========================================================================
 ! 20010322 - Vanya Belyaev
     src/GiGaSensDetBase.cpp 
       remove compilation warning on NT 
