@@ -1,14 +1,25 @@
-// $Id: ObjectTypeTraits.h,v 1.3 2002-04-24 21:16:39 ibelyaev Exp $
+// $Id: ObjectTypeTraits.h,v 1.4 2002-04-25 08:02:02 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/24 21:16:39  ibelyaev
+//  fix one more problem for Win2K
+//
 // Revision 1.2  2002/04/03 15:35:17  ibelyaev
 // essential update and redesing of all 'Relations' stuff
 //
 // ============================================================================
 #ifndef RELATIONS_ObjectTypeTraits_H
 #define RELATIONS_ObjectTypeTraits_H 1
+// suppress warnings on Win32 
+#ifdef WIN32
+/** disable warning C4786: 
+ *  identifier was truncated to '255' characters in the debug information
+ */
+#pragma warning ( disable : 4786 )
+#endif 
+
 // Include files
 // STD & STL 
 #include <functional>

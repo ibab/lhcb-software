@@ -1,11 +1,21 @@
-// $Id: RelationWeightedTypeTraits.h,v 1.4 2002-04-24 21:16:40 ibelyaev Exp $
+// $Id: RelationWeightedTypeTraits.h,v 1.5 2002-04-25 08:02:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/24 21:16:40  ibelyaev
+//  fix one more problem for Win2K
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWEIGTEDTYPETRAITS_H
 #define RELATIONS_RELATIONWEIGTEDTYPETRAITS_H 1
+// suppress warnings on Win32 
+#ifdef WIN32
+/** disable warning C4786: 
+ *  identifier was truncated to '255' characters in the debug information
+ */
+#pragma warning ( disable : 4786 )
+#endif 
 // Include files
 // STD & STL
 #include <vector>
