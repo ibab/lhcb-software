@@ -1,12 +1,31 @@
-! $Id: release.notes,v 1.13 2002-04-22 08:10:38 cattanem Exp $
+! $Id: release.notes,v 1.14 2002-04-24 09:51:20 ocallot Exp $
 package VeloDet
 package manager : Velo Group
 
-! >>>>>>>>>>>>>>>>>>>> VeloDet v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<
+!=============================================================================
+! 24/04/2002 - Olivier Callot  ** v5r0 **
+  - Added functions for the new Xml description, allowing various R-Phi orders.
+     isRSensor( num ) : return if the sensor measures R
+     phiSensorAssociated( num ) : Lits the Phi sensors to patch the specified 
+                                  R sensor
+     matchingZones( zone1, zone2 ) : Are the two R zones compatible ?
+     rOfStrip( int ) : Return the radius of this strip, from a pre-computed 
+                       table for fast access.
+     phiPitch( int ) : Return the phi pitch in angle of the specified strip.
+  - Get the sensor geometry form Xml, using a userParameter. No longer any
+    hardcoded knowledge of the R-Phi order and alternance. PuVeto is also
+    identified from Xml.
+
+!=============================================================================
+! 18/04/2002 - Olivier Callot
+  - Replaced 'wafer' by 'sensor' in all member function names and internals
+  - New function sensorType( int ) to get the type of a sensor
+
 ! 20020419 (M.Cattaneo)
   Use DetDesc v10* (for Gaudi v10)
 
-! 05/04/2002 - Olivier Callot
+!=============================================================================
+! 05/04/2002 - Olivier Callot ** v4r0 **
   - Fixed the type of wafers in PuVeto, they were always of teh same type !
 
 ! 28/03/2002 - Olivier Callot

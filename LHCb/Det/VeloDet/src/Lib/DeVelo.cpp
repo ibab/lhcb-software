@@ -1,9 +1,10 @@
-// $Id: DeVelo.cpp,v 1.11 2002-04-05 11:36:56 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.12 2002-04-24 09:51:24 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
 // ============================================================================
 // from STL
+#include <stdio.h>
 #include <cmath>
 #include <algorithm>
 // from CLHEP
@@ -151,33 +152,30 @@ StatusCode DeVelo::initialize() {
 
   m_innerTiltRadius = m_innerRadius * sin( m_innerTilt );
   m_outerTiltRadius = m_phiBoundRadius * sin( m_outerTilt );
-  m_phiInnerTilt    = m_innerTilt - m_phiOrigin;
+  m_phiInnerTilt    = m_innerTilt + m_phiOrigin;
   m_phiAtBoundary   = m_phiInnerTilt - 
                       asin( m_innerTiltRadius / m_phiBoundRadius );
   m_phiOuterTilt    = m_phiAtBoundary + m_outerTilt;
   m_phiPitchInner   = 2.* m_halfAngle / m_nbPhiInner;
   m_phiPitchOuter   = 2.* m_halfAngle / (2048. - m_nbPhiInner);
 
-  double phi = m_phiOuterTilt + asin( m_outerTiltRadius / m_outerRadius );
-  loging << MSG::DEBUG
-      << "Phi inner "    << - m_phiOrigin
-      << " at boundary " << m_phiAtBoundary 
-      << " and outside " << phi
+  double phi = m_phiOuterTilt - asin( m_outerTiltRadius / m_outerRadius );
+  loging << MSG::INFO
+      << "Phi (degree) inner "    << m_phiOrigin / degree
+      << " at boundary " << m_phiAtBoundary / degree
+      << " and outside " << phi / degree
       << endreq;
 
  
 /**  
- * Get the stations (wafers) with their Z, type and orientation
+ * Get the stations (sensors) with their Z, type and orientation
  */
   HepPoint3D pointLocal( 0, 0, 0);
   HepPoint3D pointGlobal( 0, 0, 0);
   int number;
   int index = 0;
-  double minZ = -200.*mm;
   bool inVeto = true;
-  double z;
-  int rightLeft;
-  int phiType;
+  char line[80];
   
   IDetectorElement* stations = *childBegin();
 
@@ -185,51 +183,102 @@ StatusCode DeVelo::initialize() {
        stations->childEnd() != child ; ++child ) {
     number = child - stations->childBegin();
 
-    IGeometryInfo* geoData = (*child)->geometry();
-    if ( 0 != geoData ) {
-      pointGlobal = geoData->toGlobal( pointLocal );
-      z = pointGlobal.z();
-      if ( inVeto && ( minZ < z ) ) {
-        inVeto = false;
-        index  = 0;
-      }      
-    }
-    loging << MSG::DEBUG << "Station " << index << " center z = " << z;
+    unsigned int firstInStation = m_sensor.size();
 
-    for( IDetectorElement::IDEContainer::iterator waf = (*child)->childBegin();
-         (*child)->childEnd() != waf ; ++waf ) {
-      int j = waf - (*child)->childBegin();
+    for(IDetectorElement::IDEContainer::iterator sens = (*child)->childBegin();
+        (*child)->childEnd() != sens ; ++sens ) {
 
-      rightLeft = j/2;
-      phiType   = number%2 + 1;  // 1 or 2
-      
-      IGeometryInfo* geoData = (*waf)->geometry();
+      IGeometryInfo* geoData = (*sens)->geometry();
       if ( 0 != geoData ) {
         pointGlobal = geoData->toGlobal( pointLocal );
-        z =  pointGlobal.z();
+        double z =  pointGlobal.z();
 
-        VeloWafer* wafer = new VeloWafer();
-        wafer->setNumber( index++ );
-        wafer->setZ( z );
-        if ( inVeto ) {
-          wafer->setType( j );
-          loging << "    R " << wafer->type() << " z=" << wafer->z();
-          m_puWafer.push_back( wafer );
-        } else {
-          if ( 1 == j%2 ) {
-            wafer->setType( 2*phiType + rightLeft );
-            loging << " Phi" << wafer->type() << " z=" << wafer->z();
+        int type = -1;
+        std::string typeStr = "???";
+        Parameters pars( (*sens)->userParameters() );
+
+        it = std::find( pars.begin() , pars.end () , std::string("Type") );
+        if( pars.end() != it ) {
+          typeStr = (*sens)->userParameterAsString( *it ) ;
+          if ( typeStr == " VetoL" ) {
+            type = 0;
+          } else if ( typeStr == " VetoR" ) {
+            type = 1;
           } else {
-            wafer->setType( rightLeft );
-            loging << " R" << wafer->type() << " z=" << wafer->z();
+            if ( inVeto ) {
+              inVeto = false;
+              index  = 0;
+            }
+            if ( typeStr == " RLeft" ) {
+              type = 0;
+            } else if ( typeStr == " RRigh" ) {
+              type = 1;
+            } else if ( typeStr == " Phi1L" ) {
+              type = 2;
+            } else if ( typeStr == " Phi1R" ) {
+              type = 3;
+            } else if ( typeStr == " Phi2L" ) {
+              type = 4;
+            } else if ( typeStr == " Phi2R" ) {
+              type = 5;
+            }
           }
-          m_wafer.push_back( wafer );
         }
+
+        VeloSensor* sensor = new VeloSensor();
+        sensor->setNumber( index++ );
+        sensor->setType( type );
+        sensor->setZ( z );
+        sensor->setGeometry( geoData );
+        if ( inVeto ) {
+          m_puSensor.push_back( sensor );
+        } else {
+          m_sensor.push_back( sensor );
+        }
+
+        sprintf( line, "Sensor %2d ", sensor->number() );
+        loging << MSG::INFO << line << typeStr;
+        sprintf( line, "(%d) z=%7.2f ", sensor->type(), sensor->z() );
+        loging << line;
+
       } else {
         loging << " no geometry !" << endreq;
       }
     }
     loging << endreq;
+
+    // build the list of Phi associated to R, in principle both PHI of the 
+    // station due to the dog-leg shape.
+    // But for now on (phi and R are half circles), use only the closest
+    for ( unsigned int sR = firstInStation ; m_sensor.size() > sR ; sR++ ) {
+      if ( isRSensor( sR )  ) {
+        double bestZ = 10000.;
+        int    bestP ;
+        for ( unsigned int sP = firstInStation; m_sensor.size() > sP; sP++ ) {
+          if ( !isRSensor( sP )  ) {
+            if ( bestZ > fabs( m_sensor[sR]->z() - m_sensor[sP]->z() )) {
+              bestZ = fabs( m_sensor[sR]->z() - m_sensor[sP]->z() );
+              bestP = sP;
+            }
+          }
+        }
+        m_sensor[sR]->associate( bestP );
+      }
+    }
+
+  }
+
+  //=======================================================================
+  // Build the list of radius for the R strips. Only for 1024 strips...
+  //=======================================================================
+  m_rStrip.clear();
+  double radius;
+  double center = 0.5;
+  int dum;
+  
+  for ( int iR=0 ; 1024 > iR ; iR++ ) {
+    radius = rOfStrip( center, dum );
+    m_rStrip.push_back( radius );
   }
 
   m_zVertex = 0;   // default value.
@@ -238,11 +287,11 @@ StatusCode DeVelo::initialize() {
 };
 
 // ============================================================================
-// Get the wafer a point is in.
+// Get the sensor a point is in.
 // ============================================================================
-int DeVelo::waferNumber( const HepPoint3D& point ) {
-  std::vector<VeloWafer*>::const_iterator it ;
-  for ( it = m_wafer.begin() ; m_wafer.end() != it; it++ ) {
+int DeVelo::sensorNumber( const HepPoint3D& point ) {
+  std::vector<VeloSensor*>::const_iterator it ;
+  for ( it = m_sensor.begin() ; m_sensor.end() != it; it++ ) {
     if ( 0.250 * mm > fabs( point.z() - (*it)->z() ) ) {
       return (*it)->number();
     }
@@ -252,11 +301,11 @@ int DeVelo::waferNumber( const HepPoint3D& point ) {
 };
 
 // ============================================================================
-// Get the wafer a point is in.
+// Get the sensor a point is in.
 // ============================================================================
-int DeVelo::puWaferNumber( const HepPoint3D& point ) {
-  std::vector<VeloWafer*>::const_iterator it ;
-  for ( it = m_puWafer.begin() ; m_puWafer.end() != it; it++ ) {
+int DeVelo::puSensorNumber( const HepPoint3D& point ) {
+  std::vector<VeloSensor*>::const_iterator it ;
+  for ( it = m_puSensor.begin() ; m_puSensor.end() != it; it++ ) {
     if ( 0.250 * mm > fabs( point.z() - (*it)->z() ) ) {
       return (*it)->number();
     }
@@ -265,36 +314,36 @@ int DeVelo::puWaferNumber( const HepPoint3D& point ) {
 };
 
 //=============================================================================
-// Returns the strip number for the specified wafer
+// Returns the strip number for the specified sensor
 //=============================================================================
-double DeVelo::stripNumber( unsigned int waferNumber, 
+double DeVelo::stripNumber( unsigned int sensorNumber, 
                             const HepPoint3D& point, 
                             double& pitch ) {
   int type;
-  if ( m_wafer.size() <= waferNumber ) {
+  if ( m_sensor.size() <= sensorNumber ) {
     return -1;
   }
-  type = m_wafer[waferNumber]->type();
+  type = m_sensor[sensorNumber]->type();
   return stripNumberByType( type, point, pitch ) ;
 }
 
    
 //=============================================================================
-// Returns the strip number for the specified wafer
+// Returns the strip number for the specified sensor
 //=============================================================================
-double DeVelo::puStripNumber( unsigned int waferNumber, 
+double DeVelo::puStripNumber( unsigned int sensorNumber, 
                               const HepPoint3D& point, 
                               double& pitch ) {
   int type;
-  if ( m_puWafer.size() <= waferNumber ) {
+  if ( m_puSensor.size() <= sensorNumber ) {
     return -1;
   }
-  type = m_puWafer[waferNumber]->type();
+  type = m_puSensor[sensorNumber]->type();
   return stripNumberByType( type, point, pitch ) ;
   
 }
 //=============================================================================
-// Returns the strip number for the specified wafer
+// Returns the strip number for the specified sensor
 //=============================================================================
 double DeVelo::stripNumberByType( int type,
                                   const HepPoint3D& point, 
@@ -317,7 +366,7 @@ double DeVelo::stripNumberByType( int type,
   
   if ( 1 >= type ) {
 
-    // ** This is an R wafer.
+    // ** This is an R sensor.
 
     if ( -m_halfAngle < phi ) {
       int zone  = (int) ( ( phi + m_halfAngle ) / m_quarterAngle );
@@ -339,14 +388,14 @@ double DeVelo::stripNumberByType( int type,
             }
           }
           if ( 1 < zone ) {
-            strip += 1024.;           // second half of the wafer
+            strip += 1024.;           // second half of the sensor
           }
         }
       }
     }
     return strip;
   }
-  // ** This is a phi wafer. Can symmetrized to handle th eother stereo...
+  // ** This is a phi sensor. Can symmetrized to handle th eother stereo...
 
   if ( 3 < type ) {
     phi = - phi;
@@ -356,7 +405,7 @@ double DeVelo::stripNumberByType( int type,
 
   if ( (m_innerRadius < radius ) && ( m_outerRadius > radius ) ) {
     if ( m_phiBoundRadius > radius ) {
-      phi  -=  m_phiInnerTilt - asin( m_innerTiltRadius / radius );
+      phi   = phi - ( m_phiInnerTilt - asin( m_innerTiltRadius / radius ) );
       strip = phi / m_phiPitchInner;
       pitch = m_phiPitchInner * radius;
       if ( 0 > strip) {
@@ -365,7 +414,7 @@ double DeVelo::stripNumberByType( int type,
         strip = 2048 + strip - m_nbPhiInner;
       }
     } else {
-      phi  -=  m_phiOuterTilt - asin( m_outerTiltRadius / radius );
+      phi   = phi - ( m_phiOuterTilt - asin( m_outerTiltRadius / radius ) );
       strip = phi / m_phiPitchOuter + m_nbPhiInner;
       pitch = m_phiPitchOuter * radius;
       if ( m_nbPhiInner > strip) {
@@ -406,16 +455,37 @@ double DeVelo::rOfStrip( double strip, int& phiZone ) {
   }
   return  localR;
 }
-
+  
+//=========================================================================
+//  Return true if the two phiZones are matching. This depends on the
+//  R sensor geometry
+//=========================================================================
+bool DeVelo::matchingZones ( int zone1, int zone2 ) {
+  switch ( zone1 ){
+  case 0 : 
+    return ( (0 == zone2) || (2 == zone2) );
+  case 1 : 
+    return ( (1 == zone2) || (2 == zone2) );
+  case 2 : 
+    return (3 >  zone2) ;
+  case 3 : 
+    return ( (3 == zone2) || (5 == zone2) );
+  case 4 : 
+    return ( (4 == zone2) || (5 == zone2) );
+  case 5 : 
+    return ( 2 < zone2) ;
+  }
+  return false;
+}
 //=========================================================================
 //  
 //=========================================================================
-double DeVelo::phiOfStrip ( double strip, double radius, int waferNb ) {
+double DeVelo::phiOfStrip ( double strip, double radius, int sensorNb ) {
 
   // This version codes unphysical strips as SICBMC generates hits in semi-
-  // circular wafer, not taking into accound the real Phi wafer shape. The 
+  // circular sensor, not taking into accound the real Phi sensor shape. The 
   // non-official strips are coded as 2048 plus the strip number of the 
-  // wafer which covers this region in the next half station.
+  // sensor which covers this region in the next half station.
 
   double stripLocal = strip;
   if ( 2048. <= strip ) {
@@ -438,17 +508,17 @@ double DeVelo::phiOfStrip ( double strip, double radius, int waferNb ) {
   }
   phiLocal -= halfpi;
 
-  if ( 3 < ( m_wafer[waferNb]->type() ) ) {
+  if ( 3 < ( m_sensor[sensorNb]->type() ) ) {
     phiLocal = -phiLocal;
   }
   return phiLocal;
 }
 //=============================================================================
-// Returns the strip number for the specified wafer
+// Returns the strip number for the specified sensor
 //=============================================================================
-bool DeVelo::getSpacePoint( unsigned int RWaferNumber, 
+bool DeVelo::getSpacePoint( unsigned int RSensorNumber, 
                             double       RStripNumber,
-                            unsigned int PhiWaferNumber, 
+                            unsigned int PhiSensorNumber, 
                             double       PhiStripNumber,
                             HepPoint3D& point, 
                             double&  rPitch,
@@ -457,24 +527,24 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
   rPitch   = 0.;
   phiPitch = 0.;
 
-  // check that the wafer number are valid
+  // check that the sensor number are valid
 
-  if ( ( m_wafer.size() <= RWaferNumber   ) ||
-       ( m_wafer.size() <= PhiWaferNumber )    ) {
+  if ( ( m_sensor.size() <= RSensorNumber   ) ||
+       ( m_sensor.size() <= PhiSensorNumber )    ) {
     return false;
   }
 
-  // check that the wafer types are valid
-  int phiType =  m_wafer[PhiWaferNumber]->type();
+  // check that the sensor types are valid
+  int phiType =  m_sensor[PhiSensorNumber]->type();
   
-  if ( ( 1 < m_wafer[RWaferNumber]->type() ) || ( 2 > phiType ) ) {
+  if ( ( 1 < m_sensor[RSensorNumber]->type() ) || ( 2 > phiType ) ) {
     return false;
   }
 
-  // Nearby wafer...
+  // Nearby sensor...
 
-  double zR   = m_wafer[RWaferNumber]->z();
-  double zPhi = m_wafer[PhiWaferNumber]->z();
+  double zR   = m_sensor[RSensorNumber]->z();
+  double zPhi = m_sensor[PhiSensorNumber]->z();
   if ( fabs(zR - zPhi) > 50. ) {
     return false;
   }
@@ -510,7 +580,7 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
     }
   }
 
-  double phiLocal = phiOfStrip( PhiStripNumber, rAtPhi, PhiWaferNumber );
+  double phiLocal = phiOfStrip( PhiStripNumber, rAtPhi, PhiSensorNumber );
   double phiMin = phiLocal + 0.02;    // Tolerance for tests
   double phiMax = phiLocal - 0.02;    // tolerance for tests
   
@@ -550,7 +620,7 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
   point.setX( localR * cos( phiLocal ) );
   point.setY( localR * sin( phiLocal ) );
   // Here we should convert a local point to a global point, using the 
-  // toGlobal method of the R wafer detector element... Not now !
+  // toGlobal method of the R sensor detector element... Not now !
 
 
   // Compute the pitches. 
@@ -564,7 +634,7 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
 //=========================================================================
 //  Compute the distance of the origin to the strip
 //=========================================================================
-double DeVelo::originToPhiDistance ( double strip, int waferNb ) {
+double DeVelo::originToPhiDistance ( double strip, int sensorNb ) {
 
   double stripLocal = strip;
   if ( 2048. <= strip ) {
@@ -578,15 +648,15 @@ double DeVelo::originToPhiDistance ( double strip, int waferNb ) {
     distance = m_outerTiltRadius ;
   }
 
-  int phiType =  m_wafer[waferNb]->type();
+  int phiType =  m_sensor[sensorNb]->type();
   if ( 4 > phiType    ) {  distance = -distance; }
   return distance;
 }
 
 //=========================================================================
-//  
+//  Returns the angle of the strip with the x axis
 //=========================================================================
-double DeVelo::phiDirectionOfStrip ( double strip, int waferNb ) {
+double DeVelo::phiDirectionOfStrip ( double strip, int sensorNb ) {
 
   double stripLocal = strip;
   if ( 2048. <= strip ) {
@@ -607,7 +677,7 @@ double DeVelo::phiDirectionOfStrip ( double strip, int waferNb ) {
   }
   phiLocal -= halfpi;
 
-  int phiType =  m_wafer[waferNb]->type();
+  int phiType =  m_sensor[sensorNb]->type();
 
   if ( 3 <  phiType   ) { phiLocal = -phiLocal; }
   if ( 0 == phiType%2 ) { phiLocal += pi;       }

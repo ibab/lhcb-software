@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.6 2002-04-05 11:36:55 ocallot Exp $
+// $Id: DeVelo.h,v 1.7 2002-04-24 09:50:34 ocallot Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -16,23 +16,21 @@
 
 /// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"
-
-/// from Det/VeloDet
-#include "VeloDet/CLIDDeVelo.h"
+#include "DetDesc/IGeometryInfo.h"
 
 /// forwad declarations
 class MsgStream;
 
 
 /**  
- * Auxilliary class to handle each wafer.
+ * Auxilliary class to handle each sensor.
  */
 
-class VeloWafer {
+class VeloSensor {
   
 public:
-  VeloWafer() {};
-  ~VeloWafer() {};
+  VeloSensor() {};
+  ~VeloSensor() {};
 
   double z()                    const { return m_z;      }
   void   setZ( double z )             { m_z = z;         }
@@ -42,7 +40,14 @@ public:
   
   int    number()               const { return m_number; }
   void   setNumber( int num )         { m_number = num;  }
+
+  std::vector<int> phiAssociated() const { return m_associated; };
+  void   associate( int num )         { m_associated.push_back( num ); };
   
+  IGeometryInfo* geometry( )               const { return m_geometry; }
+  void   setGeometry( IGeometryInfo* geo )       { m_geometry = geo; }
+
+
 private:
   int m_number;   ///< station number
   /** The detector type describes if the detector is right or left (low bit)
@@ -51,6 +56,8 @@ private:
    */
   int m_type;     ///< detector type
   double m_z;     ///< Z position of silicium center
+  std::vector<int> m_associated; ///< list of associated phi sensors.
+  IGeometryInfo*   m_geometry;  ///< Pointer to the sensor geometry.
 };
 
 /** @class DeVelo DeVelo.h "VeloDet/DeVelo.h" 
@@ -59,6 +66,8 @@ private:
  *
  *  @author Olivier Callot Olivier.Callot@cern.ch
  */
+
+static const CLID& CLID_DeVelo = 8100; 
 
 class DeVelo: public DetectorElement {
 
@@ -78,55 +87,73 @@ public:
   /// initialization method 
   virtual StatusCode initialize(); 
 
-  /// return the wafer number for a point
-  int waferNumber( const HepPoint3D& point );
+  /// return the sensor number for a point
+  int sensorNumber( const HepPoint3D& point );
 
-  /// return the PU wafer number for a point
-  int puWaferNumber( const HepPoint3D& point );
+  /// return the PU sensor number for a point
+  int puSensorNumber( const HepPoint3D& point );
 
-  /// return the number of wafers
-  int nbWafer()  const { return m_wafer.size() ; };
+  /// return the number of sensors
+  int nbSensor()  const { return m_sensor.size() ; };
   
-  /// return the number of wafers
-  int nbPuWafer()  const { return m_puWafer.size(); };
+  /// return the number of sensors
+  int nbPuSensor()  const { return m_puSensor.size(); };
   
-  /// return the (floating) strip number for this wafer;
-  double stripNumber( unsigned int waferNumber, 
+  /// return the (floating) strip number for the point in this sensor;
+  double stripNumber( unsigned int sensorNumber, 
                       const HepPoint3D& point, 
                       double& pitch );
 
-  /// return the (floating) strip number for this wafer;
-  double puStripNumber( unsigned int waferNumber, 
+  /// return the (floating) strip number for the point in this sensor;
+  double puStripNumber( unsigned int sensorNumber, 
                         const HepPoint3D& point, 
                         double& pitch );
 
-  /// return the (floating) strip number for this wafer;
-  double stripNumberByType( int type,
-                            const HepPoint3D& point, 
-                            double& pitch );
-
   /// return the space point and sigma for a given pair of strips.
-
-  bool getSpacePoint( unsigned int RWaferNumber, 
+  bool getSpacePoint( unsigned int RSensorNumber, 
                       double       RStripNumber,
-                      unsigned int PhiWaferNumber, 
+                      unsigned int PhiSensorNumber, 
                       double       PhiStripNumber,
                       HepPoint3D& point, 
                       double&  rPitch,
                       double&  phiPitch );
 
-  double zWafer( unsigned int num ) { 
-    if ( m_wafer.size() > num ) {
-      return m_wafer[num]->z(); 
+  /// return true if this sensor measures the R coordinate
+  bool isRSensor( unsigned int num ) { 
+    if ( m_sensor.size() > num ) {
+      if ( (0 ==  m_sensor[num]->type()) || 
+           (1 ==  m_sensor[num]->type()) )  {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /// Returns the vector of Phi sensor number one can match with the 
+  /// specified R sensor number
+  std::vector<int> phiSensorAssociated( unsigned int rNum ) {
+    if ( m_sensor.size() > rNum ) {
+      if ( (0 ==  m_sensor[rNum]->type()) || 
+           (1 ==  m_sensor[rNum]->type()) )  {
+        return m_sensor[rNum]->phiAssociated();
+      }
+    }
+    return std::vector<int>();
+  }
+  
+  /// Returns the z position of this Velo sensor
+  double zSensor( unsigned int num ) { 
+    if ( m_sensor.size() > num ) {
+      return m_sensor[num]->z(); 
     } else{
       return -9999.;
     }
   }
   
-  
-  double zPuWafer( unsigned int num ) { 
-    if ( m_puWafer.size() > num ) {
-      return m_puWafer[num]->z(); 
+  /// Returns the Z position of this PuVeto sensor
+  double zPuSensor( unsigned int num ) { 
+    if ( m_puSensor.size() > num ) {
+      return m_puSensor[num]->z(); 
     } else{
       return -9999.;
     }
@@ -135,16 +162,25 @@ public:
   /// returns the local radius of the strip
   double rOfStrip( double strip, int& phiZone );
 
-  /// returns the phi of the strip at the specified radius for this wafer.
-  double phiOfStrip( double strip, double radius, int wafer );
+  /// Returns the (local) radius of the specified strip
+  double rOfStrip( int strip ) {
+    int localStrip = strip % m_rStrip.size();
+    return m_rStrip[localStrip];
+  }
+  
+  /// return true if the two phiZone can match
+  bool matchingZones( int zone1, int zone2 );
+
+  /// returns the phi of the strip at the specified radius for this sensor.
+  double phiOfStrip( double strip, double radius, int sensor );
 
   /// returns the signed distance from origin to phi strip number
-  double originToPhiDistance( double strip, int wafer );
+  double originToPhiDistance( double strip, int sensor );
   
   /// returns the phi angle of the strip itself. 'phiOfStrip' returns the 
   /// phi of the point at the specified radius on the strip. 
   /// 'phiDirectionOfStrip' is the direction of the strip
-  double phiDirectionOfStrip( double strip, int wafer );
+  double phiDirectionOfStrip( double strip, int sensor );
 
   /// returns the R pitch at the given radius
   double rPitch( double radius ) {
@@ -164,26 +200,40 @@ public:
     }
   }
   
+  /// returns the Phi pitch (in radian) for a given strip
+  double phiPitch( int strip ) {
+    if ( strip%2048 < m_nbPhiInner ) {
+      return m_phiPitchInner;
+    } else {
+      return m_phiPitchOuter;
+    }
+  }
+  
 
   /**
    * Set accessor to member m_zVertex, used to compute phi by extrapolating
-   * between R and Phi wafers.
+   * between R and Phi sensors.
    * @param zVertex the new value for m_zVertex
    */
-  void setZVertex (double zVertex) {
-    m_zVertex = zVertex;
-  }
+  void setZVertex (double zVertex) { m_zVertex = zVertex; }
 
   /**
    * Get accessor to member m_zVertex, used to compute Phi by extraposlating 
-   * between R and Phi wafers.
+   * between R and Phi sensors.
    * @return the current value of m_zVertex
    */
-  double zVertex () {
-    return m_zVertex;
-  }
+  double zVertex () { return m_zVertex; }
+
+  /// return the maximum sensitive radius of an R wafer
+  double rMax() { return m_outerRadius; };
+  
 
 protected: 
+
+  /// return the (floating) strip number for the point in a sensor of this type
+  double stripNumberByType( int type,
+                            const HepPoint3D& point, 
+                            double& pitch );
 
 private:
   
@@ -221,8 +271,9 @@ private:
 
   double m_zVertex;
   // Local storage for geometry computation
-  std::vector<VeloWafer*> m_wafer;
-  std::vector<VeloWafer*> m_puWafer;
+  std::vector<VeloSensor*> m_sensor;
+  std::vector<VeloSensor*> m_puSensor;
+  std::vector<double>      m_rStrip;           ///< list of strip radii
 };
 
 // ============================================================================

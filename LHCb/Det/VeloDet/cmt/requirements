@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.8 2002-04-22 08:10:38 cattanem Exp $
+# $Id: requirements,v 1.9 2002-04-24 09:51:16 ocallot Exp $
 # =========================================================================
 
 package  VeloDet 
-version  v4r0
+version  v5r0
 
 # =============== structure ===============================================	
-branches         src cmt doc options VeloDet 
+branches         src cmt doc VeloDet 
 
 # =============== own includes ============================================
 include_dirs      $(VELODETROOT)
