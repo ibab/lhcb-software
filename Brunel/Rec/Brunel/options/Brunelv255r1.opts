@@ -1,1 +1,4 @@
+// Job options for use with dbase v255r1.opt "Global robustness test"
+
 #include "$BRUNELOPTS/Brunelv254r1.opts"
+#include "$BRUNELOPTS/GlobalRobustness.opts" // Global robustness test

@@ -22,7 +22,6 @@ MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field043.cdf";
 // Uncomment one of following options for required TDR robustness test
 // See release notes for details.
 //---------------------------------------------------------------------------
-//#include "$BRUNELOPTS/GlobalRobustness.opts" // Global robustness test
 //#include "$BRUNELOPTS/Test2Robustness.opts"  // L0Muon test case 2
 
 //---------------------------------------------------------------------------

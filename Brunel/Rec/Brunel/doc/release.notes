@@ -28,7 +28,7 @@ Purpose: LHCb reconstruction program
      http://cern.ch/lhcb-phys/task_force/TDR_studies_2002-2003/robustness/
      are implemented as follows:
    
-     case 0: add GlobalRobustness.opts at end of Brunelv254r1.opts
+     case 0: default settings for dbase v255r1, Brunelv255r1.opts
      case 1: default settings, use Brunelv254r1.opts as is
      case 2: add Test2Robustness.opts at end of Brunelv254r1.opts
      case 3: Not yet implemented
