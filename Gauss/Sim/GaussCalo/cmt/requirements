@@ -1,3 +1,4 @@
+# $Id: requirements,v 1.7 2003-07-07 08:20:58 ibelyaev Exp $ 
 # =============================================================================
 package GaussCalo
 version v3r0
@@ -9,6 +10,9 @@ branches          cmt src doc
 use AIDA          v*   
 use GaussTools    v*     Sim
 
+# =============== options =====================================================
+set GAUSSCALOOPTS ${GAUSSCALOROOT}/options 
+ 
 # =============== Event =======================================================
 use CaloEvent     v*     Event 
 
@@ -24,6 +28,11 @@ include_dirs     $(GAUSSCALOROOT)
         
 # ============== standard patterns ===========================================
 apply_pattern    component_library library=GaussCalo
+        
+# ============================================================================
+# CVS tag $Name: not supported by cvs2svn $
+# ===========================================================================
+# $Log: not supported by cvs2svn $ 
 # ============================================================================
 # The END 
 # ============================================================================

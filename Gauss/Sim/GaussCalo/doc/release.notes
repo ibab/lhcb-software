@@ -2,10 +2,40 @@
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
 !                    Patrick Robbe
-! Responsible	   : Patrick Robe, Vanya Belyaev
+! Responsible	     : Patrick Robbe, Vanya Belyaev
 ! Purpose          : collection of sensitive detectors, converters, 
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
+
+! 2003-07-05 - Vanya BELYAEV
+ - src/CaloSensDet.h,cpp: 
+     1) define and implement generic ProcessHit method 
+     2) define abstract fillHitInfo method
+     3) add few modifications of birkCorrection method 
+     4) add possibility to load the input histograms 
+     5) define few birkCorrection methods, based on original 
+        implementation by Patrick 
+ - src/EHCalSensDet.h,.cpp: 
+     1) new class derived fro CaloSensDet
+     2) implement the generic timinig procedure 
+        (rewritten using Patrick's ideas), applicable 
+        both to Ecal ans Hcal with the usage of input 
+        histograms 
+ - src/HcalSensDet.h,.cpp
+     1) new class for handling of Hcal sensitive detector, derived from 
+        EHCalSensDet  with new implementation of 
+        timing and Birk's law
+ - src/EcalSensDet.h,.cpp 
+     1) new class for handling of Ecal sensitive detector, derived from 
+        EHCalSensDet
+     2) *ALL* functionality is kept as originally implemented by Patrick 
+- src/SpdPrsSensDet.h,.cpp
+     1) new class for handling of Spd/Prs sensitive detectors,
+        derived directly from CaloSensDet
+     2) the timing need to be implemented properly 
+
+- cmt/requirements  version increase to v4r0 
+
 
 !=========================== GaussCalo v3r0 2003-05-18 ======================
 ! 2003-06-17 - Patrick Robbe

@@ -16,10 +16,14 @@
 void GaussCalo_load() 
 { 
   /// Sensitive Detector 
-  DECLARE_GiGaFactory     (    CaloSensDet             );
-
+  DECLARE_GiGaFactory     ( EcalSensDet    ) ;
+  /// Sensitive Detector 
+  DECLARE_GiGaFactory     ( HcalSensDet    ) ;
+  /// Sensitive Detector 
+  DECLARE_GiGaFactory     ( SpdPrsSensDet  ) ;
+  
   /// Converters 
-  DECLARE_CONVERTER       (    GiGaCaloHitCnv          );  
+  DECLARE_CONVERTER       ( GiGaCaloHitCnv ) ;  
 };
 // ============================================================================
 

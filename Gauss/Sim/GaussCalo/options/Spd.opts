@@ -1,0 +1,35 @@
+// $Id: Spd.opts,v 1.1 2003-07-07 08:21:05 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ *  The configuration file for Spd sensitive detector 
+ *  @author Vanya Belyaev    Ivan.Belyaev@itep.ru
+ *  @author Grigori Rybkine  Grigori.Rybkine@cern.ch
+ *  @date   2002-12-05
+ */
+// ============================================================================
+
+GiGaGeo.Spd.StartVolumes = 
+  {
+    "/dd/Geometry/Spd/Modules/InnCell"  ,
+    "/dd/Geometry/Spd/Modules/MidCell"  ,
+    "/dd/Geometry/Spd/Modules/OutCell"
+  };
+
+GiGaGeo.Spd.EndVolume      =  "/dd/Geometry/Spd/Installation/Spd" ;
+GiGaGeo.Spd.CollectionName =  "SpdHits"                            ;
+GiGaGeo.Spd.Detector       =  "/dd/Structure/LHCb/Spd"             ;
+GiGaGeo.Spd.zMin           =  12300. * mm ;
+GiGaGeo.Spd.zMax           =  15000. * mm ;
+
+GiGaGeo.Spd.DetectorPath   =  "/LHCb/Calo"             ;
+
+
+// ============================================================================
+// The END 
+// ============================================================================

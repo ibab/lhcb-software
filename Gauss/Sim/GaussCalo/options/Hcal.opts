@@ -1,0 +1,41 @@
+// $Id: Hcal.opts,v 1.1 2003-07-07 08:21:03 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ *  The configuration file for Hcal sensitive detector
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @author Patrick ROBBE robbe@lal.in2p3.fr
+ *  @date   2002-12-05
+ */
+// ============================================================================
+
+GiGaGeo.Hcal.StartVolumes = 
+  {
+    "/dd/Geometry/Hcal/Cells/lvHcalInnCellUpScTile"  ,
+    "/dd/Geometry/Hcal/Cells/lvHcalInnCellLowScTile"      , 
+    "/dd/Geometry/Hcal/Cells/lvHcalOutCellScTile"
+  };
+
+
+GiGaGeo.Hcal.EndVolume      =  "/dd/Geometry/Hcal/Installation/lvHcal" ;
+GiGaGeo.Hcal.CollectionName =  "HcalHits"                            ;
+GiGaGeo.Hcal.Detector       =  "/dd/Structure/LHCb/Hcal"             ;
+GiGaGeo.Hcal.zMin           =  12300. * mm ;
+GiGaGeo.Hcal.zMax           =  15000. * mm ;
+
+GiGaGeo.Hcal.DetectorPath   =  "/LHCb/Calo"             ;
+
+GiGaGeo.Hcal.Histograms = 
+  { 
+    "GaussCalo/HCALTIME/1" ,
+    "GaussCalo/HCALTIME/2" 
+  };
+
+// ============================================================================
+// The END 
+// ============================================================================

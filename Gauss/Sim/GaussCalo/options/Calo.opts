@@ -1,123 +1,32 @@
-// $Id: Calo.opts,v 1.4 2003-06-17 14:21:18 robbep Exp $ 
+// $Id: Calo.opts,v 1.5 2003-07-07 08:21:02 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2003/06/05 15:47:06  robbep
-// Remove declarations for 0 magnetic field in calorimeters from option
-// file. They are now in XmlDDDB/Ecal and XmlDDDB/Hcal
-//
-// Revision 1.2  2003/06/05 08:26:13  robbep
-// Add possibility to use 0 magnetic field in ECal and HCal.
-// Change cell names in ECal to work with simplified geometry.
-//
-// Revision 1.1  2003/05/27 12:40:24  robbep
-// Added options/Calo.opts (moved from Gauss package)
-// Added Hcal sensitive detector
-// Added z range for Ecal and Hcal
-//
-// Revision 1.3  2002/12/16 11:00:29  witoldp
-// use fixed version of GiGa and GiGaCnv
-//
-// Revision 1.2  2002/12/13 17:24:08  witoldp
-// changes due to restructurisation
-//
-// Revision 1.1  2002/12/07 14:47:29  ibelyaev
-//  add new Calo stuff and newer verisons of all other packages
-// 
 // ============================================================================
 
 // ============================================================================
 /** @file 
  *  The configuration file for Calorimeter objects 
- *  @author Vanya Belyaev 
+ *  @author Vanya Belyaev  Ivcan.Belyaev@itep.ru
  *  @date   2002-12-05
  */
 // ============================================================================
 
-GiGaGeo.Ecal.StartVolumes = 
-{
-  //  "/dd/Geometry/Ecal/Modules/InnCentSubCellSc"  ,
-  //  "/dd/Geometry/Ecal/Modules/InnSubCellSc"      , 
-  //  "/dd/Geometry/Ecal/Modules/MidCentSubCellSc"  ,
-  //  "/dd/Geometry/Ecal/Modules/MidSubCellSc"      ,
-  //  "/dd/Geometry/Ecal/Modules/OutCentSubCellSc"  ,
-  //  "/dd/Geometry/Ecal/Modules/OutSubCellSc" 
-  "/dd/Geometry/Ecal/Modules/InnCell",
-  "/dd/Geometry/Ecal/Modules/MidCell",
-  "/dd/Geometry/Ecal/Modules/OutCell"
-};
 
-GiGaGeo.Ecal.EndVolume      =  "/dd/Geometry/Ecal/Installation/Ecal" ;
-GiGaGeo.Ecal.CollectionName =  "EcalHits"                            ;
-GiGaGeo.Ecal.Detector       =  "/dd/Structure/LHCb/Ecal"             ;
-GiGaGeo.Ecal.zMin           =  12300. * mm ;
-GiGaGeo.Ecal.zMax           =  15000. * mm ;
+/// Input Histograms
+HistogramDataSvc.Input += 
+  { "GaussCalo DATAFILE='./gausscalo.hbook' TYP='HBOOK'" };
 
-GiGaGeo.Ecal.DetectorPath   =  "/LHCb/Calo"             ;
+/// configuration of Spd  sensitive detector 
+#include "$GAUSSCALOOPTS/Spd.opts"
+/// configuration of Prs  sensitive detector 
+#include "$GAUSSCALOOPTS/Prs.opts"
+/// configuration of Ecal sensitive detector 
+#include "$GAUSSCALOOPTS/Ecal.opts"
+/// configuration of Hcal sensitive detector 
+#include "$GAUSSCALOOPTS/Hcal.opts"
 
-GiGaGeo.Hcal.StartVolumes = 
-{
-  "/dd/Geometry/Hcal/Cells/lvHcalInnCellUpScTile"  ,
-  "/dd/Geometry/Hcal/Cells/lvHcalInnCellLowScTile"      , 
-  "/dd/Geometry/Hcal/Cells/lvHcalOutCellScTile"
-};
-
-
-GiGaGeo.Hcal.EndVolume      =  "/dd/Geometry/Hcal/Installation/lvHcal" ;
-GiGaGeo.Hcal.CollectionName =  "HcalHits"                            ;
-GiGaGeo.Hcal.Detector       =  "/dd/Structure/LHCb/Hcal"             ;
-GiGaGeo.Hcal.zMin           =  12300. * mm ;
-GiGaGeo.Hcal.zMax           =  15000. * mm ;
-
-GiGaGeo.Hcal.DetectorPath   =  "/LHCb/Calo"             ;
-
-
-//Spd
-
-GiGaGeo.Spd.StartVolumes = 
-{
-  //  "/dd/Geometry/Spd/Modules/InnCell",
-  //  "/dd/Geometry/Spd/Modules/MidCell",
-  //  "/dd/Geometry/Spd/Modules/OutCell"
-  "/dd/Geometry/Spd/lvSpdInner",
-  "/dd/Geometry/Spd/lvSpdMiddle",
-  "/dd/Geometry/Spd/lvSpdOuter"
-};
-
-//GiGaGeo.Spd.EndVolume      =  "/dd/Geometry/Spd/Installation/Spd" ;
-GiGaGeo.Spd.EndVolume      =  "/dd/Geometry/Spd/lvSpd"             ;
-GiGaGeo.Spd.CollectionName =  "SpdHits"                            ;
-GiGaGeo.Spd.Detector       =  "/dd/Structure/LHCb/Spd"             ;
-/*
-GiGaGeo.Spd.zMin           =  12300. * mm ;
-GiGaGeo.Spd.zMax           =  15000. * mm ;
-*/
-
-GiGaGeo.Spd.DetectorPath   =  "/LHCb/Calo"                         ;
-
-//Prs
-
-GiGaGeo.Prs.StartVolumes = 
-{
-  //  "/dd/Geometry/Prs/Modules/InnCell",
-  //  "/dd/Geometry/Prs/Modules/MidCell",
-  //  "/dd/Geometry/Prs/Modules/OutCell"
-  "/dd/Geometry/Prs/lvPrsInner",
-  "/dd/Geometry/Prs/lvPrsMiddle",
-  "/dd/Geometry/Prs/lvPrsOuter"
-};
-
-//GiGaGeo.Prs.EndVolume      =  "/dd/Geometry/Prs/Installation/Prs" ;
-GiGaGeo.Prs.EndVolume      =  "/dd/Geometry/Prs/lvPrs"             ;
-GiGaGeo.Prs.CollectionName =  "PrsHits"                            ;
-GiGaGeo.Prs.Detector       =  "/dd/Structure/LHCb/Prs"             ;
-/*
-GiGaGeo.Prs.zMin           =  12300. * mm ;
-GiGaGeo.Prs.zMax           =  15000. * mm ;
-*/
-
-GiGaGeo.Prs.DetectorPath   =  "/LHCb/Calo"                         ;
 
 // ============================================================================
 // The END 

@@ -1,0 +1,40 @@
+// $Id: Ecal.opts,v 1.1 2003-07-07 08:21:02 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ *  The configuration file for Ecal sensitive detector
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @author Patrick ROBBE robbe@lal.in2p3.fr
+ *  @date   2002-12-05
+ */
+// ============================================================================
+
+GiGaGeo.Ecal.StartVolumes = 
+  {
+    "/dd/Geometry/Ecal/Modules/InnCell",
+    "/dd/Geometry/Ecal/Modules/MidCell",
+    "/dd/Geometry/Ecal/Modules/OutCell"
+  };
+
+GiGaGeo.Ecal.EndVolume      =  "/dd/Geometry/Ecal/Installation/Ecal" ;
+GiGaGeo.Ecal.CollectionName =  "EcalHits"                            ;
+GiGaGeo.Ecal.Detector       =  "/dd/Structure/LHCb/Ecal"             ;
+GiGaGeo.Ecal.zMin           =  12300. * mm ;
+GiGaGeo.Ecal.zMax           =  15000. * mm ;
+
+GiGaGeo.Ecal.DetectorPath   =  "/LHCb/Calo"             ;
+
+GiGaGeo.Ecal.Histograms = 
+  { 
+    "GaussCalo/ECALTIME/1" ,
+    "GaussCalo/ECALTIME/2" 
+  };
+
+// ============================================================================
+// The END 
+// ============================================================================
