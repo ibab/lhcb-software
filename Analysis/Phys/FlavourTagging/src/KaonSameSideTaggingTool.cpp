@@ -53,7 +53,7 @@ KaonSameSideTaggingTool::KaonSameSideTaggingTool( const std::string &type,
   declareProperty( "AllVertices", m_AllVertices = true );
   declareProperty( "MinImpactSignificance", m_ISMin = -1 );
   declareProperty( "MaxImpactSignificance", m_ISMax = -1 );
-  declareProperty( "MaxPhi", m_dPhiCut = 0.9 );
+  declareProperty( "MaxPhi", m_dPhiCut = 1.1 );
   declareProperty( "MaxEta", m_dEtaCut = 1.0 );
   declareProperty( "MaxQ", m_dQCut = 1500 );
   declareProperty( "Monitored", m_Monitor = false );
@@ -247,24 +247,21 @@ void KaonSameSideTaggingTool::tagFromList( const Particle &theB,
   for( c = candidates.begin(); c != candidates.end(); c++ ) {
     // First do the missing cut on the impact parameter.
     bool bad = false;
-    std::vector<const Vertex *>::const_iterator v;
-    int vi;
-    for( vi = 0, v = vtxs.begin(); v != vtxs.end(); vi++, v++ ) {
-      double impact, error;
-      m_GeomDisp->calcImpactPar( **c, **v, impact, error );
-      if( ((m_ISMin > 0) && (impact/error < m_ISMin)) ||
-          ((m_ISMax > 0) && (impact/error > m_ISMax)) ) {
-        bad = true;
-        log << MSG::DEBUG << "Rejecting: ip/err = "
-            << impact << '/' << error << '=' << impact/error
-            << " not in [" << m_ISMin << ',' << m_ISMax << ']' << endreq;
-        break;
-      }
+    double impact, error;
+    m_GeomDisp->calcImpactPar( **c, thePrimVtx, impact, error );
+    if( ((m_ISMin > 0) && (impact/error < m_ISMin)) ||
+        ((m_ISMax > 0) && (impact/error > m_ISMax)) ) {
+      bad = true;
+      log << MSG::DEBUG << "Rejecting: ip/err = "
+          << impact << '/' << error << '=' << impact/error
+          << " not in [" << m_ISMin << ',' << m_ISMax << ']' << endreq;
     }
     double deta = fabs(theB.momentum().pseudoRapidity()
                        - (*c)->momentum().pseudoRapidity());
     double dphi = fabs(theB.momentum().phi() - (*c)->momentum().phi());
     double dQ   = (theB.momentum()+(*c)->momentum()).m() - theB.mass();
+
+    
     if( deta >= m_dEtaCut ) {
       bad = true;
       log << MSG::DEBUG << "Rejecting: deta = " << deta << ">=" << m_dEtaCut
