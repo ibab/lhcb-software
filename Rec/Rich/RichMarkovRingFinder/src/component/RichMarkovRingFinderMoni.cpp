@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.cpp,v 1.18 2005-03-23 15:29:54 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.cpp,v 1.19 2005-03-30 13:00:21 abuckley Exp $
 // Include files
 
 // from Gaudi
@@ -352,6 +352,8 @@ RichMarkovRingFinderMoni::execute()
                                    static_cast<double>(numRecPixelsPerMCParticle[const_cast<MCParticle*>(pixMCPart)]) );
       m_MarkovRingEfficiency[whichRich]->fill(ringEfficiency);
 
+      // And 2D correlation...
+      m_MarkovRingEfficiencyVsPurity[whichRich]->fill(ringPurity, ringEfficiency);
 
       // Agreement between non-null MC parts from pix and MCseg matching
       // Used to calculate event-wise Markov purity
@@ -590,6 +592,7 @@ RichMarkovRingFinderMoni::execute()
         m_RingTrackOriginZ[whichRich][recOrNot]->fill( startPoint.z()/m );
         m_RingTrackOriginRZ[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
         m_RingTrackOrigin[whichRich][recOrNot]->fill( startPoint.z()/m, startPoint.x()/m, startPoint.y()/m );
+        m_RingTrackOriginVertexType[whichRich][recOrNot]->fill( pixMCPart->originVertex()->type() );
 
 
         // Origin position (by subdetector) -specific histos
@@ -600,6 +603,7 @@ RichMarkovRingFinderMoni::execute()
           m_RingTrackOriginRZ1[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
           m_RingTrackOriginRZ1Zoom[whichRich][recOrNot]->fill( startPoint.z()/m, rho/m );
           m_RingTrackOriginInVeloVertexType[whichRich][recOrNot]->fill( pixMCPart->originVertex()->type() );
+          m_RingTrackOriginInVeloMCType[whichRich][recOrNot]->fill(pixMCType);
           if (Rich::Electron == pixMCType) {
             m_RingTrackOriginInVeloElectronVertexType[whichRich][recOrNot]->fill( pixMCPart->originVertex()->type() );
           }
@@ -674,6 +678,9 @@ RichMarkovRingFinderMoni::execute()
     }
     const double eventEfficiency(ringPixMCParts[*rich].size() / static_cast<double>(numRecblMCParts));
     m_MarkovEventEfficiency[*rich]->fill(eventEfficiency);
+
+    // 2D pur/eff correlation
+    m_MarkovEventEfficiencyVsPurity[*rich]->fill(eventPurity, eventEfficiency);
   }
 
   return StatusCode::SUCCESS;
@@ -739,6 +746,13 @@ RichMarkovRingFinderMoni::bookHistograms() {
     id = "MarkovEventEfficiency";
     title = "Markov ring set efficiency in " + mainsubtitle;
     m_MarkovEventEfficiency[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 1);
+    // And correlations in 2D...
+    id = "MarkovRingEfficiencyVsPurity";
+    title = "Markov ring efficiency vs. purity in " + mainsubtitle;
+    m_MarkovRingEfficiencyVsPurity[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 1, 50, 0, 1);
+    id = "MarkovEventEfficiencyVsPurity";
+    title = "Markov event efficiency vs. purity in " + mainsubtitle;
+    m_MarkovEventEfficiencyVsPurity[richType] = histoSvc()->book(mainhistopath, id, title, 50, 0, 1, 50, 0, 1);
 
     // MC photon angles and in-plane shifts from the PD normal
     id = "MarkovRingMCPhotonNormalAngle";
@@ -789,6 +803,9 @@ RichMarkovRingFinderMoni::bookHistograms() {
       title = "MC particle type of tracks giving " + subtitle;
       id = "RingTrackMCType";
       m_RingTrackMCType[richType][recType] = histoSvc()->book(histopath, id, title, 6, -1.5, 4.5);
+      title = "MC particle type of tracks giving " + subtitle + "in the VELO";
+      id = "RingTrackOriginInVeloMCType";
+      m_RingTrackOriginInVeloMCType[richType][recType] = histoSvc()->book(histopath, id, title, 6, -1.5, 4.5);
 
       // Cerenkov angle and center-point pulls dbns
       title = "Cerenkov angle pull dbn of " + subtitle;
@@ -874,6 +891,9 @@ RichMarkovRingFinderMoni::bookHistograms() {
 
 
       // Origin vertex types
+      title = "Origin vertex type for origin vertices of " + subtitle;
+      id = "RingTrackOriginVtxType";
+      m_RingTrackOriginVertexType[richType][recType] = histoSvc()->book(histopath, id, title, 15, -0.5, 14.5);
       title = "Origin vertex type for origin vertices of " + subtitle + " in the VELO";
       id = "RingTrackOriginInVeloVtxType";
       m_RingTrackOriginInVeloVertexType[richType][recType] = histoSvc()->book(histopath, id, title, 15, -0.5, 14.5);
@@ -897,7 +917,7 @@ RichMarkovRingFinderMoni::bookHistograms() {
       id = "RingTrackEndDecayZ";
       m_RingTrackEndDecayZ[richType][recType] = histoSvc()->book(histopath, id, title, nbins1D, -1, 15);
       title = "Z end (not decay) points of " + subtitle;
-      id = "RingTrackNotEndDecayZ";
+      id = "RingTrackEndNotDecayZ";
       m_RingTrackEndNotDecayZ[richType][recType] = histoSvc()->book(histopath, id, title, nbins1D, -1, 15);
       title = "Z decay points of " + subtitle + " with VELO origins";
       id = "RingTrackDecaysFromVeloZ";

@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.14 2005-03-23 15:29:54 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.15 2005-03-30 13:00:21 abuckley Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 
@@ -146,9 +146,10 @@ private: // data
 
   Histos1DByDetector m_MarkovRingPurity;
   Histos1DByDetector m_MarkovRingEfficiency;
+  Histos2DByDetector m_MarkovRingEfficiencyVsPurity;
   Histos1DByDetector m_MarkovEventPurity;
   Histos1DByDetector m_MarkovEventEfficiency;
-
+  Histos2DByDetector m_MarkovEventEfficiencyVsPurity;
 
   /// MCPhoton incidence angle to pd plane normal
   Histos1DByDetector m_MarkovRingMCPhotonNormalAngle;
@@ -165,6 +166,8 @@ private: // data
 
   /// Pull distributions and similar
   Histos1DByDetectorAndRecType m_RingTrackMCType;
+  Histos1DByDetectorAndRecType m_RingTrackOriginInVeloMCType;
+  Histos1DByDetectorAndRecType m_RingTrackOriginVertexType;
   Histos1DByDetectorAndRecType m_RingTrackOriginInVeloVertexType;
   Histos1DByDetectorAndRecType m_RingTrackOriginInVeloElectronVertexType;
   Histos1DByDetectorAndRecType m_CkPull;
