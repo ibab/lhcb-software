@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiAttribute.h,v 1.4 2002-01-28 18:49:16 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiAttribute.h,v 1.5 2002-02-11 09:24:31 mato Exp $
 #ifndef DADIATTRIBUTE_H 
 #define DADIATTRIBUTE_H 1
 
@@ -39,6 +39,8 @@ public:
   DOMString getMeth();
   void setGetMeth(DOMString value);
 
+  bool static_();
+  void setStatic_(bool value);
 
 protected:
 
@@ -51,6 +53,7 @@ private:
             m_init,
             m_setMeth, 
             m_getMeth;
+  bool      m_static;
 
 };
 
@@ -123,6 +126,16 @@ inline DOMString DaDiAttribute::getMeth()
 inline void DaDiAttribute::setGetMeth(DOMString value)
 {
   m_getMeth = value;
+}
+
+inline bool DaDiAttribute::static_()
+{
+  return m_static;
+}
+
+inline void DaDiAttribute::setStatic_(bool value)
+{
+  m_static = value;
 }
 
 #endif // DADIATTRIBUTE_H

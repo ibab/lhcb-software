@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.24 2002-02-05 17:30:55 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.25 2002-02-11 09:24:32 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -654,13 +654,30 @@ void parseAttribute(DOM_Node node,
                     DaDiAttribute* gddAttribute)
 //-----------------------------------------------------------------------------
 {
+  std::vector<DOMString> typeWords;
+  std::vector<DOMString>::iterator iter;
+  gddAttribute->setStatic_(false);
+
   gddAttribute->setName(node.getAttributes().
     getNamedItem(DOMString::transcode("name")).
     getNodeValue());
-            
+
+  typeWords = findWords(node.getAttributes().
+    getNamedItem(DOMString::transcode("type")).
+    getNodeValue(), " ");
+
+  for (iter = typeWords.begin(); iter != typeWords.end(); ++iter)
+  {
+    if ((*iter).equals("static"))
+    {
+      gddAttribute->setStatic_(true);
+    }
+  }
+
   gddAttribute->setType(node.getAttributes().
     getNamedItem(DOMString::transcode("type")).
     getNodeValue());
+
   gddClass->pushImportList(node.getAttributes().
     getNamedItem(DOMString::transcode("type")).
     getNodeValue().transcode());

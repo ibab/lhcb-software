@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.39 2002-02-05 17:30:55 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.40 2002-02-11 09:24:31 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -769,16 +769,21 @@ void printMembers(std::ofstream& xmlOut,
     std::string gddAttAccess = gddAttribute->access().transcode(),
                 gddAttName = gddAttribute->name().transcode(),
                 gddAttType = gddAttribute->type().transcode(),
-                gddAttDesc = gddAttribute->desc().transcode();
+                gddAttDesc = gddAttribute->desc().transcode(),
+                gddAttInit = gddAttribute->init().transcode();
+    bool gddAttIsStatic = gddAttribute->static_();
 
     if (gddAttAccess == accessor)
     {
-      std::string fullAttName = " m_" + gddAttName + ";";
+      std::string fullAttName = " m_" + gddAttName;
+      if (gddAttIsStatic && (gddAttInit != ""))
+      {
+        fullAttName = fullAttName + " = " + gddAttInit;
+      }
+      fullAttName = fullAttName + ";";
       xmlOut << "  ";
-//      xmlOut.setf(std::ios::left, std::ios::adjustfield);
       xmlOut.width(maxLengthType);
       xmlOut << gddAttType; 
-//      xmlOut.setf(std::ios::left, std::ios::adjustfield);
       xmlOut.width(maxLengthName);
       xmlOut << fullAttName << " ///< " << gddAttDesc << std::endl;
     }
@@ -1085,37 +1090,41 @@ void printClass(std::ofstream& xmlOut,
                   gddAttName = gddAttribute->name().transcode(),
                   gddAttType = gddAttribute->type().transcode(),
                   gddAttInit = gddAttribute->init().transcode();
+      bool gddAttIsStatic = gddAttribute->static_();
       int lastspace = gddAttType.find_last_of(" ");
       gddAttType = gddAttType.substr(lastspace+1, gddAttType.size()-lastspace);
-      if (gddAttInit != "")
+      if (!gddAttIsStatic)
       {
-        initValue = gddAttInit;
-      }
-      else if ((gddAttType == "int") || (gddAttType == "unsigned") ||
-               (gddAttType == "short") || (gddAttType == "signed") ||
-               (gddAttType == "long"))
-      {
-        initValue = "0";
-      }
-      else if ((gddAttType == "float") || (gddAttType == "double"))
-      {
-        initValue = "0.0";
-      }
+        if (gddAttInit != "")
+        {
+          initValue = gddAttInit;
+        }
+        else if ((gddAttType == "int") || (gddAttType == "unsigned") ||
+                 (gddAttType == "short") || (gddAttType == "signed") ||
+                 (gddAttType == "long"))
+        {
+          initValue = "0";
+        }
+        else if ((gddAttType == "float") || (gddAttType == "double"))
+        {
+          initValue = "0.0";
+        }
 
-      if (initValue != "")
-      {
-        if (firstLine)
+        if (initValue != "")
         {
-          xmlOut << std::endl 
-            << "    : ";
-          firstLine = false;
+          if (firstLine)
+          {
+            xmlOut << std::endl 
+              << "    : ";
+            firstLine = false;
+          }
+          else
+          {
+            xmlOut << "," << std::endl 
+              << "    ";
+          }
+          xmlOut << "m_" << gddAttName << "(" << initValue << ")";
         }
-        else
-        {
-          xmlOut << "," << std::endl 
-            << "    ";
-        }
-        xmlOut << "m_" << gddAttName << "(" << initValue << ")";
       }
     }
     xmlOut << " {}" << std::endl 
