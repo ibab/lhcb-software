@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.8 2003-06-30 19:03:37 jonrob Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.9 2003-07-02 15:37:52 jonesc Exp $
 
 // local
 #include "RichRecMCTruthTool.h"
@@ -225,12 +225,26 @@ const MCParticle * RichRecMCTruthTool::trueCherenkovPhoton( const RichRecPhoton 
 
   const MCParticle * mcPart = trueRecPhoton( photon );
   if ( !mcPart ) return NULL;
-
+  
   if ( const MCRichOpticalPhoton * optPhot = mcRichOpticalPhoton( photon->richRecPixel() ) ) {
     Rich::RadiatorType rad = photon->richRecSegment()->trackSegment().radiator();
-    if ( ( rad != Rich::Aerogel && optPhot->gas() ) ||
-         ( rad == Rich::Aerogel && optPhot->aerogel() &&
-           !optPhot->scatteredAerogel() ) ) return mcPart;
+    if ( rad == optPhot->radiator() && !optPhot->scatteredPhoton() ) return mcPart;
+  }
+  
+  return NULL;
+}
+
+const MCParticle * RichRecMCTruthTool::trueCherenkovRadiation( const RichRecPixel * pixel, 
+                                                               Rich::RadiatorType rad ) {
+
+  const MCParticle * mcPart = mcParticle( pixel );
+  if ( !mcPart ) return NULL;
+  
+  if ( const MCRichOpticalPhoton * optPhot = mcRichOpticalPhoton( pixel ) ) {
+    if ( rad == optPhot->radiator() && !optPhot->scatteredPhoton() ) return mcPart;
+    //if ( ( rad != Rich::Aerogel && optPhot->gas() ) ||
+    //     ( rad == Rich::Aerogel && optPhot->aerogel() &&
+    //       !optPhot->scatteredAerogel() ) ) return mcPart;
   }
   
   return NULL;
@@ -309,9 +323,10 @@ RichRecMCTruthTool::trueCkPixels( const RichRecSegment * segment ) {
         if ( pixMCPart == tkMCPart ) {
           const MCRichOpticalPhoton * optPhot = mcRichOpticalPhoton( *pix );
           if ( optPhot ) {
-            if ( ( rad != Rich::Aerogel && optPhot->gas() ) ||
-                 ( rad == Rich::Aerogel && optPhot->aerogel() &&
-                   !optPhot->scatteredAerogel() ) ) {
+            if ( rad == optPhot->radiator() && !optPhot->scatteredPhoton() ) {
+            //if ( ( rad != Rich::Aerogel && optPhot->gas() ) ||
+            //     ( rad == Rich::Aerogel && optPhot->aerogel() &&
+            //       !optPhot->scatteredAerogel() ) ) {
               vec.push_back( *pix );
             }
           }
