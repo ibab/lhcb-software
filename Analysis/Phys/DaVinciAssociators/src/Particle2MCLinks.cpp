@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.10 2003-05-26 11:38:38 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.11 2003-06-05 17:42:22 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -46,13 +46,13 @@ Particle2MCLinks::~Particle2MCLinks() {};
 StatusCode Particle2MCLinks::initialize() {
 
   MsgStream msg(msgSvc(), name());
-  msg << MSG::VERBOSE << "==> Initialise" << endreq;
+  msg << MSG::DEBUG << "==> Initialise" << endreq;
 
-  StatusCode sc = retrievePrivateAsct( "ProtoParticle2MCAsct", "ChargedPPAsct",
-                                       false, m_pAsctCharged) ;
+  StatusCode sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "ChargedPP2MCAsct",
+                                           m_pAsctCharged) ;
   if( sc.isSuccess() ) {
-    sc = retrievePrivateAsct( "ProtoParticle2MCAsct", "NeutralPPAsct",
-                              false, m_pAsctNeutral) ;
+    sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "NeutralPP2MCAsct",
+                                  m_pAsctNeutral) ;
   }
   return sc;
 };
@@ -63,7 +63,7 @@ StatusCode Particle2MCLinks::initialize() {
 StatusCode Particle2MCLinks::execute() {
 
   MsgStream  msg( msgSvc(), name() );
-  msg << MSG::VERBOSE << "==> Execute" << endreq;
+  msg << MSG::DEBUG << "==> Execute" << endreq;
 
   // create an association table and register it in the TES
   Particle2MCLinksAsct::Table* table = new Particle2MCLinksAsct::Table();
@@ -156,7 +156,7 @@ StatusCode Particle2MCLinks::execute() {
 StatusCode Particle2MCLinks::finalize() {
 
   MsgStream msg(msgSvc(), name());
-  msg << MSG::VERBOSE << "==> Finalize" << endreq;
+  msg << MSG::DEBUG << "==> Finalize" << endreq;
 
   return StatusCode::SUCCESS;
 }

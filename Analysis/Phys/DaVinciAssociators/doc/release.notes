@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.27 2003-06-03 16:56:15 gcorti Exp $
+! $Id: release.notes,v 1.28 2003-06-05 17:42:22 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+
+! 2003-06-06 - Philippe Charpentier
+ - Particle2MCLinks : do not retrieve private versions of the ProtoParticle2MC
+   associators, as there is only one possible table
+   
 !================= DaVinciAssociators v4r1 2003-06-03 ======================
+
 ! 2003-05-16 - Philippe Charpentier
  - Particle2MCLinks:
       - Use NeutralPP2MC associator for neutral particles

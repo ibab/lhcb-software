@@ -37,8 +37,8 @@ ApplicationMgr.TopAlg += { "TestAssociators" };
   a relations table or not. If not (""), then no table is created and the relation 
   is created on the flight
 */
-TestAssociators.LinkAsct.Location      = "";
-//TestAssociators.LinkAsct.Location      = "Phys/Relations/Particle2MCLinks";
+//TestAssociators.LinkAsct.Location      = "";
+TestAssociators.LinkAsct.Location      = "Phys/Relations/Particle2MCLinks";
 // The "weight" of tracks to MCParticles is of decreasing importance
 //TestAssociators.LinkAsct.DecreasingWeight = true;
 // Only useful if there is a table defined
@@ -81,8 +81,7 @@ Particle2MCChi2.OutputLevel = 2;
 Particle2MCWithChi2.OutputLevel = 2;
 // Auxiliary algorithms
 Particle2MCChi2.Particle2MCWithChi2.OutputLevel = 2;
-Particle2MCLinks.ChargedPP2MC.OutputLevel = 2;
-CompositeParticle2MCLinks.Particle2MCLinks.OutputLevel = 2;
+CompositeParticle2MCLinks.Particle2MCLinks.OutputLevel = 1;
 
 // Make others mute
 //  TestPhysDesktop.PhysDesktop.OutputLevel = 4;

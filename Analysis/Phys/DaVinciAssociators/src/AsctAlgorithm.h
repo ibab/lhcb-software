@@ -1,4 +1,4 @@
-// $Id: AsctAlgorithm.h,v 1.1 2003-05-26 11:38:37 phicharp Exp $
+// $Id: AsctAlgorithm.h,v 1.2 2003-06-05 17:42:22 phicharp Exp $
 #ifndef ASCTALGORITHM_H 
 #define ASCTALGORITHM_H 1
 
@@ -48,7 +48,8 @@ template <class T>
   if( asctName == asctType ) {
     sc = toolSvc()->retrieveTool( asctType, asctName, asct, this);
   } else {
-    sc = toolSvc()->retrieveTool( asctType, asctName, asct);
+    // if the associator is not private, do not change its location and algorithm
+    return toolSvc()->retrieveTool( asctType, asctName, asct);
   }
   
   if( sc.isFailure() || 0 == asct) {

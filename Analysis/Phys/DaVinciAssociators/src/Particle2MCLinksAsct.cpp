@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinksAsct.cpp,v 1.2 2003-05-26 11:38:38 phicharp Exp $
+// $Id: Particle2MCLinksAsct.cpp,v 1.3 2003-06-05 17:42:22 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -26,16 +26,16 @@ StatusCode Particle2MCLinksAsct::initialize() {
 
   MsgStream msg(msgSvc(), name());
   Asct::initialize();
-  msg << MSG::VERBOSE << "==> Initialise" << endreq;
+  msg << MSG::DEBUG << "==> Initialise" << endreq;
   StatusCode sc = StatusCode::SUCCESS;
   if( location() == "" ) {
     m_hasTable = false;
     msg << MSG::VERBOSE << "    This associator is direct, without Relations table" << endreq;
     // Create the temporary table
     m_table = new Table;
-    sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "ChargedPP2MC", m_pChargedAsct, this) ;
+    sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "ChargedPP2MCAsct", m_pChargedAsct) ;
     if( sc.isSuccess() ) {
-      sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "NeutralPP2MC", m_pNeutralAsct, this) ;
+      sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "NeutralPP2MCAsct", m_pNeutralAsct) ;
     }
   } else {
     m_hasTable = true;

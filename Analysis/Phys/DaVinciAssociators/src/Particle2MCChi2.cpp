@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.cpp,v 1.6 2003-04-17 09:58:26 phicharp Exp $
+// $Id: Particle2MCChi2.cpp,v 1.7 2003-06-05 17:42:22 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,7 @@ Particle2MCChi2::~Particle2MCChi2() {};
 StatusCode Particle2MCChi2::initialize() {
  
   MsgStream log(msgSvc(), name());
-  log << MSG::VERBOSE << "==> Initialise" << endreq;
+  log << MSG::DEBUG << "==> Initialise" << endreq;
 
   // Retrieve a weighted associator on which a threshold will be applied
   // Its InputData must be set identical as this one's (true parameter)
@@ -62,7 +62,7 @@ StatusCode Particle2MCChi2::initialize() {
 StatusCode Particle2MCChi2::execute() {
 
   MsgStream  log( msgSvc(), name() );
-  log << MSG::VERBOSE << "==> Execute" << endreq;
+  log << MSG::DEBUG << "==> Execute" << endreq;
 
   // Create an association table and register it in the TES
   Particle2MCAsct::Table* table = new Particle2MCAsct::Table();
@@ -126,7 +126,7 @@ StatusCode Particle2MCChi2::execute() {
 StatusCode Particle2MCChi2::finalize() {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::VERBOSE << "==> Finalize" << endreq;
+  log << MSG::DEBUG << "==> Finalize" << endreq;
 
   return StatusCode::SUCCESS;
 }
