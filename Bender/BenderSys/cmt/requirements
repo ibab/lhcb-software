@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2004-07-08 19:45:19 ibelyaev Exp $ 
+# $Id: requirements,v 1.15 2004-07-08 20:09:30 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -12,7 +12,7 @@ author        Vanya BELYAEV
 use HIPPODRAW   v1r133 
 
 # =========== Bender Application itself =======================================
-use           Bender         v3r3 Phys 
+use           Bender         v3r4 Phys 
 # =========== Bender Libraries ================================================
 use           BenderLibs     v3r0 Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
@@ -39,6 +39,9 @@ use           BenderUser     v3r0 Phys
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.14  2004/07/08 19:45:19  ibelyaev
+# *** empty log message ***
+#
 # Revision 1.13  2004/07/08 19:36:57  ibelyaev
 #  increment the version
 #
