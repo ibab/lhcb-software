@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.h,v 1.6 2002-11-21 13:50:36 mzupan Exp $
+// $Id: PuVetoAlg.h,v 1.7 2002-11-28 09:06:44 mzupan Exp $
 #ifndef PUVETOALG_H 
 #define PUVETOALG_H 1
 
@@ -56,7 +56,7 @@ protected:
   long    zBin( double z ) {
     int bin = -1;
     if ( m_lowBound[0] < z ) {
-      for ( unsigned int j=0 ; m_histoBins > j ; j++ ) {
+      for ( int j=0 ;(m_histoBins - 1) > j ; j++ ) {
         if ( m_lowBound[j+1] > z ) {
           bin = j; 
           break;
@@ -91,8 +91,8 @@ private:
   double         m_highPosition;
   double         m_secondPosition;
 
-  long           m_binningScenario;
-  long           m_histoBins;
+  int            m_binningScenario;
+  int            m_histoBins;
   double         m_bin2Constant;
   double         m_bin2Slope;
   double         m_maskingWindow;
