@@ -1,6 +1,7 @@
 ##----------------------------------------------------------------------##
 
-# Error suppression file Boole v6r0, gcc 3.2.3, valgrind 2.0.0
+# valgrind error suppression file for Boole v6r1, gcc 3.2.3, valgrind 2.0.0
+# See also suppressions in $STDOPTS/Gaudi.supp
 
 # Format of this file is:
 # {
@@ -15,10 +16,8 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
-# All Gaudi and external package errors have been moved to $STDOPTS/Gaudi.supp
-
-# Errors from PoolDbCacheSvc::finalize(), not seen in default Brunel v23r3 setup
-# GaudiPoolDb v1r5-v1r8, POOL 1_5_0-POOL_1_7_0-gamma, Root 3.10.02
+# Errors from PoolDbCacheSvc::finalize(), not seen in default Brunel v24r1 setup
+# GaudiPoolDb v1r5-v1r8, POOL 1_5_0-POOL_1_7_0, Root 3.10.02
 {
   Root/longest_match
   Memcheck:Cond
@@ -51,22 +50,23 @@
   fun:R__Deflate_fast
 }
 
-# Leaks not be tested with Boole v6r0 (access violation in main()...)
 # Error from poolRootTreeContainer
-{
-  POOL_1_6_3/RootTreeContainer
-  Memcheck:Leak
-  fun:R__huft_build
-  fun:R__Inflate_fixed
-  fun:R__Inflate_block
-}
+# Not tested with Boole v6r0-v6r1 (access violation in main()...)
+#{
+#  POOL_1_6_3/RootTreeContainer
+#  Memcheck:Leak
+#  fun:R__huft_build
+#  fun:R__Inflate_fixed
+#  fun:R__Inflate_block
+#}
 
-# Error from seal reflection, to be fixed in next release. Seen in event 400,
-# related to memory "jumps"?
-{ 
-  SEAL_1_3_4/reflection
-  Memcheck:Leak
-  fun:_Znwj
-  fun:_ZN4seal7reflect12ClassBuilder9addMethodEPKcS3_S3_PFPvS4_Ei
-  fun:_ZN26std__vector_longsint__dictC1Ev
-}
+# Error from seal reflection, should b fixed in 1_4_0 release. 
+# Not tested with Boole v6r0-v6r1 (access violation in main()...)
+# Seen with Boole v5r9 in event 400, related to memory "jumps"?
+#{ 
+#  SEAL_1_3_4/reflection
+#  Memcheck:Leak
+#  fun:_Znwj
+#  fun:_ZN4seal7reflect12ClassBuilder9addMethodEPKcS3_S3_PFPvS4_Ei
+#  fun:_ZN26std__vector_longsint__dictC1Ev
+#}
