@@ -7,6 +7,7 @@
 //#include "$STDOPTS/Hbook.opts"
 // ROOT persistency (use RootHistCnv v* in requirements).
 #include "$STDOPTS/RootHist.opts"
+RootHistCnv.ForceAlphaIds = true;
 
 //--------------------------------------------------------------
 // Detectors to monitor
@@ -24,7 +25,6 @@ BrunelMoniITSeq.Members += { "ITEffMonitor" };
 ITEffMonitor.MCParticleSelector.betaGammaMin = 0.0;
 //#include "$ITCHECKERSROOT/options/Brunel.opts"
 //ITEffMonitor.fullDetail = true;
-//ITEffMonitor.OutputLevel = 2;
 
 // OT reconstruction
 BrunelMoniOTSeq.Members += { "OTClusterMonitor" };
@@ -76,12 +76,3 @@ BrunelMoniCALOSeq.Members +=
   "CaloClusterMCTruthMonitor/CaloMCTruthMoni"
 };
 #include "$CALOMONITOROPTS/Moni.opts"
-
-//--------------------------------------------------------------
-// Set up some profiling. Enable/Disable setting lines below to true/false
-//--------------------------------------------------------------
-//ApplicationMgr.DLLs += { "GaudiAud" };
-//AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
-//NameAuditor.Enable   = false;
-//ChronoAuditor.Enable = true;
-//MemoryAuditor.Enable = false;

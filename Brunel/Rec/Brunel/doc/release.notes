@@ -6,6 +6,10 @@ Purpose: LHCb reconstruction program
 </PRE><H1><A NAME=v24r1>2004-07-26 Brunel v24r1</A></H1><PRE>
 This version uses Gaudi v15r1, needs CMT v1r16. It can process DC04 data
 
+- New or modified functionality
+  . Prefix numeric histogram IDs by "h" to facilitate manipulation in Root.
+    Controlled by the option RootHistSvc.ForceAlphaIds (RootHistCnv v9r3)
+
 - Bug fixes
   . Fix EventSelector.FirstEvent, in v24r0 was skipping twice the requested 
     events (GaudiSvc v12r2)
