@@ -43,7 +43,7 @@ ApplicationMgr.EvtMax    = -1;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
-// some minimum bias data. Should get ~80% of reconstructed PV.
+// some minimum bias data. Should get ~80% with at least one reconstructed PV
 EventSelector.Input   = {
 "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000622_00008138_10.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000622_00008142_10.dst' TYP='POOL_ROOTTREE' OPT='READ'",
