@@ -1,4 +1,4 @@
-//$Id: IConditionInfo.h,v 1.2 2002-04-24 12:41:26 mato Exp $
+//$Id: IConditionInfo.h,v 1.3 2003-04-16 08:06:08 cattanem Exp $
 #ifndef DETDESC_ICONDITIONINFO_H
 #define DETDESC_ICONDITIONINFO_H 1
 
@@ -26,6 +26,8 @@ class IConditionInfo : virtual public  IInterface
 {
 
  public:
+  virtual ~IConditionInfo() { }
+  
   /** retrieve the uniqie interface identifier 
    *  @return the unique interface identifier 
    */
