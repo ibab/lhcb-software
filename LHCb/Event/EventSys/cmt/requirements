@@ -13,9 +13,9 @@ use OTEvent      v12r0   Event
 use TrEvent      v12r0   Event
 use RichEvent    v4r0    Event
 use CaloEvent    v12r0   Event
-use MuonEvent    v2r1p1    Event
+use MuonEvent    v2r1p1  Event
 use L0Event      v13r0   Event
-use L1Event      v12r0   Event
+use L1Event      v11r0p1 Event
 use PhysEvent    v8r0    Event
 use DbCnv        v7r0    Event
 use GenEvent     v2r1p1    Event
