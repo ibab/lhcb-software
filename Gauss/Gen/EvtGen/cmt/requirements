@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2002-05-28 16:25:55 witoldp Exp $
+# $Id: requirements,v 1.5 2002-05-29 08:51:57 mato Exp $
 # ==========================================================================
 package          EvtGen
 version  v1r0 
@@ -13,13 +13,13 @@ include_dirs     $(EVTGENROOT)
 
 library          EvtGen *.cpp *.F
 
-macro CERNLIB_link "`cernlib photos mathlib jetset74`" 
+apply_pattern package_linkopts
 
+private
+macro_append EvtGen_cppflags "-DEVTSTANDALONE"
+macro CERNLIB_link "`cernlib photos mathlib jetset74`" 
 macro_append CERNLIB_linkopts "" \
              WIN32            " kernmd.lib photos.lib jetset74.lib"
-
-macro_append EvtGen_cppflags "-DEVTSTANDALONE"
-
-apply_pattern package_linkopts
+apply_pattern package_shlibflags
 
 
