@@ -1,8 +1,14 @@
+// ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2001/06/30 10:29:03  ibelyaev
+// modification in printout methods
+//
 // Revision 1.7  2001/06/29 10:26:18  ibelyaev
 // update to use new features of DetDesc v7 package
 //
+// ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1 
+// ============================================================================
 // from STL
 #include <cmath> 
 // from CLHEP 
