@@ -1,8 +1,9 @@
 !Package         : STDet
 !Package manager : M. Needham
 
-! M. Needham - 29/3/2005
-  - correct typo in STDetectionStation header
+!======================== STDet v1r2p1 2005-03-29 =======================
+! 2005-03-29 - M. Needham
+ - correct typo in STDetectionStation header
 
 !========================= STDet v1r2 2004-07-19 ========================
 ! 2004-07-19 - Marco Cattaneo
