@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromTrStoredTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.10 2005-02-17 09:57:59 jonrob Exp $
+ * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.11 2005-02-24 11:56:01 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -166,7 +166,16 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
   }
   if ( msgLevel(MSG::VERBOSE) ) 
   {
-    verbose() << "Analysing TrStoredTrack " << track->key() << " (history " << track->history() 
+    verbose() << "Analysing TrStoredTrack key=" << track->key();
+    if      ( track->unique()  ) verbose() << " unique";
+    if      ( track->forward() ) verbose() << " forward";
+    else if ( track->match()   ) verbose() << " match";
+    else if ( track->seed()    ) verbose() << " seed";
+    else if ( track->veloTT()  ) verbose() << " veloTT";
+    else if ( track->ksTrack() ) verbose() << " KsTrack";
+    else if ( track->velo()    ) verbose() << " velo";
+    else                         verbose() << " UNKNOWN";
+    verbose() << " (history " << track->history() 
               << ") : " << track->states().size() << " TrStates at z =";
     for ( SmartRefVector<TrState>::const_iterator iS = track->states().begin();
           iS != track->states().end(); ++iS ) 
