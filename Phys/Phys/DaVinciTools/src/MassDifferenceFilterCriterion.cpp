@@ -1,4 +1,4 @@
-// $Id: MassDifferenceFilterCriterion.cpp,v 1.1 2002-11-14 12:35:35 graven Exp $
+// $Id: MassDifferenceFilterCriterion.cpp,v 1.2 2002-11-16 15:53:23 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -107,5 +107,5 @@ bool MassDifferenceFilterCriterion::isSatisfied( const Particle* const & part ) 
    }
    
    double massDifference = part->mass()-p[0]->mass();
-   return fabs(massDifference) < m_massWindow;
+   return fabs(massDifference-m_massOffset) < m_massWindow;
 }
