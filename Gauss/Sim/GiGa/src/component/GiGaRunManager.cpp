@@ -1,8 +1,11 @@
-// $Id: GiGaRunManager.cpp,v 1.12 2003-10-17 13:47:49 ranjard Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.13 2003-10-30 16:33:33 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2003/10/17 13:47:49  ranjard
+// v14r6 - fix the code for geant4.5.2.ref04
+//
 // Revision 1.11  2003/04/06 18:49:48  ibelyaev
 //  see $GIGAROOT/doc/release.notes
 //
@@ -235,13 +238,11 @@ StatusCode GiGaRunManager::processTheEvent()
   if( G4RunManager::verboseLevel > 0 )
     {
       (G4RunManager::timer)->Stop();
-      // G4cout << "Run terminated." << G4endl;
-      // G4cout << "Run Summary"     << G4endl;
       if( G4RunManager::runAborted ) 
-        { G4cout << " G4Run Aborted after " << 1 << " events processed."  ; }
+        { std::cout << " G4Run Aborted after " << 1 << " events processed."  ; }
       else                           
-        { G4cout << " G4: Number of events processed : " << 1             ; }
-      G4cout << " Timer: " << *(G4RunManager::timer) << G4endl;
+        { std::cout << " G4: Number of events processed : " << 1             ; }
+      std::cout << " Timer: " << *(G4RunManager::timer) << std::endl;
     }
   ///
   set_evt_Is_Processed( true  ); 

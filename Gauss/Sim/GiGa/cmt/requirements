@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.53 2003-10-17 13:47:49 ranjard Exp $ 
+# $Id: requirements,v 1.54 2003-10-30 16:33:33 witoldp Exp $ 
 # =============================================================================
 package  GiGa
-version  v14r6
+version  v14r7
 
 # ============== package structure ============================================ 
 branches         cmt src doc GiGa

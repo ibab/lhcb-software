@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.cpp,v 1.5 2003-10-09 15:44:21 witoldp Exp $
+// $Id: GiGaFieldMgrBase.cpp,v 1.6 2003-10-30 16:33:33 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/10/09 15:44:21  witoldp
+// changed level of printouts
+//
 // Revision 1.4  2003/08/15 12:51:50  witoldp
 // few warnings changed to prints
 //
@@ -77,17 +80,21 @@ GiGaFieldMgrBase::GiGaFieldMgrBase
   const std::string& name   , 
   const IInterface*  parent )
   : GiGaBase        ( type , name , parent )
-  , m_global        ( false                )
-  , m_manager       ( 0                    )
-  , m_minStep       ( 0.01*mm              )
-  , m_stepperType   ( "UNDEFINED"          )
-  , m_stepper       ( 0                    )
+    , m_global        ( false                )
+    , m_manager       ( 0                    )
+    , m_minStep       ( 0.01*mm              )
+    , m_stepperType   ( "UNDEFINED"          )
+    , m_stepper       ( 0                    )
+    , m_deltaintersection (0.001*mm)
+    , m_deltaonestep      (0.001*mm)
 {
   declareInterface<IGiGaFieldMgr> ( this ) ;
   // 
-  declareProperty ( "MinStep" , m_minStep      ) ;
-  declareProperty ( "Stepper" , m_stepperType  ) ;
-  declareProperty ( "Global"  , m_global       ) ;
+  declareProperty ("MinStep", m_minStep);
+  declareProperty ("Stepper", m_stepperType);
+  declareProperty ("Global", m_global);
+  declareProperty ("DeltaIntersection", m_deltaintersection);
+  declareProperty ("DeltaOneStep", m_deltaonestep);
   //
 #ifdef GIGA_DEBUG
   //
@@ -262,7 +269,6 @@ StatusCode GiGaFieldMgrBase::createFieldMgr () const
         G4TransportationManager::GetTransportationManager () ;
       if( 0 == mgr ) { return Error("Invalid Transportation manager" ) ; }
       m_manager = mgr -> GetFieldManager() ;
-      //Print ( "Global G4FieldManager will be (re)configured." ) ;
     }
   else 
     { m_manager = new G4FieldManager() ; }
@@ -287,6 +293,8 @@ StatusCode GiGaFieldMgrBase::createFieldMgr () const
   
   G4ChordFinder* chordFinder = new G4ChordFinder( mag , m_minStep , step ) ;
   m_manager -> SetChordFinder( chordFinder );
+  m_manager -> SetDeltaIntersection(m_deltaintersection);
+  m_manager -> SetDeltaOneStep(m_deltaonestep);
   
   return StatusCode::SUCCESS ;
 };

@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.h,v 1.1 2003-04-06 18:49:45 ibelyaev Exp $
+// $Id: GiGaFieldMgrBase.h,v 1.2 2003-10-30 16:33:33 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 18:49:45  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+// 
 // ============================================================================
 #ifndef GIGA_GIGAFIELDMGRBASE_H 
 #define GIGA_GIGAFIELDMGRBASE_H 1
@@ -99,11 +102,15 @@ private:
 private:
 
   // global/local flag 
-  bool                            m_global      ;
+  bool m_global;
   // field managet itself 
-  mutable G4FieldManager*         m_manager     ;
+  mutable G4FieldManager* m_manager;
   // minimal step 
-  double                          m_minStep     ;
+  double m_minStep;
+  // delta intersection
+  double m_deltaintersection;
+  // delta one step
+  double m_deltaonestep;
   // stepper type 
   std::string                     m_stepperType ;
   // the stepper itself 

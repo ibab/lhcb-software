@@ -1,18 +1,24 @@
-! $Id: release.notes,v 1.84 2003-10-17 13:47:49 ranjard Exp $
+! $Id: release.notes,v 1.85 2003-10-30 16:33:33 witoldp Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
 
-!========================== GiGa v14r6 2003-10-17 =======================
+!========================== GiGa v14r7 ======================================
+! 2003-10-30 - Witek Pokorski
+ - GiGaFieldMgrBase - added setting of DeltaIntersection and DeltaOnePoint 
+                      for the global field manager
+ - GiGaRunManager - G4cout replaced by std::cout
+
+!========================== GiGa v14r6 2003-10-17 ===========================
 ! 2003-10-17 - Florence RANJARD
  - GiGaRunManager.cpp, GiGaRunManagerInterface.cpp - remove all references
    to "cutoffInitialize" which has been removed from geant4.5.2.ref04.
 
-!========================= GiGa v14r5 2003-10-09 ==========================
+!========================= GiGa v14r5 2003-10-09 ============================
 ! 2003-10-09 - Witek Pokorski
  - GiGaTrajectory - added vertex type
 
-!========================= GiGa v14r4 2003-09-25 ==========================
+!========================= GiGa v14r4 2003-09-25 ============================
 ! 2003-09-25 - Florence RANJARD
  - cmt/requirements - use G4readout instead of GEANT4
 
@@ -23,11 +29,11 @@ Package manager : Vanya Belyaev
    Now ALL tools have proper reference counters 
    and finalized properly
 
-!============================ GiGa v14r3 2003-08-15 ========================
+!============================ GiGa v14r3 2003-08-15 =========================
 ! 2003-08-15 - Witek Pokorski
  - src/Lib/GiGaBase.cpp - removed printing out of the unfinalized tools
 
-!============================ GiGa v14r2p1 2003-07-07 ========================
+!============================ GiGa v14r2p1 2003-07-07 =======================
 ! 2003-07-14 - Vanya BELYAEV
  - src/Lib/GiGaBase.cpp 
    add the counter to search for unfinalized tools 
