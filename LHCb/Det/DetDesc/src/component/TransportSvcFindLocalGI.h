@@ -1,4 +1,4 @@
-// $Id: TransportSvcFindLocalGI.h,v 1.6 2002-06-21 13:46:11 ocallot Exp $ 
+// $Id: TransportSvcFindLocalGI.h,v 1.7 2002-06-22 15:58:36 ocallot Exp $ 
 // ============================================================================
 #ifndef        __DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H__
 #define        __DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H__ 1
@@ -25,7 +25,7 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
                                             IGeometryInfo*    topGi  ) const  {
   if( 0 == gi ) { return 0 ; } 
 
-  bool debug = false;
+  MsgStream log( DetDesc::msgSvc() , "TransportSvc" );
 
   /// output :-))
   IGeometryInfo* goodGI = 0  ; 
@@ -33,30 +33,28 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
   try {  
     /// find the nearest "upper" volume, which contains the  first point  
     IGeometryInfo* gi1   = gi ;   
-    if ( debug ) std::cout << "Original geom " << gi1->lvolumeName() 
-                           << " point z = " << point1.z()
-                           << std::endl;
+    log << MSG::VERBOSE << "Original geom " << gi1->lvolumeName() 
+        << " point z = " << point1.z() << endreq;
     gi1   = gi1->belongsTo( point1, -1 ) ;   
-    if ( debug ) std::cout << "  belongsTo geom " << gi1->lvolumeName() 
-                           << std::endl;
+    log << MSG::VERBOSE << "  belongsTo geom " << gi1->lvolumeName() 
+        << endreq;
     {  
       bool loc = false ;  
       for( loc = gi1->isInside( point1 ) ; 
            !loc && (0 != gi1) && (gi != gi1) ; 
            gi1 = gi1->parentIGeometryInfo() ) {
         loc = gi1->isInside( point1 ); 
-        if ( debug ) std::cout << " inside loop " <<  loc 
-                               << " pointr=" << gi1->lvolumeName() 
-                               << std::endl;  
+        log << MSG::VERBOSE << " inside loop " <<  loc 
+            << " pointr=" << gi1->lvolumeName() << endreq;  
         if ( loc ) break;
       }  
       if( !loc || 0 == gi1 ) { 
-        if ( debug ) std::cout << " .. point1 not inside" << std::endl;
+        log << MSG::VERBOSE << " .. point1 not inside" << endreq;
         return 0; 
       }   
     }
-   if ( debug )  std::cout << "  p1 isInside geom " << gi1->lvolumeName() 
-                           << std::endl;
+    log << MSG::VERBOSE << "  p1 isInside geom " << gi1->lvolumeName() 
+        << endreq;
   
     /// find the nearest "upper" volume, which contains the second point  
     IGeometryInfo* gi2   = gi1 ; 
@@ -65,17 +63,17 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
       for( loc = gi2->isInside( point2 ) ; !loc && 0 != gi2 ; 
            gi2 = gi2->parentIGeometryInfo() ) { 
         loc = gi2->isInside( point2 ); 
-        if ( debug ) std::cout << "  p2 : " << loc << " vol " 
-                               << gi2->lvolumeName() << std::endl;
+        log << MSG::VERBOSE << "  p2 : " << loc << " vol " 
+            << gi2->lvolumeName() << endreq;
         if ( loc ) break;
       }  
       if( 0 == gi2 ) { 
-        if ( debug ) std::cout << " .. point2 not inside" << std::endl;
+        log << MSG::VERBOSE << " .. point2 not inside" << endreq;
         return 0; 
       }
     }
-    if ( debug ) std::cout << "  p2 isInside geom " << gi2->lvolumeName() 
-                           << std::endl;
+    log << MSG::VERBOSE << "  p2 isInside geom " << gi2->lvolumeName() 
+        << endreq;
     
     /// here both points are located 
     ///  try fo find the "common" location 
@@ -87,13 +85,13 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
            gl = gl->parentIGeometryInfo() ) { 
         if ( 0 == gl ) return 0;
         if( goodLocalGI( point1 , point2 , gl ) ) { 
-          if ( debug ) std::cout << "  goodLocalGI geom " << gl->lvolumeName()
-                                 << std::endl;
+          log << MSG::VERBOSE << "  goodLocalGI geom " << gl->lvolumeName()
+              << endreq;
           return gl; 
         } 
       }
       /// we have failed to find "good" element 
-     if ( debug )  std::cout << "  failed to find good element" << std::endl;
+      log << MSG::VERBOSE << "  failed to find good element" << endreq;
       return 0;                      /// RETURN !!! 
     }
     
@@ -106,8 +104,8 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
 
     m_vGi1.clear();   
     for( vgi = gi1 ; (0 != vgi); vgi = vgi->parentIGeometryInfo() ) { 
-      if ( debug ) std::cout << "  store parent 1 " << vgi->lvolumeName() 
-                             << std::endl;
+      log << MSG::VERBOSE << "  store parent 1 " << vgi->lvolumeName() 
+          << endreq;
       m_vGi1.push_back( vgi ); 
       if ( topGi == vgi ) break;
     }
@@ -115,8 +113,8 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
     /// "top" geometry tree for the second point 
     m_vGi2.clear(); 
     for( vgi = gi2 ; (0 != vgi); vgi = vgi->parentIGeometryInfo()  ) { 
-      if ( debug ) std::cout << "  store parent 2 " << vgi->lvolumeName() 
-                             << std::endl;
+      log << MSG::VERBOSE << "  store parent 2 " << vgi->lvolumeName() 
+          << endreq;
       m_vGi2.push_back( vgi ); 
       if ( topGi == vgi ) break;
     }  
@@ -131,8 +129,8 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
              (      0        != *it1 ) && 
              (      0        != *it2 ) &&  
              (   *it1        == *it2 )    ) { 
-       if ( debug )  std::cout << "  store common " << (*it1)->lvolumeName()
-                               << std::endl;
+        log << MSG::VERBOSE << "  store common " << (*it1)->lvolumeName()
+            << endreq;
         m_vGi.push_back( *it1 ) ; 
         ++it1 ; 
         ++it2 ; 
@@ -141,27 +139,27 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
     
     /// no common elements found !!!
     if( m_vGi.empty() ) { 
-      if ( debug ) std::cout << " .. no common element" << std::endl;
+      log << MSG::VERBOSE << " .. no common element" << endreq;
       return 0 ; 
     } 
 
     /// common "top" tree is found! 
     {
-      if ( debug ) std::cout << "  extend tree" << std::endl;
+      log << MSG::VERBOSE << "  extend tree" << endreq;
       
       /// extend it to lower level!   ???? DO WE NEED IT ????  YES!!! 
       IGeometryInfo*  gl = *(m_vGi.rbegin()); 
       while( 0 != gl ) {
-        if ( debug ) std::cout << "     test " << gl->lvolumeName() 
-                               << std::endl;
+        log << MSG::VERBOSE << "     test " << gl->lvolumeName() 
+            << endreq;
         IGeometryInfo* gl1 = gl->belongsTo( point1 ); 
         if( 0 == gl1 ) { 
           gl = 0 ; 
         } else {
           IGeometryInfo* gl2 = gl->belongsTo( point2 ); 
           if   ( gl1 == gl2 ) {
-            if ( debug ) std::cout << "   extended to " 
-                                   << gl2->lvolumeName() << std::endl;
+            log << MSG::VERBOSE << "   extended to " 
+                << gl2->lvolumeName() << endreq;
             m_vGi.push_back( gl2 ); gl = gl2 ; 
           } else {
             gl = 0; 
@@ -174,18 +172,17 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
     
     /// try to find a "good" geometry element in this tree 
     for( rGeoIt it = m_vGi.rbegin() ; m_vGi.rend() != it ; ++it ) { 
-      if ( debug ) std::cout << "   test goodLocalGI " <<  (*it)->lvolumeName()
-                             << std::endl;
+      log << MSG::VERBOSE << "   test goodLocalGI " <<  (*it)->lvolumeName()
+          << endreq;
       if ( goodLocalGI( point1 , point2 , *it ) ) {
         goodGI = (*it); 
-        if ( debug ) std::cout << " geometry " << (*it)->lvolumeName() 
-                               << std::endl;
+        log << MSG::VERBOSE << " geometry " << (*it)->lvolumeName() 
+                               << endreq;
         break;
       }
     } 
-    if ( debug ) std::cout << " +++ exit with goodGI = " 
-                           << goodGI->lvolumeName() 
-                           << std::endl;
+    log << MSG::VERBOSE << " +++ exit with goodGI = " 
+        << goodGI->lvolumeName() << endreq;
     
     ///  "good" element if found , or not found ;-))) 
   }

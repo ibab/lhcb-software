@@ -1,8 +1,11 @@
-// $Id: LVolume.cpp,v 1.23 2002-06-21 13:43:43 ocallot Exp $ 
+// $Id: LVolume.cpp,v 1.24 2002-06-22 15:58:36 ocallot Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.23  2002/06/21 13:43:43  ocallot
+// Fix findLocalGI for the transport service.
+//
 // Revision 1.22  2002/06/03 09:52:36  ocallot
 // fixes in the TransportService
 //
@@ -677,7 +680,7 @@ unsigned int LVolume::intersectLine
       // check the result!!!
       if( sc.isFailure() )
         {
-          MsgStream log( DetDesc::msgSvc() , "DetectorDataSvc" );
+          MsgStream log( DetDesc::msgSvc() , "TransportSvc" );
           log << MSG::ERROR
               << "===== Failure to merge " << name()
               << " type " << m_solid->typeName()
@@ -823,7 +826,7 @@ unsigned int LVolume::intersectLine
         ( own , childrens , std::back_inserter( intersections ) );
       // check the result !
       if( sc.isFailure() ) {
-          MsgStream log( DetDesc::msgSvc() , "DetectorDataSvc" );
+          MsgStream log( DetDesc::msgSvc() , "TransportSvc" );
           char line[140];
           sprintf( line, 
                    " x %7.2f y %7.2f z %7.2f %d own, %d child, status ",

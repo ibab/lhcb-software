@@ -1,8 +1,11 @@
-// $Id: VolumeIntersectionIntervals.h,v 1.9 2002-06-03 09:56:07 ocallot Exp $ 
+// $Id: VolumeIntersectionIntervals.h,v 1.10 2002-06-22 15:58:35 ocallot Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/06/03 09:56:07  ocallot
+// fixes in the TransportService
+//
 // Revision 1.8  2002/06/03 09:52:36  ocallot
 // fixes in the TransportService
 //
@@ -23,6 +26,7 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StatusCode.h"
 // DetDesc 
+#include "DetDesc/DetDesc.h"
 #include "DetDesc/ISolid.h"
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
@@ -197,11 +201,13 @@ namespace  VolumeIntersectionIntervals
           /** this situation means that something wrong
            *  with geometry description!!!
            */
-          std::cout << "VolumeIntersection:Merge error 15 : interval " 
-                    << intervalLoc.first << " "
-                    << intervalLoc.second << " master "
-                    << intervalTop.first << " " 
-                    << intervalTop.second << std::endl;
+          MsgStream log( DetDesc::msgSvc() , "TransportSvc" );
+          log << MSG::ERROR
+              << "VolumeIntersection:Merge error 15 : interval " 
+              << intervalLoc.first << " "
+              << intervalLoc.second << " master "
+              << intervalTop.first << " " 
+              << intervalTop.second << std::endl;
           return StatusCode(15) ;
         }
         // ? RETURN !!!
@@ -244,11 +250,13 @@ namespace  VolumeIntersectionIntervals
                                              matLocal ) ; 
           }
         } else {                                 // geometry error!!!
-          std::cout << "VolumeIntersection:Merge error 17 : interval " 
-                    << intervalLocal.first << " "
-                    << intervalLocal.second << " master "
-                    << leftTick << " " 
-                    << mostRightTick << std::endl;
+          MsgStream log( DetDesc::msgSvc() , "TransportSvc" );
+          log << MSG::ERROR
+              << "VolumeIntersection:Merge error 17 : interval " 
+              << intervalLocal.first << " "
+              << intervalLocal.second << " master "
+              << leftTick << " " 
+              << mostRightTick << std::endl;
           return StatusCode(17) ; 
         }         // RETURN !!!
         leftTick     = intervalLocal.second;
