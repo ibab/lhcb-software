@@ -86,7 +86,7 @@ use L0DU         v4r0   L0
 use CaloInterfaces v1r0 Calo
 use CaloUtils      v1r1 Calo
 use CaloTools      v1r1 Calo
-use CaloAlgs       v4r2 Calo
+use CaloAlgs       v4r3 Calo
 use CaloCA         v3r1 Calo
 
 # Tracking

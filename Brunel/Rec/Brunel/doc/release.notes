@@ -26,9 +26,11 @@ Purpose: LHCb reconstruction program
       Bug fixes in ITDigitCreator, Add ITDigitEffMonitor class
 
    - use CaloEvent    v7r1  Event
-   - use CaloUtils    v1r1  Calo
-   - use CaloAlgs     v4r2  Calo
       fix problems with std::maps on Win2K 
+   - use CaloAlgs     v4r3  Calo
+      fix problems with std::maps on Win2K
+      fix the CPU problems with sorting of very large containers 
+             (substutute std::sort with std::stable_sort)
 
    - use Velodet      v3r1  Det
     . Change the 'type' of the wafers, to handle properly the separation between
