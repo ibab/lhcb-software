@@ -2,6 +2,7 @@
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 
+!========================== VertexFit v1r0 2004-08-24 ===================
 ! 2004-08-24 - P. Koppenburg
  - Made a mistake while importing DaVinciFilter, overwriting VertexFit. 
    Had to remove all filters from VertexFit.
