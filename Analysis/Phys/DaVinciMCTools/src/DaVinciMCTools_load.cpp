@@ -1,4 +1,4 @@
-// $Id: DaVinciMCTools_load.cpp,v 1.7 2004-11-16 16:15:40 pkoppenb Exp $
+// $Id: DaVinciMCTools_load.cpp,v 1.8 2005-01-12 09:26:55 pkoppenb Exp $
 // Include files 
 
 
@@ -23,5 +23,6 @@ DECLARE_FACTORY_ENTRIES(DaVinciMCTools) {
   DECLARE_ALGORITHM( PrintTree );
   DECLARE_ALGORITHM( DumpEvent );
   DECLARE_ALGORITHM( FilterGoodDecay );
+  DECLARE_ALGORITHM( IsBEvent );
   
 }

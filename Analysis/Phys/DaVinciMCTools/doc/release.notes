@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.41 2005-01-11 12:36:08 pkoppenb Exp $
+! $Id: release.notes,v 1.42 2005-01-12 09:26:55 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
+! 2005-01-12 - P. Koppenburg
+  - src/IsBEvent.{cpp,h}
+    . New GaudiAlgorithm that checke is given particles are in the Event and
+      writes a SelResults object
+  - src/DaVinciMCTools_load.cpp
+    . Added IsBEvent algorithm
+  - src/DumpEvent.cpp
+    . Few buglet fixes
 ! 2005-01-11 - P. Koppenburg
   - src/MCParticleMaker.*
     . Make it a GaudiTool. 

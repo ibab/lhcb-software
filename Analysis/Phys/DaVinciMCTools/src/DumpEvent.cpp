@@ -1,4 +1,4 @@
-// $Id: DumpEvent.cpp,v 1.1 2004-09-14 11:59:07 pkoppenb Exp $
+// $Id: DumpEvent.cpp,v 1.2 2005-01-12 09:26:55 pkoppenb Exp $
 // Include files 
 #include <stdlib.h>
 
@@ -48,14 +48,16 @@ DumpEvent::~DumpEvent() {};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode DumpEvent::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialise" << endreq;
 
-  StatusCode sc = toolSvc()->retrieveTool( m_debug_name, m_debug, this );
-  if( sc.isFailure() ) {
+  m_debug = tool<IDebugTool>( m_debug_name, this );
+  if( !m_debug ) {
     fatal() << "Unable to retrieve Debug tool '"
         << m_debug_name << "'" << endreq;
-    return sc;
+    return StatusCode::FAILURE;
   }  
 
   return StatusCode::SUCCESS;
@@ -68,9 +70,8 @@ StatusCode DumpEvent::execute() {
   
   debug() << "==> Execute" << endreq;
 
-  SmartDataPtr<MCParticles> kmcparts(eventSvc(), MCParticleLocation::Default );
-  if( !kmcparts )
-  {
+  MCParticles* kmcparts = get<MCParticles>(MCParticleLocation::Default );
+  if( !kmcparts ){
     fatal() << "Unable to find MC particles at '"
         << MCParticleLocation::Default << "'" << endreq;
     return StatusCode::FAILURE;
@@ -92,7 +93,7 @@ StatusCode DumpEvent::finalize() {
 
   debug() << "==> Finalize" << endreq;
 
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();
 }
 
 //=============================================================================
