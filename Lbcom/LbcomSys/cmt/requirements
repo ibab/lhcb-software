@@ -1,0 +1,32 @@
+package LbcomSys
+version v1r0
+
+branches doc cmt
+
+#===============================================================
+# LHCb packages shared by several applications
+#===============================================================
+
+# L0 trigger simulation
+use L0Calo          v8r0    L0
+use L0DU            v6r7p3  L0
+use L0MuonTrigger   v2r3p1  L0
+use PuVeto          v6r0    L0
+
+# Outer tracker
+use OTMonitor       v1r1    OT
+
+# Tracking
+use TrExtrapolator  v2r14   Tr
+
+# Rich
+use RichTools	    v1r3    Rich
+use RichMCTools	    v2r4    Rich
+use RichRecTools    v2r13   Rich
+use RichRecMCTools  v1r7    Rich
+use RichRecCommon   v1r10   Rich
+use RichRecQC	    v1r10   Rich
+
+# Calo
+use CaloReco        v2r7    Calo
+use CaloPIDs	    v2r4    Calo
