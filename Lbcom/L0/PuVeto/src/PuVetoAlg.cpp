@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.15 2004-12-03 17:50:47 dhcroft Exp $
+// $Id: PuVetoAlg.cpp,v 1.16 2004-12-07 19:56:55 dhcroft Exp $
 // Include files 
 #include <math.h>
 // from Gaudi
@@ -143,9 +143,11 @@ StatusCode PuVetoAlg::initialize() {
     m_hist.push_back(0);
   }
 
-  unsigned int ks;
-  for ( ks=0 ; m_nbPuSensor > ks ; ks++ ) {
-    VetoInput a( m_velo->zSensor(ks+128) );
+  std::vector<DeVeloRType*> puSensors = m_velo->vpPileUpSensors();
+
+  std::vector<DeVeloRType*>::iterator iSens;
+  for ( iSens = puSensors.begin() ; iSens != puSensors.end() ; ++iSens ){
+    VetoInput a( (*iSens)->z() );
     m_input.push_back( a );
   }
 
@@ -198,7 +200,6 @@ StatusCode PuVetoAlg::execute() {
   std::vector<unsigned short int> rawpudata;
   std::vector<raw_int> rawdatavec;
   
-
   for ( MCVeloFEs::const_iterator itFe = fes->begin(); 
         fes->end() != itFe ; itFe++  ) {
     if ( m_threshold < (*itFe)->charge() ) {      
@@ -208,21 +209,10 @@ StatusCode PuVetoAlg::execute() {
                << " in " << m_inputContainer << endreq;
         continue;
       }
-      if((*itFe)->NumberOfMCVeloHits() > 0 ){
-        logmsg <<MSG::VERBOSE
-               << "Used MCVeloHit at r=" << (*itFe)->mcVeloHit(0)->entry().perp() 
-               << endreq;
-        double rA;
-        m_velo->rOfStrip( (*itFe)->channelID(), rA );
-        logmsg << MSG::VERBOSE
-               << "Reconstructed at "<< rA << endreq;
-      }
 
-      int sensor = (*itFe)->sensor()-128;
+      int sensor = (*itFe)->sensor();
       unsigned int sfired           = 4 * ( (*itFe)->strip()/4 ) + 2;
       VeloChannelID fired(sensor,sfired);
-      fired.setType(VeloChannelID::PileUpType);
-      
 
       unsigned short int rawhit = rawEncode(sensor,(*itFe)->strip());
       rawpudata.push_back(rawhit);
@@ -230,7 +220,7 @@ StatusCode PuVetoAlg::execute() {
       logmsg << MSG::VERBOSE << sensor << " " << (*itFe)->strip() << " " 
              << rawhit << endreq;
 
-      std::vector<VeloChannelID>* strips = m_input[sensor].strips();
+      std::vector<VeloChannelID>* strips = m_input[sensor-128].strips();
       bool toAdd = true;
 
       logmsg << MSG::VERBOSE << "PU Sensor " << sensor << " strip " 
@@ -392,13 +382,13 @@ void PuVetoAlg::fillHisto ( ) {
                << dA->sensor() << endreq;        
         continue; 
       } 
-      m_velo->rOfStrip( *dA, rA );
+      rA = m_velo->rOfStrip( *dA );
       zoneA = m_velo->zoneOfStrip( *dA );
       
       for ( dB = digsB->begin();  digsB->end() != dB ; dB++ ) {
       // hack to hide some hits that match the true PV 
         if ( ! dB->isPileUp() ) { continue; } 
-        m_velo->rOfStrip( *dB, rB );
+        rB = m_velo->rOfStrip( *dB );
         zoneB = m_velo->zoneOfStrip( *dB );
 
         // Basic Phi matching... Corresponding zones in the sensor.
@@ -452,7 +442,7 @@ void PuVetoAlg::maskHits ( double zVertex,
       if( ! stripA.isPileUp() ){
         stripA.setType(VeloChannelID::PileUpType);
       }
-      m_velo->rOfStrip( stripA, rA );
+      rA = m_velo->rOfStrip( stripA );
       zoneA =  m_velo->zoneOfStrip( stripA );
       
       for ( dB = digsB->begin() ; digsB->end() != dB ; dB++ ) {
@@ -461,7 +451,7 @@ void PuVetoAlg::maskHits ( double zVertex,
         if( ! stripB.isPileUp() ){
           stripB.setType(VeloChannelID::PileUpType);
         }
-        m_velo->rOfStrip( stripB, rB );
+        rB = m_velo->rOfStrip( stripB );
         zoneB =  m_velo->zoneOfStrip( stripB );
       
         // Basic Phi matching... Corresponding zones in the sensor.
