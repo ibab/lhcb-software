@@ -1,4 +1,4 @@
-// $Id: XmlMuonODECnv.cpp,v 1.2 2004-02-04 14:38:10 cattanem Exp $
+// $Id: XmlMuonODECnv.cpp,v 1.3 2004-02-06 14:28:22 cattanem Exp $
 // Include files 
 
 #include <vector>
@@ -18,7 +18,7 @@
 
 // local
 
-/** @class XmlMuonCablingCnv
+/** @class XmlMuonODECnv
  *
  * XML converter for MuonODE
  *
@@ -202,12 +202,3 @@ return StatusCode::SUCCESS;
 }
 
 //=============================================================================
-
-
-
-
-
-
-
-
-

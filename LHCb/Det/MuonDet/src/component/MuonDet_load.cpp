@@ -1,4 +1,4 @@
-// $Id: MuonDet_load.cpp,v 1.4 2004-02-04 15:42:36 cattanem Exp $ 
+// $Id: MuonDet_load.cpp,v 1.5 2004-02-06 14:28:22 cattanem Exp $ 
 // ============================================================================
 #define MUONDET_MUONDETLOAD_CPP 1 
 
@@ -58,6 +58,8 @@ void MuonDet_load()
   DLL_DECL_CONVERTER( XmlMuonRegionCnv );
   DLL_DECL_CONVERTER( XmlMuonReadoutCondCnv );
   DLL_DECL_CONVERTER( XmlMuonCablingCnv );
+  DLL_DECL_CONVERTER( XmlMuonODECnv );
+  DLL_DECL_CONVERTER( XmlMuonTSMapCnv );
 
   
   /// Object factories 
