@@ -1,0 +1,4 @@
+// Degraded resolutions for robustness test
+
+ToolSvc.RichRecSegmentTool.ScalePhotonEff  = 0.8;
+ToolSvc.RichRecSegmentTool.ScaleEmisPntErr = { 1, 1.25, 1 };

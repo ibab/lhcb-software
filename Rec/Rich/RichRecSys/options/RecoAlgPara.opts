@@ -1,0 +1,85 @@
+// RICH Reconstruction algorithm parameters
+
+// Local Algorithm parameters
+RichLocPID.MinimumPtot                       = 0.0*GeV;
+RichLocPID.LocalPIDToolName                  = "RichLocPIDTool";
+RichLocPID.MaxUsedTracks                     = 230;
+ToolSvc.RichLocPIDTool.MinProbThresholdHighP = { 0.03,  0.01, 0.02, 0.02 };
+ToolSvc.RichLocPIDTool.MinProbThresholdLowP  = { 0.1,   0.1,  0.1,  0.09 };
+ToolSvc.RichLocPIDTool.CherenkovThetaRes     = { 0.002, 0.0014, 0.0007   };
+
+// Global PID digit selection
+RichGloPIDDigSel.MaxUsedPixels            = 8000;
+
+// Global PID track selection
+RichGloPIDTrSel.MaxUsedTracks             = 230;
+RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
+RichGloPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
+RichGloPIDTrSel.ResetTracksToPion         = false;   // true to ignore previous results
+
+// Global Algorithm parameters - phase 1
+RichGloPIDIt1.TrackMinDeltaLLThreshold    = -5;
+RichGloPIDIt1.LikelihoodThreshold         = 1e-3;
+RichGloPIDIt1.MinSignalForNoLLCalc        = 1e-25;
+RichGloPIDIt1.MinSignalForAproxLLCalc     = 1e-5;
+
+// Global Algorithm parameters - phase 2
+RichGloPIDIt2.TrackMinDeltaLLThreshold    = -5;
+RichGloPIDIt2.LikelihoodThreshold         = 1e-3;
+RichGloPIDIt2.MinSignalForNoLLCalc        = 1e-25;
+RichGloPIDIt2.MinSignalForAproxLLCalc     = 1e-5;
+
+// Ring Refit                                  Aero   C4F10   CF4
+RichRingRefit.MinSignalPhotonProb         = {  999,   1e-2,   5e-3  };
+RichRingRefit.MinRefitPhotons             = {  999,      7,      7  };
+RichRingRefit.MaxBackgroundProb           = {  999,    999,    999  };
+RichRingRefit.MaxCandsPerPixel            = {    1,      1,      1  };
+
+// Global Algorithm parameters - phase 3
+RichGloPIDIt3.TrackMinDeltaLLThreshold    = -5;
+RichGloPIDIt3.LikelihoodThreshold         = 1e-3;
+RichGloPIDIt3.MinSignalForNoLLCalc        = 1e-25;
+RichGloPIDIt3.MinSignalForAproxLLCalc     = 1e-5;
+
+// PID output algorithm
+MergeRichPIDs.OutputPIDLocation = "Rec/Rich/PIDs";
+
+// RichRec Tool Registry
+ToolSvc.RichToolRegistry.Tools = {
+  "RichTrackCreatorFromTrStoredTracks/RichTrackCreator",
+  "RichPixelCreatorFromSICB/RichPixelCreator",
+  "RichPhotonCreator/RichPhotonCreator",
+  "RichSegmentCreator/RichSegmentCreator",
+  "RichDetInterface/RichDetInterface",
+  //"RichGeomEffDetailed/RichGeomEff",
+  "RichGeomEffFixedValue/RichGeomEff",
+  "RichTrackProperties/RichTrackProperties",
+  "RichSegmentProperties/RichSegmentProperties",
+  "RichPhotonPredictor/RichPhotonPredictor",
+  "RichPhotonSignal/RichPhotonSignal",
+  "PixelFinder/SICBPixelGeom"
+};
+
+// General Reconstruction tool parameters            aero   c4f10   cf4
+ToolSvc.RichPhotonPredictor.MinTrackROI          = { 130.0,  0.0,   0.0 };
+ToolSvc.RichPhotonPredictor.MaxTrackROI          = { 350.0, 90.0, 250.0 };
+ToolSvc.RichPhotonCreator.MinCherenkovTheta      = { 0.1,  0.005, 0.005 };
+ToolSvc.RichPhotonCreator.MaxCherenkovTheta      = { 0.29, 0.075, 0.045 };
+ToolSvc.RichPhotonCreator.MinPhotonProbability   = { 1e-15, 1e-15, 1e-15 };
+ToolSvc.RichGeomEff.NPhotonsGeomEffCalc          = 100;
+ToolSvc.RichGeomEff.NPhotonsGeomEffBailout       = 25;
+ToolSvc.RichSegmentProperties.NAerogelResBins    = { 0.2, 0.25 };
+ToolSvc.RichSegmentProperties.AerogelForwardRes  = { 0.00304, 0.00239, 0.00221 };
+ToolSvc.RichSegmentProperties.AerogelMatchRes    = { 0.00296, 0.00261, 0.00221 };
+ToolSvc.RichSegmentProperties.AerogelUpStreamRes = { 0.00308, 0.00273, 0.00230 };
+ToolSvc.RichSegmentProperties.AerogelVTTRes      = { 0.01000, 0.00431, 0.00262 };
+ToolSvc.RichSegmentProperties.NC4F10ResBins      = { 0.03, 0.05 };
+ToolSvc.RichSegmentProperties.C4F10ForwardRes    = { 0.00219, 0.00139, 0.00126 };
+ToolSvc.RichSegmentProperties.C4F10MatchRes      = { 0.00262, 0.00167, 0.00148 };
+ToolSvc.RichSegmentProperties.C4F10UpStreamRes   = { 0.00258, 0.00164, 0.00157 };
+ToolSvc.RichSegmentProperties.C4F10VTTRes        = { 0.00700, 0.00296, 0.00186 };
+ToolSvc.RichSegmentProperties.NCF4ResBins        = { 0.018, 0.028 };
+ToolSvc.RichSegmentProperties.CF4ForwardRes      = { 0.001011, 0.000745, 0.000606 };
+ToolSvc.RichSegmentProperties.CF4MatchRes        = { 0.000973, 0.000802, 0.000659 };
+ToolSvc.RichSegmentProperties.CF4UpStreamRes     = { 0.001082, 0.000811, 0.000737 };
+ToolSvc.RichSegmentProperties.CF4SeedRes         = { 0.001225, 0.000861, 0.000749 };

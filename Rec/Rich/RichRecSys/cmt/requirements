@@ -1,0 +1,21 @@
+#============================================================================
+# Created    : 2003-07-01
+# Maintainer : Chris Jones
+#============================================================================
+package           RichRecSys
+version           v1r0
+
+# ================ structure ================================================
+branches          cmt doc options
+
+# ================ environment ==============================================
+set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
+
+# ================ dependencies =============================================
+use RichRecBase    v1r2   Rich
+use RichRecTools   v2r1   Rich
+use RichRecCommon  v1r0   Rich
+use RichRingRefit  v1r0   Rich
+use RichLocalPID   v1r0   Rich
+use RichGlobalPID  v1r0   Rich
+use RichPIDMerge   v1r0   Rich

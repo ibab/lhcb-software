@@ -1,0 +1,32 @@
+//========================= Rich OO Reconstruction ===========================
+//
+// This option file is for running the OO Rich reconstruction in DaVinci
+//
+
+// Local PID first
+ApplicationMgr.TopAlg += { "RichLocalPIDAlg/RichLocPID" };
+// Initialise GlobalPID
+ApplicationMgr.TopAlg += { "RichGlobalPIDInitialize/RichGloPIDInit" };
+ApplicationMgr.TopAlg += { "RichGlobalPIDDigitSel/RichGloPIDDigSel" };
+ApplicationMgr.TopAlg += { "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
+// Backgroud alg - Uses local PID results as working particle hypotheses
+ApplicationMgr.TopAlg += { "RichRecBackgroundEsti/RichBckEst1" };
+// First iteration of Global PID
+ApplicationMgr.TopAlg += { "RichGlobalPIDAlg/RichGloPIDIt1" };
+// Backgroud alg - Uses global 1st iter results as working particle hypotheses
+ApplicationMgr.TopAlg += { "RichRecBackgroundEsti/RichBckEst2" };
+// Second iteration of Global PID
+ApplicationMgr.TopAlg += { "RichGlobalPIDAlg/RichGloPIDIt2" };
+// Ring refit - uses working IDs to identify good photons and refit angles
+ApplicationMgr.TopAlg += { "RichRingRefitAlg/RichRingRefit" };
+// Backgroud alg - Uses global 2nd iter results as working particle hypotheses
+ApplicationMgr.TopAlg += { "RichRecBackgroundEsti/RichBckEst3" };
+// Final iteration of Global PID
+ApplicationMgr.TopAlg += { "RichGlobalPIDAlg/RichGloPIDIt3" };
+// Finalise Global PID
+ApplicationMgr.TopAlg += { "RichGlobalPIDFinalize/RichGloPIDFin" };
+// Make final output PID results
+ApplicationMgr.TopAlg += { "RichPIDSimpleMerge/MergeRichPIDs" };     
+
+// Algorithm parameters
+#include "$RICHRECCOMMONOPTS/RecoAlgPara.opts"

@@ -1,0 +1,41 @@
+//
+// Turn on debug printout for Rich OO Reconstruction algorithms
+//
+
+// Det tool interface
+ToolSvc.RichDetInterface.OutputLevel = 2;
+
+// Rich Rec tools
+ToolSvc.RichPhotonCreator.OutputLevel = 2;
+ToolSvc.RichTrackCreator.OutputLevel = 2;
+ToolSvc.RichTrackProperties.OutputLevel = 2;
+ToolSvc.RichSegmentCreator.OutputLevel = 2;
+ToolSvc.RichSegmentProperties.OutputLevel = 2;
+ToolSvc.RichPixelCreator.OutputLevel = 2;
+ToolSvc.RichRecMCTruthTool.OutputLevel = 2;
+ToolSvc.RichPhotonPredictor.OutputLevel = 2;
+ToolSvc.RichPhotonSignal.OutputLevel = 2;
+ToolSvc.RichToolRegistry.OutputLevel = 2;
+ToolSvc.RichGeomEff.OutputLevel = 2;
+
+// Ring Refit
+RichRingRefit.OutputLevel = 2;
+
+// Global PID
+RichGloPIDInit.OutputLevel = 2;
+RichGloPIDDigSel.OutputLevel = 2;
+RichGloPIDTrSel.OutputLevel = 2;
+RichBckEst1.OutputLevel = 1;
+RichGloPIDIt1.OutputLevel = 1;
+RichBckEst2.OutputLevel = 1;
+RichGloPIDIt2.OutputLevel = 1;
+RichBckEst3.OutputLevel = 1;
+RichGloPIDIt3.OutputLevel = 1;
+RichGloPIDFin.OutputLevel = 2;
+
+// Local PID
+RichLocPID.OutputLevel = 2;
+ToolSvc.RichLocPIDTool.OutputLevel = 2;
+
+// Finalisation algorithm
+MergeRichPIDs.OutputLevel = 2;
