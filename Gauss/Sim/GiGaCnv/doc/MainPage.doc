@@ -1,0 +1,23 @@
+/** \mainpage GiGaCnv
+  *     
+  *  <b>GiGa</b>  <b>Conversion</b>  <b>Services</b>
+  *             
+  * This is the code reference manual for GiGaCnv package. 
+  * These pages have been generated directly from the code and 
+  * reflect the exact state of the 
+  * software. 
+  *
+  * The detailed description of 
+  * <a href="http://cern.ch/Gaudi">Gaudi</a> and   
+  * <a href="http://cern.ch/Geant4">Geant4</a>  
+  * could be found elsewhere. 
+  *
+  * Use the links in the menu at the top of the page to navigate. In particular,
+  * the list of classes can be found <a href="annotated.html">here</a> or via
+  * the <a href="hierarchy.html">Class Hierarchy</a> link. 
+  *
+  * @author Vanya Belyaev Ivan.Belyaev@itep.ru
+  * @date   01/08/2001 
+  *
+  */
+
