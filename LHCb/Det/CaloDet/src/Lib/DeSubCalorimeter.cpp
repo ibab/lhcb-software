@@ -1,10 +1,19 @@
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2001/07/12 21:53:39  ibelyaev
+// adaptation for Win2K
+//
 // Revision 1.5  2001/06/30 10:29:03  ibelyaev
 // modification in printout methods
 //
 // Revision 1.4  2001/06/29 10:26:18  ibelyaev
 // update to use new features of DetDesc v7 package
-// 
+//
+// ============================================================================
+#define CALODET_DESUBCALORIMETER_CPP 1
+// ============================================================================
 
 // CaloDet
 #include "CaloDet/DeSubCalorimeter.h"
@@ -15,32 +24,32 @@
 //
 //------------------------------------------------------------------------------
 
-/// ===========================================================================
-/// Standard Constructors
-/// ===========================================================================
-DeSubCalorimeter::DeSubCalorimeter( const std::string& name ) 
+// ============================================================================
+// Standard Constructors
+// ============================================================================
+DeSubCalorimeter::DeSubCalorimeter( const std::string& name )
   : DetectorElement     ( name )
   , m_size( 0.0 )
 {};
-  
-/// ===========================================================================
-/// Destructor
-/// ===========================================================================
+
+// ============================================================================
+// Destructor
+// ============================================================================
 DeSubCalorimeter::~DeSubCalorimeter(){};
 
 
-/// ===========================================================================
-/// object identification 
-/// ===========================================================================
-const CLID& DeSubCalorimeter::clID() const 
-{ return DeSubCalorimeter::classID(); } 
+// ============================================================================
+/// object identification
+// ============================================================================
+const CLID& DeSubCalorimeter::clID() const
+{ return DeSubCalorimeter::classID(); }
 
-/// ===========================================================================
-/// standard initialization 
-/// ===========================================================================
+// ============================================================================
+// standard initialization
+// ============================================================================
 StatusCode DeSubCalorimeter::initialize()
 {
-  /// initialize the base class 
+  /// initialize the base class
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) { return sc ; }
   ///
@@ -49,16 +58,16 @@ StatusCode DeSubCalorimeter::initialize()
   ///
   Parameters pars( userParameters() );
   ///
-  { /// cell size 
-    Iterator it = 
-		std::find( pars.begin() , pars.end () , std::string("CellSize") );
-    if( pars.end() != it ) 
+  { /// cell size
+    Iterator it =
+      std::find( pars.begin() , pars.end () , std::string("CellSize") );
+    if( pars.end() != it )
       {
         setSize( userParameterAsDouble(*it) ) ;
         pars.erase( it );
       }
-    else 
-      { return StatusCode::FAILURE ; } 
+    else
+      { return StatusCode::FAILURE ; }
   }
   if( !pars.empty() ) {
     // some "extra" parameters.
@@ -69,30 +78,30 @@ StatusCode DeSubCalorimeter::initialize()
   ///
 };
 
-/// ===========================================================================
-/// standard printout to STL standard stream 
-/// ===========================================================================
-std::ostream& DeSubCalorimeter::printOut( std::ostream& os ) const 
+// ============================================================================
+// standard printout to STL standard stream
+// ============================================================================
+std::ostream& DeSubCalorimeter::printOut( std::ostream& os ) const
 {
-  os << "\tDeSubCalorimeter" 
-     << " fullname ='" << fullpath() 
-     << std::endl; 
+  os << "\tDeSubCalorimeter"
+     << " fullname ='" << fullpath()
+     << std::endl;
   os << "\t\t\tCellSize=" << std::setw(12) << m_size
-     << std::endl;    
+     << std::endl;
   return os;
 };
 
-/// ===========================================================================
-/// standard printout to Gaudi standard stream 
-/// ===========================================================================
-MsgStream&    DeSubCalorimeter::printOut( MsgStream&    os ) const 
+// ============================================================================
+// standard printout to Gaudi standard stream
+// ============================================================================
+MsgStream&    DeSubCalorimeter::printOut( MsgStream&    os ) const
 {
-  os << "\tDeSubCalorimeter" 
-     << " fullname ='" << fullpath() 
-     << endreq   ; 
+  os << "\tDeSubCalorimeter"
+     << " fullname ='" << fullpath()
+     << endreq   ;
   os << "\t\t\tCellSize=" << std::setw(12) << m_size
-     << endreq   ;    
+     << endreq   ;
   return os;
 };
 
-/// ===========================================================================
+// ============================================================================
