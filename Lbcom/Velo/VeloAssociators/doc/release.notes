@@ -1,6 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+! 2002-07-08 - Chris Parkes
+- Ensure no relation filled when link is not present 
+  (spillover or noise clusters)
+
 ! 2002-06-19 - Marco Cattaneo
  - Use VeloEvent v11r* and VeloDet v6r*
  - Use 'VeloCluster2MCHitAsctLocation' as relation location.
