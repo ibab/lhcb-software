@@ -1,6 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2004-03-30 - Olivier Callot
+ - Fix a bug in the recreation of the default container, the test was comparing
+   the float Et to the integer EtCode to get the highest candidate...
+
 !========================= L0Calo v7r4 2004-03-25 =========================
 ! 2004-03-22 - Olivier Callot
  - Recreate L0CaloCandidates default container from the Full container in 

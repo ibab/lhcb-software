@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.2 2004-03-22 12:38:51 ocallot Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.3 2004-03-30 15:35:27 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -119,7 +119,8 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
       int type = cand>>24 & 0xFF;
       while ( bestCand.size() <= (unsigned int)type ) bestCand.push_back( 0 );
 
-      msg << MSG::DEBUG << format( "Data %8x Type %1d", cand, type ) << endreq;
+      msg << MSG::VERBOSE 
+          << format( "Data %8x Type %1d", cand, type ) << endreq;
 
       if ( L0Calo::SumEt == type ) {
         int sumEt = cand & 0xFFFFFF;
@@ -161,7 +162,7 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
        outFull->add( myL0Cand );
        if ( 0 == bestCand[type] ) {
          bestCand[type] = myL0Cand;
-       } else if ( et > bestCand[type]->et() ) {
+       } else if ( et > bestCand[type]->etCode() ) {
          bestCand[type] = myL0Cand;
        }
      }
