@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.29 2003-01-08 06:47:47 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.30 2003-01-27 08:16:57 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -755,13 +755,13 @@ VeloChannelID DeVelo::neighbour ( const VeloChannelID& chan,
     if ( 0 < numAway ) {
       if ( (m_nbRInner >  strip) && 
            (m_nbRInner <= newStrip) ) {
-        newStrip += (int)m_nbRInner;
+        valid = false; // not with 512 inner ! : newStrip += (int)m_nbRInner;
       } else if ( ( 1024 >  strip ) && 
                   ( 1024 <= newStrip ) ) {
         valid = false;
       } else if ( (m_nbRInner+1024 >  strip) && 
                   (m_nbRInner+1024 <= newStrip) ) {
-        newStrip += (int)m_nbRInner;
+        valid = false; // not with 512 inner ! : newStrip += (int)m_nbRInner;
       } else if ( nbStrips() <= newStrip ) {
         valid = false;
       }
