@@ -1,0 +1,13 @@
+!-----------------------------------------------------------------------------
+! Package          : Sim/GiGaVisUI
+! Responsible	   : Vanya Belyaev, Witold Pokorski
+! Purpose          : GiGa visualisation and UI 
+!-----------------------------------------------------------------------------
+	
+
+
+!=========================== GiGaVisUI v1r0 2002-12-11 ========================
+! 2002-12-11 - Witek Pokorski
+  - New package: contains all GiGa visualisation and UI 
+
+!==============================================================================
