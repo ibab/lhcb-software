@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.7 2002-04-24 09:50:34 ocallot Exp $
+// $Id: DeVelo.h,v 1.8 2002-06-11 08:57:37 ocallot Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -20,7 +20,7 @@
 
 /// forwad declarations
 class MsgStream;
-
+#include "Kernel/VeloChannelID.h"
 
 /**  
  * Auxilliary class to handle each sensor.
@@ -160,15 +160,16 @@ public:
   }
 
   /// returns the local radius of the strip
-  double rOfStrip( double strip, int& phiZone );
+  double rOfStrip( double strip, int& rZone );
 
   /// Returns the (local) radius of the specified strip
   double rOfStrip( int strip ) {
-    int localStrip = strip % m_rStrip.size();
-    return m_rStrip[localStrip];
+    int localStrip = strip %1024;   // Two halves in R are equal.
+    if ( m_nbRInner <= localStrip ) { localStrip -= (int)m_nbRInner; }
+    return .5 * (m_rStrip[localStrip] + m_rStrip[localStrip+1]);
   }
   
-  /// return true if the two phiZone can match
+  /// return true if the two rZones can match
   bool matchingZones( int zone1, int zone2 );
 
   /// returns the phi of the strip at the specified radius for this sensor.
@@ -227,18 +228,70 @@ public:
   /// return the maximum sensitive radius of an R wafer
   double rMax() { return m_outerRadius; };
   
+  /// returns the silicon thickness
+  double siliconThickness ( unsigned int num ) {
+    if ( m_puSensor.size() > num ) {
+      return m_siliconThickness;
+    }
+    return -1.;
+  }
+  /// returns the number of strips per sensor.
+  int nbStrips() const { return 2048; }
+  
+  /// return the neighbour at 'numAway' channels.
+  VeloChannelID neighbour( const VeloChannelID& chan, 
+                           int numAway, 
+                           bool& valid );
+
+  /// returns the distance in strip of two channels, and if this is valid.
+  int neighbour( const VeloChannelID& entryChan,
+                 const VeloChannelID& exitChan,
+                 bool& valid );
+  
+  /// Indices to get access to an array of properties...
+  /// get an index to use in an array (0->max) from the sensor number
+  int sensorArrayIndex(int sensorId) { return sensorId; };
+
+  /// given an array index what is the corresponding sensor number
+  int sensorNumber(int sensorIndex) { return sensorIndex; };
+
+  /// get an index to use in an array (0->max) from the strip number
+  int stripArrayIndex(int sensorId, int stripId);
+
+  /// given an array index what is the corresponding strip number
+  int stripNumber(int sensorId, int stripIndex);
+ 
+  /// returns the capacitance of the strip.
+  double stripCapacitance(int sensorId, int stripIndex);
+
+  /// return the channelID number + fraction of channel for the point 
+  /// in this sensor;
+  VeloChannelID channelID(const HepPoint3D& point, 
+                          double& fraction, 
+                          double& pitch,
+                          bool& valid);
+
 
 protected: 
 
   /// return the (floating) strip number for the point in a sensor of this type
   double stripNumberByType( int type,
-                            const HepPoint3D& point, 
+                            const HepPoint3D& point,
                             double& pitch );
-
+  
+  double phiOffset( double radius )  {
+    if (  m_phiBoundRadius > radius ) {
+      return m_phiInnerTilt - asin( m_innerTiltRadius / radius );
+    } else {
+      return m_phiOuterTilt - asin( m_outerTiltRadius / radius ) ;
+    }
+  }
+  
 private:
   
   double m_innerRadius;
   double m_outerRadius;
+  double m_siliconThickness;
   // R detector
   double m_fixPitchRadius;
   double m_middleRRadius;
@@ -256,8 +309,6 @@ private:
   // auxilliary variables
 
   double m_pitchSlope;
-  double m_logPitchStep;
-  double m_nbRFixedPitch;
   double m_halfAngle;
   double m_quarterAngle;
     

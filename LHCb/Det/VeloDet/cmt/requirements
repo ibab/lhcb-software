@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.9 2002-04-24 09:51:16 ocallot Exp $
+# $Id: requirements,v 1.10 2002-06-11 08:57:37 ocallot Exp $
 # =========================================================================
 
 package  VeloDet 
-version  v5r0
+version  v6r0
 
 # =============== structure ===============================================	
 branches         src cmt doc VeloDet 
@@ -12,6 +12,7 @@ include_dirs      $(VELODETROOT)
 
 # =============== used packages ===========================================
 use DetDesc      v10r*  Det 
+use LHCbKernel   v1r*     Kernel
 
 # =============== own options ==========================================
 set VELODETOPTS  ${VELODETROOT}/options

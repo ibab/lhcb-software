@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.14 2002-05-05 06:18:05 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.15 2002-06-11 08:57:38 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -130,21 +130,28 @@ StatusCode DeVelo::initialize() {
     pars.erase( it );
   }
 
+  it = std::find( pars.begin() , pars.end () , std::string("SiThick") );
+  if( pars.end() != it ) {
+    m_siliconThickness =  userParameterAsDouble( *it ) ;
+    pars.erase( it );
+  }
+
   if( !pars.empty() ) {
     // some "extra" parameters.
     // should be an error??
   }
   ///
 
-  loging << MSG::DEBUG << "Velo : Radius from " << m_innerRadius/mm 
-         << " to " << m_outerRadius/mm << endreq;
+  loging << MSG::INFO    //==== Shoudl be changed for production !!!
+         << "Velo : Radius from " << m_innerRadius/mm 
+         << " to " << m_outerRadius/mm 
+         << " thick " << m_siliconThickness / micrometer << " microns"
+         << endreq;
  
   // Auxilliary variables for R strip computation
 
   m_pitchSlope = (m_outerPitch - m_innerPitch ) /  
                  (m_outerRadius - m_fixPitchRadius);
-  m_logPitchStep = log( 1. + m_pitchSlope );
-  m_nbRFixedPitch = (m_fixPitchRadius - m_innerRadius) / m_innerPitch;
   m_halfAngle     = 91.0 * degree;
   m_quarterAngle  = .5 * m_halfAngle;
   
@@ -157,14 +164,14 @@ StatusCode DeVelo::initialize() {
                       asin( m_innerTiltRadius / m_phiBoundRadius );
   m_phiOuterTilt    = m_phiAtBoundary + m_outerTilt;
   m_phiPitchInner   = 2.* m_halfAngle / m_nbPhiInner;
-  m_phiPitchOuter   = 2.* m_halfAngle / (2048. - m_nbPhiInner);
+  m_phiPitchOuter   = 2.* m_halfAngle / (nbStrips() - m_nbPhiInner);
 
   double phi = m_phiOuterTilt - asin( m_outerTiltRadius / m_outerRadius );
-  loging << MSG::INFO
-      << "Phi (degree) inner "    << m_phiOrigin / degree
-      << " at boundary " << m_phiAtBoundary / degree
-      << " and outside " << phi / degree
-      << endreq;
+
+  loging << "Phi (degree) inner "    << m_phiOrigin / degree
+         << " at boundary " << m_phiAtBoundary / degree
+         << " and outside " << phi / degree
+         << endreq;
 
  
 /**  
@@ -209,17 +216,17 @@ StatusCode DeVelo::initialize() {
               inVeto = false;
               index  = 0;
             }
-            if ( typeStr == "RLeft" ) {
+            if ( typeStr == "RRigh" ) {
               type = 0;
-            } else if ( typeStr == "RRigh" ) {
+            } else if ( typeStr == "RLeft" ) {
               type = 1;
-            } else if ( typeStr == "Phi1L" ) {
+            } else if ( typeStr == "PhiUR" ) {
               type = 2;
-            } else if ( typeStr == "Phi1R" ) {
+            } else if ( typeStr == "PhiUL" ) {
               type = 3;
-            } else if ( typeStr == "Phi2L" ) {
+            } else if ( typeStr == "PhiDR" ) {
               type = 4;
-            } else if ( typeStr == "Phi2R" ) {
+            } else if ( typeStr == "PhiDL" ) {
               type = 5;
             }
           }
@@ -245,7 +252,7 @@ StatusCode DeVelo::initialize() {
         }
 
         sprintf( line, "Sensor %2d ", sensor->number() );
-        loging << MSG::INFO << line << typeStr;
+        loging << line << typeStr;
         sprintf( line, "(%d) z=%7.2f ", sensor->type(), sensor->z() );
         loging << line;
 
@@ -257,39 +264,30 @@ StatusCode DeVelo::initialize() {
 
     // build the list of Phi associated to R, in principle both PHI of the 
     // station due to the dog-leg shape.
-    // But for now on (phi and R are half circles), use only the closest
+
     for ( unsigned int sR = firstInStation ; m_sensor.size() > sR ; sR++ ) {
       if ( isRSensor( sR )  ) {
-        double bestZ = 10000.;
-        int    bestP ;
         for ( unsigned int sP = firstInStation; m_sensor.size() > sP; sP++ ) {
           if ( !isRSensor( sP )  ) {
-            if ( bestZ > fabs( m_sensor[sR]->z() - m_sensor[sP]->z() )) {
-              bestZ = fabs( m_sensor[sR]->z() - m_sensor[sP]->z() );
-              bestP = sP;
-            }
+            m_sensor[sR]->associate( sP );
           }
         }
-        m_sensor[sR]->associate( bestP );
       }
     }
 
   }
 
-  //=======================================================================
-  // Build the list of radius for the R strips. Only for 1024 strips...
-  //=======================================================================
-  m_rStrip.clear();
-  double radius;
-  double center = 0.5;
-  int dum;
-  
-  for ( int iR=0 ; 1024 > iR ; iR++ ) {
-    radius = rOfStrip( center, dum );
-    m_rStrip.push_back( radius );
-    center += 1.;
-  }
+  // Build the list of radius for the R strips. In fact the boundaries.
 
+  m_rStrip.clear();
+  
+  double radius = m_innerRadius;
+  m_rStrip.push_back( radius );
+  
+  while( m_outerRadius > radius ){
+    radius += rPitch( radius );
+    m_rStrip.push_back( radius );
+  }
   m_zVertex = 0;   // default value.
 
   return sc;
@@ -381,14 +379,19 @@ double DeVelo::stripNumberByType( int type,
       int zone  = (int) ( ( phi + m_halfAngle ) / m_quarterAngle );
       if ( 4 > zone ) {
         if ( (m_innerRadius < radius ) && ( m_outerRadius > radius ) ) {
-          if ( m_fixPitchRadius > radius ) {
-            strip = ( radius - m_innerRadius ) / m_innerPitch;
-            pitch = m_innerPitch;
-          } else {
-            strip = log( 1. + m_pitchSlope * (radius - m_fixPitchRadius) / 
-                         m_innerPitch ) / m_logPitchStep + m_nbRFixedPitch;
-            pitch = m_innerPitch +  m_pitchSlope * (radius - m_fixPitchRadius);
+          int ifst = 0;
+          int ilst = m_rStrip.size()-1;
+          while ( 1 < ilst-ifst ) {
+            int imed = (ifst+ilst)/2;
+            if ( m_rStrip[imed] < radius ) {
+              ifst = imed;
+            } else {
+              ilst = imed;
+            }
           }
+          pitch = m_rStrip[ilst]- m_rStrip[ifst];
+          strip = ifst + ( radius - m_rStrip[ifst] ) / pitch;
+          
           if ( m_nbRInner < strip ) {
             strip += m_nbRInner;            // get space for second inner part
           } else {
@@ -404,32 +407,29 @@ double DeVelo::stripNumberByType( int type,
     }
     return strip;
   }
-  // ** This is a phi sensor. Can symmetrized to handle th eother stereo...
+  // ** This is a phi sensor. Use symmetry to handle the second stereo...
 
-  if ( 3 < type ) {
-    phi = - phi;
-  }
+  if ( 3 < type ) { phi = - phi; }
   
   phi += halfpi;   // phi is now in a range close to 0-180 degree
 
   if ( (m_innerRadius < radius ) && ( m_outerRadius > radius ) ) {
+    phi = phi - phiOffset( radius );
     if ( m_phiBoundRadius > radius ) {
-      phi   = phi - ( m_phiInnerTilt - asin( m_innerTiltRadius / radius ) );
       strip = phi / m_phiPitchInner;
       pitch = m_phiPitchInner * radius;
       if ( 0 > strip) {
-        strip = 2048 + m_nbPhiInner + strip;
+        strip = -2.; 
       } else if (m_nbPhiInner < strip) {
-        strip = 2048 + strip - m_nbPhiInner;
+        strip = -2.; 
       }
     } else {
-      phi   = phi - ( m_phiOuterTilt - asin( m_outerTiltRadius / radius ) );
       strip = phi / m_phiPitchOuter + m_nbPhiInner;
       pitch = m_phiPitchOuter * radius;
       if ( m_nbPhiInner > strip) {
-        strip = 4096 - m_nbPhiInner + strip;
-      } else if (2048 < strip ) {
-        strip = m_nbPhiInner + strip;
+        strip = -2.; 
+      } else if ( nbStrips() < strip ) {
+        strip = -2.; 
       }
     }
   }
@@ -439,34 +439,29 @@ double DeVelo::stripNumberByType( int type,
 //=============================================================================
 // Returns the (local) radius of the specified strip, and also its zone.
 //=============================================================================
-double DeVelo::rOfStrip( double strip, int& phiZone ) {
+double DeVelo::rOfStrip( double strip, int& rZone ) {
   double localStrip = strip;
-  phiZone = 0;
+  rZone = 0;
   if ( 1024. <= localStrip ) {
     localStrip -= 1024.;
-    phiZone = 3;
+    rZone = 3;
   }
   
   if ( m_nbRInner <= localStrip ) {     // two zones in the central part
-    localStrip -= (int)m_nbRInner;
-    phiZone += 1;
+    localStrip = localStrip - m_nbRInner;
+    rZone += 1;
     if  ( m_nbRInner <= localStrip ) {
-      phiZone += 1;
+      rZone += 1;
     }
   }
-  double localR;
-  if ( m_nbRFixedPitch > localStrip ) {
-    localR = m_innerRadius + localStrip * m_innerPitch;
-  } else {
-    double dStrip = localStrip-m_nbRFixedPitch;
-    localR = m_fixPitchRadius + m_innerPitch * 
-      ( exp(dStrip * m_logPitchStep) - 1. ) / m_pitchSlope;
-  }
-  return  localR;
+
+  int    rBin  = (int) localStrip;
+  double delta = localStrip - (double)rBin;
+  return  m_rStrip[rBin] * (1-delta) + delta * m_rStrip[rBin+1];
 }
-  
+
 //=========================================================================
-//  Return true if the two phiZones are matching. This depends on the
+//  Return true if the two rZones are matching. This depends on the
 //  R sensor geometry
 //=========================================================================
 bool DeVelo::matchingZones ( int zone1, int zone2 ) {
@@ -491,29 +486,12 @@ bool DeVelo::matchingZones ( int zone1, int zone2 ) {
 //=========================================================================
 double DeVelo::phiOfStrip ( double strip, double radius, int sensorNb ) {
 
-  // This version codes unphysical strips as SICBMC generates hits in semi-
-  // circular sensor, not taking into accound the real Phi sensor shape. The 
-  // non-official strips are coded as 2048 plus the strip number of the 
-  // sensor which covers this region in the next half station.
-
-  double stripLocal = strip;
-  if ( 2048. <= strip ) {
-    stripLocal -= 2048.;
-  }
-  
   double phiLocal;
-  if ( stripLocal < m_nbPhiInner ) {
-    phiLocal = (stripLocal * m_phiPitchInner) + 
-               m_phiInnerTilt - asin( m_innerTiltRadius / radius );
-    if ( 2048. <= strip ) {  
-      phiLocal = phiLocal-2*m_halfAngle; 
-    }
+
+  if ( strip < m_nbPhiInner ) {
+    phiLocal = (strip * m_phiPitchInner) + phiOffset( radius );
   } else {
-    phiLocal = ((stripLocal-m_nbPhiInner) * m_phiPitchOuter) + 
-               m_phiOuterTilt - asin( m_outerTiltRadius / radius );
-    if ( 2048. <= strip ) {  
-      phiLocal = phiLocal-2*m_halfAngle; 
-    }
+    phiLocal = ((strip-m_nbPhiInner) * m_phiPitchOuter) + phiOffset( radius );
   }
   phiLocal -= halfpi;
 
@@ -544,9 +522,10 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
   }
 
   // check that the sensor types are valid
-  int phiType =  m_sensor[PhiSensorNumber]->type();
+  int rType   = m_sensor[RSensorNumber]->type();
+  int phiType = m_sensor[PhiSensorNumber]->type();
   
-  if ( ( 1 < m_sensor[RSensorNumber]->type() ) || ( 2 > phiType ) ) {
+  if ( ( 1 < rType ) || ( 2 > phiType ) ) {
     return false;
   }
 
@@ -561,12 +540,12 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
   bool status = true;
   
   // Compute R from strip. Could be tabulated for performance, if needed.
-  int    phiZone;
-  double localR = rOfStrip( RStripNumber, phiZone );
+  int    rZone;
+  double localR = rOfStrip( RStripNumber, rZone );
   
   // check some matching in the detector region.
   double rAtPhi = localR * ( zPhi - m_zVertex ) / ( zR - m_zVertex );
-  double tolPhiBoundary = 5*m_innerPitch;
+  double tolPhiBoundary = 5. * m_innerPitch;
 
   // If the local computed slope is too big, keep R constant...
   if ( 0.4 < localR / fabs( zR - m_zVertex ) ) { 
@@ -574,60 +553,70 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
     tolPhiBoundary = .5 * fabs( zPhi-zR );   // Don't know the angle -> 45 deg
   }
 
-  double myPhiStrip = PhiStripNumber;
-  if ( 2048. <= myPhiStrip ) myPhiStrip -= 2048.;
- 
-  // Coherence in the Phi detector region, with some tolerance of 1 strip
+  if ( m_innerRadius > rAtPhi ) { return false; }
+  if ( m_outerRadius < rAtPhi ) { return false; }
+
+  // Coherence in the Phi detector region, with some tolerance
 
   if ( m_phiBoundRadius + tolPhiBoundary < rAtPhi ) {
-    if ( myPhiStrip < m_nbPhiInner ) {
+    if ( PhiStripNumber < m_nbPhiInner ) {
       return false;
     }
   } else if ( m_phiBoundRadius - tolPhiBoundary > rAtPhi ) {
-    if ( myPhiStrip > m_nbPhiInner ) {
+    if ( PhiStripNumber > m_nbPhiInner ) {
       return false;
     }
   }
 
   double phiLocal = phiOfStrip( PhiStripNumber, rAtPhi, PhiSensorNumber );
+
   double phiMin = phiLocal + 0.02;    // Tolerance for tests
   double phiMax = phiLocal - 0.02;    // tolerance for tests
+
+  // For unusual pairing, rotate Phi ranges to match the R zone...
+  if ( ( phiType + rType )%2 != 0 ) {
+    if ( phiLocal < 0 ) {
+      phiMin += pi;
+      phiMax += pi;
+    } else {
+      phiMin -= pi;
+      phiMax -= pi;
+    }
+  }
   
   // phi is in the +- m_halfAngle range. Test for R compatibility
 
-  if ( 0 == phiZone  ) {
+  if ( 0 == rZone  ) {
     if ( (-m_halfAngle > phiMin) || ( -m_quarterAngle < phiMax ) ){
       return false;
     }
-  } else if ( 1 == phiZone ) {
+  } else if ( 1 == rZone ) {
     if ( (-m_quarterAngle > phiMin) || ( 0 < phiMax )  ) {
       return false;
     }
-  } else if ( 2 == phiZone ) {
+  } else if ( 2 == rZone ) {
     if ( (-m_halfAngle > phiMin) || ( 0 < phiMax ) ) {
       return false;
     }
-  } else if ( 3 == phiZone ) {
+  } else if ( 3 == rZone ) {
     if ( (0 > phiMin) || (m_quarterAngle < phiMax)  ) {
       return false;
     }
-  } else if ( 4 == phiZone ) {
+  } else if ( 4 == rZone ) {
     if ( (m_quarterAngle > phiMin) || (m_halfAngle < phiMax) ) {
       return false;
     }
-  } else if ( 5 == phiZone ) {
+  } else if ( 5 == rZone ) {
     if ( (0 > phiMin) || (m_halfAngle < phiMax) ) {
       return false;
     }
   }
   
-  if ( 0 == phiType%2 ) {
-    phiLocal += pi;
-  }
+  //=== put back in the proper space location 
+  if ( 0 == phiType%2 ) { phiLocal += pi;  }
 
-  point.setZ( zR );
-  point.setX( localR * cos( phiLocal ) );
-  point.setY( localR * sin( phiLocal ) );
+  point.set( localR * cos(phiLocal),  localR * sin(phiLocal), zR );
+
   // Here we should convert a local point to a global point, using the 
   // toGlobal method of the R sensor detector element... Not now !
 
@@ -645,13 +634,8 @@ bool DeVelo::getSpacePoint( unsigned int RSensorNumber,
 //=========================================================================
 double DeVelo::originToPhiDistance ( double strip, int sensorNb ) {
 
-  double stripLocal = strip;
-  if ( 2048. <= strip ) {
-    stripLocal -= 2048.;
-  }
-  
   double distance;
-  if ( stripLocal < m_nbPhiInner ) {
+  if ( strip < m_nbPhiInner ) {
     distance = m_innerTiltRadius ;
   } else {
     distance = m_outerTiltRadius ;
@@ -667,22 +651,11 @@ double DeVelo::originToPhiDistance ( double strip, int sensorNb ) {
 //=========================================================================
 double DeVelo::phiDirectionOfStrip ( double strip, int sensorNb ) {
 
-  double stripLocal = strip;
-  if ( 2048. <= strip ) {
-    stripLocal -= 2048.;
-  }
-  
   double phiLocal;
-  if ( stripLocal < m_nbPhiInner ) {
-    phiLocal = (stripLocal * m_phiPitchInner) + m_phiInnerTilt;
-    if ( 2048. <= strip ) {  
-      phiLocal = phiLocal-2*m_halfAngle; 
-    }
+  if ( strip < m_nbPhiInner ) {
+    phiLocal = (strip * m_phiPitchInner) + m_phiInnerTilt;
   } else {
-    phiLocal = ((stripLocal-m_nbPhiInner) * m_phiPitchOuter) + m_phiOuterTilt;
-    if ( 2048. <= strip ) {  
-      phiLocal = phiLocal-2*m_halfAngle; 
-    }
+    phiLocal = ((strip-m_nbPhiInner) * m_phiPitchOuter) + m_phiOuterTilt;
   }
   phiLocal -= halfpi;
 
@@ -692,3 +665,101 @@ double DeVelo::phiDirectionOfStrip ( double strip, int sensorNb ) {
   if ( 0 == phiType%2 ) { phiLocal += pi;       }
   return phiLocal;
 }
+
+//=========================================================================
+//  Return the 'numAway' channelIDfrom the specified one. 
+//=========================================================================
+VeloChannelID DeVelo::neighbour ( const VeloChannelID& chan, 
+                                  int numAway, 
+                                  bool& valid) {
+  int strip = chan.strip();
+  int newStrip = strip + numAway;
+  valid = true;
+  
+  if ( isRSensor( chan.sensor() ) ) {
+    if ( 0 < numAway ) {
+      if ( (m_nbRInner > strip) && (m_nbRInner < newStrip) ) {
+        newStrip += (int)m_nbRInner;
+      } else if ( ( 1024 > strip ) && (1024 <= newStrip ) ) {
+        valid = false;
+      } else if ( (m_nbRInner+1024 > strip) && (m_nbRInner+1024 < newStrip) ) {
+        newStrip += (int)m_nbRInner;
+      } else if ( 2048 <= newStrip ) {
+        valid = false;
+      }
+    } else {
+      if ( 0 > newStrip ) {
+        valid = false;
+      } else if ( (m_nbRInner < strip) && (m_nbRInner > newStrip) ) {
+        valid = false;
+      } else if ( ( 1024 <= strip ) && (1024 > newStrip ) ) {
+        valid = false;
+      } else if ( (m_nbRInner+1024 < strip) && 
+                  (m_nbRInner+1024 <= newStrip) ) {
+        valid = false;
+      }
+    }
+  } else {
+    if ( 0 < numAway ) {
+      if ( ( m_nbPhiInner > strip ) && ( m_nbPhiInner <= newStrip ) ) {
+        valid = false;
+      } else if ( nbStrips() <= newStrip ) {
+        valid = false;
+      }
+    } else {
+      if ( 0 > newStrip ) {
+        valid = false;
+      } else if ( (m_nbPhiInner <= strip) && ( m_nbPhiInner > newStrip ) ) {
+        valid = false;
+      }
+    }
+  }
+  if ( valid ) {
+    return VeloChannelID( chan.sensor(), newStrip );
+  }
+  return VeloChannelID( chan.sensor(), 0 );
+}
+
+//=========================================================================
+//  Returns the distance between these two channels.
+//=========================================================================
+int DeVelo::neighbour ( const VeloChannelID& entryChan,
+                        const VeloChannelID& exitChan,
+                        bool& valid ) {
+  valid = true;
+  if ( entryChan.sensor() != exitChan.sensor() ) {
+    valid = false;
+    return -1;
+  }
+  int str1 = entryChan.strip();
+  int str2 = exitChan.strip();
+  int dist = str2 - str1;
+  if ( str1 > str2 ) {
+    str2 = entryChan.strip();
+    str1 = exitChan.strip();
+  }
+  
+  if ( isRSensor( entryChan.sensor() ) ) {
+    if ( (1024 > str1) && (1024 <= str2) ) valid = false;
+    str1 = str1 % 1024;
+    str2 = str2 % 1024;
+    if ( (m_nbRInner > str1) && (m_nbRInner <= str2 ) ) {
+      if ( 2*m_nbRInner <= str2  ) {
+        if ( 0 < dist ) {
+          dist -= (int) m_nbRInner;
+        } else {
+          dist += (int) m_nbRInner;
+        }
+      } else {
+        valid = false;
+      }
+    }
+  } else {
+    if ( ( m_nbPhiInner > str1 ) && ( m_nbPhiInner <= str2 ) ) {
+      valid = false;
+    }
+  }
+  if ( valid ) return dist;
+  return -1;  
+}
+//=========================================================================
