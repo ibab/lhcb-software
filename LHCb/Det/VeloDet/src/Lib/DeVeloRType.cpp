@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.4 2004-02-17 21:37:13 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.5 2004-02-24 18:26:46 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -94,7 +94,7 @@ StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
 {
   MsgStream msg(msgSvc(), "DeVeloRType");
   HepPoint3D localPoint(0,0,0);
-  StatusCode sc = DeVeloSensor::globalToLocal(point,localPoint);
+  StatusCode sc = this->globalToLocal(point,localPoint);
 
   if(!sc.isSuccess()) return sc;
 
@@ -137,19 +137,26 @@ StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
 //==============================================================================
 StatusCode DeVeloRType::isInside(const HepPoint3D& point)
 {
+  MsgStream msg(msgSvc(), "DeVeloRType");
   // check boundaries....  
   double radius=point.perp();
   if(m_innerActiveArea > radius || m_outerActiveArea < radius) {
+    msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
   // Dead region from bias line
   double y=point.y();
   if (m_phiGap > y && -m_phiGap < y) {
+    msg << MSG::VERBOSE << "Inside dead region from bias line " << y << endreq;
     return StatusCode::FAILURE;
   }
   // corner cut-offs
   bool isCutOff=this->isCutOff(point.x(),point.y());
-  if(isCutOff) return StatusCode::FAILURE;
+  if(isCutOff) {
+    msg << MSG::VERBOSE << "cut off: x,y " << point.x() << "," << point.y()
+        << endreq;    
+    return StatusCode::FAILURE;
+  }
   return StatusCode::SUCCESS;
 }
 //==============================================================================
