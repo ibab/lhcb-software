@@ -1,94 +1,67 @@
-! =============================================================================
-! CVS tag $Name: not supported by cvs2svn $ 
-! =============================================================================
-! $Id: release.notes,v 1.47 2002-05-07 12:21:33 ibelyaev Exp $
-! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
-! ============================================================================
-! 4 May 2002 - Vanya Belyaev
-! MAJOR redesing of ALL interfaces but it is still 100% "compatible" 
-! ALL objects, except GiGaSvc, converison services and converters are now 
-! "Tools", owned by GiGa Service
-! Thus ALL job otions must be changed like:
-!   AAA.bb = "some value";          
-! GiGaSvc.AAA.bb = "soem value" ;   // NOW
-! ============================================================================
+! >>>>>>>>>>>>>>>>>>>>>>>>> GiGa v8r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-! ============================================================================
-! 4 May 2002 - Vanya Belyaev
-! - src/component/GiGaSensDetBudget.h,.cpp 
-!   new class for evaluation of material budget.
-!   It is a special type of "sensitive detector", which 
-!   accumulates the  radiation lengths, passed by the particles
-!   per logical and/or physical volume and/or per material. The 
-!   configuration of the class has 3 boolean properties "Logical", 
-!   "Physical" and "Material". IN "finalize" method the sorted 
-!   material budget  tables are printed  
-! - GiGa/GiGaMap.h,GiGa/GiGaHashMap.h and GiGa/GiGaHash.h
-!   files imported from LHCb Calo Software to "hide" std::map and
-!   std::hash_map for MicroSoft C++ compiler 
-! ============================================================================
+! 20020507 - GiGa v8r0 - Vanya
+  MAJOR redesing of ALL interfaces but it is still 100% "compatible" 
+  ALL objects, except GiGaSvc, converison services and converters are now 
+  "Tools", owned by GiGa Service
+  Thus ALL job otions must be changed like:
+   AAA.bb = "some value";          
+   GiGaSvc.AAA.bb = "some value" ;   // NOW
 
-!=============================================================================
-! 1 May 2002 - v8r0 Vanya Belyaev
-! 1) Add errors/warnings/exceptions counters for major classes 
-!    (imported from LHCb Calo software)
-! 2) Decrease teh dependency form Run and Vis Managers, remove classes 
-!    form "public" places
-! 3) Fix some problems with user interafces   
-!=============================================================================
+! 20020503 - GiGa v8r0 Flr
+  - requirements - apply  new library patterns
+ 
+! 20020502 - GiGa v8r0 Vanya Belyaev
+ 1) Add errors/warnings/exceptions counters for major classes 
+    (imported from LHCb Calo software)
+ 2) Decrease teh dependency form Run and Vis Managers, remove classes 
+    form "public" places
+ 3) Fix some problems with user interafces   
 
-!=============================================================================
-! 24/04/2002 - v8r0 Vanya Belyaev
+! 20020424 - GiGa v8r0 Vanya Belyaev
   - add DEFINE_xxx and  IMPLEMENT_xxx macros to avoid notorious typing
-!=============================================================================
 
-!=============================================================================
-! 23/04/2002 - v8r0 Vanya Belyaev
+! 20020423 - GiGa v8r0 Vanya Belyaev
   - update for newer Gaudi & Geant4 versions 
-!=============================================================================
 
-!=============================================================================
-! 09/04/2002 - Vanya Belyaev
+! 20020409 - GiGa v8r0 Vanya Belyaev
   - minor changes mainly to increase a little bit the printout level 
-!=============================================================================
 
-!=============================================================================
-! 13/03/2002 - Ivan Belyaev
+! 20020313 - GiGa v8r0 Ivan Belyaev
   - fix interface for GiGaMagnetic field object 
-!=============================================================================
 
-!==========================================================================
-! 13/03/2002 - v7r1 Vanya 
+! >>>>>>>>>>>>>>>>>>>>>>>> GiGa v7r1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 20020313 - GiGa v7r1 Vanya 
+  update for newer Gaudi & Geant4 
+
+! >>>>>>>>>>>>>>>>>>>>>>> GiGa v7r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 20020122 - v7r0 Vanya 
 ! update for newer Gaudi & Geant4 
-!==========================================================================
 
-!==========================================================================
-! 22/01/2002 - v7r0 Vanya 
-! update for newer Gaudi & Geant4 
-!==========================================================================
+! >>>>>>>>>>>>>>>>>>>>>> GiGa v6r1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-!==========================================================================
 ! 20011008 - v6r1 Flr & S.Ponce
   src/component/GiGaSvc.cpp, GiGaSvcIGiGaSetUpSvc.cpp - include some G4 
      include file to please new compiler.
             
-!===========================================================================
+! >>>>>>>>>>>>>>>>>>>>> GiGa v6 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 ! 20010801    Vanya Belyaev
      redesign and reimplementation of GiGaRunManager class
-!===========================================================================
+
 ! 20010726    Vanya Belyaev
     (1) add several concrete Run Action components 
     (2) improve the printout for all base classes 
     (3) add Sensitive Detector component GiGaSensDetPrint   
 
-!===========================================================================
 ! 20010727    Vanya Belyaev
      add new abstract interface IGiGaRunAction 
  
-!===========================================================================
 ! 20010724    Vanya Belyaev 
      src/component/GiGaEventActionCommand.h/.cpp 
       - new "component" Event actions.
@@ -96,14 +69,12 @@ Package manager : Vanya Belyaev
         Geant4 commands at the begin of each event and at the 
         end of each event  
 
-!===========================================================================
 ! 20010724    Vanya Belyaev 
 
      1) Remove ALL conversions from GiGa!
      2) Introduce new interface IGiGaGeoSrc - minimal source of geometry 
         information. 
 
-!===========================================================================
 ! 20010723    Vanya Belyaev 
      src/component/GiGaTrackActionSequence.h/.cpp
       - a new concrete Tracking Actions, it is just a sequence of 
@@ -112,7 +83,6 @@ Package manager : Vanya Belyaev
       - a new concrete Event Actions, it is just a sequence of 
         other event actions 
 
-!===========================================================================
 ! 20010723    Vanya Belyaev 
      GiGa/GiGaUtil.h 
      three new useful utilities for deletion of object
@@ -120,7 +90,6 @@ Package manager : Vanya Belyaev
           GiGaUtil::Eraser     - templated class 
           GiGaUtil::Delete_Ptr - templated function
  
-!===========================================================================
 ! 20010723   v Vanya Belyaev 
      GiGa/GiGaUtil.h
      src/Lib/GiGaUtil.cpp 
@@ -132,7 +101,6 @@ Package manager : Vanya Belyaev
        - new type of Step Action - it is just a sequence of all other 
          Step Actions  (a'la  CMS "action units") 
   
-!===========================================================================
 ! 20010721   v6 Vanya Belyaev 
    move several interfaces to make the package
    interdependencies weaker 
