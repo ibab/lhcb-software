@@ -1,4 +1,18 @@
-# $Id: HISTORY,v 1.8 2001-11-26 19:21:16 andreav Exp $
+# $Id: HISTORY,v 1.9 2001-11-27 18:57:36 andreav Exp $
+
+------------------------------------------------
+27.11.2001 Ex/DetCondExample v2 (LINUX only)
+------------------------------------------------
+A few more changes before including my detector data service in GaudiSvc.
+-> the event time is not passed in an address from the DataSvc to the CnvSvc
+   > remove IConditionAddress
+   > ConditionsDBCnvSvc now reads the event time from the DetDataSvc
+   > ConditionDataSvc::updateObject now just checks validity before delegating
+-> move interface IDetDataSvc (formerly IConditionDataSvc) to GaudiKernel 
+   > needed to retrieve the event time within the ConditionsDBCnvSvc
+   > the setEventTime method is temporary (eventually: use the IncidentService)
+-> store ConditionsDBAddress private data as GenericAddress private data
+Private tag: h20011127.
 
 ------------------------------------------------
 26.11.2001 Ex/DetCondExample v2 (LINUX only)
