@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v5r3>2004-03-15 Boole v5r3</A></H1><PRE>
+</PRE><H1><A NAME=v5r3>2004-03-18 Boole v5r3</A></H1><PRE>
 
 Requires XmlDDDB v22r0 or greater
 Requires data produced by Gauss v14r3 or greater
@@ -22,6 +22,8 @@ Requires data produced by Gauss v14r3 or greater
     (GaudiSvc v11r4, ParamFiles v3r4)
   - Remove fix for Rich energy deposit, now fixed since Gauss v14r3
     (RichReadout v1r6)  
+  - Associator tools now inherit from GaudiTool. New printout for tools that
+    are not finalised (GaudiTools v8r1, LHCbKernel v4r4)
 
 >>> Temporarily disable TrgVeloTT in L1WithTrg.opts to allow porting to 
     new ST L1Buffer
