@@ -1,5 +1,5 @@
 package GaussSys
-version v14r0
+version v14r1
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v14r0	Sim
+use Gauss		v14r1	Sim
 
 # Generator stuff ...
 use EvtGen              v5r0    Gen

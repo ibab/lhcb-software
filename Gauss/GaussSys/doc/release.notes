@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!========================== GaussSys v14r1 2004-01-29 =====================
+! 2004-01-29 - Florence RANJARD
+ - Gauss v14r1 uses Gaudi v14r1, LHCb v15r1 XmlDDDB v20r1
+
 !=========================== GaussSys v14r0 2004-01-22 ===================
 ! 2004-01-22 - Florence RANJARD
  - Gauss v14r0 uses EvtGen v5r0, Geant4 6.0, LHCb v15r0, Gaudi v14r0
