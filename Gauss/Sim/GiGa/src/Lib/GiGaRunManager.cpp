@@ -1,8 +1,11 @@
-// $Id: GiGaRunManager.cpp,v 1.11 2002-01-22 18:20:53 ibelyaev Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.12 2002-02-12 17:10:28 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/01/22 18:20:53  ibelyaev
+//  Vanya: update for newer versions of Gaudi and Geant4
+//
 // Revision 1.10  2001/08/12 15:42:49  ibelyaev
 // improvements with Doxygen comments
 //
@@ -173,6 +176,14 @@ StatusCode GiGaRunManager::processTheEvent()
    ///
   set_evt_Is_Processed( true  ); 
   set_evt_Is_Prepared ( false ); 
+  ///
+  if( 0 != m_g4UIsession && !uis_Is_Started() )
+    { 
+      ///
+      set_uis_Is_Started( true  ) ; 
+      m_g4UIsession->SessionStart() ; 
+      set_uis_Is_Started( false ) ; 
+    } 
   ///
   Print("Geant4 Event is processed successfully"); 
   ///

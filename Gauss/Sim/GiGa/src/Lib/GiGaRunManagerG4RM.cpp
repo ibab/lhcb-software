@@ -1,8 +1,11 @@
-// $Id: GiGaRunManagerG4RM.cpp,v 1.3 2002-01-22 18:20:53 ibelyaev Exp $ 
+// $Id: GiGaRunManagerG4RM.cpp,v 1.4 2002-02-12 17:10:29 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/01/22 18:20:53  ibelyaev
+//  Vanya: update for newer versions of Gaudi and Geant4
+//
 // Revision 1.2  2001/08/12 15:42:49  ibelyaev
 // improvements with Doxygen comments
 //
@@ -50,7 +53,7 @@ void GiGaRunManager::BeamOn( int         n_event       ,
 };
 
 // ============================================================================
-// Initialize the geometry 
+// Initialize the geometry
 // ============================================================================
 void GiGaRunManager::InitializeGeometry()
 {
