@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.1.1.1 2003-04-04 09:10:14 asatta Exp $
+// $Id: MuonBackground.h,v 1.2 2003-06-12 16:15:18 asatta Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -9,7 +9,7 @@
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/IAlgManager.h"
-#include "GaudiKernel/IProperty.h"                                                                                    
+#include "GaudiKernel/IProperty.h"                                             
 #include "GaudiKernel/IAlgorithm.h"
 #include "GaudiKernel/PropertyMgr.h"
  
@@ -97,10 +97,14 @@ public:
                                       float& zentry,float& zexit);
   float max(float a,float b);
   float min(float a,float b);
+  int howManyHit( float floatHit);
   
 protected:
 
 private:
+  int m_type;  
+  std::string m_typeOfBackground; 
+  
   std::vector<double> m_safetyFactor;  
   int m_stationNumber;
   std::vector<int> m_numberOfGaps;
@@ -108,6 +112,12 @@ private:
   int m_regionNumber;
   int m_partition;  
   int m_numberOfEventsNeed;
+  
+
+  float m_luminosity;
+  std::vector<double> m_flatSpilloverHit;
+  int m_numberOfFlatSpill;
+  
   std::vector<std::vector <float> > containerOfFirstGapPosition;
   static std::string spill[5];
   static std::string numreg[4];
@@ -131,14 +141,13 @@ private:
   std::vector<MuBgDistribution*> m_logtimevsradial;  
   std::vector<MuBgDistribution*> m_lintimevsradial;
   std::vector<MuBgDistribution*> m_hitgap;
-  
+  float m_luminosityFactor; 
   IMuonTileXYZTool* m_pMuonTileXYZ ;
  
   //only to test the histos
   IHistogram1D * m_pointer1D[20];
   IHistogram2D * m_pointer2D[20];
-  
-
+  Rndm::Numbers* m_flatDistribution;
 };
 
 

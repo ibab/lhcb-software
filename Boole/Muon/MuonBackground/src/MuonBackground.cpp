@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.10 2003-05-20 12:03:23 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.11 2003-06-12 16:15:18 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,7 @@ std::string MuonBackground::numsta[5]=
 {"Hits","ChamberNoiseHits","FlatSpilloverHits","BackgroundHits"};
 
 
-
+enum BackgroundType {LowEnergy=0,FlatSpillover};
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -72,7 +72,10 @@ MuonBackground::MuonBackground( const std::string& name,
   declareProperty("HistogramsMeaning" , m_histoName) ; 
   declareProperty("SafetyFactors" , m_safetyFactor ) ; 
   declareProperty("BXTime" , m_BXTime=25.0 ) ; 
-
+  declareProperty("Luminosity" , m_luminosity=2.0 ) ;
+  declareProperty("AverageFlatHits" , m_flatSpilloverHit ) ;
+  declareProperty("FlatSpillNumber" , m_numberOfFlatSpill=1 ) ;
+  declareProperty("BackgroundType" , m_typeOfBackground ) ;
 }
 
 //=============================================================================
@@ -116,59 +119,82 @@ StatusCode MuonBackground::initialize() {
   m_lintimevsradial.resize(m_maxDimension);
   m_hitgap.resize(m_maxDimension);
  
-     initializeParametrization();
+  initializeParametrization();
+  m_flatDistribution =new Rndm::Numbers; 
+  m_flatDistribution->initialize(randSvc(), Rndm::Flat(0.0,1.0));
+  msg<<MSG::DEBUG<<" type input "<<m_typeOfBackground<<endreq;
+    msg<<MSG::DEBUG<<" safety factor "<<m_safetyFactor[0]<<
+	" "<<m_safetyFactor[1]<<" "<<m_safetyFactor[2]<<" "<<
+	m_safetyFactor[3]<<" "<<m_safetyFactor[4]<<endreq;
+
+  if(m_typeOfBackground=="LowEnergy"){
+    m_type=LowEnergy;    
+  }else if(m_typeOfBackground=="FlatSpillover"){
+    m_type=FlatSpillover;        
+  }
+  msg << MSG::DEBUG <<" type "<< m_type<<endreq;
+  if(m_type==LowEnergy){    
+
+    //     for (int y=0;y<5;y++){
+    //   for (int kk=0;kk<4;kk++){
+    //     int hh;
+    //     hh=y*4+kk;
+    //     char label[10]; 
+    //     if(hh<9)sprintf(label,"%1i",hh+1);
+
+    //    if(hh>=9)sprintf(label,"%2i",hh+1);
  
-     //to test
-//     for (int y=0;y<5;y++){
-//       for (int kk=0;kk<4;kk++){
-//         int hh;
-//         hh=y*4+kk;
-//         char label[10];
-//         if(hh<9)sprintf(label,"%1i",hh+1);
-//         
-//        if(hh>=9)sprintf(label,"%2i",hh+1);
-//        
-//        //msg<<MSG::INFO<<label<<endreq;
-//        std::string ap="STAT/";
-//        
-//        std::string label2=ap+label;
-//        
-//        m_pointer1D[hh]=
-//          histoSvc()->book( label, "HT multiplicity", 50, 0., 50. );  
-//        m_pointer2D[hh]=
-//          histoSvc()->book( label2, "ADD bk vs HT multiplicity", 
-//                            50, 0., 50., 50 ,0., 50. );  
-//       }    
-//     }
-     IAlgManager* algmgr;
-     sc = service( "ApplicationMgr", algmgr );
-     if( !sc.isSuccess() ) {
-       msg << MSG::ERROR << "Failed to locate algManager i/f of AppMgr" 
-           <<endmsg;
-       return sc;
-     }   
-     IAlgorithm*  spillAlg;
-     sc = algmgr->getAlgorithm( "SpillOverAlg", spillAlg );
-     if( !sc.isSuccess() ) {
-       msg << MSG::DEBUG << "SpillOverAlg not found" << endmsg;
-       m_readSpilloverEvents =0;
-     }
-     else {
-       IProperty* spillProp;
-       spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
-       IntegerProperty numPrev = 0;
-       IntegerProperty numNext = 0;
-       numPrev.assign( spillProp->getProperty("SpillOverPrev") );
-       numNext.assign( spillProp->getProperty("SpillOverNext") ); 
-       m_readSpilloverEvents= numPrev + numNext;
-       msg << MSG::DEBUG << "SpillOverAlg " << numPrev << numNext<<endreq;
-       // Release the interfaces that are no longer needed  
-       spillAlg->release();
-     }
-     algmgr->release();
-     msg << MSG::DEBUG << "number of spillover events read from aux stream "
-         << m_readSpilloverEvents << endmsg;  
-     return StatusCode::SUCCESS;
+        //msg<<MSG::INFO<<label<<endreq; 
+    //    std::string ap="STAT/";
+
+    //    std::string label2=ap+label;
+
+    //    m_pointer1D[hh]=
+    //      histoSvc()->book( label, "HT multiplicity", 50, 0., 50. );
+    //    m_pointer2D[hh]=
+    //      histoSvc()->book( label2, "ADD bk vs HT multiplicity",
+    //                        50, 0., 50., 50 ,0., 50. );
+    //   }
+    // }
+
+    IAlgManager* algmgr;
+    sc = service( "ApplicationMgr", algmgr );
+    if( !sc.isSuccess() ) {
+      msg << MSG::ERROR << "Failed to locate algManager i/f of AppMgr" 
+          <<endmsg;
+      return sc;
+    }   
+    IAlgorithm*  spillAlg;
+    sc = algmgr->getAlgorithm( "SpillOverAlg", spillAlg );
+    if( !sc.isSuccess() ) {
+      msg << MSG::DEBUG << "SpillOverAlg not found" << endmsg;
+      m_readSpilloverEvents =0;
+    }
+    else {
+      IProperty* spillProp;
+      spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
+      IntegerProperty numPrev = 0;
+      IntegerProperty numNext = 0;
+      numPrev.assign( spillProp->getProperty("SpillOverPrev") );
+      numNext.assign( spillProp->getProperty("SpillOverNext") ); 
+      m_readSpilloverEvents= numPrev + numNext;
+      msg << MSG::DEBUG << "SpillOverAlg " << numPrev << numNext<<endreq;
+      // Release the interfaces that are no longer needed  
+      spillAlg->release();
+    }
+    algmgr->release();
+    msg << MSG::DEBUG << "number of spillover events read from aux stream "
+        << m_readSpilloverEvents << endmsg;  
+  }else if(m_type==FlatSpillover){
+    m_readSpilloverEvents=1;
+    m_luminosityFactor=m_luminosity/2.0;   
+    //    m_readSpilloverEvents=m_numberOfFlatSpill;    
+  }
+  
+  
+    
+
+  return StatusCode::SUCCESS;
 };
 
 //=============================================================================
@@ -178,13 +204,9 @@ StatusCode MuonBackground::execute() {
 
   MsgStream  msg( msgSvc(), name() );
   msg << MSG::DEBUG << "==> Execute" << endreq;
-  //  MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
-
   for (int ispill=0;ispill<=m_readSpilloverEvents;ispill++){    
     calculateNumberOfCollision(ispill);  
     if(!collisions())return  StatusCode::SUCCESS;
-
-    // KeyedContainer<MCMuonHit>* hitsContainer[m_regionNumber*m_stationNumber];
     KeyedContainer<MCMuonHit>* hitsContainer[DIMENSIONMAX]; // fix for VC6
     {for(int station=0;station<m_stationNumber;station++){
       for(int region=0;region<m_regionNumber;region++){          
@@ -192,49 +214,78 @@ StatusCode MuonBackground::execute() {
           =new KeyedContainer<MCMuonHit>();
       }
     }
-    } // Fix for VC6 scoping bug
-     
+    }// Fix for VC6 scoping bug
+    
     m_resultPointer = new std::vector<std::vector<int> > (collisions()) ;
-    calculateStartingNumberOfHits(ispill);    
-        for(int coll=0;coll<collisions();coll++){      
-    //for(int coll=0;coll<1;coll++){     
-      for(int station=0;station<m_stationNumber;station++){
-        
-        //        std::string path="/Event"+spill[ispill]+
-        // "/MC/Muon/"+numsta[k]+
-        //  "/R"+numreg[s]+"/"+TESPathOfHitsContainer[container];
-        
-                for (int multi=0;multi<m_gaps;multi++){
-        //        for (int multi=0;multi<1;multi++){
-          int index=station*m_gaps+multi;
-          int startingHits=((*m_resultPointer)[coll])[index];
-          // extract number of hits to be added
-          int hitToAdd=0;
-          
-          if(numsta[station]=="M1"){
-            hitToAdd=(int)(startingHits*(m_safetyFactor[station]));            
-          } else{
-            hitToAdd=(int) (m_safetyFactor[station]*
-                            (m_correlation[index])->giveRND(startingHits+0.5));
-            msg<<MSG::DEBUG<<"adding "<< hitToAdd<<" to orginal "<<
-              startingHits<<" in station "<<station<<
-              " for multiplicity "<<multi<<" and colisions "<<coll<<endreq;
-            
-          }
-          
-          for(int hitID=0;hitID< hitToAdd;hitID++){            
+
+    if(m_type==LowEnergy){
+      // m_resultPointer = new std::vector<std::vector<int> > (collisions()) ;
+      calculateStartingNumberOfHits(ispill);    
+      for(int coll=0;coll<collisions();coll++){      
+        for(int station=0;station<m_stationNumber;station++){        
+          for (int multi=0;multi<m_gaps;multi++){
+            int index=station*m_gaps+multi;
+            int startingHits=((*m_resultPointer)[coll])[index];
+            // extract number of hits to be added
+            int hitToAdd=0;
+            float floatHit=0;          
+            if(numsta[station]=="M1"){
+              floatHit=(startingHits*(m_safetyFactor[station]));   
+              hitToAdd=howManyHit( floatHit);            
+            } else{          
+              int yy=(int)(m_correlation[index])->
+                         giveRND(startingHits+0.5);
+              floatHit=(m_safetyFactor[station]*
+                        (yy));
+              hitToAdd=howManyHit( floatHit);
+              //msg<<MSG::DEBUG<<"station safe start end hits "<<
+              //  station<< " "<<m_safetyFactor[station]<< " "<<
+              //  yy<< " "<< hitToAdd<<" "<<startingHits<<endreq;
+              
+              msg<<MSG::DEBUG<<"adding "<< hitToAdd<<" to orginal "<<
+                startingHits<<" in station "<<station<<
+                " for multiplicity "<<multi<<" and collisions/spill "<<coll
+                 <<" "<<ispill<<endreq;
+            }            
+            for(int hitID=0;hitID< hitToAdd;hitID++){            
             createHit(hitsContainer, station,multi,ispill);            
-          }
-//          m_pointer1D[index]->fill(startingHits+0.00001,1.0);
-//          m_pointer2D[index]->
-//            fill(startingHits+0.00001,hitToAdd+0.00001,1.0);          
-        }      
-      }    
+            }
+            // m_pointer1D[index]->fill(startingHits+0.00001,1.0);
+            //m_pointer2D[index]->
+            //fill(startingHits+0.00001,hitToAdd+0.00001,1.0);
+          }          
+        }        
+      }      
+    }else if(m_type==FlatSpillover){
+      for(int station=0;station<m_stationNumber;station++){        
+        for (int multi=0;multi<m_gaps;multi++){
+          int index=station*m_gaps+multi;
+          float floatHit=m_flatSpilloverHit[index]*m_luminosityFactor
+            *m_safetyFactor[station];         
+          for (int fspill=0;fspill<=m_numberOfFlatSpill;fspill++){
+            int hitToAdd=0;
+            hitToAdd=howManyHit( floatHit);          
+            msg<<MSG::DEBUG<<"adding "<< hitToAdd<<
+              " in station "<<station<<
+              " for multiplicity "<<multi<<" and spill"
+               <<fspill<<endreq;
+            for(int hitID=0;hitID< hitToAdd;hitID++){            
+              createHit(hitsContainer, station,multi,fspill);            
+            }         
+          }          
+        }        
+      }
     }
+    
+                                                                                
+    
+    
+    
+    msg<<MSG::DEBUG<<" starting saveing the ocntainer "<<endreq;
+    
+      
     {for(int station=0;station<m_stationNumber;station++){
       for(int region=0;region<m_regionNumber;region++){
-        //  std::string path="/Event"+spill[ispill]+"/MC/Muon/"+numsta[k]+
-        //  "/R"+numreg[s]+"/"+TESPathOfHitsContainer[3];   
         std::string path="/Event"+spill[ispill]+"/MC/Muon/"+numsta[station]+
           "/R"+numreg[region]+"/"+m_containerName;
         msg<<MSG::DEBUG<<" number of total hit added "<<
@@ -244,15 +295,13 @@ StatusCode MuonBackground::execute() {
                                                  +region]);   
       }      
     }
-    } // Fix for VC6 scoping bug
-    
+    } // Fix for VC6 scoping bug    
     delete m_resultPointer;    
-  }
-  
-  
-  
+  }  
   return StatusCode::SUCCESS;
-};
+}
+
+
 
 //=============================================================================
 //  Finalize
@@ -261,7 +310,7 @@ StatusCode MuonBackground::finalize() {
 
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Finalize" << endreq;
-
+  delete m_flatDistribution;
   for (int i=0;i<m_maxDimension;i++){
     MuBgDistribution* pointDelete=m_correlation[i];    
     if(pointDelete)delete pointDelete;
@@ -349,25 +398,16 @@ StatusCode MuonBackground::initializeGeometry() {
   
       for(itGap=gapContainer->begin();itGap<gapContainer->end();
           itGap++){
-        // msg<<MSG::INFO<<" imbecille gap "<<endreq;
-        
         if(fabs(localZGap-*(itGap)) <zgaphwidth){
           insert=false;          
         }        
-      }
-      //  msg<<MSG::INFO<<"insert "<<insert<< "position "<<localZGap<<endreq;
-      
+      }      
       if(insert)gapContainer->push_back(localZGap);    
       chamberNumber++;      
     }
-    // msg<<MSG::INFO<<" number of gap stored "<<gapContainer->size()<<endreq;
-    // for(int i=0;i<(int)gapContainer->size();i++){
-    //   msg<<MSG::INFO<<" gap position "<<(*gapContainer)[i]<<endreq;
-    // }    
   }
   } // Fix for VC6 scoping bug
   
-  //  msg<<MSG::INFO<<"ciao"<<endreq;
   
   return StatusCode::SUCCESS;
 }
@@ -381,17 +421,6 @@ StatusCode MuonBackground::initializeParametrization()
   int gap;  
   std::string name;  
   if(numName!=numCode)return StatusCode::FAILURE;
-//  std::string scema="InFile/112100";
-//  SmartDataPtr<IHistogram1D> histoin(histoSvc(),scema);
-//  if(histoin){
-//    msg<<MSG::INFO<<"found the histo "<<"alessia"<<scema<<endreq;
-//  }
-//  else{
-//    msg<<MSG::INFO<<"not found the histo "<<"alessia"<<endreq;
-//  }
-
-  //int nbinx,nbiny;
-  //  float xlow,xup,ylow,tup;
   // the first station is without background!!!!!
   for(int station=0;station<m_stationNumber;station++){
     gap=m_numberOfGaps[station*m_gaps];
@@ -411,22 +440,14 @@ StatusCode MuonBackground::initializeParametrization()
           }
           
           std::string path=m_histoFile+"/"+codePath;
-          //          msg<<MSG::INFO<<"searching for "<<path<<endreq;          
-          //IHistogram*  histoPointer;
-
           if(numsta[station]=="M1"&&m_histoName[i]=="correlation"){
             // skip the input of the correlation plot for M1 it does not exist
           }else if(m_histogramsDimension[i]==1){
             SmartDataPtr<IHistogram1D> histo1d(histoSvc(),path);
             if(histo1d){ 
-              // histoPointer=histoin;              
-              //       msg<<MSG::INFO<<"found the 1D histo "<<path<<endreq;
               std::vector<Rndm::Numbers*>  distributions;
               double xmin,xmax;
               std::vector<bool>   pointerToFlags;
-              
-              //,ymin,ymax;
-              //int nbinx;              
               initializeRNDDistribution1D(histo1d,
                                           distributions ,pointerToFlags,xmin, 
                                           xmax);
@@ -533,9 +554,6 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> calculateStartingNumberOfHit " << endreq;
   bool first=true;
-  
-  //  SmartDataPtr<Collisions> collisionsPointer
-  //  ( eventSvc(), CollisionLocation::Default );
   int gap,chamber,index;
   int preGap,preChamber,preIndex;
 
@@ -580,10 +598,6 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
           chamber=(*iter)->chamberID()+chamberOffset;   
           index=(*iter)->mcParticle()->key();
           if(station==1){
-            //              msg<<MSG::INFO<<"vertex type "<<
-            // (*iter)->mcParticle()->originVertex()->
-            // type()<<endreq;
-            
             msg<<MSG::DEBUG<<" index, chamber, gap "<<index<<" "<<
             chamber<<" "<<gap<<endreq;
             msg<<MSG::DEBUG<<" index "<<index<<" in position "<<
@@ -602,7 +616,8 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
           
           if(particleInfo[index]){
             if(chamber!=preChamber||gap!=preGap||index!=preIndex)
-            particleInfo[index]->setHitIn(station,gap,chamber);            }
+            particleInfo[index]->setHitIn(station,gap,chamber);            
+          }
           else{
             ParticleInfo* tmpPointer;
             if(!first){                   
@@ -614,41 +629,19 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
                                  m_stationNumber,m_gaps);
               first=false;
             }
-            //                         msg<<MSG::INFO<<"fini "<<endreq;
-            
             particleInfo[index]=tmpPointer;
-            //  msg<<MSG::INFO<<"fini 2 "<<station<<" "<<gap<<endreq;
-            // msg<<MSG::INFO<<"fini 3 " <<particleInfo[index]->
-            //  getCollision()<<endreq;
-              
             particleInfo[index]->setHitIn(station,gap,chamber);
-            // msg<<MSG::INFO<<"fini 4"<<endreq;            
           }              
-          
-      
-      
-        
           preGap=gap;
           preIndex=index;
           preChamber=chamber;
-          }
-        
-      }
-      
-        
-      
-    }
-    
-    chamberOffset=chamberOffset+usefull.getChamberPerRegion(iterRegion);
-    
+          }       
+      }      
+    }    
+    chamberOffset=chamberOffset+usefull.getChamberPerRegion(iterRegion);    
   }
   
-  
-  //  msg<<MSG::INFO<<"finito il loop sulla particelle"<<endreq;
-  
-  //std::vector<int>* m_particleResult;
-    
-  int partCollision;
+   int partCollision;
   
   {for(int i=0;i<collisions();i++){
     (*m_resultPointer)[i].resize(m_maxDimension);      
@@ -1039,7 +1032,7 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
           if(sc.isSuccess()){           
             int chamberTest1=(unsigned int)pGasGap->chamberNumber();
             int regionTest1=(unsigned int)pGasGap->regionNumber();
-            //            int gapTest1=(unsigned int)pGasGap->gasGapNumber();
+            //            int gapTest1=(unsigned int)pGasGap->gasGapNumber();   
             
             if(chamberTest!=chamberTest1){
               correct=false;
@@ -1303,5 +1296,19 @@ float MuonBackground::max(float a,float b)
 
 
   
+int  MuonBackground::howManyHit( float floatHit)
+{
+  int intHit=0;
+  float partHit=0;
+  intHit=(int)floatHit;
+  partHit=floatHit-intHit;
+  if((*m_flatDistribution)()<partHit){
+    return intHit+1;
+  }
+  else{
+    return intHit;
+  }              
+}
+
 
 

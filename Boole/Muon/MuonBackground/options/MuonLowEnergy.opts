@@ -1,0 +1,9 @@
+MuonLowEnergy.HistogramsFile= "LowEnergy";
+MuonLowEnergy.HistogramsUpCode = 100000;
+MuonLowEnergy.ContainerName = "BackgroundHits";
+MuonLowEnergy.SafetyFactors ={ 0 , 1 ,1, 1, 1};
+MuonLowEnergy.HistogramsNumber = { -1 , 1 , 2 , 3 , 4 , 5, 6, 7};
+MuonLowEnergy.HistogramsDimension = { 2 , 1 , 2 , 2 , 2 , 2 , 2, 1};      
+MuonLowEnergy.HistogramsMeaning =  { "correlation" , "r", "phi", "thetaloc", "philoc", "lintime" , "logtime" , "hitgap"  }; 
+HistogramDataSvc.Input += { "LowEnergy DATAFILE='$LHCBHOME/sim/data/mubg1.hbook' TYP='HBOOK'" };     
+MuonLowEnergy.BackgroundType = "LowEnergy" ;
