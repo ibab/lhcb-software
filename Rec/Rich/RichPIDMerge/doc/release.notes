@@ -9,7 +9,6 @@
  - Remove CERNLIB from shlib linkopts
 
 ! 2003-11-02 - Chris Jones
- - Use RichLocalPID v2r0
  - Updates due to RichUtils
 
 !======================= RichPIDMerge v1r0 2003-07-07 =======================
