@@ -1,0 +1,8 @@
+!------------------------------------------------------------------------------
+! Package     : Rich/RichRecTools
+! Responsible : Chris Jones   Christopher.Rob.Jones@cern.ch
+! Purpose     : Utility algorithms and tools for RICH reconstruction algorithms
+!------------------------------------------------------------------------------
+
+! 2002-07-27 - Chris Jones
+ - first version v1r0 in CVS
