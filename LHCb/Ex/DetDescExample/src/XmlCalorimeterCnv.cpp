@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/XmlCalorimeterCnv.cpp,v 1.2 2001-05-14 15:16:23 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/XmlCalorimeterCnv.cpp,v 1.3 2001-05-23 15:26:38 sponce Exp $
 
 // Include files
 #include "DetDesc/XmlUserDetElemCnv.h"
@@ -82,5 +82,6 @@ StatusCode XmlCalorimeterCnv::i_fillSpecificObj (DOM_Element childElement,
   } else {
     // Unknown tag, a warning message could be issued here
   }
+  return StatusCode::SUCCESS;
 }
 

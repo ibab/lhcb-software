@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/XmlVertexCnv.cpp,v 1.2 2001-05-14 15:16:23 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/XmlVertexCnv.cpp,v 1.3 2001-05-23 15:26:39 sponce Exp $
 
 // Include files
 #include "DetDesc/XmlUserDetElemCnv.h"
@@ -83,4 +83,5 @@ StatusCode XmlVertexCnv::i_fillSpecificObj (DOM_Element childElement,
       dataObj->setStations ((unsigned int)atol (n.c_str()));
     }
   }
+  return StatusCode::SUCCESS;
 }
