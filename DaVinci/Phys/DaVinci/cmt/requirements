@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.144 2004-07-22 17:00:41 pkoppenb Exp $
+# $Id: requirements,v 1.145 2004-07-22 17:15:42 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -56,7 +56,7 @@ use ParamFiles          v3r8    -no_auto_imports
 use LHCb        v15r13
 
 #=======================================================
-# DaVinciSys v11r9
+# DaVinciSys v11r11
 #=======================================================
 
 # Trigger packages

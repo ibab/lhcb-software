@@ -3,8 +3,31 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v11r11>2004-07-23 DaVinci v11r11 - DC'04 tests version</A></H1><PRE>
+ Many modifications
+
+ - DVAlgorithm now inherits from GaudiAlgorithm.
+  
+ - Updated transporters: sligtly changes all chi**2.
+  
+ - Updated electron reconstruction: include DaVinciElectrons.opts *before* 
+   DaVinciReco.opts for electrons
+   
+   -> many small changes in selection options
+ 
+ - New Bs2DsDs preselection
+ 
+ - New Muon trigger
+ 
+ - New FlightDistanceFilterCriterion and TrackTypeFilterCriterion filters, 
+   ChangePID algorithm.
+   
+ - based on LHCB v15r13
+ 
+ - LoKi v2r8
+ 
 </PRE><H1><A NAME=v11r10>2004-07-05 DaVinci v11r10 - DC'04 tests version</A></H1><PRE>
- Essentially a ug fix version of v11r9
+ Essentially a bug fix version of v11r9
 
  - based on LHCB v15r13
  
