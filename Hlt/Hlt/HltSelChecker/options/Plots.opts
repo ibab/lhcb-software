@@ -18,7 +18,7 @@ HLTResonancesPlots.Variables = { "M", "Chi2", "Pt" } ;
 
 HLTPlots.Members += { "SimplePlots/HLTBs2DsHPlots" };
 HLTBs2DsHPlots.PhysDesktop.InputLocations = { "Phys/HLTDaughtersFromDs", "Phys/HLTFilterDs2KKPi", "Phys/HLTFilterBs2DsH"} ;
-HLTs2DsHPlots.Variables = { "M", "Chi2", "Pt" } ;
+HLTBs2DsHPlots.Variables = { "M", "Chi2", "Pt" } ;
 
 // temporary
 HLTPlots.Members += { "SimplePlots/HLTDs2KstarKPlots" };
