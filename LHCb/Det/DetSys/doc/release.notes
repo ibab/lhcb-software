@@ -4,6 +4,9 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+! 2003-01-07 - Marco Cattaneo
+ - requirements - use MuonTools v3r3
+
 ! 2003-01-06 - Marco Cattaneo
  - requirements - use VeloDet v8r3
 
