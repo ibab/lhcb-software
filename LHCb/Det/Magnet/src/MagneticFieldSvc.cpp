@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.4 2002-05-21 17:15:38 gcorti Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.5 2002-05-23 08:55:07 ocallot Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -273,6 +273,10 @@ StatusCode MagneticFieldSvc::fieldGrid (const HepPoint3D& r,
   int i, j, k;
   int ijk000, ijk001, ijk010, ijk011, ijk100, ijk101, ijk110, ijk111;
 
+  bf[0] = 0.;
+  bf[1] = 0.;
+  bf[2] = 0.;
+
   dx_FL = m_Dxyz[0];
   dy_FL = m_Dxyz[1];
   dz_FL = m_Dxyz[2];
@@ -378,7 +382,7 @@ StatusCode MagneticFieldSvc::fieldGrid (const HepPoint3D& r,
     bf(2) = -bf(2);
   }
   else if( xvect[0] >= 0. && xvect[1] < 0. ){    
-    bf(1) = -bf(1);
+    bf(0) = -bf(0);
     bf(2) = -bf(2);
   } 
   return scs;      
