@@ -1,0 +1,220 @@
+  inline int  NumPhotProdRich1Gas() 
+  {
+    return  m_NumPhotProdRich1Gas;
+  }
+  inline int NumPhotGasOnRich1Mirror1() 
+  {
+    return  m_NumPhotGasOnRich1Mirror1;
+  }
+  inline int  NumPhotGasOnRich1Mirror2()
+  {
+    return m_NumPhotGasOnRich1Mirror2;
+  }
+  inline int NumPhotGasOnRich1GasQW() 
+  {
+    return m_NumPhotGasOnRich1GasQW;
+    
+    
+  }
+  inline int  NumPhotGasOnRich1HpdQW()
+  {
+   return  m_NumPhotGasOnRich1HpdQW;
+  }
+  inline int NumPhotGasRich1BeforeQE()
+  {
+    return  m_NumPhotGasRich1BeforeQE;
+  }
+  
+  inline int  NumPhotGasRich1AfterQE()
+  {
+    return  m_NumPhotGasRich1AfterQE;
+  }
+
+  inline int  NumPhotGasRich1SiDet()
+  {
+    return  m_NumPhotGasRich1SiDet;
+  }
+
+
+
+
+  inline int  NumPhotProdRich1Agel() 
+  {
+    return  m_NumPhotProdRich1Agel;
+  }
+inline int NumPhotAgelAtAgelDownstrZ()
+{
+  return m_NumPhotAgelAtAgelDownstrZ;
+}
+
+  inline int NumPhotAgelOnRich1Mirror1() 
+  {
+    return  m_NumPhotAgelOnRich1Mirror1;
+  }
+  inline int  NumPhotAgelOnRich1Mirror2()
+  {
+    return m_NumPhotAgelOnRich1Mirror2;
+  }
+  inline int NumPhotAgelOnRich1GasQW() 
+  {
+    return m_NumPhotAgelOnRich1GasQW;
+    
+    
+  }
+  inline int  NumPhotAgelOnRich1HpdQW()
+  {
+   return  m_NumPhotAgelOnRich1HpdQW;
+  }
+  inline int NumPhotAgelRich1BeforeQE()
+  {
+    return  m_NumPhotAgelRich1BeforeQE;
+  }
+  
+  inline int  NumPhotAgelRich1AfterQE()
+  {
+    return  m_NumPhotAgelRich1AfterQE;
+  }
+
+  inline int  NumPhotAgelRich1SiDet()
+  {
+    return  m_NumPhotAgelRich1SiDet;
+  }
+
+  inline int NumHitTotRich1Gas() 
+  {
+    return   m_NumHitTotRich1Gas;
+    
+  }
+  
+  inline int NumHitTotRich1Agel() 
+  {
+    return  m_NumHitTotRich1Agel;
+  }
+  inline int NumHitSaturatedRich1Gas() 
+  {
+    return  m_NumHitSaturatedRich1Gas;
+  }
+  inline int NumHitSaturatedRich1Agel()
+  {
+    return m_NumHitSaturatedRich1Agel;
+  }
+  
+  
+  inline int NumHitPartGunPrimaryPartRich1Gas()
+  {
+    return  m_NumHitPartGunPrimaryPartRich1Gas;
+  }
+  
+  inline int NumHitPartGunPrimaryPartRich1Agel()
+  {
+    return m_NumHitPartGunPrimaryPartRich1Agel;
+  }
+  inline int NumHitTotRich1All()
+  {
+    return m_NumHitTotRich1All;
+  }
+
+  inline void bumpNumPhotProdRich1Gas()
+  {
+    m_NumPhotProdRich1Gas++;
+  }
+  inline void bumpNumPhotGasOnRich1Mirror1()
+  {
+    m_NumPhotGasOnRich1Mirror1++;
+  }
+  inline void bumpNumPhotGasOnRich1Mirror2()
+  {
+    m_NumPhotGasOnRich1Mirror2++;
+  }
+  inline void bumpNumPhotGasOnRich1GasQW()
+  {
+    m_NumPhotGasOnRich1GasQW++;
+  }
+  inline void bumpNumPhotGasOnRich1HpdQW()
+  {
+    m_NumPhotGasOnRich1HpdQW++;
+  }
+  inline void bumpNumPhotGasRich1BeforeQE()
+  {
+    m_NumPhotGasRich1BeforeQE++;
+  }
+  inline void bumpNumPhotGasRich1AfterQE()
+  {
+    m_NumPhotGasRich1AfterQE++;
+  }
+  inline void bumpNumPhotGasRich1SiDet()
+  {
+    m_NumPhotGasRich1SiDet++;
+  }
+  
+
+
+  inline void bumpNumPhotProdRich1Agel()
+  {
+    m_NumPhotProdRich1Agel++;
+  }
+
+  inline void bumpNumPhotAgelAtAgelDownstrZ()
+  {
+  m_NumPhotAgelAtAgelDownstrZ++;
+  }
+
+  inline void bumpNumPhotAgelOnRich1Mirror1()
+  {
+    m_NumPhotAgelOnRich1Mirror1++;
+  }
+  inline void bumpNumPhotAgelOnRich1Mirror2()
+  {
+    m_NumPhotAgelOnRich1Mirror2++;
+  }
+  inline void bumpNumPhotAgelOnRich1GasQW()
+  {
+    m_NumPhotAgelOnRich1GasQW++;
+  }
+  inline void bumpNumPhotAgelOnRich1HpdQW()
+  {
+    m_NumPhotAgelOnRich1HpdQW++;
+  }
+  inline void bumpNumPhotAgelRich1BeforeQE()
+  {
+    m_NumPhotAgelRich1BeforeQE++;
+  }
+  inline void bumpNumPhotAgelRich1AfterQE()
+  {
+    m_NumPhotAgelRich1AfterQE++;
+  }
+  inline void bumpNumPhotAgelRich1SiDet()
+  {
+    m_NumPhotAgelRich1SiDet++;
+  }
+
+  inline void bumpNumHitTotRich1Gas() 
+  {
+    m_NumHitTotRich1Gas++;
+  }
+  inline void bumpNumHitTotRich1Agel()
+  {
+    m_NumHitTotRich1Agel++;
+  }
+  inline void bumpNumHitSaturatedRich1Gas()
+  {
+    m_NumHitSaturatedRich1Gas++;
+  }
+  inline void bumpNumHitSaturatedRich1Agel()
+  {
+    m_NumHitSaturatedRich1Agel++;
+  }
+  
+
+  inline void bumpNumHitPartGunPrimaryPartRich1Gas()
+  {
+    m_NumHitPartGunPrimaryPartRich1Gas++;
+  }
+  inline void bumpNumHitPartGunPrimaryPartRich1Agel()
+  {
+    m_NumHitPartGunPrimaryPartRich1Agel++;
+  }
+   inline void bumpNumHitTotRich1All()
+  {
+    m_NumHitTotRich1All++;
+  }
