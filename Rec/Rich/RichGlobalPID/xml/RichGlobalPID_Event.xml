@@ -2,8 +2,6 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
     <package name="RichGlobalPID">
-        <import name="Kernel/CLHEPStreams"/>
-        <import name="Kernel/SerializeStl"/>
         <class author="Chris Jones    (Christopher.Rob.Jones@cern.ch)" desc="Summary object for RICH Global PID analysis" id="12431" location="Rec/Rich/GlobalPID/Summary" name="RichGlobalPIDSummary">
             <base name="DataObject"/>
             <method desc="Push back this value in event LL vector" name="addToEventLL">
