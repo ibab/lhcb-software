@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.223 2005-01-06 12:34:58 pkoppenb Exp $
+# $Id: requirements,v 1.224 2005-01-06 16:52:37 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -101,7 +101,7 @@ use  Tampering                  v1r0     Phys
 use  DaVinciAssociators 	v5r2p1   Phys
 use  DaVinciEff         	v3r2     Phys
 use  DaVinciMCTools     	v5r7     Phys
-use  DaVinciTest        	v5r4     Phys
+use  DaVinciTest        	v5r5     Phys
 use  DaVinciUser        	v5r2     Phys
 
 # Stripping
