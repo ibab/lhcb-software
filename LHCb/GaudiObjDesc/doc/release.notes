@@ -8,8 +8,8 @@ Package manager : Stefan Roiser
 !20020617 - Stefan
 - handling of offsets to abstract-interface-classes
 - use friend-classes for investigation of offsets instead of defines
-- no dictionary-information for private, pure virtual and friend-functions
-- changes to dictionary-fragments to produce the class with the friend-class
+- no dictionary-information for private, protected, pure virtual and friend-functions
+- changes to dictionary-fragments to produce the class with the friend-class in the dict-directory
 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>GaudiObjDesc v4r3<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
