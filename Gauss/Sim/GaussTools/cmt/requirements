@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.33 2004-02-20 19:35:25 ibelyaev Exp $ 
+# $Id: requirements,v 1.34 2004-02-20 19:36:21 ibelyaev Exp $ 
 # =============================================================================
 package GaussTools
-version v9r1
+version v10r0
 
 # =============== package structure ===========================================
 branches          cmt src doc GaussTools
