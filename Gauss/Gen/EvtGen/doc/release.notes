@@ -1,6 +1,20 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2004-03-08 - Patrick Robbe
+ - EvtIncoherentMixing : put PDG 2004 mixing parameters as default values
+    for the mixing (Delta m_s, Delta m_d, Delta Gamma_s, Delta Gamma_d)
+ - EvtPDL : add evtIdFromLundKC to be able to retrieve a particle ID 
+    from the Pythia ID
+ - EvtBTo3piCP, EvtBTo4piCP, EvtBToKpipiCP, EvtBto2piCPiso,
+   EvtSSSCP, EvtSSSCPT, EvtSTSCP, EvtSVPCP, EvtSVSCP, EvtSVSCPiso,
+   EvtSVSNONCPEIGEN, EvtSVVCP, EvtSVVCPLH, EvtSVVNONCPEIGEN : 
+    add the possibility to flip the event to generate CP violation
+    in a Incoherent B-Bbar production environment.
+ - EvtISGW2 : adjust max prob for B_s -> D's1 tau nu_tau decays
+ - EvtPythia : use LundKC property of the EvtId class to store Pythia
+   ID which is available from ParticleTable.txt since Gaudi v14r3
+
 ! 2004-02-06 - Patrick Robbe
  - modifications to use B_s -> omega e+ e- decays
 
