@@ -4,6 +4,10 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! =================== FlavourTagging v4r0 2002-11-13 ======================
+! 2002-11-13 - Gloria Corti
+ - Use new major versions of DaVinciTools (v7r*) and DaVinciMCTools (v4r*)
+
 ! =================== FlavourTagging v3r0 2002-10-30 ======================
 ! 2002-10-21 - Gloria Corti
  - Introduce some missing std:: to compile on windows
