@@ -1,14 +1,19 @@
-// $Id: GaussSensPlaneHit.cpp,v 1.2 2004-01-14 13:38:10 ranjard Exp $
+// $Id: GaussSensPlaneHit.cpp,v 1.3 2004-12-14 14:53:18 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.1  2003/07/07 16:09:39  ibelyaev
 //  add Calorimeter Sensitive Palne hits and the converter
 // 
 // ============================================================================
 // Include files 
 // ============================================================================
+// from GiGa
+#include "GiGa/GiGaUtil.h"
 // Geant4
 #include "G4Allocator.hh"
 // local

@@ -7,6 +7,10 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2004-12-14 - Gloria CORTI
+ - src/GaussSensPlaneHit.cpp
+   introduce include of GiGa/GiGaUtil.h to allow compilation
+
 ! 2004-10-08 - Vanya BELYAEV
  - fix a bug in mapping G4 space points -> CaloCellID.
    The problem is due to *DIFERENT* actual size of 
