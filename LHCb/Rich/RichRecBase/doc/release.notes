@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RichRec
 !-----------------------------------------------------------------------------
 
+!======================= RichRecBase v1r1 2003-06-19 =======================
 ! 2003-06-18 - Marco Cattaneo
  - Use more recent version of GaudiObjDesc
 
