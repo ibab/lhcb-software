@@ -5,10 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.6 2005-01-13 13:04:05 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2005/01/07 12:38:09  jonrob
- *  Updates for new RichDAQ package
+ *  $Id: RichDigitQC.h,v 1.7 2005-02-20 18:37:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -35,6 +32,7 @@
 #include "Kernel/RichSmartID.h"
 #include "Kernel/RichDetectorType.h"
 #include "RichKernel/RichStatDivFunctor.h"
+#include "RichKernel/RichPoissonEffFunctor.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
@@ -50,6 +48,7 @@
 #include "RichKernel/IRichHPDToLevel1Tool.h"
 #include "RichKernel/IRichHPDIDTool.h"
 #include "RichKernel/IRichSmartIDTool.h"
+#include "RichKernel/IRichMCTruthTool.h"
 
 /** @class RichDigitQC RichDigitQC.h RichDigiQC/RichDigitQC.h
  *
@@ -72,6 +71,10 @@ public:
   virtual StatusCode execute   ();    // Algorithm execution
   virtual StatusCode finalize  ();    // Algorithm finalization
 
+private: // methods
+
+  std::string mchitLocation( const MCRichDigit * digit ) const;
+
 private: // data
 
   /// Pointer to RICH Level1 tool
@@ -80,11 +83,15 @@ private: // data
   /// Pointer to Rich HPD ID tool
   IRichHPDIDTool * m_hpdID;
 
-  // Pointer to RichSmartID tool
+  /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_smartIDs;
+
+  /// Pointer to MC truth tool
+  IRichMCTruthTool * m_mcTool;
 
   // job options
   std::string m_digitTDS;  ///< Location of MCRichDigits in TES
+  bool m_extraHists;       ///< Flag to turn on the production of additional histograms
 
   /// Number of events processed
   unsigned int m_evtC; 
@@ -96,6 +103,28 @@ private: // data
   typedef RichMap< const RichSmartID, unsigned int > HPDCounter;
   HPDCounter m_nHPD[Rich::NRiches]; ///< Tally for HPD occupancy, in each RICH
 
+  typedef std::map< std::string, unsigned int > SpillCount;
+  typedef std::vector< SpillCount > SpillDetCount;
+
+  /// Number of digitised hits per RICH detector and event location
+  SpillDetCount m_spillDigits;
+
+  /// Number of digitised hits per RICH detector and event location
+  SpillDetCount m_totalSpills;
+
+  /// Number of background hits in each RICH
+  std::vector< unsigned int > m_bkgHits;
+
 };
+
+inline std::string RichDigitQC::mchitLocation( const MCRichDigit * digit ) const
+{
+  for ( SmartRefVector<MCRichHit>::const_iterator iHit = digit->hits().begin();
+        iHit != digit->hits().end(); ++iHit )
+  {
+    if ( *iHit && !m_mcTool->isSpillover(*iHit) ) return objectLocation( (*iHit)->parent() );
+  } 
+  return objectLocation( digit->hits().front()->parent() );
+}
 
 #endif // RICHDIGIQC_RICHDIGITQC_H
