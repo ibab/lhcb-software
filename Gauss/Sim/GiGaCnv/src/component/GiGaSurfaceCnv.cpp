@@ -1,6 +1,9 @@
-// $Id: GiGaSurfaceCnv.cpp,v 1.12 2003-12-15 14:05:38 witoldp Exp $
+// $Id: GiGaSurfaceCnv.cpp,v 1.13 2004-02-20 19:27:27 ibelyaev Exp $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2003/12/15 14:05:38  witoldp
+// fix for G4.6.0
+//
 // Revision 1.11  2003/07/08 17:00:48  ranjard
 // v12r3 - new fix for gcc3.2
 //
@@ -37,10 +40,10 @@
 #include  "G4LogicalBorderSurface.hh"
 // local 
 #include "AddTabulatedProperties.h"
-#include "GiGaSurfaceCnv.h" 
+#include "GiGaSurfaceCnv.h"
 
 // ============================================================================
-/** @file GiGaSurface.cpp
+/** @file
  * 
  *  implementation of class GiGaSurfaceCnv 
  *  
@@ -128,8 +131,8 @@ StatusCode GiGaSurfaceCnv::createRep
  */
 // ============================================================================
 StatusCode GiGaSurfaceCnv::updateRep
-( DataObject*     Object  , 
-  IOpaqueAddress* Address  ) 
+( DataObject*        Object  , 
+  IOpaqueAddress* /* Address */ ) 
 {
   ///
   { MsgStream log( msgSvc() , name() ); 

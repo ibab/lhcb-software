@@ -1,8 +1,11 @@
-// $Id: IGiGaGeomCnvSvc.h,v 1.6 2003-04-06 18:55:31 ibelyaev Exp $ 
+// $Id: IGiGaGeomCnvSvc.h,v 1.7 2004-02-20 19:27:26 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/04/06 18:55:31  ibelyaev
+//  remove unnesessary dependencies and adapt for newer GiGa
+//
 // Revision 1.5  2002/05/04 20:39:35  ibelyaev
 //  see $GIGACNVROOT/release.notes (4 May 2002)
 //
@@ -14,7 +17,6 @@
 #include "GiGa/IGiGaGeoSrc.h" 
 /// GiGaCnv
 #include "GiGaCnv/IGiGaCnvSvc.h" 
-#include "GiGaCnv/IIDIGiGaGeomCnvSvc.h"
 #include "GiGaCnv/GiGaVolume.h"
 
 class ISolid;
@@ -42,8 +44,8 @@ class IGiGaGeomCnvSvc: virtual public IGiGaCnvSvc ,
  public:  
   
   /// Retrieve unique interface identifier  
-  static const InterfaceID& interfaceID() { return IID_IGiGaGeomCnvSvc; }
-
+  static const InterfaceID& interfaceID() ;
+  
   /** Retrieve the pointer for G4 materials from G4MaterialTable, 
    *  (could trigger the conversion of the (DetDesc) Material)
    *  @param  name    name/address/location of Material object 
@@ -156,8 +158,10 @@ class IGiGaGeomCnvSvc: virtual public IGiGaCnvSvc ,
   ( const std::string& Name   , 
     IGiGaMagField*&    Mag    ) = 0 ;
 
+protected: 
+
   /// virtual destructor 
-  virtual ~IGiGaGeomCnvSvc(){};
+  virtual ~IGiGaGeomCnvSvc() ;
   ///
 
 };

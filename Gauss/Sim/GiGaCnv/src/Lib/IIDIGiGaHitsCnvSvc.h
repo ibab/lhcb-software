@@ -1,8 +1,11 @@
-// $Id: IIDIGiGaHitsCnvSvc.h,v 1.3 2002-01-22 18:24:42 ibelyaev Exp $ 
+// $Id: IIDIGiGaHitsCnvSvc.h,v 1.1 2004-02-20 19:27:27 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/01/22 18:24:42  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.2  2001/08/12 17:24:50  ibelyaev
 // improvements with Doxygen comments
 //

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/08/12 17:24:50  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.2  2001/07/25 17:19:31  ibelyaev
 /// all conversions now are moved from GiGa to GiGaCnv
 ///
@@ -16,7 +19,6 @@
 /// GiGa 
 /// GiGaCnv 
 #include "GiGaCnv/IGiGaCnvSvc.h" 
-#include "GiGaCnv/IIDIGiGaHitsCnvSvc.h"
 /// forward declaration
 class GiGaKineRefTable;
 
@@ -38,15 +40,17 @@ class IGiGaHitsCnvSvc: virtual public IGiGaCnvSvc
   /** retrieve the unique interface identifier 
    *  @return unique interface identifier 
    */
-  static const InterfaceID& interfaceID() { return IID_IGiGaHitsCnvSvc; }
+  static const InterfaceID& interfaceID() ;
   
   /** retrieve the relation table between Geant4 track/trajectory 
    *  identifiers and the converted MCParticle objects 
    *  @return the reference to relation table  
    */
   virtual GiGaKineRefTable&      table() = 0 ;
+
+protected: 
   
-  virtual ~IGiGaHitsCnvSvc(){} ; 
+  virtual ~IGiGaHitsCnvSvc() ; 
   ///
 };
 ///

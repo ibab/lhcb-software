@@ -1,7 +1,20 @@
-! $Id: release.notes,v 1.68 2004-02-20 19:12:00 ibelyaev Exp $
+! $Id: release.notes,v 1.69 2004-02-20 19:27:27 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2004-02-20 - Ivan BELYAEV
+ - GiGaCnv/IGiGa*.h 
+     1) move IGiGaXXX::~IGiGaXXX() implementations to separate file 
+     2) move IGiGaXXX::interface() implementations to separate file 
+ - src/Lib/GiGaCnvInterfaces.cpp 
+     new file with implementations of IGiGaXXX::~IGiGaXXX() and 
+       IGiGaXXX::interfaceID() methods 
+ - GiGa/IIDIGiGa*.
+     move into src/Lib directory 
+ - src/component/GiGaSurfaceCnv.cpp 
+     fix compilation warning 
+ 
 
 ! 2004-02-20 - Vanya BELYAEV
  - GiGaCnv/GiGaPrimaryParticleInformation.h
