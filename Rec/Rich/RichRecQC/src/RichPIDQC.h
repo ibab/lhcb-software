@@ -4,8 +4,11 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.15 2004-10-29 09:35:09 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.16 2004-10-30 22:14:54 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.15  2004/10/29 09:35:09  jonrob
+ *  Update final printout format
+ *
  *  Revision 1.14  2004/10/27 14:36:30  jonrob
  *  Improvements to PID Tables
  *
@@ -200,52 +203,6 @@ inline const TrStateP * RichPIDQC::getTrStateP( const TrStoredTrack * track,
                                                 const double zPos ) const
 {
   return ( track ? dynamic_cast<const TrStateP*>((const TrState*)track->closestState(zPos)) : 0 );
-}
-
-inline bool RichPIDQC::pidIsSelected( const RichPID * pid ) const
-{
-  if ( const TrStoredTrack * trTrack = pid->recTrack() ) {
-    return m_trSelector.trackSelected( trTrack );
-  } else if ( const TrgTrack * trgTrack = pid->trgTrack() ) {
-    return m_trSelector.trackSelected( trgTrack );
-  } else {
-    Exception( "unknown RichPID track type" );
-    return false;
-  }
-}
-
-inline double RichPIDQC::momentum( const RichPID * pid ) const
-{
-  if ( const TrStoredTrack * trTrack = pid->recTrack() ) {
-    const TrStateP* pState = getTrStateP( trTrack );
-    return ( pState ? pState->p()/GeV : 0 );
-  } else if ( const TrgTrack * trgTrack = pid->trgTrack() ) {
-    return fabs( trgTrack->firstState().momentum())/GeV;
-  } else {
-    Exception( "unknown RichPID track type" );
-  }
-}
-
-inline Rich::Track::Type RichPIDQC::trackType( const RichPID * pid ) const
-{
-  if ( const TrStoredTrack * trTrack = pid->recTrack() ) {
-    return Rich::Track::type(trTrack);
-  } else if ( const TrgTrack * trgTrack = pid->trgTrack() ) {
-    return Rich::Track::type(trgTrack);
-  } else {
-    Exception( "unknown RichPID track type" );
-  }
-}
-
-inline Rich::ParticleIDType RichPIDQC::trueMCType( const RichPID * pid ) const
-{
-  if ( const TrStoredTrack * trTrack = pid->recTrack() ) {
-    return m_mcTruth->mcParticleType(trTrack);
-  } else if ( const TrgTrack * trgTrack = pid->trgTrack() ) {
-    return m_mcTruth->mcParticleType(trgTrack);
-  } else {
-    Exception( "unknown RichPID track type" );
-  }
 }
 
 #endif // RICHRECQC_RICHPIDQC_H
