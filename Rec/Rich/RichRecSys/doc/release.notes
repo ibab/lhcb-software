@@ -4,6 +4,11 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v1r16 2005-03-08 ======================
+! 2005-03-08 - Marco Cattaneo
+ - Various undocumented updates to job options...
+ - Updated packages for LHCb v18r1 etc.
+
 !====================== RichRecSys v1r15 2005-02-08 ======================
 ! 2005-02-08 - Marco Cattaneo
  - Use RichDAQ v2r1, RichRecCommon v1r11

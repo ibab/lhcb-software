@@ -2,7 +2,7 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.35 2005-03-03 15:52:00 jonrob Exp $
+# $Id: requirements,v 1.36 2005-03-08 14:36:05 cattanem Exp $
 #============================================================================
 
 package           RichRecSys
@@ -17,7 +17,7 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # ================ dependencies =============================================
 
 # DAQ Decoding
-use RichDAQ         v2r1	Rich
+use RichDAQ         v2r1p1	Rich
 
 # Common RICH reconstruction packages
 use RichRecBase     v1r15	Rich
@@ -33,7 +33,7 @@ use RichRingRefit   v1r9	Rich
 use RichPIDMerge    v1r5	Rich
 
 # MC packages
-use RichRecMCTools  v1r7	Rich
+use RichRecMCTools  v1r8	Rich
 
 # =================================
 # Developmental algorithms ...
