@@ -9,7 +9,7 @@ branches doc cmt
 
 use LHCb		v17r1
 
-use GaudiConf		v8r1
+use GaudiConf		v8r2
 
 # External package used by GenEvent
 use HepMC	v4r121p0	Sim
