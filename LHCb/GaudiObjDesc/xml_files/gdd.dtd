@@ -118,7 +118,7 @@
 	init CDATA #IMPLIED
 	array CDATA "FALSE"
 	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
-	noCast (TRUE | FALSE) "FALSE"
+	compression (TRUE | FALSE) "TRUE"
 	serialize (TRUE | FALSE) "TRUE"
 	setMeth (TRUE | FALSE) "TRUE"
 	getMeth (TRUE | FALSE) "TRUE"

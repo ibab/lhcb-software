@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.60 2002-04-30 17:04:44 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.61 2002-05-13 17:24:44 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -1922,7 +1922,7 @@ void printClass(std::ofstream& xmlOut,
         std::string gddAttType = gddAttribute->type().transcode(),
                     gddAttName = gddAttribute->name().transcode();
         bool gddAttSerialize = gddAttribute->serialize(),
-             gddAttNoCast = gddAttribute->noCast();
+             gddAttCompression = gddAttribute->compression();
 
         if (gddAttSerialize)
         {
@@ -1939,7 +1939,7 @@ void printClass(std::ofstream& xmlOut,
           {
             xmlOut << "<< l_";
           }
-          else if (gddAttType == "double" && !gddAttNoCast)
+          else if (gddAttType == "double" && gddAttCompression)
           {
             xmlOut << "<< (float)m_";
           }
@@ -2029,9 +2029,9 @@ void printClass(std::ofstream& xmlOut,
         std::string gddAttType = gddAttribute->type().transcode(),
                     gddAttName = gddAttribute->name().transcode();
         bool gddAttSerialize = gddAttribute->serialize(),
-             gddAttNoCast = gddAttribute->noCast();
+             gddAttCompression = gddAttribute->compression();
 
-        if (gddAttType == "double" && gddAttSerialize && !gddAttNoCast)
+        if (gddAttType == "double" && gddAttSerialize && gddAttCompression)
         {
           if (!attFloat)
           {
@@ -2066,7 +2066,7 @@ void printClass(std::ofstream& xmlOut,
         std::string gddAttType = gddAttribute->type().transcode(),
                     gddAttName = gddAttribute->name().transcode();
         bool gddAttSerialize = gddAttribute->serialize(),
-             gddAttNoCast = gddAttribute->noCast();
+             gddAttCompression = gddAttribute->compression();
 
         if (gddAttSerialize)
         {
@@ -2079,7 +2079,7 @@ void printClass(std::ofstream& xmlOut,
           {
             xmlOut << std::endl << "    ";
           }
-          if (gddAttType == "bool" || (gddAttType == "double" && !gddAttNoCast))
+          if (gddAttType == "bool" || (gddAttType == "double" && gddAttCompression))
           {
             xmlOut << ">> l_";
           }
@@ -2134,9 +2134,9 @@ void printClass(std::ofstream& xmlOut,
         std::string gddAttType = gddAttribute->type().transcode(),
                     gddAttName = gddAttribute->name().transcode();
         bool gddAttSerialize = gddAttribute->serialize(),
-             gddAttNoCast = gddAttribute->noCast();
+             gddAttCompression = gddAttribute->compression();
 
-        if (gddAttType == "double" && gddAttSerialize && !gddAttNoCast)
+        if (gddAttType == "double" && gddAttSerialize && gddAttCompression)
         {
           xmlOut << "  m_" << gddAttName << " = l_" << gddAttName << ";" << std::endl;
         }
@@ -2179,7 +2179,7 @@ void printClass(std::ofstream& xmlOut,
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
         std::string gddAttName = gddAttribute->name().transcode(),
                     gddAttType = gddAttribute->type().transcode();
-        bool gddAttNoCast = gddAttribute->noCast(),
+        bool gddAttCompression = gddAttribute->compression(),
              gddAttIsBitset = gddAttribute->bitset();
 
         if(i==0)
@@ -2199,7 +2199,7 @@ void printClass(std::ofstream& xmlOut,
         {  
           xmlOut << "<< l_";
         }
-        else if (gddAttType == "double" && !gddAttNoCast)
+        else if (gddAttType == "double" && gddAttCompression)
         {
           xmlOut << "<< (float)m_";
         }

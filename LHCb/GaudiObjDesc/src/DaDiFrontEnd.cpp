@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.37 2002-04-30 16:50:25 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.38 2002-05-13 17:24:45 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -831,14 +831,14 @@ template<class T> void parseAttribute(DOM_Node node,
   }  
   
   if (node.getAttributes().
-    getNamedItem(DOMString::transcode("noCast")).
+    getNamedItem(DOMString::transcode("compression")).
     getNodeValue().equals("TRUE"))
   {
-    gddAttribute->setNoCast(true);
+    gddAttribute->setCompression(true);
   }
   else
   {
-    gddAttribute->setNoCast(false);
+    gddAttribute->setCompression(false);
   }
 
   if (node.getAttributes().

@@ -7,7 +7,8 @@ Package manager : Stefan Roiser
 
 !20020422 - Stefan
  - Added <attribute>- and <relation>-attribute 'serialize' to specify whether to persistify an object
- - Added <attribute>-attribute 'noCast' to suppress casting double<->float while serializing
+ - Added <attribute>-attribute 'compression' to enable conversion double<->float 
+   while serializing to compress the resulting size
  - Added new <bitfield>-element to handle bitpacking
  - friend-functions are now implemented outside the class-body
 

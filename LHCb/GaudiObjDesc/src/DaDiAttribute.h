@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiAttribute.h,v 1.7 2002-04-30 16:50:24 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiAttribute.h,v 1.8 2002-05-13 17:24:44 mato Exp $
 #ifndef DADIATTRIBUTE_H 
 #define DADIATTRIBUTE_H 1
 
@@ -47,8 +47,8 @@ public:
   bool static_();
   void setStatic_(bool value);
 
-  bool noCast();
-  void setNoCast(bool value);
+  bool compression();
+  void setCompression(bool value);
 
   bool serialize();
   void setSerialize(bool value);
@@ -73,7 +73,7 @@ private:
                            m_setMeth, 
                            m_getMeth;
   bool                     m_static,
-                           m_noCast,
+                           m_compression,
                            m_serialize,
                            m_bitset;
   std::list<DaDiBitfield*> m_daDiBitfield;
@@ -171,14 +171,14 @@ inline void DaDiAttribute::setStatic_(bool value)
   m_static = value;
 }
 
-inline bool DaDiAttribute::noCast()
+inline bool DaDiAttribute::compression()
 {
-  return m_noCast;
+  return m_compression;
 }
 
-inline void DaDiAttribute::setNoCast(bool value)
+inline void DaDiAttribute::setCompression(bool value)
 {
-  m_noCast = value;
+  m_compression = value;
 }
 
 inline bool DaDiAttribute::serialize()
