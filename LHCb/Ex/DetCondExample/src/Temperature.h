@@ -1,11 +1,11 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/Temperature.h,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/Temperature.h,v 1.2 2001-11-26 19:19:39 andreav Exp $
 #ifndef DETCONDEXAMPLE_TEMPERATURE_H
 #define DETCONDEXAMPLE_TEMPERATURE_H 1
 
 #include <string>
 
 // Base class
-#include "DetCond/ConditionData.h"
+#include "ConditionData.h"
 
 // Unique ID of the class
 static const CLID CLID_Temperature = 197001;

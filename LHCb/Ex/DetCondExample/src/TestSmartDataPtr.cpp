@@ -1,9 +1,9 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/TestSmartDataPtr.cpp,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/TestSmartDataPtr.cpp,v 1.2 2001-11-26 19:19:03 andreav Exp $
 #include <stdio.h>
 
+#include "ConditionData.h"
 #include "TestSmartDataPtr.h"
 
-#include "DetCond/ConditionData.h"
 #include "DetCond/IConditionDataSvc.h"
 #include "DetCond/IConditionsDBDataSvc.h"
 
@@ -140,7 +140,7 @@ StatusCode TestSmartDataPtr::execute( ) {
       << "Retrieved smart data pointer to path " << tdsName << endreq;
   log << MSG::INFO 
       << "Before update, condition at time " 
-      << m_conditionDataSvc->eventTime()->absoluteTime() << ":" << endreq;
+      << m_conditionDataSvc->eventTime().absoluteTime() << ":" << endreq;
   log << MSG::INFO << (ConditionData*)aCondition << endreq;
   log << MSG::INFO << "Now update the condition" << endreq;
   if ( !( ( detSvc()->updateObject( (DataObject*)aCondition ) 
@@ -151,7 +151,7 @@ StatusCode TestSmartDataPtr::execute( ) {
   }
   log << MSG::INFO 
       << "After update, condition at time " 
-      << m_conditionDataSvc->eventTime()->absoluteTime() << ":" << endreq;
+      << m_conditionDataSvc->eventTime().absoluteTime() << ":" << endreq;
   log << MSG::INFO << (ConditionData*)aCondition << endreq;
   return StatusCode::SUCCESS;
 }

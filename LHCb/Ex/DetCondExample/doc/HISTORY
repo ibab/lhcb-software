@@ -1,4 +1,15 @@
-# $Id: HISTORY,v 1.7 2001-11-23 18:19:48 andreav Exp $
+# $Id: HISTORY,v 1.8 2001-11-26 19:21:16 andreav Exp $
+
+------------------------------------------------
+26.11.2001 Ex/DetCondExample v2 (LINUX only)
+------------------------------------------------
+A few changes suggested by Pere before including my data service in GaudiSvc.
+-> move ConditionData from DetCond/src/Lib to DetCondExample
+   > only DataObjects are manipulated, with dynamic casts to IValidity
+   > no Lib anymore in DetCond/src
+-> manipulate ITime and TimePoint objects rather than ITime pointers
+   > add bool method to check if the event time is defined in ConditionDataSvc
+Private tag: h20011126.
 
 ------------------------------------------------
 23.11.2001 Ex/DetCondExample v2 (LINUX only)

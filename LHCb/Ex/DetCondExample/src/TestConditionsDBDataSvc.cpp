@@ -1,9 +1,9 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/TestConditionsDBDataSvc.cpp,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/TestConditionsDBDataSvc.cpp,v 1.2 2001-11-26 19:19:22 andreav Exp $
 #include <stdio.h>
 
+#include "ConditionData.h"
 #include "TestConditionsDBDataSvc.h"
 
-#include "DetCond/ConditionData.h"
 #include "DetCond/IConditionDataSvc.h"
 #include "DetCond/IConditionsDBDataSvc.h"
 
@@ -109,7 +109,7 @@ StatusCode TestConditionsDBDataSvc::execute( ) {
     return StatusCode::FAILURE;
   }
   log << MSG::INFO << "Condition at time " 
-      << m_conditionDataSvc->eventTime()->absoluteTime() << ":" << endreq;
+      << m_conditionDataSvc->eventTime().absoluteTime() << ":" << endreq;
   log << MSG::INFO << aCondition << endreq;
   return StatusCode::SUCCESS;
 }
