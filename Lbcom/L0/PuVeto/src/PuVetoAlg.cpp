@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.3 2002-04-05 09:26:03 ocallot Exp $
+// $Id: PuVetoAlg.cpp,v 1.4 2002-04-24 13:00:19 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,8 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ObjectVector.h"
 
+// from VeloEvent
+#include "Event/MCVeloFE.h"
 // from L0Event
 #include "Event/L0PuVeto.h"
 // local
@@ -29,8 +31,9 @@ const        IAlgFactory& PuVetoAlgFactory = s_factory ;
 PuVetoAlg::PuVetoAlg( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
-  , m_inputContainer      ( L1RawLocation::Default )
+  , m_inputContainer      ( MCVeloFELocation::PuVeto  )
   , m_outputContainer     ( L0PuVetoLocation::Default )
+  , m_threshold           (   20. * keV )
   , m_lowThreshold        (    2.     )
   , m_highThreshold       (    2.     )
   , m_highPosition        (    0. *mm )
@@ -38,6 +41,7 @@ PuVetoAlg::PuVetoAlg( const std::string& name,
 {
   declareProperty( "InputContainer"     , m_inputContainer  );
   declareProperty( "OutputContainer"    , m_outputContainer );
+  declareProperty( "SignalThreshold"    , m_threshold       );
   declareProperty( "LowThreshold"       , m_lowThreshold    );
   declareProperty( "HighThreshold"      , m_highThreshold   );
   declareProperty( "HighPosition"       , m_highPosition    );
@@ -57,7 +61,7 @@ StatusCode PuVetoAlg::initialize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
 
-  SmartDataPtr<DeVelo> velo( detDataService(), "/dd/Structure/LHCb/Velo" );
+  SmartDataPtr<DeVelo> velo( detSvc(), "/dd/Structure/LHCb/Velo" );
   if ( 0 == velo ) {
     log << MSG::ERROR << "Unable to retrieve Velo detector element." << endreq;
     return StatusCode::FAILURE;
@@ -82,6 +86,11 @@ StatusCode PuVetoAlg::initialize() {
   m_nBin.push_back( zBin( m_lowBound[4]-0.001)+1 );
 
   m_totBin = m_nBin[ m_nBin.size()-1 ];
+
+  for ( int ks=0 ; m_velo->nbPuSensor() > ks ; ks++ ) {
+    VetoInput a( ks );
+    m_input.push_back( a );
+  }
 
   double binCenter;
   
@@ -112,18 +121,50 @@ StatusCode PuVetoAlg::execute() {
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 
+  int ks;
+  for ( ks=0 ; m_velo->nbPuSensor() > ks ; ks++ ) {
+    m_input[ks].strips()->clear();
+  }
   //*** get the input data
 
-  SmartDataPtr< L1Raws > digs ( eventDataService() , 
-                                                m_inputContainer );
-  if( 0 == digs ) {
-    log << MSG::ERROR
-        << "Unable to retrieve input data container="
+  SmartDataPtr< MCVeloFEs > fes ( eventSvc() , m_inputContainer );
+  if( 0 == fes ) {
+    log << MSG::ERROR << "Unable to retrieve input data container="
         << m_inputContainer << endreq;
     return StatusCode::FAILURE;
   }
 
-  fillHisto( digs );
+  //========================================================================
+  // Apply a threshold on each strip, OR them by 4 and store the central
+  // strip coordinate, to be transformed in R later.
+  //========================================================================
+
+  for ( MCVeloFEs::const_iterator itFe = fes->begin(); 
+        fes->end() != itFe ; itFe++  ) {
+    if ( m_threshold < (*itFe)->charge() ) {
+      unsigned int sensor = (*itFe)->sensor();
+      int fired           = 4 * ( (*itFe)->strip()/4 ) + 2;
+      std::vector<int>* strips = m_input[sensor].strips();
+      bool toAdd = true;
+
+      log << MSG::VERBOSE << "Sens " << sensor << " strip " << fired;
+      
+      for ( std::vector<int>::const_iterator itS = strips->begin();
+            strips->end() != itS; itS++) {
+        if ( (*itS) == fired ) {
+          toAdd = false;
+          log << " exists.";
+        }
+      }
+      if ( toAdd ) {
+        strips->push_back( fired );
+        log << " added.";
+      }
+      log << endreq;
+    }
+  }
+
+  fillHisto(  );
 
   // We have filled the 'histogram'. Search for maximum.
   double height1, sum1, pos1;
@@ -147,8 +188,8 @@ StatusCode PuVetoAlg::execute() {
       << " window " << zTol << endreq;
     
 
-    maskHits( digs, pos1, zTol );
-    fillHisto( digs );
+    maskHits( pos1, zTol );
+    fillHisto( );
   }
 
   pos2 = peakValue( height2, sum2, width );
@@ -191,6 +232,10 @@ StatusCode PuVetoAlg::execute() {
         << endreq;
     return StatusCode::FAILURE;
   }
+  
+  for ( ks=0 ; m_velo->nbPuSensor() > ks ; ks++ ) {
+    m_input[ks].strips()->clear();
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -210,7 +255,7 @@ StatusCode PuVetoAlg::finalize() {
 //=========================================================================
 //  Fill the histogram
 //=========================================================================
-void PuVetoAlg::fillHisto ( L1Raws* digs ) {
+void PuVetoAlg::fillHisto ( ) {
   MsgStream  log( msgSvc(), name() );
   // clear histo
   for ( unsigned int j=0 ; m_hist.size() > j ; j++ ) {
@@ -222,50 +267,38 @@ void PuVetoAlg::fillHisto ( L1Raws* digs ) {
   int    zoneA, zoneB;
   int    bin;
 
-  L1Raws::iterator itWaf = digs->begin();
-  L1Raw* wafA;
-  L1Raw* wafB;
+  std::vector<VetoInput>::iterator itSens = m_input.begin();
+  VetoInput* sensA;
+  VetoInput* sensB;
+  std::vector<int>::const_iterator dA;
+  std::vector<int>::const_iterator dB;
+  
+  for ( unsigned int i1 = 0 ; 2 > i1 ; i1++, itSens++ ) {
+    sensA = &(*itSens);
+    sensB = &(*(itSens+2));
 
-  for ( unsigned int i1 = 0 ; 2 > i1 ; i1++, itWaf++ ) {
-    wafA = (*itWaf);
-    wafB = (*(itWaf+2));
+    zA = m_velo->zPuSensor( sensA->sensor() );
+    zB = m_velo->zPuSensor( sensB->sensor() );
 
-    zA = m_velo->zPuWafer( wafA->key() );
-    zB = m_velo->zPuWafer( wafB->key() );
+    std::vector<int>* digsA = sensA->strips();
+    std::vector<int>* digsB = sensB->strips() ;
 
-    std::vector<int>* digsA = & wafA->digits();
-    std::vector<int>* digsB = & wafB->digits() ;
-
-    log << MSG::VERBOSE << "Loop on Wafer " << i1 
+    log << MSG::VERBOSE << "Loop on Sensor " << i1 
         << " z = " << zA << " " << zB
         << " Mult " << digsA->size() << " and " << digsB->size() << endreq;
-    for ( std::vector<int>::const_iterator dA = digsA->begin() ; 
-          digsA->end() != dA ; dA++ ) {
+    for ( dA = digsA->begin() ;  digsA->end() != dA ; dA++ ) {
       if ( 10000 < (*dA) ) { continue; }
       double stripA = (double) (*dA) ;
       rA = m_velo->rOfStrip( stripA, zoneA );
       
-      for ( std::vector<int>::const_iterator dB = digsB->begin() ; 
-          digsB->end() != dB ; dB++ ) {
+      for ( dB = digsB->begin();  digsB->end() != dB ; dB++ ) {
         if ( 10000 < (*dB) ) { continue; }
         double stripB = (double) (*dB);
         rB = m_velo->rOfStrip( stripB, zoneB );
 
-        // Basic Phi matching... Corresponding zones in the wafer.
+        // Basic Phi matching... Corresponding zones in the sensor.
 
-        if ( 0 == zoneA ) {
-          if ( 0 != zoneB ) { continue; }
-        } else if ( 1 == zoneA ) {
-          if ( 1 != zoneB ) { continue; }
-        } else if ( 2 == zoneA ) {
-          if ( 2 < zoneB ) { continue; }
-        } else if ( 3 == zoneA ) {
-          if ( 3 != zoneB ) { continue; }
-        } else if ( 4 == zoneA ) {
-          if ( 4 != zoneB ) { continue; }
-        } else if ( 5 == zoneA ) {
-          if ( 3 > zoneB ) { continue; }
-        }
+        if ( !m_velo->matchingZones( zoneA, zoneB ) ) {  continue; }
 
         if ( rB < rA ) {
           z = ( zB*rA - zA*rB) / ( rA - rB );
@@ -285,8 +318,7 @@ void PuVetoAlg::fillHisto ( L1Raws* digs ) {
 //=========================================================================
 //  Mask the hits contributing to the vertex
 //=========================================================================
-void PuVetoAlg::maskHits ( L1Raws* digs, 
-                           double zVertex,
+void PuVetoAlg::maskHits ( double zVertex,
                            double zTol   ) {
   MsgStream  log( msgSvc(), name() );
   double stripA, stripB;
@@ -294,21 +326,22 @@ void PuVetoAlg::maskHits ( L1Raws* digs,
   double rA, rB;
   int    zoneA, zoneB;
 
-  L1Raws::iterator itWaf = digs->begin();
-  L1Raw* wafA;
-  L1Raw* wafB;
+  std::vector<VetoInput>::iterator itSens = m_input.begin();
+  VetoInput* sensA;
+  VetoInput* sensB;
+  std::vector<int>::iterator dA; 
+  std::vector<int>::iterator dB; 
   
-  for ( unsigned int i1 = 0 ; 2 > i1 ; i1++, itWaf++ ) {
-    wafA = (*itWaf);
-    wafB = (*(itWaf+2));
-    zA = m_velo->zPuWafer( wafA->key() );
-    zB = m_velo->zPuWafer( wafB->key() );
+  for ( unsigned int i1 = 0 ; 2 > i1 ; i1++, itSens++ ) {
+    sensA = &(*itSens);
+    sensB = &(*(itSens+2));
+    zA = m_velo->zPuSensor( sensA->sensor() );
+    zB = m_velo->zPuSensor( sensB->sensor() );
 
-    std::vector<int>* digsA = & wafA->digits();
-    std::vector<int>* digsB = & wafB->digits() ;
+    std::vector<int>* digsA = sensA->strips();
+    std::vector<int>* digsB = sensB->strips() ;
 
-    for ( std::vector<int>::iterator dA = digsA->begin() ; 
-          digsA->end() != dA ; dA++ ) {
+    for ( dA = digsA->begin() ;  digsA->end() != dA ; dA++ ) {
       if ( 10000 < (*dA) ) { 
         stripA = (double) ((*dA)-10000 );
       } else {
@@ -317,8 +350,7 @@ void PuVetoAlg::maskHits ( L1Raws* digs,
       
       rA = m_velo->rOfStrip( stripA, zoneA );
       
-      for ( std::vector<int>::iterator dB = digsB->begin() ; 
-          digsB->end() != dB ; dB++ ) {
+      for ( dB = digsB->begin() ; digsB->end() != dB ; dB++ ) {
         if ( 10000 < (*dB) ) { 
           stripB = (double) ((*dB)-10000 );
         } else {
@@ -326,21 +358,8 @@ void PuVetoAlg::maskHits ( L1Raws* digs,
         }
         rB = m_velo->rOfStrip( stripB, zoneB );
 
-        // Basic Phi matching... Corresponding zones in the wafer.
-
-        if ( 0 == zoneA ) {
-          if ( 0 != zoneB ) { continue; }
-        } else if ( 1 == zoneA ) {
-          if ( 1 != zoneB ) { continue; }
-        } else if ( 2 == zoneA ) {
-          if ( 2 < zoneB ) { continue; }
-        } else if ( 3 == zoneA ) {
-          if ( 3 != zoneB ) { continue; }
-        } else if ( 4 == zoneA ) {
-          if ( 4 != zoneB ) { continue; }
-        } else if ( 5 == zoneA ) {
-          if ( 3 > zoneB ) { continue; }
-        }
+        // Basic Phi matching... Corresponding zones in the sensor.
+        if ( !m_velo->matchingZones( zoneA, zoneB ) ) {  continue; }
 
         if ( rB < rA ) {
           z = ( zB*rA - zA*rB) / ( rA - rB );

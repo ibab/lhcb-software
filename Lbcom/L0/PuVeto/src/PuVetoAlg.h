@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.h,v 1.3 2002-04-05 09:26:03 ocallot Exp $
+// $Id: PuVetoAlg.h,v 1.4 2002-04-24 13:00:19 ocallot Exp $
 #ifndef PUVETOALG_H 
 #define PUVETOALG_H 1
 
@@ -9,11 +9,27 @@
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
 
-// from L1Event
-#include "Event/L1Raw.h"
+// from VeloEvent
+#include "Event/MCVeloFE.h"
 
 // from VeloDet
 #include "VeloDet/DeVelo.h"
+
+class VetoInput {
+public:
+  VetoInput( int sensor )  { m_sensor = sensor;  };
+  virtual ~VetoInput( ) { };
+  int sensor()                   const { return m_sensor; };
+
+  void addStrip( double strip )        { m_strip.push_back( strip ); };
+  
+  std::vector<int>* strips( )          { return &m_strip;            };
+  
+private:
+  int m_sensor;
+  std::vector<int> m_strip;
+};
+
 
 /** @class PuVetoAlg PuVetoAlg.h
  *  Computes the Veto algorithm, from the PuVetoDigits
@@ -34,7 +50,7 @@ public:
 
 protected:
   /// fill the histogram
-  void fillHisto( L1Raws* digs );
+  void fillHisto( );
 
   /// return the bin number in the variable size histogram;
   long    zBin( double z ) {
@@ -64,11 +80,12 @@ protected:
   double peakValue( double& height, double& sum, double& width ) ;
 
   /// Mask the hits contributing to a peak at a given vertex position
-  void maskHits(  L1Raws* digs, double zVertex, double zTol );
+  void maskHits( double zVertex, double zTol );
 
 private:
   std::string    m_inputContainer;
   std::string    m_outputContainer;
+  double         m_threshold;
   double         m_lowThreshold;
   double         m_highThreshold;
   double         m_highPosition;
@@ -76,6 +93,8 @@ private:
 
   DeVelo*        m_velo;
 
+  std::vector< VetoInput > m_input;
+  
   // Storage for the variable bound histogram
 
   std::vector<double> m_lowBound;

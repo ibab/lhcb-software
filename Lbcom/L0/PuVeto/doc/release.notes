@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.4 2002-04-05 15:25:46 ocallot Exp $
+! $Id: release.notes,v 1.5 2002-04-24 13:00:19 ocallot Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
 
 !=============================================================================
-! 05/04/2002 - Olivier Callot  ** v2r0 **
+! 24/04/2002 - Olivier Callot  ** v2r0 **
+  - Adapted to the new Velo event model. One starts from MCVeloFE strips
+  - Added a threshold per strip, and the grouping by 4 in the algorithm.
+
+!=============================================================================
+! 05/04/2002 - Olivier Callot
   - Adapted to the L1 event model.
 	- Uses the fixed Det/VeloDet for PuVeto geometry.
 
