@@ -1,4 +1,4 @@
-// $Id: RichParticleIDType.h,v 1.10 2004-02-02 14:15:21 jonesc Exp $
+// $Id: RichParticleIDType.h,v 1.11 2004-07-12 14:51:18 jonrob Exp $
 #ifndef RICHKERNEL_PARTICLEIDTYPE_H
 #define RICHKERNEL_PARTICLEIDTYPE_H 1
 
@@ -11,7 +11,13 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
-// namespace for RICH detector specifics
+/** @namespace Rich
+ *  
+ *  General namespace for RICH specific definitions
+ *
+ *  @author Chris Jones  Christoper.Rob.Jones@cern.ch
+ *  @date   08/07/2004
+ */
 namespace Rich {
 
   /// Number of RICH particle types
@@ -19,12 +25,12 @@ namespace Rich {
 
   /// Number of RICH particle types, kept for backward compatibility
   static const int NRichParticleTypes = 5;
-
-  /** @enum Rich::ParticleIDType
-   *  Enumeration for RICH particle ID mass hypotheses
+ 
+  /**  
+   *  RICH particle ID mass hypotheses
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date   2002-06-19
+   *  @author Chris Jones  Christoper.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
   enum ParticleIDType {
     Unknown = -1,

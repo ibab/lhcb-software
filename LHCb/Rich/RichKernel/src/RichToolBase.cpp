@@ -1,4 +1,4 @@
-// $Id: RichToolBase.cpp,v 1.1 2004-06-17 12:00:48 cattanem Exp $
+// $Id: RichToolBase.cpp,v 1.2 2004-07-12 14:51:18 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -27,11 +27,20 @@ RichToolBase::RichToolBase( const std::string& type,
 StatusCode RichToolBase::initialize() 
 {
   // Execute the base class initialize
-  return GaudiTool::initialize();
+  const StatusCode sc = GaudiTool::initialize();
+  
+  // Printout from initialization
+  debug() << "Initilize" << endreq;
+  
+  // return status
+  return sc;
 }
 
 StatusCode RichToolBase::finalize() 
 {
-  // Finalise base class
+  // Printout from finalization
+  debug() << "Finalize" << endreq;
+
+  // Finalise base class and return
   return GaudiTool::finalize();
 }
