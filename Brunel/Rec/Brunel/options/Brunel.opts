@@ -17,7 +17,7 @@
 // Standard Gaudi configuration and additional DLLs
 //--------------------------------------------------------------
 #include "$STDOPTIONS"
-#include "$STDOPTS/DetDesc.opts"
+//#include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
 
 #pragma print on
@@ -32,7 +32,7 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
                            "BrunelPhase/BrunelFinalFit",
                            "BrunelFinalisation/BrunelFinish" };
 #pragma print off
-#include "$BRUNELOPTS/BrunelMoni.opts"
+//#include "$BRUNELOPTS/BrunelMoni.opts"
 #pragma print on
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
@@ -45,46 +45,46 @@ BrunelFinalFit.DetectorList = { "TRAC" };
 //--------------------------------------------------------------
 // Fortran processing sequences
 //--------------------------------------------------------------
-BrunelDigiVELOSeq.Members = { "BrunelDigiVELO" };
+//BrunelDigiVELOSeq.Members = { "BrunelDigiVELO" };
 BrunelDigiRICHSeq.Members = { "BrunelDigiRICH" };
-BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
+//BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
 
-BrunelTriggerTRIGGERSeq.Members = { "BrunelTriggerTRIGGER" };
+//BrunelTriggerTRIGGERSeq.Members = { "BrunelTriggerTRIGGER" };
 
-BrunelRecoRICHSeq.Members = { "BrunelRecoRICH" };
-BrunelRecoCALOSeq.Members = { "BrunelRecoECAL", "BrunelRecoHCAL" };
+//BrunelRecoRICHSeq.Members = { "BrunelRecoRICH" };
+//BrunelRecoCALOSeq.Members = { "BrunelRecoECAL", "BrunelRecoHCAL" };
 
-BrunelFinalFitTRACSeq.Members = { "BrunelFinalFitTRAC" };
+//BrunelFinalFitTRACSeq.Members = { "BrunelFinalFitTRAC" };
 
 // Add muon background (default is false)
-BrunelDigiMUON.addBkg = false;
+//BrunelDigiMUON.addBkg = false;
 
 //--------------------------------------------------------------
 // C++ subdetector algorithms
 //--------------------------------------------------------------
 #pragma print off
 // L0 trigger
-#include "$L0CALOROOT/options/Brunel.opts"
-#include "$L0MUONROOT/options/Brunel.opts"
-#include "$PUVETOROOT/options/Brunel.opts"
-#include "$L0DUROOT/options/Brunel.opts"
-ApplicationMgr.DLLs += { "MuonSicbCnv" };
+//#include "$L0CALOROOT/options/Brunel.opts"
+//#include "$L0MUONROOT/options/Brunel.opts"
+//#include "$PUVETOROOT/options/Brunel.opts"
+//#include "$L0DUROOT/options/Brunel.opts"
+//ApplicationMgr.DLLs += { "MuonSicbCnv" };
 
 // Calorimeter digitisation
 //   and back conversion of digits to SICB bank
-#include "$CALOTOOLSOPTS/Brunel.opts"
-#include "$CALOCAOPTS/Brunel.opts"
-#include "$CALOALGSOPTS/Brunel.opts"
-#include "$CALOSICBCNVOPTS/Brunel.opts"
+//#include "$CALOTOOLSOPTS/Brunel.opts"
+//#include "$CALOCAOPTS/Brunel.opts"
+//#include "$CALOALGSOPTS/Brunel.opts"
+//#include "$CALOSICBCNVOPTS/Brunel.opts"
 
 // Tracking and back conversion of tracks to AXTK
-ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
-#include "$OTALGORITHMSROOT/options/Brunel.opts"
-#include "$ITALGORITHMSROOT/options/Brunel.opts"
-#include "$TRALGORITHMSROOT/options/Brunel.opts"
-#include "$TRSICBCNVROOT/options/Brunel.opts"
+//ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+//#include "$OTALGORITHMSROOT/options/Brunel.opts"
+//#include "$ITALGORITHMSROOT/options/Brunel.opts"
+//#include "$TRALGORITHMSROOT/options/Brunel.opts"
+//#include "$TRSICBCNVROOT/options/Brunel.opts"
 
 // Velo digitisation and tracking
-ApplicationMgr.DLLs += { "VeloDet", "VeloDigit", "VeloTrack" };
-BrunelDigiVELOSeq.Members += { "VeloDigitAlg", "PuVetoDigitAlg" };
-BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
+//ApplicationMgr.DLLs += { "VeloDet", "VeloDigit", "VeloTrack" };
+//BrunelDigiVELOSeq.Members += { "VeloDigitAlg", "PuVetoDigitAlg" };
+//BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
