@@ -5,8 +5,11 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.6 2005-01-21 22:17:23 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.7 2005-01-24 21:29:08 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2005/01/21 22:17:23  jonrob
+ *  update statistical printout
+ *
  *  Revision 1.5  2005/01/21 18:10:04  jonrob
  *  Fix L1 statistics
  *
@@ -108,46 +111,52 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
                                      const std::string & title ) const
 {
 
-  // See if any summary info has been collected
-  if ( !count.empty() ) {
+  // Hack for DC04. Catch exception due to unknown L1 ID
+  try {
 
-    // Statistical calculators
-    const RichStatDivFunctor occ1("%7.2f +-%5.2f"), occ2("%8.2f +-%5.2f");
+    // See if any summary info has been collected
+    if ( !count.empty() ) {
 
-    // Printout
-    info() << "=========================================================================================================" << endreq
-           << "                                      " << title << endreq;
+      // Statistical calculators
+      const RichStatDivFunctor occ1("%7.2f +-%5.2f"), occ2("%8.2f +-%5.2f");
 
-    debug() << "---------------------------------------------------------------------------------------------------------" << endreq;
-    std::vector< unsigned long > totWordSize(Rich::NRiches,0), totBanks(Rich::NRiches,0), totHits(Rich::NRiches,0);
-    for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
-    {
-      const RichDAQ::HPDHardwareID L1ID   = (*iL1C).first.second;
-      const RichDAQ::BankVersion version  = (*iL1C).first.first;
-      const Rich::DetectorType rich       = m_l1Tool->richDetector( L1ID );
-      const unsigned long nBanks          = (*iL1C).second.first;
-      totBanks[rich]                     += nBanks;
-      const unsigned long words           = (*iL1C).second.second.first;
-      totWordSize[rich]                  += words;
-      const unsigned long hits            = (*iL1C).second.second.second;
-      totHits[rich]                      += hits;
-      debug() << "  Board " << format("%3i",L1ID) << " Ver" << version << " | L1 size ="
-              << occ1(nBanks,m_evtCount) << " hpds :"
-              << occ2(words,m_evtCount) << " words :"
-              << occ2(hits,m_evtCount) << " hits / event" << endreq;
-    }
+      // Printout
+      info() << "=========================================================================================================" << endreq
+             << "                                      " << title << endreq;
 
-    info() << "---------------------------------------------------------------------------------------------------------" << endreq;
-    info() << "  RICH1 Average  | L1 size =" << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
-           << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
-           << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
-    info() << "  RICH2 Average  | L1 size =" << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
-           << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
-           << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
+      debug() << "---------------------------------------------------------------------------------------------------------" << endreq;
+      std::vector< unsigned long > totWordSize(Rich::NRiches,0), totBanks(Rich::NRiches,0), totHits(Rich::NRiches,0);
+      for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
+      {
+        const RichDAQ::HPDHardwareID L1ID   = (*iL1C).first.second;
+        const RichDAQ::BankVersion version  = (*iL1C).first.first;
+        const Rich::DetectorType rich       = m_l1Tool->richDetector( L1ID );
+        const unsigned long nBanks          = (*iL1C).second.first;
+        totBanks[rich]                     += nBanks;
+        const unsigned long words           = (*iL1C).second.second.first;
+        totWordSize[rich]                  += words;
+        const unsigned long hits            = (*iL1C).second.second.second;
+        totHits[rich]                      += hits;
+        debug() << "  Board " << format("%3i",L1ID) << " Ver" << version << " | L1 size ="
+                << occ1(nBanks,m_evtCount) << " hpds :"
+                << occ2(words,m_evtCount) << " words :"
+                << occ2(hits,m_evtCount) << " hits / event" << endreq;
+      }
 
-    info() << "=========================================================================================================" << endreq;
+      info() << "---------------------------------------------------------------------------------------------------------" << endreq;
+      info() << "  RICH1 Average  | L1 size =" << occ1(totBanks[Rich::Rich1],m_evtCount) << " hpds :"
+             << occ2(totWordSize[Rich::Rich1],m_evtCount) << " words :"
+             << occ2(totHits[Rich::Rich1],m_evtCount) << " hits / event" << endreq;
+      info() << "  RICH2 Average  | L1 size =" << occ1(totBanks[Rich::Rich2],m_evtCount) << " hpds :"
+             << occ2(totWordSize[Rich::Rich2],m_evtCount) << " words :"
+             << occ2(totHits[Rich::Rich2],m_evtCount) << " hits / event" << endreq;
 
-  } // end stats available
+      info() << "=========================================================================================================" << endreq;
+
+    } // end stats available
+
+  }
+  catch ( const GaudiException & expt ) { }
 
 }
 
