@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.10 2002-06-30 14:43:11 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.11 2002-07-07 19:48:17 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -154,18 +154,21 @@ StatusCode VeloSim::execute() {
   if (sc){
       // velo simulation
       m_hits = m_veloHits;
-      m_spillOverHits = m_veloSpillOverHits;
+      m_spillOverHits=NULL;
+      if (0!=m_veloSpillOverHits) m_spillOverHits = m_veloSpillOverHits;
       m_FEs  = m_veloFEs;
       m_simMode="velo"; 
       sc = simulation();   
    
 
       // pile-up simulation
+    if (m_pileUp){
       m_hits = m_pileUpHits;
       m_spillOverHits = m_pileUpSpillOverHits;
       m_FEs  = m_pileUpFEs;
       m_simMode="pileUp";
-      sc = simulation();       
+      sc = simulation(); 
+    }      
   }
 
   if (sc) sc= storeOutputData(); // add MCFEs to TDS
@@ -199,8 +202,9 @@ StatusCode VeloSim::getInputData() {
   log << MSG::DEBUG << "Retrieving MCVeloHits from " << m_inputContainer 
       << endreq;
   SmartDataPtr<MCVeloHits> hits ( eventSvc() , m_inputContainer );
+  log << MSG::DEBUG <<"hits" << hits << endreq;
   m_veloHits=hits;
- 
+
   if( 0 == m_veloHits ) {
     log << MSG::ERROR
 	<< "Unable to retrieve input data container="
@@ -239,11 +243,11 @@ StatusCode VeloSim::getInputData() {
     m_veloSpillOverHits=sphits;
  
     if( 0 == m_veloSpillOverHits ) {
-      log << MSG::INFO
+      log << MSG::DEBUG
 	  << "Spill over event not present unable to retrieve input data container="
 	  << m_spillOverInputContainer << endreq;
     }
-   else log << MSG::DEBUG << m_spillOverHits->size() 
+   else log << MSG::DEBUG << m_veloSpillOverHits->size() 
             << " spill over hits retrieved" << endreq;
   }
 
@@ -255,7 +259,7 @@ StatusCode VeloSim::getInputData() {
     m_pileUpSpillOverHits=spuhits;
  
     if( 0 == m_pileUpSpillOverHits ) {
-      log << MSG::INFO
+      log << MSG::DEBUG
 	  << "Spill over event for PileUp not present unable to retrieve input data container="
 	  << m_spillOverInputContainer << endreq;
     }
@@ -315,7 +319,7 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
     }
   }
 
-  log << MSG::DEBUG << " Number of MCVeloFEs created "
+  log << MSG::DEBUG << "Number of MCVeloFEs "
       << m_FEs->size() << endreq;
 
   return StatusCode::SUCCESS;
@@ -626,17 +630,19 @@ StatusCode VeloSim::coupling(){
     MCVeloFE* myFE = m_FEs->object( (*coupIt)->key() );
     if ( 0 != myFE ) {
       myFE->setAddedSignal( myFE->addedSignal() + (*coupIt)->addedSignal() );
-      log << MSG::DEBUG << " -- Existing FE. " 
+      log << MSG::VERBOSE << " -- Existing FE. " 
           << (*coupIt)->sensor() << "," 
           << (*coupIt)->strip() << " Update with coupling FE." << endreq;      
     } else {
-      log << MSG::DEBUG << " -- Add coupling FE " 
+      log << MSG::VERBOSE << " -- Add coupling FE " 
           << (*coupIt)->sensor() << "," 
           << (*coupIt)->strip() << endreq;
       m_FEs->insert(*coupIt);
     }
   }
   delete m_FEs_coupling;
+  log << MSG::DEBUG << "Number of FEs after coupling simulation " 
+      << m_FEs->size() << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -838,6 +844,9 @@ StatusCode VeloSim::noiseSim(){
     }
 
   }
+  log << MSG::DEBUG << "Number of FEs after noise simulation " 
+      << m_FEs->size() << endreq;
+
 
   return StatusCode::SUCCESS;
 }
@@ -902,8 +911,8 @@ MCVeloFE* VeloSim::findOrInsertFE(VeloChannelID& stripKey){
   if (myFE==NULL) {
     // this strip has not been used before, so create
     myFE = new MCVeloFE(stripKey);
-    log << MSG::DEBUG << " -- Add FE " << stripKey.sensor() << "," 
-        << stripKey.strip() << endreq;
+        log << MSG::VERBOSE << " -- Add FE " << stripKey.sensor() << "," 
+            << stripKey.strip() << endreq;
     m_FEs->insert(myFE);
   }
   return myFE;
