@@ -1,11 +1,22 @@
-! $Id: release.notes,v 1.9 2005-02-12 16:11:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.10 2005-02-16 11:16:57 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.10 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2005-02-16 - Vanya BELYAEV
+ - new examples: 
+
+   src/LoKi_Bs2PhiMM.cpp 
+      simple algorithm to study the kinematical property of Bs-> phi mu+ mu- decay 
+
+   src/LoKi_Higgs1.cpp  
+      simple algorithm to study the energy flows , suitable for 
+       Higgs->bb analysis with tagging muon from W or Z 
+
 
 ! 2005-02-12 - Vanya BELYAEV
 

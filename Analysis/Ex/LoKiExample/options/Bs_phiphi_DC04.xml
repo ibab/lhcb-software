@@ -6,7 +6,7 @@
 <POOLFILECATALOG>
 <File ID="58DFAF80-E3B6-D811-9428-0002B3AFB2ED">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000068_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000068_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000068_5.dst"/>
@@ -14,7 +14,7 @@
 </File>
 <File ID="1499FF2F-E7B1-D811-90DE-0002B3AFB2FE">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000032_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000032_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000032_5.dst"/>
@@ -22,7 +22,7 @@
 </File>
 <File ID="B86D2AC4-E6B1-D811-83C0-0002B3D8EAED">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000088_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000088_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000088_5.dst"/>
@@ -30,7 +30,7 @@
 </File>
 <File ID="28B7FA7E-EDB1-D811-9B58-0002B3B09A61">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000063_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000063_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000063_5.dst"/>
@@ -38,7 +38,7 @@
 </File>
 <File ID="20AA7E04-DBB6-D811-8512-0002B3B0995F">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000050_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000050_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000050_5.dst"/>
@@ -46,7 +46,7 @@
 </File>
 <File ID="B6E58991-DAB6-D811-850E-0002B3D8E545">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000016_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000016_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000016_5.dst"/>
@@ -54,7 +54,7 @@
 </File>
 <File ID="4ED6E79C-E3B1-D811-9BF2-0002B3AFB44E">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000066_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000066_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000066_5.dst"/>
@@ -62,7 +62,7 @@
 </File>
 <File ID="3E477CA9-DCB6-D811-9156-0002B3AFA7DE">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000043_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000043_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000043_5.dst"/>
@@ -70,7 +70,7 @@
 </File>
 <File ID="7238C6EE-D7B6-D811-8EE9-0002B3AFAD3E">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000056_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000056_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000056_5.dst"/>
@@ -78,7 +78,7 @@
 </File>
 <File ID="E468A2AC-63C6-D811-9EBF-0002B3E9B12D">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000651_00000021_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000651_00000021_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000651_00000021_5.dst"/>
@@ -86,7 +86,7 @@
 </File>
 <File ID="E6434CDE-D3B6-D811-99DE-0002B3D8EBBF">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000041_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000041_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000041_5.dst"/>
@@ -94,7 +94,7 @@
 </File>
 <File ID="C8880D27-DAB6-D811-9B21-0002B3D8E79D">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000010_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000010_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000010_5.dst"/>
@@ -102,7 +102,7 @@
 </File>
 <File ID="58F05C08-D5B6-D811-9D97-0002B3B09964">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000022_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000022_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000022_5.dst"/>
@@ -110,7 +110,7 @@
 </File>
 <File ID="CEE82E11-E6B1-D811-8433-0002B3D8E855">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000065_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000065_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000065_5.dst"/>
@@ -118,7 +118,7 @@
 </File>
 <File ID="5A070C30-DBB6-D811-8B04-0002B3D8E944">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000060_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000060_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000060_5.dst"/>
@@ -126,7 +126,7 @@
 </File>
 <File ID="084EB677-DBB6-D811-8085-0002B3D8BB90">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000054_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000054_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000054_5.dst"/>
@@ -134,7 +134,7 @@
 </File>
 <File ID="1C677148-D7B1-D811-9619-0002B3AFAD80">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000035_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000035_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000035_5.dst"/>
@@ -142,7 +142,7 @@
 </File>
 <File ID="C4083508-CEB6-D811-977B-0002B3AFB484">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000004_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000004_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000004_5.dst"/>
@@ -150,7 +150,7 @@
 </File>
 <File ID="224548DE-DEC2-D811-8451-0002B3D8E675">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000651_00000010_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000651_00000010_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000651_00000010_5.dst"/>
@@ -158,7 +158,7 @@
 </File>
 <File ID="2C417B44-E2B6-D811-82AE-0002B3AFB591">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000073_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000073_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000073_5.dst"/>
@@ -166,7 +166,7 @@
 </File>
 <File ID="E640A6C2-D4B6-D811-9A95-0002B3D8BB79">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000055_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000055_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000055_5.dst"/>
@@ -174,7 +174,7 @@
 </File>
 <File ID="AE19DF57-60C6-D811-88C1-0002B3E9B12D">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000651_00000020_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000651_00000020_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000651_00000020_5.dst"/>
@@ -182,7 +182,7 @@
 </File>
 <File ID="746834B7-DDB6-D811-9E3A-0002B3D8EBF9">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000044_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000044_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000044_5.dst"/>
@@ -190,7 +190,7 @@
 </File>
 <File ID="CAAF474B-DDC2-D811-87C5-0002B3D8E674">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000651_00000003_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000651_00000003_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000651_00000003_5.dst"/>
@@ -198,7 +198,7 @@
 </File>
 <File ID="A0A03252-DBB6-D811-8943-0002B3D8EAF1">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000053_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000053_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000053_5.dst"/>
@@ -206,7 +206,7 @@
 </File>
 <File ID="C0FFD10D-D4B6-D811-897D-0002B3D8E742">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000047_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000047_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000047_5.dst"/>
@@ -214,7 +214,7 @@
 </File>
 <File ID="B8154C64-DCB6-D811-8743-0002B3AFB491">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000036_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000036_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000036_5.dst"/>
@@ -222,7 +222,7 @@
 </File>
 <File ID="64AED680-DCB6-D811-9154-0002B3AFB4AC">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000078_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000078_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000078_5.dst"/>
@@ -230,7 +230,7 @@
 </File>
 <File ID="D8B20424-F2B1-D811-9F16-0002B3D8F96C">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000067_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000067_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000067_5.dst"/>
@@ -238,7 +238,7 @@
 </File>
 <File ID="E222F82C-DBB6-D811-9702-0002B3B0847F">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000037_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000037_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000037_5.dst"/>
@@ -246,7 +246,7 @@
 </File>
 <File ID="BC78F29B-D8B6-D811-8086-0002B3AFA939">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000021_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000021_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000021_5.dst"/>
@@ -254,7 +254,7 @@
 </File>
 <File ID="CE773E13-EBB1-D811-8611-0002B3D8E80F">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000087_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000087_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000087_5.dst"/>
@@ -262,7 +262,7 @@
 </File>
 <File ID="62051001-D8B6-D811-9F67-0002B3D8E821">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000020_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000020_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000020_5.dst"/>
@@ -270,7 +270,7 @@
 </File>
 <File ID="DEE5A0FC-D5B6-D811-98C2-0002B3AFB26F">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000039_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000039_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000039_5.dst"/>
@@ -278,7 +278,7 @@
 </File>
 <File ID="DCFDA34D-DAB6-D811-9F3D-0002B3D8E5E3">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000076_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000076_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000076_5.dst"/>
@@ -286,7 +286,7 @@
 </File>
 <File ID="0ACF1B8C-6AC6-D811-8B29-0002B3E9B08E">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000651_00000023_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000651_00000023_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000651_00000023_5.dst"/>
@@ -294,7 +294,7 @@
 </File>
 <File ID="10AC7A08-E2C2-D811-8423-0002B3D8FBBA">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000651_00000007_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000651_00000007_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000651_00000007_5.dst"/>
@@ -302,7 +302,7 @@
 </File>
 <File ID="FCB99CA0-DDC2-D811-9F8E-0002B3D8E4E8">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000651_00000017_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000651_00000017_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000651_00000017_5.dst"/>
@@ -310,7 +310,7 @@
 </File>
 <File ID="18427244-DBB6-D811-836E-0002B3D8E535">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000042_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000042_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000042_5.dst"/>
@@ -318,7 +318,7 @@
 </File>
 <File ID="AC1EF07D-D6B6-D811-8E8A-0002B3D8E827">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000008_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000008_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000008_5.dst"/>
@@ -326,7 +326,7 @@
 </File>
 <File ID="82AD6AC1-DBB6-D811-89E8-0002B3D8E6F8">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000018_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000018_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000018_5.dst"/>
@@ -334,7 +334,7 @@
 </File>
 <File ID="9C2AED68-DEB6-D811-95DB-0002B3AF7C00">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000077_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000077_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000077_5.dst"/>
@@ -342,7 +342,7 @@
 </File>
 <File ID="C459CB83-6AC6-D811-87D0-0002B3E9B08E">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000651_00000025_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000651_00000025_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000651_00000025_5.dst"/>
@@ -350,7 +350,7 @@
 </File>
 <File ID="5C3AD4A8-E5C2-D811-87C7-0002B3D8EC28">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000651_00000015_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000651_00000015_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000651_00000015_5.dst"/>
@@ -358,7 +358,7 @@
 </File>
 <File ID="E8051373-D7B6-D811-8121-0002B3AFAE2D">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000027_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000027_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000027_5.dst"/>
@@ -366,7 +366,7 @@
 </File>
 <File ID="F245B3B1-DBB6-D811-9406-0002B3AFAFE7">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000071_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000071_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000071_5.dst"/>
@@ -374,7 +374,7 @@
 </File>
 <File ID="22636400-DAB6-D811-92A4-0002B3D8E80A">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000057_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000057_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000057_5.dst"/>
@@ -382,7 +382,7 @@
 </File>
 <File ID="E063C0C8-D8B6-D811-9FC3-0002B3D8E699">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000033_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000033_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000033_5.dst"/>
@@ -390,7 +390,7 @@
 </File>
 <File ID="5C4354A7-E2B1-D811-86EA-0002B3AFAB11">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000064_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000064_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000064_5.dst"/>
@@ -398,7 +398,7 @@
 </File>
 <File ID="D2017267-DAB6-D811-8D89-0002B3D8EB28">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000061_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000061_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000061_5.dst"/>
@@ -406,7 +406,7 @@
 </File>
 <File ID="04E3A031-D8B6-D811-88B5-0002B3D8EC21">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000034_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000034_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000034_5.dst"/>
@@ -414,7 +414,7 @@
 </File>
 <File ID="5C840DC3-EAB6-D811-9E7D-0002B3D8F97C">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000046_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000046_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000046_5.dst"/>
@@ -422,7 +422,7 @@
 </File>
 <File ID="2A520672-C5B6-D811-9C2B-0002B3AFAFEC">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000001_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000001_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000001_5.dst"/>
@@ -430,7 +430,7 @@
 </File>
 <File ID="C06D4752-D9B6-D811-8892-0002B3D8EBEE">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000023_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000023_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000023_5.dst"/>
@@ -438,7 +438,7 @@
 </File>
 <File ID="EE3F593D-D2B6-D811-8E43-0002B3D8EB94">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000017_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000017_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000017_5.dst"/>
@@ -446,7 +446,7 @@
 </File>
 <File ID="121605A7-DBB6-D811-88E9-0002B3D8E5A5">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000025_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000025_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000025_5.dst"/>
@@ -454,7 +454,7 @@
 </File>
 <File ID="2C4F8F7B-D4B6-D811-95D4-0002B3D8C273">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000026_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000026_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000026_5.dst"/>
@@ -462,7 +462,7 @@
 </File>
 <File ID="4EBAD9DF-D9B6-D811-82BA-0002B3AFB5BD">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000062_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000062_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000062_5.dst"/>
@@ -470,7 +470,7 @@
 </File>
 <File ID="DE2E8086-D8B6-D811-86B9-0002B3D8E8A0">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000030_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000030_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000030_5.dst"/>
@@ -478,7 +478,7 @@
 </File>
 <File ID="3E8D7ABA-DCB6-D811-8438-0002B3D8E875">
  <physical>
-  <pfn name="rfio:/castor/cern.ch/lhcb/DC04/00000623_00000040_5.dst" filetype="ROOT_All"/>
+  <pfn name="castor:/castor/cern.ch/lhcb/DC04/00000623_00000040_5.dst" filetype="ROOT_All"/>
  </physical>
  <logical>
   <lfn name="/lhcb/production/DC04/v1/DST/00000623_00000040_5.dst"/>

@@ -1,0 +1,71 @@
+// $Id: DV_LoKi_Bs2PhiMM.opts,v 1.1 2005-02-16 11:16:57 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.1 $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ * 
+ *  Example file to run  LoKi_Bs2PhiMM example 
+ *
+ *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+ *
+ *  @date 2005-02-15
+ */
+
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+#pragma print on
+
+
+ApplicationMgr.DLLs    += {"LoKi" , "LoKiExample"        } ;
+
+ApplicationMgr.TopAlg  += { "GaudiSequencer/Bs2PhiMMSeq" } ;
+Bs2PhiMMSeq.Members     = { "LoKiPreLoad/Charged"        ,
+                            "LoKi_Bs2PhiMM/Bs2PhiMM"     } ;
+Bs2PhiMMSeq.MeasureTime = true                             ;
+
+Charged.PhysDesktop.ParticleMakerType               = "CombinedParticleMaker" ;
+Charged.PhysDesktop.CombinedMakerType.Particles     = { "muon" , "kaon" }     ;
+Charged.PhysDesktop.CombinedMakerType.ExclusiveSelection = false ;
+Charged.PhysDesktop.CombinedMakerType.MuonSelection = { "det='MUON' mu-pi='-10'" } ;
+Charged.PhysDesktop.CombinedMakerType.KaonSelection = { "det='RICH'  K-pi='-10'" } ;
+
+Bs2PhiMM.PhysDesktop.InputLocations = { "/Event/Phys/Charged" } ;
+Bs2PhiMM.NTupleLUN = "PHIMM" ;
+
+
+// N-Tuples
+ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
+NTupleSvc.Output      += 
+  {"PHIMM DATAFILE='Bs2PhiMM.hbook' TYP='HBOOK' OPT='NEW'" } ;
+
+// Histogram persistency 
+ApplicationMgr.HistogramPersistency = "HBOOK";
+
+#pragma print off
+/// input data : DC04 Bs-> phi mumu  production
+#include "$LOKIEXAMPLEOPTS/Bs_phimumu_DC04.opts"
+/// input data : DC04 Bs-> phi mumu  (PHOTOS) production
+/// #include "$LOKIEXAMPLEOPTS/Bs_phimumu_photos_DC04.opts"
+#pragma   print on 
+
+PoolDbCacheSvc.Catalog = 
+  { 
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/LoKiExampleMutableCatalog.xml"  ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phimumu_DC04.xml"            ,         
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phimumu_photos_DC04.xml"          
+  };
+
+// Number of events to process, skip and printing frequency
+ApplicationMgr.EvtMax    =   500 ;
+EventSelector.FirstEvent =     1 ;
+EventSelector.PrintFreq  =    10 ;
+
+
+// ============================================================================
+// The END 
+// ============================================================================

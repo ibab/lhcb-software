@@ -1,0 +1,72 @@
+// $Id: DV_LoKi_Higgs1.opts,v 1.1 2005-02-16 11:16:58 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.1 $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ * 
+ *  Example file to run  LoKi_Higgs1 example 
+ *
+ *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+ *
+ *  @date 2005-02-15
+ */
+
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+#pragma print on
+
+
+ApplicationMgr.DLLs   += {"LoKi" , "LoKiExample"     } ;
+
+ApplicationMgr.TopAlg += { "GaudiSequencer/HiggsSeq" } ;
+
+HiggsSeq.Members       = {  "LoKiPreLoad/Charged"    , 
+                            "LoKiPreLoad/Photons"    , 
+                            "LoKi_Higgs1/Higgs1"     } ;
+HiggsSeq.MeasureTime   = true ;
+
+Charged.PhysDesktop.ParticleMakerType = "CombinedParticleMaker" ;
+Charged.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = true ; // ATTENTION!
+Charged.PhysDesktop.CombinedParticleMaker.Particles          = { "muon" , "pion" } ;
+Charged.PhysDesktop.CombinedParticleMaker.MuonSelection      = { "det='MUON' mu-pi='-10'" } ;
+Charged.PhysDesktop.CombinedParticleMaker.PionSelection      = {} ;
+
+Photons.PhysDesktop.ParticleMakerType = "PhotonParticleMaker" ;
+
+Higgs1.PhysDesktop.InputLocations = { "/Event/Phys/Charged" ,
+                                      "/Event/Phys/Photons" } ;
+Higgs1.NTupleLUN = "HIGGS" ;
+
+// N-Tuples
+ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
+NTupleSvc.Output      += 
+  {"HIGGS DATAFILE='Higgs1.hbook' TYP='HBOOK' OPT='NEW'" } ;
+
+// Histogram persistency 
+ApplicationMgr.HistogramPersistency = "HBOOK";
+
+
+#pragma print off
+// input data : DC04 Higgs production
+#include "$LOKIEXAMPLEOPTS/Higgs_bb_DC04.opts"
+#pragma   print on 
+
+PoolDbCacheSvc.Catalog = 
+  { 
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/LoKiExampleMutableCatalog.xml"  ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Higgs_bb_DC04.xml"          
+  };
+
+// Number of events to process, skip and printing frequency
+ApplicationMgr.EvtMax    =   500 ;
+EventSelector.FirstEvent =     1 ;
+EventSelector.PrintFreq  =    10 ;
+
+// ============================================================================
+//  The END 
+// ============================================================================
