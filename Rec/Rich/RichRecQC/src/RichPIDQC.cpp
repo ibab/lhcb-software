@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.8 2003-07-02 15:58:53 jonesc Exp $
+// $Id: RichPIDQC.cpp,v 1.9 2003-07-04 12:30:31 jonesc Exp $
 // Include files
 
 // local
@@ -518,7 +518,7 @@ StatusCode RichPIDQC::finalize() {
                    kaonIDEff[0], kaonIDEff[1], piIDEff[0], piIDEff[1] ) << endreq;
     msg << format( "  %MisID   |    Ka: %6.2f+-%6.2f    Pi: %6.2f+-%6.2f ",
                    kaonMisIDEff[0], kaonMisIDEff[1], piMisIDEff[0], piMisIDEff[1] ) << endreq;
-    msg << "PID rate   | events " << evPIDRate[0] << " +- " << evPIDRate[1]
+    msg << "PID rate   |    events " << evPIDRate[0] << " +- " << evPIDRate[1]
         << "%,  tracks " << trPIDRate[0] << " +- " << trPIDRate[1] << "%" << endreq
         << "-----------+-----------------------------------------------+-----------"
         << endreq;
