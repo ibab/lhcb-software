@@ -1,10 +1,10 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimEngine.h,v 1.2 2004-05-26 18:39:41 vanphil Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimEngine.h,v 1.3 2004-09-21 16:35:03 mato Exp $
 #ifndef GAUCHO_DIMENGINE_H
 #define GAUCHO_DIMENGINE_H 1
 
 #include <string>
 #include <map>
-#include "/afs/cern.ch/user/v/vanphil/dim/dim/dis.hxx"
+#include "dis.hxx"
 
 /** @class DimEngine DimEngine.h Gaucho/DimEngine.h
 
@@ -40,4 +40,4 @@ private:
   DimH1DMapIt m_dimHistosIt;
 }; 
 
-#endif GAUCHO_DIMENGINE_H
+#endif // GAUCHO_DIMENGINE_H

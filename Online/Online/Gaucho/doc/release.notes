@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.1.1.1 2003-06-05 09:34:45 vanphil Exp $
+! $Id: release.notes,v 1.2 2004-09-21 16:35:03 mato Exp $
 ! Package     : Online/Gaucho	
 ! Responsible : Philippe.Vannerem@cern.ch
 
+! 20040921 - Pere Mato
+  - Changed requirements file and include file path to use new DIM
+    interface package
+  
 ! 20030603 - Gaucho v1
   Gaucho makes counters, floats, 1DHistogram of a Gaudi application
   online available as Dim Services. Properties of Algorithms can be 

@@ -3,7 +3,7 @@
 
 #include <string>
 #include <iostream>
-#include "/afs/cern.ch/user/v/vanphil/dim/dim/dis.hxx"
+#include "dis.hxx"
 
 
 /** @class DimH1D Gaucho/DimH1D.h
