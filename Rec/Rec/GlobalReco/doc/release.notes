@@ -4,6 +4,15 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2003-05-30 - Gloria Corti
+ - src/ChargedProtoPAlg.h, ChargedProtoPAlg.cpp
+   . introduce combined particle ID and fill all DLL values for separate
+     detectors as well as the combined value in ProtoParticles. 
+     Note that the combined values are the difference between a certain 
+     hypothesis and the pion hypothesis, hence the DLL combined value for the
+     pion is identically set to zero.
+   . release all tools in finalize
+
 !===================== GlobalReco v3r1 2003-04-27 ===========================
 ! 2003-04-27 - Gloria Corti
  - cmt/requirements
