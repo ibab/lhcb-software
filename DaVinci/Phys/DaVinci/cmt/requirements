@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.161 2004-08-12 14:03:17 pkoppenb Exp $
+# $Id: requirements,v 1.162 2004-08-17 07:14:40 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -68,13 +68,13 @@ use  L0mConf 		v2r2d2   L0
 
 use  L1Decision         v2r1     Trg
 use  L1Reco             v4r0p1   Trg
-use  TrgChecker         v4r0     Trg
+use  TrgChecker         v4r1     Trg
 use  TrgForward         v2r1     Trg
 use  TrgMonitor         v2r0     Trg
 use  TrgPrimVertex      v2r0     Trg
-use  TrgTools           v4r1     Trg
+use  TrgTools           v4r2     Trg
 use  TrgVelo            v4r0     Trg
-use  TrgVeloTT          v4r0     Trg
+use  TrgVeloTT          v4r1     Trg
 use  STDAQ              v1r2     IT
 
 # To rebuild velo clusters
@@ -118,7 +118,7 @@ use  DaVinciTest        v5r0     Phys
 use  PhysSelSys		v7r7     PhysSel
 
 # Stripping
-use  Stripping          v1r2p2   Tools
+use  Stripping          v1r3     Tools
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
