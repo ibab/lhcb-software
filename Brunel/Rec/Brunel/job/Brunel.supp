@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Error suppression file Brunel v23r3, gcc 3.2, valgrind 2.0.0
+# Error suppression file Brunel v24r2, gcc 3.2.3, valgrind 2.0.0
 
 # Format of this file is:
 # {
@@ -17,11 +17,12 @@
 
 # All Gaudi and external package errors have been moved to $STDOPTS/Gaudi.supp
 
-# SEAL_1_4_0 - reported to Pere. Seen in Brunel event 400
+# POOL_1_7_0
 {
-  SEAL leak
+  POOL bug 3171
   Memcheck:Leak
-  fun:__builtin_new
+  fun:__builtin_vec_new
   fun:_Znwj
-  fun:_ZN4seal7reflect12ClassBuilder8addFieldEPKcS3_S3_ii
+  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
+  fun:_ZN11xercesc_2_322UnixHTTPURLInputStreamC1ERKNS_6XMLURLE
 }
