@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.h,v 1.1.1.1 2003-04-01 13:21:56 jonesc Exp $
+// $Id: RichRecAlgBase.h,v 1.2 2003-04-16 11:37:18 cattanem Exp $
 #ifndef RICHRECALGS_RICHRECALGBASE_H
 #define RICHRECALGS_RICHRECALGBASE_H 1
 
@@ -99,7 +99,7 @@ protected:
   int m_msgLevel;
 
   /// Track types to accept
-  std::vector<string> m_trNames; 
+  std::vector<std::string> m_trNames; 
   
   /// Bit filed for track selection
   unsigned long m_trBits;
