@@ -1,4 +1,4 @@
-// $Id: RichRecPhotonTool.h,v 1.2 2002-11-14 13:54:22 jonrob Exp $
+// $Id: RichRecPhotonTool.h,v 1.3 2002-11-20 09:04:08 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECPHOTONTOOL_H
 #define RICHRECTOOLS_RICHRECPHOTONTOOL_H 1
 
@@ -15,8 +15,8 @@
 // Rich Detector
 #include "RichDetTools/IRichDetInterface.h"
 
-// local
-#include "RichRecTools/IRichRecPhotonTool.h"
+// Interface
+#include "RichRecInterfaces/IRichRecPhotonTool.h"
 
 // Forward declarations
 class IDataProviderSvc;

@@ -1,4 +1,4 @@
-// $Id: RichRecTrackTool.h,v 1.2 2002-11-14 13:54:23 jonrob Exp $
+// $Id: RichRecTrackTool.h,v 1.3 2002-11-20 09:04:08 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECTRACKTOOL_H
 #define RICHRECTOOLS_RICHRECTRACKTOOL_H 1
 
@@ -12,9 +12,9 @@
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IChronoStatSvc.h"
 
-// local
-#include "RichRecTools/IRichRecTrackTool.h"
-#include "RichRecTools/IRichRecSegmentTool.h"
+// interfaces
+#include "RichRecInterfaces/IRichRecTrackTool.h"
+#include "RichRecInterfaces/IRichRecSegmentTool.h"
 
 // Rich Detector
 #include "RichDetTools/IRichDetInterface.h"

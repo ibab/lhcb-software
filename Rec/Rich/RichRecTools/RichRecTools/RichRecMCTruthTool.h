@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.h,v 1.1 2002-11-14 13:54:22 jonrob Exp $
+// $Id: RichRecMCTruthTool.h,v 1.2 2002-11-20 09:04:08 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
 
@@ -28,10 +28,10 @@
 #include "Event/RichRecPhoton.h"
 #include "Event/MCRichDigit.h"
 
-// local
-#include "RichRecTools/IRichRecMCTruthTool.h"
-#include "RichRecTools/IRichRecTrackTool.h"
-#include "RichRecTools/IRichRecPixelTool.h"
+// interfaces
+#include "RichRecInterfaces/IRichRecMCTruthTool.h"
+#include "RichRecInterfaces/IRichRecTrackTool.h"
+#include "RichRecInterfaces/IRichRecPixelTool.h"
 
 // Forward declarations
 class IDataProviderSvc;

@@ -1,4 +1,4 @@
-// $Id: RichRecPixelTool.h,v 1.1 2002-11-14 13:54:22 jonrob Exp $
+// $Id: RichRecPixelTool.h,v 1.2 2002-11-20 09:04:08 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECPIXELTOOL_H
 #define RICHRECTOOLS_RICHRECPIXELTOOL_H 1
 
@@ -12,8 +12,8 @@
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IChronoStatSvc.h"
 
-// local
-#include "RichRecTools/IRichRecPixelTool.h"
+// interface
+#include "RichRecInterfaces/IRichRecPixelTool.h"
 
 // Temporary SICB geometry package
 #include "RiSicbGeom/PixelFinder.h"

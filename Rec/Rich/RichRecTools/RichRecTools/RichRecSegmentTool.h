@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.h,v 1.2 2002-11-14 13:54:23 jonrob Exp $
+// $Id: RichRecSegmentTool.h,v 1.3 2002-11-20 09:04:08 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -17,8 +17,8 @@
 #include "RichUtils/IRich1DProperty.h"
 #include "RichUtils/Rich1DTabProperty.h"
 
-// local
-#include "RichRecTools/IRichRecSegmentTool.h"
+// interfaces
+#include "RichRecInterfaces/IRichRecSegmentTool.h"
 
 // Detector
 #include "RichDetTools/IRichDetInterface.h"
