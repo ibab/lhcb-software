@@ -4,11 +4,11 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
-
-!======================== MuonAlgs v5r1 2004-02-03 ========================
+!======================== MuonAlgs v5r2 2004-02-03 ========================
 ! 2004-02-03 - Alessia Satta
- - Modify to cope with the new digit time format (MuonEvent v3r0)
+ - Modify to cope with the new digit time format (MuonEvent v3r1)
 
+!======================== MuonAlgs v5r2 2004-01-07 ========================
 ! 2004-01-07 - Marco Cattaneo
  - Move to Gaudi v14 (use MuonEvent v3r* in requirements)
 
