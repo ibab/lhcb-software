@@ -6,6 +6,7 @@ branches cmt doc src options
 include_dirs $(ITDETROOT)
 
 use DetDescCnv v2r* Det
+use LHCbKernel	v2r*	Kernel
 
 #---- link library
 library ITDetLib ../src/Lib/*.cpp 
