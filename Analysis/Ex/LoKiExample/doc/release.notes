@@ -1,8 +1,15 @@
+! $Id: release.notes,v 1.7 2005-02-08 11:23:10 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.7 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV     Ivan.Belyaev@itep.ru 
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2005-02-08 - Vanya BELYAEV
+ - add new example LoKi_Pi0.cpp 
+
 
 ! 2004-10-21 - Vanya BELYAEV 
    - src/K0S_Creator.cpp 
