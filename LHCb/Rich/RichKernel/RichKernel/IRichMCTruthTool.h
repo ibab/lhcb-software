@@ -3,8 +3,11 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.5 2004-08-19 13:55:58 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.6 2004-10-13 09:19:23 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/08/19 13:55:58  jonrob
+ *  Add new method to MC truth tool + various other things after CVS server switch
+ *
  *  Revision 1.4  2004/07/26 17:53:16  jonrob
  *  Various improvements to the doxygen comments
  *
@@ -24,9 +27,10 @@ class MCRichSegment;
 class MCRichTrack;
 class MCRichDigit;
 class MCParticle;
+class MCRichHit;
 class RichDigit;
 class TrStoredTrack;
-class MCRichHit;
+class TrgTrack;
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichMCTruthTool( "IRichMCTruthTool", 1, 0 );
@@ -56,8 +60,19 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
-  virtual const MCParticle * 
+  virtual const MCParticle *
   mcParticle ( const TrStoredTrack * track ) const = 0;
+
+  /** Find best MCParticle association for a given TrgTrack
+   *
+   *  @param track Pointer to a TrgTrack
+   *
+   *  @return Pointer to MCParticle
+   *  @retval NULL  No Monte Carlo association was possible
+   *  @retval !NULL Association was successful
+   */
+  virtual const MCParticle *
+  mcParticle ( const TrgTrack * track ) const = 0;
 
   /** Determines the particle mass hypothesis for a given TrtStoredTrack
    *
@@ -65,16 +80,25 @@ public:
    *
    *  @return The true particle type of the TrStoredTrack
    */
-  virtual Rich::ParticleIDType 
+  virtual Rich::ParticleIDType
   mcParticleType ( const TrStoredTrack * track ) const = 0;
-  
+
+  /** Determines the particle mass hypothesis for a given TrgTrack
+   *
+   *  @param track Pointer to a TrgTrack
+   *
+   *  @return The true particle type of the TrStoredTrack
+   */
+  virtual Rich::ParticleIDType
+  mcParticleType ( const TrgTrack * track ) const = 0;
+
   /** Determines the particle mass hypothesis for a given MCParticle
    *
    *  @param mcPart Pointer to an MCParticle
    *
    *  @return The true particle type of the MCParticle
    */
-  virtual Rich::ParticleIDType 
+  virtual Rich::ParticleIDType
   mcParticleType ( const MCParticle * mcPart ) const = 0;
 
   /** Finds the MCRichDigit association for a given RichDigit
@@ -85,7 +109,7 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
-  virtual const MCRichDigit * 
+  virtual const MCRichDigit *
   mcRichDigit ( const RichDigit * digit ) const = 0;
 
   /** Finds the MCRichTrack associated to a given TrStoredTrack
@@ -96,8 +120,19 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
-  virtual const MCRichTrack * 
+  virtual const MCRichTrack *
   mcRichTrack ( const TrStoredTrack * track ) const = 0;
+
+  /** Finds the MCRichTrack associated to a given TrgTrack
+   *
+   *  @param track Pointer to a TrgTrack
+   *
+   *  @return Pointer to an MCRichTrack
+   *  @retval NULL  No Monte Carlo association was possible
+   *  @retval !NULL Association was successful
+   */
+  virtual const MCRichTrack *
+  mcRichTrack ( const TrgTrack * track ) const = 0;
 
   /** Finds the MCRichTrack associated to a given MCParticle
    *
@@ -107,7 +142,7 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
-  virtual const MCRichTrack * 
+  virtual const MCRichTrack *
   mcRichTrack ( const MCParticle * mcPart ) const = 0;
 
   /** Finds the MCRichOpticalPhoton associated to a given MCRichHit
@@ -118,10 +153,10 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
-  virtual const MCRichOpticalPhoton * 
+  virtual const MCRichOpticalPhoton *
   mcOpticalPhoton ( const MCRichHit * mcHit ) const = 0;
 
-  /** Checks if the given MCRichDigit is the result of a background 
+  /** Checks if the given MCRichDigit is the result of a background
    *  hit, i.e. not a true Cherenkov hit
    *
    *  @param digit Pointer to an MCRichDigit
@@ -130,8 +165,7 @@ public:
    *  @retval true  MCRichDigit originated from a background hit
    *  @retval false MCRichDigit originated from Cherenkov Radiation
    */
-  virtual bool 
-  isBackground ( const MCRichDigit * digit ) const = 0;
+  virtual bool isBackground ( const MCRichDigit * digit ) const = 0;
 
   /** Checks if the given MCRichHit is the result of a background
    *  hit, i.e. not a true Cherenkov hit
@@ -142,8 +176,7 @@ public:
    *  @retval true  MCRichHit originated from a background hit
    *  @retval false MCRichHit originated from Cherenkov Radiation
    */
-  virtual bool 
-  isBackground ( const MCRichHit * hit ) const = 0;
+  virtual bool isBackground ( const MCRichHit * hit ) const = 0;
 
 };
 

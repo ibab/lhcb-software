@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.54 2004-09-23 07:01:55 cattanem Exp $
+! $Id: release.notes,v 1.55 2004-10-13 09:19:23 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2004-10-13 - Chris Jones
+ - New methods to IRichMCTruthTool
 
 ! 2004-09-23 - Marco Cattaneo
  - BoostArray.h: Add an include to compile with Gaudi v15r2
