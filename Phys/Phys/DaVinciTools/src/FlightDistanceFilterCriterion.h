@@ -18,7 +18,7 @@ class IDataProviderSvc;
 /** @class FlightDistanceFilterCriterion FlightDistanceFilterCriterion.h
  *  Returns a yes/no depending on flight distance / significance w.r.t either 
  *  -> all PVs (for the min cuts)
- *  -> Best PV, chosen as the one for which the IPS of the composite 
+ *  -> Best PV (default), chosen as the one for which the IPS of the composite 
  *     particle is the smallest (for the min and max cuts)
  *  Cuts:
  *       - on the minimum signed or unsigned flight distance or significance
@@ -55,28 +55,21 @@ public:
 private:
 
   // Two modes (both at the same time not possible with same instance):
+  //           -> compute flight w.r.t Best PV (default)
   //           -> compute flight w.r.t all PVs
-  bool       m_CutAllPVs; ///< Cuts w.r.t all PVs
-  //           -> compute flight w.r.t Best PV
-  bool       m_CutBestPV; ///< Cuts w.r.t Best PV
+  bool       m_CutBestPV; ///< Cuts w.r.t Best PV (true). False w.r.t all PVs
 
-  // Min cuts for flight distance w.r.t all PVs  
-  double     m_minFallPVs; ///< Min unsigned Flight distance w.r.t all PVs
-  double     m_minFSallPVs; ///< Min unsigned Flight Significance w.r.t all PVs
-  double     m_minSignedFallPVs; ///< Min signed F distance w.r.t all PVs
-  double     m_minSignedFSallPVs; ///< Min signed F Significance w.r.t all PVs
-
-  // Min cuts for flight distance w.r.t the Best PV
-  double     m_minFPV; ///< Min unsigned Flight distance w.r.t Best PV
-  double     m_minFSPV; ///< Min unsigned Flight Significance w.r.t Best PV
-  double     m_minSignedFPV; ///< Min signed F distance w.r.t Best PV
-  double     m_minSignedFSPV; ///< Min signed F Significance w.r.t Best PV
+  // Min cuts for flight distance
+  double     m_minFPV; ///< Min unsigned Flight distance
+  double     m_minFSPV; ///< Min unsigned Flight Significance
+  double     m_minSignedFPV; ///< Min signed Flight distance
+  double     m_minSignedFSPV; ///< Min signed Flight Significance
 
   // Max cuts for flight distance w.r.t the Best PV
   double     m_maxFPV; ///< Max unsigned Flight distance w.r.t Best PV
   double     m_maxFSPV; ///< Max unsigned Flight Significance w.r.t Best PV
-  double     m_maxSignedFPV; ///< Max signed F distance w.r.t Best PV
-  double     m_maxSignedFSPV; ///< Max signed F Significance w.r.t Best PV
+  double     m_maxSignedFPV; ///< Max signed Flight distance w.r.t Best PV
+  double     m_maxSignedFSPV; ///< Max signed Flight Significance w.r.t Best PV
 
   IDataProviderSvc* m_EDS;
   IGeomDispCalculator* m_vtxDisTool;

@@ -32,42 +32,29 @@ FlightDistanceFilterCriterion::FlightDistanceFilterCriterion(
   // declare properties
 
   //================================================================
-  declareProperty( "CutAllPVs", m_CutAllPVs = false);
-  declareProperty( "CutBestPV", m_CutBestPV = false);
+  declareProperty( "CutBestPV", m_CutBestPV = true);
   //================================================================
 
   //================================================================
-  // Min unsigned Flight distance w.r.t all PVs
-  declareProperty( "MinFallPVs", m_minFallPVs = -1. );
-  // Min unsigned Flight Significance w.r.t all PVs
-  declareProperty( "MinFSallPVs", m_minFSallPVs = -1. );
-  // Min signed Flight distance w.r.t all PVs
-  declareProperty( "MinSignedFallPVs", m_minSignedFallPVs = -100000. );
-  // Min signed Flight Significance w.r.t all PVs
-  declareProperty( "MinSignedFSallPVs", m_minSignedFSallPVs = -100000. );
-  //================================================================
-
-  //================================================================
-  // Min unsigned Flight distance w.r.t Best PV
+  // Min unsigned Flight distance
   declareProperty( "MinFPV", m_minFPV = -1. );  
-  // Min unsigned Flight Significance w.r.t Best PV
+  // Min unsigned Flight Significance
   declareProperty( "MinFSPV", m_minFSPV = -1. );
-  // Min signed Flight distance w.r.t Best PV
+  // Min signed Flight distance
   declareProperty( "MinSignedFPV", m_minSignedFPV = -100000. );
-  // Min signed Flight Significance w.r.t Best PV
+  // Min signed Flight Significance
   declareProperty( "MinSignedFSPV", m_minSignedFSPV = -100000. );
   //---
-  // Max unsigned Flight distance w.r.t Best PV
+  // Max unsigned Flight distance
   declareProperty( "MaxFPV", m_maxFPV = -1. );  
-  // Max unsigned Flight Significance w.r.t Best PV
+  // Max unsigned Flight Significance
   declareProperty( "MaxFSPV", m_maxFSPV = -1. );
-  // Max signed Flight distance w.r.t Best PV
+  // Max signed Flight distance
   declareProperty( "MaxSignedFPV", m_maxSignedFPV = -100000. );
-  // Max signed Flight Significance w.r.t Best PV
+  // Max signed Flight Significance
   declareProperty( "MaxSignedFSPV", m_maxSignedFSPV = -100000. );
-
-
   //================================================================
+
 }
 
 //=============================================================================
@@ -94,63 +81,31 @@ StatusCode FlightDistanceFilterCriterion::initialize() {
     return sc;
   }
 
-  if(m_CutAllPVs && m_CutBestPV){
-    fatal() << ">>>   CANNOT cut w.r.t all PVs AND Best PV. " 
-      "Choose either mode." << endreq;
-    return StatusCode::FAILURE;
+  //================================================================
+  debug() << ">>>   Cuts are:" << endreq;
+  
+  // Min cuts
+  if(m_minFPV>0.){
+    debug() << ">>>   Minimum unsigned F: " 
+	    << m_minFPV << " mm" << endreq;
   }
-
-  //================================================================
-  if(m_CutAllPVs){
-    debug() << ">>>   Will apply cuts w.r.t all PVs. Cuts are:" << endreq;
-
-    if(m_minFallPVs>0.){
-      debug() << ">>>   Minimum unsigned F w.r.t all PVs: " 
-              << m_minFallPVs << " mm" << endreq;
-    }
-    
-    if(m_minFSallPVs>0.){
-      debug() << ">>>   Minimum unsigned FS w.r.t all PVs: " 
-              << m_minFSallPVs << " sigma" << endreq;
-    }
-    
-    if(m_minSignedFallPVs>-100000.){
-      debug() << ">>>   Minimum signed F w.r.t all PVs: " 
-              << m_minSignedFallPVs << " mm" << endreq;
-    }
-    
-    if(m_minSignedFSallPVs>-100000.){
-      debug() << ">>>   Minimum signed FS w.r.t all PVs: " 
-              << m_minSignedFSallPVs << " sigma" << endreq;
-    }
+  
+  if(m_minFSPV>0.){
+    debug() << ">>>   Minimum unsigned FS: " 
+	    << m_minFSPV << " sigma" << endreq;
   }
-  //================================================================
-
-  //================================================================
+  
+  if(m_minSignedFPV>-100000.){
+    debug() << ">>>   Minimum signed F: " 
+	    << m_minSignedFPV << " mm" << endreq;
+  }
+  
+  if(m_minSignedFSPV>-100000.){
+    debug() << ">>>   Minimum signed FS: " 
+	    << m_minSignedFSPV << " sigma" << endreq;
+  }
+  
   if(m_CutBestPV){
-    debug() << ">>>   Will apply cuts w.r.t Best PV. Cuts are:" << endreq;
-    
-    // Min cuts
-    if(m_minFPV>0.){
-      debug() << ">>>   Minimum unsigned F w.r.t Best PV: " 
-              << m_minFPV << " mm" << endreq;
-    }
-    
-    if(m_minFSPV>0.){
-      debug() << ">>>   Minimum unsigned FS w.r.t Best PV: " 
-              << m_minFSPV << " sigma" << endreq;
-    }
-    
-    if(m_minSignedFPV>-100000.){
-      debug() << ">>>   Minimum signed F w.r.t Best PV: " 
-              << m_minSignedFPV << " mm" << endreq;
-    }
-    
-    if(m_minSignedFSPV>-100000.){
-      debug() << ">>>   Minimum signed FS w.r.t Best PV: " 
-              << m_minSignedFSPV << " sigma" << endreq;
-    }
-
     // Max cuts
     if(m_maxFPV>0.){
       debug() << ">>>   Maximum unsigned F w.r.t Best PV: " 
@@ -171,8 +126,8 @@ StatusCode FlightDistanceFilterCriterion::initialize() {
               << m_maxSignedFSPV << " sigma" << endreq;
     }
   }
-  //================================================================
-
+  //================================================================    
+  
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -200,7 +155,6 @@ bool FlightDistanceFilterCriterion::isSatisfied( const Particle* const & part ){
 
   double normIPSMin = -1.;
   
-  bool minFallPVs_happy  = true;
   bool minFPV_happy  = true;
 
   // set to false if needed
@@ -234,9 +188,7 @@ bool FlightDistanceFilterCriterion::isSatisfied( const Particle* const & part ){
       }
     }
     //================================================================
-
-    //================================================================
-    if(m_CutAllPVs){
+    else{
       double f = -1. , fe = -1.;
       StatusCode sc = m_vtxDisTool->calcVertexDis(*pv, *secv, f, fe);
       if (sc.isFailure()) continue;
@@ -259,18 +211,18 @@ bool FlightDistanceFilterCriterion::isSatisfied( const Particle* const & part ){
       verbose() << "signed flight significance = " << normfs << endreq ;
       
       
-      if (// Check the unsigned flight distance w.r.t all PVs
-          (m_minFallPVs>0. && f < m_minFallPVs)
+      if (// Check the unsigned flight distance
+          (m_minFPV>0. && f < m_minFPV)
           ||
-          // Check the unsigned flight significance w.r.t all PVs
-          (m_minFSallPVs>0. && fs < m_minFSallPVs)
+          // Check the unsigned flight significance
+          (m_minFSPV>0. && fs < m_minFSPV)
           ||
-          // Check the unsigned flight distance w.r.t all PVs
-          (m_minSignedFallPVs > -100000. && normf < m_minSignedFallPVs)
+          // Check the unsigned flight distance
+          (m_minSignedFPV > -100000. && normf < m_minSignedFPV)
           ||
-          // Check the unsigned flight significance w.r.t all PVs
-          (m_minSignedFSallPVs > -100000. && normfs < m_minSignedFSallPVs)){
-        minFallPVs_happy  = false;
+          // Check the unsigned flight significance
+          (m_minSignedFSPV > -100000. && normfs < m_minSignedFSPV)){
+        minFPV_happy  = false;
         verbose() << "Breaking because of bad min Flight w.r.t all PVs" 
                   << endreq ;
         break; // found at least one PV not satisfying one of the criteria
@@ -281,9 +233,9 @@ bool FlightDistanceFilterCriterion::isSatisfied( const Particle* const & part ){
   } // loop over PVs
   
   //================================================================
-  if(m_CutAllPVs){  
+  if(!m_CutBestPV){  
     verbose() << "Happy for minimum F w.r.t all PVs: " 
-              << minFallPVs_happy << endreq ;
+              << minFPV_happy << endreq ;
   }
   //================================================================  
 
@@ -386,7 +338,7 @@ bool FlightDistanceFilterCriterion::isSatisfied( const Particle* const & part ){
   
     //================================================================
   
-  return (minFallPVs_happy && minFPV_happy && maxFPV_happy);
+  return (minFPV_happy && maxFPV_happy);
 }
 
 //=============================================================================

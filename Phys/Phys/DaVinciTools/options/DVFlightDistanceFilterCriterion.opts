@@ -27,5 +27,5 @@ EventSelector.Input   = {
   "DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000519_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
  };
 
-ApplicationMgr.EvtMax    = 100;
+ApplicationMgr.EvtMax    = 100 ;
 //MessageSvc.OutputLevel   = 1;
