@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.5 2002-03-01 16:12:36 andreav Exp $
+//$Id: PopulateDB.cpp,v 1.6 2002-04-17 16:11:59 andreav Exp $
 #include <stdio.h>
 #include <fstream>
 
@@ -377,13 +377,27 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
 	  << "Folder name: " << rootName+"/Geometry/LHCb" << endreq;
       log << MSG::VERBOSE 
 	  << "Create object with validity range: [" << CondDBminusInf
-	  << "," << CondDBplusInf << "]" << endreq;
+	  << "(0x" << std::hex 
+	  << CondDBminusInf
+	  << std::dec << ")" 
+	  << "," << CondDBplusInf 
+	  << "(0x" << std::hex 
+	  << CondDBplusInf
+	  << std::dec << ")" 
+	  << "]" << endreq;
       ICondDBObject* condObject = CondDBObjFactory::createCondDBObject
 	(CondDBminusInf, CondDBplusInf, xmlString, "LHCb geometry");
       log << MSG::VERBOSE 
 	  << "Created object with validity range: [" 
-	  << condObject->validSince() << "," 
-	  << condObject->validTill() << "]" << endreq;
+	  << condObject->validSince() 
+	  << "(0x" << std::hex 
+	  << condObject->validSince() 
+	  << std::dec << ")" 
+	  << "," << condObject->validTill() 
+	  << "(0x" << std::hex 
+	  << condObject->validTill() 
+	  << std::dec << ")" 
+	  << "]" << endreq;
       condDBDataAccess->storeCondDBObject
         ( rootName+"/Geometry/LHCb", condObject );
       CondDBObjFactory::destroyCondDBObject(condObject);
@@ -594,7 +608,14 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
     }
     log << MSG::INFO 
 	<< "Data since " << pObj->validSince() 
-	<< " till " << pObj->validTill() << " is:" << std::endl
+	<< "(0x" << std::hex 
+	<< pObj->validSince() 
+	<< std::dec << ")" 
+	<< " till " << pObj->validTill() 
+	<< "(0x" << std::hex 
+	<< pObj->validTill() 
+	<< std::dec << ")" 
+	<< " is:" << std::endl
 	<< theData << endreq;
     // In the Objy implementation, next() returns 0 on the last object
     // In the Oracle one, next() throws an exception on the last object

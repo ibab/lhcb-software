@@ -1,3 +1,3 @@
-#!/usr/local/bin/tcsh
-# $Id: listAll.csh,v 1.1 2002-03-28 13:23:19 andreav Exp $
+#!/usr/local/bin/tcsh -f
+# $Id: listAll.csh,v 1.2 2002-04-17 16:11:04 andreav Exp $
 ${ORACLE9_DIR}/bin/sqlplus ${DETCONDEXAMPLE_DBUSER}/${DETCONDEXAMPLE_DBPSWD}@${DETCONDEXAMPLE_DBHOST} @${DETCONDEXAMPLEROOT}/sql/listAll

@@ -1,4 +1,4 @@
-# $Id: README.RedHat72,v 1.1 2002-03-28 17:25:49 andreav Exp $
+# $Id: README.RedHat72,v 1.2 2002-04-17 16:19:05 andreav Exp $
 
 ------------------------------------------------------------------------------
 Packages needed to execute DetCondExample on tbed0087/88/89 (RedHat7.2)
@@ -9,65 +9,90 @@ Packages needed to execute DetCondExample on tbed0087/88/89 (RedHat7.2)
 cd ~/newmycmt
 
 # You need to getpack the head versions of the following packages
-getpack Det/CondDBOracle   v3r10   head
-getpack Det/DetCond        v2r1    head
-getpack Det/DetCondExample v2r1    head
+# You also need to modify DetDesc as explained in doc/README.
+getpack Det/CondDBOracle   v3r10p1  head
+getpack Det/DetCond        v3r0     head
+getpack Det/DetCondExample v3r0     head
+getpack Det/DetDesc        v10r0    head
 
 # You need to getpack ALL the following packages, because:
-# - libraries need to be recompiled for the rh72_gcc29521 tag
-# - pointers to external libraries must be defined for the rh72_gcc29521 tag
-getpack AIDA               v1r0
-getpack CLHEP              v17r10
-getpack Det/DetDesc        v9r2
-getpack ExternalLibs       v3r5
-getpack GaudiAlg           v5r1
+# - libraries need to be recompiled for the rh72_gcc2952 tag
+# - pointers to external libraries must be defined for the rh72_gcc2952 tag
+getpack AIDA               v2r2
+getpack CLHEP              v17r10p1
+getpack ExternalLibs       v3r6
+getpack GaudiAlg           v6r0
 getpack GaudiConf          v6r2
-getpack GaudiKernel        v11r1
-getpack GaudiPolicy        v5r4
-getpack GaudiSvc           v7r3
-getpack HTL                v13r10
-getpack XERCES             v15r2p2
+getpack GaudiKernel        v12r0
+getpack GaudiPolicy        v5r5
+getpack GaudiSvc           v8r0
+getpack HTL                v13r10p1
+getpack XERCES             v16r0p1
 
-# You need to EDIT and MODIFY CLHEP/v17r10/cmt/requirements:
-< set CLHEP_DIR "${LHCXX_BASE}/CLHEP/1.7.1.0"
+# You need to define the tag rh72_gcc2952.
+# This indicates Linux RedHat 7.2 (kernel linux24, glibc 2.2) with gcc 2.95.2
+# -> `fs sysname` returns "Current sysname is 'i386_linux24'"
+# -> `uname -msr` returns "Linux 2.4.9-31.1.cernsmp i686"
+# -> `ls -l /lib/libc.so.6` points to "libc-2.2.4.so"
+# -------------------------------------------------------------------
+# ===> EDIT and MODIFY GaudiPolicy/v5r5/cmt/requirements by adding:
+# -------------------------------------------------------------------
+> # Linux RedHat 7.2 (kernel linux24, glibc 2.2) with gcc 2.95.2
+> tag i386_linux24        Linux glibc-2.2
+> tag rh72_gcc2952        Linux glibc-2.2 gcc-2.95.2
+> tag rh72_gcc2952dbx     Linux glibc-2.2 gcc-2.95.2 debug
+> tag rh72_gcc2952Static  Linux glibc-2.2 gcc-2.95.2 static
+
+# You need to define the correct path to the LHCXX libraries for RedHat7.2.
+# Currently two version of LHCXX libraries for RedHat7.2 are maintained.
+# They are called gcc-2.95.2-from61/ and gcc-2.95.2-from72/.
+# While the compiler version is the same, the compiler itself is compiled on 
+# 6.1 in one case, on 7.2 in the other. This can result in different stdc++ 
+# libraries (while the glibc library is the same in both cases). 
+# For the moment, version gcc-2.95.2-from61/ is used (soft linked as
+# gcc-2.95.2/): eventually, gcc-2.95.2-from72/ should be used.
+# -------------------------------------------------------------------
+# ===> EDIT and MODIFY ExternalLibs/v3r6/cmt/requirements:
+# -------------------------------------------------------------------
+< macro PLATARCH    "$(PLATARCHdef)"\
+<       egcs-1.1.2  "rh61_egcs112"\
+<       STANDALONE  ""
 ---
-> set CLHEP_DIR "${LHCXX_BASE}/CLHEP/1.7.1.0" \
->     rh72_gcc29521       "${LHCXX_BASE}/CLHEP/1.7.0.0"\
->     rh72_gcc29521dbx    "${LHCXX_BASE}/CLHEP/1.7.0.0"\
->     rh72_gcc29521Static "${LHCXX_BASE}/CLHEP/1.7.0.0"
+> macro PLATARCH     "$(PLATARCHdef)"\
+>       egcs-1.1.2   "rh61_egcs112"\
+>       rh72_gcc2952 "redhat72/gcc-2.95.2"\
+>       STANDALONE   ""
 
-# You need to EDIT and MODIFY ExternalLibs/v3r5/cmt/requirements:
-< set LHCXX_DIR   "${SWROOT}/lhcxx/specific/${CMTCONFIG}"\
-<     CERN_WIN32  "${SWROOT}/lhcxx/specific/wnt"\
-<     LAPE_RIO    "${SWROOT}"
+# You need to use CLHEP 1.7.0.0 as 1.7.1.0 does not exist yet for RedHat7.2.
+# -------------------------------------------------------------------
+# ===> EDIT and MODIFY CLHEP/v17r10p1/cmt/requirements:
+# -------------------------------------------------------------------
+< macro CLHEPBASE "${CLHEP_DIR}/1.7.1.0"
 ---
-> set LHCXX_DIR           "${SWROOT}/lhcxx/specific/${CMTCONFIG}"\
->     rh72_gcc29521       "${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2"\
->     rh72_gcc29521dbx    "${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2"\
->     rh72_gcc29521Static "${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2"\
->     CERN_WIN32          "${SWROOT}/lhcxx/specific/wnt"\
->     LAPE_RIO            "${SWROOT}"
+> macro CLHEPBASE    "${CLHEP_DIR}/1.7.1.0" \
+>       rh72_gcc2952 "${CLHEP_DIR}/1.7.0.0"
 
-# You may also modify MsgStream.h in GaudiKernel as described in doc/README
-# This is NOT neeeded to run on RedHat72
-
-# You need to EDIT and MODIFY HTL/v13r10/cmt/requirements:
-< set HTL_DIR      "${LHCXX_BASE}/HTL/1.3.1.0"
+# You need to use HTL 1.3.2.1 as 1.3.1.0 does not exist for RedHat7.2.
+# -------------------------------------------------------------------
+# ===> EDIT and MODIFY HTL/v13r10p1/cmt/requirements:
+# -------------------------------------------------------------------
+< macro HTLBASE    "${HTL_DIR}/1.3.1.0"\
+<       Solaris     "${HTL_DIR}/1.3.1.1"
 ---
-> set HTL_DIR      "${LHCXX_BASE}/HTL/1.3.1.0" \
->     rh72_gcc29521       "${LHCXX_BASE}/HTL/1.3.2.1"\
->     rh72_gcc29521dbx    "${LHCXX_BASE}/HTL/1.3.2.1"\
->     rh72_gcc29521Static "${LHCXX_BASE}/HTL/1.3.2.1"
+> macro HTLBASE      "${HTL_DIR}/1.3.1.0"\
+>       Solaris      "${HTL_DIR}/1.3.1.1"\
+>       rh72_gcc2952 "${HTL_DIR}/1.3.2.1"
 
-# You need to EDIT and MODIFY XERCES/v15r2p2/cmt/requirements:
-< macro XERCESHOME "${XERCES_DIR}/1.5.2/${CMTCONFIG}" \
-<       CERN_WIN32 "${XERCES_DIR}/1.5.2/Win32"
+# You need to use XERCES for RedHat 6.1 as libraries for 7.2 do not exist yet
+# -------------------------------------------------------------------
+# ===> EDIT and MODIFY XERCES/v16r0p1/cmt/requirements:
+# -------------------------------------------------------------------
+< macro XERCESBASE "${XERCES_DIR}/1.6.0/$(PLATARCH)" \
+<       WIN32      "${XERCES_DIR}/1.6.0/Win32"
 ---
-> macro XERCESHOME          "${XERCES_DIR}/1.5.2/${CMTCONFIG}" \
->       rh72_gcc29521       "${XERCES_DIR}/1.5.2/rh61_gcc2952"\
->       rh72_gcc29521dbx    "${XERCES_DIR}/1.5.2/rh61_gcc2952"\
->       rh72_gcc29521Static "${XERCES_DIR}/1.5.2/rh61_gcc2952"\
->       CERN_WIN32          "${XERCES_DIR}/1.5.2/Win32"
+> macro XERCESBASE   "${XERCES_DIR}/1.6.0/$(PLATARCH)" \
+>       rh72_gcc2952 "${XERCES_DIR}/1.6.0/rh61_gcc2952" \
+>       WIN32        "${XERCES_DIR}/1.6.0/Win32"
 
 ------------------------------------------------------------------------------
 How to setup the LHCb RedHat7.2 environment on tbed0087/88/89 (RedHat7.2)
@@ -80,21 +105,22 @@ ssh $USER@tbed0087.cern.ch
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v2r1/cmt
+cd Ex/DetCondExample/v3r0/cmt
 
 # Source the setup_RedHat72.csh script
 # This does the following:
-# - it reconfigures CMT to use v1r10p20011126 instead of v1r9
-# - it defines CMTCONFIG as rh72_gcc29521
+# - it assumes CMT v1r12p20020412 is used
+# - it defines CMTCONFIG as rh72_gcc2952
 # - it makes sure that gcc 2.95.2 is used instead of gcc 2.96
 # - it redefines LHCXX_DIR as $SWROOT/lhcxx/specific/redhat72/gcc-2.95.2
 source setup_RedHat72.csh
 
-# Broadcast "cmt config" to make sure CMT v1r10p20011126 is used everywhere
+# Broadcast "cmt config" to make sure CMT v1r12p20020412 is used everywhere
 cmt broadcast cmt config
 
+# I suggest you build packages in debug mode, i.e. using tag $CMTDEB.
 # Setup the environment
-source ../cmt/setup.csh
+source ../cmt/setup.csh -tag=$CMTDEB
 
 ------------------------------------------------------------------------------
 How to setup and link DetCondExample on tbed0087/88/89 (RedHat7.2)
@@ -103,22 +129,17 @@ How to setup and link DetCondExample on tbed0087/88/89 (RedHat7.2)
 # NB: Do NOT source LHCXX setup scripts in your .cshrc!
 # The configuration of LHCXX stuff is handled for you by CMT scripts!
 
-# I suggest you do NOT build packages in debug mode, i.e. using tag $CMTDEB.
-# CMT seems unable to recognize tag rh71_gcc29521dbx: it uses rh71_gcc29521
-# The "-g" flag is hardcoded for CondDBOracle, DetCond and DetCondExample
-# to allow debugging of the packages which make use of Oracle libraries
-
 # Go to your release directory
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v2r1/cmt
+cd Ex/DetCondExample/v3r0/cmt
 
 # Setup the environment
-source ../cmt/setup.csh
+source ../cmt/setup.csh -tag=$CMTDEB
 
 # Compile and link all packages
-cmt broadcast gmake
+cmt broadcast gmake tag=$CMTDEB
 
 ------------------------------------------------------------------------------
 How to run DetCondExample on tbed0087/88/89 (RedHat7.2)
@@ -128,17 +149,17 @@ How to run DetCondExample on tbed0087/88/89 (RedHat7.2)
 cd ~/newmycmt
 
 # Go to the working directory
-cd Ex/DetCondExample/v2r1/options
+cd Ex/DetCondExample/v3r0/options
 
 ============
 (1) testXml
 ============
 
 # Run the application
-../$CMTCONFIG/DetCondExample.exe testXml.opts
+../$CMTDEB/DetCondExample.exe testXml.opts
 
 # Run the application and create an output comparable to the standard one
-../$CMTCONFIG/DetCondExample.exe testXml.opts > log.testXml.Linux72
+../$CMTDEB/DetCondExample.exe testXml.opts > log.testXml.Linux72
 
 ================
 (2a) fillCondDB
@@ -165,15 +186,15 @@ setenv DETCONDEXAMPLE_DBNAME MYCONDDB_LINUX
 setenv DETCONDEXAMPLE_DBPSWD ********
 
 # Run the application
-../$CMTCONFIG/DetCondExample.exe fillCondDB.opts
+../$CMTDEB/DetCondExample.exe fillCondDB.opts
 
 # Run the application and create an output comparable to the standard one
 # The database is only filled if empty: the first output is longer
 # Be sure to start with a new database if you want to compare the first output
 # You do not need to source setupDB.csh again
 source ../cmt/cleanupDB.csh
-../$CMTCONFIG/DetCondExample.exe fillCondDB.opts >log.fillCondDB_1.Orac.Linux72
-../$CMTCONFIG/DetCondExample.exe fillCondDB.opts >log.fillCondDB_2.Orac.Linux72
+../$CMTDEB/DetCondExample.exe fillCondDB.opts >log.fillCondDB_1.Orac.Linux72
+../$CMTDEB/DetCondExample.exe fillCondDB.opts >log.fillCondDB_2.Orac.Linux72
 
 ================
 (2b) testCondDB
@@ -181,10 +202,10 @@ source ../cmt/cleanupDB.csh
 
 # Run the application
 # Be sure to have filled the database using fillCondDB.opts first!
-../$CMTCONFIG/DetCondExample.exe testCondDB.opts
+../$CMTDEB/DetCondExample.exe testCondDB.opts
 
 # Run the application and create an output comparable to the standard one
-../$CMTCONFIG/DetCondExample.exe testCondDB.opts >log.testCondDB.Orac.Linux72
+../$CMTDEB/DetCondExample.exe testCondDB.opts >log.testCondDB.Orac.Linux72
 
 ------------------------------------------------------------------------------
 How to fill the DB on Windows and read it from RedHat72 (or viceversa)
@@ -198,7 +219,7 @@ set DETCONDEXAMPLE_DBNAME=MYCONDDB_WINDOWS
 # You can run the testCondDB example again on Linux after setting
 setenv DETCONDEXAMPLE_DBNAME MYCONDDB_WINDOWS
 # You can compare the output to that in the ../job directory
-../$CMTCONFIG/DetCondExample.exe testCondDB.opts \
+../$CMTDEB/DetCondExample.exe testCondDB.opts \
   > log.testCondDB.Orac.Linux72.DBfilledOnWindows
 
 # You can run the testCondDB example again on Windows after setting
@@ -219,7 +240,7 @@ How to browse the Oracle DB using SQL commands on tbed0087/88/89 (RedHat7.2)
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v2r1/cmt
+cd Ex/DetCondExample/v3r0/cmt
 
 # Setup the environment
 # This sets the path to the DB if you modified the relevant scripts as above

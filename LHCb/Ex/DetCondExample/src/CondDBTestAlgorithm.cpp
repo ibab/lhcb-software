@@ -1,4 +1,4 @@
-//$Id: CondDBTestAlgorithm.cpp,v 1.2 2002-03-01 16:14:10 andreav Exp $
+//$Id: CondDBTestAlgorithm.cpp,v 1.3 2002-04-17 16:11:59 andreav Exp $
 
 #include "CondDBTestAlgorithm.h"
 #include "DetDesc/Condition.h"
@@ -114,7 +114,13 @@ StatusCode CondDBTestAlgorithm::i_analyse( DataObject* pObj ) {
 	<< "Before update:" << std::endl
 	<< "-> this Condition is valid in [" 
 	<< pCond->validSince().absoluteTime()
+	<< "(0x" << std::hex 
+	<< pCond->validSince().absoluteTime()
+	<< std::dec << ")" 
 	<< ","   << pCond->validTill().absoluteTime()
+	<< "(0x" << std::hex 
+	<< pCond->validTill().absoluteTime()
+	<< std::dec << ")" 
 	<< "]" << std::endl << "-> it has " 
 	<< pCond->params().size() << " params and "
 	<< pCond->paramVectors().size() << " paramVectors" << std::endl
@@ -133,7 +139,13 @@ StatusCode CondDBTestAlgorithm::i_analyse( DataObject* pObj ) {
 	<< "After update:" << std::endl
 	<< "-> this Condition is valid in [" 
 	<< pCond->validSince().absoluteTime()
+	<< "(0x" << std::hex 
+	<< pCond->validSince().absoluteTime()
+	<< std::dec << ")" 
 	<< ","   << pCond->validTill().absoluteTime()
+	<< "(0x" << std::hex 
+	<< pCond->validTill().absoluteTime()
+	<< std::dec << ")" 
 	<< "]" << std::endl << "-> it has " 
 	<< pCond->params().size() << " params and "
 	<< pCond->paramVectors().size() << " paramVectors" << std::endl

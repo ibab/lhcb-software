@@ -1,6 +1,15 @@
-#$Id: release.notes,v 1.14 2002-04-08 15:00:03 andreav Exp $
+#$Id: release.notes,v 1.15 2002-04-17 16:19:15 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020417 - Andrea Valassi
+Upgrade to Gaudi v10
+- use RedHat7.2 tag rh72_gcc2952 (not rh72_gcc29521), defined in GaudiPolicy
+- dependency on Det/DetCond changed from v2r1 to v3r0
+- adapt to new version of MsgStream.h in GaudiKernel for longlong printout
+- dependency on Det/DetDesc changed from v9r* to v10r*
+Requirements v3r0, private tag h20020417
 
 ==============================================================================
 !20020408 - Andrea Valassi

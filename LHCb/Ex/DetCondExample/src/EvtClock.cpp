@@ -1,4 +1,4 @@
-//$Id: EvtClock.cpp,v 1.4 2002-03-01 16:13:01 andreav Exp $
+//$Id: EvtClock.cpp,v 1.5 2002-04-17 16:11:59 andreav Exp $
 #include <stdio.h>
 
 #include "EvtClock.h"
@@ -58,9 +58,17 @@ StatusCode EvtClock::initialize() {
   }
   log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
   log << MSG::INFO << "Time of first event: "
-      << (ITime::AbsoluteTime)m_startTime << endreq; 
+      << (ITime::AbsoluteTime)m_startTime 
+      << "(0x" << std::hex 
+      << (ITime::AbsoluteTime)m_startTime 
+      << std::dec << ")" 
+      << endreq; 
   log << MSG::INFO << "Time between events: "
-      << (ITime::AbsoluteTime)m_delayTime << endreq;
+      << (ITime::AbsoluteTime)m_delayTime 
+      << "(0x" << std::hex 
+      << (ITime::AbsoluteTime)m_delayTime 
+      << std::dec << ")" 
+      << endreq;
   return StatusCode::SUCCESS;
 
 }
@@ -82,7 +90,11 @@ StatusCode EvtClock::execute( ) {
   // Set the event time
   long time = i_evtTime();
   log << MSG::INFO << "Event time: "
-      << (ITime::AbsoluteTime)time << endreq; 
+      << (ITime::AbsoluteTime)time 
+      << "(0x" << std::hex 
+      << (ITime::AbsoluteTime)time 
+      << std::dec << ")" 
+      << endreq; 
   m_detDataSvc->setEventTime( TimePoint(time) );
 
   return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-# $Id: README,v 1.19 2002-04-08 15:00:03 andreav Exp $
+# $Id: README,v 1.20 2002-04-17 16:16:46 andreav Exp $
 
 Two examples are distributed in this package: a test of condition data 
 stored in flat XML files, and a test of condition data stored in the CondDB.
@@ -26,7 +26,7 @@ The detector elements used in the tests are the following:
 > LHCb is used to test geometry data in the CondDB
 
 ------------------------------------------------------------------------------
-Packages needed to run DetCondExample v2r1
+Packages needed to run DetCondExample v3r0
 ------------------------------------------------------------------------------
 
 For general information on configuring the Gaudi environment, 
@@ -37,7 +37,8 @@ The Windows environment is presented in a shorter way at the end of this file.
 The Linux RedHat7.2 environment is only meant for tests and requires
 extensive changes which are described in the doc/README.RedHat72 file.
 
-Version v1r11 of CMT is assumed under both Windows and Linux.
+Version v1r11 of CMT is assumed as the default under Windows.
+Version v1r12p20020412 of CMT is assumed as the default under Linux.
 
 It is assumed that CMTPATH contains the release directory in ${HOME}/newmycmt,
 i.e. ~/newmycmt. Put the following line in .cshrc to achieve this:
@@ -45,44 +46,54 @@ i.e. ~/newmycmt. Put the following line in .cshrc to achieve this:
 Check the result with
         printenv CMTPATH
 
-To run the detector condition example, you need the following packages:
+To run the detector condition example, you need the following packages,
+as well as the standard Gaudi packages from the release area of Gaudi v10.
         cd ~/newmycmt
-        getpack Det/DetCond        v2r1     head
-        getpack Ex/DetCondExample  v2r1     head
+        getpack Det/DetCond        v3r0     head
+        getpack Ex/DetCondExample  v3r0     head
+	getpack Det/DetDesc        v10r0    head
 Under Linux (RedHat6.1)
-        getpack CONDDB             v3r02p1
+        getpack CONDDB             v3r02p2
 Under Windows:
-        getpack Det/CondDBOracle   v3r10    head
+        getpack Det/CondDBOracle   v3r10p1  head
 Under Linux (RedHat7.2)
-        getpack Det/CondDBOracle   v3r10    head
-	
+        getpack Det/CondDBOracle   v3r10p1  head
+
+In package DetDesc the cmt/ requirements file needs to be modified to use 
+the latest GaudiKernel and XERCES (and fix a small bug under Windows):
+< version v9r3
+< use GaudiKernel v11r*
+< use XERCES v15r*
+< macro_append  DetDescLib_shlibflags "$(GaudiKernel_linkopts) " 
+---
+> version v10r0
+> use GaudiKernel v12r*
+> use XERCES v16r*
+> macro_append  DetDescLib_shlibflags " $(GaudiKernel_linkopts) " 
+
 Under Linux (RedHat7.2) many more packages need to be getpack'ed and MODIFIED.
 Refer to the doc/README.RedHat72 for more details.
 
 ------------------------------------------------------------------------------
-Optional modifications to GaudiKernel
+Additional modifications to GaudiKernel
 ------------------------------------------------------------------------------
 
-Minor (optional) modifications to GaudiKernel were used to produce the
-logfiles for the examples, to print out int64 integers both in decimal
-and hexadecimal format rather than only in hexadecimal format.
-Change the operator<<(longlong) printout in GaudiKernel/MsgStream.h as follows,
-if you want to reproduce exactly the same logfiles provided in this example.
+Minor additional modifications to GaudiKernel were used to produce the
+logfiles for the examples, to correct a bug for Windows and print out 
+correctly int64 integers in hexadecimal format on Windows.
 
-  MsgStream& operator<<(longlong arg)             {if(isActive())
-	{
-#ifdef __linux__
-	  m_stream << arg << "(0x" << std::hex << arg << std::dec << ")"; 
-#else
-      static char buf[64];
-	  sprintf(buf,"%I64d",arg); // Or equivalently: _i64toa(arg, buf, 10);
-	  std::string darg(buf);
-	  sprintf(buf,"%I64x",arg); // Or equivalently: _i64toa(arg, buf, 16);
-	  std::string xarg(buf);
-	  m_stream << darg << "(0x" << xarg << ")"; 
+If the following lines are not already included in GaudiKernel/MsgStream.h
+for the version of GaudiKernel that you are using, getpack GaudiKernel, add 
+these lines to MsgStream.h and recompile GaudiKernel and the CondDB packages.
+
+#ifdef WIN32
+  /// Accept ios base class modifiers
+  /// On Windows this is needed to accept std::hex and std::dec
+  MsgStream& operator<<(std::ios_base& (*_f)(std::ios_base&))    {
+    if ( isActive() ) _f(m_stream);
+    return *this;
+  }
 #endif
-	}
-	return *this;}
 
 ------------------------------------------------------------------------------
 How to setup the environment and link DetCondExample on lxplus
@@ -99,7 +110,7 @@ How to setup the environment and link DetCondExample on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v2r1/cmt
+cd Ex/DetCondExample/v3r0/cmt
 
 # Setup the environment
 # This also starts the lockserver and AMSserver and installs the databases
@@ -121,7 +132,7 @@ How to run DetCondExample on lxplus (without debugger)
 cd ~/newmycmt
 
 # Go to the working directory
-cd Ex/DetCondExample/v2r1/options
+cd Ex/DetCondExample/v3r0/options
 
 ============
 (1) testXml
@@ -133,7 +144,7 @@ cd Ex/DetCondExample/v2r1/options
 # Run the application and compare the output to the standard one
 /bin/rm -f log.testXml.Linux61
 ../$CMTDEB/DetCondExample.exe testXml.opts > log.testXml.Linux61
-diff log.testXml.Linux61 ../job
+tkdiff log.testXml.Linux61 ../job &
 
 ================
 (2a) fillCondDB
@@ -160,8 +171,8 @@ source ../cmt/setupDB.csh   -tag=$CMTDEB
 /bin/rm -f log.fillCondDB_2.Objy.Linux61
 ../$CMTDEB/DetCondExample.exe fillCondDB.opts > log.fillCondDB_1.Objy.Linux61
 ../$CMTDEB/DetCondExample.exe fillCondDB.opts > log.fillCondDB_2.Objy.Linux61
-diff log.fillCondDB_1.Objy.Linux61 ../job
-diff log.fillCondDB_2.Objy.Linux61 ../job
+tkdiff log.fillCondDB_1.Objy.Linux61 ../job &
+tkdiff log.fillCondDB_2.Objy.Linux61 ../job &
 
 ================
 (2b) testCondDB
@@ -174,7 +185,7 @@ diff log.fillCondDB_2.Objy.Linux61 ../job
 # Run the application and compare the output to the standard one
 /bin/rm -f log.testCondDB.Objy.Linux61
 ../$CMTDEB/DetCondExample.exe testCondDB.opts > log.testCondDB.Objy.Linux61
-diff log.testCondDB.Objy.Linux61 ../job
+tkdiff log.testCondDB.Objy.Linux61 ../job &
 
 ------------------------------------------------------------------------------
 How to run DetCondExample on lxplus with the debugger
@@ -184,7 +195,7 @@ How to run DetCondExample on lxplus with the debugger
 cd ~/newmycmt
 
 # Go to the working directory
-cd Ex/DetCondExample/v2r1/options
+cd Ex/DetCondExample/v3r0/options
 
 # To use the debugger, link one of the three option files to job.opts
 /bin/rm -f job.opts
@@ -235,7 +246,7 @@ How to cleanup the environment on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v2r1/cmt
+cd Ex/DetCondExample/v3r0/cmt
 
 # Remove old makefiles and dependencies
 cmt broadcast -select=mycmt '/bin/rm -f *make*'
@@ -248,6 +259,10 @@ cmt broadcast -select=mycmt '/bin/rm -rf ../$CMTDEB'
 # [NB If AMS and lock servers are still running, you will be stuck at logout]
 source ../cmt/cleanup.csh -tag=$CMTDEB
 
+# WARNING: If you want to continue using CMT in the same shell,
+# remember to setenv CMTCONFIG to your preferred value first.
+# Under Linux, "source cleanup.csh" unsetenv's CMTCONFIG.
+
 ------------------------------------------------------------------------------
 How to setup the environment and link DetCondExample under Windows
 ------------------------------------------------------------------------------
@@ -258,7 +273,7 @@ How to setup the environment and link DetCondExample under Windows
 cd H:\newmycmt
 
 # Go to the cmt directory
-cd Ex\DetCondExample\v2r1\cmt
+cd Ex\DetCondExample\v3r0\cmt
 
 # Setup the environment
 setup
@@ -274,7 +289,7 @@ How to run DetCondExample under Windows
 cd H:\newmycmt
 
 # Go to the working directory
-cd Ex\DetCondExample\v2r1\options
+cd Ex\DetCondExample\v3r0\options
 
 ============
 (1) testXml
@@ -342,7 +357,7 @@ How to browse the Oracle database using SQL commands on Windows
 cd H:\newmycmt
 
 # Go to the cmt directory
-cd Ex\DetCondExample\v2r1\cmt
+cd Ex\DetCondExample\v3r0\cmt
 
 # Setup the environment
 # This sets the path to the DB if you modified the relevant scripts as above

@@ -1,7 +1,14 @@
-# $Id: DetCondExample.gdb,v 1.4 2001-12-16 16:12:05 andreav Exp $
+# $Id: DetCondExample.gdb,v 1.5 2002-04-17 16:13:33 andreav Exp $
 #-----------------------------------------------------------------------------
 # HINT: use the Tab Key to see possible completions of a breakpoint
 delete breakpoints
+
+# Breakpoint at the very beginning
+break 'main'
+
+# Breakpoints during system initialization
+#break 'Gaudi::createApplicationMgr(void)'
+#break 'Gaudi::createApplicationMgr(basic_string<char, string_char_traits<char>, __default_alloc_template<true, 0> > const &, basic_string<char, string_char_traits<char>, __default_alloc_template<true, 0> > const &)'
 
 # Breakpoints during algorithm initialization
 #break 'PopulateDB::initialize(void)'
@@ -9,8 +16,8 @@ delete breakpoints
 
 # Breakpoints during algorithm execution
 #break 'EvtClock::execute(void)'
-break 'CondDBTestAlgorithm::execute(void)'
-break 'XmlTestAlgorithm::execute(void)'
+#break 'CondDBTestAlgorithm::execute(void)'
+#break 'XmlTestAlgorithm::execute(void)'
 
 # Breakpoints during algorithm finalization
 #break 'EvtClock::finalize(void)'
@@ -46,6 +53,8 @@ run
 #break 'ConversionSvc::fillObjRefs(IOpaqueAddress *, DataObject *)'
 #break 'ConversionSvc::updateObj(IOpaqueAddress *, DataObject *)'
 #break 'ConversionSvc::makeCall(int, bool, bool, bool, IOpaqueAddress *&, DataObject *&)'
+#break 'Gaudi::getFactory(basic_string<char, string_char_traits<char>, __default_alloc_template<true, 0> > const &, basic_string<char, string_char_traits<char>, __default_alloc_template<true, 0> > const &)'
+#break 'System::loadDynamicLib(basic_string<char, string_char_traits<char>, __default_alloc_template<true, 0> > const &, void **)'
 
 
 
