@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.3 2004-12-06 10:36:38 dhcroft Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.4 2005-02-10 10:10:42 dhcroft Exp $
 // Include files 
 
 // from Gaudi
@@ -128,9 +128,9 @@ StatusCode PrepareVeloRawBuffer::execute() {
       }
       data.clear();
       while ( ++lastSensor != sensor ) {
-        // sensor numbers are discontinuous, skip 40->63 
+        // sensor numbers are discontinuous, skip 42->63 
         // (gap between R and phi) numbers
-        if( 39 < lastSensor && lastSensor < 64 ) { continue;}
+        if( 41 < lastSensor && lastSensor < 64 ) { continue;}
         // this is an ugly hack: please fix properly
 
         if ( isDebug ) {

@@ -1,6 +1,9 @@
 ! Package     : VeloDAQ
 ! Responsible : ChrisParkes
 
+! 2005-02-10 - David Hutchcroft
+ - Modified the code to produce banks for all of the sensors.
+
 !==========================  VeloDAQ v2r2 2004-12-06 ======================
 ! 2004-12-03 - David Hutchcroft
  - Modified PrepareVeloRawBufferFPGA to use new Velo Detector element inteface
