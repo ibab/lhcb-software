@@ -1,5 +1,6 @@
-// $Id: MuonGeometryTool.cpp,v 1.1 2002-05-10 12:47:09 dhcroft Exp $
+// $Id: MuonGeometryTool.cpp,v 1.2 2002-05-15 07:50:24 cattanem Exp $
 // Include files 
+#include <cmath>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
