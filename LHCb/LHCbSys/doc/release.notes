@@ -4,6 +4,9 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+! 2003-06-16 - Sebastien Ponce
+ - use newer versions of packages
+
 !====================== LHCbSys v11r12 2003-06-02 ============================
 ! 2003-05-28 - Marco Cattaneo
  - requirements:
