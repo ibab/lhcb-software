@@ -1,10 +1,17 @@
 !-----------------------------------------------------------------------------
 ! Package          : Sim/GaussCalo
-! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine
+! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
+!                    Patrick Robbe
 ! Responsible	     : Vanya Belyaev
 ! Purpose          : collection of sensitive detectors, converters, 
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
+
+! 2003-06-05 - Patrick Robbe
+ - upgrade version number to v3r0
+ - options/Calo.opts : use of 0 magnetic field in ECal and HCal
+ - CaloSensDet       : change Birk's Law to work with Geant4.5.1.ref02. Use
+                       MaterialCouple instead of Material
 
 !=========================== GaussCalo v2r2 2003-05-14 ========================
 ! 2003-05-27 - Patrick Robbe
