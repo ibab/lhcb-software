@@ -4,30 +4,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.17 2004-12-13 17:27:13 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.16  2004/10/30 22:14:54  jonrob
- *  removed debug compile warnings
- *
- *  Revision 1.15  2004/10/29 09:35:09  jonrob
- *  Update final printout format
- *
- *  Revision 1.14  2004/10/27 14:36:30  jonrob
- *  Improvements to PID Tables
- *
- *  Revision 1.13  2004/10/13 09:39:01  jonrob
- *  Update for new RichPID object
- *
- *  Revision 1.12  2004/08/20 16:08:30  jonrob
- *  Add tally for each type of PID result to final results table
- *
- *  Revision 1.11  2004/08/19 14:14:09  jonrob
- *  Tidy up monitoring algorithms and add new options to create
- *  histograms for different PID efficiency and purity settings
- *
- *  Revision 1.10  2004/07/27 13:56:30  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichPIDQC.h,v 1.18 2005-01-26 10:02:31 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -55,6 +32,9 @@
 #include "Event/RichPID.h"
 #include "Event/TrStoredTrack.h"
 #include "Event/MCParticle.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
@@ -162,11 +142,11 @@ private: // data
   int m_multiplicity;
   int m_totalSelTracks;
 
-  typedef std::map<Rich::Track::Type,std::pair<unsigned int,unsigned int> > TkCount;
+  typedef RichMap<Rich::Track::Type,std::pair<unsigned int,unsigned int> > TkCount;
   /// Count the number of PID objects by track type
   TkCount m_trackCount;
 
-  typedef std::map<std::string,std::pair<unsigned int,unsigned int> > PIDsByType;
+  typedef RichMap<std::string,std::pair<unsigned int,unsigned int> > PIDsByType;
   /// Count the number of PID objects by PID type
   PIDsByType m_pidPerTypeCount;
 

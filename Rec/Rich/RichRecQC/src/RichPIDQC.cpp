@@ -4,50 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.37 2004-12-16 15:08:05 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.36  2004/12/14 15:11:12  jonrob
- *  Set ExtraHistos job option back to false
- *
- *  Revision 1.35  2004/12/14 14:58:15  jonrob
- *  change cut value back to default
- *
- *  Revision 1.34  2004/12/13 17:27:13  jonrob
- *  various improvements
- *
- *  Revision 1.33  2004/11/05 18:04:46  jonrob
- *  Update Warning message
- *
- *  Revision 1.32  2004/11/04 16:30:45  jonrob
- *  Add protection against missing track containers
- *
- *  Revision 1.31  2004/10/30 22:14:54  jonrob
- *  removed debug compile warnings
- *
- *  Revision 1.30  2004/10/30 19:28:36  jonrob
- *  update final PID table printout
- *
- *  Revision 1.29  2004/10/29 09:35:08  jonrob
- *  Update final printout format
- *
- *  Revision 1.28  2004/10/27 14:36:30  jonrob
- *  Improvements to PID Tables
- *
- *  Revision 1.27  2004/10/21 09:11:19  jonrob
- *  minor update
- *
- *  Revision 1.26  2004/10/13 09:39:01  jonrob
- *  Update for new RichPID object
- *
- *  Revision 1.25  2004/08/20 16:08:30  jonrob
- *  Add tally for each type of PID result to final results table
- *
- *  Revision 1.24  2004/08/19 14:14:09  jonrob
- *  Tidy up monitoring algorithms and add new options to create
- *  histograms for different PID efficiency and purity settings
- *
- *  Revision 1.23  2004/07/27 13:56:30  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichPIDQC.cpp,v 1.38 2005-01-26 10:02:31 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
