@@ -1,4 +1,4 @@
-// $Id: Rich1Side.h,v 1.4 2003-04-15 16:10:33 jonrob Exp $
+// $Id: Rich1Side.h,v 1.5 2003-04-15 17:50:48 jonrob Exp $
 #ifndef RICHKERNEL_RICH1SIDE_H 
 #define RICHKERNEL_RICH1SIDE_H 1
 
@@ -46,6 +46,15 @@ inline MsgStream& operator << ( MsgStream& s,
                                 const Rich::Rich1Side& side ) {
   s << Rich::text( side );
   return s;
+}
+
+// Text conversion for Rich1Side enumeration
+inline std::string Rich::text( const Rich::Rich1Side& side ) {
+  switch( side ) {
+  case Rich::top:     return "top";
+  case Rich::bottom:  return "bottom";
+  default:            return "?"; // should never happen
+  }
 }
 
 #endif // RICHKERNEL_RICH1SIDE_H

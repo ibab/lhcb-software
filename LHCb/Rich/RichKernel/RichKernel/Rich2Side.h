@@ -1,6 +1,6 @@
-// $Id: Rich2Side.h,v 1.4 2003-04-15 16:10:33 jonrob Exp $
-#ifndef RICH2SIDE_H 
-#define RICH2SIDE_H 1
+// $Id: Rich2Side.h,v 1.5 2003-04-15 17:50:49 jonrob Exp $
+#ifndef RICHKERNEL_RICH2SIDE_H 
+#define RICHKERNEL_RICH2SIDE_H 1
 
 // Include files
 #include <string>
@@ -48,4 +48,14 @@ inline MsgStream& operator << ( MsgStream& s,
   return s;
 }
 
-#endif // RICH2SIDE_H
+// Text conversion for Rich2Side enumeration
+inline std::string Rich::text( const Rich::Rich2Side& side ) {
+  switch( side ) {
+  case Rich::left:    return "left";
+  case Rich::right:   return "right";
+  default:            return "?"; // should never happen
+  }
+}
+
+
+#endif // RICHKERNEL_RICH2SIDE_H
