@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2003-11-02 - Chris Jones
+ - New version supporting HPDs only.
+ - Uses a more realistic treatment of the detector response
+
 !========================= RichReadout v1r0 2003-10-06 =======================
 ! 2003-10-01 - Marco Cattaneo
  - Moved sicb_incident_track.data to ParamFiles package
