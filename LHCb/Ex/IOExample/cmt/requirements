@@ -1,45 +1,19 @@
-# $Id: requirements,v 1.8 2003-12-17 05:51:46 frankb Exp $
+# $Id: requirements,v 1.9 2003-12-18 15:32:09 cattanem Exp $
 package IOExample
 version v1r0
 
-branches doc src job options cmt
+branches doc src options cmt
 
-include_dirs $(IOEXAMPLEROOT)/include $(IOEXAMPLEROOT)/src
+include_dirs $(IOEXAMPLEROOT)/include
 
-use ExternalLibs          v*
-#use Gaudi                v*
-use GaudiSvc              v*
-use GaudiRootDb           v*
-#use GaudiODBCDb           v*
-use GaudiPoolDb           v*
+use GaudiSvc            v*
+use GaudiRootDb         v*
+use GaudiPoolDb         v*
 
-use Event         	  v*  Event
-use GaudiConf             v*
-#use SicbCnv     	  v*  SICB
-#use dbase                v*  SICB
-use AIDA                  v*
-use EventSys              v* Event
+use GaudiConf           v*
+use EventSys            v* Event
+use AssociatorsSys	v* Associators
 
 #==> IO example
-library IOExample        KeyedObjects/*.cpp \
-                         Statistics/*.cpp   \
-                         DataSvc/*.cpp      \
-                         GaudiKernel/*.cpp  \
-                         GaudiDb/*.cpp      \
-                         GaudiSvc/*.cpp     \
-                         Common/*.cpp
-
-#==> IO example
-library IOMin        DataSvc/StoreExplorer.cpp    \
-                     Common/EvtNumberPrintout.cpp \
-                     Common/TestAlgorithm.cpp     \
-                     Common/GaudiMain.cpp
-                         
-# ========================= set macros ============================
-apply_pattern  package_Clinkopts
-apply_pattern  library_Lshlibflags library=IOExample
-apply_pattern  library_Lshlibflags library=IOMin
-apply_pattern  application_path 
-macro_append   IOExample_linkopts " $(GaudiKernel_linkopts) $(GaudiDb_linkopts) "
-macro_append   IOMin_linkopts     " $(GaudiKernel_linkopts) $(GaudiDb_linkopts) "
-set LHCBTESTROOT ${IOEXAMPLEROOT}
+application IOMin    "$(GAUDICONFROOT)/src/GaudiMain.cpp" \
+                     *.cpp

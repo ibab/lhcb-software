@@ -1,43 +1,35 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/IOExample/options/ReadMin.opts,v 1.2 2003-12-16 15:45:05 frankb Exp $
-ApplicationMgr.ExtSvc = { "EventSelector" };
-//--------------------------------------------------------------
-// Private Application Configuration options
-//--------------------------------------------------------------
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel     = 3;
-ApplicationMgr.EvtMax      = 500;
-EventSelector.OutputLevel  = 2;
-EventSelector.PrintFreq    = 1;
-EventSelector.FirstEvent   = 1;
-ApplicationMgr.ExtSvc    += { "PoolDbCacheSvc", 
-                              "PoolDbCnvSvc/RootEvtCnvSvc", 
-                              "PoolDbCnvSvc/RootKeyEvtCnvSvc", 
-                              "PoolDbCnvSvc/RootTreeEvtCnvSvc" 
-                            };
-ApplicationMgr.DLLs             += { "GaudiPoolDb" };
-EventPersistencySvc.CnvServices += { "RootTreeEvtCnvSvc" };
-EventPersistencySvc.CnvServices += { "RootKeyEvtCnvSvc" };
-EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
-RootEvtCnvSvc.DbType             = "POOL_ROOT";
-RootKeyEvtCnvSvc.DbType          = "POOL_ROOTKEY";
-RootTreeEvtCnvSvc.DbType         = "POOL_ROOTTREE";
-PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "lcg_XMLCatalog" };
-#include "$LHCBTESTROOT/options/Dictionaries.opts"
-PoolDbCacheSvc.CatalogConnect    = "xmlcatalog_file:test_catalog.xml";
-PoolDbCacheSvc.OutputLevel = 3;
+// $Id: ReadMin.opts,v 1.3 2003-12-18 15:33:43 cattanem Exp $
+
+//--------------------------------------------------------------------
+// Example to navigate the event data store, starting from a POOL file
+//--------------------------------------------------------------------
 
 ApplicationMgr.TopAlg      = { "EvtNumberPrintout/Printout" };
 ApplicationMgr.TopAlg     += { "StoreExplorer" };
-StoreExplorer.PrintEvt  = 0;
-StoreExplorer.PrintFreq = 0.933334;
-StoreExplorer.ExploreRelations  = 1;
-ApplicationMgr.DLLs       += { "OTAssociators", "ITAssociators", "MuonAssociators", "CaloAssociators", "TrAssociators", "VeloAssociators", "Associators" };
-//
-//
-// Brunel file
-//EventSelector.Input  = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOT' OPT='READ'" };
-// Boole file
-EventSelector.Input  = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOT' OPT='READ'" };
-// Gauss file
-EventSelector.Input  = {"DATAFILE='PFN:PoolGen.root' TYP='POOL_ROOT' OPT='READ'" };
+ApplicationMgr.ExtSvc      = { "EventSelector" };
+ApplicationMgr.EvtMax      = 5;
 
+// Job options to set up the POOL persistency
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+
+// Job options for the old Root/IO persistency. Needed for DST and OODIGI example
+// They enable navigation to event objects not on the POOL file 
+#include "$STDOPTS/RootDb.opts"
+
+// DLLs that contain the necessary dictionaries and factories
+ApplicationMgr.DLLs += { "CaloEvent" };
+#include "$EVENTSYSROOT/options/PoolDicts.opts"
+#include "$ASSOCIATORSSYSROOT/options/DLLs.opts" // Relations factories
+
+// The catalog is only needed if the POOL file refers to other POOL files
+// PoolDbCacheSvc.CatalogConnect    = "xmlcatalog_file:test_catalog.xml";
+
+StoreExplorer.PrintFreq = 1.;
+StoreExplorer.ExploreRelations = 1;
+
+// Brunel file
+//EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOT' OPT='READ'"};
+// Boole file
+//EventSelector.Input  = {"DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOT' OPT='READ'" };
+// Gauss file
+EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOT' OPT='READ'"};

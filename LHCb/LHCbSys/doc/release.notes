@@ -4,6 +4,52 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v15r0 2003-12-19 =======================
+! 2003-12-15 - Marco Cattaneo
+
+ - New packages:      Ex/IOExample v1r0 - to demonstrate reading and writing
+                                          data with POOL
+
+ - Modified packages: XmlTools v3r1, GaudiConf v7r5, DumpEventExample v7r2,
+                      KernelSys v3r0, LHCbKernel v4r0, TrKernel v1r3,
+                        RichKernel v4r3, MuonKernel v2r5, CaloKernel v2r5,
+                      EventSys v17r0, CaloEvent v13r0, DAQEvent v4r0, Event v4r0,
+                        GenEvent v3r0, L0Event v14r0, L1Event v12r0, 
+                        OTEvent v13r0, ITEvent v13r0, VeloEvent v13r0,
+                        TrEvent v13r0, RichEvent v7r0, MuonEvent v3r0,
+                        PhysEvent v8r0, HltEvent v5r0
+                      DetSys v4r1, DetDesc v14r1, DetDescCnv v2r3, ITDet v1r9,
+                        OTDet v5r2, VeloDet v8r8
+                      AssociatorsSys v1r9, TrFitEvent v4r2, ITAssociators v2r6,
+                        OTAssociators v2r7, TrAssociators v3r8, Associators v2r2,
+                        VeloAssociators v1r7, CaloAssociators v3r5
+
+ - Removed packages:  EventKernel, DbCnv
+
+ - In all modified packages:
+   . Modifications to requirements to build against GAUDI_v14r0. 
+
+ - In all Event packages
+   . Modifications to xml to generate dictionaries for POOL
+   . Xml parsed by GaudiConf v6r*, to produce POOL dictionaries
+
+ - In EventSys v17r0
+   . Added GenEvent v3r0 (previously not included)
+   . Added options/PoolDicts.opts to load all dictionary DLLs
+   . Moved ParticleID from Event to LHCbKernel
+   . Moved ProcStatus from TrEvent to Event
+
+ - In CaloEvent v13r0
+   . Added "seed" attribute to CaloCluster. 
+     Backwards incompatible with existing datasets
+
+ - In AssociatorsSys v1r9
+   . Added options/DLLs.opts to load all associators DLLs
+
+ - In GaudiConf v7r5
+   . Added RootDb.opts to set up Root/IO persistency
+   . Modified SimContent.opts for consistency with GaussTape.opts of Gauss
+
 !======================= LHCbSys v14r0 2003-12-08 =======================
 ! 2003-12-08 - Marco Cattaneo
 

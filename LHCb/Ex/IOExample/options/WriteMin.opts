@@ -1,56 +1,32 @@
+//-------------------------------------------------------------------------
+// Job options to read a ROOT/IO file and write the corresponding POOL file
+//-------------------------------------------------------------------------
 ApplicationMgr.ExtSvc = { "EventSelector" };
 ApplicationMgr.HistogramPersistency = "NONE";
-//--------------------------------------------------------------
-// Private Application Configuration options
-//--------------------------------------------------------------
-ApplicationMgr.DLLs       += { "GaudiDb", "GaudiRootDb" };
-ApplicationMgr.ExtSvc     += { "DbEventCnvSvc/RootEvtCnvSvc" };
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-MessageSvc.OutputLevel     =  3;
+ApplicationMgr.EvtMax      = 100;
+EventSelector.PrintFreq = 1;
 
-EventSelector.PrintFreq    = 100;
-EventSelector.FirstEvent   = 1;
-ApplicationMgr.EvtMax      = 20;
+// Job options to set up the POOL persistency for the output file
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+
+// Job options to read the old ROOT/IO persistency files
+#include "$STDOPTS/RootDb.opts"
+
+// DLLs that contain the necessary dictionaries and factories
+ApplicationMgr.DLLs += { "CaloEvent" };
+#include "$EVENTSYSROOT/options/PoolDicts.opts"
+
+// Updates the local POOL catalog with the created file
+PoolDbCacheSvc.CatalogConnect    = "xmlcatalog_file:test_catalog.xml";
+
 //--------------------------------------------------------------
 // Persistency service setup: 
 //--------------------------------------------------------------
 EventDataSvc.RootCLID = 1;
 EventDataSvc.ForceLeaves = 1;
-//--------------------------------------------------------------
-// Test chain
-//--------------------------------------------------------------
-Printout.PrintFreq           = 100;
-ApplicationMgr.TopAlg      = {};
-ApplicationMgr.TopAlg     += { "StoreExplorer/Explorer" };
-EventSelector.Input = {};
-ApplicationMgr.EvtMax      = 4000000;
-RootEvtCnvSvc.AgeLimit     = 2;
 
-Explorer.PrintFreq         = 0.2;
-ApplicationMgr.OutStream  = {};
-//
-ApplicationMgr.ExtSvc    += { "PoolDbCacheSvc", 
-                              "PoolDbCnvSvc/RootKeyEvtCnvSvc", 
-                              "PoolDbCnvSvc/RootTreeEvtCnvSvc" 
-                            };
-ApplicationMgr.DLLs             += { "GaudiPoolDb" };
-EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
-EventPersistencySvc.CnvServices += { "RootTreeEvtCnvSvc" };
-EventPersistencySvc.CnvServices += { "RootKeyEvtCnvSvc" };
-//
-RootEvtCnvSvc.DbType             = "ROOT";
-RootKeyEvtCnvSvc.DbType          = "POOL_ROOTKEY";
-RootTreeEvtCnvSvc.DbType         = "POOL_ROOTTREE";
-PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "lcg_XMLCatalog" };
-#include "$LHCBTESTROOT/options/Dictionaries.opts"
-
-PoolDbCacheSvc.CatalogConnect    = "xmlcatalog_file:test_catalog.xml";
 PoolDbCacheSvc.OutputLevel = 3;
 
-ApplicationMgr.DLLs       += { "OTAssociators", "ITAssociators", "MuonAssociators", "CaloAssociators", "TrAssociators", "VeloAssociators", "Associators" };
-Explorer.ExploreRelations  = 1;
-
-ApplicationMgr.EvtMax      = 10;
-Explorer.PrintFreq         = 1.0;
-#include "$LHCBTESTROOT/options/PoolGen.opts"
-StoreExplorer.PrintMissing = 1;
+//#include "$IOEXAMPLEROOT/options/PoolDst.opts"  // Copy a OODST
+#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a OODIGI
+//#include "$IOEXAMPLEROOT/options/PoolSim.opts"  // Copy a OOSIM

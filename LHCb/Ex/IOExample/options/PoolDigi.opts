@@ -1,0 +1,13 @@
+// Load associators DLLs as they contain the relations factories
+#include "$ASSOCIATORSSYSROOT/options/DLLs.opts"
+
+EventSelector.Input   = {
+  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v4r0/412400.oodigi' TYP='ROOT' OPT='READ'"
+};
+
+// Define the OODIGI content to copy
+//#include "$GAUDICONFROOT/options/DigiContent.opts"
+#include "$IOEXAMPLEROOT/options/DigiContent.opts"
+
+DigiWriter.Output = "DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='REC'";
+ApplicationMgr.OutStream += {"DigiWriter"};
