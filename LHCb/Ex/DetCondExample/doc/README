@@ -1,4 +1,4 @@
-# $Id: README,v 1.25 2002-11-25 22:27:29 andreav Exp $
+# $Id: README,v 1.26 2002-11-25 22:50:34 andreav Exp $
 
 Three examples are distributed in this package: a test of condition data 
 stored in flat XML files, a test of condition data stored in the CondDB,
@@ -59,9 +59,17 @@ Under Linux (RedHat6.1)
 Under Windows and Linux (RedHat7.3)
         getpack Det/CondDBOracle   v4r16    head
 
-If package CONDDB v3r02p3 is not in CVS yet, you may find a tarred copy in 
-  /afs/cern.ch/user/a/andreav/public/CONDDB_v3r02p3.tar.gz
-(Check what is the version indicated in the requirements file in CVS HEAD).
+It may be that the CONDDB you get is not the latest version yet. Check by
+    more CONDDB/v3r02p3/cmt/requirements | grep 'version v'
+whether the requirements file indicates v3r02p3. Otherwise (i.e. if it
+indicates v3r02p2) copy the package frommy public area,
+    rm -rf CONDDB
+    mkdir CONDDB
+    cd CONDDB
+    tar -xvzf /afs/cern.ch/user/a/andreav/public/CONDDB_v3r02p3.tar.gz
+    cd v3r02p3/cmt
+    cmt config
+This will do everything that's necessary.
 
 ------------------------------------------------------------------------------
 How to setup the environment and link DetCondExample on lxplus/lxplus7
