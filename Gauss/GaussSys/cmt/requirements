@@ -1,5 +1,5 @@
 package GaussSys
-version v7
+version v7r1
 
 branches cmt doc
 
@@ -7,7 +7,7 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 # Gauss application
-use Gauss		v7r0	Sim
+use Gauss		v7r1	Sim
 
 # GEANT4 libraries
 use GEANT4		v2r4101p0 Sim
