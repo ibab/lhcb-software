@@ -83,9 +83,9 @@ ToolSvc.OutputLevel    = 4;
 
 EventSelector.PrintFreq  = 1;
 
-PrintTrueB.OutputLevel = 3;
+PrintTrueB.OutputLevel = 4;
 PrintTrueD.OutputLevel = 4;
-PrintBTracks.OutputLevel = 3;
+PrintBTracks.OutputLevel = 4;
 PrintDstarTracks.OutputLevel = 4;
 PrintFoundDstar.OutputLevel = 4;
-PrintTDR.OutputLevel = 3;
+PrintTDR.OutputLevel = 4;
