@@ -1,20 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPixelCreatorFromSignalRichDigits.cpp
  *
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.6 2004-11-20 12:33:26 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/11/09 10:47:10  jonrob
- *  Add filtering on association to tracked MCParticles
- *
- *  Revision 1.4  2004/07/27 16:14:11  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.7 2005-02-02 10:01:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichPixelCreatorFromSignalRichDigits.h"
@@ -70,7 +66,7 @@ StatusCode RichPixelCreatorFromSignalRichDigits::initialize()
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichPixelCreatorFromSignalRichDigits::finalize()

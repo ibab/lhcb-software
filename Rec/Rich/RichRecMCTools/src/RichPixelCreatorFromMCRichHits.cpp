@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPixelCreatorFromMCRichHits.cpp
  *
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromMCRichHits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.10 2004-07-27 16:14:11 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.11 2005-02-02 10:01:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichPixelCreatorFromMCRichHits.h"
@@ -29,7 +30,8 @@ RichPixelCreatorFromMCRichHits( const std::string& type,
     m_pixels      ( 0 ),
     m_smartIDTool ( 0 ),
     m_mcTool      ( 0 ),
-    m_allDone     ( false )
+    m_allDone     ( false ),
+    m_usedRads    ( Rich::NRadiatorTypes, true )
 {
 
   declareInterface<IRichPixelCreator>(this);
@@ -39,6 +41,7 @@ RichPixelCreatorFromMCRichHits( const std::string& type,
                    m_richRecPixelLocation = RichRecPixelLocation::Default );
   declareProperty( "MCRichHitLocation",
                    m_mcHitsLocation = MCRichHitLocation::Default );
+  declareProperty( "UseRadiators", m_usedRads );
 
 }
 
@@ -52,13 +55,18 @@ StatusCode RichPixelCreatorFromMCRichHits::initialize()
   acquireTool( "RichSmartIDTool", m_smartIDTool );
   acquireTool( "RichMCTruthTool", m_mcTool      );
 
+  // Check which radiators to use
+  if ( !m_usedRads[Rich::Aerogel] ) Warning("Pixel data for Aerogel is disabled",StatusCode::SUCCESS);
+  if ( !m_usedRads[Rich::C4F10]   ) Warning("Pixel data for C4F10 is disabled",StatusCode::SUCCESS);
+  if ( !m_usedRads[Rich::CF4]     ) Warning("Pixel data for CF4 is disabled",StatusCode::SUCCESS);
+
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichPixelCreatorFromMCRichHits::finalize()
@@ -93,34 +101,39 @@ RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
 
     RichRecPixel * newPixel = NULL;
 
-    RichSmartID id(0);
-    StatusCode sc = m_smartIDTool->smartID( hit->entry(), id );
-    if ( sc.isSuccess() && id.pixelDataAreValid() ) {
+    // Check if we are using this radiator
+    if ( m_usedRads[hit->radiator()] ) {
 
-      // Find associated MCRichOpticalPhoton
-      const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
-      if ( mcPhot ) {
+      RichSmartID id(0);
+      StatusCode sc = m_smartIDTool->smartID( hit->entry(), id );
+      if ( sc.isSuccess() && id.pixelDataAreValid() ) {
 
-        // Make a new RichRecPixel
-        newPixel = new RichRecPixel();
-        richPixels()->insert( newPixel );
+        // Find associated MCRichOpticalPhoton
+        const MCRichOpticalPhoton * mcPhot = m_mcTool->mcOpticalPhoton(hit);
+        if ( mcPhot ) {
 
-        // Positions
-        newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
-        newPixel->localPosition() =
-          m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
+          // Make a new RichRecPixel
+          newPixel = new RichRecPixel();
+          richPixels()->insert( newPixel );
 
-        // Set smartID
-        newPixel->setSmartID( id );
+          // Positions
+          newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
+          newPixel->localPosition() =
+            m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
 
-        // Set parent information
-        newPixel->setParentPixel( hit );
-        newPixel->setParentType( Rich::PixelParent::MCHit );
+          // Set smartID
+          newPixel->setSmartID( id );
 
+          // Set parent information
+          newPixel->setParentPixel( hit );
+          newPixel->setParentType( Rich::PixelParent::MCHit );
+
+        }
+
+      } else {
+        Warning("RichSmartID does not contain valid pixel data !");
       }
 
-    } else {
-      Warning("RichSmartID does not contain valid pixel data !");
     }
 
     // Add to reference map

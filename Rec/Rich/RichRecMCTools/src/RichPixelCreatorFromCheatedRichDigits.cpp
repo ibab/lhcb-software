@@ -1,21 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPixelCreatorFromCheatedRichDigits.cpp
  *
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.12 2005-01-13 14:39:00 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.11  2004/10/13 09:37:27  jonrob
- *  Add new pixel creator tool.
- *  Add ability to make pixels for particular radiators.
- *
- *  Revision 1.10  2004/07/27 16:14:11  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.13 2005-02-02 10:01:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichPixelCreatorFromCheatedRichDigits.h"
@@ -60,6 +55,11 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::initialize()
   acquireTool( "RichSmartIDTool", m_smartIDTool );
   acquireTool( "RichMCTruthTool", m_mcTool      );
 
+  // Check which radiators to use
+  if ( !m_usedRads[Rich::Aerogel] ) Warning("Pixel data for Aerogel is disabled",StatusCode::SUCCESS);
+  if ( !m_usedRads[Rich::C4F10]   ) Warning("Pixel data for C4F10 is disabled",StatusCode::SUCCESS);
+  if ( !m_usedRads[Rich::CF4]     ) Warning("Pixel data for CF4 is disabled",StatusCode::SUCCESS);
+
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
@@ -67,7 +67,7 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::initialize()
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichPixelCreatorFromCheatedRichDigits::finalize()

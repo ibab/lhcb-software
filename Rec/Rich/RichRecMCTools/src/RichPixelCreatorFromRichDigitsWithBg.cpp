@@ -1,31 +1,17 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPixelCreatorFromRichDigitsWithBg.cpp
  *
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.6 2004-11-20 12:34:16 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/10/30 19:27:02  jonrob
- *  Update method access types + comments
- *
- *  Revision 1.4  2004/10/27 14:35:55  jonrob
- *  Update for new RichSmartID Tool
- *
- *  Revision 1.3  2004/10/21 09:10:48  jonrob
- *  minor update
- *
- *  Revision 1.2  2004/10/13 10:32:49  jonrob
- *  Bug fix
- *
- *  Revision 1.1  2004/10/13 09:37:27  jonrob
- *  Add new pixel creator tool.
- *  Add ability to make pixels for particular radiators.
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.7 2005-02-02 10:01:48 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/10/2004
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichPixelCreatorFromRichDigitsWithBg.h"
@@ -70,6 +56,10 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::initialize()
   acquireTool( "RichSmartIDTool", m_smartIDTool );
   acquireTool( "RichMCTruthTool", m_mcTool      );
 
+  // Check which detectors to use
+  if ( !m_usedDets[Rich::Rich1] ) Warning("Pixels for RICH1 are disabled",StatusCode::SUCCESS);
+  if ( !m_usedDets[Rich::Rich2] ) Warning("Pixels for RICH2 are disabled",StatusCode::SUCCESS);
+
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
@@ -77,7 +67,7 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::initialize()
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichPixelCreatorFromRichDigitsWithBg::finalize()
