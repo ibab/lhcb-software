@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.15 2002-07-18 18:17:07 gcorti Exp $
+! $Id: release.notes,v 1.16 2002-07-19 09:45:20 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-07-19 - Gloria Corti
+ - Remove obsolete FillParticleAlgorithm that filled particles from 
+   AxPartCandidate
 
 ! 2002-07-18 - Gloria Corti
  - Use PhysEvent v6r0
