@@ -22,6 +22,7 @@ include_dirs           $(FLAVOURTAGGINGROOT)
 #============================================================================
 # Used packages. 
 #============================================================================
+use EventKernel         v2r0    Event
 use DaVinciTools	v7r*	Phys
 use DaVinciMCTools	v4r*	Phys
 
