@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.7 2002-07-25 13:50:52 andreav Exp $
+//$Id: PopulateDB.cpp,v 1.8 2004-12-08 17:32:24 marcocle Exp $
 #include <stdio.h>
 #include <fstream>
 
@@ -13,12 +13,29 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/TimePoint.h"
 
-#include "ConditionsDB/CondDBObjFactory.h"
+#ifdef __CondDBOracle__
+#include "ConditionsDB/CondDBOracleObjectFactory.h"
+#endif
+#ifdef __CondDBMySQL__
+#include "ConditionsDB/CondDBMySQLObjectFactory.h"
+#endif
+
 #include "ConditionsDB/ICondDBMgr.h"
 #include "ConditionsDB/ICondDBTagMgr.h"
-#include "ConditionsDB/ICondDBFolderMgr.h"
-#include "ConditionsDB/ICondDBDataAccess.h"
+#include "ConditionsDB/ICondDBBasicFolderMgr.h"
+#include "ConditionsDB/ICondDBBasicDataAccess.h"
 #include "ConditionsDB/ICondDBDataIterator.h"
+
+/*
+#ifdef __CondDBOracle__
+// #define CondDBObjFactory CondDBOracleObjectFactory
+#endif
+#ifdef __CondDBMySQL__
+// #define CondDBObjFactory CondDBMySQLObjectFactory
+#endif
+*/
+
+#define BIGBANG 0
 
 /// Instantiation of a static factory to create instances of this algorithm
 static const AlgFactory<PopulateDB> Factory;
@@ -101,8 +118,8 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
       << endreq;
 
   ICondDBMgr*        condDBMgr        = m_conditionsDBGate->condDBManager();
-  ICondDBDataAccess* condDBDataAccess = condDBMgr->getCondDBDataAccess();
-  ICondDBFolderMgr*  condDBFolderMgr  = condDBMgr->getCondDBFolderMgr();
+  ICondDBBasicDataAccess* condDBDataAccess = condDBMgr->getCondDBBasicDataAccess();
+  ICondDBBasicFolderMgr*  condDBFolderMgr  = condDBMgr->getCondDBBasicFolderMgr();
   ICondDBTagMgr*     condDBTagMgr     = condDBMgr->getCondDBTagMgr();
 
   // Check if root folderSet exists
@@ -267,18 +284,18 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
       ICondDBObject* condObject;
       // LHCb
       i_encodeXmlTemperature( (double)i*10+5, "scLHCb", s);
-      condObject = CondDBObjFactory::createCondDBObject
+      condObject = createCondDBObject
 	( i*16, (i+1)*16, s, "LHCb temperature in the given time interval");
       condDBDataAccess->storeCondDBObject
 	( rootName+"/SlowControl/LHCb/scLHCb", condObject );
-      CondDBObjFactory::destroyCondDBObject(condObject);
+      destroyCondDBObject(condObject);
       // Hcal
       i_encodeXmlTemperature( (double)i*10+5, "scHcal", s);
-      condObject = CondDBObjFactory::createCondDBObject
+      condObject = createCondDBObject
 	( i*16, (i+1)*16, s, "Hcal temperature in the given time interval");
       condDBDataAccess->storeCondDBObject
 	( rootName+"/SlowControl/Hcal/scHcal", condObject );
-      CondDBObjFactory::destroyCondDBObject(condObject);
+      destroyCondDBObject(condObject);
     }
     log << MSG::DEBUG << "Create and apply tag COLD" << endreq;
     condDBTagMgr->createCondDBTag("COLD");
@@ -296,18 +313,18 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
       ICondDBObject* condObject;
       // LHCb
       i_encodeXmlTemperature( (double)i*10+105, "scLHCb", s);
-      condObject = CondDBObjFactory::createCondDBObject
+      condObject = createCondDBObject
 	( i*16, (i+1)*16, s, "LHCb temperature in the given time interval");
       condDBDataAccess->storeCondDBObject
 	( rootName+"/SlowControl/LHCb/scLHCb", condObject );
-      CondDBObjFactory::destroyCondDBObject(condObject);
+      destroyCondDBObject(condObject);
       // Hcal
       i_encodeXmlTemperature( (double)i*10+105, "scHcal", s);
-      condObject = CondDBObjFactory::createCondDBObject
+      condObject = createCondDBObject
 	( i*16, (i+1)*16, s, "Hcal temperature in the given time interval");
       condDBDataAccess->storeCondDBObject
 	( rootName+"/SlowControl/Hcal/scHcal", condObject );
-      CondDBObjFactory::destroyCondDBObject(condObject);
+      destroyCondDBObject(condObject);
     }
     log << MSG::DEBUG << "Create and apply tag HOT" << endreq;
     condDBTagMgr->createCondDBTag("HOT");
@@ -376,17 +393,17 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
       log << MSG::VERBOSE 
 	  << "Folder name: " << rootName+"/Geometry/LHCb" << endreq;
       log << MSG::VERBOSE 
-	  << "Create object with validity range: [" << CondDBminusInf
+	  << "Create object with validity range: [" << BIGBANG
 	  << "(0x" << std::hex 
-	  << CondDBminusInf
+	  << BIGBANG
 	  << std::dec << ")" 
 	  << "," << CondDBplusInf 
 	  << "(0x" << std::hex 
 	  << CondDBplusInf
 	  << std::dec << ")" 
 	  << "]" << endreq;
-      ICondDBObject* condObject = CondDBObjFactory::createCondDBObject
-	(CondDBminusInf, CondDBplusInf, xmlString, "LHCb geometry");
+      ICondDBObject* condObject = createCondDBObject
+	(BIGBANG, CondDBplusInf, xmlString, "LHCb geometry");
       log << MSG::VERBOSE 
 	  << "Created object with validity range: [" 
 	  << condObject->validSince() 
@@ -400,7 +417,7 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
 	  << "]" << endreq;
       condDBDataAccess->storeCondDBObject
         ( rootName+"/Geometry/LHCb", condObject );
-      CondDBObjFactory::destroyCondDBObject(condObject);
+      destroyCondDBObject(condObject);
     }
     condDBMgr->commit();    
 
@@ -445,7 +462,7 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
       << endreq;
 
   ICondDBMgr*        condDBMgr        = m_conditionsDBGate->condDBManager();
-  ICondDBFolderMgr*  condDBFolderMgr  = condDBMgr->getCondDBFolderMgr();
+  ICondDBBasicFolderMgr*  condDBFolderMgr  = condDBMgr->getCondDBBasicFolderMgr();
 
   // List all stored CondDBFolders 
   // Use options: "l" = long, "R" = Recursive 
@@ -572,7 +589,7 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
 
   // Data access to the CondDB
   ICondDBMgr*        condDBMgr        = m_conditionsDBGate->condDBManager();
-  ICondDBDataAccess* condDBDataAccess = condDBMgr->getCondDBDataAccess();
+  ICondDBBasicDataAccess* condDBDataAccess = condDBMgr->getCondDBBasicDataAccess();
 
   // Iterator over objects in the folder for this tag
   ICondDBDataIterator* it;
@@ -631,3 +648,50 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
 }
   
 //----------------------------------------------------------------------------
+ICondDBObject* PopulateDB::createCondDBObject(const CondDBKey& since,
+                                              const CondDBKey& till,
+                                              const std::string& data,
+                                              const std::string& description)
+  throw(CondDBException)
+{
+  ICondDBObject* condObject = 0;
+  switch (m_conditionsDBGate->implementationCode()){
+#ifdef __CondDBOracle__
+  case ConditionsDBGateImplementation::CONDDBORACLE :
+    condObject = cool::CondDBOracleObjectFactory::createCondDBObject
+      ( since,till,data,description );
+      break;
+#endif
+#ifdef __CondDBMySQL__
+  case ConditionsDBGateImplementation::CONDDBMYSQL :
+    condObject = CondDBMySQLObjectFactory::createCondDBObject
+      ( since,till,data,description );
+    break;
+#endif
+  default:
+    MsgStream log(msgSvc(), "PopulateDB" );
+    log << MSG::ERROR << "I cannot use the ConditionsDB implementation '" <<
+      m_conditionsDBGate->implementation() << "'" << endmsg;
+  }
+  return condObject;  
+}
+void PopulateDB::destroyCondDBObject(ICondDBObject* CondObj)
+  throw(CondDBException)
+{
+  switch (m_conditionsDBGate->implementationCode()){
+#ifdef __CondDBOracle__
+  case ConditionsDBGateImplementation::CONDDBORACLE :
+    cool::CondDBOracleObjectFactory::destroyCondDBObject(CondObj);
+    break;
+#endif
+#ifdef __CondDBMySQL__
+  case ConditionsDBGateImplementation::CONDDBMYSQL :
+    CondDBMySQLObjectFactory::destroyCondDBObject(CondObj);
+    break;
+#endif
+  default:
+    MsgStream log(msgSvc(), "PopulateDB" );
+    log << MSG::ERROR << "I cannot use the ConditionsDB implementation '" <<
+      m_conditionsDBGate->implementation() << "'" << endmsg;
+  }
+}
