@@ -35,7 +35,8 @@ Purpose: LHCb reconstruction program
    . Fixes to readout and layer bits in MuonTileID (MuonRec v2r2)
    . Fix track fit 'smoother problem' (-ve covariances) (TrExtrapolator v2r1) 
    . Use fabs instead of abs for doubles. Should fix overlapping volumes and 
-     other problems on Windows (DetDesc v10r4, RiSicbGeom v2r3, RiSicbCnv v4r4)
+     other problems on Windows (DetDesc v10r4, RiSicbGeom v2r3, RiSicbCnv v4r4,
+     CaloDet v5r1, CaloUtils v4r2, CaloTools v4r4)
 
  - Geometry changes (XmlDDDB v12r5):
    . Fix overlap between Velo and Rich1

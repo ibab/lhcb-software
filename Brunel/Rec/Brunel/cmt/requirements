@@ -46,7 +46,7 @@ use Futio        v12r0  SICB
 # Detector description
 use DetDesc      v10r4  Det
 use XmlDDDB      v12r5  Det
-use CaloDet       v5r0  Det
+use CaloDet       v5r1  Det
 use CaloDetXmlCnv v2r0  Det
 use ITDet         v1r1  Det
 use MuonDet       v3r2  Det
@@ -82,8 +82,8 @@ use L1VeloTrack         v2r2    L1
 # Calorimeter
 use CaloKernel          v2r0    Calo
 use CaloInterfaces 	v2r2 	Calo
-use CaloUtils      	v4r1 	Calo
-use CaloTools      	v4r2 	Calo
+use CaloUtils      	v4r2 	Calo
+use CaloTools      	v4r4 	Calo
 use CaloAlgs       	v7r1 	Calo
 use CaloMonitor         v1r1    Calo
 use CaloAssociators	v2r2	Calo
