@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.14 2005-02-23 12:34:00 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.15 2005-02-23 12:37:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -151,7 +151,7 @@ RichMCTruthTool::mcParticle( const TrgTrack * track ) const
 {
   if ( track ) {
     const MCParticle * mcP = trgTrackToMCPLinks()->first(track);
-    if ( !mcP ) Warning( "::mcParticle : Failed to load MCParticle for TrgTrack" );
+    if ( !mcP ) Warning( "::mcParticle : Failed to locate MCParticle from TrgTrack" );
     return mcP;
   } else {
     Warning ( "::mcParticle : NULL TrgTrack pointer" );
@@ -178,7 +178,7 @@ const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) cons
 const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichSmartID id ) const
 {
   const MCRichDigit * mcDigit = ( mcRichDigits() ? mcRichDigits()->object(id) : 0 );
-  if ( !mcDigit ) Warning( "Failed to location MCRichDigit from RichSmartID" );
+  if ( !mcDigit ) Warning( "Failed to locate MCRichDigit from RichSmartID" );
   return mcDigit;
 }
 
