@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.10 2005-02-22 14:07:29 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.11 2005-02-22 18:11:58 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -227,13 +227,13 @@ const RichSmartID::Collection & RichSmartIDTool::readoutChannelList( ) const
     m_readoutChannels.reserve( 400000 );
 
     // Fill for RICH1
-    m_photoDetPanels[Rich::Rich1][Rich::top]->readoutChannelList(m_readoutChannels,Rich::Rich1,Rich::top);
-    m_photoDetPanels[Rich::Rich1][Rich::bottom]->readoutChannelList(m_readoutChannels,Rich::Rich1,Rich::bottom);
+    m_photoDetPanels[Rich::Rich1][Rich::top]->readoutChannelList(m_readoutChannels);
+    m_photoDetPanels[Rich::Rich1][Rich::bottom]->readoutChannelList(m_readoutChannels);
     const unsigned int nRich1 = m_readoutChannels.size();
 
     // Fill for RICH2
-    m_photoDetPanels[Rich::Rich2][Rich::left]->readoutChannelList(m_readoutChannels,Rich::Rich2,Rich::left);
-    m_photoDetPanels[Rich::Rich2][Rich::right]->readoutChannelList(m_readoutChannels,Rich::Rich2,Rich::right);
+    m_photoDetPanels[Rich::Rich2][Rich::left]->readoutChannelList(m_readoutChannels);
+    m_photoDetPanels[Rich::Rich2][Rich::right]->readoutChannelList(m_readoutChannels);
     const unsigned int nRich2 = m_readoutChannels.size() - nRich1;
 
     // Sort the list
