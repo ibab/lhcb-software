@@ -138,7 +138,7 @@ EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
 // set this to 2 to get memory usage at each event
-DaVinci.OutputLevel = 3 ;                                                                                                
+DaVinci.OutputLevel = 4 ;                                                                                                
 
 //***************************************************************
 // Interactive prompt: 
