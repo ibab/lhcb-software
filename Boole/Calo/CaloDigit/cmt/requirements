@@ -21,7 +21,7 @@ branches         cmt doc src options
 #============================================================================
 use CaloKernel   v2r*    Calo
 use CaloEvent    v11r* Event
-use CaloDet      v5r* Det
+use CaloDet      v6r* Det
 
 #============================================================================
 # Component library building rule

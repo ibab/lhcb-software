@@ -4,6 +4,10 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!========================= CaloDigit v1r1 2002-12-05 =====================
+! 2002-11-22 - Florence Ranjard
+ - requirements - use new versions
+
 ! 2002-11-29 - Ivan Belyaev
  - cmt requirements   version update 
 
