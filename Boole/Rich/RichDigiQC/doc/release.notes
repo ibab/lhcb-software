@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichDigiQC v2r1 2005-03-08 ========================
 ! 2005-02-20 - Chris Jones
  - Upgrade the monitoring information provided on the digitisation 
    performance
