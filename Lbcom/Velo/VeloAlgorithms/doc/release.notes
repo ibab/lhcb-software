@@ -1,6 +1,7 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+!===================== VeloAlgorithms v2r3 2002-10-21 =====================
 
 ! 2002-10-16 - Chris Parkes
  -VeloDataProcessor change digitise routine to return a float.
