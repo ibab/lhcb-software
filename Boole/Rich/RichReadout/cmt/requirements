@@ -2,7 +2,7 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.23 2005-03-03 10:55:38 jonrob Exp $
+# $Id: requirements,v 1.24 2005-03-08 10:49:29 cattanem Exp $
 #============================================================================
 
 package RichReadout
@@ -17,7 +17,7 @@ set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
 use RichEvent   v8r*    Event
-use DAQEvent    v4r*    Event
+use DAQEvent    v*      Event
 
 # ================ component library =========================================
 library RichReadout ../src/*.cpp  -import=AIDA

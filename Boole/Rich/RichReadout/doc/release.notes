@@ -4,6 +4,7 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v1r12 2005-03-08 =======================
 ! 2005-03-03 - Chris Jones
  - Add history information to MCRichDigits.
 
