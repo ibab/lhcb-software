@@ -1,86 +1,91 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.9 2005-02-05 12:58:32 ibelyaev Exp $ 
+! $Id: release.notes,v 1.10 2005-02-05 19:12:22 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
-! Purpose     : The package is a result of "pythonization procedure" 
-!                of the LoKi package 
+! Purpose     : The package is a result of "pythonization procedure"
+!                of the LoKi package
 ! -----------------------------------------------------------------------------
 
 ! 2005-02-05 - Vanya BELYAEV
- - add new package Tools/BenderResl to make available 
-   all C++ relation tables in Python/Bender 
-   see the example in Ex/BenderExample/v4r6/python/CaloCLusterMCTruth.py 
-   For a moment an explicit import of this package si required: 
-   
+ - python/benderhelper.py
+   bug fix for MC predicates
+
+
+! 2005-02-05 - Vanya BELYAEV
+ - add new package Tools/BenderResl to make available
+   all C++ relation tables in Python/Bender
+   see the example in Ex/BenderExample/v4r6/python/CaloCLusterMCTruth.py
+   For a moment an explicit import of this package si required:
+
    import benderrels
 
    After some consolidation period, it will be imported in an automated way
 
 
-! 2005-02-02 - Vanya BELYAEV 
- - python/benderaux.py 
+! 2005-02-02 - Vanya BELYAEV
+ - python/benderaux.py
    make the functions from namespace LoKi::Adder availabel in Bendr/Python
    as "addMomenta" ( throughtehintrmediate class Bender::Adder)
- - python 
-   load new classes LoKi::MCParticcles::MCMotherFunction and 
-   LoKi::MCMotherPredicate availabel as MCMOTHER and MCMOTHCUT 
- - cmt/requirements 
-   version incremenet to v4r6 
+ - python
+   load new classes LoKi::MCParticcles::MCMotherFunction and
+   LoKi::MCMotherPredicate availabel as MCMOTHER and MCMOTHCUT
+ - cmt/requirements
+   version incremenet to v4r6
 
 ! 2005-01-21 - Vanya BELYAEV
 
- - python/bendersmartrefs.py 
+ - python/bendersmartrefs.py
 
-   new script to substitute the retur value for few C++ methodf 
-   from SmartRefVector<XXX> to Python list 
+   new script to substitute the retur value for few C++ methodf
+   from SmartRefVector<XXX> to Python list
    e.g.  MCParticle::endVertices()
-   It allows a normal iteration over the return value 
+   It allows a normal iteration over the return value
 
    mcp = ....
    for v in mcp.endVertices() :
-        type type(v), v 
+        type type(v), v
 
 
-   In additon SmartRefVector<XXX> is equipper with 'normal' 
-   __getitem__ function to provide similar iteration 
+   In additon SmartRefVector<XXX> is equipper with 'normal'
+   __getitem__ function to provide similar iteration
 
- - cmt/requirements 
+ - cmt/requirements
    move LD_PRELOAD to BenderGCC package
 
- - cmt/requirements 
-   version increment to v4r5 
+ - cmt/requirements
+   version increment to v4r5
 
 
 ! 2004-08-08 - Vanya BELYAEV
  - python/benderhelper.py
    add ==/!= operators to ID/ABSID/MCID/MCABSID functions. e.g.
-     'e+' == MCABSID 
+     'e+' == MCABSID
  - cmt/requirements
-   version increment to v3r7 
+   version increment to v3r7
 
 
 ! 2004-07-11 - Vanya BELYAEV
  - python/*.py
    split bendermodule.py into set of small modules.
-- cmt/requirements 
-   add the usage of Tools/LoKiHybrid package 
-   increment the versiuon to v3r5 
+- cmt/requirements
+   add the usage of Tools/LoKiHybrid package
+   increment the versiuon to v3r5
 
 ! 2004-03-26 - Vanya BELYAEV
  - python/bendermodule.py
-   uncomment TR* functions 
- - cmt/requirements 
-   increment the version to v3r1 
+   uncomment TR* functions
+ - cmt/requirements
+   increment the version to v3r1
 
 ! 2004-03-17 - Vanya BELYAEV
  - python/benderPreLoad.py
-   new module with 3 simple functions which will simplify teh configuration of 
-   preloading algorihtms of type LoKiPreLoad, 
-   see the examples in BenderExample package 
+   new module with 3 simple functions which will simplify teh configuration of
+   preloading algorihtms of type LoKiPreLoad,
+   see the examples in BenderExample package
 
 
 ! 2003-04-15 - Vanya BELYAEV
@@ -88,10 +93,10 @@
 	too many changes to be described here, consider it 'the first commit'
 
 ! 2002-11-02 - Vanya Belyaev
- - new package 
+ - new package
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------
 
 </PRE>

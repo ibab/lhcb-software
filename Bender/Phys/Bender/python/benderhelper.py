@@ -83,6 +83,7 @@ _OpsPID4   = gaudi.gbl.Bender.OperatorsPID ( 'LoKi::MCParticles::AbsIdentifier' 
 _CallsP    = gaudi.gbl.Bender.Calls        ( 'const Particle*'   )
 _CallsV    = gaudi.gbl.Bender.Calls        ( 'const Vertex*'     )
 _CallsMCP  = gaudi.gbl.Bender.CallsMC      ( 'const MCParticle*' )
+_CallsMCV  = gaudi.gbl.Bender.CallsMC      ( 'const MCVertex*'   )
 
 def _OpsFunP   ( fun ) :
     _OpsFun    ( fun ,   _OpsP   )
@@ -106,8 +107,13 @@ def _OpsCutV   ( cut ) :
     _OpsCut    ( cut ,   _OpsV )
     _CallsCut  ( cut , _CallsV )
     
-def _OpsCutMCP ( cut ) : _OpsCut ( cut , _OpsMCP )
-def _OpsCutMCV ( cut ) : _OpsCut ( cut , _OpsMCV )
+def _OpsCutMCP ( cut ) :
+    _OpsCut    ( cut , _OpsMCP   )
+    _CallsCut  ( cut , _CallsMCP )
+
+def _OpsCutMCV ( cut ) :
+    _OpsCut    ( cut , _OpsMCV   )
+    _CallsCut  ( cut , _CallsMCV )
 
 def _OpsFunID      ( fun ) : _OpsFunP  ( fun ) ; _OpsE   ( fun , _OpsPID1 )
 def _OpsFunABSID   ( fun ) : _OpsFunP  ( fun ) ; _OpsE   ( fun , _OpsPID2 )
