@@ -1,8 +1,11 @@
-// $Id: Calo.opts,v 1.2 2002-12-13 17:24:08 witoldp Exp $ 
+// $Id: Calo.opts,v 1.3 2002-12-16 11:00:29 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/13 17:24:08  witoldp
+// changes due to restructurisation
+//
 // Revision 1.1  2002/12/07 14:47:29  ibelyaev
 //  add new Calo stuff and newer verisons of all other packages
 // 
@@ -19,11 +22,11 @@
 GiGaGeo.Ecal.StartVolumes = 
 {
   "/dd/Geometry/Ecal/Modules/InnCentSubCellSc"  ,
-  "/dd/Geometry/Ecal/Modules/InnSubCellSc"      
-  //"/dd/Geometry/Ecal/Modules/MidCentSubCellSc"  ,
-  //"/dd/Geometry/Ecal/Modules/MidSubCellSc"      ,
-  //"/dd/Geometry/Ecal/Modules/OutCentSubCellSc"  ,
-  //"/dd/Geometry/Ecal/Modules/OutSubCellSc" 
+  "/dd/Geometry/Ecal/Modules/InnSubCellSc"      , 
+  "/dd/Geometry/Ecal/Modules/MidCentSubCellSc"  ,
+  "/dd/Geometry/Ecal/Modules/MidSubCellSc"      ,
+  "/dd/Geometry/Ecal/Modules/OutCentSubCellSc"  ,
+  "/dd/Geometry/Ecal/Modules/OutSubCellSc" 
 };
 
 GiGaGeo.Ecal.EndVolume      =  "/dd/Geometry/Ecal/Installation/Ecal" ;
@@ -31,7 +34,6 @@ GiGaGeo.Ecal.CollectionName =  "EcalHits"                            ;
 GiGaGeo.Ecal.Detector       =  "/dd/Structure/LHCb/Ecal"             ;
 
 GiGaGeo.Ecal.DetectorPath   =  "/LHCb/Calo"             ;
-GiGaGeo.Ecal.OutputLevel = 1 ;
 
 
 // ============================================================================
