@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== GaussSys v12r1 2003-08-13 =================
+! 2003-08-14 - Florence Ranjard
+ - remove use of Gen/DecFiles which has been moved to DBASE.
+
 ! 2003-08-13 - Witek Pokorski
  - uses geant4 5.2.ref01
  - various fixes to v12r0. This version will be used for the test production.

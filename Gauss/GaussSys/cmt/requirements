@@ -6,8 +6,6 @@ branches cmt doc
 #==================================================================
 # Gauss packages
 #==================================================================
-# Decay files
-use DecFiles		v1r0	Gen
 
 # Gauss application
 use Gauss		v12r1	Sim
@@ -23,7 +21,7 @@ use GeneratorModules    v8r1    Gen
 # GiGa stuff...
 use GiGa        	v14r2p1	Sim        
 use GiGaCnv     	v13r0   Sim
-use GiGaVisUI		v2r0	Sim
+use GiGaVisUI		v2r1	Sim
 
 use VisSvc              v3r0    Vis
 use SimSvc              v3r2    Sim
