@@ -1,6 +1,7 @@
 Package         : ITDet
 Package manager : M. Needham 
 
+!========================== ITDet v1r1 2002-10-04 ==========================
 ! 2002-10-03 M Needham
   Bug fixes in ITSTLayer, ITTT1Layer 
   Change ITWafer to allow for dead region between sensors

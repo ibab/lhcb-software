@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.9 2002-08-07 15:38:26 jvantilb Exp $
+! $Id: release.notes,v 1.10 2002-10-04 11:37:43 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
 
+!========================== OTDet v2r2 2002-10-04 ==========================
 ! 2002-08-07 Jeroen van Tilburg
   - Adjust OTLayer and DeOTDetector to C++ coding conventions.
   - Add descriptions.
