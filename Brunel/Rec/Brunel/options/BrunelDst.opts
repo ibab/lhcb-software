@@ -32,7 +32,7 @@ BrunelDstWriter.ItemList =
 , "/Event/Raw/Velo#1"
 , "/Event/Raw/Velo/Clusters#1"
 , "/Event/Raw/Rich#1"
-  //, "/Event/Raw/Rich/Digits#1" // Need converter to load explicitly 
+, "/Event/Raw/Rich/Digits#1" 
 , "/Event/Rec#1"
 , "/Event/Rec/IT#1"
 , "/Event/Rec/IT/Summary#1"

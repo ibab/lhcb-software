@@ -4,7 +4,7 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v10r0>20020507 Brunel v10r0</A></H1><PRE>
+</PRE><H1><A NAME=v10r0>20020514 Brunel v10r0</A></H1><PRE>
    >>>>>>>>>>>>>>>>>>>>>>>>>>> Beware!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
    >>>>>>>>> Current head revision has limited functionality!! <<<<<<<<<<<<
 
@@ -20,7 +20,7 @@ Purpose: LHCb reconstruction program
      - Velo digitisation and standalone tracking
      - Forward tracking (not in OT), including "StoredTracks" as output
      - RICH Digitisation (old SICB Fortran version)
-     - Calo digitisation and reconstruction
+     - Calo digitisation and clustering
      - MUON Digitisation (old SICB Fortran version) and reconstruction
      - L0 trigger simulation
      - First tests of DST output

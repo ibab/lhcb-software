@@ -45,24 +45,7 @@ BrunelReco.DetectorList = {"VELO","OT","IT","Tr","TRACK","RICH","CALO","MUON"};
 BrunelFinalFit.DetectorList = { "TRAC" };
 
 //--------------------------------------------------------------
-// Fortran processing sequences
-//--------------------------------------------------------------
-//BrunelDigiVELOSeq.Members = { "BrunelDigiVELO" };
-BrunelDigiRICHSeq.Members = { "BrunelDigiRICH" };
-BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
-
-//BrunelTriggerTRIGGERSeq.Members = { "BrunelTriggerTRIGGER" };
-
-//BrunelRecoRICHSeq.Members = { "BrunelRecoRICH" };
-//BrunelRecoCALOSeq.Members = { "BrunelRecoECAL", "BrunelRecoHCAL" };
-
-//BrunelFinalFitTRACSeq.Members = { "BrunelFinalFitTRAC" };
-
-// Add muon background (default is false)
-//BrunelDigiMUON.addBkg = false;
-
-//--------------------------------------------------------------
-// C++ subdetector algorithms
+// Subdetector algorithms
 //--------------------------------------------------------------
 #pragma print off
 // L0 trigger
@@ -72,12 +55,15 @@ BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
 #include "$L0DUROOT/options/Brunel.opts"
 #include "$MUONTOOLSROOT/options/MuonTools.opts"
 
-// Calorimeter RAWH conversion, digitisation, reconstruction
-ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
-#include "$CALOSICBCNVOPTS/Brunel.opts"
+// Calorimeter digitisation and reconstruction (clustering)
+ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
 #include "$CALOTOOLSOPTS/Brunel.opts"
 #include "$CALOCAOPTS/Brunel.opts"
 #include "$CALOALGSOPTS/Brunel.opts"
+
+// Rich Fortran digitisation and OO digits creator 
+ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };
+BrunelDigiRICHSeq.Members = { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
 
 // Inner tracker digitisation and reconstruction (clustering)
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
@@ -98,6 +84,7 @@ BrunelRecoTRACKSeq.Members = { "FwtFind", "StoreTracks" };
 //#include "$TRALGORITHMSROOT/options/Brunel.opts"
 //#include "$TRSICBCNVROOT/options/Brunel.opts"
 
-// Muon reconstruction
+// Muon Fortran digitisation and C++ reconstruction
 ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet", "MuonRec" };
-BrunelRecoMUONSeq.Members  = { "MuonRec" };
+BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
+BrunelRecoMUONSeq.Members = { "MuonRec" };
