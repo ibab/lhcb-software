@@ -1,8 +1,11 @@
-// $Id: AssociatorBase.cpp,v 1.2 2004-11-19 15:01:22 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.3 2004-11-22 16:49:55 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2004/11/19 15:01:22  ibelyaev
+//  substitute explict algorithm management by 'Data-On-Demand' service
+// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -104,10 +107,11 @@ StatusCode Relations::AssociatorBase::initialize ()
   {
     std::string msg = 
       "Obsolete properties 'AlgorithmName' and 'AlgorithmType'." ;
-    msg += "Use new 'Data-On-Demand' Service: \n\n" ;
-    msg += " \tDataOnDemandSvc.Algorithms +={" ;
-    msg += "\"DATA='" + location() + 
-      "' TYPE='" + m_builderType + "/"+m_builderName+"'\"}; \n\n // " ;
+    msg += "Use new 'Data-On-Demand' Service: \n\n"   ;
+    msg += " \tDataOnDemandSvc.Algorithms +={\"DATA='" ;
+    if ( std::string::npos == location().find("/Event/") ) { msg += "/Event/" ; }
+    msg += location() ;
+    msg += "' TYPE='" + m_builderType + "/"+m_builderName+"'\"}; \n\n // " ;
     Warning( msg ) ;
   };
   

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.4 2004-11-22 09:05:00 cattanem Exp $ 
+! $Id: release.notes,v 1.5 2004-11-22 16:49:55 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -32,7 +32,7 @@
   e.g. for concrete examples with MC association for CaloClusters:
 
     DataOnDemandSvc.Algorithms 
-      += { "DATA='Rec/Relations/EcalClusters2MCParticles' , TYPE='CaloClustersMCTruth5Alg/CCs2MCPs'" } ;
+      += { "DATA='/Event/Rec/Relations/EcalClusters2MCParticles' , TYPE='CaloClustersMCTruth5Alg/CCs2MCPs'" } ;
 
   With such configuration one *DOES NOT* need the associators at all, 
   the relation table can be retrieved and use inside the 
@@ -59,7 +59,7 @@
   --------------------------------
       ToolSvc.CCs2MCPs    WARNING  Obsolete properties 'AlgorithmName' and 'AlgorithmType'. Use new 'Data-On-Demand' Service: 
     
-               DataOnDemandSvc.Algorithms += { "DATA='Rec/Relations/EcalClusters2MCParticles' , TYPE='CaloClustersMCTruth5Alg/CCs2MCPs'" } ;
+               DataOnDemandSvc.Algorithms += { "DATA='/Event/Rec/Relations/EcalClusters2MCParticles' , TYPE='CaloClustersMCTruth5Alg/CCs2MCPs'" } ;
 
   --------------------------------
    
@@ -83,8 +83,11 @@
     DataOnDemandSvc.Algorithms 
          += { "DATA='MyTableLocation' , TYPE='MyAlgorithmType/MyAlgInstanceName'" } ;
 	
-  (NB: do not forget the "The.Full.Name.Of.My.Associator" is really *FULL" name
-   and includes the parent name, e.g. "ToolSvc" for "PUBLIC" associators!)
+  Important Notes:
+     - "MyTableLocation" is a FULL location of object in TES, including "/Event/"
+     - do not forget the "The.Full.Name.Of.My.Associator" is really *FULL" name
+       and includes the parent name, e.g. "ToolSvc" for "PUBLIC" associators
+
 
    Let me stress here once more that, the line, marked by "//THE LINE" is needed 
    only if one still uses "Associators", for direct usage of relation table 
