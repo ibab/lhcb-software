@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.h,v 1.4 2003-08-06 10:02:10 jonrob Exp $
+// $Id: RichGlobalPIDAlg.h,v 1.5 2003-12-11 16:33:34 cattanem Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDALG_H
 #define RICHRECALGS_RICHGLOBALPIDALG_H 1
 
@@ -16,9 +16,6 @@
 #include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
-
-// RichKernel
-#include "RichKernel/MessageSvcStl.h"
 
 /** @class RichGlobalPIDAlg RichGlobalPIDAlg.h
  *

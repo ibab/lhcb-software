@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.h,v 1.8 2003-12-01 09:52:54 jonesc Exp $
+// $Id: RichPhotonCreator.h,v 1.9 2003-12-11 16:33:36 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
 
@@ -18,10 +18,6 @@
 #include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "RichDetTools/IRichDetInterface.h"
-
-// Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
-//#include "RichKernel/BoostArray.h"
 
 /** @class RichPhotonCreator RichPhotonCreator.h
  *

@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           RichRecQC
-version           v1r3
+version           v1r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -21,11 +21,4 @@ use RichRecBase   v1r*  Rich
 #============================================================================
 library          RichRecQC  ../src/*.cpp  -import=AIDA
 
-# define component library link options
-#============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
-
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
+apply_pattern component_library library=RichRecQC

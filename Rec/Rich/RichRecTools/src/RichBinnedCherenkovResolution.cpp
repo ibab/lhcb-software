@@ -1,4 +1,4 @@
-// $Id: RichBinnedCherenkovResolution.cpp,v 1.5 2003-11-25 14:06:39 jonrob Exp $
+// $Id: RichBinnedCherenkovResolution.cpp,v 1.6 2003-12-11 16:33:36 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -10,10 +10,6 @@
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
-
-// Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
-
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichBinnedCherenkovResolution

@@ -2,7 +2,7 @@
 # Maintainer : Christopher Rob Jones
 
 package RichGlobalPID
-version v1r2
+version v1r3
 
 #============================================================================
 # Structure
@@ -36,11 +36,9 @@ library   RichGlobalPIDEventDict  ../dict/*.cpp -import=GaudiIntrospection
 
 # define component library link options
 #============================================================================
-apply_pattern     package_Clinkopts
-apply_pattern     packageShr
+apply_pattern component_library library=RichGlobalPID
+apply_pattern component_library library=RichGlobalPIDEventDict
 
 #============================================================================
 private
-apply_pattern     package_Cshlibflags
 include_dirs $(RICHGLOBALPIDROOT)/Event
-macro RichGlobalPIDEventDict_shlibflags  "$(GaudiIntrospection_linkopts) $(RichGlobalPID_linkopts) $(use_linkopts) $(libraryshr_linkopts)

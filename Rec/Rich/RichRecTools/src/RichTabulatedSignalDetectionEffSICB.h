@@ -1,4 +1,4 @@
-// $Id: RichTabulatedSignalDetectionEffSICB.h,v 1.1 2003-11-25 14:06:41 jonrob Exp $
+// $Id: RichTabulatedSignalDetectionEffSICB.h,v 1.2 2003-12-11 16:33:36 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFFSICB_H
 #define RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFFSICB_H 1
 
@@ -24,7 +24,6 @@
 #include "DetDesc/DetectorElement.h"
 
 // Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
 #include "RichKernel/RichDetectorType.h"
 #include "RichKernel/BoostArray.h"
 

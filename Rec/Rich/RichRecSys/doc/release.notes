@@ -4,6 +4,11 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!======================= RichRecSys v1r5 2003-12-10 =======================
+! 2003-12-10 - Marco Cattaneo
+ - New versions of RichRecBase, RichRingRefit, RichRecTools, RichRecCommon,
+   RichLocalPID, RichGlobalPID for GAUDI v13r0, LHCB v14r0
+
 !======================= RichRecSys v1r4 2003-12-04 =======================
 ! 2003-12-03 - Chris Jones
  - New versions of RichRecBase and RichRecTools

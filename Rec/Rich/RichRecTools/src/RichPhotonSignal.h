@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.h,v 1.6 2003-11-25 14:06:40 jonrob Exp $
+// $Id: RichPhotonSignal.h,v 1.7 2003-12-11 16:33:36 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONSIGNAL_H
 #define RICHRECTOOLS_RICHPHOTONSIGNAL_H 1
 
@@ -21,9 +21,6 @@
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
-
-// Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"

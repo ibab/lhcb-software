@@ -1,4 +1,4 @@
-// $Id: RichSignalDetectionEffSICB.h,v 1.2 2003-10-13 16:32:35 jonrob Exp $
+// $Id: RichSignalDetectionEffSICB.h,v 1.3 2003-12-11 16:33:36 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHSIGNALDETECTIONEFFSICB_H
 #define RICHRECTOOLS_RICHSIGNALDETECTIONEFFSICB_H 1
 
@@ -17,9 +17,6 @@
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
-
-// Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
 
 /** @class RichSignalDetectionEffSICB RichSignalDetectionEffSICB.h
  *

@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================== RichRecQC v1r4 2003-12-10 ========================
+! 2003-12-10 - Marco Cattaneo
+ - Remove #include RichKernel/MessageSvcStl.h, not needed for GAUDI v13
+
 !======================== RichRecQC v1r3 2003-11-27 ========================
 ! 2003-11-25 - Chris Jones
  - Tidy up job options

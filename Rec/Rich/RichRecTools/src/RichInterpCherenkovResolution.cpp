@@ -1,4 +1,4 @@
-// $Id: RichInterpCherenkovResolution.cpp,v 1.3 2003-11-25 14:06:40 jonrob Exp $
+// $Id: RichInterpCherenkovResolution.cpp,v 1.4 2003-12-11 16:33:36 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -10,10 +10,6 @@
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
-
-// Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
-
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichInterpCherenkovResolution

@@ -1,4 +1,4 @@
-// $Id: RichParticleProperties.h,v 1.3 2003-11-02 21:51:23 jonrob Exp $
+// $Id: RichParticleProperties.h,v 1.4 2003-12-11 16:33:36 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHPARTICLEPROPERTIES_H
 #define RICHRECTOOLS_RICHPARTICLEPROPERTIES_H 1
 
@@ -11,7 +11,6 @@
 #include "CLHEP/Units/PhysicalConstants.h"
 
 // Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
 #include "RichKernel/BoostArray.h"
 
 // base class

@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecTools v2r6 2003-12-11 ======================
+! 2003-12-11 - Marco Cattaneo
+ - Remove references to RichKernel/MessageSvcStl.h (now in GAUDI v13)
+
 !====================== RichRecTools v2r5 2003-12-04 ======================
 ! 2003-12-01 - Chris Jones
  - Minor updates for new RichDetTool interface

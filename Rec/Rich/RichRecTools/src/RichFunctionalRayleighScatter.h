@@ -1,4 +1,4 @@
-// $Id: RichFunctionalRayleighScatter.h,v 1.1 2003-08-26 14:40:19 jonrob Exp $
+// $Id: RichFunctionalRayleighScatter.h,v 1.2 2003-12-11 16:33:36 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHFUNCTIONALRAYLEIGHSCATTER_H
 #define RICHRECTOOLS_RICHFUNCTIONALRAYLEIGHSCATTER_H 1
 
@@ -8,9 +8,6 @@
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
-
-// Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"

@@ -1,4 +1,4 @@
-// $Id: RichExpectedTrackSignal.h,v 1.4 2003-10-13 16:32:30 jonrob Exp $
+// $Id: RichExpectedTrackSignal.h,v 1.5 2003-12-11 16:33:36 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H
 #define RICHRECTOOLS_RICHEXPECTEDTRACKSIGNAL_H 1
 
@@ -7,9 +7,6 @@
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
-
-// Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"

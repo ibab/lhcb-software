@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.h,v 1.5 2003-11-25 13:51:24 jonesc Exp $
+// $Id: RichGlobalPIDTrTrackSel.h,v 1.6 2003-12-11 16:33:34 cattanem Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H
 #define RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H 1
 
@@ -22,9 +22,6 @@
 // interfaces
 #include "RichRecBase/IRichTrackCreator.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
-
-// RichKernel
-#include "RichKernel/MessageSvcStl.h"
 
 /** @class RichGlobalPIDTrTrackSel RichGlobalPIDTrTrackSel.h
  *

@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.h,v 1.3 2003-11-25 14:06:41 jonrob Exp $
+// $Id: RichSegmentCreator.h,v 1.4 2003-12-11 16:33:36 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -16,9 +16,6 @@
 
 // interfaces
 #include "RichRecBase/IRichSegmentCreator.h"
-
-// RichKernel
-#include "RichKernel/MessageSvcStl.h"
 
 /** @class RichSegmentCreator RichSegmentCreator.h
  *

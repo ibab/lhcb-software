@@ -1,4 +1,4 @@
-// $Id: RichGeomEffPhotonTracing.h,v 1.1 2003-11-25 14:06:40 jonrob Exp $
+// $Id: RichGeomEffPhotonTracing.h,v 1.2 2003-12-11 16:33:36 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H
 #define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
 
@@ -15,9 +15,6 @@
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
-
-// Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
 
 // interfaces
 #include "RichRecBase/IRichCherenkovAngle.h"

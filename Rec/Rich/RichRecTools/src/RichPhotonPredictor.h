@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictor.h,v 1.2 2003-10-13 16:32:31 jonrob Exp $
+// $Id: RichPhotonPredictor.h,v 1.3 2003-12-11 16:33:36 cattanem Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTOR_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTOR_H 1
 
@@ -14,9 +14,6 @@
 
 // Interfaces
 #include "RichRecBase/IRichPhotonPredictor.h"
-
-// Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
 
 /** @class RichPhotonPredictor RichPhotonPredictor.h
  *

@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.h,v 1.5 2003-11-02 21:47:22 jonrob Exp $
+// $Id: RichPIDQC.h,v 1.6 2003-12-11 16:33:32 cattanem Exp $
 #ifndef RICHRECQC_RICHPIDQC_H
 #define RICHRECQC_RICHPIDQC_H 1
 
@@ -21,9 +21,6 @@
 #include "Event/RichPID.h"
 #include "Event/TrStoredTrack.h"
 #include "Event/MCParticle.h"
-
-// RICH kernel
-#include "RichKernel/MessageSvcStl.h"
 
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
