@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonPadLayout.cpp,v 1.2 2001-06-08 13:43:47 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonPadLayout.cpp,v 1.3 2001-06-26 18:42:10 atsareg Exp $
 
 #define MUONPADLAYOUT_CPP
 
@@ -130,6 +130,12 @@ L0mPad* MuonPadLayout::createPad(MuonDigit* md) {
     for (int i=0; i<4; i++) { 
         if ( z > zbound[i] ) st++;
     }    
+    
+    // Bring the coordinates to the central station z-position
+    Parameter* lst = m_layout[st];
+    double zStation = lst->get("Zposition");
+    x = x*zStation/z;
+    y = y*zStation/z;
          
     return createPad(st,x,y);
 }
