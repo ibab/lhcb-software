@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 20020503 - v6r3 - Pere Mato
+  added options/Interactive.opts for enabling phython interactivity on
+  applications
+
 ! 20020123 - v6r1 - Pere Mato
   src/GaudiMain.cpp removed default JobOptions file to ""
 
