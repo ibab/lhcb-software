@@ -4,7 +4,12 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
-!======================== LHCbAlgs v1r2 2004-11-30 ========================
+!======================= LHCbAlgs v1r3p1 2005-01-28 =======================
+! 2005-01-28 - Marco Cattaneo
+ - Remove an unnecessary variable from LbAppInit
+ - Fix some doxygen warnings
+
+!======================== LHCbAlgs v1r3 2004-11-30 ========================
 ! 2004-11-30 - Marco Cattaneo
  - LbAppInit:
    . Replace SmartDataPtr access to ProcStatus, use GaudiAlgorithms methods

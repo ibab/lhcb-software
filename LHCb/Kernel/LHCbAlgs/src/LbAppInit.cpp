@@ -1,18 +1,15 @@
-// $Id: LbAppInit.cpp,v 1.7 2004-12-10 15:20:02 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.8 2005-01-28 13:18:04 cattanem Exp $
 
 // Include files
 #include "LbAppInit.h"
 #include "GaudiKernel/Memory.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRndmEngine.h"
-#include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/Property.h"
 #include "AIDA/IHistogram1D.h"
 #include "Event/EventHeader.h"
 #include "Event/ProcStatus.h"
 #include "Tools/INormalizeTool.h"
-#include <vector>
 
 #include "boost/format.hpp"
 
@@ -49,13 +46,11 @@ StatusCode LbAppInit::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) return Error( "Failed to initialize base class", sc );
   
-  char* pver = getenv("APPVERSION");
+  const char* pver = getenv("APPVERSION");
   if( NULL == pver ) {
     return Error( "APPVERSION environment variable not defined" );
   }
 
-  std::string version = (std::string)pver;
-  
   // Get the current time
   time_t t;
   std::time( &t );
@@ -67,7 +62,7 @@ StatusCode LbAppInit::initialize() {
     << "=================================================================="
     << std::endl
     << "                                "
-    << "                   Welcome to " << name() << " version " << version
+    << "                   Welcome to " << name() << " version " << pver
     << std::endl
     << "                                "
     << "          running on " << System::hostName()

@@ -1,4 +1,4 @@
-// $Id: TESCheck.cpp,v 1.1 2004-09-17 07:24:20 cattanem Exp $
+// $Id: TESCheck.cpp,v 1.2 2005-01-28 13:18:04 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -64,11 +64,6 @@
  *
  *  Indeed it is a bit updated version of
  *     CaloCheckObjectsAlg from Calo/CaloReco package
- *
- *  @file
- *
- *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
- *  @date 2004-09-16
  */
 // ============================================================================
 class TESCheck : public GaudiAlgorithm

@@ -1,10 +1,9 @@
-// $Id: TESFilter.h,v 1.1.1.1 2004-06-14 12:40:38 cattanem Exp $
+// $Id: TESFilter.h,v 1.2 2005-01-28 13:18:04 cattanem Exp $
 #ifndef TESFILTER_H 
 #define TESFILTER_H 1
 
 // Include files
 // from STL
-#include <string>
 #include <vector>
 
 // from Gaudi

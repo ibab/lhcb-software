@@ -1,4 +1,4 @@
-// $Id: ProcessPhase.h,v 1.1.1.1 2004-06-14 12:40:38 cattanem Exp $
+// $Id: ProcessPhase.h,v 1.2 2005-01-28 13:18:04 cattanem Exp $
 #ifndef PROCESSPHASE_H
 #define PROCESSPHASE_H
 
@@ -13,7 +13,7 @@ typedef std::vector<std::string> VectorName;
  * Processing phase of LHCb application
  *
  * Creates and invokes subdetector processing algorithms
- * Convention: algorithm name = <phase name> + <detector name> 
+ * Convention: algorithm name = \<phase name\> + \<detector name\> 
  *
  * @author: Marco Cattaneo
  * @date:   17th December 1999

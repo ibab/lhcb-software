@@ -1,11 +1,9 @@
-// $Id: TESFilter.cpp,v 1.1.1.1 2004-06-14 12:40:38 cattanem Exp $
+// $Id: TESFilter.cpp,v 1.2 2005-01-28 13:18:04 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/DataObject.h" 
-#include "GaudiKernel/SmartDataPtr.h" 
 
 // Event model
 #include "Event/GenHeader.h"
