@@ -1,6 +1,7 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!======================== L0Calo v7r0p1 2003-06-23 ========================
 ! 2003-06-23 - Olivier Callot
  - Fixes for gcc 3.2, pure technicalities.
 
