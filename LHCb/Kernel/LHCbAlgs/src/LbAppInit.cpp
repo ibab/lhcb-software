@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.3 2004-07-30 14:41:43 pkoppenb Exp $
+// $Id: LbAppInit.cpp,v 1.4 2004-09-06 09:26:40 cattanem Exp $
 
 // Include files
 #include "LbAppInit.h"
@@ -53,8 +53,13 @@ StatusCode LbAppInit::initialize() {
   double timeNorm = timingTool->normalize() / 1.e+09;
   release( timingTool );
   
-  std::string version = (std::string)getenv("APPVERSION");
+  char* pver = getenv("APPVERSION");
+  if( NULL == pver ) {
+    return Error( "APPVERSION environment variable not defined" );
+  }
 
+  std::string version = (std::string)pver;
+  
   // Get the current time
   time_t t;
   std::time( &t );

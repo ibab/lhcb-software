@@ -4,9 +4,12 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v1r1 2004-09-06 ========================
+! 2004-09-06 - Marco Cattaneo
+ - LbAppInit: Protect against undefined APPVERSION environment variable
+
 ! 2004-07-30 - P. Koppenburg
-  - LbAppInit
-    . Print memory usage at each event in debug() OutputLevel
+ - LbAppInit: Print memory usage at each event in debug() OutputLevel
     
 !======================== LHCbAlgs v1r0 2004-07-21 ========================
 ! 2004-07-21 - Marco Cattaneo
