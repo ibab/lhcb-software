@@ -36,6 +36,8 @@ Purpose: LHCb reconstruction program
      case 5: independent of Brunel. Use Brunelv254r1.opts as is
      case 6: Not yet implemented
 
+	  . Added Brunelv255r0.opts, Brunelv255r1.opts to support new dbases 
+
 
 - Removed features:
    . Removed support for data produced with dbase v253r99 (Xmas 02 production) 
