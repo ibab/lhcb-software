@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.6 2003-11-10 14:59:58 jonrob Exp $
+// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.7 2003-11-21 13:13:40 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -78,7 +78,7 @@ StatusCode MCRichDigitsToHLTBuffAlg::execute() {
 
   Rich::PDMap PDDigits;
 
-  // Loop overdigits and sort according to PD
+  // Loop over digits and sort according to PD
   for ( MCRichDigits::const_iterator iDigit = digits->begin();
         iDigit != digits->end(); ++iDigit ) {
     PDDigits[(*iDigit)->key().pdID()].push_back( *iDigit );
