@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mTower.cpp,v 1.7 2001-07-17 18:08:57 atsareg Exp $
+// $Id: L0mTower.cpp,v 1.8 2001-07-26 13:05:38 cattanem Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include <set>
@@ -9,8 +9,7 @@
 #include "L0Muon/L0mPad.h"
 #include "L0Muon/L0MuonCandidate.h"
 #include "L0Muon/L0mProcUnit.h"
-
-const CLID& CLID_L0mTower = 6005;  // User defined  
+  
 
 L0mTower::L0mTower()  {
   m_pad3 = 0;

@@ -1,6 +1,6 @@
 package L0Muon
 
-version v3
+version v3r1
 
 branches src doc options
 

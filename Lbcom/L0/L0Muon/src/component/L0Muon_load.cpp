@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0Muon_load.cpp,v 1.1 2001-06-07 16:34:22 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0Muon_load.cpp,v 1.2 2001-07-26 13:05:38 cattanem Exp $
 //====================================================================
 //  L0Muon_load.cpp
 //--------------------------------------------------------------------
@@ -39,6 +39,9 @@ void L0Muon_load()
   ///
   
   DLL_DECL_ALGORITHM( L0mTrigger     );
+  DLL_DECL_ALGORITHM( L0mTriggerProc );
+  DLL_DECL_ALGORITHM( L0mTriggerProcD );
+  DLL_DECL_ALGORITHM( L0mPadBuilder );
   
 }
 

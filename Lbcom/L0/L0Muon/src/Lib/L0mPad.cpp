@@ -1,10 +1,9 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mPad.cpp,v 1.3 2001-07-12 20:28:12 atsareg Exp $
+// $Id: L0mPad.cpp,v 1.4 2001-07-26 13:05:37 cattanem Exp $
 
 #include "GaudiKernel/MsgStream.h"
 
 #include "L0Muon/L0mPad.h"
-
-const CLID& CLID_L0mPad = 6003;  // User defined  
+ 
 
 L0mPad::L0mPad() : m_station(0) {}
 

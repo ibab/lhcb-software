@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mTower.h,v 1.3 2001-07-17 18:14:22 atsareg Exp $
+// $Id: L0mTower.h,v 1.4 2001-07-26 13:05:35 cattanem Exp $
 
 #ifndef L0MTOWER_H     
 #define L0MTOWER_H     1 
@@ -8,12 +8,12 @@
 #include "GaudiKernel/ContainedObject.h" 
 #include "GaudiKernel/SmartRef.h" 
 #include "L0Muon/L0mPad.h"
+#include "L0Muon/CLIDL0mTower.h"
 
 class L0MuonCandidate;
 class MsgStream;
 class L0mProcUnit;
 
-extern const CLID& CLID_L0mTower;    
 
 /** @class L0mTower L0mTower.h L0mTower.h 
 

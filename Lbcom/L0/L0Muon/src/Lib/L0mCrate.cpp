@@ -1,4 +1,9 @@
-// $Id: L0mCrate.cpp,v 1.6 2001-07-12 20:27:38 atsareg Exp $
+// $Id: L0mCrate.cpp,v 1.7 2001-07-26 13:05:37 cattanem Exp $
+
+#ifdef WIN32
+// Disable warning C4786 identifier truncated to 255 characters in debug info.
+#pragma warning ( disable : 4786 )
+#endif // WIN32
 
 #include <vector>
 #include <algorithm>

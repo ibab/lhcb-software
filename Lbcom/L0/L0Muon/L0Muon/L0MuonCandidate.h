@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0MuonCandidate.h,v 1.3 2001-06-07 16:46:13 atsareg Exp $
+// $Id: L0MuonCandidate.h,v 1.4 2001-07-26 13:05:34 cattanem Exp $
 
 #ifndef L0MUON_L0MUONCANDIDATE_H
 #define L0MUON_L0MUONCANDIDATE_H 1
@@ -10,10 +10,8 @@
 #include "GaudiKernel/SmartRefVector.h"
 
 #include "L0Muon/L0mPad.h"
+#include "L0Muon/CLIDL0MuonCandidate.h"
 
-extern const CLID& CLID_L0MuonCandidate;
-
-// const CLID& CLID_L0MuonCandidate = 6002;
 
 /** @class L0MuonCandidate L0MuonCandidate.h L0Muon/L0MuonCandidate.h
 

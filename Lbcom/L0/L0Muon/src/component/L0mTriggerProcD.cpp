@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.6 2001-07-10 10:23:31 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.7 2001-07-26 13:05:39 cattanem Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -141,8 +141,6 @@ StatusCode L0mTriggerProcD::execute() {
   // register trigger candidates  
   //=========================================
   
-  ObjectVector<L0mTower>::iterator it;
-
   ObjectVector<L0MuonCandidate>* cand = new ObjectVector<L0MuonCandidate>;
   if( cand == 0 ) {
     log << MSG::ERROR << "Unable to create L0MuonCandidates" << endreq;

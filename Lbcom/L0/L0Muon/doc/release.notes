@@ -1,6 +1,12 @@
-!  $Id: release.notes,v 1.7 2001-07-17 18:22:19 atsareg Exp $
+!  $Id: release.notes,v 1.8 2001-07-26 13:05:36 cattanem Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
+
+! 20010726 - L0Muon v3r1 Marco Cattaneo 
+
+  Fixes for Windows:
+  - Add include files for static declaration of CLIDs
+  - Add missing factory declarations
 
 !====================================v3========================================
 ! 12/07/2001 - Olivier Callot

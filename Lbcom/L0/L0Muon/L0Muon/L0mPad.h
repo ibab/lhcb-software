@@ -1,4 +1,4 @@
-// $Header: 
+// $Id: L0mPad.h,v 1.5 2001-07-26 13:05:35 cattanem Exp $ 
 
 #ifndef L0MUON_L0MPAD_H     
 #define L0MUON_L0MPAD_H     1 
@@ -9,9 +9,8 @@
 #include "LHCbEvent/MCParticle.h" 
 #include "LHCbEvent/MuonDigit.h"    
 #include "L0Muon/MuonTile.h"
+#include "L0Muon/CLIDL0mPad.h"
 
-// Externals
-extern const CLID& CLID_L0mPad;           
 
 class MsgStream;
 class MuonLayout;

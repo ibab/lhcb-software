@@ -1,4 +1,10 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mProcUnit.cpp,v 1.5 2001-07-12 20:29:29 atsareg Exp $
+// $Id: L0mProcUnit.cpp,v 1.6 2001-07-26 13:05:37 cattanem Exp $
+
+#ifdef WIN32
+// Disable warning C4786 identifier truncated to 255 characters in debug info.
+#pragma warning ( disable : 4786 )
+#endif // WIN32
+
 #include "GaudiKernel/MsgStream.h"
 
 #include "L0Muon/L0mProcUnit.h"
