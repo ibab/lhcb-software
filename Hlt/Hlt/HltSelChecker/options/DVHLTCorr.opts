@@ -28,7 +28,7 @@ HLTCorrelations.IgnoreFilterPassed = true ;
 
 //------------------------------------------------------------------------------
 // PK's stripping of MB passing L0 and L1:
-//#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //------------------------------------------------------------------------------
 // PK's stripping of signal passing L0, L1 and TDR:
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
@@ -43,6 +43,7 @@ HLTCorrelations.IgnoreFilterPassed = true ;
 ApplicationMgr.EvtMax    = 5000 ;
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
+
 
 ApplicationMgr.HistogramPersistency = "HBOOK";
 HistogramPersistencySvc.OutputFile = "test.hbook"; 
