@@ -5,6 +5,73 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v17r1 2004-11-22 =======================
+! 2004-11-22 - Marco Cattaneo
+ - Modified packages: KernelSys v4r4, LHCbKernel v5r4, RichKernel v5r1,
+                   EventSys v19r1, RichEvent v8r0, TrgEvent v5r0, PhysEvent v8r6,
+                   DetSys v5r9, RichDet v8r1, GaudiConf v8r1, LHCbAlgs v1r2,
+                   RichDAQ v1r6, RichMCTools v2r3, RichTools v1r2, MCTools v1r9,
+                   Relations v2r0, AssociatorsSys v2r1,  Associators v2r4,
+                   ITAssociators v2r10, OTAssociators v3r1, VeloAssociators v1r12,
+                   TrAssociators v5r1, CaloAssociators v4r4, MuonAssociators v1r5
+
+ - In GaudiConf v8r1
+   . For rh73_gcc323 and slc_ia32_gcc323, append "_0411" to ROOT_native_version,
+     to pick up fix for using rootd on Castor
+
+ - In LHCbKernel v5r4
+   . Backwards compatible changes to RichSmartID
+
+ - In RichKernel v5r1
+   . Add some interfaces and methods to existing interfaces
+
+ - In RichEvent v8r0
+   . New format for RichPID class, incompatible with DC04 data
+   . Add support for TrgTracks in RichPID and TrgStates in RichTrckSegment
+
+ - In TrgEvent v5r0
+   . Remove inheritance from TrgVertex to Vertex
+     (circular dependency with PhysEvent package)
+   . Add new bitfields and container names to TrgTrack
+   . Add TrgCaloCluster
+
+ - In RichDet v8r1
+   . Add access to tabulated properties to DeRich and DeRichRadiator
+
+ - In LHCbAlgs v1r2
+   . LbAppInit:
+     + Remove use of timing tool at initialisation
+     + Improve initialisation of random numbers (see LHCbAlgs release notes)
+
+ - In RichDAQ v1r6
+   . Use DataOnDemandSvc
+   . work directly from RawBuffer, skipping creation of RichDigits
+
+ - In RichMCTools v2r3
+   . Add new methods to RichMCTool
+   . Add flags to turn off individual radiators
+
+ - In RichTools v1r2
+   . Add new method to RichRayTracing
+   . Add flags to turn off individual radiators
+
+ - In MCTools v1r8
+   . IMCEffReconstructible.h:
+     + Take MCParticle arguments as const.
+     + reconstructible( const MCParticle* mcPart ) returns an enum
+       RecblCategory { NotRec=0, Long=1, TTT=2, VTT=3, Neutral=4 };
+
+ - In STDAQ v1r4
+   . Add limit on number of RawBuffer clusters per board (set to 256)
+   . Ensure L1 word initialized to zero
+
+ - In Relations v2r0
+   . Use DataOnDemandSvc to instantiate associator algorithms (see release notes)
+
+ - In Associators v2r4, ITAssociators v2r10, OTAssociators v3r1, VeloAssociators v1r12,
+      TrAssociators v5r1, CaloAssociators v4r4, MuonAssociators v1r5, RichMCTools v2r3
+   . Adapt to use new version of Relations
+
 !======================= LHCbSys v17r0 2004-11-01 =======================
 ! 2004-11-01 - Marco Cattaneo
  - New packages: OTDAQ v3r1 (moved here from application projects)
