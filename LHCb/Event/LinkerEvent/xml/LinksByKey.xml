@@ -15,7 +15,7 @@
 
       <constructor 
         desc   = "Constructor with arguments" 
-        argList= "int srcLinkID, int linkID, int key, int nextIndex, double weight">
+        argList= "int srcLinkID, int linkID, int key, int nextIndex, float weight">
         <code> 
 m_srcLinkID = srcLinkID;
 m_linkID    = linkID;
