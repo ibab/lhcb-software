@@ -5,6 +5,15 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTracker v3r2 ================================
+! 2005-01-27 - Gloria Corti
+ - cmt/requirements
+   . increase version number
+ - src/GiGaSensDetMuon.{h,cpp}
+   . introduce protection for illegal chamber number in the different regions
+     (R1: 1-12, R2: 1-24, R3: 1-48, R4: 1-192). If a hit has numbers greater
+     than allowed value do not store it in collection
+
 !=========================== GaussTracker v3r1 ================================
 ! 2003-12-03 - Witek Pokorski
  - sensitive detectors - added protection agains hits with the same entry 
