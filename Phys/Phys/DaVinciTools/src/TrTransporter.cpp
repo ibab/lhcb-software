@@ -1,4 +1,4 @@
-// $Id: TrTransporter.cpp,v 1.2 2004-01-14 19:00:06 gcorti Exp $
+// $Id: TrTransporter.cpp,v 1.3 2004-02-11 19:41:45 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -244,7 +244,7 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
   // Fill the TrState with Particle
   HepVector pState(5, 0);
   HepSymMatrix pCov(5, 1);
-     TrStateP* workTrStateP = new TrStateP(zold, pState, pCov);
+  TrStateP* workTrStateP = new TrStateP(zold, pState, pCov);
 
   // Initialize new momentum;
   HepLorentzVector newMomentum;
@@ -279,9 +279,12 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
   pCov[3][3] = oldSlopesMomErr[1][1];
   pCov[4][0] = a*oldPosSlopesCorr[2][0];
   pCov[4][1] = a*oldPosSlopesCorr[2][1];
-  pCov[4][2] = a*oldPosSlopesCorr[2][0];
-  pCov[4][3] = a*oldPosSlopesCorr[2][1];
-  pCov[4][4] = a*a*oldPosSlopesCorr[2][2];
+//   pCov[4][2] = a*oldPosSlopesCorr[2][0];
+//   pCov[4][3] = a*oldPosSlopesCorr[2][1];
+//   pCov[4][4] = a*a*oldPosSlopesCorr[2][2];
+  pCov[4][2] = a*oldSlopesMomErr[2][0];
+  pCov[4][3] = a*oldSlopesMomErr[2][1];
+  pCov[4][4] = a*a*oldSlopesMomErr[2][2];
 
   workTrStateP->setStateCov( pCov );
   
@@ -319,9 +322,12 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
   newSlopesMomErr[1][1] = pCov[3][3];
   newPosSlopesCorr[2][0] = pCov[4][0]/a;
   newPosSlopesCorr[2][1] = pCov[4][1]/a;
-  newPosSlopesCorr[2][0] = pCov[4][2]/a;
-  newPosSlopesCorr[2][1] = pCov[4][3]/a;
-  newPosSlopesCorr[2][2] = pCov[4][4]/(a*a);
+//   newPosSlopesCorr[2][0] = pCov[4][2]/a;
+//   newPosSlopesCorr[2][1] = pCov[4][3]/a;
+//   newPosSlopesCorr[2][2] = pCov[4][4]/(a*a);
+  newSlopesMomErr[2][0] = pCov[4][2]/a;
+  newSlopesMomErr[2][1] = pCov[4][3]/a;
+  newSlopesMomErr[2][2] = pCov[4][4]/(a*a);
   
   // a new "particle" is made with transported values
   transParticle.setPointOnTrack(newPOT);

@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.66 2004-01-29 17:29:30 gcorti Exp $
+! $Id: release.notes,v 1.67 2004-02-11 19:41:45 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+!========================== DaVinciTools v8r5 2004-02-11 ==================
+! 2004-02-11 - Gloria CORTI for Vincenzo VAGNONI
+ - src/TrTransporter.cpp
+   . fix bug in the construction of the covariance matrix passed to the
+     extrapolator. The bug involved the momentum row so any mass constrained
+     fit using the TrExtrapolator could not work properly
 
 !========================== DaVinciTools v8r4 2004-01-29 ==================
 ! 2004-01-29 - Gloria CORTI for Vincenzo VAGNONI
