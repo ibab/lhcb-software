@@ -1,4 +1,4 @@
-// $Id: CaloClusterCorrect3x3Position.cpp,v 1.1 2004-06-03 06:04:24 ibelyaev Exp $
+// $Id: CaloClusterCorrect3x3Position.cpp,v 1.2 2004-07-21 12:10:27 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -60,8 +60,9 @@ const        IAlgFactory&CaloClusterCorrect3x3PositionFactory = s_Factory ;
  *  @param   svcloc pointer to service locator 
  */
 // ============================================================================
-CaloClusterCorrect3x3Position::CaloClusterCorrect3x3Position( const std::string& name    ,
-                                    ISvcLocator*       svcloc  )
+CaloClusterCorrect3x3Position::CaloClusterCorrect3x3Position
+( const std::string& name    ,
+  ISvcLocator*       svcloc  )
   : CaloAlgorithm ( name , svcloc ) 
 {
  // set the appropriate defaults for input    data 
@@ -193,10 +194,16 @@ StatusCode CaloClusterCorrect3x3Position::execute()
 	const CaloDigit*  cell = ient->digit();
 	const CaloCellID&  cellID = cell->cellID() ;
 	if( 0 != m_cell3x3( seedID , cellID) && m_neighbour(seedID,cellID) ){
-	  const HepPoint3D& centerMtrx =             detector->cellCenter ( seedID ) ;
-	  const HepPoint3D& centerCell =             detector->cellCenter ( cellID ) ;
-	  const double      sizeMtrx   =  0.5  * 3 * detector->cellSize   ( seedID ) ;
-	  const double      sizeCell   =  0.5  *     detector->cellSize   ( cellID ) ;
+    
+    // commented by I.B to suppress compiler warnings 2004-07-21
+	  // const HepPoint3D& centerMtrx =             
+    //       detector->cellCenter ( seedID ) ;
+	  // const HepPoint3D& centerCell =             
+    //       detector->cellCenter ( cellID ) ;
+	  // const double      sizeMtrx   =  
+    //       0.5  * 3 * detector->cellSize   ( seedID ) ;
+	  // const double      sizeCell   =  
+    //       0.5  *     detector->cellSize   ( cellID ) ;
 	  
 	  Energy += cell->e() * ient->fraction();
 	  PosX += detector->cellX(cellID) * cell->e() * ient->fraction();

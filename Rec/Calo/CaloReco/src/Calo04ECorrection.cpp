@@ -1,26 +1,8 @@
-// $Id: Calo04ECorrection.cpp,v 1.3 2004-06-03 06:04:23 ibelyaev Exp $
+// $Id: Calo04ECorrection.cpp,v 1.4 2004-07-21 12:10:27 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2004/05/06 16:32:21  odescham
-// Minor changes (to be consistent with v1r2 revision of options file)
-//
-// Revision 1.1  2004/03/17 16:32:21  ibelyaev
-//  add new (04) Photon calibrations from Olivier Deschamps
-//
-// Revision 1.4   2004/02/06 odescham
-// New E-corrections for DC04
-//
-// Revision 1.3  2003/12/11 16:33:40  cattanem
-// Fixes for Gaudi v13
-//
-// Revision 1.2  2003/05/16 08:19:11  cattanem
-// remove unused variables
-//
-// Revision 1.1  2003/04/11 09:33:35  ibelyaev
-//  add new E-,S- and L-corrections from Olivier Deschamps
-//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -124,6 +106,7 @@ Calo04ECorrection::Calo04ECorrection
   m_hypos_.push_back ( (int) CaloHypotheses::Photon               ) ;
   m_hypos_.push_back ( (int) CaloHypotheses::PhotonFromMergedPi0  ) ;
   m_hypos_.push_back ( (int) CaloHypotheses::BremmstrahlungPhoton ) ;
+  m_hypos_.push_back ( (int) CaloHypotheses::EmCharged            ) ;
   declareProperty    ( "Hypotheses"   , m_hypos_   ) ;
   /// vectors of external parameters 
   declareProperty    ( "GlobalFactor" , A0 ) ;
@@ -230,16 +213,29 @@ StatusCode Calo04ECorrection::initialize ()
   
   // transform vector of accepted hypos
   m_hypos.clear () ;
-  for( Hypotheses_::const_iterator ci = m_hypos_.begin() ; 
-       m_hypos_.end() != ci ; ++ci ) 
+  { 
+    for( Hypotheses_::const_iterator ci = m_hypos_.begin() ; 
+         m_hypos_.end() != ci ; ++ci ) 
     {
       const int hypo = *ci ;
       if( hypo <= (int) CaloHypotheses::Undefined || 
           hypo >= (int) CaloHypotheses::Other      ) 
-        { return Error("Invalid/Unknown  Calorimeter hypothesis object!" ) ; }
+      { return Error("Invalid/Unknown  Calorimeter hypothesis object!" ) ; }
       m_hypos.push_back( (CaloHypotheses::Hypothesis) hypo );
     }
-
+  }
+  { 
+    info() << " Accepted Hypotheses : " ;
+    for ( Hypotheses::const_iterator ci = m_hypos.begin() ;
+          m_hypos.end() != ci ; ++ci ) 
+    {
+      info() << "\t " ;
+      CaloHypoPrint ( info() , *ci ) ;
+      info() << ","   ;
+    }
+    info() << endreq ;
+  }
+  
   // locate and set and configure the Detector 
   const DeCalorimeter* ecal = getDet<DeCalorimeter>( detName () ) ;
   if( 0 == ecal ) { return StatusCode::FAILURE ; }
@@ -362,22 +358,24 @@ StatusCode Calo04ECorrection::process    ( CaloHypo* hypo  ) const
     unsigned int    Area  = cellID.area();
     //if(Area == seedArea && abs(Col-seedCol) <=1 && abs(Row-seedRow) <=1){
     //eEcal += ent->e();
-    msg<< MSG::INFO
-       << " ENE entries " << ent->e() << " "
-       << "fraction " << ient->fraction()  << " "
-       << "Id = "<<  Area  << "  " <<  Row << " " << Col
-       << " status " << ient->status()
-       << "For energy " << CaloDigitStatus::UseForEnergy 
-       << endreq;
-    
+    if( msgLevel( MSG::DEBUG ) ) 
+    { 
+      debug() 
+        << " ENE entries " << ent->e() << " "
+        << "fraction " << ient->fraction()  << " "
+        << "Id = "<<  Area  << "  " <<  Row << " " << Col
+        << " status " << ient->status()
+        << "For energy " << CaloDigitStatus::UseForEnergy 
+        << endreq;
+    } 
   }
   //  }
-
-
+  
+  
   if(  CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()){
-    msg<< MSG::INFO << "Photon From Merged "<< endreq; }
-  msg<< MSG::INFO << "ENTRIES " << entries.size() << endreq;
-  msg<< MSG::INFO << "iseed-entries.end() " << entries.end()-iseed << endreq;
+    debug() << "Photon From Merged "<< endreq; }
+  debug() << "ENTRIES " << entries.size() << endreq;
+  debug() << "iseed-entries.end() " << entries.end()-iseed << endreq;
   for(CaloCluster::Entries::const_iterator iseed = entries.begin ();
       iseed != entries.end   () ; ++iseed){
   }
@@ -521,7 +519,8 @@ StatusCode Calo04ECorrection::process    ( CaloHypo* hypo  ) const
   double Eps = ePrsSum;
   // Avoid double counting (should be corrected in CaloMergedPi0Alg)
   if( CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()  ){Eps = ePrs;}
-  double Beta = Beta_a[area] + Beta_b[area] * elog; // Modif Mai 2004 (elog <-> Ecor/GeV)
+  double Beta = 
+    Beta_a[area] + Beta_b[area] * elog; // Modif Mai 2004 (elog <-> Ecor/GeV)
   if( Level[3] ){Ecor  += Beta * Eps ;}
   
 
@@ -534,29 +533,32 @@ StatusCode Calo04ECorrection::process    ( CaloHypo* hypo  ) const
 
 
   if(  CaloHypotheses::PhotonFromMergedPi0 == hypo->hypothesis()){
-    msg<< MSG::INFO << "Photon From Merged "<< endreq;}
-    msg<< MSG::INFO
-     << " Main Cluster " << cluster->position().e()/GeV    <<  " "
-     << "area "  << area  <<  " "
-     << "Row "  << Row <<  " "
-     << "Col "  << Col <<  " "
-     << "Asx "  << Asx <<  " "
-     << "Asy "  << Asy <<  " "
-     << "eSpd "  << eSpd <<  " "
-     << "ePrs "  << ePrs  <<  " "
-     << "eSpdSum "  << eSpdSum <<  " "
-     << "ePrsSum "  << ePrsSum  <<  " "
-     << "eEcal " << eEcal/GeV <<  " "
-     << "Ecor "  <<  Ecor/GeV <<  " "
-     << "A0 "  <<  A0[area] <<  " "
-     << "A1 "  <<  A1 <<  " "
-     << "A2 "  <<  A2 <<  " "
-     << "A3 "  <<  A3 <<  " "
-     << "A3x "  <<  A3x <<  " "
-     << "A3y "  <<  A3y <<  " "
-     << "bDist "  <<  bDist <<  " "
-     << endreq;
+      debug() << "Photon From Merged "<< endreq;}
   
+  if ( msgLevel( MSG::DEBUG ) ) 
+  {  
+    debug() 
+      << " Main Cluster " << cluster->position().e()/GeV    <<  " "
+      << "area "  << area  <<  " "
+      << "Row "  << Row <<  " "
+      << "Col "  << Col <<  " "
+      << "Asx "  << Asx <<  " "
+      << "Asy "  << Asy <<  " "
+      << "eSpd "  << eSpd <<  " "
+      << "ePrs "  << ePrs  <<  " "
+      << "eSpdSum "  << eSpdSum <<  " "
+      << "ePrsSum "  << ePrsSum  <<  " "
+      << "eEcal " << eEcal/GeV <<  " "
+      << "Ecor "  <<  Ecor/GeV <<  " "
+      << "A0 "  <<  A0[area] <<  " "
+      << "A1 "  <<  A1 <<  " "
+      << "A2 "  <<  A2 <<  " "
+      << "A3 "  <<  A3 <<  " "
+      << "A3x "  <<  A3x <<  " "
+      << "A3y "  <<  A3y <<  " "
+      << "bDist "  <<  bDist <<  " "
+      << endreq;
+  };
 
   /** At the end: 
    */
@@ -571,16 +573,16 @@ StatusCode Calo04ECorrection::process    ( CaloHypo* hypo  ) const
 
   /** The following quantities should be updated 
    */
-  msg<< MSG::INFO
-     << " ENE 1 " << hypo->position ()->e() <<  " " << endreq;
+  debug() 
+    << " ENE 1 " << hypo->position ()->e() <<  " " << endreq;
   
   parameters ( CaloPosition::E ) = Ecor ;
-
-  msg<< MSG::INFO
-     << " ENE 2 " << hypo->position ()->e() <<  " " << endreq;
+  
+  debug() 
+    << " ENE 2 " << hypo->position ()->e() <<  " " << endreq;
   // parameters ( CaloPosition::X ) = ... ;
   // parameters ( CaloPosition::Y ) = ... ;
-
+  
   // Covariance to be DONE
   // covariance ( CaloPosition::X , CaloPosition::X ) = .. ;
   // covariance ( CaloPosition::Y , CaloPosition::X ) = .. ;

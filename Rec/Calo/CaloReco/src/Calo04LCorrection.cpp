@@ -1,17 +1,8 @@
-// $Id: Calo04LCorrection.cpp,v 1.1 2004-03-17 16:32:21 ibelyaev Exp $
+// $Id: Calo04LCorrection.cpp,v 1.2 2004-07-21 12:10:27 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2004/02/09 odescham
-//  add new E-,S- and L-corrections tuned for DC04
-//
-// Revision 1.2  2003/05/16 08:19:11  cattanem
-// remove unused variables
-//
-// Revision 1.1  2003/04/11 09:33:37  ibelyaev
-//  add new E-,S- and L-corrections from Olivier Deschamps
-//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -79,6 +70,7 @@ Calo04LCorrection::Calo04LCorrection
   m_hypos_.push_back ( (int) CaloHypotheses::Photon               ) ;
   m_hypos_.push_back ( (int) CaloHypotheses::PhotonFromMergedPi0  ) ;
   m_hypos_.push_back ( (int) CaloHypotheses::BremmstrahlungPhoton ) ;
+  m_hypos_.push_back ( (int) CaloHypotheses::EmCharged            ) ;
   declareProperty    ( "Hypotheses"   , m_hypos_   ) ;
   /// vectors of external parameters 
   declareProperty    ( "Par_Al1" , Par_Al1 ) ;
@@ -136,15 +128,28 @@ StatusCode Calo04LCorrection::initialize ()
   
   // transform vector of accepted hypos
   m_hypos.clear () ;
-  for( Hypotheses_::const_iterator ci = m_hypos_.begin() ; 
-       m_hypos_.end() != ci ; ++ci ) 
+  {
+    for( Hypotheses_::const_iterator ci = m_hypos_.begin() ; 
+         m_hypos_.end() != ci ; ++ci ) 
     {
       const int hypo = *ci ;
       if( hypo <= (int) CaloHypotheses::Undefined || 
           hypo >= (int) CaloHypotheses::Other      ) 
-        { return Error("Invalid/Unknown  Calorimeter hypothesis object!" ) ; }
+      { return Error("Invalid/Unknown  Calorimeter hypothesis object!" ) ; }
       m_hypos.push_back( (CaloHypotheses::Hypothesis) hypo );
     }
+  }
+  { 
+    info() << " Accepted Hypotheses : " ;
+    for ( Hypotheses::const_iterator ci = m_hypos.begin() ;
+          m_hypos.end() != ci ; ++ci ) 
+    {
+      info() << "\t " ;
+      CaloHypoPrint ( info() , *ci ) ;
+      info() << ","   ;
+    }
+    info() << endreq ;
+  }
   
   // locate and set and configure the Detector 
   const DeCalorimeter* ecal = getDet<DeCalorimeter>( detName () ) ;

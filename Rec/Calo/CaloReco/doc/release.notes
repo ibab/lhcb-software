@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.47 2004-07-20 12:06:26 ibelyaev Exp $
+! $Id: release.notes,v 1.48 2004-07-21 12:10:26 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,31 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2004-07-21 - Vanya BELYAEV
+
+
+ - src/CaloClusterCorrect3x3Position.cpp 
+    1. fix compilation warnings 
+ - src/Calo04ECorrection.cpp 
+    1. fix compilation warnings 
+    2. add 'info' printout for accepter hypos 
+    3. suppress excessive 'INFO' printout 
+    4. add 'EmCharged' to the list of accepted hypos 
+ - src/Calo04SCorrection.cpp 
+    1. fix compilation warnings 
+    2. add 'EmCharged' to the list of accepted hypos 
+    3. add 'info' printout for accepter hypos 
+ - src/Calo04LCorrection.cpp 
+    1. fix compilation warnings 
+    2. add 'info' printout for accepter hypos 
+    3. add 'EmCharged' to the list of accepted hypos 
+
+            ****** ALL MODIFICATIONS ARE BACKWARD COMPATIBLE ****** 
+
+ - cmt/requirements   
+    1. increment the version to v2r4 
+
 
 ! 2004-07-20 - Vanya BELYAEV
  - CaloMergedPi0Alg.cpp 
