@@ -580,8 +580,8 @@ StatusCode BTagging::finalize() {
       << "======================================================="<<endreq;
   req << MSG::INFO << "Summary : " <<endreq;
   req << MSG::INFO << "After L0 and L1 triggers, " <<endreq;
-  req << MSG::INFO << " Category            EFF.          Etag        
- Wrong TF"     << "      r       w       "<<endreq;
+  req << MSG::INFO << " Category            EFF.          Etag        Wrong TF"     
+      << "      r       w       "<<endreq;
 
   for( int it=1; it < 12+1; it++ ) {
 
