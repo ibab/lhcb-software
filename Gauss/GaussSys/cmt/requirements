@@ -11,11 +11,10 @@ branches cmt doc
 use Gauss		v19r0	  Sim
 
 # Generator stuff ...
-use GENSER		v1r030p0  Gen
-use PYTHIA              v2r6226p0 Gen    
-use HepEvt              v2r121p0  Gen
-use EvtGen              v8r1      Gen
-use GeneratorModules    v14r0     Gen
+use GENSER		v2r030p0  Gen
+use HepEvt              v3r121p0  Gen
+use EvtGen              v8r2      Gen
+use GeneratorModules    v14r1     Gen
 
 # GiGa stuff...
 use GiGa        	v17r1	Sim        
