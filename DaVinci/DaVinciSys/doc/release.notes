@@ -2,8 +2,56 @@
 ! Package     : DaVinciSys
 ! Responsible : P. Koppenburg
 ! Purpose     : Explicit list of all DaVinci packages
+! See Phys/DaVinci/v*/doc/release.notes for details of modifications
 !-----------------------------------------------------------------------------
 
+!===================  DaVinciSys v12r1 2004-09-16 ============================
+New packages:
+use  TrgMuonID                 v2r0     Trg
+
+Modified packages:
+use  L0MuonTrigger             v2r2     L0
+use  L1Decision                v3r0     Trg
+use  L1Reco                    v5r0     Trg
+use  TrgChecker                v5r0     Trg
+use  TrgForward                v3r0     Trg
+use  TrgMonitor                v3r0     Trg
+use  TrgPrimVertex             v3r0     Trg
+use  TrgTools                  v5r0     Trg
+use  TrgVelo                   v5r0     Trg
+use  TrgVeloTT                 v5r0     Trg
+use  CaloPIDs                  v2r4     Calo 
+use  CaloReco                  v2r5     Calo
+use  GlobalReco                v4r8p1   Rec
+use  LoKi                      v3r4p2   Tools  
+use  Utilities                 v1r10    Tools
+use  CommonParticles           v1r5p3   Phys
+use  DaVinciFilter             v1r1     Phys
+use  DaVinciKernel             v1r1     Phys
+use  DaVinciTools              v11r1    Phys
+use  DaVinciUser               v5r1p2   Phys
+use  FlavourTagging            v5r3     Phys
+use  ParticleMaker             v1r1     Phys
+use  PhysSelections            v6r10    Phys
+use  DaVinciTransporter        v1r1     Phys
+use  VertexFit                 v1r1     Phys
+use  DaVinciAssociators        v5r2     Phys
+use  DaVinciMCTools            v5r5     Phys
+use  DaVinciTest               v5r2     Phys
+use  Stripping                 v1r4     Tools
+use  PhysSelSys                v7r9     PhysSel
+use  B2HH                      v2r4     PhysSel
+use  B2RhoRho                  v1r7p1   PhysSel
+use  B2XGamma                  v2r4     PhysSel
+use  Bd2D0Kstar                v4r3     PhysSel
+use  Bd2DstarPi                v2r7     PhysSel
+use  Bd2JpsiKs                 v2r6     PhysSel
+use  Bd2MuMuKstar              v2r3     PhysSel
+use  Bs2DsH                    v3r3     PhysSel
+use  Bs2JpsiPhi                v2r3     PhysSel
+use  Bs2MuMu                   v2r4     PhysSel
+use  Bs2PhiPhi                 v2r3     PhysSel 
+use  D02MuMu                   v1r4p3   PhysSel 
 !===================  DaVinciSys v12r0 2004-08-24 ============================
 New packages:
 use  DaVinciFilter              v1r0     Phys
