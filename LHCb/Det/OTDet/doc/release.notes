@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.23 2003-12-04 10:22:09 jnardull Exp $
+! $Id: release.notes,v 1.24 2003-12-04 12:42:17 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
 
+!========================== OTDet v5r0 2003-12-04 ==========================
 ! 2003-12-04 - Jacopo Nardulli
  - Introduction of DeOTQuarters. A DeOTLayer is now split into 4 quarters.
    Each quarter now has nine modules.
