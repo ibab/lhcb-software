@@ -4,6 +4,7 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v1r2 2003-04-15 ========================
 ! 2003-03-23 - Olivier Callot
  - New algorithm CaloProduceRaw to create the DAQEvent from CaloDigit,
    L0CaloAdc and L0PrsSpdHit using trhe DAQ bank structure. This is a first 
