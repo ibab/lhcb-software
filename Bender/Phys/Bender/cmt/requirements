@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2004-08-21 16:25:45 ibelyaev Exp $ 
+# $Id: requirements,v 1.15 2004-08-21 18:18:41 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -12,6 +12,7 @@ version           v4r0
 branches          cmt doc src python
 
 # =============== dependencies ================================================
+use               BenderGCC   v*  Tools 
 use               BenderDict  v*  Tools 
 use               BenderDet   v*  Det  
 use               LoKiHybrid  v*  Tools 
@@ -33,9 +34,7 @@ path_append       PYTHONPATH $(PYPI)/src/AnalysisServices/PyAIDAProxy"
 # =============== application macro ===========================================
 path_remove       LD_PRELOAD  GaudiKernel
 path_append       LD_PRELOAD  "" \
-	          Linux $(GAUDIKERNELROOT)/$(CMTCONFIG)/libGaudiKernel.so
-
-#clean_script      cleanLDPRELOAD
+	          Linux $(BENDERGCCROOT)/$(CMTCONFIG)/libBenderGCC.so
 
 # =============== application macro ===========================================
 macro             Bender_linkopts    "${application_linkopts}"

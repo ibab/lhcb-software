@@ -51,7 +51,7 @@ def setEnvironment() :
         environ['LHCBHOME'] = os.environ['LHCBHOME']+'/DEV'
 
     # some initial standard environment ( do we need it?) 
-    os.system('. $LHCBHOME/scripts/oldCMT.sh')
+    os.system('. $LHCBHOME/scripts/newCMT.sh')
 
     # check for CMT settings
     if 'CMTBIN'    not in os.environ.keys() :
@@ -67,7 +67,8 @@ def setEnvironment() :
     import cmt
 
     # set the project environment 
-    cmt.project( 'Bender'  , 'v3r7'   )
+    cmt.project( 'DaVinci' , 'v12r0' , os.environ['LHCBDEV'] )
+    cmt.project( 'Bender'  , 'v4r0'  , os.environ['Bender_release_area'] )
 
     # show CMT paths 
     for p in cmt.showpath() : print  ' CMT path: ' + p
