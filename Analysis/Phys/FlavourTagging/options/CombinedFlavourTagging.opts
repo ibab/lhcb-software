@@ -90,9 +90,9 @@ CombTagging.CategoryTaggingTool.KaonOSTagger.ParticleFilter.ParticleTaggerCriter
 CombTagging.CategoryTaggingTool.KaonSSTagger.AllVertices = true;
 CombTagging.CategoryTaggingTool.KaonSSTagger.MinImpactSignificance = -1;
 CombTagging.CategoryTaggingTool.KaonSSTagger.MaxImpactSignificance = 2.5;
-//CombTagging.CategoryTaggingTool.KaonSSTagger.MaxPhi = 1.1;
-//CombTagging.CategoryTaggingTool.KaonSSTagger.MaxEta = 1.0;
-//CombTagging.CategoryTaggingTool.KaonSSTagger.MaxQ = 1500;
+CombTagging.CategoryTaggingTool.KaonSSTagger.MaxPhi = 1.1;
+CombTagging.CategoryTaggingTool.KaonSSTagger.MaxEta = 1.0;
+CombTagging.CategoryTaggingTool.KaonSSTagger.MaxQ = 1500;
 CombTagging.CategoryTaggingTool.KaonSSTagger.FilterName = "ParticleFilter";
 CombTagging.CategoryTaggingTool.KaonSSTagger.ParticleFilter.CriteriaNames = { "ParticleTaggerCriterion" };
 CombTagging.CategoryTaggingTool.KaonSSTagger.ParticleFilter.ParticleTaggerCriterion.ParticleName = "K+";
