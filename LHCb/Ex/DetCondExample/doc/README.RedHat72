@@ -1,0 +1,246 @@
+# $Id: README.RedHat72,v 1.1 2002-03-28 17:25:49 andreav Exp $
+
+------------------------------------------------------------------------------
+Packages needed to execute DetCondExample on tbed0087/88/89 (RedHat7.2)
+------------------------------------------------------------------------------
+
+# I assume in the following that your release directory is ~/newmycmt
+# Go to your release directory
+cd ~/newmycmt
+
+# You need to getpack the head versions of the following packages
+getpack Det/CondDBOracle   v3r10   head
+getpack Det/DetCond        v2r1    head
+getpack Det/DetCondExample v2r1    head
+
+# You need to getpack ALL the following packages, because:
+# - libraries need to be recompiled for the rh72_gcc29521 tag
+# - pointers to external libraries must be defined for the rh72_gcc29521 tag
+getpack AIDA               v1r0
+getpack CLHEP              v17r10
+getpack Det/DetDesc        v9r2
+getpack ExternalLibs       v3r5
+getpack GaudiAlg           v5r1
+getpack GaudiConf          v6r2
+getpack GaudiKernel        v11r1
+getpack GaudiPolicy        v5r4
+getpack GaudiSvc           v7r3
+getpack HTL                v13r10
+getpack XERCES             v15r2p2
+
+# You need to EDIT and MODIFY CLHEP/v17r10/cmt/requirements:
+< set CLHEP_DIR "${LHCXX_BASE}/CLHEP/1.7.1.0"
+---
+> set CLHEP_DIR "${LHCXX_BASE}/CLHEP/1.7.1.0" \
+>     rh72_gcc29521       "${LHCXX_BASE}/CLHEP/1.7.0.0"\
+>     rh72_gcc29521dbx    "${LHCXX_BASE}/CLHEP/1.7.0.0"\
+>     rh72_gcc29521Static "${LHCXX_BASE}/CLHEP/1.7.0.0"
+
+# You need to EDIT and MODIFY ExternalLibs/v3r5/cmt/requirements:
+< set LHCXX_DIR   "${SWROOT}/lhcxx/specific/${CMTCONFIG}"\
+<     CERN_WIN32  "${SWROOT}/lhcxx/specific/wnt"\
+<     LAPE_RIO    "${SWROOT}"
+---
+> set LHCXX_DIR           "${SWROOT}/lhcxx/specific/${CMTCONFIG}"\
+>     rh72_gcc29521       "${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2"\
+>     rh72_gcc29521dbx    "${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2"\
+>     rh72_gcc29521Static "${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2"\
+>     CERN_WIN32          "${SWROOT}/lhcxx/specific/wnt"\
+>     LAPE_RIO            "${SWROOT}"
+
+# You may also modify MsgStream.h in GaudiKernel as described in doc/README
+# This is NOT neeeded to run on RedHat72
+
+# You need to EDIT and MODIFY HTL/v13r10/cmt/requirements:
+< set HTL_DIR      "${LHCXX_BASE}/HTL/1.3.1.0"
+---
+> set HTL_DIR      "${LHCXX_BASE}/HTL/1.3.1.0" \
+>     rh72_gcc29521       "${LHCXX_BASE}/HTL/1.3.2.1"\
+>     rh72_gcc29521dbx    "${LHCXX_BASE}/HTL/1.3.2.1"\
+>     rh72_gcc29521Static "${LHCXX_BASE}/HTL/1.3.2.1"
+
+# You need to EDIT and MODIFY XERCES/v15r2p2/cmt/requirements:
+< macro XERCESHOME "${XERCES_DIR}/1.5.2/${CMTCONFIG}" \
+<       CERN_WIN32 "${XERCES_DIR}/1.5.2/Win32"
+---
+> macro XERCESHOME          "${XERCES_DIR}/1.5.2/${CMTCONFIG}" \
+>       rh72_gcc29521       "${XERCES_DIR}/1.5.2/rh61_gcc2952"\
+>       rh72_gcc29521dbx    "${XERCES_DIR}/1.5.2/rh61_gcc2952"\
+>       rh72_gcc29521Static "${XERCES_DIR}/1.5.2/rh61_gcc2952"\
+>       CERN_WIN32          "${XERCES_DIR}/1.5.2/Win32"
+
+------------------------------------------------------------------------------
+How to setup the LHCb RedHat7.2 environment on tbed0087/88/89 (RedHat7.2)
+------------------------------------------------------------------------------
+
+# Logon to tbed0087 or tbed0088 or tbed0089
+ssh $USER@tbed0087.cern.ch
+
+# Go to your release directory
+cd ~/newmycmt
+
+# Go to the cmt directory
+cd Ex/DetCondExample/v2r1/cmt
+
+# Source the setup_RedHat72.csh script
+# This does the following:
+# - it reconfigures CMT to use v1r10p20011126 instead of v1r9
+# - it defines CMTCONFIG as rh72_gcc29521
+# - it makes sure that gcc 2.95.2 is used instead of gcc 2.96
+# - it redefines LHCXX_DIR as $SWROOT/lhcxx/specific/redhat72/gcc-2.95.2
+source setup_RedHat72.csh
+
+# Broadcast "cmt config" to make sure CMT v1r10p20011126 is used everywhere
+cmt broadcast cmt config
+
+# Setup the environment
+source ../cmt/setup.csh
+
+------------------------------------------------------------------------------
+How to setup and link DetCondExample on tbed0087/88/89 (RedHat7.2)
+------------------------------------------------------------------------------
+
+# NB: Do NOT source LHCXX setup scripts in your .cshrc!
+# The configuration of LHCXX stuff is handled for you by CMT scripts!
+
+# I suggest you do NOT build packages in debug mode, i.e. using tag $CMTDEB.
+# CMT seems unable to recognize tag rh71_gcc29521dbx: it uses rh71_gcc29521
+# The "-g" flag is hardcoded for CondDBOracle, DetCond and DetCondExample
+# to allow debugging of the packages which make use of Oracle libraries
+
+# Go to your release directory
+cd ~/newmycmt
+
+# Go to the cmt directory
+cd Ex/DetCondExample/v2r1/cmt
+
+# Setup the environment
+source ../cmt/setup.csh
+
+# Compile and link all packages
+cmt broadcast gmake
+
+------------------------------------------------------------------------------
+How to run DetCondExample on tbed0087/88/89 (RedHat7.2)
+------------------------------------------------------------------------------
+
+# Go to your release directory
+cd ~/newmycmt
+
+# Go to the working directory
+cd Ex/DetCondExample/v2r1/options
+
+============
+(1) testXml
+============
+
+# Run the application
+../$CMTCONFIG/DetCondExample.exe testXml.opts
+
+# Run the application and create an output comparable to the standard one
+../$CMTCONFIG/DetCondExample.exe testXml.opts > log.testXml.Linux72
+
+================
+(2a) fillCondDB
+================
+
+# Set the debug level for the CONDDB library. Possible debug levels are:
+#    none: no message is printed (default)
+#    prof: only print messages which do not disturb profiling measurements
+#    user: only print messages of "general" interest
+#    devl: also print messages of interest only for the package developer
+#    more: more paranoid messages are printed 
+#    all:  any debug message will be printed
+setenv COND_DB_DEBUG none
+
+# Set the correct path to the database
+# Even better, you can also modify and execute the setupDB_Oracle.bat script
+# You can set your password in the private/setupDBPSWD_Oracle.bat
+# The host (here db9) must correspond to an entry in the tnsnames.ora file
+# The name of the DB can be anything: a DB with that name is created and used
+# For instance, this is what I use... except the password :-)
+setenv DETCONDEXAMPLE_DBHOST DB9
+setenv DETCONDEXAMPLE_DBUSER AVALASSI
+setenv DETCONDEXAMPLE_DBNAME MYCONDDB_LINUX
+setenv DETCONDEXAMPLE_DBPSWD ********
+
+# Run the application
+../$CMTCONFIG/DetCondExample.exe fillCondDB.opts
+
+# Run the application and create an output comparable to the standard one
+# The database is only filled if empty: the first output is longer
+# Be sure to start with a new database if you want to compare the first output
+# You do not need to source setupDB.csh again
+source ../cmt/cleanupDB.csh
+../$CMTCONFIG/DetCondExample.exe fillCondDB.opts >log.fillCondDB_1.Orac.Linux72
+../$CMTCONFIG/DetCondExample.exe fillCondDB.opts >log.fillCondDB_2.Orac.Linux72
+
+================
+(2b) testCondDB
+================
+
+# Run the application
+# Be sure to have filled the database using fillCondDB.opts first!
+../$CMTCONFIG/DetCondExample.exe testCondDB.opts
+
+# Run the application and create an output comparable to the standard one
+../$CMTCONFIG/DetCondExample.exe testCondDB.opts >log.testCondDB.Orac.Linux72
+
+------------------------------------------------------------------------------
+How to fill the DB on Windows and read it from RedHat72 (or viceversa)
+------------------------------------------------------------------------------
+
+# In the example above, you created a database from Linux, whose name is
+setenv DETCONDEXAMPLE_DBNAME MYCONDDB_LINUX
+# In the Windows example (see README), you created a database whose name is
+set DETCONDEXAMPLE_DBNAME=MYCONDDB_WINDOWS
+
+# You can run the testCondDB example again on Linux after setting
+setenv DETCONDEXAMPLE_DBNAME MYCONDDB_WINDOWS
+# You can compare the output to that in the ../job directory
+../$CMTCONFIG/DetCondExample.exe testCondDB.opts \
+  > log.testCondDB.Orac.Linux72.DBfilledOnWindows
+
+# You can run the testCondDB example again on Windows after setting
+set DETCONDEXAMPLE_DBNAME=MYCONDDB_LINUX
+# You can compare the output to that in the ..\job directory
+run DetCondExample testCondDB.opts > log.testCondDB.Orac.Windows.DBfilledOnLinux72
+
+# The result of this test is that there are no significant differences
+# The only difference is in the standard format to print floats:
+# - on Windows: 1.50000000e+001
+# - on Linux:   1.50000000e+01
+
+------------------------------------------------------------------------------
+How to browse the Oracle DB using SQL commands on tbed0087/88/89 (RedHat7.2)
+------------------------------------------------------------------------------
+
+# Go to your release directory
+cd ~/newmycmt
+
+# Go to the cmt directory
+cd Ex/DetCondExample/v2r1/cmt
+
+# Setup the environment
+# This sets the path to the DB if you modified the relevant scripts as above
+source ../cmt/setup.csh
+
+# List which CondDBs exist on that host for that user
+source ../sql/listCondDBs.csh
+
+# List which tables exist on that host for that user for the current DB name
+source ../sql/listAll.csh
+
+# Login interactively on that host as that user
+source ../sql/loginSqlPlus.csh
+# Example: print all CondDBObject's
+SQL> select * from <DBNAME>_CONOBJS;
+# Example: print the range of all CondDBObject's
+SQL> select since,till from <DBNAME>_CONOBJS;
+# Example: change your password
+SQL> alter user <USERNAME> identified by <NEWPASSWORD>;
+# Quit the SQL*plus session
+SQL> quit;
+
+==============================================================================
+

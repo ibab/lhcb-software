@@ -1,14 +1,14 @@
-# $Id: README,v 1.16 2002-03-01 17:09:42 andreav Exp $
+# $Id: README,v 1.17 2002-03-28 17:25:42 andreav Exp $
 
 Two examples are distributed in this package: a test of condition data 
 stored in flat XML files, and a test of condition data stored in the CondDB.
 
 The XML example does not require DetCond and works in the same way
-under Windows and under Linux.
+under Windows and under Linux (RedHat6.1 or RedHat7.2).
 
 The CondDB example requires package DetCond. 
-Under Linux, DetCond uses package CONDDB (based on Objectivity).
-Under Windows, DetCond uses package CondDBOracle (based on Oracle).
+Under Linux RedHat6.1, DetCond uses CONDDB (based on Objectivity).
+Under Windows and Linux RedHat7.2, DetCond uses CondDBOracle (based on Oracle).
 The Oracle implementation is based on Oracle 9i using the OCCI library.
 
 Three main job options exist in the options directory:
@@ -31,8 +31,12 @@ Packages needed to run DetCondExample v2r1
 
 For general information on configuring the Gaudi environment, 
 please refer to the Gaudi Web pages. 
-Most of the following refers to the Linux environment. 
-Only at the end a few words about Windows are given.
+
+Most of the following refers to the Linux RedHat6.1 environment (lxplus).
+The Windows environment is presented in a shorter way at the end of this file.
+The Linux RedHat7.2 environment is only meant for tests and requires
+extensive changes which are described in the doc/README.RedHat72 file.
+
 Version v1r10p20011126 or higher of CMT is needed for a proper setup.
 [However version v1r9 is still used under Linux: cleanup may give problems].
 
@@ -46,10 +50,15 @@ To run the detector condition example, you need the following packages:
         cd ~/newmycmt
         getpack Det/DetCond        v2r1
         getpack Ex/DetCondExample  v2r1
-Under Linux:
-        getpack CONDDB             v3r02p1 
+Under Linux (RedHat6.1)
+        getpack CONDDB             v3r02
 Under Windows:
-        getpack Det/CondDBOracle   v1r00 
+        getpack Det/CondDBOracle   v3r10 
+Under Linux (RedHat7.2)
+        getpack Det/CondDBOracle   v3r10 
+	
+Under Linux (RedHat7.2) many more packages need to be getpack'ed and MODIFIED.
+Refer to the doc/README.RedHat72 for more details.
 
 ------------------------------------------------------------------------------
 Optional modifications to GaudiKernel
@@ -123,9 +132,9 @@ cd Ex/DetCondExample/v2r1/options
 ../$CMTDEB/DetCondExample.exe testXml.opts
 
 # Run the application and compare the output to the standard one
-/bin/rm -f log.testXml.Linux
-../$CMTDEB/DetCondExample.exe testXml.opts > log.testXml.Linux
-diff log.testXml.Linux ../job
+/bin/rm -f log.testXml.Linux61
+../$CMTDEB/DetCondExample.exe testXml.opts > log.testXml.Linux61
+diff log.testXml.Linux61 ../job
 
 ================
 (2a) fillCondDB
@@ -146,14 +155,14 @@ setenv COND_DB_DEBUG none
 # Run the application and compare the output to the standard one
 # The database is only filled if empty: the first output is longer
 # Be sure to start with a new database if you want to compare the first output
-source ../cmt/cleanupDB.csh
-source ../cmt/setupDB.csh -tag=$CMTDEB
-/bin/rm -f log.fillCondDB_1.Objy.Linux
-/bin/rm -f log.fillCondDB_2.Objy.Linux
-../$CMTDEB/DetCondExample.exe fillCondDB.opts > log.fillCondDB_1.Objy.Linux
-../$CMTDEB/DetCondExample.exe fillCondDB.opts > log.fillCondDB_2.Objy.Linux
-diff log.fillCondDB_1.Objy.Linux ../job
-diff log.fillCondDB_2.Objy.Linux ../job
+source ../cmt/cleanupDB.csh -tag=$CMTDEB
+source ../cmt/setupDB.csh   -tag=$CMTDEB
+/bin/rm -f log.fillCondDB_1.Objy.Linux61
+/bin/rm -f log.fillCondDB_2.Objy.Linux61
+../$CMTDEB/DetCondExample.exe fillCondDB.opts > log.fillCondDB_1.Objy.Linux61
+../$CMTDEB/DetCondExample.exe fillCondDB.opts > log.fillCondDB_2.Objy.Linux61
+diff log.fillCondDB_1.Objy.Linux61 ../job
+diff log.fillCondDB_2.Objy.Linux61 ../job
 
 ================
 (2b) testCondDB
@@ -164,9 +173,9 @@ diff log.fillCondDB_2.Objy.Linux ../job
 ../$CMTDEB/DetCondExample.exe testCondDB.opts
 
 # Run the application and compare the output to the standard one
-/bin/rm -f log.testCondDB.Objy.Linux
-../$CMTDEB/DetCondExample.exe testCondDB.opts > log.testCondDB.Objy.Linux
-diff log.testCondDB.Objy.Linux ../job
+/bin/rm -f log.testCondDB.Objy.Linux61
+../$CMTDEB/DetCondExample.exe testCondDB.opts > log.testCondDB.Objy.Linux61
+diff log.testCondDB.Objy.Linux61 ../job
 
 ------------------------------------------------------------------------------
 How to run DetCondExample on lxplus with the debugger
@@ -278,7 +287,7 @@ cd Ex\DetCondExample\v2r1\options
 run DetCondExample testXml.opts
 
 # Run the application and create an output comparable to the standard one
-run DetCondExample testXml.opts > log.testXml.Win32
+run DetCondExample testXml.opts > log.testXml.Windows
 
 ================
 (2a) fillCondDB
@@ -294,14 +303,15 @@ run DetCondExample testXml.opts > log.testXml.Win32
 setenv COND_DB_DEBUG none
 
 # Set the correct path to the database
-# Even better, you can also modify and execute the setupDB.bat script
-# For instance, this is what I use... except the password :-)
-# The host (here sundb06) must correspond to an entry in the tnsnames.ora file
+# Even better, you can also modify and execute the setupDB_Oracle.bat script
+# You can set your password in the private/setupDBPSWD_Oracle.bat
+# The host (here db9) must correspond to an entry in the tnsnames.ora file
 # The name of the DB can be anything: a DB with that name is created and used
+# For instance, this is what I use... except the password :-)
+set DETCONDEXAMPLE_DBHOST=DB9
 set DETCONDEXAMPLE_DBUSER=AVALASSI
+set DETCONDEXAMPLE_DBNAME=MYCONDDB_WINDOWS
 set DETCONDEXAMPLE_DBPSWD=********
-set DETCONDEXAMPLE_DBHOST=SUNDB06
-set DETCONDEXAMPLE_DBNAME=MYCONDDB
 
 # Run the application using the "run" script 
 run DetCondExample fillCondDB.opts
@@ -309,10 +319,10 @@ run DetCondExample fillCondDB.opts
 # Run the application and create an output comparable to the standard one
 # The database is only filled if empty: the first output is longer
 # Be sure to start with a new database if you want to compare the first output
-# You do not need to ..\cmt\setupDB.bat again
+# You do not need to call setupDB.bat again
 ..\cmt\cleanupDB.bat
-run DetCondExample fillCondDB.opts > log.fillCondDB_1.Orac.Win32
-run DetCondExample fillCondDB.opts > log.fillCondDB_2.Orac.Win32
+run DetCondExample fillCondDB.opts > log.fillCondDB_1.Orac.Windows
+run DetCondExample fillCondDB.opts > log.fillCondDB_2.Orac.Windows
 
 ================
 (2b) testCondDB
@@ -323,7 +333,7 @@ run DetCondExample fillCondDB.opts > log.fillCondDB_2.Orac.Win32
 run DetCondExample testCondDB.opts
 
 # Run the application and create an output comparable to the standard one
-run DetCondExample testCondDB.opts > log.testCondDB_1.Orac.Win32
+run DetCondExample testCondDB.opts > log.testCondDB.Orac.Windows
 
 ------------------------------------------------------------------------------
 How to browse the Oracle database using SQL commands on Windows
@@ -336,17 +346,8 @@ cd H:\newmycmt
 cd Ex\DetCondExample\v2r1\cmt
 
 # Setup the environment
+# This sets the path to the DB if you modified the relevant scripts as above
 setup
-
-# Set the correct path to the database
-# Even better, you can also modify and execute the setupDB.bat script
-# For instance, this is what I use... except the password :-)
-# The host (here sundb06) must correspond to an entry in the tnsnames.ora file
-# The name of the DB can be anything: a DB with that name is created and used
-set DETCONDEXAMPLE_DBUSER=AVALASSI
-set DETCONDEXAMPLE_DBPSWD=********
-set DETCONDEXAMPLE_DBHOST=SUNDB06
-set DETCONDEXAMPLE_DBNAME=MYCONDDB
 
 # List which CondDBs exist on that host for that user
 ..\sql\listCondDBs.bat
