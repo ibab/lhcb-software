@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.20 2002-05-22 08:22:16 gcorti Exp $
+# $Id: requirements,v 1.21 2002-05-23 23:30:48 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -50,7 +50,6 @@ use GaudiKernel        v12r2
 use GaudiSvc           v8r0
 use GaudiAlg           v6r0
 use GaudiAud           v6r0
-#use GaudiTools         v6r0
 use GaudiNagC          v7r0
 use GaudiDb            v7r0
 use GaudiRootDb        v7r0
@@ -75,6 +74,7 @@ use DetDesc        v10r0   Det
 use VeloDet        v5r0   Det
 
 #--- Event Model ( via EventSys the whole Event Model is available )
+use PhysEvent      v4r1   Event
 use EventSys       v10r0  Event
 
 #--- SicB event data persistency
@@ -93,15 +93,14 @@ use axreclib       v4r*   SICB
 use axsellib       v6r*   SICB
 
 #--- DaVinci packages
-use DaVinciSicb          v3r*   Phys
-use DaVinciTools         v4r*   Phys
-use DaVinciAssociators   v1r*   Phys
-use DaVinciMCTools       v1r*   Phys
-#use PrimaryVertices     v1r*   Phys
-use PhysSelections       v1r*   Phys
-#use FlavourTagging      v1r*   Phys
-use DaVinciTest          v1r*   Phys
-#use DaVinciUser         v1r*   Phys
+use DaVinciSicb          v3r0   Phys
+use DaVinciTools         v4r0   Phys
+use DaVinciAssociators   v1r0   Phys
+use DaVinciMCTools       v1r0   Phys
+use PhysSelections       v1r0   Phys
+use FlavourTagging       v1r0   Phys
+use DaVinciTest          v1r0   Phys
+use DaVinciUser          v1r0   Phys
 
 # Build DaVinci Application with standard executable and user example code
 # Note that user code can also be located in a component library (see details
@@ -109,7 +108,6 @@ use DaVinciTest          v1r*   Phys
 #============================================================================
 application      DaVinci    ../src/Main/DaVinciMain.cpp \
                             $(DAVINCISICBROOT)/src/Objs/*.F \
-# Rememeber no cpp anymore in ../src/User (only the suanal)
                             ../src/User/*.F 
 
 # define link options

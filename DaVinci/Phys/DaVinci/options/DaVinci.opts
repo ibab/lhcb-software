@@ -17,15 +17,15 @@
 //--------------------------------------------------------------
 #include "$STDOPTS/Hbook.opts"
 HistogramPersistencySvc.OutputFile = "Histos.hbook";
-// #include "$STDOPTS/RootHist.opts"
-// HistogramPersistencySvc.OutputFile = "Histos.rt";
+//#include "$STDOPTS/RootHist.opts"
+//HistogramPersistencySvc.OutputFile = "Histos.rt";
 
 //--------------------------------------------------------------
-// No Ntuples by default. Uncomment to switch on
+// Ntuples available by default. Comment to switch off
 //--------------------------------------------------------------
-// ApplicationMgr.ExtSvc += { "NTupleSvc" };
-// NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
-// NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.rt' TYP='ROOT' OPT='NEW'"};
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
+//NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.rt' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false
@@ -47,21 +47,23 @@ ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
 //--------------------------------------------------------------
 
 ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
+// Uncomment the following line to run Fortran AXSEL interface 
+// WARNING: this will no longer be supported once DaVinci is
+//          fully operational on OO-DST
 //ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
 ApplicationMgr.TopAlg += { "SelectJPsiMuMu"  };
 ApplicationMgr.TopAlg += { "SelectKsPiPi" };
 ApplicationMgr.TopAlg += { "SelectB0JPsiKs" };
-
-//--------------------------------------------------------------
-// Test suite 
-// Comment all algorithms above.............
-// Uncomment each options files to test a specific tool one by one
-//--------------------------------------------------------------
-//#include "$DAVINCITESTROOT/options/AsctTestAlg.opts"
+// Uncomment the following line to run the FlavourTagging Algorithm
+ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm" };
+// Uncomment the following line to run the example UserAlgorithm
+ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
 
 //--------------------------------------------------------------
 // DaVinci Algorithms to be always executed as the last one,
 // the fortran suanal is called in here 
+// WARNING: this will no longer be supported once DaVinci is
+//          is fully operational on OO-DST
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "DaVinciFinalisation" };
 
@@ -76,10 +78,11 @@ ApplicationMgr.TopAlg += { "DaVinciFinalisation" };
 //-----------------------------------------------------------------
 #include "$DAVINCITOOLSROOT/options/DaVinciTools.opts"
 #include "$DAVINCISICBROOT/options/DaVinciSicb.opts"
+
 // The next lines are an example of changing the default behaviour
 // of algorithms in the library 
-//          Execute the PhysSelectAlgorithm for B0JM
-//PhysSelectAlgorithm.DecayName    = "B0JM";
+//           Execute the PhysSelectAlgorithm for B0JM
+PhysSelectAlgorithm.DecayName    = "B0JM";
 PhysSelectAlgorithm.SelMode      = 0;
 PhysSelectAlgorithm.SelLevel     = 0;
 PhysSelectAlgorithm.Histograms   = 1;
@@ -92,9 +95,12 @@ PhysSelectAlgorithm.Histograms   = 1;
 // If a relative path is used you need to copy them to the batch
 // area when running.
 //-----------------------------------------------------------------
-//#include "$PHYSSELECTIONSROOT/options/SelectJPsiMuMu.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectKsPiPi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectB0JPsiKs.opts"
+#include "$PHYSSELECTIONSROOT/options/SelectJPsiMuMu.opts"
+#include "$PHYSSELECTIONSROOT/options/SelectKsPiPi.opts"
+#include "$PHYSSELECTIONSROOT/options/SelectB0JPsiKs.opts"
+#include "$FLAVOURTAGGINGROOT/options/FlavourTagging.opts"
+FlavourTaggingAlgorithm.ParticlesLocation = "/Event/Phys/JPsi/Particles";
+FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/B0" };
 
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -104,26 +110,18 @@ ToolSvc.OutputLevel                     = 2;
 XmlParserSvc.OutputLevel                = 4;
 AxPrimaryVertexAlgorithm.OutputLevel    = 3;
 PhysSelectAlgorithm.OutputLevel         = 3;
-FillParticleAlgorithm.OutputLevel       = 3;
 ToolSvc.GeomDispCalculator.OutputLevel  = 4;
-SelectJPsiMuMu.OutputLevel              = 2;
-SelectJPsiMuMu.PhysDeskTop.OutputLevel              = 3;
-SelectJPsiMuMu.ParticleFilter.OutputLevel           = 2;
-SelectJPsiMuMu.ParticleFilter.PIDFilterCriterion.OutputLevel = 2;
-SelectJPsiMuMu.ParticleFilter.KinFilterCriterion.OutputLevel = 2;
-SelectJPsiMuMu.LagrangeMassVertexFitter.OutputLevel = 3;
-SelectKsPiPi.OutputLevel                = 2;
-SelectB0JPsiKs.OutputLevel              = 2;  
-SelectKsPiPi.PhysDeskTop.OutputLevel                = 3;
-SelectB0JPsiKs.PhysDeskTop.OutputLevel              = 3;
-SelectKsPiPi.LagrangeMassVertexFitter.OutputLevel   = 3;
-SelectB0JPsiKs.LagrangeMassVertexFitter.OutputLevel = 3;
-DaVinciTestAlgorithm.OutputLevel = 2;
+SelectJPsiMuMu.OutputLevel              = 3;
+SelectKsPiPi.OutputLevel                = 3;
+//SelectKsPiPi.UnconsVertexFitter.OutputLevel  = 3;
+//SelectKsPiPi..OutputLevel  = 3;
+
+SelectB0JPsiLs.OutputLevel              = 3;
  
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax = 5;
+ApplicationMgr.EvtMax = 100;
 EventSelector.FirstEvent = 1;
 //EventSelector.PrintFreq = 1;
    
@@ -131,7 +129,8 @@ EventSelector.FirstEvent = 1;
 // Examples of input data
 //---------------------------------------------------------------
 // B->J/PsiKs, Brunel v5r1
-//EventSelector.Input = {"JOBID='64042'"};
-#include "$STDOPTS/SicbTestDataFile.opts"
+EventSelector.Input = {"JOBID='64042'"};
+// B->J/PsiKs, Brunel v9r1, dbase v243r3
+//EventSelector.Input = {"JOBID='94334'"};
 //################################################################
 

@@ -10,12 +10,14 @@ EventPersistencySvc.CnvServices = { "SicbEventCnvSvc" };
 
 EventDataSvc.ForceLeaves = true; 
 
-ApplicationMgr.DLLs = { "SicbCnv", "GaudiAud", "PhysSicbCnv" };
-ApplicationMgr.DLLs += { "GaudiAlg" };
+ApplicationMgr.DLLs =  { "SicbCnv", "PhysSicbCnv" };
+ApplicationMgr.DLLs += { "GaudiAud", "GaudiAlg" };
 ApplicationMgr.DLLs += { "DaVinciTools" };
+ApplicationMgr.DLLs += { "PhysSelections", "FlavourTagging" };
 ApplicationMgr.DLLs += { "DaVinciAssociators" };
 ApplicationMgr.DLLs += { "DaVinciMCTools" };
 ApplicationMgr.DLLs += { "DaVinciTest" };
+ApplicationMgr.DLLs += { "DaVinciUser" };
 
 //-------------------------------------------------------------
 // No Histogram persistency chosen at this point
