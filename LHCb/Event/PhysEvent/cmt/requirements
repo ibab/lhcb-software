@@ -1,36 +1,46 @@
-package PhysEvent
-version v3r0
+# $Id: requirements,v 1.8 2002-03-27 19:51:36 gcorti Exp $
+# Created      : 20/06/2001
+# Maintainer   : Gloria Corti
+#
+# Documentation on the requirement file can be found at
 
-branches Event cmt doc src xml
+package           PhysEvent
+version           v3r0
 
-use GaudiObjDesc v3r*  
-use EventKernel  v1r*  Event
-use LHCbEvent    v12r* Event
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src xml Event
 
+# Include directories
+#============================================================================
 include_dirs $(PHYSEVENTROOT)
 
-#---- Produce Header-Files from XML description
+# Used packages. 
+#============================================================================
+#use LHCbKernel   v1r*
+use EventKernel  v1r*    Event
+use GaudiObjDesc v3r*
+# the following line decide if compatible with old/new event model
+use LHCbEvent    v12r* Event
+#use Event        v1r*  Event
+
+# Produce Header-Files & dictionary from XML description
+#============================================================================
 document obj2doth PhysEventObj2Doth ../xml/PhysEvent.xml
+#document obj2dict PhysEventObj2Dict ../xml/PhysEvent.xml
 
-# static library
-library PhysEventLib -no_share ../src/PhysSelDecay.cpp \
-                               ../src/PhysSel.cpp
-# component library
-library PhysEvent  ../src/PhysEvent_dll.cpp \
-                   ../src/PhysEvent_load.cpp
+# Build library (including dictionary)
+#============================================================================
+library     PhysEvent    *.cpp         
+#                         ../dict/*.cpp
 
-#--- Produce Dictionaries
-#document obj2dict PhysEventObj2Dict -group=dict ../xml/PhysEvent.xml
-#library PhysEventDict -group=dict ../dict/*.cpp
-#macro PhysEventDict_shlibflags  "$(use_linkopts) $(libraryshr_linkopts)"
-
-
-apply_pattern package_Llinkopts
-apply_pattern linker_path
-apply_pattern package_stamps
+# Define link options
+#============================================================================
+apply_pattern    package_linkopts
+apply_pattern    package_stamps
+apply_pattern    linker_path
 
 #============================================================================
 private
-
-apply_pattern package_Cshlibflags
-macro_prepend PhysEventLib_shlibflags " $(LHCbEvent_linkopts) $(GaudiKernel_linkopts)"
+macro_remove use_linkopts $(PhysEvent_linkopts)
+macro PhysEvent_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
