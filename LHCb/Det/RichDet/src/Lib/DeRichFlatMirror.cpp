@@ -1,4 +1,15 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichFlatMirror.cpp,v 1.4 2004-07-01 11:02:52 papanest Exp $
+
+/** @file DeRichFlatMirror.cpp
+ *
+ *  Implementation file for detector description class : DeRichFlatMirror
+ *
+ *  CVS Log :-
+ *  $Id: DeRichFlatMirror.cpp,v 1.5 2004-07-27 08:55:23 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
 
 #define DERICHFLATMIRROR_CPP
 
@@ -19,18 +30,14 @@
 #include "RichDet/DeRichFlatMirror.h"
 
 //----------------------------------------------------------------------------
-//
-// Implementation of class :  DeRichFlatMirror
-//
-//----------------------------------------------------------------------------
 
 const CLID& CLID_DeRichFlatMirror = 12031;  // User defined
 
 // Standard Constructor
 DeRichFlatMirror::DeRichFlatMirror()
-  : m_alignmentConstantX(0.0), m_alignmentConstantY(0.0), m_mirrorNumber(-1) 
+  : m_alignmentConstantX(0.0), m_alignmentConstantY(0.0), m_mirrorNumber(-1)
 {}
-  
+
 // Standard Destructor
 DeRichFlatMirror::~DeRichFlatMirror() {}
 
@@ -46,7 +53,7 @@ StatusCode DeRichFlatMirror::initialize() {
 
   MsgStream log(msgSvc(), "DeRichFlatMirror" );
   log << MSG::DEBUG <<"Starting initialisation for DeRichFlatMirror"<< endreq;
-  this->printOut(log);  
+  this->printOut(log);
 
   m_solid = geometry()->lvolume()->solid();
 
@@ -54,13 +61,13 @@ StatusCode DeRichFlatMirror::initialize() {
   m_alignmentConstantY = userParameterAsDouble("AlignmentConstantY");
 
   HepRotateX3D alignX(-m_alignmentConstantY);
-  HepRotateY3D alignY(m_alignmentConstantX);  
-  
+  HepRotateY3D alignY(m_alignmentConstantX);
+
   // get the z half length, to find the centre on the mirror surface
   // where reflection will take place
   const ISolid* mysolid = geometry()->lvolume()->solid();
   const SolidBox* myBox = dynamic_cast<const SolidBox*>(mysolid);
-  double centreOnSurfaceZ = myBox->zHalfLength();  
+  double centreOnSurfaceZ = myBox->zHalfLength();
 
   HepPoint3D localCentre(0.0, 0.0, centreOnSurfaceZ);
   // in global coordinates
@@ -81,7 +88,7 @@ StatusCode DeRichFlatMirror::initialize() {
   HepTransform3D localToGlobal = geometry()->matrixInv();
   m_normalVector = alignedLocalNormal.transform(localToGlobal);
   //cout << "Normal in glob coord: " << m_normalVector << std::endl;
-  
+
 
   // create the mirror plane
   HepPlane3D aPlane(m_normalVector, m_mirrorCentre);
@@ -97,8 +104,8 @@ StatusCode DeRichFlatMirror::initialize() {
     log << MSG::FATAL <<"A mirror without a number!"<< endreq;
     sc = StatusCode::FAILURE;
   }
-  
-  log << MSG::DEBUG << "Mirror #" << m_mirrorNumber 
+
+  log << MSG::DEBUG << "Mirror #" << m_mirrorNumber
       <<" Centre (on reflective surface) " << m_mirrorCentre  << endreq;
   log << MSG::DEBUG <<"Finished initialisation for DeRichFlatMirror"<< endreq;
 
@@ -110,7 +117,7 @@ StatusCode DeRichFlatMirror::initialize() {
 //  intersection with solid
 //=========================================================================
 
-StatusCode DeRichFlatMirror:: intersects(const HepPoint3D& globalP, 
+StatusCode DeRichFlatMirror:: intersects(const HepPoint3D& globalP,
                                          const HepVector3D& globalV)
 {
   HepPoint3D pLocal = geometry()->toLocal(globalP);
@@ -119,12 +126,12 @@ StatusCode DeRichFlatMirror:: intersects(const HepPoint3D& globalP,
 
   ISolid::Ticks ticks;
   unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
-  
+
   if (0 == noTicks) {
     return StatusCode::FAILURE;
   }
   else {
-    return StatusCode::SUCCESS;  
+    return StatusCode::SUCCESS;
   }
-  
+
 }

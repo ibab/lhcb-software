@@ -1,4 +1,16 @@
-// $Id: DeRich2HPDPanel.cpp,v 1.12 2004-02-16 14:11:53 papanest Exp $
+
+/** @file DeRich2HPDPanel.cpp
+ *
+ *  Implementation file for detector description class : DeRich2HPDPanel
+ *
+ *  CVS Log :-
+ *  $Id: DeRich2HPDPanel.cpp,v 1.13 2004-07-27 08:55:23 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
 #define DERICH2HPDPANEL_CPP
 
 // Include files
@@ -17,10 +29,6 @@
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidSphere.h"
 
-//----------------------------------------------------------------------------
-//
-// Implementation of class :  DeRich2HPDPanel
-//
 //----------------------------------------------------------------------------
 
 const CLID& CLID_DeRich2HPDPanel = 12012;  // User defined
@@ -56,9 +64,9 @@ StatusCode DeRich2HPDPanel::initialize() {
       << m_rowPitch << endreq;
 
   if (fabs(m_columnPitch) < m_activeRadius*2) {
-    log << MSG::WARNING << "The active area is bigger by:" 
+    log << MSG::WARNING << "The active area is bigger by:"
         << (m_activeRadius*2 - fabs(m_columnPitch))/mm
-        << " mm than the column pitch.  There could be loss of photons" 
+        << " mm than the column pitch.  There could be loss of photons"
         << endreq;
   }
 
@@ -66,7 +74,7 @@ StatusCode DeRich2HPDPanel::initialize() {
   // coordinate is positive the pitch is negative and vise versa
   m_panelHorizEdge = m_HPD0Centre.x() - 0.5*m_columnPitch;
   m_detPlaneHorizEdge = fabs(m_panelHorizEdge);
-  
+
   //get the Vertical Edge for the two types of columns
   //numbers start at 0
   m_panelVerticalEdgeEven = m_HPD0Centre.y() - 0.5*m_rowPitch;
@@ -75,14 +83,14 @@ StatusCode DeRich2HPDPanel::initialize() {
   m_detPlaneVertEdge = fabs(m_panelVerticalEdgeEven);
   if (fabs(m_panelVerticalEdgeOdd) > m_detPlaneVertEdge)
     m_detPlaneVertEdge = fabs(m_panelVerticalEdgeOdd);
-  
+
   log << MSG::DEBUG <<"m_panelHorizEdge:"<< m_panelHorizEdge
       << " m_panelVerticalEdgeEven:" << m_panelVerticalEdgeEven
-      << " m_panelVerticalEdgeOdd:" << m_panelVerticalEdgeOdd 
+      << " m_panelVerticalEdgeOdd:" << m_panelVerticalEdgeOdd
       << "  m_detPlaneVertEdge:" <<  m_detPlaneVertEdge
       << endreq;
 
-  log << MSG::DEBUG <<"Finished initialisation for DeRich2HPDPanel "<< m_name 
+  log << MSG::DEBUG <<"Finished initialisation for DeRich2HPDPanel "<< m_name
       <<endreq;
 
   return StatusCode::SUCCESS;
@@ -91,11 +99,11 @@ StatusCode DeRich2HPDPanel::initialize() {
 // ===========================================================================
 
 bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
-                                   RichSmartID& id) {
+                                    RichSmartID& id) {
 
   // find HPD row/column and check if the point is withing the covered area
 
-  unsigned int HPDColumn = 
+  unsigned int HPDColumn =
     static_cast<unsigned int> (floor((inPanel.x()-m_panelHorizEdge)/
                                      m_columnPitch));
 
@@ -104,7 +112,7 @@ bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
 
   unsigned int HPDRow = 0;
   if (0 == HPDColumn%2) {
-    HPDRow = static_cast<unsigned int> 
+    HPDRow = static_cast<unsigned int>
       (floor((inPanel.y() - m_panelVerticalEdgeEven)/m_rowPitch));
   } else {
     HPDRow = static_cast<unsigned int>
@@ -122,14 +130,14 @@ bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
 //  convert a point from the panel to the global coodinate system
 //=========================================================================
 HepPoint3D DeRich2HPDPanel::globalPosition( const HepPoint3D& localPoint,
-                                           Rich::Side side) {
+                                            Rich::Side side) {
 
   int sign(1);
   if (side == Rich::left) sign = -1;
-  
+
   return (geometry()->
-          toGlobal(HepPoint3D(localPoint.x()+sign*m_detPlaneHorizEdge, 
-                              localPoint.y(), 
+          toGlobal(HepPoint3D(localPoint.x()+sign*m_detPlaneHorizEdge,
+                              localPoint.y(),
                               localPoint.z() + m_detPlaneZ )));
 }
 

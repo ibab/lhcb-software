@@ -1,6 +1,18 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichSphMirror.h,v 1.5 2004-07-22 10:49:55 papanest Exp $
-#ifndef DERICHSPHMIRROR_H
-#define DERICHSPHMIRROR_H 1
+
+/** @file DeRichSphMirror.h
+ *
+ *  Header file for detector description class : DeRichSphMirror
+ *
+ *  CVS Log :-
+ *  $Id: DeRichSphMirror.h,v 1.6 2004-07-27 08:55:22 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
+#ifndef  RICHDET_DERICHSPHMIRROR_H
+#define  RICHDET_DERICHSPHMIRROR_H 1
 
 // Include files
 #include "CLHEP/Geometry/Point3D.h"
@@ -16,6 +28,7 @@ extern const CLID& CLID_DeRichSphMirror;
  * Detector element for spherical mirrors providing geometry info
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
+ * @date   2004-06-18
  */
 class DeRichSphMirror: public DetectorElement {
 
@@ -117,4 +130,4 @@ private:
   int m_mirrorNumber;               ///< mirror (segment) number
 };
 
-#endif    // DERICHSPHMIRROR_H
+#endif    //  RICHDET_DERICHSPHMIRROR_H

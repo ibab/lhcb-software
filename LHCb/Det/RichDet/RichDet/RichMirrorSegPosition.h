@@ -1,4 +1,16 @@
-// $Id: RichMirrorSegPosition.h,v 1.3 2004-07-22 10:49:55 papanest Exp $
+
+/** @file RichMirrorSegPosition.h
+ *
+ *  Header file for utility class : RichMirrorSegPosition
+ *
+ *  CVS Log :-
+ *  $Id: RichMirrorSegPosition.h,v 1.4 2004-07-27 08:55:22 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-30
+ */
+
 #ifndef RICHDET_RICHMIRRORSEGPOSITION_H
 #define RICHDET_RICHMIRRORSEGPOSITION_H 1
 

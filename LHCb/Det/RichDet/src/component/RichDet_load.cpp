@@ -1,19 +1,21 @@
-// $Id: RichDet_load.cpp,v 1.6 2003-12-03 17:46:48 papanest Exp $
-// Include files 
 
+/** @file RichDet_load.cpp
+ *
+ *  Declaration of objects in the component library RichDet
+ *
+ *  CVS Log :-
+ *  $Id: RichDet_load.cpp,v 1.7 2004-07-27 08:55:24 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
+DECLARE_FACTORY_ENTRIES(RichDet)
+{
 
-// Declare  OBJECT / CONVERTER / ALGORITHM / TOOL using the macros DECLARE_xxx
-// The statements are like that:
-//
-// DECLARE_CONVERTER( MyConverter );
-// DECLARE_OBJECT( DataObject );
-//
-// They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
-
-DECLARE_FACTORY_ENTRIES(RichDet) {
   DECLARE_CONVERTER( XmlDeRich2Cnv );
   DECLARE_CONVERTER( XmlDeRich1Cnv );
   DECLARE_CONVERTER( XmlDeRichFlatMirrorCnv );
@@ -23,4 +25,5 @@ DECLARE_FACTORY_ENTRIES(RichDet) {
   DECLARE_CONVERTER( XmlDeRich1CdfHPDPanelCnv );
   DECLARE_CONVERTER( XmlDeRichSingleSolidRadiatorCnv );
   DECLARE_CONVERTER( XmlDeRichMultiSolidRadiatorCnv );
+
 }

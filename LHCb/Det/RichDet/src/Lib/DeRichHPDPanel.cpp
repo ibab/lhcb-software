@@ -1,4 +1,16 @@
-// $Id: DeRichHPDPanel.cpp,v 1.16 2004-07-22 10:49:56 papanest Exp $
+
+/** @file DeRichHPDPanel.cpp
+ *
+ *  Implementation file for detector description class : DeRichHPDPanel
+ *
+ *  CVS Log :-
+ *  $Id: DeRichHPDPanel.cpp,v 1.17 2004-07-27 08:55:23 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
 #define DERICHHPDPANEL_CPP
 
 // Include files
@@ -14,10 +26,6 @@
 #include "DetDesc/SolidSphere.h"
 #include "DetDesc/TabulatedProperty.h"
 
-//----------------------------------------------------------------------------
-//
-// Implementation of class :  DeRichHPDPanel
-//
 //----------------------------------------------------------------------------
 
 // Standard Constructor
@@ -203,12 +211,12 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
   if ( fabs(inSiliconX) > m_siliconHalfLengthX ) {
     const int signX = ( inSiliconX > 0.0 ? 1 : -1 );
     inSiliconX -= signX*0.001*mm;
-  } 
+  }
 
   if (fabs(inSiliconY) > m_siliconHalfLengthY ) {
     const int signY = ( inSiliconY > 0.0 ? 1 : -1 );
     inSiliconY -= signY*0.001*mm;
-  } 
+  }
 
   if ( (fabs(inSiliconX) > m_siliconHalfLengthX) ||
        (fabs(inSiliconY) > m_siliconHalfLengthY)    ) {
@@ -276,7 +284,7 @@ StatusCode DeRichHPDPanel::detectionPoint (const RichSmartID& smartID,
 HepPoint3D DeRichHPDPanel::globalToPDPanel( const HepPoint3D& globalPoint ) {
 
   const HepPoint3D localPoint( geometry()->toLocal( globalPoint ) );
-  return HepPoint3D(localPoint.x(), localPoint.y(), 
+  return HepPoint3D(localPoint.x(), localPoint.y(),
                     localPoint.z() - m_detPlaneZ );
 }
 
@@ -315,7 +323,7 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
       const double x = panelIntersection.x() - m_HPDCentres[HPDNumber].x();
       const double y = panelIntersection.y() - m_HPDCentres[HPDNumber].y();
       if ( ( x*x + y*y ) > m_activeRadiusSq ) return StatusCode::FAILURE;
-      
+
       windowPointGlobal = geometry()->toGlobal( panelIntersection );
 
       smartID.setPDRow( HPDRow );
@@ -387,7 +395,7 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
     toMother(pvWindow->toMother(windowPoint));
   // check the active radius.
   const double hitRadius2 = ( windowPointInHPD.x()*windowPointInHPD.x() +
-                        windowPointInHPD.y()*windowPointInHPD.y() );
+                              windowPointInHPD.y()*windowPointInHPD.y() );
   if ( hitRadius2 > m_activeRadiusSq ) return StatusCode::FAILURE;
 
   windowPointGlobal =
@@ -469,9 +477,9 @@ bool DeRichHPDPanel::detPlanePoint( const HepPoint3D& pGlobal,
          fabs(hitInPanel.y()) >= m_detPlaneVertEdge ) {
       return false;
     }
-    
+
   }
   return true;
-  
+
 }
 

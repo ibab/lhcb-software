@@ -1,4 +1,16 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichSphMirror.cpp,v 1.8 2004-07-01 11:02:52 papanest Exp $
+
+/** @file DeRichSphMirror.cpp
+ *
+ *  Implementation file for detector description class : DeRichSphMirror
+ *
+ *  CVS Log :-
+ *  $Id: DeRichSphMirror.cpp,v 1.9 2004-07-27 08:55:23 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
 #define DERICHSPHMIRROR_CPP
 
 // Include files
@@ -17,12 +29,7 @@
 #include "RichDet/DeRichSphMirror.h"
 #include "RichDet/DeRich.h"
 
-
-//------------------------------------------------------------------------
-//
-// Implementation of class :  DeRichSphMirror
-//
-//--------------------------------------------------------------------------
+//======================================================================
 
 const CLID& CLID_DeRichSphMirror = 12030;  // User defined
 
@@ -38,7 +45,6 @@ DeRichSphMirror::~DeRichSphMirror() {}
 const CLID& DeRichSphMirror::classID() {
   return CLID_DeRichSphMirror;
 }
-
 
 
 StatusCode DeRichSphMirror::initialize() {

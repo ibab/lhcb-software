@@ -1,4 +1,15 @@
-// $Id: DeRichRadiator.h,v 1.8 2004-07-22 10:49:55 papanest Exp $
+
+/** @file DeRichRadiator.h
+ *
+ *  Header file for detector description class : DeRichRadiator
+ *
+ *  CVS Log :-
+ *  $Id: DeRichRadiator.h,v 1.9 2004-07-27 08:55:22 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
 
 #ifndef RICHDET_DERICHRADIATOR_H
 #define RICHDET_DERICHRADIATOR_H 1

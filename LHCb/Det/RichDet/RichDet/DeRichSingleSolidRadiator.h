@@ -1,4 +1,15 @@
-// $Id: DeRichSingleSolidRadiator.h,v 1.2 2004-07-22 10:49:55 papanest Exp $
+
+/** @file DeRichSingleSolidRadiator.h
+ *
+ *  Header file for detector description class : DeRichSingleSolidRadiator
+ *
+ *  CVS Log :-
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.3 2004-07-27 08:55:22 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
 
 #ifndef RICHDET_DERICHSINGLESOLIDRADIATOR_H
 #define RICHDET_DERICHSINGLESOLIDRADIATOR_H 1
@@ -15,6 +26,7 @@ extern const CLID& CLID_DeRichSingleSolidRadiator;
  * Implementation of DeRichRadiator for single solids (can be boolean solids)
  *
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
  */
 
 class DeRichSingleSolidRadiator: public DeRichRadiator {

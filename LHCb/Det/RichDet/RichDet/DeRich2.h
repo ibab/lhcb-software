@@ -1,6 +1,18 @@
-// $Id: DeRich2.h,v 1.9 2004-07-22 10:49:55 papanest Exp $
-#ifndef DERICH2_H
-#define DERICH2_H 1
+
+/** @file DeRich2.h
+ *
+ *  Header file for detector description class : DeRich2
+ *
+ *  CVS Log :-
+ *  $Id: DeRich2.h,v 1.10 2004-07-27 08:55:22 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
+#ifndef RICHDET_DERICH2_H
+#define RICHDET_DERICH2_H 1
 
 // local
 #include "RichDet/DeRich.h"
@@ -107,4 +119,4 @@ private:
 
 };
 
-#endif    // DERICH2_H
+#endif    // RICHDET_DERICH2_H

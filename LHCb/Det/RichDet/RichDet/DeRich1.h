@@ -1,4 +1,16 @@
-// $Id: DeRich1.h,v 1.8 2004-07-22 10:49:55 papanest Exp $
+
+/** @file DeRich1.h
+ *
+ *  Header file for detector description class : DeRich1
+ *
+ *  CVS Log :-
+ *  $Id: DeRich1.h,v 1.9 2004-07-27 08:55:22 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
 #ifndef RICHDET_DERICH1_H
 #define RICHDET_DERICH1_H 1
 
@@ -11,11 +23,11 @@ extern const CLID& CLID_DERich1;
 
 /** @class DeRich1 DeRich1.h
  *
- * This is the DeRich detector element for Rich1
+ *  This is the DeRich detector element for Rich1
  *
- * @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
  */
-
 
 class DeRich1 : public DeRich {
 
@@ -91,11 +103,11 @@ public:
    * @param point A point in the global coordinate system
    * @return The side for this point
    */
-  inline virtual Rich::Side side( const HepPoint3D & point) const 
+  inline virtual Rich::Side side( const HepPoint3D & point) const
   {
     return ( point.y() >= 0.0 ? Rich::top : Rich::bottom );
   }
-  
+
 private:
 
   HepPlane3D m_nominalPlaneTop;    ///< The top nominal flat mirror plane

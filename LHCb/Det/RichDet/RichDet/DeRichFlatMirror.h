@@ -1,7 +1,18 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichFlatMirror.h,v 1.3 2004-07-22 10:49:55 papanest Exp $
 
-#ifndef DERICHFLATMIRROR_H
-#define DERICHFLATMIRROR_H 1
+/** @file DeRichFlatMirror.h
+ *
+ *  Header file for detector description class : DeRichFlatMirror
+ *
+ *  CVS Log :-
+ *  $Id: DeRichFlatMirror.h,v 1.4 2004-07-27 08:55:22 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
+#ifndef RICHDET_DERICHFLATMIRROR_H
+#define RICHDET_DERICHFLATMIRROR_H 1
 
 // Include files
 #include "CLHEP/Geometry/Point3D.h"
@@ -113,4 +124,4 @@ private:
 
 };
 
-#endif    // DERICHFLATMIRROR_H
+#endif    // RICHDET_DERICHFLATMIRROR_H

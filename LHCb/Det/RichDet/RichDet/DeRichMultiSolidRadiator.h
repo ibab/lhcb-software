@@ -1,4 +1,15 @@
-// $Id: DeRichMultiSolidRadiator.h,v 1.2 2004-07-22 10:49:55 papanest Exp $
+
+/** @file DeRichMultiSolidRadiator.h
+ *
+ *  Header file for detector description class : DeRichMultiSolidRadiator
+ *
+ *  CVS Log :-
+ *  $Id: DeRichMultiSolidRadiator.h,v 1.3 2004-07-27 08:55:22 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
 
 #ifndef RICHDET_DERICHMULTISOLIDRADIATOR_H
 #define RICHDET_DERICHMULTISOLIDRADIATOR_H 1
@@ -8,7 +19,6 @@
 
 // External declarations
 extern const CLID& CLID_DeRichMultiSolidRadiator;
-
 
 /** @class DeRichMultiSolidRadiator DeRichMultiSolidRadiator.h
  *

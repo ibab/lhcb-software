@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2004-07-27 - Chris Jones
+ - Add doxygen file documentation
+
 !========================= RichDet v8r0 2004-07-01 =========================
 ! 2004-07-22 - Antonis Papanestis
  - Added documentation

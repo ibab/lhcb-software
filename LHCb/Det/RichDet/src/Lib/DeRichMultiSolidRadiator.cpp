@@ -1,4 +1,16 @@
-// $Id: DeRichMultiSolidRadiator.cpp,v 1.2 2004-07-01 11:02:52 papanest Exp $
+
+/** @file DeRichMultiSolidRadiator.cpp
+ *
+ *  Implementation file for detector description class : DeRichMultiSolidRadiator
+ *
+ *  CVS Log :-
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.3 2004-07-27 08:55:23 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
 #define DERICHSINGLESOLIDRADIATOR_CPP
 
 // Include files
@@ -16,11 +28,6 @@
 #include "DetDesc/SolidBoolean.h"
 #include "DetDesc/SolidTrd.h"
 
-
-//----------------------------------------------------------------------------
-//
-// Implementation of class :  DeRichMultiSolidRadiator
-//
 //----------------------------------------------------------------------------
 
 const CLID& CLID_DeRichMultiSolidRadiator = 12041;  // User defined
@@ -79,7 +86,7 @@ StatusCode DeRichMultiSolidRadiator::initialize() {
 //=========================================================================
 //  returns the next intersection point
 //=========================================================================
-StatusCode 
+StatusCode
 DeRichMultiSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
                                                  const HepVector3D& vGlobal,
                                                  HepPoint3D&  returnPoint ) {
@@ -93,7 +100,7 @@ DeRichMultiSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
   HepPoint3D localNextTempPoint;
   HepVector3D solidLocalVector;
   bool foundTick(false);
-  
+
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
     solidLocalVector = vLocal;
     if ( m_solids[solid]->
@@ -103,24 +110,24 @@ DeRichMultiSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
                            ticks) ) {
       localNextTempPoint = m_pVolumes[solid]->
         toMother(m_pVolumes[solid]->toLocal(pLocal)+solidLocalVector*ticks[0]);
-      if ( localNextTempPoint.z() < localNextPoint.z() ) 
+      if ( localNextTempPoint.z() < localNextPoint.z() )
         localNextPoint = localNextTempPoint;
       foundTick = true;
     }
-  }      
+  }
 
   if (!foundTick)  return StatusCode::FAILURE;
-  
+
   returnPoint = geometry()->toGlobal(localNextPoint);
   return StatusCode::SUCCESS;
-  
+
 
 }
 
 //=========================================================================
-// return the entry and exit points of radiator 
+// return the entry and exit points of radiator
 //=========================================================================
-StatusCode 
+StatusCode
 DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D&  position,
                                               const HepVector3D& direction,
                                               HepPoint3D& entryPoint,
@@ -137,7 +144,7 @@ DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D&  position,
   HepPoint3D localExitTempPoint;
   HepVector3D solidLocalVector;
   bool foundTick(false);
-  
+
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
     solidLocalVector = vLocal;
     if ( m_solids[solid]->
@@ -150,18 +157,18 @@ DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D&  position,
       localExitTempPoint = m_pVolumes[solid]->
         toMother(m_pVolumes[solid]->toLocal(pLocal)+solidLocalVector*
                  ticks[ticks.size()-1]);
-      
-      if ( localEntryTempPoint.z() < localEntryPoint.z() ) 
+
+      if ( localEntryTempPoint.z() < localEntryPoint.z() )
         localEntryPoint = localEntryTempPoint;
-      if ( localExitTempPoint.z() > localExitPoint.z() ) 
+      if ( localExitTempPoint.z() > localExitPoint.z() )
         localExitPoint = localExitTempPoint;
       foundTick = true;
     }
-  }      
+  }
 
 
   if (!foundTick)  return StatusCode::FAILURE;
-  
+
   entryPoint = geometry()->toGlobal( localEntryPoint );
   exitPoint = geometry()->toGlobal( localExitPoint );
   return StatusCode::SUCCESS;
@@ -172,11 +179,11 @@ DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D&  position,
 //=========================================================================
 //  return a vector with all intersection points with solid
 //=========================================================================
-unsigned int 
+unsigned int
 DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
-                                               const HepVector3D& vGlobal,
-                                               std::vector<HepPoint3D>& 
-                                               points) {
+                                              const HepVector3D& vGlobal,
+                                              std::vector<HepPoint3D>&
+                                              points) {
 
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
   HepVector3D vLocal = vGlobal;
@@ -188,7 +195,7 @@ DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
   HepVector3D solidLocalVector;
   unsigned int noTicks;
   unsigned int totalTicks(0);
-  
+
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
     solidLocalVector = vLocal;
     noTicks = m_solids[solid]->
@@ -209,7 +216,7 @@ DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
             (m_pVolumes[solid]->toLocal(pLocal) + solidLocalVector.transform
              (m_pVolumes[solid]->matrix()) * (*tick_it) )));
       }
-    }      
+    }
   }
 
   return totalTicks;

@@ -1,4 +1,19 @@
-// $Id: DeRich1CdfHPDPanel.cpp,v 1.15 2004-02-16 14:11:53 papanest Exp $
+
+/** @file DeRich1CdfHPDPanel.cpp
+ *
+ *  Implementation file for detector description class : DeRich1CdfHPDPanel
+ *     (COLUMN wise panel)
+ *  The numbering in this class increases in columns and odd cloumns have
+ *  one less HPD than even columns
+ *
+ *  CVS Log :-
+ *  $Id: DeRich1CdfHPDPanel.cpp,v 1.16 2004-07-27 08:55:23 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
 #define DERICH1CDFHPDPANEL_CPP
 
 // Include files
@@ -16,13 +31,6 @@
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidSphere.h"
 
-
-//----------------------------------------------------------------------------
-//
-// Implementation of class :  DeRich1CdfHPDPanel (COLUMN wise panel)
-// the numbering in this class increases in columns and odd cloumns have
-// one less HPD than even columns
-//
 //----------------------------------------------------------------------------
 
 const CLID& CLID_DeRich1CdfHPDPanel = 12013;  // User defined
@@ -52,7 +60,7 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
   if ( !DeRichHPDPanel::initialize() ) return sc;
 
   // specific initialization for Rich1CdfHPDPanel
-  // the number of rows (m_HPDRows) in this panel is 2*rows-1 
+  // the number of rows (m_HPDRows) in this panel is 2*rows-1
   // of what you would expect from a normal grid
 
   log << MSG::DEBUG <<"HPDsInBigCol:" << m_HPDsInBigCol
@@ -62,13 +70,13 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
   m_columnPitch = m_HPDNSCentre.x() - m_HPD0Centre.x();
   log << MSG::DEBUG <<"columnPitch:"<< m_columnPitch << " rowPitch:"
       << m_rowPitch << endreq;
-  
+
   if ( fabs(m_columnPitch) < m_activeRadius*2 ) {
-    log << MSG::WARNING << "The active area is bigger by:" 
+    log << MSG::WARNING << "The active area is bigger by:"
         << (m_activeRadius*2 - fabs(m_columnPitch))/mm
-        << " mm than the column pitch.  There could be loss of photons" 
+        << " mm than the column pitch.  There could be loss of photons"
         << endreq;
-  }  
+  }
 
   // get the Horizontal Edge of the HPD cover area. When the HPD centre
   // coordinate is positive the pitch is negative and vise versa
@@ -85,10 +93,10 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
   m_detPlaneVertEdge = fabs(m_panelVerticalEdgeEven);
   if (fabs(m_panelVerticalEdgeOdd) > m_detPlaneVertEdge)
     m_detPlaneVertEdge = fabs(m_panelVerticalEdgeOdd);
-  
+
   log << MSG::DEBUG <<"panelHorizEdge:"<< m_panelHorizEdge
       << " panelVerticalEdgeEven:" << m_panelVerticalEdgeEven
-      << " panelVerticalEdgeOdd:" << m_panelVerticalEdgeOdd 
+      << " panelVerticalEdgeOdd:" << m_panelVerticalEdgeOdd
       << "  m_detPlaneVertEdge:" <<  m_detPlaneVertEdge
       << endreq;
 
@@ -104,19 +112,19 @@ bool DeRich1CdfHPDPanel::findHPDRowCol ( const HepPoint3D& inPanel,
 
   // find the correct HPD inside the panel
 
-  unsigned int HPDColumn = 
+  unsigned int HPDColumn =
     static_cast<unsigned int>(floor((inPanel.x() - m_panelHorizEdge)
                                     / m_columnPitch));
 
   if (HPDColumn >= m_HPDColumns)  return false;
-  id.setPDCol(HPDColumn);  
+  id.setPDCol(HPDColumn);
 
   unsigned int HPDRow = 0;
   if (0 == HPDColumn%2) {
     HPDRow=static_cast<unsigned int>
       (floor((inPanel.y() - m_panelVerticalEdgeEven)/m_rowPitch));
     if (HPDRow >= m_HPDsInBigCol) return false;
-  
+
   } else {
     HPDRow=static_cast<unsigned int>
       (floor((inPanel.y() - m_panelVerticalEdgeOdd)/m_rowPitch));
@@ -131,14 +139,14 @@ bool DeRich1CdfHPDPanel::findHPDRowCol ( const HepPoint3D& inPanel,
 //  convert a point from the panel to the global coodinate system
 //=========================================================================
 HepPoint3D DeRich1CdfHPDPanel::globalPosition( const HepPoint3D& localPoint,
-                                           Rich::Side side) {
+                                               Rich::Side side) {
 
   int sign(1);
   if (side == Rich::top) sign = -1;
-  
+
   return (geometry()->
-          toGlobal(HepPoint3D(localPoint.x(), 
-                              localPoint.y()+sign*m_detPlaneVertEdge, 
+          toGlobal(HepPoint3D(localPoint.x(),
+                              localPoint.y()+sign*m_detPlaneVertEdge,
                               localPoint.z() + m_detPlaneZ )));
 }
 //============================================================================

@@ -1,4 +1,16 @@
-// $Id: DeRichRadiator.cpp,v 1.5 2003-12-03 17:46:48 papanest Exp $
+
+/** @file DeRichRadiator.cpp
+ *
+ *  Implementation file for detector description class : DeRichRadiator
+ *
+ *  CVS Log :-
+ *  $Id: DeRichRadiator.cpp,v 1.6 2004-07-27 08:55:23 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
 #define DERICHRADIATOR_CPP
 
 // Include files
@@ -17,11 +29,6 @@
 #include "DetDesc/SolidBoolean.h"
 #include "DetDesc/SolidTrd.h"
 
-
-//----------------------------------------------------------------------------
-//
-// Implementation of class :  DeRichRadiator
-//
 //----------------------------------------------------------------------------
 
 StatusCode DeRichRadiator::initialize() {

@@ -1,6 +1,18 @@
-// $Id: DeRich.h,v 1.5 2004-07-22 10:49:54 papanest Exp $
-#ifndef DERICH_H
-#define DERICH_H 1
+
+/** @file DeRich.h
+ *
+ *  Header file for detector description class : DeRich
+ *
+ *  CVS Log :-
+ *  $Id: DeRich.h,v 1.6 2004-07-27 08:55:22 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
+#ifndef RICHDET_DERICH_H
+#define RICHDET_DERICH_H 1
 
 // DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -23,10 +35,13 @@
  *  @date   2004-06-18
  */
 namespace DeRichLocation {
-  /// Rich1 location
+
+  /// Rich1 location in transient detector store
   static const std::string& Rich1 = "/dd/Structure/LHCb/Rich1";
-  /// Rich2 location
+
+  /// Rich2 location in transient detector store
   static const std::string& Rich2 = "/dd/Structure/LHCb/Rich2";
+
 }
 
 /** @class DeRich DeRich.h
@@ -159,4 +174,4 @@ protected:
 
 };
 
-#endif    // DERICH_H
+#endif    // RICHDET_DERICH_H

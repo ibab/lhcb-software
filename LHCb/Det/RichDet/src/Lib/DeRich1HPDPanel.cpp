@@ -1,4 +1,16 @@
-// $Id: DeRich1HPDPanel.cpp,v 1.13 2004-02-16 14:11:53 papanest Exp $
+
+/** @file DeRich1HPDPanel.cpp
+ *
+ *  Implementation file for detector description class : DeRich1HPDPanel
+ *
+ *  CVS Log :-
+ *  $Id: DeRich1HPDPanel.cpp,v 1.14 2004-07-27 08:55:23 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
 #define DERICH1HPDPANEL_CPP
 
 // Include files
@@ -16,12 +28,6 @@
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidSphere.h"
 
-
-
-//----------------------------------------------------------------------------
-//
-// Implementation of class :  DeRich1HPDPanel
-//
 //----------------------------------------------------------------------------
 
 const CLID& CLID_DeRich1HPDPanel = 12011;  // User defined
@@ -52,9 +58,9 @@ StatusCode DeRich1HPDPanel::initialize() {
       << m_rowPitch << endreq;
 
   if (fabs(m_rowPitch) < m_activeRadius*2) {
-    log << MSG::WARNING << "The active area is bigger by:" 
+    log << MSG::WARNING << "The active area is bigger by:"
         << (m_activeRadius*2 - fabs(m_rowPitch))/mm
-        << " mm than the row pitch.  There could be loss of photons" 
+        << " mm than the row pitch.  There could be loss of photons"
         << endreq;
   }
 
@@ -71,12 +77,12 @@ StatusCode DeRich1HPDPanel::initialize() {
   //get the Vertical Edge for the two types of columns
   //numbers start at 0
   m_panelVerticalEdge = m_HPD0Centre.y() - 0.5*m_rowPitch;
-      
+
   m_detPlaneVertEdge = fabs(m_panelVerticalEdge);
 
   log << MSG::DEBUG <<"panelHorizEdgeEven:"<< m_panelHorizEdgeEven
       << " panelHorizEdgeOdd:" << m_panelHorizEdgeOdd
-      << " panelVerticalEdge:" << m_panelVerticalEdge 
+      << " panelVerticalEdge:" << m_panelVerticalEdge
       << " m_detPlaneHorizEdge:" << m_detPlaneHorizEdge
       << endreq;
 
@@ -88,28 +94,28 @@ StatusCode DeRich1HPDPanel::initialize() {
 // ===========================================================================
 
 bool DeRich1HPDPanel::findHPDRowCol (const HepPoint3D& inPanel,
-                                          RichSmartID& id)
+                                     RichSmartID& id)
 {
 
-  unsigned int HPDRow = 
+  unsigned int HPDRow =
     static_cast<unsigned int>(floor((inPanel.y() - m_panelVerticalEdge) /
                                     m_rowPitch));
-  
+
   if (HPDRow >= m_HPDRows) return false;
   id.setPDRow( HPDRow );
-  
+
   unsigned int HPDColumn = 0;
   if (0 == HPDRow%2) {
-    HPDColumn = static_cast<unsigned int> 
+    HPDColumn = static_cast<unsigned int>
       (floor((inPanel.x() - m_panelHorizEdgeEven) / m_columnPitch));
   } else {
-    HPDColumn = static_cast<unsigned int> 
+    HPDColumn = static_cast<unsigned int>
       (floor((inPanel.x() - m_panelHorizEdgeOdd) / m_columnPitch));
   }
 
   if (HPDColumn >= m_HPDColumns) return false;
   id.setPDCol(HPDColumn);
-  
+
   return true;
 }
 
@@ -118,14 +124,14 @@ bool DeRich1HPDPanel::findHPDRowCol (const HepPoint3D& inPanel,
 //  convert a point from the panel to the global coodinate system
 //=========================================================================
 HepPoint3D DeRich1HPDPanel::globalPosition( const HepPoint3D& localPoint,
-                                           Rich::Side side) {
+                                            Rich::Side side) {
 
   int sign(1);
   if (side == Rich::top) sign = -1;
-  
+
   return (geometry()->
-          toGlobal(HepPoint3D(localPoint.x(), 
-                              localPoint.y()+sign*m_detPlaneVertEdge, 
+          toGlobal(HepPoint3D(localPoint.x(),
+                              localPoint.y()+sign*m_detPlaneVertEdge,
                               localPoint.z() + m_detPlaneZ )));
 }
 

@@ -1,4 +1,16 @@
-// $Id: DeRichSingleSolidRadiator.cpp,v 1.2 2004-07-01 11:02:52 papanest Exp $
+
+/** @file DeRichSingleSolidRadiator.cpp
+ *
+ *  Implementation file for detector description class : DeRichSingleSolidRadiator
+ *
+ *  CVS Log :-
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.3 2004-07-27 08:55:23 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
 #define DERICHSINGLESOLIDRADIATOR_CPP
 
 // Include files
@@ -16,11 +28,6 @@
 #include "DetDesc/SolidBoolean.h"
 #include "DetDesc/SolidTrd.h"
 
-
-//----------------------------------------------------------------------------
-//
-// Implementation of class :  DeRichSingleSolidRadiator
-//
 //----------------------------------------------------------------------------
 
 const CLID& CLID_DeRichSingleSolidRadiator = 12040;  // User defined

@@ -1,4 +1,16 @@
-// $Id: DeRich1CdfHPDPanel.h,v 1.11 2004-07-22 10:49:55 papanest Exp $
+
+/** @file DeRich1CdfHPDPanel.h
+ *
+ *  Header file for detector description class : DeRich1CdfHPDPanel
+ *
+ *  CVS Log :-
+ *  $Id: DeRich1CdfHPDPanel.h,v 1.12 2004-07-27 08:55:22 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Antonis Papanestis a.papanestis@rl.ac.uk
+ *  @date   2004-06-18
+ */
+
 #ifndef RICHDET_DERICH1CDFHPDPANEL_H
 #define RICHDET_DERICH1CDFHPDPANEL_H 1
 
