@@ -22,6 +22,7 @@ Purpose: LHCb reconstruction program
     can be recreated from RawBuffer by rerunning the clustering
   . Added intermediate directories of Digits paths, to avoid opening .digi
     file when registering Digits re-created from RawBuffer in DaVinci
+  . use POOL_1_6_3
 
 </PRE><H1><A NAME=v23r5>2004-04-15 Brunel v23r5</A></H1><PRE>
 
