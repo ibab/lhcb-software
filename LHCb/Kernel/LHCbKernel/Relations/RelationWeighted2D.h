@@ -1,8 +1,11 @@
-// $Id: RelationWeighted2D.h,v 1.8 2002-04-25 15:30:18 ibelyaev Exp $
+// $Id: RelationWeighted2D.h,v 1.9 2002-07-25 15:32:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/04/25 15:30:18  ibelyaev
+//  one more attempt to make Bill Gates happy
+//
 // Revision 1.7  2002/04/25 14:10:23  ibelyaev
 //  one more fix for Win2K
 //
@@ -73,7 +76,7 @@ public:
     : DataObject ( inv ) , Base( inv , flag ) {};
   
   /// destructor (virtual) 
-  virtual ~RelationWeighted2D() { clear() ; } ;
+  virtual ~RelationWeighted2D() {} ;
   
   /** object identification (static method) 
    *  @see DataObject 

@@ -1,8 +1,11 @@
-// $Id: RelationWeightedBase.h,v 1.4 2002-04-26 09:42:39 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.5 2002-07-25 15:32:15 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/26 09:42:39  ibelyaev
+//  reduce number of warnings for Microsoft  compiler
+//
 // Revision 1.3  2002/04/25 08:44:04  ibelyaev
 //  bug fix for Win2K
 //
@@ -425,7 +428,7 @@ namespace Relations
     { if( reserve ) { Relations::reserve( m_entries , reserve ) ; } };
     
     /// destructor (virtual)
-    virtual ~RelationWeightedBase() { i_clear(); }
+    virtual ~RelationWeightedBase() {} ;
     
     /** copy constructor 
      *  @param copy object to be copied 

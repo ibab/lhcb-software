@@ -1,8 +1,11 @@
-// $Id: Relation.h,v 1.3 2002-06-18 16:46:40 ibelyaev Exp $
+// $Id: Relation.h,v 1.4 2002-07-25 15:32:13 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/06/18 16:46:40  ibelyaev
+//  bug fix in Relations/Relation.h file
+//
 // Revision 1.2  2002/04/25 08:44:03  ibelyaev
 //  bug fix for Win2K
 //
@@ -113,7 +116,7 @@ namespace Relations
     };
     
     /// destructor (virtual)
-    virtual ~Relation(){ clear() ; };
+    virtual ~Relation(){};
     
     /** retrive all relations from the object
      *

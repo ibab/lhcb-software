@@ -1,8 +1,11 @@
-// $Id: Relation1D.h,v 1.7 2002-04-25 15:30:18 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.8 2002-07-25 15:32:14 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/04/25 15:30:18  ibelyaev
+//  one more attempt to make Bill Gates happy
+//
 // Revision 1.6  2002/04/25 14:10:13  ibelyaev
 //  one more fix for Win2K
 //
@@ -91,7 +94,7 @@ public:
     : DataObject () , Base( inv  , flag ) {};
   
   /// destructor (virtual)
-  virtual ~Relation1D(){ clear() ; };
+  virtual ~Relation1D() {} ;
   
   /** object identification (static method)
    *  @see DataObject

@@ -1,8 +1,11 @@
-// $Id: RelationBase.h,v 1.5 2002-04-26 09:42:38 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.6 2002-07-25 15:32:14 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/04/26 09:42:38  ibelyaev
+//  reduce number of warnings for Microsoft  compiler
+//
 // Revision 1.4  2002/04/26 09:22:24  ibelyaev
 //  reduce number of warnings for Microsoft  compiler
 //
@@ -254,7 +257,7 @@ namespace Relations
     { if( reserve ) { Relations::reserve( m_entries , reserve ) ; } ; };
     
     /// destructor (virtual)
-    virtual ~RelationBase() { m_entries.clear(); }
+    virtual ~RelationBase() {} ;
     
     /** copy constructor
      *  @param copy object to be copied  

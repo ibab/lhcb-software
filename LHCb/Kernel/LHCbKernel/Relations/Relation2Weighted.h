@@ -1,8 +1,11 @@
-// $Id: Relation2Weighted.h,v 1.2 2002-04-25 08:44:04 ibelyaev Exp $
+// $Id: Relation2Weighted.h,v 1.3 2002-07-25 15:32:14 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/25 08:44:04  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.1  2002/04/03 15:35:18  ibelyaev
 // essential update and redesing of all 'Relations' stuff
 //
@@ -125,7 +128,7 @@ namespace Relations
     };
     
     /// destructor (virtual)
-    virtual ~Relation2Weighted() { clear() ; }
+    virtual ~Relation2Weighted() {} ;
     
     /** query the interface
      *  @see    IRelation

@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.7 2002-04-25 15:30:18 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.8 2002-07-25 15:32:14 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/04/25 15:30:18  ibelyaev
+//  one more attempt to make Bill Gates happy
+//
 // Revision 1.6  2002/04/25 14:10:16  ibelyaev
 //  one more fix for Win2K
 //
@@ -71,7 +74,7 @@ public:
     : DataObject ( inv ) , Base( inv , flag ) {};
   
   /// destructor (virtual) 
-  virtual ~Relation2D() { clear() ; } ;
+  virtual ~Relation2D() {} ;
   
   /** object identification (static method) 
    *  @see DataObject 
