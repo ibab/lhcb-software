@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.19 2002-12-07 21:13:48 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.20 2003-01-23 10:06:30 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.19  2002/12/07 21:13:48  ibelyaev
+//  bug fix and small CPU performace optimization
+//
 //  ===========================================================================
 #define GIGACNV_GIGAMCPARTICLECNV_CPP 1 
 // ============================================================================
@@ -214,6 +217,7 @@ StatusCode GiGaMCParticleCnv::updateObj
       GiGaCnvFunctors::Trajectory2Particle Cnv( ppSvc() );
       // perform the conversion itself
       TrajectoryVector* tv = trajectories->GetVector();
+      
       for(TrajectoryVector::const_iterator iTr = tv->begin(); tv->end() != iTr;
           ++iTr ) 
         {
@@ -224,6 +228,13 @@ StatusCode GiGaMCParticleCnv::updateObj
           const int index = trajectory->trackID() ;
           particles -> insert( mcp );
           table( index )  = GiGaKineRefTableEntry( mcp , index );
+          cout << "Converted track " << trajectory->trackID()
+               << " with " << trajectory->GetPointEntries()
+               << " points, to " << mcp->particleID() << " with energy " 
+               << mcp->momentum().e()
+               << " motherID: " << trajectory->parentID() 
+               << endl;
+          
         }
     }
   catch( const GaudiException& Excp )
@@ -301,51 +312,76 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
   GiGaCnvFunctors::MCVerticesLess  Less  ; 
   GiGaCnvFunctors::MCVerticesEqual Equal ;
   MCVertices::iterator iVertex     = vertices     -> begin();
-  TrajectoryVector* tv = trajectories->GetVector();
-  for( ITC iTrajectory = tv->begin(); tv->end() != iTrajectory ; ++iTrajectory )
+
+  // new version by WP
+
+  // loop over all vertices created by GiGaMCVertexCnv
+  for(iVertex=vertices->begin();vertices->end()!=iVertex;++iVertex)
     {
-      const G4VTrajectory* vt = *iTrajectory ;
-      if( 0 == vt       ) { return Error("G4VTrajectory* points to NULL" ) ; } 
-      const GiGaTrajectory*  trajectory = gigaTrajectory( vt ) ; 
-      if( 0 == trajectory ) 
-        { return Error("G4VTrajectory*(of type '" + 
-                       GiGaUtil::ObjTypeName(vt)+ 
-                       "*') could not be cast to GiGaTrajectory*");}
-      MCParticle* particle = table( trajectory->trackID() ).particle() ;
-      if( 0 == particle ) { return Error("MCParticle* points to NULL!"   ) ; } 
-      for( ITG iPoint = trajectory->begin() ; 
-           trajectory->end() != iPoint ; ++iPoint )
+      // check if there exist mother particle for the vertex
+      // if yes add this vertex to EnvVertices of the mother
+      if ((*iVertex)->mother())
         {
-          if( 0 == *iPoint ) 
-            { return Error("GiGaTrajectoryPoint* points to NULL!" ) ; } 
-          // auxillary vertex 
-          miscVertex.setPosition    ( (*iPoint)->GetPosition() );
-          miscVertex.setTimeOfFlight( (*iPoint)->GetTime    () );
-          // look for vertex 
-          iVertex = 
-            std::lower_bound( trajectory -> begin () == iPoint             ? 
-                              vertices   -> begin () : iVertex             , 
-                              vertices   -> end   () , &miscVertex , Less  ) ;
-          // vertex is not found! 
-          if ( vertices->end() == iVertex || !Equal( &miscVertex , *iVertex ) ) 
-            {  return Error(" appropriate MCVertex is not found!") ; }
-          MCVertex* Vertex = *iVertex ;             
-          if( 0 == Vertex ) { return Error("MCVertex* points to NULL!") ; }
-          //  it is not the first vertex of the trajectory
-          if ( trajectory->begin  () != iPoint )           
-            { 
-              Ref decay( particle , refID , Vertex->key() , Vertex  ) ;
-              particle->addToEndVertices ( decay ) ; 
-            } 
-          // the first vertex and origin is not yet set   
-          else if ( !particle->originVertex() )    
-            {  
-              Ref origin( particle , refID , Vertex->key() , Vertex ) ;
-              particle->setOriginVertex( origin ) ;
-            } 
-          else { return Error("'OriginVertex' is already set!") ; }
+          Ref decay( (*iVertex)->mother(), refID, (*iVertex)->key(), *iVertex);
+          ((*iVertex)->mother())->addToEndVertices( decay );
         }
-    } 
+
+      // look at the products of the vertex (outgoing particles)      
+      SmartRefVector<MCParticle>& daughters = (*iVertex)->products();
+      SmartRefVector<MCParticle>::iterator idau;
+      for ( idau   = daughters.begin(); idau != daughters.end(); idau++)
+      {
+        // for each outgoing particle set this vertex to be OriginVertex
+        Ref prod( (*idau), refID , (*iVertex)->key() , *iVertex  ) ;
+        (*idau)->setOriginVertex( prod ) ;
+      }      
+    }
+
+//TrajectoryVector* tv = trajectories->GetVector();
+//for( ITC iTrajectory = tv->begin(); tv->end() != iTrajectory ; ++iTrajectory )
+//{
+//const G4VTrajectory* vt = *iTrajectory ;
+//if( 0 == vt       ) { return Error("G4VTrajectory* points to NULL" ) ; } 
+//const GiGaTrajectory*  trajectory = gigaTrajectory( vt ) ; 
+//    if( 0 == trajectory ) 
+//         { return Error("G4VTrajectory*(of type '" + 
+//                        GiGaUtil::ObjTypeName(vt)+
+//                        "*') could not be cast to GiGaTrajectory*");}
+//     MCParticle* particle = table( trajectory->trackID() ).particle() ;
+//     if( 0 == particle ) { return Error("MCParticle* points to NULL!"   ) ; } 
+//     for( ITG iPoint = trajectory->begin() ; 
+//            trajectory->end() != iPoint ; ++iPoint )
+//         {
+//           if( 0 == *iPoint ) 
+//             { return Error("GiGaTrajectoryPoint* points to NULL!" ) ; } 
+//           // auxillary vertex 
+//           miscVertex.setPosition    ( (*iPoint)->GetPosition() );
+//           miscVertex.setTimeOfFlight( (*iPoint)->GetTime    () );
+//           // look for vertex 
+//           iVertex = 
+//           std::lower_bound( trajectory -> begin () == iPoint             ?
+//                             vertices   -> begin () : iVertex             , 
+//                           vertices   -> end   () , &miscVertex , Less  ) ;
+//           // vertex is not found! 
+//      if ( vertices->end() == iVertex || !Equal( &miscVertex , *iVertex ) ) 
+//          {  return Error(" appropriate MCVertex is not found!") ; }
+//           MCVertex* Vertex = *iVertex ;             
+//           if( 0 == Vertex ) { return Error("MCVertex* points to NULL!") ; }
+//           //  it is not the first vertex of the trajectory
+//           if ( trajectory->begin  () != iPoint )           
+//             { 
+//               Ref decay( particle , refID , Vertex->key() , Vertex  ) ;
+//               particle->addToEndVertices ( decay ) ; 
+//             } 
+//           // the first vertex and origin is not yet set   
+//           else if ( !particle->originVertex() )    
+//             {  
+//               Ref origin( particle , refID , Vertex->key() , Vertex ) ;
+//               particle->setOriginVertex( origin ) ;
+//             } 
+//           else { return Error("'OriginVertex' is already set!") ; }
+//         }
+//     } 
   ///
   return StatusCode::SUCCESS;
   ///

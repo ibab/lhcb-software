@@ -1,14 +1,18 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.19 2002-12-07 21:13:49 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.20 2003-01-23 10:06:30 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.19  2002/12/07 21:13:49  ibelyaev
+//  bug fix and small CPU performace optimization
+//
 //  ===========================================================================
 #define GIGACNV_GIGAMCVERTEXCNV_CPP 1 
 // ============================================================================
 // STL 
 #include <string>
 #include <vector>
+#include <map>
 #include <algorithm>
 #include <numeric>
 #include <functional>
@@ -79,7 +83,10 @@ GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator )
 // ============================================================================
 // destructor 
 // ============================================================================
-GiGaMCVertexCnv::~GiGaMCVertexCnv(){}; 
+GiGaMCVertexCnv::~GiGaMCVertexCnv()
+{
+  m_onepointIDs.clear();
+}; 
 
 // ============================================================================
 // Class ID 
@@ -230,6 +237,10 @@ StatusCode GiGaMCVertexCnv::updateObj
     GiGaCnvFunctors::Point2Vertex Cnv;
     // convert points into vertices 
     typedef TrajectoryVector::const_iterator IT;
+
+    // clear the vector of "one-point" trajectories
+    m_onepointIDs.clear();
+    
     for( IT iTr = trajectories->GetVector()->begin() ; 
          trajectories->GetVector()->end() != iTr ; ++iTr ) 
       {
@@ -241,6 +252,22 @@ StatusCode GiGaMCVertexCnv::updateObj
           { return Error("G4VTrajectory*(of type '"  + 
                          GiGaUtil::ObjTypeName( vt ) + 
                          "*') could not be cast to GiGaTrajectory*"  ) ; }
+  
+        // check if the trajectory contains only 1 point
+        // if yes, store it in the map, together with 
+        // the pointer to the TrajectoryPoint
+        if (trajectory->GetPointEntries()==1)
+          {
+            GiGaTrajectoryPoint* point = 
+              dynamic_cast<GiGaTrajectoryPoint*> ( trajectory->GetPoint(0) );
+
+            m_onepointIDs[trajectory->trackID()] = point;
+            cout << "Found trajectory with one point " << trajectory->trackID() 
+                 << " mother trID " << trajectory->parentID() << endl;
+            
+
+          }
+        
         for (GiGaTrajectory::const_iterator ittr=trajectory->begin(); 
              ittr!=trajectory->end();++ittr)
           { vertices->insert( Cnv( *ittr ) ); }
@@ -349,6 +376,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
     GiGaKineRefTable& table = kineSvc()->table();
     TrajectoryVector* tv = trajectories->GetVector();
     ITV iVertex     = vertices     -> begin() ;
+
     for(ITT iTrajectory = tv->begin(); tv->end() != iTrajectory; ++iTrajectory )
       {
         const G4VTrajectory* vt = *iTrajectory ;
@@ -358,11 +386,14 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
           { return Error("G4VTrajectory*(of type '" + 
                          GiGaUtil::ObjTypeName( vt ) + 
                          "*') could not be cast to GiGaTrajectory*" ) ; }
-        // own    MCParticle 
-        MCParticle* particle  = table( trajectory->trackID() ).particle();
+        // own MCParticle 
+        int trid=trajectory->trackID();
+        MCParticle* particle  = table( trid ).particle();
         if( 0 == particle ) { return Error("MCParticle* points to NULL!" ) ; } 
+
         // index of mother 
-        GiGaKineRefTableEntry& entry = table( trajectory->parentID() ) ;
+        int parid=trajectory->parentID();
+        GiGaKineRefTableEntry& entry = table( parid ) ;
         // mother MCParticle (could be NULL!)
         MCParticle* mother  = entry.particle () ;
         // loop over trajectory points (vertices)  
@@ -388,9 +419,17 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
             // is it the first vertex for track?
             if ( trajectory->begin() == iPoint ) 
               {
-                // add daughter particle to the vertex 
-                Ref dau( vertex , refID , particle->key() , particle );
-                vertex->addToProducts( dau) ; 
+                // is the parent a trajectory with only one point?
+                // if yes do not attach the particle to the vertex
+                // it will be treated later (an additional vertex
+                // will need to be created first)
+                if(m_onepointIDs.end()==m_onepointIDs.find(parid))
+                  {
+                    // add daughter particle to the vertex 
+                    Ref dau( vertex , refID , particle->key() , particle );
+                    vertex->addToProducts( dau) ;
+                  }
+                
                 // mother is known ?            
                 if ( !vertex->mother() && 0 != mother )
                   { 
@@ -410,7 +449,56 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
 	    
           } // end loop over points 
       } // end loop over trajectories
-  } // end end of relations scope 
+
+    // now loop through the trajectories which were attached to problematic 
+    // particles (i.e. to trajectories with one point only)
+    
+    for (  std::map<int, GiGaTrajectoryPoint*, less<int> >::iterator 
+             miter=m_onepointIDs.begin(); 
+           m_onepointIDs.end()!=miter; ++miter)
+      {
+        // to look at later  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        // should I check if it has any daughters? 
+
+        int mytrid=(*miter).first;
+        
+        // look for the corresponding MCParticle
+        MCParticle* mcpart  = table( mytrid ).particle();
+        
+        // create a new end vertex and set (x,t)        
+        SmartRef<MCVertex> endvtx= new MCVertex();
+        GiGaTrajectoryPoint* point=(*miter).second;
+        
+        endvtx->setPosition(point->GetPosition());
+        endvtx->setTimeOfFlight(point->GetTime());
+        
+        // add the new vertex to the container
+        vertices->insert( endvtx ); 
+        
+        // set mother of the new vertex
+        Ref moth( endvtx , refID , mcpart->key() , mcpart );
+        endvtx->setMother( moth ) ;             
+        
+        // look through the trajectories, find particles that should 
+        // be outgoing from the new vertex and attach them
+        // unfortunately a loop over trajectories, due to lack of 
+        // a pointer to "daughter trajectory"        
+
+        for(ITT itra=tv->begin(); tv->end() != itra; ++itra)
+          {
+            if ((*itra)->GetParentID()==mytrid)
+              {
+                MCParticle* outpart=table((*itra)->
+                                          GetTrackID() ).particle();
+                
+                Ref dau( endvtx , refID , outpart->key() , outpart );
+                
+                endvtx->addToProducts(dau);
+                
+              }
+          }
+      }
+  } // end end of relations scope
   //
   return StatusCode::SUCCESS; 
 };

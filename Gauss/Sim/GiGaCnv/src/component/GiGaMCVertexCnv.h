@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.h,v 1.6 2002-05-02 11:57:03 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.h,v 1.7 2003-01-23 10:06:30 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/05/02 11:57:03  ibelyaev
+//  cleanup of header files
+//
 // ============================================================================
 #ifndef GIGACNV_GIGAMCVERTEXCNV_H
 #define GIGACNV_GIGAMCVERTEXCNV_H 1 
@@ -130,6 +133,12 @@ private:
 private:
 
   GiGaLeaf m_leaf;
+
+  // map containing IDs of problematic trajectories with only one point
+
+  //  std::vector<int> m_onepointIDs;
+  std::map<int, GiGaTrajectoryPoint*, less<int> > m_onepointIDs;
+
   
 };
 
