@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.14 2004-02-03 14:15:26 jonesc Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.15 2004-02-03 14:15:57 jonesc Exp $
 // Include files
 
 // local
@@ -432,7 +432,7 @@ double RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
       double oldSig = (*iPixel)->currentBackground();
       double newSig = oldSig;
 
-      // cache end point size container size will not change in proceeding loop
+      // cache end point since container size will not change in proceeding loop
       const RichRecPixel::Photons::iterator iPhotonEnd = photons.end(); 
       for ( RichRecPixel::Photons::const_iterator iPhoton = photons.begin();
             iPhoton != iPhotonEnd; ++iPhoton ) {
