@@ -4,6 +4,8 @@
 <!ENTITY Particle.xml         SYSTEM "Particle.xml"        >
 <!ENTITY Vertex.xml           SYSTEM "Vertex.xml"          >
 
+<!ENTITY PrimVertex.xml       SYSTEM "PrimVertex.xml"      >
+
 <!ENTITY PhysSelDecay.xml     SYSTEM "PhysSelDecay.xml"    >
 <!ENTITY PhysSel.xml          SYSTEM "PhysSel.xml"         >
 
@@ -22,6 +24,7 @@
     <!-- Basic classes -->
     &Particle.xml;
     &Vertex.xml;
+    &PrimVertex.xml;
     
     <!-- High Level classes -->
     &PhysSelDecay.xml;

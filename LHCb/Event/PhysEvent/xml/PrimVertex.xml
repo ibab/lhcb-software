@@ -1,0 +1,19 @@
+<!-- ****************************************************************
+     * PrimVertex                                                   *
+     ****************************************************************-->
+
+     <class 
+      author="Gloria Corti"
+      desc="Physics analysis Primary Vertex. Inherits from Vertex plus TrTracks information"
+      name="PrimVertex"
+      id="804"
+     >
+       <base name="Vertex"/>
+       <import name="Event/TrStoredTrack" soft="TRUE"/>
+       <relation
+        name="tracks"
+        desc="Reference to tracks composing the vertex"
+        multiplicity="N"
+        type="TrStoredTrack"
+       />
+     </class>
