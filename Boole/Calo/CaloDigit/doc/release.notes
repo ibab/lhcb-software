@@ -4,6 +4,7 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================= CaloDigit v1r2p1 2003-06-23 =======================
 ! 2003-06-23 - Olivier Callot
  - Adaptation to gcc 3.2, few technicalities, no expected effect.
 
