@@ -1,8 +1,11 @@
-// $Id: RelationWeighted1D.h,v 1.9 2003-01-17 14:07:02 sponce Exp $
+// $Id: RelationWeighted1D.h,v 1.10 2003-06-16 13:27:54 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/01/17 14:07:02  sponce
+// support for gcc 3.2
+//
 // Revision 1.8  2002/07/25 15:32:15  ibelyaev
 //  bug fix in destructors of relation objects
 //
@@ -58,21 +61,21 @@ public:
   
   /// the standard/default constructor
   RelationWeighted1D ( const size_t reserve = 0 ) 
-    : DataObject     () , Base ( reserve ) {};
+    : IBase(), Base (reserve), DataObject() {};
   
   /** constructor from inverse object 
    *  @param inv relation object to be inverted 
    *  @param flag artificial argument to distinguish from copy constructor 
    */
   RelationWeighted1D( const InvType& inv , int flag ) 
-    : DataObject( inv ) , Base( inv , flag ) {};
+    : IBase(), Base( inv , flag ), DataObject( inv ) {};
 
   /** constructor from inverse interface
    *  @param inv relation object to be inverted 
    *  @param flag artificial argument to distinguish from copy constructor 
    */
   RelationWeighted1D( const typename IBase::InverseType & inv , int flag ) 
-    : DataObject() , Base( inv , flag ) {};
+    : IBase(), Base( inv , flag ), DataObject() {};
 
   /// destructor (virtual)
   virtual ~RelationWeighted1D (){};

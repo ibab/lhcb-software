@@ -1,8 +1,11 @@
-// $Id: CaloHashMap.h,v 1.3 2002-04-27 15:31:02 ibelyaev Exp $
+// $Id: CaloHashMap.h,v 1.4 2003-06-16 13:27:54 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/27 15:31:02  ibelyaev
+//  add CaloHash.h for efficient hashing on Win32 platform
+//
 // Revision 1.2  2002/04/22 16:57:18  ibelyaev
 //  new files to eliminate the dependency of 'Event' on 'Calo'
 //
@@ -18,7 +21,13 @@
 #include "Kernel/CaloHash.h"
 #include <vector>            
 #else 
-#include <hash_map>                // STD & STL   (except for Visual-C Win32)
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
+#include <hash_map>
+using std::hash_map;
+#else
+#include <ext/hash_map>
+using __gnu_cxx::hash_map;
+#endif
 #endif 
 
 /** @class CaloHashMap CaloHashMap.h Kernel/CaloHashMap.h
@@ -55,18 +64,18 @@ public:
   /** the  map itself
    *  @warning the actual type is platform-dependent!
    */
-  typedef  std::hash_map<Key,Value> Map      ;
+  typedef  hash_map<Key,Value> Map      ;
 #endif
   
   /** the type of iterator 
    *  @warning the actual type is platform-dependent!
    */
-  typedef  Map::iterator            iterator       ;
+  typedef  typename Map::iterator iterator;
   
   /** the type of const_iterator 
    *  @warning the actual type is platform-dependent!
    */
-  typedef  Map::const_iterator      const_iterator ;
+  typedef  typename Map::const_iterator const_iterator ;
   
 public:
   
@@ -124,7 +133,7 @@ public:
     for( Keys::const_iterator ikey = m_keys.begin() ; 
          m_keys.end() != ikey ; ++ikey ) { m_map.remove( *ikey  ) ; }
     m_keys.clear();
-#endif;
+#endif
   };
   
   /** erase the sequence from the map
@@ -138,7 +147,7 @@ public:
     m_map.erase  ( it        ); 
 #else 
     m_map.remove ( it->first );
-#endif;
+#endif
   };
   
   /** remove/erase element from the map (by key) 
@@ -166,22 +175,22 @@ public:
   /** iterator for sequential access to the content of the "map"
    *  @return begin-iterator (non-const version) 
    */
-  Map::iterator       begin ()       { return m_map.begin () ; }
+  typename Map::iterator begin ()       { return m_map.begin () ; }
 
   /** iterator for sequential access to the content of the "map"
    *  @return begin-iterator (const version) 
    */
-  Map::const_iterator begin () const { return m_map.begin () ; }
+  typename Map::const_iterator begin () const { return m_map.begin () ; }
 
   /** iterator for sequential access to the content of the "map"
    *  @return end-iterator (non-const version) 
    */
-  Map::iterator       end   ()       { return m_map.end   () ; }
+  typename Map::iterator end() { return m_map.end   () ; }
 
   /** iterator for sequential access to the content of the "map"
    *  @return end-iterator (const version) 
    */
-  Map::const_iterator end   () const { return m_map.end   () ; }
+  typename Map::const_iterator end() const { return m_map.end   () ; }
 
 private:
 

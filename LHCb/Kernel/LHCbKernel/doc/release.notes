@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2003-06-16 - Sebastien Ponce
+ - fixes for gcc 3.2/3.3
+
 !======================= LHCbKernel v2r7 2003-05-30 =======================
 ! 2003-05-30 - Marco Cattaneo
  - Move BrunelPhase to this package from Rec/BrunelKernel, renamed ProcessPhase

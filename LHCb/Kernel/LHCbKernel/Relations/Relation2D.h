@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.9 2003-01-17 14:07:01 sponce Exp $
+// $Id: Relation2D.h,v 1.10 2003-06-16 13:27:54 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/01/17 14:07:01  sponce
+// support for gcc 3.2
+//
 // Revision 1.8  2002/07/25 15:32:14  ibelyaev
 //  bug fix in destructors of relation objects
 //
@@ -66,7 +69,7 @@ public:
    *  @param reserve the map-size to be preallocated
    */
   Relation2D ( const size_t reserve  = 0 ) 
-    : DataObject () , Base ( reserve ) {};
+    : IBase(), Base ( reserve ), DataObject () {};
   
   /** constructor from the inverse type!
    *  @attention it is the way to "invert" all relations!
@@ -74,7 +77,7 @@ public:
    *  @param flag artificial argument to invert the relations 
    */
   Relation2D ( const InvType& inv , int flag ) 
-    : DataObject ( inv ) , Base( inv , flag ) {};
+    : IBase(), Base( inv , flag ), DataObject ( inv ) {};
   
   /// destructor (virtual) 
   virtual ~Relation2D() {} ;

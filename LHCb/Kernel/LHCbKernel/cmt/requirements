@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.35 2003-01-17 14:07:02 sponce Exp $
+# $Id: requirements,v 1.36 2003-06-16 13:27:54 sponce Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -11,7 +11,7 @@ include_dirs $(LHCBKERNELROOT) $(BOOSTHOME)
 use GaudiKernel  v13r*
 use CLHEP        v*
 use BOOST        v*     -no_auto_imports
-use GaudiObjDesc v4r*   -no_auto_imports
+use GaudiObjDesc v5r*   -no_auto_imports
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================

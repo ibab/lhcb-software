@@ -1,4 +1,4 @@
-// $Id: CLHEP_dict.cpp,v 1.1 2002-05-03 11:09:14 mato Exp $
+// $Id: CLHEP_dict.cpp,v 1.2 2003-06-16 13:27:54 sponce Exp $
 #include <iostream>
 #include <string>
 
@@ -262,11 +262,11 @@ C_dict::C_dict()
   std::string retType = "double";
   
   MetaClass* meta1 = new MetaClass("HepLorentzVector", "HEP Lozentz Vector");
-  meta1->addField("px", "double", "Momentum X",&((HepLorentzVector*)0)->pp.dx);   
-  meta1->addField("py", "double", "Momentum Y",&((HepLorentzVector*)0)->pp.dy);   
-  meta1->addField("pz", "double", "Momentum Z",&((HepLorentzVector*)0)->pp.dz); 
-  meta1->addField("pp", "Hep3Vector", "Hep3Vector", &((HepLorentzVector*)0)->pp);  
-  meta1->addField("e",  "double", "Energy",    &((HepLorentzVector*)0)->ee);   
+  meta1->addField("px", "double", "Momentum X",OffsetOf(HepLorentzVector,pp.dx));   
+  meta1->addField("py", "double", "Momentum Y",OffsetOf(HepLorentzVector,pp.dy));   
+  meta1->addField("pz", "double", "Momentum Z",OffsetOf(HepLorentzVector,pp.dz)); 
+  meta1->addField("pp", "Hep3Vector", "Hep3Vector", OffsetOf(HepLorentzVector,pp));  
+  meta1->addField("e",  "double", "Energy",    OffsetOf(HepLorentzVector,ee));   
   meta1->addMethod("theta", "Get special vector components in spherical coordinate system", retType,  Meta1_theta);
   meta1->addMethod("cosTheta", "Get special vector components in spherical coordinate system", retType,  Meta1_cosTheta);
   meta1->addMethod("phi", "Get special vector components in spherical coordinate system", retType,  Meta1_phi);
@@ -290,13 +290,13 @@ C_dict::C_dict()
   meta2->addMethod("z", "Z-Component in cartesian coordinate system", retType,  Meta2_z);
   
   MetaClass* meta3 = new MetaClass("HepSymMatrix", "Hep Symetric Matrix");
-  meta3->addField("nrow", "int", "Number of rows",&((HepSymMatrix*)0)->nrow);   
-  meta3->addField("size", "int", "Total size",&((HepSymMatrix*)0)->size);
+  meta3->addField("nrow", "int", "Number of rows",OffsetOf(HepSymMatrix, nrow));   
+  meta3->addField("size", "int", "Total size",OffsetOf(HepSymMatrix, size));
 
   MetaClass* meta4 = new MetaClass("Hep3Vector", "general 3 vector class");
-  meta4->addField("dx", "double", "X", &((Hep3Vector*)0)->dx);
-  meta4->addField("dy", "double", "Y", &((Hep3Vector*)0)->dy);
-  meta4->addField("dz", "double", "Z", &((Hep3Vector*)0)->dz);
+  meta4->addField("dx", "double", "X", OffsetOf(Hep3Vector, dx));
+  meta4->addField("dy", "double", "Y", OffsetOf(Hep3Vector, dy));
+  meta4->addField("dz", "double", "Z", OffsetOf(Hep3Vector, dz));
   meta4->addMethod("x", "X-Component in cartesian coordinate system", retType,  Meta4_x);
   meta4->addMethod("y", "Y-Component in cartesian coordinate system", retType,  Meta4_y);
   meta4->addMethod("z", "Z-Component in cartesian coordinate system", retType,  Meta4_z);
