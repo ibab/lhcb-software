@@ -1,0 +1,27 @@
+package PhysEvent
+version v1
+
+branches PhysEvent cmt doc src
+
+use LHCbEvent v11* Event
+
+include_dirs $(PHYSEVENTROOT)
+
+# static library
+library PhysEventLib -no_share ../src/PhysSelDecay.cpp \
+                               ../src/PhysSel.cpp
+
+# component library
+library PhysEvent  ../src/PhysEvent_dll.cpp \
+                   ../src/PhysEvent_load.cpp
+
+apply_pattern package_Llinkopts
+macro         PhysEvent_stamps "$(PhysEventDir)/PhysEventLib.stamp"
+
+apply_pattern packageShr
+
+#============================================================================
+private
+
+apply_pattern package_Cshlibflags
+macro_prepend PhysEventLib_shlibflags " $(LHCbEvent_linkopts) $(GaudiKernel_linkopts)"

@@ -1,0 +1,15 @@
+! $Id: release.notes,v 1.1.1.1 2001-07-09 09:23:58 gcorti Exp $
+! Package     : PhysEvent 
+! Responsible : Gloria Corti
+
+! ======================================================================
+
+! 09072001 - PhysEvent v1 (GCorti)
+  First release of the package.
+  This package is foreseen to contain the event data model for physics
+  analysis. 
+  This first release contains a generic Physis Event class (PhysEvent)
+  a generic vertex class (VtxCandidate), and two classes to hold results
+  of the Physics Analysis Selection Algorithms (AxSel and AxSelDecay)
+  
+! ======================================================================
