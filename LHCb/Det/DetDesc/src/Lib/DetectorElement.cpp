@@ -1,28 +1,30 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/DetectorElement.cpp,v 1.8 2001-07-02 14:11:02 sponce Exp $
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #include "GaudiKernel/Kernel.h"
-
-#include "DetDesc/IGeometryInfo.h"
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IMessageSvc.h"
-
 #include "GaudiKernel/TimePoint.h" 
 #include "GaudiKernel/TransientStore.h" 
 #include "GaudiKernel/ObjectFactory.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/Bootstrap.h"
-
-
+///
+#include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/DetectorElement.h"
-
-
 /// local !!!
-#include "GeometryInfo.h"
+#include "GeoInfo.h"
 
+/** @file DetectorElement.cpp
+ *  
+ * Implementation of class DetectorElement
+ * @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ * @date xx/xx/xxxx
+ */
 
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 DetectorElement::DetectorElement( const std::string&   name        ,
                                   const ITime&         validSince  ,   
                                   const ITime&         validTill   )
@@ -50,7 +52,8 @@ DetectorElement::DetectorElement( const std::string&   name        ,
   m_de_validTill  = new(std::nothrow) TimePoint( validTill  ) ; 
   ///
   m_de_svcLoc = Gaudi::svcLocator(); 
-  if( 0 == svcLoc() ) { throw DetectorElementException("DetectorElement(1), ISvcLocator* points to NULL!"); }
+  if( 0 == svcLoc() ) 
+    { throw DetectorElementException("ISvcLocator* points to NULL!"); }
   svcLoc()->addRef();
   ///
   {  
@@ -69,7 +72,7 @@ DetectorElement::DetectorElement( const std::string&   name        ,
     msgSvc()->addRef();
   }
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////
 DetectorElement::DetectorElement( const std::string&   name   )
   : DataObject           (  name   )
   , m_de_iGeometry       (    0    ) 
@@ -114,7 +117,7 @@ DetectorElement::DetectorElement( const std::string&   name   )
     msgSvc()->addRef();
   }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////
 DetectorElement::~DetectorElement()
 {
   if( 0 != msgSvc  () ) { msgSvc  ()->release() ; m_de_msgSvc  = 0 ; }  
@@ -133,123 +136,137 @@ DetectorElement::~DetectorElement()
   //  if ( 0 != m_de_validSince    ) { delete m_de_validSince    ;  m_de_validSince    = 0 ; }
   //  if ( 0 != m_de_validTill     ) { delete m_de_validTill     ;  m_de_validTill     = 0 ; }
 };
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 bool DetectorElement::acceptInspector( IInspector* pInspector ) 
 {
   if( 0 == pInspector ) { return false; } 
   pInspector->inspectByRef( m_de_iGeometry , this , "GeometryInfo" ); 
   return DataObject::acceptInspector( pInspector ) ;
 };  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 bool DetectorElement::acceptInspector( IInspector* pInspector ) const  
 {
   if( 0 == pInspector ) { return false; } 
   pInspector->inspectByRef( m_de_iGeometry , this , "GeometryInfo" ); 
   return DataObject::acceptInspector( pInspector ) ;
 };  
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 StreamBuffer& DetectorElement::serialize( StreamBuffer& sb ) const 
 {
   DataObject::serialize( sb ) ; 
   sb << *m_de_iGeometry ;
   return sb;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 StreamBuffer& DetectorElement::serialize( StreamBuffer& sb ) 
 {
   reset() ; 
   DataObject::serialize( sb ) ; 
   if( 0 == m_de_iGeometry ) 
-    { m_de_iGeometry = new GeometryInfo( this ) ; } 
+    { m_de_iGeometry = GeoInfo::createGeometryInfo( this ) ; } 
   sb >> *m_de_iGeometry ;
   return sb;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 std::ostream& DetectorElement::printOut( std::ostream& os ) const
 { 
   os << "DetectorElement::"  << fullpath(); 
   return ( 0 == geometry() ? os : (os << "GeometryInfo::" << geometry()) ); 
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 MsgStream& DetectorElement::printOut( MsgStream& os ) const
 { 
   os << "DetectorElement::"  << fullpath(); 
   return ( 0 == geometry() ? os : (os << "GeometryInfo::" << geometry() ) );
 };
-/// reset to the initial state/////////////////////////////////////////////////////////////////////////////////////////
+/// reset to the initial state/////
 IDetectorElement* DetectorElement::reset() 
 {
   /// reset geometry
   if( 0 != geometry() ) { geometry()->reset() ;} 
-  if( m_de_childrensLoaded ) { std::for_each( childBegin() , childEnd() , std::mem_fun(&IDetectorElement::reset) );} 
+  if( m_de_childrensLoaded ) 
+    { std::for_each( childBegin() , childEnd() , 
+                     std::mem_fun(&IDetectorElement::reset) );} 
   m_de_childrensLoaded = false ; 
   m_de_childrens.clear()       ; 
   return this;  
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const IGeometryInfo* DetectorElement::createGeometryInfo()
+/////
+const IGeometryInfo* 
+DetectorElement::createGeometryInfo()
 {
   Assert( 0 == geometry() , "Could not create GHOST: Geometry already exist!" );
-  m_de_iGeometry = new GeometryInfo( this );
+  m_de_iGeometry = GeoInfo::createGeometryInfo( this );
   return geometry();
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const IGeometryInfo* DetectorElement::createGeometryInfo( const std::string& LogVol )
+/////
+const IGeometryInfo* 
+DetectorElement::createGeometryInfo( const std::string& LogVol )
 {
   Assert( 0 == geometry() , "Could not create ORPHAN: Geometry already exist!" );
-  m_de_iGeometry = new GeometryInfo( this , LogVol );
+  m_de_iGeometry = GeoInfo::createGeometryInfo( this , LogVol );
   return geometry();
 };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const IGeometryInfo* DetectorElement::createGeometryInfo( const std::string& LogVol   , 
-                                                          const std::string& Support  ,
-                                                          const std::string& NamePath )
+/////
+const IGeometryInfo* 
+DetectorElement::createGeometryInfo( const std::string& LogVol   , 
+                                     const std::string& Support  ,
+                                     const std::string& NamePath )
 {
-  Assert( 0 == geometry() , "Could not create REGULAR(1): Geometry already exist!" );
-  m_de_iGeometry = new GeometryInfo( this , LogVol , Support , NamePath );
+  Assert( 0 == geometry() , 
+          "Could not create REGULAR(1): Geometry already exist!" );
+  m_de_iGeometry = GeoInfo::createGeometryInfo( this     , 
+                                                LogVol   , 
+                                                Support  , 
+                                                NamePath );
   return geometry();
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const IGeometryInfo* DetectorElement::createGeometryInfo( const std::string           & LogVol   , 
-                                                          const std::string           & Support  ,
-                                                          const ILVolume::ReplicaPath & rPath    ) 
+//
+const IGeometryInfo* 
+DetectorElement::createGeometryInfo( const std::string           & LogVol   , 
+                                     const std::string           & Support  ,
+                                     const ILVolume::ReplicaPath & rPath    ) 
 {
-  Assert( 0 == geometry() , "Could not create REGULAR(2): Geometry already exist!" );
-  m_de_iGeometry = new GeometryInfo( this , LogVol , Support , rPath );
+  Assert( 0 == geometry() , 
+          "Could not create REGULAR(2): Geometry already exist!" );
+  m_de_iGeometry = GeoInfo::createGeometryInfo( this    , 
+                                                LogVol  , 
+                                                Support , 
+                                                rPath   );
   return geometry();
 };
-/// functions from IValidity ///////////////////////////////////////////////////////////////////////////////////////////
+/// functions from IValidity /
 const ITime&  DetectorElement::validSince ()
 {
   if ( 0 != m_de_validSince ){  setValiditySince( time_absolutepast ); }
   return *m_de_validSince; 
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 const ITime&  DetectorElement::validTill  () 
 {
   if ( 0 != m_de_validTill ) { setValidityTill( time_absolutefuture ); }
   return *m_de_validTill; 
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 void          DetectorElement::setValidity       ( const ITime& Since , 
                                                                 const ITime& Till )
 {
   setValiditySince( Since );
   setValidityTill ( Till  );
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 void          DetectorElement::setValiditySince  ( const ITime& Since ) 
 {
   if( 0 != m_de_validSince ) { delete m_de_validSince; m_de_validSince = 0 ;} 
   m_de_validSince = new(std::nothrow)  TimePoint( Since );   
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 void          DetectorElement::setValidityTill  ( const ITime& Till ) 
 {
   if( 0 != m_de_validTill ){ delete m_de_validTill; m_de_validTill = 0 ;} 
   m_de_validTill = new(std::nothrow)  TimePoint( Till );   
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 StatusCode    DetectorElement::updateValidity    ()
 {
   validSince();
@@ -259,7 +276,7 @@ StatusCode    DetectorElement::updateValidity    ()
   //
   return StatusCode::SUCCESS;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
 StatusCode DetectorElement::initialize() {
   // this is a default implementation that does nothing.
   // it is up to the user to override this in a child of DetectorElement
@@ -267,9 +284,9 @@ StatusCode DetectorElement::initialize() {
 }
 
 
-//////////////////////////////////////////////////////
+
 /// addUserParameter
-//////////////////////////////////////////////////////
+
 void DetectorElement::addUserParameter (std::string name,
                                         std::string type,
                                         std::string comment,
@@ -285,9 +302,9 @@ void DetectorElement::addUserParameter (std::string name,
   m_userParameters[name] = userParam;
 }
   
-//////////////////////////////////////////////////////
+
 /// addUserParameter
-//////////////////////////////////////////////////////
+
 void DetectorElement::addUserParameter (std::string name,
                                         std::string type,
                                         std::string comment,
@@ -304,9 +321,9 @@ void DetectorElement::addUserParameter (std::string name,
   m_userParameters[name] = userParam;
 }
   
-//////////////////////////////////////////////////////
+
 /// addUserParameter
-//////////////////////////////////////////////////////
+
 void DetectorElement::addUserParameter (std::string name,
                                         std::string type,
                                         std::string comment,
@@ -321,9 +338,9 @@ void DetectorElement::addUserParameter (std::string name,
   m_userParameters[name] = userParam;
 }
   
-//////////////////////////////////////////////////////
+
 /// addUserParameterVector
-//////////////////////////////////////////////////////
+
 void DetectorElement::addUserParameterVector (std::string name,
                                               std::string type,
                                               std::string comment,
@@ -339,9 +356,9 @@ void DetectorElement::addUserParameterVector (std::string name,
   m_userParameterVectors[name] = userParamVector;
 }
 
-//////////////////////////////////////////////////////
+
 /// addUserParameterVector
-//////////////////////////////////////////////////////
+
 void DetectorElement::addUserParameterVector (std::string name,
                                               std::string type,
                                               std::string comment,
@@ -358,9 +375,9 @@ void DetectorElement::addUserParameterVector (std::string name,
   m_userParameterVectors[name] = userParamVector;
 }
 
-//////////////////////////////////////////////////////
+
 /// addUserParameterVector
-//////////////////////////////////////////////////////
+
 void DetectorElement::addUserParameterVector (std::string name,
                                               std::string type,
                                               std::string comment,
@@ -375,9 +392,9 @@ void DetectorElement::addUserParameterVector (std::string name,
   m_userParameterVectors[name] = userParamVector;
 }
 
-//////////////////////////////////////////////////////
+
 /// userParameterType
-//////////////////////////////////////////////////////
+
 std::string DetectorElement::userParameterType (std::string name) {
   if (m_userParameters.find(name) == m_userParameters.end()) {
     throw DetectorElementException("No userParameter with this name : \""
@@ -386,9 +403,9 @@ std::string DetectorElement::userParameterType (std::string name) {
   return m_userParameters[name].type;
 }
   
-//////////////////////////////////////////////////////
+
 /// userParameterComment
-//////////////////////////////////////////////////////
+
 std::string DetectorElement::userParameterComment (std::string name) {
   if (m_userParameters.find(name) == m_userParameters.end()) {
     throw DetectorElementException("No userParameter with this name : \""
@@ -397,9 +414,9 @@ std::string DetectorElement::userParameterComment (std::string name) {
   return m_userParameters[name].comment;
 }
   
-//////////////////////////////////////////////////////
+
 /// userParameterAsString
-//////////////////////////////////////////////////////
+
 std::string DetectorElement::userParameterAsString (std::string name) {
   if (m_userParameters.find(name) == m_userParameters.end()) {
     throw DetectorElementException("No userParameter with this name : \""
@@ -408,9 +425,9 @@ std::string DetectorElement::userParameterAsString (std::string name) {
   return m_userParameters[name].value;
 }
   
-//////////////////////////////////////////////////////
+
 /// userParameterAsInt
-//////////////////////////////////////////////////////
+
 int DetectorElement::userParameterAsInt (std::string name) {
   if (m_userParameters.find(name) == m_userParameters.end()) {
     throw DetectorElementException("No userParameter with this name : \""
@@ -423,9 +440,9 @@ int DetectorElement::userParameterAsInt (std::string name) {
   return m_userParameters[name].i_value;
 }
 
-//////////////////////////////////////////////////////
+
 /// userParameterAsDouble
-//////////////////////////////////////////////////////
+
 double DetectorElement::userParameterAsDouble (std::string name) {
   if (m_userParameters.find(name) == m_userParameters.end()) {
     throw DetectorElementException("No userParameter with this name : \""
@@ -439,16 +456,16 @@ double DetectorElement::userParameterAsDouble (std::string name) {
   return m_userParameters[name].d_value;
 }
   
-//////////////////////////////////////////////////////
+
 /// userParameter
-//////////////////////////////////////////////////////
+
 double DetectorElement::userParameter (std::string name) {
   return userParameterAsDouble (name);
 }  
   
-//////////////////////////////////////////////////////
+
 /// userParameterVectorType
-//////////////////////////////////////////////////////
+
 std::string DetectorElement::userParameterVectorType (std::string name) {
   if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
     throw DetectorElementException("No userParameterVector with this name : \""
@@ -457,9 +474,9 @@ std::string DetectorElement::userParameterVectorType (std::string name) {
   return m_userParameterVectors[name].type;
 }
   
-//////////////////////////////////////////////////////
+
 /// userParameterVectorComment
-//////////////////////////////////////////////////////
+
 std::string
 DetectorElement::userParameterVectorComment (std::string name) {
   if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
@@ -469,9 +486,9 @@ DetectorElement::userParameterVectorComment (std::string name) {
   return m_userParameterVectors[name].comment;
 }
   
-//////////////////////////////////////////////////////
+
 /// userParameterVectorAsString
-//////////////////////////////////////////////////////
+
 std::vector<std::string>
 DetectorElement::userParameterVectorAsString (std::string name) {
   if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
@@ -481,9 +498,9 @@ DetectorElement::userParameterVectorAsString (std::string name) {
   return m_userParameterVectors[name].value;
 }
   
-//////////////////////////////////////////////////////
+
 /// userParameterVectorAsInt
-//////////////////////////////////////////////////////
+
 std::vector<int>
 DetectorElement::userParameterVectorAsInt (std::string name) {
   if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
@@ -497,9 +514,9 @@ DetectorElement::userParameterVectorAsInt (std::string name) {
   return m_userParameterVectors[name].i_value;
 }
 
-//////////////////////////////////////////////////////
+
 /// userParameterVectorAsDouble
-//////////////////////////////////////////////////////
+
 std::vector<double>
 DetectorElement::userParameterVectorAsDouble (std::string name) {
   if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
@@ -514,17 +531,17 @@ DetectorElement::userParameterVectorAsDouble (std::string name) {
   return m_userParameterVectors[name].d_value;
 }
 
-//////////////////////////////////////////////////////
+
 /// userParameterVector
-//////////////////////////////////////////////////////
+
 std::vector<double>
 DetectorElement::userParameterVector (std::string name) {
   return userParameterVectorAsDouble (name);
 }
 
-//////////////////////////////////////////////////////
+
 /// userParameters
-//////////////////////////////////////////////////////
+
 std::vector<std::string> DetectorElement::userParameters() {
   std::vector<std::string> result;
   for (UserParamMap::iterator it = m_userParameters.begin();
@@ -535,9 +552,9 @@ std::vector<std::string> DetectorElement::userParameters() {
   return result;
 }
    
-//////////////////////////////////////////////////////
+
 /// userParameterVectors
-//////////////////////////////////////////////////////
+
 std::vector<std::string> DetectorElement::userParameterVectors() {
   std::vector<std::string> result;
   for (UserParamVectorMap::iterator it = m_userParameterVectors.begin();
