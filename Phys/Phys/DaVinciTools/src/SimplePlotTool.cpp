@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.8 2005-01-18 10:35:58 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.9 2005-02-09 13:40:13 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -248,9 +248,9 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
       if (!sc) continue;
       if ( var == "IP" ){
         plot(ip,"IP of "+name,hmin,hmax);
-      } else if ( var == "IPs" ){
-        if (ipe>0) plot(ip/ipe,"IP/err of "+name,hmin,hmax);       
-// DPV or FS - to "best PV"
+      } else if (( var == "IPs" ) && ( pp->mass() < 5*GeV )){ // not B's
+        if (ipe>0) plot(ip/ipe,"Any IP/err of "+name,hmin,hmax);       
+// DPV or FS, or B - to "best PV"
       } else if ( (P->endVertex()) && ( ip/ipe < minip ) ) {
         minip = ip/ipe ; // new best PV
         StatusCode sc = m_geomTool->calcVertexDis(*(*iv), (*P->endVertex()), bestf ,bestfe );
@@ -262,6 +262,8 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
         plot(bestf,"PV distance of "+name,hmin,hmax);
       } else if ( var == "FS" ){
         if (bestfe>0) plot(bestf/bestfe,"Flight signif. of "+name,hmin,hmax);       
+      } else if (( var == "IPs" ) && ( pp->mass() >= 5*GeV )){
+        plot(minip,"Smallest IP/err of "+name,hmin,hmax); 
       }
     }
   // -----------------------------------------
