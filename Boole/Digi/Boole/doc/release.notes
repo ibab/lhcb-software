@@ -3,6 +3,34 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v5r3>2004-02-23 Boole v5r3</A></H1><PRE>
+
+Backwards incompatible changes to Velo geometry and VeloChannelID.
+Requires XmlDDDB v22r0 or greater
+
+>>> Temporarily remove things to be ported to new VeloDet:
+  - in Boole.opts:
+    . Remove ProcessPhase/Trigger
+    . Disable L0 and Trg in Relations phase
+    . Disable loading of L0 DLLs
+    . Disable loading of TrgTools DLL and include of L1WithTrg.opts
+    . Disable PrepareTTL1Buffer, PrepareVeloL1BufferFPGA, PrepareVeloRawBuffer
+
+  - in BooleMoni.opts
+    . Disable L0 and Trg in BrunelMoni sequence
+    . Disable Velo in BrunelMoni sequence (core dumps in event 7)
+
+  - in v200402.opts
+    . Disable writing of output file
+
+  - In requirements
+    . Disable use PuVeto, TrgTools, TrgChecker, TrgVelo, TrgVeloTT, L1Reco 
+>>>>
+
+- New functionality
+  - Changed bit definitions in VeloChannelID, and Velo station numbering
+    (XmlDDDB v22r0, VeloEvent v14r0, VeloDet v9r0, VeloAlgorithms v3r0)
+
 </PRE><H1><A NAME=v5r2>2004-02-10 Boole v5r2</A></H1><PRE>
 
 Backwards incompatible changes to TT geometry.

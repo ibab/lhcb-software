@@ -11,7 +11,8 @@
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0", "Trg" };
+//Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0", "Trg" };
+Moni.DetectorList = { "IT", "OT", "RICH", "CALO" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms

@@ -1,5 +1,5 @@
 package Boole
-version v5r2
+version v5r3
 
 branches doc cmt job options
 
@@ -40,14 +40,14 @@ use GaudiObjDesc 	v6r2p1
 use HbookCnv 		v14r1
 
 #-- Databases
-use XmlDDDB	v21r0	Det
+use XmlDDDB	v22r0	Det
 use ParamFiles	v2r1	$(LHCb_release_area)/PARAM -no_auto_imports
 use FieldMap	v4r3
 
-#-- LHCb libraries (from LHCB_v15r2)
-use LHCb	v15r2
+#-- LHCb libraries (from LHCB_v15r3)
+use LHCb	v15r3
 
-#-- BooleSys v5r2 packages
+#-- BooleSys v5r3 packages
 
 use DigiAlg		v2r3	Digi
 use LHCbTools		v1r0	Kernel
@@ -55,22 +55,22 @@ use LHCbTools		v1r0	Kernel
 # L0 trigger
 use L0Calo              v7r3	L0
 use L0Muon              v6r7	L0
-use PuVeto              v5r5	L0
+#use PuVeto              v5r5	L0
 use L0DU                v6r7	L0
 
 # L1 trigger
-use TrgTools		v2r1	Trg
-use TrgChecker		v2r0	Trg
-use TrgVelo		v2r0	Trg
-use TrgVeloTT		v2r0	Trg
-use L1Reco		v2r1	Trg
+#use TrgTools		v2r1	Trg
+#use TrgChecker		v2r0	Trg
+#use TrgVelo		v2r0	Trg
+#use TrgVeloTT		v2r0	Trg
+#use L1Reco		v2r1	Trg
 
 # Calorimeter
 use CaloMonitor         v1r6	Calo
 use CaloDigit           v1r5	Calo
 
 # Velo
-use VeloAlgorithms      v2r9	Velo
+use VeloAlgorithms      v3r0	Velo
 
 # Inner Tracker
 use ITAlgorithms        v14r0	IT
@@ -78,7 +78,7 @@ use ITCheckers          v2r0	IT
 
 # Outer Tracker
 use OTAlgorithms        v13r4	OT
-use OTDAQ               v1r0    OT
+use OTDAQ               v1r1    OT
 
 # Muon
 use MuonAlgs            v5r2	Muon
