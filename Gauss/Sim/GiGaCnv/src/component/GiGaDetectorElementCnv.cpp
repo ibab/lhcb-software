@@ -1,20 +1,8 @@
-// $Id: GiGaDetectorElementCnv.cpp,v 1.7 2002-01-22 18:24:43 ibelyaev Exp $ 
+// $Id: GiGaDetectorElementCnv.cpp,v 1.8 2002-05-04 20:53:17 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2001/08/12 17:24:52  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.5  2001/07/25 17:19:31  ibelyaev
-// all conversions now are moved from GiGa to GiGaCnv
-//
-// Revision 1.4  2001/07/24 11:13:55  ibelyaev
-// package restructurization(III) and update for newer GiGa
-//
-// Revision 1.3  2001/07/15 20:45:09  ibelyaev
-// the package restructurisation
-// 
 //  ===========================================================================
 #define GIGACNV_GIGADETECTORELEMENTCNV_CPP
 // ============================================================================
@@ -97,8 +85,10 @@ const unsigned char GiGaDetectorElementCnv::storageType ()
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaDetectorElementCnv::createRep( DataObject*     Object  , 
-                                              IOpaqueAddress*& Address ) 
+StatusCode 
+GiGaDetectorElementCnv::createRep
+( DataObject*     Object  , 
+  IOpaqueAddress*& Address ) 
 {
   ///
   Address = 0 ; 
@@ -164,12 +154,14 @@ StatusCode GiGaDetectorElementCnv::createRep( DataObject*     Object  ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  , 
-                                              IOpaqueAddress* /* Address */ ) 
+StatusCode 
+GiGaDetectorElementCnv::updateRep
+( DataObject*     Object  , 
+  IOpaqueAddress* /* Address */ ) 
 {
   ///
   MsgStream log( msgSvc() , name() ); 
-  log << MSG::INFO << "updateRep::start " 
+  log << MSG::DEBUG << "updateRep::start " 
       << Object->registry()->identifier() << endreq; 
   ///
   if( 0 == Object                 ) 
@@ -197,24 +189,24 @@ StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  ,
   //    {
   //      std::string path ( de->name() );
   //      do
-  //        {
-  //          G4VPhysicalVolume* pv = 0; 
-  //          G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
-  //          for( unsigned int indx = 0 ; indx < store.size() ; ++indx )
-  //            { if( path == store[indx]->GetName() ) { pv = store[indx] ; break; } }
-  //          /// it was converted EXPLICITELY or IMPLICITELY !!!
-  //          if( 0 != pv ) 
-  //            {
-  //              MsgStream log( msgSvc() , name() ) ; 
-  //              log << MSG::INFO 
-  //                  << "DE=" << de->name() 
-  //                  << " was already EXPLICITELY/IMPLICITELY converted for PV=" 
-  //                  << pv->GetName() << endreq; 
-  //              return StatusCode::SUCCESS; 
-  //            }                          /// RETURN !!!
-  //          ///
-  //          path.erase( path.find_last_of('/') ); 
-  //        } 
+  //      {
+  //      G4VPhysicalVolume* pv = 0; 
+  //      G4PhysicalVolumeStore& store = *G4PhysicalVolumeStore::GetInstance();
+  //      for( unsigned int indx = 0 ; indx < store.size() ; ++indx )
+  //      { if( path == store[indx]->GetName() ) { pv = store[indx] ; break; } }
+  //      /// it was converted EXPLICITELY or IMPLICITELY !!!
+  //      if( 0 != pv ) 
+  //      {
+  //      MsgStream log( msgSvc() , name() ) ; 
+  //      log << MSG::INFO 
+  //      << "DE=" << de->name() 
+  //      << " was already EXPLICITELY/IMPLICITELY converted for PV=" 
+  //      << pv->GetName() << endreq; 
+  //      return StatusCode::SUCCESS; 
+  //      }                          /// RETURN !!!
+  //      ///
+  //      path.erase( path.find_last_of('/') ); 
+  //      } 
   //      while( std::string::npos != path.find_last_of('/') ); 
   //    }
   /// it have not been converted yet!!! convert it!
@@ -238,13 +230,13 @@ StatusCode GiGaDetectorElementCnv::updateRep( DataObject*     Object  ,
   if( 0 != GiGaVolumeUtils::findPVolume( de->name() ) )
     { return StatusCode::SUCCESS ; }               ///< RETURN !!!
   ///
-  /// a little bit strange lines due to names of Assemblies  
-  /// return 
-  ///  Error("updateRep:: could not convert DetectorElement="+de->name()) ;
   return StatusCode::SUCCESS ;
   ///
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

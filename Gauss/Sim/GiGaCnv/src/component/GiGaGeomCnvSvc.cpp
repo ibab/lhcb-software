@@ -1,8 +1,11 @@
-// $Id: GiGaGeomCnvSvc.cpp,v 1.9 2002-05-04 20:39:36 ibelyaev Exp $ 
+// $Id: GiGaGeomCnvSvc.cpp,v 1.10 2002-05-04 20:53:17 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/05/04 20:39:36  ibelyaev
+//  see $GIGACNVROOT/release.notes (4 May 2002)
+//
 // ===========================================================================
 #define GIGACNV_GIGAGEOMCNVSVC_CPP 1 
 // ============================================================================
@@ -727,7 +730,6 @@ G4LogicalVolume* GiGaGeomCnvSvc::createG4LV
   // look for global material budget counter 
   if( !m_budget.empty() )
     {
-      std::cout << " I am here " << m_budget << std::endl;
       IGiGaSensDet* budget = 0 ;
       StatusCode sc = sensitive( m_budget , budget );
       Assert( sc.isSuccess() , 
