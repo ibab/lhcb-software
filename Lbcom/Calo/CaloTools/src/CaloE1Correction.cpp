@@ -1,8 +1,11 @@
-// $Id: CaloE1Correction.cpp,v 1.1 2002-07-21 18:56:17 ibelyaev Exp $
+// $Id: CaloE1Correction.cpp,v 1.2 2002-07-21 19:25:24 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/07/21 18:56:17  ibelyaev
+//  add new energy correction
+//
 // Revision 1.1  2002/06/21 11:02:46  ibelyaev
 //  update in S-,L- and E-corrections
 //
@@ -150,8 +153,8 @@ StatusCode CaloE1Correction::operator() ( CaloHypo* hypo  ) const
   // allowed hypo ?
   if( m_hypos.end() == h ) { return Error("Unknown hypothesis!"); }
   
-  // check the position 
-  if( 0 == hypo->momentum () ) { return Error("CaloMometum* points to NULL!");}
+  // check the position
+  if( 0 == hypo->position () ) { return Error("CaloPosition* points to NULL!");}
   
   // get the cluster 
   CaloCluster* cluster = hypo->clusters().front();
@@ -167,8 +170,6 @@ StatusCode CaloE1Correction::operator() ( CaloHypo* hypo  ) const
     ( 0 == area ) ? m_const0 : 
     ( 1 == area ) ? m_const1 : m_const2 ;
   
-  // check the position
-  if( 0 == hypo->position () ) { return Error("CaloPosition* points to NULL!");}
   
   CaloPosition::Covariance& cov = hypo -> position() -> covariance() ;
   CaloPosition::Parameters& par = hypo -> position() -> parameters() ;
