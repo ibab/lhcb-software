@@ -4,9 +4,6 @@ L0Muon::TileRegister::TileRegister() {
 
 }
 
-
-  
-
 L0Muon::TileRegister::TileRegister(int bits) : L0Muon::Register(bits) {
 
 }
@@ -51,18 +48,9 @@ void L0Muon::TileRegister::setTile(MuonTileID & id){
       index =ind;
       m_bitset.set(index);
       break;
-    }
-    
-  }
-  
-  
+    }    
+  }  
 }
-
-
-
-
-
-
 
 void L0Muon::TileRegister::setTag(std::vector<L0MTile> & tiles){
 
@@ -102,91 +90,50 @@ void L0Muon::TileRegister::setTag(std::vector<L0MTile> & tiles){
         m_tilestag.push_back(0);
         m_stripstag.push_back(1);
       }
-      
-      
     }
-    
-    
-    
-    
-    
   }
-  
-  
 }
 
 
 
 void L0Muon::TileRegister::makePads(){
-
  
   if (m_pads.size() != 0){
     m_pads.clear();
   }  
-
   std::vector<MuonTileID> tmp = firedTiles();
-  std::vector<MuonTileID> tilev = getTileVector();
-
- 
-  //std::vector<MuonTileID>::iterator itmp;
+  //std::vector<MuonTileID> tilev = getTileVector();
   
-
   unsigned int i,j;
   if ( ! tmp.empty() ) {
-      for ( i=0; i< m_bitset.size(); i++){
-    
-         if (m_bitset.test(i)) {
-          if ( m_tilestag[i] ==1){
-         
-            MuonTileID mid = tile(i);
-                
-            m_pads.push_back(mid);
-          }
-          if ( m_tilestag[i] ==0){
-           
-            if ( i< m_bitset.size()-1) {
-              if (m_bitset.test(i)) {
-              for ( j = i+1; j < m_bitset.size(); j++){
-              
-                  if (m_bitset.test(j)) {
-                    if ( m_stripstag[i] != m_stripstag[j]) {
-                  MuonTileID ip = tile(i);
-                  MuonTileID jp = tile(j);
-                  MuonTileID ijp = ip.intercept(jp);
-   
-                               
-                  if (ijp.isValid()){
-                    m_pads.push_back(ijp);
-                  }
-                  
-                  
-                    }
-                    
-                    
-                  }
-                  
-                  
-              }
-              
-              
-              }
-              
-              
-            }
-            
-            
-          }
-          
-          
-         }
-         
-     }
-     
-  }
+    for ( i=0; i< m_bitset.size(); i++){
 
-  
-    
-  
+      if (m_bitset.test(i)) {
+        if ( m_tilestag[i] == 1){
+          MuonTileID mid = tile(i);
+          m_pads.push_back(mid);
+        }
+        if ( m_tilestag[i] ==0){
+          if ( i< m_bitset.size()-1) {
+            if (m_bitset.test(i)) {
+              for ( j = i+1; j < m_bitset.size(); j++){
+                if (m_bitset.test(j)) {
+                  if ( m_stripstag[i] != m_stripstag[j]) {
+                    MuonTileID ip = tile(i);
+                    MuonTileID jp = tile(j);
+                    MuonTileID ijp = ip.intercept(jp);
+                    if (ijp.isValid()){
+                      m_pads.push_back(ijp);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 
