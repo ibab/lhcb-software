@@ -1,0 +1,4 @@
+// Options specific for the dbase v249r1 with 4 Muon stations only
+
+L0Muon.True4Stations = true;
+L0Muon.IgnoreM1 = true;
