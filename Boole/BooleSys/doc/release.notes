@@ -1,181 +1,705 @@
-!-----------------------------------------------------------------------------
-! Package     : BooleSys
-! Responsible : Marco Cattaneo
-! Purpose     : List of packages in Boole project
-!-----------------------------------------------------------------------------
+<PRE>
+Package: Digi/Boole
+Package Coordinator: Marco Cattaneo
+Purpose: LHCb Digitization program
 
-!======================== BooleSys v7r2 2004-12-10 =======================
-! 2004-12-10 - Marco Cattaneo
- - Packages modified: PuVeto v6r0, VeloAlgorithms v3r2,
-                      L0MuonKernel v2r3, L0MuonTrigger v2r3p1,
-                      OTSimulation v1r2, OTMonitor v1r1
+</PRE><H1><A NAME=v7r2p1>2005-01-13 Boole v7r2p1</A></H1><PRE>
+Documentation moved to BooleSys package (from Digi/Boole):
+ . These release notes
+ . doxygen configuration files
 
-!======================== BooleSys v7r1 2004-11-22 =======================
-! 2004-11-19 - Marco Cattaneo
- - Packages removed:  CaloMonitor (obsolete)
- - Packages added:    CaloMoniDigi (monitoring algorithms for Digi files)
- - Packages modified: L0MuonKernel v2r2, L0MuonTrigger v2r3,
-                      RichDigiQC v1r8, RichReadout v1r10, ITAlgorithms v14r4
+</PRE><H1><A NAME=v7r2>2004-12-10 Boole v7r2</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r2. Can process DC04 Gauss output.
+Output data incompatible with DC04 versions, needs Brunel v25r2 or greater
 
-!======================== BooleSys v7r0 2004-10-26 =======================
-! 2004-10-26 - Marco Cattaneo
- - Packages removed:  OTDAQ (moved to LHCbSys), OTAlgorithms (obsolete)
- - Packages added:    OTSimulation v1r1, OTMonitor v1r0
- - Packages modified: AsctToLinker v1r3
+- Packages modified: PuVeto v6r0, VeloAlgorithms v3r2, L0MuonKernel v2r3,
+                     L0MuonTrigger v2r3p1, OTSimulation v1r2, OTMonitor v1r1
 
-!======================== BooleSys v6r3 2004-10-27 ========================
- Built on v6r2b2 branch
+- New functionality:
+  . Support for v200412 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout,
+                                  new Velo numbering)
+    Not yet tested, needs new Gauss data (v200412.opts, XmlDDDB v23r1)
 
-! 2004-10-27 - Marco Cattaneo
- - Same packages as BooleSys v6r2, but built against LHCb v16r3, Gaudi v15r3
+- Modified functionality
+  . Uses new Velo detector element and geometry. Sensor numbering incompatible
+    with DC04 version. (LHCbKernel v5r5, VeloEvent v13r2, VeloDet v9r1,
+    VeloDAQ v2r1, VeloAlgorithms v3r2, PuVeto v6r0)
 
-!======================== BooleSys v6r2 2004-09-20 ========================
-! 2004-09-20 - Marco Cattaneo
- - Packages removed:  VeloDAQ, STDAQ, MuonDAQ (Moved to LHCbSys)
- - Packages modified: CaloMonitor v2r2p1, CaloDigit v2r7, L0MuonTrigger v2r2,
-                      L0DU v6r7p2
+- Removed functionality
+  . Support for v200411 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout)
 
-!======================== BooleSys v6r1 2004-07-29 ========================
-! 2004-07-29 - Marco Cattaneo
- - Same as v6r0, but built against Gaudi v15r1
- - Packages modified: L0DU v6r7p1
+- Persistency changes
+  . New velo sensor numbering in RawBuffer, requires VeloDet v9r1, VeloDAQ v2r1
+    to decode
 
-!======================== BooleSys v6r0 2004-07-22 ========================
-! 2004-07-22 - Marco Cattaneo
- - Packages added   : AsctToLinker (converts "Relations" to "Linker")
- - Packages removed : LHCbTools, RichDAQ (moved to LHCb)
-                      RichDetTools (renamed RichTools, moved to LHCb)
-                      RichUtils (suppressed, moved into RichKernel)
-                      Trg/* (no longer used in Boole)
- - Packages modified: STDAQ v1r3, ITAlgorithms v14r3, ITCheckers v2r3,
-                      RichReadout v1r9, RichDigiQC v1r7, DigiAlg v3r0,
-                      L0mConf v2r2p3, L0MuonKernel v2r1p1, L0MuonTrigger v2r1,
-                      VeloAlgorithms v2r9p3, MuonBackground v1r8, MuonAlgs v5r6,
-                      OTAlgorithms v13r4p1
+- Bug fixes
+  . Fix to allow L0 studies with no M1 (L0MuonKernel v2r3, L0MuonTrigger v2r3p1)
 
-!======================== BooleSys v5r9 2004-05-24 ========================
-! 2004-05-24 - Marco Cattaneo
- - Packages modified: L0mConf v2r2p1, L0Calo v7r6
+- Packaging changes
+  . Move to new GaudiAlgorithm base classes
+    (OTDAQ v3r2, OTSimulation v1r2, OTMonitor v1r1)
 
-!======================== BooleSys v5r8 2004-04-28 ========================
-! 2004-04-28 - Marco Cattaneo
- - Packages modified: L0Calo v7r5, PuVeto v5r7
+</PRE><H1><A NAME=v7r1>2004-11-25 Boole v7r1</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r1. Can process DC04 Gauss output.
+Output data incompatible with DC04 versions, needs Brunel v25r0 or v25r1
 
-!======================== BooleSys v5r7 2004-04-26 ========================
-! 2004-04-26 - Marco Cattaneo
- - Packages modified: TrgTools v3r1, TrgVeloTT v3r1, L1Reco v3r1,
-                      MuonBackground v1r7
+- Packages removed:  CaloMonitor (obsolete)
+- Packages added:    CaloMoniDigi (monitoring algorithms for Digi files)
+- Packages modified: L0MuonKernel v2r2, L0MuonTrigger v2r3,
+                     RichDigiQC v1r8, RichReadout v1r10, ITAlgorithms v14r4
 
-!======================== BooleSys v5r6 2004-04-23 ========================
-! 2004-04-23 - Marco Cattaneo
- - Packages modified: CaloMonitor v2r2, RichUtils v3r9, RichDAQ v1r4, 
-                      RichDetTools v4r1, RichReadout v1r8, RichDigiQC v1r6,
-                      MuonAlgs v5r5, L0MuonTrigger v1r1p1
+- New functionality:
+  . Support for v200411 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout)
+    Not yet tested, needs new Gauss data (v200411.opts, XmlDDDB v23r0)
+  . Support for Data Quality checking. Data Quality reference files built from
+    DC04 log files are provided in $LHCBRELEASES/DBASE/DQ/BooleDQ/v1r0. XML
+    descriptions of log file fields to be verified are in $BOOLEROOT/DQ.
+    To verify a log file, execute the command:
+      python2.2 $LHCBHOME/scripts/checklog.py $BOOLEROOT/DQ/Boole_options.xml
+        <event-type> <log-file>
 
-!======================== BooleSys v5r5 2004-04-14 ========================
-! 2004-04-14 - Marco Cattaneo
- - Move to Gaudi v14r4
+- Modified functionality
+  . Improvement to initialisation of random numbers. Now three seeds are used
+    (run and event numbers, plus hash of string containing name, event number,
+    run number). Can optionally skip some random numbers before every event,
+    by setting job option Boole.SkipFactor (default is zero). Can revert to
+    previous behaviour by setting job option Boole.SingleSeed = true;
+    (LHCbAlgs v1r2)
+  . Use rootd (instead of rfio) to access castor files
+    (GaudiConf v8r1, v200402.opts)
+  . New options for L0Muon studies (L0MuonKernel v2r2, L0MuonTrigger v2r3)
+  . Minor change to RichSignal algorithm (RichReadout v1r10)
+  . Remove explicit creation of MagneticFieldSvc and ParticlePropertySvc. First
+    one is created on demand, second one is not needed (Boole.opts)
+  . Use clustering by port for RawBuffer filling (STDAQ v1r4, ITAlgorithms v14r4)
+  . Number of ST RawBuffer clusters per board limited to 256 (STDAQ v1r4)
+  . Use DataOnDemandSvc to instantiate associator algorithms 
+    (Relations v2r0, AssociatorsSys v2r1)
 
- - Packages modified: LHCbTools v1r1, MuonBackground v1r6, MuonAlgs v5r4,
-                      MuonDAQ v1r1
+- Removed functionality:
+  . Removed support for 200402-TT-alt and Field043 geometries 
 
-!======================== BooleSys v5r4 2004-04-01 ========================
-! 2004-04-01 - Marco Cattaneo
- - Packages modified: L0mConf v2r2, L0MuonKernel v1r1, L0MuonTrigger v1r1,
-                      L0Calo v7r4, PuVeto v5r6, VeloAlgorithms v2r9p2,
-                      ITAlgorithms v14r2, ITCheckers v2r2, STDAQ v1r1,
-                      TrgChecker v3r0p1, OTDAQ v2r0, MuonAlgs v5r3
+- New packaging
+  . Calo monitoring moved to CaloMoniDigi package
 
-!======================== BooleSys v5r3 2004-03-19 ========================
-! 2004-03-19 - Marco Cattaneo
- - Packages added:    STDAQ v1r0, VeloDAQ v1r0, TrgMonitor v1r0, L0mConf,
-                      L0MuonKernel, L0MuonTrigger
+- Persistency changes
+  . Fixed TT L1Buffer encoding requires removal of DC04 decoding fix when reading
 
- - Packages removed:  L0Muon
+- Bug fixes
+  . Fix in getPadIndex for Muon stations 4 and 5 (L0MuonKernel v2r2)
+  . Fix DC04 bug in L1Buffer encoding for TT (ITAlgorithms v14r4)
 
- - Packages modified: OTDAQ v1r1, VeloAlgorithms v2r9p1, CaloDigit v1r6,
-                      CaloMonitor v2r0, ITAlgorithms v14r1, ITCheckers v2r1,
-                      RichReadout v1r7, CaloMonitor v2r1, RichUtils v3r8, 
-                      RichDAQ v1r3, RichDetTools v4r0, RichDigiQC v1r5,
-                      TrgTools v3r0, TrgChecker v3r0, TrgVelo v3r0, 
-                      TrgVeloTT v3r0, L1Reco v3r0
+</PRE><H1><A NAME=v7r0>2004-11-01 Boole v7r0</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r0. Can process DC04 Gauss output.
+Output data incompatible with DC04 versions, needs Brunel v25r0 or greater
 
-!======================== BooleSys v5r2 2004-02-05 ========================
-! 2004-02-05 - Marco Cattaneo
+- Packages removed:  OTDAQ (moved to LHCbSys), OTAlgorithms (obsolete)
+- Packages added:    OTSimulation v1r1, OTMonitor v1r0
+- Packages modified: AsctToLinker v1r3
 
- - Packages added:    MuonDAQ v1r0, OTDAQ v1r0
+- Modified functionality
+  . MCOTTimeCreator replaces MCOTDigitCreator. MCOTTimes used to fill RawBuffer
+  . OTDigitMonitor replaced by OTTimeMonitor and OTTimeChecker
+  . OTTimeCreator + OTTime2MCHitAlg replace OTDigit2MCHitAlg for truth relations
+  . Introduce OT beam tilt capability. Tilt angle currently set to 0.
 
- - Packages modified: ITAlgorithms v14r0, ITCheckers v2r0, 
-                      TrgTools v2r1, TrgVeloTT v2r0, RichUtils v3r7,
-                      RichDetTools v3r6, RichDAQ v1r2, RichReadout v1r5,
-                      MuonAlgs v5r1, L0Calo v7r3, L1Reco v2r1
+- Persistency changes
+  . More compact RawBuffer (Otis headers removed), requires OTDAQ v3r* to decode
+  . Relations/OTTimes2MCHits replaces Relations/OTDigits2MCHits
+  . Link/Raw/OT/Times        replaces Link/Raw/OT/Digits
 
- - Packages removed:  L1VeloTrack, L1Decision
+</PRE><H1><A NAME=v6r3>2004-10-27 Boole v6r3</A></H1><PRE>
+This version uses Gaudi v15r3 and LHCb v16r3. Built on v6r2b2 branch
+It can process DC04 data. Data produced requires Brunel v24r3
 
-!======================== BooleSys v5r1 2004-01-27 ========================
-! 2004-01-27 - Marco Cattaneo
- - Packages modified: ITAlgorithms v13r2, L0DU v6r7
+- Persistency changes
+  . Remove Event/Header from output file (can be rebuilt from RawBuffer)
 
- - Packages removed:  MCTools, CaloInterfaces, CaloUtils, RiSicbGeom
-                      (all now in LHCB project)
+</PRE><H1><A NAME=v6r2>2004-09-20 Boole v6r2</A></H1><PRE>
+This version uses Gaudi v15r2 and LHCb v16r2. It needs CMT v1r16p*.
+It can process DC04 data
 
-!======================== BooleSys v5r0 2004-01-16 ========================
-! 2004-01-16 - Marco Cattaneo
- - Packages added: MCTools v1r2, TrgTools v2r0, TrgChecker v2r0, TrgVelo v2r0,
-                   TrgVeloTT v1r0, L1Reco v2r0
+- Packages removed:  VeloDAQ, STDAQ, MuonDAQ (Moved to LHCbSys)
+- Packages modified: CaloMonitor v2r2p1, CaloDigit v2r7, L0MuonTrigger v2r2,
+                     L0DU v6r7p2
 
- - Packages modified: RiSicbGeom v3r8, DigiAlg v2r3, L0Calo v7r2, L0Muon v6r7,
-                      PuVeto v5r5, L0DU v6r6, L1VeloTrack v5r6, L1Decision v2r4,
-                      ITAlgorithms v13r1, CaloInterfaces v3r1, CaloUtils v4r6,
-                      CaloMonitor v1r6, CaloDigit v1r5, VeloAlgorithms v2r9,
-                      MuonAlgs v5r1, MuonBackground v1r5, RichDigiQC v1r4,
-                      RichDAQ v1r1, RichDetTools v3r5, RichReadout v1r4
+- Modified functionality
+  . New test input data files taken from DC04 (v200402.opts)
 
-!======================== BooleSys v4r0 2003-12-12 ========================
-! 2003-12-09 - Marco Cattaneo
- - Packages modified: RiSicbGeom v3r7, CaloInterfaces v3r0, CaloMonitor v1r5, 
-                      RichUtils v3r6, ITAlgorithms v13r0p1, RichDetTools v3r4,
-                      RichReadout v1r3, MuonBackground v1r4p1, L0Muon v6r6,
-                      L1VeloTradck v5r5, L1Decision v2r3, RichDAQ v1r0p1
+- New tuning
+  . Use new Pt kick value in L0 Muon trigger (L0MuonTrigger v2r2, L0DU v6r7p2)
 
-!======================== BooleSys v3r2 2003-12-03 ========================
-! 2003-12-03 - Marco Cattaneo
- - Packages modified: CaloDigit v1r4p1, ITAlgorithms v13r0, ITCheckers v1r4,
-                      L1VeloTrack v5r4, RichDetTools v3r3, RichReadout v1r2p1,
-                      OTAlgorithms v13r4
+- Bug fixes
+  . Workaround for core dump on exit() (GaudiPoolDb v1r9)
+  . Various fixes for memory leaks (GaudiSvc v12r3, GaudiPoolDb v1r9)
+  . Increase default size of PAWC common block to 250000 words, as workaround 
+    to problems seen when extending its size (HbookCnv v14r2p1)
 
-!======================== BooleSys v3r1 2003-11-26 ========================
-! 2003-11-26 - Marco Cattaneo
- - Packages added:    RichDAQ v1r0
- - Packages modified: CaloDigit v1r4, DigiAlg v2r0, OTAlgorithms v13r3, 
-                      RiScbGeom v3r6, RichDetTools v3r2, RichDigiQC v1r3, 
-                      RichReadout v1r2, RichUtils v3r5
+</PRE><H1><A NAME=v6r1>2004-07-26 Boole v6r1</A></H1><PRE>
+This version uses Gaudi v15r1, needs CMT v1r16. It can process DC04 data
 
-!======================= BooleSys v3r0p1 2003-11-10 =======================
-! 2003-11-10 - Marco Cattaneo
- - Packages modified: DigiAlg v2r1p1, Boole v3r0p1
+- Packages modified: L0DU v6r7p1
 
-!======================== BooleSys v3r0 2003-11-04 ========================
-! 2003-11-04 - Marco Cattaneo
- - New packages: Kernel/LHCbTools v1r0
- - Packages modified: RichUtils v3r4, RiSicbGeom v3r5, RichDetTools v3r1,
+- Bug fixes
+  . Fix EventSelector.FirstEvent, in v6r0 was skipping twice the requested 
+    events (GaudiSvc v12r2)
+
+</PRE><H1><A NAME=v6r0>2004-07-22 Boole v6r0</A></H1><PRE>
+This version uses Gaudi v15r0, needs CMT v1r16. It can process DC04 data
+
+- Packages added   : AsctToLinker (converts "Relations" to "Linker")
+- Packages removed : LHCbTools, RichDAQ (moved to LHCb)
+                     RichDetTools (renamed RichTools, moved to LHCb)
+                     RichUtils (suppressed, moved into RichKernel)
+                     Trg/* (no longer used in Boole)
+- Packages modified: STDAQ v1r3, ITAlgorithms v14r3, ITCheckers v2r3,
+                     RichReadout v1r9, RichDigiQC v1r7, DigiAlg v3r0,
+                     L0mConf v2r2p3, L0MuonKernel v2r1p1, L0MuonTrigger v2r1,
+                     VeloAlgorithms v2r9p3, MuonBackground v1r8, MuonAlgs v5r6,
+                     OTAlgorithms v13r4p1
+
+- Modified functionality
+  . GaudiAuditors no longer used for algorithm timing, uses GaudiSequencer
+    internal timing instead
+  . L1 trigger simulation removed (Trg packages can be executed on Boole output)
+  . Remove obsolete GaudiRootDb capability
+
+- New tuning
+  . Initialize MuonGeometry tool completely at intialisation, not during first
+    ~10 events (MuonTools v3r7)
+  . New tuning and bug fixes in L0 Muon trigger simulation
+    (L0mConf v2r2p3, L0MuonKernel v2r1p1, L0MuonTrigger v2r1, ParamFiles v3r8)
+
+- New packaging
+  . Use new GaudiSequencer base class for ProcessPhase (LHCbAlgs v1r0)
+  . Use new GaudiAlg base classes
+    (STDet v1r2, ITAssociators v2r9, STDAQ v1r3, ITAlgorithms v14r3,
+     ITCheckers v2r3, RichReadout v1r9, RichDigiQC v1r7, RichTools v1r0,
+     DigiAlg v2r4)
+  . Converters of "Relations" to "Linker" MC truth tables moved to AsctToLinker
+    package (from TrgChecker) (AsctToLinker v1r2)
+  . Removed dependency on GaudiAud, GaudiTools and GaudiDb packages
+  . Removed dependency on Trg packages
+  . Removed dependency on PYTHIA via HepMC (HepMC v4r121p0)
+  . Use new LbAppInit instead of BooleInit (LHCbAlgs v1r0)
+  . Use CreateL1Buffer and CreateRawBuffer (DAQEvent v4r4)
+  . Take external packages from LCG_Interfaces area
+
+- Bug fixes
+  . Add protection for crazy MCHits in BuildMCTrackInfo (MCTools v1r6)
+  . Removed fix from L0mConf v2r2p1, due to access violation on Windows
+
+</PRE><H1><A NAME=v5r9>2004-05-24 Boole v5r9</A></H1><PRE>
+Version used for DC04
+
+- Packages modified: L0mConf v2r2p1, L0Calo v7r6
+
+- Bug fixes
+  . Protect size of L1 output bank to not exceed 126 words, so as not to 
+    trigger exception and job abort in this rare case (L0Calo v7r6)
+  . Release DOM tree after use, in L0MXmlReader (L0mConf v2r2p1)
+
+</PRE><H1><A NAME=v5r8>2004-04-29 Boole v5r8</A></H1><PRE>
+Version used at start of DC04
+
+- Packages modified: L0Calo v7r5, PuVeto v5r7
+
+- New tuning
+  . 12% correction to HCAL calibration coefficient  (XmlDDDB v22r2)
+  . 7.2% correction to ECAL calibration coefficient (XmlDDDB v22r2)
+
+- Bug fixes
+  . Fix a major bug in filling L1Buffer for L0Calo (L0Calo v7r5)
+
+</PRE><H1><A NAME=v5r7>2004-04-28 Boole v5r7</A></H1><PRE>
+
+- Packages modified: TrgTools v3r1, TrgVeloTT v3r1, L1Reco v3r1,
+                     MuonBackground v1r7
+
+- Bug fixes
+  . Fix to allow processing of TT-alt geometry (TrgVeloTT v3r1)
+  . Fix a memory leak (savannah bug 3129) (MuonDet v4r6)
+  . Add a protecton, fixes crash in production 478.183 (MuonBackground v1r7)
+  . Make MC/Signal optional and Gen/HardProcesses mandatory on Digi definition
+
+</PRE><H1><A NAME=v5r6>2004-04-23 Boole v5r6</A></H1><PRE>
+Requires data produced with Gauss v15r4 or later
+
+- Packages modified: CaloMonitor v2r2, RichUtils v3r9, RichDAQ v1r4,
+                     RichDetTools v4r1, RichReadout v1r8, RichDigiQC v1r6,
+                     MuonAlgs v5r5, L0MuonTrigger v1r1p1
+
+- New tuning
+  . Faster erase() implementation for KeyedContainers. Speeds up VeloSim by a
+    factor 3 (GaudiKernel v15r3)
+  . Change Muon digitization time gate to 25. (from 20.) (MuonAlgs v5r5)
+
+- Persistency changes
+  . Add Gen/HardProcesses, Gen/HepMCEvents, MC/Signal (produced by Gauss v15r4)
+  . Remove Spillover hits from output file
+  . Use POOL_1_6_3
+  . Move objects described in L1Output.opts file into DigiContent.opts, 
+    and remove L1Output.opts
+
+- Bug fixes
+  . Do not use spillover hits for Muoncoord2MCParticle association
+    (MuonAssociators v1r3)
+  . Do not retrieve VeloCluster2MCHitAsct tool at every event
+    (VeloAssociators v1r10)
+  . Minor fix in a monitor class
+    (RichReadout v1r8, RichdigiQC v1r6)
+  . Fix L0MuonTrigger.FoiXSize (L0MuonTrigger v1r1p1)
+
+</PRE><H1><A NAME=v5r5>2004-04-15 Boole v5r5</A></H1><PRE>
+- Packages modified: LHCbTools v1r1, MuonBackground v1r6, MuonAlgs v5r4,
+                     MuonDAQ v1r1
+
+- New features
+  . Can now use Copy.opts (GaudiSvc v11r6)
+  . Location of XmlDDDB file is printed at start of job (GaudiSvc v11r6)
+
+- Changed features
+  . PoolDbCacheSvc.InputCatalog and .OutputCatalog no longer supported:
+    use PoolDbCacheSvc.Catalog instead, with support for search list;
+    first catalog in list is read/write, others are read only. 
+    (POOL v1r162p0, GaudiPoolDb v1r6)
+
+- New tuning
+  . Tuning of muon background for Gauss data 
+    (ParamFiles v3r5, MuonBackground v1r6, MuonAlgs v5r4)
+
+- Persistency changes
+  . Using POOL_1_6_2 (POOL v1r162p0, GaudiPoolDb v1r6)
+
+- Bug fixes
+  . All tools correctly released at end of job (GaudiSvc v11r6)
+  . Fix a typo in TimingTool::finalize (LHCbTools v1r1)
+  . Fix the physical pad size in M1R2 and M1R3     (XmlDDDB v22r1)
+  . Fix the Xtalk edge sigma in M1 (from cm -> mm) (XmlDDDB v22r1)
+  . Fix 1.5 cm shift of a TT ladders near the edge (XmlDDDB v22r1)
+
+</PRE><H1><A NAME=v5r4>2004-04-01 Boole v5r4</A></H1><PRE>
+Requires XmlDDDB v22r0 or greater
+Requires data produced by Gauss v14r3 or greater
+
+- Packages modified: L0mConf v2r2, L0MuonKernel v1r1, L0MuonTrigger v1r1,
+                     L0Calo v7r4, PuVeto v5r6, VeloAlgorithms v2r9p2,
+                     ITAlgorithms v14r2, ITCheckers v2r2, STDAQ v1r1,
+                     TrgChecker v3r0p1, OTDAQ v2r0, MuonAlgs v5r3
+
+- New features
+  . Field045 map is the default. To process data produced with the old field
+    map, use v200402-Field043.opts instead of v200402.opts
+  . Disable addition of SICBMC generated LHC background, due to imcompatibilities
+    with current Gauss generated data
+  . Additional histograms for Velo detailed monitoring 
+    (VeloAlgorithms v2r9p2, VeloDet v8r8p2)
+  . Added example job options (Copy.opts) for copying one or more files. Can be
+    used to merge several files, or to produce files with reduced (or extended..)
+    DIGI content (N.B. requires GaudiSvc v11r5, not yet released)
+
+- Persistency changes
+  . Add PuVeto raw hit output to RawBuffer (PuVeto v5r6)
+  . New version of RawBuffer for OT: new bank structure, multiple hit
+    capability, new straw numbering (OTDAQ v2r0)
+  . HepMC can now be made persistent also for POOL data (GenEvent v3r1)
+    Disabled from Digi content as it requires data produced with Gauss v15r4
+    or greater, not yet released.
+
+- Bug fixes
+  . Fix large memory leak (Savannah bug 2821) (L0mConf v2r2)
+  . Fix a rounding problem (Savannah bug 2914) (MuonAlgs v5r3)
+  . Fix a compiler warning (L0MuonKernel v1r1)
+  . Use public instead of private tool (L0MuonTrigger v1r1)
+  . Add protection for dead regions on Velo sensor (VeloAlgorithms v2r9p2)
+  . Minor fix to test on path length in MCITDepositCreator (ITAlgorithms v14r2)
+  . Avoid linking with unnecessary libraries (requirements)
+
+</PRE><H1><A NAME=v5r3>2004-03-18 Boole v5r3</A></H1><PRE>
+Requires XmlDDDB v22r0 or greater
+Requires data produced by Gauss v14r3 or greater
+
+- Packages added:    STDAQ v1r0, VeloDAQ v1r0, TrgMonitor v1r0, L0mConf,
+                     L0MuonKernel, L0MuonTrigger
+- Packages removed:  L0Muon
+- Packages modified: OTDAQ v1r1, VeloAlgorithms v2r9p1, CaloDigit v1r6,
+                     CaloMonitor v2r0, ITAlgorithms v14r1, ITCheckers v2r1,
+                     RichReadout v1r7, CaloMonitor v2r1, RichUtils v3r8,
+                     RichDAQ v1r3, RichDetTools v4r0, RichDigiQC v1r5,
+                     TrgTools v3r0, TrgChecker v3r0, TrgVelo v3r0,
+                     TrgVeloTT v3r0, L1Reco v3r0
+
+- New features
+  - New ST code to fill L1Buffer and RawBuffer (and remove old PrepareTTL1Buffer)
+    (STDAQ v1r0, ITAlgorithms v14r1, ITCheckers v2r1, ITAssociators v2r8)
+  - New and repackaged Velo code to fill L1Buffer and RawBuffer
+    (VeloDAQ v1r0, VeloAlgorithms v2r9p1)
+  - Updated Trg packages for L1, to use new ST and Velo buffers, and new tuning
+    (TrgTools v3r0, TrgVelo v3r0, TrgVeloTT v3r0, TrgVeloTT v3r0, L1Reco v3r0)
+  - New monitoring for Trg primary vertex (TrgMonitor v1r0)
+  - New version of the L0 muon trigger simulation
+    (L0mConf v2r1, L0MuonKernel v1r0, L0MuonTrigger v1r0, ParamFiles v3r4) 
+  - Use new version of ParticlePropertySvc
+    (GaudiSvc v11r4, ParamFiles v3r4)
+  - Remove fix for Rich energy deposit, now fixed since Gauss v14r3
+    (RichReadout v1r7)
+  - New HPD layout in Rich2 (backwards incompatible) (XmlDDDB v22r0)
+
+- Persistency changes
+  - Default output file is now POOL
+  - Backwards incompatible change to internal encoding of VeloChannelID
+    (LHCbKernel v4r3)
+  - Use VeloChannelID of first strip as key of VeloCluster
+    (VeloEvent v13r0p1, backwards incompatible)
+  - Remove VeloClusters, ITDigits and OTDigits from Digi output
+    (only if POOL output, due to GaudiDb bug)
+  - Fix Spillover with POOL (GaudiPoolDb v1r5)
+
+- Bug fixes
+  - Fix long finalization time (RichReadout v1r7)
+
+- New packaging
+  - Valgrind error suppression file for Gaudi and external package errors moved
+    to $STDOPTS/Gaudi.supp (GaudiConf v7r6, valgrind.job)
+  - Removed VeloRound, round() function now implemented in Kernel/LHCbMath.h
+    (LHCbKernel v4r3, VeloKernel v1r4, VelDet v8r8p1, VeloAlgorithms v2r9p1)
+  - Use new Gaudi base classes. New printout for tools not finalised
+    (GaudiAlg v7r1, GaudiTools v8r1, LHCbKernel v4r4, CaloMonitor v2r0, 
+     CaloDigit v1r6, RichUtils v3r8, RichDetTools v4r0, RichReadout v1r7,
+     RichDigiQC v1r5)
+
+</PRE><H1><A NAME=v5r2>2004-02-10 Boole v5r2</A></H1><PRE>
+Backwards incompatible changes to TT geometry.
+Requires data produced with XmlDDDB v21r0 or greater.
+
+- Packages added:    MuonDAQ v1r0, OTDAQ v1r0
+- Packages modified: ITAlgorithms v14r0, ITCheckers v2r0,
+                     TrgTools v2r1, TrgVeloTT v2r0, RichUtils v3r7,
+                     RichDetTools v3r6, RichDAQ v1r2, RichReadout v1r5,
+                     MuonAlgs v5r1, L0Calo v7r3, L1Reco v2r1
+- Packages removed:  L1VeloTrack, L1Decision
+
+- New functionality
+  - Support for new TT layouts (4-3-3-4: v200402.opts, 4-2-1-1-2-4: TT-alt.opts) 
+    (XmlDDDB v21r0, STDet v1r0, ITAlgorithms v14r0, ITCheckers v2r0)
+  - Possibility to use LHC background events in Rich digitization
+    (RichReadout v1r5)
+  - Support for mirror segmentation in Rich geometry (switched off by default)
+    (RichReadout v1r5, RichDetTools v3r6)
+  - Add Muon digits to Raw buffer (MuonDAQ v1r0, MuonDet v4r5, XmlDDDB v21r0)
+  - Add OT digits to Raw buffer (OTDAQ v1r0)
+  - Add Vertexing and use of L0Muon to Trg tracking
+    (PhysEvent v8r1, TrgEvent v2r1, TrgTools v2r1, L1Reco v2r1)
+
+- New tuning
+  - Updated TT detector geometry (beam pipe hole, guard ring size etc.)
+    (XmlDDDB v21r0)
+  - Adaptation of Trg software to new TT geometry (TrgVeloTT v2r0, L1Reco v2r1)
+  - Fix physical pad size in M1R1 (XmlDDDB v21r0)
+
+- Event model / persistency changes
+  - Add depositedCharge() to ITCluster (ITEvent v13r1, ITAlgorithms v14r0)
+  - Add one significant bit to time field of MuonDigit
+    (MuonEvent v3r1, MuonAlgs v5r1)
+  - Replace Relations/L0CaloCandidates and Relations/L0CaloFullCandidates old
+    style relations with new style Link/Trig/L0/Calo, FullCalo (L0Calo v7r3)
+  - Remove all (old) L1 objects from Digi output. To be replaced by new Trg
+  - Remove Muon/Digits (can be rebuilt form RawBuffer)
+
+- Dropped functionality
+  - Dropped support for pre-2004 geometries (removed v200311.opts, RiSicbGeom)
+  - Dropped old L1 trigger algorithms (removed L1VeloTrack, L1Decision)
+
+- Known problems
+  - Cannot use POOL input file for Spillover or LHC background events. Use a 
+    GaudiRootDb file even if main events are read from POOL. To be fixed in Gaudi
+  - Usage of LHC background in Rich and ST is switched off in job options
+    until LHC background events can be generated in Gauss with latest geometry
+  - OTDigits are still on Digi output, due to bug in Gaudi that breaks 
+    OTDigits2MCHits relations if OTDigits are not saved
+  - L1Decision not available, waiting for new code working in Trg framework
+
+</PRE><H1><A NAME=v5r1>2004-01-23 Boole v5r1</A></H1><PRE>
+- Packages removed:  MCTools, CaloInterfaces, CaloUtils, RiSicbGeom
+                     (all now in LHCB project)
+
+- New tuning
+  - use GSL spline in ITChargeSharingTool for interpolation (ITAlgorithms v13r2)
+
+- New functionality
+  - Add PrepareL0DUL1Buffer to fill L1 buffer with L0 decision unit result
+    (L0DU v6r7)
+  - POOL improvements:
+    . All output classes can now be written (LHCbKernel v4r1)
+    . Factor 2.5 speed improvement in writing - now 1.4 s/evt (Gaudi v14r1)
+    . No more limit on output file size (POOL 1.5.0)
+
+- Bug fixes
+  - bug 2241: spillover probability was not reproducible because it was 
+              determined before event by event random number initialization
+
+</PRE><H1><A NAME=v5r0>2004-01-22 Boole v5r0</A></H1><PRE>
+Built against GAUDI_v14r0, LHCB_v15r0.
+
+- Packages added: MCTools v1r2, TrgTools v2r0, TrgChecker v2r0, TrgVelo v2r0,
+                  TrgVeloTT v1r0, L1Reco v2r0
+- Packages modified: RiSicbGeom v3r8, DigiAlg v2r3, L0Calo v7r2, L0Muon v6r7,
+                     PuVeto v5r5, L0DU v6r6, L1VeloTrack v5r6, L1Decision v2r4,
+                     ITAlgorithms v13r1, CaloInterfaces v3r1, CaloUtils v4r6,
+                     CaloMonitor v1r6, CaloDigit v1r5, VeloAlgorithms v2r9,
+                     MuonAlgs v5r1, MuonBackground v1r5, RichDigiQC v1r4,
+                     RichDAQ v1r1, RichDetTools v3r5, RichReadout v1r4
+
+- New tuning
+  - New Ecal and Hcal calibration for "ActiveToTotal" parameter (XmlDDDB v20r1)
+
+- New features
+  - Possibility to use POOL persistency. Disabled by default. 
+    To be used with care (tests by experts)
+  - Populate RawBuffer and L1Buffer with L0Calo (full) clusters. L0CaloDigit
+    algorithm removed (L0Calo v7r2)
+  - Populate RawBuffer and L1Buffer with Velo clusters (TrgTools v2r0)
+  - Populate L1Buffer with TT clusters (TrgTools v2r0)
+  - Execute new Trg (L1) tracking starting from L1Buffer
+    (TrgTools v2r0, TrgVelo v2r0, TrgVeloTT v1r0, L1Reco v2r0, TrgChecker v2r0)
+  - Create MCTrackInfo (acceptance and reconstructible info for MCParticle)
+    Currently uses the Trg tracking definition of reconstructible (MCTools v1r2)
+
+- oodigi changes
+  - Options file DigiContent.opts moved to Boole from GaudiConf. 
+    File BooleOutput.opts is obsolete and has been removed.
+  - L0/Calo and L0/FullCalo removed (can be rebuilt from RawBuffer)
+  - Gen/HepMCEvents added as optional (will be written if present on Gauss o/p)
+  - Link objects added (MC truth for tracking digits)
+  - MCTrackInfo added
+
+
+</PRE><H1><A NAME=v4r0>2003-12-12 Boole v4r0</A></H1><PRE>
+Built against GAUDI_v13r0, LHCB_v14r0.
+ 
+- Packages modified: RiSicbGeom v3r7, CaloInterfaces v3r0, CaloMonitor v1r5,
+                     RichUtils v3r6, ITAlgorithms v13r0p1, RichDetTools v3r4,
+                     RichReadout v1r3, MuonBackground v1r4p1, L0Muon v6r6,
+                     L1VeloTradck v5r5, L1Decision v2r3, RichDAQ v1r0p1
+
+- New features 
+  - multiple PV reconstruction (max 3) for L1 (L1Decision v2r3)
+
+</PRE><H1><A NAME=v3r2>2003-12-04 Boole v3r2</A></H1><PRE>
+** Input data must be produced with:                                       **
+**   Gauss  v12r7  or greater, XmlDDDB v19r0 or greater,  v200311 geometry **
+** Output data must be reconstructed with Brunel v21r2 or greater          **
+
+- Packages modified: CaloDigit v1r4p1, ITAlgorithms v13r0, ITCheckers v1r4,
+                     L1VeloTrack v5r4, RichDetTools v3r3, RichReadout v1r2p1,
+                     OTAlgorithms v13r4
+
+- New features
+  - Many changes in IT digitization. (ITAlgorithms v13r0) 
+    See talk at Amsterdam tracking workshop 20/11/2003
+      * New model for energy deposition in Silicon
+      * Convert to adc counts/simulate saturation
+      * Noise levels tuned to testbeam
+      * Remainders --> retuned to laser/testbeam. Spline parameterization
+      * Different noise/remainders in IT L/R T/B boxes
+      * Pick up machine background if it is there
+  - More IT checking histograms (ITCheckers v1r4)
+  - Introduce OTQuarters in OT geometry 
+    (OTAlgorithms v13r4, OTDet v5r0, XmlDDDB v20r0)
+
+- oodigi changes (GaudiConf v7r4)
+  - Removed Trig/L1/OTClusters
+  - Redefinition of OTChannelID bits (backwards incompatible, LHCbKernel v2r10)
+
+- New packaging
+  - Modified i/face IITsignalToNoiseTool (ITAlgorithms v13r0, L1VeloTrack v5r3p1)
+  - Rename some Rich tools (RichDetTools v3r3, RichReadout v1r2p1)
+
+- Bug fixes
+  - Fix an unitialized variable (bug #1963) (CaloDigit v1r4p1)
+  - Fix an unitialized variable (bug #1973) (L1VeloTrack v5r4)
+
+- Removed features
+  - Remove OTDigitToL1 as this is broken by new OT geometry and will in any
+    case be replaced by new algorithm filling L1Buffer. (L1VeloTrack v5r4)
+  - Remove support for v256r0 geometry (not supported by OTDet v5r0)
+
+</PRE><H1><A NAME=v3r1>2003-11-28 Boole v3r1</A></H1><PRE>
+** Input data must be produced with:                               **
+**   SICBMC v264r2 or greater + SicbToOORAWH v3r0, v256r0 geometry **
+**   Gauss  v12r5  or greater, XmlDDDB v19r0,     v200311 geometry **
+** Output data must be reconstructed with Brunel v21r1 or greater  **
+
+- Packages added:    RichDAQ v1r0
+- Packages modified: CaloDigit v1r4, DigiAlg v2r0, OTAlgorithms v13r3,
+                     RiScbGeom v3r6, RichDetTools v3r2, RichDigiQC v1r3,
+                     RichReadout v1r2, RichUtils v3r5
+
+- New features
+   - Populate RawBuffer with calorimeter digits (CaloDigit v1r4)
+   - Populate RawBuffer with rich digits (RichDAQ v1r0)
+   - Handle LHC background in Calo digitization (CaloDigit v1r4)
+   - Improved default OT monitoring, with possibility of switching on 
+     detailed histograms (OTAlgorithms v13r3)
+   - Moved Spillover and LHC background to new "Init" phase, "Data" sequence
+   - Moved BooleInit to new "Init" phase, "Boole" sequence
+
+- oodigi changes (GaudiConf v7r3, EventSys v15r2)
+   - HltBuffer etc. event classes renamed RawBuffer etc.
+     (DAQEvent v3r0, DigiAlg v2r0)
+   - RawBuffer now contains encoded rich and calorimeter digits
+   - Rich and Calorimeter digits removed, can be rebuilt from RawBuffer
+   - Collisions saved also for Spillover events
+
+- New tuning
+   - Speed improvements to Rich geometry (RichDet v6r2)
+   - Small fixes to Rich (RiSicbGeom v3r6)
+   - Speed improvements to Relations (LHCbKernel v2r9)
+
+- Removed features
+   - Removed support for SICBMC optimization TDR geometry (v254r1)
+
+
+</PRE><H1><A NAME=v3r0p1>2003-11-10 Boole v3r0p1</A></H1><PRE>
+- Packages modified: DigiAlg v2r1p1, Boole v3r0p1
+
+- Bug fix
+   - Correctly serialize HltBuffer and L1Buffer (DAQEvent v2r1)
+
+</PRE><H1><A NAME=v3r0>2003-11-04 Boole v3r0</A></H1><PRE>
+- New packages: Kernel/LHCbTools v1r0
+- Packages modified: RichUtils v3r4, RiSicbGeom v3r5, RichDetTools v3r1,
       RichReadout v1r1, RichDigiQC v1r2, DigiAlg v2r1, L1VeloTrack v5r3
 
-!======================== BooleSys v2r1 2003-10-16 ========================
-! 2003-10-15 - Marco Cattaneo
- - Packages modified: Boole v2r1, MuonBackground v1r4, DigiAlg v2r0p1
- - Packages removed:  MuonUtils
+- New features
+   - Add a new "Relations" phase, to create all Relations tables needed for the
+     output file, independent of whether Moni phase is executed
+   - Print a timing normalization at intialization (DigiAlg v2r1, LHCbTools v1r0)
+   - Move ITDigitToL1 and OTDigitToL1 to the IT/OT digitization sequences
 
-!======================== BooleSys v2r0 2003-10-08 ========================
-! 2003-10-08 - Marco Cattaneo
- - Packages added:    RichReadout v1r0, RiSicbCnv v3r4
- - Packages modified: Boole v2r0, DigiAlg v2r0, ITCheckers v1r3p1, MuonAlgs v5r0,
+- New tuning
+   - Changes to Rich HPD digitization
+     (RiSicbGeom v3r5, RichUtils v3r4, RichDetTools v3r1, RichReadout v1r1)
+   - Changes to Rich monitoring (RichDigiQC v1r2)
+
+- DST changes
+   - Change to RichSmartID. Data produced with this version of Boole requires
+     Brunel v21r*. (RichKernel v4r0, RichEvent v6r0)
+   - HLTBuffer event class renamed HltBuffer 
+     (DAQEvent v2r0, GaudiConf v7r2, DigiAlgs v2r1)
+
+- Geometry changes
+   - Renamed v200309-hpd.opts to v200311.opts
+   - Removed v256-MaPMT.opts and v200309.opts (MaPMT geometries)   
+
+- Bug fixes
+   - Fix uninitalised variable in RichHPDSignalSICB.cpp (bug 1669)
+
+- Package changes
+   - Remove dependency from ParamFiles for beam data in LumiTool: "BeamCrossRate"
+     and "TotalCrossSection" taken from job options (DigiAlgs v2r1)
+   - Remove dependency from CERNLIB for solution of quartic polynomial. Now done
+     in private code, to be submitted to GSL (RichDetTools v3r1)
+   - Remove unneccessary usage of ITDigit2MCHit associator from ITDigitToL1
+     (L1veloTrack v5r3)
+
+</PRE><H1><A NAME=v2r1>2003-10-16 Boole v2r1</A></H1><PRE>
+- Packages modified: Boole v2r1, MuonBackground v1r4, DigiAlg v2r0p1
+- Packages removed:  MuonUtils
+
+- Bug fixes
+   - MuonBackground was not finding new SpilloverAlg (MuonBackground v1r4)
+   - Spilloveralg was filling NextNext event instead of PrevPrev (DigiAlg v2r0p1)
+   - Fix bugs 1653, 1654 (BooleMoni.opts, BooleMoniProd.opts)
+   - Remove some obsolete sicb related commands from Boole.job and valgrind.job
+
+- Packaging changes
+   - Remove unneccessary MuonUtils package
+
+</PRE><H1><A NAME=v2r0>2003-10-09 Boole v2r0</A></H1><PRE>
+First version of Boole completely independent of ZEBRA. To process SICBMC data,
+first convert it to oosim format using SicbToOORawh, version v3r0 or greater 
+
+Can process data produced with:
+  SICBMC v264r2 or greater
+   - for standard cdf geometry,  use v256r0.opts  options file
+   - for Rich MaPMT options,     use v256r0-MaPMT.opts options file
+  Gauss v12r5 or greater
+   - for baseline (MaPMT) September 03 geometry, use v200309.opts options file
+   - for September 03 geometry, HPD option,  use v200309-hpd.opts options file
+
+(Can also process 2003 TDR production data, but with low efficiency due to
+ incompatibilities of the input data with the new Rich digitization) 
+
+- Packages added:    RichReadout v1r0, RiSicbCnv v3r4
+- Packages modified: Boole v2r0, DigiAlg v2r0, ITCheckers v1r3p1, MuonAlgs v5r0,
      MuonBackground v1r3, OTAlgorithms v13r2, RichDetTools v3r0, RichDigiQC v1r1,
      RichUtils v3r3, L1Decision v2r2, VeloAlgorithms v2r8
- - Packages removed:  BrunelSicb, BrunelAlgs, MCTools, recevt, recrich
+- Packages removed:  BrunelSicb, BrunelAlgs, MCTools, recevt, recrich
 
-!======================== BooleSys v1r0 2003-07-17 ========================
-! 2003-07-17 - Marco Cattaneo
- - First version of Boole, based on Brunel v19r1
- - Changed packages relative to Brunel v19r1 (to adapt to new Calo, Rich MC Hit):
+- New features
+  . Reads data (including spillover) in oosim format
+  . Use MergeEventAlg for spillover, allows any number of spillover events; 
+    default is three (/Prev, /Next, /NextNext) (DigiAlg v2r0)
+  . Deploy Rich C++ digitization. Supports both MaPMT (baseline) and HPD options 
+    (RichKernelv3r2, RichUtils v3r3, RichDet v6r0, RichDetTools v3r0, 
+     RichEvent v5r1, RiSicbGeom v3r4, RichReadout v1r0, RichDigiQC v6r2)
+  . All parameterisations taken from ParamFiles directory (includes versioning
+    needed by production tools). LHCBDBASE environment variable no longer needed.
+  . Create L1Buffer and HLTBuffer for data in DAQ format. Currently these are 
+    empty, sub-detector code is needed to populate this according to front end
+    specifications. (DAQEvent v1r1, DigiAlg v2r0)
+  . CreateL1Event algorithm at start of L1 sequence, gives access to L1Buffer in
+    L1 algorithms. Should be included in L1 timing measurements.
+    (DAQEvent v1r1, DigiAlg v2r0)
+
+- Removed features
+  . Removed SICB common block. Can no longer read Zebra data directly, must be
+    first converted to oosim by SicbToOORawh program (v3r0 or greater). 
+	  Boole.cards no longer needed
+  . Removed access to LHCBDBASE. cdf files still in use have been moved to
+    ParamFiles package (v2r1 or greater)
+
+- oodigi output changes (GaudiConf v7r1)
+  . Add DAQ/L1Buffer and DAQ/HLTBuffer
+    (N.B. these are placeholders, currently empty. Will eventaully contain
+     the complete digitized event, to simulate data format from DAQ)
+  . Add MC/Rich/Digits to preserve relation to MC truth (forgotten in v1r0)
+
+- New tuning
+  . Switch on 10kHz noise in OT digitization (OTAlgorithms v13r2)
+  . New parameterisation of muon background, following fix to "TOF bug"
+    (MuonBackground v1r3)
+
+- Bug fixes
+  . Fix to BooleMoni.opts to switch on OT monitoring
+  . Fix to BooleMoniProd.opts to switch on CALO monitoring
+
+- New packaging
+  . Include RiSicbGeom package in BOOLE project to remove dependency on SICBOO
+    project
+  . Removed dependencies on NAGC 
+    (L1Decision v2r2, ITCheckers v1r3p1, VeloAlgorithms v2r8)
+
+
+</PRE><H1><A NAME=v1r0>2003-07-17 Boole v1r0</A></H1><PRE>
+First version of the LHCb digitization program.
+  - Replaces the digitization and trigger phases of Brunel
+  - Produces output to be reconstructed by Brunel v20r0
+
+This verson is based on digitization+trigger phases of Brunel v19r1.
+
+- Changed packages relative to Brunel v19r1 (to adapt to new Calo, Rich MC Hit):
      DigiAlg v1r1, L0Calo v7r1, CaloDigit v1r3
+
+Changes relative to Brunel v19r1
+--------------------------------
+Event model changes:
+ - Boole cannot read oorawh files produced with SicbToOORawh v1r* due to changes
+   in the Calo and Rich MC Hit definitions. Use data converted with SicbToOORawh
+   v2r*
+
+Bug fixes:
+ - Correct a bug with rotation of TT stereo layers (ITDet v1r5)
+
+</PRE>
