@@ -1,25 +1,16 @@
+
+//------------------------------------------------------------------------------------
 /** @file IRichMCTruthTool.h
  *
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.8 2005-01-18 10:49:40 cattanem Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.7  2004/11/03 12:14:57  jonrob
- *  Add method to locate the MCRichDigit associated to a given RichSmartID
- *
- *  Revision 1.6  2004/10/13 09:19:23  jonrob
- *  New MCTruth methods
- *
- *  Revision 1.5  2004/08/19 13:55:58  jonrob
- *  Add new method to MC truth tool + various other things after CVS server switch
- *
- *  Revision 1.4  2004/07/26 17:53:16  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: IRichMCTruthTool.h,v 1.9 2005-02-20 18:40:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
  */
+//------------------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_IRICHMCTRUTHTOOL_H
 #define RICHKERNEL_IRICHMCTRUTHTOOL_H 1
@@ -41,6 +32,7 @@ class TrgTrack;
 /// Static Interface Identification
 static const InterfaceID IID_IRichMCTruthTool( "IRichMCTruthTool", 1, 0 );
 
+//------------------------------------------------------------------------------------
 /** @class IRichMCTruthTool IRichMCTruthTool.h RichKernel/IRichMCTruthTool.h
  *
  *  Interface for tool performing MC truth associations between Rich event objects
@@ -48,6 +40,7 @@ static const InterfaceID IID_IRichMCTruthTool( "IRichMCTruthTool", 1, 0 );
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//------------------------------------------------------------------------------------
 
 class IRichMCTruthTool : public virtual IAlgTool {
 
@@ -189,11 +182,33 @@ public:
    *
    *  @param hit Pointer to an MCRichHit
    *
-   *  @return Boolean indicating if the digit is background
+   *  @return Boolean indicating if the hit is background
    *  @retval true  MCRichHit originated from a background hit
    *  @retval false MCRichHit originated from Cherenkov Radiation
    */
   virtual bool isBackground ( const MCRichHit * hit ) const = 0;
+
+  /** Checks if the given MCRichHit came from a spillover event
+   *
+   *  @param hit Pointer to an MCRichHit
+   *
+   *  @return Boolean indicating if the hit is from spillover
+   *  @retval true  MCRichHit originated from a spillover event
+   *  @retval false MCRichHit originated from the signal event
+   */
+  virtual bool isSpillover ( const MCRichHit * hit ) const = 0;
+
+  /** Checks if the given MCRichDigit came from a spillover event
+   *
+   *  @param hit Pointer to an MCRichDigit
+   *
+   *  @return Boolean indicating if the digit is from spillover
+   *  @retval true  MCRichDigit originated from a spillover event
+   *                (None of the associated MCRichHits came from the signal event)
+   *  @retval false MCRichDigit originated from the signal event
+   *                (All of the associated MCRichHits came from spillover events)
+   */
+  virtual bool isSpillover ( const MCRichDigit * digit ) const = 0;
 
 };
 
