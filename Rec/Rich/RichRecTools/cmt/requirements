@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.13 2003-06-27 15:14:11 cattanem Exp $
+# $Id: requirements,v 1.14 2003-06-30 15:48:21 jonrob Exp $
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones
 #
 
 package RichRecTools
-version v2r0p1
+version v2r1
 
 # ================ structure ================================================
 branches src cmt doc

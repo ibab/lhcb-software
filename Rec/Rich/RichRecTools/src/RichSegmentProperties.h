@@ -1,50 +1,48 @@
-// $Id: RichRecSegmentTool.h,v 1.4 2003-06-27 15:14:12 cattanem Exp $
-#ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
-#define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
+// $Id: RichSegmentProperties.h,v 1.1 2003-06-30 15:47:06 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHSEGMENTPROPERTIES_H
+#define RICHRECTOOLS_RICHSEGMENTPROPERTIES_H 1
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
-#include "GaudiKernel/IIncidentListener.h"
-#include "GaudiKernel/IIncidentSvc.h"
-//#include "GaudiKernel/IChronoStatSvc.h"
-#include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/IParticlePropertySvc.h"
+
+// base class
+#include "RichRecBase/RichRecToolBase.h"
 
 // RichUtils
 #include "RichUtils/IRich1DProperty.h"
 #include "RichUtils/Rich1DTabProperty.h"
 
-// interfaces
-#include "RichRecBase/IRichRecSegmentTool.h"
+// Event model
+#include "Event/RichRecSegment.h"
+#include "Event/RichPID.h"
 
-// Detector
+// interfaces
+#include "RichRecBase/IRichSegmentProperties.h"
+#include "RichRecBase/IRichGeomEff.h"
 #include "RichDetTools/IRichDetInterface.h"
 
-// Forward declarations
-class IDataProviderSvc;
-class IParticlePropertySvc;
-
-/** @class RichRecSegmentTool RichRecSegmentTool.h
+/** @class RichSegmentProperties RichSegmentProperties.h
  *
- *  Tool which performs the association between RichRecTracks and
- *  RichRecPixels to form RichRecSegments
+ *  Tool performing useful calculations and manipulations evolving
+ *  RichRecSegments
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *  @todo Review this class and move methods to more logical and sef-contained tools
  */
 
-class RichRecSegmentTool : public AlgTool,
-                           virtual public IRichRecSegmentTool,
-                           virtual public IIncidentListener {
+class RichSegmentProperties : public RichRecToolBase,
+                              virtual public IRichSegmentProperties {
 
 public:
 
   /// Standard constructor
-  RichRecSegmentTool( const std::string& type,
-                      const std::string& name,
-                      const IInterface* parent );
+  RichSegmentProperties( const std::string& type,
+                         const std::string& name,
+                         const IInterface* parent );
 
   /// Destructor
-  virtual ~RichRecSegmentTool() {};
+  virtual ~RichSegmentProperties() {};
 
   /// Initialize method
   StatusCode initialize();
@@ -52,110 +50,87 @@ public:
   /// Finalize method
   StatusCode finalize();
 
-  /// Implement the handle method for the Incident service.
-  /// This is used to inform the tool of software incidents.
-  void handle( const Incident& incident );
-
-  /// Save a new RichRecSegment in the container
-  void saveSegment( RichRecSegment * segment );
-
-  /// Return Pointer to RichRecSegments
-  RichRecSegments * richSegments();
-
-  /// Obtain geometrical efficiency for this track and hypothesis
-  double geomEfficiency ( RichRecSegment * segment,
-                          const Rich::ParticleIDType & id );
-
-  /// Obtain scattered geometrical efficiency for this track and hypothesis
-  double geomEfficiencyScat ( RichRecSegment * segment,
-                              const Rich::ParticleIDType & id );
-
   /// Expected number of signal photons for given segment and hypothesis
   double nSignalPhotons ( RichRecSegment * segment,
-                          const Rich::ParticleIDType & id );
+                          const Rich::ParticleIDType id );
 
   /// Expected number of observable signal photons for given segment and hypothesis
   double nObservableSignalPhotons ( RichRecSegment * segment,
-                                    const Rich::ParticleIDType & id );
+                                    const Rich::ParticleIDType id );
 
   /// Expected number of scattered photons for given segment and hypothesis
   double nScatteredPhotons ( RichRecSegment * segment,
-                             const Rich::ParticleIDType & id );
+                             const Rich::ParticleIDType id );
 
   /// Expected number of observable scattered photons for given segment and hypothesis
   double nObservableScatteredPhotons ( RichRecSegment * segment,
-                                       const Rich::ParticleIDType & id );
+                                       const Rich::ParticleIDType id );
 
   /// Expected number of observable signal+scattered photons for given segment and hypothesis
   double nTotalObservablePhotons ( RichRecSegment * segment,
-                                   const Rich::ParticleIDType & id );
+                                   const Rich::ParticleIDType id );
 
   /// Expected number of emitted photons for given segment and hypothesis
   double nEmittedPhotons ( RichRecSegment * segment,
-                           const Rich::ParticleIDType& id );
+                           const Rich::ParticleIDType id );
 
   /// Expected number of emitted photons for given segment and hypothesis,
   /// scaled by the HPD quantum efficiency
   double nDetectablePhotons ( RichRecSegment * segment,
-                              const Rich::ParticleIDType& id );
+                              const Rich::ParticleIDType id );
 
   /// Returns average Cherenkov angle for given particle hypothesis
   double avgCherenkovTheta( RichRecSegment * segment,
-                            const Rich::ParticleIDType& id );
+                            const Rich::ParticleIDType id );
 
   /// Returns 'beta' for given particle hypothesis
-  double beta( RichRecSegment * segment, const Rich::ParticleIDType& id );
+  double beta( RichRecSegment * segment, const Rich::ParticleIDType id );
 
   /// Is it geometrically possible for this segment to give Rich information
   bool hasRichInfo( RichRecSegment * segment );
 
   /// Is this segment above threshold for a given particle hypothesis
-  bool aboveThreshold( RichRecSegment * segment, const Rich::ParticleIDType& type );
+  bool aboveThreshold( RichRecSegment * segment,
+                       const Rich::ParticleIDType type );
 
   /// Average refractive index for this segments radiator
   double refractiveIndex( RichRecSegment * segment );
 
   /// Photon resolution
   double ckThetaResolution( RichRecSegment * segment,
-                            const Rich::ParticleIDType& id );
+                            const Rich::ParticleIDType id );
+
+  /// Set the threshold information in a RichPID object for given segment
+  void setThresholdInfo( RichRecSegment * segment, RichPID * pid );
 
   // Private methods
 private:
 
   /// Photon Rayleigh scattering probability in aerogel
-  double photonUnscatteredProb( const double& energy,
-                                const double& path );
+  double photonUnscatteredProb( const double energy,
+                                const double path );
 
   /// Refractive index for a given energy
-  double refractiveIndex( const Rich::RadiatorType& radiator,
+  double refractiveIndex( const Rich::RadiatorType radiator,
                           double energy );
 
   /// Average refractive index for given radiator
-  double refractiveIndex( const Rich::RadiatorType& radiator );
+  double refractiveIndex( const Rich::RadiatorType radiator );
 
-  // Private data
-private:
+private:  // Private data
 
-  /// Pointer to RichRecTracks
-  RichRecSegments * m_segments;
+  /// Pointers to tool instances
+  IRichDetInterface * m_richDetInt;
+  IRichGeomEff * m_geomEff;
 
-  /// Pointer to event data service
-  IDataProviderSvc* m_evtDataSvc;
-
-  /// Pointer to RichDetInterface tool
-  IRichDetInterface * m_richDetInterface;
+  /// Pointer to Particle property service
+  IParticlePropertySvc * m_ppSvc;
 
   /// Array containing particle masses
   std::vector<double> m_particleMass;
 
   /// Array containing particle masses
   std::vector<double> m_particleMassSq;
-
-  /// Location of RichRecSegments in TES
-  std::string m_richRecSegmentLocation;
-
-  /// Number of photons to use in geometrical efficiency calculation
-  int m_nGeomEff;
 
   /// Increment parameter for HPD efficiencies
   double m_hpdInc;
@@ -167,10 +142,6 @@ private:
   std::vector<double> m_sinCkPhi;
   /// Cache Cos(angle) for geometrical efficiency calculation
   std::vector<double> m_cosCkPhi;
-
-  /// Number of photons to quit after in geometrical efficiency calculation
-  /// if all so far have failed
-  int m_nGeomEffBailout;
 
   /// Average refractive index for each radiator
   std::vector<double> m_AvRefIndex;
@@ -222,9 +193,6 @@ private:
   /// curve for all HPDs
   Rich1DTabProperty * m_referenceQE;
 
-  /// Flat Randomn distribution between 0 and 1
-  Rndm::Numbers m_uniDist;
-
   std::vector<double> m_theerr[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
   std::vector<double> m_thebin[Rich::NRadiatorTypes];
 
@@ -234,4 +202,4 @@ private:
 
 };
 
-#endif // RICHRECTOOLS_RICHRECSEGMENTTOOL_H
+#endif // RICHRECTOOLS_RICHSEGMENTPROPERTIES_H

@@ -1,97 +1,81 @@
-// $Id: RichRecPixelTool.cpp,v 1.5 2003-06-27 15:14:12 cattanem Exp $
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
+// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.1 2003-06-30 15:47:05 jonrob Exp $
 
 // local
-#include "RichRecPixelTool.h"
+#include "RichPixelCreatorFromRichDigits.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichRecPixelTool
+// Implementation file for class : RichPixelCreatorFromRichDigits
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichRecPixelTool>          s_factory ;
-const        IToolFactory& RichRecPixelToolFactory = s_factory ;
+static const  ToolFactory<RichPixelCreatorFromRichDigits>          s_factory ;
+const        IToolFactory& RichPixelCreatorFromRichDigitsFactory = s_factory ;
 
 // Standard constructor
-RichRecPixelTool::RichRecPixelTool( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
-  : AlgTool( type, name, parent ) {
+RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::string& type,
+                                                                const std::string& name,
+                                                                const IInterface* parent )
+  : RichRecToolBase( type, name, parent ) {
 
-  declareInterface<IRichRecPixelTool>(this);
+  declareInterface<IRichPixelCreator>(this);
 
-  // Define job option parameters
   declareProperty( "RichRecPixelLocation",
                    m_richRecPixelLocation = RichRecPixelLocation::Default );
   declareProperty( "RecoDigitsLocation",
                    m_recoDigitsLocation = RichDigitLocation::Default );
-  declareProperty( "SICBRichDigits", m_sicbDigits = true );
 
 }
 
-StatusCode RichRecPixelTool::initialize() {
+StatusCode RichPixelCreatorFromRichDigits::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
 
-  StatusCode sc = StatusCode::SUCCESS;
+  // Sets up various tools and services
+  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
   // Get pointer to EDS
   if ( !serviceLocator()->service( "EventDataSvc", m_evtDataSvc, true ) ) {
     msg << MSG::ERROR << "EventDataSvc not found" << endreq;
-    sc = StatusCode::FAILURE;
+    return StatusCode::FAILURE;
   }
 
-  // Get Pointer to PixelFinder (temporary for SICB data)
-  if ( !toolSvc()->retrieveTool( "PixelFinder", m_pixelFinder ) ) {
-    msg << MSG::ERROR << "PixelFinder not found" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // Retrieve particle property service
-  if ( !toolSvc()->retrieveTool( "RichDetInterface", m_richDetInterface ) ) {
-    msg << MSG::ERROR << "RichDetInterface not found" << endreq;
-    sc = StatusCode::FAILURE;
-  }
+  // Acquire instances of tools
+  acquireTool("RichDetInterface", m_richDetInt);
 
   // Setup incident services
   IIncidentSvc * incSvc;
   if ( !serviceLocator()->service( "IncidentSvc", incSvc, true ) ) {
     msg << MSG::ERROR << "IncidentSvc not found" << endreq;
-    sc = StatusCode::FAILURE;
+    return StatusCode::FAILURE;
   } else {
     incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
-    //incSvc->addListener( this, "EndEvent"   ); // Informed at the end of event
     incSvc->release();
   }
 
-  return sc;
+  // Informational printout
+  msg << MSG::DEBUG
+      << " Using OO RichDigits" << endreq;
+
+  return StatusCode::SUCCESS;
 }
 
-StatusCode RichRecPixelTool::finalize() {
+StatusCode RichPixelCreatorFromRichDigits::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  //Release the tools ans services
-  if ( m_pixelFinder ) toolSvc()->releaseTool( m_pixelFinder );
-  if ( m_richDetInterface ) toolSvc()->releaseTool( m_richDetInterface );
+  // release services and tools
+  if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
 
-  if( 0 != m_evtDataSvc ) {
-    m_evtDataSvc->release();
-    m_evtDataSvc = 0;
-  }
-  
-  return StatusCode::SUCCESS;
+  // Execute base class method
+  return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichRecPixelTool::handle ( const Incident& incident ) {
+void RichPixelCreatorFromRichDigits::handle ( const Incident& incident ) {
 
   if ( "BeginEvent" == incident.type() ) {
 
@@ -135,8 +119,16 @@ void RichRecPixelTool::handle ( const Incident& incident ) {
 }
 
 // Forms a new RichRecPixel object from a RichDigit
-RichRecPixel * RichRecPixelTool::newPixel( RichDigit * digit ) {
+RichRecPixel * RichPixelCreatorFromRichDigits::newPixel( ContainedObject * obj ) {
 
+  // Try to cast to RichDigit
+  RichDigit * digit = dynamic_cast<RichDigit*>(obj);
+  if ( !digit ) { 
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::WARNING << "Parent not of type RichDigit" << endreq;
+    return NULL;
+  }
+  
   RichSmartID id = digit->key();
 
   // See if this RichRecPixel already exists
@@ -152,21 +144,15 @@ RichRecPixel * RichRecPixelTool::newPixel( RichDigit * digit ) {
       newPixel = new RichRecPixel();
       m_pixels->insert( newPixel );
 
-      // difference treatment if digits from SICB or OO
+      // Positions
       HepPoint3D & gPosition = newPixel->globalPosition();
-      HepPoint3D & lPosition = newPixel->localPosition();
-      if ( m_sicbDigits ) {
-        gPosition = 10.0 * (m_pixelFinder->globalPosition(id));
-        lPosition = 10.0 * (m_pixelFinder->SICBlocalPosition(id));
-        m_pixelFinder->convertSmartID( id ); //convert smartID to OO conventions
-      } else { // the glorious future!!!
-        m_richDetInterface->globalPosition( id, gPosition );
-        // no method for local position as yet !
-      }
+      m_richDetInt->globalPosition( id, gPosition );
+      // no method for local position as yet !
+      //HepPoint3D & lPosition = newPixel->localPosition();
 
       // Set smartID
       newPixel->setSmartID( id );
- 
+
       // Set parent information
       newPixel->setParentPixel( digit );
       newPixel->setParentType( Rich::RecPixel::Digit );
@@ -181,33 +167,32 @@ RichRecPixel * RichRecPixelTool::newPixel( RichDigit * digit ) {
 
 }
 
-StatusCode RichRecPixelTool::newPixels() {
+StatusCode RichPixelCreatorFromRichDigits::newPixels() {
 
   if ( m_allDone ) return StatusCode::SUCCESS;
   m_allDone = true;
 
+  MsgStream msg( msgSvc(), name() );
+
   // Obtain smart data pointer to RichDigits
   SmartDataPtr<RichDigits> digits( m_evtDataSvc, m_recoDigitsLocation );
   if ( !digits ) {
-    MsgStream msg( msgSvc(), name() );
     msg << MSG::ERROR << "Failed to locate digits at "
         << m_recoDigitsLocation << endreq;
     return StatusCode::FAILURE;
+  } else {
+    msg << MSG::DEBUG << "located " << digits->size() << " RichDigits at "
+        <<  m_recoDigitsLocation << endreq;
   }
-  
+
   for ( RichDigits::iterator digit = digits->begin();
         digit != digits->end();
         ++digit ) { newPixel( *digit ); }
-  
+
   return StatusCode::SUCCESS;
 }
 
-RichRecPixels * RichRecPixelTool::richPixels()
-{ 
-  return m_pixels;
-}
-
-RichDigit * RichRecPixelTool::parentRichDigit ( const RichRecPixel * pixel )
+RichRecPixels *& RichPixelCreatorFromRichDigits::richPixels()
 {
-  return dynamic_cast<RichDigit*>( (ContainedObject*)pixel->parentPixel() );
+  return m_pixels;
 }

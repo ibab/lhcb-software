@@ -1,14 +1,17 @@
-// $Id: RichRecMCTruthTool.h,v 1.2 2003-06-27 15:14:12 cattanem Exp $
+// $Id: RichRecMCTruthTool.h,v 1.3 2003-06-30 15:47:05 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/ToolFactory.h"
+
+// base class
+#include "RichRecBase/RichRecToolBase.h"
 
 // Relations
 #include "Relations/IAssociatorWeighted.h"
@@ -22,16 +25,18 @@
 #include "Event/RichRecPixel.h"
 #include "Event/RichRecTrack.h"
 #include "Event/RichRecPhoton.h"
+#include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
+#include "Event/MCRichOpticalPhoton.h"
 
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
-#include "RichRecBase/IRichRecTrackTool.h"
-#include "RichRecBase/IRichRecPixelTool.h"
-#include "RichRecBase/IRichRecSegmentTool.h"
+#include "RichRecBase/IRichTrackCreator.h"
+#include "RichRecBase/IRichPixelCreator.h"
+#include "RichRecBase/IRichSegmentCreator.h"
 
-// Forward declarations
-class IDataProviderSvc;
+// CLHEP
+#include "CLHEP/Units/PhysicalConstants.h"
 
 /** @class RichRecMCTruthTool RichRecMCTruthTool.h
  *
@@ -44,7 +49,7 @@ class IDataProviderSvc;
 // tracking MC truth
 typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackAsct ;
 
-class RichRecMCTruthTool : public AlgTool,
+class RichRecMCTruthTool : public RichRecToolBase,
                            virtual public IRichRecMCTruthTool,
                            virtual public IIncidentListener {
 
@@ -66,10 +71,10 @@ public:
   void handle( const Incident& incident );
 
   /// Find best MCParticle association for a given RichRecTrack
-  MCParticle * mcParticle( const RichRecTrack * richTrack );
+  const MCParticle * mcParticle( const RichRecTrack * richTrack );
 
   /// Find best MCParticle association for a given RichRecSegment
-  MCParticle * mcParticle( const RichRecSegment * richSegment );
+  const MCParticle * mcParticle( const RichRecSegment * richSegment );
 
   /// Truth particle type for given RichRecTrack
   Rich::ParticleIDType mcParticleType( const RichRecTrack * richTrack );
@@ -81,25 +86,32 @@ public:
   Rich::ParticleIDType mcParticleType( const MCParticle * mcPart );
 
   /// Find parent MCParticle association for a given RichRecPixel
-  MCParticle * mcParticle( const RichRecPixel * richPixel );
+  const MCParticle * mcParticle( const RichRecPixel * richPixel );
 
   /// Find parent MCRichDigit association for a given RichRecPixel
-  MCRichDigit * mcRichDigit( const RichRecPixel * richPixel );
+  const MCRichDigit * mcRichDigit( const RichRecPixel * richPixel );
 
   /// Find parent MCRichOpticalPhoton association for a given RichRecPixel
-  MCRichOpticalPhoton * mcRichOpticalPhoton( const RichRecPixel * richPixel );
+  const MCRichOpticalPhoton * mcRichOpticalPhoton( const RichRecPixel * richPixel );
 
-  /// If pixel and segment have the same MParticle returns pointer to parent,
-  /// otherwise return NULL
-  MCParticle * trueRecPhoton( const RichRecPhoton * photon );
+  /// Is this a true photon candidate ?
+  /// Do the associated track and pixel have the same MC parent
+  const MCParticle * trueRecPhoton( const RichRecPhoton * photon );
+
+  /// Is this a true Cherenkov photon candidate ?
+  /// Do the associated track and pixel have the same MC parent AND was the pixel
+  /// the result of Cherenkov radiation from the relevant radiator
+  const MCParticle * trueCherenkovPhoton( const RichRecPhoton * photon );
 
   /// Returns a vector of pointers to true Cherenkov pixels for this segment
   RichRecPixelVector* trueCkPixels( const RichRecSegment * segment );
 
-private:
+private: // private methods
 
   MCRichDigits * mcRichDigits();
   MCRichOpticalPhotons * mcRichOpticalPhotons();
+
+private: // private data
 
   bool m_mcRichDigitsDone;
   bool m_mcRichOptPhotsDone;
@@ -129,14 +141,14 @@ private:
   std::string m_trAsctType;
   TrackAsct* m_trackToMCP;
 
-  /// Pointer to RichRecTrackTool interface
-  IRichRecTrackTool* m_richRecTrackTool;
+  /// Pointer to RichTrackCreator interface
+  IRichTrackCreator * m_trackCreator;
 
   /// Pointer to RichRecPixelTool interface
-  IRichRecPixelTool* m_richRecPixelTool;
+  IRichPixelCreator * m_pixelCreator;
 
-  /// Pointer to RichRecSegmentTool interface
-  IRichRecSegmentTool* m_richRecSegmentTool;
+  /// Pointer to RichSegmentCreator
+  IRichSegmentCreator * m_segCreator;
 
 };
 

@@ -1,41 +1,39 @@
-// $Id: RichRecSegmentTool.cpp,v 1.10 2003-06-27 15:14:12 cattanem Exp $
+// $Id: RichSegmentProperties.cpp,v 1.1 2003-06-30 15:47:06 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
 // local
-#include "RichRecSegmentTool.h"
+#include "RichSegmentProperties.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
+// Rich Kernel
+#include "RichKernel/MessageSvcStl.h"
+
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichRecSegmentTool
+// Implementation file for class : RichSegmentProperties
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichRecSegmentTool>          s_factory ;
-const        IToolFactory& RichRecSegmentToolFactory = s_factory ;
+static const  ToolFactory<RichSegmentProperties>          s_factory ;
+const        IToolFactory& RichSegmentPropertiesFactory = s_factory ;
 
 // Standard constructor
-RichRecSegmentTool::RichRecSegmentTool ( const std::string& type,
-                                         const std::string& name,
-                                         const IInterface* parent )
-  : AlgTool( type, name, parent ) {
+RichSegmentProperties::RichSegmentProperties ( const std::string& type,
+                                               const std::string& name,
+                                               const IInterface* parent )
+  : RichRecToolBase( type, name, parent ) {
 
-  declareInterface<IRichRecSegmentTool>(this);
+  declareInterface<IRichSegmentProperties>(this);
 
   // Define job option parameters
-  declareProperty( "RichRecSegmentLocation",
-                   m_richRecSegmentLocation = RichRecSegmentLocation::Default );
-  declareProperty( "NPhotonsGeomEffCalc", m_nGeomEff = 100 );
-  declareProperty( "NPhotonsGeomEffBailout", m_nGeomEffBailout = 20 );
+
   declareProperty( "ExpPhotonEnergyBins", m_EnergyBins = 5 );
 
   (m_thebin[Rich::Aerogel]).push_back( 0.2 );
@@ -119,9 +117,6 @@ RichRecSegmentTool::RichRecSegmentTool ( const std::string& type,
   (m_theerr[Rich::CF4][Rich::Track::Velo]).push_back( 999 );
   (m_theerr[Rich::CF4][Rich::Track::Velo]).push_back( 999 );
 
-  // randomn number distribution
-  Rndm::Numbers m_uniDist;
-
   // temporary parameters to take into acount degraded performance for robustness tests
   declareProperty( "ScalePhotonEff", m_photonEffScale = 1 );
   m_emisPntErrScale.push_back( 1 );
@@ -131,68 +126,24 @@ RichRecSegmentTool::RichRecSegmentTool ( const std::string& type,
 
 }
 
-StatusCode RichRecSegmentTool::initialize() {
+StatusCode RichSegmentProperties::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
 
   StatusCode sc = StatusCode::SUCCESS;
 
-  // Get pointer to Event Data service
-  if ( !serviceLocator()->service( "EventDataSvc", m_evtDataSvc, true ) ) {
-    msg << MSG::ERROR << "EventDataSvc not found" << endreq;
-    sc = StatusCode::FAILURE;
-  }
+  // Sets up various tools and services
+  if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
+
+  // Acquire instances of tools
+  acquireTool("RichDetInterface", m_richDetInt);
+  acquireTool("RichGeomEff", m_geomEff);
 
   // Retrieve particle property service
-  if ( !toolSvc()->retrieveTool( "RichDetInterface", m_richDetInterface ) ) {
-    msg << MSG::ERROR << "RichDetInterface not found" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // Retrieve particle property service
-  IParticlePropertySvc* ppSvc = 0;
-  if ( !serviceLocator()->service( "ParticlePropertySvc", ppSvc ) ) {
+  if ( !serviceLocator()->service( "ParticlePropertySvc", m_ppSvc ) ) {
     msg << MSG::ERROR << "ParticlePropertySvc not found" << endreq;
     sc = StatusCode::FAILURE;
-  }
-
-  // Setup incident services
-  IIncidentSvc * incSvc;
-  if ( !serviceLocator()->service( "IncidentSvc", incSvc, true ) ) {
-    msg << MSG::ERROR << "IncidentSvc not found" << endreq;
-    sc = StatusCode::FAILURE;
-  } else {
-    incSvc->addListener( this, "BeginEvent" );   // Informed of a new event
-    //incSvc->addListener( this, "EndEvent"   ); // Informed at the end of event
-    incSvc->release();
-  }
-
-  // randomn number service
-  IRndmGenSvc * randSvc;
-  if ( serviceLocator()->service( "RndmGenSvc", randSvc, true ) ) {
-    if ( !m_uniDist.initialize( randSvc, Rndm::Flat(0,1) ) ) {
-      msg << MSG::ERROR << "Unable to initialise randomn numbers" << endreq;
-      sc = StatusCode::FAILURE;
-    }
-    randSvc->release();
-  } else {
-    sc = StatusCode::FAILURE;
-  }
-
-  // If all ok, continue
-  if ( !sc ) return sc;
-
-  // Set up parameters for geometrical efficiency calculation
-  m_hpdInc = 1.0 / ( (double)m_nGeomEff );
-  m_incPhi = M_PI/2.0 + M_2PI/( (double)m_nGeomEff );
-  //m_incPhi = M_2PI/( (double)m_nGeomEff );
-  double ckPhi = 0.0;
-  m_sinCkPhi.clear();
-  m_cosCkPhi.clear();
-  for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot, ckPhi += m_incPhi ) {
-    m_sinCkPhi.push_back( sin(ckPhi) );
-    m_cosCkPhi.push_back( cos(ckPhi) );
   }
 
   // Define mirror reflectivities and energy cutoff values.
@@ -212,18 +163,18 @@ StatusCode RichRecSegmentTool::initialize() {
 
   // Get the Quantum Eff
   // For time being assume only one reference curve for all HPDs
-  m_referenceQE = m_richDetInterface->hpdQuantumEff();
+  m_referenceQE = m_richDetInt->hpdQuantumEff();
   if ( !m_referenceQE ) {
     msg << MSG::ERROR << "Failed to acquire QE function" << endreq;
     return StatusCode::FAILURE;
   }
 
   // Retrieve particle masses
-  m_particleMass.push_back( ppSvc->find("e+" )->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("mu+")->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("pi+")->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("K+" )->mass()/MeV );
-  m_particleMass.push_back( ppSvc->find("p+" )->mass()/MeV );
+  m_particleMass.push_back( m_ppSvc->find("e+" )->mass()/MeV );
+  m_particleMass.push_back( m_ppSvc->find("mu+")->mass()/MeV );
+  m_particleMass.push_back( m_ppSvc->find("pi+")->mass()/MeV );
+  m_particleMass.push_back( m_ppSvc->find("K+" )->mass()/MeV );
+  m_particleMass.push_back( m_ppSvc->find("p+" )->mass()/MeV );
   // cache squares of masses
   m_particleMassSq.push_back( m_particleMass[ Rich::Electron ] *
                               m_particleMass[ Rich::Electron ] );
@@ -325,9 +276,7 @@ StatusCode RichRecSegmentTool::initialize() {
       m_binRefIndex[iRad].push_back( refractiveIndex( rad, eBin ) );
 
     } // end energy loop
-  } // end radiator loop
-  } // Fix VC6 scoping problem
-  
+  }} // end radiator loop
 
   // Setup momentum thresholds
   m_AvRefIndex.push_back( refractiveIndex(Rich::Aerogel) );
@@ -338,86 +287,36 @@ StatusCode RichRecSegmentTool::initialize() {
       m_momThres[iRad][iHypo] = m_particleMass[iHypo]/
         sqrt( m_AvRefIndex[iRad]*m_AvRefIndex[iRad] - 1.0);
     }
-  }
-  } // Fix VC6 scoping problem
+  }}
 
   // Informational Printout
-  msg << MSG::DEBUG << "Tool Parameters :-" << endreq
+  msg << MSG::DEBUG
       << " Photon Energy Bins         = " << m_EnergyBins << endreq
-      << " GeomEff Phots Max/Bailout  = " << m_nGeomEff << "/" << m_nGeomEffBailout << endreq;
-  //<< " Particle masses (MeV)      = " << m_particleMass << endreq
-  //<< " Average refractive indices = " << m_AvRefIndex << endreq;
-  //for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
-  // msg << " " << (Rich::RadiatorType)iR << " Res. bins = " << m_thebin[iR] << endreq;
-  // for ( int iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
-  //   msg << " " << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT
-  //       << " Ck Res. = " << m_theerr[iR][iT] << endreq;
-  // }
-  //}
-
-  // release locally used services
-  ppSvc->release();
+      << " Particle masses (MeV)      = " << m_particleMass << endreq
+      << " Average refractive indices = " << m_AvRefIndex << endreq;
+  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
+    msg << " " << (Rich::RadiatorType)iR << " Res. bins = " << m_thebin[iR] << endreq;
+    for ( int iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
+      msg << " " << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT
+          << " Ck Res. = " << m_theerr[iR][iT] << endreq;
+    }
+  }
 
   return sc;
 }
 
-StatusCode RichRecSegmentTool::finalize() {
+StatusCode RichSegmentProperties::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  // Release tools and services
-  if ( m_richDetInterface ) toolSvc()->releaseTool( m_richDetInterface );
-
-  if( 0 != m_evtDataSvc ) {
-    m_evtDataSvc->release();
-    m_evtDataSvc = 0;
-  }  
-
-  // Release the random generator
-  m_uniDist.finalize();
-
-  return StatusCode::SUCCESS;
-}
-
-// Method that handles various Gaudi "software events"
-void RichRecSegmentTool::handle ( const Incident& incident ) {
-
-  if ( "BeginEvent" == incident.type() ) {
-
-    SmartDataPtr<RichRecSegments> tdsSegments( m_evtDataSvc,
-                                               m_richRecSegmentLocation );
-    if ( !tdsSegments ) {
-
-      // Reinitialise the Photon Container
-      m_segments = new RichRecSegments();
-
-      // Register new RichRecPhoton container to Gaudi data store
-      if (!m_evtDataSvc->registerObject(m_richRecSegmentLocation, m_segments)) {
-        MsgStream msg( msgSvc(), name() );
-        msg << MSG::ERROR << "Failed to register RichRecSegments at "
-            << m_richRecSegmentLocation << endreq;
-      }
-
-    } else {
-
-      // Set smartref to TES segment container
-      m_segments = tdsSegments;
-
-    }
-
-  } // begin event if
-
-}
-
-// Forms a new RichRecSegment object
-void RichRecSegmentTool::saveSegment ( RichRecSegment * segment ) {
-  m_segments->insert( segment );
+  // Execute base class method
+  return RichRecToolBase::finalize();
 }
 
 double
-RichRecSegmentTool::nSignalPhotons ( RichRecSegment * segment,
-                                     const Rich::ParticleIDType& id ) {
+RichSegmentProperties::nSignalPhotons ( RichRecSegment * segment,
+                                        const Rich::ParticleIDType id ) {
 
   double signal = segment->nSignalPhotons( id );
   if ( signal < -0.5 ) {
@@ -457,8 +356,8 @@ RichRecSegmentTool::nSignalPhotons ( RichRecSegment * segment,
 }
 
 double
-RichRecSegmentTool::nScatteredPhotons ( RichRecSegment * segment,
-                                        const Rich::ParticleIDType& id ) {
+RichSegmentProperties::nScatteredPhotons ( RichRecSegment * segment,
+                                           const Rich::ParticleIDType id ) {
 
   double signal = segment->nScatteredPhotons( id );
   if ( signal < -0.5 ) {
@@ -469,16 +368,16 @@ RichRecSegmentTool::nScatteredPhotons ( RichRecSegment * segment,
   return segment->nScatteredPhotons( id );
 }
 
-double RichRecSegmentTool::photonUnscatteredProb( const double& energy,
-                                                  const double& path ) {
+double RichSegmentProperties::photonUnscatteredProb( const double energy,
+                                                     const double path ) {
   if ( energy <= 0 || path <= 0 ) return 0;
   double lambda = m_rayleighPara[0]/energy;
   double scatLeng = lambda*lambda*lambda*lambda/m_rayleighPara[1];
   return (scatLeng/path)*(1-exp(-1*path/scatLeng));
 }
 
-double RichRecSegmentTool::nDetectablePhotons ( RichRecSegment * segment,
-                                                const Rich::ParticleIDType& id ) {
+double RichSegmentProperties::nDetectablePhotons ( RichRecSegment * segment,
+                                                   const Rich::ParticleIDType id ) {
 
   double signal = segment->nDetectablePhotons( id );
   if ( signal < -0.5 ) {
@@ -503,8 +402,8 @@ double RichRecSegmentTool::nDetectablePhotons ( RichRecSegment * segment,
   return signal;
 }
 
-double RichRecSegmentTool::nEmittedPhotons ( RichRecSegment * segment,
-                                             const Rich::ParticleIDType& id ) {
+double RichSegmentProperties::nEmittedPhotons ( RichRecSegment * segment,
+                                                const Rich::ParticleIDType id ) {
 
   double signal = segment->nEmittedPhotons( id );
   if ( signal < -0.5 ) {
@@ -539,151 +438,8 @@ double RichRecSegmentTool::nEmittedPhotons ( RichRecSegment * segment,
   return signal;
 }
 
-double RichRecSegmentTool::geomEfficiency ( RichRecSegment * segment,
-                                            const Rich::ParticleIDType& id ) {
-
-  double eff = segment->geomEfficiency( id );
-  if ( eff < -0.5 ) {
-
-    // Cherenkov theta for this segment/hypothesis combination
-    double ckTheta = this->avgCherenkovTheta( segment, id );
-    if ( ckTheta <= 0 ) {
-      eff = 0;
-    } else {
-
-      RichTrackSegment & trackSeg = segment->trackSegment();
-
-      // Define rotation matrix
-      HepVector3D z = trackSeg.bestMomentum().unit();
-      HepVector3D y = ( fabs( z * HepVector3D(1.,0.,0.) ) < 1. ?
-                        z.cross( HepVector3D(0.,1.,0.) ) :
-                        z.cross( HepVector3D(1.,0.,0.) ) );
-      y.setMag(1);
-      HepVector3D x = y.cross(z);
-      HepRotation rotation = HepRotation();
-      rotation.rotateAxes(x,y,z);
-
-      int nDetect = 0;
-      double sinCkTheta = sin(ckTheta);
-      double cosCkTheta = cos(ckTheta);
-      for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot ) {
-
-        // Photon emission point is random between segment start and end points
-        HepPoint3D emissionPt = trackSeg.bestPoint( m_uniDist() );
-
-        // Photon direction around loop
-        HepVector3D photDir = rotation*HepVector3D( sinCkTheta*m_cosCkPhi[iPhot],
-                                                    sinCkTheta*m_sinCkPhi[iPhot],
-                                                    cosCkTheta );
-
-        // Ray trace through detector
-        RichGeomPhoton photon;
-        if ( 0 != m_richDetInterface->traceToDetector( trackSeg.rich(),
-                                                       emissionPt,
-                                                       photDir,
-                                                       photon ) ) {
-          ++nDetect;
-          segment->addToGeomEfficiencyPerHPD( id,
-                                              (int)(photon.smartID().hpdID()),
-                                              m_hpdInc );
-          if ( photon.detectionPoint().x() > 0 ) {
-            segment->setPhotonsInXPlus(1);
-          } else {
-            segment->setPhotonsInXMinus(1);
-          }
-          if ( photon.detectionPoint().y() > 0 ) {
-            segment->setPhotonsInYPlus(1);
-          } else {
-            segment->setPhotonsInYMinus(1);
-          }
-
-        }
-
-        // Bail out if tried m_geomEffBailout times and all have failed
-        if ( 0 == nDetect && iPhot >= m_nGeomEffBailout ) break;
-
-      } // fake photon loop
-
-      eff = (double)nDetect/(double)m_nGeomEff;
-
-    } // CK theta IF
-
-    segment->setGeomEfficiency( id, eff );
-  }
-
-  return eff;
-}
-
-double RichRecSegmentTool::geomEfficiencyScat ( RichRecSegment * segment,
-                                                const Rich::ParticleIDType& id ) {
-
-  double eff = segment->geomEfficiencyScat( id );
-  if ( eff < -0.5 ) {
-
-    // only for aerogel
-    if ( segment->trackSegment().radiator() != Rich::Aerogel ) {
-      eff = 0;
-    } else {
-
-      RichTrackSegment & trackSeg = segment->trackSegment();
-
-      // Photon emission point is end of aerogel
-      HepPoint3D emissionPt = trackSeg.exitPoint();
-
-      // Define rotation matrix
-      HepVector3D z = trackSeg.bestMomentum().unit();
-      HepVector3D y = ( fabs( z * HepVector3D(1.,0.,0.) ) < 1. ?
-                        z.cross( HepVector3D(0.,1.,0.) ) :
-                        z.cross( HepVector3D(1.,0.,0.) ) );
-      y.setMag(1);
-      HepVector3D x = y.cross(z);
-      HepRotation rotation = HepRotation();
-      rotation.rotateAxes(x,y,z);
-
-      int nDetect = 0;
-      RichGeomPhoton photon;
-      for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot ) {
-
-        // generate randomn cos(theta)**2 distribution for thetaCk
-        double ckTheta;
-        do {
-          ckTheta = m_uniDist()*M_PI;
-        } while ( m_uniDist() > pow(cos(ckTheta),2) );
-
-        // Photon direction around loop
-        HepVector3D photDir = rotation*HepVector3D( sin(ckTheta)*m_cosCkPhi[iPhot],
-                                                    sin(ckTheta)*m_sinCkPhi[iPhot],
-                                                    cos(ckTheta) );
-
-        // Ray trace through detector
-        if ( 0 != m_richDetInterface->traceToDetector( trackSeg.rich(),
-                                                       emissionPt,
-                                                       photDir,
-                                                       photon ) ) { ++nDetect; }
-
-        // Bail out if tried m_geomEffBailout times and all have failed
-        if ( 0 == nDetect && iPhot >= m_nGeomEffBailout ) break;
-
-      } // fake photon loop
-
-      eff = (double)nDetect/(double)m_nGeomEff;
-
-    } // CK theta IF
-
-    // For time being use same efficiency for all hypotheses
-    segment->setGeomEfficiencyScat( Rich::Electron, eff );
-    segment->setGeomEfficiencyScat( Rich::Muon, eff );
-    segment->setGeomEfficiencyScat( Rich::Pion, eff );
-    segment->setGeomEfficiencyScat( Rich::Kaon, eff );
-    segment->setGeomEfficiencyScat( Rich::Proton, eff );
-
-  }
-
-  return eff;
-}
-
-double RichRecSegmentTool::avgCherenkovTheta( RichRecSegment * segment,
-                                              const Rich::ParticleIDType& id ) {
+double RichSegmentProperties::avgCherenkovTheta( RichRecSegment * segment,
+                                                 const Rich::ParticleIDType id ) {
 
   double angle = segment->averageCKTheta( id );
   if ( angle < -0.5 ) {
@@ -708,8 +464,8 @@ double RichRecSegmentTool::avgCherenkovTheta( RichRecSegment * segment,
   return angle;
 }
 
-double RichRecSegmentTool::ckThetaResolution( RichRecSegment * segment,
-                                              const Rich::ParticleIDType& id ) {
+double RichSegmentProperties::ckThetaResolution( RichRecSegment * segment,
+                                                 const Rich::ParticleIDType id ) {
 
   // Expected Cherenkov theta angle
   double thetaExp = this->avgCherenkovTheta( segment, id );
@@ -727,14 +483,12 @@ double RichRecSegmentTool::ckThetaResolution( RichRecSegment * segment,
     res = (m_theerr[rad][type])[2];
   }
 
-  // Scale for robustness tests
-  res *= m_emisPntErrScale[rad];
-
-  return res;
+  // Scale for robustness tests and return
+  return ( res *= m_emisPntErrScale[rad] );
 }
 
-double RichRecSegmentTool::beta( RichRecSegment * segment,
-                                 const Rich::ParticleIDType& id ) {
+double RichSegmentProperties::beta( RichRecSegment * segment,
+                                    const Rich::ParticleIDType id ) {
 
   double momentum = segment->trackSegment().bestMomentumMag();
   double Esquare = momentum*momentum + m_particleMassSq[id];
@@ -742,43 +496,39 @@ double RichRecSegmentTool::beta( RichRecSegment * segment,
   return (Esquare > 0.0 ? momentum/sqrt(Esquare) : 0.0);
 }
 
-bool RichRecSegmentTool::hasRichInfo( RichRecSegment * segment ) {
+bool RichSegmentProperties::hasRichInfo( RichRecSegment * segment ) {
 
   for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-    if ( geomEfficiency(segment,(Rich::ParticleIDType)iHypo) > 0 ) return true;
+    if ( m_geomEff->geomEfficiency(segment,(Rich::ParticleIDType)iHypo) > 0 ) return true;
   }
 
   return false;
 }
 
-RichRecSegments * RichRecSegmentTool::richSegments() {
-  return m_segments;
+double RichSegmentProperties::nTotalObservablePhotons ( RichRecSegment * segment,
+                                                        const Rich::ParticleIDType id ) {
+  return ( m_geomEff->geomEfficiency(segment,id) * nSignalPhotons(segment,id) ) +
+    ( m_geomEff->geomEfficiencyScat(segment,id) * nScatteredPhotons(segment,id) );
 }
 
-double RichRecSegmentTool::nTotalObservablePhotons ( RichRecSegment * segment,
-                                                     const Rich::ParticleIDType& id ) {
-  return ( geomEfficiency(segment,id) * nSignalPhotons(segment,id) ) +
-    ( geomEfficiencyScat(segment,id) * nScatteredPhotons(segment,id) );
+double RichSegmentProperties::nObservableSignalPhotons ( RichRecSegment * segment,
+                                                         const Rich::ParticleIDType id ) {
+  return m_geomEff->geomEfficiency(segment,id) * nSignalPhotons(segment,id);
 }
 
-double RichRecSegmentTool::nObservableSignalPhotons ( RichRecSegment * segment,
-                                                      const Rich::ParticleIDType& id ) {
-  return geomEfficiency(segment,id) * nSignalPhotons(segment,id);
+double RichSegmentProperties::nObservableScatteredPhotons ( RichRecSegment * segment,
+                                                            const Rich::ParticleIDType id ) {
+  return m_geomEff->geomEfficiencyScat(segment,id) * nScatteredPhotons(segment,id);
 }
 
-double RichRecSegmentTool::nObservableScatteredPhotons ( RichRecSegment * segment,
-                                                         const Rich::ParticleIDType & id ) {
-  return geomEfficiencyScat(segment,id) * nScatteredPhotons(segment,id);
-}
-
-bool RichRecSegmentTool::aboveThreshold( RichRecSegment * segment,
-                                         const Rich::ParticleIDType& type ) {
+bool RichSegmentProperties::aboveThreshold( RichRecSegment * segment,
+                                            const Rich::ParticleIDType type ) {
   return segment->trackSegment().bestMomentumMag() >
     m_momThres[(int)segment->trackSegment().radiator()][(int)type];
 }
 
-double RichRecSegmentTool::refractiveIndex( const Rich::RadiatorType& radiator,
-                                            double energy ) {
+double RichSegmentProperties::refractiveIndex( const Rich::RadiatorType radiator,
+                                               double energy ) {
 
   double index = 0;
   double fe =
@@ -794,13 +544,35 @@ double RichRecSegmentTool::refractiveIndex( const Rich::RadiatorType& radiator,
   return index;
 }
 
-double RichRecSegmentTool::refractiveIndex( RichRecSegment * segment ) {
+double RichSegmentProperties::refractiveIndex( RichRecSegment * segment ) {
   return refractiveIndex( segment->trackSegment().radiator() );
 }
 
-double RichRecSegmentTool::refractiveIndex( const Rich::RadiatorType& radiator ) {
+double RichSegmentProperties::refractiveIndex( const Rich::RadiatorType radiator ) {
 
   double meanEnergy = m_referenceQE->meanX( m_referenceQE->minX(),
                                             m_referenceQE->maxX() ) / eV;
   return this->refractiveIndex( radiator, meanEnergy );
+}
+
+// Set the threshold information in a RichPID object for given segment
+void RichSegmentProperties::setThresholdInfo( RichRecSegment * segment,
+                                              RichPID * pid ) {
+
+  if ( aboveThreshold(segment,Rich::Electron) ) {
+    if ( nTotalObservablePhotons(segment,Rich::Electron)>0 ) pid->setElectronHypoAboveThres(1);
+  } else { return; }
+  if ( aboveThreshold(segment,Rich::Muon) ) {
+    if ( nTotalObservablePhotons(segment,Rich::Muon)>0 ) pid->setMuonHypoAboveThres(1);
+  } else { return; }
+  if ( aboveThreshold(segment,Rich::Pion) ) {
+    if ( nTotalObservablePhotons(segment,Rich::Pion)>0 ) pid->setPionHypoAboveThres(1);
+  } else { return; }
+  if ( aboveThreshold(segment,Rich::Kaon) ) {
+    if ( nTotalObservablePhotons(segment,Rich::Kaon)>0 ) pid->setKaonHypoAboveThres(1);
+  } else { return; }
+  if ( aboveThreshold(segment,Rich::Proton) ) {
+    if ( nTotalObservablePhotons(segment,Rich::Proton)>0 ) pid->setProtonHypoAboveThres(1);
+  } else { return; }
+
 }
