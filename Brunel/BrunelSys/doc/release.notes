@@ -12,7 +12,8 @@
                       RichRecQC v1r7, RichDetTools v4r1, RichRecSys v1r9,
                       RichRecBase v1r11, RichDAQ v1r4, RichRecMCTools v1r4,
                       RichRingRefit v1r7, RichLocalPID v1r7, RichGlobalPID v1r6,
-                      RichRecCommon v1r6, RichRecTools v2r9
+                      RichRecCommon v1r6, RichRecTools v2r9, TrMatching v2r10,
+                      TrExtrapolator v2r11, TrKShort v1r4
 
 !======================= BrunelSys v23r5 2004-04-15 =======================
 ! 2004-04-15 - Marco Cattaneo
