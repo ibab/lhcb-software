@@ -37,6 +37,7 @@ MuonDigitization::MuonDigitization(const std::string& name,
   //declareProperty("NmbOfSpilloverEvents" , m_numberOfSpilloverEvents=3) ;
   declareProperty("BXTime" , m_BXTime=25.0) ;
   declareProperty("TimeGate" , m_gate=20.0) ;
+  declareProperty("TimeBits" , m_TimeBits=4) ;
   declareProperty("VerboseDebug" , m_verboseDebug=false) ;
   declareProperty("ApplyTimeJitter" , m_applyTimeJitter=true) ;
   declareProperty("ApplyChamberNoise" , m_applyChamberNoise=true) ;
@@ -45,6 +46,7 @@ MuonDigitization::MuonDigitization(const std::string& name,
   declareProperty("ApplyEfficiency" , m_applyEfficiency=true) ;
   declareProperty("ApplyDeadtime" , m_applyDeadtime=true) ;
   declareProperty("ApplyTimeAdjustment",m_applyTimeAdjustment=true);
+
 }
 
 StatusCode MuonDigitization::initialize()
@@ -108,7 +110,12 @@ StatusCode MuonDigitization::initialize()
   detectorResponse.initialize( toolSvc(),randSvc(), detSvc(), msgSvc());
   m_spill=6;
   m_container=4;
+  unsigned int count=1;
+  for (int i=0;i<4;i++){
+    count=count*2;    
+  }
   
+  m_timeBin=m_gate/(count-1);  
   return StatusCode::SUCCESS;
 
 }
@@ -1216,7 +1223,7 @@ createRAWFormat(MCMuonDigits& mcDigitContainer, MuonDigits& digitContainer){
 	  if((*iterMCDigit)->DigitInfo().isAlive()){		  
       MuonDigit* muonDigit= new MuonDigit((*iterMCDigit)->key());
 			unsigned int time=(unsigned	int)(((*iterMCDigit)->firingTime())
-                                       /(m_gate/8.0));
+                                       /(m_timeBin));
       //			if(time>7)time=7;
 			muonDigit->setTimeStamp(time);
 			digitContainer.insert(muonDigit);

@@ -103,6 +103,9 @@ private:
   int m_partition;
   int m_spill;
   int m_container;
+  unsigned int m_TimeBits;
+  double m_timeBin;
+  
   
   
   
