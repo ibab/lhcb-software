@@ -1,4 +1,4 @@
-// $Id: RichPhotonSpectra.h,v 1.5 2004-02-02 14:23:04 jonesc Exp $
+// $Id: RichPhotonSpectra.h,v 1.6 2004-04-17 09:28:04 jonesc Exp $
 #ifndef RICHRECBASE_RICHPHOTONSPECTRA_H
 #define RICHRECBASE_RICHPHOTONSPECTRA_H 1
 
@@ -30,11 +30,11 @@ public:
 
   /// Standard constructor
   RichPhotonSpectra( const unsigned int enBins = 5,
-                     const double minEn = 0,
-                     const double maxEn = 5 )
+                     const double minEn        = 0,
+                     const double maxEn        = 5 )
     : m_enBins   ( enBins ),
-      m_minEn    ( minEn ),
-      m_maxEn    ( maxEn ),
+      m_minEn    ( minEn  ),
+      m_maxEn    ( maxEn  ),
       m_binSize  ( 0 != enBins ? (maxEn-minEn)/enBins : 0 ),
       m_photdata ( Rich::NParticleTypes, PhotonData(enBins) ) { }
   

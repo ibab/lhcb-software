@@ -1,21 +1,20 @@
-// $Id: RichRecPhotonKey.h,v 1.2 2003-06-30 15:11:57 jonrob Exp $
+// $Id: RichRecPhotonKey.h,v 1.3 2004-04-17 09:28:04 jonesc Exp $
 #ifndef RichRecEvent_RichRecPhotonKey_H
 #define RichRecEvent_RichRecPhotonKey_H 1
+
+// Gaudi
+#include "GaudiKernel/GaudiException.h"
 
 // LHCb
 #include "Kernel/CLHEPStreams.h"
 
-// Rich Kernel
-//#include "RichKernel/RichDefinitions.h"
-
-/** @class RichRecPhotonKey RichRecPhotonKey.h
+/** @class RichRecPhotonKey RichRecPhotonKey.h RichRecBase/RichRecPhotonKey.h
  *
  *  Smart Key for RichRecPhotons. Encodes the parent RichRecSegment and 
- *  RichRecPixel key values.
+ *  RichRecPixel key values into a unique key for each RichRecPhoton
  *
- *  @author Chris Jones   (Christopher.Rob.Jones@cern.ch)
- *  created Tue Feb 26 09:25:55 2002
- *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date 15/02/2002
  */
 
 class RichRecPhotonKey {
@@ -23,31 +22,51 @@ class RichRecPhotonKey {
 public:
 
   /// Constructor from long int
-  RichRecPhotonKey(long longKey) { m_longKey = longKey; }
+  RichRecPhotonKey( const long key = 0 ) : m_key ( key ) { }
 
-  /// Default Constructor
-  RichRecPhotonKey() { m_longKey = 0; }
+  /// Constructor from segment and pixel numbers
+  RichRecPhotonKey( const long pixelKey, 
+                    const long segmentKey ) 
+    : m_key ( pixelKey%65536 | segmentKey<<16 ) 
+  {
+    if ( pixelKey != pixelNumber() || segmentKey != segmentNumber() ) {
+      throw GaudiException( "pixel/segment number error", 
+                            "RichRecPhotonKey", StatusCode::FAILURE );
+    }
+  }
 
   /// Destructor
-  virtual ~RichRecPhotonKey() {}
+  ~RichRecPhotonKey() {}
 
   /// Retrieve 32 bit integer key
-  long longKey() const;
+  inline long key() const
+  {
+    return m_key;
+  }
 
+  /// long operator
+  inline operator long() const 
+  { 
+    return key(); 
+  }
+  
   /// Update 32 bit integer key
-  void setLongKey(long value);
-
-  /// Set the associated RichRecSegment
-  void setSegmentNumber(const long segmentNumber);
-
-  /// Set the associated RichRecPixel
-  void setPixelNumber(const long pixelNumber);
+  inline void setKey(const long key)
+  {
+    m_key = key;
+  }
 
   /// Retrieve associated RichRecSegment
-  int segmentNumber() const;
+  inline int segmentNumber() const
+  {
+    return key()/65536;
+  }
 
   /// Retrieve associated RichRecPixel
-  int pixelNumber() const;
+  inline int pixelNumber() const
+  {
+    return key()%65536;
+  }
 
   /// Serialize the object for writing
   StreamBuffer& serialize(StreamBuffer& s) const;
@@ -58,17 +77,11 @@ public:
   /// Fill the ASCII output stream
   std::ostream& fillStream(std::ostream& s) const;
 
-  /// long operator
-  // operator long() const { return m_longKey|0xFF000000; }
-  operator long() const { return m_longKey; }
-
-protected:
-
 private:
 
-  /// 32 bit integer key
+  /// 32 bit integer key.
   /// First 16 bits are segment number, last 16 pixel number.
-  unsigned long m_longKey; 
+  unsigned long m_key; 
 
 };
 
@@ -76,69 +89,37 @@ private:
 //   end of class
 // -----------------------------------------------------------------------------
 
-inline void RichRecPhotonKey::setSegmentNumber(const long segmentNumber)
+inline std::ostream& RichRecPhotonKey::fillStream(std::ostream& s) const
 {
-  m_longKey = m_longKey%65536;
-  m_longKey += segmentNumber<<16;
-}
-
-inline void RichRecPhotonKey::setPixelNumber(const long pixelNumber)
-{
-  m_longKey = (m_longKey/65536)<<16;
-  m_longKey += pixelNumber;
-}
-
-inline int RichRecPhotonKey::segmentNumber() const
-{
-  return m_longKey/65536;
-}
-
-inline int RichRecPhotonKey::pixelNumber() const
-{
-  return m_longKey%65536;
-}
-
-inline long RichRecPhotonKey::longKey() const
-{
-  return m_longKey;
-}
-
-inline void RichRecPhotonKey::setLongKey(long value)
-{
-  m_longKey = value;
+  s << "{ "
+    << " key:\t" << key() << " } ";
+  return s;
 }
 
 inline StreamBuffer& RichRecPhotonKey::serialize(StreamBuffer& s) const
 {
-  s << m_longKey;
+  s << key();
   return s;
 }
 
 inline StreamBuffer& RichRecPhotonKey::serialize(StreamBuffer& s)
 {
-  s >> m_longKey;
+  s >> m_key;
   return s;
 }
 
-inline std::ostream& RichRecPhotonKey::fillStream(std::ostream& s) const
+/// Implement StreamBuffer >> method for RichRecPhotonKey
+inline StreamBuffer& operator >> (StreamBuffer& s, RichRecPhotonKey& key)
 {
-  s << "{ "
-    << " longKey:\t" << m_longKey << " } ";
+  long intkey; s >> intkey; key.setKey(intkey);
   return s;
 }
 
-/// Impliment StreamBuffer >> method for RichRecPhotonKey
-inline StreamBuffer& operator >> (StreamBuffer& s, RichRecPhotonKey& key)  {
-  long longKey;
-  s >> longKey;
-  key.setLongKey(longKey);
+/// Implement StreamBuffer << method for RichRecPhotonKey
+inline StreamBuffer& operator << (StreamBuffer& s, const RichRecPhotonKey& key) 
+{
+  s << key.key();
   return s;
 }
 
-/// Impliment StreamBuffer << method for RichRecPhotonKey
-inline StreamBuffer& operator << (StreamBuffer& s, const RichRecPhotonKey& key) {
-  s << key.longKey();
-  return s;
-}
-
-#endif   ///RichRecEvent_RichRecPhotonKey_H
+#endif   // RichRecEvent_RichRecPhotonKey_H

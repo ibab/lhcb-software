@@ -1,4 +1,4 @@
-// $Id: RichTrackID.h,v 1.5 2004-03-16 13:39:58 jonesc Exp $
+// $Id: RichTrackID.h,v 1.6 2004-04-17 09:28:05 jonesc Exp $
 #ifndef RICHRECBASE_RICHTRACKID_H
 #define RICHRECBASE_RICHTRACKID_H 1
 
@@ -95,14 +95,14 @@ public:
       m_unique     ( true ) { }
 
   /// Constructor from a TrStoredTrack
-  RichTrackID( const TrStoredTrack * track )
+  explicit RichTrackID( const TrStoredTrack * track )
     : m_tkType     ( Rich::Track::type(track)         ),
       m_parentType ( Rich::TrackParent::TrStoredTrack ),
       m_history    ( track ? track->history() : 0     ),
       m_unique     ( 0 != track->unique()             ) { }
 
   /// Constructor from an MCParticle
-  RichTrackID( const MCParticle * mcPart )
+  explicit RichTrackID( const MCParticle * mcPart )
     : m_tkType     ( Rich::Track::Unknown ),
       m_parentType ( Rich::TrackParent::MCParticle    ),
       m_history    ( 0    ),
