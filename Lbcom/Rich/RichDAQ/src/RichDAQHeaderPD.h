@@ -4,8 +4,11 @@
  *  Header file for RICH DAQ utility class : RichDAQHeaderPD
  *
  *  CVS Log :-
- *  $Id: RichDAQHeaderPD.h,v 1.11 2005-01-13 13:09:12 jonrob Exp $
+ *  $Id: RichDAQHeaderPD.h,v 1.12 2005-01-24 21:29:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2005/01/13 13:09:12  jonrob
+ *  update print format
+ *
  *  Revision 1.10  2005/01/07 12:35:59  jonrob
  *  Complete rewrite
  *
@@ -44,7 +47,7 @@
  */
 namespace RichDAQHeaderV0 {
 
-  /** @namespace RichDAQHeaderV0::RichDAQHeaderPDCode
+  /** @namespace RichDAQHeaderPDCode
    *
    *  Namespace for definitions related to RichDAQHeaderV0::RichDAQHeaderPD
    *
@@ -73,14 +76,16 @@ namespace RichDAQHeaderV0 {
     static const RichDAQ::LongType MaskStartPD   = ((1 << BitsStartPD)-1)  << ShiftStartPD;
 
     // Create the max values that can be stored in each field
-    static const RichDAQ::ShortType MaxHitCount  = ( 1 << BitsHitCount ) - 1;
-    static const RichDAQ::ShortType MaxHPDID     = ( 1 << BitsHPDID  ) - 1;
+    static const RichDAQ::ShortType MaxHitCount  = ( 1 << BitsHitCount ) - 1; ///< Maximum number of hits
+    static const RichDAQ::ShortType MaxHPDID     = ( 1 << BitsHPDID  ) - 1;   ///< Maximum HPD ID
 
   }
 
-  /** @class RichDAQHeaderV0::RichDAQHeaderPD RichDAQHeaderPD.h
+  /** @class RichDAQHeaderPD RichDAQHeaderPD.h
    *
-   *  Utility class representing the header word for HPD data
+   *  Utility class representing the header word for HPD data.
+   *
+   *  First iteration, compatible with DC04 data
    *
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-06
@@ -128,7 +133,7 @@ namespace RichDAQHeaderV0 {
            RichDAQHeaderPDCode::MaskStartPD );
     }
 
-    // Is new PD bit set ?
+    /// Is new PD bit set ?
     inline bool startPD() const
     {
       return ( 0 != ( (data() & RichDAQHeaderPDCode::MaskStartPD)
@@ -190,7 +195,7 @@ namespace RichDAQHeaderV0 {
       return true;
     }
 
-    /// tests whether a given value is in range for a given data field
+    /// Tests whether a given value is in range for a given data field
     inline bool dataInRange( const RichDAQ::ShortType value,
                              const RichDAQ::ShortType max ) const
     {
@@ -222,15 +227,14 @@ inline MsgStream & operator << ( MsgStream & os,
 
 /** @namespace RichDAQHeaderV1
  *
- *  Namespace for version 0 of the RichDAQHeaderPD object.
- *  DC04 compatible version (Now obsolete).
+ *  Namespace for version 1 of the RichDAQHeaderPD object.
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
 namespace RichDAQHeaderV1 {
 
-  /** @namespace RichDAQHeaderV1::RichDAQHeaderPDCode
+  /** @namespace RichDAQHeaderPDCode
    *
    *  Namespace for definitions related to RichDAQHeaderV1::RichDAQHeaderPD
    *
@@ -253,14 +257,15 @@ namespace RichDAQHeaderV1 {
     static const RichDAQ::LongType MaskHPDID      = ((1 << BitsHPDID)-1)  << ShiftHPDID;
 
     // Create the max values that can be stored in each field
-    static const RichDAQ::ShortType MaxHitCount   = ( 1 << BitsHitCount ) - 1;
-    static const RichDAQ::ShortType MaxHPDID      = ( 1 << BitsHPDID  ) - 1;
+    static const RichDAQ::ShortType MaxHitCount   = ( 1 << BitsHitCount ) - 1; ///< Max number of hits
+    static const RichDAQ::ShortType MaxHPDID      = ( 1 << BitsHPDID  ) - 1;   ///< Max HPD ID
 
   }
 
-  /** @class RichDAQHeaderV1::RichDAQHeaderPD RichDAQHeaderPD.h
+  /** @class RichDAQHeaderPD RichDAQHeaderPD.h
    *
-   *  Utility class representing the header word for HPD data
+   *  Utility class representing the header word for HPD data.
+   *
    *  Version 1 : Fixed new HPD, zero-suppression and Alice mode bit locations
    *
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -308,7 +313,7 @@ namespace RichDAQHeaderV1 {
         ( (data() & RichDAQHeaderPDCode::MaskHPDID) >> RichDAQHeaderPDCode::ShiftHPDID );
     }
 
-    /// Set the hit count info
+    /// Set the number of hits
     inline bool setHitCount( const RichDAQ::ShortType hitCount )
     {
       return ( dataInRange(hitCount,RichDAQHeaderPDCode::MaxHitCount) ?
@@ -316,7 +321,7 @@ namespace RichDAQHeaderV1 {
                     RichDAQHeaderPDCode::MaskHitCount ) : false );
     }
 
-    /// Retrieve the hit count number
+    /// Retrieve the number of hits
     inline RichDAQ::ShortType hitCount() const
     {
       return ( (data() & RichDAQHeaderPDCode::MaskHitCount)
