@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.34 2004-06-17 10:19:12 gcorti Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.35 2004-07-05 11:17:28 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.34  2004/06/17 10:19:12  gcorti
+// problem in production: appropriate vertex not found
+//
 // Revision 1.33  2004/06/15 12:05:20  gcorti
 // temporary fix for production
 //
@@ -150,12 +153,17 @@ GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator )
   m_hadronicProcesses.push_back ( "AntiSigmaPlusInelastic"        ) ; // I.B.
   m_hadronicProcesses.push_back ( "SigmaPlusInelastic"            ) ; // I.B.
   m_hadronicProcesses.push_back ( "XiMinusInelastic"              ) ; // I.B.
-  m_hadronicProcesses.push_back ( "XiZeroInelastic"               ) ; // G.C.  
+  m_hadronicProcesses.push_back ( "XiZeroInelastic"               ) ; // G.C.
+  m_hadronicProcesses.push_back ( "AntiSigmaMinusInelastic"       ) ; // G.C.
+  m_hadronicProcesses.push_back ( "AntiXiMinusInelastic"          ) ; // G.C.
+  m_hadronicProcesses.push_back ( "OmegaMinusInelastic"           ) ; // G.C.
+  m_hadronicProcesses.push_back ( "AntiOmegaMinusInelastic"       ) ; // G.C.
+  m_hadronicProcesses.push_back ( "AlphaInelastic"                ) ; // G.C. 
   
   std::sort ( m_hadronicProcesses.begin () ,
               m_hadronicProcesses.end   () ) ;
-}; 
-
+};
+ 
 // ============================================================================
 // destructor 
 // ============================================================================
@@ -538,7 +546,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                   { vertex->setType ( MCVertex::Pair    ) ; }
                   else if ( "compt" == pname                      ) 
                   { vertex->setType ( MCVertex::Compton ) ; }
-                  else if ( "eBrem" == pname || "muBrems" == pname )    
+                  else if ( "eBrem" == pname || "MuBrems" == pname )    
                   { vertex->setType ( MCVertex::Brem    ) ; }
                   else if ( "annihil" == pname )
                   { vertex->setType ( MCVertex::Annihil ) ; }
@@ -546,6 +554,8 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                   { vertex->setType ( MCVertex::Photo ) ; }
                   else if ( "RichHpdPhotoelectricProcess" == pname ) 
                   { vertex->setType ( MCVertex::RICHPhoto ) ; }
+                  else if ( "RichG4Cerenkov" == pname )
+                  { vertex->setType ( MCVertex::Cerenkov ) ; }
                   else 
                   {
                     const bool found = std::binary_search 

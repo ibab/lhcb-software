@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.88 2004-06-17 10:19:12 gcorti Exp $ 
+! $Id: release.notes,v 1.89 2004-07-05 11:17:28 gcorti Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2004-07-05 - Gloria CORTI
+ - src/component/GiGaMCVertexCnv.cpp
+   . add some inelastic processes to the list (messages from production)
+   . correct typing for muon Brem
+   . add Cerenkov type to MCVertexType
 
 !====================== GiGaCnv v15r7 2004-06-17 ===========================
 ! 2004-06-17 - Gloria CORTI
