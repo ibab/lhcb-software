@@ -9,3 +9,5 @@ trCreat.OutputLevel  = 4;
 trCreat.firstStation = 1;
 trCreat.lastStation = 4;
 trFit_trackFitter_extrapolator1.matDBASE = 241;
+otCheck.numStations = 4;
+otCheck.firstOTStation = 1;
