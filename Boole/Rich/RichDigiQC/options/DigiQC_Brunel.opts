@@ -1,0 +1,4 @@
+
+BrunelMoniRICHSeq.Members += { "RichDigitMonitor/RiDigiMon" };
+//RiDigiMon.InputDigits = "Raw/Rich/Digits";
+RiDigiMon.HistoPath   = "RICH/DIGI/";

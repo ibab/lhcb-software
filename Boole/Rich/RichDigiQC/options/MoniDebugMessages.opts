@@ -1,0 +1,4 @@
+// Turn on debug printout
+
+// digi monitor
+RiDigiMon.OutputLevel = 2;
