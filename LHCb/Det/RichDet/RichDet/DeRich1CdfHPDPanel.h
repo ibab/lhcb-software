@@ -1,25 +1,12 @@
-// $Id: DeRich1CdfHPDPanel.h,v 1.2 2003-01-21 20:38:37 papanest Exp $
-
-#ifndef DERICH1CDFHPDPANEL_H
-#define DERICH1CDFHPDPANEL_H 1
-
+// $Id: DeRich1CdfHPDPanel.h,v 1.3 2003-04-01 13:01:49 jonrob Exp $
+#ifndef RICHDET_DERICH1CDFHPDPANEL_H
+#define RICHDET_DERICH1CDFHPDPANEL_H 1
 
 // Include files
-//#include "CLHEP/Geometry/Point3D.h"
-//#include "CLHEP/Geometry/Vector3D.h"
-//#include "CLHEP/Geometry/Plane3D.h"
-
-//#include "DetDesc/DetectorElement.h"
-//#include "DetDesc/ISolid.h"
-
-//#include "RichKernel/RichSmartID.h"
-//#include "RichKernel/RichDefinitions.h"
-
 #include "RichDet/DeRichHPDPanel.h"
 
 // External declarations
 extern const CLID& CLID_DeRich1CdfHPDPanel;
-
 
 /** @class DeRich1CdfHPDPanel DeRich1CdfHPDPanel.h
  *
@@ -27,6 +14,7 @@ extern const CLID& CLID_DeRich1CdfHPDPanel;
  *
  * @author Antonis Papanestis
  */
+
 class DeRich1CdfHPDPanel: public DeRichHPDPanel {
 
 public:
@@ -129,9 +117,18 @@ private:
   /// the top of the HPD window in silicon coordinates
   HepPoint3D HPDTop;
   
-  /// 
+  /// detection plane
   HepPlane3D detectionPlane_m;
   
+
+  // CRJ : cache variables
+  HepTransform3D m_vectorTransf;
+  const ISolid* m_HPDPanelSolid;
+  std::vector<const IPVolume*> m_pvHPDMasters;
+  std::vector<const IPVolume*> m_pvHPDSMasters;
+  std::vector<const IPVolume*> m_pvWindows;
+  std::vector<const ISolid*>   m_windowSolids;
+  std::vector<HepTransform3D>  m_vectorTransfHPD2s;
 };
 
-#endif    // DERICH1CDFHPDPANEL_H
+#endif    // RICHDET_DERICH1CDFHPDPANEL_H

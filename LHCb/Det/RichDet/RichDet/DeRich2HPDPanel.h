@@ -1,8 +1,6 @@
-// $Id: DeRich2HPDPanel.h,v 1.1 2003-01-16 17:46:05 papanest Exp $
-
-#ifndef DERICH2HPDPANEL_H
-#define DERICH2HPDPANEL_H 1
-
+// $Id: DeRich2HPDPanel.h,v 1.2 2003-04-01 13:01:49 jonrob Exp $
+#ifndef RICHDET_DERICH2HPDPANEL_H
+#define RICHDET_DERICH2HPDPANEL_H 1
 
 // Include files
 #include "RichDet/DeRichHPDPanel.h"
@@ -10,13 +8,13 @@
 // External declarations
 extern const CLID& CLID_DeRich2HPDPanel;
 
-
 /** @class DeRich2HPDPanel DeRich2HPDPanel.h
  *
  * This is the definition of the Rich HPDPanel detector class
  *
  * @author Antonis Papanestis
  */
+
 class DeRich2HPDPanel: public DeRichHPDPanel {
 
 public:
@@ -34,9 +32,7 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const {
-    return classID();
-  }
+  const CLID& clID() const { return classID(); }
 
   /**
    * Retrieves reference to class identifier
@@ -79,11 +75,7 @@ public:
    * HPDs (a plane resting on the HPDs touching the window).
    * @return HepPlane3D
    */
-  inline HepPlane3D detectionPlane() const  {
-    return detectionPlane_m;
-  }
-  
-  
+  inline HepPlane3D detectionPlane() const { return detectionPlane_m; }
   
 private:
 
@@ -93,7 +85,7 @@ private:
   double siliconHalfLengthY;
 
   /// the Horizontal Edge of the HPD grid (beggining of numbers).
-  double panelHorizEdge;
+  double panelHorizEdge, fabs_panelHorizEdge;
 
   /// the Vertical Edge of the HPD grid. Even columns are
   /// different from odd columns in Rich2
@@ -114,9 +106,18 @@ private:
   /// the top of the HPD window in silicon coordinates
   HepPoint3D HPDTop;
   
-  /// 
+  /// detection plane
   HepPlane3D detectionPlane_m;
-  
+
+  // CRJ : cache variables
+  HepTransform3D m_vectorTransf;
+  const ISolid* m_HPDPanelSolid;
+  std::vector<const IPVolume*> m_pvHPDMasters;
+  std::vector<const IPVolume*> m_pvHPDSMasters;
+  std::vector<const IPVolume*> m_pvWindows;
+  std::vector<const ISolid*>   m_windowSolids;
+  std::vector<HepTransform3D>  m_vectorTransfHPD2s;
+
 };
 
-#endif    // DERICH2HPDPANEL_H
+#endif    // RICHDET_DERICH2HPDPANEL_H

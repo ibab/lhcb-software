@@ -1,16 +1,17 @@
-// $Id: DeRich2.h,v 1.2 2002-10-30 11:36:56 papanest Exp $
+// $Id: DeRich2.h,v 1.3 2003-04-01 13:01:49 jonrob Exp $
 #ifndef DERICH2_H
 #define DERICH2_H 1
 
-
-// Include files
+// DetDesc
 #include "DetDesc/DetectorElement.h"
 
+// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Plane3D.h"
 
-#include "RichKernel/RichDefinitions.h"
+// RichKernel
+#include "RichKernel/RichSide.h"
 
 // External declarations
 extern const CLID& CLID_DERich2;

@@ -1,4 +1,4 @@
-// $Id: DeRichRadiator.cpp,v 1.1 2002-07-16 16:02:42 papanest Exp $
+// $Id: DeRichRadiator.cpp,v 1.2 2003-04-01 13:01:51 jonrob Exp $
 #define DERICHRADIATOR_CPP
 
 // Include files
@@ -13,7 +13,7 @@
 
 /// Detector description classes
 #include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/SolidBoolean.h" 
+#include "DetDesc/SolidBoolean.h"
 #include "DetDesc/SolidTrd.h"
 
 
@@ -26,9 +26,8 @@
 const CLID& CLID_DeRichRadiator = 12040;  // User defined
 
 // Standard Constructor
-DeRichRadiator::DeRichRadiator()
-{}
-  
+DeRichRadiator::DeRichRadiator() {}
+
 // Standard Destructor
 DeRichRadiator::~DeRichRadiator() {}
 
@@ -36,7 +35,6 @@ DeRichRadiator::~DeRichRadiator() {}
 const CLID& DeRichRadiator::classID() {
   return CLID_DeRichRadiator;
 }
-
 
 StatusCode DeRichRadiator::initialize() {
 
@@ -46,8 +44,8 @@ StatusCode DeRichRadiator::initialize() {
   log << MSG::DEBUG <<"Starting initialisation for DeRichRadiator"<< endreq;
 
   m_solid = geometry()->lvolume()->solid();
-  std::string tempName = name();  
-  
+  std::string tempName = name();
+
   const std::string::size_type pos = tempName.find("Rich2");
   if( std::string::npos != pos )
     m_radiatorID = Rich::CF4;
@@ -65,17 +63,16 @@ StatusCode DeRichRadiator::initialize() {
       }
     }
   }
-  
+
   log << MSG::DEBUG <<"Finished initialisation for DeRichRadiator"<< endreq;
 
   return sc;
 }
 
-StatusCode DeRichRadiator::nextIntersectionPoint
-                                (const HepPoint3D&  pGlobal,
-                                 const HepVector3D& vGlobal,
-                                 HepPoint3D&  returnPoint) 
-{  
+StatusCode DeRichRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
+                                                  const HepVector3D& vGlobal,
+                                                  HepPoint3D&  returnPoint ) {
+
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
   const HepTransform3D vTrans = geometry()->matrix();
   HepVector3D vLocal = vGlobal;
@@ -83,24 +80,23 @@ StatusCode DeRichRadiator::nextIntersectionPoint
 
   ISolid::Ticks ticks;
   unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
-  
+
   if (0 == noTicks) {
     return StatusCode::FAILURE;
   }
   else {
     HepPoint3D tempPointLocal = pLocal + ticks[0] * vLocal;
     returnPoint = geometry()->toGlobal(tempPointLocal);
-    return StatusCode::SUCCESS;  
+    return StatusCode::SUCCESS;
   }
-  
+
 }
 
 
-unsigned int DeRichRadiator::intersectionPoints
-                                  (const HepPoint3D& pGlobal,
-                                   const HepVector3D& vGlobal,
-                                   std::vector<HepPoint3D>& points)
-{
+unsigned int DeRichRadiator::intersectionPoints( const HepPoint3D& pGlobal,
+                                                 const HepVector3D& vGlobal,
+                                                 std::vector<HepPoint3D>& points) {
+
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
   const HepTransform3D vTrans = geometry()->matrix();
   HepVector3D vLocal = vGlobal;
@@ -116,7 +112,7 @@ unsigned int DeRichRadiator::intersectionPoints
       HepPoint3D tempPointLocal = pLocal + (*tick_it) * vLocal;
       HepPoint3D tempPointGlobal = geometry()->toGlobal(tempPointLocal);
       points.push_back(tempPointGlobal);
-    }  
+    }
   }
   return noTicks;
 }

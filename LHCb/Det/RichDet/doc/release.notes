@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2003-04-01 - Chris Jones
+ - Various bug fixes and optimisations for speed
+
 !======================== RichDet v4r0 2003-01-22 ========================
 ! 2003-01-16 - Antonis Papanestis
   class DeRichHPDPanel has been split in 3 different classes, with the original

@@ -1,16 +1,17 @@
-// $Id: DeRich1.h,v 1.1 2002-10-30 11:36:55 papanest Exp $
-#ifndef DERICH1_H
-#define DERICH1_H 1
+// $Id: DeRich1.h,v 1.2 2003-04-01 13:01:49 jonrob Exp $
+#ifndef RICHDET_DERICH1_H
+#define RICHDET_DERICH1_H 1
 
-
-// Include files
+// Det Desc
 #include "DetDesc/DetectorElement.h"
 
+// CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Plane3D.h"
 
-#include "RichKernel/RichDefinitions.h"
+// RICH Kernel
+#include "RichKernel/RichSide.h"
 
 // External declarations
 extern const CLID& CLID_DERich1;
@@ -88,4 +89,4 @@ private:
 
 };
  
-#endif    // DERICH1_H
+#endif    // RICHDET_DERICH1_H

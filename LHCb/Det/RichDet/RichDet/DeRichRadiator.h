@@ -1,4 +1,4 @@
-// $Id: DeRichRadiator.h,v 1.1 2002-07-16 16:02:35 papanest Exp $
+// $Id: DeRichRadiator.h,v 1.2 2003-04-01 13:01:49 jonrob Exp $
 
 #ifndef DERICHRADIATOR_H
 #define DERICHRADIATOR_H 1
@@ -10,7 +10,7 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
 
-#include "RichKernel/RichDefinitions.h"
+#include "RichKernel/RichRadiatorType.h"
 
 // External declarations
 extern const CLID& CLID_DeRichRadiator;
@@ -22,6 +22,7 @@ extern const CLID& CLID_DeRichRadiator;
  *
  * @author Antonis Papanestis
  */
+
 class DeRichRadiator: public DetectorElement {
 
 public:
