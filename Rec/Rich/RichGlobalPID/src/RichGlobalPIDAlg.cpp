@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.5 2003-07-08 07:12:27 cattanem Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.6 2003-07-08 07:50:45 cattanem Exp $
 // Include files
 
 // local
@@ -282,7 +282,7 @@ void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks ) {
             (m_inR2 && rRTrack->inRICH2()) ) ) continue;
 
     // skip frozen tracks
-    if ( (*iP).first > m_freezeOutDll ) break;
+    if ( 0 != m_trackIteration && (*iP).first > m_freezeOutDll ) break;
 
     // Set best hypothesis deltaLL to zero
     gTrack->globalPID()->setParticleDeltaLL( rRTrack->currentHypothesis(),
