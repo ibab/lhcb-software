@@ -1,4 +1,4 @@
-// $Id: MuonHit.h,v 1.1.1.1 2002-12-12 14:42:12 witoldp Exp $
+// $Id: MuonHit.h,v 1.2 2002-12-18 11:08:55 witoldp Exp $
 #ifndef TRACKING_MuonHit_H 
 #define TRACKING_MuonHit_H 1
 

@@ -1,4 +1,4 @@
-// $Id: VeloHit.h,v 1.1.1.1 2002-12-12 14:42:12 witoldp Exp $
+// $Id: VeloHit.h,v 1.2 2002-12-18 11:08:55 witoldp Exp $
 #ifndef TRACKING_VELOHIT_H 
 #define TRACKING_VELOHIT_H 1
 

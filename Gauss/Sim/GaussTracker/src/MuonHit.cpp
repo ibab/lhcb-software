@@ -1,4 +1,4 @@
-// $Id: MuonHit.cpp,v 1.1.1.1 2002-12-12 14:42:11 witoldp Exp $
+// $Id: MuonHit.cpp,v 1.2 2002-12-18 11:08:55 witoldp Exp $
 // Include files
 
 // local

@@ -20,11 +20,12 @@
 #include "GaudiKernel/ParticleProperty.h"
 /// GiGa 
 #include "GiGa/IGiGaSvc.h" 
-#include "GiGaCnv/IGiGaHitsCnvSvc.h"
 #include "GiGa/GiGaTrajectory.h" 
 #include "GiGa/GiGaUtil.h"
-#include "TrackerHit.h"
+#include "GiGa/GiGaHitsByID.h"
+#include "GiGa/GiGaHitsByName.h"
 /// GiGaCnv  
+#include "GiGaCnv/IGiGaHitsCnvSvc.h"
 #include "GiGaCnv/GiGaKineRefTable.h" 
 #include "GiGaCnv/GiGaCnvUtils.h"
 /// LHCbEvent
@@ -34,6 +35,7 @@
 #include "G4SDManager.hh"
 // local 
 #include "GiGaTrackerHitCnv.h"
+#include "TrackerHit.h"
 
 // ======================================================================
 
@@ -151,82 +153,49 @@ StatusCode GiGaTrackerHitCnv::updateObj
                                         GiGaUtil::ObjTypeName(object) + 
                                         "*') is not 'MCHits*'! "   );}  
   // clear the object 
-  hits->clear(); 
+  hits->clear();  
   
   // retrieve the hits container from GiGa Service
 
-  G4HCofThisEvent* hitscollections = 0 ; 
-
+  G4HCofThisEvent* hitscollections = 0 ;
   std::string colname = *(address->par());
-  
-  try
-    {
-        // get hitscollections from GiGa 
-        *gigaSvc() >> hitscollections ; 
 
-        //
-        if( 0 != hitscollections ) 
-          { 
+  // get the hits collection from GiGa 
+  GiGaHitsByName col( colname );
+  *gigaSvc() >> col ;
+ 
+ if( 0 == col.hits() ) 
+   { 
+     return Warning(" The hit collection='" + colname + 
+                    "' is not found! ", StatusCode::SUCCESS ) ; 
+   } // RETURN
 
-          G4SDManager* fSDM=G4SDManager::GetSDMpointer();
-          int collectionID=fSDM->GetCollectionID(colname);
-          
-          TrackerHitsCollection* myCollection = 
-            (TrackerHitsCollection*)(hitscollections->GetHC(collectionID));
-          
-          if(0==myCollection || collectionID==-1) 
-            {
-              return StatusCode::SUCCESS;
-            }
-          int numberofhits=myCollection->entries();
-
-          // reserve elements on object container 
-          hits->reserve( numberofhits );
-
-          //convert hits          
-          for( int itr = 0 ; itr<numberofhits ; ++itr ) 
-           {
-             HepPoint3D pentry=(*myCollection)[itr]->GetEntryPos();
-             HepPoint3D pexit=(*myCollection)[itr]->GetExitPos();
-             double edep=(*myCollection)[itr]->GetEdep();
-             double toffl=(*myCollection)[itr]->GetTimeOfFlight();
-
-             MCHit* mchit =new MCHit();
-             mchit->setEntry(pentry);
-             mchit->setExit(pexit);
-             mchit->setEnergy(edep);
-             mchit->setTimeOfFlight(toffl);             
-             
-             hits->insert( mchit);
-           }      
-          }
-        else
-          {
-            MsgStream log(   msgSvc(), name());
-            log << MSG::INFO << "No TrackerHits to be converted" 
-                <<endreq;        
-            return StatusCode::SUCCESS; 
-          }
-        
-   }
-  
-  catch( const GaudiException& Excp )
-    {
-      hits->clear(); 
-      return Exception("updateObj: " , Excp ) ;
-    }  
-  catch( const std::exception& Excp )
-    {
-      hits->clear(); 
-      return Exception("updateObj: " , Excp ) ;  
-    }
-  catch( ...  )
-    {
-      hits->clear(); 
-      return Exception("updateObj: " ) ;  
-    }
+ const TrackerHitsCollection* myCollection = trackerHits( col.hits() );
+ if( 0 == myCollection ) { return Error(" Wrong Collection type" ) ; } // RETURN
+ 
+ int numberofhits=myCollection->entries();
+ 
+ // reserve elements on object container 
+ hits->reserve( numberofhits );
+ 
+ //convert hits          
+ for( int itr = 0 ; itr<numberofhits ; ++itr ) 
+   {
+     HepPoint3D pentry=(*myCollection)[itr]->GetEntryPos();
+     HepPoint3D pexit=(*myCollection)[itr]->GetExitPos();
+     double edep=(*myCollection)[itr]->GetEdep();
+     double toffl=(*myCollection)[itr]->GetTimeOfFlight();
+     
+     MCHit* mchit =new MCHit();
+     mchit->setEntry(pentry);
+     mchit->setExit(pexit);
+     mchit->setEnergy(edep);
+     mchit->setTimeOfFlight(toffl);             
+     
+     hits->insert( mchit);
+   }      
   ///
-  return StatusCode::SUCCESS;
+ return StatusCode::SUCCESS;
 };
 
 // ======================================================================

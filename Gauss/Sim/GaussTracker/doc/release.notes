@@ -5,8 +5,11 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 	
-
-
+!=========================== GaussTracker v2r0 2002-12-17 ========================
+! 2002-12-17 - Witek Pokorski
+ - use new GaussTools (new Geant4) 
+ - technical change to GiGaTrackerHitCnv - uses GiGaHitsByName, to be further tested
+   and then also used in other hit converters
 !=========================== GaussTracker v1r0 2002-12-11 ========================
 ! 2002-12-11 - Witek Pokorski
   - New package: contains all tracker-like specific implementations of sensitive
