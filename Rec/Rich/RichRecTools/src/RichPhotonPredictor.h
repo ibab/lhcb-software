@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictor.h,v 1.6 2004-06-10 14:39:23 jonesc Exp $
+// $Id: RichPhotonPredictor.h,v 1.7 2004-07-09 17:38:44 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTOR_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTOR_H 1
 
@@ -19,7 +19,9 @@
 /** @class RichPhotonPredictor RichPhotonPredictor.h
  *
  *  Tool which performs the association between RichRecTracks and
- *  RichRecPixels to form RichRecPhotons
+ *  RichRecPixels to form RichRecPhotons. This particular class using simple
+ *  geometrical considerations based on the segment/pixel seperation
+ *  to make the decision.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002

@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.1 2004-06-10 14:40:50 jonesc Exp $
+// $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.2 2004-07-09 17:39:27 jonrob Exp $
 #ifndef RICHRECMCTOOLS_RICHPHOTONPREDICTORUSINGMCRICHOPTICALPHOTOS_H
 #define RICHRECMCTOOLS_RICHPHOTONPREDICTORUSINGMCRICHOPTICALPHOTOS_H 1
 
@@ -19,8 +19,9 @@
 
 /** @class RichPhotonPredictorUsingMCRichOpticalPhotons RichPhotonPredictorUsingMCRichOpticalPhotons.h
  *
- *  Tool which performs the association between RichRecTracks and
- *  RichRecPixels to form RichRecPhotons
+ *  Tool which performs the association between RichRecSegments and
+ *  RichRecPixels to form RichRecPhotons.  This particular instance uses
+ *  MCRichOpticalPhoton objects to select only true Cherenkov photon combinations.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002

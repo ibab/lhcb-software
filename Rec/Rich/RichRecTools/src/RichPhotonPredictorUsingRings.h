@@ -1,4 +1,4 @@
-// $Id: RichPhotonPredictorUsingRings.h,v 1.2 2004-07-02 14:30:31 jonrob Exp $
+// $Id: RichPhotonPredictorUsingRings.h,v 1.3 2004-07-09 17:38:44 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTORUSINGRINGS_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTORUSINGRINGS_H 1
 
@@ -22,8 +22,10 @@
 
 /** @class RichPhotonPredictorUsingRings RichPhotonPredictorUsingRings.h
  *
- *  Tool which performs the association between RichRecTracks and
- *  RichRecPixels to form RichRecPhotons
+ *  Tool which performs the association between RichRecSegments and
+ *  RichRecPixels to form RichRecPhotons.  This particular instance uses
+ *  RichRecRing objects (which must already exist in the TES) to only select
+ *  pixel/segment combinations that form a valid Ring candidate.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
