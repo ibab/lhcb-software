@@ -3,6 +3,7 @@
 
 EventSelector.Input   = {
   "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v22r0/412400.dst' TYP='ROOT' OPT='READ'"
+  //  "DATAFILE='GaudiDbDst.root' TYP='ROOT' OPT='READ'"
 };
 
 // Define the DST content to copy
@@ -10,4 +11,5 @@ EventSelector.Input   = {
 #include "../options/DstContent.opts"
 
 DstWriter.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";
+//DstWriter.Output = "DATAFILE='GaudiDbDst.root' TYP='ROOT' OPT='NEW'";
 ApplicationMgr.OutStream += {"DstWriter"};
