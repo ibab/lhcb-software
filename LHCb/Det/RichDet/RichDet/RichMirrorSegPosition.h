@@ -1,4 +1,4 @@
-// $Id: RichMirrorSegPosition.h,v 1.1 2004-07-01 11:02:52 papanest Exp $
+// $Id: RichMirrorSegPosition.h,v 1.2 2004-07-09 17:36:30 jonrob Exp $
 #ifndef RICHDET_RICHMIRRORSEGPOSITION_H 
 #define RICHDET_RICHMIRRORSEGPOSITION_H 1
 
@@ -12,7 +12,7 @@
  *  @date   2004-06-30
  */
 
-// Namespace for definitions related to RichTraceMode
+// Namespace for definitions related to RichMirrorSegPosition
 namespace RichMirrorSegPositionNames
 {
   // Type for dataword
@@ -31,60 +31,68 @@ namespace RichMirrorSegPositionNames
 }
 
 class RichMirrorSegPosition {
+
 public: 
+
   /// Standard constructor
   RichMirrorSegPosition( ): m_data(0) {}
   
-
-  virtual ~RichMirrorSegPosition( ) {} ///< Destructor
+  ~RichMirrorSegPosition( ) {} ///< Destructor
 
   /// Retrieve the full value
-  inline RichMirrorSegPositionNames::ShortType data() const { return m_data; }
+  inline RichMirrorSegPositionNames::ShortType data() const 
+  { 
+    return m_data; 
+  }
 
   /// Update the internal data
   inline void setData( const RichMirrorSegPositionNames::ShortType data ) 
-  { m_data = data; }
+  { 
+    m_data = data; 
+  }
 
   /// Set the flag for top position
-  inline bool setRow( const int row ) {
+  inline void setRow( const int row ) 
+  {
     set( row, 
          RichMirrorSegPositionNames::ShiftRow, 
          RichMirrorSegPositionNames::MaskRow );
-    return true;
   }
-
+  
   /// Retrieve the flag for top position
-  inline int row() const {
+  inline int row() const 
+  {
     return ( (data() & RichMirrorSegPositionNames::MaskRow) 
-                    >> RichMirrorSegPositionNames::ShiftRow  );
+             >> RichMirrorSegPositionNames::ShiftRow  );
   }
 
   /// Set the flag for column position
-  inline bool setColumn( const int column ) {
+  inline void setColumn( const int column ) 
+  {
     set( column, 
          RichMirrorSegPositionNames::ShiftColumn, 
          RichMirrorSegPositionNames::MaskColumn );
-    return true;
   }
 
   /// Retrieve the flag for column position
-  inline int column() const {
+  inline int column() const 
+  {
     return ( (data() & RichMirrorSegPositionNames::MaskColumn) 
-                    >> RichMirrorSegPositionNames::ShiftColumn  );
+             >> RichMirrorSegPositionNames::ShiftColumn  );
   }
 
-protected:
+private: // methods
+  
+  inline void set( const RichMirrorSegPositionNames::ShortType value,
+                   const RichMirrorSegPositionNames::ShortType shift,
+                   const RichMirrorSegPositionNames::ShortType mask ) 
+  {
+    setData( ((value << shift) & mask) | (data() & ~mask) );
+  }
 
-private:
+private: // data
 
   RichMirrorSegPositionNames::ShortType m_data;
-  
-  inline bool set( const RichMirrorSegPositionNames::ShortType value,
-                   const RichMirrorSegPositionNames::ShortType shift,
-                   const RichMirrorSegPositionNames::ShortType mask ) {
-    setData( ((value << shift) & mask) | (data() & ~mask) );
-    return true;
-  }
 
 };
 
