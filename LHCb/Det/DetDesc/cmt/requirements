@@ -2,6 +2,9 @@
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.18  2001/10/17 12:54:05  sponce
+# new version
+#
 # Revision 1.17  2001/08/09 16:48:00  ibelyaev
 # update in interfaces and redesign of solids
 # 
@@ -17,6 +20,19 @@ use GaudiKernel v10*
 use CLHEP v1*
 use XML v3*
 
+# avoid displaying of warning messages coming from xerces
+set XmlBaseDetElemCnv_cpp_cppflags "-w"
+set XmlGenericCnv_cpp_cppflags "-w"
+set XmlTabulatedPropertyCnv_cpp_cppflags "-w"
+set XmlSurfaceCnv_cpp_cppflags "-w"
+set XmlMixtureCnv_cpp_cppflags "-w"
+set XmlLVolumeCnv_cpp_cppflags "-w"
+set XmlCatalogCnv_cpp_cppflags "-w"
+set XmlDetectorElementCnv_cpp_cppflags "-w"
+set XmlElementCnv_cpp_cppflags "-w"
+set XmlIsotopeCnv_cpp_cppflags "-w"
+set XmlCnvSvc_cpp_cppflags "-w"
+set XmlParserSvc_cpp_cppflags "-w"
 
 # build a Linker library
 library DetDescLib   Lib/*.cpp
