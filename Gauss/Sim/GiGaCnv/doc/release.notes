@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.42 2003-01-30 20:08:31 witoldp Exp $
+! $Id: release.notes,v 1.43 2003-02-17 09:22:29 witoldp Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!======================== GiGaCnv v11r1 ===============================
 
 ! 2003-01-30 Witek Pokorski
  - GiGaGeo  - added handling of UserLimits through SimSvc
