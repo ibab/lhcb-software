@@ -1,8 +1,11 @@
-// $Id: CaloTrackPrsEval.h,v 1.3 2004-09-02 18:55:36 ibelyaev Exp $
+// $Id: CaloTrackPrsEval.h,v 1.4 2005-03-08 15:46:27 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/09/02 18:55:36  ibelyaev
+//  prepare for HLT/Trigger development
+//
 // Revision 1.2  2004/04/19 15:57:27  cattanem
 // v2r2
 //
@@ -84,7 +87,7 @@ public:
    *  @see ICaloTrackIdEval 
    *  It evaluated the Track ID estimators using the calorimeter information  
    *  @param  track  pointer to the object to be processed
-   *  @param  the value of the estimator
+   *  @return the value of the estimator
    */  
   virtual double     operator() 
     ( const TrgTrack*      track ) const ;

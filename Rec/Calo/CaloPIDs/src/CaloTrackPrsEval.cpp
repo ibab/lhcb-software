@@ -1,8 +1,11 @@
-// $Id: CaloTrackPrsEval.cpp,v 1.3 2004-09-02 18:55:36 ibelyaev Exp $
+// $Id: CaloTrackPrsEval.cpp,v 1.4 2005-03-08 15:46:27 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/09/02 18:55:36  ibelyaev
+//  prepare for HLT/Trigger development
+//
 // Revision 1.2  2004/02/17 12:06:15  ibelyaev
 //  update for rrading of histograms from the file
 //
@@ -145,7 +148,7 @@ StatusCode    CaloTrackPrsEval::initialize ()
 namespace Local
 {
   // ==========================================================================
-  /**  pure technical method
+  /*   pure technical method
    *   (just a copy of std::transform with
    *   a minor "improvement")
    */
