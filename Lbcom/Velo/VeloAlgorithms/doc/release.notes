@@ -1,6 +1,8 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+! 2002-07-07 - Chris Parkes
+ - Remove bug in spillover
 
 ! 2002-06-30 - Chris Parkes
  - Adding Rounding function for windows comptibility.
