@@ -1,4 +1,4 @@
-//$Id: common.opts,v 1.1 2001-12-16 16:12:05 andreav Exp $
+//$Id: common.opts,v 1.2 2004-12-08 17:25:19 marcocle Exp $
 //==============================================================
 // Common job options for all DetCondExample tests
 //==============================================================
@@ -8,7 +8,7 @@
 //--------------------------------------------------------------
 
 // Dynamically load component library for DetCond services and converters
-ApplicationMgr.DLLs    = { "DetDesc", "GaudiAlg" };
+ApplicationMgr.DLLs    = { "DetDesc", "GaudiAlg", "XmlTools", "DetDescCnv" };
 
 // Configure which DetectorDataSvc should be used
 ApplicationMgr.ExtSvc  = { "DetDataSvc/DetectorDataSvc" };
