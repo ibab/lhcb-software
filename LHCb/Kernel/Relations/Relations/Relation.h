@@ -1,23 +1,8 @@
-// $Id: Relation.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: Relation.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $ 
 // =============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2004/05/03 15:15:38  cattanem
-// v4r6
-//
-// Revision 1.11  2004/03/17 20:17:49  ibelyaev
-//  update Relations
-//
-// Revision 1.10  2004/01/14 16:30:25  ibelyaev
-//  update for new interface IUpdateable
-//
-// Revision 1.9  2004/01/14 15:13:02  ibelyaev
-//  few tricks to make POOL/ROOT happy
-//
-// Revision 1.8  2003/11/23 12:42:58  ibelyaev
-//  update to remove multiple and virtual inheritance
-//
 // =============================================================================
 #ifndef RELATIONS_Relation_H
 #define RELATIONS_Relation_H 1
@@ -212,11 +197,30 @@ namespace Relations
       sc = reserve( entries.size() )   ; if( sc.isFailure() ) { return sc ; }
       // 5) build new relations 
       for( typename _Entries::const_iterator it = entries.begin() ; 
-           entries.end() != it ; ++it ) { i_relate( it->from() , it->to() )  ;}
+           entries.end() != it ; ++it ) { i_push( it->from() , it->to() )  ;}
+      // (re)sort
+      i_sort() ;
       //
       return StatusCode::SUCCESS  ;
     };
     
+    /** make the relation between 2 objects (fast,100% inline method) 
+     *  - Call for i_sort() is mandatory! 
+     */
+    inline   void       i_push   
+    ( const  From&      object1 ,
+      const  To&        object2 )
+    {
+      m_direct.i_push( object1 , object2 ) ;
+      if ( 0 != m_inverse ) { m_inverse -> i_push( object2 , object1 ) ; }
+    } ;
+
+    /** (re)sort of the table 
+     *   mandatory to use after i_push 
+     */
+    inline void i_sort() 
+    { m_direct.i_sort() ; if ( 0 != m_inverse ) { m_inverse->i_sort() ; } }
+   
   public:  // abstract methods from interface
     
     /** retrive all relations from the object

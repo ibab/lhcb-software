@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.7 2004-12-09 09:49:07 cattanem Exp $ 
+! $Id: release.notes,v 1.8 2005-01-26 16:27:29 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -7,7 +7,105 @@
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
-!====================== Relations v2r1 2004-12-09 ============================
+! 2005-01-26 - Vanya BELYAEV
+ 
+  - few modification to improve CPU performance.
+  
+   If one compare the CPU performance for "filling" of Relation 
+   table and Linker object, Linker seems to be MUCH more efficient 
+   for creation. The CPU penalty comes from inservtion of 
+   relation entries into large vector. It is well-knbown problem 
+   that associative vector (which is the  internal implementation 
+   of Relation table) is slower for filling, but usually faster 
+   for reading/using than e.g. std::map or other associative 
+   technique. 
+   
+   To solve the problem the "power input" is enabled now:
+   e.g. instead of "safe" and robust code
+
+   for( ... )
+     {  
+     for( ... ) 
+       {
+       table->relate( object1 , object2 ) ;
+       }
+    }
+  
+   Now one can write more efficient:
+
+   for( ... )
+     {  
+     for( ... ) 
+       {
+       table->i_push( object1 , object2 ) ;
+       }
+    }
+    table->i_sort() ; // NB!!! call for i_sort() is mandatory
+
+   This code is more efficient, but less safe.
+   E.g. there is no control for duplicated entries, 
+  
+   New method i_push is ENOURMOUSLY fast, 
+   for realistc case it has the perfromace 5 times better that "Linker".
+   But, after the usage of i_push, the relatioin tabel stays in invald state and 
+   need to be manually set into valid state. It is doen using i_sort() 
+   method which is CPU-consuming.
+   
+   The overall CPU performance of i_push/i_sort is approximately 
+   2 times slower than filling of  Linker object. 
+
+   The special new package Tests/RelationTest is developed to measure 
+   correctly the relative performace of Relations tables and Linker objects.
+   Indeed it is not an easy task to measure only the performance of relations
+   and factorize everything else. 
+  
+   The package is is CVS and it contains realistic example whith 
+     CaloCluster->MCParticle weighted relations/links. 
+ 
+   CPU Performance in some arbirtary units: 
+   ----------------------------------------
+  
+   ----------------------------------------------------------------------------------
+     Technique                             Filling        Using/Looping/Extraction
+   ----------------------------------------------------------------------------------
+      1) Linker object                          419                261  
+   ----------------------------------------------------------------------------------
+      2) non-optmized Relations tables  
+         with random input data        
+          (using Table::relate method)          16478           
+   ----------------------------------------------------------------------------------
+      3) non-optimized Relation tables
+         with sorted input data                 817
+          (using Table::relate method)  
+   ----------------------------------------------------------------------------------
+      4) non-optmized Relations tables  
+         with random input data                 16349   
+          (using Table::i_relate method)          
+   ----------------------------------------------------------------------------------
+      5) optmized Relations tables  
+          with random input data        
+          (using Table::i_push/i_sort methods)  693                47 
+   ----------------------------------------------------------------------------------
+
+   For Using/Looping/Extarction there  (2),(3),(4) and (5) are the same.
+   All numbers were measured in ONE job using 1000 events and exising 
+   input data for CaloCluster->MCParticle MC-associations.
+   The job has been run few times to prove the stability of measurement. 
+ 
+   As a bottom-line I'd like to note that this version of Kernel/Relations 
+   package with "power input" option result in 1.65 worser performance for 
+   filling of the relation table relative to Linker technique, 
+   but it has 5.5 better CPU performace for extration of relations.
+   
+   I could be wrong, but probably the idiom "one time write - many times read"
+   is valid for *almost* any relations/links  (at least it is true for all 
+   MC-associations).
+
+   
+ - cmt/requirements 
+    version increment to v2r2 
+
+! ====================== Relations v2r1 2004-12-09 ============================
 ! 2004-12-08 - Vanya BELYAEV
 
  - remove few obsolete tricks to unify GCC and Visual C++ 

@@ -1,14 +1,8 @@
-// $Id: RelationWeightedBase.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: RelationWeightedBase.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2004/05/03 15:15:39  cattanem
-// v4r6
-//
-// Revision 1.7  2003/11/23 12:42:59  ibelyaev
-//  update to remove multiple and virtual inheritance
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWeightedBASE_H
 #define RELATIONS_RELATIONWeightedBASE_H 1
@@ -413,6 +407,31 @@ namespace Relations
      */
     inline StatusCode i_reserve ( const size_t num  )
     { m_entries.reserve( num ) ; return StatusCode::SUCCESS ; }
+
+    /** make the relation between 2 objects, but brute force.
+     *  The relation entry in *APPENDED* to the end 
+     *  of the internal container, keeping it in INVALID state
+     *
+     *  This method is added to provide more 
+     *  efficient fill for Relation tables.
+     *
+     *  The subsequent call of "sort" is MANDATORY!
+     *  
+     *  @param  object1 smart reference to the first object
+     *  @param  object2 smart reference to the second object
+     *  @param  weight  weigth for the relation
+     */
+    inline void i_push  
+    ( const From&     object1 ,
+      const To&       object2 ,
+      const Weight&   weight  )
+    { m_entries.push_back( Entry( object1 , object2 , weight ) ) ; };
+    
+    /** (re)sort the whole underlying container 
+     *  Call for this method is MANDATORY after usage of i_push 
+     */ 
+    inline void i_sort() 
+    { std::sort( m_entries.begin() , m_entries.end() , m_less ) ; };
     
     /** standard/default constructor
      *  @param reserve size of preallocated reserved space
@@ -426,7 +445,7 @@ namespace Relations
       , m_equal   () 
       , m_comp1   () 
       , m_comp2   () 
-    { if( reserve ) { Relations::reserve( m_entries , reserve ) ; } };
+    { if( 0 < reserve ) { i_reserve( reserve ) ; } };
     
     /// destructor (virtual)
     virtual ~RelationWeightedBase() {} ;

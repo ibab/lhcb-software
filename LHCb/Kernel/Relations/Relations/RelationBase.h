@@ -1,17 +1,8 @@
-// $Id: RelationBase.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: RelationBase.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.10  2004/05/03 15:15:38  cattanem
-// v4r6
-//
-// Revision 1.9  2004/01/15 10:54:39  cattanem
-// fix for Windows
-//
-// Revision 1.8  2003/11/23 12:42:59  ibelyaev
-//  update to remove multiple and virtual inheritance
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONBASE_H 
 #define RELATIONS_RELATIONBASE_H 1
@@ -246,6 +237,36 @@ namespace Relations
      */
     inline StatusCode i_reserve ( const size_t num  )
     { m_entries.reserve( num ) ; return StatusCode::SUCCESS ; }
+
+
+    /** make the relation between 2 objects
+     * 
+     *   - StatusCode::FAILURE is returned if the relation
+     *     between the given objects  is already set
+     *
+     *   - the CPU performance is proportional to log(N)
+     *     for location of the object plus some overhead for 
+     *     list operation, which is more or less constant for 
+     *     std::deque implementation of the underlying relation 
+     *     store and proportional to N for std::vector implementation, 
+     *     where N is the total number of relations 
+     *
+     *  @see IRelation 
+     *  @see RelationTypeTraits
+     *  @param object1  the first object
+     *  @param object2  the second object 
+     *  @return status code 
+     */
+    inline  void       i_push   
+    ( const From&      object1 , 
+      const To&        object2 ) 
+    { m_entries.push_back( Entry( object1 , object2 ) ) ; }
+    
+    /** (re)sort the whole underlying container 
+     *  Call for this method is MANDATORY after usage of i_push 
+     */ 
+    inline void i_sort() 
+    { std::sort( m_entries.begin() , m_entries.end() , m_less ) ; };
     
     /** standard/default constructor
      *  @param reserve size of preallocated reserved space
@@ -256,7 +277,7 @@ namespace Relations
       , m_less    ()
       , m_less1   ()
       , m_equal   ()
-    { if( reserve ) { Relations::reserve( m_entries , reserve ) ; } ; };
+    { if( 0 < reserve ) { i_reserve( reserve ) ; } ; };
     
     /** copy constructor
      *  @param copy object to be copied  

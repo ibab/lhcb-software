@@ -1,20 +1,8 @@
-// $Id: Relation2.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: Relation2.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
 // =============================================================================
-// CV Stag $Name: not supported by cvs2svn $
+// CV Stag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
 // =============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2004/05/03 15:15:38  cattanem
-// v4r6
-//
-// Revision 1.7  2004/01/14 16:30:25  ibelyaev
-//  update for new interface IUpdateable
-//
-// Revision 1.6  2004/01/14 15:13:03  ibelyaev
-//  few tricks to make POOL/ROOT happy
-//
-// Revision 1.5  2003/11/23 12:42:59  ibelyaev
-//  update to remove multiple and virtual inheritance
-//
 // =============================================================================
 #ifndef RELATIONS_Relation2_H 
 #define RELATIONS_Relation2_H 1
@@ -157,6 +145,19 @@ namespace Relations
     /// rebuild ALL relations form ALL  object to ALL objects(fast,100% inline)
     inline  StatusCode i_rebuild() 
     { return m_direct.i_rebuild() ; };
+    
+    /** make the relation between 2 objects (fast,100% inline method) 
+     *  - Call for i_sort() is mandatory!
+     */
+    inline   void       i_push   
+    ( const  From&      object1 ,
+      const  To&        object2 )
+    { m_direct.i_push   ( object1 , object2 ) ; }
+
+    /** (re)sort the table 
+     *   mandatory to use after i_push
+     */
+    inline  void i_sort() { m_direct.i_sort() ; }
     
   public:  // abstract methods from interface
     

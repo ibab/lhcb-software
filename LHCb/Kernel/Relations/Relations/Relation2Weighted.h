@@ -1,8 +1,11 @@
-// $Id: Relation2Weighted.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: Relation2Weighted.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/07/21 07:57:26  cattanem
+// first import of Kernel/Relations
+//
 // Revision 1.8  2004/05/03 15:15:38  cattanem
 // v4r6
 //
@@ -187,6 +190,20 @@ namespace Relations
     /// rebuild ALL relations form ALL  object to ALL objects(fast,100% inline)
     inline  StatusCode i_rebuild() 
     { return m_direct.i_rebuild() ; };
+    
+    /** make the relation between 2 objects (fast,100% inline)
+     *  call for i_sort() is mandatory!
+     */
+    inline   void i_push
+    ( const  From&      object1 , 
+      const  To&        object2 ,
+      const  Weight&    weight  ) 
+    { m_direct.i_push ( object1 , object2 , weight ) ; }
+        
+    /** (re)sort of the table 
+     *   mandatory to use after i_push 
+     */
+    inline void i_sort() { m_direct.i_sort() ; }
     
   public:  // abstract methods from interface
     

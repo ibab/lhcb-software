@@ -1,4 +1,4 @@
-// $Id: RelationWeighted2D.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: RelationWeighted2D.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted2D_H 
 #define RELATIONS_RelationWeighted2D_H 1
@@ -274,6 +274,20 @@ public:  // major functional methods (fast, 100% inline)
   /// rebuild ALL relations form ALL  object to ALL objects(fast,100% inline)
   inline  StatusCode i_rebuild() 
   { return m_base.i_rebuild() ; };
+  
+  /** make the relation between 2 objects (fast,100% inline)
+   *  the call for i_sort() is mandatory after usage of this method!
+   */
+  inline   void i_push
+  ( const  From&      object1 , 
+    const  To&        object2 ,
+    const  Weight&    weight  ) 
+  { m_base.i_push ( object1 , object2 , weight ) ;}
+  
+  /** (re)sort of the table 
+   *   mandatory to use after i_push 
+   */
+  inline   void  i_sort() { m_base.i_sort () ; }
   
 public:  // abstract methods from interface
   

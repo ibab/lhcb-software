@@ -1,23 +1,8 @@
-// $Id: Relation2D.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: Relation2D.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.16  2004/05/03 15:15:38  cattanem
-// v4r6
-//
-// Revision 1.15  2004/01/14 16:30:26  ibelyaev
-//  update for new interface IUpdateable
-//
-// Revision 1.14  2004/01/14 15:13:03  ibelyaev
-//  few tricks to make POOL/ROOT happy
-//
-// Revision 1.13  2003/12/18 15:32:58  cattanem
-// For LHCB v15r0
-//
-// Revision 1.12  2003/11/23 12:42:59  ibelyaev
-//  update to remove multiple and virtual inheritance
-//
 // ============================================================================
 #ifndef RELATIONS_Relation2D_H 
 #define RELATIONS_Relation2D_H 1
@@ -241,7 +226,20 @@ public:  // major functional methods (fast, 100% inline)
   /// rebuild ALL relations form ALL  object to ALL objects(fast,100% inline)
   inline  StatusCode i_rebuild() 
   { return m_base.i_rebuild() ; };
-  
+
+  /** make the relation between 2 objects (fast,100% inline method) 
+   *  the call for i_sort() is mandatory
+   */
+  inline   void       i_push
+  ( const  From&      object1 ,
+    const  To&        object2 )
+  { m_base.i_push    ( object1 , object2 ) ; }
+
+  /** (re)sort the table 
+   *   mandatory to use after i_push
+   */
+   inline  void i_sort() { m_base.i_sort() ; }
+
 public: // abstract methods from interface 
   
   /** retrive all relations from the given object object

@@ -1,5 +1,9 @@
-// $Id: Relation1D.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: Relation1D.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
 // =============================================================================
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
 #ifndef RELATIONS_Relation1D_H
 #define RELATIONS_Relation1D_H 1
 // Include files
@@ -246,6 +250,19 @@ public:  // major functional methods (fast, 100% inline)
   inline  StatusCode i_rebuild() 
   { return m_base.i_rebuild() ; };
   
+  /** make the relation between 2 objects (fast,100% inline method) 
+   *   - the call for i_sort() is mandatory 
+   */
+  inline   void i_push
+  ( const  From&      object1 ,
+    const  To&        object2 )
+  { m_base.i_push   ( object1 , object2 ) ; }
+  
+  /** (re)sort the table 
+   *   mandatory to use after i_push
+   */
+  inline  void i_sort() { m_base.i_sort() ; }
+
 public: // abstract methods from interface 
   
   /** retrive all relations from the given object object

@@ -1,8 +1,11 @@
-// $Id: RelationWeighted.h,v 1.1.1.1 2004-07-21 07:57:26 cattanem Exp $
+// $Id: RelationWeighted.h,v 1.2 2005-01-26 16:27:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/07/21 07:57:26  cattanem
+// first import of Kernel/Relations
+//
 // Revision 1.11  2004/05/03 15:15:38  cattanem
 // v4r6
 //
@@ -242,11 +245,31 @@ namespace Relations
       // 5) build new relations 
       for( typename _Entries::const_iterator it = entries.begin() ; 
            entries.end() != it ; ++it )
-      { i_relate( it->from() , it->to() , it->weight() )  ; }
+      { i_push( it->from() , it->to() , it->weight() )  ; }
+      // (re)sort
+      i_sort() ;
       //
       return StatusCode::SUCCESS ;
     };
- 
+    
+    /** make the relation between 2 objects (fast,100% inline)
+     *  subsequent call for i_sort is mandatory! 
+     */
+    inline   void i_push 
+    ( const  From&      object1 , 
+      const  To&        object2 ,
+      const  Weight&    weight  ) 
+    {
+      m_direct.i_push( object1 , object2 , weight );
+      if ( 0 != m_inverse ) { m_inverse->i_push( object2 , object1 , weight ) ; }
+    };
+    
+    /** (re)sort of the table 
+     *   mandatory to use after i_push 
+     */
+    inline void i_sort() 
+    { m_direct.i_sort() ; if ( 0 != m_inverse ) { m_inverse->i_sort() ; } }
+    
     
   public:  // abstract methods from interface
     
