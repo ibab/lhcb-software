@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.2 2002-06-18 06:50:01 ocallot Exp $
+// $Id: VeloSim.cpp,v 1.3 2002-06-18 14:52:21 ocallot Exp $
 // Include files
 // STL
 #include <string>
@@ -555,7 +555,7 @@ StatusCode VeloSim::coupling(){
     MCVeloFE* myFE = m_fes->object( (*coupIt)->key() );
     if ( 0 != myFE ) {
       myFE->setAddedSignal( myFE->addedSignal() + (*coupIt)->addedSignal() );
-      log << MSG::INFO << " -- Existing FE. " 
+      log << MSG::DEBUG << " -- Existing FE. " 
           << (*coupIt)->sensor() << "," 
           << (*coupIt)->strip() << " Update with coupling FE." << endreq;      
     } else {
