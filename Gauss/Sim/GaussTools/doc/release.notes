@@ -5,6 +5,11 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v8r7 =================================
+! 2003-10-13 - Witek Pokorski
+ - GaussInitialization - switched to generation of random seed using hashing 
+	                 algorithm as in Boole
+
 !======================== GaussTools v8r6 =================================
 ! 2003-10-09 - Witek Pokorski
  - GaussTrackAction - added possibility of storing trajectories according

@@ -104,7 +104,20 @@ StatusCode GaussInitialisation::execute() {
     }
   }  
   else {
-    m_theSeed = 100000 * (m_eventNumb % 20000) + (m_runNumb % 100000);
+    // Get random number seed by hashing string containing event & run nos.
+    char seedTxt[32];
+    sprintf( seedTxt, "Gauss_evt_%.8lx_run_%.8lx", m_eventNumb, m_runNumb);
+    
+    //--> Hash32 algorithm from Pere Mato
+    const char* k;
+    long hash;
+    for (hash = 0, k = seedTxt; *k; k++) {
+      hash += *k; hash += (hash << 10); hash ^= (hash >> 6);
+    }
+    hash += (hash << 3); hash ^= (hash >> 11); hash += (hash << 15);
+    //<--
+    m_theSeed = abs(hash); // CLHEP cannot cope with -ve seeds
+    
     seeds.push_back( m_theSeed );
     m_engine->setSeeds( seeds );
     log << MSG::INFO 
