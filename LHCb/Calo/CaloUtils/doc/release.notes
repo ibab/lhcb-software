@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.32 2004-10-27 12:47:08 cattanem Exp $
+! $Id: release.notes,v 1.33 2004-10-27 12:51:21 pkoppenb Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!========================== CaloUtils v4r8 2004-10-27 ===================
 ! 2004-10-27 - Vanya BELYAEV
  - CaloUtils/TrTrackUse.h ,
    src/TrTrackUse.cpp
