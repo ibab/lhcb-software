@@ -1,5 +1,5 @@
 package           OTAssociators
-version           v2r2
+version           v2r3
         
 # =============== structure =================================================== 
 branches          OTAssociators src cmt doc options 
@@ -7,7 +7,7 @@ branches          OTAssociators src cmt doc options
 include_dirs $(OTASSOCIATORSROOT)
 
 # =============== used packages ===============================================
-use OTEvent     v11r*  Event 
+use OTEvent     v12r*  Event 
 
 # =============== own options =================================================
 set OTASSOCIATORSOPTS  ${OTASSOCIATORSROOT}/options
