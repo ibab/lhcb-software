@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.3 2002-06-24 11:04:36 parkesb Exp $
+#// $Id: VeloSim.h,v 1.4 2002-06-24 11:31:04 cattanem Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -54,7 +54,7 @@ private:
                       double tol,
                       int Npoints,
                       std::vector<double>& Spoints);
-  void diffusion(MCVeloHit* hit, int Npoints, vector<double>& Spoints);
+  void diffusion(MCVeloHit* hit, int Npoints, std::vector<double>& Spoints);
   void fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge);
   void fillFE(MCVeloFE* myFE, double charge);
   StatusCode coupling();
