@@ -1,4 +1,4 @@
-// $Id: RichGeomEffFixedValue.h,v 1.1 2003-06-30 15:47:04 jonrob Exp $
+// $Id: RichGeomEffFixedValue.h,v 1.2 2003-11-25 14:06:40 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHGEOMEFFFIXEDVALUE_H
 #define RICHRECTOOLS_RICHGEOMEFFFIXEDVALUE_H 1
 
@@ -11,6 +11,7 @@
 #include "Event/RichRecSegment.h"
 
 // interfaces
+#include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichGeomEff.h"
 
 /** @class RichGeomEffFixedValue RichGeomEffFixedValue.h
@@ -52,7 +53,10 @@ public:
 
 private: // Private data
 
-  double m_fixedValue;
+  // Pointers to tool instances
+  IRichCherenkovAngle * m_ckAngle;
+
+  std::vector<double> m_fixedValue;
   double m_fixedScatValue;
 
 };

@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFunc.h,v 1.3 2003-10-13 16:32:34 jonrob Exp $
+// $Id: RichSellmeirFunc.h,v 1.4 2003-11-25 14:06:41 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHSELLMEIRFUNC_H
 #define RICHRECTOOLS_RICHSELLMEIRFUNC_H 1
 
@@ -60,7 +60,7 @@ public:
 private: // methods
 
   // internal calculation for photon yield
-  double paraW( Rich::RadiatorType rad, double energy );
+  double paraW( const Rich::RadiatorType rad, const double energy );
 
 private: // data
 

@@ -1,6 +1,6 @@
-// $Id: RichPhotonSignalMaPMT.h,v 1.1 2003-09-04 07:12:52 jonrob Exp $
-#ifndef RICHRECTOOLS_RICHPHOTONSIGNALMAPMT_H
-#define RICHRECTOOLS_RICHPHOTONSIGNALMAPMT_H 1
+// $Id: RichPhotonSignal.h,v 1.6 2003-11-25 14:06:40 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHPHOTONSIGNAL_H
+#define RICHRECTOOLS_RICHPHOTONSIGNAL_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -28,29 +28,29 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
-/** @class RichPhotonSignalMaPMT RichPhotonSignalMaPMT.h
+/** @class RichPhotonSignal RichPhotonSignal.h
  *
  *  Tool to calculate for a given photon the probabilities of it
  *  being a signal or scattered photon, and its predicted contribution
  *  to its associated RichRecPixel, under a certain mass hypothesis.
- *  This version is tuned for MaPMTs
+ *  This version is tuned for HPDs
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 
-class RichPhotonSignalMaPMT : public RichRecToolBase,
-                              virtual public IRichPhotonSignal {
+class RichPhotonSignal : public RichRecToolBase,
+                         virtual public IRichPhotonSignal {
 
 public:
 
   /// Standard constructor
-  RichPhotonSignalMaPMT( const std::string& type,
-                         const std::string& name,
-                         const IInterface* parent );
+  RichPhotonSignal( const std::string& type,
+                    const std::string& name,
+                    const IInterface* parent );
 
   /// Destructor
-  virtual ~RichPhotonSignalMaPMT(){}
+  virtual ~RichPhotonSignal(){}
 
   /// Initialize method
   StatusCode initialize();
@@ -88,4 +88,4 @@ private: // private data
 
 };
 
-#endif // RICHRECTOOLS_RICHPHOTONSIGNALMAPMT_H
+#endif // RICHRECTOOLS_RICHPHOTONSIGNAL_H

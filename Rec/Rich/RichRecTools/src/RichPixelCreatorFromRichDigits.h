@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.h,v 1.2 2003-10-13 16:32:32 jonrob Exp $
+// $Id: RichPixelCreatorFromRichDigits.h,v 1.3 2003-11-25 14:06:40 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H 1
 
@@ -66,9 +66,6 @@ private:
 
   /// Pointer to RichRecPixels
   RichRecPixels * m_pixels;
-
-  /// Pointer to event data service
-  IDataProviderSvc* m_evtDataSvc;
 
   /// Pointer to RichDetInterface tool
   IRichDetInterface * m_richDetInt;

@@ -1,22 +1,22 @@
-// $Id: RichTabulatedHPDSignalDetectionEff.cpp,v 1.2 2003-10-13 16:32:35 jonrob Exp $
+// $Id: RichTabulatedSignalDetectionEff.cpp,v 1.1 2003-11-25 14:06:41 jonrob Exp $
 
 // local
-#include "RichTabulatedHPDSignalDetectionEff.h"
+#include "RichTabulatedSignalDetectionEff.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichTabulatedHPDSignalDetectionEff
+// Implementation file for class : RichTabulatedSignalDetectionEff
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichTabulatedHPDSignalDetectionEff>          s_factory ;
-const        IToolFactory& RichTabulatedHPDSignalDetectionEffFactory = s_factory ;
+static const  ToolFactory<RichTabulatedSignalDetectionEff>          s_factory ;
+const        IToolFactory& RichTabulatedSignalDetectionEffFactory = s_factory ;
 
 // Standard constructor
-RichTabulatedHPDSignalDetectionEff::RichTabulatedHPDSignalDetectionEff ( const std::string& type,
-                                                                         const std::string& name,
-                                                                         const IInterface* parent )
+RichTabulatedSignalDetectionEff::RichTabulatedSignalDetectionEff ( const std::string& type,
+                                                                   const std::string& name,
+                                                                   const IInterface* parent )
   : RichRecToolBase  ( type, name, parent ),
     m_flatMirReflLoc ( Rich::NRiches      ),
     m_sphMirReflLoc  ( Rich::NRiches      ) {
@@ -44,7 +44,7 @@ RichTabulatedHPDSignalDetectionEff::RichTabulatedHPDSignalDetectionEff ( const s
 
 }
 
-StatusCode RichTabulatedHPDSignalDetectionEff::initialize() {
+StatusCode RichTabulatedSignalDetectionEff::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
@@ -95,13 +95,13 @@ StatusCode RichTabulatedHPDSignalDetectionEff::initialize() {
 
   // Get Rich1 Detector element
   SmartDataPtr<IDetectorElement> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
-  
+
   // Quartz window eff
   m_quartzWinEff = Rich1DE->userParameterAsDouble( "HPDQuartzWindowEff" );
-  
+
   // Digitisation pedestal loss
   m_pedLoss = Rich1DE->userParameterAsDouble( "HPDPedestalDigiEff" );
-  
+
   // Informational Printout
   msg << MSG::DEBUG
       << " Using XML tabulated implementation for HPD" << endreq
@@ -117,7 +117,7 @@ StatusCode RichTabulatedHPDSignalDetectionEff::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichTabulatedHPDSignalDetectionEff::finalize() {
+StatusCode RichTabulatedSignalDetectionEff::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
@@ -138,8 +138,8 @@ StatusCode RichTabulatedHPDSignalDetectionEff::finalize() {
 }
 
 double
-RichTabulatedHPDSignalDetectionEff::photonDetEfficiency( RichRecSegment * segment,
-                                                         double energy )
+RichTabulatedSignalDetectionEff::photonDetEfficiency( RichRecSegment * segment,
+                                                      double energy )
 {
   // which detector
   Rich::DetectorType det = segment->trackSegment().rich();

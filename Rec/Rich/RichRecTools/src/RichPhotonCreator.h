@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.h,v 1.6 2003-08-26 14:40:19 jonrob Exp $
+// $Id: RichPhotonCreator.h,v 1.7 2003-11-25 14:06:40 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
 
@@ -96,9 +96,6 @@ private: // private data
 
   /// Pointer to RichRecPhotons
   RichRecPhotons * m_photons;
-
-  /// Pointer to event data service
-  IDataProviderSvc * m_evtDataSvc;
 
   /// Location of RichRecPhotons in TES
   std::string m_richRecPhotonLocation;

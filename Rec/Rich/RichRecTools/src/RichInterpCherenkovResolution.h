@@ -1,4 +1,4 @@
-// $Id: RichInterpCherenkovResolution.h,v 1.1 2003-09-04 07:12:52 jonrob Exp $
+// $Id: RichInterpCherenkovResolution.h,v 1.2 2003-11-25 14:06:40 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHINTERPCHERENKOVRESOLUTION_H
 #define RICHRECTOOLS_RICHINTERPCHERENKOVRESOLUTION_H 1
 
@@ -57,9 +57,6 @@ private:  // Private data
 
   // Interpolators
   Rich1DTabFunc * m_ckRes[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
-
-  /// temporary parameters to take into acount degraded performance for robustness tests
-  std::vector<double> m_emisPntErrScale;
 
 };
 

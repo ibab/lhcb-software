@@ -1,4 +1,4 @@
-// $Id: RichInterpCherenkovResolution.cpp,v 1.2 2003-10-13 16:32:31 jonrob Exp $
+// $Id: RichInterpCherenkovResolution.cpp,v 1.3 2003-11-25 14:06:40 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -55,12 +55,6 @@ RichInterpCherenkovResolution::RichInterpCherenkovResolution ( const std::string
   declareProperty( "CF4UpStreamRes", m_theerr[Rich::CF4][Rich::Track::UpStream] );
   declareProperty( "CF4SeedRes",     m_theerr[Rich::CF4][Rich::Track::Seed] );
   declareProperty( "CF4VTTRes",      m_theerr[Rich::CF4][Rich::Track::VeloTT] );
-
-  // temporary parameters to take into acount degraded performance for robustness tests
-  m_emisPntErrScale.push_back( 1 );
-  m_emisPntErrScale.push_back( 1 );
-  m_emisPntErrScale.push_back( 1 );
-  declareProperty( "ScaleEmisPntErr", m_emisPntErrScale );
 
 }
 
@@ -126,9 +120,5 @@ RichInterpCherenkovResolution::ckThetaResolution( RichRecSegment * segment,
   Rich::Track::Type type = segment->richRecTrack()->trackID().trackType();
 
   // compute the interpolated resolution
-  double res = (m_ckRes[rad][type])->value(thetaExp);
-  
-  // Scale for robustness tests and return
-  res *= m_emisPntErrScale[rad];
-  return res;
+  return (m_ckRes[rad][type])->value(thetaExp);
 }

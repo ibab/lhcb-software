@@ -1,4 +1,4 @@
-// $Id: RichStatusCreator.h,v 1.1 2003-07-02 09:04:21 jonrob Exp $
+// $Id: RichStatusCreator.h,v 1.2 2003-11-25 14:06:41 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHSTATUSCREATOR_H
 #define RICHRECTOOLS_RICHSTATUSCREATOR_H 1
 
@@ -55,9 +55,6 @@ private:
 
   /// Pointer to RichRecStatus
   RichRecStatus * m_status;
-
-  /// Pointer to event data service
-  IDataProviderSvc * m_evtDataSvc;
 
   /// Location of RichRecStatus in TES
   std::string m_richStatusLocation;

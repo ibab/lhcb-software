@@ -1,22 +1,22 @@
-// $Id: RichTabulatedHPDSignalDetectionEffSICB.cpp,v 1.1 2003-10-13 16:32:35 jonrob Exp $
+// $Id: RichTabulatedSignalDetectionEffSICB.cpp,v 1.1 2003-11-25 14:06:41 jonrob Exp $
 
 // local
-#include "RichTabulatedHPDSignalDetectionEffSICB.h"
+#include "RichTabulatedSignalDetectionEffSICB.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichTabulatedHPDSignalDetectionEffSICB
+// Implementation file for class : RichTabulatedSignalDetectionEffSICB
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichTabulatedHPDSignalDetectionEffSICB>          s_factory ;
-const        IToolFactory& RichTabulatedHPDSignalDetectionEffSICBFactory = s_factory ;
+static const  ToolFactory<RichTabulatedSignalDetectionEffSICB>          s_factory ;
+const        IToolFactory& RichTabulatedSignalDetectionEffSICBFactory = s_factory ;
 
 // Standard constructor
-RichTabulatedHPDSignalDetectionEffSICB::RichTabulatedHPDSignalDetectionEffSICB ( const std::string& type,
-                                                                                 const std::string& name,
-                                                                                 const IInterface* parent )
+RichTabulatedSignalDetectionEffSICB::RichTabulatedSignalDetectionEffSICB ( const std::string& type,
+                                                                           const std::string& name,
+                                                                           const IInterface* parent )
   : RichRecToolBase  ( type, name, parent ),
     m_flatMirReflLoc ( Rich::NRiches      ),
     m_sphMirReflLoc  ( Rich::NRiches      ) {
@@ -44,7 +44,7 @@ RichTabulatedHPDSignalDetectionEffSICB::RichTabulatedHPDSignalDetectionEffSICB (
 
 }
 
-StatusCode RichTabulatedHPDSignalDetectionEffSICB::initialize() {
+StatusCode RichTabulatedSignalDetectionEffSICB::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
@@ -121,7 +121,7 @@ StatusCode RichTabulatedHPDSignalDetectionEffSICB::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichTabulatedHPDSignalDetectionEffSICB::finalize() {
+StatusCode RichTabulatedSignalDetectionEffSICB::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
@@ -142,8 +142,8 @@ StatusCode RichTabulatedHPDSignalDetectionEffSICB::finalize() {
 }
 
 double
-RichTabulatedHPDSignalDetectionEffSICB::photonDetEfficiency( RichRecSegment * segment,
-                                                             double energy )
+RichTabulatedSignalDetectionEffSICB::photonDetEfficiency( RichRecSegment * segment,
+                                                          double energy )
 {
   // which detector
   Rich::DetectorType det = segment->trackSegment().rich();

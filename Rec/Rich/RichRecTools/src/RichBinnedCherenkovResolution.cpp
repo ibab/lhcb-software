@@ -1,4 +1,4 @@
-// $Id: RichBinnedCherenkovResolution.cpp,v 1.4 2003-10-13 16:32:30 jonrob Exp $
+// $Id: RichBinnedCherenkovResolution.cpp,v 1.5 2003-11-25 14:06:39 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -116,12 +116,6 @@ RichBinnedCherenkovResolution::RichBinnedCherenkovResolution ( const std::string
   (m_theerr[Rich::CF4][Rich::Track::Velo]).push_back( 999 );
   (m_theerr[Rich::CF4][Rich::Track::Velo]).push_back( 999 );
 
-  // temporary parameters to take into acount degraded performance for robustness tests
-  m_emisPntErrScale.push_back( 1 );
-  m_emisPntErrScale.push_back( 1 );
-  m_emisPntErrScale.push_back( 1 );
-  declareProperty( "ScaleEmisPntErr", m_emisPntErrScale );
-
 }
 
 StatusCode RichBinnedCherenkovResolution::initialize() {
@@ -181,7 +175,5 @@ RichBinnedCherenkovResolution::ckThetaResolution( RichRecSegment * segment,
     res = (m_theerr[rad][type])[2];
   }
 
-  // Scale for robustness tests and return
-  res *= m_emisPntErrScale[rad];
   return res;
 }

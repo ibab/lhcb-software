@@ -1,9 +1,11 @@
-// $Id: RichGeomEffDetailed.h,v 1.3 2003-10-13 16:32:31 jonrob Exp $
-#ifndef RICHRECTOOLS_RICHGEOMEFFDETAILED_H
-#define RICHRECTOOLS_RICHGEOMEFFDETAILED_H 1
+// $Id: RichGeomEffPhotonTracing.h,v 1.1 2003-11-25 14:06:40 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H
+#define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
 
 // from Gaudi
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/ParticleProperty.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -11,12 +13,18 @@
 // Event model
 #include "Event/RichRecSegment.h"
 
+// CLHEP
+#include "CLHEP/Units/PhysicalConstants.h"
+
+// Rich Kernel
+#include "RichKernel/MessageSvcStl.h"
+
 // interfaces
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichGeomEff.h"
 #include "RichDetTools/IRichDetInterface.h"
 
-/** @class RichGeomEffDetailed RichGeomEffDetailed.h
+/** @class RichGeomEffPhotonTracing RichGeomEffPhotonTracing.h
  *
  *  Tool to perform a full detailed calculation of the geometrical
  *  efficiency for a given RichRecSegment and mass hypothesis.
@@ -25,18 +33,18 @@
  *  @date   15/03/2002
  */
 
-class RichGeomEffDetailed : public RichRecToolBase,
-                            virtual public IRichGeomEff {
+class RichGeomEffPhotonTracing : public RichRecToolBase,
+                                 virtual public IRichGeomEff {
 
 public:
 
   /// Standard constructor
-  RichGeomEffDetailed( const std::string& type,
-                       const std::string& name,
-                       const IInterface* parent );
+  RichGeomEffPhotonTracing( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent );
 
   /// Destructor
-  virtual ~RichGeomEffDetailed() {};
+  virtual ~RichGeomEffPhotonTracing() {};
 
   /// Initialize method
   StatusCode initialize();
@@ -81,4 +89,4 @@ private: // Private data
 
 };
 
-#endif // RICHRECTOOLS_RICHGEOMEFFDETAILED_H
+#endif // RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H

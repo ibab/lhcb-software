@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.6 2003-10-13 16:32:36 jonrob Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.7 2003-11-25 14:06:41 jonrob Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -17,7 +17,8 @@ const        IToolFactory& RichTrackCreatorFromTrStoredTracksFactory = s_factory
 RichTrackCreatorFromTrStoredTracks::RichTrackCreatorFromTrStoredTracks( const std::string& type,
                                                                         const std::string& name,
                                                                         const IInterface* parent )
-  : RichRecToolBase( type, name, parent ) {
+  : RichRecToolBase( type, name, parent ),
+    m_tkPcut( Rich::Track::NTrTypes, 0 ) {
 
   declareInterface<IRichTrackCreator>(this);
 
@@ -27,12 +28,18 @@ RichTrackCreatorFromTrStoredTracks::RichTrackCreatorFromTrStoredTracks( const st
                    m_richRecTrackLocation = RichRecTrackLocation::Default );
   declareProperty( "SkipNonUniqueTracks", m_skipNonUnique = true );
 
+  m_tkPcut[Rich::Track::Forward]  = 0;
+  m_tkPcut[Rich::Track::Match]    = 0;
+  m_tkPcut[Rich::Track::UpStream] = 0;
+  m_tkPcut[Rich::Track::Seed]     = 0;
+  m_tkPcut[Rich::Track::VeloTT]   = 0;
+  declareProperty( "TrackMinPtotPerClass", m_tkPcut );
+
 }
 
 StatusCode RichTrackCreatorFromTrStoredTracks::initialize() {
 
   MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "Initialize" << endreq;
 
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
@@ -41,12 +48,6 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize() {
   acquireTool( "RichSegmentCreator",      m_segCr      );
   acquireTool( "RichDetInterface",        m_richDetInt );
   acquireTool( "RichExpectedTrackSignal", m_signal     );
-
-  // Get pointer to EDS
-  if ( !serviceLocator()->service( "EventDataSvc", m_evtDataSvc, true ) ) {
-    msg << MSG::ERROR << "EventDataSvc not found" << endreq;
-    return StatusCode::FAILURE;
-  }
 
   // Setup incident services
   IIncidentSvc * incSvc;
@@ -59,8 +60,9 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize() {
   }
 
   // Informational printout
-  msg << MSG::DEBUG
-      << " Using TrStoredTracks" << endreq;
+  msg << MSG::DEBUG << "Initialize :-" 
+      << " Using TrStoredTracks" << endreq
+      << " Ptot max cut per track type  = " << m_tkPcut << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -71,7 +73,6 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release services and tools
-  if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
   releaseTool( m_segCr );
   releaseTool( m_richDetInt );
   releaseTool( m_signal );
@@ -88,16 +89,16 @@ void RichTrackCreatorFromTrStoredTracks::handle ( const Incident& incident ) {
     // Initialise navigation data
     m_trackDone.clear();
     m_allDone = false;
+    m_trTracks = 0;
 
-    SmartDataPtr<RichRecTracks> tdsTracks( m_evtDataSvc,
-                                           m_richRecTrackLocation );
+    SmartDataPtr<RichRecTracks> tdsTracks( eventSvc(), m_richRecTrackLocation );
     if ( !tdsTracks ) {
 
       // Reinitialise the Photon Container
       m_tracks = new RichRecTracks();
 
       // Register new RichRecPhoton container to Gaudi data store
-      if ( !m_evtDataSvc->registerObject(m_richRecTrackLocation, m_tracks) ) {
+      if ( !eventSvc()->registerObject(m_richRecTrackLocation, m_tracks) ) {
         MsgStream msg( msgSvc(), name() );
         msg << MSG::ERROR << "Failed to register RichRecTracks at "
             << m_richRecTrackLocation << endreq;
@@ -112,7 +113,7 @@ void RichTrackCreatorFromTrStoredTracks::handle ( const Incident& incident ) {
       for ( RichRecTracks::const_iterator iTrack = tdsTracks->begin();
             iTrack != tdsTracks->end();
             ++iTrack ) {
-        m_trackDone[(int)(*iTrack)->key()] = true;
+        m_trackDone[(*iTrack)->key()] = true;
       }
 
     }
@@ -126,26 +127,41 @@ StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() {
   if ( ! m_allDone ) {
     m_allDone = true;
 
-    // Obtain smart data pointer to TrStoredTracks
-    SmartDataPtr<TrStoredTracks> tracks( m_evtDataSvc, m_trTracksLocation );
-    if ( !tracks ) {
-      MsgStream msg( msgSvc(), name() );
-      msg << MSG::ERROR << "Failed to locate TrStoredTracks at "
-          << m_trTracksLocation << endreq;
-      return StatusCode::FAILURE;
-    } else {
-      if ( msgLevel(MSG::DEBUG) ) {
-        MsgStream msg( msgSvc(), name() );
-        msg << MSG::DEBUG << "located " << tracks->size() << " TrStoredTracks at "
-            << m_trTracksLocation << endreq;
-      }
-    }
+    // Load tracks
+    if ( !m_trTracks ) { if ( !loadTrStoredTracks() ) return StatusCode::FAILURE; }
 
     // Iterate over all reco tracks, and create new RichRecTracks
-    for ( TrStoredTracks::const_iterator track = tracks->begin();
-          track != tracks->end();
+    for ( TrStoredTracks::const_iterator track = m_trTracks->begin();
+          track != m_trTracks->end();
           ++track) { newTrack( *track ); } // Make new RichRecTrack
 
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+long RichTrackCreatorFromTrStoredTracks::nInputTracks()
+{
+  if ( !m_trTracks ) { loadTrStoredTracks(); }
+  return ( m_trTracks ? m_trTracks->size() : 0 );
+}
+
+bool RichTrackCreatorFromTrStoredTracks::loadTrStoredTracks()
+{
+
+  // Obtain smart data pointer to TrStoredTracks
+  SmartDataPtr<TrStoredTracks> tracks( eventSvc(), m_trTracksLocation );
+  if ( !tracks ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::ERROR << "Failed to locate TrStoredTracks at "
+        << m_trTracksLocation << endreq;
+    return StatusCode::FAILURE;
+  }
+  m_trTracks = tracks;
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::DEBUG << "located " << tracks->size() << " TrStoredTracks at "
+        << m_trTracksLocation << endreq; 
   }
 
   return StatusCode::SUCCESS;
@@ -159,11 +175,11 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) {
   if ( !trTrack ) return NULL;
   if ( m_skipNonUnique && !trTrack->unique() ) return NULL;
 
-  int key = (int)trTrack->key();
+  unsigned long key = (int)trTrack->key();
 
   // See if this RichRecTrack already exists
   if ( m_trackDone[key] ) {
-    return (RichRecTrack*)(m_tracks->object(key));
+    return static_cast<RichRecTrack*>(m_tracks->object(key));
   } else {
 
     RichRecTrack * newTrack = NULL;
@@ -175,8 +191,9 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) {
 
       // Find TrStoredTrack current state and momentum
       SmartRef<TrState> trackState = trTrack->closestState(-999999.);
-      TrStateP * trackPState = dynamic_cast<TrStateP*>( (TrState*)trackState );
-      if ( trackPState ) {
+      TrStateP * trackPState = dynamic_cast<TrStateP*>( static_cast<TrState*>(trackState) );
+      if ( trackPState && 
+           trackPState->p()/GeV > m_tkPcut[Rich::Track::type(trTrack)] ) {
 
         // Form a new RichRecTrack
         newTrack = new RichRecTrack();
@@ -192,8 +209,15 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) {
           // make a new RichRecSegment from this RichTrackSegment
           RichRecSegment * newSegment = m_segCr->newSegment( *iSeg, newTrack );
 
-          // Is this segment useful ?
-          if ( m_signal->hasRichInfo(newSegment) ) {
+          // Get PD panel impact point
+          HepPoint3D & hitPoint = newSegment->pdPanelHitPoint();
+          HepVector3D trackDir = (*iSeg).bestMomentum();
+          if ( m_richDetInt->traceToDetectorWithoutEff( (*iSeg).rich(),
+                                                        (*iSeg).bestPoint(),
+                                                        trackDir,
+                                                        hitPoint,
+                                                        DeRichPDPanel::loose )
+               && m_signal->hasRichInfo(newSegment) ) {
 
             // keep track
             keepTrack = true;
@@ -203,18 +227,6 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) {
 
             // Add to the SmartRefVector of RichSegments for this RichRecTrack
             newTrack->addToRichRecSegments( newSegment );
-
-            // Get PD panel impact point
-            HepPoint3D & hitPoint = newSegment->pdPanelHitPoint();
-            HepVector3D trackDir = (*iSeg).bestMomentum();
-            if ( !m_richDetInt->traceToDetectorWithoutEff( (*iSeg).rich(),
-                                                           (*iSeg).bestPoint(),
-                                                           trackDir,
-                                                           hitPoint ) ) {
-              MsgStream msg( msgSvc(), name() );
-              msg << MSG::WARNING << "Segment " << newSegment->key()
-                  << " has no PD panel impact point !!" << endreq;
-            }
 
             // set radiator info
             Rich::RadiatorType rad = (*iSeg).radiator();

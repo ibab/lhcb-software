@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.3 2003-10-13 16:32:36 jonrob Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.4 2003-11-25 14:06:41 jonrob Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -17,9 +17,15 @@
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichDetTools/IRichDetInterface.h"
 
+// Rich Kernel
+#include "RichKernel/MessageSvcStl.h"
+
 // Event
 #include "Event/TrStoredTrack.h"
 #include "Event/RichRecTrack.h"
+
+// CLHEP
+#include "CLHEP/Units/PhysicalConstants.h"
 
 /** @class RichTrackCreatorFromTrStoredTracks RichTrackCreatorFromTrStoredTracks.h
  *
@@ -65,13 +71,21 @@ public:
   /// Return a pointer to the container of RichRecTracks
   RichRecTracks *& richTracks();
 
-private:
+  /// Returns the number of tracks in the input TrStoredTrack container.
+  long nInputTracks();
+
+private: // methods
+
+  /// Load the TrStoredTracks
+  bool loadTrStoredTracks();
+
+private: // data
 
   /// Pointer to RichRecTracks
   RichRecTracks * m_tracks;
 
-  /// Pointer to event data service
-  IDataProviderSvc* m_evtDataSvc;
+  /// Pointer to TrStoredTracks
+  TrStoredTracks * m_trTracks;
 
   /// Pointer to the RichSegmentCreator tool
   IRichSegmentCreator * m_segCr;
@@ -95,7 +109,10 @@ private:
   bool m_allDone;
 
   // Working object to keep track of formed objects
-  std::map<int, bool> m_trackDone;
+  std::map<unsigned long, bool> m_trackDone;
+
+
+  std::vector<double> m_tkPcut;
 
 };
 

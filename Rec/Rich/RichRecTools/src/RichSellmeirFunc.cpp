@@ -1,4 +1,4 @@
-// $Id: RichSellmeirFunc.cpp,v 1.3 2003-10-13 16:32:34 jonrob Exp $
+// $Id: RichSellmeirFunc.cpp,v 1.4 2003-11-25 14:06:41 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -33,7 +33,7 @@ RichSellmeirFunc::RichSellmeirFunc ( const std::string& type,
 
   declareInterface<IRichSellmeirFunc>(this);
 
-  // Aerogel specific parameters... SHould be in XML
+  // Aerogel specific parameters... Should be in XML
   declareProperty( "WaveIndpTrans", m_waveIndepTrans = 0.78 ); 
 
 }
@@ -142,7 +142,8 @@ double RichSellmeirFunc::photonsInEnergyRange( RichRecSegment * segment,
   return nPhot;
 }
 
-double RichSellmeirFunc::paraW ( Rich::RadiatorType rad, double energy ) {
+double RichSellmeirFunc::paraW ( const Rich::RadiatorType rad, 
+                                 const double energy ) {
 
   double X = m_RXSPscale[rad] * log( (m_REP[rad]+energy)/(m_REP[rad]-energy) );
   double Y = m_RXSMscale[rad] * log( (m_REM[rad]+energy)/(m_REM[rad]-energy) );

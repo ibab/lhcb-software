@@ -4,6 +4,11 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2003-11-25 - Chris Jones
+ - Remove MaPMT code
+ - Improved track selection
+ - Improved geometrical efficiency calculation
+
 !====================== RichRecTools v2r3 2003-11-05 ======================
 ! 2003-11-02 - Chris Jones
  - Move refractive index tools to RichDetTools

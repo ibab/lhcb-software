@@ -1,6 +1,6 @@
-// $Id: RichTabulatedMaPMTSignalDetectionEff.h,v 1.1 2003-10-13 16:32:35 jonrob Exp $
-#ifndef RICHRECTOOLS_RICHTABULATEDMaPMTSIGNALDETECTIONEFF_H
-#define RICHRECTOOLS_RICHTABULATEDMaPMTSIGNALDETECTIONEFF_H 1
+// $Id: RichTabulatedSignalDetectionEff.h,v 1.1 2003-11-25 14:06:41 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H
+#define RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -28,7 +28,7 @@
 #include "RichKernel/RichDetectorType.h"
 #include "RichKernel/BoostArray.h"
 
-/** @class RichTabulatedMaPMTSignalDetectionEff RichTabulatedMaPMTSignalDetectionEff.h
+/** @class RichTabulatedSignalDetectionEff RichTabulatedSignalDetectionEff.h
  *
  *  Tool providing calculations for the photon detection efficiencies
  *
@@ -36,18 +36,18 @@
  *  @date   15/03/2002
  */
 
-class RichTabulatedMaPMTSignalDetectionEff : public RichRecToolBase,
-                                             virtual public IRichSignalDetectionEff {
+class RichTabulatedSignalDetectionEff : public RichRecToolBase,
+                                        virtual public IRichSignalDetectionEff {
 
 public:
 
   /// Standard constructor
-  RichTabulatedMaPMTSignalDetectionEff( const std::string& type,
-                                        const std::string& name,
-                                        const IInterface* parent );
+  RichTabulatedSignalDetectionEff( const std::string& type,
+                                   const std::string& name,
+                                   const IInterface* parent );
 
   /// Destructor
-  virtual ~RichTabulatedMaPMTSignalDetectionEff() {};
+  virtual ~RichTabulatedSignalDetectionEff() {};
 
   /// Initialize method
   StatusCode initialize();
@@ -78,7 +78,7 @@ private:  // Private data
   double m_pedLoss;
 
   /// Quantum Efficiency function.
-  /// For time being assume only one reference curve for all MaPMTs
+  /// For time being assume only one reference curve for all HPDs
   Rich1DTabProperty * m_QE;
 
   /// Location of QE in XML
@@ -89,4 +89,4 @@ private:  // Private data
 
 };
 
-#endif // RICHRECTOOLS_RICHTABULATEDMaPMTSIGNALDETECTIONEFF_H
+#endif // RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H

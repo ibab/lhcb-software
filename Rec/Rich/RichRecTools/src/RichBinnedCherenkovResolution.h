@@ -1,4 +1,4 @@
-// $Id: RichBinnedCherenkovResolution.h,v 1.1 2003-08-06 11:08:12 jonrob Exp $
+// $Id: RichBinnedCherenkovResolution.h,v 1.2 2003-11-25 14:06:39 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHBINNEDCHERENKOVRESOLUTION_H
 #define RICHRECTOOLS_RICHBINNEDCHERENKOVRESOLUTION_H 1
 
@@ -50,9 +50,6 @@ private:  // Private data
 
   std::vector<double> m_theerr[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
   std::vector<double> m_thebin[Rich::NRadiatorTypes];
-
-  /// temporary parameters to take into acount degraded performance for robustness tests
-  std::vector<double> m_emisPntErrScale;
 
 };
 

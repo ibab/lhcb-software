@@ -1,4 +1,4 @@
-// $Id: RichSegmentCreator.cpp,v 1.3 2003-10-13 16:32:34 jonrob Exp $
+// $Id: RichSegmentCreator.cpp,v 1.4 2003-11-25 14:06:41 jonrob Exp $
 
 // local
 #include "RichSegmentCreator.h"
@@ -55,12 +55,6 @@ StatusCode RichSegmentCreator::initialize() {
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
-  // Get pointer to Event Data service
-  if ( !serviceLocator()->service( "EventDataSvc", m_evtDataSvc, true ) ) {
-    msg << MSG::ERROR << "EventDataSvc not found" << endreq;
-    return StatusCode::FAILURE;
-  }
-
   // Setup incident services
   IIncidentSvc * incSvc;
   if ( !serviceLocator()->service( "IncidentSvc", incSvc, true ) ) {
@@ -85,9 +79,6 @@ StatusCode RichSegmentCreator::finalize() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  // release services and tools
-  if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
-
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -97,7 +88,7 @@ void RichSegmentCreator::handle ( const Incident& incident ) {
 
   if ( "BeginEvent" == incident.type() ) {
 
-    SmartDataPtr<RichRecSegments> tdsSegments( m_evtDataSvc,
+    SmartDataPtr<RichRecSegments> tdsSegments( eventSvc(),
                                                m_richRecSegmentLocation );
     if ( !tdsSegments ) {
 
@@ -105,7 +96,7 @@ void RichSegmentCreator::handle ( const Incident& incident ) {
       m_segments = new RichRecSegments();
 
       // Register new RichRecPhoton container to Gaudi data store
-      if (!m_evtDataSvc->registerObject(m_richRecSegmentLocation, m_segments)) {
+      if (!eventSvc()->registerObject(m_richRecSegmentLocation, m_segments)) {
         MsgStream msg( msgSvc(), name() );
         msg << MSG::ERROR << "Failed to register RichRecSegments at "
             << m_richRecSegmentLocation << endreq;

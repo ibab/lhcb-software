@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.8 2003-08-26 14:40:19 jonrob Exp $
+// $Id: RichPhotonCreator.cpp,v 1.9 2003-11-25 14:06:40 jonrob Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -49,12 +49,6 @@ StatusCode RichPhotonCreator::initialize() {
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
-  // Get pointer to EDS
-  if ( !serviceLocator()->service( "EventDataSvc", m_evtDataSvc, true ) ) {
-    msg << MSG::ERROR << "EventDataSvc not found" << endreq;
-    return StatusCode::FAILURE;
-  }
-
   // Acquire instances of tools
   acquireTool("RichDetInterface",    m_richDetInt      );
   acquireTool("RichTrackCreator",    m_trackCreator    );
@@ -87,7 +81,6 @@ StatusCode RichPhotonCreator::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release services and tools
-  if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
   releaseTool( m_richDetInt      );
   releaseTool( m_trackCreator    );
   releaseTool( m_photonSignal    );
@@ -106,7 +99,7 @@ void RichPhotonCreator::handle ( const Incident& incident ) {
     // Initialise navigation data
     m_photonDone.clear();
 
-    SmartDataPtr<RichRecPhotons> tdsPhotons( m_evtDataSvc,
+    SmartDataPtr<RichRecPhotons> tdsPhotons( eventSvc(),
                                              m_richRecPhotonLocation );
     if ( !tdsPhotons ) {
 
@@ -114,7 +107,7 @@ void RichPhotonCreator::handle ( const Incident& incident ) {
       m_photons = new RichRecPhotons();
 
       // Register new RichRecPhoton container to Gaudi data store
-      if ( !m_evtDataSvc->registerObject(m_richRecPhotonLocation, m_photons) ) {
+      if ( !eventSvc()->registerObject(m_richRecPhotonLocation, m_photons) ) {
         MsgStream msg( msgSvc(), name() );
         msg << MSG::ERROR << "Failed to register RichRecPhotons at "
             << m_richRecPhotonLocation << endreq;

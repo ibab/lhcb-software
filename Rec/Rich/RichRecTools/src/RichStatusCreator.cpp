@@ -1,4 +1,4 @@
-// $Id: RichStatusCreator.cpp,v 1.1 2003-07-02 09:04:21 jonrob Exp $
+// $Id: RichStatusCreator.cpp,v 1.2 2003-11-25 14:06:41 jonrob Exp $
 
 // local
 #include "RichStatusCreator.h"
@@ -34,12 +34,6 @@ StatusCode RichStatusCreator::initialize() {
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
-  // Get pointer to EDS
-  if ( !serviceLocator()->service( "EventDataSvc", m_evtDataSvc, true ) ) {
-    msg << MSG::ERROR << "EventDataSvc not found" << endreq;
-    return StatusCode::FAILURE;
-  }
-
   // Setup incident services
   IIncidentSvc * incSvc;
   if ( !serviceLocator()->service( "IncidentSvc", incSvc, true ) ) {
@@ -58,9 +52,6 @@ StatusCode RichStatusCreator::finalize() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  // release services and tools
-  if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
-
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -70,11 +61,11 @@ void RichStatusCreator::handle ( const Incident& incident ) {
 
   if ( "BeginEvent" == incident.type() ) {
 
-    SmartDataPtr<RichRecStatus> status( m_evtDataSvc,m_richStatusLocation );
+    SmartDataPtr<RichRecStatus> status( eventSvc(), m_richStatusLocation );
     if ( !status ) {
 
       m_status = new RichRecStatus();
-      if ( !m_evtDataSvc->registerObject(m_richStatusLocation, m_status) ) {
+      if ( !eventSvc()->registerObject(m_richStatusLocation, m_status) ) {
         MsgStream msg( msgSvc(), name() );
         msg << MSG::ERROR << "Failed to register RichRecStatus at "
             << m_richStatusLocation << endreq;

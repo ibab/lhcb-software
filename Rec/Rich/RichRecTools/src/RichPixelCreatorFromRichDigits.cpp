@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.4 2003-10-13 16:32:32 jonrob Exp $
+// $Id: RichPixelCreatorFromRichDigits.cpp,v 1.5 2003-11-25 14:06:40 jonrob Exp $
 
 // local
 #include "RichPixelCreatorFromRichDigits.h"
@@ -37,12 +37,6 @@ StatusCode RichPixelCreatorFromRichDigits::initialize() {
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
 
-  // Get pointer to EDS
-  if ( !serviceLocator()->service( "EventDataSvc", m_evtDataSvc, true ) ) {
-    msg << MSG::ERROR << "EventDataSvc not found" << endreq;
-    return StatusCode::FAILURE;
-  }
-
   // Acquire instances of tools
   acquireTool("RichDetInterface", m_richDetInt);
 
@@ -69,7 +63,6 @@ StatusCode RichPixelCreatorFromRichDigits::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release services and tools
-  if ( m_evtDataSvc ) { m_evtDataSvc->release(); m_evtDataSvc = 0; }
   releaseTool( m_richDetInt );
 
   // Execute base class method
@@ -87,7 +80,7 @@ void RichPixelCreatorFromRichDigits::handle ( const Incident& incident ) {
     m_pixelExists.clear();
     m_pixelDone.clear();
 
-    SmartDataPtr<RichRecPixels> tdsPixels( m_evtDataSvc,
+    SmartDataPtr<RichRecPixels> tdsPixels( eventSvc(),
                                            m_richRecPixelLocation );
     if ( !tdsPixels ) {
 
@@ -95,7 +88,7 @@ void RichPixelCreatorFromRichDigits::handle ( const Incident& incident ) {
       m_pixels = new RichRecPixels();
 
       // Register new RichRecPhoton container to Gaudi data store
-      if ( !m_evtDataSvc->registerObject(m_richRecPixelLocation, m_pixels) ) {
+      if ( !eventSvc()->registerObject(m_richRecPixelLocation, m_pixels) ) {
         MsgStream msg( msgSvc(), name() );
         msg << MSG::ERROR << "Failed to register RichRecPixels at "
             << m_richRecPixelLocation << endreq;
@@ -176,7 +169,7 @@ StatusCode RichPixelCreatorFromRichDigits::newPixels() {
   m_allDone = true;
 
   // Obtain smart data pointer to RichDigits
-  SmartDataPtr<RichDigits> digits( m_evtDataSvc, m_recoDigitsLocation );
+  SmartDataPtr<RichDigits> digits( eventSvc(), m_recoDigitsLocation );
   if ( !digits ) {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::ERROR << "Failed to locate digits at "

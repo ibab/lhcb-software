@@ -1,33 +1,22 @@
-// $Id: RichGeomEffDetailed.cpp,v 1.5 2003-10-13 16:32:31 jonrob Exp $
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/ParticleProperty.h"
+// $Id: RichGeomEffPhotonTracing.cpp,v 1.1 2003-11-25 14:06:40 jonrob Exp $
 
 // local
-#include "RichGeomEffDetailed.h"
-
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
-
-// Rich Kernel
-#include "RichKernel/MessageSvcStl.h"
-
+#include "RichGeomEffPhotonTracing.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichGeomEffDetailed
+// Implementation file for class : RichGeomEffPhotonTracing
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichGeomEffDetailed>          s_factory ;
-const        IToolFactory& RichGeomEffDetailedFactory = s_factory ;
+static const  ToolFactory<RichGeomEffPhotonTracing>          s_factory ;
+const        IToolFactory& RichGeomEffPhotonTracingFactory = s_factory ;
 
 // Standard constructor
-RichGeomEffDetailed::RichGeomEffDetailed ( const std::string& type,
-                                           const std::string& name,
-                                           const IInterface* parent )
+RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
+                                                     const std::string& name,
+                                                     const IInterface* parent )
   : RichRecToolBase( type, name, parent ) {
 
   declareInterface<IRichGeomEff>(this);
@@ -41,7 +30,7 @@ RichGeomEffDetailed::RichGeomEffDetailed ( const std::string& type,
 
 }
 
-StatusCode RichGeomEffDetailed::initialize() {
+StatusCode RichGeomEffPhotonTracing::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
@@ -75,13 +64,13 @@ StatusCode RichGeomEffDetailed::initialize() {
 
   // Informational Printout
   msg << MSG::DEBUG
-      << " Using full geometrical calculation" << endreq
+      << " Using full photon ray tracing" << endreq
       << " GeomEff Phots Max/Bailout  = " << m_nGeomEff << "/" << m_nGeomEffBailout << endreq;
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichGeomEffDetailed::finalize() {
+StatusCode RichGeomEffPhotonTracing::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
@@ -95,8 +84,9 @@ StatusCode RichGeomEffDetailed::finalize() {
   return RichRecToolBase::finalize();
 }
 
-double RichGeomEffDetailed::geomEfficiency ( RichRecSegment * segment,
-                                             const Rich::ParticleIDType id ) {
+double
+RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
+                                           const Rich::ParticleIDType id ) {
 
   if ( !segment->geomEfficiency().dataIsValid(id) ) {
     double eff = 0;
@@ -124,6 +114,8 @@ double RichGeomEffDetailed::geomEfficiency ( RichRecSegment * segment,
 
         // Photon emission point is random between segment start and end points
         HepPoint3D emissionPt = trackSeg.bestPoint( m_uniDist() );
+        // Photon emission point is half-way between segment start and end points
+        //HepPoint3D & emissionPt = trackSeg.bestPoint();
 
         // Photon direction around loop
         HepVector3D photDir = rotation*HepVector3D( sinCkTheta*m_cosCkPhi[iPhot],
@@ -138,7 +130,7 @@ double RichGeomEffDetailed::geomEfficiency ( RichRecSegment * segment,
                                                  photon ) ) {
           ++nDetect;
           segment->addToGeomEfficiencyPerPD( id,
-                                             (int)(photon.smartID().pdID()),
+                                             photon.smartID().pdID(),
                                              m_pdInc );
           if ( photon.detectionPoint().x() > 0 ) {
             segment->setPhotonsInXPlus(1);
@@ -168,14 +160,16 @@ double RichGeomEffDetailed::geomEfficiency ( RichRecSegment * segment,
   return segment->geomEfficiency( id );
 }
 
-double RichGeomEffDetailed::geomEfficiencyScat ( RichRecSegment * segment,
-                                                 const Rich::ParticleIDType id ) {
+double
+RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
+                                               const Rich::ParticleIDType id ) {
 
   if ( !segment->geomEfficiencyScat().dataIsValid(id) ) {
     double eff = 0;
 
     // only for aerogel
-    if ( segment->trackSegment().radiator() == Rich::Aerogel ) {
+    double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
+    if ( ckTheta > 0 && segment->trackSegment().radiator() == Rich::Aerogel ) {
 
       RichTrackSegment & trackSeg = segment->trackSegment();
 
@@ -220,7 +214,7 @@ double RichGeomEffDetailed::geomEfficiencyScat ( RichRecSegment * segment,
 
       eff = (double)nDetect/(double)m_nGeomEff;
 
-    } // CK theta IF
+    } // radiator
 
     // Assign this efficiency to all hypotheses
     segment->setGeomEfficiencyScat( Rich::Electron, eff );
