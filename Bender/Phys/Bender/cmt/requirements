@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.2 2004-02-10 12:35:03 ibelyaev Exp $ 
+# $Id: requirements,v 1.3 2004-03-15 18:13:56 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -12,7 +12,8 @@ version           v2r0
 branches          cmt doc src python
 
 # =============== dependencies ================================================
-use               BenderDict  v2r*  Tools 
+use               BenderDict  v3r*  Tools 
+use               BenderDet   v1r*  Det  
 use               DaVinci     v11r* Phys 
 	
 # =============== consituents =================================================
@@ -49,6 +50,9 @@ apply_pattern     application_path
 # The END
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/02/10 12:35:03  ibelyaev
+#  last update
+#
 # Revision 1.1.1.1  2004/01/22 22:29:45  ibelyaev
 # New location of 'old' package
 #

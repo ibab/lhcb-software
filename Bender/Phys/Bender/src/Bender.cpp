@@ -1,8 +1,11 @@
-// $Id: Bender.cpp,v 1.3 2004-02-11 17:46:43 ibelyaev Exp $
+// $Id: Bender.cpp,v 1.4 2004-03-15 18:13:57 ibelyaev Exp $
 // ============================================================================ 
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================ 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/02/11 17:46:43  ibelyaev
+//  small polishing
+//
 // Revision 1.2  2004/02/10 12:35:03  ibelyaev
 //  last update
 //
@@ -39,6 +42,10 @@
 #include "GaudiKernel/StatusCode.h" 
 #include "GaudiKernel/System.h" 
 // ============================================================================
+// BenderLibs  
+// ============================================================================
+#include "Bender/Welcome.h"
+// ============================================================================
 
 void       printHelp () ;
 void       welcome   () ;
@@ -48,7 +55,7 @@ StatusCode processTheFile ( const std::string& name ) ;
 int main ( int argc, char** argv ) 
 {
   
-  welcome() ;
+  welcome() ;  
   
   typedef  std::vector<std::string> Arguments ;
   
@@ -224,7 +231,7 @@ void printHelp()
  *  @date 2004-02-11
  */
 // ============================================================================ 
-void welcome () {}
+void welcome () { Bender::Welcome::instance () ; }
 // ============================================================================
 
 // ============================================================================ 
