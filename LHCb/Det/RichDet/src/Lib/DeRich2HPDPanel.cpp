@@ -1,4 +1,4 @@
-// $Id: DeRich2HPDPanel.cpp,v 1.5 2003-08-29 08:29:42 papanest Exp $
+// $Id: DeRich2HPDPanel.cpp,v 1.6 2003-09-08 19:24:09 papanest Exp $
 #define DERICH2HPDPANEL_CPP
 
 // Include files
@@ -7,6 +7,8 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
+
+#include "Kernel/CLHEPStreams.h"
 
 // CLHEP files
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -17,6 +19,7 @@
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidSphere.h"
 
+#include "Kernel/CLHEPStreams.h"
 //----------------------------------------------------------------------------
 //
 // Implementation of class :  DeRich2HPDPanel
@@ -51,6 +54,7 @@ StatusCode DeRich2HPDPanel::initialize() {
   m_winRsq = m_winR*m_winR;
   
   HepPoint3D zero(0.0, 0.0, 0.0);
+  
   m_HPDRows = userParameterAsInt("PDRows");
   m_HPDColumns = userParameterAsInt("PDColumns");
   m_PDMax = m_HPDColumns * m_HPDRows;
@@ -69,6 +73,8 @@ StatusCode DeRich2HPDPanel::initialize() {
 
   // HPD #0 coordinates
   HepPoint3D HPD0Centre = pvHPDMaster0->toMother(zero);
+  log << MSG::DEBUG << "Centre of HPDPanel:" << geometry()->toGlobal(zero) 
+      << " Centre of HPD#0:" << geometry()->toGlobal(HPD0Centre) << std::endl;
 
   //get the next HPD. For Rich1 same row, for Rich2 same column
   const IPVolume* pvHPDMaster1 = geometry()->lvolume()->pvolume(1);

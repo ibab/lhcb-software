@@ -1,4 +1,4 @@
-// $Id: DeRichMaPMTPanel.cpp,v 1.1 2003-08-29 08:29:42 papanest Exp $
+// $Id: DeRichMaPMTPanel.cpp,v 1.2 2003-09-08 19:24:09 papanest Exp $
 #define DERICHMAPMTPANEL_CPP
 
 // Include files
@@ -40,6 +40,17 @@ StatusCode DeRichMaPMTPanel::initialize() {
   log << MSG::DEBUG <<"Starting initialisation of DeRichMaPMTPanel"<< endreq;
   this->printOut(log);
   
+  // get the detector service and get some MaPMT parameters from Rich1
+  IDataProviderSvc* detSvc =  dataSvc();
+  SmartDataPtr<DetectorElement> deRich1(detSvc, "/dd/Structure/LHCb/Rich1");
+
+  m_pixelRows = static_cast<unsigned int>
+    (deRich1->userParameterAsInt("RichMapmtNumPixelRow"));
+  m_pixelCols = static_cast<unsigned int>
+    (deRich1->userParameterAsInt("RichMapmtNumPixelCol"));
+  m_cdfPixelSize = deRich1->userParameterAsDouble("RhCdfMaPMTPixelSize");
+  m_cdfPixelPitch = deRich1->userParameterAsDouble("RhCdfMaPMTPixelPitch");
+
   HepPoint3D zero(0.0, 0.0, 0.0);
   m_PDRows = static_cast<unsigned int>(userParameterAsInt("PDRows"));
   m_PDColumns = static_cast<unsigned int>(userParameterAsInt("PDColumns"));
@@ -139,6 +150,17 @@ StatusCode DeRichMaPMTPanel::initialize() {
     m_vectorTransfMaPMT2s.push_back( m_pvMaPMTMasters[MaPMT]->matrix() );
   }
 
+  // save cdf information
+  m_cdfPixelHorizEdge = m_pixelCols*m_cdfPixelPitch/2;
+  m_cdfPixelVerticalEdge = m_pixelRows*m_cdfPixelPitch/2;
+  if (m_cdfPixelHorizEdge > m_quartzWinHalfLengthX ||
+      m_cdfPixelVerticalEdge > m_quartzWinHalfLengthY) {
+    log << MSG::ERROR << "Cdf Pixel pitch:" <<  m_cdfPixelPitch 
+        << " is too big for the window half size:" <<  m_quartzWinHalfLengthX
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -205,8 +227,8 @@ StatusCode DeRichMaPMTPanel::detectionPoint (const RichSmartID& smartID,
 
   // here it is assumed that the x and y coordinates of the hit at the anode
   // are the same in the quartz window
-  double x = smartID.pixelCol()*m_pixelPitch - m_pixelHorizEdge;
-  double y = smartID.pixelRow()*m_pixelPitch - m_pixelVerticalEdge;
+  double x = (smartID.pixelCol()+0.5)*m_pixelPitch - m_pixelHorizEdge;
+  double y = (smartID.pixelRow()+0.5)*m_pixelPitch - m_pixelVerticalEdge;
   double z = -m_quartzWinHalfLengthZ;
   
   HepPoint3D pointInPanel
@@ -241,7 +263,7 @@ StatusCode DeRichMaPMTPanel::PDWindowPoint( const HepVector3D& vGlobal,
 
   HepPoint3D panelIntersection = pLocal + PanelTicks[0]*vLocal;
 
-  if ( fabs(panelIntersection.x()) >= m_abs_panelHorizEdge && 
+  if ( fabs(panelIntersection.x()) >= m_abs_panelHorizEdge ||
        fabs(panelIntersection.y()) >= m_abs_panelVerticalEdge ) {
     smartID = RichSmartID(0);
     return fail;
@@ -332,9 +354,6 @@ StatusCode DeRichMaPMTPanel::PDWindowPoint( const HepVector3D& vGlobal,
 StatusCode DeRichMaPMTPanel::readoutChannelList(std::vector<RichSmartID>&
                                              readoutChannels) {
 
-  m_pixelRows = 8;
-  m_pixelCols = 8;
-
   for (unsigned int PDRow = 0; PDRow < m_PDRows; ++PDRow)
     for (unsigned int PDCol = 0; PDCol < m_PDColumns; ++PDCol)
       for (unsigned int pixelRow = 0; pixelRow < m_pixelRows; ++pixelRow)
@@ -345,5 +364,92 @@ StatusCode DeRichMaPMTPanel::readoutChannelList(std::vector<RichSmartID>&
           
 
   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+
+bool DeRichMaPMTPanel::validateCdfHit(const HepPoint3D& pGlobal,
+                                            RichSmartID& smartID ) {
+
+  MsgStream log(msgSvc(), "DeRichMaPMTPanel" );
+
+  // transform point and vector to the MaPMT Panel coordsystem.
+  HepPoint3D pInPanel( geometry()->toLocal(pGlobal) );
+
+  if ( fabs(pInPanel.x()) >= m_abs_panelHorizEdge || 
+       fabs(pInPanel.y()) >= m_abs_panelVerticalEdge ) {
+    smartID = RichSmartID(0);
+    std::cout << "Failed 1" << std::endl;
+    return false;
+  }
+  
+  unsigned int MaPMTRow, MaPMTColumn;
+  MaPMTRow = (unsigned int) floor((pInPanel.y() - 
+                                   m_panelVerticalEdge)/ m_rowPitch);
+  MaPMTColumn = (unsigned int) floor((pInPanel.x() - 
+                                      m_panelHorizEdge) / m_columnPitch);
+  
+  unsigned int MaPMTNum = MaPMTRow*m_PDColumns + MaPMTColumn;
+  if (MaPMTNum >= m_PDMax) {
+    log << MSG::ERROR << "Problem with MaPMT number" <<  endreq;
+    smartID = RichSmartID(0);
+    return false;
+  }
+
+  // convert the point to the hit MaPMT coordinates
+  HepPoint3D pInMaPMT (m_pvMaPMTMasters[MaPMTNum]->toLocal(pInPanel));
+
+  // check if point is withing the quartz window dimensions
+  if (fabs(pInMaPMT.x()) >= m_cdfPixelHorizEdge ||
+      fabs(pInMaPMT.y()) >= m_cdfPixelVerticalEdge ) {
+    smartID = RichSmartID(0);
+    return false;
+  }
+
+  unsigned int pixelRow = (unsigned int) 
+    floor((m_cdfPixelVerticalEdge + pInMaPMT.y()) / m_cdfPixelPitch);
+  unsigned int pixelColumn = (unsigned int) 
+    floor((m_cdfPixelHorizEdge + pInMaPMT.x()) / m_cdfPixelPitch);
+
+  double x = (pixelColumn+0.5)*m_cdfPixelPitch - m_cdfPixelHorizEdge;
+  double y = (pixelRow+0.5)*m_cdfPixelPitch - m_cdfPixelVerticalEdge;
+
+  if ( fabs(pInMaPMT.x() - x) > m_cdfPixelSize/2.0 ||
+       fabs(pInMaPMT.y() - y) > m_cdfPixelSize/2.0 ) {
+    smartID = RichSmartID(0);
+    return false;
+  } 
+
+  smartID = RichSmartID(0, 0, MaPMTRow, MaPMTColumn, pixelRow, pixelColumn);
+  return true;
+}
+
+//=============================================================================
+bool DeRichMaPMTPanel::cdfDetectionPoint (const RichSmartID& smartID,
+                                          HepPoint3D& windowHitGlobal) {
+
+  MsgStream log(msgSvc(), "DeRichMaPMTPanel" ); 
+
+  unsigned int MaPMTNum = smartID.HPDRow()*m_PDColumns + smartID.HPDCol();
+  if (MaPMTNum >= m_PDMax) {
+    log << MSG::ERROR << "Problem with MaPMT number" <<  endreq;
+    windowHitGlobal = HepPoint3D(0.0, 0.0, 0.0);
+    return false;
+  }
+
+  // here it is assumed that the x and y coordinates of the hit at the anode
+  // are the same in the quartz window
+  double x = (smartID.pixelCol()+0.5)*m_cdfPixelPitch - m_cdfPixelHorizEdge;
+  double y = (smartID.pixelRow()+0.5)*m_cdfPixelPitch - m_cdfPixelVerticalEdge;
+  double z = -m_quartzWinHalfLengthZ;
+  
+  HepPoint3D pointInPanel
+    (m_pvMaPMTMasters[MaPMTNum]->toMother
+     (m_pvMaPMTSMasters[MaPMTNum]->toMother
+      (m_pvWindows[MaPMTNum]->toMother(HepPoint3D(x,y,z)))));
+
+  windowHitGlobal = geometry()->toGlobal(pointInPanel);  
+  
+  return true;
 }
 

@@ -1,4 +1,4 @@
-// $Id: DeRichMaPMTPanel.h,v 1.1 2003-08-29 08:29:42 papanest Exp $
+// $Id: DeRichMaPMTPanel.h,v 1.2 2003-09-08 19:24:08 papanest Exp $
 
 #ifndef DERICHMAPMTPANEL_H
 #define DERICHMAPMTPANEL_H 1
@@ -86,7 +86,24 @@ public:
    */
   virtual StatusCode readoutChannelList(std::vector<RichSmartID>&
                                         readoutChannels);
+  
+  /**
+   * Validates the hit position (if it is on a sensitive area of an MaPMT)
+   * taking into account the "effective" pixel size (with lenses) and returns
+   * the RichSmartID for the pixel.
+   * @return bool
+   */
+  virtual bool validateCdfHit( const HepPoint3D& globalPosition,
+                               RichSmartID& smartID );
 
+  /**
+   * Returns the detection point given a smartID. The point is on the inside
+   * of the MaPMT window, on the photocathode, and the effect of the lenses
+   * is simulated by using an "effctive" pixel size
+   * @return StatusCode
+   */
+  virtual bool cdfDetectionPoint( const RichSmartID& smartID,
+                                  HepPoint3D& windowHitGlobal ); 
 
 protected:
 
@@ -123,6 +140,12 @@ private:
   double m_pixelHorizEdge;
   double m_pixelVerticalEdge;
   
+  /// Temporary fix while SICBMC is alive 
+  double m_cdfPixelHorizEdge;
+  double m_cdfPixelVerticalEdge;
+  double m_cdfPixelSize;
+  double m_cdfPixelPitch;
+
   HepTransform3D m_vectorTransf;
   const ISolid* m_MaPMTPanelSolid;
   std::vector<const IPVolume*> m_pvMaPMTMasters;
@@ -131,6 +154,7 @@ private:
   std::vector<const ISolid*>   m_windowSolids;
   std::vector<HepTransform3D>  m_vectorTransfMaPMT2s;
 
+  
 };
 
 #endif    // DERICHMAPMTPANEL_H
