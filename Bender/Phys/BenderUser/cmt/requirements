@@ -1,0 +1,32 @@
+# $Id: requirements,v 1.1.1.1 2004-02-10 11:22:45 ibelyaev Exp $ 
+# ============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
+# ============================================================================
+# Created    : 2004-02-10
+# Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
+# ============================================================================
+package          BenderUser
+author           Vanya BELYAEV
+version          v1r0
+
+# ============== structure ===================================================
+branches         cmt doc python 
+
+# ============== environment =================================================
+set              BENDERUSERPYTHON  $(BENDERUSERROOT)/python
+
+# ============== dependencies ================================================
+use              Bender      v*   Phys 
+
+# ============== nesessary paths =============================================
+path_remove      PYTHONPATH "/BenderUser/"  WIN32  "\BenderUser\"
+path_prepend     PYTHONPATH "$(BENDERUSERROOT)/python"
+
+# ============== patterns =====================================================
+apply_pattern    application_path
+
+# ============================================================================
+# The END 
+# ============================================================================
+# $Log: not supported by cvs2svn $
+# ============================================================================
