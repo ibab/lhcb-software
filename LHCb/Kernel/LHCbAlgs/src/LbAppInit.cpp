@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.6 2004-11-15 15:07:18 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.7 2004-12-10 15:20:02 cattanem Exp $
 
 // Include files
 #include "LbAppInit.h"
@@ -225,9 +225,7 @@ StatusCode LbAppInit::createProcStatus() {
 //-----------------------------------------------------------------------------
 
   // Create a ProcStatus if it does not already exist
-  SmartDataPtr<ProcStatus> procSt ( eventSvc(),
-                                    ProcStatusLocation::Default);
-  if ( 0 == procSt ) {
+  if( !exist<ProcStatus>( ProcStatusLocation::Default ) ) {
     ProcStatus* procStat = new ProcStatus();
     put( procStat, ProcStatusLocation::Default );
   }
