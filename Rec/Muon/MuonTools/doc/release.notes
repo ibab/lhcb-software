@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.10 2002-04-19 12:15:55 dhcroft Exp $
+! $Id: release.notes,v 1.11 2002-04-19 17:03:47 dhcroft Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
@@ -10,6 +10,7 @@
 ! 19/04/2002 David Hutchcroft
   More bug fixes, move the reported position to the center of the pads and 
   report the positions of a logical channel in a chamber accurately
+  Removed dependance on LHCbEvent
 
 ! ===========v1r1============================================================
 ! 11/04/2002 David Hutchcroft
