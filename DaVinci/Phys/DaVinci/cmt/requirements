@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.213 2004-12-01 14:43:58 pkoppenb Exp $
+# $Id: requirements,v 1.214 2004-12-13 10:28:30 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r5
+version           v12r6
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -40,7 +40,7 @@ use ParamFiles          v3r8    -no_auto_imports
 use LHCb                v16r4
 
 #=======================================================
-# DaVinciSys v12r5
+# DaVinciSys v12r6
 #=======================================================
 
 # L0 Trigger packages
@@ -63,7 +63,7 @@ use HltGeneric                  v2r0     Hlt
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
-use  CaloReco           	v2r6     Calo
+use  CaloReco           	v2r7     Calo
 # Muon PID
 use  MuonID             	v3r7p1   Muon
 
@@ -75,7 +75,7 @@ use  RecoTools          	v1r1     Rec
 # Utility tools
 use  TrExtrapolator     	v2r14    Tr
 
-use  LoKi               	v3r6     Tools  
+use  LoKi               	v3r7     Tools  
 use  LoKiHlt             	v2r0     Tools  
 
 # Reconstruction tools 
@@ -86,12 +86,13 @@ use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v1r3     Phys
 use  DaVinciKernel      	v2r1     Phys
 use  DaVinciTools       	v11r3    Phys
-use  FlavourTagging     	v5r3     Phys
+use  FlavourTagging     	v5r3p1   Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r1     Phys
 use  PhysSelections		v6r11    Phys
 use  DaVinciTransporter 	v1r2     Phys
 use  VertexFit			v1r2     Phys
+use  Tampering                  v1r0     Phys
 
 # Physics MC packages
 use  DaVinciAssociators 	v5r2p1   Phys
