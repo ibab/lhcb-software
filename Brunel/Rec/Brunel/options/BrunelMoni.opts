@@ -30,6 +30,7 @@ BrunelMoniVELOSeq.Members += { "VeloMonitor" };
 
 // IT digitisation and clustering
 #include "$ITCHECKERSROOT/options/Brunel.opts"
+#include "$ASSOCIATORSROOT/options/Brunel.opts"
 
 // OT digitisation
 BrunelMoniOTSeq.Members += { "MCOTDepositMonitor" };

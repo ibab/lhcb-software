@@ -10,7 +10,7 @@ RootEvtCnvSvc.DbType = "ROOT" ;
 EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
 
 // Instantiate Brunel phase to filter containers and create relations
-ApplicationMgr.TopAlg += { "BrunelPhase/BrunelOutput" };
+ApplicationMgr.TopAlg += { "ProcessPhase/BrunelOutput" };
 BrunelOutput.DetectorList = { "Filters" };
 
 // Filter algorithms
@@ -29,3 +29,5 @@ BrunelOutputFiltersSeq.Members += { "MCParticleFilter" };
 // Define DST content
 ApplicationMgr.OutStream += { "DstWriter" };
 #include "$STDOPTS/DstContent.opts"
+// Remove objects from DST depending on event type
+BrunelOutputFiltersSeq.Members += { "MCEvTypeFilter" };

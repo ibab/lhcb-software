@@ -1,12 +1,12 @@
 package Brunel
-version v18r0p2
+version v18r1
 
 branches doc cmt job options
 
 #-- CMT and GaudiPolicy
 use GaudiPolicy v5r9
 
-#-- External libraries (as defined in GAUDI_v11r4)
+#-- External libraries (as defined in GAUDI_v11r5)
 use ExternalLibs	v4r0p1
 use AIDA		v3r22p0
 use CLHEP		v2r1800p0
@@ -16,34 +16,33 @@ use XERCES		v2r160p1
 use CERNLIB 		v2r2002p0
 use ROOT 		v2r30309p1
 
-#-- Gaudi libraries (from GAUDI_v11r4)
+#-- Gaudi libraries (from GAUDI_v11r5)
 use GaudiKernel		v13r2
 use GaudiSvc 		v10r1p3
 use GaudiAlg 		v6r3p1
 use GaudiTools 		v6r1
 use GaudiAud 		v6r1
 use GaudiNagC 		v7r2
-use GaudiDb 		v8r3p2
+use GaudiDb 		v8r3p3
 use GaudiRootDb 	v9r1p3
 use GaudiIntrospection 	v4r4p1
 use GaudiObjDesc 	v4r5p1
 use HbookCnv 		v13r2p1
 
 #-- Database
-use XmlDDDB	v15r3	Det
+use XmlDDDB	v15r5	Det
 
-#-- LHCb libraries (from LHCB_v11r11)
-use LHCb	v11r11
+#-- LHCb libraries (from LHCB_v11r12)
+use LHCb	v11r12
 
-#-> SICB basic libraries (from LHCB_v11r11)
+#-> SICB basic libraries (from LHCB_v11r12)
 use SICBSys	v1r3	SICB
 
-#-- BrunelSys v18r0 packages
+#-- BrunelSys v18r1 packages
 
 # Brunel utilities
-use BrunelKernel        v5r4p1	Rec
 use BrunelSicb          v4r1    Rec
-use BrunelAlgs          v1r9    Rec
+use BrunelAlgs          v2r0	Rec
 use KsReco              v1r4    Rec
 
 # Phys utilities
@@ -63,7 +62,7 @@ use L1Decision		v1r7	L1
 use CaloInterfaces      v2r4  	Calo
 use CaloUtils           v4r4  	Calo
 use CaloMonitor         v1r4  	Calo
-use CaloReco            v1r4 	Calo
+use CaloReco            v1r6 	Calo
 use CaloPIDs		v1r0	Calo
 use CaloDigit           v1r2  	Calo
 
@@ -72,7 +71,7 @@ use VeloAlgorithms      v2r7  	Velo
 
 # Inner Tracker
 use ITAlgorithms        v12r9 	IT
-use ITCheckers          v1r2  	IT
+use ITCheckers          v1r3  	IT
 
 # Outer Tracker
 use OTAlgorithms        v12r4 	OT
@@ -80,7 +79,7 @@ use OTAlgorithms        v12r4 	OT
 # Tracking
 use VeloTrack           v5r0  	Velo
 use TrCheck             v1r3  	Tr
-use LongTrack           v1r5  	Tr
+use LongTrack           v1r6  	Tr
 use TrFitter            v3r5  	Tr
 use TrExtrapolator      v2r5  	Tr
 use TrTools             v2r4  	Tr
@@ -93,14 +92,14 @@ use VeloTT              v1r5  	Tr
 
 # Muon
 use MuonAlgs            v4r0    Muon
-use MuonBackground	v1r0	Muon
+use MuonBackground	v1r1	Muon
 use MuonUtils		v1r0	Muon
 use MuonRec             v2r3    Muon
 use MuonID              v3r5    Muon
 
 # Rich
 use RichMonitor         v3r0  	Rich
-use RichRecAlgs		v2r0  	Rich
+use RichRecAlgs		v2r0p1	Rich
 use RichRecTools	v2r0  	Rich
 use RichRecBase		v1r0  	Rich
 use RichUtils		v3r0  	Rich
@@ -123,8 +122,8 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=180002 " \
-           VisualC  " /DBrunelVersion=180002 "
+macro_append fflags " -DBrunelVersion=180100 " \
+           VisualC  " /DBrunelVersion=180100 "
 
 apply_pattern application_path
 

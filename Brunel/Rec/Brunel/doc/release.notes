@@ -3,6 +3,30 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v18r1>2003-06-05 Brunel v18r1</A></H1><PRE>
+- New features:
+   . New algorithm MCEvTypeFilter to allow different DST definitions depending
+     on event type (BrunelAlgs v2r0)
+   . Enable default IT monitoring (ITCheckers v1r3)
+
+- DST changes:
+   . L1OT(ST,TT)Clusters are present only on minimum bias events, as in the TDR
+     production with Brunel v17r4. In Brunel v18r0 they were present on all
+     events (GaudiConf v6r8, BrunelAlgs v2r0)
+
+- Bug fixes:
+   . Fix problem with handling of OT geometry in Y=0 overlap region. Improves
+     tracking efficiency by 0.3% (LongTrack v1r6)
+   . Fix run time problem on Windows (RichRecAlgs v2r0p1)
+   . Fix bug 425: processing aborted if bad cluster in Ecal (CaloReco v1r6)
+   . Fix bug 424: crashes due to rounding problem (MuonBackground v1r1)
+   . Fix bug 135: Solids deleted twice at finalisation (DetDesc v1r9p1)
+   . Fix some Rich1 overlaps reported by transport service (XmlDDDB v15r5)
+
+- Packaging changes:
+	 . BrunelInitialisation and BrunelPhase algorithms moved to BrunelAlgs
+     package, making BrunelKernel package obsolete (BrunelAlgs v2r0)
+
 </PRE><H1><A NAME=v18r0p2>2003-05-07 Brunel v18r0p2</A></H1><PRE>
 - New features:
    . Add support for dbase v255r4 and "degraded Velo" robustness test

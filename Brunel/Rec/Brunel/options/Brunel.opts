@@ -8,7 +8,7 @@
 //==============================================================
 #include "$STDOPTIONS"
 
-ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
+ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg" };
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
@@ -16,12 +16,12 @@ EventDataSvc.RootCLID    =    1;
 // Brunel Phases to be executed
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "BrunelSicbInit",
-                           "BrunelInitialisation/BrunelInit",
-                           "BrunelPhase/BrunelDigi",
-                           "BrunelPhase/BrunelTrigger",
-                           "BrunelPhase/BrunelReco",
-                           "BrunelFinalisation/BrunelFinish" };
-ApplicationMgr.TopAlg += { "BrunelPhase/BrunelMoni" }; 
+                           "BrunelInitialisation",
+                           "ProcessPhase/BrunelDigi",
+                           "ProcessPhase/BrunelTrigger",
+                           "ProcessPhase/BrunelReco",
+                           "BrunelFinalisation" };
+ApplicationMgr.TopAlg += { "ProcessPhase/BrunelMoni" }; 
 #include "$BRUNELOPTS/BrunelMoni.opts"
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
@@ -195,7 +195,6 @@ BrunelRecoV0Seq.Members += { "UpstreamProtoPAlg", "SelectKs2pipi", "V0Reco" };
 #include "$KSRECOROOT/options/Brunel.opts"
 
 // Algorithm timing
-ApplicationMgr.DLLs += { "BrunelAlgs" };
 BrunelRecoTimingSeq.Members += { "TimingAlg" };
 #include "$BRUNELALGSROOT/options/Timing.opts"
 
