@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2004-06-18 - Chris Jones
+ - Update includes for new package structure
+ - Remove DaVinci options file
+
 ! 2004-05-26 - Chris Jones
  - Add code to properly set radiator information in RichPIDs
 
