@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.2 2002-05-24 16:11:16 gcorti Exp $
+! $Id: release.notes,v 1.3 2002-06-27 16:51:12 gcorti Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
+
+! 2002-06-27 - Gloria Corti
+ - comment use of <unistd.h> in generated mclexer.icpp because it is not
+   available on win and it is not necessary
+
+! 2002-06-23 - Olivier Dormond
+ - cosmetic changes in DebugTool
+ - use std::strings in MCDecayFinder parsing
 
 ! >>>>>>>>>>>>>>>>>>>>>>> DaVinciMCTools v1r0 <<<<<<<<<<<<<<<<<<<<<
 
