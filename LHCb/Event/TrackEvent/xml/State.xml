@@ -62,20 +62,23 @@
         type    = 'HepVector'
         name    = 'state'
         desc    = 'the state vector'
-        setMeth = 'FALSE' />
+        setMeth = 'FALSE'
+        access  = 'PROTECTED' />
 
       <attribute
         type    = 'HepSymMatrix'
         name    = 'covariance'
         desc    = 'the state covariance matrix (indexes 1,...,5 for x, y, tx, ty, Q/p)'
-        setMeth = 'FALSE' />
+        setMeth = 'FALSE'
+        access  = 'PROTECTED' />
 
       <attribute
         type    = 'double'
         name    = 'z'
         desc    = 'the z-position of the state'
         setMeth = 'FALSE'
-        getMeth = 'FALSE' />
+        getMeth = 'FALSE'
+        access  = 'PROTECTED' />
 
       <method
         type    = 'unsigned int'

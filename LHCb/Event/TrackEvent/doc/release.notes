@@ -4,6 +4,14 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-04-31 - Eduardo Rodrigues
+ - attributes in Track and State made protected (for inheritance)
+
+! 2005-04-30 - Eduardo Rodrigues
+ - copy constructor with assigned key
+ - using the latest bitfields functionality as in GaudiObjDesc v7r4
+   or later
+
 ! 2005-03-15 - Jose Hernando, Eduardo Rodrigues
  - introduction of the Measurement and Node base classes
  - replacing TrGeneral by TrackParameters

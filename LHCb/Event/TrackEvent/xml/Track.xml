@@ -46,22 +46,31 @@
         desc    = 'enumeration for the track flags'
         access  = 'PUBLIC' />
 
-      <attribute
-        type = 'double'
-        name = 'chi2PerDoF'
-        desc = 'chi^2 per degree of freedom of the track' />
+      <constructor 
+	desc     = "Constructor with assigned key" 
+	argList  = "int key " 
+	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(), m_physicsState(), m_states()">
+      </constructor>
 
       <attribute
-        type = 'int'
-        name = 'nDoF'
-        desc = 'number of degrees of freedom of the track' />
+        type   = 'double'
+        name   = 'chi2PerDoF'
+        desc   = 'chi^2 per degree of freedom of the track'
+        access = 'PROTECTED' />
+
+      <attribute
+        type   = 'int'
+        name   = 'nDoF'
+        desc   = 'number of degrees of freedom of the track'
+        access = 'PROTECTED' />
 
      <attribute
        type    = 'bitfield'
        name    = 'flags'
        desc    = 'the variety of track flags'
        init    = '0'
-       setMeth = 'FALSE'>
+       setMeth = 'FALSE'
+       access  = 'PROTECTED'>
        <bitfield
          name      = 'type'
          length    = '7'
@@ -83,6 +92,7 @@
          length    = '4'
          type      = 'Flag'
          desc      = 'track flags'
+         exclusive = 'FALSE'
          setMeth   = 'TRUE'
          getMeth   = 'FALSE'
          checkMeth = 'TRUE' />
@@ -92,17 +102,20 @@
         type      = 'std::vector&lt;LHCbID&gt;'
         name      = 'lhcbIDs'
         desc      = 'container of LHCbIDs'
+        access    = 'PROTECTED'
         serialize = 'FALSE' />
 
       <attribute
-        type         = 'State'
-        name         = 'physicsState'
-        desc         = 'State closest to the beam-line' />
+        type   = 'State'
+        name   = 'physicsState'
+        desc   = 'State closest to the beam-line'
+        access = 'PROTECTED' />
 
       <attribute
-        type    = 'std::vector&lt;State*&gt;'
-        name    = 'states'
-        desc    = 'container with pointers to all the states'
+        type      = 'std::vector&lt;State*&gt;'
+        name      = 'states'
+        desc      = 'container with pointers to all the states'
+        access    = 'PROTECTED'
         serialize = 'FALSE' />
 
       <destructor
