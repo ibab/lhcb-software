@@ -3,7 +3,7 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
-! 20010605 Brunel v3r1 (MC)
+! 20010606 Brunel v3r1 (MC)
    This version reads SICBMC data starting from SICBMC v245, dbase v238
    ** It is not backwards compatible with older RAWH formats and geometry **
    ** It is no longer possible to do Pileup in Brunel                     **
@@ -14,14 +14,21 @@ Purupose: LHCb reconstruction program
    - New VELO geometry description
    - Added old SICBDST checking histograms, and dropping of banks from DST
 
-   options/BrunelInput.opts 
+   In options/
+   ----------
+   BrunelInput.opts 
      - Fix format of SpillOverSelector.Input option,
      - New option BrunelFinish.DropDSTBanks to control call to DROPBANKS
 
-   options/Brunel.cards - Switch on RICH extended tracking for all events
+   Brunel.cards - Switch on RICH extended tracking for all events
 >    DIGI 'RICH' 2
 >    RECO 'RICH' 3
 
+   BrunelMessage.opts: Use default Gaudi message format
+   BrunelMoni.opts:    Add SICB DST checking histograms
+
+   In src/BrunelSicb/
+   -----------------
    BrunelInitialisation.cpp: 
      - initialise SICB variable NPILEUP with value from PASS bank 
        (to cope with RAWH2) - not compatible with SicbCnv PileUpAlg
@@ -32,11 +39,15 @@ Purupose: LHCb reconstruction program
    BrunelSICBMoni.cpp: New. Calls new Fortran routine SUCHECK to fill SICB
                        DST checking histograms
 
-   BrunelMessage.opts: Use default Gaudi message format
-   BrunelMoni.opts:    Add SICB DST checking histograms
+   In cmt/requirements
+   -------------------
+     use TrEvent      v4r1
+>  Fixes for new velo geometry
 
-   requirements:
-     use dbase    v238
+     use TrAlgorithms v4r1
+>  Bug fix in job options
+
+     use dbase        v238
 >          new VELO geometry description
 > vsrp.cdf - modified
 > vpil.cdf - modified
