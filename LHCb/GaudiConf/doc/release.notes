@@ -4,6 +4,7 @@ package manager: F.Ranjard
 ! 20010319 - GaudiConf v4 (MC)
   options/Dlls.opts     - Remove HbookCnv from standard DLLs. This is because 
                           user should choose between Hbook and Root
+          DetDesc.opts  - Options now property of DetDescSvc, not ApplicationMgr
           Hbook.opts    - new: Standard options for HBOOK persistency
           RootHist.opts - new: Standard options for ROOT histogram persistency
 

@@ -5,8 +5,17 @@ ApplicationMgr.ExtSvc += { "XmlCnvSvc" };
 ApplicationMgr.DLLs   += { "DetDesc" };
 
 //--------------------------------------------------------------
-// Location of detector description XML database
+// Location of detector description XML database is a URL
+// so never use "\" (Use only "/")
 //--------------------------------------------------------------
-ApplicationMgr.DetDbRootName  = "dd";
-ApplicationMgr.DetStorageType = 7;
+DetDescSvc.DetDbLocation  = "$DDDB/dddb.xml";
+DetDescSvc.DetDbRootName  = "dd";
+DetDescSvc.DetStorageType = 7;
 
+// Detector Persistency service setup: 
+DetectorPersistencySvc.CnvServices = { "XmlCnvSvc" };
+
+// Trigger generic detector element conversion
+// Useful in the case of visualization or in a case the required user
+// defined detector element converters are somehow not available
+XmlCnvSvc.AllowGenericConversion = true;
