@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.10 2005-02-05 12:58:32 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.11 2005-02-08 12:37:36 ibelyaev Exp $ 
 # =============================================================================
-# CVS version $Revision: 1.10 $ 
+# CVS version $Revision: 1.11 $ 
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2005/02/05 12:58:32  ibelyaev
+#  add Tools/BenderRels package
+#
 # Revision 1.9  2005/01/24 17:44:39  ibelyaev
 #  v4r5
 #
@@ -350,7 +353,6 @@ class Algo(BenderAlgo):
         
         Return value: the located dobject in Gaudi Transient Store
         """
-        if not address : address = args.get ( 'address'  , None )
         if not address : address = args.get ( 'location' , None )
         if not address : raise TypeError, " 'address/location' is not specified "
         obj = self._evtSvc_[ address ]
@@ -372,7 +374,6 @@ class Algo(BenderAlgo):
         Helper function to locate objects in Gaudi Detector Transient Store
         """
         if not address : address = args.get( 'detector' , None )
-        if not address : address = args.get( 'address'  , None )
         if not address : address = args.get( 'location' , None )
         if not address : raise TypeError, " 'address/location' is not specified "
         return self._detSvc_[ address ]                                # RETURN 
@@ -383,16 +384,23 @@ class Algo(BenderAlgo):
         (needed for contruction of some  important geometry-related funtions/cuts)
         """
         if args.has_key ( "vertex" ) :
-            return BenderAlgo.point( self , args.get ( 'vertex' ) )
+            vertex = args['vertex']
+            if not vertex : self.Warinig( message = 'point(): Vertex is None') 
+            return BenderAlgo.point( self , vertex )
         if args.has_key ( "point"  ) :
-            return BenderAlgo.point( self , args.get ( 'point' ) )
+            vertex = args['point']
+            if not vertex : self.Warinig( message = 'point(): Vertex is None') 
+            return BenderAlgo.point( self , vertex )
         return BenderAlgo.geo( self )
 
     def geo            ( self , **args ) :
         if   args : return self.point ( args )
         else      : return self.point (      ) 
         
-    def Error          ( self , **args ) :
+    def Error          ( self                                ,
+                         message = '<* Unspecified ERROR *>' ,
+                         code    = FAILURE                   ,
+                         prints  = 10                        ) :
         """
         Error: printout and statistics
 
@@ -401,26 +409,26 @@ class Algo(BenderAlgo):
         if a < 0 : self.Error( message = 'something wrong here!' ,prints = 5 )
         
         """
-        message = args.get ( 'message' , 'Unspecified Error' )
-        code    = args.get ( 'code'    ,  FAILURE            )
-        prints  = args.get ( 'prints'  , 10                  ) 
         return BenderAlgo.Error( self  , message  , code , prints )      #RETURN 
     
-    def Warning        ( self , **args ) :
+    def Warning        ( self                                  ,
+                         message = '<* Unspecified Warning *>' ,
+                         code    = FAILURE                     ,
+                         prints  = 10                          ) :
         """
         Warnings: printout and statistics
-
+        
         Usage:
-
+        
         if a < 0 : self.Warning( message = 'something wrong here!' ,prints = 5 )
         
         """
-        message = args.get ( 'message' , 'Unspecified Error' )
-        code    = args.get ( 'code'    , FAILURE             )
-        prints  = args.get ( 'prints'  , 10                  ) 
         return BenderAlgo.Warning( self , message , code , prints )  # RETURN 
     
-    def Print        ( self , **args ) :
+    def Print        ( self                           ,
+                       message = '<* EMTY MESSAGE *>' ,
+                       level   = MSG.ALWAYS           ,
+                       code    = SUCCESS              ) :
         """
         Print the message with the given verbosity level 
 
@@ -429,9 +437,6 @@ class Algo(BenderAlgo):
         if a < 0 : self.Print( message = ' some information ' , level = MSG.ALWAYS  )
         
         """
-        message = args.get ( 'message' , ' <* EMPTY MESSAGE *> ' )
-        code    = args.get ( 'code'    , SUCCESS                 )
-        level   = args.get ( 'level'   , MSG.ALWAYS              )
         if level >= MSG.NUM_LEVELS : level = MSG.ALWAYS
         if level <= MSG.NIL        : level = MSG.VERBOSE  
         return BenderAlgo.Print( self  , message , code , level  )     # RETURN 
