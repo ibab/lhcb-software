@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.8 2002-07-03 08:08:56 ranjard Exp $ 
+! $Id: release.notes,v 1.9 2002-07-15 10:11:04 witoldp Exp $ 
 ! =============================================================================
 Package : Gauss
 Package manager : Witek Pokorski
 
 !========================== Gauss v3r1 ====================================
+
+! 2002-07015 - Witek Pokorski
+  Generator.opts - several algorithms renamed:
+                   PythiaModule to PythiaAlg
+                   EvtDecay to EvtDecayAlg
+                   SetStatusAlg to SetDecayAlg
+
 ! 2002-07-03 - Witek Pokorski
   requirements - use Event v2r*, GiGaCnv v6r*
 
