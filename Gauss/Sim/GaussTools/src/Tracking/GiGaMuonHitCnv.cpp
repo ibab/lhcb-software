@@ -51,13 +51,17 @@ GiGaMuonHitCnv::GiGaMuonHitCnv( ISvcLocator* Locator )
   setConverterName              ( "GiGaMuonHitCnv" );
   ///
 
-  //  for(int i=0;i<20;i++)
-  //   {
-      
-      GiGaLeaf::Pars pars2;
-      pars2.push_back("MuonSDM2R3/MuonSDM2R3");
-      declareObject(GiGaLeaf(MCMuonHitPath::MCMuonHitPath[6], objType(),pars2));
-
+  GiGaLeaf::Pars pars[20];
+  std::string MuonSD[] = {"MuonSDM1R1","MuonSDM1R2","MuonSDM1R3","MuonSDM1R4",
+                            "MuonSDM2R1","MuonSDM2R2","MuonSDM2R3","MuonSDM2R4",
+                            "MuonSDM3R1","MuonSDM3R2","MuonSDM3R3","MuonSDM3R4",
+                            "MuonSDM4R1","MuonSDM4R2","MuonSDM4R3","MuonSDM4R4",
+                            "MuonSDM5R1","MuonSDM5R2","MuonSDM5R3","MuonSDM5R4"};
+  for(int i=0;i<20;i++)
+    {
+      pars[i].push_back(MuonSD[i]);
+      declareObject(GiGaLeaf(MCMuonHitPath::MCMuonHitPath[i], objType(),pars[i]));
+    }
   ///
 }; 
 
