@@ -1,4 +1,4 @@
-// $Id: GaudiMain.cpp,v 1.2 2001-07-03 17:49:16 mato Exp $
+// $Id: GaudiMain.cpp,v 1.3 2001-07-04 07:03:21 mato Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : GaudiConf
@@ -16,7 +16,6 @@
 
 //--- Example main program
 int main ( int argc, char** argv ) {
-  StatusCode status = StatusCode::SUCCESS;
   // Create an instance of an application manager
   IInterface* iface = Gaudi::createApplicationMgr();
   SmartIF<IProperty>     propMgr ( IID_IProperty, iface );
