@@ -1,8 +1,11 @@
-// $Id: RelationUtils.h,v 1.5 2003-06-25 14:59:01 ibelyaev Exp $
+// $Id: RelationUtils.h,v 1.6 2003-06-26 09:55:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/06/25 14:59:01  ibelyaev
+//  Modifications in Relations-subpackage
+//
 // Revision 1.4  2002/04/25 08:44:04  ibelyaev
 //  bug fix for Win2K
 //
@@ -109,7 +112,8 @@ namespace Relations
     InstanceCounter();
     /// the copy constructor is private 
     InstanceCounter( const InstanceCounter& );
-    /// the destructor is private 
+  public:
+    /// the destructor is public ( due to Win32) 
     ~InstanceCounter();
   private:
     mutable Counters m_counters ;

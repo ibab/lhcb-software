@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2003-06-26 - Vanya BELYAEV 
+  - fix for Win32 
+
 ! 2003-06-25 - Vanya BELYAEV
  - few modification  for Relations stuff. 
  - cmt/requirements  increase the version     
