@@ -5,8 +5,11 @@
  * Header file for enumeration Rich::Rec::ProcStat
  *
  * CVS Log :-
- * $Id: RichRecProcCode.h,v 1.3 2004-07-26 18:00:58 jonrob Exp $
+ * $Id: RichRecProcCode.h,v 1.4 2004-11-20 12:30:24 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2004/07/26 18:00:58  jonrob
+ * Various improvements to the doxygen comments
+ *
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-05-10
@@ -41,10 +44,11 @@ namespace Rich {
     enum ProcStat
       {
         ProcStatAbort         = -1, ///< Processing was aborted prior to the RICH
-        ReachedPixelLimit     = -2, ///< The maximum number of pixels was exceeded
-        NoRichTracks          = -3, ///< No tracks were found with RICH information
-        ReachedTrTrackLimit   = -4, ///< The maximum number of raw tracks was exceeded
-        ReachedRichTrackLimit = -5  ///< The maximum number of tracks with RICH information was exceeded
+        NoRichPixels          = -2, ///< No RICH pixels were found
+        ReachedPixelLimit     = -3, ///< The maximum number of pixels was exceeded
+        NoRichTracks          = -4, ///< No tracks were found with RICH information
+        ReachedTrTrackLimit   = -5, ///< The maximum number of raw tracks was exceeded
+        ReachedRichTrackLimit = -6  ///< The maximum number of tracks with RICH information was exceeded
       };
 
   }

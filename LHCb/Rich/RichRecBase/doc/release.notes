@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2004-11-20 - Chris Jones
+ - Improved handling of events with no pixels.
+
 !====================== RichRecBase v1r14 2004-11-18 =======================
 ! 2004-11-02 - Chris Jones
  - Update the way the XML is structured so that each file is parsed 

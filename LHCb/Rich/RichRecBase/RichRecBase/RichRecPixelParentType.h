@@ -5,8 +5,11 @@
  * Header file for RichRecPixel enumerations
  *
  * CVS Log :-
- * $Id: RichRecPixelParentType.h,v 1.6 2004-10-30 19:23:21 jonrob Exp $
+ * $Id: RichRecPixelParentType.h,v 1.7 2004-11-20 12:30:24 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2004/10/30 19:23:21  jonrob
+ * Add enmeration type for RawBuffer parentage
+ *
  * Revision 1.5  2004/07/26 18:00:58  jonrob
  * Various improvements to the doxygen comments
  *
@@ -56,7 +59,8 @@ namespace Rich {
         Unknown = -1, ///< Parent type is unknown
         Digit,        ///< Pixel derives from a reconstructed RichDigit
         MCHit,        ///< Pixel derives from Monte Carlo MCRichHit information
-        RawBuffer     ///< Pixel was derived directly from the RawBuffer
+        RawBuffer,    ///< Pixel was derived directly from the RawBuffer
+        NoParent      ///< Pixel has no associated parent (e.g. artificially added background)
       };
 
   }
