@@ -40,7 +40,7 @@ use GiGaVisUI           v1r2    Sim
 #use GaussImports       v4r0    Sim
 
 # generator
-use GeneratorModules    v5r0    Gen
+use GeneratorModules    v5r1    Gen
 
 # optional generator: 
 #use EvGen              v4r0    Sim 
