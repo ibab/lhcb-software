@@ -112,7 +112,7 @@ private:
   static std::string numreg[4];
   static std::string numsta[5];
   static std::string TESPathOfHitsContainer[4];
-  const static int OriginOfHitsContainer[5];
+  static const int OriginOfHitsContainer[5];
   
   Rndm::Numbers m_flatDist;
   

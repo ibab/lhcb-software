@@ -4,7 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
-!======================== MuonAlgs v4r1 2003-06-19 ========================
+!======================== MuonAlgs v4r1 2003-06-23 ========================
+! 2003-06-23 -Alessia Satta
+ - Modified to be compatible with gcc3.2
+
 ! 2003-04-22 - Alessia Satta
  - Modified to include LHCbackground
 

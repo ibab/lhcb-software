@@ -378,8 +378,8 @@ MuonDigitization::createInput(
               //useful later
               
               bool parallelFlag=false ; 
-              float slopeY;
-              float intercept;
+              float slopeY=0;
+              float intercept=0;
               if((*iter)->exit().x()!=(*iter)->entry().x()){
                 slopeY=((*iter)->exit().y()-(*iter)->entry().y())/
                   ((*iter)->exit().x()-(*iter)->entry().x());

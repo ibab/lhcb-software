@@ -203,12 +203,8 @@ void MuonPhysicalChannel::applyXTalk(int phChInX[2], int phChInY[2],
         //						if(m_ID.getStation()==0&&m_ID.getRegion()==0)
         //						cout<<"direction "<<directionx<<" "<<directiony<<" "<<
         //						 x<<" "<<y<<endl;
-        /*if(m_ID.getID()==738328588){
-          //cout<<" test test test test test"<<endl;
-          //cout<<" Xtalk X "<<numberOfXTalkHitsX<<endl;
-          //cout<<" Xtalk Y "<<numberOfXTalkHitsY<<endl;}*/
-        
-        if(numberOfXTalkHitsX)fireXTalkChannels(0,numberOfXTalkHitsX,iter,
+        if(numberOfXTalkHitsX)fireXTalkChannels(0,numberOfXTalkHitsX,
+                                                &(*iter),
                                                 nx, directionx, 
                                                 phChInX[readoutType],  
                                                 hitDueToXTalk) ;        
@@ -216,7 +212,8 @@ void MuonPhysicalChannel::applyXTalk(int phChInX[2], int phChInY[2],
         //						if(m_ID.getStation()==0&&m_ID.getRegion()==0)cout
         //<<"size in X "<<hitDueToXTalk.size()-azzerax<<endl;
         
-        if(numberOfXTalkHitsY)fireXTalkChannels(1,numberOfXTalkHitsY,iter,
+        if(numberOfXTalkHitsY)fireXTalkChannels(1,numberOfXTalkHitsY,
+                                                 &(*iter),
                                                 ny, directiony, 
                                                 phChInY[readoutType],  
                                                 hitDueToXTalk) ;

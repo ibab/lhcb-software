@@ -29,7 +29,7 @@ template<class T> MuonDigitizationData<T>::~MuonDigitizationData(){
     *log << MSG::INFO 
          <<" the contatiners have not been registed in the TES"
          << " => deleting objects "<<endreq;
-    KeyedContainer<T>::iterator it;
+    typename KeyedContainer<T>::iterator it;
     for(int i=0;i<MuonDigitizationData_m_partitionNumber;i++){
       for(it=muonDataPartition[i].begin();it<muonDataPartition[i].end();it++)
         delete  (*it);
@@ -75,7 +75,7 @@ template<class T> bool MuonDigitizationData<T>::isObjectIn(int i,T* p0, T*&
                                                            bool (*comp)
                                                            (T* p1,T* p2))
 {  
-  KeyedContainer<T>::iterator iter ;
+  typename KeyedContainer<T>::iterator iter ;
   iter=muonDataPartition[i].begin();
   bool found=false;
   if(iter<muonDataPartition[i].end()){

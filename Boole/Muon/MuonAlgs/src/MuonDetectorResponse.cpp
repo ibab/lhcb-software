@@ -16,7 +16,7 @@ void MuonDetectorResponse::initialize(IToolSvc* toolSvc,IRndmGenSvc * randSvc,
                                       IMessageSvc * msgSvc){  
 	MsgStream log(msgSvc, "MuonDetectorResponse");
   // MuonGeometryStore::Parameters usefull( toolSvc,detSvc, msgSvc);
-  StatusCode sc=toolSvc->retrieveTool("MuonGetInfoTool",m_pGetInfo);
+  toolSvc->retrieveTool("MuonGetInfoTool",m_pGetInfo);
   //if(sc.isFailure())return StatusCode::FAILURE;
   m_toolSvc=toolSvc;  
   // usefullPointer= 

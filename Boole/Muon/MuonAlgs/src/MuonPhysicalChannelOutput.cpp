@@ -39,7 +39,10 @@ IMuonGetInfoTool *usefullPointer){
   //  
   // reset number of distinct phys chan
   //
-  
+  newidX=0;
+  newidY=0;
+  numberOfPCX=0;
+  numberOfPCY=0;
   numberTileOutput=0;
 
   //    cout<<"calculate "<<station<<" "<<region<<" "<<partition<<" "
