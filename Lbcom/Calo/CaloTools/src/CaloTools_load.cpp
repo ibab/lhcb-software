@@ -1,8 +1,11 @@
-// $Id: CaloTools_load.cpp,v 1.4 2001-11-12 21:16:14 ibelyaev Exp $
+// $Id: CaloTools_load.cpp,v 1.5 2001-11-23 11:44:50 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2001/11/12 21:16:14  ibelyaev
+//  new concrete sub-cluster selector is added
+//
 // Revision 1.3  2001/11/09 16:25:02  ibelyaev
 //  add new tool
 //
@@ -16,14 +19,15 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES(CaloTools) {
-
+  
   DECLARE_TOOL( ClusterCovarianceMatrixTool  );
+  DECLARE_TOOL( ClusterSpreadTool            );
   DECLARE_TOOL( SubClusterSelectorAll        );
   DECLARE_TOOL( SubClusterSelector3x3        );
   DECLARE_TOOL( SubClusterSelectorMax2x2     );
   DECLARE_TOOL( SubClusterSelectorSwissCross );
   DECLARE_TOOL( SubClusterSelectorNeighbors  );
-
+  
 };
 
 

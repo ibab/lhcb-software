@@ -1,17 +1,11 @@
-// $Id: ClusterCovarianceMatrixTool.h,v 1.3 2001-11-23 11:44:51 ibelyaev Exp $
+// $Id: ClusterSpreadTool.h,v 1.1 2001-11-23 11:44:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2001/11/08 10:58:34  ibelyaev
-//  new tools are added for selection of subclusters within the cluster
-//
-// Revision 1.1  2001/11/04 15:30:40  ibelyaev
-// add concrete tool
-//
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
-#ifndef CLUSTERCOVARIANCEMATRIXTOOL_H 
-#define CLUSTERCOVARIANCEMATRIXTOOL_H 1
+#ifndef CALOTOOLS_CLUSTERSPREADTOOL_H 
+#define CALOTOOLS_CLUSTERSPREADTOOL_H 1
 // Include files
 // GaudiKernel
 #include "GaudiKernel/Property.h"
@@ -20,27 +14,24 @@
 // CaloGen 
 #include  "CaloGen/CaloTool.h"
 // CaloUtil 
-#include  "CaloUtils/CovarianceEstimator.h"
+#include  "CaloUtils/SpreadEstimator.h"
 
-class CovarianceEstimator;
-
-/** @class ClusterCovarianceMatrixTool 
- *         ClusterCovarianceMatrixTool.h
+/** @class ClusterSpreadTool ClusterSpreadTool.h
  *  
- *  Concrete tool for calculation of covariance matrix 
- *  for the whole cluster object 
+ *  Concrete tool for estimation of the 
+ *  effective cluster size ("spread")
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   02/11/2001
+ *  @date   22/11/2001
  */
 
-class ClusterCovarianceMatrixTool:
+class ClusterSpreadTool:
   public virtual ICaloClusterTool ,
-  public                 CaloTool
+  public                 CaloTool 
 {
   /// friend class for instantiation
-  friend class ToolFactory<ClusterCovarianceMatrixTool>;
-
+  friend class ToolFactory<ClusterSpreadTool>;
+  
 public:
   
   /** standard initialization method 
@@ -75,37 +66,29 @@ public:
     const CaloHypotheses::Hypothesis& hypo ) const ;
   
 protected:
-
+  
   /** Standard constructor
    *  @param type tool type (useless)
    *  @param name tool name
    *  @param parent pointer to parent object (service, algorithm or tool)  
    */
-  ClusterCovarianceMatrixTool
+  ClusterSpreadTool
   ( const std::string& type   ,
     const std::string& name   ,
     const IInterface*  parent );
   
   /** destructor, virtual and protected 
    */
-  virtual ~ClusterCovarianceMatrixTool();
+  virtual ~ClusterSpreadTool();
   
 private:
   
-  ///
-  CovarianceEstimator     m_estimator ;
-  ///
-  SimpleProperty<double>  m_a         ;
-  SimpleProperty<double>  m_gainErr   ;
-  SimpleProperty<double>  m_noiseIn   ;
-  SimpleProperty<double>  m_noiseCo   ;
-  ///
+  SpreadEstimator    m_estimator ;
   
-}; ///< end of class ClusterCovarianceMatrixTool
-
+};
 
 // ============================================================================
 // The End 
 // ============================================================================
-#endif // CLUSTERCOVARIANCEMATRIXTOOL_H
+#endif // CALOTOOLS_CLUSTERSPREADTOOL_H
 // ============================================================================
