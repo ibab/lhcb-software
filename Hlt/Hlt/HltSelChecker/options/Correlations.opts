@@ -1,7 +1,10 @@
 //==============================================================================
 // correlations
 //==============================================================================
-ApplicationMgr.TopAlg += { "GaudiSequencer/HLTCorrelations" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/MakeCorrelations" };
+
+MakeCorrelations.Members += { "TrgL1Filter/CorrTrg" };
+MakeCorrelations.Members += { "GaudiSequencer/HLTCorrelations" };
 HLTCorrelations.IgnoreFilterPassed = true ;
 
 HLTCorrelations.Members += { "IsBEvent" }; // with default options

@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSelChecker v2r2 2005-03-03 ===================
+! 2005-03-08 - P. Koppenburg
+  - options/Correlations.opts
+    . Apply L1 filter 
+  - options/DVNtuple.opts
+    . Do not include TrgDispCalculator, TrgVertexFitter a second time
+    
 ! 2005-02-23 - P. Koppenburg
   - src/DecayChainNTuple.cpp
     . std::map<int, HandleNTuple*>::data_type is not understood by windows. 
