@@ -63,6 +63,8 @@ public:
   static int getStdHep(EvtId id ){return _partlist[id.getId()].getStdHep();}
   static int getLundKC(EvtId id ){return _partlist[id.getId()].getLundKC();}
   static EvtId evtIdFromStdHep(int stdhep );
+  // Function to retrieve EvtId from PythiaID  
+  static EvtId evtIdFromLundKC(int pythiaId );
   static EvtId chargeConj(EvtId id );
   static int chg3(EvtId i ){return _partlist[i.getId()].getChg3();}
   static EvtSpinType::spintype getSpinType(EvtId i )

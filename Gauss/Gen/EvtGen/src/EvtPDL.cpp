@@ -261,6 +261,19 @@ EvtId EvtPDL::evtIdFromStdHep(int stdhep){
 }
 
 
+// Function to get EvtId from LundKC ( == Pythia Hep Code , KF ) 
+EvtId EvtPDL::evtIdFromLundKC(int pythiaId){
+
+  unsigned int i;
+
+  for (i=0;i<_partlist.size();i++){
+    if (_partlist[i].getLundKC()==pythiaId)
+      return _partlist[i].getId();
+  }
+  
+  return EvtId(-1,-1);
+  
+}
 
 void EvtPDL::alias(EvtId num,const std::string& newname){
 
