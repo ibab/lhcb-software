@@ -1,6 +1,17 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2003-11-18 - Olivier Callot
+ - Process the L0CaloAlg from the Hlt buffer. No longer need for L0CaloDigit
+ - L0CaloCandidates are saved in the L1 and HLT buffers. No threshold for
+   HLT buffer (non zero candidates only !) but individual threshold for
+   L1 buffer, controlled by options (L1XXXXThr where XXXX is Electron Photon,
+   hadron, Pi0Global and Pi0Local ) and listed in initialization. The total
+   HCAL ET and the SPD multiplicity are always output in both buffers.
+
+   Writing to L1 and HLT buffer can be switched off by setting the option
+   'StoreInBuffer = false;'
+
 !========================= L0Calo v7r1 2003-07-16 =========================
 ! 2003-07-16 - Marco Cattaneo
  - Use CaloEvent v12r*

@@ -1,4 +1,4 @@
-// $Id: L0Calo_load.cpp,v 1.5 2003-04-03 16:21:40 cattanem Exp $
+// $Id: L0Calo_load.cpp,v 1.6 2003-12-15 09:18:14 ocallot Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -13,7 +13,6 @@
 
 DECLARE_FACTORY_ENTRIES(L0Calo) {
 
-  DECLARE_ALGORITHM( L0CaloDigit );
   DECLARE_ALGORITHM( L0CaloAlg   );
   DECLARE_ALGORITHM( L0CaloMonit );
   DECLARE_ALGORITHM( L0CaloToMCParticleAsct );
