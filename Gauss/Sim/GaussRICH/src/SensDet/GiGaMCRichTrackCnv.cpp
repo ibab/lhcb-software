@@ -4,8 +4,11 @@
  *  Implementation file for GiGa converter : GiGaRichTrackCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichTrackCnv.cpp,v 1.5 2005-01-19 10:38:52 jonrob Exp $
+ *  $Id: GiGaMCRichTrackCnv.cpp,v 1.6 2005-02-17 13:32:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2005/01/19 10:38:52  jonrob
+ *  add simple printout to GiGa converters
+ *
  *  Revision 1.4  2004/07/30 14:18:23  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -65,29 +68,29 @@ const unsigned char GiGaRichTrackCnv::storageType()
 
 // ======================================================================
 
-StatusCode GiGaRichTrackCnv::initialize() {
-
+StatusCode GiGaRichTrackCnv::initialize() 
+{
   // initialize the base class
-  StatusCode sc = GiGaCnvBase::initialize();
+  const StatusCode sc = GiGaCnvBase::initialize();
   if ( sc.isFailure() ) return Error("Could not initialize the base class!",sc);
 
   // check for necessary services
   if( 0 == kineSvc() ) { return Error("IGiGaKineCnvSvc* points to NULL!"); }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 // ======================================================================
 
 StatusCode GiGaRichTrackCnv::finalize()
 {
-
   // Printout final numbers
   const RichStatDivFunctor occ;
   MsgStream msg( msgSvc(), name() );
   msg << MSG::ALWAYS << "Av. # MCRichTracks         : Overall = " 
       << occ(m_hitTally,m_nEvts) << endreq;
 
+  // finalise base class and return
   return GiGaCnvBase::finalize();
 }
 

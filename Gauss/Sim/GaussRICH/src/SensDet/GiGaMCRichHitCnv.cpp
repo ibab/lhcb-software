@@ -4,8 +4,11 @@
  *  Implementation file for GiGa converter : GiGaMCRichHitCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichHitCnv.cpp,v 1.11 2005-01-19 10:38:52 jonrob Exp $
+ *  $Id: GiGaMCRichHitCnv.cpp,v 1.12 2005-02-17 13:32:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2005/01/19 10:38:52  jonrob
+ *  add simple printout to GiGa converters
+ *
  *  Revision 1.10  2004/07/30 13:42:13  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -49,9 +52,7 @@
 #include "Event/MCRichHit.h"
 
 // RichKernel
-//#include "RichKernel/RichStatDivFunctor.h"
-// Use local file until using RichKernel version with this included
-#include "RichStatDivFunctor.h"
+#include "RichKernel/RichStatDivFunctor.h"
 
 // Geant4 includes
 #include "G4VHitsCollection.hh"
@@ -119,7 +120,7 @@ StatusCode GiGaMCRichHitCnv::initialize()
   // check for necessary services
   if ( 0 == hitsSvc() ) return Error("IGiGaHitsCnvSvc* points to NULL!");
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 // ======================================================================
@@ -134,6 +135,7 @@ StatusCode GiGaMCRichHitCnv::finalize()
       << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
       << endreq;
 
+  // finalise base class and return
   return GiGaCnvBase::finalize();
 }
 
@@ -282,7 +284,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           }
 
           // Photon detector number
-          mchit->setPhotoDetector(g4hit->GetCurHpdNum());
+          //mchit->setPhotoDetector(g4hit->GetCurHpdNum());
 
           // Radiator information
           if ( g4hit->GetRadiatorNumber() < 0 ) {

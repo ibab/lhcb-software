@@ -4,8 +4,11 @@
  *  Header file for GiGa converter : GiGaRichSegmentCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichSegmentCnv.h,v 1.4 2005-01-19 10:38:52 jonrob Exp $
+ *  $Id: GiGaMCRichSegmentCnv.h,v 1.5 2005-02-17 13:32:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2005/01/19 10:38:52  jonrob
+ *  add simple printout to GiGa converters
+ *
  *  Revision 1.3  2004/07/30 14:18:23  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -65,9 +68,7 @@
 #include "G4SDManager.hh"
 
 // RichKernel
-//#include "RichKernel/RichStatDivFunctor.h"
-// Use local file until using RichKernel version with this included
-#include "RichStatDivFunctor.h"
+#include "RichKernel/RichStatDivFunctor.h"
 
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"

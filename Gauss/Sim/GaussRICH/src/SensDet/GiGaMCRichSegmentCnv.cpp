@@ -4,8 +4,11 @@
  *  Implementation file for GiGa converter : GiGaRichSegmentCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichSegmentCnv.cpp,v 1.5 2005-01-19 10:38:52 jonrob Exp $
+ *  $Id: GiGaMCRichSegmentCnv.cpp,v 1.6 2005-02-17 13:32:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2005/01/19 10:38:52  jonrob
+ *  add simple printout to GiGa converters
+ *
  *  Revision 1.4  2004/07/30 13:42:14  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -95,8 +98,8 @@ const unsigned char GiGaRichSegmentCnv::storageType()
 
 // ======================================================================
 
-StatusCode GiGaRichSegmentCnv::initialize() {
-
+StatusCode GiGaRichSegmentCnv::initialize() 
+{
   // initialize the base class
   const StatusCode sc = GiGaCnvBase::initialize();
   if ( sc.isFailure() ) return Error("Could not initialize the base class!",sc);
@@ -104,14 +107,13 @@ StatusCode GiGaRichSegmentCnv::initialize() {
   // check for necessary services
   if ( 0 == hitsSvc() ) return Error("IGiGaHitsCnvSvc* points to NULL!");
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 // ======================================================================
 
 StatusCode GiGaRichSegmentCnv::finalize()
 {
-
   // Printout final numbers
   const RichStatDivFunctor occ;
   MsgStream msg( msgSvc(), name() );
@@ -120,6 +122,7 @@ StatusCode GiGaRichSegmentCnv::finalize()
       << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
       << endreq;
 
+  // finalise base class and return
   return GiGaCnvBase::finalize();
 }
 

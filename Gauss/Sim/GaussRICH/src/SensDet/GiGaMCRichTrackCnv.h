@@ -4,8 +4,11 @@
  *  Header file for GiGa converter : GiGaRichTrackCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichTrackCnv.h,v 1.3 2005-01-19 10:38:52 jonrob Exp $
+ *  $Id: GiGaMCRichTrackCnv.h,v 1.4 2005-02-17 13:32:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2005/01/19 10:38:52  jonrob
+ *  add simple printout to GiGa converters
+ *
  *  Revision 1.2  2004/07/30 13:42:14  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -68,9 +71,7 @@
 #include "G4SDManager.hh"
 
 // RichKernel
-//#include "RichKernel/RichStatDivFunctor.h"
-// Use local file until using RichKernel version with this included
-#include "RichStatDivFunctor.h"
+#include "RichKernel/RichStatDivFunctor.h"
 
 // Rich Event
 #include "Event/MCRichTrack.h"
