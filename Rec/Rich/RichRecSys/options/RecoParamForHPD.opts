@@ -48,10 +48,10 @@ ToolSvc.RichToolRegistry.Tools += { "RichPhotonSignalHPD/RichPhotonSignal" };
 ToolSvc.RichToolRegistry.Tools += { "RichSellmeirFunc/RichSellmeirFunc" };
 
 // Cherenkov resolution - fixed binned implementation
-//#include "$RICHRECSYSOPTS/tools/BinnedCherenkovRes.opts"
+#include "$RICHRECSYSOPTS/tools/BinnedCherenkovRes.opts"
 
 // Interpolated cherenkov resolution function
-#include "$RICHRECSYSOPTS/tools/InterpCherenkovRes.opts"
+//#include "$RICHRECSYSOPTS/tools/InterpCherenkovRes.opts"
 
 // Photon detection efficiency using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedHPDSignalDetectionEff/RichSignalDetectionEff" };
@@ -77,12 +77,12 @@ ToolSvc.RichRefractiveIndex.QETableLocation =
   "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
 
 // Rayleigh scattering using XML tabulation
-ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRayleighScatter/RichRayleighScatter" };
-ToolSvc.RichRayleighScatter.RayScatLengthLocation =
-  "/dd/Materials/RichMaterialTabProperties/AerogelRayleighPT";
+//ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRayleighScatter/RichRayleighScatter" };
+//ToolSvc.RichRayleighScatter.RayScatLengthLocation =
+//  "/dd/Materials/RichMaterialTabProperties/AerogelRayleighPT";
 
 // Rayleigh scattering using analytic function
-//ToolSvc.RichToolRegistry.Tools += { "RichFunctionalRayleighScatter/RichRayleighScatter" };
+ToolSvc.RichToolRegistry.Tools += { "RichFunctionalRayleighScatter/RichRayleighScatter" };
 
 // Expected Cherenkov angles
 ToolSvc.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
