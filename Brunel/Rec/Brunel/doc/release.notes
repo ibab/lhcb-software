@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v18r0p1>2003-04-24 Brunel v18r0p1</A></H1><PRE>
+- New features:
+   . Add support for dbase v255r2
+
 </PRE><H1><A NAME=v18r0>2003-04-17 Brunel v18r0</A></H1><PRE>
 - New features:
    . DST content is now defined in GaudiConf package, not in BrunelDst.opts
