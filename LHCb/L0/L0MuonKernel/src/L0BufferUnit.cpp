@@ -3,10 +3,7 @@
 #include "L0MuonKernel/CrateUnit.h"
 #include "L0mConf/L0MBase.h" 
 #include <cmath>
-#include <iostream.h>
-#include <fstream.h>
-#include <stdlib.h>
-#include <stdio.h>
+#include <iostream>
 
 #define UNKNOWN "Unknown"
 

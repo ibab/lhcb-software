@@ -11,7 +11,7 @@
   to build the file name as well as to determine the size of the 
   output tile list.
 */
-std::vector<L0MTile>  L0Muon::tileListFromMap(const MuonTileID & pu, int type, std::string path){
+std::vector<L0MTile>  L0Muon::tileListFromMap(const MuonTileID & pu, int type, std::string /*path*/){
   std::vector<L0MTile> ltiles;
 
   // Open the map file 
@@ -55,7 +55,6 @@ std::vector<L0MTile>  L0Muon::tileListFromMap(const MuonTileID & pu, int type, s
 std::vector<L0MTile>  L0Muon::readTileListFromMap(FILE *mapfile,int max){
   std::vector<L0MTile> ltiles(max);
   
-  int ic=0;
   while (1)
   {
 

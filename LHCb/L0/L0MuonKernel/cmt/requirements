@@ -5,8 +5,7 @@ version v3r0
 
 branches cmt doc src L0MuonKernel
 
-use L0mConf         v2r2p3  L0
-use ProcessorKernel v1r0    L0
+use ProcessorKernel v1r*    L0
 
 include_dirs $(L0MUONKERNELROOT)
 

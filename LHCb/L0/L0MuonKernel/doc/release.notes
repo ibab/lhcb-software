@@ -4,7 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================== L0MuonKernel v3r0 2005-04-04 ===================
+!========================== L0MuonKernel v3r0 2005-04-05 ===================
+! 2005-04-05 - Marco Cattaneo
+ - Fix some compiler warnings
+
 ! 2005-04-04 A. Tsaregorodtsev
  - Many changes to make L0MuonKernel not dependant on Gaudi framework
  - Code rearrangements and optimizations of the performance
