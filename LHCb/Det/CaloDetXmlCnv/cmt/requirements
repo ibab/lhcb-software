@@ -1,0 +1,39 @@
+# $Id: requirements,v 1.1.1.1 2002-03-28 13:32:34 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
+# =============================================================================
+# $Log: not supported by cvs2svn $
+# =============================================================================
+# The package with XML-converters gfor Caloriometer Detector Model 
+# =============================================================================
+package   CaloDetXmlCnv
+version   v1r0
+
+# =============== structure ===================================================	
+branches         src cmt doc options 
+
+# =============== own includes ================================================
+include_dirs      $(CALODETXMLCNVROOT)
+
+# =============== used packages ===============================================
+use CaloDet      v4r*  Det 
+
+# =============== own options =================================================
+set CALODETXMLCNVOPTS  ${CALODETXMLCNVROOT}/options
+
+# =============== component library ===========================================
+library          CaloDetXmlCnv  *.cpp
+
+# =============== patterns ====================================================
+
+apply_pattern    package_Clinkopts 
+apply_pattern    package_Cstamps
+apply_pattern    packageShr 
+
+# =============== private stuff ===============================================
+private
+apply_pattern    package_Cshlibflags
+
+# =============================================================================
+# The end 
+# =============================================================================
