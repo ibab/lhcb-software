@@ -216,7 +216,7 @@ void L0Muon::Tower::processTower(MuonTileID & puID){
     if (m_debug) std::cout << "Tower: cleaning seeds" << std::endl;
     cleanSeed(m_bittable[2]);
   }  
-  if (m_seeded && m_debug ) draw();
+  //if (m_seeded && m_debug ) draw();
 
   m_puCandidates.clear();
   m_offForCand.clear();
@@ -258,7 +258,6 @@ void L0Muon::Tower::processTower(MuonTileID & puID){
          
         // Should be done once at creation time
 	for (int ista =4 ; ista >= 0; ista--){
-	  std::cout << ista << m_xfoi[ista] << m_yfoi[ista] << std::endl;
           m_ctower.setFoi(ista, m_xfoi[ista], m_yfoi[ista]);
         }
                  
@@ -283,8 +282,8 @@ void L0Muon::Tower::processTower(MuonTileID & puID){
           m_ctower.setOrderedPadIndex(ista,m_maxXFoI[ista], m_maxYFoI[ista],
                                       offset, pCs->getHitPos(ista));
           
-	  std::cout << bits << std::endl;
-	  std::cout << "Found hit in station " << ista << " " << pCs->getHitPos(ista) << std::endl;
+	  //std::cout << bits << std::endl;
+	  //std::cout << "Found hit in station " << ista << " " << pCs->getHitPos(ista) << std::endl;
 	         
           if (pCs->hitFoundInSta(ista) == false) {
             break ;
@@ -573,30 +572,33 @@ L0Muon::Candidate* L0Muon::Tower::createCandidate(double p, double th,
 }
 
 
-void L0Muon::Tower::xyFromPad(MuonTileID pad, double x, double y)  {
+void L0Muon::Tower::xyFromPad(MuonTileID pad, double& x, double& y)  {
 
-  double dx = 1.2;
+  double dx = 1.25;
   double dy = 1.0;
-  double l1 = m_ptparam[0];
-  double l2 = l1 + m_ptparam[1];
-  double l3 = l2 + m_ptparam[2];
-  
+  double l1 = m_ptparam[0]+m_ptparam[1];
+  double l2 = l1 + m_ptparam[2];
+  double l3 = l2 + 120.;
+    
   int ns = pad.station();
   int nq = pad.quarter();
   int nr = pad.region();
   int nx = pad.nX();
   int ny = pad.nY();
   
-  int nreg = 1;
+  double nreg = 1.;
   if ( nr == 1) {
-    nreg = 2;
+    nreg = 2.;
   } else if ( nr == 2) {
-    nreg = 4;
+    nreg = 4.;
   } else if ( nr == 3) {
-    nreg = 8;
+    nreg = 8.;
   }
   
-  x = dx*(nx+0.5)*nreg;
+  double factor = 1.;
+  if ( ns == 0 ) factor = 2.;
+  
+  x = dx*(nx+0.5)*nreg*factor;
   y = dy*(ny+0.5)*nreg;
   if ( ns == 1 ) {
     x *= l2/l1;
@@ -610,7 +612,7 @@ void L0Muon::Tower::xyFromPad(MuonTileID pad, double x, double y)  {
   } else if ( nq == 2 ) {
     x = -x;
     y = -y;
-  } else if ( nq == 2 ) {
+  } else if ( nq == 3 ) {
     x = -x;
   }    
     
@@ -636,7 +638,7 @@ double L0Muon::Tower::ptcalc() {
   
   xyFromPad(p1,x1,y1);
   xyFromPad(p2,x2,y2);
- 
+   
   double x0 = x1 - d2*(x2-x1)/d3;
   double y0 = y1*d1/(d1+d2);
         

@@ -5,10 +5,10 @@ version v2r4
 
 branches cmt doc src L0MuonKernel
 
-use MuonTools       v3r* Muon
-use L0Event         v14r* Event
+#use MuonTools       v3r* Muon
+#use L0Event         v14r* Event
 use L0mConf         v2r2p3  L0
-
+use ProcessorKernel v1r0 L0
 
 
 include_dirs $(L0MUONKERNELROOT)

@@ -26,10 +26,10 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,
    std::vector<MuonTileID>::iterator ib;
    std::vector<MuonTileID>::iterator ipusb;
 
-   std::cout << "Crate constructor " <<  std::endl;
-   for ( int i = 0; i<5 ; i++ ) {
-     std::cout << "Foi X in station " << i << " " << foix[i] <<  std::endl;
-   }
+   // std::cout << "Crate constructor " <<  std::endl;
+//    for ( int i = 0; i<5 ; i++ ) {
+//      std::cout << "Foi X in station " << i << " " << foix[i] <<  std::endl;
+//    }
 
    bool ok;
 
@@ -75,7 +75,6 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,
 	        
        if ( ok ) {
 	 L0MPuNodeBase m_pPuNode = pProNet->puNode(*ipusb);
-
 	 Unit * pProcUnit = new L0mProcUnit(m_pPuNode,ptpara,ignoreM1,foix,foiy,
                                            precision, bits, writeL0buffer);
 

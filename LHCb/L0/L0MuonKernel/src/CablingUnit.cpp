@@ -24,18 +24,15 @@ void L0Muon::CablingUnit::makePads() {
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
     if ( ! itr->empty() ) {
-      std::cout << "Register name " << itr->name() << std::endl;
-      if (m_debug) std::cout << "Cabling: " << " " << ir->first << " " <<std::endl;
+      //if (m_debug) std::cout << "Register name " << itr->name() << std::endl;
+      //if (m_debug) std::cout << "Cabling: " << " " << ir->first << " " <<std::endl;
       boost::dynamic_bitset<> r = itr->getBitset();
-      if (m_debug) std::cout << "Cabling: " << " reg size" << " " <<r.size() << std::endl;
+      //if (m_debug) std::cout << "Cabling: " << " reg size" << " " <<r.size() << std::endl;
       std::vector<MuonTileID> tmp = itr->firedTiles();
       std::vector<MuonTileID>::iterator itmp;
       if (m_debug) std::cout << "Cabling: " << "Fired tiles: " << std::endl;
       for (itmp = tmp.begin(); itmp!= tmp.end(); itmp++){
-	if (m_debug) std::cout << " " << (*itmp).quarter() << " " 
-            << (*itmp).region() << " " << (*itmp).nX() << " " 
-            << (*itmp).nY()
-            << std::endl;
+	if (m_debug) std::cout << " " << (*itmp).toString()<< std::endl;
       }
 
       itr->makePads();
@@ -67,11 +64,7 @@ void L0Muon::CablingUnit::makeTower() {
   
   for (ip=m_pads.begin(); ip != m_pads.end(); ip++) {
 
-    if (m_debug) std::cout << "Cabling: " << "pad" << " " 
-                           << (*ip).quarter() <<" " 
-        		   << (*ip).region() << " " 
-        		   << (*ip).nX() << " " 
-        		   << (*ip).nY() << std::endl;
+    //if (m_debug) std::cout << "Cabling: " << "pad " << (*ip).toString() << std::endl;
     int nsta = ip->station();
     std::vector<MuonTileID> tmp;
     
@@ -86,14 +79,12 @@ void L0Muon::CablingUnit::makeTower() {
       tmp = layout.tilesInRegion((*ip), nreg); 
     }
     
-    if (m_debug) std::cout << "Cabling: " << "tiles for this pad" << std::endl;
-    for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
-      if (m_debug) std::cout << "sta" << 
-        " " << nsta << " " << (*itmp).quarter() << " " 
-          << (*itmp).region() << " " 
-          << (*itmp).nX() << " " << (*itmp).nY() << std::endl;
-    }
-     
+    // if (m_debug) {
+//       std::cout << "Cabling: " << "tiles for this pad" << std::endl;
+//       for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
+// 	std::cout << "station: " << nsta << " " << (*itmp).toString() << std::endl;
+//       }
+//     } 
      
      for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
 
@@ -132,10 +123,7 @@ void L0Muon::CablingUnit::initialize() {
 
 void L0Muon::CablingUnit::execute() {
 
-  if (m_debug) std::cout << "Cabling:" << std::endl;
   if (m_debug) std::cout << "Cabling: executing PU " << m_parent->name() << std::endl; 
-
-  dump();
 
   Unit * myBoard = m_parent->parent();
   BoardUnit * bu = dynamic_cast<BoardUnit*>(myBoard);
@@ -156,12 +144,10 @@ void L0Muon::CablingUnit::execute() {
   L0mProcUnit * mpu = dynamic_cast<L0mProcUnit*>(m_parent);
   
   
-   for (int ista=0; ista<5; ista++){
-     std::cout << " Cabling Tower FOI " << ista 
-               << " " << mpu->xFoi(ista) << mpu->yFoi(ista) << std::endl;     
+   for (int ista=0; ista<5; ista++){ 
      m_tower.setFoi(ista,mpu->xFoi(ista),mpu->yFoi(ista));
    }
-   
+      
    m_tower.setPtparam(mpu->ptParameters());
    m_tower.setIgnoreM1(mpu->ignoreM1());
 

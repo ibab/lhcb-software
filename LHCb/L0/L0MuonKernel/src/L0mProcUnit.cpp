@@ -21,6 +21,9 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
   }
 
   m_ptparameters =ptpara;
+  
+  std::cout << " L0mProcUnit::L0mProcUnit: " << ptpara[0] << std::endl; 
+  
   m_ignoreM1 = ignoreM1;
   m_xfoi= foix;
   m_yfoi= foiy; 

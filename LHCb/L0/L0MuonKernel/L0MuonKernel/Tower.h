@@ -1,4 +1,4 @@
-// $Id: Tower.h,v 1.8 2005-02-03 19:49:51 atsareg Exp $
+// $Id: Tower.h,v 1.9 2005-02-04 10:39:18 atsareg Exp $
 
 #ifndef PROCESSORKERNEL_TOWER_H
 #define PROCESSORKERNEL_TOWER_H     1
@@ -161,7 +161,7 @@ namespace L0Muon {
     
   private:
 
-    void xyFromPad(MuonTileID pad, double x, double y) ;
+    void xyFromPad(MuonTileID pad, double& x, double& y) ;
     
     CandidateTower m_ctower ;
     int m_maxXFoI[5];
