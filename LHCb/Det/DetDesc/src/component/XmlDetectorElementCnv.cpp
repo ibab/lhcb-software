@@ -1,26 +1,9 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlDetectorElementCnv.cpp,v 1.4 2001-05-17 13:26:52 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlDetectorElementCnv.cpp,v 1.5 2001-05-17 16:34:04 sponce Exp $
 
 // include files
-// #include <cstdlib>
-// #include <iostream>
-// #include <string>
-// #include <vector>
-
 #include "GaudiKernel/CnvFactory.h"
-// #include "GaudiKernel/GenericAddress.h"
-// #include "GaudiKernel/GenericLink.h"
-// #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/ISvcLocator.h"
-// #include "GaudiKernel/IDataProviderSvc.h"
-// #include "GaudiKernel/IDataDirectory.h"
-// #include "GaudiKernel/MsgStream.h"
-// #include "GaudiKernel/RegistryEntry.h"
 
-// #include "DetDesc/DetectorElement.h"
-// #include "DetDesc/XmlAddress.h"
-// #include "DetDesc/XmlCnvSvc.h"
-// #include "DetDesc/XmlCnvAttrList.h"
-// #include "DetDesc/XmlCnvException.h"
 #include "XmlDetectorElementCnv.h"
 
 

@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.1 2001-05-17 13:26:52 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.2 2001-05-17 16:34:04 sponce Exp $
 
 // include files
 #include <cstdlib>
@@ -6,7 +6,6 @@
 #include <string>
 #include <vector>
 
-//#include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/ICnvManager.h"
@@ -18,10 +17,10 @@
 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/XmlAddress.h"
-#include "DetDesc/XmlCnvSvc.h"
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/XmlCnvException.h"
 #include "DetDesc/XmlBaseDetElemCnv.h"
+#include "DetDesc/IXmlSvc.h"
 
 
 // -----------------------------------------------------------------------
@@ -53,8 +52,7 @@ StatusCode XmlBaseDetElemCnv::initialize() {
     log << MSG::VERBOSE << "Initializing" << endreq;
     /// Get the XML conversion service interface and
     try {
-      m_doGenericCnv =
-        (dynamic_cast<XmlCnvSvc*>(m_xmlSvc))->allowGenericCnv();
+      m_doGenericCnv = m_xmlSvc->allowGenericCnv();
       log << MSG::INFO << "Generic conversion status: "
           << (unsigned int)m_doGenericCnv << endreq;
     } catch( ... )  {

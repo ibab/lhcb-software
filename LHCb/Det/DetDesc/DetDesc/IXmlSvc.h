@@ -1,4 +1,5 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IXmlSvc.h,v 1.2 2001-05-14 15:13:36 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IXmlSvc.h,v 1.3 2001-05-17 16:33:59 sponce Exp $
+
 #ifndef DETDESC_IXMLSVC_H
 #define DETDESC_IXMLSVC_H
 
@@ -8,7 +9,7 @@
 #include "DetDesc/IXmlParserSvc.h"
 
 /// Declaration of the interface ID (interface id, major version, minor version)
-static const InterfaceID IID_IXmlSvc(130, 2 , 0);
+static const InterfaceID IID_IXmlSvc(130, 3 , 0);
 
 
 /** @class IXmlSvc IXmlSvc.h DetDesc/IXmlSvc.h
@@ -37,6 +38,13 @@ public:
    * @return the corresponding DOMTree or 0 if the parsing was not successfull
    */
   virtual DOM_Document parse (const char* fileName) = 0;
+
+  /**
+   * Tells whether generic conversion of user defined detector elements should
+   * be used in case the corresponding user defined converter is not available
+   * @return true if generic conversion is allowed
+   */
+  virtual bool allowGenericCnv() = 0;
 
   /** 
    * Evaluates a numerical expresion

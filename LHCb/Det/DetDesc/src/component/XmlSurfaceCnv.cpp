@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlSurfaceCnv.cpp,v 1.3 2001-05-14 15:13:43 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlSurfaceCnv.cpp,v 1.4 2001-05-17 16:34:05 sponce Exp $
 
 // Include files
 #include <cstdlib>
@@ -20,7 +20,7 @@
 
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/XmlAddress.h"
-#include "DetDesc/XmlCnvSvc.h"
+#include "DetDesc/IXmlSvc.h"
 #include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/XmlCnvException.h"
 

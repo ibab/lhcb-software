@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlCnvSvc.cpp,v 1.1 2001-05-14 15:13:41 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.3 2001-05-17 16:34:04 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -12,7 +12,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include "DetDesc/XmlCnvSvc.h"
+#include "XmlCnvSvc.h"
 
 // Forward and external declarations
 extern const IAddrFactory& XmlAddressFactory;

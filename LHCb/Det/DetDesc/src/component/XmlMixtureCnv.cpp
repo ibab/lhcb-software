@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.8 2001-05-14 15:13:43 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.9 2001-05-17 16:34:05 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -15,11 +15,11 @@
 
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/XmlAddress.h"
-#include "DetDesc/XmlCnvSvc.h"
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
 #include "DetDesc/XmlCnvException.h"
+#include "DetDesc/IXmlSvc.h"
 
 #include <cstdlib>
 #include <iostream>
