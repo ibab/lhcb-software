@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.6 2001-05-17 16:34:04 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlElementCnv.cpp,v 1.7 2001-06-25 09:02:50 sponce Exp $
 
 // Include Files
 #include "GaudiKernel/CnvFactory.h"
@@ -144,7 +144,7 @@ StatusCode XmlElementCnv::i_fillObj (DOM_Element childElement,
     }
     std::string zeffAttribute = dom2Std (childElement.getAttribute ("Zeff"));
     if (!zeffAttribute.empty()) {
-      dataObj->setZ (xmlSvc()->eval(zeffAttribute));
+      dataObj->setZ (xmlSvc()->eval(zeffAttribute, false));
     }
   } else if ("isotoperef" == tagName) {
     log << MSG::VERBOSE << "looking at an isotoperef" << endreq;

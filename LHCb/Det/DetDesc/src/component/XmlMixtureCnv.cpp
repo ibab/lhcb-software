@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.9 2001-05-17 16:34:05 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.10 2001-06-25 09:02:50 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -99,7 +99,7 @@ StatusCode XmlMixtureCnv::i_createObj (DOM_Element element,
   }
   std::string zeffAttribute = dom2Std (element.getAttribute ("Zeff"));
   if (!zeffAttribute.empty()) {
-    dataObj->setZ (xmlSvc()->eval(zeffAttribute));
+    dataObj->setZ (xmlSvc()->eval(zeffAttribute, false));
   }
   std::string densityAttribute = dom2Std (element.getAttribute ("density"));
   if (!densityAttribute.empty()) {

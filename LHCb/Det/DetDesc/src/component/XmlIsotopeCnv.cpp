@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlIsotopeCnv.cpp,v 1.6 2001-05-17 16:34:04 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlIsotopeCnv.cpp,v 1.7 2001-06-25 09:02:50 sponce Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -96,11 +96,11 @@ StatusCode XmlIsotopeCnv::i_createObj (DOM_Element element,
   }
   std::string zAttribute = dom2Std (element.getAttribute ( "Z" ));
   if (!zAttribute.empty()) {
-    dataObj->setZ (xmlSvc()->eval(zAttribute));
+    dataObj->setZ (xmlSvc()->eval(zAttribute, false));
   }
   std::string nAttribute = dom2Std (element.getAttribute ( "N" ));
   if (!nAttribute.empty()) {
-    dataObj->setN (xmlSvc()->eval(nAttribute));
+    dataObj->setN (xmlSvc()->eval(nAttribute, false));
   }
   std::string densityAttribute = dom2Std (element.getAttribute ("density"));
   if (!densityAttribute.empty()) {
