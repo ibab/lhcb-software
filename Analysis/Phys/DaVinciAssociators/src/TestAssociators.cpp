@@ -1,4 +1,4 @@
-// $Id: TestAssociators.cpp,v 1.6 2004-03-11 10:30:26 pkoppenb Exp $
+// $Id: TestAssociators.cpp,v 1.7 2004-04-05 08:58:16 pkoppenb Exp $
 #define TestAssociators_CPP 
 
 // Include files
@@ -307,7 +307,7 @@ StatusCode TestAssociators::execute() {
     }
   }
   
-  int width = (int)log10(nbParts)+1;
+  int width = (int)log10((double)nbParts)+1;
 
   ifMsg(MSG::DEBUG) << "========= On " << std::setw(width) <<  nbParts
     << " Particles ========="
@@ -436,7 +436,7 @@ StatusCode TestAssociators::execute() {
     }
   }
 
-  width = (int)log10(mcPartCount)+1;
+  width = (int)log10((double)mcPartCount)+1;
   ifMsg( MSG::DEBUG ) 
     << "========= On " << std::setw(width) << mcPartCount
     << " MCParticles ========="
@@ -513,7 +513,7 @@ StatusCode TestAssociators::finalize() {
 
   MsgStream msg(msgSvc(), name());
   ifMsg( MSG::DEBUG ) << ">>> Finalize" << endreq;
-  int width = (int)log10(m_nbParts)+1;
+  int width = (int)log10((double)m_nbParts)+1;
  
   ifMsg( MSG::INFO )
     << "======== Statistics for Particles to MCParticles association"
@@ -536,7 +536,7 @@ StatusCode TestAssociators::finalize() {
     << " | Matched different | " << std::setw(width) << m_matchDifferent
     << endreq;
   
-  width = (int)log10(m_mcPartCount)+1;
+  width = (int)log10((double)m_mcPartCount)+1;
   ifMsg( MSG::INFO )
       << "======== Statistics on MCParticle associations ========"
       << endreq
