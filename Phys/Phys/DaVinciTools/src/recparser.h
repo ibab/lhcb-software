@@ -49,7 +49,7 @@
 #define NAME 305
 #define VALUE 306
 union YYSTYPE {
-  char *text;
+  std::string *text;
   double dval;
   Quarks quarkval;
   Quantums quantumval;
