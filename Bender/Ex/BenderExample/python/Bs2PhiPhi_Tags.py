@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiPhi_Tags.py,v 1.2 2004-11-12 14:24:42 ibelyaev Exp $
+# $Id: Bs2PhiPhi_Tags.py,v 1.3 2004-11-14 16:56:49 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -48,7 +48,8 @@ class Bs2PhiPhiTags(Algo):
         evtcol.column ( name = "nPhi"    , value = Phi.size()   )
         
         self.setFilterPassed( TRUE )
-            
+
+        print ' i am here!!! ' 
         return SUCCESS 
 
 # =============================================================================
@@ -71,6 +72,8 @@ def configure () :
                     'NeutralPP2MC.OutputLevel  =   5  ' ,
                     'Hadrons.OutputLevel       =   5  ' ,
                     'EventSelector.PrintFreq   = 100  ' ] )
+
+    gaudi.HistogramPersistency = "ROOT"
     
     # specific job configuration 
     # preload algorithm(s)
@@ -104,15 +107,16 @@ def configure () :
     tagw.ItemList    = [ '/NTUPLES/EVTTAGS/TagCreator/1' ]
     tagw.EvtDataSvc  =   'EvtTupleSvc' ;
     
+    # event collections
+    #tsvc = gaudi.service('EvtTupleSvc')
+    #tsvc.Output =  [ "EVTTAGS DATAFILE='PFN:EventTags.tags' TYP='POOL_ROOTTREE' OPT='NEW' " ]
+    #print ' OUTPUT ' , tsvc.Output
+
     # ntuples 
     nsvc = gaudimodule.iProperty( 'NTupleSvc' )
-    nsvc.Output = [ "PHIPHI  DATAFILE='bs2phiphi_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
-    # event collections
-    tsvc = gaudimodule.iProperty('EvtTupleSvc')
-    tsvc.Output =  [ "EVTTAGS DATAFILE='PFN:EventTags.tags' TYP='POOL_ROOTTREE' OPT='RECREAT' " ]
+    nsvc.Output = [ "PHIPHI  DATAFILE='bs2phiphi_tup.root' TYP='ROOT' OPT='NEW'" ]
     
 
-    print ' OUTPUT ' , tsvc.Output
     
     return SUCCESS 
     
@@ -130,6 +134,9 @@ if __name__ == '__main__' :
     
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/11/12 14:24:42  ibelyaev
+#  v4r2
+#
 # =============================================================================
 # The END 
 # =============================================================================

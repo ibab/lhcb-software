@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.37 2004-11-12 14:27:04 ibelyaev Exp $ 
+# $Id: requirements,v 1.38 2004-11-14 16:55:50 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -19,8 +19,8 @@ use           BenderDet      v4r0   Det
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDict     v4r1   Tools 
 # =========== Bender & LoKi documentation =====================================
-use           BenderDoc      v4r0   Doc 
-use           LoKiDoc        v3r5p1 Doc 
+use           BenderDoc      v4r2   Doc 
+use           LoKiDoc        v3r5p3 Doc 
 use           BenderTutor    v4r2   Tutorial
 # =========== Test suit for Bender ============================================
 use           BenderTest     v4r0   Tests 
@@ -39,9 +39,6 @@ use           LoKiHybrid     v1r0p1 Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.36  2004/11/08 17:27:29  ibelyaev
-#  v4r2p1
-#
 # =============================================================================
 # The END 
 # =============================================================================
