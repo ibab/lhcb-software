@@ -1,31 +1,35 @@
+# $Id: requirements,v 1.23 2002-06-15 10:33:19 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $
+# =============================================================================
 package  CaloDet 
-version  v4r1
+version  v5r0
 
-# =============== structure ===============================================	
+# =============== structure ===================================================
 branches         src cmt doc options CaloDet 
 
-# =============== own includes ============================================
+# =============== own includes ================================================
 include_dirs      $(CALODETROOT)
 
-# =============== used packages ===========================================
+# =============== used packages ===============================================
 use CaloKernel   v2r*   Calo 
 use DetDesc      v10r*  Det 
 
-# =============== own options ==========================================
+# =============== own options =================================================
 set CALODETOPTS  ${CALODETROOT}/options
 
-# =============== link library (base classes) =============================
+# =============== link library (base classes) =================================
 library          CaloDetLib        Lib/*.cpp 
 
-# =============== component library =======================================
+# =============== component library ===========================================
 library          CaloDet           component/*.cpp
 
-#================ patterns ================================================
+#================ patterns ====================================================
 apply_pattern    package_Llinkopts 
 apply_pattern    package_Lstamps
 apply_pattern    linker_path
 
-#================ private stuff ===========================================
+#================ private stuff ===============================================
 private
 apply_pattern    package_Cshlibflags
 apply_pattern    package_Lshlibflags

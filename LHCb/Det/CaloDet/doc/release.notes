@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.22 2002-06-15 06:25:25 ocallot Exp $ 
+! $Id: release.notes,v 1.23 2002-06-15 10:33:19 ibelyaev Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-06-15 - v5r0 Vanya Belyaev
+ - cmt/requirements: change version number to v5r0 to avoid seriouse problems
 
 ! 2002-06-15 - Olivier Callot
  - Changed Ecal cell size to 121.700 mm (X)
