@@ -1,40 +1,42 @@
-// $Id: CaloClusterMCTruthMonitor.cpp,v 1.1.1.1 2004-10-25 09:00:25 ibelyaev Exp $
+// $Id: CaloClusterMCTruthMonitor.cpp,v 1.2 2004-10-27 11:28:43 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2004/03/17 16:35:19  ibelyaev
-//  regular update: MCCaloMonitor and CaloPIDsMonitor
-//
-// Revision 1.3  2004/02/17 12:00:57  ibelyaev
-//  add new algorithm and update for new base
-//
-// Revision 1.2  2002/06/27 12:41:18  ibelyaev
-//  put all monitoring histograms under the same hat
-//
-// Revision 1.1  2002/06/16 17:14:36  ibelyaev
-//  new monitoring algorithms
-//
 // ============================================================================
 // Include files
+// ============================================================================
 // Relations 
+// ============================================================================
 #include   "Relations/IAssociatorWeighted.h"
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include   "GaudiKernel/AlgFactory.h"
 #include   "GaudiKernel/MsgStream.h" 
 #include   "GaudiKernel/IHistogramSvc.h"
+// ============================================================================
 // AIDA 
+// ============================================================================
 #include   "AIDA/IHistogram1D.h"
+// ============================================================================
 // CaloDet 
+// ============================================================================
 #include   "CaloDet/DeCalorimeter.h"
+// ============================================================================
 // Event 
+// ============================================================================
 #include   "Event/CaloHypo.h"
-// Event 
 #include   "Event/MCParticle.h"
+// ============================================================================
 // CaloUtils 
+// ============================================================================
 #include   "CaloUtils/dirHbookName.h"
+// ============================================================================
 // local
+// ============================================================================
 #include   "CaloClusterMCTruthMonitor.h"
+// ============================================================================
 
 // ============================================================================
 /** @file CaloClusterMCTruthMonitor.cpp
@@ -97,12 +99,11 @@ CaloClusterMCTruthMonitor::~CaloClusterMCTruthMonitor() {};
 StatusCode CaloClusterMCTruthMonitor::initialize() 
 {  
   StatusCode sc = CaloMoniAlg::initialize();
-  if( sc.isFailure() ) 
-  { return Error("Could not initialize the base class CaloMoniAlg",sc);}
+  if ( sc.isFailure() ) { return sc ; }
   
   // locate the associator 
   m_associator = tool<Asct>( m_associatorType , m_associatorName ) ;
-  if( 0 == m_associator ) { return StatusCode::FAILURE ; }
+  if ( 0 == m_associator ) { return StatusCode::FAILURE ; }
   
   // book the histograms
   m_links   = book ( 1 , "Total Links      : " + inputData() + " " + name() , 

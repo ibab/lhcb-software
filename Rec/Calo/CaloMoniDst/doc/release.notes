@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.1.1.1 2004-10-25 09:00:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2004-10-27 11:28:43 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,10 @@
 ! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2004-10-27 - Vanya BELYAEV
+ - tiny improvements in algorithms 
+
 
 ! 2004-10-25 - Vanya BELYAEV
  - the new package: the code is imported from Calo/CaloMonitor package 
