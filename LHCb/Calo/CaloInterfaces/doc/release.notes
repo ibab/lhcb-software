@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.20 2004-09-02 18:52:52 ibelyaev Exp $
+! $Id: release.notes,v 1.21 2004-09-06 09:43:53 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!======================= CaloInterfaces v4r2 2004-09-02 =====================
 ! 2004-09-02 - Vanya BELYAEV
   Modification of interfaces to prepare to HTL/Trigger developments 
    - CaloInterfaces/ICaloTrackIdEval.h, CaloInterfaces/ICaloTrackMatch.h
