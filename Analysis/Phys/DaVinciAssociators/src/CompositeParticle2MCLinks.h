@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.4 2003-04-24 13:55:07 gcorti Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.5 2003-05-26 11:38:38 phicharp Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -13,7 +13,7 @@
 // local
 #include "DaVinciAssociators/Particle2MCLinksAsct.h"
 #include "DaVinciAssociators/Particle2MCAsct.h"
-#include "DaVinciAssociators/AsctAlgorithm.h"
+#include "AsctAlgorithm.h"
 
 /** @class CompositeParticle2MCLinks CompositeParticle2MCLinks.h
  *  
@@ -41,6 +41,9 @@ private:
 
   bool associate1(const Particle *p, const MCParticle *m, 
                   Particle2MCAsct::Table* table) const;
+  // This can be removed when the Relations package is updated...
+  MCParticle* myAssociatedFrom(const Particle* p) const;
+  bool isAssociatedFrom( const Particle* p, const MCParticle* m) const;
 
   class associator : public std::unary_function<MCParticle*,bool> {
   public:

@@ -1,4 +1,4 @@
-// $Id: TestAssociators.cpp,v 1.4 2003-04-17 09:58:26 phicharp Exp $
+// $Id: TestAssociators.cpp,v 1.5 2003-05-26 11:38:38 phicharp Exp $
 #define TestAssociators_CPP 
 
 // Include files
@@ -45,6 +45,7 @@ TestAssociators::TestAssociators(const std::string& name,
   Algorithm(name, pSvcLocator)
   , m_pAsctChi2(0)
   , m_pAsctLinks(0)
+  , m_pAsctComp(0)
   , m_pAsctWithChi2(0)
   , m_matchLinks(0)
   , m_matchChi2(0)
@@ -53,6 +54,9 @@ TestAssociators::TestAssociators(const std::string& name,
   , m_matchLinksHighChi2(0)
   , m_matchChi2NotLinks(0)
   , m_matchDifferent(0)
+  , m_matchLinksDiffComp(0)
+  , m_matchMissedComp(0)
+  , m_matchComp(0)
   , m_nbParts(0)
   , m_mcPart2Track(7,0)
   , m_mcPart2Proto(6,0)
@@ -109,6 +113,14 @@ StatusCode TestAssociators::initialize() {
     return sc;
   }
 
+  // This is the composite Particle2MC tool
+  sc = toolSvc()->retrieveTool( "Particle2MCAsct", "CompAsct", m_pAsctComp, this);
+  if( sc.isFailure() || 0 == m_pAsctComp) {
+    msg << MSG::FATAL << "    Unable to retrieve Composite Associator tool" 
+        << endreq;
+    return sc;
+  }
+
   sc = toolSvc()->retrieveTool( "Particle2MCLinksAsct", 
                                 "LinkAsct", m_pAsctLinks, this);
   if( sc.isFailure() || 0 == m_pAsctLinks) {
@@ -144,8 +156,9 @@ StatusCode TestAssociators::execute() {
 
   MsgStream          msg( msgSvc(), name() );
   int matchLinks=0, matchChi2=0, matchFull=0, nbParts=0;
-  int matchLinksNotChi2=0, matchLinksHighChi2=0, 
-    matchChi2NotLinks=0, matchDifferent=0;
+  int matchLinksNotChi2=0, matchLinksHighChi2=0
+    , matchChi2NotLinks=0, matchDifferent=0, matchLinksDiffComp=0
+    , matchMissedComp=0, matchComp=0;
   int skippedEvt = 0;  
 
   for( std::vector<std::string>::iterator inp = m_inputData.begin();
@@ -187,8 +200,9 @@ StatusCode TestAssociators::execute() {
     for(Particles::const_iterator cand = parts->begin(); 
         parts->end() != cand; cand++, nbParts++) {
       Particle* part = *cand;
-      
-      ifMsg( MSG::VERBOSE ) << "Particle " << part->key() 
+
+      std::string strCharged = part->charge()? "Charged" : "Neutral";
+      ifMsg( MSG::VERBOSE ) << strCharged << " particle " << part->key() 
                             << " , momentum, slopes "
                             << part->p() << " " 
                             << part->slopeX() << " " 
@@ -202,6 +216,7 @@ StatusCode TestAssociators::execute() {
         // There is a table from the Proto links associator...
         MCParticle* mcPartLinks = 0;
         MCParticle* mcPartChi2 = 0;
+        MCParticle* mcPartComp = 0;
         double chi2 = 0.;
         MCsFromParticleLinks mcPartLinksRange = 
           m_pAsctLinks->rangeFrom( part );
@@ -212,7 +227,7 @@ StatusCode TestAssociators::execute() {
           ifMsg( MSG::VERBOSE ) << "   Associated to "
               << mcPartLinksRange.end()-mcPartLinksRange.begin()+1
               << " MCParts: " << endreq;
-          matchLinks++;        
+          if( part->charge() ) matchLinks++;        
           for( mcPartLinksIt = mcPartLinksRange.begin();
                mcPartLinksRange.end() != mcPartLinksIt; mcPartLinksIt++ ) {
             mcPartLinks = mcPartLinksIt->to();
@@ -228,10 +243,22 @@ StatusCode TestAssociators::execute() {
           }
           // Reset the link to the first one to test the "decreasing" feature!...
           mcPartLinks = m_pAsctLinks->associatedFrom( part );
+          mcPartComp = m_pAsctComp->associatedFrom( part );
+          if( part->charge() ){
+            if( 0 != mcPartComp ) {
+              matchComp++;
+              if( mcPartLinks != mcPartComp ) {
+                ifMsg( MSG::VERBOSE ) << "   MCPart from Composite != Links" << endreq;
+                if( 0 != mcPartLinks ) matchLinksDiffComp++;
+              }
+            } else {
+              matchMissedComp++;
+            }
+          }
         } else {
           ifMsg( MSG::VERBOSE ) << "   No MCPart found from links" << endreq;
         }
-          
+        if( 0 == part->charge() ) continue;
         mcPartChi2 = m_pAsctWithChi2->associatedFrom( part, chi2);
         if( mcPartsChi2.empty() ) {
           // No particles found above threshold with CHi2
@@ -282,26 +309,33 @@ StatusCode TestAssociators::execute() {
   
   int width = (int)log10(nbParts)+1;
 
-  ifMsg(MSG::DEBUG) << "========= On " << std::setw(width) <<  nbParts 
-        << " Particles =========" 
-        <<endreq
-        << "   | Matched with Links | " << std::setw(width) << matchLinks 
-        << " | Missed with Chi2  | " << std::setw(width) << matchLinksNotChi2 
-        << " | Too large Chi2  | " << std::setw(width) << matchLinksHighChi2 
-        << endreq
-        << "   | Matched with Chi2  | " << std::setw(width) << matchChi2
-        << " | Missed with Links | " << std::setw(width) << matchChi2NotLinks 
-        << endreq
-        << "   | Matched with both  | " << std::setw(width) << matchFull
-        << " | Matched different | " << std::setw(width) << matchDifferent 
-        << endreq;
-
+  ifMsg(MSG::DEBUG) << "========= On " << std::setw(width) <<  nbParts
+    << " Particles ========="
+    << endreq
+    << "   | Matched with Links | " << std::setw(width) << matchLinks
+    << " | Missed with Chi2  | " << std::setw(width) << matchLinksNotChi2
+    << " | Too large Chi2    | " << std::setw(width) << matchLinksHighChi2
+    << endreq
+    << "   | Matched with Comp. | " << std::setw(width) << matchComp
+    << " | Diff. from Links  | " << std::setw(width) << matchLinksDiffComp
+    << " | Missed with Comp. | " << std::setw(width) << matchMissedComp
+    << endreq
+    << "   | Matched with Chi2  | " << std::setw(width) << matchChi2
+    << " | Missed with Links | " << std::setw(width) << matchChi2NotLinks
+    << endreq
+    << "   | Matched with both  | " << std::setw(width) << matchFull
+    << " | Matched different | " << std::setw(width) << matchDifferent
+    << endreq;
+  
   m_matchLinks += matchLinks;
   m_matchChi2 += matchChi2;
   m_matchFull += matchFull;
   m_matchLinksNotChi2 += matchLinksNotChi2;
   m_matchLinksHighChi2 += matchLinksHighChi2;
   m_matchChi2NotLinks += matchChi2NotLinks;
+  m_matchLinksDiffComp += matchLinksDiffComp;
+  m_matchMissedComp += matchMissedComp;
+  m_matchComp += matchComp;
   m_matchDifferent += matchDifferent;
   m_nbParts += nbParts;
 
@@ -478,23 +512,27 @@ StatusCode TestAssociators::finalize() {
   ifMsg( MSG::DEBUG ) << ">>> Finalize" << endreq;
   int width = (int)log10(m_nbParts)+1;
  
-  ifMsg( MSG::INFO ) 
-      << "======== Statistics for Particles to MCParticles association"
-      << "========" << endreq
-      << "======== On " << std::setw(width) <<  m_nbParts 
-      << " Particles ( " << m_nbEvts << " events) ========" 
-      <<endreq
-      << "   | Matched with Links | " << std::setw(width) << m_matchLinks 
-      << " | Missed with Chi2  | " << std::setw(width) << m_matchLinksNotChi2 
-      << " | Too large Chi2  | " << std::setw(width) << m_matchLinksHighChi2 
-      << endreq
-      << "   | Matched with Chi2  | " << std::setw(width) << m_matchChi2
-      << " | Missed with Links | " << std::setw(width) << m_matchChi2NotLinks 
-      << endreq
-      << "   | Matched with both  | " << std::setw(width) << m_matchFull
-      << " | Matched different | " << std::setw(width) << m_matchDifferent 
-      << endreq;
-
+  ifMsg( MSG::INFO )
+    << "======== Statistics for Particles to MCParticles association"
+    << "========" << endreq
+    << "======== On " << std::setw(width) <<  m_nbParts
+    << " Particles ( " << m_nbEvts << " events) ========"
+    <<endreq
+    << "   | Matched with Links | " << std::setw(width) << m_matchLinks
+    << " | Missed with Chi2  | " << std::setw(width) << m_matchLinksNotChi2
+    << " | Too large Chi2    | " << std::setw(width) << m_matchLinksHighChi2
+    << endreq
+    << "   | Matched with Comp. | " << std::setw(width) << m_matchComp
+    << " | Diff. from Links  | " << std::setw(width) << m_matchLinksDiffComp
+    << " | Missed with Comp. | " << std::setw(width) << m_matchMissedComp
+    << endreq
+    << "   | Matched with Chi2  | " << std::setw(width) << m_matchChi2
+    << " | Missed with Links | " << std::setw(width) << m_matchChi2NotLinks
+    << endreq
+    << "   | Matched with both  | " << std::setw(width) << m_matchFull
+    << " | Matched different | " << std::setw(width) << m_matchDifferent
+    << endreq;
+  
   width = (int)log10(m_mcPartCount)+1;
   ifMsg( MSG::INFO )
       << "======== Statistics on MCParticle associations ========"

@@ -10,9 +10,5 @@ ToolSvc.CompP2MCLinkAsct.AlgorithmName = "CompositeParticle2MCLinks";
 // used by the algorithm CompositeParticle2MCLinks
 CompositeParticle2MCLinks.P2MCAsct.AlgorithmType = "Particle2MCLinks";
 CompositeParticle2MCLinks.P2MCAsct.AlgorithmName = "Particle2MCLinks";
-// ... definition for the link algorithm
-//  Particle2MCLinks.InputData  = { "Phys/Prod/Particles" };
-// Use Particle2MCLinks and ChargedPP2MC standard properties
-//  #include "$DAVINCIASSOCIATORSROOT/options/Particle2MCLinks.opts"
-//  #include "$DAVINCIASSOCIATORSROOT/options/ChargedPP2MC.opts"
-//
+// This defines where to find the Tr2MC association table (on OODST) *** DO NOT DELETE ***
+ToolSvc.Track2MCAsct.Location = "Rec/Relations/Tr2MCP";

@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.h,v 1.5 2003-04-17 09:58:26 phicharp Exp $
+// $Id: Particle2MCLinks.h,v 1.6 2003-05-26 11:38:38 phicharp Exp $
 #ifndef Particle2MCLinks_H 
 #define Particle2MCLinks_H 1
 
@@ -13,7 +13,7 @@
 // local
 #include "DaVinciAssociators/Particle2MCLinksAsct.h"
 #include "DaVinciAssociators/ProtoParticle2MCAsct.h"
-#include "DaVinciAssociators/AsctAlgorithm.h"
+#include "AsctAlgorithm.h"
 
 /** @class Particle2MCLinks Particle2MCLinks.h
  *  
@@ -37,7 +37,8 @@ public:
 protected:
 
 private:
-  ProtoParticle2MCAsct::IAsct* m_pAsctProto;
-  
+  ProtoParticle2MCAsct::IAsct* m_pAsctCharged;
+  ProtoParticle2MCAsct::IAsct* m_pAsctNeutral;
+
 };
 #endif // Particle2MCLinks_H

@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinksAsct.h,v 1.2 2003-04-24 13:55:07 gcorti Exp $
+// $Id: Particle2MCLinksAsct.h,v 1.3 2003-05-26 11:38:37 phicharp Exp $
 #ifndef Particle2MCLinksASCT_H 
 #define Particle2MCLinksASCT_H 1
 
@@ -38,7 +38,8 @@ public:
                   const std::string& name,
                   const IInterface* parent )
     : Asct( type, name, parent)
-    , m_pAsctProto(0)
+    , m_pChargedAsct(0)
+    , m_pNeutralAsct(0)
     , m_table(0)
   {
 
@@ -87,8 +88,9 @@ public:
 protected:
 
 private:
-    bool m_hasTable;  //<< Flag set if the associator doesn't use a table
-    ProtoParticle2MCAsct::IAsct* m_pAsctProto;
+  bool m_hasTable;  //<< Flag set if the associator doesn't use a table
+  ProtoParticle2MCAsct::IAsct* m_pChargedAsct;
+  ProtoParticle2MCAsct::IAsct* m_pNeutralAsct;
   Table* m_table;     //<< Table to hold temporary relations
 };
 

@@ -2,7 +2,7 @@
 // Property file for TestAssociators
 // Default options for any DaVinci jobs
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$DAVINCIROOT/options/DaVinciv248r4.opts"
+#include "$DAVINCIROOT/options/DaVinciv254r1.opts"
 
 // The test associator can fill histograms
 #include "$STDOPTS/Hbook.opts"
@@ -12,12 +12,23 @@ HistogramPersistencySvc.OutputFile = "TestDVAssociators.hbook";
 // This is the default parameters
 //
 // List of necessary algorithms for the test
-ApplicationMgr.TopAlg = { "MCPIDProtoPAlg",
-                          "PreLoadParticles",
-                          "TestAssociators" };
-
+ApplicationMgr.TopAlg = { "ChargedProtoPAlg", "UpstreamProtoPAlg",
+                          "NeutralPPCreator/NeutralProtoPAlg",
+                          "PreLoadParticles" };
+                          
 // Include properties of PreLoadParticles
 #include "$DAVINCITOOLSROOT/options/PreLoadParticles.opts"
+
+ApplicationMgr.TopAlg += { "PreLoadParticles/PreLoadPhotons" };
+// Include properties for PreLoadPhotons
+PreLoadPhotons.PhysDesktop.ParticleMakerType = "PhotonParticleMaker";
+//PreLoadPhotons.PhysDesktop.InputLocation = { "Rec/ProtoP/Neutrals" };
+PreLoadPhotons.PhysDesktop.OutputLocation = "Phys/Photons";
+PreLoadPhotons.PhysDesktop.PhotonParticleMaker.Particle = {"gamma" };
+PreLoadPhotons.PhysDesktop.PhotonParticleMaker.ConfLevelCuts = { 0.001 };
+Preload.PhysDesktop.OutputLevel = 2;
+
+ApplicationMgr.TopAlg += { "TestAssociators" };
 
 // Include properties of specific Associator to test
 #include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
@@ -26,13 +37,19 @@ ApplicationMgr.TopAlg = { "MCPIDProtoPAlg",
   a relations table or not. If not (""), then no table is created and the relation 
   is created on the flight
 */
-//TestAssociators.LinkAsct.Location      = "";
-TestAssociators.LinkAsct.Location      = "Phys/Relations/Particle2MCLinks";
+TestAssociators.LinkAsct.Location      = "";
+//TestAssociators.LinkAsct.Location      = "Phys/Relations/Particle2MCLinks";
 // The "weight" of tracks to MCParticles is of decreasing importance
-TestAssociators.LinkAsct.DecreasingWeight = true;
+//TestAssociators.LinkAsct.DecreasingWeight = true;
 // Only useful if there is a table defined
 TestAssociators.LinkAsct.AlgorithmType = "Particle2MCLinks";
 TestAssociators.LinkAsct.AlgorithmName = "Particle2MCLinks";
+
+// One must define the location and algorithm for the Composite Associator
+TestAssociators.CompAsct.Location      = "Phys/Relations/CompPart2MCLinks";
+// Only useful if there is a table defined
+TestAssociators.CompAsct.AlgorithmType = "CompositeParticle2MCLinks";
+TestAssociators.CompAsct.AlgorithmName = "CompositeParticle2MCLinks";
 
 // Define missing Location for calo matches
 Toolsvc.BremMatch.Location = "Rec/Calo/BremMatch";
@@ -40,9 +57,10 @@ Toolsvc.ElectronMatch.Location = "Rec/Calo/ElectronMatch";
 Toolsvc.PhotonMatch.Location = "Rec/Calo/PhotonMatch";
 
 // Define InputData for the test
-TestAssociators.InputData = {"Phys/Prod/Particles"};
+TestAssociators.InputData = {"Phys/Prod/Particles", "Phys/Photons/Particles"};
 Particle2MCChi2.InputData = {@TestAssociators.InputData};
 Particle2MCLinks.InputData = {@TestAssociators.InputData};
+CompositeParticle2MCLinks.InputData = {@TestAssociators.InputData};
 Particle2MCWithChi2.InputData = {@TestAssociators.InputData};
 
 // Set DEBUG options to show what is going on
@@ -50,27 +68,31 @@ TestPhysDesktop.OutputLevel = 4;
 PrimaryVertexFinderAlg.OutputLevel = 4;
 TestAssociators.OutputLevel = 3;
 // Associators
-TestAssociators.Particle2MCWithChi2Asct.OutputLevel = 4;
-TestAssociators.Particle2MCAsct.OutputLevel = 4;
-TestAssociators.LinkAsct.OutputLevel = 3;
+TestAssociators.Particle2MCWithChi2Asct.OutputLevel = 2;
+TestAssociators.Particle2MCAsct.OutputLevel = 2;
+TestAssociators.CompAsct.OutputLevel = 2;
+TestAssociators.LinkAsct.OutputLevel = 2;
 // Association creation algorithms
-Particle2MCLinks.OutputLevel = 4;
-Particle2MCLinks.ChargedPP2MC.OutputLevel = 4;
-ChargedPP2MC.OutputLevel = 4;
-Particle2MCChi2.OutputLevel = 4;
-Particle2MCWithChi2.OutputLevel = 4;
+Particle2MCLinks.OutputLevel = 1;
+CompositeParticle2MCLinks.OutputLevel = 2;
+ChargedPP2MC.OutputLevel = 2;
+NeutralPP2MC.OutputLevel = 2;
+Particle2MCChi2.OutputLevel = 2;
+Particle2MCWithChi2.OutputLevel = 2;
 // Auxiliary algorithms
-Particle2MCChi2.Particle2MCWithChi2.OutputLevel = 4;
-Particle2MCLinks.ProtoParticle2MCLinks.OutputLevel = 4;
+Particle2MCChi2.Particle2MCWithChi2.OutputLevel = 2;
+Particle2MCLinks.ChargedPP2MC.OutputLevel = 2;
+CompositeParticle2MCLinks.Particle2MCLinks.OutputLevel = 2;
 
 // Make others mute
 //  TestPhysDesktop.PhysDesktop.OutputLevel = 4;
 //  TestPhysDesktop.PhysDesktop.ChargedParticlemaker.OutputLevel = 4;
-MCPIDProtoAlg.OutputLevel = 4;
+NeutralProtoPAlg.OutputLevel = 2;
+ChargedProtoPAlg.OutputLevel = 2;
 PreLoadParticles.OutputLevel = 4;
 
 // Number of events to process, skip and printing frequency
-ApplicationMgr.EvtMax = 200;
+ApplicationMgr.EvtMax = 1;
 EventSelector.FirstEvent = 1;
    
 // Data to use for the test

@@ -1,4 +1,4 @@
-// $Id: AsctAlgorithm.cpp,v 1.1 2002-07-18 12:35:40 phicharp Exp $
+// $Id: AsctAlgorithm.cpp,v 1.2 2003-05-26 11:38:37 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 #include "GaudiKernel/MsgStream.h" 
 
 // local
-#include "DaVinciAssociators/AsctAlgorithm.h"
+#include "AsctAlgorithm.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AsctAlgorithm

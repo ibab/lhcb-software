@@ -1,4 +1,4 @@
-// $Id: ChargedPP2MC.cpp,v 1.1 2002-10-02 07:06:26 phicharp Exp $
+// $Id: ChargedPP2MC.cpp,v 1.2 2003-05-26 11:38:37 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -29,7 +29,7 @@ ChargedPP2MC::ChargedPP2MC( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
   , m_outputTable( ChargedPP2MCAsctLocation )
-  , m_trackAsctName( "Track2MCParticleAsct" )
+  , m_trackAsctName( "Track2MCAsct" )
 {
   m_inputData.push_back( ProtoParticleLocation::Charged );
   m_inputData.push_back( ProtoParticleLocation::Upstream );
@@ -75,7 +75,7 @@ StatusCode ChargedPP2MC::execute() {
   //////////////////////////////////
   // Loop on Particles containers //
   //////////////////////////////////
-
+  bool found = false;
   for( std::vector<std::string>::const_iterator inp = m_inputData.begin(); 
        m_inputData.end()!= inp; inp++) {
     if( !m_track2MCParticleAsct->tableExists() ) {
@@ -89,9 +89,11 @@ StatusCode ChargedPP2MC::execute() {
       log << MSG::VERBOSE << "    " << protos->size()
           << " ProtoParticles retrieved from " 
           << *inp << endreq;
+      found = true;
     }
     else {
-      log << MSG::INFO << "    *** Could not retrieve ProtoParticles from "
+      MSG::Level lvl =  found ? MSG::DEBUG : MSG::INFO;
+      log << lvl << "    *** Could not retrieve ProtoParticles from "
           << *inp << endreq;
       continue;
     }

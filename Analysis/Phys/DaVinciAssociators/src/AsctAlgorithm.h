@@ -1,4 +1,4 @@
-// $Id: AsctAlgorithm.h,v 1.4 2002-10-10 18:42:36 gcorti Exp $
+// $Id: AsctAlgorithm.h,v 1.1 2003-05-26 11:38:37 phicharp Exp $
 #ifndef ASCTALGORITHM_H 
 #define ASCTALGORITHM_H 1
 
@@ -30,18 +30,30 @@ public:
 template <class T>
 StatusCode retrievePrivateAsct( std::string asctType,
                                 bool sameInput, T*& asct) {
+  return retrievePrivateAsct( asctType, asctType, sameInput, asct);
+}
+
+template <class T>
+  StatusCode retrievePrivateAsct( std::string asctType, std::string asctName,
+                                bool sameInput, T*& asct) {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> entering retrievePrivateAsct" << endreq;
 
   // Internally used associator
-  std::string myLocation = outputTable() +"AuxTable" ;
+  std::string myLocation = outputTable() + asctName ;
   StringProperty myAlgName;
+
+  StatusCode sc;
+  if( asctName == asctType ) {
+    sc = toolSvc()->retrieveTool( asctType, asctName, asct, this);
+  } else {
+    sc = toolSvc()->retrieveTool( asctType, asctName, asct);
+  }
   
-  StatusCode sc = toolSvc()->retrieveTool( asctType, asct, this);
   if( sc.isFailure() || 0 == asct) {
     log << MSG::FATAL << "    Unable to retrieve " 
-        << asctType << " Associator tool" 
+        << asctName << " Associator tool" 
         << endreq;
     return sc;
   }
@@ -50,7 +62,7 @@ StatusCode retrievePrivateAsct( std::string asctType,
     sc = prop->setProperty( "Location", myLocation);
     if( sc.isSuccess() ) {
       log << MSG::DEBUG << "Property Location set to " << myLocation
-          << " in Asct " << asctType << endreq;
+          << " in Asct " << asctName << endreq;
     }
     StringProperty myAlgType;
     myAlgType.assign( prop->getProperty( "AlgorithmType" ) );
@@ -59,7 +71,7 @@ StatusCode retrievePrivateAsct( std::string asctType,
     sc = prop->setProperty( "AlgorithmName", myAlgName);
     if( sc.isSuccess() ) {
       log << MSG::DEBUG << "Property AlgorithmName set to " 
-          << myAlgName << " in Asct " << asctType << endreq;
+          << myAlgName << " in Asct " << asctName << endreq;
     }
   }
   if( !sameInput) return StatusCode::SUCCESS;

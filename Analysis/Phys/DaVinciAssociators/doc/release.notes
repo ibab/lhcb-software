@@ -1,6 +1,23 @@
-! $Id: release.notes,v 1.25 2003-04-24 13:56:23 gcorti Exp $
+! $Id: release.notes,v 1.26 2003-05-26 11:38:37 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2003-05-16 - Philippe Charpentier
+ - Particle2MCLinks:
+      - Use NeutralPP2MC associator for neutral particles
+ - CompositeParticle2MCLinks.cpp
+      - For composite particles, checks whether their daughters are in the
+        associated range rather than equal to "the" associated MCParticle
+        (needed for neutrals that have many associations)
+ - AsctAlgorithm.h : move to ./src as no need to expose it
+ - TestAssociators : adapt for testing with neutrals and composite
+ - NeutralPP2MC.opts: add options with the default tool name and include 
+   the calorimeter options for CaloClusters association
+! 2003-05-12 - Philippe Charpentier
+ - CompositeParticle2MCLinks.cpp:
+      - Use AsctAlgorithm features to transmit the input data Property to the 
+        Links associator and give it a unique name...
+      - Returns the MCParticle with most hits common with the track
 
 !================= DaVinciAssociators v4r0 2003-04-24 ======================
 ! 2003-04-24 - Gloria Corti

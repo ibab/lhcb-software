@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.h,v 1.3 2002-10-02 07:06:29 phicharp Exp $
+// $Id: Particle2MCChi2.h,v 1.4 2003-05-26 11:38:38 phicharp Exp $
 #ifndef Particle2MCChi2_H 
 #define Particle2MCChi2_H 1
 
@@ -14,7 +14,7 @@
 // local
 #include "DaVinciAssociators/Particle2MCAsct.h"
 #include "DaVinciAssociators/Particle2MCWithChi2Asct.h"
-#include "DaVinciAssociators/AsctAlgorithm.h"
+#include "AsctAlgorithm.h"
 
 /** @class Particle2MCChi2 Particle2MCChi2.h
  *  

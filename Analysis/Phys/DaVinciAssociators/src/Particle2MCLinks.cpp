@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.9 2003-04-17 09:58:26 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.10 2003-05-26 11:38:38 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -45,12 +45,15 @@ Particle2MCLinks::~Particle2MCLinks() {};
 //=============================================================================
 StatusCode Particle2MCLinks::initialize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::VERBOSE << "==> Initialise" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::VERBOSE << "==> Initialise" << endreq;
 
-  StatusCode sc = retrievePrivateAsct( "ProtoParticle2MCAsct", 
-                                       false, m_pAsctProto) ;
-
+  StatusCode sc = retrievePrivateAsct( "ProtoParticle2MCAsct", "ChargedPPAsct",
+                                       false, m_pAsctCharged) ;
+  if( sc.isSuccess() ) {
+    sc = retrievePrivateAsct( "ProtoParticle2MCAsct", "NeutralPPAsct",
+                              false, m_pAsctNeutral) ;
+  }
   return sc;
 };
 
@@ -59,8 +62,8 @@ StatusCode Particle2MCLinks::initialize() {
 //=============================================================================
 StatusCode Particle2MCLinks::execute() {
 
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::VERBOSE << "==> Execute" << endreq;
+  MsgStream  msg( msgSvc(), name() );
+  msg << MSG::VERBOSE << "==> Execute" << endreq;
 
   // create an association table and register it in the TES
   Particle2MCLinksAsct::Table* table = new Particle2MCLinksAsct::Table();
@@ -74,27 +77,33 @@ StatusCode Particle2MCLinks::execute() {
     // Get Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
     if( 0 != parts ) {
-      log << MSG::VERBOSE << "    Particles retrieved from " << *inp 
-          << endreq;
+      msg << MSG::VERBOSE << "    Particles retrieved from " << *inp 
+        << endreq;
     }
     else {
-      log << MSG::INFO << "    *** Could not retrieve Particles" << endreq;
+      msg << MSG::INFO << "    *** Could not retrieve Particles from " << *inp
+        << endreq;
       continue;
     }
     
     // loop on Parts and MCParts to match them
-    if( m_pAsctProto->tableExists() ) {
+    if( m_pAsctCharged->tableExists() || m_pAsctNeutral->tableExists() ) {
       for( Particles::const_iterator pIt=parts->begin() ;
            parts->end() != pIt; pIt++) {
-        log << MSG::VERBOSE << "    Particle " << (*pIt)->key();
+        msg << MSG::VERBOSE << "    Particle " << (*pIt)->key();
         ProtoParticle* protoPart = dynamic_cast<ProtoParticle*>
           ( (*pIt)->origin() ) ;
         if( protoPart ) {
-          log << " from ProtoParticle " << protoPart->key();
+          if( msg.level() <= MSG::VERBOSE ) {
+            std::string strCharged = (*pIt)->charge() ? "Charged" : "Neutral";
+            msg << " from " << strCharged << " ProtoParticle " << protoPart->key();
+          }
+          ProtoParticle2MCAsct::IAsct* pAsct =
+            (*pIt)->charge() ? m_pAsctCharged : m_pAsctNeutral;
           MCsFromProtoParticle mcPartRange = 
-            m_pAsctProto->rangeFrom( protoPart );
+            pAsct->rangeFrom( protoPart );
           if( !mcPartRange.empty() ) {
-            log << " associated to " << mcPartRange.end()-mcPartRange.begin()+1
+            msg << " associated to " << mcPartRange.end()-mcPartRange.begin()
                 << " MCParts: ";
             MCsFromProtoParticleIterator mcPartIt;
             for( mcPartIt = mcPartRange.begin();
@@ -102,19 +111,18 @@ StatusCode Particle2MCLinks::execute() {
               MCParticle* mcPart = mcPartIt->to();
               double weight = mcPartIt->weight();
               if( mcPart ) {
-                log  << mcPart->key() << " - ";
+                msg  << mcPart->key() << " - ";
                 table->relate( *pIt, mcPart, weight);
               }
             }
           } else {
-            log << " not associated to any MCPart";
+            msg << " not associated to any MCPart";
           }
         } else {
-            log << " not from a ProtoParticle";
+            msg << " not from a ProtoParticle";
         }
-        log << endreq;
+        msg << endreq;
       }
-      
     } else {
       delete table;
       table = 0;
@@ -124,17 +132,17 @@ StatusCode Particle2MCLinks::execute() {
     // Register the table on the TES
     StatusCode sc = eventSvc()->registerObject( outputTable(), table);
     if( sc.isFailure() ) {
-      log << MSG::FATAL << "     *** Could not register table " 
+      msg << MSG::FATAL << "     *** Could not register table " 
           << outputTable()
           << endreq;
       delete table;
       return sc;
     } else {
-      log << MSG::VERBOSE << "     Registered table " 
+      msg << MSG::VERBOSE << "     Registered table " 
           << outputTable() << endreq;
     }
   } else {
-    log << MSG::FATAL << "     *** Could not create table " 
+    msg << MSG::FATAL << "     *** Could not create table " 
         << outputTable()
         << endreq;
   }
@@ -147,8 +155,8 @@ StatusCode Particle2MCLinks::execute() {
 //=============================================================================
 StatusCode Particle2MCLinks::finalize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::VERBOSE << "==> Finalize" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::VERBOSE << "==> Finalize" << endreq;
 
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.cpp,v 1.5 2002-10-02 07:06:29 phicharp Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.6 2003-05-26 11:38:38 phicharp Exp $
 // Include files 
 #include <math.h>
 
@@ -99,8 +99,7 @@ StatusCode Particle2MCWithChi2::execute() {
     if( 0 != parts ) {
       log << MSG::VERBOSE << "    Particles retrieved from " << *inp 
           << endreq;
-    }
-    else {
+    } else {
       log << MSG::INFO
           << "    *** Could not retrieve Particles from " << *inp
           << endreq;

@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinksAsct.cpp,v 1.1 2003-04-17 09:58:26 phicharp Exp $
+// $Id: Particle2MCLinksAsct.cpp,v 1.2 2003-05-26 11:38:38 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -33,7 +33,10 @@ StatusCode Particle2MCLinksAsct::initialize() {
     msg << MSG::VERBOSE << "    This associator is direct, without Relations table" << endreq;
     // Create the temporary table
     m_table = new Table;
-    sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", m_pAsctProto, this) ;
+    sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "ChargedPP2MC", m_pChargedAsct, this) ;
+    if( sc.isSuccess() ) {
+      sc = toolSvc()->retrieveTool( "ProtoParticle2MCAsct", "NeutralPP2MC", m_pNeutralAsct, this) ;
+    }
   } else {
     m_hasTable = true;
     m_table = 0;
@@ -43,7 +46,8 @@ StatusCode Particle2MCLinksAsct::initialize() {
 
 StatusCode Particle2MCLinksAsct::finalize() {
   if( m_table) delete m_table;
-  if( m_pAsctProto ) m_pAsctProto->release();
+  if( m_pChargedAsct ) m_pChargedAsct->release();
+  if( m_pNeutralAsct ) m_pNeutralAsct->release();
   return StatusCode::SUCCESS;
 }
 
@@ -55,20 +59,24 @@ StatusCode Particle2MCLinksAsct::handle(){
 // Interface implementation
 //=============================================================================
 bool Particle2MCLinksAsct::tableExists() const{
-  return (!m_hasTable && (NULL != m_table) && m_pAsctProto->tableExists()) || Asct::tableExists();
+  return (!m_hasTable && (NULL != m_table) &&
+          m_pChargedAsct->tableExists() &&
+          m_pNeutralAsct->tableExists() )
+  || Asct::tableExists();
 };
 
 MCsFromParticleLinks Particle2MCLinksAsct::rangeFrom(const From& part) const
 {
   MsgStream msg(msgSvc(), name());
   if( m_hasTable ) return Asct::rangeFrom( part );
+  ProtoParticle2MCAsct::IAsct* protoAsct = part->charge() ? m_pChargedAsct : m_pNeutralAsct;
   // Local implementation...
-  if( m_pAsctProto->tableExists() ) {
+  if( protoAsct->tableExists() ) {
     msg << MSG::VERBOSE << "    Particle " << part->key();
     const ProtoParticle* protoPart = dynamic_cast<const  ProtoParticle*>( part->origin() ) ;
     if( protoPart ) {
       msg << " from ProtoParticle " << protoPart->key() << endreq;
-      MCsFromProtoParticle range = m_pAsctProto->rangeFrom( protoPart );
+      MCsFromProtoParticle range = protoAsct->rangeFrom( protoPart );
       for( MCsFromProtoParticleIterator it=range.begin(); range.end() != it; it++) {
         m_table->relate( part, it->to(), it->weight());
       }
@@ -85,12 +93,13 @@ MCsFromParticleLinks Particle2MCLinksAsct::rangeWithLowCutFrom(const From& part,
   if( m_hasTable ) return Asct::rangeWithLowCutFrom( part, cut );
   MsgStream  msg( msgSvc(), name() );
   // Local implementation...
-  if( m_pAsctProto->tableExists() ) {
+  ProtoParticle2MCAsct::IAsct* protoAsct = part->charge() ? m_pChargedAsct : m_pNeutralAsct;
+  if( protoAsct->tableExists() ) {
     msg << MSG::VERBOSE << "    Particle " << part->key();
     const ProtoParticle* protoPart = dynamic_cast<const ProtoParticle*>( part->origin() ) ;
     if( protoPart ) {
       msg << " from ProtoParticle " << protoPart->key() << endreq;
-      MCsFromProtoParticle range =  m_pAsctProto->rangeWithLowCutFrom( protoPart, cut );
+      MCsFromProtoParticle range =  protoAsct->rangeWithLowCutFrom( protoPart, cut );
       for( MCsFromProtoParticleIterator it=range.begin(); range.end() != it; it++) {
         m_table->relate( part, it->to(), it->weight());
       }
@@ -107,12 +116,13 @@ MCsFromParticleLinks Particle2MCLinksAsct::rangeWithHighCutFrom(const From& part
   if( m_hasTable ) return Asct::rangeWithHighCutFrom( part, cut );
   MsgStream  msg( msgSvc(), name() );
   // Local implementation...
-  if( m_pAsctProto->tableExists() ) {
+  ProtoParticle2MCAsct::IAsct* protoAsct = part->charge() ? m_pChargedAsct : m_pNeutralAsct;
+  if( protoAsct->tableExists() ) {
     msg << MSG::VERBOSE << "    Particle " << part->key();
     const ProtoParticle* protoPart = dynamic_cast<const ProtoParticle*>( part->origin() ) ;
     if( protoPart ) {
       msg << " from ProtoParticle " << protoPart->key() << endreq;
-      MCsFromProtoParticle range =  m_pAsctProto->rangeWithHighCutFrom( protoPart, cut );
+      MCsFromProtoParticle range =  protoAsct->rangeWithHighCutFrom( protoPart, cut );
       for( MCsFromProtoParticleIterator it=range.begin(); range.end() != it; it++) {
         m_table->relate( part, it->to(), it->weight());
       }
@@ -129,12 +139,13 @@ Particle2MCLinksAsct::To Particle2MCLinksAsct::associatedFrom(const From& part) 
   if( m_hasTable ) return Asct::associatedFrom( part );
   MsgStream  msg( msgSvc(), name() );
   // Local implementation...
-  if( m_pAsctProto->tableExists() ) {
+  ProtoParticle2MCAsct::IAsct* protoAsct = part->charge() ? m_pChargedAsct : m_pNeutralAsct;
+  if( protoAsct->tableExists() ) {
     msg << MSG::VERBOSE << "    Particle " << part->key();
     const ProtoParticle* protoPart = dynamic_cast<const ProtoParticle*>( part->origin() ) ;
     if( protoPart ) {
       msg << " from ProtoParticle " << protoPart->key() << endreq;
-      return m_pAsctProto->associatedFrom( protoPart );
+      return protoAsct->associatedFrom( protoPart );
     } else {
       msg << " not from a ProtoParticle" << endreq;
     }
@@ -147,12 +158,13 @@ Particle2MCLinksAsct::To Particle2MCLinksAsct::associatedFrom(const From& part, 
   if( m_hasTable ) return Asct::associatedFrom( part, weight );
   MsgStream  msg( msgSvc(), name() );
   // Local implementation...
-  if( m_pAsctProto->tableExists() ) {
+  ProtoParticle2MCAsct::IAsct* protoAsct = part->charge() ? m_pChargedAsct : m_pNeutralAsct;
+  if( protoAsct->tableExists() ) {
     msg << MSG::VERBOSE << "    Particle " << part->key();
     const ProtoParticle* protoPart = dynamic_cast<const ProtoParticle*>( part->origin() ) ;
     if( protoPart ) {
       msg << " from ProtoParticle " << protoPart->key() << endreq;
-      return m_pAsctProto->associatedFrom( protoPart, weight );
+      return protoAsct->associatedFrom( protoPart, weight );
     } else {
       msg << " not from a ProtoParticle" << endreq;
     }

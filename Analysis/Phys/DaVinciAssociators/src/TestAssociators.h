@@ -1,4 +1,4 @@
-// $Id: TestAssociators.h,v 1.2 2003-04-17 09:58:26 phicharp Exp $
+// $Id: TestAssociators.h,v 1.3 2003-05-26 11:38:38 phicharp Exp $
 #ifndef TestAssociators_H
 #define TestAssociators_H 1
 
@@ -43,6 +43,8 @@ private:
   Particle2MCAsct::IAsct* m_pAsctChi2;  ///< Pointer to associator using Chi2
   Particle2MCLinksAsct::IAsct* 
     m_pAsctLinks; ///< Pointer to associator using links
+  Particle2MCAsct::IAsct* 
+    m_pAsctComp; ///< Pointer to composite particle associator using links
   Particle2MCWithChi2Asct::IAsct* 
     m_pAsctWithChi2; ///< Pointer to associator with chi2 as weight
   ProtoParticle2MCAsct::IAsct* 
@@ -59,6 +61,9 @@ private:
   int m_matchLinksHighChi2;
   int m_matchChi2NotLinks;
   int m_matchDifferent;
+  int m_matchLinksDiffComp;
+  int m_matchMissedComp;
+  int m_matchComp;
   int m_nbParts;
   int m_mcPartRecons;
   std::vector<int> m_mcPart2Track;
