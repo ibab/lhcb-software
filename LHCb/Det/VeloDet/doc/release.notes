@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.32 2002-12-03 06:24:12 ocallot Exp $
+! $Id: release.notes,v 1.33 2002-12-03 11:01:21 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v8r1 2002-12-03 =========================
 ! 2002-12-03 - Olivier Callot
  - Fix the pitch of design 1, so that we have 512 strips below 42 mm, not 
    512.5 as before. Outer pitch changed from .1028 to .1030;
  - Fix a problem in PhiMatchingStrips for matching in the dog-leg part. Test is
-   now on th eR sensor zone, not on the actual phi.
+   now on the R sensor zone, not on the actual phi.
 
 !========================= VeloDet v8r0 2002-11-11 =========================
 ! 2002-11-08 - Olivier Callot
