@@ -1,6 +1,16 @@
-# $Id: release.notes,v 1.26 2003-01-31 20:23:20 andreav Exp $
+# $Id: release.notes,v 1.27 2004-12-08 16:47:53 marcocle Exp $
 Package Det/DetCond
-Package manager : Andrea Valassi 
+Package manager : Marco Clemencic
+
+! 2004-12-08 - Marco Clemencic
+ - Upgrade to latest stable version of CondDB (CONDDB_0_2_0) and fixed for the
+changes in Gaudi/LHCb
+ - Moved and modified part of the ConditionsDBCnvSvc to a dedicated converter
+(XmlRelyCnv) + a generic CondDB converter to put common Converter functions in
+one place
+ - Implemented the possibility to use a fall back Converter (the one relying on
+DetectorPersistencySvc) if no dedicated converter is found.
+Requirements v5r0
 
 ==============================================================================
 !20030131 - Andrea Valassi
