@@ -1,10 +1,13 @@
-// $Id: IRichRayTraceCherenkovCone.h,v 1.1 2004-05-31 21:34:03 jonrob Exp $
+// $Id: IRichRayTraceCherenkovCone.h,v 1.2 2004-06-10 14:14:48 jonesc Exp $
 #ifndef RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H
 #define RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H 1
 
 // Event model
 #include "Event/RichRecRing.h"
 class RichRecSegment;
+
+// from RichDet
+#include "RichDet/DeRichHPDPanel.h"
 
 /** @class IRichRayTraceCherenkovCone IRichRayTraceCherenkovCone.h
  *
@@ -26,15 +29,26 @@ public:
   /// Ray trace the Cherenkov cone for the given segment and mass hypothesis to the detector plane
   virtual StatusCode rayTrace ( RichRecSegment * segment,
                                 const Rich::ParticleIDType id,
-                                std::vector<HepPoint3D> & points ) const = 0;
+                                std::vector<HepPoint3D> & points,
+                                const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
 
   /// Ray trace the Cherenkov cone for the given segment and cherenkov angle to the detector plane
   virtual StatusCode rayTrace ( RichRecSegment * segment,
                                 const double ckTheta,
-                                std::vector<HepPoint3D> & points ) const = 0;
+                                std::vector<HepPoint3D> & points,
+                                const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
+
+  /// Ray trace the Cherenkov cone using the given emission point, direction and Cherenkov angle
+  virtual StatusCode rayTrace ( const Rich::DetectorType rich,
+                                const HepPoint3D & emissionPoint,
+                                const HepVector3D & direction,
+                                const double ckTheta,
+                                std::vector<HepPoint3D> & points,
+                                const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
 
   /// Ray trace the Cherenkov cone for the given ring to the detector plane
-  virtual std::vector<HepPoint3D> & rayTrace ( RichRecRing * ring ) const = 0;
+  virtual std::vector<HepPoint3D> & rayTrace ( RichRecRing * ring,
+                                               const DeRichHPDPanel::traceMode mode = DeRichHPDPanel::loose ) const = 0;
 
 };
 

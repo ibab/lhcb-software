@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.h,v 1.12 2004-03-16 13:39:57 jonesc Exp $
+// $Id: RichRecAlgBase.h,v 1.13 2004-06-10 14:14:48 jonesc Exp $
 #ifndef RICHRECALGS_RICHRECALGBASE_H
 #define RICHRECALGS_RICHRECALGBASE_H 1
 
@@ -113,35 +113,35 @@ protected:  // Protected methods
   /// Returns pointer to RichRecPixel creator tool
   inline const IRichPixelCreator * pixelCreator() const
   {
-    //if ( !m_pixTool ) acquireTool( "RichPixelCreator", m_pixTool );
+    if ( !m_pixTool ) acquireTool( "RichPixelCreator", m_pixTool );
     return m_pixTool;
   }
 
   /// Returns pointer to RichRecTrack creator tool
   inline const IRichTrackCreator * trackCreator() const
   {
-    //if ( !m_tkTool ) acquireTool( "RichTrackCreator", m_tkTool );
+    if ( !m_tkTool ) acquireTool( "RichTrackCreator", m_tkTool );
     return m_tkTool;
   }
 
   /// Returns pointer to RichRecSegment creator tool
   inline const IRichSegmentCreator * segmentCreator() const
   {
-    //if ( !m_segTool ) acquireTool( "RichSegmentCreator", m_segTool );
+    if ( !m_segTool ) acquireTool( "RichSegmentCreator", m_segTool );
     return m_segTool;
   }
 
   /// Returns pointer to RichRecPhoton creator tool
   inline const IRichPhotonCreator * photonCreator() const
   {
-    //if ( !m_photTool ) acquireTool( "RichPhotonCreator", m_photTool );
+    if ( !m_photTool ) acquireTool( "RichPhotonCreator", m_photTool );
     return m_photTool;
   }
 
   /// Returns pointer to RichRecStatus creator tool
   inline const IRichStatusCreator * statusCreator() const
   {
-    //if ( !m_statTool ) acquireTool( "RichStatusCreator", m_statTool );
+    if ( !m_statTool ) acquireTool( "RichStatusCreator", m_statTool );
     return m_statTool;
   }
 
