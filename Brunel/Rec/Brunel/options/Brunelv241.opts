@@ -1,31 +1,28 @@
+//--------------------------------------------------------------
 // Job options for Brunel when using $LHCBDBASE version v241
-// "LHCb light" detector
+// ------------------  "LHCb light" detector -------------------
 #pragma print off
-#include "$BRUNELOPTS/Brunel.opts"
-
-// Database specific: standard tracking
-ITDigitize.tofVector = {7.9, 26., 28.2, 30.4};
-OTDigitize.startReadoutGate= { 5.,27.,29.5,32.};
-OTDigitize.numOTStations = 4;
-OTDigitize.firstOTStation = 1;
-trCreat.firstOTStation = 1;
-trCreat.OutputLevel  = 4;
-trCreat.firstStation = 1;
-trCreat.lastStation = 4;
-trFit_trackFitter_extrapolator1.matDBASE = 241;
-trFit_trackFitter_extrapolator1.energyLoss = 60.0;
-trFit_trackFitter_extrapolator1.fms2 = 1.7;
-OTDigitChecker.numStations = 4;
-OTDigitChecker.firstOTStation = 1;
-ToolSvc.ITGeometryTool.newCDF = false;
-ToolSvc.ITGeometryTool.newLayout = false;
-
-// Database specific: forward tracking
-#include "$FWTRACKROOT/options/BrunelLight.opts"
-
-// Leave next two lines as last lines
+// --- Define input data. Spillover first (if required), then signal ---
+//#include "$SICBCNVROOT/options/Brunel.opts"  // Uncomment for spillover
+//SpillOverSelector.Input = {"JOBID='xxxxx'"}; // evtype 61 for spillover
 #pragma print on
-#include "$BRUNELOPTS/BrunelUser.opts"
+EventSelector.Input = {"JOBID='67142'"}; // Signal, evtype 412100
 #pragma print off
-#include "$BRUNELOPTS/BrunelStatic.opts"
+
+//--------------------------------------------------------------
+#include "$BRUNELOPTS/Brunel.opts"  // Generic options for all jobs
+//--------------------------------------------------------------
+// Database specific options
+//--------------------------------------------------------------
+#include "$BRUNELOPTS/BrunelTrLight.opts" // Standard tracking
+#include "$BRUNELOPTS/BrunelOldTT1.opts"  // Pre dbase v242 TT1 geometry
+#include "$FWTRACKROOT/options/BrunelLight.opts" // Forward tracking
+
+//--------------------------------------------------------------
+// Add here your specific options. These over-ride previously defined options
+//EventSelector.FirstEvent = 6;
 #pragma print on
+ApplicationMgr.EvtMax = 10;
+//--------------------------------------------------------------
+#pragma print off
+//ApplicationMgr.DLLs = {"NONE"}; // Uncomment if static link, must be last line 

@@ -5,16 +5,12 @@
 // This file defines, sequences and configures the algorithms to be executed
 // You only need to modify it if you want to add or remove algorithms
 // !! Do not modify position or order of included files !!
-//
-// User configuration is done by modifying the following included files
-// - BrunelInput.opts:   to define input data and switch on/off SpillOver
-// - BrunelMoni.opts:    to modify monitoring behaviour
-// - BrunelMessage.opts: to modify printing behaviour
-// - BrunelUser.opts:    to add additional user options
-// - BrunelStatic.opts:  to enable/disable static execution mode
 //==============================================================
 
-#include "$BRUNELOPTS/BrunelInputs.opts"
+//--------------------------------------------------------------
+//BrunelFinish.DropDSTBanks = false; // Uncomment to keep all SICB banks on DST
+//--------------------------------------------------------------
+
 #include "$BRUNELOPTS/BrunelMessage.opts"
 
 //--------------------------------------------------------------

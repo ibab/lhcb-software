@@ -1,0 +1,14 @@
+// Brunel options for standard tracking, LHCb-minus setup
+ITDigitize_digitCreator.tofVector = {7.1, 25.8, 28., 30.4};
+OTDigitize.startReadoutGate= { 5.,27.,29.5,32.};
+OTDigitize.numOTStations = 4;
+OTDigitize.firstOTStation = 1;
+trCreat.firstOTStation = 1;
+trCreat.OutputLevel  = 4;
+trCreat.firstStation = 1;
+trCreat.lastStation = 4;
+trFit_trackFitter_extrapolator1.matDBASE = 2401;
+trFit_trackFitter_extrapolator1.energyLoss = 50.0;
+trFit_trackFitter_extrapolator1.fms2 = 1.6;
+OTDigitChecker.numStations = 4;
+OTDigitChecker.firstOTStation = 1;

@@ -23,16 +23,17 @@ version_strategy first_choice
 use GaudiPolicy  v5r4
 
 # External libraries - Gaudi v9
-use ExternalLibs   v3r4
+use ExternalLibs   v3r5
 use AIDA           v1r0
 use CLHEP          v17r10
 use HTL            v13r10
-use XERCES         v15r2
+use XERCES         v15r2p2
 use CERNLIB        v2001
 
 #---Gaudi libraries - Gaudi v9r1 + bug fixes
 use GaudiKernel        v11r1
 use GaudiSvc           v7r2
+use GaudiAlg           v5r1
 use GaudiAud           v5r0
 use GaudiNagC          v6r0
 use GaudiDb            v5r0

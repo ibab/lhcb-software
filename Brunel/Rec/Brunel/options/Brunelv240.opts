@@ -1,15 +1,26 @@
+//--------------------------------------------------------------
 // Job options for Brunel when using $LHCBDBASE version v240
-// "LHCb-classic"
+// ------------------  "LHCb classic" detector -------------------
 #pragma print off
-#include "$BRUNELOPTS/Brunel.opts"
-
-// Database specific: inner tracker, to suppress TT1
-ToolSvc.ITGeometryTool.newCDF = false;
-ToolSvc.ITGeometryTool.newLayout = false;
-
-// Leave next two lines as last lines
+// --- Define input data. Spillover first (if required), then signal ---
+//#include "$SICBCNVROOT/options/Brunel.opts"  // Uncomment for spillover
+//SpillOverSelector.Input = {"JOBID='xxxxx'"}; // evtype 61 for spillover
 #pragma print on
-#include "$BRUNELOPTS/BrunelUser.opts"
+EventSelector.Input = {"JOBID='81091'"}; // Signal, evtype 412100
 #pragma print off
-#include "$BRUNELOPTS/BrunelStatic.opts"
+
+//--------------------------------------------------------------
+#include "$BRUNELOPTS/Brunel.opts"  // Generic options for all jobs
+//--------------------------------------------------------------
+// Database specific options
+//--------------------------------------------------------------
+#include "$BRUNELOPTS/BrunelOldTT1.opts"  // Pre dbase v242 TT1 geometry
+
+//--------------------------------------------------------------
+// Add here your specific options. These over-ride previously defined options
+//EventSelector.FirstEvent = 6;
 #pragma print on
+ApplicationMgr.EvtMax = 10;
+//--------------------------------------------------------------
+#pragma print off
+//ApplicationMgr.DLLs = {"NONE"}; // Uncomment if static link, must be last line 
