@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidate.cpp,v 1.4 2002-06-17 07:27:34 atsareg Exp $
+// $Id: L0MuonCandidate.cpp,v 1.5 2002-07-24 17:04:42 atsareg Exp $
 
 #include <cmath>
 #include <vector>
@@ -63,9 +63,11 @@ void L0MuonCandidate::setPt(double pt) {
   }
   unsigned int roundedPt = int((fabs(pt)+L0MuonBase::PT_BIN_WIDTH/2.)/
                                               L0MuonBase::PT_BIN_WIDTH);
-  if ( roundedPt > ( 1<< L0MuonBase::BitsPt ) ) roundedPt = L0MuonBase::BitsPt;
+  if ( roundedPt > (( 1<< L0MuonBase::BitsPt ) - 1) ) {
+    roundedPt = (1 << L0MuonBase::BitsPt) - 1 ;
+  }  
   
-  //cout << "L0MuonCandidate::setPt " << pt << " " << roundedPt << endl;
+  // cout << "L0MuonCandidate::setPt " << pt << " " << roundedPt << endl;
   
   setBit(roundedPt,L0MuonBase::ShiftPt,L0MuonBase::MaskPt);
   

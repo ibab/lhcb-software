@@ -1,4 +1,4 @@
-// $Id: L0MuonBase.h,v 1.2 2002-05-07 08:17:28 atsareg Exp $
+// $Id: L0MuonBase.h,v 1.3 2002-07-24 17:04:42 atsareg Exp $
 //
 #ifndef      L0MUON_L0MUONBASE_H
 #define      L0MUON_L0MUONBASE_H 1
@@ -29,8 +29,8 @@ namespace L0MuonBase {
   static const unsigned int ShiftY        = ShiftX       + BitsX  ;
   static const unsigned int ShiftRegion   = ShiftY       + BitsY  ;
   static const unsigned int ShiftPt       = ShiftRegion  + BitsRegion ;  
-  static const unsigned int ShiftPtSign   = ShiftPtSign  + BitsPtSign ;  
-  static const unsigned int ShiftStatus   = ShiftPt      + BitsPt ;
+  static const unsigned int ShiftPtSign   = ShiftPt      + BitsPt ;  
+  static const unsigned int ShiftStatus   = ShiftPtSign  + BitsPtSign ;
   static const unsigned int ShiftBCID     = ShiftStatus  + BitsStatus  ;
   //
   static const ContentType  MaskX     =
