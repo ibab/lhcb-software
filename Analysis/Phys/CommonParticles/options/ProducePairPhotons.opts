@@ -3,10 +3,11 @@
 // default options
 ProducePairPhotons.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
 ProducePairPhotons.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};
-ProducePairPhotons.PhysDesktop.OutputLocation = "Phys/PairPhotons";
+//ProducePairPhotons.PhysDesktop.OutputLocation = "Phys/PairPhotons";
 //ProducePairPhotons.TrVeloCharge.Normalisation = 22.4;
 ProducePairPhotons.TrVeloCharge.Normalisation = 1.;
 ProducePairPhotons.TrVeloCharge.Ratio = 0.8;
 //ProducePairPhotons.MinimalProbabilityCut = 1.5;
 ProducePairPhotons.MinimalProbabilityCut = 38.;
 ProducePairPhotons.ChangePID = false;
+ProducePairPhotons.DecayDescriptor = " gamma -> e+ e- ";

@@ -4,6 +4,11 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+! 2004-04-28 - R.Beneyton
+ - ProducePairPhoton (h/src/opts): update to new DVAlg 
+    . getInput, loadtools in code with flag off
+    . DecayDescriptor, Outputlocation in opts files
+
 ! 2004-04-28 - P.Koppenburg
  - src/MergedPi0Alg.cpp
    . SetFilterPassed(true).

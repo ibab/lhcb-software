@@ -1,4 +1,4 @@
-// $Id: ProducePairPhotons.cpp,v 1.4 2004-04-23 17:20:41 beneyton Exp $
+// $Id: ProducePairPhotons.cpp,v 1.5 2004-04-28 19:01:11 beneyton Exp $
 // Include files
 #include <string>
 
@@ -71,12 +71,14 @@ StatusCode ProducePairPhotons::initialize() {
 	MsgStream msg(msgSvc(), name());
 	IFD msg << MSG::DEBUG << "==> Initialise" << endreq;
 
+#ifdef DVvnine
 	// Load all necessary tools via base class
 	status = loadTools();
 	if( status.isFailure() ) {
 		msg << MSG::ERROR << "   Unable to load tools" << endreq;
 		return StatusCode::FAILURE;
 	}
+#endif
 
 	// Access the TrVeloCharge Tool
 	IFD msg << MSG::DEBUG << " Looking for TrVeloCharge Tool called " << m_veloChargeName << "." << endreq;
@@ -122,13 +124,13 @@ StatusCode ProducePairPhotons::execute() {
 //=============================================================================
 // Get all created Particle and create gammas
 //=============================================================================
-	/*
+#ifdef DVvnine
 	status = desktop()->getInput();
 	if (!status) {
 		msg << MSG::ERROR << "    not able to fill PhysDesktop " << endreq;
 		return StatusCode::FAILURE;
 	}
-	*/
+#endif
 	const ParticleVector& parts = desktop()->particles();
 	ParticleVector tmpparts(parts.begin(), parts.end());
 	IFD msg << MSG::DEBUG << "found " << tmpparts.size() << " particles" << endreq;
