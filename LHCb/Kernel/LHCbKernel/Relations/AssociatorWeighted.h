@@ -1,8 +1,11 @@
-// $Id: AssociatorWeighted.h,v 1.5 2002-05-13 09:48:26 phicharp Exp $
+// $Id: AssociatorWeighted.h,v 1.6 2002-05-13 15:54:19 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/05/13 09:48:26  phicharp
+// Add methods associatedFrom() and To() for single objects
+//
 // Revision 1.4  2002/05/12 09:58:02  ibelyaev
 //  see $LHCBKERNELROOT/doc/releae.notes 12 May 2002
 //
@@ -369,11 +372,11 @@ public:
     const Table* table = direct();
     if (0 != table) {
       ToRange range = table->relations( from );
-      if( !range->empty ) {
+      if( !range.empty() ) {
         return range.begin()->to();
       }
     }
-    return 0;
+    return To();
   };
 
   /** Method to retrieve a single element associated to a given FROM element
@@ -385,18 +388,18 @@ public:
    *  
    */
   virtual To         associatedFrom 
-  ( const From&      from , 
+  ( const From&      from    , 
     Weight&          weight  ) const 
   {
     const Table* table = direct();
     if (0 != table) {
       ToRange range = table->relations( from );
-      if( !range->empty ) {
+      if( !range.empty() ) {
         weight = range.begin()->weight();
         return range.begin()->to();
       }
     }
-    return 0;
+    return To();
   };
 
   /** Method to retrieve a single element associated to a given TO element
@@ -407,16 +410,16 @@ public:
    *  
    */
   virtual From       associatedTo
-  ( const To&        from  ) const 
+  ( const To&        to      ) const 
   {
-    const Table* table = direct();
+    const InvTable* table = inverse();
     if (0 != table) {
-      ToRange range = table->relations( from );
-      if( !range->empty ) {
+      FromRange range = table->relations( to );
+      if( !range.empty() ) {
         return range.begin()->to();
       }
     }
-    return 0;
+    return From();
   };
 
   /** Method to retrieve a single element associated to a given TO element
@@ -431,15 +434,15 @@ public:
   ( const To&        to , 
     Weight&          weight  ) const 
   {
-    const Table* table = direct();
+    const InvTable* table = inverse();
     if (0 != table) {
-      ToRange range = table->relations( from );
-      if( !range->empty ) {
+      FromRange range = table->relations( to );
+      if( !range.empty() ) {
         weight = range.begin()->weight();
         return range.begin()->to();
       }
     }
-    return 0;
+    return From();
   };
 
   /* Method to test if the table does exist or not

@@ -3,6 +3,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
+!20020513 - Vanya Belyaev 
+  - Relations/Associator.h 
+  - Relations/AssociatorWeighed.h  fix bugs
+  
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 ! 20020513 - Marco Cattaneo
   - requirements: use a * for BOOST dependency
