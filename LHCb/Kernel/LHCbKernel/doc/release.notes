@@ -6,8 +6,12 @@ Purpose: LHCb specific Kernel classes
 ! 2002-07-16 - Florence Ranjard
  - requirements - use CLHEP 1.8.0.0
  
-!========================= LHCbKernel v1r3 2002-07-15 ===================
-!2002-07-12 - Philippe Charpentier
+!========================= LHCbKernel v1r3 2002-07-18 ===================
+! 2002-07-18 - Marco Cattaneo
+ - Add Kernel/InstanceCounter.h: static class for instrumenting constructors
+   and destructors to serach for memory leaks
+
+! 2002-07-12 - Philippe Charpentier
  - modification in Relations, file src/AssociatorBase.cpp
    the associator now tries and set the Property "OutputTable" or "Output"
    of the building algorithm (in this order of priority) to the value of 
