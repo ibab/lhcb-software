@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.33 2005-01-18 12:08:20 pkoppenb Exp $
+! $Id: release.notes,v 1.34 2005-01-21 14:40:06 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
+
+! 2005-01-21 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . StatusCode sc = setProperties();
+      *before* loadtools. Or any change in DVAlgorithm options 
+      affetcying the choice of tools would be ignored.
 
 !========================== DaVinciKernel v3r0 2005-01-18 ===================
 ! 2005-01-18 - P. Koppenburg
