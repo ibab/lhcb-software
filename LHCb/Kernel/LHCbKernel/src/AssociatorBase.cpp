@@ -1,19 +1,8 @@
-// $Id: AssociatorBase.cpp,v 1.7 2003-01-17 14:07:02 sponce Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2002/07/15 08:11:06  phicharp
-// Relations: Associators set the output location of their algorithm
-//
-// Revision 1.5  2002/05/24 18:36:33  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes
-//
-// Revision 1.4  2002/05/12 08:45:28  ibelyaev
-//  see $LHCBKERNELROOT/dc/release.notes 12 May 2002
-//
-// ============================================================================
+// $Id: AssociatorBase.cpp,v 1.8 2003-05-14 11:54:34 cattanem Exp $
+// $Id: AssociatorBase.cpp,v 1.8 2003-05-14 11:54:34 cattanem Exp $
+
 // Include files
+
 // from Gaudi
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
@@ -34,8 +23,15 @@
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/System.h"
+
 // local
 #include "Relations/AssociatorBase.h"
+
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
+#include <strstream>
+#else
+#include <sstream>
+#endif
 
 // ============================================================================
 /** @file AssociatorBase.cpp
@@ -492,8 +488,4 @@ StatusCode Relations::AssociatorBase::locateAlgorithm() const
   //
   return StatusCode::SUCCESS ;
 };
-// ============================================================================
-
-// ============================================================================
-// The End 
 // ============================================================================
