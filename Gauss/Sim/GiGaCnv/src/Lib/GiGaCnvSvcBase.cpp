@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.16 2004-02-20 19:12:00 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.17 2004-08-02 13:16:59 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2004/02/20 19:12:00  ibelyaev
+//  upgrade for newer GiGa
+//
 // Revision 1.15  2003/12/10 17:25:46  ranjard
 // v14r0 - fix for Gaudi v13r0
 //
@@ -405,12 +408,12 @@ StatusCode GiGaCnvSvcBase::finalize()
 
 // ============================================================================
 /** Retrieve the interface
- *  @param IID   unique interface identifier 
+ *  @param iid   unique interface identifier 
  *  @param ppI   placeholder for returned interface 
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaCnvSvcBase::queryInterface( const IID& iid , void** ppI )
+StatusCode GiGaCnvSvcBase::queryInterface( const InterfaceID& iid , void** ppI )
 { 
   ///
   if( 0 == ppI                ) { return StatusCode::FAILURE ;}

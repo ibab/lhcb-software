@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.89 2004-07-05 11:17:28 gcorti Exp $ 
+! $Id: release.notes,v 1.90 2004-08-02 13:16:58 gcorti Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!====================== GiGaCnv v15r8 2004-08-02 ===========================
+! 2004-08-02 - Gloria CORTI
+ - GiGaCnvSvcBase.h/cpp and GiGaGeo.cpp 
+   . modify to use InterfaceID instead of IID to adapt to Gaudi v16
 
 ! 2004-07-05 - Gloria CORTI
  - src/component/GiGaMCVertexCnv.cpp

@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.h,v 1.11 2003-12-10 17:25:45 ranjard Exp $ 
+// $Id: GiGaCnvSvcBase.h,v 1.12 2004-08-02 13:16:58 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/12/10 17:25:45  ranjard
+// v14r0 - fix for Gaudi v13r0
+//
 // Revision 1.10  2002/12/07 21:13:48  ibelyaev
 //  bug fix and small CPU performace optimization
 //
@@ -88,7 +91,7 @@ public:
    */
   virtual StatusCode finalize       ();
   ///
-  virtual StatusCode queryInterface ( const IID& , void**  );
+  virtual StatusCode queryInterface ( const InterfaceID& , void**  );
   ///
   virtual StatusCode declareObject  ( const GiGaLeaf& Leaf );
   ///

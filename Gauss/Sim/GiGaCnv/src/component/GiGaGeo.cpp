@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.14 2004-04-20 04:26:46 ibelyaev Exp $ 
+// $Id: GiGaGeo.cpp,v 1.15 2004-08-02 13:16:59 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2004/04/20 04:26:46  ibelyaev
+//  fix reference counters and add warning counter
+//
 // Revision 1.13  2004/02/20 19:12:00  ibelyaev
 //  upgrade for newer GiGa
 //
@@ -812,7 +815,7 @@ StatusCode GiGaGeo::updateRepRefs
 
 
 // ============================================================================
-StatusCode GiGaGeo::queryInterface( const IID& iid , void** ppI )
+StatusCode GiGaGeo::queryInterface( const InterfaceID& iid , void** ppI )
 { 
   ///
   if  ( 0 == ppI ) { return StatusCode::FAILURE ; }
