@@ -5,6 +5,12 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTracker v3r1 ================================
+! 2003-12-03 - Witek Pokorski
+ - sensitive detectors - added protection agains hits with the same entry 
+                         and exit points (which sometimes occur due to tracking
+                         cuts)
+ 
 !=========================== GaussTracker v3r0 ================================
 ! 2003-10-17 - Witek Pokorski
  - GiGaSensDetVelo, GiGaSensDetMuon - got rid of 'GetMother' method

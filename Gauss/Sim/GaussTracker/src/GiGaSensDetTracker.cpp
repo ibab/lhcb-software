@@ -66,11 +66,19 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
     {
       double edep = step->GetTotalEnergyDeposit();     
       
-      if (edep!=0.0)
+      if (edep!=0.0 && step->GetStepLength()!=0.0)
         {
           double timeof = track-> GetGlobalTime();
           HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
           HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
+
+//           HepPoint3D postdir = step->GetPostStepPoint()->GetMomentumDirection();
+//           HepPoint3D predir = step->GetPreStepPoint()->GetMomentumDirection();
+          
+//           std::cout << "predir " << predir << " postdir " << postdir
+//                     << " calculated dir " << (postpos-prepos).unit() 
+//                     << std::endl;
+          
           int trid = track->GetTrackID();          
           ///
           TrackerHit* newHit = new TrackerHit();

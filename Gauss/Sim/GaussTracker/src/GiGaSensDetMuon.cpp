@@ -68,7 +68,7 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
     {
       double edep = step->GetTotalEnergyDeposit();
 
-      if(edep!=0)
+      if(edep!=0 && step->GetStepLength()!=0.0)
         {
           double timeof = step->GetTrack()-> GetGlobalTime();
           HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();

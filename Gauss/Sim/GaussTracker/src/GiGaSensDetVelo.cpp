@@ -65,7 +65,7 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
     {
       double edep = step->GetTotalEnergyDeposit();
 
-      if(edep!=0.0)
+      if(edep!=0.0 && step->GetStepLength()!=0.0)
         {
           double timeof = track-> GetGlobalTime();
           HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
