@@ -15,6 +15,7 @@ Purpose: LHCb reconstruction program
 
  - New features:
    . Re-enable OO-Rich by default (Brunel.opts)
+   . Add support for dbase v253
 
  - Bug fixes:
    . Do not abort job if no track are found for K0 search (KsReco v1r3)
