@@ -44,27 +44,33 @@ HistogramPersistencySvc.OutputFile = "TT-alt.hbook";  // Monitoring histos
 PoolDbCacheSvc.Catalog = {
   "xmlcatalog_file:NewCatalog.xml"
  ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
+ ,"xmlcatalog_http://gcorti.home.cern.ch/gcorti/POOL/MyCatalog.xml"
 };
 
 //---------------------------------------------------------------------------
-// Spillover input
+// Spillover
 //---------------------------------------------------------------------------
 
-// Format for GaudiRootDb input (no Gauss v15r4 files available for TT-alt geometry)
+// Format for GaudiRootDb input (no files available for Gauss v15r4)
 //SpilloverSelector.Input = { "DATAFILE='evtype61.oosim' TYP='ROOT' OPT='READ'" };
 
-// Format for POOL input (no Gauss v15r4 files available for TT-alt geometry)
-//SpilloverSelector.Input = { "DATAFILE='PFN:evtype61.sim' TYP='POOL_ROOT' OPT='READ'" };
+// POOL files
+SpilloverSelector.Input = { 
+ "DATAFILE='rfio:/castor/cern.ch/user/g/gcorti/Gauss/v15r4/000061.sim' TYP='POOL_ROOT' OPT='READ'" 
+}; // Gauss v15r4, XmlDDDB v22r1, Field045, evtype 61
+
 
 //---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
 
-// Format for GaudiRootDb input (no Gauss v15r4 files available for TT-alt geometry)
+// Format for GaudiRootDb input (no files available for Gauss v15r4)
 //EventSelector.Input = { "DATAFILE='signal.oosim' TYP='ROOT' OPT='READ'" };
 
-// Format for POOL input (no Gauss v15r4 files available for TT-alt geometry)
-//EventSelector.Input = { "DATAFILE='PFN:signal.sim' TYP='POOL_ROOT' OPT='READ'" };
+// POOL file
+EventSelector.Input = {
+ "DATAFILE='rfio:/castor/cern.ch/user/g/gcorti/Gauss/v15r4/411300.sim' TYP='POOL_ROOT' OPT='READ'" 
+}; // Gauss v15r4, XmlDDDB v22r1, Field045, evtype 411300
 
 //---------------------------------------------------------------------------
 // Output file
