@@ -1,4 +1,4 @@
-// $Id: SpdPrsSensDet.cpp,v 1.3 2003-07-09 17:01:44 ibelyaev Exp $ 
+// $Id: SpdPrsSensDet.cpp,v 1.4 2003-07-16 18:51:24 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -221,7 +221,7 @@ StatusCode SpdPrsSensDet::timing
   const double locTime = time - t0( cell );
     
   // number of the current 25 ns bx w.r.t. local time
-  slot = static_cast<CaloSubHit::Time>( trunc( locTime/m_BX ) );
+  slot = static_cast<CaloSubHit::Time>( floor( locTime/m_BX ) );
 
   const double refTime = locTime - slot * m_BX;
     
@@ -233,13 +233,15 @@ StatusCode SpdPrsSensDet::timing
   const double upperEdge = axis.upperEdge();
 
   unsigned int i; double t;
-  for( i = 0, t = -m_BX + m_sDelays[area] - refTime;
+  for( i = 0, t = - m_BX + m_sDelays[area] - refTime;
        i < m_numBXs;
        i++, t += m_BX )
     if( lowerEdge < t && t < upperEdge )
       fractions.push_back( histos()[area]->binHeight( axis.coordToIndex(t) ) );
     else fractions.push_back(0.);
 
+  slot -= 1;
+  
   return StatusCode::SUCCESS ;
 }
 // ============================================================================
