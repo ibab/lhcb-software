@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IDetectorElement.h,v 1.3 2001-06-20 07:48:41 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IDetectorElement.h,v 1.4 2001-06-22 10:15:09 sponce Exp $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1 
 
@@ -39,27 +39,27 @@ class IDetectorElement: virtual public IInspectable
   ///
   /// "accessor":  delegates the IGeometryInfo Interface 
   virtual                IGeometryInfo* geometry   ()         = 0; 
-  /// "accessor":  delegates the IGeometryInfo Interface                   (const)
+  /// "accessor":  delegates the IGeometryInfo Interface (const)
   virtual          const IGeometryInfo* geometry   ()   const = 0; 
   /// "accessor":  delegates the IAlignment Interface 
   virtual                IAlignment*    alignment  ()         = 0; 
-  /// "accessor":  delegates the IAlignment Interface                      (const) 
+  /// "accessor":  delegates the IAlignment Interface (const) 
   virtual          const IAlignment*    alignment  ()   const = 0; 
   /// "accessor":  delegates the ICalibration Interface 
   virtual                ICalibration*  calibration()         = 0; 
-  /// "accessor":  delegates the ICalibration Interface                    (const)
+  /// "accessor":  delegates the ICalibration Interface (const)
   virtual          const ICalibration*  calibration()   const = 0; 
   /// "accessor":  delegates the IReadOut Interface 
   virtual                IReadOut*      readOut    ()         = 0; 
-  /// "accessor":  delegates the IReadOut Interface                        (const)
+  /// "accessor":  delegates the IReadOut Interface (const)
   virtual          const IReadOut*      readOut    ()   const = 0; 
   /// "accessor":  delegates the ISlowControl Interface 
   virtual                ISlowControl*  slowControl()         = 0; 
-  /// "accessor":  delegates the ISlowControl Interface                    (const)
+  /// "accessor":  delegates the ISlowControl Interface (const)
   virtual          const ISlowControl*  slowControl()   const = 0; 
   /// "accessor":  delegates the IFastControl Interface                      
   virtual                IFastControl*  fastControl()         = 0; 
-  // "accessor":  delegates the IFastControl Interface                     (const)
+  // "accessor":  delegates the IFastControl Interface (const)
   virtual          const IFastControl*  fastControl()   const = 0; 
   /// Another way of accessiong the information: "pseudo-conversion"
   /// cast to       IGeometryInfo*
@@ -121,16 +121,17 @@ class IDetectorElement: virtual public IInspectable
   /// pointer to parent IDetectorElement (const version)
   virtual const IDetectorElement*  parentIDetectorElement() const  = 0 ; 
   /// (reference to) container of pointers to child detector elements 
-  virtual       IDetectorElement::IDEContainer&  childIDetectorElements()       = 0 ;
+  virtual       IDetectorElement::IDEContainer&  childIDetectorElements() = 0 ;
   /// (reference to) container of pointers to child detector elements 
-  virtual const IDetectorElement::IDEContainer&  childIDetectorElements() const = 0 ;
+  virtual const IDetectorElement::IDEContainer&
+  childIDetectorElements() const = 0;
   /// iterators for manipulation of daughter elements 
   /// begin iterator 
-  virtual IDetectorElement::IDEContainer::iterator        childBegin()       = 0 ;
-  virtual IDetectorElement::IDEContainer::const_iterator  childBegin() const = 0 ;
+  virtual IDetectorElement::IDEContainer::iterator childBegin() = 0;
+  virtual IDetectorElement::IDEContainer::const_iterator childBegin() const = 0;
   /// end   iterator 
-  virtual IDetectorElement::IDEContainer::iterator        childEnd  ()       = 0 ;
-  virtual IDetectorElement::IDEContainer::const_iterator  childEnd  () const = 0 ;
+  virtual IDetectorElement::IDEContainer::iterator childEnd() = 0 ;
+  virtual IDetectorElement::IDEContainer::const_iterator childEnd() const = 0 ;
   /// functions for  listing of objects, used in overloaded << operations
   virtual std::ostream&  printOut      ( std::ostream& ) const = 0;  
   /// reset to the initial state 
@@ -194,7 +195,8 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter vector
    * @return its value, as a string
    */
-  virtual std::vector<std::string> userParameterVectorValue (std::string name) = 0;
+  virtual std::vector<std::string>
+  userParameterVectorValue (std::string name) = 0;
   
   /**
    * this gets the value of the parameter as a vector of double.
@@ -206,15 +208,33 @@ class IDetectorElement: virtual public IInspectable
    */
   virtual std::vector<double> userParameterVector (std::string name) = 0;
 
+  /**
+   * this returns the list of existing userParameters as a vector of their
+   * names
+   * @return a list of userParameter names
+   */
+  virtual std::vector<std::string> userParameters() = 0;
+  
+  /**
+   * this returns the list of existing userParameterVectors as a vector of
+   * their names
+   * @return a list of userParameter names
+   */
+  virtual std::vector<std::string> userParameterVectors() = 0;
+  
+
 };
 
 
 inline std::ostream& operator<<( std::ostream& os , 
-				 const IDetectorElement& de ) { return de.printOut(os); };
+				 const IDetectorElement& de ) {
+  return de.printOut(os);
+};
 
 inline std::ostream& operator<<( std::ostream& os , 
 				 const IDetectorElement* de )
-{ return ( (0 == de) ? (os << "IDetectorElement* points to NULL") : ( os << *de ) ) ; };
+{ return ( (0 == de) ? (os << "IDetectorElement* points to NULL") :
+           ( os << *de ) ) ; };
 
 #endif  //    GAUDIKERNEL_IDETECTORELEMENT_H
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.10 2001-06-20 07:48:41 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.11 2001-06-22 10:15:09 sponce Exp $
 
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
@@ -367,7 +367,22 @@ public:
    * @return its value, as a vector of double
    */
   inline virtual std::vector<double> userParameterVector (std::string name);
+
+  /**
+   * this returns the list of existing userParameters as a vector of their
+   * names
+   * @return a list of userParameter names
+   */
+  virtual std::vector<std::string> userParameters();
   
+  /**
+   * this returns the list of existing userParameterVectors as a vector of
+   * their names
+   * @return a list of userParameter names
+   */
+  virtual std::vector<std::string> userParameterVectors();
+  
+ 
 
 protected:
 
@@ -417,8 +432,8 @@ private:
     double d_value;
   } UserParam;
 
-  /// this is the list of user defined parameters
-  std::map<std::string, UserParam> m_userParameters;
+  /// this defines a map of UserParam
+  typedef std::map<std::string, UserParam> UserParamMap;
 
   /// This defines a user parameter
   typedef struct _userParamVector {
@@ -428,8 +443,14 @@ private:
     std::vector<double> d_value;
   } UserParamVector;
 
+  /// this defines a map of UserParamVector
+  typedef std::map<std::string, UserParamVector> UserParamVectorMap;
+
+  /// this is the list of user defined parameters
+  UserParamMap m_userParameters;
+
   /// this is the list of user defined parameter vectors
-  std::map<std::string, UserParamVector> m_userParameterVectors;
+  UserParamVectorMap m_userParameterVectors;
 
 };
 

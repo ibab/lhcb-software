@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.14 2001-06-20 12:41:20 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.15 2001-06-22 10:15:15 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -1142,18 +1142,6 @@ SolidCons* XmlLVolumeCnv::dealWithCons (DOM_Element element) {
     dom2Std (element.getAttribute ("deltaPhiAngle"));
   std::string consName = dom2Std (element.getAttribute ("name"));
 
-  // some checks : both angles could be omitted simultaneously ! 
-  if ((startPhiAngleAttribute.empty()) != (deltaPhiAngleAttribute.empty())) {
-    if (startPhiAngleAttribute.empty()) {
-      throw XmlCnvException (" cons : only deltaPhiAngle is provided! ",
-                             CORRUPTED_DATA);
-    } 
-    if (deltaPhiAngleAttribute.empty()) {
-      throw XmlCnvException (" cons : only startPhiAngle is provided! ",
-                             CORRUPTED_DATA);
-    } 
-  }
-
   // computes the values
   double sizeZ = 0.0;
   double outerRadiusPZ = 0.0;
@@ -1218,18 +1206,6 @@ SolidTubs* XmlLVolumeCnv::dealWithTubs (DOM_Element element) {
     dom2Std (element.getAttribute ("deltaPhiAngle"));
   std::string tubsName = dom2Std (element.getAttribute ("name"));
 
-  // some checks : both angles could be omitted simultaneously ! 
-  if ((startPhiAngleAttribute.empty()) != (deltaPhiAngleAttribute.empty())) {
-    if (startPhiAngleAttribute.empty()) {
-      throw XmlCnvException (" tubs : only deltaPhiAngle is provided! ",
-                             CORRUPTED_DATA);
-    } 
-    if (deltaPhiAngleAttribute.empty()) {
-      throw XmlCnvException (" tubs : only startPhiAngle is provided! ",
-                             CORRUPTED_DATA);
-    } 
-  }
-
   // computes the values
   double sizeZ = 0.0;
   double outerRadius = 0.0;
@@ -1287,26 +1263,6 @@ SolidSphere* XmlLVolumeCnv::dealWithSphere (DOM_Element element) {
   std::string deltaThetaAngleAttribute =
     dom2Std (element.getAttribute ("deltaThetaAngle"));
   std::string sphereName = dom2Std (element.getAttribute ("name"));
-
-  // Some checks : both angles could be omitted simultaneously ! 
-  if ((startPhiAngleAttribute.empty()) != (deltaPhiAngleAttribute.empty())) {
-    if (startPhiAngleAttribute.empty()) {
-      throw XmlCnvException (" sphere :: only deltaPhiAngle is provided! ",
-                             CORRUPTED_DATA);
-    } else {
-      throw XmlCnvException (" sphere :: only startPhiAngle is provided! ",
-                             CORRUPTED_DATA);
-    } 
-  }
-  if (startThetaAngleAttribute.empty() != deltaThetaAngleAttribute.empty()) {
-    if (startThetaAngleAttribute.empty()) {
-      throw XmlCnvException (" sphere :: only deltaThetaAngle is provided! ",
-                             CORRUPTED_DATA);
-    } else {
-      throw XmlCnvException (" sphere :: only startThetaAngle is provided! ",
-                             CORRUPTED_DATA);
-    } 
-  }
 
   // computes the values
   double outerRadius = 0.0;
@@ -1488,7 +1444,6 @@ HepTransform3D* XmlLVolumeCnv::dealWithTransformation(DOM_Element element) {
   } else {
     result = new HepTransform3D();
   }
-  
   // returns
   return result;
 } // end dealWithTransformation
