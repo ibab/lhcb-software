@@ -20,11 +20,11 @@ include_dirs $(VELOASSOCIATORSROOT)
 #============================================================================
 use  VeloEvent  v11r*   Event
 use  VeloDet    v6r*    Det
-use  VeloKernel v1r*    Velo
+use  VeloKernel v1r*    Velo -no_auto_imports
 
 # Component library building rule
 #============================================================================
-library          VeloAssociators    ../src/*.cpp
+library          VeloAssociators    ../src/*.cpp -import=VeloKernel
 
 # define component library link options
 #============================================================================
