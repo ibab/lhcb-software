@@ -14,7 +14,7 @@ ApplicationMgr.DLLs = { "SicbCnv", "GaudiAud", "PhysSicbCnv" };
 ApplicationMgr.DLLs += { "GaudiAlg", "GaudiTools" };
 ApplicationMgr.DLLs += { "DaVinciTools" };
 //ApplicationMgr.DLLs += { "DaVinciAssociators" };
-//ApplicationMgr.DLLs += { "DaVinciTest" };
+ApplicationMgr.DLLs += { "DaVinciTest" };
 
 //-------------------------------------------------------------
 // No Histogram persistency chosen at this point
@@ -30,7 +30,7 @@ ApplicationMgr.ExtSvc += { "XmlCnvSvc" };
 ApplicationMgr.DLLs   += { "DetDesc" };
 
 DetectorDataSvc.UsePersistency = true;
-DetectorDataSvc.DetDbLocation  = "$DDDB/dddb.xml";
+DetectorDataSvc.DetDbLocation  = "$XMLDDDBROOT/DDDB/dbase.xml";
 DetectorDataSvc.DetDbRootName  = "dd";
 DetectorDataSvc.DetStorageType = 7;
 
