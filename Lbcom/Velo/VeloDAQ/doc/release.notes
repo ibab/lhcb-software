@@ -1,0 +1,10 @@
+! Package     : VeloDAQ
+! Responsible : ChrisParkes
+
+!==========================  VeloDAQ v1r0 2004-03-15 ======================
+! 2004-03-06 - Chris Parkes
+ - Initial release.
+   L1 and HLT Buffers for Velo.
+   L1 code (Niels Tuning) previously in Trg area
+
+ 
