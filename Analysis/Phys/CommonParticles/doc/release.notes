@@ -4,6 +4,7 @@
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
 
+!========================== CommonParticles v1r5p2 2004-08-03 ===================
 ! 2004-07-23 - P. Koppenburg
  - cmt/requirements
    . Don't use but import AIDA
