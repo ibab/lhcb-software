@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.36 2003-08-19 10:00:33 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.37 2003-09-04 14:12:50 witoldp Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -42,7 +42,7 @@ Simulation.Members +=
   "GiGaInputStream/Kine"                 // load the kinematics 
 //, "GiGaFlushAlgorithm/GiGaFlush"         // flush the event 
 //, "PrintEventAlg"                        // get MCParticles/MCVertices
-//, "GetGiGaHitsAlg/GetHits"               // get MCHits
+, "GetGiGaHitsAlg/GetHits"               // get MCHits
 };
 
 // configuration of GiGa Data Store 
@@ -113,7 +113,7 @@ GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
 
 // mandatory tracking action (1/2)
 GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
-GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" } ;
+GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" }; 
 
 ///////////////////////////////////////////////////////////////////////
 // all the subdetector specific actions should be added here:
