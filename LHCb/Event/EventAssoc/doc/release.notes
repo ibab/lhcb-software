@@ -4,6 +4,10 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2004-05-05 - P. Koppenburg
+ - Add      <assoc from="Particle" to="MCParticle" weight="double"/>
+            <assoc from="Particle" to="MCParticle"/>
+
 !======================= EventAssoc v1r1 2004-05-03 ==========================
 ! 2004-05-03 - Marco Cattaneo
  - Add RelationWeighted1D<ProtoParticle,MCParticle,double>

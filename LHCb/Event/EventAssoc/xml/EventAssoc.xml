@@ -32,6 +32,9 @@
     <assoc from="VeloCluster" to="MCVeloHit"  weight="double" type="2D"/>
 
     <assoc from="ProtoParticle" to="MCParticle" weight="double"/>
+
+    <assoc from="Particle" to="MCParticle" weight="double"/>
+    <assoc from="Particle" to="MCParticle"/>
 </package>
 
 </gdd>
