@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v20r2 2005-03-11 ========================
+! 2005-03-11 - Marco Cattaneo
+ - Use PhysEvent v8r9
+
 !======================== EventSys v20r1 2005-03-07 ========================
 ! 2005-03-07 - Marco Cattaneo
  - Use DAQEvent v5r0, RichEvent v8r2
