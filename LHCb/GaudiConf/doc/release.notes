@@ -1,8 +1,9 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v8r0 2004-07-14 ========================
-! 2004-07-14 - Marco Cattaneo
+!======================== GaudiConf v8r0 2004-07-23 ========================
+! 2004-07-23 - Marco Cattaneo
+ - Update Gaudi.supp for Gaudi v15 errors
  - Remove RootDb.opts as this is obsolete with Gaudi v15
 
 !======================== GaudiConf v7r8 2004-05-03 ========================

@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Error suppression file for GAUDI_v14r5, gcc 3.2, valgrind 2.0.0
+# Error suppression file for GAUDI_v15r0, gcc 3.2.3, valgrind 2.0.0
 
 # Format of this file is:
 # {
@@ -15,40 +15,13 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
-# POOL_1_5_0 (Savannah bug 3010)
+# Problem with gcc 3.2.3
 {
-  Pool/1.5.0
-  Memcheck:Free
-  fun:__builtin_delete
-  fun:_ZdlPv
-  fun:_ZN4CINT4TypeD0Ev
-}
-
-# POOL_1_6_2/SEAL_1_3_4 (reported to Markus and Pere). Also in POOL_1_6_3
-{
-  Seal/1.3.4
-  Memcheck:Cond
-  fun:_ZN4seal6Module5queryEv
-  fun:_ZN4seal11ModuleCache11scanModulesERSt4listIPNS_9ModuleRegESaIS3_EE
-  fun:_ZN4seal11ModuleCache7rebuildEv
-}
-
-# GaudiKernel v14r2 - v15r3 (Savannah bug 2066)
-{
-  Gaudi/2066
-  Memcheck:Cond
-  fun:strlen
-  fun:_IO_str_init_static_internal
-  fun:_IO_vsscanf
-}
-
-# HbookCnv v14r0 - v14r1 (Reported to Grigori/Pere)
-{
-  Gaudi/HbookCnv
-  Memcheck:Cond
-  fun:iucomp_
-  fun:hfinop_
-  fun:hstati_
+  gcc/16bytes
+  Memcheck:Leak
+  fun:malloc
+  fun:realloc
+  fun:__argz_append
 }
 
 # Known DNS system library problems (Linux rh6.1 - rh7.3)
@@ -84,18 +57,45 @@
   obj:/lib/i686/libc-2.2.5.so
 }
 
-# Possible rfio problem (libshift.so.1.5.1.3 - 1.5.2.3)
+# GaudiKernel v14r2 - v16r1 (Savannah bug 2066)
 {
-  rfio
+  Gaudi/2066
+  Memcheck:Cond
+  fun:strlen
+  fun:_IO_str_init_static_internal
+  fun:_IO_vsscanf
+}
+
+# HbookCnv v14r1 - v14r2
+{
+  HbookCnv/v14r1
+  Memcheck:Leak
+  fun:malloc
+  fun:memgetf_
+  fun:mzpaw_
+}
+
+# HbookCnv v14r0 - v14r2 (Reported to Grigori/Pere)
+{
+  Gaudi/HbookCnv
+  Memcheck:Cond
+  fun:iucomp_
+  fun:hfinop_
+  fun:hstati_
+}
+
+# Four rfio problems - libshift.so.1.5.1.3 - 1.7.1.5 (Reported to Sebastien) 
+{
+  rfio_open_ext/rfio_filbuf/rfio_fstat/rfio_close_v2
   Memcheck:Param
   socketcall.send(msg)
   obj:/lib/i686/libc-2.2.5.so
   fun:netwrite_timeout
 }
 
-# Memory leaks due to unused but linked Root 3.10.02 libraries
+# Memory leaks due to linked Root 3.10.02 libraries
 {
-  Root/libPhysics.so
+  libMatrix
   Memcheck:Leak
   fun:malloc
   fun:G__memfunc_para_setup
@@ -103,7 +103,7 @@
 }
 
 {
-  Root/libPhysics/FeldmanCousins
+  libMatrix2
   Memcheck:Leak
   fun:malloc
   fun:G__savestring
@@ -111,14 +111,14 @@
 }
 
 {
-  Root/libMatrix.so
+  libMatrix3
   Memcheck:Leak
   fun:malloc
   fun:G__memfunc_next
   fun:G__memfunc_setup
 }
 
-# Memory leak in Root 3.10.02 as used by POOL_1_6_3
+# Root 3.10.02 with POOL_1_6_3 - POOL_1_7_0-gamma
 {
   Root/POOL
   Memcheck:Leak
@@ -127,24 +127,7 @@
   fun:_ZN10TStringRef6GetRepEii
 }
 
-# Memory leaks in POOL_1_6_3
-{
-  POOL bug 3048
-  Memcheck:Leak
-  fun:__builtin_vec_new
-  fun:_Znaj
-  fun:_ZNK11xercesc_2_39DOMString9transcodeEv
-}
-
-{
-  POOL bug 3171
-  Memcheck:Leak
-  fun:__builtin_new
-  fun:_Znwj
-  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
-}
-
-# Memory leaks in SEAL_1_3_4
+# SEAL_1_3_4 - 1_4_0
 {
   SEAL bug 3050
   Memcheck:Leak
@@ -153,20 +136,29 @@
   fun:_ZNSt24__default_alloc_templateILb1ELi0EE14_S_chunk_allocEjRi
 }
 
-# Memory leaks in SEAL_1_3_4 as used by GaudiPoolDb v1r6p1
+# POOL_1_7_0-gamma
 {
-  Bug reported privately to Pere/Markus
+  POOL bug 4215
+  Memcheck:Free
+  fun:__builtin_delete
+  fun:_ZdlPv
+  fun:_ZN4CINT4TypeD0Ev
+}
+
+{
+  POOL bug 4206
+  Memcheck:Leak
+  fun:__builtin_vec_new
+  fun:_Znaj
+  fun:_ZN11xercesc_2_318IconvLCPTranscoder9transcodeEPKt
+}
+
+# POOL_1_6_3 - POOL_1_7_0-gamma
+{
+  POOL bug 3171
   Memcheck:Leak
   fun:__builtin_new
   fun:_Znwj
-  fun:_ZN4seal13SharedLibrary4loadERKSs
+  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
 }
 
-# Memory leak in HbookCnv v14r1
-{
-  HbookCnv/v14r1
-  Memcheck:Leak
-  fun:malloc
-  fun:memgetf_
-  fun:mzpaw_
-}
