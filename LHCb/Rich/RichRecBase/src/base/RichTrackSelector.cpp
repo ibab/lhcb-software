@@ -1,20 +1,20 @@
-// $Id: TrTrackSelector.cpp,v 1.1 2003-06-30 15:11:58 jonrob Exp $
+// $Id: RichTrackSelector.cpp,v 1.1 2003-10-13 16:10:54 jonrob Exp $
 // Include files
 
 // local
-#include "RichRecBase/TrTrackSelector.h"
+#include "RichRecBase/RichTrackSelector.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrTrackSelector
+// Implementation file for class : RichTrackSelector
 //
 // 2003-06-20 : Chris Jones
 //-----------------------------------------------------------------------------
 
 // Standard constructor
-TrTrackSelector::TrTrackSelector() :
-  m_trNames(),
-  m_trBits(0),
-  m_uniqueTrOnly(true) {
+RichTrackSelector::RichTrackSelector() :
+  m_trNames      (      ),
+  m_trBits       ( 0    ),
+  m_uniqueTrOnly ( true ) {
 
   m_trNames.push_back( "unique" );
   m_trNames.push_back( "seed" );
@@ -25,14 +25,13 @@ TrTrackSelector::TrTrackSelector() :
 
 }
 
-bool TrTrackSelector::configureTrackTypes() {
+bool RichTrackSelector::configureTrackTypes() {
 
   // Initialise track bit selection
   m_trBits = 0;
   m_uniqueTrOnly = false;
-  for ( std::vector<std::string>::const_iterator iName = m_trNames.begin();
-        iName != m_trNames.end();
-        iName++ ) {
+  for ( TrackNames::const_iterator iName = m_trNames.begin();
+        iName != m_trNames.end(); ++iName ) {
     if      ( *iName == "unique"   ) { m_uniqueTrOnly = true; }
     else if ( *iName == "velo"     ) { m_trBits += 2;   }
     else if ( *iName == "seed"     ) { m_trBits += 4;   }

@@ -9,14 +9,9 @@
             <import name="GaudiKernel/ContainedObject"/>
             <import name="RichKernel/RichParticleIDType"/>
             <import name="RichKernel/RichHypoData"/>
-            <import name="RichRecBase/RichRecTrackParentType"/>
-            <import name="RichRecBase/RichTrackType"/>
+            <import name="RichRecBase/RichTrackID"/>
             <import ignore="TRUE" name="Rich"/>
-            <import ignore="TRUE" name="RecTrack"/>
-            <import ignore="TRUE" name="ParentType"/>
             <import ignore="TRUE" name="ParticleIDType"/>
-            <import ignore="TRUE" name="Track"/>
-            <import ignore="TRUE" name="Type"/>
             <method const="FALSE" desc="Set the number of emitted photons for a given particle type" name="setNEmittedPhotons">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
@@ -77,7 +72,6 @@
             </method>
             <method desc="Reset information to force recalculation" name="reset" type="void"/>
             <attribute array="FALSE" compression="FALSE" desc="Reconstructed momentum at vertex" init="0" name="vertexMomentum" type="double"/>
-            <attribute compression="TRUE" desc="Enumeration to Parent type" init="Rich::RecTrack::Unknown" name="parentType" type="Rich::RecTrack::ParentType"/>
             <attribute array="FALSE" compression="TRUE" desc="The number of emitted photons expected for each particle hypothesis" name="nEmittedPhotons" type="RichHypoData&lt;double&gt;"/>
             <attribute array="FALSE" compression="TRUE" desc="The number of detectable emitted photons expected for each particle hypothesis" name="nDetectablePhotons" type="RichHypoData&lt;double&gt;"/>
             <attribute array="FALSE" compression="TRUE" desc="The number of signal photons expected for each particle hypothesis" name="nSignalPhotons" type="RichHypoData&lt;double&gt;"/>
@@ -86,7 +80,7 @@
             <attribute array="FALSE" compression="TRUE" desc="The number of observable scattered photons expected for each particle hypothesis" name="nObservableScatteredPhotons" type="RichHypoData&lt;double&gt;"/>
             <attribute desc="The current working particle hypothesis for this track. Used by specific algorithms" init="Rich::Pion" name="currentHypothesis" type="Rich::ParticleIDType"/>
             <attribute desc="Flag for use by algorithms to tag in this track is in use or not" init="false" name="inUse" serialize="FALSE" type="bool"/>
-            <attribute desc="Track Type. Used to define resolutions etc." init="Rich::Track::Unknown" name="trackType" type="Rich::Track::Type"/>
+            <attribute desc="track type identifier" name="trackID" type="RichTrackID"/>
             <attribute desc="Bit packed field containing specific detector information" init="0" name="richTrackInfo" type="bitfield">
                 <bitfield desc="Flag for whether this track is active in RICH1" length="1" name="inRICH1"/>
                 <bitfield desc="Flag for whether this track is active in RICH2" length="1" name="inRICH2"/>
@@ -94,7 +88,7 @@
                 <bitfield desc="Flag for whether this track is active in RICH1 Gas" length="1" name="inGas1"/>
                 <bitfield desc="Flag for whether this track is active in RICH2 Gas" length="1" name="inGas2"/>
             </attribute>
-            <relation desc="Parent Object this track was produced from" name="parentTrack" type="ContainedObject"/>
+            <relation desc="Parent object this track was produced from" name="parentTrack" type="ContainedObject"/>
             <relation desc="Smart Reference vector of radiator segments for this track" multiplicity="N" name="richRecSegmentsSmartRefs" type="RichRecSegment"/>
             <relation desc="SmartRefVector of RichRecPixels for which this track has valid photon associations" multiplicity="N" name="richRecPixelsSmartRefs" type="RichRecPixel"/>
             <relation desc="SmartRefVector of associated RichRecPhotons" multiplicity="N" name="richRecPhotonsSmartRefs" type="RichRecPhoton"/>
@@ -136,8 +130,8 @@
             <method const="TRUE" desc="Returns Rich Detector" name="detector" type="Rich::DetectorType">
                 <code>return (Rich::DetectorType)m_smartID.rich();</code>
             </method>
-            <method const="TRUE" desc="Returns unique integer hpd identifier" name="hpd" type="int">
-                <code>return (int)m_smartID.hpdID();</code>
+            <method const="TRUE" desc="Returns unique integer pd identifier" name="pd" type="int">
+                <code>return (int)m_smartID.pdID();</code>
             </method>
             <method const="TRUE" desc="Returns unique integer Rich panel identifier" name="panel" type="int">
                 <code>return (int)m_smartID.panelID();</code>
@@ -170,9 +164,9 @@
             <import name="RichRecBase/RichMap"/>
             <import name="RichRecBase/RichPhotonSpectra"/>
             <import name="RichKernel/RichHypoData"/>
-            <typedef access="PUBLIC" def="HPDGeomEffs" desc="Data containers for each hypothesis" type="RichMap&lt;int,double&gt;"/>
-            <typedef access="PUBLIC" def="HPDGeomEffsVector" desc="Data containers for each hypothesis" type="std::vector&lt; HPDGeomEffs &gt;"/>
-            <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerHPD(Rich::NParticleTypes, RichMap&lt;int,double&gt;() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_richRecTrack(pTrk)">
+            <typedef access="PUBLIC" def="PDGeomEffs" desc="Data containers for each hypothesis" type="RichMap&lt;int,double&gt;"/>
+            <typedef access="PUBLIC" def="PDGeomEffsVector" desc="Data containers for each hypothesis" type="std::vector&lt; PDGeomEffs &gt;"/>
+            <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, RichMap&lt;int,double&gt;() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_richRecTrack(pTrk)">
                 <arg name="segment" type="RichTrackSegment"/>
                 <arg inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
                 <arg inout="BYVALUE" name="enBins" type="unsigned int"/>
@@ -215,11 +209,11 @@
                 <arg const="TRUE" inout="BYVALUE" name="angle" type="double"/>
                 <code>m_averageCKTheta[type] = angle;</code>
             </method>
-            <method desc="Method to create the geometrical efficiencies per HPD" name="addToGeomEfficiencyPerHPD">
+            <method desc="Method to create the geometrical efficiencies per PD" name="addToGeomEfficiencyPerPD">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
-                <arg const="TRUE" inout="BYVALUE" name="hpd" type="int"/>
+                <arg const="TRUE" inout="BYVALUE" name="pd" type="int"/>
                 <arg const="TRUE" inout="BYVALUE" name="signal" type="double"/>
-                <code>(m_geomEfficiencyPerHPD[type])[hpd] += signal;</code>
+                <code>(m_geomEfficiencyPerPD[type])[pd] += signal;</code>
             </method>
             <method const="TRUE" desc="Returns the number of emitted photons for a given particle type" name="nEmittedPhotons" type="double">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
@@ -253,9 +247,9 @@
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_averageCKTheta[type];</code>
             </method>
-            <method desc="Returns the geometrical efficiency per HPD for given hypothesis" name="geomEfficiencyPerHPD" type="RichMap&lt;int,double&gt;&amp;">
+            <method desc="Returns the geometrical efficiency per PD for given hypothesis" name="geomEfficiencyPerPD" type="RichMap&lt;int,double&gt;&amp;">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
-                <code>return m_geomEfficiencyPerHPD[type];</code>
+                <code>return m_geomEfficiencyPerPD[type];</code>
             </method>
             <method desc="Reset information to force recalculation" name="reset" type="void"/>
             <attribute array="FALSE" compression="TRUE" desc="The number of emitted photons expected for each particle hypothesis" name="nEmittedPhotons" type="RichHypoData&lt;double&gt;"/>
@@ -265,12 +259,12 @@
             <attribute desc="Photon energy spectra for emitted photons" name="emittedPhotonSpectra" type="RichPhotonSpectra"/>
             <attribute desc="Photon energy spectra for detectable photons" name="detectablePhotonSpectra" type="RichPhotonSpectra"/>
             <attribute desc="Photon energy spectra for signal photons" name="signalPhotonSpectra" type="RichPhotonSpectra"/>
-            <attribute desc="The geometrical efficiency for a given hypothesis, binned per HPD" init="Rich::NParticleTypes,RichMap&lt;int,double&gt;() " name="geomEfficiencyPerHPD" type="HPDGeomEffsVector"/>
+            <attribute desc="The geometrical efficiency for a given hypothesis, binned per PD" init="Rich::NParticleTypes,RichMap&lt;int,double&gt;() " name="geomEfficiencyPerPD" type="PDGeomEffsVector"/>
             <attribute desc="Geometrical efficiencies for the each particle hypothesis" name="geomEfficiency" type="RichHypoData&lt;double&gt;"/>
             <attribute desc="Geometrical efficiency for scattered component" name="geomEfficiencyScat" type="RichHypoData&lt;double&gt;"/>
             <attribute desc="The average Cherenkov theta angle for given particle ID type" name="averageCKTheta" type="RichHypoData&lt;double&gt;"/>
             <attribute desc="Track segment, the passage of a track through a Rich detector" name="trackSegment" type="RichTrackSegment"/>
-            <attribute desc="Ray traced HPD panel impact point" name="hpdPanelHitPoint" type="HepPoint3D"/>
+            <attribute desc="Ray traced PD panel impact point" name="pdPanelHitPoint" type="HepPoint3D"/>
             <attribute desc="Detector regions accessible to this segment" init="0" name="hitDetectorRegions" type="bitfield">
                 <bitfield desc="Photons observable in x&gt;0 region of detector" length="1" name="photonsInXPlus"/>
                 <bitfield desc="Photons observable in x&lt;0 region of detector" length="1" name="photonsInXMinus"/>

@@ -1,10 +1,10 @@
-// $Id: RichDetParams.h,v 1.2 2003-09-04 07:08:48 jonrob Exp $
+// $Id: RichDetParams.h,v 1.3 2003-10-13 16:10:54 jonrob Exp $
 #ifndef RICHKERNEL_RICHDETPARAMS_H
 #define RICHKERNEL_RICHDETPARAMS_H 1
 
 #define RADIATOR_NAMES      const std::string radiator[] = { "aerogel", "C4F10", "CF4" }
 #define RICH_NAMES          const std::string rich[] =     { "Rich1", "Rich2" }
-#define HYPOTHESIS_NAMES    const std::string hypothesis[] = { "el", "mu", "pi", "Ka", "Pr" }
+#define HYPOTHESIS_NAMES    const std::string hypothesis[] = { "el", "mu", "pi", "Ka", "Pr", "X" }
 #define RICH_HISTO_OFFSET   const int richOffset = 10000
 #define RAD_HISTO_OFFSET    const int radOffset  = 1000
 #define HYPO_HISTO_OFFSET   const int hypoOffset = 100
@@ -34,34 +34,34 @@ const double zRadLenMax[]  = {   60.0,  2000.0,  2500.0 }
  RADIATOR_GLOBAL_LENGTHS;
 
 //                                 Rich1     Rich2
-#define HPD_GLOBAL_POSITIONS_X \
-const double xMinHPDGlo[]  = {    -800.0,   -4500.0   };\
-const double xMaxHPDGlo[]  = {     800.0,    4500.0   }
-#define HPD_GLOBAL_POSITIONS_Y \
-const double yMinHPDGlo[]  = {   -1200.0,    -750.0   };\
-const double yMaxHPDGlo[]  = {    1200.0,     750.0   }
-#define HPD_GLOBAL_POSITIONS_Z \
-const double zMinHPDGlo[]  = {    1150.0,   10440.0   };\
-const double zMaxHPDGlo[]  = {    1750.0,   11100.0   }
-#define HPD_GLOBAL_POSITIONS \
- HPD_GLOBAL_POSITIONS_X; \
- HPD_GLOBAL_POSITIONS_Y; \
- HPD_GLOBAL_POSITIONS_Z; 
+#define PD_GLOBAL_POSITIONS_X \
+const double xMinPDGlo[]  = {    -800.0,   -4500.0   };\
+const double xMaxPDGlo[]  = {     800.0,    4500.0   }
+#define PD_GLOBAL_POSITIONS_Y \
+const double yMinPDGlo[]  = {   -1200.0,    -750.0   };\
+const double yMaxPDGlo[]  = {    1200.0,     750.0   }
+#define PD_GLOBAL_POSITIONS_Z \
+const double zMinPDGlo[]  = {    1150.0,   10440.0   };\
+const double zMaxPDGlo[]  = {    1750.0,   11100.0   }
+#define PD_GLOBAL_POSITIONS \
+ PD_GLOBAL_POSITIONS_X; \
+ PD_GLOBAL_POSITIONS_Y; \
+ PD_GLOBAL_POSITIONS_Z;
 
 //                                 Rich1     Rich2
-#define HPD_LOCAL_POSITIONS_X \
-const double xMinHPDLoc[] = {    -700.0,    -700.0   };\
-const double xMaxHPDLoc[] = {     700.0,     700.0   }
-#define HPD_LOCAL_POSITIONS_Y \
-const double yMinHPDLoc[] = {    -700.0,    -700.0   };\
-const double yMaxHPDLoc[] = {     700.0,     700.0   }
-#define HPD_LOCAL_POSITIONS_Z \
-const double zMinHPDLoc[] = {      -5.0,      -5.0   };\
-const double zMaxHPDLoc[] = {       5.0,       5.0   }
-#define HPD_LOCAL_POSITIONS \
- HPD_LOCAL_POSITIONS_X; \
- HPD_LOCAL_POSITIONS_Y; \
- HPD_LOCAL_POSITIONS_Z;
+#define PD_LOCAL_POSITIONS_X \
+const double xMinPDLoc[] = {    -700.0,    -700.0   };\
+const double xMaxPDLoc[] = {     700.0,     700.0   }
+#define PD_LOCAL_POSITIONS_Y \
+const double yMinPDLoc[] = {    -700.0,    -700.0   };\
+const double yMaxPDLoc[] = {     700.0,     700.0   }
+#define PD_LOCAL_POSITIONS_Z \
+const double zMinPDLoc[] = {      -5.0,      -5.0   };\
+const double zMaxPDLoc[] = {       5.0,       5.0   }
+#define PD_LOCAL_POSITIONS \
+ PD_LOCAL_POSITIONS_X; \
+ PD_LOCAL_POSITIONS_Y; \
+ PD_LOCAL_POSITIONS_Z;
 
 //                                 Rich1     Rich2
 #define SPHERICAL_MIRROR_GLOBAL_POSITIONS_X \
@@ -76,7 +76,7 @@ const double zMaxSpheGlo[] = {    2080.0,   11800.0   }
 #define SPHERICAL_MIRROR_GLOBAL_POSITIONS \
  SPHERICAL_MIRROR_GLOBAL_POSITIONS_X; \
  SPHERICAL_MIRROR_GLOBAL_POSITIONS_Y; \
- SPHERICAL_MIRROR_GLOBAL_POSITIONS_Z; 
+ SPHERICAL_MIRROR_GLOBAL_POSITIONS_Z;
 
 //                                 Rich1     Rich2
 #define FLAT_MIRROR_GLOBAL_POSITIONS_X \

@@ -1,4 +1,4 @@
-// $Id: IRichTrackCreator.h,v 1.1 2003-06-30 15:11:56 jonrob Exp $
+// $Id: IRichTrackCreator.h,v 1.2 2003-10-13 16:10:54 jonrob Exp $
 #ifndef RICHRECTOOLS_IRICHTRACKCREATOR_H
 #define RICHRECTOOLS_IRICHTRACKCREATOR_H 1
 
@@ -26,13 +26,13 @@ public:
 
   /// Returns a RichRecTrack object pointer for given ContainedObject.
   /// If if it not possible NULL is return.
-  virtual RichRecTrack * newTrack ( ContainedObject * obj ) = 0;
-  
+  virtual RichRecTrack * newTrack ( const ContainedObject * obj ) = 0;
+
   /// Form all possible RichRecTracks from input Objects.
   /// The most efficient way to make all RichRecTrack objects in the event.
   virtual StatusCode newTracks() = 0;
-  
-  /// Returns a pointer to the container of RichRecTracks. 
+
+  /// Returns a pointer to the container of RichRecTracks.
   virtual RichRecTracks *& richTracks() = 0;
 
 };

@@ -1,4 +1,4 @@
-// $Id: RichRecTrack.cpp,v 1.2 2003-08-06 09:55:32 jonrob Exp $
+// $Id: RichRecTrack.cpp,v 1.3 2003-10-13 16:10:55 jonrob Exp $
 // Include files 
 
 // local
@@ -19,7 +19,6 @@ void RichRecTrack::reset() {
   m_nObservableSignalPhotons.resetData();
   m_nScatteredPhotons.resetData();
   m_nObservableScatteredPhotons.resetData();
-
   setCurrentHypothesis( Rich::Pion );
 
 }

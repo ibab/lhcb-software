@@ -1,4 +1,4 @@
-// $Id: IRichExpectedTrackSignal.h,v 1.1 2003-08-06 09:55:30 jonrob Exp $
+// $Id: IRichExpectedTrackSignal.h,v 1.2 2003-10-13 16:10:53 jonrob Exp $
 #ifndef RICHRECTOOLS_IRICHEXPECTEDTRACKSIGNAL_H
 #define RICHRECTOOLS_IRICHEXPECTEDTRACKSIGNAL_H 1
 
@@ -84,6 +84,15 @@ public:
   /// Expected number of emitted photons for given segment and hypothesis, scaled by the HPD quantum efficiency
   virtual double nDetectablePhotons ( RichRecSegment * segment,
                                       const Rich::ParticleIDType id ) = 0;
+
+
+  /// The average energy of signal Cherenkov photons
+  virtual double avgSignalPhotEnergy( RichRecSegment * segment,
+                                      const Rich::ParticleIDType id ) = 0;
+
+  /// The average energy of emitted Cherenkov photons
+  virtual double avgEmitPhotEnergy( RichRecSegment * segment,
+                                    const Rich::ParticleIDType id ) = 0;
 
   /// Is it possible for this track to give Rich information
   virtual bool hasRichInfo( RichRecTrack * track ) = 0;
