@@ -3,6 +3,9 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020503 Pere Mato
+- added dictionary for CLHEP classes in /dict
+
 ! 20020430 Vanya Belyaev
   Kernel/CaloHash.h  bug fix for Win2K   
   
