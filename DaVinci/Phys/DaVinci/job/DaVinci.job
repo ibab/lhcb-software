@@ -49,7 +49,6 @@ set Dversion = "v11r12"
 setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/$Dversion
 
 # == set the program environment
-set Dversion = "v11r12"
 source $DaVinci_release_area/DaVinciEnv/$Dversion/cmt/setup.csh
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 
