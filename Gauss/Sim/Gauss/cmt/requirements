@@ -1,0 +1,28 @@
+package Gauss
+version v0r1
+
+branches doc src job options cmt
+
+use GeneratorModules v0r1 Gen
+
+
+# Main program and standard job options
+use GaudiConf     v5*     
+
+# GAUDI framework
+use GaudiSys      v9*
+
+# ROOT event persistency
+use GaudiRootDb   v5*
+
+# Histogram persistency
+use HbookCnv      v11r*
+use dbase         v239 SICB
+
+#==> Main Program
+application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp
+
+# ========================= set macros ============================
+
+apply_pattern application_path 
+macro Gauss_linkopts  "$(application_linkopts)"
