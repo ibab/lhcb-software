@@ -25,6 +25,8 @@
       INTEGER npasso
       LOGICAL MCFlag,SELFlag,TRKFlag,PQUALFlag,AGRFlag,TAGFlag
       INTEGER I, ILUND, natmc
+      LOGICAL IPRINT
+      DATA IPRINT/.FALSE./
 *
 *------------------------------------------------------------------
 #include "inc/ubmacro_func.inc"
@@ -32,23 +34,26 @@
 #include "inc/atmc_func.inc"
 *------------------------------------------------------------------
 *
-      WRITE(luprnt,*) '**********************************************'
-      WRITE(LUPRNT,*) ' Testing Accessing AXSEL results from fortran '
-      npasso = N_PASS()
-      IF (npasso.ge.1) THEN
-        WRITE(luprnt,*) '  EVTYPE   = ', PASS$EVTYPE(1)
+      IF( IPRINT ) THEN
+        WRITE(luprnt,*) '**********************************************'
+        WRITE(LUPRNT,*) ' Testing Accessing AXSEL results from fortran '
+        npasso = N_PASS()
+        IF (npasso.ge.1) THEN
+          WRITE(luprnt,*) '  EVTYPE   = ', PASS$EVTYPE(1)
+        ENDIF
       ENDIF
 
       CALL AXSELRESULTS(MCFlag,TRKFlag,PQUALFlag,
      &                  SELFlag,AGRFlag,TAGFlag)
 C
-      WRITE(LUPRNT,*) '  MCFlag =', MCFlag
-      WRITE(LUPRNT,*) '  TRKFlag = ', TRKFlag 
-      WRITE(LUPRNT,*) '  PQUALFlag = ', PQUALFlag
-      WRITE(LUPRNT,*) '  SELFlag = ', SElFlag
-      WRITE(LUPRNT,*) '  AGRFlag = ', AGRFlag
-      WRITE(LUPRNT,*) '  TAGFlag = ', TAGFlag
-      WRITE(luprnt,*) '**********************************************'
+      IF( IPRINT ) THEN
+        WRITE(LUPRNT,*) '  MCFlag =', MCFlag
+        WRITE(LUPRNT,*) '  TRKFlag = ', TRKFlag 
+        WRITE(LUPRNT,*) '  PQUALFlag = ', PQUALFlag
+        WRITE(LUPRNT,*) '  SELFlag = ', SElFlag
+        WRITE(LUPRNT,*) '  AGRFlag = ', AGRFlag
+        WRITE(LUPRNT,*) '  TAGFlag = ', TAGFlag
+        WRITE(luprnt,*) '**********************************************'
 C
 C      NATMC = N_ATMC()
 C      DO I = 1,NATMC
@@ -57,6 +62,7 @@ C        IF( (ILUND.GE.71) .and. (ilund.le.78) ) THEN
 C          CALL PRINT_ATMC_TREE(LUPRNT,ID_ATMC(I),'H')
 C        ENDIF
 C      ENDDO
+      ENDIF
 C                                               !   end SUANAL
       RETURN
       END
