@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.90 2004-05-14 09:43:31 pkoppenb Exp $
+! $Id: release.notes,v 1.91 2004-05-18 15:32:45 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-05-18 - P. Koppenburg
+  - src/PhysDesktop.cpp
+    . In PhysDesktop::saveTrees( int partid ) call saveTrees 
+      also when there's nothing to save. Avoids having no container when
+      the algorithm has been executed.
+  
 ! 2004-05-15 - P. Koppenburg
   - src/CombinedTransporter.cpp
   - src/LinearTransporter.cpp

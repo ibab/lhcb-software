@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.12 2004-04-29 08:41:29 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.13 2004-05-18 15:32:45 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -490,6 +490,31 @@ StatusCode PhysDesktop::saveTrees(VertexVector& vToSave){
 }
 
 //=============================================================================
+// Save only particles in desktop corresponding to this code
+//=============================================================================
+StatusCode PhysDesktop::saveTrees( int partid ) {
+  
+  MsgStream          msg( msgSvc(), name() );
+  msg << MSG::DEBUG << "PhysDesktop saveParticles(pid code)" 
+      << "type = " << partid << endreq;
+  
+  ParticleVector pToSave;
+  for( ParticleVector::iterator icand = m_parts.begin();
+       icand != m_parts.end(); icand++ ) {
+    if( ((*icand)->particleID().pid()) == partid ) {
+      pToSave.push_back(*icand);
+    }
+  }
+  //  if( pToSave.size() > 0 ) {
+  return saveTrees( pToSave );
+  //   }
+  
+  //  return StatusCode::SUCCESS;
+  
+}
+
+
+//=============================================================================
 // Find all particle and vertices connected to this tree
 //=============================================================================
 void PhysDesktop::findAllTree( Particle* part, ParticleVector& parts,
@@ -523,31 +548,6 @@ void PhysDesktop::findAllTree( Vertex* vert, ParticleVector& parts,
   }
   return;
 }
-
-//=============================================================================
-// Save only particles in desktop corresponding to this code
-//=============================================================================
-StatusCode PhysDesktop::saveTrees( int partid ) {
-  
-  MsgStream          msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "PhysDesktop saveParticles(pid code)" 
-      << "type = " << partid << endreq;
-  
-  ParticleVector pToSave;
-  for( ParticleVector::iterator icand = m_parts.begin();
-       icand != m_parts.end(); icand++ ) {
-    if( ((*icand)->particleID().pid()) == partid ) {
-      pToSave.push_back(*icand);
-    }
-  }
-  if( pToSave.size() > 0 ) {
-    return saveTrees( pToSave );
-  }
-  
-  return StatusCode::SUCCESS;
-  
-}
-
 
 //=============================================================================
 // Method retrieving the data from the store.
