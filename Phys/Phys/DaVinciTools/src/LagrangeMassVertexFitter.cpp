@@ -1949,8 +1949,8 @@ StatusCode LagrangeMassVertexFitter::itera(HepVector& e, HepSymMatrix& Ce,
     - p1*p3*co13 - p1*p4*co14 - p2*p3*co23
     - p2*p4*co24 - beta;     
   
-  log << MSG::DEBUG << "lagrange constrained equations for 4 tracks with two
- ressonances" << endreq;
+  log << MSG::DEBUG << "lagrange constrained equations for 4 tracks with"
+      << " two ressonances" << endreq;
   log << MSG::DEBUG << cte << endreq;
   
   
