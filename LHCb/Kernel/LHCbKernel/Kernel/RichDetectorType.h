@@ -1,6 +1,17 @@
-// $Id: RichDetectorType.h,v 1.2 2004-06-29 14:28:36 jonesc Exp $
+// $Id: RichDetectorType.h,v 1.3 2004-08-17 11:07:23 jonrob Exp $
+// ===========================================================================
+// $Log: not supported by cvs2svn $
+
 #ifndef LHCBKERNEL_RICHDETECTORTYPE_H
 #define LHCBKERNEL_RICHDETECTORTYPE_H 1
+
+/** @file RichDetectorType.h
+ *
+ *  Header file for enumeration : RichDetectorType
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
+ */
 
 // std include
 #include <string>
@@ -11,26 +22,38 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
-// namespace for RICH detector specifics
+/** @namespace Rich
+ *
+ *  General namespace for RICH specific definitions
+ *
+ *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+ *  @date   08/07/2004
+ */
 namespace Rich {
 
   /// Number of RICH detectors
   static const int NRiches = 2;
 
-  /** @enum Rich::DetectorType 
-   *  Enumeration for the main RICH detectors 
+  /** @enum Rich::DetectorType
    *
-   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
-   *  @date   2002-06-19
+   *  RICH Detector types
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   08/07/2004
    */
-  enum DetectorType {
-    InvalidDetector = -1,
-    Rich1           = 0,
-    Rich2           = 1
-  };
+  enum DetectorType
+    {
+      InvalidDetector = -1, ///< Unspecified Detector
+      Rich1           = 0,  ///< RICH1 detector
+      Rich2           = 1   ///< RICH2 detector
+    };
 
-  /// Text conversion for DetectorType enumeration
-  inline std::string text( const Rich::DetectorType & detector ) 
+  /** Text conversion for DetectorType enumeration
+   *
+   *  @param detector RICH detector enumeration
+   *  @return Detector type as a string
+   */
+  inline std::string text( const Rich::DetectorType & detector )
   {
     switch( detector ) {
     case Rich::Rich1:              return "Rich1";
