@@ -1,6 +1,13 @@
 package DetDesc
 package manager : Vanya Belyaev
 
+! 20010205 - Flr
+  src/         - add component/
+                 move all files from src/ to src/component/
+  requirements - add ignore_pattern package_stamps
+                 remove apply_pattern packageShr
+  cmt/         - reintroduce Makefile and NMake
+
 ! 20010131 - Gonzalo Gracia
      SolidTrd.cpp: Bug fixed.
 
