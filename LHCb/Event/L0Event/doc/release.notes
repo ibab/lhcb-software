@@ -1,6 +1,11 @@
-$Id: release.notes,v 1.35 2004-12-10 14:48:23 cattanem Exp $
+$Id: release.notes,v 1.36 2005-01-12 09:28:06 ocallot Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+! 2005-01-12 - Olivier Callot
+ - Re-implement L0PrsSpdHit and L0CaloADC
+ - L0PrsSpdHit is now a KeyedObject as the new GOD has a problem with
+   simple contained object. This is just a transient object -> no effect.
 
 !======================= L0Event v14r1p2 2004-12-10 =======================
 ! 2004-12-10 - Marco Cattaneo

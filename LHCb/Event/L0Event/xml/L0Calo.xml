@@ -58,8 +58,8 @@
     <class author="Olivier Callot" desc=" Fired cells in Prs or Spd." id="6007" name="L0PrsSpdHit">
       <location name="Prs" place="/Event/Trig/L0/PrsRaw"/>
       <location name="Spd" place="/Event/Trig/L0/SpdRaw"/>
-      <base name="ContainedObject"/>
-      &ContainedObject;
+      <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
       <import name="Kernel/CaloCellID"/>
       <attribute desc="Fired cells" name="cellID" setMeth="FALSE" type="CaloCellID"/>
       <constructor argList="CaloCellID ID" desc="Usual constructor, specifies the CellID" initList="m_cellID( ID )">
