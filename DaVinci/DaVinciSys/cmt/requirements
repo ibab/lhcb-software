@@ -20,6 +20,7 @@ use  FlavourTagging      v4r2	Phys
 use  DaVinciEff          v2r1   Phys
 use  DaVinciUser         v4r0   Phys
 use  GlobalReco          v2r3	Rec
+use  KsReco		 v1r4   Rec
 
 #--- Trigger
 use  L0Calo		v6r4	L0
