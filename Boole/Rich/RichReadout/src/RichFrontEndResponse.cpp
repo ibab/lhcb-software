@@ -248,9 +248,7 @@ StatusCode RichFrontEndResponse::Digital(){
 
   samplecache_t::iterator tsc_it;
 
-  DataObject*  pObject = new MCRichDigits();
-  MCRichDigits* mcRichDigits = dynamic_cast<MCRichDigits*>(pObject);
-
+  MCRichDigits* mcRichDigits = new MCRichDigits();
 
   // Register new RichDigit container to Gaudi data store
   if ( !eventSvc()->registerObject(m_mcRichDigitsLocation, mcRichDigits) ) {
