@@ -4,6 +4,14 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2004-12-14 - Gloria CORTI
+ - src/Components/SpecialCuts.cpp
+   . adapt to use with geant4.7.0 by replacing obsolete methods names with
+     new one (G4VParticleChange) :
+     SetEnergyChange       -> ProposeEnergy
+     SetLocalEnergyDeposit -> ProposeLocalEnergyDeposit
+     SetStatusChange       -> ProposeTrackStatus
+
 !===================== GaussTools v10r6 2004-06-15 ========================
 ! 2004-06-15 - Gloria CORTI
  - src/Components/TrCutsRunAction.cpp
