@@ -1,0 +1,54 @@
+ApplicationMgr.ExtSvc = { "EventSelector" };
+ApplicationMgr.HistogramPersistency = "NONE";
+//--------------------------------------------------------------
+// Private Application Configuration options
+//--------------------------------------------------------------
+ApplicationMgr.DLLs       += { "GaudiDb", "GaudiRootDb" };
+ApplicationMgr.ExtSvc     += { "DbEventCnvSvc/RootEvtCnvSvc" };
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel     =  3;
+
+EventSelector.PrintFreq    = 100;
+EventSelector.FirstEvent   = 1;
+ApplicationMgr.EvtMax      = 20;
+//--------------------------------------------------------------
+// Persistency service setup: 
+//--------------------------------------------------------------
+EventDataSvc.RootCLID = 1;
+EventDataSvc.ForceLeaves = 1;
+//--------------------------------------------------------------
+// Test chain
+//--------------------------------------------------------------
+Printout.PrintFreq           = 100;
+ApplicationMgr.TopAlg      = {};
+ApplicationMgr.TopAlg     += { "StoreExplorer/Explorer" };
+EventSelector.Input = {};
+ApplicationMgr.EvtMax      = 4000000;
+RootEvtCnvSvc.AgeLimit     = 2;
+
+Explorer.PrintFreq         = 0.2;
+ApplicationMgr.OutStream  = {};
+//
+ApplicationMgr.ExtSvc    += { "PoolDbCacheSvc", 
+                              "PoolDbCnvSvc/RootKeyEvtCnvSvc", 
+                              "PoolDbCnvSvc/RootTreeEvtCnvSvc" 
+                            };
+ApplicationMgr.DLLs             += { "GaudiPoolDb" };
+EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
+EventPersistencySvc.CnvServices += { "RootTreeEvtCnvSvc" };
+EventPersistencySvc.CnvServices += { "RootKeyEvtCnvSvc" };
+//
+RootEvtCnvSvc.DbType             = "ROOT";
+RootKeyEvtCnvSvc.DbType          = "POOL_ROOTKEY";
+RootTreeEvtCnvSvc.DbType         = "POOL_ROOTTREE";
+PoolDbCacheSvc.Dlls              = {"lcg_RootStorageSvc", "lcg_XMLCatalog" };
+PoolDbCacheSvc.CatalogConnect    = "xmlcatalog_file:test_catalog.xml";
+PoolDbCacheSvc.OutputLevel = 3;
+
+ApplicationMgr.DLLs       += { "OTAssociators", "ITAssociators", "MuonAssociators", "CaloAssociators", "TrAssociators", "VeloAssociators", "Associators" };
+Explorer.ExploreRelations  = 1;
+
+ApplicationMgr.EvtMax      = 10;
+Explorer.PrintFreq         = 1.0;
+#include "$LHCBTESTROOT/options/PoolGen.opts"
+StoreExplorer.PrintMissing = 1;

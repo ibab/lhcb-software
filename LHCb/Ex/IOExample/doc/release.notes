@@ -1,0 +1,6 @@
+$Id: release.notes,v 1.1 2003-12-16 13:51:02 frankb Exp $
+Package: PoolIO
+Package Manager: M.Frank
+
+Purpose: Demonstrate how to write and read back event data using POOL I/O.
+
