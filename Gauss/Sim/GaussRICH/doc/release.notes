@@ -6,6 +6,13 @@
 !-----------------------------------------------------------------------------
 
 !======================== GaussRICH v4r6 =================================
+! 2004-03-17 - Sajan Easo
+ - Modified GiGaPhysConstructorOp.cpp to avoid suspending the
+   tracking of charged track which creates optical photons 
+   until those photons are tracked. This is to get around a 
+   problem in G4 and GiGa whereby the G4trajectory of the 
+   suspended charged track was lost and a new G4trajectory was created
+   when its tracking resumed.
 ! 2004-02-09 - Chris Jones
  - Added two new converters for MCRichTracks and MCRichSegments
  - General minor improvements to the code

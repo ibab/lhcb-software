@@ -189,7 +189,9 @@ void GiGaPhysConstructorOp::ConstructOp() {
   msg << MSG::DEBUG << " Max Number of Photons per Cherenkov step=  "
       << MaxNumPhotons << endreq;
   
-  theCerenkovProcess->SetTrackSecondariesFirst(true);
+  //  theCerenkovProcess->SetTrackSecondariesFirst(true);
+  // the following change made in March 2004 to fix the problem in G4.
+  theCerenkovProcess->SetTrackSecondariesFirst(false);
   theCerenkovProcess->SetMaxNumPhotonsPerStep(MaxNumPhotons);
   theCerenkovProcess->
     SetRichVerboseInfoTag( (G4bool) m_RichActivateVerboseProcessInfoTag);
