@@ -1,7 +1,18 @@
-! $Id: release.notes,v 1.34 2002-12-13 14:25:19 ibelyaev Exp $
+! $Id: release.notes,v 1.35 2002-12-15 17:17:45 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-12-15 - Ivan Belyaev
+ - src/component/GiGaGeo.cpp           manualy clear Logical Volumes store and
+   src/component/GiGaGeo.h             Physical Volumes store at the end 
+                                       Solids Store is not cleared. Moreover 
+                                       Geometry is closed again to avoid 
+                                       crash. It is a temporary fix.
+                                       Warning message is issued. 
+                                       Need to be investigated in detals 
+                                       somewhen later.
+
 
 ! 2002-12-13 - Ivan Belyaev
  - src/Lib/GiGaCnvBase.cpp           Trivial bug fixes 

@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.h,v 1.1 2002-12-07 14:36:26 ibelyaev Exp $ 
+// $Id: GiGaGeo.h,v 1.2 2002-12-15 17:17:45 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/07 14:36:26  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+//
 // ============================================================================
 #ifndef  GIGACNV_GiGaGeo_H 
 #define  GIGACNV_GiGaGeo_H 1 
@@ -296,6 +299,10 @@ private:
   std::string                      m_worldMagField ; ///< global mag field  
   // special sensitive detector for estimation of material budget 
   std::string                      m_budget        ;
+
+  // flag for clearing all G4 geometry stores    
+  bool                             m_clearStores   ;
+  
   // list of all sensitive detector
   SDobjects                        m_SDs  ; ///< created sensitive detectors 
   // list of all magnetic fields

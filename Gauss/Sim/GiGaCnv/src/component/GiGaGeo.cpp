@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.2 2002-12-13 14:25:22 ibelyaev Exp $ 
+// $Id: GiGaGeo.cpp,v 1.3 2002-12-15 17:17:45 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/13 14:25:22  ibelyaev
+//  few trivial bug fixes
+//
 // Revision 1.1  2002/12/07 14:36:26  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes
 //
@@ -41,6 +44,11 @@
 #include "G4IntersectionSolid.hh"
 #include "G4SubtractionSolid.hh"
 #include "G4UnionSolid.hh"
+//
+#include "G4GeometryManager.hh"
+#include "G4SolidStore.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4PhysicalVolumeStore.hh"
 //
 #include "G4VisAttributes.hh"
 #include "G4FieldManager.hh"
@@ -83,42 +91,46 @@ const       ISvcFactory&GiGaGeoFactory = s_Factory ;
  */
 // ============================================================================
 GiGaGeo::GiGaGeo
-( const std::string&   ServiceName          , 
-  ISvcLocator*         ServiceLocator       ) 
-  : GiGaCnvSvcBase   ( ServiceName          , 
-                       ServiceLocator       , 
-                       GiGaGeom_StorageType )
-  , m_worldPV        ( 0                    ) 
-  , m_worldNamePV    ( "Universe"           )
-  , m_worldNameLV    ( "World"              )
-  , m_worldMaterial  ( "/dd/Materials/Air"  )
+( const std::string&    ServiceName          , 
+  ISvcLocator*          ServiceLocator       ) 
+  : GiGaCnvSvcBase    ( ServiceName          , 
+                        ServiceLocator       , 
+                        GiGaGeom_StorageType )
+  , m_worldPV         ( 0                    ) 
+  , m_worldNamePV     ( "Universe"           )
+  , m_worldNameLV     ( "World"              )
+  , m_worldMaterial   ( "/dd/Materials/Air"  )
   // parameters of world volume 
-  , m_worldX         ( 50. * m              )
-  , m_worldY         ( 50. * m              )
-  , m_worldZ         ( 50. * m              )
+  , m_worldX          ( 50. * m              )
+  , m_worldY          ( 50. * m              )
+  , m_worldZ          ( 50. * m              )
   //
-  , m_worldMagField  ( ""                   )
+  , m_worldMagField   ( ""                   )
   // special sensitive detector for estimation of material budget 
-  , m_budget         ( ""                   )
+  , m_budget          ( ""                   )
+  // 
+  , m_clearStores     ( true  ) 
   //
-  , m_SDs            ()
-  , m_MFs            ()
+  , m_SDs             ()
+  , m_MFs             ()
   ///
 {
   ///
   setNameOfDataProviderSvc("DetectorDataSvc"); 
   ///
-  declareProperty("WorldMaterial"             , m_worldMaterial );
-  declareProperty("WorldPhysicalVolumeName"   , m_worldNamePV   );
-  declareProperty("WorldLogicalVolumeName"    , m_worldNameLV   );
+  declareProperty ( "WorldMaterial"             , m_worldMaterial   ) ;
+  declareProperty ( "WorldPhysicalVolumeName"   , m_worldNamePV     ) ;
+  declareProperty ( "WorldLogicalVolumeName"    , m_worldNameLV     ) ;
+  // /
+  declareProperty ( "XsizeOfWorldVolume"        , m_worldX          ) ;
+  declareProperty ( "YsizeOfWorldVolume"        , m_worldY          ) ;
+  declareProperty ( "XsizeOfWorldVolume"        , m_worldZ          ) ;
   ///
-  declareProperty("XsizeOfWorldVolume"        , m_worldX        );
-  declareProperty("YsizeOfWorldVolume"        , m_worldY        );
-  declareProperty("XsizeOfWorldVolume"        , m_worldZ        );
+  declareProperty ( "GlobalSensitivity"         , m_budget          ) ;
+  declareProperty ( "WorldMagneticField"        , m_worldMagField   ) ;
   ///
-  declareProperty("GlobalSensitivity"         , m_budget        );
-  declareProperty("WorldMagneticField"        , m_worldMagField );
-  ///
+  declareProperty ( "ClearStores"              , m_clearStores      ) ;
+  
 };
 // ============================================================================
 
@@ -477,10 +489,40 @@ StatusCode GiGaGeo::finalize()
                  m_MFs.end   () , 
                  std::mem_fun( &IInterface::release ) );
   m_MFs.clear() ;
+
   // clear store of assemblies!
   StatusCode sc = GiGaAssemblyStore::store()->clear();
-  // delete of world volume
-  // if( 0 != m_worldPV ) { delete m_worldPV ; }
+
+  // delete of volume stores 
+  if( m_clearStores ) 
+    {
+      G4GeometryManager* geo = G4GeometryManager::GetInstance() ;
+      if      (  0 == geo                ) 
+        { Warning(" G4GeometryManager* points to NULL!"); }
+      else if (  geo -> IsGeometryClosed() ) 
+        {
+          geo -> OpenGeometry() ; 
+          Print( " G4 Geometry is opened " , 
+                 MSG::VERBOSE , StatusCode::SUCCESS ) ;
+        }
+      G4LogicalVolumeStore  :: Clean     () ;
+      Print( " G4LogicalVolumeStore  is cleaned "  ,
+             MSG::VERBOSE , StatusCode::SUCCESS ) ;
+      G4PhysicalVolumeStore :: Clean     () ;
+      Print( " G4PhysicalVolumeStore is cleaned "  ,
+             MSG::VERBOSE , StatusCode::SUCCESS ) ;
+      // ugly trick to "hide" some erros 
+      if( 0 != geo && ! geo->IsGeometryClosed() ) 
+        {
+          geo->CloseGeometry( false , false ) ;
+          Warning( " G4 Geometry is closed " + 
+                   std::string(" (temporary trick, to be fixed soon) " ) );
+        }
+      G4SolidStore          :: Clean     () ;
+      Print( " G4SolidStore          is cleaned only partially " , 
+             MSG::VERBOSE , StatusCode::SUCCESS ) ;
+    }
+  
   // finalize the base class 
   return GiGaCnvSvcBase::finalize(); 
 };
