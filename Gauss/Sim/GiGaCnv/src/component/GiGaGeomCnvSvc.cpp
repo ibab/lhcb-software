@@ -1,8 +1,11 @@
-// $Id: GiGaGeomCnvSvc.cpp,v 1.12 2002-05-16 13:22:14 witoldp Exp $ 
+// $Id: GiGaGeomCnvSvc.cpp,v 1.13 2002-06-14 09:47:05 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2002/05/16 13:22:14  witoldp
+// fixed registering of SD with g4SDManager
+//
 // Revision 1.11  2002/05/07 12:24:50  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes 7 May 2002
 //
@@ -43,6 +46,7 @@
 #include "G4Trd.hh"
 #include "G4Trap.hh"
 #include "G4Tubs.hh"
+#include "G4Polycone.hh"
 #include "G4IntersectionSolid.hh"
 #include "G4SubtractionSolid.hh"
 #include "G4UnionSolid.hh"
@@ -325,6 +329,32 @@ G4VSolid*    GiGaGeomCnvSvc::solid ( const ISolid*      Sd     )
                            sTrap->dxAtPlusZMinusY  (),
                            sTrap->dxAtPlusZPlusY   (),
                            sTrap->alphaAtPlusZ     () ); }
+  }
+  /// polycone ?
+  {
+    const SolidPolycone* sPolycone = dynamic_cast<const SolidPolycone*>(Sd);
+    if (solidType == "SolidPolycone" && 0 != sPolycone ) 
+      {      
+        int numberofz=sPolycone->number();
+        double ztemp[numberofz];
+        double rIntemp[numberofz];
+        double rOuttemp[numberofz];
+        
+        for (int it=0;it<numberofz;it++)
+          {
+            ztemp[it]=sPolycone->z(it);
+            rIntemp[it]=sPolycone->RMin(it);
+            rOuttemp[it]=sPolycone->RMax(it);              
+          }
+        return new G4Polycone( sPolycone->name          (),
+                               sPolycone->startPhiAngle (),
+                               sPolycone->deltaPhiAngle (),
+                               numberofz                  ,
+                               ztemp                      ,
+                               rIntemp                    ,
+                               rOuttemp);
+      }
+    
   }
   /// boolean ? 
   {
