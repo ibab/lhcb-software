@@ -10,8 +10,8 @@
     <assoc from="ITCluster" to="MCParticle" weight="double"/>
     <assoc from="ITCluster" to="MCHit"      weight="double"/>
 
-    <assoc from="OTDigit"   to="MCHit"      weight="int"/>
-    <assoc from="OTCluster" to="MCParticle"/>
+    <import name="Event/OTTime"/>
+    <assoc from="OTTime"    to="MCHit"      type="1D"/>
 
     <assoc from="MuonCoord" to="MCParticle"/>
 

@@ -4,6 +4,14 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v1r4 2004-10-18 ==========================
+! 2004-08-30 - Jacopo Nardulli
+ - Modifications in EventAssoc.xml for new OT event model:
+   <assoc from="OTTime" to="MCHit" type="1D"/>
+   replaces the previous ones:
+   <assoc from="OTDigit"   to="MCHit"      weight="int"/>
+   <assoc from="OTCluster" to="MCParticle"/>
+
 !======================= EventAssoc v1r3 2004-09-06 ==========================
 ! 2004-09-06 - Marco Cattaneo
  - Add explicit use Relations to requirements

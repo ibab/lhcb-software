@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.5 2004-09-06 15:00:15 cattanem Exp $
+# $Id: requirements,v 1.6 2004-10-20 08:38:31 cattanem Exp $
 # Created    : 19/12/2003
 # Maintainer : Marco Cattaneo
 #
 package           EventAssoc
-version           v1r3
+version           v1r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
