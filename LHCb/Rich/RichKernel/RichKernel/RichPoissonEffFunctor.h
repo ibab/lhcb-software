@@ -1,17 +1,19 @@
 
-//------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 /** @file RichPoissonEffFunctor.h
  *
  *  Header file for poisson efficiency functor : RichPoissonEffFunctor
  *
  *  CVS Log :-
- *  $Id: RichPoissonEffFunctor.h,v 1.1 2005-01-07 13:16:36 jonrob Exp $
+ *  $Id: RichPoissonEffFunctor.h,v 1.2 2005-01-13 12:17:29 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 13:16:36  jonrob
+ *  Add to CVS
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
  */
-//------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_RICHPOISSONEFFFUNCTOR_H
 #define RICHKERNEL_RICHPOISSONEFFFUNCTOR_H 1
