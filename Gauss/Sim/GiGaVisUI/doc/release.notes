@@ -3,7 +3,11 @@
 ! Responsible	   : Vanya Belyaev, Witold Pokorski
 ! Purpose          : GiGa visualisation and UI 
 !-----------------------------------------------------------------------------
-	
+
+!========================== GiGaVisUI v1r2 2003-02-17 =======================
+
+! 2003-02-17 - Witek Pokorski
+ - changed version numer for the next Gauss release	
 
 ! 2003-02-11 - Ivan BELYAEV
  - src/GiGaVisManager.cpp  initialize the static accessor to G4VVisManager 
