@@ -1,20 +1,9 @@
-// $Id: CovarianceEstimator.h,v 1.3 2002-04-02 10:59:30 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.h,v 1.4 2002-11-13 20:43:36 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2001/11/08 20:04:23  ibelyaev
-//  update and bug fix
-//
-// Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
-// New package: The first commit into CVS
-//
-// Revision 1.2  2001/07/17 20:00:49  ibelyaev
-// modifications to improve Doxygen documentation
-//
-// Revision 1.1  2001/07/06 21:20:27  ibelyaev
-// new class CovarianceEstimator
-//
+// Revision 1.3  2002/04/02 10:59:30  ibelyaev
 // ===========================================================================
 #ifndef CALOALGS_COVARIANCEESTIMATOR_H
 #define CALOALGS_COVARIANCEESTIMATOR_H 1
@@ -22,14 +11,15 @@
 // Include files
 // STD & STL
 #include <functional>
+#include <iostream>
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
 // GaudiKernel
 #include "GaudiKernel/StatusCode.h"
 // forward declaration
-class  CaloCluster;
-class  DeCalorimeter;
-
+class  CaloCluster    ;
+class  DeCalorimeter  ;
+class  MsgStream      ;
 
 /** @class CovarianceEstimator CovarianceEstimator.h
  *
@@ -163,18 +153,21 @@ public:
   typedef DeCalorimeter* DET;
   
   /** standard constructor
-      @param  Det      pointer to DeCalorimeter object
-      @param  ResA     intrinsic calo resolution
-      @param  GainS    sigma relative error in gain
-      @param  NoiseIn  sigma on incoherent noise
-      @param  NoiseCo  sigma on coherent   noise
-  */
+   *   @param  Det      pointer to DeCalorimeter object
+   *  @param  ResA     intrinsic calo resolution
+   *  @param  GainS    sigma relative error in gain
+   *  @param  NoiseIn  sigma on incoherent noise
+   *  @param  NoiseCo  sigma on coherent   noise
+   *  @param  ResB     intrinsic additions to the constant term 
+   *                   (nonuniformities, leakages)  
+   */
   CovarianceEstimator( const DeCalorimeter* Det     = 0    ,
                        const double         A       = 0.10 ,
-                       const double         GainS   = 0.0  ,
+                       const double         GainS   = 0.01 ,
                        const double         NoiseIn = 0.0  ,
-                       const double         NoiseCo = 0.0  );
-
+                       const double         NoiseCo = 0.0  , 
+                       const double         ResB    = 0.01 );
+  
   /// (virtual) Destructor
   virtual ~CovarianceEstimator();
 
@@ -209,7 +202,7 @@ public:
   inline const DeCalorimeter* detector    () const
   { return m_detector    ; }
   
-  /** set new resolution parameter 
+  /** set new resolution parameter
    *  @param A calorimeter resolution 
    */
   inline void setA ( const double A ) 
@@ -220,6 +213,18 @@ public:
    */
   inline double a2GeV        () const
   { return m_a2GeV  ; }
+
+  /** set new resolution parameter
+   *  @param B calorimeter resolution 
+   */
+  inline void setB ( const double B ) 
+  { m_b2  = B * B ; }
+  
+  /** calorimeter resolution (B*B)
+   *  @return B*B resolution parameter 
+   */
+  inline double b2           () const
+  { return m_b2   ; }
 
   /** set error in gain 
    *  @param GainS error in relative gain 
@@ -262,17 +267,49 @@ public:
    */   
   inline double s2coherent   () const
   { return m_s2coherent   ; }
-
+  
+  /** printout to standard gaudi stream 
+   *  @see MsgStream 
+   *  @param log the reference to the standard stream 
+   *  @return the reference to the standard stream 
+   */
+  MsgStream&     printOut ( MsgStream&    log             ) const ;
+  
+  /** printout to standard gaudi stream 
+   *  @param  log  the reference to the standard stream 
+   *  @return the reference to the standard stream 
+   */
+  std::ostream&  printOut ( std::ostream& log = std::cout ) const ;
+  
 private:
-
+  
   const DeCalorimeter* m_detector ; ///< pointer to DeCalorimeter object
   double m_a2GeV                  ; ///< calorimeter resolution ((A**2)*GeV)
+  double m_b2                     ; ///< calorimeter resolution ((B**2))
   double m_s2gain                 ; ///< relative gain dispersion
   double m_s2incoherent           ; ///< incoherent noise dispersion
   double m_s2coherent             ; ///< coherent noise dispersion
-
+  
 };
 
+/** printout operator to standard gaudi stream 
+ *  @see MsgStream 
+ *  @param stream the reference to the standard stream 
+ *  @param object object to be printed  
+ *  @return the reference to the standard stream 
+ */
+inline MsgStream&    operator<<( MsgStream&                 stream , 
+                                 const CovarianceEstimator& object ) 
+{ return object.printOut( stream );};
+
+/** printout operator to standard gaudi stream 
+ *  @param stream the reference to the standard stream 
+ *  @param object object to be printed  
+ *  @return the reference to the standard stream 
+ */
+inline std::ostream& operator<<( std::ostream&              stream , 
+                                 const CovarianceEstimator& object ) 
+{ return object.printOut( stream );};
 
 // ===========================================================================
 // The End 

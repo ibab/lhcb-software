@@ -1,20 +1,8 @@
-// $Id: CovarianceEstimator.cpp,v 1.10 2002-10-03 10:25:48 cattanem Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.11 2002-11-13 20:43:37 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2002/06/13 12:33:53  ibelyaev
-//  bug fixes
-//
-// Revision 1.8  2002/05/29 07:42:43  ibelyaev
-//  fix the most stupid bug in my life
-//
-// Revision 1.7  2002/05/23 11:16:30  ibelyaev
-//  remove extra printout
-//
-// Revision 1.6  2002/05/23 11:07:09  ibelyaev
-//  see /afs/cern.ch/user/i/ibelyaev/w0/Calo/CaloUtils/v2r0/doc/release.notes
-//
 // ============================================================================
 #define CALOUTILS_COVARIANCEESTIMATOR_CPP 1 
 // ============================================================================
@@ -26,6 +14,9 @@
 #include "CLHEP/Matrix/SymMatrix.h"
 /// GaudiKernel
 #include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/MsgStream.h"
+/// Kernel
+#include "Kernel/CaloPrint.h"
 /// CaloDet
 #include "CaloDet/DeCalorimeter.h"
 /// CaloEvent
@@ -59,9 +50,11 @@ CovarianceEstimator::CovarianceEstimator
   const double         ResA     ,
   const double         GainS    ,
   const double         NoiseIn  ,  
-  const double         NoiseCo  )
+  const double         NoiseCo  ,
+  const double         ResB     )
   : m_detector     ( Detector             ) 
   , m_a2GeV        ( ResA    * ResA * GeV )
+  , m_b2           ( ResB    * ResB       )
   , m_s2gain       ( GainS   * GainS      )
   , m_s2incoherent ( NoiseIn * NoiseIn    )  
   , m_s2coherent   ( NoiseCo * NoiseCo    )
@@ -142,13 +135,14 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
       const double y_i  =   pos.y() ;
       // intrinsic resolution 
       double s2 = fabs( energy )  * a2GeV() ; 
+      if( 0 != b2     () ) { s2 += energy * energy * b2     () ; }  
       //  gain fluctuation
-      if( 0 != s2gain () ) { s2 += energy * energy * s2gain() ; }  
+      if( 0 != s2gain () ) { s2 += energy * energy * s2gain () ; }  
       //  noise (both coherent and incoherent) 
       double g = 0;
       if( 0 != s2noise() ) 
         { 
-          g = detector()->cellGain( digit->cellID() ); 
+          g   = detector()->cellGain( digit->cellID() ); 
           s2 += s2noise() * g * g ; 
         }
       //
@@ -249,6 +243,61 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   return StatusCode::SUCCESS;
 };
 // ============================================================================
+
+// ============================================================================
+/** printout to standard gaudi stream 
+ *  @see MsgStream 
+ *  @param  log the reference to the standard stream 
+ *  @return the reference to the standard stream 
+ */
+// ============================================================================
+MsgStream& CovarianceEstimator::printOut ( MsgStream& log ) const 
+{
+  CaloPrint print;
+  log << " Cluster Covariance Estimator: " 
+      << " Detector is " <<  ( 0 == m_detector ? "INVALID" : "VALID" )
+      << endreq 
+      << "   Resolution       is " << print( sqrt( a2GeV        () / GeV ) ) 
+      << endreq 
+      << "   Sigma Gain       is " << print( sqrt( s2gain       ()       ) ) 
+      << endreq 
+      << "   Coherent Noise   is " << print( sqrt( s2coherent   ()       ) ) 
+      << endreq 
+      << "   InCoherent Noise is " << print( sqrt( s2incoherent ()       ) )
+      << endreq ;
+  ///
+  return log ;
+};
+// ============================================================================
+
+
+// ============================================================================
+/** printout to standard gaudi stream 
+ *  @see MsgStream 
+ *  @param  log the reference to the standard stream 
+ *  @return the reference to the standard stream 
+ */
+// ============================================================================
+std::ostream& CovarianceEstimator::printOut ( std::ostream& log ) const 
+{
+  CaloPrint print;
+  log << " Cluster Covariance Estimator: " 
+      << " Detector is " <<  ( 0 == m_detector ? "INVALID" : "VALID" )
+      << std::endl 
+      << "   Resolution       is " << print( sqrt( a2GeV        () / GeV ) ) 
+      << std::endl 
+      << "   Sigma Gain       is " << print( sqrt( s2gain       ()       ) ) 
+      << std::endl 
+      << "   Coherent Noise   is " << print( sqrt( s2coherent   ()       ) ) 
+      << std::endl 
+      << "   InCoherent Noise is " << print( sqrt( s2incoherent ()       ) )
+      << std::endl ;
+  ///
+  return log ;
+};
+// ============================================================================
+
+
 
 // ============================================================================
 // The End 

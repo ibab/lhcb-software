@@ -1,8 +1,11 @@
-// $Id: SpreadEstimator.h,v 1.1 2001-11-22 16:02:33 ibelyaev Exp $
+// $Id: SpreadEstimator.h,v 1.2 2002-11-13 20:43:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/22 16:02:33  ibelyaev
+//  new utilities
+// 
 // ============================================================================
 #ifndef CALOUTILS_SPREADESTIMATOR_H 
 #define CALOUTILS_SPREADESTIMATOR_H 1
@@ -73,7 +76,9 @@ class SpreadEstimator :
   
  private:
   
-  const DeCalorimeter* m_detector ;
+  const DeCalorimeter*  m_detector ;
+
+  mutable unsigned long m_invalid  ;
   
 };
 
