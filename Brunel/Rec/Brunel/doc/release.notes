@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v19r0>2003-06-24 Brunel v19r0</A></H1><PRE>
+</PRE><H1><A NAME=v19r0>2003-06-26 Brunel v19r0</A></H1><PRE>
 - Development version for:
    . Port to Gaudi v12
    . Port to gcc 3.2
@@ -35,6 +35,7 @@ Purpose: LHCb reconstruction program
 
 - Bug fixes:
    . Release application manager in BrunelMain.cpp, to please valgrind
+   . Remove IGeometryInfoException from DoxyFile.cfg, to fix doxygen doc
 
 </PRE><H1><A NAME=v18r1>2003-06-24 Brunel v18r1</A></H1><PRE>
 - New features:
