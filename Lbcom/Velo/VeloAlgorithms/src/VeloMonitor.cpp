@@ -289,10 +289,10 @@ StatusCode VeloMonitor::bookHistograms() {
     // MCVeloHit
     m_MCVHNHits = histoSvc()->
       book("velo/1", "Number of MCVeloHits per event", 100, 0., 3000.);
-    m_MCVHEntryZX = histoSvc()->
-      book("velo/4", "Particle entry point in Si ZX (cm)", 
-           1000, -20., 80.,50,-10.,10.);
     if (m_detailedMonitor) {
+      m_MCVHEntryZX = histoSvc()->
+  book("velo/4", "Particle entry point in Si ZX (cm)",
+       1000,-20.,80.,50,-10.,10.);
       m_MCVHEnergy = histoSvc()->
 	book("velo/2", "Energy deposited in Si (eV)", 100, 0., 300000.);
       m_Thomas1 = histoSvc()->
@@ -317,10 +317,10 @@ StatusCode VeloMonitor::bookHistograms() {
     // pileup MCVeloHit
     m_MCVHPNHits = histoSvc()->
       book("velo/51", "PU:Number of MCVeloHits per event", 100, 0., 2000.);
-    m_MCVHPEntryZX = histoSvc()->
-      book("velo/54", "PU:Particle entry point in Si ZX (cm)",
-           1000, -20., 80.,50,-10.,10.);
     if (m_detailedMonitor) {
+      m_MCVHPEntryZX = histoSvc()->
+  book("velo/54", "PU:Particle entry point in Si ZX (cm)",
+           1000, -20., 80.,50,-10.,10.);
       m_MCVHPEnergy = histoSvc()->
 	book("velo/52", "PU:Energy deposited in Si (eV)", 100, 0., 300000.);
       m_MCVHPEntryXY = histoSvc()->
@@ -447,12 +447,12 @@ StatusCode VeloMonitor::bookHistograms() {
     //Velo Cluster
     m_VCNHits = histoSvc()->
       book("velo/301", "Number of VeloClusters per event", 50, 0., 3000.);
-    m_VCZR = histoSvc()->
-      book("velo/314", "Cluster R position vs. Z (cm)",1000,-20., 80.,50,0.,5.);
-    m_VCZPhi = histoSvc()->
-      book("velo/315", "Cluster Phi position vs. Z (cm)",
-           1000, -20., 80.,60,-180.,180.);
     if (m_detailedMonitor) {
+      m_VCZR = histoSvc()->
+  book("velo/314", "Cluster R position vs. Z (cm)",1000,-20., 80.,50,0.,5.);
+      m_VCZPhi = histoSvc()->
+  book("velo/315", "Cluster Phi position vs. Z (cm)",
+       1000, -20., 80.,60,-180.,180.);
       m_VCNHits_s = histoSvc()->
 	book("velo/302", "signal dominated - Number of VeloClusters per event",
        50, 0., 3000.);

@@ -1,6 +1,9 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+! 2003-04-04 - Marco Cattaneo
+ - Remove 2D histograms from default set
+
 ! 2003-04-04 - Juan Palacios
  - Cleaned up VeloMonitor. Added new histograms and options files.
 
