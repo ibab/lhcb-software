@@ -25,7 +25,7 @@ stored for a single silicon/output channel. Constructed from MCVeloHits
 (i.e. GEANT deposits), MCVeloFE of previous events (spill over), noise 
 (above a threshold)"
            location="/Event/MC/Velo/FE">
-      <location name="PuVeto" place="/Event/MC/Velo/FE" />
+      <location name="PuVeto" place="/Event/MC/Velo/PuFE" />
       <base name="KeyedObject&lt;VeloChannelID&gt;"/>
       <import name="Kernel/VeloChannelID"/>
       <constructor desc="Constructor with key" 
