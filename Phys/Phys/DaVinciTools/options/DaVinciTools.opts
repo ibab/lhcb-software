@@ -4,28 +4,14 @@
 //---------------------------------------------------------------
 
 ToolSvc.AxPart2MCParticleAsct.DataLocation = "/Event/Anal/AxPart2MCParticle" ;
+ToolSvc.MCUtilityTool.PrintDepth = 999;
 
 //##############################################################
 // Default options for Algorithms available
-// Users can overwrite any of the single options or include their
-// own copy of an algorithm options
+// Each option can be overriden later
 //---------------------------------------------------------------
 
-// DaVinciInitialization
-//   useSICB: do necessary initialization to run fortran physics 
-//            analysis code
-DaVinciInitialisation.useSICB = true;
-
-// AxPrimVertexAlgorithm 
-//   maximum number of times the Algorithm is allowd to fail
-AxPrimVertexAlgorithm.ErrorMax = 10;
-
-// MCDecayFinderAlgorithm
-//   ParentOfDecay: name of parent particle (def="B0")
-//   DecayProducts: name of decay products (def={ "pi+", "pi-" })
-MCDecayFinderAlgorithm.ParentOfDecay         = "K_S0";
-MCDecayFinderAlgorithm.DecayProducts         = { "pi+", "pi-" };
-
-// ==== Algorithms with many options have separate options files
-#include "$DAVINCITOOLSROOT/options/PhysSelectAlgorithm.opts" 
+//--------------------------------------------------------------
+// Algorithms with many options have separate options files
+//--------------------------------------------------------------
 
