@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.29 2002-11-08 10:56:09 ocallot Exp $
+! $Id: release.notes,v 1.30 2002-11-11 10:08:53 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v7r2 2002-11-11 =========================
 ! 2002-11-08 - Olivier Callot
  - New method nbL1Sectors() to return 8 (45 degree design) or 4 (TDR design).
 
