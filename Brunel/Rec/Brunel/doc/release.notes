@@ -3,6 +3,14 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2002-06-21 - Marco Cattaneo
+ - Add latest Calorimeter code. 
+
+   DST is now complete, except for L1Tracks and all persistent tracks other
+   than forward tracks (and corresponding Relations to MCParticle). Filtering
+   of tracking detector clusters and MCParticles/Vertices still to be done.
+
+
 ! 2002-06-19 - Marco Cattaneo
  - Add Rich digitisation and reconstruction
 

@@ -50,6 +50,10 @@ BrunelReco.DetectorList = {"VELO","OT","IT","Tr","TRACK","RICH","CALO","MUON"};
 ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
 #include "$CALOTOOLSOPTS/Brunel.opts"
 #include "$CALOALGSOPTS/Brunel.opts"
+#include "$CALORECOPTS/Brunel.opts"
+#include "$CALOASSOCIATORSOPTS/Brunel.opts"
+#include "$CALOTRACKTOOLSOPTS/Brunel.opts"
+#include "$CALOMONITOROPTS/Brunel.opts"
 
 // Rich Fortran digitisation and OO digits creator 
 ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };

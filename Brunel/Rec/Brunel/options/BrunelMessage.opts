@@ -29,7 +29,6 @@ fitSeed.Fitter.OutputLevel = 5;
 matchVeloSeed.OutputLevel = 5;
 reFit.Fitter.OutputLevel = 5;
 
-SicbMCCaloHitCnv.OutputLevel = 5;
 RichPIDMonitor.OutputLevel = 4;
 RichPIDCnvVrifier.OutputLevel = 4;
 RichMCDigitToDigitAlg.OutputLevel = 4;
