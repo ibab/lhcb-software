@@ -11,10 +11,10 @@ include_dirs	$(L0CALOROOT)
 set L0CALOOPTS	$(L0CALOROOT)/options
 
 # ================ used packages =========================================
-use L0Event     v12r*   Event
+use L0Event     v13r*   Event
 use CaloEvent	v11r*	Event
-use CaloDet	v5r*	Det
-use AIDA        v2r* -no_auto_imports
+use CaloDet	v6r*	Det
+use AIDA        v* -no_auto_imports
 
 # ================ component library =====================================
 library		L0Calo	../src/*.cpp -import=AIDA

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.26 2002-12-01 14:24:46 ibelyaev Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v6r4 2002-12-05 =====================
 ! 2002-11-29 - Ivan Belyaev
  - cmt/requirements     version update
+
+! 2002-11-26 - Florence Ranjard
+ - requirements - use new versions
 
 !========================= L0Calo v6r3 2002-11-22 =======================
 ! 2002-11-21 - Olivier Callot
