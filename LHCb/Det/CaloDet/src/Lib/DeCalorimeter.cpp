@@ -1,25 +1,8 @@
+// $Id: DeCalorimeter.cpp,v 1.14 2001-11-25 15:08:46 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2001/08/21 11:03:57  ibelyaev
-// parameter fix on Win2K
-//
-// Revision 1.11  2001/07/17 17:26:52  ibelyaev
-// modifications to improve Doxygen documentation
-//
-// Revision 1.10  2001/07/12 21:53:39  ibelyaev
-// adaptation for Win2K
-//
-// Revision 1.9  2001/07/02 17:17:59  ibelyaev
-// improvements in readability of DeCalorimeter.h
-//
-// Revision 1.8  2001/06/30 10:29:03  ibelyaev
-// modification in printout methods
-//
-// Revision 1.7  2001/06/29 10:26:18  ibelyaev
-// update to use new features of DetDesc v7 package
-//
 // ============================================================================
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
@@ -34,8 +17,8 @@
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
-// CaloGen
-#include "CaloGen/OutputStreamIterator.h"
+// CaloKernel
+#include "CaloKernel/OutputStreamIterator.h"
 //
 // from Det/CaloDet
 #include "CaloDet/DeCalorimeter.h"
@@ -48,7 +31,6 @@
  *  @author Olivier Callot Olivier.Callot@cern.ch
  *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru 
  */
-
 
 // **  Standard Constructors
 

@@ -1,7 +1,11 @@
+// $Id: DeCalorimeter.h,v 1.8 2001-11-25 15:08:45 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2001/08/21 13:05:08  ibelyaev
+// fix problems of user parameters on Win2K
+//
 // Revision 1.6  2001/07/02 17:17:59  ibelyaev
 // improvements in readability of DeCalorimeter.h
 //
@@ -15,34 +19,28 @@
 /// from STL
 #include <iostream>
 #include <vector>
-
 /// from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Units/SystemOfUnits.h"
 #include "CLHEP/Units/PhysicalConstants.h"
-
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
-
 /// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"
-
-/// from Event/CaloGen
-#include "CaloGen/CaloCellID.h"
-#include "CaloGen/CaloVector.h"
-#include "CaloGen/CaloException.h"
-
+/// from CaloKernel
+#include "CaloKernel/CaloCellID.h"
+#include "CaloKernel/CaloVector.h"
+#include "CaloKernel/CaloException.h"
 /// from Det/CaloDet
 #include "CaloDet/CaloCardParams.h"
 #include "CaloDet/CLIDDeCalorimeter.h"
 #include "CaloDet/CellParam.h"
 #include "CaloDet/CardParam.h"
 
-
 /// forwad declarations
 class MsgStream;
 
-/** @class DeCalorimeter DeCalorimeter.h "CaloDet/DeCalorimeter.h" 
+/** @class DeCalorimeter DeCalorimeter.h CaloDet/DeCalorimeter.h 
  *
  *  Calorimeter detector element class.
  *
@@ -54,287 +52,287 @@ class DeCalorimeter: public DetectorElement {
 
 public:
   
-  /// Constructors
+  ///  Constructors
   DeCalorimeter( const std::string& name    = "" );
   
-  /// (dirtual) Destructor
+  ///  (dirtual) Destructor
   virtual ~DeCalorimeter() ;
   
-  /// object identification
+  ///  object identification
   static  const CLID& classID ()       { return CLID_DeCalorimeter ; } 
-  /// object identification
+  ///  object identification
   virtual const CLID& clID    () const ;
   
-  /// printout to std::ostream 
+  ///  printout to std::ostream 
   virtual std::ostream& printOut( std::ostream& s = std::cerr ) const;
-  /// printout to MsgStream 
+  ///  printout to MsgStream 
   virtual MsgStream&    printOut( MsgStream&                  ) const;
 
-  /// initialization method 
+  ///  initialization method 
   virtual StatusCode initialize(); 
  
-  /// if initialized in a proper way?
+  ///  if initialized in a proper way?
   inline  bool  isInitialized() const  { return m_initialized ; }  
   
-  /// accessor to number of builded cells 
+  ///  accessor to number of builded cells 
   unsigned int   numberOfCells () { buildCells() ; return cells.size(); };
 
-  /// set function for coding 
+  ///  set function for coding 
   void setCoding        ( const unsigned int nb     );
-  /// set function for maxEt 
+  ///  set function for maxEt 
   void setEtInCenter    ( const double maxEt        ) 
   { m_maxEtInCenter = maxEt; }
-  /// set function for maxEtSlope  
+  ///  set function for maxEtSlope  
   void setEtSlope       ( const double maxEtSlope   ) 
   { m_maxEtSlope    = maxEtSlope; }
-  /// set function for AdcMax 
+  ///  set function for AdcMax 
   void setAdcMax        ( const unsigned int adcMax ) 
   { m_adcMax        = adcMax; }
-  /// set function for active/total ratio 
+  ///  set function for active/total ratio 
   void setActiveToTotal ( const double actToTotal   ) 
   { m_activeToTotal = actToTotal; }
-  /// set function for ZshowerMax 
+  ///  set function for ZshowerMax 
   void setZShowerMax    ( const double ZShowerMax   ) 
   { m_zShowerMax    = ZShowerMax; }
   
-  /// retrieve max et in center  
+  ///  retrieve max et in center  
   double        maxEtInCenter () const { return m_maxEtInCenter ; }; 
-  /// retrieve max et slope 
+  ///  retrieve max et slope 
   double        maxEtSlope    () const { return m_maxEtSlope    ; }; 
-  /// retrieve adcMax 
+  ///  retrieve adcMax 
   unsigned int  adcMax        () const { return m_adcMax        ; }; 
-  /// retrieve active/total energy ratio 
+  ///  retrieve active/total energy ratio 
   double        activeToTotal () const { return m_activeToTotal ; };
-  /// retrieve position of shower max 
+  ///  retrieve position of shower max 
   double        zShowerMax    () const { return m_zShowerMax    ; };
   
-  /// validity flag for the cell 
+  ///  validity flag for the cell 
   inline bool   valid    ( const CaloCellID& ) const ;
-  /// x-position of center of the cell 
+  ///  x-position of center of the cell 
   inline double cellX    ( const CaloCellID& ) const ;
-  /// y-position of center of the cell 
+  ///  y-position of center of the cell 
   inline double cellY    ( const CaloCellID& ) const ;
-  /// z-position of center of the cell 
+  ///  z-position of center of the cell 
   inline double cellZ    ( const CaloCellID& ) const ;
-  /// cell size  
+  ///  cell size  
   inline double cellSize ( const CaloCellID& ) const ;
-  /// sine function for given cell 
+  ///  sine function for given cell 
   inline double cellSine ( const CaloCellID& ) const ;
-  /// PM gain for given cell  
+  ///  PM gain for given cell  
   inline double cellGain ( const CaloCellID& ) const ;
-  /// Timing for for given cell  
+  ///  Timing for for given cell  
   inline double cellTime ( const CaloCellID& ) const ;
-  /// cell center 
+  ///  cell center 
   inline const HepPoint3D&    cellCenter       ( const CaloCellID& ) const ;
-  /// list of neighbour cells 
+  ///  list of neighbour cells 
   inline const CaloNeighbors& neighborCells    ( const CaloCellID& ) const ;
-  /// list of neighbour cells 
+  ///  list of neighbour cells 
   inline const CaloNeighbors& zsupNeighborCells( const CaloCellID& ) const ;
   
-  /// From ID to cell serial number and vice-versa
+  ///  From ID to cell serial number and vice-versa
   inline int        cellIndex    ( const CaloCellID&  ) const ;
   inline CaloCellID cellIdByIndex( const unsigned int ) const ;
   
-  /// More complex functions
+  ///  More complex functions
   CaloCellID  Cell    ( const HepPoint3D& point )             ;
   
-  /// Front-end card information
-  /// card number 
+  ///  Front-end card information
+  ///  card number 
   inline int cardNumber( const CaloCellID& ) const ;
-  /// card row  
+  ///  card row  
   inline int cardRow   ( const CaloCellID& ) const ;
-  /// card column  
+  ///  card column  
   inline int cardColumn( const CaloCellID& ) const ;
-  /// card address 
+  ///  card address 
   inline void cardAddress ( const CaloCellID& ID   , 
                             int &             card , 
                             int &             row  , 
                             int &             col  ) const ;
   
-  /// number of cards 
+  ///  number of cards 
   int nCards          ( )                 const { return m_cards; }
-  /// down card number 
+  ///  down card number 
   inline int downCardNumber     ( const int card   )  const ;
-  /// left card number 
+  ///  left card number 
   inline int leftCardNumber     ( const int card   )  const ;
-  /// corder card number 
+  ///  corder card number 
   inline int cornerCardNumber   ( const int card   )  const ;
-  /// previous card number 
+  ///  previous card number 
   inline int previousCardNumber ( const int card   )  const ;
-  /// card neighbours
+  ///  card neighbours
   inline void cardNeighbors     ( const int card   , 
                                   int&      down   , 
                                   int&      left   ,  
                                   int&      corner )  const ;
-  /// card area 
+  ///  card area 
   inline int cardArea           ( const int card   )  const ;
-  /// card first row 
+  ///  card first row 
   inline int cardFirstRow       ( const int card   )  const ;
-  /// card first column 
+  ///  card first column 
   inline int cardFirstColumn    ( const int card   )  const ;
-  /// ID of the bottom left cell
+  ///  ID of the bottom left cell
   inline CaloCellID firstCellID ( const int card   )  const ;
-  /// ID of of the top right cell
+  ///  ID of of the top right cell
   inline CaloCellID lastCellID  ( const int card   )  const ;
-  /// ID of the specified cell
+  ///  ID of the specified cell
   inline CaloCellID cardCellID  ( const int card   , 
                                   const int row    , 
                                   const int col    )  const ;
   ///
 protected: 
   
-  /// Initialization method for building the cells 
+  ///  Initialization method for building the cells 
   StatusCode     buildCells    ();
-  /// Initialization method for building the cards 
+  ///  Initialization method for building the cards 
   StatusCode     buildCards    ();
   
 protected: 
   
-  /// assertion
+  ///  assertion
   inline void Assert( bool , const char*         ) const ; 
-  /// assertion
+  ///  assertion
   inline void Assert( bool , const std::string&  ) const ; 
   
 private:
   
-  /// Flag, to compute the geometry only once
+  ///  Flag, to compute the geometry only once
   bool     m_initialized;     
-  /// Flag, to compute the card layout only once  
+  ///  Flag, to compute the card layout only once  
   bool     m_cardsInitialized;
-  /// Calorimeter index, to code CellIDs
+  ///  Calorimeter index, to code CellIDs
   int      m_caloIndex;   
-  /// Maximum value for the Row / Column =31 or 63
+  ///  Maximum value for the Row / Column =31 or 63
   int      maxRowCol;  
-  /// First row or column over center,    16 or 64
+  ///  First row or column over center,    16 or 64
   int      firstRowUp;       
-  /// Central value = maxRowCol/2,      15.5 or 31.5
+  ///  Central value = maxRowCol/2,      15.5 or 31.5
   double   centerRowCol;    
   
-  /// Et value for the maximum ADC value at teta = 0 
+  ///  Et value for the maximum ADC value at teta = 0 
  double   m_maxEtInCenter;    
   
   /**  Increase in Et per radian. 
-       This is also the maximum E if m_maxEtInCenter = 0
-  */
+   *   This is also the maximum E if m_maxEtInCenter = 0
+   */
   double   m_maxEtSlope; 
-  /// maximum codage in the ADC, 4095 or 1023
+  ///  maximum codage in the ADC, 4095 or 1023
   int      m_adcMax;  
-  /// Convertion from activeE() to energy seen 
+  ///  Convertion from activeE() to energy seen 
   double   m_activeToTotal;
-  /// Z of the shower maximum in the local frame.
+  ///  Z of the shower maximum in the local frame.
   double   m_zShowerMax;
-  /// Collection of cells
+  ///  Collection of cells
   CaloVector<CellParam> cells;
-  /// Parameters for the cards
+  ///  Parameters for the cards
   int m_cards;
-  /// Parameters for the cards
+  ///  Parameters for the cards
   std::vector<CardParam> feCards ;
   
 };
 
 
-/// ===========================================================================
-/// ouput operator 
-/// ===========================================================================
+// ===========================================================================
+//  ouput operator 
+// ===========================================================================
 inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter& de )
 { return de.printOut( os ); } 
 
-/// ===========================================================================
-/// ouput operator 
-/// ===========================================================================
+// ===========================================================================
+//  ouput operator 
+// ===========================================================================
 inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter* de )
 { return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<std::endl); }
 
-/// ===========================================================================
-/// ouput operator 
-/// ===========================================================================
+// ===========================================================================
+//  ouput operator 
+// ===========================================================================
 inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter& de )
 { return de.printOut( os ); } 
 
-/// ===========================================================================
-/// ouput operator 
-/// ===========================================================================
+// ===========================================================================
+//  ouput operator 
+// ===========================================================================
 inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter* de )
 { return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<endreq   ); }
 
-/// ===========================================================================
-/// validity flag for the cell
-/// ===========================================================================
+// ===========================================================================
+//  validity flag for the cell
+// ===========================================================================
 inline bool DeCalorimeter::valid    ( const CaloCellID& ID ) const 
 { return cells[ID].size() >0;}
 
-/// ===========================================================================
-/// x-position of center of the cell
-/// ===========================================================================
+// ===========================================================================
+//  x-position of center of the cell
+// ===========================================================================
 inline double DeCalorimeter::cellX  ( const CaloCellID& ID ) const 
 { return cells[ID].x (); }
-/// ===========================================================================
-/// y-position of center of the cell
-/// ===========================================================================
+//  ===========================================================================
+//  y-position of center of the cell
+//  ===========================================================================
 inline double DeCalorimeter::cellY  ( const CaloCellID& ID ) const 
 { return cells[ID].y (); }
 
-/// ===========================================================================
-/// z-position of center of the cell
-/// ===========================================================================
+// ===========================================================================
+//  z-position of center of the cell
+// ===========================================================================
 inline double DeCalorimeter::cellZ  ( const CaloCellID& ID ) const 
 { return cells[ID].z (); }
 
-/// ===========================================================================
-/// cell size
-/// ===========================================================================
+// ===========================================================================
+//  cell size
+// ===========================================================================
 inline double DeCalorimeter::cellSize ( const CaloCellID& ID ) const 
 { return cells[ID].size (); }
 
-/// ===========================================================================
-/// sine function for given cell
-/// ===========================================================================
+// ===========================================================================
+//  sine function for given cell
+// ===========================================================================
 inline double DeCalorimeter::cellSine ( const CaloCellID& ID ) const 
 { return cells[ID].sine (); }
 
-/// ===========================================================================
-/// PM gain for given cell
-/// ===========================================================================
+// ===========================================================================
+//  PM gain for given cell
+// ===========================================================================
 inline double DeCalorimeter::cellGain ( const CaloCellID& ID ) const 
 { return cells[ID].gain (); }
 
-/// ===========================================================================
-/// Timing for for given cell
-/// ===========================================================================
+// ===========================================================================
+//  Timing for for given cell
+// ===========================================================================
 inline double DeCalorimeter::cellTime ( const CaloCellID& ID ) const 
 { return cells[ID].time (); }
 
-/// ===========================================================================
-/// cell center
-/// ===========================================================================
+// ===========================================================================
+//  cell center
+// ===========================================================================
 inline const HepPoint3D& 
 DeCalorimeter::cellCenter ( const CaloCellID& ID ) const 
 { return cells[ID].center       (); }
 
-/// ===========================================================================
-/// list of neighbour cells
-/// ===========================================================================
+// ============================================================================
+//  list of neighbour cells
+// ============================================================================
 inline const CaloNeighbors& 
 DeCalorimeter::neighborCells    ( const CaloCellID& ID ) const 
 { return cells[ID].neighbors    (); }
 
-/// ===========================================================================
-/// list of neighbour cells
-/// ===========================================================================
+// ============================================================================
+//  list of neighbour cells
+// ============================================================================
 inline const CaloNeighbors& 
 DeCalorimeter::zsupNeighborCells( const CaloCellID& ID ) const 
 { return cells[ID].zsupNeighbors(); }
 
-/// ===========================================================================
-/// From ID to cell serial number and vice-versa
-/// ===========================================================================
+// ============================================================================
+//  From ID to cell serial number and vice-versa
+// ============================================================================
 inline int    
 DeCalorimeter::cellIndex( const CaloCellID& ID ) const 
 { return cells.index(ID); }
 
-/// ===========================================================================
-/// From ID to cell serial number and vice-versa
-/// ===========================================================================
+// ============================================================================
+//  From ID to cell serial number and vice-versa
+// ============================================================================
 inline CaloCellID 
 DeCalorimeter::cellIdByIndex( const unsigned int num )    const 
 {
@@ -342,27 +340,27 @@ DeCalorimeter::cellIdByIndex( const unsigned int num )    const
     ( (num < cells.size() ) ? (cells.begin()+num)->cellID() : CaloCellID() );
 };
 
-/// ===========================================================================
-/// card number 
-/// ===========================================================================
+// ============================================================================
+//  card number 
+// ============================================================================
 inline int 
 DeCalorimeter::cardNumber( const CaloCellID& ID ) const
 {return cells[ID].cardNumber(); }
-/// ===========================================================================
-/// card row  
-/// ===========================================================================
+// ============================================================================
+//  card row  
+// ============================================================================
 inline int 
 DeCalorimeter::cardRow   ( const CaloCellID& ID ) const 
 {return cells[ID].cardRow();    }
-/// ===========================================================================
-/// card column  
-/// ===========================================================================
+// ============================================================================
+//  card column  
+// ============================================================================
 inline int 
 DeCalorimeter::cardColumn( const CaloCellID& ID ) const 
 {return cells[ID].cardColumn(); }
-/// ===========================================================================
-/// card address 
-/// ===========================================================================
+// ============================================================================
+//  card address 
+// ============================================================================
 inline void 
 DeCalorimeter::cardAddress ( const CaloCellID& ID     ,
                              int &             card   , 
@@ -374,33 +372,33 @@ DeCalorimeter::cardAddress ( const CaloCellID& ID     ,
   column = cells[ID].cardColumn() ;
 };
 
-/// ===========================================================================
-/// down card number 
-/// ===========================================================================
+// ============================================================================
+//  down card number 
+// ============================================================================
 inline int DeCalorimeter::downCardNumber  ( const int card )  const 
 { return feCards[card].downNumber(); }
 
-/// ===========================================================================
-/// left card number 
-/// ===========================================================================
+// ============================================================================
+//  left card number 
+// ============================================================================
 inline int DeCalorimeter::leftCardNumber  ( const int card )  const 
 { return feCards[card].leftNumber(); }
 
-/// ===========================================================================
-/// corder card number 
-/// ===========================================================================
+// ============================================================================
+//  corder card number 
+// ============================================================================
 inline int DeCalorimeter::cornerCardNumber( const int card )  const 
 { return feCards[card].cornerNumber();}
 
-/// ===========================================================================
-/// previous card number 
-/// ===========================================================================
+// ============================================================================
+//  previous card number 
+// ============================================================================
 inline int DeCalorimeter::previousCardNumber(const int card ) const
 {  return feCards[card].previousNumber();}
 
-/// ===========================================================================
-/// card neighbours
-/// ===========================================================================
+// ============================================================================
+//  card neighbours
+// ============================================================================
 inline void DeCalorimeter::cardNeighbors ( const int card, 
                                            int  & down, 
                                            int  & left, 
@@ -411,27 +409,27 @@ inline void DeCalorimeter::cardNeighbors ( const int card,
   corner = feCards[card].cornerNumber();
 };
 
-/// ===========================================================================
-/// card area 
-/// ===========================================================================
+// ============================================================================
+//  card area 
+// ============================================================================
 inline int DeCalorimeter::cardArea       ( const int card ) const 
 { return feCards[card].area(); };
 
-/// ===========================================================================
-/// card first row 
-/// ===========================================================================
+// ============================================================================
+//  card first row 
+// ============================================================================
 inline int DeCalorimeter::cardFirstRow   ( const int card ) const 
 { return feCards[card].firstRow();};
 
-/// ===========================================================================
-/// card first column 
-/// ===========================================================================
+// ============================================================================
+//  card first column 
+// ============================================================================
 inline int DeCalorimeter::cardFirstColumn( const int card ) const 
 { return feCards[card].firstColumn(); };
 
-/// ===========================================================================
-/// ID of the bottom left cell, of the top right cell, of the specified cell
-/// ===========================================================================
+// ===========================================================================
+//  ID of the bottom left cell, of the top right cell, of the specified cell
+// ===========================================================================
 inline CaloCellID DeCalorimeter::firstCellID ( const int card ) const 
 {  
   return CaloCellID( m_caloIndex                 ,
@@ -440,9 +438,9 @@ inline CaloCellID DeCalorimeter::firstCellID ( const int card ) const
                      feCards[card].firstColumn() ); 
 };
 
-/// ===========================================================================
-/// ID of the bottom left cell, of the top right cell, of the specified cell
-/// ===========================================================================
+// ===========================================================================
+//  ID of the bottom left cell, of the top right cell, of the specified cell
+// ===========================================================================
 inline CaloCellID DeCalorimeter::lastCellID ( const int card ) const 
 {
   return CaloCellID( m_caloIndex                                   ,
@@ -451,9 +449,9 @@ inline CaloCellID DeCalorimeter::lastCellID ( const int card ) const
                      feCards[card].firstColumn() + nColCaloCard -1 ); 
 };
 
-/// ===========================================================================
-/// ID of the bottom left cell, of the top right cell, of the specified cell
-/// ===========================================================================
+// ===========================================================================
+//  ID of the bottom left cell, of the top right cell, of the specified cell
+// ===========================================================================
 inline CaloCellID DeCalorimeter::cardCellID ( const int card , 
                                               const int row  , 
                                               const int col ) const 
@@ -465,9 +463,9 @@ inline CaloCellID DeCalorimeter::cardCellID ( const int card ,
 };
 
 
-//----------------------------------------------------------------------------
+// ============================================================================
 // Explicit inline methods, those needing more than a single statement...
-//----------------------------------------------------------------------------
+// ============================================================================
 inline void DeCalorimeter::Assert( bool assertion , 
                                    const char* message ) const {
   if( !assertion ) {
@@ -483,6 +481,8 @@ inline void DeCalorimeter::Assert( bool assertion ,
   }
 };
 
+// ============================================================================
+// The End 
 // ============================================================================
 #endif  //    CALODET_DECALORIMETER_H
 // ============================================================================

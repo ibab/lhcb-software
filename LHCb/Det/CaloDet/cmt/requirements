@@ -1,5 +1,8 @@
 # =========================================================================	
 # $Log: not supported by cvs2svn $
+# Revision 1.14  2001/11/22 13:06:54  ibelyaev
+#  fix the package order (due to CLHEP problems)
+#
 # Revision 1.13  2001/10/30 11:32:56  ibelyaev
 # version match for  CaloGen v3*
 #
@@ -24,7 +27,7 @@ branches         src cmt doc options CaloDet
 include_dirs      $(CALODETROOT)
 
 # =============== used packages ===========================================
-use CaloGen      v3*  Calo 
+use CaloKernel   v1*  Calo 
 use DetDesc      v8*  Det 
 
 # =============== own options ==========================================
@@ -38,15 +41,16 @@ library          CaloDet           component/*.cpp
 
 #================ patterns ================================================
 
-apply_pattern    package_Lstamps
 apply_pattern    package_Llinkopts 
+apply_pattern    package_Lstamps
 apply_pattern    linker_path
 
 #================ private stuff ===========================================
 private
 apply_pattern    package_Cshlibflags
 apply_pattern    package_Lshlibflags
-macro_append     CaloDetLib_shlibflags " $(DetDesc_linkopts) "
+macro_append     CaloDetLib_shlibflags  " $(DetDesc_linkopts) "
+macro_append     CaloDetLib_shlibflags  " $(CaloKernel_linkopts) "
 macro_append     CaloDetLib_shlibflags  " $(GaudiKernel_linkopts) "
 macro_append     CaloDetLib_shlibflags  " $(CLHEP_linkopts) "
 
