@@ -1,164 +1,217 @@
 ! $Id: 
-! Package     : VertexFit
+! Package     : DaVinciFilter
 ! Responsible : P. Koppenburg
 
 ! 2004-08-23 - P. Koppenburg
- - New package Vertex extracted from DaVinciTools,
-   containing all vertex fitters and assocaited tools.
+ - New package DaVinciFilter extracted from DaVinciTools,
+   containing all filters and associated algorithms.
+   
 !========================== DaVinciTools v10r3 2004-08-23 ===================
 ! 2004-08-23 - Florence RANJARD
  - replace GaudiTools/ with GaudiAlg
 
-!========================== DaVinciTools v10r0 2004-07-22 ===================
-! 2004-07-20 - P. Koppenburg
-  - src/LagrangeMassVertexFitter.cpp
-    . Bug affecting only Windows
-      -> put definitions
-         Particle* part3 = pList[2];
-         Particle* part4 = pList[3];
-      in the sections where one knows that there are more than 2 particles.
+!========================== DaVinciTools v10r2 2004-08-17 ===================
+! 2004-08-12 - P. Koppenburg
+  Many modifications to allow DaVinciTools to work with particles made
+  from TrgTracks for HLT:
+  - cmt/requirements
+    . Use TrgEvent
+  - src/FlightDistanceFilterCriterion.*
+  & src/Momentum2FlightAngleFilterCriterion.*
+    . Use PV from Trg when UseTrgPV option is switched on (OFF by default)
+  - src/PVIPFilterCriterion.*
+    . Use PV from Trg when UseTrgPV option is switched on (OFF by default)
+    . Use PV from Phys when UseOfflinePV option is switched on (OFF by default)
+    . Determine which PV to use from track origin when nothing is switched on.
+      This does not work as expected when composte particles made from Trg 
+      particles are used. To be revised...
+  - src/TrackTypeFilterCriterion.*
+    . Works with Trg tracks, but assumes they are all Long.      
+  Also a little cosmetics:
+  - src/MassDifferenceFilterCriterion.*
+  & src/MassFilterCriterion.*
+  & src/PIDCriterion.*
+  & src/PhysDesktop.*
+    . Make it a GaudiTool. Use message service shortcuts.
+  - src/PIDCriterion.*
+    . Use CL = 0 when the list of confidence levels is not given. This
+      makes sense for HLT and for composite particles where the CL is 1 anyway.
 
-  - src/LifetimeFitter.cpp
-    . posMomCorr() was misused as the upper square in LifetimeFitter.cpp, 
-      and this is fixed.
-!========================= DaVinciTools v9r5 2004-06-04 ===================
-! 2004-06-04 - P. Koppenburg
-  - src/LagrangeGeomVertexFitter.cpp
-    . String over two lines corrected for Windows
-    
-! 2004-05-11 - P. Koppenburg for Claudia Pereira Nunes
- - src/LagrangeGeomVertexFitter.{cpp,h}
- - DaVinciTools/IGeomVertexFitter.h
-   . New constrained vertex fitting tool. This tool has two public methods. 
-     One, called fitWithGeom, makes only a geometrical  constrained fit for 
-     at most 4 tracks. It doesn't make any kind of invariant mass vertex fit, 
-     like the LagrangeMassVertexFitter tool does, it just constrain the
-     particles to come from the same point. The other method, called 
-     fitWithGeomAndSubMass, makes a geometrical constrained fit and an 
-     invariant mass constrained fit of any daughter which is a resonance 
-     (with width < 10 MeV).  This method only works if there is a daughter 
-     resonance and it works for at most 4 tracks also. 
- - src/LagrangeMassVertexFitter.{cpp,h}
-   . Corrected an error on the way the geometrical constrained 
-     equations were being obtained.
+!========================== DaVinciTools v10r1 2004-08-03 ===================
+! 2004-07-29 - P. Koppenburg for Luis Fernandez
+ - src/Momentum2FlightAngleFilterCriterion.cpp
+   . Returns a yes/no depending on the cosine of the angle between the particle 
+     momentum and the flight distance w.r.t either
+     -> all PVs
+     -> Best PV (default), chosen as the one for which the IPS of the composite
+        particle is the smallest
+! 2004-07-19 - P. Koppenburg for Luis Fernandez
+  - src/FlightDistanceFilterCriterion.{h.cpp}
+    Shorter options. see below.
+  
+! 2004-07-16 - P. Koppenburg for Luis Fernandez
+  - src/FlightDistanceFilterCriterion.{h.cpp} (preliminary version)
+    . Returns a yes/no depending on flight distance / significance w.r.t either 
+       -> all PVs (for the min cuts)
+       -> Best PV, chosen as the one for which the IPS of the composite 
+          particle is the smallest (for the min and max cuts)
+       Cuts:
+        - on the minimum signed or unsigned flight distance or significance
+          w.r.t all PVs or the Best PV
+        - on the maximum signed or unsigned flight distance or significance
+          w.r.t the Best PV
+  - options/DVFlightDistanceFilterCriterion.opts
+    . Test options for the above
+  
+! 2004-07-16 - P. Koppenburg
+  - DaVinciTools/IBestParticles.h  
+    . Interface for a new kind of "filter" tool that filters a ParticleVector
+      and returns another ParticleVector.
+  - src/FilterByBestParticles.{h,cpp}
+    . Generic DVAlgorithm that uses an IBestParticles tool to filter
+      particles.  
+  - src/KinBestParticles.{h,cpp}
+    . IBestParticles tool that returns an ordered vector with the n particles 
+      with highest P, Pt, E from a vector. 
+  - options/DVFilterByBestParticles.opts
+    . Example option file to use FilterByBestParticles with KinBestParticles.
+
+!========================== DaVinciTools v9r8 2004-07-16 ===================
+! 2004-07-15 - P. Koppenburg
+  - src/DaVinciTools_load.cpp
+    . Missing BooleanFilterCriterion added
+
+! 2004-07-09 - P. Koppenburg
+  - src/PVIPFilterCriterion.*
+    . Finalize cleanly
+
+! 2004-07-08 - P. Koppenburg
+  - src/PVIPFilterCriterion.*
+    . Made it a GaudiTool
+  - src/TrackTypeFilterCriterion.*
+    . New filter criterion that filters particles according to track types.
+         declareProperty( "RequireLong",       m_reqLong         = false );
+         declareProperty( "VetoLong",          m_vetoLong        = false );
+         declareProperty( "RequireDownstream", m_reqDownstream   = false );
+         declareProperty( "VetoDownstream",    m_vetoDownstream  = false );
+         declareProperty( "RequireUpstream",   m_reqUpstream     = false );
+         declareProperty( "VetoUpstream",      m_vetoUpstream    = false );
+         declareProperty( "RequireVelo",       m_reqVeloTrack    = false );
+         declareProperty( "VetoVelo",          m_vetoVeloTrack   = false );
+         declareProperty( "RequireBackward",   m_reqBackward     = false );
+         declareProperty( "VetoBackward",      m_vetoBackward    = false );
+         declareProperty( "RequireTtrack",     m_reqTtrack       = false );
+         declareProperty( "VetoTtrack",        m_vetoTtrack      = false );
+      Switch this to true to keep neutrals or compisite particles,
+      or they get filtered out if any of the above is true...
+         declareProperty( "IgnoreNonTracks",   m_ignoreNonTracks = false );
+
+!========================== DaVinciTools v9r6 2004-06-28 ===================
+! 2004-06-25 - P. Koppenburg
+  - src/PVIPFilterCriterion.{cpp,h}
+    . Filter for IP of particles on PV (and only PV!).
+      There are four possible cuts:
+      o MinIP:       Minimal IP on *any* PV. Typically to select B tracks.
+      o MinIPsignif: The same but cutting on IP/error
+      o MaxIP:       Maximal IP on *at least one* PV. 
+                     Typically to select the B itself
+      o MaxIPsignif: The same but cutting on IP/error.
+    Example of use can be found in $BU2LLKROOT/options/  
 
 !========================== DaVinciTools v9r2 2004-03-31 ==================
-! 2004-03-30 - P. Koppenburg for Miriam Gandelman
- - src/GeomDispCalculator.cpp
-   . Bug fix
+! 2004-03-29 - P. Koppenburg
+ - src/LifetimeSignificanceCriterion.cpp,  src/MassFilterCriterion.cpp
+   . Small modifications to allow compilation on Windows.
+
+!========================== DaVinciTools v9r1 2004-03-23 ==================
+! 2004-03-23 - P. Koppenburg for Gerhard Raven
+ - src/BooleanFilterCriterion.*
+  It makes logical 'and' and 'or' combinations of other IFilterCriterion 
+  which can be specified in the options. The difference with ParticleFilter 
+  is that both 'and' and 'or' are supported, and it satisfies the 
+  IFilterCriterion interface -- which makes it much easier/more elegant 
+  to use from eg. LoKi. 
   
 !========================== DaVinciTools v8r4 2004-01-29 ==================
 ! 2004-01-14 - Gloria CORTI
- - DaVinciTools/IGeomDispCalCulator.h
-   src/GeomDispCalculator.{h,cpp}
-   . propagate change from DaVinci v8r3 that was built on a branch  
-   
-!========================== DaVinciTools v8r3 2003-12-12 ==================
-! 2003-12-12 - Gloria CORTI for Miriam GANDELMAN
- Built on a branch v8r2b
- - DaVinciTools/IGeomDispCalCulator.h
-   src/GeomDispCalculator.{h,cpp}
-   . new interface method introduced to provide the error for each of
-     the component of the IP vector. The method requires a Particle and
-     a Vertex as input and returns 4 variables in the following order:
-     the IP, the IP error, the full IP vector and the error on the IP
-     vector.
+ - src/MassDifferenceFilterCriterion.cpp,
+       LifetimeSignificanceCriterion.cpp,
+       MassFilterCriterion.cpp,
+       V0MakerAlg.cpp
+   . remove inclusion of unnecessary ParticleID.h (preventing compilation
+     against LHCb v12r1 and v15r0 at the same time since in different 
+     locations)
+
+! 2003-12-04 - Gerhard Raven
+  - src/LifetimeSignificanceCriterion.{h,cpp}
+    . add filtercriterion on the significance of the reconstructed lifetime.
+      This criterion uses the above associator to determine which production
+      vertex to use.
 
 !========================== DaVinciTools v8r1p2 2003-06-26 ==================
 ! 2003-06-26 - Gloria CORTI
- - src/LagrangeMassVertexFitter.h & cpp
-   . introduce method finalize where tools are released (valgrind 
-     possible memory leak)
- - src/GeomDispCalculator.h & cpp
+ - src/ParticleFilter.h & cpp
    . introduce method finalize where tools are released (valgrind
-     possible memory leak )
-   . introduce protection in method calcVertexDis() when dist = 0
-     appearing wtih special configuration of Bd->D0 K* jobs (Miriam
-     GANDELMAN)
-!========================== DaVinciTools v8r1 2003-06-03 ====================
-! 2003-05-05 - Gerhard Raven
- - DaVinciTools/ILifetimeFitter.h
- - src/LifetimeFitter.{cpp,h}
-   . add code to compute, given a particle and its production vertex,
-     the corresponding particle lifetime
+     possible memory leak)
+   . move m_XXX variable to private
+   
+!========================== DaVinciTools v8r0 2003-05-01 ====================
+! 2003-04-29 - Gloria Corti
+ - src/MassFilterCriterion.h, MassFilterCriterion.cpp, 
+       VtxFilterCriterion.h, VtxFilterCriterion.cpp
+   . move criteriafrom Bs2JpsiPhi package since they are of general utility
+   . MassFilterCriterion returns a yes/no depending on the mass window,
+     allowing for asymmetric mass windows in MassFilterCriterion
+     (Gerhard Raven)
+   . VtxFilterCriterion returns a yes/no depending on the particle vertex
+     (Gerhard Raven)
+ - src/DaVinciTools_load.cpp
+   . add declaration of MassFilterCriterion and VtxFilterCriterion
 
-! 2002-11-11 - Gloria Corti
- - Fix problem in tree propagation in UnconstVertexFitter when using 
-   resonances and fix bug reported by Gerhard Raven of hessian/2 (Sandra Amato)
- - Introduce property with cut value on width of mother particle in order to
-   use products or not to make vertex in LagrangeMassVertexFitter (S.Amato)
-   leave uncommented the setIsResonance. When using this tool the tree is still
-   not correctly progagated.
+!=========================== DaVinciTools v7r1 2002-12-20 ===================
+! 2002-11-14 - Gerhard Raven
+ - Add new selection criterion MassDifferenceFilterCriterion
+   which allows to cut on the mass difference between a particle
+   and one of its daughters. 
 
 !=========================== DaVinciTools v6r0 2002-10-30 ===================
-! 2002-10-29 - Gloria Corti
- - Comment temporarly the use of setIsResonance(true) in ParticleStuffer
-   and LagrangeMassVertexFitter because of consequent missing step of
-   intermediate particle when creating a new vertex in vertex fitters when
-   daughters of resonaces are used.
+! 2002-10-20 - Gloria Corti
+ - Fix bug in FilterParticle where filterNegative was not passing any particle
+   (bug introduced in changes of 2002-10-14) (O.Dormond) 
 
-! 2002-10-22 - Gloria Corti
- - Modified UnconstVertexFitter, LagrangeMassVertexFitter and
-   GeomDispCalculator to be able to set which Transporter to use
-   (CombinedTransporter beeing the default (as in v5r0)). An example of
-   how to do it can be found in the DaVinciTest package.
- - Introduce new method in IMassVertexFitter to give 4 particles as input
-   (C.Nunes, S.Amato)
- - Modified LagrangeMassVertexFitter (C.Nunes, A.Amato)
-    + handle fits up to 4 particles,
-    + set the flag isResonance() to new particles if lifetime < exp-15sec
-    + check if a particle is a resonace in which case uses the daughters
-      to perform the fit when widht < 10 MeV
-    + fix error reported by B.Viaud to use transported values of slopes
-      and momentum and not only positions
- - Modified UnconstVertexFitter (S.Amato) 
-    + check if a particle is a resonace in which case uses the daughters
-      to perform the fit
-    + fix error reported by B.Viaud to use transported values of slopes
-      and momentum and not only positions
-
-! 2002-09-11 - Gloria Corti
- - New tool NeutralParticleMaker from Frederic Machefert
- - Modification in GeomDispCalculator and ParticleStuffer to take into
-   account different dimension in error correlation matrix in Particle
- - Changes in PhysDesktop to fix bug noted by Sandra of copying initial
-   particle when daughters of a new particle.
- - Use PhysEvent v7r0 and increase version number
+! 2002-10-14 - Gloria Corti
+ - Change message level to DEBUG (S.Amato) and remove comments to
+	 allow filtering of positive/negative particle even without any
+	 criteria (D.Huthcroft) in ParticleFilter.cpp
 
 !=========================== DaVinciTools v5r0 2002-07-29 ===================
-! 2002-07-27 - Gloria Corti
- - Add error calculation in DCA for parallel particles in 
-   GeomDispCalculator ( M.Gandelman )
+! 2002-07-28 - Gloria Corti
+ - replace macro "and" with && for compilation on windows in 
+   ParticleFilter
 
-! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
-! 2002-05-10 - Gloria Corti
-  - IMassVertexFitter: modify names of method to generic names (GC)
-  - LagrangeVertexFitter: shortcut methods (Joao de Mello)
+! 2002-07-27 - Gloria Corti
+ - Add counters for particle passing criterias both independently and
+   cumulative and introduce methods in IParticleFilter interface to
+   access counters  results in ParticleFilter ( S.Amato ) 
 
 ! 2002-05-06 - Gloria Corti
-  - DaVinciTools/IVertexFitter.h: new methods (short-cuts) for 2 and 3 
-  - src/UnconsVertexFitter: short cut methods implementation (Sandra Amato)
-  - DaVinciTools/IGeomDispCalculator.h: return type of method changed from
-    void to StatusCode (Miriam Gandelman)
-  - src/GeomDispCalculator: use transporter (Miriam Gandelman)
-
+  - src/PIDFilterCriterion.cpp - adapt to new ParticleID,
+    bug fix for CL .ge. , throw exception in constructor if service not
+    available, use new template method for service retrieval (test),
+    introduce protection if no CL list is specified
 ! ======================================================================
 ! 20020402 - DaVinciTools v3r0 (G.Corti)
-    - DaVinciTools/IVertexFitter.h, interface for generic vertex fitters
-      src/UnconstVertexFitter.h&cpp, concrete implementation of a vertex fitter
-          based on Fortran axksvrtx.F
-      author: Sandra Amato      
-    - DaVinciTools/IMassVertexFitter.h, interface for mass constrained vertex
-                                       fitters
-      src/LagrangeMassVertexFitter.h&cpp, concrete implementation using
-          Lagrangian Multipliers
-      author: Joao de Mello
-  - Introduce new OO tools working with new PhysEvent model
-    The interfaces are in DaVinciTools subdirectory.
-    - DaVinciTools/IGeomDispCalculator.h (interface)
-      src/GeomDispCalculator.h&cpp 
-          Tool to calculate varius geometrical distances between Particles & 
-          Vertices (ex. impact parameter) 
-      author: Miriam Gandelman
+    - DaVinciTools/IParticleFilter.h (interface)
+      src/ParticleFilter.h&cpp
+          Tool to filter lists of particles satisfying criteria specified
+          as IFilterCriterion (configured in jobOptions)
+      author: Paul Colrain
 
-                            
+    - DaVinciTools/IFilterCriterion.h, interface for tool specifiying a
+          criteria to be satified by a Particle to be filtered
+      src/PIDFilterCriterion.h&cpp, concrete implementation of filtering
+          by ParticleID + Confidence Level
+      src/KinFilterCriterion.h&cpp, concrete implementation of filtering 
+          based on kinematic quantities
+      author: Paul Colrain
+
