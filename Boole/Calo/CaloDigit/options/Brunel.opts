@@ -1,9 +1,8 @@
-#pragma print off
-// $Id: Brunel.opts,v 1.1.1.1 2002-11-04 10:29:51 ocallot Exp $
+// $Id: Brunel.opts,v 1.2 2002-11-15 09:24:32 ibelyaev Exp $
 //=========================================================================
 //  Calorimeter signal processing and digitisation
 //=========================================================================
-ApplicationMgr.DLLs += { "CaloDigit" };
+// ApplicationMgr.DLLs += { "CaloDigit" };
 
 BrunelDigiCALOSeq.Members = { 
   "CaloSignalAlg/SpdSignal",
@@ -21,4 +20,4 @@ BrunelDigiCALOSeq.Members = {
 };
 
 //==========================================================================
-#pragma print on
+

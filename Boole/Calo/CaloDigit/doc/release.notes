@@ -4,6 +4,12 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2002-11-15 - Ivan Belyaev
+ - options/Brunel.opts - remove explicit loading of DLL
+                         "DLLs" statements are now only in top level packages
+ - options/Brunel.opts - remove #pragma print on/off 
+                         (rely on #pragma directives from top level packages) 
+
 ! 2002-10-10 - Olivier Callot
  - Based on the old algorithms, restructuration in 3 phases, conversion to 
    CaloAlgorithms
