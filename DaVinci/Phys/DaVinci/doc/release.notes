@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.7 2002-02-11 10:49:19 gcorti Exp $
+! $Id: release.notes,v 1.8 2002-02-12 17:07:26 gcorti Exp $
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
+
+! 12022002 - DaVinci v2r0 (GCorti)
+  - adapt DaVinci.job to new configuration
 
 ! 11022002 - Gloria Corti
   - introduce printing of version number in src/Main/DaVinciMain.cpp
