@@ -2,7 +2,7 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
-===============================GaudiObjDesc v7r1============================
+===============================GaudiObjDesc v7r2============================
 
 !20050126 - Stefan
 - genClassDicts.py: fix for dictionary (because of problems with persistency 
@@ -17,6 +17,8 @@ Package manager : Stefan Roiser
 !20050117 - Stefan
 - import names stay unchanged if they contain a '.'. E.g. <import name='file.hh'/> will convert to #include "file.hh"
 - fix: all get/set/addTo/etc. methods are now public in the dictionaries by default
+
+===============================GaudiObjDesc v7r1============================
 
 !20050111 - Stefan
 - generating of typedefs in classes unified. All typedefs are handled by a single function (std::vector,KeyedContainer,ContainedObject) 
