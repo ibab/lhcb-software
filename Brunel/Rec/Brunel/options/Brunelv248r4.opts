@@ -30,7 +30,7 @@ MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
 
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options
-//EventSelector.FirstEvent = 6;
+//EventSelector.FirstEvent = 5; // Skip busy event 4...
 ApplicationMgr.EvtMax = 10;
 //--------------------------------------------------------------
 //ApplicationMgr.DLLs = {"NONE"}; // Uncomment if static link, must be last line 

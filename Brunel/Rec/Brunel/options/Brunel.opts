@@ -135,6 +135,7 @@ ApplicationMgr.DLLs += { "UpstreamPR" };
 #pragma print off
 #include "$UPSTREAMPRROOT/options/Brunel.opts"
 #pragma print on
+upstreamFit.Fitter.stateAtBeamLine = false;
 
 // Clone killer and converter to TrStoredTrack
 ApplicationMgr.DLLs += { "TrCleanEx" };

@@ -3,21 +3,32 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! Preparation for Brunel v14r0
-
+</PRE><H1><A NAME=v14r0>2002-10-14 Brunel v14r0</A></H1><PRE>
  - New tuning:
    . Improvements to Forward tracking (LongTrack v1r0, Brunel.opts)
-   . Improvements to Velo tracking fot K0s (VeloTrack v4r1)
-   . Only skip tracking if more than 1000 Velo tracks (was 200) (Brunel.opts)
+   . Improvements to Velo tracking for K0s (VeloTrack v4r1)
+   . Tune Velo noise and signal/noise cuts
+     (VeloKernel v1r2, VeloAlgorithms v2r2, VeloTrack v4r1)
 
  - New features:
    . Add support for Muon with MWPC, with/without M1
      (XmlDDDB v13r0, MuonDet v4r0)
-   . Add a track state at the Z of nearest approach to the beam (TrFitter v3r1) 
+   . Use latest versions of packages (changes not affecting Brunel)
+     (CaloAssociators v3r0)
+
+ - DST changes:
+   . Replace FwtFind with FindLongTrack in AlgUsedTimes (BrunelAlgs v1r3)
+   . Add a track state at the Z of nearest approach to the beam to Forward and
+     Match tracks (TrFitter v3r1, Brunel.opts)
 
  - Bug fixes:
    . Scan also L1Track2d2MCP when selecting MCParticles to be saved to DST. 
      Should fix crashes when writing DST (15% of signal jobs) (BrunelAlgs v1r3)
+   . Fix VeloCluster to MCHit association ambiguity
+     (EventSys v12r5, VeloEvent v11r1, VeloAssociators v1r2, L1VeloTrack 2r3)
+   . Fix a bug in debug printout (MuonID v3r2) 
+   . Use same track state for Fortran back conversion and subsequent comparison 
+     (RiSicbCnv v4r5)
 
 </PRE><H1><A NAME=v13r2>2002-10-08 Brunel v13r2</A></H1><PRE>
 Bug fix release for reprocessing of summer production

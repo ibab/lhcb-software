@@ -55,14 +55,14 @@ use VeloDet       v7r0  Det
 use Magnet        v1r1  Det
 
 # Event Model
-use EventSys     v12r4  Event
+use EventSys     v12r5  Event
 
 # SicB event data persistency
 use SicbCnv      v17r2  SICB
 use RiSicbGeom   v2r3   SICB
 use CaloSicbCnv  v7r1   SICB
 use MuonSicbCnv  v6r4   SICB
-use RiSicbCnv    v4r4   SICB
+use RiSicbCnv    v4r5   SICB
 use VSicbCnv     v8r0   SICB
 
 # Brunel utilities
@@ -77,7 +77,7 @@ use PuVeto              v4r0    L0
 use L0DU                v6r1    L0
 
 # L1 trigger
-use L1VeloTrack         v2r2    L1
+use L1VeloTrack         v2r3    L1
 
 # Calorimeter
 use CaloKernel          v2r0    Calo
@@ -86,14 +86,14 @@ use CaloUtils      	v4r2 	Calo
 use CaloTools      	v4r4 	Calo
 use CaloAlgs       	v7r1 	Calo
 use CaloMonitor         v1r1    Calo
-use CaloAssociators	v2r2	Calo
+use CaloAssociators	v3r0	Calo
 use CaloRec		v2r3	Calo
 use CaloTrackTools	v1r4	Calo
 
 # Velo
-use VeloKernel		v1r1	Velo
-use VeloAlgorithms	v2r1	Velo
-use VeloAssociators	v1r1	Velo
+use VeloKernel		v1r2	Velo
+use VeloAlgorithms	v2r2	Velo
+use VeloAssociators	v1r2	Velo
 
 # Inner Tracker
 use ITAlgorithms	v12r1  	IT
@@ -124,7 +124,7 @@ use MuonKernel          v2r1    Muon
 use MuonTools           v3r0    Muon
 use MuonAlgs		v2r2	Muon
 use MuonRec     	v2r2	Muon
-use MuonID      	v3r1	Muon
+use MuonID      	v3r2	Muon
 use MuonAssociators	v1r0	Muon
 
 # Rich
