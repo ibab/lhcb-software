@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.14 2003-10-16 11:09:45 jonrob Exp $
+// $Id: RichPIDQC.cpp,v 1.15 2003-11-02 21:47:22 jonrob Exp $
 // Include files
 
 // local
@@ -17,7 +17,7 @@ const        IAlgFactory& RichPIDQCFactory = s_factory ;
 // Standard constructor, initializes variables
 RichPIDQC::RichPIDQC( const std::string& name,
                       ISvcLocator* pSvcLocator )
-  : Algorithm ( name, pSvcLocator ) {
+  : RichAlgBase ( name, pSvcLocator ) {
 
   // Declare job options
   declareProperty( "TrackAsctName", m_tkMCTruthName = "TrackToMCP" );
@@ -35,7 +35,7 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos",   m_extraHistos = false );
+  declareProperty( "ExtraHistos",   m_extraHistos = true );
 
 }
 
@@ -47,6 +47,9 @@ StatusCode RichPIDQC::initialize() {
 
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Initialize" << endreq;
+
+  // Initialize base class
+  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
 
   // Check momentum cuts make sense
   if ( m_pMinCut >= m_pMaxCut ) {
@@ -341,8 +344,6 @@ StatusCode RichPIDQC::finalize() {
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "Finalize" << endreq;
 
-  StatusCode sc = StatusCode::SUCCESS;
-
   if ( m_truth && m_finalPrintOut ) {
 
     // index variables
@@ -461,9 +462,10 @@ StatusCode RichPIDQC::finalize() {
   } // final printout
 
   // release tools
-  if ( m_trackToMCP ) { toolSvc()->releaseTool( m_trackToMCP ); m_trackToMCP=0; }
+  releaseTool( m_trackToMCP );
 
-  return sc;
+  // finalize base class
+  return RichAlgBase::finalize();
 }
 
 StatusCode RichPIDQC::loadPIDData() {

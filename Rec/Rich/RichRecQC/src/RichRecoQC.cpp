@@ -1,4 +1,4 @@
-// $Id: RichRecoQC.cpp,v 1.6 2003-10-13 16:12:42 jonrob Exp $
+// $Id: RichRecoQC.cpp,v 1.7 2003-11-02 21:47:22 jonrob Exp $
 
 // local
 #include "RichRecoQC.h"
@@ -40,12 +40,7 @@ StatusCode RichRecoQC::initialize() {
   // acquire tools
   acquireTool( "RichParticleProperties", m_richPartProp );
   acquireTool( "RichCherenkovAngle",     m_ckAngle      );
-
-  // Get pointer to MC Truth tool
-  if ( !(toolSvc()->retrieveTool("RichRecMCTruthTool",m_richRecMCTruth) ) ) {
-    msg << MSG::ERROR << "failed to acquire RichRecMCTruthTool" << endreq;
-    return StatusCode::FAILURE;
-  }
+  acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
 
   // Book histograms
   if ( !bookHistograms() || !bookMCHistograms() ) return StatusCode::FAILURE;

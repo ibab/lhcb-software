@@ -1,9 +1,11 @@
-// $Id: RichPIDQC.h,v 1.4 2003-10-13 16:12:42 jonrob Exp $
+// $Id: RichPIDQC.h,v 1.5 2003-11-02 21:47:22 jonrob Exp $
 #ifndef RICHRECQC_RICHPIDQC_H
 #define RICHRECQC_RICHPIDQC_H 1
 
+// base class
+#include "RichUtils/RichAlgBase.h"
+
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
@@ -33,12 +35,6 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
-
-// Forward Declarations
-class IHistogram1D;
-class IHistogram2D;
-class IParticlePropertySvc;
-
 /** @class RichPIDQC RichPIDQC.h
  *
  *  Quality control monitor for RichPIDs
@@ -50,7 +46,7 @@ class IParticlePropertySvc;
 // tracking MC truth
 typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackFitAsct ;
 
-class RichPIDQC : public Algorithm {
+class RichPIDQC : public RichAlgBase {
 
 public:
 
