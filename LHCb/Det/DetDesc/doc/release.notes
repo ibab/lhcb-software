@@ -1,14 +1,21 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.53 2001-10-25 20:14:59 ibelyaev Exp $ 
+! $Id: release.notes,v 1.54 2001-11-05 16:36:24 sponce Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
 
 ! =============================================================================
+! 20011105 - Sebastien Ponce
+  XmlLVolumeCnv : add new test for dealing with precision problems in the
+  HepVis package.
+  requirements : switch to the XERCES package, forget about the XML one
+
+! =============================================================================
 ! 20011025 - Vanya Belyaev 
   src/lib/SolidSphere.h  bug fix 
+
 ! =============================================================================
 ! 20011025 - Vanya Belyaev 
   DetDesc/SolidPolycone.h 

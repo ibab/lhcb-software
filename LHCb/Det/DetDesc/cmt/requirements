@@ -2,6 +2,9 @@
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.19  2001/10/18 15:58:55  sponce
+#  avoid displaying of warning messages coming from xerces
+#
 # Revision 1.18  2001/10/17 12:54:05  sponce
 # new version
 #
@@ -18,7 +21,7 @@ include_dirs $(DETDESCROOT)
 
 use GaudiKernel v10*
 use CLHEP v1*
-use XML v3*
+use XERCES v1*
 
 # avoid displaying of warning messages coming from xerces
 set XmlBaseDetElemCnv_cpp_cppflags "-w"

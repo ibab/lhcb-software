@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.16 2001-07-03 09:21:38 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.17 2001-11-05 16:36:25 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -24,7 +24,11 @@
 #include "DetDesc/Surface.h"
 #include "DetDesc/XmlCnvException.h"
 
+// This is for the definition of M_PI
+#include <CLHEP/config/CLHEP.h>
+
 #include <cstdlib>
+#include <float.h>
 #include <map>
 
 #include "XmlLVolumeCnv.h"
@@ -1320,6 +1324,14 @@ SolidSphere* XmlLVolumeCnv::dealWithSphere (DOM_Element element) {
     deltaThetaAngle = xmlSvc()->eval(deltaThetaAngleAttribute);
   }
 
+  // take care that if startThetaAngle+deltaThetaAngle = 180 degree,
+  // it could be 180 + epsilon in case of a round error.
+  // In this case, we correct deltaThetaAngle
+  if ((startThetaAngle + deltaThetaAngle > M_PI) &&
+      (startThetaAngle + deltaThetaAngle <= M_PI + 2*DBL_EPSILON)) {
+    deltaThetaAngle = M_PI - startThetaAngle;
+  }
+  
   // builds the solid
   SolidSphere* result = new SolidSphere
     (sphereName, outerRadius, innerRadius, startPhiAngle,
