@@ -1,4 +1,4 @@
-// $Id: INNetTool.h,v 1.1 2005-02-02 07:10:27 pkoppenb Exp $
+// $Id: INNetTool.h,v 1.2 2005-03-01 11:21:25 musy Exp $
 #ifndef NNETTOOL_INNETTOOL_H 
 #define NNETTOOL_INNETTOOL_H 1
 
@@ -25,20 +25,20 @@ public:
  
   virtual double MLPm(double x1,double x2,double x3,
 		      double x4,double x5,double x6,
-		      double x7,double x8,double x9)=0;
+		      double x7,double x8)=0;
   virtual double MLPe(double x1,double x2,double x3,
 		      double x4,double x5,double x6,
-		      double x7,double x8,double x9)=0;
+		      double x7,double x8)=0;
   virtual double MLPk(double x1,double x2,double x3,
 		      double x4,double x5,double x6,
-		      double x7,double x8,double x9)=0;
+		      double x7,double x8)=0;
   virtual double MLPkS(double x1,double x2,double x3,
 		       double x4,double x5,double x6,
-		       double x7,double x8,double x9,
+		       double x7,double x8,
 		       double x10,double x11,double x12)=0;
   virtual double MLPpS(double x1,double x2,double x3,
 		       double x4,double x5,double x6,
-		       double x7,double x8,double x9,
+		       double x7,double x8,
 		       double x10,double x11,double x12)=0;
 
 };

@@ -1,4 +1,4 @@
-// $Id: NNetTool.h,v 1.2 2005-02-02 07:10:27 pkoppenb Exp $
+// $Id: NNetTool.h,v 1.3 2005-03-01 11:21:26 musy Exp $
 #ifndef NNETTOOL_NNETTOOL_H 
 #define NNETTOOL_NNETTOOL_H 1
 // Include files
@@ -29,25 +29,26 @@ public:
   /// Finalize
   StatusCode finalize();
   
-  virtual double MLPm(double x1,double x2,double x3,
-		      double x4,double x5,double x6,
-		      double x7,double x8,double x9);
-  virtual double MLPe(double x1,double x2,double x3,
-		      double x4,double x5,double x6,
-		      double x7,double x8,double x9);
-  virtual double MLPk(double x1,double x2,double x3,
-		      double x4,double x5,double x6,
-		      double x7,double x8,double x9);
-  virtual double MLPkS(double x1,double x2,double x3,
-		       double x4,double x5,double x6,
-		       double x7,double x8,double x9,
-		       double x10,double x11,double x12);
-  virtual double MLPpS(double x1,double x2,double x3,
-		       double x4,double x5,double x6,
-		       double x7,double x8,double x9,
-		       double x10,double x11,double x12);
+  virtual double MLPm(double ,double,double,
+		      double ,double,double,double ,double);
+  virtual double MLPe(double ,double,double,
+		      double ,double,double,double ,double);
+  virtual double MLPk(double ,double,double,
+		      double ,double,double,double ,double);
+  virtual double MLPkS(double,double,double,
+		       double,double,double,
+		       double,double,double,double ,double);
+  virtual double MLPpS(double,double,double,
+		       double,double,double,
+		       double,double,double,double ,double);
 private:
   double SIGMOID(double);
-
+  void normaliseOS(double& , double& , double&,
+		   double& , double& , double& ,
+		   double& , double& );
+  void normaliseSS(double& , double& , double&,
+		   double& , double& , double& ,
+		   double& , double& , double& , 
+		   double& , double& );
 };
 #endif // NNETTOOL_NNETTOOL_H

@@ -1,14 +1,19 @@
 //##############################################################
-// Example of
-// DaVinci job Options to run BTagging with an event selection
+// Example of DaVinci job Options
+// to run BTagging with an event selection
 //##############################################################
+#pragma print off
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print on
+
+//--------------------------------------------------------------
+// If needed, Re-run L0 and L1 Trigger with DC04 tuning
+//--------------------------------------------------------------
+//#include "$DAVINCIROOT/options/L0.opts"
+//#include "$TRGSYSROOT/options/L1.opts"
+
+//--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
-//--------------------------------------------------------------
-// Re-run L0 and L1 Trigger with DC04 tuning
-//--------------------------------------------------------------
-#include "$DAVINCIROOT/options/L0.opts"
-#include "$TRGSYSROOT/options/L1.opts"
 
 ///example Bd Channel Selection ----------------------------------
 //#include "$B2HHROOT/options/DoTDRselBd2PiPi.opts"
@@ -20,53 +25,50 @@
 //BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2KK" };
 //TamperingL1Alg.SelectionName = "TDRselBs2KK";
 
-//#include "$BS2DSHROOT/options/DoTDRselBs2DsPi.opts"
-//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsPi" };
-//TamperingL1Alg.SelectionName = "TDRselBs2DsPi";
-
-#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
-BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsK" };
-TamperingL1Alg.SelectionName = "TDRselBs2DsK";
+//#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
+//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsK" };
+//TamperingL1Alg.SelectionName = "TDRselBs2DsK";
 
 ///or Cheated Selection ------------------------------------------
-#include "$FLAVOURTAGGINGROOT/options/CheatedSelection.opts"
+#include "$FLAVOURTAGGINGOPTS/CheatedSelection.opts"
 
 //----------------------------------------------------------------
 // includes upstream/downstream tracks (not mandatory) 
 ChargedProtoPAlg.VeloTTTracks     = true ;
-//ChargedProtoPAlg.DownStreamTracks = true ;
 
-//*************************************************************
-//   Options for L1 buffer tampering
-//*************************************************************
-#include "$TAMPERINGROOT/options/TamperingCommon.opts"
-TamperingL1Alg.InputType     = "Selection";
-//TamperingL1Alg.SelectionName = " ";
-TamperingL1Alg.OutputLevel   = 3;
-Tampering.OutputLevel        = 3;
+///---------------------------------------------------------------
+//   L1 buffer tampering: must rerun L0&L1 trigger first
+///---------------------------------------------------------------
+//#include "$TAMPERINGROOT/options/TamperingCommon.opts"
+//TamperingL1Alg.InputType = "Selection";
 
 ///---------------------------------------------------------------
 ///               BTagging
 ///---------------------------------------------------------------
-#include "$FLAVOURTAGGINGROOT/options/BTagging.opts"
+#include "$FLAVOURTAGGINGOPTS/BTagging.opts"
+
+//if you set this to true, you will have slightly better performance
+//but you need to run Trigger&Tampering (uncomment above)
+//BTagging.RequireTampering = true; 
 
 ///---------------------------------------------------------------
 /// 		BTaggingMonitor
 ///---------------------------------------------------------------
 ///example of optional algorithm that reads in what is in TES
-#include "$FLAVOURTAGGINGROOT/options/BTaggingMonitor.opts"
+#include "$FLAVOURTAGGINGOPTS/BTaggingMonitor.opts"
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
 MessageSvc.Format = "% F%15W%S%7W%R%T %0W%M";
-ApplicationMgr.EvtMax    = 100;
+ApplicationMgr.EvtMax    = 100000;
+EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
 //---------------------------------------------------------------
 // Input data 
 //---------------------------------------------------------------
-EventSelector.Input = {"DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bs2DsK01.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
+EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bs2DsK01.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
 //---------------------------------------------------------------
 
 

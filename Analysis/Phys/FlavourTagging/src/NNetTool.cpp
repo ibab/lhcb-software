@@ -1,4 +1,4 @@
-// $Id: NNetTool.cpp,v 1.2 2005-02-02 07:10:27 pkoppenb Exp $
+// $Id: NNetTool.cpp,v 1.3 2005-03-01 11:21:26 musy Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -9,6 +9,12 @@
 // Implementation file for class : NNetTool v1.3
 //
 // 2004-03-18 : Marco Musy 
+//
+// Neural Net returns wrong tag fraction for a given tagger.
+// Inputs are: B-signal momentum/GeV, B-theta, event-multiplicity,
+// tampering flag, tagger p/GeV, pt/GeV, IP-significance,
+// IP significance wrt secondary Vtx, Delta-eta between B and tagger,
+// Delta-phi, Delta-Q (= mass of B+tagger system - mass of B).
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -16,19 +22,15 @@ static const  ToolFactory<NNetTool>          s_factory ;
 const        IToolFactory& NNetToolFactory = s_factory ; 
 
 //=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
 NNetTool::NNetTool( const std::string& type,
 		    const std::string& name,
 		    const IInterface* parent ) :
   GaudiTool ( type, name, parent ) { 
   declareInterface<INNetTool>(this);
 }
-
-//=============================================================================
+NNetTool::~NNetTool(){}
 StatusCode NNetTool::initialize() { return StatusCode::SUCCESS; }
 StatusCode NNetTool::finalize() { return StatusCode::SUCCESS; }
-NNetTool::~NNetTool(){}
 
 //=============================================================================
 double NNetTool::SIGMOID(double x){
@@ -36,16 +38,54 @@ double NNetTool::SIGMOID(double x){
   if(x < -37.0) return 0.0;
   return 1.0/(1.0+exp(-x));
 }
-//=============================================================================
-double NNetTool::MLPm(double OUT1, double OUT2, double OUT3,
-		      double OUT4, double OUT5, double OUT6,
-		      double OUT7, double OUT8, double OUT9) { 
-  debug()<<"NNetTool MLPm"<<endreq;
 
+//=============================================================================
+void NNetTool::normaliseOS(double& OUT1, double& OUT2, double& OUT3,
+			   double& OUT4, double& OUT5, double& OUT6,
+			   double& OUT7, double& OUT8) { 
+  OUT1 = std::min(OUT1/600., 1.);
+  OUT2 = std::min(OUT2/0.25, 1.);
+  OUT3 = OUT3/90.;
   if(OUT4 ==  10) OUT4=0.;
   else if(OUT4 == 100) OUT4=0.33;
   else if(OUT4 ==  11) OUT4=0.66;
   else if(OUT4 ==   1) OUT4=0.99;
+
+  OUT5 = std::min(OUT5/150., 1.);
+  OUT6 = std::min(OUT6/10., 1.);
+  OUT7 = std::min(std::max(OUT7/100.,-1.),1.);
+  OUT8 = std::min(std::max(OUT8/12.,-1.),1.);
+}
+void NNetTool::normaliseSS(double& OUT1, double& OUT2, double& OUT3,
+			   double& OUT4, double& OUT5, double& OUT6,
+			   double& OUT7, double& OUT8, double& OUT10, 
+			   double& OUT11, double& OUT12) { 
+  OUT1 = std::min(OUT1/600., 1.);
+  OUT2 = std::min(OUT2/0.25, 1.);
+  OUT3 = OUT3/90.;
+  if(OUT4 ==  10) OUT4=0.;
+  else if(OUT4 == 100) OUT4=0.33;
+  else if(OUT4 ==  11) OUT4=0.66;
+  else if(OUT4 ==   1) OUT4=0.99;
+
+  OUT5 = std::min(OUT5/150., 1.);
+  OUT6 = std::min(OUT6/10., 1.);
+  OUT7 = std::min(std::max(OUT7/100.,-1.),1.);
+  OUT8 = std::min(std::max(OUT8/12.,-1.),1.);
+  OUT10= OUT10/3.5;
+  OUT11= OUT11/3.2;
+  OUT12= std::min(OUT12/12.0, 1.);
+}
+
+//=============================================================================
+double NNetTool::MLPm(double OUT1, double OUT2, double OUT3,
+		      double OUT4, double OUT5, double OUT6,
+		      double OUT7, double OUT8) { 
+  debug()<<"NNetTool MLPm"<<endreq;
+
+  normaliseOS( OUT1,  OUT2,  OUT3,
+	       OUT4,  OUT5,  OUT6, OUT7,  OUT8 );
+  double OUT9 = 0.;
 
   double RIN1 = 3.983911e-01
     +(-7.026953e-01) * OUT1
@@ -63,16 +103,16 @@ double NNetTool::MLPm(double OUT1, double OUT2, double OUT3,
   return 3.334001e-01
     +(5.451372e-01) * OUT1;
 }; 
+
 //=============================================================================
 double NNetTool::MLPe(double OUT1, double OUT2, double OUT3,
 		      double OUT4, double OUT5, double OUT6,
-		      double OUT7, double OUT8, double OUT9) { 
+		      double OUT7, double OUT8) { 
   debug()<<"NNetTool MLPe"<<endreq;
 
-  if(OUT4 ==  10) OUT4=0.;
-  else if(OUT4 == 100) OUT4=0.33;
-  else if(OUT4 ==  11) OUT4=0.66;
-  else if(OUT4 ==   1) OUT4=0.99;
+  normaliseOS( OUT1,  OUT2,  OUT3,
+	       OUT4,  OUT5,  OUT6, OUT7,  OUT8 );
+  double OUT9 = 0.;
 
   double RIN1 = 1.645051e+00
     +(5.659825e-01) * OUT1
@@ -114,16 +154,16 @@ double NNetTool::MLPe(double OUT1, double OUT2, double OUT3,
     +(1.236691e+00) * OUT2
     +(-1.525095e+00) * OUT3;
 }; 
+
 //=============================================================================
 double NNetTool::MLPk(double OUT1, double OUT2, double OUT3,
 		      double OUT4, double OUT5, double OUT6,
-		      double OUT7, double OUT8, double OUT9) { 
+		      double OUT7, double OUT8) { 
   debug()<<"NNetTool MLPk"<<endreq;
 
-  if(OUT4 ==  10) OUT4=0.;
-  else if(OUT4 == 100) OUT4=0.33;
-  else if(OUT4 ==  11) OUT4=0.66;
-  else if(OUT4 ==   1) OUT4=0.99;
+  normaliseOS( OUT1,  OUT2,  OUT3,
+	       OUT4,  OUT5,  OUT6, OUT7,  OUT8 );
+  double OUT9 = 0.;
 
   double  RIN1 = -2.548925e-01
     +(7.836971e-02) * OUT1
@@ -143,17 +183,17 @@ double NNetTool::MLPk(double OUT1, double OUT2, double OUT3,
 
   return (mlpk-0.45)*3.0;
 }; 
+
 //=============================================================================
 double NNetTool::MLPkS(double OUT1, double OUT2, double OUT3,
 		       double OUT4, double OUT5, double OUT6,
-		       double OUT7, double OUT8, double OUT9,
+		       double OUT7, double OUT8,
 		       double OUT10, double OUT11, double OUT12) { 
   debug()<<"NNetTool MLPkS"<<endreq;
 
-  if(OUT4 ==  10) OUT4=0.;
-  else if(OUT4 == 100) OUT4=0.33;
-  else if(OUT4 ==  11) OUT4=0.66;
-  else if(OUT4 ==   1) OUT4=0.99;
+  normaliseSS( OUT1,  OUT2,  OUT3, OUT4,  OUT5,  OUT6,
+	       OUT7,  OUT8,  OUT10, OUT11,  OUT12 );
+  double OUT9 = 0.;
 
   double RIN1 = 5.042735e-01
     +(-2.163759e-01) * OUT1
@@ -189,17 +229,17 @@ double NNetTool::MLPkS(double OUT1, double OUT2, double OUT3,
     +(-6.236218e-01) * OUT1
     +(1.547721e+00) * OUT2;
 }; 
+
 //=============================================================================
 double NNetTool::MLPpS(double OUT1, double OUT2, double OUT3,
 		       double OUT4, double OUT5, double OUT6,
-		       double OUT7, double OUT8, double OUT9,
+		       double OUT7, double OUT8,
 		       double OUT10, double OUT11, double OUT12) { 
   debug()<<"NNetTool MLPpS"<<endreq;
 
-  if(OUT4 ==  10) OUT4=0.;
-  else if(OUT4 == 100) OUT4=0.33;
-  else if(OUT4 ==  11) OUT4=0.66;
-  else if(OUT4 ==   1) OUT4=0.99;
+  normaliseSS( OUT1,  OUT2,  OUT3, OUT4,  OUT5,  OUT6,
+	       OUT7,  OUT8,  OUT10, OUT11,  OUT12 );
+  double OUT9 = 0.;
 
   double RIN1 = 6.777766e-01
     +(6.243266e-02) * OUT1
@@ -235,4 +275,5 @@ double NNetTool::MLPpS(double OUT1, double OUT2, double OUT3,
     +(1.538327e+00) * OUT1
     +(3.393626e+00) * OUT2;
 };
+
 //=============================================================================

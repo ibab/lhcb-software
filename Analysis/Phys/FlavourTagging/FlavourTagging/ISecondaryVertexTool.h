@@ -1,4 +1,4 @@
-// $Id: ISecondaryVertexTool.h,v 1.1 2005-02-02 07:10:27 pkoppenb Exp $
+// $Id: ISecondaryVertexTool.h,v 1.2 2005-03-01 11:21:25 musy Exp $
 #ifndef SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H 
 #define SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H 1
 
