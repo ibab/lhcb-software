@@ -81,6 +81,7 @@ ApplicationMgr.DLLs += { "RecoTools" };
 
 // Generic Utility package
 ApplicationMgr.DLLs += { "Utilities" };
+ApplicationMgr.DLLs += { "LHCbAlgs" };
 
 // Configure the DataOnDemand Service (for Calo) 
 ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
