@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.4 2005-02-05 13:47:40 ibelyaev Exp $
+! $Id: release.notes,v 1.5 2005-02-07 16:38:15 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.4 $
+! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.5 $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! 2005-02-07 - Vanya BELYAEV
+ - add new algorithm Pi0.py,
 
 ! 2005-02-05 - Ivan BELYAEV
  - add new examples to test the new package Tools/BenderRels, 

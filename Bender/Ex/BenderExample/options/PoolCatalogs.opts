@@ -1,28 +1,27 @@
-// $Id: PoolCatalogs.opts,v 1.3 2005-01-24 17:33:00 ibelyaev Exp $ 
+// $Id: PoolCatalogs.opts,v 1.4 2005-02-07 16:38:18 ibelyaev Exp $ 
 // ============================================================================
-// CVS version $Revision: 1.3 $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.4 $ 
 // ============================================================================
 
 PoolDbCacheSvc.Catalog = 
   {
     // Ex/BenderExample
-    "xmlcatalog_file:$HOME/BenderExampleMutableCatalog.xml"  ,
-    "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_DstA1.xml"        ,
-    "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_JpsiKst.xml"      ,       
-    "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_JpsiKst.xml"      ,       
-    "xmlcatalog_file:$BENDEREXAMPLEOPTS/BBinclusive.xml"     ,       
+    "xmlcatalog_file:$HOME/BenderExampleMutableCatalog.xml"   ,
+    "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_DstA1.xml"         ,
+    "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_JpsiKst.xml"       ,       
+    "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_JpsiKst.xml"       ,       
+    "xmlcatalog_file:$BENDEREXAMPLEOPTS/BBinclusive.xml"      ,       
     // Ex/LoKiExample
-    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bd_Kstgamma_DC04.xml"  ,
-    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_Jpsiphimm_DC04.xml" ,
-    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phigamma_DC04.xml"  ,
-    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.xml"    ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bd_Kstgamma_DC04.xml"   ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_Jpsiphimm_DC04.xml"  ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phigamma_DC04.xml"   ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.xml"     ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bd_pipipi_CPV_DC04.xml" ,
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/Mixture_DC04.xml"
   };
 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // The END 
 // ============================================================================
