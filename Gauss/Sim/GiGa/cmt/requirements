@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.36 2002-12-03 18:43:37 ibelyaev Exp $ 
+# $Id: requirements,v 1.37 2002-12-04 08:02:18 ranjard Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -10,7 +10,7 @@ branches         cmt src doc GiGa
 
 # ============== explicit dependencies ========================================
 use GaudiKernel  v13r* 
-use GEANT4       v2r4101p0 Sim 
+use GEANT4       v* Sim 
 
 # ============== standard includes ============================================
 include_dirs     $(GIGAROOT)
