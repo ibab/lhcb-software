@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.13 2004-02-02 14:25:53 jonesc Exp $
+// $Id: RichGlobalPIDAlg.cpp,v 1.14 2004-02-03 14:15:26 jonesc Exp $
 // Include files
 
 // local
@@ -425,24 +425,32 @@ double RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
   for ( RichRecTrack::Pixels::iterator iPixel = pixels.begin();
         iPixel != pixels.end(); ++iPixel ) {
 
-    double oldSig = (*iPixel)->currentBackground();
-    double newSig = oldSig;
+    // photons for this pixel
     RichRecPixel::Photons & photons = (*iPixel)->richRecPhotons();
-    for ( RichRecPixel::Photons::iterator iPhoton = photons.begin();
-          iPhoton != photons.end(); ++iPhoton ) {
-      RichRecPhoton * photon = *iPhoton;
+    if ( !photons.empty() ) {
 
-      if ( !photon->richRecTrack()->inUse() ) continue;
+      double oldSig = (*iPixel)->currentBackground();
+      double newSig = oldSig;
 
-      const double tmpOldSig =
-        photon->expPixelSignalPhots( photon->richRecTrack()->currentHypothesis() );
-      oldSig += tmpOldSig;
-      newSig += ( photon->richRecTrack() != track ? tmpOldSig :
-                  m_photonSig->predictedPixelSignal( photon, newHypo ) );
+      // cache end point size container size will not change in proceeding loop
+      const RichRecPixel::Photons::iterator iPhotonEnd = photons.end(); 
+      for ( RichRecPixel::Photons::const_iterator iPhoton = photons.begin();
+            iPhoton != iPhotonEnd; ++iPhoton ) {
+        RichRecPhoton * photon = *iPhoton;
 
-    } // end photon loop
+        if ( !photon->richRecTrack()->inUse() ) continue;
 
-    deltaLL -= sigFunc(newSig) - sigFunc(oldSig);
+        const double tmpOldSig =
+          photon->expPixelSignalPhots( photon->richRecTrack()->currentHypothesis() );
+        oldSig += tmpOldSig;
+        newSig += ( photon->richRecTrack() != track ? tmpOldSig :
+                    m_photonSig->predictedPixelSignal( photon, newHypo ) );
+
+      } // end photon loop
+
+      deltaLL -= sigFunc(newSig) - sigFunc(oldSig);
+
+    } // end photons not empty
 
   } // end pixel loop
 
