@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.9 2005-02-09 18:00:48 pkoppenb Exp $ 
+! $Id: release.notes,v 1.10 2005-02-15 07:35:55 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 
+!========================== ParticleMaker v1r3 2005-02-15 ===================
 ! 2005-02-09 - P. Koppenburg
  - src/PhotonFromMergedParameters.h
  - src/PhotonParameters.h
