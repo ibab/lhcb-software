@@ -1,4 +1,4 @@
-// $Id: DigiAlg_load.cpp,v 1.2 2003-10-06 16:16:40 cattanem Exp $
+// $Id: DigiAlg_load.cpp,v 1.3 2004-06-28 13:43:50 cattanem Exp $
 // Include files 
 
 
@@ -14,7 +14,5 @@
 
 DECLARE_FACTORY_ENTRIES(DigiAlg) {
   DECLARE_TOOL( LumiTool );
-  DECLARE_ALGORITHM( BooleInit );
   DECLARE_ALGORITHM( MergeEventAlg );
-  DECLARE_ALGORITHM( CreateL1Event );
 }

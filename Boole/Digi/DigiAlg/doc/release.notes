@@ -4,7 +4,11 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
-!========================== DigiAlg v2r4 2004-06-22 =========================
+!========================== DigiAlg v3r0 2004-06-28 =========================
+! 2004-06-28 - Marco Cattaneo
+ - Remove BooleInit algorithm (superseded by LbAppInit in Kernel/LHCbAlgs)
+ - Remove CreateL1Event algorithm (moved to Event/DAQEvent)
+
 ! 2004-06-22 - Marco Cattaneo
  - Adopt GaudiAlgorithm and GaudiTool base classes
 
