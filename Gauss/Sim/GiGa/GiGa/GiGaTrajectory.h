@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.h,v 1.17 2003-03-11 09:34:55 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.h,v 1.18 2003-10-09 08:57:28 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2003/03/11 09:34:55  ibelyaev
+//  remove invalid inline directives
+//
 // ============================================================================
 #ifndef    GIGA_GIGATRAJECTORY_H
 #define    GIGA_GIGATRAJECTORY_H 1 
@@ -105,6 +108,14 @@ public:
   virtual G4int         GetPDGEncoding     () const ;
   virtual G4ThreeVector GetInitialMomentum () const ;
 
+  inline void setProcessName(std::string procname)
+  {
+    m_processname=procname;
+  };
+
+  std::string processName() const;
+  
+
 private:
   /// assignement operator id private 
   GiGaTrajectory& operator=( const GiGaTrajectory& );
@@ -114,6 +125,7 @@ private:
   int                          m_parentID ;
   const G4ParticleDefinition*  m_partDef  ; 
   HepLorentzVector             m_4vect    ;   
+  std::string m_processname;
   /// 
 };
 // ============================================================================

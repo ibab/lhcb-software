@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.cpp,v 1.11 2003-03-11 09:34:55 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.12 2003-10-09 08:57:28 witoldp Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/03/11 09:34:55  ibelyaev
+//  remove invalid inline directives
+//
 // Revision 1.10  2002/12/16 16:23:15  ibelyaev
 //  update for newer version of Geant4 (release 5.0)
 //
@@ -83,11 +86,12 @@ GiGaTrajectory::GiGaTrajectory (   )
 // ============================================================================
 GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
   : G4VTrajectory(                                              ) 
-  , std::vector<GiGaTrajectoryPoint*>   (                       )
-  , m_trackID    ( aTrack->GetTrackID        ()                 ) 
-  , m_parentID   ( aTrack->GetParentID       ()                 )
-  , m_partDef    ( aTrack->GetDefinition     ()                 ) 
-  , m_4vect      ( aTrack->GetDynamicParticle()->Get4Momentum() )
+    , std::vector<GiGaTrajectoryPoint*>   (                       )
+    , m_trackID    ( aTrack->GetTrackID        ()                 ) 
+    , m_parentID   ( aTrack->GetParentID       ()                 )
+    , m_partDef    ( aTrack->GetDefinition     ()                 ) 
+    , m_4vect      ( aTrack->GetDynamicParticle()->Get4Momentum() )
+    , m_processname("undefined")
 {
   ///
   GiGaTrajectoryPoint* firstPoint = 
@@ -112,6 +116,7 @@ GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
   , m_parentID                        ( right.parentID      ()       )
   , m_partDef                         ( right.partDef       ()       )
   , m_4vect                           ( right.fourMomentum  ()       )
+    , m_processname(right.processName())
 {
   clear();
   for( const_iterator it = right.begin() ; right.end() != it ; ++it ) 
@@ -289,6 +294,13 @@ G4int         GiGaTrajectory::GetPDGEncoding  () const
 
 G4ThreeVector GiGaTrajectory::GetInitialMomentum () const 
 { return momentum(); };
+
+std::string GiGaTrajectory::processName() const
+{
+  return m_processname;
+};
+
+
 
 // ============================================================================
 // The END 
