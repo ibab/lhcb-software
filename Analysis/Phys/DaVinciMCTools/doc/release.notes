@@ -1,0 +1,19 @@
+! $Id: release.notes,v 1.1.1.1 2002-05-21 07:32:01 gcorti Exp $
+! Package     : DaVinciMCTools
+! Responsible : Gloria Corti
+
+! >>>>>>>>>>>>>>>>>>>>>>> DaVinciMCTools v1r0 <<<<<<<<<<<<<<<<<<<<<
+
+! 2002-05-19 Gloria Corti
+  Package holding tools for analysis of Monte Carlo events
+  - DebugTools (Olivier Dormond): tools to printout tree in MC event and
+    Phys Event
+  - MCDecayFinder (Olivier Dormond): retrieve decay following a
+    "string description" in jobOptions (see explanations in header file)
+    Use a special parser yacc (fragments and
+    changes in requirements, and recparser.ypp, reclexer.lpp)  
+
+
+
+
+  

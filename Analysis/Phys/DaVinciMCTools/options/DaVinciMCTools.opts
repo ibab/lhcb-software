@@ -1,0 +1,30 @@
+//##############################################################
+// Default options for AlgTools available in the DaVinciMCTools
+// package.
+//---------------------------------------------------------------
+
+// Defaults for DebugTool
+//ToolSvc.DebugTool.PrintDepth = 999;
+//ToolSvc.DebugTool.TreeWidth = 20;
+//ToolSvc.DebugTool.FieldWidth = 10; // 6 is a minimal.
+//ToolSvc.DebugTool.FieldPrecision= 3;
+//ToolSvc.DebugTool.Arrow = "+-->";
+
+// Examples for MCDecayFinder
+ToolSvc.MCDecayFinder.Decay = "B0 -> (J/psi(1S) -> mu+ mu- {gamma,}) (KS0 -> pi- pi+)";
+//ToolSvc.MCDecayFinder.Decay = "rho(770)0 -> pi+ [pi+]cc";
+//ToolSvc.MCDecayFinder.Decay = "B0";
+//ToolSvc.MCDecayFinder.Decay = "(B0)";
+//ToolSvc.MCDecayFinder.Decay = "J/psi(1S)";
+//ToolSvc.MCDecayFinder.Decay = "KS0";
+//ToolSvc.MCDecayFinder.Decay = "pi0 -> gamma gamma";
+//ToolSvc.MCDecayFinder.Decay = "(pi+)";
+//ToolSvc.MCDecayFinder.Decay = "B0 => mu+ mu- gamma (KS0 -> pi+ pi-)";
+//ToolSvc.MCDecayFinder.Decay = "odie";
+//ToolSvc.MCDecayFinder.Decay = "[B0,B+]cc";
+//ToolSvc.MCDecayFinder.Decay = "pp => K-";
+//ToolSvc.MCDecayFinder.Decay = "Delta0";
+//ToolSvc.MCDecayFinder.ResonnanceThreshold = 1e-15*second;
+
+//##############################################################
+

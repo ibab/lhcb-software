@@ -1,0 +1,27 @@
+
+LPP = $(${NAME}_lpp_lexpp_prefix)
+
+$(src)${NAME}.${SUFFIX} : $(${NAME}_${FILESUFFIX}_dependencies)
+	$(echo) $@
+	cd $(src); \
+	  $(lexpp) -t ${FILENAME} | \
+	   sed -e 's/yylex/${LPP}ylex/g' \
+	       -e 's/YYCLASS/${LYP}/g' \
+               -e 's=extern=//=g' \
+               -e 's/FILE \*yyin/static FILE \*yyin/g' \
+               -e 's/void yyrestart/static void yyrestart/g' \
+               -e 's/void yy_switch_to_buffer/static void yy_switch_to_buffer/g' \
+               -e 's/void yy_load_buffer_state/static void yy_load_buffer_state/g' \
+               -e 's/YY_BUFFER_STATE yy_create_buffer/static YY_BUFFER_STATE yy_create_buffer/g' \
+               -e 's/void yy_delete_buffer/static void yy_delete_buffer/g' \
+               -e 's/void yy_init_buffer/static void yy_init_buffer/g' \
+               -e 's/void yy_flush_buffer/static void yy_flush_buffer/g' \
+               -e 's/YY_BUFFER_STATE yy_scan_buffer/static YY_BUFFER_STATE yy_scan_buffer/g' \
+               -e 's/YY_BUFFER_STATE yy_scan_string/static YY_BUFFER_STATE yy_scan_string/g' \
+               -e 's/YY_BUFFER_STATE yy_scan_bytes/static YY_BUFFER_STATE yy_scan_bytes/g' \
+               -e 's/char \*yytext/static char \*yytext/g' \
+               -e 's/int yyleng/static int yyleng/g' \
+	       -e 's/yylval/${LPP}ylval/g'> ${NAME}.$(SUFFIX)
+
+${CONSTITUENT}clean ::
+	cd $(src); /bin/rm -f $(NAME).$(SUFFIX)

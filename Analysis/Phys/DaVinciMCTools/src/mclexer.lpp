@@ -1,0 +1,77 @@
+/* Options used by flex to know how to compile this file */
+/* Just run 'flex flexer.l' to produce the code */
+%option 7bit nodefault never-interactive ecs meta-ecs noyywrap nostdinit
+/* %option outfile="lexer.icc" prefix="Descriptor::lexer" */
+
+%{
+#include <string.h>
+#include <stdlib.h>
+%}
+
+P_NAME		[a-zA-Z][a-zA-Z/\']*
+Q_STATE		\*?(_[a-z]|_[0-9]|_[a-z][0-9])?
+P_MASS		(\([0-9]*[A-Z]?\))?
+P_CHARGE	~?(0|\-|\+|\-\-|\+\+)?
+PARTICLE	{P_NAME}{Q_STATE}{P_MASS}{P_CHARGE}
+
+%x PARTICLE_WC
+
+%%
+
+<PARTICLE_WC>{
+   X		return METAX;
+   u		return UP_QUARK;
+   d		return DOWN_QUARK;
+   c		return CHARM_QUARK;
+   s		return STRANGE_QUARK;
+   t		return TOP_QUARK;
+   b		return BOTTOM_QUARK;
+   u~		return ANTI_UP_QUARK;
+   d~		return ANTI_DOWN_QUARK;
+   c~		return ANTI_CHARM_QUARK;
+   s~		return ANTI_STRANGE_QUARK;
+   t~		return ANTI_TOP_QUARK;
+   b~		return ANTI_BOTTOM_QUARK;
+   Q		return CHARGE;
+   B		return BARYON;
+   l		return LEPTON;
+   I		return ISOSPIN;
+   J		return TOTALSPIN;
+   S		return SPIN;
+   L		return ANGULAR;
+   G		return G_PARITY;
+   CP		return CP_PARITY;
+   C		return C_PARITY;
+   P		return P_PARITY;
+   Cness	return CHARM;
+   Sness	return STRANGE;
+   Tness	return TOP;
+   Bness	return BOTTOM;
+   "=="		return EQEQUAL;
+   "<="		return LESSEQUAL;
+   ">="		return GREATEREQUAL;
+   "!="		return NOTEQUAL;
+   "<"		return LANGLE;
+   ">"		BEGIN(INITIAL); return RANGLE;
+   [-+0-9](\.[0-9]*)?([eE][-+]?[0-9]+)? { yylval.dval = strtod(yytext,NULL); return VALUE; }
+   \.[0-9+]([eE][-+]?[0-9]+)? { yylval.dval = strtod(yytext,NULL); return VALUE; }
+}
+"->"		return ARROW;
+"=>"		return RARROW;
+"("		return LPAREN;
+")"		return RPAREN;
+"{"		return LBRACE;
+"}"		return RBRACE;
+"<"		BEGIN(PARTICLE_WC); return LANGLE;
+"["		return LBRACK;
+"]os"		return OSCIL;
+"]cc"		return CCONJ;
+","		return COMMA;
+"!"		return EXCLAM;
+"..."		return ELIPSIS;
+"pp"		return PP;
+"?"		return QMARK;
+{PARTICLE}	{ yylval.text = strndup(yytext,yyleng); return NAME; }
+[[:blank:]\n]	/* eat the blanks! */
+.		throw YYCLASSDescriptorError(std::string("Unexpected char '")+(yytext[0])+"'");
+
