@@ -1261,7 +1261,7 @@ addElectronicNoise(MuonDigitizationData
                   newPhysicalChannel->setResponse
                     (detectorResponse.getResponse
                      (*(newPhysicalChannel->phChID())));
-                  if(!newPhysicalChannel->getResponse()){
+                  //if(!newPhysicalChannel->getResponse()){
                     //log<<MSG::INFO<<"addio p"<<partitionNumber<<endreq;
                     //log<<MSG::INFO<<"addio oip"<<detectorResponse.
                     //  getResponse(*(newPhysicalChannel->phChID()))<<endreq; 
