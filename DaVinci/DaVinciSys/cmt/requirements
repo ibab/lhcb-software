@@ -43,6 +43,8 @@ use  PhysSelections	v6r2     Phys
 
 use  PhysSelSys		v6r3     PhysSel
 
+# Used packages. 
+#============================================================================
 use  B2DD            v1r7    PhysSel
 use  B2HH            v1r5    PhysSel
 use  Bd2DstarPi      v1r5    PhysSel
@@ -56,18 +58,26 @@ use  Bs2MuMu         v1r4    PhysSel
 use  Bs2PhiEtac      v1r4p1  PhysSel
 use  Bd2a1Dstar      v1r0    PhysSel
 
-use  Bu2KsPi         v1r3p2  PhysSel
-use  Bd2JpsiKs       v1r4    PhysSel
-use  Bd2PiPiPi0      v1r3    PhysSel
-use  B2DstarX2D02hh  v1r0    PhysSel
-use  Bc2JpsiPi       v1r0    PhysSel
-use  Bd2D0Kstar      v2r4    PhysSel
-use  Bd2KstarGamma   v1r3    PhysSel
-use  Bd2OmegaGamma   v1r0    PhysSel
-use  Bd2PhiKs        v3r2    PhysSel
-use  Bs2DsH          v2r2    PhysSel
-use  Bs2PhiGamma     v1r2    PhysSel
-use  Bs2PhiPhi       v1r2    PhysSel
+use  LoKi            v2r*    Tools
+
+#============================================================================
+# Quarantine 
+#============================================================================
+# --- Include obsolete #Event/PhysSel.h
+# use  Bu2KsPi         v1r3p2  PhysSel
+# --- Use upstream tracks:
+# use  Bd2JpsiKs       v1r4    PhysSel
+# use  Bd2PiPiPi0      v1r3    PhysSel
+# --- Use LoKi v1:
+# use  B2DstarX2D02hh  v1r0    PhysSel
+# use  Bc2JpsiPi       v1r0    PhysSel
+# use  Bd2D0Kstar      v2r4    PhysSel
+# use  Bd2KstarGamma   v1r3    PhysSel
+# use  Bd2OmegaGamma   v1r0    PhysSel
+# use  Bd2PhiKs        v3r2    PhysSel
+# use  Bs2DsH          v2r2    PhysSel
+# use  Bs2PhiGamma     v1r2    PhysSel
+# use  Bs2PhiPhi       v1r2    PhysSel
 
 #--- Tools
 use  LoKi              v2r0  Tools
