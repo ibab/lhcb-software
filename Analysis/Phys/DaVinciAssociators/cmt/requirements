@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.18 2004-05-03 13:34:17 pkoppenb Exp $
+# $Id: requirements,v 1.19 2004-05-18 06:34:45 pkoppenb Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciAssociators
-version           v4r5p1
+version           v4r5p2
 
 # This template is an example for a standard Algorithm package
 #

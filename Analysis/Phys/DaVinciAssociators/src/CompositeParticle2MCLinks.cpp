@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.6 2004-01-22 10:47:50 jvantilb Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.7 2004-05-18 06:34:45 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -98,7 +98,7 @@ StatusCode CompositeParticle2MCLinks::execute() {
           << endmsg;
     }
     else {
-      msg << MSG::FATAL << "    *** Could not retrieve Particles from " 
+      msg << MSG::INFO << "    *** Could not retrieve Particles from " 
           << *inp << endmsg;
       continue;
     }
