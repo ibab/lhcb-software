@@ -22,6 +22,7 @@
 #include "Event/TrgCaloCluster.h"
 #include "CaloKernel/CaloVector.h"
 #include "Event/TrgCaloParticle.h"
+#include "Event/L1Score.h"
 
 // local
 #include "DecayChainNTuple.h"
@@ -160,13 +161,6 @@ StatusCode DecayChainNTuple::initialize() {
   }
 
 #endif
-
-  // Trigger
-  m_dataProvider = tool<TrgDataProvider> ("TrgDataProvider");
-  if(!m_dataProvider){
-    err() << "Unable to retrieve the TrgDataProvider" << endreq;
-    return sc;
-  }
 
   return StatusCode::SUCCESS;
 };
@@ -1127,29 +1121,26 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   bool L1Elec     = false;
   bool L1Phot     = false;
   
-  if(m_dataProvider != NULL){
-    // L1Score* score = m_dataProvider->l1Score(); // this does not work outside trigger sequence
-    L1Score* score = get<L1Score>( L1ScoreLocation::Default );
-    if(score != NULL){
+  L1Score* score = get<L1Score>( L1ScoreLocation::Default );
+  if(score != NULL){
 
-      L1Decision = score->decision();
-      L1Gen      = score->decisionGen();
-      L1SiMu     = score->decisionMu();
-      L1DiMu     = score->decisionDiMu();
-      L1JPsi     = score->decisionDiMuJPsi();
-      L1Elec     = score->decisionElec();
-      L1Phot     = score->decisionPhot();
- 
-      debug() << "L1 trigger summary: "        << endreq;
-      debug() << " Generic:     " << L1Gen      << endreq;
-      debug() << " Single Muon: " << L1SiMu     << endreq;
-      debug() << " Dimuon:      " << L1DiMu     << endreq;
-      debug() << " JPsi:        " << L1JPsi     << endreq;
-      debug() << " Electron:    " << L1Elec     << endreq;
-      debug() << " Photon:      " << L1Phot     << endreq;
-      debug() << "----------------------------" << endreq;
-      debug() << "Total:       " << L1Decision << endreq;
-    }
+    L1Decision = score->decision();
+    L1Gen      = score->decisionGen();
+    L1SiMu     = score->decisionMu();
+    L1DiMu     = score->decisionDiMu();
+    L1JPsi     = score->decisionDiMuJPsi();
+    L1Elec     = score->decisionElec();
+    L1Phot     = score->decisionPhot();
+    
+    debug() << "L1 trigger summary: "        << endreq;
+    debug() << " Generic:     " << L1Gen      << endreq;
+    debug() << " Single Muon: " << L1SiMu     << endreq;
+    debug() << " Dimuon:      " << L1DiMu     << endreq;
+    debug() << " JPsi:        " << L1JPsi     << endreq;
+    debug() << " Electron:    " << L1Elec     << endreq;
+    debug() << " Photon:      " << L1Phot     << endreq;
+    debug() << "----------------------------" << endreq;
+    debug() << "Total:       " << L1Decision << endreq;
   }
 
   bool HLTDecision = false;

@@ -10,7 +10,6 @@
 #include "Kernel/DVAlgorithm.h"
 
 #include "Event/RichPID.h"
-#include "TrgTools/TrgDataProvider.h"
 
 class ParticleProperty;
 class IDecayFinder;
@@ -162,7 +161,6 @@ private:
 
   // Trigger
   const std::string m_pathTrg;
-  TrgDataProvider* m_dataProvider;
   const std::string m_CaloClustersPath;
   const std::string m_TrgCaloClustersPath;
 
