@@ -70,8 +70,9 @@ EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00005296_00000
 // Output file
 //---------------------------------------------------------------------------
 
-// GaudiRootDb
-DigiWriter.Output = "DATAFILE='411300.oodigi' TYP='ROOT' OPT='NEW'";
+// GaudiRootDb. Uncomment also extra digi objects!
+//DigiWriter.Output = "DATAFILE='411300.oodigi' TYP='ROOT' OPT='NEW'";
+//DigiWriter.ItemList += { "/Event/Raw/OT/Digits#1"};
 
 // POOL
-//DigiWriter.Output = "DATAFILE='PFN:Pool411300.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:Pool411300.digi' TYP='POOL_ROOTTREE' OPT='REC'";

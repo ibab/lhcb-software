@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v5r3>2004-03-05 Boole v5r3</A></H1><PRE>
+</PRE><H1><A NAME=v5r3>2004-03-12 Boole v5r3</A></H1><PRE>
 
 Requires XmlDDDB v22r0 or greater
 
@@ -20,12 +20,13 @@ Requires XmlDDDB v22r0 or greater
     new ST L1Buffer
 
 - Persistency changes
+  - Default output file is now POOL
   - Backwards incompatible change to internal encoding of VeloChannelID
     (LHCbKernel v4r3)
-  - Remove IT Digits from Digi output (can be rebuilt from RawBuffer) 
-  - Remove OT Digits from Digi output
-    (relations problem fixed in Brunel by OTDAQ v1r1)
+  - Remove OT Digits from Digi output (only if POOL output, due to GaudiDb bug)
   - Fix Spillover with POOL (GaudiPoolDb v1r5)
+
+>>>  IT Digits not yet removed from POOL Digi output due to ITDigit2MCHit problem
 
 - New packaging
   - Valgrind error suppression file for Gaudi and external package errors moved
