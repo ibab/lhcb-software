@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.102 2002-06-03 09:52:36 ocallot Exp $ 
+! $Id: release.notes,v 1.103 2002-06-03 12:26:53 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
+!====================== DetDesc v10r2 update 2002-06-03 =======================
 ! 2002-06-03 - Olivier Callot
  - Fix the TransportSvc initial step, where a good local geometry has to be
    found and memorized. Affects TransportSvc.cpp, TransportSvcFindLocalGI.h and
@@ -53,14 +54,11 @@
  - src/component/MaterialBudgetAlg : remove 
  - src/Lib/SolidBoolean.cpp        : improve the printout  
 
-! >>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
 ! 2002-05-24 - Sebastien Ponce
  - Message "found element DDDB at top level of xml file" went to VERBOSE mode
  - update this file to the new release notes format (What a pain !)
 
-! >>>>>>>>>>>>>>>>>>>>>>>> DetDesc v10r1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
+!====================== DetDesc v10r1 release 2002-05-23 ======================
 ! 2002-05-22 - Marco Cattaneo
  - XmlBaseConditionCnv.cpp, XmlBaseDetElemCnv.cpp:
    change severity of initialisation status message to MSG::DEBUG

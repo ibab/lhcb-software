@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.40 2002-05-26 10:47:13 ibelyaev Exp $ 
+# $Id: requirements,v 1.41 2002-06-03 12:26:53 cattanem Exp $ 
 # ==============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # ==============================================================================
 package       DetDesc
-version       v10r3
+version       v10r2
 
 # =========== structure ========================================================
 branches      DetDesc doc cmt src
