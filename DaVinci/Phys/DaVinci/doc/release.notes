@@ -3,6 +3,14 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v8r3p3>2003-07-15 DaVinci v8r3p3</A></H1><PRE>
+  - Modifications in (Pre)Selections ( PhysSelSys v5r7)
+    . Bd -> mu mu K*
+  - Modification in Efficiency algorithm to classify rec'tible, rec'ted
+    with various categories of tracks, and introduce new rec'tible 
+    definition for neutrals (DaVinciEff v5r6), new definition of rec'ted
+    for gammas from pi0 to cover merged pi0 (DaVinciEff v5r7)
+   
 </PRE><H1><A NAME=v8r3p2>2003-07-08 DaVinci v8r3p2</A></H1><PRE>
 
   - Modifications in (Pre)Selections
