@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.2 2002-05-15 23:39:26 gcorti Exp $
+// $Id: PhysDesktop.cpp,v 1.3 2002-05-17 22:28:26 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,6 @@ PhysDesktop::PhysDesktop( const std::string& type,
   declareProperty( "InputPrimaryVertices", 
                    m_primVtxLocn = VertexLocation::Primary );
   m_inputLocn.clear();
-  m_inputLocn.push_back("none");
   declareProperty( "InputLocations", m_inputLocn );
   declareProperty( "OutputLocation", m_outputLocn = "/Event/Phys/User");
   
@@ -97,7 +96,9 @@ StatusCode PhysDesktop::initialize() {
   }
   else{
     
-    // Retrieve the ParticleMaker tool:  
+    // Retrieve the ParticleMaker tool:
+    log << MSG::INFO << " Using " << m_pMakerType << "to make particles"
+        << endreq;
     sc = StatusCode::FAILURE;
     sc = toolSvc()->retrieveTool(m_pMakerType, m_pMaker,this); 
    
@@ -107,6 +108,22 @@ StatusCode PhysDesktop::initialize() {
     }
   }
   
+  // Check if InputLocation has been set
+  if( m_inputLocn.size() == 0 ) {
+    log << MSG::INFO << "No Input from previous processing requested"
+        << endreq;
+  }
+  else {
+    log << MSG::INFO << "Particles will be loaded from ";
+
+    for( std::vector<std::string>::iterator iloc = m_inputLocn.begin(); 
+       iloc != m_inputLocn.end(); iloc++ ) {
+    
+      log << MSG::INFO << "   ==> *iloc ";
+    }
+    log << MSG::INFO << endreq;
+  }
+
   return StatusCode::SUCCESS;
   
 }
@@ -595,19 +612,12 @@ StatusCode PhysDesktop::getInput(){
   log << MSG::DEBUG << "Number of Vertices from " << m_primVtxLocn
       << " are " << m_verts.size() << endreq;
   
-  
   // Retrieve Particles & their Vertices from all previous processing
   // as specified in jobOptions
-  if( *(m_inputLocn.begin()) == "none" ) {
-    log << MSG::DEBUG << "No Input from previous processing requested"
-        << endreq;
-    return StatusCode::SUCCESS;
-  }
-  
   for( std::vector<std::string>::iterator iloc = m_inputLocn.begin(); 
        iloc != m_inputLocn.end(); iloc++ ) {
     
-    std::string location = *iloc;
+    std::string location = (*iloc)+"/Particles";
     
     SmartDataPtr<Particles> parts( eventSvc(), location );
     if ( ! parts ) { 
