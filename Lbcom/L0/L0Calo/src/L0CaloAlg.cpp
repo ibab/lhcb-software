@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.16 2002-12-17 15:43:02 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.17 2003-01-09 16:52:18 cattanem Exp $
 
 /// STL
 #include <stdio.h>
@@ -317,12 +317,12 @@ StatusCode L0CaloAlg::execute() {
   std::vector<L0Candidate> allPi0Local;
   std::vector<L0Candidate> allPi0Global;
 
-  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+  {for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
     allElectrons.push_back( L0Candidate( m_ecal, m_etScale ) );
     allPhotons.push_back(   L0Candidate( m_ecal, m_etScale ) );
     allPi0Local.push_back(  L0Candidate( m_ecal, m_etScale ) );
     allPi0Global.push_back( L0Candidate( m_ecal, m_etScale ) );
-  }
+  }}
 
   int eCard;
   for( eCard = 0; m_ecal->nCards() > eCard; ++eCard ) {
@@ -579,11 +579,11 @@ StatusCode L0CaloAlg::execute() {
 
   msg << MSG::DEBUG << "== L0CaloCandidate Summary: "
       << L0Calo->size() << " entries." << endreq;
-  for( L0CaloCandidates::const_iterator item = L0Calo->begin() ;
+  {for( L0CaloCandidates::const_iterator item = L0Calo->begin() ;
        L0Calo->end() != item ; ++item ) {
     L0CaloCandidate* cand = (*item);
     msg << MSG::DEBUG << cand << endreq;
-  }
+  }}
 
   //=== Store the perValidation candidates
 
@@ -596,30 +596,30 @@ StatusCode L0CaloAlg::execute() {
     msg << MSG::ERROR << "Status is " << sc << endreq;
     return sc ;
   }
-  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+  {for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
     allElectrons[kk].saveCandidate( L0Calo::Electron,  L0FullCalo );
-  }
-  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+  }}
+  {for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
     allPhotons[kk].saveCandidate(   L0Calo::Photon,    L0FullCalo );
-  }
-  for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
+  }}
+  {for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
     hadron.setCandidate( hcalFe[hCard].etMax(), hcalFe[hCard].cellIdMax() );
     hadron.saveCandidate( L0Calo::Hadron, L0FullCalo );
-  }
-  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+  }}
+  {for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
     allPi0Local[kk].saveCandidate(  L0Calo::Pi0Local,  L0FullCalo );
-  }
-  for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
+  }}
+  {for ( int kk=0 ; m_nbValidation > kk ; kk++ ) {
     allPi0Global[kk].saveCandidate( L0Calo::Pi0Global, L0FullCalo );
-  }
+  }}
 
   msg << MSG::DEBUG <<"== L0CaloFullCandidate Summary: "
       << L0FullCalo->size() << " entries." << endreq;
-  for( L0CaloCandidates::const_iterator item = L0FullCalo->begin() ;
+  {for( L0CaloCandidates::const_iterator item = L0FullCalo->begin() ;
        L0FullCalo->end() != item ; ++item ) {
     L0CaloCandidate* cand = (*item);
     msg << MSG::DEBUG << cand << endreq;
-  }
+  }}
 
   return StatusCode::SUCCESS;
 }
