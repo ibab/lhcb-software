@@ -1,0 +1,118 @@
+// -------------------------------------------------------------------------------------
+// General Gauss job configuration
+
+#units "$STDOPTS/units.opts"
+
+AuditorSvc.Auditors = { "ChronoAuditor" };
+
+ApplicationMgr.ExtSvc            = 
+{ "ParticlePropertySvc" ,
+  "EventSelector"       };
+
+EventPersistencySvc.CnvServices  = {};  
+
+ApplicationMgr.DLLs  = { "GaudiAud"};
+ApplicationMgr.DLLs += { "GaudiAlg"} ;
+ApplicationMgr.DLLs += { "GaussTools"} ;
+
+RndmGenSvc.Engine.SetSingleton = true;
+
+ApplicationMgr.HistogramPersistency = "NONE";
+
+EventDataSvc.ForceLeaves = true ;
+
+ParticlePropertySvc.ParticlePropertiesFile="$PARAMFILESROOT/data/particle.cdf";
+
+ApplicationMgr.TopAlg          =  
+{ "GaussInitialisation/GaussInit",
+  "Sequencer/Generator" 
+};
+
+MessageSvc.OutputLevel    = 4; 
+
+MessageSvc.setWarning += { "XmlGenericCnv" };
+
+ApplicationMgr.EvtSel     = "NONE" ;
+
+ApplicationMgr.DLLs += 
+{ "GaudiDb"     ,
+  "GaudiRootDb" };
+
+ApplicationMgr.ExtSvc           += { "DbEventCnvSvc/RootEvtCnvSvc" };
+RootEvtCnvSvc.DbType             = "ROOT" ;
+EventPersistencySvc.CnvServices += { "RootEvtCnvSvc"               };
+
+ApplicationMgr.OutStream +=  { "GaussTape" };
+
+GaussTape.OptItemList =
+  {
+  };
+
+GaussTape.PreLoad     = false ; 
+GaussTape.OutputLevel = 3;
+
+ApplicationMgr.DLLs += { "GeneratorModules" } ;
+
+//-------------------------------------------------------------------------------------
+// Modify from here
+// ------------------------------------------------------------------------------------
+
+// 
+// 
+
+Generator.Members += {"SignalDecayAlg"} ;
+
+// 
+// If you want signal B hadrons produced at rest, comment the line below
+// In this case, the output of EvtGen is contained in "/Event/Gen/SignalDecay"
+// and other containers are not created.
+// 
+// 
+// If you want signal B hadrons to have the correct momentum distribution given
+// by Pythia, uncomment the line below.
+// The available output containers will be 
+//     --- "/Event/Gen/SignalDecay" with the signal decay chain in the signal B rest frame
+//     --- "/Event/Gen/HepMCEvents" with the whole event 
+//     --- "/Event/Gen/BHadronTree" with only the B hadron decay tree in the lab frame.
+//
+Generator.Members += { "PythiaAlg", "SetDecayAlg", "EvtDecayAlg"};
+
+//
+// number of events to be processed, first event number and run number
+// all three numbers are used to initalize the random number generators
+//
+ApplicationMgr.EvtMax     = 10;
+GaussInit.FirstEventNumber = 1;
+GaussInit.RunNumber = 1;
+
+//
+// Name of the output root file
+//
+GaussTape.Output = "DATAFILE='evtgen.oosim' TYP='ROOT' OPT='RECREATE'";
+
+/// content of output file
+GaussTape.ItemList = 
+  {  
+        // event Header
+    "/Event#1",      
+    "/Event/Header#1"
+        // Gen Header
+    ,"/Event/Gen#1"
+       // Generated event
+    ,"/Event/Gen/SignalDecay#1"
+    // Comment the 3 lines below if you do not use PythiaAlg
+    // and want to generate only in the B rest frame with EvtGen 
+    ,"/Event/Gen/HepMCEvents#1"
+    ,"/Event/Gen/BHadronTree#1"
+    ,"/Event/Gen/Header#1"
+  };
+
+ToolSvc.EvtGenTool.OutputLevel = 4;
+SetDecayAlg.OutputLevel = 4;
+// Comment the line below if you do not want "/Event/Gen/BHadronTree"
+EvtDecayAlg.IsolateSignal = true ;
+
+// Include here the option files for the decay you want to generate
+// already defined signal decay modes are located in the DecFiles 
+// package
+#include "$DECFILESROOT/options/413000.opts"
