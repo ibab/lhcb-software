@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/02/17 12:08:11  ibelyaev
+//  update for new CaloKernel and CaloInterfaces
+//
 // ============================================================================
 #ifndef CALOCA_CELLULARAUTOMATON_H
 #define CALOCA_CELLULARAUTOMATON_H 1
@@ -83,20 +86,29 @@ private:
   CellularAutomaton& operator=
   ( const CellularAutomaton& );
 
-private:
-  ///
+protected:
   
-  bool isLocMax
+  
+  inline bool isLocMax
+  ( const CaloDigit*     digit ,
+    const DirVector&     hits  ,
+    const DeCalorimeter* det   ) ;
+  
+  inline bool isLocMax
+  ( const CelAutoTaggedCell* taggedCell ,
+    const DirVector&         hitsDirect ,
+    const DeCalorimeter*     detector   )
+  {
+    if ( 0 == taggedCell ) { return false ; }
+    return isLocMax ( taggedCell->digit() , hitsDirect , detector ) ;
+  }
+  
+  inline void appliRulesTagger
   ( CelAutoTaggedCell*   taggedCell,
-    CaloDigits&          hitsDirect,
-    const DeCalorimeter* detector );
-  
-  void appliRulesTagger
-  ( CelAutoTaggedCell*&  taggedCell,
     DirVector&           taggedCellsDirect,
     const DeCalorimeter* detector );
   
-  void setEXYCluster
+  inline void setEXYCluster
   ( CaloCluster*         cluster,
     const DeCalorimeter* detector );
   

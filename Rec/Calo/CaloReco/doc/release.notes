@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.51 2004-09-05 15:25:19 ibelyaev Exp $
+! $Id: release.notes,v 1.52 2004-09-05 20:23:48 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,13 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2004-09-05 - Vanya BELYAEV
+   some CPU optimisation 
+  - src/CelAutoTaggedCell.h
+    src/CellularAutomaton.h
+    src/CellularAutomaton.cpp
+   trivial modification to obtain 25% CPU gain 
 
 ! 2004-09-05 - Vanya BELYAEV
  - src/CaloCheckObjectsAlg.h(.cpp)

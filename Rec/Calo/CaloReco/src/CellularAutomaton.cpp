@@ -1,14 +1,8 @@
-// $Id: CellularAutomaton.cpp,v 1.3 2004-02-17 12:08:11 ibelyaev Exp $
+// $Id: CellularAutomaton.cpp,v 1.4 2004-09-05 20:23:48 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2004/01/13 08:47:25  ibelyaev
-//  update 'seed' and 'version' for Cluster/Clusters
-//
-// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
-// new package 
-//
 // ============================================================================ 
 #define CALOCA_CELLULARAUTOMATON_CPP 1 
 // ============================================================================
@@ -23,6 +17,7 @@
 #include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/Stat.h"
+#include "GaudiKernel/Chrono.h"
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
 // CaloEvent
@@ -36,6 +31,8 @@
 // Private              
 #include "CellularAutomaton.h"
 #include "TaggedCellFunctor.h"
+
+#include "boost/lexical_cast.hpp"
 
 // ============================================================================
 /** @file CellularAutomaton.cpp
@@ -53,6 +50,94 @@
 
 static const AlgFactory<CellularAutomaton>    Factory;
 const IAlgFactory& CellularAutomatonFactory = Factory;
+
+// ============================================================================
+inline bool CellularAutomaton::isLocMax
+( const CaloDigit*                      digit ,
+  const CellularAutomaton::DirVector&   hits  ,
+  const DeCalorimeter*                  det   ) 
+{
+  const CaloNeighbors& ns = det->neighborCells( digit -> cellID() ) ;
+  double e = digit -> e() ;
+  for ( CaloNeighbors::const_iterator iN = ns.begin() ; ns.end() != iN ; ++iN )
+  {
+    const CelAutoTaggedCell* cell = hits[*iN];
+    if ( 0 == cell   ) { continue     ; }  
+    const CaloDigit* nd = cell->digit() ;
+    if ( 0 == nd     ) { continue     ; }
+    if ( nd->e() > e ) { return false ; }
+  }   
+  return true ;
+};
+// ============================================================================
+
+// ============================================================================
+/** Application of rules of tagging on one cell
+ *  - No action if no clustered neighbor 
+ *   - Clustered if only one clustered neighbor
+ *   - Edge if more then one clustered neighbor 
+ */
+// ============================================================================
+inline void 
+CellularAutomaton::appliRulesTagger
+( CelAutoTaggedCell*             cell ,
+  CellularAutomaton::DirVector&  hits ,
+  const DeCalorimeter*           det  ) 
+{
+  
+  // Find in the neighbors cells tagged before, the clustered neighbors cells
+  const CaloCellID&    cellID = cell->cellID() ;
+  const CaloNeighbors& ns     = det->neighborCells ( cellID ) ;
+  for ( CaloNeighbors::const_iterator iN = ns.begin() ; ns.end() != iN ; ++iN ) 
+  {
+    const CelAutoTaggedCell* nei = hits[ *iN ] ;
+    if ( 0 == nei                 ) { continue ; }
+    if ( !nei->isClustered()      ) { continue ; }
+    const CaloCellID& seed = nei->seedForClustered() ;
+    if ( cell->isWithSeed( seed ) ) { continue ; }
+    cell->addSeed ( seed ) ;
+  }
+  
+  // Tag or or not the cell
+  
+  switch ( cell -> numberSeeds() ) {
+  case 0:
+    break;
+  case 1: 
+    cell->setClustered();
+    break;
+  default: 
+    cell->setEdge();
+    break;
+  } 
+};
+// ============================================================================
+
+// ============================================================================
+inline void CellularAutomaton::setEXYCluster
+( CaloCluster* cluster,
+  const DeCalorimeter* detector ) 
+{
+  ///
+  double E, X, Y;
+  ///
+  StatusCode sc = ClusterFunctors::calculateEXY
+    ( cluster->entries().begin() ,
+      cluster->entries().end  () ,
+      detector , E , X , Y      );
+  ///
+  if( sc.isSuccess() )
+  {
+    cluster->position().parameters()( CaloPosition::E ) = E ;
+    cluster->position().parameters()( CaloPosition::X ) = X ;
+    cluster->position().parameters()( CaloPosition::Y ) = Y ;
+  }
+  else 
+  { Error( " E,X and Y of cluster could not be evaluated!",sc); }
+  ///
+};
+// ============================================================================
+
 
 // ============================================================================
 /** standard constructor
@@ -122,10 +207,6 @@ StatusCode CellularAutomaton::initialize()
 // ============================================================================
 StatusCode CellularAutomaton::execute() 
 {
-  
-  MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "Execution" << endreq;
-  
   // get the detector 
   const DeCalorimeter* detector = getDet<DeCalorimeter>( detData() );
   if( 0 == detector ) { return StatusCode::FAILURE; }
@@ -136,93 +217,93 @@ StatusCode CellularAutomaton::execute()
   // get input data (sequential and simultaneously direct access!)  
   CaloDigits* hits = get<CaloDigits>( inputData() );
   if( 0 == hits ) { return StatusCode::FAILURE ; }
-  
+
   /** Create the container of clusters and  
    *  register it into the event data store
    */ 
   CaloClusters* output = new CaloClusters();
   // update the version number (needed for seriazalition)
   output -> setVersion( 2 ) ;
-
+  
   StatusCode sc = put( output , outputData() );
-  if( sc.isFailure() ) { return sc ; }
+  
+  if ( sc.isFailure() ) { return sc ; }
   
   // Create access direct and sequential on the tagged cells  
   DirVector taggedCellsDirect( (CelAutoTaggedCell*) 0 ) ;
   SeqVector taggedCellsSeq                              ;
+  typedef std::vector<CelAutoTaggedCell> _Local ;
+  _Local local_cells ( hits->size()  , CelAutoTaggedCell() ) ;
   
-  for( CaloDigits::const_iterator ihit = 
-         hits->begin() ; hits->end() != ihit ; ++ihit )
+  taggedCellsDirect.reserve ( hits->size() ) ;
+  taggedCellsDirect.setSize ( 14000        ) ;
+  taggedCellsSeq.reserve    ( hits->size() ) ;
+  
+  { // fill with the data
+    size_t index = 0 ;
+    for( CaloDigits::const_iterator ihit = 
+           hits->begin() ; hits->end() != ihit ; ++ihit , ++index )
     {
-      if( 0 == *ihit ) { continue ; }                    // CONTINUE !!! 
-      const CaloCellID& cellID      = (*ihit)->cellID() ;
-      CelAutoTaggedCell* taggedCell = new CelAutoTaggedCell( cellID );
-      taggedCellsDirect.addEntry              ( taggedCell , cellID );
-      taggedCellsSeq.push_back( taggedCell );
+      const CaloDigit* digit   = *ihit ;
+      if ( 0 == digit ) { continue ; }  // CONTINUE !!! 
+      CelAutoTaggedCell& taggedCell = *(local_cells.begin() + index ) ;
+      taggedCell = digit ;
+      taggedCellsDirect.addEntry ( &taggedCell , digit->cellID() ) ;
+      taggedCellsSeq.push_back   ( &taggedCell                   ) ;
     }
+  }
   
   // Find and mark the seeds (local maxima) 
-  SeqVector::iterator  itTag;
-  for( itTag = taggedCellsSeq.begin(); 
-       taggedCellsSeq.end() != itTag ; ++itTag )
-    {
-      if ( isLocMax( *itTag, *hits , detector ) ) 
-        { 
-          (*itTag)->setIsSeed(); 
-        }
-    }
+  for( SeqVector::iterator itTag = taggedCellsSeq.begin(); taggedCellsSeq.end() != itTag ; ++itTag )
+  { if ( isLocMax ( (*itTag)->digit() , 
+                    taggedCellsDirect , 
+                    detector          ) ) { (*itTag)->setIsSeed(); } }
   
   /// Tag the cells which are not seeds
-  SeqVector::iterator itTagLastSeed =
-    std::partition( taggedCellsSeq.begin(),
-                    taggedCellsSeq.end(),
-                    TaggedCellFunctor::isClustered() );
-
+  SeqVector::iterator itTagLastSeed = std::stable_partition 
+    ( taggedCellsSeq.begin () ,
+      taggedCellsSeq.end   () ,
+      TaggedCellFunctor::isClustered() );
+  
   SeqVector::iterator itTagLastClustered = itTagLastSeed      ;     
   SeqVector::iterator itTagFirst         = itTagLastClustered ; 
-
+  
   while ( itTagLastClustered != taggedCellsSeq.end() ) {
     
     // Apply rules tagger for all not tagged cells
-    SeqVector::iterator itTag = itTagLastClustered;
-    while ( itTag != taggedCellsSeq.end() ) {
-      appliRulesTagger( (*itTag),  taggedCellsDirect, detector ); 
-      itTag++;
-    }
+    for ( SeqVector::iterator itTag = itTagLastClustered ; 
+          taggedCellsSeq.end() != itTag ; ++itTag ) 
+    { appliRulesTagger( (*itTag),  taggedCellsDirect , detector ); }
     
     // Valid result
-    itTag = itTagFirst;   
-    std::for_each ( itTag, taggedCellsSeq.end(), 
-                    TaggedCellFunctor::setStatus() );
+    std::for_each ( itTagFirst, taggedCellsSeq.end(), TaggedCellFunctor::setStatus() );
     
-    itTagLastClustered = 
-      std::partition( itTagFirst,
-                      taggedCellsSeq.end(),
-                      TaggedCellFunctor::isClusteredOrEdge() );   
-
+    itTagLastClustered = std::stable_partition
+      ( itTagFirst,
+        taggedCellsSeq.end(),
+        TaggedCellFunctor::isClusteredOrEdge() );   
+    
     // Test if cells are tagged in this pass    
-    if ( itTagLastClustered == itTagFirst ) {
-      log << MSG::INFO 
-          << "TAGGING NOT FULL - Remain " 
-          << taggedCellsSeq.end() - itTagLastClustered
-          << " not clustered cells"
-          << endreq; 
+    if ( itTagLastClustered == itTagFirst ) 
+    {
+      const long number = taggedCellsSeq.end() - itTagLastClustered ;
+      Warning ( " TAGGING NOT FULL - Remain " 
+                + boost::lexical_cast<std::string> ( number  ) 
+                + " not clustered cells" ) ;
       itTagLastClustered = taggedCellsSeq.end();
     }
     itTagFirst = itTagLastClustered;
   }
-  log << MSG::DEBUG << "Tagging ended" << endreq;
   
   /** Partionne taggedCells 
    *  (after seeds, another clustered, shared, another case )
    */
-  itTagLastClustered = 
-    std::partition( itTagLastSeed,
-                    taggedCellsSeq.end(),
-                    TaggedCellFunctor::isClustered() );  
+  itTagLastClustered = std::stable_partition 
+    ( itTagLastSeed                    ,
+      taggedCellsSeq.end()             ,
+      TaggedCellFunctor::isClustered() ) ;  
   
   // Create cluster data and store in output
-  log << MSG::DEBUG << "Create clusters from tagged cells" << endreq; 
   
   CaloClusters* clustersSeq = output;  // V.B.!!
   SeqVector::iterator itTagSeed = taggedCellsSeq.begin();
@@ -243,41 +324,36 @@ StatusCode CellularAutomaton::execute()
     CaloDigitStatus::SharedCell        | CaloDigitStatus::UseForEnergy      | 
     CaloDigitStatus::UseForPosition    | CaloDigitStatus::UseForCovariance  ;
   
-  while ( itTagSeed != itTagLastSeed ) {
+  while ( itTagSeed != itTagLastSeed ) 
+  {
     CaloCluster* cluster = new  CaloCluster();
-    cluster->entries().
-      push_back( CaloClusterEntry( (*hits) ( (*itTagSeed)->cellID() ) , 
-                                   seed ) );
+    const CaloDigit* digit = (*itTagSeed)->digit() ;
+    cluster->entries(). push_back( CaloClusterEntry( digit , seed ) );
     // set seed for cluster! (I.B.)
-    cluster->setSeed( (*itTagSeed)->cellID() );
+    cluster->setSeed( digit->cellID() );
     
-    itTagClustered2 = 
-      std::partition ( itTagClustered1,
-                       itTagLastClustered,
-                       TaggedCellFunctor::isWithSeed((*itTagSeed)->cellID()));
-    while ( itTagClustered1 != itTagClustered2 ) {
-      cluster->entries().
-        push_back( CaloClusterEntry( (*hits) ( (*itTagClustered1)->cellID() ), 
-                                     owned ) );
-      ++itTagClustered1;
+    itTagClustered2 = std::stable_partition 
+      ( itTagClustered1                                        ,
+        itTagLastClustered                                     ,
+        TaggedCellFunctor::isWithSeed( (*itTagSeed)->cellID()) ) ;
+    for (  ; itTagClustered1 != itTagClustered2 ; ++itTagClustered1 ) 
+    {
+      const CaloDigit* digit = (*itTagClustered1)->digit() ;
+      cluster->entries().push_back( CaloClusterEntry( digit , owned ) );
     }
     /// corrections from N.B. 9/11/2001
-    SeqVector::iterator itTagFirstEdge ;
-    SeqVector::iterator itTagLastEdge  ;
-    itTagFirstEdge = itTagLastClustered ;
-    itTagLastEdge  = 
-      std::partition ( itTagLastClustered,
-                       taggedCellsSeq.end(),
-                       TaggedCellFunctor::isWithSeed((*itTagSeed)->cellID()));
-    while ( itTagFirstEdge != itTagLastEdge ) {
-      cluster->entries().
-        push_back( CaloClusterEntry( (*hits) ( (*itTagFirstEdge)->cellID()),
-                                     shared ) );
-      ++itTagFirstEdge;
-    }      
+    SeqVector::iterator itTagFirstEdge = itTagLastClustered ;
+    SeqVector::iterator itTagLastEdge  = std::stable_partition 
+      ( itTagLastClustered                                       ,
+        taggedCellsSeq.end()                                     ,
+        TaggedCellFunctor::isWithSeed ( (*itTagSeed)->cellID() ) ) ;
+    for(  ; itTagFirstEdge != itTagLastEdge ; ++itTagFirstEdge  ) 
+    {
+      const CaloDigit* digit = (*itTagFirstEdge)->digit() ;
+      cluster->entries().push_back( CaloClusterEntry( digit , shared ) );
+    }
     
-    
-    setEXYCluster( cluster, detector );
+    setEXYCluster ( cluster, detector );
     
     cluster->setStatus( 1 ) ;
     cluster->position().setZ( zPosition( cluster )  );
@@ -289,115 +365,20 @@ StatusCode CellularAutomaton::execute()
   /** sort the sequence to simplify the comparison 
    *  with other clusterisation techniques 
    */
-  { 
-    CaloDataFunctor::Less_by_Energy<const CaloCluster*> Cmp;
-    std::stable_sort( clustersSeq->begin() ,
-                      clustersSeq->end  () ,
-                      std::not2( Cmp )     );
-  }
   
-  { /// delete cells
-    std::for_each(taggedCellsSeq.begin() , 
-                  taggedCellsSeq.end  () , 
-                  CaloUtil::Eraser<CelAutoTaggedCell>() ) ;
-    taggedCellsSeq    .clear();
-    taggedCellsDirect .clear();
-  }
-  
-  log << MSG::DEBUG
-      << "Execution clusterization manager completed successfully" 
-      << endreq;
+  CaloDataFunctor::Less_by_Energy<const CaloCluster*> Cmp;
+  std::stable_sort
+    ( clustersSeq->begin()            ,
+      clustersSeq->end  ()            ,
+      CaloDataFunctor::inverse( Cmp ) ) ;
+
+  // clear local storaged 
+  taggedCellsSeq    .clear () ;
+  taggedCellsDirect .clear () ;
+  local_cells       .clear () ;
   
   return StatusCode::SUCCESS; 
-}
-
-
-// IsLocMax
-
-bool CellularAutomaton::isLocMax
-( CelAutoTaggedCell*      taggedCell,
-  CaloDigits&             hitsDirect,
-  const DeCalorimeter* detector ) 
-{
-  const CaloNeighbors& neighborsCellID = 
-    detector->neighborCells( taggedCell->cellID() );
-  CaloNeighbors::const_iterator 
-    itNeighborsCellID = neighborsCellID.begin();
-  while ( itNeighborsCellID != neighborsCellID.end() ) {
-    if ( ( 0 != hitsDirect( (*itNeighborsCellID) ) ) &&
-         ( hitsDirect( (*itNeighborsCellID) )->e() > 
-           hitsDirect( taggedCell->cellID() )->e() ) ) {
-      break;
-    }
-    ++itNeighborsCellID ;
-  }
-  // If true, this cell is one seed
-  return( itNeighborsCellID == neighborsCellID.end() ? true : false );
-};
-
-// Application of rules of tagging on one cell
-//   - No action if no clustered neighbor 
-//   - Clustered if only one clustered neighbor
-//   - Edge if more then one clustered neighbor 
-
-void 
-CellularAutomaton::appliRulesTagger
-( CelAutoTaggedCell*&            taggedCell        ,
-  CellularAutomaton::DirVector&  taggedCellsDirect ,
-  const DeCalorimeter*           detector          ) {
-  
-  // Find in the neighbors cells tagged before, the clustered neighbors cells 
-  
-  std::vector<CaloCellID> neighborsCells = 
-    detector->neighborCells( taggedCell->cellID() );
-  std::vector<CaloCellID>::iterator itNeighbors = neighborsCells.begin();
-  while ( itNeighbors != neighborsCells.end() ) {
-    if ( ( 0 != taggedCellsDirect[ (*itNeighbors) ] ) && 
-         ( taggedCellsDirect[ (*itNeighbors) ]->isClustered() ) &&  
-         ( ! taggedCell->
-           isWithSeed( taggedCellsDirect[ (*itNeighbors) ]->
-                       seedForClustered() ) ) ) {
-      taggedCell->addSeed( taggedCellsDirect[ (*itNeighbors) ]->
-                           seedForClustered() );    }
-    itNeighbors++;
   }
   
-  // Tag or or not the cell
-  
-  switch ( taggedCell->numberSeeds() ) {
-  case 0: 
-    break;
-  case 1: 
-    taggedCell->setClustered();
-    break;
-  default: 
-    taggedCell->setEdge();
-    break;
-  } 
-}
 
-
-void CellularAutomaton::setEXYCluster
-( CaloCluster* cluster,
-  const DeCalorimeter* detector ) 
-{
-  ///
-  double E, X, Y;
-  ///
-  StatusCode sc = 
-    ClusterFunctors::calculateEXY( cluster->entries().begin() ,
-                                   cluster->entries().end  () ,
-                                   detector , E , X , Y      );
-  ///
-  if( sc.isSuccess() )
-    {
-      cluster->position().parameters()( CaloPosition::E ) = E ;
-      cluster->position().parameters()( CaloPosition::X ) = X ;
-      cluster->position().parameters()( CaloPosition::Y ) = Y ;
-    }
-  else 
-    { Error( " E,X and Y of cluster could not be evaluated!",sc); }
-  ///
-};
-
-
+// ==========================================================================
