@@ -364,7 +364,8 @@ void EvtDDalitz::decay( EvtParticle *p){
       double A     =  EvtDecayTable::GetDecayFunc( p->getParent() ) 
         -> getArg( 2 )  ;
 
-      EvtComplex Factor( fabs( A ) * cos ( delta ) , sin ( delta ) ) ;
+      EvtComplex Factor( fabs( A ) * cos ( delta ) , 
+                         fabs( A ) * sin ( delta ) ) ;
 
       if ( ( p->getParent()->getId() == BP ) || 
            ( p->getParent()->getId() == B0 ) ) {
