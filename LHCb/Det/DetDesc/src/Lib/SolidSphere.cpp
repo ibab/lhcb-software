@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/08/09 18:13:38  ibelyaev
+/// modification for solid factories
+///
 /// Revision 1.4  2001/08/09 16:48:03  ibelyaev
 /// update in interfaces and redesign of solids
 /// 
@@ -64,8 +67,8 @@ SolidSphere::SolidSphere( const std::string & name             ,
   if( InsideRadius >= OuterRadius ) 
     { throw SolidException("SolidSphere::InsideRadius>=OuterRadius    "); }
   ///
-  m_sphere_outerR2  = sqrt( OuterRadius );
-  m_sphere_insideR2 = sqrt( InsideRadius );
+  m_sphere_outerR2  = OuterRadius  * OuterRadius  ;
+  m_sphere_insideR2 = InsideRadius * InsideRadius ;
   ///
   if( -180.0 * degree > StartPhiAngle )
     { throw SolidException("SolidSphere::StartPhiAngle < -180 degree !"); }
