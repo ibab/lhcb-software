@@ -1,10 +1,19 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.44 2002-04-25 13:02:04 ibelyaev Exp $
+! $Id: release.notes,v 1.45 2002-05-01 18:23:37 ibelyaev Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev 
+
+!=============================================================================
+! 1 May 2002 - v8r0 Vanya Belyaev
+! 1) Add errors/warnings/exceptions counters for major classes 
+!    (imported from LHCb Calo software)
+! 2) Decrease teh dependency form Run and Vis Managers, remove classes 
+!    form "public" places
+! 3) Fix some problems with user interafces   
+!=============================================================================
 
 !=============================================================================
 ! 24/04/2002 - v8r0 Vanya Belyaev

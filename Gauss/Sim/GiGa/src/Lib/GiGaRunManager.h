@@ -1,19 +1,8 @@
+// $Id: GiGaRunManager.h,v 1.1 2002-05-01 18:23:38 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.10  2001/08/01 09:42:21  ibelyaev
-/// redesign and reimplementation of GiGaRunManager class
-///
-/// Revision 1.9  2001/07/27 14:28:59  ibelyaev
-/// bug fix
-///
-/// Revision 1.8  2001/07/25 17:18:07  ibelyaev
-/// move all conversions from GiGa to GiGaCnv
-///
-/// Revision 1.7  2001/07/23 13:11:42  ibelyaev
-/// the package restructurisation(II)
-///
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef   GIGA_GIGARUNMANAGER_H
 #define   GIGA_GIGARUNMANAGER_H  1
@@ -45,9 +34,9 @@ class     G4UIsession                   ;
 class     G4UImanager                   ; 
 
 
-/** @class GiGaRunManager GiGaRunManager.h GiGa/GiGaRunManager.h
+/** @class GiGaRunManager GiGaRunManager.h 
  *
- *  Customized version of Genat4 Run Manager 
+ *  Customized version of Geant4 Run Manager 
  *
  *  @author Vanya Belyaev 
  *  @date xx/xx/xxx 
@@ -228,15 +217,15 @@ public:
    *  @return status code 
    */
   StatusCode finalizeRunManager () ;
-  
+
 private:
-  
-  /// no default constructor 
-  GiGaRunManager();
-  /// no copy constructor 
-  GiGaRunManager( const  GiGaRunManager& );
-  /// no assignment 
-  GiGaRunManager& operator=( const  GiGaRunManager& );
+
+  /// default constructor  is private
+  GiGaRunManager() ;
+  /// copy    constructor  is private
+  GiGaRunManager           ( const GiGaRunManager& ) ;
+  /// assignement operator is private
+  GiGaRunManager& operator=( const GiGaRunManager& ) ;
   
 private:
   
@@ -246,16 +235,8 @@ private:
   inline void set_evt_Is_Processed   ( bool st ) { m_pro_st = st ; }
   inline void set_uis_Is_Started     ( bool st ) { m_uis_st = st ; }
   
-  /** Assertion
-   *  @param assertion condition to be checked 
-   *  @param msg       message
-   *  @param sc        status code 
-   */
-  inline void Assert( bool  assertion                              ,  
-                      const std::string& msg = "GiGaSvc::unknown"  ,  
-                      const StatusCode&  sc = StatusCode::FAILURE  ) ;
- private: 
-
+private: 
+  
   bool                       m_krn_st       ;
   bool                       m_run_st       ;
   bool                       m_pre_st       ;
@@ -265,22 +246,12 @@ private:
   G4VPhysicalVolume*         m_rootGeo      ;
   IGiGaGeoSrc*               m_geoSrc       ;
   G4UIsession*               m_g4UIsession  ;
-
+  
 };
 
-// ============================================================================
-/** Assertion
- *  @param assertion condition to be checked 
- *  @param msg       message
- *  @param sc        status code 
- */
-// ============================================================================
-inline void GiGaRunManager::Assert( bool  assertion        , 
-                                    const std::string& msg , 
-                                    const StatusCode &  sc ) 
-{ if( !assertion ) { Exception(msg , MSG::FATAL , sc ) ; } };
 
-
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  ///< GIGA_GIGARUNMANAGER_H
 // ============================================================================

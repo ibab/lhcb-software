@@ -1,8 +1,11 @@
-// $Id: GiGaRunManagerInterface.cpp,v 1.3 2002-01-22 18:20:53 ibelyaev Exp $ 
+// $Id: GiGaRunManagerInterface.cpp,v 1.4 2002-05-01 18:23:38 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/01/22 18:20:53  ibelyaev
+//  Vanya: update for newer versions of Gaudi and Geant4
+//
 // Revision 1.2  2001/08/12 15:42:49  ibelyaev
 // improvements with Doxygen comments
 //
@@ -12,8 +15,9 @@
 // ============================================================================
 /// GiGa 
 #include "GiGa/GiGaUtil.h"
-#include "GiGa/GiGaRunManager.h"
 #include "GiGa/IGiGaGeoSrc.h"
+// Local
+#include "GiGaRunManager.h"
 /// G4 
 #include "G4StateManager.hh"
 #include "G4VUserPrimaryGeneratorAction.hh"
@@ -27,10 +31,11 @@
 #include "G4UIsession.hh"
 
 // ============================================================================
-/** Implementation of public interface for class  GiGaRunManager
+/** @file
+ *  Implementation of public interface for class  GiGaRunManager
  *
- * @date   31/07/2001 
- * @author Vanya Belyaev
+ *  @date   31/07/2001 
+ *  @author Vanya Belyaev
  */
 
 // ============================================================================

@@ -1,19 +1,8 @@
+// $Id: GiGaSvc.h,v 1.8 2002-05-01 18:23:39 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/08/01 09:42:24  ibelyaev
-/// redesign and reimplementation of GiGaRunManager class
-///
-/// Revision 1.5  2001/07/27 14:29:01  ibelyaev
-/// bug fix
-///
-/// Revision 1.4  2001/07/25 17:18:10  ibelyaev
-/// move all conversions from GiGa to GiGaCnv
-///
-/// Revision 1.3  2001/07/15 20:54:35  ibelyaev
-/// package restructurisation
-///
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef       GIGA_GIGASVC_H
 #define       GIGA_GIGASVC_H   1 
@@ -23,6 +12,7 @@
 #include <string>
 #include <list>
 #include <vector> 
+#include <map> 
 /// GaudiKernel 
 #include  "GaudiKernel/Kernel.h"
 #include  "GaudiKernel/StatusCode.h"
@@ -40,6 +30,7 @@ class     IObjManager                     ;
 template   <class TYPE> class SvcFactory  ;
 /// forwad declarations  from GiGa  
 class     IGiGaRunManager    ; 
+class     IGiGaGeoSrc        ; 
 class     IGiGaPhysList      ;
 class     IGiGaStackAction   ;
 class     IGiGaTrackAction   ;
@@ -51,13 +42,13 @@ class     G4UImanager        ;
 class     G4VVisManager      ;
 
 /**  @class GiGaSvc GiGaSvc.h 
-     
-     implementation of abstract Interfaces IGiGaSvc          
-     (for event-by-event communications with Geant4)         
-     and IGiGaSetUpSvc (for configuration of Geant4)         
-     
-     @author: Vanya Belyaev                                                   
-*/
+ *    
+ *   implementation of abstract Interfaces IGiGaSvc          
+ *   (for event-by-event communications with Geant4)         
+ *    and IGiGaSetUpSvc (for configuration of Geant4)         
+ *   
+ *    @author: Vanya Belyaev Ivan.Belyaev@itep.ru
+ */
 
 class GiGaSvc: public         Service       , 
                virtual public IGiGaSvc      ,
@@ -73,9 +64,10 @@ class GiGaSvc: public         Service       ,
  protected: 
   
   /** standard constructor 
-      @param name instrance name 
-      @param svc  pointer to service locator 
-  */
+   *  @see Service
+   *  @param name instrance name 
+   *  @param svc  pointer to service locator 
+   */
   GiGaSvc( const std::string& name , 
            ISvcLocator*       svc  );
 
@@ -362,6 +354,8 @@ class GiGaSvc: public         Service       ,
   setStepping     ( G4UserSteppingAction          * action        ) ;
 
   /** service initialization 
+   *  @see  Service 
+   *  @see IService 
    *  @return status code 
    */
   virtual StatusCode                    initialize() ; 
@@ -416,45 +410,52 @@ private:
    *  @param assertion   assertion condition
    *  @param msg         assertion message 
    *  @param sc          assertion status code 
+   *  @return status code 
    */
-  inline void Assert( bool  assertion                              , 
-                      const std::string& msg = "GiGaSvc::unknown"  , 
-                      const StatusCode&  sc = StatusCode::FAILURE  ) ;
+  inline StatusCode Assert
+  ( bool  assertion                              , 
+    const std::string& msg = "GiGaSvc::unknown"  , 
+    const StatusCode&  sc = StatusCode::FAILURE  ) const ;
   
   /** assertion 
    *  @param assertion   assertion condition
    *  @param msg         assertion message 
    *  @param sc          assertion status code 
+   *  @return status code 
    */
-  inline void Assert( bool  assertion                              ,
-                      const char*        msg                       ,
-                      const StatusCode&  sc  = StatusCode::FAILURE ) ;
+  inline StatusCode Assert
+  ( bool  assertion                              ,
+    const char*        msg                       ,
+    const StatusCode&  sc  = StatusCode::FAILURE ) const ;
   
   /** error printout 
    *  @param msg         error message 
    *  @param sc          error status code
    *  @return status code 
    */
-  inline StatusCode Error  ( const std::string & msg ,  
-                             const StatusCode  & sc  = StatusCode::FAILURE );
-
+  StatusCode Error  
+  ( const std::string & msg                       ,  
+    const StatusCode  & sc  = StatusCode::FAILURE ) const ;
+  
   /** warning printout 
    *  @param msg         warning message 
    *  @param sc          warning status code
    *  @return status code 
    */
-  inline StatusCode Warning( const std::string & msg ,  
-                             const StatusCode  & sc  = StatusCode::FAILURE );
-
+  StatusCode Warning
+  ( const std::string & msg                       ,  
+    const StatusCode  & sc  = StatusCode::FAILURE ) const ;
+  
   /** printout 
    *  @param msg            message 
    *  @param lvl            printout level 
    *  @param sc             status code
    *  @return status code 
    */
-  inline StatusCode Print  ( const std::string & msg ,  
-                             const MSG::Level  & lvl = MSG::INFO           ,
-                             const StatusCode  & sc  = StatusCode::FAILURE );
+  StatusCode Print  
+  ( const std::string & msg                       ,  
+    const MSG::Level  & lvl = MSG::INFO           ,
+    const StatusCode  & sc  = StatusCode::FAILURE ) const ;
   
   /** exception
    *  @param msg            exception message 
@@ -463,11 +464,11 @@ private:
    *  @param sc             exception status code
    *  @return status code 
    */
-  inline StatusCode 
-  Exception ( const std::string    & msg  ,  
-              const GaudiException & exc  , 
-              const MSG::Level     & lvl = MSG::FATAL           ,
-              const StatusCode     & sc  = StatusCode::FAILURE );
+  StatusCode Exception 
+  ( const std::string    & msg                       ,  
+    const GaudiException & exc                       , 
+    const MSG::Level     & lvl = MSG::FATAL          ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
   
   /** exception
    *  @param msg            exception message 
@@ -476,72 +477,76 @@ private:
    *  @param sc             exception status code
    *  @return status code 
    */
-  inline StatusCode 
-  Exception ( const std::string    & msg  ,  
-              const std::exception & exc  , 
-              const MSG::Level     & lvl = MSG::FATAL           ,
-              const StatusCode     & sc  = StatusCode::FAILURE );
+  StatusCode Exception 
+  ( const std::string    & msg                       ,  
+    const std::exception & exc                       , 
+    const MSG::Level     & lvl = MSG::FATAL          ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
+  
+  /** exception
+   *  @param msg            exception message 
+   *  @param lvl            exception printout level 
+   *  @param sc             exception status code
+   *  @return status code 
+   */
+  StatusCode Exception 
+  ( const std::string    & msg                       ,  
+    const MSG::Level     & lvl = MSG::FATAL          ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
 
-  /** exception
-   *  @param msg            exception message 
-   *  @param lvl            exception printout level 
-   *  @param sc             exception status code
-   *  @return status code 
-   */
-  inline StatusCode 
-  Exception ( const std::string    & msg  ,  
-              const MSG::Level     & lvl = MSG::FATAL           ,
-              const StatusCode     & sc  = StatusCode::FAILURE );
-  
-  
   /** instantiate new physics list object using abstract factory technique 
    *  @param TypeAndName    "Type/Name" of physics list object 
    *  @param PhysicsList    reference to new phisics list object 
    *  @return status code 
    */
-  StatusCode physList      ( const std::string& TypeAndName , 
-                             IGiGaPhysList*&    PhisicsList ) ;
+  StatusCode physList      
+  ( const std::string& TypeAndName , 
+    IGiGaPhysList*&    PhisicsList ) ;
   
   /** instantiate new stacking action object using abstract factory technique 
    *  @param TypeAndName    "Type/Name" of stacking action object 
    *  @param StackAction    reference to new stacking action object 
    *  @return status code 
    */
-  StatusCode stackAction   ( const std::string& TypeAndName , 
-                             IGiGaStackAction*& StackAction ) ;
+  StatusCode stackAction   
+  ( const std::string& TypeAndName , 
+    IGiGaStackAction*& StackAction ) ;
   
   /** instantiate new tracking action object using abstract factory technique 
    *  @param TypeAndName    "Type/Name" of tracking action object 
    *  @param TrackAction    reference to new tracking action object 
    *  @return status code 
    */
-  StatusCode trackAction   ( const std::string& TypeAndName , 
-                             IGiGaTrackAction*& TrackAction ) ;
-
+  StatusCode trackAction 
+  ( const std::string& TypeAndName , 
+    IGiGaTrackAction*& TrackAction ) ;
+  
   /** instantiate new stepping action object using abstract factory technique 
    *  @param TypeAndName    "Type/Name" of stepping action object 
    *  @param StepAction    reference to new stepping action object 
    *  @return status code 
    */
-  StatusCode stepAction    ( const std::string& TypeAndName , 
-                             IGiGaStepAction*&  StepAction  ) ;
+  StatusCode stepAction 
+  ( const std::string& TypeAndName , 
+    IGiGaStepAction*&  StepAction  ) ;
   
   /** instantiate new event action object using abstract factory technique 
    *  @param TypeAndName    "Type/Name" of event  action object 
    *  @param eventAction     reference to new event action object 
    *  @return status code 
    */
-  StatusCode eventAction   ( const std::string& TypeAndName , 
-			     IGiGaEventAction*& EventAction  ) ;
-
+  StatusCode eventAction   
+  ( const std::string& TypeAndName , 
+    IGiGaEventAction*& EventAction  ) ;
+  
   /** instantiate new run action object using abstract factory technique 
    *  @param TypeAndName    "Type/Name" of run action object 
    *  @param runAction     reference to new run action object 
    *  @return status code 
    */
-  StatusCode runAction     ( const std::string& TypeAndName , 
-			     IGiGaRunAction*&   RunAction  ) ;
-  
+  StatusCode runAction    
+  ( const std::string& TypeAndName , 
+    IGiGaRunAction*&   RunAction  ) ;
   
 private:
   
@@ -567,14 +572,14 @@ private:
   ///
   bool        m_UseVisManager    ; ///< flag to use vis manager 
   ///
+  typedef std::map<std::string,unsigned int> Counter;
+  /// counter of errors 
+  mutable Counter m_errors     ;
+  /// counter of warning 
+  mutable Counter m_warnings   ; 
+  /// counter of exceptions
+  mutable Counter m_exceptions ; 
 };
-
-// ============================================================================
-// ============================================================================
-inline void GiGaSvc::Assert( bool               assertion , 
-                             const std::string& msg       , 
-                             const StatusCode&  sc        ) 
-{ if( !assertion ) { throw GiGaException( name() + msg , sc ) ; } };
 
 // ============================================================================
 /** assertion 
@@ -583,118 +588,36 @@ inline void GiGaSvc::Assert( bool               assertion ,
  *  @param sc          assertion status code 
  */
 // ============================================================================
-inline void GiGaSvc::Assert( bool               assertion , 
-                             const char*        msg       , 
-                             const StatusCode&  sc        ) 
-{ if( !assertion ) { throw GiGaException( name() + msg , sc ) ; } };
+inline StatusCode  GiGaSvc::Assert
+( bool               assertion , 
+  const std::string& msg       , 
+  const StatusCode&  sc        ) const 
+{  
+  StatusCode status = StatusCode::SUCCESS ;
+  return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
+};
+// ============================================================================
 
 // ============================================================================
-/** error printout 
- *  @param msg         error message 
- *  @param sc          error status code
- *  @return status code 
+/** assertion 
+ *  @param assertion   assertion condition
+ *  @param msg         assertion message 
+ *  @param sc          assertion status code 
  */
 // ============================================================================
-inline StatusCode GiGaSvc::Error( const std::string& Message , 
-                                  const StatusCode & Status )
+inline StatusCode  GiGaSvc::Assert
+( bool               assertion , 
+  const char*        msg       , 
+  const StatusCode&  sc        ) const 
 { 
-  Stat stat( chronoSvc() , name() + ":Error" ); 
-  return  Print( Message , MSG::ERROR  , Status  ) ; 
-};  
-
-// ============================================================================
-/** warning printout 
- *  @param msg         warning message 
- *  @param sc          warning status code
- *  @return status code 
- */
-// ============================================================================
-inline StatusCode GiGaSvc::Warning( const std::string& Message , 
-                                    const StatusCode & Status )
-{ 
-  Stat stat( chronoSvc() , name() + ":Warning" ); 
-  return  Print( Message , MSG::WARNING , Status ) ; 
-};  
-
-// ============================================================================
-/** printout 
- *  @param msg            message 
- *  @param lvl            printout level 
- *  @param sc             status code
- *  @return status code 
- */
-// ============================================================================
-inline StatusCode GiGaSvc::Print( const std::string& Message , 
-                                  const MSG::Level & level   , 
-                                  const StatusCode & Status )
-{ 
-  MsgStream log( msgSvc() , name() ); 
-  log << level << Message << endreq ; 
-  return  Status; 
-};  
-
-// ============================================================================
-/** exception
- *  @param Message        exception message 
- *  @param Excp           reference to "previous" exception
- *  @param level          exception printout level 
- *  @param Status         exception status code
- *  @return status code 
- */
-// ============================================================================
-inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
-                                      const GaudiException & Excp    ,
-                                      const MSG::Level     & level   , 
-                                      const StatusCode     & Status )
-{
-  Stat stat( chronoSvc() , Excp.tag() );
-  MsgStream log( msgSvc() , name() + ":"+Excp.tag() ); 
-  log << level << Message << ":" << Excp << endreq ; 
-  return  Status;
-};  
-
-// ============================================================================
-/** exception
- *  @param Message        exception message 
- *  @param Excp           reference to "previous" exception
- *  @param level          exception printout level 
- *  @param Status         exception status code
- *  @return status code 
- */
-// ============================================================================
-inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
-                                      const std::exception & Excp    ,
-                                      const MSG::Level     & level   , 
-                                      const StatusCode     & Status )
-{
-  Stat stat( chronoSvc() , ":std::exception" );
-  MsgStream log( msgSvc() , name() ); 
-  log << level << Message << ":" << Excp.what() << endreq ; 
-  return  Status;
-};  
-
-// ============================================================================
-/** exception
- *  @param Message        exception message 
- *  @param level          exception printout level 
- *  @param Status         exception status code
- *  @return status code 
- */
-// ============================================================================
-inline StatusCode GiGaSvc::Exception( const std::string    & Message , 
-                                      const MSG::Level     & level   , 
-                                      const StatusCode     & Status )
-{
-  Stat stat( chronoSvc() , ":*UNKNOWN* exception" );
-  MsgStream log( msgSvc() , name() ); 
-  log << level << Message << ": UNKNOWN exception"  << endreq ; 
-  return  Status;
-};  
-
- 
+  StatusCode status = StatusCode::SUCCESS ;
+  return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
+};
 // ============================================================================
 
 
+// ============================================================================
+// The END
 // ============================================================================
 #endif  ///<  GIGA_GIGASVC_H
 // ============================================================================

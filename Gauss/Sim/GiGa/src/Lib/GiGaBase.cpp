@@ -1,29 +1,8 @@
-// $Id: GiGaBase.cpp,v 1.10 2002-04-09 17:16:49 ibelyaev Exp $
+// $Id: GiGaBase.cpp,v 1.11 2002-05-01 18:23:38 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.9  2002/01/22 18:20:53  ibelyaev
-///  Vanya: update for newer versions of Gaudi and Geant4
-///
-/// Revision 1.8  2001/08/12 15:42:48  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.7  2001/08/01 09:42:23  ibelyaev
-/// redesign and reimplementation of GiGaRunManager class
-///
-/// Revision 1.6  2001/07/27 17:03:17  ibelyaev
-/// improved printout
-///
-/// Revision 1.5  2001/07/27 15:06:14  ibelyaev
-/// printout improvements in base class GiGaBase
-///
-/// Revision 1.4  2001/07/23 13:12:11  ibelyaev
-/// the package restructurisation(II)
-///
-/// Revision 1.3  2001/07/15 20:54:25  ibelyaev
-/// package restructurisation
-///
+// $Log: not supported by cvs2svn $
 // ===========================================================================
 #define GIGA_GIGABASE_CPP 1 
 // ============================================================================
@@ -90,6 +69,10 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   , m_objMgr     ( 0                     ) 
   ///
   , m_init       ( false                 ) 
+  ///
+  , m_errors      ()
+  , m_warnings    ()
+  , m_exceptions  ()
 {
   ///
   if( 0 == svcLoc() ) 
@@ -189,6 +172,31 @@ StatusCode GiGaBase::initialize()
     if( st.isFailure() ) 
       { return Error("GiGaBase::initialize could not set own properties") ; }
   }
+  ///
+  { /// print ALL properties 
+    typedef std::vector<Property*> Properties;
+    const Properties& properties = getProperties() ;
+    MsgStream log( msgSvc() , name ()  );
+    log << MSG::DEBUG 
+        << " List of ALL properties of "
+        << System::typeinfoName( typeid( *this ) ) << "/" 
+        << name ()           << "   #properties = " 
+        << properties.size() << endreq ;
+    const int   buffer_size  = 256 ;
+    char buffer[buffer_size]       ;
+    for( Properties::const_reverse_iterator property 
+           = properties.rbegin() ;
+         properties.rend() != property ; ++property )  
+      {
+        std::fill( buffer , buffer + buffer_size , 0 );
+        std::ostrstream ost ( buffer , buffer_size );
+        (*property)->nameAndValueAsStream( ost );
+        ost.freeze();
+        log << MSG::DEBUG
+            << "Property ['Name': Value] = " 
+            << ost.str() << endreq ;
+      }
+  }  
   ///
   if( !m_msgName.empty() )
     {
@@ -315,6 +323,7 @@ StatusCode GiGaBase::initialize()
   ///
   return StatusCode::SUCCESS;  
 };
+// ============================================================================
 
 // ============================================================================
 /** finalize the object 
@@ -323,9 +332,48 @@ StatusCode GiGaBase::initialize()
 // ============================================================================
 StatusCode GiGaBase::finalize()
 {
-  ///
-  Print("GiGaBase finalization" , 
-        StatusCode::SUCCESS , MSG::VERBOSE ) ;
+  //
+  Print( "GiGaBase finalization" , StatusCode::SUCCESS , MSG::DEBUG ) ;
+  // error printout 
+  if( 0 != m_errors     .size() || 
+      0 != m_warnings   .size() || 
+      0 != m_exceptions .size()   ) 
+    {      
+      MsgStream log( msgSvc() , name() );
+      // format printout 
+      log << MSG::ALWAYS 
+          << " Exceptions/Errors/Warnings statistics:  " 
+          << m_exceptions .size () << "/"
+          << m_errors     .size () << "/"
+          << m_warnings   .size () << endreq ; 
+      // print exceptions counter 
+      for( Counter::const_iterator excp = m_exceptions.begin() ;
+           excp != m_exceptions.end() ; ++excp )
+        {
+          log << MSG::ALWAYS 
+              << " #EXCEPTIONS= " << excp->second  
+              << " Message='"     << excp->first    << "'" << endreq ; 
+        }  
+      // print errors counter 
+      for( Counter::const_iterator error = m_errors.begin() ;
+           error != m_errors.end() ; ++error )
+        {
+          log << MSG::ALWAYS 
+              << " #ERRORS    = " << error->second  
+              << " Message='"     << error->first    << "'" << endreq ; 
+        }  
+      // print warnings
+      for( Counter::const_iterator warning = m_warnings.begin() ;
+           warning != m_warnings.end() ; ++warning )
+        {
+          log << MSG::ALWAYS 
+              << " #WARNINGS  = " << warning->second  
+              << " Message='"     << warning->first  << "'" << endreq ; 
+        }  
+    }
+  m_errors      .clear();
+  m_warnings    .clear();
+  m_exceptions  .clear();
   ///
   if ( init() )
     {
@@ -346,6 +394,7 @@ StatusCode GiGaBase::finalize()
   return StatusCode::SUCCESS;
   ///
 };
+// ============================================================================
 
 // ============================================================================
 /** set own properties 
@@ -375,6 +424,7 @@ StatusCode GiGaBase::setProperties()
   ///
   return StatusCode::SUCCESS;
 };
+// ============================================================================
 
 // ============================================================================
 /** Print the error    message and return status code 
@@ -383,12 +433,16 @@ StatusCode GiGaBase::setProperties()
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaBase::Error( const std::string& Message , 
-			    const StatusCode & Status ) const 
+StatusCode GiGaBase::Error
+( const std::string& Message , 
+  const StatusCode & Status  ) const 
 {
   Stat stat( chronoSvc() , name()+":Error" ); 
+  /// increase the counter of errors  
+  m_errors[ Message ] += 1 ;
   return Print( Message , Status , MSG::ERROR ); 
 };  
+// ============================================================================
 
 // ============================================================================
 /** Print the warning  message and return status code 
@@ -397,12 +451,16 @@ StatusCode GiGaBase::Error( const std::string& Message ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaBase::Warning( const std::string& Message , 
-			      const StatusCode & Status ) const 
+StatusCode GiGaBase::Warning
+( const std::string& Message , 
+  const StatusCode & Status  ) const 
 {
   Stat stat( chronoSvc() , name()+":Warning" ); 
+  /// increase the counter of warnings  
+  m_warnings[ Message ] += 1 ;
   return  Print( Message , Status , MSG::WARNING );
 };
+// ============================================================================
   
 // ============================================================================
 /** re-throw the exception and print 
@@ -413,17 +471,20 @@ StatusCode GiGaBase::Warning( const std::string& Message ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaBase::Exception ( const std::string    & msg ,  
-                                 const GaudiException & exc , 
-                                 const MSG::Level     & lvl ,
-                                 const StatusCode     & sc  )
+StatusCode GiGaBase::Exception 
+( const std::string    & msg ,  
+  const GaudiException & exc , 
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const 
 {
   Stat stat( chronoSvc() , exc.tag() );
-  MsgStream log( msgSvc() , name() ); 
   Print( "GaudiException: catch and re-throw " + msg , sc , lvl );
-  throw   GiGaException( myType()+"/"+name()+": " + msg , exc , sc );
+  /// increase the exception counter 
+  m_exceptions[ msg ] += 1 ;
+  throw   GiGaException( myType()+"/"+name()+"::" + msg , exc , sc );
   return  sc;
 };
+// ============================================================================
 
 // ============================================================================
 /** re-throw the exception and print 
@@ -434,17 +495,21 @@ StatusCode GiGaBase::Exception ( const std::string    & msg ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaBase::Exception ( const std::string    & msg ,  
-                                 const std::exception & exc , 
-                                 const MSG::Level     & lvl ,
-                                 const StatusCode     & sc  )
+StatusCode GiGaBase::Exception 
+( const std::string    & msg ,  
+  const std::exception & exc , 
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const 
 {
   Stat stat( chronoSvc() , "std::exception" );
-  MsgStream log( msgSvc() , name() ); 
   Print( "std::exception: catch and re-throw " + msg , sc , lvl );
-  throw   GiGaException( myType()+"/"+name()+": " + msg , sc );
+  /// increase the exception counter 
+  m_exceptions[ msg ] += 1 ;
+  throw   GiGaException( myType()+"/"+name()+"::" + msg + 
+                         " (" + exc.what() + ")" , sc );
   return  sc;
 };
+// ============================================================================
 
 // ============================================================================
 /** throw the exception and print 
@@ -454,16 +519,45 @@ StatusCode GiGaBase::Exception ( const std::string    & msg ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaBase::Exception ( const std::string    & msg ,  
-                                 const MSG::Level     & lvl ,
-                                 const StatusCode     & sc  )
+StatusCode GiGaBase::Exception 
+( const std::string    & msg ,  
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const 
 {
   Stat stat( chronoSvc() , "GiGaException" );
-  MsgStream log( msgSvc() , name() ); 
   Print( "GiGaException throw " + msg , sc , lvl );
+  /// increase the exception counter 
+  m_exceptions[ msg ] += 1 ;
   throw   GiGaException( msg , sc );
   return  sc;
 };
+// ============================================================================
+
+// ============================================================================
+/** Print the message and return status code 
+ *  @param mgs message to be printed 
+ *  @param sc  status code 
+ *  @param lvl print level  
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode GiGaBase::Print
+( const std::string& Message , 
+  const StatusCode & Status  , 
+  const MSG::Level & level   ) const 
+{
+  ///
+  MsgStream log( msgSvc() , name() ); 
+  log << level 
+      << myType() 
+      << ":: "   
+      << Message 
+      << endreq  ; 
+  ///
+  return  Status;
+  ///
+};
+// ============================================================================
 
 // ============================================================================
 /** set the property by property
@@ -473,6 +567,7 @@ StatusCode GiGaBase::Exception ( const std::string    & msg ,
 // ============================================================================
 StatusCode GiGaBase::setProperty  ( const Property    & p ) 
 { return m_propMgr->setProperty( p ) ; };
+// ============================================================================
 
 // ============================================================================
 /** set the property from input stream
@@ -482,6 +577,7 @@ StatusCode GiGaBase::setProperty  ( const Property    & p )
 // ============================================================================
 StatusCode GiGaBase::setProperty  ( std::istream      & s )  
 { return m_propMgr->setProperty( s ) ; }
+// ============================================================================
 
 // ============================================================================
 /** set the property from the string 
@@ -490,9 +586,11 @@ StatusCode GiGaBase::setProperty  ( std::istream      & s )
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaBase::setProperty  ( const std::string & n ,
-                                    const std::string & v )
+StatusCode GiGaBase::setProperty  
+( const std::string & n ,
+  const std::string & v )
 { return m_propMgr->setProperty( n , v ) ; } ;
+// ============================================================================
 
 // ============================================================================
 /** get the property by property
@@ -511,6 +609,7 @@ StatusCode GiGaBase::getProperty  (       Property    * p ) const
 // ============================================================================
 const Property& GiGaBase::getProperty  ( const std::string & N ) const 
 { return m_propMgr->getProperty( N ) ; };
+// ============================================================================
 
 // ============================================================================ 
 /** get the property by std::string
@@ -522,6 +621,7 @@ const Property& GiGaBase::getProperty  ( const std::string & N ) const
 StatusCode GiGaBase::getProperty  ( const std::string & n ,
                                     std::string & v ) const 
 { return m_propMgr->getProperty( n , v ) ; } ;
+// ============================================================================
 
 // ============================================================================
 /** get list of all properties 
@@ -530,7 +630,7 @@ StatusCode GiGaBase::getProperty  ( const std::string & n ,
 // ============================================================================
 const std::vector<Property*>& GiGaBase::getProperties() const 
 { return m_propMgr->getProperties()  ; };   
-///
+// ============================================================================
 
 // ============================================================================
 /// serialize object for reading 
@@ -554,6 +654,7 @@ StreamBuffer& GiGaBase::serialize( StreamBuffer& S )
   ///
   return S;       
 };  
+// ============================================================================
 
 // ============================================================================
 /// serialize object for writing 
@@ -570,6 +671,7 @@ StreamBuffer& GiGaBase::serialize( StreamBuffer& S ) const
            << m_omName    
            << m_output ;   
 };
+// ============================================================================
 
 // ============================================================================
 /** handle the incident
@@ -578,10 +680,13 @@ StreamBuffer& GiGaBase::serialize( StreamBuffer& S ) const
 // ============================================================================
 void  GiGaBase::handle( const Incident& incident ) 
 { 
-  Print("Incident='"+incident.type()+"'" + 
-        " \tsource='"+incident.source()+"'" ); 
+  Print("Incident='"  + incident .type   () + "'" + 
+        " \tsource='" + incident .source () + "'" ); 
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

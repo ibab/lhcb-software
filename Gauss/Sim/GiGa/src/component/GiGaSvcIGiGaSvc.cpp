@@ -1,13 +1,8 @@
+// $Id: GiGaSvcIGiGaSvc.cpp,v 1.7 2002-05-01 18:23:39 ibelyaev Exp $ 
 // ================================`============================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ================================`============================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/23 13:12:29  ibelyaev
-/// the package restructurisation(II)
-///
-/// Revision 1.4  2001/07/15 20:54:36  ibelyaev
-/// package restructurisation
-///
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #define GIGA_GIGASVCIGIGASVC_CPP 1 
 // ============================================================================
@@ -27,12 +22,14 @@
 #include    "GaudiKernel/ParticleProperty.h"
 /// GiGa 
 #include    "GiGa/GiGaException.h"
-#include    "GiGa/GiGaRunManager.h"
 /// local 
 #include    "GiGaSvc.h"
+// G4 
+#include    "G4Event.hh"
 
 // ============================================================================
-/**  Implementation of class GiGaSvc  
+/**  @file 
+ *   Implementation of class GiGaSvc  
  *   all methods from abstract interface IGiGaSvc 
  *
  *   @author: Vanya Belyaev 
@@ -59,6 +56,7 @@ IGiGaSvc&   GiGaSvc::operator <<         ( G4PrimaryVertex * vertex   )
   return *this; 
   ///
 }; 
+// ============================================================================
 
 // ============================================================================
 /** get the whole event  object from GiGa/G4 
@@ -77,6 +75,7 @@ IGiGaSvc& GiGaSvc::operator >> ( const G4Event*         & event        )
   Assert( sc.isSuccess(), "operator>>(G4Event*)" , sc );   
   return *this;
 }; 
+// ============================================================================
 
 // ============================================================================
 /** get the all hit collections from GiGa/G4 
@@ -93,11 +92,11 @@ IGiGaSvc& GiGaSvc::operator >> ( G4HCofThisEvent*       & collections  )
   ///
   const G4Event* event = 0 ; 
   *this >> event           ; 
-  collections = 
-    ( 0 != event )  ? event->GetHCofThisEvent() : 0 ; 
+  collections = ( 0 != event )  ? event->GetHCofThisEvent() : 0 ; 
   ///
   return *this;   
 };
+// ============================================================================
 
 // ============================================================================
 /** get the concrete hit collection from GiGa/G4 
@@ -118,6 +117,7 @@ IGiGaSvc& GiGaSvc::operator >> ( CollectionPair         & collection   )
   ///
   return *this ;  
 }; 
+// ============================================================================
 
 // ============================================================================
 /** get all trajectories(trajectory container) from GiGa/G4 
@@ -134,11 +134,11 @@ IGiGaSvc& GiGaSvc::operator >> ( G4TrajectoryContainer* & trajectories )
   ///
   const G4Event* event = 0 ; 
   *this >> event ;
-  trajectories = 
-    ( 0 != event ) ? event->GetTrajectoryContainer() : 0 ; 
+  trajectories = ( 0 != event ) ? event->GetTrajectoryContainer() : 0 ; 
   /// 
   return *this ; 
 };
+// ============================================================================
 
 // ============================================================================
 /** add  primary vertex into GiGa/G4  
@@ -159,6 +159,7 @@ StatusCode  GiGaSvc::addPrimaryKinematics( G4PrimaryVertex  * vertex   )
   ///
   return StatusCode::SUCCESS;  
 };
+// ============================================================================
 
 // ============================================================================
 /** get the whole event  object from GiGa/G4 
@@ -179,6 +180,7 @@ StatusCode GiGaSvc::retrieveEvent  ( const G4Event*          & event )
   ///
   return StatusCode::SUCCESS ;  
 };
+// ============================================================================
 
 // ============================================================================
 /** get the all hit collections from GiGa/G4 
@@ -199,6 +201,7 @@ StatusCode GiGaSvc::retrieveHitCollections  ( G4HCofThisEvent* & collections  )
   ///
   return StatusCode::SUCCESS; 
 };
+// ============================================================================
 
 // ============================================================================
 /** get the concrete hit collection from GiGa/G4 
@@ -219,6 +222,7 @@ StatusCode GiGaSvc::retrieveHitCollection  ( CollectionPair & collection   )
   ///
   return StatusCode::SUCCESS; 
 };
+// ============================================================================
 
 // ============================================================================
 /** get all trajectories(trajectory container) from GiGa/G4 
@@ -241,7 +245,10 @@ StatusCode GiGaSvc::retrieveTrajectories( G4TrajectoryContainer*& trajectories)
   ///
   return StatusCode::SUCCESS; 
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

@@ -1,16 +1,8 @@
+// $Id: GiGaBase.h,v 1.14 2002-05-01 18:23:37 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.12  2001/07/27 17:03:17  ibelyaev
-/// improved printout
-///
-/// Revision 1.11  2001/07/27 15:06:14  ibelyaev
-/// printout improvements in base class GiGaBase
-///
-/// Revision 1.10  2001/07/23 13:11:41  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef     GIGA_GIGABASE_H
 #define     GIGA_GIGABASE_H 1 
@@ -18,6 +10,7 @@
 /// STL
 #include <string>
 #include <exception>
+#include <map>
 /// GaudiKernel 
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/ISerialize.h"
@@ -238,22 +231,46 @@ protected:
   const std::string&  setMyType() const;
   
 protected:
+
+  /** assertion 
+   *  @param assertion   assertion condition
+   *  @param msg         assertion message 
+   *  @param sc          assertion status code 
+   *  @return status code 
+   */
+  inline StatusCode Assert
+  ( bool  assertion                               , 
+    const std::string& msg = "GiGaBase::unknown"  , 
+    const StatusCode&  sc  = StatusCode::FAILURE  ) const ;
+  
+  /** assertion 
+   *  @param assertion   assertion condition
+   *  @param msg         assertion message 
+   *  @param sc          assertion status code 
+   *  @return status code 
+   */
+  inline StatusCode Assert
+  ( bool  assertion                              ,
+    const char*        msg                       ,
+    const StatusCode&  sc  = StatusCode::FAILURE ) const ;
   
   /** Print the error    message and return status code 
    *  @param mgs message to be printed 
    *  @param sc  status code 
    *  @return status code 
    */
-  StatusCode Error   ( const std::string& msg , 
-                       const StatusCode & sc  = StatusCode::FAILURE ) const ;  
+  StatusCode Error   
+  ( const std::string& msg , 
+    const StatusCode & sc  = StatusCode::FAILURE ) const ;  
   
   /** Print the warning  message and return status code 
    *  @param mgs message to be printed 
    *  @param sc  status code 
    *  @return status code 
    */
-  StatusCode Warning ( const std::string& msg , 
-                       const StatusCode & sc  = StatusCode::FAILURE ) const ;
+  StatusCode Warning 
+  ( const std::string& msg , 
+    const StatusCode & sc  = StatusCode::FAILURE ) const ;
   
   /** Print the message and return status code 
    *  @param mgs message to be printed 
@@ -261,10 +278,10 @@ protected:
    *  @param lvl print level  
    *  @return status code 
    */
-  inline StatusCode 
-  Print   ( const std::string& msg , 
-            const StatusCode & sc  = StatusCode::SUCCESS ,
-            const MSG::Level & lvl = MSG::INFO           ) const ;
+  StatusCode Print   
+  ( const std::string& msg , 
+    const StatusCode & sc  = StatusCode::SUCCESS ,
+    const MSG::Level & lvl = MSG::INFO           ) const ;
   
   /** re-throw the exception and print 
    *  @param msg exception message  
@@ -273,10 +290,11 @@ protected:
    *  @param status code
    *  @return status code 
    */
-  StatusCode Exception ( const std::string    & msg                        ,  
-                         const GaudiException & exc                        , 
-                         const MSG::Level     & lvl = MSG::FATAL           ,
-                         const StatusCode     & sc  = StatusCode::FAILURE );
+  StatusCode Exception 
+  ( const std::string    & msg                       ,  
+    const GaudiException & exc                       , 
+    const MSG::Level     & lvl = MSG::FATAL          ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
   
   /** re-throw the exception and print 
    *  @param msg exception message  
@@ -285,10 +303,11 @@ protected:
    *  @param status code
    *  @return status code 
    */
-  StatusCode Exception ( const std::string    & msg                        ,  
-                         const std::exception & exc                        , 
-                         const MSG::Level     & lvl = MSG::FATAL           ,
-                         const StatusCode     & sc  = StatusCode::FAILURE );
+  StatusCode Exception 
+  ( const std::string    & msg                       ,  
+    const std::exception & exc                       , 
+    const MSG::Level     & lvl = MSG::FATAL          ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
   
   /** re-throw the exception and print 
    *  @param msg exception message  
@@ -296,10 +315,11 @@ protected:
    *  @param status code
    *  @return status code 
    */
-  StatusCode Exception ( const std::string    & msg                        ,  
-                         const MSG::Level     & lvl = MSG::FATAL           ,
-                         const StatusCode     & sc  = StatusCode::FAILURE );
-
+  StatusCode Exception 
+  ( const std::string    & msg                       ,  
+    const MSG::Level     & lvl = MSG::FATAL          ,
+    const StatusCode     & sc  = StatusCode::FAILURE ) const ;
+  
 private: 
   ///
   GiGaBase();                              ///< no default 
@@ -354,32 +374,16 @@ private:
   IObjManager*          m_objMgr     ;
   /// "init" flag 
   bool                  m_init       ;
+  ///
+  typedef std::map<std::string,unsigned int> Counter;
+  /// counter of errors 
+  mutable Counter m_errors     ;
+  /// counter of warning 
+  mutable Counter m_warnings   ; 
+  /// counter of exceptions
+  mutable Counter m_exceptions ;
 };
 ///
-
-// ============================================================================
-/** Print the message and return status code 
- *  @param mgs message to be printed 
- *  @param sc  status code 
- *  @param lvl print level  
- *  @return status code 
- */
-// ============================================================================
-inline StatusCode GiGaBase::Print( const std::string& Message , 
-                                   const StatusCode & Status  , 
-                                   const MSG::Level & level   ) const 
-{
-  ///
-  MsgStream log( msgSvc() , name() ); 
-  log << level 
-      << myType() 
-      << " "   
-      << Message 
-      << endreq  ; 
-  ///
-  return  Status;
-  ///
-};
 
 // ============================================================================
 /** object name 
@@ -395,6 +399,40 @@ inline const std::string& GiGaBase::name () const { return m_name ; };
 // ============================================================================
 inline const std::string& GiGaBase::myType() const 
 { return m_myType.empty() ? setMyType() : m_myType ; }
+
+// ============================================================================
+/** assertion 
+ *  @param assertion   assertion condition
+ *  @param msg         assertion message 
+ *  @param sc          assertion status code 
+ */
+// ============================================================================
+inline StatusCode  GiGaBase::Assert
+( bool               assertion , 
+  const std::string& msg       , 
+  const StatusCode&  sc        ) const 
+{  
+  StatusCode status = StatusCode::SUCCESS ;
+  return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
+};
+// ============================================================================
+
+// ============================================================================
+/** assertion 
+ *  @param assertion   assertion condition
+ *  @param msg         assertion message 
+ *  @param sc          assertion status code 
+ */
+// ============================================================================
+inline StatusCode  GiGaBase::Assert
+( bool               assertion , 
+  const char*        msg       , 
+  const StatusCode&  sc        ) const 
+{ 
+  StatusCode status = StatusCode::SUCCESS ;
+  return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
+};
+// ============================================================================
 
 // ============================================================================
 #endif ///<   GIGA_GIGABASE_H

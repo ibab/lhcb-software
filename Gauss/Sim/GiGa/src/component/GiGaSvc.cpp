@@ -1,29 +1,8 @@
-// $Id: GiGaSvc.cpp,v 1.12 2002-01-22 18:20:53 ibelyaev Exp $ 
+// $Id: GiGaSvc.cpp,v 1.13 2002-05-01 18:23:38 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.11  2001/10/08 14:08:12  ranjard
-// v6r1 - some correction to please new compiler
-//
-// Revision 1.10  2001/08/12 15:42:54  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.9  2001/08/01 09:42:24  ibelyaev
-// redesign and reimplementation of GiGaRunManager class
-//
-// Revision 1.8  2001/07/27 14:29:01  ibelyaev
-// bug fix
-//
-// Revision 1.7  2001/07/25 17:18:09  ibelyaev
-// move all conversions from GiGa to GiGaCnv
-//
-// Revision 1.6  2001/07/23 20:53:47  ibelyaev
-// reorganization of GiGaUtil namespace
-//
-// Revision 1.5  2001/07/15 20:54:35  ibelyaev
-// package restructurisation
-// 
 // ============================================================================
 #define GIGA_GIGASVC_CPP 1 
 // ============================================================================
@@ -104,6 +83,9 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   ///
   , m_UseVisManager        ( false            )
   ///
+  , m_errors     ()
+  , m_warnings   ()
+  , m_exceptions ()
 {
   /// list of User Intreface sessions 
   declareProperty( "UIsessions"             , m_UIsessions           ) ;
@@ -151,7 +133,9 @@ GiGaSvc::~GiGaSvc()
  *  @return status code
  */
 // ============================================================================
-StatusCode GiGaSvc::queryInterface( const IID& id , void** ppI  ) 
+StatusCode 
+GiGaSvc::queryInterface
+( const IID& id , void** ppI  ) 
 {
   if       ( 0 == ppI  )               
     { return StatusCode::FAILURE             ; }       ///< RETURN !!!  
@@ -172,7 +156,8 @@ StatusCode GiGaSvc::queryInterface( const IID& id , void** ppI  )
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::initialize()
+StatusCode 
+GiGaSvc::initialize()
 {
   /// initialize the base class 
   {
@@ -183,9 +168,32 @@ StatusCode GiGaSvc::initialize()
   ///
   setProperties(); 
   ///
-  if( 0 == svcLoc() ) { return Error("ISvcLocator* points to NULL!"); }
-  
+  { /// print ALL properties 
+    typedef std::vector<Property*> Properties;
+    const Properties& properties = getProperties() ;
+    MsgStream log( msgSvc() , name ()  );
+    log << MSG::DEBUG 
+        << " List of ALL properties of "
+        << System::typeinfoName( typeid( *this ) ) << "/" 
+        << name ()           << "   #properties = " 
+        << properties.size() << endreq ;
+    const int   buffer_size  = 256 ;
+    char buffer[buffer_size]       ;
+    for( Properties::const_reverse_iterator property 
+           = properties.rbegin() ;
+         properties.rend() != property ; ++property )  
+      {
+        std::fill( buffer , buffer + buffer_size , 0 );
+        std::ostrstream ost ( buffer , buffer_size );
+        (*property)->nameAndValueAsStream( ost );
+        ost.freeze();
+        log << MSG::DEBUG
+            << "Property ['Name': Value] = " 
+            << ost.str() << endreq ;
+      }
+  }  
   /// locate  services, 
+  if( 0 == svcLoc() ) { return Error("ISvcLocator* points to NULL!"); }
   {
     StatusCode sc = 
       svcLoc()->service( "ChronoStatSvc" , m_chronoSvc , true ); 
@@ -380,7 +388,7 @@ StatusCode GiGaSvc::initialize()
   else { Print("GiGa Geometry Source is not required to be loaded") ; } 
   ///
   
-  /// UI session business 
+  // UI session business 
   if( !m_UIsessions.empty() )
     {
       G4UIsession* session = 0 ;
@@ -397,7 +405,7 @@ StatusCode GiGaSvc::initialize()
             }
         }
     }
-  /// instantiate Visualisation Manager
+  // instantiate Visualisation Manager
   if( m_UseVisManager )
     {
       ///
@@ -406,9 +414,10 @@ StatusCode GiGaSvc::initialize()
       G4VVisManager* m_visMgr = GiGa::createVisManager() ;
       if( 0 == m_visMgr ) 
         { Error("GiGa VisualisationManager is not created!");}
-      ///
+      //
     }
   else { Warning("Visualisation Manager is not required to be created!") ; } 
+  //  
   ///
   return StatusCode::SUCCESS ; 
 };
@@ -420,12 +429,12 @@ StatusCode GiGaSvc::initialize()
 // ============================================================================
 StatusCode GiGaSvc::finalize()
 {  
-  Print("finalization");
+  Print("Finalization" , MSG::DEBUG , StatusCode::SUCCESS );
   /// finalize Run Manager 
   StatusCode sc ( StatusCode::SUCCESS ); 
   if( 0 != runMgr() ) { sc = runMgr()->finalize() ;} 
   if( sc.isFailure() ) 
-    { Error("coudlnot finalize RunManager", sc ); } 
+    { Error("coudlnot finalize RunManager", sc ); }
   /// release all used services 
   if( 0 != objMgr   () ) { objMgr   ()->release() ; m_objMgr    = 0 ; } 
   if( 0 != chronoSvc() ) { chronoSvc()->release() ; m_chronoSvc = 0 ; } 
@@ -446,6 +455,46 @@ StatusCode GiGaSvc::finalize()
     { return Exception( "finalize" , Excpt ) ; } 
   catch(...)                            
     { return Exception( "finalize"         ) ; }
+  /// error printout 
+  if( 0 != m_errors     .size() || 
+      0 != m_warnings   .size() || 
+      0 != m_exceptions .size()   ) 
+    {      
+      MsgStream log( msgSvc() , name() );
+      // format printout 
+      log << MSG::ALWAYS 
+          << " Exceptions/Errors/Warnings statistics:  " 
+          << m_exceptions .size () << "/"
+          << m_errors     .size () << "/"
+          << m_warnings   .size () << endreq ; 
+      // print exceptions counter 
+      for( Counter::const_iterator excp = m_exceptions.begin() ;
+           excp != m_exceptions.end() ; ++excp )
+        {
+          log << MSG::ALWAYS 
+              << " #EXCEPTIONS= " << excp->second  
+              << " Message='"     << excp->first    << "'" << endreq ; 
+        }  
+      // print errors counter 
+      for( Counter::const_iterator error = m_errors.begin() ;
+           error != m_errors.end() ; ++error )
+        {
+          log << MSG::ALWAYS 
+              << " #ERRORS    = " << error->second  
+              << " Message='"     << error->first    << "'" << endreq ; 
+        }  
+      // print warnings
+      for( Counter::const_iterator warning = m_warnings.begin() ;
+           warning != m_warnings.end() ; ++warning )
+        {
+          log << MSG::ALWAYS 
+              << " #WARNINGS  = " << warning->second  
+              << " Message='"     << warning->first  << "'" << endreq ; 
+        }  
+    }
+  m_errors      .clear();
+  m_warnings    .clear();
+  m_exceptions  .clear();
   ///  finalize the base class 
   return Service::finalize();
 };
@@ -474,7 +523,9 @@ StatusCode GiGaSvc::createGiGaRunManager()
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::prepareTheEvent( G4PrimaryVertex * vertex ) 
+StatusCode 
+GiGaSvc::prepareTheEvent
+( G4PrimaryVertex * vertex ) 
 {
   try
     { 
@@ -501,7 +552,9 @@ StatusCode GiGaSvc::prepareTheEvent( G4PrimaryVertex * vertex )
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::retrieveTheEvent( const G4Event*& event) 
+StatusCode 
+GiGaSvc::retrieveTheEvent
+( const G4Event*& event) 
 {
   try
     { 
@@ -529,8 +582,10 @@ StatusCode GiGaSvc::retrieveTheEvent( const G4Event*& event)
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::physList( const std::string& TypeName , 
-                              IGiGaPhysList*&    PL       )
+StatusCode 
+GiGaSvc::physList
+( const std::string& TypeName , 
+  IGiGaPhysList*&    PL       )
 {
   PL = 0 ; /// reset output value 
   std::string Type , Name ; 
@@ -564,8 +619,10 @@ StatusCode GiGaSvc::physList( const std::string& TypeName ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::stackAction( const std::string& TypeName , 
-                                 IGiGaStackAction*& SA       )
+StatusCode 
+GiGaSvc::stackAction
+( const std::string& TypeName , 
+  IGiGaStackAction*& SA       )
 {
   SA = 0 ; /// reset output value 
   std::string Type , Name ; 
@@ -599,8 +656,10 @@ StatusCode GiGaSvc::stackAction( const std::string& TypeName ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::trackAction( const std::string& TypeName , 
-                                 IGiGaTrackAction*& TA       )
+StatusCode 
+GiGaSvc::trackAction
+( const std::string& TypeName , 
+  IGiGaTrackAction*& TA       )
 {
   TA = 0 ; /// reset output value 
   std::string Type , Name ; 
@@ -634,8 +693,10 @@ StatusCode GiGaSvc::trackAction( const std::string& TypeName ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::stepAction( const std::string& TypeName , 
-                                IGiGaStepAction*&  SA       )
+StatusCode 
+GiGaSvc::stepAction
+( const std::string& TypeName , 
+  IGiGaStepAction*&  SA       )
 {
   SA = 0 ; /// reset output value 
   std::string Type , Name ; 
@@ -669,8 +730,10 @@ StatusCode GiGaSvc::stepAction( const std::string& TypeName ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::eventAction( const std::string& TypeName , 
-                                 IGiGaEventAction*& EA       )
+StatusCode 
+GiGaSvc::eventAction
+( const std::string& TypeName , 
+  IGiGaEventAction*& EA       )
 {
   EA = 0 ; /// reset output value 
   std::string Type , Name ; 
@@ -704,8 +767,10 @@ StatusCode GiGaSvc::eventAction( const std::string& TypeName ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::runAction( const std::string& TypeName , 
-                               IGiGaRunAction*& RA       )
+StatusCode 
+GiGaSvc::runAction
+( const std::string& TypeName , 
+  IGiGaRunAction*& RA       )
 {
   RA = 0 ; /// reset output value 
   std::string Type , Name ; 
@@ -732,6 +797,135 @@ StatusCode GiGaSvc::runAction( const std::string& TypeName ,
   ///
 };
 
+// ============================================================================
+/** printout 
+ *  @param msg            message 
+ *  @param lvl            printout level 
+ *  @param sc             status code
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode GiGaSvc::Print
+( const std::string& Message , 
+  const MSG::Level & level   , 
+  const StatusCode & Status ) const 
+{ 
+  MsgStream log( msgSvc() , name() ); 
+  log << level << Message << endreq ; 
+  return  Status; 
+};
+// ============================================================================
+
+// ============================================================================
+/** error printout 
+ *  @param msg         error message 
+ *  @param sc          error status code
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode GiGaSvc::Error
+( const std::string& Message , 
+  const StatusCode & Status ) const
+{ 
+  Stat stat( chronoSvc() , name() + ":Error" ); 
+  // increase error counter 
+  m_errors [ Message ] += 1;
+  return  Print( Message , MSG::ERROR  , Status  ) ; 
+};  
+// ============================================================================
+
+// ============================================================================
+/** warning printout 
+ *  @param msg         warning message 
+ *  @param sc          warning status code
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode GiGaSvc::Warning
+( const std::string& Message , 
+  const StatusCode & Status ) const 
+{ 
+  Stat stat( chronoSvc() , name() + ":Warning" ); 
+  // increase counter of warnings  
+  m_errors [ Message ] += 1;
+  return  Print( Message , MSG::WARNING , Status ) ; 
+};  
+// ============================================================================
+
+// ============================================================================
+/** exception
+ *  @param Message        exception message 
+ *  @param Excp           reference to "previous" exception
+ *  @param level          exception printout level 
+ *  @param Status         exception status code
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode GiGaSvc::Exception
+( const std::string    & Message , 
+  const GaudiException & Excp    ,
+  const MSG::Level     & level   , 
+  const StatusCode     & Status  ) const 
+{
+  Stat stat( chronoSvc()  , Excp.tag()  );
+  Print ( "GaudiException: catch and re-throw " + Message , level , Status );
+  // increase counter of exceptions  
+  m_exceptions [ Message ] += 1;
+  throw GiGaException( name() + "::" + Message , Excp , Status  );
+  return  Status;
+};  
+// ============================================================================
+
+// ============================================================================
+/** exception
+ *  @param Message        exception message 
+ *  @param Excp           reference to "previous" exception
+ *  @param level          exception printout level 
+ *  @param Status         exception status code
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode GiGaSvc::Exception
+( const std::string    & Message , 
+  const std::exception & Excp    ,
+  const MSG::Level     & level   , 
+  const StatusCode     & Status  ) const 
+{
+  Stat stat( chronoSvc()  , Excp.what()  );
+  Print ( "std::exception: catch and re-throw " + Message , level , Status );
+  // increase counter of exceptions  
+  m_exceptions [ Message ] += 1;
+  throw GiGaException( name() + "::" + Message + " (" + 
+                       Excp.what() + ")", Status  );
+  return  Status;
+};  
+// ============================================================================
+
+// ============================================================================
+/** exception
+ *  @param Message        exception message 
+ *  @param level          exception printout level 
+ *  @param Status         exception status code
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode GiGaSvc::Exception
+( const std::string    & Message , 
+  const MSG::Level     & level   , 
+  const StatusCode     & Status  )  const 
+{
+  Stat stat( chronoSvc()  , "*UNKNOWN Exception*"  );
+  Print ( "GiGaException throw " + Message , level , Status );
+  // increase counter of exceptions  
+  m_exceptions [ Message ] += 1;
+  throw GiGaException( name() + "::" + Message , Status );
+  return  Status;
+}; 
+// ============================================================================
+
+
+// ============================================================================
+// The END 
 // ============================================================================
 
 

@@ -2,6 +2,9 @@
 // VS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/01/22 18:20:53  ibelyaev
+//  Vanya: update for newer versions of Gaudi and Geant4
+//
 // Revision 1.5  2001/08/12 15:42:50  ibelyaev
 // improvements with Doxygen comments
 //
@@ -14,9 +17,9 @@
 // ============================================================================
 #define GIGA_GIGAVISMANAGER_CPP 1 
 // ============================================================================
-#ifdef G4VIS_USE
+#ifndef G4VIS_NONE
 // GiGa 
-#include "GiGa/GiGaVisManager.h"
+#include "GiGaVisManager.h"
 // Supported drivers...
 // Not needing external packages or libraries...
 #include "G4ASCIITree.hh"
@@ -66,6 +69,12 @@
 #include "G4VRML2.hh"
 #endif
 
+/** @file 
+ *  Implementation fiel for class GiGaVisManager 
+ *  @author Vanya Belyaev 
+ *  @date xx/xxx/xxxxx
+ */
+
 /// constructor
 GiGaVisManager::GiGaVisManager () {}
 
@@ -74,8 +83,8 @@ void GiGaVisManager::RegisterGraphicsSystems ()
 
   // Graphics Systems not needing external packages or libraries...
   RegisterGraphicsSystem (new G4ASCIITree);
-  RegisterGraphicsSystem (new G4DAWNFILE);
   RegisterGraphicsSystem (new G4GAGTree);
+  RegisterGraphicsSystem (new G4DAWNFILE);
   RegisterGraphicsSystem (new G4HepRepFile);
   RegisterGraphicsSystem (new G4RayTracer);
   RegisterGraphicsSystem (new G4VRML1File);
@@ -130,4 +139,8 @@ void GiGaVisManager::RegisterGraphicsSystems ()
   ///
 }
 ///
-#endif
+#endif   // G4VIS_NONE 
+
+// ============================================================================
+// Th END 
+// ============================================================================
