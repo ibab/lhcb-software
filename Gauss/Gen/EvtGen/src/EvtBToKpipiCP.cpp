@@ -111,7 +111,7 @@ void EvtBToKpipiCP::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtIncoherentMixing::OtherB(p,t,other_b);
+  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
 
   EvtParticle *Kp,*pim,*pi0;
 

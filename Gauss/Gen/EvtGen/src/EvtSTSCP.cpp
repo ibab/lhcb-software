@@ -89,7 +89,7 @@ void EvtSTSCP::decay( EvtParticle *p){
   EvtVector4R moms = p->getDaug(1)->getP4();
   double masst = t1->mass();
 
-  EvtIncoherentMixing::OtherB(p,t,other_b);
+  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
 
   double m_parent = p->mass();
 

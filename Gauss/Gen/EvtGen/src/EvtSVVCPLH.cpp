@@ -82,7 +82,7 @@ void EvtSVVCPLH::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtIncoherentMixing::OtherB(p,t,other_b);
+  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
 
   EvtComplex G0P,G1P,G1M;
   

@@ -140,13 +140,7 @@ void EvtSVVNONCPEIGEN::decay( EvtParticle *p){
 
   p->initializePhaseSpace(2,daugs);
 
-  double tag = EvtRandom::Flat(0.0,1.0);
-  if (tag < 0.5) {
-    EvtIncoherentMixing::OtherB(p,t,other_b,1.0);
-  }
-  else {
-    EvtIncoherentMixing::OtherB(p,t,other_b,0.0);
-  }
+  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
 
   EvtComplex amp[3];
 

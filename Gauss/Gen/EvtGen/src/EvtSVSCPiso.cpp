@@ -129,17 +129,7 @@ void EvtSVSCPiso::decay( EvtParticle *p){
 
 //randomly generate the tag (B0 or B0B) 
 
-   double tag = EvtRandom::Flat(0.0,1.0);
-   if (tag < 0.5) {
- 
-    EvtIncoherentMixing::OtherB(p,t,other_b,1.0);
-    other_b = B0;
-   }
-   else {
-    
-    EvtIncoherentMixing::OtherB(p,t,other_b,0.0);
-    other_b = B0B;
-   }
+  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
 
   if (p->getNDaug()==0) first_time=1;
 

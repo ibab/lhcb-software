@@ -186,7 +186,7 @@ void EvtBTo4piCP::decay( EvtParticle *p){
   double t;
   EvtId other_b;
 
-  EvtIncoherentMixing::OtherB(p,t,other_b);
+  EvtIncoherentMixing::OtherB(p,t,other_b,0.5);
   
   p->initializePhaseSpace(getNDaug(),getDaugs());
   EvtVector4R mom1 = p->getDaug(0)->getP4();
