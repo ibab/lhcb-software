@@ -4,6 +4,7 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+!==================== FlavourTagging v4r4p1 2003-06-03 ===================
 ! 2003-05-30 - Gloria Corti
  - src/SingleParticleTaggingMonitor.h, SingleParticleTaggingMonitor.cpp
    . adapt to change in name of Particle2MCLinksAsct and removal of
