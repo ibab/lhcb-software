@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.h,v 1.2 2002-07-12 15:26:54 phicharp Exp $
+// $Id: Particle2MCChi2.h,v 1.3 2002-10-02 07:06:29 phicharp Exp $
 #ifndef Particle2MCChi2_H 
 #define Particle2MCChi2_H 1
 
@@ -14,6 +14,7 @@
 // local
 #include "DaVinciAssociators/Particle2MCAsct.h"
 #include "DaVinciAssociators/Particle2MCWithChi2Asct.h"
+#include "DaVinciAssociators/AsctAlgorithm.h"
 
 /** @class Particle2MCChi2 Particle2MCChi2.h
  *  
@@ -21,7 +22,7 @@
  *  @author Philippe Charpentier
  *  @date   17/05/2002
  */
-class Particle2MCChi2 : public Algorithm {
+class Particle2MCChi2 : public AsctAlgorithm {
 public:
   /// Standard constructor
   Particle2MCChi2( const std::string& name, ISvcLocator* pSvcLocator );
@@ -38,8 +39,6 @@ public:
 protected:
 
 private:
-  std::vector<std::string> m_inputData;  ///< location of Particles to associate
-  std::string m_outputTable; ///< location of relations table
   double m_chi2;            ///< Chi2 maximum
 
   Particle2MCWithChi2Asct::IAsct* 

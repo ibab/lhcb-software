@@ -1,0 +1,15 @@
+//
+/* This is the default parameters for the Particle2MCWithChi2 Associator 
+   with Chi2 as a weight */
+//
+//Toolsvc.Particle2MCWithChi2Asct.Location      = "Phys/Relations/Particle2MCWithChi2";
+//ToolSvc.Particle2MCWithChi2Asct.AlgorithmType = "Particle2MCWithChi2";
+//ToolSvc.Particle2MCWithChi2Asct.AlgorithmName = "Particle2MCWithChi2";
+//
+// ... and for the corresponding algorithm
+//
+//Particle2MCWithChi2.InputData  = { "Phys/Prod/Particles" };
+// OutputTable is automatically set by default to Location of the Asct
+//Particle2MCWithChi2.OutputTable  = "Phys/Relations/Particle2MCWithChi2";
+Particle2MCWithChi2.FillHistos = true;
+

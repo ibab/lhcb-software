@@ -1,4 +1,4 @@
-// $Id: ProtoParticle2MCLinks.cpp,v 1.4 2002-09-09 13:48:50 gcorti Exp $
+// $Id: ChargedPP2MC.cpp,v 1.1 2002-10-02 07:06:26 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -8,31 +8,31 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // local
-#include "ProtoParticle2MCLinks.h"
+#include "ChargedPP2MC.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : ProtoParticle2MCLinks
+// Implementation file for class : ChargedPP2MC
 //
 // 10/07/2002 : Philippe Charpentier
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<ProtoParticle2MCLinks>          s_factory ;
-const        IAlgFactory& ProtoParticle2MCLinksFactory = s_factory ; 
+static const  AlgFactory<ChargedPP2MC>          s_factory ;
+const        IAlgFactory& ChargedPP2MCFactory = s_factory ; 
 
+#define ifLog(sev) log << sev; if( log.level() <= (sev) ) log
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ProtoParticle2MCLinks::ProtoParticle2MCLinks( const std::string& name,
+ChargedPP2MC::ChargedPP2MC( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
-  , m_outputTable( ProtoParticle2MCAsctLocation )
+  , m_outputTable( ChargedPP2MCAsctLocation )
   , m_trackAsctName( "Track2MCParticleAsct" )
 {
   m_inputData.push_back( ProtoParticleLocation::Charged );
   m_inputData.push_back( ProtoParticleLocation::Upstream );
-  m_inputData.push_back( ProtoParticleLocation::Neutrals );
 
   declareProperty( "InputData", m_inputData );
   declareProperty( "OutputTable", m_outputTable );
@@ -42,12 +42,12 @@ ProtoParticle2MCLinks::ProtoParticle2MCLinks( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-ProtoParticle2MCLinks::~ProtoParticle2MCLinks() {}; 
+ChargedPP2MC::~ChargedPP2MC() {}; 
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode ProtoParticle2MCLinks::initialize() {
+StatusCode ChargedPP2MC::initialize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
@@ -64,78 +64,90 @@ StatusCode ProtoParticle2MCLinks::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode ProtoParticle2MCLinks::execute() {
+StatusCode ChargedPP2MC::execute() {
 
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 
-  SmartDataPtr<MCParticles> 
-    mcParts( eventSvc(), MCParticleLocation::Default );
-  if( 0 != mcParts ) {
-    log << MSG::DEBUG << "    " << mcParts->size()
-        << " MCParts retrieved" << endreq;
-  }
-  else {
-    log << MSG::FATAL << "    *** Could not retrieve MCParts" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  // create an association table and register it in the TES
+  // create an association table 
   ProtoParticle2MCAsct::Table* table = new ProtoParticle2MCAsct::Table();
   
   //////////////////////////////////
   // Loop on Particles containers //
   //////////////////////////////////
 
-  for( std::vector<std::string>::iterator inp = m_inputData.begin(); 
+  for( std::vector<std::string>::const_iterator inp = m_inputData.begin(); 
        m_inputData.end()!= inp; inp++) {
-    // Get Particles
+    if( !m_track2MCParticleAsct->tableExists() ) {
+      log << MSG::INFO << "Unable to retrieve the Track2MC association table"
+          << endreq;
+      break;
+    }
+    // Get ProtoParticles
     SmartDataPtr<ProtoParticles> protos (eventSvc(), *inp);
     if( 0 != protos ) {
-      log << MSG::DEBUG << "    " << protos->size()
+      log << MSG::VERBOSE << "    " << protos->size()
           << " ProtoParticles retrieved from " 
           << *inp << endreq;
     }
     else {
-      log << MSG::ERROR << "    *** Could not retrieve ProtoParticles from "
+      log << MSG::INFO << "    *** Could not retrieve ProtoParticles from "
           << *inp << endreq;
       continue;
     }
     
-    // loop on Protos and MCParts to match them
+    // loop on Protos to match them from their tracks
     int nrel = 0 ;
     for( ProtoParticles::const_iterator pIt=protos->begin() ;
          protos->end() != pIt; pIt++) {
-      log << MSG::DEBUG << "    ProtoParticle " << (*pIt)->key();
-      // Follow links from this protoParticle via tracks and clusters
-      TrStoredTrack* track = (*pIt)->track() ;
+      ifLog( MSG::VERBOSE )
+        << "    ProtoParticle " << (*pIt)->key();
+      // Follow links from this protoParticle via tracks
+      const TrStoredTrack* track = (*pIt)->track() ;
       if( 0 != track ) {
-        log << " from track " << track->key();
-        MCParticle* mcPart = m_track2MCParticleAsct->associatedFrom( track );
-        if( 0 != mcPart ) {
-          log << " associated to MCPart " << mcPart->key();
-          table->relate( *pIt, mcPart);
-          nrel++;
+        const Tr2MCPartAsct::ToRange mcPartRange
+          = m_track2MCParticleAsct->rangeFrom( track);
+        ifLog( MSG::VERBOSE )
+          << " from track " << track->key();
+        if( !mcPartRange.empty() ) {
+          Tr2MCPartAsct::ToIterator mcPartIt;
+          ifLog( MSG::VERBOSE )
+            << " associated to " << mcPartRange.end()-mcPartRange.end()+1
+            << " MCParts : ";
+          for( mcPartIt = mcPartRange.begin(); 
+               mcPartRange.end() != mcPartIt; mcPartIt++) {
+            const MCParticle* mcPart = mcPartIt->to();
+            double weight = mcPartIt->weight();
+            if( 0 != mcPart ) {
+              ifLog(MSG::VERBOSE)
+                << mcPart->key() << " - ";
+              table->relate( *pIt, mcPart, weight);
+              nrel++;
+            }
+          }
+        } else {
+          log << " not associated to an MCPart";
         }
+      } else {
+        log << " not originating from a track";
       }
       log << endreq;
     }
-  
-    log << MSG::DEBUG
-        << protos->end() - protos->begin() << " ProtoParts associated with "
-        << mcParts->end() - mcParts->begin() << " MCParts: " 
+    ifLog( MSG::VERBOSE )
+        << protos->end() - protos->begin() << " ProtoParts associated: "
         << nrel << " relations found" << endreq;
   }
   
   // Register the table on the TES
   StatusCode sc = eventSvc()->registerObject( outputTable(), table);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "     *** Could not register table " << outputTable()
-        << endreq;
+    ifLog( MSG::FATAL )
+      << "     *** Could not register table " << outputTable() << endreq;
     delete table;
     return sc;
   } else {
-    log << MSG::DEBUG << "     Registered table " << outputTable() << endreq;
+    ifLog( MSG::VERBOSE )
+      << "     Registered table " << outputTable() << endreq;
   }
   return StatusCode::SUCCESS ;
 };
@@ -143,7 +155,7 @@ StatusCode ProtoParticle2MCLinks::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode ProtoParticle2MCLinks::finalize() {
+StatusCode ChargedPP2MC::finalize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;

@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.cpp,v 1.4 2002-07-27 19:32:19 gcorti Exp $
+// $Id: Particle2MCChi2.cpp,v 1.5 2002-10-02 07:06:28 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -26,13 +26,12 @@ const        IAlgFactory& Particle2MCChi2Factory = s_factory ;
 //=============================================================================
 Particle2MCChi2::Particle2MCChi2( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
-  , m_outputTable( Particle2MCAsctLocation )
+  : AsctAlgorithm ( name , pSvcLocator )
   , m_chi2( 100. )
 {
   m_inputData.push_back( ParticleLocation::Production );
-  declareProperty( "InputData", m_inputData );
-  declareProperty( "OutputTable", m_outputTable );
+  m_outputTable = Particle2MCAsctLocation ;
+  
   declareProperty( "Chi2Cut", m_chi2 );
 }
 
@@ -45,63 +44,16 @@ Particle2MCChi2::~Particle2MCChi2() {};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode Particle2MCChi2::initialize() {
-  std::string myAlgName = name() + "AlgWithChi2";
-  std::string myAsctName = name() + "AsctWithChi2";
-
+ 
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
+  log << MSG::VERBOSE << "==> Initialise" << endreq;
 
   // Retrieve a weighted associator on which a threshold will be applied
-  StatusCode sc = toolSvc()->retrieveTool( "Particle2MCWithChi2Asct" , 
-                                           myAsctName,
-                                           m_pAsctChi2);
-  if( sc.isFailure() || 0 == m_pAsctChi2) {
-    log << MSG::FATAL << "    Unable to retrieve the WithChi2 Associator tool" 
-        << endreq;
-    return sc;
-  }
-  
-  /* Now set up the WithChi2 associator such that it gives 
-     the correct information (local to this algorithm) */
-  
-  IProperty* prop = 
-    dynamic_cast<IProperty*>( m_pAsctChi2 );
-  if( prop ) {
-    std::string myLocation = outputTable() + "TempWithChi2";
-    sc = prop->setProperty( "Location", myLocation);
-    if( sc.isSuccess() ) {
-      log << MSG::DEBUG << "Property Location set to " << myLocation
-          << " in Asct " << myAsctName << endreq;
-    }
-    sc = prop->setProperty( "AlgorithmName", myAlgName);
-    if( sc.isSuccess() ) {
-      log << MSG::DEBUG << "Property AlgorithmName set to " << myAlgName
-          << " in Asct " << myAsctName << endreq;
-    }
-  }
-  // Now set the algorithm's properties...
-  prop = dynamic_cast<IProperty*>( m_pAsctChi2->algorithm() );
-  if( prop ) {
-    std::string propString ;
-    std::string sep = "\"";
-    propString = "[";
-    for( std::vector<std::string>::iterator inp = m_inputData.begin();
-         m_inputData.end() != inp; inp++ ) {
-      propString = propString + sep + *inp ;
-      sep = "\",\"";
-    }
-    propString = propString + "\"]";
-    sc = prop->setProperty( "InputData", propString);
-    if( sc.isSuccess() ) {
-      log << MSG::DEBUG << "Property InputData set to "
-          << propString << " in algo " << myAlgName << endreq;
-    }
-    else {
-      log << MSG::DEBUG << " **** Error setting Property InputData of "
-          << myAlgName << " to " << propString << endreq;
-    }
-  }
-  return StatusCode::SUCCESS;
+  // Its InputData must be set identical as this one's (true parameter)
+  StatusCode sc =  retrievePrivateAsct( "Particle2MCWeightedAsct", 
+                                       true, m_pAsctChi2) ;
+
+  return sc;
 };
 
 //=============================================================================
@@ -110,7 +62,7 @@ StatusCode Particle2MCChi2::initialize() {
 StatusCode Particle2MCChi2::execute() {
 
   MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+  log << MSG::VERBOSE << "==> Execute" << endreq;
 
   // Create an association table and register it in the TES
   Particle2MCAsct::Table* table = new Particle2MCAsct::Table();
@@ -127,11 +79,11 @@ StatusCode Particle2MCChi2::execute() {
     // Get Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
     if( 0 != parts ) {
-      log << MSG::DEBUG << "    Particles retrieved from " << *inp 
+      log << MSG::VERBOSE << "    Particles retrieved from " << *inp 
           << endreq;
     }
     else {
-      log << MSG::ERROR
+      log << MSG::INFO
           << "    *** Could not retrieve Particles from " << *inp
           << endreq;
       continue;
@@ -150,7 +102,7 @@ StatusCode Particle2MCChi2::execute() {
         }
       }
     } else {
-      log << MSG::WARNING << "Chi2Asct table not found" << endreq;
+      log << MSG::INFO << "Chi2Asct table not found" << endreq;
     }
   }
       
@@ -162,7 +114,7 @@ StatusCode Particle2MCChi2::execute() {
     delete table;
     return sc;
   } else {
-    log << MSG::DEBUG << "     Registered table " << outputTable() << endreq;
+    log << MSG::VERBOSE << "     Registered table " << outputTable() << endreq;
   }
   
   return StatusCode::SUCCESS;
@@ -174,7 +126,7 @@ StatusCode Particle2MCChi2::execute() {
 StatusCode Particle2MCChi2::finalize() {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
+  log << MSG::VERBOSE << "==> Finalize" << endreq;
 
   return StatusCode::SUCCESS;
 }

@@ -1,0 +1,53 @@
+//##############################################################
+// Property file for TestAssociators
+
+//
+// This is the default parameters
+//
+// List of necessary algorithms for the test
+#include "$DAVINCITESTROOT/options/TestPhysDesktop.opts" 
+ApplicationMgr.TopAlg += { "TestAssociators" };
+
+// Include properties of specific Associator to test
+#include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
+
+/* Define specific parameters for another associator based on the same scheme
+   but with a different algorithm
+*/
+TestAssociators.LinkAsct.Location      = "Phys/Relations/Particle2MCLinks";
+TestAssociators.LinkAsct.AlgorithmType = "Particle2MCLinks";
+TestAssociators.LinkAsct.AlgorithmName = "Particle2MCLinks";
+
+// Define missing Location for calo matches
+Toolsvc.BremMatch.Location = "Rec/Calo/BremMatch";
+Toolsvc.ElectronMatch.Location = "Rec/Calo/ElectronMatch";
+Toolsvc.PhotonMatch.Location = "Rec/Calo/PhotonMatch";
+
+// Define InputData for the test
+TestAssociators.InputData = {"Phys/Prod/Particles"};
+Particle2MCChi2.InputData = {@TestAssociators.InputData};
+Particle2MCLinks.InputData = {@TestAssociators.InputData};
+Particle2MCWithChi2.InputData = {@TestAssociators.InputData};
+
+// Set DEBUG options to show what is going on
+TestPhysDesktop.OutputLevel = 4;
+PrimaryVertexFinderAlg.OutputLevel = 4;
+TestAssociators.OutputLevel = 3;
+// Associators
+TestAssociators.Particle2MCWithChi2Asct.OutputLevel = 4;
+TestAssociators.Particle2MCAsct.OutputLevel = 4;
+TestAssociators.LinkAsct.OutputLevel = 4;
+// Association creation algorithms
+Particle2MCLinks.OutputLevel = 4;
+Particle2MCLinks.ChargedPP2MC.OutputLevel = 4;
+ChargedPP2MC.OutputLevel = 4;
+Particle2MCChi2.OutputLevel = 4;
+Particle2MCWithChi2.OutputLevel = 4;
+// Auxiliary algorithms
+Particle2MCChi2.Particle2MCWithChi2.OutputLevel = 4;
+Particle2MCLinks.ProtoParticle2MCLinks.OutputLevel = 4;
+
+// Make others mute
+TestPhysDesktop.PhysDesktop.OutputLevel = 4;
+TestPhysDesktop.PhysDesktop.ChargedParticlemaker.OutputLevel = 4;
+MCPIDProtoAlg.OutputLevel = 4;

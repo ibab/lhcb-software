@@ -1,4 +1,4 @@
-// $Id: Particle2MCWithChi2.cpp,v 1.4 2002-07-27 19:32:32 gcorti Exp $
+// $Id: Particle2MCWithChi2.cpp,v 1.5 2002-10-02 07:06:29 phicharp Exp $
 // Include files 
 #include <math.h>
 
@@ -79,10 +79,10 @@ StatusCode Particle2MCWithChi2::execute() {
   SmartDataPtr<MCParticles> 
     mcParts( eventSvc(), MCParticleLocation::Default );
   if( 0 != mcParts ) {
-    log << MSG::DEBUG << "    MCParts retrieved" << endreq;
+    log << MSG::VERBOSE << "    MCParts retrieved" << endreq;
   }
   else {
-    log << MSG::ERROR << "    *** Could not retrieve MCPart from " 
+    log << MSG::INFO << "    *** Could not retrieve MCPart from " 
         << MCParticleLocation::Default << endreq;
     return StatusCode::FAILURE;
   }
@@ -97,11 +97,11 @@ StatusCode Particle2MCWithChi2::execute() {
     // Get Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
     if( 0 != parts ) {
-      log << MSG::DEBUG << "    Particles retrieved from " << *inp 
+      log << MSG::VERBOSE << "    Particles retrieved from " << *inp 
           << endreq;
     }
     else {
-      log << MSG::FATAL 
+      log << MSG::INFO
           << "    *** Could not retrieve Particles from " << *inp
           << endreq;
       continue;
@@ -131,7 +131,7 @@ StatusCode Particle2MCWithChi2::execute() {
       int fail;
       cov.invert( fail );
       if( fail ) {
-        log << MSG::WARNING << "    Covariance matrix inversion failed" <<
+        log << MSG::INFO << "    Covariance matrix inversion failed" <<
           endreq;
       } else {
         HepVector pVector(6);
@@ -176,9 +176,10 @@ StatusCode Particle2MCWithChi2::execute() {
         }
       }
     }
-    log << MSG::DEBUG
-        << parts->end() - parts->begin() << " Parts associated with "
-        << mcParts->end() - mcParts->begin() << " MCParts" << endreq;
+    if( log.level() <= MSG::DEBUG ) 
+      log << MSG::VERBOSE
+          << parts->end() - parts->begin() << " Parts associated with "
+          << mcParts->end() - mcParts->begin() << " MCParts" << endreq;
   } // End of loop on input data locations
   
   // Now register the table in the TES
@@ -189,7 +190,7 @@ StatusCode Particle2MCWithChi2::execute() {
     delete table;
     return sc;
   } else {
-    log << MSG::DEBUG << "     Registered table " << outputTable() << endreq;
+    log << MSG::VERBOSE << "     Registered table " << outputTable() << endreq;
   }
   return StatusCode::SUCCESS;
 };
@@ -200,7 +201,7 @@ StatusCode Particle2MCWithChi2::execute() {
 StatusCode Particle2MCWithChi2::finalize() {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
+  log << MSG::VERBOSE << "==> Finalize" << endreq;
 
   return StatusCode::SUCCESS;
 }

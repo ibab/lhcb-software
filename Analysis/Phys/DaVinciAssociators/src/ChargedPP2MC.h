@@ -1,6 +1,6 @@
-// $Id: ProtoParticle2MCLinks.h,v 1.1 2002-07-12 15:28:47 phicharp Exp $
-#ifndef ProtoParticle2MCLinks_H 
-#define ProtoParticle2MCLinks_H 1
+// $Id: ChargedPP2MC.h,v 1.1 2002-10-02 07:06:26 phicharp Exp $
+#ifndef ChargedPP2MC_H 
+#define ChargedPP2MC_H 1
 
 // Include files
 // from STL
@@ -18,20 +18,20 @@
 // local
 #include "DaVinciAssociators/ProtoParticle2MCAsct.h"
 
-/** @class ProtoParticle2MCLinks ProtoParticle2MCLinks.h
+/** @class ChargedPP2MC ChargedPP2MC.h
  *  
  *
  *  @author Philippe Charpentier
  *  @date   10/07/2002
  */
-class ProtoParticle2MCLinks : public Algorithm {
-  friend AlgFactory<ProtoParticle2MCLinks>;
+class ChargedPP2MC : public Algorithm {
+  friend AlgFactory<ChargedPP2MC>;
   
 public:
   /// Standard constructor
-  ProtoParticle2MCLinks( const std::string& name, ISvcLocator* pSvcLocator );
+  ChargedPP2MC( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~ProtoParticle2MCLinks( ); ///< Destructor
+  virtual ~ChargedPP2MC( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -45,7 +45,7 @@ protected:
 private:
   std::vector<std::string> m_inputData;  ///< location of Particles to associate
   std::string m_outputTable; ///< location of relations table 
-  IAssociatorWeighted<TrStoredTrack,MCParticle,double>* m_track2MCParticleAsct;
+  Tr2MCPartAsct* m_track2MCParticleAsct;
   std::string m_trackAsctName;
 };
-#endif // ProtoParticle2MCLinks_H
+#endif // ChargedPP2MC_H
