@@ -25,7 +25,9 @@ private
 
 use GaudiKernel v*           -no_auto_imports
 use CLHEP  v* LCG_Interfaces -no_auto_imports
+use GSL    v* LCG_Interfaces -no_auto_imports   # Only needed to please SealCLHEPDict
 use Python v* LCG_Interfaces -no_auto_imports
+
 
 macro xmlsrc "test"
 document obj2doth EventObj2Doth -group=tests ../test/TestModel.xml 
