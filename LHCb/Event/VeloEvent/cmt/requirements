@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.26 2004-02-13 07:05:45 cattanem Exp $
+# $Id: requirements,v 1.27 2004-03-05 09:57:40 cattanem Exp $
 package VeloEvent
-version v14r0
+version v13r1
 
 branches Event src xml cmt doc dict
 
