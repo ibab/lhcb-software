@@ -11,7 +11,7 @@
 // Fix bug in CaloMergedPi0Alg Brunel (bad cluster association to SplitPhotons)
 ApplicationMgr.TopAlg += { "CaloHypoReShuffleAlg/Fix" };
  
-// Options to re-calibrate calorimeter in DaVinci
+// Options to apply re-corrections to calorimeter in DaVinci
 #include "$DAVINCIROOT/options/CaloReCorrections.opts" 
 
 // CaloHyposMerge now handles SplitPhotons
