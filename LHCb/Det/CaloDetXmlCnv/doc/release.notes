@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.6 2002-12-01 14:23:49 ibelyaev Exp $
+! $Id: release.notes,v 1.7 2002-12-04 18:27:40 ranjard Exp $
 ! =============================================================================
 ! Package     : CaloDetXmlCnv
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!===================== CaloDetXmlCnv v2r2 2002-12-04 ======================
 ! 2002-11-29 - Ivan Belyaev
  - cmt/requirements          version update 
+
+! 2002-11-21 - Florence Ranjard
+ - requirements - uses CaloDet v6r*
 
 !===================== CaloDetXmlCnv v2r1 2002-11-14 ==========================
 ! 2002-11-14 - Ivan Belyaev

@@ -1,14 +1,4 @@
-# $Id: requirements,v 1.5 2002-12-01 14:23:49 ibelyaev Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
-# =============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.4  2002/11/13 20:51:21  ibelyaev
-#  version update to use newer Calo packages
-#
-# Revision 1.3  2002/06/15 10:36:43  ibelyaev
-#  version update
-#
+# $Id: requirements,v 1.6 2002-12-04 18:27:40 ranjard Exp $ 
 # =============================================================================
 # The package with XML-converters gfor Caloriometer Detector Model 
 # =============================================================================
@@ -22,7 +12,7 @@ branches         src cmt doc options
 include_dirs      $(CALODETXMLCNVROOT)
 
 # =============== used packages ===============================================
-use CaloDet      v5r*  Det 
+use CaloDet      v6r*  Det 
 
 # =============== own options =================================================
 set CALODETXMLCNVOPTS  ${CALODETXMLCNVROOT}/options
