@@ -1,4 +1,4 @@
-// $Id: RichHypoData.h,v 1.2 2003-08-26 14:44:11 jonrob Exp $
+// $Id: RichHypoData.h,v 1.3 2003-10-13 16:04:52 jonrob Exp $
 #ifndef RICHRECBASE_RICHHYPODATA_H
 #define RICHRECBASE_RICHHYPODATA_H 1
 
@@ -19,6 +19,8 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
+ *
+ *  @todo   Fix data validification to work without test on data value
  */
 
 template <class TYPE>
@@ -30,7 +32,7 @@ public:
   typedef boost::array<TYPE,Rich::NParticleTypes> Array;
 
   /// Default Constructor
-  RichHypoData() { resetData(); }
+  RichHypoData( TYPE initValue = (TYPE)-1 ) { resetData(initValue); }
   
   /// Destructor
   ~RichHypoData() { }
@@ -42,7 +44,7 @@ public:
   TYPE& operator []       ( Rich::ParticleIDType type )       { return m_data[type]; }
 
   /// Reset data
-  void resetData();
+  void resetData( TYPE initValue = (TYPE)-1 );
 
   /// Const Accessor
   const Array & dataArray() const { return m_data; }
@@ -67,13 +69,13 @@ inline bool RichHypoData<TYPE>::dataIsValid( Rich::ParticleIDType type )
 }
 
 template <class TYPE>
-inline void RichHypoData<TYPE>::resetData()
+inline void RichHypoData<TYPE>::resetData( TYPE initValue )
 {
-  m_data[Rich::Electron] = -1;
-  m_data[Rich::Muon]     = -1;
-  m_data[Rich::Pion]     = -1;
-  m_data[Rich::Kaon]     = -1;
-  m_data[Rich::Proton]   = -1;
+  m_data[Rich::Electron] = initValue;
+  m_data[Rich::Muon]     = initValue;
+  m_data[Rich::Pion]     = initValue;
+  m_data[Rich::Kaon]     = initValue;
+  m_data[Rich::Proton]   = initValue;
 }
 
 /// Implement textual ostream << method

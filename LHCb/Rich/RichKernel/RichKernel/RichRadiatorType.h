@@ -1,4 +1,4 @@
-// $Id: RichRadiatorType.h,v 1.4 2003-06-30 14:17:04 jonrob Exp $
+// $Id: RichRadiatorType.h,v 1.5 2003-10-13 16:04:52 jonrob Exp $
 #ifndef RICHKERNEL_RICHRADIATORTYPE_H
 #define RICHKERNEL_RICHRADIATORTYPE_H 1
 
@@ -7,7 +7,7 @@
 #include <vector>
 #include <iostream>
 
-// from gaudi
+// from Gaudi
 #include "GaudiKernel/MsgStream.h"
 
 /// namespace for RICH detector specifics
@@ -22,11 +22,11 @@ namespace Rich {
    *  @date   2002-06-19
    */
   enum RadiatorType {
-    Aerogel = 0,
-    Rich1Gas,
-    Rich2Gas,
-    C4F10 = 1,  // backwards compatibility
-    CF4 = 2,    // backwards compatibility
+    Aerogel  = 0,
+    Rich1Gas = 1,
+    Rich2Gas = 2,
+    C4F10    = 1,  // backwards compatibility
+    CF4      = 2,  // backwards compatibility
   };
 
   /// Text conversion for RadiatorType enumeration
