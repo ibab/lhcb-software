@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.5 2002-03-20 15:49:09 ibelyaev Exp $
+! $Id: release.notes,v 1.6 2002-03-26 18:37:06 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -8,6 +8,12 @@
 ! The package contains the general Calo Kernel classes and utilities, 
 ! which are essentially independent from Detector and Event models 
 ! =============================================================================
+
+!==============================================================================
+! 26/03/2002 - v2r0 Ivan Belyaev
+! add CaloMap.h and CaloHashMap.h wrapper classes to deals with maps/hash_maps 
+! for Linux/Win32 in teh same way
+! ============================================================================= 
 
 ! =============================================================================
 ! 20/03/2002 - Vanya  Belyaev

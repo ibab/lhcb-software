@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.7 2002-03-26 18:37:06 ibelyaev Exp $
+# $Id: requirements,v 1.8 2002-03-26 18:39:27 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2002/03/26 18:37:06  ibelyaev
+#  some restructurisation and map wrappers
+#
 # Revision 1.6  2002/03/20 21:50:45  ibelyaev
 #  update the package version
 #
@@ -27,7 +30,7 @@
 # =============================================================================
 
 package           CaloKernel
-version           v1r3
+version           v2r0
 
 # =============== structure ===================================================
 branches          src cmt doc CaloKernel

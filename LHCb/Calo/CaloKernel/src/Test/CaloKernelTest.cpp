@@ -1,8 +1,11 @@
-// $Id: CaloKernelTest.cpp,v 1.2 2002-03-20 15:49:09 ibelyaev Exp $ 
+// $Id: CaloKernelTest.cpp,v 1.3 2002-03-26 18:37:06 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/03/20 15:49:09  ibelyaev
+//  add simple adaptor for std::map/HashTable classes
+//
 // Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
 // New Package: substitution of the  previous CaloGen package
 //
@@ -18,6 +21,8 @@
 #include "CaloKernel/InputStreamIterator.h"
 #include "CaloKernel/OutputStreamIterator.h"
 #include "CaloKernel/CaloMap.h"
+#include "CaloKernel/CaloPrint.h"
+#include "CaloKernel/CaloHashMap.h"
 
 // ============================================================================
 /**  @file CaloGenTest.cpp 
@@ -86,18 +91,40 @@ int main()
     << "/" 
     << sizeof( cell3.raw() ) 
     << std::endl ;
-
-  CaloMap<int,std::string> mm;
   
-  mm[1]   = "value of 1st element" ;
-  mm[100] = "value of 100th element" ;
+  {
+    CaloPrint print;
+    std::cout << " Test Of CaloPrint " << std::endl 
+              << "\t double  ='" << print( 1./ 3. ) << "'" << std::endl 
+              << "\t int     ='" << print( 1      ) << "'" << std::endl ;
+  }
   
+  {    
+    CaloMap<int,std::string>     mm;
     
-  std::cout << " test of map "
-            << "mm[1]   ='" << mm[1]   << "' " 
-            << "mm[100] ='" << mm[100] << "' " 
-            << "mm[50]  ='" << mm[50]  << "' " << std::endl;
-
+    mm[1]   = "value of 1st element" ;
+    mm[100] = "value of 100th element" ;
+    
+    std::cout << " Test of CaloMap      "            << std::endl 
+              << "\t mm[1]   ='" << mm[1]    << "' " << std::endl 
+              << "\t mm[100] ='" << mm[100]  << "' " << std::endl
+              << "\t mm[50]  ='" << mm[50]   << "' " << std::endl;
+    
+  }
+  
+  {
+    CaloHashMap<int,std::string> hm ;
+    
+    hm[1]       = "value of 1st element" ;
+    hm[1000000] = "value of 1000000th element" ;
+    
+    std::cout << " Test of CaloHashMap  "                   << std::endl 
+              << "\t mm[1]       ='" << hm[1]       << "' " << std::endl 
+              << "\t mm[1000000] ='" << hm[1000000] << "' " << std::endl
+              << "\t mm[50]      ='" << hm[50]      << "' " << std::endl; 
+  };
+  
+  
   try
     {
       throw CaloException("This is an exception", StatusCode::FAILURE );
