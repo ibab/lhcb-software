@@ -1,4 +1,4 @@
-// $Id: RawBufferToRichDigitsAlg.cpp,v 1.3 2004-03-16 13:37:37 jonesc Exp $
+// $Id: RawBufferToRichDigitsAlg.cpp,v 1.4 2004-04-19 22:55:07 jonesc Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -185,8 +185,8 @@ RawBufferToRichDigitsAlg::decodeNonZeroSuppressedBank( const RawBank & bank ) co
 }
 
 //  Finalize
-StatusCode RawBufferToRichDigitsAlg::finalize() {
-
+StatusCode RawBufferToRichDigitsAlg::finalize() 
+{
   debug() << "Finalise" << endreq;
 
   // finalise base
@@ -198,10 +198,9 @@ RawEvent * RawBufferToRichDigitsAlg::getRawEvent()
 
   // Try and load from TES. If it exists return, overwise try to create one
   SmartDataPtr<RawEvent> rawEventTES( eventSvc(), m_rawEventLoc );
-  if ( rawEventTES ) {
-    return rawEventTES;
-  } else {
-    debug() << "Manually creating RawEvent from RawBuffer" << endreq;
+  if ( rawEventTES ) { return rawEventTES; } 
+  else {
+    debug() << "Creating RawEvent from RawBuffer" << endreq;
 
     // Retrieve the RawBuffer
     SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), RawBufferLocation::Default );
@@ -209,7 +208,7 @@ RawEvent * RawBufferToRichDigitsAlg::getRawEvent()
 
     // make new RawEvent and put into TES
     RawEvent * rawEvent = new RawEvent( rawBuffer );
-    if ( !rawEvent ) { Error( "Unable to allocate memory to RawEvent" ); return 0; }
+    if ( !rawEvent ) { Error("Unable to allocate memory to RawEvent"); return 0; }
     put( rawEvent, RawEventLocation::Default );
 
     return rawEvent;

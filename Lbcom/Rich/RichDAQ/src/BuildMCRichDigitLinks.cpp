@@ -1,4 +1,4 @@
-// $Id: BuildMCRichDigitLinks.cpp,v 1.3 2004-03-16 13:37:36 jonesc Exp $
+// $Id: BuildMCRichDigitLinks.cpp,v 1.4 2004-04-19 22:55:07 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -69,19 +69,9 @@ StatusCode BuildMCRichDigitLinks::execute() {
   debug() << "Successfully located " << digits->size()
           << " RichDigits at " << m_richDigitsLocation << endreq;
 
-  MCRichDigits::iterator mcdigit = mcDigits->begin();
-  for ( RichDigits::iterator digit = digits->begin();
-        digit != digits->end(); ++digit, ++mcdigit ) {
-
-    // Find MCRichDigit
-    MCRichDigit * mcDigit = mcDigits->object( (*digit)->key() );
- 
-    // Set MCTruth
-    if ( setMCTruth(*digit, mcDigit).isFailure() ) {
-      warning() << "Failed to set MCTruth for RichDigit "
-                << (*digit)->key() << " MCRichDigit " << mcDigit << endreq;
-    }
-
+  // build the MC links
+  if ( setMCTruth(digits,mcDigits).isFailure() ) {
+    return Warning("Failed to build MC links for RichDigits");
   }
 
   return StatusCode::SUCCESS;

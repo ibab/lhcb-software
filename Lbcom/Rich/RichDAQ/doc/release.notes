@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2004-04-04 - Chris Jones
+ - Change MC linking building from per digit to container (potential bug fix,
+   thanks to M. Needham )
+
 !========================== RichDAQ v1r3 2004-03-18 =========================
 ! 2004-03-03 - Chris Jones
  - Add ability to try to create a RawEvent object from the RawBuffer in
