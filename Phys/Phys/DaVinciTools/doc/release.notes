@@ -1,6 +1,17 @@
-! $Id: release.notes,v 1.96 2004-06-22 10:49:20 pkoppenb Exp $
+! $Id: release.notes,v 1.97 2004-06-25 08:00:21 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
+
+! 2004-06-25 - P. Koppenburg
+  - src/PVIPFilterCriterion.{cpp,h}
+    . Filter for IP of particles on PV (and only PV!).
+      There are four possible cuts:
+      o MinIP:       Minimal IP on *any* PV. Typically to select B tracks.
+      o MinIPsignif: The same but cutting on IP/error
+      o MaxIP:       Maximal IP on *at least one* PV. 
+                     Typically to select the B itself
+      o MaxIPsignif: The same but cutting on IP/error.
+    Example of use can be found in $BU2LLKROOT/options/  
 
 ! 2004-06-22 - P. Koppenburg
   - Lib/DVAlgorithm.cpp
