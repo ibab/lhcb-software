@@ -12,8 +12,8 @@
 //   *                                                                        *
 //   **************************************************************************
 
-#ifndef TrEvent_TrGeneral_H
-#define TrEvent_TrGeneral_H 1
+#ifndef TrackEvent_TrGeneral_H
+#define TrackEvent_TrGeneral_H 1
 
 // Include files
 #include "Kernel/CLHEPStreams.h"
@@ -49,4 +49,4 @@ namespace TrGeneral
 // Including forward declarations
 
 
-#endif ///TrEvent_TrGeneral_H
+#endif ///TrackEvent_TrGeneral_H

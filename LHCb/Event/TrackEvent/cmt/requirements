@@ -19,8 +19,7 @@ include_dirs      $(TRACKEVENTROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-# use   Package      v1r*    Hat
-use TrKernel     v11r*  Tr
+use   LHCbKernel    v*    Kernel
 
 #============================================================================
 #---- Produce Header-Files from XML description

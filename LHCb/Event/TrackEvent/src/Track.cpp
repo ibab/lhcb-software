@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.1.1.1 2005-02-10 17:23:12 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.2 2005-02-10 19:33:50 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -12,7 +12,7 @@
 
 //=============================================================================
 // Retrieve the position and momentum vectors and the corresponding
-// 6D covariance matrix (pos:1->3,mom:4-6) of a track closest to the beam-line
+// 6D covariance matrix (pos:1->3,mom:4-6) at the physics state
 //=============================================================================
 StatusCode Track::positionAndMomentum( HepPoint3D &pos,
                                        HepVector3D &mom,
@@ -24,7 +24,7 @@ StatusCode Track::positionAndMomentum( HepPoint3D &pos,
 };
 
 //=============================================================================
-// Retrieve the 3D-position (+ errors) of a track closest to the beam-line
+// Retrieve the 3D-position (+ errors) at the physics state
 //=============================================================================
 StatusCode Track::position( HepPoint3D &pos,
                             HepSymMatrix &errPos ) const
@@ -36,7 +36,7 @@ StatusCode Track::position( HepPoint3D &pos,
 };
 
 //=============================================================================
-// Retrieve the slopes (dx/dz,dy/dz,1) of a track closest to the beam-line
+// Retrieve the slopes (dx/dz,dy/dz,1) at the physics state
 //=============================================================================
 StatusCode Track::slopes( HepVector3D &slopes,
                           HepSymMatrix &errSlopes ) const
@@ -48,7 +48,7 @@ StatusCode Track::slopes( HepVector3D &slopes,
 };
 
 //=============================================================================
-// Retrieve the momentum of a track closest to the beam-line
+// Retrieve the momentum at the physics state
 //=============================================================================
 double Track::p() const
 {
@@ -56,7 +56,7 @@ double Track::p() const
 };
 
 //=============================================================================
-// Retrieve the transverse momentum of a track closest to the beam-line
+// Retrieve the transverse momentum at the physics state
 //=============================================================================
 double Track::pt() const
 {
@@ -64,7 +64,7 @@ double Track::pt() const
 };
 
 //=============================================================================
-// Retrieve the momentum vector (+ errors) of a track closest to the beam-line
+// Retrieve the momentum vector (+ errors) at the physics state
 //=============================================================================
 StatusCode Track::momentum( HepVector3D &mom,
                             HepSymMatrix &errMom ) const
@@ -76,8 +76,7 @@ StatusCode Track::momentum( HepVector3D &mom,
 };
 
 //=============================================================================
-// Retrieve the 6D covariance matrix (x,y,z,px,py,pz)
-// of a track closest to the beam-line
+// Retrieve the 6D covariance matrix (x,y,z,px,py,pz) at the physics state
 //=============================================================================
 StatusCode Track::posMomCovariance( HepSymMatrix &cov6D ) const
 {
@@ -87,7 +86,7 @@ StatusCode Track::posMomCovariance( HepSymMatrix &cov6D ) const
 };
 
 //=============================================================================
-// Retrieve the pointer to the state closest to the given z-position
+// Retrieve the reference to the state closest to the given z-position
 //=============================================================================
 State & Track::closestState( double z )
 {
@@ -105,7 +104,7 @@ State & Track::closestState( double z )
 };
 
 //=============================================================================
-// Retrieve the (constant) pointer to the state closest to the given z-position
+// Retrieve the (const) reference to the state closest to the given z-position
 //=============================================================================
 const State & Track::closestState( double z ) const
 {
@@ -123,7 +122,7 @@ const State & Track::closestState( double z ) const
 };
 
 //=============================================================================
-// Retrieve the pointer to the state closest to the given plane
+// Retrieve the reference to the state closest to the given plane
 //=============================================================================
 State & Track::closestState( const HepPlane3D &plane )
 {
@@ -143,7 +142,7 @@ State & Track::closestState( const HepPlane3D &plane )
 };
 
 //=============================================================================
-// Retrieve the (constant) reference to the state closest to the given plane
+// Retrieve the (const) reference to the state closest to the given plane
 //=============================================================================
 const State & Track::closestState( const HepPlane3D &plane ) const
 {
@@ -158,7 +157,9 @@ const State & Track::closestState( const HepPlane3D &plane ) const
       best    = *it;
     }
   }
-  if ( fabs( plane.distance(m_physicsState.position()) ) < minDist ) return m_physicsState;
+  if ( fabs( plane.distance(m_physicsState.position()) ) < minDist )
+    return m_physicsState;
+
   return *best;
 };
 
@@ -172,7 +173,7 @@ bool Track::hasStateAt( const State::Location& value ) const
 };
 
 //=============================================================================
-// Retrieve the reference to the state closest to the given plane
+// Retrieve the pointer to the state closest to the given plane
 //=============================================================================
 State* Track::stateAt( const State::Location& value )
 {
@@ -185,7 +186,7 @@ State* Track::stateAt( const State::Location& value )
 };
 
 //=============================================================================
-// Retrieve the (constant) pointer to the state at a given location
+// Retrieve the (const) pointer to the state at a given location
 //=============================================================================
 const State* Track::stateAt( const State::Location& value ) const
 {
