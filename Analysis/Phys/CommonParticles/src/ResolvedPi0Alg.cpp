@@ -103,7 +103,7 @@ StatusCode ResolvedPi0Alg::initialize()
     }
   }
 
-  logbk<<MSG::WARNING<<"setFilterPassed is systematically FALSE"<<endreq;
+  logbk<<MSG::WARNING<<"setFilterPassed is systematically TRUE"<<endreq;
 
   ///
   return StatusCode::SUCCESS;

@@ -4,5 +4,13 @@
 ApplicationMgr.DLLs += { "CommonParticles" };
 
 // uncomment these 2 lines if you want pair photons creation
-ApplicationMgr.TopAlg += { "ProducePairPhotons" };
-#include "$COMMONPARTICLESROOT/options/ProducePairPhotons.opts"
+// ApplicationMgr.TopAlg += { "ProducePairPhotons" };
+// #include "$COMMONPARTICLESROOT/options/ProducePairPhotons.opts"
+
+// uncomment these 2 lines if you want merged Pi0s
+// ApplicationMgr.TopAlg += { "MergedPi0Alg" };
+// #include "$COMMONPARTICLESROOT/options/MergedPi0Alg.opts"
+
+// uncomment these 2 lines if you want resolved Pi0s
+// ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
+// #include "$COMMONPARTICLESROOT/options/ResolvedPi0Alg.opts"

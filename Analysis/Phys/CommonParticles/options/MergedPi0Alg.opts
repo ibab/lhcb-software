@@ -9,7 +9,7 @@
 
 // Configure PhysDesktop Tool with necessary values
 MergedPi0Alg.PhysDesktop.ParticleMakerType = "PhotonFromMergedParticleMaker";
-//MergedPi0Alg.PhysDesktop.OutputLocation="/Event/Phys/MergedPi0";
+
 MergedPi0Alg.PhysDesktop.PhotonFromMergedParticleMaker.OutputLevel = 4;
 
 ////////////////////////////////////////
@@ -21,7 +21,7 @@ MergedPi0Alg.ParMas={ 1.00 , 0.00 , 0.00 };
 ////////////////////////////////////////
 
 MergedPi0Alg.OutputLevel = 4;
-MergedPi0Alg.HistogramFlag = true;
+MergedPi0Alg.HistogramFlag = false;
 
 // List of Criteria to use in Filter
 MergedPi0Alg.ParticleFilter.CriteriaNames = {"PIDFilterCriterion"};
