@@ -13,7 +13,7 @@ include_dirs      $(MUONALGSROOT)
 use AIDA           v2r2
 use MuonDet     v3r*  Det
 use MuonEvent   v3r*   Event
-use MuonTools   v2r0  Muon
+use MuonTools   v2r*  Muon
 use MuonKernel   v2r*  Muon
 use MuonSicbCnv  v7r* SICB
 
