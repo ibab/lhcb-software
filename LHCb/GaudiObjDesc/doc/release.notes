@@ -2,7 +2,14 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
-! 20020118 - SR
+! 20021028 - Stefan Roiser
+ - <namespace>-element introduced
+ - fragments will now write the output to sub-dir "Event"
+ - new 'database' of classes generated from Gaudi v9r0
+ - bugfixes applied (writing to public, protected, private; including of unknown classes)
+ - typedef for KeyedContainer added if derived from KeyedObject
+
+! 20020118 - Stefan Roiser
  - bugfix applied for better handling of fundamental types
  - <enum>-element introduced
  - attribute 'initList' for special constructors introduced, which will handle initialization

@@ -1,5 +1,5 @@
 package GaudiObjDesc
-version v2r1
+version v3r0
 
 branches doc cmt src
 
@@ -18,3 +18,5 @@ make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
 
 application GODWriteCppHeader ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppHeader.cpp
 application GODWriteCppDict   ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppDict.cpp
+
+setup_script setDTD

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.5 2002-01-18 17:25:14 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.6 2002-01-28 18:49:18 mato Exp $
 #ifndef DADIPACKAGE_H 
 #define DADIPACKAGE_H 1
 
@@ -7,6 +7,7 @@
 
 #include "dom/DOMString.hpp"
 
+#include "DaDiNamespace.h"
 #include "DaDiClass.h"
 
 /** @class DaDiPackage DaDiPackage.h
@@ -44,15 +45,20 @@ public:
   void pushDaDiClass(DaDiClass* value);
   int sizeDaDiClass();
 
+  DaDiNamespace* popDaDiNamespace();
+  void pushDaDiNamespace(DaDiNamespace* value);
+  int sizeDaDiNamespace();
+
 protected:
 
 private:
 
-  DOMString              m_packageName;
-  std::list<std::string> m_impSoftList,
-                         m_impStdList,
-                         m_importList;
-  std::list<DaDiClass*>  m_daDiClass;
+  DOMString                 m_packageName;
+  std::list<std::string>    m_impSoftList,
+                            m_impStdList,
+                            m_importList;
+  std::list<DaDiClass*>     m_daDiClass;
+  std::list<DaDiNamespace*> m_daDiNamespace;
 
 };
 
@@ -199,6 +205,7 @@ inline void DaDiPackage::remDblImportList()
 inline DaDiClass* DaDiPackage::popDaDiClass()
 {
   DaDiClass* pt = m_daDiClass.front();
+  m_daDiClass.push_back(pt);
   m_daDiClass.pop_front();
   return pt;
 }
@@ -211,6 +218,24 @@ inline void DaDiPackage::pushDaDiClass(DaDiClass* value)
 inline int DaDiPackage::sizeDaDiClass()
 {
   return m_daDiClass.size();
+}
+
+inline DaDiNamespace* DaDiPackage::popDaDiNamespace()
+{
+  DaDiNamespace* pt = m_daDiNamespace.front();
+  m_daDiNamespace.push_back(pt);
+  m_daDiNamespace.pop_front();
+  return pt;
+}
+
+inline void DaDiPackage::pushDaDiNamespace(DaDiNamespace* value)
+{
+  m_daDiNamespace.push_back(value);
+}
+
+inline int DaDiPackage::sizeDaDiNamespace()
+{
+  return m_daDiNamespace.size();
 }
 
 #endif // DADIPACKAGE_H

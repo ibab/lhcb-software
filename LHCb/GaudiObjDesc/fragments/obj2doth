@@ -1,4 +1,5 @@
 $(dest)${NAME}.obj2doth : ${FULLNAME} 
 	@echo Producing Header files from ${FULLNAME}
+	@if !(test -d $(dest)); then mkdir $(dest); fi 
 	@cd $(dest); $(GAUDIOBJDESCROOT)/$(tag)/$(parsetool) $(GODflags) ${FULLNAME}
 	@echo /dev/null > $@

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiAttribute.h,v 1.3 2001-11-09 08:37:10 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiAttribute.h,v 1.4 2002-01-28 18:49:16 mato Exp $
 #ifndef DADIATTRIBUTE_H 
 #define DADIATTRIBUTE_H 1
 
@@ -33,11 +33,11 @@ public:
   DOMString init();
   void setInit(DOMString value);
 
-  bool setMeth();
-  void setSetMeth(bool value);
+  DOMString setMeth();
+  void setSetMeth(DOMString value);
   
-  bool getMeth();
-  void setGetMeth(bool value);
+  DOMString getMeth();
+  void setGetMeth(DOMString value);
 
 
 protected:
@@ -48,8 +48,8 @@ private:
             m_type, 
             m_desc, 
             m_access,
-            m_init;
-  bool      m_setMeth, 
+            m_init,
+            m_setMeth, 
             m_getMeth;
 
 };
@@ -105,22 +105,22 @@ inline void DaDiAttribute::setInit(DOMString value)
   m_init = value;
 }
 
-inline bool DaDiAttribute::setMeth()
+inline DOMString DaDiAttribute::setMeth()
 {
   return m_setMeth;
 }
 
-inline void DaDiAttribute::setSetMeth(bool value)
+inline void DaDiAttribute::setSetMeth(DOMString value)
 {
   m_setMeth = value;
 }
 
-inline bool DaDiAttribute::getMeth()
+inline DOMString DaDiAttribute::getMeth()
 {
   return m_getMeth;
 }
 
-inline void DaDiAttribute::setGetMeth(bool value)
+inline void DaDiAttribute::setGetMeth(DOMString value)
 {
   m_getMeth = value;
 }

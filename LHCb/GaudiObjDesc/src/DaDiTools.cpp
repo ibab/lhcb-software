@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.4 2001-11-28 15:56:21 mato Exp $
+// $Id: DaDiTools.cpp,v 1.5 2002-01-28 18:49:18 mato Exp $
 
 
 // Include files
@@ -19,6 +19,7 @@
 //extern std::ostream& operator<<(std::ostream& target, const DOMString& s);
 
 
+std::vector<std::string> DaDiTools::additionalImports;
 
 //-----------------------------------------------------------------------------
 char* DaDiTools::chooseAccess(const DOMString& s)
@@ -31,6 +32,23 @@ char* DaDiTools::chooseAccess(const DOMString& s)
   else {return "";}
 }
 
+bool DaDiTools::isSimple(std::string value)
+{
+  int i = value.find_last_of(" ");
+  value = value.substr(i+1, value.size()-i);
+  if ((value == "bool")   || (value == "short")   ||
+      (value == "long")   || (value == "int")     || 
+      (value == "float")  || (value == "double")  || 
+      (value == "char")   || (value == "unsigned") ||
+      (value == "signed"))
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
 
 
 //-----------------------------------------------------------------------------
@@ -80,3 +98,16 @@ void DaDiTools::resetErrors()
   // No-op in this case
 }
 
+//-----------------------------------------------------------------------------
+void DaDiTools::pushAddImport(std::string value)
+//-----------------------------------------------------------------------------
+{
+  additionalImports.push_back(value);
+}
+
+//-----------------------------------------------------------------------------
+const std::vector<std::string>& DaDiTools::addImport()
+//-----------------------------------------------------------------------------
+{
+  return additionalImports;
+}

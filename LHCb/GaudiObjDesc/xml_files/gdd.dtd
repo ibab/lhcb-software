@@ -1,6 +1,6 @@
 <?xml encoding="UTF-8"?>
 <!-- ?xml encoding="ISO-8859-1"? -->
-<!ELEMENT gdd (import*, (package+ | class))>
+<!ELEMENT gdd ((import*, package+)+)>
 <!ATTLIST gdd
 	version CDATA "1.0"
 >
@@ -10,11 +10,11 @@
 	std (TRUE | FALSE) "FALSE"
 	soft (TRUE | FALSE) "FALSE"
 >
-<!ELEMENT package (import*, class*)>
+<!ELEMENT package ((import*, class*, namespace*)*)>
 <!ATTLIST package
 	name CDATA #REQUIRED
 >
-<!ELEMENT class (desc?, base*, import*, enum*, constructor*, destructor*, method*, attribute*, relation*)>
+<!ELEMENT class ((desc?, base?, import?, enum?, constructor?, destructor?, method?, attribute?, relation?)*)>
 <!ATTLIST class
 	name CDATA #REQUIRED
 	author CDATA #REQUIRED
@@ -28,6 +28,11 @@
 <!ATTLIST desc
 	xml:space (default | preserve) #FIXED "preserve"
 >
+<!ELEMENT namespace ((enum?, class?)*)>
+<!ATTLIST namespace
+	name CDATA #REQUIRED
+	desc CDATA #REQUIRED
+>
 <!ELEMENT base EMPTY>
 <!ATTLIST base
 	name CDATA #REQUIRED
@@ -36,25 +41,25 @@
 >
 <!ELEMENT enum EMPTY>
 <!ATTLIST enum
-   name CDATA #REQUIRED
-   desc CDATA #REQUIRED
-   value CDATA #REQUIRED
+	name CDATA #REQUIRED
+	desc CDATA #REQUIRED
+	value CDATA #REQUIRED
 	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
 >
-<!ELEMENT constructor (arg*, code?)>
+<!ELEMENT constructor (arg*, code?, arg*)>
 <!ATTLIST constructor
 	desc CDATA #REQUIRED
 	argList CDATA #IMPLIED
 	argInOut CDATA #IMPLIED
 	initList CDATA #IMPLIED
 >
-<!ELEMENT destructor (arg*, code?)>
+<!ELEMENT destructor (arg*, code?, arg*)>
 <!ATTLIST destructor
 	desc CDATA #REQUIRED
 	argList CDATA #IMPLIED
 	argInOut CDATA #IMPLIED
 >
-<!ELEMENT method (arg*, return?, code?)>
+<!ELEMENT method ((arg*, return?, arg*, code?, arg*) | (arg*, code?, arg*, return?, arg*))>
 <!ATTLIST method
 	name CDATA #REQUIRED
 	desc CDATA #REQUIRED

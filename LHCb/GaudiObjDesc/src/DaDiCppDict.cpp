@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.13 2001-11-07 14:49:34 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.14 2002-01-28 18:49:16 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -192,7 +192,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
                                   bool additionalImports)
 //-----------------------------------------------------------------------------
 {
-  int i=0;
+  int i=0,k=0;
   std::map<std::string,std::string> dbExportClass;
 
 //
@@ -331,7 +331,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
   }
 
 
-  while(gddPackage->sizeDaDiClass())
+  for(k=0; k<gddPackage->sizeDaDiClass(); ++k)
   {
   
   DaDiClass* gddClass = gddPackage->popDaDiClass();
@@ -380,7 +380,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
     << "#define private public" << std::endl;
   
     std::string impName = gddClass->className().transcode();
-    if(dbExportClass[impName] != "")
+/*    if(dbExportClass[impName] != "")
         {
       impName = dbExportClass[impName];
         }
@@ -390,7 +390,8 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
         << impName << std::endl << "   Line written: #include \""
         << impName << ".h\"" << std::endl;
         }
-    metaOut << "#include \"" << impName << ".h\"" << std::endl;
+        */
+    metaOut << "#include \"Event/" << impName << ".h\"" << std::endl;
 
   metaOut << "#undef private" << std::endl << std::endl 
     << "#include \"GaudiIntrospection/Introspection.h\"" 

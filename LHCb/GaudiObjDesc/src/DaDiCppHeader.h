@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiCppHeader.h,v 1.1.1.1 2001-10-03 16:39:17 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiCppHeader.h,v 1.2 2002-01-28 18:49:17 mato Exp $
 #ifndef DADICPPHEADER_H 
 #define DADICPPHEADER_H 1
 
@@ -20,7 +20,7 @@ public:
   DDBEcpp() {};
   ~DDBEcpp() {};
   
-  static void printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envOut, bool additionalImports);
+//  static void printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envOut, bool additionalImports);
 
 };
 
