@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.h,v 1.5 2002-12-03 16:56:22 andreav Exp $
+//$Id: ConditionsDBGate.h,v 1.6 2004-12-08 17:12:07 marcocle Exp $
 #ifndef DETCOND_CONDITIONSDBGATE_H
 #define DETCOND_CONDITIONSDBGATE_H 1
 
@@ -12,8 +12,8 @@
 // Forward and external declarations
 class ConditionsDBCnvSvc;
 class ICondDBMgr;
-class ICondDBDataAccess;
-class ICondDBFolderMgr;
+class ICondDBBasicDataAccess;
+class ICondDBBasicFolderMgr;
 class ITime;
 
 ///---------------------------------------------------------------------------
@@ -21,8 +21,11 @@ class ITime;
 
     A low-level gate to the ConditionsDB for management and data access.
 
-    @author Andrea Valassi 
+    @author Andrea Valassi
     @date August 2001
+    @author Marco Clemencic
+    @author Nicolas Gilardi
+    @date November 2004
 *///--------------------------------------------------------------------------
 
 class ConditionsDBGate : public Service, 
@@ -45,7 +48,7 @@ class ConditionsDBGate : public Service,
   // Reimplemented from IInterface
 
   /// Query the interface of the service
-  virtual StatusCode queryInterface( const IID& riid, 
+  virtual StatusCode queryInterface( const InterfaceID& riid, 
                                      void** ppvInterface );  
 
  public:
@@ -73,7 +76,13 @@ class ConditionsDBGate : public Service,
   /// Read the description of a folder in the CondDB
   StatusCode readCondDBFolder      ( std::string&        description,
 				     const std::string&  folderName );
-  
+
+  /// Return a string stating the implementation used
+  virtual const std::string & implementation() const ;
+
+  /// Return the code of the implementation used
+  virtual short implementationCode() const ;
+
   /// (TEMPORARY?) Handle to the CondDBMgr for arbitrary manipulations
   inline ICondDBMgr* condDBManager ( ) { return m_condDBmgr; };
 
@@ -112,10 +121,10 @@ class ConditionsDBGate : public Service,
   ICondDBMgr*        m_condDBmgr;
 
   /// CondDB Data Access
-  ICondDBDataAccess* m_condDBDataAccess;
+  ICondDBBasicDataAccess* m_condDBDataAccess;
 
   /// CondDB Folder Manager
-  ICondDBFolderMgr*  m_condDBFolderMgr;
+  ICondDBBasicFolderMgr*  m_condDBFolderMgr;
 
   // Private data members specific to the ConditionsDB implementation:
   // full path to the database, which can be set using the JobOptionsSvc.
@@ -140,17 +149,6 @@ class ConditionsDBGate : public Service,
   bool               m_showCondDBPswd;
 
 };
-
-namespace ConditionsDBGateImplementation 
-{
-  /// Cannot define this as enum as there is no method to read enum properties
-  static const short CONDDBNONE   = 0;
-  static const short CONDDBOBJY   = 1;
-  static const short CONDDBORACLE = 2;
-  static const short CONDDBMYSQL  = 3;
-};
-
-using namespace ConditionsDBGateImplementation;
 
 #endif    // DETCOND_CONDITIONSDBGATE_H
 

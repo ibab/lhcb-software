@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.cpp,v 1.14 2002-12-03 16:59:34 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.15 2004-12-08 17:12:07 marcocle Exp $
 #include <string>
 
 #ifdef WIN32
@@ -15,13 +15,15 @@
 #  endif
 #endif
 
-#ifdef __CondDBOracle__
-#  include "ConditionsDB/CondDBOracleDBMgrFactory.h"
-#  include <stdlib.h> /* For getenv */
+#ifdef __CondDBMySQL__
+#  include "ConditionsDB/CondDBMySQLMgrFactory.h"
+#  include "ConditionsDB/CondDBObjFactory.h"
 #endif
 
-#ifdef __CondDBMySQL__
-#  include "IConditionsDB/CondDBMySQLMgrFactory.h"
+#ifdef __CondDBOracle__
+#  include "ConditionsDB/CondDBOracleMgrFactory.h"
+#  include <stdlib.h> /* For getenv */
+#  include "ConditionsDB/ICondDBObject.h"
 #endif
 
 #include "ConditionsDBGate.h"
@@ -30,11 +32,12 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/TimePoint.h"
 
-#include "ConditionsDB/CondDBObjFactory.h"
 #include "ConditionsDB/ICondDBFolder.h"
-#include "ConditionsDB/ICondDBFolderMgr.h"
+#include "ConditionsDB/ICondDBBasicFolderMgr.h"
+#include "ConditionsDB/ICondDBBasicDataAccess.h"
 
 //----------------------------------------------------------------------------
+using namespace ConditionsDBGateImplementation;
 
 /// Constructor
 ConditionsDBGate::ConditionsDBGate( const std::string& name, 
@@ -143,10 +146,9 @@ StatusCode ConditionsDBGate::initialize()
       return StatusCode::FAILURE;
     }
     if ( ! status.isSuccess() ) return status;
-
     // Get dataAccess and folderMgr handles
-    m_condDBDataAccess = m_condDBmgr->getCondDBDataAccess();
-    m_condDBFolderMgr  = m_condDBmgr->getCondDBFolderMgr();
+    m_condDBDataAccess = m_condDBmgr->getCondDBBasicDataAccess();
+    m_condDBFolderMgr  = m_condDBmgr->getCondDBBasicFolderMgr();
         
   } catch (CondDBException &e) {
 
@@ -225,7 +227,8 @@ StatusCode ConditionsDBGate::i_initDBOracle()
 #ifdef __CondDBOracle__
 
   //--- Begin of Oracle implementation-specific code    
-  m_condDBmgr = CondDBOracleDBMgrFactory::createCondDBMgr();
+  //  m_condDBmgr = cool::CondDBOracleMgrFactory::createCondDBMgr();
+  m_condDBmgr = CondDBOracleMgrFactory::createCondDBMgr();
   
   // Initialise the database
   std::string condDBInfo;
@@ -335,7 +338,8 @@ StatusCode ConditionsDBGate::finalize()
       
     case CONDDBORACLE:
 #ifdef __CondDBOracle__
-      CondDBOracleDBMgrFactory::destroyCondDBMgr( m_condDBmgr );
+      //      cool::CondDBOracleMgrFactory::destroyCondDBMgr( m_condDBmgr );
+      CondDBOracleMgrFactory::destroyCondDBMgr( m_condDBmgr );
 #else
       log << MSG::ERROR << "CondDB Oracle implementation not linked" << endreq;
       return StatusCode::FAILURE;
@@ -365,7 +369,7 @@ StatusCode ConditionsDBGate::finalize()
 //----------------------------------------------------------------------------
 
 /// Query interface
-StatusCode ConditionsDBGate::queryInterface(const IID& riid, 
+StatusCode ConditionsDBGate::queryInterface(const InterfaceID& riid, 
 					    void** ppvInterface)
 {
   if ( IID_IConditionsDBGate == riid )  {
@@ -406,12 +410,12 @@ ConditionsDBGate::readCondDBObject      ( ITime&              refValidSince,
   log << MSG::DEBUG << "Key=" << key 
       << "(0x" << std::hex 
       << key
-      << std::dec << ")" 
+      << std::dec << ")"
       << endreq; 
 
   // Create an object (must delete it at the end)
   ICondDBObject* aCondDBObject;
-  status = i_findCondDBObject ( aCondDBObject, folderName, tagName, key ); 
+  status = i_findCondDBObject ( aCondDBObject, folderName, tagName, key );
   if ( !status.isSuccess() ) return status;
 
   // Set required parameters
@@ -484,7 +488,7 @@ ConditionsDBGate::i_findCondDBObject ( ICondDBObject*&     refpCobject,
 				       const std::string&  tagName,
 				       const CondDBKey&    key)
 {
-
+  
   MsgStream log(msgSvc(), "ConditionsDBGate" );
   try {
 
@@ -525,7 +529,7 @@ ConditionsDBGate::i_findCondDBObject ( ICondDBObject*&     refpCobject,
 	<< " ] : '" << data << "'" << endreq;
     refpCobject = 0;
     return StatusCode::FAILURE;
-  }    
+  }
 
   return StatusCode::SUCCESS;
 
@@ -830,3 +834,10 @@ StatusCode ConditionsDBGate::i_convertToKey ( CondDBKey& key,
 }
 
 //----------------------------------------------------------------------------
+const std::string & ConditionsDBGate::implementation() const{
+  return m_condDBImpl;
+}
+short ConditionsDBGate::implementationCode() const {
+  return m_condDBImplCode;
+}
+
