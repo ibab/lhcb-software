@@ -1,8 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
-! 2003-09-10 - Marco Cattaneo
- - Use DAQEvent v1r0
+!======================== EventSys v14r3 2003-10-06 ========================
+! 2003-10-06 - Marco Cattaneo
+ - Add DAQEvent v1r1, use EventKernel v3r0, HltEvent v4r0, RichEvent v5r1
 
 !======================== EventSys v14r2 2003-07-16 ========================
 ! 2003-07-16 - Marco Cattaneo
