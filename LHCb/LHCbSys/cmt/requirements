@@ -25,11 +25,11 @@ use RichKernel  	v5r4	Rich
 use VeloKernel  	v1r5p1  Velo
 
 # Detector description
-use DetSys		v6r3	Det
+use DetSys		v6r4	Det
 use VeloDet        	v9r3	Det
-use DetDesc        	v14r3	Det
+use DetDesc        	v14r4	Det
 use DetDescCnv        	v2r3	Det
-use XmlTools        	v3r3	Tools
+use XmlTools        	v3r4	Tools
 use OTDet          	v5r4p1	Det
 use CaloDet        	v6r8	Det
 use CaloDetXmlCnv	v2r3p1	Det
@@ -79,7 +79,7 @@ use CaloDAQ		v1r0p2	Calo
 
 # Other stuff
 use LHCbInterfaces	v1r1	Kernel
-use LHCbAlgs		v1r3p1	Kernel
+use LHCbAlgs		v1r4	Kernel
 use MCTools		v1r12	Phys
 use CaloInterfaces	v4r3	Calo
 use CaloUtils		v4r8	Calo
