@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.3 2003-04-17 09:58:25 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.4 2003-04-24 13:55:07 gcorti Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -36,6 +36,8 @@ public:
 
 private:
   Particle2MCLinksAsct::IAsct* m_pAsct;
+  bool m_allowExtraMCPhotons;
+  int  m_gamma;
 
   bool associate1(const Particle *p, const MCParticle *m, 
                   Particle2MCAsct::Table* table) const;

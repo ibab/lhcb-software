@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.3 2003-04-17 09:58:25 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.4 2003-04-24 13:55:07 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -34,9 +34,11 @@ const        IAlgFactory& CompositeParticle2MCLinksFactory = s_factory ;
 CompositeParticle2MCLinks::CompositeParticle2MCLinks( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : AsctAlgorithm ( name , pSvcLocator )
+  , m_gamma( 22 )
 {
   m_outputTable = "Phys/Relations/CompPart2MCfromLinks" ;
   m_inputData.push_back( ParticleLocation::Production );
+  declareProperty( "AllowExtraMCPhotons", m_allowExtraMCPhotons = false );
 }
 
 //=============================================================================
@@ -58,6 +60,7 @@ StatusCode CompositeParticle2MCLinks::initialize() {
     log << MSG::FATAL << " Unable to retrieve Associator tool" << endreq;
     return sc;
   }
+
   return sc;
 };
 
@@ -187,14 +190,14 @@ CompositeParticle2MCLinks::associate1(const Particle *p,
           if (j==mcdau.end()) break; // doesn't match -- give up
           mcdau.erase(j);
         }
-#if 0
+
         if (m_allowExtraMCPhotons) { // maybe add an energy threshold
                                      // for extraneous photons?
-          static const ParticleID gamma =  ;
-          while (!mcdau.empty() &&  mcdau.back()->pid() == gamma ) 
+          while (!mcdau.empty() &&
+                 mcdau.back()->particleID().pid() == m_gamma ) 
             mcdau.pop_back();
         }
-#endif
+
         s = ( i == dau.end() && mcdau.empty() ) ; // all matched up, 
                                                   // nothing left
       }
