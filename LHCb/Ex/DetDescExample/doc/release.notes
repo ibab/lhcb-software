@@ -1,15 +1,20 @@
-$Id: release.notes,v 1.12 2002-04-29 17:05:49 sponce Exp $
+$Id: release.notes,v 1.13 2002-12-03 17:45:20 ranjard Exp $
 Package: DetDescExample
 Package Manager: I.Belyaev
-
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
 
+!=============================== DetDescExample v5r0 ===================
+! 2002-11-21 - Florence Ranjard
+ - requirements - use LHCB v11r3
+
+!=============================== DetDescExample v4r0 ====================
 ! 20020429 - DetDescExample v4 (Sebastien)
   - Adapted to Gaudi v10r0
   - rewrote everything to be compliant with the new geometry and
     to be more understandable, both in the code and in the output
 
+!============================== DetDescExample v3r0 =====================
 ! 20011211 - DetDescExample v3 (Pere)
   Adapted to Gaudi v9r0
 

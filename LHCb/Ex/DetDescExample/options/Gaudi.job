@@ -35,10 +35,15 @@ else
 endif
 set current = $PWD
 #
+# == set the LHCB version number
+setenv Lversion "v11r3"
 # == set the root directory of your job
-setenv MYJOBROOT $HOME/newmycmt/Ex/DetDescExample/v2
-# == reset the dynamic library search path
-unsetenv LD_LIBRARY_PATH
+#setenv MYJOBROOT $HOME/newmycmt/Ex/DetDescExample/v5r0
+setenv MYJOBROOT $LHCb_release_area/LHCB/LHCB_${Lversion}/Ex/DetDescExample/v5r0
+
+# == set the environment
+$LHCBHOME/scripts/LHCbEnv.csh ${Lversion}
+
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
 
