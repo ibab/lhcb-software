@@ -86,4 +86,4 @@ use RichMCTools		v2r0	Rich
 # LHCb  Examples
 use DetDescChecks	v2r1	Det
 use DetDescExample      v6r2p1	Ex
-use IOExample    	v1r2	Ex
+use IOExample    	v1r3	Ex
