@@ -15,6 +15,7 @@ Purpose: LHCb reconstruction program
      - RICH Digitisation (old SICB Fortran version)
      - Calo digitisation and reconstruction
      - MUON Digitisation (old SICB Fortran version) and reconstruction
+     - L0 trigger simulation (except L0 Muon)
    >>>>>>
 
    Backwards incompatible version for use with the new event model.
@@ -43,6 +44,9 @@ Purpose: LHCb reconstruction program
    - use CaloTools      v2r0 Calo
    - use CaloAlgs       v5r0 Calo
    - use CaloCA         v4r0 Calo
+   - use L0Calo         v5r0 L0
+   - use PuVeto         v2r0 L0
+   - use L0DU           v5r0 L0
 
 ! =================================================================
 </PRE><H1><A NAME=v9r1p1>20020419 Brunel v9r1p1</A></H1><PRE>
