@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.47 2004-03-05 14:27:12 cattanem Exp $
+! $Id: release.notes,v 1.48 2004-05-03 15:39:44 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
-!======================== PhysEvent v8r2 2003-03-03 ========================
+!======================== PhysEvent v8r3 2004-05-03 ========================
+! 2004-05-03 - Marco Cattaneo
+ - Fixes for POOL dictionaries in ProtoParticle.xml and SelResult.xml
+
+!======================== PhysEvent v8r2 2004-03-05 ========================
 ! 2004-03-05 - P. Koppenburg
  - src/ProtoParticle.xml:
    . Add PhotonID to detectorPID enum for later use by Calorimeter group.
@@ -14,7 +18,7 @@
    . New: Store result of selection.
    . Removed obsolete PhysSel.xml and PhySelDecay.xml
 
-!======================== PhysEvent v8r1 2003-02-09 ========================
+!======================== PhysEvent v8r1 2004-02-09 ========================
 ! 2004-02-06 - Olivier Callot
  - Add a constructor with key to Vertex, for Trg usage.
 

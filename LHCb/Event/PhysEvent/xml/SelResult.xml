@@ -8,6 +8,7 @@
      id="860"
     >
       <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
       <location
        name="Default"
        place="/Event/Phys/Selections"

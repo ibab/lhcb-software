@@ -105,12 +105,12 @@
        <attribute
         name="pIDDetectors"
         desc="List of separate detectors pID info: technique and value"
-        type="std::vector&lt; std::pair&lt;int,double&gt; &gt;"
+        type="std::vector&lt;std::pair&lt;int,double&gt; &gt;"
        />
        <attribute
         name="pIDInfo"
         desc="List of particleIDs and their Probability value after corresponding merging stage"
-        type="std::vector&lt; std::pair&lt;int,double&gt; &gt;"
+        type="std::vector&lt;std::pair&lt;int,double&gt; &gt;"
        />
        <attribute
         name="pIDhistory"
