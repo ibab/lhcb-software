@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.h,v 1.2 2004-12-08 17:33:16 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.h,v 1.3 2005-02-10 08:06:21 marcocle Exp $
 #ifndef DETCONDEXAMPLE_DAQCONDDBALGORITHM_H
 #define DETCONDEXAMPLE_DAQCONDDBALGORITHM_H 1
 
@@ -7,7 +7,11 @@
 
 // Forward declarations
 class IConditionsDBCnvSvc;
-class ICondDBMgr;
+class ICondDBAccessSvc;
+namespace pool
+{
+  class AttributeListSpecification;
+}
 
 ///---------------------------------------------------------------------------
 /** @class DAQCondDBAlgorithm DAQCondDBAlgorithm.h DetCondExample/DAQCondDBAlgorithm.h
@@ -48,6 +52,9 @@ class DAQCondDBAlgorithm : public Algorithm {
   /// Number of events analysed so far
   long m_daqEventNumber;
 
+  /// System time at the end of initialization 
+  longlong m_nsInitialized;
+
   /// Total time (ns) spent in event processing
   longlong m_nsExec;
 
@@ -57,8 +64,11 @@ class DAQCondDBAlgorithm : public Algorithm {
   /// Handle to the ConditionsDBCnvSvc (retrieved during the initialization)
   IConditionsDBCnvSvc* m_condDBCnvSvc;
 
-  /// Handle to the CondDBMgr (retrieved during the initialization)
-  ICondDBMgr* m_condDBMgr;
+  /// Handle to the CondDBAccessSvc (retrieved during the initialization)
+  ICondDBAccessSvc* m_dbAccSvc;
+
+  /// Specification for the payload to sore
+  pool::AttributeListSpecification* m_payloadSpec;
 
 };
 

@@ -1,4 +1,4 @@
-//$Id: PopulateDB.h,v 1.4 2005-02-09 09:06:25 marcocle Exp $
+//$Id: PopulateDB.h,v 1.5 2005-02-10 08:06:21 marcocle Exp $
 #ifndef DETCONDEXAMPLE_POPULATEDB_H
 #define DETCONDEXAMPLE_POPULATEDB_H 1
 
@@ -7,11 +7,11 @@
 
 // Forward declarations
 class IConditionsDBCnvSvc;
-class IConditionsDBGate;
+class ICondDBAccessSvc;
 class ICondDBObject;
 
-#include "ConditionsDB/CondDBException.h"
-#include "ConditionsDB/CondDBKey.h"
+//#include "ConditionsDB/CondDBException.h"
+//#include "ConditionsDB/CondDBKey.h"
 
 ///---------------------------------------------------------------------------
 /** @class PopulateDB PopulateDB.h DetCondExample/PopulateDB.h
@@ -20,6 +20,8 @@ class ICondDBObject;
 
     @author Andrea Valassi 
     @date August 2001
+    @author Marco Clemencic
+    @date January 2005
 *///--------------------------------------------------------------------------
 
 class PopulateDB : public Algorithm {
@@ -63,15 +65,19 @@ class PopulateDB : public Algorithm {
   IConditionsDBCnvSvc* m_conditionsDBCnvSvc;
 
   /// Handle to the ConditionsDBGate (write the data in the CondDB)
-  IConditionsDBGate* m_conditionsDBGate;
+  ICondDBAccessSvc* m_dbAccSvc;
 
+  /*
   ICondDBObject* createCondDBObject(const CondDBKey& since,
                                     const CondDBKey& till,
                                     const std::string& data,
                                     const std::string& description)
+                                    throw(CondDBException);
+  */
+  /*
+    void destroyCondDBObject(ICondDBObject* CondObj)
     throw(CondDBException);
-  void destroyCondDBObject(ICondDBObject* CondObj)
-    throw(CondDBException);
+  */
 };
 
 #endif    // DETCONDEXAMPLE_POPULATEDB_H
