@@ -221,7 +221,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
 
           // Set data
           mchit->setEntry( g4hit->GetGlobalPos() );
-          mchit->setEnergy( g4hit->GetEdep() );
+          mchit->setEnergy( g4hit->GetEdep()/10 ); // Fix for energy bug
           mchit->setTimeOfFlight( g4hit->RichHitGlobalTime() );
 
           // Now for the Rich Specific word.
@@ -259,8 +259,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
 
         }
       }
-      //           msg << MSG::INFO << "Built " << hits->size()
-      //           << " MCRichHits at " << MCRichHitLocation::Default << endreq;
+
     } else {
       msg << MSG::INFO << "No RichG4Hits to be converted since no Collections"
           << endreq;

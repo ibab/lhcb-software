@@ -165,9 +165,7 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
   try {
 
     // retrieve the hits container from GiGa Service
-
     // get hitscollections from GiGa
-
     *gigaSvc() >> hitscollections;
 
     if ( 0 != hitscollections ) {
@@ -177,9 +175,6 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
       if ( !mcHits ) {
         return Warning( "Could not locate MCRichHits from GiGaMCRichOpticalPhotonCnv" );
       }
-
-      //       msg << MSG::INFO << "Located " << mcHits->size() << " MCHits at "
-      //           << MCRichHitLocation::Default << endreq;
 
       // note this key is need for consistency with MCRichHit converter
       int globalKey = 0;
@@ -239,10 +234,6 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
 
 
       }
-
-      //       msg << MSG::INFO
-      //           << "Built " << photons->size() << " MCRichOpticalPhotons at "
-      //           << MCRichOpticalPhotonLocation::Default << endreq;
 
       // Should have one opticalphoton for each and every MCRichHit
       if ( photons->size() != mcHits->size() ) {
