@@ -23,9 +23,10 @@ HltGenericDecision.Filter = false ; // false is default
 // #include "$HLTSELCHECKERROOT/options/NoCuts.opts" // No Cuts
 
 //==============================================================================
-#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+//#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //EventSelector.Input   = {};
 //#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
+//EventSelector.Input   = {"DATAFILE='PFN:HLTAccepted.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
 
 ApplicationMgr.TopAlg += { "GaudiSequencer/TupleSeq" }; 
 ApplicationMgr.DLLs += { "PrimVtx" };
@@ -55,8 +56,8 @@ TrackNTuple.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 TrackNTuple.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksHLTBd2D0Kstar";
 Particle2MCLinksHLTBd2D0Kstar.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTDetachedPions/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles", "Phys/HLTPreselPhotons/Particles"};
 
-TrackNTuple.OutputLevel = 4 ;
-
 NTupleSvc.Output={"FILE1 DATAFILE='${NTUPLEFILE}' TYP='HBOOK' OPT='NEW'"};
 
-ApplicationMgr.EvtMax    = 34000 ;
+ApplicationMgr.EvtMax = -1 ;
+
+TrackNTuple.OutputLevel = 4 ;

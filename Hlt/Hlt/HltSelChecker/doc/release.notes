@@ -4,30 +4,34 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-03-16 - P. Koppenburg
+  - options/DVWriteDST.opts
+   . Writes out DST with trigger-accepted events.
+
 ! 2005-03-21 - Luis Fernandez
- - src/DecayChainNTuple.{h, cpp}
-   . Remove TrgDataProvider stuff, get L1 through L1Score
+  - src/DecayChainNTuple.{h, cpp}
+    . Remove TrgDataProvider stuff, get L1 through L1Score
 
 ! 2005-03-21 - P. Koppenburg
-   . Many changes reflecting the fact that the muons are now done in HltGeneric
+    . Many changes reflecting the fact that the muons are now done in HltGeneric
 
 ! 2005-03-20 - Luis Fernandez
- - src/DecayChainNTuple.{h, cpp}
-   . Association for gammas
- - options/
-   . Modifications for association of gammas, TrueMCFilterCriterion
+  - src/DecayChainNTuple.{h, cpp}
+    . Association for gammas
+  - options/
+    . Modifications for association of gammas, TrueMCFilterCriterion
 
 ! 2005-03-17 - Luis Fernandez
- - src/DecayChainNTuple.{h, cpp}
-   . Added useful variables to the ntuple
+  - src/DecayChainNTuple.{h, cpp}
+    . Added useful variables to the ntuple
 
 !========================== HltSelChecker v2r3 2005-03-16 ===================
 ! 2005-03-13 - Luis Fernandez
- - src/DecayChainNTuple.{h, cpp}
-   . Some modernization and possibility to use the TrgDispCalculator
+  - src/DecayChainNTuple.{h, cpp}
+    . Some modernization and possibility to use the TrgDispCalculator
 
- - options/NTB*.opts, HLTExSelectionsNTuples.opts
-   . Adapted to changes in DecayChainNTuple
+  - options/NTB*.opts, HLTExSelectionsNTuples.opts
+    . Adapted to changes in DecayChainNTuple
 
 !========================== HltSelChecker v2r2 2005-03-08 ===================
 ! 2005-03-08 - P. Koppenburg

@@ -1,4 +1,4 @@
-// $Id: TrackNTuple.cpp,v 1.4 2005-03-08 10:54:51 pkoppenb Exp $
+// $Id: TrackNTuple.cpp,v 1.5 2005-03-21 15:11:38 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -8,7 +8,7 @@
 
 // From LHCb
 #include "Event/L1Score.h"
-#include "Event/Collision.h"
+#include "Event/MCVertex.h"
 #include "Event/TrgCaloParticle.h"
 
 // from DaVinci
@@ -78,7 +78,10 @@ StatusCode TrackNTuple::execute() {
   debug() << "==> Execute" << endmsg;
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
 
-  m_sr = get<SelResults>(SelResultLocation::Default);
+  m_sr = NULL ;
+  if ( exist<SelResults>(SelResultLocation::Default)){
+    m_sr = get<SelResults>(SelResultLocation::Default);
+  }
   if (!m_sr) err() << "No selresults" << endmsg;
   m_pattern = bitPattern();
 
@@ -114,16 +117,8 @@ StatusCode TrackNTuple::fillStatsTuple(const int& nB,const int& nT){
   tuple->column( "B" , nB );
   tuple->column( "BTracks" , nT );
 
-  VertexVector OnPVs = desktop()->primaryVertices(); // online
-  tuple->column( "OnPVs", OnPVs.size() );
-
-  Vertices* OffPVs = get<Vertices>( VertexLocation::Primary ); 
-  if ( OffPVs ) tuple->column( "OffPVs", OffPVs->size() );
-  else tuple->column( "OffPVs", 0. );
-
-  Collisions* coll = get<Collisions>(CollisionLocation::Default);
-  if ( coll ) tuple->column( "Coll", coll->size() );
-  else tuple->column( "Coll", 0. );
+  StatusCode sc = fillPV(tuple);
+  if (!sc) return sc;
 
   if (exist<Particles>("Phys/HLTPions/Particles")){
     Particles* all = get<Particles>("Phys/HLTPions/Particles");
@@ -131,12 +126,137 @@ StatusCode TrackNTuple::fillStatsTuple(const int& nB,const int& nT){
     else tuple->column( "Tracks", 0 );  
   } else tuple->column( "Tracks", -1 );  
   
-  StatusCode sc = fillHlt(tuple);
+  sc = fillHlt(tuple);
   if (!sc) return sc ;
 
   tuple->write();
   return StatusCode::SUCCESS;
 }
+//=============================================================================
+//  get MCPVs
+//=============================================================================
+std::vector<const MCVertex*> TrackNTuple::getMCPVs(){
+  std::vector<const MCVertex*> PVs;
+  MCVertices* AllMC = get<MCVertices>(MCVertexLocation::Default);
+  for ( MCVertices::const_iterator imc = AllMC->begin() ; 
+        imc!= AllMC->end(); ++imc){
+    if ((*imc)->type()==MCVertex::ppCollision){
+      PVs.push_back(*imc);
+    }
+  }
+  return PVs;
+}
+//=============================================================================
+//  PV
+//=============================================================================
+StatusCode TrackNTuple::fillPV(Tuple& tuple){
+
+  VertexVector OnPVs = desktop()->primaryVertices(); // online
+  std::vector<const MCVertex*> MCPVs = getMCPVs() ;
+ 
+  std::vector<double> x,y,z,tx,ty,tz;
+  std::vector<int> rctrue ;
+  std::vector<int> pctrue ;
+  std::vector<double> dtrue ;
+  std::vector<int> products ;
+  for ( VertexVector::const_iterator pv = OnPVs.begin(); pv != OnPVs.end(); ++pv){
+    verbose() << "PV loop" << endmsg ;
+    x.push_back((*pv)->position().x());
+    y.push_back((*pv)->position().y());
+    z.push_back((*pv)->position().z());
+    double dd = 999999.; int i = 0; int rci = -1; int pct = -1; int prod = -1 ;
+    double rtx = -999.; double rty = -999.; double rtz = -999.;
+    for ( std::vector<const MCVertex*>::const_iterator c = MCPVs.begin(); 
+          c != MCPVs.end(); ++c){
+      ++i;
+      double d = ((*c)->position()-(*pv)->position()).mag();
+      if ( d<dd  ){ 
+        rci=i ; 
+        dd = d ; 
+        if ((*c)->collision()) pct = (*c)->collision()->processType();
+        prod = ((*c)->products()).size();
+        rtx = (*c)->position().x();
+        rty = (*c)->position().y();
+        rtz = (*c)->position().z();
+      } 
+    }
+    if (rctrue.size()>20) continue;
+    rctrue.push_back(rci);
+    pctrue.push_back(pct);
+    tx.push_back(rtx);
+    ty.push_back(rty);
+    tz.push_back(rtz);
+    dtrue.push_back(dd);
+    products.push_back(prod);
+    info() << "Found PV  at " << (*pv)->position() << " reconstructing " 
+           << rtx << " " << rty << " " << rtz << endmsg ;
+  }
+  
+  verbose() << "Filling PV" << endmsg ;
+  //  tuple->column( "OnPVs", OnPVs.size() );
+  tuple->farray( "PVx"  , x.begin(),  x.end(), "OnPVs", 20  );
+  tuple->farray( "PVy"  , y.begin(),  y.end(), "OnPVs", 20  );
+  tuple->farray( "PVz"  , z.begin(),  z.end(), "OnPVs", 20  );
+  tuple->farray( "PVT"  , rctrue.begin(),  rctrue.end(), "OnPVs", 20  );
+  tuple->farray( "PVTPT", pctrue.begin(),  pctrue.end(), "OnPVs", 20  );
+  tuple->farray( "PVTx",  tx.begin(),  tx.end(), "OnPVs", 20  );
+  tuple->farray( "PVTy",  ty.begin(),  ty.end(), "OnPVs", 20  );
+  tuple->farray( "PVTz",  tz.begin(),  tz.end(), "OnPVs", 20  );
+  tuple->farray( "PVTdist",  dtrue.begin(),  dtrue.end(), "OnPVs", 20  );
+  tuple->farray( "PVTprod",  products.begin(),  products.end(), "OnPVs", 20  );
+
+  // collisions
+  int i = 0 ;
+  std::vector<int> reco, ptype;
+  std::vector<double> ntx,nty,ntz;
+  products.clear();
+  for ( std::vector<const MCVertex*>::const_iterator c = MCPVs.begin(); c !=  MCPVs.end(); ++c){
+    ++i;
+    verbose() << "Collisions loop " << i << endmsg ;
+    int rr = -1 ; int j=0; 
+    double dd = 999999. ;
+    for (std::vector<int>::const_iterator ll = rctrue.begin(); ll!=rctrue.end();++ll){
+      ++j;
+      if (( *ll == i ) && (dtrue[j-1] < dd)){
+        dd = dtrue[j-1] ;
+        rr = j; 
+      }
+    }
+    if (reco.size()>20) continue;
+    reco.push_back(rr);
+    ntx.push_back((*c)->position().x());
+    nty.push_back((*c)->position().y());
+    ntz.push_back((*c)->position().z());
+    products.push_back(((*c)->products()).size());
+    if ((*c)->collision()) ptype.push_back(((*c)->collision())->processType());
+    else  ptype.push_back(-1);
+    if (rr>0) info() << "Collision at " << (*c)->position() << " with " 
+                     << ((*c)->products()).size() << " tracks best reconstructed by " 
+                     << rr << endmsg ;
+    else info() << "Collision at " << (*c)->position()  << " with " 
+                << ((*c)->products()).size() << " tracks not reconstructed" << endmsg ;
+  }
+  verbose() << "Filling Collisions" << endmsg ;
+  tuple->farray( "TPVx"  , ntx.begin(),  ntx.end(), "Coll", 20  );
+  tuple->farray( "TPVy"  , nty.begin(),  nty.end(), "Coll", 20  );
+  tuple->farray( "TPVz"  , ntz.begin(),  ntz.end(), "Coll", 20  );
+  tuple->farray( "TPtype", ptype.begin(),  ptype.end(), "Coll", 20  );
+  tuple->farray( "TPreco", reco.begin(),  reco.end(), "Coll", 20  );
+  tuple->farray( "TPprod",  products.begin(),  products.end(), "Coll", 20  );
+
+  verbose() << "Done" << endmsg ;
+  // offline
+
+  Vertices* OffPVs = get<Vertices>( VertexLocation::Primary ); 
+  if ( OffPVs ) tuple->column( "OffPVs", OffPVs->size() );
+  else tuple->column( "OffPVs", 0. );
+
+  info() << "There are " << OnPVs.size() << " online PVs and " 
+           << MCPVs.size() << " collisions" << endmsg ;
+
+  return StatusCode::SUCCESS;
+}
+
 //=============================================================================
 //  Fill HLT
 //=============================================================================
