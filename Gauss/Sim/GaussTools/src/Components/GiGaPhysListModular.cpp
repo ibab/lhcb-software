@@ -61,13 +61,17 @@ GiGaPhysListModular::~GiGaPhysListModular(){};
 // ============================================================================
 StatusCode GiGaPhysListModular::initialize() 
 {
+  StatusCode sc=GiGaPhysListBase::initialize ();
+  if( sc.isFailure() )
+    { return Error("Could not initialize GiGaPhysListBase class!", sc); }
+  
   MsgStream log( msgSvc(), name() );
   log << MSG::INFO << "GiGaPhysListModular initializing" << endreq;
-
+  
   IGiGaPhysConstructor* theconstr;
   IToolSvc* toolSvc;
   
-  StatusCode sc = svcLoc()->service( "ToolSvc" , toolSvc , true );
+  sc = svcLoc()->service( "ToolSvc" , toolSvc , true );
   if(!sc)
     {
       log << MSG::ERROR << "Could not find ToolSvc..." << endreq;
