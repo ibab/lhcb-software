@@ -35,12 +35,12 @@
         desc="Generator Name"
         name="generatorName" init='"Unknown"'
         type="std::string"
-        transient="TRUE" />
+      />
       <attribute
         desc="HepMC generator event"
         name="pGenEvt" init="0"
         type="HepMC::GenEvent*"
-        transient="TRUE" />
+      />
       <method
         desc="Assignment operator"
         name="operator="

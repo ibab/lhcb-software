@@ -1,6 +1,11 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski
 
+!================= GenEvent v3r1 2004-04-01 ===========================
+! 2004-04-01 - Gloria CORTI
+ - Remove transient declaration from GenEvent.xml to persistify with POOL
+   HepMC
+
 !================= GenEvent v3r0 2004-01-07 ===========================
 ! 2004-01-07 - Marco Cattaneo
  - Changes for POOL persistency (Gaudi v14)
