@@ -121,6 +121,7 @@ product should be taken if used in a vertex"
        />
        <method
         name="slopeX"
+        const="TRUE"
         desc="Retrieve slopeX from momentum - line rapresentation of a Particle"
         type="double"
        >
@@ -128,6 +129,7 @@ product should be taken if used in a vertex"
        </method>
        <method
         name="slopeY"
+        const="TRUE"
         desc="Retrieve slopeY from momentum - line rapresentaion of a Particle"
         type="double"
        >
@@ -135,6 +137,7 @@ product should be taken if used in a vertex"
        </method>
        <method
         name="pt"
+        const="TRUE"
         desc="short cut for transerve momentum"
         type="double"
        >
@@ -142,6 +145,7 @@ product should be taken if used in a vertex"
        </method>
        <method
         name="p"
+        const="TRUE"
         desc="short cut for |P|" 
         type="double"
        > 
