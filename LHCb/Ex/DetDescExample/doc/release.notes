@@ -1,8 +1,12 @@
-$Id: release.notes,v 1.22 2003-07-01 07:37:54 cattanem Exp $
+$Id: release.notes,v 1.23 2003-07-17 07:32:37 cattanem Exp $
 Package: DetDescExample
 Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
+
+!==================DetDescExample v6r1 2003-07-17 ====================
+! 2003-07-17 - Marco Cattaneo
+ - Use new version of GaudiConf
 
 !==================DetDescExample v6r0 2003-07-01 ====================
 ! 2003-06-16 - Sebastien Ponce
