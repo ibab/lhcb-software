@@ -3,9 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v17r0>2003-01-?? Brunel v17r0</A></H1><PRE>
+</PRE><H1><A NAME=v17r0>2003-01-09 Brunel v17r0</A></H1><PRE>
  - New tuning:
    . Change strip threshold to 7000e (PuVeto v5r3)
+   . Add tuning for magnetic field043 (LongTrack v1r5) 
 
  - New features:
    . Add support for dbase v253r1
@@ -16,7 +17,7 @@ Purpose: LHCb reconstruction program
    . Add Rec/Relation/L0CaloFullCandidates, Raw/L0/FullCalo
 
  - Bug fixes:
-   . Fix many minor problems flagged by valgrind (SicbCnv v17r5,
+   . Fix many minor problems flagged by valgrind (SicbCnv v17r5, MuonSicbCnv v6r7
      OTAssociators v2r4, OTAlgorithms v12r3, ITAlgorithms v12r7, TrTools v2r3,
      TrCleanEx v2r4, TrAssociators v3r4, TrCheck v1r3, MuonID v3r5,
      MuonAlgs v3r2, RichRecInterfaces v2r0, RichRecTools v1r4, RiSicbCnv v5r4,

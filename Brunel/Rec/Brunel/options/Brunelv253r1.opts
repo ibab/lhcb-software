@@ -13,6 +13,7 @@
 //---------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v252r0.xml";
 MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field043.cdf";
+#include "$LONGTRACKROOT/options/BrunelField043.opts"
 #pragma print on
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
