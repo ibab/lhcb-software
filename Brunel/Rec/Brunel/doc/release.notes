@@ -27,6 +27,10 @@ Purpose: LHCb reconstruction program
 	 . BrunelInitialisation and BrunelPhase algorithms moved to BrunelAlgs
      package, making BrunelKernel package obsolete (BrunelAlgs v2r0)
 
+</PRE><H1><A NAME=v18r0p3>2003-06-06 Brunel v18r0p3</A></H1><PRE>
+- New features:
+   . Add support for dbase v255r3
+
 </PRE><H1><A NAME=v18r0p2>2003-05-07 Brunel v18r0p2</A></H1><PRE>
 - New features:
    . Add support for dbase v255r4 and "degraded Velo" robustness test
