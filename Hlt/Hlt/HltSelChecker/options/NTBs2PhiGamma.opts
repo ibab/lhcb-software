@@ -43,6 +43,7 @@ OffBs2PhiGammaTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma";
 OffBs2PhiGammaTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma, B_s~0 -> (^phi(1020) -> ^K- ^K+) ^gamma}";
 OffBs2PhiGammaTree.NtupleName = "FILE1/OffBs2PhiGamma";
 OffBs2PhiGammaTree.FillMCDecay = true;
+OffBs2PhiGammaTree.RequireTrigger = true;
 OffBs2PhiGammaTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffBs2PhiGammaTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
@@ -67,8 +68,10 @@ HLTBs2PhiGammaTree.Decay = "B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma";
 HLTBs2PhiGammaTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma, B_s~0 -> (^phi(1020) -> ^K- ^K+) ^gamma}";
 HLTBs2PhiGammaTree.NtupleName = "FILE1/HLTBs2PhiGamma";
 HLTBs2PhiGammaTree.FillMCDecay = true;
+HLTBs2PhiGammaTree.RequireTrigger = true;
 HLTBs2PhiGammaTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBs2PhiGammaTree.UseRichOnlinePID = false;
+HLTBs2PhiGammaTree.UseOnlineCalo = true;
 HLTBs2PhiGammaTree.GeomTool = "TrgDispCalculator";
 HLTBs2PhiGammaTree.OutputLevel = 3;
 //------------------------------------------------------------------------------

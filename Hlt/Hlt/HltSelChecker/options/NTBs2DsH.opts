@@ -47,6 +47,7 @@ OffBs2DsHTree.MCDecay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s0 -> (^D_s+ =
 ,B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-, B_s~0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+}";
 OffBs2DsHTree.NtupleName = "FILE1/OffBs2DsH";
 OffBs2DsHTree.FillMCDecay = true;
+OffBs2DsHTree.RequireTrigger = true;
 OffBs2DsHTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffBs2DsHTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
@@ -70,6 +71,7 @@ HLTBs2DsHTree.MCDecay = "{B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^pi+, B_s0 -> (^D_s+ =
 ,B_s0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+, B_s0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-, B_s~0 -> (^D_s+ => ^K- ^K+ ^pi+) ^K-, B_s~0 -> (^D_s- => ^K+ ^K- ^pi-) ^K+}";
 HLTBs2DsHTree.NtupleName = "FILE1/HLTBs2DsH";
 HLTBs2DsHTree.FillMCDecay = true;
+HLTBs2DsHTree.RequireTrigger = true;
 HLTBs2DsHTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBs2DsHTree.UseRichOnlinePID = false;
 HLTBs2DsHTree.GeomTool = "TrgDispCalculator";

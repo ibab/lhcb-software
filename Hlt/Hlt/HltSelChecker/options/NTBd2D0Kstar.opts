@@ -43,6 +43,7 @@ OffBd2D02KpiKstarTree.Decay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-)
 OffBd2D02KpiKstarTree.MCDecay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-)}";
 OffBd2D02KpiKstarTree.NtupleName = "FILE1/OffBd2D02KpiKstar";
 OffBd2D02KpiKstarTree.FillMCDecay = true;
+OffBd2D02KpiKstarTree.RequireTrigger = true;
 OffBd2D02KpiKstarTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffBd2D02KpiKstarTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
@@ -77,6 +78,7 @@ B~0 -> (^D0 -> ^K+ ^K-) (^K*(892)~0 -> ^K- ^pi+)
 HLTBd2D0KstarTree.MCDecay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-)}";
 HLTBd2D0KstarTree.NtupleName = "FILE1/HLTBd2D0Kstar";
 HLTBd2D0KstarTree.FillMCDecay = true;
+HLTBd2D0KstarTree.RequireTrigger = true;
 HLTBd2D0KstarTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBd2D0KstarTree.UseRichOnlinePID = false;
 HLTBd2D0KstarTree.GeomTool = "TrgDispCalculator";
