@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.66 2003-07-06 20:41:41 gcorti Exp $
+# $Id: requirements,v 1.67 2003-07-08 15:40:47 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -96,5 +96,5 @@ macro DaVinci_linkopts    "${application_linkopts}"
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append cppflags " -DDaVinciVersion=800301 " \
-             VisualC  " /DDaVinciVersion=800301 "
+macro_append cppflags " -DDaVinciVersion=800302 " \
+             VisualC  " /DDaVinciVersion=800302 "

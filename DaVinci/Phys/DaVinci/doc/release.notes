@@ -3,21 +3,41 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
- - FlavourTagging v4r6
- - PhysSelSys v5r6 (B2DD v1r3, Bs2JpsiEta v1r1, Bs2PhiEtac v1r3)
+</PRE><H1><A NAME=v8r3p2>2003-07-08 DaVinci v8r3p2</A></H1><PRE>
 
+  - Modifications in (Pre)Selections
+   . Modified or new preselections (PhysSelSys v5r6, refers to its
+     release notes for details)
+     .. Bd -> D D
+        Bs -> Ds Ds
+        Bs -> Phi Phi
+   . Modified selection with almost final cuts (PhysSelSys v5r6)
+     .. Bd -> Jpsi K*   
+   . Encapsulation of MC truth (PhysSelSys v5r6)
+     .. Bs -> Jpsi Eta
+        Bs -> Phi Etac
+   . New selection
+     .. Bu -> Ks Pi (PhysSelSys v5r6)
+   . Added a preselection cut to remove all particles compatible with a pileup
+     vtx.
+  
+  - Modification in Flavour Tagging (refer to its release notes for details)
+    . Print out the number of reconstructed vertex instead of collisions
+    . Print out the category the event fall in.
+    . Fix cuts values in Vertex charge, same side Kaon,
+ 
 </PRE><H1><A NAME=v8r3p1>2003-07-03 DaVinci v8r3p1</A></H1><PRE>
  - New features:
    . Modified preselection
      .. Bd -> D0bar K*
         Bd,s -> hh
-     .. use PhysSel v5r5
+     .. use PhysSelSys v5r5
  - Bug fixes:
    . Fix problems for preselection production with too small rejection
      factor
      .. Bd -> K pi pi pi
         Bs -> Ds K/pi
-     .. use PhysSel v5r5
+     .. use PhysSelSys v5r5
 
 </PRE><H1><A NAME=v8r3>2003-06-27 DaVinci v8r3</A></H1><PRE>
  - New features:
