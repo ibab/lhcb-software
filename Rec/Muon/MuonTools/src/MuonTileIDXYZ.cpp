@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.15 2002-08-05 12:53:04 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.16 2002-09-25 09:57:53 dhcroft Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -625,9 +625,6 @@ StatusCode MuonTileIDXYZ::fillGridSizes(){
     }
   }
 
-  std::cout << "fillGridSizes sizes : " << m_NStation
-            <<" "<< m_NRegion << std::endl;
-
   // make arrays correct size
   m_logChanVertGridX.resize(m_NStation*m_NRegion);
   m_logChanVertGridY.resize(m_NStation*m_NRegion);
@@ -635,15 +632,6 @@ StatusCode MuonTileIDXYZ::fillGridSizes(){
   m_logChanHorizGridY.resize(m_NStation*m_NRegion);
   m_padGridX.resize(m_NStation*m_NRegion);
   m_padGridY.resize(m_NStation*m_NRegion);
-
-  std::cout << " logChanVertGridX : " << m_logChanVertGridX.size()
-            << " logChanVertGridY : " << m_logChanVertGridY.size()
-            << " logChanHorizGridX : " << m_logChanHorizGridX.size()
-            << " logChanHorizGridY : " << m_logChanHorizGridY.size()
-            << " padGridX : " << m_padGridX.size()
-            << " padGridY : " << m_padGridY.size() 
-            << std::endl;
-
 
   int station,region;
   for( station = 0 ; station < m_NStation ; station++ ){
