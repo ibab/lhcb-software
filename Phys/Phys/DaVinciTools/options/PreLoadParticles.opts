@@ -1,0 +1,11 @@
+//########################################################################
+// Default options for pre loading particles in TES 
+// No cuts are performed
+//========================================================================
+//  ApplicationMgr.TopAlg += { "PreLoadParticles" };
+PreLoadParticles.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
+PreLoadParticles.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};
+PreLoadParticles.PhysDesktop.OutputLocation = "/Event/Phys/Prod";
+
+// Example of out to set property of subsequent algorithm
+// MyAlgorithm.PhysDesktop.InputLocations = {"/Event/Phys/Prod"};
