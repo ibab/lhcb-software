@@ -4,6 +4,17 @@ TrueSignals.IgnoreFilterPassed = true ;
 // from TrgChecking
 TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","TrgTrack2MCParticle"};
 
+ApplicationMgr.DLLs += {"DaVinciMCTools"}; 
+TrueSignals.Members += {"PrintMCTree/PrintTrueB"};
+PrintTrueB.ParticleNames = {  "B_s0", "B_s~0", "B0", "B~0" } ;
+PrintTrueB.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintTrueB.Depth = 3;
+
+TrueSignals.Members += {"PrintMCTree/PrintTrueD"};
+PrintTrueD.ParticleNames = {  "D*(2010)-", "D*(2010)+" } ;
+PrintTrueD.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintTrueD.Depth = 2;
+
 #include "$HLTSELCHECKERROOT/options/TrueB2HH.opts"
 #include "$HLTSELCHECKERROOT/options/TrueBs2PhiPhi.opts"
 #include "$HLTSELCHECKERROOT/options/TrueBd2D02KPiKstar.opts"
@@ -17,5 +28,25 @@ TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","Trg
 //==============================================================================
 #include "$HLTSELCHECKERROOT/options/TrueDstar.opts"                // special case
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/TruthCommon.opts"
-//==============================================================================
+// all tracks!
+TrueSignals.Members += {"PrintTree/PrintTracks"};
+PrintTracks.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintTracks.PhysDesktop.InputLocations = { "Phys/HLTKaons", "Phys/HLTPions" };
+PrintTracks.OutputLevel = 4; // don't do this
+
+TrueSignals.Members += {"PrintTree/PrintBTracks"};
+PrintBTracks.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintBTracks.PhysDesktop.InputLocations = { "Phys/AllBd2D02KPiKstarTracks"
+                                           , "Phys/AllBd2DstarPiTracks"
+                                            ,"Phys/AllBs2DsHTracks"
+                                            ,"Phys/AllBs2PhiPhiTracks"
+                                           , "Phys/AllB2HHTracks"
+					    ,"Phys/AllB2MuMuTracks"
+					    ,"Phys/AllBd2JpsiKsTracks"
+					   , "Phys/AllBd2MuMuKstarTracks"
+					   , "Phys/AllBs2JpsiPhiTracks"
+					     } ;
+
+// links
+Particle2MCLinks.InputData = { "Phys/HLTPions/Particles",  "Phys/HLTKaons/Particles",  "Phys/HLTMuons/Particles"};
+

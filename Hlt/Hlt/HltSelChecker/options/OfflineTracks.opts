@@ -3,11 +3,6 @@
 //==============================================================================
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 
-// Here it is topAlg
-ApplicationMgr.TopAlg+= {"GaudiSequencer/HLTSelections"};
-HLTSelections.IgnoreFilterPassed = true ; // make them all
-HLTSelections.MeasureTime = true ;
-
 // Make all particles as "pions" with long tracks
 HLTSelections.Members += {"PreLoadParticles/HLTPions"};
 HLTPions.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker";
@@ -15,3 +10,24 @@ HLTPions.PhysDesktop.NoPIDsParticleMaker.Particle = "PIONS";
 HLTPions.PhysDesktop.NoPIDsParticleMaker.UseLongTracks       = true;
 HLTPions.PhysDesktop.NoPIDsParticleMaker.UseUpstreamTracks   = false;
 HLTPions.PhysDesktop.NoPIDsParticleMaker.UseDownstreamTracks = false;
+
+// Make all particles as "kaons" with long tracks
+HLTSelections.Members += {"PreLoadParticles/HLTKaons"};
+HLTKaons.PhysDesktop.ParticleMakerType = "NoPIDsParticleMaker";
+HLTKaons.PhysDesktop.NoPIDsParticleMaker.Particle = "KAONS";
+HLTKaons.PhysDesktop.NoPIDsParticleMaker.UseLongTracks       = true;
+HLTKaons.PhysDesktop.NoPIDsParticleMaker.UseUpstreamTracks   = false;
+HLTKaons.PhysDesktop.NoPIDsParticleMaker.UseDownstreamTracks = false;
+
+// Make some muons
+HLTSelections.Members += {"PreLoadParticles/HLTMuons"};
+HLTMuons.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+HLTMuons.PhysDesktop.CombinedParticleMaker.Particles = { "muon" };
+HLTMuons.PhysDesktop.CombinedParticleMaker.MuonSelection = { "det='MUON' mu-pi='-8.0'" };
+HLTMuons.PhysDesktop.CombinedParticleMaker.UseLongTracks     = true;
+
+//------------------------------------------------------------------------------
+// Make some photons
+HLTSelections.Members += {"PreLoadParticles/HLTPhotons"};
+HLTPhotons.PhysDesktop.ParticleMakerType = "PhotonParticleMaker";
+// not tested.

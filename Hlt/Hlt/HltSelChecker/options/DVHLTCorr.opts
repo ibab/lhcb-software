@@ -1,4 +1,5 @@
-#include "$HLTSELCHECKERROOT/options/DVHLTExSelections.opts"
+ApplicationMgr.DLLs += {"HltSelChecker"};
+#include "$HLTSELECTIONSROOT/options/DVHLTExSelections.opts"
 
 //------------------------------------------------------------------------------
 // The offline selections
@@ -22,6 +23,7 @@ ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 #include "$BS2JPSIPHIROOT/options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts"
 #include "$BD2MUMUKSTARROOT/options/DoTDRselBd2MuMuKstar.opts"
 #include "$BD2JPSIKSROOT/options/DoTDRselBd2Jpsi2MuMu_Ks2PiPi.opts"
+#include "$HLTSELCHECKERROOT/options/PrintTDR.opts"
 
 // correlations
 #include "$HLTSELCHECKERROOT/options/CorrB2HH.opts"
@@ -81,9 +83,9 @@ ToolSvc.OutputLevel    = 4;
 
 EventSelector.PrintFreq  = 1;
 
-PrintTrueB.OutputLevel = 4;
+PrintTrueB.OutputLevel = 3;
 PrintTrueD.OutputLevel = 4;
-PrintBTracks.OutputLevel = 4;
+PrintBTracks.OutputLevel = 3;
 PrintDstarTracks.OutputLevel = 4;
-
 PrintFoundDstar.OutputLevel = 4;
+PrintTDR.OutputLevel = 3;

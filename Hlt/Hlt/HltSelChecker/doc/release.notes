@@ -4,14 +4,32 @@
 ! Purpose     : High-Level Trigger Exclusive Selections 
 !-----------------------------------------------------------------------------
 
+! 2004-11-24 - P. Koppenburg
+ - options/DVHLTExSelections.opts
+   . Moved to HLtSelections as there is no dependency on HltSelChecker
+ - options/DVHLTCorr.opts
+   . Adapt accordingly
+ - options/OfflineTracks.opts
+   . Adapted to use NoPIDsParticleMaker
+ - options/Plots.opts
+   . Plots for signal tracks
+ - options/PrintTDR.opts
+   . New option file: Allows to rpint reconstructed decay tree from TDR
+ - options/Truth.opts
+   . Add all generic truth stuff in here
+ - options/TruthCommon.opts
+   . Removed
+   
 ! 2004-11-21 - Luis Fernandez
  - options/DVHLTExSelections.opts, CorrBs2PhiGamma.opts
    . Modifications for Bs2PhiGamma
  - options/DVHLTCheck.opts
    . Imported from HltSelections, needs to be updated
 
+!========================== HltSelChecker v1r1 2004-11-19 ===========================
 ! 2004-11-19 - P. Koppenburg
   Updated version to incorporate the RICH
+
 !========================== HltSelChecker v1r0 2004-11-18 ====================
 ! 2004-11-18 - P. Koppenburg
   New package Hlt/HltSelChecker that contains all monitors and checkers

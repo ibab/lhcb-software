@@ -1,10 +1,14 @@
-ApplicationMgr.TopAlg += { "SimplePlots/HLTSeedingVerticesPlots" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/HLTPlots"};
+HLTPlots.IgnoreFilterPassed = true ; // make them all
+HLTPlots.MeasureTime = true ;
+
+HLTPlots.Members += { "SimplePlots/HLTSeedingVerticesPlots" };
 HLTSeedingVerticesPlots.PhysDesktop.InputLocations = { "Phys/HLTSeedingVertices" } ;
 HLTSeedingVerticesPlots.Variables = { "M", "Chi2", "Pt" } ;
 HLTSeedingVerticesPlots.Minima = { 0., 0., 0. } ;
 HLTSeedingVerticesPlots.Maxima = { 8000., 200., 10000. } ;
 
-ApplicationMgr.TopAlg += { "SimplePlots/HLTResonancesPlots" };
+HLTPlots.Members += { "SimplePlots/HLTResonancesPlots" };
 HLTResonancesPlots.PhysDesktop.InputLocations = { "Phys/HLTKPiFromKstar"
                                                  ,  "Phys/HLTKKFromPhi"
 						 ,  "Phys/HLTD02KPi"
@@ -12,38 +16,64 @@ HLTResonancesPlots.PhysDesktop.InputLocations = { "Phys/HLTKPiFromKstar"
 						   } ;
 HLTResonancesPlots.Variables = { "M", "Chi2", "Pt" } ;
 
-ApplicationMgr.TopAlg += { "SimplePlots/HLTBs2DsHPlots" };
+HLTPlots.Members += { "SimplePlots/HLTBs2DsHPlots" };
 HLTBs2DsHPlots.PhysDesktop.InputLocations = { "Phys/HLTDaughtersFromDs", "Phys/HLTFilterDs2KKPi", "Phys/HLTFilterBs2DsH"} ;
 HLTs2DsHPlots.Variables = { "M", "Chi2", "Pt" } ;
 
 // temporary
-ApplicationMgr.TopAlg += { "SimplePlots/HLTDs2KstarKPlots" };
+HLTPlots.Members += { "SimplePlots/HLTDs2KstarKPlots" };
 HLTDs2KstarKPlots.PhysDesktop.InputLocations = { "Phys/HLTDs2KstarK" } ;
 HLTDs2KstarKPlots.Variables = { "M", "Chi2", "Pt" } ;
 
-ApplicationMgr.TopAlg += { "SimplePlots/HLTDs2PhiPiPlots" };
+HLTPlots.Members += { "SimplePlots/HLTDs2PhiPiPlots" };
 HLTDs2PhiPiPlots.PhysDesktop.InputLocations = { "Phys/HLTDs2PhiPi" } ;
 HLTDs2PhiPiPlots.Variables = { "M", "Chi2", "Pt" } ;
 
-ApplicationMgr.TopAlg += { "SimplePlots/HLTB2HHPlots" };
+HLTPlots.Members += { "SimplePlots/HLTB2HHPlots" };
 HLTB2HHPlots.PhysDesktop.InputLocations = { "Phys/HLTFilterB2HH" } ;
 HLTB2HHPlots.Variables = { "M", "Chi2", "Pt" } ;
 
-ApplicationMgr.TopAlg += { "SimplePlots/HLTBd2D0KstarPlots" };
+HLTPlots.Members += { "SimplePlots/HLTBd2D0KstarPlots" };
 HLTBd2D0KstarPlots.PhysDesktop.InputLocations = { "Phys/FilterD0ForHLTBd2D0Kstar"
                                                  , "Phys/FilterKstarForHLTBd2D0Kstar" 
 						 , "Phys/HLTFilterBd2D02KPiKstar" } ;
 HLTBd2D0KstarPlots.Variables = { "M", "Chi2", "Pt" } ;
 
-ApplicationMgr.TopAlg += { "SimplePlots/HLTBd2DstarPiPlots" };
+HLTPlots.Members += { "SimplePlots/HLTBd2DstarPiPlots" };
 HLTBd2DstarPiPlots.PhysDesktop.InputLocations = { "Phys/FilterD0ForHLTBd2DstarPi"
                                                  , "Phys/SoftPionForHLTDstar2D02KPi" 
 						 , "Phys/FilterDstarForHLTBd2DstarPi" 
 						 , "Phys/HLTFilterBd2DstarPi" } ;
 HLTBd2DstarPiPlots.Variables = { "M", "Chi2", "Pt" } ;
 
-ApplicationMgr.TopAlg += { "SimplePlots/HLTBs2PhiPhiPlots" };
+HLTPlots.Members += { "SimplePlots/HLTBs2PhiPhiPlots" };
 HLTBs2PhiPhiPlots.PhysDesktop.InputLocations = { "Phys/PhiSelHLTBs2PhiPhi"
                                                 , "Phys/HLTFilterBs2PhiPhi" } ;
 HLTBs2PhiPhiPlots.Variables = { "M", "Chi2", "Pt" } ;
+
+HLTPlots.Members += { "SimplePlots/KaonPlots" };
+KaonPlots.PhysDesktop.InputLocations = { "Phys/HLTKaons"} ;
+KaonPlots.Variables = { "Pt", "P" } ;
+
+HLTPlots.Members += { "SimplePlots/PionPlots" };
+PionPlots.PhysDesktop.InputLocations = { "Phys/HLTPions"} ;
+PionPlots.Variables = { "Pt", "P" } ;
+
+HLTPlots.Members += { "SimplePlots/MuonPlots" };
+MuonPlots.PhysDesktop.InputLocations = { "Phys/HLTMuons"} ;
+MuonPlots.Variables = { "Pt", "P" } ;
+
+HLTPlots.Members += { "SimplePlots/SignalTracksPlots" };
+SignalTracksPlots.PhysDesktop.InputLocations = { "Phys/SelectBd2D02KPiKstar"
+                                           , "Phys/SelectBd2DstarPi"
+                                            ,"Phys/SelectBs2DsH"
+                                            ,"Phys/SelectBs2PhiPhi"
+                                           , "Phys/SelectB2HH"
+					    ,"Phys/SelectB2MuMu"
+					    ,"Phys/SelectBd2JpsiKs"
+					   , "Phys/SelectBd2MuMuKstar"
+					   , "Phys/SelectBs2JpsiPhi"
+					    ,"Phys/SelectBs2PhiPhi" } ;
+SignalTracksPlots.Variables = { "Pt", "P" } ;
+
 
