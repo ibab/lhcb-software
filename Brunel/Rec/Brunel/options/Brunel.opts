@@ -104,7 +104,7 @@ BrunelDigiVELOSeq.Members += { "VeloFEToL1" };
 // Velo Tracking
 ApplicationMgr.DLLs += { "VeloTrack" };
 BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
-VeloTrackAlg.AbortNumTrack = 1000;
+// VeloTrackAlg.AbortNumTrack = 1000;
 
 // Forward tracking
 ApplicationMgr.DLLs += { "LongTrack", "TrFitter", "TrExtrapolator" };

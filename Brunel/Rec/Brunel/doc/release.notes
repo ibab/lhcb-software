@@ -13,6 +13,11 @@ Purpose: LHCb reconstruction program
  - New features:
    . Add support for Muon with MWPC, with/without M1
      (XmlDDDB v13r0, MuonDet v4r0)
+   . Add a track state at the Z of nearest approach to the beam (TrFitter v3r1) 
+
+ - Bug fixes:
+   . Scan also L1Track2d2MCP when selecting MCParticles to be saved to DST. 
+     Should fix crashes when writing DST (15% of signal jobs) (BrunelAlgs v1r3)
 
 </PRE><H1><A NAME=v13r2>2002-10-08 Brunel v13r2</A></H1><PRE>
 Bug fix release for reprocessing of summer production

@@ -68,7 +68,7 @@ use VSicbCnv     v8r0   SICB
 # Brunel utilities
 use BrunelKernel v5r1   Rec
 use BrunelSicb   v4r0   Rec
-use BrunelAlgs   v1r2   Rec
+use BrunelAlgs   v1r3   Rec
 
 # L0 trigger
 use L0Calo              v6r1    L0
@@ -110,7 +110,7 @@ use VeloTrack           v4r1    Velo
 use TrAssociators       v3r1    Tr
 use FwTrack             v4r2    Tr
 use LongTrack           v1r0    Tr
-use TrFitter            v3r0    Tr
+use TrFitter            v3r1    Tr
 use TrExtrapolator      v2r1    Tr
 use TrTools             v2r0    Tr
 use Seeding	        v2r1    Tr
