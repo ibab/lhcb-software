@@ -4,16 +4,12 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v1r6 2004-02-26 ========================
 ! 2004-02-23 - Vanya BELYAEV
- - src/CaloDigitAlg.cpp
+ - src/CaloDigitAlg.cpp, CaloSignalAlg.cpp, CaloZSupAlg.cpp
      adaptation for new signature of "get" methods 
- - src/CaloSignalAlg.cpp
-     adaptation for new signature of "get" methods
- - src/CaloSZSupAlg.cpp
-     adaptation for new signature of "get" methods
  - cmt/requirements
-     1) add the explicit dependence on CaloKernel
-     2) incrementr the MINOTR version 
+     increment the MINOR version 
 
 !======================== CaloDigit v1r5 2004-01-07 ========================
 ! 2004-01-07 - Marco Cattaneo
