@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.26 2002-10-03 10:21:42 cattanem Exp $ 
+! $Id: release.notes,v 1.27 2002-10-11 07:13:57 ranjard Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!========================= CaloDet v6r0 2002-10-02 =========================
 ! 2002-10-03 - Marco Cattaneo
  - Use fabs() instead of abs() for floating point
 
-!========================= CaloDet v6r0 2002-10-02 =========================
 ! 2002-10-02 - Florence Ranjard
  - cmt/requirements - move to new versions 
 
