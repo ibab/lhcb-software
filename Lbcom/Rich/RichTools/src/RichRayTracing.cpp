@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.cpp,v 1.7 2004-07-15 15:47:24 jonrob Exp $
+// $Id: RichRayTracing.cpp,v 1.8 2004-07-15 17:11:00 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -144,14 +144,14 @@ StatusCode RichRayTracing::traceToDetector ( Rich::DetectorType rich,
                                              const HepVector3D& startDir,
                                              RichGeomPhoton& photon,
                                              const RichTraceMode mode,
-                                             Rich::Side fSide )
+                                             const Rich::Side forcedSide )
   const {
 
   HepPoint3D tmpPosition( startPoint );
   HepVector3D tmpDirection( startDir );
 
   if ( reflectBothMirrors( rich, tmpPosition, tmpDirection, photon,
-                           mode, fSide ).isFailure() )
+                           mode, forcedSide ).isFailure() )
     return StatusCode::FAILURE;
 
   HepPoint3D hitPosition;
@@ -187,7 +187,7 @@ RichRayTracing::traceToDetectorWithoutEff( Rich::DetectorType rich,
                                            const HepVector3D& direction,
                                            HepPoint3D& hitPosition,
                                            const RichTraceMode mode,
-                                           Rich::Side fSide ) const {
+                                           const Rich::Side forcedSide ) const {
 
   HepPoint3D tmpPosition( position );
   HepVector3D tmpDirection( direction );
@@ -195,7 +195,7 @@ RichRayTracing::traceToDetectorWithoutEff( Rich::DetectorType rich,
   RichGeomPhoton photon;
 
   if ( reflectBothMirrors( rich, tmpPosition, tmpDirection, photon,
-                           mode, fSide ).isFailure() )
+                           mode, forcedSide ).isFailure() )
     return StatusCode::FAILURE;
 
   const Rich::Side side = m_rich[rich]->side(tmpPosition);
@@ -215,7 +215,7 @@ StatusCode RichRayTracing::reflectBothMirrors( Rich::DetectorType rich,
                                                HepVector3D& direction,
                                                RichGeomPhoton& photon,
                                                const RichTraceMode mode,
-                                               const Rich::Side fSide ) const {
+                                               const Rich::Side forcedSide ) const {
 
   HepPoint3D tmpPosition( position );
   HepVector3D tmpDirection( direction );
@@ -225,7 +225,7 @@ StatusCode RichRayTracing::reflectBothMirrors( Rich::DetectorType rich,
   if ( !mode.forcedSide() )
     side = m_rich[rich]->side(tmpPosition);
   else
-    side = fSide;
+    side = forcedSide;
 
   // Spherical mirror reflection with nominal parameters
   if ( !reflectSpherical( tmpPosition, tmpDirection,
