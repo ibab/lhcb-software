@@ -39,7 +39,7 @@ MemoryAuditor.Enable = false;
 //--------------------------------------------------------------
 // DaVinci Algorithms to be always executed at the beginning
 //--------------------------------------------------------------
-//ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
+//ApplicationMgr.TopAlg = { "ChargedProtoPAlg" };
 ApplicationMgr.TopAlg = { "MCPIDProtoPAlg" };
 ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 
@@ -48,112 +48,99 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 // or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
+// The various selections algorithms are listed here 
+// EACH COMPLETE SELECTION HAS TO BE EXECUTED BY ITSELF
+//
 // Bd->J/Psi(mu+mu-)Ks(pi+pi-)
 ApplicationMgr.TopAlg += { "SelectJpsi2mumu"  };
 ApplicationMgr.TopAlg += { "SelectKs2pipi" };
-//ApplicationMgr.TopAlg += { "SelectBd2JpsiKs" };
-// Bs->Ds(KKpi)K selection
+ApplicationMgr.TopAlg += { "SelectBd2JpsiKs" };
+#include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBd2JpsiKs.opts"
+#include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2JpsiKs.opts"
+#include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Ks2pipi.opts"
+
+// Bs->Ds(KKpi)K
 //ApplicationMgr.TopAlg += { "SelectDs2KKpi" };
 //ApplicationMgr.TopAlg += { "SelectBs2DsK" };
+//#include "$PHYSSELECTIONSROOT/options/SelectDs2KKpi.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectBs2Ds2KKpi_K.opts"
+
 // Bd -> phi(K+K-) Ks(pi+pi-) 
 //ApplicationMgr.TopAlg += { "Selectphi2KKForBd2phiKs" };
 //ApplicationMgr.TopAlg += { "SelectKs2pipiForBd2phiKs" };
 //ApplicationMgr.TopAlg += { "SelectBd2phiKs" };
+//#include "$PHYSSELECTIONSROOT/options/Selectphi2KKForBd2phiKs.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2phiKs.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectBd2phi2KK_Ks2pipi.opts"
+
 // Bs -> J/Psi(mu+mu-) phi(KK)
 //ApplicationMgr.TopAlg += { "Select2ParticleDecay/SelectJpsi2mumu" };
 //ApplicationMgr.TopAlg += { "Select2ParticleDecay/SelectPhi2KK" };
 //ApplicationMgr.TopAlg += { "Select2ParticleDecay/SelectBs2Jpsiphi" };
+//#include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBs2Jpsiphi.opts"
+//#include "$PHYSSELECTIONSROOT/options/Selectphi2KKForBs2Jpsiphi.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectBs2Jpsi2mumu_phi2KK.opts"
+
 // Bd -> D0bar(K+pi-) K*(K+pi-) 
 //ApplicationMgr.TopAlg += { "SelectD0andKstar2Kpi" };
 //ApplicationMgr.TopAlg += { "SelectBd2KstarD0" };
+//#include "$PHYSSELECTIONSROOT/options/SelectD0andKstar2Kpi.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectBd2Kstar2Kpi_D02Kpi.opts"
+
 // Bd -> J/Psi(mumu) K*(K+pi-)
 //ApplicationMgr.TopAlg += { "SelectJpsi2mumu" };
 //ApplicationMgr.TopAlg += { "SelectKstar2Kpi" };
 //ApplicationMgr.TopAlg += { "SelectBd2JpsiKstar" };
+//#include "$PHYSSELECTIONSROOT/options/SelectJPsi2mumuForBd2JpsiKstar.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectKstar2Kpi.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Kstar2Kpi.opts"
+
 // Bs->mu+mu-
 //ApplicationMgr.TopAlg += { "SelectBs2mumu" };
+//#include "$PHYSSELECTIONSROOT/options/SelectBs2mumu.opts"
+
 // B -> D+(K- Pi+ Pi+) D-(K+ Pi- Pi-)
 //ApplicationMgr.TopAlg += { "SelectD2Kpipi/SelectDPlus"  };
 //ApplicationMgr.TopAlg += { "SelectD2Kpipi/SelectDMinus" };
 //ApplicationMgr.TopAlg += { "SelectBd2DD" };
-// Bs -> Ds+(K- K+ Pi+) Ds-(K+ K- Pi-)
-//ApplicationMgr.TopAlg += { "SelectDs2KKpiForBs2DsDs/SelectDsPlus"  };
-//ApplicationMgr.TopAlg += { "SelectDs2KKpiForBs2DsDs/SelectDsMinus" };
-//ApplicationMgr.TopAlg += { "SelectBs2DsDs" };
+//#include "$PHYSSELECTIONSROOT/options/SelectDPlus2Kpipi.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectDMinus2Kpipi.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectBd2D2Kpipi_D2Kpipi.opts"
 
-// Uncomment the following line to run the FlavourTagging Algorithm
-//ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm" };
 // Uncomment the following line to run the example UserAlgorithm
 //ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
+
+//-----------------------------------------------------------------
+// Options for algorithms and tools in DaVinciTools library
+// can be added here to overwrite any of the default options
+// Examples are in the options subdirectory of the packages
+//-----------------------------------------------------------------
+// Private algorithms options
+// Private algorithm options can be listed here or included from
+// here.
+// If a relative path is used you need to copy them to the batch
+// area when running.
+//-----------------------------------------------------------------
 
 //--------------------------------------------------------------
 // Uncomment the following line if you want static version
 //--------------------------------------------------------------
 //ApplicationMgr.DLL = {"NONE"};
 
-//-----------------------------------------------------------------
-// Default options for algorithms and tools in DaVinciTools library
-// you can overwrite any of the default options
-//-----------------------------------------------------------------
-#include "$DAVINCITOOLSROOT/options/DaVinciTools.opts"
-#include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
-
-//-----------------------------------------------------------------
-// Private algorithms options
-//-----------------------------------------------------------------
-// Private algorithm options can be listed here or included from
-// here as in this case.
-// If a relative path is used you need to copy them to the batch
-// area when running.
-//-----------------------------------------------------------------
-#include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBd2JpsiKs.opts"
-#include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2JpsiKs.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Ks2pipi.opts"
-//#include "$FLAVOURTAGGINGROOT/options/FlavourTagging.opts"
-//FlavourTaggingAlgorithm.ParticlesLocation = "/Event/Phys/JPsi/Particles";
-//FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/B0" };
-//#include "$PHYSSELECTIONSROOT/options/SelectDsKKPi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBs2DsK.opts"
-
-//#include "$PHYSSELECTIONSROOT/options/SelectDs2KKpi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBs2Ds2KKpi_K.opts"
-
-//#include "$PHYSSELECTIONSROOT/options/Selectphi2KKForBd2phiKs.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2phiKs.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBd2phi2KK_Ks2pipi.opts"
-
-//#include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBs2Jpsiphi.opts"
-//#include "$PHYSSELECTIONSROOT/options/Selectphi2KKForBs2Jpsiphi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBs2Jpsi2mumu_phi2KK.opts"
-
-//#include "$PHYSSELECTIONSROOT/options/SelectD0andKstar2Kpi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBd2Kstar2Kpi_D02Kpi.opts"
-
-//#include "$PHYSSELECTIONSROOT/options/SelectJPsi2mumuForBd2JpsiKstar.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectKstar2Kpi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Kstar2Kpi.opts"
-
-//#include "$PHYSSELECTIONSROOT/options/SelectBs2mumu.opts"
-
-//#include "$PHYSSELECTIONSROOT/options/SelectDPlus2Kpipi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectDMinus2Kpipi.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBd2D2Kpipi_D2Kpipi.opts"
-
-//#include "$PHYSSELECTIONSROOT/options/SelectDsPlus2KKpiForBs2DsDs.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectDsMinus2KKpiForBs2DsDs.opts"
-//#include "$PHYSSELECTIONSROOT/options/SelectBs2Ds2KKpi_Ds2KKpi.opts"
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 //--------------------------------------------------------------
 MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
+PrimaryVertexFinderAlg.OutputLevel      = 4;
 ChargedProtoPAlg.OutputLevel            = 2;
-SelectKs2pipi.OutputLevel               = 2;
-SelectKs2pipi.PhysDesktop.OutputLevel   = 2;
+MCPIDProtoPAlg.OutputLevel              = 2;
+SelectKs2pipi.OutputLevel               = 3;
+SelectKs2pipi.PhysDesktop.OutputLevel   = 3;
 
-// Modify Message Format to print algorithm name with 80 characters
-MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
+// Modify Message Format to print algorithm name with 40 characters
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
@@ -165,10 +152,7 @@ EventSelector.PrintFreq = 1;
 //---------------------------------------------------------------
 // Input data
 //---------------------------------------------------------------
-//EventSelector.Input = {"DATAFILE='$LHCBDEV/Rec/Brunel/v11r1/job/dst_v248r2.root' TYP='ROOT' OPT='READ'" };
-//EventSelector.Input = {"DATAFILE='$LHCBHOME/group/rich/vol4/jonrob/dst_v248r2_new.root' TYP='ROOT' OPT='READ'" };
-//EventSelector.Input = {"DATAFILE='rfio:/shift/lhcb003d/data01/z5/stage/D278590.757105' TYP='ROOT' OPT='READ'" };
-EventSelector.Input = {"DATAFILE='$LHCBHOME/group/background/vol3/bruneltmp/B2JPsi/b2jpsi_dst_v248r2.root' TYP='ROOT' OPT='READ'" };
+//EventSelector.Input = {"DATAFILE='$LHCBHOME/group/background/vol3/bruneltmp/B2JPsi/b2jpsi_dst_v248r2.root' TYP='ROOT' OPT='READ'" };
 //---------------------------------------------------------------
 //-- GAUDI data cards generated on 15-JUL-2002
 //-- For Event Type = 411300 / Data type = ALL 
@@ -177,9 +161,9 @@ EventSelector.Input = {"DATAFILE='$LHCBHOME/group/background/vol3/bruneltmp/B2JP
 //--     
 //-- 1 dataset(s) found - NbEvents = 500
 //-- 
-//EventSelector.Input   = {
-//  //"DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278590' TYP='ROOT' OPT='READ'"
-//};
+EventSelector.Input   = {
+  "DATAFILE='rfio:/castor/cern.ch/lhcb/mc/D278590' TYP='ROOT' OPT='READ'"
+};
 //-- End of Data cards 
 //################################################################
 
