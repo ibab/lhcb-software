@@ -5,7 +5,7 @@
  *  Header file for algorithm base class : RichAlgBase
  *
  *  CVS Log :-
- *  $Id: RichAlgBase.h,v 1.7 2005-02-02 09:59:25 jonrob Exp $
+ *  $Id: RichAlgBase.h,v 1.8 2005-02-20 18:40:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -17,6 +17,8 @@
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/IRegistry.h"
 
 // GaudiAlg
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -24,6 +26,10 @@
 // Interfaces
 #include "RichKernel/IRichToolRegistry.h"
 
+// Forward declarations
+class DatObject;
+
+//-----------------------------------------------------------------------------
 /** @class RichAlgBase RichAlgBase.h RichKernel/RichAlgBase.h
  *
  *  Abstract base class for RICH algorithms providing
@@ -32,6 +38,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichAlgBase : public GaudiAlgorithm {
 
@@ -83,6 +90,18 @@ private: // private methods
   }
 
 protected:  // protected methods
+
+  /** Returns the full location of the given object in the Data Store
+   *
+   *  @param pObj Data object
+   *
+   *  @return Location of given data object
+   */
+  inline std::string objectLocation( const DataObject * pObj ) const
+  {
+    return ( !pObj ? "Null DataObject !" :
+             (pObj->registry() ? pObj->registry()->identifier() : "UnRegistered") );
+  }
 
   /** Returns a pointer to the tool associated to a given nickname
    *  Uses the RichToolRegistry tool to convert tool nicknames

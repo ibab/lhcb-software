@@ -5,7 +5,7 @@
  *  Header file for Tool base class : RichMoniToolBase
  *
  *  CVS Log :-
- *  $Id: RichMoniToolBase.h,v 1.3 2005-02-02 09:59:25 jonrob Exp $
+ *  $Id: RichMoniToolBase.h,v 1.4 2005-02-20 18:40:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -14,6 +14,10 @@
 
 #ifndef RICHKERNEL_RICHMONITOOLBASE_H
 #define RICHKERNEL_RICHMONITOOLBASE_H 1
+
+// Gaudi
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/IRegistry.h"
 
 // GaudiTools
 #include "GaudiAlg/GaudiTupleTool.h"
@@ -75,6 +79,18 @@ private:   // private methods
   }
 
 protected:   // Protected methods
+
+  /** Returns the full location of the given object in the Data Store
+   *
+   *  @param pObj Data object
+   *
+   *  @return Location of given data object
+   */
+  inline std::string objectLocation( const DataObject * pObj ) const
+  {
+    return ( !pObj ? "Null DataObject !" :
+             (pObj->registry() ? pObj->registry()->identifier() : "UnRegistered") );
+  }
 
   /** Returns a pointer to the tool associated to a given nickname
    *  Uses the RichToolRegistry tool to convert tool nicknames
