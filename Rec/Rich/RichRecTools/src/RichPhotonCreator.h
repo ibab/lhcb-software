@@ -1,17 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPhotonCreator.h
  *
  *  Header file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.h,v 1.16 2005-01-13 14:34:27 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.15  2004/07/27 20:15:31  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichPhotonCreator.h,v 1.17 2005-02-24 16:30:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
@@ -27,6 +26,7 @@
 
 // RichKernel
 #include "RichKernel/RichHashMap.h"
+#include "RichKernel/RichStatDivFunctor.h"
 
 // Interfaces
 #include "RichRecBase/IRichPhotonCreator.h"
@@ -34,6 +34,7 @@
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "RichKernel/IRichPhotonReconstruction.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichPhotonCreator RichPhotonCreator.h
  *
  *  Tool which performs the association between RichRecTracks and
@@ -42,6 +43,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichPhotonCreator : public RichRecToolBase,
                           virtual public IRichPhotonCreator,
@@ -126,13 +128,25 @@ private: // private data
   /// minimum cut value for photon probability
   std::vector<double> m_minPhotonProb;
 
+  /// Flag to turn on or off the book keeping features to save cpu time.
+  bool m_bookKeep;
+
+  // debug photon counting
+  mutable std::vector<unsigned long int> m_photCount;
+  mutable std::vector<unsigned long int> m_photCountLast;
+
+  /// Number of events processed tally
+  unsigned int m_Nevts;
+
 };
 
 inline void RichPhotonCreator::InitNewEvent()
 {
   // Initialise navigation data
-  m_photonDone.clear();
+  if ( m_bookKeep ) m_photonDone.clear();
   m_photons = 0;
+  m_photCountLast = m_photCount;
+  ++m_Nevts;
 }
 
 

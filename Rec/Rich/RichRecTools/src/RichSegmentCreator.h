@@ -5,7 +5,7 @@
  *  Header file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.h,v 1.13 2005-02-24 15:34:10 jonrob Exp $
+ *  $Id: RichSegmentCreator.h,v 1.14 2005-02-24 16:31:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -107,8 +107,8 @@ private:  // Private data
   double m_minPhotEn[Rich::NRadiatorTypes];
 
   // debug segment counting
-  mutable std::vector<unsigned int> m_segCount;
-  mutable std::vector<unsigned int> m_segCountLast;
+  mutable std::vector<unsigned long int> m_segCount;
+  mutable std::vector<unsigned long int> m_segCountLast;
 
   /// Number of events processed tally
   unsigned int m_Nevts;

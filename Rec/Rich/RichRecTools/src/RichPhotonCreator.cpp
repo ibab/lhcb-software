@@ -1,17 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPhotonCreator.cpp
  *
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.20 2005-01-13 14:34:27 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.19  2004/07/27 20:15:31  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichPhotonCreator.cpp,v 1.21 2005-02-24 16:30:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichPhotonCreator.h"
@@ -30,10 +29,18 @@ RichPhotonCreator::RichPhotonCreator( const std::string& type,
     m_photonPredictor ( 0 ),
     m_photonSignal    ( 0 ),
     m_photonReco      ( 0 ),
-    m_photons         ( 0 )
+    m_photons         ( 0 ),
+    m_bookKeep        ( false ),
+    m_photCount       ( Rich::NRadiatorTypes, 0 ),
+    m_photCountLast   ( Rich::NRadiatorTypes, 0 ),
+    m_Nevts           ( 0                       )
 {
 
   declareInterface<IRichPhotonCreator>(this);
+
+  // job options
+
+  declareProperty( "DoBookKeeping", m_bookKeep );
 
   declareProperty( "RichRecPhotonLocation",
                    m_richRecPhotonLocation = RichRecPhotonLocation::Default );
@@ -70,14 +77,22 @@ StatusCode RichPhotonCreator::initialize()
   incSvc()->addListener( this, IncidentType::BeginEvent );
   if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
 
-  // Make sure we are ready for a new event
-  InitNewEvent();
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichPhotonCreator::finalize()
 {
+
+  // statistical tool
+  RichStatDivFunctor occ("%10.2f +-%8.2f");
+
+  // Print out final stats
+  info() << "------------------------------------------------------------------------------" << endreq
+         << "Created " << occ(m_photCount[Rich::Aerogel],m_Nevts) << "  Aerogel photons / event" << endreq
+         << "Created " << occ(m_photCount[Rich::C4F10],m_Nevts)   << "  C4F10   photons / event" << endreq
+         << "Created " << occ(m_photCount[Rich::CF4],m_Nevts)     << "  CF4     photons / event" << endreq
+         << "------------------------------------------------------------------------------" << endreq;
+
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -90,7 +105,10 @@ void RichPhotonCreator::handle ( const Incident& incident )
   // Debug printout at the end of each event
   else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
   {
-    debug() << "Created " << richPhotons()->size() << " RichRecPhotons" << endreq;
+    debug() << "Created " << richPhotons()->size() << " RichRecPhotons : Aerogel=" 
+            << m_photCount[Rich::Aerogel]-m_photCountLast[Rich::Aerogel]
+            << " C4F10=" << m_photCount[Rich::C4F10]-m_photCountLast[Rich::C4F10]
+            << " CF4=" << m_photCount[Rich::CF4]-m_photCount[Rich::CF4] << endreq;
   }
 }
 
@@ -105,7 +123,7 @@ RichPhotonCreator::reconstructPhoton( RichRecSegment * segment,
   const RichRecPhotonKey photonKey(pixel->key(),segment->key());
 
   // See if this photon already exists
-  if ( m_photonDone[ photonKey ] ) {
+  if ( m_bookKeep && m_photonDone[ photonKey ] ) {
     return static_cast<RichRecPhoton*>(richPhotons()->object(photonKey));
   } else {
     return buildPhoton( segment, pixel, photonKey );
@@ -156,6 +174,9 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
 
         richPhotons()->insert( newPhoton, key );
 
+        // count
+        ++m_photCount[rad];
+
         // Build cross-references between objects
         segment->addToRichRecPixels( pixel );
         segment->addToRichRecPhotons( newPhoton );
@@ -182,7 +203,7 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
   }
 
   // Add to reference map
-  m_photonDone[ key ] = true;
+  if ( m_bookKeep ) m_photonDone[ key ] = true;
 
   // Return pointer to this photon
   return newPhoton;

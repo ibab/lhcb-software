@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.13 2005-02-24 15:34:10 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.14 2005-02-24 16:31:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -70,6 +70,7 @@ StatusCode RichSegmentCreator::initialize()
 StatusCode RichSegmentCreator::finalize() 
 {
 
+  // statistical tool
   RichStatDivFunctor occ("%7.2f +-%6.2f");
 
   // Print out final stats
