@@ -5,6 +5,7 @@ Purpose: LHCb specific Kernel classes
 !====================== LHCbKernel v3r0 2003-12-08 ========================
 ! 2003-12-08 - Marco Cattaneo
  - Move to GAUDI_v13r0 (in requirements: use GaudiKernel v14r*)
+ - Relations/IAssociatorWeighted.h: add a missing typename, needed by vc71
  - SerializeStl.h: add serialisation methods for std::map (taken from RichKernel)
  - Remove Kernel/MuonTileID.h (more recent version exists in MuonKernel)
 

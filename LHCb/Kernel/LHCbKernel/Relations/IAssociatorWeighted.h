@@ -1,20 +1,8 @@
-// $Id: IAssociatorWeighted.h,v 1.9 2003-01-17 14:07:01 sponce Exp $
+// $Id: IAssociatorWeighted.h,v 1.10 2003-12-10 09:34:10 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2002/05/15 14:43:30  phicharp
-// Make name of associators' methods consistent
-//
-// Revision 1.7  2002/05/13 09:48:26  phicharp
-// Add methods associatedFrom() and To() for single objects
-//
-// Revision 1.6  2002/05/12 09:58:02  ibelyaev
-//  see $LHCBKERNELROOT/doc/releae.notes 12 May 2002
-//
-// Revision 1.5  2002/05/10 14:49:40  phicharp
-// Add retrieve methods to IAssociatorxx
-// ============================================================================
+
 #ifndef RELATIONS_IAssociatorWeighted_H 
 #define RELATIONS_IAssociatorWeighted_H 1
 // Include files
@@ -62,7 +50,7 @@ public:
   typedef DirectType                          Table;
   typedef typename Table::Range               ToRange;
   typedef typename Table::iterator            ToIterator;
-  typedef OwnType::InverseType                InvTable;
+  typedef typename OwnType::InverseType       InvTable;
   typedef typename InvTable::Range            FromRange;
   typedef typename InvTable::iterator         FromIterator;
 
