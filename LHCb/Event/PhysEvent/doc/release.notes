@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.22 2002-07-25 14:22:14 cattanem Exp $
+! $Id: release.notes,v 1.23 2002-07-26 18:53:03 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 2002-07-25 - Gloria Corti
+ - Bug fix in bestPID() of ProtoParticle
 
 !========================= PhysEvent v6r0 2002-07-25 ========================
 ! 2002-07-24 - Gloria Corti
