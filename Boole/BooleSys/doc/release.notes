@@ -4,11 +4,17 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
-!======================== BooleSys v7r0 2004-10-20 =======================
-! 2004-10-20 - Marco Cattaneo
+!======================== BooleSys v7r0 2004-10-26 =======================
+! 2004-10-26 - Marco Cattaneo
  - Packages removed:  OTDAQ (moved to LHCbSys), OTAlgorithms (obsolete)
- - Packages added:    OTSimulation v1r0, OTMonitor v1r0
+ - Packages added:    OTSimulation v1r1, OTMonitor v1r0
  - Packages modified: AsctToLinker v1r3
+
+!======================== BooleSys v6r3 2004-10-27 ========================
+ Built on v6r2b2 branch
+
+! 2004-10-27 - Marco Cattaneo
+ - Same packages as BooleSys v6r2, but built against LHCb v16r3, Gaudi v15r3
 
 !======================== BooleSys v6r2 2004-09-20 ========================
 ! 2004-09-20 - Marco Cattaneo

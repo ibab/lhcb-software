@@ -15,11 +15,11 @@ use GaudiPolicy v5r19
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v15r2)
-use GaudiKernel		v16r2
-use GaudiSvc 		v12r3
-use GaudiAlg 		v8r0
-use GaudiPoolDb		v1r9
+#-- Gaudi libraries (from GAUDI_v15r3)
+use GaudiKernel		v17r0
+use GaudiSvc 		v12r5
+use GaudiAlg 		v8r2
+use GaudiPoolDb		v1r10
 use GaudiObjDesc 	v6r3
 use HbookCnv 		v14r2p1
 
@@ -56,7 +56,7 @@ use ITAlgorithms        v14r3	IT
 use ITCheckers          v2r3	IT
 
 # Outer Tracker
-use OTSimulation	v1r0	OT
+use OTSimulation	v1r1	OT
 use OTMonitor		v1r0	OT
 
 # Muon

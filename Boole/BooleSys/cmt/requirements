@@ -32,7 +32,7 @@ use ITAlgorithms        v14r3	IT
 use ITCheckers          v2r3	IT
 
 # Outer Tracker
-use OTSimulation	v1r0	OT
+use OTSimulation	v1r1	OT
 use OTMonitor		v1r0	OT
 
 # Muon

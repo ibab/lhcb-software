@@ -17,6 +17,13 @@ Output data incompatible with DC04 versions, needs Brunel v25r0 or greater
   . Relations/OTTimes2MCHits replaces Relations/OTDigits2MCHits
   . Link/Raw/OT/Times        replaces Link/Raw/OT/Digits
 
+</PRE><H1><A NAME=v6r3>2004-10-27 Boole v6r3</A></H1><PRE>
+This version uses Gaudi v15r3 and LHCb v16r3. Built on v6r2b2 branch
+It can process DC04 data. Data produced requires Brunel v24r3
+
+- Persistency changes
+  . Remove Event/Header from output file (can be rebuilt from RawBuffer)
+
 </PRE><H1><A NAME=v6r2>2004-09-20 Boole v6r2</A></H1><PRE>
 This version uses Gaudi v15r2 and LHCb v16r2. It needs CMT v1r16p*.
 It can process DC04 data
