@@ -1,7 +1,8 @@
-!  $Id: release.notes,v 1.20 2002-11-06 15:56:09 atsareg Exp $
+!  $Id: release.notes,v 1.21 2002-11-07 09:26:00 cattanem Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
+!========================= L0Muon v6r2 2002-11-06 =========================
 ! 2002-11-06 - A.Tsaregorodtsev
   - Added working mode for dealing with 4 Muon stations configuration
     (dbase v249r1)
