@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.64 2003-12-10 17:25:46 ranjard Exp $
+! $Id: release.notes,v 1.65 2003-12-15 14:05:38 witoldp Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!========================= GiGaCnv v14r1 ============================
+! 2003-12-15 - Witek Pokorski
+ - GiGaSurfaceCnv.cpp - fix for Geant4.6.0 (some method for optical
+                        surfaces have changed)
 
 !========================= GiGaCnv v14r0 ============================
 ! 2003-12-11 Vanya Belyaev

@@ -1,6 +1,9 @@
-// $Id: GiGaSurfaceCnv.cpp,v 1.11 2003-07-08 17:00:48 ranjard Exp $
+// $Id: GiGaSurfaceCnv.cpp,v 1.12 2003-12-15 14:05:38 witoldp Exp $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/07/08 17:00:48  ranjard
+// v12r3 - new fix for gcc3.2
+//
 // Revision 1.10  2003/07/07 16:45:30  ranjard
 // v12r3 - fix for gcc3.2
 //
@@ -156,14 +159,14 @@ StatusCode GiGaSurfaceCnv::updateRep
   if( status.isFailure() || 0 == logSurf ) 
     { return Error("Could not create G4LogicalSurface!", status ) ;} 
   ///
-  if( 0 == logSurf->GetOpticalSurface() )
+  if( 0 == logSurf->GetSurfaceProperty() )
     {    
       /// create optical surface 
       G4OpticalSurface* optSurf = 
         new G4OpticalSurface( surfaceName                                    ,
                               ( G4OpticalSurfaceModel  ) surface->model   () ,
                               ( G4OpticalSurfaceFinish ) surface->finish  () ,
-                              ( G4OpticalSurfaceType   ) surface->type    () ,
+                              ( G4SurfaceType   ) surface->type    () ,
                               surface->value                              () );
       ///
       if( 0 == optSurf->GetMaterialPropertiesTable() ) 
@@ -175,7 +178,7 @@ StatusCode GiGaSurfaceCnv::updateRep
       if( sc.isFailure() ) 
         { return Error("Could not set properties forG4OpticalSurface!") ; }
       /// 
-      logSurf->SetOpticalSurface( optSurf ); 
+      logSurf->SetSurfaceProperty( optSurf ); 
     }
   ///
   ///
