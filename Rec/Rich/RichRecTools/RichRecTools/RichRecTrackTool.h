@@ -1,17 +1,23 @@
-// $Id: RichRecTrackTool.h,v 1.1.1.1 2002-07-28 10:46:22 jonesc Exp $
+// $Id: RichRecTrackTool.h,v 1.2 2002-11-14 13:54:23 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECTRACKTOOL_H
 #define RICHRECTOOLS_RICHRECTRACKTOOL_H 1
 
 #include <string>
-#include <iostream>
-#include <stdio.h>
+#include <map>
 
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IChronoStatSvc.h"
 
 // local
 #include "RichRecTools/IRichRecTrackTool.h"
 #include "RichRecTools/IRichRecSegmentTool.h"
+
+// Rich Detector
+#include "RichDetTools/IRichDetInterface.h"
 
 // Forward declarations
 class IDataProviderSvc;
@@ -20,12 +26,13 @@ class IDataProviderSvc;
  *
  *  Tool which performs useful methods on RichRecTracks
  *
- *  @author Chris Jones
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 
 class RichRecTrackTool : public AlgTool,
-                         virtual public IRichRecTrackTool {
+                         virtual public IRichRecTrackTool,
+                         virtual public IIncidentListener {
 
 public:
 
@@ -37,30 +44,92 @@ public:
   /// Destructor
   virtual ~RichRecTrackTool(){}
 
+  /// Initialize method
+  StatusCode initialize();
+
+  /// Implement the handle method for the Incident service.
+  void handle( const Incident& incident );
+
+  /// Forms a new RichRecTrack object from a TrStoredTrack
+  RichRecTrack * newTrack ( TrStoredTrack * trTrack );
+
+  /// Form all tracks for input TrStoredTracks
+  StatusCode newTracks();
+
+  /// Expected number of observable signal photons for given track 
+  /// and hypothesis
+  double signalPhotons ( RichRecTrack * track,
+                         const Rich::ParticleIDType& id );
+
+  /// Expected number of observable signal+scattered photons for 
+  /// given track and hypothesis
+  double allPhotons ( RichRecTrack * track,
+                      const Rich::ParticleIDType& id );
+
+  /// Expected number of emitted photons for given track and hypothesis
+  double emittedPhotons ( RichRecTrack * track,
+                          const Rich::ParticleIDType& id );
+
+  /// Expected number of observable scattered photons for given track and hypothesis
+  double scatteredPhotons ( RichRecTrack * track,
+                            const Rich::ParticleIDType& id );
+
+  /// Is this track active in this radiator medium for given particle id
+  bool activeInRadiator( RichRecTrack * track,
+                         const Rich::RadiatorType rad,
+                         const Rich::ParticleIDType id = Rich::Electron );
+
+  /// Is it geometrically possible for this track to give Rich information
+  bool hasRichInfo( RichRecTrack * track );
+
+  /// Return Pointer to RichRecTracks
+  RichRecTracks * richTracks();
+
   /// Locates parent MCParticle
-  void parent ( const SmartRef<RichRecTrack>& track,
-                SmartRef<MCParticle>& pParent );
-
+  MCParticle * parentMCP ( const RichRecTrack * track );
+  
   /// Locates parent TrStoredTrack
-  void parent ( const SmartRef<RichRecTrack>& track,
-                SmartRef<TrStoredTrack>& pParent );
+  TrStoredTrack * parentTrTrack ( const RichRecTrack * track );
 
+  /// Is this track above threshold for a given particle type
+  bool aboveThreshold( RichRecTrack * track, Rich::ParticleIDType & type );
 
-  /// Expected photon signal for given track and hypothesis
-  double expObsPhotonSignal ( const SmartRef<RichRecTrack>& track,
-                              const Rich::ParticleIDType id );
-
-  /// Expected emitted photons for given track and hypothesis
-  double expPhotons ( const SmartRef<RichRecTrack>& track,
-                      const Rich::ParticleIDType id );
+  /// Is this track above threshold for a given particle type in a given radiator
+  bool aboveThreshold( RichRecTrack * track,
+                       Rich::ParticleIDType & type,
+                       Rich::RadiatorType & radiator );
 
 private:
 
-  /// Pointer to Tool Service
-  IToolSvc * m_toolService;
+  /// Pointer to RichRecTracks
+  RichRecTracks * m_tracks;
+
+  /// Pointer to event data service
+  IDataProviderSvc* m_evtDataSvc;
 
   /// Pointer to RichRecSegment tool
   IRichRecSegmentTool * m_richRecSegmentTool;
+
+  /// Pointer to RichDetInterface tool
+  IRichDetInterface * m_richDetInterface;
+
+  /// Input location of TrStoredTracks in TES
+  std::string m_trTracksLocation;
+
+  /// Location of RichRecTracks in TES
+  std::string m_richRecTrackLocation;
+
+  /// Flag for code profiling using ChronoStatSvc
+  bool m_timing;
+
+  /// Pointer to ChronoStat Service
+  IChronoStatSvc * m_chrono;
+
+  /// Flag to signify all tracks have been formed
+  bool m_allDone;
+
+  /// track map
+  std::map< int, bool > m_trackDone;
 
 };
 

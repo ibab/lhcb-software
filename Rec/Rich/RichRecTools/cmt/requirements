@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2002-07-28 10:46:19 jonesc Exp $
+# $Id: requirements,v 1.2 2002-11-14 13:54:23 jonrob Exp $
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones
 #
@@ -18,21 +18,19 @@ include_dirs $(RICHRECTOOLSROOT)
 # ================ dependencies =============================================
 use RichDetTools  v1r*  Rich
 use RichRecEvent  v1r*  Rich
-use RichRecKernel v1r*  Rich
-use RichUtils     v1r*  Rich
 use TrEvent       v11r* Event
 # Temporary usage while SICB pixels used
-use RiSicbGeom    v2r*  SICB
+use RiSicbGeom    v3r*  SICB
 
 # ================ component library=========================================
-library RichRecTools ../src/*.cpp
+library          RichRecTools  ../src/*.cpp
 
 # define component library link options
 #============================================================================
-apply_pattern    package_Clinkopts
+apply_pattern    package_linkopts
 apply_pattern    packageShr
 apply_pattern    linker_path
 
 #============================================================================
 private
-apply_pattern    package_Cshlibflags
+apply_pattern    package_shlibflags
