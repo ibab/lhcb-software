@@ -4,12 +4,15 @@
  *
  *  Implementation file for RICH Channel ID class : RichSmartID
  *
- *  $Id: RichSmartID.cpp,v 1.4 2005-02-22 13:11:19 jonrob Exp $
+ *  $Id: RichSmartID.cpp,v 1.5 2005-02-22 13:48:04 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2005-01-06
  */
 //-----------------------------------------------------------------------------
+
+// Gaudi
+#include "GaudiKernel/GaudiException.h"
 
 // boost
 #include "boost/lexical_cast.hpp"

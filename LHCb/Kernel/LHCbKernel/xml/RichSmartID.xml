@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.16 2005-02-22 13:11:19 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.17 2005-02-22 13:48:04 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -18,7 +18,6 @@
 
         &StlVector;
 
-        <import name = "GaudiKernel/GaudiException"               />
         <import name = "Kernel/RichDetectorType"                  />
         <import name = "Kernel/RichSide"                          />
         <import name = "Rich"                    ignore = "TRUE"  />
