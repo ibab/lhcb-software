@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.14 2003-06-18 12:25:05 gcorti Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.15 2003-06-26 16:50:09 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -52,6 +52,15 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   , m_trackClassCut( 0.4 )
   , m_chiSqITracks( 500.0 )
   , m_chiSqOTracks( 100.0 )
+  , m_photonMatch(0)
+  , m_electronMatch(0)
+  , m_bremMatch(0)
+  , m_ecalPIDe(0)  
+  , m_prsPIDe(0)  
+  , m_bremPIDe(0)  
+  , m_hcalPIDe(0)  
+  , m_ecalPIDmu(0)  
+  , m_hcalPIDmu(0)  
   , m_errorCount( )
   , m_monitor( false )
 {
@@ -531,12 +540,12 @@ StatusCode ChargedProtoPAlg::finalize() {
   if( m_electronMatch ) toolSvc()->releaseTool( m_electronMatch );
   if( m_bremMatch )     toolSvc()->releaseTool( m_bremMatch );
   if( m_ecalPIDe )      toolSvc()->releaseTool( m_ecalPIDe );
-  if( m_prsPIDe ) toolSvc()->releaseTool( m_prsPIDe );
-  if( m_bremPIDe ) toolSvc()->releaseTool( m_bremPIDe );
-  if( m_hcalPIDe ) toolSvc()->releaseTool( m_hcalPIDe );
-  if( m_ecalPIDmu ) toolSvc()->releaseTool( m_ecalPIDmu );
-  if( m_hcalPIDmu ) toolSvc()->releaseTool( m_hcalPIDmu );
-  if( m_muonIDdll ) toolSvc()->releaseTool( m_muonIDdll );
+  if( m_prsPIDe )       toolSvc()->releaseTool( m_prsPIDe );
+  if( m_bremPIDe )      toolSvc()->releaseTool( m_bremPIDe );
+  if( m_hcalPIDe )      toolSvc()->releaseTool( m_hcalPIDe );
+  if( m_ecalPIDmu )     toolSvc()->releaseTool( m_ecalPIDmu );
+  if( m_hcalPIDmu )     toolSvc()->releaseTool( m_hcalPIDmu );
+  if( m_muonIDdll )     toolSvc()->releaseTool( m_muonIDdll );
 
 
   msg << MSG::INFO << "********* ProtoParticles production Summary ******"

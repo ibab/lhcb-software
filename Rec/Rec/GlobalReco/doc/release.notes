@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!===================== GlobalReco v4r0p2 2003-06-26 =========================
+! 2003-06-26 - Gloria CORTI
+ - src/ChargedProtoPAlg.cpp
+   . set pointers to 0 in constructor
+
 !===================== GlobalReco v4r0p1 2003-06-18 =========================
 ! 2003-06-17 - Gloria CORTI
  - src/ChargedProtoPAlg.cpp
