@@ -42,8 +42,8 @@ use  Utilities          	v1r11p1  Tools
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v1r2     Phys
-use  DaVinciKernel      	v2r0     Phys
-use  DaVinciTools       	v11r1    Phys
+use  DaVinciKernel      	v2r0p1   Phys
+use  DaVinciTools       	v11r2    Phys
 use  FlavourTagging     	v5r3     Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r1     Phys

@@ -7,12 +7,14 @@
 
 !===================  DaVinciSys v12r4 2004-11-12 ============================
 New packages:
-TrgSys              v1r0
+TrgSys              v1r0    Trg
 TrgEvent            v5r0    Event
 TrgCalo             v1r0    Trg
 
 Modified packages:
 DaVinci             v12r4   Phys   
+DaVinciTools        v11r2   Phys
+DaVinciKernel       v2r0p1  Phys
 DaVinciUser         v5r2    Phys
 DaVinciTest         v5r3    Phys
 TrgTools            v6r0    Trg
