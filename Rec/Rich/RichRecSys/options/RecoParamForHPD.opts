@@ -55,21 +55,37 @@ ToolSvc.RichToolRegistry.Tools += { "RichSellmeirFunc/RichSellmeirFunc" };
 
 // Photon detection efficiency using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedHPDSignalDetectionEff/RichSignalDetectionEff" };
+// For time being Gauss is using ideal values for comparisions to SICB
+//ToolSvc.RichSignalDetectionEff.RichSphMirrorLocations = {
+//  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceReflectivityPT",
+//  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceReflectivityPT"
+//};
+//ToolSvc.RichSignalDetectionEff.RichFlatMirrorLocations = {
+//  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceReflectivityPT",
+//  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceReflectivityPT"
+//};
+ToolSvc.RichToolRegistry.Tools += { "RichTabulatedHPDSignalDetectionEffSICB/RichSignalDetectionEff" };
 ToolSvc.RichSignalDetectionEff.RichSphMirrorLocations = {
-  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceReflectivityPT",
-  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceReflectivityPT"
+  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT",
+  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror1SurfaceIdealReflectivityPT"
 };
 ToolSvc.RichSignalDetectionEff.RichFlatMirrorLocations = {
-  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceReflectivityPT",
-  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceReflectivityPT"
+  "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT",
+  "/dd/Geometry/Rich2/Rich2SurfaceTabProperties/Rich2Mirror2SurfaceIdealReflectivityPT"
 };
 ToolSvc.RichSignalDetectionEff.QETableLocation =
   "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
 
 // Refractive index using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
+// For time being Gauss is using ideal values for comparisions to SICB
+//ToolSvc.RichRefractiveIndex.RefIndexLocations = {
+//  "/dd/Materials/RichMaterialTabProperties/AerogelRIndexPT",
+//  "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
+//  "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
+//};
 ToolSvc.RichRefractiveIndex.RefIndexLocations = {
-  "/dd/Materials/RichMaterialTabProperties/AerogelRIndexPT",
+  "/dd/Materials/RichMaterialTabProperties/AerogelIdealRIndexPT",
   "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
   "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
 };
@@ -89,7 +105,3 @@ ToolSvc.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
 
 // Rich particle properties
 ToolSvc.RichToolRegistry.Tools += { "RichParticleProperties/RichParticleProperties" };
-
-// temporary parameters. To be got from XML eventually
-//ToolSvc.RichSellmeirFunc.WaveIndpTrans = 1;
-//ToolSvc.RichRayleighScatter.AeroClarity = 0.0008;
