@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.2 2001-05-17 16:34:04 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.3 2001-05-21 14:41:54 sponce Exp $
 
 // include files
 #include <cstdlib>
@@ -133,7 +133,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
 
     // builds an entryName
     std::string entryName = referenceValue.substr(poundPosition + 1);
-    entryName = /*m_objRcpt->objectName()*/ + "/" + entryName;
+    entryName = /*m_objRcpt->objectName() +*/ "/" + entryName;
 
     log << MSG::DEBUG << "New XmlAddress created : CLID = " << usedCLID
         << ", location = " << location << ", container name = "

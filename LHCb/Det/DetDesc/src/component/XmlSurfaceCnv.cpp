@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlSurfaceCnv.cpp,v 1.4 2001-05-17 16:34:05 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlSurfaceCnv.cpp,v 1.5 2001-05-21 14:41:55 sponce Exp $
 
 // Include files
 #include <cstdlib>
@@ -115,6 +115,7 @@ StatusCode XmlSurfaceCnv::i_createObj (DOM_Element element,
     const std::string value = dom2Std (element.getAttribute ("volsecond"));
     dataObj->setSecondVol (value); 
   }
+  return StatusCode::SUCCESS;
 } // end i_createObj
 
 
@@ -143,6 +144,7 @@ StatusCode XmlSurfaceCnv::i_fillObj (DOM_Element childElement,
     log << MSG::WARNING << "This tag makes no sense to surface : "
         << tagName << endreq;
   }
+  return StatusCode::SUCCESS;
 } // end i_fillObj
 
 
