@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.7 2002-12-02 09:42:21 jonrob Exp $
+# $Id: requirements,v 1.8 2002-12-06 10:37:16 cattanem Exp $
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones
 #
 
 package RichRecTools
-version v1r2
+version v1r3
 
 # ================ structure ================================================
-branches src cmt RichRecTools doc options
+branches src cmt RichRecTools doc
 
 # ================ environment ==============================================
 set RICHRECTOOLSOPTS $(RICHRECTOOLSROOT)/options
@@ -16,7 +16,7 @@ include_dirs $(RICHRECTOOLSROOT)
 # ================ dependencies =============================================
 use RichDetTools       v1r*   Rich
 use RichRecInterfaces  v1r*   Rich
-use TrEvent            v11r*  Event
+use TrEvent            v12r*  Event
 # Temporary usage while SICB pixels used
 use RiSicbGeom         v3r*   SICB
 
