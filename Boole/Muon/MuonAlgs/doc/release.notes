@@ -4,6 +4,9 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+! 2003-01-07 - Marco Cattaneo
+ - Release interfaces when they are no longer needed
+
 ! 2002-12-18 - Marco Cattaneo
  - Release tools at finalise
 
