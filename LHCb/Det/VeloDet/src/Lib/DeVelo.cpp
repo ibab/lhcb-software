@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.9 2002-03-19 08:58:08 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.10 2002-03-19 16:30:34 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -308,7 +308,7 @@ double DeVelo::stripNumberByType( int type,
 
   // Rotate the point if in the left part. Is in +- m_halfAngle
 
-  if ( 0 == type%2 ) {
+  if ( 0 == (type%2) ) {
     if ( 0 < phi ) {
       phi = phi - pi;
     } else {
@@ -322,7 +322,7 @@ double DeVelo::stripNumberByType( int type,
 
     if ( -m_halfAngle < phi ) {
       int zone  = (int) ( ( phi + m_halfAngle ) / m_quarterAngle );
-      if ( 4 > phi ) {
+      if ( 4 > zone ) {
         if ( (m_innerRadius < radius ) && ( m_outerRadius > radius ) ) {
           if ( m_fixPitchRadius > radius ) {
             strip = ( radius - m_innerRadius ) / m_innerPitch;
@@ -335,7 +335,7 @@ double DeVelo::stripNumberByType( int type,
           if ( m_nbRInner < strip ) {
             strip += m_nbRInner;            // get space for second inner part
           } else {
-            if ( 0 != (zone % 2) ) { 
+            if ( 1 == (zone%2) ) { 
               strip += m_nbRInner;          // second half of inner strips
             }
           }
@@ -390,10 +390,10 @@ double DeVelo::rOfStrip( double strip, int& phiZone ) {
     phiZone = 3;
   }
   
-  if ( m_nbRInner < localStrip ) {     // two zones in the central part
+  if ( m_nbRInner <= localStrip ) {     // two zones in the central part
     localStrip -= (int)m_nbRInner;
     phiZone += 1;
-    if  ( m_nbRInner < localStrip ) {
+    if  ( m_nbRInner <= localStrip ) {
       phiZone += 1;
     }
   }
@@ -439,12 +439,6 @@ double DeVelo::phiOfStrip ( double strip, double radius, int waferNb ) {
   }
   phiLocal -= halfpi;
 
-  //if ( halfpi < phiLocal ) {
-  //  phiLocal -= pi;
-  //} else if ( -halfpi > phiLocal ) {
-  //  phiLocal += pi;
-  //}
-
   if ( 3 < ( m_wafer[waferNb]->type() ) ) {
     phiLocal = -phiLocal;
   }
@@ -460,6 +454,9 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
                             HepPoint3D& point, 
                             double&  rPitch,
                             double&  phiPitch ) {
+  point.set( 0., 0., 0. );
+  rPitch   = 0.;
+  phiPitch = 0.;
 
   // check that the wafer number are valid
 
@@ -482,6 +479,8 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
   if ( fabs(zR - zPhi) > 50. ) {
     return false;
   }
+
+  bool status = true;
   
   // Compute R from strip. Could be tabulated for performance, if needed.
   int    phiZone;
@@ -489,47 +488,57 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
   
   // check some matching in the detector region.
   double rAtPhi = localR * ( zPhi - m_zVertex ) / ( zR - m_zVertex );
+  double tolPhiBoundary = 5*m_innerPitch;
+
+  // If the local computed slope is too big, keep R constant...
+  if ( 0.4 < localR / fabs( zR - m_zVertex ) ) { 
+    rAtPhi = localR; 
+    tolPhiBoundary = .5 * fabs( zPhi-zR );   // Don't know the angle -> 45 deg
+  }
+
   double myPhiStrip = PhiStripNumber;
   if ( 2048. <= myPhiStrip ) myPhiStrip -= 2048.;
  
   // Coherence in the Phi detector region, with some tolerance of 1 strip
 
-  if ( m_phiBoundRadius < rAtPhi - m_innerPitch ) {
-   if ( myPhiStrip < m_nbPhiInner ) {
+  if ( m_phiBoundRadius + tolPhiBoundary < rAtPhi ) {
+    if ( myPhiStrip < m_nbPhiInner ) {
       return false;
     }
-  } else if ( m_phiBoundRadius > rAtPhi + m_innerPitch ) {
+  } else if ( m_phiBoundRadius - tolPhiBoundary > rAtPhi ) {
     if ( myPhiStrip > m_nbPhiInner ) {
       return false;
     }
   }
 
   double phiLocal = phiOfStrip( PhiStripNumber, rAtPhi, PhiWaferNumber );
+  double phiMin = phiLocal + 0.02;    // Tolerance for tests
+  double phiMax = phiLocal - 0.02;    // tolerance for tests
   
-  // phi is in the -pi/2, pi/2 range. Test for R compatibility
+  // phi is in the +- m_halfAngle range. Test for R compatibility
 
   if ( 0 == phiZone  ) {
-    if ( (-m_halfAngle > phiLocal) || ( -m_quarterAngle < phiLocal ) ){
+    if ( (-m_halfAngle > phiMin) || ( -m_quarterAngle < phiMax ) ){
       return false;
     }
   } else if ( 1 == phiZone ) {
-    if ( (-m_quarterAngle > phiLocal) || ( 0 < phiLocal )  ) {
+    if ( (-m_quarterAngle > phiMin) || ( 0 < phiMax )  ) {
       return false;
     }
   } else if ( 2 == phiZone ) {
-    if ( (-m_halfAngle > phiLocal) || ( 0 < phiLocal ) ) {
+    if ( (-m_halfAngle > phiMin) || ( 0 < phiMax ) ) {
       return false;
     }
   } else if ( 3 == phiZone ) {
-    if ( (0 > phiLocal) || (m_quarterAngle < phiLocal)  ) {
+    if ( (0 > phiMin) || (m_quarterAngle < phiMax)  ) {
       return false;
     }
   } else if ( 4 == phiZone ) {
-    if ( (m_quarterAngle > phiLocal) || (m_halfAngle < phiLocal) ) {
+    if ( (m_quarterAngle > phiMin) || (m_halfAngle < phiMax) ) {
       return false;
     }
   } else if ( 5 == phiZone ) {
-    if ( (0 > phiLocal) || (m_halfAngle < phiLocal) ) {
+    if ( (0 > phiMin) || (m_halfAngle < phiMax) ) {
       return false;
     }
   }
@@ -550,6 +559,6 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
   rPitch   = this->rPitch( localR );
   phiPitch = this->phiPitch( localR );
   
-  return true;
+  return status;
 }
 

@@ -1,12 +1,16 @@
-! $Id: release.notes,v 1.10 2002-03-19 08:58:08 ocallot Exp $
+! $Id: release.notes,v 1.11 2002-03-19 16:30:34 ocallot Exp $
 package VeloDet
 package manager : Velo Group
 
 !=============================================================================
-! 18/03/2002 - Olivier Callot
+! 18/03/2002 - Olivier Callot ** v3r1 **
   - Change the 'type' of the wafers, to handle properly the separation between
-    left and right detectors, this was not done for R and was incorrect for Phi.
-    The result was an inefficiency in the overlap region (vertical).
+    left and right detectors, this was not done for R and was incorrect for 
+    Phi. The result was an inefficiency in the overlap region (vertical).
+  - Fixes a few minor problems of boundary, by increasing tolerances to see
+    if a hit is compatible with a region of the other detector.
+  - When matching R-Phi, if the slope from the nominal vertex is too big,
+    one use an extrapolation parallel to the Z axis and an increased tolerance.
 
 !=============================================================================
 ! 29/01/2002 - Olivier Callot  v3r0

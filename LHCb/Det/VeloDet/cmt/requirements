@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.5 2002-01-22 16:27:32 ocallot Exp $
+# $Id: requirements,v 1.6 2002-03-19 16:30:34 ocallot Exp $
 # =========================================================================
 
 package  VeloDet 
-version  v3r0
+version  v3r1
 
 # =============== structure ===============================================	
 branches         src cmt doc options VeloDet 
