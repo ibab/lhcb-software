@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.1 2002-07-25 15:39:43 andreav Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.2 2004-12-08 17:32:06 marcocle Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
@@ -9,10 +9,17 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Timing.h"
 
-#include "ConditionsDB/CondDBObjFactory.h"
+#ifdef __CondDBOracle__
+#include "ConditionsDB/CondDBOracleObjectFactory.h"
+#endif
+
+#ifdef __CondDBMySQL__
+#include "ConditionsDB/CondDBMySQLObjectFactory.h"
+#endif
+
 #include "ConditionsDB/ICondDBMgr.h"
-#include "ConditionsDB/ICondDBFolderMgr.h"
-#include "ConditionsDB/ICondDBDataAccess.h"
+#include "ConditionsDB/ICondDBBasicFolderMgr.h"
+#include "ConditionsDB/ICondDBBasicDataAccess.h"
 
 /// Instantiation of a static factory to create instances of this algorithm
 static const AlgFactory<DAQCondDBAlgorithm> Factory;
@@ -57,16 +64,15 @@ StatusCode DAQCondDBAlgorithm::initialize() {
   // Locate the ConditionsDBCnvSvc
   // Get a handle to the ConditionsDBGate
   // Get a handle to the CondDBMgr
-  IConditionsDBCnvSvc* conditionsDBCnvSvc;
   StatusCode sc = serviceLocator()->service 
-    ( "ConditionsDBCnvSvc", conditionsDBCnvSvc );
+    ( "ConditionsDBCnvSvc", m_condDBCnvSvc );
   if( !sc.isSuccess() ) {
     log << MSG::ERROR << "Can't locate ConditionsDBCnvSvc" << endreq;
     return sc;
   } else {
     log << MSG::DEBUG << "Succesfully located ConditionDBCnvSvc" << endreq;
   }
-  m_condDBMgr = conditionsDBCnvSvc->conditionsDBGate()->condDBManager();
+  m_condDBMgr = m_condDBCnvSvc->conditionsDBGate()->condDBManager();
   log << MSG::DEBUG << "Retrieved a handle to the CondDBMgr" << endreq;
 
   // Get properties from the JobOptionsSvc
@@ -105,7 +111,7 @@ StatusCode DAQCondDBAlgorithm::initialize() {
   bool rootFolderSetExists;
   try {
     m_condDBMgr->startRead();
-    rootFolderSetExists = m_condDBMgr->getCondDBFolderMgr()->exist( rootName );
+    rootFolderSetExists = m_condDBMgr->getCondDBBasicFolderMgr()->exist( rootName );
     m_condDBMgr->commit();
   } catch (CondDBException &e) {
     log << MSG::ERROR
@@ -129,7 +135,7 @@ StatusCode DAQCondDBAlgorithm::initialize() {
 	<< "Root folderSet does not exist: create it" << endreq;
     try {
       m_condDBMgr->startUpdate();
-      m_condDBMgr->getCondDBFolderMgr()->createCondDBFolderSet( 
+      m_condDBMgr->getCondDBBasicFolderMgr()->createCondDBFolderSet( 
         rootName,
 	    folderAttributes,
 	    "Root folderSet for the ConditionsDB",
@@ -161,7 +167,7 @@ StatusCode DAQCondDBAlgorithm::initialize() {
   bool daqFolderExists;
   try {
     m_condDBMgr->startRead();
-    daqFolderExists = m_condDBMgr->getCondDBFolderMgr()->exist( daqFolderFullName );
+    daqFolderExists = m_condDBMgr->getCondDBBasicFolderMgr()->exist( daqFolderFullName );
     m_condDBMgr->commit();
   } catch (CondDBException &e) {
     log << MSG::ERROR
@@ -185,7 +191,7 @@ StatusCode DAQCondDBAlgorithm::initialize() {
 	<< "DAQ CondDB folder does not exist: create it" << endreq;
     try {
       m_condDBMgr->startUpdate();
-      m_condDBMgr->getCondDBFolderMgr()->createCondDBFolder( 
+      m_condDBMgr->getCondDBBasicFolderMgr()->createCondDBFolder( 
         daqFolderFullName,
 	    folderAttributes,
 	    "DAQ folder for the ConditionsDB",
@@ -226,12 +232,29 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
   // At every event store a new condition
   ICondDBObject* condObject;
   std::string daqFolderFullName = rootName + "/" + m_daqFolderName;
-  condObject = CondDBObjFactory::createCondDBObject
-    ( System::currentTime(System::nanoSec), CondDBplusInf, m_daqRecord, "");
+  switch (m_condDBCnvSvc->conditionsDBGate()->implementationCode()){
+#ifdef __CondDBOracle__
+  case ConditionsDBGateImplementation::CONDDBORACLE :
+    condObject = cool::CondDBOracleObjectFactory::createCondDBObject
+      ( System::currentTime(System::nanoSec), CondDBplusInf, m_daqRecord, "");
+      break;
+#endif
+#ifdef __CondDBMySQL__
+  case ConditionsDBGateImplementation::CONDDBMYSQL :
+    condObject = CondDBMySQLObjectFactory::createCondDBObject
+      ( System::currentTime(System::nanoSec), CondDBplusInf, m_daqRecord, "");
+    break;
+#endif
+  default:
+    log << MSG::ERROR << "I cannot use the ConditionsDB implementation '" <<
+      m_condDBCnvSvc->conditionsDBGate()->implementation() << "'" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
   try {
     longlong startIO = System::currentTime(System::nanoSec);
     m_condDBMgr->startUpdate();
-    m_condDBMgr->getCondDBDataAccess()->storeCondDBObject
+    m_condDBMgr->getCondDBBasicDataAccess()->storeCondDBObject
       ( daqFolderFullName, condObject );
     m_condDBMgr->commit();
     longlong endIO = System::currentTime(System::nanoSec);
@@ -258,8 +281,22 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
   log << MSG::DEBUG
 	  << "Condition object written to the database " 
 	  << endreq;
-  CondDBObjFactory::destroyCondDBObject(condObject);
-
+  switch (m_condDBCnvSvc->conditionsDBGate()->implementationCode()){
+#ifdef __CondDBOracle__
+  case ConditionsDBGateImplementation::CONDDBORACLE :
+    cool::CondDBOracleObjectFactory::destroyCondDBObject(condObject);
+      break;
+#endif
+#ifdef __CondDBMySQL__
+  case ConditionsDBGateImplementation::CONDDBMYSQL :
+    CondDBMySQLObjectFactory::destroyCondDBObject(condObject);
+    break;
+#endif
+  default:
+    log << MSG::ERROR << "I cannot use the ConditionsDB implementation '" <<
+      m_condDBCnvSvc->conditionsDBGate()->implementation() << "'" << endmsg;
+  }
+  
   // Stop the nsExec timer
   m_nsExec += System::currentTime(System::nanoSec);
   return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.h,v 1.1 2002-07-25 15:39:43 andreav Exp $
+//$Id: DAQCondDBAlgorithm.h,v 1.2 2004-12-08 17:33:16 marcocle Exp $
 #ifndef DETCONDEXAMPLE_DAQCONDDBALGORITHM_H
 #define DETCONDEXAMPLE_DAQCONDDBALGORITHM_H 1
 
@@ -6,6 +6,7 @@
 #include "GaudiKernel/Algorithm.h"
 
 // Forward declarations
+class IConditionsDBCnvSvc;
 class ICondDBMgr;
 
 ///---------------------------------------------------------------------------
@@ -52,6 +53,9 @@ class DAQCondDBAlgorithm : public Algorithm {
 
   /// Total time (ns) spent in writing to the DB
   longlong m_nsDBIO;
+
+  /// Handle to the ConditionsDBCnvSvc (retrieved during the initialization)
+  IConditionsDBCnvSvc* m_condDBCnvSvc;
 
   /// Handle to the CondDBMgr (retrieved during the initialization)
   ICondDBMgr* m_condDBMgr;
