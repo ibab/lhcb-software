@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.46 2004-03-05 13:42:50 pkoppenb Exp $
+! $Id: release.notes,v 1.47 2004-03-05 14:27:12 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
@@ -12,6 +12,7 @@
    . Added category and setCategory for future use by flavour tagging
  - xml/SelResult.xml
    . New: Store result of selection.
+   . Removed obsolete PhysSel.xml and PhySelDecay.xml
 
 !======================== PhysEvent v8r1 2003-02-09 ========================
 ! 2004-02-06 - Olivier Callot
