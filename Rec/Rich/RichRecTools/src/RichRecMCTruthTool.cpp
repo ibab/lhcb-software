@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.1 2002-11-14 13:54:24 jonrob Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.2 2002-11-15 14:09:22 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -35,7 +35,7 @@ RichRecMCTruthTool::RichRecMCTruthTool( const std::string& type,
                    m_mcRichDigitsLocation = MCRichDigitLocation::Default );
   declareProperty( "TrackAsctName", m_trAsctName = "TrackToMCP" );
   declareProperty( "TrackAsctType",
-                   m_trAsctType = "AssociatorWeighted<TrStoredTrack,MCParticle,double>");
+          m_trAsctType = "AssociatorWeighted<TrStoredTrack,MCParticle,double>");
 
 }
 
@@ -162,7 +162,7 @@ MCRichDigit * RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel )
   if ( !digit ) return NULL;
 
   // Try fast method
-  MCRichDigit * mcDigit = ( digit ? MCTruth<MCRichDigit>(digit) : NULL );
+  MCRichDigit * mcDigit = MCTruth<MCRichDigit>(digit);
 
   // If failed, try accessing MCRichDigit container directly
   if ( !mcDigit && mcRichDigits() ) {
@@ -185,7 +185,7 @@ MCParticle * RichRecMCTruthTool::mcParticle( const RichRecPixel * richPixel )
 
 MCParticle * RichRecMCTruthTool::trueRecPhoton( const RichRecPhoton * photon ) {
 
-  RichRecTrack * track = (RichRecTrack*)photon->richRecSegment()->richRecTrack();
+  RichRecTrack * track= (RichRecTrack*)photon->richRecSegment()->richRecTrack();
   RichRecPixel * pixel = (RichRecPixel*)photon->richRecPixel();
 
   MCParticle * mcTrack = ( track ? mcParticle(track) : NULL );
