@@ -2,12 +2,15 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.14 2004-07-30 11:12:25 jonrob Exp $
+# $Id: requirements,v 1.15 2004-10-27 14:36:57 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.14  2004/07/30 11:12:25  jonrob
+# Add CVS log to requirements file
+#
 #============================================================================
 
 package           RichRecQC
-version           v1r9
+version           v1r10
 
 # Structure, i.e. directories to process. 
 #============================================================================
