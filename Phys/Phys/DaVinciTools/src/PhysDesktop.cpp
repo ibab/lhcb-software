@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.3 2002-05-17 22:28:26 gcorti Exp $
+// $Id: PhysDesktop.cpp,v 1.4 2002-05-20 23:15:32 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -574,7 +574,7 @@ StatusCode PhysDesktop::getInput(){
   }
   
   // Retrieve Primary vertices
-  if( "none" == m_primVtxLocn ) {
+  if( "None" == m_primVtxLocn ) {
     log << MSG::DEBUG << "Not loading any primary vertices" 
         << endreq;
   }
