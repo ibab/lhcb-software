@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/27 17:03:20  ibelyaev
+/// improved printout
+///
 /// Revision 1.2  2001/07/27 14:29:01  ibelyaev
 /// bug fix
 ///
@@ -70,9 +73,9 @@ StatusCode GiGaRunActionCommand::initialize()
     { return Error("Could not initialize the base class", sc );}
   ///
   if( m_beginCmds.empty() ) 
-    { Print("'BeginOfEventCommands' list is empty") ;}
+    { Print("'BeginOfRunCommands' list is empty") ;}
   if( m_endCmds  .empty() ) 
-    { Print("'EndOfEventCommands' list is empty"  ) ;}
+    { Print("'EndOfRunCommands' list is empty"  ) ;}
   ///
   Print("initialized succesfully");
   ///
