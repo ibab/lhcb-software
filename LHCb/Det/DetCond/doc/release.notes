@@ -1,6 +1,13 @@
-# $Id: release.notes,v 1.16 2002-03-28 08:57:13 andreav Exp $
+# $Id: release.notes,v 1.17 2002-04-05 16:25:15 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020405 - Andrea Valassi
+Minor modifications to requirements
+- dependency on CONDDB changed from v3r02 to v3r02p1
+- env. variable CONDDB_implementation is defined in CONDDB or Det/CondDBOracle
+Requirements v2r1, private tag h20020405
 
 ==============================================================================
 !20020328 - Andrea Valassi

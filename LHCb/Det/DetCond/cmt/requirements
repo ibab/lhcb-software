@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.17 2002-03-28 08:57:13 andreav Exp $
+# $Id: requirements,v 1.18 2002-04-05 16:25:14 andreav Exp $
 package DetCond
 version v2r1
 
@@ -9,20 +9,12 @@ use GaudiKernel v11r*
 use GaudiSvc    v7r*
 
 # ConditionsDB package
-macro CONDDB_use            "CONDDB v3r02" \
+macro CONDDB_use            "CONDDB v3r02p1" \
       rh72_gcc29521         "CondDBOracle v3r10 Det"\
       rh72_gcc29521dbx      "CondDBOracle v3r10 Det"\
       rh72_gcc29521Static   "CondDBOracle v3r10 Det" \
       WIN32                 "CondDBOracle v3r10 Det"
 use $(CONDDB_use)
-
-# ConditionsDB package implementation
-# This should be moved to CONDDB and CondDBOracle
-set   CONDDB_implementation "CondDBObjy"   \
-      rh72_gcc29521         "CondDBOracle" \
-      rh72_gcc29521dbx      "CondDBOracle" \
-      rh72_gcc29521Static   "CondDBOracle" \
-      WIN32                 "CondDBOracle"
 
 # Inform the C++ precompiler which ConditionsDB implementation is used
 macro_append cppflags ' -D__$(CONDDB_implementation)__' \

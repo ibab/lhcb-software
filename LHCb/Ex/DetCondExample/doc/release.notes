@@ -1,6 +1,12 @@
-#$Id: release.notes,v 1.12 2002-03-28 15:17:15 andreav Exp $
+#$Id: release.notes,v 1.13 2002-04-05 16:26:06 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020405 - Andrea Valassi
+Fix a bug in setup_Redhat72.csh.
+Change the 6 Windows scripts to use sqlplus from dfs installation.
+Requirements v2r1, private tag h20020405
 
 ==============================================================================
 !20020328 - Andrea Valassi
