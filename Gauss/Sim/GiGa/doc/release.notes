@@ -1,12 +1,22 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.27 2001-07-23 13:12:54 ibelyaev Exp $
+! $Id: release.notes,v 1.28 2001-07-23 20:53:46 ibelyaev Exp $
 ! =============================================================================
 
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
+!===========================================================================
+! 20010723   v Vanya Belyaev 
+     GiGa/GiGaUtil.h
+     src/Lib/GiGaUtil.cpp 
+       - move all utilities into GiGaUtil name space
+       - make use of this utilities 
+     GiGaStepActionSequence.h/.cpp 
+       - new type of Step Action - it is just a sequence of all other 
+         Step Actions  (a'la  CMS "action units") 
+  
 !===========================================================================
 ! 20010721   v6 Vanya Belyaev 
    move several interfaces to make the package
