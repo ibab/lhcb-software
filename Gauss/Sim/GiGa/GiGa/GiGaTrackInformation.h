@@ -23,11 +23,11 @@ class GiGaTrackInformation : public G4VUserTrackInformation
   ///
 public:
   ///
-  GiGaTrackInformation() ;
+  inline   GiGaTrackInformation() ;
   virtual ~GiGaTrackInformation() ; 
   ///
-  inline void* operator new    ( size_t );
-  inline void  operator delete ( void*  );
+  void* operator new    ( size_t );
+  void  operator delete ( void*  );
   ///
   virtual void Print() const;   /// from base class
   ///

@@ -29,13 +29,13 @@ class GiGaTrajectory: public G4VTrajectory                    ,
   ///
 public:
   ///
-  GiGaTrajectory (                        );
-  GiGaTrajectory ( const G4Track*         );
-  GiGaTrajectory ( const GiGaTrajectory & );
+  inline   GiGaTrajectory (                        );
+  inline   GiGaTrajectory ( const G4Track*         );
+  inline   GiGaTrajectory ( const GiGaTrajectory & );
   virtual ~GiGaTrajectory();
   ///  
-  inline void* operator new    ( size_t ) ;
-  inline void  operator delete ( void*  ) ;
+  void* operator new    ( size_t ) ;
+  void  operator delete ( void*  ) ;
   ///
   inline int operator == (const GiGaTrajectory& right) const
   {return ( &right == this );} 

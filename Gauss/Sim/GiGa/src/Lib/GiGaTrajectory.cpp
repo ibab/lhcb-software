@@ -16,51 +16,14 @@
 G4Allocator<GiGaTrajectory> s_GiGaTrajectoryAllocator;
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+void* GiGaTrajectory::operator new(size_t)
+{ return (void*) s_GiGaTrajectoryAllocator.MallocSingle(); };
+////////////////////////////////////////////////////////////////////////////////////
+void  GiGaTrajectory::operator delete(void* aTrajectory)
+{ s_GiGaTrajectoryAllocator.FreeSingle( (GiGaTrajectory*) aTrajectory ); };
 ///////////////////////////////////////////////////////////////////////////////////////////
-GiGaTrajectory::GiGaTrajectory (   )
-  : G4VTrajectory                     (   ) 
-  , std::vector<GiGaTrajectoryPoint*> (   ) 
-  , m_trackID                         ( 0 ) 
-  , m_parentID                        ( 0 )
-  , m_partDef                         ( 0 ) 
-  , m_4vect                           (   )
-  , m_stepMgr                         ( 0 )
-{};
-///////////////////////////////////////////////////////////////////////////////////////////
-GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
-  : G4VTrajectory(                                              ) 
-  , std::vector<GiGaTrajectoryPoint*>   (                       )
-  , m_trackID    ( aTrack->GetTrackID        ()                 ) 
-  , m_parentID   ( aTrack->GetParentID       ()                 )
-  , m_partDef    ( aTrack->GetDefinition     ()                 ) 
-  , m_4vect      ( aTrack->GetDynamicParticle()->Get4Momentum() )
-  , m_stepMgr    ( 0 )
-{
-  ///
-  GiGaTrajectoryPoint* firstPoint = 
-    new GiGaTrajectoryPoint( aTrack->GetPosition() , aTrack->GetGlobalTime() );
-  push_back( firstPoint );
-  ///
-};
-///////////////////////////////////////////////////////////////////////////////////////////
-GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
-  : G4VTrajectory                     (                              )
-  , std::vector<GiGaTrajectoryPoint*> (                              )
-  , m_trackID                         ( right.trackID       ()       )
-  , m_parentID                        ( right.parentID      ()       )
-  , m_partDef                         ( right.partDef       ()       )
-  , m_4vect                           ( right.fourMomentum  ()       )
-  , m_stepMgr                         ( right.stepMgr       ()       )
-{
-  // does not work on NT
-  // copy(through clone) points from right 
-  //    std::transform( right.begin() , right.end() , 
-  //                    std::back_inserter( *this ) ,
-  //                    std::mem_fun(&GiGaTrajectoryPoint::clone) );
-  clear();
-  for( GiGaTrajectory::const_iterator it = right.begin() ; right.end() != it ; ++it )
-    {  push_back( (*it)->clone() ) ; }
-};
+
 ///////////////////////////////////////////////////////////////////////////////////////////
 GiGaTrajectory::~GiGaTrajectory()
 {
@@ -73,7 +36,7 @@ GiGaTrajectory::~GiGaTrajectory()
   m_stepMgr = 0 ;
   ///
 };
-//////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 void GiGaTrajectory::DrawTrajectory  ( G4int i_mode ) const 
 {
   ///
