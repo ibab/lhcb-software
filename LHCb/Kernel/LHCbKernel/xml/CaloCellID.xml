@@ -1,0 +1,436 @@
+<!-- **************************************************************************
+  * $Id: CaloCellID.xml,v 1.1 2003-11-24 14:17:30 ibelyaev Exp $
+  *****************************************************************************
+  * CVS tag $Name: not supported by cvs2svn $                            
+  *****************************************************************************
+  * XML-description of CaloCellIDclass                                        *
+  * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
+  * date:   2003-11-24                                                        *
+  *****************************************************************************
+  * $Log: not supported by cvs2svn $
+  ************************************************************************* -->
+
+  
+  <class
+    name   = "CaloCellID"
+    desc   = "Simple class to represent cell identifier for calorimeter devices"
+    author = "Vanya BELYAEV Ivan.Belyaev@itep.ru">
+  <desc> *
+    *
+    *  The class represents the unique cell identifier for all calorimeter devices
+    *
+    * </desc>
+  
+  <import name = "GaudiKernel/Kernel"       />
+  <import name = "GaudiKernel/StreamBuffer" />
+  <import name = "GaudiKernel/MsgStream"    />
+  <import name = "Kernel/CaloCellCode"      />
+    
+  <typedef
+    def    = "ContentType"
+    type   = "CaloCellCode::ContentType"
+    desc   = "transient representation (presumably 32bits)"
+    access = "PUBLIC" />
+  <typedef
+    def    = "WriteType"
+    type   = "CaloCellCode::WriteType"
+    desc   = "persistent representation (presumably 16bits)"
+    access = "PUBLIC" />
+  
+  <attribute
+    name = "ccid"
+    desc = "Representation of CellID (32bits)"
+    type = "ContentType" />
+  
+  <constructor
+    desc     = "Default/empty constructor"
+    initList = "m_ccid( 0 )" > 
+    <code/> 
+  </constructor>
+  
+  <constructor
+    desc     = "Explicit constructor from Calo, Area, Row and Column"
+    argList  = "unsigned int Calo, unsigned int Area, unsigned int Row, unsigned int Column "
+    initList = "m_ccid( 0 )" > 
+    <code>
+      setCalo ( Calo   ) ;
+      setArea ( Area   ) ;
+      setRow  ( Row    ) ;
+      setCol  ( Column ) ;
+    </code> 
+  </constructor>
+  
+  <constructor
+    desc     = "Constructor from Sicb and Calo identifier"
+    argList  = "unsigned int Calo, unsigned int Sicb"
+    initList = "m_ccid( 0 )" > 
+    <code>
+      setCalo ( Calo          ) ;
+      setSicb ( Calo , Sicb   ) ;
+    </code> 
+  </constructor>
+  
+  <constructor
+    desc     = "Constructor from Short/Raw representation (16bit)"
+    argList  = "WriteType Raw"
+    initList = "m_ccid( 0 )" > 
+    <code>
+      m_ccid = (ContentType) Raw ;
+    </code> 
+  </constructor>
+  
+  <method
+    desc   = "Decoding function to extract index"
+    name   = "index"
+    type   = "unsigned int"
+    const  = "TRUE"
+    access = "PUBLIC" >
+    <code>
+      return ( contents() &amp; CaloCellCode::MaskIndex ) &gt;&gt; CaloCellCode::ShiftIndex ; 
+    </code>
+  </method>
+  
+  <method
+    desc   = "Decoding function to extract calorimeter identifier"
+    name   = "calo"
+    type   = "unsigned int"
+    const  = "TRUE"
+    access = "PUBLIC" >
+    <code>
+      return ( contents() &amp; CaloCellCode::MaskCalo ) &gt;&gt; CaloCellCode::ShiftCalo ; 
+    </code>
+  </method>
+
+  <method
+    desc   = "Decoding function to extract calorimeter area identifier"
+    name   = "area"
+    type   = "unsigned int"
+    const  = "TRUE"
+    access = "PUBLIC" >
+    <code>
+      return ( contents() &amp; CaloCellCode::MaskArea ) &gt;&gt; CaloCellCode::ShiftArea ; 
+    </code>
+  </method>
+  
+  
+  <method
+    desc   = "Decoding function to extract calorimeter row identifier"
+    name   = "row"
+    type   = "unsigned int"
+    const  = "TRUE"
+    access = "PUBLIC" >
+    <code>
+      return ( contents() &amp; CaloCellCode::MaskRow  ) &gt;&gt; CaloCellCode::ShiftRow  ; 
+    </code>
+  </method>
+  
+  <method
+    desc   = "Decoding function to extract calorimeter column identifier"
+    name   = "col"
+    type   = "unsigned int"
+    const  = "TRUE"
+    access = "PUBLIC" >
+    <code>
+      return ( contents() &amp; CaloCellCode::MaskCol  ) &gt;&gt; CaloCellCode::ShiftCol  ; 
+    </code>
+  </method>
+  
+  <method
+    desc   = "Decoding function to extract raw-data representatio"
+    name   = "raw"
+    type   = "WriteType"
+    const  = "TRUE"
+    access = "PUBLIC" >
+    <code>
+      return (WriteType) all() ; 
+    </code>
+  </method>
+  
+  <method
+    desc   = "Decoding function to extract all significant bits representatio"
+    name   = "all"
+    type   = "ContentType"
+    const  = "TRUE"
+    access = "PUBLIC" >
+    <code>
+      return ( contents() &amp; CaloCellCode::MaskAll  ) &gt;&gt; CaloCellCode::ShiftAll  ; 
+    </code>
+  </method>
+  
+  <method
+    desc    = "Comparison operator using 'index()' representation"
+    name    = "operator&lt;"
+    argList = "const CaloCellID ID"
+    type    = "bool"
+    const   = "TRUE"
+    access  = "PUBLIC" >
+    <code>
+      return index() &lt; ID.index() ;
+    </code>
+  </method>
+  
+  <method
+    desc    = "Equality operator using 'contents()' representation"
+    name    = "operator=="
+    argList = "const CaloCellID ID"
+    type    = "bool"
+    const   = "TRUE"
+    access  = "PUBLIC" >
+    <code>
+      return contents() == ID.contents() ;
+    </code>
+  </method>
+
+  <method
+    name    = "serialize"
+    desc    = "Serialization of the object (writing to StreamBuffer)"
+    type    = "StreamBuffer&amp;"
+    virtual = "TRUE"
+    const   = "TRUE" >
+    <arg name = "buffer" type = "StreamBuffer"    inout = "BOTH"/>
+    <code>
+      return buffer &lt;&lt; raw() ; 
+    </code>  
+  </method>
+  
+  <method
+    name    = "serialize"
+    desc    = "Serialization of the object (reading from StreamBuffer)"
+    type    = "StreamBuffer&amp;"
+    virtual = "TRUE"
+    const   = "FALSE" >
+    <arg name = "buffer" type = "StreamBuffer" inout = "BOTH" />
+    <code>
+      WriteType tmp ;
+      buffer &gt;&gt; tmp ; 
+      m_ccid = (ContentType) tmp;
+      return buffer;  
+    </code>
+  </method>
+  
+  <method
+    name      = "fillStream"
+    desc      = "printOut method to Gaudi message stream"
+    type      = "MsgStream&amp;"
+    virtual   = "TRUE"
+    const     = "TRUE" >
+    <arg name = "os" type = "MsgStream"    inout = "BOTH"/>
+    <code>
+      os &lt;&lt; "[" ;
+      /// corrupted ?!
+      if( 0 != rest() ) { os &lt;&lt; "?" &lt;&lt; std::setw(4) &lt;&lt; rest() &lt;&lt; "?," ; }  
+      return 
+      os 
+      &lt;&lt; CaloCellCode::CaloNameFromNum( calo() ) [0] &lt;&lt; "," 
+      &lt;&lt; std::setw(1) &lt;&lt; area () &lt;&lt; "," 
+      &lt;&lt; std::setw(2) &lt;&lt; row  () &lt;&lt; "," 
+      &lt;&lt; std::setw(2) &lt;&lt; col  () &lt;&lt; "]" ;  
+    </code>
+  </method>
+  
+  <method
+    name      = "fillStream"
+    desc      = "printOut to standard STD/STL output streams"
+    type      = "std::ostream&amp;"
+    virtual   = "TRUE"
+    const     = "TRUE" >
+    <arg name = "os" type = "std::ostream" inout = "BOTH" />
+    <code>
+      os &lt;&lt; "[" ;
+      /// corrupted ?!
+      if( 0 != rest() ) { os &lt;&lt; "?" &lt;&lt; std::setw(4) &lt;&lt; rest() &lt;&lt; "?," ; }  
+      return 
+      os 
+      &lt;&lt; CaloCellCode::CaloNameFromNum( calo() ) [0] &lt;&lt; "," 
+      &lt;&lt; std::setw(1) &lt;&lt; area () &lt;&lt; "," 
+      &lt;&lt; std::setw(2) &lt;&lt; row  () &lt;&lt; "," 
+      &lt;&lt; std::setw(2) &lt;&lt; col  () &lt;&lt; "]" ;  
+    </code>
+  </method>
+  
+  <method
+    desc    = "bit pattern as string"
+    name    = "bits"
+    type    = "std::string"
+    const   = "TRUE"
+    access  = "PUBLIC" >
+    <arg name = "del" type = "char" inout = "INPUT" />
+    <code>
+      std::string  str("[");
+      const ContentType  one = 1;
+      for( int n  = ( 0 == rest() )? CaloCellCode::BitsAll - 1 : 
+      CaloCellCode::BitsTotal - 1 ; n &gt;= 0 ; --n  )
+      {
+      unsigned int pos = n;
+      bool isNull =   ( 0 == ( ( one &lt;&lt; pos ) &amp; contents() ) );     
+      str+= isNull ? '0' : '1';
+      if      ( 0                       == pos )   break      ;
+      if      ( 0                       == del )   continue   ;
+      if      ( CaloCellCode::ShiftRest == pos ) { str += del ; }
+      else if ( CaloCellCode::ShiftCalo == pos ) { str += del ; }
+      else if ( CaloCellCode::ShiftArea == pos ) { str += del ; }
+      else if ( CaloCellCode::ShiftRow  == pos ) { str += del ; }
+      else if ( CaloCellCode::ShiftCol  == pos ) { str += del ; }
+      else if ( CaloCellCode::ShiftAll  == pos ) { str += del ; }
+      }
+      return str += "]";
+    </code>
+  </method>
+  
+  <method
+    desc    = "bit pattern as string"
+    name    = "bits"
+    type    = "std::string"
+    const   = "TRUE"
+    access  = "PUBLIC" >
+    <code>
+      return bits(',');
+    </code>
+  </method>
+  
+    
+  <method
+    desc      = "Update Calorimeter identifier"
+    name      = "setCalo"
+    type      = "CaloCellID&amp;"
+    const     = "FALSE"
+    access    = "PRIVATE" >
+    <arg name = "Calo" type = "unsigned int" inout = "INPUT" />
+    <code>
+      return set( Calo  , CaloCellCode::ShiftCalo , CaloCellCode::MaskCalo ) ;
+    </code>
+  </method>
+
+  <method
+    desc      = "Update Calorimeter Area identifier"
+    name      = "setArea"
+    type      = "CaloCellID&amp;"
+    const     = "FALSE"
+    access    = "PRIVATE" >
+    <arg name = "Area" type = "unsigned int" inout = "INPUT" />
+    <code>
+      return set( Area  , CaloCellCode::ShiftArea , CaloCellCode::MaskArea ) ;
+    </code>
+  </method>
+
+  <method
+    desc      = "Update Calorimeter Row identifier"
+    name      = "setRow"
+    type      = "CaloCellID&amp;"
+    const     = "FALSE"
+    access    = "PRIVATE" >
+    <arg name = "Row" type = "unsigned int" inout = "INPUT" />
+    <code>
+      return set( Row  , CaloCellCode::ShiftRow , CaloCellCode::MaskRow ) ;
+    </code>
+  </method>
+
+  <method
+    desc      = "Update Calorimeter Column identifier"
+    name      = "setCol"
+    type      = "CaloCellID&amp;"
+    const     = "FALSE"
+    access    = "PRIVATE" >
+    <arg name = "Col" type = "unsigned int" inout = "INPUT" />
+    <code>
+      return set( Col  , CaloCellCode::ShiftCol , CaloCellCode::MaskCol ) ;
+    </code>
+  </method>
+
+
+  <method
+    desc      = "Update Index field"
+    name      = "setIndex"
+    type      = "CaloCellID&amp;"
+    const     = "FALSE"
+    access    = "PRIVATE" >
+    <arg name = "Index" type = "unsigned int" inout = "INPUT" />
+    <code>
+      return set( Index  , CaloCellCode::ShiftIndex , CaloCellCode::MaskIndex ) ;
+    </code>
+  </method>
+  
+  <method
+    desc      = "Update Sicb field"
+    name      = "setSicb"
+    type      = "CaloCellID&amp;"
+    const     = "FALSE"
+    access    = "PRIVATE" >
+    <arg name = "Calo" type = "unsigned int" inout = "INPUT" />
+    <arg name = "Sicb" type = "unsigned int" inout = "INPUT" />
+    <code>
+      ///
+      unsigned int Col  =   Sicb % 1000            ;
+      unsigned int Row  = ( Sicb / 1000   ) % 1000 ;
+      unsigned int Area = ( Sicb / 1000000) -    1 ;
+      ///
+      if ( 3 == Calo ) {    ///&lt; HCAL
+      if ( 0 == Area ) {
+      Col = Col - 1 ;       ///&lt; 1:32 -&gt;  0:31
+      Row = Row + 2 ;       ///&lt; 1:26 -&gt;  3:28
+      } else {
+      Col = Col - 1 ;       ///&lt; 1:32 -&gt;  0:31
+      Row = Row + 1 ;       ///&lt; 1:28 -&gt;  2:29
+      }
+      } else {
+      if ( 0 == Area ) { 
+      Col = Col - 1 ;       ///&lt; 1:64 -&gt;  0:63
+      Row = Row + 5 ;       ///&lt; 1:52 -&gt;  6:57
+      } else if ( 1 == Area ) { 
+      Col = Col - 1 ;       ///&lt; 1:64 -&gt;  0:63
+      Row = Row + 11 ;      ///&lt; 1:40 -&gt; 12:51
+      } else { 
+      Col = Col + 7 ;       ///&lt; 1:48 -&gt;  8:55
+      Row = Row + 13 ;      ///&lt; 1:36 -&gt; 14:49
+      }
+      }
+      setArea ( Area ) ; 
+      setRow  ( Row  ) ; 
+      setCol  ( Col  ) ; 
+      ///
+      return *this; 
+    </code>
+  </method>
+
+  <method
+    desc      = "set the active field"
+    name      = "set"
+    type      = "CaloCellID&amp;"
+    const     = "FALSE"
+    access    = "PRIVATE" >
+    <arg name = "Value" type = "ContentType"  inout = "INPUT" />
+    <arg name = "Shift" type = "unsigned int" inout = "INPUT" />
+    <arg name = "Mask"  type = "unsigned int" inout = "INPUT" />
+    <code>
+      ContentType tmp1 , tmp2 ;
+      tmp1   = ( Value &lt;&lt; Shift ) &amp;  Mask ; 
+      tmp2   =  contents()              &amp; ~Mask ; 
+      m_ccid = ( tmp1 | tmp2 ) ;
+      return *this;
+    </code>
+  </method>
+  
+  <method
+    desc   = "Extract 'the rest' - must be 0!"
+    name   = "rest"
+    type   = "ContentType"
+    const  = "TRUE"
+    access = "PRIVATE" >
+    <code>
+      return ( contents() &amp; CaloCellCode::MaskRest  ) &gt;&gt; CaloCellCode::ShiftRest  ; 
+    </code>
+  </method>
+  
+  <method
+    desc   = "Extract the full content"
+    name   = "contents"
+    type   = "ContentType"
+    const  = "TRUE"
+    access = "PRIVATE" >
+    <code>
+      return m_ccid ; 
+    </code>
+  </method>
+  
+  
+  </class>
