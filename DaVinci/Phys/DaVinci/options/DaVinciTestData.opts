@@ -216,3 +216,4 @@ PoolDbCacheSvc.Catalog = {
  ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
  ,"xmlcatalog_http://gcorti.home.cern.ch/gcorti/POOL/MyCatalog.xml"
 };
+ApplicationMgr.EvtMax    = 1000;
