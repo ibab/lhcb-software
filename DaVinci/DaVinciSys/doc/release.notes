@@ -6,7 +6,7 @@
 
 !====================  DaVinciSys v11r8 2004-06-02 ============================
 Most packages updated
-+use  CaloReco           v2r2     Calo
++use  CaloReco           v2r3p1   Calo
 +use  GlobalReco         v4r7     Rec
 +use  TrExtrapolator     v2r12    Tr
 +use  Utilities          v1r4     Tools
