@@ -1,4 +1,4 @@
-// $Id: GlobalReco_load.cpp,v 1.1.1.1 2002-07-10 16:53:05 gcorti Exp $
+// $Id: GlobalReco_load.cpp,v 1.2 2002-07-11 16:24:20 gcorti Exp $
 // Include files 
 
 
@@ -15,5 +15,8 @@
 DECLARE_FACTORY_ENTRIES(GlobalReco) {
   
   DECLARE_ALGORITHM( ChargedProtoPAlg );
+
+  DECLARE_ALGORITHM(PrimaryVertexFinderAlg);
+  DECLARE_TOOL(PrimaryVertexFitterTool);
 
 }
