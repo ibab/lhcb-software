@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.25 2002-06-19 15:47:20 roiser Exp $
+# $Id: requirements,v 1.26 2002-06-21 16:19:17 ibelyaev Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -42,7 +42,7 @@ macro LHCbKernelDict_shlibflags  "$(GaudiIntrospection_linkopts) $(use_linkopts)
         
 private 
 application   RelationsTest -check  Test/RelationsTest.cpp 
-macro_prepend RelationsTestlinkopts " $(LHCbKernel_linkopts) "
+macro_prepend RelationsTestlinkopts " $(LHCbKernel_linkopts) $(use_linkopts) "
 apply_pattern application_path
 path_remove   PATH                  "LHCbKernel"
 path_append   PATH                  ${LHCBKERNELROOT}/${BINDIR}
