@@ -136,13 +136,13 @@ StatusCode Mixture::computeByFraction()
   ///
   /// recompute fractions
   double frsum = 0.0  ;
-  for( Elements::iterator it = m_elements.begin() ; m_elements.end() != it ; ++it )
-    { frsum += it->first ; } 
+  for( Elements::iterator it1 = m_elements.begin() ; m_elements.end() != it1 ; ++it1 )
+    { frsum += it1->first ; } 
   if( frsum < 0 ) 
     { throw MaterialException("Mixture::computeByFractions:: not positive fraction sum!",this);}
   /// rescale  fractions
-  for( Elements::iterator it = m_elements.begin() ; m_elements.end() != it ; ++it )
-    {  it->first /= frsum ; } 
+  for( Elements::iterator it2 = m_elements.begin() ; m_elements.end() != it2 ; ++it2 )
+    {  it2->first /= frsum ; } 
   ///
   m_A = 0 ;
   m_Z = 0 ;
@@ -151,10 +151,10 @@ StatusCode Mixture::computeByFraction()
   double radlen = 0 ; 
   double lambda = 0 ;
   ///
-  for( Elements::iterator it = m_elements.begin() ; m_elements.end() != it ; ++it )
+  for( Elements::iterator it3 = m_elements.begin() ; m_elements.end() != it3 ; ++it3 )
     { 
-      double   frac = it->first  ;
-      Element* elem = it->second ;
+      double   frac = it3->first  ;
+      Element* elem = it3->second ;
       /// 
       m_A += frac * elem->A() ;
       m_Z += frac * elem->Z() ;
