@@ -4,8 +4,11 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.13 2004-11-20 12:23:01 jonrob Exp $
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.14 2004-12-13 17:23:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.13  2004/11/20 12:23:01  jonrob
+ *  Add better support for events with no pixels
+ *
  *  Revision 1.12  2004/07/27 10:56:36  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -61,23 +64,29 @@ StatusCode RichGlobalPIDDigitSel::execute() {
   if ( procStat->aborted() ) {
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ProcStatAbort );
     richStatus()->setEventOK( false );
-    return Warning("Processing aborted -> Abort",StatusCode::SUCCESS);
+    return Warning( "Processing aborted -> Abort", StatusCode::SUCCESS );
   }
 
   // Create all RichRecPixels
   if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
-  debug() << "Selected " << richPixels()->size() << " RichDigits" << endreq;
 
-  // How many pixels ?
-  if ( richPixels()->empty() ) {
+  // check the number of pixels
+  if ( richPixels()->empty() ) { // empty event ?
+
     procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::NoRichPixels );
     richStatus()->setEventOK( false );
-    return Warning("Event contains no pixels -> Abort",StatusCode::SUCCESS);
-  } else if ( m_maxUsedPixels < richPixels()->size() ) {
-    procStat->addAlgorithmStatus(m_richGPIDName,Rich::Rec::ReachedPixelLimit);
+    return Warning( "Event contains no pixels -> Abort", StatusCode::SUCCESS );
+
+  } else if ( m_maxUsedPixels < richPixels()->size() ) { // too many pixels
+
+    procStat->addAlgorithmStatus( m_richGPIDName, Rich::Rec::ReachedPixelLimit );
     richStatus()->setEventOK( false );
-    return Warning("Max. number of pixels exceeded -> Abort",StatusCode::SUCCESS);
+    return Warning( "Max. number of pixels exceeded -> Abort", StatusCode::SUCCESS );
+
   }
+
+  // final printout of selected number of pixels
+  debug() << "Selected " << richPixels()->size() << " RichRecPixels" << endreq;
 
   return StatusCode::SUCCESS;
 }
