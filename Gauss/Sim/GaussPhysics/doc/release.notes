@@ -4,6 +4,10 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!======================= GaussPhysics v2r2 2002-04-29 =======================
+! 2003-04-29 - Witek Pokorski
+ - requirements - user GaussTools v*
+
 !======================= GaussPhysics v2r1 2003-03-07 =======================
 ! 2003-03-07 - Florence RANJARD
  - GaussPhysics_load.cpp - DECLARE GeneralPhysics

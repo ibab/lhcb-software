@@ -1,12 +1,12 @@
 # =============================================================================
 package GaussPhysics
-version v2r1
+version v2r2
 
 # =============== package structure ===========================================
 branches          cmt src doc
 
 # =============== explicit dependencies =======================================  
-use GaussTools    v6r*     Sim
+use GaussTools    v*     Sim
 
 # ============== component library ============================================
 library          GaussPhysics      *.cpp   \
