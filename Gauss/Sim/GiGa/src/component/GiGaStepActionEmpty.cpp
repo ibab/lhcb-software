@@ -1,8 +1,11 @@
-// $Id: GiGaStepActionEmpty.cpp,v 1.8 2002-04-25 13:02:05 ibelyaev Exp $ 
+// $Id: GiGaStepActionEmpty.cpp,v 1.9 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/04/25 13:02:05  ibelyaev
+//  small update
+//
 // ============================================================================
 #include "CLHEP/Geometry/Point3D.h"
 ///
@@ -13,7 +16,7 @@
 ///
 #include "GaudiKernel/MsgStream.h"
 /// GiGa 
-#include "GiGa/GiGaStepActionFactory.h"
+#include "GiGa/GiGaMACROs.h"
 /// local
 #include "GiGaStepActionEmpty.h"
 
@@ -21,51 +24,46 @@
  *  
  *  Implementation of class GiGaStepActionEmpty
  *
- *  @author Vanya Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
 // ============================================================================
-// Factory
+/// Factory
 // ============================================================================
-IMPLEMENT_GiGaStepAction( GiGaStepActionEmpty ) ;
+IMPLEMENT_GiGaFactory( GiGaStepActionEmpty ) ;
+// ============================================================================
 
 // ============================================================================
+/** standard constructor 
+ *  @see GiGaStepActionBase 
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
+ */
 // ============================================================================
-GiGaStepActionEmpty::GiGaStepActionEmpty( const std::string& Name , 
-                                          ISvcLocator* Loc ) 
-  : GiGaStepActionBase            ( Name , Loc ) 
-{};
+GiGaStepActionEmpty::GiGaStepActionEmpty
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent ) 
+  : GiGaStepActionBase ( type , name , parent ) {};
+// ============================================================================
 
 // ============================================================================
+/// destructor
 // ============================================================================
 GiGaStepActionEmpty::~GiGaStepActionEmpty(){};
+// ============================================================================
 
 // ============================================================================
+/** stepping action
+ *  @see G4UserSteppingAction
+ *  @param step Geant4 step
+ */
 // ============================================================================
-StatusCode GiGaStepActionEmpty::initialize () 
-{ 
-  /// initialize the base class 
-  StatusCode sc = GiGaStepActionBase::initialize() ; 
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class",sc); }
-  ///
-  Print("initialized succesfully");
-  ///
-  return StatusCode::SUCCESS;
-} ;
-
+void GiGaStepActionEmpty::UserSteppingAction ( const G4Step* ) {}
 // ============================================================================
-// ============================================================================
-StatusCode GiGaStepActionEmpty::finalize   () 
-{ 
-  Print("finalization");
-  return GiGaStepActionBase::finalize() ; 
-};
-
-// ============================================================================
-// ============================================================================
-void GiGaStepActionEmpty::UserSteppingAction ( const G4Step* ) 
-{ Print(" UserSteppingAction!"); }
 
 // ============================================================================
 // The END 

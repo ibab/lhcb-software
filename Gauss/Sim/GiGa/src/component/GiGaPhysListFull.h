@@ -1,24 +1,19 @@
+// $Id: GiGaPhysListFull.h,v 1.7 2002-05-07 12:21:35 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/27 17:03:20  ibelyaev
-/// improved printout
-///
-/// Revision 1.4  2001/07/23 13:12:27  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef    GIGA_GiGaPhysListFULL_H
 #define    GIGA_GiGaPhysListFULL_H 1 
 // ============================================================================
-
+// include files 
+// GiGa 
 #include "GiGa/GiGaPhysListBase.h"
+// forward declarations 
+template <class TYPE> class GiGaFactory;
 
-template <class PL> 
-class GiGaPhysListFactory;
-
-/** @class  GiGaPhysListFull        GiGaPhysListFull.h  GiGaPhysListFull.h
+/** @class  GiGaPhysListFull GiGaPhysListFull.h
  *   
  *  "Real" implementation of "Physics List"   
  *  it correspond("cut&paste") to novice example N04:
@@ -31,26 +26,29 @@ class GiGaPhysListFactory;
 
 class GiGaPhysListFull : public GiGaPhysListBase
 {
-  ///
-  friend class GiGaPhysListFactory<GiGaPhysListFull>;
-  ///
-protected:
-  ///
-  GiGaPhysListFull( const std::string& nick , ISvcLocator* loc );
-  virtual ~GiGaPhysListFull();
-  ///
-public: 
-
-  /** initialization of the object
-   *  @return status code 
-   */
-  virtual StatusCode initialize();
+  /// friend factory for instantiation
+  friend class GiGaFactory<GiGaPhysListFull>;
   
-  /** finalization of the object
-   *  @return status code 
-   */
-  virtual StatusCode finalize  ();
+protected:
 
+  /** standard constructor 
+   *  @see GiGaPhysListBase
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
+   */
+  GiGaPhysListFull
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
+  
+  /// destructor (virtual and protected)
+  virtual ~GiGaPhysListFull();
+  
+public: 
+  
   /// from G4VUserPhysicsList 
   void ConstructParticle ();
   void ConstructProcess  ();
@@ -70,12 +68,13 @@ private:
   virtual void ConstructAllShortLiveds ();
   ///
 private:
-  ///
+
   GiGaPhysListFull();
   GiGaPhysListFull           ( const GiGaPhysListFull& );
   GiGaPhysListFull& operator=( const GiGaPhysListFull& );
-  ///
+
 };
+// ============================================================================
 
 
 // ============================================================================

@@ -1,26 +1,17 @@
-// $Id: GiGaMagFieldUniform.h,v 1.7 2002-03-13 16:22:12 ibelyaev Exp $ 
+// $Id: GiGaMagFieldUniform.h,v 1.8 2002-05-07 12:21:35 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/08/12 15:42:51  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.5  2001/07/27 17:03:20  ibelyaev
-/// improved printout
-///
-/// Revision 1.4  2001/07/23 13:12:27  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef    GIGA_GIGAMagFieldUniform_H
 #define    GIGA_GIGAMagFieldUniform_H 1 
 // ============================================================================
-
+// include files 
+// GiGa 
 #include "GiGa/GiGaMagFieldBase.h"
-
-template <class MagField> class GiGaMagFieldFactory;
-
+// forward declarations 
+template <class TYPE> class GiGaFactory;
 
 /** @class GiGaMagFieldUniform  GiGaMagFieldUniform.h
  *
@@ -32,43 +23,50 @@ template <class MagField> class GiGaMagFieldFactory;
 
 class GiGaMagFieldUniform: public GiGaMagFieldBase 
 {
-  ///
-  friend class GiGaMagFieldFactory<GiGaMagFieldUniform>;
-  ///
- protected:
-  /// constructor 
-  GiGaMagFieldUniform( const std::string& , ISvcLocator*); 
-  /// virtual destructor 
-  virtual ~GiGaMagFieldUniform();
-  ///
- public:
-
-  /** initialization of the object
-   *  @return status code 
-   */
-  virtual StatusCode initialize();
+  /// friend factory for instantiatio 
+  friend class GiGaFactory<GiGaMagFieldUniform>;
   
-  /** finalization of the object
-   *  @return status code 
+protected:
+  
+  /** standard constructor 
+   *  @see GiGaMagFieldBase
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
    */
-  virtual StatusCode finalize  ();
-
+  GiGaMagFieldUniform
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
+  
+  /// virtual destructor (protected)
+  virtual ~GiGaMagFieldUniform();
+  
+public:
+  
+  /** get the field value 
+   *  @see G4MagneticField
+   *  @param point point  
+   *  @param B   value of magnetic filed in poitnt 
+   */
   virtual void GetFieldValue ( const double [4], double *B  ) const ;
-  ///
- private:
-  ///
+  
+private:
+  
   GiGaMagFieldUniform(); ///< no default constructor! 
   GiGaMagFieldUniform( const GiGaMagFieldUniform& ) ; ///< no copy 
   GiGaMagFieldUniform& operator=( const GiGaMagFieldUniform& ) ; ///< no = 
-  ///
- private:
-  ///
+  
+private:
+
   float    m_Bx ; 
   float    m_By ; 
   float    m_Bz ; 
-  ///
+
 };
-///
+// ============================================================================
 
 // ============================================================================
 #endif  // GIGA_GIGAMagFieldUniform_H

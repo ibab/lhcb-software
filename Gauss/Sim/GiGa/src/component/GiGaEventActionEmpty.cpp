@@ -1,11 +1,14 @@
-// $Id: GiGaEventActionEmpty.cpp,v 1.7 2002-04-25 13:02:04 ibelyaev Exp $ 
+// $Id: GiGaEventActionEmpty.cpp,v 1.8 2002-05-07 12:21:34 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/04/25 13:02:04  ibelyaev
+//  small update
+//
 // ============================================================================
 // GiGa 
-#include "GiGa/GiGaEventActionFactory.h"
+#include "GiGa/GiGaMACROs.h"
 // local
 #include "GiGaEventActionEmpty.h"
 
@@ -19,50 +22,46 @@
 // ============================================================================
 // Factory
 // ============================================================================
-IMPLEMENT_GiGaEventAction( GiGaEventActionEmpty );
+IMPLEMENT_GiGaFactory( GiGaEventActionEmpty );
+// ============================================================================
 
 // ============================================================================
+/** standard constructor 
+ *  @see GiGaEventActionBase
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
+ */
 // ============================================================================
-GiGaEventActionEmpty::GiGaEventActionEmpty( const std::string& Name , 
-                                            ISvcLocator* Loc ) 
-  : GiGaEventActionBase( Name , Loc ) 
+GiGaEventActionEmpty::GiGaEventActionEmpty
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent ) 
+  : GiGaEventActionBase( type , name , parent ) 
 {};
+// ============================================================================
 
 // ============================================================================
+/// Desctructor 
 // ============================================================================
 GiGaEventActionEmpty::~GiGaEventActionEmpty(){};
+// ============================================================================
 
 // ============================================================================
-// ============================================================================
-StatusCode GiGaEventActionEmpty::initialize () 
-{
-  /// initialize the base class 
-  StatusCode sc = GiGaEventActionBase::initialize() ; 
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class",sc); }
-  ///
-  Print("initialized succesfully");
-  ///
-  return StatusCode::SUCCESS;
-} ;
-
-// ============================================================================
-// ============================================================================
-StatusCode GiGaEventActionEmpty::finalize   () 
-{ 
-  Print("finalization");
-  return GiGaEventActionBase::finalize() ; 
-} ;
-
-// ============================================================================
+/// G4 
 // ============================================================================
 void GiGaEventActionEmpty::BeginOfEventAction ( const G4Event* /* event */ ) 
-{ Print(" BeginOfEventAction() method is invoked"); };
+{ Print("'BeginOfEventAction' method is invoked"); };
+// ============================================================================
 
 // ============================================================================
+// G4
 // ============================================================================
 void GiGaEventActionEmpty::EndOfEventAction   ( const G4Event* /* event */ ) 
-{ Print(" EndOfEventAction() method is invoked"); };
+{ Print("'EndOfEventAction' method is invoked"); };
+// ============================================================================
 
 // ============================================================================
 // The END 

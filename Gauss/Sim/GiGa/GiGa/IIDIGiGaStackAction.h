@@ -1,24 +1,26 @@
-// $Id: IIDIGiGaStackAction.h,v 1.6 2002-01-22 18:20:52 ibelyaev Exp $ 
+// $Id: IIDIGiGaStackAction.h,v 1.7 2002-05-07 12:21:32 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2001/08/12 15:42:48  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.4  2001/07/23 13:11:48  ibelyaev
-// the package restructurisation(II)
-// 
 // ============================================================================
 #ifndef   GIGA_IIDIGIGASTACKACTION_H
 #define   GIGA_IIDIGIGASTACKACTION_H 1 
 // ============================================================================
 
-/** @file IIDIGiGaStackAction.h
- *  
+/** @file 
  *  Declaration of the interface ID ( interface id, major & minor version) 
+ *  for class IGiGaStackAction
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   26/07/2001
  */
-static const InterfaceID IID_IGiGaStackAction( "IGiGaStackAction" , 2 , 0 );
+/** @var IID_IGiGaStackAction
+ *  Declaration of the interface ID ( interface id, major & minor version) 
+ *  for class IGiGaStackAction
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   26/07/2001
+ */
+static const InterfaceID IID_IGiGaStackAction( "IGiGaStackAction" , 3 , 0 );
 
 // ============================================================================
 // The End 

@@ -1,8 +1,11 @@
-// $Id: GiGaSvc.h,v 1.8 2002-05-01 18:23:39 ibelyaev Exp $ 
+// $Id: GiGaSvc.h,v 1.9 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/01 18:23:39  ibelyaev
+//  import errors/warnings/exception counterf from LHCb Calo software
+//
 // ============================================================================
 #ifndef       GIGA_GIGASVC_H
 #define       GIGA_GIGASVC_H   1 
@@ -27,6 +30,7 @@
 class     IChronoStatSvc                  ;
 class     ISvcLocator                     ;
 class     IObjManager                     ;
+class     IToolSvc                        ;
 template   <class TYPE> class SvcFactory  ;
 /// forwad declarations  from GiGa  
 class     IGiGaRunManager    ; 
@@ -374,11 +378,6 @@ class GiGaSvc: public         Service       ,
                                       void**             pI  );
 protected: 
   
-  /** create GiGa Run Manager 
-   *  @return status code 
-   */
-  StatusCode createGiGaRunManager () ;  
-  
   /** prepare the event 
    *  @param  vertex pointer to primary vertex 
    *  @return status code 
@@ -393,6 +392,14 @@ protected:
   
 private:
   
+  /** retrieve IGiGaRunManager 
+   *  @see IGiGaRunManager
+   *  @return status code
+   */
+  StatusCode      retrieveRunManager() ;
+  
+private:
+  
   /// accessor to IGiGaRunManager object
   inline IGiGaRunManager* runMgr    () const { return m_runMgr         ; } ;
   /// accessor to visualization manager 
@@ -403,6 +410,8 @@ private:
   inline IChronoStatSvc*  chronoSvc () const { return m_chronoSvc      ; } ;
   /// accessor to object manager 
   inline IObjManager*     objMgr    () const { return m_objMgr         ; } ;
+  /// accessor to Tool Service 
+  inline IToolSvc*        toolSvc   () const { return m_toolSvc        ; } ;
   /// accessor to Service Locator 
   inline ISvcLocator*     svcLoc    () const { return serviceLocator() ; } ;
   
@@ -554,7 +563,8 @@ private:
   IGiGaRunManager* m_runMgr      ; ///< pointer to IGiGaRunManager  object
   G4VVisManager*   m_visMgr      ; ///< visualization manager 
   ///
-  IChronoStatSvc*  m_chronoSvc   ; ///< pointer to Chtono&Stat service
+  IChronoStatSvc*  m_chronoSvc   ; ///< pointer to Chtono & Stat Service
+  IToolSvc*        m_toolSvc     ; ///< pointer to Tool Service 
   IObjManager*     m_objMgr      ; ///< pointer to ObjectManager object
   IGiGaGeoSrc*     m_geoSrc      ; ///< pointer to GiGa Geometry Source 
   std::string      m_objMgrName  ; ///< name of object manager object

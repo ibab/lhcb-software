@@ -1,10 +1,8 @@
+// $Id: GiGaStepActionSequence.h,v 1.3 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/23 20:53:46  ibelyaev
-/// reorganization of GiGaUtil namespace
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef GIGA_GIGASTEPACTIONSEQUENCE_H 
 #define GIGA_GIGASTEPACTIONSEQUENCE_H 1
@@ -15,8 +13,7 @@
 /// GiGa 
 #include "GiGa/GiGaStepActionBase.h"
 /// forward declarations 
-template <class SA>
-class GiGaStepActionFactory;
+template <class TYPE> class GiGaFactory;
 
 
 /** @class GiGaStepActionSequence GiGaStepActionSequence.h
@@ -24,51 +21,61 @@ class GiGaStepActionFactory;
  *  The specialized Step Action. It is just an ordered 
  *  sequence of other Step Actions.  
  *
- *  @author Ivan Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   23/07/2001
  */
 
 class GiGaStepActionSequence: public GiGaStepActionBase
 {
-  /// the friend class    
-  friend class GiGaStepActionFactory<GiGaStepActionSequence> ;
-  ///
+  /// the friend factory for instantiation   
+  friend class GiGaFactory<GiGaStepActionSequence> ;
+
 public:
   
   typedef std::vector<std::string>       MEMBERS;
   typedef std::vector<IGiGaStepAction*>  ACTIONS;
   
   /** initialize the object
+   *  @see GiGaStepActionBase 
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
    *  @return status code 
    */
   virtual StatusCode  initialize () ;
   
   /** finalize the object
+   *  @see GiGaStepActionBase 
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
    *  @return status code 
    */
   virtual StatusCode  finalize   () ;
   
   /** perform the stepping action
+   *  @see G4UserSteppingAction
    *  @param pointer to current Geant4 step 
    */
   virtual void UserSteppingAction ( const G4Step* step );
   
 protected:
   
-  /** the standard constructor
-   *  @param  Name name of the instance
-   *  @param  Loc  pointer to service locator object 
+  /** standard constructor 
+   *  @see GiGaStepActionBase 
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
    */
-  GiGaStepActionSequence( const std::string& Name ,
-                     ISvcLocator*       Loc  );
+  GiGaStepActionSequence
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
   
-  /// destructor 
+  /// destructor (virtual and protected)
   virtual ~GiGaStepActionSequence();
-  
-  /** finalise, delete and clear actions container 
-   *  @return status code 
-   */
-  StatusCode   actionsReset() ;
   
 private:
   
@@ -85,7 +92,10 @@ private:
   ACTIONS m_actions ; ///< members
   
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 #endif ///< GIGA_GIGASTEPACTIONSEQUENCE_H
 // ============================================================================

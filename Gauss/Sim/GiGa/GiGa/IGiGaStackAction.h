@@ -1,55 +1,45 @@
+// $Id: IGiGaStackAction.h,v 1.8 2002-05-07 12:21:31 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name:
+// CVS tag $Name:
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/07/23 13:11:46  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef     GIGA_IGIGASTACKACTION_H
 #define     GIGA_IGIGASTACKACTION_H 1 
 // ============================================================================
-// STL 
-#include <string> 
-// base classes from GaudiKernel  
-#include "GaudiKernel/IInterface.h"
-// base class from Geant4 
-#include "G4UserStackingAction.hh"
-// unique IID 
+// GiGa
+#include "GiGa/IGiGaInterface.h"
 #include "GiGa/IIDIGiGaStackAction.h"
-
-
+// Geant4 
+#include "G4UserStackingAction.hh"
 
 /** @class IGiGaStackAction IGiGaStackAction.h GiGa/IGiGaStackAction.h
  *
  *  Definition of "pseudo-abstract" pseudo-interface 
  *                           for GiGa Stacking Action
  *
- *  @author  Vanya Belyaev
- *   @date    21/02/2001
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    21/02/2001
  */
 
-class IGiGaStackAction: virtual public G4UserStackingAction ,
-                        virtual public IInterface            
+class IGiGaStackAction: 
+  virtual public G4UserStackingAction ,
+  virtual public IGiGaInterface   
 {
-  ///
 public:
+  
   /// Retrieve interface ID
   static const InterfaceID& interfaceID ()  { return IID_IGiGaStackAction ; }
-  ///
-  /// identification 
-  virtual const std::string& name        () const = 0 ;
-  /// initialization method 
-  virtual StatusCode         initialize  ()       = 0 ;
-  /// finalization method 
-  virtual StatusCode         finalize    ()       = 0 ;
-  ///
+  
+protected:
+  
   ///  virtual destructor   
   virtual ~IGiGaStackAction(){};
-  ///
 };
+// ============================================================================
 
-
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  ///<  GIGA_IGIGASTACKACTION_H
 // ============================================================================

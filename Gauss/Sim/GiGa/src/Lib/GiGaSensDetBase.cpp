@@ -1,13 +1,8 @@
+// $Id: GiGaSensDetBase.cpp,v 1.4 2002-05-07 12:21:34 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/07/27 17:03:18  ibelyaev
-/// improved printout
-///
-/// Revision 1.1  2001/07/23 13:12:12  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // from STL
 #include <vector>
@@ -20,65 +15,66 @@
 // GiGa
 #include "GiGa/GiGaSensDetBase.h" 
 
-/** impementation of class GiGaSensDetBase
+/** @file 
+ *  impementation of class GiGaSensDetBase
  *
  *  @author Vanya Belyaev 
  *  @date   22/07/2001 
  */
 
 // ============================================================================
-/** standard constructor   
- *  @param name name of this sensitive detector instance 
- *  @param Svc pointer to service locator 
+/** standard constructor 
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
  */
 // ============================================================================
-GiGaSensDetBase::GiGaSensDetBase( const std::string& nick , 
-                                  ISvcLocator* svc )
-  /// ATTENTION !!! this name ill be overwritten later!!!!
-  : G4VSensitiveDetector( nick                 ) 
-  ///
-  , GiGaBase            ( nick     ,   svc     ) 
-  /// initilization flag 
-  , m_init              ( false                )
-  /// Active Flag 
+GiGaSensDetBase::GiGaSensDetBase 
+( const std::string& type   , 
+  const std::string& name   , 
+  const IInterface*  parent )
+  // ATTENTION !!! this name ill be overwritten later!!!!
+  : G4VSensitiveDetector( name                 ) 
+  , GiGaBase            ( type , name , parent ) 
+  // Active Flag 
   , m_active            ( true                 ) 
-  /// Det Name 
-  , m_detName           () 
-{ 
-  declareProperty( "Active"                , m_active   );
-  declareProperty( "DetectrrName"          , m_detName  );
+  // Path 
+  , m_detPath           ( ""                   ) 
+{
+  declareInterface<IGiGaSensDet> ( this );
+  declareProperty( "Active"       , m_active   );
+  declareProperty( "DetectorPath" , m_detPath   );
 };
+// ============================================================================
 
 // ============================================================================
-/// virtual destructor 
+// virtual destructor 
 // ============================================================================
 GiGaSensDetBase::~GiGaSensDetBase(){};
 
 // ============================================================================
-/** ident
- *  @return name of the given sensitive detector instance 
- */
-// ============================================================================
-const std::string& GiGaSensDetBase::name () const 
-{ return GiGaBase::name() ; }; 
-
-// ============================================================================
 /** initialize the sensitive detector  
+ *  @see GiGaBase 
+ *  @see  AlgTool 
+ *  @see IAlgTool 
  *  @return status code 
  */
 // ============================================================================
 StatusCode GiGaSensDetBase::initialize() 
 {
   StatusCode sc = GiGaBase::initialize() ; 
-  if( sc.isFailure() ) { return Error("Could not initialize Base class!"); } 
-  /// Correct the names!
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize base class GiGaBase"); } 
+  // Correct the names!
   {
     ///
-    std::string tmp( m_detName + "/" + name() ); 
+    std::string tmp( m_detPath + "/" + name() ); 
     std::string::size_type pos = tmp.find("//") ; 
     while( std::string::npos != pos ) 
       { tmp.erase( pos , 1 ) ; pos = tmp.find("//") ; }
-    /// attention!!! direct usage of G4VSensitiveDetector members!!!! 
+    // attention!!! direct usage of G4VSensitiveDetector members!!!! 
     pos = tmp.find_last_of('/') ; 
     if( std::string::npos == pos )
       { 
@@ -120,11 +116,10 @@ StatusCode GiGaSensDetBase::initialize()
         <<  endreq; /// ATTENTION !!! 
   }
   ///
-  Print("GiGaSensDetBase initialized successfully" ,
-        StatusCode::SUCCESS , MSG::DEBUG ) ;
-  ///
-  return StatusCode::SUCCESS;
+  return Print("GiGaSensDetBase initialized successfully" ,
+               StatusCode::SUCCESS                        , MSG::VERBOSE ) ;
 }; 
+// ============================================================================
 
 // ============================================================================
 /** finalize the sensitive detector  
@@ -133,57 +128,15 @@ StatusCode GiGaSensDetBase::initialize()
 // ============================================================================
 StatusCode GiGaSensDetBase::finalize() 
 { 
-  ///
   Print("GiGaSensDetBase finalization" ,
-        StatusCode::SUCCESS , MSG::DEBUG ) ;
+        StatusCode::SUCCESS            , MSG::VERBOSE ) ;
   ///
   return GiGaBase::finalize();  
 };
+// ============================================================================
 
 // ============================================================================
-/** query the interface
- *  @param ID   uniqie interface identifier 
- *  @param ppI  the placeholder for returned interface 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaSensDetBase::queryInterface( const InterfaceID& iid ,
-                                            void** ppI)
-{
-  if( 0 == ppI ) { return StatusCode::FAILURE; } 
-  *ppI = 0; 
-  if      ( IID_IGiGaSensDet == iid ) 
-    { *ppI = static_cast<IGiGaSensDet*>        ( this ) ; } 
-  else                           
-    { return GiGaBase::queryInterface( iid , ppI ) ; } /// RETURN!!!
-  addRef();
-  return StatusCode::SUCCESS;
-};
-
-// ============================================================================
-/// serialize object for reading
-// ============================================================================
-StreamBuffer& GiGaSensDetBase::serialize( StreamBuffer& S )       
-{
-  GiGaBase::serialize( S ) ; 
-  m_init = false ; 
-  int    tmp     ; 
-  S >> m_detName >> tmp ; 
-  ///
-  m_active = tmp ? true : false ;   
-  ///
-  return S;       
-};
-  
-// ============================================================================
-/// serialize object for writing 
-// ============================================================================
-StreamBuffer& GiGaSensDetBase::serialize( StreamBuffer& S ) const 
-{
-  GiGaBase::serialize( S ) ; 
-  return S << m_detName << (int) m_active ;
-}; 
-
+// The END  
 // ============================================================================
 
 

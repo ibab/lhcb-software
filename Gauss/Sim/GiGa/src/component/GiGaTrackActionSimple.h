@@ -1,28 +1,21 @@
+// $Id: GiGaTrackActionSimple.h,v 1.7 2002-05-07 12:21:37 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/27 14:29:02  ibelyaev
-/// bug fix
-///
-/// Revision 1.4  2001/07/23 13:12:29  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef       GIGA_GiGaTrackActionSimple_H
 #define       GIGA_GiGaTrackActionSimple_H 1 
 // ============================================================================
-/// STL 
+// STL 
 #include <string>
 #include <vector>
-/// GiGa
+// GiGa
 #include "GiGa/GiGaTrackActionBase.h"
-///
-template <class TA> 
-class GiGaTrackActionFactory;
+// forward declarations 
+template <class TYPE> class GiGaFactory;
 class G4Track;
 class G4particleDefinition;
-///
 
 /** @class GiGaTrackActionSimple GiGaTrackActionSimple.h 
  *
@@ -32,43 +25,73 @@ class G4particleDefinition;
  *  It is just "Simple"!
  *  
  *
- *  @author  Vanya Belyaev
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date    23/01/2001
  */
 
 
 class GiGaTrackActionSimple: virtual public GiGaTrackActionBase
 {
-  ///
-  friend class GiGaTrackActionFactory<GiGaTrackActionSimple>;
-  ///
+  /// friend factory for instantiation 
+  friend class GiGaFactory<GiGaTrackActionSimple>;
+
 public: 
-  ///
+  /// useful typedefs
   typedef  std::vector<std::string>                  TypeNames; 
   typedef  std::vector<const G4ParticleDefinition*>  PartDefs; 
   ///
 protected:
-  /// constructor 
-  GiGaTrackActionSimple( const std::string& , ISvcLocator* );
-  ///  
-  virtual ~GiGaTrackActionSimple();
-  ////
-public: 
-  ///
-  virtual StatusCode initialize () ; 
-  virtual StatusCode finalize   () ;
 
-  /**  perform action 
-   *   @param pointer to new track opbject 
+  /** standard constructor 
+   *  @see GiGaTrackActionBase 
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
+   */
+  GiGaTrackActionSimple
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
+  
+  /// destructor (virtual and protected)
+  virtual ~GiGaTrackActionSimple();
+
+public: 
+  
+  /** initialize the track action  
+   *  @see GiGaTrackActionBase 
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
+   *  @return status code 
+   */
+  virtual StatusCode initialize () ; 
+  
+  /** finalize the action object 
+   *  @see GiGaTrackActionBase 
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
+   *  @return status code
+   */
+  virtual StatusCode finalize   () ;
+  
+  /** perform action 
+   *  @see G4UserTrackingAction
+   *  @param pointer to new track opbject 
    */
   virtual void PreUserTrackingAction  ( const G4Track* ) ;
-  /**  perform action 
-   *   @param pointer to new track opbject 
+
+  /** perform action 
+   *  @see G4UserTrackingAction
+   *  @param pointer to new track opbject 
    */
   virtual void PostUserTrackingAction ( const G4Track* ) ;
-  ///
+
 protected:
-  ///
+
   /// Should all tracks to be stored?
   inline bool      storeAll             () const ; 
   /// Should primaries be stored ? 
@@ -97,14 +120,14 @@ protected:
   inline const PartDefs& childStoredTypes     () const ; 
   ///
 private:
-  ///
+
   GiGaTrackActionSimple() ; ///< no default constructor
   GiGaTrackActionSimple( const GiGaTrackActionSimple& ) ; ///< no copy 
   GiGaTrackActionSimple& operator=( const GiGaTrackActionSimple& ) ; 
-  ///
+
 private:
-  ///
-  ///  Flags:
+
+  //  Flags:
   ///  all tracks to be stored         
   bool            m_storeAll              ;
   ///  all primaries are stored
@@ -113,8 +136,9 @@ private:
   bool            m_storeByOwnEnergy      ; 
   ///  all tracks  with given type are stored 
   bool            m_storeByOwnType        ; 
-  ///  all tracks which has a daughter 
-  /// with kinetic energy over threshold are stored 
+  /** all tracks which has a daughter 
+   *  with kinetic energy over threshold are stored 
+   */
   bool            m_storeByChildEnergy    ; 
   ///  all tracks which has a daughter of given type are stored 
   bool            m_storeByChildType      ; 

@@ -1,10 +1,8 @@
+// $Id: GiGaMagFieldBase.h,v 1.8 2002-05-07 12:21:29 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/07/23 13:11:42  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef    GIGA_GIGAMagFieldBase_H
 #define    GIGA_GIGAMagFieldBase_H 1 
@@ -22,50 +20,50 @@ class IMagneticFieldSvc;
  */
 
 class GiGaMagFieldBase: public virtual IGiGaMagField , 
-                        public         GiGaBase 
+                        public          GiGaBase 
 {
-  ///
 protected:
-
+  
   /** standard constructor
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
    *  @param name name of the object
-   *  @param loc  pointer to service locator 
+   *  @param parent  pointer to parent object
    */
-  GiGaMagFieldBase( const std::string& name , 
-                    ISvcLocator*       loc ) ; 
+  GiGaMagFieldBase 
+  ( const std::string& type   , 
+    const std::string& name   , 
+    const IInterface*  parent ) ; 
+  
   /// virtual destructor 
   virtual ~GiGaMagFieldBase();
-  ///
+
 public:
   
-  /// identification  
-  virtual const std::string&  name    () const ;
-  
   /** initialize the object 
+   *  @see GiGaBase
+   *  @see  AlgTool
+   *  @see IAlgTool
    *  @return status code 
    */
   virtual StatusCode   initialize     () ; 
 
   /** finalize the object  
+   *  @see GiGaBase
+   *  @see  AlgTool
+   *  @see IAlgTool
    *  @return status code 
    */
   virtual StatusCode   finalize       () ; 
-
-  /** query the interface
-   *  @param id uniqie interface identifier 
-   *  @param i  placeholder for returned interface 
-   *  @return status code 
-   */
-  virtual StatusCode   queryInterface ( const InterfaceID& id , 
-                                        void**             i  ) ;
-  ///
+  
 protected:
-
+  
   /** aceess to Magnetic Field Service
    *  @return pointer to Magnetic Field Service 
    */
   inline IMagneticFieldSvc*  mfSvc() const { return m_mfSvc; }
-   
+  
 private:
   ///
   GiGaMagFieldBase(); ///< no default constructor! 
@@ -78,8 +76,9 @@ private:
   IMagneticFieldSvc*   m_mfSvc;
   ///
 };
-///
 
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  /// GIGA_GIGAMagFieldBase_H
 // ============================================================================

@@ -1,11 +1,11 @@
-// $Id: GiGaPhysListGeantino.cpp,v 1.7 2002-04-25 13:02:05 ibelyaev Exp $ 
+// $Id: GiGaPhysListGeantino.cpp,v 1.8 2002-05-07 12:21:35 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // GiGa
-#include "GiGa/GiGaPhysListFactory.h"
+#include "GiGa/GiGaMACROs.h"
 // G4 
 #include "G4ParticleTypes.hh"
 // local
@@ -19,51 +19,34 @@
  */
 
 // ============================================================================
-// Factory
+/// Factory
 // ============================================================================
-IMPLEMENT_GiGaPhysList( GiGaPhysListGeantino ) ;
+IMPLEMENT_GiGaFactory( GiGaPhysListGeantino ) ;
+// ============================================================================
       
 // ============================================================================
-// ============================================================================
-GiGaPhysListGeantino::GiGaPhysListGeantino( const std::string& nick , 
-                                            ISvcLocator* loc ) 
-  : GiGaPhysListBase( nick , loc )
-{};
-
-// ============================================================================
-// ============================================================================
-GiGaPhysListGeantino::~GiGaPhysListGeantino()
-{};
-
-// ============================================================================
-/** initialization of the object
- *  @return status code 
+/** standard constructor 
+ *  @see GiGaPhysListBase
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
  */
 // ============================================================================
-StatusCode GiGaPhysListGeantino::initialize()
-{
-  /// initialize the base class 
-  StatusCode sc = GiGaPhysListBase::initialize();
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class",sc);}
-  ///
-  Print("initialized succesfully") ;
-  ///
-  return StatusCode::SUCCESS;  
-};
+GiGaPhysListGeantino::GiGaPhysListGeantino
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent )
+  : GiGaPhysListBase( type , name , parent )
+{};
+// ============================================================================
 
 // ============================================================================
-/** finalization of the object
- *  @return status code 
- */
+/// destructor 
 // ============================================================================
-StatusCode GiGaPhysListGeantino::finalize  ()
-{
-  ///
-  Print("finalization") ;
-  ///
-  return GiGaPhysListBase::finalize();
-};
+GiGaPhysListGeantino::~GiGaPhysListGeantino() {};
+// ============================================================================
 
 // ============================================================================
 // ============================================================================

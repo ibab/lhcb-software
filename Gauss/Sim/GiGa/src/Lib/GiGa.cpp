@@ -1,25 +1,15 @@
-// $Id: GiGa.cpp,v 1.4 2002-05-01 18:23:38 ibelyaev Exp $ 
+// $Id: GiGa.cpp,v 1.5 2002-05-07 12:21:33 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2002/01/22 18:20:53  ibelyaev
-//  Vanya: update for newer versions of Gaudi and Geant4
-//
-// Revision 1.2  2001/08/12 13:25:23  ibelyaev
-// improvements in Doxygen documentation
-//
-// Revision 1.1  2001/08/01 09:42:23  ibelyaev
-// redesign and reimplementation of GiGaRunManager class
-// 
-// x===========================================================================
+// ===========================================================================
 /// GaudiKernel
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/System.h"
 /// GiGa 
 #include "GiGa/GiGa.h"
 // Local
-#include "GiGaRunManager.h"
 #include "GiGaVisManager.h"
 /// G4 
 #include "G4RunManager.hh"
@@ -63,30 +53,6 @@
  *  @date  31/07/2001 
  */
 // ============================================================================
-
-// ============================================================================
-/** create GiGa Run Manager
- *  @param   Name name of run manager 
- *  @param   Loc  pointer to service Locator  
- *  @return  pointer to giga run manager abstract interface 
- */     
-// ============================================================================
-IGiGaRunManager* GiGa::createRunManager( const std::string& Name , 
-                                         ISvcLocator*       Loc  )
-{
-  /// static variable! 
-  static IGiGaRunManager* s_runMgr = 0;         ///< NB !!! STATIC !!!
-  /// return the existing reference 
-  if( 0 != s_runMgr ) { s_runMgr->addRef() ; return s_runMgr ; }
-  /// check for other G4 Run Manager 
-  if( 0 != G4RunManager::GetRunManager() )   { return 0; }
-  ///
-  if( 0 == Loc ) { Loc = Gaudi::svcLocator() ; }
-  /// 
-  s_runMgr = new GiGaRunManager( Name , Loc );
-  ///
-  return s_runMgr ;
-};
 
 // ============================================================================
 /** create (and initialize) GiGa Vis manager

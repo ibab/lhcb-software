@@ -1,10 +1,8 @@
+// $Id: GiGaPhysListBase.h,v 1.8 2002-05-07 12:21:29 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/07/23 13:11:42  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef       GIGA_GiGaPhysListBase_H
 #define       GIGA_GiGaPhysListBase_H 1 
@@ -21,25 +19,43 @@
  *  @author Vanya Belyaev
  */
 
-class GiGaPhysListBase: virtual public IGiGaPhysList   , 
-                        public          GiGaBase
+class GiGaPhysListBase: 
+  public virtual IGiGaPhysList   , 
+  public          GiGaBase
 {
-  ///
 protected:
-  ///
-  GiGaPhysListBase( const std::string& , ISvcLocator* );
+  
+  /** standard constructor
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
+   */
+  GiGaPhysListBase( const std::string& type   , 
+                    const std::string& name   , 
+                    const IInterface*  parent ) ;
   ///
   virtual ~GiGaPhysListBase();
-  ///
+
 public:
-  ///
-  virtual const  std::string& name       () const { return GiGaBase::name() ; }
-  /// 
-  virtual StatusCode   queryInterface( const InterfaceID&  , void** ); 
-  ///
-  virtual StatusCode   initialize () ; 
-  virtual StatusCode   finalize   () ; 
-  ///
+  
+  /** initialize the object 
+   *  @see GiGaBase
+   *  @see  AlgTool
+   *  @see IAlgTool
+   *  @return status code 
+   */
+  virtual StatusCode   initialize     () ; 
+  
+  /** finalize the object 
+   *  @see GiGaBase
+   *  @see  AlgTool
+   *  @see IAlgTool
+   *  @return status code 
+   */
+  virtual StatusCode   finalize       () ; 
+  
 protected:
   ///
   double    defCut() const { return m_DefaultCutValue; } 
@@ -51,11 +67,11 @@ private:
   GiGaPhysListBase& operator=( const GiGaPhysListBase& ) ; //< no assignment  
   ///
 private:
-  ///
+
   double    m_DefaultCutValue  ; //default cut value
-  ///
+
 };
-///
+// ============================================================================
  
 // ============================================================================
 #endif    ///<  GIGA_GiGaPhysListBase_H

@@ -1,35 +1,30 @@
+// $Id: IGiGaRunAction.h,v 1.4 2002-05-07 12:21:31 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/07/26 14:24:46  ibelyaev
-/// new base class for Run Action
-///
-/// Revision 1.1  2001/07/26 13:26:02  ibelyaev
-/// new abstract interface
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef GIGA_IGIGARUNACTION_H 
 #define GIGA_IGIGARUNACTION_H 1
 // ============================================================================
-/// GaudiKernel
-#include "GaudiKernel/IInterface.h"
-/// GiGa 
+// GiGa 
+#include "GiGa/IGiGaInterface.h"
 #include "GiGa/IIDIGiGaRunAction.h"
-/// G4 
+// G4 
 #include "G4UserRunAction.hh"
 
 /** @class IGiGaRunAction IGiGaRunAction.h GiGa/IGiGaRunAction.h
  *  
  *  definition of presudo-abstract interface for 
- *    GiGa Run Action
+ *  GiGa Run Action
  *
- *  @author Ivan Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   26/07/2001
  */
 
-class IGiGaRunAction: virtual public G4UserRunAction ,  
-                      virtual public IInterface          
+class IGiGaRunAction: 
+  virtual public G4UserRunAction ,  
+  virtual public IGiGaInterface
 {
   
 public:
@@ -39,28 +34,16 @@ public:
    */
   static const InterfaceID& interfaceID ()  { return IID_IGiGaRunAction ; }
   
-  /** identification 
-   *  @return name of concrete inteface instance 
-   */
-  virtual const std::string& name        () const = 0 ;
-
-  /** initialization method 
-   *  @return status code 
-   */
-  virtual StatusCode         initialize  ()       = 0 ;
-  
-  /** finalization method 
-   *  @return status code 
-   */
-  virtual StatusCode         finalize    ()       = 0 ;
+protected:
   
   ///  virtual destructor   
   virtual ~IGiGaRunAction(){};
   
-private:
-
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 #endif ///< GIGA_IGIGARUNACTION_H
 // ============================================================================

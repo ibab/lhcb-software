@@ -1,8 +1,11 @@
-// $Id: GiGa_load.cpp,v 1.12 2002-05-04 20:20:12 ibelyaev Exp $
+// $Id: GiGa_load.cpp,v 1.13 2002-05-07 12:21:37 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2002/05/04 20:20:12  ibelyaev
+//  see $GIGAROOT/doc/release.notes (4 May 2002)
+//
 // Revision 1.11  2002/04/25 13:02:05  ibelyaev
 //  small update
 //
@@ -21,7 +24,7 @@
  *  @date xx/xx/xxxx
  */
 // ============================================================================
- 
+
 void GiGa_load() 
 { 
   /// GiGa Service itself
@@ -30,34 +33,36 @@ void GiGa_load()
   DECLARE_ALGORITHM       (    GiGaInputStream         );
   DECLARE_ALGORITHM       (    GiGaOutputStream        );
   DECLARE_ALGORITHM       (    GiGaFlushAlgorithm      );
+  /// Run manager  (GiGa)
+  DECLARE_GiGaFactory     (    GiGaRunManager          );
   /// Physics List (GiGa)
-  DECLARE_GiGaPhysList    (    GiGaPhysListGeantino    );
-  DECLARE_GiGaPhysList    (    GiGaPhysListEm          );
-  DECLARE_GiGaPhysList    (    GiGaPhysListFull        );
+  DECLARE_GiGaFactory     (    GiGaPhysListGeantino    );
+  DECLARE_GiGaFactory     (    GiGaPhysListEm          );
+  DECLARE_GiGaFactory     (    GiGaPhysListFull        );
   /// Sensitive Detector 
-  DECLARE_GiGaSensDet     (    GiGaSensDetPrint        );
-  DECLARE_GiGaSensDet     (    GiGaSensDetBudget       );
+  DECLARE_GiGaFactory     (    GiGaSensDetPrint        );
+  DECLARE_GiGaFactory     (    GiGaSensDetBudget       );
   /// Magnetic Field  
-  DECLARE_GiGaMagField    (    GiGaMagFieldGlobal      );
-  DECLARE_GiGaMagField    (    GiGaMagFieldUniform     );
+  DECLARE_GiGaFactory     (    GiGaMagFieldGlobal      );
+  DECLARE_GiGaFactory     (    GiGaMagFieldUniform     );
   /// stacking action 
-  DECLARE_GiGaStackAction (    GiGaStackActionEmpty    );
+  DECLARE_GiGaFactory     (    GiGaStackActionEmpty    );
   /// tracking action 
-  DECLARE_GiGaTrackAction (    GiGaTrackActionEmpty    );
-  DECLARE_GiGaTrackAction (    GiGaTrackActionSimple   );
-  DECLARE_GiGaTrackAction (    GiGaTrackActionSequence );
+  DECLARE_GiGaFactory     (    GiGaTrackActionEmpty    );
+  DECLARE_GiGaFactory     (    GiGaTrackActionSimple   );
+  DECLARE_GiGaFactory     (    GiGaTrackActionSequence );
   /// stepping  action 
-  DECLARE_GiGaStepAction  (    GiGaStepActionEmpty     );
-  DECLARE_GiGaStepAction  (    GiGaStepActionDraw      );
-  DECLARE_GiGaStepAction  (    GiGaStepActionSequence  );
+  DECLARE_GiGaFactory     (    GiGaStepActionEmpty     );
+  DECLARE_GiGaFactory     (    GiGaStepActionDraw      );
+  DECLARE_GiGaFactory     (    GiGaStepActionSequence  );
   /// run action
-  DECLARE_GiGaRunAction   (    GiGaRunActionSequence   );
-  DECLARE_GiGaRunAction   (    GiGaRunActionCommand    );
+  DECLARE_GiGaFactory     (    GiGaRunActionSequence   );
+  DECLARE_GiGaFactory     (    GiGaRunActionCommand    );
   /// event action 
-  DECLARE_GiGaEventAction (    GiGaEventActionEmpty    );
-  DECLARE_GiGaEventAction (    GiGaEventActionDraw     );
-  DECLARE_GiGaEventAction (    GiGaEventActionSequence );
-  DECLARE_GiGaEventAction (    GiGaEventActionCommand  );
+  DECLARE_GiGaFactory     (    GiGaEventActionEmpty    );
+  DECLARE_GiGaFactory     (    GiGaEventActionDraw     );
+  DECLARE_GiGaFactory     (    GiGaEventActionSequence );
+  DECLARE_GiGaFactory     (    GiGaEventActionCommand  );
 };
 
 // ============================================================================

@@ -1,13 +1,8 @@
+// $Id: GiGaSensDetPrint.h,v 1.4 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/08/12 15:42:53  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.1  2001/07/27 17:56:07  ibelyaev
-/// add new component GiGaSensDetPrint
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef       GIGA_GiGaSensDetPRINT_H
 #define       GIGA_GiGaSensDetPRINT_H 1 
@@ -30,38 +25,27 @@ class GiGaSensDetFactory;
 class GiGaSensDetPrint: virtual public GiGaSensDetBase
 {
   /// friend factory 
-  friend class GiGaSensDetFactory<GiGaSensDetPrint>;
-  ///
+  friend class GiGaFactory<GiGaSensDetPrint>;
+
 protected:
   
-  /** standard consrtructor 
-   *  @see GiGaSensDetBase
-   *  @see GiGaBase
-   *  @param Name name of sensitive detector 
-   *  @param Loc  pointer to service Locator 
-   */ 
+  /** standard constructor 
+   *  @see GiGaSensDetBase 
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
+   */
   GiGaSensDetPrint
-  ( const std::string&  Name , 
-    ISvcLocator*        Loc  );
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
   
   /// destructor (virtual and protected)
   virtual ~GiGaSensDetPrint();
   
 public: 
-
-  /** initialize the sensitive detector 
-   *  @see GiGaSensDetBase 
-   *  @see GiGaBase 
-   *  @return status code 
-   */
-  virtual StatusCode initialize () ; 
-  
-  /** finalize the sensitive detector 
-   *  @see GiGaSensDetBase 
-   *  @see GiGaBase 
-   *  @return status code 
-   */
-  virtual StatusCode finalize   () ;
   
   /** process the hit
    *  @param step     pointer to current Geant4 step 

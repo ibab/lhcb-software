@@ -1,56 +1,46 @@
+// $Id: IGiGaEventAction.h,v 1.6 2002-05-07 12:21:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2001/07/23 13:11:44  ibelyaev
-// the package restructurisation(II)
-// 
 // ============================================================================
 #ifndef     GIGA_IGIGAEventACTION_H
 #define     GIGA_IGIGAEventACTION_H 1 
 // ============================================================================
-// STL 
-#include <string>
-// base classes from GaudiKernel  
-#include "GaudiKernel/IInterface.h"
-// base class from Geant4 
-#include "G4UserEventAction.hh"
+// base classes from GiGa
+#include "GiGa/IGiGaInterface.h"
 // unique IID 
 #include "GiGa/IIDIGiGaEventAction.h"
-
+// G4 
+#include "G4UserEventAction.hh"
 
 /** @interface IGiGaEventAction IGiGaEventAction.h "GiGa/IGiGaEventAction.h"
  *
  *  Definition of "pseudo-abstract" pseudo-interface for GiGa Event Action
  *
- *  @author  Vanya Belyaev
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date    17/03/2001
-*/
+ */
 
-class IGiGaEventAction: virtual public G4UserEventAction ,  
-                        virtual public IInterface          
+class IGiGaEventAction: 
+  virtual public G4UserEventAction ,  
+  virtual public IGiGaInterface  
 {
-  ///
- public
-:
+public:
+  
   /// Retrieve the unique interface ID
   static const InterfaceID& interfaceID ()  { return IID_IGiGaEventAction ; }
-
-  /// object identification 
-  virtual const std::string& name        () const = 0 ;
-
-  /// initialization method
-  virtual StatusCode         initialize  ()       = 0 ;
-
-  /// finalization method 
-  virtual StatusCode         finalize    ()       = 0 ;
-
-  ///  virtual destructor   
+  
+protected:
+  
+  ///  virtual (protected) destructor   
   virtual ~IGiGaEventAction(){};
-
+  
 };
+// ============================================================================
 
-
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  ///<  GIGA_IGIGAEventACTION_H
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: GiGaRunManager.cpp,v 1.13 2002-05-01 18:23:38 ibelyaev Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.14 2002-05-07 12:21:33 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -6,10 +6,10 @@
 // ============================================================================
 #define GIGA_GIGARUNMANAGER_CPP 1 
 // ============================================================================
-/// STD & STL 
+// STD & STL 
 #include <string> 
 #include <typeinfo> 
-/// GaudiKernel
+// GaudiKernel
 #include  "GaudiKernel/Kernel.h"
 #include  "GaudiKernel/System.h"
 #include  "GaudiKernel/IService.h" 
@@ -17,21 +17,23 @@
 #include  "GaudiKernel/IMessageSvc.h" 
 #include  "GaudiKernel/IChronoStatSvc.h" 
 #include  "GaudiKernel/Chrono.h" 
-/// GiGa 
+#include  "GaudiKernel/ToolFactory.h" 
+// GiGa 
 #include  "GiGa/GiGaException.h"
 #include  "GiGa/IGiGaGeoSrc.h" 
 #include  "GiGa/GiGaUtil.h" 
+#include  "GiGa/GiGaMACROs.h" 
 // Local 
 #include  "GiGaRunManager.h" 
-/// G4 
+// G4 
 #include  "G4Timer.hh"
 #include  "G4StateManager.hh"
 #include  "G4UIsession.hh"
 #include  "G4UImanager.hh"
-/// G4 
+// G4 
 #include  "G4VUserPrimaryGeneratorAction.hh"
 #include  "G4VUserDetectorConstruction.hh"
-///
+//
 
 // ============================================================================
 /**  @file
@@ -41,17 +43,29 @@
  */
 // ============================================================================
 
+// ============================================================================
+/** @var GiGaRunManagerFacrtory 
+ *  static factory for creation of GiGaRunNAnager object
+ */
+// ============================================================================
+IMPLEMENT_GiGaFactory( GiGaRunManager ) ;
+// ============================================================================
 
 // ============================================================================
 /** standard onstructor 
+ *  @see  GiGaBase 
+ *  @see   AlgTool
+ *  @param type type of the run manager object
  *  @param name name of the run manager object
- *  @param svc  pointer to service locator 
+ *  @param parent pointer to parent object  
  */
 // ============================================================================
-GiGaRunManager::GiGaRunManager( const std::string & Name   ,
-                                ISvcLocator*        svc    ) 
+GiGaRunManager::GiGaRunManager
+( const std::string&  type   , 
+  const std::string&  name   , 
+  const IInterface*   parent ) 
   : G4RunManager   (         )
-  , GiGaBase       ( Name , svc )
+  , GiGaBase       ( type , name , parent )
   , m_krn_st       (  false  ) 
   , m_run_st       (  false  ) 
   , m_pre_st       (  false  ) 
@@ -60,16 +74,14 @@ GiGaRunManager::GiGaRunManager( const std::string & Name   ,
   , m_rootGeo      (    0    ) 
   , m_geoSrc       (    0    ) 
   , m_g4UIsession  (    0    ) 
-{};
+{ declareInterface<IGiGaRunManager> ( this ) ; };
+// ============================================================================
 
 // ============================================================================
-/// destructor 
+// destructor 
 // ============================================================================
-GiGaRunManager::~GiGaRunManager()
-{
-  /// release services
-  if( 0 != geoSrc    () ) { geoSrc    ()->release() ;  m_geoSrc    = 0 ; } 
-};
+GiGaRunManager::~GiGaRunManager() {};
+// ============================================================================
 
 // ============================================================================
 /** Retrieve the processed event 
@@ -79,14 +91,12 @@ GiGaRunManager::~GiGaRunManager()
 // ============================================================================
 StatusCode GiGaRunManager::retrieveTheEvent( const G4Event*& event ) 
 {
-  ///
   event = 0 ; 
-  ///
   try
     {
       StatusCode sc( StatusCode::SUCCESS ) ; 
-      if( !evt_Is_Processed() ) { sc = processTheEvent() ; }
-      if( sc.isFailure() ) { return Exception("retrieveTheEvent()");}
+      if( !evt_Is_Processed() ) { sc = processTheEvent()                  ; }
+      if( sc.isFailure()      ) { return Exception("retrieveTheEvent()" ) ; }
     }
   catch( const GaudiException& Excp )
     { return Exception( "retrieveTheEvent()", Excp ); }
@@ -98,9 +108,10 @@ StatusCode GiGaRunManager::retrieveTheEvent( const G4Event*& event )
   set_evt_Is_Prepared( false ) ; 
   event = G4RunManager::GetCurrentEvent() ;  
   ///
-  return StatusCode::SUCCESS;
-  ///
+  return Print("Geant4 Event is retrieved with success" , 
+               StatusCode::SUCCESS                      , MSG::VERBOSE );
 };
+// ============================================================================
 
 // ============================================================================
 /** Process the prepared event 
@@ -163,11 +174,10 @@ StatusCode GiGaRunManager::processTheEvent()
       set_uis_Is_Started( false ) ; 
     } 
   ///
-  Print("Geant4 Event is processed successfully"); 
-  ///
-  return StatusCode::SUCCESS;
-  ///
+  return Print("Geant4 Event is processed successfully" , 
+               StatusCode::SUCCESS                      , MSG::VERBOSE ) ;
 };
+// ============================================================================
 
 // ============================================================================
 /** Prepare the event 
@@ -226,11 +236,8 @@ StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
   ///
   set_evt_Is_Prepared ( true   ); 
   ///
-  Print("Geant4 Event preparation is succesfull", 
-        StatusCode::SUCCESS , MSG::DEBUG );
-  ///
-  return StatusCode::SUCCESS;
-  ///
+  return Print("Geant4 Event preparation is succesfull" , 
+               StatusCode::SUCCESS                      , MSG::VERBOSE );
 }; 
 
 // ============================================================================
@@ -276,10 +283,10 @@ StatusCode  GiGaRunManager::initializeRun()
   G4RunManager::RunInitialization();  
   set_run_Is_Initialized( true );
   ///
-  Print("Geant4 Run is initialized  successfully");
-  //
-  return StatusCode::SUCCESS;
+  return Print("Geant4 Run is initialized  successfully" , 
+               StatusCode::SUCCESS                       , MSG::VERBOSE );
 };
+// ============================================================================
 
 // ============================================================================
 /** initialize the Geant4 kernel
@@ -333,11 +340,10 @@ StatusCode GiGaRunManager::initializeKernel()
       set_uis_Is_Started( false ) ; 
     } 
   ///
-  Print("Geant4 Kernel is initialized  successfully");
-  ///
-  return StatusCode::SUCCESS; 
-  ///
+  return Print("Geant4 Kernel is initialized  successfully" , 
+               StatusCode::SUCCESS                          , MSG::VERBOSE );
 };
+// ============================================================================
 
 // ============================================================================
 /** finalize run manager 
@@ -353,9 +359,10 @@ StatusCode GiGaRunManager::finalizeRunManager()
   set_evt_Is_Prepared   ( false ) ; 
   set_evt_Is_Processed  ( false ) ; 
   ///
-  return StatusCode::SUCCESS; 
-  ///
+  return Print("Geant4 Run  is finalized  successfully" , 
+               StatusCode::SUCCESS                      , MSG::VERBOSE );
 };
+// ============================================================================
 
 // ============================================================================
 // The End 

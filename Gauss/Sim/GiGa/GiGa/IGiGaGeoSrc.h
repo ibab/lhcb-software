@@ -1,17 +1,8 @@
-// $Id: IGiGaGeoSrc.h,v 1.3 2002-01-22 18:20:52 ibelyaev Exp $
+// $Id: IGiGaGeoSrc.h,v 1.4 2002-05-07 12:21:30 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2001/08/12 13:25:22  ibelyaev
-// improvements in Doxygen documentation
-//
-// Revision 1.1  2001/07/25 17:18:08  ibelyaev
-// move all conversions from GiGa to GiGaCnv
-//
-// Revision 1.1  2001/07/23 13:11:45  ibelyaev
-// the package restructurisation(II)
-// 
 // ============================================================================
 #ifndef GIGA_IGIGAGEOSRC_H 
 #define GIGA_IGIGAGEOSRC_H 1
@@ -28,7 +19,7 @@ class G4VPhysicalVolume;
  *  
  *  definition of "minimal" geometry source interface for GiGa
  *
- *  @author Ivan Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   21/07/2001
  */
 
@@ -51,6 +42,8 @@ public:
    *  @return pointer to constructed(converted) geometry tree 
    */  
   virtual G4VPhysicalVolume*  G4WorldPV () = 0 ;
+  
+protected:
   
   /// virtual destructor 
   virtual ~IGiGaGeoSrc(){};

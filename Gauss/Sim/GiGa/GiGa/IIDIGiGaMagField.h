@@ -1,23 +1,25 @@
-// $Id: IIDIGiGaMagField.h,v 1.7 2002-01-22 18:20:52 ibelyaev Exp $ 
+// $Id: IIDIGiGaMagField.h,v 1.8 2002-05-07 12:21:32 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2001/08/12 15:42:47  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.5  2001/07/23 13:11:47  ibelyaev
-// the package restructurisation(II)
-// 
 // ============================================================================
 #ifndef   GIGA_IIDIGIGAMagField_H
 #define   GIGA_IIDIGIGAMagField_H 1 
 // ============================================================================
 
 
-/** declaration of teh unique interface identifier 
+/** @file 
+ *  declaration of the unique interface identifier for class IGiGaMagField
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   7 May 2002  
  */
-static const InterfaceID IID_IGiGaMagField ( "IGiGaMagField" , 1 , 0 );
+/** @var IID_IGiGaMagField
+ *  declaration of the unique interface identifier for class IGiGaMagField
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   7 May 2002  
+ */
+static const InterfaceID IID_IGiGaMagField ( "IGiGaMagField" , 2 , 0 );
 
 
 // ============================================================================

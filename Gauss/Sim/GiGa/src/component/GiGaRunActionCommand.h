@@ -1,20 +1,16 @@
+// $Id: GiGaRunActionCommand.h,v 1.3 2002-05-07 12:21:35 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/26 16:09:22  ibelyaev
-/// GiGaRunActions budiness
-///
-///
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef GIGA_GIGARUNACTIONCOMMAND_H 
 #define GIGA_GIGARUNACTIONCOMMAND_H 1
 // ============================================================================
-/// GiGa
+// GiGa
 #include "GiGa/GiGaRunActionBase.h"
-/// forward declarations
-template <class RA>
-class GiGaRunActionFactory;
+// forward declarations
+template <class TYPE> class GiGaFactory;
 
 /** @class GiGaRunActionCommand GiGaRunActionCommand.h
  *  
@@ -26,25 +22,15 @@ class GiGaRunActionFactory;
  *  @date   25/07/2001
  */
 
-class GiGaRunActionCommand: public GiGaRunActionBase
+class GiGaRunActionCommand: public virtual GiGaRunActionBase
 {
   /// friend factory for instantiation
-  friend class GiGaRunActionFactory<GiGaRunActionCommand>;
-  ////
+  friend class GiGaFactory<GiGaRunActionCommand>;
+  
 public:
 
   /// useful typedef 
   typedef  std::vector<std::string> COMMANDS;
-  
-  /** initialization of event action object
-   *  @return status code
-   */
-  virtual StatusCode initialize();
-  
-  /** finalization of event action object
-   *  @return status code
-   */
-  virtual StatusCode finalize  ();
   
   /** performe the action at the begin of each run 
    *  @param run pointer to Geant4 run object 
@@ -58,13 +44,20 @@ public:
   
 protected:
   
-  /** standard constructor
-   *  @param Name  name of this concrete event action instance 
-   *  @param Loc   poinetr to service locator 
+  /** standard constructor 
+   *  @see GiGaPhysListBase
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
    */
-  GiGaRunActionCommand( const std::string& Name ,
-                          ISvcLocator*       Loc  );
-  /// destructor
+  GiGaRunActionCommand
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
+  
+  // destructor (virtual and protected)
   virtual ~GiGaRunActionCommand( );
   
 private:
@@ -82,7 +75,10 @@ private:
   COMMANDS  m_endCmds;
 
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 #endif ///< GIGA_GIGARUNACTIONCOMMAND_H
 // ============================================================================

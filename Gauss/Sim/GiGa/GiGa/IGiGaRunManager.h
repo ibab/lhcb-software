@@ -1,21 +1,24 @@
+//  $ID:$ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/08/01 09:42:23  ibelyaev
-/// redesign and reimplementation of GiGaRunManager class
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2001/08/12 15:42:46  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.1  2001/08/01 09:42:23  ibelyaev
+// redesign and reimplementation of GiGaRunManager class
+// 
 // ============================================================================
 #ifndef GIGA_IGIGARUNMANAGER_H 
 #define GIGA_IGIGARUNMANAGER_H 1
 // ============================================================================
-/// GaudiKernel
-#include "GaudiKernel/IInterface.h"
-/// GiGa 
+// GiGa 
+#include "GiGa/IGiGaInterface.h"
 #include "GiGa/IIDIGiGaRunManager.h"
-/// forward declarations from GiGa 
+// forward declarations from GiGa 
 class     IGiGaGeoSrc                   ;
-/// forward declarations form Geant4 
+// forward declarations form Geant4 
 class     G4VUserPrimaryGeneratorAction ;
 class     G4VUserDetectorConstruction   ;
 class     G4VUserPhysicsList            ;
@@ -37,7 +40,7 @@ class     G4UIsession                   ;
  *  @date   31/07/2001
  */
 
-class IGiGaRunManager: virtual public IInterface
+class IGiGaRunManager: virtual public IGiGaInterface
 {  
   
 public:
@@ -46,11 +49,6 @@ public:
    *  @return uniqie interface ID 
    */
   static const InterfaceID& interfaceID ()  { return IID_IGiGaRunManager ; }
-  
-  /** identification 
-   *  @return name of concrete inteface instance 
-   */
-  virtual const std::string& name       () const = 0 ;
   
   /** declare the Geant4 Primary Generator Action 
    *  @param obj pointer  to Geant4 Primary Generator Action 
@@ -135,21 +133,17 @@ public:
    */
   virtual StatusCode declare( G4UIsession                    * obj     ) = 0 ;
 
-  /** initialize the run manager 
-   *  @return status code
-   */ 
-  virtual StatusCode initialize () = 0 ;
-  
-  /** finalize the run manager 
-   *  @return status code
-   */ 
-  virtual StatusCode finalize   () = 0 ;
 
+protected:
+  
   /// destructor 
   virtual ~IGiGaRunManager(){}; 
-
+  
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 #endif ///< GIGA_IGIGARUNMANAGER_H
 // ============================================================================

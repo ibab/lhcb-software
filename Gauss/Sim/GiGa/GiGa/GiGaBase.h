@@ -1,4 +1,4 @@
-// $Id: GiGaBase.h,v 1.14 2002-05-01 18:23:37 ibelyaev Exp $
+// $Id: GiGaBase.h,v 1.15 2002-05-07 12:21:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -7,16 +7,18 @@
 #ifndef     GIGA_GIGABASE_H
 #define     GIGA_GIGABASE_H 1 
 // ============================================================================
-/// STL
+// STL
 #include <string>
 #include <exception>
 #include <map>
-/// GaudiKernel 
-#include "GaudiKernel/IProperty.h"
+// GaudiKernel 
 #include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/MsgStream.h"
-///
+#include "GaudiKernel/AlgTool.h"
+// GiGa
+#include "GiGa/IGiGaInterface.h"
+// forward declarations 
 class IMessageSvc          ;
 class ISvcLocator          ;
 class IChronoStatSvc       ;
@@ -25,12 +27,12 @@ class IIncidentSvc         ;
 class IObjManager          ;
 class IGiGaSvc             ; 
 class IGiGaSetUpSvc        ; 
-///
+//
 class PropertyMgr          ;
 class MsgStream            ;
 class StreamBuffer         ;
 class GaudiException       ;
-///
+//
 
 /** @class GiGaBase GiGaBase.h GiGa/GiGaBase.h
  *    
@@ -42,46 +44,38 @@ class GaudiException       ;
  *  @date    23/01/2001
  */
 
-class  GiGaBase: virtual public IProperty         , 
-                 virtual public ISerialize        , 
-                 virtual public IIncidentListener 
+class  GiGaBase:
+  public virtual IGiGaInterface    , 
+  public virtual IIncidentListener , 
+  public virtual        ISerialize ,
+  public                   AlgTool 
 {
-  ///
 protected:
-
+  
   /** standard constructor 
+   *  @see AlgTool 
+   *  @param type tool   type (?)  
    *  @param name object name 
-   *  @param loc  pointer to servcie locator 
+   *  @param parent pointer to parent object  
    */
-  GiGaBase( const std::string& , ISvcLocator* );
+  GiGaBase( const std::string& type   ,
+            const std::string& name   , 
+            const IInterface*  parent );
   /// virtual destructor 
   virtual ~GiGaBase();
-  ///
+
 public:
 
-  /** object name 
-   *  @return object name 
-   */
-  inline virtual const std::string& name   () const ;
-  
-  /// Increment the reference count of Interface instance
-  virtual unsigned long          addRef  () ;
-  /// Release Interface instance
-  virtual unsigned long          release () ;
-
-  /** query the interface
-   *  @param id unique interface identifier 
-   *  @param I  placeholder for returning interface 
-   *  @return status code 
-   */ 
-  virtual StatusCode queryInterface( const InterfaceID& id , 
-                                     void**             I  ) ;
   /** initialize the object
+   *  @see  AlgTool
+   *  @see IAlgTool
    *  @return status code 
    */
   virtual StatusCode initialize() ;
 
   /** finalize the object 
+   *  @see  AlgTool
+   *  @see IAlgTool
    *  @return status code 
    */
   virtual StatusCode finalize  () ;
@@ -92,74 +86,18 @@ public:
   /// serialize object for writing 
   virtual StreamBuffer& serialize( StreamBuffer& S ) const ; 
 
-  /** set the property by property
-   *  @param p property 
-   *  @return status code 
-   */
-  virtual StatusCode      setProperty   ( const Property& p       )       ;
-
-  /** set the property from input stream
-   *  @param s reference to input stream 
-   *  @return status code 
-   */
-  virtual StatusCode      setProperty   ( std::istream& s         )       ;
-  
-  /** set the property from the string 
-   *  @param n property name 
-   *  @param s string property 
-   *  @return status code 
-   */
-  virtual StatusCode      setProperty   ( const std::string& n    , 
-                                          const std::string& s    )       ;
-
-  /** get the property by property
-   *  @param p pointer to property 
-   *  @return status code 
-   */
-  virtual StatusCode      getProperty   ( Property* p             ) const ;
-  
-  /** get the property by name
-   *  @param name property name 
-   *  @return status code 
-   */
-  virtual const Property& getProperty   ( const std::string& name ) const ; 
-
-  /** get the property by std::string
-   *  @param s property name 
-   *  @param n property string 
-   *  @return status code 
-   */
-  virtual StatusCode      getProperty   ( const std::string& n    , 
-                                          std::string&       s    ) const ;
-
-  /** get list of all properties 
-   *  @return list of all proeprties 
-   */
-  virtual const std::vector<Property*>& getProperties ( )  const ;
-
   /** handle the incident
    *  @param i reference to the incident
    */ 
   virtual void handle( const Incident& i ) ;
   /// 
 protected:
-  ///
   
-  /** object type 
-   *  @return object type 
-   */
-  inline const std::string& myType   () const ;
-
-  /** is the base is initialized properly?
-   *  @return true if it is initialized 
-   */
-  inline bool              init      () const { return m_init      ; };
-
   /** accessor to service locator 
    *  @return pointer to service locator 
    */
-  inline ISvcLocator*      svcLoc    () const { return m_svcLoc    ; };  
-
+  inline ISvcLocator*      svcLoc    () const { return serviceLocator() ; };  
+  
   /** accessor to GiGa Service 
    *  @return pointer to GiGa Service 
    */
@@ -169,11 +107,6 @@ protected:
    *  @return pointer to GiGa SetUp Service 
    */
   inline IGiGaSetUpSvc*    setupSvc  () const { return m_setupSvc  ; };
-
-  /** accessor to Message Service 
-   *  @return pointer to Message Service 
-   */
-  inline IMessageSvc*      msgSvc    () const { return m_msgSvc    ; };
 
   /** accessor to Chrono & Stat Service 
    *  @return pointer to Chrono & Stat Service 
@@ -195,40 +128,11 @@ protected:
    */
   inline IIncidentSvc*     incSvc    () const { return m_incSvc    ; }; 
 
-  /** accessor to Property Manager 
-   *  @return pointer to Property Manager  
-   */
-  inline PropertyMgr*      propMgr   () const { return m_propMgr   ; };  
-
   /** accessor to Object Manager
    *  @return pointer to Object Manager  
    */
   inline IObjManager*      objMgr    () const { return m_objMgr    ; };  
   ///
-protected: 
-  
-  /** Methods for declaring properties to the property manager
-   *  @param name property name 
-   *  @param reference property reference 
-   *  @return status code
-   */
-  template <class TYPE>
-  StatusCode declareProperty( const std::string& name , TYPE& reference )
-  {
-    if( 0 != propMgr() ) { propMgr()->declareProperty( name , reference ); } 
-    return 0 != propMgr() ? StatusCode::SUCCESS : StatusCode::FAILURE ; 
-  };
-
-  /** set own properties 
-   *  @return status code
-   */
-  StatusCode setProperties  () ; 
-  ///
-
-  /** set the type of the object
-   *  @return object type 
-   */
-  const std::string&  setMyType() const;
   
 protected:
 
@@ -328,18 +232,10 @@ private:
   ///
 private:
   ///
-  /// the reference count 
-  unsigned long         m_count      ;
-  /// name of the object 
-  std::string           m_name       ; 
-  /// type of the object 
-  mutable std::string   m_myType     ;
   /// name of GiGa Service   
   std::string           m_gigaName   ; 
   /// name of GiGa SetUp Service   
   std::string           m_setupName  ; 
-  /// name of Message Service 
-  std::string           m_msgName    ; 
   /// name of Chrono & Stat service
   std::string           m_chronoName ;
   /// name of Event Data Provider Service  
@@ -349,19 +245,11 @@ private:
   /// name of Incident Service 
   std::string           m_incName    ; 
   /// name of Object Manager 
-  std::string           m_omName     ; 
-  /// output level 
-  int                   m_output     ; 
-  //// pointer to Service Locator 
-  ISvcLocator*          m_svcLoc     ; 
-  /// pointer to Property Manager 
-  PropertyMgr*          m_propMgr    ; 
+  std::string           m_omName     ;
   /// pointer to GiGa Service 
   IGiGaSvc*             m_gigaSvc    ;
   /// pointer to GiGa SetUp Service 
   IGiGaSetUpSvc*        m_setupSvc   ;
-  /// pointer to Message  Service 
-  IMessageSvc*          m_msgSvc     ; 
   /// pointer to Chrono& Stat  Service 
   IChronoStatSvc*       m_chronoSvc  ; 
   /// pointer to Event Data  Service 
@@ -372,8 +260,6 @@ private:
   IIncidentSvc*         m_incSvc     ; 
   /// pointer to Object Manager  
   IObjManager*          m_objMgr     ;
-  /// "init" flag 
-  bool                  m_init       ;
   ///
   typedef std::map<std::string,unsigned int> Counter;
   /// counter of errors 
@@ -383,22 +269,7 @@ private:
   /// counter of exceptions
   mutable Counter m_exceptions ;
 };
-///
-
 // ============================================================================
-/** object name 
- *  @return object name 
- */
-// ============================================================================
-inline const std::string& GiGaBase::name () const { return m_name ; };
-
-// ============================================================================
-/** object type 
- *  @return object type 
- */
-// ============================================================================
-inline const std::string& GiGaBase::myType() const 
-{ return m_myType.empty() ? setMyType() : m_myType ; }
 
 // ============================================================================
 /** assertion 

@@ -1,24 +1,17 @@
+// $Id: IGiGaTrackAction.h,v 1.8 2002-05-07 12:21:31 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/07/23 13:11:46  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef     GIGA_IGIGATrackACTION_H
 #define     GIGA_IGIGATrackACTION_H 1 
 // ============================================================================
-// STL 
-#include <string>
-// base classes from GaudiKernel  
-#include "GaudiKernel/IInterface.h"
-// base class from Geant4 
-#include "G4UserTrackingAction.hh"
-// unique IID 
+// GiGa
+#include "GiGa/IGiGaInterface.h"
 #include "GiGa/IIDIGiGaTrackAction.h"
-// 
-
+// Geant4 
+#include "G4UserTrackingAction.hh"
 
 /** @class IGiGaTrackAction IGiGaTrackAction.h GiGa/IGiGaTrackAction.h
  *
@@ -29,27 +22,25 @@
  *   @date    21/02/2001
  */
 
-class IGiGaTrackAction: virtual public G4UserTrackingAction , 
-                        virtual public IInterface             
+class IGiGaTrackAction: 
+  virtual public G4UserTrackingAction , 
+  virtual public IGiGaInterface 
 {
-  ///
+
 public:
+  
   /// Retrieve interface ID
   static const InterfaceID& interfaceID ()  { return IID_IGiGaTrackAction ; }
-  ///
-  /// identification 
-  virtual const std::string& name        () const = 0 ;
-  /// initialization method 
-  virtual StatusCode         initialize  ()       = 0 ;
-  /// finalization method 
-  virtual StatusCode         finalize    ()       = 0 ;
-  ///
+  
+protected:
+  
   ///  virtual destructor   
   virtual ~IGiGaTrackAction(){};
-  ///
 };
+// ============================================================================
 
-
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  ///<  GIGA_IGIGATrackACTION_H
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: GiGaBase.cpp,v 1.11 2002-05-01 18:23:38 ibelyaev Exp $
+// $Id: GiGaBase.cpp,v 1.12 2002-05-07 12:21:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/05/01 18:23:38  ibelyaev
+//  import errors/warnings/exception counterf from LHCb Calo software
+//
 // ===========================================================================
 #define GIGA_GIGABASE_CPP 1 
 // ============================================================================
@@ -37,38 +40,33 @@
 
 // ============================================================================
 /** standard constructor 
- *  @param name object name 
- *  @param loc  pointer to servcie locator 
+ *  @see AlgTool 
+ *  @param type tool   type (?)  
+ *  @param Name object name 
+ *  @param parent point to parent object 
  */
 // ============================================================================
-GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
-  /// reference count
-  : m_count      ( 0                     ) 
-  /// name 
-  , m_name       ( Name                  ) 
+GiGaBase::GiGaBase
+( const std::string& type   ,
+  const std::string& Name   ,
+  const IInterface*  parent )
+  : AlgTool( type , Name , parent )
   ///
   , m_gigaName   ( "GiGaSvc"             ) 
   , m_setupName  ( "GiGaSvc"             ) 
-  , m_msgName    ( "MessageSvc"          ) 
   , m_chronoName ( "ChronoStatSvc"       ) 
   , m_evtName    ( "EventDataSvc"        )
   , m_detName    ( "DetectorDataSvc"     )
   , m_incName    ( "IncidentSvc"         ) 
   , m_omName     ( "ApplicationMgr"      ) 
-  , m_output     ( MSG::NIL              ) 
   ///
-  , m_svcLoc     ( svc                   )   
-  , m_propMgr    ( 0                     )  
   , m_gigaSvc    ( 0                     ) 
   , m_setupSvc   ( 0                     ) 
-  , m_msgSvc     ( 0                     ) 
   , m_chronoSvc  ( 0                     ) 
   , m_evtSvc     ( 0                     )
   , m_detSvc     ( 0                     ) 
   , m_incSvc     ( 0                     ) 
   , m_objMgr     ( 0                     ) 
-  ///
-  , m_init       ( false                 ) 
   ///
   , m_errors      ()
   , m_warnings    ()
@@ -78,102 +76,45 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   if( 0 == svcLoc() ) 
     { throw GiGaException("GiGaBase():: ISvcLocator* points to NULL!") ; }
   ///
-  m_propMgr = new PropertyMgr();
-  ///  
-  declareProperty( "OutputLevel"               ,  m_output      );
-  declareProperty( "GiGaService"               ,  m_gigaName    );
-  declareProperty( "GiGaSetUpService"          ,  m_setupName   );
-  declareProperty( "MessageService"            ,  m_msgName     );
-  declareProperty( "ChronoStatService"         ,  m_chronoName  );
-  declareProperty( "EventDataProvider"         ,  m_evtName     );
-  declareProperty( "DetectorDataProvider"      ,  m_detName     );
-  declareProperty( "IncidentService"           ,  m_incName     );
-  declareProperty( "ObjectManager"             ,  m_omName      );
+  declareInterface<IGiGaInterface>    ( this );
+  declareInterface<IIncidentListener> ( this );
+  declareInterface<ISerialize>        ( this );
+  ///
+  declareProperty( "GiGaService"               ,  m_gigaName    ) ;
+  declareProperty( "GiGaSetUpService"          ,  m_setupName   ) ;
+  declareProperty( "ChronoStatService"         ,  m_chronoName  ) ;
+  declareProperty( "EventDataProvider"         ,  m_evtName     ) ;
+  declareProperty( "DetectorDataProvider"      ,  m_detName     ) ;
+  declareProperty( "IncidentService"           ,  m_incName     ) ;
+  declareProperty( "ObjectManager"             ,  m_omName      ) ;
   ///
 };
+// ============================================================================
 
 // ============================================================================
-/// destructor 
+// destructor 
 // ============================================================================
-GiGaBase::~GiGaBase() 
-{ 
-  if( init()         ) { finalize() ; } 
-  if( 0 != m_propMgr ) { delete m_propMgr ; m_propMgr = 0 ; } 
-} 
-
-
+GiGaBase::~GiGaBase() {} 
 // ============================================================================
-/** set the type of the object
- *  @return object type 
- */
-// ============================================================================
-const std::string&  GiGaBase::setMyType() const
-{
-  return m_myType = GiGaUtil::ObjTypeName( this );
-};
-
-// ============================================================================
-/** query the interface
- *  @param id unique interface identifier 
- *  @param I  placeholder for returning interface 
- *  @return status code 
- */ 
-// ============================================================================
-StatusCode GiGaBase::queryInterface(const InterfaceID& riid , void** ppI )
-{
-  if ( 0 == ppI ) { return StatusCode::FAILURE; }
-  *ppI = 0 ;
-  if      ( IProperty::         interfaceID() == riid ) 
-    { *ppI = static_cast<IProperty*>         ( this ) ; } 
-  else if ( ISerialize::        interfaceID() == riid )
-    { *ppI = static_cast<ISerialize*>        ( this ) ; } 
-  else if ( IInterface::        interfaceID() == riid ) 
-    { *ppI = static_cast<IInterface*>        ( this ) ; } 
-  else if ( IIncidentListener:: interfaceID() == riid ) 
-    { *ppI = static_cast<IIncidentListener*> ( this ) ; } 
-  else                                                  
-    { return StatusCode::FAILURE               ; }
-  addRef();
-  return StatusCode::SUCCESS;
-};
-
-// ============================================================================
-/// Increment the reference count of Interface instance
-// ============================================================================
-unsigned long GiGaBase::addRef() { return ++m_count ; };
-
-// ============================================================================
-/// Release Interface instance
-// ================================x============================================
-unsigned long GiGaBase::release () { return 0 < m_count ? --m_count : 0 ; };
 
 // ============================================================================
 /** initialize the object
+ *  @see  AlgTool
+ *  @see IAlgTool 
  *  @return status code 
  */
 // ============================================================================
 StatusCode GiGaBase::initialize() 
 {
-  ///
-  if( 0 != msgSvc    () ) { msgSvc    ()->release() ; m_msgSvc    = 0 ; } 
-  if( 0 != chronoSvc () ) { chronoSvc ()->release() ; m_chronoSvc = 0 ; } 
-  if( 0 != gigaSvc   () ) { gigaSvc   ()->release() ; m_gigaSvc   = 0 ; } 
-  if( 0 != setupSvc  () ) { setupSvc  ()->release() ; m_setupSvc  = 0 ; } 
-  if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc    = 0 ; } 
-  if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc    = 0 ; } 
-  if( 0 != incSvc    () ) { incSvc    ()->release() ; m_incSvc    = 0 ; } 
-  if( 0 != objMgr    () ) { objMgr    ()->release() ; m_objMgr    = 0 ; } 
-  ///
+  // initialize the base class 
+  StatusCode sc = AlgTool::initialize();
+  if( sc.isFailure() )
+    { return Error("Could not initialize the base class AlgTool",sc);};
+  // 
   if( 0 == svcLoc()     ) 
     { throw GiGaException("GiGaBase::ini ISvcLocator* points to NULL!");}
-  ///
-  {
-    StatusCode st = setProperties(); 
-    if( st.isFailure() ) 
-      { return Error("GiGaBase::initialize could not set own properties") ; }
-  }
-  ///
-  { /// print ALL properties 
+  //
+  { // print ALL properties 
     typedef std::vector<Property*> Properties;
     const Properties& properties = getProperties() ;
     MsgStream log( msgSvc() , name ()  );
@@ -198,22 +139,6 @@ StatusCode GiGaBase::initialize()
       }
   }  
   ///
-  if( !m_msgName.empty() )
-    {
-      StatusCode sc = svcLoc()->service( m_msgName , m_msgSvc , true );  
-      if( sc.isFailure() ) 
-        { return Error("Could not locate IMessageSvc="+ m_msgName , sc ) ; }
-      if( 0 == msgSvc () ) 
-        { return Error("Could not locate IMessageSvc="+ m_msgName      ) ; }    
-      msgSvc()->addRef() ; 
-      m_output = 
-        m_output < (int) MSG::NIL   ? (int) MSG::NIL   : 
-        m_output > (int) MSG::FATAL ? (int) MSG::FATAL : m_output ; 
-      if( MSG::NIL != m_output ) 
-        { msgSvc()->setOutputLevel( name(), m_output ); }
-    }
-  else { Warning("Message Service is not requested to be located"); }
-  ///
   if( !m_chronoName.empty() )
     {
       StatusCode sc = svcLoc()->service( m_chronoName , m_chronoSvc , true );  
@@ -234,7 +159,7 @@ StatusCode GiGaBase::initialize()
         { return Error("Could not locate IGiGaSvc="+ m_gigaName      ) ; }
       gigaSvc()->addRef() ; 
     }
-  else { Warning("GiGa Service is not requestedto be located"); }
+  else { Warning("GiGa Service is not requested to be located"); }
   ///
   if( !m_setupName.empty() )
     {
@@ -290,50 +215,23 @@ StatusCode GiGaBase::initialize()
       objMgr()->addRef() ; 
     }
   else { Print("IObjManager is not required to be located"); }
-  ///
-  m_init = true ;
-  ///
-  { /// print ALL properties 
-    typedef std::vector<Property*> Properties;
-    const Properties& properties = getProperties() ;
-    MsgStream log( msgSvc() , name () );
-    log << MSG::DEBUG 
-        << " List of ALL properties of "
-        << System::typeinfoName( typeid( *this ) ) << "/" 
-        << name ()           << "   #properties = " 
-        << properties.size() << endreq ;
-    const int   buffer_size  = 256 ;
-    char buffer[buffer_size]       ;
-    for( Properties::const_reverse_iterator property 
-           = properties.rbegin() ;
-         properties.rend() != property ; ++property )  
-      {
-        std::fill( buffer , buffer + buffer_size , 0 );
-        std::ostrstream ost ( buffer , buffer_size );
-        (*property)->nameAndValueAsStream( ost );
-        ost.freeze();
-        log << MSG::DEBUG
-            << "Property ['Name': Value] = " 
-            << ost.str() << endreq ;
-      }
-  } 
-  ///
-  Print("GiGaBase initialized successfully" , 
-        StatusCode::SUCCESS , MSG::VERBOSE ) ;
-  ///
-  return StatusCode::SUCCESS;  
+  //
+  return Print("GiGaBase initialized successfully" , 
+               StatusCode::SUCCESS                 , MSG::VERBOSE ) ;
 };
 // ============================================================================
 
 // ============================================================================
 /** finalize the object 
+ *  @see  AlgTool
+ *  @see IAlgTool 
  *  @return status code 
  */
 // ============================================================================
 StatusCode GiGaBase::finalize()
 {
   //
-  Print( "GiGaBase finalization" , StatusCode::SUCCESS , MSG::DEBUG ) ;
+  Print( "GiGaBase Finalization" , StatusCode::SUCCESS , MSG::VERBOSE ) ;
   // error printout 
   if( 0 != m_errors     .size() || 
       0 != m_warnings   .size() || 
@@ -374,55 +272,17 @@ StatusCode GiGaBase::finalize()
   m_errors      .clear();
   m_warnings    .clear();
   m_exceptions  .clear();
+  // release services inreverse order !!!
+  if( 0 != objMgr    () ) { objMgr    ()->release() ; m_objMgr    = 0 ; }
+  if( 0 != incSvc    () ) { incSvc    ()->release() ; m_incSvc    = 0 ; } 
+  if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc    = 0 ; } 
+  if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc    = 0 ; } 
+  if( 0 != setupSvc  () ) { setupSvc  ()->release() ; m_setupSvc  = 0 ; } 
+  if( 0 != gigaSvc   () ) { gigaSvc   ()->release() ; m_gigaSvc   = 0 ; } 
+  if( 0 != chronoSvc () ) { chronoSvc ()->release() ; m_chronoSvc = 0 ; } 
+  // finalize the base class 
+  return AlgTool::finalize() ;
   ///
-  if ( init() )
-    {
-      /// reverse order !!!
-      if( 0 != objMgr    () ) { objMgr    ()->release() ; m_objMgr    = 0 ; }
-      if( 0 != incSvc    () ) { incSvc    ()->release() ; m_incSvc    = 0 ; } 
-      if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc    = 0 ; } 
-      if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc    = 0 ; } 
-      if( 0 != setupSvc  () ) { setupSvc  ()->release() ; m_setupSvc  = 0 ; } 
-      if( 0 != gigaSvc   () ) { gigaSvc   ()->release() ; m_gigaSvc   = 0 ; } 
-      if( 0 != chronoSvc () ) { chronoSvc ()->release() ; m_chronoSvc = 0 ; } 
-      if( 0 != msgSvc    () ) { msgSvc    ()->release() ; m_msgSvc    = 0 ; } 
-      ///
-    }
-  ///
-  m_init = false ;
-  ///
-  return StatusCode::SUCCESS;
-  ///
-};
-// ============================================================================
-
-// ============================================================================
-/** set own properties 
- *  @return status code
- */
-// ============================================================================
-StatusCode GiGaBase::setProperties() 
-{
-  ///
-  if( 0 == svcLoc()    ) 
-    { throw GiGaException("GiGaBase::setPro ICvsLocatort* point to NULL!") ; } 
-  ///
-  {
-    IService* pS = 0 ; 
-    StatusCode sc = svcLoc()->getService( "JobOptionsSvc" , pS );
-    if( sc.isFailure() )
-      { return Error("Could not locate JobOptionsSvc", sc          ) ; } 
-    if( 0 == pS        ) 
-      { return Error("Could not locate JobOptionsSvc"              ) ; }
-    IJobOptionsSvc* jos = dynamic_cast<IJobOptionsSvc*> (pS); 
-    if( 0 == jos       )
-      { return Error("Could not cast IService* to JobOptionsSvc"   ) ; }
-    jos->addRef  () ;
-    jos->setMyProperties( name(), this );
-    jos->release () ; 
-  }
-  ///
-  return StatusCode::SUCCESS;
 };
 // ============================================================================
 
@@ -481,7 +341,7 @@ StatusCode GiGaBase::Exception
   Print( "GaudiException: catch and re-throw " + msg , sc , lvl );
   /// increase the exception counter 
   m_exceptions[ msg ] += 1 ;
-  throw   GiGaException( myType()+"/"+name()+"::" + msg , exc , sc );
+  throw   GiGaException( type()+"/"+name()+"::" + msg , exc , sc );
   return  sc;
 };
 // ============================================================================
@@ -505,7 +365,7 @@ StatusCode GiGaBase::Exception
   Print( "std::exception: catch and re-throw " + msg , sc , lvl );
   /// increase the exception counter 
   m_exceptions[ msg ] += 1 ;
-  throw   GiGaException( myType()+"/"+name()+"::" + msg + 
+  throw   GiGaException( type()+"/"+name()+"::" + msg + 
                          " (" + exc.what() + ")" , sc );
   return  sc;
 };
@@ -528,7 +388,7 @@ StatusCode GiGaBase::Exception
   Print( "GiGaException throw " + msg , sc , lvl );
   /// increase the exception counter 
   m_exceptions[ msg ] += 1 ;
-  throw   GiGaException( msg , sc );
+  throw   GiGaException( type() + "/" + name() + "::" + msg , sc );
   return  sc;
 };
 // ============================================================================
@@ -549,7 +409,7 @@ StatusCode GiGaBase::Print
   ///
   MsgStream log( msgSvc() , name() ); 
   log << level 
-      << myType() 
+      << type() 
       << ":: "   
       << Message 
       << endreq  ; 
@@ -560,117 +420,17 @@ StatusCode GiGaBase::Print
 // ============================================================================
 
 // ============================================================================
-/** set the property by property
- *  @param p property 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaBase::setProperty  ( const Property    & p ) 
-{ return m_propMgr->setProperty( p ) ; };
-// ============================================================================
-
-// ============================================================================
-/** set the property from input stream
- *  @param s reference to input stream 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaBase::setProperty  ( std::istream      & s )  
-{ return m_propMgr->setProperty( s ) ; }
-// ============================================================================
-
-// ============================================================================
-/** set the property from the string 
- *  @param n property name 
- *  @param s string property 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaBase::setProperty  
-( const std::string & n ,
-  const std::string & v )
-{ return m_propMgr->setProperty( n , v ) ; } ;
-// ============================================================================
-
-// ============================================================================
-/** get the property by property
- *  @param p pointer to property 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaBase::getProperty  (       Property    * p ) const 
-{ return m_propMgr->getProperty( p ) ; };
-
-// ============================================================================
-/** get the property by name
- *  @param name property name 
- *  @return status code 
- */
-// ============================================================================
-const Property& GiGaBase::getProperty  ( const std::string & N ) const 
-{ return m_propMgr->getProperty( N ) ; };
-// ============================================================================
-
-// ============================================================================ 
-/** get the property by std::string
- *  @param s property name 
- *  @param n property string 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaBase::getProperty  ( const std::string & n ,
-                                    std::string & v ) const 
-{ return m_propMgr->getProperty( n , v ) ; } ;
-// ============================================================================
-
-// ============================================================================
-/** get list of all properties 
- *  @return list of all proeprties 
- */
-// ============================================================================
-const std::vector<Property*>& GiGaBase::getProperties() const 
-{ return m_propMgr->getProperties()  ; };   
-// ============================================================================
-
-// ============================================================================
-/// serialize object for reading 
+// serialize object for reading 
 // ============================================================================
 StreamBuffer& GiGaBase::serialize( StreamBuffer& S )       
-{ 
-  ///
-  if( 0 == m_propMgr ) { m_propMgr = new PropertyMgr() ;} 
-  ///
-  S >> m_name  
-    >> m_gigaName 
-    >> m_setupName
-    >> m_msgName   
-    >> m_evtName   
-    >> m_detName    
-    >> m_incName    
-    >> m_omName    
-    >> m_output ; 
-  ///
-  m_init = false; 
-  ///
-  return S;       
-};  
+{ return S ; } ;
 // ============================================================================
 
 // ============================================================================
 /// serialize object for writing 
 // ============================================================================
 StreamBuffer& GiGaBase::serialize( StreamBuffer& S ) const 
-{
-  return S << m_name  
-           << m_gigaName 
-           << m_setupName
-           << m_msgName   
-           << m_evtName   
-           << m_detName    
-           << m_incName    
-           << m_omName    
-           << m_output ;   
-};
+{ return S ; } ;
 // ============================================================================
 
 // ============================================================================
@@ -680,8 +440,8 @@ StreamBuffer& GiGaBase::serialize( StreamBuffer& S ) const
 // ============================================================================
 void  GiGaBase::handle( const Incident& incident ) 
 { 
-  Print("Incident='"  + incident .type   () + "'" + 
-        " \tsource='" + incident .source () + "'" ); 
+  Print(" Incident = '"  + incident .type   () + "' " + 
+        " \tsource = '"  + incident .source () + "' " ); 
 };
 // ============================================================================
 

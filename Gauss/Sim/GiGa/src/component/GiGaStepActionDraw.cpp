@@ -1,8 +1,8 @@
-// $Id: GiGaStepActionDraw.cpp,v 1.8 2002-04-25 13:02:05 ibelyaev Exp $ 
+// $Id: GiGaStepActionDraw.cpp,v 1.9 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #define GIGA_GIGASTEPACTIONDRAW_CPP 1 
 // ============================================================================
@@ -15,7 +15,7 @@
 ///
 #include "GaudiKernel/MsgStream.h"
 // GiGa 
-#include "GiGa/GiGaStepActionFactory.h"
+#include "GiGa/GiGaMACROs.h"
 // local
 #include "GiGaStepActionDraw.h"
 
@@ -24,54 +24,34 @@
  *  @author Vanya Belyaev Ivan.Belyave@itep.ru
  */
 
+// ============================================================================
 /// factory
-IMPLEMENT_GiGaStepAction( GiGaStepActionDraw );
+// ============================================================================
+IMPLEMENT_GiGaFactory( GiGaStepActionDraw );
+// ============================================================================
 
 // ============================================================================
 /** standard constructor 
- *  @param name name of this ocncrete instance
- *  @param Loc  pointer to service locator 
+ *  @see GiGaStepActionBase 
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
  */
 // ============================================================================
-GiGaStepActionDraw::GiGaStepActionDraw( const std::string& Name , 
-                                        ISvcLocator*       Loc  ) 
-  : GiGaStepActionBase            ( Name , Loc ) 
-{};
+GiGaStepActionDraw::GiGaStepActionDraw
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent ) 
+  : GiGaStepActionBase ( type , name , parent ) {};
+// ============================================================================
 
 // ============================================================================
 /// destructor 
 // ============================================================================
 GiGaStepActionDraw::~GiGaStepActionDraw(){};
-
 // ============================================================================
-/** initialization 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaStepActionDraw::initialize () 
-{ 
-  /// initialize the base class 
-  StatusCode sc = GiGaStepActionBase::initialize() ; 
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize base class",sc);}
-  ///
-  Print("initialized succesfully");
-  ///
-  return StatusCode::SUCCESS;
-} ;
-
-// ============================================================================
-/** finalization 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaStepActionDraw::finalize   () 
-{ 
-  ///
-  Print("finalisation");
-  ///
-  return GiGaStepActionBase::initialize() ; 
-} ;
 
 // ============================================================================
 /** the "main" method

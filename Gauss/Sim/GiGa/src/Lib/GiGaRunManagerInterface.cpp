@@ -1,17 +1,8 @@
-// $Id: GiGaRunManagerInterface.cpp,v 1.4 2002-05-01 18:23:38 ibelyaev Exp $ 
+// $Id: GiGaRunManagerInterface.cpp,v 1.5 2002-05-07 12:21:34 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2002/01/22 18:20:53  ibelyaev
-//  Vanya: update for newer versions of Gaudi and Geant4
-//
-// Revision 1.2  2001/08/12 15:42:49  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.1  2001/08/01 09:42:24  ibelyaev
-// redesign and reimplementation of GiGaRunManager class
-// 
 // ============================================================================
 /// GiGa 
 #include "GiGa/GiGaUtil.h"
@@ -39,13 +30,6 @@
  */
 
 // ============================================================================
-/** identification 
- *  @return name of concrete inteface instance 
- */
-// ============================================================================
-const std::string& GiGaRunManager::name () const { return GiGaBase::name(); }
-
-// ============================================================================
 /** initialize the run manager 
  *  @return status code
  */ 
@@ -57,9 +41,10 @@ StatusCode GiGaRunManager::initialize ()
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class " , sc ) ; }
   ///
-  return StatusCode::SUCCESS;
-  ///
+  return Print("GiGaRunManager initialized successfully" , 
+               StatusCode::SUCCESS                       , MSG::VERBOSE );
 };
+// ============================================================================
 
 // ============================================================================
 /** finalize the run manager 
@@ -68,13 +53,14 @@ StatusCode GiGaRunManager::initialize ()
 // ============================================================================
 StatusCode GiGaRunManager::finalize   () 
 {
-  Print("finalization");
+  Print("GiGaRunManager Finalization");
   StatusCode sc = finalizeRunManager();
   if( sc.isFailure() ) 
     { return Error("could not finalize RunManager base ",sc);}
   /// 
   return GiGaBase::finalize();
 };
+// ============================================================================
 
 // ============================================================================
 /** declare the Geant4 Primary Generator Action 
@@ -145,6 +131,7 @@ StatusCode GiGaRunManager::declare( G4VUserDetectorConstruction    * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
+// ============================================================================
 
 // ============================================================================
 /** declare the top level ("world") physical volume 
@@ -172,6 +159,7 @@ StatusCode GiGaRunManager::declare( G4VPhysicalVolume              * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
+// ============================================================================
 
 // ============================================================================
 /** declare the Geant4 Physics List 
@@ -206,6 +194,7 @@ StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
+// ============================================================================
 
 // ============================================================================
 /** declare the GiGa Geometry source 
@@ -238,6 +227,7 @@ StatusCode GiGaRunManager::declare( IGiGaGeoSrc                    * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
+// ============================================================================
 
 // ============================================================================
 /** declare the Geant4 Run Action 
@@ -261,6 +251,7 @@ StatusCode GiGaRunManager::declare( G4UserRunAction                * obj )
   G4RunManager::SetUserAction( obj ); 
   return StatusCode::SUCCESS ; 
 };
+// ============================================================================
 
 // ============================================================================
 /** declare the Geant4 Event Action 
@@ -285,6 +276,7 @@ StatusCode GiGaRunManager::declare( G4UserEventAction              * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
+// ============================================================================
 
 // ============================================================================
 /** declare the Geant4 Stacking Action 
@@ -309,6 +301,7 @@ StatusCode GiGaRunManager::declare( G4UserStackingAction           * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
+// ============================================================================
 
 // ============================================================================
 /** declare the Geant4 Stepping  Action 
@@ -333,6 +326,7 @@ StatusCode GiGaRunManager::declare( G4UserSteppingAction           * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
+// ============================================================================
 
 // ============================================================================
 /** declare the Geant4 Tracking Action 
@@ -357,6 +351,7 @@ StatusCode GiGaRunManager::declare( G4UserTrackingAction           * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
+// ============================================================================
 
 // ============================================================================
 /** declare the Geant4 User Interface session 
@@ -381,6 +376,7 @@ StatusCode GiGaRunManager::declare( G4UIsession                    * obj     )
   return StatusCode::SUCCESS;
   ///
 };
+// ============================================================================
 
 // ============================================================================
 // The End 

@@ -1,16 +1,13 @@
-// $Id: GiGaRunActionCommand.cpp,v 1.7 2002-04-25 13:02:05 ibelyaev Exp $
+// $Id: GiGaRunActionCommand.cpp,v 1.8 2002-05-07 12:21:35 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2002/04/09 17:16:50  ibelyaev
-///  printout polishing
-///
+// $Log: not supported by cvs2svn $
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
-#include "GiGa/GiGaRunActionFactory.h"
+#include "GiGa/GiGaMACROs.h"
 /// G4 
 #include "G4UImanager.hh"
 /// Local 
@@ -19,33 +16,41 @@
 // ============================================================================
 /** @file 
  *
- *   Implementation file for class : GiGaRunActionCommand
+ *  Implementation file for class : GiGaRunActionCommand
  *
- *   @author Vanya  Belyaev
- *   @date 25/07/2001 
+ *  @author Vanya  Belyaev Ivan.Belyaev@itep.ru
+ *  @date 25/07/2001 
  */
 // ============================================================================
 
 // ============================================================================
 /// Factory business
 // ============================================================================
-IMPLEMENT_GiGaRunAction( GiGaRunActionCommand ) ;
+IMPLEMENT_GiGaFactory( GiGaRunActionCommand ) ;
+// ============================================================================
 
 // ============================================================================
-/** standard constructor
- *  @param Name  name of this concrete event action instance 
- *  @param Loc   pointer to service locator 
+/** standard constructor 
+ *  @see GiGaPhysListBase
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
  */
 // ============================================================================
-GiGaRunActionCommand::GiGaRunActionCommand( const std::string& Name ,
-                                                ISvcLocator*       Loc  )
-  : GiGaRunActionBase( Name, Loc )
-  , m_beginCmds ()   ///< empty default list! 
-  , m_endCmds   ()   ///< empty default list! 
+GiGaRunActionCommand::GiGaRunActionCommand
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent ) 
+  : GiGaRunActionBase( type , name , parent )
+  , m_beginCmds ()   //  empty default list! 
+  , m_endCmds   ()   //  empty default list! 
 {  
   declareProperty("BeginOfRunCommands", m_beginCmds );
   declareProperty("EndOfRunCommands"  , m_endCmds   );
 };
+// ============================================================================
 
 // ============================================================================
 /// destructor 
@@ -54,40 +59,6 @@ GiGaRunActionCommand::~GiGaRunActionCommand()
 {
   m_beginCmds .clear();
   m_endCmds   .clear();
-};
-
-// ============================================================================
-/** initialization of event action object
- *  @return status code
- */
-// ============================================================================
-StatusCode GiGaRunActionCommand::initialize()
-{
-  StatusCode sc = GiGaRunActionBase::initialize();
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class", sc );}
-  ///
-  if( m_beginCmds.empty() ) 
-    { Print("'BeginOfRunCommands' list is empty") ;}
-  if( m_endCmds  .empty() ) 
-    { Print("'EndOfRunCommands' list is empty"  ) ;}
-  ///
-  Print("initialized succesfully");
-  ///
-  return StatusCode::SUCCESS;
-};
-
-// ============================================================================
-/** finalization of event action object
- *  @return status code
- */
-// ============================================================================
-StatusCode GiGaRunActionCommand::finalize()
-{
-  ///
-  Print("finalization");
-  /// finalize the base class 
-  return GiGaRunActionBase::finalize();
 };
 
 // ============================================================================
@@ -108,12 +79,13 @@ void GiGaRunActionCommand::BeginOfRunAction( const G4Run* run )
       for( COMMANDS::const_iterator iCmd = m_beginCmds.begin() ;
            m_beginCmds.end() != iCmd ; ++iCmd ) 
         { 
-          Print("BeginOfRunAction(): execute '"+(*iCmd)+"'");
+          Print("BeginOfRunAction(): execute '" + (*iCmd) + "'" , 
+                StatusCode::SUCCESS                             , MSG::DEBUG );
           ui->ApplyCommand( *iCmd ); 
         }
     }
-  ///
 };
+// ============================================================================
 
 // ============================================================================
 /** performe the action at the end of each run 
@@ -133,12 +105,13 @@ void GiGaRunActionCommand::EndOfRunAction( const G4Run* run )
       for( COMMANDS::const_iterator iCmd = m_endCmds.begin() ;
            m_endCmds.end() != iCmd ; ++iCmd ) 
         { 
-          Print("EndOfRunAction(): execute '"+(*iCmd)+"'");
+          Print("EndOfRunAction(): execute '" + (*iCmd) + "'" , 
+                StatusCode::SUCCESS                           , MSG::DEBUG );
           ui->ApplyCommand( *iCmd ); 
         }
     }  
-  ///
 };
+// ============================================================================
 
 // ============================================================================
 // The End

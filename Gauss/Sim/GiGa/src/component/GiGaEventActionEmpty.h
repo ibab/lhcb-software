@@ -1,21 +1,17 @@
-// ====a========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: GiGaEventActionEmpty.h,v 1.7 2002-05-07 12:21:34 ibelyaev Exp $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/25 18:09:38  ibelyaev
-/// bug fix
-///
-/// Revision 1.4  2001/07/23 13:12:26  ibelyaev
-/// the package restructurisation(II)
-/// 
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef       GIGA_GiGaEventActionEmpty_H
 #define       GIGA_GiGaEventActionEmpty_H 1 
 // ============================================================================
-
+// include files  
+// GiGa
 #include "GiGa/GiGaEventActionBase.h"
-template <class EA> 
-class GiGaEventActionFactory;
+// forward declaration
+template <class TYPE> class GiGaFactory;
 
 /** @class GiGaEventActionEmpty GiGaEventActionEmpty.h 
  *    
@@ -26,35 +22,47 @@ class GiGaEventActionFactory;
  *  @date    17/03/2001
 */
 
-class GiGaEventActionEmpty: virtual public GiGaEventActionBase
+class GiGaEventActionEmpty: public GiGaEventActionBase
 {
-  ///
-  friend class GiGaEventActionFactory<GiGaEventActionEmpty>;
-  ///
- protected:
-  ///
-  GiGaEventActionEmpty( const std::string& name , ISvcLocator* Loc );
-  ///  
+  /// friend factory for instantiatioin 
+  friend class GiGaFactory<GiGaEventActionEmpty>;
+  
+protected:
+
+ /** standard constructor 
+   *  @see GiGaEventActionBase
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
+   */
+  GiGaEventActionEmpty
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
+  
+  ///  destructor (virtual and protected)
   virtual ~GiGaEventActionEmpty();
-  ////
- public: 
-  ///
-  virtual StatusCode initialize () ; 
-  virtual StatusCode finalize   () ;
-  ///
+
+public:
+  
   virtual void BeginOfEventAction ( const G4Event* );
   virtual void EndOfEventAction   ( const G4Event* );
   /// 
- private:
+private:
   ///
   GiGaEventActionEmpty() ; ///< no default constructor
   GiGaEventActionEmpty( const GiGaEventActionEmpty& ) ; ///< no copy  
   GiGaEventActionEmpty& operator=( const GiGaEventActionEmpty& ) ; ///< no = 
   ///
- private:
+private:
   ///
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  ///<  GIGA_GiGaEventActionEmpty_H
 // ============================================================================

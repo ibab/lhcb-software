@@ -1,62 +1,69 @@
+// $Id: GiGaStepActionEmpty.h,v 1.7 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/08/12 15:42:54  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.4  2001/07/23 13:12:28  ibelyaev
-/// the package restructurisation(II)
-///
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef       GIGA_GiGaStepActionEmpty_H
 #define       GIGA_GiGaStepActionEmpty_H 1 
 // ============================================================================
-
+// include files 
+// GiGa
 #include "GiGa/GiGaStepActionBase.h"
-
-template <class SA> 
-class GiGaSensDetFactory;
+// forward declarations 
+template <class TYPE> class GiGaFactory;
 
 /** @class GiGaStepActionEmpty GiGaStepActionEmpty.h
  *   
  *  Example of "primitive" implementation of Stepping action class
  *  It is just empty!
  *
- *   @author  Vanya Belyaev
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date    23/01/2001
  */
 
 class GiGaStepActionEmpty: virtual public GiGaStepActionBase
 {
-  ///
-  friend class GiGaStepActionFactory<GiGaStepActionEmpty>;
-  ///
+  /// friend factory for instantiation
+  friend class GiGaFactory<GiGaStepActionEmpty>;
+
 protected:
-  ///
-  GiGaStepActionEmpty( const std::string& , ISvcLocator* );
+
+  /** standard constructor 
+   *  @see GiGaStepActionBase 
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
+   */
+  GiGaStepActionEmpty
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
+  
+  /// destructor (virtual and protected)
   virtual ~GiGaStepActionEmpty();
-  ////
+
 public:
   
+  /** stepping action
+   *  @see G4UserSteppingAction
+   *  @param step Geant4 step
+   */
   virtual void UserSteppingAction ( const G4Step* );
   
-public: 
-  ///
-  virtual StatusCode initialize () ; 
-  virtual StatusCode finalize   () ;
-  /// 
 private:
-  ///
+
   GiGaStepActionEmpty(); ///< no default constructor
   GiGaStepActionEmpty( const GiGaStepActionEmpty& ); ///< no copy  
   GiGaStepActionEmpty& operator=( const GiGaStepActionEmpty& ) ; ///< no = 
-  ///
-private:
-  ///
+
 };
+// ============================================================================
 
-
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  ///<    GIGA_GiGaStepActionEmpty_H
 // ============================================================================

@@ -1,10 +1,8 @@
+// $Id: GiGaEventActionCommand.h,v 1.3 2002-05-07 12:21:34 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/25 18:13:39  ibelyaev
-/// add new component GiGaEventActionCommand
-///
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef GIGA_GIGAEVENTACTIONCOMMAND_H 
 #define GIGA_GIGAEVENTACTIONCOMMAND_H 1
@@ -12,8 +10,7 @@
 /// GiGa
 #include "GiGa/GiGaEventActionBase.h"
 /// forward declarations
-template <class EA>
-class GiGaEventActionFactory;
+template <class TYPE> class GiGaFactory;
 
 /** @class GiGaEventActionCommand GiGaEventActionCommand.h
  *  
@@ -28,22 +25,12 @@ class GiGaEventActionFactory;
 class GiGaEventActionCommand: public GiGaEventActionBase
 {
   /// friend factory for instantiation
-  friend class GiGaEventActionFactory<GiGaEventActionCommand>;
-  ////
+  friend class GiGaFactory<GiGaEventActionCommand>;
+  
 public:
-
+  
   /// useful typedef 
   typedef  std::vector<std::string> COMMANDS;
-  
-  /** initialization of event action object
-   *  @return status code
-   */
-  virtual StatusCode initialize();
-  
-  /** finalization of event action object
-   *  @return status code
-   */
-  virtual StatusCode finalize  ();
   
   /** performe the action at the begin of each event 
    *  @param event pointer to Geant4 event object 
@@ -57,12 +44,18 @@ public:
   
 protected:
   
-  /** standard constructor
-   *  @param Name  name of this concrete event action instance 
-   *  @param Loc   poinetr to service locator 
+  /** standard constructor 
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
    */
-  GiGaEventActionCommand( const std::string& Name ,
-                          ISvcLocator*       Loc  );
+  GiGaEventActionCommand
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent );
+  
   /// destructor
   virtual ~GiGaEventActionCommand( );
   

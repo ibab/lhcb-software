@@ -1,13 +1,8 @@
+// $Id: GiGaTrackActionSequence.h,v 1.4 2002-05-07 12:21:37 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/07/27 14:29:01  ibelyaev
-/// bug fix
-///
-/// Revision 1.1  2001/07/24 09:08:14  ibelyaev
-/// new component GiGaTrackActionSequence
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef COMPONENT_GIGATRACKACTIONSEQUENCE_H 
 #define COMPONENT_GIGATRACKACTIONSEQUENCE_H 1
@@ -18,65 +13,75 @@
 /// GiGa 
 #include "GiGa/GiGaTrackActionBase.h"
 /// forward decalrations 
-template <class TA>
-class GiGaTrackActionFactory;
+template <class TYPE> class GiGaFactory;
 
 /** @class GiGaTrackActionSequence GiGaTrackActionSequence.h
  *
  *  A concrete implementation of IGiGaTrackAction interface
  *  Simple action - just a chain/sequence of other Track Actions   
  *
- *  @author Ivan Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   24/07/2001
  */
 
 class GiGaTrackActionSequence: public GiGaTrackActionBase
 {
-  /// friend factory
-  friend class GiGaTrackActionFactory<GiGaTrackActionSequence>;
+  /// friend factory for instantiation 
+  friend class GiGaFactory<GiGaTrackActionSequence>;
   ///
 public:
   
   typedef  std::vector<std::string>        MEMBERS ;
   typedef  std::vector<IGiGaTrackAction*>  ACTIONS ; 
   
-  /** initialise the action object 
-   *  @return status code
-   */ 
+  /** initialize the track action  
+   *  @see GiGaTrackActionBase 
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
+   *  @return status code 
+   */
   virtual StatusCode initialize () ; 
   
   /** finalize the action object 
+   *  @see GiGaTrackActionBase 
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
    *  @return status code
    */ 
   virtual StatusCode finalize   () ;
   
   /** perform the pre-action
+   *  @see G4UserTrackingAction
    *  @param track pointer to Geant4 track object 
    */ 
   virtual void PreUserTrackingAction  ( const G4Track* track );
   
   /** perform the post-action
+   *  @see G4UserTrackingAction
    *  @param track pointer to Geant4 track object 
    */ 
   virtual void PostUserTrackingAction ( const G4Track* track );
   
 protected:
-
-  /** standard constructor
-   *  @param Name name of this concrete instance 
-   *  @param Loc  pointer to Service Locator 
-   */
-  GiGaTrackActionSequence( const std::string& Name ,
-                           ISvcLocator*       Loc  ); 
   
-  /// destructor 
+  /** standard constructor 
+   *  @see GiGaTrackActionBase 
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
+   */
+  GiGaTrackActionSequence
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
+  
+  /// destructor (virtual and protected)
   virtual ~GiGaTrackActionSequence();
 
-  /** reset all members(actions)
-   *  @return status code 
-   */
-  virtual StatusCode actionsReset() ;
-  
 private:
 
   /// no default constructor

@@ -1,10 +1,20 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.46 2002-05-04 20:20:11 ibelyaev Exp $
+! $Id: release.notes,v 1.47 2002-05-07 12:21:33 ibelyaev Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev 
+
+! ============================================================================
+! 4 May 2002 - Vanya Belyaev
+! MAJOR redesing of ALL interfaces but it is still 100% "compatible" 
+! ALL objects, except GiGaSvc, converison services and converters are now 
+! "Tools", owned by GiGa Service
+! Thus ALL job otions must be changed like:
+!   AAA.bb = "some value";          
+! GiGaSvc.AAA.bb = "soem value" ;   // NOW
+! ============================================================================
 
 ! ============================================================================
 ! 4 May 2002 - Vanya Belyaev

@@ -1,22 +1,19 @@
+// $Id: GiGaEventActionSequence.h,v 1.3 2002-05-07 12:21:35 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/24 09:48:15  ibelyaev
-/// new component GiGaEventActionSequence
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef GIGA_GIGAEVENTACTIONSEQUENCE_H 
 #define GIGA_GIGAEVENTACTIONSEQUENCE_H 1
 // ============================================================================
-/// STD & STL 
+// STD & STL 
 #include <string>
 #include <vector>
-/// GiGa 
+// GiGa 
 #include "GiGa/GiGaEventActionBase.h"
-/// forward declarations 
-template <class EA>
-class GiGaEventActionFactory;
+// forward declaration
+template <class TYPE> class GiGaFactory;
 
 
 /** @class GiGaEventActionSequence GiGaEventActionSequence.h
@@ -31,50 +28,62 @@ class GiGaEventActionFactory;
 class GiGaEventActionSequence : public GiGaEventActionBase
 {
   /// friend factory
-  friend class GiGaEventActionFactory<GiGaEventActionSequence>;
+  friend class GiGaFactory<GiGaEventActionSequence>;
   
 public:
-
+  
   /// type definition  for list of type/name 
   typedef  std::vector<std::string>       MEMBERS;
   /// type definiiton for list of sequence members 
   typedef  std::vector<IGiGaEventAction*> ACTIONS;
   
   /** initialize the event action object
+   *  @see GiGaEventActionBase 
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
    *  @return status code 
    */
   virtual StatusCode initialize ();
   
   /** finalize the event action object
+   *  @see GiGaEventActionBase 
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
    *  @return status code 
    */
   virtual StatusCode finalize   ();
-
-  /** perform begin-of-event action
+  
+  /** perform begin-of-event action.
+   *  @see G4UserEventAction
    *  @param event pointer to Geant4 event 
    */
   virtual void BeginOfEventAction ( const G4Event* event );
   
   /** perform end-of-event action
+   *  @see    G4UserEventAction
    *  @param event pointer to Geant4 event 
    */
   virtual void EndOfEventAction   ( const G4Event* event );
-
+  
 protected:
   
-  /** standard constructor
-   *  @param Name name of the event action object instance
-   *  @param Loc  pointer to Service Locator 
+  /** standard constructor 
+   *  @see GiGaEventActionBase
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
    */
-  GiGaEventActionSequence( const std::string& Name ,
-                           ISvcLocator*       Loc  ); 
-  /// destructor 
-  virtual ~GiGaEventActionSequence( ); 
+  GiGaEventActionSequence
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
   
-  /** finalise, delete and clear actions container 
-   *  @return status code 
-   */
-  StatusCode   actionsReset() ;
+  /// destructor (virtual and protected)
+  virtual ~GiGaEventActionSequence( ); 
   
 private:
   
@@ -91,7 +100,10 @@ private:
   ACTIONS m_actions ;
   
 };
+// ============================================================================
 
+// ============================================================================
+// The END
 // ============================================================================
 #endif ///< GIGA_GIGAEVENTACTIONSEQUENCE_H
 // ============================================================================

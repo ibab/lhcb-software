@@ -1,19 +1,14 @@
+// $Id: IGiGaMagField.h,v 1.8 2002-05-07 12:21:30 ibelyaev Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2001/07/23 13:11:45  ibelyaev
-// the package restructurisation(II)
-// 
 // ===========================================================================
 #ifndef     GIGA_IGIGAMagField_H
 #define     GIGA_IGIGAMagField_H 1 
 // ===========================================================================
-// STD & STL 
-#include <string>
-// Gaudi Kernel
-#include "GaudiKernel/IInterface.h"
 // GiGa 
+#include "GiGa/IGiGaInterface.h" 
 #include "GiGa/IIDIGiGaMagField.h" 
 // from G4 
 #include "G4MagneticField.hh"
@@ -27,22 +22,24 @@
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
-class IGiGaMagField: virtual public G4MagneticField , 
-                     virtual public IInterface 
+class IGiGaMagField: 
+  virtual public G4MagneticField , 
+  virtual public IAlgTool 
 {
 public:
+  
   /// Retrieve the unique interface ID
   static const InterfaceID&  interfaceID() { return IID_IGiGaMagField ; }
-  /// identification
-  virtual const std::string& name       () const = 0 ;
-  /// initialization 
-  virtual StatusCode         initialize ()       = 0 ;
-  /// finalization 
-  virtual StatusCode         finalize   ()       = 0 ;
+  
+protected:
+  
   /// destructor 
   virtual ~IGiGaMagField(){};
 };
+// ===========================================================================
 
+// ===========================================================================
+// The END 
 // ===========================================================================
 #endif   ///< GIGA_IGIGAMagField_H
 // ===========================================================================

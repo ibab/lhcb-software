@@ -1,4 +1,4 @@
-// $Id: GiGaRunActionSequence.cpp,v 1.6 2002-04-25 13:02:05 ibelyaev Exp $ 
+// $Id: GiGaRunActionSequence.cpp,v 1.7 2002-05-07 12:21:35 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -9,7 +9,8 @@
 /// GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
-#include "GiGa/GiGaRunActionFactory.h"
+#include "GiGa/IGiGaSvc.h"
+#include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaUtil.h"
 /// local 
 #include "GiGaRunActionSequence.h"
@@ -17,9 +18,9 @@
 // ============================================================================
 /** @file
  *
- * Implementation file for class : GiGaRunActionSequence
+ * Implementation file for class GiGaRunActionSequence
  * 
- * @author Vanya  Belyaev
+ * @author Vanya  Belyaev Ivan.Belyaev@itep.ru
  * @date 26/07/2001 
  */
 // ============================================================================
@@ -27,64 +28,46 @@
 // ============================================================================
 /// factory business 
 // ============================================================================
-IMPLEMENT_GiGaRunAction( GiGaRunActionSequence ) ;
+IMPLEMENT_GiGaFactory( GiGaRunActionSequence ) ;
 
 // ============================================================================
-/** standard constructor
- *  @param Name name of this concrete instance of Run Action Object 
- *  @param Loc  pointer to Service Locator 
+/** standard constructor 
+ *  @see GiGaPhysListBase
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
  */
 // ============================================================================
-GiGaRunActionSequence::GiGaRunActionSequence( const std::string Name ,
-                                              ISvcLocator*      Loc  )
-  : GiGaRunActionBase( Name , Loc )
+GiGaRunActionSequence::GiGaRunActionSequence
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent ) 
+  : GiGaRunActionBase( type , name , parent )
   , m_members ( ) ///< empty default lst!
   , m_actions ( ) 
-{ 
-  declareProperty( "Members" , m_members );
-};
+{ declareProperty( "Members" , m_members ); };
+// ============================================================================
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaRunActionSequence::~GiGaRunActionSequence()
+GiGaRunActionSequence::~GiGaRunActionSequence() 
 {
-  /// finalize (if it is not yet done)
-  if( init() ) { finalize(); }
-  /// delete all actions 
-  std::transform( m_actions.begin  () ,
-                  m_actions.end    () ,
-                  m_actions.begin  () ,
-                  GiGaUtil::Delete () );
-  ///
+  m_members.clear () ;
+  m_actions.clear () ;
 };
-
 // ============================================================================
-/** finalise, delete and clear actions container 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaRunActionSequence::actionsReset() 
-{
-  /// finalize all members 
-  std::for_each  ( m_actions.begin () , 
-                   m_actions.end   () ,
-                   std::mem_fun(&IGiGaRunAction::finalize) );
-  /// delete all members
-  std::transform ( m_actions.begin  () , 
-                   m_actions.end    () ,
-                   m_actions.begin  () ,
-                   GiGaUtil::Delete () );
-  /// clear the coinatiner 
-  m_actions.clear() ;
-  ///
-  return StatusCode::SUCCESS ;
-};
 
 // ============================================================================
 /** initialization method 
+ *  @see GiGaRunActionBase 
+ *  @see GiGaBase 
+ *  @see  AlgTool 
+ *  @see IAlgTool 
  *  @return status code 
- */ 
+ */
 // ============================================================================
 StatusCode GiGaRunActionSequence::initialize  ()
 {
@@ -92,49 +75,31 @@ StatusCode GiGaRunActionSequence::initialize  ()
   StatusCode sc = GiGaRunActionBase::initialize();
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!");}
-  if( m_members.empty() ) { Warning("The sequence is empty!"); }
-  /// create the creator
-  GiGaUtil::RunActionCreator  creator( objMgr() , svcLoc() );
   /// instantiate all members using the creator 
-  for( MEMBERS::const_iterator it = m_members.begin() ;
-       m_members.end() != it ; ++it ) 
+  std::string Type ; // Member Type 
+  std::string Name ; // Member Name
+  for( MEMBERS::const_iterator member = m_members.begin() ;
+       m_members.end() != member ; ++member ) 
     {
-      /// get the type and name for the member 
-      std::string Type ; /// Member Type 
-      std::string Name ; /// Member Name
-      StatusCode sc = 
-        GiGaUtil::SplitTypeAndName( *it , Type , Name );
+      sc = GiGaUtil::SplitTypeAndName( *member , Type , Name );
+      if( sc.isFailure() )
+        { return Error("Member Type/Name '"+(*member)+"' is unparsable",sc);}
+      IGiGaRunAction* action = 0 ;
+      sc = toolSvc()->retrieveTool( Type , Name , action , gigaSvc() );
       if( sc.isFailure() ) 
-        { 
-          Error("Could not resolve Type/Name=" + (*it) , sc ) ;
-          actionsReset() ;
-          return  sc ;                                      /// < RETURN 
-        }
-      /// create the member 
-      IGiGaRunAction* runAction = creator( Type , Name ) ;
-      if( 0 == runAction ) 
-        {
-          Error("Could not create Type/Name=" + Type + "/" +  Name , sc ) ;
-          actionsReset() ;
-          return  StatusCode::FAILURE ;                      /// < RETURN
-        }
-      /// initialize the member 
-      sc = runAction->initialize() ;
-      if( sc.isFailure() ) 
-        { 
-          Error("Could not initialize Type/Name=" + Type + "/" + Name , sc ) ;
-          actionsReset();
-          return  sc ;                                      /// < RETURN 
-        }
-      ///
-      m_actions.push_back( runAction );
-      Print("Member '"+Type+"'/'"+Name+"' is added to the sequence");
-    }
+        { return Error("Could not create IGiGaRunAction '" 
+                       + Type + "'/'" + Name + "'" , sc  ) ; }
+      if( 0 == action    ) 
+        { return Error("Could not create IGiGaRunAction '" 
+                       + Type + "'/'" + Name + "'"       ) ; }
+      action->addRef();
+      m_actions.push_back( action );
+    }       
   ///
-  Print("initialized successfully");
-  ///
-  return StatusCode::SUCCESS; 
+  return Print("initialized successfully" , 
+               StatusCode::SUCCESS , MSG::VERBOSE );
 };
+// ============================================================================
 
 // ============================================================================
 /** finalization method 
@@ -143,15 +108,15 @@ StatusCode GiGaRunActionSequence::initialize  ()
 // ============================================================================
 StatusCode GiGaRunActionSequence::finalize()
 {
-  ///
-  Print("finalization");
-  /// finalize all members 
+  Print("Finalization", StatusCode::SUCCESS , MSG::VERBOSE );
+  // release all members 
   std::for_each  ( m_actions.begin () , 
                    m_actions.end   () ,
-                   std::mem_fun(&IGiGaRunAction::finalize) );
-  ///
+                   std::mem_fun(&IGiGaRunAction::release) );
+  m_actions.clear();
+  // finalize teh base class 
   return GiGaRunActionBase::finalize();
-}
+};
 
 // ============================================================================
 /** perform begin-of-run action
@@ -165,6 +130,7 @@ void GiGaRunActionSequence::BeginOfRunAction ( const G4Run* run )
                   std::bind2nd( std::mem_fun1(&IGiGaRunAction::
                                               BeginOfRunAction) , run ) );
 };
+// ============================================================================
 
 // ============================================================================
 /** perform end-of-run action
@@ -178,6 +144,7 @@ void GiGaRunActionSequence::EndOfRunAction ( const G4Run* run )
                   std::bind2nd( std::mem_fun1(&IGiGaRunAction::
                                               EndOfRunAction) , run ) );
 };
+// ============================================================================
 
 // ============================================================================
 // The END 

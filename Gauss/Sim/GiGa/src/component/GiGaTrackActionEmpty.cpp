@@ -1,4 +1,4 @@
-// $Id: GiGaTrackActionEmpty.cpp,v 1.10 2002-04-25 13:02:05 ibelyaev Exp $ 
+// $Id: GiGaTrackActionEmpty.cpp,v 1.11 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -13,7 +13,7 @@
 ///
 #include "GaudiKernel/MsgStream.h"
 // GiGa 
-#include "GiGa/GiGaTrackActionFactory.h"
+#include "GiGa/GiGaMACROs.h"
 /// local
 #include "GiGaTrackActionEmpty.h"
 
@@ -21,63 +21,58 @@
  * 
  * Implementation of the class GiGaTrackActionEmpty
  *  
- *  @author Vanya Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
 // ============================================================================
-// Factory
+/// Factory
 // ============================================================================
-IMPLEMENT_GiGaTrackAction( GiGaTrackActionEmpty );
+IMPLEMENT_GiGaFactory( GiGaTrackActionEmpty );
+// ============================================================================
 
 // ============================================================================
+/** standard constructor 
+ *  @see GiGaTrackActionBase 
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
+ */
 // ============================================================================
-GiGaTrackActionEmpty::GiGaTrackActionEmpty( const std::string& Name , 
-                                            ISvcLocator* Loc ) 
-  : GiGaTrackActionBase( Name , Loc ) 
-{};
+GiGaTrackActionEmpty::GiGaTrackActionEmpty
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent ) 
+  : GiGaTrackActionBase( type , name , parent ) {};
+// ============================================================================
 
 // ============================================================================
+/// destructor 
 // ============================================================================
 GiGaTrackActionEmpty::~GiGaTrackActionEmpty(){};
+// ============================================================================
 
 // ============================================================================
-// ============================================================================
-StatusCode GiGaTrackActionEmpty::initialize () 
-{ 
-  /// initialize the base class 
-  StatusCode sc = GiGaTrackActionBase::initialize() ; 
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class",sc);}
-  ///  
-  Print("initialized succesfully");
-  ///
-  return StatusCode::SUCCESS;
-} ;
-
-// ============================================================================
-// ============================================================================
-StatusCode GiGaTrackActionEmpty::finalize   () 
-{ 
-  ///  
-  Print("initialized succesfully");
-  ///
-  return GiGaTrackActionBase::initialize() ; 
-} ;
-
-// ============================================================================
+/// G4 
 // ============================================================================
 void 
 GiGaTrackActionEmpty::PreUserTrackingAction  ( const G4Track* /* track */ ) 
 { Print("PreUserTrackingAction() is invoked"  , 
-        StatusCode::SUCCESS , MSG::DEBUG ); };
+        StatusCode::SUCCESS                   , MSG::VERBOSE ); };
+// ============================================================================
 
 // ============================================================================
+/// G4 
 // ============================================================================
 void 
 GiGaTrackActionEmpty::PostUserTrackingAction ( const G4Track* /* track */ )
 { Print("PostUserTrackingAction() is invoked" , 
-        StatusCode::SUCCESS , MSG::DEBUG ); };
+        StatusCode::SUCCESS                   , MSG::VERBOSE ); };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

@@ -1,13 +1,13 @@
-// $Id: GiGaPhysListEm.cpp,v 1.9 2002-04-25 13:02:05 ibelyaev Exp $ 
+// $Id: GiGaPhysListEm.cpp,v 1.10 2002-05-07 12:21:35 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 // GiGa
-#include "GiGa/GiGaPhysListFactory.h"
+#include "GiGa/GiGaMACROs.h"
 // G4 
 #include "G4ParticleTypes.hh"
 #include "G4ParticleDefinition.hh"
@@ -30,49 +30,34 @@
  */
 
 // ============================================================================
-// Factory
+/// Factory
 // ============================================================================
-IMPLEMENT_GiGaPhysList( GiGaPhysListEm ) ;
+IMPLEMENT_GiGaFactory( GiGaPhysListEm ) ;
+// ============================================================================
 
 // ============================================================================
+/** standard constructor 
+ *  @see GiGaPhysListBase
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
+ */
 // ============================================================================
-GiGaPhysListEm::GiGaPhysListEm( const std::string& nick , ISvcLocator* loc ) 
-  : GiGaPhysListBase( nick , loc )
+GiGaPhysListEm::GiGaPhysListEm
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent )
+  : GiGaPhysListBase( type , name , parent )
 {};
+// ============================================================================
 
 // ============================================================================
+/// destructor 
 // ============================================================================
 GiGaPhysListEm::~GiGaPhysListEm(){};
-
-/// ============================================================================
-/** initialization of the object
- *  @return status code 
- */
 // ============================================================================
-StatusCode GiGaPhysListEm::initialize()
-{
-  /// initialize the base class 
-  StatusCode sc = GiGaPhysListBase::initialize();
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class",sc);}
-  ///
-  Print("initialized succesfully") ;
-  ///
-  return StatusCode::SUCCESS;  
-};
-
-// ============================================================================
-/** finalization of the object
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaPhysListEm::finalize  ()
-{
-  ///
-  Print("finalization") ;
-  ///
-  return GiGaPhysListBase::finalize();
-};
 
 // ============================================================================
 // ============================================================================
@@ -337,4 +322,6 @@ void GiGaPhysListEm::ConstructGeneral()
   }
 }
 
+// ============================================================================
+// The END 
 // ============================================================================

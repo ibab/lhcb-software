@@ -1,68 +1,83 @@
-// $Id: GiGaEventActionBase.cpp,v 1.8 2002-04-25 13:02:04 ibelyaev Exp $
+// $Id: GiGaEventActionBase.cpp,v 1.9 2002-05-07 12:21:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/04/25 13:02:04  ibelyaev
+//  small update
+//
 // ============================================================================
 // GiGa 
 #include "GiGa/GiGaEventActionBase.h"
 
+// ============================================================================
 /** @file 
  *  implementation fo class GiGaEventActionBase
  * 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 6 May 2002 
  */
+// ============================================================================
 
 // ============================================================================
+/** standard  constructor
+ *  @see GiGaBase
+ *  @see AlgTool
+ *  @param type tool type (?)
+ *  @param name  tool name 
+ *  @param parent 
+ */
 // ============================================================================
-GiGaEventActionBase::GiGaEventActionBase( const std::string& nick , 
-                                          ISvcLocator* svc )
-  : GiGaBase          ( nick , svc ) 
-{};
+GiGaEventActionBase::GiGaEventActionBase
+( const std::string& type , 
+  const std::string& nick , 
+  const IInterface*  svc  )
+  : GiGaBase          ( type , nick , svc ) 
+{ declareInterface<IGiGaEventAction> (this); };
+// ============================================================================
 
 // ============================================================================
-/// virtual destructor
+// virtual destructor
 // ============================================================================
 GiGaEventActionBase::~GiGaEventActionBase(){};
+// ============================================================================
 
 // ============================================================================
+/** initialize the object 
+ *  @see GiGaBase
+ *  @see  AlgTool
+ *  @see IAlgTool
+ *  @return status code 
+ */
 // ============================================================================
-StatusCode GiGaEventActionBase::initialize() 
+StatusCode GiGaEventActionBase::initialize ()  
 {
-  StatusCode sc = GiGaBase::initialize() ; 
-  if( sc.isFailure() ) { return Error("Could not initialize Base class!"); } 
+  /// initialize base class
+  StatusCode sc = GiGaBase::initialize (); 
+  if( sc.isFailure() )
+    { return Error("Could not initialize GiGaBase class!", sc); }
   ///
-  Print("GiGaEventActionBase initialized successfully" ,
-        StatusCode::SUCCESS , MSG::DEBUG ) ;
-  ///
-  return StatusCode::SUCCESS;
-}; 
+  return Print("GiGaEventActionBase initialized succesfully" ,
+               StatusCode::SUCCESS                           , MSG::VERBOSE );
+};
+// ============================================================================
 
 // ============================================================================
+/** finalize initialize the object 
+ *  @see GiGaBase
+ *  @see  AlgTool
+ *  @see IAlgTool
+ *  @return status code 
+ */
 // ============================================================================
-StatusCode GiGaEventActionBase::finalize() 
+StatusCode GiGaEventActionBase::finalize   ()  
 { 
-  ///
-  Print("GiGaEventActionBase finalization" ,
-        StatusCode::SUCCESS , MSG::DEBUG ) ;
-  ///
-  return GiGaBase::finalize();  
-  ///
+  Print("GiGaEventActionBase Finalization" ,
+        StatusCode::SUCCESS                , MSG::VERBOSE );
+  // finalze the base class 
+  return GiGaBase::finalize   (); 
 };
-
 // ============================================================================
-// ============================================================================
-StatusCode GiGaEventActionBase::queryInterface( const InterfaceID& iid , 
-                                                void** ppI)
-{
-  if( 0 == ppI ) { return StatusCode::FAILURE; } 
-  *ppI = 0; 
-  if   ( IGiGaEventAction::interfaceID() == iid ) 
-    { *ppI = static_cast<IGiGaEventAction*>        ( this ) ; } 
-  else { return GiGaBase::queryInterface( iid , ppI ) ; } /// RETURN!!!
-  addRef();
-  return StatusCode::SUCCESS;
-};
 
 // ============================================================================
 // The End 

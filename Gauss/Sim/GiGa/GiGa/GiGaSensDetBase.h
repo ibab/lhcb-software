@@ -1,10 +1,8 @@
+// $Id: GiGaSensDetBase.h,v 1.7 2002-05-07 12:21:30 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $  
+// CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/23 13:11:43  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef     GIGA_GiGaSensDetBase_H
 #define     GIGA_GiGaSensDetBase_H 1 
@@ -27,46 +25,38 @@ class GiGaSensDetBase: virtual public IGiGaSensDet ,
 {
   ///
 protected:
-
+  
   /** standard constructor   
-   *  @param name name of this sensitive detector instance 
-   *  @param Svc pointer to service locator 
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
    */
-  GiGaSensDetBase( const std::string& name , 
-                   ISvcLocator*       Svc  );
+  GiGaSensDetBase ( const std::string& type   , 
+                    const std::string& name   , 
+                    const IInterface*  parent );
   /// virtual destructor 
   virtual ~GiGaSensDetBase();
   ///
 public:
 
-  /** ident
-   *  @return name of the given sensitive detector instance 
-   */
-  virtual const std::string& name       () const ;
-  
   /** initialize the sensitive detector  
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
    *  @return status code 
    */
   virtual StatusCode         initialize () ; 
 
   /** finalize the sensitive detector  
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
    *  @return status code 
    */
   virtual StatusCode         finalize   () ; 
 
-  /** query the interface
-   *  @param ID   uniqie interface identifier 
-   *  @param ppI  the placeholder for returned interface 
-   *  @return status code 
-   */
-  virtual StatusCode    queryInterface ( const InterfaceID& ID , 
-                                         void** ppI ) ;
-
-  /// serialization for reading
-  virtual StreamBuffer& serialize( StreamBuffer& )       ;
-  /// serialization for writing
-  virtual StreamBuffer& serialize( StreamBuffer& ) const ;
-  ///
   /// 
 protected:
   ///
@@ -75,14 +65,16 @@ protected:
   ///
 private:
   ///
-  bool                m_init    ;  ///< Init Flag
   bool                m_active  ;  ///< Active Flag
-  std::string         m_detName ;  ///< Det name 
-  ///
+  std::string         m_detPath ;
 };
-///
+// ============================================================================
 
+// ============================================================================
+// The END 
+// ============================================================================
 #endif   // GIGA_GiGaSensDet_H
+// ============================================================================
 
 
 

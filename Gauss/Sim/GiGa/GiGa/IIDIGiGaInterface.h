@@ -1,27 +1,36 @@
-// $Id: IIDIGiGaSensDet.h,v 1.7 2002-05-07 12:21:32 ibelyaev Exp $ 
+// $Id: IIDIGiGaInterface.h,v 1.1 2002-05-07 12:21:32 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
-#ifndef       GIGA_IIDIGiGaSensDet_H
-#define       GIGA_IIDIGiGaSensDet_H 1 
-// ============================================================================
+#ifndef GIGA_IIDIGIGAINTERFACE_H 
+#define GIGA_IIDIGIGAINTERFACE_H 1
+// Include files
+// GaudiKernel
+#include "GaudiKernel/IInterface.h"
 
 /** @file 
- *  Declaration of the interface ID ( interface id, major & minor version) 
+ *  
+ *  Definition of unique identifier for class IGiGaInterface
+ *  @see IGiGaInterface 
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   26/07/2001
+ *  @date   06/05/2002
  */
-/** @var  IID_IGiGaSensDet
- *  Declaration of the interface ID ( interface id, major & minor version) 
+
+/** @var IID_IGiGaInterface  
+ *  
+ *  Definition of unique identifier for class IGiGaInterface
+ *  @see IGiGaInterface 
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   26/07/2001
+ *  @date   06/05/2002
  */
-static const InterfaceID IID_IGiGaSensDet( "IGiGaSensDet" , 3 , 0 );
+static const InterfaceID IID_IGiGaInterface( "IGiGaInterface" , 1 , 0 );
 
 // ============================================================================
-// The End 
+// The END
 // ============================================================================
-#endif   ///<   GIGA_IIDIGiGaSensDet_H
+#endif // GIGA_IIDIGIGAINTERFACE_H
 // ============================================================================

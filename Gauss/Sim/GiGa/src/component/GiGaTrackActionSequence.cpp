@@ -1,8 +1,8 @@
-// $Id: GiGaTrackActionSequence.cpp,v 1.5 2002-04-25 13:02:05 ibelyaev Exp $ 
+// $Id: GiGaTrackActionSequence.cpp,v 1.6 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
+// $Log: not supported by cvs2svn $
 // ============================================================================
 /// STD & STL 
 #include <functional>
@@ -10,8 +10,9 @@
 /// GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
+#include "GiGa/IGiGaSvc.h"
 #include "GiGa/GiGaUtil.h"
-#include "GiGa/GiGaTrackActionFactory.h"
+#include "GiGa/GiGaMACROs.h"
 /// local 
 #include "GiGaTrackActionSequence.h"
 
@@ -24,62 +25,37 @@
  */
 // ============================================================================
 
-
 // ============================================================================
 /// Factory business 
 // ============================================================================
-IMPLEMENT_GiGaTrackAction( GiGaTrackActionSequence ) ;
+IMPLEMENT_GiGaFactory( GiGaTrackActionSequence ) ;
 
 // ============================================================================
-/** standard constructor
- *  @param Name name of this concrete instance 
- *  @param Loc  pointer to Service Locator 
+/** standard constructor 
+ *  @see GiGaTrackActionBase 
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
  */
 // ============================================================================
-GiGaTrackActionSequence::GiGaTrackActionSequence( const std::string& Name ,
-                                                  ISvcLocator*       Loc  )
-  : GiGaTrackActionBase( Name , Loc ) 
+GiGaTrackActionSequence::GiGaTrackActionSequence
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent ) 
+  : GiGaTrackActionBase( type , name , parent  ) 
   , m_members ()  ///< default empty vertor!
   , m_actions ()
   , m_setMgr  ( false ) 
-{  
-  declareProperty( "Members" , m_members );
-};
+{ declareProperty( "Members" , m_members ); };
+// ============================================================================
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaTrackActionSequence::~GiGaTrackActionSequence()
-{
-  /// delete all actions
-  std::transform( m_actions.begin () , 
-                  m_actions.end   () ,
-                  m_actions.begin () ,
-                  GiGaUtil::Delete() );
-  ///
-};
-
+GiGaTrackActionSequence::~GiGaTrackActionSequence() {};
 // ============================================================================
-/** reset all members(actions)
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaTrackActionSequence::actionsReset() 
-{
-  /// finalize all actions 
-  std::for_each( m_actions.begin () ,
-                 m_actions.end   () ,
-                 std::mem_fun(&IGiGaTrackAction::finalize) );         
-  /// delete all actions 
-  std::transform ( m_actions.begin  () , 
-                   m_actions.end    () ,
-                   m_actions.begin  () ,
-                   GiGaUtil::Delete () );
-  /// clear the conatiner 
-  m_actions.clear() ;
-  ///
-  return StatusCode::SUCCESS;
-};
 
 // ============================================================================
 /** initialise the action object 
@@ -92,48 +68,30 @@ StatusCode GiGaTrackActionSequence::initialize ()
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!", sc ); }
   if( m_members.empty() ) { Warning("The sequence is empty!"); }
-  /// create the creator
-  GiGaUtil::TrackActionCreator  creator( objMgr() , svcLoc() );
-  /// instantiate all members using the creator 
-  for( MEMBERS::const_iterator it = m_members.begin() ;
-       m_members.end() != it ; ++it ) 
+  // instantiate members 
+  std::string Type, Name;
+  for( MEMBERS::const_iterator member = m_members.begin() ;
+       m_members.end() != member ; ++member )
     {
-      /// get the type and name for the member 
-      std::string Type ; /// Member Type 
-      std::string Name ; /// Member Name
-      StatusCode sc = 
-        GiGaUtil::SplitTypeAndName( *it , Type , Name );
+      sc = GiGaUtil::SplitTypeAndName( *member , Type , Name );
+      if( sc.isFailure() )
+        { return Error("Member Type/Name '"+(*member)+"' is unparsable",sc);}
+      IGiGaTrackAction* action = 0 ;
+      sc = toolSvc()->retrieveTool( Type , Name , action , gigaSvc() );
       if( sc.isFailure() ) 
-        { 
-          Error("Could not resolve Type/Name=" + (*it) , sc ) ;
-          actionsReset() ;
-          return  sc ;                                      /// < RETURN 
-        }
-      /// create the member 
-      IGiGaTrackAction* trackAction = creator( Type , Name ) ;
-      if( 0 == trackAction ) 
-        {
-          Error("Could not create Type/Name=" + Type + "/" +  Name , sc ) ;
-          actionsReset() ;
-          return  StatusCode::FAILURE ;                      /// < RETURN
-        }
-      /// initialize the member 
-      sc = trackAction->initialize() ;
-      if( sc.isFailure() ) 
-        { 
-          Error("Could not initialize Type/Name=" + Type + "/" + Name , sc ) ;
-          actionsReset();
-          return  sc ;                                      /// < RETURN 
-        }
-      ///
-      m_actions.push_back( trackAction );
-      Print("Member '"+Type+"'/'"+Name+"' is added to the sequence");
-    }
-  ///
-  Print("initialized successfully");
-  ///
-  return StatusCode::SUCCESS;
+        { return Error("Could not create IGiGaTrackAction '" 
+                       + Type + "'/'" + Name + "'" , sc  ) ; }
+      if( 0 == action    ) 
+        { return Error("Could not create IGiGaTrackAction '" 
+                       + Type + "'/'" + Name + "'"       ) ; }
+      action->addRef();
+      m_actions.push_back( action );
+    }       
+  //
+  return Print("Iinitialized successfully" , 
+               StatusCode::SUCCESS         , MSG::VERBOSE );
 };
+// ============================================================================
 
 // ============================================================================
 /** finalize the action object 
@@ -142,15 +100,16 @@ StatusCode GiGaTrackActionSequence::initialize ()
 // ============================================================================
 StatusCode GiGaTrackActionSequence::finalize   () 
 {
-  ///
-  Print("finalization");
-  /// finalize all actions 
+  Print("Finalization" , StatusCode::SUCCESS , MSG::VERBOSE );
+  // release all memebrs 
   std::for_each( m_actions.begin () ,
                  m_actions.end   () ,
-                 std::mem_fun(&IGiGaTrackAction::finalize) );         
-  /// finalize the base class
+                 std::mem_fun(&IInterface::release) );         
+  m_actions.clear();
+  // finalize the base class
   return GiGaTrackActionBase::finalize() ;
 };
+// ============================================================================
 
 // ============================================================================
 /** perform the pre-action
@@ -159,7 +118,7 @@ StatusCode GiGaTrackActionSequence::finalize   ()
 // ============================================================================
 void GiGaTrackActionSequence::PreUserTrackingAction  ( const G4Track* track )
 {
-  /// set the tracking manager for all members 
+  // set the tracking manager for all members 
   if( ! m_setMgr ) 
     {
       G4TrackingManager* mgr = trackMgr();
@@ -170,12 +129,13 @@ void GiGaTrackActionSequence::PreUserTrackingAction  ( const G4Track* track )
                                    mgr ) ) ;
       m_setMgr = true;
     }
-  /// tracking actions of all members  
+  // tracking actions of all members  
   std::for_each( m_actions.begin () , 
                  m_actions.end   () ,
                  std::bind2nd( std::mem_fun1(&IGiGaTrackAction::
                                              PreUserTrackingAction),track ) ) ;
 };
+// ============================================================================
 
 // ============================================================================
 /** perform the post-action
@@ -184,12 +144,24 @@ void GiGaTrackActionSequence::PreUserTrackingAction  ( const G4Track* track )
 // ============================================================================
 void GiGaTrackActionSequence::PostUserTrackingAction  ( const G4Track* track )
 {
-  /// tracking actions of all members  
+  // set the tracking manager for all members 
+  if( ! m_setMgr ) 
+    {
+      G4TrackingManager* mgr = trackMgr();
+      std::for_each( m_actions.begin () , 
+                     m_actions.end   () ,
+                     std::bind2nd( std::mem_fun1(&IGiGaTrackAction::
+                                                 SetTrackingManagerPointer) , 
+                                   mgr ) ) ;
+      m_setMgr = true;
+    }
+  // tracking actions of all members  
   std::for_each( m_actions.begin () , 
                  m_actions.end   () ,
                  std::bind2nd( std::mem_fun1(&IGiGaTrackAction::
                                              PostUserTrackingAction),track ) );
 };
+// ============================================================================
 
 // ============================================================================
 // The END 

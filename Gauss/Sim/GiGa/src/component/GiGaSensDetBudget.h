@@ -1,8 +1,8 @@
-// $Id: GiGaSensDetBudget.h,v 1.1 2002-05-04 20:20:12 ibelyaev Exp $
+// $Id: GiGaSensDetBudget.h,v 1.2 2002-05-07 12:21:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef GIGA_GIGASENSDETBUDGET_H 
 #define GIGA_GIGASENSDETBUDGET_H 1
@@ -11,6 +11,8 @@
 #include "GiGa/GiGaSensDetBase.h"
 #include "GiGa/GiGaMap.h"
 #include "GiGa/GiGaHashMap.h"
+// forward declaration
+template <class TYPE> class GiGaFactory;
 
 /** @class GiGaSensDetBudget GiGaSensDetBudget.h 
  *  
@@ -22,18 +24,21 @@
 class GiGaSensDetBudget : virtual public GiGaSensDetBase 
 {
   /// friend factory for instantiation
-  friend class GiGaSensDetFactory<GiGaSensDetBudget>;
+  friend class GiGaFactory<GiGaSensDetBudget>;
 
 public:
   
   /** finalize the sensitive detector 
    *  @see GiGaSensDetBase 
    *  @see GiGaBase 
+   *  @see  AlgTool
+   *  @see IAlgTool
    *  @return status code 
    */
   virtual StatusCode finalize   () ;
   
   /** process the hit
+   *  @see G4VSensitiveDetector
    *  @param step     pointer to current Geant4 step 
    *  @param history  pointert to touchable history 
    */
@@ -43,16 +48,18 @@ public:
   
 protected:
   
-  /** Standard constructor
-   *  @see GiGaSensDetBase
-   *  @see GiGaBase
-   *  @param name   name of the sensitive detector
-   *  @param svcloc pointer to servcie locator 
+  /** standard constructor 
+   *  @see GiGaSensDetBase 
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
    */
   GiGaSensDetBudget
-  ( const std::string& name   , 
-    ISvcLocator*       svcloc );
-  
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
   
   /// destructor (virtual and protected)
   virtual ~GiGaSensDetBudget() ;
@@ -90,6 +97,7 @@ private:
   bool   m_material ;
   
 };
+// ============================================================================
 
 // ============================================================================
 // The END 

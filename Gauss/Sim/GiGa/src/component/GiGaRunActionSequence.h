@@ -1,10 +1,8 @@
+// $Id: GiGaRunActionSequence.h,v 1.3 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/26 16:09:23  ibelyaev
-/// GiGaRunActions budiness
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef GIGA_GIGARUNACTIONSEQUENCE_H 
 #define GIGA_GIGARUNACTIONSEQUENCE_H 1
@@ -14,6 +12,8 @@
 #include <vector> 
 /// GiGa
 #include "GiGa/GiGaRunActionBase.h"
+// forward declarations
+template <class TYPE> class GiGaFactory;
 
 /** @class GiGaRunActionSequence GiGaRunActionSequence.h
  *  
@@ -27,8 +27,8 @@
 class GiGaRunActionSequence: public GiGaRunActionBase
 {
   /// friend factory for instantiation 
-  friend class GiGaRunActionFactory<GiGaRunActionSequence>;
-  ///  
+  friend class GiGaFactory<GiGaRunActionSequence>;
+
 public:
   
   /// useful typedefs 
@@ -36,40 +36,52 @@ public:
   typedef  std::vector<IGiGaRunAction*>  ACTIONS;
   
   /** initialization method 
+   *  @see GiGaRunActionBase 
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
    *  @return status code 
    */
   virtual StatusCode         initialize  ()        ;
   
   /** finalization method 
+   *  @see GiGaRunActionBase 
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
    *  @return status code 
    */
   virtual StatusCode         finalize    ()        ;
   
   /** perform begin-of-run action
+   *  @see G4UserRunAction
    *  @param run  pointer to Geant4 Run object
    */
   virtual void BeginOfRunAction ( const G4Run* run );
   
   /** perform end-of-run action
+   *  @see G4UserRunAction
    *  @param run  pointer to Genat4 Run object
    */
   virtual void EndOfRunAction   ( const G4Run* run );
   
 protected :
   
-  /** standard constructor
-   *  @param Name name of this concrete instance of Run Action Object 
-   *  @param Loc  pointer to Service Locator 
-   */ 
-  GiGaRunActionSequence( const std::string Name ,
-                     ISvcLocator*      Loc  ); 
- /// destructor 
-  virtual ~GiGaRunActionSequence();
-  
-  /** finalise, delete and clear actions container 
-   *  @return status code 
+  /** standard constructor 
+   *  @see GiGaPhysListBase
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
    */
-  StatusCode   actionsReset() ;
+  GiGaRunActionSequence
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
+  
+  /// destructor (virtual and protected) 
+  virtual ~GiGaRunActionSequence();
   
 private: 
   
@@ -86,7 +98,10 @@ private:
   ACTIONS   m_actions ;
 
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 #endif ///< GIGA_GIGARUNACTIONSEQUENCE_H
 // ============================================================================

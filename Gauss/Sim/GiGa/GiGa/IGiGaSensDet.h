@@ -1,59 +1,54 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaSensDet.h,v 1.4 2001-07-15 20:53:57 ibelyaev Exp $ 
+// $Id: IGiGaSensDet.h,v 1.5 2002-05-07 12:21:31 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
 #ifndef    GIGA_IGiGaSensDet_H
 #define    GIGA_IGiGaSensDet_H 1 
-// from STL
-#include <string> 
-// base classes from GaudiKernel  
-#include "GaudiKernel/IInterface.h"
+// GiGa
+#include "GiGa/IGiGaInterface.h"
+#include "GiGa/IIDIGiGaSensDet.h"
 // base class from Geant4 
 #include "G4VSensitiveDetector.hh" 
-// unique IID 
-#include "GiGa/IIDIGiGaSensDet.h"
-// 
 
 /** @class IGiGaSensDet IGiGaSensDet.h GiGa/IGiGaSensDet.h
+ *
+ *  Definition of pseudo-abstract pseudo-interface for GiGa Sensitive Detector 
+ *
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    23/01/2001
+ */
 
-    Definition of pseudo-abstract pseudo-interface for GiGa Sensitive Detector 
-
-    @author  Vanya Belyaev
-    @date    23/01/2001
-*/
-
-
-class IGiGaSensDet: virtual public G4VSensitiveDetector,  /*  "the main" class from Geant4                   */ 
-               virtual public IInterface             /*  to allow easy Gaudi instantiation              */
+class IGiGaSensDet: 
+  public virtual G4VSensitiveDetector,
+  public virtual IGiGaInterface       
 {
-  ///
- public:
-  ///
-  /// Retrieve interface ID
+public:
+  
+  /** Retrieve the unique interface ID (static)
+   *  @see IInterface
+   */
   static const InterfaceID& interfaceID ()  { return IID_IGiGaSensDet ; }
-  ///
-
-  /// identification 
-  virtual const std::string& name        () const = 0 ;
-  /// initialization method 
-  virtual StatusCode         initialize  ()       = 0 ;
-  /// finalization method 
-  virtual StatusCode         finalize    ()       = 0 ;
-  ///
+  
+protected:
+  
   ///  virtual destructor   
   virtual ~IGiGaSensDet(){};
   ///
- protected:
+protected:
+
   ///
-  IGiGaSensDet(): G4VSensitiveDetector( "NotYetDefined" ){} ; // no default constructor 
-  ///
+  IGiGaSensDet(): G4VSensitiveDetector( "NotYetDefined" ){} ; 
+  // no default constructor 
 };
+// ============================================================================
 
-///
-///
-///
-
-
-
-
+// ============================================================================
+// The END
+// ============================================================================
 #endif  // GIGA_IGiGaSensDet_H
+// ============================================================================
 
 
 

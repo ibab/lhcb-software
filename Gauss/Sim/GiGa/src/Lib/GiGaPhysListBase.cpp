@@ -1,13 +1,8 @@
+// $Id: GiGaPhysListBase.cpp,v 1.8 2002-05-07 12:21:33 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/07/27 17:03:18  ibelyaev
-/// improved printout
-///
-/// Revision 1.5  2001/07/23 13:12:11  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
@@ -15,38 +10,48 @@
 /// GiGa
 #include "GiGa/GiGaPhysListBase.h"
 
-/** imeplementation of class GiGaPhysListBase
+// ============================================================================
+/** @file 
+ *  implementation of class GiGaPhysListBase
  *
  *  @author Vanya Belyaev 
  */
+// ============================================================================
 
 // ============================================================================
+/** standard constructor
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
+ */
 // ============================================================================
-GiGaPhysListBase::GiGaPhysListBase( const std::string& nick , ISvcLocator* loc) 
-  : GiGaBase          ( nick , loc  )
+GiGaPhysListBase::GiGaPhysListBase
+( const std::string& type   , 
+  const std::string& name   , 
+  const IInterface*  parent ) 
+  : GiGaBase          ( type , name , parent  )
   , m_DefaultCutValue ( 2.0 * mm    )
-{ declareProperty( "Cut" , m_DefaultCutValue ); };
+{ 
+  declareInterface<IGiGaPhysList> (this);
+  declareProperty( "Cut" , m_DefaultCutValue ); 
+};
+// ============================================================================
 
 // ============================================================================
+/// destructor
 // ============================================================================
 GiGaPhysListBase::~GiGaPhysListBase(){};
+// ============================================================================
 
 // ============================================================================
-// ============================================================================
-StatusCode GiGaPhysListBase::queryInterface( const InterfaceID& id , 
-                                             void** ppI) 
-{
-  if( 0 == ppI ) { return StatusCode::FAILURE; } 
-  *ppI = 0 ; 
-  if   ( IGiGaPhysList::interfaceID() == id ) 
-    { *ppI = static_cast<IGiGaPhysList*> (this)    ; } 
-  else                                        
-    {  return GiGaBase::queryInterface( id , ppI ) ; } /// RETURN ;
-  addRef();
-  return StatusCode::SUCCESS; 
-};
-
-// ============================================================================
+/** initialize the object 
+ *  @see GiGaBase
+ *  @see  AlgTool
+ *  @see IAlgTool
+ *  @return status code 
+ */
 // ============================================================================
 StatusCode GiGaPhysListBase::initialize ()  
 {
@@ -66,22 +71,28 @@ StatusCode GiGaPhysListBase::initialize ()
   log << MSG::INFO << " Default Cut Value is set to be " 
       << GetDefaultCutValue() / mm << " [mm]" << endreq; 
   ///
-  Print("GiGaPhysListBase initialized succesfully" ,
-        StatusCode::SUCCESS , MSG::DEBUG );
-  ///
-  return StatusCode::SUCCESS;
+  return Print("GiGaPhysListBase initialized succesfully" ,
+               StatusCode::SUCCESS                        , MSG::VERBOSE );
 };
+// ============================================================================
 
 // ============================================================================
+/** finalize initialize the object 
+ *  @see GiGaBase
+ *  @see  AlgTool
+ *  @see IAlgTool
+ *  @return status code 
+ */
 // ============================================================================
 StatusCode GiGaPhysListBase::finalize   ()  
 { 
-  ///
-  Print("GiGaPhysListBase finalization" ,
-        StatusCode::SUCCESS , MSG::DEBUG );
-  ///
+  Print("GiGaPhysListBase Finalization" ,
+        StatusCode::SUCCESS             , MSG::VERBOSE );
+  // finalze the base class 
   return GiGaBase::finalize   (); 
 };
-
 // ============================================================================
 
+// ============================================================================
+// The END 
+// ============================================================================

@@ -1,18 +1,12 @@
+// $Id: GiGaTrackActionBase.h,v 1.10 2002-05-07 12:21:30 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.8  2001/07/27 14:28:59  ibelyaev
-/// bug fix
-///
-/// Revision 1.7  2001/07/23 13:11:43  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef     GIGA_GiGaTrackActionBase_H
 #define     GIGA_GiGaTrackActionBase_H 1 
 // ============================================================================
-
 // from STL
 #include <vector> 
 // base class 
@@ -26,34 +20,51 @@ class G4Track;
  *  
  *  Base class for implementation of concrete Tracking Action for GiGa
  *  
- *  @author  Vanya Belyaev
+ *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date    23/01/2001
  */
 
-class GiGaTrackActionBase: virtual public IGiGaTrackAction   ,
-                           public  GiGaBase
+class GiGaTrackActionBase: 
+  public virtual IGiGaTrackAction ,
+  public         GiGaBase
 {
-  ///
 protected:
-  /// constructor 
-  GiGaTrackActionBase( const std::string& , ISvcLocator* );
+
+  /** standard constructor 
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
+   */
+  GiGaTrackActionBase
+  ( const std::string& type   , 
+    const std::string& name   , 
+    const IInterface*  parent ) ;
+
   virtual ~GiGaTrackActionBase();
-  ///
+
 public:
-  /// ident 
-  virtual const std::string&  name () const { return GiGaBase::name() ; }; 
-  /// initialize 
-  virtual StatusCode   initialize () ; 
-  /// finalize 
-  virtual StatusCode   finalize   () ; 
-  /// Query Interface
-  virtual StatusCode   queryInterface ( const InterfaceID& , void** ) ;
-  ///
-public:
-  ///
+  
+  /** initialize the track action  
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
+   *  @return status code 
+   */
+  virtual StatusCode         initialize () ; 
+  
+  /** finalize the track action
+   *  @see GiGaBase 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
+   *  @return status code 
+   */
+  virtual StatusCode         finalize   () ;
+
   virtual void PreUserTrackingAction  ( const G4Track* );
   virtual void PostUserTrackingAction ( const G4Track* );
-  ///
+  
 protected:
   
   /** accessor to Geant4 Tracking Manager 
@@ -71,8 +82,10 @@ private:
 private:
   ///
 };
-///
+// ============================================================================
  
+// ============================================================================
+// The END 
 // ============================================================================
 #endif   ///< GIGA_GiGaTrackActionBase_H 
 // ============================================================================

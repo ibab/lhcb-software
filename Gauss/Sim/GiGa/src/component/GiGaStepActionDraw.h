@@ -1,22 +1,16 @@
+// $Id: GiGaStepActionDraw.h,v 1.6 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/23 13:12:28  ibelyaev
-/// the package restructurisation(II)
-///
-/// Revision 1.3  2001/07/15 20:54:34  ibelyaev
-/// package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef       GIGA_GiGaStepActionDraw_H
 #define       GIGA_GiGaStepActionDraw_H 1 
 // ============================================================================
 /// GiGa 
 #include "GiGa/GiGaStepActionBase.h"
-
-template <class SA> 
-class GiGaStepActionFactory;
+// forward declarations 
+template <class TYPE> class GiGaFactory;
 class G4Step;
 
 /** @class GiGaStepActionDraw GiGaStepActionDraw.h
@@ -31,47 +25,46 @@ class G4Step;
 
 class GiGaStepActionDraw: virtual public GiGaStepActionBase
 {
-  ///
-  friend class GiGaStepActionFactory<GiGaStepActionDraw>;
-  ///
- protected:
-
-  /** standard constructor 
-   *  @param name name of this ocncrete instance
-   *  @param Loc  pointer to service locator 
-   */
-  GiGaStepActionDraw( const std::string& Name , 
-                      ISvcLocator*       Loc  );
-  /// destructor 
-  virtual ~GiGaStepActionDraw();
-  ////
- public: 
-
-  /** initialization 
-   *  @return status code 
-   */
-  virtual StatusCode initialize () ; 
+  /// friend factory for instantiation 
+  friend class GiGaFactory<GiGaStepActionDraw>;
   
-  /** finalization 
-   *  @return status code 
+protected:
+  
+  /** standard constructor 
+   *  @see GiGaStepActionBase 
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
    */
-  virtual StatusCode finalize   () ;
+  GiGaStepActionDraw
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
+  
+  /// destructor (virtual and protected) 
+  virtual ~GiGaStepActionDraw();
+  
+public: 
   
   /** the "main" method
+   *  @see   G4UserSteppingAction
    *  @param aStep  pointer to current step object
    */
   virtual void UserSteppingAction( const G4Step* aStep );
-  /// 
+  
 private:
-  ///
+
   GiGaStepActionDraw() ; ///< no default constructor
   GiGaStepActionDraw( const GiGaStepActionDraw& ); ///< no copy constructor 
   GiGaStepActionDraw& operator=( const GiGaStepActionDraw& ) ; // no assignment 
-  ///
- private:
-  ///
-};
 
+};
+// ============================================================================
+
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  ///<    GIGA_GiGaStepActionDraw_H
 // ============================================================================

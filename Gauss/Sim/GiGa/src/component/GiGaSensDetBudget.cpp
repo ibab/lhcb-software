@@ -1,18 +1,15 @@
-// $Id: GiGaSensDetBudget.cpp,v 1.2 2002-05-04 20:57:01 ibelyaev Exp $
+// $Id: GiGaSensDetBudget.cpp,v 1.3 2002-05-07 12:21:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2002/05/04 20:20:12  ibelyaev
-//  see $GIGAROOT/doc/release.notes (4 May 2002)
-//
 // ============================================================================
 // Include files
 // GaudiKernel
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/PropertyMgr.h" 
 // GiGa
-#include "GiGa/GiGaSensDetFactory.h"
+#include "GiGa/GiGaMACROs.h"
 // local
 #include "GiGaSensDetBudget.h"
 // G4 
@@ -37,26 +34,29 @@
 /** implement static factory
  */
 // ============================================================================
-IMPLEMENT_GiGaSensDet( GiGaSensDetBudget );
+IMPLEMENT_GiGaFactory( GiGaSensDetBudget );
 // ============================================================================
 
 
 // ============================================================================
-/** Standard constructor
- *  @see GiGaSensDetBase
- *  @see GiGaBase
- *  @param Name   name of the sensitive detector
- *  @param svcloc pointer to servcie locator 
+/** standard constructor 
+ *  @see GiGaSensDetBase 
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
  */
 // ============================================================================
 GiGaSensDetBudget::GiGaSensDetBudget
-( const std::string& Name   , 
-  ISvcLocator*       svcloc )
-  : GiGaSensDetBase      ( Name , svcloc ) 
-  , G4VSensitiveDetector ( Name       )
-  , m_budgetL            (      )
-  , m_budgetP            (      )
-  , m_budgetM            (      )
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent ) 
+  : GiGaSensDetBase      ( type , name , parent ) 
+  , G4VSensitiveDetector ( name  )
+  , m_budgetL            (       )
+  , m_budgetP            (       )
+  , m_budgetM            (       )
   , m_lvolume            ( true  ) // accumulate by logical  volume name 
   , m_pvolume            ( true  ) // accumulate by physical volume name 
   , m_material           ( true  ) // accumulate by material name 

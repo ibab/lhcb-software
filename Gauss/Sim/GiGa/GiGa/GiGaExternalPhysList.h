@@ -1,18 +1,16 @@
-// $Id: GiGaExternalPhysList.h,v 1.2 2002-05-05 13:23:49 ibelyaev Exp $
+// $Id: GiGaExternalPhysList.h,v 1.3 2002-05-07 12:21:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2002/04/25 13:02:04  ibelyaev
-//  small update
-// 
 // ============================================================================
 #ifndef GIGA_GIGAEXTERNALPHYSLIST_H 
 #define GIGA_GIGAEXTERNALPHYSLIST_H 1
 // Include files
 // GiGa 
 #include "GiGa/GiGaPhysListBase.h"
-#include "GiGa/GiGaPhysListFactory.h"
+// forward declarations 
+template <class TYPE> class GiGaFactory;
 
 /** @class GiGaExternalPhysList GiGaExternalPhysList.h 
  *  
@@ -34,7 +32,7 @@ class GiGaExternalPhysList :
   /// own type 
   typedef GiGaExternalPhysList<PHYSLIST>   MyType ;
   /// friend factory for instantiation 
-  friend class GiGaPhysListFactory<MyType>                ;
+  friend class GiGaFactory<MyType>                ;
   ///
 public:
   
@@ -50,20 +48,28 @@ public:
 protected:
   
   /** standard constructor 
+   *  
+   *  @warning Constructor exploits the  virtual inheritance 
+   *  Constructor COULD produce compiler warning
+   *  for CORRECT  inheritance schema and 
+   *  it MUST produce the compiler error 
+   *  for INCORECT inheritance schema  
+   *
    *  @see GiGaPhysListBase 
    *  @see GiGaBase 
+   *  @see  AlgTool 
    *  @param name of the instance 
    *  @param svc  service locator 
    */
   GiGaExternalPhysList
-  ( const std::string& name , 
-    ISvcLocator*       svc  )
-    : GiGaPhysListBase   ( name , svc )
+  (  const std::string& type   , 
+     const std::string& name   , 
+     const IInterface*  parent )
+    : GiGaPhysListBase   ( type , name , parent )
     , PHYSLIST           () 
-    //    , G4VUserPhysicsList ()
   {
     // check for virtual inheritance 
-    // the following line could produce compiler warning
+    // the following line COULD produce compiler warning
     // for CORRECT  inheritance schema and 
     // it MUST produce the compiler error 
     // for INCORECT inheritance schema  
@@ -92,10 +98,8 @@ private:
  *  @date   25/04/2002
  */
 #define IMPLEMENT_ExternalPhysList( PL )                            \
- static const                                                       \
-  GiGaPhysListFactory<GiGaExternalPhysList<PL> >  s_##PL##Factory ; \
- const                                                              \
- IGiGaPhysListFactory&##PL##Factory =             s_##PL##Factory;
+ static const GiGaFactory<GiGaExternalPhysList<##PL##> >   s_##PL##Factory ; \
+ const           IFactory&##PL##Factory                  = s_##PL##Factory ;
 
 // ============================================================================
 // The END 

@@ -1,13 +1,13 @@
-// $Id: GiGaPhysListFull.cpp,v 1.8 2002-04-25 13:02:05 ibelyaev Exp $ 
+// $Id: GiGaPhysListFull.cpp,v 1.9 2002-05-07 12:21:35 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 // GiGa
-#include "GiGa/GiGaPhysListFactory.h"
+#include "GiGa/GiGaMACROs.h"
 // G4 
 #include "G4ParticleTypes.hh"
 #include "globals.hh"
@@ -39,53 +39,34 @@
  */
 
 // ============================================================================
-// Factory
+/// Factory
 // ============================================================================
-IMPLEMENT_GiGaPhysList( GiGaPhysListFull ) ;
+IMPLEMENT_GiGaFactory( GiGaPhysListFull ) ;
+// ============================================================================
 
 // ============================================================================
-// ============================================================================
-GiGaPhysListFull::GiGaPhysListFull( const std::string& nick , 
-                                    ISvcLocator* loc ) 
-  : GiGaPhysListBase( nick , loc )
-{};
-
-// ============================================================================
-// ============================================================================
-GiGaPhysListFull::~GiGaPhysListFull()
-{};
-
-
-
-/// ============================================================================
-/** initialization of the object
- *  @return status code 
+/** standard constructor 
+ *  @see GiGaPhysListBase
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
  */
 // ============================================================================
-StatusCode GiGaPhysListFull::initialize()
-{
-  /// initialize the base class 
-  StatusCode sc = GiGaPhysListBase::initialize();
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class",sc);}
-  ///
-  Print("initialized succesfully") ;
-  ///
-  return StatusCode::SUCCESS;  
-};
+GiGaPhysListFull::GiGaPhysListFull
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent ) 
+  : GiGaPhysListBase( type , name , parent )
+{};
+// ============================================================================
 
 // ============================================================================
-/** finalization of the object
- *  @return status code 
- */
+// destructor 
 // ============================================================================
-StatusCode GiGaPhysListFull::finalize  ()
-{
-  ///
-  Print("finalization") ;
-  ///
-  return GiGaPhysListBase::finalize();
-};
+GiGaPhysListFull::~GiGaPhysListFull(){};
+// ============================================================================
 
 // ============================================================================
 // ============================================================================
@@ -788,6 +769,8 @@ void GiGaPhysListFull::ConstructAllShortLiveds()
   pConstructor.ConstructParticle();  
 };
 
+// ============================================================================
+// The END
 // ============================================================================
 
 

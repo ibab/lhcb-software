@@ -1,26 +1,20 @@
+// $Id: GiGa.h,v 1.3 2002-05-07 12:21:28 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2001/08/01 09:42:21  ibelyaev
-// redesign and reimplementation of GiGaRunManager class
-// 
 // ============================================================================
 #ifndef GIGA_GIGA_H 
 #define GIGA_GIGA_H 1
-/// STD & STL 
+// STD & STL 
 #include <string>
-///@{
-/**  forward declarations */
-class ISvcLocator;       ///< GaudiKernbel
-class IGiGaRunManager;   ///< GiGa 
-class G4VVisManager;     ///< Geant4 
-class G4UIsession;       ///< Geant4 
-///@}
+//
+class G4VVisManager;
+class G4UIsession;  
 
 /** @namespace GiGa GiGa.h "GiGa/GiGa.h"
  *  
- *  @brief wrapper methods for creation of Geant4 objects 
+ *  Wrapper methods for creation of some Geant4 objects 
  *
  *  Tne namespace consists of a number of wrapper methods 
  *  for creation of Geant4 objects 
@@ -30,17 +24,8 @@ class G4UIsession;       ///< Geant4
  */
 
 namespace GiGa
-{
-  
-  /** create GiGa Run Manager
-   *  @param   Name name of run manager 
-   *  @param   Loc  pointer to service Locator  
-   *  @return  pointer to giga run manager abstract interface 
-   */     
-  IGiGaRunManager* 
-  createRunManager( const std::string& Name = "GiGaMgr" , 
-                    ISvcLocator*       Loc  =  0        );
-  
+{  
+
   /** create (and initialize) GiGa Vis manager
    *  @return pointer to Visualization Manager 
    */
@@ -53,7 +38,10 @@ namespace GiGa
   G4UIsession*  createUIsession( const std::string& type );
 
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 #endif ///< GIGA_GIGA_H
 // ============================================================================

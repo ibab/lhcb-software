@@ -1,19 +1,17 @@
+// $Id: GiGaEventActionDraw.h,v 1.6 2002-05-07 12:21:34 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/23 13:12:26  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef       GIGA_GiGaEventActionDraw_H
 #define       GIGA_GiGaEventActionDraw_H 1 
 // ============================================================================
-
-
+// include files  
+// GiGa
 #include "GiGa/GiGaEventActionBase.h"
-
-template <class EA> class GiGaEventActionFactory;
+// forward declaration
+template <class TYPE> class GiGaFactory;
 
 /** @class GiGaEventActionDraw GiGaEventActionDraw.h
  *    
@@ -24,34 +22,47 @@ template <class EA> class GiGaEventActionFactory;
  *  @date    17/03/2001
  */
 
-class GiGaEventActionDraw: virtual public GiGaEventActionBase
+class GiGaEventActionDraw: public GiGaEventActionBase
 {
-  ///
-  friend class GiGaEventActionFactory<GiGaEventActionDraw>;
-  ///
- protected:
-  ///
-  GiGaEventActionDraw( const std::string& name , ISvcLocator* Loc );
-  ///  
+  /// frined factory for instantiatio 
+  friend class GiGaFactory<GiGaEventActionDraw>;
+  
+protected:
+  
+  /** standard constructor 
+   *  @see GiGaEventActionBase
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
+   */
+  GiGaEventActionDraw
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
+  
+  /// desctrustor (virtual and protected)  
   virtual ~GiGaEventActionDraw();
-  ////
- public: 
-  ///
-  virtual StatusCode initialize () ; 
-  virtual StatusCode finalize   () ;
-  ///
+  
+public: 
+  
+  /// G4
   virtual void EndOfEventAction   ( const G4Event* event );
-  /// 
- private:
-  ///
+  
+private:
+  
   GiGaEventActionDraw(); ///< no default constructor
   GiGaEventActionDraw( const GiGaEventActionDraw& ); ///< no copy  
   GiGaEventActionDraw& operator=( const GiGaEventActionDraw& ) ; ///< no = 
-  ///
- private:
-  ///
+  
+private:
+  
 };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  //    GIGA_GiGaEventActionDraw_H
 // ============================================================================

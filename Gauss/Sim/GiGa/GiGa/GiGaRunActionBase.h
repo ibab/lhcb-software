@@ -1,13 +1,8 @@
+// $Id: GiGaRunActionBase.h,v 1.4 2002-05-07 12:21:29 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/08/12 15:42:43  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.1  2001/07/26 14:24:45  ibelyaev
-/// new base class for Run Action
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef GIGA_GIGARUNACTIONBASE_H 
 #define GIGA_GIGARUNACTIONBASE_H 1
@@ -25,22 +20,24 @@
  *  @author Ivan Belyaev
  *  @date   26/07/2001
  */
-class GiGaRunActionBase : virtual public IGiGaRunAction , 
-                          public          GiGaBase 
+class GiGaRunActionBase : 
+  public virtual IGiGaRunAction , 
+  public          GiGaBase 
 {
 public:
   
-  /** identification 
-   *  @return name of concrete inteface instance 
-   */
-  virtual const std::string& name        () const  ;
-  
   /** initialization method 
+   *  @see GiGaBase
+   *  @see  AlgTool
+   *  @see IAlgTool
    *  @return status code 
    */
   virtual StatusCode         initialize  ()        ;
   
   /** finalization method 
+   *  @see GiGaBase
+   *  @see  AlgTool
+   *  @see IAlgTool
    *  @return status code 
    */
   virtual StatusCode         finalize    ()        ;
@@ -48,16 +45,22 @@ public:
 protected :
   
   /** standard constructor
-   *  @param Name name of this concrete instance of Run Action Object 
-   *  @param Loc  pointer to Service Locator 
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
    */
-  GiGaRunActionBase( const std::string Name ,
-                     ISvcLocator*      Loc  ); 
+  GiGaRunActionBase
+  ( const std::string& type   , 
+    const std::string& name   , 
+    const IInterface*  parent ) ;
+  
   /// destructor 
   virtual ~GiGaRunActionBase();
   
-private: 
-  
+private:
+
   /// no default constructor 
   GiGaRunActionBase();
   ///  no copy constructor 
@@ -69,6 +72,8 @@ private:
   
 };
 
+// ============================================================================
+// The END 
 // ============================================================================
 #endif ///< GIGA_GIGARUNACTIONBASE_H
 // ============================================================================

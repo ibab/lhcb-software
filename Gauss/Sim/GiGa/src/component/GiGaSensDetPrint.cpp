@@ -1,21 +1,15 @@
-// $Id: GiGaSensDetPrint.cpp,v 1.3 2002-04-25 13:02:05 ibelyaev Exp $ 
+// $Id: GiGaSensDetPrint.cpp,v 1.4 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/08/12 15:42:53  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.1  2001/07/27 17:56:05  ibelyaev
-/// add new component GiGaSensDetPrint
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 /// CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 /// GiGa 
-#include "GiGa/GiGaSensDetFactory.h"
+#include "GiGa/GiGaMACROs.h"
 /// Geant4 
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
@@ -38,53 +32,33 @@
 // ============================================================================
 /// factory business 
 // ============================================================================
-IMPLEMENT_GiGaSensDet( GiGaSensDetPrint );
+IMPLEMENT_GiGaFactory( GiGaSensDetPrint );
+// ============================================================================
 
 // ============================================================================
-/** standard consrtructor 
- *  @param Name name of sensitive detector 
- *  @param Loc  pointer to service Locator 
- */ 
+/** standard constructor 
+ *  @see GiGaSensDetBase 
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
+ */
 // ============================================================================
-GiGaSensDetPrint::GiGaSensDetPrint( const std::string& Name , 
-                                    ISvcLocator* Loc ) 
-  : GiGaSensDetBase     ( Name , Loc ) 
-  , G4VSensitiveDetector( Name )
+GiGaSensDetPrint::GiGaSensDetPrint
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent ) 
+  : GiGaSensDetBase     ( type , name , parent ) 
+  , G4VSensitiveDetector( name  )
 {};
+// ============================================================================
 
 // ============================================================================
 /// destructor 
 // ============================================================================
 GiGaSensDetPrint::~GiGaSensDetPrint(){};
-
 // ============================================================================
-/** initialize the sensitive detector 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaSensDetPrint::initialize () 
-{ 
-  StatusCode sc = GiGaSensDetBase::initialize() ; 
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize base class!",sc);}
-  ///
-  Print("initialized successfully");
-  ///
-  return StatusCode::SUCCESS;
-} ;
-
-// ============================================================================
-/** finalize the sensitive detector 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaSensDetPrint::finalize   () 
-{ 
-  ///
-  Print("finalization");
-  ///
-  return GiGaSensDetBase::initialize() ; 
-} ;
 
 // ============================================================================
 /** process the hit
@@ -115,6 +89,7 @@ bool GiGaSensDetPrint::ProcessHits( G4Step* step ,
   
   return false;
 };
+// ============================================================================
 
 // ============================================================================
 // The END 

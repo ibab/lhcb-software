@@ -1,4 +1,4 @@
-// $Id: GiGaSvc.cpp,v 1.13 2002-05-01 18:23:38 ibelyaev Exp $ 
+// $Id: GiGaSvc.cpp,v 1.14 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -16,6 +16,7 @@
 #include    "GaudiKernel/IMessageSvc.h"
 #include    "GaudiKernel/IChronoStatSvc.h"
 #include    "GaudiKernel/IObjManager.h"
+#include    "GaudiKernel/IToolSvc.h"
 #include    "GaudiKernel/SvcFactory.h"
 #include    "GaudiKernel/MsgStream.h"
 #include    "GaudiKernel/ParticleProperty.h"
@@ -41,12 +42,12 @@
 #include    "GiGaSvc.h"
 
 // ============================================================================
-/**  implementation of general non-inline methods from class GiGaSvc
+/**  @file 
+ *   implementation of general non-inline methods from class GiGaSvc
  *   @author Vanya Belyaev
  *   @date xx/xx/xxxx
  */
 // ============================================================================
-
 
 /// factory 
 static const  SvcFactory<GiGaSvc>                   s_Factory ;
@@ -65,6 +66,7 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   , m_runMgr               (   0              )
   , m_visMgr               (   0              )
   , m_chronoSvc            (   0              ) 
+  , m_toolSvc              (   0              ) 
   ///
   , m_objMgr               ( 0                ) 
   , m_geoSrc               ( 0                ) 
@@ -116,15 +118,7 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
 /// destructor
 // ============================================================================
 GiGaSvc::~GiGaSvc() 
-{ 
-  if( 0 != runMgr()  ) 
-    { 
-      runMgr()->release() ; 
-      delete m_runMgr ; 
-      m_runMgr  = 0 ; 
-    } 
-  if( 0 != visMgr() ) { delete m_visMgr ; m_visMgr = 0 ; }
-};
+{ if( 0 != visMgr() ) { delete m_visMgr ; m_visMgr = 0 ; } };
 
 // ============================================================================
 /** query interface 
@@ -138,18 +132,18 @@ GiGaSvc::queryInterface
 ( const IID& id , void** ppI  ) 
 {
   if       ( 0 == ppI  )               
-    { return StatusCode::FAILURE             ; }       ///< RETURN !!!  
-  else if  ( IID_IGiGaSvc      == id )
-    {  *ppI = (IGiGaSvc*)       this         ; } 
-  else if  ( IID_IGiGaSetUpSvc == id ) 
-    {  *ppI = (IGiGaSetUpSvc*)  this         ; } 
-  else                                 
-    { return Service::queryInterface(id,ppI) ; }       ///<  RETURN !!!
-  ///
+    { return StatusCode::FAILURE                    ; } // RETURN !!!  
+  else if  ( IGiGaSvc::interfaceID()      == id   )
+    {  *ppI = static_cast<IGiGaSvc*>      ( this  ) ; } 
+  else if  ( IGiGaSetUpSvc::interfaceID() == id   ) 
+    {  *ppI = static_cast<IGiGaSetUpSvc*> ( this  ) ; } 
+  else { return Service::queryInterface( id , ppI ) ; } //  RETURN !!!
+  //
   addRef(); 
-  ///
+  //
   return StatusCode::SUCCESS;
 };
+// ============================================================================
 
 // ============================================================================
 /** service initialization 
@@ -192,8 +186,9 @@ GiGaSvc::initialize()
             << ost.str() << endreq ;
       }
   }  
-  /// locate  services, 
+  // locate  services, 
   if( 0 == svcLoc() ) { return Error("ISvcLocator* points to NULL!"); }
+  //
   {
     StatusCode sc = 
       svcLoc()->service( "ChronoStatSvc" , m_chronoSvc , true ); 
@@ -203,7 +198,17 @@ GiGaSvc::initialize()
       { return Error("Unable to locate Chrono & Stat Service"     ); } 
     chronoSvc()->addRef();
   }
-  ///
+  //
+  {
+    StatusCode sc = 
+      svcLoc()->service( "ToolSvc" , m_toolSvc , true ); 
+    if( sc.isFailure()   ) 
+      { return Error("Unable to locate Tool Service", sc ); } 
+    if( 0 == toolSvc() ) 
+      { return Error("Unable to locate Tool Service"     ); } 
+    toolSvc()->addRef();
+  }
+  //
   {
     StatusCode sc = 
       svcLoc()->service( m_objMgrName , m_objMgr ); 
@@ -213,15 +218,15 @@ GiGaSvc::initialize()
       { return Error("IObjManager* points to NULL  "+m_objMgrName     ); } 
     objMgr()->addRef();
   }
-  ///
-  {
-    StatusCode sc = createGiGaRunManager(); 
+  //
+  { // get GiGa Run Manager
+    StatusCode sc = retrieveRunManager() ;
     if( sc.isFailure() ) 
       { return Error("Unable to create GiGaRunManager ", sc ); }
     if( 0 == runMgr () ) 
       { return Error("Unable to create GiGaRunManager ", sc ); }
   } 
-  /// try to locate Physics List Object and make it known for GiGa 
+  // try to locate Physics List Object and make it known for GiGa 
   if( !m_GiGaPhysList.empty() )
     {
       IGiGaPhysList* PL   = 0 ;
@@ -246,8 +251,7 @@ GiGaSvc::initialize()
     }
   else { Warning(std::string("Physics List Object is not required") + 
                  " to be loaded It could be dangerous!") ; } 
-  ///
-  /// try to locate Stacking Action Object and make it known for GiGa 
+  // try to locate Stacking Action Object and make it known for GiGa 
   if( !m_GiGaStackAction.empty() )
     {
       IGiGaStackAction* SA   = 0 ;
@@ -271,8 +275,7 @@ GiGaSvc::initialize()
             GiGaUtil::ObjTypeName( SA ) + "/"+SA->name() );
     }
   else { Print("Stacking Action Object is not required to be loaded") ; } 
-  ///
-  /// try to locate Tracking Action Object and make it known for GiGa 
+  // try to locate Tracking Action Object and make it known for GiGa 
   if( !m_GiGaTrackAction.empty() )
     {
       IGiGaTrackAction* TA   = 0 ;
@@ -296,8 +299,7 @@ GiGaSvc::initialize()
             GiGaUtil::ObjTypeName( TA ) + "/"+TA->name() );
     }
   else { Print("Tracking Action Object is not required to be loaded") ; } 
-  ///
-  /// try to locate Stepping Action Object and make it known for GiGa 
+  // try to locate Stepping Action Object and make it known for GiGa 
   if( !m_GiGaStepAction.empty() )
     {
       IGiGaStepAction* SA   = 0 ;
@@ -321,8 +323,7 @@ GiGaSvc::initialize()
             GiGaUtil::ObjTypeName( SA ) + "/"+SA->name() );
     }
   else { Print("Stepping Action Object is not required to be loaded") ; } 
-  ///
-  /// try to locate Event    Action Object and make it known for GiGa 
+  // try to locate Event    Action Object and make it known for GiGa 
   if( !m_GiGaEventAction.empty() )
     {
       IGiGaEventAction* EA   = 0 ;
@@ -346,8 +347,7 @@ GiGaSvc::initialize()
             GiGaUtil::ObjTypeName( EA ) + "/"+EA->name() );
     }
   else { Print("Event Action Object is not required to be loaded") ; } 
-  ///
-  /// try to locate Run Action Object and make it known for GiGa 
+  // try to locate Run Action Object and make it known for GiGa 
   if( !m_GiGaRunAction.empty() )
     {
       IGiGaRunAction* RA   = 0 ;
@@ -370,9 +370,8 @@ GiGaSvc::initialize()
       Print("Used Run Action Object is " + 
             GiGaUtil::ObjTypeName( RA ) + "/"+RA->name() );
     }
-  else { Print("Run Action Object is not required to be loaded") ; }  
-
-  /// try to locate GiGa Geometry source  and make it known for GiGa 
+  else { Print("Run Action Object is not required to be loaded") ; }
+  // try to locate GiGa Geometry source  and make it known for GiGa 
   if( !m_geoSrcName.empty() )
     {
       StatusCode sc = svcLoc()->service( m_geoSrcName , m_geoSrc , true ); 
@@ -386,8 +385,6 @@ GiGaSvc::initialize()
       if( 0 != runMgr() ){ runMgr()->declare( geoSrc() ); }
     }
   else { Print("GiGa Geometry Source is not required to be loaded") ; } 
-  ///
-  
   // UI session business 
   if( !m_UIsessions.empty() )
     {
@@ -430,32 +427,15 @@ GiGaSvc::initialize()
 StatusCode GiGaSvc::finalize()
 {  
   Print("Finalization" , MSG::DEBUG , StatusCode::SUCCESS );
-  /// finalize Run Manager 
+  // release Run Manager 
   StatusCode sc ( StatusCode::SUCCESS ); 
-  if( 0 != runMgr() ) { sc = runMgr()->finalize() ;} 
-  if( sc.isFailure() ) 
-    { Error("coudlnot finalize RunManager", sc ); }
-  /// release all used services 
+  if( 0 != runMgr   () ) { runMgr   ()->release() ; m_runMgr    = 0 ; } 
+  // release all used services 
   if( 0 != objMgr   () ) { objMgr   ()->release() ; m_objMgr    = 0 ; } 
+  if( 0 != toolSvc  () ) { toolSvc  ()->release() ; m_toolSvc   = 0 ; } 
   if( 0 != chronoSvc() ) { chronoSvc()->release() ; m_chronoSvc = 0 ; } 
   if( 0 != geoSrc   () ) { geoSrc   ()->release() ; m_geoSrc    = 0 ; } 
-  /// 
-  try
-    {
-      if( 0 != runMgr()  )
-        { 
-          runMgr()->release  ()   ;
-          delete m_runMgr ;
-          m_runMgr  = 0   ;
-        }
-    }
-  catch ( const GaudiException& Excpt ) 
-    { return Exception( "finalize" , Excpt ) ; } 
-  catch ( const std::exception& Excpt ) 
-    { return Exception( "finalize" , Excpt ) ; } 
-  catch(...)                            
-    { return Exception( "finalize"         ) ; }
-  /// error printout 
+  // error printout 
   if( 0 != m_errors     .size() || 
       0 != m_warnings   .size() || 
       0 != m_exceptions .size()   ) 
@@ -498,24 +478,7 @@ StatusCode GiGaSvc::finalize()
   ///  finalize the base class 
   return Service::finalize();
 };
-
 // ============================================================================
-/** create GiGa Run Manager 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaSvc::createGiGaRunManager() 
-{
-  ///
-  if( 0 != runMgr() ) { return StatusCode::SUCCESS; }     /// RETURN !!!
-  ///
-  m_runMgr = GiGa::createRunManager( m_runMgrName , serviceLocator() ); 
-  ///
-  if( 0 == runMgr() ) { return Error(" Unable to create GiGaRunManager"); }
-  ///  
-  return StatusCode::SUCCESS;                                     /// RETURN !!!
-  ///
-};
 
 // ============================================================================
 /** prepare the event 
@@ -530,9 +493,9 @@ GiGaSvc::prepareTheEvent
   try
     { 
       StatusCode sc( StatusCode::SUCCESS ) ; 
-      if( 0 == runMgr () ) { sc = createGiGaRunManager()     ; }
+      if( 0 == runMgr () ) { sc = retrieveRunManager()       ; }
       if( sc.isFailure() ) { Exception("prepareTheEvent()" ) ; }
-     sc = runMgr()->prepareTheEvent( vertex ) ; 
+      sc = runMgr()->prepareTheEvent( vertex ) ; 
       if( sc.isFailure() ) { Exception("prepareTheEvent()" ) ; } 
     }
   catch ( const GaudiException& Excpt ) 
@@ -545,6 +508,7 @@ GiGaSvc::prepareTheEvent
   return StatusCode::SUCCESS; 
   ///
 };
+// ============================================================================
 
 // ============================================================================
 /** retrieve the event 
@@ -559,7 +523,7 @@ GiGaSvc::retrieveTheEvent
   try
     { 
       StatusCode sc( StatusCode::SUCCESS ) ; 
-      if( 0 == runMgr () ) { sc = createGiGaRunManager()      ; }
+      if( 0 == runMgr () ) { sc = retrieveRunManager()       ; }
       if( sc.isFailure() ) { Exception("retrieveTheEvent()" ) ; }
       sc = runMgr()->retrieveTheEvent( event ) ; 
       if( sc.isFailure() ) { Exception("retrieveTheEvent()" ) ; }
@@ -574,6 +538,31 @@ GiGaSvc::retrieveTheEvent
   return StatusCode::SUCCESS; 
   ///
 };
+// ============================================================================
+
+// ============================================================================
+/** retrieve IGiGaRunManager 
+ *  @see IGiGaRunManager
+ *  @return status code
+ */
+// ============================================================================
+StatusCode GiGaSvc::retrieveRunManager() 
+{
+  if( 0 != runMgr  () ) { return StatusCode::SUCCESS ; }
+  if( 0 == toolSvc () )
+    { return Error("retrieveRunManager():: IToolSvc* points to NULL!"); }
+  StatusCode sc = 
+    toolSvc()->
+    retrieveTool( "GiGaRunManager" , m_runMgrName , m_runMgr , this );
+  if( sc.isFailure() ) 
+    { return Error("Unable to retrieve GiGaRunManager ", sc ); }
+  if( 0 == runMgr () ) 
+    { return Error("Unable to retrieve GiGaRunManager ", sc ); }
+  runMgr()->addRef();
+  // 
+  return StatusCode::SUCCESS ;
+};
+// ============================================================================
 
 // ============================================================================
 /** instantiate new physics list object using abstract factory technique 
@@ -594,23 +583,19 @@ GiGaSvc::physList
   if( sc.isFailure() ) 
     { return Error("physicsList(): Physics List Type/Name=" + 
                    TypeName+" is unresolved!",sc) ; }
-  /// create the creator 
-  GiGaUtil::PhysListCreator creator( objMgr()  , serviceLocator() );
-  /// create the object 
-  PL = creator( Type , Name );
-  if( 0 == PL    ) 
-    { return Error(std::string("physicsList(): could not instantiate") + 
-                   " IGiGaPhysList* Object "+Type+"/"+Name );} 
-  ///
+  sc = toolSvc() ->retrieveTool( Type , Name , PL , this );
+  if( sc.isFailure() )
+    { return Error("Could not retrieve IGiGaPhysList='" 
+                   + Type + "'/'" + Name + "'" , sc ) ; }
+  if( 0 == PL        )
+    { return Error("Could not retrieve IGiGaPhysList='" 
+                   + Type + "'/'" + Name + "'"      ) ; }
+  //
   PL->addRef(); 
-  if( PL->initialize().isSuccess() ) { return StatusCode::SUCCESS; } 
-  //// 
-  PL->release(); delete PL ; PL = 0 ;  
-  ///
-  return Error(std::string("physicsList(): could not initialize ") + 
-               "IGiGaPhysList* Object "+Type+"/"+Name, sc) ;
-  ///
+  // 
+  return StatusCode::SUCCESS ;
 };
+// ============================================================================
 
 // ============================================================================
 /** instantiate new stacking action object using abstract factory technique 
@@ -626,64 +611,55 @@ GiGaSvc::stackAction
 {
   SA = 0 ; /// reset output value 
   std::string Type , Name ; 
-  StatusCode sc = 
-    GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
+  StatusCode sc = GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
   if( sc.isFailure() ) 
     { return Error("stackAction(): Stack Action Type/Name=" + 
                    TypeName+" is unresolved!",sc);}
-  /// Create the creator
-  GiGaUtil::StackActionCreator creator( objMgr() , serviceLocator() );
-  /// creat the object 
-  SA = creator( Type , Name ) ;
-  if( 0 == SA    ) 
-    { return Error(std::string("stackAction(): could not instantiate") 
-                   + " IGiGaStackAction* Object "+Type+"/"+Name );} 
-  ///
+  
+  sc = toolSvc() ->retrieveTool( Type , Name , SA , this );
+  if( sc.isFailure() )
+    { return Error("Could not retrieve IGiGaStackAction='" 
+                   + Type + "'/'" + Name + "'" , sc ) ; }
+  if( 0 == SA        )
+    { return Error("Could not retrieve IGiGaStackAction='" 
+                   + Type + "'/'" + Name + "'"      ) ; }
+  //
   SA->addRef(); 
-  if( SA->initialize().isSuccess() ) { return StatusCode::SUCCESS; } 
-  //// 
-  SA->release(); delete SA ; SA = 0 ;  
-  ///
-  return Error(std::string("stackAction(): could not initialize ") + 
-               "IGiGaStackAction* Object "+Type+"/"+Name, sc) ;
-  ///
+  // 
+  return StatusCode::SUCCESS ;
 };
+// ============================================================================
 
 // ============================================================================
 /** instantiate new tracking action object using abstract factory technique 
  *  @param TypeName    "Type/Name" of tracking action object 
- *  @param TA           reference to new tracking action object 
+ *  @param SA           reference to new tracking action object 
  *  @return status code 
  */
 // ============================================================================
 StatusCode 
 GiGaSvc::trackAction
 ( const std::string& TypeName , 
-  IGiGaTrackAction*& TA       )
+  IGiGaTrackAction*& SA       )
 {
-  TA = 0 ; /// reset output value 
+  SA = 0 ; /// reset output value 
   std::string Type , Name ; 
-  StatusCode sc = 
-    GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
+  StatusCode sc = GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
   if( sc.isFailure() ) 
     { return Error("trackAction(): Track Action Type/Name=" + 
                    TypeName+" is unresolved!",sc);}
-  /// create the creator 
-  GiGaUtil::TrackActionCreator creator( objMgr() , serviceLocator() );
-  /// create the object 
-  TA = creator( Type , Name );
-  if( 0 == TA    ) 
-    { return Error(std::string("trackAction(): could not instantiate ") 
-                   + "IGiGaTrackAction* Object "+Type+"/"+Name );} 
-  ///
-  TA->addRef(); 
-  if( TA->initialize().isSuccess() ) { return StatusCode::SUCCESS; } 
-  //// 
-  TA->release(); delete TA ; TA = 0 ;  
-  ///
-  return Error(std::string("trackAction(): could not initialize ") +
-               " IGiGaTrackAction* Object "+Type+"/"+Name, sc) ;
-  ///
+  
+  sc = toolSvc() ->retrieveTool( Type , Name , SA , this );
+  if( sc.isFailure() )
+    { return Error("Could not retrieve IGiGaTrackAction='" 
+                   + Type + "'/'" + Name + "'" , sc ) ; }
+  if( 0 == SA        )
+    { return Error("Could not retrieve IGiGaTrackAction='" 
+                   + Type + "'/'" + Name + "'"      ) ; }
+  //
+  SA->addRef(); 
+  // 
+  return StatusCode::SUCCESS ;
 };
 
 // ============================================================================
@@ -700,102 +676,91 @@ GiGaSvc::stepAction
 {
   SA = 0 ; /// reset output value 
   std::string Type , Name ; 
-  StatusCode sc = 
-    GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
+  StatusCode sc = GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
   if( sc.isFailure() ) 
     { return Error("stepAction(): Stepping Action Type/Name=" + 
                    TypeName+" is unresolved!",sc);}
-  /// create the creator 
-  GiGaUtil::StepActionCreator creator( objMgr() , serviceLocator() );
-  /// create the object
-  SA = creator( Type , Name );
-  if( 0 == SA    ) 
-    { return Error(std::string("stepAction(): could not instantiate ") +
-                   "IGiGaStepAction* Object "+Type+"/"+Name );} 
-  ///
+  
+  sc = toolSvc() ->retrieveTool( Type , Name , SA , this );
+  if( sc.isFailure() )
+    { return Error("Could not retrieve IGiGaStepAction='" 
+                   + Type + "'/'" + Name + "'" , sc ) ; }
+  if( 0 == SA        )
+    { return Error("Could not retrieve IGiGaStepAction='" 
+                   + Type + "'/'" + Name + "'"      ) ; }
+  //
   SA->addRef(); 
-  if( SA->initialize().isSuccess() ) { return StatusCode::SUCCESS; } 
-  //// 
-  SA->release(); delete SA ; SA = 0 ;  
-  ///
-  return Error(std::string("stepAction(): could not initialize ") + 
-               "IGiGaStepAction* Object "+Type+"/"+Name, sc) ;
-  ///
+  // 
+  return StatusCode::SUCCESS ;
 };
+// ============================================================================
+
 
 // ============================================================================
 /** instantiate new event action object using abstract factory technique 
  *  @param TypeName    "Type/Name" of event  action object 
- *  @param EA           reference to new event action object 
+ *  @param SA           reference to new event action object 
  *  @return status code 
  */
 // ============================================================================
 StatusCode 
 GiGaSvc::eventAction
 ( const std::string& TypeName , 
-  IGiGaEventAction*& EA       )
+  IGiGaEventAction*& SA       )
 {
-  EA = 0 ; /// reset output value 
+  SA = 0 ; /// reset output value 
   std::string Type , Name ; 
-  StatusCode sc = 
-    GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
+  StatusCode sc = GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
   if( sc.isFailure() ) 
     { return Error("eventAction(): Event Action Type/Name=" + 
                    TypeName+" is unresolved!",sc);}
-  /// create the creator 
-  GiGaUtil::EventActionCreator creator( objMgr() , serviceLocator() );
-  /// create the object 
-  EA = creator( Type , Name ) ;
-  if( 0 == EA    ) 
-    { return Error(std::string("eventAction(): could not instantiate ") + 
-                   "IGiGaEventAction* Object "+Type+"/"+Name );} 
-  ///
-  EA->addRef(); 
-  if( EA->initialize().isSuccess() ) { return StatusCode::SUCCESS; } 
-  //// 
-  EA->release(); delete EA ; EA = 0 ;  
-  ///
-  return Error(std::string("eventAction(): could not initialize ") + 
-               "IGiGaEventAction* Object "+Type+"/"+Name, sc) ;
-  ///
+  
+  sc = toolSvc() ->retrieveTool( Type , Name , SA , this );
+  if( sc.isFailure() )
+    { return Error("Could not retrieve IGiGaEventAction='" 
+                   + Type + "'/'" + Name + "'" , sc ) ; }
+  if( 0 == SA        )
+    { return Error("Could not retrieve IGiGaEventAction='" 
+                   + Type + "'/'" + Name + "'"      ) ; }
+  //
+  SA->addRef(); 
+  // 
+  return StatusCode::SUCCESS ;
 };
+// ============================================================================
 
 // ============================================================================
 /** instantiate new run action object using abstract factory technique 
- *  @param TypeName    "Type/Name" of run  action object 
- *  @param RA           reference to new run action object 
+ *  @param  TypeName    "Type/Name" of run  action object 
+ *  @param  SA           reference to new run action object 
  *  @return status code 
  */
 // ============================================================================
 StatusCode 
 GiGaSvc::runAction
 ( const std::string& TypeName , 
-  IGiGaRunAction*& RA       )
+  IGiGaRunAction*&   SA       )
 {
-  RA = 0 ; /// reset output value 
+  SA = 0 ; /// reset output value 
   std::string Type , Name ; 
-  StatusCode sc = 
-    GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
+  StatusCode sc = GiGaUtil::SplitTypeAndName( TypeName , Type , Name );
   if( sc.isFailure() ) 
     { return Error("runAction(): Run Action Type/Name=" + 
                    TypeName+" is unresolved!",sc);}
-  /// create the creator 
-  GiGaUtil::RunActionCreator creator( objMgr() , serviceLocator() );
-  /// create the object 
-  RA = creator( Type , Name ) ;
-  if( 0 == RA    ) 
-    { return Error(std::string("runAction(): could not instantiate ") + 
-                   "IGiGaRunAction* Object "+Type+"/"+Name );} 
-  ///
-  RA->addRef(); 
-  if( RA->initialize().isSuccess() ) { return StatusCode::SUCCESS; } 
-  //// 
-  RA->release(); delete RA ; RA = 0 ;  
-  ///
-  return Error(std::string("runAction(): could not initialize ") + 
-               "IGiGaRunAction* Object "+Type+"/"+Name, sc) ;
-  ///
+  
+  sc = toolSvc() ->retrieveTool( Type , Name , SA , this );
+  if( sc.isFailure() )
+    { return Error("Could not retrieve IGiGaRunAction='" 
+                   + Type + "'/'" + Name + "'" , sc ) ; }
+  if( 0 == SA        )
+    { return Error("Could not retrieve IGiGaRunAction='" 
+                   + Type + "'/'" + Name + "'"      ) ; }
+  //
+  SA->addRef(); 
+  // 
+  return StatusCode::SUCCESS ;
 };
+// ============================================================================
 
 // ============================================================================
 /** printout 

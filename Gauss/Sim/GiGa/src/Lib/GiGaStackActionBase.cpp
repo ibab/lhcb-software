@@ -1,87 +1,159 @@
+// $Id: GiGaStackActionBase.cpp,v 1.7 2002-05-07 12:21:34 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/27 17:03:18  ibelyaev
-/// improved printout
-///
-/// Revision 1.4  2001/07/23 13:12:12  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // GiGa 
 #include "GiGa/GiGaStackActionBase.h"
 
-/** implementation of class GiGaStackActionBase
+/** @file 
+ *  implementation of class GiGaStackActionBase
  *
- * @author Vanya Belyaev 
+ *  @author Vanya Belyaev 
  */
 
 // ============================================================================
+/** standard constructor 
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
+ */
 // ============================================================================
-GiGaStackActionBase::GiGaStackActionBase( const std::string& nick , 
-                                          ISvcLocator* svc )
+GiGaStackActionBase::GiGaStackActionBase
+( const std::string& type   , 
+  const std::string& name   , 
+  const IInterface*  parent ) 
   : G4UserStackingAction () 
-  , GiGaBase             ( nick , svc ) 
-{};
+  , GiGaBase             ( type , name , parent ) 
+{ declareInterface<IGiGaStackAction> (this) ; };
+// ============================================================================
 
 // ============================================================================
+// Destructor 
 // ============================================================================
 GiGaStackActionBase::~GiGaStackActionBase(){};
+// ============================================================================
 
 // ============================================================================
+/** initialize the stack action  
+ *  @see GiGaBase 
+ *  @see  AlgTool 
+ *  @see IAlgTool 
+ *  @return status code 
+ */
 // ============================================================================
 StatusCode GiGaStackActionBase::initialize() 
 {
   StatusCode sc = GiGaBase::initialize() ; 
-  if( sc.isFailure() ) { return Error("Could not initialize Base class!"); } 
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize base class GiGaBase"); } 
   ///
-  Print("GiGaStackActionBase initialized successfully" ,
-        StatusCode::SUCCESS , MSG::DEBUG ) ;
-  ///
-  return StatusCode::SUCCESS;
+  return Print("GiGaStackActionBase initialized successfully",
+               StatusCode::SUCCESS                           , MSG::VERBOSE );  
 }; 
+// ============================================================================
 
 // ============================================================================
+/** finalize the stack action
+ *  @see GiGaBase 
+ *  @see  AlgTool 
+ *  @see IAlgTool 
+ *  @return status code 
+ */
 // ============================================================================
 StatusCode GiGaStackActionBase::finalize() 
 { 
-  ///
   Print("GiGaStackActionBase finalization" ,
-        StatusCode::SUCCESS , MSG::DEBUG ) ;
-  ///
+        StatusCode::SUCCESS                , MSG::VERBOSE ) ;
+  // finalize the base class 
   return GiGaBase::finalize();  
 };
+// ============================================================================
 
 // ============================================================================
-// ============================================================================
-StatusCode GiGaStackActionBase::queryInterface( const InterfaceID& iid , 
-                                                void** ppI)
-{
-  if( 0 == ppI ) { return StatusCode::FAILURE; } 
-  *ppI = 0; 
-  if   ( IGiGaStackAction::interfaceID() == iid ) 
-    { *ppI = static_cast<IGiGaStackAction*>        ( this ) ; } 
-  else                                            
-    { return GiGaBase::queryInterface( iid , ppI ) ; } /// RETURN!!!
-  addRef();
-  return StatusCode::SUCCESS;
-};
-
-// ============================================================================
+/** From G4:
+    
+    Reply G4ClassificationOfNewTrack determined by the
+    newly coming G4Track.  
+    
+    enum G4ClassificationOfNewTrack
+    {
+    fUrgent,    // put into the urgent stack
+    fWaiting,   // put into the waiting stack
+    fPostpone,  // postpone to the next event
+    fKill       // kill without stacking
+    };  
+    
+    The parent_ID of the track indicates the origin of it.
+    G4int parent_ID = aTrack->get_parentID();
+    
+    parent_ID = 0 : primary particle
+    parent_ID > 0 : secondary particle
+    parent_ID < 0 : postponed from the previous event
+*/
 // ============================================================================
 G4ClassificationOfNewTrack 
 GiGaStackActionBase::ClassifyNewTrack ( const G4Track* /* track */ )
-{ return fUrgent; }
+{ 
+  Print("'ClassiftNewTrack' is invoked" , StatusCode::SUCCESS , MSG::DEBUG );
+  return fUrgent; 
+};
+// ============================================================================
 
 // ============================================================================
+/** From G4:
+    
+    This method is called by G4StackManager when the urgentStack
+    becomes empty and contents in the waitingStack are transtered
+    to the urgentStack.
+    
+    Note that this method is not called at the begining of each
+    event, but "PrepareNewEvent" is called.
+    
+    In case re-classification of the stacked tracks is needed,
+    use the following method to request to G4StackManager.
+    
+    stackManager->ReClassify();
+    
+    All of the stacked tracks in the waitingStack will be re-classified 
+    by "ClassifyNewTrack" method.
+    
+    To abort current event, use the following method.
+    stackManager->clear();
+    
+    Note that this way is valid and safe only for the case it is called
+    from this user class. The more global way of event abortion is
+    
+    G4UImanager * UImanager = G4UImanager::GetUIpointer();
+    UImanager->ApplyCommand("/event/abort");
+*/
 // ============================================================================
-void GiGaStackActionBase::NewStage         (){};
+void GiGaStackActionBase::NewStage         ()
+{ Print("'NewStage' is invoked" , StatusCode::SUCCESS , MSG::DEBUG ); };
+// ============================================================================
 
 // ============================================================================
+/** From G4:
+    
+    This method is called by G4StackManager at the begining of
+    each event.
+    
+    Be careful that the urgentStack and the waitingStack of 
+    G4StackManager are empty at this moment, because this method
+    is called before accepting primary particles. Also, note that
+    the postponeStack of G4StackManager may have some postponed
+    tracks.
+*/ 
 // ============================================================================
-void GiGaStackActionBase::PrepareNewEvent  (){};
+void GiGaStackActionBase::PrepareNewEvent  ()
+{ Print("'PrepareNewEvent' is invoked" , StatusCode::SUCCESS , MSG::DEBUG ); };
+// ============================================================================
 
+// ============================================================================
+// The END 
 // ============================================================================
 
 

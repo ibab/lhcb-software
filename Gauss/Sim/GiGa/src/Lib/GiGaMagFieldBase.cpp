@@ -1,16 +1,8 @@
+// $Id: GiGaMagFieldBase.cpp,v 1.8 2002-05-07 12:21:33 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/08/12 15:42:49  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.5  2001/07/27 17:03:18  ibelyaev
-/// improved printout
-///
-/// Revision 1.4  2001/07/23 13:12:11  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 //  ===========================================================================
 #define GIGA_GIGAMAGFIELDBASE_CPP 1 
 ///  ===========================================================================
@@ -21,9 +13,12 @@
 /// GiGa  
 #include "GiGa/GiGaMagFieldBase.h"
 
-/** The implemenation of the class GiGaMagFieldBase 
+// ============================================================================
+/** @file 
+ *  The implemenation of the class GiGaMagFieldBase 
  *  @author Vanya Belyaev
  */
+// ============================================================================
 
 // ============================================================================
 /** standard constructor
@@ -31,43 +26,25 @@
  *  @param loc  pointer to service locator 
  */
 // ============================================================================
-GiGaMagFieldBase::GiGaMagFieldBase( const std::string& nick , 
-                                    ISvcLocator*       loc ) 
-  : GiGaBase( nick , loc ) 
+GiGaMagFieldBase::GiGaMagFieldBase 
+( const std::string& type , 
+  const std::string& nick , 
+  const IInterface*  loc  )
+  
+  : GiGaBase( type ,nick , loc ) 
   , m_nameMFSvc ( "MagneticFieldSvc" )
   , m_mfSvc     ( 0 )
-{ declareProperty( "MagneticFieldService" , m_nameMFSvc ); };
+{ 
+  declareInterface<IGiGaMagField> (this);
+  declareProperty( "MagneticFieldService" , m_nameMFSvc ); 
+};
+// ============================================================================
 
 // ============================================================================
 /// virtual destructor 
 // ============================================================================
 GiGaMagFieldBase::~GiGaMagFieldBase(){};
-
 // ============================================================================
-/** query the interface
- *  @param id   uniqie interface identifier 
- *  @param ppI  placeholder for returned interface 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaMagFieldBase::queryInterface( const InterfaceID& id , 
-                                             void** ppI) 
-{
-  if( 0 == ppI ) { return StatusCode::FAILURE; } 
-  *ppI = 0 ; 
-  if   ( IGiGaMagField::interfaceID() == id ) 
-    { *ppI = static_cast<IGiGaMagField*> (this) ; } 
-  else                                        
-    { return GiGaBase::queryInterface( id , ppI ); } /// RETURN ;
-  addRef();
-  return StatusCode::SUCCESS; 
-};
-
-// ============================================================================
-/// identification  
-// ============================================================================
-const std::string& GiGaMagFieldBase::name () const 
-{ return GiGaBase::name() ; }; 
 
 // ============================================================================
 /** initialize the object 
@@ -91,11 +68,10 @@ StatusCode GiGaMagFieldBase::initialize ()
     }
   else { Warning("Magnetic Field Service is not requested") ; }
   ///
-  Print("GiGaMagFieldBase initialized successfully" ,
-        StatusCode::SUCCESS , MSG::DEBUG ) ;
-  ///
-  return StatusCode::SUCCESS;
+  return Print("GiGaMagFieldBase initialized successfully" ,
+               StatusCode::SUCCESS                         , MSG::VERBOSE ) ;
 };
+// ============================================================================
 
 // ============================================================================
 /** finalize the object  
@@ -104,16 +80,19 @@ StatusCode GiGaMagFieldBase::initialize ()
 // ============================================================================
 StatusCode GiGaMagFieldBase::finalize   ()  
 {
-  /// relese magnetic field service
+  Print("GiGaMagFieldBase Finalization" ,
+        StatusCode::SUCCESS             , MSG::VERBOSE ) ;
+  // relese magnetic field service
   if( 0 != mfSvc() ) { mfSvc() -> release() ; m_mfSvc = 0 ; }
-  ///
-  Print("GiGaMagFieldBase finalization" ,
-        StatusCode::SUCCESS , MSG::DEBUG ) ;
-  ///
+  // finalize the base class 
   return GiGaBase::finalize   (); 
 };
+// ============================================================================
 
 // ============================================================================
+// The END 
+// ============================================================================
+
 
 
 

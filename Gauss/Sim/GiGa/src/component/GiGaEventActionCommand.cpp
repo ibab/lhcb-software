@@ -1,13 +1,16 @@
-// $Id: GiGaEventActionCommand.cpp,v 1.7 2002-04-25 13:02:04 ibelyaev Exp $ 
+// $Id: GiGaEventActionCommand.cpp,v 1.8 2002-05-07 12:21:34 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/04/25 13:02:04  ibelyaev
+//  small update
+//
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
-#include "GiGa/GiGaEventActionFactory.h"
+#include "GiGa/GiGaMACROs.h"
 /// G4 
 #include "G4UImanager.hh"
 /// Local 
@@ -26,23 +29,29 @@
 // ============================================================================
 // Factory business
 // ============================================================================
-IMPLEMENT_GiGaEventAction( GiGaEventActionCommand );
+IMPLEMENT_GiGaFactory( GiGaEventActionCommand );
 
 // ============================================================================
-/** standard constructor
- *  @param Name  name of this concrete event action instance 
- *  @param Loc   pointer to service locator 
+/** standard constructor 
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
  */
 // ============================================================================
-GiGaEventActionCommand::GiGaEventActionCommand( const std::string& Name ,
-                                                ISvcLocator*       Loc  )
-  : GiGaEventActionBase( Name, Loc )
-  , m_beginCmds ()   ///< empty default list! 
-  , m_endCmds   ()   ///< empty default list! 
+GiGaEventActionCommand::GiGaEventActionCommand
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent )
+  : GiGaEventActionBase( type , name , parent )
+  , m_beginCmds ()   //  empty default list! 
+  , m_endCmds   ()   //  empty default list! 
 {  
   declareProperty("BeginOfEventCommands", m_beginCmds );
   declareProperty("EndOfEventCommands"  , m_endCmds   );
 };
+// ============================================================================
 
 // ============================================================================
 /// destructor 
@@ -51,40 +60,6 @@ GiGaEventActionCommand::~GiGaEventActionCommand()
 {
   m_beginCmds .clear();
   m_endCmds   .clear();
-};
-
-// ============================================================================
-/** initialization of event action object
- *  @return status code
- */
-// ============================================================================
-StatusCode GiGaEventActionCommand::initialize()
-{
-  StatusCode sc = GiGaEventActionBase::initialize();
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class", sc );}
-  ///
-  if( m_beginCmds.empty() ) 
-    { Print("'BeginOfEventCommands' list is empty") ;}
-  if( m_endCmds  .empty() ) 
-    { Print("'EndOfEventCommands' list is empty"  ) ;}
-  ///
-  Print("initialized succesfully");
-  ///
-  return StatusCode::SUCCESS;
-};
-
-// ============================================================================
-/** finalization of event action object
- *  @return status code
- */
-// ============================================================================
-StatusCode GiGaEventActionCommand::finalize()
-{
-  ///
-  Print("finalization");
-  /// finalize the base class 
-  return GiGaEventActionBase::finalize();
 };
 
 // ============================================================================
@@ -105,12 +80,14 @@ void GiGaEventActionCommand::BeginOfEventAction( const G4Event* event )
       for( COMMANDS::const_iterator iCmd = m_beginCmds.begin() ;
            m_beginCmds.end() != iCmd ; ++iCmd ) 
         { 
-          Print("BeginOfEventAction(): execute '"+(*iCmd)+"'");
+          Print("BeginOfEventAction(): execute '" + (*iCmd) + "'" , 
+                StatusCode::SUCCESS , MSG::DEBUG );
           ui->ApplyCommand( *iCmd); 
         }
     }
   ///
 };
+// ============================================================================
 
 // ============================================================================
 /** performe the action at the end of each event 
@@ -130,12 +107,14 @@ void GiGaEventActionCommand::EndOfEventAction( const G4Event* event )
       for( COMMANDS::const_iterator iCmd = m_endCmds.begin() ;
            m_endCmds.end() != iCmd ; ++iCmd )
         { 
-          Print("EndOfEventAction(): execute '"+(*iCmd)+"'");
+          Print("EndOfEventAction(): execute '" + (*iCmd) + "'" ,
+                StatusCode::SUCCESS , MSG::DEBUG );
           ui->ApplyCommand( *iCmd ); 
         }
     }  
   ///
 };
+// ============================================================================
 
 // ============================================================================
 // The END 

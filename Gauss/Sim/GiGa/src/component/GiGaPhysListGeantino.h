@@ -1,21 +1,17 @@
+// $Id: GiGaPhysListGeantino.h,v 1.7 2002-05-07 12:21:35 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.5  2001/07/27 17:03:20  ibelyaev
-/// improved printout
-///
-/// Revision 1.4  2001/07/23 13:12:28  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef    GIGA_GiGaPhysListGEANTINO_H
 #define    GIGA_GiGaPhysListGEANTINO_H 1 
 // ============================================================================
-
+// include files 
+// GiGa 
 #include "GiGa/GiGaPhysListBase.h"
-template <class PL> 
-class GiGaPhysListFactory;
+// forward declarations 
+template <class TYPE> class GiGaFactory;
 
 /** @class  GiGaPhysListGeantino GiGaPhysListGeantino.h
  *    
@@ -33,38 +29,43 @@ class GiGaPhysListFactory;
 
 class GiGaPhysListGeantino : public GiGaPhysListBase
 {
-  ///
-  friend class GiGaPhysListFactory<GiGaPhysListGeantino>;
-  ///
- protected:
-  ///
-  GiGaPhysListGeantino( const std::string& , ISvcLocator* );
-  virtual ~GiGaPhysListGeantino();
-  ///
-public: 
+  /// friend factory for instantiation
+  friend class GiGaFactory<GiGaPhysListGeantino>;
 
-  /** initialization of the object
-   *  @return status code 
-   */
-  virtual StatusCode initialize();
+ protected:
+
   
-  /** finalization of the object
-   *  @return status code 
+  /** standard constructor 
+   *  @see GiGaPhysListBase
+   *  @see GiGaBase 
+   *  @see AlgTool 
+   *  @param type type of the object (?)
+   *  @param name name of the object
+   *  @param parent  pointer to parent object
    */
-  virtual StatusCode finalize  ();
+  GiGaPhysListGeantino
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) ;
+  
+  // constructor (virtual and protected)
+  virtual ~GiGaPhysListGeantino();
+
+public: 
 
   /// from G4VUserPhysicsList 
   void ConstructParticle ();
   void ConstructProcess  ();
   void SetCuts           ();
   ///
- private:
+private:
   ///
   GiGaPhysListGeantino();
   GiGaPhysListGeantino           ( const GiGaPhysListGeantino& );
   GiGaPhysListGeantino& operator=( const GiGaPhysListGeantino& );
   ///
 };
+// ============================================================================
 
 
 // ============================================================================

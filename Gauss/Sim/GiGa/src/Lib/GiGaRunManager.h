@@ -1,4 +1,4 @@
-// $Id: GiGaRunManager.h,v 1.1 2002-05-01 18:23:38 ibelyaev Exp $ 
+// $Id: GiGaRunManager.h,v 1.2 2002-05-07 12:21:34 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -26,12 +26,13 @@
 /// Geant4 
 #include   "G4RunManager.hh" 
 /// forward declarations (Gaudi)
-class     IParticlePropertySvc          ;
-class     IChronoStatSvc                ;
-class     ISvcLocator                   ;
-class     IGiGaGeoSrc                   ;
-class     G4UIsession                   ;
-class     G4UImanager                   ; 
+class     IParticlePropertySvc           ;
+class     IChronoStatSvc                 ;
+class     ISvcLocator                    ;
+class     IGiGaGeoSrc                    ;
+class     G4UIsession                    ;
+class     G4UImanager                    ; 
+template <class TOOL> class  GiGaFactory ;
 
 
 /** @class GiGaRunManager GiGaRunManager.h 
@@ -42,118 +43,141 @@ class     G4UImanager                   ;
  *  @date xx/xx/xxx 
  */
 
-class GiGaRunManager: public  virtual IGiGaRunManager ,
-                      private            G4RunManager ,
-                      private          GiGaBase    
+class GiGaRunManager: public  virtual IGiGaRunManager  ,
+                      public  virtual  GiGaBase        ,    
+                      private virtual G4RunManager 
 {
-  ///
-public:
+  /// friend factory
+  friend class GiGaFactory<GiGaRunManager>;
   
-  /** standard onstructor 
+protected:
+
+  /** standard constructor
+   *  @see  GiGaBase 
+   *  @see   AlgTool
+   *  @param type type of the run manager object
    *  @param name name of the run manager object
-   *  @param svc  pointer to service locator 
+   *  @param parent pointer to parent object  
    */
-  GiGaRunManager( const std::string&  name , 
-                  ISvcLocator*        svc  ) ;
+  GiGaRunManager
+  ( const std::string&  type   , 
+    const std::string&  name   , 
+    const IInterface*   parent ) ;
+  
   /// virtual destructor 
   virtual ~GiGaRunManager();  
 
 public:
 
-  /** identification 
-   *  @return name of concrete inteface instance 
-   */
-  virtual const std::string& GiGaRunManager::name () const;
-  
   /** declare the Geant4 Primary Generator Action 
+   *  @see IGiGaRunManager 
    *  @param obj pointer  to Geant4 Primary Generator Action 
    *  @return  status code 
    */
   virtual StatusCode declare( G4VUserPrimaryGeneratorAction  * obj ) ;
 
   /** declare the top level ("world") physical volume 
+   *  @see IGiGaRunManager 
    *  @param obj pointer  to top level ("world") physical volume  
    *  @return  status code 
    */
   virtual StatusCode declare( G4VPhysicalVolume              * obj ) ;
 
   /** declare the Geant4 Detector Construction Action
+   *  @see IGiGaRunManager 
    *  @param obj pointer  to Geant4 Detector Construction Action  
    *  @return  status code 
    */
   virtual StatusCode declare( G4VUserDetectorConstruction    * obj ) ;
 
   /** declare the Geant4 Physics List 
+   *  @see IGiGaRunManager 
    *  @param obj pointer  to Geant4 Physics List  
    *  @return  status code 
    */
   virtual StatusCode declare( G4VUserPhysicsList             * obj ) ;
 
   /** declare the GiGa geometry source  
+   *  @see IGiGaRunManager 
    *  @param obj pointer  to GiGa Geometry source   
    *  @return  status code 
    */
   virtual StatusCode declare( IGiGaGeoSrc                    * obj ) ;
 
   /** declare the Geant4 Run Action 
+   *  @see IGiGaRunManager 
    *  @param obj pointer  to Geant4 Run action  
    *  @return  status code 
    */
   virtual StatusCode declare( G4UserRunAction                * obj ) ;
 
   /** declare the Geant4 Event Action 
+   *  @see IGiGaRunManager 
    *  @param obj pointer  to Geant4 Event  
    *  @return  status code 
    */
   virtual StatusCode declare( G4UserEventAction              * obj ) ;
 
   /** declare the Geant4 Stacking Action 
+   *  @see IGiGaRunManager 
    *  @param obj pointer  to Geant4 Stacking Action 
    *  @return  status code 
    */
   virtual StatusCode declare( G4UserStackingAction           * obj ) ;
 
   /** declare the Geant4 Stepping  Action 
+   *  @see IGiGaRunManager 
    *  @param obj pointer  to Geant4 Stepping Action 
    *  @return  status code 
    */
   virtual StatusCode declare( G4UserSteppingAction           * obj ) ;
 
   /** declare the Geant4 Tracking Action 
+   *  @see IGiGaRunManager 
    *  @param obj pointer  to Geant4 Tracking Action 
    *  @return  status code 
    */
   virtual StatusCode declare( G4UserTrackingAction           * obj ) ;
 
   /** Prepare the event 
+   *  @see IGiGaRunManager 
    *  @param vertex pointer to (main) primary vertex 
    *  @return status code 
    */
   virtual StatusCode  prepareTheEvent ( G4PrimaryVertex    * vertex = 0 ) ; 
 
   /** Process the prepared event 
+   *  @see IGiGaRunManager 
    *  @return status code 
    */
   virtual StatusCode  processTheEvent (                                 ) ; 
 
   /** Retrieve the processed event 
+   *  @see IGiGaRunManager 
    *  @param  event pointer to processed event  
    *  @return status code 
    */
   virtual StatusCode  retrieveTheEvent( const G4Event      *& event     ) ;
 
   /** declare the Geant4 User Interface session 
+   *  @see IGiGaRunManager 
    *  @param obj pointer  to Geant4 User Interface session  
    *  @return  status code 
    */
   virtual StatusCode declare( G4UIsession                    * obj     ) ;
 
   /** initialize the run manager 
+   *  @see    GiGaBase 
+   *  @see     AlgBase 
+   *  @see    IAlgBase 
    *  @return status code
    */ 
   virtual StatusCode initialize () ;
   
   /** finalize the run manager 
+   *  @see    GiGaBase 
+   *  @see     AlgBase 
+   *  @see    IAlgBase 
    *  @return status code
    */ 
   virtual StatusCode finalize   () ;
@@ -248,7 +272,7 @@ private:
   G4UIsession*               m_g4UIsession  ;
   
 };
-
+// ============================================================================
 
 // ============================================================================
 // The END 

@@ -1,15 +1,15 @@
-// $Id: GiGaMagFieldUniform.cpp,v 1.9 2002-04-25 13:02:05 ibelyaev Exp $ 
+// $Id: GiGaMagFieldUniform.cpp,v 1.10 2002-05-07 12:21:35 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
+// $Log: not supported by cvs2svn $
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa
-#include "GiGa/GiGaMagFieldFactory.h"
+#include "GiGa/GiGaMACROs.h"
 /// local 
 #include "GiGaMagFieldUniform.h"
 
@@ -21,15 +21,26 @@
  */
 
 // ============================================================================
-// Factory
+/// Factory
 // ============================================================================
-IMPLEMENT_GiGaMagField( GiGaMagFieldUniform) ;
+IMPLEMENT_GiGaFactory( GiGaMagFieldUniform) ;
+// ============================================================================
 
 // ============================================================================
+/** standard constructor 
+ *  @see GiGaMagFieldBase
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
+ */
 // ============================================================================
-GiGaMagFieldUniform::GiGaMagFieldUniform( const std::string& nick , 
-                                          ISvcLocator* loc) 
-  : GiGaMagFieldBase ( nick , loc )
+GiGaMagFieldUniform::GiGaMagFieldUniform
+( const std::string& type   ,
+  const std::string& name   ,
+  const IInterface*  parent )
+  : GiGaMagFieldBase ( type , name , parent)
   , m_Bx( 0 ) 
   , m_By( 0 ) 
   , m_Bz( 0 ) 
@@ -38,54 +49,31 @@ GiGaMagFieldUniform::GiGaMagFieldUniform( const std::string& nick ,
   declareProperty("By" , m_By );
   declareProperty("Bz" , m_Bz );
 };
+// ============================================================================
 
 // ============================================================================
+/// destructor 
 // ============================================================================
 GiGaMagFieldUniform::~GiGaMagFieldUniform(){};
+// ============================================================================
 
 // ============================================================================
-/** initialization of the object
- *  @return status code 
+/** get the field value 
+ *  @see G4MagneticField
+ *  @param point point  
+ *  @param B   value of magnetic filed in poitnt 
  */
-// ============================================================================
-StatusCode GiGaMagFieldUniform::initialize()
-{
-  /// initialize the base class 
-  StatusCode sc = GiGaMagFieldBase::initialize();
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class",sc);}
-  ///
-  Print("initialized succesfully") ;
-  return StatusCode::SUCCESS;  
-};
-
-// ============================================================================
-/** finalization of the object
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaMagFieldUniform::finalize  ()
-{
-  ///
-  Print("finalization") ;
-  ///
-  return GiGaMagFieldBase::finalize();
-};
-
-
-// ============================================================================
 // ============================================================================
 void GiGaMagFieldUniform::GetFieldValue 
-( const double [4]    , 
-  double*          B  ) const 
+( const double [4] /* point */    , 
+  double*             B           ) const 
 {
-  ///
   *(B+0) = (double) m_Bx ;
   *(B+1) = (double) m_By ;
   *(B+2) = (double) m_Bz ;
   *(B+2) = (double) m_Bz ;
-  ///
 };
+// ============================================================================
 
 // ============================================================================
 // The END 

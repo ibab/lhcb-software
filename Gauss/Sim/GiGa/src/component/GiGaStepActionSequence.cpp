@@ -1,4 +1,4 @@
-// $Id: GiGaStepActionSequence.cpp,v 1.7 2002-04-25 13:02:05 ibelyaev Exp $ 
+// $Id: GiGaStepActionSequence.cpp,v 1.8 2002-05-07 12:21:36 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -10,82 +10,61 @@
 /// GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa
-#include "GiGa/IGiGaStepAction.h"
-#include "GiGa/GiGaStepActionFactory.h"
+#include "GiGa/IGiGaSvc.h"
+#include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaUtil.h"
 /// Local 
 #include "GiGaStepActionSequence.h"
 
 /** @file
  * 
- * Implementation of GiGaStepActionSequence
+ *  Implementation of GiGaStepActionSequence
  *
- *  @author Vanya Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 23/07/2001 
  */
 
 // ============================================================================
 /// factories 
 // ============================================================================
-IMPLEMENT_GiGaStepAction( GiGaStepActionSequence );
+IMPLEMENT_GiGaFactory( GiGaStepActionSequence );
 
 // ============================================================================
-/** the standard constructor
- *  @param  Name name of the instance
- *  @param  Loc  pointer to service locator object 
+/** standard constructor 
+ *  @see GiGaStepActionBase 
+ *  @see GiGaBase 
+ *  @see AlgTool 
+ *  @param type type of the object (?)
+ *  @param name name of the object
+ *  @param parent  pointer to parent object
  */
 // ============================================================================
-GiGaStepActionSequence::GiGaStepActionSequence( const std::string& Name ,
-                                                ISvcLocator*       Loc  )
-  : GiGaStepActionBase( Name , Loc )
-  , m_members    () ///< empty default vector! 
+GiGaStepActionSequence::GiGaStepActionSequence
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent ) 
+  : GiGaStepActionBase( type , name , parent )
+  , m_members    () // empty default vector! 
   , m_actions    ()
-{
-  declareProperty("Members" , m_members );
-};
-
+{ declareProperty("Members" , m_members ); };
 // ============================================================================
-/** finalise, delete and clear actions container 
- *  @return status code 
- */
-// ============================================================================
-StatusCode GiGaStepActionSequence::actionsReset() 
-{
-  /// finalize all members 
-  std::for_each  ( m_actions.begin () , 
-                   m_actions.end   () ,
-                   std::mem_fun(&IGiGaStepAction::finalize) );
-  /// delete all members
-
-  std::transform ( m_actions.begin  () , 
-                   m_actions.end    () ,
-                   m_actions.begin  () ,
-                   GiGaUtil::Delete () );
-  /// clear the coinatiner 
-  m_actions.clear() ;
-  ///
-  return StatusCode::SUCCESS ;
-};
 
 // ============================================================================
 /// destructor 
 // ============================================================================
 GiGaStepActionSequence::~GiGaStepActionSequence()
 {
-  /// delete all actions 
-  std::transform( m_actions.begin () ,  
-                  m_actions.end   () , 
-                  m_actions.begin () ,  
-                  GiGaUtil::Delete() );
-  ///
   m_actions.clear();
   m_members.clear();
-  ///
-}
-
+};
+// ============================================================================
 
 // ============================================================================
 /** initialize the object
+ *  @see GiGaStepActionBase 
+ *  @see GiGaBase 
+ *  @see  AlgTool 
+ *  @see IAlgTool 
  *  @return status code 
  */
 // ============================================================================
@@ -96,65 +75,51 @@ StatusCode GiGaStepActionSequence::initialize()
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!");}
   if( m_members.empty() ) { Warning("The sequence is empty!"); }
-  /// create the creator
-  GiGaUtil::StepActionCreator  creator( objMgr() , svcLoc() );
-  /// instantiate all members using the creator 
-  for( MEMBERS::const_iterator it = m_members.begin() ;
-       m_members.end() != it ; ++it ) 
+  // instantiate members 
+  std::string Type, Name;
+  for( MEMBERS::const_iterator member = m_members.begin() ;
+       m_members.end() != member ; ++member )
     {
-      /// get the type and name for the member 
-      std::string Type ; /// Member Type 
-      std::string Name ; /// Member Name
-      StatusCode sc = 
-        GiGaUtil::SplitTypeAndName( *it , Type , Name );
+      sc = GiGaUtil::SplitTypeAndName( *member , Type , Name );
+      if( sc.isFailure() )
+        { return Error("Member Type/Name '"+(*member)+"' is unparsable",sc);}
+      IGiGaStepAction* action = 0 ;
+      sc = toolSvc()->retrieveTool( Type , Name , action , gigaSvc() );
       if( sc.isFailure() ) 
-        { 
-          Error("Could not resolve Type/Name=" + (*it) , sc ) ;
-          actionsReset() ;
-          return  sc ;                                      /// < RETURN 
-        }
-      /// create the member 
-      IGiGaStepAction* stepAction = creator( Type , Name ) ;
-      if( 0 == stepAction ) 
-        {
-          Error("Could not create Type/Name=" + Type + "/" +  Name , sc ) ;
-          actionsReset() ;
-          return  StatusCode::FAILURE ;                      /// < RETURN
-        }
-      /// initialize the member 
-      sc = stepAction->initialize() ;
-      if( sc.isFailure() ) 
-        { 
-          Error("Could not initialize Type/Name=" + Type + "/" + Name , sc ) ;
-          actionsReset();
-          return  sc ;                                      /// < RETURN 
-        }
-      ///
-      m_actions.push_back( stepAction );
-      Print("Member '"+Type+"'/'"+Name+"' is added to the sequence");
-    }
-  /// 
-  Print("initialized successfully");
-  ///
-  return StatusCode::SUCCESS;
+        { return Error("Could not create IGiGaStepAction '" 
+                       + Type + "'/'" + Name + "'" , sc  ) ; }
+      if( 0 == action    ) 
+        { return Error("Could not create IGiGaStepAction '" 
+                       + Type + "'/'" + Name + "'"       ) ; }
+      action->addRef();
+      m_actions.push_back( action );
+    }       
+  //
+  return Print("Iinitialized successfully" , 
+               StatusCode::SUCCESS         , MSG::VERBOSE);
 };
+// ============================================================================
 
 // ============================================================================
 /** finalize the object
+ *  @see GiGaStepActionBase 
+ *  @see GiGaBase 
+ *  @see  AlgTool 
+ *  @see IAlgTool 
  *  @return status code 
  */
 // ============================================================================
 StatusCode GiGaStepActionSequence::finalize() 
 {
-  ///
-  Print("finalization");
-  /// finalize all members 
+  Print("Finalization" , StatusCode::SUCCESS , MSG::VERBOSE );
+  // finalize all members 
   std::for_each  ( m_actions.begin () , 
                    m_actions.end   () ,
-                   std::mem_fun(&IGiGaStepAction::finalize) );
-  ///
+                   std::mem_fun(&IInterface::release) );
+  // finalize base class 
   return GiGaStepActionBase::finalize();
 };
+// ============================================================================
 
 // ============================================================================
 /** perform the stepping action
@@ -168,8 +133,8 @@ void GiGaStepActionSequence::UserSteppingAction ( const G4Step* step )
                    m_actions.end   () ,
                    std::bind2nd( std::mem_fun1(&IGiGaStepAction::
                                                UserSteppingAction) , step ) );
-  ///  
 };
+// ============================================================================
 
 // ============================================================================
 // The END 
