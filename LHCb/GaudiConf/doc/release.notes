@@ -1,6 +1,7 @@
 package GaudiConf
 package manager: F.Ranjard
 
+!======================== GaudiConf v6r8 2003-05-19 ========================
 ! 2003-04-30 - Marco Cattaneo
  - Make L1/TTClusters, L1/ITClusters, L1/OTClusters optional in DstContent.opts
    This is because DSTs can exist both with (evtype 61) and without (other 
