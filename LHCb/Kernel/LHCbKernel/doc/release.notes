@@ -4,6 +4,9 @@ Purpose: LHCb specific Kernel classes
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 
+! 20020523 M. Needham
+  - add uniqueLayer/uniqueWafer members to OTChannelID.h
+
 ! 20020422 Vanya Belyaev
   new files: 
   Kernel/CaloPrint.h
