@@ -1,6 +1,7 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 
+!===================== VeloAlgorithms v3r2 2004-12-06 =====================
 ! 2004-12-03 - David Hutchcroft
  - Changes to VeloSim (GaudiAlg + big cluster bug fixes)
  - Changes to VeloClusterMaker (GaudiAlg + big cluster bug fixes)
