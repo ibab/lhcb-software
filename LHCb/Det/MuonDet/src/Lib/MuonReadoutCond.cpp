@@ -1,8 +1,11 @@
-// $Id: MuonReadoutCond.cpp,v 1.4 2002-08-05 18:14:08 asatta Exp $
+// $Id: MuonReadoutCond.cpp,v 1.5 2002-11-26 18:07:39 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/08/05 18:14:08  asatta
+// few bug fixes for pad edge effect x-talk calculation
+//
 // Revision 1.3  2002/06/04 16:08:37  dhcroft
 // Added time jitter pdfs to the readouts
 //
@@ -231,7 +234,7 @@ int MuonReadoutCond::singleGapCluster(const int &xy,
     cluster = &(m_RList[i].ClusterY);
     padEdgeSize = &(m_RList[i].PadEdgeSizeY);
     padEdgeSigma = &(m_RList[i].PadEdgeSigmaY);
-		for(int size=0;size<(int)m_RList[i].CumProbX.size();size++){
+		for(int size=0;size<(int)m_RList[i].CumProbY.size();size++){
 		  local_cluster.push_back(m_RList[i].ClusterY[size]);
 		  local_cumProb.push_back(m_RList[i].CumProbY[size]);
 		}		
