@@ -1,0 +1,30 @@
+# Created    : 23/08/2004
+# Maintainer : P. Koppenburg
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+
+package           VertexFit
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+
+# Exported header files
+#============================================================================
+include_dirs     $(VERTEXFITROOT)
+
+# Used packages. 
+#============================================================================
+use  DaVinciTransporter  v*  Phys
+
+# Component library building rule
+#============================================================================
+library          VertexFit    ../src/*.cpp
+
+# standard patterns (order is essential!)
+#============================================================================
+apply_pattern component_library library=VertexFit
+	     
+

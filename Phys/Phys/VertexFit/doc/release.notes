@@ -1,0 +1,164 @@
+! $Id: 
+! Package     : VertexFit
+! Responsible : P. Koppenburg
+
+! 2004-08-23 - P. Koppenburg
+ - New package Vertex extracted from DaVinciTools,
+   containing all vertex fitters and assocaited tools.
+!========================== DaVinciTools v10r3 2004-08-23 ===================
+! 2004-08-23 - Florence RANJARD
+ - replace GaudiTools/ with GaudiAlg
+
+!========================== DaVinciTools v10r0 2004-07-22 ===================
+! 2004-07-20 - P. Koppenburg
+  - src/LagrangeMassVertexFitter.cpp
+    . Bug affecting only Windows
+      -> put definitions
+         Particle* part3 = pList[2];
+         Particle* part4 = pList[3];
+      in the sections where one knows that there are more than 2 particles.
+
+  - src/LifetimeFitter.cpp
+    . posMomCorr() was misused as the upper square in LifetimeFitter.cpp, 
+      and this is fixed.
+!========================= DaVinciTools v9r5 2004-06-04 ===================
+! 2004-06-04 - P. Koppenburg
+  - src/LagrangeGeomVertexFitter.cpp
+    . String over two lines corrected for Windows
+    
+! 2004-05-11 - P. Koppenburg for Claudia Pereira Nunes
+ - src/LagrangeGeomVertexFitter.{cpp,h}
+ - DaVinciTools/IGeomVertexFitter.h
+   . New constrained vertex fitting tool. This tool has two public methods. 
+     One, called fitWithGeom, makes only a geometrical  constrained fit for 
+     at most 4 tracks. It doesn't make any kind of invariant mass vertex fit, 
+     like the LagrangeMassVertexFitter tool does, it just constrain the
+     particles to come from the same point. The other method, called 
+     fitWithGeomAndSubMass, makes a geometrical constrained fit and an 
+     invariant mass constrained fit of any daughter which is a resonance 
+     (with width < 10 MeV).  This method only works if there is a daughter 
+     resonance and it works for at most 4 tracks also. 
+ - src/LagrangeMassVertexFitter.{cpp,h}
+   . Corrected an error on the way the geometrical constrained 
+     equations were being obtained.
+
+!========================== DaVinciTools v9r2 2004-03-31 ==================
+! 2004-03-30 - P. Koppenburg for Miriam Gandelman
+ - src/GeomDispCalculator.cpp
+   . Bug fix
+  
+!========================== DaVinciTools v8r4 2004-01-29 ==================
+! 2004-01-14 - Gloria CORTI
+ - DaVinciTools/IGeomDispCalCulator.h
+   src/GeomDispCalculator.{h,cpp}
+   . propagate change from DaVinci v8r3 that was built on a branch  
+   
+!========================== DaVinciTools v8r3 2003-12-12 ==================
+! 2003-12-12 - Gloria CORTI for Miriam GANDELMAN
+ Built on a branch v8r2b
+ - DaVinciTools/IGeomDispCalCulator.h
+   src/GeomDispCalculator.{h,cpp}
+   . new interface method introduced to provide the error for each of
+     the component of the IP vector. The method requires a Particle and
+     a Vertex as input and returns 4 variables in the following order:
+     the IP, the IP error, the full IP vector and the error on the IP
+     vector.
+
+!========================== DaVinciTools v8r1p2 2003-06-26 ==================
+! 2003-06-26 - Gloria CORTI
+ - src/LagrangeMassVertexFitter.h & cpp
+   . introduce method finalize where tools are released (valgrind 
+     possible memory leak)
+ - src/GeomDispCalculator.h & cpp
+   . introduce method finalize where tools are released (valgrind
+     possible memory leak )
+   . introduce protection in method calcVertexDis() when dist = 0
+     appearing wtih special configuration of Bd->D0 K* jobs (Miriam
+     GANDELMAN)
+!========================== DaVinciTools v8r1 2003-06-03 ====================
+! 2003-05-05 - Gerhard Raven
+ - DaVinciTools/ILifetimeFitter.h
+ - src/LifetimeFitter.{cpp,h}
+   . add code to compute, given a particle and its production vertex,
+     the corresponding particle lifetime
+
+! 2002-11-11 - Gloria Corti
+ - Fix problem in tree propagation in UnconstVertexFitter when using 
+   resonances and fix bug reported by Gerhard Raven of hessian/2 (Sandra Amato)
+ - Introduce property with cut value on width of mother particle in order to
+   use products or not to make vertex in LagrangeMassVertexFitter (S.Amato)
+   leave uncommented the setIsResonance. When using this tool the tree is still
+   not correctly progagated.
+
+!=========================== DaVinciTools v6r0 2002-10-30 ===================
+! 2002-10-29 - Gloria Corti
+ - Comment temporarly the use of setIsResonance(true) in ParticleStuffer
+   and LagrangeMassVertexFitter because of consequent missing step of
+   intermediate particle when creating a new vertex in vertex fitters when
+   daughters of resonaces are used.
+
+! 2002-10-22 - Gloria Corti
+ - Modified UnconstVertexFitter, LagrangeMassVertexFitter and
+   GeomDispCalculator to be able to set which Transporter to use
+   (CombinedTransporter beeing the default (as in v5r0)). An example of
+   how to do it can be found in the DaVinciTest package.
+ - Introduce new method in IMassVertexFitter to give 4 particles as input
+   (C.Nunes, S.Amato)
+ - Modified LagrangeMassVertexFitter (C.Nunes, A.Amato)
+    + handle fits up to 4 particles,
+    + set the flag isResonance() to new particles if lifetime < exp-15sec
+    + check if a particle is a resonace in which case uses the daughters
+      to perform the fit when widht < 10 MeV
+    + fix error reported by B.Viaud to use transported values of slopes
+      and momentum and not only positions
+ - Modified UnconstVertexFitter (S.Amato) 
+    + check if a particle is a resonace in which case uses the daughters
+      to perform the fit
+    + fix error reported by B.Viaud to use transported values of slopes
+      and momentum and not only positions
+
+! 2002-09-11 - Gloria Corti
+ - New tool NeutralParticleMaker from Frederic Machefert
+ - Modification in GeomDispCalculator and ParticleStuffer to take into
+   account different dimension in error correlation matrix in Particle
+ - Changes in PhysDesktop to fix bug noted by Sandra of copying initial
+   particle when daughters of a new particle.
+ - Use PhysEvent v7r0 and increase version number
+
+!=========================== DaVinciTools v5r0 2002-07-29 ===================
+! 2002-07-27 - Gloria Corti
+ - Add error calculation in DCA for parallel particles in 
+   GeomDispCalculator ( M.Gandelman )
+
+! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
+! 2002-05-10 - Gloria Corti
+  - IMassVertexFitter: modify names of method to generic names (GC)
+  - LagrangeVertexFitter: shortcut methods (Joao de Mello)
+
+! 2002-05-06 - Gloria Corti
+  - DaVinciTools/IVertexFitter.h: new methods (short-cuts) for 2 and 3 
+  - src/UnconsVertexFitter: short cut methods implementation (Sandra Amato)
+  - DaVinciTools/IGeomDispCalculator.h: return type of method changed from
+    void to StatusCode (Miriam Gandelman)
+  - src/GeomDispCalculator: use transporter (Miriam Gandelman)
+
+! ======================================================================
+! 20020402 - DaVinciTools v3r0 (G.Corti)
+    - DaVinciTools/IVertexFitter.h, interface for generic vertex fitters
+      src/UnconstVertexFitter.h&cpp, concrete implementation of a vertex fitter
+          based on Fortran axksvrtx.F
+      author: Sandra Amato      
+    - DaVinciTools/IMassVertexFitter.h, interface for mass constrained vertex
+                                       fitters
+      src/LagrangeMassVertexFitter.h&cpp, concrete implementation using
+          Lagrangian Multipliers
+      author: Joao de Mello
+  - Introduce new OO tools working with new PhysEvent model
+    The interfaces are in DaVinciTools subdirectory.
+    - DaVinciTools/IGeomDispCalculator.h (interface)
+      src/GeomDispCalculator.h&cpp 
+          Tool to calculate varius geometrical distances between Particles & 
+          Vertices (ex. impact parameter) 
+      author: Miriam Gandelman
+
+                            
