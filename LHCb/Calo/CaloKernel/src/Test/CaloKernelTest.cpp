@@ -1,8 +1,11 @@
-// $Id: CaloKernelTest.cpp,v 1.1.1.1 2001-11-25 14:07:38 ibelyaev Exp $ 
+// $Id: CaloKernelTest.cpp,v 1.2 2002-03-20 15:49:09 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
+// New Package: substitution of the  previous CaloGen package
+//
 // ============================================================================
 //
 #include <iostream>
@@ -14,6 +17,7 @@
 #include "CaloKernel/CaloVector.h"
 #include "CaloKernel/InputStreamIterator.h"
 #include "CaloKernel/OutputStreamIterator.h"
+#include "CaloKernel/CaloMap.h"
 
 // ============================================================================
 /**  @file CaloGenTest.cpp 
@@ -82,7 +86,18 @@ int main()
     << "/" 
     << sizeof( cell3.raw() ) 
     << std::endl ;
+
+  CaloMap<int,std::string> mm;
   
+  mm[1]   = "value of 1st element" ;
+  mm[100] = "value of 100th element" ;
+  
+    
+  std::cout << " test of map "
+            << "mm[1]   ='" << mm[1]   << "' " 
+            << "mm[100] ='" << mm[100] << "' " 
+            << "mm[50]  ='" << mm[50]  << "' " << std::endl;
+
   try
     {
       throw CaloException("This is an exception", StatusCode::FAILURE );

@@ -1,8 +1,11 @@
-// $Id: CaloPrint.cpp,v 1.2 2001-12-13 11:14:34 ibelyaev Exp $
+// $Id: CaloPrint.cpp,v 1.3 2002-03-20 15:49:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/12/13 11:14:34  ibelyaev
+//  update for Win2K
+//
 // Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
 // New Package: substitution of the  previous CaloGen package
 //
@@ -47,8 +50,8 @@ char* CaloPrint::storage()
 /** initialize static members 
  */
 // ============================================================================
-std::string CaloPrint::s_formatDouble  = "%-.3g" ;
-std::string CaloPrint::s_formatInteger = "%d"    ;
+std::string CaloPrint::s_formatDouble  = "%-8.3g" ;
+std::string CaloPrint::s_formatInteger = "%d"     ;
 	
 // ============================================================================
 /**	accessor to format for integers 
