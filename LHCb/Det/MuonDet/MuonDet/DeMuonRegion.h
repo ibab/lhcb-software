@@ -1,8 +1,11 @@
-// $Id: DeMuonRegion.h,v 1.4 2002-04-03 16:14:59 dhcroft Exp $
+// $Id: DeMuonRegion.h,v 1.5 2002-04-08 14:54:55 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/03 16:14:59  dhcroft
+// Added const qualifiers to DeMuonRegion accessor methods
+//
 // Revision 1.3  2002/03/20 16:43:28  dhcroft
 // Added the size of the Front end channels to the XML and the mapping from FE to logical channels
 //
@@ -58,6 +61,16 @@ public:
   /// Return the number of chambers in the region
   inline int chamberNum() const {
     return m_chamberNum;
+  }
+
+  /// Set the number of gaps that are connect to one FE channel
+  void setGapsPerFE( int nGaps ){
+    m_GapsPerFE = nGaps;
+  }
+  
+  /// Return the number of gaps that are connected to one FE Channel
+  inline int gapsPerFE() const {
+    return m_GapsPerFE;
   }
 
   /// Set the number of FE Anode readout channels cover a chamber in x
@@ -125,6 +138,9 @@ private:
 
   /// The number of chambers in this region
   int m_chamberNum;
+
+  /// Number of gaps in a hardwired OR to each FE channel
+  int m_GapsPerFE;
 
   /// The number of FE channels in the X direction for Anode readout 
   /// (0 means no anode readout)

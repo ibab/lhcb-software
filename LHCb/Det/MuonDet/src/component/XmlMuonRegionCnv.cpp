@@ -1,8 +1,11 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.5 2002-03-20 16:43:40 dhcroft Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.6 2002-04-08 14:55:00 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/03/20 16:43:40  dhcroft
+// Added the size of the Front end channels to the XML and the mapping from FE to logical channels
+//
 // Revision 1.4  2002/02/21 16:38:44  dhcroft
 // Added methods to retrieve the number of the station, region, chamber and gas gap to DeMuonChamber and
 // DeMuonGasGap objects. Modified XmlMuonRegionCnv to fill these parameters when making the objects.
@@ -201,7 +204,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
     if(!sc.isSuccess()){
       log << MSG::WARNING << "Failed to read chamber" << endreq;
       return sc;
-    }
+    }    
   } else if("ReadoutMap" == tagName){
 
     const std::string ReadoutType = 
@@ -248,7 +251,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
       }
     }      
 
-  } else {
+  }else {
     // Unknown tag, a warning message could be issued here
     log << MSG::WARNING << "Can not interpret specific type :" 
         << tagName << endreq;
@@ -303,7 +306,12 @@ StatusCode XmlMuonRegionCnv::chamberRead (DOM_Element &childElement,
     log << MSG::WARNING << "Failed to read chamber children" << endreq;
     return sc;
   }
-  
+
+  // for now with MWPCs and RPCs this is a good formula
+  int numberGapsPerFE = gasGapNumber / 2 ; 
+    
+  dataObj->setGapsPerFE(numberGapsPerFE);
+
   // get a value of the 'Number' attribute
   const std::string Number = dom2Std (childElement.getAttribute ("Number"));
 

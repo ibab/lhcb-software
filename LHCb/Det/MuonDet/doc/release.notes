@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.8 2002-04-03 16:15:09 dhcroft Exp $
+! $Id: release.notes,v 1.9 2002-04-08 14:55:00 dhcroft Exp $
 ! CVS tag $Name: not supported by cvs2svn $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
+
+! ============================================================================
+! 20020406 - David Hutchcroft
+ - Changed the XmlDeMuonRegionCnv code to calculate the number of gaps per
+   FE channel, rather than read from the XML.
 
 ! ============================================================================
 ! 20020403 - David Hutchcroft

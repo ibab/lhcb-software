@@ -1,8 +1,11 @@
-// $Id: DeMuonRegion.cpp,v 1.4 2002-04-03 16:15:10 dhcroft Exp $
+// $Id: DeMuonRegion.cpp,v 1.5 2002-04-08 14:55:00 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/03 16:15:10  dhcroft
+// Added const qualifiers to DeMuonRegion accessor methods
+//
 // Revision 1.3  2002/03/20 16:43:40  dhcroft
 // Added the size of the Front end channels to the XML and the mapping from FE to logical channels
 //
@@ -26,7 +29,8 @@
 
 /// Standard Constructor
 DeMuonRegion::DeMuonRegion()
-  : m_chamberNum(0), m_FEAnodeX(0), m_FEAnodeY(0), 
+  : m_chamberNum(0), m_GapsPerFE(0), 
+    m_FEAnodeX(0), m_FEAnodeY(0), 
     m_FECathodeX(0), m_FECathodeY(0), m_logMap()
 {
 }
