@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.18 2002-10-21 21:44:54 gcorti Exp $
+# $Id: requirements,v 1.19 2002-10-21 21:58:18 gcorti Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -23,7 +23,6 @@ use  DetDesc        v10r*  Det
 use  AIDA           v2r*
 use  CaloUtils      v4r*   Calo
 use  CaloInterfaces v2r*   Calo
-use  TrTransporter  v2r*   Tr
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
