@@ -25,6 +25,9 @@ Development version
   . Removed dependency on GaudiAud package
   . Removed dependency on Trg packages
 
+- Bug fixes
+  . Add protection for crazy MCHits in BuildMCTrackInfo (MCTools v1r6)
+
 </PRE><H1><A NAME=v5r9>2004-05-24 Boole v5r9</A></H1><PRE>
 Version used for DC04
 
