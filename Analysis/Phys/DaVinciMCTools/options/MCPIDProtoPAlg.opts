@@ -1,0 +1,23 @@
+//##############################################################
+// Default options
+
+#pragma print off
+// Input data
+//MCPIDProtoPAlg.TrStoredTracksInput = "Rec/Tr/Best";
+//MCPIDProtoPAlg.RichPIDsInput = "Rec/Rich/PIDs";
+//MCPIDProtoPAlg.MuonPIDsInput = "Rec/Muon/MuonID";
+//MCPIDProtoPAlg.ElectronsInput ="Rec/Calo/Electrons";
+//MCPIDProtoPAlg.TrackMatching =  
+//MCPIDProtoPAlg.CaloEMatching = 
+//MCPIDProtoPAlg.BremMatching =  
+
+// Output data
+//MCPIDProtoPAlg.OutputData = "Rec/ProtoP/Charged";
+
+// Track quality
+//MCPIDProtoPAlg.MaxChiSquare = 1000;
+#pragma print on
+
+// Track associator 
+MCPIDProtoPAlg.TrackAsct = "Track2MCAsct";
+ToolSvc.Track2MCAsct.Location = "Rec/Relations/Tr2MCP";
