@@ -1,5 +1,5 @@
 package Gauss
-version v12r8
+version v13r0
 
 # =============================================================================
 # structure 
@@ -16,14 +16,14 @@ use GaudiConf           v7r*
 # GAUDI framework
 use GaudiAlg            v6r*
 use GaudiAud            v6r*
-use GaudiSvc            v10r*
+use GaudiSvc            v11r*
 
 # ROOT event persistency
 use GaudiRootDb         v9r*
-use DbCnv               v7r*    Event 
+use DbCnv               v8r*    Event 
 
 # Histogram persistency 
-use HbookCnv            v13r*
+use HbookCnv            v14r*
 
 # Access to magnetic field service
 use Magnet              v2r*    Det
@@ -34,18 +34,18 @@ use Magnet              v2r*    Det
 #============================================================================
 
 #GiGa staff...
-use GiGaCnv             v13r6   Sim
-use GaussTools          v8r8    Sim
+use GiGaCnv             v14r0   Sim
+use GaussTools          v9r0    Sim
 use GaussTracker        v3r1    Sim
 use GaussRICH           v4r4    Sim
-use GaussCalo           v4r3    Sim
+use GaussCalo           v5r0    Sim
 use GaussPhysics        v2r5    Sim
 
 #optional visualisation and UI
-#use GiGaVisUI           v2r2    Sim
+#use GiGaVisUI           v3r0    Sim
 
 # generator
-use GeneratorModules    v10r1    Gen
+use GeneratorModules    v10r2    Gen
 
 #get information from DBASE and PARAM 
 use XmlDDDB             v20r0   Det   -no_auto_imports

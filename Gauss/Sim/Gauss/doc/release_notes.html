@@ -4,8 +4,32 @@ Package manager : Witek Pokorski
 </PRE>
 
 !========================================================================
+<H1><A NAME="v13r0">2003-12-10 - Gauss v13r0</A></H1><PRE>
+ use GEANT4_v52r5 (geant4.5.2.ref05), LHCb v14r0, Gaudi v13r0
+ some fixes to GiGaCnv and GaussCalo were necessary to cope with Gaudi v13r0
+
+!======================== EvtGen v4r3 =================================
+! 2003-12-10 - Patrick Robbe
+ - modify EvtSVVCPLH.cpp to be able to define the parameter deltaGamma
+   in decay files.
+ - modify the default DeltaGamma_s value in EvtIncoherentMixing
+ - remove dependences to B_s0L and B_s0H
+
+! 2003-12-09 - Florence Ranjard
+ - requirements - remove explicit version numbers
+
+! 2003-12-09 - Patrick Robbe
+ - Add model BToDDalitzCPK to generate B0->D0 K*0 and B+->D0 K+ with
+    D0->Ks pi+ pi-
+ - EvtDDalitz : add some resonances and change parameters to the decay
+    D0->Ks pi+ pi-
+ - EvtModelReg : declare BToDDalitzCPK model
+ - EvtResonance2 : add spin-2 resonances
+ - requirements : increase to v4r3
+
+!========================================================================
 <H1><A NAME="v12r8">2003-12-05 - Gauss v12r8</A></H1><PRE>
- use GEANT4_v52r6 (geant4.5.2.ref06)
+ use GEANT4_v52r5 (geant4.5.2.ref05)
  some fixes to GaussCalo, GaussTools, EvtGen, GeneratorModules
  improvement in GiGaCnv to allow setting predifined decay time
 
