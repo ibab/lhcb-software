@@ -1,5 +1,5 @@
 package Gauss
-version v4r0p1
+version v5r0
 
 # =============================================================================
 # structure 
@@ -21,10 +21,10 @@ use GaudiConf           v6*
 # GAUDI framework
 use GaudiAlg            v6r*
 use GaudiAud            v6r*
-use GaudiSvc            v9r*
+use GaudiSvc            v10r*
 
 # ROOT event persistency
-use GaudiRootDb         v8r*
+use GaudiRootDb         v9r*
 use DbCnv               v7r*    Event 
 
 # Histogram persistency (optional)
@@ -34,18 +34,18 @@ use DbCnv               v7r*    Event
 use Magnet              v2r*    Det
 
 #GiGa staff...
-use GiGaCnv             v7r*    Sim
-use GaussTools          v1r*    Sim
+use GiGaCnv             v8r*    Sim
+use GaussTools          v2r*    Sim
 #use GaussImports        v2r*    Sim 
 
 # generator
-use GeneratorModules    v3r*    Gen
+use GeneratorModules    v4r*    Gen
 
 # optional generator: 
 #use EvGen               v4r*    Sim 
 
 #geometry source 
-use XmlDDDB             v12r5   Det 
+use XmlDDDB             v14r*   Det 
 
 # =============================================================================
 # Essential environment variables 
