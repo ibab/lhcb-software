@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.230 2005-01-18 08:42:01 pkoppenb Exp $
+# $Id: requirements,v 1.231 2005-01-26 13:02:43 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r6
+version           v12r7
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -43,7 +43,7 @@ use LHCb                v16r4
 use RichTools           v1r2p2 Rich
 
 #=======================================================
-# DaVinciSys v12r6
+# DaVinciSys v12r7
 #=======================================================
 
 # L0 Trigger packages
@@ -62,7 +62,7 @@ use RichHLTSys                  v1r0     Rich
 use RichRecQC                   v1r10    Rich
 
 #-- HLT trigger
-use HltGeneric                  v2r1     Hlt
+use HltGeneric                  v2r2     Hlt
 use HltSelections               v2r0     Hlt
 use HltSelChecker               v2r0     Hlt
 
@@ -89,7 +89,7 @@ use  Utilities          	v1r13    Tools
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v1r4     Phys
-use  DaVinciKernel      	v3r0     Phys
+use  DaVinciKernel      	v3r1     Phys
 use  DaVinciTools       	v11r4    Phys
 use  FlavourTagging     	v5r3p1   Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
