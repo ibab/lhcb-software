@@ -4,7 +4,7 @@
     <package name="RichRecBase">
         <import name="Kernel/CLHEPStreams"/>
         <import name="Kernel/SerializeStl"/>
-        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working track object." id="12421" keyedContTypeDef="TRUE" location="Rec/Rich/RecBase/Tracks" name="RichRecTrack" stdVectorTypeDef="TRUE">
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working track object." id="12421" keyedContTypeDef="TRUE" location="Rec/Rich/RecoEvent/Tracks" name="RichRecTrack" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
             &KeyedObject;
             <import name="RichKernel/RichParticleIDType"/>
@@ -113,7 +113,7 @@
             </method>
             <attribute desc="Flag to say if all possible photon candidates have been mad for this segment" init="false" name="allPhotonsDone" type="bool"/>
         </class>
-        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working pixel object" id="12422" keyedContTypeDef="TRUE" location="Rec/Rich/Rec/Pixels" name="RichRecPixel" stdVectorTypeDef="TRUE">
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working pixel object" id="12422" keyedContTypeDef="TRUE" location="Rec/Rich/RecoEvent/Pixels" name="RichRecPixel" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
             &KeyedObject;
             <import name="RichRecBase/RichRecPixelParentType"/>
@@ -159,7 +159,7 @@
                 <code>m_richRecPhotons.push_back(photon);</code>
             </method>
         </class>
-        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction object describing a continuous track segment in a single radiator" id="12423" keyedContTypeDef="TRUE" location="Rec/Rich/RecBase/Segments" name="RichRecSegment" stdVectorTypeDef="TRUE">
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction object describing a continuous track segment in a single radiator" id="12423" keyedContTypeDef="TRUE" location="Rec/Rich/RecoEvent/Segments" name="RichRecSegment" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
             &KeyedObject;
             <import name="RichKernel/RichParticleIDType"/>
@@ -294,7 +294,7 @@
             </method>
             <attribute desc="Flag to say if all possible photon candidates have been mad for this segment" init="false" name="allPhotonsDone" type="bool"/>
         </class>
-        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction photon candidate. The result of an association between a RichRecTrack and a RichRecPixel." id="12424" keyedContTypeDef="TRUE" location="Rec/Rich/RecBase/Photons" name="RichRecPhoton" stdVectorTypeDef="TRUE">
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction photon candidate. The result of an association between a RichRecTrack and a RichRecPixel." id="12424" keyedContTypeDef="TRUE" location="Rec/Rich/RecoEvent/Photons" name="RichRecPhoton" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;RichRecPhotonKey&gt;"/>
             <import name="RichRecBase/RichRecPhotonKey"/>
             <import name="RichKernel/RichHypoData"/>
@@ -337,7 +337,7 @@
             <attribute compression="FALSE" desc="Associated RichRecTrack" init="0" name="richRecTrack" serialize="FALSE" type="RichRecTrack*"/>
             <attribute compression="FALSE" desc="Associated RichRecPixel" init="0" name="richRecPixel" serialize="FALSE" type="RichRecPixel*"/>
         </class>
-        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Status object for Rich Reconstruction" id="12425" location="Rec/Rich/RecBase/Status" name="RichRecStatus" templateList="FALSE" templateVector="FALSE">
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Status object for Rich Reconstruction" id="12425" location="Rec/Rich/RecoEvent/Status" name="RichRecStatus" templateList="FALSE" templateVector="FALSE">
             <base name="DataObject"/>
             &DataObject;
             <import name="RichKernel/RichDetectorType"/>
@@ -354,7 +354,7 @@
             <attribute desc="Boolean to indicate if the event was successfully processed" init="true" name="eventOK" type="bool"/>
             <attribute desc="Overall background estimates for each RICH" init="Rich::NRiches" name="detOverallBkg" type="std::vector&lt;double&gt;"/>
         </class>
-        <class author="Chris Jones    Christopher.Rob.Jones@cern.ch" desc="A ring candidate. A collection of RichRecPixels associated to a single Cherenkov ring" id="12426" location="Rec/Rich/Common/Rings" name="RichRecRing">
+        <class author="Chris Jones    Christopher.Rob.Jones@cern.ch" desc="A ring candidate. A collection of RichRecPixels associated to a single Cherenkov ring" id="12426" location="Rec/Rich/RecoEvent/Rings" name="RichRecRing">
             <base name="KeyedObject&lt;long&gt;"/>
             &KeyedObject;
             <import name="Kernel/RichDetectorType"/>
