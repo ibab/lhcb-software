@@ -1,4 +1,4 @@
-// $Id: GaudiMain.cpp,v 1.4 2001-11-29 07:49:16 mato Exp $
+// $Id: GaudiMain.cpp,v 1.5 2002-01-24 16:14:03 mato Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : GaudiConf
@@ -27,10 +27,10 @@ int main ( int argc, char** argv ) {
   }
 
   // Get the input configuration file from arguments
-  std:: string opts = (argc>1) ? argv[1] :  "../options/job.opts";
+  std:: string opts = (argc>1) ? argv[1] :  "";
 
   propMgr->setProperty( "JobOptionsPath", opts );
-  if( opts.substr( opts.length() - 3, 3 ) == ".py" ) {
+  if( opts != "" && opts.substr( opts.length() - 3, 3 ) == ".py" ) {
     propMgr->setProperty( "EvtSel",         "NONE" );
     propMgr->setProperty( "JobOptionsType", "NONE" );
     propMgr->setProperty( "DLLs",           "['GaudiPython']" );

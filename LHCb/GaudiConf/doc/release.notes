@@ -1,6 +1,9 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 20020123 - v6r1 - Pere Mato
+  src/GaudiMain.cpp removed default JobOptions file to ""
+
 ! 20020123 - v6r1 - Marco Cattaneo
   options/DetDesc.opts, .py: removed DetectorDataSvc.DetDbLocation option.
 
