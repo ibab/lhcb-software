@@ -3,6 +3,14 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>GaudiObjDesc v4r3<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+!20020422 - Stefan
+ - Added <attribute>- and <relation>-attribute 'serialize' to specify whether to persistify an object
+ - Added <attribute>-attribute 'noCast' to suppress casting double<->float while serializing
+ - Added new <bitfield>-element to handle bitpacking
+ - friend-functions are now implemented outside the class-body
+
 ================v4r2=====================================
 ! 20020503 Pere Mato
 - Small problem on the fragment obj2doth_header that forced the re-creation of 

@@ -142,6 +142,7 @@
 	name CDATA #REQUIRED
 	length CDATA #REQUIRED
 	desc CDATA #REQUIRED
+	startBit CDATA #IMPLIED
 	startAtOne (TRUE | FALSE) "FALSE"
 	setMeth (TRUE | FALSE) "TRUE"
 	getMeth (TRUE | FALSE) "TRUE"
