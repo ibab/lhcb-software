@@ -1,0 +1,30 @@
+
+
+MessageSvc.OutputLevel     = 1;
+
+
+ApplicationMgr.DLLs       += { "GeneratorModules" };
+ApplicationMgr.DLLs       += { "GaudiDb" };
+
+//ApplicationMgr.TopAlg     += {"SingleParticleGun","DumpMC","EvtDecay","DumpMC"};
+ApplicationMgr.TopAlg     += {"PythiaModule","DumpMC","EvtDecay","DumpMC"};
+
+
+ApplicationMgr.EvtSel      ="NONE";
+
+EventDataSvc.ForceLeaves = 1;
+
+ApplicationMgr.EvtMax      =1;
+
+SingleParticleGun.PdgCode=511;
+
+SingleParticleGun.Pt = 50000.;
+SingleParticleGun.ModePt = 1;
+SingleParticleGun.ModeEta =2; 
+SingleParticleGun.ModePhi =2; 
+
+//--------------------------------------------------------------
+// Algorithms Private Options
+//--------------------------------------------------------------
+PythiaModule.PythiaCommand = {"pysubs msel 5","pydat3 mdcy 511 1 0"};
+
