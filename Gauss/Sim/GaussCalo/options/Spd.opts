@@ -1,8 +1,11 @@
-// $Id: Spd.opts,v 1.3 2003-07-16 18:51:24 ibelyaev Exp $ 
+// $Id: Spd.opts,v 1.4 2003-11-05 12:19:50 rybkine Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/16 18:51:24  ibelyaev
+//  minor fix for Spd/Prs
+//
 // Revision 1.2  2003/07/09 17:01:44  ibelyaev
 //  Spd/Prs implemenattion by Grigory Rybkine
 //
@@ -35,7 +38,7 @@ GiGaGeo.Spd.zMax           =  15000. * mm ;
 
 GiGaGeo.Spd.DetectorPath   =  "/LHCb/Calo"             ;
 
-GiGaGeo.Spd.IntegrationDelays = { 21.5 , 19.5 , 17.5 } ;
+GiGaGeo.Spd.IntegrationDelays = { 18.5 * ns , 17.5 * ns , 16.5 * ns } ;
 
 GiGaGeo.Spd.Histograms = 
   { 	

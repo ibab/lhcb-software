@@ -8,6 +8,10 @@
 !-----------------------------------------------------------------------------
 
 !=========================== GaussCalo v4r2 ===============================
+! 2003-11-05 - Grigory Rybkine 
+ - options/Sps.opts,Prs.opts   - modified IntegrationDelays values, 
+                                 added time units to them 
+
 ! 2003-10-17 - Florence RANJARD
  - src/CaloSensDet.cpp, src/SprPrsSensDet.cpp - fix code for geant4.5.2.ref04
 
