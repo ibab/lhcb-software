@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.40 2004-02-24 18:26:22 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.41 2004-02-25 13:22:41 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -728,6 +728,7 @@ StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan,
   double phiLocal ;
   sc=phiOfStrip(phiChan, phiFrac, rAtPhi, phiLocal);
   if(sc.isFailure()) return sc;
+  if(this->isDownstream(phiSensor)) phiLocal = -phiLocal;
   // Test for R compatibility
   double phiMin = phiLocal + 0.02;    // Tolerance for tests
   double phiMax = phiLocal - 0.02;    // tolerance for tests
@@ -747,11 +748,11 @@ StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan,
   }
   if(static_cast<unsigned int>(rZone) != iFind) return StatusCode::FAILURE;
   // Convert a local point to a global point, using the 
-  // localToGlobal method of the Phi sensor
-  //  double x=localR*cos(phiLocal);
-  //  double y=localR*sin(phiLocal);
-  double x=rAtPhi*cos(phiLocal);
-  double y=rAtPhi*sin(phiLocal);
+  // localToGlobal method of the R sensor
+  double x=localR*cos(phiLocal);
+  double y=localR*sin(phiLocal);
+  //  double x=rAtPhi*cos(phiLocal);
+  //  double y=rAtPhi*sin(phiLocal);
   sc=localToGlobal(rSensor,HepPoint3D(x,y,0),point);
   // Compute the pitches. 
   sc = this->rPitch(rChan, rPitch);
