@@ -1,8 +1,8 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.3 2003-01-17 14:16:22 sponce Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.4 2003-04-23 14:23:18 sponce Exp $
 
 // Include files
 
-#include "DetDesc/XmlUserDetElemCnv.h"
+#include "DetDescCnv/XmlUserDetElemCnv.h"
 #include "DeMuonRegion.h"
 
 /// Utility classes
@@ -156,7 +156,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
         
       }
     }
-    
+
     // for now with MWPCs and RPCs this is a good formula
     dataObj->setGapsPerFE(gasGapNumber / 2);
 
