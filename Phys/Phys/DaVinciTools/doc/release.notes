@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.61 2003-06-26 16:51:51 gcorti Exp $
+! $Id: release.notes,v 1.62 2003-07-07 09:53:03 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2003-07-06 - Gloria CORTI
+ - cmt/requirements
+   . remove use of DetDesc that is not necessary
 
 !========================== DaVinciTools v8r1p2 2003-06-26 ==================
 ! 2003-06-26 - Gloria CORTI
