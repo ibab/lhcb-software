@@ -1,12 +1,12 @@
 package LHCbSys
-version v11r5
+version v11r6
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v11r5
+use LHCb		v11r6
 
 use GaudiConf		v6r5
 
@@ -27,11 +27,10 @@ use DetSys		v1r1	Det
 use EventSys		v13r0	Event
 
 # Associators
-use AssociatorsSys	v1r0	Associators
+use AssociatorsSys	v1r1	Associators
 
 # SICB Converters
-use SICBSys             v1r0    SICB
-use SicbCnv      v17r4   SICB
+use SICBSys             v1r1    SICB
 
 # LHCb  EXamples
 use DetDescExample      v5r0    Ex

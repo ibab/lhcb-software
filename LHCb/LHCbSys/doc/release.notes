@@ -4,6 +4,9 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+! 2002-12-20 - Marco Cattaneo
+ - requirements	- use SICBSys v1r1 and AssociatorsSys v1r1
+
 !====================== LHCbSys v11r5 ================================
 ! 2002-12-13 - Florence Ranjard
  - requirements - use DetSys v1r1 to use bug fix DetDesc v11r8.
