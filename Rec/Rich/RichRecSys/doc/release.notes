@@ -12,7 +12,29 @@
 ! 2004-06-07 - Chris Jones
  - Add new MC reconstruction options to allow reconstruction to use MC 
    information for development, debugging etc.
-   Available options are listed in options/RecoTooPara.opts
+
+   Available options are listed in options/RecoTooPara.opts :-
+   Tracks :-
+    1. Use only reconstructed information from TrStoredTracks (default)
+    2. Using TrStoredTracks but cheating the tracking information by
+       using the associated MCRichTrack. Cheating can be turned on/off for
+       individual track algorithm types
+   Pixels :-
+    1. Use only reconstructed information from RichDigits (default)
+    2. Using all RichDigits but cheating the hit position on the HPD window
+       using MCRichOpticalPhotons
+    3. Uses only reconstructed information (RichDigits) but select only
+       true Cherenkov Hits (possibly some issues still be be address here
+       regarding the flagging of hits in Gauss)
+    4. Using RichDigits but select only true Cherenkov Hits
+       and then cheat the hit position using MCRichOpticalPhotons
+   Photons :-
+    1. Photon reconstruction using full reconstructed information (Default)
+    2. Photon reconstruction using full reconstructed information, but
+       selecting only true Cherenkov photons using MC information.
+    3. Photon reconstruction that uses only true Cherenkov information from
+       the MCRichOpticalPhotons (I.e cheat the emission, detection and
+       mirror reflection points, and the Cherenkov angles) 
 
 ! 2004-05-30 - Chris Jones
  - Add RichRecRing creator to options files
