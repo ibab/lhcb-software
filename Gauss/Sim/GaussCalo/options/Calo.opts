@@ -1,8 +1,11 @@
-// $Id: Calo.opts,v 1.8 2003-07-09 17:01:44 ibelyaev Exp $ 
+// $Id: Calo.opts,v 1.9 2003-07-15 16:30:13 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2003/07/09 17:01:44  ibelyaev
+//  Spd/Prs implemenattion by Grigory Rybkine
+//
 // Revision 1.7  2003/07/08 19:40:56  ibelyaev
 //  Sensitive Plane Detector + improved printout
 //
@@ -16,6 +19,7 @@
  */
 // ============================================================================
 
+#include "$STDOPTS/Hbook.opts"
 
 /// Input Histograms
 HistogramDataSvc.Input += 
