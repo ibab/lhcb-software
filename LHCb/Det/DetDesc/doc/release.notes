@@ -3,6 +3,10 @@ package manager : Vanya Belyaev
 
 ===========================================================================
 ! 20010304 - Vanya Belyaev
+    src/Lib/Element.cpp - 3 lines are modified to please NT compiler 
+
+===========================================================================
+! 20010304 - Vanya Belyaev
      New features:
      (1) class Material now holds the container of tabulated properties 
          ==> add tabulatedProperties() accessors (const and non const) 

@@ -1,7 +1,7 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Element.cpp,v 1.3 2001-03-04 14:56:07 ibelyaev Exp $
-#include "GaudiKernel/StatusCode.h"
-/// STL 
+/// STL and STD 
 #include <math.h>
+/// GaudiKernel
+#include "GaudiKernel/StatusCode.h"
 /// DetDesc 
 #include "DetDesc/MaterialException.h"
 #include "DetDesc/Element.h"
@@ -36,16 +36,16 @@ Element::Element( const std::string& name    ,
 /////////////////////////////////////////////////////////////////////////////////////////
 Element::~Element() { m_isotopes.clear();  }
 ////////////////////////////////////////////////////////////////////////////////////////
-void  Element::addIsotope ( const SmartRef<Isotope>& iPtr , const double Fract, const bool comp = false )
+void  Element::addIsotope ( const SmartRef<Isotope>& iPtr , const double Fract, const bool comp )
 { addIsotope( Entry( Fract, iPtr ) , comp ); }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void  Element::addIsotope ( const Entry&             iPtr                     , const bool comp = false )
+void  Element::addIsotope ( const Entry&             iPtr                     , const bool comp )
 { 
   m_isotopes.push_back( iPtr ) ; 
   if( comp ) { compute(); } 
 }; 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void  Element::removeIsotope ( const SmartRef<Isotope>& iPtr , const bool comp = false )
+void  Element::removeIsotope ( const SmartRef<Isotope>& iPtr , const bool comp )
 {
   for( Isotopes::iterator it = m_isotopes.begin() ; m_isotopes.end() != it ; ++it )
     { if( it->second == iPtr ) { m_isotopes.erase(it); break; }  } 
