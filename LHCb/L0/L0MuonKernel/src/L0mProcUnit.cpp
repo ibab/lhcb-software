@@ -1,7 +1,7 @@
 //#include <time.h>
 #include "L0MuonKernel/L0mProcUnit.h"
 #include "L0mConf/L0MFoi.h"
-
+#include "L0MuonKernel/Utilities.h"
 
 L0Muon::L0mProcUnit::L0mProcUnit() {
   
@@ -22,7 +22,7 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
 
   m_ptparameters =ptpara;
   
-  std::cout << " L0mProcUnit::L0mProcUnit: " << ptpara[0] << std::endl; 
+  if (m_debug) std::cout << "L0mProcUnit: ptpara[0]=" << ptpara[0] << std::endl; 
   
   m_ignoreM1 = ignoreM1;
   m_xfoi= foix;
@@ -129,8 +129,8 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
     
       
       testalias = rfactory->createAlias(buf,bufalias);
-      if (m_debug) std::cout << "name for Register" <<" " << buf <<  std::endl;
-      if (m_debug) std::cout << "alias for Register" <<" " << bufalias <<  std::endl;
+      if (m_debug) std::cout << "L0mProcUnit: name for Register"  <<" " << buf <<  std::endl;
+      if (m_debug) std::cout << "L0mProcUnit: alias for Register" <<" " << bufalias <<  std::endl;
       //*m_if (m_debug) std::cout << "tiles in reg" <<" " <<  std::endl;
       //for (itlist =tlist.begin(); itlist < tlist.end(); itlist++){
       //*m_log<< MSG::DEBUG << " "  << (*itlist).quarter() << " "
@@ -411,7 +411,7 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
     //----- PLL L0Buffer ----- 
     // Read the map describing the content of the PLL L0Buffer
     // If no map is found, the L0Buffer for this PU is not activated.
-    tiles=m_l0bpll->tileListFromMap(0);
+    tiles=tileListFromMap(puNode.id(),0);
     if (tiles.size()>0) {
 
       flag_PLL_l0buffer = 1;
@@ -441,7 +441,7 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
     //----- PLL OL ----- 
     // Read the map describing the content of the PLL OL
     // If no map is found, the L0Buffer for this PU is not activated.
-    tiles=m_l0bpll->tileListFromMap(1);
+    tiles=tileListFromMap(puNode.id(),1);
     if (tiles.size()>0) {
 
       flag_PLL_OL = 1;
@@ -472,7 +472,7 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase & puNode,
       //m_l0b->activate();
       // Set the output files
       //m_l0b->setOutputFile("std");
-      std::string suffixe = "pll_" + m_writeL0buffer;
+      std::string suffixe = m_writeL0buffer;
       m_l0bpll->setOutputFile(suffixe);
     }
       

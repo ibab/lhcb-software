@@ -21,10 +21,10 @@ void L0Muon::FormattingUnit::makePads() {
 
   std::map<std::string,Register*>::iterator ir;
 
-  if (m_debug) std::cout << "Registers in input in FormattingUnit"  << std::endl;
+  if (m_debug) std::cout << "Formatting: registers in input"  << std::endl;
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
-    if (m_debug) std::cout << " " << ir->first << " " <<std::endl;
+    if (m_debug) std::cout << "Formatting:   " << ir->first << std::endl;
     
     std::vector<MuonTileID> tmp = itr->firedTiles();
 

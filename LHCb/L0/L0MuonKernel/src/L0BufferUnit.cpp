@@ -19,12 +19,14 @@
 #define  BCPT_OFFSET      1*16+8
 
 #define  OUTPUTFIELD_SIZE 4*16
-#define  L0BUFFER_SIZE    32*16
-#define  OL_SIZE          18*16  
+// #define  L0BUFFER_SIZE    32*16
+// #define  OL_SIZE          18*16  
 
 #define  BCIDin_OFFSET    6*16+0
 #define  OL_BCID_OFFSET   17*16+0
 #define  BCID_SIZE        4
+
+
 /*
   Constructor.
 */
@@ -46,14 +48,16 @@ L0Muon::L0BufferUnit::L0BufferUnit(MuonTileID & pu,
 /*
   Open the Output file where to write the L0Buffers, and write the header.
 */
-void L0Muon::L0BufferUnit::setOutputFile(std::string l0buffertype){
+void L0Muon::L0BufferUnit::setOutputFile(std::string suffixe){
 
   // Open the output file 
 
-  //char * name = "/lhcb/users/cogan/public/TestBench/L0Buffers/l0buf_PUQ%dR%d%d%d_%s.txt";
-  char * name = "/marmuon3/NewInputFiles/l0buf_PUQ%dR%d%d%d_%s.txt";
+  //char * name = "/marmuon3/NewInputFiles/l0buf_sim_PUQ%dR%d%d%d_%s.txt";
+  //char buf[4096];
+  //sprintf(buf,name,m_pu.quarter()+1,m_pu.region()+1,m_pu.nX(),m_pu.nY(),suffixe.c_str());
+  char * name = "/marmuon3/NewInputFiles/l0buf_sim_R%d%d%d_%s.txt";
   char buf[4096];
-  sprintf(buf,name,m_pu.quarter()+1,m_pu.region()+1,m_pu.nX(),m_pu.nY(),l0buffertype.c_str());
+  sprintf(buf,name,m_pu.region()+1,m_pu.nX(),m_pu.nY(),suffixe.c_str());
   m_l0bufferFile = fopen(buf,"w");
 
   writeHeader();
@@ -189,7 +193,11 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
   // Make the pads (cross horizontal and vertical strips)
   pInRegister->makePads();
   // Get the list of fired pads 
-  std::vector<MuonTileID> firedPadList = pInRegister->Pads();
+  std::vector<MuonTileID> firedPadsList = pInRegister->Pads();
+  // Get the list of fired tiles 
+  std::vector<MuonTileID> firedTilesList = pInRegister->firedTiles();
+//   std::cout << "L0buffer:  firedPadsList.size()= "<< firedPadsList.size() << std::endl; 
+//   std::cout << "L0buffer:  firedTilesList.size()= "<< firedTilesList.size() << std::endl; 
 
     
   // Get a pointer to the L0buffer output register
@@ -207,13 +215,40 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
        itl0buffer!=l0bufferTiles.end();
        itl0buffer++){
     
-    // Loop over the fired pads
-    for (std::vector<MuonTileID> ::iterator itfired=firedPadList.begin(); 
-	 itfired!= firedPadList.end(); 
-	 itfired++){
-      MuonTileID  intercept= itfired->intercept(*itl0buffer);
-      if (intercept.isValid()){
-	pOutRegister->setTile(*itl0buffer);
+    if (! itl0buffer->isValid()) continue;
+//     std::cout << "L0buffer: l0buffer tile is "<< itl0buffer->toString()<< std::endl; 
+    if (itl0buffer->station()>2) {
+//       std::cout << "L0buffer: start loop over firedPadsList"<< std::endl; 
+      // Loop over the fired pads for stations M4 & M5
+      for (std::vector<MuonTileID> ::iterator itfired=firedPadsList.begin(); 
+	   itfired!= firedPadsList.end(); 
+	   itfired++){
+	MuonTileID  intercept= itfired->intercept(*itl0buffer);
+	if (intercept.isValid()){
+	  pOutRegister->setTile(*itl0buffer);
+	}
+      }
+    } else {
+      // Loop over the fired tiles for stations M1, M2 & M3
+//       std::cout << "L0buffer: start loop over firedTilesList"<< std::endl; 
+      for (std::vector<MuonTileID> ::iterator itfired=firedTilesList.begin(); 
+	   itfired!= firedTilesList.end(); 
+	   itfired++){
+	//if (! itfired->isValid()) continue;
+	//std::cout << "L0buffer:   fired tile is: " <<itfired->toString() << std::endl; 
+	MuonTileID  intercept= itfired->intercept(*itl0buffer);
+
+	MuonTileID  container= itl0buffer->containerID(itfired->layout());
+	//	if (container == (*itfired) ){
+	if ( intercept== (*itl0buffer) ){
+// 	  std::cout << "L0buffer:   "
+// 		    <<" ... "<< intercept.toString() 
+// 		    <<" ... "<< container.toString() 
+// 		    <<" ... "<< itfired->toString()
+// 		    <<" ..." << itl0buffer->toString() 
+// 		    << std::endl; 
+	  pOutRegister->setTile(*itl0buffer);
+	}
       }
     }
     
@@ -237,7 +272,7 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
   }
   
   // Write the FOI in X for M1
-  boost::dynamic_bitset<> xM1bitset(4,(unsigned long) xFoi(0));
+  boost::dynamic_bitset<> xM1bitset(4,(unsigned long) xHardFoi(0));
   for (boost::dynamic_bitset<>::size_type i =0; i < xM1bitset.size();i++){
     int val=xM1bitset[i] ;
     if (val) {
@@ -246,7 +281,7 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
   }
 
   // Write the FOI in X for M2
-  boost::dynamic_bitset<> xM2bitset(4,(unsigned long) xFoi(1));
+  boost::dynamic_bitset<> xM2bitset(4,(unsigned long) xHardFoi(1));
   for (boost::dynamic_bitset<>::size_type i =0; i < xM2bitset.size();i++){
     int val=xM2bitset[i] ;
     if (val) {
@@ -255,7 +290,7 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
   }
 
   // Write the FOI in X for M4
-  boost::dynamic_bitset<> xM4bitset(4,(unsigned long) xFoi(3));
+  boost::dynamic_bitset<> xM4bitset(4,(unsigned long) xHardFoi(3));
   for (boost::dynamic_bitset<>::size_type i =0; i < xM4bitset.size();i++){
     int val=xM4bitset[i] ;
     if (val) {
@@ -264,7 +299,7 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
   }
 
   // Write the FOI in X for M5
-  boost::dynamic_bitset<> xM5bitset(4,(unsigned long) xFoi(4));
+  boost::dynamic_bitset<> xM5bitset(4,(unsigned long) xHardFoi(4));
   for (boost::dynamic_bitset<>::size_type i =0; i < xM5bitset.size();i++){
     int val=xM5bitset[i] ;
     if (val) {
@@ -273,7 +308,7 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
   }
 
   // Write the FOI in Y for M4
-  boost::dynamic_bitset<> yM4bitset(4,(unsigned long) yFoi(3));
+  boost::dynamic_bitset<> yM4bitset(4,(unsigned long) yHardFoi(3));
   for (boost::dynamic_bitset<>::size_type i =0; i < yM4bitset.size();i++){
     int val=yM4bitset[i] ;
     if (val) {
@@ -282,7 +317,7 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
   }
 
   // Write the FOI in Y for M5
-  boost::dynamic_bitset<> yM5bitset(4,(unsigned long) yFoi(4));
+  boost::dynamic_bitset<> yM5bitset(4,(unsigned long) yHardFoi(4));
   for (boost::dynamic_bitset<>::size_type i =0; i < yM5bitset.size();i++){
     int val=yM5bitset[i] ;
     if (val) {
@@ -370,81 +405,6 @@ void L0Muon::L0BufferUnit::setOLPLL(){
 }
 
 
-/*
-  Read the external file describing the buffer and return the L0MTileList
-*/
-std::vector<L0MTile> L0Muon::L0BufferUnit::tileListFromMap(int type){
-
-  std::vector<L0MTile> ltiles;
-
-  // Open the map file describing the l0buffer
-  char name[4096];
-  if (type == 0) {
-    char * format = "/lhcb/users/cogan/public/TestBench/L0BufferMaps/map_l0buffer_PLL_Q%dR%d%d%d.txt";
-    sprintf(name,format,m_pu.quarter()+1,m_pu.region()+1,m_pu.nX(),m_pu.nY());
-  } else  if (type == 1){
-    char * format = "/lhcb/users/cogan/public/TestBench/L0BufferMaps/map_OL_PLL_Q%dR%d%d%d.txt";
-    sprintf(name,format,m_pu.quarter()+1,m_pu.region()+1,m_pu.nX(),m_pu.nY());
-  } 
-  FILE * mapfile = fopen(name,"r");
-  if (mapfile==NULL) return ltiles;
-
-  // Build the list of L0MTile
-  // Fix the size of the list
-  int size;
-  if (type == 0){
-    size = L0BUFFER_SIZE;
-  } else if (type == 1) {
-    size = OL_SIZE;
-  }
-
-  ltiles = readTileListFromMap(mapfile,size);
-
-  fclose(mapfile);
-
-  return ltiles;
-
-}
-/*
-  Generic method to extract a tile list from the map
-*/
-std::vector<L0MTile> L0Muon::L0BufferUnit::readTileListFromMap(FILE * mapfile,int max){
-
-  std::vector<L0MTile> ltiles(max);
-  while (1)
-  {
-    // Read line
-    int ibit;
-    int Q;
-    int R; 
-    int sta;
-    char type[8];
-    int gridX;
-    int gridY;
-    int nX;
-    int nY;
-
-
-    if (fscanf(mapfile,"%d %d %d %d %s %d %d %d %d",&ibit,&Q,&R,&sta,type,&gridX,&gridY,&nX,&nY)==EOF) break;
-
-    L0MBase::L0MTileType tag; 
-    if      (type == "Pad")     { tag = L0MBase::Pad; }
-    else if (type == "HS")      { tag = L0MBase::StripH; }
-    else if (type == "VS")      { tag = L0MBase::StripV; }
-    else { tag = L0MBase::Unknown; }
-    
-    // Build the L0MTile
-     
-    MuonLayout layout(gridX,gridY);
-    MuonTileID mid(sta,0,0,layout,R,Q,nX,nY);
-    L0MTile tile(mid,tag);
-    ltiles[ibit]=tile;
-  }
-
-  return ltiles;
-  
-}
-
 
 void L0Muon::L0BufferUnit::initialize(){
   if (m_debug) std::cout << "Initialize L0Buffer" << std::endl;  
@@ -458,7 +418,6 @@ void L0Muon::L0BufferUnit::execute(){
   if ( ! m_units.empty() ) {
     std::map<std::string,L0Muon::Unit*>::iterator iu;
     for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      if (m_debug) std::cout << "L0BufferUnit::execute " << "subUnit "<< (*iu).first << std::endl;
       (*iu).second->execute();
     }
   }
@@ -483,15 +442,15 @@ void L0Muon::L0BufferUnit::writeHeader(){
   int xFOI=0;
   int yFOI=0;
 
-  int xM1 = xFoi(0);
-  int xM2 = xFoi(1);
-  int xM4 = xFoi(3);
-  int xM5 = xFoi(4);
+  int xM1 = xHardFoi(0);
+  int xM2 = xHardFoi(1);
+  int xM4 = xHardFoi(3);
+  int xM5 = xHardFoi(4);
 
-  int yM1 = yFoi(0);
-  int yM2 = yFoi(1);
-  int yM4 = yFoi(3);
-  int yM5 = yFoi(4);
+  int yM1 = yHardFoi(0);
+  int yM2 = yHardFoi(1);
+  int yM4 = yHardFoi(3);
+  int yM5 = yHardFoi(4);
 
   xFOI |= ( xM5&0xF ) <<  0 ;
   xFOI |= ( xM4&0xF ) <<  4 ;
@@ -505,10 +464,10 @@ void L0Muon::L0BufferUnit::writeHeader(){
   
   fprintf(m_l0bufferFile,"#- PU\n");
   fprintf(m_l0bufferFile,"Q%d R%d%d%d\n",m_pu.quarter()+1,m_pu.region()+1,m_pu.nX(),m_pu.nY());
-  fprintf(m_l0bufferFile,"#- FOI (to be implemented)\n");
+  fprintf(m_l0bufferFile,"#- FOI \n");
   fprintf(m_l0bufferFile,"%04x %04x\n",xFOI,yFOI);
-  fprintf(m_l0bufferFile,"#- Mask (to be implemented)\n");
-  fprintf(m_l0bufferFile,"%04x %04x %04x\n",0,0,0);
+  fprintf(m_l0bufferFile,"#- Mask \n");
+  fprintf(m_l0bufferFile,"%04x %04x %04x\n",0,0xffff,0);
 
   
 }
@@ -523,7 +482,7 @@ void L0Muon::L0BufferUnit::writeEvent(){
 
   // Write Event Header
   fprintf(m_l0bufferFile,"#- Header\n");
-  fprintf(m_l0bufferFile,"%04x %04x\n",m_l0EventNumber,0);
+  fprintf(m_l0bufferFile,"%04x %04x\n",m_l0EventNumber%16,0);
   
   std::map<std::string,Register*>::iterator ir ;
 
@@ -533,7 +492,7 @@ void L0Muon::L0BufferUnit::writeEvent(){
   for (ir = m_outputs.begin(); ir!= m_outputs.end(); ir++){
     TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
      if (itr->Type()=="OpticalLink" ) {
-       itr->print_words(m_l0bufferFile);
+       itr->print_words(m_l0bufferFile,3);
      }
   }
 
@@ -561,6 +520,22 @@ int L0Muon::L0BufferUnit::xFoi(int sta)
 int L0Muon::L0BufferUnit::yFoi(int sta)
 {
   int yfoi= m_yfoi[sta];
+  return yfoi;
+  
+}
+
+int L0Muon::L0BufferUnit::xHardFoi(int sta)
+{
+  int soft2hardxFoi[5]={2,1,0,4,4};
+  int xfoi= m_xfoi[sta]/soft2hardxFoi[sta];
+  return xfoi;
+  
+}
+
+int L0Muon::L0BufferUnit::yHardFoi(int sta)
+{
+  int soft2hardyFoi[5]={1,1,0,1,1};
+  int yfoi= m_yfoi[sta]/soft2hardyFoi[sta];
   return yfoi;
   
 }

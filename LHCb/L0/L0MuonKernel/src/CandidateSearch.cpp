@@ -1,5 +1,6 @@
 //#include <time.h>
 #include "L0MuonKernel/CandidateSearch.h"
+#include <iostream>
 
 
 L0Muon::CandidateSearch::CandidateSearch(){
@@ -48,71 +49,42 @@ L0Muon::CandidateSearch::~CandidateSearch(){
 }
 
 
-
+/*
+   Look for a hit in the input bitset. 
+   If a hit is found, set the m_found flag for 
+   the corresponding station and fill the hitpos
+   with the bit position.
+   For station M2, fill the m_offset variable with 
+   the hit position,idem for M1 with the m_offsetM1.
+*/
 void L0Muon::CandidateSearch::searchInSta(int sta, 
                                           boost::dynamic_bitset<> & bits){
-  // Station 3
+
+  
+  // Station M3
   if (sta ==2){
     m_found[sta] = true;
+    return;
   }
-  //  Station 2
-  if (sta==1){
-    for (boost::dynamic_bitset<>::size_type i=0; i <bits.size(); i++){
-      bool val = bits.test(i);
-      if (val == true ) {
-        m_offset =i ;
-        m_hitpos[sta] = i;
-        m_found[sta]=true;
-        break ;
-      } else {
-        m_found[sta]=false;	
-      }
-    }
-    //if (m_found[sta]==false){
-    //}
-    
-  }
-  
-  // Station 1
-  if (sta ==0) {
-   
-    bool val = false ;
-    
-    
-    for (boost::dynamic_bitset<>::size_type i=0; i < bits.size(); i++){
-      val = bits.test(i);
-      if (val == true){
-        m_found[sta]=true;
-        m_offsetM1 = i;
-      
-        m_hitpos[sta] = i;
-       
-        break;
-      }
-    }
-    
-    if (val == false){
-      m_found[sta] = false;
-      
+
+  // Station M1,M2,M4 and M5
+  bool val = false ;
+  for (boost::dynamic_bitset<>::size_type i=0; i <bits.size(); i++){
+    val = bits.test(i);
+    if (val == true ) {
+      m_hitpos[sta] = i;
+      break ;
     }
   }
 
-  // Stations 4 and 5
-  if (sta ==3 || sta == 4){
-    anyBitsInSta(sta, bits);
-    bool val = false ;
-    for (boost::dynamic_bitset<>::size_type i=0; i < bits.size(); i++){
-      val = bits.test(i);
-      if (val == true){
-        m_hitpos[sta] = i;
-        break;
-      }
-      
-    }
-    
-    
-  }
-  
+  m_found[sta]=val;	    
+
+  //  Station M2
+  if (sta==1) m_offset = m_hitpos[sta];
+
+  // Station M1
+  if (sta==0) m_offsetM1 = m_hitpos[sta];
+
 
 }
 
@@ -186,7 +158,15 @@ void L0Muon::CandidateSearch::setCandidateAddrs(std::pair<int, int> & sd){
       }
     }
 
-    boost::dynamic_bitset<> addrM1(4, offsetM1);
+
+    if (offsetM1>0) {
+      offsetM1 = int((offsetM1+1)/2);
+    } else {
+      offsetM1 = int((offsetM1-1)/2);
+    }
+
+
+    boost::dynamic_bitset<> addrM1(3, offsetM1);
     m_addrM1 = addrM1 ;
   
 
@@ -223,7 +203,7 @@ void L0Muon::CandidateSearch::setCandidateAddrs(std::pair<int, int> & sd){
     m_addrM3 = addrM3;
     boost::dynamic_bitset<> addrM2(4,nb);
     m_addrM2 = addrM2;
-    boost::dynamic_bitset<> addrM1(4,nb);
+    boost::dynamic_bitset<> addrM1(3,nb);
     m_addrM1 = addrM1;
   }
        
@@ -277,6 +257,7 @@ boost::dynamic_bitset<>  L0Muon::CandidateSearch::getCandidateAddrs(){
     bool val = bit[ibit];
     m_addr.push_back(val);
   }
+  m_addr.push_back(0);
   bit = getAddrs(1);
   for (boost::dynamic_bitset<>::size_type ibit=0; ibit < bit.size(); ibit++){
     bool val = bit[ibit];
@@ -327,7 +308,14 @@ void L0Muon::CandidateSearch::resetBits()
 }
 
 
-
+/*
+  Method to acces the m_hitpos for station sta ?
+  (obscure to me (Julien): why not symply:
+  int L0Muon::CandidateSearch::getHitPos(int sta){
+     if (sta<0 && sta>=5) return 999; // if necessary ??
+     return m_hitpos[sta];
+  }
+*/
 int L0Muon::CandidateSearch::getHitPos(int sta)
 {
   int hitpos =999;

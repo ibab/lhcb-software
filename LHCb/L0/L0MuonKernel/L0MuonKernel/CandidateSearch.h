@@ -63,9 +63,6 @@ class CandidateSearch {
   /// Get the addresses of candidates
   nbitset getCandidateAddrs();
 
-  /// Get the address in station sta
-  nbitset getAddrs(int sta) ;
-
   /// Return the hit position in station sta
   int getHitPos(int sta);
   
@@ -76,6 +73,10 @@ class CandidateSearch {
   void ignoreM1(bool & ignoreM1) { m_ignoreM1 = ignoreM1; }
   
     
+
+ private: 
+  /// Get the address in station sta
+  nbitset getAddrs(int sta) ;
 
  private: 
   int m_extraM1[11];

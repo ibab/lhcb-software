@@ -40,6 +40,12 @@ namespace L0Muon {
     /// Return y foi in station sta
     int yFoi(int sta);
 
+    /// Return x foi in station sta
+    int xHardFoi(int sta);
+  
+    /// Return y foi in station sta
+    int yHardFoi(int sta);
+
     /// Return the type of the buffer 
     int type(int type){return m_type;}
     
@@ -49,14 +55,14 @@ namespace L0Muon {
     void setL0bufPLL();
     void setOLPLL();
 
-    /// Read the external file describing the buffer and return the L0MTileList
-    std::vector<L0MTile> tileListFromMap(int type);
+/*     /// Read the external file describing the buffer and return the L0MTileList */
+/*     std::vector<L0MTile> tileListFromMap(int type); */
 
-    /// Generic method to extract a tile list from the map
-    std::vector<L0MTile> readTileListFromMap(FILE *file,int max);
+/*     /// Generic method to extract a tile list from the map */
+/*     std::vector<L0MTile> readTileListFromMap(FILE *file,int max); */
 
     /// Open the output file 
-    void setOutputFile(std::string l0buffertype);
+    void setOutputFile(std::string suffixe);
  
     /// Write the l0buffer on the output file
     void writeEvent();

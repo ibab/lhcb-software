@@ -24,15 +24,15 @@ void L0Muon::CablingUnit::makePads() {
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
     if ( ! itr->empty() ) {
-      //if (m_debug) std::cout << "Register name " << itr->name() << std::endl;
-      //if (m_debug) std::cout << "Cabling: " << " " << ir->first << " " <<std::endl;
+      if (m_debug) std::cout << "Cabling: register key  " << ir->first   << std::endl;
+      if (m_debug) std::cout << "Cabling: register name " << itr->name() << std::endl;
       boost::dynamic_bitset<> r = itr->getBitset();
-      //if (m_debug) std::cout << "Cabling: " << " reg size" << " " <<r.size() << std::endl;
+      if (m_debug) std::cout << "Cabling: reg size" << " " <<r.size() << std::endl;
       std::vector<MuonTileID> tmp = itr->firedTiles();
       std::vector<MuonTileID>::iterator itmp;
-      if (m_debug) std::cout << "Cabling: " << "Fired tiles: " << std::endl;
+      if (m_debug) std::cout << "Cabling: fired tiles: " << std::endl;
       for (itmp = tmp.begin(); itmp!= tmp.end(); itmp++){
-	if (m_debug) std::cout << " " << (*itmp).toString()<< std::endl;
+	if (m_debug) std::cout << "Cabling:   " << (*itmp).toString()<< std::endl;
       }
 
       itr->makePads();
@@ -64,7 +64,7 @@ void L0Muon::CablingUnit::makeTower() {
   
   for (ip=m_pads.begin(); ip != m_pads.end(); ip++) {
 
-    //if (m_debug) std::cout << "Cabling: " << "pad " << (*ip).toString() << std::endl;
+    if (m_debug) std::cout << "Cabling: " << "pad " << (*ip).toString() << std::endl;
     int nsta = ip->station();
     std::vector<MuonTileID> tmp;
     
@@ -73,40 +73,31 @@ void L0Muon::CablingUnit::makeTower() {
       // if (m_debug) std::cout << "Cabling: " << "ip->region==nreg" << std::endl;
       tmp = layout.tiles(*ip);
     } else if ( ip->region() != nreg){
-      //if (m_debug) std::cout << "ip->region != nreg" << std::endl;
-      //if (m_debug) std::cout << "quarter " << (*ip).quarter() << " region " 
-      //    << (*ip).region() << " nreg " << nreg << std::endl;
+      if (m_debug) std::cout << "Cabling: ip->region != nreg" << std::endl;
+      if (m_debug) std::cout << "Cabling: quarter " << (*ip).quarter() << " region " << (*ip).region() << " nreg " << nreg << std::endl;
       tmp = layout.tilesInRegion((*ip), nreg); 
     }
     
-    // if (m_debug) {
-//       std::cout << "Cabling: " << "tiles for this pad" << std::endl;
-//       for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
-// 	std::cout << "station: " << nsta << " " << (*itmp).toString() << std::endl;
-//       }
-//     } 
-     
-     for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
+    for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
 
 
-       MuonTileID puid = pulayout.contains(*itmp);
-
-       int nYindex= (itmp->nY())-refY+m_tower.maxYFoi(nsta);
-       int nXindex= (itmp->nX())-refX+m_tower.maxXFoi(nsta);
-
-       std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
-
-     
-       m_tower.setBit(nsta, nYindex, nXindex );
-
-       //if (m_debug) std::cout << "XY" << " " << nXindex <<
-       //" " <<  nYindex << " " << "sta" << 
-       //" " << nsta << " " << (*itmp).quarter() << " " 
-       ///  << (*itmp).region() << " " 
-       //<< (*itmp).nX() << " " << (*itmp).nY() << std::endl;
-       m_tower.setPadIdMap(nsta, yx, *ip);
-             
-     }     
+      MuonTileID puid = pulayout.contains(*itmp);
+      
+      int nYindex= (itmp->nY())-refY+m_tower.maxYFoi(nsta);
+      int nXindex= (itmp->nX())-refX+m_tower.maxXFoi(nsta);
+      
+      std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
+      
+      
+      m_tower.setBit(nsta, nYindex, nXindex );
+      
+      if (m_debug) std::cout << "Cabling:   XY" 
+			     << " " << nXindex  
+			     << " " << nYindex 
+			     << " " << (*itmp).toString() << std::endl;
+      m_tower.setPadIdMap(nsta, yx, *ip);
+      
+    }     
   } 
 }
 
@@ -138,7 +129,9 @@ void L0Muon::CablingUnit::execute() {
   m_tower.reset();
 
   makePads();
+  if (m_debug) std::cout << "Cabling: after makePads " << std::endl; 
   makeTower();
+  if (m_debug) std::cout << "Cabling: after makeTower "<< std::endl; 
 
   
   L0mProcUnit * mpu = dynamic_cast<L0mProcUnit*>(m_parent);
@@ -146,6 +139,7 @@ void L0Muon::CablingUnit::execute() {
   
    for (int ista=0; ista<5; ista++){ 
      m_tower.setFoi(ista,mpu->xFoi(ista),mpu->yFoi(ista));
+     if (m_debug) std::cout << "Cabling: FOI sta M" <<ista+1<< "X: "<< mpu->xFoi(ista)<< "Y: "<< mpu->yFoi(ista) << std::endl; 
    }
       
    m_tower.setPtparam(mpu->ptParameters());
