@@ -5,8 +5,11 @@
  *  Implementation file for RICH reconstruction algorithm base class : RichRecAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecAlgBase.cpp,v 1.17 2004-07-26 18:00:58 jonrob Exp $
+ *  $Id: RichRecAlgBase.cpp,v 1.18 2004-10-30 19:24:19 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.17  2004/07/26 18:00:58  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
@@ -36,7 +39,7 @@ RichRecAlgBase::~RichRecAlgBase() {};
 StatusCode RichRecAlgBase::initialize()
 {
   // Initialise base class
-  StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // Cache creator tools
@@ -52,7 +55,7 @@ StatusCode RichRecAlgBase::initialize()
   acquireTool( "RichPhotonCreator",  m_photTool );
   acquireTool( "RichStatusCreator",  m_statTool );
 
-  return StatusCode::SUCCESS;
+  return sc;
 };
 
 // Finalize
