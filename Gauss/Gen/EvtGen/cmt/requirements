@@ -1,5 +1,5 @@
 package     EvtGen
-version     v5r2
+version     v5r3
 
 branches    cmt src doc EvtGen EvtGenModels EvtGenBase
 
@@ -11,13 +11,12 @@ include_dirs  $(EVTGENROOT)
 
 library       EvtGen -no_share *.cpp *.F 
 
-macro CERNLIB_link "`cernlib photos mathlib`" WIN32 " "
-
-macro_append CERNLIB_linkopts "" \
-             WIN32            " photos.lib"
 
 macro_append EvtGen_cppflags "-DEVTSTANDALONE"
 
 apply_pattern package_linkopts
 
 macro_append EvtGen_pp_fflags "" WIN32 "/DWIN32"
+
+macro_append EvtGen_linkopts " -L$(CERNLIB_path)/lib -lphotos202" \
+             WIN32            " /libpath:"(CERNLIB_path)/lib photos.lib"
