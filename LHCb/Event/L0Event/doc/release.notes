@@ -1,8 +1,12 @@
-$Id: release.notes,v 1.15 2002-04-30 14:22:57 cattanem Exp $
+$Id: release.notes,v 1.16 2002-05-07 08:21:10 atsareg Exp $
 Package : L0Event
 Package manager : Olivier Callot
 
 >>>>>>>>>>>>>>>> L0Event v11r0 <<<<<<<<<<<<<<<<<<<<<<<<
+! 20020506 Andrei Tsaregorodtsev
+  - minor bug fixed in L0MuonCandidate.cpp;
+  - removed redundant constants from L0MuonBase.h 
+
 ! 20020430 Marco Cattaneo
   - requirements: remove run time dependency on GaudiIntrospection
   - add L0Event_load.cpp to declare factories
