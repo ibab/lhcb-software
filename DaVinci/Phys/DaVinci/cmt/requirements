@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.33 2002-07-19 13:44:12 gcorti Exp $
+# $Id: requirements,v 1.34 2002-07-23 16:55:12 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -65,7 +65,7 @@ use MuonKernel   v2r1   Muon
 #--- Detector description ( add any other Det package you need )
 use DetDesc        v10r3   Det
 use XmlDDDB        v12r2   Det
-use VeloDet        v6r0    Det
+use VeloDet        v7r0    Det
 use ITDet          v1r0    Det
 use OTDet          v2r0    Det
 use CaloDet        v5r0    Det
@@ -97,7 +97,7 @@ use DaVinciTools         v5r0   Phys
 use DaVinciAssociators   v2r0   Phys
 use DaVinciMCTools       v2r0   Phys
 use DaVinciTest          v2r0   Phys
-#use PhysSelections       v2r0   Phys
+use PhysSelections       v2r0   Phys
 #use FlavourTagging       v2r0   Phys
 use DaVinciUser          v2r0   Phys
 
