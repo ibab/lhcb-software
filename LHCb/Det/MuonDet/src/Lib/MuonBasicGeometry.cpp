@@ -1,4 +1,4 @@
-// $Id: MuonBasicGeometry.cpp,v 1.1 2002-10-21 20:38:03 asatta Exp $
+// $Id: MuonBasicGeometry.cpp,v 1.2 2002-10-21 20:42:16 asatta Exp $
 // Include files
 // local
 #include "MuonDet/MuonBasicGeometry.h"
@@ -17,17 +17,17 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
                                      IMessageSvc * msgSvc ) {
   MsgStream log(msgSvc, "MuonBasicGeometry");
   std::string muonRootLocation="/dd/Structure/LHCb/Muon";
-  log << MSG::INFO << "%%% " << "muon geom" << endreq;
+  //log << MSG::INFO << "%%% " << "muon geom" << endreq;
   
   SmartDataPtr<DetectorElement> muonSystem(detSvc,"/dd/Structure/LHCb/Muon"); 
   // log << MSG::INFO << "%%% " << muonSystem->name() << endreq;
   m_stationNumber=0; 
   m_regionNumber=4;   
   if(muonSystem){
-    log << MSG::INFO << "%%% " << muonSystem->name() << endreq;    
+    //log << MSG::INFO << "%%% " << muonSystem->name() << endreq;    
   }
   else{
-     log << MSG::INFO << "%%%  muon system null"  << endreq;
+    // log << MSG::INFO << "%%%  muon system null"  << endreq;
   }
   
   IDetectorElement::IDEContainer::iterator itStation;  
@@ -40,9 +40,9 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
    log << MSG::ERROR << "Could not read station"
        <<(*itStation)->name() <<endreq;      
   }
-  log << MSG::INFO << "+ " << muStation->name() << endreq;
+  //log << MSG::INFO << "+ " << muStation->name() << endreq;
   std::string stationName=findName(muStation->name(),muonRootLocation); 
-  log << MSG::INFO << "+++ " << stationName << endreq;
+  //log << MSG::INFO << "+++ " << stationName << endreq;
    
   m_stationNumber=m_stationNumber+1;
   numsta.push_back(stationName);
