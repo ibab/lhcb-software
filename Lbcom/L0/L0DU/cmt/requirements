@@ -13,7 +13,7 @@ set L0DUOPTS	$(L0DUROOT)/options
 # ================ used packages =========================================
 use L0Event     v14r*	Event
 use Event       v4r*	Event
-
+use DAQEvent    v4r*    Event
 # ================ component library =====================================
 library		L0DU	../src/*.cpp
 
