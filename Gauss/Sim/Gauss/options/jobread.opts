@@ -7,7 +7,8 @@ MessageSvc.OutputLevel     = 1;
 ApplicationMgr.DLLs       += { "GeneratorModules" };
 ApplicationMgr.DLLs       += { "GaudiDb" };
 
-ApplicationMgr.DLLs       += {"GaudiRootDb"};
+ApplicationMgr.DLLs       += {"GaudiRootDb","DbCnv"};
+ApplicationMgr.DLLs       += {"GiGaCnv"};
 
 
 ApplicationMgr.ExtSvc     += {"DbEventCnvSvc/RootEvtCnvSvc"};
@@ -17,7 +18,7 @@ RootEvtCnvSvc.DbType = "ROOT";
 EventDataSvc.RootCLID = 1;
 
 
-EventSelector.Input = {"DATAFILE='GenDst.root' TYP='ROOT' OPT='READ'"}; 
+EventSelector.Input = {"DATAFILE='Gauss.root' TYP='ROOT' OPT='READ'"}; 
 
 
 //--------------------------------------------------------------
@@ -25,9 +26,10 @@ EventSelector.Input = {"DATAFILE='GenDst.root' TYP='ROOT' OPT='READ'"};
 //--------------------------------------------------------------
 
 
-ApplicationMgr.TopAlg = {"DumpMC"};
+ApplicationMgr.TopAlg  = {"GiGaMiscGetEventAlg/GetEvent"};
+ApplicationMgr.TopAlg += {"DumpMC"};
 
-ApplicationMgr.EvtSel      ="FILE='GenDst.root'";
+ApplicationMgr.EvtSel      ="'Gauss.root'";
 
 //--------------------------------------------------------------
 // Event related parameters
