@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.4 2001-12-17 20:03:48 andreav Exp $
+//$Id: PopulateDB.cpp,v 1.5 2002-03-01 16:12:36 andreav Exp $
 #include <stdio.h>
 #include <fstream>
 
@@ -24,11 +24,16 @@
 static const AlgFactory<PopulateDB> Factory;
 const IAlgFactory& PopulateDBFactory = Factory;
 
+// Define the name of the root folderset
+// This used to be "/" in Objectivity.
+// In the Oracle implementation it is required to have a name "/XXX"
+const std::string rootName = "/CONDDB";  
+
 //----------------------------------------------------------------------------
 
 /// Constructor
 PopulateDB::PopulateDB( const std::string&  name, 
-				  ISvcLocator*        pSvcLocator )
+			ISvcLocator*        pSvcLocator )
   : Algorithm(name, pSvcLocator)
 {
 }
@@ -102,13 +107,14 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
 
   // Check if root folderSet exists
   log << MSG::INFO 
-      << "Checking if CondDB root folderSet `/' already exists" << endreq;
+      << "Checking if CondDB root folderSet `"
+      << rootName << "' already exists" << endreq;
   log << MSG::INFO 
       << "" << endreq;
   bool rootFolderSetExists;
   try {
     condDBMgr->startRead();
-    rootFolderSetExists = condDBFolderMgr->exist( "/" );
+    rootFolderSetExists = condDBFolderMgr->exist( rootName );
     condDBMgr->commit();
   } catch (CondDBException &e) {
     log << MSG::ERROR
@@ -121,6 +127,9 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
 	<< "***  error code:    " << e.getErrorCode()    << endreq;
     return StatusCode::FAILURE;
   } 
+
+  // Define the attributes for all folders created in this example
+  std::string folderAttributes = "";
 
   // If root folderSet exists already then return
   // If root folderSet does not exist then create it and store sample data
@@ -140,9 +149,10 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
     try {
       condDBMgr->startUpdate();
       condDBFolderMgr->createCondDBFolderSet
-	( "/",
-	  "",
-	  "Root folderSet for the ConditionsDB" ); 
+	( rootName,
+	  folderAttributes,
+	  "Root folderSet for the ConditionsDB",
+	  true); 
       condDBMgr->commit();    
     } catch (CondDBException &e) {
       log << MSG::ERROR
@@ -176,28 +186,33 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
     condDBMgr->startUpdate();
 
     condDBFolderMgr->createCondDBFolderSet
-      ( "/SlowControl",
-	"",
-	"Main SlowControl folderSet" ); 
+      ( rootName+"/SlowControl",
+	folderAttributes,
+	"Main SlowControl folderSet",
+	true ); 
 
     condDBFolderMgr->createCondDBFolderSet
-      ( "/SlowControl/LHCb", 
-	"",
-	"SlowControl folderSet for the LHCb detector" ); 
+      ( rootName+"/SlowControl/LHCb", 
+	folderAttributes,
+	"SlowControl folderSet for the LHCb detector",
+	true ); 
 
     condDBFolderMgr->createCondDBFolderSet
-      ( "/SlowControl/Hcal", 
-	"",
-	"SlowControl folderSet for the Hcal detector" ); 
+      ( rootName+"/SlowControl/Hcal", 
+	folderAttributes,
+	"SlowControl folderSet for the Hcal detector",
+	true ); 
 
     condDBFolderMgr->createCondDBFolderSet
-      ( "/Geometry",
-	"",
-	"Main Geometry folderSet" ); 
+      ( rootName+"/Geometry",
+	folderAttributes,
+	"Main Geometry folderSet",
+	true ); 
 
     // Encode description for CondDBFolders with XML data
-    log << MSG::DEBUG << "Create folders /SlowControl/LHCb/scLHCb"
-	<< " and /SlowControl/Hcal/scHcal" << endreq;
+    log << MSG::DEBUG 
+	<< "Create folders "+rootName+"/SlowControl/LHCb/scLHCb"
+	<< " and "+rootName+"/SlowControl/Hcal/scHcal" << endreq;
     type = XML_StorageType; 
     log << MSG::DEBUG 
 	<< "Encode description for type=" << (unsigned int)type << endreq;
@@ -210,16 +225,18 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
     // Create CondDBFolders with temperature data
     // For simplicity, create two folders with the same objects
     condDBFolderMgr->createCondDBFolder
-      ( "/SlowControl/LHCb/scLHCb", 
-	"",
-	description );
+      ( rootName+"/SlowControl/LHCb/scLHCb", 
+	folderAttributes,
+	description,
+	true );
     condDBFolderMgr->createCondDBFolder
-      ( "/SlowControl/Hcal/scHcal", 
-	"",
-	description );
+      ( rootName+"/SlowControl/Hcal/scHcal", 
+	folderAttributes,
+	description,
+	true );
 
     // Encode description for CondDBFolders with XML data
-    log << MSG::DEBUG << "Create folder /Geometry/LHCb" << endreq;
+    log << MSG::DEBUG << "Create folder "+rootName+"/Geometry/LHCb" << endreq;
     type = XML_StorageType; 
     log << MSG::DEBUG 
 	<< "Encode description for type=" << (unsigned int)type << endreq;
@@ -231,16 +248,18 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
 
     // Create CondDBFolders with XML catalogs
     condDBFolderMgr->createCondDBFolder
-      ( "/Geometry/LHCb",
-	"",
-	description );
+      ( rootName+"/Geometry/LHCb",
+	folderAttributes,
+	description,
+	true );
 
     // It is not necessary to commit transactions one by one (as of v.0.1.9.0)
     condDBMgr->commit();    
 
     // Create new COLD temperature CondDBObjects
-    log << MSG::DEBUG << "Create COLD objects in /SlowControl/LHCb/scLHCb"
-	<< " and /SlowControl/Hcal/scHcal" << endreq;
+    log << MSG::DEBUG 
+	<< "Create COLD objects in "+rootName+"/SlowControl/LHCb/scLHCb"
+	<< " and "+rootName+"/SlowControl/Hcal/scHcal" << endreq;
     int i;
     condDBMgr->startUpdate();
     for ( i=0; i<3; i++ ) {
@@ -251,25 +270,26 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
       condObject = CondDBObjFactory::createCondDBObject
 	( i*16, (i+1)*16, s, "LHCb temperature in the given time interval");
       condDBDataAccess->storeCondDBObject
-	( "/SlowControl/LHCb/scLHCb", condObject );
+	( rootName+"/SlowControl/LHCb/scLHCb", condObject );
       CondDBObjFactory::destroyCondDBObject(condObject);
       // Hcal
       i_encodeXmlTemperature( (double)i*10+5, "scHcal", s);
       condObject = CondDBObjFactory::createCondDBObject
 	( i*16, (i+1)*16, s, "Hcal temperature in the given time interval");
       condDBDataAccess->storeCondDBObject
-	( "/SlowControl/Hcal/scHcal", condObject );
+	( rootName+"/SlowControl/Hcal/scHcal", condObject );
       CondDBObjFactory::destroyCondDBObject(condObject);
     }
     log << MSG::DEBUG << "Create and apply tag COLD" << endreq;
     condDBTagMgr->createCondDBTag("COLD");
-    condDBTagMgr->tag("/SlowControl/LHCb/scLHCb","COLD");
-    condDBTagMgr->tag("/SlowControl/Hcal/scHcal","COLD");
+    condDBTagMgr->tag(rootName+"/SlowControl/LHCb/scLHCb","COLD");
+    condDBTagMgr->tag(rootName+"/SlowControl/Hcal/scHcal","COLD");
     condDBMgr->commit();    
 
     // Create new HOT temperature CondDBObjects
-    log << MSG::DEBUG << "Create HOT objects in /SlowControl/LHCb/scLHCb"
-	<< " and /SlowControl/Hcal/scHcal" << endreq;
+    log << MSG::DEBUG 
+	<< "Create HOT objects in "+rootName+"/SlowControl/LHCb/scLHCb"
+	<< " and "+rootName+"/SlowControl/Hcal/scHcal" << endreq;
     condDBMgr->startUpdate();
     for ( i=0; i<3; i++ ) {
       std::string s;
@@ -279,24 +299,25 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
       condObject = CondDBObjFactory::createCondDBObject
 	( i*16, (i+1)*16, s, "LHCb temperature in the given time interval");
       condDBDataAccess->storeCondDBObject
-	( "/SlowControl/LHCb/scLHCb", condObject );
+	( rootName+"/SlowControl/LHCb/scLHCb", condObject );
       CondDBObjFactory::destroyCondDBObject(condObject);
       // Hcal
       i_encodeXmlTemperature( (double)i*10+105, "scHcal", s);
       condObject = CondDBObjFactory::createCondDBObject
 	( i*16, (i+1)*16, s, "Hcal temperature in the given time interval");
       condDBDataAccess->storeCondDBObject
-	( "/SlowControl/Hcal/scHcal", condObject );
+	( rootName+"/SlowControl/Hcal/scHcal", condObject );
       CondDBObjFactory::destroyCondDBObject(condObject);
     }
     log << MSG::DEBUG << "Create and apply tag HOT" << endreq;
     condDBTagMgr->createCondDBTag("HOT");
-    condDBTagMgr->tag("/SlowControl/LHCb/scLHCb","HOT");
-    condDBTagMgr->tag("/SlowControl/Hcal/scHcal","HOT");
+    condDBTagMgr->tag(rootName+"/SlowControl/LHCb/scLHCb","HOT");
+    condDBTagMgr->tag(rootName+"/SlowControl/Hcal/scHcal","HOT");
     condDBMgr->commit();    
 
     // Create new geometry CondDBObjects
-    log << MSG::DEBUG << "Create objects in folder /Geometry/LHCb" << endreq;
+    log << MSG::DEBUG 
+	<< "Create objects in folder "+rootName+"/Geometry/LHCb" << endreq;
     condDBMgr->startUpdate();
     {
       // Copy XML data from a file to a string
@@ -349,10 +370,22 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
       // Now store the XML string in the CondDB
       log << MSG::VERBOSE << "XML data is:" << std::endl 
 	  << xmlString << endreq;
+      log << MSG::VERBOSE 
+	  << "Store it in the database with [-inf,+inf] validity range" 
+	  << endreq;
+      log << MSG::VERBOSE 
+	  << "Folder name: " << rootName+"/Geometry/LHCb" << endreq;
+      log << MSG::VERBOSE 
+	  << "Create object with validity range: [" << CondDBminusInf
+	  << "," << CondDBplusInf << "]" << endreq;
       ICondDBObject* condObject = CondDBObjFactory::createCondDBObject
 	(CondDBminusInf, CondDBplusInf, xmlString, "LHCb geometry");
+      log << MSG::VERBOSE 
+	  << "Created object with validity range: [" 
+	  << condObject->validSince() << "," 
+	  << condObject->validTill() << "]" << endreq;
       condDBDataAccess->storeCondDBObject
-	( "/Geometry/LHCb", condObject );
+        ( rootName+"/Geometry/LHCb", condObject );
       CondDBObjFactory::destroyCondDBObject(condObject);
     }
     condDBMgr->commit();    
@@ -363,9 +396,9 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
     condDBMgr->startUpdate();
     log << MSG::DEBUG << "Create and apply tag PRODUCTION" << endreq;
     condDBTagMgr->createCondDBTag("PRODUCTION");
-    condDBTagMgr->tag("/SlowControl/LHCb/scLHCb","PRODUCTION","COLD");
-    condDBTagMgr->tag("/SlowControl/Hcal/scHcal","PRODUCTION","HOT");
-    condDBTagMgr->tag("/Geometry/LHCb","PRODUCTION");
+    condDBTagMgr->tag(rootName+"/SlowControl/LHCb/scLHCb","PRODUCTION","COLD");
+    condDBTagMgr->tag(rootName+"/SlowControl/Hcal/scHcal","PRODUCTION","HOT");
+    condDBTagMgr->tag(rootName+"/Geometry/LHCb","PRODUCTION");
     condDBMgr->commit();    
 
   } catch (CondDBException &e) {
@@ -419,11 +452,11 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
   try {
     condDBMgr->startRead();
     log << MSG::INFO << "Iteratively list contents of CondDB" << endreq;
-    std::vector<string> allCondDBFolderSet;
-    std::vector<string> allCondDBFolder;
+    std::vector<std::string> allCondDBFolderSet;
+    std::vector<std::string> allCondDBFolder;
     condDBFolderMgr->getAllCondDBFolderSet ( allCondDBFolderSet );
     condDBFolderMgr->getAllCondDBFolder    ( allCondDBFolder    );
-    std::vector<string>::const_iterator aName;
+    std::vector<std::string>::const_iterator aName;
     log << MSG::INFO << "CondDB contains " << allCondDBFolderSet.size() 
 	<< " CondDBFolderSet(s):";
     for ( aName  = allCondDBFolderSet.begin(); 
@@ -451,10 +484,10 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
     return StatusCode::FAILURE;
   }
 
-  // Dump the content of CondDBFolder "/SlowControl/LHCb/scLHCb"
+  // Dump the content of CondDBFolder rootName+"/SlowControl/LHCb/scLHCb"
   std::string folderName;
   StatusCode status;
-  folderName = "/SlowControl/LHCb/scLHCb";
+  folderName = rootName+"/SlowControl/LHCb/scLHCb";
   status = i_dumpFolder( folderName, "COLD" );
   if (! status.isSuccess() ) return status;
   status = i_dumpFolder( folderName, "HOT" );
@@ -462,8 +495,8 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
   status = i_dumpFolder( folderName, "PRODUCTION" );
   if (! status.isSuccess() ) return status;
 
-  // Dump the content of CondDBFolder "/SlowControl/Hcal/scHcal"
-  folderName = "/SlowControl/Hcal/scHcal";
+  // Dump the content of CondDBFolder rootName+"/SlowControl/Hcal/scHcal"
+  folderName = rootName+"/SlowControl/Hcal/scHcal";
   status = i_dumpFolder( folderName, "COLD" );
   if (! status.isSuccess() ) return status;
   status = i_dumpFolder( folderName, "HOT" );
@@ -471,8 +504,8 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
   status = i_dumpFolder( folderName, "PRODUCTION" );
   if (! status.isSuccess() ) return status;
 
-  // Dump the content of CondDBFolder "/Geometry/LHCb"
-  folderName = "/Geometry/LHCb";
+  // Dump the content of CondDBFolder rootName+"/Geometry/LHCb"
+  folderName = rootName+"/Geometry/LHCb";
   status = i_dumpFolder( folderName, "PRODUCTION" );
   if (! status.isSuccess() ) return status;
 
@@ -512,7 +545,7 @@ void PopulateDB::i_encodeXmlTemperature( const double temperature,
 
 //----------------------------------------------------------------------------
 
-/// Dump th contents of a CondDBFolder
+/// Dump the contents of a CondDBFolder
 StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
 				     const std::string& tagName ) 
 {
@@ -531,7 +564,10 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
   ICondDBDataIterator* it;
   try {
     condDBMgr->startRead();
+    // Retrieve an iterator (positioned at minus infinity)
     condDBDataAccess->browseObjectsInTag( it, folderName, tagName );
+    // Although this is not necessary, this cannot harm
+    it->goToFirst();
     condDBMgr->commit();
   } catch (CondDBException &e) {
     log << MSG::ERROR
@@ -560,7 +596,14 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
 	<< "Data since " << pObj->validSince() 
 	<< " till " << pObj->validTill() << " is:" << std::endl
 	<< theData << endreq;
-    pObj = it->next();
+    // In the Objy implementation, next() returns 0 on the last object
+    // In the Oracle one, next() throws an exception on the last object
+    // Portable solution: check with hasNext() if this is the last object
+    if ( it->hasNext() ) {
+      pObj = it->next();
+    } else {
+      pObj = 0;
+    }
   } while ( pObj != 0 );
   condDBMgr->commit();
   return StatusCode::SUCCESS;

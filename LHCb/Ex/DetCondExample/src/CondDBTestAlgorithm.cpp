@@ -1,4 +1,4 @@
-//$Id: CondDBTestAlgorithm.cpp,v 1.1 2001-12-17 20:13:25 andreav Exp $
+//$Id: CondDBTestAlgorithm.cpp,v 1.2 2002-03-01 16:14:10 andreav Exp $
 
 #include "CondDBTestAlgorithm.h"
 #include "DetDesc/Condition.h"
@@ -117,7 +117,7 @@ StatusCode CondDBTestAlgorithm::i_analyse( DataObject* pObj ) {
 	<< ","   << pCond->validTill().absoluteTime()
 	<< "]" << std::endl << "-> it has " 
 	<< pCond->params().size() << " params and "
-	<< pCond->paramVectors().size() << " paramVectors" << endl
+	<< pCond->paramVectors().size() << " paramVectors" << std::endl
 	<< pCond->printParams() << pCond->printParamVectors() << endreq;
   log << MSG::INFO << "Now update it" << endreq;
   StatusCode sc = detSvc()->updateObject( pObj );
@@ -136,7 +136,7 @@ StatusCode CondDBTestAlgorithm::i_analyse( DataObject* pObj ) {
 	<< ","   << pCond->validTill().absoluteTime()
 	<< "]" << std::endl << "-> it has " 
 	<< pCond->params().size() << " params and "
-	<< pCond->paramVectors().size() << " paramVectors" << endl
+	<< pCond->paramVectors().size() << " paramVectors" << std::endl
 	<< pCond->printParams() << pCond->printParamVectors() << endreq;
   return StatusCode::SUCCESS;  
 }

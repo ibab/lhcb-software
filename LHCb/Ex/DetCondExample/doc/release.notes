@@ -1,6 +1,23 @@
-#$Id: release.notes,v 1.10 2001-12-20 15:06:27 andreav Exp $
+#$Id: release.notes,v 1.11 2002-03-01 16:16:34 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020301 - Andrea Valassi
+First version running on Windows (using the Oracle implementation of CONDDB)
+- Both examples now run under both Windows and Linux
+  > the Xml example (unchanged)
+  > the CondDB example (previously working only under Linux)
+- Some useful scripts introduced for Oracle as .sql files
+- Proper setup and cleanup scripts introduced for Windows as .bat files
+- The Oracle example uses a remote server: username/password are needed
+- Minor changes in folder names
+  > a prefix /CONDDB is used as the root folder of the CondDB structure
+- Minor changes in messaging
+  > debug the hex notation of longlong printout
+  > introduce also a dec notation of longlong printout
+  > extensive checks for __int64 data type
+Requirements v2r1, private tag h20020301.
 
 ==============================================================================
 !20011220 - Andrea Valassi
@@ -97,6 +114,4 @@ Requirements v2, private tag h20011123.
 !20010914 - Andrea Valassi
 New package: example using detector condition services from Det/DetCond
 - File README explains how to run the example
-- File HISTORY contains the release notes for previous versions outside CVS
-- File simpleDoc.txt briefly describes the software architecture
 Requirements v1, private tag v1.

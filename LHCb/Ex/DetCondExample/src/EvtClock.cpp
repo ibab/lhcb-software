@@ -1,4 +1,4 @@
-//$Id: EvtClock.cpp,v 1.3 2001-12-16 21:58:25 andreav Exp $
+//$Id: EvtClock.cpp,v 1.4 2002-03-01 16:13:01 andreav Exp $
 #include <stdio.h>
 
 #include "EvtClock.h"
@@ -58,20 +58,9 @@ StatusCode EvtClock::initialize() {
   }
   log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
   log << MSG::INFO << "Time of first event: "
-      << (ITime::AbsoluteTime)m_startTime
-      << " (msb:" 
-      << (long)(   (ITime::AbsoluteTime)m_startTime         >> 32 )
-      << ", lsb:" 
-      << (long)( ( (ITime::AbsoluteTime)m_startTime << 32 ) >> 32 )
-      << ")" << endreq; 
+      << (ITime::AbsoluteTime)m_startTime << endreq; 
   log << MSG::INFO << "Time between events: "
-      << (ITime::AbsoluteTime)m_delayTime
-      << " (msb:" 
-      << (long)(   (ITime::AbsoluteTime)m_delayTime         >> 32 )
-      << ", lsb:" 
-      << (long)( ( (ITime::AbsoluteTime)m_delayTime << 32 ) >> 32 )
-      << ")" << endreq; 
-  log << MSG::INFO << "Initialization completed" << endreq;
+      << (ITime::AbsoluteTime)m_delayTime << endreq;
   return StatusCode::SUCCESS;
 
 }
@@ -93,12 +82,7 @@ StatusCode EvtClock::execute( ) {
   // Set the event time
   long time = i_evtTime();
   log << MSG::INFO << "Event time: "
-      << (ITime::AbsoluteTime)time
-      << " (msb:" 
-      << (long)(   (ITime::AbsoluteTime)time         >> 32 )
-      << ", lsb:" 
-      << (long)( ( (ITime::AbsoluteTime)time << 32 ) >> 32 )
-      << ")" << endreq; 
+      << (ITime::AbsoluteTime)time << endreq; 
   m_detDataSvc->setEventTime( TimePoint(time) );
 
   return StatusCode::SUCCESS;

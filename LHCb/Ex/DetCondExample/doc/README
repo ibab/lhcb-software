@@ -1,20 +1,24 @@
-# $Id: README,v 1.12 2001-12-17 20:12:16 andreav Exp $
+# $Id: README,v 1.13 2002-03-01 16:17:04 andreav Exp $
 
 Two examples are distributed in this package: a test of condition data 
 stored in flat XML files, and a test of condition data stored in the CondDB.
 
-The CondDB example requires package DetCond, which depends on Objectivity
-and only works under Linux, as HepODBMS is not supported under Windows.
-The XML example does not require DetCond and works also under Windows.
+The XML example does not require DetCond and works in the same way
+under Windows and under Linux.
+
+The CondDB example requires package DetCond. 
+Under Linux, DetCond uses package CONDDB (based on Objectivity).
+Under Windows, DetCond uses package CondDBOracle (based on Oracle).
+The Oracle implementation is based on Oracle 9i using the OCCI library.
 
 Three main job options exist in the options directory:
- 1) testXml.opts    -> test of condition data stored in XML files  (Linux/Win)
-2a) fillCondDB.opts -> populate the CondDB used in the CondDB test (Linux only)
-2b) testCondDB.opts -> test of condition data stored in the CondDB (Linux only)
+ 1) testXml.opts    -> test of condition data stored in XML files (NO Ora/Objy)
+2a) fillCondDB.opts -> populate the CondDB used in the CondDB test (Ora/Objy)
+2b) testCondDB.opts -> test of condition data stored in the CondDB (Ora/Objy)
 
-By default, the MsgSvc level is set to 1 (INFO) in all three job options files.
-To see more verbose comments, set it to 2 (DEBUG) or 3 (VERBOSE).
-Standard outputs for INFO and VERBOSE modes are included in the release.
+By default, the MsgSvc level is set to 3 (VERBOSE) in all 3 job options files.
+To see less verbose comments, set it to 2 (DEBUG) or 1 (INFO).
+Standard outputs for the VERBOSE mode are included in the release.
 
 The detector elements used in the tests are the following:
 > Ecal is used to test all kinds of conditions in XML files
@@ -22,7 +26,7 @@ The detector elements used in the tests are the following:
 > LHCb is used to test geometry data in the CondDB
 
 ------------------------------------------------------------------------------
-Packages needed to run DetCondExample v2r0
+Packages needed to run DetCondExample v2r1
 ------------------------------------------------------------------------------
 
 For general information on configuring the Gaudi environment, 
@@ -30,6 +34,7 @@ please refer to the Gaudi Web pages.
 Most of the following refers to the Linux environment. 
 Only at the end a few words about Windows are given.
 Version v1r10p20011126 or higher of CMT is needed for a proper setup.
+[However version v1r9 is still used under Linux: cleanup may give problems].
 
 It is assumed that CMTPATH contains the release directory in ${HOME}/newmycmt,
 i.e. ~/newmycmt. Put the following line in .cshrc to achieve this:
@@ -37,11 +42,18 @@ i.e. ~/newmycmt. Put the following line in .cshrc to achieve this:
 Check the result with
         printenv CMTPATH
 
-To run the detector condition example, you need the following three packages:
+To run the detector condition example, you need the following packages:
         cd ~/newmycmt
+        getpack Det/DetCond        v2r1
+        getpack Ex/DetCondExample  v2r1
+Under Linux:
         getpack CONDDB             v3r02p1 
-        getpack Det/DetCond        v2r0
-        getpack Ex/DetCondExample  v2r0
+Under Windows:
+        getpack Det/CondDBOracle   v1r00 
+
+Minor (optional) modifications to GaudiKernel were used to produce the
+logfiles for the examples, to print out int64 integers both in decimal
+and hexadecimal format rather than only in hexadecimal format.
 
 ------------------------------------------------------------------------------
 How to setup the environment and link DetCondExample on lxplus
@@ -58,7 +70,7 @@ How to setup the environment and link DetCondExample on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v2r0/cmt
+cd Ex/DetCondExample/v2r1/cmt
 
 # Setup the environment
 # This also starts the lockserver and AMSserver and installs the databases
@@ -80,7 +92,7 @@ How to run DetCondExample on lxplus (without debugger)
 cd ~/newmycmt
 
 # Go to the working directory
-cd Ex/DetCondExample/v2r0/options
+cd Ex/DetCondExample/v2r1/options
 
 ============
 (1) testXml
@@ -90,12 +102,9 @@ cd Ex/DetCondExample/v2r0/options
 ../$CMTDEB/DetCondExample.exe testXml.opts
 
 # Run the application and compare the output to the standard one
-/bin/rm -f log.testXml
-../$CMTDEB/DetCondExample.exe testXml.opts >& log.testXml
-diff log.testXml ../job
-
-# If you used the VERBOSE mode:
-diff log.testXml ../job/log.testXml.verbose
+/bin/rm -f log.testXml.Objy.Linux
+../$CMTDEB/DetCondExample.exe testXml.opts > log.testXml.Objy.Linux
+diff log.testXml.Objy.Linux ../job
 
 ================
 (2a) fillCondDB
@@ -118,41 +127,25 @@ setenv COND_DB_DEBUG none
 # Be sure to start with a new database if you want to compare the first output
 source ../cmt/cleanupDB.csh
 source ../cmt/setupDB.csh -tag=$CMTDEB
-/bin/rm -f log.fillCondDB_1
-/bin/rm -f log.fillCondDB_2
-../$CMTDEB/DetCondExample.exe fillCondDB.opts >& log.fillCondDB_1
-../$CMTDEB/DetCondExample.exe fillCondDB.opts >& log.fillCondDB_2
-diff log.fillCondDB_1 ../job
-diff log.fillCondDB_2 ../job
-
-# If you used the VERBOSE mode:
-diff log.fillCondDB_1 ../job/log.fillCondDB_1.verbose
-diff log.fillCondDB_2 ../job/log.fillCondDB_2.verbose
+/bin/rm -f log.fillCondDB_1.Objy.Linux
+/bin/rm -f log.fillCondDB_2.Objy.Linux
+../$CMTDEB/DetCondExample.exe fillCondDB.opts > log.fillCondDB_1.Objy.Linux
+../$CMTDEB/DetCondExample.exe fillCondDB.opts > log.fillCondDB_2.Objy.Linux
+diff log.fillCondDB_1.Objy.Linux ../job
+diff log.fillCondDB_2.Objy.Linux ../job
 
 ================
 (2b) testCondDB
 ================
 
-# Set the debug level for the CONDDB library. Possible debug levels are:
-#    none: no message is printed (default)
-#    prof: only print messages which do not disturb profiling measurements
-#    user: only print messages of "general" interest
-#    devl: also print messages of interest only for the package developer
-#    more: more paranoid messages are printed 
-#    all:  any debug message will be printed
-setenv COND_DB_DEBUG none
-
 # Run the application
+# Be sure to have filled the database using fillCondDB.opts first!
 ../$CMTDEB/DetCondExample.exe testCondDB.opts
 
 # Run the application and compare the output to the standard one
-# Be sure to have filled the database ueing fillCondDB.opts first!
-/bin/rm -f log.testCondDB
-../$CMTDEB/DetCondExample.exe testCondDB.opts >& log.testCondDB
-diff log.testCondDB ../job
-
-# If you used the VERBOSE mode:
-diff log.testCondDB ../job/log.testCondDB.verbose
+/bin/rm -f log.testCondDB.Objy.Linux
+../$CMTDEB/DetCondExample.exe testCondDB.opts > log.testCondDB.Objy.Linux
+diff log.testCondDB.Objy.Linux ../job
 
 ------------------------------------------------------------------------------
 How to run DetCondExample on lxplus with the debugger
@@ -162,7 +155,7 @@ How to run DetCondExample on lxplus with the debugger
 cd ~/newmycmt
 
 # Go to the working directory
-cd Ex/DetCondExample/v2r0/options
+cd Ex/DetCondExample/v2r1/options
 
 # To use the debugger, link one of the three option files to job.opts
 /bin/rm -f job.opts
@@ -185,7 +178,7 @@ ddd --tty --debugger "/usr/local/bin/gdb ../$CMTDEB/DetCondExample.exe"
 ddd --tty --debugger "/usr/local/bin/gdb ../$CMTDEB/DetCondExample.exe -x DetCondExample.gdb"
 
 ------------------------------------------------------------------------------
-How to browse the database using the GUIbrowser on lxplus
+How to browse the Objectivity database using the GUIbrowser on lxplus
 ------------------------------------------------------------------------------
 
 # NB The GUIbrowser only works with the new compiler and Objectivity 6.1!
@@ -213,7 +206,7 @@ How to cleanup the environment on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v2r0/cmt
+cd Ex/DetCondExample/v2r1/cmt
 
 # Remove old makefiles and dependencies
 cmt broadcast -select=mycmt '/bin/rm -f *make*'
@@ -227,7 +220,7 @@ cmt broadcast -select=mycmt '/bin/rm -rf ../$CMTDEB'
 source ../cmt/cleanup.csh -tag=$CMTDEB
 
 ------------------------------------------------------------------------------
-How to setup the environment and run DetCondExample under Windows
+How to setup the environment and link DetCondExample under Windows
 ------------------------------------------------------------------------------
 
 # I assume in the following that your release directory is H:\newmycmt
@@ -236,7 +229,7 @@ How to setup the environment and run DetCondExample under Windows
 cd H:\newmycmt
 
 # Go to the cmt directory
-cd Ex\DetCondExample\v2r0\cmt
+cd Ex\DetCondExample\v2r1\cmt
 
 # Setup the environment
 setup
@@ -244,9 +237,110 @@ setup
 # Compile and link
 cmt broadcast -select=newmycmt make
 
-# Run the application using the "run" script
+------------------------------------------------------------------------------
+How to run DetCondExample under Windows
+------------------------------------------------------------------------------
+
+# Go to your release directory
+cd H:\newmycmt
+
+# Go to the working directory
+cd Ex\DetCondExample\v2r1\options
+
+============
+(1) testXml
+============
+
+# Run the application using the "run" script 
+# (located in \\cern.ch\dfs\Experiments\Lhcb\scripts)
 # This sets PATH = %PATH%;%LD_LIBRARY_PATH% to give the path to .dll files
 run DetCondExample testXml.opts
+
+# Run the application and create an output comparable to the standard one
+run DetCondExample testXml.opts > log.testXml.Orac.Win32
+
+================
+(2a) fillCondDB
+================
+
+# Set the debug level for the CONDDB library. Possible debug levels are:
+#    none: no message is printed (default)
+#    prof: only print messages which do not disturb profiling measurements
+#    user: only print messages of "general" interest
+#    devl: also print messages of interest only for the package developer
+#    more: more paranoid messages are printed 
+#    all:  any debug message will be printed
+setenv COND_DB_DEBUG none
+
+# Set the correct path to the database
+# Even better, you can also modify and execute the setupDB.bat script
+# For instance, this is what I use... except the password :-)
+# The host (here sundb06) must correspond to an entry in the tnsnames.ora file
+# The name of the DB can be anything: a DB with that name is created and used
+set DETCONDEXAMPLE_DBUSER=AVALASSI
+set DETCONDEXAMPLE_DBPSWD=********
+set DETCONDEXAMPLE_DBHOST=SUNDB06
+set DETCONDEXAMPLE_DBNAME=MYCONDDB
+
+# Run the application using the "run" script 
+run DetCondExample fillCondDB.opts
+
+# Run the application and create an output comparable to the standard one
+# The database is only filled if empty: the first output is longer
+# Be sure to start with a new database if you want to compare the first output
+# You do not need to ..\cmt\setupDB.bat again
+..\cmt\cleanupDB.bat
+run DetCondExample fillCondDB.opts > log.fillCondDB_1.Orac.Win32
+run DetCondExample fillCondDB.opts > log.fillCondDB_2.Orac.Win32
+
+================
+(2b) testCondDB
+================
+
+# Run the application using the "run" script 
+# Be sure to have filled the database using fillCondDB.opts first!
+run DetCondExample testCondDB.opts
+
+# Run the application and create an output comparable to the standard one
+run DetCondExample testCondDB.opts > log.testCondDB_1.Orac.Win32
+
+------------------------------------------------------------------------------
+How to browse the Oracle database using SQL commands on Windows
+------------------------------------------------------------------------------
+
+# Go to your release directory
+cd H:\newmycmt
+
+# Go to the cmt directory
+cd Ex\DetCondExample\v2r1\cmt
+
+# Setup the environment
+setup
+
+# Set the correct path to the database
+# Even better, you can also modify and execute the setupDB.bat script
+# For instance, this is what I use... except the password :-)
+# The host (here sundb06) must correspond to an entry in the tnsnames.ora file
+# The name of the DB can be anything: a DB with that name is created and used
+set DETCONDEXAMPLE_DBUSER=AVALASSI
+set DETCONDEXAMPLE_DBPSWD=********
+set DETCONDEXAMPLE_DBHOST=SUNDB06
+set DETCONDEXAMPLE_DBNAME=MYCONDDB
+
+# List which CondDBs exist on that host for that user
+..\sql\listCondDBs.bat
+
+# List which tables exist on that host for that user for the current DB name
+..\sql\listAll.bat
+
+# Login interactively on that host as that user
+..\sql\loginSqlPlus.bat
+# Example: print all CondDBObject's
+SQL> select * from <DBNAME>_CONOBJS;
+# Example: print the range of all CondDBObject's
+SQL> select since,till from <DBNAME>_CONOBJS;
+# Quit the SQL*plus session
+SQL> quit;
 
 ==============================================================================
 

@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.8 2001-12-20 15:06:27 andreav Exp $
+# $Id: requirements,v 1.9 2002-03-01 16:09:58 andreav Exp $
 package DetCondExample
-version v2r0
+version v2r1
 
-branches doc src job options cmt XMLDDDB
+branches doc src job options cmt XMLDDDB sql
 ignore_pattern package_stamps 
 
 # Main program and standard job options
@@ -14,29 +14,39 @@ use GaudiSvc v7r*
 use GaudiAlg v5r*
 
 # Detector Description
-use DetDesc v9* Det
+use DetDesc v9r* Det
 
-# Detector Conditions (only on Linux)
-macro DetCond_use "DetCond v2r0* Det" \
-      WIN32       ""
-use $(DetCond_use)
+# Detector Conditions
+use DetCond v2r1* Det
 
 # XML detector description database location
 set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
 
-# Build a test CondDB for the example (only on Linux)
+# Setup for the test CondDB used in the example
 setup_script setupDB
 
-# Remove the test CondDB for the example (only on Linux)
+# Remove the test CondDB used in the example
 cleanup_script cleanupDB
+
+# Path to some useful scripts using sql
+path_append PATH ${DETCONDEXAMPLEROOT}/sql
+
+# Path to the shared libraries in the bin directory
+path_append LD_LIBRARY_PATH ${DETCONDEXAMPLEROOT}/${BINDIR}
+
+# Set the debug level for the CONDDB library. Possible debug levels are:
+#    none: no message is printed (default)
+#    prof: only print messages which do not disturb profiling measurements
+#    user: only print messages of "general" interest
+#    devl: also print messages of interest only for the package developer
+#    more: more paranoid messages are printed 
+#    all:  any debug message will be printed
+set COND_DB_DEBUG none
 
 #==================================================================
 private
 
 #==> Detector Conditions example
-macro DetCondExample_sources "*.cpp" \
-      WIN32 "DumpDetectorStore.cpp EvtClock.cpp XmlTestAlgorithm.cpp"
-application DetCondExample \
-	$(DetCondExample_sources) "$(GAUDICONFROOT)/src/GaudiMain.cpp"
+application DetCondExample *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
 macro DetCondExample_linkopts "$(application_linkopts)"
 
