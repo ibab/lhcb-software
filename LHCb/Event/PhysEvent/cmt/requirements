@@ -1,9 +1,10 @@
 package PhysEvent
-version v2r0
+version v3r0
 
 branches PhysEvent cmt doc src
 
-#use GaudiObjDesc v3r*
+use GaudiObjDesc v3r*  
+use EventKernel  v1r*  Event
 use LHCbEvent    v12r* Event
 
 include_dirs $(PHYSEVENTROOT)

@@ -1,7 +1,7 @@
 // $Id : $
 
 // Include files
-#include "PhysEvent/PhysSelDecay.h"
+#include "Event/PhysSelDecay.h"
 
 //-------------------------------------------------------------------
 // Implementation file for class: PhysSelDecay

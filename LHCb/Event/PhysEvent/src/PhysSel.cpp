@@ -2,7 +2,7 @@
 
 // Include files
 #include "GaudiKernel/Kernel.h"
-#include "PhysEvent/PhysSel.h"
+#include "Event/PhysSel.h"
 
 //-------------------------------------------------------------------
 // Implementation file for class: PhysSel

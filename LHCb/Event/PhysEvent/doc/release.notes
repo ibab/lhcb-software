@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.5 2002-02-12 16:30:25 gcorti Exp $
+! $Id: release.notes,v 1.6 2002-02-28 13:40:32 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 20020228 - PhysEvent v3r0 (G.Corti)
+  First changes for v3r0:
+  - Remove header files from PhysEvent
+  - Update xml/PhysEvent.xml with Particle&Vertex classes according to
+    new Event model conventions, remove PhysEvent class.
+  - Update src to use Event in includes and factories declarations
+  - Introduce Event/HepMatrixStream.h for serialization
 
 ! ======================================================================
 
