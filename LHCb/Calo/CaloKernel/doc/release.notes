@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.31 2004-02-17 11:55:55 ibelyaev Exp $
+! $Id: release.notes,v 1.32 2004-02-26 09:59:32 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,12 +7,13 @@
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
 
+!======================= CaloKernel v3r0 2004-02-26 =======================
 ! 2004-02-15 - Vanya BELYAEV
 
- - GaloKernel/CaloAlgorithm.h    
+ - CaloKernel/CaloAlgorithm.h    
         1) use new base GaudiAlg/GaudiAlgorithm
 
- - GaloKernel/CaloTool.h    
+ - CaloKernel/CaloTool.h    
         1) use new base GaudiTools/GaudiTool
 
  - src/CaloAlgorihtm.cpp                       update for new CaloAlgorithm
