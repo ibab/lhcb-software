@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.1 2002-05-17 17:07:51 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.2 2002-07-12 15:27:11 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -30,11 +30,11 @@ const        IAlgFactory& Particle2MCLinksFactory = s_factory ;
 Particle2MCLinks::Particle2MCLinks( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
-  , m_inputData( ParticleLocation::Production )
-  , m_outputData( "Phys/Relations/Part2MCfromLinks" )
+  , m_outputTable( "Phys/Relations/Part2MCfromLinks" )
 {
+  m_inputData.push_back( ParticleLocation::Production );
   declareProperty( "InputData", m_inputData );
-  declareProperty( "OutputData", m_outputData );
+  declareProperty( "OutputTable", m_outputTable );
 }
 
 //=============================================================================
@@ -63,23 +63,15 @@ StatusCode Particle2MCLinks::execute() {
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 
-  // get Particles and MCParticles
-  SmartDataPtr<Particles> parts (eventSvc(), m_inputData);
-  if( 0 != parts ) {
-    log << MSG::DEBUG << "    Particles retrieved" << endreq;
-  }
-  else {
-    log << MSG::FATAL << "    *** Could not retrieve Particles" << endreq;
-  }
-  
   SmartDataPtr<MCParticles> 
     mcParts( eventSvc(), MCParticleLocation::Default );
   if( 0 != mcParts ) {
     log << MSG::DEBUG << "    MCPart retrieved" << endreq;
   }
   else {
-    log << MSG::FATAL << "    *** Could not retrieve MCPart" << endreq;
+    log << MSG::ERROR << "    *** Could not retrieve MCPart" << endreq;
   }
+
   // create an association table and register it in the TES
   Particle2MCAsct::Table* table = new Particle2MCAsct::Table();
 
@@ -101,44 +93,71 @@ StatusCode Particle2MCLinks::execute() {
       << nbMCPartIntegrated.size() << " for " << nbMCPart 
       <<" MCParticles" << endreq ;
   
-  // loop on Parts and MCParts to match them
-  for( Particles::const_iterator pIt=parts->begin() ;
-       parts->end() != pIt; pIt++) {
-    // Follow links from this particle in the ZEBRA bank...
-    AxPartCandidate* axPart = dynamic_cast<AxPartCandidate*> 
-      ( (*pIt)->origin() ) ;
-    if( 0 == axPart ) {
-      if( false == notFromAxPart ) {
-        log << MSG::WARNING 
-            << " Particles not originating from AxPartCandidate" << endreq ;
-        notFromAxPart = true ;
-      }
-    } else {
-      long truth = axPart->addrMCTruth() ;
-      long interaction = truth/10000 ;
-      long posInInter = truth % 10000 ;
-      
-      int mcPartSeq = nbMCPartIntegrated[interaction-1] + posInInter - 1 ;
-      
-      MCParticles::const_iterator mcIt=mcParts->begin() ;
-      mcIt += mcPartSeq;
-      MCParticle* mcPart = *mcIt ;
-      table->relate( *pIt, mcPart);
+  //////////////////////////////////
+  // Loop on Particles containers //
+  //////////////////////////////////
+
+  int nrel = 0;
+  for( vector<std::string>::iterator inp = m_inputData.begin(); 
+       m_inputData.end()!= inp; inp++) {
+    // Get Particles
+    SmartDataPtr<Particles> parts (eventSvc(), *inp);
+    if( 0 != parts ) {
+      log << MSG::DEBUG << "    Particles retrieved from " << *inp 
+          << endreq;
     }
+    else {
+      log << MSG::FATAL << "    *** Could not retrieve Particles" << endreq;
+      continue;
+    }
+    
+    // loop on Parts and MCParts to match them
+    for( Particles::const_iterator pIt=parts->begin() ;
+         parts->end() != pIt; pIt++) {
+      // Follow links from this particle in the ZEBRA bank...
+      AxPartCandidate* axPart = dynamic_cast<AxPartCandidate*> 
+        ( (*pIt)->origin() ) ;
+      if( 0 == axPart ) {
+        if( false == notFromAxPart ) {
+          log << MSG::WARNING 
+              << " Particles not originating from AxPartCandidate" << endreq ;
+          notFromAxPart = true ;
+        }
+      } else {
+        long truth = axPart->addrMCTruth() ;
+        long interaction = truth/10000 ;
+        long posInInter = truth % 10000 ;
+        
+        int mcPartSeq = nbMCPartIntegrated[interaction-1] + posInInter - 1 ;
+
+        notFromAxPart = false ;
+        MCParticles::const_iterator mcIt=mcParts->begin() ;
+        mcIt += mcPartSeq;
+        MCParticle* mcPart = *mcIt ;
+        table->relate( *pIt, mcPart);
+        nrel++;
+      }
+    }
+  
+    log << MSG::DEBUG
+        << parts->end() - parts->begin() << " Parts associated with "
+        << mcParts->end() - mcParts->begin() << " MCParts" << endreq;
   }
   
-  log << MSG::DEBUG
-      << parts->end() - parts->begin() << " Parts associated with "
-      << mcParts->end() - mcParts->begin() << " MCParts" << endreq;
-
   // Register the table on the TES
-  StatusCode sc = eventSvc()->registerObject( outputData(), table);
-  if( sc.isFailure() ) {
-    log << MSG::FATAL << "     *** Could not register table " << outputData()
-        << endreq;
+  if( !notFromAxPart && nrel ) {
+    StatusCode sc = eventSvc()->registerObject( outputTable(), table);
+    if( sc.isFailure() ) {
+      log << MSG::FATAL << "     *** Could not register table " 
+          << outputTable()
+          << endreq;
+      delete table;
+      return sc;
+    }
+  } else {
     delete table;
-    return sc;
   }
+    
   return StatusCode::SUCCESS ;
 };
 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2002-06-28 12:57:27 gcorti Exp $
+# $Id: requirements,v 1.5 2002-07-12 15:25:15 phicharp Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -20,8 +20,9 @@ include_dirs     $(DAVINCIASSOCIATORSROOT)
 
 # Used packages. 
 #============================================================================
-use PhysEvent      v5r*   Event
-use AIDA           v2r2   
+use EventSys       v11r1	Event
+use AIDA           v2r2 
+use TrAssociators  v2r* 	Tr 
 
 # Component library building rule
 #============================================================================

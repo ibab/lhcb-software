@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.h,v 1.1 2002-05-17 17:07:51 phicharp Exp $
+// $Id: Particle2MCChi2.h,v 1.2 2002-07-12 15:26:54 phicharp Exp $
 #ifndef Particle2MCChi2_H 
 #define Particle2MCChi2_H 1
 
@@ -33,13 +33,13 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   /// Location of table in TES
-  std::string outputData() { return m_outputData; }
+  std::string outputTable() { return m_outputTable; }
   
 protected:
 
 private:
-  std::string m_inputData;  ///< location of Particles to associate
-  std::string m_outputData; ///< location of relations table
+  std::vector<std::string> m_inputData;  ///< location of Particles to associate
+  std::string m_outputTable; ///< location of relations table
   double m_chi2;            ///< Chi2 maximum
 
   Particle2MCWithChi2Asct::IAsct* 

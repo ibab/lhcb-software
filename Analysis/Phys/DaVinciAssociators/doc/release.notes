@@ -1,6 +1,17 @@
-! $Id: release.notes,v 1.4 2002-06-07 07:53:39 cattanem Exp $
+! $Id: release.notes,v 1.5 2002-07-12 15:25:36 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2002-07-12 - Philippe Charpentier
+ - Property "InputData" of associators now a vector of strings, allowing
+    more than one input location
+ - Property "OutputData" changed to "OutputTable"
+ - New associator for OO-DST: ProtoParticle2MCAsct for associations between 
+    ProtoParticles and MCParticles. Implemented for charged tracks only
+ - Associator from ZEBRA links still present for backward compatibility, will
+    eventually be removed
+ - Chi2 associator using now its own instance of WithChi2 associator, as an
+    example on how to do this and set correctly the properties.
 
 !================= DaVinciAssociators v1r0p1 2002-06-07 ====================
 ! 2002-06-07 - Marco Cattaneo

@@ -1,4 +1,4 @@
-// $Id: Particle2MCAsct.h,v 1.1 2002-05-17 17:07:51 phicharp Exp $
+// $Id: Particle2MCAsct.h,v 1.2 2002-07-12 15:24:07 phicharp Exp $
 #ifndef ASSOCIATORS_Particle2MCASCT_H 
 #define ASSOCIATORS_Particle2MCASCT_H 1
 
@@ -53,5 +53,6 @@ typedef Particle2MCAsct::FromRange                 ParticlesToMC;
 typedef Particle2MCAsct::FromIterator              ParticlesToMCIterator;
 typedef Particle2MCAsct::ToRange                   MCsFromParticle;
 typedef Particle2MCAsct::ToIterator                MCsFromParticleIterator;
+typedef Particle2MCAsct::Table                     Particle2MCTable;
   
 #endif // ASSOCIATORS_Particle2MCASCT_H
