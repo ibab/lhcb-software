@@ -28,6 +28,25 @@ Package manager : Gloria Corti
      (R1: 1-12, R2: 1-24, R3: 1-48, R4: 1-192). If a hit has numbers greater
      than allowed value do not store it in collection
 
+!========================= GENSER v2r030p0 ================================
+! 2005-02-01 - Florence RANJARD
+ - requirements - set pythia_native_version and _linkopts
+                  set photos_native_version and _linkopts
+                  set pdf_native_version and _linkopts
+
+!========================= GeneratorModules v14r1 =======================
+! 2005-02-01 - Florence RANJARD
+ - requirements - use GENSER instead of PYTHIA
+
+!====================== HepEvt v3r121p0 ===================================
+! 2005-02-01 - Florence RANJARD
+ - requirements - remove use PYTHIA which is set in GENSER
+
+!=================== EvtGen v8r2 ===============================
+! 2005-02-01 - Florence RANJARD
+ - requirements - move photos link options to GENSER
+                  remove use PYTHIA which is included in GENSER
+
 !====================== GiGaCnv v15r10 2005-01-25 ===========================
 ! 2005-01-25 - Gloria CORTI
  - cmt/requirements
@@ -45,20 +64,6 @@ Package manager : Gloria Corti
    . add pointer to HepMC event and barcode of the associated HepMC particle
      to be able to substitute to the G4 energy the real generated energy
      by the generator phase in the final MCParticle.
-
-!========================= GeneratorModules v14r1 =======================
-! 2005-02-01 - Florence RANJARD
- - requirements - use GENSER instead of PYTHIA
-
-!====================== HepEvt v3r121p0 ===================================
-! 2005-02-01 - Florence RANJARD
- - requirements - remove use PYTHIA which is set in GENSER
-
-!=================== EvtGen v8r2 ===============================
-! 2005-02-01 - Florence RANJARD
- - requirements - move photos link options to GENSER
-                  remove use PYTHIA which is included in GENSER
-
 
 !==================== EvtGen v8r1 =================================
 ! 2005-01-25 - Patrick Robbe
