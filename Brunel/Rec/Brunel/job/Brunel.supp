@@ -142,24 +142,6 @@
   fun:makeClusterFromDigit__16VeloClusterMakerP13VeloFullDigitRf
 }
 
-# Strange tracking problems (Brunel v16r4)
-#{
-#  Tr/TrFirstCleverExtrapolator/TrParabolicExtrapolator
-#  Value4
-#  fun:release__7AlgTool
-#  fun:releaseTool__7ToolSvcP8IAlgTool
-#  fun:finalize__25TrFirstCleverExtrapolator
-#}
-
-#{
-#  Tr/TrFitAtAllPoints/TrFirstCleverExtrapolator
-#  Value4
-#  fun:finalize__25TrFirstCleverExtrapolator
-#  fun:releaseTool__7ToolSvcP8IAlgTool
-#  fun:finalize__16TrFitAtAllPoints
-#}
-
-
 # Calo problems (Brunel v16r4)
 {
   Calo/CellParam1
@@ -168,29 +150,6 @@
   fun:*
   fun:__13DeCalorimeteriRCt12basic_string3ZcZt18string_char_traits1ZcZt24__default_alloc_template2b1i0
 }
-
-# Call sequence too deeply nested for valgrind
-#{
-#  Calo/CellParam2
-#  Value8
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:buildCells__13DeCalorimeter
-#}
-
-# Call sequence too deeply nested for valgrind
-#{
-#  Calo/CellParam3
-#  Value8
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:buildCells__13DeCalorimeter
-#}
 
 # Property initialisation problems (Brunel v16r4)
 {
@@ -328,17 +287,6 @@
   Value4
   fun:new_fit_line__
 }
-
-# Muon bugs - call stack to deep to suppress... - fixed by v3r3?
-#{
-#  MuonAlgs/v3r1
-#  Value8
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:*
-#  fun:addElectronicNoise__16MuonDigitizationRt20MuonDigitizationData1Z19MuonPhysicalChannel
-#}
 
 # CLHEP 1.8.0.0 errors (reported, fixed in CVS head?)
 {
