@@ -61,7 +61,8 @@ VeloMonitor::VeloMonitor(const std::string& name, ISvcLocator* pSvcLocator)
     m_testVeloFullDigit ( true  ),
     m_testVeloCluster   ( true  ),
     m_resolution        ( false ),
-    m_detElement        ( false )
+    m_detElement        ( false ),
+    m_2DHist            ( false )
 
 {
   declareProperty( "DetailedMonitor"         ,m_detailedMonitor );
@@ -73,6 +74,7 @@ VeloMonitor::VeloMonitor(const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty( "Resolution"              ,m_resolution );
   declareProperty( "Printout"                ,m_printout);
   declareProperty( "DetElement"              ,m_detElement);
+  declareProperty( "Make2DHist"              ,m_2DHist);
 
   Rndm::Numbers m_uniformDist;
  
@@ -227,7 +229,7 @@ StatusCode VeloMonitor::retrieveData() {
     }
   }
 
-  if (m_testMCVeloFE) {
+  if (m_testMCVeloFE||m_testVeloCluster) {
     SmartDataPtr<MCVeloFEs> fes(eventSvc(),  MCVeloFELocation::Default);
     m_mcfes=fes;
     log << MSG::DEBUG << "Retrieving " << MCVeloFELocation::Default << endmsg;
@@ -295,7 +297,7 @@ StatusCode VeloMonitor::bookHistograms() {
       book("velo/1", "Number of MCVeloHits per event", 100, 0., 3000.);
     if (m_detailedMonitor) {
       m_MCVHEntryZX = histoSvc()->
-  book("velo/4", "Particle entry point in Si ZX (cm)",
+      book("velo/4", "Particle entry point in Si ZX (cm)",
        1000,-20.,80.,50,-10.,10.);
       m_MCVHEnergy = histoSvc()->
 	book("velo/2", "Energy deposited in Si (eV)", 100, 0., 300000.);
@@ -315,7 +317,26 @@ StatusCode VeloMonitor::bookHistograms() {
 	book("velo/8", "Time Of Flight (nS)", 100, 0., 5.);
       m_MCPEnergy = histoSvc()->
 	book("velo/9", "Particle Energy (GeV)", 100, 0., 50.);
-    }
+      // Store plots of hits for each type of sensor
+      m_MCVHRRighXY = histoSvc()->
+        book("velo/20", "Particle entry point in RRigh XY (cm)", 
+             50, -10,10.,50,-10.,10.);
+      m_MCVHRLeftXY = histoSvc()->
+        book("velo/21", "Particle entry point in RLeft XY (cm)", 
+             50, -10,10.,50,-10.,10.);
+      m_MCVHPhiURXY = histoSvc()->
+        book("velo/22", "Particle entry point in PhiUR XY (cm)", 
+             50, -10,10.,50,-10.,10.);
+      m_MCVHPhiDRXY = histoSvc()->
+        book("velo/23", "Particle entry point in PhiDR XY (cm)", 
+             50, -10,10.,50,-10.,10.);
+      m_MCVHPhiULXY = histoSvc()->
+        book("velo/24", "Particle entry point in PhiUL XY (cm)", 
+             50, -10,10.,50,-10.,10.);
+      m_MCVHPhiDLXY = histoSvc()->
+        book("velo/25", "Particle entry point in PhiDR XY (cm)", 
+             50, -10,10.,50,-10.,10.);
+     }
   }
   if (m_testMCVeloHit) {
     // pileup MCVeloHit
@@ -420,6 +441,24 @@ StatusCode VeloMonitor::bookHistograms() {
     m_MCVFEMCHitsTotalSignal_o= histoSvc()->
       book("velo/125", "other dominated - MC total signal deposited in FE",
            100, 0., 50000);
+    m_MCVFEZR0 = histoSvc()->
+      book("velo/130", "MCVeloFE R position vs. Z (cm) Zone 0",
+           1000,-20., 80.,50,0.,5.);
+    m_MCVFEZR1 = histoSvc()->
+      book("velo/131", "MCVeloFE R position vs. Z (cm) Zone 1",
+           1000,-20., 80.,50,0.,5.);
+    m_MCVFEZR2 = histoSvc()->
+      book("velo/132", "MCVeloFE R position vs. Z (cm) Zone 2",
+           1000,-20., 80.,50,0.,5.);
+    m_MCVFEZR3 = histoSvc()->
+      book("velo/133", "MCVeloFE R position vs. Z (cm) Zone 3",
+           1000,-20., 80.,50,0.,5.);
+    m_MCVFEZPhiInner = histoSvc()->
+      book("velo/134", "MCVeloFE Phi position vs. Z (cm) Inner",
+           1000, -20., 80.,60,-180.,180.);
+    m_MCVFEZPhiOuter = histoSvc()->
+      book("velo/135", "MCVeloFE Phi position vs. Z (cm) Outer",
+           1000, -20., 80.,60,-180.,180.);
   }
   if (m_testVeloFullDigit && m_detailedMonitor) {
     // VeloFullDigit
@@ -451,12 +490,30 @@ StatusCode VeloMonitor::bookHistograms() {
     //Velo Cluster
     m_VCNHits = histoSvc()->
       book("velo/301", "Number of VeloClusters per event", 50, 0., 3000.);
-    if (m_detailedMonitor) {
-      m_VCZR = histoSvc()->
-  book("velo/314", "Cluster R position vs. Z (cm)",1000,-20., 80.,50,0.,5.);
-      m_VCZPhi = histoSvc()->
-  book("velo/315", "Cluster Phi position vs. Z (cm)",
-       1000, -20., 80.,60,-180.,180.);
+    std::cout << "TESTVELOCLUSTER " << m_2DHist << std::endl;
+    
+    if(m_2DHist){
+      m_VCZR0 = histoSvc()->
+        book("velo/314", "Cluster R position vs. Z (cm) Zone 0",
+             1000,-20., 80.,50,0.,5.);
+      m_VCZR1 = histoSvc()->
+        book("velo/315", "Cluster R position vs. Z (cm) Zone 1",
+             1000,-20., 80.,50,0.,5.);
+      m_VCZR2 = histoSvc()->
+        book("velo/316", "Cluster R position vs. Z (cm) Zone 2",
+             1000,-20., 80.,50,0.,5.);
+      m_VCZR3 = histoSvc()->
+        book("velo/317", "Cluster R position vs. Z (cm) Zone 3",
+             1000,-20., 80.,50,0.,5.);
+      m_VCZPhiInner = histoSvc()->
+        book("velo/318", "Cluster Phi position vs. Z (cm) Inner",
+             1000, -20., 80.,60,-180.,180.);
+      m_VCZPhiOuter = histoSvc()->
+        book("velo/319", "Cluster Phi position vs. Z (cm) Outer",
+             1000, -20., 80.,60,-180.,180.);
+    }
+    
+    if (m_detailedMonitor) {     
       m_VCNHits_s = histoSvc()->
 	book("velo/302", "signal dominated - Number of VeloClusters per event",
        50, 0., 3000.);
@@ -534,6 +591,13 @@ StatusCode VeloMonitor::bookHistograms() {
     m_detPhiDL = histoSvc()->book("velo/504","PhiDL",101,-50.,50.,101,-50.,50.);
     m_detPhiUR = histoSvc()->book("velo/505","PhiUR",101,-50.,50.,101,-50.,50.);
     m_detPhiDR = histoSvc()->book("velo/506","PhiDR",101,-50.,50.,101,-50.,50.);
+    // strip no.
+    m_stripRRigh = histoSvc()->book("velo/520","RRigh strip",2048,0.,2047.);
+    m_stripRLeft = histoSvc()->book("velo/521","RLeft strip",2048,0.,2047.);
+    m_stripPhiUL = histoSvc()->book("velo/522","PhiUL strip",2048,0.,2047.);
+    m_stripPhiDL = histoSvc()->book("velo/523","PhiDL strip",2048,0.,2047.);
+    m_stripPhiUR = histoSvc()->book("velo/524","PhiUR strip",2048,0.,2047.);
+    m_stripPhiDR = histoSvc()->book("velo/525","PhiDR strip",2048,0.,2047.);
     // check residual
     m_resRRigh = histoSvc()->book("velo/511","res RRigh",51,-0.05,0.05);
     m_resRLeft = histoSvc()->book("velo/512","res RLeft",51,-0.05,0.05);
@@ -542,7 +606,7 @@ StatusCode VeloMonitor::bookHistograms() {
     m_resPhiUR = histoSvc()->book("velo/515","res PhiUR",51,-0.05,0.05);
     m_resPhiDR = histoSvc()->book("velo/516","res PhiDR",51,-0.05,0.05);
     // check strips radii
-    m_rOfStrips = histoSvc()->book("velo/521","R of strips",2048,0.,2047.);
+    m_rOfStrips = histoSvc()->book("velo/517","R of strips",2048,0.,2047.);
   }
   return StatusCode::SUCCESS;
 }
@@ -588,7 +652,32 @@ StatusCode VeloMonitor::testMCVeloHit() {
     m_MCVHExitZX->fill((*it)->exit().z()/cm,(*it)->exit().x()/cm,1.0);
     m_MCVHSensorZ->fill((*it)->entry().z()/cm,(*it)->sensor(),1.0);
     m_MCVHTOF->fill((*it)->timeOfFlight()/ns,1.0);
- 
+    // fill xy plots for each type of sensor
+    unsigned int sensor=(*it)->sensor();
+    double x=(*it)->entry().x()/cm;
+    double y=(*it)->entry().y()/cm;
+    if(m_velo->isRight(sensor)){ // +ve x first
+      if(m_velo->isRSensor(sensor)){
+        m_MCVHRRighXY->fill(x,y,1.0);
+      } else if(m_velo->isPhiSensor(sensor)){
+        if(m_velo->isDownstream(sensor)){
+          m_MCVHPhiDRXY->fill(x,y,1.0);
+        } else {
+          m_MCVHPhiURXY->fill(x,y,1.0);
+        }
+      }
+    } else { // now -ve x
+      if(m_velo->isRSensor(sensor)){
+        m_MCVHRLeftXY->fill(x,y,1.0);
+      } else if(m_velo->isPhiSensor(sensor)){
+        if(m_velo->isDownstream(sensor)){
+          m_MCVHPhiDLXY->fill(x,y,1.0);
+        } else {
+          m_MCVHPhiULXY->fill(x,y,1.0);
+        }
+      }
+    }
+
     // access MCParticle which made the hit, and write out 4-mom
     MCParticle* myMCParticle=(*it)->mcParticle();
     if (0!=myMCParticle){
@@ -674,14 +763,15 @@ StatusCode VeloMonitor::testMCVeloFE() {
     // printout some info.
     if (m_printout>m_NEvent){
       log << MSG::INFO << "testMCVeloFE:"
-	  << " sensorNumber " << (*itdv)->sensor() 
-	  << " strip Number " << (*itdv)->strip()
-	  << " Added Noise " << (*itdv)->addedNoise()
-	  << " Added CM Noise " << (*itdv)->addedCMNoise()
-	  << " Added Pedestal " << (*itdv)->addedPedestal()
-	  << " Added Signal " << (*itdv)->addedSignal()
-	  << " Charge " << (*itdv)->charge()
-	  << endmsg;
+          << " channel ID " << (*itdv)->channelID()
+          << " sensorNumber " << (*itdv)->sensor() 
+          << " strip Number " << (*itdv)->strip()
+          << " Added Noise " << (*itdv)->addedNoise()
+          << " Added CM Noise " << (*itdv)->addedCMNoise()
+          << " Added Pedestal " << (*itdv)->addedPedestal()
+          << " Added Signal " << (*itdv)->addedSignal()
+          << " Charge " << (*itdv)->charge()
+          << endmsg;
     }
     m_MCVFECharge->fill((*itdv)->charge(),1.);
     if (signal) m_MCVFECharge_s->fill((*itdv)->charge(),1.);
@@ -716,7 +806,7 @@ StatusCode VeloMonitor::testMCVeloFE() {
 
     if (m_printout>m_NEvent) {
       log << MSG::INFO << "testMCVeloFE:" << "MCVeloHit " <<
-	"size " << myMCVeloHits.size() << endmsg; 
+        "size " << myMCVeloHits.size() << endmsg; 
     }
     m_MCVFEMCHits->fill(myMCVeloHits.size(),1.);
     if (signal) m_MCVFESensorStrip_s->fill( (*itdv)->sensor(),
@@ -730,9 +820,9 @@ StatusCode VeloMonitor::testMCVeloFE() {
     itch=myMCVeloHitscharge.begin();
     for (itmh=myMCVeloHits.begin(); itmh!=myMCVeloHits.end(); itmh++) {
       if (m_printout>m_NEvent) {
-	log << MSG::INFO << "testMCVeloFE:" << "MCVeloHit " 
-	    <<" charge in this strip (electrons) " << (*itch) 
-	    <<" energy (eV) " << (*itmh)->energy()/eV << endmsg;
+        log << MSG::INFO << "testMCVeloFE:" << "MCVeloHit " 
+            <<" charge in this strip (electrons) " << (*itch) 
+            <<" energy (eV) " << (*itmh)->energy()/eV << endmsg;
       }
       totalSignal+=(*itch);
       m_MCVFEMCHitsSignal->fill((*itch),1.);
@@ -742,8 +832,47 @@ StatusCode VeloMonitor::testMCVeloFE() {
     if (signal) m_MCVFEMCHitsTotalSignal_s->fill(totalSignal,1.);
     if (noise)  m_MCVFEMCHitsTotalSignal_n->fill(totalSignal,1.);
     if (other)  m_MCVFEMCHitsTotalSignal_o->fill(totalSignal,1.);
+    if(m_2DHist) {
+      StatusCode sc;
+      VeloChannelID channel=(*itdv)->channelID();
+      double sensorZ=m_velo->zSensor(channel.sensor())/cm;
+      log << MSG::DEBUG << "Channel " << (*itdv)->channelID() 
+          << " sensor " << channel.sensor() << " " << (*itdv)->sensor() 
+          << " z position " << sensorZ
+          << endreq;
+      if (m_velo->isRSensor(channel.sensor())){
+        double testRadius;
+        sc=m_velo->rOfStrip(channel,testRadius);
+        log << MSG::DEBUG << "sensor " << channel.sensor() 
+            << " strip " << channel.strip()
+            << "sensorZ " << sensorZ 
+            << " testRadius " << testRadius 
+            << " testRadius/cm " << testRadius/cm << endmsg;
+        unsigned int zone=m_velo->zoneOfStrip(channel);
+        if(0 == zone) {
+          m_MCVFEZR0->fill(sensorZ, testRadius/cm,1.0);
+        } else if(1 == zone) {
+          m_MCVFEZR1->fill(sensorZ, testRadius/cm,1.0);
+        } else if(2 == zone) {
+          m_MCVFEZR2->fill(sensorZ, testRadius/cm,1.0);
+        } else if(3 == zone) {
+          m_MCVFEZR3->fill(sensorZ, testRadius/cm,1.0);
+        }
+      } else if(m_velo->isPhiSensor(channel.sensor())) {
+        unsigned int zone=m_velo->zoneOfStrip(channel);
+        double testRadius=m_velo->rMin(channel.sensor(),zone);
+        double testPhi;
+        sc=m_velo->phiOfStrip(channel,testRadius,testPhi);
+        log << MSG::DEBUG << "sensor " << channel.sensor() 
+            << " strip " << channel.strip()
+            << "sensorZ " << sensorZ << " testPhi " << testPhi <<endmsg;
+        if (0==zone){
+          m_MCVFEZPhiInner->fill(sensorZ, testPhi/degree,1.0);}
+        else {
+          m_MCVFEZPhiOuter->fill(sensorZ, testPhi/degree,1.0);}
+      }
+    }
   }
-
   return StatusCode::SUCCESS;
 }
 
@@ -878,36 +1007,42 @@ StatusCode VeloMonitor::testDetElement()
             if(testRRigh && "RRigh" == type){
               if(Point){
                 m_detRRigh->fill(testPoint.x(),testPoint.y());
+                m_stripRRigh->fill(channel.strip(),1.0);
                 if(Residual) m_resRRigh->fill(residual,1.0);
               }
               testRRigh = false;
             } else if(testRLeft && "RLeft" == type){
               if(Point) {
                 m_detRLeft->fill(testPoint.x(),testPoint.y());
+                m_stripRLeft->fill(channel.strip(),1.0);
                 if(Residual) m_resRLeft->fill(residual,1.0);
               }
               testRLeft = false;
             } else if(testPhiDR && "PhiDR" == type){
               if(Point){
                 m_detPhiDR->fill(testPoint.x(),testPoint.y()); 
+                m_stripPhiDR->fill(channel.strip(),1.0);
                 if(Residual) m_resPhiDR->fill(residual,1.0);
               }
               testPhiDR = false; 
             } else if(testPhiUR && "PhiUR" == type){
               if(Point){
                 m_detPhiUR->fill(testPoint.x(),testPoint.y());
+                m_stripPhiUR->fill(channel.strip(),1.0);
                 if(Residual) m_resPhiUR->fill(residual,1.0);
               }
               testPhiUR = false;
             } else if(testPhiUL && "PhiUL" == type){
               if(Point){
                 m_detPhiUL->fill(testPoint.x(),testPoint.y());
+                m_stripPhiUL->fill(channel.strip(),1.0);
                 if(Residual) m_resPhiUL->fill(residual,1.0);
               }
               testPhiUL = false;
             } else if(testPhiDL && "PhiDL" == type){
               if(Point){
                 m_detPhiDL->fill(testPoint.x(),testPoint.y());
+                m_stripPhiDL->fill(channel.strip(),1.0);
                 if(Residual) m_resPhiDL->fill(residual,1.0);
               }
               testPhiDL = false;
@@ -1102,14 +1237,31 @@ StatusCode VeloMonitor::basicMonitor() {
         log << MSG::DEBUG << "sensorZ " << sensorZ 
             << " testRadius " << testRadius 
             << " testRadius/cm " << testRadius/cm << endmsg;
-  // 	m_VCZR->fill(sensorZ, testRadius/cm,1.0);
+        unsigned int zone=m_velo->zoneOfStrip(IntCentW);
+        if (m_2DHist){
+          if(0 == zone) {
+            m_VCZR0->fill(sensorZ, testRadius/cm,1.0);
+          } else if(1 == zone) {
+            m_VCZR1->fill(sensorZ, testRadius/cm,1.0);
+          } else if(2 == zone) {
+            m_VCZR2->fill(sensorZ, testRadius/cm,1.0);
+          } else if(3 == zone) {
+            m_VCZR3->fill(sensorZ, testRadius/cm,1.0);
+          }
+        }
       } else if(m_velo->isPhiSensor((*itcv)->sensor())) {
-        double testRadius=20./mm;
+        unsigned int zone=m_velo->zoneOfStrip(IntCentW);
+        double testRadius=m_velo->rMin((*itcv)->sensor(),zone);
         double testPhi;
         sc=m_velo->phiOfStrip(IntCentW,fractionCentW,testRadius,testPhi);
         log << MSG::DEBUG << "sensorZ " << sensorZ << " testPhi " 
             << testPhi <<endmsg;
-        //	m_VCZPhi->fill(sensorZ, testPhi/degree,1.0);
+        if (m_2DHist){
+          if (0==zone){
+            m_VCZPhiInner->fill(sensorZ, testPhi/degree,1.0);}
+          else {
+            m_VCZPhiOuter->fill(sensorZ, testPhi/degree,1.0);}
+        }
       }
     }
   }
@@ -1139,7 +1291,7 @@ StatusCode VeloMonitor::clusterType(VeloCluster* aCluster,bool& signal,
                                     bool& noise, bool& other ) {
   // mainly signal or spillover/coupling or noise ?
   //    noise=false, signal=false, other=false;
-
+MsgStream log(msgSvc(), name());
   // find main FE in cluster
   MCVeloFE* FE=0;
   int NStrips=aCluster->size();
@@ -1147,11 +1299,21 @@ StatusCode VeloMonitor::clusterType(VeloCluster* aCluster,bool& signal,
     // get MCVeloFE for strip
     VeloChannelID channelID = aCluster->channelID(iStrip);
     MCVeloFE* anFE = m_mcfes->object(channelID);
-    if (iStrip==0) FE=anFE;
-    if (anFE->charge() > FE->charge()) FE=anFE; 
+    if (0==anFE) log << MSG::ERROR  << "ERROR not found FE" << endmsg;
+    if ( 0 != FE ) {
+      if (iStrip==0) FE=anFE;
+      if (anFE->charge() > FE->charge()) FE=anFE; 
+    }
   }
-  FEType(FE, signal, noise, other);
+
+  signal = false;
+  noise = false;
+  other = false;
+
+  if ( 0 != FE ) {FEType(FE, signal, noise, other); }
+
   return StatusCode::SUCCESS;
+
 }
 
 StatusCode VeloMonitor::detElement(){
