@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.16 2003-01-23 16:01:21 mzupan Exp $
+# $Id: requirements,v 1.17 2004-01-07 09:57:27 cattanem Exp $
 # Created    : 11/01/2002
 # Maintainer : Olivier Callot
 
 package           PuVeto
-version           v6r0
+version           v5r5
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -11,19 +11,12 @@ branches          cmt doc src options
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use	L0Event		v13r*	Event
-use	VeloEvent	v12r*	Event
+use	L0Event		v14r*	Event
+use	VeloEvent	v13r*	Event
 use     VeloDet         v8r*    Det
 
 # Component library building rule
 #============================================================================
 library          PuVeto    ../src/*.cpp
 
-# define component library link options
-#============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
-
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
+apply_pattern component_library library=PuVeto

@@ -1,14 +1,14 @@
 package L0Muon
 
-version v6r6
+version v6r7
 
 branches src doc options
 
 include_dirs $(L0MUONROOT)
 
-use MuonTools  v3r* Muon
-use MuonEvent  v2r* Event
-use L0Event   v13r* Event
+use MuonTools	v3r*	Muon
+use MuonEvent	v3r*	Event
+use L0Event	v14r*	Event
 
 library L0MuonLib ../src/Lib/*.cpp
 library L0Muon ../src/component/*.cpp

@@ -11,19 +11,14 @@ include_dirs	$(L0CALOROOT)
 set L0CALOOPTS	$(L0CALOROOT)/options
 
 # ================ used packages =========================================
-use L0Event     v13r*   Event
-use CaloEvent	v12r*	Event
+use L0Event     v14r*   Event
+use CaloEvent	v13r*	Event
 use CaloDet	v6r*	Det
 use AIDA        v* -no_auto_imports
 
 # ================ component library =====================================
 library		L0Calo	../src/*.cpp -import=AIDA
 
-apply_pattern	package_Clinkopts    
-apply_pattern	packageShr
-
-#================= private stuff =========================================
-private
-apply_pattern	package_Cshlibflags
+apply_pattern component_library library=L0Calo
 
 

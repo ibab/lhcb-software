@@ -1,6 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v7r2 2004-01-07 =========================
+! 2004-01-06 - Marco Cattaneo
+ - Move to Gaudi v14 (use CaloEvent v13r* and L0Event v14r* in requirements)
+
 ! 2003-12-15 - Olivier Callot
  - Process the L0CaloAlg from the Hlt buffer. No longer need for L0CaloDigit
  - L0CaloCandidates are saved in the L1 and HLT buffers. No threshold for

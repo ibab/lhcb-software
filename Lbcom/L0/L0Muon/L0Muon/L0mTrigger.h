@@ -1,4 +1,4 @@
-// $Id: L0mTrigger.h,v 1.6 2003-06-23 12:54:45 atsareg Exp $
+// $Id: L0mTrigger.h,v 1.7 2004-01-07 09:57:31 cattanem Exp $
 
 #ifndef L0MUON_L0MTRIGGER_H
 #define L0MUON_L0MTRIGGER_H 1
@@ -6,7 +6,6 @@
 #include "GaudiKernel/Algorithm.h"
 // Private include files
 #include "L0Muon/L0mCrate.h"
-#include "Event/Kernel.h"
 #include "MuonKernel/MuonSystemLayout.h"
 #include "Event/MuonDigit.h"
 #include "Event/MuonCoord.h"

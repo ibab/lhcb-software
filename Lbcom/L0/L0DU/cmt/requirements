@@ -1,5 +1,5 @@
 package		L0DU
-version 	v6r5
+version 	v6r6
 
 # ================ structure =============================================
 branches	src cmt doc options
@@ -11,17 +11,11 @@ include_dirs	$(L0DUROOT)
 set L0DUOPTS	$(L0DUROOT)/options
 
 # ================ used packages =========================================
-use L0Event     v13r*   Event
-use Event       v3r*    Event
+use L0Event     v14r*	Event
+use Event       v4r*	Event
 
 # ================ component library =====================================
 library		L0DU	../src/*.cpp
 
-apply_pattern	package_Clinkopts    
-apply_pattern	packageShr
-
-#================= private stuff =========================================
-private
-apply_pattern	package_Cshlibflags
-#ignore_pattern	package_stamps
+apply_pattern component_library library=L0DU
 

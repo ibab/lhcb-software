@@ -1,11 +1,9 @@
-// $Id: L0mPad.h,v 1.7 2003-12-10 16:06:44 cattanem Exp $ 
+// $Id: L0mPad.h,v 1.8 2004-01-07 09:57:31 cattanem Exp $ 
 
 #ifndef L0MUON_L0MPAD_H     
 #define L0MUON_L0MPAD_H     1 
 
 #include "MuonKernel/MuonTileID.h"
-#include "Event/Kernel.h"
-
 
 class MsgStream;
 class MuonLayout;

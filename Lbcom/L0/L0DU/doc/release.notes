@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.26 2003-06-03 16:10:10 gcorti Exp $
+$Id: release.notes,v 1.27 2004-01-07 09:57:26 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+!========================== L0DU v6r6 2004-01-06 ==========================
+! 2004-01-06 - Marco Cattaneo
+ - Move to Gaudi v14 (use L0Event v14r* and Event v4r* in requirements)
 
 !========================== L0DU v6r5 2003-06-03 ==========================
 ! 2003-05-29 - Eduardo Rodrigues
