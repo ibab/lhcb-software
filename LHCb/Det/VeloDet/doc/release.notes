@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.37 2003-01-08 06:47:47 ocallot Exp $
+! $Id: release.notes,v 1.38 2003-01-08 16:11:42 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v8r3 2003-01-08 =========================
 ! 2003-01-08 - Olivier Callot
  - Add an extra entry in m_rStrip: For strip 511, we access the center of the
    non-existing strip 512, with weight = 0, but it needs to be specified.
