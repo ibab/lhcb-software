@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================= LHCbAlgs v1r1p1 2004-10-26 =======================
+! 2004-10-26 - Marco Cattaneo
+ - LbAppInit: bug fix, if creating the event header, it contained the run number
+              instead of the event number, and 0 for the run number
+
 !======================== LHCbAlgs v1r1 2004-09-06 ========================
 ! 2004-09-17 - Marco Cattaneo
  - Add TESCheck algorithm from Vanya, to preload and/or check existence of

@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.4 2004-09-06 09:26:40 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.5 2004-10-26 13:08:19 cattanem Exp $
 
 // Include files
 #include "LbAppInit.h"
@@ -135,7 +135,7 @@ StatusCode LbAppInit::execute() {
     eventNumber = m_firstEvent + m_eventCounter;
     EventHeader* newEvt = new EventHeader;
     newEvt->setEvtNum( eventNumber );
-    newEvt->setEvtNum( m_runNumber );
+    newEvt->setRunNum( m_runNumber );
     put( newEvt, EventHeaderLocation::Default );
   }
   ++m_eventCounter;
