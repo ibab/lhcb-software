@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2003-06-25 - Ivan BELYAEV
+ - src/AssociatorBase.cpp    fix for memory leak 
+
+
 !======================= LHCbKernel v2r8 2003-06-17 =======================
 ! 2003-06-16 - Sebastien Ponce
  - fixes for gcc 3.2/3.3

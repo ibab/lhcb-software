@@ -1,5 +1,5 @@
-// $Id: AssociatorBase.cpp,v 1.8 2003-05-14 11:54:34 cattanem Exp $
-// $Id: AssociatorBase.cpp,v 1.8 2003-05-14 11:54:34 cattanem Exp $
+// $Id: AssociatorBase.cpp,v 1.9 2003-06-25 11:17:04 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.9 2003-06-25 11:17:04 ibelyaev Exp $
 
 // Include files
 
@@ -389,7 +389,8 @@ StatusCode Relations::AssociatorBase::locateOrBuild () const
   SmartDataPtr<IInterface>  object1( evtSvc() , location () );
   if( object1 ) 
     { 
-      m_object = object1 ; 
+      m_object =  object1 ; 
+      m_object -> addRef();
       return Print( "Retrieved relation table is '" + location() + 
                     "' (type '" + System::typeinfoName( typeid( *m_object ) ) +
                     "'", StatusCode::SUCCESS , MSG::VERBOSE  ); 
@@ -419,7 +420,8 @@ StatusCode Relations::AssociatorBase::locateOrBuild () const
  */
 // ============================================================================
 void Relations::AssociatorBase::handle
-( const Incident& /* incident */ ) { m_object = 0 ; };
+( const Incident& /* incident */ ) 
+{ if( 0 != m_object ) { m_object->release() ; m_object = 0 ; } };
 // ============================================================================
 
 // ============================================================================
