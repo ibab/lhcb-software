@@ -1,8 +1,11 @@
-// $Id: CaloKernelTest.cpp,v 1.5 2002-03-28 12:10:11 ibelyaev Exp $ 
+// $Id: CaloKernelTest.cpp,v 1.6 2002-04-22 16:56:05 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/03/28 12:10:11  ibelyaev
+//  minor fix in OS_iterator class
+//
 // Revision 1.4  2002/03/27 15:06:42  ibelyaev
 //  rename OutputStreamIterator to OS_iterator
 //
@@ -27,9 +30,10 @@
 #include "CaloKernel/CaloVector.h"
 #include "CaloKernel/InputStreamIterator.h"
 #include "CaloKernel/OutputStreamIterator.h"
-#include "CaloKernel/CaloMap.h"
-#include "CaloKernel/CaloPrint.h"
-#include "CaloKernel/CaloHashMap.h"
+
+#include "Kernel/CaloMap.h"
+#include "Kernel/CaloPrint.h"
+#include "Kernel/CaloHashMap.h"
 
 // ============================================================================
 /**  @file CaloGenTest.cpp 
