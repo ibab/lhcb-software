@@ -86,7 +86,7 @@ use STDAQ               v1r1    IT
 
 # Outer Tracker
 use OTAlgorithms        v13r4	OT
-use OTDAQ               v1r1    OT
+use OTDAQ               v2r0    OT
 
 # Muon
 use MuonAlgs            v5r2	Muon

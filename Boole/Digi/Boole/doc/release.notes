@@ -3,14 +3,14 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v5r4>2004-03-26 Boole v5r4</A></H1><PRE>
+</PRE><H1><A NAME=v5r4>2004-03-30 Boole v5r4</A></H1><PRE>
 
 Requires XmlDDDB v22r0 or greater
 Requires data produced by Gauss v14r3 or greater
 
 - New features
-  . Field045 map is available. To use it, add the option
-    MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field045.cdf";
+  . Field045 map is the default. To process data produced with the old field
+    map, use v200402-Field043.opts instead of v200402.opts
   . Disable addition of SICBMC generated LHC background, due to imcompatibilities
     with current Gauss generated data
   . Additional histograms for Velo detailed monitoring 
@@ -21,6 +21,8 @@ Requires data produced by Gauss v14r3 or greater
 
 - Persistency changes
   . Add PuVeto raw hit output to RawBuffer (PuVeto v5r6)
+  . New version of RawBuffer for OT: new bank structure, multiple hit
+    capability, new straw numbering (OTDAQ v2r0)
 
 - Bug fixes
   . Fix large memory leak (Savannah bug 2821) (L0mConf v2r2)

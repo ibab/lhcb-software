@@ -9,7 +9,6 @@ ApplicationMgr.HistogramPersistency = "NONE";
 ApplicationMgr.OutStream = {"DigiWriter"};
 
 EventDataSvc.RootCLID = 1;
-
 EventSelector.PrintFreq = 1;
 
 // Job options to set up the POOL persistency for the output file
