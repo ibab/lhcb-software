@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.3 2002-06-28 12:57:52 gcorti Exp $
+# $Id: requirements,v 1.4 2002-07-18 18:39:15 gcorti Exp $
 # Created    : 19/05/2002
 # Maintainer : Gloria Corti
 #
@@ -20,7 +20,7 @@ include_dirs     $(DAVINCIMCTOOLSROOT)
 
 # Used packages. 
 #============================================================================
-use  PhysEvent           v5r*  Event
+use  PhysEvent           v6r*  Event
 use  DaVinciAssociators  v2r*  Phys
 
 # Extra language for translating yacc to c++

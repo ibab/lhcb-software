@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.5 2002-07-18 18:38:53 gcorti Exp $
+! $Id: release.notes,v 1.6 2002-07-18 18:39:59 gcorti Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
 
 ! 2002-07-18 - Gloria Corti
+ - Use PhysEvent v6r*
  - New algorithm MCPIDProtoPAlg and related options file to make charged
    ProtoParticles and use the MC truth particle ID of the associated 
    track to set its combined ParticleID. If associated tracks does not exist
