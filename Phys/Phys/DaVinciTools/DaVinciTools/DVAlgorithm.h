@@ -26,8 +26,6 @@
 #include "DaVinciTools/IParticleStuffer.h"
 #include "DaVinciTools/IParticleFilter.h"
 
-
-
 /** @class DVAlgorithm DVAlgorithm.h DaVinciTools/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:
  *  Does the retrieval of all necessary DaVinci Tools
@@ -50,13 +48,17 @@ public:
       , m_pFilter(0)
       , m_ppSvc(0)
       , m_setFilterCalled(false)
-      , m_toolsLoaded(false){  
+      , m_toolsLoaded(false)
+      , m_countFilterWrite(0)
+      , m_countFilterPassed(0)
+  {  
     
     declareProperty("VertexFitter", m_typeVertexFit="UnconstVertexFitter");
     declareProperty("MassVertexFitter", 
                     m_typeLagFit="LagrangeMassVertexFitter");
     declareProperty("DecayDescriptor", m_decayDescriptor="not specified");
     declareProperty("AvoidSelResult", m_avoidSelResult = false);
+    declareProperty("PrintSelResult", m_printSelResult = true);
   };
 
   virtual ~DVAlgorithm( ){ }; ///< Destructor
@@ -98,6 +100,9 @@ public:
   // Overridden from Gaudi Algorithm
   StatusCode sysInitialize ();  
 
+  // Overridden from Gaudi Algorithm
+  StatusCode sysFinalize ();  
+
   /// Imposes an output location for desktop different from algo name
   /// Should be avoided!
   void imposeOutputLocation (std::string outputLocationString);  
@@ -121,6 +126,9 @@ private:
   std::string m_decayDescriptor;
   /// Avoid writing SelResult object in TES (Property)
   bool m_avoidSelResult;
+  /// Avoid printing SelResult statistics 
+  /// (cannot be switched off by OutputLevel)
+  bool m_printSelResult;
   
   /// Reference to desktop tool
   mutable IPhysDesktop* m_pDesktop;        
@@ -140,6 +148,9 @@ private:
   bool m_setFilterCalled;
   /// Have Tools been already loaded?
   bool m_toolsLoaded;
+  int m_countFilterWrite ;
+  int m_countFilterPassed ;
+  
   
 };
 // ---------------------------------------------------------------------------
@@ -248,8 +259,8 @@ inline StatusCode DVAlgorithm::releaseTools() {
 inline IPhysDesktop* DVAlgorithm::desktop() const {
   if(!m_toolsLoaded) {
     MsgStream  msg( msgSvc(), name() );
-    msg << MSG::FATAL << "Attempted to use desktop without having loaded tools"
-        << endreq;
+    msg << MSG::FATAL << 
+      "Attempted to use desktop without having loaded tools" << endreq;
  }
   return m_pDesktop;
 }  
@@ -335,7 +346,9 @@ inline StatusCode DVAlgorithm::sysExecute () {
     myResult->setLocation(name());
     myResult->setDecay(m_decayDescriptor);
     
-    
+    if (filterPassed()) m_countFilterPassed++;
+    m_countFilterWrite++;
+
     existingSelRess->insert(myResult);
     msg << MSG::DEBUG << "Number of objects in existingSelRes: "
         << existingSelRess->size() << endreq;
@@ -372,9 +385,44 @@ inline StatusCode DVAlgorithm::sysInitialize () {
     msg << MSG::INFO << "Decay Descriptor: " << m_decayDescriptor << endreq;
   }
 
+  
+
   return sc;
 }
-
+//=============================================================================
+inline StatusCode DVAlgorithm::sysFinalize () {
+  
+  if (m_printSelResult){
+    
+    MsgStream msg( msgSvc(), name() );
+    if (m_countFilterWrite < m_countFilterPassed ){
+      msg << MSG::WARNING << "Executed " << m_countFilterWrite << 
+        " times and flagged as passed " << m_countFilterPassed <<
+        " times" << endreq;      
+    } else if (m_countFilterWrite <= 0 ){      
+      msg << MSG::WARNING << "Executed " << m_countFilterWrite << " times" 
+          << endreq;
+    } else if (m_countFilterPassed <= 0 ){
+      msg << MSG::ALWAYS << "No events selected in " << 
+        m_countFilterWrite << " calls." << endreq;
+    } else if (m_countFilterPassed == m_countFilterWrite ){
+      msg << MSG::ALWAYS << "All events selected in " << 
+        m_countFilterWrite << " calls." << endreq;
+    } else {
+      double eta = (double)m_countFilterPassed/(double)m_countFilterWrite ;
+      double delta = sqrt( eta*((double)1.-eta)/(double)m_countFilterWrite );
+      double r = (double)1./eta ;
+      double re = r*(delta/eta) ;
+      
+      msg << MSG::ALWAYS << "Passed " << m_countFilterPassed << 
+        " times in " << m_countFilterWrite << " calls -> (" <<
+        100.0*eta << "+/-" << 100.0*delta <<  ")%, reduction= " << 
+        r << "+/-" << re << endreq;
+    }
+  }
+  
+  return this->Algorithm::sysFinalize();
+}
  
 //=============================================================================
 inline void DVAlgorithm::imposeOutputLocation 
