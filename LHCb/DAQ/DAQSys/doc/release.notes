@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : DAQ/DAQSys
+! Responsible : Marco Cattaneo
+! Purpose     : Hat package for packages encoding and decoding DAQ buffers
+!-----------------------------------------------------------------------------
+
+!========================== DAQSys v1r0 2005-01-14 ===========================
+! 2005-01-14 - Marco Cattaneo
+ - First release. Uses all xxDAQ packages of subdetectors, contains options
+   for decoding RawBuffer on demand

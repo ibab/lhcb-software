@@ -1,0 +1,13 @@
+package DAQSys
+version v1r0
+
+branches doc cmt options
+
+# LHCb DAQ buffer libraries
+
+use RichDAQ     v1r6    Rich
+use MuonDAQ     v1r2    Muon
+use OTDAQ       v3r2    OT
+use STDAQ       v1r4    IT
+use VeloDAQ     v2r2    Velo
+use CaloDAQ     v1r0    Calo
