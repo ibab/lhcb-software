@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.14 2002-06-14 11:38:07 ibelyaev Exp $
+! $Id: release.notes,v 1.15 2002-06-14 17:46:03 ibelyaev Exp $
 ! Package     : CaloTools
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-06-14 - Ivan Belyaev
+ - src/CaloLCorrection.h,.cpp  new Longitudinal correction
+ - src/CaloTools_load.cpp      update 
+ - cmt/requirements            version update (v3r3) 
 
 ! 2002-06-13 - Ivan Belyaev
  - new tools, new options and update in CaloTools_load.cpp

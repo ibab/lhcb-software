@@ -1,14 +1,8 @@
-// $Id: CaloTools_load.cpp,v 1.9 2002-06-14 11:38:08 ibelyaev Exp $
+// $Id: CaloTools_load.cpp,v 1.10 2002-06-14 17:46:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2002/06/13 12:32:39  ibelyaev
-//  version update
-//
-// Revision 1.7  2002/04/27 19:21:30  ibelyaev
-//  several 'technical' tools are added
-//
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -36,7 +30,9 @@ DECLARE_FACTORY_ENTRIES(CaloTools) {
   DECLARE_TOOL( CaloHypoToolSequence         ) ;
   
   DECLARE_TOOL( CaloExtraDigits              ) ;
+
   DECLARE_TOOL( CaloSShape                   ) ;
+  DECLARE_TOOL( CaloLCorrection              ) ;
 
   DECLARE_TOOL( CaloPhotonMomentumTool       ) ;
 
