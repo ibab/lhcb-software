@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.36 2002-04-17 16:55:45 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.37 2002-04-30 16:50:25 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -410,7 +410,18 @@ void parseMethod(DOM_Node node,
   gddMethod->setDesc(node.getAttributes().
     getNamedItem(DOMString::transcode("desc")).
     getNodeValue());
-            
+
+  if(!node.getAttributes().getNamedItem(DOMString::transcode("template")).isNull())
+  {
+    gddMethod->setTemplate(node.getAttributes().
+      getNamedItem(DOMString::transcode("template")).
+      getNodeValue());
+  }
+  else
+  {
+    gddMethod->setTemplate(0);
+  }
+
   gddMethod->setAccess(node.getAttributes().
     getNamedItem(DOMString::transcode("access")).
     getNodeValue());
@@ -685,6 +696,36 @@ void parseDestructor(DOM_Node node,
   }
 }
 
+//-----------------------------------------------------------------------------
+void parseBitfield(DOM_Node node,
+                   DaDiBitfield* gddBitfield)
+//-----------------------------------------------------------------------------
+{
+  gddBitfield->setName(node.getAttributes().
+    getNamedItem(DOMString::transcode("name")).getNodeValue());
+
+  gddBitfield->setDesc(node.getAttributes().
+    getNamedItem(DOMString::transcode("desc")).getNodeValue());
+
+  gddBitfield->setLength(node.getAttributes().
+    getNamedItem(DOMString::transcode("length")).getNodeValue());
+
+  gddBitfield->setGetMeth(node.getAttributes().
+    getNamedItem(DOMString::transcode("getMeth")).getNodeValue());
+
+  gddBitfield->setSetMeth(node.getAttributes().
+    getNamedItem(DOMString::transcode("setMeth")).getNodeValue());
+
+  if (node.getAttributes().getNamedItem(DOMString::transcode("startAtOne")).
+      getNodeValue().equals("TRUE"))
+  {
+    gddBitfield->setStartAtOne(true);
+  }
+  else
+  {
+    gddBitfield->setStartAtOne(false);
+  }
+}
 
 //-----------------------------------------------------------------------------
 template<class T> void parseAttribute(DOM_Node node, 
@@ -716,6 +757,23 @@ template<class T> void parseAttribute(DOM_Node node,
     }
   }
 
+  DOMString gddAttType = node.getAttributes().
+    getNamedItem(DOMString::transcode("type")).
+    getNodeValue();
+  
+  if (gddAttType.equals("bitfield"))
+  {
+    gddAttribute->setType(DOMString::transcode("unsigned long"));
+    gddAttribute->setBitset(true);
+  }
+  else
+  {
+    gddAttribute->setType(gddAttType);
+    gdd->pushImportList(gddAttType.transcode());
+    gddAttribute->setBitset(false);
+  }
+  
+/*
   gddAttribute->setType(node.getAttributes().
     getNamedItem(DOMString::transcode("type")).
     getNodeValue());
@@ -723,6 +781,18 @@ template<class T> void parseAttribute(DOM_Node node,
   gdd->pushImportList(node.getAttributes().
     getNamedItem(DOMString::transcode("type")).
     getNodeValue().transcode());
+
+  if (node.getAttributes().
+    getNamedItem(DOMString::transcode("bitset")).
+    getNodeValue().equals("TRUE"))
+  {
+    gddAttribute->setBitset(true);
+  }
+  else
+  {
+    gddAttribute->setBitset(false);
+  }
+*/
           
   if (!node.getAttributes().getNamedItem(DOMString::transcode("desc")).
       isNull())
@@ -758,7 +828,59 @@ template<class T> void parseAttribute(DOM_Node node,
   else
   {
     gddAttribute->setInit(0);
-  }            
+  }  
+  
+  if (node.getAttributes().
+    getNamedItem(DOMString::transcode("noCast")).
+    getNodeValue().equals("TRUE"))
+  {
+    gddAttribute->setNoCast(true);
+  }
+  else
+  {
+    gddAttribute->setNoCast(false);
+  }
+
+  if (node.getAttributes().
+    getNamedItem(DOMString::transcode("serialize")).
+    getNodeValue().equals("TRUE"))
+  {
+    gddAttribute->setSerialize(true);
+  }
+  else
+  {
+    gddAttribute->setSerialize(false);
+  }
+
+  node = node.getFirstChild();
+
+  while(!node.isNull())
+  {
+    switch(node.getNodeType())
+    {    
+      case DOM_Node::ELEMENT_NODE:
+      {
+        //
+        // parse Bitfield
+        //
+        if(node.getNodeName().equals("bitfield"))
+        {
+          DaDiBitfield* gddBitfield = new DaDiBitfield();
+          gddAttribute->pushDaDiBitfield(gddBitfield);
+          parseBitfield(node,gddBitfield);
+        }
+        else
+        {    
+          node = node.getNextSibling();
+        } 
+      }
+      default:
+      {
+        node = node.getNextSibling();
+      }
+    }
+  }
+
 }
 
 
@@ -780,6 +902,17 @@ void parseRelation(DOM_Node node,
   gddClass->pushImpSoftList(node.getAttributes().            
     getNamedItem(DOMString::transcode("type")).            
     getNodeValue().transcode());
+
+  if (node.getAttributes().
+    getNamedItem(DOMString::transcode("serialize")).
+    getNodeValue().equals("TRUE"))
+  {
+    gddRelation->setSerialize(true);
+  }
+  else
+  {
+    gddRelation->setSerialize(false);
+  }
           
   if (!node.getAttributes().getNamedItem(DOMString::transcode("desc")).          
       isNull())

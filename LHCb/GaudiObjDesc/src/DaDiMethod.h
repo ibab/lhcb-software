@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.6 2002-02-27 13:25:35 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.7 2002-04-30 16:50:25 mato Exp $
 #ifndef DADIMETHOD_H 
 #define DADIMETHOD_H 1
 
@@ -28,6 +28,9 @@ public:
 
   DOMString desc();
   void setDesc(DOMString value);
+
+  DOMString template_();
+  void setTemplate(DOMString value);
 
   DOMString access();
   void setAccess(DOMString value);
@@ -68,7 +71,8 @@ protected:
 private:
 
   DOMString                    m_name, 
-                               m_desc, 
+                               m_desc,
+                               m_template,
                                m_access, 
                                m_argList,
                                m_argInOut,
@@ -101,6 +105,16 @@ inline DOMString DaDiMethod::desc()
 inline void DaDiMethod::setDesc(DOMString value)
 {
   m_desc = value;
+}
+
+inline DOMString DaDiMethod::template_()
+{
+  return m_template;
+}
+
+inline void DaDiMethod::setTemplate(DOMString value)
+{
+  m_template = value;
 }
 
 inline DOMString DaDiMethod::access()

@@ -9,7 +9,7 @@
 	name CDATA #REQUIRED
 	std (TRUE | FALSE) "FALSE"
 	soft (TRUE | FALSE) "FALSE"
-      ignore (TRUE | FALSE) "FALSE"
+	ignore (TRUE | FALSE) "FALSE"
 >
 <!ELEMENT package ((import*, class*, namespace*)*)>
 <!ATTLIST package
@@ -24,11 +24,11 @@
 	filename CDATA #IMPLIED
 	id CDATA #IMPLIED
 	location CDATA #IMPLIED
-      stdVectorTypeDef (TRUE | FALSE) "FALSE"
-      keyedContTypeDef (TRUE | FALSE) "FALSE"
+	stdVectorTypeDef (TRUE | FALSE) "FALSE"
+	keyedContTypeDef (TRUE | FALSE) "FALSE"
 	templateVector (TRUE | FALSE) "TRUE"
 	templateList (TRUE | FALSE) "TRUE"
-      serializers (TRUE | FALSE) "TRUE"
+	serializers (TRUE | FALSE) "TRUE"
 >
 <!ELEMENT desc (#PCDATA)>
 <!ATTLIST desc
@@ -36,9 +36,9 @@
 >
 <!ELEMENT location EMPTY>
 <!ATTLIST location
-   name CDATA #REQUIRED
-   place CDATA #REQUIRED
-   noQuote (TRUE | FALSE) "FALSE"
+	name CDATA #REQUIRED
+	place CDATA #REQUIRED
+	noQuote (TRUE | FALSE) "FALSE"
 >
 <!ELEMENT namespace ((desc?, typedef?, enum?, class?, import?, attribute?, method?)*)>
 <!ATTLIST namespace
@@ -61,10 +61,10 @@
 >
 <!ELEMENT typedef EMPTY>
 <!ATTLIST typedef 
-  desc CDATA #REQUIRED
-  type CDATA #REQUIRED
-  def CDATA #REQUIRED
-  access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
+	desc CDATA #REQUIRED
+	type CDATA #REQUIRED
+	def CDATA #REQUIRED
+	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
 >
 <!ELEMENT constructor (arg*, code?, arg*)>
 <!ATTLIST constructor
@@ -83,6 +83,7 @@
 <!ATTLIST method
 	name CDATA #REQUIRED
 	desc CDATA #REQUIRED
+	template CDATA #IMPLIED
 	access (PUBLIC | PROTECTED | PRIVATE) "PUBLIC"
 	const (TRUE | FALSE) "FALSE"
 	virtual (TRUE | FALSE | PURE) "FALSE"
@@ -109,7 +110,7 @@
 <!ATTLIST code
 	xml:space (default | preserve) #FIXED "preserve"
 >
-<!ELEMENT attribute EMPTY>
+<!ELEMENT attribute (bitfield*)>
 <!ATTLIST attribute
 	type CDATA #REQUIRED
 	name CDATA #REQUIRED
@@ -117,6 +118,8 @@
 	init CDATA #IMPLIED
 	array CDATA "FALSE"
 	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
+	noCast (TRUE | FALSE) "FALSE"
+	serialize (TRUE | FALSE) "TRUE"
 	setMeth (TRUE | FALSE) "TRUE"
 	getMeth (TRUE | FALSE) "TRUE"
 >
@@ -127,9 +130,19 @@
 	desc CDATA #REQUIRED
 	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
 	multiplicity (1 | N | n | M | m) "1"
+	serialize (TRUE | FALSE) "TRUE"
 	setMeth (TRUE | FALSE) "TRUE"
 	getMeth (TRUE | FALSE) "TRUE"
 	addMeth (TRUE | FALSE) "TRUE"
 	remMeth (TRUE | FALSE) "TRUE"
 	clrMeth (TRUE | FALSE) "TRUE"
+>
+<!ELEMENT bitfield EMPTY>
+<!ATTLIST bitfield
+	name CDATA #REQUIRED
+	length CDATA #REQUIRED
+	desc CDATA #REQUIRED
+	startAtOne (TRUE | FALSE) "FALSE"
+	setMeth (TRUE | FALSE) "TRUE"
+	getMeth (TRUE | FALSE) "TRUE"
 >

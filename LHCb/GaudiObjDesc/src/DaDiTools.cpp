@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.14 2002-04-17 16:55:46 mato Exp $
+// $Id: DaDiTools.cpp,v 1.15 2002-04-30 16:50:25 mato Exp $
 
 
 // Include files
@@ -40,7 +40,7 @@ void DaDiTools::remSpaces(std::string& word)
 
 //-----------------------------------------------------------------------------
 std::vector<std::string> DaDiTools::findWords(std::string value, 
-                                   std::string delim)
+                                              std::string delim)
 //-----------------------------------------------------------------------------
 {
   std::vector<std::string> words;
@@ -48,15 +48,14 @@ std::vector<std::string> DaDiTools::findWords(std::string value,
 
   while ((i = value.find(delim)) != std::string::npos)
   {
-    while((i = value.find(" ")) == 0)
-    {
-      value = value.substr(1, value.size()-1);
-    }
-    words.push_back(value.substr(0,i));
-    value = value.substr(i+1,value.size()-i);
+    std::string word = value.substr(0,i);
+    DaDiTools::remSpaces(word);
+    words.push_back(word);
+    value = value.substr(i+1,value.length()-i);
   }
   if (value.size() != 0)
   {
+    DaDiTools::remSpaces(value);
     words.push_back(value.substr(0,value.size()));
   }
   return words;
@@ -175,6 +174,17 @@ bool DaDiTools::isStdContainer(std::string value)
   {
     return false;
   }
+}
+
+//-----------------------------------------------------------------------------
+bool DaDiTools::isEmpty(const std::string& value)
+//-----------------------------------------------------------------------------
+{
+  for (int i = 0; i < value.length(); ++i)
+  {
+    if (value[i] != ' ') { return false; }
+  }
+  return true;
 }
 
 //-----------------------------------------------------------------------------

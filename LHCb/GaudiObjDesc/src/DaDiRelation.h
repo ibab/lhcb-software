@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiRelation.h,v 1.3 2002-01-28 18:49:18 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiRelation.h,v 1.4 2002-04-30 16:50:25 mato Exp $
 #ifndef DADIRELATION_H 
 #define DADIRELATION_H 1
 
@@ -48,6 +48,9 @@ public:
   DOMString clrMeth();
   void setClrMeth(DOMString value);
 
+  bool serialize();
+  void setSerialize(bool value);
+
 protected:
 
 private:
@@ -62,6 +65,7 @@ private:
             m_addMeth, 
             m_remMeth, 
             m_clrMeth;
+  bool      m_serialize;
 
 };
 
@@ -164,6 +168,16 @@ inline DOMString DaDiRelation::clrMeth()
 inline void DaDiRelation::setClrMeth(DOMString value)
 {
   m_clrMeth = value;
+}
+
+inline bool DaDiRelation::serialize()
+{
+  return m_serialize;
+}
+
+inline void DaDiRelation::setSerialize(bool value)
+{
+  m_serialize = value;
 }
 
 

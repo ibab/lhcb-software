@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.9 2002-04-08 13:03:44 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.10 2002-04-30 16:50:25 mato Exp $
 #ifndef DADITOOLS_H 
 #define DADITOOLS_H 1
 
@@ -55,6 +55,7 @@ public:
   static bool isRef(std::string value);
   static bool isArray(std::string value);
   static bool isStdContainer(std::string value);
+  static bool isEmpty(const std::string& value);
   static std::string containerType(std::string value);
   static std::string firstUp(const std::string& s);
   static std::string retGetName(const std::string& s);

@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.58 2002-04-17 16:55:44 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.59 2002-04-30 16:50:24 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -21,7 +21,7 @@
 #include <string>
 #include <map>
 #include <algorithm>
-
+#include <cmath>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DaDiCppHeader
@@ -160,7 +160,7 @@ template <class T> void printArguments(std::ofstream& xmlOut,
     {
       xmlOut << "const ";
     }
-    if (elemName != "")
+    if (!DaDiTools::isEmpty(elemName))
     {    
       xmlOut << checkClassPrefix(gddArgType, elemName);
     }
@@ -179,7 +179,7 @@ template <class T> void printArguments(std::ofstream& xmlOut,
       xmlOut << "&";
     }
 
-    if (gddArgName != "")
+    if (!DaDiTools::isEmpty(gddArgName))
     {
       xmlOut << " " << gddArgName;
     }
@@ -206,19 +206,24 @@ template <class T> void printMethodDecl(std::ofstream& xmlOut,
   {
     DaDiMethod* gddMethod = gddElement->popDaDiMethod();
     std::string gddMethodAccess = gddMethod->access().transcode(),
+                gddMethodTemplate = gddMethod->template_().transcode(),
                 gddMethodDesc = gddMethod->desc().transcode(),
                 gddMethodVirtual = gddMethod->virtual_().transcode(),
                 gddMethodName = gddMethod->name().transcode(),
                 gddMethodCode = gddMethod->code().transcode(),
                 gddMethReturnType = gddMethod->daDiMethReturn()->type().transcode();
-    bool gddMethodIsFriend = gddMethod->friend_(),
-         gddMethodIsStatic = gddMethod->static_(),
+    bool gddMethodIsStatic = gddMethod->static_(),
+         gddMethodIsFriend = gddMethod->friend_(),
          gddMethodIsConst = gddMethod->const_(),
          gddMethReturnIsConst = gddMethod->daDiMethReturn()->const_();
       
     if (gddMethodAccess == accessor || accessor == "")
     {
       xmlOut << "  /// " << gddMethodDesc << std::endl << "  ";
+      if (!DaDiTools::isEmpty(gddMethodTemplate))
+      {
+        xmlOut << "template<" << gddMethodTemplate << "> ";
+      }
       if ((accessor == "" ) && (gddMethodCode != ""))
       {
         xmlOut << "inline ";
@@ -254,7 +259,7 @@ template <class T> void printMethodDecl(std::ofstream& xmlOut,
       {
         xmlOut << " = 0";
       }
-      if (gddMethodIsFriend)
+/*      if (gddMethodIsFriend)
       {
         xmlOut << std::endl 
           << "  {" << std::endl 
@@ -263,10 +268,10 @@ template <class T> void printMethodDecl(std::ofstream& xmlOut,
           << std::endl;
       }
       else
-      {
+      { */
         xmlOut << ";" << std::endl 
           << std::endl;
-      }
+//      }
     }
   }
 }
@@ -295,12 +300,13 @@ template <class T> void printMethodImpl(std::ofstream& xmlOut,
          gddMethodIsStatic = gddMethod->static_(),
          gddMethodIsFriend = gddMethod->friend_(),
          gddMethReturnIsConst = gddMethod->daDiMethReturn()->const_(),
-         gddMethodIsVirtual = (gddMethodVirtual == "TRUE" || 
-                               gddMethodVirtual == "PURE") ? true : false;
+         gddMethodIsPureVirtual = (gddMethodVirtual == "PURE") ? true : false,
+         gddMethodIsTemplated = (gddMethod->template_().length() == 0) ? false : true;
 
 
     if ((gddMethodAccess == accessor || accessor == "")
-        && gddMethodCode != "" && !gddMethodIsFriend && !gddMethodIsVirtual)
+        && gddMethodCode != "" && !gddMethodIsPureVirtual
+        && !gddMethodIsTemplated) // && !gddMethodIsFriend)
     {
       xmlOut << "inline ";
       if (gddMethodIsStatic)
@@ -311,8 +317,12 @@ template <class T> void printMethodImpl(std::ofstream& xmlOut,
       {
         xmlOut << "const ";
       }
-      xmlOut << checkClassPrefix(gddMethReturnType, gddClassName) 
-          << " " << gddClassName << "::" << gddMethodName << "(";
+      xmlOut << checkClassPrefix(gddMethReturnType, gddClassName) << " ";
+      if (!gddMethodIsFriend)
+      {
+        xmlOut << gddClassName << "::";
+      }
+      xmlOut << gddMethodName << "(";
 
       printArguments(xmlOut, gddMethod);
             
@@ -336,7 +346,7 @@ void printSetGetAttDecl(std::ofstream& xmlOut,
                         const char* accessor)
 //-----------------------------------------------------------------------------
 {
-  int i;
+  int i, j;
   for(i=0; i < gddClass->sizeDaDiAttribute(); i++) 
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
@@ -345,6 +355,7 @@ void printSetGetAttDecl(std::ofstream& xmlOut,
                 gddAttDesc = gddAttribute->desc().transcode(),
                 gddAttType = gddAttribute->type().transcode(),
                 gddAttName = gddAttribute->name().transcode();
+    bool gddAttIsBitset = gddAttribute->bitset();
 
     if(gddAttGetMeth == accessor)
     {
@@ -392,6 +403,32 @@ void printSetGetAttDecl(std::ofstream& xmlOut,
       xmlOut << " value);" << std::endl 
         << std::endl;
     }
+
+    if (gddAttIsBitset)
+    {
+      for (j=0; j<gddAttribute->sizeDaDiBitfield(); ++j)
+      {
+        DaDiBitfield* gddBitfield = gddAttribute->popDaDiBitfield();
+        std::string gddBfName = gddBitfield->name().transcode(),
+                    gddBfDesc = gddBitfield->desc().transcode(),
+                    gddBfSetMeth = gddBitfield->setMeth().transcode(),
+                    gddBfGetMeth = gddBitfield->getMeth().transcode();
+         
+        if (gddBfSetMeth == accessor)
+        {
+          xmlOut << "  /// Update " << gddBfDesc << std::endl
+              << "  void set" << DaDiTools::firstUp(gddBfName) 
+              << "(unsigned long value);" << std::endl
+            << std::endl;
+        }
+        if (gddBfGetMeth == accessor)
+        {
+          xmlOut << "  /// Retrieve " << gddBfDesc << std::endl
+              << "  unsigned long " << gddBfName << "() const;" << std::endl
+            << std::endl;
+        }
+      }
+    }
   }
 }
 
@@ -402,7 +439,7 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
                         const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
-  int i=0;
+  int i,j;
 
   for(i=0; i<gddClass->sizeDaDiAttribute(); i++) 
   {
@@ -412,6 +449,7 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
                 gddAttType = gddAttribute->type().transcode(),
                 gddAttName = gddAttribute->name().transcode(),
                 gddClassName = gddClass->name().transcode();
+    bool gddAttIsBitset = gddAttribute->bitset();
       
     if(gddAttGetMeth == accessor)
     {
@@ -465,6 +503,104 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
         << "  m_" << gddAttName << " = value; " << std::endl 
         << "}" << std::endl 
         << std::endl;
+    }
+
+    if (gddAttIsBitset)
+    {
+      std::vector<std::string> bFields;
+      std::vector<std::string>::iterator bfIter;
+      for (j=0; j<gddAttribute->sizeDaDiBitfield(); ++j)
+      {
+        DaDiBitfield* gddBitfield = gddAttribute->popDaDiBitfield();
+        std::string gddBfName = gddBitfield->name().transcode(),
+                    gddBfSetMeth = gddBitfield->setMeth().transcode(),
+                    gddBfGetMeth = gddBitfield->getMeth().transcode(),
+                    gddShiftBits = "";
+        int gddBfLength = gddBitfield->length();
+        bool gddBfStartAtOne = gddBitfield->startAtOne();
+
+        std::vector<std::string> gddBfMasks = gddBitfield->mask();
+        bFields.push_back(gddBfName);
+
+        if (gddBfLength == 0)
+        {
+          for (bfIter = bFields.begin(); bfIter != bFields.end(); ++bfIter)
+          {
+            if (std::find(gddBfMasks.begin(), gddBfMasks.end(), *bfIter) != gddBfMasks.end())
+            {
+              gddShiftBits = *bfIter;
+              break;
+            }
+          }
+          if (gddShiftBits == "")
+          {
+            std::cerr << "GOD says: Could not find a sub-mask (tbd)" << std::endl;
+            exit(1);
+          }
+        }
+        else
+        {
+          gddShiftBits = gddBfName;
+        }
+
+        if (gddBfSetMeth == accessor)
+        {
+          xmlOut << "inline void " << gddClassName << "::set" 
+            << DaDiTools::firstUp(gddBfName) << "(unsigned long value)" << std::endl
+            << "{" << std::endl
+            << "  m_" << gddAttName << " &= ~" << gddBfName << "Mask;" << std::endl;
+/*            << "  m_" << gddAttName << " &= (";
+
+          bool firstElem = false;
+          for (k=0; k<gddAttribute->sizeDaDiBitfield(); ++k)
+          {
+            DaDiBitfield* tmpBitfield = gddAttribute->popDaDiBitfield();
+            std::string tmpBfName = tmpBitfield->name().transcode();
+            int tmpBfLength = tmpBitfield->length();
+            if ( tmpBfLength && (
+                 (gddBfLength && tmpBfName != gddBfName) ||
+                 (!gddBfLength && 
+                 std::find(gddBfMasks.begin(), gddBfMasks.end(), tmpBfName) == gddBfMasks.end())))
+            {
+              if (firstElem) { xmlOut << " | "; }
+              firstElem = true;
+              xmlOut << tmpBfName << "Mask";
+            }
+          }          
+          xmlOut << ");" << std::endl;*/
+
+          xmlOut << "  m_" << gddAttName << " |= ((";
+          if (gddBfStartAtOne)
+          {
+            xmlOut << "(";
+          }
+          xmlOut << "value";
+          if (gddBfStartAtOne)
+          {
+            xmlOut << " - 1)";
+          }
+          xmlOut << " << " << gddShiftBits 
+            << "Bits) & " << gddBfName << "Mask);" << std::endl; 
+          
+          xmlOut << "}" << std::endl
+            << std::endl;
+        }
+        if (gddBfGetMeth == accessor)
+        {
+          xmlOut << "inline unsigned long " << gddClassName << "::" << gddBfName 
+              << "() const" << std::endl
+            << "{" << std::endl
+            << "  return ((m_" << gddAttName << " & " << gddBfName << "Mask) >> "
+              << gddShiftBits << "Bits)";
+          if (gddBfStartAtOne)
+          {
+            xmlOut << " + 1";
+          }   
+          xmlOut << ";" << std::endl
+            << "}" << std::endl
+            << std::endl;
+        }
+      }
     }
   }
 }
@@ -757,6 +893,7 @@ template<class T> void printEnums(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 {
   int i;
+  bool newline = false;
   for (i=0; i<gdd->sizeDaDiEnum(); ++i)
   {
     DaDiEnum* gddEnum = gdd->popDaDiEnum();
@@ -769,9 +906,10 @@ template<class T> void printEnums(std::ofstream& xmlOut,
     {
       xmlOut << "  enum " << gddEnumName << " {" << gddEnumValue << "};   ///<" 
           << gddEnumDesc << std::endl;
+      newline = true;
     }
   }
-  xmlOut << std::endl;
+  if (newline)  xmlOut << std::endl;
 }
 
 
@@ -782,6 +920,7 @@ template<class T> void printTypeDefs(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 {
   int i;
+  bool newline = false;
   for (i=0; i<gdd->sizeDaDiTypeDef(); ++i)
   {
     DaDiTypeDef* gddTypeDef      = gdd->popDaDiTypeDef();
@@ -792,11 +931,12 @@ template<class T> void printTypeDefs(std::ofstream& xmlOut,
 
     if (accessor == "" || gddTypeDefAccess == accessor) 
     {
+      newline = true;
       xmlOut << "  typedef " << gddTypeDefType << " " << gddTypeDefDef << ";   ///<" 
           << gddTypeDefDesc << std::endl;
     }
   }
-  xmlOut << std::endl;
+  if (newline) xmlOut << std::endl;
 }
 
 
@@ -806,7 +946,7 @@ void printMembers(std::ofstream& xmlOut,
                   const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
-  int i;
+  int i,j;
   unsigned int maxLengthName = 0, maxLengthType = 0;
   
   for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
@@ -864,6 +1004,88 @@ void printMembers(std::ofstream& xmlOut,
   maxLengthName = maxLengthName + 4;
 
   //  xmlOut.setf(std::ios::left, std::ios::adjustfield);
+
+
+  //
+  // Enums for bitfields (lengths & masks)
+  //
+  for (i=0; i<gddClass->sizeDaDiAttribute(); i++)
+  {
+    DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+    std::string gddAttAccess = gddAttribute->access().transcode(),
+                gddAttName = gddAttribute->name().transcode(),
+                gddAttType = gddAttribute->type().transcode(),
+                gddAttDesc = gddAttribute->desc().transcode();
+    bool gddAttIsBitset = gddAttribute->bitset();
+    
+    if (gddAttIsBitset && (gddAttAccess == accessor))
+    {
+      xmlOut << "  enum " << gddAttName << "Bits {";
+      int offset = 0;
+      for (j=0; j<gddAttribute->sizeDaDiBitfield(); ++j)
+      {
+        DaDiBitfield* gddBitfield = gddAttribute->popDaDiBitfield();
+        int gddBfLength = gddBitfield->length();
+        std::string gddBfName = gddBitfield->name().transcode();
+        if (gddBfLength != 0)
+        {
+          if (j!=0) { xmlOut << ", "; }
+          xmlOut << gddBfName << "Bits = " << offset;
+          offset = offset + gddBfLength;
+        }
+      }
+      xmlOut << "}; ///< Offsets of bitfield " << gddAttName << std::endl;
+      if (offset > (sizeof(unsigned int)*8))
+      {
+        std::cerr << std::endl << "GOD says: WARNING: Bitset " 
+          << gddAttName << " has more than " << (sizeof(unsigned long)*8) 
+          << " bits";
+      }
+
+      xmlOut << "  enum " << gddAttName << "Masks {";
+      offset = 0;
+      for (j=0; j<gddAttribute->sizeDaDiBitfield(); ++j)
+      {
+        DaDiBitfield* gddBitfield = gddAttribute->popDaDiBitfield();
+        int gddBfLength = gddBitfield->length();
+        std::string gddBfName = gddBitfield->name().transcode();
+
+        if (j!=0) { xmlOut << ", "; }
+        xmlOut << gddBfName << "Mask = ";
+
+        if (gddBfLength != 0)
+        {
+          int mask = pow(2,gddBfLength)-1;
+          mask = mask << offset;
+          xmlOut << "0x";
+          xmlOut.setf(std::ios_base::hex, std::ios_base::basefield);
+          xmlOut.width(8);
+          xmlOut.fill('0');
+          xmlOut << mask;
+          xmlOut.fill(' ');
+          xmlOut.unsetf(std::ios::adjustfield);
+        }
+        else
+        {
+          std::vector<std::string> masks = gddBitfield->mask();
+          std::vector<std::string>::const_iterator iter;
+
+          for (iter = masks.begin(); iter != masks.end(); ++iter)
+          {
+            if (iter != masks.begin())
+            {
+              xmlOut << " + ";
+            }
+            xmlOut << *iter << "Mask";
+          }
+        }
+        offset = offset + gddBfLength;
+      }
+      xmlOut << "}; ///< Bitmasks for bitfield " << gddAttName << std::endl
+        << std::endl;
+    }
+  }
+
 
   //
   // Private members (attributes)
@@ -945,7 +1167,7 @@ void printClass(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 {
   time_t ltime;
-  int i;
+  int i, j;
   bool classTemplate = gddClass->keyedContTypeDef(), 
        isEventClass = false, 
        classTemplateVector = false,
@@ -991,7 +1213,7 @@ void printClass(std::ofstream& xmlOut,
     }
   }*/
 
-  if (gddClassID != "")
+  if (!DaDiTools::isEmpty(gddClassID))
   {
     isEventClass = true;
   }
@@ -1013,11 +1235,11 @@ void printClass(std::ofstream& xmlOut,
 //
 // create namespace for locations
 //
-  if ((gddClassLocation != "") || gddClass->sizeDaDiLocation())
+  if ((!DaDiTools::isEmpty(gddClassLocation)) || gddClass->sizeDaDiLocation())
   {
     xmlOut << "// Namespace for locations in TDS" << std::endl
       << "namespace " << gddClassName << "Location {" << std::endl;
-    if (gddClassLocation != "")
+    if (!DaDiTools::isEmpty(gddClassLocation))
     {
       xmlOut << "  static const std::string& Default = \"" 
           << gddClassLocation << "\";" << std::endl;
@@ -1079,12 +1301,12 @@ void printClass(std::ofstream& xmlOut,
 
   xmlOut << std::endl << " *" << std::endl;
 
-  if (gddClassDesc != "")
+  if (!DaDiTools::isEmpty(gddClassDesc))
   {
     xmlOut << " *  " << gddClassDesc;
   }
 
-  if (gddClassLongDesc != "")
+  if (!DaDiTools::isEmpty(gddClassLongDesc))
   {
     xmlOut << std::endl 
       << gddClassLongDesc;
@@ -1152,7 +1374,7 @@ void printClass(std::ofstream& xmlOut,
   // 
   //   PUBLIC AREA
   //
-  xmlOut << "public: " << std::endl 
+  xmlOut << "public: " << std::endl
     << std::endl;
 
   //
@@ -1177,7 +1399,7 @@ void printClass(std::ofstream& xmlOut,
                 gddConsInitList = gddConstructor->initList().transcode();
 
     
-    if (gddConsDesc != "")
+    if (!DaDiTools::isEmpty(gddConsDesc))
     {
       xmlOut << "  /// " << gddConsDesc << std::endl;
     }
@@ -1235,7 +1457,7 @@ void printClass(std::ofstream& xmlOut,
       gddAttType = gddAttType.substr(lastspace+1, gddAttType.size()-lastspace);
       if (!gddAttIsStatic)
       {
-        if (gddAttInit != "")
+        if (!DaDiTools::isEmpty(gddAttInit))
         {
           initValue = gddAttInit;
         }
@@ -1291,7 +1513,7 @@ void printClass(std::ofstream& xmlOut,
                   gddDestCode = gddDestructor->code().transcode();
 
 
-      if (gddDestDesc != "")
+      if (!DaDiTools::isEmpty(gddDestDesc))
       {
         xmlOut << "  /// " << gddDestDesc << std::endl;
       }
@@ -1372,25 +1594,27 @@ void printClass(std::ofstream& xmlOut,
     {
 	  xmlOut << "  /// Operator overloading for serializing (writing)"  << std::endl 
 	    << "  friend StreamBuffer& operator<< (StreamBuffer& s, const "
-	      << gddClassName << "& obj)" << std::endl 
-      << "  {" << std::endl 
+	      << gddClassName << "& obj);" << std::endl 
+      /*<< "  {" << std::endl 
       << "    return obj.serialize(s);" << std::endl 
-      << "  }" << std::endl 
+      << "  }" << std::endl */
       << std::endl;
 
 	  xmlOut << "  /// Operator overloading for serializing (reading)" << std::endl
 	    << "  friend StreamBuffer& operator>> (StreamBuffer& s, "
-      << gddClassName << "& obj)" << std::endl 
-      << "  {" << std::endl
+      << gddClassName << "& obj);" << std::endl 
+      /*<< "  {" << std::endl
 	    << "    return obj.serialize(s);" << std::endl 
-      << "  }" << std::endl
+      << "  }" << std::endl*/
 	    << std::endl;
 
 	  xmlOut << "  /// Operator overloading for stringoutput" << std::endl
 	    << "  friend std::ostream& operator<< (std::ostream& s, const "
-	    << gddClass->name().transcode() << "& obj)" << std::endl << "  {"
-      << std::endl << "    return obj.fillStream(s);" << std::endl << "  }" 
-	    << std::endl << std::endl;
+	    << gddClass->name().transcode() << "& obj);" << std::endl 
+      /*<< "  {" << std::endl 
+      << "    return obj.fillStream(s);" << std::endl 
+      << "  }" << std::endl */
+      << std::endl;
 
   /*    xmlOut << "/// Serialize the object for writing" << std::endl
         << "virtual StreamBuffer& serialize(StreamBuffer& s) const;" 
@@ -1457,12 +1681,12 @@ void printClass(std::ofstream& xmlOut,
   // print public members
   printMembers(xmlOut, gddClass, "PUBLIC");
 
+   
   //
   //   PROTECTED AREA
   //
 
-  xmlOut << std::endl << "protected: " 
-    << std::endl 
+  xmlOut << "protected: " << std::endl
     << std::endl;
 
   printTypeDefs(xmlOut, gddClass, "PROTECTED");
@@ -1475,8 +1699,7 @@ void printClass(std::ofstream& xmlOut,
   //   PRIVATE AREA
   //
 
-  xmlOut << std::endl << "private: " 
-    << std::endl 
+  xmlOut << "private: " << std::endl
     << std::endl;
 
   // print private typedefs
@@ -1629,12 +1852,38 @@ void printClass(std::ofstream& xmlOut,
 
 
 
+  if (gddClassSerializers)
+  {
+
+    if (!isEventClass)
+    {
+	  xmlOut << "StreamBuffer& operator<< (StreamBuffer& s, const "
+	      << gddClassName << "& obj)" << std::endl 
+      << "{" << std::endl 
+      << "  return obj.serialize(s);" << std::endl 
+      << "}" << std::endl 
+      << std::endl;
+
+	  xmlOut << "StreamBuffer& operator>> (StreamBuffer& s, "
+      << gddClassName << "& obj)" << std::endl 
+      << "{" << std::endl
+	    << "  return obj.serialize(s);" << std::endl 
+      << "}" << std::endl
+	    << std::endl;
+
+	  xmlOut << "std::ostream& operator<< (std::ostream& s, const "
+	    << gddClass->name().transcode() << "& obj)" << std::endl 
+      << "{"  << std::endl 
+      << "  return obj.fillStream(s);" << std::endl 
+      << "}" << std::endl 
+      << std::endl;
+    }  
+    
+    
+    
 //
 // SteamBuffer<<
 //
-
-  if (gddClassSerializers)
-  {
     if (!streamOut)
     {
       /// function header
@@ -1648,8 +1897,9 @@ void printClass(std::ofstream& xmlOut,
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
         std::string gddAttName = gddAttribute->name().transcode(),
                     gddAttType = gddAttribute->type().transcode();
+        bool gddAttSerialize = gddAttribute->serialize();
 
-        if (gddAttType == "bool")
+        if (gddAttType == "bool" && gddAttSerialize)
         {
           xmlOut << "  unsigned char " << "l_" << gddAttName << " = (m_"
               << gddAttName << ") ? 1 : 0;" << std::endl;
@@ -1671,42 +1921,56 @@ void printClass(std::ofstream& xmlOut,
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
         std::string gddAttType = gddAttribute->type().transcode(),
                     gddAttName = gddAttribute->name().transcode();
-        if(i==0 && !seriAtt)
+        bool gddAttSerialize = gddAttribute->serialize(),
+             gddAttNoCast = gddAttribute->noCast();
+
+        if (gddAttSerialize)
         {
-          xmlOut << "  s ";
-          seriAtt = true;
+          if(i==0 && !seriAtt)
+          {
+            xmlOut << "  s ";
+            seriAtt = true;
+          }
+          else
+          {
+            xmlOut << std::endl << "    ";
+          }
+          if (gddAttType == "bool")
+          {
+            xmlOut << "<< l_";
+          }
+          else if (gddAttType == "double" && !gddAttNoCast)
+          {
+            xmlOut << "<< (float)m_";
+          }
+          else
+          {
+            xmlOut << "<< m_";
+          }
+          xmlOut << gddAttName;    
         }
-        else
-        {
-          xmlOut << std::endl << "    ";
-        }
-        if (gddAttType == "bool")
-        {
-          xmlOut << "<< l_";
-        }
-        else if (gddAttType == "double")
-        {
-          xmlOut << "<< (float)m_";
-        }
-        else
-        {
-          xmlOut << "<< m_";
-        }
-        xmlOut << gddAttName;    
       }
+
       for(i=0; i<gddClass->sizeDaDiRelation(); i++)
       {
-        std::string gddRelName = gddClass->popDaDiRelation()->name().transcode();
-        if (i==0 && !seriAtt)
+        DaDiRelation* gddRelation = gddClass->popDaDiRelation();
+        std::string gddRelName = gddRelation->name().transcode();
+        bool gddRelSerialize = gddRelation->serialize();
+
+        if (gddRelSerialize)
         {
-          xmlOut << "s << m_" << gddRelName << "(this)";
-          seriAtt = true;
-        }
-        else
-        {
-          xmlOut << std::endl << "    << m_" << gddRelName << "(this)";
+          if (i==0 && !seriAtt)
+          {
+            xmlOut << "s << m_" << gddRelName << "(this)";
+            seriAtt = true;
+          }
+          else
+          {
+            xmlOut << std::endl << "    << m_" << gddRelName << "(this)";
+          }
         }
       }
+
 	    if (seriAtt)
       {
         xmlOut << ";" << std::endl;
@@ -1737,8 +2001,9 @@ void printClass(std::ofstream& xmlOut,
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
         std::string gddAttType = gddAttribute->type().transcode(),
                     gddAttName = gddAttribute->name().transcode();
+        bool gddAttSerialize = gddAttribute->serialize();
 
-        if (gddAttType == "bool")
+        if (gddAttType == "bool" && gddAttSerialize)
         {
           if (!attBool)
           {
@@ -1763,8 +2028,10 @@ void printClass(std::ofstream& xmlOut,
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
         std::string gddAttType = gddAttribute->type().transcode(),
                     gddAttName = gddAttribute->name().transcode();
+        bool gddAttSerialize = gddAttribute->serialize(),
+             gddAttNoCast = gddAttribute->noCast();
 
-        if (gddAttType == "double")
+        if (gddAttType == "double" && gddAttSerialize && !gddAttNoCast)
         {
           if (!attFloat)
           {
@@ -1792,42 +2059,55 @@ void printClass(std::ofstream& xmlOut,
 		    xmlOut << "  " << gddBaseName << "::serialize(s);" << std::endl;
         }
       }
+
       for(i=0; i<gddClass->sizeDaDiAttribute(); i++)
       {
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
         std::string gddAttType = gddAttribute->type().transcode(),
                     gddAttName = gddAttribute->name().transcode();
+        bool gddAttSerialize = gddAttribute->serialize(),
+             gddAttNoCast = gddAttribute->noCast();
 
-        if(i==0 && !seriAtt)
+        if (gddAttSerialize)
         {
-          xmlOut << "  s ";
-          seriAtt = true;
+          if(i==0 && !seriAtt)
+          {
+            xmlOut << "  s ";
+            seriAtt = true;
+          }
+          else
+          {
+            xmlOut << std::endl << "    ";
+          }
+          if (gddAttType == "bool" || (gddAttType == "double" && !gddAttNoCast))
+          {
+            xmlOut << ">> l_";
+          }
+          else
+          {
+            xmlOut << ">> m_";
+          }
+          xmlOut << gddAttName;    
         }
-        else
-        {
-          xmlOut << std::endl << "    ";
-        }
-        if (gddAttType == "bool" || gddAttType == "double")
-        {
-          xmlOut << ">> l_";
-        }
-        else
-        {
-          xmlOut << ">> m_";
-        }
-        xmlOut << gddAttName;    
       }
+
       for(i=0; i<gddClass->sizeDaDiRelation(); i++)
       {
-        std::string gddRelName = gddClass->popDaDiRelation()->name().transcode();
-        if (i==0 && !seriAtt)
+        DaDiRelation* gddRelation = gddClass->popDaDiRelation();
+        std::string gddRelName = gddRelation->name().transcode();
+        bool gddRelSerialize = gddRelation->serialize();
+        
+        if (gddRelSerialize)
         {
-          xmlOut << "s >> m_" << gddRelName << "(this)";
-          seriAtt = true;
-        }
-        else
-        {
-          xmlOut << std::endl << "    " << ">> m_" << gddRelName << "(this)";
+          if (i==0 && !seriAtt)
+          {
+            xmlOut << "s >> m_" << gddRelName << "(this)";
+            seriAtt = true;
+          }
+          else
+          {
+            xmlOut << std::endl << "    " << ">> m_" << gddRelName << "(this)";
+          }
         }
       }
   	  if (seriAtt)
@@ -1840,8 +2120,9 @@ void printClass(std::ofstream& xmlOut,
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
         std::string gddAttType = gddAttribute->type().transcode(),
                     gddAttName = gddAttribute->name().transcode();
+        bool gddAttSerialize = gddAttribute->serialize();
 
-        if (gddAttType == "bool")
+        if (gddAttType == "bool" && gddAttSerialize)
         {
           xmlOut << "  m_" << gddAttName << " = (l_" << gddAttName
             << ") ? true : false;" << std::endl;
@@ -1852,8 +2133,10 @@ void printClass(std::ofstream& xmlOut,
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
         std::string gddAttType = gddAttribute->type().transcode(),
                     gddAttName = gddAttribute->name().transcode();
+        bool gddAttSerialize = gddAttribute->serialize(),
+             gddAttNoCast = gddAttribute->noCast();
 
-        if (gddAttType == "double")
+        if (gddAttType == "double" && gddAttSerialize && !gddAttNoCast)
         {
           xmlOut << "  m_" << gddAttName << " = l_" << gddAttName << ";" << std::endl;
         }
@@ -1896,6 +2179,9 @@ void printClass(std::ofstream& xmlOut,
         DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
         std::string gddAttName = gddAttribute->name().transcode(),
                     gddAttType = gddAttribute->type().transcode();
+        bool gddAttNoCast = gddAttribute->noCast(),
+             gddAttIsBitset = gddAttribute->bitset();
+
         if(i==0)
         {
           /*xmlOut << "  s << \"class " << gddClass->className().transcode()
@@ -1908,12 +2194,12 @@ void printClass(std::ofstream& xmlOut,
         {
 		      xmlOut << " << std::endl" << std::endl << "    << \"   " 
             << gddAttName << ":\\t\" ";
-        }
+        }          
         if (gddAttType == "bool")
         {  
           xmlOut << "<< l_";
         }
-        else if (gddAttType == "double")
+        else if (gddAttType == "double" && !gddAttNoCast)
         {
           xmlOut << "<< (float)m_";
         }
@@ -1922,6 +2208,23 @@ void printClass(std::ofstream& xmlOut,
           xmlOut << "<< m_";
         }
         xmlOut << gddAttName;
+      
+        if (gddAttIsBitset)
+        {
+          for (j=0; j<gddAttribute->sizeDaDiBitfield(); ++j)
+          {
+            DaDiBitfield* gddBitfield = gddAttribute->popDaDiBitfield();
+            std::string gddBfName = gddBitfield->name().transcode();
+            bool gddBfGetMeth = gddBitfield->getMeth().equals("TRUE");
+
+            if (gddBfGetMeth)
+            {
+              xmlOut << " << std::endl" << std::endl 
+                << "    << \"   " << gddBfName << ":\\t\" << " << gddBfName << "()";
+            }
+          }
+        }
+        
       }
 	    if (seriAtt)
       {
@@ -2032,7 +2335,7 @@ void printNamespace(std::ofstream& xmlOut,
     << " *  " << gddNamespDesc << std::endl 
     << " *" << std::endl;
 
-  if (gddNamespLongDesc != "")
+  if (!DaDiTools::isEmpty(gddNamespLongDesc))
   {
     xmlOut << " *  " << gddNamespLongDesc << std::endl;
   }
@@ -2065,7 +2368,7 @@ void printNamespace(std::ofstream& xmlOut,
 
     xmlOut << "  /// " << gddAttDesc << std::endl
       << "  " << gddAttType << " " << gddAttName;
-    if (gddAttInit != "")
+    if (!DaDiTools::isEmpty(gddAttInit))
     {
       xmlOut << " = " << gddAttInit;
     }

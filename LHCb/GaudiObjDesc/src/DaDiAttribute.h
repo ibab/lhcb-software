@@ -1,9 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiAttribute.h,v 1.6 2002-03-13 18:35:46 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiAttribute.h,v 1.7 2002-04-30 16:50:24 mato Exp $
 #ifndef DADIATTRIBUTE_H 
 #define DADIATTRIBUTE_H 1
 
 // Include files
 #include "dom/DOMString.hpp"
+
+#include "DaDiBitfield.h"
 
 /** @class DaDiAttribute DaDiAttribute.h
  *  
@@ -45,19 +47,36 @@ public:
   bool static_();
   void setStatic_(bool value);
 
+  bool noCast();
+  void setNoCast(bool value);
+
+  bool serialize();
+  void setSerialize(bool value);
+
+  bool bitset();
+  void setBitset(bool value);
+
+	DaDiBitfield* popDaDiBitfield();
+	void pushDaDiBitfield(DaDiBitfield* value);
+	int sizeDaDiBitfield();
+
 protected:
 
 private:
 
-  DOMString m_name, 
-            m_type, 
-            m_desc, 
-            m_array,
-            m_access,
-            m_init,
-            m_setMeth, 
-            m_getMeth;
-  bool      m_static;
+  DOMString                m_name, 
+                           m_type, 
+                           m_desc, 
+                           m_array,
+                           m_access,
+                           m_init,
+                           m_setMeth, 
+                           m_getMeth;
+  bool                     m_static,
+                           m_noCast,
+                           m_serialize,
+                           m_bitset;
+  std::list<DaDiBitfield*> m_daDiBitfield;
 
 };
 
@@ -150,6 +169,54 @@ inline bool DaDiAttribute::static_()
 inline void DaDiAttribute::setStatic_(bool value)
 {
   m_static = value;
+}
+
+inline bool DaDiAttribute::noCast()
+{
+  return m_noCast;
+}
+
+inline void DaDiAttribute::setNoCast(bool value)
+{
+  m_noCast = value;
+}
+
+inline bool DaDiAttribute::serialize()
+{
+  return m_serialize;
+}
+
+inline void DaDiAttribute::setSerialize(bool value)
+{
+  m_serialize = value;
+}
+
+inline bool DaDiAttribute::bitset()
+{
+  return m_bitset;
+}
+
+inline void DaDiAttribute::setBitset(bool value)
+{
+  m_bitset = value;
+}
+
+inline DaDiBitfield* DaDiAttribute::popDaDiBitfield()
+{
+	DaDiBitfield* pt = m_daDiBitfield.front();
+	m_daDiBitfield.push_back(pt);
+	m_daDiBitfield.pop_front();
+	return pt;
+}
+
+inline void DaDiAttribute::pushDaDiBitfield(DaDiBitfield* value)
+{
+	m_daDiBitfield.push_back(value);
+}
+
+inline int DaDiAttribute::sizeDaDiBitfield()
+{
+	return m_daDiBitfield.size();
 }
 
 #endif // DADIATTRIBUTE_H
