@@ -1,4 +1,4 @@
-// $Id: PhotonCalibration04.opts,v 1.1 2004-03-17 16:32:20 ibelyaev Exp $ 
+// $Id: PhotonCalibration04.opts,v 1.2 2004-03-18 14:08:14 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -34,8 +34,8 @@ ToolSvc.LCorrection.OutputLevel = 4 ;
 
 // Remove evaluated 4-momentum and reevaluate it again with new parameters
 
-PhotonFromMergedCalibration.OutputLevel = 2 ;
-PhotonCalibration.OutputLevel = 2 ;
+//PhotonFromMergedCalibration.OutputLevel = 2 ;
+//PhotonCalibration.OutputLevel = 2 ;
 
 // Parameters
 #include "$CALORECOOPTS/Calo04ECorrectionParam.opts"  
