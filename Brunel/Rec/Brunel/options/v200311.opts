@@ -22,7 +22,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200311.xml";
 // Finally, define input and output files, first event, number of events
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v3r1/412400.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
+  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v3r2/412400.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
 
 DstWriter.Output = "DATAFILE='412400.dst' TYP='ROOT' OPT='NEW'";
 HistogramPersistencySvc.OutputFile = "412400.hbook";  // Monitoring histos

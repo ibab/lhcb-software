@@ -3,6 +3,27 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v21r2>2003-12-03 Brunel v21r2</A></H1><PRE>
+
+- New features
+   . Additional monitoring histograms (ITCheckers v1r4)
+
+- New tuning
+   . Changes to IT clustering cuts (ITAlgorithms v13r0)
+   . Use circle method everywhere for ray tracing, gives further improvement in
+     Rich time performance without loss of efficiency 
+     (RichDetTools v3r3, RichRecSys v1r4)
+
+- Bug fixes
+   . Fix division by 0 for backward moving tracks (bug 1928) (TrCheck v2r2)
+
+- New packaging
+   . Changes to IT geometry tree structure 
+     (XmlDDDB v19r1, ITDet v1r7, Seeding v2r5p1,LongTrack v1r8p1, TrCheck v2r2,
+      TrCleanEx v2r7p1, TrIntraPR v2r6p1)
+   . Changes to ITSignalToNoise tools ---> noise in e- or ADC 
+     (ITAlgorithms v13r0, LongTrack v1r8p1, TrIntraPR v2r6p1, VeloTT v1r6p1)
+
 </PRE><H1><A NAME=v21r1>2003-11-28 Brunel v21r1</A></H1><PRE>
 ** This version requires data produced by Boole v3r1 or greater **
 
