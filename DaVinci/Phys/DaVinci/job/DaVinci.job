@@ -25,7 +25,7 @@
 # you have to set $WORKDIR to what you want
 #
 if ($#argv == 0 ) then
-  echo "\nUsage: Brunel.job <dbase-version> [<mode>]"
+  echo "\nUsage: DaVinci.job <dbase-version> [<mode>]"
   echo " where:"
   echo "  <dbase-version> (mandatory) is SICB/dbase version (e.g. v241)"
   echo "  <mode>          (optional)  is execution mode (e.g. rh61_gcc2952dbx)"
@@ -48,7 +48,7 @@ set current = $PWD
 #
 if ($?LS_SUBCWD) then 
 # in BATCH, location of executable has to be given explicitly
-  setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v2r0
+  setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v3r0
 else
 # in interactive, executable is under same root directory as this job
   cd `dirname $0` 
@@ -81,112 +81,7 @@ endif
 #==  create temporary joboptions file ==================
 #
 #
-cat >! tmpjob.opts<<EOF
-//##############################################################
-// Default DaVinci job Options
-//
-// This file defines, sequences and configures the algorithms 
-// to be executed
-//==============================================================
-// Standard Gaudi configuration and additional DLLs are in 
-// DaVinciCommon.opts
-//--------------------------------------------------------------
-#include "$DAVINCIROOT/options/DaVinciCommon.opts"
-
-//--------------------------------------------------------------
-// Histogram persistency 
-// Hbook or Root are available, uncomment the one you want to use
-// Keep in mind that the hbook file referred to here contains 
-// all the C++ generated histograms, not those filled in Fortran
-//--------------------------------------------------------------
-// #include "$STDOPTS/Hbook.opts"
-// #include "$STDOPTS/RootHist.opts"
-// HistogramPersistencySvc.OutputFile = "Histos.hbook";
-// HistogramPersistencySvc.OutputFile = "Histos.rt";
-
-//--------------------------------------------------------------
-// No Ntuples by default. Uncomment to switch on
-//--------------------------------------------------------------
-// ApplicationMgr.ExtSvc += { "NTupleSvc" };
-// NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
-// NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.rt' TYP='ROOT' OPT='NEW'"};
-
-//--------------------------------------------------------------
-// Set up some profiling. Enable/Disable setting lines below to true/false
-//--------------------------------------------------------------
-AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
-NameAuditor.Enable   = false;
-ChronoAuditor.Enable = true;
-MemoryAuditor.Enable = false;
-
-//--------------------------------------------------------------
-// DaVinci Algorithms to be always executed as the first one
-//--------------------------------------------------------------
-ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
-
-//--------------------------------------------------------------
-// Other additional algorithms to be executed, from public 
-// or private code.
-// >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
-//--------------------------------------------------------------
-
-//ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
-ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
-ApplicationMgr.TopAlg += { "DaVinciTestAlgorithm" }; 
-
-//--------------------------------------------------------------
-// DaVinci Algorithms to be always executed as the last one,
-// the fortran suanal is called in here 
-//--------------------------------------------------------------
-ApplicationMgr.TopAlg += { "DaVinciFinalisation" };
-
-//--------------------------------------------------------------
-// Uncomment the following line if you want static version
-//--------------------------------------------------------------
-//ApplicationMgr.DLL = {"NONE"};
-
-//-----------------------------------------------------------------
-// Default options for algorithms and tools in DaVinciTools library
-// you can overwrite any of the default options
-//-----------------------------------------------------------------
-#include "$DAVINCITOOLSROOT/options/DaVinciTools.opts"
-#include "$DAVINCISICBROOT/options/DaVinciSicb.opts"
-// The next lines are an example of changing the default behaviour
-// of algorithms in the library 
-//PhysSelectAlgorithm.DecayName    = "B0JM";
-PhysSelectAlgorithm.Histograms   = 1;
-
-//-----------------------------------------------------------------
-// Private algorithms options
-//-----------------------------------------------------------------
-DaVinciTestAlgorithm.SearchParticle       = "B0";
-DaVinciTestAlgorithm.DecayProducts        = { "pi+", "pi-" };
-
-//--------------------------------------------------------------
-// Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-//--------------------------------------------------------------
-MessageSvc.OutputLevel = 3;
-ToolSvc.OutputLevel    = 3;
-//DaVinciTestAlgorithm.OutputLevel        = 2;
-//AxPrimaryVertexAlgorithm.OutputLevel    = 2;
-//PhysSelectAlgorithm.OutputLevel         = 2;
-
-//---------------------------------------------------------------
-// Number of events to process, skip and printing frequency
-//---------------------------------------------------------------
-ApplicationMgr.EvtMax = 500;
-//EventSelector.FirstEvent = 6;
-//EventSelector.PrintFreq = 1;
- 
-  
-//---------------------------------------------------------------
-// Examples of input data
-//---------------------------------------------------------------
-// B->pi+pi-, Brunel v5r1
-EventSelector.Input = {"JOBID='64026,64025'"};
-//################################################################
-
-EOF
+cp $MYJOBROOT/options/DaVinci.opts tmpjob.opts
 
 #
 # == run $EXEC.exe ============================================

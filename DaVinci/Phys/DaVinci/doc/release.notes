@@ -1,6 +1,30 @@
-! $Id: release.notes,v 1.9 2002-02-28 14:41:05 gcorti Exp $
+! $Id: release.notes,v 1.10 2002-04-03 17:53:41 gcorti Exp $
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
+
+
+! 02042002 - DaVinci v3r0 (G.Corti)
+
+  - Algorithms to perform offline selection of B0->J/Psi(mu+mu-)Ks(pi+pi-)
+    using new Physics Event model and new OO tools in src/User
+    Provide example of how to use new structure and tools to perform offline
+    physics selection on real data classes
+     - SelectJPsiMuMu.h&cpp for J/Psi selection
+     - SelectKsPiPi.h&cpp for Ks selection
+     - SelectB0JPsiKs.h&cpp for B0 
+    authors: Sandra Amato, Claudia Nunes
+
+  - Adapt jobOptions for new structure with tools (each algorithm has its
+    own options)
+
+  - Modify DaVinci.job for new version
+
+  - Uses new physics packages:
+      Event/PhysEvent   v3r0
+      Phys/DaVinciSicb  v2r0
+      Phys/DaVinciTools v3r0 
+    uses Gaudi v9 + GaudiSvc v7r3 (changes for tools)
+    + GaudiObjDesc v3r3 (for PhysEvent automatic generation)
 
 ! 28022002 - DaVinci v3r0 (GCorti)
   - Begin to adapt to changes in PhysEvent: new structure and new Vertex
