@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v7r0 2004-03-18 =========================
 ! 2004-03-15 - Chris Jones
  - Add standard locations in TDS to Detector element header files
 
