@@ -1,8 +1,11 @@
-// $Id: CaloPIDsData.cpp,v 1.1 2004-03-17 16:11:39 ibelyaev Exp $
+// $Id: CaloPIDsData.cpp,v 1.2 2004-04-27 03:13:26 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/03/17 16:11:39  ibelyaev
+//  add Frederic's Photon(P)ID tool
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -75,11 +78,11 @@ CaloPIDsData::CaloPIDsData
   , m_name_Tr2MC 
 ("AssociatorWeighted<TrStoredTrack,MCParticle,double>/TrackToMCP")
   //
-  , m_name_PrsE     ( "AssociatorWeighted<TrStoredTrack,float>/PrsE"     )
-  , m_name_EcalChi2 ( "AssociatorWeighted<TrStoredTrack,float>/EcalChi2" )
-  , m_name_BremChi2 ( "AssociatorWeighted<TrStoredTrack,float>/BremChi2" )
-  , m_name_EcalE    ( "AssociatorWeighted<TrStoredTrack,float>/EcalE"    )
-  , m_name_HcalE    ( "AssociatorWeighted<TrStoredTrack,float>/HcalE"    )
+  , m_name_PrsE     ( "Associator<TrStoredTrack,float>/PrsE"     )
+  , m_name_EcalChi2 ( "Associator<TrStoredTrack,float>/EcalChi2" )
+  , m_name_BremChi2 ( "Associator<TrStoredTrack,float>/BremChi2" )
+  , m_name_EcalE    ( "Associator<TrStoredTrack,float>/EcalE"    )
+  , m_name_HcalE    ( "Associator<TrStoredTrack,float>/HcalE"    )
   //
   , m_Tr2MC     ( 0 )
   //
