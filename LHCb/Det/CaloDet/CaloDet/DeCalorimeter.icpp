@@ -1,0 +1,48 @@
+#ifndef    CALODET_DECALORIMETER_ICPP
+#define    CALODET_DECALORIMETER_ICPP 1 
+/// GaudiKernel
+#include "GaudiKernel/MsgStream.h"
+/// CaloDet 
+#include "CaloDet/DeCalorimeter.h"
+///
+
+///
+inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter& de )
+{ return de.printOut( os ); } 
+///
+inline std::ostream&  operator<<( std::ostream& os , const DeCalorimeter* de )
+{ return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<std::endl); }
+///
+inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter& de )
+{ return de.printOut( os ); } 
+///
+inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter* de )
+{ return de ? (os<<*de) : (os<<" DeCalorimeter* points to NULL!"<<endreq   ); }
+///
+ 
+//----------------------------------------------------------------------------
+// Explicit inline methods, those needing more than a single statement...
+//----------------------------------------------------------------------------
+
+inline void DeCalorimeter::Assert( bool assertion , 
+                                   const char* message ) const {
+  if( !assertion ) {
+    std::string msg("DeCalorimeter:: ");  
+    throw CaloException( msg += message  );  
+  }
+}; 
+  
+inline void DeCalorimeter::Assert( bool assertion , 
+                                   const std::string&  message ) const {
+  if( !assertion ) {
+    std::string msg("DeCalorimeter:: ");  
+    throw CaloException( msg += message  );  
+  }
+}; 
+
+
+
+
+
+
+#endif  // CALODET_DECALORIMETER_ICPP
