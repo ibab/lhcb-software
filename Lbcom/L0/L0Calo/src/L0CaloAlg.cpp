@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.6 2001-06-12 14:28:02 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.7 2001-06-12 15:05:55 ocallot Exp $
 
 /// STL
 #include <string>
@@ -732,20 +732,24 @@ void L0CaloAlg::addSpdData( MsgStream& log ) {
   for( ObjectVector<CaloDigit>::const_iterator digit = spdDigit->begin() ;
        spdDigit->end() != digit ; ++digit ) {
     CaloCellID ID     = (*digit)->cellID();
-    int card, row,  col  ;
-    int down, left, corner  ;
-    m_ecal->cardAddress(ID, card, row, col );     // Card and internal address
-    m_ecal->cardNeighbors( card, down, left, corner );    // Neighboring cards
+    double     energy = (*digit)->e();
 
-    ecalFe[card].setSpd( col, row );
-    if ( (0 == row) && (0 <= down) ) {
-      ecalFe[down].setSpd( col, nRowCaloCard );
-    }
-    if ( (0 == col) && (0 <= left) ) {
-      ecalFe[left].setSpd( nColCaloCard, row );
-    }
-    if ( (0 == col) && (0 == row) && (0 <= corner) ) {
-      ecalFe[corner].setSpd( nColCaloCard, nRowCaloCard );
+    if ( 0.1 < energy ) {        // Threshold necessary when reading back DST !
+      int card, row,  col  ;
+      int down, left, corner  ;
+      m_ecal->cardAddress(ID, card, row, col );    // Card and internal address
+      m_ecal->cardNeighbors( card, down, left, corner );   // Neighboring cards
+      
+      ecalFe[card].setSpd( col, row );
+      if ( (0 == row) && (0 <= down) ) {
+        ecalFe[down].setSpd( col, nRowCaloCard );
+      }
+      if ( (0 == col) && (0 <= left) ) {
+        ecalFe[left].setSpd( nColCaloCard, row );
+      }
+      if ( (0 == col) && (0 == row) && (0 <= corner) ) {
+        ecalFe[corner].setSpd( nColCaloCard, nRowCaloCard );
+      }
     }
   }
 }
