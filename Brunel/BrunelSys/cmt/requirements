@@ -1,5 +1,5 @@
 package BrunelSys
-version v17r0
+version v17r1
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v17r0   Rec
+use Brunel              v17r1   Rec
 
 # Brunel utilities
 use BrunelKernel        v5r3     Rec
@@ -17,14 +17,14 @@ use BrunelAlgs          v1r8     Rec
 use KsReco              v1r4     Rec
 
 # L0 trigger
-use L0Calo              v6r5    L0
+use L0Calo              v6r6    L0
 use L0Muon              v6r3    L0
 use PuVeto              v5r3    L0
 use L0DU                v6r2    L0
 
 # L1 trigger
 use L1VeloTrack         v3r5    L1
-use L1Decision		v1r4	L1
+use L1Decision		v1r5	L1
 
 # Calorimeter
 use CaloInterfaces      v2r4  Calo
@@ -34,10 +34,10 @@ use CaloReco            v1r2  Calo
 use CaloDigit           v1r1  Calo
 
 # Velo
-use VeloAlgorithms      v2r5  Velo
+use VeloAlgorithms      v2r6  Velo
 
 # Inner Tracker
-use ITAlgorithms        v12r7 IT
+use ITAlgorithms        v12r8 IT
 use ITCheckers          v1r2  IT
 
 # Outer Tracker
@@ -48,11 +48,11 @@ use VeloTrack           v4r4  Velo
 use TrCheck             v1r3  Tr
 use LongTrack           v1r5  Tr
 use TrFitter            v3r5  Tr
-use TrExtrapolator      v2r4  Tr
-use TrTools             v2r3  Tr
+use TrExtrapolator      v2r5  Tr
+use TrTools             v2r4  Tr
 use Seeding             v2r4  Tr 
-use TrMatching          v2r5  Tr
-use TrCleanEx           v2r4  Tr
+use TrMatching          v2r6  Tr
+use TrCleanEx           v2r5  Tr
 use TrIntraPR           v2r3  Tr
 use UpstreamPR          v2r6  Tr
 use VeloTT              v1r4  Tr
