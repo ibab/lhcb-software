@@ -7,14 +7,15 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
-2003-07-17 - Grigory Rybkine 
-  src/SpdPrsSensDet.cpp  - fix the increment of the slot variable
-2003-07-16 - Vanya BELYAEV 
-  src/SpdPrsSensDet.cpp    - fix the index of currect BX to be 0 
-  options/Spd.opts 
-  options/Prs.opts         - add tuned delays 
-
 !============================ GaussCalo v4r0 ==============================
+
+! 2003-07-17 - Grigory Rybkine 
+ - src/SpdPrsSensDet.cpp  - fix the increment of the slot variable
+
+! 2003-07-16 - Vanya BELYAEV 
+ - src/SpdPrsSensDet.cpp    - fix the index of currect BX to be 0 
+ - options/Spd.opts 
+ - options/Prs.opts         - add tuned delays 
 
 ! 2003-07-10 - Ivan BELYAEV
  - few minor fixes for gcc3.2  + copy of CaloSimHash.h from the branch 
