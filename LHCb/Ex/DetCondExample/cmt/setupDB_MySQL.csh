@@ -1,6 +1,6 @@
-# $Id: setupDB_MySQL.csh,v 1.1 2002-12-03 17:34:03 andreav Exp $
+# $Id: setupDB_MySQL.csh,v 1.2 2004-12-08 17:22:37 marcocle Exp $
 # Setup MySQL environment variables
-source ${CONDDBMYSQLROOT}/cmt/setupDB_MySQL.csh
+source ${CONDDBROOT}/cmt/setupDB_MySQL.csh
 setenv DETCONDEXAMPLE_DBHOST $CONDDBMYSQL_DBHOST
 setenv DETCONDEXAMPLE_DBNAME $CONDDBMYSQL_DBNAME
 setenv DETCONDEXAMPLE_DBUSER $CONDDBMYSQL_DBUSER

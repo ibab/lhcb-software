@@ -1,6 +1,6 @@
-# $Id: setupDB_Oracle.csh,v 1.4 2002-12-03 17:34:03 andreav Exp $
+# $Id: setupDB_Oracle.csh,v 1.5 2004-12-08 17:22:37 marcocle Exp $
 # Setup Oracle environment variables
-source ${CONDDBORACLEROOT}/cmt/setupDB_Oracle.csh
+source ${CONDDBROOT}/cmt/setupDB_Oracle.csh
 setenv DETCONDEXAMPLE_DBHOST $CONDDBORACLE_DBHOST
 setenv DETCONDEXAMPLE_DBNAME $CONDDBORACLE_DBNAME
 setenv DETCONDEXAMPLE_DBUSER $CONDDBORACLE_DBUSER

@@ -1,3 +1,3 @@
-rem $Id: dropDB_Oracle.bat,v 1.1 2002-12-03 17:34:21 andreav Exp $
+rem $Id: dropDB_Oracle.bat,v 1.2 2004-12-08 17:22:37 marcocle Exp $
 rem Remove the Oracle ConditionsDB
-call %DETCONDEXAMPLEROOT%\sql\dropCondDB.bat
+call %CONDDBROOT%\cmt\condDBOracle_dropCondDB.csh %CONDDBORACLE_DBUSER% %CONDDBORACLE_DBPSWD% %CONDDBORACLE_DBHOST% %CONDDBORACLE_DBNAME%
