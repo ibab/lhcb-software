@@ -22,15 +22,22 @@ extern const CLID& CLID_L0MuonCandidate;
    @date        06 April 2001
 */
 
+namespace L0Muon {
+  enum StatusCode {
+    OK=0,
+    EMPTY,
+    ERROR,
+    CRATE_EMPTY,
+    CRATE_ERROR,
+    PU_EMPTY,
+    PU_ERROR,
+    PU_OVERFLOW
+  };    
+};
+
 class L0MuonCandidate : virtual public ContainedObject {
 
 public:
-  /// L0 muon trigger types
-  enum L0Type{
-  OK=0,
-  PUOVERFLOW,
-  PUERROR};
-		    
 
   /// Default constructor
   L0MuonCandidate( ) : m_pt(0), m_xM1(0), m_yM1(0), m_theta(0), m_phi(0) { }
@@ -78,6 +85,8 @@ public:
   L0mPad* padM3() { return m_pM3; } 
   /// accessor to L0Muon status code
   int status() const { return m_status; }
+  /// Comparison < operator for sorting the candidates in Pt
+  bool operator<(const L0MuonCandidate& lmc) { return pt() < lmc.pt(); }
 
 /// Serialize the pbject, for read/write
   virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
@@ -114,7 +123,5 @@ inline StreamBuffer& L0MuonCandidate::serialize(StreamBuffer& s) const {
 				<< m_pM1 << m_pM2 << m_pM3;
   return s;
 }
-
-typedef ObjectVector<L0MuonCandidate> L0MuonCandidates;
 
 #endif // L0MUON_L0MUONCANDIDATE_H
