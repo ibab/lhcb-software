@@ -1,14 +1,15 @@
-! $Id: release.notes,v 1.27 2002-10-11 07:13:57 ranjard Exp $ 
+! $Id: release.notes,v 1.28 2002-11-14 15:33:39 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
-!========================= CaloDet v6r0 2002-10-02 =========================
+!========================== CaloDet v5r2 2002-11-14 ==========================
+! 2002-11-14 - Marco Cattaneo
+ - Change version to force recompilation
+
+!========================== CaloDet v5r1 2002-10-05 ==========================
 ! 2002-10-03 - Marco Cattaneo
  - Use fabs() instead of abs() for floating point
-
-! 2002-10-02 - Florence Ranjard
- - cmt/requirements - move to new versions 
 
 !========================== CaloDet v5r0 2002-07-09 ==========================
 ! 2002-06-15 - v5r0 Vanya Belyaev
