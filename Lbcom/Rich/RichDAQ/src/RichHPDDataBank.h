@@ -1,18 +1,26 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichHPDDataBank.h
  *
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.1 2005-01-07 12:35:59 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.2 2005-01-13 13:09:34 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 12:35:59  jonrob
+ *  Complete rewrite
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHDAQ_RICHHPDDATABANK_H
 #define RICHDAQ_RICHHPDDATABANK_H 1
+
+// Gaudi
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/GaudiException.h"
 
 // Kernel
 #include "RichKernel/RichDAQDefinitions.h"
@@ -86,13 +94,18 @@ public:
    *
    *  @param rawData The raw data bank to fill
    */
-  virtual void fillRAWBank( RichDAQ::RAWBank & rawData ) const = 0;
+  void fillRAWBank( RichDAQ::RAWBank & rawData ) const;
 
-  /** Print data bank to Gaudi MsgStream
+  /** Overloaded output to message stream
    *
-   *  @param os Stream to print to
+   *  @param os   Output stream
+   *  @param data HPD data bank to print
    */
-  virtual void fillMsgStream( MsgStream & os ) const = 0;
+  friend MsgStream & operator << ( MsgStream & os, const RichHPDDataBank & data )
+  {
+    data.fillMsgStream(os);
+    return os;
+  }
 
 private: // methods
 
@@ -104,15 +117,21 @@ private: // methods
   {
     if ( m_internalData && m_data )
     {
-      delete[] m_data; m_data = 0;
+      delete[] m_data;
+      m_data = 0;
     }
   }
 
 protected: // methods
 
-  /// Add a data point
+  /// Add data point
   inline void addData( const RichDAQ::LongType data )
   {
+    if ( m_dataSize > 31 )
+    {
+      throw GaudiException("Attempt to fill more than 32 data words",
+                           "*RichHPDDataBank*", StatusCode::SUCCESS );
+    }
     m_data[m_dataSize++] = data;
   }
 
@@ -128,8 +147,38 @@ protected: // methods
     return m_dataSize;
   }
 
-  /// Dump the raw header and data block to MsgStream
+  /// Test if a given bit in a word is set on
+  inline bool
+  isBitOn( const RichDAQ::LongType data, const RichDAQ::ShortType pos ) const
+  {
+    return ( 0 != (data & (1<<pos)) );
+  }
+
+  /// Set a given bit in a data word on
+  inline void 
+  setBit( RichDAQ::LongType & data, const RichDAQ::ShortType pos )
+  {
+    data |= 1<<pos;
+  }
+
+  /// Set a given bit in a data word on
+  inline void 
+  setBit( RichDAQ::ShortType & data, const RichDAQ::ShortType pos )
+  {
+    data |= 1<<pos;
+  }
+
+  /** Dump the raw header and data block to message stream
+   *
+   *  @param os Stream to print to
+   */
   void dumpAllBits( MsgStream & os ) const;
+
+  /** Print data bank to message stream
+   *
+   *  @param os Stream to print to
+   */
+  virtual void fillMsgStream( MsgStream & os ) const = 0;
 
 protected: // data
 
@@ -146,12 +195,5 @@ protected: // data
   bool m_internalData;
 
 };
-
-/// overloaded output to MsgStream
-inline MsgStream & operator << ( MsgStream & os, const RichHPDDataBank & data )
-{
-  data.fillMsgStream(os);
-  return os;
-}
 
 #endif // RICHDAQ_RICHHPDDATABANK_H
