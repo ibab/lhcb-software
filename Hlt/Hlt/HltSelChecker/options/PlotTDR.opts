@@ -1,0 +1,19 @@
+// Plot TDR selections
+//
+ApplicationMgr.TopAlg += { "SimplePlots/TDRPlots" };
+TDRPlots.PhysDesktop.InputLoction = { "Phys/TDRselBs2PhiPhi"
+                                        , "Phys/TDRselBd2PiPi"
+                                        , "Phys/TDRselBd2KPi"
+                                        , "Phys/TDRselBs2PiK"
+                                        , "Phys/TDRselBs2KK"
+                                        , "Phys/TDRselBs2MuMu"
+                                        , "Phys/TDRselBd2DstarPi"
+                                        , "Phys/TDRselBd2D02KpiKstar"
+                                        , "Phys/TDRselBd2MuMuKstar"
+                                        , "Phys/TDRselBs2DsPi"
+                                        , "Phys/TDRselBs2DsK"
+                                        , "Phys/TDRselBs2Jpsi2MuMu_Phi2KK"
+                                        , "Phys/TDRselBs2PhiGamma" };
+					
+TDRPlots.PlotTool = "RecursivePlotTool" ;
+TDRPlots.RecursivePlotTool.Variables = { "WM", "M", "Chi2", "Vz", "P", "Pt", "IPs" } ;
