@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.1 2003-05-30 11:55:12 gcorti Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.2 2003-06-02 18:57:54 gcorti Exp $
 // Include files 
 #include <algorithm>
 
@@ -104,10 +104,17 @@ StatusCode CombinedParticleMaker::initialize() {
   }
   
   if( m_pionSelection.empty() ) {
-    std::vector<std::string>::const_reverse_iterator iLastPID = 
-      m_particleList.rbegin();
-    const std::string lastPID = *iLastPID;
-    if( "PION" != to_upper(lastPID) ) {
+    std::vector<std::string>::const_iterator iPType = m_particleList.begin();
+    bool makePion = false;
+    while( m_particleList.end() != iPType ) {
+      if( "PION" == to_upper( *iPType ) ) { 
+        makePion = true;
+        break;
+      }
+      ++iPType;
+    }
+    const std::string lastPID = m_particleList.back();
+    if( makePion && ("PION" != to_upper(lastPID)) ) {
       msg << MSG::FATAL 
           << "When PionSelections not specified pion must be last in list"
           << endreq;
@@ -176,6 +183,36 @@ StatusCode CombinedParticleMaker::initialize() {
     msg << MSG::FATAL << "Unable to locate Event Data Service" << endreq;
     return sc;
   }
+
+  // Log selection criteria
+  msg << MSG::INFO << "Selection of particle types have been set" << endreq;
+  msg << MSG::INFO << "Particle Type" << "     Criteria" << endreq;
+  for( TypeSelections::const_iterator itype=m_typeSelections.begin();
+       m_typeSelections.end()!=itype; ++itype ) {
+    std::string ptype = ((*itype).first)->particle();
+    partProp = ppSvc->findByStdHepID( -(((*itype).first)->jetsetID()) );
+    if( partProp ) { ptype += "/"+partProp->particle(); }
+    msg << MSG ::INFO << ptype << "   ";
+    for( SelectionSpecs::const_iterator isel=((*itype).second).begin();
+         ((*itype).second).end()!=isel; ++isel) {
+      std::string det = "";
+      if( (*isel)->HasRich() ) det += "RICH ";
+      if( (*isel)->HasCalo() ) det += "CALO ";
+      if( (*isel)->HasMuon() ) det += "MUON ";
+      msg << MSG::INFO << det << "   ";
+      const std::vector<double>& cuts = (*isel)->dllCuts();
+      for( unsigned int ipos = 0; ipos < cuts.size(); ++ipos ) {
+        if( cuts[ipos] > -999.0 ) {
+          PMakerSelection::DLLCuts a = PMakerSelection::DLLCuts(ipos);
+          std::string explanation = (*isel)->cutType( a );
+          msg << MSG::INFO << explanation << " > " << cuts[ipos] << "  ";
+        }
+      }
+      msg << MSG::INFO << std::endl;
+    }
+    msg << MSG::INFO << endreq;  
+  }
+
   return StatusCode::SUCCESS;
 
 }
@@ -344,7 +381,7 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
       // protoparticle
       bool kept = false;
       for( SelectionSpecs::const_iterator iSpec=((*iSel).second).begin();
-           ((*iSel).second).end(); ++iSpec ) {
+           ((*iSel).second).end()!=iSpec; ++iSpec ) {
         if( selectionIsSatisfied(*iProto, *iSpec) ) {
           // if satifisfied fillParticle,
           Particle* aParticle = new Particle();
@@ -584,7 +621,7 @@ bool CombinedParticleMaker::selectionIsSatisfied(const ProtoParticle* proto,
   
   // proton vs other hypothesis
   dllCut = (spec->dllCuts())[PMakerSelection::DLLP_PI];
-  if( (dllCut > -999.0) && (dk_pi < dllCut) )             { keep = false; }
+  if( (dllCut > -999.0) && (dp_pi < dllCut) )             { keep = false; }
   dllCut = (spec->dllCuts())[PMakerSelection::DLLP_E];
   if( (dllCut > -999.0) && ((dp_pi - de_pi) < dllCut) )  { keep = false; }
   dllCut = (spec->dllCuts())[PMakerSelection::DLLP_MU];
