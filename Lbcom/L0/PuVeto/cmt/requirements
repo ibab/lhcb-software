@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.18 2004-03-24 15:03:37 mzupan Exp $
+# $Id: requirements,v 1.19 2004-04-28 13:06:32 mzupan Exp $
 # Created    : 11/01/2002
 # Maintainer : Olivier Callot
 
 package           PuVeto
-version           v5r6
+version           v5r7
 
 # Structure, i.e. directories to process. 
 #============================================================================

@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.12 2004-03-25 08:39:48 cattanem Exp $
+// $Id: PuVetoAlg.cpp,v 1.13 2004-04-28 13:07:18 mzupan Exp $
 // Include files 
 #include <math.h>
 // from Gaudi
@@ -35,8 +35,8 @@ PuVetoAlg::PuVetoAlg( const std::string& name,
   , m_inputContainer      ( MCVeloFELocation::PuVeto  )
   , m_outputContainer     ( L0PuVetoLocation::Default )
   , m_threshold           ( 7000.     ) //electrons
-  , m_lowThreshold        (    2.     )
-  , m_highThreshold       (    2.     )
+  , m_lowThreshold        (    3.     )
+  , m_highThreshold       (    3.     )
   , m_highPosition        (    0. *mm )
   , m_secondPosition      ( -500. *mm )
 {
