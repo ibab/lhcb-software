@@ -1,4 +1,4 @@
-// $Id: MuonTileID.cpp,v 1.4 2002-03-22 18:24:09 atsareg Exp $
+// $Id: MuonTileID.cpp,v 1.5 2002-05-07 07:04:33 atsareg Exp $
 // Include files
 
 #include "MuonKernel/MuonTileID.h"
@@ -65,7 +65,8 @@ MuonTileID MuonTileID::intercept(const MuonTileID& otherID) const {
 
   // check first that the two strips are really intercepting
   
-  if ( region()  != otherID.region() ||
+  if ( station() != otherID.station() ||
+       region()  != otherID.region() ||
        quarter() != otherID.quarter()     )  return MuonTileID();
        
   int thisGridX = layout().xGrid();

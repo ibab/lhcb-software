@@ -1,4 +1,4 @@
-// $Id: MuonTileID.h,v 1.3 2002-03-25 13:31:18 atsareg Exp $
+// $Id: MuonTileID.h,v 1.4 2002-05-07 07:04:02 atsareg Exp $
 //
 #ifndef      MUONKERNEL_MUONTILEID_H
 #define      MUONKERNEL_MUONTILEID_H 1  
@@ -21,9 +21,6 @@
     @author  Andrei Tsaregorodtsev
     @date    26/12/2001
 */ 
-
-// class MuonStationLayout;
-// class MuonSystemLayout;
 
 class MuonTileID {
 
@@ -214,7 +211,6 @@ public:
   /// It can be however not a valid id.
   bool isDefined() const;
   
-private:
   /// update station identifier 
   inline void setStation  ( const unsigned int station );  
   
@@ -239,9 +235,16 @@ private:
   /// update index in Y
   inline void setY ( const unsigned int y ); 
   
+  /// modify index in X
+  inline void deltaX ( int dx ) { setX(nX() + dx); } 
+  
+  /// modify index in Y
+  inline void deltaY ( int dy ) { setY(nY() + dy); } 
+  
+private:  
   /// set arbitrary field of the identifier
   inline void set ( const MuonTileID::ContentType      Value ,  
-                    const unsigned int  	   Shift ,
+                    const unsigned int  	       Shift ,
                     const MuonTileID::ContentType&     Mask  );
 
 private:
