@@ -7,6 +7,7 @@ $(src)${NAME}.${SUFFIX} : $(${NAME}_${FILESUFFIX}_dependencies)
 	  $(lexpp) -t ${FILENAME} | \
 	   sed -e 's/yylex/${LPP}ylex/g' \
 	       -e 's/YYCLASS/${LYP}/g' \
+	       -e 's=#include <unistd.h>=//#include <unistd.h>=g' \
                -e 's=extern=//=g' \
                -e 's/FILE \*yyin/static FILE \*yyin/g' \
                -e 's/void yyrestart/static void yyrestart/g' \

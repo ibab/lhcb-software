@@ -9,6 +9,9 @@ $(src)${NAME}.${SUFFIX} : $(${NAME}_ypp_dependencies)
 	       -e 's/. YYSTYPE;/#endif/g' \
 	       -e 's/#define YYSTYPE yystype/#define YYSTYPE ${LYP}YYSTYPE/g' \
 	       -e 's/YYCLASS/${LYP}/g' \
+	       -e 's/extern char \*getenv();//g' \
+               -e 's/^static int yygrowstack();//g' \
+               -e 's/static int yygrowstack/int ${LYP}yygrowstack/g' \
 	       y.tab.c >${NAME}.$(SUFFIX); \
 	   sed -e 's/typedef union/union YYSTYPE/g' \
 	       -e 's/YYSTYPE;/;/g' \
