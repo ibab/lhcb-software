@@ -3,7 +3,7 @@
 # Maintainer : Marco Cattaneo
 #============================================================================
 package LHCbAlgs
-version v1r3p1
+version v1r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -19,6 +19,7 @@ use GaudiAlg    	v*
 use LHCbInterfaces	v1r*	Kernel
 use GenEvent    	v3r*    Event
 use DAQEvent            v*      Event
+use DetDesc		v*	Det
 
 #============================================================================
 # Component library building rule

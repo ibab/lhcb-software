@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.8 2005-01-28 13:18:04 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.9 2005-03-18 16:23:45 cattanem Exp $
 
 // Include files
 #include "LbAppInit.h"
@@ -6,10 +6,12 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRndmEngine.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/IDataManagerSvc.h"
 #include "AIDA/IHistogram1D.h"
 #include "Event/EventHeader.h"
 #include "Event/ProcStatus.h"
 #include "Tools/INormalizeTool.h"
+#include "DetDesc/DataStoreLoadAgent.h"
 
 #include "boost/format.hpp"
 
@@ -32,6 +34,7 @@ LbAppInit::LbAppInit( const std::string& name, ISvcLocator* pSvcLocator )
   declareProperty( "doHistos",         m_doHistos   = true  );
   declareProperty( "SkipFactor",       m_skipFactor = 0     );
   declareProperty( "SingleSeed",       m_singleSeed = false );
+  declareProperty( "PreloadGeometry",  m_preloadGeom= false );
 }
 //-----------------------------------------------------------------------------
 
@@ -105,6 +108,14 @@ StatusCode LbAppInit::initialize() {
                                       numBins, 0.5, numBins+0.5 );
   }
 
+  if( m_preloadGeom ) {
+    DataStoreLoadAgent *loadAgent = new DataStoreLoadAgent();
+    IDataManagerSvc *dataMgr = svc<IDataManagerSvc>("DetectorDataSvc", true);
+    info() << "Preloading detector geometry..." << endmsg;
+    dataMgr->traverseTree(loadAgent);
+    delete loadAgent;
+  }
+  
   return StatusCode::SUCCESS;
 }
 

@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v1r4 2005-03-18 =======================
+! 2005-03-18 - Marco Cattaneo
+ - Add "PreloadGeometry" option to LbAppInit. Default is false
+
 !======================= LHCbAlgs v1r3p1 2005-01-28 =======================
 ! 2005-01-28 - Marco Cattaneo
  - Remove an unnecessary variable from LbAppInit

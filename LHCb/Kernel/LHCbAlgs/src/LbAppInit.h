@@ -1,4 +1,4 @@
-// $Id: LbAppInit.h,v 1.2 2004-11-15 15:07:18 cattanem Exp $
+// $Id: LbAppInit.h,v 1.3 2005-03-18 16:23:45 cattanem Exp $
 #ifndef LHCBALGS_LBAPPINIT_H
 #define LHCBALGS_LPAPPINIT_H 1
 
@@ -51,6 +51,9 @@ private:
 
   /// Property to use only one seed (default is false)
   bool m_singleSeed;
+  
+  /// Property to preload the detector geometry (default is false)
+  bool m_preloadGeom;
 
   // Member data
   IRndmEngine*  m_engine;       ///< Pointer to random number engine
