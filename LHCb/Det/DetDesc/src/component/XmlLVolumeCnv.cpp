@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.11 2001-06-15 08:40:40 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.12 2001-06-18 14:32:44 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -271,9 +271,15 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
       // deals with a physical volume, adds it to the logical volume
       // and frees the memory
       PVolumeItem* volume = dealWithPhysvol(childElement);
-      dataObj->createPVolume (volume->physvolName,
-                              volume->logvolName,
-                              *(volume->transformation));
+      if (0 == volume->transformation) {
+        dataObj->createPVolume (volume->physvolName,
+                                volume->logvolName,
+                                HepTransform3D::Identity);
+      } else {
+        dataObj->createPVolume (volume->physvolName,
+                                volume->logvolName,
+                                *(volume->transformation));
+      }
       if (volume->transformation != 0) {
         delete (volume->transformation);
         volume->transformation = 0;
@@ -298,9 +304,15 @@ StatusCode XmlLVolumeCnv::internalCreateObj (DOM_Element element,
         resstr[len] = 0; 
         std::string pvname (resstr); 
         delete [] resstr;
-        dataObj->createPVolume (pvname,
-                                (*it)->logvolName,
-                                *((*it)->transformation));
+        if (0 == (*it)->transformation) {
+          dataObj->createPVolume (pvname,
+                                  (*it)->logvolName,
+                                  HepTransform3D::Identity);
+        } else {
+          dataObj->createPVolume (pvname,
+                                  (*it)->logvolName,
+                                  (*it)->transformation->inverse());
+        }
       }
       while (volumes->size() > 0) {
         PVolumeItem* item = volumes->back();
@@ -538,6 +550,7 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
         nbOfTransfoFound++;
       }
     }
+  
     // if there are still children after the transformation,
     // raise an error message
     while (j < childNodes.getLength() && 
@@ -566,6 +579,7 @@ XmlLVolumeCnv::dealWithParamphysvol (DOM_Element element, unsigned int nD) {
         }
       }
     }
+
   } else {
     // no element child -> display an error, return 0
     MsgStream log(msgSvc(), "XmlLVolumeCnv" );
@@ -663,9 +677,19 @@ XmlLVolumeCnv::expandParamPhysVol
       newPvi->physvolName = (*it)->physvolName;
       newPvi->tag = tag;
       newPvi->logvolName = (*it)->logvolName;
-      newPvi->transformation = new HepTransform3D
-        (rotations[step] * (*it)->transformation->getRotation(),
-         translations[step] + (*it)->transformation->getTranslation());
+      if (0 == (*it)->transformation) {
+        HepTransform3D *transformation =
+          new HepTranslate3D (translations[step]);
+        *transformation = *transformation * HepRotate3D (rotations[step]);
+        newPvi->transformation = transformation;
+      } else {
+        HepTransform3D *transformation =
+          new HepTranslate3D (translations[step] +
+                              (*it)->transformation->getTranslation());
+        *transformation = *transformation * HepRotate3D
+          (rotations[step] * (*it)->transformation->getRotation());
+        newPvi->transformation = transformation;
+      }
       result->push_back (newPvi);
     }
   }
@@ -866,6 +890,8 @@ XmlLVolumeCnv::dealWithBooleanChildren (DOM_Element element) {
             << "A solid is needed here. It will be ignored" << endreq;
         i += 1;
       }
+    } else {
+      i += 1;
     }
   }
   // returns
