@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.53 2004-08-03 15:48:09 pkoppenb Exp $
+! $Id: release.notes,v 1.54 2004-09-16 07:00:56 pkoppenb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+! 2004-09-16 - P. Koppenburg
+ - src/Particle2MCLink.cpp
+   . Try to check if origin() is a TrgTrack if it is not a ProtoParticle.
+     This does not allow yet to associate TrgTracks as they are not 
+     stored in a container at creation. 
 !========================== DaVinciAssociators v5r1 2004-08-03 ===================
 ! 2004-08-03 - Ph. Charpentier
  - src/CompositeParticle2MCLinks.cpp

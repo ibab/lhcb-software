@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.15 2004-08-03 15:32:59 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.16 2004-09-16 07:00:56 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,7 @@
 
 // from event model
 #include "Event/ProtoParticle.h"
+#include "Event/TrgTrack.h"
 #include "Event/MCParticle.h"
 #include "Event/Particle.h"
 
@@ -111,37 +112,54 @@ StatusCode Particle2MCLinks::execute() {
     
     // loop on Parts and MCParts to match them
     for( Particles::const_iterator pIt=parts->begin() ;
-         parts->end() != pIt; pIt++) {
+         parts->end() != pIt; ++pIt ) {
+      Particle* PPP = *pIt ;
+      verbose() << "Particle " << PPP->momentum() << endreq ;
       ifMsg(MSG::VERBOSE) << "    Particle " << objectName(*pIt);
-      ProtoParticle* protoPart = 
-        dynamic_cast<ProtoParticle*>( (*pIt)->origin() ) ;
+
+      MCParticle* mcPart = NULL ;
+      Object2MCLink* link = (*pIt)->charge() ? m_chargedLink : m_neutralLink;
+      // check if it is from a ProtoParticle
+      ProtoParticle* protoPart = dynamic_cast<ProtoParticle*>( (*pIt)->origin() ) ;
       if( NULL != protoPart ) {
         if( msg.level() <= MSG::VERBOSE ) {
           std::string strCharged = (*pIt)->charge() ? "Charged" : "Neutral";
           msg << " from " << strCharged << " ProtoParticle " 
               << protoPart->key();
         }
-        Object2MCLink* link = 
-          (*pIt)->charge() ? m_chargedLink : m_neutralLink;
         // Use the Linker 
-        MCParticle* mcPart = link->first( protoPart );
-        if( NULL == mcPart ) {
-          ifMsg(MSG::VERBOSE) << " not associated to any MCPart";
-        } 
-        else {
-          nass++;
-          ifMsg(MSG::VERBOSE) << " associated to MCParts";
-          do {
-            ifMsg(MSG::VERBOSE) << " - " << mcPart->key();
-            if( NULL != table )table->relate( *pIt, mcPart, link->weight());
-            if( NULL != linkerTable) 
-              linkerTable->link( *pIt, mcPart, link->weight());
-            nrel++;
-            mcPart = link->next();
-          } while( NULL != mcPart);
-        }
+        mcPart = link->first( protoPart );
       } else {
-        ifMsg(MSG::VERBOSE) << " not from a ProtoParticle";
+        ifMsg(MSG::VERBOSE) << " not from a ProtoParticle" ;
+      // check if it is from a Trigger track
+        const TrgTrack* TrgT = dynamic_cast<const TrgTrack*>( PPP->origin() );
+        ifMsg(MSG::VERBOSE) << " " << TrgT << " " ;
+        if ( TrgT ) {
+          if( msg.level() <= MSG::VERBOSE ) {
+            std::string strCharged = (*pIt)->charge() ? "Charged" : "Neutral";
+            msg << " from " << strCharged << " TrgTrack " << TrgT->key();
+          }
+          // Use the Linker 
+          mcPart = link->first( TrgT );
+          ifMsg(MSG::VERBOSE) << " " << mcPart ;
+        } else {
+          ifMsg(MSG::VERBOSE) << " nor from a TrgTrack";
+        } // Trg
+      } // Proto
+      if( NULL == mcPart ) {
+        ifMsg(MSG::VERBOSE) << " is not associated to any MCPart";
+      } 
+      else {
+        nass++;
+        ifMsg(MSG::VERBOSE) << " is associated to MCParts";
+        do {
+          ifMsg(MSG::VERBOSE) << " - " << mcPart->key();
+          if( NULL != table )table->relate( *pIt, mcPart, link->weight());
+          if( NULL != linkerTable) 
+            linkerTable->link( *pIt, mcPart, link->weight());
+          nrel++;
+          mcPart = link->next();
+        } while( NULL != mcPart);
       }
       ifMsg(MSG::VERBOSE) << endreq;
     }
