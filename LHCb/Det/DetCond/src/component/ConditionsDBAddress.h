@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/component/ConditionsDBAddress.h,v 1.1.1.1 2001-09-14 15:07:21 andreav Exp $
+//$Id: ConditionsDBAddress.h,v 1.2 2001-11-23 17:18:48 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBADDRESS_H
 #define DETCOND_CONDITIONSDBADDRESS_H 1
 
@@ -6,20 +6,19 @@
 
 // Base classes
 #include "DetCond/IConditionsDBAddress.h"
-#include "DetCond/SimpleAddress.h"
+#include "GaudiKernel/GenericAddress.h"
 
 ///---------------------------------------------------------------------------
 /** @class ConditionsDBAddress ConditionsDBAddress.h Det/DetCond/ConditionsDBAddress.h
 
     An IOpaqueAddress for CERN-IT CondDB data persistency.
-    This class is derived from SimpleAddress rather than from GenericAddress.
 
     @author Andrea Valassi 
     @date August 2001
 *///---------------------------------------------------------------------------
 
 class ConditionsDBAddress : virtual public IConditionsDBAddress, 
-			    public SimpleAddress {
+			    public GenericAddress {
     
  public:
     
@@ -29,14 +28,14 @@ class ConditionsDBAddress : virtual public IConditionsDBAddress,
 		       const ITime& validityTime,       // CondDB time
 		       const CLID& clid,                // classID
 		       const unsigned char& stringType, // string type
-		       IDataDirectory* entry = 0);      // data store entry
+		       IRegistry* entry = 0);           // data store entry
 
   /// Constructor.
   /// If not specifed, type and clID are discovered at runtime in the CondDB.
   ConditionsDBAddress( const std::string& folderName,   // CondDB folderName
 		       const std::string& tagName,      // CondDB tagName
 		       const ITime& validityTime,       // CondDB time
-		       IDataDirectory* entry = 0);      // data store entry
+		       IRegistry* entry = 0);           // data store entry
 
   /// Destructor
   ~ConditionsDBAddress();

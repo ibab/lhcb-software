@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.2 2001-10-29 12:41:51 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.3 2001-11-23 17:25:40 andreav Exp $
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
@@ -54,19 +54,20 @@ StatusCode ConditionsDBCnvSvc::initialize()
 
   // Now we can get a handle to the MessageSvc
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::DEBUG << "Initialization starting" << endreq;
+  log << MSG::DEBUG << "Specific initialization starting" << endreq;
 
-  // Create the ConditionsDBGate and initialize it
+  // Create the ConditionsDBGate as a private service of ConditionsDBCnvSvc
   log << MSG::DEBUG << "Creating ConditionsDBGate" << endreq;
   m_conditionsDBGate = new ConditionsDBGate( "ConditionsDBGate",
 					     serviceLocator() );
+
+  // Initialize the ConditionsDBGate
   log << MSG::DEBUG << "Initializing ConditionsDBGate" << endreq;
   sc = m_conditionsDBGate->initialize();
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not initialize ConditionsDBGate" << endreq;
     return sc;
   }
-  log << MSG::DEBUG << "Initialized ConditionsDBGate" << endreq;
 
   // Locate the Detector Data Service
   IDataProviderSvc* pDDS = 0;
@@ -78,7 +79,7 @@ StatusCode ConditionsDBCnvSvc::initialize()
   }
 
   // Set the condition data store
-  sc = setStore ( pDDS );
+  sc = setDataProvider ( pDDS );
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not set transient store" << endreq;
     return sc;
@@ -86,7 +87,7 @@ StatusCode ConditionsDBCnvSvc::initialize()
 
   // Locate IConversionSvc interface of the DetectorPersistencySvc
   sc = serviceLocator()->service 
-    ("DetectorPersistencySvc",  m_detPersSvc);
+    ("DetectorPersistencySvc",  m_detPersSvc, true);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Cannot locate IConversionSvc interface of DetectorPersistencySvc"
@@ -123,13 +124,13 @@ StatusCode ConditionsDBCnvSvc::initialize()
     return sc;
   }
 
-  log << MSG::DEBUG << "Initialization completed" << endreq;
+  log << MSG::DEBUG << "Specific initialization completed" << endreq;
   return sc;
 }
 
 //----------------------------------------------------------------------------
 
-/// Stop the service.
+/// Finalize the service.
 StatusCode ConditionsDBCnvSvc::finalize()
 {
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
@@ -160,18 +161,14 @@ StatusCode ConditionsDBCnvSvc::queryInterface(const IID& riid,
 //----------------------------------------------------------------------------
 
 /// Create a transient representation from another representation of an object.
+/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
 StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress, 
 					   DataObject*&    refpObject) {
-
-  /// This overloaded method:
-  /// - does NOT register the object in the data store
-  /// - does NOT associate the address to the object it created
-  /// - therefore, its implementation does NOT call the base class method
 
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Method createObj starting" << endreq;
 
-  /// FIRST: decode the opaque address 
+  /// First, decode the opaque address 
   std::string   folderName;
   std::string   tagName;
   const ITime*  evtTime;
@@ -184,7 +181,7 @@ StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress,
     return StatusCode::FAILURE;
   }
 
-  /// SECOND: create a new ConditionData object for the given folder, time, tag
+  /// Second, create a new ConditionData object for the given folder, time, tag
   //  Notice that the ConditionsDBCnvSvc has no converters of its own:
   //  object creation is delegated to another CnvSvc via a temporary address
   ConditionData* pCdata;
@@ -203,21 +200,29 @@ StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress,
 
 //----------------------------------------------------------------------------
 
+/// Resolve the references of the created transient object.
+/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
+StatusCode ConditionsDBCnvSvc::fillObjRefs ( IOpaqueAddress* /*pAddress*/, 
+					     DataObject*     /*pObject */ ) {
+
+  // Do nothing for the moment
+  return StatusCode::SUCCESS;
+
+}
+  
+//----------------------------------------------------------------------------
+
 /// Update a transient representation from another representation of an object.
-/// ALWAYS update even if ConditionData is valid at the specified time:
+/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
+/// Always update even if ConditionData is valid at the specified time:
 /// previous ConditionData may refer to a different tag at the same time.
 StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress, 
 					   DataObject*     pObject  ) {
 
-  /// This overloaded method:
-  /// - does NOT register the object in the data store
-  /// - does NOT associate the address to the object it created
-  /// - therefore, its implementation does NOT call the base class method
-
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Method updateObj starting" << endreq;
 
-  /// Decode the opaque address 
+  /// First, decode the opaque address 
   std::string   folderName;
   std::string   tagName;
   const ITime*  evtTime;
@@ -230,7 +235,7 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
     return StatusCode::FAILURE;
   }
 
-  // Update the object according to the specifications of the address
+  // Second, update the object according to the specifications of the address
   if( 0 == pObject ) {
     log << MSG::ERROR << "There is no object to update" << endreq;
     return StatusCode::FAILURE;
@@ -251,7 +256,7 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
     return StatusCode::FAILURE;
   }
 
-  // Check that everything is OK
+  // Last, check that everything is OK
   log << MSG::DEBUG << "New ConditionData is valid since "
       << pCdata->validSince().absoluteTime() << " till "
       << pCdata->validTill().absoluteTime()  << endreq;
@@ -263,7 +268,19 @@ StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress,
 
 //----------------------------------------------------------------------------
 
-/// Decode an IOpaqueAddress as a ConditionsDBAddress
+/// Update the references of an updated transient object.
+/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
+StatusCode ConditionsDBCnvSvc::updateObjRefs ( IOpaqueAddress* /*pAddress*/, 
+					       DataObject*     /*pObject */ ) {
+
+  // Do nothing for the moment
+  return StatusCode::SUCCESS;
+
+}
+  
+//----------------------------------------------------------------------------
+
+/// Decode an IOpaqueAddress as a ConditionsDBAddress.
 StatusCode 
 ConditionsDBCnvSvc::i_decodeAddress ( IOpaqueAddress*   pAddress, 
 				      std::string&      folderName,
@@ -295,10 +312,11 @@ ConditionsDBCnvSvc::i_decodeAddress ( IOpaqueAddress*   pAddress,
   folderName = addr->folderName();
   tagName    = addr->tagName();
   evtTime    = addr->time();
-  classID    = addr->clID();    
+  //classID    = addr->clID();    
+  classID    = pAddress->clID();    
   type       = addr->stringType();    
 
-  log << MSG::DEBUG << "ConditionsDBAddress succesfully decoded" << endreq;
+  log << MSG::DEBUG << "ConditionsDBAddress successfully decoded" << endreq;
   log << MSG::DEBUG
       << "folder="  << folderName << endreq;
   log << MSG::DEBUG << "tag=" << tagName
@@ -310,13 +328,13 @@ ConditionsDBCnvSvc::i_decodeAddress ( IOpaqueAddress*   pAddress,
 
 //----------------------------------------------------------------------------
 
-/// Create a ConditionData object by folder name, tag and time
-/// This method does not register the ConditionData in the transient data store
+/// Create a ConditionData object by folder name, tag and time.
+/// This method does not register ConditionData in the transient data store.
 /// Implementation:
-/// -> create a temporary address containing storage type and classID
-/// -> dispatch to appropriate conversion service according to storage type
-/// -> this will dispatch to appropriate converter according to CLID
-///    (NB: ConditionsDBCnvSvc has no converters of its own)
+/// - create a temporary address containing storage type and classID;
+/// - dispatch to appropriate conversion service according to storage type;
+/// - this will dispatch to appropriate converter according to CLID
+///   (ConditionsDBCnvSvc has no converters of its own).
 StatusCode 
 ConditionsDBCnvSvc::createConditionData ( ConditionData*&      refpCdata,
 					  const std::string&   folderName,
@@ -337,7 +355,7 @@ ConditionsDBCnvSvc::createConditionData ( ConditionData*&      refpCdata,
     log << MSG::ERROR << "Could not read CondDBObject data" << endreq;
     return status;
   }
-  log << MSG::DEBUG << "CondDBObject data succesfully read" << endreq;
+  log << MSG::DEBUG << "CondDBObject data successfully read" << endreq;
 
   // Should classID and type be discovered in the ConditionsDB?
   CLID          theClassID;
@@ -373,19 +391,18 @@ ConditionsDBCnvSvc::createConditionData ( ConditionData*&      refpCdata,
       << (int)theType << " for class " << theClassID << endreq;
   log << MSG::DEBUG << "String data is '" << stringData << "'" << endreq;
   IOpaqueAddress* tmpAddress;
+  const std::string par[2] = {stringData, ""};
   status = addressCreator()->createAddress
-    ( theType, theClassID, stringData, "", 0, tmpAddress);
+    ( theType, theClassID, par, 0, tmpAddress);
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Persistency service could not create a new address" << endreq;
     return status;
   }  
-  log << MSG::DEBUG << "Temporary address succesfully created" << endreq;
+  log << MSG::DEBUG << "Temporary address successfully created" << endreq;
   tmpAddress->addRef();
 
   // Now create the object
-  // (NB: CnvSvc of given string type MUST be modified so that createObj() 
-  // (NB: does not call updateRegistryEntry - but still calls fillObjRefs()
   log << MSG::DEBUG 
       << "Delegate object creation to the persistency service" << endreq;
   status = m_detPersSvc->createObj ( tmpAddress, (DataObject*&)refpCdata );
@@ -395,7 +412,7 @@ ConditionsDBCnvSvc::createConditionData ( ConditionData*&      refpCdata,
 	<< "Persistency service could not create a new object" << endreq;
     return status;
   }
-  log << MSG::DEBUG << "New object succesfully created" << endreq;
+  log << MSG::DEBUG << "New object successfully created" << endreq;
   refpCdata->setValidity ( since, till );
   return StatusCode::SUCCESS;
 
@@ -420,15 +437,15 @@ ConditionsDBCnvSvc::createConditionData (ConditionData*&      refpCdata,
 
 //----------------------------------------------------------------------------
 
-/// Update a ConditionData object by folder name, tag and time
-/// ALWAYS update even if ConditionData is valid at the specified time:
+/// Update a ConditionData object by folder name, tag and time.
+/// Always update even if ConditionData is valid at the specified time:
 /// previous ConditionData may refer to a different tag at the same time.
-/// This method does not register the ConditionData in the transient data store
+/// This method does not register ConditionData in the transient data store.
 /// Implementation:
-/// -> create a temporary address containing storage type and classID
-/// -> dispatch to appropriate conversion service according to storage type
-/// -> this will dispatch to appropriate converter according to CLID
-///    (NB: ConditionsDBCnvSvc has no converters of its own)
+/// - create a temporary address containing storage type and classID;
+/// - dispatch to appropriate conversion service according to storage type;
+/// - this will dispatch to appropriate converter according to CLID
+///   (the ConditionsDBCnvSvc has no converters of its own).
 StatusCode 
 ConditionsDBCnvSvc::updateConditionData ( ConditionData*       pCdata,
 					  const std::string&   folderName,
@@ -490,7 +507,7 @@ ConditionsDBCnvSvc::updateConditionData ( ConditionData*       pCdata,
     log << MSG::ERROR << "Could not read CondDBObject data" << endreq;
     return status;
   }
-  log << MSG::DEBUG << "CondDBObject data succesfully read" << endreq;
+  log << MSG::DEBUG << "CondDBObject data successfully read" << endreq;
 
   // Create temporary address for the relevant type and classID 
   log << MSG::DEBUG 
@@ -500,19 +517,18 @@ ConditionsDBCnvSvc::updateConditionData ( ConditionData*       pCdata,
       << (int)theType << " for class " << theClassID << endreq;
   log << MSG::DEBUG << "String data: " << stringData << endreq;
   IOpaqueAddress* tmpAddress;
+  const std::string par[2] = {stringData, ""};
   status = addressCreator()->createAddress
-    ( theType, theClassID, stringData, "", 0, tmpAddress);
+    ( theType, theClassID, par, 0, tmpAddress);
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Persistency service could not create a new address" << endreq;
     return status;
   }  
-  log << MSG::DEBUG << "Temporary address succesfully created" << endreq;
+  log << MSG::DEBUG << "Temporary address successfully created" << endreq;
   tmpAddress->addRef();
 
   // Now update the object
-  // (NB: CnvSvc of given string type MUST be modified so that updateObj() 
-  // (NB: does not call updateRegistryEntry - but still calls updateObjRefs()
   log << MSG::DEBUG << "Delegate update to the persistency service" << endreq;
   status = m_detPersSvc->updateObj ( tmpAddress, (DataObject*&)pCdata );
   tmpAddress->release();
@@ -648,7 +664,7 @@ ConditionsDBCnvSvc::encodeDescription   ( const CLID&          classID,
 
 //----------------------------------------------------------------------------
 
-/// (TEMPORARY?) Handle to the ConditionsDBGate
+/// Handle to the ConditionsDBGate
 IConditionsDBGate* ConditionsDBCnvSvc::conditionsDBGate ( ) {
   return m_conditionsDBGate;
 }

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/Lib/ConditionData.cpp,v 1.2 2001-09-14 16:51:41 andreav Exp $
+//$Id: ConditionData.cpp,v 1.3 2001-11-23 17:12:03 andreav Exp $
 #include <string> 
 
 #include "GaudiKernel/TimePoint.h" 
@@ -46,7 +46,7 @@ ConditionData::ConditionData( ConditionData& icdata )
 //---------------------------------------------------------------------------
 
 /// Copy operator.
-/// Need to overload it to point to new TimePoint objects.
+/// Overloaded from DataObject to point to new TimePoint objects.
 ConditionData& ConditionData::operator= ( ConditionData& icdata )
 {
   DataObject::operator= (icdata);

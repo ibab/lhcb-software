@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/DetCond/IConditionAddress.h,v 1.1.1.1 2001-09-14 15:07:22 andreav Exp $
+//$Id: IConditionAddress.h,v 1.2 2001-11-23 17:05:41 andreav Exp $
 #ifndef DETCOND_ICONDITIONADDRESS_H
 #define DETCOND_ICONDITIONADDRESS_H 1
 
@@ -17,7 +17,7 @@ class ITime;
     @date August 2001
 *///--------------------------------------------------------------------------
 
-class IConditionAddress : virtual public IOpaqueAddress {
+class IConditionAddress {
 
  public:
 

@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/component/ConditionsDBAddress.cpp,v 1.1.1.1 2001-09-14 15:07:21 andreav Exp $
+//$Id: ConditionsDBAddress.cpp,v 1.2 2001-11-23 17:18:48 andreav Exp $
 
 #include "ConditionsDBAddress.h"
 
@@ -19,15 +19,15 @@ ConditionsDBAddress::ConditionsDBAddress ( const std::string& folderName,
 					   const ITime& validityTime,
 					   const CLID& clid,
 					   const unsigned char& stringType,
-					   IDataDirectory* entry )
+					   IRegistry* entry )
 
-  : SimpleAddress   ( CONDDB_StorageType,
-		      clid,
-		      entry               )
+  : GenericAddress  ( CONDDB_StorageType,
+		      clid                )
   , m_folderName    ( folderName          )
   , m_tagName       ( tagName             )
   , m_stringType    ( stringType          )
 {
+  setRegistry( entry );
   m_time = new TimePoint ( validityTime );
 }
 
@@ -37,15 +37,15 @@ ConditionsDBAddress::ConditionsDBAddress ( const std::string& folderName,
 ConditionsDBAddress::ConditionsDBAddress ( const std::string& folderName,
 					   const std::string& tagName,   
 					   const ITime& validityTime,
-					   IDataDirectory* entry )
-  : SimpleAddress   ( CONDDB_StorageType,
-		      ConditionsDBAddress_undefinedClassID,
-		      entry               )
+					   IRegistry* entry )
+  : GenericAddress  ( CONDDB_StorageType,
+		      ConditionsDBAddress_undefinedClassID )
   , m_folderName    ( folderName          )
   , m_tagName       ( tagName             )
   , m_stringType    ( ConditionsDBAddress_undefinedStringType )
 
 {
+  setRegistry( entry );
   m_time = new TimePoint ( validityTime );
 }
 

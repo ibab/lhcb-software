@@ -1,16 +1,20 @@
-# $Id: requirements,v 1.5 2001-10-29 17:05:46 andreav Exp $
+# $Id: requirements,v 1.6 2001-11-23 17:10:32 andreav Exp $
 package DetCond
-version v1
+version v2
 
 branches DetCond cmt src doc
 
 # GAUDI framework dependencies
 # GaudiKernel and GaudiSvc are needed at compile time
 # GaudiAlg components are needed at runtime (as shared library $GaudiAlgShr)
-use GaudiSys v8*
+use GaudiSys     v9*
+#use GaudiPolicy  v5*
+#use GaudiKernel  v11*
+#use GaudiSvc     v7*
+#use GaudiAlg     v5*
 
 # ConditionsDB package
-use CONDDB       v3r01*
+use CONDDB       v3r02*
 
 include_dirs $(DETCONDROOT)
 
@@ -48,6 +52,7 @@ private
 apply_pattern package_Cshlibflags
 apply_pattern package_Lshlibflags
 macro_append DetCond_shlibflags "$(GaudiKernel_linkopts) $(CONDDB_linkopts)"
+
 
 
 

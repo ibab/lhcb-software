@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/component/ConditionDataSvc.h,v 1.1.1.1 2001-09-14 15:07:21 andreav Exp $
+//$Id: ConditionDataSvc.h,v 1.2 2001-11-23 17:18:13 andreav Exp $
 #ifndef DETCOND_CONDITIONDATASVC_H
 #define DETCOND_CONDITIONDATASVC_H 1
 
@@ -40,6 +40,9 @@ class ConditionDataSvc : public DataSvc,
 
   /// Initialize the service
   virtual StatusCode initialize();
+  
+  /// Finalize the service
+  virtual StatusCode finalize();
   
   /// Update object
   virtual StatusCode updateObject( DataObject* toUpdate );

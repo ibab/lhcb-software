@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/component/ConditionsDBDataSvc.h,v 1.1.1.1 2001-09-14 15:07:21 andreav Exp $
+//$Id: ConditionsDBDataSvc.h,v 1.2 2001-11-23 17:14:25 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBDATASVC_H
 #define DETCOND_CONDITIONSDBDATASVC_H 1
 
@@ -8,8 +8,9 @@
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;
-class IOpaqueAddress;
 class IConditionsDBCnvSvc;
+class IOpaqueAddress;
+class IRegistry;
 
 ///---------------------------------------------------------------------------
 /** @class ConditionsDBDataSvc ConditionsDBDataSvc.h Det/DetCond/ConditionsDBDataSvc.h
@@ -45,11 +46,14 @@ class ConditionsDBDataSvc : virtual public ConditionDataSvc,
 
  public:
 
-  // Overload DataSvc methods: 
+  // Overloaded DataSvc methods
 
-  /// Service initialisation.
+  /// Initialize the service
   virtual StatusCode initialize();
 
+  /// Finalize the service
+  virtual StatusCode finalize();
+  
  public:
   
   // Implementation of the IConditionsDBDataSvc interface
@@ -88,7 +92,7 @@ class ConditionsDBDataSvc : virtual public ConditionDataSvc,
 
   /// Retrieve a directory creating all intermediate directories if necessary
   StatusCode i_mkdir ( const std::string& pathName,
-		       RegistryEntry*&    entry     );
+		       IRegistry*&        entry     );
 
  private:
 

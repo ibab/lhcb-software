@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/component/ConditionDataSvc.cpp,v 1.1.1.1 2001-09-14 15:07:21 andreav Exp $
+//$Id: ConditionDataSvc.cpp,v 1.2 2001-11-23 17:18:13 andreav Exp $
 #include <string>
 
 #include "ConditionDataSvc.h"
@@ -6,8 +6,8 @@
 #include "DetCond/ConditionData.h"
 #include "DetCond/IConditionAddress.h"
 
-#include "GaudiKernel/AddrFactory.h"
 #include "GaudiKernel/DataSvc.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
@@ -19,18 +19,15 @@
 ConditionDataSvc::ConditionDataSvc(const std::string& name,
 				   ISvcLocator* svc) 
   : DataSvc(name,svc)   
-  , m_eventTime          ( 0 )
+  , m_eventTime          ( 0 ) 
 {
 }
 
 //----------------------------------------------------------------------------
 
 /// Destructor
-ConditionDataSvc::~ConditionDataSvc()  {
-  if( 0 != m_eventTime ) delete m_eventTime; 
-  //DataSvc::~DataSvc;
-  setDataLoader(0);
-  clearStore();
+ConditionDataSvc::~ConditionDataSvc() 
+{
 }
 
 //----------------------------------------------------------------------------
@@ -46,10 +43,25 @@ StatusCode ConditionDataSvc::initialize()
   // Now we can get a handle to the MessageSvc
   // Set the output level for name "ConditionDataSvc"
   msgSvc()->setOutputLevel( "ConditionDataSvc", m_outputLevel );
-  MsgStream log(msgSvc(), "ConditionDataSvc" );
-  log << MSG::DEBUG << "Initialize()" << endreq;
 
   return sc;
+}
+
+//----------------------------------------------------------------------------
+
+/// Finalize the service.
+StatusCode ConditionDataSvc::finalize()
+{
+
+  MsgStream log(msgSvc(), "ConditionDataSvc" );
+  log << MSG::DEBUG << "Finalizing" << endreq;
+
+  // Delete the associated event time
+  if( 0 != m_eventTime ) delete m_eventTime; 
+
+  // Finalize the base class
+  return DataSvc::finalize();
+
 }
 
 //----------------------------------------------------------------------------
@@ -110,19 +122,19 @@ StatusCode ConditionDataSvc::updateObject( DataObject* toUpdate ) {
   }
 
   // Set the new event time in the address (even if object is still valid!)
-  if ( 0 == toUpdate->directory() )    {
+  if ( 0 == toUpdate->registry() )    {
     log << MSG::ERROR 
 	<< "The object is not registered in a DataDirectory" << endreq; 
     return INVALID_OBJ_ADDR;
   }
-  if ( 0 == toUpdate->directory()->address() )    {
+  if ( 0 == toUpdate->registry()->address() )    {
     return INVALID_OBJ_ADDR;
     log << MSG::ERROR 
 	<< "The object has no associated address" << endreq; 
   } 
   IConditionAddress* addr;
   addr = dynamic_cast< IConditionAddress* >
-    ( toUpdate->directory()->address() );
+    ( toUpdate->registry()->address() );
   if ( 0 == addr ) {
     log << MSG::ERROR 
 	<< "Object address is not an IConditionAddress" << endreq;

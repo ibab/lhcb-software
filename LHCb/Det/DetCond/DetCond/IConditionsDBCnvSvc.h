@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/DetCond/IConditionsDBCnvSvc.h,v 1.1.1.1 2001-09-14 15:07:22 andreav Exp $
+//$Id: IConditionsDBCnvSvc.h,v 1.2 2001-11-23 17:05:41 andreav Exp $
 #ifndef DETCOND_ICONDITIONSDBCNVSVC_H
 #define DETCOND_ICONDITIONSDBCNVSVC_H 1
 
@@ -40,7 +40,7 @@ class IConditionsDBCnvSvc : virtual public IInterface
 
  public:
   
-  // Handling of arbitrary condition data, not registered in the TDS
+  // Create/update ConditionData that's not necessarily registered in the TDS.
 
   /// Create a ConditionData object by folder name, tag and time.
   /// This method does not register ConditionData in the transient data store.
@@ -92,7 +92,7 @@ class IConditionsDBCnvSvc : virtual public IInterface
 				     const unsigned char& type,
 				     std::string&         description) = 0;
   
-  /// (TEMPORARY?) Handle to the ConditionsDBGate.
+  /// Handle to the ConditionsDBGate.
   virtual IConditionsDBGate* 
     conditionsDBGate               ( )                                 = 0;
 

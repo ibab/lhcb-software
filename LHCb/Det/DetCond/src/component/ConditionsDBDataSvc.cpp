@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/component/ConditionsDBDataSvc.cpp,v 1.1.1.1 2001-09-14 15:07:21 andreav Exp $
+//$Id: ConditionsDBDataSvc.cpp,v 1.2 2001-11-23 17:16:21 andreav Exp $
 #include <string>
 
 #include "ConditionsDBDataSvc.h"
@@ -41,8 +41,6 @@ ConditionsDBDataSvc::ConditionsDBDataSvc( const std::string& name,
 /// Destructor
 ConditionsDBDataSvc::~ConditionsDBDataSvc()
 {
-  setDataLoader(0);
-  clearStore();
 }
 
 //----------------------------------------------------------------------------
@@ -76,11 +74,11 @@ StatusCode ConditionsDBDataSvc::initialize()
   // Set the output level for name "ConditionsDBDataSvc"
   msgSvc()->setOutputLevel( "ConditionsDBDataSvc", m_outputLevel );
   MsgStream log(msgSvc(), "ConditionsDBDataSvc" );
-  log << MSG::DEBUG << "ConditionsDBDataSvc specific init: start" << endreq;
+  log << MSG::DEBUG << "Specific initialization starting" << endreq;
 
   // Locate the DetectorPersistencySvc and set it as data loader
   IConversionSvc* pers_svc;
-  sc = serviceLocator()->service("DetectorPersistencySvc", pers_svc);
+  sc = serviceLocator()->service("DetectorPersistencySvc", pers_svc, true);
   if( sc .isFailure() ) {
     log << MSG::ERROR 
 	<< " Unable to locate DetectorPersistencySvc" << endreq; 
@@ -104,8 +102,22 @@ StatusCode ConditionsDBDataSvc::initialize()
   log << MSG::DEBUG 
       << "Global tag name:        " << m_tagName         << endreq;
 
-  log << MSG::DEBUG << "ConditionsDBDataSvc specific init: end" << endreq;
+  log << MSG::DEBUG << "Specific initialization completed" << endreq;
   return sc;
+}
+
+//----------------------------------------------------------------------------
+
+/// Finalize the service.
+StatusCode ConditionsDBDataSvc::finalize()
+{
+
+  MsgStream log(msgSvc(), "ConditionsDBDataSvc" );
+  log << MSG::DEBUG << "Finalizing" << endreq;
+
+  // Finalize the base class
+  return ConditionDataSvc::finalize();
+
 }
 
 //----------------------------------------------------------------------------
@@ -158,7 +170,7 @@ ConditionsDBDataSvc::getNameInStore ( std::string& path,
 	<< "This path is reserved for the data store root" << endreq;
     return StatusCode::FAILURE;
   }
-  else if ( path[0] != IDataDirectory::SEPARATOR ) {
+  else if ( path[0] != IDataProviderSvc::SEPARATOR ) {
     log << MSG::ERROR
 	<< "Invalid path for ConditionData: " << path << endreq;
     log << MSG::ERROR
@@ -189,7 +201,7 @@ ConditionsDBDataSvc::retrieveValidCondition  ( DataObject*&         refpObject,
 
   // Check if the event time is set
   if ( 0 == eventTime() ) {
-    log << MSG::ERROR << "The evet time is not set yet" << endreq;
+    log << MSG::ERROR << "The event time is not set yet" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -205,10 +217,10 @@ ConditionsDBDataSvc::retrieveValidCondition  ( DataObject*&         refpObject,
   // Check if the object address is consistent to what we are asking for
   // If the object does not exist, load it
   // If the object exists, update it
-  RegistryEntry* entry;
+  IRegistry* entry;
   if ( checkRoot () ) {
 
-    entry = m_root.findLeaf(m_rootName, path);
+    entry = m_root->find(path);
     if ( 0 != entry ) {
 
       log << MSG::DEBUG 
@@ -283,7 +295,7 @@ ConditionsDBDataSvc::retrieveValidCondition( DataObject*&        refpObject,
 /// Fill each intermediate directory with a dummy DataObject.
 StatusCode
 ConditionsDBDataSvc::i_mkdir ( const std::string& pathName,
-			       RegistryEntry*&    entry )
+			       IRegistry*& entry )
 {
   
   MsgStream log(msgSvc(), "ConditionsDBDataSvc" );
@@ -297,7 +309,7 @@ ConditionsDBDataSvc::i_mkdir ( const std::string& pathName,
   bool isRoot = true;           // is current directory the oldest parent?
   std::string path = pathName;  // path still to be decomposed
   int sep;
-  while ( (sep = path.find(IDataDirectory::SEPARATOR,1) ) > 0 ) {
+  while ( (sep = path.find(IDataProviderSvc::SEPARATOR,1) ) > 0 ) {
 
     // Extract lPath for current directory in the tree
     lPath = lPath + std::string( path, 0,   sep           );
@@ -368,22 +380,27 @@ ConditionsDBDataSvc::i_mkdir ( const std::string& pathName,
   } // loop on intermediate directories
 
   // Now create the RegistryEntry at pathName
-  RegistryEntry* parent = m_root.findLeaf( m_rootName, lPath ); 
+  DataSvcHelpers::RegistryEntry* parent;
+  try {
+    parent = 
+      dynamic_cast<DataSvcHelpers::RegistryEntry*> ( m_root->find(lPath) );
+  } catch (...) {
+  }
   if (0 == parent ) {
     log << MSG::ERROR 
 	<< "Could not locate RegistryEntry in the store at " 
 	<< lPath << endreq;
     return StatusCode::FAILURE;
   }
-  if (0 != m_root.findLeaf( m_rootName, pathName ) ) {
+  if (0 != m_root->find( pathName ) ) {
     log << MSG::ERROR 
 	<< "RegistryEntry already exists in the store at " 
 	<< pathName << endreq;
     return StatusCode::FAILURE;
   }
-  entry = new RegistryEntry ( pathName );
+  entry = new DataSvcHelpers::RegistryEntry ( pathName );
   parent->add ( entry );
-  if (0 == m_root.findLeaf( m_rootName, pathName ) ) {
+  if (0 == m_root->find( pathName ) ) {
     log << MSG::ERROR 
 	<< "Unable to create RegistryEntry at " << pathName << endreq;
     return StatusCode::FAILURE;

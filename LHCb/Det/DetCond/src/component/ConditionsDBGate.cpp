@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/component/ConditionsDBGate.cpp,v 1.1.1.1 2001-09-14 15:07:21 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.2 2001-11-23 17:12:58 andreav Exp $
 #include <string>
 #include <unistd.h>
 #include <sys/param.h>
@@ -24,8 +24,6 @@ ConditionsDBGate::ConditionsDBGate( const std::string& name,
   , m_condDBDataAccess   ( 0     )
   , m_condDBFolderMgr    ( 0     )
 {
-  //cout << "Creating a ConditionsDBGate" << endl;
-  //cout << "Its address is" << this << endl;
   declareProperty( "condDBBootHost",   m_condDBBootHost  = ""     );
   declareProperty( "condDBBootDir",    m_condDBBootDir   = ""     );
   declareProperty( "condDBBootFile",   m_condDBBootFile  = ""     );
@@ -50,7 +48,7 @@ StatusCode ConditionsDBGate::initialize()
 
   // Now we can get a handle to the MessageSvc
   MsgStream log(msgSvc(), "ConditionsDBGate" );
-  log << MSG::DEBUG << "CondDB-specific initialization starting" << endreq;
+  log << MSG::DEBUG << "Specific initialization starting" << endreq;
 
   // Get properties from the JobOptionsSvc
   status = setProperties();
@@ -107,7 +105,7 @@ StatusCode ConditionsDBGate::initialize()
 
   }
 
-  log << MSG::DEBUG << "CondDB-specific initialization completed" << endreq;
+  log << MSG::DEBUG << "Specific initialization completed" << endreq;
   return status;
 }
 
