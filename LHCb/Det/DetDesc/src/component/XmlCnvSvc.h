@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.7 2002-05-28 16:06:31 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.h,v 1.8 2002-05-29 07:43:55 sponce Exp $
 
 #ifndef DETDESC_XMLCNVSVC_H
 #define DETDESC_XMLCNVSVC_H
@@ -195,9 +195,11 @@ private:
 //           | product '-' sum
 //    product :=   expr '*' product
 //               | expr '/' product
-//    expr :=   '-'? alphanumeric token
+//    expr :=   '-'? alphanumeric_token
 //            | '-'? function_name? '(' sum ')'
-// Where ? means that it is optionnal and | means or.
+// Where ? means that it is optionnal and | means or. alphanumeric_token
+// contains only alphanumeric characters, except for a single '-' character
+// if preceded by a digit and an 'e'
 //
 // The way it is implemented is the following :
 //    - every function receives the string to be parsed and the

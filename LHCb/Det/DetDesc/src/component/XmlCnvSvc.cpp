@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.12 2002-05-28 16:06:30 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.13 2002-05-29 07:43:55 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -483,8 +483,23 @@ unsigned int XmlCnvSvc::skipExpr (std::string s,
     if (endIndex < end) return endIndex; else return end;
   } else {
     // if the expression does not start with a parenthesis nor a
-    // function call, it should be an alphanumeric character
-    if (isalnum(s[realStart])) {
+    // function call, it should be either a word or a number
+    if (isalpha(s[realStart])) {
+      if (index != s.npos) {
+        return index;
+      } else {
+        return end;
+      }
+    } else if (isdigit(s[realStart])) {
+      // We have a number, look whether we have a negative exponent
+      // if yes, skip it
+      if ((index != s.npos) && (s[index] == '-')) {
+        if (index > realStart + 1) {
+          if ((s[index-1] == 'e') && (isdigit(s[index-2]))) {
+            index = s.find_first_of("+-/*()", index+1);
+          }
+        }
+      }
       if (index != s.npos) {
         return index;
       } else {
