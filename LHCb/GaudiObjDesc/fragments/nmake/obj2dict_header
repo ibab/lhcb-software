@@ -1,6 +1,5 @@
 
-dicttool      = GODWriteCppDict.exe
-headertool    = GODWriteCppHeader.exe
+parsetool     = godII.py
 dest          = ..\dict\ 
 dtdfile       = ..\$(xmlsrc)\gdd.dtd 
 
