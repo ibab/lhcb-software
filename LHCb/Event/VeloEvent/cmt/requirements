@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.27 2004-03-05 09:57:40 cattanem Exp $
+# $Id: requirements,v 1.28 2004-11-29 13:55:34 cattanem Exp $
 package VeloEvent
-version v13r1
+version v13r2
 
 branches Event src xml cmt doc dict
 
-use Event        v4r* Event
+use Event        v* Event
 
 include_dirs	 $(VELOEVENTROOT)
 
@@ -20,3 +20,6 @@ library          VeloEventDict  ../dict/*.cpp
 apply_pattern component_library library=VeloEventDict
 apply_pattern linker_library    library=VeloEvent
 macro_append VeloEvent_linkopts "" WIN32 "/include:_VeloEvent_loadRef"
+
+private
+use GaudiObjDesc v*

@@ -1,8 +1,8 @@
-! $Id: release.notes,v 1.29 2004-10-26 14:36:46 dhcroft Exp $
+! $Id: release.notes,v 1.30 2004-11-29 13:55:34 cattanem Exp $
 package Event/VeloEvent
 package manager: C.Parkes
 
-
+!======================= VeloEvent v13r2 2004-10-26 =======================
 ! 2004-10-26 - David Hutchcroft
  - Modifications for new VeloDet v9r0 code (start from Chris' code again)
 
