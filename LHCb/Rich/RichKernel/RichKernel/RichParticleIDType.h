@@ -1,4 +1,4 @@
-// $Id: RichParticleIDType.h,v 1.3 2002-11-07 17:23:40 jonrob Exp $
+// $Id: RichParticleIDType.h,v 1.4 2002-11-12 16:59:08 jonrob Exp $
 #ifndef RICHKERNEL_PARTICLEIDTYPE_H
 #define RICHKERNEL_PARTICLEIDTYPE_H 1
 
@@ -22,6 +22,7 @@
 namespace Rich {
 
   /// Number of Rich particle types
+  static const int NRichParticleTypes = 5;
   static const int NParticleTypes = 5;
 
   /// Enumeration for particle ID types
