@@ -1,4 +1,4 @@
-// $Id: RichToolRegistry.cpp,v 1.1 2003-06-30 15:47:06 jonrob Exp $
+// $Id: RichToolRegistry.cpp,v 1.2 2003-07-03 09:15:07 jonesc Exp $
 
 // local
 #include "RichToolRegistry.h"
@@ -43,7 +43,7 @@ StatusCode RichToolRegistry::initialize() {
     m_tools[name] = RichToolPair(type,NULL);
     m_refC[name] = 0;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -54,41 +54,43 @@ StatusCode RichToolRegistry::finalize() {
 
   // release all acquired tools
   for ( RichToolMap::iterator it = m_tools.begin();
-        it != m_tools.end(); 
+        it != m_tools.end();
         ++it ) { releaseTool( ((*it).second).second ); }
-  
+
   return StatusCode::SUCCESS;
 }
 
 IAlgTool * RichToolRegistry::acquireTool( std::string toolName ) {
-  
+
   RichToolPair& instance = m_tools[toolName];
-  
   IAlgTool *& pTool = instance.second;
   if ( !pTool ) {
     if ( "" == instance.first ) instance.first = toolName;
     MsgStream msg( msgSvc(), name() );
-    msg << MSG::DEBUG << "Acquiring tool '"+toolName 
+    msg << MSG::DEBUG << "Acquiring tool '"+toolName
         << "' of type '"+instance.first << "'" << endreq;
     if ( !toolSvc()->retrieveTool(instance.first, toolName, pTool) ) {
       pTool = NULL;
       throw GaudiException( "Unable to retrieve tool '" + toolName +
-                            "' of type '"+instance.first + "'" ,
+                            "' of type '" + instance.first + "'" ,
                             name(), StatusCode::FAILURE );
     }
-    ++m_refC[toolName];
   }
-  
+  ++m_refC[toolName];
+
   return pTool;
 }
 
 void RichToolRegistry::releaseTool( std::string toolName ) {
-  
+
   --m_refC[toolName];
   if ( m_refC[toolName] <= 0 ) {
     m_refC[toolName] = 0;
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::DEBUG << "Releasing tool '"+toolName
+        << "' of type '"+(m_tools[toolName]).first << "'" << endreq;
     releaseTool( (m_tools[toolName]).second );
   }
-  
+
 }
 

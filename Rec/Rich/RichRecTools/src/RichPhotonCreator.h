@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.h,v 1.1 2003-06-30 15:47:05 jonrob Exp $
+// $Id: RichPhotonCreator.h,v 1.2 2003-07-03 09:15:07 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONCREATOR_H
 #define RICHRECTOOLS_RICHPHOTONCREATOR_H 1
 
@@ -21,6 +21,7 @@
 #include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichTrackCreator.h"
 #include "RichRecBase/IRichPixelCreator.h"
+#include "RichRecBase/IRichStatusCreator.h"
 #include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "RichDetTools/IRichDetInterface.h"
@@ -93,11 +94,12 @@ private: // private methods
 private: // private data
 
   // Pointers to tool instances
-  IRichTrackCreator * m_trackCreator;
-  IRichPixelCreator * m_pixelCreator;
-  IRichPhotonPredictor * m_photonPredictor;
-  IRichPhotonSignal * m_photonSignal;
-  IRichDetInterface * m_richDetInt;
+  IRichTrackCreator * m_trackCreator; ///< Pointer to RichTrackCreator
+  IRichPixelCreator * m_pixelCreator; ///< Pointer to RichPixelCreator
+  IRichPhotonPredictor * m_photonPredictor; ///< Pointer to RichPhotonPredictor
+  IRichPhotonSignal * m_photonSignal; ///< Pointer to RichPhotonSignal
+  IRichDetInterface * m_richDetInt;   ///< Pointer to RichDetInterface
+  IRichStatusCreator * m_richStat;    ///< Pointer to RichStatusCreator
 
   /// Pointer to RichRecPhotons
   RichRecPhotons * m_photons;
