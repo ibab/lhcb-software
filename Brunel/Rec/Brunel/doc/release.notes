@@ -3,10 +3,17 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
-</PRE>
 
-<H1><A NAME=v8>20011017 Brunel v8</A></H1>
-<PRE>
+</PRE><H1><A NAME=v8>20020115 Brunel v9r0</A></H1><PRE>
+   Upgraded to use Gaudi v9
+
+   Functionality changes
+   ---------------------
+   In options
+   - Brunel.opts: suppress printout of options from included subdetector files
+
+! =================================================================
+</PRE><H1><A NAME=v8>20011017 Brunel v8</A></H1><PRE>
    Major repackaging, no major change in functionality:
    - all source files have been removed and moved to new Rec/BrunelSicb package
    - version number is set by a compiler define flag in the requirements file
