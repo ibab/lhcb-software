@@ -51,7 +51,6 @@ if ($?LS_SUBCWD) then
 else
 # in interactive, executable is under same root directory as this job
   cd `dirname $0` 
-  cd ..
   set MYJOBROOT = $PWD
 endif
 
