@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2002-09-03 - Olivier Dormond
+ - The "/Particles" part of the hypothesis locations is now added
+   automatically if not present.
+ - Added a check to avoid trying to tag particles without a bottom quark.
+
+! 2002-09-03 - Olivier Dormond
  - Swapped the way particles and B hypothesis are setup. Now the PhysDesktop
    takes care of the particles and the B are handled seperatly.
  - Support multiple locations for the B.
