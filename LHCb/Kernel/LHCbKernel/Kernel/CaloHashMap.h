@@ -1,8 +1,11 @@
-// $Id: CaloHashMap.h,v 1.8 2004-07-28 16:21:46 ibelyaev Exp $
+// $Id: CaloHashMap.h,v 1.9 2004-07-28 16:55:57 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2004/07/28 16:21:46  ibelyaev
+//  fix(?) a bug for Win32 in Kernel/CaloHashMap.h
+//
 // Revision 1.7  2004/07/27 14:08:58  ibelyaev
 //  modification/simplification of classes CaloMap&CaloHashMap
 //
@@ -41,7 +44,7 @@ public:
   /// type of the mapped value  
   typedef  VALUE                 Value    ;
   /// own type 
-  typedef  HashMap<KEY,VALUE>    Self     ;
+  typedef  CaloHashMap<KEY,VALUE> Self     ;
   
   /// the  map itself
   typedef typename __gnu_cxx::hash_map
@@ -61,10 +64,10 @@ public:
 public:
   
   /// Standard constructor (empty)
-  HashMap() : m_map  () {};
+  CaloHashMap() : m_map  () {};
   
   /// destructor (virtual)
-  virtual ~HashMap() { clear() ; };
+  virtual ~CaloHashMap() { clear() ; };
   
   /// empty container? 
   bool          empty  () const { return m_map.empty() ; }
