@@ -1,6 +1,4 @@
-# $Id: requirements,v 1.11 2002-12-01 14:20:44 ibelyaev Exp $
-# =============================================================================
-# CVS  tag $Name: not supported by cvs2svn $
+# $Id: requirements,v 1.12 2002-12-04 18:20:59 ranjard Exp $
 # =============================================================================
 # Package which contains the essential ingredients to build/store/retrieve 
 # basic relations/associations between calorimter objects 
@@ -15,7 +13,7 @@ branches          src cmt doc options
 
 # =============== used packages ===============================================
 use CaloEvent     v11r*  Event 
-use CaloDet       v5r*   Det 
+use CaloDet       v6r*   Det 
 
 # =============== own options =================================================
 set CALOASSOCIATORSOPTS  ${CALOASSOCIATORSROOT}/options

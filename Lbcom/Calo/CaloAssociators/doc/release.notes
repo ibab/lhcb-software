@@ -1,14 +1,16 @@
-! $Id: release.notes,v 1.19 2002-12-01 14:20:44 ibelyaev Exp $
-! =============================================================================
-! CVS tag $Name: not supported by cvs2svn $
+! $Id: release.notes,v 1.20 2002-12-04 18:20:59 ranjard Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Ivan Belyaev
 ! =============================================================================
 
+!================== CaloAssociators v3r2 2002-12-04 =====================
 ! 2002-11-29 - Ivan Belyaev
  - cmt/requirements      version update 
+
+! 2002-11-19 - Florence Ranjard
+ - requirements - use new versions
 
 !===================== CaloAssociators v3r1 2002-11-14 =====================
 ! 2002-11-13 - Ivan Belyaev
