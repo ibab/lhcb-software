@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Error suppression file Brunel v24r2, gcc 3.2.3, valgrind 2.0.0
+# Error suppression file Brunel v25r2, gcc 3.2.3, valgrind 2.0.0
 
 # Format of this file is:
 # {
@@ -25,4 +25,13 @@
   fun:_Znwj
   fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
   fun:_ZN11xercesc_2_322UnixHTTPURLInputStreamC1ERKNS_6XMLURLE
+}
+
+{
+  POOL RootStorageSvc MF20041217
+  Memcheck:Leak
+  fun:__builtin_vec_new
+  fun:_Znaj
+  fun:_ZN13TStreamerInfo7CompileEv
+  fun:_ZN4CINT4Type14patchStreamersEv
 }
