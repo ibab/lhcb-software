@@ -1,4 +1,4 @@
-// $Id: MuBgTest.cpp,v 1.1.1.1 2003-04-04 09:10:14 asatta Exp $
+// $Id: MuBgTest.cpp,v 1.2 2003-04-16 08:33:55 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -312,7 +312,7 @@ StatusCode MuBgTest::fillHisto(int station,int region, int ispill,
     }      
     
   }
-  
+  return StatusCode::SUCCESS;
 }
 
 
