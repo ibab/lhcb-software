@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.4 2002-07-17 07:49:21 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.5 2002-07-27 19:32:25 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -69,7 +69,7 @@ StatusCode Particle2MCLinks::execute() {
   // Loop on Particles containers //
   //////////////////////////////////
 
-  for( vector<std::string>::iterator inp = m_inputData.begin(); 
+  for( std::vector<std::string>::iterator inp = m_inputData.begin(); 
        m_inputData.end()!= inp; inp++) {
     // Get Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);

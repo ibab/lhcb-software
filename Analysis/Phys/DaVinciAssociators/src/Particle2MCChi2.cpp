@@ -1,4 +1,4 @@
-// $Id: Particle2MCChi2.cpp,v 1.3 2002-07-15 15:17:17 phicharp Exp $
+// $Id: Particle2MCChi2.cpp,v 1.4 2002-07-27 19:32:19 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -122,7 +122,7 @@ StatusCode Particle2MCChi2::execute() {
   // Loop on Particles containers //
   //////////////////////////////////
 
-  for( vector<std::string>::iterator inp = m_inputData.begin(); 
+  for( std::vector<std::string>::iterator inp = m_inputData.begin(); 
        m_inputData.end()!= inp; inp++) {
     // Get Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
