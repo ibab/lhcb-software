@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.1 2002-10-02 07:06:26 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.2 2002-10-10 18:31:06 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -52,10 +52,11 @@ StatusCode CompositeParticle2MCLinks::initialize() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endmsg;
 
-  StatusCode sc = toolSvc()->retrieveTool("Particle2MCAsct", m_pAsct, this);
+  StatusCode sc = toolSvc()->retrieveTool("Particle2MCWeightedAsct", 
+                                          "P2MCAsct",m_pAsct, this);
   if(sc.isFailure()){
-        log << MSG::FATAL << " Unable to retrieve Associator tool" << endreq;
-         return sc;
+    log << MSG::FATAL << " Unable to retrieve Associator tool" << endreq;
+    return sc;
   }
   return sc;
 };
@@ -85,7 +86,8 @@ StatusCode CompositeParticle2MCLinks::execute() {
           << endmsg;
     }
     else {
-      log << MSG::FATAL << "    *** Could not retrieve Particles from " << *inp << endmsg;
+      log << MSG::FATAL << "    *** Could not retrieve Particles from " 
+          << *inp << endmsg;
       continue;
     }
     
@@ -93,16 +95,18 @@ StatusCode CompositeParticle2MCLinks::execute() {
     if( m_pAsct->tableExists() ) {
       for( Particles::const_iterator pIt=parts->begin() ;
            parts->end() != pIt; pIt++) {
-           if ( table->relations(*pIt).size()!=0 ) continue; // already in table
-           MCParticle *mcp =  m_pAsct->associatedFrom( *pIt );
-           if ( mcp!=0) { // copy from underlying associator
-               table->relate(*pIt,mcp);
-           } else {
-               SmartDataPtr<MCParticles> mcParts( eventSvc(), MCParticleLocation::Default );
-               for (MCParticles::iterator i = mcParts->begin();i!=mcParts->end();++i) {
-                  associate1(*pIt,*i,table);
-               }
-           }
+        if ( table->relations(*pIt).size()!=0 ) continue; // already in table
+        MCParticle *mcp =  m_pAsct->associatedFrom( *pIt );
+        if ( mcp!=0) { // copy from underlying associator
+          table->relate(*pIt,mcp);
+        } else {
+          SmartDataPtr<MCParticles> mcParts( eventSvc(),
+                                             MCParticleLocation::Default );
+          for (MCParticles::iterator i = mcParts->begin();
+               i!=mcParts->end(); ++i) {
+            associate1(*pIt,*i,table);
+          }
+        }
       }
     } else {
       delete table;
@@ -110,22 +114,22 @@ StatusCode CompositeParticle2MCLinks::execute() {
     }
   }
   if (table!=0) {
-      // Register the table on the TES
-      StatusCode sc = eventSvc()->registerObject( outputTable(), table);
-      if( sc.isFailure() ) {
-        log << MSG::FATAL << "     *** Could not register table " 
-            << outputTable()
-            << endmsg;
-        delete table;
-        return sc;
-      } else {
-        log << MSG::DEBUG << "     Registered table " 
-            << outputTable() << endmsg;
-      }
+    // Register the table on the TES
+    StatusCode sc = eventSvc()->registerObject( outputTable(), table);
+    if( sc.isFailure() ) {
+      log << MSG::FATAL << "     *** Could not register table " 
+          << outputTable()
+          << endmsg;
+      delete table;
+      return sc;
+    } else {
+      log << MSG::DEBUG << "     Registered table " 
+          << outputTable() << endmsg;
+    }
   } else {
-      log << MSG::FATAL << "     *** Could not create table " 
-            << outputTable()
-            << endmsg;
+    log << MSG::FATAL << "     *** Could not create table " 
+        << outputTable()
+        << endmsg;
 
   }
     
@@ -144,56 +148,64 @@ StatusCode CompositeParticle2MCLinks::finalize() {
 }
 
 //=============================================================================
-
+//  associate1 auxiliary method
+//=============================================================================
 bool 
-CompositeParticle2MCLinks::associate1(const Particle *p, const MCParticle *m, Particle2MCAsct::Table* table) const
-{
-       MsgStream  log( msgSvc(), name() );
-       bool s = false;
-       const ParticleID& idP = p->particleID();
-       const ParticleID& idM = m->particleID();
-       log << MSG::DEBUG << " checking particle " <<  p->key() << " (" <<idP.pid() << ") "
-                         << " and MC Particle " << m->key()<< " (" <<idM.pid() << ") ";
-       if ( idP.pid() == idM.pid() || ( p->charge()==0 && idP.abspid() == idM.abspid()) ) {
-           log << MSG::DEBUG << " potential match " ;
-           const Vertex *v = p->endVertex();
-           if (v==0) {
-              log <<  " no daughter, check underlying particle associator" ;
-              s = ( m ==  m_pAsct->associatedFrom(p) ); 
-           } else {
-              const SmartRefVector<Particle>& dau = v->products();
-              const SmartRefVector<MCVertex>& vMC = m->endVertices(); 
-              if (!vMC.empty()) {
-                    std::vector<const MCParticle*> mcdau;
-                    // check the sum of all endVertices???
-                    if (vMC[0]!=0) {
-                        const SmartRefVector<MCParticle>& d = vMC[0]->products();
-                        for (SmartRefVector<MCParticle>::const_iterator k=d.begin();k!=d.end();++k)
-                           mcdau.push_back(*k);
-                    }
-                    SmartRefVector<Particle>::const_iterator i;
-                    for (i = dau.begin();i != dau.end();++i) {
-                       std::vector<const MCParticle*>::iterator j = mcdau.begin();
-                       while (j != mcdau.end() && !associate1(*i,*j,table)) ++j;
-                       if (j==mcdau.end()) break; // doesn't match -- give up
-                       mcdau.erase(j);
-                    }
+CompositeParticle2MCLinks::associate1(const Particle *p, 
+                                      const MCParticle *m, 
+                                      Particle2MCAsct::Table* table) const {
+  MsgStream  log( msgSvc(), name() );
+  bool s = false;
+  const ParticleID& idP = p->particleID();
+  const ParticleID& idM = m->particleID();
+  log << MSG::DEBUG << " checking particle " <<  p->key() 
+      << " (" <<idP.pid() << ") "
+      << " and MC Particle " << m->key()<< " (" <<idM.pid() << ") ";
+  if ( idP.pid() == idM.pid() || 
+       ( p->charge()==0 && idP.abspid() == idM.abspid()) ) {
+    log << MSG::DEBUG << " potential match " ;
+    const Vertex *v = p->endVertex();
+    if (v==0) {
+      log <<  " no daughter, check underlying particle associator" ;
+      s = ( m ==  m_pAsct->associatedFrom(p) ); 
+    } else {
+      const SmartRefVector<Particle>& dau = v->products();
+      const SmartRefVector<MCVertex>& vMC = m->endVertices(); 
+      if (!vMC.empty()) {
+        std::vector<const MCParticle*> mcdau;
+        // check the sum of all endVertices???
+        if (vMC[0]!=0) {
+          const SmartRefVector<MCParticle>& d = vMC[0]->products();
+          for (SmartRefVector<MCParticle>::const_iterator k=d.begin();
+               k!=d.end();++k)
+            mcdau.push_back(*k);
+        }
+        SmartRefVector<Particle>::const_iterator i;
+        for (i = dau.begin();i != dau.end();++i) {
+          std::vector<const MCParticle*>::iterator j = mcdau.begin();
+          while (j != mcdau.end() && !associate1(*i,*j,table)) ++j;
+          if (j==mcdau.end()) break; // doesn't match -- give up
+          mcdau.erase(j);
+        }
 #if 0
-                    if (m_allowExtraMCPhotons) { // maybe add an energy threshold for extraneous photons?
-                       static const ParticleID gamma =  ;
-                       while (!mcdau.empty() &&  mcdau.back()->pid() == gamma ) mcdau.pop_back();
-                    }
+        if (m_allowExtraMCPhotons) { // maybe add an energy threshold
+                                     // for extraneous photons?
+          static const ParticleID gamma =  ;
+          while (!mcdau.empty() &&  mcdau.back()->pid() == gamma ) 
+            mcdau.pop_back();
+        }
 #endif
-                    s = ( i == dau.end() && mcdau.empty() ) ; // all matched up, nothing left
-              }
-          }
-       }
-       if (s) {
-          table->relate(p,m);
-          log  << " registered match " << endmsg;
-       } else {
-          log  << " NO match " << endmsg;
+        s = ( i == dau.end() && mcdau.empty() ) ; // all matched up, 
+                                                  // nothing left
+      }
+    }
+  }
+  if (s) {
+    table->relate(p,m);
+    log  << " registered match " << endmsg;
+  } else {
+    log  << " NO match " << endmsg;
 
-       }
-       return s;
+  }
+  return s;
 }
