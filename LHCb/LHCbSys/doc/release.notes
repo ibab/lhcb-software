@@ -5,9 +5,39 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v18r1 2005-03-02 =======================
-! 2005-03-02 - Marco Cattaneo
+!======================= LHCbSys v18r1 2005-03-07 =======================
+! 2005-03-07 - Marco Cattaneo
  - Move to Gaudi v16r2
+ - Packages modified: KernelSys v4r8, LHCbKernel v5r8,
+     EventSys v20r1, DAQEvent v5r0, RichEvent v8r2, RichRecBase v1r15,
+     DetSys v6r3, RichDet v8r3, VeloDet v9r3, MuonTools v3r8, DAQSys v1r1p1,
+     RichDAQ v2r2p1, VeloDAQ v2r3p1, CaloDAQ v1r0p2, MuonDAQ v1r2p1, OTDAQ v3r2p1
+
+ - In LHCbKernel v5r8
+   . Backwards icompatible changes to RichSmartID
+   . Add missing lcg dict entries
+
+ - In DAQEvent v5r0
+   . Backwards incompatible changes to RawBuffer
+   . Add/Modify RawBuffer and L1Buffer bank types
+   . Encode/decode event and run number into DAQ RawBank
+
+ - In RichEvent v8r2
+   . Add history bit fields to MCRichDigit, MCRichDeposit, MCRichSummedDeposit
+   . Remove unused photo-detector numbers from MCRichHit and MCRichOpticalPhoton
+   . Updates to MCRichSegment for CLHEP 1.9... and LCG dictionaries
+
+ - In RichRecBase v1r15
+   . Minor fix to RichTrackID, add monitor algorithm and tool base classes
+
+ - In RichDet v8r3
+   . Add protection against invalid pixel information
+
+ - In VeloDet v9r3
+   . Fix bug to isInside
+
+ - In MuonTools v3r8
+   . Add MuonPosTool
 
 !======================= LHCbSys v18r0 2005-02-11 =======================
 ! 2005-02-11 - Marco Cattaneo
