@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromTrStoredTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.11 2005-02-24 11:56:01 jonrob Exp $
+ * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.12 2005-02-24 12:26:02 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -351,7 +351,7 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
 
     // Final check that info is reaonable
     if ( (entryPState->z() > exitPState->z()) ) {
-      Warning( "Entry state after exit state for " + Rich::text(rad) + "  -> rejecting segment",
+      Warning( "Entry state after exit state for " + Rich::text(rad) + " -> rejecting segment",
                StatusCode::SUCCESS, 5 );
       continue;
     }
