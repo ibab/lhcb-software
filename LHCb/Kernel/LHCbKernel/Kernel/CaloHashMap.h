@@ -1,11 +1,14 @@
-// $Id: CaloHashMap.h,v 1.1 2002-04-22 16:49:51 ibelyaev Exp $
+// $Id: CaloHashMap.h,v 1.2 2002-04-22 16:57:18 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/22 16:49:51  ibelyaev
+//  new files to eliminate the dependency of 'Event' on 'Calo'
+//
 // ============================================================================
-#ifndef CALOKERNEL_CALOHASHMAP_H 
-#define CALOKERNEL_CALOHASHMAP_H 1
+#ifndef KERNEL_CALOHASHMAP_H 
+#define KERNEL_CALOHASHMAP_H 1
 // Include files
 #ifdef WIN32
 #include "GaudiKernel/HashTable.h" // GaudiKernel (only for Visual-C Win32)
@@ -191,5 +194,5 @@ private:
 // ============================================================================
 // The End 
 // ============================================================================
-#endif // KERNEL_CALOMAP_H
+#endif // KERNEL_CALOHASHMAP_H
 // ============================================================================
