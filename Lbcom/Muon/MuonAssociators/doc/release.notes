@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.10 2003-12-18 15:33:28 cattanem Exp $
+! $Id: release.notes,v 1.11 2004-04-13 14:13:43 asatta Exp $
 ! Package     : MuonAssociators
 ! Responsible : David Hutchcroft
 
-!===================== MuonAssociators v1r2 2003-12-16 =====================
+!===================== MuonAssociators v1r2 2004-04-13 =====================
+! 2004-04-13 - Alessia Satta
+ - Fix to reject link between coords and mcparticles from spillover events
+ 	
 ! 2003-12-16 - Marco Cattaneo
  - Move to Gaudi v14
 

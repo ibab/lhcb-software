@@ -1,4 +1,4 @@
-// $Id: MuonCoord2MCParticleAlg.cpp,v 1.5 2002-07-04 16:45:52 dhcroft Exp $
+// $Id: MuonCoord2MCParticleAlg.cpp,v 1.6 2004-04-13 14:13:44 asatta Exp $
 // Include files 
 
 #include "Event/MuonCoord.h"
@@ -12,6 +12,9 @@
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/LinkManager.h"
+#include "GaudiKernel/IRegistry.h"
+
 
 // local
 #include "MuonCoord2MCParticleAlg.h"
@@ -115,8 +118,9 @@ MuonCoord2MCParticleAlg::associateToTruth(const MuonCoord * coord,
   // get the MCParticles for the event, do not make links to spillover
   SmartDataPtr<MCParticles> mcParticles(eventSvc(),
                                         MCParticleLocation::Default);
+  MsgStream log(msgSvc(), name());
   if(!mcParticles){
-    MsgStream log(msgSvc(), name());
+    
     log << MSG::ERROR << "Could not find MCParticles in " 
         << MCParticleLocation::Default << endreq;
     return StatusCode::FAILURE;
@@ -135,30 +139,72 @@ MuonCoord2MCParticleAlg::associateToTruth(const MuonCoord * coord,
     // match the MCMuonDigit to the MuonDigit via the Key
     MCMuonDigit * mcDigit = mcDigits->object((*iDigit)->key());
     if(!mcDigit) {
-      MsgStream log(msgSvc(), name());
+
       log << MSG::ERROR << "Could not find the match for " << (*iDigit)->key()
           << " in " << MCMuonDigitLocation::MCMuonDigit << endreq;
       return StatusCode::FAILURE;
     }
 
+    unsigned int bcross=mcDigit->DigitInfo().BX();
+    log<<MSG::DEBUG<<"bunch crossing "<<bcross<<endreq;
+      
+    
+    
+    if(bcross!=0)return StatusCode::SUCCESS;
+    
     // loop over MCMuonHits attached to this MCMuonDigit
     SmartRefVector<MCMuonHit>::const_iterator iHit;
+
+    //    std::vector<MCMuonHitHistory>& mcDigit->HitsHistory();
+    std::vector<MCMuonHitHistory>::iterator 
+      iterHistory=(mcDigit)->HitsHistory().begin();
     for( iHit = mcDigit->mcMuonHits().begin() ;
          iHit != mcDigit->mcMuonHits().end() ;
          iHit++ ){
       const MCMuonHit * mcHit = *iHit;
       // check the MCMuonHit is still available
-      if(mcHit) {
-        const MCParticle * mcPart = mcHit->mcParticle();
-        // check found mcParticle
-        if(mcPart){
-        // check in the current event container
-          if( mcParticles == mcPart->parent() ){
-            aTable->relate(coord,mcPart);
+      log<<MSG::DEBUG<<"bunch crossing "<< iterHistory->BX()<<" "<<
+        iterHistory->isGeantHit()<<endreq;
+      
+      if( iterHistory->BX()==0){
+        if( iterHistory->isGeantHit()){
+          if(mcHit) {
+            std::string path;
+            if(mcHit->parent()){
+            
+              
+              LinkManager* link=mcHit->parent()->linkMgr();
+            
+              if(link){
+                
+                 if(link->link(mcHit->parent()))
+                path=link->link(mcHit->parent())->path(); 
+                
+              }
+              
+            }
+            
+            
+            const MCParticle * mcPart = mcHit->mcParticle();
+            // check found mcParticle
+            
+            
+            if(mcPart){
+              // check in the current event container
+              if( mcParticles == mcPart->parent() ){
+              
+              
+                  log<<MSG::DEBUG<<mcPart->parent()->registry()->
+                 identifier()<<endreq;
+                
+                aTable->relate(coord,mcPart);
+              }
+            }
           }
-        }
-      }
-    }
+        }  
+      }      
+      iterHistory++;
+    }    
   }
 
   return StatusCode::SUCCESS;
