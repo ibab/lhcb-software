@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd"[]>
+
+<gdd>
+
+<package name="EventAssoc">
+
+    <assoc from="ITDigit"   to="MCParticle"/>
+    <assoc from="ITDigit"   to="MCHit"      weight="double"/>
+    <assoc from="ITCluster" to="MCParticle" weight="double"/>
+    <assoc from="ITCluster" to="MCHit"      weight="double"/>
+
+    <assoc from="OTDigit"   to="MCHit"      weight="int"/>
+    <assoc from="OTCluster" to="MCParticle"/>
+
+    <assoc from="MuonCoord" to="MCParticle"/>
+
+    <assoc from="TrStoredTrack" to="float"/>
+    <assoc from="TrStoredTrack" to="MCParticle" weight="double"/>
+
+    <assoc from="L0CaloCandidate" to="MCParticle" weight="double"/>
+
+    <assoc from="L1Track2d" to="MCParticle" weight="double"/>
+    <assoc from="L1Track3d" to="MCParticle" weight="double"/>
+
+    <assoc from="CaloCluster" to="MCParticle"    weight="float"/>
+    <assoc from="CaloCluster" to="TrStoredTrack" weight="float" type="2D"/>
+    <assoc from="CaloHypo"    to="TrStoredTrack" weight="float" type="2D"/>
+
+    <assoc from="VeloCluster" to="MCParticle" weight="double" type="2D"/>
+    <assoc from="VeloCluster" to="MCVeloHit"  weight="double" type="2D"/>
+
+</package>
+
+</gdd>

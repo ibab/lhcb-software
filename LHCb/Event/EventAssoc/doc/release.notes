@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Event/EventAssoc
+! Responsible : Marco Cattaneo
+! Purpose     : Define and build the POOL dictionaries for the relations
+!-----------------------------------------------------------------------------
+
+!======================= EventAssoc v1r0 2003-12-19 ==========================
+! 2003-12-19 - Marco Cattaneo
+ - First version
