@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.29 2003-06-16 13:32:51 sponce Exp $
+! $Id: release.notes,v 1.30 2003-06-17 09:16:10 cattanem Exp $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
 
+!========================= MuonDet v4r4 2003-06-17 =========================
 ! 2003-06-16 - Sebastien Ponce
  - use new xerces 2.2
  - use new package DetDescCnv

@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.20 2003-06-16 13:40:41 sponce Exp $
+! $Id: release.notes,v 1.21 2003-06-17 09:16:07 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
 
+!========================== OTDet v4r0 2003-06-17 ==========================
 ! 2003-06-16 - Sebastien Ponce
  - use new package DetDescCnv
 

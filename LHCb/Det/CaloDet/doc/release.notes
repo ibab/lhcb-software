@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.34 2003-06-16 13:39:04 sponce Exp $ 
+! $Id: release.notes,v 1.35 2003-06-17 09:16:08 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!========================= CaloDet v6r5 2003-06-17 =========================
 ! 2003-06-16 - Sebastien Ponce
  - use new version of DetDesc. Thus drop dependency on XML
  - minor fix for gcc 3.2/3.3

@@ -4,6 +4,7 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v2r0 2003-06-17 =========================
 ! 2003-06-17 - Marco Cattaneo
  - requirements
    New packages:      DetDescCnv v2r0, XmlTools v2r0
