@@ -6,6 +6,10 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+!=========================== GaussCalo v2r1 2003-04-29 ========================
+! 2003-04-29 - Witek Pokorski
+ - requirements - put v* to avoid changing version numbers
+ 
 !=========================== GaussCalo v2r0 2002-12-17 ========================
 
 ! 2002-12-17 - Witek Pokorski

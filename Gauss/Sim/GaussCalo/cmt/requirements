@@ -1,20 +1,20 @@
 # =============================================================================
 package GaussCalo
-version v2r0
+version v2r1
 
 # =============== package structure ===========================================
 branches          cmt src doc
 
 # =============== explicit dependencies =======================================  
 use AIDA          v*   
-use GaussTools    v6r*     Sim
+use GaussTools    v*     Sim
 
 # =============== Event =======================================================
-use CaloEvent     v11r*     Event 
+use CaloEvent     v*     Event 
 
 # =============== Det =========================================================
-use CaloDet       v6r*      Det 
-use CaloDetXmlCnv v2r*      Det 
+use CaloDet       v*      Det 
+use CaloDetXmlCnv v*      Det 
 
 # ============== component library ============================================
 library          GaussCalo   *.cpp                  
