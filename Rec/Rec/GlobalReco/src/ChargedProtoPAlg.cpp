@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.7 2002-09-09 17:16:33 gcorti Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.8 2002-10-14 11:25:36 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -135,6 +135,16 @@ StatusCode ChargedProtoPAlg::initialize() {
     return sc;
   }
 
+  // Set up monitoring Counters 
+  m_errorCount["1. No Tracks            "] = 0;
+  m_errorCount["2. No Rich pID          "] = 0;
+  m_errorCount["3. No Muon pID          "] = 0;
+  m_errorCount["4. No Electron pID      "] = 0;
+  m_errorCount["5. No photon table      "] = 0;
+  m_errorCount["6. No electron table    "] = 0;
+  m_errorCount["7. No brems table       "] = 0;
+  m_errorCount["8. No Tracks for physics"] = 0;
+  m_errorCount["9. No ProtoParticles    "] = 0;
 
   return StatusCode::SUCCESS;
 };
@@ -145,7 +155,6 @@ StatusCode ChargedProtoPAlg::initialize() {
 StatusCode ChargedProtoPAlg::execute() {
 
   MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
 
   // Prepare output container
   ProtoParticles* chprotos = new ProtoParticles();
@@ -163,7 +172,7 @@ StatusCode ChargedProtoPAlg::execute() {
   if( !tracks || 0 == tracks->size() ) {
     log << MSG::INFO << "Unable to retrieve TrStoredTracks at "
         << m_tracksPath << endreq;
-    m_errorCount["No Tracks"] += 1;
+    m_errorCount["1. No Tracks            "] += 1;
     return StatusCode::SUCCESS;
   }
   else {
@@ -177,7 +186,7 @@ StatusCode ChargedProtoPAlg::execute() {
   if( !richpids || 0 == richpids->size() ) {
     log << MSG::INFO  << "Failed to locate RichPIDs at "
         << m_richPath << endreq;
-    m_errorCount["No Rich pID"] += 1;
+    m_errorCount["2. No Rich pID          "] += 1;
   }
   else {   
     log << MSG::DEBUG << "Successfully located " << richpids->size()
@@ -191,7 +200,7 @@ StatusCode ChargedProtoPAlg::execute() {
   if( !muonpids || 0 == muonpids->size() ) {
     log << MSG::INFO << "Failed to locate MuonIDs at "
         << m_muonPath << endreq;
-    m_errorCount["No Muon pID"] += 1;
+    m_errorCount["3. No Muon pID          "] += 1;
   }
   else {
     log << MSG::DEBUG << "Successfully located " << muonpids->size()
@@ -205,7 +214,7 @@ StatusCode ChargedProtoPAlg::execute() {
   if( !electrons || 0 == electrons->size() ) {
     log << MSG::INFO << "Failed to locate CaloHypos at "
         << m_electronPath << endreq;
-    m_errorCount["No electron pID"] += 1;
+    m_errorCount["4. No Electron pID      "] += 1;
   }
   else {
     log << MSG::DEBUG << "Successfully located " << electrons->size()
@@ -218,19 +227,19 @@ StatusCode ChargedProtoPAlg::execute() {
   if( 0 == phtable ) { 
     log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
     caloData = false;
-    m_errorCount["No photon table"] += 1;
+    m_errorCount["5. No photon table      "] += 1;
   }
   const ElectronTable* etable = m_electronMatch->inverse();
   if( 0 == etable ) { 
     log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
     caloData = false;
-    m_errorCount["No electron table"] += 1;
+    m_errorCount["6. No electron table    "] += 1;
   }
   const BremTable* brtable = m_bremMatch->inverse();
   if( 0 == brtable ) { 
     log << MSG::DEBUG << "Table from PhotonMatch points to NULL";
     caloData = false;
-    m_errorCount["No brems table"] += 1;
+    m_errorCount["7. No brems table       "] += 1;
   }
 
   // ProtoParticles should only be "good tracks"
@@ -367,6 +376,13 @@ StatusCode ChargedProtoPAlg::execute() {
   log << MSG::DEBUG << "Number of ProtoParticles in TES is " 
       << chprotos->size() << endreq;
 
+  if( 0 == countProto[TrackProto] ) {
+    m_errorCount["8. No Tracks for physics"] += 1;
+  }
+  if( 0 == chprotos->size() ) {
+    m_errorCount["9. No ProtoParticles    "] += 1;
+  }
+
 //    if( m_monitor ) {
     for( ProtoParticles::iterator ip = chprotos->begin();
          chprotos->end() != ip; ++ip ) {
@@ -401,15 +417,19 @@ StatusCode ChargedProtoPAlg::execute() {
 StatusCode ChargedProtoPAlg::finalize() {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
+  log << MSG::INFO << "********* ProtoParticles production Summary ******"
+      << endreq;
+  log << MSG::INFO << "Number of events with :" << endreq;
 
   for( ErrorTable::iterator ierr = m_errorCount.begin();
        ierr != m_errorCount.end(); ierr++ ) { 
-    log << MSG::INFO 
-        << "Number of events with " << (*ierr).first 
-        << " = " << (*ierr).second 
+    log << MSG::INFO << "   " << (*ierr).first 
+        << "  " << format("%9u", (*ierr).second ) 
         << endreq;
   }
+  log << MSG::INFO << "**************************************************"
+      << endreq;
+  
   return StatusCode::SUCCESS;
 }; 
 

@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2002-10-13 - Gloria Corti
+ - Improve printing of counters in ChargedProtoPAlg
+
+
 ! 2002-09-09 - Gloria Corti
  - change ChargeProtoPAlg to introduce Chi2/NdF cut on tracks, isMuon,
    counters as for MCPIDProtoPAlg. In addition set value of combined
