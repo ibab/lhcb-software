@@ -118,3 +118,14 @@ ApplicationMgr.HistogramPersistency = "ROOT";
 // compatible database is included from here.
 #include "$DAVINCIROOT/options/DaVinciDDDB.opts"
 
+//--------------------------------------------------------------
+// Start DaVinci sequence
+//
+ApplicationMgr.TopAlg = { "GaudiSequencer/DaVinciMainSeq" } ;
+DaVinciMainSeq.IgnoreFilterPassed = true ; // because of DaVinciElectrons
+DaVinciMainSeq.MeasureTime = true ;
+//--------------------------------------------------------------
+// Temporary hack converting old RICH data to new format
+//
+ApplicationMgr.DLLs += { "RichTools" };
+DaVinciMainSeq.Members += { "OldRichPIDCnvAlg" } ;

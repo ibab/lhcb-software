@@ -1,4 +1,4 @@
-// $Id: DaVinciNeutrals.opts,v 1.13 2004-10-26 08:54:43 pkoppenb Exp $
+// $Id: DaVinciNeutrals.opts,v 1.14 2004-11-17 16:58:20 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -13,7 +13,7 @@
  */
 
 // The major algorith sequence for "neutrals"
-ApplicationMgr.TopAlg += { "GaudiSequencer/Neutrals" };
+DaVinciMainSeq.Members += { "GaudiSequencer/Neutrals" };
 
 // Re-create CaloDigits from raw buffer 
 // Neutrals.Members  = { "CaloDigitsFromRaw" };
