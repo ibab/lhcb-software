@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.34 2004-12-13 17:27:13 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.35 2004-12-14 14:58:15 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.34  2004/12/13 17:27:13  jonrob
+ *  various improvements
+ *
  *  Revision 1.33  2004/11/05 18:04:46  jonrob
  *  Update Warning message
  *
@@ -77,7 +80,7 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
   declareProperty( "ExtraHistos",   m_extraHistos = true );
   declareProperty( "IgnoreThresholds", m_ignoreThres = true );
-  declareProperty( "KaonDLLCut", m_dllKaonCut = 15 );
+  declareProperty( "KaonDLLCut", m_dllKaonCut = -9999999 );
   declareProperty( "PionDLLCut", m_dllPionCut = -9999999 );
 
 }
