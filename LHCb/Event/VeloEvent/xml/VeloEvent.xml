@@ -9,9 +9,9 @@
 It is populated by a Sicb converter (SicbMCVeloHitCnv) from the VRPR (VELO) 
 and VPRW (pile-up) classes." 
            id="4001" 
-           location="MC/Velo/Hit" 
+           location="MC/Velo/Hits" 
            keyedContTypeDef="TRUE" >
-      <location name="PuVeto" place="MC/Velo/PuHit" />
+      <location name="PuVeto" place="MC/Velo/PuHits" />
       <base name="MCHit"/>
       <import name="Event/MCHit"/>
       <attribute name="sensor" type="long" desc="Sensor Number"/>
@@ -67,7 +67,7 @@ stored for a single silicon/output channel. Constructed from MCVeloHits
 channel. This info. is available inside the data processor but is not normally 
 output on DAQ stream for all channels. It does not contain any simulation 
 information"
-	   location="Raw/Velo/FullDigit">
+	   location="Raw/Velo/FullDigits">
            <base name="KeyedObject&lt;VeloChannelID&gt;"/>
            <constructor desc="Constructor with key" 
                         initList="KeyedObject&lt;VeloChannelID&gt;(key),
@@ -106,7 +106,7 @@ information"
            author="Chris Parkes" 
            desc="A cluster as on the DAQ output, after the data processor and 
 without applying any additional processing. It contains no simulation info."
-	   location="Raw/Velo/Cluster">
+	   location="Raw/Velo/Clusters">
            <import name="Kernel/SerializeStl"/>
            <base name="KeyedObject&lt;int&gt;"/>
            <attribute name="sensor" type="long" desc="Sensor Number"/>
