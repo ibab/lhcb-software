@@ -20,7 +20,7 @@ branches xml doc src cmt Event RichRecBase
 use   RichEvent      v5r*  Event
 use   RichKernel     v3r*  Rich
 use   RichUtils      v3r*  Rich
-use   RichDetTools   v2r*  Rich
+use   RichDetTools   v3r*  Rich
 use   GaudiObjDesc   v5r*  -no_auto_imports
 
 #============================================================================
