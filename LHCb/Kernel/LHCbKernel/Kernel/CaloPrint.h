@@ -1,4 +1,4 @@
-// $Id: CaloPrint.h,v 1.3 2005-01-26 07:15:08 cattanem Exp $
+// $Id: CaloPrint.h,v 1.4 2005-01-27 14:50:49 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -166,7 +166,7 @@ public:
 private:
   
   /** accessor to static storage
-   *  @retunr pointer to internal static storage 
+   *  @return pointer to internal static storage 
    */
   static char* storage()        ;
   
