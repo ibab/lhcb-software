@@ -4,7 +4,7 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v8>20020115 Brunel v9r0</A></H1><PRE>
+</PRE><H1><A NAME=v9>20020115 Brunel v9r0</A></H1><PRE>
    Upgraded to use Gaudi v9
 
    Functionality changes
@@ -12,6 +12,43 @@ Purpose: LHCb reconstruction program
    In options
    - Brunel.opts: suppress printout of options from included subdetector files
 
+   Changes for Gaudi v9 
+   --------------------
+   In job
+   - Brunel.job: pass job options path as argument to executable
+
+   In requirements
+    use GaudiConf    v6    (was v6)
+    use GaudiSys     v9r0  (was v8)
+    use HbookCnv     v11r0 (was v10r1)
+    use BrunelKernel v3r0  (was v2)
+    use BrunelSicb   v2r0  (was v1)
+    use TrKernel     v6r0  (was v5r1)
+    use CaloKernel   v1r0  (was CaloGen v2)
+    use DetDesc      v9r0  (was v7)
+    use XmlDDDB      v7r0  (was v6r1)
+    use CaloDet      v3r0  (was v3r0)
+    use LHCbEvent    v12r1 (was v11)
+    use L0Event      v4r0  (was v3)
+    use VeloEvent    v6r0  (was v5)
+    use ITEvent      v7r0  (was v6r1)
+    use OTEvent      v7r0  (was v6r1)
+    use TrEvent      v7r0  (was v6r1)
+    use CaloEvent    v7r0  (was v6)
+    use SicbCnv      v15r0 (was v13r1)
+    use CaloSicbCnv  v5r1  (was v4)
+    use L0SicbCnv    v4r0  (was v3)
+    use MuonSicbCnv  v4r0  (was v3)
+    use TrSicbCnv    v4r0  (was v3)
+    use VSicbCnv     v6r0  (was v5)
+    use L0Calo       v3r0  (was v2)
+    use L0Muon       v4r0  (was v3r1)
+    use L0DU         v3r0  (was v2r1)
+    use CaloAlgs     v4r0  (was v3)
+    use ITAlgorithms v7r0  (was v6)
+    use OTAlgorithms v7r0	 (was v6)
+    use TrAlgorithms v7r0  (was v6r2)
+     
 ! =================================================================
 </PRE><H1><A NAME=v8>20011017 Brunel v8</A></H1><PRE>
    Major repackaging, no major change in functionality:
@@ -19,6 +56,9 @@ Purpose: LHCb reconstruction program
    - version number is set by a compiler define flag in the requirements file
    - same Brunel version can read data produced with multiple dbase versions,
      starting from dbase v240
+
+   In job
+   - Brunel.job: Remove unsetenv LD_LIBRARY_PATH
 
    In options
    - Remove LHCbLight.opts (moved to dbase v241)

@@ -64,7 +64,7 @@ use L0Muon       v4r0   L0
 use L0DU         v3r0   L0
 
 # Calorimeter digitisation
-use CaloAlgs     v4r*   Calo
+use CaloAlgs     v4r0   Calo
 
 # Tracking
 use ITAlgorithms v7r0   IT
