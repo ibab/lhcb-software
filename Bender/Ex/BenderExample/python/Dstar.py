@@ -1,4 +1,4 @@
-# $Id: Dstar.py,v 1.3 2004-01-24 23:38:51 ibelyaev Exp $
+# $Id: Dstar.py,v 1.4 2004-02-10 12:37:34 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -36,11 +36,12 @@ class Dstar(Algo):
         # reconstructed particles
         pions = self.select( tag = "pi" , cuts = 211 == ABSID )
         kaons = self.select( tag = "K"  , cuts = 321 == ABSID )
-        
+
+        # Monte-Carlo truth 
         tup1    = self.ntuple ( title = "D0 Tuple" )
         dm      = ADMASS("D0") < 60 * MeV   # create Delta Mass cut
         
-        # Loop over all H+ H- combinations 
+        # Loop over all (K pi)  combinations 
         for D0 in self.loop( formula = "K pi" , pid= "D0" ) :
             if not 1.7 * GeV < D0.mass(1,2) < 2.010 * GeV : continue
             if 0 != SUMQ( D0 )                            : continue  
@@ -159,7 +160,7 @@ g.initialize()
 
 
 ## g.run(100)  ## crash !!
-g._evtpro.executeRun(1000)
+g._evtpro.executeRun(100)
 
 g.exit()
 
@@ -167,4 +168,7 @@ g.exit()
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2004/01/24 23:38:51  ibelyaev
+#  update and fixes
+#
 # =============================================================================

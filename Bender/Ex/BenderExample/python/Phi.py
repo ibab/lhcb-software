@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.3 2004-01-24 23:38:52 ibelyaev Exp $
+# $Id: Phi.py,v 1.4 2004-02-10 12:37:35 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -15,10 +15,13 @@
 from   bendermodule import *
 import benderconfig as bender 
 
+
 g.JobOptionsType = 'NONE'
 g.OutputLevel = 3
 g.config()
 
+
+global h1 
 # =============================================================================
 # Specific physics analysis algorithm 
 # =============================================================================
@@ -37,10 +40,11 @@ class Phi(Algo):
         # loop over KK combinations 
         for phi in phis:
             if phi.mass(1,2) > 1050 * MeV : continue
-            self.plot( title = "K+ K- mass"      ,
-                       value = M ( phi ) / MeV   ,
-                       low   = 1000              ,
-                       high  = 1050              )
+            global h1
+            h1 = self.plot( title = "K+ K- mass"      ,
+                            value = M ( phi ) / MeV   ,
+                            low   = 1000              ,
+                            high  = 1050              )
             
         return SUCCESS 
         
@@ -108,7 +112,7 @@ hsvc.OutputFile = 'phi.hbook'
 g.initialize()
 
 ## g.run(100)  ## crash !!
-g._evtpro.executeRun(500)
+g._evtpro.executeRun(100)
 
 g.exit()
 
