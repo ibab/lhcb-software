@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.39 2003-01-27 08:16:57 ocallot Exp $
+! $Id: release.notes,v 1.40 2003-01-27 10:32:00 ocallot Exp $
 package VeloDet
 package manager : Velo Group
 
@@ -6,6 +6,8 @@ package manager : Velo Group
  - Change the handling of the neighbours in the R sensor, when at the boundary
    inner-outer part. When there is no outer part, an illegal strip 2048 was
    created in some cases.
+ - Add also protection towards illegal strip ( > 2047 ) for Phi sensors, and 
+   for the case of step=0 in the neighbour method.
 
 !========================= VeloDet v8r3 2003-01-08 =========================
 ! 2003-01-08 - Olivier Callot
