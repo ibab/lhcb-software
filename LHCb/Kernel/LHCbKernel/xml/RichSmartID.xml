@@ -6,14 +6,14 @@
             <constructor desc="Constructor from internal type" initList="m_key( key )">
                 <arg const="TRUE" name="key" type="RichSmartID::KeyType"/>
             </constructor>
-            <constructor desc="Constructor from data fields" initList="m_key( 0 )">
+            <constructor desc="Constructor from data fields including sub-pixel information" initList="m_key( 0 )">
                 <arg const="TRUE" name="rich" type="int"/>
                 <arg const="TRUE" name="panel" type="int"/>
                 <arg const="TRUE" name="pdRow" type="int"/>
                 <arg const="TRUE" name="pdCol" type="int"/>
                 <arg const="TRUE" name="pixelRow" type="int"/>
                 <arg const="TRUE" name="pixelCol" type="int"/>
-                <arg const="TRUE" name="subPixel = 0" type="int"/>
+                <arg const="TRUE" name="subPixel" type="int"/>
                 <code>setRich( rich );
 setPanel( panel );
 setPDRow( pdRow );
@@ -21,6 +21,20 @@ setPDCol( pdCol );
 setPixelRow( pixelRow );
 setPixelCol( pixelCol );
 setSubPixel( subPixel );</code>
+            </constructor>
+            <constructor desc="Constructor from data fields" initList="m_key( 0 )">
+                <arg const="TRUE" name="rich" type="int"/>
+                <arg const="TRUE" name="panel" type="int"/>
+                <arg const="TRUE" name="pdRow" type="int"/>
+                <arg const="TRUE" name="pdCol" type="int"/>
+                <arg const="TRUE" name="pixelRow" type="int"/>
+                <arg const="TRUE" name="pixelCol" type="int"/>
+                <code>setRich( rich );
+setPanel( panel );
+setPDRow( pdRow );
+setPDCol( pdCol );
+setPixelRow( pixelRow );
+setPixelCol( pixelCol );</code>
             </constructor>
             <method const="TRUE" desc="implicit conversion to internal type" name="operator RichSmartID::KeyType" type="">
                 <code>return m_key;</code>
