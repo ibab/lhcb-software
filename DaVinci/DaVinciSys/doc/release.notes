@@ -4,6 +4,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================  DaVinciSys v8r3p3 2003-07-15 ===========================
+! 2003-07-15 - Gloria CORTI
+ - use Bd2MuMuKstar        v1r2
+       PhysSelSys          v5r7
+       DaVinciEff          v2r7
+       DaVinci             v8r3p3
+       DecayPresel         v1r5p3
+
 !====================  DaVinciSys v8r3p2 2003-07-08 ===========================
 ! 2003-07-08 - Gloria CORTI
  - use B2DD                v1r3
