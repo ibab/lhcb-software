@@ -5,8 +5,10 @@
  *  Header file for tool : RichHPDToLevel1Tool
  *
  *  CVS Log :-
- *  $Id: RichHPDToLevel1Tool.h,v 1.1 2005-01-07 12:35:59 jonrob Exp $
+ *  $Id: RichHPDToLevel1Tool.h,v 1.2 2005-01-13 13:10:14 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 12:35:59  jonrob
+ *  Complete rewrite
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -17,6 +19,9 @@
 
 #ifndef RICHDAQ_RICHHPDTOLEVEL1TOOL_H
 #define RICHDAQ_RICHHPDTOLEVEL1TOOL_H 1
+
+// STD
+#include <sstream>
 
 // Boost
 #include "boost/lexical_cast.hpp"
@@ -79,26 +84,27 @@ public: // methods (and doxygen comments) inherited from interface
   // Obtain a list of HPD hardware identifiers for a given level 1 ID
   const RichDAQ::HPDHardwareIDs & l1HPDHardIDs( const RichDAQ::Level1ID l1ID ) const;
 
+  // Access mapping between Level 1 IDs and HPD RichSmartIDs
+  const RichDAQ::L1ToSmartIDs & l1HPDSmartIDs() const;
+
+  // Access mapping between Level 1 IDs and HPD RichSmartIDs
+  const RichDAQ::L1ToHardIDs & l1HPDHardIDs() const;
+
 private: // data
 
   /// Pointer to Rich HPD ID tool
   IRichHPDIDTool * m_hpdID;
 
-  /// Typdef for mapping from RichSmartID to Level1 ID
-  typedef std::map< const RichSmartID, RichDAQ::Level1ID > SmartIDToL1;
+  /// Typedef for mapping from RichSmartID to Level1 ID
+  typedef RichHashMap< const RichSmartID, RichDAQ::Level1ID > SmartIDToL1;
   SmartIDToL1 m_smartid2L1; ///< HPD RichSmartID to L1 ID map
 
-  /// Typdef for mapping from HPD Hardware ID to Level1 ID
-  typedef std::map< const RichDAQ::HPDHardwareID, RichDAQ::Level1ID > HardIDToL1;
+  /// Typedef for mapping from HPD Hardware ID to Level1 ID
+  typedef RichHashMap< const RichDAQ::HPDHardwareID, RichDAQ::Level1ID > HardIDToL1;
   HardIDToL1 m_hardid2L1; ///< HPD Hardware ID to L1 ID map
 
-  /// Typdef for mapping from Level1 ID to list of HPD RichSmartIDs
-  typedef std::map< const RichDAQ::Level1ID, RichSmartID::Collection > L1ToSmartIDs;
-  L1ToSmartIDs m_l12smartids; ///< L1 ID to RichSmartIDs map
-
-  /// Typdef for mapping from Level1 ID to list of HPD RichSmartIDs
-  typedef std::map< const RichDAQ::Level1ID, RichDAQ::HPDHardwareIDs > L1ToHardIDs;
-  L1ToHardIDs m_l12hardids; ///< L1 ID to HPD hardware IDs map
+  RichDAQ::L1ToSmartIDs m_l12smartids; ///< L1 ID to RichSmartIDs map
+  RichDAQ::L1ToHardIDs  m_l12hardids;  ///< L1 ID to HPD hardware IDs map
 
 };
 

@@ -5,16 +5,15 @@
  *  Implementation file for class : RichHPDIDTool
  *
  *  CVS Log :-
- *  $Id: RichHPDIDTool.cpp,v 1.1 2005-01-07 12:35:59 jonrob Exp $
+ *  $Id: RichHPDIDTool.cpp,v 1.2 2005-01-13 13:10:14 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 12:35:59  jonrob
+ *  Complete rewrite
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
  */
 //-----------------------------------------------------------------------------
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
 
 // local
 #include "RichHPDIDTool.h"
@@ -57,7 +56,7 @@ StatusCode RichHPDIDTool::initialize()
 
   // Create temporary mapping between software and hardware numbering
   // Eventually, will need to come from some sort of data base
-  unsigned int hID = 0;
+  unsigned int hID = 1;
   std::vector< unsigned int > nHPDs( Rich::NRiches, 0 );
   for ( RichSmartID::Collection::const_iterator iID = pixels.begin(); iID != pixels.end(); ++iID ) 
   {
@@ -88,9 +87,11 @@ const RichDAQ::HPDHardwareID RichHPDIDTool::hardwareID( const RichSmartID smartI
 {
   // See if this RichSmartID is known
   SoftToHard::const_iterator id = m_soft2hard.find( smartID.pdID() );
-  if ( m_soft2hard.end() == id ) {
-    error() << "Unknown HPD RichSmartID " << smartID << endreq;
-    Exception ( "Unknown HPD RichSmartID" );
+  if ( m_soft2hard.end() == id ) 
+  {
+    std::ostringstream mess;
+    mess << "Unknown HPD RichSmartID " << smartID;
+    Exception ( mess.str() );
   }
 
   // Found, so return hardware ID
@@ -101,7 +102,8 @@ const RichSmartID RichHPDIDTool::richSmartID( const RichDAQ::HPDHardwareID hID )
 {
   // See if this hardware ID is known
   HardToSoft::const_iterator id = m_hard2soft.find( hID );
-  if ( m_hard2soft.end() == id ) {
+  if ( m_hard2soft.end() == id ) 
+  {
     Exception ( "Unknown HPD hardware ID" + boost::lexical_cast<std::string>(hID) );
   }
 

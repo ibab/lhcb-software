@@ -5,8 +5,10 @@
  * Implementation file for class : RichHPDToLevel1Tool
  *
  * CVS Log :-
- * $Id: RichHPDToLevel1Tool.cpp,v 1.1 2005-01-07 12:35:59 jonrob Exp $
+ * $Id: RichHPDToLevel1Tool.cpp,v 1.2 2005-01-13 13:10:14 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.1  2005/01/07 12:35:59  jonrob
+ * Complete rewrite
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-12-18
@@ -52,9 +54,6 @@ StatusCode RichHPDToLevel1Tool::initialize()
   // Get list of all valid readout channels
   const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();
 
-  // release smartid tool
-  releaseTool( smartIDs );
-
   // number of HPDs per L1 board
   // Probably fixed, but should still be in XML...
   const unsigned int nHPDsPerL1 = 48;
@@ -70,7 +69,7 @@ StatusCode RichHPDToLevel1Tool::initialize()
       // Get hardware ID for this RichSmartID
       const RichDAQ::HPDHardwareID hardID = m_hpdID->hardwareID( hpdID );
       // Create L1 ID : NB - Should be done better
-      const RichDAQ::Level1ID L1ID = hardID / nHPDsPerL1;
+      const RichDAQ::Level1ID L1ID = 1 + hardID / nHPDsPerL1;
 
       // Fill maps
       m_smartid2L1[hpdID] = L1ID;
@@ -79,10 +78,13 @@ StatusCode RichHPDToLevel1Tool::initialize()
       m_l12smartids[L1ID].push_back( hpdID );
       m_l12hardids[L1ID].push_back( hardID );
 
-      verbose() << "RichSmartID " << hpdID << " HardID " << hardID 
+      verbose() << "RichSmartID " << hpdID << " HardID " << hardID
                 << " -> L1ID " << L1ID << endreq;
     }
   }
+
+  // release smartid tool
+  releaseTool( smartIDs );
 
   info() << "Created L1 ID <-> HPD map : # L1 Boards RICH(1/2) = " << nL1s[Rich::Rich1]
          << " / " << nL1s[Rich::Rich2] << endreq;
@@ -103,8 +105,9 @@ RichHPDToLevel1Tool::levelL1ID( const RichSmartID smartID ) const
   SmartIDToL1::const_iterator id = m_smartid2L1.find( smartID.pdID() );
   if ( m_smartid2L1.end() == id )
   {
-    error() << "Unknown HPD RichSmartID " << smartID << endreq;
-    Exception ( "Unknown HPD RichSmartID" );
+    std::ostringstream mess;
+    mess << "Unknown HPD RichSmartID " << smartID;
+    Exception ( mess.str() );
   }
 
   // Found, so return hardware ID
@@ -129,7 +132,7 @@ const RichSmartID::Collection &
 RichHPDToLevel1Tool::l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const
 {
   // See if this Hardware ID is known
-  L1ToSmartIDs::const_iterator id = m_l12smartids.find( l1ID );
+  RichDAQ::L1ToSmartIDs::const_iterator id = m_l12smartids.find( l1ID );
   if ( m_l12smartids.end() == id )
   {
     Exception ( "Unknown RICH Level 1 ID " + boost::lexical_cast<std::string>(l1ID) );
@@ -143,7 +146,7 @@ const RichDAQ::HPDHardwareIDs &
 RichHPDToLevel1Tool::l1HPDHardIDs( const RichDAQ::Level1ID l1ID ) const
 {
   // See if this Hardware ID is known
-  L1ToHardIDs::const_iterator id = m_l12hardids.find( l1ID );
+  RichDAQ::L1ToHardIDs::const_iterator id = m_l12hardids.find( l1ID );
   if ( m_l12hardids.end() == id )
   {
     Exception ( "Unknown RICH Level 1 ID " + boost::lexical_cast<std::string>(l1ID) );
@@ -151,4 +154,16 @@ RichHPDToLevel1Tool::l1HPDHardIDs( const RichDAQ::Level1ID l1ID ) const
 
   // Found, so return list
   return (*id).second;
+}
+
+// Access mapping between Level 1 IDs and HPD RichSmartIDs
+const RichDAQ::L1ToSmartIDs & RichHPDToLevel1Tool::l1HPDSmartIDs() const
+{
+  return m_l12smartids;
+}
+
+// Access mapping between Level 1 IDs and HPD RichSmartIDs
+const RichDAQ::L1ToHardIDs & RichHPDToLevel1Tool::l1HPDHardIDs() const
+{
+  return m_l12hardids;
 }
