@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2004-03-11 16:12:34 pkoppenb Exp $
+# $Id: requirements,v 1.33 2004-03-12 16:11:05 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -39,10 +39,6 @@ use  CaloInterfaces v*     Calo
 #document lex_to_icpp RecLexer reclexer.lpp
 #macro reclexer_lpp_lexpp_prefix "DecayFinder::"
 
-# Linker library building rule (has to come first)
-#============================================================================
-library          DaVinciToolsLib  ../Lib/*.cpp
-
 # Component library building rule
 #============================================================================
 library          DaVinciTools    ../src/*.cpp
@@ -50,6 +46,5 @@ library          DaVinciTools    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern component_library library=DaVinciTools
-apply_pattern linker_library    library=DaVinciToolsLib
 
 
