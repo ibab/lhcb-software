@@ -17,7 +17,7 @@ use CERNLIB 		v2r2002p0
 use ROOT 		v2r30504p0
 
 #-- Gaudi libraries (from GAUDI_v12r0)
-use GaudiKernel		v13r4
+use GaudiKernel		v13r4p1
 use GaudiSvc 		v10r2
 use GaudiAlg 		v6r4
 use GaudiTools 		v6r1
