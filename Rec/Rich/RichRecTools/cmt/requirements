@@ -2,8 +2,11 @@
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.26 2004-07-30 11:16:05 jonrob Exp $
+# $Id: requirements,v 1.27 2004-08-19 14:21:43 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.26  2004/07/30 11:16:05  jonrob
+# Add CVS log to requirements file
+#
 #============================================================================
 
 package RichRecTools
@@ -14,7 +17,8 @@ branches src cmt doc
 include_path none
 
 # ================ dependencies =============================================
-use RichRecBase        v1r*   Rich
+use RichRecBase    v1r*   Rich
+use RichDet        v8r*   Det    
 
 # ================ component library=========================================
 library          RichRecTools  ../src/*.cpp

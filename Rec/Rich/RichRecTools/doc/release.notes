@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-08-17 - Chris Jones
+ - Add dependency on package Det/RichDet (removed implicitly from RichRecBase)
+
 ! 2004-07-27 - Chris Jones
  - Update doxygen comments
 
