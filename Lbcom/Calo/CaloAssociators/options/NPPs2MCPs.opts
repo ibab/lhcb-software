@@ -1,0 +1,26 @@
+// $Id: NPPs2MCPs.opts,v 1.1 2002-09-04 15:16:14 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Nam:$
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file CCs2MCPs.opts
+ *
+ *  options for associator.
+ * 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date 04 Sep 2002 
+ */
+
+ToolSvc.NPPs2MCPs.Location      = "Rec/Relations/CaloClusters2MCParticles" ;
+ToolSvc.NPPs2MCPs.AlgorithmType = "NeutralPPMCTruthAlg"                    ;
+ToolSvc.NPPs2MCPs.AlgorithmName = "NPPs2MCPs"                              ; 
+
+NPPs2MCPs.Input                 = "Rec/ProtoP/Neutrals"                    ;
+NPPs2MCPs.Output                = "Rec/Relations/NeutralPPs2MCParticles"   ;
+NPPs2MCPs.Detector              = "/dd/Structure/LHCb/Ecal"                ;
+
+// ============================================================================
+// The END 
+// ============================================================================
