@@ -7,7 +7,18 @@ Purupose: LHCb reconstruction program
 
    In src/BrunelSicb/
    -----------------
+   BrunelInitialisation.cpp - make sure Raw and Rec sub-event roots are created
    dropbanks.F - do not drop E1RW bank (needed to generate MCSensPlaneHit)
+ 
+   In options/
+   -----------
+   BrunelMessage.opts - set global output level to WARNING or above
+                       (N.B. this means that event number is not printed out 
+                        by Gaudi, but still is by SICB)
+                      - set output level of some tracking algorithms to ERROR,
+                        to suppress excessive printing in production
+   Brunel.opts - Set ErrorMax of tracking algorithms to 1000, to prevent
+                 program stopping wih 'missing container' on empty events
 
    In cmt/requirements
    -------------------

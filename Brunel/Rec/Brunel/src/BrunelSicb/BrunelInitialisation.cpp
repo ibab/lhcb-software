@@ -1,12 +1,12 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/BrunelSicb/BrunelInitialisation.cpp,v 1.2 2001-06-06 16:54:10 cattaneb Exp $
+// $Id: BrunelInitialisation.cpp,v 1.3 2001-07-27 09:54:17 cattaneb Exp $
 
 // Include files
 #include "BrunelInitialisation.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "SicbCnv/SicbFortran.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "LHCbEvent/MCEvent.h"
+#include "SicbCnv/SicbFortran.h"
 
 //----------------------------------------------------------------------------
 //
@@ -15,6 +15,7 @@
 // Author:      Marco Cattaneo
 // Created:     15th February 2000
 // Modified: MC 2001/05/31 - to fix NPILEUP for RAWH2 data
+// Modified: MC 2001/07/27 - to make sure Raw and Rec event roots are created
 //-----------------------------------------------------------------------------
 extern "C" {
 #ifdef WIN32
@@ -53,12 +54,34 @@ StatusCode BrunelInitialisation::execute() {
   // Update the common block variable NPILEUP with number of piled up events.
   // Necessary for generator level pileup.
   // May break some SICB DST code if pileup has been done in Brunel
-  SmartDataPtr<MCEvent> evt( eventSvc(), "/Event/MC" );
-  if( evt ) {
-    int npile = evt->pileUp();
+  
+  std::string mcPath = "/Event/MC";
+  SmartDataPtr<MCEvent> mcEvt(eventSvc(),mcPath);
+  if (0 == mcEvt){
+    log <<MSG::ERROR << mcPath << " doesn't exist" << endreq;
+    return StatusCode::FAILURE;
+  }
+  else {
+    int npile = mcEvt->pileUp();
     SicbFortran::SetNPileUp( npile );
     log << MSG::DEBUG << "npile = " << npile << endreq;
   }
+  
+  // ensure Raw and Rec sub-event roots exist 
+  std::string rawPath = "/Event/Raw";
+  SmartDataPtr<DataObject> rawEvt(eventSvc(),rawPath);
+  if (0 == rawEvt){
+    log <<MSG::ERROR << rawPath << " doesn't exist" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  std::string recPath = "/Event/Rec";
+  SmartDataPtr<DataObject> recEvt(eventSvc(),recPath);
+  if (0 == recEvt){
+    log <<MSG::ERROR << recPath << " doesn't exist" << endreq;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
 }
 

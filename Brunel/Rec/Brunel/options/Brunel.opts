@@ -82,6 +82,14 @@ ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 #include "$TRALGORITHMSROOT/options/Brunel.opts"
 #include "$TRSICBCNVROOT/options/Brunel.opts"
 
+// Temporary fix to missing containers on empty events
+ITHitsCreator.ErrorMax = 1000;
+TrTrueTracksCreator.ErrorMax = 1000;
+TrTracksCreator.ErrorMax = 1000;
+TrEventTracksFitter.ErrorMax = 1000;
+TrFitInitializer.ErrorMax = 1000;
+TrTrackToSicbCnv.ErrorMax = 1000;
+
 // Leave next two lines as last lines
 #include "$BRUNELOPTS/BrunelUser.opts"
 #include "$BRUNELOPTS/BrunelStatic.opts"

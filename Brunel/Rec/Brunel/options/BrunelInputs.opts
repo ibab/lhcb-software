@@ -10,9 +10,7 @@
 //--------------------------------------------------------------
 // Define the main event data: SICBMC >= v245
 //--------------------------------------------------------------
-//EventSelector.Input = {"FILE='/shift/shd18/data26/z5/stage/L229156.362817'"};
-//EventSelector.Input = {"FILE='/castor/cern.ch/lhcb/mc/L229156'"};
-EventSelector.Input = {"JOBID='52310'"};
+EventSelector.Input = {"JOBID='52160'"};
 ApplicationMgr.EvtMax = 10;
 //EventSelector.FirstEvent = 6;
 //--------------------------------------------------------------

@@ -21,11 +21,14 @@ BrunelMoni.DetectorList = { "IT", "OT", "Tr", "CALO", "TRIGGER" };
 BrunelMoniOTSeq.Members   = { "OTDigitChecker" };
 BrunelMoniTrSeq.Members   = { "TrMonitor" };
 
+// Temporary fix for missing containers on empty events
+TrMonitor.ErrorMax = 1000;
+
 //--------------------------------------------------------------
 // Suppress excessive error messages
 //--------------------------------------------------------------
-OTDigitChecker.OutputLevel = 4;
-TrMonitor.OutputLevel = 4;
+//OTDigitChecker.OutputLevel = 4;
+//TrMonitor.OutputLevel = 4;
 
 //--------------------------------------------------------------
 // No IT monitoring by default (produces ntuple). Uncomment to switch on

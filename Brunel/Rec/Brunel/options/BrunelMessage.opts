@@ -11,10 +11,11 @@ EventSelector.PrintFreq = 1;
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 //--------------------------------------------------------------
 
-// Global output level
-MessageSvc.OutputLevel = 3;
+// Global output level: only print by default WARNINGs and above
+MessageSvc.OutputLevel = 4;
 
-// Next two are needed due to a bug in GaudiKernel v9: 
-// Tools have output level set to zero if parent algorithm uses default 
-ToolSvc.OutputLevel    = 3;
-OTDigitize.OutputLevel = 3;
+// Suppress excessive warnings from some algorithms
+TrEventTracksFitter.OutputLevel = 5;
+TrMonitor.OutputLevel = 5;
+TrMonitor_xtrp1.OutputLevel = 5;
+TrMonitor_xtrp1_longFieldExtrapolator.OutputLevel = 5;
