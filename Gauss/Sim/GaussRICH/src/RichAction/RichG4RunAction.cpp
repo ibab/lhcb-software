@@ -6,7 +6,8 @@
 #include "G4UImanager.hh"
 /// Local 
 #include "RichG4RunAction.h"
-#include "RichG4Histo.h"
+#include "RichG4HistoDefineSet1.h"
+#include "RichG4HistoDefineTimer.h"
 
 // ============================================================================
 // SE 21-8-2002
@@ -35,9 +36,16 @@ RichG4RunAction::RichG4RunAction
   : GiGaRunActionBase( type , name , parent )
   , m_beginCmds ()   //  empty default list! 
   , m_endCmds   ()   //  empty default list! 
+  , m_defineRichG4HistoSet1(false)
+    , m_defineRichG4HistoTimer(false)
+    , m_aRichG4HistoSet1(0)
+    ,  m_aRichG4HistoTimer(0)
 {  
   declareProperty("BeginOfRunCommands", m_beginCmds );
   declareProperty("EndOfRunCommands"  , m_endCmds   );
+  declareProperty("DefineRichG4HistoSet1", m_defineRichG4HistoSet1);
+  declareProperty("DefineRichG4HistoTimer",  m_defineRichG4HistoTimer);
+  
 
 };
 // ============================================================================
@@ -60,7 +68,7 @@ void RichG4RunAction::BeginOfRunAction( const G4Run* run )
 {
   if( 0 == run ) 
     { Warning("BeginOfRunAction:: G4Run* points to NULL!") ; }
-
+  // The part for interactive runnign is commented out.
   /// get Geant4 UI manager 
   //  G4UImanager* ui = G4UImanager::GetUIpointer() ;
   // if( 0 == ui    ) 
@@ -76,9 +84,17 @@ void RichG4RunAction::BeginOfRunAction( const G4Run* run )
   //      }
   //  }
 
-  //    m_aRichG4Histo= new RichG4Histo(svcLoc());
-    m_aRichG4Histo= new RichG4Histo();
+  if(m_defineRichG4HistoSet1) {
+    
+    m_aRichG4HistoSet1 = new RichG4HistoDefineSet1();
+  }
 
+  if(m_defineRichG4HistoTimer) {
+    
+    m_aRichG4HistoTimer = new  RichG4HistoDefineTimer();
+    
+  }
+  
 };
 // ============================================================================
 
@@ -91,6 +107,7 @@ void RichG4RunAction::EndOfRunAction( const G4Run* run )
 {
   if( 0 == run ) 
     { Warning("EndOfRunAction:: G4Run* points to NULL!") ; }
+  // the part for the interactive running of G4 commented out.
   /// get Geant4 UI manager 
   //  G4UImanager* ui = G4UImanager::GetUIpointer() ;
   // if( 0 == ui    ) 

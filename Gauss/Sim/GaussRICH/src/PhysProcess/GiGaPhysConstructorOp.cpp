@@ -80,9 +80,12 @@ void  GiGaPhysConstructorOp::ConstructPeProcess()
        G4ProcessManager* pmanager =  particle->GetProcessManager();
        pmanager ->AddProcess(theTransportationProcess,-1,2,2);
        pmanager->AddProcess(theMultipleScattering,-1,1,1);
-       pmanager ->SetProcessOrderingToFirst(theTransportationProcess, idxAlongStep);
-       pmanager ->SetProcessOrderingToFirst(theTransportationProcess, idxPostStep);
-        pmanager ->SetProcessOrderingToFirst(theMultipleScattering, idxAlongStep);
+       pmanager ->SetProcessOrderingToFirst
+                       (theTransportationProcess, idxAlongStep);
+       pmanager ->SetProcessOrderingToFirst
+                        (theTransportationProcess, idxPostStep);
+        pmanager ->SetProcessOrderingToFirst
+                         (theMultipleScattering, idxAlongStep);
        pmanager ->SetProcessOrderingToFirst(theMultipleScattering, idxPostStep);
       particle->SetCuts(aPeCut);
        particle->SetApplyCutsFlag(true);
@@ -92,7 +95,8 @@ void  GiGaPhysConstructorOp::ConstructPeProcess()
 
       G4int j;
      // Rebuild the physics tables for every process for this particle type
-     G4ProcessVector* pVector = (particle->GetProcessManager())->GetProcessList();
+     G4ProcessVector* pVector = 
+                         (particle->GetProcessManager())->GetProcessList();
      G4cout<<"size ProcList pe- "<< pVector->size()<< G4endl;
  
      for ( j=0; j < pVector->size(); ++j) {
@@ -134,20 +138,20 @@ void  GiGaPhysConstructorOp::ConstructPeProcess()
 }
 
 // ============================================================================
-#include "G4Cerenkov.hh"
+#include "RichG4Cerenkov.hh"
 #include "G4OpAbsorption.hh"
-#include "G4OpRayleigh.hh"
-#include "G4OpBoundaryProcess.hh"
+#include "RichG4OpRayleigh.hh"
+#include "RichG4OpBoundaryProcess.hh"
 #include "RichHpdPhotoElectricEffect.h"
 // ============================================================================
 void GiGaPhysConstructorOp::ConstructOp() {
 
   G4cout<<"Now creating Optical processes"<<G4endl;
   G4cout<<"This is the phys list Op from GiGaRich1 "<<G4endl;
-  G4Cerenkov*   theCerenkovProcess = new G4Cerenkov("Cerenkov");
+  RichG4Cerenkov*   theCerenkovProcess = new RichG4Cerenkov("RichG4Cerenkov");
   G4OpAbsorption* theAbsorptionProcess = new G4OpAbsorption();
-  G4OpRayleigh*   theRayleighScatteringProcess = new G4OpRayleigh();
-  G4OpBoundaryProcess* theBoundaryProcess = new G4OpBoundaryProcess();
+  RichG4OpRayleigh*   theRayleighScatteringProcess = new RichG4OpRayleigh();
+  RichG4OpBoundaryProcess* theBoundaryProcess = new RichG4OpBoundaryProcess();
 
   G4cout<<"Now creating Photoelectric  processes"<<endl;
   RichHpdPhotoElectricEffect* theRichHpdPhotoElectricProcess= 

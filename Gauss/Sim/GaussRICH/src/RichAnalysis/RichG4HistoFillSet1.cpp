@@ -1,10 +1,10 @@
-// $Id: RichG4HistoFill.cpp,v 1.1 2003-04-29 15:04:54 seaso Exp $
+// $Id: RichG4HistoFillSet1.cpp,v 1.1 2003-04-29 17:08:05 seaso Exp $
 // Include files 
 
 
 
 // local
-#include "RichG4HistoFill.h"
+#include "RichG4HistoFillSet1.h"
 // GiGa 
 #include "GiGa/GiGaMACROs.h"
 // local
@@ -27,7 +27,7 @@
 #include "RichG4SvcLocator.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichG4HistoFill
+// Implementation file for class : RichG4HistoFillSet1
 //
 // 2003-03-20 : Sajan EASO
 //-----------------------------------------------------------------------------
@@ -35,13 +35,13 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichG4HistoFill::RichG4HistoFill(  ) {
+RichG4HistoFillSet1::RichG4HistoFillSet1(  ) {
 
 }
-RichG4HistoFill::~RichG4HistoFill(  ) { 
+RichG4HistoFillSet1::~RichG4HistoFillSet1(  ) { 
 }
 
-void RichG4HistoFill:: FillRichG4Histo( const G4Event* anEvent,
+void RichG4HistoFillSet1:: FillRichG4HistoSet1( const G4Event* anEvent,
                       int NumRichColl,  std::vector<int> RichG4CollectionID ) 
 {
   //  IHistogramSvc* CurrentHistoSvc;
@@ -52,9 +52,9 @@ void RichG4HistoFill:: FillRichG4Histo( const G4Event* anEvent,
 
   // StatusCode sc = svcLoc()->service( "HistogramSvc", CurrentHistoSvc, true );
 
-  SmartDataPtr<IHistogram1D>hNumTotHitRich1(CurrentHistoSvc,"RICHG4HISTO/1");
-  SmartDataPtr<IHistogram2D>hGlobalPEOriginXY(CurrentHistoSvc,"RICHG4HISTO/2");
-  SmartDataPtr<IHistogram2D>hGlobalHitXY(CurrentHistoSvc,"RICHG4HISTO/3");
+  SmartDataPtr<IHistogram1D>hNumTotHitRich1(CurrentHistoSvc,"RICHG4HISTOSET1/1");
+  SmartDataPtr<IHistogram2D>hGlobalPEOriginXY(CurrentHistoSvc,"RICHG4HISTOSET1/2");
+  SmartDataPtr<IHistogram2D>hGlobalHitXY(CurrentHistoSvc,"RICHG4HISTOSET1/3");
   
   G4HCofThisEvent * HCE;
   G4int nHitTotRich1=0;

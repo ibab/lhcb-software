@@ -29,7 +29,9 @@ include_dirs     $(GAUSSRICHROOT) \
                  $(GAUSSRICHROOT)/src/PhysProcess \
                  $(GAUSSRICHROOT)/src/RichAction \
                  $(GAUSSRICHROOT)/src/Misc \
-                 $(GAUSSRICHROOT)/src/RichAnalysis
+                 $(GAUSSRICHROOT)/src/RichAnalysis \
+                 $(GAUSSRICHROOT)/src/srcG4
+
         
 # ============== standard patterns ===========================================
 apply_pattern    component_library library=GaussRICH

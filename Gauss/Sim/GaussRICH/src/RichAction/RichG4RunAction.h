@@ -6,7 +6,8 @@
 
 // forward declarations
 template <class TYPE> class GiGaFactory;
-class RichG4Histo;
+class RichG4HistoDefineSet1;
+class RichG4HistoDefineTimer;
 
 // SE 21-8-2002
 
@@ -48,7 +49,17 @@ protected:
   // destructor (virtual and protected)
   virtual ~RichG4RunAction( );
 
-  RichG4Histo* aRichG4Histo() {return  m_aRichG4Histo; }
+  RichG4HistoDefineSet1* aRichG4HistoDefineSet1() 
+   {return  m_aRichG4HistoSet1; }
+  bool defineRichG4HistoSet1() 
+  {
+    return  m_defineRichG4HistoSet1;
+    
+  }
+  void setdefineRichG4HistoSet1(bool aboolValue) 
+  {
+    m_defineRichG4HistoSet1= aboolValue;
+  }
   
 private:
   
@@ -58,14 +69,18 @@ private:
   RichG4RunAction( const RichG4RunAction& );  
   /// no assignement 
   RichG4RunAction& operator=( const RichG4RunAction& );
-
+ 
 private:
   
   COMMANDS  m_beginCmds;
   COMMANDS  m_endCmds;
-
-  RichG4Histo* m_aRichG4Histo;
-
+  bool m_defineRichG4HistoSet1;
+  bool m_defineRichG4HistoTimer;
+  
+  
+  RichG4HistoDefineSet1* m_aRichG4HistoSet1;
+  RichG4HistoDefineTimer* m_aRichG4HistoTimer;
+  
 };
 // ============================================================================
 

@@ -23,7 +23,7 @@
 ////////////////////////////////////////////////////////////////////////
 // Optical Photon Boundary Process Class Implementation
 ////////////////////////////////////////////////////////////////////////
-//
+// G4OpboundaryProcess.cc   SE 28-4-2003
 // File:        G4OpBoundaryProcess.cc
 // Description: Discrete Process -- reflection/refraction at
 //                                  optical interfaces
@@ -55,7 +55,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "G4ios.hh"
-#include "G4OpBoundaryProcess.hh"
+#include "RichG4OpBoundaryProcess.hh"
 #include "RichG4AnalysisConstGauss.h"
 
 /////////////////////////
@@ -66,7 +66,7 @@
         // Operators
         //////////////
 
-// G4OpBoundaryProcess::operator=(const G4OpBoundaryProcess &right)
+// RichG4OpBoundaryProcess::operator=(const RichG4OpBoundaryProcess &right)
 // {
 // }
 
@@ -74,7 +74,7 @@
         // Constructors
         /////////////////
 
-G4OpBoundaryProcess::G4OpBoundaryProcess(const G4String& processName)
+RichG4OpBoundaryProcess::RichG4OpBoundaryProcess(const G4String& processName)
              : G4VDiscreteProcess(processName)
 {
         if ( verboseLevel > 0) {
@@ -86,7 +86,8 @@ G4OpBoundaryProcess::G4OpBoundaryProcess(const G4String& processName)
 	theFinish = polished;
 }
 
-// G4OpBoundaryProcess::G4OpBoundaryProcess(const G4OpBoundaryProcess &right)
+// RichG4OpBoundaryProcess::RichG4OpBoundaryProcess
+//    (const RichG4OpBoundaryProcess &right)
 // {
 // }
 
@@ -94,7 +95,7 @@ G4OpBoundaryProcess::G4OpBoundaryProcess(const G4String& processName)
         // Destructors
         ////////////////
 
-G4OpBoundaryProcess::~G4OpBoundaryProcess(){}
+RichG4OpBoundaryProcess::~RichG4OpBoundaryProcess(){}
 
         ////////////
         // Methods
@@ -104,7 +105,8 @@ G4OpBoundaryProcess::~G4OpBoundaryProcess(){}
 // ------------
 //
 G4VParticleChange*
-G4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
+RichG4OpBoundaryProcess::PostStepDoIt
+      (const G4Track& aTrack, const G4Step& aStep)
 {
         aParticleChange.Initialize(aTrack);
 
@@ -260,7 +262,7 @@ G4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 	  theLocalNormal = -theLocalNormal;
 	}
 	else {
-	  G4cerr << " G4OpBoundaryProcess/PostStepDoIt(): "
+	  G4cerr << " RichG4OpBoundaryProcess/PostStepDoIt(): "
 	       << " The Navigator reports that it returned an invalid normal" 
 	       << G4endl;
 	}
@@ -334,7 +336,7 @@ G4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 }
 
 G4ThreeVector 
-G4OpBoundaryProcess::GetFacetNormal(const G4ThreeVector& Momentum,
+RichG4OpBoundaryProcess::GetFacetNormal(const G4ThreeVector& Momentum,
 			            const G4ThreeVector&  Normal ) const
 {
         G4ThreeVector FacetNormal;
@@ -404,7 +406,7 @@ G4OpBoundaryProcess::GetFacetNormal(const G4ThreeVector& Momentum,
 	return FacetNormal;
 }
 
-void G4OpBoundaryProcess::DielectricMetal()
+void RichG4OpBoundaryProcess::DielectricMetal()
 {
 	do {
            if( !G4BooleanRand(theReflectivity) ) {
@@ -425,7 +427,7 @@ void G4OpBoundaryProcess::DielectricMetal()
 	} while (NewMomentum * theGlobalNormal < 0.0);
 }
 
-void G4OpBoundaryProcess::DielectricDielectric()
+void RichG4OpBoundaryProcess::DielectricDielectric()
 {
 	G4bool Inside = false;
 	G4bool Swap = false;
@@ -778,7 +780,7 @@ void G4OpBoundaryProcess::DielectricDielectric()
 // GetMeanFreePath
 // ---------------
 //
-G4double G4OpBoundaryProcess::GetMeanFreePath(const G4Track& ,
+G4double RichG4OpBoundaryProcess::GetMeanFreePath(const G4Track& ,
                                               G4double ,
                                               G4ForceCondition* condition)
 {

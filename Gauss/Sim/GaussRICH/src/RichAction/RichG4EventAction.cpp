@@ -49,14 +49,19 @@ RichG4EventAction::RichG4EventAction
   const std::string& name   ,
   const IInterface*  parent ) 
   : GiGaEventActionBase( type , name , parent ) ,
+    m_RichG4HistoFillSet1(0), 
+    m_RichG4HistoFillTimer(0),
   m_RichEventActionVerboseLevel(0), 
-  m_RichEventActionHistoFillActivate(false)
+    m_RichEventActionHistoFillActivateSet1(false),
+    m_RichEventActionHistoFillActivateTimer(false)
 {
   declareProperty( "RichEventActionVerbose",  
                    m_RichEventActionVerboseLevel );
   
-  declareProperty( "RichEventActionHistoFill",
-                     m_RichEventActionHistoFillActivate);
+  declareProperty( "RichEventActionHistoFillSet1",
+                     m_RichEventActionHistoFillActivateSet1);
+  declareProperty( "RichEventActionHistoFillTimer",
+                     m_RichEventActionHistoFillActivateTimer);
   
 
   m_RichHitCName= new RichG4HitCollName();
@@ -65,10 +70,17 @@ RichG4EventAction::RichG4EventAction
   for (int ic=0; ic<m_NumRichColl; ic++) {
     m_RichG4CollectionID.push_back(-1);
   }
+  //  if(m_RichEventActionHistoFillActivateSet1) {
+    
+     m_RichG4HistoFillSet1 = new RichG4HistoFillSet1();
   
-  m_RichG4HistoFill = new RichG4HistoFill();
+     //  }
+     // if(m_RichEventActionHistoFillActivateTimer) {
+    
+     m_RichG4HistoFillTimer = new RichG4HistoFillTimer();
   
- 
+     //  }
+  
 
 };
 // ============================================================================
@@ -84,6 +96,11 @@ RichG4EventAction::~RichG4EventAction(){};
 // ============================================================================
 void RichG4EventAction::BeginOfEventAction ( const G4Event* aEvt /* event */ ) 
 {
+  if(m_RichEventActionHistoFillActivateTimer) {
+    m_RichG4HistoFillTimer->RichG4BeginEventTimer();
+    
+  }
+  
   G4SDManager * SDman = G4SDManager::GetSDMpointer();
   G4String colNam;  
   for (int icol=0; icol<m_NumRichColl; icol++) {
@@ -104,14 +121,21 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* aEvt /* event */ )
 void RichG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event */ ) 
 {
 
+   if(m_RichEventActionHistoFillActivateTimer) {
+   
+    m_RichG4HistoFillTimer->RichG4EndEventTimer();
+  
+   }
+
    MsgStream log(   msgSvc(), name());
 
   G4int CurEventNum=anEvent->GetEventID();
+
    
-  if( m_RichEventActionHistoFillActivate) {
+  if( m_RichEventActionHistoFillActivateSet1) {
     
   //Now for the histo ids which are filled in this class.
-    m_RichG4HistoFill->FillRichG4Histo(anEvent, 
+    m_RichG4HistoFillSet1->FillRichG4HistoSet1(anEvent, 
                      m_NumRichColl,m_RichG4CollectionID);
   
   }

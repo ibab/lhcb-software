@@ -21,13 +21,14 @@
 // ********************************************************************
 //
 //
-// $Id: G4Cerenkov.cc,v 1.1 2003-04-29 15:04:56 seaso Exp $
+// RichG4Cerenkov.cc
+// $Id: RichG4Cerenkov.cc,v 1.1 2003-04-29 17:08:06 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 ////////////////////////////////////////////////////////////////////////
 // Cerenkov Radiation Class Implementation
 ////////////////////////////////////////////////////////////////////////
-//
+//       RichG4Cerenkov.cc  SE 28-04-2003
 // File:        G4Cerenkov.cc 
 // Description: Continuous Process -- Generation of Cerenkov Photons
 // Version:     2.1
@@ -53,7 +54,7 @@
 
 #include "G4ios.hh"
 #include "G4Poisson.hh"
-#include "G4Cerenkov.hh"
+#include "RichG4Cerenkov.hh"
 // To tag the info regarding photon production.
 #include "RichG4CherenkovPhotProdTag.h"
 // local analysis for RichG4.
@@ -67,7 +68,7 @@
         // Operators
         //////////////
 
-// G4Cerenkov::operator=(const G4Cerenkov &right)
+// RichG4Cerenkov::operator=(const RichG4Cerenkov &right)
 // {
 // }
 
@@ -75,7 +76,7 @@
         // Constructors
         /////////////////
 
-G4Cerenkov::G4Cerenkov(const G4String& processName)
+RichG4Cerenkov::RichG4Cerenkov(const G4String& processName)
            : G4VContinuousProcess(processName)
 {
 	fTrackSecondariesFirst = false;
@@ -90,7 +91,7 @@ G4Cerenkov::G4Cerenkov(const G4String& processName)
 	BuildThePhysicsTable();
 }
 
-// G4Cerenkov::G4Cerenkov(const G4Cerenkov &right)
+// RichG4Cerenkov::RichG4Cerenkov(const G4Cerenkov &right)
 // {
 // }
 
@@ -98,7 +99,7 @@ G4Cerenkov::G4Cerenkov(const G4String& processName)
         // Destructors
         ////////////////
 
-G4Cerenkov::~G4Cerenkov() 
+RichG4Cerenkov::~RichG4Cerenkov() 
 {
 	if (thePhysicsTable != NULL) {
 	   thePhysicsTable->clearAndDestroy();
@@ -114,7 +115,7 @@ G4Cerenkov::~G4Cerenkov()
 // -------------
 //
 G4VParticleChange*
-G4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
+RichG4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
 // This routine is called for each tracking Step of a charged particle
 // in a radiator. A Poisson-distributed number of photons is generated
@@ -349,7 +350,7 @@ G4Cerenkov::AlongStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 // ---------------------------------------------
 //
 
-void G4Cerenkov::BuildThePhysicsTable()
+void RichG4Cerenkov::BuildThePhysicsTable()
 {
 	if (thePhysicsTable) return;
 
@@ -458,7 +459,7 @@ void G4Cerenkov::BuildThePhysicsTable()
 //
 
 G4double 
-G4Cerenkov::GetContinuousStepLimit(const G4Track& aTrack,
+RichG4Cerenkov::GetContinuousStepLimit(const G4Track& aTrack,
 				   G4double  ,
 				   G4double  ,
                                    G4double& )
@@ -502,7 +503,7 @@ G4Cerenkov::GetContinuousStepLimit(const G4Track& aTrack,
 //             ^^^^^^^^^^
 
 G4double 
-G4Cerenkov::GetAverageNumberOfPhotons(const G4DynamicParticle* aParticle, 
+RichG4Cerenkov::GetAverageNumberOfPhotons(const G4DynamicParticle* aParticle, 
 			      const G4Material* aMaterial,
 			      const G4MaterialPropertyVector* Rindex) const
 {

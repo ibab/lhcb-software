@@ -6,7 +6,8 @@
 // GiGa
 #include <vector>
 #include "GiGa/GiGaEventActionBase.h"
-#include "../RichAnalysis/RichG4HistoFill.h"
+#include "../RichAnalysis/RichG4HistoFillSet1.h"
+#include "../RichAnalysis/RichG4HistoFillTimer.h"
 
 // forward declaration
 template <class TYPE> class GiGaFactory;
@@ -46,9 +47,13 @@ public:
     return  m_NumRichColl;
   }
     
-  RichG4HistoFill* GetRichG4HistoFill() 
+  RichG4HistoFillSet1* GetRichG4HistoFillSet1() 
   {
-    return m_RichG4HistoFill;
+    return m_RichG4HistoFillSet1;
+  }
+  RichG4HistoFillTimer* GetRichG4HistoFillTimer() 
+  {
+    return m_RichG4HistoFillTimer;
   }
   
   int RichEventActionVerboseLevel() 
@@ -56,9 +61,13 @@ public:
     return  m_RichEventActionVerboseLevel;
   }
   
-  bool RichEventActionHistoFillActivate()
+  bool RichEventActionHistoFillActivateSet1()
   {
-    return  m_RichEventActionHistoFillActivate;
+    return  m_RichEventActionHistoFillActivateSet1;
+  }
+  bool RichEventActionHistoFillActivateTimer()
+  {
+    return  m_RichEventActionHistoFillActivateTimer;
   }
   
 private:
@@ -71,10 +80,14 @@ private:
   std::vector<int> m_RichG4CollectionID;
   int m_NumRichColl;
   RichG4HitCollName* m_RichHitCName;
-  RichG4HistoFill* m_RichG4HistoFill;
-  int m_RichEventActionVerboseLevel;
-  bool m_RichEventActionHistoFillActivate;
+  RichG4HistoFillSet1* m_RichG4HistoFillSet1;
+  RichG4HistoFillTimer* m_RichG4HistoFillTimer;
   
+  int m_RichEventActionVerboseLevel;
+  bool m_RichEventActionHistoFillActivateSet1;
+  bool m_RichEventActionHistoFillActivateTimer;
+  
+   
   
   ///
 };

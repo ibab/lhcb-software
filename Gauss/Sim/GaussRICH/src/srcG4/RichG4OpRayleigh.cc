@@ -21,14 +21,14 @@
 // ********************************************************************
 //
 //
-// $Id: G4OpRayleigh.cc,v 1.1 2003-04-29 15:04:58 seaso Exp $
+// $Id: RichG4OpRayleigh.cc,v 1.1 2003-04-29 17:08:06 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
 ////////////////////////////////////////////////////////////////////////
 // Optical Photon Rayleigh Scattering Class Implementation
 ////////////////////////////////////////////////////////////////////////
-//
+// RichG4OpRayleigh.cc   SE 28-04-2003
 // File:        G4OpRayleigh.cc 
 // Description: Discrete Process -- Rayleigh scattering of optical 
 //		photons  
@@ -52,7 +52,7 @@
 ////////////////////////////////////////////////////////////////////////
 
 #include "G4ios.hh"
-#include "G4OpRayleigh.hh"
+#include "RichG4OpRayleigh.hh"
 
 /////////////////////////
 // Class Implementation
@@ -62,7 +62,7 @@
         // Operators
         //////////////
 
-// G4OpRayleigh::operator=(const G4OpRayleigh &right)
+// RichG4OpRayleigh::operator=(const RichG4OpRayleigh &right)
 // {
 // }
 
@@ -70,7 +70,7 @@
         // Constructors
         /////////////////
 
-G4OpRayleigh::G4OpRayleigh(const G4String& processName)
+RichG4OpRayleigh::RichG4OpRayleigh(const G4String& processName)
            : G4VDiscreteProcess(processName)
 {
 
@@ -83,7 +83,7 @@ G4OpRayleigh::G4OpRayleigh(const G4String& processName)
         BuildThePhysicsTable();
 }
 
-// G4OpRayleigh::G4OpRayleigh(const G4OpRayleigh &right)
+// RichG4OpRayleigh::RichG4OpRayleigh(const RichG4OpRayleigh &right)
 // {
 // }
 
@@ -91,7 +91,7 @@ G4OpRayleigh::G4OpRayleigh(const G4String& processName)
         // Destructors
         ////////////////
 
-G4OpRayleigh::~G4OpRayleigh()
+RichG4OpRayleigh::~RichG4OpRayleigh()
 {
         if (thePhysicsTable!= NULL) {
            thePhysicsTable->clearAndDestroy();
@@ -107,7 +107,7 @@ G4OpRayleigh::~G4OpRayleigh()
 // -------------
 //
 G4VParticleChange* 
-G4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
+RichG4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 {
         aParticleChange.Initialize(aTrack);
 
@@ -195,7 +195,7 @@ G4OpRayleigh::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 // BuildThePhysicsTable for the Rayleigh Scattering process
 // --------------------------------------------------------
 //
-void G4OpRayleigh::BuildThePhysicsTable()
+void RichG4OpRayleigh::BuildThePhysicsTable()
 {
 //      Builds a table of scattering lengths for each material
 
@@ -233,7 +233,7 @@ void G4OpRayleigh::BuildThePhysicsTable()
 // GetMeanFreePath()
 // -----------------
 //
-G4double G4OpRayleigh::GetMeanFreePath(const G4Track& aTrack,
+G4double RichG4OpRayleigh::GetMeanFreePath(const G4Track& aTrack,
                                      G4double ,
                                      G4ForceCondition* )
 {
@@ -281,7 +281,8 @@ G4double G4OpRayleigh::GetMeanFreePath(const G4Track& aTrack,
 // Private method to compute Rayleigh Scattering Lengths (for water)
 //
 G4PhysicsOrderedFreeVector* 
-G4OpRayleigh::RayleighAttenuationLengthGenerator(G4MaterialPropertiesTable *aMPT) 
+RichG4OpRayleigh::RayleighAttenuationLengthGenerator
+                     (G4MaterialPropertiesTable *aMPT) 
 {
         // Physical Constants
 

@@ -1,5 +1,5 @@
-#ifndef RichG4Histo_H
-#define RichG4Histo_H 1
+#ifndef RichG4HistoDefineSet1_H
+#define RichG4HistoDefineSet1_H 1
 
 // Include files
 // #include "GaudiKernel/Algorithm.h"
@@ -14,26 +14,21 @@ class IHistogram1D;
 class IHistogram2D;
 
 // Author SE 21-8-2002
-class RichG4Histo {
+class RichG4HistoDefineSet1 {
 
 public:
-  // Constructor of this form must be provided
-  //  RichG4Histo(const std::string& name, ISvcLocator* pSvcLocator); 
-  RichG4Histo();
-  virtual ~RichG4Histo();
-  // Three mandatory member functions of any algorithm
-  //  StatusCode initialize();
-  // StatusCode execute();
-  // StatusCode finalize();
+  RichG4HistoDefineSet1();
+  virtual ~RichG4HistoDefineSet1();
 
 private:
   // These data members are used in the execution of this algorithm
   // They are set in the initialisation phase by the job options service
-  // bool        m_ProduceRichG4Histogram;  // flag for histo production
+  // for the RichG4RunAction.
+  // bool        m_DefineRichG4HistogramSet1;  // flag for histo production
   /// Book histograms
-  void bookRichG4Histograms();
+  void bookRichG4HistogramsSet1();
 
-  // Histograms ( used if m_produceHistogram = 1 (true) )
+  // Histograms ( used if m_produceHistogramSet1 = 1 (true) )
   IHistogram1D*         m_hNumTotHitRich1;
   IHistogram1D*         m_hNumTotHitAgelRich1;
   IHistogram1D*         m_hNumTotHitC4F10Rich1;
@@ -62,8 +57,8 @@ private:
   // IHistogram2D*         m_hGlobalPEOriginAgelBotXY;
   // IHistogram2D*         m_hGlobalPEOriginC4F10BotXY;
 
-  std::string m_RichG4HistoPath; ///< Histo path
-  ISvcLocator* svcLoc;
+  std::string m_RichG4HistoPathSet1; ///< Histo path
+  ISvcLocator* m_svcLocSet1;
 
 
 
