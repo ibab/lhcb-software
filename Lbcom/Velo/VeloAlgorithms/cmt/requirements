@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes
 #
 package           VeloAlgorithms
-version           v3r2
+version           v3r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -23,17 +23,3 @@ use  GSL 	v*    LCG_Interfaces
 library          VeloAlgorithms    ../src/*.cpp -import=AIDA -import=VeloKernel
 
 apply_pattern component_library library=VeloAlgorithms
-
-
-
-
-
-
-
-
-
-
-
-
-
-

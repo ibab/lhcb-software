@@ -9,13 +9,11 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "Event/MCParticle.h"
-#include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "GaudiKernel/IHistogramSvc.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "Relations/IAssociatorWeighted.h"
-#include "GaudiKernel/IToolSvc.h"
 #include "Kernel/LHCbMath.h"
 
 //- Velo classes ----------------------------------------------
@@ -978,7 +976,7 @@ StatusCode VeloMonitor::testVeloCluster() {
     }
 
     float adcSum=0.;
-    for (int i=0;i<size;i++) {adcSum+=(*itcv)->adcValue(i);}
+    for (int i=0;i<size;i++) {adcSum+=float((*itcv)->adcValue(i));}
     m_VCSensorStrip->fill((*itcv)->sensor(),(*itcv)->strip(0));
     m_VCADCSum->fill(adcSum);
     if (signal) {

@@ -8,8 +8,6 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/ObjectVector.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 
 // local
 #include "VeloDataProcessor.h"
@@ -87,7 +85,7 @@ StatusCode VeloDataProcessor::execute() {
     // take an MCFE make a VeloFullDigit
      VeloChannelID myKey((*MCFEIt)->key());
      VeloFullDigit* mydigit = new VeloFullDigit(myKey);
-     int ADC=int(digitise((*MCFEIt)->charge())); 
+     int ADC=int(digitise(float((*MCFEIt)->charge()))); 
      mydigit->setRawADCValue(ADC);
 
      // following will come from data processing 
@@ -96,7 +94,7 @@ StatusCode VeloDataProcessor::execute() {
      mydigit->setSubtractedPedestal(0.);
      mydigit->setSubtractedCM(0.);
      // noise - use sigma of generator distribution
-     float noise=digitise(noiseSigma());
+     float noise=digitise(float(noiseSigma()));
      mydigit->setRawNoise(noise);
      mydigit->setNoise(noise);
      mydigitvector->insert(mydigit);  
@@ -127,8 +125,8 @@ StatusCode VeloDataProcessor::finalize() {
 
 float VeloDataProcessor::digitise(float electrons) {
   // convert electrons to ADC counts
-  float digi = electrons*(VeloDigiParams::ADCFullScale/VeloDigiParams::electronsFullScale);
-  if (digi>(VeloDigiParams::ADCFullScale-1)) digi=VeloDigiParams::ADCFullScale-1.;
+  float digi = float(electrons*(VeloDigiParams::ADCFullScale/VeloDigiParams::electronsFullScale));
+  if (digi>(VeloDigiParams::ADCFullScale-1)) digi=float(VeloDigiParams::ADCFullScale-1.);
 
   return digi;
 }

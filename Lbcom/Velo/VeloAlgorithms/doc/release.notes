@@ -1,6 +1,11 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 
+!===================== VeloAlgorithms v3r3 2005-02-10 =====================
+! 2005-02-10 - Marco Cattaneo
+ - Fix windows compilation warnings
+ - Remove some unneccesary includes (no longer needed due to GaudiAlg) 
+
 ! 2005-02-10 - David Hutchcroft
  - Bug fix in VeloCluster maker to make clusters for last 4 sensors
 

@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.33 2004-12-06 17:17:13 cattanem Exp $
+// $Id: VeloSim.cpp,v 1.34 2005-02-11 10:23:21 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -19,7 +19,6 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/Stat.h"
-#include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "Kernel/LHCbMath.h"

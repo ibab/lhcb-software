@@ -35,10 +35,10 @@ VeloClusterMaker::VeloClusterMaker( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_inputContainer                 ( VeloFullDigitLocation::Default )
   , m_outputContainer                ( VeloClusterLocation::Default )
-  , m_defaultSignalToNoiseCut        (3.0)
-  , m_defaultClusterSignalToNoiseCut (3.0)
+  , m_defaultSignalToNoiseCut        (3.0F)
+  , m_defaultClusterSignalToNoiseCut (3.0F)
   , m_maxClusters                    (10000)   
-  , m_inclusionThreshold             (0.1)
+  , m_inclusionThreshold             (0.1F)
 {
   declareProperty( "InputData"           , m_inputContainer  );
   declareProperty( "OutputData"          , m_outputContainer );
@@ -448,7 +448,7 @@ void VeloClusterMaker::addDigit(VeloCluster* currentCluster,
     std::vector<std::pair<long,double> >::iterator sigFirst = signals.begin(); 
     signals.insert(sigFirst,newpair); 
     // update S/N
-    currentClusterSTN += nearbyDigit->signalToNoise();
+    currentClusterSTN += float(nearbyDigit->signalToNoise());
   }
   currentCluster->setStripSignals(signals);
 }
