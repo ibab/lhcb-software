@@ -1,8 +1,11 @@
-// $Id: MuonReadoutCond.cpp,v 1.2 2002-01-31 10:00:10 dhcroft Exp $
+// $Id: MuonReadoutCond.cpp,v 1.3 2002-06-04 16:08:37 dhcroft Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/01/31 10:00:10  dhcroft
+// Moved CLIDs to seperate files for Visual C linker
+//
 // ============================================================================
 #define MUONDET_MUONREADOUTCOND_CPP
 
@@ -11,7 +14,7 @@
 #include <cmath>
 
 /** @file MuonReadoutCond.cpp
- * 
+ *
  * Implementation of class : MuonReadoutCond
  * This is the Muon readout information, with electronic and chamber
  * effects required to convert GEANT information into fired channels
@@ -39,7 +42,7 @@ MuonReadoutCond::MuonReadoutCond( MuonReadoutCond& obj ) :
 {
 }
 
-/// update constructor, do a deep copy of all 
+/// update constructor, do a deep copy of all
 /// except for the properties of a generic DataObject
 void MuonReadoutCond::update( MuonReadoutCond& obj ){
   Condition::update((Condition&)obj);
@@ -53,37 +56,38 @@ MuonReadoutCond::~MuonReadoutCond()
 
 StatusCode MuonReadoutCond::initialize(){
   /// Set CumProbX and CumProbY from cluserX and clusterY
+  /// and make the randomnumber generators
   std::vector<_readoutParameter>::iterator iRout;
   for(iRout = m_RList.begin() ; iRout != m_RList.end() ; iRout++){
 
     if(iRout->ClusterX.size() == 0 || iRout->ClusterY.size() == 0){
       return StatusCode::FAILURE;
     }
-    
+
     // start with X
     iRout->CumProbX.clear(); // remove old probabilties
     const int maxX=maxCluster(*iRout,'x');
 
     // make enough entries in the vector
-    iRout->CumProbX.insert( iRout->CumProbX.begin(), maxX, 0.); 
-    
+    iRout->CumProbX.insert( iRout->CumProbX.begin(), maxX, 0.);
+
     // fill CumProbX in position i with value p from cluster
     std::vector<_clus>::const_iterator probIt;
-    for( probIt = iRout->ClusterX.begin(); 
+    for( probIt = iRout->ClusterX.begin();
          probIt != iRout->ClusterX.end(); ++probIt){
       iRout->CumProbX[(*probIt).clSize-1]=(*probIt).clProb;
     }
-    
+
     double rsum=0.;
     std::vector<double>::iterator cumIt;
-    for( cumIt = iRout->CumProbX.begin(); 
+    for( cumIt = iRout->CumProbX.begin();
          cumIt != iRout->CumProbX.end() ; ++cumIt){
       rsum += *cumIt;
       *cumIt=rsum;
     }
-    
+
     // alright paranoia here, normalise the cumlative sum
-    for( cumIt = iRout->CumProbX.begin(); 
+    for( cumIt = iRout->CumProbX.begin();
          cumIt != iRout->CumProbX.end() ; ++cumIt){
       *cumIt /= rsum;
     }
@@ -93,23 +97,23 @@ StatusCode MuonReadoutCond::initialize(){
     const int maxY=maxCluster(*iRout,'y');
 
     // make enough entries in the vector
-    iRout->CumProbY.insert( iRout->CumProbY.begin(), maxY, 0.); 
-    
+    iRout->CumProbY.insert( iRout->CumProbY.begin(), maxY, 0.);
+
     // fill CumProbY in position i with value p from cluster
-    for( probIt = iRout->ClusterY.begin(); 
+    for( probIt = iRout->ClusterY.begin();
          probIt != iRout->ClusterY.end(); ++probIt){
       iRout->CumProbY[(*probIt).clSize-1]=(*probIt).clProb;
     }
-    
+
     rsum=0.;
-    for( cumIt = iRout->CumProbY.begin(); 
+    for( cumIt = iRout->CumProbY.begin();
          cumIt != iRout->CumProbY.end() ; ++cumIt){
       rsum += *cumIt;
       *cumIt=rsum;
     }
-    
+
     // alright paranoia here, normalise the cumlative sum
-    for( cumIt = iRout->CumProbY.begin(); 
+    for( cumIt = iRout->CumProbY.begin();
          cumIt != iRout->CumProbY.end() ; ++cumIt){
       *cumIt /= rsum;
     }
@@ -127,14 +131,13 @@ StatusCode MuonReadoutCond::addReadout(const std::string &rType, int &index){
 
   if(rType == "Anode"){
     tmpParameters.ReadoutType=0;
-  }else if(rType == "Cathode"){    
+  }else if(rType == "Cathode"){
     tmpParameters.ReadoutType=1;
   }else{
     index=-1;
     return StatusCode::FAILURE;
   }
   tmpParameters.Efficiency=0.;
-  tmpParameters.TimeJitterID="";
   tmpParameters.SyncDrift=0.;
   tmpParameters.ChamberNoise=0.;
   tmpParameters.ElectronicsNoise=0.;
@@ -145,14 +148,16 @@ StatusCode MuonReadoutCond::addReadout(const std::string &rType, int &index){
   tmpParameters.PadEdgeSigmaX=0.;
   tmpParameters.PadEdgeSizeY=0.;
   tmpParameters.PadEdgeSigmaY=0.;
-  
+  tmpParameters.JitterMin=0;
+  tmpParameters.JitterMax=0;
+
   m_RList.push_back(tmpParameters);
   index = m_RList.size() - 1;
   return StatusCode::SUCCESS;
 }
 
 /// Utility routine to find the largest posible size of cluster
-int MuonReadoutCond::maxCluster(const _readoutParameter &readout, 
+int MuonReadoutCond::maxCluster(const _readoutParameter &readout,
                                 const char &xy){
 
   const std::vector<_clus> *cluster;
@@ -175,26 +180,26 @@ int MuonReadoutCond::maxCluster(const _readoutParameter &readout,
 }
 
 /// Return the size of cluster corresponding to a random number (0->1) in X
-int MuonReadoutCond::singleGapClusterX(const double &randomNumber, 
+int MuonReadoutCond::singleGapClusterX(const double &randomNumber,
                                        const double &xDistPadEdge,
                                        const int &i){
   return this->singleGapCluster(0,randomNumber,xDistPadEdge,i);
 }
 
 /// Return the size of cluster corresponding to a random number (0->1) in Y
-int MuonReadoutCond::singleGapClusterY(const double &randomNumber, 
+int MuonReadoutCond::singleGapClusterY(const double &randomNumber,
                                        const double &yDistPadEdge,
                                        const int &i){
   return this->singleGapCluster(1,randomNumber,yDistPadEdge,i);
 }
 
 /// Used by singleGapClusterX and  singleGapClusterY to calculate value
-int MuonReadoutCond::singleGapCluster(const int &xy, 
-                                      const double &randomNumber, 
+int MuonReadoutCond::singleGapCluster(const int &xy,
+                                      const double &randomNumber,
                                       const double &xpos,
                                       const int &i) {
 
-  // Apologies for the high level of indirection, I decided that 
+  // Apologies for the high level of indirection, I decided that
   // having one routine that picked from X or Y was perferable to
   // two routines.
 
@@ -221,17 +226,17 @@ int MuonReadoutCond::singleGapCluster(const int &xy,
   // now should have a cumlative sum in *cumProb
   int icsize;
   if( (*cumProb).size() >= 3  &&  randomNumber > (*cumProb)[1] ){
-    // do _not_ do the correction for the pad edge effect 
+    // do _not_ do the correction for the pad edge effect
     // (cluster size at least 3 anyway)
     icsize=1;
     while( (*cumProb)[icsize] < randomNumber ){
       ++icsize;
     }
   }else{
-    // must correct for pad edge effect 
+    // must correct for pad edge effect
     if( (*padEdgeSigma) > 0.  &&  (*padEdgeSize) > 0.){
       // tested that there _is_ an effect
-      double edgeEffect = (*padEdgeSize) * 
+      double edgeEffect = (*padEdgeSize) *
         exp( -0.5 * ( xpos*xpos) / ( (*padEdgeSigma)*(*padEdgeSigma) ));
       (*cumProb)[0] -= edgeEffect;
       (*cumProb)[1] += edgeEffect;
@@ -262,4 +267,13 @@ void MuonReadoutCond::addClusterY(const int &size, const double &prob,
   tmp.clProb=prob;
   m_RList[i].ClusterY.push_back(tmp);
 }
-  
+
+void MuonReadoutCond::setTimeJitter(const std::vector<double> &jitterVec,
+                                    const double &min,
+                                    const double &max,
+                                    const int &i){
+  m_RList[i].JitterVector=jitterVec;
+  m_RList[i].JitterMin=min;
+  m_RList[i].JitterMax=max;
+}
+

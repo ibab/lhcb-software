@@ -1,8 +1,11 @@
-// $Id: MuonReadoutCond.h,v 1.2 2002-01-31 10:00:09 dhcroft Exp $
+// $Id: MuonReadoutCond.h,v 1.3 2002-06-04 16:08:33 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/01/31 10:00:09  dhcroft
+// Moved CLIDs to seperate files for Visual C linker
+//
 //
 // ============================================================================
 #ifndef MUONDET_MUONREADOUTCOND_H
@@ -16,10 +19,10 @@
 #include "MuonDet/CLID_MuonReadoutCond.h"
 
 /** @class MuonReadoutCond MuonReadoutCond.h MuonDet/MuonReadoutCond.h
- *  
+ *
  *  The muon readout parameters implemented as a Condition
  *
- *  Stores the numbers related to the electronics and chamber effects 
+ *  Stores the numbers related to the electronics and chamber effects
  *  required to convert GEANT entry/exit points into electronics channels
  *  fired for a given chamber readout
  *
@@ -33,13 +36,13 @@ public:
   /// Default Constructors
   MuonReadoutCond();
 
-  /// Constructor 
+  /// Constructor
   MuonReadoutCond( const ITime& since, const ITime& till );
 
-  /// Copy constructor 
+  /// Copy constructor
   MuonReadoutCond( MuonReadoutCond& obj );
 
-  /// Update using another MuonReadoutCond: deep copy all contents, 
+  /// Update using another MuonReadoutCond: deep copy all contents,
   /// except for the properties of a generic DataObject
   virtual void update ( MuonReadoutCond& obj );
 
@@ -55,13 +58,13 @@ public:
   // Re-implemented from DataObject
 
   /// Class ID of this instance
-  inline virtual const CLID& clID() const { 
-    return classID(); 
-  } 
+  inline virtual const CLID& clID() const {
+    return classID();
+  }
 
   /// Class ID of this class
-  inline static  const CLID& classID() { 
-    return CLID_MuonReadoutCond; 
+  inline static  const CLID& classID() {
+    return CLID_MuonReadoutCond;
   }
 
 public:
@@ -90,16 +93,7 @@ public:
   void setEfficiency(const double &eff, const int &i){
     m_RList[i].Efficiency = eff;
   }
-  
-  /// get ID of time jitter histogram (will be replaced sometime)
-  inline std::string timeJitterID(const int &i) const {
-    return m_RList[i].TimeJitterID;
-  }
-  /// set Hoook ID of time jitter histogram 
-  void setTimeJitterID(const std::string &jitter, const int &i){
-    m_RList[i].TimeJitterID=jitter;
-  }
-  
+
   /// get (maximum) synchronization imprecision (ns)
   inline double syncDrift(const int &i) const {
     return m_RList[i].SyncDrift;
@@ -108,7 +102,7 @@ public:
   void setSyncDrift(const double &sync, const int &i){
     m_RList[i].SyncDrift = sync;
   }
-  
+
    /// get Chamber Noise rate (counts/sec/cm2)
   inline double chamberNoise(const int &i) const {
     return m_RList[i].ChamberNoise;
@@ -117,7 +111,7 @@ public:
   void setChamberNoise(const double &chamNoise, const int &i){
     m_RList[i].ChamberNoise=chamNoise;
   }
-  
+
   /// get Electronics noise rates (counts/sec/channel)
   inline double electronicsNoise(const int &i) const {
     return m_RList[i].ElectronicsNoise;
@@ -126,7 +120,7 @@ public:
   void setElectronicsNoise(const double &elecNoise, const int &i){
     m_RList[i].ElectronicsNoise=elecNoise;
   }
-  
+
   /// get average dead time of a channel (ns)
   inline double meanDeadTime(const int &i) const {
     return m_RList[i].MeanDeadTime;
@@ -135,7 +129,7 @@ public:
   void setMeanDeadTime(const double &mDead, const int &i){
     m_RList[i].MeanDeadTime=mDead;
   }
-  
+
   /// get RMS of the dead time (ns)
   inline double rmsDeadTime(const int &i) const {
     return  m_RList[i].RMSDeadTime;
@@ -179,11 +173,26 @@ public:
 
   int singleGapClusterX(const double &randomNumber,
                         const double &xDistPadEdge, const int &i);
-  
-  int singleGapClusterY(const double &randomNumber,
-                        const double &xDistPadEdge, const int &i);    
 
-private: 
+  int singleGapClusterY(const double &randomNumber,
+                        const double &xDistPadEdge, const int &i);
+
+  /// Function to set the time jitter PDF, minimum and increment
+  void setTimeJitter(const std::vector<double> &jitterVec,
+                     const double &min,
+                     const double &max,
+                     const int &i);
+
+  /// get a time jitter distribution in ns
+  std::vector<double> timeJitter( double &min, double &max ,
+                                  const int &i){
+    min = m_RList[i].JitterMin;
+    max = m_RList[i].JitterMax;
+    return m_RList[i].JitterVector;
+  }
+
+
+private:
   // some typdefs for the structures to store the information in
 
   // used to keep the cluster size parameters before turning them into
@@ -197,13 +206,12 @@ private:
   typedef struct  {
     int                 ReadoutType;
     double              Efficiency;
-    std::string         TimeJitterID;
     double              SyncDrift;
     double              ChamberNoise;
     double              ElectronicsNoise;
     double              MeanDeadTime;
     double              RMSDeadTime;
-    double              TimeGateStart;                 
+    double              TimeGateStart;
     double              PadEdgeSizeX;
     double              PadEdgeSigmaX;
     double              PadEdgeSizeY;
@@ -211,7 +219,10 @@ private:
     std::vector<_clus>  ClusterX;
     std::vector<_clus>  ClusterY;
     std::vector<double> CumProbX;
-    std::vector<double> CumProbY;    
+    std::vector<double> CumProbY;
+    std::vector<double> JitterVector;
+    double              JitterMin;
+    double              JitterMax;
   } _readoutParameter;
 
 private:
@@ -220,7 +231,7 @@ private:
     return m_RList;
   }
 
-  /// returns a single gap cluster size in x (0) or y (1) 
+  /// returns a single gap cluster size in x (0) or y (1)
   /// should be given a random number between 0 and 1 and distance from the
   /// pad edge (cm)
   int singleGapCluster(const int &xy, const double &randomNumber,
@@ -229,7 +240,7 @@ private:
 
   int maxCluster(const _readoutParameter &readout, const char &xy);
 
-  /// The list of the readouts 
+  /// The list of the readouts
   std::vector<_readoutParameter> m_RList;
 };
 

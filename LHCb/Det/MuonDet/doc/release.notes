@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.12 2002-04-25 10:16:26 dhcroft Exp $
+! $Id: release.notes,v 1.13 2002-06-04 16:08:36 dhcroft Exp $
 ! CVS tag $Name: not supported by cvs2svn $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
 
-! >>>>>>>>>>>>>>>> MuonDet v3r1 <<<<<<<<<<<<<<<<<<<<<
+! 20020604 David Hutchcroft
+  - Added the code to MuonReadoutCond to store the time jitter information
+  - Added the code to XmlMuonReadoutCondCnv to read the time jitter pdfs from
+    the XML
+
 ! 25/04/2022 David Hutchcroft
   - Another Bug fix in XmlMuonRegionCnv: set FE channel size of Anode and 
     cathode correctly, I think this is the last problem with this code...
