@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-01-13 - P. Koppenburg
+  - options/Plots.opts
+    . New variable "WM": wide mass window for B
+    
 ! 2005-01-12 - P. Koppenburg
   - options/CorrB2HH.opts
   - options/CorrBd2D0Kstar.opts
