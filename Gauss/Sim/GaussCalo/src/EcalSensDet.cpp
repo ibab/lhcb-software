@@ -1,8 +1,12 @@
-// $Id: EcalSensDet.cpp,v 1.4 2003-12-05 08:59:58 robbep Exp $ 
+// $Id: EcalSensDet.cpp,v 1.5 2003-12-06 16:16:54 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/12/05 08:59:58  robbep
+// Put fonctions and constants for the non-uniformity. The local
+// non-uniformity (sin-like amplitude) is set to 0 for the moment.
+//
 // Revision 1.3  2003/07/08 10:22:50  robbep
 // Adaptation to the new GaussCalo interface
 //
@@ -98,7 +102,7 @@ EcalSensDet::EcalSensDet
   //  middle ecal
     , m_a_global_outer_ecal  ( 0.03  ) // global non uniformity amplitude 
   // outer ecal
-    , m_a_reflection_height ( 0.07 ) // reflection on the edges - height
+    , m_a_reflection_height ( 0.09 ) // reflection on the edges - height
     , m_a_reflection_width  ( 6. * mm ) // reflection on the edges - width
 {
   ///
