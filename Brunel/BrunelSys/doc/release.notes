@@ -4,6 +4,16 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
+!======================= BrunelSys v22r0 2003-12-12 =======================
+! 2003-12-10 - Marco Cattaneo
+ - Modified requirements for Brunel v20r0. Uses LHCB v14r0, GAUDI v13r0
+
+   Packages modified: RiSicbGeom v3r7, CaloInterfaces v3r0, CaloMonitor v1r5,
+     RichUtils v3r6, ITAlgorithms v13r0p1, RichDetTools v3r4, CaloReco v1r7,
+     CaloPIDs v1r2, TrExtrapolator v2r9, RichRecSys v1r5, RichRecBase v1r7,
+     RichRecQC v1r4, RichRingRefit v1r4, RichRecTools v2r6, RichRecCommon v1r3,
+     RichLocalPID v1r4, RichGlobalPID v1r3
+
 !======================= BrunelSys v21r2 2003-12-03 =======================
 ! 2003-12-03 - Marco Cattaneo
  - Modified requirements for Brunel v21r2. Uses LHCB v13r5

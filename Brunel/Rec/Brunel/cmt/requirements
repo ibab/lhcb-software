@@ -1,5 +1,5 @@
 package Brunel
-version v21r2
+version v22r0
 
 branches doc cmt job options
 
@@ -8,38 +8,38 @@ pattern BrunelVersion path_append BRUNELVERS <version>
 apply_pattern BrunelVersion
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r11p2
+use GaudiPolicy v5r14
 
-#-- External libraries (as defined in GAUDI_v12r0)
-use ExternalLibs	v4r0p1
-use AIDA		v3r22p2
-use CLHEP		v2r1800p0
-use HTL			v2r1321p0
-use GSL			v2r13p0
-use XERCES		v2r220p0
+#-- External libraries (as defined in GAUDI_v13r0)
+use ExternalLibs	v4r4
+use AIDA		v3r300
+use CLHEP		v2r1810p0
+use GSL			v2r14p0
+use XERCES		v2r230p0
 use CERNLIB 		v2r2002p0
-use ROOT 		v2r30504p0
+use ROOT 		v2r31001p1
+use PI			v1r100
 
-#-- Gaudi libraries (from GAUDI_v12r0)
-use GaudiKernel		v13r4p1
-use GaudiSvc 		v10r2
+#-- Gaudi libraries (from GAUDI_v13r0)
+use GaudiKernel		v14r2
+use GaudiSvc 		v11r0
 use GaudiAlg 		v6r4
-use GaudiAud 		v6r2
-use GaudiGSL		v3r0
-use GaudiDb 		v8r4
-use GaudiRootDb 	v9r2
-use GaudiIntrospection 	v4r6
-use GaudiObjDesc 	v5r0
-use HbookCnv 		v13r4
+use GaudiAud 		v6r3
+use GaudiGSL		v5r0
+use GaudiDb 		v9r0
+use GaudiRootDb 	v9r3
+use GaudiIntrospection 	v4r7
+use GaudiObjDesc 	v5r2
+use HbookCnv 		v14r0
 
 #-- Database
 use XmlDDDB		v20r0	Det
 use ParamFiles          v2r1    $(LHCb_release_area)/PARAM -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v13r5)
-use LHCb	v13r5
+#-- LHCb libraries (from LHCB_v14r0)
+use LHCb	v14r0
 
-#-- BrunelSys v21r2 packages
+#-- BrunelSys v22r0 packages
 
 # Phys utilities
 use MCTools		v1r1p1	Phys
@@ -48,17 +48,17 @@ use MCTools		v1r1p1	Phys
 use BrunelAlgs          v3r2	Rec
 
 # Calorimeter
-use CaloInterfaces      v2r4  	Calo
+use CaloInterfaces      v3r0  	Calo
 use CaloUtils           v4r5  	Calo
-use CaloMonitor         v1r4  	Calo
-use CaloReco            v1r6p1	Calo
-use CaloPIDs		v1r1	Calo
+use CaloMonitor         v1r5  	Calo
+use CaloReco            v1r7	Calo
+use CaloPIDs		v1r2	Calo
 
 # Velo
 use VeloAlgorithms      v2r8  	Velo
 
 # Inner Tracker
-use ITAlgorithms        v13r0	IT
+use ITAlgorithms        v13r0p1	IT
 use ITCheckers          v1r4	IT
 
 # Outer Tracker
@@ -69,7 +69,7 @@ use VeloTrack           v5r1  	Velo
 use TrCheck             v2r2	Tr
 use LongTrack           v1r9	Tr
 use TrFitter            v3r7	Tr
-use TrExtrapolator      v2r8	Tr
+use TrExtrapolator      v2r9	Tr
 use TrTools             v2r5 	Tr
 use Seeding             v2r6	Tr 
 use TrMatching          v2r7	Tr
@@ -84,12 +84,12 @@ use MuonRec             v2r3    Muon
 use MuonID              v3r6    Muon
 
 # Rich
-use RichUtils		v3r5  	Rich
-use RichDetTools	v3r3	Rich
-use RichRecSys		v1r4	Rich
-use RichRecQC		v1r3	Rich
+use RichUtils		v3r6  	Rich
+use RichDetTools	v3r4	Rich
+use RichRecSys		v1r5	Rich
+use RichRecQC		v1r4	Rich
 use RichRecMCTools	v1r1	Rich
-use RiSicbGeom          v3r6	SICB
+use RiSicbGeom          v3r7	SICB
 
 #
 #===== build Brunel =========================

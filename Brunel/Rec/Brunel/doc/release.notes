@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v22r0>2003-12-12 Brunel v22r0</A></H1><PRE>
+- Built against GAUDI v13r0
+
 </PRE><H1><A NAME=v21r2>2003-12-04 Brunel v21r2</A></H1><PRE>
 ** This version requires data produced by Boole v3r2 or greater **
 
