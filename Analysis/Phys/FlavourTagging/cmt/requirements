@@ -25,6 +25,9 @@ include_dirs           $(FLAVOURTAGGINGROOT)
 use EventKernel         v2r0    Event
 use DaVinciTools	v7r*	Phys
 use DaVinciMCTools	v4r*	Phys
+use DaVinciAssociators	v3r*    Phys
+use L0Event		v12r2	Event
+use TrAssociators	v3r*	Tr
 
 #============================================================================
 # Component library building rule
