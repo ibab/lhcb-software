@@ -173,8 +173,8 @@ StatusCode GiGaRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
       return Warning( "Could not locate  MCRichHits from GiGaRichOpticalPhoton" );
       }
       
-      msg << MSG::INFO << "Located " << mcHits->size() << " MCHits at " 
-          << MCRichHitLocation::Default << endreq;
+//       msg << MSG::INFO << "Located " << mcHits->size() << " MCHits at " 
+//           << MCRichHitLocation::Default << endreq;
 
       // note this key is need for consistency with MCRichOpticalPhoton converter
       int globalKey = 0;
@@ -236,9 +236,9 @@ StatusCode GiGaRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
         
       }
       
-      msg << MSG::INFO 
-          << "Built " << photons->size() << " MCRichOpticalPhotons at "
-          << MCRichOpticalPhotonLocation::Default << endreq;
+//       msg << MSG::INFO 
+//           << "Built " << photons->size() << " MCRichOpticalPhotons at "
+//           << MCRichOpticalPhotonLocation::Default << endreq;
 
       // Should have one opticalphoton for each and every MCRichHit
       if ( photons->size() != mcHits->size() ) {

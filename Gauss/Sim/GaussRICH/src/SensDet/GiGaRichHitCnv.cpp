@@ -141,10 +141,7 @@ StatusCode GiGaRichHitCnv::fillObjRefs
                    GiGaUtil::ObjTypeName(object) +
                   "*') is not 'MCRichHits*'! "   );
   }
-
-  return updateObjRefs( address , object );
-
-  
+  return updateObjRefs( address , object );  
 };
 
 
@@ -158,7 +155,7 @@ StatusCode GiGaRichHitCnv::updateObj ( IOpaqueAddress*  address ,
     return Error( " DataObject*(of type '" + GiGaUtil::ObjTypeName(object) +
                   "*') is not 'MCRichHits*'! "   );
   }
-
+  
   // Initialise
   MsgStream msg( msgSvc(), name() );
   hits->clear();
@@ -167,59 +164,58 @@ StatusCode GiGaRichHitCnv::updateObj ( IOpaqueAddress*  address ,
   if( 0 == registry ) { return Error("IRegistry* points to NULL!");}
   const std::string& location = registry->identifier();
   //  { // try to locate MCParticles explicitely
-    // just to force the loading of the reference table 
-        std::string mcpath = 
-        location.substr( 0, location.find( "/MC" ) ) + "/" + 
-        MCParticleLocation::Default;
-    // get MCparticles 
-       const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
-     if( 0 == mcps ) 
-      { return Error("Can not locate MCparticles at '" + mcpath + "'");}  
+  // just to force the loading of the reference table 
+  std::string mcpath = 
+    location.substr( 0, location.find( "/MC" ) ) + "/" + 
+    MCParticleLocation::Default;
+  // get MCparticles 
+  const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
+  if( 0 == mcps ) 
+    { return Error("Can not locate MCparticles at '" + mcpath + "'");}  
   //  }
- 
-    // retrieve the hits container from GiGa Service
-    G4HCofThisEvent* hitscollections = 0 ;
-
+  
+  // retrieve the hits container from GiGa Service
+  G4HCofThisEvent* hitscollections = 0 ;
+  
   try {
-
+      
     // get hitscollections from GiGa
     *gigaSvc() >> hitscollections;
-
+    
     if ( 0 != hitscollections ) {
-
+      
       // note this key is need for consistency with MCRichOpticalPhoton converter
       int globalKey = 0; 
       for (int iii=0;iii<m_RichG4HitCollectionName->RichHCSize() ;iii++) {
         
-
-              std::string colName = m_RichG4HitCollectionName->RichHCName(iii);
-
-              G4SDManager * fSDM = G4SDManager::GetSDMpointer();
-              if ( !fSDM ) return Error( "GiGaRichHitCnv : NULL G4SDManager pointer !!" );
-              int collectionID = fSDM->GetCollectionID(colName);
-              if ( -1 == collectionID ) return StatusCode::SUCCESS;
-
+        std::string colName = m_RichG4HitCollectionName->RichHCName(iii);
+        
+        G4SDManager * fSDM = G4SDManager::GetSDMpointer();
+        if ( !fSDM ) return Error( "GiGaRichHitCnv : NULL G4SDManager pointer !!" );
+        int collectionID = fSDM->GetCollectionID(colName);
+        if ( -1 == collectionID ) return StatusCode::SUCCESS;
+        
         RichG4HitsCollection* myCollection =
           (RichG4HitsCollection*)(hitscollections->GetHC(collectionID));
-
+        
         if ( 0 == myCollection ) return StatusCode::SUCCESS;
         
-         int numberofhits=myCollection->entries();
-
+        int numberofhits=myCollection->entries();
+        
         // reserve space
         hits->reserve(  numberofhits );
-
+        
         // Reference table between G4 tracks/trajectories and MC particles
         const GiGaKineRefTable& table = hitsSvc()->table() ;
-
+          
         //convert hits
         for ( int ihit = 0 ; ihit< numberofhits ; ++ihit ) {
-
+            
           RichG4Hit * g4hit = (*myCollection)[ihit];
           HepPoint3D pentry=(*myCollection)[ihit]->GetGlobalPos();
           double edep=(*myCollection)[ihit]->GetEdep();
           double toffl=(*myCollection)[ihit]-> RichHitGlobalTime();
-
+          
           MCRichHit * mchit = new MCRichHit();
           mchit->setEntry(pentry);
           mchit->setEnergy(edep);
@@ -228,50 +224,40 @@ StatusCode GiGaRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           // first reset the value.
           mchit->setHistoryCode(0);
           mchit->setRich((g4hit->GetCurRichDetNum() ) < 0 ? 2 :
-                   ((unsigned long int ) g4hit->GetCurRichDetNum()) );
+                         ((unsigned long int ) g4hit->GetCurRichDetNum()) );
           mchit->setPhotoDetector((unsigned long int )g4hit->  GetCurHpdNum());
           mchit->setRadiator((g4hit-> GetRadiatorNumber() )< 0 ? 3 :
-                          ((unsigned long int ) g4hit-> GetRadiatorNumber()) );
+                             ((unsigned long int ) g4hit-> GetRadiatorNumber()) );
           
           mchit->setChargedTrack( (g4hit->GetChTrackID() ) < 0 ? 1 : 0);
           
-
+          
           //end of filling the Rich Specific word.
           int traid=(*myCollection)[ihit]->GetTrackID();
-
+          
           if(table[traid].particle())
-           {
-             mchit->setMCParticle(table[traid].particle());
-           }else{
-             MsgStream log(   msgSvc(), name());
-                              log << MSG::INFO 
-                               << "No pointer to MCParticle for " 
-                               <<" MCRichHit associated to trackID: " 
-                      <<iii<<"  "<<ihit<< "   "<< traid << endreq;
-            }
-
-
+            {
+              mchit->setMCParticle(table[traid].particle());
+            }else{
+              MsgStream log(   msgSvc(), name());
+              log << MSG::INFO 
+                  << "No pointer to MCParticle for " 
+                  <<" MCRichHit associated to trackID: " 
+                  <<iii<<"  "<<ihit<< "   "<< traid << endreq;
+            }  
           hits->insert( mchit, globalKey );
           globalKey++;
-          
         }
-        
-        
       }
-      
-    
-    
-          msg << MSG::INFO << "Built " << hits->size()
-          << " MCRichHits at " << MCRichHitLocation::Default << endreq;
-
+      //           msg << MSG::INFO << "Built " << hits->size()
+      //           << " MCRichHits at " << MCRichHitLocation::Default << endreq;
     } else {
       msg << MSG::INFO << "No RichG4Hits to be converted since no Collections" 
           << endreq;
       return StatusCode::SUCCESS;
     }
-
   } // end try
-
+  
   catch( const GaudiException& Excp ) {
     hits->clear();
     return Exception( "updateObj: ", Excp ) ;
@@ -284,15 +270,12 @@ StatusCode GiGaRichHitCnv::updateObj ( IOpaqueAddress*  address ,
     hits->clear();
     return Exception( "updateObj: " ) ;
   }
-
   return StatusCode::SUCCESS;
 };
 
 StatusCode GiGaRichHitCnv::updateObjRefs
 ( IOpaqueAddress*  address , 
-  DataObject*      object  ) {
-
-
-  return StatusCode::SUCCESS;
-  
+  DataObject*      object  ) 
+{
+  return StatusCode::SUCCESS;  
 };
