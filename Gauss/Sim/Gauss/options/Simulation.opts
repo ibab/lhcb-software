@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.59 2005-02-21 19:22:35 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.60 2005-02-28 16:34:42 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -91,6 +91,10 @@ GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
 GiGa.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
 GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" }; 
 
+///////////////////////////////////////////////////////////////////////
+// To debug wih detailed Geant4 printout a specific track
+// uncomment the following options editing the file accordingly
+//#include "$GAUSSOPTS/DebugG4Track.opts"
 
 ///////////////////////////////////////////////////////////////////////
 // all the subdetector specific actions should be added here:
@@ -133,4 +137,5 @@ GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
 GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" };
 GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
 
-
+// uncomment the following to save geometry in GDML format
+//#include "$GAUSSOPTS/GDMLWriter.opts"

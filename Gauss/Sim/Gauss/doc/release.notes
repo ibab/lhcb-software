@@ -4,24 +4,37 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v19r1 ==================================
+! 2005-02-28 - Gloria Corti
+ - Use new versions of GeneratorModules (v14r2), GaussTools (v10r8), 
+   GaussRICH (v4r11), GaussTracker (v3r3)
+ - Introduce monitoring histograms for Velo
+   . use new package VeloAlgorithms (v3r3)
+   . introduce algorithm to execute in Monitor.opts
+ - New example options on how to debug with full Geant4 printout a 
+   specific track (options in DebugG4Track.opts, included in Simulation.opts
+   commented). 
+ - New options to dump LHCb G4 geometry in a files written with GDML
+   (options in GDMLWriter.opts, included in Simulation.opts commented)
+
 ! 2005-02-21 - Gloria Corti
  - cmt/requirements
    . add DAWN to path for visualization (commented)
- - options/Simulation.opts
-   . show example of how to use RichVerbose.opts (commented)
- - options/Common.opts, GaussTape.opts 
-   . introduce pragma print off/on to reduce print out in production
-   . introduce title/explanation compatible with doxygen documentation 
- - options/GaussVis.opts
-   . introduce commands to dump geometry tree in ASCII format
- - options/Monitor.opts
-   . introduce monitor histograms for Silicon Tracker, Outer Tracker, 
-     RICH, Calorimeters
- - job/Gauss.job
-   . NEW file to control job submission (cshell) on batch, interactively
-     or using gvd as debugger. The Gauss version to be used MUST be passed as
-     first argument. It is set to use $GAUSSOPTS/Gauss.opts as options.
-     In case of core dump in batch it will return trace back info.
+ - Show example of how to obtain detailed rich info 
+   . introduce RichVerbose.opts (commented) in Simulation.opts
+ - Reduce print out in production and title/explanation compatible with 
+   doxygen documentation
+   . introduce pragma print off/on in Common.opts, GaussTape.opts 
+ - Allow to dump G4 geometry tree in ASCII format
+   . introduce command in GaussVis.opts (commented)
+ - Introduce monitor histograms for Silicon Tracker, Outer Tracker, 
+   RICH, Calorimeters
+   . in Monitor.opts
+ - NEW file ( job/Gauss.job ) to control job submission (cshell) on batch,
+   interactively or using gvd as debugger. 
+   The Gauss version to be used MUST be passed as first argument. 
+   It is set to use $GAUSSOPTS/Gauss.opts as options.
+   In case of core dump in batch it will return trace back info.
      Example of how to use for batch submission
         > bsub -q 1nd Gauss.job v19r0
      Example of how to use interactively in debug with gvd

@@ -1,5 +1,5 @@
 package Gauss
-version v19r0
+version v19r1
 
 # =============================================================================
 # structure 
@@ -22,12 +22,12 @@ use Geant4Files		v52r0	      -no_auto_imports
 
 #========================================================================
 #generator
-use GeneratorModules    v14r1   Gen
+use GeneratorModules    v14r2   Gen
 
 #GiGa staff...
 use GiGaCnv             v15r10   Sim
 
-use GaussTools          v10r7 	Sim
+use GaussTools          v10r8 	Sim
 use GaussTracker        v3r3    Sim
 use GaussRICH           v4r11   Sim
 use GaussCalo           v7r2    Sim
@@ -41,6 +41,7 @@ use GaussAlgs		v1r4    Sim
 #Monitoring
 use GaussMonitor        v1r2    Sim
 use CaloMoniSim         v1r0    Calo
+use VeloAlgorithms      v3r3    Velo
 #======================================================================
 # Main program and standard job options
 use GaudiConf           v*     

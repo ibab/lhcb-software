@@ -25,4 +25,4 @@ GenMonitorAlg.HistoPath   = "";
 // any Pythia commands (flags) should be specified in the following form:
 // PythiaAlg.PythiaUserCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
 
-PythiaAlg.OutputLevel = 4;
+//PythiaAlg.OutputLevel = 4;
