@@ -1,5 +1,5 @@
 package GENSER
-version v1r030p0
+version v2r030p0
 
 branches doc cmt
 
@@ -8,8 +8,26 @@ use LCG_Settings v*
 include_path none
 
 macro GENSER_native_version "GENSER_0_3_0"
-macro GENSER_home "$(LCG_releases)/GENSER/$(GENSER_native_version)/$(LCG_system)"
+macro GENSER_home "$(LCG_releases)/GENSER/$(GENSER_native_version)/$(LCG_platform)"
 
 path_remove LD_LIBRARY_PATH "/GENSER/"
 path_append LD_LIBRARY_PATH "$(GENSER_home)/lib"
 
+macro pythia_native_version "6_226.2"
+include_dirs $(LCG_releases)/GENSER/$(GENSER_native_version)/src/pythia/$(pythia_native_version)/include
+
+macro pythia_linkopts "-L$(GENSER_home)/lib -lpythia$(pythia_native_version) -ldummy_pythia$(pythia_native_version)"\
+        WIN32         "/libpath:$(GENSER_home)\lib pythia$(PYTHIA_native_version).lib dummy_pythia$(pythia_native_version)"
+
+macro photos_native_version "209.2"
+macro photos_linkopts " -L$(GENSER_home)/lib -lphotos$(photos_native_version)" \
+             WIN32            " /libpath:$(GENSER_home)/lib photos$(photos_native_version).lib"
+
+use cernlib v* LCG_Interfaces
+
+macro pdflib_native_version "804"
+macro pdflib_linkopts  " -Wl,-u,pdfset_,-u,structm_,-u,structp_ -L$(cernlib_home)/lib -lpdflib$(pdflib_native_version) " \
+      WIN32   "/include:_PDFSET /include:_STRUCTM /include:_STRUCTP /libpath:$(cernlib_home)\lib pdflib$(pdflib_native_version).lib"
+
+
+macro GENSER_linkopts "$(pythia_linkopts) $(pdflib_linkopts) $(photos_linkopts)"
