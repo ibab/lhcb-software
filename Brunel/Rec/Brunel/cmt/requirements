@@ -56,7 +56,7 @@ use BrunelAlgs          v3r4p1	Rec
 
 # Calorimeter
 use CaloMonitor         v2r2  	Calo
-use CaloReco            v2r1p1	Calo
+use CaloReco            v2r2	Calo
 use CaloPIDs		v2r3	Calo
 
 # Velo

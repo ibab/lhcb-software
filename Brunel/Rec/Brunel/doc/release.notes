@@ -3,12 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v24r0>2004-06-02 Brunel v24r0</A></H1><PRE>
+</PRE><H1><A NAME=v24r0>2004-06-04 Brunel v24r0</A></H1><PRE>
 Development version
 
 - New tuning
   . Initialize MuonGeometry tool completely at intialisation, not during first
     ~10 events (MuonTools v3r7)
+  . New Calo calibration for DC04 settings (XmlDDDB >= v22r2) (CaloReco v2r2)
 
 - New packaging and code cleanups
   . Use new GaudiAlg and GaudiTools base classes
