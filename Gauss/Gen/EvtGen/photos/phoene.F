@@ -50,7 +50,10 @@ C--
         XPHOTO=0.0D0
 CC Temporary Fix for EvtGen, Force the call to PHOFAC to reset
 CC values for the first particle
-        TEMPVALUE = PHOFAC( 0 ) 
+        IF ( IREP.EQ.0 ) THEN
+          PROBH=0.D0
+          TEMPVALUE = PHOFAC( 0 )
+        ENDIF 
 CC End Fix
         RETURN
       ENDIF
@@ -70,11 +73,7 @@ C--
 C--   Check on kinematical bounds
       IF (PRSOFT.LT.0.1D0) THEN
         DATA=PRSOFT
-CC Temp Fix for EvtGen        CALL PHOERR(2,'PHOENE',DATA)
-        print*, '******************************************'
-        print*, '* WARNING IN PHOENE Too much Brem.       *' 
-        print*, '* PRSOFT = ' , DATA , '                  *'
-        print*, '******************************************'
+        CALL PHOERR(2,'PHOENE',DATA)
       ENDIF
       IF (PHORAN(IWT1).LT.PRSOFT) THEN
 C--
