@@ -30,7 +30,7 @@ use GaudiObjDesc 	v5r0
 use HbookCnv 		v13r3
 
 #-- Database
-use XmlDDDB		v16r0	Det
+use XmlDDDB		v16r1	Det
 
 #-- LHCb libraries (from LHCB_v12r0)
 use LHCb	v12r0
@@ -49,7 +49,7 @@ use BrunelAlgs          v2r0	Rec
 use KsReco              v1r5	Rec
 
 # LHC background
-use DigiAlg		v1r0	Digi
+use DigiAlg		v1r0p1	Digi
 
 # L0 trigger
 use L0Calo              v7r0p1	L0
