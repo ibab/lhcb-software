@@ -40,15 +40,15 @@ RichGloPIDIt2.LikelihoodThreshold         = -1e-3;
 RichGloPIDIt2.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt2.MinSignalForAproxLLCalc     = 1e-5;
 
-// Ring Refit   
-RichRingRefit.TrackSelection              = { "unique", "forward", "upstream" };
+// Ring Refit
+RichRingRefit.TrackSelection              = { "unique", "forward", "match" };
 //                                             Aero   C4F10   CF4
-RichRingRefit.MinSignalPhotonProb         = {  999,    999,   1e-4  };
-RichRingRefit.MinRefitPhotons             = {  999,    999,      7  };
-RichRingRefit.MaxBackgroundProb           = {  999,    999,    999  };
-RichRingRefit.MaxCandsPerPixel            = {    1,      1,      1  };
-RichRingRefit.MinFitProbability           = {  0.3,    0.3,    0.3  };
-RichRingRefit.NSigmaCut                   = 3;
+RichRingRefit.NSigmaCut = 3;
+RichRingRefit.MinSignalPhotonProb         = {  999,   1e-2,   1.6e-4 };
+RichRingRefit.MinRefitPhotons             = {  999,    999,      7   };
+RichRingRefit.MaxBackgroundProb           = {  999,    999,    999   };
+RichRingRefit.MaxCandsPerPixel            = {    1,      1,      10  };
+RichRingRefit.MinFitProbability           =  { 0.5,     0.5,   0.05  };
 
 // Global Algorithm parameters - phase 3
 // not used yet.
