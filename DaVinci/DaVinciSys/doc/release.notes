@@ -4,30 +4,50 @@
 ! Purpose     : Explicit list of all DaVinci packages
 !-----------------------------------------------------------------------------
 
+!===================  DaVinciSys v11r13 2004-08-17 ============================
+-use  DaVinci            v11r13 Phys   
+
+use  L1Decision         v2r1     Trg
+use  TrgChecker         v4r1     Trg
+use  TrgTools           v4r2     Trg
+use  TrgVeloTT          v4r1     Trg
+use  PrimVtx            v2r1p1   Rec
+use  LoKi               v3r2     Tools  
+use  Utilities          v1r8p1   Tools
+use  DaVinciTools       v10r2    Phys
+use  PhysSelections     v6r9     Phys
+use  Stripping          v1r3     Tools
+use  PhysSelSys         v7r7     PhysSel
+use  B2RhoRho           v1r7     PhysSel
+use  Bd2DstarPi         v2r5     PhysSel
+use  Bd2JpsiKs          v2r5     PhysSel
+use  Bs2DsH             v3r2p4   PhysSel
+use  Muon               v1r0     PhysSel
+
 !===================  DaVinciSys v11r12 2004-08-03 ============================
 Already included all CMT-related modifications in prevision of Gaudi v15.
 
-use  DaVinci            v11r12 Phys   
+use  DaVinci            v11r12   Phys   
 use  L0DU               v6r7p1   L0
 use  L0Checker          v2r1p1   L0
-use  L0mConf           v2r2d2   L0
+use  L0mConf           v2r2d2    L0
 use  L1Reco             v4r0p1   Trg
-use  TrgForward         v2r1   Trg
-use  TrgTools           v4r1   Trg
+use  TrgForward         v2r1     Trg
+use  TrgTools           v4r1     Trg
 use  LoKi               v2r8p1   Tools  
-use  Utilities          v1r8   Tools
+use  Utilities          v1r8     Tools
 use  CommonParticles    v1r5p2   Phys
 use  DaVinciTools       v10r1    Phys
 use  DaVinciUser        v5r1p1   Phys
 use  FlavourTagging     v5r2     Phys
 use  Ks2PiPiSel         v1r4p1   Phys
-use  PhysSelections    v6r8p2   Phys
+use  PhysSelections    v6r8p2    Phys
 use  DaVinciAssociators v5r0p2   Phys
 use  DaVinciEff         v3r0p1   Phys
 use  DaVinciTest        v5r0     Phys
-use  PhysSelSys                v7r6     PhysSel
+use  PhysSelSys        v7r6      PhysSel
 use  Stripping          v1r2p1   Tools
-use  B2DstarX2D02hh  v2r1p1  PhysSel
+use  B2DstarX2D02hh  v2r1p1      PhysSel
 use  B2HH            v2r3p2  PhysSel
 use  B2RhoRho        v1r6    PhysSel
 use  Bd2D0Kstar      v4r2p2  PhysSel
