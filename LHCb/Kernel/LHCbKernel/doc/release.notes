@@ -4,7 +4,7 @@ Purpose: LHCb specific Kernel classes
 
 
 ! 2002-06-18 - Vanya Belyaev
- - src/Relation.h                bug fix (observed by Marco) 
+ - Relations/Relation.h: fix bug affecting inverse relations (found by Marco)
 
 ! 2002-06-07 - Marco Cattaneo
  - Change version number to v1r2
