@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/08/12 15:42:50  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.6  2001/07/23 13:12:12  ibelyaev
 /// the package restructurisation(II)
 ///
@@ -36,8 +39,9 @@ void GiGaTrajectory::DrawTrajectory  ( G4int i_mode ) const
   if(i_mode>=0)
     {
       G4Polyline pPolyline;
+
       for( const_iterator it = begin() ; end() != it ; ++it ) 
-        { if( 0 != *it ) { pPolyline.push_back( (*it)->GetPosition() ) ; } } 
+        { if( 0 != *it ) { pPolyline.push_back( (*it)->GetPosition() ) ;}}
       G4Colour colour;
       if     ( 0 != partDef() && partDef()->GetPDGCharge() < 0.) 
         { colour = G4Colour(1.,0.,0.); } 
@@ -83,9 +87,9 @@ void GiGaTrajectory::AppendStep      ( const G4Step*  step )
   /// if  it is the last step, the step must be appended 
   else if ( fAlive != step->GetTrack()->GetTrackStatus() ) 
     { append = true ; }
-  /// if  there are some secondaries, the step must be appended  
-  // else if ( 0 != stepMgr()->GetSecondary()            && 
-  //	    0 != stepMgr()->GetSecondary()->entries   () ) { append = true ; }
+  //   if  there are some secondaries, the step must be appended  
+  //   else if ( 0 != stepMgr()->GetSecondary()            && 
+  //  	    0 != stepMgr()->GetSecondary()->size   () ) { append = true ; }
   /// for optical photons also the reflection/refraction step must be appended  
   else if ( step->GetPostStepPoint()->GetStepStatus() == 
 	    fGeomBoundary &&

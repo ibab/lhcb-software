@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.56 2002-10-11 08:59:55 ranjard Exp $
+! $Id: release.notes,v 1.57 2002-10-30 13:46:16 witoldp Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Packagxe manager : Vanya Belyaev
+
+! 2002-10-30 - Witek Pokorski
+  GiGaTrackInformation moved to GaussTools
 
 !=============================== GiGa v10r0 2002-10-11 ======================
 ! 2002-10-11 - Florence Ranjard
