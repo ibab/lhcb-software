@@ -1,6 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2004-05-19 - Olivier Callot
+ - Protect the size of the L1 output bank to not exceed 126 words, to avoid
+   triggering an exception and a job abort in this rare case.
+
 !========================= L0Calo v7r5 2004-04-28 =========================
 ! 2004-04-28 - Olivier Callot
  - Fixed a major bug in filling the L1Buffer: one need to push two 16 bit

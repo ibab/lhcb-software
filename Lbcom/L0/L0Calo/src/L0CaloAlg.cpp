@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.22 2004-04-28 06:10:04 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.23 2004-05-19 12:14:18 ocallot Exp $
 
 /// STL
 #include <stdio.h>
@@ -922,7 +922,7 @@ void L0CaloAlg::saveCandidate ( int type, L0Candidate& cand, int thr ) {
 
   int word = ( type << 24 ) + (cand.ID().raw() << 8 ) + cand.et();
   m_rawOutput.push_back( word );
-  if ( thr < cand.et() ) {
+  if ( thr < cand.et() && 122 > m_l1Output.size() ) {
     m_l1Output.push_back( (word >> 16) & 0xFFFF );
     m_l1Output.push_back( word & 0xFFFF );
   }
