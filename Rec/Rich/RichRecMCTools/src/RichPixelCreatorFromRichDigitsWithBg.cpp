@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.3 2004-10-21 09:10:48 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.4 2004-10-27 14:35:55 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/10/21 09:10:48  jonrob
+ *  minor update
+ *
  *  Revision 1.2  2004/10/13 10:32:49  jonrob
  *  Bug fix
  *
@@ -188,9 +191,8 @@ RichPixelCreatorFromRichDigitsWithBg::newPixel( const RichSmartID id ) const
         richPixels()->insert( newPixel );
 
         // Positions
-        HepPoint3D & gPosition = newPixel->globalPosition();
-        m_smartIDTool->globalPosition( id, gPosition );
-        newPixel->localPosition() = m_smartIDTool->globalToPDPanel(gPosition);
+        newPixel->globalPosition() = m_smartIDTool->globalPosition( id );
+        newPixel->localPosition()  = m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
 
         // Set smartID
         newPixel->setSmartID( id );
