@@ -1,4 +1,4 @@
-// $Id: RichMassHypothesisRingCreator.cpp,v 1.1 2004-05-31 21:30:50 jonrob Exp $
+// $Id: RichMassHypothesisRingCreator.cpp,v 1.2 2004-05-31 22:02:06 jonrob Exp $
 
 // local
 #include "RichMassHypothesisRingCreator.h"
@@ -68,7 +68,6 @@ void RichMassHypothesisRingCreator::newMassHypoRings( RichRecSegment * segment )
   for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
     newMassHypoRing( segment, static_cast<const Rich::ParticleIDType>(iHypo) );
   }
-
 }
 
 // Forms a new RichRecRing object from a RichDigit
@@ -92,6 +91,12 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
   // Cherenkov theta for this segment/hypothesis combination
   const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
   if ( ckTheta > 0 ) {
+
+    if ( msgLevel(MSG::VERBOSE) ) {
+      verbose() << "Creating " << id 
+                << " hypothesis ring for RichRecSegment " << segment->key() 
+                << endreq;
+    }
 
     // Make a new ring and give to container
     newRing = new RichRecRing();
@@ -136,6 +141,9 @@ RichRecRings * RichMassHypothesisRingCreator::massHypoRings() const
       put( m_rings, m_ringLocation );
 
     } else {
+
+      debug() << "Found " << tdsRings->size() << " pre-existing RichRecRings in TES at "
+              << m_ringLocation << endreq;
 
       // Set smartref to TES Ring container
       m_rings = tdsRings;

@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.13 2004-04-19 23:06:13 jonesc Exp $
+// $Id: RichPhotonCreator.cpp,v 1.14 2004-05-31 22:02:06 jonrob Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -309,6 +309,9 @@ RichRecPhotons * RichPhotonCreator::richPhotons() const
       put( m_photons, m_richRecPhotonLocation );
 
     } else {
+
+      debug() << "Found " << tdsPhotons->size() << " pre-existing RichRecPhotons in TES at "
+              << m_richRecPhotonLocation << endreq;
 
       // Set smartref to TES photon container
       m_photons = tdsPhotons;
