@@ -1,4 +1,4 @@
-// $Id: VolumeIntersectionIntervals.h,v 1.12 2002-11-21 15:39:56 sponce Exp $ 
+// $Id: VolumeIntersectionIntervals.h,v 1.13 2004-07-09 14:19:42 cattanem Exp $ 
 #ifndef       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H
 #define       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H 
 // STD & STL  
@@ -146,6 +146,7 @@ namespace  VolumeIntersectionIntervals
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @param  own container of 'own' intersections
    *  @param  child container of 'child' intersections 
+   *  @param  out  ??
    *  @return status code 
    */
   template < class OUTPUTTYPE > 

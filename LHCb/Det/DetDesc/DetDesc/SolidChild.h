@@ -1,8 +1,6 @@
-// $Id: SolidChild.h,v 1.11 2002-05-11 18:25:46 ibelyaev Exp $ 
+// $Id: SolidChild.h,v 1.12 2004-07-09 14:19:41 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
 // ===========================================================================
 #ifndef       DETDESC_SOLIDCHILD_H 
 #define       DETDESC_SOLIDCHILD_H 1
@@ -142,13 +140,13 @@ public:
                       ISolid::Ticks&     ticks  ) const;
   
   /** serialization for reading
-   *  @param sb reference to stream buffer
+   *  @param "" reference to stream buffer
    *  @return reference to stream buffer
    */
   virtual StreamBuffer& serialize( StreamBuffer& s )       ;   
   
   /** serialization for writing
-   *  @param sb reference to stream buffer
+   *  @param "" reference to stream buffer
    *  @return reference to stream buffer
    */
   virtual StreamBuffer& serialize( StreamBuffer& s ) const ;

@@ -1,14 +1,6 @@
-// $Id: SolidTrap.h,v 1.9 2003-04-25 08:52:23 sponce Exp $
+// $Id: SolidTrap.h,v 1.10 2004-07-09 14:19:42 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.8  2002/05/11 18:25:46  ibelyaev
-///  see $DETDESCROOT/doc/release.notes 11 May 2002
-///
-/// Revision 1.7  2001/08/09 16:47:59  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
 /// ===========================================================================
 #ifndef     DETDESC_SOLIDTRAP_H
 #define     DETDESC_SOLIDTRAP_H 1 
@@ -129,7 +121,7 @@ public:
    *  @see ISerialize 
    *  @see ISolid  
    *  @see SolidBase   
-   *  @param      s               reference to stream buffer
+   *  @param      ""              reference to stream buffer
    *  @exception  SolidException  wrong parameters range 
    *  @return reference to stream buffer
    */
@@ -141,7 +133,7 @@ public:
    *  @see ISerialize 
    *  @see ISolid  
    *  @see SolidBase   
-   *  @param s reference to stream buffer
+   *  @param "" reference to stream buffer
    *  @return reference to stream buffer
    */
   StreamBuffer& serialize( StreamBuffer& ) const ; 
@@ -187,7 +179,7 @@ public:
 protected:
   
   /** constructor 
-   *  @param name name of general trapezoid 
+   *  @param Name name of general trapezoid 
    */
   SolidTrap( const std::string& Name = "Anonymous Trap");
 

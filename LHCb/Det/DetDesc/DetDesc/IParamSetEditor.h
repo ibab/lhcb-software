@@ -1,4 +1,4 @@
-//$Id: IParamSetEditor.h,v 1.1 2003-04-23 10:06:42 sponce Exp $
+//$Id: IParamSetEditor.h,v 1.2 2004-07-09 14:19:40 cattanem Exp $
 #ifndef  DETDESC_IPARAMSETEDITOR_H 
 #define  DETDESC_IPARAMSETEDITOR_H 1
 
@@ -54,6 +54,7 @@ public:
    * is not used by the detector element itself
    * @param comment a comment on this parameter use
    * @param value the value of the parameter, as a string
+   * @param d_value the value of the parameter, as a double
    * @param i_value the value of the parameter, as an int
    */
   virtual void addUserParameter (std::string name,
@@ -74,7 +75,6 @@ public:
    * is not used by the detector element itself
    * @param comment a comment on this parameter use
    * @param value the value of the parameter, as a string
-   * @param d_value the value of the parameter, as a double
    */
   virtual void addUserParameter (std::string name,
                                  std::string type,
@@ -113,7 +113,8 @@ public:
    * the user, it is not used by the detector element itself
    * @param comment a comment on this parameter vector use
    * @param value the value of the parameter vector, as a vector of strings
-   * @param d_value the value of the parameter vector, as a vector of ints
+   * @param d_value the value of the parameter vector, as a vector of doubles
+   * @param i_value the value of the parameter vector, as a vector of ints
    */
   virtual void addUserParameterVector (std::string name,
                                        std::string type,
@@ -134,7 +135,6 @@ public:
    * the user, it is not used by the detector element itself
    * @param comment a comment on this parameter vector use
    * @param value the value of the parameter vector, as a vector of strings
-   * @param d_value the value of the parameter vector, as a vector of doubles
    * strings by default
    */
   virtual void addUserParameterVector (std::string name,
@@ -174,6 +174,7 @@ public:
    * is not used by the detector element itself
    * @param comment a comment on this parameter use
    * @param value the value of the parameter, as a string
+   * @param d_value the value of the parameter, as a double
    * @param i_value the value of the parameter, as an int
    */
   virtual void addParam (std::string name,
@@ -193,7 +194,6 @@ public:
    * is not used by the detector element itself
    * @param comment a comment on this parameter use
    * @param value the value of the parameter, as a string
-   * @param d_value the value of the parameter, as a double
    */
   virtual void addParam (std::string name,
                          std::string type,
@@ -230,7 +230,8 @@ public:
    * the user, it is not used by the detector element itself
    * @param comment a comment on this parameter vector use
    * @param value the value of the parameter vector, as a vector of strings
-   * @param d_value the value of the parameter vector, as a vector of ints
+   * @param d_value the value of the parameter vector, as a vector of doubles
+   * @param i_value the value of the parameter vector, as a vector of ints
    */
   virtual void addParamVector (std::string name,
                                std::string type,
@@ -250,7 +251,6 @@ public:
    * the user, it is not used by the detector element itself
    * @param comment a comment on this parameter vector use
    * @param value the value of the parameter vector, as a vector of strings
-   * @param d_value the value of the parameter vector, as a vector of doubles
    * strings by default
    */
   virtual void addParamVector (std::string name,

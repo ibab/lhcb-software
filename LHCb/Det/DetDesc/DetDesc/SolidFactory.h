@@ -1,11 +1,6 @@
-// $Id: SolidFactory.h,v 1.4 2003-04-01 13:41:07 sponce Exp $ 
+// $Id: SolidFactory.h,v 1.5 2004-07-09 14:19:41 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2002/05/04 13:13:24  ibelyaev
-//  see $DETDESCROOT/doc/release.notes ( 4 May 2002 )
-//
 // ===========================================================================
 #ifndef DETDESC_SOLIDFACTORY_H 
 #define DETDESC_SOLIDFACTORY_H 1
@@ -58,12 +53,12 @@ public:
   virtual unsigned long      release          () const { return        1 ; }; 
   
   /** retrieve the identification type 
-   *  @param identification/name 
+   *  @return identification/name 
    */
   virtual const std::string& ident            () const { return m_ident  ; };
   
   /** create the instance of ISolid object
-   *  @return poionter to new ISolid object
+   *  @return pointer to new ISolid object
    */
   virtual ISolid*    instantiate() const 
   { return new ConcreteSolid(); }

@@ -1,13 +1,8 @@
-// $Id: SolidIntersection.h,v 1.7 2003-04-25 08:52:23 sponce Exp $
+// $Id: SolidIntersection.h,v 1.8 2004-07-09 14:19:41 cattanem Exp $
 /// ==========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ==========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.6  2001/08/09 16:47:59  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
-/// ==========================================================================
-#ifndef      DETDESC_SOLISINTERSECTION_H
+#ifndef      DETDESC_SOLIDINTERSECTION_H
 #define      DETDESC_SOLIDINTERSECTION_H 1 
 // STD & STL 
 #include <algorithm>
@@ -63,7 +58,7 @@ public:
    *    frame of the solid.   
    *  - implementation of ISolid absstract interface  
    *  @see ISolid 
-   *  @param point point (in local reference system of the solid)
+   *  @param "" point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
   bool isInside ( const HepPoint3D   & ) const ;
@@ -77,7 +72,7 @@ public:
                            const HepTransform3D* mtrx                     );
   
   /** add intersections 
-   *  @param solid pointer         to new solid 
+   *  @param child    pointer to new solid 
    *  @param position position 
    *  @param rotation rotation 
    *  @return status code

@@ -1,4 +1,4 @@
-// $Id: LVolume.h,v 1.18 2003-04-23 14:07:44 sponce Exp $ 
+// $Id: LVolume.h,v 1.19 2004-07-09 14:19:41 cattanem Exp $ 
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
 
@@ -139,9 +139,9 @@ public:
    *  can be VERY slow for complex geometry, 
    *  therefore use the appropriate Level for usage 
    *  @see ILVolume 
-   *  @param  localPoint point in local reference system of logical volume 
-   *  @param  level depth level
-   *  @param  volumePath  vector of physical volumes
+   *  @param  LocalPoint   point in local reference system of logical volume 
+   *  @param  Level depth  level
+   *  @param  pVolumePath  vector of physical volumes
    *  @return status code 
    */
   virtual StatusCode belongsTo
@@ -153,9 +153,9 @@ public:
    *  can be VERY slow for complex geometry, 
    *  therefore use the appropriate Level for usage 
    *  @see ILVolume 
-   *  @param  localPoint point in local reference system of logical volume 
-   *  @param  level depth level
-   *  @param  volumePath  vector of physical volumes
+   *  @param  LocalPoint  point in local reference system of logical volume 
+   *  @param  Level       depth level
+   *  @param  replicaPath replica path 
    *  @return status code 
    */
   virtual StatusCode belongsTo
@@ -208,7 +208,7 @@ public:
    *  @param intersections output container
    *  @param tickMin minimum value of possible Tick
    *  @param tickMax maximum value of possible Tick
-   *  @param threshold threshold value 
+   *  @param Threshold threshold value 
    *  @return number of intersections  
    */
   virtual unsigned int intersectLine

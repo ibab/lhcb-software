@@ -1,14 +1,6 @@
-// $Id: SolidSubtraction.h,v 1.8 2003-04-25 08:52:23 sponce Exp $
+// $Id: SolidSubtraction.h,v 1.9 2004-07-09 14:19:42 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.7  2002/05/26 10:47:13  ibelyaev
-///  remove checks/tests and update requiements
-///
-/// Revision 1.6  2001/08/09 16:47:59  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
 /// ===========================================================================
 #ifndef       DETDESC_SOLISSUBTRACTION_H
 #define       DETDESC_SOLIDSUBTRACTION_H 1 
@@ -87,8 +79,9 @@ public:
     const HepTransform3D* mtrx  );
   
   /** subtract child solid from  the solid 
-   *  @param solid pointer to child solid 
+   *  @param child    pointer to child solid 
    *  @param position position  
+   *  @param rotation rotation
    *  @return status code 
    */
   StatusCode subtract 
@@ -99,7 +92,7 @@ public:
 protected:
   
   /** constructor 
-   *  @param name name of the solid subtraction  
+   *  @param Name name of the solid subtraction  
    */
   SolidSubtraction( const std::string& Name = "Anonymous Subtraction");
 

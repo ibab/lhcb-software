@@ -1,4 +1,4 @@
-// $Id: PVolume.h,v 1.12 2003-11-24 14:43:44 cattanem Exp $ 
+// $Id: PVolume.h,v 1.13 2004-07-09 14:19:42 cattanem Exp $ 
 #ifndef    DETDESC_PVOLUME_H
 #define    DETDESC_PVOLUME_H 1 
 /// STD & STL 
@@ -177,6 +177,8 @@ public:
    *  @param Point initial point at the line
    *  @param Vector direction vector of the line
    *  @param intersections output container 
+   *  @param tickMin minimum value of possible Tick
+   *  @param tickMax maximum value of possible Tick
    *  @param threshold threshold value 
    */
   virtual unsigned int intersectLine
@@ -196,7 +198,7 @@ public:
   //  virtual size_t    copy  () const { return m_copy ; }
   
   /** apply the  misalignemnt to the transformation matrix 
-   *  @param ms misalignment matrix (assumed to be small!!!)
+   *  @param ma misalignment matrix (assumed to be small!!!)
    *  @return the resulting transformation matrix
    */
   virtual const HepTransform3D& 

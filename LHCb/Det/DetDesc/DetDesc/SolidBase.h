@@ -1,4 +1,4 @@
-// $Id: SolidBase.h,v 1.8 2003-12-09 15:50:52 cattanem Exp $
+// $Id: SolidBase.h,v 1.9 2004-07-09 14:19:41 cattanem Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 // CLHEP
@@ -54,8 +54,6 @@ public:
    *  @see ISolid 
    *  @param Point initial point for the line
    *  @param Vector vector along the line
-   *  @param tickMin minimum value of Tick 
-   *  @param tickMax maximu value of Tick 
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */

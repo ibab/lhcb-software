@@ -1,11 +1,6 @@
-// $Id: LAssembly.h,v 1.2 2002-07-03 08:15:36 ocallot Exp $
+// $Id: LAssembly.h,v 1.3 2004-07-09 14:19:41 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2001/11/18 15:32:44  ibelyaev
-//  update for Logical Assemblies
-// 
 // ============================================================================
 #ifndef DETDESC_LASSEMBLY_H 
 #define DETDESC_LASSEMBLY_H 1
@@ -130,9 +125,9 @@ public:
    *  can be VERY slow for complex geometry, 
    *  therefore use the appropriate Level for usage 
    *  @see ILVolume 
-   *  @param  localPoint point in local reference system of logical volume 
-   *  @param  level depth level
-   *  @param  volumePath  vector of physical volumes
+   *  @param  LocalPoint point in local reference system of logical volume 
+   *  @param  Level depth level
+   *  @param  pVolumePath  vector of physical volumes
    *  @return status code 
    */
   virtual StatusCode belongsTo
@@ -144,9 +139,9 @@ public:
    *  can be VERY slow for complex geometry, 
    *  therefore use the appropriate Level for usage 
    *  @see ILVolume 
-   *  @param  localPoint point in local reference system of logical volume 
-   *  @param  level depth level
-   *  @param  volumePath  vector of physical volumes
+   *  @param  LocalPoint point in local reference system of logical volume 
+   *  @param  Level depth level
+   *  @param  replicaPath  vector of physical volumes
    *  @return status code 
    */
   virtual StatusCode belongsTo
@@ -199,7 +194,7 @@ public:
    *  @param intersections output container
    *  @param tickMin minimum value of possible Tick
    *  @param tickMax maximum value of possible Tick
-   *  @param threshold threshold value 
+   *  @param Threshold threshold value 
    *  @return number of intersections  
    */
   virtual unsigned int intersectLine

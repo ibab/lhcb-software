@@ -1,11 +1,6 @@
-// $Id: SolidUnion.h,v 1.7 2002-05-11 18:25:47 ibelyaev Exp $ 
+// $Id: SolidUnion.h,v 1.8 2004-07-09 14:19:42 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2001/08/09 16:48:00  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ===========================================================================
 #ifndef       DETDESC_SOLIDUNION_H
 #define       DETDESC_SOLIDUNION_H 1 
@@ -93,8 +88,9 @@ public:
                      const HepTransform3D* mtrx  ); 
 
   /** add child solid to the solid union
-   *  @param solid pointer to child solid 
-   *  @param position position  
+   *  @param child    pointer to child solid 
+   *  @param position position
+   *  @param rotation rotation
    *  @return status code 
    */
   StatusCode unite ( ISolid*               child                    , 
@@ -104,7 +100,7 @@ public:
  protected:
 
   /** constructor 
-   *  @param name name of the solid union 
+   *  @param Name name of the solid union 
    */
   SolidUnion( const std::string& Name = "Anonymous Union");
 

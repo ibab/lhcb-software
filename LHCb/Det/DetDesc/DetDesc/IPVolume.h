@@ -1,11 +1,6 @@
-// $Id: IPVolume.h,v 1.7 2003-10-09 13:43:07 cattanem Exp $ 
+// $Id: IPVolume.h,v 1.8 2004-07-09 14:19:40 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2003/09/20 13:25:40  ibelyaev
-//  few fixes to solve Gauss problems
-//
 // ===========================================================================
 #ifndef  DETDESC_IPVOLUME_H 
 #define  DETDESC_IPVOLUME_H 1 
@@ -145,7 +140,9 @@ public:
    *  @param Point initial point at the line
    *  @param Vector direction vector of the line
    *  @param intersections output container 
-   *  @param threshold threshold value 
+   *  @param tickMin minimum value of possible Tick
+   *  @param tickMax maximum value of possible Tick
+   *  @param Threshold threshold value 
    */
   virtual unsigned int intersectLine
   ( const HepPoint3D        & Point         ,
@@ -183,7 +180,7 @@ public:
   //  virtual size_t    copy  () const = 0 ;
   
   /** apply the  misalignemnt to the transformation matrix 
-   *  @param ms misalignment matrix (assumed to be small!!!)
+   *  @param ma misalignment matrix (assumed to be small!!!)
    *  @return the resulting transformation matrix
    */
   virtual const HepTransform3D& 
@@ -246,8 +243,8 @@ inline MsgStream& operator<<
 
 // ============================================================================
 /** output operator to Streambuffer 
- *  @param  os      reference to output   stream
- *  @param  Pv      reference to IPVolume object
+ *  @param  s       reference to output   stream
+ *  @param  pv      reference to IPVolume object
  *  @return reference to the stream
  */
 // ============================================================================
@@ -257,7 +254,7 @@ inline StreamBuffer& operator<<
 
 // ============================================================================
 /** input  operator from StreamBuffer          
- *  @param  os      reference to output   stream
+ *  @param   s      reference to output   stream
  *  @param  pv      reference to IPVolume object
  *  @return reference to the stream
  */

@@ -1,11 +1,6 @@
-// $Id: SolidPolycone.h,v 1.2 2002-05-11 18:25:46 ibelyaev Exp $ 
+// $Id: SolidPolycone.h,v 1.3 2004-07-09 14:19:41 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2001/10/25 14:04:04  ibelyaev
-// New shape: SolidPolycone is added
-// 
 // ============================================================================
 #ifndef DETDESC_SOLIDPOLYCONE_H 
 #define DETDESC_SOLIDPOLYCONE_H 1
@@ -92,7 +87,7 @@ public:
    *  - reimplementation of SolidBase::printOut( std::ostream& )
    *  @see SolidBase 
    *  @see ISolid 
-   *  @param stream STD/STL stream
+   *  @param os STD/STL stream
    *  @return reference to the stream 
    */
   virtual std::ostream&  printOut ( std::ostream& os = std::cout )    const;
@@ -102,7 +97,7 @@ public:
    *  - reimplementation of SolidBase::printOut( MsgStream& )
    *  @see SolidBase 
    *  @see ISolid 
-   *  @param stream STD/STL stream
+   *  @param "" STD/STL stream
    *  @return reference to the stream 
    */
   virtual MsgStream&     printOut ( MsgStream&                   )    const; 
@@ -122,7 +117,7 @@ public:
    *  @see ISolid 
    *  @param Point initial point for the line
    *  @param Vector vector along the line
-   *  @param ticks output container of "Ticks"
+   *  @param Ticks output container of "Ticks"
    *  @return the number of intersection points
    */
   virtual unsigned int 
@@ -136,7 +131,7 @@ public:
    *  @see ISerialize 
    *  @see ISolid  
    *  @see SolidBase   
-   *  @param      s               reference to stream buffer
+   *  @param      sb              reference to stream buffer
    *  @exception  SolidException  wrong parameters range 
    *  @return reference to stream buffer
    */
@@ -148,7 +143,7 @@ public:
    *  @see ISerialize 
    *  @see ISolid  
    *  @see SolidBase   
-   *  @param s reference to stream buffer
+   *  @param sb reference to stream buffer
    *  @return reference to stream buffer
    */
   StreamBuffer& serialize( StreamBuffer& sb ) const ;
@@ -188,14 +183,14 @@ public:
   { return ( begin() + index )->first ; }
   
   /** accessor to rMax of plane indexed with some index
-   *  @param indx   plane index 
+   *  @param index   plane index 
    *  @return rMax
    */
   inline const double  RMax( Triplets::size_type index ) const 
   { return ( begin() + index )->second.first ; }
   
   /** accessor to rMin of plane indexed with some index
-   *  @param indx   plane index 
+   *  @param index   plane index 
    *  @return rMin
    */
   inline const double  RMin( Triplets::size_type index ) const 
@@ -229,12 +224,12 @@ protected:
 protected:
   
   /** default protected  constructor 
-   *  @param name name of conical tube segment  
+   *  @param Name name of conical tube segment  
    */
   SolidPolycone( const std::string& Name = "Anonymous Polycone") ;
 
   /** set bounding parameters 
-   *  @return satus code 
+   *  @return status code 
    */
   StatusCode setBP();
   

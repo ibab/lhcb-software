@@ -1,17 +1,6 @@
-// $Id: IGeometryInfo.h,v 1.7 2003-09-20 13:25:40 ibelyaev Exp $ 
+// $Id: IGeometryInfo.h,v 1.8 2004-07-09 14:19:40 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2001/12/03 15:18:29  mato
-// Small changes to compile without warnings in Windows
-//
-// Revision 1.5  2001/11/18 15:32:43  ibelyaev
-//  update for Logical Assemblies
-//
-// Revision 1.4  2001/08/10 14:59:01  ibelyaev
-// modifications in IGeometryInfo and related classes
-//
 // ===========================================================================
 #ifndef  DETDESC_IGEOMETRYINFO_H
 #define  DETDESC_IGEOMETRYINFO_H 1
@@ -513,8 +502,7 @@ public:
    */
   virtual IGeometryInfo* reset () = 0;
   
-  /// the virtual destructor
-  virtual   ~IGeometryInfo() ;
+  virtual   ~IGeometryInfo() ;  ///< The virtual destructor
   
 };
 

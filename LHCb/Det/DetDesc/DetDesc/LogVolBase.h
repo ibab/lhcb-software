@@ -1,4 +1,4 @@
-// $Id: LogVolBase.h,v 1.8 2003-10-09 13:43:07 cattanem Exp $ 
+// $Id: LogVolBase.h,v 1.9 2004-07-09 14:19:41 cattanem Exp $ 
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
 /// STD and STL includes
@@ -201,8 +201,9 @@ public:
   /** traverse the sequence of paths  \n 
    *  transform the sequence of replicas to sequence of  physical volumes 
    *  @see ILVolume 
-   *  @param replicaPath replica-Path 
-   *  @param volumePath  vector of physical volumes 
+   *  @param pathBegin    first replica-Path 
+   *  @param pathEnd      last  replica-Path 
+   *  @param pVolumePath  vector of physical volumes 
    *  @return status code 
    */
   virtual StatusCode traverse 
@@ -213,8 +214,8 @@ public:
   /** traverse the sequence of paths  \n 
    *  transform the sequence of replicas to sequence of  physical volumes 
    *  @see ILVolume 
-   *  @param replicaPath replica-Path 
-   *  @param volumePath  vector of physical volumes 
+   *  @param path         replica-Path 
+   *  @param pVolumePath  vector of physical volumes 
    *  @return status code 
    */
   inline virtual StatusCode traverse 
@@ -410,7 +411,7 @@ protected:
    *  @exception LVolumeException wrong parameters or geometry error
    *  @param Point initial point at the line
    *  @param Vector direction vector of the line
-   *  @param intersections output container
+   *  @param childIntersections output container
    *  @param tickMin minimum value of possible Tick
    *  @param tickMax maximum value of possible Tick
    *  @param threshold threshold value 

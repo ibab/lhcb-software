@@ -1,17 +1,6 @@
-// $Id: SolidBoolean.h,v 1.14 2003-12-09 15:50:52 cattanem Exp $ 
+// $Id: SolidBoolean.h,v 1.15 2004-07-09 14:19:41 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.13  2003/09/20 13:25:40  ibelyaev
-//  few fixes to solve Gauss problems
-//
-// Revision 1.12  2002/05/26 10:47:12  ibelyaev
-//  remove checks/tests and update requiements
-//
-// Revision 1.11  2002/05/11 18:25:46  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-//
 // ===========================================================================
 #ifndef      DETDESC_SOLIDBOOLEAN_H 
 #define      DETDESC_SOLIDBOOLEAN_H  1 
@@ -133,13 +122,13 @@ class SolidBoolean: public virtual SolidBase
   {  return  ( ( index < noChildrens() )  ? *(childBegin()+index) : 0 ) ; } ;
   
   /** serialization for reading
-   *  @param sb reference to stream buffer
+   *  @param "" reference to stream buffer
    *  @return reference to stream buffer
    */
   StreamBuffer& serialize( StreamBuffer& )       ; 
   
   /** serialization for writing
-   *  @param sb reference to stream buffer
+   *  @param  "" reference to stream buffer
    *  @return reference to stream buffer
    */
   StreamBuffer& serialize( StreamBuffer& ) const ; 
@@ -176,7 +165,7 @@ protected:
   SolidBoolean ( const std::string& name="Undefined" );
   
   /** add child to daughter container 
-   *  @param chidl pointer to solid 
+   *  @param child pointer to solid 
    *  @param mtrx  pointer to transformation 
    *  @return status code 
    */
@@ -185,7 +174,7 @@ protected:
     const HepTransform3D* mtrx  );
   
   /** add child to daughter container 
-   *  @param pointer to solid 
+   *  @param child    pointer to solid 
    *  @param position position 
    *  @param rotation rotation 
    */

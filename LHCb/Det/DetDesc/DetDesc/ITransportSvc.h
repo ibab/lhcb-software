@@ -1,11 +1,6 @@
-// $Id: ITransportSvc.h,v 1.4 2002-04-24 10:52:17 ibelyaev Exp $ 
+// $Id: ITransportSvc.h,v 1.5 2004-07-09 14:19:41 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2002/04/03 11:01:44  ibelyaev
-//  fix the problems with Assemblies for TransportSvc
-// 
 // ============================================================================
 #ifndef DETDESC_ITRANSPORTSVC_H 
 #define DETDESC_ITRANSPORTSVC_H 1
@@ -61,10 +56,10 @@ class ITransportSvc : virtual public IService
    *  @see ISolid  
    *  @see IGeometryInfo
    *  @see Material
-   *  @param Point   initial point on the line
+   *  @param point   initial point on the line
    *  @param vector  direction vector of the line 
    *  @param tickMin minimal value of line paramater
-   *  @param TickMax maximal value of line parameter 
+   *  @param tickMax maximal value of line parameter 
    *  @param intersept (output) container of intersections
    *  @param threshold threshold value
    *  @param alternativeGeometry  source of alternative geometry information

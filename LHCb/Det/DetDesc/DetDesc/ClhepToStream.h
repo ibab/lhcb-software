@@ -1,11 +1,6 @@
-// $Id: ClhepToStream.h,v 1.3 2003-04-25 08:52:23 sponce Exp $
+// $Id: ClhepToStream.h,v 1.4 2004-07-09 14:19:40 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/08/09 16:47:56  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
 /// ===========================================================================
 #ifndef     DETDESC_CLHEP_TO_STREAM_H
 #define     DETDESC_CLHEP_TO_STREAM_H 1 
@@ -26,8 +21,7 @@
  *   @date xx/xx/xxxx
  */
 
-/** @defgroup  Hep3Vector
- *  serialization of class Hep3Vector
+/** @defgroup  Hep3Vector  Serialization of class Hep3Vector
  *  @{ 
  */
 inline StreamBuffer& operator<<( StreamBuffer& sb , const Hep3Vector& Vect ) 
@@ -45,8 +39,7 @@ inline StreamBuffer& operator>>( StreamBuffer& sb ,       Hep3Vector& Vect )
 };
 ///@}
 
-/** @defgroup  HepRotation
- *  serialization of class HepRotation
+/** @defgroup  HepRotation  Serialization of class HepRotation
  *  @{ 
  */
 inline StreamBuffer& operator<<( StreamBuffer& sb , const HepRotation& Rot ) 
@@ -64,8 +57,7 @@ inline StreamBuffer& operator>>( StreamBuffer& sb ,       HepRotation& Rot )
 };
 ///@}
 
-/** @defgroup  HepTransform3D 
- *  serialization of class HepTransform3D
+/** @defgroup  HepTransform3D  Serialization of class HepTransform3D
  *  @{ 
  */
 inline StreamBuffer& operator<<( StreamBuffer& sb , const HepTransform3D& Tr ) 

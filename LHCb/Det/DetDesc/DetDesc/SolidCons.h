@@ -1,8 +1,6 @@
-// $Id: SolidCons.h,v 1.9 2002-05-11 18:25:46 ibelyaev Exp $ 
+// $Id: SolidCons.h,v 1.10 2004-07-09 14:19:41 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDCONS_H
 #define     DETDESC_SOLIDCONS_H 1   
@@ -98,7 +96,7 @@ public:
    *  - reimplementation of SolidBase::printOut( std::ostream& )
    *  @see SolidBase 
    *  @see ISolid 
-   *  @param stream STD/STL stream
+   *  @param os STD/STL stream
    *  @return reference to the stream 
    */
   virtual std::ostream&  printOut ( std::ostream& os = std::cout )    const;
@@ -108,7 +106,7 @@ public:
    *  - reimplementation of SolidBase::printOut( MsgStream& )
    *  @see SolidBase 
    *  @see ISolid 
-   *  @param stream STD/STL stream
+   *  @param "" STD/STL stream
    *  @return reference to the stream 
    */
   virtual MsgStream&     printOut ( MsgStream&                   )    const; 
@@ -171,7 +169,7 @@ public:
    *  @see ISerialize 
    *  @see ISolid  
    *  @see SolidBase   
-   *  @param      s               reference to stream buffer
+   *  @param      sb              reference to stream buffer
    *  @exception  SolidException  wrong parameters range 
    *  @return reference to stream buffer
    */
@@ -183,7 +181,7 @@ public:
    *  @see ISerialize 
    *  @see ISolid  
    *  @see SolidBase   
-   *  @param s reference to stream buffer
+   *  @param sb reference to stream buffer
    *  @return reference to stream buffer
    */
   StreamBuffer& serialize( StreamBuffer& sb ) const ; 
@@ -292,8 +290,8 @@ protected:
     
 protected:
   
-  /** default protected  coinstructor 
-   *  @param name name of conical tube segment  
+  /** default protected constructor 
+   *  @param Name name of conical tube segment  
    */
   SolidCons( const std::string& Name = "Anonymous CONS") ;
 

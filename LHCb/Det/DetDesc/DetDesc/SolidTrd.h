@@ -1,8 +1,6 @@
-// $Id: SolidTrd.h,v 1.8 2002-05-13 18:29:53 ibelyaev Exp $ 
+// $Id: SolidTrd.h,v 1.9 2004-07-09 14:19:42 cattanem Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDTRD_H
 #define     DETDESC_SOLIDTRD_H 1 
@@ -94,7 +92,7 @@ class SolidTrd: public    virtual SolidBase             ,
    *  @see ISerialize 
    *  @see ISolid  
    *  @see SolidBase   
-   *  @param      s               reference to stream buffer
+   *  @param      ""              reference to stream buffer
    *  @exception  SolidException  wrong parameters range 
    *  @return reference to stream buffer
    */
@@ -106,7 +104,7 @@ class SolidTrd: public    virtual SolidBase             ,
    *  @see ISerialize 
    *  @see ISolid  
    *  @see SolidBase   
-   *  @param s reference to stream buffer
+   *  @param "" reference to stream buffer
    *  @return reference to stream buffer
    */
   virtual StreamBuffer& serialize( StreamBuffer& ) const ; 

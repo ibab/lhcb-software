@@ -1,14 +1,6 @@
-// $Id: Solid.cpp,v 1.3 2003-06-30 12:58:01 cattanem Exp $
+// $Id: Solid.cpp,v 1.4 2004-07-09 14:19:42 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2003/04/25 08:52:24  sponce
-/// fixes after valgrind tests, application of code conventions
-///
-/// Revision 1.1  2001/08/09 16:48:01  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
 /// ===========================================================================
 ///@{ 
 /** STD & STL includes  */ 

@@ -1,20 +1,6 @@
-// $Id: ILVolume.h,v 1.7 2003-09-20 13:25:40 ibelyaev Exp $ 
+// $Id: ILVolume.h,v 1.8 2004-07-09 14:19:40 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2001/11/18 15:32:43  ibelyaev
-//  update for Logical Assemblies
-//
-// Revision 1.5  2001/08/24 12:06:13  ibelyaev
-//  changes to take into account Assembly Volumes
-//
-// Revision 1.4  2001/08/13 09:51:35  ibelyaev
-// bug fix in 'reset' method
-//
-// Revision 1.3  2001/08/09 16:47:56  ibelyaev
-// update in interfaces and redesign of solids
-// 
 // ===========================================================================
 #ifndef  DETDESC_ILVOLUME_H
 #define  DETDESC_ILVOLUME_H 1 
@@ -283,7 +269,7 @@ belongsTo
    *  @param intersections output container
    *  @param tickMin minimum value of possible Tick
    *  @param tickMax maximum value of possible Tick
-   *  @param threshold threshold value 
+   *  @param Threshold threshold value 
    *  @return number of intersections  
    */
   virtual unsigned int intersectLine

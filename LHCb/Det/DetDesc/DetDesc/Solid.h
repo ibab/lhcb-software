@@ -1,11 +1,6 @@
-// $Id: Solid.h,v 1.2 2003-04-25 08:52:23 sponce Exp $
+// $Id: Solid.h,v 1.3 2004-07-09 14:19:41 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/08/09 16:47:57  ibelyaev
-/// update in interfaces and redesign of solids
-/// 
 /// ===========================================================================
 #ifndef DETDESC_SOLID_H 
 #define DETDESC_SOLID_H 1
@@ -57,7 +52,7 @@ namespace Solid
   public:
     
     /** (explicit) constructor
-     *   @param point  point (in local reference system of solid)
+     *   @param LocalPoint  point (in local reference system of solid)
      */
     explicit IsInside( const HepPoint3D& LocalPoint  ) 
       : m_point( LocalPoint ){};
