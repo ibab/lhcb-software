@@ -1,38 +1,24 @@
-// $Id: GiGaCnvBase.cpp,v 1.7 2002-05-01 18:33:18 ibelyaev Exp $ 
+// $Id: GiGaCnvBase.cpp,v 1.8 2002-05-07 12:24:50 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2002/01/22 18:24:42  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.5  2001/08/12 17:24:50  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.4  2001/07/25 17:19:31  ibelyaev
-// all conversions now are moved from GiGa to GiGaCnv
-//
-// Revision 1.3  2001/07/24 11:13:54  ibelyaev
-// package restructurization(III) and update for newer GiGa
-//
-// Revision 1.2  2001/07/15 20:45:08  ibelyaev
-// the package restructurisation
-//
-//=============================================================================
+// ============================================================================
 #define GIGACNV_GIGACNVBASE_CPP 1 
-///============================================================================
-/// STL 
+// ============================================================================
+//  STL 
 #include <string> 
 #include <vector> 
-/// GaudiKernel
+//  GaudiKernel
 #include "GaudiKernel/Converter.h" 
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IService.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/Stat.h"
-/// GiGa 
+//  GiGa 
 #include "GiGa/IGiGaSvc.h" 
 #include "GiGa/IGiGaSetUpSvc.h"
 #include "GiGa/GiGaException.h"
@@ -43,6 +29,15 @@
 #include "GiGaCnv/IGiGaHitsCnvSvc.h" 
 #include "GiGaCnv/GiGaCnvBase.h"
 
+// ============================================================================
+/** @file 
+ *  implementation of 
+ *  base class for  converters from Geant4 to Gaudi and vice versa  
+ *  
+ *  @author  Vanya Belyaev
+ *  @date    21/02/2001
+ */
+// ============================================================================
 
 // ============================================================================
 /// constructor 
@@ -65,6 +60,7 @@ GiGaCnvBase::GiGaCnvBase
   , m_evtSvc                        (  0              ) 
   , m_detSvc                        (  0              ) 
   , m_chronoSvc                     (  0              ) 
+  , m_toolSvc                       (  0              )
   , m_errors     ()
   , m_warnings   ()
   , m_exceptions ()
@@ -271,6 +267,19 @@ StatusCode GiGaCnvBase::initialize ()
   }
   ///
   {
+    const std::string toolName("ToolSvc");
+    StatusCode sc = 
+      serviceLocator()->service( toolName , m_toolSvc , true ) ;
+    if ( st.isFailure()    ) 
+      { return Error("Initialize::unable to locate IToolSvs=" + 
+                     toolName, sc );} 
+    if ( 0 == toolSvc()  ) 
+      { return Error("Initialize::unable to locate IToolSvs=" + 
+                     toolName  );}
+    toolSvc()->addRef(); 
+  }
+  ///
+  {
     for( Leaves::const_iterator it = m_leaves.begin() ; 
          m_leaves.end() != it ; ++it )
       { cnvSvc()->declareObject( *it ); }
@@ -287,6 +296,7 @@ StatusCode GiGaCnvBase::initialize ()
 StatusCode GiGaCnvBase::finalize () 
 {
   /// release (in reverse order)
+  if( 0 != toolSvc   () ) { toolSvc   ()->release() ; m_toolSvc        = 0 ; } 
   if( 0 != chronoSvc () ) { chronoSvc ()->release() ; m_chronoSvc      = 0 ; } 
   if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc         = 0 ; } 
   if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc         = 0 ; } 

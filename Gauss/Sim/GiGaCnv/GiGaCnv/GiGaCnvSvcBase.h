@@ -1,23 +1,8 @@
-// $Id: GiGaCnvSvcBase.h,v 1.7 2002-05-04 20:39:34 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.h,v 1.8 2002-05-07 12:24:50 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2002/05/01 18:33:18  ibelyaev
-//  import error/warning/exception counter technique from LHCb Calo
-//
-// Revision 1.5  2002/01/22 18:24:41  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.4  2001/08/12 17:24:49  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.3  2001/07/25 17:19:30  ibelyaev
-// all conversions now are moved from GiGa to GiGaCnv
-//
-// Revision 1.2  2001/07/24 11:13:54  ibelyaev
-// package restructurization(III) and update for newer GiGa
-// 
 // ============================================================================
 #ifndef      GIGA_GIGACNVSVCBASE_H 
 #define      GIGA_GIGACNVSVCBASE_H  1 
@@ -39,6 +24,7 @@ class IParticlePropertySvc ;
 class IMagneticFieldSvc    ; 
 class IObjManager          ; 
 class IChronoStatSvc       ; 
+class IToolSvc             ; 
 class IIncidentSvc         ; 
 class IGiGaSvc             ;
 class IGiGaSetUpSvc        ;
@@ -137,6 +123,8 @@ protected:
   inline IDataProviderSvc* detSvc    ()  const { return m_detSvc      ; }  
   /// chrono  service              (optional)
   inline IChronoStatSvc*   chronoSvc ()  const { return m_chronoSvc   ; } 
+  /// tool    service              (optional)
+  inline IToolSvc*         toolSvc   ()  const { return m_toolSvc     ; } 
   /// object manager               (optiona)
   inline IObjManager*      objMgr    ()  const { return m_objMgr      ; } 
   /// incident service                          
@@ -266,6 +254,9 @@ private:
   ///
   std::string                          m_chronoName ; 
   IChronoStatSvc*                      m_chronoSvc  ;
+  ///
+  std::string                          m_toolName   ; 
+  IToolSvc*                            m_toolSvc    ;
   ///
   std::string                          m_omName     ; 
   IObjManager*                         m_objMgr     ;

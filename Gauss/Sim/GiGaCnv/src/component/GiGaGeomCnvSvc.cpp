@@ -1,8 +1,11 @@
-// $Id: GiGaGeomCnvSvc.cpp,v 1.10 2002-05-04 20:53:17 ibelyaev Exp $ 
+// $Id: GiGaGeomCnvSvc.cpp,v 1.11 2002-05-07 12:24:50 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/05/04 20:53:17  ibelyaev
+//  reduce the verbosity of printout
+//
 // Revision 1.9  2002/05/04 20:39:36  ibelyaev
 //  see $GIGACNVROOT/release.notes (4 May 2002)
 //
@@ -17,6 +20,7 @@
 #include "GaudiKernel/IDataSelector.h"
 #include "GaudiKernel/IConverter.h"
 #include "GaudiKernel/IObjManager.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/DataObject.h"
@@ -45,9 +49,7 @@
 #include "G4TransportationManager.hh"
 // from GiGa 
 #include "GiGa/IGiGaSensDet.h"
-#include "GiGa/IGiGaSensDetFactory.h"
 #include "GiGa/IGiGaMagField.h"
-#include "GiGa/IGiGaMagFieldFactory.h"
 #include "GiGa/GiGaUtil.h"
 // From GiGaCnv 
 #include "GiGaCnv/GiGaAssembly.h"
@@ -113,7 +115,7 @@ GiGaGeomCnvSvc::GiGaGeomCnvSvc
   declareProperty("YsizeOfWorldVolume"        , m_worldY        );
   declareProperty("XsizeOfWorldVolume"        , m_worldZ        );
   ///
-  declareProperty("MaterialBudget"            , m_budget        );
+  declareProperty("GlobalSensitivity"         , m_budget        );
   declareProperty("WorldMagneticField"        , m_worldMagField );
   ///
 };
@@ -431,17 +433,19 @@ StatusCode GiGaGeomCnvSvc::initialize()
 // ============================================================================
 StatusCode GiGaGeomCnvSvc::finalize()   
 { 
-  // finalize all created sensitive detectors 
+  // release all created sensitive detectors 
   std::for_each( m_SDs.begin () , 
                  m_SDs.end   () , 
-                 std::mem_fun( &IGiGaSensDet::finalize ) );
+                 std::mem_fun( &IInterface::release ) );
+  m_SDs.clear() ;
   // finalize all created mag field objects 
   std::for_each( m_MFs.begin () , 
                  m_MFs.end   () , 
-                 std::mem_fun( &IGiGaMagField::finalize ) );
+                 std::mem_fun( &IInterface::release ) );
+  m_MFs.clear() ;
   // clear store of assemblies!
   StatusCode sc = GiGaAssemblyStore::store()->clear();
-  //
+  // finalize the base class 
   return GiGaCnvSvcBase::finalize(); 
 };
 
@@ -606,23 +610,20 @@ StatusCode   GiGaGeomCnvSvc::sensitive
           GiGaUtil::ObjTypeName( *it )  == Type ) 
         { (*it)->addRef() ; SD = *it ; return StatusCode::SUCCESS ; }  
     } 
-  /// create the creator 
-  GiGaUtil::SensDetCreator creator( objMgr() , serviceLocator() );
-  /// create the object
-  SD = creator( Type , Nick ) ;
-  if( 0 == SD ) 
-    { Error("Could Not Create  the SD Object Type/Nick=" + 
-            Type + "/" + Nick ); }
-  ///
-  StatusCode st = SD->initialize(); 
-  if( st.isFailure() ) 
-    { Error("Could Not Initialize the SD Object " + 
-            TypeNick, st ); delete SD ; SD = 0 ; } 
-  ///
+  // locate tool 
+  sc = toolSvc() -> retrieveTool( Type , Nick , SD , this );
+  if( sc.isFailure() ) 
+    { return Error("Could not locate SensDet ='" 
+                   + Type + "'/'" + Nick + "'" , sc ) ; }
+  if( 0 == SD        )
+    { return Error("Could not locate SensDet ='" 
+                   + Type + "'/'" + Nick + "'"      ) ; }
+  //
+  SD->addRef();
+  //
   m_SDs.push_back( SD );
-  ///
+  //
   return StatusCode::SUCCESS;
-  ///
 };
 
 // ============================================================================
@@ -652,15 +653,15 @@ StatusCode   GiGaGeomCnvSvc::magnetic
 ( const std::string& TypeNick      , 
   IGiGaMagField*&    MF            )  
 {
-  ///
+  //
   MF = 0 ; /// reset the output value 
-  ///
+  //
   std::string Type,Nick;
   StatusCode sc = GiGaUtil::SplitTypeAndName( TypeNick , Type, Nick ); 
   if( sc.isFailure() ) 
     { return Error("Could not interprete name of MagField=" + 
                    TypeNick, sc ) ; }
-  /// look at the local storage:
+  // look at the local storage:
   for( MFobjects::const_iterator it = m_MFs.begin() ; 
        m_MFs.end() != it ; ++it ) 
     {
@@ -668,22 +669,19 @@ StatusCode   GiGaGeomCnvSvc::magnetic
           GiGaUtil::ObjTypeName( *it ) == Type ) 
         { (*it)->addRef() ; MF = *it ; return StatusCode::SUCCESS ; }  
     } 
-  /// create the creator 
-  GiGaUtil::MagFieldCreator creator( objMgr() , serviceLocator() );
-  /// create the object
-  MF = creator( Type , Nick ) ;
-  if( 0 == MF ) 
-    { return Error("Could not create the MagField Object Type/Nick=" + 
-                   Type + "/" + Nick ); }  
-  ///
-  StatusCode st = MF->initialize(); 
-  if( st.isFailure() ) 
-    { delete MF ; MF = 0 ; 
-    return Error("Could not Initialize the MagField Object=" + 
-                 TypeNick, st ); } 
-  ///
+  // locate tool 
+  sc = toolSvc() -> retrieveTool( Type , Nick , MF , this );
+  if( sc.isFailure() ) 
+    { return Error("Could not locate MagField ='" 
+                   + Type + "'/'" + Nick + "'" , sc ) ; }
+  if( 0 == MF        )
+    { return Error("Could not locate MagField ='" 
+                   + Type + "'/'" + Nick + "'"      ) ; }
+  //
+  MF->addRef();
+  //
   m_MFs.push_back( MF );
-  ///
+  //
   return StatusCode::SUCCESS;
   ///
 };

@@ -1,21 +1,8 @@
-// $Id: GiGaCnvBase.h,v 1.7 2002-05-01 18:33:18 ibelyaev Exp $ 
+// $Id: GiGaCnvBase.h,v 1.8 2002-05-07 12:24:50 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2002/01/22 18:24:41  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.5  2001/08/12 17:24:48  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.4  2001/07/25 17:19:30  ibelyaev
-// all conversions now are moved from GiGa to GiGaCnv
-//
-// Revision 1.3  2001/07/24 11:13:53  ibelyaev
-// package restructurization(III) and update for newer GiGa
-//
-// Revision 1.2  2001/07/15 20:45:08  ibelyaev
-// the package restructurisation
-// 
 // ============================================================================
 #ifndef GIGA_GIGACNVBASE_H 
 #define GIGA_GIGACNVBASE_H  1 
@@ -36,6 +23,7 @@
 class IDataProviderSvc     ;
 class IMessageSvc          ; 
 class IChronoStatSvc       ; 
+class IToolSvc             ; 
 class IParticlePropertySvc ; 
 class IGiGaSvc             ;   
 class IGiGaSetUpSvc        ;
@@ -56,7 +44,6 @@ class IGiGaHitsCnvSvc      ;
 
 class GiGaCnvBase: public Converter 
 {
-  ///  
 public:
   typedef std::vector<GiGaLeaf> Leaves;
   
@@ -135,6 +122,12 @@ protected:
    */  
   inline IChronoStatSvc*       chronoSvc () const 
   { return m_chronoSvc                                ; } 
+
+  /** accessor to Tool Service 
+   *  @return pointer to Tool Service 
+   */  
+  inline IToolSvc*             toolSvc   () const 
+  { return m_toolSvc                                  ; } 
   
   /** accessor to GiGa service
    *  @return pointer to GiGa service 
@@ -281,6 +274,7 @@ private:
   IDataProviderSvc*     m_evtSvc                      ; 
   IDataProviderSvc*     m_detSvc                      ; 
   IChronoStatSvc*       m_chronoSvc                   ; 
+  IToolSvc*             m_toolSvc                     ; 
   ///
   typedef std::map<std::string,unsigned int> Counter;
   /// counter of errors 

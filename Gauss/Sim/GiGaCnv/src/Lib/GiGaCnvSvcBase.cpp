@@ -1,4 +1,4 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.7 2002-05-01 18:33:18 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.8 2002-05-07 12:24:50 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -16,6 +16,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/IChronoStatSvc.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/ICnvFactory.h"
@@ -39,6 +40,19 @@
 #include "GiGaCnv/GiGaCnvSvcBase.h"
 
 // ============================================================================
+/** @file 
+ *
+ *   implementation of 
+ *   base conversion service  for converting of Gaudi 
+ *   structures into Geant4 structures and vice versa  
+ *   
+ *   @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *   @date    07/08/2000 
+ */
+// ============================================================================
+
+
+// ============================================================================
 /** standard constructor
  *  @param ServiceName     service name 
  *  @param ServiceLocator  pointer to Service Locator 
@@ -49,31 +63,34 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
                                 ISvcLocator*         ServiceLocator    ,
                                 const unsigned int   StorageType       )
   : ConversionSvc( ServiceName , ServiceLocator , StorageType )  
-  ///
+  //
   , m_dpName      ( "UndefinedName"       )
   , m_dpSvc       (     0                 )
-  /// 
+  // 
   , m_evtName     ( "EventDataSvc"        )
   , m_evtSvc      (     0                 )
-  ///
+  //
   , m_detName     ( "DetectorDataSvc"     )
   , m_detSvc      (     0                 )
-  ///
+  //
   , m_gigaName    ( "GiGaSvc"             ) 
   , m_gigaSvc     (     0                 ) 
-  ///
+  //
   , m_setupName   ( "GiGaSvc"             ) 
   , m_setupSvc    (     0                 ) 
-  ///
+  //
   , m_chronoName  ( "ChronoStatSvc"       )  
   , m_chronoSvc   (     0                 ) 
-  ///
+  //
+  , m_toolName    ( "ToolSvc"             )  
+  , m_toolSvc     (     0                 ) 
+  //
   , m_omName      ( "ApplicationMgr"      )  
   , m_objMgr      (     0                 ) 
-  ///
+  //
   , m_inName      ( "IncidentSvc"         )  
   , m_incSvc      (     0                 ) 
-  ///
+  //
   , m_errors      ()
   , m_warnings    ()
   , m_exceptions  ()
@@ -83,6 +100,7 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
   declareProperty   ( "GiGaService"                     , m_gigaName    ); 
   declareProperty   ( "GiGaSetUpService"                , m_setupName   ); 
   declareProperty   ( "ChronoStatService"               , m_chronoName  );
+  declareProperty   ( "ToolService"                     , m_toolName    );
   declareProperty   ( "ObjectManager"                   , m_omName      );
   declareProperty   ( "IncidentService"                 , m_inName      );
 };
@@ -222,6 +240,19 @@ StatusCode GiGaCnvSvcBase::initialize()
       Print( " Located Chrono & Stat Service="+m_chronoName, MSG::VERBOSE ); 
     } 
   else { Warning(" Chrono & Stat Service is not requested to be located!") ;} 
+  ///
+  {
+    StatusCode status = 
+      serviceLocator()->service( m_toolName , m_toolSvc  ) ; 
+    if( status.isFailure() ) 
+      { return Error("Initialize::Could not locate IToolSvc=" + 
+                     m_toolName, status );}      
+    if( 0 == toolSvc()   ) 
+      { return Error("Initialize::Could not locate IToolSvc=" + 
+                     m_toolName         );}
+    toolSvc()->addRef(); 
+    Print( " Located Tool  Service=" + m_toolName, MSG::VERBOSE ); 
+  } 
   ///
   if( !m_omName.empty() ) 
     {
