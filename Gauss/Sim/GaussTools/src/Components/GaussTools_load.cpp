@@ -1,8 +1,11 @@
-// $Id: GaussTools_load.cpp,v 1.7 2003-04-11 17:55:36 witoldp Exp $
+// $Id: GaussTools_load.cpp,v 1.8 2003-04-23 15:45:54 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/04/11 17:55:36  witoldp
+// new handling of user limits
+//
 // Revision 1.6  2003/04/09 12:05:58  witoldp
 // change of name of GiGaTrackAction
 //
@@ -49,16 +52,11 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    GiGaSensDetPrint        ) ;
   DECLARE_GiGaFactory     (    GiGaSensDetBudget       ) ;
 
-  /// stacking action 
-  DECLARE_GiGaFactory     (    GiGaStackActionEmpty    ) ;
-
   /// tracking action 
-  DECLARE_GiGaFactory     (    GiGaTrackActionEmpty    );
   DECLARE_GiGaFactory     (    GaussTrackAction        );
   DECLARE_GiGaFactory     (    GiGaTrackActionSequence );
 
   /// stepping  action 
-  DECLARE_GiGaFactory     (    GiGaStepActionEmpty     ) ;
   DECLARE_GiGaFactory     (    GiGaStepActionDraw      ) ;
   DECLARE_GiGaFactory     (    GiGaStepActionSequence  ) ;
   DECLARE_GiGaFactory     (    GaussStepAction         ) ;
@@ -70,7 +68,6 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    TrCutsRunAction         ) ;
 
   /// event action 
-  DECLARE_GiGaFactory     (    GiGaEventActionEmpty    ) ;
   DECLARE_GiGaFactory     (    GiGaEventActionDraw     ) ;
   DECLARE_GiGaFactory     (    GiGaEventActionSequence ) ;
   DECLARE_GiGaFactory     (    GiGaEventActionCommand  ) ;
