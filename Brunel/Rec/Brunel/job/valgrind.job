@@ -42,7 +42,6 @@ setenv MYJOBROOT ~/newmycmt/Rec/Brunel/$Bversion
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
 # in BATCH, location of executable has to be given explicitly
-  setenv MYJOBROOT ~/newmycmt/Rec/Brunel/v15r4
 else
 # in interactive set WORKDIR to submission directory
   set WORKDIR = $PWD
