@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingTool.cpp,v 1.5 2002-09-10 07:44:35 odie Exp $
+// $Id: SingleParticleTaggingTool.cpp,v 1.6 2002-09-20 12:09:05 odie Exp $
 #include <algorithm>
 #include <iomanip>
 
@@ -233,9 +233,21 @@ tagExcludingFromList( const Particle &theB,
   ParticleVector::const_iterator i;
   ParticleVector::iterator k;
   log << MSG::DEBUG << "Building prefiltered list of candidates" << endreq;
+  int n = 0;
   for( i = theExcluded.begin(); i != theExcluded.end(); i++ )
-    if( (k = std::find(parts.begin(), parts.end(), *i)) != parts.end() )
+  {
+    bool kill = false;
+    for( k = parts.begin(); k != parts.end(); k++ )
+      if( (*i)->origin() != NULL && (*i)->origin() == (*k)->origin() )
+      {
+        n++;
+        kill = true;
+        break;
+      }
+    if( kill )
       parts.erase( k );
+  }
+  log << MSG::DEBUG << "Number of particles removed: " << n << endreq;
 
   tagFromList( theB, parts, thePrimVtx, theTag );
 }
@@ -252,10 +264,22 @@ tagExcludingFromList( const Particle &theB,
   ParticleVector parts(theEvent.begin(),theEvent.end());
   ParticleVector::const_iterator i;
   ParticleVector::iterator k;
+  int n = 0;
   log << MSG::DEBUG << "Building prefiltered list of candidates" << endreq;
   for( i = theExcluded.begin(); i != theExcluded.end(); i++ )
-    if( (k = std::find(parts.begin(), parts.end(), *i)) != parts.end() )
+  {
+    bool kill = false;
+    for( k = parts.begin(); k != parts.end(); k++ )
+      if( (*i)->origin() != NULL && (*i)->origin() == (*k)->origin() )
+      {
+        n++;
+        kill = true;
+        break;
+      }
+    if( kill )
       parts.erase( k );
+  }
+  log << MSG::DEBUG << "Number of particles removed: " << n << endreq;
 
   tagFromList( theB, parts, thePrimVtx, theTag );
 }

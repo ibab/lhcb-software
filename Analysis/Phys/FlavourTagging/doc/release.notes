@@ -4,6 +4,21 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2002-09-20 - Olivier Dormond
+ - requirement: added DaVinciMCTools v3r* for the monitoring.
+ - FlavourTagging.opts: Changed particle maker to Charged and "All".
+ -                      Changed measured Z cut to more closely match the VELO.
+ -                      Added setting for the FlavourTaggingDebug algorithm.
+ - FlavourTaggingAlgorithm: Added a property 'FirstOnly' (default to false)
+     which will let the tagging only use the first B in each hypo location.
+     The idea is to have a workaround for the strange behaviour of the
+     SelectBs2mumu algo which produces n^2 identical Bs where n is the number
+     of primary vertices.
+ - SingleParticleTaggingTool: Fixed the removing of the B decay products from
+     the event by comparing the ProtoParticles. It could be replaced by the
+     CheckOverlap tool when commonly available.
+ - Added a FlavourTaggingDebug algorithm which dumps the B and the event.
+
 ! 2002-09-13 - Gloria Corti
  - Remove use of PhysEvent, update version of use used packages to be
    consistent with DaVinci v6r0 and set version to v3r0

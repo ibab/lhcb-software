@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.6 2002-09-10 07:44:35 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.7 2002-09-20 12:09:05 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -41,6 +41,7 @@ FlavourTaggingAlgorithm::FlavourTaggingAlgorithm( const std::string& name,
                   m_primVertices_location = VertexLocation::Primary );
   declareProperty("DesktopName", m_pDesktop_name = "PhysDesktop");
   declareProperty("TaggingTool", m_taggingTool_name = "OrderedTaggingTool");
+  declareProperty("FirstOnly", m_only_one = false);
 }
 
 //=============================================================================
@@ -112,8 +113,23 @@ StatusCode FlavourTaggingAlgorithm::execute() {
           << *loc_iter << "'. Skipping it!" << endreq;
       continue;
     }
-    hypothesis.insert( hypothesis.end(),
-                       keyed_hypothesis->begin(), keyed_hypothesis->end() );
+    Particles::const_iterator pi;
+    bool include_it = true;
+    for( pi = keyed_hypothesis->begin(); pi != keyed_hypothesis->end(); pi++ )
+    {
+      if( !(*pi)->particleID().hasBottom() )
+      {
+        log << MSG::VERBOSE << "Skipping a " << (*pi)->particleID().pid()
+            << endreq;
+        continue;
+      }
+      if( include_it )
+      {
+        hypothesis.push_back( *pi );
+        if( m_only_one )
+          include_it = false;
+      }
+    }
   }
   if( hypothesis.size() == 0 )
   {
@@ -149,12 +165,6 @@ StatusCode FlavourTaggingAlgorithm::execute() {
   ParticleVector::const_iterator hi;
   for( hi=hypothesis.begin(); hi!=hypothesis.end(); hi++ )
   {
-    if( !(*hi)->particleID().hasBottom() )
-    {
-      log << MSG::VERBOSE << "Skipping a " << (*hi)->particleID().pid()
-          << endreq;
-      continue;
-    }
     m_n_B++;
     log << MSG::DEBUG << "About to tag a " << (*hi)->particleID().pid()
         << endreq;

@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.h,v 1.3 2002-09-05 08:16:48 odie Exp $
+// $Id: FlavourTaggingAlgorithm.h,v 1.4 2002-09-20 12:09:05 odie Exp $
 #ifndef FLAVOURTAGGINGALGORITHM_H 
 #define FLAVOURTAGGINGALGORITHM_H 1
 
@@ -36,6 +36,8 @@ private:
   int m_n_B;
   int m_n_b_tags;
   int m_n_bbar_tags;
+
+  bool m_only_one;
 
   std::string m_pDesktop_name;
   std::string m_taggingTool_name;

@@ -3,11 +3,12 @@
 //FlavourTaggingAlgorithm.HypothesisLocations = { "/Event/Phys/B0" };
 //FlavourTaggingAlgorithm.PrimaryVerticesLocation = "";
 //FlavourTaggingAlgorithm.DesktopName = "PhysDesktop";
+//FlavourTaggingAlgorithm.FirstOnly = false;
 
 FlavourTaggingAlgorithm.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
+//FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/Prod" };
 //FlavourTaggingAlgorithm.PhysDesktop.OutputLocation = "/Event/Phys/Prod/Particles";
-FlavourTaggingAlgorithm.PhysDesktop.ChargedParticleMaker.ParticleNames = {"e+", "e-", "mu+", "mu-", "K+", "K-"};
-FlavourTaggingAlgorithm.PhysDesktop.ChargedParticleMaker.ConfLevelCuts = {0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
+FlavourTaggingAlgorithm.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};
 
 //FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/User" };
 //FlavourTaggingAlgorithm.TaggingTool = "OrderedTaggingTool";
@@ -35,8 +36,8 @@ FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTag
 FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1; // -1 == disable
 FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 4500; // -1 == disable
 FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1; // -1 == disable
-FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -2000;
-FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 1000;
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -315;
+FlavourTaggingAlgorithm.OrderedTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 750;
 
 // --- Electron tags
 
@@ -56,8 +57,8 @@ FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.Particl
 FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1; // -1 == disable
 FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 8000; // -1 == disable
 FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1; // -1 == disable
-FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -2000;
-FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 1000;
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -315;
+FlavourTaggingAlgorithm.OrderedTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 750;
 
 // --- Kaon tags
 
@@ -77,5 +78,11 @@ FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTag
 FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1; // -1 == disable
 FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 2000; // -1 == disable
 FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1; // -1 == disable
-FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -2000;
-FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 1000;
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -315;
+FlavourTaggingAlgorithm.OrderedTaggingTool.KaonTagger.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 750;
+
+// --- Debuging
+
+FlavourTaggingDebug.PhysDesktop.InputLocations = { "/Event/Phys/B0" };
+FlavourTaggingDebug.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
+FlavourTaggingDebug.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};
