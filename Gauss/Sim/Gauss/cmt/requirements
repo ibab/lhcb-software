@@ -1,4 +1,4 @@
-package Gauss
+]package Gauss
 version v12r2
 
 # =============================================================================
@@ -40,7 +40,7 @@ use CaloDetXmlCnv       v2r3    Det
 use GeneratorModules    v8r2    Gen
 
 #get information from DBASE and PARAM 
-use XmlDDDB             v17r1   Det   -no_auto_imports
+use XmlDDDB             v17r1p1 Det   -no_auto_imports
 use FieldMap            v4r3          -no_auto_imports
 use DecFiles            v1r0    Gen   -no_auto_imports
 use ParamFiles          v1r2    $(LHCb_release_area)/PARAM   -no_auto_imports
