@@ -1,0 +1,19 @@
+!-----------------------------------------------------------------------------
+! Package     : DAVINCI_v8r3/DaVinciSys
+! Responsible : Gloria CORTI
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+!====================  DaVinciSys v8r3 2003-06-27 ===========================
+! 2003-06-27 - Gloria CORTI
+ - use DaVinciTools        v8r1p2
+       PhysSelections      v6r0p1
+       GlobalReco          v4r0p1
+       PrimVtx             v2r0p1
+       PhysSelSys          v5r4
+       Bd2DstarPi          v1r1
+       Bd2Pi0Pi0           v1r0
+       Bs2PhiEtac          v1r2
+       DaVinci             v8r3
+       TriggerFilter       v1r4
+       DecayPresel         v1r5
