@@ -1,6 +1,6 @@
 // ============================================================================
-#ifndef       GaussTools_GaussStepAction_H
-#define       GaussTools_GaussStepAction_H 1 
+#ifndef       GaussTools_CutsStepAction_H
+#define       GaussTools_CutsStepAction_H 1 
 // ============================================================================
 // include files 
 // GiGa
@@ -8,16 +8,16 @@
 // forward declarations 
 template <class TYPE> class GiGaFactory;
 
-/** @class GaussStepAction GaussStepAction.h
+/** @class CutsStepAction CutsStepAction.h
  *   
  *  @author  Witek Pokorski
  *  @date    1/11/2002
  */
 
-class GaussStepAction: virtual public GiGaStepActionBase
+class CutsStepAction: virtual public GiGaStepActionBase
 {
   /// friend factory for instantiation
-  friend class GiGaFactory<GaussStepAction>;
+  friend class GiGaFactory<CutsStepAction>;
 
 protected:
 
@@ -29,13 +29,13 @@ protected:
    *  @param name name of the object
    *  @param parent  pointer to parent object
    */
-  GaussStepAction
+  CutsStepAction
   ( const std::string& type   ,
     const std::string& name   ,
     const IInterface*  parent ) ;
   
   /// destructor (virtual and protected)
-  virtual ~GaussStepAction();
+  virtual ~CutsStepAction();
 
 public:
   
@@ -47,18 +47,17 @@ public:
   
 private:
 
-  GaussStepAction(); ///< no default constructor
-  GaussStepAction( const GaussStepAction& ); ///< no copy  
-  GaussStepAction& operator=( const GaussStepAction& ) ; ///< no = 
+  CutsStepAction(); ///< no default constructor
+  CutsStepAction( const CutsStepAction& ); ///< no copy  
+  CutsStepAction& operator=( const CutsStepAction& ) ; ///< no = 
 
-  bool m_storePointsOfSecondaries;
-  bool m_storeNotDeltaE;
-  bool m_storeHitPoints;
+  double m_trcuteg;
+  double m_trcuthadr;
 };
 // ============================================================================
 
 // ============================================================================
 // The END 
 // ============================================================================
-#endif  ///<    GaussTools_GaussStepAction_H
+#endif  ///<    GaussTools_CutsStepAction_H
 // ============================================================================

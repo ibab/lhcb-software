@@ -7,7 +7,7 @@
 !=========================== GaussTools v6r1 2002-02-14 =====================
 
 ! 2003-02-14 - Witek Pokorski
-  GaussStepAction extended with tracking cuts
+  added CutsStepAction with tracking cuts
   dynamic_cast replaced by static_cast in a few places for optimisation
   GiGaPhysListModular - added production cuts for electrons (to supress
                         delta rays) 
