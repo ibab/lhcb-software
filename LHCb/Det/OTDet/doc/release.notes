@@ -1,16 +1,19 @@
-! $Id: release.notes,v 1.4 2002-06-06 08:53:38 jvantilb Exp $
+! $Id: release.notes,v 1.5 2002-06-10 15:58:12 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
+
+! 2002-06-07 - Marco Cattaneo
+  - Change version to v2r0
 
 ! 2002-06-06 Jeroen van Tilburg
   - OTLayer: added methods to check in which monolayer a straw is located 
     and methods to check if module is in top/bottom area.
     Removed obsolete 'get' methods.
   - DeOTDetector: renamed method from numStation() to numStations(). 
-    Old method will be removed later. Added method which returns the 
-    number of the first station with OT technology.
+    Added method which returns the number of the first station with 
+    OT technology.
 
-! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OTDet v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+!========================= OTDet v1r1 2002-05-27 =========================
 ! 2002-05-27 - Olivier Callot
  - Make private the methods of OTLayer which are not used by OTAlgorithms or
    FwTrack or TrFitEvent. 

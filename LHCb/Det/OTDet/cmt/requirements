@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.1.1.1 2002-05-26 22:36:33 jvantilb Exp $
+# $Id: requirements,v 1.2 2002-06-10 15:58:11 cattanem Exp $
 # =========================================================================
 
 package  OTDet 
-version  v1r0
+version  v2r0
 
 # =============== structure ===============================================	
 branches         src cmt doc OTDet 
@@ -33,7 +33,6 @@ apply_pattern    linker_path
 private
 apply_pattern    package_Cshlibflags
 apply_pattern    package_Lshlibflags
-macro_append     OTDetLib_shlibflags " $(DetDesc_linkopts) "
+macro_append     OTDetLib_shlibflags  " $(DetDesc_linkopts) "
 macro_append     OTDetLib_shlibflags  " $(GaudiKernel_linkopts) "
 macro_append     OTDetLib_shlibflags  " $(CLHEP_linkopts) "
-

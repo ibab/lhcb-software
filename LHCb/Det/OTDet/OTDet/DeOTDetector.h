@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.5 2002-06-06 08:53:38 jvantilb Exp $
+// $Id: DeOTDetector.h,v 1.6 2002-06-10 15:58:11 cattanem Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -59,9 +59,6 @@ public:
   unsigned int firstOTStation()  { return m_firstOTStation; }
 
   std::vector<OTLayer*> allLayers() const { return m_layers; }
-
-  /// Obsolete method
-  unsigned int numStation()  { return m_numStations; }
 
 private:
 
