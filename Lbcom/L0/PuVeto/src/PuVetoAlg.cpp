@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.16 2004-12-07 19:56:55 dhcroft Exp $
+// $Id: PuVetoAlg.cpp,v 1.17 2004-12-08 08:08:14 dhcroft Exp $
 // Include files 
 #include <math.h>
 // from Gaudi
@@ -214,7 +214,7 @@ StatusCode PuVetoAlg::execute() {
       unsigned int sfired           = 4 * ( (*itFe)->strip()/4 ) + 2;
       VeloChannelID fired(sensor,sfired);
 
-      unsigned short int rawhit = rawEncode(sensor,(*itFe)->strip());
+      unsigned short int rawhit = rawEncode(sensor-128,(*itFe)->strip());
       rawpudata.push_back(rawhit);
       
       logmsg << MSG::VERBOSE << sensor << " " << (*itFe)->strip() << " " 

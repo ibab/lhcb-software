@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.29 2004-12-08 07:50:43 cattanem Exp $
+! $Id: release.notes,v 1.30 2004-12-08 08:08:14 dhcroft Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
+
+! 2004-12-08 - David Hutchcroft
+ - Put sensor numbering back to 0-3 in RawBuffer
 
 !========================= PuVeto v6r0 2004-12-07 =========================
 ! 2004-12-07 - David Hutchcroft
