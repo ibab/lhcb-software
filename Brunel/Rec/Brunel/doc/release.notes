@@ -8,6 +8,7 @@ Purpose: LHCb reconstruction program
  To (re)process data produced with dbase v248r4, use dbase v248r5 and Brunelv248r5.opts
  To (re)process data produced with dbase v250r0, use dbase v251r0 and Brunelv251r0.opts
  To (re)process data produced with dbase v250r1, use dbase v251r1 and Brunelv251r1.opts
+ The new Rich tuning is not supported for dbase v249r*
 
  - New tuning:
    . Modified the PuVeto peakValue method to improve peak finding (PuVeto v5r0)
@@ -21,6 +22,7 @@ Purpose: LHCb reconstruction program
    . Improvements to L0 Pi0 trigger (L0Calo v6r3)
    . Use TT1 for VTT and Upstream track association to MC (TrAssociators v3r3)
    . New tuning for Rich, use VTT tracks (recrich v7r3, dbase v251r*/v248r5)
+     (not available for test data produced with dbase v249r*)
 
  - New features:
    . Add support for dbase v250r0, v250r1 (XmlDDDB v14r1, Seeding v2r3)
