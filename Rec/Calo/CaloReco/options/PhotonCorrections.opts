@@ -1,8 +1,11 @@
-// $Id: PhotonCorrections.opts,v 1.1.1.1 2002-11-13 20:46:44 ibelyaev Exp $
+// $Id: PhotonCorrections.opts,v 1.2 2002-11-15 14:26:50 beneyton Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:44  ibelyaev
+// new package 
+//
 // ============================================================================
 
 /** @file 
@@ -13,19 +16,6 @@
  */
 
 ToolSvc.CaloSPhoton.Detector      = "/dd/Structure/LHCb/Ecal";
-ToolSvc.CaloSPhoton.SCorrectionsX = 
-{ "CaloSCorrectionDoubleTanh/CaloSCorrectionDoubleTanh_area_0",
-  "CaloSCorrectionDoubleTanh/CaloSCorrectionDoubleTanh_area_1",
-  "CaloSCorrectionDoubleTanh/CaloSCorrectionDoubleTanh_area_2"
-};
-ToolSvc.CaloSPhoton.SCorrectionBorder = "no" ; // "CaloSCorrectionCellCenter";
-ToolSvc.CaloSCorrectionDoubleTanh_area_0.Coeff = { 0.46 , 28.0 , 0.50 } ;
-ToolSvc.CaloSCorrectionDoubleTanh_area_1.Coeff = { 0.50 , 12.5 , 1.36 } ;
-ToolSvc.CaloSCorrectionDoubleTanh_area_2.Coeff = { 0.52 ,  9.3 , 2.10 } ;
-
-ToolSvc.CaloLPhoton.Cste    = 78.59;
-ToolSvc.CaloLPhoton.Zecal   = 12490.;
-ToolSvc.CaloLPhoton.LogCste = 12.04;
 
 #include "$CALORECOOPTS/PrsCorrG.opts"
 
