@@ -261,11 +261,6 @@ EvtComplex EvtDDalitz::amplDtoK0PiPi(EvtVector4R p4_p,  EvtVector4R moms1,
 
 
 void EvtDDalitz::decay( EvtParticle *p){
-
-  std::string theBDecayName("") ;
-  if ( p -> getParent () ) {
-    EvtDecayTable::GetDecayFunc( p->getParent() ) -> getName( theBDecayName ) ;
-  }
   
   //added by Lange Jan4,2000
   static EvtId BP = EvtPDL::getId("B+");
@@ -285,6 +280,15 @@ void EvtDDalitz::decay( EvtParticle *p){
   static EvtId PI0=EvtPDL::getId("pi0");
 
   double oneby2 = 0.707106782;
+  
+  std::string theBDecayName("") ;
+  if ( p -> getParent () ) {
+    EvtId parId = p -> getParent() -> getId ( ) ;
+    if ( ( BP == parId ) || ( BM == parId ) || ( B0 == parId ) || 
+         ( B0B == parId ) )
+      EvtDecayTable::GetDecayFunc( p->getParent() ) 
+        -> getName( theBDecayName ) ;
+  }
 
 //same structure for all of these decays
 
