@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCnvSvc.cpp,v 1.3 2001-01-25 12:12:30 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCnvSvc.cpp,v 1.4 2001-01-25 14:19:55 ibelyaev Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -138,7 +138,8 @@ double XmlCnvSvc::eval( const char* expr, bool check ) const {
     std::string e(expr);
     unsigned int pos = e.find_last_of('*');
     // set the unit to what come after the '*' or the complete expresion
-    std::string unit = (pos == -1) ? e : e.substr(pos + 1);
+    // std::string unit = (pos == -1 ) ? e : e.substr(pos + 1);
+    std::string unit = ( pos == std::string::npos ) ? e : e.substr(pos + 1);
     // remove leading blanks
     pos = unit.find_first_not_of(' ');
     unit = unit.substr(pos);

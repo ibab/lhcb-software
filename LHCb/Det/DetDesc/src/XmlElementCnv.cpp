@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlElementCnv.cpp,v 1.4 2001-01-25 12:12:30 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlElementCnv.cpp,v 1.5 2001-01-25 14:19:55 ibelyaev Exp $
 #include "DetDesc/XmlElementCnv.h"
 #include "DetDesc/XmlCnvException.h"
 
@@ -257,9 +257,9 @@ void XmlElementCnv::startElement( const char* const name,
 // XML characters
 // -----------------------------------------------------------------------
 void XmlElementCnv::characters(
-                                const char* const  chars
-                               ,const unsigned int length
-                              )
+			       const char* const  chars , 
+			       const unsigned int /* length */
+			       )
 {
   MsgStream log(msgSvc(), "XmlElementCnv" );
   log << MSG::VERBOSE << "\"" << chars << "\"" << endreq;
@@ -269,8 +269,9 @@ void XmlElementCnv::characters(
 // XML ignorableWhitespaces
 // -----------------------------------------------------------------------
 void XmlElementCnv::ignorableWhitespace(
-                                         const char* const chars
-                                        ,const unsigned int length )
+					const char* const chars , 
+                                        const unsigned int /* length */ 
+					)
 {
   MsgStream log(msgSvc(), "XmlElementCnv" );
   log << MSG::VERBOSE << "\"" << chars << "\"" << endreq;
