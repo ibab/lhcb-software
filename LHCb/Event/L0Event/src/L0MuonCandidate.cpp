@@ -1,4 +1,4 @@
-// $Id: L0MuonCandidate.cpp,v 1.2 2002-04-04 07:17:24 cattanem Exp $
+// $Id: L0MuonCandidate.cpp,v 1.3 2002-05-07 08:18:07 atsareg Exp $
 
 #include <cmath>
 #include <vector>
@@ -28,7 +28,7 @@ double L0MuonCandidate::pt() const
 {
 
   int tmp = (m_bitcode & L0MuonBase::MaskPt) >> L0MuonBase::ShiftPt;
-  double rtmp = L0MuonBase::PT_BIN_WIDTH * ((double)tmp + 0.5);
+  double rtmp = L0MuonBase::PT_BIN_WIDTH * ((double)tmp);
 
   int sign = (m_bitcode & L0MuonBase::MaskPtSign)
                >> L0MuonBase::ShiftPtSign;
@@ -60,7 +60,10 @@ void L0MuonCandidate::setPt(double pt) {
   }
   unsigned int roundedPt = int((fabs(pt)+L0MuonBase::PT_BIN_WIDTH/2.)/
                                               L0MuonBase::PT_BIN_WIDTH);
-  if ( roundedPt > L0MuonBase::BitsPt ) roundedPt = L0MuonBase::BitsPt;
+  if ( roundedPt > ( 1<< L0MuonBase::BitsPt ) ) roundedPt = L0MuonBase::BitsPt;
+  
+  //cout << "L0MuonCandidate::setPt " << pt << " " << roundedPt << endl;
+  
   setBit(roundedPt,L0MuonBase::ShiftPt,L0MuonBase::MaskPt);
   
 }
