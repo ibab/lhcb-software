@@ -16,7 +16,7 @@
        <enum
         desc="Define the bank types for L1 trigger buffer"
         name="BankType"
-        value="VeloR=0, VeloPhi, TT, L0DU, L0Calo"
+        value="VeloR=0, VeloPhi, TT, L0DU, L0Calo, L0Muon"
         access="PUBLIC"
        />
        <base name="DataObject"/>
