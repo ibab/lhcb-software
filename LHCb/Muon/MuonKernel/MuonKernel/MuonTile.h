@@ -1,4 +1,4 @@
-// $Id: MuonTile.h,v 1.2 2002-02-18 09:22:54 atsareg Exp $
+// $Id: MuonTile.h,v 1.3 2002-05-07 07:01:59 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONTILE_H
 #define MUONKERNEL_MUONTILE_H     1
@@ -13,9 +13,8 @@
 */ 
 
 #include "MuonKernel/MuonTileID.h"
-#include "MuonKernel/IMuonTile.h"
 
-class MuonTile : virtual public IMuonTile {
+class MuonTile {
 
 public:       
     
@@ -29,29 +28,44 @@ public:
     virtual ~MuonTile() {}
     
     /// Accessor to the tile's MuonTileID
-    virtual MuonTileID id() const {return m_muonid; }
+    virtual MuonTileID& id()  {return m_muonid; }
     
     /// Accessor to the tile's key
     virtual long key() const {return m_muonid.key(); }
 
-    virtual bool operator==(const MuonTileID& mid) const {
-      return id() == mid;
+    virtual bool operator==(const MuonTileID& mid) {
+      return m_muonid == mid;
     }
     
     /// Accessor to the tile's MuonTileID station
-    virtual unsigned int station() const {return id().station();}
+    virtual unsigned int station() {return m_muonid.station();}
     
     /// Accessor to the tile's MuonTileID quarter
-    virtual unsigned int quarter() const {return id().quarter();}
+    virtual unsigned int quarter() {return m_muonid.quarter();}
     
     /// Accessor to the tile's MuonTileID region
-    virtual unsigned int region() const {return id().region();}
+    virtual unsigned int region() {return m_muonid.region();}
     
     /// Accessor to the tile's MuonTileID nX
-    virtual unsigned int nX() const {return id().nX();}
+    virtual unsigned int nX() {return m_muonid.nX();}
     
     /// Accessor to the tile's MuonTileID nY
-    virtual unsigned int nY() const {return id().nY();}
+    virtual unsigned int nY() {return m_muonid.nY();}
+    
+    /// Accessor to the tile's MuonTileID station
+    virtual void setStation(int sta) { m_muonid.setStation(sta);}
+    
+    /// Accessor to the tile's MuonTileID quarter
+    virtual void setQuarter(int q) { m_muonid.setQuarter(q);}
+    
+    /// Accessor to the tile's MuonTileID region
+    virtual void setRegion(int r) { m_muonid.setRegion(r);}
+    
+    /// Accessor to the tile's MuonTileID nX
+    virtual void setX(int x) { m_muonid.setX(x);}
+    
+    /// Accessor to the tile's MuonTileID nY
+    virtual void setY(int y) { m_muonid.setY(y);}
     
 private:
 
