@@ -49,14 +49,20 @@ def _OpsCut ( cut , ops ) :
     cut. __rand__  = ops. __rand__
     cut.   __or__  = ops.   __or__
     cut.  __ror__  = ops.  __ror__
-    
+
+def _CALL_ ( self , obj ) :
+    if not obj : return self.__CALL__(     )
+    return              self.__CALL__( obj ) 
+
 def _CallsFun ( fun , calls ) :
     " define call operators "
-    fun. __call__ =  calls. __fcall__
+    fun. __CALL__ =  calls. __fcall__
+    fun. __call__ = _CALL_
     
 def _CallsCut ( cut , calls ) :
     " define call operators "
-    cut. __call__ =  calls. __ccall__ 
+    cut. __CALL__ =  calls. __ccall__ 
+    cut. __call__ = _CALL_
     
 # import operators 
 _OpsP     = gaudi.gbl.Bender.Operators    ( 'const Particle*'   )
