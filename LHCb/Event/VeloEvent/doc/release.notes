@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.19 2002-07-04 09:20:54 mato Exp $
+! $Id: release.notes,v 1.20 2002-07-09 18:26:04 cattanem Exp $
 package Event/VeloEvent
 package manager: C.Parkes
 
+!========================= VeloEvent v11r0 2002-07-09 =========================
 ! 2002-07-04 - Pere Mato
  - Added /include:_<package>_loadRef in <package>_linkopts for Windows
 
