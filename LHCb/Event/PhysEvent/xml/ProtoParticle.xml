@@ -59,6 +59,23 @@
         name="Neutrals"
         place="Rec/ProtoP/Neutrals"
        />
+       <constructor
+        argList="ProtoParticle orig"
+        desc="Copy constructor, note that the original SmartRef are not cloned"
+       />
+       <method
+        name="clone"
+        desc="Clone, note that the original SmartRef are not cloned"
+        type="ProtoParticle*"
+        const="TRUE"
+       />
+       <method
+        desc="Assignment operator, note that the original SmartRef are all kept"
+        name="operator="
+        type="ProtoParticle&amp;"
+       >
+         <arg name="orig" type="ProtoParticle" const='TRUE'/>
+       </method>
        <relation
         name="calo"
         desc="Reference to possible calorimeters result"

@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.2 2002-07-18 17:40:40 gcorti Exp $
+// $Id: ProtoParticle.cpp,v 1.3 2002-07-24 16:20:38 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -15,6 +15,48 @@
 // 2002-07-08 : Gloria Corti
 //-----------------------------------------------------------------------------
 
+//=============================================================================
+// Copy constructor
+//=============================================================================
+ProtoParticle::ProtoParticle(const ProtoParticle& proto)
+  : KeyedObject<int>()
+  , m_pIDDetectors( proto.pIDDetectors() )
+  , m_pIDInfo( proto.pIDInfo() )
+  , m_pIDhistory( proto.pIDhistory() )
+  , m_calo( proto.calo() )
+  , m_track( proto.track() )
+  , m_richPID( proto.richPID() )
+  , m_muonPID( proto.muonPID() )
+{
+
+}
+
+//=============================================================================
+// Clone 
+//=============================================================================
+ProtoParticle* ProtoParticle::clone() const
+{
+  return new ProtoParticle(*this);
+}
+
+//=============================================================================
+// Assignment operator
+//=============================================================================
+ProtoParticle& ProtoParticle::operator=(const ProtoParticle& orig) {
+  
+  // protect against self assignement
+  if( this != &orig ) {
+    m_pIDDetectors = orig.pIDDetectors();
+    m_pIDInfo = orig.pIDInfo();
+    m_pIDhistory = orig.pIDhistory();
+    m_calo = orig.calo(); 
+    m_track = orig.track();
+    m_richPID = orig.richPID();
+    m_muonPID = orig.muonPID();
+  }
+  return *this;
+}    
+    
 //=============================================================================
 // Return probability for specified PDG id code
 //=============================================================================
