@@ -1,8 +1,11 @@
-// $Id: GiGaSetSimAttributes.cpp,v 1.6 2003-06-03 17:45:06 ibelyaev Exp $
+// $Id: GiGaSetSimAttributes.cpp,v 1.7 2003-07-07 16:57:30 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/06/03 17:45:06  ibelyaev
+//  fix for the problem, reported by P.Robbe
+//
 // Revision 1.5  2003/05/30 14:30:41  ibelyaev
 //  add the propagation of UserLimits along the geoemtry tree
 //
@@ -138,7 +141,8 @@ G4LogicalVolume* GiGaSetSimAttributes::g4volume
          store -> begin() ; store->end() != ivolume ; ++ivolume ) 
     {
       G4LogicalVolume* vol = *ivolume ;
-      if( 0 != vol && vol->GetName() == address ) { return vol ; }
+      std::string G4VolName = vol->GetName();
+      if( 0 != vol && G4VolName == address ) { return vol ; }
     }
   Error ( "g4volume('" + address + "'): volume is not found!" ) ;
   return 0 ;

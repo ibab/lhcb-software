@@ -66,7 +66,7 @@ private:
   double m_ncut;
   double m_mcut;
   bool m_killloops;
-  double m_maxsteps;
+  int m_maxsteps;
   double m_minstep;
 };
 // ============================================================================

@@ -1,8 +1,13 @@
+
 !-----------------------------------------------------------------------------
 ! Package       : Sim/GaussTools
 ! Responsible	: Witold Pokorski
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
+
+!======================== GaussTools v8r1 2003-07-07 =======================
+! 2003-07-07 - Florence RANJARD
+ - fix for gcc32 (S.Ponce)
 
 !======================== GaussTools v8r0 2003-06-18 =========================
 
