@@ -1,4 +1,4 @@
-// $Id: DebugTool.cpp,v 1.2 2002-05-24 20:56:14 gcorti Exp $
+// $Id: DebugTool.cpp,v 1.3 2002-06-26 14:28:05 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -169,11 +169,11 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
     case M:         log << std::setw(m_fWidth) << "M";         break;
     case P:         log << std::setw(m_fWidth) << "P";         break;
     case Pt:        log << std::setw(m_fWidth) << "Pt";        break;
-    case Px:        log << std::setw(m_fWidth) << "Pz";        break;
-    case Py:        log << std::setw(m_fWidth) << "Pz";        break;
+    case Px:        log << std::setw(m_fWidth) << "Px";        break;
+    case Py:        log << std::setw(m_fWidth) << "Py";        break;
     case Pz:        log << std::setw(m_fWidth) << "Pz";        break;
-    case Vx:        log << std::setw(m_fWidth) << "Vz";        break;
-    case Vy:        log << std::setw(m_fWidth) << "Vz";        break;
+    case Vx:        log << std::setw(m_fWidth) << "Vx";        break;
+    case Vy:        log << std::setw(m_fWidth) << "Vy";        break;
     case Vz:        log << std::setw(m_fWidth) << "Vz";        break;
     case theta:     log << std::setw(m_fWidth) << "theta";     break;
     case phi:       log << std::setw(m_fWidth) << "phi";       break;
@@ -188,11 +188,11 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
       case M:       log << std::setw(m_fWidth) << "M";         break;
       case P:       log << std::setw(m_fWidth) << "P";         break;
       case Pt:      log << std::setw(m_fWidth) << "Pt";        break;
-      case Px:      log << std::setw(m_fWidth) << "Pz";        break;
-      case Py:      log << std::setw(m_fWidth) << "Pz";        break;
+      case Px:      log << std::setw(m_fWidth) << "Px";        break;
+      case Py:      log << std::setw(m_fWidth) << "Py";        break;
       case Pz:      log << std::setw(m_fWidth) << "Pz";        break;
-      case Vx:      log << std::setw(m_fWidth) << "Vz";        break;
-      case Vy:      log << std::setw(m_fWidth) << "Vz";        break;
+      case Vx:      log << std::setw(m_fWidth) << "Vx";        break;
+      case Vy:      log << std::setw(m_fWidth) << "Vy";        break;
       case Vz:      log << std::setw(m_fWidth) << "Vz";        break;
       case theta:   log << std::setw(m_fWidth) << "theta";     break;
       case phi:     log << std::setw(m_fWidth) << "phi";       break;
@@ -357,9 +357,10 @@ void DebugTool::printInfo( const std::string &prefix, const MCParticle *part,
             p = m_ppSvc->findByStdHepID( reco->particleID().pid() );
             std::string p_name = p ? p->particle() : "N/A";
             int p_len = p_name.length();
-            if( p_len > m_fWidth )
-              p_len = m_fWidth;
-            log << p_name << std::string(m_fWidth-p_name.length(), ' ');
+            if( p_len > m_fWidth-1 )
+              p_len = m_fWidth-2;
+            log << ' ' << p_name
+                << std::string(m_fWidth-1-p_len, ' ');
           }
           break;
         case E:
