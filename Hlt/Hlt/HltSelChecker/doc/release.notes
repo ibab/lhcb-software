@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-01-18 - P. Koppenburg
+  - options/Plots.opts
+    . Add more wide-mass plots 
+
 ! 2005-01-17 - Luis Fernandez
   - src/DecayChainNTuple{h,cpp}
     . Modified properties, MC true decay in the same tree as the reconstructed
