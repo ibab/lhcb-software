@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.92 2004-05-26 14:01:17 pkoppenb Exp $
+! $Id: release.notes,v 1.93 2004-06-02 11:20:54 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+!========================= DaVinciTools v9r5 2004-06-02 ===================
 ! 2004-05-26 - P. Koppenburg
   - src/TrTransporter.cpp
     . Change FATAL printouts to ERROR

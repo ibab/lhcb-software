@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.cpp,v 1.7 2002-11-13 16:21:14 gcorti Exp $
+// $Id: UnconstVertexFitter.cpp,v 1.8 2004-06-02 11:20:54 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -123,18 +123,18 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector&
   ParticleVector::const_iterator iterP;
   SmartRefVector<Particle>::iterator itMother;
   for(iterP = pList.begin(); iterP != pList.end(); iterP++) {
+    log << MSG::VERBOSE << "Using " << (*iterP)->particleID().pid() << " " << 
+      (*iterP)->momentum()  << endreq ;
+    
     if ((*iterP)->isResonance()){
       for ( itMother = (*iterP)->endVertex()->products().begin();
             itMother != (*iterP)->endVertex()->products().end(); itMother++ ){
         particleList.push_back(*itMother);
-
       }
  
     }
     else{
       particleList.push_back(*iterP);
-      
-
     }
   }
   StatusCode sc = doFitVertex(particleList,myVertex);
