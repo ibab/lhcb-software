@@ -77,6 +77,7 @@ class IMCDecayFinder;
  *  Note: use the run and event number as a key to plot reconstructed versus true decay variables
  *
  *  TODO: 
+ *  - adapt to gammas ...
  *  - for gammas: re-valuate 4-vector at at secondary vertex for online and offline
  *  - for gammas: get MC association
  *  - rewrite to have MC truth in the same Tree 
@@ -103,6 +104,7 @@ private:
   // Properties
   std::string m_Decay; // Decay for which the ntuples will be created 
   std::string m_ntupleName; // Name of the TDirectory
+  bool m_useRichPID;
   std::string m_richPIDLocation;
 
   // Flag to book the NTuple only once

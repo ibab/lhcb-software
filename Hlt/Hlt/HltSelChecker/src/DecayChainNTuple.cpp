@@ -58,7 +58,8 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   declareProperty( "MCNtupleName", m_MCntupleName = "FILE1/MyMCSelection" );
 #endif
   declareProperty( "NtupleName", m_ntupleName = "FILE1/MySelection" );
-  declareProperty( "RichPIDLocation",  m_richPIDLocation = "Rec/Rich/TrgPIDs" );
+  declareProperty( "UseRichPID", m_useRichPID = false);
+  declareProperty( "RichPIDLocation", m_richPIDLocation = "Rec/Rich/TrgPIDs" );
 }
 //=============================================================================
 // Destructor
@@ -525,8 +526,38 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
   double xTrack = 0.0;
   double yTrack = 0.0;
   double zTrack = 0.0;
+  
+  // set some default values
+  m_dllepi[m_n] = -999.;
+  m_dllmupi[m_n] = -999.;
+  m_dllkpi[m_n] = -999.;
+  m_dllppi[m_n] = -999.;
+  
+  // Global Rich PIDs
+  m_globdllpi[m_n] = -999.;
+  m_globdllk[m_n] = -999.; 
+  
+  m_stateX[m_n] = -999.;
+  m_stateXErr[m_n] = -999.;
+  m_stateY[m_n] = -999.;
+  m_stateYErr[m_n] = -999.;
+  m_stateTX[m_n] = -999.;
+  m_stateTXErr[m_n] = -999.;
+  m_stateTY[m_n] = -999.;
+  m_stateTYErr[m_n] = -999.;
+  m_stateQoverP[m_n] = -999.;
+  m_stateQoverPErr[m_n] = -999.;
+  
+#ifdef MCCheck
+  m_MCstateX[m_n] = -999.;
+  m_MCstateY[m_n] = -999.;
+  m_MCstateTX[m_n] = -999.;
+  m_MCstateTY[m_n] = -999.;
+  m_MCstateQoverP[m_n] = -999.;
+#endif
 
-  if(pporig){ // if there is a protoparticle  
+  if(pporig){ // if there is a protoparticle
+
     // Retrieve Delta log-likelihood values
     // dll(e-pi)
     m_dllepi[m_n] = pporig->detPIDvalue( ProtoParticle::LkhPIDe );
@@ -537,37 +568,32 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
     // dll(p-pi)
     m_dllppi[m_n] = pporig->detPIDvalue( ProtoParticle::LkhPIDp );
 
-    // Global Rich PIDs
-    m_globdllpi[m_n] = -999.;
-    m_globdllk[m_n] = -999.; 
-
     // Error**2 = Variance = sigma**2
 
     // state vector TrStateP closest to IP
     const TrStateP* ClosestTrStateP = pporig->trStateP();
 
-    xTrack = ClosestTrStateP->x();
-    yTrack = ClosestTrStateP->y();
-    zTrack = ClosestTrStateP->z();
+    if(ClosestTrStateP){
+      xTrack = ClosestTrStateP->x();
+      yTrack = ClosestTrStateP->y();
+      zTrack = ClosestTrStateP->z();
+      
+      m_stateX[m_n] = ClosestTrStateP->x();
+      m_stateXErr[m_n] = sqrt(ClosestTrStateP->eX2());
+      m_stateY[m_n] = ClosestTrStateP->y();
+      m_stateYErr[m_n] = sqrt(ClosestTrStateP->eY2());
+      m_stateTX[m_n] = ClosestTrStateP->tx();
+      m_stateTXErr[m_n] = sqrt(ClosestTrStateP->eTx2());
+      m_stateTY[m_n] = ClosestTrStateP->ty();
+      m_stateTYErr[m_n] = sqrt(ClosestTrStateP->eTy2());
+      m_stateQoverP[m_n] = ClosestTrStateP->qDivP();
+      m_stateQoverPErr[m_n] = sqrt(ClosestTrStateP->eQdivP2());
+    }
 
-    m_stateX[m_n] = ClosestTrStateP->x();
-    m_stateXErr[m_n] = sqrt(ClosestTrStateP->eX2());
-    m_stateY[m_n] = ClosestTrStateP->y();
-    m_stateYErr[m_n] = sqrt(ClosestTrStateP->eY2());
-    m_stateTX[m_n] = ClosestTrStateP->tx();
-    m_stateTXErr[m_n] = sqrt(ClosestTrStateP->eTx2());
-    m_stateTY[m_n] = ClosestTrStateP->ty();
-    m_stateTYErr[m_n] = sqrt(ClosestTrStateP->eTy2());
-    m_stateQoverP[m_n] = ClosestTrStateP->qDivP();
-    m_stateQoverPErr[m_n] = sqrt(ClosestTrStateP->eQdivP2());
   }
   else if (TrgT){ // the particle is a Trg track
 
     // Global Rich PIDs
-    m_globdllpi[m_n] = -999.;
-    m_globdllk[m_n] = -999.; 
-
-    // overwrite if available ...
     if(globalPIDs){
       RichPID* globalpid = globalPIDs->object(TrgT->key());    
       if(globalpid){
@@ -584,11 +610,6 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
         m_globdllk[m_n] = globalpid->particleDeltaLL(Rich::Kaon);
       }
     }
-  
-    m_dllepi[m_n] = -999.;
-    m_dllmupi[m_n] = -999.;
-    m_dllkpi[m_n] = -999.;
-    m_dllppi[m_n] = -999.;  
     
     // state closest to track's origin
     const TrgState FirstTrgState = TrgT->firstState();
@@ -596,7 +617,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
     xTrack = FirstTrgState.x();
     yTrack = FirstTrgState.y();
     zTrack = FirstTrgState.z();
-
+    
     m_stateX[m_n] = FirstTrgState.x();
     m_stateXErr[m_n] = sqrt(FirstTrgState.errX2());
     m_stateY[m_n] = FirstTrgState.y();
@@ -607,40 +628,9 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
     m_stateTYErr[m_n] = sqrt(FirstTrgState.errTy2());
     m_stateQoverP[m_n] = FirstTrgState.qOverP();
     m_stateQoverPErr[m_n] = sqrt(FirstTrgState.errQOverP2());
+
   }
   
-  else{ // the particle is composite -> no DLL, no track state
-    
-    m_dllepi[m_n] = -999.;
-    m_dllmupi[m_n] = -999.;
-    m_dllkpi[m_n] = -999.;
-    m_dllppi[m_n] = -999.;
-
-    // Global Rich PIDs
-    m_globdllpi[m_n] = -999.;
-    m_globdllk[m_n] = -999.; 
-
-    m_stateX[m_n] = -999.;
-    m_stateXErr[m_n] = -999.;
-    m_stateY[m_n] = -999.;
-    m_stateYErr[m_n] = -999.;
-    m_stateTX[m_n] = -999.;
-    m_stateTXErr[m_n] = -999.;
-    m_stateTY[m_n] = -999.;
-    m_stateTYErr[m_n] = -999.;
-    m_stateQoverP[m_n] = -999.;
-    m_stateQoverPErr[m_n] = -999.;
-
-#ifdef MCCheck
-    m_MCstateX[m_n] = -999.;
-    m_MCstateY[m_n] = -999.;
-    m_MCstateTX[m_n] = -999.;
-    m_MCstateTY[m_n] = -999.;
-    m_MCstateQoverP[m_n] = -999.;
-#endif
-
-  }
-
 #ifdef MCCheck
   // Compute the extrapolated state vector of the associated MCParticle (x,y,tx,ty,Q/P), tx = dx/dz, ty = dy/dz
   if(isSig){
@@ -1045,9 +1035,11 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 
   //---------------------------------------------  
   RichPIDs* globalPIDs = NULL;
-  globalPIDs = get<RichPIDs>( m_richPIDLocation );
-  if(globalPIDs){
-    debug() << "Found " << globalPIDs->size() << " RichPIDs at " << m_richPIDLocation << endreq;
+  if (m_useRichPID){
+    globalPIDs = get<RichPIDs>( m_richPIDLocation );
+    if(globalPIDs){
+      debug() << "Found " << globalPIDs->size() << " RichPIDs at " << m_richPIDLocation << endreq;
+    }
   }
   //---------------------------------------------  
 
