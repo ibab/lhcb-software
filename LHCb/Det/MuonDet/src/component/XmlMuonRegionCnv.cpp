@@ -1,8 +1,12 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.4 2002-02-21 16:38:44 dhcroft Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.5 2002-03-20 16:43:40 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/02/21 16:38:44  dhcroft
+// Added methods to retrieve the number of the station, region, chamber and gas gap to DeMuonChamber and
+// DeMuonGasGap objects. Modified XmlMuonRegionCnv to fill these parameters when making the objects.
+//
 // Revision 1.3  2002/02/01 18:02:14  dhcroft
 // Fixed overrun errors in sprintf, thanks to Pere
 //
@@ -174,6 +178,21 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
               Number CDATA #REQUIRED
               offset CDATA #REQUIRED
               logvol CDATA #REQUIRED>
+    <!-- Information on the mapping of FE channels to logical channels -->
+    <!-- NFEChamber(X/Y) are the number of channels in x and y
+         across a chamber -->
+    <!-- MergeLogical are the information on which FE channels to merge 
+         into either one or two logical strip (or pads if not crosses) 
+         sets (-1 is no mapping)-->
+    <!ELEMENT ReadoutMap EMPTY>
+    <!ATTLIST ReadoutMap 
+              ReadoutType ( Anode | Cathode ) #REQUIRED
+              NFEChamberX  CDATA #REQUIRED
+              NFEChamberY  CDATA #REQUIRED
+              MergeLogicalX1 CDATA #REQUIRED
+              MergeLogicalY1 CDATA #REQUIRED
+              MergeLogicalX2 CDATA "-1"
+              MergeLogicalY2 CDATA "-1">                  
   */
 
 
@@ -183,6 +202,52 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
       log << MSG::WARNING << "Failed to read chamber" << endreq;
       return sc;
     }
+  } else if("ReadoutMap" == tagName){
+
+    const std::string ReadoutType = 
+      dom2Std (childElement.getAttribute ("ReadoutType"));
+    const std::string NFEChamberX = 
+      dom2Std (childElement.getAttribute ("NFEChamberX"));
+    const std::string NFEChamberY = 
+      dom2Std (childElement.getAttribute ("NFEChamberY"));
+    const std::string MergeLogicalX1 = 
+      dom2Std (childElement.getAttribute ("MergeLogicalX1"));
+    const std::string MergeLogicalY1 = 
+      dom2Std (childElement.getAttribute ("MergeLogicalY1"));
+    const std::string MergeLogicalX2 = 
+      dom2Std (childElement.getAttribute ("MergeLogicalX2"));
+    const std::string MergeLogicalY2 = 
+      dom2Std (childElement.getAttribute ("MergeLogicalY1"));
+
+    if(!("Anode" == ReadoutType || "Cathode" == ReadoutType)){
+      log << MSG::WARNING << "Was given a readout type :" 
+          << ReadoutType << endreq;
+      return StatusCode::FAILURE;
+    }
+    if("Anode" == ReadoutType){
+      dataObj->setFEAnodeX( atol(NFEChamberX.c_str()) );
+      dataObj->setFEAnodeY( atol(NFEChamberY.c_str()) );
+      dataObj->addLogicalMap(MuonParameters::Anode, 
+                                atol(MergeLogicalX1.c_str()),
+                                atol(MergeLogicalY1.c_str()));
+      if( 0 < atol(MergeLogicalX2.c_str()) ){
+        dataObj->addLogicalMap(MuonParameters::Anode, 
+                                atol(MergeLogicalX2.c_str()),
+                                atol(MergeLogicalY2.c_str()));
+      }
+    }else{
+      dataObj->setFEAnodeX( atol(NFEChamberX.c_str()) );
+      dataObj->setFEAnodeY( atol(NFEChamberY.c_str()) );
+      dataObj->addLogicalMap(MuonParameters::Cathode, 
+                                atol(MergeLogicalX1.c_str()),
+                                atol(MergeLogicalY1.c_str()));
+      if( 0 < atol(MergeLogicalX2.c_str()) ){
+        dataObj->addLogicalMap(MuonParameters::Cathode, 
+                                atol(MergeLogicalX2.c_str()),
+                                atol(MergeLogicalY2.c_str()));
+      }
+    }      
+
   } else {
     // Unknown tag, a warning message could be issued here
     log << MSG::WARNING << "Can not interpret specific type :" 

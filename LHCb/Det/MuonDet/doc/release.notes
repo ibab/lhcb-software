@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.5 2002-02-25 09:55:58 cattanem Exp $
+! $Id: release.notes,v 1.6 2002-03-20 16:43:40 dhcroft Exp $
 ! CVS tag $Name: not supported by cvs2svn $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
+
+! ============================================================================
+! 20020320 - David Hutchcroft
+  - Added code to read the Front end channel size from the XML 
+    in src/Lib/XmlMuonRegionCnv.cpp
+  - Added storeage of the channel size and mapping between FE channels and 
+    logical channels in DeMuonRegion.h and DeMuonRegion.cpp
+  - Added MuonDet/MuonParameters.h to store the readout type enumeration
 
 ! ===========v1r1=============================================================
 ! 20020221 - David Hutchcroft
