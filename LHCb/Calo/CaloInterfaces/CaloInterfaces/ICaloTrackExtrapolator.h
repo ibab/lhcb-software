@@ -1,8 +1,11 @@
-// $Id: ICaloTrackExtrapolator.h,v 1.1.1.1 2001-11-02 16:53:13 ibelyaev Exp $
+// $Id: ICaloTrackExtrapolator.h,v 1.2 2001-11-08 19:50:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/02 16:53:13  ibelyaev
+// New Package: the first release
+//
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOTrackEXTRAPOLATOR_H 
 #define CALOINTERFACES_ICALOTrackEXTRAPOLATOR_H 1
@@ -32,7 +35,18 @@ public:
   
   static const InterfaceID& interfaceID() 
   { return IID_ICaloTrackExtrapolator; }
+
+  /** artificial initialize method 
+   *  @return status code 
+   */
+  virtual StatusCode initialize () = 0 ;
   
+  /** artificial finalize method 
+   *  @return status code 
+   */
+  virtual StatusCode finalize   () = 0 ;
+  
+
   /** The main method 
    *  @param newZ position of  reference plane 
    *  @param state track state  ( ATTENTION! state IS MODIFIED!) 
