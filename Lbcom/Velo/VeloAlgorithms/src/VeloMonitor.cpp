@@ -18,6 +18,7 @@
 #include "AIDA/IHistogram2D.h"
 #include "Relations/IAssociatorWeighted.h"
 #include "GaudiKernel/IToolSvc.h"
+#include "Kernel/LHCbMath.h"
 
 //- Velo classes ----------------------------------------------
 #include "Event/MCVeloHit.h"
@@ -27,7 +28,6 @@
 #include "Kernel/VeloChannelID.h"
 #include "VeloDet/DeVelo.h"
 #include "VeloKernel/VeloSimParams.h"
-#include "VeloKernel/VeloRound.h"
 #include "VeloDet/DeVelo.h"
 //--------------------------------------------------------------------
 
@@ -1127,7 +1127,7 @@ VeloChannelID VeloMonitor::weightedMean(VeloCluster* cluster, double& fraction){
   }
   centre /= total;
   centre -= 100;
-  iDiff=int(VeloRound::round(centre));
+  iDiff=int(LHCbMath::round(centre));
   fraction=centre-iDiff;
   VeloChannelID iDiffID;
   sc= m_velo->neighbour(cluster->channelID(0),iDiff,iDiffID);

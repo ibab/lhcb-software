@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.29 2004-02-24 17:48:12 mtobin Exp $
+// $Id: VeloSim.cpp,v 1.30 2004-03-02 14:44:40 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -25,6 +25,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "Kernel/LHCbMath.h"
 
 // from VeloEvent
 #include "Event/MCVeloHit.h"
@@ -37,7 +38,6 @@
 
 // VeloKernel
 #include "VeloKernel/VeloSimParams.h"
-#include "VeloKernel/VeloRound.h"
 
 // local
 #include "VeloSim.h"
@@ -541,7 +541,7 @@ void VeloSim::deltaRayCharge(double charge, double tol,
     // not truly correct
     double charge=ran_inv_E2(Tmin,Tmax);
     // choose pt at random to add delta ray
-    int ipt=int(VeloRound::round(m_uniformDist()*(Npoints-1)));
+    int ipt=int(LHCbMath::round(m_uniformDist()*(Npoints-1)));
     if( verbose ) {
       log << MSG::VERBOSE << " delta ray charge added to point " << ipt
           << "/" << Npoints << endmsg;
@@ -984,7 +984,7 @@ StatusCode VeloSim::noiseSim(){
     // add both large +ve and -ve noise.
     int maxStrips= m_velo->numberStrips(sensor);
     int hitNoiseTotal= 
-      int(VeloRound::round(2.*gsl_sf_erf_Q(VeloSimParams::threshold/noiseSig)
+      int(LHCbMath::round(2.*gsl_sf_erf_Q(VeloSimParams::threshold/noiseSig)
                            *float(maxStrips)));
     Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
     //    log <<  MSG::INFO << " poisson" << poisson() << endmsg;
@@ -1004,7 +1004,7 @@ StatusCode VeloSim::noiseSim(){
     for (int noiseHit=0; noiseHit<hitNoiseTotal; noiseHit++){
       // choose random hit to add noise to
       // get strip number
-      int stripArrayIndex=int(VeloRound::round(m_uniformDist()*(maxStrips-1)));
+      int stripArrayIndex=int(LHCbMath::round(m_uniformDist()*(maxStrips-1)));
       VeloChannelID stripKey(sensor,stripArrayIndex);
       // find strip in list.
       MCVeloFE* myFE = findOrInsertFE(stripKey);
