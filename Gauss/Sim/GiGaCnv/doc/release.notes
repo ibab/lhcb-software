@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.85 2004-05-03 13:50:18 gcorti Exp $ 
+! $Id: release.notes,v 1.86 2004-06-15 12:05:20 gcorti Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2004-06-15 - Gloria CORTI
+ - src/component/GiGaMCVertexCnv.cpp
+   . temporarly issue a warning instead of an exception when a mother particle
+     has already ben set. Do do reset the parent. Most of this happens
+     for vertices z < -10m. Temporary until a better solution is found.
 
 !====================== GiGaCnv v15r5 2004-05-03 ============================
 ! 2004-05-03 - Gloria CORTI

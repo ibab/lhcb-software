@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.32 2004-04-20 04:26:46 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.33 2004-06-15 12:05:20 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.32  2004/04/20 04:26:46  ibelyaev
+//  fix reference counters and add warning counter
+//
 // Revision 1.31  2004/04/07 15:47:55  gcorti
 // signal info, extended collision, new vertex types
 //
@@ -590,13 +593,13 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                     << "with momentum of mother of the vertex being " 
                     << vertex->mother()->momentum() << endreq;
                 
-                log << MSG::INFO 
+                log << MSG::DEBUG 
                     << "and the complete collection of trajectories being"
                     << endreq;
                 
                 for(ITT iT = tv->begin(); tv->end() != iT; ++iT )
                 {
-                  log << MSG::INFO << "trajectoryID " 
+                  log << MSG::DEBUG << "trajectoryID " 
                       << (*iT)->GetTrackID() << " motherID " 
                       << (*iT)->GetParentID() <<
                     "  pdgID " << (*iT)->GetPDGEncoding() 
@@ -607,11 +610,12 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                   for( ITG iP = ((GiGaTrajectory*)(*iT))->begin() ; 
                        ((GiGaTrajectory*)(*iT))->end() != iP ; ++iP )
                   {
-                    log << MSG::INFO << (HepPoint3D)((*iP)->GetPosition())
+                    log << MSG::DEBUG << (HepPoint3D)((*iP)->GetPosition())
                         << endreq;
                   }
                 }    
-                return Error("'MotherParticle' is already set!"); 
+                // return Error("'MotherParticle' is already set!"); 
+                Warning( "'MotherParticle' is already set!" );
               }
             }
           } // end loop over points 
