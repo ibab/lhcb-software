@@ -1,4 +1,4 @@
-// $Id: MuonStationLayout.cpp,v 1.4 2002-02-25 10:57:43 atsareg Exp $
+// $Id: MuonStationLayout.cpp,v 1.5 2002-02-28 15:39:51 atsareg Exp $
 // Include files
 #include <iostream>
 #include <algorithm>
@@ -116,9 +116,45 @@ std::vector<MuonTileID> MuonStationLayout::tilesInRegion(const MuonTileID& pad,
 
 std::vector<MuonTileID> 
 MuonStationLayout::neighbours(const MuonTileID& pad) const {
-  unsigned int reg = pad.region();			      
-  return m_layouts[reg].neighbours(pad);
+
+  std::vector<MuonTileID> result;			      
+  std::vector<MuonTileID> vreg;
+  std::vector<MuonTileID>::iterator it;
+  			        
+  for ( unsigned int ireg = 0; ireg < 4; ireg++ ) {
+    vreg = m_layouts[ireg].neighbours(pad);
+    for(it = vreg.begin(); it != vreg.end(); it++) {
+      if(it->region() == ireg) {
+	result.push_back(*it);
+      }  
+    }
+  }  		
+  return result;
 }
+
+std::vector<MuonTileID> 
+MuonStationLayout::neighbours(const MuonTileID& pad,
+                              int dirX,
+			      int dirY) const {
+  
+//  This function returns all the MuonTileID's which are neighbours
+//  of the given pad in the direction indicated by dirX and dirY and 
+//  defined in terms of this layout. 
+
+  unsigned int nreg = pad.region();
+  std::vector<MuonTileID> vtm = neighbours(pad,dirX,dirY,1);
+  // if no neigbours at all
+  if(vtm.empty()) return vtm;
+  // if the neigbours are all in the same region or larger region
+  if(vtm[0].region() >= nreg) return vtm;
+  // if there is only one neighbour
+  if(vtm.size() == 1) return vtm;
+  
+  // We have got to the smaller region - make use of the corresponding
+  // function in this region's MuonLayout
+  nreg = vtm[0].region();
+  return m_layouts[nreg].neighbours(pad,dirX,dirY);			      
+}			      
 
 std::vector<MuonTileID> 
 MuonStationLayout::neighbours(const MuonTileID& pad,
@@ -128,60 +164,18 @@ MuonStationLayout::neighbours(const MuonTileID& pad,
 			      
   std::vector<MuonTileID> result;			      
   std::vector<MuonTileID> vreg;
-  std::vector<MuonTileID> vtmit;
-  std::vector<MuonTileID>::iterator it,itm,itf;
-  			      
-  unsigned int reg = pad.region();  
-  
-  vreg = m_layouts[reg].neighbours(pad,dirX,dirY,depth);
-  for(it = vreg.begin(); it != vreg.end(); it++) {
-    if(it->region() == reg) {
-      result.push_back(*it);
-    } else {
-      int itreg = it->region();
-      vtmit = m_layouts[itreg].tiles(*it);   
-      for(itm = vtmit.begin(); itm != vtmit.end(); itm++) {   
-        itf = std::find(result.begin(),result.end(),*itm);
-	if ( itf == result.end() ) result.push_back(*itm);
-      }
-    }  
-  }			      
+  std::vector<MuonTileID>::iterator it;
+  			        
+  for ( unsigned int ireg = 0; ireg < 4; ireg++ ) {
+    vreg = m_layouts[ireg].neighbours(pad,dirX,dirY,depth);
+    for(it = vreg.begin(); it != vreg.end(); it++) {
+      if(it->region() == ireg) {
+	result.push_back(*it);
+      }  
+    }
+  }  		      
   return result;
 }
-
-// std::vector<MuonTileID> 
-// MuonStationLayout::neighbours(const MuonTileID& pad,
-//                               int dirX,
-// 			      int dirY,
-// 			      int depth) const {
-// 			      
-//   std::vector<MuonTileID> result;			      
-//   std::vector<MuonTileID> vtm;
-//   std::vector<MuonTileID>::iterator it;
-//   			      
-//   unsigned int reg = pad.region();  
-//   
-//   for(unsigned int i = 0; i<4; i++) {
-//   
-//     int depthX = depth;
-//     int depthY = depth;
-//     if(i != reg) {
-//       depthX = depth*m_layouts[i].xGrid()/m_layouts[reg].xGrid();
-//       depthY = depth*m_layouts[i].yGrid()/m_layouts[reg].yGrid();
-//     }
-// 
-//     vtm=m_layouts[i].neighboursInArea(pad,dirX,dirY,
-//                                       depthX,
-// 				      depthY);
-//     
-//     if(!vtm.empty()) {
-//       for(it = vtm.begin(); it != vtm.end(); it++) {
-//         if(it->region() == i) result.push_back(*it);
-//       }
-//     }
-//   } 			      
-//   return result;
-// }
 
 bool MuonStationLayout::isValidID(const MuonTileID& pad) const {
 

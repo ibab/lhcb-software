@@ -1,4 +1,4 @@
-// $Id: MuonLayout.cpp,v 1.4 2002-02-25 10:57:43 atsareg Exp $
+// $Id: MuonLayout.cpp,v 1.5 2002-02-28 15:39:51 atsareg Exp $
 // Include files
 #include <iostream>
 #include <algorithm>
@@ -147,8 +147,8 @@ std::vector<MuonTileID> MuonLayout::tilesInArea(const MuonTileID& pad,
       if( nr == -1 ) nr = 0;
       if( nr > 3 ) break;                    
       if(nr == nrx || !regleap) {
-	int newx = ix/rfactor(nr)/xratio; 	  
-	int newy = iy/rfactor(nr)/yratio;
+	unsigned int newx = ix/rfactor(nr)/xratio; 	  
+	unsigned int newy = iy/rfactor(nr)/yratio;
 	if(newy < 2*yGrid() && newx < 2*xGrid()) {
           MuonTileID newtile(0,0,0,*this,nr,quarter,newx,newy); 
 	  if(newtile.isValid()) {
@@ -213,7 +213,7 @@ std::vector<MuonTileID> MuonLayout::tiles(int iq, int ir) const {
   
   MuonTileID newpad;
   
-  int ix; int iy;
+  unsigned int ix; unsigned int iy;
   for(ix = 0; ix < 2*xGrid(); ix++) {
     for(iy = yGrid(); iy < 2*yGrid(); iy++) {
       vmt.push_back(MuonTileID(0,0,0,*this,ir,iq,ix,iy));
@@ -268,23 +268,97 @@ std::vector<MuonTileID> MuonLayout::neighbours(const MuonTileID& pad) const {
   // This function returns all the neighbours within unity depth
   std::vector<MuonTileID> result;
   std::vector<MuonTileID> vmt;
-  vmt = neighbours(pad,MuonBase::RIGHT,MuonBase::DOWN,1);
+  vmt = neighbours(pad,MuonBase::RIGHT,MuonBase::DOWN);
   result.insert(result.end(),vmt.begin(),vmt.end());
-  vmt = neighbours(pad,MuonBase::RIGHT,MuonBase::CENTER,1);
+  vmt = neighbours(pad,MuonBase::RIGHT,MuonBase::CENTER);
   result.insert(result.end(),vmt.begin(),vmt.end());	
-  vmt = neighbours(pad,MuonBase::RIGHT,MuonBase::UP,1);
+  vmt = neighbours(pad,MuonBase::RIGHT,MuonBase::UP);
   result.insert(result.end(),vmt.begin(),vmt.end());
-  vmt = neighbours(pad,MuonBase::LEFT,MuonBase::DOWN,1);
+  vmt = neighbours(pad,MuonBase::LEFT,MuonBase::DOWN);
   result.insert(result.end(),vmt.begin(),vmt.end());
-  vmt = neighbours(pad,MuonBase::LEFT,MuonBase::CENTER,1);
+  vmt = neighbours(pad,MuonBase::LEFT,MuonBase::CENTER);
   result.insert(result.end(),vmt.begin(),vmt.end());	
-  vmt = neighbours(pad,MuonBase::LEFT,MuonBase::UP,1);
+  vmt = neighbours(pad,MuonBase::LEFT,MuonBase::UP);
   result.insert(result.end(),vmt.begin(),vmt.end());	
-  vmt = neighbours(pad,MuonBase::CENTER,MuonBase::UP,1);
+  vmt = neighbours(pad,MuonBase::CENTER,MuonBase::UP);
   result.insert(result.end(),vmt.begin(),vmt.end());	
-  vmt = neighbours(pad,MuonBase::CENTER,MuonBase::DOWN,1);
+  vmt = neighbours(pad,MuonBase::CENTER,MuonBase::DOWN);
   result.insert(result.end(),vmt.begin(),vmt.end());
   return result;			     
+}
+
+std::vector<MuonTileID> MuonLayout::neighbours(const MuonTileID& pad,
+                                               int dirX,
+					       int dirY) const {
+					       
+//  This function returns all the MuonTileID's which are neighbours
+//  of the given pad in the direction indicated by dirX and dirY and 
+//  defined in terms of this layout. 
+
+  unsigned int nreg = pad.region();
+  std::vector<MuonTileID> vtm = neighbours(pad,dirX,dirY,1);
+  // if no neigbours at all
+  if(vtm.empty()) return vtm;
+  // if the neigbours are all in the same region or the neighboring 
+  // region is larger than the pad's one
+  if(vtm[0].region() >= nreg) return vtm;
+  // if there is only one neighbour
+  if(vtm.size() == 1) return vtm;
+  
+  // We have got to the smaller region
+  nreg = vtm[0].region();
+  std::vector<MuonTileID> xvtm,result;
+  std::vector<MuonTileID>::iterator ivtm;
+  // Find the limits of the returned pad's area
+  unsigned int minx=9999;
+  unsigned int maxx=0;
+  unsigned int miny=9999;
+  unsigned int maxy=0;
+  for ( ivtm = vtm.begin(); ivtm != vtm.end(); ivtm++) {
+    if( (*ivtm).nY() > maxy ) maxy = (*ivtm).nY();
+    if( (*ivtm).nX() > maxx ) maxx = (*ivtm).nX();
+    if( (*ivtm).nY() < miny ) miny = (*ivtm).nY();
+    if( (*ivtm).nX() < minx ) minx = (*ivtm).nX();
+  }
+  
+  // perform the check in the X direction first
+  if ( dirX == MuonBase::LEFT ) {
+    for ( ivtm = vtm.begin(); ivtm != vtm.end(); ivtm++) {
+      if( (*ivtm).nX() == maxx ) {
+        xvtm.push_back(*ivtm);
+      }
+    }
+  } else if ( dirX == MuonBase::RIGHT ) {
+    for ( ivtm = vtm.begin(); ivtm != vtm.end(); ivtm++) {
+      if( (*ivtm).nX() == minx ) {
+        xvtm.push_back(*ivtm);
+      }
+    }  
+  } else {
+    for ( ivtm = vtm.begin(); ivtm != vtm.end(); ivtm++) {
+      xvtm.push_back(*ivtm);
+    } 
+  }
+    
+  // check in the Y direction with the pads that are left 
+  if ( dirY == MuonBase::DOWN ) {
+    for ( ivtm = xvtm.begin(); ivtm != xvtm.end(); ivtm++) {
+      if( (*ivtm).nY() == maxy ) {
+        result.push_back(*ivtm);
+      }
+    }
+  } else if ( dirY == MuonBase::UP ) {
+    for ( ivtm = xvtm.begin(); ivtm != xvtm.end(); ivtm++) {
+      if( (*ivtm).nY() == miny ) {
+        result.push_back(*ivtm);
+      }
+    }  
+  } else {
+    for ( ivtm = xvtm.begin(); ivtm != xvtm.end(); ivtm++) {
+      result.push_back(*ivtm);
+    } 
+  }
+  return result;  					       				       
 }
 
 std::vector<MuonTileID> MuonLayout::neighbours(const MuonTileID& pad,
@@ -298,95 +372,7 @@ std::vector<MuonTileID> MuonLayout::neighbours(const MuonTileID& pad,
 //  the depth parameter
 
   return neighboursInArea(pad,dirX,dirY,depth,depth);
-
-  // MuonLayout playout = pad.layout();
-//   std::vector<MuonTileID> vmt;
-// 
-//   int quarter = pad.quarter();
-//   int nreg = pad.region();
-// 
-//   // the finest grid of the two layouts
-//   int mxgrid = std::_MAX(m_xgrid, playout.xGrid() );
-//   int mygrid = std::_MAX(m_ygrid, playout.yGrid() );
-// 
-//   // cout << mxgrid << mygrid << endl;	    
-// 
-//   MuonLayout fineGrid(mxgrid,mygrid);
-// 
-//   int xratio = m_xgrid/playout.xGrid();
-//   int yratio = m_ygrid/playout.yGrid();
-// 
-//   xratio = (xratio == 0) ? 1 : xratio ;
-//   yratio = (yratio == 0) ? 1 : yratio ;
-// 
-//   // input pad area in terms of the finest grid and smallest region  
-//   // depending on the direction of the search
-//  
-//   int maxX,maxY,minX,minY;
-//   
-//   if(dirX == MuonBase::RIGHT) {
-//     maxX = (pad.nX()+1)*rfactor(nreg)*xratio+depth*rfactor(nreg)-1;
-//     minX = (pad.nX()+1)*rfactor(nreg)*xratio;
-//   } else if (dirX == MuonBase::LEFT) {
-//     maxX = pad.nX()*rfactor(nreg)*xratio-1;
-//     minX = pad.nX()*rfactor(nreg)*xratio - depth*rfactor(nreg) ;
-//   } else {
-//     maxX = (pad.nX()+1)*rfactor(nreg)*xratio-1;
-//     minX = (pad.nX())*rfactor(nreg)*xratio;
-//   } 
-//   
-//   if(dirY == MuonBase::UP) {
-//     maxY = (pad.nY()+1)*rfactor(nreg)*yratio+depth*rfactor(nreg)-1;
-//     minY = (pad.nY()+1)*rfactor(nreg)*yratio;
-//   } else if (dirY == MuonBase::DOWN){
-//     maxY = pad.nY()*rfactor(nreg)*yratio-1;
-//     minY = pad.nY()*rfactor(nreg)*yratio - depth*rfactor(nreg) ;
-//   } else {
-//     maxY = (pad.nY()+1)*rfactor(nreg)*yratio-1;
-//     minY = (pad.nY())*rfactor(nreg)*yratio;
-//   }
-//     
-//   minX = std::_MAX(0,minX);
-//   minY = std::_MAX(0,minY);
-// 
-//   //cout << minX << " " << minY << " " << maxX << " " << maxY << " " << endl;
-// 
-//   // Which tiles are hit ?
-// 
-//   xratio = mxgrid/m_xgrid;
-//   yratio = mygrid/m_ygrid;
-// 
-//   int ix = minX;
-//   int iy = minY;
-//   bool regleap = false;
-//   int nr, nrx;
-//   
-//   while ( ix <= maxX ) {
-//     nrx = fineGrid.region(ix,iy);
-//     if( nrx == -1 ) nrx = 0;
-//     while ( iy <= maxY ) {
-//       // which region	
-//       nr = fineGrid.region(ix,iy);
-//       if( nr == -1 ) nr = 0;
-//       if(nr == nrx || !regleap) {
-// 	int newx = ix/rfactor(nr)/xratio; 	  
-// 	int newy = iy/rfactor(nr)/yratio;
-// 	MuonTileID newtile(0,0,0,*this,nr,quarter,newx,newy);
-// 	if (newtile.isValid()) {
-// 	  vmt.push_back(newtile);
-// 	}  
-//       }		
-//       iy += rfactor(nr)*yratio;
-//     }   
-//     if(regleap) {
-//       regleap = false;
-//     } else if (nr != nrx) {
-//       regleap = true;	
-//     } 
-//     iy = minY;
-//     ix += rfactor(nrx)*xratio;
-//   }  
-//   return vmt;					       
+					       
 }
 
 //========================================================================
@@ -473,8 +459,8 @@ std::vector<MuonTileID> MuonLayout::neighboursInArea(const MuonTileID& pad,
       nr = fineGrid.region(ix,iy);
       if( nr == -1 ) nr = 0;
       if(nr == nrx || !regleap) {
-	int newx = ix/rfactor(nr)/xratio; 	  
-	int newy = iy/rfactor(nr)/yratio;
+	unsigned int newx = ix/rfactor(nr)/xratio; 	  
+	unsigned int newy = iy/rfactor(nr)/yratio;
 	// New tile should not come out of its region
 	if(newy < 2*yGrid() && newx < 2*xGrid()) {
 	  MuonTileID newtile(0,0,0,*this,nr,quarter,newx,newy);
@@ -501,17 +487,19 @@ bool MuonLayout::isValidID(const MuonTileID& mt) const {
 
   int nx = mt.nX();
   int ny = mt.nY();
+  int xg = xGrid();
+  int yg = yGrid();
   
   if(nx >= 0 && 
-     nx < (2*xGrid()) && 
-     ny >= (yGrid()) && 
-     ny < 2*yGrid()) {
+     nx < (2*xg) && 
+     ny >= (yg) && 
+     ny < 2*yg) {
     return true;
   }
-  if(nx >= (xGrid()) && 
-     nx < 2*xGrid() && 
+  if(nx >= xg && 
+     nx < 2*xg && 
      ny >= 0 && 
-     ny < yGrid()) {
+     ny < yg) {
     return true;
   }
   return false;

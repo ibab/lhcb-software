@@ -1,4 +1,4 @@
-// $Id: MuonTileID.cpp,v 1.1 2002-02-18 09:20:58 atsareg Exp $
+// $Id: MuonTileID.cpp,v 1.2 2002-02-28 15:39:53 atsareg Exp $
 // Include files
 
 #include "MuonKernel/MuonTileID.h"
@@ -57,23 +57,8 @@ bool MuonTileID::isValid() const {
   if ( ! isDefined() ) return false;
 
   MuonLayout ml = layout(); 
-
-  int nx = nX();
-  int ny = nY();
-
-  if(nx >= 0 &&
-     nx < (2*ml.xGrid()) &&
-     ny >= (ml.yGrid()) &&
-     ny < 2*ml.yGrid()) {
-    return true;
-  }
-  if(nx >= (ml.xGrid()) &&
-     nx < 2*ml.xGrid() &&
-     ny >= 0 &&
-     ny < ml.yGrid()) {
-    return true;
-  }
-  return false; 
+  
+  return ml.isValidID(*this);
 }
 
 MuonTileID MuonTileID::intercept(const MuonTileID& otherID) const {
