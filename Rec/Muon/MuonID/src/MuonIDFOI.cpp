@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.cpp,v 1.2 2002-05-10 15:25:54 dhcroft Exp $
+// $Id: MuonIDFOI.cpp,v 1.3 2002-07-05 08:58:13 dhcroft Exp $
 // Include files
 #include <cstdio>
 
@@ -172,18 +172,23 @@ StatusCode MuonIDFOI::execute() {
 
   TrStoredTracks::const_iterator iTrack;
   for( iTrack = trTracks->begin() ; iTrack != trTracks->end() ; iTrack++){
+    // in the clone killed output we want only 
+    // unqiue && (matched || forward || upstream)
+    if((*iTrack)->unique()  && 
+       ((*iTrack)->forward() || (*iTrack)->match() || (*iTrack)->upstream())){
 
-    resetTrackLocals();
-    // do the track extrapolations
-    StatusCode sc = trackExtrapolate(*iTrack);
-
-    MuonID * pMuid = new MuonID;
-    pMuid->setIDTrack(*iTrack);
-    sc = doID(pMuid);
-    if(sc.isFailure()){
-      return sc;
+      resetTrackLocals();
+      // do the track extrapolations
+      StatusCode sc = trackExtrapolate(*iTrack);
+      
+      MuonID * pMuid = new MuonID;
+      pMuid->setIDTrack(*iTrack);
+      sc = doID(pMuid);
+      if(sc.isFailure()){
+        return sc;
+      }
+      pMuids->insert( pMuid );
     }
-    pMuids->insert( pMuid );
   }
 
   // Debug : muon identification event summary
