@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichFunctionalRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.cpp,v 1.9 2004-07-27 20:15:30 jonrob Exp $
+ *  $Id: RichFunctionalRayleighScatter.cpp,v 1.10 2004-10-13 09:52:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/07/27 20:15:30  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -26,7 +29,8 @@ RichFunctionalRayleighScatter::RichFunctionalRayleighScatter ( const std::string
                                                                const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_eVToMicron   ( 0 ),
-    m_AeroClarity  ( 0 ) {
+    m_AeroClarity  ( 0 ) 
+{
 
   declareInterface<IRichRayleighScatter>(this);
 
@@ -34,6 +38,7 @@ RichFunctionalRayleighScatter::RichFunctionalRayleighScatter ( const std::string
 
 StatusCode RichFunctionalRayleighScatter::initialize() 
 {
+
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }

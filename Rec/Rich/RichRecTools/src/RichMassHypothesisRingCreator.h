@@ -4,8 +4,11 @@
  *  Header file for tool : RichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.h,v 1.3 2004-07-27 20:15:30 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.h,v 1.4 2004-10-13 09:52:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/27 20:15:30  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -96,7 +99,6 @@ private: // methods
 private: // data
 
   // Pointers to tool instances
-  IRichRayTraceCherenkovCone * m_rayTrace;
   IRichCherenkovAngle * m_ckAngle;
 
   /// Pointer to Rings

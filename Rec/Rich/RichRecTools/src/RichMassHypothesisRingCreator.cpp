@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.6 2004-07-27 20:15:30 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.7 2004-10-13 09:52:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/07/27 20:15:30  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,7 +28,6 @@ RichMassHypothesisRingCreator::RichMassHypothesisRingCreator( const std::string&
                                                               const std::string& name,
                                                               const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
-    m_rayTrace      ( 0 ),
     m_ckAngle       ( 0 ),
     m_rings         ( 0 )
 {
@@ -46,7 +48,6 @@ StatusCode RichMassHypothesisRingCreator::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichCherenkovAngle", m_ckAngle  );
-  acquireTool( "RichRayTraceCKCone", m_rayTrace );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );

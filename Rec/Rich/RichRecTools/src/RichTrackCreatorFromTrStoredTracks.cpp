@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.19 2004-07-27 20:15:33 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.20 2004-10-13 09:52:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.19  2004/07/27 20:15:33  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -37,20 +40,24 @@ RichTrackCreatorFromTrStoredTracks( const std::string& type,
     m_richRecTrackLocation ( RichRecTrackLocation::Default  ),
     m_trSegToolNickName    ( "RichDetTrSegMaker"            ),
     m_allDone              ( false ),
-    m_buildHypoRings       ( false ),
-    m_nTracks              ( Rich::Track::NTrTypes, std::pair<unsigned,unsigned>(0,0) )
+    m_buildHypoRings       ( false )
 {
 
   // declare interface for this tool
   declareInterface<IRichTrackCreator>(this);
 
   // job options
+
+  // data locations
   declareProperty( "TrStoredTracksLocation",   m_trTracksLocation        );
   declareProperty( "RichRecTrackLocation",     m_richRecTrackLocation    );
-  declareProperty( "TrackMinPtotPerClass",     m_trSelector.minMomenta() );
-  declareProperty( "TrackMaxPtotPerClass",     m_trSelector.maxMomenta() );
+
+  // tool options
   declareProperty( "BuildMassHypothesisRings", m_buildHypoRings          );
   declareProperty( "TrackSegmentTool",         m_trSegToolNickName       );
+
+  // track selection
+  declareProperty( "TrackMomentumCuts", m_trSelector.setMomentumCuts()   );
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes()   );
 
 }
@@ -101,21 +108,22 @@ void RichTrackCreatorFromTrStoredTracks::handle ( const Incident & incident )
   if      ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
   // Debug printout at the end of each event
   else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
-    {
-      // Print out of track count
-      unsigned nTotTried(0), nTotSel(0);
-      {for ( TrackTypeCount::iterator i = m_nTracks.begin();
-             i != m_nTracks.end(); ++i ) {
-        nTotTried += (*i).first;
-        nTotSel   += (*i).second;
-      }}
-      debug() << "Selected " << nTotSel << "/" << nTotTried << " TrStoredTracks :";
-      for ( unsigned iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
-        debug() << " " << (Rich::Track::Type)iTk << "=(" << m_nTracks[iTk].second
-                << "/" << m_nTracks[iTk].first << ")";
-      }
-      debug() << endreq;
-    }
+  {
+    // Print out of track count
+    unsigned nTotTried(0), nTotSel(0);
+    {for ( TrackTypeCount::iterator i = m_nTracks.begin();
+           i != m_nTracks.end(); ++i ) {
+      nTotTried += (*i).second.first;
+      nTotSel   += (*i).second.second;
+    }}
+    debug() << "Selected " << nTotSel << "/" << nTotTried << " TrStoredTracks :";
+    {for (  TrackTypeCount::iterator iTk = m_nTracks.begin();
+            iTk != m_nTracks.end(); ++iTk ) {
+      debug() << " " << (*iTk).first << "=(" << (*iTk).second.second
+              << "/" << (*iTk).second.first << ")"; 
+    }}
+    debug() << endreq;
+  }
 }
 
 const StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() const {
@@ -124,10 +132,9 @@ const StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() const {
     m_allDone = true;
 
     // Iterate over all reco tracks, and create new RichRecTracks
-    richTracks()->reserve( trStoredTracks()->size() );
+    richTracks()->reserve( nInputTracks() );
     for ( TrStoredTracks::const_iterator track = trStoredTracks()->begin();
-          track != trStoredTracks()->end();
-          ++track) { newTrack( *track ); } // Make new RichRecTrack
+          track != trStoredTracks()->end(); ++track) { newTrack( *track ); } 
 
   }
 
@@ -136,7 +143,8 @@ const StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() const {
 
 const long RichTrackCreatorFromTrStoredTracks::nInputTracks() const
 {
-  return ( trStoredTracks() ? trStoredTracks()->size() : 0 );
+  const TrStoredTracks * tracks = trStoredTracks();
+  return ( tracks ? tracks->size() : 0 );
 }
 
 const TrStoredTracks *
@@ -159,7 +167,10 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
 
   // Is this a TrStoredTrack ?
   const TrStoredTrack * trTrack = dynamic_cast<const TrStoredTrack*>(obj);
-  if ( !trTrack ) return NULL;
+  if ( !trTrack ) {
+    Warning( "Input data object is not of type TrStoredTrack" );
+    return NULL;
+  }
 
   // track type
   const Rich::Track::Type trType = Rich::Track::type(trTrack);
@@ -264,7 +275,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
             newSegment = NULL;
           }
 
-        }
+        } // end loop over RichTrackSegments
 
         if ( keepTrack ) {
 

@@ -4,8 +4,11 @@
  *  Header file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.h,v 1.8 2004-07-27 20:15:32 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigits.h,v 1.9 2004-10-13 09:52:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2004/07/27 20:15:32  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -81,6 +84,9 @@ private: // methods
   /// Initialise for a new event
   void InitNewEvent();
 
+  /// Build a new RichRecPixel
+  RichRecPixel * buildPixel ( const RichDigit * digit ) const;
+
 private: // data
 
   /// Pointer to RichRecPixels
@@ -102,15 +108,23 @@ private: // data
   mutable std::map< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
   mutable std::map< RichSmartID::KeyType, bool > m_pixelDone;
 
+  /// Flag to turn on or off the book keeping features to save cpu time.
+  bool m_bookKeep;
+
+  /// Flags for which RICH detectors to create pixels for
+  std::vector<bool> m_usedDets;
+
 };
 
 inline void RichPixelCreatorFromRichDigits::InitNewEvent()
 {
   // Initialise navigation data
   m_allDone = false;
-  m_pixelExists.clear();
-  m_pixelDone.clear();
-  m_pixels = 0;
+  m_pixels  = 0;
+  if ( m_bookKeep ) {
+    m_pixelExists.clear();
+    m_pixelDone.clear();
+  }
 }
 
 #endif // RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H

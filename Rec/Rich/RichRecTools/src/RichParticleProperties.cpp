@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.cpp,v 1.8 2004-07-27 20:15:30 jonrob Exp $
+ *  $Id: RichParticleProperties.cpp,v 1.9 2004-10-13 09:52:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2004/07/27 20:15:30  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -49,7 +52,7 @@ StatusCode RichParticleProperties::initialize() {
   m_particleMass[Rich::Pion]     = ppSvc->find("pi+")->mass()/MeV;
   m_particleMass[Rich::Kaon]     = ppSvc->find("K+" )->mass()/MeV;
   m_particleMass[Rich::Proton]   = ppSvc->find("p+" )->mass()/MeV;
- 
+
   // cache squares of masses
   m_particleMassSq[Rich::Electron] = gsl_pow_2( m_particleMass[Rich::Electron] );
   m_particleMassSq[Rich::Muon]     = gsl_pow_2( m_particleMass[Rich::Muon]     );
@@ -81,7 +84,7 @@ StatusCode RichParticleProperties::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichParticleProperties::finalize() 
+StatusCode RichParticleProperties::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();

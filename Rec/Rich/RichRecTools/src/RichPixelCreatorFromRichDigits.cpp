@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.13 2004-07-27 20:15:32 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.14 2004-10-13 09:52:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.13  2004/07/27 20:15:32  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,7 +30,9 @@ RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::strin
   : RichRecToolBase( type, name, parent ),
     m_pixels      ( 0 ),
     m_smartIDTool ( 0 ),
-    m_allDone     ( false )
+    m_allDone     ( false ),
+    m_bookKeep    ( true  ),
+    m_usedDets    ( Rich::NRiches, true )
 {
 
   declareInterface<IRichPixelCreator>(this);
@@ -37,10 +42,12 @@ RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::strin
                    m_richRecPixelLocation = RichRecPixelLocation::Default );
   declareProperty( "RecoDigitsLocation",
                    m_recoDigitsLocation = RichDigitLocation::Default );
+  declareProperty( "DoBookKeeping", m_bookKeep );
+  declareProperty( "UseDetectors", m_usedDets );
 
 }
 
-StatusCode RichPixelCreatorFromRichDigits::initialize() 
+StatusCode RichPixelCreatorFromRichDigits::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -59,7 +66,7 @@ StatusCode RichPixelCreatorFromRichDigits::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPixelCreatorFromRichDigits::finalize() 
+StatusCode RichPixelCreatorFromRichDigits::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -79,7 +86,7 @@ void RichPixelCreatorFromRichDigits::handle ( const Incident& incident )
 
 // Forms a new RichRecPixel object from a RichDigit
 RichRecPixel *
-RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const 
+RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const
 {
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
@@ -88,17 +95,31 @@ RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const
     return NULL;
   }
 
+  // See if this RichRecPixel already exists
+  RichRecPixel * pixel = ( m_bookKeep && m_pixelDone[digit->key()] ?
+                           m_pixelExists[digit->key()] : buildPixel(digit) );
+
+  // Add to reference map
+  if ( m_bookKeep ) {
+    m_pixelExists[ digit->key() ] = pixel;
+    m_pixelDone  [ digit->key() ] = true;
+  }
+
+  return pixel;
+}
+
+RichRecPixel *
+RichPixelCreatorFromRichDigits::buildPixel( const RichDigit * digit ) const
+{
+
+  RichRecPixel * newPixel = NULL;
+
   // RichDigit key
   const RichSmartID id = digit->key();
+  if ( id.pixelDataAreValid() ) { // check it is valid
 
-  // See if this RichRecPixel already exists
-  if ( m_pixelDone[id] ) {
-    return m_pixelExists[id];
-  } else {
-
-    RichRecPixel * newPixel = NULL;
-
-    if ( id.pixelDataAreValid() ) {
+    // Check if we are using this detector
+    if ( m_usedDets[id.rich()] ) {
 
       // Make a new RichRecPixel
       newPixel = new RichRecPixel();
@@ -116,20 +137,16 @@ RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const
       newPixel->setParentPixel ( digit                    );
       newPixel->setParentType  ( Rich::PixelParent::Digit );
 
-    } else {
-      Warning("RichSmartID does not contain valid pixel data !");
     }
 
-    // Add to reference map
-    m_pixelExists[ id ] = newPixel;
-    m_pixelDone  [ id ] = true;
-
-    return newPixel;
+  } else {
+    Warning("RichSmartID does not contain valid pixel data !");
   }
 
+  return newPixel;
 }
 
-StatusCode RichPixelCreatorFromRichDigits::newPixels() const 
+StatusCode RichPixelCreatorFromRichDigits::newPixels() const
 {
   if ( m_allDone ) return StatusCode::SUCCESS;
   m_allDone = true;
@@ -174,11 +191,13 @@ RichRecPixels * RichPixelCreatorFromRichDigits::richPixels() const
       // Set smartref to TES pixel container
       m_pixels = tdsPixels;
 
-      // Remake local pixel reference map
-      for ( RichRecPixels::const_iterator iPixel = tdsPixels->begin();
-            iPixel != tdsPixels->end(); ++iPixel ) {
-        m_pixelExists [ (*iPixel)->smartID() ] = *iPixel;
-        m_pixelDone   [ (*iPixel)->smartID() ] = true;
+      if ( m_bookKeep ) {
+        // Remake local pixel reference map
+        for ( RichRecPixels::const_iterator iPixel = tdsPixels->begin();
+              iPixel != tdsPixels->end(); ++iPixel ) {
+          m_pixelExists [ (*iPixel)->smartID() ] = *iPixel;
+          m_pixelDone   [ (*iPixel)->smartID() ] = true;
+        }
       }
 
     }

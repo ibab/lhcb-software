@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-10-13 - Chris Jones
+ - Speed improvements to RichPixelCreatorFromRichDigits
+ - Various other minor changes
+
 ! 2004-08-17 - Chris Jones
  - Add dependency on package Det/RichDet (removed implicitly from RichRecBase)
 
