@@ -1,4 +1,4 @@
-// $Id: CaloSensDet.cpp,v 1.1.1.1 2002-12-12 14:38:42 witoldp Exp $ 
+// $Id: CaloSensDet.cpp,v 1.2 2002-12-13 16:52:57 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -235,7 +235,12 @@ void CaloSensDet::Initialize( G4HCofThisEvent* HCE )
   m_collection = new CaloHitsCollection ( SensitiveDetectorName , 
                                           collectionName[0]     ) ; 
   /// 
-  HCE -> AddHitsCollection( GetCollectionID( 0 ) , m_collection );
+  const int id  = GetCollectionID( 0 )  ;
+  HCE -> AddHitsCollection( id , m_collection );
+  ///
+  Print(" Initialize(): CollectionName='" + m_collection->GetName   () +
+        "' for SensDet='"                 + m_collection->GetSDname () + 
+        "'" , StatusCode::SUCCESS , MSG::VERBOSE                       ) ;
   ///
   m_hitmap.clear() ;
 };
@@ -261,6 +266,8 @@ void CaloSensDet::EndOfEvent( G4HCofThisEvent* HCE )
 bool CaloSensDet::ProcessHits( G4Step* step , 
                                G4TouchableHistory* /* history */ ) 
 {
+
+  
   if( 0 == step ) { return false ; } 
   ///
   const double      edeposit  = step-> GetTotalEnergyDeposit                () ;
@@ -315,7 +322,7 @@ bool CaloSensDet::ProcessHits( G4Step* step ,
   // get the existing hit 
   CaloHit*&    hit = m_hitmap( cellID );                        // ATTENTION 
   if( 0 == hit )  // hit does not exists 
-    { 
+    {
       // create new hit 
       hit = new CaloHit      ( cellID ) ; 
       // add it into collection 
