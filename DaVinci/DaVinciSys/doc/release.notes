@@ -4,6 +4,20 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================  DaVinciSys v11r0 2004-02-06 ============================
+! 2004-02-06 - Gloria CORTI
+ - new version of packages used respect to v10r0
+   . L0DU                v6r6
+   . L1Decision          v2r4
+   . CaloInterfaces      v3r1
+   . CaloUtils           v4r6
+   . CaloReco	           v1r8
+   . MuonID              v3r7
+   . TrExtrapolator      v2r10
+   . DaVinci             v11r0
+   . TriggerFilter       v4r0
+   . DecayPresel         v4r0
+
 !====================  DaVinciSys v10r0 2004-02-06 ============================
 ! 2004-02-06 - Gloria CORTI
  - new version of packages used respect to v9r3

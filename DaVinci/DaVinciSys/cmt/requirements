@@ -1,5 +1,5 @@
 package DaVinciSys
-version v10r0
+version v11r0
 
 branches doc cmt
 
@@ -8,11 +8,11 @@ branches doc cmt
 #=======================================================
 
 # DaVinci application
-use  DaVinci             v10r0  Phys
+use  DaVinci             v11r0  Phys
 
 #--- DaVinci packages
 #    General Use
-use  MCTools             v1r1p1 Phys
+use  MCTools             v1r2   Phys
 use  DaVinciTools        v8r4   Phys
 use  DaVinciAssociators  v4r3   Phys
 use  DaVinciMCTools      v5r1   Phys
@@ -57,28 +57,27 @@ use  Bs2PhiGamma         v1r2   PhysSel
 use  Bs2PhiPhi           v1r2   PhysSel
 
 #--- Trigger
-use  L0DU                v6r5	L0
-use  L1Decision          v2r3   L1
+use  L0DU                v6r6	L0
+use  L1Decision          v2r4   L1
 
 #--- ProtoParticles 
-use  CaloInterfaces      v3r0   Calo
-use  CaloUtils           v4r5   Calo
-use  CaloReco	         v1r7   Calo
+use  CaloInterfaces      v3r1   Calo
+use  CaloUtils           v4r6   Calo
+use  CaloReco	         v1r8   Calo
 
 #--- Particle ID
 use  CaloPIDs   	 v1r2   Calo
-use  MuonID              v3r6   Muon
+use  MuonID              v3r7   Muon
 
 #--- Necessary for DaVinciTools
-use  TrExtrapolator      v2r9   Tr
+use  TrExtrapolator      v2r10  Tr
 
 #--- TriggerFilter
 use  Utilities           v1r2   Tools
-use  TriggerFilter       v3r0   Tools
+use  TriggerFilter       v4r0   Tools
 
 #--- DecayPreselections
-use  DecayPresel         v3r0   Tools
+use  DecayPresel         v4r0   Tools
 
 #--- Tools
-#    not buildable on Win32
 use  LoKi                v1r9   Tools

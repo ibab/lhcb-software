@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.82 2004-02-06 21:45:43 gcorti Exp $
+# $Id: requirements,v 1.83 2004-02-06 22:18:02 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -68,7 +68,7 @@ use  LHCb               v15r0
 #    Enable neutral ProtoParticles production and CaloPIDs
 use  CaloInterfaces     v3r1     Calo
 use  CaloUtils 	        v4r6     Calo
-use  CaloReco           v1r7     Calo
+use  CaloReco           v1r8     Calo
 use  CaloPIDs           v1r2     Calo 
 
 #    Muon PID
@@ -102,6 +102,8 @@ use  PhysSelSys		v6r1     PhysSel
 
 #    Generic utilities
 use  Utilities          v1r2     Tools
+
+use  DaVinciChecks      v2r0     Phys
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
