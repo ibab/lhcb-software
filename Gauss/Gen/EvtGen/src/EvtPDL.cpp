@@ -62,6 +62,46 @@ EvtPDL::~EvtPDL(){
 
 }
 
+double EvtPDL::getNominalMass(EvtId i )
+{ return _partlist[i.getId()].getMass(); }
+
+double EvtPDL::getMass(EvtId i )
+{return _partlist[i.getId()].rollMass();}
+
+double EvtPDL::getMaxMass(EvtId i )
+{return _partlist[i.getId()].getMassMax();}
+
+double EvtPDL::getMinMass(EvtId i )
+{return _partlist[i.getId()].getMassMin();}
+
+double EvtPDL::getWidth(EvtId i )
+{return _partlist[i.getId()].getWidth();}
+
+double EvtPDL::getctau(EvtId i )
+{return _partlist[i.getId()].getctau();}
+
+int EvtPDL::getStdHep(EvtId id )
+{return _partlist[id.getId()].getStdHep();}
+
+int EvtPDL::getLundKC(EvtId id )
+{return _partlist[id.getId()].getLundKC();}
+
+int EvtPDL::chg3(EvtId i )
+{return _partlist[i.getId()].getChg3();}
+
+EvtSpinType::spintype EvtPDL::getSpinType(EvtId i )
+{return _partlist[i.getId()].getSpinType();}
+
+EvtString EvtPDL::name(EvtId i)
+{return _partlist[i.getAlias()].getName();}
+
+void EvtPDL::reSetMass(EvtId i, double mass) 
+{ _partlist[i.getId()].reSetMass(mass);}
+
+void EvtPDL::reSetWidth(EvtId i, double width) 
+{ _partlist[i.getId()].reSetWidth(width);}
+
+
 void EvtPDL::readPDT(const EvtString fname){
 
 

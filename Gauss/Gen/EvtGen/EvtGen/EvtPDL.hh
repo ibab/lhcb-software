@@ -41,28 +41,26 @@ public:
   void readPDT(const EvtString fname);
 
   
-  static double getNominalMass(EvtId i ){ return _partlist[i.getId()].getMass(); }
-  static double getMass(EvtId i ){return _partlist[i.getId()].rollMass();}
+  static double getNominalMass(EvtId i ); 
+  static double getMass(EvtId i );
 
-  static double getMaxMass(EvtId i ){return _partlist[i.getId()].getMassMax();}
-  static double getMinMass(EvtId i ){return _partlist[i.getId()].getMassMin();}
-  static double getWidth(EvtId i ){return _partlist[i.getId()].getWidth();}
-  static double getctau(EvtId i ){return _partlist[i.getId()].getctau();}
-  static int getStdHep(EvtId id ){return _partlist[id.getId()].getStdHep();}
-  static int getLundKC(EvtId id ){return _partlist[id.getId()].getLundKC();}
+  static double getMaxMass(EvtId i );
+  static double getMinMass(EvtId i );
+  static double getWidth(EvtId i );
+  static double getctau(EvtId i );
+  static int getStdHep(EvtId id );
+  static int getLundKC(EvtId id );
   static EvtId evtIdFromStdHep(int stdhep );
   static EvtId chargeConj(EvtId id );
-  static int chg3(EvtId i ){return _partlist[i.getId()].getChg3();}
-  static EvtSpinType::spintype getSpinType(EvtId i )
-              {return _partlist[i.getId()].getSpinType();}
+  static int chg3(EvtId i );
+  static EvtSpinType::spintype getSpinType(EvtId i );
   static EvtId getId(const EvtString& name );
-  static EvtString name(EvtId i){return _partlist[i.getAlias()].getName();}
+  static EvtString name(EvtId i);
   static void alias(EvtId num,const EvtString& newname);
   static void aliasChgConj(EvtId a,EvtId abar);
   static int entries() { return MAX_PART;}
-  static void reSetMass(EvtId i, double mass) { _partlist[i.getId()].reSetMass(mass);}
-  static void reSetWidth(EvtId i, double width) { _partlist[i.getId()].reSetWidth(width);}
-
+  static void reSetMass(EvtId i, double mass);
+  static void reSetWidth(EvtId i, double width);
 
 private:
 
