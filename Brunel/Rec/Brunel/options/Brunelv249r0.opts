@@ -30,7 +30,7 @@ SpillOverSelector.Input = {
   "FILE='/castor/cern.ch/lhcb/prod/L299354'", // JobID 131555 RAWH2 evtype 61
   "FILE='/castor/cern.ch/lhcb/prod/L299355'"  // JobID 131577 RAWH2 evtype 61
  }; // evtype 61 RAWH2
-//SpillOverSelector.FirstEvent = 6; // Skip corresponding spillover events
+//SpillOverSelector.FirstEvent = 7; // Skip corresponding spillover events
 BrunelDstWriter.Output = "DATAFILE='v249r0.dst' TYP='ROOT' OPT='NEW'";
 HistogramPersistencySvc.OutputFile = "v249r0.hbook";  // Monitoring histos
 ApplicationMgr.EvtMax = 10;
