@@ -1,6 +1,6 @@
 package MuonKernel
 
-version v1
+version v1r0
 
 branches cmt src MuonKernel doc Test
 

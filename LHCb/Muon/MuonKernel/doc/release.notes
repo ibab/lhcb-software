@@ -1,7 +1,7 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
-! 20020228 - MuonKernel v1 Andrei Tsaregorodtsev
+! 20020228 - MuonKernel v1r0 Andrei Tsaregorodtsev
 
   Muon/MuonKernel v1 can be compiled in the standalone mode (without
   Gaudi legacy) by excluding MsgStream and alike with conditional
