@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.7 2001-06-22 12:43:13 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.8 2001-06-22 12:45:42 sponce Exp $
 #define DDEXAMPLE_SIMPLEALGORITHM_CPP
 
 /// Include files
@@ -126,20 +126,6 @@ StatusCode SimpleAlgorithm::initialize() {
     log << MSG::INFO << "ECAL " << *it << " = "
         << ecal->userParameterValue(*it)
         << endreq;
-  }
-  
-  std::vector<std::string> parameterVectorList = ecal->userParameterVectors();
-  for (std::vector<std::string>::iterator it = parameterVectorList.begin();
-       it != parameterVectorList.end();
-       it++) {
-    std::vector<std::string> values = ecal->userParameterVectorValue(*it);
-    log << MSG::INFO << "ECAL " << *it << " = ";
-    for (std::vector<std::string>::iterator it2 = values.begin();
-         it2 != values.end();
-         it2++) {
-      log << *it2 << " ";
-    }
-    log << endreq;
   }
   
   dumpPVs( msgSvc(), ecal->geometry()->lvolume(), ecal->name() );
