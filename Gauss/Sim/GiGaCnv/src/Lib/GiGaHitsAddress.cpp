@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/Lib/GiGaHitsAddress.cpp,v 1.1 2001-04-23 17:21:38 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGaCnv/src/Lib/GiGaHitsAddress.cpp,v 1.2 2001-04-23 17:44:39 ibelyaev Exp $ 
 /// from STL 
 #include <string> 
 /// from Gaudi
@@ -6,13 +6,6 @@
 /// from GiGaCnv
 #include "GiGaCnv/GiGaHitsAddress.h" 
 ///
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-static const  AddrFactory<GiGaHitsAddress>         s_GiGaHitsAddressFactory(GiGaHits_StorageType);
-const        IAddrFactory&GiGaHitsAddressFactory = s_GiGaHitsAddressFactory;
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 ///////////////////////////////////////////////////////////////////////////////
 GiGaHitsAddress::GiGaHitsAddress(  const CLID&        Clid          , 
