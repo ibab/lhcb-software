@@ -17,7 +17,7 @@ ApplicationMgr.DLLs += { "CaloEvent" };
 #include "$EVENTSYSROOT/options/PoolDicts.opts"
 
 // Updates the local POOL catalog with the created file
-PoolDbCacheSvc.OutputCatalog = "xmlcatalog_file:MyCatalog.xml";
+PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
 
 //--------------------------------------------------------------
 // Persistency service setup: 

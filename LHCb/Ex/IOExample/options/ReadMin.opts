@@ -1,10 +1,10 @@
-// $Id: ReadMin.opts,v 1.5 2004-01-19 14:34:58 cattanem Exp $
+// $Id: ReadMin.opts,v 1.6 2004-06-17 15:19:42 cattanem Exp $
 
 //--------------------------------------------------------------------
 // Example to navigate the event data store, starting from a POOL file
 //--------------------------------------------------------------------
 
-ApplicationMgr.TopAlg      = { "EvtNumberPrintout/Printout" };
+ApplicationMgr.DLLs       += { "LHCbAlgs" };
 ApplicationMgr.TopAlg     += { "StoreExplorer" };
 ApplicationMgr.ExtSvc      = { "EventSelector" };
 ApplicationMgr.EvtMax      = 5;
@@ -23,14 +23,16 @@ ApplicationMgr.DLLs += { "CaloEvent" };
 
 // The input catalog describes the input file.
 // In this example it is the catalog produced by WriteMin.opts
-PoolDbCacheSvc.InputCatalog = "xmlcatalog_file:MyCatalog.xml";
+PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
 
 StoreExplorer.PrintFreq = 1.;
 StoreExplorer.ExploreRelations = 1;
 
+// Input data file can be produced by first running IOMin.exe with WriteMin.opts
+
 // Brunel file
-//EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOT' OPT='READ'"};
+EventSelector.Input = {"DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOT' OPT='READ'"};
 // Boole file
 //EventSelector.Input  = {"DATAFILE='PFN:PoolDigi.root' TYP='POOL_ROOT' OPT='READ'" };
 // Gauss file
-EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOT' OPT='READ'"};
+//EventSelector.Input = {"DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOT' OPT='READ'"};
