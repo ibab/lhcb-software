@@ -1,15 +1,8 @@
-// Include files
 #include <cmath>
 
-#include "RichDet/Rich.h"
-#include "RichDet/PhotonSpectrum.h"
-#include "RichDet/PhotonReflector.h"
-#include "RichDet/PhotonDetector.h"
-#include "RichDet/RichParameters.h"
-#include "RichRec/ActivePixel.h"
-#include "RichRec/Photon.h"
-#include "RichRec/TrackSegment.h"
 #include "RichDet/RichXGasRadiator.h"
+
+#include "RichDet/Trajectory.h"
 
 RichXGasRadiator::RichXGasRadiator (const RadiatorID id, const Rich &rich)
   : PhotonRadiator(id,rich), m_parGas(2), m_avgRefIndex(0.)
@@ -133,162 +126,11 @@ bool RichXGasRadiator::leaves (const Trajectory &trajectory,
   if ( ! rich().reflector().intersectMirror( trajectory, distance ) ) {
     return  false;
   }
-  return trajectory.direction(distance).z() > 0.;
+  return trajectory.direction(/*distance*/).z() > 0.;
 
 }
 
-Photon RichXGasRadiator::generatePhoton (const ParticleCode code,
-                                         TrackSegment &segment) const
-{
-  Photon photon = this->radiatePhoton(code,segment);
-
-  if ( photon.status() == Photon::Emitted ) {
-    rich().reflector().reflect(photon);
-  }
-
-  if ( photon.status() == Photon::Reflected ) {
-    rich().detector().detect(photon);
-  }
-
-  return photon;
-}
-
-Photon RichXGasRadiator::generatePhoton (const double thetaCherenkov,
-                                         const double phiCherenkov,
-                                         const double distCherenkov,
-                                         TrackSegment &segment) const
-{
-  Photon photon = Photon::emitted(0.,thetaCherenkov,phiCherenkov,
-                                  distCherenkov,segment);
-
-  if ( photon.status() == Photon::Emitted ) {
-    rich().reflector().reflect(photon);
-  }
-
-  if ( photon.status() == Photon::Reflected ) {
-    rich().detector().detect(photon);
-  }
-
-  return photon;
-}
-
-Photon RichXGasRadiator::reconstructPhoton (TrackSegment &segment,
-                                            const ActivePixel &pixel) const
-{
-
-  if ( ! segment.active() ) {
-    return Photon::notReconstructed(pixel.pixel(),segment);
-  }
-
-  // No intermediate wall
-
-  HepPoint3D detection = pixel.globalPosition();
-  double distance = 0.5 * ( segment.enters() + segment.leaves() );
-  double fraction = 1.;
-
-  if ( Rich::Rich1 == this->rich().id() ) {
-    double enter = segment.enters();
-    double delta = segment.leaves() - enter;
-    HepPoint3D emission1  = segment.position(enter+0.01*delta);
-    HepPoint3D emission2  = segment.position(enter+0.99*delta);
-    HepPoint3D reflection1;
-    HepPoint3D reflection2;
-    bool ok1 =
-      rich().reflector().reflectionPoint(emission1,detection,reflection1);
-    bool ok2 =
-      rich().reflector().reflectionPoint(emission2,detection,reflection2);
-    //      cout << "Emission1" << emission1 << " :" << enter + 0.01*delta << endl;
-    //      cout << "Emission2" << emission2 << " :" << enter + 0.99*delta << endl;
-    //      cout << "Reflection1" << reflection1 << " : " << ok1 << endl;
-    //      cout << "Reflection2" << reflection2 << " : " << ok2 << endl;
-    double fracx = 999.;
-    double fracy = 999.;
-    if ( ok1 && ok2 ) {
-      // Nop
-    } else if ( ok1 ) {
-
-      if ( reflection1.x() * reflection2.x() < 0. ) {
-        fracx = abs( reflection1.x() / (reflection1.x() - reflection2.x()));
-      }
-      if ( reflection1.y() * reflection2.y() < 0. ) {
-        fracy = abs( reflection1.y() / (reflection1.y() - reflection2.y()));
-      }
-      fraction = ( fracx < fracy ? fracx : fracy );
-      distance = enter + 0.5 * fraction * delta;
-
-    } else if ( ok2 ) {
-
-      if ( reflection1.x() * reflection2.x() < 0. ) {
-        fracx = abs( reflection2.x() / (reflection1.x() - reflection2.x()));
-      }
-      if ( reflection1.y() * reflection2.y() < 0. ) {
-        fracy = abs( reflection2.y() / (reflection1.y() - reflection2.y()));
-      }
-      fraction = ( fracx < fracy ? fracx : fracy );
-      distance = enter + ( 1. - 0.5 * fraction ) * delta;
-
-    } else {
-      return Photon::notReconstructed(pixel.pixel(),segment);
-    }
-
-    // intermediate wall
-
-  } else if ( Rich::Rich2 == this->rich().id() ) {
-
-    HepPoint3D entry = segment.position(segment.enters());
-    double dist;
-    bool ok = segment.intersect(HepPlane3D(0.,1.,0.,0.),dist);
-    bool entryOk = entry.x() * detection.x() > 0.;
-
-    // Track has intersection inside sensitive volume
-
-    if ( ok && dist > segment.enters() && dist < segment.leaves() ) {
-
-      if ( entryOk ) {
-        dist = 0.5 * ( segment.enters() + dist );
-        fraction = dist / distance;
-        distance = dist;
-      } else {
-        dist = 0.5 * ( dist + segment.leaves() );
-        fraction = dist / distance;
-        distance = dist;
-      }
-
-    } else {
-
-      if ( !entryOk ) {
-        return Photon::notReconstructed(pixel.pixel(),segment);
-      }
-
-    }
-
-  }
-
-  HepPoint3D emission = segment.position(distance);
-  // cout << "Final Emission" << emission << " : " << distance << endl;
-  HepPoint3D reflection;
-  bool ok = rich().reflector().reflectionPoint(emission,detection,reflection);
-  // cout << "Final " << reflection << " : " << ok << endl;
-  if ( ! ok ) {
-    return Photon::notReconstructed(pixel.pixel(),segment);
-  }
-
-  HepVector3D emissionDirection = reflection - emission;
-  double theta, phi;
-  segment.angleToDirection(distance,emissionDirection,
-                           HepVector3D(1.,0.,0.),theta,phi);
-
-  //    if ( theta > this->maxThetaCherenkov() + 0.02 ) {
-  //    return Photon::notReconstructed(pixel.pixel(),segment);
-  //   }
-  return Photon::reconstructed(distance,theta,phi,fraction,
-                               pixel.pixel(),segment);
-
-}
-
-double RichXGasRadiator::scatterFraction (const ParticleCode particle,
-                                          const TrackSegment &segment,
-                                          const double theta,
+double RichXGasRadiator::scatterFraction (const double theta,
                                           const double area) const
 {
   return 0.;

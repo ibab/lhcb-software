@@ -1,13 +1,11 @@
-// $Id: RichParameters.h,v 1.2 2001-10-26 13:02:12 rihill Exp $
+// $Id: RichParameters.h,v 1.3 2001-10-31 16:50:12 rihill Exp $
 #ifndef RICHREC_RICHPARAMETERS_H
 #define RICHREC_RICHPARAMETERS_H 1
 
-// Include files
 #include <string>
 #include <iostream>
 #include <map>
 #include <stdio.h>
-using namespace std;
 
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
@@ -23,7 +21,7 @@ using namespace std;
 
 class RichParameters : public AlgTool {
 
-public:    // Standard constructor
+public:
   RichParameters( const std::string& type, const std::string& name,
                   const IInterface* parent);
 
@@ -54,7 +52,6 @@ private:
   virtual void updateParaMap();
 
 private:
-  // Data Members for Class Attributes
 
   std::string m_parameterFile;
 

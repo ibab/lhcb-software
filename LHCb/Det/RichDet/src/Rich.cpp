@@ -1,4 +1,4 @@
-// Include files
+
 #include <cassert>
 
 #include "RichDet/Rich.h"

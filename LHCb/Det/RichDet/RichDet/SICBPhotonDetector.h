@@ -3,7 +3,6 @@
 
 #include <cmath>
 #include <vector>
-//#include "RichGlobal/Definitions.h"
 #include "RichDet/CLHEP_Geometry.h"
 using namespace std;
 
@@ -14,7 +13,6 @@ class Rich;
 class PhotonSpectrum;
 class RichParameters;
 class Pixel;
-class Photon;
 class RichXLocalPosition;
 class SICBPixel;
 
@@ -63,8 +61,8 @@ public:
 
   PhotonSpectrum * photonEfficiency () const;
 
-  void detect (Photon &photon) const;
-
+  Pixel* detect (Trajectory &photon) const;
+  
   Pixel * newPixel (const HepPoint3D &position) const;
 
   Pixel * newPixel (const LocalPosition &local) const;

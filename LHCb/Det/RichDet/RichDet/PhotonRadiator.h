@@ -5,16 +5,14 @@
 #include <stddef.h>
 #include "CLHEP/Geometry/Plane3D.h"
 
-//#include "RichGlobal/Definitions.h"
 #include "ParticleCode.h"
 
-#include "Rich.h"
+#include "RichDet/Rich.h"
 class PhotonSpectrum;
 class RichParameters;
-class ActivePixel;
-class Photon;
 class Trajectory;
-class TrackSegment;
+
+class Photon;
 
 class PhotonRadiator {
 
@@ -35,7 +33,8 @@ public:
 
   virtual PhotonSpectrum * 
   newObservedSpectrum (const double mass, 
-                       const TrackSegment& segment) const;
+                       const double beta,
+                       const double length) const;
 
   virtual bool enters (const Trajectory &trajectory, 
                        double &distance) const;
@@ -47,47 +46,35 @@ public:
 
   virtual double refractiveIndex () const = 0;
 
-  virtual Photon generatePhoton (const ParticleCode code, 
-                                 TrackSegment &segment) const = 0;
-
-  virtual Photon generatePhoton (const double thetaCherenkov, 
-                                 const double phiCherenkov, 
-                                 const double distCherenkov, 
-                                 TrackSegment &segment) const = 0;
-
-  virtual Photon reconstructPhoton (TrackSegment &segment, 
-                                    const ActivePixel &pixel) const = 0;
-
   virtual double momentumThreshold (const ParticleCode particle) const;
 
   virtual double maxThetaCherenkov () const;
 
-  virtual void efficiency (const ParticleCode particle, 
-                           const TrackSegment &segment, 
-                           double &signalEfficiency, 
-                           double &scatterEfficiency) const;
+  virtual int scatter (Trajectory &photon, const double energy) const;
+  // returns : -1 if photon absorbed, 
+  //            1 if scattered
+  //            0 if not scattered
 
-  virtual double signalFraction (const ParticleCode particle, 
-                                 const TrackSegment &segment,
+  virtual bool refract (Trajectory &photon, 
+                        const double energy) const;
+
+  virtual double signalFraction (const double thtExp,
                                  const double theta, 
                                  const double area) const;
 
-  virtual double scatterFraction (const ParticleCode particle, 
-                                  const TrackSegment &segment, 
-                                  const double theta, 
+  virtual double scatterFraction (const double theta, 
                                   const double area) const = 0;
 
   virtual double photonResolution (const double theta) const;
 
 protected:
-  Photon radiatePhoton (const ParticleCode code, 
-                        TrackSegment &segment) const;
+  void updateTrajectory(Trajectory& trajectory, 
+                        const HepPoint3D& pos,
+                        const HepVector3D& dir) const;
 
   virtual const PhotonSpectrum & photonEfficiency () const;
 
   virtual void initPhotonResolution ();
-
-  // Data Members for Class Attributes
 
   double m_refIndex;
   double m_z0Pos;
@@ -119,15 +106,13 @@ private:
 
   PhotonRadiator & operator=(const PhotonRadiator &right);
 
-  // Data Members for Class Attributes
-
   const RadiatorID m_id;
-
-private:
-  // Data Members for Associations
 
   const Rich *m_rich;
 };
+
+// ==========================================
+
 
 inline const PhotonRadiator::RadiatorID PhotonRadiator::id () const 
 {

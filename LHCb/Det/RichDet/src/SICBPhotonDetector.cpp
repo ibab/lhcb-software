@@ -7,10 +7,11 @@
 #include "RichDet/PhotonSpectrum.h"
 #include "RichDet/RichParameters.h"
 #include "RichDet/Pixel.h"
-#include "RichRec/Photon.h"
 #include "RichDet/SICBPhotonDetector.h"
 #include "RichDet/RichXLocalPosition.h"
 #include "RichDet/SICBPixel.h"
+
+#include "RichDet/Trajectory.h"
 
 SICBPhotonDetector::SICBPhotonDetector (const Rich &rich)
   : PhotonDetector(rich),
@@ -94,47 +95,50 @@ PhotonSpectrum * SICBPhotonDetector::photonEfficiency () const
   return new PhotonSpectrum(2.0,0.25,hamamatsu);
 }
 
-void SICBPhotonDetector::detect (Photon &photon) const
+Pixel* SICBPhotonDetector::detect (Trajectory &photon) const
 {
-
-  assert( photon.status() == Photon::Reflected ||
-          photon.status() == Photon::ScatteredReflected );
+  // ajb 181001
 
   // simulate geometrical efficiency
   if ( RandFlat::shoot(0.,1.) > pixelActive_ ) {
-    photon.absorbed();
-    return;
+    //    photon.absorbed();
+    return NULL;
   };
 
   // intersect to plane
   int side = this->side( photon.position() );
   double dist;
   if ( ! photon.intersect(plane_[side],dist) ) {
-    photon.absorbed();
-    return;
+    //    photon.absorbed();
+    return NULL;
   };
 
   // Get hit point
   HepPoint3D pos = photon.position(dist);
+  SICBPixel * pixel;
 
   // Check if Photon has switched sides
   int newside = this->side( pos );
   double newdist;
   if ( newside != side ) {
     if ( ! photon.intersect(plane_[newside],newdist) ) {
-      photon.absorbed();
-      return;
+      //      photon.absorbed();
+      return NULL;
     };
     HepPoint3D newpos = photon.position(newdist);
-    SICBPixel * newpixel = newSICBPixel(newpos);
-    photon.observed(pos,newpixel);
+    //    SICBPixel * newpixel = newSICBPixel(newpos);
+    pixel = newSICBPixel(newpos);
+    PhotonDetector::updateTrajectory(photon, /*new*/pos);
+    //    photon.observed(pos,newpixel);
 
   } else {
 
-    SICBPixel * pixel = newSICBPixel(pos);
-    photon.observed(pos,pixel);
+    pixel = newSICBPixel(pos);
+    PhotonDetector::updateTrajectory(photon, /*new*/pos);
+    //    photon.observed(pos,pixel);
 
   }; 
+  return pixel;
 }
 
 Pixel * SICBPhotonDetector::newPixel (const HepPoint3D &position) const

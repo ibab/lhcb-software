@@ -3,9 +3,6 @@
 
 #include <cassert>
 #include <vector>
-//#include "RichGlobal/Definitions.h"
-
-using namespace std;
 
 #include "RichDet/Rich.h"
 #include "RichDet/RichParameters.h"
@@ -29,30 +26,17 @@ public:
   // Returns reference to a given rich
   const Rich & rich (Rich::RichID id) const;
 
-  // Additional Public Declarations
-
-protected:
-
-  // Additional Protected Declarations
-
 private:
   Configuration(const Configuration &right);
 
   Configuration & operator=(const Configuration &right);
 
-  // Additional Private Declarations
-
-private:
-  // Data Members for Associations
-
-  vector<Rich*> rich_;
-
-  // Additional Implementation Declarations
+  std::vector<Rich*> rich_;
 
 };
 
 
-// Class Rich::Configuration
+// ====================================================
 
 
 inline int Configuration::nrRich () const

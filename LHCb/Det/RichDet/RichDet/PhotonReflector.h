@@ -8,13 +8,13 @@
 #include "CLHEP/Geometry/Point3D.h"
 
 #include "RichDet/CLHEP_Geometry.h"
-#include "RichDet/Rich.h"
 
 class Rich;
 class PhotonSpectrum;
 class RichParameters;
-class Photon;
 class Trajectory;
+
+//class Photon;
 
 class PhotonReflector {
 
@@ -35,13 +35,18 @@ public:
   virtual bool intersectMirror (const Trajectory &trajectory,
                                 double &distance) const;
 
-  virtual void reflect (Photon &photon) const;
-
+  virtual bool reflect (Trajectory& photon) const;
+  
   virtual bool reflectionPoint (const HepPoint3D &emission,
                                 const HepPoint3D &detection,
                                 HepPoint3D &reflection) const;
 
 protected:
+
+  void updateTrajectory(Trajectory& trajectory, 
+                        const HepPoint3D& pos,
+                        const HepVector3D& dir) const;
+
   static HepPoint3D setCenter (const double radius,
                                const double tiltx,
                                const double tilty,

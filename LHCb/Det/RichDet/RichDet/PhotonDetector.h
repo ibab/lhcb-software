@@ -1,20 +1,19 @@
-// $Id: PhotonDetector.h,v 1.2 2001-10-26 13:02:12 rihill Exp $
+// $Id: PhotonDetector.h,v 1.3 2001-10-31 16:50:12 rihill Exp $
 #ifndef RICHDET_PHOTONDETECTOR_H
 #define RICHDET_PHOTONDETECTOR_H 1
 
-// Include files
 #include <cassert>
 #include <stddef.h>
 
 class Rich;
-class Photon;
 class PhotonSpectrum;
 class RichParameters;
 class LocalPosition;
 class Pixel;
 
-class HepPoint3D;
+class Trajectory;
 
+class HepPoint3D;
 
 // The general representation of a Photon detector. Only
 // general features are implemented. The concrete
@@ -36,7 +35,7 @@ public:
 
   virtual PhotonSpectrum * photonEfficiency () const = 0;
 
-  virtual void detect (Photon &photon) const = 0;
+  virtual Pixel* detect (Trajectory &photon) const = 0;
 
   virtual Pixel * newPixel (const HepPoint3D &position) const = 0;
 
@@ -58,10 +57,9 @@ public:
 
   virtual double expSignalBackground (const Pixel &pixel) const = 0;
 
-  // Additional Public Declarations
-
 protected:
-  // Additional Protected Declarations
+
+  void updateTrajectory(Trajectory& trajectory, const HepPoint3D& pos) const;
 
 private:
   PhotonDetector();
@@ -70,12 +68,12 @@ private:
 
   PhotonDetector & operator=(const PhotonDetector &right);
 
-private:
-  // Data Members for Associations
-
   const Rich *m_rich;
 
 };
+
+// ==============================================
+
 
 inline const Rich & PhotonDetector::rich () const
 {

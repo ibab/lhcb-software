@@ -1,17 +1,12 @@
 
 #include <cassert>
 
-// Rich
 #include "RichDet/Rich.h"
-// PhotonSpectrum
 #include "RichDet/PhotonSpectrum.h"
-// PhotonDetector
 #include "RichDet/PhotonDetector.h"
-// RichParameters
 #include "RichDet/RichParameters.h"
-// Photon
-#include "RichRec/Photon.h"
-// Rich2PhotonReflector
+#include "RichDet/Trajectory.h"
+//#include "RichRec/Photon.h"
 #include "RichDet/Rich2PhotonReflector.h"
 
 
@@ -76,15 +71,16 @@ PhotonSpectrum * Rich2PhotonReflector::newPhotonEfficiency () const
 
 }
 
-void Rich2PhotonReflector::reflect (Photon &photon) const
+bool Rich2PhotonReflector::reflect (Trajectory &photon) const
 {
 
   // reflection on spherical mirror
 
-  this->PhotonReflector::reflect(photon);
-
-  if ( photon.status() == Photon::Absorbed ) return;
-  assert( photon.status() == Photon::Reflected );
+  if ( ! this->PhotonReflector::reflect(photon) ) {
+    // if ( photon.status() == Photon::Absorbed ) return;
+    return false;
+  }
+  //  assert( photon.status() == Photon::Reflected );
 
   // reflexion on flat mirror
 
@@ -92,17 +88,20 @@ void Rich2PhotonReflector::reflect (Photon &photon) const
 
   double dist;
   if ( ! photon.intersect(flatMirror_[side],dist) ) {
-    photon.absorbed();
-    return;
+    // photon.absorbed();
+    return false;
   }
 
-  HepPoint3D  pos    = photon.position(dist);
-  HepVector3D dir    = photon.direction(dist);
+  HepPoint3D pos    = photon.position(dist);
+  HepVector3D dir    = photon.direction(/*dist*/);
   HepNormal3D normal = flatMirror_[side].normal();
 
   dir = dir - 2.0 * (normal * dir ) * normal;
 
-  photon.reflected(pos,dir);
+  //  photon.reflected(pos,dir);
+  PhotonReflector::updateTrajectory(photon, pos, dir);
+
+  return true;
 }
 
 HepPlane3D Rich2PhotonReflector::setPlane (const double xMin,

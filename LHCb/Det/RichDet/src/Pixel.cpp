@@ -19,7 +19,6 @@ Pixel::~Pixel()
 #endif
 }
 
-
 // Additional Declarations
 #ifdef MEM_DEBUG
 Pixel::s_number = 0;

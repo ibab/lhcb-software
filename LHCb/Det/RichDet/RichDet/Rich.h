@@ -11,6 +11,7 @@
 #include "RichDet/PhotonDetector.h"
 #include "RichDet/RichParameters.h"
 
+
 // Represents a detector. The main purpose is to establish
 // a RICH identity and to provide access to the components
 

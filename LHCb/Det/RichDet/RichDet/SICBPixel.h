@@ -20,7 +20,7 @@ public:
 
   bool operator != (const Pixel &right) const;
 
-  Pixel * clone () const;
+  SICBPixel * clone () const;
 
   virtual const HepPoint3D & position() const;
 

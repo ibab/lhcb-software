@@ -1,17 +1,10 @@
 
 #include <cassert>
 
-// Rich
 #include "RichDet/Rich.h"
-// PhotonSpectrum
 #include "RichDet/PhotonSpectrum.h"
-// PhotonDetector
 #include "RichDet/PhotonDetector.h"
-// RichParameters
 #include "RichDet/RichParameters.h"
-// Photon
-//#include "RichDet/Photon.h"
-// Rich1PhotonReflector
 #include "RichDet/Rich1PhotonReflector.h"
 
 

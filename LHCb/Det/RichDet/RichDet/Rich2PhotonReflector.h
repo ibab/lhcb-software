@@ -8,7 +8,9 @@ class Rich;
 class PhotonSpectrum;
 class PhotonDetector;
 class RichParameters;
-class Photon;
+class Trajectory;
+
+//class Photon;
 
 class Rich2PhotonReflector : public PhotonReflector {
 
@@ -21,7 +23,7 @@ public:
 
   PhotonSpectrum * newPhotonEfficiency () const;
 
-  void reflect (Photon &photon) const;
+  bool reflect (Trajectory &photon) const;
 
   static HepPlane3D setPlane (const double xMin,
                               const double xMax,

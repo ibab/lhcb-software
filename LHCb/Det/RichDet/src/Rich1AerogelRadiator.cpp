@@ -1,5 +1,4 @@
 
-// Include files
 #include <vector>
 #include <cmath>
 #include "CLHEP/Random/RandExponential.h"
@@ -10,10 +9,7 @@
 #include "RichDet/PhotonReflector.h"
 #include "RichDet/PhotonDetector.h"
 #include "RichDet/RichParameters.h"
-#include "RichRec/ActivePixel.h"
-#include "RichRec/Photon.h"
-#include "RichRec/Trajectory.h"
-#include "RichRec/TrackSegment.h"
+#include "RichDet/Trajectory.h"
 #include "RichDet/Rich1AerogelRadiator.h"
 
 Rich1AerogelRadiator::Rich1AerogelRadiator (const Rich &rich)
@@ -107,92 +103,37 @@ bool Rich1AerogelRadiator::leaves (const Trajectory &trajectory,
   if ( !trajectory.intersect(m_plane1,distance) ) {
     return false;
   }
-  return trajectory.direction(distance).z() > 0;
+  return trajectory.direction(/*distance*/).z() > 0;
 
 }
 
-Photon Rich1AerogelRadiator::generatePhoton (const ParticleCode code,
-                                             TrackSegment &segment) const
+int Rich1AerogelRadiator::scatter (Trajectory &photon, 
+                                    const double energy) const
 {
-  Photon photon = this->radiatePhoton(code,segment);
-
-  if ( photon.status() == Photon::Emitted ) {
-    scatter(photon);
-  };
-
-  if ( photon.status() == Photon::Emitted ||
-       photon.status() == Photon::Scattered ) {
-    rich().reflector().reflect(photon);
-  };
-
-  if ( photon.status() == Photon::Reflected ||
-       photon.status() == Photon::ScatteredReflected ) {
-    rich().detector().detect(photon);
-  };
-
-  return photon;
-}
-
-Photon Rich1AerogelRadiator::generatePhoton (const double thetaCherenkov,
-                                             const double phiCherenkov,
-                                             const double distCherenkov,
-                                             TrackSegment &segment) const
-{
-  Photon photon = Photon::emitted(0.,thetaCherenkov,phiCherenkov,
-                                  distCherenkov,segment);
-
-  if ( photon.status() == Photon::Emitted ) {
-    scatter(photon);
-  };
-  if ( photon.status() == Photon::Emitted ||
-       photon.status() == Photon::Scattered ) {
-    rich().reflector().reflect(photon);
-  }
-
-  if ( photon.status() == Photon::Reflected ||
-       photon.status() == Photon::ScatteredReflected ) {
-    rich().detector().detect(photon);
-  }
-
-  return photon;
-}
-
-void Rich1AerogelRadiator::scatter (Photon &photon) const
-{
-
-  //    cout << "Photon Emitted :" << photon.thetaCherenkov() << endl;
-
-
   double dist;
+  int scattered = 0;
 
   if ( m_rayleighScattering ) {
 
-    double scatterLength = pow(1.24/photon.energy(),4) / m_clarity;
-
+    double scatterLength = pow(1.24/energy,4) / m_clarity;
     int scatter = 0;
     for(;;) {
-
       if ( photon.direction().z() > 0. ) {
         if ( ! photon.intersect(m_plane1,dist) || dist < 0.  ) {
-          //     cout << "Photon absorbed 1" << endl;
-          photon.absorbed(true);
-          return;
+          //          photon.absorbed(true);
+          return -1;
         }
       } else {
         if ( ! photon.intersect(m_plane0,dist) || dist < 0.) {
-          //     cout << "Photon absorbed 2" << endl;
-          photon.absorbed(true);
-          return;
+          //          photon.absorbed(true);
+          return -1;
         }
       }
       HepPoint3D  pos = photon.position(dist);
       if ( abs(pos.x()) > m_x0Max || abs(pos.y()) > m_y0Max ) {
-        //   cout << "Photon absorbed 3 : z = "
-        //        << photon.position().z() << endl;
-        photon.absorbed(true);
-        return;
+        //        photon.absorbed(true);
+        return -1;
       }
-
 
       double length =  RandExponential::shoot(scatterLength);
 
@@ -201,61 +142,75 @@ void Rich1AerogelRadiator::scatter (Photon &photon) const
       double theta = randCos2();
       double phi   = RandFlat::shoot(2.*M_PI);
 
-      // HepVector3D dir = photon.direction(length);
-      // if ( abs(dir.x()) < abs(dir.y()) ) {
       HepVector3D  dir =
         photon.rotateDirection(length,theta,phi,HepVector3D(1.,0.,0.));
-      // } else {
-      //  dir = photon.rotateDirection(length,theta,phi,HepVector3D(0.,1.,0.));
-      // }
-      photon.scattered(pos,dir);
+      PhotonRadiator::updateTrajectory(photon, pos, dir);
+      
+      //      photon.scattered(pos,dir);
+      scattered = 1;
 
       // Emergency Exit
       if ( ++scatter < 10 ) {
-        photon.absorbed(true);
-        return;
+        //        photon.absorbed(true);
+        return -1;
       }
 
     }
   }
+  
 
   // photon has to go upstream
 
   if ( ! leaves(photon,dist) ) {
-    //      cout << "Photon absorbed 4 : z = " << photon.position().z() << endl;
-    photon.absorbed(true);
-    return;
+    //    photon.absorbed(true);
+    return -1;
   }
+  return scattered;
+}
 
-  //    cout << "Photon After :" <<
-  //    photon.direction().angle(photon.segment().direction()) << endl;
 
-  // finally refraction on exiting aerogel
-
+bool Rich1AerogelRadiator::refract (Trajectory &photon, 
+                                    const double energy) const
+{
+  // refraction on exiting aerogel
   if ( m_refraction ) {
 
+    double dist;
+
+    double dist2;
+    if ( ((! photon.intersect(m_plane1,dist) || dist < 0.) != 
+         ( ! leaves(photon, dist2)) ) || (dist != dist2)  ) {
+      cout << "mismatch> i: " << photon.intersect(m_plane1,dist);
+      cout << " l: " << leaves(photon, dist2);
+      cout << " d1: " << dist <<  " d2: " << dist2 << endl;
+      
+    }
+
+
+    if ( ! photon.intersect(m_plane1,dist) || dist < 0.  ) {
+      //          photon.absorbed(true);
+      return false;
+    }
     HepPoint3D  pos = photon.position(dist);
-    HepVector3D dir = photon.direction(dist);
+    HepVector3D dir = photon.direction(/*dist*/);
 
     // snells law, it is assumed that the refraction plane is ortogonal
     // to the z axis
 
     double sinTheta =
-      this->refractiveIndex(photon.energy()) * sin(dir.theta());
+      this->refractiveIndex(energy) * sin(dir.theta());
 
     if ( sinTheta > 1. ) {
-      // cout << "Total reflection : z = " << photon.position().z() << endl;
-      photon.absorbed(true);
-      return;
+      //      photon.absorbed(true);
+      return false ;
     }
 
     dir.setTheta( asin(sinTheta) );
 
-    //      cout << " Refracted : z = " << photon.position().z() << endl;
-    photon.refracted(pos,dir);
-
+    //    photon.refracted(pos,dir);
+    PhotonRadiator::updateTrajectory(photon, pos, dir);
   }
-
+  return true;
 }
 
 double Rich1AerogelRadiator::randCos2 ()
@@ -269,59 +224,9 @@ double Rich1AerogelRadiator::randCos2 ()
   return theta;
 }
 
-Photon Rich1AerogelRadiator::reconstructPhoton (TrackSegment &segment,
-                                                const ActivePixel &pixel)
-  const
-{
-
-  if ( ! segment.active() ) {
-    Photon phot = Photon::notReconstructed(pixel.pixel(),segment);
-    return phot;
-  }
-
-  // Aerogel is thin. Full track segement is seen by pixel.
-
-  double distance = 0.5 * ( segment.enters() + segment.leaves() );
-  HepPoint3D emission  = segment.position(distance);
-  HepPoint3D detection = pixel.globalPosition();
-  HepPoint3D reflection;
-
-  if ( ! rich().reflector().reflectionPoint(emission,detection,reflection) ) {
-    return Photon::notReconstructed(pixel.pixel(),segment);
-  }
-
-  HepVector3D dir = reflection - emission;
-
-  if ( m_refraction ) {
-
-    // correct for refraction. Distance in Aergoel can be neglected
-    // again refraction plane is assumed to be normal to z axis
-
-    double sinTheta  = sin(dir.theta()) / this->refractiveIndex();
-    double theta = ( sinTheta > 1. ? 0.5 * M_PI : asin( sinTheta ) );
-    dir.setTheta(theta);
-
-  }
-
-  double theta, phi;
-  segment.angleToDirection(distance,dir,HepVector3D(1.,0.,0.),theta,phi);
-
-
-  //    if ( theta > maxThetaCherenkov()+0.02 ) {
-  //    return  Photon::notReconstructed(pixel.pixel(),segment);
-  // }
-
-  return Photon::reconstructed(distance,theta,phi,1.,pixel.pixel(),segment);
-
-}
-
-double Rich1AerogelRadiator::scatterFraction (const ParticleCode particle,
-                                              const TrackSegment &segment,
-                                              const double theta,
+double Rich1AerogelRadiator::scatterFraction (const double theta,
                                               const double area) const
 {
-  assert( segment.avgThetaCherenkov(particle) > 0. );
-
   double par[] = { 31.2301, -0.000175438, 0.132727, 0.570114, -2.34341,
                    2.18153, 1.4248 };
 

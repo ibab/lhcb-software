@@ -13,28 +13,21 @@ Configuration::Configuration()
 
 Configuration::~Configuration()
 {
-
   for(vector<Rich*>::iterator rich = rich_.begin();
       rich != rich_.end();
       ++rich) {
-
     delete *rich;
-
-  };
-
+  }
 }
 
 void Configuration::update (const RichParameters &parameter)
 {
-
   for(vector<Rich*>::iterator rich = rich_.begin();
       rich != rich_.end();
       ++rich) {
     assert( *rich != NULL );
     (*rich)->update(parameter);
-
-  };
-
+  }
 }
 
 

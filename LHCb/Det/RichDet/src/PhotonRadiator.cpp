@@ -1,28 +1,17 @@
-// $Id: PhotonRadiator.cpp,v 1.2 2001-10-26 13:02:13 rihill Exp $
+// $Id: PhotonRadiator.cpp,v 1.3 2001-10-31 16:50:12 rihill Exp $
 #include <cmath>
 #include <cassert>
 #include "CLHEP/Random/RandFlat.h"
 
-// Rich
 #include "RichDet/Rich.h"
-// PhotonSpectrum
 #include "RichDet/PhotonSpectrum.h"
-// PhotonRadiator
 #include "RichDet/PhotonRadiator.h"
-// PhotonReflector
 #include "RichDet/PhotonReflector.h"
-// PhotonDetector
 #include "RichDet/PhotonDetector.h"
-// RichParameters
 #include "RichDet/RichParameters.h"
-// ActivePixel
-#include "RichRec/ActivePixel.h"
-// Photon
-#include "RichRec/Photon.h"
-// Trajectory
-#include "RichRec/Trajectory.h"
-// TrackSegment
-#include "RichRec/TrackSegment.h"
+#include "RichDet/Trajectory.h"
+
+//#include "RichRec/Photon.h"
 
 #include <typeinfo>
 
@@ -47,14 +36,31 @@ double PhotonRadiator::maxThetaCherenkov () const
   return acos( 1. / this->refractiveIndex() );
 }
 
+void PhotonRadiator::updateTrajectory(Trajectory& trajectory,
+                                       const HepPoint3D& pos,
+                                       const HepVector3D& dir) const
+{ 
+  trajectory.m_position = pos;
+  trajectory.m_direction = dir;
+  trajectory.m_direction.setMag(1.0);
+}
+
+
+int PhotonRadiator::scatter (Trajectory &photon, const double energy) const
+{
+  return 0; // no scattering by default
+}
+
+bool PhotonRadiator::refract (Trajectory &photon, const double energy) const
+{
+  return true; // ...means not absorbed
+}
+
 PhotonSpectrum
 *PhotonRadiator::newObservedSpectrum(const double mass,
-                                         const TrackSegment &segment) const
+                                     const double beta,
+                                     const double length) const
 {
-
-  double beta   = segment.beta(mass);
-  double length = segment.leaves() - segment.enters();
-
   PhotonSpectrum * spectrum = new PhotonSpectrum(this->photonEfficiency());
 
   double delta  = m_photonEfficiency->deltaEnergy();
@@ -113,28 +119,12 @@ bool PhotonRadiator::enters (const Trajectory &trajectory,
 
   // right flight direction ?
 
-  HepVector3D dir = trajectory.direction(distance);
+  HepVector3D dir = trajectory.direction(/*distance*/);
   if ( dir.z() < 0. ) {
     return false;
   }
 
   return true;
-
-}
-
-Photon PhotonRadiator::radiatePhoton (const ParticleCode code,
-                                          TrackSegment &segment) const
-{
-
-  double energy   = segment.observedSpectrum(code).random();
-  double beta     = segment.beta(code);
-  double thetaC   = acos( 1. / ( beta * refractiveIndex(energy) ) );
-  double phiC     = RandFlat::shoot(0.,M_2PI);
-  double distC    = ( m_emissionError ?
-                      RandFlat::shoot(segment.enters(),segment.leaves()) :
-                      0.5 * ( segment.enters() + segment.leaves() ) );
-
-  return Photon::emitted(energy,thetaC,phiC,distC,segment);
 
 }
 
@@ -164,45 +154,10 @@ const PhotonSpectrum & PhotonRadiator::photonEfficiency () const
 
 }
 
-void PhotonRadiator::efficiency (const ParticleCode particle,
-                                     const TrackSegment &segment,
-                                     double &signalEfficiency,
-                                     double &scatterEfficiency) const
+double PhotonRadiator::signalFraction (const double thtExp,
+                                       const double theta,
+                                       const double area) const
 {
-
-  // calculated by MC integration. Photons are simulated and the number of
-  // observed signal or scatter photons is counted.
-
-  int signal  = 0;
-  int scatter = 0;
-
-  for(int i = 0; i < int(1/m_efficiencyPrecision) ; ++i ) {
-    Photon photon =
-      this->generatePhoton(particle,const_cast<TrackSegment &>(segment));
-    switch( photon.status() ) {
-    case Photon::Observed :
-      ++signal;
-      break;
-    case Photon::ScatteredObserved :
-      ++scatter;
-      break;
-    default:
-      break;
-    }
-  }
-
-  signalEfficiency  = signal  * m_efficiencyPrecision;
-  scatterEfficiency = scatter * m_efficiencyPrecision;
-
-}
-
-double PhotonRadiator::signalFraction (const ParticleCode particle,
-                                           const TrackSegment &segment,
-                                           const double theta,
-                                           const double area) const
-{
-
-  double thtExp = segment.avgThetaCherenkov(particle);
   assert( thtExp > 0. );
   assert( theta >= 0 );
   double sig =  photonResolution(thtExp);

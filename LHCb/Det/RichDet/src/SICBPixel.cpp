@@ -11,6 +11,17 @@ SICBPixel::~SICBPixel()
 {
 }
 
+/*
+SICBPixel::SICBPixel(const SICBPixel &right)
+{
+}
+
+
+SICBPixel::SICBPixel & operator=(const SICBPixel &right)
+{
+}
+*/
+
 bool SICBPixel::operator < (const Pixel &right) const
 {
   const SICBPixel & r = dynamic_cast<const SICBPixel&>(right);
@@ -38,7 +49,7 @@ bool SICBPixel::operator != (const Pixel &right) const
     position_.distance2(r.position_) > EPSILON * EPSILON;
 }
 
-Pixel * SICBPixel::clone () const
+SICBPixel* SICBPixel::clone () const
 {
   return new SICBPixel(rich(),position_);
 }
