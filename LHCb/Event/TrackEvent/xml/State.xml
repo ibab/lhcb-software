@@ -1,0 +1,437 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrEvent'>
+
+<!-- ==================== State class definition ==================== -->
+
+    <class
+      name             = 'State'
+      author           = 'Jose Hernando, Eduardo Rodrigues'
+      desc             = 'State is the base class of offline and online track states.'
+      id               = '10011'
+      location         = 'Rec/Track/States'
+      serializers      = 'FALSE'
+      keyedContTypeDef = 'TRUE'>
+
+      <import name='CLHEP/Geometry/Point3D' />
+      <import name='CLHEP/Geometry/Vector3D' />
+      &StlPtrVector;
+
+      <enum
+        name    = 'Type'
+        value   = 'HasMomentum=1,StraightLine=2'
+        desc    = 'enumeration for the state type'
+        access  = 'PUBLIC' />
+
+      <enum
+        name    = 'Location'
+        value   = 'Unknown=1,ClosestToBeam=2,FirstMeasurement=4,EndVelo=8,AtTT=16,AtT=32,BegRich1=64,EndRich1=128,BegRich2=256,EndRich2=512,Calo=1024,Muon=2048'
+        desc    = 'enumeration for the location of the state'
+        access  = 'PUBLIC' />
+
+      <constructor
+        desc    = 'Default constructor. State defined to be of type State::HasMomentum.' />
+
+     <attribute
+       type    = 'bitfield'
+       name    = 'flags'
+       desc    = 'the variety of state flags'
+       init    = '0'
+       setMeth = 'FALSE'
+       access  = 'PROTECTED'>
+       <bitfield
+         name      = 'type'
+         length    = '2'
+         type      = 'Type'
+         desc      = 'state type'
+         setMeth   = 'FALSE'
+         getMeth   = 'FALSE'
+         checkMeth = 'TRUE' />
+       <bitfield
+         name      = 'location'
+         length    = '10'
+         type      = 'Location'
+         desc      = 'state location'
+         setMeth   = 'TRUE'
+         getMeth   = 'FALSE'
+         checkMeth = 'TRUE' />
+      </attribute>
+
+      <attribute
+        type    = 'HepVector'
+        name    = 'state'
+        desc    = 'the state vector'
+        setMeth = 'FALSE' />
+
+      <attribute
+        type    = 'HepSymMatrix'
+        name    = 'covariance'
+        desc    = 'the state covariance matrix (indexes 1,...,5 for x, y, tx, ty, Q/p)'
+        setMeth = 'FALSE' />
+
+      <attribute
+        type    = 'double'
+        name    = 'z'
+        desc    = 'the z-position of the state'
+        setMeth = 'FALSE'
+        getMeth = 'FALSE' />
+
+      <method
+        type    = 'unsigned int'
+        name    = 'nParameters'
+        const   = 'TRUE'
+        desc    = 'Retrieve the number of state parameters'>
+        <code>
+  return (unsigned int) m_state.num_row();
+        </code>
+      </method>
+
+      <method
+        name    = 'positionAndMomentum'
+        desc    = 'Retrieve the position and momentum vectors and the corresponding 6D covariance matrix (pos:1->3,mom:4-6) of the state'
+        const   = 'TRUE'>
+        <arg type = 'HepPoint3D' name='pos' />
+        <arg type = 'HepVector3D' name='mom' />
+        <arg type = 'HepSymMatrix' name='cov6D' />
+        <code>
+  pos   = position();
+  mom   = momentum();
+  cov6D = posMomCovariance();
+        </code>
+      </method>
+
+      <method
+        type    = 'HepPoint3D'
+        name    = 'position'
+        desc    = 'Retrieve the 3D-position vector of the state'
+        const   = 'TRUE'>
+        <code>
+  return HepPoint3D( m_state[0], m_state[1], m_z );
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'x'
+        const   = 'TRUE'
+        desc    = 'Retrieve the x-position of the state'>
+        <code>
+  return m_state[0];
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'y'
+        const   = 'TRUE'
+        desc    = 'Retrieve the y-position of the state'>
+        <code>
+  return m_state[1];
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'z'
+        const   = 'TRUE'
+        desc    = 'Retrieve the z-position of the state'>
+        <code>
+  return m_z;
+        </code>
+      </method>
+
+      <method
+        type    = 'HepVector3D'
+        name    = 'slopes'
+        const   = 'TRUE'
+        desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) of the state'>
+        <code>
+  return HepVector3D( m_state[2], m_state[3], 1.);
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'tx'
+        const   = 'TRUE'
+        desc    = 'Retrieve the Tx=dx/dz slope of the state'>
+        <code>
+  return m_state[2];
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'ty'
+        const   = 'TRUE'
+        desc    = 'Retrieve the Ty=dy/dz slope of the state'>
+        <code>
+  return m_state[3];
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'qOverP'
+        const   = 'TRUE'
+        desc    = 'Retrieve the charge-over-momentum Q/P of the state'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'double'
+        name    = 'p'
+        const   = 'TRUE'
+        desc    = 'Retrieve the momentum of the state'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'double'
+        name    = 'pt'
+        const   = 'TRUE'
+        desc    = 'Retrieve the transverse momentum of the state'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'HepVector3D'
+        name    = 'momentum'
+        const   = 'TRUE'
+        desc    = 'Retrieve the momentum vector of the state'>
+        <code>
+  HepVector3D mom = slopes();
+  mom *= ( p() / mom.mag() );
+  return mom;
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'qOverPperp'
+        const   = 'TRUE'
+        desc    = 'Retrieve the Q/Pperp (ratio of the charge to the component of the momentum transverse to the magnetic field) of the state'>
+        <code>
+  double tx2 = tx() * tx();
+  return ( qOverP() * sqrt( (1.+ tx2 + ty()*ty()) / (1. + tx2 ) ) );
+        </code>
+      </method>
+
+      <method
+        type    = 'HepSymMatrix'
+        name    = 'posMomCovariance'
+        const   = 'TRUE'
+        desc    = 'Retrieve the 6D covariance matrix (x,y,z,px,py,pz) of the state'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'HepSymMatrix'
+        name    = 'errPosition'
+        const   = 'TRUE'
+        desc    = 'Retrieve the errors on the 3D-position vector of the state'>
+        <code>
+  const HepSymMatrix temp = posMomCovariance();
+  return temp.sub(1,3);
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'errX2'
+        const   = 'TRUE'
+        desc    = 'Retrieve the squared error on the x-position of the state'>
+        <code>
+  return m_covariance.fast(1,1);
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'errY2'
+        const   = 'TRUE'
+        desc    = 'Retrieve the squared error on the y-position of the state'>
+        <code>
+  return m_covariance.fast(2,2);
+        </code>
+      </method>
+
+      <method
+        type    = 'HepSymMatrix'
+        name    = 'errSlopes'
+        const   = 'TRUE'
+        desc    = 'Retrieve the errors on the slopes of the state'>
+        <code>
+  const HepSymMatrix temp = m_covariance;
+  HepSymMatrix err = temp.sub(3,5);
+  err.fast(2,1) = 0.;
+  err.fast(3,1) = 0.;
+  err.fast(3,2) = 0.;
+  err.fast(3,3) = 0.;
+  return err;
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'errTx2'
+        const   = 'TRUE'
+        desc    = 'Retrieve the squared error on the x-slope Tx=dx/dz of the state'>
+        <code>
+  return m_covariance.fast(3,3);
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'errTy2'
+        const   = 'TRUE'
+        desc    = 'Retrieve the squared error on the y-slope Ty=dy/dz of the state'>
+        <code>
+  return m_covariance.fast(4,4);
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'errQOverP2'
+        const   = 'TRUE'
+        desc    = 'Retrieve the squared error on the charge-over-momentum Q/P of the state'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'double'
+        name    = 'errP2'
+        const   = 'TRUE'
+        desc    = 'Retrieve the squared error on the momentum of the state'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'HepSymMatrix'
+        name    = 'errMomentum'
+        const   = 'TRUE'
+        desc    = 'Retrieve the errors on the momentum vector of the stateRetrieve the errors on the momentum vector of the state'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'double'
+        name    = 'errQOverPperp2'
+        const   = 'TRUE'
+        desc    = 'Retrieve the squared error on the Q/Pperp of the state'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'State*'
+        name    = 'clone'
+        desc    = 'Clone the state'
+        virtual = 'TRUE'
+        const   = 'TRUE' />
+
+      <method
+        name    = 'reset'
+        desc    = 'Clear the state before re-using it'
+        virtual = 'TRUE' />
+
+      <method
+        name    = 'setState'
+        argList = 'const HepVector state'
+        desc    = 'Update the state vector'>
+        <code>
+  m_state = state;
+        </code>
+      </method>
+
+      <method
+        name    = 'setState'
+        argList = 'double x, double y, double z, double tx, double ty, double qOverP'
+        desc    = 'Update the state vector (presumably of type State::HasMomentum)'
+        virtual = 'TRUE' />
+
+      <method
+        name    = 'setState'
+        argList = 'double x, double y, double z, double tx, double ty'
+        desc    = 'Update the state vector (presumably of type State::StraightLine)'>
+        <code>
+  m_state[0] = x;
+  m_state[1] = y;
+  m_state[2] = tx;
+  m_state[3] = ty;
+  m_z        = z;
+        </code>
+      </method>
+
+      <method
+        name    = 'setCovariance'
+        argList = 'HepSymMatrix value'
+        desc    = 'Update the state covariance'>
+        <code>
+  if ( value.num_row() == (int) nParameters() ) {
+    m_covariance = value;
+  }
+  else {
+    std::cerr &lt;&lt; "ERROR   The dimension of the covariance matrix does not match that of the state!"
+              &lt;&lt; "ERROR   Using the default covariance matrix." &lt;&lt; std::endl;
+    int dim = nParameters();
+    m_covariance = HepSymMatrix(dim,0);
+  }
+        </code>
+      </method>
+
+      <method
+        name    = 'setX'
+        argList = 'double value'
+        desc    = 'Update the x-position of the state'>
+        <code>
+  m_state[0] = value;
+        </code>
+      </method>
+
+      <method
+        name    = 'setY'
+        argList = 'double value'
+        desc    = 'Update the y-position of the state'>
+        <code>
+  m_state[1] = value;
+        </code>
+      </method>
+
+      <method
+        name    = 'setZ'
+        argList = 'double value'
+        desc    = 'Update the z-position of the state'>
+        <code>
+  m_z = value;
+        </code>
+      </method>
+
+      <method
+        name    = 'setTx'
+        argList = 'double value'
+        desc    = 'Update the Tx slope of the state'>
+        <code>
+  m_state[2] = value;
+        </code>
+      </method>
+
+      <method
+        name    = 'setTy'
+        argList = 'double value'
+        desc    = 'Update the Ty slope of the state'>
+        <code>
+  m_state[3] = value;
+        </code>
+      </method>
+
+      <method
+        name    = 'setQOverP'
+        argList = 'double value'
+        desc    = 'Update the Q/P value of the state'
+        virtual = 'TRUE' />
+
+      <method
+        name    = 'setType'
+        argList = 'State::Type value'
+        desc    = 'Update the type of the state'
+        access  = 'PROTECTED' />
+
+    </class>
+
+  </package>
+</gdd>

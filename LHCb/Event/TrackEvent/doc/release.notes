@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Event/TrackEvent
+! Responsible : Jose Hernando, Eduardo Rodrigues
+! Purpose     : Package for the tracking event model classes
+!-----------------------------------------------------------------------------
+
+! 2005-02-10 - Jose Hernando, Eduardo Rodrigues
+ - creation of the package. It contains for now the Track and State
+   base classes

@@ -1,0 +1,43 @@
+#============================================================================
+# Created    : 2005-02-10
+# Maintainer : Jose Hernando, Eduardo Rodrigues
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           TrackEvent
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc dict Event xml
+include_dirs      $(TRACKEVENTROOT)
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+use TrKernel     v11r*  Tr
+
+#============================================================================
+#---- Produce Header-Files from XML description
+private
+document obj2doth TrackEventObj2Doth ../xml/*.xml
+document obj2dict TrackEventObj2Dict ../xml/*.xml
+
+public
+library          TrackEvent         ../src/*.cpp
+library          TrackEventDict     ../dict/*.cpp
+
+#============================================================================
+# define library link options
+#============================================================================
+apply_pattern component_library library=TrackEventDict
+apply_pattern linker_library	library=TrackEvent
+macro_append TrackEvent_linkopts  "" WIN32 "/include:_TrackEvent_loadRef" 
+
+private
+use GaudiObjDesc v*

@@ -1,0 +1,339 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrEvent'>
+
+<!-- ==================== Track class definition ==================== -->
+
+    <class
+      name        = 'Track'
+      author      = 'Jose Hernando, Eduardo Rodrigues'
+      desc        = 'Track is the base class for offline and online tracks.'
+      id          = '10010'
+      location    = 'Rec/Track/Best'
+      serializers = 'FALSE'>
+
+      <location name="Velo"    place="Rec/Track/Velo"/>
+      <location name="Seed"    place="Rec/Track/Seed"/>
+      <location name="Match"   place="Rec/Track/Match"/>
+      <location name="Forward" place="Rec/Track/Forward"/>
+      <location name="Follow"  place="Rec/Track/Follow"/>
+      <location name="VeloTT"  place="Rec/Track/VeloTT"/>
+      <location name="KsTrack" place="Rec/Track/KsTrack"/>
+
+      <base name='KeyedObject&lt;int&gt;' />
+      &KeyedObject;
+
+      <import name='Event/State' />
+      <import name='Kernel/LHCbID' />
+      <import name='CLHEP/Geometry/Plane3D' />
+
+      <enum
+        name    = 'TrackType'
+        value   = 'Velo=1,VeloR=2,Backward=4,Long=8,Upstream=16,Downstream=32,Ttrack=64'
+        desc    = 'enumeration for the track type'
+        access  = 'PUBLIC' />
+
+      <enum
+        name    = 'HistoryFlag'
+        value   = 'LongTrack=1,Seeding=2,TrKshort=4,TrMatching=8,VeloTrack=16,VeloTT=32,TrgForward=64,TrgVelo=128,TrgVeloTT=256'
+        desc    = 'enumeration for the track history'
+        access  = 'PUBLIC' />
+
+      <enum
+        name    = 'Flag'
+        value   = 'Valid=1,Unique=2'
+        desc    = 'enumeration for the track flags'
+        access  = 'PUBLIC' />
+
+      <attribute
+        type = 'double'
+        name = 'chi2PerDoF'
+        desc = 'chi^2 per degree of freedom of the track' />
+
+      <attribute
+        type = 'int'
+        name = 'nDoF'
+        desc = 'number of degrees of freedom of the track' />
+
+     <attribute
+       type    = 'bitfield'
+       name    = 'flags'
+       desc    = 'the variety of track flags'
+       init    = '0'
+       setMeth = 'FALSE'>
+       <bitfield
+         name      = 'type'
+         length    = '7'
+         type      = 'TrackType'
+         desc      = 'track type'
+         setMeth   = 'TRUE'
+         getMeth   = 'FALSE'
+         checkMeth = 'TRUE' />
+       <bitfield
+         name      = 'history'
+         length    = '9'
+         type      = 'HistoryFlag'
+         desc      = 'track history (specifies which algorithm produced the track)'
+         setMeth   = 'FALSE'
+         getMeth   = 'FALSE'
+         checkMeth = 'FALSE' />
+       <bitfield
+         name      = 'flag'
+         length    = '2'
+         type      = 'Flag'
+         desc      = 'track flags'
+         setMeth   = 'TRUE'
+         getMeth   = 'FALSE'
+         checkMeth = 'TRUE' />
+      </attribute>
+
+      <attribute
+        type      = 'std::vector&lt;LHCbID&gt;'
+        name      = 'lhcbIDs'
+        desc      = 'container of LHCbIDs'
+        serialize = 'FALSE' />
+
+      <attribute
+        type         = 'State'
+        name         = 'physicsState'
+        desc         = 'State closest to the beam-line' />
+
+      <attribute
+        type    = 'std::vector&lt;State*&gt;'
+        name    = 'states'
+        desc    = 'container with pointers to all the states'
+        serialize = 'FALSE' />
+
+      <destructor
+        desc = 'Track destructor'>
+        <code>
+  for (std::vector&lt;State*&gt;::iterator iter = m_states.begin();
+  iter != m_states.end(); iter++)
+  delete *iter;
+        </code>
+      </destructor>
+
+      <method
+        type    = 'StatusCode'
+        name    = 'positionAndMomentum'
+        desc    = 'Retrieve the position and momentum vectors and the corresponding 6D covariance matrix (pos:1->3,mom:4-6) of a track closest to the beam-line'
+        const   = 'TRUE'>
+        <arg type = 'HepPoint3D' name='pos' />
+        <arg type = 'HepVector3D' name='mom' />
+        <arg type = 'HepSymMatrix' name='cov6D' />
+      </method>
+
+      <method
+        type    = 'StatusCode'
+        name    = 'position'
+        desc    = 'Retrieve the 3D-position (+ errors) of a track closest to the beam-line'
+        const   = 'TRUE'>
+        <arg type = 'HepPoint3D' name='pos' />
+        <arg type = 'HepSymMatrix' name='errPos' />
+      </method>
+
+      <method
+        type    = 'StatusCode'
+        name    = 'slopes'
+        desc    = 'Retrieve the slopes (dx/dz,dy/dz,1) of a track closest to the beam-line'
+        const   = 'TRUE'>
+        <arg type = 'HepVector3D' name='slopes' />
+        <arg type = 'HepSymMatrix' name='errSlopes' />
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'p'
+        desc    = 'Retrieve the momentum of a track closest to the beam-line'
+        const   = 'TRUE' />
+
+      <method
+        type    = 'double'
+        name    = 'pt'
+        desc    = 'Retrieve the transverse momentum of a track closest to the beam-line'
+        const   = 'TRUE' />
+
+      <method
+        type    = 'StatusCode'
+        name    = 'momentum'
+        desc    = 'Retrieve the momentum vector (+ errors) of a track closest to the beam-line'
+        const   = 'TRUE'>
+        <arg type = 'HepVector3D' name='mom' />
+        <arg type = 'HepSymMatrix' name='errMom' />
+      </method>
+
+      <method
+        type    = 'StatusCode'
+        name    = 'posMomCovariance'
+        desc    = 'Retrieve the 6D covariance matrix (x,y,z,px,py,pz) of a track closest to the beam-line'
+        const   = 'TRUE'>
+        <arg type='HepSymMatrix' name='cov6D' />
+      </method>
+
+      <method
+        type    = 'int'
+        name    = 'charge'
+        const   = 'TRUE'
+        desc    = 'Retrieve the charge assigned to the track'>
+        <code>
+  double qP = m_physicsState.qOverP();
+  return ( qP != 0. ? int(fabs(qP)/qP) : 0 );
+        </code>
+      </method>
+
+      <method
+        type    = 'unsigned int'
+        name    = 'nStates'
+        const   = 'TRUE'
+        desc    = 'number of states on track'>
+        <code>
+  return m_states.size();
+        </code>
+      </method>
+
+     <method
+        name    = 'addToStates'
+        argList = 'State* value'
+        desc    = 'Add a State to the list of states associated to the track'>
+        <code>
+  m_states.push_back( value );
+        </code>
+      </method>
+
+     <method
+        name    = 'removeFromStates'
+        desc    = 'Remove a State from the list of states associated to the track'
+        argList = 'State* value'>
+        <code>
+  std::vector&lt;State*&gt;::iterator iter =
+    std::remove( m_states.begin(), m_states.end(), value );
+  m_states.erase( iter, m_states.end() );
+        </code>
+      </method>
+
+      <method
+        type    = 'State &amp;'
+        name    = 'closestState'
+        argList = 'double z'
+        desc    = 'Retrieve the pointer to the state closest to the given z-position'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'const State &amp;'
+        name    = 'closestState'
+        argList = 'double z'
+        desc    = 'Retrieve the pointer to the state closest to the given z-position'
+        const   = 'TRUE'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'State &amp;'
+        name    = 'closestState'
+        argList = 'const HepPlane3D plane'
+        desc    = 'Retrieve the pointer to the state closest to the given plane'
+        virtual = 'TRUE'>
+      </method>
+
+      <method
+        type    = 'const State &amp;'
+        name    = 'closestState'
+        argList = 'const HepPlane3D plane'
+        desc    = 'Retrieve the pointer to the state closest to the given plane'
+        const   = 'TRUE'
+        virtual = 'TRUE'>
+      </method>
+
+      <method
+        type    = 'bool'
+        name    = 'hasStateAt'
+        argList = 'const State::Location value'
+        desc    = 'check the existence of a state at a certain predefined location. See State class.'
+        const   = 'TRUE'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'State*'
+        name    = 'stateAt'
+        argList = 'const State::Location value'
+        desc    = 'Retrieve the pointer to the state at a certain predefined location. See State class.'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'const State*'
+        name    = 'stateAt'
+        argList = 'const State::Location value'
+        desc    = 'Retrieve the pointer to the state at a certain predefined location. See State class.'
+        const   = 'TRUE'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'double'
+        name    = 'chi2'
+        const   = 'TRUE'
+        desc    = 'Retrieve the Chi^2 of the track'>
+        <code>
+  return ( m_chi2PerDoF * double(m_nDoF) );
+        </code>
+      </method>
+
+      <method
+        type    = 'void'
+        name    = 'reset'
+        desc    = 'Clear the track before re-use'
+        virtual = 'TRUE'>
+        <code>
+  m_chi2PerDoF   = 0;
+  m_nDoF         = 0;
+  m_flags        = 0;
+  m_physicsState.reset();
+  m_states.clear();
+  m_lhcbIDs.clear();
+        </code>
+      </method>
+
+      <method
+        type    = 'Track*'
+        name    = 'clone'
+        desc    = 'Clone the track'
+        virtual = 'TRUE'
+        const   = 'TRUE' />
+
+     <method
+        name    = 'addToLhcbIDs'
+        desc    = 'Add an LHCbID to the list of LHCbIDs associated to the track'
+        argList = 'LHCbID value'>
+        <code>
+  m_lhcbIDs.push_back( value );
+        </code>
+      </method>
+
+     <method
+        name    = 'removeFromLhcbIDs'
+        desc    = 'Remove an LHCbID from the list of LHCbIDs associated to the track'
+        argList = 'LHCbID value'>
+        <code>
+  std::vector&lt;LHCbID&gt;::iterator iter =
+    std::remove( m_lhcbIDs.begin(), m_lhcbIDs.end(), value );
+  m_lhcbIDs.erase( iter, m_lhcbIDs.end() );
+        </code>
+      </method>
+
+      <method
+        type    = 'bool'
+        name    = 'producedByAlgo'
+        argList = 'HistoryFlag value'
+        desc    = 'Check whether the track was produced by a given algorithm'
+        const   = 'TRUE'
+        virtual = 'TRUE' />
+
+      <method
+        name    = 'setProducedByAlgo'
+        argList = 'HistoryFlag value'
+        desc    = 'Update the name of the algorithm that produced the track'
+        virtual = 'TRUE' />
+
+    </class>
+
+  </package>
+</gdd>
