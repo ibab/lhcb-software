@@ -1,3 +1,10 @@
+# $Id: benderconfig.py,v 1.8 2005-01-24 17:44:39 ibelyaev Exp $
+# =============================================================================
+# CVS version $Revision: 1.8 $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
+# =============================================================================
+
 import gaudimodule
 import os , string , tempfile 
 
@@ -145,29 +152,20 @@ gaudimodule.iHistogramSvc.defineOutput  = _histofile_
 gaudimodule.iHistogramSvc.setOutputFile = _histofile_
 gaudimodule.iHistogramSvc.setOutput     = _histofile_
 
-gaudimodule.AppMgr.nTupleSvc            = gaudimodule.AppMgr.ntupleSvc  
-gaudimodule.AppMgr.nTupSvc              = gaudimodule.AppMgr.ntupleSvc  
-gaudimodule.AppMgr.ntupSvc              = gaudimodule.AppMgr.ntupleSvc  
+#def _ntuplesvc_( self , name = 'NTupleSvc' ) :
+#    if 'NTupleSvc' not in self.ExtSvc : self.ExtSvc += ['NTupleSvc']
+#    svc = gaudimodule.Helper.service( self._svcloc, name, True )
+#    return gaudimodule.iNTupleSvc(name, svc)
+#
+# gaudimodule.AppMgr.ntuplesvc            = _ntuplesvc_
 
-# for 'backward compatibility'
-def config( **args ) :
-    """
-    The method is provided for the backward
-    compatibility with Bender vesions < v4r2
-    """
-    appMgr = gaudimodule.AppMgr()
-    return appMgr.config( **args )
-# =============================================================================
+gaudimodule.AppMgr.nTupleSvc            = gaudimodule.AppMgr.ntuplesvc
+gaudimodule.AppMgr.nTupSvc              = gaudimodule.AppMgr.ntuplesvc
+gaudimodule.AppMgr.ntupSvc              = gaudimodule.AppMgr.ntuplesvc
 
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.6  2004/11/23 17:13:23  ibelyaev
-#  v4r4
-#
-# Revision 1.5  2004/11/09 09:59:05  ibelyaev
-#  minor update for backward compatibility
-#
 # =============================================================================
 # The END 
 # =============================================================================

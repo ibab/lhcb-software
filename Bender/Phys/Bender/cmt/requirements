@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.21 2005-01-21 10:36:34 ibelyaev Exp $ 
+# $Id: requirements,v 1.22 2005-01-24 17:44:39 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -31,10 +31,10 @@ path_prepend      PYTHONPATH "$(BENDERPYTHON)"
 path_remove       PATH       "/Bender/" WIN32 "\Bender\"                
 path_prepend      PATH       "$(BENDERROOT)/$(BINDIR)"
 
-macro PYSEAL "/afs/cern.ch/sw/lcg/app/releases/SEAL/$(SEAL_native_version)"
-path_append       PYTHONPATH $(PYSEAL)/src/Scripting/PyROOT/src
-macro PYPI   "/afs/cern.ch/sw/lcg/app/releases/PI/$(PI_native_version)"
-path_append       PYTHONPATH $(PYPI)/src/AnalysisServices/PyAIDAProxy"
+#macro PYSEAL "/afs/cern.ch/sw/lcg/app/releases/SEAL/$(SEAL_native_version)"
+#path_append       PYTHONPATH $(PYSEAL)/src/Scripting/PyROOT/src
+#macro PYPI   "/afs/cern.ch/sw/lcg/app/releases/PI/$(PI_native_version)"
+#path_append       PYTHONPATH $(PYPI)/src/AnalysisServices/PyAIDAProxy"
 
 # =============== application macro ===========================================
 macro             Bender_linkopts    "${application_linkopts}"
@@ -49,6 +49,9 @@ apply_pattern     application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.21  2005/01/21 10:36:34  ibelyaev
+#  preparation for v4r5
+#
 # Revision 1.20  2004/11/23 17:13:23  ibelyaev
 #  v4r4
 #

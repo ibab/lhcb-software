@@ -1,21 +1,18 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.8 2004-11-24 12:50:04 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.9 2005-01-24 17:44:39 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $NAme:$ 
+# CVS version $Revision: 1.9 $ 
+# =============================================================================
+# CVS tag     $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.7  2004/11/23 17:13:23  ibelyaev
-#  v4r4
-#
-# Revision 1.6  2004/11/08 17:06:52  ibelyaev
-#  v4r2
-#
 # =============================================================================
 """
 The definition and implemenation of basic Bender' algorithm:
 It is the heart of Bender
 """
+__author__ = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 
 # =============================================================================
 # @file
@@ -40,7 +37,7 @@ from   bendermatch  import MCMatch
 # load minimal set of obejcts 
 gaudimodule.loaddict('BenderDict')
 
-# load the 'intermediate' object 
+# load the 'intermediate' object
 BenderAlgo = gaudimodule.gbl.Bender.BenderAlgoWrap 
 
 # extend the intermeadiate object
@@ -428,8 +425,8 @@ class Algo(BenderAlgo):
         message = args.get ( 'message' , ' <* EMPTY MESSAGE *> ' )
         code    = args.get ( 'code'    , SUCCESS                 )
         level   = args.get ( 'level'   , MSG.ALWAYS              )
-        if level >= MSG.NUM_LEVEL : level = MSG.ALWAYS
-        if level <= MSG.NIL       : level = MSG.VERBOSE  
+        if level >= MSG.NUM_LEVELS : level = MSG.ALWAYS
+        if level <= MSG.NIL        : level = MSG.VERBOSE  
         return BenderAlgo.Print( self  , message , code , level  )     # RETURN 
 
 

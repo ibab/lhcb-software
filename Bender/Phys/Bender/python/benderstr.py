@@ -1,19 +1,12 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderstr.py,v 1.4 2004-11-08 17:06:52 ibelyaev Exp $ 
+# $Id: benderstr.py,v 1.5 2005-01-24 17:44:39 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# CVS version $Revision: 1.5 $ 
+# =============================================================================
+# CVS tag     $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.3  2004/08/26 19:34:36  ibelyaev
-#  remove explict PyLCGDict
-#
-# Revision 1.2  2004/08/06 12:07:09  ibelyaev
-#  minor improvements
-#
-# Revision 1.1  2004/07/24 15:03:33  ibelyaev
-#  add benderstr
-#
 # =============================================================================
 
 
@@ -29,38 +22,39 @@ import gaudimodule
 from   benderaux   import fillStream
 
 # load modules
-gaudimodule.loaddict ( 'EventDict'     )
-gaudimodule.loaddict ( 'PhysEventDict' )
-gaudimodule.loaddict ( 'TrEventDict'   )
-gaudimodule.loaddict ( 'OTEventDict'   )
-gaudimodule.loaddict ( 'ITEventDict'   )
-gaudimodule.loaddict ( 'VeloEventDict' )
-gaudimodule.loaddict ( 'RichEventDict' )
-gaudimodule.loaddict ( 'MuonEventDict' )
-gaudimodule.loaddict ( 'CaloEventDict' )
-gaudimodule.loaddict ( 'CaloEventDict' )
+_dicts_ = [ 'EventDict'     ,
+            'EventDict'     ,
+            'PhysEventDict' ,
+            'TrEventDict'   ,
+            'OTEventDict'   ,
+            'ITEventDict'   ,
+            'VeloEventDict' ,
+            'RichEventDict' ,
+            'MuonEventDict' ,
+            'CaloEventDict' ]
+for dct in _dicts_ : gaudimodule.loaddict( dct ) 
 
 def _fillStream_ ( self ) :
     _obj = self 
     return fillStream ( _obj )
 
-_gbl = gaudimodule.gbl
-_types = [ _gbl.MCParticle    ,
-           _gbl.MCVertex      ,
-           _gbl.Collision     ,
-           _gbl.SelResult     ,
-           _gbl.Particle      ,
-           _gbl.Vertex        ,
-           _gbl.ProtoParticle ,
-           _gbl.TrStoredTrack ,
-           _gbl.RichPID       ,
-           _gbl.MuonID        ,
-           _gbl.CaloParticle  ,
-           _gbl.CaloHypo      ,
-           _gbl.CaloCluster   ,
-           _gbl.CaloDigit     ]
+_types = [ 'MCParticle'    ,
+           'MCVertex'      ,
+           'Collision'     ,
+           'SelResult'     ,
+           'Particle'      ,
+           'Vertex'        ,
+           'ProtoParticle' ,
+           'TrStoredTrack' ,
+           'RichPID'       ,
+           'MuonID'        ,
+           'CaloParticle'  ,
+           'CaloHypo'      ,
+           'CaloCluster'   ,
+           'CaloDigit'     ]
 
 for t in _types :
+    t = gaudimodule.getClass( t ) 
     t.__repr__ = _fillStream_
     
 # =============================================================================

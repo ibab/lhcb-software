@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendersmartrefs.py,v 1.3 2005-01-21 12:44:02 ibelyaev Exp $ 
+# $Id: bendersmartrefs.py,v 1.4 2005-01-24 17:44:39 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -13,7 +13,7 @@ Helper module  to (re)define few sipmple methods for few useful event classes
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS: $Revision: 1.3 $; tag=$Name: not supported by cvs2svn $ "
+__version__ = "CVS: $Revision: 1.4 $; tag=$Name: not supported by cvs2svn $ "
 # =============================================================================
 
 import gaudimodule
@@ -66,33 +66,33 @@ def subSmartRefVector( klass , method , toList = True ) :
     command += "\nsetattr( klass , method , %s )           \n" 
     command  = command % ( _n ,_o , _n )
     exec(command)
+
     
-_dicts_ = ( 'Event'     ,
+_dicts_ = [ 'Event'     ,
             'PhysEvent' ,
             'CaloEvent' ,
-            'TrEvent'   )
+            'TrEvent'   ]
 
-for dct in _dicts_ : gaudimodule.loaddict( dct + 'Dict' )
-
-_list_ = [ ( gaudimodule.gbl.MCParticle    , 'endVertices' ) ,
-           ( gaudimodule.gbl.MCVertex      , 'products'    ) ,
+_list_ = [ ( 'MCParticle'    , 'endVertices' ) ,
+           ( 'MCVertex'      , 'products'    ) ,
            # Event/PhysEvent
-           ( gaudimodule.gbl.Vertex        , 'products'    ) ,
-           ( gaudimodule.gbl.PrimVertex    , 'tracks'      ) ,
-           ( gaudimodule.gbl.ProtoParticle , 'calo'        ) ,
+           ( 'Vertex'        , 'products'    ) ,
+           ( 'PrimVertex'    , 'tracks'      ) ,
+           ( 'ProtoParticle' , 'calo'        ) ,
            # Event/CaloEvent
-           ( gaudimodule.gbl.CaloParticle  , 'hypos'       ) ,
-           ( gaudimodule.gbl.CaloHypo      , 'hypos'       ) ,
-           ( gaudimodule.gbl.CaloHypo      , 'clusters'    ) ,
-           ( gaudimodule.gbl.MCCaloDigit   , 'hits'        ) ]
+           ( 'CaloParticle'  , 'hypos'       ) ,
+           ( 'CaloHypo'      , 'hypos'       ) ,
+           ( 'CaloHypo'      , 'clusters'    ) ,
+           ( 'MCCaloDigit'   , 'hits'        ) ]
 
-for klass,method in _list_ :  subSmartRefVector( klass , method )
+for klass,method in _list_ :
+    subSmartRefVector( gaudimodule.getClass( klass , _dicts_ ) , method )
 
 
 def indexSmartRefVector( klass ) :
     """
     """
-    cklass = gaudimodule.gbl.SmartRefVector(klass)
+    cklass = gaudimodule.getClass( klass )
     prefix  = '_yyy_'
     _n = prefix + '_SRV_' + klass + prefix 
     command  = "def %s( self, i ) :                                              \n"
@@ -112,6 +112,38 @@ _list_ = [ 'MCVertex'      ,
 
 for klass in _list_ : indexSmartRefVector( klass )
 
+class KeyedContainerIterator(object) :
+    def __init__ ( self , container ) :
+        self._vector_ = container.containedObjects()
+        self._index_  = 0
+    def next     ( self ) :
+        index = self._index_ 
+        if index < self._vector_.size() :
+            obj = self._vector_[ index ]
+            self._index_ = index + 1
+            return obj
+        raise StopIteration
+
+def _create_iterator_( self ) :
+    return KeyedContainerIterator( self )
+
+def keyedContainerIteration( klass ) :
+    setattr( klass , '__iter__' , _create_iterator_ )
+
+_list_  = [ 'MCVertex'      ,
+            'MCParticle'    ,
+            'Particle'      ,
+            'Vertex'        ,
+            'CaloCluster'   ,
+            'ProtoParticle' ,
+            'MCCaloHit'     ,
+            'TrStoredTrack' ]
+
+for name in _list_ :
+    cnt = 'KeyedContainer<%s,Containers::KeyedObjectManager<Containers::hashmap> > >' % name
+    klass  = gaudimodule.getClass( cnt )
+    keyedContainerIteration( klass )
+    
 # =============================================================================
 # The END 
 # =============================================================================

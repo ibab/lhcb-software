@@ -1,21 +1,9 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.18 2005-01-21 12:44:02 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.19 2005-01-24 17:44:39 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.17  2005/01/21 10:36:35  ibelyaev
-#  preparation for v4r5
-#
-# Revision 1.16  2005/01/21 09:33:06  ibelyaev
-# *** empty log message ***
-#
-# Revision 1.15  2004/11/23 17:13:23  ibelyaev
-#  v4r4
-#
-# Revision 1.14  2004/11/08 17:06:52  ibelyaev
-#  v4r2
-#
 # =============================================================================
 """
 This is a major Python Module for Bender application
@@ -48,8 +36,7 @@ for lib in _libs_ : gaudimodule.loaddict( lib + 'EventDict' )
 
 _libs_ = ( 'BenderDict'     ,
            'LoKiHybridDict' )
-for lib in _libs_ :    gaudimodule.loaddict( lib               )
-
+for lib in _libs_ : gaudimodule.loaddict( lib               )
 
 from   bendertypes     import *
 from   benderaux       import *
@@ -67,6 +54,8 @@ appMgr = gaudi     #
 g      = gaudi     # for 'backward compatibility'
 theApp = gaudi     # ATLAS style
 
+
+getClass = gaudimodule.getClass
 
 _libs_ = ( 'LoKi'       ,
            'LoKiHlt'    ,
