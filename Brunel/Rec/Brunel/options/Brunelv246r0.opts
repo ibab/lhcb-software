@@ -3,8 +3,8 @@
 // ------ "Realistic LHCb light, IT only TT1, 2-gap M1" detector -----
 #pragma print off
 // --- Define input data. Spillover first (if required), then signal ---
-//#include "$SICBCNVROOT/options/Brunel.opts"  // Uncomment for spillover
-//SpillOverSelector.Input = {"JOBID='95716'"}; // evtype 61 RAWH2 for spillover
+#include "$SICBCNVROOT/options/Brunel.opts"  // Uncomment for spillover
+SpillOverSelector.Input = {"JOBID='96842'"}; // evtype 61 RAWH2 for spillover
 #pragma print on
 EventSelector.Input = {"JOBID='96324'"}; // evtype 411300 RAWH2 signal
 #pragma print off

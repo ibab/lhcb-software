@@ -27,7 +27,7 @@ use HTL            	v13r10p1
 use NAGC           	v5r0
 use XERCES         	v16r0p1
 use CERNLIB        	v2001
-use ROOT		v3r01p1
+use ROOT		v2r302p0
 
 #---Gaudi libraries - Gaudi v10r1
 use GaudiKernel        v12r2
@@ -36,7 +36,7 @@ use GaudiAlg           v6r0
 use GaudiAud           v6r0
 use GaudiNagC          v7r0
 use GaudiDb            v8r0
-use GaudiRootDb        v7r0
+use GaudiRootDb        v8r1
 use HbookCnv           v12r0
 #use RootHistCnv        v6r0
 

@@ -114,12 +114,13 @@ reFit.TrackContainer = "Rec/FitTrack/Match";
 // Clone killer and converter to TrStoredTrack
 ApplicationMgr.DLLs += { "TrCleanEx" };
 BrunelRecoTrSeq.Members += { "TrTrackCloneKiller" };
-BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreVelo", 
-                             "TrFit2StoredTrackCnv/StoreSeed", 
-                             "TrFit2StoredTrackCnv/StoreMatch", 
-                             "TrFit2StoredTrackCnv/StoreForward", 
+BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreForward", 
                              "TrFit2StoredTrackCnv/StoreBest" };
+//                             "TrFit2StoredTrackCnv/StoreVelo", 
+//                             "TrFit2StoredTrackCnv/StoreSeed", 
+//                             "TrFit2StoredTrackCnv/StoreMatch", 
 #include "$TRCLEANEXROOT/options/Brunel.opts"
+TrTrackCloneKiller.flagMode = true;
 
 // Back conversion of tracks for RICH reconstruction
 BrunelRecoRICHSeq.Members = { "TrStoredTrackToSicbCnv" };

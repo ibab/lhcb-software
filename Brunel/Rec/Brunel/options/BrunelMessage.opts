@@ -32,7 +32,5 @@ reFit.Fitter.OutputLevel = 5;
 
 RichPIDMonitor.OutputLevel = 4;
 
-//FwtAnalyse.PrintEveryEvent = false;
-//MatchAnalyse.PrintEveryEvent = false;
-
-//DetectorDataSvc.OutputLevel = 6;
+FwtAnalyse.PrintEveryEvent = false;
+MatchAnalyse.PrintEveryEvent = false;

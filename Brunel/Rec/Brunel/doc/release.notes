@@ -3,16 +3,23 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2002-07-01 - Marco Cattaneo
+ - Add L1 monitoring and Truth information
+ - Add L0 Truth information
+ - Disable filtering of MCParticles/MCVertices (not working with Spillover)
+ - Output Tr/Best tracks in "flag" mode (contains a copy of all track types,
+   with clones flagged, not killed) and  suppress creation of Tr/Seed, Tr/Velo,
+   Tr/Match containers
+
+   DST is now complete, except for:
+   . "upstream" tracks (from upstream track following algorithm) 
+   . filtering of tracking clusters not used by tracks
+   . truth relations for "Best" tracks
+
 ! 2002-06-28 - Marco Cattaneo
  - Add "new" seeding algorithm
  - Add filter of MCParticles and MCVertices
  
-   DST is now complete, except for:
-   . "upstream" tracks (from upstream track following algorithm) 
-   . filtering of tracking clusters not used by tracks
-   . truth relations for saved tracks (other than forward tracks)
-   . truth information for L0 and L1
-
 ! 2002-06-27 - Marco Cattaneo
  - Add track clone killer. Currently all track types are saved, plus a
    copy of these tracks as selected by the clone killer
