@@ -20,7 +20,7 @@ inline bool DetDataAgent::analyse(IRegistry* dir, int /*level*/ ){
   MsgStream log( m_msgSvc, "detDataAgent" );
   log << MSG::INFO << dir->identifier()
       << ( dir->object() ? " [loaded] " : " " )
-      << endreq; 
+      << endmsg; 
   return true;
 }
 

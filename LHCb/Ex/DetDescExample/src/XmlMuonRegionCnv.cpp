@@ -1,24 +1,13 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.1 2002-04-29 17:05:54 sponce Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.2 2003-01-13 12:55:29 cattanem Exp $
+
 // Include files
-//#include <cstdio>
-//#include <iostream>
-//#include <string>
-//#include <vector>
 
 #include "DetDesc/XmlUserDetElemCnv.h"
 #include "DeMuonRegion.h"
 
-/// Gaudi interfaces
-//#include "GaudiKernel/IService.h"
-//#include "GaudiKernel/IDataProviderSvc.h"
-
 /// Utility classes
 #include "GaudiKernel/MsgStream.h"
-//#include "GaudiKernel/SmartDataPtr.h"
-//#include "GaudiKernel/AlgFactory.h"
 
-//#include "GaudiKernel/RegistryEntry.h"
-//#include "GaudiKernel/GenericAddress.h"
 #include <dom/DOM_NamedNodeMap.hpp>
 
 /** @class XmlMuonRegionCnv
@@ -83,7 +72,7 @@ StatusCode XmlMuonRegionCnv::initialize(){
   StatusCode sc = XmlBaseDetElemCnv::initialize();
   if(sc.isSuccess()){
     MsgStream log (msgSvc(), "XmlDetElemCnv");
-    log << MSG::VERBOSE << "Initializing" << endreq;    
+    log << MSG::VERBOSE << "Initializing" << endmsg;    
   }
   return sc;
 }
@@ -99,7 +88,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
   // gets the element's name
   std::string tagName = dom2Std (childElement.getNodeName());
 
-  log << MSG::DEBUG << "Processing element " << tagName << endreq;
+  log << MSG::DEBUG << "Processing element " << tagName << endmsg;
   
   /*
     <!-- Number of Chambers in region -->
@@ -141,7 +130,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
     // checks there are children
     if(!childElement.hasChildNodes()){
       log << MSG::DEBUG << "No readout/gasgap associated to this region" 
-          << endreq;
+          << endmsg;
       return StatusCode::FAILURE;
     }
 
@@ -153,7 +142,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
       // get child and type it
       if (nodeChildren.item(i).getNodeType() != DOM_Node::ELEMENT_NODE) {
         log << MSG::WARNING 
-            << "Non-element in the chambers tag" << endreq;
+            << "Non-element in the chambers tag" << endmsg;
         return StatusCode::FAILURE;
       }
 
@@ -175,7 +164,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
     const std::string Number = dom2Std (childElement.getAttribute ("Number"));
     if (Number.empty()) {
       log <<MSG::WARNING << "Chamber object did not have number attribute" 
-          << endreq;
+          << endmsg;
       return StatusCode::FAILURE;
     }
     dataObj->setchamberNum (xmlSvc()->eval(Number.c_str(), false));
@@ -191,7 +180,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
 
     if(!("Anode" == ReadoutType || "Cathode" == ReadoutType)){
       log << MSG::WARNING << "Was given a readout type :" 
-          << ReadoutType << endreq;
+          << ReadoutType << endmsg;
       return StatusCode::FAILURE;
     }
     if("Anode" == ReadoutType){
@@ -205,7 +194,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
   }else {
     // Unknown tag, a warning message could be issued here
     log << MSG::WARNING << "Can not interpret specific type :" 
-        << tagName << endreq;
+        << tagName << endmsg;
   }
   return StatusCode::SUCCESS;
 }

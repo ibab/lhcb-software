@@ -1,8 +1,12 @@
-$Id: release.notes,v 1.13 2002-12-03 17:45:20 ranjard Exp $
+$Id: release.notes,v 1.14 2003-01-13 12:55:28 cattanem Exp $
 Package: DetDescExample
 Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
+
+!=============================== DetDescExample v5r1 ===================
+! 2003-01-13 - Marco Cattaneo
+ - Fixed to make it work with latest XmlDDDB
 
 !=============================== DetDescExample v5r0 ===================
 ! 2002-11-21 - Florence Ranjard

@@ -36,10 +36,10 @@ endif
 set current = $PWD
 #
 # == set the LHCB version number
-setenv Lversion "v11r3"
+setenv Lversion "v11r7"
 # == set the root directory of your job
-#setenv MYJOBROOT $HOME/newmycmt/Ex/DetDescExample/v5r0
-setenv MYJOBROOT $LHCb_release_area/LHCB/LHCB_${Lversion}/Ex/DetDescExample/v5r0
+setenv MYJOBROOT $HOME/newmycmt/Ex/DetDescExample/v5r1
+#setenv MYJOBROOT $LHCb_release_area/LHCB/LHCB_${Lversion}/Ex/DetDescExample/v5r1
 
 # == set the environment
 $LHCBHOME/scripts/LHCbEnv.csh ${Lversion}
