@@ -2,8 +2,11 @@
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.28 2004-10-27 14:39:41 jonrob Exp $
+# $Id: requirements,v 1.29 2005-01-13 14:34:26 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.28  2004/10/27 14:39:41  jonrob
+# Various updates
+#
 # Revision 1.27  2004/08/19 14:21:43  jonrob
 # Add dependency on Det/RichDet (removed implicitly from RichRecBase package)
 #
@@ -13,7 +16,7 @@
 #============================================================================
 
 package RichRecTools
-version v2r12
+version v2r13
 
 # ================ structure ================================================
 branches src cmt doc

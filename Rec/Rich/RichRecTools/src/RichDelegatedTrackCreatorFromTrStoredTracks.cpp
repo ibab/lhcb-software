@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichDelegatedTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.4 2004-07-27 20:15:29 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.5 2005-01-13 14:34:26 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/27 20:15:29  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -139,11 +142,10 @@ RichDelegatedTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * 
   if ( !Rich::Track::isUsable(trType) ) return NULL;
 
   // See if this RichRecTrack already exists
-  const unsigned long key = static_cast<unsigned long>(trTrack->key());
-  if ( m_trackDone[key] ) {
+  if ( m_trackDone[trTrack->key()] ) {
 
     // track already done
-    return richTracks()->object(key);
+    return richTracks()->object(trTrack->key());
 
   } else {
 

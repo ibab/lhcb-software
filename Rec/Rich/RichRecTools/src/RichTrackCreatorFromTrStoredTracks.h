@@ -4,8 +4,11 @@
  *  Header file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.18 2004-11-11 16:51:32 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.19 2005-01-13 14:34:27 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.18  2004/11/11 16:51:32  jonrob
+ *  Add separate unique and non-unique counts for debug
+ *
  *  Revision 1.17  2004/10/13 09:52:41  jonrob
  *  Speed improvements + various minor changes
  *
@@ -36,6 +39,10 @@
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichTrSegMaker.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
+#include "RichKernel/RichHashMap.h"
 
 // Event
 #include "Event/TrStoredTrack.h"
@@ -137,7 +144,7 @@ private: // data
   mutable bool m_allDone;
 
   // Working object to keep track of formed objects
-  mutable std::map<unsigned long, bool> m_trackDone;
+  mutable RichHashMap<unsigned long, bool> m_trackDone;
 
   /// Flag to turn on the creation of the RichRecRings for the segment mass hypotheses
   bool m_buildHypoRings;
@@ -146,9 +153,12 @@ private: // data
   RichTrackSelector m_trSelector;
 
   // Track count
-  typedef std::map< Rich::Track::Type, std::pair< unsigned int, unsigned int > > TrackTypeCount;
+  typedef RichMap< Rich::Track::Type, std::pair< unsigned int, unsigned int > > TrackTypeCount;
   mutable TrackTypeCount m_nTracksUnique;
   mutable TrackTypeCount m_nTracksNonUnique;
+
+  /// Flag to turn on or off the book keeping features to save cpu time.
+  bool m_bookKeep;
 
   /// Ray-tracing configuration object
   RichTraceMode m_traceMode;
@@ -157,7 +167,7 @@ private: // data
 
 inline void RichTrackCreatorFromTrStoredTracks::InitNewEvent()
 {
-  m_trackDone.clear();
+  if ( m_bookKeep ) m_trackDone.clear();
   m_allDone  = false;
   m_trTracks = 0;
   m_tracks   = 0;

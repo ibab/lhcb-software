@@ -4,8 +4,11 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.4 2004-11-20 12:34:16 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.5 2005-01-13 14:39:01 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/11/20 12:34:16  jonrob
+ *  Update parent information for background pixels
+ *
  *  Revision 1.3  2004/10/30 19:27:02  jonrob
  *  Update method access types + comments
  *
@@ -37,6 +40,10 @@
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
+
+// RichKernel
+#include "RichKernel/RichHashMap.h"
+#include "RichKernel/RichMap.h"
 
 // Event
 #include "Event/RichDigit.h"
@@ -125,11 +132,11 @@ private: // data
   mutable bool m_allDone;
 
   /// Pointer to pixel map
-  mutable std::map< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
-  mutable std::map< RichSmartID::KeyType, bool > m_pixelDone;
+  mutable RichHashMap< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
+  mutable RichHashMap< RichSmartID::KeyType, bool > m_pixelDone;
 
   /// Stack of RichSmartIDS for a single MCParticle for use as track background
-  typedef std::map<const MCParticle*, std::vector<RichSmartID> > BgTrackStack;
+  typedef RichMap<const MCParticle*, std::vector<RichSmartID> > BgTrackStack;
   mutable BgTrackStack m_digitsForTrackBg;
 
   /// Number of background tracks to add to each event

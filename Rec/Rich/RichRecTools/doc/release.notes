@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2005-01-13 - Chris Jones
+ - Various minor improvements to creator tools
+
 !===================== RichRecTools v2r12 2004-11-17 ======================
 ! 2004-11-17 - Marco Cattaneo
  - Set flag to create ParticlePropertySvc on demand if it does not exist

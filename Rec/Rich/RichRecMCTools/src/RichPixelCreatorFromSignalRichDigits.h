@@ -4,8 +4,11 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.4 2004-11-09 10:47:10 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.5 2005-01-13 14:39:01 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/11/09 10:47:10  jonrob
+ *  Add filtering on association to tracked MCParticles
+ *
  *  Revision 1.3  2004/07/27 16:14:11  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -29,6 +32,9 @@
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
 
 // Event
 #include "Event/RichDigit.h"
@@ -90,7 +96,7 @@ private: // methods
   void InitNewEvent();
 
   /// List of tracked MCParticles
-  typedef std::map<const MCParticle*,bool> TrackedMCPList;
+  typedef RichMap < const MCParticle*, bool > TrackedMCPList;
 
   /// Get the map for tracked MCParticles for this event
   TrackedMCPList & trackedMCPs() const;

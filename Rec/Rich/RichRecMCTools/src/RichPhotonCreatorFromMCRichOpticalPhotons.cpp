@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.4 2004-07-27 16:14:11 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.5 2005-01-13 14:39:00 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/27 16:14:11  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -99,7 +102,7 @@ RichPhotonCreatorFromMCRichOpticalPhotons::reconstructPhoton( RichRecSegment * s
   const RichRecPhotonKey photonKey(pixel->key(),segment->key());
 
   // See if this photon already exists
-  if ( m_photonDone[static_cast<long>(photonKey)] ) {
+  if ( m_photonDone[photonKey] ) {
     return static_cast<RichRecPhoton*>(richPhotons()->object(photonKey));
   } else {
     return buildPhoton( segment, pixel, photonKey );
@@ -185,7 +188,7 @@ RichPhotonCreatorFromMCRichOpticalPhotons::buildPhoton( RichRecSegment * segment
   }
 
   // Add to reference map
-  m_photonDone[static_cast<long>(key)] = true;
+  m_photonDone[key] = true;
 
   // Return pointer to this photon
   return newPhoton;
@@ -345,7 +348,7 @@ RichRecPhotons * RichPhotonCreatorFromMCRichOpticalPhotons::richPhotons() const
       for ( RichRecPhotons::const_iterator iPhoton = tdsPhotons->begin();
             iPhoton != tdsPhotons->end();
             ++iPhoton ) {
-        m_photonDone[static_cast<long>((*iPhoton)->key())] = true;
+        m_photonDone[(*iPhoton)->key()] = true;
       }
 
     }

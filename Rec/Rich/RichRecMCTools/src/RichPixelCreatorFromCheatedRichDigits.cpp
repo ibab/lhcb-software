@@ -4,8 +4,12 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.11 2004-10-13 09:37:27 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.12 2005-01-13 14:39:00 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/10/13 09:37:27  jonrob
+ *  Add new pixel creator tool.
+ *  Add ability to make pixels for particular radiators.
+ *
  *  Revision 1.10  2004/07/27 16:14:11  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -117,12 +121,9 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
                                                         const MCRichHit * hit ) const
 {
 
-  // key for this MCRichHit
-  const unsigned hitKey = hit->key();
-
   // See if this RichRecPixel already exists
-  if ( m_pixelDone[hitKey] ) {
-    return m_pixelExists[hitKey];
+  if ( m_pixelDone[hit->key()] ) {
+    return m_pixelExists[hit->key()];
   } else {
 
     RichRecPixel * newPixel = NULL;
@@ -162,8 +163,8 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
     }
 
     // Add to reference map
-    m_pixelExists[hitKey] = newPixel;
-    m_pixelDone[hitKey] = true;
+    m_pixelExists [ hit->key() ] = newPixel;
+    m_pixelDone   [ hit->key() ] = true;
 
     return newPixel;
   }

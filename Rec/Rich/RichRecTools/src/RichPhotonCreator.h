@@ -4,8 +4,10 @@
  *  Header file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.h,v 1.15 2004-07-27 20:15:31 jonrob Exp $
+ *  $Id: RichPhotonCreator.h,v 1.16 2005-01-13 14:34:27 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.15  2004/07/27 20:15:31  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -22,6 +24,9 @@
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
+
+// RichKernel
+#include "RichKernel/RichHashMap.h"
 
 // Interfaces
 #include "RichRecBase/IRichPhotonCreator.h"
@@ -110,7 +115,7 @@ private: // private data
   std::string m_richRecPhotonLocation;
 
   /// photon done map
-  mutable std::map<long, bool> m_photonDone;
+  mutable RichHashMap<long int, bool> m_photonDone;
 
   /// Max Cherenkov theta angle
   std::vector<double> m_maxCKtheta;

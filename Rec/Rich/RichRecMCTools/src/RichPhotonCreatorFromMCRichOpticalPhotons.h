@@ -4,8 +4,10 @@
  *  Header file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.2 2004-07-27 16:14:11 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.3 2005-01-13 14:39:00 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/07/27 16:14:11  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -27,6 +29,9 @@
 #include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
+
+// RichKernel
+#include "RichKernel/RichMap.h"
 
 // Event model
 #include "Event/MCRichOpticalPhoton.h"
@@ -113,7 +118,7 @@ private: // private data
   std::string m_richRecPhotonLocation;
 
   /// photon done map
-  mutable std::map<long, bool> m_photonDone;
+  mutable RichMap<long int, bool> m_photonDone;
 
   /// Max Cherenkov theta angle
   std::vector<double> m_maxCKtheta;

@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.21 2004-11-11 16:51:31 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.22 2005-01-13 14:34:27 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.21  2004/11/11 16:51:31  jonrob
+ *  Add separate unique and non-unique counts for debug
+ *
  *  Revision 1.20  2004/10/13 09:52:41  jonrob
  *  Speed improvements + various minor changes
  *
@@ -42,13 +45,16 @@ RichTrackCreatorFromTrStoredTracks( const std::string& type,
     m_richRecTrackLocation ( RichRecTrackLocation::Default  ),
     m_trSegToolNickName    ( "RichDetTrSegMaker"            ),
     m_allDone              ( false ),
-    m_buildHypoRings       ( false )
+    m_buildHypoRings       ( false ),
+    m_bookKeep             ( false )
 {
 
   // declare interface for this tool
   declareInterface<IRichTrackCreator>(this);
 
   // job options
+
+  declareProperty( "DoBookKeeping", m_bookKeep );
 
   // data locations
   declareProperty( "TrStoredTracksLocation",   m_trTracksLocation        );
@@ -218,9 +224,8 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
   if ( !m_trSelector.trackSelected(trTrack) ) return NULL;
 
   // See if this RichRecTrack already exists
-  const unsigned long key = static_cast<unsigned long>(trTrack->key());
-  if ( m_trackDone[key] ) {
-    return richTracks()->object(key);
+  if ( m_bookKeep && m_trackDone[trTrack->key()] ) {
+    return richTracks()->object(trTrack->key());
   } else {
 
     RichRecTrack * newTrack = NULL;
@@ -306,7 +311,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
         if ( keepTrack ) {
 
           // give to container
-          richTracks()->insert( newTrack, key );
+          richTracks()->insert( newTrack, trTrack->key() );
 
           // Set vertex momentum
           newTrack->setVertexMomentum( trackPState->p() );
@@ -336,7 +341,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
     } // end segments if
 
     // Add to reference map
-    m_trackDone[key] = true;
+    if ( m_bookKeep ) m_trackDone[trTrack->key()] = true;
 
     return newTrack;
   }
@@ -364,11 +369,13 @@ RichRecTracks * RichTrackCreatorFromTrStoredTracks::richTracks() const
       // Set smartref to TES track container
       m_tracks = tdsTracks;
 
-      // Remake local track reference map
-      for ( RichRecTracks::const_iterator iTrack = tdsTracks->begin();
-            iTrack != tdsTracks->end();
-            ++iTrack ) {
-        m_trackDone[(*iTrack)->key()] = true;
+      if ( m_bookKeep ) {
+        // Remake local track reference map
+        for ( RichRecTracks::const_iterator iTrack = tdsTracks->begin();
+              iTrack != tdsTracks->end();
+              ++iTrack ) {
+          m_trackDone[(*iTrack)->key()] = true;
+        }
       }
 
     }

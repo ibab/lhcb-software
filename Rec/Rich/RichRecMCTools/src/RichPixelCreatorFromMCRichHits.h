@@ -4,8 +4,11 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromMCRichHits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromMCRichHits.h,v 1.6 2004-07-27 16:14:11 jonrob Exp $
+ *  $Id: RichPixelCreatorFromMCRichHits.h,v 1.7 2005-01-13 14:39:01 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/07/27 16:14:11  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -27,6 +30,9 @@
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
+
+// RichKernel
+#include "RichKernel/RichHashMap.h"
 
 // Event
 #include "Event/MCRichHit.h"
@@ -104,8 +110,8 @@ private: // data
   mutable bool m_allDone;
 
   // book keeping information
-  mutable std::map< long int, RichRecPixel* > m_pixelExists;
-  mutable std::map< long int, bool > m_pixelDone;
+  mutable RichHashMap< long int, RichRecPixel* > m_pixelExists;
+  mutable RichHashMap< long int, bool > m_pixelDone;
 
 };
 

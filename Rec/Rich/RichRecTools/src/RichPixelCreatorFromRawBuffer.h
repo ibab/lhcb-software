@@ -4,8 +4,10 @@
  *  Header file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.1 2004-10-30 19:38:44 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.2 2005-01-13 14:34:27 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2004/10/30 19:38:44  jonrob
+ *  Add RichRecPixel creator that uses the RawBuffer directly
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -22,6 +24,9 @@
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
+
+// RichKernel
+#include "RichKernel/RichHashMap.h"
 
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
@@ -103,8 +108,8 @@ private: // data
   mutable bool m_allDone;
 
   /// Pointer to pixel map
-  mutable std::map< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
-  mutable std::map< RichSmartID::KeyType, bool > m_pixelDone;
+  mutable RichHashMap< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
+  mutable RichHashMap< RichSmartID::KeyType, bool > m_pixelDone;
 
   /// Flag to turn on or off the book keeping features to save cpu time.
   bool m_bookKeep;

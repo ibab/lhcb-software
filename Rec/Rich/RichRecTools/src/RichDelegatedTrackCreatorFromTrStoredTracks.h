@@ -4,8 +4,10 @@
  *  Header file for tool : RichDelegatedTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.h,v 1.3 2004-07-27 20:15:30 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.h,v 1.4 2005-01-13 14:34:26 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/27 20:15:30  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,6 +27,10 @@
 
 // interfaces
 #include "RichRecBase/IRichTrackCreator.h"
+
+// RichKernel
+#include "RichKernel/RichHashMap.h"
+#include "RichKernel/StringHashFuncs.h"
 
 // Event
 #include "Event/TrStoredTrack.h"
@@ -114,19 +120,19 @@ private: // data
   mutable bool m_allDone;
 
   /// Working object to keep track of formed objects
-  mutable std::map<unsigned long, bool> m_trackDone;
+  mutable RichHashMap<long int, bool> m_trackDone;
 
   typedef std::vector<std::string> ToolList;
   /// Tool data from job options
   ToolList m_names;
 
-  /// map between track types and RichTrackCreator tools
-  typedef std::map<std::string,std::string> TypeToCreator;
-  mutable TypeToCreator m_trackToTool;
+  /// mapping type between track types and RichTrackCreator tools
+  typedef RichHashMap<std::string,std::string> TypeToCreator;
+  mutable TypeToCreator m_trackToTool; ///< Map between track types and RichTrackCreator tools
 
-  // map between tool name and pointer to instance
-  typedef std::map<std::string,IRichTrackCreator*> ToolNameToPnt;
-  mutable ToolNameToPnt m_nameToPnt;
+  /// mapping type between tool name and pointer to instance
+  typedef RichHashMap<std::string,IRichTrackCreator*> ToolNameToPnt;
+  mutable ToolNameToPnt m_nameToPnt; ///< Map between tool name and pointer to instance
 
 };
 

@@ -4,8 +4,12 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.8 2004-10-13 09:37:27 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.9 2005-01-13 14:39:00 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2004/10/13 09:37:27  jonrob
+ *  Add new pixel creator tool.
+ *  Add ability to make pixels for particular radiators.
+ *
  *  Revision 1.7  2004/07/27 16:14:11  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -30,6 +34,9 @@
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
+
+// RichKernel
+#include "RichKernel/RichHashMap.h"
 
 // Event
 #include "Event/RichDigit.h"
@@ -116,8 +123,8 @@ private: // data
   mutable bool m_allDone;
 
   // Internal book keeping
-  mutable std::map< unsigned, RichRecPixel* > m_pixelExists;
-  mutable std::map< unsigned, bool > m_pixelDone;
+  mutable RichHashMap< unsigned int, RichRecPixel* > m_pixelExists;
+  mutable RichHashMap< unsigned int, bool > m_pixelDone;
 
   /// Flags for which radiators to create pixels for
   std::vector<bool> m_usedRads;
