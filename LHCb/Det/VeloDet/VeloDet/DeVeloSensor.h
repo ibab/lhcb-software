@@ -1,10 +1,11 @@
-// $Id: DeVeloSensor.h,v 1.2 2004-02-13 07:05:48 cattanem Exp $
+// $Id: DeVeloSensor.h,v 1.3 2004-02-17 21:36:50 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
 // Include files
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Units/PhysicalConstants.h"
 
 /// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -31,13 +32,6 @@ public:
 
   /// Destructor
   virtual ~DeVeloSensor( ); 
-
-  /// Define a "less than" operator for DeVeloSensor objects.
-  /// Uses the Z position of the sensor.
-  //bool operator< (DeVeloSensor* rhs) 
-  //  {
-  //return ( this->z() < rhs->z() );
-  //}
 
   /// object identifier (static method)
   static  const CLID& classID() { return CLID_DeVeloSensor; };
@@ -118,58 +112,63 @@ public:
                                    HepPoint3D& local);
 
   /// Convert local phi to global phi
-  double localPhiToGlobal(double phiLocal);
+  inline double localPhiToGlobal(double phiLocal){
+    if(m_isLeft) return phiLocal;
+    phiLocal += pi;
+    if(m_isDownstream) phiLocal = -phiLocal;
+    return phiLocal;
+  }
 
   /// Return the z position of the sensor
-  double z();
+  inline double z() {return m_z;}
   
   /// Return +1 for X>0 side of the detector (+ve x is Left/L)
-  int xSide();
+  inline int xSide() {return m_xSide;}
   
   /// Return true for X<0 side of the detector (-ve x is Right)
-  bool isRight();
+  inline bool isRight() {return m_isRight;}
   
   /// Returns true if sensor is downstream
-  bool isDownstream();
+  inline bool isDownstream() {return m_isDownstream;}
 
   /// Returns true if R Sensor
-  bool isPileUp();
+  inline bool isPileUp() {return m_isPileUp;}  
 
   /// Returns true if R Sensor
-  bool isR();
+  inline bool isR() {return m_isR;}
 
   /// Returns true if R Sensor
-  bool isPhi();
+  inline bool isPhi() {return m_isPhi;}
 
   /// Return the number of strips
-  unsigned int numberOfStrips();
+  inline unsigned int numberOfStrips() {return m_numberOfStrips;}
 
   /// The minimum radius for the sensitive area of the sensor
-  double innerRadius();
+  inline double innerRadius() {return m_innerRadius;}
 
   /// The maximum radius for the sensitive area of the sensor
-  double outerRadius();
+  inline double outerRadius() {return m_outerRadius;}
   
   /// The thickness of the sensor in mm
-  double siliconThickness();
+  inline double siliconThickness() {return m_siliconThickness;}
   
   /// Returns the sensor type
-  std::string type();
-
-  /// Set the message level to verbose
-  void msgOutputLevel();
+  inline std::string type() {return m_type;}
 
   /// Set the sensor number
-  void sensorNumber(unsigned int sensor);
+  //void sensorNumber(unsigned int sensor);
+  inline void sensorNumber(unsigned int sensor){m_sensorNumber=sensor;}
 
   /// Returns the sensor number
-  unsigned int sensorNumber();
+  inline unsigned int sensorNumber() {return m_sensorNumber;}
   
   /// Set the sensors associated with this sensor
-  void associateSensor(unsigned int sensor);
+  inline void associateSensor(unsigned int sensor) {
+    m_associated.push_back(sensor);
+  }
 
   /// Return the (phi) sensors associated with this (R) sensor
-  std::vector<unsigned int> associatedSensors();
+  inline std::vector<unsigned int> associatedSensors() {return m_associated;}
   
 protected:
   bool m_isRight,m_isLeft,m_isDownstream;

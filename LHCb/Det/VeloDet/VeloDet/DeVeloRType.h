@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.2 2004-02-13 07:05:48 cattanem Exp $
+// $Id: DeVeloRType.h,v 1.3 2004-02-17 21:36:50 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -74,14 +74,17 @@ public:
   double stripCapacitance(unsigned int strip);
   
   /// The number of zones in the detector
-  unsigned int numberOfZones();
-  
+  inline unsigned int numberOfZones(){return m_numberOfZones;}
+ 
   /// The zones number for a given strip
-  unsigned int zoneOfStrip(const unsigned int strip);
-  //  unsigned int zoneOfStrip(const VeloChannelID& channel);
+  inline unsigned int zoneOfStrip(const unsigned int strip){
+    return static_cast<unsigned int>(strip/512);
+  }
 
   /// The number of strips in a zone
-  unsigned int stripsInZone(const unsigned int zone);
+  inline unsigned int stripsInZone(const unsigned int zone){
+    return m_stripsInZone;
+  }
 
   /// The minimum radius for a given zone of the sensor
   double rMin(const unsigned int /*zone*/) {return 0.;}
@@ -102,50 +105,88 @@ public:
   bool isCutOff(double x, double y);
 
   /// Zone for a given local phi
-  unsigned int zoneOfPhi(double phi);
+  unsigned int zoneOfPhi(double phi){
+    unsigned int zone=0;
+    if(m_phiMin[0] >= fabs(phi) && m_phiMax[0] < fabs(phi)) {
+      zone = 0;
+    } else if(m_phiMin[1] >= fabs(phi) && m_phiMax[1] < fabs(phi)) {
+      zone = 1;
+    }
+    if(0 > phi) zone += 2;
+    return zone;
+  }
   
   /// Minimum strip number for each zone
-  unsigned int firstStrip(unsigned int zone);
+  inline unsigned int firstStrip(unsigned int zone){return zone*512;}
 
   /// Return the radius of the strip
-  double rOfStrip(const unsigned int strip);
+  inline double rOfStrip(const unsigned int strip){return m_rStrips[strip];}
 
   /// Return the radius of the strip+fraction
-  double rOfStrip(unsigned int strip, double fraction);
-  
+  inline double rOfStrip(unsigned int strip, double fraction){
+    return m_rStrips[strip]+fraction*rPitch(strip);
+  }
+
   /// Return the local pitch of the sensor for a given strip
-  double rPitch(unsigned int strip);
+  inline double rPitch(unsigned int strip){return m_rPitch[strip];}
 
   /// Return the local pitch of the sensor for a given strip +/- fraction
-  double rPitch(unsigned int strip, double fraction);
+  inline double rPitch(unsigned int strip, double fraction){
+    return exp(fraction)*m_rPitch[strip];
+  }
 
   /// Return the local pitch at a given radius 
-  double rPitch(double radius);
+  inline double rPitch(double radius) {  
+    return m_innerPitch + m_pitchSlope*(radius - m_innerRadius);
+  }
 
   /// The minimum phi for a zone
-  double phiMinZone(unsigned int zone);
+  inline double phiMinZone(unsigned int zone){return m_phiMin[zone];}
 
   /// Returns the minimum phi in a zone at given radius
-  double phiMinZone(unsigned int zone, double radius);
+  inline double phiMinZone(unsigned int zone, double radius){
+    double phiMin;
+    if(0 == zone){
+      phiMin = acos(m_overlapInX/radius);
+    } else if(2 == zone){
+      phiMin = asin(-m_phiGap/radius);
+    } else {
+      phiMin = this->phiMinZone(zone);
+    }
+    return phiMin;
+  }
   
   /// The maximum phi for a zone
-  double phiMaxZone(unsigned int zone);
-   
+  inline double phiMaxZone(unsigned int zone){return m_phiMax[zone];}
+     
   /// Returns the maximum phi in a zone at given radius
-  double phiMaxZone(unsigned int zone, double radius);
-  
+  inline double phiMaxZone(unsigned int zone, double radius){
+    double phiMax;
+    if(1 == zone){
+      phiMax = asin(m_phiGap/radius);
+    } else if(3 == zone){
+      phiMax = -acos(m_overlapInX/radius);
+    } else {
+      phiMax = this->phiMaxZone(zone);
+    }
+    return phiMax;
+  }
+   
   /// The minimum phi of a strip
-  double phiMinStrip(unsigned int strip);
+  double phiMinStrip(unsigned int strip){return m_stripLimits[strip].first;}
   
   /// The maximum phi of a strip
-  double phiMaxStrip(unsigned int strip);
+  double phiMaxStrip(unsigned int strip){return m_stripLimits[strip].second;}
 
-  /// The capacitance of the strip for a given channel
-  //  double stripCapacitance(const VeloChannelID& channel);
-  
   /// Return the strip limits for panoramix
-  StatusCode stripLimits(unsigned int strip, double &radius,
-                         double &phiMin, double &phiMax);
+  inline StatusCode stripLimits(unsigned int strip, double &radius,
+                         double &phiMin, double &phiMax){
+    radius = rOfStrip(strip);
+    phiMin = phiMinStrip(strip);
+    phiMax = phiMaxStrip(strip);
+    return StatusCode::SUCCESS;
+  }
+  
   
 protected:
 

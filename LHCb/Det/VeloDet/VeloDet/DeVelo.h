@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.18 2004-02-13 16:49:38 mtobin Exp $
+// $Id: DeVelo.h,v 1.19 2004-02-17 21:36:50 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -128,6 +128,11 @@ public:
    return dynamic_cast<DeVeloPhiType*>(m_vpSensor[index]);
   }
   
+  /// Returns a vector of pointers to the R/Phi sensors
+  inline std::vector<DeVeloSensor*> vpSensors() const {
+    return m_vpSensor;
+  }
+
   /** Gives the VeloChannelID and offset (in fraction of a pitch width) 
       associated to a 3D position. with pitch width in mm
       Sign convention is offset is +- 0.5 
@@ -411,7 +416,8 @@ private:
       return ( x->sensorNumber() < y->sensorNumber() );
     }
   };
-  /// TO BE REMOVED
+
+  ///
   double m_zVertex;
 };
 

@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.3 2004-02-13 16:01:58 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.4 2004-02-17 21:36:50 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -75,19 +75,35 @@ public:
   double stripCapacitance(unsigned int strip);
   
   /// The number of zones in the detector
-  unsigned int numberOfZones();
+  inline unsigned int numberOfZones(){return m_numberOfZones;}
   
   /// The zones number for a given strip
-  unsigned int zoneOfStrip(const unsigned int strip);
+  inline unsigned int zoneOfStrip(const unsigned int strip){
+    unsigned int zone=0;
+    if(m_nbInner > strip) {
+      zone = 0;
+    } else {
+      zone = 1;
+    }
+    return zone;
+  }
   
   /// The number of strips in a zone
-  unsigned int stripsInZone(const unsigned int zone);
+  inline unsigned int stripsInZone(const unsigned int zone){
+    if(0 == zone) {
+      return m_nbInner;
+    } else if(1 == zone){
+      return m_numberOfStrips-m_nbInner;
+    }
+    return 0;
+  }
   
   /// The minimum radius for a given zone of the sensor
   double rMin(const unsigned int zone);
   
   /// The maximum radius for a given zone of the sensor
   double rMax(const unsigned int zone);
+
   /// The minimum phi for a given zone of the sensor
   double phiMin(const unsigned int /*zone*/) {return 0.;}
   
@@ -101,22 +117,63 @@ public:
   bool isCutOff(double x, double y);
 
   /// The phi position of a strip at a given radius
-  double phiOfStrip(unsigned int strip, double fraction, const double radius);
+  inline double phiOfStrip(unsigned int strip, double fraction, 
+                           const double radius){
+    double effectiveStrip=fraction+static_cast<double>(strip);
+    if (m_nbInner > strip) {
+      return (effectiveStrip*m_innerPitch) + phiOffset(radius);
+    } else {
+      effectiveStrip -= m_nbInner;
+      return (effectiveStrip*m_outerPitch) + phiOffset(radius);
+    }
+  }
   
   /// The angle of the strip wrt to the x axis
-  double angleOfStrip(unsigned int strip, double fraction);
+  inline double angleOfStrip(unsigned int strip, double fraction){
+    double effectiveStrip=fraction+static_cast<double>(strip);
+    if (m_nbInner > strip) {
+      return (effectiveStrip*m_innerPitch) + m_innerTilt;
+    } else {
+      effectiveStrip -= m_nbInner;
+      return (effectiveStrip*m_outerPitch) + m_outerTilt;
+    }
+  }
   
   /// Returns the offset in phi for a given radius
-  double phiOffset(double radius);
+  inline double phiOffset(double radius){
+    if(m_middleRadius > radius){
+      return m_innerTilt - asin(m_innerDistToOrigin / radius);
+    } else {
+      return m_outerTilt - asin(m_outerDistToOrigin / radius);
+    }
+  }
 
   /// The phi pitch in mm at a given radius
-  double phiPitch(const double radius);
-  
+  inline double phiPitch(const double radius){
+    if (m_middleRadius > radius) {
+      return m_innerPitch * radius;
+    } else {
+      return m_outerPitch * radius;
+    }
+  }
+
   /// The phi pitch in radians for a given strip
-  double phiPitch(unsigned int strip);
+  inline double phiPitch(unsigned int strip){
+    if (m_nbInner > strip) {
+      return m_innerPitch;
+    } else {
+      return m_outerPitch;
+    }
+  }
 
   /// Return the distance to the origin 
-  double distToOrigin(unsigned int strip);
+  inline double distToOrigin(unsigned int strip){
+    if(m_nbInner > strip){
+      return m_innerDistToOrigin;
+    } else {
+      return m_outerDistToOrigin;
+    }
+  }
 
   /// The minimum phi of the sensor for a given radius
   double phiMin(const double radius);
@@ -125,9 +182,14 @@ public:
   double phiMax(const double radius);
   
   /// Return the strip geometry for panoramix
-  StatusCode stripLimits(unsigned int strip, HepPoint3D& begin,
-                         HepPoint3D& end);
-  
+  inline StatusCode stripLimits(unsigned int strip, HepPoint3D& begin,
+                                HepPoint3D& end){
+    StatusCode sc=this->localToGlobal(m_stripLimits[strip].first,begin);
+    if(!sc) return sc;
+    sc=this->localToGlobal(m_stripLimits[strip].second,end);
+    return sc;
+  }
+ 
 protected:
 
 private:
@@ -152,8 +214,6 @@ private:
   double m_rGap;
   std::vector<int> m_stripsInZone;
   std::vector<std::pair<double,double> > m_stripLines;
-  //  std::vector<double> m_gradientStrip;
-  //std::vector<double> m_interceptStrip;
   /// First corner
   double m_corner1X1;
   double m_corner1Y1;
