@@ -5,9 +5,9 @@
 <!ENTITY L1Event.xml          SYSTEM "L1Event.xml"         >
 <!ENTITY L1Bank.xml           SYSTEM "L1Bank.xml"          >
 
-<!ENTITY HltBuffer.xml        SYSTEM "HltBuffer.xml"       >
-<!ENTITY HltEvent.xml         SYSTEM "HltEvent.xml"        >
-<!ENTITY HltBank.xml          SYSTEM "HltBank.xml"         >
+<!ENTITY RawBuffer.xml        SYSTEM "RawBuffer.xml"       >
+<!ENTITY RawEvent.xml         SYSTEM "RawEvent.xml"        >
+<!ENTITY RawBank.xml          SYSTEM "RawBank.xml"         >
 
 ]>
 
@@ -18,13 +18,13 @@
     <import name="Kernel/CLHEPStreams"/>
 
     &L1Buffer.xml;
-    &HltBuffer.xml;
+    &RawBuffer.xml;
 
     &L1Bank.xml;
-    &HltBank.xml;
+    &RawBank.xml;
 
     &L1Event.xml;
-    &HltEvent.xml;
+    &RawEvent.xml;
 
   </package>
 

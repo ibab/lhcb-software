@@ -13,13 +13,13 @@
  */
  
 #ifdef WIN32
-typedef __int32 hlt_int ;
+typedef __int32 raw_int ;
 typedef __int16 l1_int ;
 
 #else
 //(See at /usr/include/sys/types.h)
 #include <sys/types.h>
-typedef int32_t hlt_int ;
+typedef int32_t raw_int ;
 typedef int16_t l1_int ;
 #endif   // WIN32
 

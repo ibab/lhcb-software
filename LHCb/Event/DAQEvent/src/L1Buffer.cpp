@@ -1,11 +1,11 @@
-// $Id: L1Buffer.cpp,v 1.2 2003-11-10 15:51:46 cattanem Exp $
+// $Id: L1Buffer.cpp,v 1.3 2003-11-24 16:06:06 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/StreamBuffer.h" 
 
 // local
-#include "Event/HltBuffer.h"
+#include "Event/L1Buffer.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L1Buffer

@@ -1,37 +1,37 @@
 <!-- ****************************************************************
-     * HltEvent                                                    *
+     * RawEvent                                                    *
      ****************************************************************-->
-     <import name="Event/HltBuffer"/>
+     <import name="Event/RawBuffer"/>
      <class 
       author="Helder Lopes"
-      desc="HLT event"
-      name="HltEvent"
-      location="DAQ/HltEvent"
+      desc="Raw event"
+      name="RawEvent"
+      location="DAQ/RawEvent"
       id="1002"
       serializers="FALSE"
      >
        <base name="DataObject"/>
        <attribute
-        desc="Map with HltBanks (values) for each bank type"
+        desc="Map with RawBanks (values) for each bank type"
         name="eventMap"
-        type="std::map &lt;int, std::vector&lt;HltBank&gt; &gt;"
+        type="std::map &lt;int, std::vector&lt;RawBank&gt; &gt;"
         getMeth="FALSE"
         setMeth="FALSE"
      />
        <constructor
         desc="Constructor from a map"
        >
-         <arg name="eventMap" type="std::map &lt;int, std::vector&lt;HltBank&gt; &gt;"/>
+         <arg name="eventMap" type="std::map &lt;int, std::vector&lt;RawBank&gt; &gt;"/>
          <code>m_eventMap=eventMap ; </code>
        </constructor>
-       <constructor desc="Constructor from HltBuffer">
-         <arg name="hltBuffer" type="HltBuffer"/>
+       <constructor desc="Constructor from RawBuffer">
+         <arg name="rawBuffer" type="RawBuffer"/>
        </constructor>
 
        <method
-        desc="accessor method to the vector of HLT banks for a given bank type"
+        desc="accessor method to the vector of Raw banks for a given bank type"
         name="banks"
-        type="const std::vector &lt;HltBank &gt; &amp; "
+        type="const std::vector &lt;RawBank &gt; &amp; "
         argList="int bankType"     
        >
          <code> return (m_eventMap[bankType]); </code>

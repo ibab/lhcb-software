@@ -1,14 +1,14 @@
-// $Id: DAQEvent_load.cpp,v 1.3 2003-11-03 07:41:38 cattanem Exp $
+// $Id: DAQEvent_load.cpp,v 1.4 2003-11-24 16:06:06 cattanem Exp $
 // Include files 
 
 #include "Event/EventFactoryDefs.h"
 
 /// ====================================================================
-#include "Event/HltBuffer.h"
-#include "Event/HltEvent.h"
+#include "Event/RawBuffer.h"
+#include "Event/RawEvent.h"
 
-_ImplementDataObjectFactory( HltBuffer )
-_ImplementDataObjectFactory( HltEvent )
+_ImplementDataObjectFactory( RawBuffer )
+_ImplementDataObjectFactory( RawEvent )
 
 /// ====================================================================
 #include "Event/L1Buffer.h"
@@ -20,8 +20,8 @@ _ImplementDataObjectFactory( L1Event )
 
 void DAQEvent_load() {
 
-  DLL_DECL_OBJECTFACTORY( HltBuffer );
-  DLL_DECL_OBJECTFACTORY( HltEvent );
+  DLL_DECL_OBJECTFACTORY( RawBuffer );
+  DLL_DECL_OBJECTFACTORY( RawEvent );
   
   DLL_DECL_OBJECTFACTORY( L1Buffer );
   DLL_DECL_OBJECTFACTORY( L1Event );

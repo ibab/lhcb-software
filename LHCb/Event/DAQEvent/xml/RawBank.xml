@@ -1,10 +1,10 @@
 <!-- ****************************************************************
-     * HltBank                                                    *
+     * RawBank                                                      *
      ****************************************************************-->
      <class 
       author="Helder Lopes"
-      desc="Hlt bank"
-      name="HltBank"
+      desc="Raw data bank as read by DAQ after L1"
+      name="RawBank"
       stdVectorTypeDef="TRUE"
       serializers="FALSE"
      >
@@ -12,14 +12,14 @@
        <attribute
         desc="Pointer to each data bank(Header+body)"
         name="data"
-        type="hlt_int *"
+        type="raw_int *"
         getMeth="FALSE"
         setMeth="FALSE"
      />
        <constructor
         desc="Constructor from a pointer to a data bank"
        >
-         <arg name="pBank" type="hlt_int *"/>
+         <arg name="pBank" type="raw_int *"/>
          <code> m_data = pBank; </code>
        </constructor>
        <method
@@ -49,7 +49,7 @@
        <method
         desc="Return pointer to begining of data body of the bank"
         name="data"
-        type="hlt_int *"
+        type="raw_int *"
         const="TRUE"
         >
         <code> return (m_data+3); </code>

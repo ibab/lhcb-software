@@ -1,14 +1,14 @@
-// $Id: HltBuffer.cpp,v 1.2 2003-11-10 15:51:46 cattanem Exp $
+// $Id: RawBuffer.cpp,v 1.1 2003-11-24 16:06:06 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/StreamBuffer.h" 
 
 // local
-#include "Event/HltBuffer.h"
+#include "Event/RawBuffer.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : HltBuffer
+// Implementation file for class : RawBuffer
 //
 // 2003-11-10 : Marco Cattaneo
 //-----------------------------------------------------------------------------
@@ -17,7 +17,7 @@
 //=============================================================================
 // Serialisation for writing
 //=============================================================================
-StreamBuffer& HltBuffer::serialize( StreamBuffer& s ) const {
+StreamBuffer& RawBuffer::serialize( StreamBuffer& s ) const {
   s << m_initialSize
     << m_allocatedSize
     << m_currentSize;
@@ -34,13 +34,13 @@ StreamBuffer& HltBuffer::serialize( StreamBuffer& s ) const {
 //=============================================================================
 // Serialization for reading
 //=============================================================================
-StreamBuffer& HltBuffer::serialize( StreamBuffer& s ) {
+StreamBuffer& RawBuffer::serialize( StreamBuffer& s ) {
   s >> m_initialSize
     >> m_allocatedSize
     >> m_currentSize;
 
   if( 0 != m_buffer ) delete[] m_buffer;
-  m_buffer = new hlt_int[m_currentSize];
+  m_buffer = new raw_int[m_currentSize];
   long i = 0;
   while( i < this->currentSize() ) {
 #ifdef WIN32 // VERY temporary hack for Windows!
@@ -66,7 +66,7 @@ StreamBuffer& HltBuffer::serialize( StreamBuffer& s ) {
 //=============================================================================
 // Serialization for printing
 //=============================================================================
-std::ostream& HltBuffer::fillStream(std::ostream& s) const
+std::ostream& RawBuffer::fillStream(std::ostream& s) const
 {
   s << "{ "
     << " initialSize:\t" << m_initialSize << std::endl
