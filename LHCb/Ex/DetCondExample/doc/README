@@ -1,4 +1,4 @@
-# $Id: README,v 1.24 2002-11-25 21:51:00 andreav Exp $
+# $Id: README,v 1.25 2002-11-25 22:27:29 andreav Exp $
 
 Three examples are distributed in this package: a test of condition data 
 stored in flat XML files, a test of condition data stored in the CondDB,
@@ -277,6 +277,18 @@ SQL> select since,till from <DBNAME>_CONOBJS;
 SQL> alter user <USERNAME> identified by <NEWPASSWORD>;
 # Quit the SQL*plus session
 SQL> quit;
+
+------------------------------------------------------------------------------
+Short note on the Oracle version
+------------------------------------------------------------------------------
+
+The CondDBOracle package has been developed on Oracle9i.
+The implementation stores PL/SQL code in the database and executes it.
+The PL/SQL code is not backward compatible: you must run the code against 
+an Oracle 9i server (contact Physics-Database.Support@cern.ch).
+If you run against an Oracle 8i server (such as devdb or cerndb1) and switch 
+on debugging (COND_DB_DEBUG=all), you are likely to get an error like
+  "ORA-00904: invalid column name".
 
 ==============================================================================
 
