@@ -1,4 +1,4 @@
-// $Id: IMCDecayFinder.h,v 1.2 2002-07-12 09:28:28 odie Exp $
+// $Id: IMCDecayFinder.h,v 1.3 2002-11-06 08:35:14 odie Exp $
 #ifndef TOOLS_IMCDECAYFINDER_H 
 #define TOOLS_IMCDECAYFINDER_H 1
 
@@ -28,6 +28,10 @@ class IMCDecayFinder : virtual public IAlgTool {
 public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IMCDecayFinder; }
+
+  /// Get/Set the decay string to find
+  virtual std::string decay( void ) = 0;
+  virtual StatusCode setDecay( std::string decay ) = 0;
 
   /// Does the described decay exists in the event?
   virtual bool hasDecay( const std::vector<MCParticle*> &event ) = 0;

@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.h,v 1.4 2002-07-26 12:57:03 odie Exp $
+// $Id: MCDecayFinder.h,v 1.5 2002-11-06 08:36:10 odie Exp $
 #ifndef TOOLS_MCDECAYFINDER_H 
 #define TOOLS_MCDECAYFINDER_H 1
 
@@ -75,6 +75,10 @@ public:
   virtual ~MCDecayFinder( ); ///< Destructor
 
   StatusCode initialize( void );
+
+  /// Get/Set the decay string to find
+  std::string decay( void ) { return m_source; }
+  StatusCode setDecay( std::string decay );
 
   /// Does the described decay exists in the event?
   bool hasDecay( const std::vector<MCParticle*> &event );

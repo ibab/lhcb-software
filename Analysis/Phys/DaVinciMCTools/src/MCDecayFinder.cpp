@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.5 2002-09-18 08:58:20 odie Exp $
+// $Id: MCDecayFinder.cpp,v 1.6 2002-11-06 08:36:10 odie Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -66,13 +66,43 @@ MCDecayFinder::~MCDecayFinder( )
 
 //=============================================================================
 
+StatusCode MCDecayFinder::setDecay( std::string decay )
+{
+  MsgStream log( msgSvc(), name() );
+
+  Descriptor *old_decay = m_decay;
+
+  log << MSG::DEBUG << "Setting decay to " << decay << endreq;
+  if( compile(decay) )
+  {
+    log << MSG::DEBUG << "The compilation of the decay was successfull"
+        << endreq;
+    delete old_decay;
+    return StatusCode::SUCCESS;
+  }
+
+  // Restore previous decay if compilation failed.
+  if( m_decay && (m_decay != old_decay) )
+    delete m_decay;
+  m_decay = old_decay;
+
+  log << MSG::DEBUG << "Could not compile the decay description" << endreq;
+  return StatusCode::FAILURE;
+}
+
 StatusCode MCDecayFinder::initialize()
 {
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Initializing" << endreq;
+  if( m_source.length() == 0 )
+  {
+    log << MSG::WARNING << "No decay specified!" << endreq;
+    return StatusCode::SUCCESS;
+  }
   if( compile(m_source) )
   {
-    log << MSG::DEBUG << "The compilation of the decay was successfull" << endreq;
+    log << MSG::DEBUG << "The compilation of the decay was successfull"
+        << endreq;
     return StatusCode::SUCCESS;
   }
   log << MSG::DEBUG << "Could not compile the decay description" << endreq;
@@ -108,7 +138,13 @@ bool MCDecayFinder::hasDecay( const std::vector<MCParticle*> &event )
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "About to test the event" << endreq;
   const MCParticle *drop_me = NULL;
-  return m_decay->test( event.begin(), event.end(), drop_me );
+  if( m_decay )
+    return m_decay->test( event.begin(), event.end(), drop_me );
+  else
+  {
+    log << MSG::WARNING << "Trying to find an unspecified decay!" << endreq;
+    return false;
+  }
 }
 
 bool MCDecayFinder::findDecay( const std::vector<MCParticle*> &event,
@@ -116,7 +152,13 @@ bool MCDecayFinder::findDecay( const std::vector<MCParticle*> &event,
 {
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "About to test the event" << endreq;
-  return m_decay->test( event.begin(), event.end(), previous_result );
+  if( m_decay )
+    return m_decay->test( event.begin(), event.end(), previous_result );
+  else
+  {
+    log << MSG::WARNING << "Trying to find an unspecified decay!" << endreq;
+    return false;
+  }
 }
 
 bool MCDecayFinder::hasDecay( const MCParticles &event )
@@ -124,7 +166,13 @@ bool MCDecayFinder::hasDecay( const MCParticles &event )
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "About to test the event" << endreq;
   const MCParticle *drop_me = NULL;
-  return m_decay->test( event.begin(), event.end(), drop_me );
+  if( m_decay )
+    return m_decay->test( event.begin(), event.end(), drop_me );
+  else
+  {
+    log << MSG::WARNING << "Trying to find an unspecified decay!" << endreq;
+    return false;
+  }
 }
 
 bool MCDecayFinder::findDecay( const MCParticles &event,
@@ -132,7 +180,13 @@ bool MCDecayFinder::findDecay( const MCParticles &event,
 {
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "About to test the event" << endreq;
-  return m_decay->test( event.begin(), event.end(), previous_result );
+  if( m_decay )
+    return m_decay->test( event.begin(), event.end(), previous_result );
+  else
+  {
+    log << MSG::WARNING << "Trying to find an unspecified decay!" << endreq;
+    return false;
+  }
 }
 
 MCDecayFinder::Descriptor::Descriptor( IParticlePropertySvc *ppSvc,
