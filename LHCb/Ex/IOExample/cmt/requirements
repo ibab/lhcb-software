@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.18 2005-02-09 09:29:46 cattanem Exp $
+# $Id: requirements,v 1.19 2005-02-16 09:03:56 ibelyaev Exp $
 package IOExample
-version v1r4p1
+version v1r5
 
-branches doc options cmt
+branches doc options cmt src 
 
 use GaudiSvc            v*
 use GaudiPoolDb         v*
@@ -12,7 +12,10 @@ use MCTools		v* Phys
 use EventSys            v* Event
 use AssociatorsSys	v* Associators
 use LHCbAlgs		v* Kernel
-
+        
+library                 IOExample  *.cpp 
+apply_pattern component_library library=IOExample 
+        
 #==> IO example
 application IOMin    "$(GAUDICONFROOT)/src/GaudiMain.cpp"
 

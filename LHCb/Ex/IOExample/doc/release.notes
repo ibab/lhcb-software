@@ -1,7 +1,23 @@
-$Id: release.notes,v 1.10 2005-02-09 09:29:46 cattanem Exp $
+$Id: release.notes,v 1.11 2005-02-16 09:03:56 ibelyaev Exp $
 Package: IOExample
 Package Manager: M.Frank
 Purpose: Demonstrate how to write and read back event data using POOL I/O.
+
+
+! 2005-02-16 - Vanya BELYAEV
+
+  - src/ITDigit2MC.cpp
+  - src/OTTimes2MC.cpp
+  - src/VeloCls2MC.cpp  
+       Three primitive algorthms to test the relations from DIGI tape 
+  - src/IOExample_dll.cpp  
+  - src/IOExample_load.cpp 
+   
+ 
+  - cmt/requiremens
+     add component library IOExample 
+     increment version to v1r5   
+
 
 !====================== IOExample v1r4p1 2005-02-08 =======================
 ! 2005-02-08 - Marco Cattaneo
