@@ -1,6 +1,10 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!========================  VeloAssociators v1r1 2002-07-18 =====================
+! 2002-07-18 - Marco Cattaneo
+ - Use VeloDet v7r* (backwards compatible because not using PuVeto stuff)
+
 !========================  VeloAssociators v1r0 2002-07-09 =====================
 ! 2002-07-08 - Chris Parkes
 - Ensure no relation filled when link is not present 
