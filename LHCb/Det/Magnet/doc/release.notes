@@ -4,12 +4,11 @@
 ! Purpose     : Provides magnetic field map
 !-----------------------------------------------------------------------------
 
+! >>>>>>>>>>>>>>>>>>>>>  Magnet v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ! 2002-05-23 - Olivier Callot
  - Fix a bug : When x>0, Y<0, the Y component of the field was inverted instead
    of the x component !
  - Added also a protection: Return a zero field when outside the field map.
-
-! >>>>>>>>>>>>>>>>>>>>>  Magnet v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ! 2002-05-21 - Edgar De Oliveira
  - New version of MagneticFieldSvc (originally in SicbCnv).
