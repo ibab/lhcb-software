@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.28 2002-10-21 17:59:28 gcorti Exp $
+! $Id: release.notes,v 1.29 2002-10-21 18:24:38 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
 ! 2002-10-21 - Gloria Corti
- - New tool CheckOverlap that verify is a set of particle are common at
-   the level of the ProtoParticles (J.H.Lopes)
+ - New tool CheckOverlap (and interface ICheckOverlap) that verify if
+   a set of particle are common at the level of the ProtoParticles (J.H.Lopes)
  - NeutralParticleMaker modified to set error matrices for poin, momentum
    and correlation. Introduce ConfLevel = 0.0 for all neutral clusters,
    ConfLevel = 0.5 for coverted gammas, ConfLevel = 1.0 for non coverted
