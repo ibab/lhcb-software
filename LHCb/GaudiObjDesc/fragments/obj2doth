@@ -1,7 +1,4 @@
-$(destfull)${NAME}.obj2doth : $(destfull)${NAME}Obj2Doth
-#	@echo $@
-
-$(destfull)${NAME}Obj2Doth : ${FULLNAME}
-	@echo Producing ${FULLNAME}
-	@cd ..\$(dest)
-	@$(GAUDIOBJDESCROOT)\$(tag)\$(parsetool) $(GODflags) ..\$(xmlsrc)\${NAME}.xml
+$(dest)${NAME}.obj2doth : ${FULLNAME} 
+	@echo Producing Header files from ${FULLNAME}
+	@cd $(dest); $(GAUDIOBJDESCROOT)\$(tag)\$(parsetool) $(GODflags) ${FULLNAME}
+	@echo /dev/null > $@

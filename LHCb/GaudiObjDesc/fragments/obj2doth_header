@@ -1,9 +1,15 @@
 
-parsetool = GODWriteCppHeader.exe
-dest = LHCbEvent
-destfull = ../$(dest)/
-${CONSTITUENT}_output = $(destfull)
+parsetool     = GODWriteCppHeader.exe
+dest          = ../$(package)// 
+dtdfile       = ../$(xmlsrc)/gdd.dtd 
 
-${CONSTITUENT} :: ${OBJS}
+${CONSTITUENT}_output = $(dest)
+
+${CONSTITUENT} :: $(dtdfile) ${OBJS}
 	@echo "-----> ${CONSTITUENT} ok"
+
+$(dtdfile) : $(GAUDIOBJDESCROOT)/xml_files/gdd.dtd
+	@echo "Copying global DTD to current package"
+	@cp $(GAUDIOBJDESCROOT)/xml_files/gdd.dtd $(dtdfile)
+
 

@@ -2,6 +2,9 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20011029 - Stefan Roiser
+ - several changes in order to achieve linux compliance
+
 ! 20011019 - Stefan Roiser
  - many small changes: handling of arguments in selfdefined methods, concatenate class descriptions, produce
    at least one empty constructor, handling and errorhandling of class-attribute 'argList'

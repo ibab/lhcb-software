@@ -1,9 +1,5 @@
-$(destfull)${NAME}.obj2dict : $(destfull)${NAME}Obj2Dict
-#	@echo $@
-
-$(destfull)${NAME}Obj2Dict : ${FULLNAME}
-	@echo Producing ${FULLNAME}
-	@if not exist ..\src\$(dest) mkdir ..\src\$(dest)
-	@cd ..\src\$(dest)
-	@$(GAUDIOBJDESCROOT)\$(tag)\$(parsetool) $(GODflags) ..\..\$(xmlsrc)\${NAME}.xml
- 
+$(dest)${NAME}.obj2dict :  ${FULLNAME}
+	@echo Producing Dictionary from ${FULLNAME}
+	@if !(test -d $(dest)); then mkdir $(dest); fi 
+	@cd $(dest); $(GAUDIOBJDESCROOT)/$(tag)/$(parsetool) $(GODflags) ../${FULLNAME}
+	@echo /dev/null > $@
