@@ -139,12 +139,18 @@ void VeloClusterMaker::makeClusters(){
   // get all hits from which the clusters will be made
   m_digits = get<VeloFullDigits>(m_inputContainer);
 
-  unsigned int NDet=m_velo->numberNonPUSensors();
-  for (unsigned int detIndex=0;detIndex<NDet;detIndex++){ //loop over detectors
-    if(isDebug) debug() << "makeClusters:DetectorNumber " << detIndex 
-			<< "/" << NDet << endreq;
+  std::vector< DeVeloSensor * >::iterator iSens;
+  std::vector< DeVeloSensor * > sensors = m_velo->vpSensors();
+  for( iSens = sensors.begin() ; iSens != sensors.end() ; iSens++ ){
+
+    // ignore the 4 pileup sensors
+    if( (*iSens)->isPileUp() ) { continue; }
+
+    unsigned int detIndex = iSens-sensors.begin();
     // set all channels not used
-    m_sensor=m_velo->sensorNumber(detIndex);
+    m_sensor=(*iSens)->sensorNumber();;
+    if(isDebug) debug() << "makeClusters:DetectorNumber " << detIndex 
+			<< " Sensor " << m_sensor<< endreq;
     m_channelUsed.clear();
     m_channelUsed.insert( m_channelUsed.begin(), 
                           m_velo->numberStrips(m_sensor), false); 
@@ -152,8 +158,7 @@ void VeloClusterMaker::makeClusters(){
     std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator> 
       range=getVeloFullDigitsOfSensor(m_sensor);
     if(isDebug) debug() << "makeClusters:retrieved digits for det " 
-			<< detIndex 
-			<< "/" << NDet << " size " 
+			<< detIndex << " size " 
 			<< range.second - range.first << endreq;
     
     // sort by increasing ADC value          

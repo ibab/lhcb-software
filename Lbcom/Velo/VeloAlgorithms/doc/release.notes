@@ -1,6 +1,9 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 
+! 2005-02-10 - David Hutchcroft
+ - Bug fix in VeloCluster maker to make clusters for last 4 sensors
+
 !===================== VeloAlgorithms v3r2 2004-12-06 =====================
 ! 2004-12-06 - Marco Cattaneo
  - Explicitly call initialize and finalize of GaudiAlgorithm base class
