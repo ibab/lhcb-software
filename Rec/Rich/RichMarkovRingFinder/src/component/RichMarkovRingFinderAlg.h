@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.15 2004-12-13 18:24:54 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.16 2004-12-14 13:11:23 abuckley Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -110,6 +110,9 @@ private: // data
 
   // The ring finder
   MyFinder * m_finder; ///< Pointer to internal Ring Finder
+
+  /// Scale factor for converting from a pixel bg prob and a bg likelihood contribution
+  double m_bgprobToBgcontribScaleFactor;
 
   /// Location of output rings in TES
   std::string m_ringLocation;

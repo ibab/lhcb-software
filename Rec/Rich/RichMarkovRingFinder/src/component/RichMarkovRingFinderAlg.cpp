@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.16 2004-12-13 18:24:54 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.17 2004-12-14 13:11:23 abuckley Exp $
 // Include files
 
 // local
@@ -83,7 +83,8 @@ StatusCode RichMarkovRingFinderAlg<MyFinder>::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle     );
   acquireTool( "RichSmartIDTool",    m_smartIDTool );
 
-  // Put Markov code in try block
+
+  // Test Markov initialisation for exception-throwing
   try {
 
     // Make a run initialisation object
@@ -109,6 +110,26 @@ StatusCode RichMarkovRingFinderAlg<MyFinder>::initialize()
     return Error( "Caught unknown exception from MarkovRingFinder" );
   }
 
+
+  // Get scale factor for turning the "background probabilities" into the "background contributions" 
+  // used by the std background estimator and likelihood contribution:
+  DeRich1* Rich1DE( getDet<DeRich1>( DeRichLocation::Rich1 ) );
+  DeRich2* Rich2DE( getDet<DeRich2>( DeRichLocation::Rich2 ) );
+  const double rich2Radius( Rich2DE->sphMirrorRadius() );
+//const double xPixSize      ( Rich2DE->userParameterAsDouble("RichHpdPixelXsize") ); // 0.5*mm
+//const double yPixSize      ( Rich2DE->userParameterAsDouble("RichHpdPixelYsize") ); // 0.5*mm
+//const double demagScale    ( Rich2DE->userParameterAsDouble("HPDDemagScaleFactor");
+  const double xPixSize      ( Rich1DE->userParameterAsDouble("RichHpdPixelXsize") ); // 0.5*mm
+  const double yPixSize      ( Rich1DE->userParameterAsDouble("RichHpdPixelYsize") ); // 0.5*mm
+  const double demagScale    ( 4.8 );
+  const double pixelArea     ( demagScale*xPixSize * demagScale*yPixSize );
+  const double saturatedCkAngle ( 0.032 ); // for RICH2, in rad : Chris will add a method to the Ck angle tool for this
+  m_bgprobToBgcontribScaleFactor = 4.0 * pixelArea / ( rich2Radius * rich2Radius * saturatedCkAngle );
+  debug() << "4 * " << xPixSize << " * " << yPixSize << " * " << demagScale * demagScale 
+           << " / " << rich2Radius * rich2Radius << " * " << saturatedCkAngle << " = "
+           << m_bgprobToBgcontribScaleFactor << endmsg;
+
+
   // Configuration debug messages
   debug() << " Configured for " << m_rich << " panel " << m_panel << endreq;
   if ( m_useRichSeed ) {
@@ -116,6 +137,7 @@ StatusCode RichMarkovRingFinderAlg<MyFinder>::initialize()
   } else {
     debug() << " Initialisation from random rings" << endreq;
   }
+
 
   // Some warning messages about things to do...
   warning() << "Remove private use of CLHEP random number engine." << endreq
@@ -266,10 +288,11 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
     // Probability that this hit is background
     const double bgprob( inf.probabilityHitWasMadeBySomethingOtherThanACircle(hIt) );
     hitBgProbs[&(*hIt)] = bgprob;
-    // Set this pixel to believe that this is its background probability
-    // (the stripping alg can redefine "background" to also include untracked rings)
-    hIt->richPixel()->setCurrentBackground( bgprob );
-    richStatus()->detOverallBkg()[hIt->richPixel()->detector()] += bgprob;
+    // Set this pixel to believe that this is its background likelihood
+    // (the stripping alg can redefine "background" to also include untracked rings --- see later)
+    const double bgcontrib(bgprob * m_bgprobToBgcontribScaleFactor);
+    hIt->richPixel()->setCurrentBackground( bgcontrib );
+    richStatus()->detOverallBkg()[hIt->richPixel()->detector()] += bgcontrib;
 
     // Initialise best assoc prob pair
     bestHitCircleProbs[&(*hIt)] = pair<MarkovCircle*, double>(0, 0);
@@ -441,31 +464,13 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
           }
         }
       }
-      hit->richPixel()->setCurrentBackground( 1 - trackedSignalProb );
-      richStatus()->detOverallBkg()[hit->richPixel()->detector()] += (1 - trackedSignalProb);
+      const double bgprob(1 - trackedSignalProb);
+      const double bgcontrib(bgprob * m_bgprobToBgcontribScaleFactor);
+      hit->richPixel()->setCurrentBackground( bgcontrib );
+      richStatus()->detOverallBkg()[hit->richPixel()->detector()] += bgcontrib;
+      debug() << "Weighted pixel " << hit->richPixel()->key() << " with background contribution = " << bgcontrib << endreq;
     }
   }
-
-  // Turn the "background probabilities" into the "background contributions" used by the std
-  // background estimator and likelihood contribution:
-  DeRich1* Rich1DE( getDet<DeRich1>( DeRichLocation::Rich1 ) );
-  DeRich2* Rich2DE( getDet<DeRich2>( DeRichLocation::Rich2 ) );
-  const double rich2Radius( Rich2DE->sphMirrorRadius() );
-//const double xPixSize      ( Rich2DE->userParameterAsDouble("RichHpdPixelXsize") ); // 0.5*mm
-//const double yPixSize      ( Rich2DE->userParameterAsDouble("RichHpdPixelYsize") ); // 0.5*mm
-//const double demagScale    ( Rich2DE->userParameterAsDouble("HPDDemagScaleFactor");
-  const double xPixSize      ( Rich1DE->userParameterAsDouble("RichHpdPixelXsize") ); // 0.5*mm
-  const double yPixSize      ( Rich1DE->userParameterAsDouble("RichHpdPixelYsize") ); // 0.5*mm
-  const double demagScale    ( 4.8 );
-  const double pixelArea     ( demagScale*xPixSize * demagScale*yPixSize );
-  const double saturatedCkAngle ( 0.032 ); // for RICH2, in rad : Chris will add a method to the Ck angle tool for this
-  const double bgprobToBgcontribScaleFactor( 4.0 * pixelArea / ( rich2Radius * rich2Radius * saturatedCkAngle ) );
-  for ( typename MarkovHits::iterator hit = eio.data().hits.begin(); hit != eio.data().hits.end(); ++hit ) {
-    const double bgContrib( hit->richPixel()->currentBackground() * bgprobToBgcontribScaleFactor );
-    hit->richPixel()->setCurrentBackground( bgContrib );
-    debug() << "Weighted pixel " << hit->richPixel()->key() << " with background contribution = " << bgContrib << endreq;
-  }
-  richStatus()->detOverallBkg()[Rich::Rich2] *= bgprobToBgcontribScaleFactor;
   debug() << "Overall bg contribution in Rich2 = " << richStatus()->detOverallBkg()[Rich::Rich2] << endreq;
 
 
