@@ -1,8 +1,11 @@
-// $Id: Calo04SCorrection.cpp,v 1.1 2004-03-17 16:32:21 ibelyaev Exp $
+// $Id: Calo04SCorrection.cpp,v 1.2 2004-03-19 13:15:39 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/03/17 16:32:21  ibelyaev
+//  add new (04) Photon calibrations from Olivier Deschamps
+//
 // Revision 1.4  2004/02/09 odescham
 //  add new E-,S- and L-corrections tuned for DC04
 //
@@ -344,8 +347,8 @@ StatusCode Calo04SCorrection::process    ( CaloHypo* hypo  ) const
   double DAsx=0.;
   double DAsy=0.;
   {for (unsigned int i = 0 ; i !=Par_Res.size() ; ++i){
-    DAsx += Par_Res[i] * pow(Asx,i);
-    DAsy += Par_Res[i] * pow(Asy,i);}
+    DAsx += Par_Res[i] * pow(Asx,int(i));
+    DAsy += Par_Res[i] * pow(Asy,int(i));}
   }
   
   if(Level[1]){
@@ -380,8 +383,8 @@ StatusCode Calo04SCorrection::process    ( CaloHypo* hypo  ) const
   double DDAsx = 0.;
   double DDAsy = 0.;
   {for (unsigned int i = 0 ; i !=Par_As.size() ; ++i){
-    DDAsx += Par_AsX[i]   * pow(Asx,i);
-    DDAsy += Par_AsY[i]   * pow(Asy,i); }
+    DDAsx += Par_AsX[i]   * pow(Asx,int(i));
+    DDAsy += Par_AsY[i]   * pow(Asy,int(i)); }
   } // Fix VC6 scoping bug
   if(Level[2]){
     Asx += DDAsx;
