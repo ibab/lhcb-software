@@ -3,7 +3,287 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r8>2005-03-03 DaVinci v12r8 - Parralel version with v13r0</A></H1><PRE>
+Version released in parralel with v13r0 containing a lot of trivial
+fixes to accomodate CLHEP 1.9 (used in v13r0, not in this version).
+
+The L1 memory leak has been fixed
+
+But there is still a memory leak in L0Muon. To avoid this, L0Muon
+is not run anymore in L0.opts. !WARNING! This will make you use the old
+obsolete muon trigger result stored on the DST. So either you get the old L0Muon
+or you live with a 20kB memory leak. 
+
+There are some changes in Physics tools:
+
+- The ICheckOverlap tool has been completely revised. It now accepts 
+  const inputs. The missing single-particle method has been added. 
+  Another new method removeOverlap( ParticleVector& ) removes particles
+  with overlap (i.e. typically a B where twice the same track has been used)
+  for the vector.
+  
+- A new OverlapFilterCriterion applies the CheckOverlap tool in a filter.
+
+################################################################################
+#                               DAVINCI v12r8                                  #
+################################################################################
+##################################### CALO #####################################
+##################################### EVENT ####################################
+##################################### HLT ######################################
+!========================== HltSelChecker v2r2 2005-03-03 ===================
+! 2005-02-23 - P. Koppenburg
+  - src/DecayChainNTuple.cpp
+    . std::map<int, HandleNTuple*>::data_type is not understood by windows. 
+      It's the same as "HandleNTuple*", no?
+
+!========================== HltSelections v2r2 2005-03-03 ===================
+! 2005-02-23 - P. Koppenburg
+  - src/MakeResonances.cpp
+    . Use CheckOverlap tool to kill overlap. Corrects bug that was affecting
+      decays with intermediate resonances.
+
+! 2005-02-21 - P. Koppenburg
+  - options/TrgVertexFitter.opts
+    . Use it for all algorithms. Requires head revision of Phys/VertexFit
+    
+  - options/TrgInsertIPErrParam.opts
+    renamed as TrgInsertTrackErrParam.opts for consistency
+###################################### L0 ######################################
+##################################### PHYS #####################################
+!========================== DaVinciEff v3r2p1 2005-03-03 ===================
+! 2004-03-03 - P. Koppenburg for Luis Fernandez
+ - src/EffSelCheck.cpp
+   . Change default value m_allTrueDoIs (true)
+
+! 2004-02-23 - P. Koppenburg
+ - options/(DV)EffBd2Jpsi2MuMu_Ks2PiPi.opts
+   . Removed
+ - options/DVEff*
+   . Use existing data!
+!========================== DaVinciFilter v1r6 2005-03-03 ===================
+! 2005-02-24 - P. Koppenburg
+  - src/OverlapFilterCriterion.{cpp,h}
+    . New filter that filters composite Particles with overlapping
+      origin() in their decendants.
+      WARNING: By default this filter is active. To switch it off,
+      use "Inactive" option.
+!========================== DaVinciKernel v3r2 2005-03-03 ===================
+! 2005-02-25 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . Print only once the warning about the vertices() method.
+
+! 2005-02-25 - P. Koppenburg
+  - Kernel/IKFFitTool.h
+  - Kernel/IParticleTransporter.h
+    . Because of yet another bug of the new CLHEP 1.9, whenever one includes
+      HepSymMatrix.h *after* *Point*.h, one does not get the method     
+           HepSymMatrix sub(int min_row, int max_row);     
+      which results in the run-trime error      
+           relocation error: .../slc3_ia32_gcc323/lib*.so: undefined symbol: _ZN5CLHEP12HepSymMatrix3subEii
+      -> Include SymMatrix at the very beginning of the file.
+    
+! 2005-02-24 - P. Koppenburg
+  - Kernel/ICheckOverlap.h
+    . New method (was missing)
+         bool foundOverlap(Particle* );
+    . New methods 
+         StatusCode removeOverlap( ParticleVector& );
+         StatusCode removeOverlap( ConstParticleVector& );
+      That remove from a ParticleVector	the particles that have overlap
+      in their decendents.
+    
+! 2005-02-21 - P. Koppenburg
+  - Kernel/ICheckOverlap.h
+    . Take const arguments.
+  - Kernel/DVAlgorithm.h, src/DVAlgorithm.cpp
+    . Provide new method:
+         ICheckOverlap* checkOverlap()  
+      
+!========================== DaVinciTest v5r6 2005-03-03 ===================
+! 2005-02-24 - P. Koppenburg
+  - src/TestOverlap.cpp
+    . Minor changes.
+
+! 2005-02-21 - P. Koppenburg
+  - src/TestOverlap.cpp
+    . Adapt to new interface.
+!========================== DaVinciTools v11r6 2005-03-03 ===================
+! 2005-02-24- P. Koppenburg
+  - src/CheckOverlap.{h,cpp}
+    . Correct a few bugs
+    . Adapt again to new interface (see Phys/Kernel)
+    
+! 2005-02-21 - P. Koppenburg
+  - src/CheckOverlap.{h,cpp}
+    . Adapt to new interface with const methods.
+    . Make it a GaudiTool.
+
+!========================== DaVinciTransporter v2r0p1 2005-03-03 ===================
+! 2005-02-25 - P. Koppenburg
+  - src/CombinedTransporter.cpp
+  - src/LinearTransporter.cpp
+  - src/NsctVeloTransporter.cpp
+  - src/ParabolicTransporter.cpp
+  - src/TrTransporter.cpp
+    . Because of yet another bug of the new CLHEP 1.9, whenever one includes
+      HepSymMatrix.h *after* *Point*.h, one does not get the method     
+           HepSymMatrix sub(int min_row, int max_row);     
+      which results in the run-trime error      
+           relocation error: .../slc3_ia32_gcc323/lib*.so: undefined symbol: _ZN5CLHEP12HepSymMatrix3subEii
+      -> Include SymMatrix at the very beginning of the file.
+
+!========================== DaVinci v12r8 2005-03-03 ===================
+! 2005-02-23 - P. Koppenburg
+  - options/L0.opts
+    . Do not re-run L0Muon. It contains a 26KB/event memory leak.
+!========================== FlavourTagging v5r5 2005-03-03 ===================
+! 2005-03-01 - M. Musy
+  - src/BTagging.{h,cpp}
+    . Default is now without L0 L1 and Tampering; without Tampering, results
+      may change (worsen) slightly depending upon the decay channel.
+    . Code structure has been revised.
+    . Bug on same-side pion tagger fixed.
+!========================== VertexFit v1r5 2005-03-03 ===================
+! 2005-02-28 - Hugo Ruiz
+  - src/TrgDispCalculator.cpp
+    . Implemented the method calcCloseAppr, that computes the minimum
+      distance of approach between tracks
+
+! 2005-02-25 - P. Koppenburg
+  - src/GeomDispCalculator.{cpp,h}
+  - src/LagrangeGeomVertexFitter.{cpp,h}
+  - src/LagrangeMassVertexFitter.{cpp,h}
+    . Because of yet another bug of the new CLHEP 1.9, whenever one includes
+      HepSymMatrix.h *after* *Point*.h, one does not get the mtheod
+      00214    HepSymMatrix sub(int min_row, int max_row);
+      which results in the run-trime error
+      relocation error: .../slc3_ia32_gcc323/lib*.so: undefined symbol: _ZN5CLHEP12HepSymMatrix3subEii
+    -> Include HepSymMatrix at the very beginning of the file.
+    
+! 2005-02-24 - P. Koppenburg for Hugo Ruiz
+  - src/TrgVertexFitter.{cpp,h}
+    . Do not fix vector sizes
+! 2005-02-21 - P. Koppenburg for Hugo Ruiz
+  - src/TrgVertexFitter.{cpp,h}
+    . Fixes for resonant states and photons.
+    
+#################################### PHYSSEL ###################################
+!========================== Bd2D0Kstar v4r3p2 2005-03-03 ===================
+! 2004-02-28 - P. Koppenburg
+ - options/TDRselKstar2KpiForBd2D02pipi.opts
+   . Commented out 
+     TDRselKstar2KPiForBd2D02pipi.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = true;
+     option that was inactive because of a typo in the name of the algorithm.
+!========================== PhysSelSys v7r16 2005-03-03 ===================
+use  Bd2D0Kstar               v4r3p2   PhysSel
+use  TriggerSel               v1r0     PhysSel
+
+!========================== TriggerSel v1r0 2005-03-03 ===================
+! 2005-03-01 - P. Koppenburg
+  Imported new package that runs the trigger selection.
+#####################################  REC  ####################################
+##################################### RICH #####################################
+##################################### TOOLS ####################################
+!========================== LoKiHlt v2r1 2005-03-03 ===================
+! 2005-02-11 - Vanya BELYAEV
+
+ - make an adaptation to new CLHEP/Gaudi/LHCb/DaVinci/LoKi
+ - cmt/requirements 
+   version increment to v2r1 
+
+!========================== Stripping v1r7 2005-03-03 ===================
+! 2005-03-01 - P. Koppenburg
+  - options/OverwriteExclusiveSelection.opts
+    . Overwrites ExclusiveSelection = true for all preselections.
+  - options/DVMerge.opts
+    . Rewritten
+  - python/strip.py
+    . Add TriggerSel package. Some tricks to make it work.
+  - options/Base.opts
+    . Run trigger by default
+      
+! 2005-03-01 - P. Koppenburg
+  - options/RestoreExclusiveSelection.opts
+    . Allows to recover default value ExclusiveSelection = true
+      for CombinedParticleMaker
+  - options/DVMerge.opts
+    . Restore three missing preselections.
+      
+! 2005-02-18 - P. Koppenburg
+  - python/strip.py
+    . Veto Bs2JpsiEta TDR-selection as it does not work with the new 
+      fitter anymore
+!========================== Utilities v1r14 2005-03-03 ===================
+! 2004-03-01 - P. Koppenburg
+  - src/CheckSelResult.cpp
+    . Allow to run it with *no* algorithm defined. Yes, there is a use-case!
+      (in $TRIGGERSELROOT/options/PreselTriggerSel.opts)
+ 2004-02-22 - P. Koppenburg
+  - src/SelResultCorrelations.cpp
+    . Option "AlgorithmsColum" is renamed into "AlgorithmRow" as it prints the
+      row in the table, not the column.
+    . New bool option "OnlyNonZero" that allows printing of only those
+      algorithms that have non-zero efficiency (makes table smaller)
+    . New int options "Decimals" that controils the precision of the 
+      efficiencies output (in %). Decimals = -1 (default) lets the algorithms 
+      figure out itself what a reasonable precision is.
+
+!========================== L1Decision v4r3 2005-03-03 ===================
+! 2005-02-21 - P. Koppenburg
+ - Make L1SigAnalyser.h compatible with CLHEP 1.9
+
+! 2005-02-16 - Thomas Martin Schietinger
+ - Adaptation of L1SigAnalyser to new trigger scheme, provided by Federica
+   Legger.
+
+!========================== TrgPrimVertex v4r0p1 2005-03-03 ===================
+! 2005-03-01 - P. Koppenburg for Thomas Ruf
+  - src/TrgPrimVertexFinder.h
+    . Another patch for windows
+! 2005-03-01 - P. Koppenburg for Thomas Ruf
+  - src/TrgPrimVertexFinder.h
+    . Small fix to allow the trigger to run on windows.
+!========================== TrgSys v1r4 2005-03-03 ===================
+! 2005-03-01 - P. Koppenburg
+  Split of options for PhysSel/TriggerSel :
+  - L1options.opts
+    . L1 Options go here
+  - L1.opts:
+       ApplicationMgr.TopAlg += { "GaudiSequencer/FilterAndL1"  };
+       #include "$TRGSYSROOT/options/L1options.opts"
+   
+! 2005-02-21 - P. Koppenburg
+  - Small changes in requirements
+
+!!! BUILT ON A BRANCH v1r3b1
+  
+!========================== TrgTools v6r3 2005-01-15 ===================
+! 2005-02-21 - P.Koppenburg for Olivier Callot
+ - register L1Event to TES in L1InitEvent to avoid a memory leak
+   (from head revision).
+   
+!!! BUILT ON A BRANCH v6r2b1 
+
+
 </PRE><H1><A NAME=v12r7>2005-02-14 DaVinci v12r7 - Hlt development version</A></H1><PRE>
+Backward-compatible HLT development version. Based on Gaudi v15r3 with patched 
+GaudiPoolDb and LHCb v16r4. Includes LoKi v3r9.
+
+Main Modifications:
+
+    *  On popular demand the PhysDesktop now provides two methods
+               const VertexVector& primaryVertices();     // get all PVs
+               const VertexVector& secondaryVertices();   // get vertices from InputLocations
+            The method
+               const VertexVector& vertices();
+            is now slower as it uses the above methods, but still exists.
+       
+    * Updated L1Decision. WARNING: This version gets significantly different
+      results from the official stripping version in DV v12r4.
+    * Updated flavour tagging, now using the tampering by default.
+    * Complete HLT update. Still for experts only.
+    * Many modifications in LoKi.
+    * Many small changes to prepare for migration to CLHEP 1.9. See details.
 
 ################################################################################
 #                               DAVINCI v12r7                                  #

@@ -1,12 +1,12 @@
 package DaVinciSys
-version v12r7
+version v12r8
 
 branches doc cmt
 
 #=======================================================
 # Don't forget DaVinci itself
 #=======================================================
-use  DaVinci                 	v12r7    Phys   
+use  DaVinci                 	v12r8    Phys   
 
 #=======================================================
 # Packages temporarily overridden from LHCb
@@ -19,6 +19,7 @@ use MuonTools                   v3r8    Muon
 # packages included in the DAVINCI tree
 #=======================================================
 # L0 Trigger packages
+# L0 Trigger packages
 use  L0DU               	v6r7p2   L0
 use  L0Calo             	v7r6     L0
 use  L0Checker          	v3r0     L0
@@ -27,16 +28,16 @@ use  L0MuonTrigger 		v2r3p1   L0
 use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
-use TrgSys                      v1r3     Trg
+use TrgSys                      v1r4     Trg
 
 #-- RICH Trigger libraries 
-use RichHLTSys                  v1r0     Rich
+use RichHLTSys                  v1r0p1   Rich
 use RichRecQC                   v1r10    Rich
 
 #-- HLT trigger
 use HltGeneric                  v2r2     Hlt
-use HltSelections               v2r1     Hlt
-use HltSelChecker               v2r1     Hlt
+use HltSelections               v2r2     Hlt
+use HltSelChecker               v2r2     Hlt
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
@@ -53,42 +54,42 @@ use  RecoTools          	v1r1     Rec
 use  TrExtrapolator     	v2r14    Tr
 
 use  LoKi               	v3r9     Tools  
-use  LoKiHlt             	v2r0p1   Tools  
+use  LoKiHlt             	v2r1     Tools  
 
 # Reconstruction tools 
-use  Utilities          	v1r13    Tools
+use  Utilities          	v1r14    Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v1r5     Phys
-use  DaVinciKernel      	v3r1     Phys
-use  DaVinciTools       	v11r5    Phys
-use  FlavourTagging     	v5r4     Phys
+use  DaVinciFilter      	v1r6     Phys
+use  DaVinciKernel      	v3r2     Phys
+use  DaVinciTools       	v11r6    Phys
+use  FlavourTagging     	v5r5     Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r3     Phys
 use  PhysSelections		v6r12    Phys
-use  DaVinciTransporter 	v2r0     Phys
-use  VertexFit			v1r4     Phys
+use  DaVinciTransporter 	v2r0p1   Phys
+use  VertexFit			v1r5     Phys
 use  Tampering                  v1r0     Phys
 
 # Physics MC packages
 use  DaVinciAssociators 	v5r3     Phys
-use  DaVinciEff         	v3r2     Phys
+use  DaVinciEff         	v3r2p1   Phys
 use  DaVinciMCTools     	v5r8p1   Phys
-use  DaVinciTest        	v5r5     Phys
+use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
 
 # Stripping
-use  Stripping          	v1r6     Tools
+use  Stripping          	v1r7     Tools
 
 # Physics selections
-use  PhysSelSys			v7r15    PhysSel
+use  PhysSelSys			v7r16    PhysSel
 
 #=======================================================
 # Trg
 #=======================================================
 use TrgEvent		v5r3	Event
-use TrgTools		v6r2	Trg
+use TrgTools		v6r3	Trg
 use TrgVelo             v6r0p1  Trg
 use TrgVeloTT           v6r0    Trg
 use L1Reco              v6r1    Trg
@@ -98,7 +99,7 @@ use TrgForward          v4r0    Trg
 use TrgMonitor          v4r0    Trg
 use TrgMuonID           v3r0    Trg
 use TrgMuon             v1r2    Trg
-use TrgPrimVertex       v4r0    Trg
+use TrgPrimVertex       v4r0p1  Trg
 use TrgCalo             v1r0p2  Trg
 
 use MuonTools           v3r8    Muon
@@ -124,8 +125,8 @@ use RichTrgTools      v1r0   Rich
 #use RichPIDMerge      v1r5   Rich
 
 # Online PID packages
-use RichTrgLocalPID   v1r0   Rich
-use RichTrgGlobalPID  v1r0   Rich
+use RichTrgGlobalPID  v1r0p1   Rich
+use RichTrgLocalPID   v1r0     Rich
 
 # MC packages
 use RichRecMCTools    v1r7   Rich
@@ -138,7 +139,7 @@ use  B2DstarX2D02hh     	v2r1p1   PhysSel
 use  B2HH              	        v2r4p2   PhysSel
 use  B2RhoRho           	v1r7p3   PhysSel
 use  B2XGamma           	v3r1     PhysSel
-use  Bd2D0Kstar         	v4r3p1   PhysSel
+use  Bd2D0Kstar         	v4r3p2   PhysSel
 use  Bd2DstarPi         	v2r7p2   PhysSel
 use  Bd2JpsiKs          	v2r6p1   PhysSel
 use  Bd2JpsiKstar       	v2r1p2   PhysSel
@@ -163,3 +164,4 @@ use  DsSelector                 v1r1p1   PhysSel
 use  Gamma2ee           	v1r4p1   PhysSel
 use  Jpsi               	v1r1p1   PhysSel
 use  Muon               	v1r2     PhysSel
+use  TriggerSel               	v1r0     PhysSel
