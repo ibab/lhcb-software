@@ -3,7 +3,7 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v6r0>2004-06-10 Boole v6r0</A></H1><PRE>
+</PRE><H1><A NAME=v6r0>2004-06-23 Boole v6r0</A></H1><PRE>
 Development version
 
 - Modified functionality
@@ -19,14 +19,18 @@ Development version
   . Use new GaudiSequencer base class for ProcessPhase (LHCbAlgs v1r0)
   . Use new GaudiAlg and GaudiTools base classes
     (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithms v14r3,
-     ITCheckers v2r3, RichReadout v1r9, RichDigiQC v1r7, RichTools v1r0)
+     ITCheckers v2r3, RichReadout v1r9, RichDigiQC v1r7, RichTools v1r0,
+     DigiAlg v2r4)
   . Converters of "Relations" to "Linker" MC truth tables moved to AsctToLinker
     package (from TrgChecker) (AsctToLinker v1r2)
   . Removed dependency on GaudiAud package
   . Removed dependency on Trg packages
+  . Removed dependency on PYTHIA via HepMC (HepMC v4r121p0)
 
 - Bug fixes
   . Add protection for crazy MCHits in BuildMCTrackInfo (MCTools v1r6)
+  . Removed fix from L0mConf v2r2p1, due to access violation on Windows
+    (revert to L0mConf v2r2)
 
 </PRE><H1><A NAME=v5r9>2004-05-24 Boole v5r9</A></H1><PRE>
 Version used for DC04

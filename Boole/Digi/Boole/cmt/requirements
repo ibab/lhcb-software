@@ -51,14 +51,14 @@ use LHCb	v16r0
 
 #-- BooleSys v6r0 packages
 
-use DigiAlg		v2r3	Digi
+use DigiAlg		v2r4	Digi
 use AsctToLinker        v1r2    Rec
 
 # L0 trigger
 use L0Calo              v7r6	L0
 use PuVeto              v5r7	L0
 use L0DU                v6r7	L0
-use L0mConf		v2r2p1	L0
+use L0mConf		v2r2	L0
 use L0MuonKernel	v1r1	L0
 use L0MuonTrigger	v1r1p1	L0
 
