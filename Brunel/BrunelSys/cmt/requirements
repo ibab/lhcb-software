@@ -15,6 +15,10 @@ use BrunelEnv    "$(BRUNELVERS)"  "$(LHCb_release_area)"
 # Main program and standard job options
 use GaudiConf           v*     
 
+# Brunel utilities
+use BrunelKernel 	v5r1   Rec
+use BrunelSicb   	v4r0   Rec
+use BrunelAlgs   	v1r2   Rec
 
 # L0 trigger
 use L0Calo              v6r1    L0
