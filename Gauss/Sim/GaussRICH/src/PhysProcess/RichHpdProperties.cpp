@@ -10,21 +10,22 @@
 // create with a large number of hpds and then adjust
 // the size to the correct number of hpds in the constructer
 // after reading from the number of hpds from the xml db.
-// here the 200 as the size is just a randomly picked number, 
+// here the 200 as the size is just a randomly picked number,
 // for initialization.
 // the in the initialization the
 // parameter is 2 and this is the number of rich detectors in lhcb.
 //
-RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc, 
-                                     IMessageSvc* msgSvc) 
+RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
+                                     IMessageSvc* msgSvc)
   : m_numHpdTotRich(std::vector<int>(2)),
     m_RichHpdQEList(2,std::vector<RichHpdQE*>(200)),
     m_RichHpdPSFList(2,std::vector<RichHpdPSF*>(200)),
     m_RichHpdDeMagList(2,std::vector<RichHpdDeMag*>(200))
 {
-  MsgStream RichHpdlog( msgSvc, "RichHpdProperties");
 
-  // the following Msgstream and verbose leevl may be 
+  MsgStream RichHpdlog( msgSvc, "RichHpdProperties" );
+
+  // the following Msgstream and verbose level may be
   // modified inthe future.
 
   HpdVerboseLevel=0;
@@ -33,54 +34,52 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
   m_numberOfRichDetectors=2;
   if((int)m_numHpdTotRich.size() != m_numberOfRichDetectors)
-    m_numHpdTotRich.resize(m_numberOfRichDetectors); 
+    m_numHpdTotRich.resize(m_numberOfRichDetectors);
 
-  // RichHpdlog << MSG::INFO 
+  // RichHpdlog << MSG::INFO
   //           << " Test of Printout from RichHpdProperties" << endreq;
   // First get the number of hpds in rich1 and rich2.
 
   SmartDataPtr<IDetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
   if( !Rich1DE ){
-    RichHpdlog << MSG::ERROR 
+    RichHpdlog << MSG::ERROR
                << "Can't retrieve /dd/Structure/LHCb/Rich1" << endreq;
-  } 
-  else 
-    {
+  }
+  else
+  {
 
-      m_numHpdTotRich[0]= Rich1DE->userParameterAsInt("Rich1TotNumHpd");
+    m_numHpdTotRich[0]= Rich1DE->userParameterAsInt("Rich1TotNumHpd");
 
-      RichHpdlog << MSG::INFO << "Total Number of hpds in rich1=  "
-                 <<m_numHpdTotRich[0] << endreq;
-       m_HpdMaxQuantumEff=  Rich1DE->userParameterAsDouble("RichHpdMaxQE");
-      
-    }
+    RichHpdlog << MSG::INFO << "Total Number of hpds in Rich1 = "
+               << m_numHpdTotRich[0] << endreq;
+    m_HpdMaxQuantumEff=  Rich1DE->userParameterAsDouble("RichHpdMaxQE");
+
+  }
 
   SmartDataPtr<IDetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
   if( !Rich2DE )
-    {
-      
-      //    RichHpdlog << MSG::ERROR
-      //              << "Can't retrieve /dd/Structure/LHCb/Rich2" << endreq;
-      
-    }else if(!Rich1DE) {
+  {
+
+    //    RichHpdlog << MSG::ERROR
+    //              << "Can't retrieve /dd/Structure/LHCb/Rich2" << endreq;
+
+  }else if(!Rich1DE) {
     RichHpdlog <<MSG::ERROR<<"Can't retrieve /dd/Structure/Rich1 for Rich2"
                <<endreq;
 
   }else {
-      
-      // the following line to be un commented after 
-      // the rich2 structure.xml file has this info.
-      
-      // m_numHpdTotRich[1]= Rich2DE->userParameterAsInt("Rich2TotNumHpd");
-      m_numHpdTotRich[1]= Rich1DE->userParameterAsInt("Rich2TotNumHpd");
-     
-      if(HpdVerboseLevel >0 ) {
-        RichHpdlog << MSG::INFO 
-                   <<"Total Number of hpds in rich2= "
-                   << m_numHpdTotRich[1]<<endreq;
-      }
-    }
- 
+
+    // the following line to be un commented after
+    // the rich2 structure.xml file has this info.
+
+    // m_numHpdTotRich[1]= Rich2DE->userParameterAsInt("Rich2TotNumHpd");
+    m_numHpdTotRich[1]= Rich1DE->userParameterAsInt("Rich2TotNumHpd");
+    RichHpdlog << MSG::INFO
+               << "Total Number of hpds in Rich2 = "
+               << m_numHpdTotRich[1]<<endreq;
+
+  }
+
   // to resize the vectors. Just test on the size of one of the vectorlists
   // and adjust all the three vectorlists.
   for (int ird=0; ird<m_numberOfRichDetectors; ird++ ) {
@@ -98,7 +97,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   // Now fill in the hpd properties from the db.
   // for now the same properties are filled for all the hpds since there is
   // only one set available. This is to be changed in the future. The (single) set of properties
-  // now read from the xml db. 
+  // now read from the xml db.
 
   // First for the hpd QE
   // the photon energy is converted from MeV to eV and the qeff is
@@ -110,8 +109,8 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   std::vector<double>EphotSingle;
   int numQEbin = 0;
   if(!tabQE) {
-           
-    RichHpdlog << MSG::ERROR 
+
+    RichHpdlog << MSG::ERROR
                <<"RichHpdProperties: Can't retrieve "
                <<"/dd/Materials/RichMaterialTabProperties/HpdQuantumEff " << endreq;
 
@@ -120,13 +119,13 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
     TabulatedProperty::Table table = tabQE->table();
     TabulatedProperty::Table::iterator it;
     for (it = table.begin(); it != table.end(); it++) {
-      EphotSingle.push_back((it->first)*1000000.0);        
+      EphotSingle.push_back((it->first)*1000000.0);
       QeSingle.push_back((it->second)/100.0);
     }
-      
+
     numQEbin=(int) QeSingle.size();
-    
-    if(HpdVerboseLevel >0) { 
+
+    if(HpdVerboseLevel >0) {
       RichHpdlog << MSG::INFO  <<"Number of QE bins "<<numQEbin<<endreq;
       RichHpdlog << MSG::INFO  <<"ephot and qe values: "<<endreq;
       for(int ii=0; ii< numQEbin; ii++ ) {
@@ -141,7 +140,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   SmartDataPtr<TabulatedProperty>tabPSF(detSvc,"/dd/Materials/RichMaterialTabProperties/HpdPointSpreadFunction");
   double HpdPsfSingle = 0.0;
   if(!tabPSF) {
-    RichHpdlog << MSG::ERROR 
+    RichHpdlog << MSG::ERROR
                <<"RichHpdProperties: "
                <<" Can't retrieve /dd/Materials/RichMaterialTabProperties/HpdPSF "
                <<endreq;
@@ -152,12 +151,12 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
     HpdPsfSingle=tablePsf.begin()->second;
 
   }
-  if(HpdVerboseLevel >0 ) { 
+  if(HpdVerboseLevel >0 ) {
     RichHpdlog << MSG::INFO <<"Hpd PSF value = "<<HpdPsfSingle<<endreq;
   }
   //Now get the demagnification values
   SmartDataPtr<TabulatedProperty>tabDemag(detSvc,"/dd/Materials/RichMaterialTabProperties/HpdDemagnification");
-  std::vector<double>HpdDemagFac; 
+  std::vector<double>HpdDemagFac;
   if(!tabDemag) {
     RichHpdlog << MSG::ERROR <<"RichHpdProperties: "
                <<" Can't retrieve /dd/Materials/RichMaterialTabProperties/HpdDemagnification "<<endreq;
@@ -167,32 +166,32 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
     TabulatedProperty::Table::iterator itd;
 
     for (itd = tableDem.begin(); itd != tableDem.end(); itd++) {
-                 
+
       HpdDemagFac.push_back(itd->second);
     }
-       
+
     // Now for the cross-focussing effect.
-    // the sign of the second term in the vector 
+    // the sign of the second term in the vector
     // is to be verified in the future. For now it is left as postive.
 
     if(HpdDemagFac[0] != 0.0 )HpdDemagFac[0] = -1.0*HpdDemagFac[0];
 
-       
+
   }
-  if(HpdVerboseLevel >0 ){ 
-    RichHpdlog << MSG::INFO <<" Hpd demag factors " 
+  if(HpdVerboseLevel >0 ){
+    RichHpdlog << MSG::INFO <<" Hpd demag factors "
                <<HpdDemagFac[0]<<"   "<<HpdDemagFac[1]<<endreq;
   }
   //Now populate the classes for each of the hpds.
   for(int irichdet=0; irichdet<m_numberOfRichDetectors; irichdet++ ){
-    int nHpd=m_numHpdTotRich[irichdet]; 
+    int nHpd=m_numHpdTotRich[irichdet];
     for(int ih=0; ih< nHpd ; ih++){
       //first for the QE
-      m_RichHpdQEList[irichdet][ih] = new RichHpdQE(ih,0);    
+      m_RichHpdQEList[irichdet][ih] = new RichHpdQE(ih,0);
       if(numQEbin > 0 ){
-        m_RichHpdQEList[irichdet][ih]->setAnHpdQEen(numQEbin,QeSingle,EphotSingle);  
+        m_RichHpdQEList[irichdet][ih]->setAnHpdQEen(numQEbin,QeSingle,EphotSingle);
       }else{
-        RichHpdlog << MSG::ERROR 
+        RichHpdlog << MSG::ERROR
                    <<" RichHpdProperties: Zero number of bins for hpd QE .Check db "
                    <<endreq;
       }
@@ -205,7 +204,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
         m_RichHpdDeMagList[irichdet][ih]->setCurrentHPDDemag(HpdDemagFac);
       }
     }
-  }   
+  }
 
 
   //Now get the HPD High Voltage
@@ -213,7 +212,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   double HpdHVSingle = 0.0;
 
   if(!tabHV) {
-    RichHpdlog << MSG::ERROR 
+    RichHpdlog << MSG::ERROR
                <<"RichHpdProperties: "
                <<" Can't retrieve /dd/Materials/RichMaterialTabProperties/HpdHighVoltage "<<endreq;
 
@@ -223,28 +222,28 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
     HpdHVSingle=tableHV.begin()->second;
 
   }
-  if(HpdVerboseLevel >0) { 
-    RichHpdlog << MSG::INFO 
+  if(HpdVerboseLevel >0) {
+    RichHpdlog << MSG::INFO
                <<"Hpd HighVoltage value = "<<HpdHVSingle<<endreq;
   }
-  m_RichHpdHighVoltage=HpdHVSingle;    
-    
+  m_RichHpdHighVoltage=HpdHVSingle;
+
   //Now get the PhCathode to Si Surface max Distance
   double hpdQwtoSiDist = 0.0;
   if( !Rich1DE ){
-    RichHpdlog << MSG::ERROR 
-               << "Can't retrieve /dd/Structure/LHCb/Rich1 forHpdQw toSiDist " 
+    RichHpdlog << MSG::ERROR
+               << "Can't retrieve /dd/Structure/LHCb/Rich1 forHpdQw toSiDist "
                << endreq;
   }else {
 
     hpdQwtoSiDist = Rich1DE->userParameterAsDouble("RichHpdQWToSiMaxDist");
   }
-  if(HpdVerboseLevel >0 ){ 
-    RichHpdlog << MSG::INFO 
+  if(HpdVerboseLevel >0 ){
+    RichHpdlog << MSG::INFO
                <<"Hpd QW to Si Max Dist = "<<hpdQwtoSiDist <<endreq;
   }
   m_RichHpdQWToSiDist= hpdQwtoSiDist;
-  if(HpdVerboseLevel >1 ){ 
+  if(HpdVerboseLevel >1 ){
 
     RichHpdlog << MSG::INFO << "Hpd QW to Si Max Dist =  "
                <<m_RichHpdQWToSiDist << endreq;
@@ -254,20 +253,20 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   // Now get the MaxZHit coordinate in Rich1.
   double MaxZHitInRich1 = 0.0;
   if( !Rich1DE ){
-    RichHpdlog << MSG::ERROR 
-               << "Can't retrieve /dd/Structure/LHCb/Rich1 for MaxZhit in Rich1 " 
+    RichHpdlog << MSG::ERROR
+               << "Can't retrieve /dd/Structure/LHCb/Rich1 for MaxZhit in Rich1 "
                << endreq;
   }else {
 
     MaxZHitInRich1 = Rich1DE->userParameterAsDouble("Rich1MaxDownstreamZHitCoord");
   }
-  if(HpdVerboseLevel >0 ){ 
-    RichHpdlog << MSG::INFO 
+  if ( HpdVerboseLevel >0 ) {
+    RichHpdlog << MSG::INFO
                <<"Max Z Hit coord in Rich1 = "<<MaxZHitInRich1 <<endreq;
   }
   m_Rich1MaxZHitCoord=  MaxZHitInRich1;
 
-  if(HpdVerboseLevel >1 ){ 
+  if(HpdVerboseLevel >1 ){
 
     RichHpdlog << MSG::INFO << "Max Z coord for a hit in Rich1 =  "
                << m_Rich1MaxZHitCoord << endreq;
@@ -275,58 +274,58 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
 
   // Now get the quartz window name and the photocathode name.
   std::string hpdQWlvname;
-  std::string hpdPhCathlvname; 
+  std::string hpdPhCathlvname;
   double phcathRinn = 0.0;
   SmartDataPtr<IDetectorElement> RichHpdQWDE(detSvc, "/dd/Structure/LHCb/Rich1/Rich1FirstHpdQW");
   if(!RichHpdQWDE) {
-    RichHpdlog << MSG::ERROR  
+    RichHpdlog << MSG::ERROR
                <<"Can't retrieve /dd/Structure/LHCb/Rich1/Rich1FirstHpdQW "<<endreq;
 
   }else{
 
     if(RichHpdQWDE->geometry()->hasLVolume()){
       hpdQWlvname=RichHpdQWDE->geometry()->lvolumeName();
-    }else{ 
-      RichHpdlog << MSG::ERROR  
+    }else{
+      RichHpdlog << MSG::ERROR
                  <<"Erroneous Log Vol for Hpd QW log vol " <<endreq;
-    } 
+    }
   }
-  if(HpdVerboseLevel >0 ){ 
+  if(HpdVerboseLevel >0 ){
 
-    RichHpdlog << MSG::INFO 
+    RichHpdlog << MSG::INFO
                <<"Hpd Qw Log Volname =  "<<hpdQWlvname<<endreq;
   }
   m_HpdQWLogVolName = hpdQWlvname;
   SmartDataPtr<IDetectorElement> RichHpdPCDE(detSvc, "/dd/Structure/LHCb/Rich1/Rich1FirstHpdPhCathode");
   if(!RichHpdPCDE) {
-    RichHpdlog << MSG::ERROR  
+    RichHpdlog << MSG::ERROR
                <<"Can't retrieve /dd/Structure/LHCb/Rich1/Rich1FirstHpdPhCathode "
                <<endreq;
 
   }else{
 
-    
+
     if(RichHpdPCDE->geometry()->hasLVolume()){
       hpdPhCathlvname = RichHpdPCDE->geometry()->lvolumeName();
-    }else{ 
-      RichHpdlog << MSG::ERROR  
+    }else{
+      RichHpdlog << MSG::ERROR
                  <<"Erroneous Log Vol for Hpd PhCathode log vol " <<endreq;
     }
 
-    phcathRinn= RichHpdPCDE->userParameterAsDouble( "HpdPhCathodeRadInner"); 
- 
-  }
-  if(HpdVerboseLevel >0 ){ 
+    phcathRinn= RichHpdPCDE->userParameterAsDouble( "HpdPhCathodeRadInner");
 
-    RichHpdlog << MSG::INFO 
+  }
+  if(HpdVerboseLevel >0 ){
+
+    RichHpdlog << MSG::INFO
                <<"Hpd Ph Cathode Log Volname =  "<<hpdPhCathlvname<<endreq;
-    RichHpdlog << MSG::INFO  
+    RichHpdlog << MSG::INFO
                <<"Hpd Ph Cathode Rinner = "<< phcathRinn<<endreq;
   }
   m_HpdPhCathodeLogVolName = hpdPhCathlvname;
 
   m_HpdPhCathodeInnerRadius= phcathRinn;
-  
+
 }
 
 
@@ -337,16 +336,16 @@ RichHpdQE* RichHpdProperties::getRichHpdQE(int  hpdnum, int richdetnum ) {
 
   if(richdetnum > 1 || richdetnum < 0) {
     G4cout <<"Rich Hpd Properties: Unknown rich detector number for QE=  "
-               <<richdetnum<<G4endl;
+           <<richdetnum<<G4endl;
   }else if(hpdnum > m_numHpdTotRich[richdetnum] || hpdnum <0 ) {
-      G4cout <<"Rich Hpd Properties: Unknown hpd detector number for QE =  "
-               << hpdnum<<"  for richdetnum=  "<<richdetnum<<G4endl;
+    G4cout <<"Rich Hpd Properties: Unknown hpd detector number for QE =  "
+           << hpdnum<<"  for richdetnum=  "<<richdetnum<<G4endl;
 
   } else {
 
     curRQE = m_RichHpdQEList[richdetnum][hpdnum];
-  } 
- 
+  }
+
   return curRQE;
 }
 
@@ -354,17 +353,17 @@ RichHpdPSF* RichHpdProperties::getRichHpdPSF(int hpdnum, int richdetnum ){
   RichHpdPSF* curRPS = 0;
 
   if(richdetnum > 1 || richdetnum < 0) {
-         G4cout <<"Rich Hpd Properties: Unknown rich detector number for PSF =  "
-               <<richdetnum<<G4endl;
+    G4cout <<"Rich Hpd Properties: Unknown rich detector number for PSF =  "
+           <<richdetnum<<G4endl;
   }else if(hpdnum > m_numHpdTotRich[richdetnum] || hpdnum <0 ) {
-   G4cout <<"Rich Hpd Properties: Unknown hpd detector number for PSF =  "
-               << hpdnum<<"  for richdetnum=  "<<richdetnum<<G4endl;
+    G4cout <<"Rich Hpd Properties: Unknown hpd detector number for PSF =  "
+           << hpdnum<<"  for richdetnum=  "<<richdetnum<<G4endl;
 
   } else {
 
     curRPS  = m_RichHpdPSFList[richdetnum][hpdnum];
-  } 
- 
+  }
+
 
   return curRPS;
 }
@@ -373,45 +372,16 @@ RichHpdDeMag* RichHpdProperties::getRichHpdDeMag(int hpdnum, int richdetnum){
 
   if(richdetnum > 1 || richdetnum < 0) {
     G4cout <<"Rich Hpd Properties: Unknown rich detector number for Demag =  "
-               <<richdetnum<<G4endl;
+           <<richdetnum<<G4endl;
   }else if(hpdnum > m_numHpdTotRich[richdetnum] || hpdnum <0 ) {
     G4cout <<"Rich Hpd Properties: Unknown hpd detector number for Demag =  "
-               << hpdnum<<"  for richdetnum=  "<<richdetnum<<G4endl;
+           << hpdnum<<"  for richdetnum=  "<<richdetnum<<G4endl;
 
   } else {
 
     curDem  = m_RichHpdDeMagList[richdetnum][hpdnum];
-  } 
- 
+  }
+
   return curDem;
 }
-void RichHpdProperties::setRichHpdHighVoltage(double HpdHv){
-  m_RichHpdHighVoltage= HpdHv;
-
-}
-void  RichHpdProperties::setRichHpdQWToSiDist( double HpdQWtoSiDist ){
-  m_RichHpdQWToSiDist=HpdQWtoSiDist;
-}
-void  RichHpdProperties::setRich1MaxZHitZCoord( double RichMaximumZCoordHit ){
-  m_Rich1MaxZHitCoord=RichMaximumZCoordHit;
-}
-void RichHpdProperties::setHpdQWLogVolName(std::string hpdqwLvolname ){
-  m_HpdQWLogVolName=  hpdqwLvolname ;
-
-
-}
-
-void  RichHpdProperties::setHpdPhCathodeLogVolName(std::string  hpdphCathLvolname  ){
-
-  m_HpdPhCathodeLogVolName=hpdphCathLvolname ;
-
-}
-void RichHpdProperties::setnumberOfRichDetectors (int numberOfRichdet) {
-  m_numberOfRichDetectors=numberOfRichdet;
-}
-void RichHpdProperties::setHpdPhCathodeInnerRadius(double phCaInnRad ){
-  m_HpdPhCathodeInnerRadius = phCaInnRad;
-}
-
-
 

@@ -18,28 +18,28 @@ class RichG4RunAction: public virtual GiGaRunActionBase
 {
   /// friend factory for instantiation
   friend class GiGaFactory<RichG4RunAction>;
-  
+
 public:
 
-  /// useful typedef 
+  /// useful typedef
   typedef  std::vector<std::string> COMMANDS;
-  
-  /** performe the action at the begin of each run 
-   *  @param run pointer to Geant4 run object 
+
+  /** performe the action at the begin of each run
+   *  @param run pointer to Geant4 run object
    */
   virtual void BeginOfRunAction ( const G4Run* run );
-  
-  /** performe the action at the end  of each event 
-   *  @param run pointer to Geant4 run object 
+
+  /** performe the action at the end  of each event
+   *  @param run pointer to Geant4 run object
    */
   virtual void EndOfRunAction   ( const G4Run* run );
-  
+
 protected:
-  
-  /** standard constructor 
+
+  /** standard constructor
    *  @see GiGaPhysListBase
-   *  @see GiGaBase 
-   *  @see AlgTool 
+   *  @see GiGaBase
+   *  @see AlgTool
    *  @param type type of the object (?)
    *  @param name name of the object
    *  @param parent  pointer to parent object
@@ -48,58 +48,58 @@ protected:
   ( const std::string& type   ,
     const std::string& name   ,
     const IInterface*  parent ) ;
-  
+
   // destructor (virtual and protected)
   virtual ~RichG4RunAction( );
 
-  RichG4HistoDefineSet1* aRichG4HistoDefineSet1() 
-   {return  m_aRichG4HistoSet1; }
+  RichG4HistoDefineSet1* aRichG4HistoDefineSet1()
+  {return  m_aRichG4HistoSet1; }
 
-  RichG4HistoDefineSet2* aRichG4HistoDefineSet2() 
-   {return  m_aRichG4HistoSet2; }
+  RichG4HistoDefineSet2* aRichG4HistoDefineSet2()
+  {return  m_aRichG4HistoSet2; }
 
-  RichG4HistoDefineSet3* aRichG4HistoDefineSet3() 
-   {return  m_aRichG4HistoSet3; }
+  RichG4HistoDefineSet3* aRichG4HistoDefineSet3()
+  {return  m_aRichG4HistoSet3; }
 
 
-  bool defineRichG4HistoSet1() 
+  bool defineRichG4HistoSet1()
   {
     return  m_defineRichG4HistoSet1;
-    
+
   }
-  void setdefineRichG4HistoSet1(bool aboolValue) 
+  void setdefineRichG4HistoSet1(bool aboolValue)
   {
     m_defineRichG4HistoSet1= aboolValue;
   }
-  bool defineRichG4HistoSet2() 
+  bool defineRichG4HistoSet2()
   {
     return  m_defineRichG4HistoSet2;
-    
+
   }
-  void setdefineRichG4HistoSet2(bool aboolValue2) 
+  void setdefineRichG4HistoSet2(bool aboolValue2)
   {
     m_defineRichG4HistoSet2= aboolValue2;
   }
-  void setdefineRichG4HistoSet3(bool aboolValue3) 
+  void setdefineRichG4HistoSet3(bool aboolValue3)
   {
     m_defineRichG4HistoSet3= aboolValue3;
   }
-   void setdefineRichG4HistoSet4(bool aboolValue4) 
+  void setdefineRichG4HistoSet4(bool aboolValue4)
   {
     m_defineRichG4HistoSet4= aboolValue4;
   }
-  
+
 private:
-  
+
   ///no default constructor
   RichG4RunAction();
-  /// no copy constructor 
-  RichG4RunAction( const RichG4RunAction& );  
-  /// no assignement 
+  /// no copy constructor
+  RichG4RunAction( const RichG4RunAction& );
+  /// no assignement
   RichG4RunAction& operator=( const RichG4RunAction& );
- 
+
 private:
-  
+
   COMMANDS  m_beginCmds;
   COMMANDS  m_endCmds;
   bool m_defineRichG4HistoSet1;
@@ -107,19 +107,19 @@ private:
   bool m_defineRichG4HistoSet3;
   bool m_defineRichG4HistoSet4;
   bool m_defineRichG4HistoTimer;
-  
-  
+
+
   RichG4HistoDefineSet1* m_aRichG4HistoSet1;
   RichG4HistoDefineSet2* m_aRichG4HistoSet2;
   RichG4HistoDefineSet3* m_aRichG4HistoSet3;
   RichG4HistoDefineSet4* m_aRichG4HistoSet4;
   RichG4HistoDefineTimer* m_aRichG4HistoTimer;
-  
+
 };
 // ============================================================================
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 #endif ///< GIGA_GIGARUNACTIONCOMMAND_H
 // ============================================================================

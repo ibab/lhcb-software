@@ -1,7 +1,7 @@
 // ============================================================================
 /// CLHEP
 #include "CLHEP/Geometry/Point3D.h"
-/// Geant4 
+/// Geant4
 #include "G4Track.hh"
 #include "G4TrackVector.hh"
 #include "G4TrackingManager.hh"
@@ -16,7 +16,7 @@
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
-/// GiGa 
+/// GiGa
 #include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaTrajectory.h"
 /// local
@@ -24,7 +24,7 @@
 #include "RichG4AnalysisConstGauss.h"
 ///
 // ============================================================================
-/// factory business 
+/// factory business
 // ============================================================================
 IMPLEMENT_GiGaFactory( Rich1G4TrackActionUpstrPhoton );
 // ============================================================================
@@ -34,23 +34,23 @@ IMPLEMENT_GiGaFactory( Rich1G4TrackActionUpstrPhoton );
 Rich1G4TrackActionUpstrPhoton::Rich1G4TrackActionUpstrPhoton
 ( const std::string& type   ,
   const std::string& name   ,
-  const IInterface*  parent ) 
+  const IInterface*  parent )
   : GiGaTrackActionBase( type , name , parent ) { ; }
 // ============================================================================
 
 // ============================================================================
-/// destructor 
+/// destructor
 // ============================================================================
 Rich1G4TrackActionUpstrPhoton::~Rich1G4TrackActionUpstrPhoton(){; }
 
-void Rich1G4TrackActionUpstrPhoton::PreUserTrackingAction  
-       ( const G4Track* aTrack ) {
+void Rich1G4TrackActionUpstrPhoton::PreUserTrackingAction
+( const G4Track* aTrack ) {
 
   if( 0 == aTrack || 0 == trackMgr()) { return ; } /// RETURN !!!
 
   const G4DynamicParticle * aParticle = aTrack->GetDynamicParticle();
   if(aParticle->GetDefinition() == G4OpticalPhoton::OpticalPhoton() ) {
-    
+
     //    G4double CurPhotonOrigZcoord= aTrack->GetVertexPosition().z();
     G4double CurPhotonZcoord= aTrack->GetPosition().z();
 
@@ -58,52 +58,51 @@ void Rich1G4TrackActionUpstrPhoton::PreUserTrackingAction
     //    G4cout<<" Cur phot Zorgin = "<<CurPhotonOrigZcoord<<G4endl;
     // G4cout<<" Cur phot XYZ orgin = "<< aTrack->GetVertexPosition() <<G4endl;
     // G4cout<<" Cur phot XYZ pos =  "<< aTrack->GetPosition() <<G4endl;
-    
-    
+
+
     // end of test by SE
     // Kill the photons created upstream of Aerogel.
     // following change made in July 2003 since origin seems to
     // be not set at this stage, hence  it is 0,0,0 always.
-    //    if( CurPhotonOrigZcoord >= ZUpsRich1Analysis && 
+    //    if( CurPhotonOrigZcoord >= ZUpsRich1Analysis &&
     //    CurPhotonOrigZcoord <=  AgelZBeginAnalysis ) {
-    if( CurPhotonZcoord >= ZUpsRich1Analysis && 
+    if( CurPhotonZcoord >= ZUpsRich1Analysis &&
         CurPhotonZcoord <  AgelZBeginAnalysis ) {
-      
-       trackMgr()->GetTrack() ->SetTrackStatus(fStopAndKill);
 
-       //        G4cout<<"Photon Killed upstr end of rich1 Z= "
-       //      <<CurPhotonZcoord<<G4endl;
-     
+      trackMgr()->GetTrack() ->SetTrackStatus(fStopAndKill);
+
+      //        G4cout<<"Photon Killed upstr end of rich1 Z= "
+      //      <<CurPhotonZcoord<<G4endl;
+
     }
     // Kill photons in Rich1 which are produced
     // downstream of the Exitwall.
 
-    //    if( CurPhotonOrigZcoord >=  Rich1ExitWallBeginZAnalysis && 
+    //    if( CurPhotonOrigZcoord >=  Rich1ExitWallBeginZAnalysis &&
     //   CurPhotonOrigZcoord <=  ZDnsRich1Analysis ) {
-    if( CurPhotonZcoord >=  Rich1ExitWallBeginZAnalysis && 
+    if( CurPhotonZcoord >=  Rich1ExitWallBeginZAnalysis &&
         CurPhotonZcoord <=  ZDnsRich1Analysis ) {
-      
-       trackMgr()->GetTrack() ->SetTrackStatus(fStopAndKill);
-       //       G4cout<<"Photon Killed downstr end of rich1 Z= "
-       //      <<CurPhotonZcoord<<G4endl;
-       
-      
+
+      trackMgr()->GetTrack() ->SetTrackStatus(fStopAndKill);
+      //       G4cout<<"Photon Killed downstr end of rich1 Z= "
+      //      <<CurPhotonZcoord<<G4endl;
+
+
     }
-        
-    
+
+
   }
-  
+
 }
 
 
 
-void Rich1G4TrackActionUpstrPhoton::PostUserTrackingAction 
-   ( const G4Track* aTrack ) 
-{;} 
+void Rich1G4TrackActionUpstrPhoton::PostUserTrackingAction( const G4Track* /*aTrack*/ )
+{;}
 // ============================================================================
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 
 

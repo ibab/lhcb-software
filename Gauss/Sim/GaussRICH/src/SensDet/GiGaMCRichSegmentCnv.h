@@ -1,21 +1,60 @@
 // ============================================================================
-#ifndef GIGACNV_GiGaRichOpticalPhotonCnv_H
-#define GIGACNV_GiGaRichOpticalPhotonCnv_H  1
+#ifndef GIGACNV_GiGaRichSegmentCnv_H
+#define GIGACNV_GiGaRichSegmentCnv_H  1
 // ============================================================================
-/// STL
+
+// STL
 #include <set>
+#include <string>
+#include <vector>
+//#include <algorithm>
+//#include <numeric>
+
 /// GaudiKernel
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "GaudiKernel/CnvFactory.h"
+#include "GaudiKernel/IAddressCreator.h"
+#include "GaudiKernel/IOpaqueAddress.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/LinkManager.h"
+#include "GaudiKernel/GaudiException.h"
+
 /// LHCbEvent
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
-/// GiGa
+#include "Event/MCRichSegment.h"
+
+// GiGa
+#include "GiGa/IGiGaSvc.h"
+#include "GiGaCnv/IGiGaHitsCnvSvc.h"
 #include "GiGa/GiGaTrajectory.h"
+#include "GiGa/GiGaUtil.h"
+#include "GiGa/GiGaHitsByID.h"
+#include "GiGa/GiGaHitsByName.h"
+
 /// GiGaCnv
 #include "GiGaCnv/GiGaCnvBase.h"
+#include "GiGaCnv/GiGaKineRefTable.h"
+#include "GiGaCnv/GiGaCnvUtils.h"
+#include "GiGaCnv/IGiGaHitsCnvSvc.h"
+#include "GiGaCnv/IGiGaKineCnvSvc.h"
+#include "GiGaCnv/GiGaKineRefTable.h"
+
 /// G4
 #include "G4ParticleDefinition.hh"
+#include "G4VHitsCollection.hh"
+#include "G4HCofThisEvent.hh"
+#include "G4SDManager.hh"
+
+// CLHEP
+#include "CLHEP/Geometry/Point3D.h"
+
+// local
+#include "RichG4HitCollName.h"
+#include "RichG4Hit.h"
 
 /// forward declarations
 template <class TYPE>
@@ -23,19 +62,19 @@ class CnvFactory;
 class GiGaTrajectory;
 class RichG4HitCollName;
 
-class GiGaRichOpticalPhotonCnv: public GiGaCnvBase {
+class GiGaRichSegmentCnv : public GiGaCnvBase {
 
-  friend class CnvFactory<GiGaRichOpticalPhotonCnv>;
+  friend class CnvFactory<GiGaRichSegmentCnv>;
 
 protected:
 
   /** Standard Constructor
    *  @param loc pointer to service locator
    */
-  GiGaRichOpticalPhotonCnv( ISvcLocator* loc );
+  GiGaRichSegmentCnv( ISvcLocator* loc );
 
   /// virtual destructor
-  virtual ~GiGaRichOpticalPhotonCnv();
+  virtual ~GiGaRichSegmentCnv();
 
 public:
 
@@ -82,9 +121,9 @@ public:
 
 private: // methods
 
-  GiGaRichOpticalPhotonCnv () ; /// no default constructor
-  GiGaRichOpticalPhotonCnv( const GiGaRichOpticalPhotonCnv& ) ; /// no copy
-  GiGaRichOpticalPhotonCnv& operator=( const GiGaRichOpticalPhotonCnv& ) ; /// no assignment
+  GiGaRichSegmentCnv () ; /// no default constructor
+  GiGaRichSegmentCnv( const GiGaRichSegmentCnv& ) ; /// no copy
+  GiGaRichSegmentCnv& operator=( const GiGaRichSegmentCnv& ) ; /// no assignment
 
 private: // data
 
@@ -94,7 +133,7 @@ private: // data
 };
 
 // ============================================================================
-#endif   ///< GIGACNV_GiGaRichOpticalPhotonCnv_H
+#endif   ///< GIGACNV_GiGaRichSegmentCnv_H
 // ============================================================================
 
 

@@ -1,15 +1,15 @@
 //  SE 24-5-2002
 // ============================================================================
 #ifndef       RichSensDet_H
-#define       RichSensDet_H 1 
+#define       RichSensDet_H 1
 // ============================================================================
 #include "GiGa/GiGaSensDetBase.h"
 #include "RichG4Hit.h"
 #include "RichG4HitCollName.h"
 #include "RichG4GeomProp.h"
 
-/// forward declarations 
-template <class SD> 
+/// forward declarations
+template <class SD>
 class GiGaSensDetFactory;
 class G4HCofThisEvent;
 
@@ -19,15 +19,15 @@ class G4HCofThisEvent;
 
 class RichSensDet: virtual public GiGaSensDetBase
 {
-  /// friend factory 
+  /// friend factory
   friend class GiGaFactory<RichSensDet>;
 
 protected:
-  
-  /** standard constructor 
-   *  @see GiGaSensDetBase 
-   *  @see GiGaBase 
-   *  @see AlgTool 
+
+  /** standard constructor
+   *  @see GiGaSensDetBase
+   *  @see GiGaBase
+   *  @see AlgTool
    *  @param type type of the object (?)
    *  @param name name of the object
    *  @param parent  pointer to parent object
@@ -36,20 +36,20 @@ protected:
   ( const std::string& type   ,
     const std::string& name   ,
     const IInterface*  parent ) ;
-  
+
   /// destructor (virtual and protected)
   virtual ~RichSensDet();
-  
-public: 
-  
+
+public:
+
   /** process the hit
-   *  @param step     pointer to current Geant4 step 
-   *  @param history  pointert to touchable history 
+   *  @param step     pointer to current Geant4 step
+   *  @param history  pointert to touchable history
    */
   virtual void Initialize(G4HCofThisEvent* HCE);
   virtual void EndOfEvent(G4HCofThisEvent* HCE);
   virtual bool ProcessHits
-  ( G4Step* step                , 
+  ( G4Step* step                ,
     G4TouchableHistory* history ) ;
   virtual void clear();
   virtual void DrawAll();
@@ -59,46 +59,47 @@ public:
   RichG4HitCollName* RichG4HCName() {return m_RichG4HCName; }
   G4int NumberofRichDet() {return  m_RichGeomProperty->NumberOfRichDet(); }
 
-  G4int NumberofHPDsInRich1Det() 
-  {return   m_RichGeomProperty->NumberOfHPDsInRich1(); }
+  G4int NumberofHPDsInRich1Det() const
+  { return m_RichGeomProperty->NumberOfHPDsInRich1(); }
 
-  G4int NumberofHPDsInRich2Det() 
+  G4int NumberofHPDsInRich2Det() const
   {return m_RichGeomProperty->NumberOfHPDsInRich2(); }
 
-  G4int NumberOfDetSectionsInRich1Det() 
+  G4int NumberOfDetSectionsInRich1Det() const
   {return m_RichGeomProperty->NumberOfDetSectionsInRich1() ; }
 
-  G4int NumberOfDetSectionsInRich2Det() 
+  G4int NumberOfDetSectionsInRich2Det() const
   {return m_RichGeomProperty->NumberOfDetSectionsInRich2(); }
 
-  G4int NumberofPixelsInHPDofRich() 
+  G4int NumberofPixelsInHPDofRich() const
   {return m_RichGeomProperty->NumberOfPixelsInHPD(); }
 
-  G4double MaxZHitInRich1Detector() 
+  G4double MaxZHitInRich1Detector() const
   {return m_RichGeomProperty->MaxZHitInRich1Det(); }
 
-  std::vector<G4double>PixelBoundaryInX() 
+  const std::vector<G4double> & PixelBoundaryInX() const
   {return m_RichGeomProperty->PixelXBoundary(); }
 
-  std::vector<G4double>PixelBoundaryInY() 
+  const std::vector<G4double> & PixelBoundaryInY() const
   {return m_RichGeomProperty->PixelYBoundary(); }
 
-  G4double PixelBoundaryInXValue(int aPXNumber ) 
+  G4double PixelBoundaryInXValue(const int aPXNumber ) const
   {return  m_RichGeomProperty->PixelXBoundaryValue(aPXNumber) ;}
-  G4double PixelBoundaryInYValue(int aPYNumber ) 
+
+  G4double PixelBoundaryInYValue(const int aPYNumber ) const
   {return  m_RichGeomProperty->PixelYBoundaryValue(aPYNumber) ;}
 
-  G4int PixelXNum(G4double localXCoord ) 
+  G4int PixelXNum(const G4double localXCoord ) const
   {return m_RichGeomProperty->PixelXNumFromCoord(localXCoord) ;}
-  
-  G4int PixelYNum(G4double localYCoord ) 
+
+  G4int PixelYNum( const G4double localYCoord ) const
   {return m_RichGeomProperty->PixelYNumFromCoord(localYCoord) ;}
 
 private:
   ///
   RichSensDet(); ///< no default constructor
-  RichSensDet( const RichSensDet& ); ///< no copy constructor 
-  RichSensDet& operator=( const RichSensDet& ) ; ///< no = 
+  RichSensDet( const RichSensDet& ); ///< no copy constructor
+  RichSensDet& operator=( const RichSensDet& ) ; ///< no =
   ///
 private:
   ///
@@ -113,7 +114,7 @@ private:
 };
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
-#endif 
+#endif
 // ============================================================================

@@ -1,13 +1,13 @@
 // ============================================================================
-/// CLHEP 
+/// CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-/// GiGa 
+/// GiGa
 #include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaBase.h"
-/// Geant4 
+/// Geant4
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
@@ -27,16 +27,16 @@
 #include "RichPEInfo.h"
 
 // ============================================================================
-/// factory business 
+/// factory business
 // ============================================================================
 IMPLEMENT_GiGaFactory( RichSensDet );
 // ============================================================================
 
 // ============================================================================
-/** standard constructor 
- *  @see GiGaSensDetBase 
- *  @see GiGaBase 
- *  @see AlgTool 
+/** standard constructor
+ *  @see GiGaSensDetBase
+ *  @see GiGaBase
+ *  @see AlgTool
  *  @param type type of the object (?)
  *  @param name name of the object
  *  @param parent  pointer to parent object
@@ -45,27 +45,28 @@ IMPLEMENT_GiGaFactory( RichSensDet );
 RichSensDet::RichSensDet
 ( const std::string& type   ,
   const std::string& name   ,
-  const IInterface*  parent ) 
-  : GiGaSensDetBase     ( type , name , parent ) 
+  const IInterface*  parent )
+  : GiGaSensDetBase     ( type , name , parent )
   , G4VSensitiveDetector( name  )
 {
-  
+
   IDataProviderSvc* detSvc;
-  StatusCode sc = svcLoc()->service( "DetectorDataSvc" , detSvc , true );
-  
-  m_RichGeomProperty= new  
-    RichG4GeomProp(detSvc,msgSvc()) ;
+  if ( svcLoc()->service( "DetectorDataSvc" , detSvc , true ) ) {
 
-  m_RichG4HCName= new RichG4HitCollName();
-  m_NumberOfHCInRICH=m_RichG4HCName->NumberOfHCollectionInRICH();
-  m_HpdHCID.reserve(m_NumberOfHCInRICH);
-  m_RichHC.reserve(m_NumberOfHCInRICH);  
+    m_RichGeomProperty= new
+      RichG4GeomProp(detSvc,msgSvc()) ;
 
-  G4String HCName;
-  for(int ihc=0; ihc<m_RichG4HCName->RichHCSize(); ihc++) {
-    HCName=m_RichG4HCName->RichHCName(ihc);
-    collectionName.push_back(HCName);
-    m_HpdHCID.push_back(-1);  
+    m_RichG4HCName= new RichG4HitCollName();
+    m_NumberOfHCInRICH=m_RichG4HCName->NumberOfHCollectionInRICH();
+    m_HpdHCID.reserve(m_NumberOfHCInRICH);
+    m_RichHC.reserve(m_NumberOfHCInRICH);
+
+    G4String HCName;
+    for(int ihc=0; ihc<m_RichG4HCName->RichHCSize(); ++ihc ) {
+      HCName=m_RichG4HCName->RichHCName(ihc);
+      collectionName.push_back(HCName);
+      m_HpdHCID.push_back(-1);
+    }
 
   }
 
@@ -73,56 +74,50 @@ RichSensDet::RichSensDet
 // ============================================================================
 
 // ============================================================================
-/// destructor 
+/// destructor
 // ============================================================================
 RichSensDet::~RichSensDet(){};
 // ============================================================================
 
 // ============================================================================
 /** process the hit
- *  @param step     pointer to current Geant4 step 
- *  @param history  pointert to touchable history 
+ *  @param step     pointer to current Geant4 step
+ *  @param history  pointert to touchable history
  */
 // ============================================================================
 
-bool RichSensDet::ProcessHits( G4Step* aStep , 
-                               G4TouchableHistory* ) 
+bool RichSensDet::ProcessHits( G4Step* aStep ,
+                               G4TouchableHistory* )
 {
-  if( 0 == aStep ) { return false ; } 
-  
-  double     CurEdep = aStep->GetTotalEnergyDeposit();
+  if( 0 == aStep ) { return false ; }
+
+  double CurEdep = aStep->GetTotalEnergyDeposit();
 
   // Create a hit only when there is
   // non-zero energy deposit.  SE June 2003.
-  
+
   // cout<<"Rich SensDet CurEdep "<< CurEdep<<endl;
-  
-    if(  CurEdep <= 0.1 ) { return false; 
-   }
-    // if(  CurEdep <= 0.005 ) { return false; 
-    // }
-  
+
+  if ( CurEdep <= 0.1 ) { return false; }
+  // if(  CurEdep <= 0.005 ) { return false;
+  // }
 
   // end of Modif in June 2003 by SE.
-  
+
   G4StepPoint* prePosPoint =aStep->GetPreStepPoint();
-  
-  //  HepPoint3D CurGlobalPos  = prePosPoint->GetPosition(); 
+  const G4ThreeVector & CurGlobalPos  = prePosPoint->GetPosition();
 
-  G4ThreeVector CurGlobalPos  = prePosPoint->GetPosition(); 
-  
-
-  /// 
-  G4TouchableHistory* CurTT =  
+  ///
+  G4TouchableHistory* CurTT =
     (G4TouchableHistory*)(prePosPoint->GetTouchable());
 
   G4VPhysicalVolume*  CurPV =   CurTT->GetVolume();
   G4LogicalVolume*    CurLV =   CurPV->GetLogicalVolume();
-  // Now get the charged track (ie. photoelectron )  which created the 
-  // hit. 
+  // Now get the charged track (ie. photoelectron )  which created the
+  // hit.
   G4Track* aTrack = aStep->GetTrack();
   G4ThreeVector CurPEOrigin;
-  // log << MSG::VERBOSE <<" Track Def  and creator proc " 
+  // log << MSG::VERBOSE <<" Track Def  and creator proc "
   // << aTrack->GetDefinition()
   // <<"    "<<aTrack->GetCreatorProcess()-> GetProcessName() <<endreq;
 
@@ -131,18 +126,18 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   if(aProcess) aCreatorProcessName =  aProcess->GetProcessName();
   if((aTrack->GetDefinition() == G4Electron::Electron()) &&
      (aCreatorProcessName  == "RichHpdPhotoelectricProcess"))
-    {
-      CurPEOrigin = aTrack->GetVertexPosition() ;
-    }
+  {
+    CurPEOrigin = aTrack->GetVertexPosition() ;
+  }
 
   MsgStream log( msgSvc() , name() );
 
-  log << MSG::DEBUG << "Now in ProcessHits() for RichSensDet" 
-      << " Pos=("  << CurGlobalPos.x() << "," << CurGlobalPos.y() 
-      << "," << CurGlobalPos.z() << ")" 
-      << " PV="    << CurPV->GetName() 
-      << " LV="    << CurLV->GetName() 
-      << " edep in MeV ="  << CurEdep << endreq; 
+  log << MSG::DEBUG << "Now in ProcessHits() for RichSensDet"
+      << " Pos=("  << CurGlobalPos.x() << "," << CurGlobalPos.y()
+      << "," << CurGlobalPos.z() << ")"
+      << " PV="    << CurPV->GetName()
+      << " LV="    << CurLV->GetName()
+      << " edep in MeV ="  << CurEdep << endreq;
   log << MSG::DEBUG << " PE Origin X Y Z "<<CurPEOrigin.x()
       <<"   "<<CurPEOrigin.y()<<"   "<<CurPEOrigin.z()<<endreq;
 
@@ -152,15 +147,15 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
 
   int CurrentRichDetNumber =-1;
 
-  if( CurGlobalZ <= 0.0 ) { 
-    log << MSG::ERROR << "Inadmissible Rich Hit Z coordinate = " 
+  if( CurGlobalZ <= 0.0 ) {
+    log << MSG::ERROR << "Inadmissible Rich Hit Z coordinate = "
         <<  CurGlobalZ <<endreq;
   }else if ( CurGlobalZ < MaxZHitInRich1Detector() ) {
-    // hit coordinate in Rich1 
+    // hit coordinate in Rich1
     CurrentRichDetNumber=0;
   }else {
     // hit coordinate in Rich2
-    CurrentRichDetNumber= 1; 
+    CurrentRichDetNumber= 1;
   }
 
   CurTT -> MoveUpHistory(2);
@@ -191,14 +186,14 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4int CurrentPixelXNum=  PixelXNum(CurLocalPos.x());
   G4int CurrentPixelYNum=  PixelYNum(CurLocalPos.y());
   log << MSG::DEBUG <<
-    "Now in ProcessHits() of RichSensDet : PixelX and Y = " << 
+    "Now in ProcessHits() of RichSensDet : PixelX and Y = " <<
     CurrentPixelXNum << "   " << CurrentPixelYNum<<endreq;
 
-  //  G4int CurOptPhotID= aTrack->GetParentID();   
+  //  G4int CurOptPhotID= aTrack->GetParentID();
 
   G4double CurGlobalTime =  aTrack-> GetGlobalTime();
-  
- 
+
+
 
   G4int CurOptPhotMotherChTrackID=-1;
   G4int CurOptPhotMotherChTrackPDG=0;
@@ -216,70 +211,70 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4ThreeVector CurPhotAgelExitPos;
   G4int aRichVerboseFlag=0;
   G4int CurOptPhotID =0;
-  
+
 
   if((aTrack->GetDefinition() == G4Electron::Electron()) &&
      (aCreatorProcessName  == "RichHpdPhotoelectricProcess")) {
-    
-   G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
-   GaussTrackInformation* aRichPETrackInfo
-     = (GaussTrackInformation*)aUserTrackinfo;
 
-  if(aRichPETrackInfo) 
+    G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
+    GaussTrackInformation* aRichPETrackInfo
+      = (GaussTrackInformation*)aUserTrackinfo;
+
+    if(aRichPETrackInfo)
     {
-      if(aRichPETrackInfo->detInfo()) 
+      if(aRichPETrackInfo->detInfo())
+      {
+        RichInfo* aRichPETypeInfo = (RichInfo*)(aRichPETrackInfo->detInfo());
+        if(aRichPETypeInfo && aRichPETypeInfo->HasUserPEInfo())
         {
-          RichInfo* aRichPETypeInfo = (RichInfo*)(aRichPETrackInfo->detInfo());
-          if(aRichPETypeInfo && aRichPETypeInfo->HasUserPEInfo()) 
-            {
-              RichPEInfo* aPEInfo=aRichPETypeInfo->RichPEInformation();
-              if( aPEInfo) 
-                {
-                  CurOptPhotMotherChTrackID = aPEInfo-> MotherOfPhotonId();
-                  CurOptPhotMotherChTrackPDG = 
-                                          aPEInfo-> MotherOfPhotonPDGcode();
-                  CurRadiatorNumber   =   aPEInfo->PhotOriginRadiatorNumber();
-                  CurEmissPt          =   aPEInfo->PhotonEmisPoint();
-                  CurPhotEnergyAtProd =   aPEInfo->PhotonEnergyAtCkvProd();
-                  CurThetaCkvAtProd   =   aPEInfo->CherenkovThetaAtProd();
-                  CurPhiCkvAtProd     =   aPEInfo->CherenkovPhiAtProd();
-                  CurChTrackTotMom    =   aPEInfo-> MotherofPhotonMomAtProd();
-                  CurOptPhotID        =  aPEInfo->OptPhotonId();
-                  
-                  // log << MSG::INFO << "Now in ProcessHits()  "
-                  //  <<" Track id of charged tk opt phot pe "
-                  //    << CurOptPhotMotherChTrackID <<"   "
-                  //    <<  CurOptPhotID<<"   "
-                  //    << aTrack->GetTrackID() << endreq;
+          RichPEInfo* aPEInfo=aRichPETypeInfo->RichPEInformation();
+          if( aPEInfo)
+          {
+            CurOptPhotMotherChTrackID = aPEInfo-> MotherOfPhotonId();
+            CurOptPhotMotherChTrackPDG =
+              aPEInfo-> MotherOfPhotonPDGcode();
+            CurRadiatorNumber   =   aPEInfo->PhotOriginRadiatorNumber();
+            CurEmissPt          =   aPEInfo->PhotonEmisPoint();
+            CurPhotEnergyAtProd =   aPEInfo->PhotonEnergyAtCkvProd();
+            CurThetaCkvAtProd   =   aPEInfo->CherenkovThetaAtProd();
+            CurPhiCkvAtProd     =   aPEInfo->CherenkovPhiAtProd();
+            CurChTrackTotMom    =   aPEInfo-> MotherofPhotonMomAtProd();
+            CurOptPhotID        =  aPEInfo->OptPhotonId();
 
-                  if(  aPEInfo->  VerbosePeTagFlag() ) {
-                    aRichVerboseFlag =1;                    
-                    
-                  CurChTrackMomVect    =  
-                                   aPEInfo->  MotherofPhotonMomVectAtProd();
-                  CurChTrackPDGMass    = aPEInfo-> MotherofPhotonPDGMass();
-                  CurChTrackCkvPreStepPos= 
-                                     aPEInfo->MotherofPhotonCkvPreStep();
-                  CurChTrackCkvPostStepPos= 
-                                     aPEInfo->MotherofPhotonCkvPostStep();
-               
-                  CurPhotRayleighScatFlag= 
-                         aPEInfo->PhotonRayleighScatteringFlag();
-                   CurPhotAgelExitPos=
-                     aPEInfo->  PhotonAerogelExitPos();
-                  
-                  
+            // log << MSG::INFO << "Now in ProcessHits()  "
+            //  <<" Track id of charged tk opt phot pe "
+            //    << CurOptPhotMotherChTrackID <<"   "
+            //    <<  CurOptPhotID<<"   "
+            //    << aTrack->GetTrackID() << endreq;
 
-                  }
-                  
+            if(  aPEInfo->  VerbosePeTagFlag() ) {
+              aRichVerboseFlag =1;
 
-                } 
+              CurChTrackMomVect    =
+                aPEInfo->  MotherofPhotonMomVectAtProd();
+              CurChTrackPDGMass    = aPEInfo-> MotherofPhotonPDGMass();
+              CurChTrackCkvPreStepPos=
+                aPEInfo->MotherofPhotonCkvPreStep();
+              CurChTrackCkvPostStepPos=
+                aPEInfo->MotherofPhotonCkvPostStep();
+
+              CurPhotRayleighScatFlag=
+                aPEInfo->PhotonRayleighScatteringFlag();
+              CurPhotAgelExitPos=
+                aPEInfo->  PhotonAerogelExitPos();
+
+
+
             }
+
+
+          }
         }
+      }
     }
   }
-  
-  
+
+
   G4int CurPETrackID=aTrack->GetTrackID();
   G4int CurPETrackPDG=aTrack->GetDefinition()->GetPDGEncoding();
 
@@ -313,32 +308,32 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit -> setOptPhotRayleighFlag(CurPhotRayleighScatFlag);
   newHit ->   setOptPhotAgelExitPos(  CurPhotAgelExitPos);
   newHit -> setRichVerboseHitInfo(aRichVerboseFlag);
-  
+
   // now for the trackID from the Gausshit base class.
   // if the mother of the corresponding optical photon exits it is set
   // as the trackid. Otherwise the track creating the
   // hit is set as the track id/
   if(CurOptPhotMotherChTrackID >=0 ) {
-    
+
     newHit ->setTrackID(CurOptPhotMotherChTrackID);
   } else {
-    
+
     newHit ->setTrackID(CurPETrackID);
-    
+
   }
-  
-  
-  
+
+
+
 
   int CurrentRichCollectionSet=-1;
   if(  CurrentRichDetNumber == 0 ) {
-    if(CurrentRichDetSector == 0 ) { 
-      CurrentRichCollectionSet=0; 
+    if(CurrentRichDetSector == 0 ) {
+      CurrentRichCollectionSet=0;
     }else{ CurrentRichCollectionSet=1; }
   }else if (CurrentRichDetNumber == 1 ) {
 
-    if(CurrentRichDetSector == 0 ) { 
-      CurrentRichCollectionSet=2; 
+    if(CurrentRichDetSector == 0 ) {
+      CurrentRichCollectionSet=2;
     }else{ CurrentRichCollectionSet=3; }
 
   }
@@ -348,7 +343,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
     log << MSG::DEBUG <<
       "RichSensdet: Current collection set and Hit number stored =  "
         <<CurrentRichCollectionSet<<"   "<< NumHitsInCurHC<<endreq;
-     
+
   }
 
   return true;
@@ -356,23 +351,23 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
 void RichSensDet::clear() {  };
 void RichSensDet::DrawAll() {  };
 void RichSensDet::PrintAll() {  };
-void RichSensDet::Initialize(G4HCofThisEvent* ) { 
+void RichSensDet::Initialize(G4HCofThisEvent* ) {
 
   MsgStream log( msgSvc() , name() );
 
   log << MSG::DEBUG << "Richsensdet: Initialize. SensDetName, colName: "
-      <<SensitiveDetectorName<<"  "<<collectionName[0] 
+      <<SensitiveDetectorName<<"  "<<collectionName[0]
       <<"  "<<collectionName[1]<<"  "
       <<collectionName[2]<<"  "<<collectionName[3]<<endreq;
 
   // G4String CurCollName;
   RichG4HitsCollection* CurColl;
   m_RichHC.clear();
-  for(int ihhc=0; ihhc<m_RichG4HCName->RichHCSize(); ihhc++) {
-    //    CurCollName=collectionName[ihhc];   
-    CurColl = 
+  for(int ihhc=0; ihhc<m_RichG4HCName->RichHCSize(); ++ihhc ) {
+    //    CurCollName=collectionName[ihhc];
+    CurColl =
       new  RichG4HitsCollection(SensitiveDetectorName,collectionName[ihhc]);
-    
+
     m_RichHC.push_back( CurColl);
   }
 
@@ -380,21 +375,21 @@ void RichSensDet::Initialize(G4HCofThisEvent* ) {
 };
 void RichSensDet::EndOfEvent(G4HCofThisEvent* HCE) {
 
-  for(int ihid=0; ihid<m_RichG4HCName->RichHCSize()  ; ihid++ ) {
- 
+  for(int ihid=0; ihid<m_RichG4HCName->RichHCSize(); ++ihid ) {
+
     if(m_HpdHCID[ihid] < 0  )
-      {
-        m_HpdHCID[ihid] = G4SDManager::GetSDMpointer()->
-          GetCollectionID(collectionName[ihid]); 
-      }
-    
-    HCE->AddHitsCollection( m_HpdHCID[ihid] , m_RichHC[ihid]  ); 
+    {
+      m_HpdHCID[ihid] = G4SDManager::GetSDMpointer()->
+        GetCollectionID(collectionName[ihid]);
+    }
+
+    HCE->AddHitsCollection( m_HpdHCID[ihid] , m_RichHC[ihid]  );
   }
 
 };
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
 
 

@@ -1,6 +1,7 @@
 // ============================================================================
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
+#include "GaudiKernel/MsgStream.h"
 // GiGa
 #include "GiGa/GiGaMACROs.h"
 // G4 
@@ -73,6 +74,9 @@ void GiGaPhysConstructorOp::ConstructProcess()
 
 void  GiGaPhysConstructorOp::ConstructPeProcess() 
 {
+
+  MsgStream msg(msgSvc(), name());
+
   //        G4double aPeCut=10.0*km;
   G4double aPeCut=0.1*mm;
   G4ParticleDefinition* photoelectronDef = 
@@ -109,7 +113,7 @@ void  GiGaPhysConstructorOp::ConstructPeProcess()
         // Rebuild the physics tables for every process for this particle type
         G4ProcessVector* pVector = 
           (particle->GetProcessManager())->GetProcessList();
-        G4cout<<"size ProcList pe- "<< pVector->size()<< G4endl;
+        msg << MSG::DEBUG << "size ProcList pe- "<< pVector->size()<< endreq;
         
         for ( j=0; j < pVector->size(); ++j) 
           {
@@ -118,7 +122,7 @@ void  GiGaPhysConstructorOp::ConstructPeProcess()
         particle->DumpTable();
         pmanager->DumpInfo();
         G4int  an1 =  pmanager ->GetProcessListLength() ;
-        G4cout<<"Num proc for pe so far = "<< an1<<G4endl;
+        msg << MSG::DEBUG << "Num proc for pe so far = " << an1 << endreq;
       }
   }
   
@@ -157,10 +161,10 @@ void  GiGaPhysConstructorOp::ConstructPeProcess()
 // ============================================================================
 void GiGaPhysConstructorOp::ConstructOp() {
 
-  //  G4cout<<"Now creating Optical processes"<<G4endl;
-  //  G4cout<<"This is the phys list Op from GiGaRich1 "<<G4endl;
-  G4cout<<" Activation for verbose Output in Rich Optical Proc "
-        << m_RichActivateVerboseProcessInfoTag<<G4endl;
+  MsgStream msg(msgSvc(), name());
+  
+  msg << MSG::DEBUG <<" Activation for verbose Output in Rich Optical Proc = "
+      << m_RichActivateVerboseProcessInfoTag << endreq;
 
   RichG4Cerenkov*   theCerenkovProcess = new RichG4Cerenkov("RichG4Cerenkov");
   G4OpAbsorption* theAbsorptionProcess = new G4OpAbsorption();
@@ -181,9 +185,9 @@ void GiGaPhysConstructorOp::ConstructOp() {
   // the default value is 900.
   // G4int MaxNumPhotons = 900;
 
-  G4int MaxNumPhotons = (G4int)  m_MaxPhotonsPerRichCherenkovStep; 
-  G4cout<<" Max Number of Photons per Cherenkov step=  "
-           << MaxNumPhotons<<G4endl;
+  G4int MaxNumPhotons = (G4int)m_MaxPhotonsPerRichCherenkovStep; 
+  msg << MSG::DEBUG << " Max Number of Photons per Cherenkov step=  "
+      << MaxNumPhotons << endreq;
   
   theCerenkovProcess->SetTrackSecondariesFirst(true);
   theCerenkovProcess->SetMaxNumPhotonsPerStep(MaxNumPhotons);

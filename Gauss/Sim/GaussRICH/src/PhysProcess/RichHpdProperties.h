@@ -13,59 +13,86 @@
 
 
 class RichHpdProperties {
-  public:
 
-       RichHpdProperties(IDataProviderSvc*, IMessageSvc*);
-       virtual ~RichHpdProperties();
+public:
 
-       int numHpdTotRich1() {return  m_numHpdTotRich[0]; }
-       int numHpdTotRich2() {return  m_numHpdTotRich[1]; }
-       std::vector<int>numHpdTotRich() {return  m_numHpdTotRich; }
-       std::vector<RichHpdQE*>RichHpdQEList(int richdetnum) 
-       {return  m_RichHpdQEList[richdetnum]; }  
-       std::vector<RichHpdPSF*>RichHpdPSFList(int richdetnum) 
-       {return m_RichHpdPSFList[richdetnum]; }
-       std::vector<RichHpdDeMag*>RichHpdDeMagList(int richdetnum ) 
-       {return m_RichHpdDeMagList[richdetnum]; }
+  RichHpdProperties(IDataProviderSvc*, IMessageSvc*);
+  virtual ~RichHpdProperties();
 
-       RichHpdQE* getRichHpdQE(int hpdnum, int richdetnum);
+  int numHpdTotRich1() const {return  m_numHpdTotRich[0]; }
+  int numHpdTotRich2() const {return  m_numHpdTotRich[1]; }
 
-       RichHpdPSF* getRichHpdPSF(int hpdnum, int richdetnum );
-       
-       RichHpdDeMag* getRichHpdDeMag(int hpdnum, int richdetnum );
+  const std::vector<int> & numHpdTotRich() const {return m_numHpdTotRich; }
+  const std::vector<RichHpdQE*> & RichHpdQEList(int richdetnum) const
+  {return m_RichHpdQEList[richdetnum]; }
 
-       double RichHpdHighVoltage() {return  m_RichHpdHighVoltage; }
-       void setRichHpdHighVoltage(double HpdHv);
+  const std::vector<RichHpdPSF*> & RichHpdPSFList(int richdetnum) const
+  {return m_RichHpdPSFList[richdetnum]; }
 
-       double RichHpdQWToSiDist() {return   m_RichHpdQWToSiDist; }
-       void setRichHpdQWToSiDist( double HpdQWtoSiDist ) ;      
+  const std::vector<RichHpdDeMag*> & RichHpdDeMagList(int richdetnum ) const
+  {return m_RichHpdDeMagList[richdetnum]; }
 
-       double Rich1MaxZHitZCoord() {return m_Rich1MaxZHitCoord  ; }
-       void setRich1MaxZHitZCoord( double RichMaximumZCoordHit ) ;      
+  RichHpdQE* getRichHpdQE(int hpdnum, int richdetnum);
 
-       std::string HpdQWLogVolName() {return m_HpdQWLogVolName; }
-       void setHpdQWLogVolName (std::string hpdqwLvolname );
+  RichHpdPSF* getRichHpdPSF(int hpdnum, int richdetnum );
 
-       std::string HpdPhCathodeLogVolName() {return  m_HpdPhCathodeLogVolName; }
-       void setHpdPhCathodeLogVolName (std::string hpdphCathLvolname ); 
+  RichHpdDeMag* getRichHpdDeMag(int hpdnum, int richdetnum );
 
-       int numberOfRichDetectors() {return m_numberOfRichDetectors; }
-       void setnumberOfRichDetectors (int numberOfRichdet);
-       double HpdPhCathodeInnerRadius() {return  m_HpdPhCathodeInnerRadius; }
-       void setHpdPhCathodeInnerRadius(double phCaInnRad );
-  void setHpdMaxQuantumEff(double aMaxQE) 
+  double RichHpdHighVoltage() const {return  m_RichHpdHighVoltage; }
+  void setRichHpdHighVoltage(const double HpdHv)
+  {
+    m_RichHpdHighVoltage= HpdHv;
+  }
+
+  double RichHpdQWToSiDist() const {return   m_RichHpdQWToSiDist; }
+  void setRichHpdQWToSiDist( const double HpdQWtoSiDist )
+  {
+    m_RichHpdQWToSiDist=HpdQWtoSiDist;
+  }
+
+  double Rich1MaxZHitZCoord() const {return m_Rich1MaxZHitCoord  ; }
+  void setRich1MaxZHitZCoord( const double RichMaximumZCoordHit )
+  {
+    m_Rich1MaxZHitCoord=RichMaximumZCoordHit;
+  }
+
+  const std::string & HpdQWLogVolName() const {return m_HpdQWLogVolName; }
+  void setHpdQWLogVolName (const std::string & hpdqwLvolname )
+  {
+    m_HpdQWLogVolName=  hpdqwLvolname;
+  }
+
+  const std::string & HpdPhCathodeLogVolName() const {return  m_HpdPhCathodeLogVolName; }
+  void setHpdPhCathodeLogVolName (const std::string & hpdphCathLvolname )
+  {
+    m_HpdPhCathodeLogVolName=hpdphCathLvolname;
+  }
+
+  int numberOfRichDetectors() const {return m_numberOfRichDetectors; }
+  void setnumberOfRichDetectors (const int numberOfRichdet)
+  {
+    m_numberOfRichDetectors=numberOfRichdet;
+  }
+
+  double HpdPhCathodeInnerRadius() const {return  m_HpdPhCathodeInnerRadius; }
+
+  void setHpdPhCathodeInnerRadius(const double phCaInnRad )
+  {
+    m_HpdPhCathodeInnerRadius = phCaInnRad;
+  }
+
+  void setHpdMaxQuantumEff(const double aMaxQE)
   {
     m_HpdMaxQuantumEff= aMaxQE;
-    
   }
-  
-  double   HpdMaxQuantumEff() 
+
+  double HpdMaxQuantumEff() const
   {
     return  m_HpdMaxQuantumEff;
   }
-  
- private:
-  
+
+private:
+
   //here the first vector has a dimension of 2
   // which is the number of rich detectors in lhcb.
   std::vector<int>m_numHpdTotRich;
@@ -81,7 +108,7 @@ class RichHpdProperties {
   double m_HpdPhCathodeInnerRadius;
   int HpdVerboseLevel;
   double m_HpdMaxQuantumEff;
-  
+
 };
 
 #endif

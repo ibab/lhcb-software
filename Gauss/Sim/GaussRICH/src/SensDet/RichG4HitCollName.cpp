@@ -11,6 +11,7 @@ RichG4HitCollName::RichG4HitCollName() {
   m_RichHCName.push_back("Rich2BotHC");
 
 }
+
 RichG4HitCollName::~RichG4HitCollName() {; }
 
 

@@ -1,5 +1,5 @@
 //  ===========================================================================
-#define GIGACNV_GiGaRichOpticalPhotonCnv_CPP 1
+#define GIGACNV_GiGaMCRichOpticalPhotonCnv_CPP 1
 // ============================================================================
 #include "CLHEP/Geometry/Point3D.h"
 // STL
@@ -39,29 +39,29 @@
 #include "G4HCofThisEvent.hh"
 #include "G4SDManager.hh"
 // local
-#include "GiGaRichOpticalPhotonCnv.h"
+#include "GiGaMCRichOpticalPhotonCnv.h"
 #include "RichG4HitCollName.h"
 #include "RichG4Hit.h"
 
 // ======================================================================
 
-static const  CnvFactory<GiGaRichOpticalPhotonCnv>         s_Factory ;
-const        ICnvFactory&GiGaRichOpticalPhotonCnvFactory = s_Factory ;
+static const  CnvFactory<GiGaMCRichOpticalPhotonCnv>         s_Factory ;
+const        ICnvFactory&GiGaMCRichOpticalPhotonCnvFactory = s_Factory ;
 
 // ========================================================================
 
-GiGaRichOpticalPhotonCnv::GiGaRichOpticalPhotonCnv( ISvcLocator* Locator )
+GiGaMCRichOpticalPhotonCnv::GiGaMCRichOpticalPhotonCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ),
     m_RichG4HitCollectionName(0) {
 
-  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits ) ;
-  setConverterName              ( "GiGaRichOpticalPhotonCnv"          ) ;
+  setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits    ) ;
+  setConverterName              ( "GiGaMCRichOpticalPhotonCnv" ) ;
 
   GiGaLeaf::Pars pars1;
   pars1.push_back("");
-  declareObject(GiGaLeaf( MCRichOpticalPhotonLocation::Default, 
-         objType(), pars1));
-  
+  declareObject( GiGaLeaf( MCRichOpticalPhotonLocation::Default,
+                           objType(), pars1) );
+
 
   m_RichG4HitCollectionName = new RichG4HitCollName();
 
@@ -69,28 +69,33 @@ GiGaRichOpticalPhotonCnv::GiGaRichOpticalPhotonCnv( ISvcLocator* Locator )
 
 // ======================================================================
 
-GiGaRichOpticalPhotonCnv::~GiGaRichOpticalPhotonCnv(){
-  delete  m_RichG4HitCollectionName;
-  
+GiGaMCRichOpticalPhotonCnv::~GiGaMCRichOpticalPhotonCnv()
+{
+  delete m_RichG4HitCollectionName;
 };
 
 // ======================================================================
 
-const CLID& GiGaRichOpticalPhotonCnv::classID() { 
-  return MCRichOpticalPhoton::classID(); }
+const CLID& GiGaMCRichOpticalPhotonCnv::classID()
+{
+  return MCRichOpticalPhoton::classID();
+}
 
 // ======================================================================
 
-const unsigned char GiGaRichOpticalPhotonCnv::storageType() { 
-    return GiGaHits_StorageType; }
+const unsigned char GiGaMCRichOpticalPhotonCnv::storageType()
+{
+  return GiGaHits_StorageType;
+}
 
 // ======================================================================
 
-StatusCode GiGaRichOpticalPhotonCnv::initialize() {
+StatusCode GiGaMCRichOpticalPhotonCnv::initialize() {
 
   // initialize the base class
   StatusCode sc = GiGaCnvBase::initialize();
   if ( sc.isFailure() ) return Error("Could not initialize the base class!",sc);
+
   // check for necessary services
   if ( 0 == hitsSvc() ) return Error("IGiGaHitsCnvSvc* points to NULL!");
 
@@ -99,13 +104,15 @@ StatusCode GiGaRichOpticalPhotonCnv::initialize() {
 
 // ======================================================================
 
-StatusCode GiGaRichOpticalPhotonCnv::finalize() { 
-            return GiGaCnvBase::finalize(); }
+StatusCode GiGaMCRichOpticalPhotonCnv::finalize()
+{
+  return GiGaCnvBase::finalize();
+}
 
 // ======================================================================
 
-StatusCode GiGaRichOpticalPhotonCnv::createObj( IOpaqueAddress*  address ,
-                                                DataObject*&     object  ) {
+StatusCode GiGaMCRichOpticalPhotonCnv::createObj( IOpaqueAddress*  address ,
+                                                  DataObject*&     object  ) {
 
   object = 0;
   if ( 0 == address ) return Error("IOpaqueAddress* points to NULL!" );
@@ -117,14 +124,13 @@ StatusCode GiGaRichOpticalPhotonCnv::createObj( IOpaqueAddress*  address ,
     return Warning( "Could not create and update Object", sc );
   }
 
-
   return StatusCode::SUCCESS;
 };
 
 // ============================================================================
 
-StatusCode GiGaRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
-                                                 DataObject*      object  ) {
+StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
+                                                   DataObject*      object  ) {
 
   if ( 0 == address ) { return Error(" IOpaqueAddress* points to NULL"); }
   if ( 0 == object  ) { return Error(" DataObject* points to NULL"    ); }
@@ -134,35 +140,34 @@ StatusCode GiGaRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
                   "*') is not 'MCRichOpticalPhotons*'! "   );
   }
 
-
   // Initialise
   MsgStream msg( msgSvc(), name() );
+  msg << MSG::DEBUG << "Creating MCRichOpticalPhotons" << endreq;
   photons->clear();
 
- // get the registry
+  // get the registry
   const IRegistry* registry = address->registry();
   if( 0 == registry ) { return Error("IRegistry* points to NULL!");}
   const std::string& location = registry->identifier();
   //  { // try to locate MCParticles explicitely
-    // just to force the loading of the reference table 
-        std::string mcpath = 
-        location.substr( 0, location.find( "/MC" ) ) + "/" + 
-        MCParticleLocation::Default;
-    // get MCparticles 
-       const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
-     if( 0 == mcps ) 
-      { return Error("Can not locate MCparticles at '" + mcpath + "'");}  
+  // just to force the loading of the reference table
+  std::string mcpath =
+    location.substr( 0, location.find( "/MC" ) ) + "/" +
+    MCParticleLocation::Default;
+  // get MCparticles
+  const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
+  if( 0 == mcps )
+  { return Error("Can not locate MCparticles at '" + mcpath + "'");}
   //  }
 
-
-    G4HCofThisEvent* hitscollections = 0 ;
+  G4HCofThisEvent* hitscollections = 0 ;
 
   try {
 
     // retrieve the hits container from GiGa Service
 
     // get hitscollections from GiGa
-    
+
     *gigaSvc() >> hitscollections;
 
     if ( 0 != hitscollections ) {
@@ -170,82 +175,81 @@ StatusCode GiGaRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
       // Get MCRichHits eventSvc()
       SmartDataPtr<MCRichHits> mcHits( evtSvc(), MCRichHitLocation::Default );
       if ( !mcHits ) {
-      return Warning( "Could not locate  MCRichHits from GiGaRichOpticalPhoton" );
+        return Warning( "Could not locate MCRichHits from GiGaMCRichOpticalPhotonCnv" );
       }
-      
-//       msg << MSG::INFO << "Located " << mcHits->size() << " MCHits at " 
-//           << MCRichHitLocation::Default << endreq;
 
-      // note this key is need for consistency with MCRichOpticalPhoton converter
+      //       msg << MSG::INFO << "Located " << mcHits->size() << " MCHits at "
+      //           << MCRichHitLocation::Default << endreq;
+
+      // note this key is need for consistency with MCRichHit converter
       int globalKey = 0;
-      for (int iii=0;iii<m_RichG4HitCollectionName->RichHCSize() ;iii++) {
-           std::string colName = m_RichG4HitCollectionName->RichHCName(iii);
-
+      for ( int iii=0; iii<m_RichG4HitCollectionName->RichHCSize(); ++iii ) {
+        std::string colName = m_RichG4HitCollectionName->RichHCName(iii);
 
         G4SDManager * fSDM = G4SDManager::GetSDMpointer();
         if ( !fSDM ) return Error( "NULL G4SDManager pointer !!" );
         int collectionID = fSDM->GetCollectionID(colName);
         if ( -1 == collectionID ) return StatusCode::SUCCESS;
 
-        RichG4HitsCollection* myCollection =
-          (RichG4HitsCollection*)(hitscollections->GetHC(collectionID));
+        RichG4HitsCollection * myCollection =
+          dynamic_cast<RichG4HitsCollection*>(hitscollections->GetHC(collectionID));
         if ( 0 == myCollection ) return StatusCode::SUCCESS;
 
-          int numberofhits = myCollection->entries();
-       // reserve space
-        photons->reserve(  numberofhits );
+        int numberofhits = myCollection->entries();
+        // reserve space
+        photons->reserve( numberofhits );
 
         // Reference table between G4 tracks/trajectories and MC particles
-        const GiGaKineRefTable& table = hitsSvc()->table() ;
-
+        //const GiGaKineRefTable& table = hitsSvc()->table();
 
         //convert hits
-        for ( int ihit = 0 ; ihit< numberofhits  ; ++ihit ) {
+        for ( int ihit = 0; ihit < numberofhits; ++ihit ) {
+
+          // Pointer to G4 hit
           RichG4Hit * g4hit = (*myCollection)[ihit];
 
+          // New optical photon object
           MCRichOpticalPhoton * mcPhoton = new MCRichOpticalPhoton();
 
           // Copy required info from RichG4Hit to RichMCOpticalPhoton
           // More info may be copied in the future.
           //
+          mcPhoton-> setPdIncidencePoint( HepPoint3D(g4hit->GetGlobalPEOriginPos().x(),
+                                                     g4hit->GetGlobalPEOriginPos().y(),
+                                                     g4hit->GetGlobalPEOriginPos().z() ) );
+          mcPhoton->setEnergyAtProduction( static_cast<float>(g4hit->PhotEnergyAtProd()) );
 
-          mcPhoton-> setPdIncidencePoint( HepPoint3D(
-                                   g4hit->GetGlobalPEOriginPos().x(),  
-                                   g4hit->GetGlobalPEOriginPos().y(),
-                                   g4hit->GetGlobalPEOriginPos().z() ) );
-          mcPhoton->setEnergyAtProduction( (float) g4hit-> PhotEnergyAtProd());
-          
           mcPhoton->setEmissionPoint
-             ( HepPoint3D(g4hit->GetPhotEmisPt().x(),
-                                g4hit->GetPhotEmisPt().y(),
-                                g4hit->GetPhotEmisPt().z())  );
+            ( HepPoint3D(g4hit->GetPhotEmisPt().x(),
+                         g4hit->GetPhotEmisPt().y(),
+                         g4hit->GetPhotEmisPt().z()) );
           mcPhoton->setParentMomentum
-             (HepPoint3D( g4hit->ChTrackMomVect().x(),
-                                g4hit->ChTrackMomVect().y(),
-                                g4hit->ChTrackMomVect().z() ));
-          
+            ( HepPoint3D( g4hit->ChTrackMomVect().x(),
+                          g4hit->ChTrackMomVect().y(),
+                          g4hit->ChTrackMomVect().z()) );
+
           mcPhoton->setCherenkovTheta( g4hit->ThetaCkvAtProd() );
           mcPhoton->setCherenkovPhi( g4hit->PhiCkvAtProd() );
           mcPhoton->setMcRichHit( mcHits->object(globalKey) );
 
           photons->insert( mcPhoton, globalKey );
-          globalKey++;
-          
-        }
-        
-        
+
+          ++globalKey;
+        } // loop over g4 hits
+
+
       }
-      
-//       msg << MSG::INFO 
-//           << "Built " << photons->size() << " MCRichOpticalPhotons at "
-//           << MCRichOpticalPhotonLocation::Default << endreq;
+
+      //       msg << MSG::INFO
+      //           << "Built " << photons->size() << " MCRichOpticalPhotons at "
+      //           << MCRichOpticalPhotonLocation::Default << endreq;
 
       // Should have one opticalphoton for each and every MCRichHit
       if ( photons->size() != mcHits->size() ) {
         msg << MSG::ERROR << "Created " << photons->size() << " photons and"
             << mcHits->size() << " MCRichHits !!" << endreq;
       }
-      
+
     } else {
       msg << MSG::INFO << "No RichG4OpticalPhotons to be converted" << endreq;
       return StatusCode::SUCCESS;

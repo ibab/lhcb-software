@@ -3,7 +3,6 @@
 #include "globals.hh"
 #include <vector>
 
-
 class RichG4HitCollName {
  
 public:
@@ -11,14 +10,25 @@ public:
   RichG4HitCollName();
   virtual ~RichG4HitCollName();
 
-  int NumberOfHCollectionInRICH() {return m_NumberOfHCollectionInRICH; }
-  G4String  RichHCName(int HCNum ) {return m_RichHCName[HCNum]; }
-  std::vector<G4String>  RichHCNameVect() 
+  int NumberOfHCollectionInRICH() const
+  {
+    return m_NumberOfHCollectionInRICH; 
+  }
+  
+  G4String RichHCName(const int HCNum ) 
+  {
+    return m_RichHCName[HCNum]; 
+  }
+
+  const std::vector<G4String> & RichHCNameVect() const
   {
     return m_RichHCName;
   }
   
-  int RichHCSize() {return (int) m_RichHCName.size(); }
+  int RichHCSize() const
+  {
+    return static_cast<int>( m_RichHCName.size() ); 
+  }
 
 private:
 
