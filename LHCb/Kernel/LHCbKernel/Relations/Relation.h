@@ -1,8 +1,11 @@
-// $Id: Relation.h,v 1.2 2002-04-25 08:44:03 ibelyaev Exp $
+// $Id: Relation.h,v 1.3 2002-06-18 16:46:40 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/25 08:44:03  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.1  2002/04/03 15:35:17  ibelyaev
 // essential update and redesing of all 'Relations' stuff
 //
@@ -194,7 +197,7 @@ namespace Relations
       const  To&        object2 )
     { 
       StatusCode sc = m_direct.    i_remove( object1 , object2 ) ; 
-      if( sc.isFailure() || 0 != m_inverse ) { return sc ; }
+      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
       return          m_inverse -> i_remove( object2 , object1 );
     };
 
@@ -220,7 +223,7 @@ namespace Relations
     ( const  From&      object )
     { 
       StatusCode sc = m_direct.   i_removeFrom ( object ) ; 
-      if( sc.isFailure() || 0 != m_inverse ) { return sc ; }
+      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
       return          m_inverse-> i_removeTo   ( object ) ; 
     };
     
@@ -241,7 +244,7 @@ namespace Relations
     ( const  To&        object )
     { 
       StatusCode sc = m_direct.    i_removeTo   ( object ) ; 
-      if( sc.isFailure() || 0 != m_inverse ) { return sc ; }
+      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
       return          m_inverse -> i_removeFrom ( object ) ; 
     };
     
@@ -255,7 +258,7 @@ namespace Relations
     virtual  StatusCode clear() 
     { 
       StatusCode sc = m_direct.    i_clear () ; 
-      if( sc.isFailure() || 0 != m_inverse ) { return sc ; }
+      if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
       return          m_inverse -> i_clear () ; 
     };
 
