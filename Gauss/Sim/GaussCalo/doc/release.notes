@@ -7,6 +7,9 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-07-10 - Ivan BELYAEV
+ - few minor fixes for gcc3.2  + copy of CaloSimHash.h from the branch 
+
 ! 2003-07-09 - Vanya BELYAEV
  - src/SpdPrsSensDet.h,.cpp    - new Spd/Prs implementation by Grigory Rybkine  
  - options/Sps.opts,Prs.opts   - the new configuration options 
