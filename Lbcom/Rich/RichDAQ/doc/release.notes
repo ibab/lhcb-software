@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v1r6 2004-11-16 =========================
 ! 2004-11-03 - Chris Jones
  - Add the ability to sort the RichSmartIDs in the Raw buffer decoding tool
 
