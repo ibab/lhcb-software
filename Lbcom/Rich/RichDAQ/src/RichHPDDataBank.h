@@ -5,13 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.3 2005-01-21 18:10:04 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2005/01/13 13:09:34  jonrob
- *  Add new methods to base class
- *
- *  Revision 1.1  2005/01/07 12:35:59  jonrob
- *  Complete rewrite
+ *  $Id: RichHPDDataBank.h,v 1.4 2005-03-21 14:11:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -31,6 +25,7 @@
 // HPD Tool
 #include "RichKernel/IRichHPDIDTool.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichHPDDataBank RichHPDDataBank.h
  *
  *  Base class for all Rich HPD data bank implementations.
@@ -39,6 +34,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
  */
+//-----------------------------------------------------------------------------
 
 class RichHPDDataBank {
 
@@ -48,16 +44,16 @@ public:
 
   *  @param header   Header word for this HPD data bank
   *  @param dataSize Initialisation size for data bank
-  *  @param dataInit Initialisation value for words in data bank
+  *  @param dataInit Initialisation value for each word in the data bank
   */
   RichHPDDataBank( const RichDAQ::LongType  header,
                    const RichDAQ::ShortType dataSize,
                    const RichDAQ::LongType  dataInit )
-    : m_header       ( header   ),
-      m_dataSize     ( dataSize ),
-      m_internalData ( true     )
+    : m_header       ( header                                      ),
+      m_data         ( new RichDAQ::LongType[RichDAQ::MaxDataSize] ),
+      m_dataSize     ( dataSize                                    ),
+      m_internalData ( true                                        )
   {
-    m_data = new RichDAQ::LongType[32];
     for ( RichDAQ::ShortType i = 0; i < dataSize; ++i ) m_data[i] = dataInit;
   }
 
@@ -68,10 +64,10 @@ public:
    */
   RichHPDDataBank( const RichDAQ::LongType * data,
                    const RichDAQ::ShortType dataSize )
-    : m_header       ( *data    ),
+    : m_header       ( *data                                     ),
       m_data         ( const_cast< RichDAQ::LongType * >(++data) ),
-      m_dataSize     ( dataSize ),
-      m_internalData ( false    ) { }
+      m_dataSize     ( dataSize                                  ),
+      m_internalData ( false                                     ) { }
 
   /// Destructor
   virtual ~RichHPDDataBank()

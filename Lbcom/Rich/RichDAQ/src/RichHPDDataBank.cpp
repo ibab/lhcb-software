@@ -5,13 +5,7 @@
  *  Implementation file for RICH DAQ helper class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.cpp,v 1.3 2005-01-21 18:10:04 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2005/01/13 13:09:34  jonrob
- *  Add new methods to base class
- *
- *  Revision 1.1  2005/01/07 12:35:59  jonrob
- *  Complete rewrite
+ *  $Id: RichHPDDataBank.cpp,v 1.4 2005-03-21 14:11:42 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -22,7 +16,6 @@
 #include "RichHPDDataBank.h"
 
 //-----------------------------------------------------------------------------
-
 
 void RichHPDDataBank::dumpAllBits( MsgStream & os ) const
 {
