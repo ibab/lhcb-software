@@ -1,23 +1,8 @@
-// $Id: GiGaFieldMgrBase.cpp,v 1.6 2003-10-30 16:33:33 witoldp Exp $
+// $Id: GiGaFieldMgrBase.cpp,v 1.7 2004-02-17 18:26:51 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2003/10/09 15:44:21  witoldp
-// changed level of printouts
-//
-// Revision 1.4  2003/08/15 12:51:50  witoldp
-// few warnings changed to prints
-//
-// Revision 1.3  2003/06/05 10:49:11  witoldp
-// change to deal with null magn field
-//
-// Revision 1.2  2003/06/05 08:20:54  witoldp
-// mistake corrected
-//
-// Revision 1.1  2003/04/06 18:49:47  ibelyaev
-//  see $GIGAROOT/doc/release.notes
-// 
 // ============================================================================
 // Include files
 // Geant4//
@@ -83,10 +68,10 @@ GiGaFieldMgrBase::GiGaFieldMgrBase
     , m_global        ( false                )
     , m_manager       ( 0                    )
     , m_minStep       ( 0.01*mm              )
-    , m_stepperType   ( "UNDEFINED"          )
-    , m_stepper       ( 0                    )
     , m_deltaintersection (0.001*mm)
     , m_deltaonestep      (0.001*mm)
+    , m_stepperType   ( "UNDEFINED"          )
+    , m_stepper       ( 0                    )
 {
   declareInterface<IGiGaFieldMgr> ( this ) ;
   // 

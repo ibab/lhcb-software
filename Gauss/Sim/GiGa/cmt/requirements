@@ -1,14 +1,16 @@
-# $Id: requirements,v 1.58 2004-02-14 08:25:28 robbep Exp $ 
+# $Id: requirements,v 1.59 2004-02-17 18:26:51 ibelyaev Exp $ 
 # =============================================================================
-package  GiGa
-version  v15r2
+# CVS tag $Name: not supported by cvs2svn $
+# =============================================================================
+package          GiGa
+version          v15r3
 
 # ============== package structure ============================================ 
-branches         cmt src doc GiGa
+branche s        cmt src doc GiGa
 
 # ============== explicit dependencies ========================================
-use GaudiKernel  v* 
-use  G4readout   v* 	Geant4
+use              GaudiKernel  v* 
+use              G4readout    v* Geant4
 
 # ============== standard includes ============================================
 include_dirs     $(GIGAROOT)
@@ -19,15 +21,15 @@ library          GiGaLib           Lib/*.cpp
 # ============== component library ============================================
 library          GiGa              component/*.cpp
 
-# =============== some additional cpp flags ===================================
-macro_append GiGa_pp_cppflags  "   -DGIGA_FASTCAST   " \
-             Win32             '  /D"GIGA_FASTCAST"  '    
-macro_append GiGa_pp_cppflags  ""                      \   
-             Win32Debug        ' /D"GIGA_DEBUG"    '   \
-             debug             "  -DGIGA_DEBUG     " 
-macro_remove GiGa_pp_cppflags  ""                      \
-             Win32Debug        ' /D"GIGA_FASTCAST" '   \
-             debug             "  -DGIGA_FASTCAST  " 
+# ============== some additional cpp flags ====================================
+macro_append     GiGa_pp_cppflags  "   -DGIGA_FASTCAST   " \
+                 Win32             '  /D"GIGA_FASTCAST"  '    
+macro_append     GiGa_pp_cppflags  ""                      \   
+                 Win32Debug        ' /D"GIGA_DEBUG"    '   \
+                 debug             "  -DGIGA_DEBUG     " 
+macro_remove     GiGa_pp_cppflags  ""                      \
+                 Win32Debug        ' /D"GIGA_FASTCAST" '   \
+                 debug             "  -DGIGA_FASTCAST  " 
 
 # ============== standard patterns ============================================
 apply_pattern    component_library library=GiGa 

@@ -1,8 +1,11 @@
-// $Id: GiGaExternalPhysicsConstructor.h,v 1.1 2003-04-06 18:49:45 ibelyaev Exp $
+// $Id: GiGaExtPhysics.h,v 1.1 2004-02-17 18:26:50 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/06 18:49:45  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+// 
 // ============================================================================
 #ifndef GIGA_GIGAEXTERNALPHYSICSCONSTRUCTOR_H 
 #define GIGA_GIGAEXTERNALPHYSICSCONSTRUCTOR_H 1
@@ -19,12 +22,12 @@
  */
 
 template <class PHYSCONSTR>
-class GiGaExternalPhysicsConstructor : public GiGaPhysicsConstructorBase
+class GiGaExtPhysics : public GiGaPhysicsConstructorBase
 {
   /// actual type of Physics Constructor 
   typedef PHYSCONSTR PhysConstr ;
   /// owntype 
-  typedef GiGaExternalPhysicsConstructor<PhysConstr> OwnType ;
+  typedef GiGaExtPhysics<PhysConstr> OwnType ;
   /// friend factory for instantiation
   friend class GiGaFactory<OwnType> ;
   
@@ -39,13 +42,13 @@ public:
   G4VPhysicsConstructor* physicsConstructor ()  const
   {
     if( 0 == m_phys )
-      {
-        m_phys =  new PhysConstr() ;
-        m_phys -> SetPhysicsName( name() );
-      }
+    {
+      m_phys =  new PhysConstr() ;
+      m_phys -> SetPhysicsName( name() );
+    }
     return m_phys ;
   };
-
+  
 protected:
   
   /** Standard constructor
@@ -56,27 +59,25 @@ protected:
    *  @param name name of the instance 
    *  @param svc  service locator
    */
-  GiGaExternalPhysicsConstructor
+  GiGaExtPhysics
   ( const std::string& type   , 
     const std::string& name   , 
     const IInterface*  parent )
     : GiGaPhysicsConstructorBase( type , name , parent ) 
-    , m_phys ( 0 )
+      , m_phys ( 0 )
   {}
   
   /// destructor 
-  virtual ~GiGaExternalPhysicsConstructor(){} ;
-
+  virtual ~GiGaExtPhysics(){} ;
+  
 private:
   
   // the default constructor is disabled 
-  GiGaExternalPhysicsConstructor () ;
+  GiGaExtPhysics () ;
   // the copy  constructor is disabled 
-  GiGaExternalPhysicsConstructor 
-  ( const GiGaExternalPhysicsConstructor& ) ;
+  GiGaExtPhysics           ( const GiGaExtPhysics& ) ;
   // the assigenement operator is disabled 
-  GiGaExternalPhysicsConstructor& operator=
-  ( const GiGaExternalPhysicsConstructor& ) ;
+  GiGaExtPhysics& operator=( const GiGaExtPhysics& ) ;
   
 private:
   
@@ -86,9 +87,8 @@ private:
 };
 // ============================================================================
 
-
 // ============================================================================
-/** @def IMPLEMENT_ExternalPhysicsConstructor
+/** @def IMPLEMENT_ExtPhysics
  *  useful macro to implement a static factory for
  *  instantiation of external("imported") physics list
  *  @see IMPLEMENT_GiGaPhysList
@@ -96,9 +96,9 @@ private:
  *  @date   25/04/2002
  */
 // ============================================================================
-#define IMPLEMENT_ExternalPhysicsConstructor( PC )                      \
- static const GiGaFactory<GiGaExternalPhysicsConstructor<##PC##> > s_##PC##F ; \
- const           IFactory&##PC##Factory                          = s_##PC##F ;
+#define IMPLEMENT_ExtPhysics( PC )                         \
+ static const GiGaFactory<GiGaExtPhysics<PC> > s_##PC##F ; \
+ const           IFactory&PC##Factory        = s_##PC##F ;
 // ============================================================================
 
 

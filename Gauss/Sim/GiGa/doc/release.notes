@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.91 2004-02-17 15:10:22 ranjard Exp $
+! $Id: release.notes,v 1.92 2004-02-17 18:26:51 ibelyaev Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2004-02-17 - Vanya BELYAEV
+ - GiGa/GiGaExternalPhysicsConstructor.h   - 
+     1) rename class GiGaExternalPhysicsConstructor into GiGaExtPhysics 
+     2) fix MACRO/cpp for gcc 3.2 
+ - GiGa/GiGaExtPhysics.h                 - new file 
+ - src/component/GiGaRunManagerG4RM.cpp  - fix a compilation warning 
+ - src/Lib/GiGaFieldMgrBase.cpp          - fix a compilation warning 
+ - cmt/requirements                      - increase the version to V15r3 
 
 !========================== GiGa v15r2 =================================
 ! 2004-02-14 - Patrick Robbe

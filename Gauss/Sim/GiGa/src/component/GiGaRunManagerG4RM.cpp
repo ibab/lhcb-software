@@ -1,8 +1,11 @@
-// $Id: GiGaRunManagerG4RM.cpp,v 1.3 2003-04-06 18:49:48 ibelyaev Exp $ 
+// $Id: GiGaRunManagerG4RM.cpp,v 1.4 2004-02-17 18:26:52 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/04/06 18:49:48  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // ============================================================================
 // GiGa 
 #include "GiGa/GiGaUtil.h"
@@ -26,9 +29,9 @@
  *  ONE NEVER SHOULD USE IT!!!
  */
 // ============================================================================
-void GiGaRunManager::BeamOn( int         n_event       ,                      
-                             const char* macroFile ,                       
-                             int         n_select      )
+void GiGaRunManager::BeamOn( int         /* n_event   */ ,                      
+                             const char* /* macroFile */ ,
+                             int         /* n_select  */ )
 {
   Error("The usage of BeamOn() method is dangerouse!");
   StatusCode sc( StatusCode::SUCCESS ) ;
