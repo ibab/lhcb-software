@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.27 2003-01-08 16:11:40 cattanem Exp $
+! $Id: release.notes,v 1.28 2003-04-12 15:28:09 asatta Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
 
-!======================== MuonTools v3r3 2003-01-08 ========================
+!======================== MuonTools v3r3 2003-04-12 ========================
+! 2003-04-12 - Alessia Satta
+ - Fix a bug that causes accessing vector's element outside vector boundaries
+ 
 ! 2003-01-07 - Marco Cattaneo
  - Release services and tools when no longer required
 

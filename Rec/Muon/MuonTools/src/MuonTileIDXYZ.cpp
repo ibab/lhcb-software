@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.18 2003-01-07 15:03:05 cattanem Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.19 2003-04-12 15:28:10 asatta Exp $
 // Include files 
 #include <cstdio>
 #include <cmath>
@@ -244,7 +244,7 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
     
   // loop over regions to see if we can find one or more that matches
   int region;
-  for( region=0; region < m_NStation ; region++){
+  for( region=0; region < m_NRegion ; region++){
     // look in twelfths for this region
     int twelfth;
     for( twelfth=0; twelfth<12; twelfth++){
@@ -255,13 +255,11 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
               1. + twelfthExtent(station,region,twelfth).dy ) ) ) {
         // have a twelfth to try
 
-        log << MSG::DEBUG << "Trying station:" << station
-            << " region:" << region 
-            << " twelfth:" << twelfth
-            << endreq;
-
         StatusCode sc = locateGasGapFromXYZ(station,region,twelfth,
                                             x,y,z,tile,pGasGap);
+
+
+
         if( !sc.isSuccess() ) {
           log << MSG::ERROR << "Problem locating chamber tile" << endreq;
           return sc;
@@ -273,9 +271,10 @@ StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x,
         }
       }
     }
+    
   }
   
-  log << MSG::WARNING 
+  log << MSG::DEBUG
       << " Tried every estimated combination and could not locate chamber"
       << endreq;
   return StatusCode::FAILURE;
@@ -784,6 +783,8 @@ StatusCode MuonTileIDXYZ::fillTwelfthsExtent(){
 
   m_twelfthExtent.resize(m_NStation*m_NRegion*12,nullExtent);  
 
+
+  
   // So get the TDS representations of the stations
   // to fill twelfthsExtent and quaterExtent with the outer 
   // edges of the chambers in the
