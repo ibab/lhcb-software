@@ -1,6 +1,6 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/cmt/requirements,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+# $Id: requirements,v 1.2 2001-09-14 16:53:03 andreav Exp $
 package DetCondExample
-version v3r03
+version v1
 
 branches doc src job options cmt DB
 ignore_pattern package_stamps 
@@ -9,7 +9,7 @@ ignore_pattern package_stamps
 use GaudiConf     v5
 
 # Detector Conditions (also inherit dependency on GAUDI framework)
-use DetCond       v3r03  Det
+use DetCond       v1  Det
 
 set DETCONDEXAMPLE_FDID     30997
 set DETCONDEXAMPLE_BOOTHOST ${OBJY_LS_HOST}
@@ -36,19 +36,5 @@ private
 #==> Detector Conditions example
 application DetCondExample *.cpp "$(GAUDICONFROOT)/src/GaudiMain.cpp"
 macro DetCondExample_linkopts  "$(application_linkopts)"
-
-# Statically link also GaudiAlg component library (to use class Sequencer)
-macro_append GaudiAlg_linkopts "-L${GaudiAlgDir} -lGaudiAlg"
-
-
-
-
-
-
-
-
-
-
-
 
 

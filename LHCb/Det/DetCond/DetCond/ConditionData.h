@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/DetCond/ConditionData.h,v 1.1.1.1 2001-09-14 15:07:22 andreav Exp $
+//$Id: ConditionData.h,v 1.2 2001-09-14 16:50:13 andreav Exp $
 #ifndef DETCOND_CONDITIONDATA_H
 #define DETCOND_CONDITIONDATA_H 1
 
@@ -69,6 +69,9 @@ class ConditionData : public DataObject,
 
   // Implementation of IValidity
 
+  /// DUMMY
+  bool          isValid          (              )  ;
+
   /// Check if the condition is valid at the specified time
   bool          isValid          ( const ITime& )  ;
 
@@ -87,6 +90,9 @@ class ConditionData : public DataObject,
   /// Set end of validity
   void          setValidityTill  ( const ITime& )  ;   
   
+  /// DUMMY
+  StatusCode    updateValidity   (              )  ;
+ 
  private:
 
   // IValidity data

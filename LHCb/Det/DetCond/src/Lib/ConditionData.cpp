@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/Lib/ConditionData.cpp,v 1.1.1.1 2001-09-14 15:07:21 andreav Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/Lib/ConditionData.cpp,v 1.2 2001-09-14 16:51:41 andreav Exp $
 #include <string> 
 
 #include "GaudiKernel/TimePoint.h" 
@@ -66,6 +66,13 @@ ConditionData::~ConditionData()
 
 //---------------------------------------------------------------------------
 
+/// DUMMY
+bool ConditionData::isValid ( ) {
+  return true;
+};
+
+//---------------------------------------------------------------------------
+
 bool ConditionData::isValid ( const ITime& t ) {
   return validSince() < t &&  t < validTill();
 };
@@ -100,6 +107,14 @@ void ConditionData::setValidityTill  ( const ITime& Till )
 {
   delete m_cd_validTill;
   m_cd_validTill = new TimePoint( Till );
+};
+
+//---------------------------------------------------------------------------
+
+/// DUMMY
+StatusCode ConditionData::updateValidity () 
+{
+  return StatusCode::SUCCESS;
 };
 
 //---------------------------------------------------------------------------
