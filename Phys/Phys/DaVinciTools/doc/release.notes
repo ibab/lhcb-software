@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.146 2005-01-13 12:28:01 pkoppenb Exp $
+! $Id: release.notes,v 1.147 2005-01-13 13:32:04 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
@@ -6,8 +6,10 @@
   - src/SimplePlotTool.{h,cpp}
   - src/RecursivePlotTool.{h,cpp}
     . Implement default argument "trailer" in fillPlots method.
-  - src/RecursivePlotTool.{h,cpp}
+  - src/RecursivePlotTool.cpp
     . Add trailer "from [MotherName]" for all particles in recursive loop.
+  - src/SimplePlotTool.cpp
+    . Added "WM" variable for wide mass, to be used only with B
       
 ! 2005-01-12 - P. Koppenburg
   - src/DecodeSimpleDecayString.{h,cpp}

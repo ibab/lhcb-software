@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.4 2005-01-13 12:28:01 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.5 2005-01-13 13:32:04 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -176,13 +176,20 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
 
   debug() << "Filling plot for " << var << " of " << name << endmsg;
 
-  if ( ( var == "M" ) && (P->endVertex())){
-    if ( hmin < 0 ){
-      double mn = pp->mass() - gsl_max(pp->mass()/50.,pp->maxWidth()); // at least 2%
-      double mx = pp->mass() + gsl_max(pp->mass()/50.,pp->maxWidth());
-      plot(P->mass(),"Mass of "+name,mn,mx );
-    } else {
-      plot(P->mass(),"Mass of "+name,hmin,hmax );
+  if ( var == "M" ) {
+    if ( P->endVertex()){
+      if ( hmin < 0 ){
+        double mn = pp->mass() - gsl_max(pp->mass()/50.,pp->maxWidth()); // at least 2%
+        double mx = pp->mass() + gsl_max(pp->mass()/50.,pp->maxWidth());
+        plot(P->mass(),"Mass of "+name,mn,mx );
+      } else {
+        plot(P->mass(),"Mass of "+name,hmin,hmax );
+      }
+    }
+  } else if ( var == "WM" ){
+    if ( (P->endVertex()) && ( pp->mass() > 5*GeV ) 
+         && ( pp->maxWidth()<1*keV )){ // that's a B -> wide mass window
+      plot(P->mass(),"Mass of "+name+" (wide)", hmin, hmax );
     }
   } else if ( var == "P" ){
     plot(P->p(),"Momentum of "+name,hmin,hmax);
@@ -237,6 +244,9 @@ bool SimplePlotTool::MyHisto::setHisto(const std::string& var ){
   if ( var == "M" ){
     m_min = -1 ;
     m_max = -1 ;
+  } else if ( var == "WM" ){
+    m_min = 4.7*GeV ;
+    m_max = 5.7*GeV ;
   } else if ( var == "P" ){
     m_min = 0. ;
     m_max = 100.*GeV ;
