@@ -4,6 +4,12 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v15r6 2004-04-05 =======================
+! 2004-04-05 - Marco Cattaneo
+  Built against Gaudi v14r4
+
+ - Removed packages:  GaudiTools (was added temporarily in v15r4)
+
 !======================= LHCbSys v15r5 2004-04-01 =======================
 ! 2004-04-01 - Marco Cattaneo
  - Modified packages: KernelSys v3r5, LHCbKernel v4r5,

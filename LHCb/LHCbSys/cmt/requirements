@@ -1,13 +1,8 @@
 package LHCbSys
-version v15r5
+version v15r6
 
 branches doc cmt
 
-#===============================================================
-# Temporary bug fixes from Gaudi. Remove when released in Gaudi
-#===============================================================
-use GaudiTools	v8r1
- 
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
