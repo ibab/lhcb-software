@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.12 2001-11-20 15:23:45 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.cpp,v 1.13 2002-04-29 17:05:54 sponce Exp $
 #define DDEXAMPLE_SIMPLEALGORITHM_CPP
 
 /// Include files
@@ -26,286 +26,205 @@
 /// Private classes to the example
 #include "SimpleAlgorithm.h"
 #include "DeCalorimeter.h"
-#include "DeMuonStation.h"
+#include "DeMuonRegion.h"
 #include "DetDataAgent.h"
 
 #include "CLHEP/Geometry/Transform3D.h"
 
-
-//------------------------------------------------------------------------------
-// Implementation of class :  SimpleAlgorithm
-//------------------------------------------------------------------------------
-void dumpPVs( IMessageSvc* ms, const ILVolume* lv, std::string de )
-{
-
-  MsgStream log(ms, "dumpPVs");
-
-  unsigned long noppv5 = lv->noPVolumes();
-
-  log << MSG::INFO << de << " log. volume has "
-      << noppv5    << " phys. volumes: ";
-
-  unsigned int ppvc;
-  for (ppvc = 0; ppvc < noppv5; ppvc++) {
-    log << MSG::INFO << lv->pvolume(ppvc)->name() << " ";
-  }
-
-  log << MSG::INFO << endreq;
-}
-
 static const AlgFactory<SimpleAlgorithm>  Factory;
 const IAlgFactory& SimpleAlgorithmFactory = Factory;
 
-/// Algorithm parameters which can be set at run time must be declared.
-/// This should be done in the constructor.
-SimpleAlgorithm::SimpleAlgorithm (const std::string& name,
-                                  ISvcLocator* pSvcLocator) :
-  Algorithm(name, pSvcLocator) {
-  declareProperty("HistogramFlag", m_produceHistogram);
+/**
+ * Displays the list of existing physical volumes in lv
+ * @param ms the Message Service where to display the list
+ * @param lv the logical volume concerned
+ * @param de the name of the detector element associated to lv
+ */
+void dumpPVs (IMessageSvc* ms, const ILVolume* lv, std::string de) {
+  MsgStream log(ms, "dumpPVs");
+
+  unsigned long noppv = lv->noPVolumes();
+  log << MSG::INFO << de << " log. volume has " 
+      << noppv    << " phys. volumes: ";
+
+  unsigned int ppvc;
+  for (ppvc = 0; ppvc < noppv; ppvc++) {
+    log << MSG::INFO << lv->pvolume(ppvc)->name() << " ";
+  }
+  
+  log << MSG::INFO << endreq;
 }
 
-/// The "initialization" of the algorithm. It creates the environment needed
-/// for processing the events. In this example it declares the specific
-/// converters needed for that specific application.
+/////////////////////////
+// Default constructor //
+/////////////////////////
+SimpleAlgorithm::SimpleAlgorithm (const std::string& name,
+                                  ISvcLocator* pSvcLocator) :
+  Algorithm(name, pSvcLocator) {}
+
+
+////////////////
+// Initialize //
+////////////////
 StatusCode SimpleAlgorithm::initialize() {
   
   MsgStream log(msgSvc(), name());
-  
-  StatusCode sc;
-  
   log << MSG::INFO << "Initialization starting..." << endreq;
   
-  // This is a quick test of the TabulatedProperty feature
-  log << MSG::INFO << "Testing the TabulatedProperty feature" << endreq;
-  SmartDataPtr<TabulatedProperty> tab
-    (detSvc(), "/dd/Geometry/Rich1/Rich1Surfaces/MirrorSurfaceReflectivityPT");
-  if (!tab) {
-    log << MSG::ERROR
-        << "Can't retrieve /dd/Geometry/Rich1/Rich1Surfaces"
-        << "/MirrorSurfaceReflectivityPT" << endreq;
-    return StatusCode::FAILURE;
-  }
-  
-  TabulatedProperty::Table table = tab->table();
-  TabulatedProperty::Table::iterator it;
-  for (it = table.begin();
-       it != table.end();
-       it++) {
-    log << MSG::INFO << "new table Entry : "
-        << "x = " << it->first << ", y = " << it->second << endreq;
-  }
-  
-  // Now we retrieve the top level detector element, e.g. LHCb detector
-  // "Structure" is the top level catalog holding detector logical structure
-  log << MSG::INFO << "Retrieving now detector elements" << endreq;
-  SmartDataPtr<IDetectorElement> cave(detSvc(),"/dd/Structure/LHCb" );
-  
+  log << MSG::INFO
+      << "///////////////////////////////////////////////////" << endreq;
+  log << MSG::INFO
+      << "// Very basic test of Detector Element retrieval //" << endreq;
+  log << MSG::INFO
+      << "///////////////////////////////////////////////////" << endreq;
+  SmartDataPtr<IDetectorElement> cave(detSvc(),"/dd/Structure/LHCb" );  
   // We test if the smart reference is non-zero to be sure
   // that the data object has been loaded properly
   if (!cave) {
     log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb" << endreq;
     return StatusCode::FAILURE;
   }
-  
-  // Fill the pointer with the information about volume
-  // associated with "/dd/Structure/LHCb"
-  if (cave->geometry()->hasLVolume()) {
-    const ILVolume* stvol = cave->geometry()->lvolume();
-    log << MSG::INFO << "LHCb detector is made of " << stvol->materialName()
-        << endreq;
-    dumpPVs( msgSvc(), stvol, cave->name() );
-  }
+  log << MSG::INFO
+      << "Top detector element of LHCb was successfully retrieved." << endreq;
+  log << MSG::INFO
+      << "Here are some informations about it : " << endreq;
+  // Displays information about the volume associated with "/dd/Structure/LHCb"
+  const ILVolume* stvol = cave->geometry()->lvolume();
+  log << MSG::INFO << "LHCb detector is made of "
+      << stvol->materialName() << endreq;
+    dumpPVs (msgSvc(), stvol, cave->name());
+    
 
-  //---------------------------------------------------------------------------
-  // This is an example of usage of userParameter tag
+  log << MSG::INFO << "/////////////////////////////" << endreq;
+  log << MSG::INFO << "// Usage of userParameters //" << endreq;
+  log << MSG::INFO << "/////////////////////////////" << endreq;
+  log << MSG::INFO << "This is the list of userParameters " 
+      << "defined on the Ecal detector element : " << endreq;
   SmartDataPtr<IDetectorElement> ecal (detSvc(), "/dd/Structure/LHCb/Ecal");
-  if( !ecal )                                                            {
+  if (!ecal) {
     log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Ecal" << endreq;
     return StatusCode::FAILURE;
   }
-  
   std::vector<std::string> parameterList = ecal->userParameters();
   std::vector<std::string>::iterator it2;
   for (it2 = parameterList.begin();
        it2 != parameterList.end();
        it2++) {
-    log << MSG::INFO << "ECAL " << *it2 << " = "
+    log << MSG::INFO << *it2 << " = "
         << ecal->userParameterAsString(*it2)
         << endreq;
   }
 
-  dumpPVs( msgSvc(), ecal->geometry()->lvolume(), ecal->name() );
   
-  // however, we can also use a specific converter
+  log << MSG::INFO
+      << "/////////////////////////////////////////////////////////////////"
+      << endreq;
+  log << MSG::INFO
+      << "// Usage of specific detector elements with generic converters //"
+      << endreq;
+  log << MSG::INFO
+      << "/////////////////////////////////////////////////////////////////"
+      << endreq;
+  log << MSG::INFO << "In this example, the Ecal top detector element is "
+      << "retrieved as a specific object (namely class DeCalorimeter). "
+      << "However, a 'generic' converter is used." << endreq;
+  log << MSG::INFO << "Here are once more the parameters of the Ecal "
+      << "detector element, but retrieved using directly the DeCalorimeter "
+      << "object : " << endreq;
   SmartDataPtr<DeCalorimeter> ecal2 (detSvc(), "/dd/Structure/LHCb/Ecal");
   if (!ecal2)                                                            {
     log << MSG::ERROR
         << "Can't retrieve /dd/Structure/LHCb/Ecal as DeCalorimeter" << endreq;
     return StatusCode::FAILURE;
   }
-  log << MSG::INFO << "ECAL coding = " << ecal2->coding() << endreq;
-
-  //---------------------------------------------------------------------------
-  SmartDataPtr<IDetectorElement> ecalouter
-    (detSvc(), "/dd/Structure/LHCb/Ecal/EcalOuter");
-  if (!ecalouter) {
-    log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Ecal/EcalOuter"
-        << endreq;
-    return StatusCode::FAILURE;
-  }
-  //---------------------------------------------------------------------------
-
-  if (ecalouter->geometry()->hasLVolume()) {
-    const ILVolume* ecalo_vol = ecalouter->geometry()->lvolume();
-    if (ecalo_vol) {
-      std::string ecalo_mat = ecalo_vol->materialName();
-      log << MSG::INFO << "EcalOuter has volume "
-          << ecalouter->geometry()->lvolumeName() << endreq;
-      log << MSG::INFO << "EcalOuter module made of " << ecalo_mat << endreq;
-    }
-    dumpPVs( msgSvc(), ecalo_vol, ecalouter->name() );  
-  }
-  
-  /// Now retrieve the custom, user defined detector element "Velo" with
-  /// "specific" data defined in vertex.xml file.
-  /// In our case the specific data holds information about number of stations
-  SmartDataPtr<IDetectorElement> vertex( cave, "Velo" );
-  if( !vertex ) {
-    log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Velo" << endreq;
-    return StatusCode::FAILURE;
-  }
-  
-  if (vertex->geometry()->hasLVolume()) {
-    const ILVolume* ivol = vertex->geometry()->lvolume();
-    const ISolid*   vsolid = ivol->solid();
-    HepTransform3D vtrans = vertex->geometry()->matrixInv();
-    /// HepRotation vrot  = vtrans.getRotation();
-      Hep3Vector vvec   = vtrans.getTranslation();
-      log << MSG::INFO << "Vertex detector is made of " << ivol->materialName()
-          << endreq;
-      std::cout << "Vertex detector has solid  " << vsolid << std::endl;
-      std::cout << "Vertex detector has position  " << vvec << std::endl;
-      
-      dumpPVs( msgSvc(), ivol, vertex->name() );
-  }
-  
-  /*
-  SmartDataPtr<IDetectorElement> vs( vertex, "Stations/Station05" );
-  if (!vs) {
-    log << MSG::ERROR
-        << "Can't retrieve /dd/Structure/LHCb/Velo/Stations/Station05!"
-        << endreq;
-    return StatusCode::FAILURE;
-  }
-  
-  /// Report the material and its radiation length
-  ILVolume* stvol5 = vs->geometry()->lvolume();
-  /// const ISolid*   vsolid5 = stvol5->solid();
-  HepTransform3D vtrans5 = vs->geometry()->matrixInv();
-  HepRotation vrot5 = vtrans5.getRotation();
-  Hep3Vector v5axis; HepDouble v5angle; vrot5.getAngleAxis (v5angle, v5axis);
-  Hep3Vector vvec5   = vtrans5.getTranslation();
-
-  dumpPVs (msgSvc(), stvol5, vs->name());
-
-  log << MSG::INFO
-      << vs->name()
-      << " is made of "            << stvol5->materialName()
-      << " with radiation length " << stvol5->material()->radiationLength()
+  log << MSG::INFO << "Ecal->codingBit() = " << ecal2->codingBit() << endreq;
+  log << MSG::INFO << "Ecal->etInCenter() = " << ecal2->etInCenter() << endreq;
+  log << MSG::INFO << "Ecal->etSlope() = " << ecal2->etSlope() << endreq;
+  log << MSG::INFO << "Ecal->adcMax() = " << ecal2->adcMax() << endreq;
+  log << MSG::INFO << "Ecal->activeToTotal() = " << ecal2->activeToTotal()
       << endreq;
-  */
-  SmartDataPtr<DetectorElement> stations (detSvc(),
- 					  "/dd/Structure/LHCb/Muon/Stations");
-  if (!stations) {
-    log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Muon/Stations!"
+  log << MSG::INFO << "Ecal->zShowerMax() = " << ecal2->zShowerMax() << endreq;
+
+
+
+  log << MSG::INFO << "/////////////////////////////////////////////////////" 
+      << "//////////////////////" << endreq;
+  log << MSG::INFO
+      << "// Usage of specific detector elements together with specific "
+      << "converters //" << endreq;
+  log << MSG::INFO
+      << "//////////////////////////////////////////////////////////////////"
+      << "/////////" << endreq;
+  log << MSG::INFO << "In this example, one of the Muon Region is "
+      << "retrieved as a specific object (namely class DeMuonRegion) by"
+      << "using a specific converter (namely class XmlMuonRegionCnv). This "
+      << "provides access to data contained in the <specific> tag of the "
+      << "element" << endreq;
+  log << MSG::INFO << "Here are some parameters of the Muon Region detector "
+      << "element :" << endreq;
+  SmartDataPtr<DeMuonRegion> region (detSvc(), "/dd/Structure/LHCb/Muon/M1/R1");
+  if (!region) {
+    log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Muon/M1/R1"
         << endreq;
     return StatusCode::FAILURE;
   }
-  
-  // Loop over all the muon stations found in the detector model
-  // This is an example of how to use specific converters
-  DataSvcHelpers::RegistryEntry* entry =
-    dynamic_cast<DataSvcHelpers::RegistryEntry*> (stations->registry());
-  if (0 != entry) {
-    DataSvcHelpers::RegistryEntry::Iterator it;
-    for (it =  entry->begin();
-         it != entry->end();
-         it++) {
-      SmartDataPtr<DeMuonStation> s (detSvc(), (*it)->identifier());
-      if (!s) {
-        log << MSG::ERROR << "Unable to retrieve: "
-            << (*it)->identifier() << endreq;
-      return sc;
-      }
-      m_stations.push_back( s );
-    }
-  }
-  
-  log << MSG::INFO << "Found " << m_stations.size()
-      << " Muon Stations in detector model" << endreq;
-  
-  /// Printing the information found
-  unsigned int i;
-  for (i = 0; i < m_stations.size(); i++) {
-    log << MSG::INFO << "MUON STATION: "
-        << m_stations[i]->registry()->name() << endreq;
-    log << MSG::INFO << "Aluminium plate thickness: "
-        << m_stations[i]->thickness() << endreq;
-    log << MSG::INFO << "X pad dimension:           "
-        << m_stations[i]->padx() << endreq;
-    log << MSG::INFO << "Y pad dimension:           "
-        << m_stations[i]->pady() << endreq;
-  }
-  
-  log << MSG::INFO << "Retrieving now materials..." << endreq;
-  
-  /// The best way to work with materials is using the Material class.
-  /// This class defines the interface shared by all sorts of material
-  /// e.g. isotopes, elements or mixtures
+  log << MSG::INFO << "region->chamberNum() = " << region->chamberNum()
+      << endreq;
+  log << MSG::INFO << "region->gapsPerFE() = " << region->gapsPerFE() << endreq;
+  log << MSG::INFO << "region->FEAnodeX() = " << region->FEAnodeX() << endreq;
+  log << MSG::INFO << "region->FEAnodeY() = " << region->FEAnodeY() << endreq;
+  log << MSG::INFO << "region->FECathodeX() = " << region->FECathodeX()
+      << endreq;
+  log << MSG::INFO << "region->FECathodeY() = " << region->FECathodeY()
+      << endreq;
 
-  /// Materials are located inside the "/dd/Materials" catalog
-  
-  /// Now retrieve simple material element Oxygen
+ 
+  log << MSG::INFO << "///////////////////////" << endreq;
+  log << MSG::INFO << "// Testing Materials //" << endreq;
+  log << MSG::INFO << "///////////////////////" << endreq;
+  log << MSG::INFO << "Simple element : Oxygen" << endreq;
   SmartDataPtr<Material> elO( detSvc(), "/dd/Materials/Oxygen" );
-  if( !elO )                                                               {
+  if (!elO) {
     log << MSG::ERROR << "Can't retrieve /dd/Materials/Oxygen!" << endreq;
     return StatusCode::FAILURE;
   }
-  log << MSG::INFO << "\nMaterial: " << elO->name() << endreq;
-  log << MSG::INFO << "A       : "   << elO->A()/(g/mole)
+  log << MSG::INFO << "Material: " << elO->name() << endreq;
+  log << MSG::INFO << "A       : " << elO->A()/(g/mole)
       << " g/mole" << endreq;
-  log << MSG::INFO << "Z       : "   << elO->Z() << endreq;
-  log << MSG::INFO << "Density : "   << elO->density()/(g/cm3)
+  log << MSG::INFO << "Z       : " << elO->Z() << endreq;
+  log << MSG::INFO << "Density : " << elO->density()/(g/cm3)
       << " g/cm3" << endreq;
-  log << MSG::INFO << "X0      : "   << elO->radiationLength()/(cm)
+  log << MSG::INFO << "X0      : " << elO->radiationLength()/(cm)
       << " cm" << endreq;
-  log << MSG::INFO << "Lambda  : "   << elO->absorptionLength()/(cm)
+  log << MSG::INFO << "Lambda  : " << elO->absorptionLength()/(cm)
       << " cm" << endreq;
+  log << MSG::INFO << endreq;
   
-  /// Now retrieve the material element composed of a few isotopes
+  log << MSG::INFO << "Material composed of several isotopes : Boron" << endreq;
   SmartDataPtr<Material> elB( detSvc(), "/dd/Materials/Boron" );
   if( !elB )                                                               {
     log << MSG::ERROR << "Can't retrieve /dd/Materials/Boron!" << endreq;
     return StatusCode::FAILURE;
   }
-  log << MSG::INFO << "\nMaterial: " << elB->name() << endreq;
-  log << MSG::INFO << "A       : "   << elB->A()/(g/mole) << " g/mole"
+  log << MSG::INFO << "Material: " << elB->name() << endreq;
+  log << MSG::INFO << "A       : " << elB->A()/(g/mole) << " g/mole"
       << endreq;
-  log << MSG::INFO << "Z       : "   << elB->Z() << endreq;
-  log << MSG::INFO << "Density : "   << elB->density()/(g/cm3) << " g/cm3"
+  log << MSG::INFO << "Z       : " << elB->Z() << endreq;
+  log << MSG::INFO << "Density : " << elB->density()/(g/cm3) << " g/cm3"
       << endreq;
-  log << MSG::INFO << "X0      : "   << elB->radiationLength()/(cm) << " cm"
+  log << MSG::INFO << "X0      : " << elB->radiationLength()/(cm) << " cm"
       << endreq;
-  log << MSG::INFO << "Lambda  : "   << elB->absorptionLength()/(cm) << " cm"
+  log << MSG::INFO << "Lambda  : " << elB->absorptionLength()/(cm) << " cm"
       << endreq;
+  log << MSG::INFO << endreq;
   
-  /// Now retrieve simple material mixture
+  log << MSG::INFO << "Mixture of simple elements : Water" << endreq;
   SmartDataPtr<Material> mWater( detSvc(), "/dd/Materials/Water" );
   if( !mWater ) {
     log << MSG::ERROR << "Can't retrieve /dd/Materials/Water!" << endreq;
     return StatusCode::FAILURE;
   }
-  log << MSG::INFO << "\nMaterial: " << mWater->name() << endreq;
+  log << MSG::INFO << "Material: " << mWater->name() << endreq;
   log << MSG::INFO << "A       : " << mWater->A()/(g/mole) << " g/mole"
       << endreq;
   log << MSG::INFO << "Z       : " << mWater->Z() << endreq;
@@ -315,9 +234,9 @@ StatusCode SimpleAlgorithm::initialize() {
       << " cm"  << endreq;
   log << MSG::INFO << "Lambda  : " << mWater->absorptionLength()/(cm)
       << " cm"  << endreq;
+  log << MSG::INFO << endreq;
   
-  /// And finally retrieve mixture of mixtures,
-  /// e.g. mixture of Argon, CF4 and CO2
+  log << MSG::INFO << "Mixture of mixtures : Argon_CF4_CO2" << endreq;
   SmartDataPtr<Material> mArCF4CO2( detSvc(), "/dd/Materials/Argon_CF4_CO2" );
   if (!mArCF4CO2) {
     log << MSG::ERROR << "Can't retrieve /dd/Materials/Argon_CF4_CO2!"
@@ -334,74 +253,56 @@ StatusCode SimpleAlgorithm::initialize() {
       << " cm"  << endreq;
   log << MSG::INFO << "Lambda  : " << mArCF4CO2->absorptionLength()/(cm)
       << " cm"  << endreq;
+  log << MSG::INFO << endreq;
 
-  SmartDataPtr<Material> mSiO2( detSvc(), "/dd/Materials/SiO2" );
-  if( !mSiO2 )                                                         {
-    log << MSG::ERROR << "Can't retrieve /dd/Materials/SiO2!" << endreq;
-    return StatusCode::FAILURE;
-  }
-  log << MSG::INFO << "\nMaterial: " << mSiO2->name() << endreq;
-  log << MSG::INFO << "A       : " << mSiO2->A()/(g/mole) << " g/mole"
-      << endreq;
-  log << MSG::INFO << "Z       : " << mSiO2->Z() << endreq;
-  log << MSG::INFO << "Density : " << mSiO2->density()/(g/cm3) << " g/cm3"
-      << endreq;
-  log << MSG::INFO << "X0      : " << mSiO2->radiationLength()/(cm) << " cm"
-      << endreq;
-  log << MSG::INFO << "Lambda  : " << mSiO2->absorptionLength()/(cm) << " cm"
-      << endreq;
-  
-  SmartDataPtr<Material> mCO2( detSvc(), "/dd/Materials/CO2" );
-  if( !mCO2 )                                                         {
-    log << MSG::ERROR << "Can't retrieve /dd/Materials/CO2!" << endreq;
-    return StatusCode::FAILURE;
-  }
-  log << MSG::INFO << "\nMaterial: " << mCO2->name() << endreq;
-  log << MSG::INFO << "A       : " << mCO2->A()/(g/mole)
-      << " g/mole"  << endreq;
-  log << MSG::INFO << "Z       : " << mCO2->Z() << endreq;
-  log << MSG::INFO << "Density : " << mCO2->density()/(g/cm3)
-      << " g/cm3"  << endreq;
-  log << MSG::INFO << "X0      : " << mCO2->radiationLength()/(cm)
-      << " cm"  << endreq;
-  log << MSG::INFO << "Lambda  : " << mCO2->absorptionLength()/(cm)
-      << " cm"  << endreq;
 
-  SmartDataPtr<Material> mCF4( detSvc(), "/dd/Materials/CF4" );
-  if( !mCF4 )                                                         {
-    log << MSG::ERROR << "Can't retrieve /dd/Materials/CF4!" << endreq;
+  log << MSG::INFO << "///////////////////////////////////////////" << endreq;
+  log << MSG::INFO << "// Testing the TabulatedProperty feature //" << endreq;
+  log << MSG::INFO << "///////////////////////////////////////////" << endreq;
+  std::string path = "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/";
+  path += "Rich1MirrorSurfaceReflectivityPT";
+  SmartDataPtr<TabulatedProperty> tab
+    (detSvc(), path);
+  if (!tab) {
+    log << MSG::ERROR
+        << "Can't retrieve /dd/Geometry/Rich1/Rich1Surfaces"
+        << "/MirrorSurfaceReflectivityPT" << endreq;
     return StatusCode::FAILURE;
+  }  
+  TabulatedProperty::Table table = tab->table();
+  TabulatedProperty::Table::iterator it;
+  for (it = table.begin();
+       it != table.end();
+       it++) {
+    log << MSG::INFO << "new table Entry : "
+        << "x = " << it->first << ", y = " << it->second << endreq;
   }
-  log << MSG::INFO << "\nMaterial: " << mCF4->name() << endreq;
-  log << MSG::INFO << "A       : " << mCF4->A()/(g/mole)
-      << " g/mole"  << endreq;
-  log << MSG::INFO << "Z       : " << mCF4->Z() << endreq;
-  log << MSG::INFO << "Density : " << mCF4->density()/(g/cm3)
-      << " g/cm3"  << endreq;
-  log << MSG::INFO << "X0      : " << mCF4->radiationLength()/(cm)
-      << " cm"  << endreq;
-  log << MSG::INFO << "Lambda  : " << mCF4->absorptionLength()/(cm)
-      << " cm"  << endreq;
-
   return StatusCode::SUCCESS;
 }
 
+
+/////////////
+// Execute //
+/////////////
 StatusCode SimpleAlgorithm::execute() {
-
   MsgStream log(msgSvc(), name());
-  
   log << MSG::INFO << "execute" << endreq;
-
   return StatusCode::SUCCESS;
 }
 
-StatusCode SimpleAlgorithm::finalize() {
 
+//////////////
+// Finalize //
+//////////////
+StatusCode SimpleAlgorithm::finalize() {
   MsgStream log(msgSvc(), name());
-  
-  log << MSG::INFO << "finalize" << endreq;
-  
-  DetDataAgent agent( msgSvc() );
+  log << MSG::INFO << "///////////////////////////////////////////////"
+      << endreq;
+  log << MSG::INFO << "// View of the Data Store from the finalize  //"
+      << endreq;
+  log << MSG::INFO << "///////////////////////////////////////////////"
+      << endreq;
+  DetDataAgent agent (msgSvc());
 
   IDataManagerSvc* storeManager = 0;
   StatusCode sc = service("DetectorDataSvc", storeManager);

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.h,v 1.1.1.1 2001-03-13 15:11:14 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.h,v 1.2 2002-04-29 17:05:54 sponce Exp $
 #ifndef DDEXAMPLE_SIMPLEALGORITHM_H
 #define DDEXAMPLE_SIMPLEALGORITHM_H 1
 
@@ -24,20 +24,30 @@ class DeMuonStation;
 
 class SimpleAlgorithm : public Algorithm {
 public:
-  // Constructor: A constructor of this form must be provided.
+  /**
+   * Constructor: A constructor of this form must be provided.
+   */
   SimpleAlgorithm(const std::string& name, ISvcLocator* pSvcLocator); 
 
+  /**
+   * The "initialization" of the algorithm.
+   * It creates the environment needed for processing the events.
+   * In this example, everything is done here since no events are
+   * processed.
+   */
   StatusCode initialize();
-  StatusCode execute();
-  StatusCode finalize();
-private:
-  // Flag if produce histograms
-  bool          m_produceHistogram;
 
-  // These data members are used in the execution of the
-  // algorithm. There values are set in the initialisation
-  // phase by the job options service.
-  std::vector<DeMuonStation*> m_stations;
+  /**
+   * This is were the code for the event processing should reside.
+   * In this example, we do nothing here since we don't process any event.
+   */
+  StatusCode execute();
+
+  /**
+   * We use this place to display the status of the transient data store.
+   */
+  StatusCode finalize();
+
 };
 
 #endif    // DDEXAMPLE_SIMPLEALGORITHM_H
