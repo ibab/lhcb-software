@@ -1,8 +1,11 @@
-// $Id: IRelationBase.h,v 1.2 2004-01-14 16:30:25 ibelyaev Exp $
+// $Id: IRelationBase.h,v 1.3 2004-01-15 10:54:39 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/01/14 16:30:25  ibelyaev
+//  update for new interface IUpdateable
+//
 // Revision 1.1  2004/01/14 15:13:02  ibelyaev
 //  few tricks to make POOL/ROOT happy
 // 
@@ -50,11 +53,8 @@ public:
    */
   static const InterfaceID& interfaceID() ;
   
-protected:
-  
   /// virtual destructor 
-  virtual ~IRelationBase();
-
+  virtual ~IRelationBase() {};
 };
 
 // ============================================================================
