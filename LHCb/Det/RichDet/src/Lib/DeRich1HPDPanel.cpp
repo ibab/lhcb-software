@@ -1,4 +1,4 @@
-// $Id: DeRich1HPDPanel.cpp,v 1.8 2003-10-31 16:12:45 papanest Exp $
+// $Id: DeRich1HPDPanel.cpp,v 1.9 2003-11-01 15:48:13 jonrob Exp $
 #define DERICH1HPDPANEL_CPP
 
 // Include files
@@ -27,17 +27,13 @@
 const CLID& CLID_DeRich1HPDPanel = 12011;  // User defined
 
 // Standard Constructor
-DeRich1HPDPanel::DeRich1HPDPanel()
-{}
+DeRich1HPDPanel::DeRich1HPDPanel() {}
 
 // Standard Destructor
 DeRich1HPDPanel::~DeRich1HPDPanel() {}
 
 // Retrieve Pointer to class defininition structure
-const CLID& DeRich1HPDPanel::classID() {
-  return CLID_DeRich1HPDPanel;
-}
-
+const CLID& DeRich1HPDPanel::classID() { return CLID_DeRich1HPDPanel; }
 
 StatusCode DeRich1HPDPanel::initialize() {
 
@@ -176,9 +172,9 @@ StatusCode DeRich1HPDPanel::initialize() {
 StatusCode DeRich1HPDPanel::smartID (const HepPoint3D& globalPoint,
                                      RichSmartID& id)
 {
-  MsgStream log(msgSvc(), "DeRich1HPDPanel" );
 
   if (!geometry()->isInside(globalPoint)) {
+    MsgStream log(msgSvc(), "DeRich1HPDPanel" );
     log << MSG::ERROR << "Point outside HPD Panel" <<  endreq;
     id = RichSmartID(0);
     return StatusCode::FAILURE;
@@ -197,6 +193,7 @@ StatusCode DeRich1HPDPanel::smartID (const HepPoint3D& globalPoint,
                                 rowPitch);
 
   if (HPDRow >= (unsigned int) HPDRows) {
+    MsgStream log(msgSvc(), "DeRich1HPDPanel" );
     log << MSG::ERROR << "HPD Row number too high --- "
         << "inPanel.y:" << inPanel.y() <<" panelVerticalEdge:"
         << panelVerticalEdge <<  endreq;
@@ -215,16 +212,18 @@ StatusCode DeRich1HPDPanel::smartID (const HepPoint3D& globalPoint,
   //     << panelVerticalEdgeOdd << std::endl;
 
   if (HPDColumn >= (unsigned int) HPDColumns) {
+    MsgStream log(msgSvc(), "DeRich1HPDPanel" );
     log << MSG::ERROR << "HPD column number too high" <<  endreq;
     id = RichSmartID(0);
     return StatusCode::FAILURE;
   }
   HPDNumber = HPDRow * HPDColumns + HPDColumn;
 
-  log << MSG::DEBUG << "HPDColumn: " << HPDColumn <<" HPDRow: "<< HPDRow
-      <<" HPDNumber: " << HPDNumber << endreq;
+  //log << MSG::DEBUG << "HPDColumn: " << HPDColumn <<" HPDRow: "<< HPDRow
+  //    <<" HPDNumber: " << HPDNumber << endreq;
 
   if (HPDNumber < 0 || HPDNumber >= HPDRows*HPDColumns) {
+    MsgStream log(msgSvc(), "DeRich1HPDPanel" );
     log << MSG::ERROR << "Problem with HPDNumner= " << HPDNumber <<  endreq;
     id = RichSmartID(0);
     return StatusCode::FAILURE;
@@ -242,6 +241,7 @@ StatusCode DeRich1HPDPanel::smartID (const HepPoint3D& globalPoint,
   //std::cout << inSilicon << std::endl;
 
   if (!siliconSolid->isInside(inSilicon)) {
+    MsgStream log(msgSvc(), "DeRich1HPDPanel" );
     log << MSG::ERROR << "The point is outside the silicon box "
         << pvHPDMaster->name() <<  endreq;
     id = RichSmartID(0);
@@ -258,7 +258,6 @@ StatusCode DeRich1HPDPanel::smartID (const HepPoint3D& globalPoint,
   id = RichSmartID(id.rich(), id.panel(), HPDRow, HPDColumn, 
                    pixelRow, pixelColumn);
   return StatusCode::SUCCESS;
-
 }
 
 //============================================================================

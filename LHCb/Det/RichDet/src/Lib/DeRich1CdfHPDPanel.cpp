@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.cpp,v 1.10 2003-10-31 16:12:45 papanest Exp $
+// $Id: DeRich1CdfHPDPanel.cpp,v 1.11 2003-11-01 15:48:13 jonrob Exp $
 #define DERICH1CDFHPDPANEL_CPP
 
 // Include files
@@ -48,7 +48,6 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
   pixelSize = 0.5*mm;
   m_winR = 56*mm;
   m_winRsq = m_winR*m_winR;
-
 
   HepPoint3D zero(0.0, 0.0, 0.0);
   // this is the real number of columns
@@ -193,9 +192,8 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
 StatusCode DeRich1CdfHPDPanel::smartID ( const HepPoint3D& globalPoint,
                                          RichSmartID& id ) {
 
-  MsgStream log(msgSvc(), "DeRich1CdfHPDPanel" );
-
   if (!geometry()->isInside(globalPoint)) {
+    MsgStream log(msgSvc(), "DeRich1CdfHPDPanel" );
     log << MSG::ERROR << "Point outside HPD Panel" <<  endreq;
     id = RichSmartID(0);
     return StatusCode::FAILURE;
@@ -214,6 +212,7 @@ StatusCode DeRich1CdfHPDPanel::smartID ( const HepPoint3D& globalPoint,
                                      / columnPitch));
 
   if (HPDColumn >= HPDColumns) {
+    MsgStream log(msgSvc(), "DeRich1CdfHPDPanel" );
     log << MSG::ERROR << "Rich2 HPD column number too high" <<  endreq;
     id = RichSmartID(0);
     return StatusCode::FAILURE;
@@ -234,10 +233,11 @@ StatusCode DeRich1CdfHPDPanel::smartID ( const HepPoint3D& globalPoint,
     HPDNumber = HPDColDiv2 * HPDsIn2Cols + HPDRow + HPDsInBigCol;
   }
 
-  log << MSG::DEBUG << "HPDColumn: " << HPDColumn <<" HPDRow: "<< HPDRow
-      <<" HPDNumber: " << HPDNumber << endreq;
+  //log << MSG::DEBUG << "HPDColumn: " << HPDColumn <<" HPDRow: "<< HPDRow
+  //    <<" HPDNumber: " << HPDNumber << endreq;
 
   if (HPDNumber < 0 || HPDNumber >= HPDRows*HPDColumns) {
+    MsgStream log(msgSvc(), "DeRich1CdfHPDPanel" );
     log << MSG::ERROR << "Problem with HPDNumner= " << HPDNumber <<  endreq;
     id = RichSmartID(0);
     return StatusCode::FAILURE;
@@ -256,6 +256,7 @@ StatusCode DeRich1CdfHPDPanel::smartID ( const HepPoint3D& globalPoint,
 
   if ( (fabs(inSilicon.x()) > siliconHalfLengthX) ||
        (fabs(inSilicon.y()) > siliconHalfLengthY)    ) {
+    MsgStream log(msgSvc(), "DeRich1CdfHPDPanel" );
     log << MSG::ERROR << "The point is outside the silicon box "
         << pvHPDMaster->name() <<  endreq;
     id = RichSmartID(0);
@@ -277,7 +278,6 @@ StatusCode DeRich1CdfHPDPanel::smartID ( const HepPoint3D& globalPoint,
                    pixelColumn);
 
   return StatusCode::SUCCESS;
-
 }
 
 //============================================================================
