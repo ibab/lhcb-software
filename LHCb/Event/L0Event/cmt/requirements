@@ -1,28 +1,19 @@
 package L0Event
-version v1
+version v2
 
 branches L0Event src cmt doc
 
-use CaloEvent v6* Event
-
 include_dirs $(L0EVENTROOT)
 
-# Linker library
-library L0EventLib   -no_share  ../src/L0CLIDs.cpp
-
-apply_pattern package_Lstamps
-apply_pattern package_Llinkopts
+use LHCbEvent v11* Event
 
 # component library
-library L0Event          ../src/L0EventInstantiation.cpp \
-                         ../src/L0Event_dll.cpp
 
-apply_pattern packageShr
-#=======================================================================
-private
+library         L0Event ../src/*.cpp 
 
-apply_pattern package_Cshlibflags
-
+apply_pattern   package_Cshlibflags
+apply_pattern   package_Clinkopts
+apply_pattern   packageShr
 
 
 

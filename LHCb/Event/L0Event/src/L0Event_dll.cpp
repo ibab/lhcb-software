@@ -19,12 +19,17 @@
 extern void L0Event_load();
 
 void GaudiDll::initialize(void* hinstDLL)    {
+  void* aux  = 0 ;
+  aux = hinstDLL ; // to avoid compilation warnings
 }
 
 void GaudiDll::finalize(void* hinstDLL)    {
+  void* aux  = 0 ; 
+  aux = hinstDLL ; // to avoid compilation warings 
 }
 
 #include "GaudiKernel/FactoryTable.h"
+
 extern "C" FactoryTable::EntryList* getFactoryEntries() {
   static bool first = true;
   if ( first )    {

@@ -7,10 +7,9 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/StreamBuffer.h"
 
-// Externals 
-extern const CLID& CLID_Level0PileUpVeto;
+#include "L0Event/CLID_Level0PileUpVeto.h"
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // ClassName:   Level0PileUpVeto
 //
@@ -19,7 +18,7 @@ extern const CLID& CLID_Level0PileUpVeto;
 //
 // Author:      Bruce Hay
 //
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 class Level0PileUpVeto : public DataObject {
 
 public:
@@ -30,12 +29,8 @@ public:
   virtual ~ Level0PileUpVeto()                     {
   }
   /// Retrieve pointer to class definition structure
-  virtual const CLID& clID() const                 {
-    return Level0PileUpVeto::classID();
-  }
-  static const CLID& classID()                     {
-    return CLID_Level0PileUpVeto;
-  }
+  virtual const CLID& clID() const    { return Level0PileUpVeto::classID();  }
+  static const CLID& classID()        { return CLID_Level0PileUpVeto;        }
 
   /// Pileup decision
   int decision() const                             { return m_decision; }
@@ -64,7 +59,7 @@ public:
 
   /// Expected background level (in double event) at position of first peak
   double bkgPeak1() const                          { return m_bPeak1; }
-  /// Update expected background level (in double event) at position of first peak
+  /// Update expected background level at position of first peak
   void setBkgPeak1(double bPeak1)                  { m_bPeak1 = bPeak1; }
 
   /// Height of the second peak
@@ -89,7 +84,7 @@ public:
 
   /// Expected background level (in double event) at position of second peak
   double bkgPeak2() const                          { return m_bPeak2; }
-  /// Update expected background level (in double event) at position of second peak
+  /// Update expected background level position of second peak
   void setBkgPeak2(double bPeak2)                  { m_bPeak2 = bPeak2; }
 
   /// Total number of coincidences within histogram range
