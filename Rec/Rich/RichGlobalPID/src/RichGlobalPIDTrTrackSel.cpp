@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.11 2004-02-02 14:25:54 jonesc Exp $
+// $Id: RichGlobalPIDTrTrackSel.cpp,v 1.12 2004-02-04 19:17:06 jonesc Exp $
 // Include files
 
 // local
@@ -17,7 +17,9 @@ const        IAlgFactory& RichGlobalPIDTrTrackSelFactory = s_factory ;
 // Standard constructor, initializes variables
 RichGlobalPIDTrTrackSel::RichGlobalPIDTrTrackSel( const std::string& name,
                                                   ISvcLocator* pSvcLocator )
-  : RichGlobalPIDAlgBase ( name, pSvcLocator ) {
+  : RichGlobalPIDAlgBase ( name, pSvcLocator ),
+    m_tkSignal ( 0 )
+{
 
   // Selection cuts
   declareProperty( "MinimumPhysicsMomentum",  m_minPhysPtot = 2.0*GeV );
