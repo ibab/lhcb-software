@@ -10,7 +10,7 @@
 
    Packages added:    TrKShort v1r0, LHCbTools v1r0
 
-   Packages modified: ITAlgorithms v13r2, BrunelAlgs v3r4
+   Packages modified: ITAlgorithms v13r2, BrunelAlgs v3r4, Seeding v2r7
 
    Packages removed:  TrIntraPR, UpstreamPR (replaced by TrKShort)
                       RiSicbGeom, CaloInterfaces, CaloUtils, MCTools 
