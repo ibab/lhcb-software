@@ -10,7 +10,7 @@ use VeloDet        	v8r8 	Det
 use OTDet          	v5r2	Det
 use CaloDet	   	v6r7	Det
 use CaloDetXmlCnv  	v2r3p1	Det
-use MuonDet        	v4r4p1	Det
+use MuonDet        	v4r5	Det
 use Magnet        	v2r4	Det
 use MuonTools	   	v3r6	Muon
 use RichDet	   	v6r5	Det
