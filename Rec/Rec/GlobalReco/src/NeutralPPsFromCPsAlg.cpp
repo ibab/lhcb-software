@@ -1,8 +1,11 @@
-// $Id: NeutralPPsFromCPsAlg.cpp,v 1.6 2004-03-17 16:27:56 ibelyaev Exp $
+// $Id: NeutralPPsFromCPsAlg.cpp,v 1.7 2004-04-11 03:50:58 ibelyaev Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2004/03/17 16:27:56  ibelyaev
+//  update the creation of neutral ProtoParticles
+//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -420,7 +423,7 @@ double NeutralPPsFromCPsAlg::photonID
       hypo->hypothesis() == CaloHypotheses::PhotonFromMergedPi0  || 
       hypo->hypothesis() == CaloHypotheses::BremmstrahlungPhoton || 
       hypo->hypothesis() == CaloHypotheses::BremmstrahlungPhoton  ) 
-  { phID = m_spdprs -> likelihood( hypo ) ; }
+  { phID = m_photonID -> likelihood( hypo ) ; }
   
   return phID  ;
 };

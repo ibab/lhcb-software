@@ -4,6 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2004-04-11 - Ivan Belyaev
+ - src/NeutralPPSFromCPs.Alg.cpp 
+   fix a bug with usage of PhotonID tool 
+ - cmt/requirements 
+   increment the version to v4r6 
+
 ! 2004-04-8 - Yuehong Xie
  - src/ChargedProtoPAlg.cpp ChargedProtoPAlg.h
    . remove the  member function ProjectSeed2TT since it is already done 
