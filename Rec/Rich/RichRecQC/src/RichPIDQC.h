@@ -4,7 +4,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.18 2005-01-26 10:02:31 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.19 2005-01-26 10:14:10 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -58,6 +58,8 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
+ *
+ *  @todo Review and perhaps rewrite this monitor... Its getting a little messy.
  */
 
 class RichPIDQC : public RichAlgBase {
@@ -108,6 +110,8 @@ private: // methods
   Rich::Track::Type trackType( const RichPID * pid ) const;
 
   Rich::ParticleIDType trueMCType( const RichPID * pid ) const;
+
+  int tkNumber( const RichPID * pid ) const;
 
 private: // data
 

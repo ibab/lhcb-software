@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.38 2005-01-26 10:02:31 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.39 2005-01-26 10:14:10 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -89,13 +89,13 @@ StatusCode RichPIDQC::initialize()
   if ( m_ignoreThres ) Warning( "Ignoring threshold information", StatusCode::SUCCESS );
 
   // Warn if using kaon DLL cut
-  if ( m_dllKaonCut > 0 ) Warning( "Applying kaon selection dll(kaon) < " + 
-                                   boost::lexical_cast<std::string>(m_dllKaonCut), 
+  if ( m_dllKaonCut > 0 ) Warning( "Applying kaon selection dll(kaon) < " +
+                                   boost::lexical_cast<std::string>(m_dllKaonCut),
                                    StatusCode::SUCCESS );
 
   // Warn if using pion DLL cut
-  if ( m_dllPionCut > 0 ) Warning( "Applying pion selection dll(pion) < " + 
-                                   boost::lexical_cast<std::string>(m_dllPionCut), 
+  if ( m_dllPionCut > 0 ) Warning( "Applying pion selection dll(pion) < " +
+                                   boost::lexical_cast<std::string>(m_dllPionCut),
                                    StatusCode::SUCCESS );
 
   return StatusCode::SUCCESS;
@@ -299,7 +299,7 @@ StatusCode RichPIDQC::execute()
         // Get true track type from MC
         Rich::ParticleIDType mcpid = trueMCType( iPID );
         if ( mcpid != Rich::Unknown &&
-             !m_ignoreThres && 
+             !m_ignoreThres &&
              !iPID->isAboveThreshold(mcpid) ) mcpid = Rich::BelowThreshold;
         if ( msgLevel(MSG::VERBOSE) ) verbose() << ", MCID = " << mcpid << endreq;
 
@@ -313,7 +313,7 @@ StatusCode RichPIDQC::execute()
         m_perfTable->fill( mcpid+1, pid+1 );
         if ( mcpid>=0 && pid>=0 ) { ++m_sumTab[mcpid][pid]; }
 
-        // Momentum spectra
+        // Momentum spectra histograms...
         if ( mcpid != Rich::Unknown &&
              pid   != Rich::Unknown ) { (m_ptotSpec[mcpid][pid])->fill(tkPtot); }
 
@@ -476,10 +476,10 @@ StatusCode RichPIDQC::finalize()
              << "(" << (*iPC).second.second << ")";
     }
     info() << endreq;
-    if ( m_dllKaonCut > 0 ) { 
+    if ( m_dllKaonCut > 0 ) {
       info() << " Tagging tracks as kaons if kaon DLL < " << m_dllKaonCut << endreq;
     }
-    if ( m_dllPionCut > 0 ) { 
+    if ( m_dllPionCut > 0 ) {
       info() << " Tagging tracks as pions if pion DLL < " << m_dllPionCut << endreq;
     }
     info() << "-------------+-------------------------------------------------+------------"
@@ -617,5 +617,17 @@ Rich::ParticleIDType RichPIDQC::trueMCType( const RichPID * pid ) const
   } else {
     Exception( "unknown RichPID track type" );
     return Rich::Unknown;
+  }
+}
+
+int RichPIDQC::tkNumber( const RichPID * pid ) const
+{
+  if ( const TrStoredTrack * trTrack = pid->recTrack() ) {
+    return trTrack->key();
+  } else if ( const TrgTrack * trgTrack = pid->trgTrack() ) {
+    return trgTrack->key();
+  } else {
+    Exception( "unknown RichPID track type" );
+    return -1;
   }
 }
