@@ -1,5 +1,8 @@
 Package : L0Event
-Package manager : Bruce Hay
+Package manager : Olivier Callot
+
+! 20010109 - v1 (Flr)
+  requirements - L0EventLib is no_share
 
 ! 20000606 - v1
-First public version of Level 0 trigger event data model.
+  First public version of Level 0 trigger event data model.

@@ -3,13 +3,12 @@ version v1
 
 branches L0Event src cmt doc
 
-use LHCbEvent v8 Event
-use CaloEvent v3 Event
+use CaloEvent v3* Event
 
 include_dirs $(L0EVENTROOT)
 
 # Linker library
-library L0EventLib       ../src/L0CLIDs.cpp
+library L0EventLib   -no_share  ../src/L0CLIDs.cpp
 
 apply_pattern package_Llinkopts
 
@@ -19,12 +18,9 @@ library L0Event          ../src/L0EventInstantiation.cpp \
 
 macro_append L0Event_stamps "  " ${L0EventDir}/L0EventLib.stamp" 
 
-apply_pattern ld_library_path
+apply_pattern packageShr
 #=======================================================================
 private
-
-apply_pattern package_Lshlibflags
-macro_append L0EventLib_shlibflags "  $(Gaudi_linkopts) $(CLHEP_linkopts)"
 
 apply_pattern package_Cshlibflags
 
