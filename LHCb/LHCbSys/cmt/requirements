@@ -9,24 +9,27 @@ branches doc cmt
 
 # the following package is part of the tar file and doc, but breaks
 # cmt broadcast make
-#use XmlEditor	  v4r2	Det
+#use XmlEditor	  	v4r2	Det
 
-use GaudiConf	v6r3
+use GaudiConf		v6r3
 
-use BookKeeping v1r1	Tools
+use BookKeeping 	v1r1	Tools
 
-use XmlDDDB     v13r0	Det
+use XmlDDDB     	v13r0	Det
 
 # External packages not delivered by Gaudi
-use PYTHIA	v2r6205p1	Gen
-use HepMC	v3r121p0	Sim
+use PYTHIA		v2r6205p1	Gen
+use HepMC		v3r121p0	Sim
 
 # Kernel packages
-use KernelSys   v1r0    Kernel
+use KernelSys   	v1r0    Kernel
 
 # Detector description
-use DetSys	v1r0	Det
+use DetSys		v1r0	Det
 
 # Event data model
-use EventSys      v13r0 Event
+use EventSys		v13r0	Event
+
+# Associators
+use AssociatorsSys	v1r0	Associators
 

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================== LHCbSys v11r0 ==================================
+! 2002-10-30 - Florence Ranjard
+ - requirements - add Associators
+
 ! 2002-10-10 - Florence Ranjard
  - requirements - v11r0 uses Gaudi v11r0
 
