@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.13 2004-07-21 08:05:44 cattanem Exp $
+! $Id: release.notes,v 1.14 2004-11-23 14:20:37 cattanem Exp $
 ! Package     : MuonAssociators
 ! Responsible : David Hutchcroft
+
+!===================== MuonAssociators v1r5 2004-11-22 =====================
+! 2004-11-22 - Marco Cattaneo
+ - Modify requirements to depend on new Relations implementation v2r*
+ - Add MuonAssociators.opts to set up DataOnDemandSvc for new Relations
 
 !===================== MuonAssociators v1r4 2004-07-19 =====================
 ! 2004-07-19 - Marco Cattaneo
