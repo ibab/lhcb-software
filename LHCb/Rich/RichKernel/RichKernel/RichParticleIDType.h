@@ -1,10 +1,11 @@
-// $Id: RichParticleIDType.h,v 1.1 2002-06-21 15:33:18 jonesc Exp $
+// $Id: RichParticleIDType.h,v 1.2 2002-07-03 06:08:46 cattanem Exp $
 #ifndef RICHKERNEL_PARTICLEIDTYPE_H
 #define RICHKERNEL_PARTICLEIDTYPE_H 1
 
 // std include
 #include <string>
 #include <vector>
+#include <iostream>
 
 // from gaudi
 #include "GaudiKernel/StreamBuffer.h"
@@ -67,8 +68,8 @@ inline StreamBuffer& operator << ( StreamBuffer& s,
 }
 
 /// Implement textual ostream << method for Rich::ParticleIDType enumeration
-inline ostream& operator << ( ostream& s,
-                              const Rich::ParticleIDType& particle ) {
+inline std::ostream& operator << ( std::ostream& s,
+                                   const Rich::ParticleIDType& particle ) {
   s << Rich::text( particle );
   return s;
 }

@@ -1,10 +1,11 @@
-// $Id: Rich2Side.h,v 1.1 2002-06-21 15:32:56 jonesc Exp $
+// $Id: Rich2Side.h,v 1.2 2002-07-03 06:08:45 cattanem Exp $
 #ifndef RICH2SIDE_H 
 #define RICH2SIDE_H 1
 
 // Include files
 #include <string>
 #include <vector>
+#include <iostream>
 
 // from gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -34,8 +35,8 @@ namespace Rich {
 }
 
 /// Implement textual ostream << method for Rich::Rich2Side enumeration
-inline ostream& operator << ( ostream& s,
-                              const Rich::Rich2Side& side ) {
+inline std::ostream& operator << ( std::ostream& s,
+                                   const Rich::Rich2Side& side ) {
   s << Rich::text( side );
   return s;
 }

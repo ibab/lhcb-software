@@ -1,10 +1,11 @@
-// $Id: RichAlgorithmType.h,v 1.1 2002-06-21 15:33:02 jonesc Exp $
+// $Id: RichAlgorithmType.h,v 1.2 2002-07-03 06:08:45 cattanem Exp $
 #ifndef RICHKERNEL_RICHALGORITHMTYPE_H
 #define RICHKERNEL_RICHALGORITHMTYPE_H 1
 
 // Include files
 #include <string>
 #include <vector>
+#include <iostream>
 
 // from gaudi
 #include "GaudiKernel/MsgStream.h"
@@ -35,8 +36,8 @@ namespace Rich {
 }
 
 /// Implement textual ostream << method for Rich::AlgorithmType enumeration
-inline ostream& operator << ( ostream& s,
-                              const Rich::AlgorithmType& algorithm ) {
+inline std::ostream& operator << ( std::ostream& s,
+                                   const Rich::AlgorithmType& algorithm ) {
   s << Rich::text( algorithm );
   return s;
 }
