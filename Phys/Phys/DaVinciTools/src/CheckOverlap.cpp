@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.6 2005-02-24 12:49:17 pkoppenb Exp $
+// $Id: CheckOverlap.cpp,v 1.7 2005-03-10 16:53:56 pkoppenb Exp $
 
 // Include files 
 
@@ -172,7 +172,7 @@ StatusCode CheckOverlap::removeOverlap( ConstParticleVector& PV){
 // Replace resonance by daughters in vector, helper to the Tree methods
 //=============================================================================
 StatusCode  CheckOverlap::addOrigins( ConstParticleVector& parts, 
-                                      std::vector<const ContainedObject* > protos){
+                                      std::vector<const ContainedObject* >& protos){
   verbose() << "addOrigins() " << parts.size() << endmsg ;
   for ( ConstParticleVector::iterator c = parts.begin() ; c !=  parts.end() ; ++c ){
     

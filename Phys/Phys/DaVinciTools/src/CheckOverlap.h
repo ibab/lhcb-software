@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.h,v 1.6 2005-02-24 12:49:17 pkoppenb Exp $
+// $Id: CheckOverlap.h,v 1.7 2005-03-10 16:53:56 pkoppenb Exp $
 #ifndef CHECKOVERLAP_H 
 #define CHECKOVERLAP_H 1
 
@@ -81,7 +81,7 @@ public:
 
 protected:
   
-  StatusCode addOrigins( ConstParticleVector&, std::vector<const ContainedObject*>);
+  StatusCode addOrigins( ConstParticleVector&, std::vector<const ContainedObject*>&);
 
   /// Only look at protoparticles
   bool searchOverlap( std::vector<const ContainedObject* > & proto );

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.153 2005-03-03 14:58:04 pkoppenb Exp $
+! $Id: release.notes,v 1.154 2005-03-10 16:53:56 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-03-10- P. Koppenburg for Luis Fernadez
+  - src/CheckOverlap.{h,cpp}
+    . Correct another bugs
+     
 !========================== DaVinciTools v11r6 2005-03-03 ===================
 ! 2005-02-24- P. Koppenburg
   - src/CheckOverlap.{h,cpp}
