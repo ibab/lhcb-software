@@ -1,0 +1,39 @@
+/** @file 
+ * 
+ *  Example file to run the trigger and check it
+ *  This file defines, sequences and configures the algorithms 
+ *  to be executed
+ *
+ *  @author P. Koppenburg
+ *  @date 2004-06-18
+ */
+
+//--------------------------------------------------------------
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print on
+#include "$DAVINCIROOT/options/L0.opts"
+#include "$DAVINCIROOT/options/L1Decision.opts"
+
+// add efficiency monitor
+L1Checking.Members += { 
+                       "MCEffBuilder/MyEff",
+                       "MCEffMonitor/MyEffMonitor"
+};
+MyEff.setRuntimeEnvironment = "Trg";
+MyEff.MCDecay = "[B0 -> (KS0 -> ^pi+ ^pi-) (J/psi(1S) -> ^mu+ ^mu- {, ^gamma})]cc";
+MyEff.useBreakdown = true;
+MyEff.OutputLevel = 3;
+MyEffMonitor.TreeLocation = "/Event/Trg/MCEffTrees";
+MyEffMonitor.OutputLevel = 3;
+
+// Number of events to process, skip and printing frequency
+ApplicationMgr.EvtMax    = 100;
+EventSelector.FirstEvent = 1;
+EventSelector.PrintFreq  = 1;
+
+EventSelector.Input   = {
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000542_00000013_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000542_00000018_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000542_00000035_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000542_00000038_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
