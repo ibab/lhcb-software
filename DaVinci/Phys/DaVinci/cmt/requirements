@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.132 2004-07-02 07:45:41 pkoppenb Exp $
+# $Id: requirements,v 1.133 2004-07-02 14:57:59 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -36,7 +36,7 @@ use POOL                v1r163p0        -no_auto_imports
 #-- Gaudi libraries (from GAUDI_v14r6)
 use GaudiKernel         v15r4
 use GaudiSvc            v11r7
-use GaudiAlg            v7r3
+use GaudiAlg            v7r3p1
 use GaudiTools          v8r1
 use GaudiAud            v6r5
 use GaudiGSL            v6r0
