@@ -26,7 +26,7 @@ public:
   typedef  long int  ContentType;
 
   /// Constructor from ContentType
-  RichSmartID( const ContentType & intKey ) { m_key = intKey ; }
+  RichSmartID( const ContentType & intKey ) { m_key = intKey; }
 
   /// Default Constructor
   RichSmartID(): m_key(99999) {}
@@ -334,7 +334,7 @@ inline std::ostream& operator << ( std::ostream& os, const RichSmartID& id ) {
 
 /// overloaded output to MsgStream
 inline MsgStream& operator << ( MsgStream& os, const RichSmartID& id ) {
-  os << "'Rich=" << id.rich() << " panel=" << id.panel() << " HPD(r/c)=" 
+  os << "'Rich=" << id.rich() << " Panel=" << id.panel() << " HPD(r/c)=" 
      << id.HPDRow() << "/" << id.HPDCol() << " Pixel(r/c)=" << id.pixelRow() 
      << "/" << id.pixelCol() << "'";
   return os;

@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.12 2002-12-04 16:40:39 ranjard Exp $
+! $Id: release.notes,v 1.13 2003-04-01 11:22:57 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2003-03-13 - Chris Jones
+ - Various updates for OO Reco
 
 !=================== RichKernel v2r2 2002-12-04 ======================
 ! 2002-12-04 - Florence Ranjard

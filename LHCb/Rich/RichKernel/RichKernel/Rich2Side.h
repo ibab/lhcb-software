@@ -1,4 +1,4 @@
-// $Id: Rich2Side.h,v 1.2 2002-07-03 06:08:45 cattanem Exp $
+// $Id: Rich2Side.h,v 1.3 2003-04-01 11:22:56 jonrob Exp $
 #ifndef RICH2SIDE_H 
 #define RICH2SIDE_H 1
 
@@ -47,5 +47,15 @@ inline MsgStream& operator << ( MsgStream& s,
   s << Rich::text( side );
   return s;
 }
+
+// Text conversion for Rich2Side enumeration
+inline std::string Rich::text( const Rich::Rich2Side& side ) {
+  switch( side ) {
+  case Rich::left:    return "left";
+  case Rich::right:   return "right";
+  default:            return "?"; // should never happen
+  }
+}
+
 
 #endif // RICH2SIDE_H

@@ -1,4 +1,4 @@
-// $Id: RichParticleIDType.cpp,v 1.1 2002-06-21 15:34:08 jonesc Exp $
+// $Id: RichParticleIDType.cpp,v 1.2 2003-04-01 11:22:58 jonrob Exp $
 // Include files
 
 // local
@@ -21,33 +21,5 @@ std::string Rich::text( const Rich::ParticleIDType& particle ) {
   case Rich::BelowThreshold: return "below threshold";
   case Rich::Unknown:        return "unknown";
   default:                   return "?"; // should never happen
-  }
-}
-
-// Implementation of next function
-Rich::ParticleIDType Rich::next( const Rich::ParticleIDType& particle ) {
-  switch( particle ) {
-  case Rich::Unknown:         return Rich::Electron;
-  case Rich::Electron:        return Rich::Muon;
-  case Rich::Muon:            return Rich::Pion;
-  case Rich::Pion:            return Rich::Kaon;
-  case Rich::Kaon:            return Rich::Proton;
-  case Rich::Proton:          return Rich::BelowThreshold;
-  case Rich::BelowThreshold:  return Rich::Unknown;
-  default:                    return Rich::Unknown; // should never happen
-  }
-}
-
-// Implementation of next function
-Rich::ParticleIDType Rich::previous( const Rich::ParticleIDType& particle ) {
-  switch( particle ) {
-  case Rich::Unknown:         return Rich::BelowThreshold;
-  case Rich::Electron:        return Rich::Unknown;
-  case Rich::Muon:            return Rich::Electron;
-  case Rich::Pion:            return Rich::Muon;
-  case Rich::Kaon:            return Rich::Pion;
-  case Rich::Proton:          return Rich::Kaon;
-  case Rich::BelowThreshold:  return Rich::Proton;
-  default:                    return Rich::Unknown; // should never happen
   }
 }

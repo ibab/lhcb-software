@@ -1,14 +1,6 @@
 #ifndef RICHKERNEL_RICHSMARTCODE_H
 #define RICHKERNEL_RICHSMARTCODE_H 1
 
-// STD and STL
-//#include <iostream>
-//#include <iomanip>
-//#include <string>
-//#include <functional>
-//#include <algorithm>
-//#include <numeric>
-
 /** @class RichSmartCode RichSmartCode.h RichGen/RichSmartCode.h
  *
  *  Namespace for all code/decode rules of RichSmartID class

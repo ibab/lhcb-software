@@ -1,4 +1,4 @@
-// $Id: RichParticleIDType.h,v 1.5 2002-11-14 12:47:29 jonrob Exp $
+// $Id: RichParticleIDType.h,v 1.6 2003-04-01 11:22:56 jonrob Exp $
 #ifndef RICHKERNEL_PARTICLEIDTYPE_H
 #define RICHKERNEL_PARTICLEIDTYPE_H 1
 
@@ -35,17 +35,9 @@ namespace Rich {
     Proton,
     BelowThreshold
   };
-  static const ParticleIDType ParticleIDTypeFirst = Electron;
-  static const ParticleIDType ParticleIDTypeLast = Proton;
 
   /// Text conversion for Rich::ParticleIDType enumeration
   std::string text( const Rich::ParticleIDType& particle );
-
-  /// Implementation of next function
-  ParticleIDType next( const Rich::ParticleIDType& particle );
-
-  /// Implementation of previous function
-  ParticleIDType previous( const Rich::ParticleIDType& particle );
 
   /// Std Vector typedef
   typedef std::vector<ParticleIDType> ParticleIDTypeVector;
@@ -80,26 +72,6 @@ inline MsgStream& operator << ( MsgStream& s,
                                 const Rich::ParticleIDType& particle ) {
   s << Rich::text( particle );
   return s;
-}
-
-/// Implement ++ operator for Rich::ParticleIDType
-inline Rich::ParticleIDType operator++ ( Rich::ParticleIDType& particle ) {
-  return particle = Rich::next( particle );
-}
-
-/// Implement ++ operator for Rich::ParticleIDType
-inline Rich::ParticleIDType operator++ ( Rich::ParticleIDType& particle, int ) {
-  return particle = Rich::next( particle );
-}
-
-/// Implement -- operator for Rich::ParticleIDType
-inline Rich::ParticleIDType operator-- ( Rich::ParticleIDType& particle ) {
-  return particle = Rich::previous( particle );
-}
-
-/// Implement -- operator for Rich::ParticleIDType
-inline Rich::ParticleIDType operator-- ( Rich::ParticleIDType& particle, int ) {
-  return particle = Rich::previous( particle );
 }
 
 #endif // RICHKERNEL_PARTICLEIDTYPE_H
