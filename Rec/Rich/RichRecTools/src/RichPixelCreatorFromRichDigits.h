@@ -4,8 +4,11 @@
  *  Header file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.h,v 1.9 2004-10-13 09:52:41 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigits.h,v 1.10 2004-10-27 14:39:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/10/13 09:52:41  jonrob
+ *  Speed improvements + various minor changes
+ *
  *  Revision 1.8  2004/07/27 20:15:32  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -93,7 +96,7 @@ private: // data
   mutable RichRecPixels * m_pixels;
 
   /// Pointer to RichSmartID tool
-  IRichSmartIDTool * m_smartIDTool;
+  IRichSmartIDTool * m_idTool;
 
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;

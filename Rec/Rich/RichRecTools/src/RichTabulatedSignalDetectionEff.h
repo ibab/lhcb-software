@@ -4,8 +4,10 @@
  *  Header file for tool : RichTabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.h,v 1.6 2004-07-27 20:15:33 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.h,v 1.7 2004-10-27 14:39:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/07/27 20:15:33  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -74,16 +76,14 @@ public: // methods (and doxygen comments) inherited from public interface
 
 private:  // Private data
 
-  /// Location of flat mirror tabulated properies in XML
-  std::vector<std::string> m_flatMirReflLoc;
+  /// Tabulated properties for each rich detector
+  typedef boost::array<Rich1DTabProperty*,Rich::NRiches> TabProps;
 
-  /// Location of primiary mirror tabulated properies in XML
-  std::vector<std::string> m_sphMirReflLoc;
+  /// Flat mirror reflectivities
+  TabProps m_flatMirRefl;
 
-  /// Pointers to reflectivities for each mirror
-  typedef boost::array<Rich1DTabProperty*,Rich::NRiches> MirrorReflectivities;
-  MirrorReflectivities m_flatMirRefl;
-  MirrorReflectivities m_sphMirRefl;
+  /// Spherical mirror reflectivities
+  TabProps m_sphMirRefl;
 
   /// quartz window losses efficiency
   double m_quartzWinEff;
@@ -94,9 +94,6 @@ private:  // Private data
   /// Quantum Efficiency function.
   /// For time being assume only one reference curve for all HPDs
   Rich1DTabProperty * m_QE;
-
-  /// Location of QE in XML
-  std::string m_qeTableLoc;
 
 };
 

@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.9 2004-07-27 20:15:30 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.10 2004-10-27 14:39:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.9  2004/07/27 20:15:30  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -29,7 +32,7 @@ RichExpectedTrackSignal::RichExpectedTrackSignal ( const std::string& type,
     m_sellmeir     ( 0 ),
     m_sigDetEff    ( 0 ),
     m_richPartProp ( 0 ),
-    m_rayScat      ( 0 ) 
+    m_rayScat      ( 0 )
 {
   declareInterface<IRichExpectedTrackSignal>(this);
 }
@@ -38,7 +41,7 @@ StatusCode RichExpectedTrackSignal::initialize()
 {
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -445,21 +448,29 @@ RichExpectedTrackSignal::aboveThreshold( RichRecTrack * track,
 void RichExpectedTrackSignal::setThresholdInfo( RichRecTrack * track,
                                                 RichPID * pid ) const
 {
-  if ( aboveThreshold(track,Rich::Electron) ) {
-    if ( nTotalObservablePhotons(track,Rich::Electron)>0 ) pid->setElectronHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(track,Rich::Muon) ) {
-    if ( nTotalObservablePhotons(track,Rich::Muon)>0 ) pid->setMuonHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(track,Rich::Pion) ) {
-    if ( nTotalObservablePhotons(track,Rich::Pion)>0 ) pid->setPionHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(track,Rich::Kaon) ) {
-    if ( nTotalObservablePhotons(track,Rich::Kaon)>0 ) pid->setKaonHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(track,Rich::Proton) ) {
-    if ( nTotalObservablePhotons(track,Rich::Proton)>0 ) pid->setProtonHypoAboveThres(1);
-  } else { return; }
+
+  // Assume all hypos are above threshold
+  pid->setElectronHypoAboveThres(true);
+  pid->setMuonHypoAboveThres(true);
+  pid->setPionHypoAboveThres(true);
+  pid->setKaonHypoAboveThres(true);
+  pid->setProtonHypoAboveThres(true);
+  // Now find those which aren't
+  if ( aboveThreshold(track,Rich::Proton) &&
+       nTotalObservablePhotons(track,Rich::Proton)>0 ) { return; }
+  pid->setProtonHypoAboveThres(false);
+  if ( aboveThreshold(track,Rich::Kaon) &&
+       nTotalObservablePhotons(track,Rich::Kaon)>0 ) { return; }
+  pid->setKaonHypoAboveThres(false);
+  if ( aboveThreshold(track,Rich::Pion) &&
+       nTotalObservablePhotons(track,Rich::Pion)>0 ) { return; }
+  pid->setPionHypoAboveThres(false);
+  if ( aboveThreshold(track,Rich::Muon) &&
+       nTotalObservablePhotons(track,Rich::Muon)>0 ) { return; }
+  pid->setMuonHypoAboveThres(false);
+  if ( aboveThreshold(track,Rich::Electron) &&
+       nTotalObservablePhotons(track,Rich::Electron)>0 ) { return; }
+  pid->setElectronHypoAboveThres(false);
 
 }
 
@@ -467,20 +478,28 @@ void RichExpectedTrackSignal::setThresholdInfo( RichRecTrack * track,
 void RichExpectedTrackSignal::setThresholdInfo( RichRecSegment * segment,
                                                 RichPID * pid ) const
 {
-  if ( aboveThreshold(segment,Rich::Electron) ) {
-    if ( nTotalObservablePhotons(segment,Rich::Electron)>0 ) pid->setElectronHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(segment,Rich::Muon) ) {
-    if ( nTotalObservablePhotons(segment,Rich::Muon)>0 ) pid->setMuonHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(segment,Rich::Pion) ) {
-    if ( nTotalObservablePhotons(segment,Rich::Pion)>0 ) pid->setPionHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(segment,Rich::Kaon) ) {
-    if ( nTotalObservablePhotons(segment,Rich::Kaon)>0 ) pid->setKaonHypoAboveThres(1);
-  } else { return; }
-  if ( aboveThreshold(segment,Rich::Proton) ) {
-    if ( nTotalObservablePhotons(segment,Rich::Proton)>0 ) pid->setProtonHypoAboveThres(1);
-  } else { return; }
+
+  // Assume all hypos are above threshold
+  pid->setElectronHypoAboveThres(true);
+  pid->setMuonHypoAboveThres(true);
+  pid->setPionHypoAboveThres(true);
+  pid->setKaonHypoAboveThres(true);
+  pid->setProtonHypoAboveThres(true);
+  // Now find those which aren't
+  if ( aboveThreshold(segment,Rich::Proton) &&
+       nTotalObservablePhotons(segment,Rich::Proton)>0 ) { return; }
+  pid->setProtonHypoAboveThres(false);
+  if ( aboveThreshold(segment,Rich::Kaon) &&
+       nTotalObservablePhotons(segment,Rich::Kaon)>0 ) { return; }
+  pid->setKaonHypoAboveThres(false);
+  if ( aboveThreshold(segment,Rich::Pion) &&
+       nTotalObservablePhotons(segment,Rich::Pion)>0 ) { return; }
+  pid->setPionHypoAboveThres(false);
+  if ( aboveThreshold(segment,Rich::Muon) &&
+       nTotalObservablePhotons(segment,Rich::Muon)>0 ) { return; }
+  pid->setMuonHypoAboveThres(false);
+  if ( aboveThreshold(segment,Rich::Electron) &&
+       nTotalObservablePhotons(segment,Rich::Electron)>0 ) { return; }
+  pid->setElectronHypoAboveThres(false);
 
 }

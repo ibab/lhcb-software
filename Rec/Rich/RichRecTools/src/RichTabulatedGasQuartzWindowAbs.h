@@ -4,8 +4,10 @@
  *  Header file for tool : RichTabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.3 2004-07-27 20:15:32 jonrob Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.4 2004-10-27 14:39:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2004/07/27 20:15:32  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -77,10 +79,7 @@ public: // methods (and doxygen comments) inherited from public interface
 private:  // Private data
 
   /// Tabulated Rayleigh scattering length
-  Rich1DTabProperty * m_gasQWin;
-
-  /// Location of tabulated  rayleigh scattering length in XML
-  std::string m_gasQWinLoc;
+  Rich1DTabProperty * m_gasQWin[Rich::NRiches];
 
   /// Thickness of windows
   double m_qWinZSize[Rich::NRiches];

@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichTabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.cpp,v 1.5 2004-07-27 20:15:32 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.cpp,v 1.6 2004-10-27 14:39:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/27 20:15:32  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,26 +28,25 @@ RichTabulatedRayleighScatter::RichTabulatedRayleighScatter ( const std::string& 
                                                              const std::string& name,
                                                              const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
-    m_rayScatL( 0 ) {
+    m_rayScatL( 0 ) 
+{
 
   declareInterface<IRichRayleighScatter>(this);
 
-  declareProperty( "RayScatLengthLocation",
-                   m_rayScatLoc = "/dd/Materials/RichMaterialTabProperties/AerogelRayleighPT" );
-
 }
 
-StatusCode RichTabulatedRayleighScatter::initialize() {
+StatusCode RichTabulatedRayleighScatter::initialize() 
+{
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  SmartDataPtr<TabulatedProperty> tab( detSvc(), m_rayScatLoc );
-  if ( !tab ) {
-    return Error( "Failed to load Rayleigh scattering length from "+m_rayScatLoc );
-  }
-  m_rayScatL = new Rich1DTabProperty( tab );
+  // Get aerogel radiator
+  const DeRichRadiator * aero = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel );
+
+  // Get the rayleigh scattering length
+  m_rayScatL = new Rich1DTabProperty( aero->rayleigh() );
 
   return StatusCode::SUCCESS;
 }

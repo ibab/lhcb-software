@@ -4,11 +4,13 @@
  *  Header file for tool : RichFunctionalCKResVpForTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichFunctionalCKResVpForTrStoredTracks.h,v 1.2 2004-07-27 20:15:30 jonrob Exp $
+ *  $Id: RichFunctionalCKResVpForTrStoredTracks.h,v 1.3 2004-10-27 14:39:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/07/27 20:15:30  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @date   17/10/2004
  */
 
 #ifndef RICHRECTOOLS_RICHFUNCTIONALCKRESVPFORTRSTOREDTRACKS_H
@@ -22,7 +24,7 @@
 
 /** @class RichFunctionalCKResVpForTrStoredTracks RichFunctionalCKResVpForTrStoredTracks.h
  *
- *  Provides an analytical calculation of the expected Cherenkoc angle resolution .
+ *  Provides an analytical calculation of the expected Cherenkoc angle resolution.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-04-07

@@ -4,8 +4,11 @@
  *  Header file for tool : RichTabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.h,v 1.5 2004-07-27 20:15:33 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.h,v 1.6 2004-10-27 14:39:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/27 20:15:33  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,6 +35,9 @@
 
 // Event model
 #include "Event/RichRecSegment.h"
+
+// RichDet
+#include "RichDet/DeRichRadiator.h"
 
 // interfaces
 #include "RichRecBase/IRichRayleighScatter.h"
@@ -74,9 +80,6 @@ private:  // Private data
 
   /// Tabulated Rayleigh scattering length
   Rich1DTabProperty * m_rayScatL;
-
-  /// Location of tabulated rayleigh scattering length in XML
-  std::string m_rayScatLoc;
 
 };
 

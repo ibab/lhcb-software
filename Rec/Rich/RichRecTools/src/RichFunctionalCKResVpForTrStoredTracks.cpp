@@ -3,11 +3,13 @@
  *
  *  Implementation file for tool : RichFunctionalCKResVpForTrStoredTracks
  *
- *  $Id: RichFunctionalCKResVpForTrStoredTracks.cpp,v 1.2 2004-07-27 20:15:30 jonrob Exp $
+ *  $Id: RichFunctionalCKResVpForTrStoredTracks.cpp,v 1.3 2004-10-27 14:39:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/07/27 20:15:30  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @date   17/10/2004
  */
 
 // from Gaudi
@@ -23,18 +25,24 @@ static const  ToolFactory<RichFunctionalCKResVpForTrStoredTracks>          s_fac
 const        IToolFactory& RichFunctionalCKResVpForTrStoredTracksFactory = s_factory ;
 
 // Standard constructor
-RichFunctionalCKResVpForTrStoredTracks::RichFunctionalCKResVpForTrStoredTracks ( const std::string& type,
-                                                                                 const std::string& name,
-                                                                                 const IInterface* parent )
+RichFunctionalCKResVpForTrStoredTracks::
+RichFunctionalCKResVpForTrStoredTracks ( const std::string& type,
+                                         const std::string& name,
+                                         const IInterface* parent )
   : RichRecToolBase( type, name, parent )
 {
+
+  // define interface
   declareInterface<IRichCherenkovResolution>(this);
+
+  // job options
+
 }
 
 StatusCode RichFunctionalCKResVpForTrStoredTracks::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
 
@@ -49,7 +57,7 @@ StatusCode RichFunctionalCKResVpForTrStoredTracks::finalize()
 
 double
 RichFunctionalCKResVpForTrStoredTracks::ckThetaResolution( RichRecSegment * segment,
-                                                           const Rich::ParticleIDType /* id */ ) const
+                                                           const Rich::ParticleIDType id ) const
 {
 
   // This method is un-finished - so throw an exception if called

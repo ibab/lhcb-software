@@ -4,11 +4,13 @@
  *  Implementation file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.14 2004-10-13 09:52:41 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.15 2004-10-27 14:39:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.14  2004/10/13 09:52:41  jonrob
+ *  Speed improvements + various minor changes
+ *
  *  Revision 1.13  2004/07/27 20:15:32  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,12 +29,12 @@ const        IToolFactory& RichPixelCreatorFromRichDigitsFactory = s_factory ;
 RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::string& type,
                                                                 const std::string& name,
                                                                 const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
-    m_pixels      ( 0 ),
-    m_smartIDTool ( 0 ),
-    m_allDone     ( false ),
-    m_bookKeep    ( true  ),
-    m_usedDets    ( Rich::NRiches, true )
+  : RichRecToolBase ( type, name, parent ),
+    m_pixels        ( 0 ),
+    m_idTool        ( 0 ),
+    m_allDone       ( false ),
+    m_bookKeep      ( true  ),
+    m_usedDets      ( Rich::NRiches, true )
 {
 
   declareInterface<IRichPixelCreator>(this);
@@ -54,7 +56,7 @@ StatusCode RichPixelCreatorFromRichDigits::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDTool", m_smartIDTool );
+  acquireTool( "RichSmartIDTool", m_idTool );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -122,20 +124,25 @@ RichPixelCreatorFromRichDigits::buildPixel( const RichDigit * digit ) const
     if ( m_usedDets[id.rich()] ) {
 
       // Make a new RichRecPixel
-      newPixel = new RichRecPixel();
+      const HepPoint3D gPos = m_idTool->globalPosition( id );
+      newPixel = new RichRecPixel( id,                              // SmartID for pixel
+                                   gPos,                            // position in global coords
+                                   m_idTool->globalToPDPanel(gPos), // position in local coords
+                                   Rich::PixelParent::Digit,        // parent type
+                                   digit                            // pointer to parent
+                                   );
       richPixels()->insert( newPixel );
 
       // Positions
-      HepPoint3D & gPosition = newPixel->globalPosition();
-      m_smartIDTool->globalPosition( id, gPosition );
-      newPixel->localPosition() = m_smartIDTool->globalToPDPanel(gPosition);
+      //newPixel->globalPosition() = m_idTool->globalPosition( id );
+      //newPixel->localPosition()  = m_idTool->globalToPDPanel(gPosition);
 
       // Set smartID
-      newPixel->setSmartID( id );
+      //newPixel->setSmartID( id );
 
       // Set parent information
-      newPixel->setParentPixel ( digit                    );
-      newPixel->setParentType  ( Rich::PixelParent::Digit );
+      //newPixel->setParentPixel ( digit                    );
+      //newPixel->setParentType  ( Rich::PixelParent::Digit );
 
     }
 
@@ -148,22 +155,24 @@ RichPixelCreatorFromRichDigits::buildPixel( const RichDigit * digit ) const
 
 StatusCode RichPixelCreatorFromRichDigits::newPixels() const
 {
-  if ( m_allDone ) return StatusCode::SUCCESS;
-  m_allDone = true;
+  if ( !m_allDone ) {
+    m_allDone = true;
 
-  // Obtain smart data pointer to RichDigits
-  const RichDigits * digits = get<RichDigits>( m_recoDigitsLocation );
+    // Obtain smart data pointer to RichDigits
+    const RichDigits * digits = get<RichDigits>( m_recoDigitsLocation );
 
-  // Loop over RichDigits and create working pixels
-  richPixels()->reserve( digits->size() );
-  for ( RichDigits::const_iterator digit = digits->begin();
-        digit != digits->end(); ++digit ) { newPixel( *digit ); }
+    // Loop over RichDigits and create working pixels
+    richPixels()->reserve( digits->size() );
+    for ( RichDigits::const_iterator digit = digits->begin();
+          digit != digits->end(); ++digit ) { newPixel( *digit ); }
 
-  if ( msgLevel(MSG::DEBUG) ) {
-    debug() << "Located " << digits->size() << " RichDigits at "
-            << m_recoDigitsLocation << endreq
-            << "Created " << richPixels()->size() << " RichRecPixels at "
-            << m_richRecPixelLocation << endreq;
+    if ( msgLevel(MSG::DEBUG) ) {
+      debug() << "Located " << digits->size() << " RichDigits at "
+              << m_recoDigitsLocation << endreq
+              << "Created " << richPixels()->size() << " RichRecPixels at "
+              << m_richRecPixelLocation << endreq;
+    }
+
   }
 
   return StatusCode::SUCCESS;
