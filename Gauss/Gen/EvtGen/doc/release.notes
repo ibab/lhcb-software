@@ -1,8 +1,8 @@
-! =============================================================================
 Package :EvtGen 
 Package manager : Witek Pokorski
 
-! =============================================================================
+! >>>>>>>>>>>>>>>>>> EvtGen v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 ! 20020411 - EvtGen v1r0 Witek Pokorski
   - New package
     ATLAS code, not maintain by LHCb, not modified
@@ -15,6 +15,7 @@ Package manager : Witek Pokorski
     Upsilon(4S) and for generic hadronic decays, e.g. of B mesons, that are 
     not implemented in the generator.   
 
-! =============================================================================
+! >>>>>>>>>>>>>>>>>> EvtGen v0r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 
 
