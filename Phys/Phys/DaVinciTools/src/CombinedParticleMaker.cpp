@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.2 2003-06-02 18:57:54 gcorti Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.3 2003-06-03 16:59:51 gcorti Exp $
 // Include files 
 #include <algorithm>
 
@@ -61,16 +61,16 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
 
   declareProperty("ExclusiveSelection", m_exclusive );
   
-  m_muonSelection.push_back("det='MUON' mu-pi='0.0'");
+  m_muonSelection.push_back("det='MUON' mu-pi='-8.0'");
   declareProperty("MuonSelection", m_muonSelection );
 
   m_electronSelection.push_back("det='CALO' e-pi='0.0'");
   declareProperty("ElectronSelection", m_electronSelection );
   
-  m_kaonSelection.push_back("det='RICH' k-pi='0.0'");
+  m_kaonSelection.push_back("det='RICH' k-pi='2.0' k-p='-2.0'");
   declareProperty("KaonSelection", m_kaonSelection );
 
-  m_protonSelection.push_back("det='RICH' p-pi='0.0' p-k='0.0'");
+  m_protonSelection.push_back("det='RICH' p-pi='3.0'");
   declareProperty("ProtonSelection", m_protonSelection );
 
   m_pionSelection.clear();
@@ -223,9 +223,18 @@ StatusCode CombinedParticleMaker::initialize() {
 StatusCode CombinedParticleMaker::finalize() {
   
   MsgStream msg(msgSvc(), name());
-  // loop over m_typeSelections, remove pair, pop back vector of selectionDesc
+
+  msg << MSG::DEBUG << "Delete selection criteria" << endreq;  
+  // loop over m_typeSelections, pop back vector of selectionDesc
   // where new was done
-  //  for( TypeSelections::iterator m_typeSelections.
+  for( TypeSelections::iterator itype=m_typeSelections.begin();
+       m_typeSelections.end()!=itype; ++itype ) {
+    while( ((*itype).second).size() > 0 ) {
+      PMakerSelection* aSel = ((*itype).second).back();
+      ((*itype).second).pop_back();
+      delete aSel;
+    }
+  }
 
   return StatusCode::SUCCESS;
 }

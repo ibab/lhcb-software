@@ -1,6 +1,21 @@
-! $Id: release.notes,v 1.56 2003-05-30 11:55:12 gcorti Exp $
+! $Id: release.notes,v 1.57 2003-06-03 16:59:51 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+!========================== DaVinciTools v8r1 2003-06-03 ====================
+! 2003-06-03 - Gloria CORTI
+ - src/CombinedParticleMaker.cpp
+   . set default values for properies as agreed with Roger Forty
+   . delete PMakerSelections in finalize
+
+! 2003-06-02 - Gloria CORTI
+ - src/CombinedParticleMaker.cpp
+   . introduce additional protections in initialize for checking
+     pion condition when pions are not requested
+   . put printing of conditions at end of initialize
+   . fix mistyping bugs
+ - src/PMakerSelection.cpp
+   . introduce method for meanigful printing of enum
 
 ! 2003-05-30 - Gloria Corti
  - src/CombinedParticleMaker.h, CombinedParticleMaker.cpp
