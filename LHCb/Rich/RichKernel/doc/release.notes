@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.67 2005-03-03 15:45:28 jonrob Exp $
+! $Id: release.notes,v 1.68 2005-03-08 10:55:25 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v5r4 2005-03-08 =======================
 ! 2005-02-20 - Chris Jones
  - Add new methods to algorithm and tool base classes to access the TES
    location for a given DataObject.
