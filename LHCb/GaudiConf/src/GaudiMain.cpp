@@ -1,4 +1,4 @@
-// $Id: GaudiMain.cpp,v 1.5 2002-01-24 16:14:03 mato Exp $
+// $Id: GaudiMain.cpp,v 1.6 2002-11-21 15:47:51 sponce Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : GaudiConf
@@ -39,6 +39,9 @@ int main ( int argc, char** argv ) {
 
   // Run the application manager and process events
   appMgr->run();
+
+  // Release Application Manager
+  iface->release();
 
   // All done - exit
   return 0;

@@ -1,6 +1,9 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 2002-11-21 - Sebastien Ponce
+ - Release of the Application was missing at the end of GaudiMain
+
 !========================== GaudiConf v6r4 2002-11-14 ======================
 ! 2002-11-14 - Marco Cattaneo
  - Added units.opts and included it from Common.opts. This file could be modified
