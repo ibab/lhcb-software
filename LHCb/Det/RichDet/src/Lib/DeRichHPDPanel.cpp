@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichHPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRichHPDPanel.cpp,v 1.19 2004-10-20 22:41:55 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.20 2004-10-21 14:52:53 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.19  2004/10/20 22:41:55  jonrob
+ *  Tidy up inline and virtual functions (whilst solving a windows problem)
+ *
  *  Revision 1.18  2004/10/20 17:02:44  jonrob
  *  Updates for windows
  *
@@ -201,11 +204,9 @@ StatusCode DeRichHPDPanel::smartID ( const HepPoint3D& globalPoint,
   if ( !findHPDRowCol(inPanel, id) ) return StatusCode::FAILURE;
 
   const unsigned int HPDNumber = HPDRowColToNum(id.PDRow(), id.PDCol());
-
   const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
   const IPVolume* pvHPDSMaster = pvHPDMaster->lvolume()->pvolume(0);
   const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume(4);
-  //  const ISolid* siliconSolid = pvSilicon->lvolume()->solid();
 
   const HepPoint3D inSilicon =
     pvSilicon->toLocal(pvHPDSMaster->toLocal(pvHPDMaster->toLocal(inPanel)));
@@ -272,12 +273,14 @@ StatusCode DeRichHPDPanel::detectionPoint ( const RichSmartID& smartID,
   const double inWindowX = -inSiliconX / m_deMagFactor[0];
   const double inWindowY = -inSiliconY / m_deMagFactor[0];
   const double inWindowZ = sqrt(m_winRsq-inWindowX*inWindowX-inWindowY*inWindowY);
-  HepPoint3D windowHit(inWindowX, inWindowY, inWindowZ);
 
   windowHitGlobal =
     geometry()->toGlobal(pvHPDMaster->
                          toMother(pvHPDSMaster->
-                                  toMother(pvWindow->toMother(windowHit))));
+                                  toMother(pvWindow->
+                                           toMother(HepPoint3D(inWindowX, 
+                                                               inWindowY, 
+                                                               inWindowZ)))));
 
   return StatusCode::SUCCESS;
 }
@@ -488,4 +491,3 @@ bool DeRichHPDPanel::detPlanePoint( const HepPoint3D& pGlobal,
   hitPosition = geometry()->toGlobal( hitInPanel );
   return true;
 }
-
