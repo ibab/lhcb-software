@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.6 2002-03-20 21:50:45 ibelyaev Exp $
+# $Id: requirements,v 1.7 2002-03-26 18:37:06 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2002/03/20 21:50:45  ibelyaev
+#  update the package version
+#
 # Revision 1.5  2002/03/20 15:49:09  ibelyaev
 #  add simple adaptor for std::map/HashTable classes
 #
@@ -48,9 +51,10 @@ apply_pattern     package_libraries
 
 # =============== private stuff ===============================================
 private
-apply_pattern     package_shlibflags 
-macro_append      CaloKernel_shlibflags  $(use_linkopts)
-macro_remove      use_linkopts           $(CaloKernel_linkopts)
+apply_pattern     package_shlibflags    
+macro_append      CaloKernel_shlibflags  " $(LHCbKernel_linkopts) "
+macro_append      CaloKernel_shlibflags  " $(GaudiKernel_linkopts) "
+macro_append      CaloKernel_shlibflags  " $(CLHEP_linkopts) " 
 apply_pattern     application_path
 
 # =============== test application ============================================
