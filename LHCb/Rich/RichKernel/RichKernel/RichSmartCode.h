@@ -21,35 +21,35 @@ namespace RichSmartCode {
 
   static const unsigned int BitsRich      = 1;
   static const unsigned int BitsPanel     = 2;
-  static const unsigned int BitsHPDRow    = 6;
-  static const unsigned int BitsHPDCol    = 6;
+  static const unsigned int BitsPDRow     = 6;
+  static const unsigned int BitsPDCol     = 6;
   static const unsigned int BitsPixelRow  = 8;
   static const unsigned int BitsPixelCol  = 8;
-  static const unsigned int BitsIndex     = 
-   BitsHPDCol + BitsHPDRow + BitsPixelRow + BitsPixelCol + BitsPanel + BitsRich;
+  static const unsigned int BitsIndex     =
+    BitsPDCol + BitsPDRow + BitsPixelRow + BitsPixelCol + BitsPanel + BitsRich;
 
   static const unsigned int BitsAll       =
-   BitsHPDCol + BitsHPDRow + BitsPixelRow + BitsPixelCol + BitsPanel + BitsRich;
+  BitsPDCol + BitsPDRow + BitsPixelRow + BitsPixelCol + BitsPanel + BitsRich;
 
   static const unsigned int BitsTotal     = 32 ;
   static const unsigned int BitsRest      = BitsTotal - BitsAll;
 
-  static const unsigned int ShiftHPDCol   = 0 ;
-  static const unsigned int ShiftHPDRow   = ShiftHPDCol   + BitsHPDCol;
-  static const unsigned int ShiftPixelRow = ShiftHPDRow   + BitsHPDRow;
+  static const unsigned int ShiftPDCol    = 0 ;
+  static const unsigned int ShiftPDRow    = ShiftPDCol   + BitsPDCol;
+  static const unsigned int ShiftPixelRow = ShiftPDRow   + BitsPDRow;
   static const unsigned int ShiftPixelCol = ShiftPixelRow + BitsPixelRow;
   static const unsigned int ShiftPanel    = ShiftPixelCol + BitsPixelCol;
   static const unsigned int ShiftRich     = ShiftPanel    + BitsPanel;
 
-  static const unsigned int ShiftIndex    = ShiftHPDCol;
-  static const unsigned int ShiftAll      = ShiftHPDCol;
+  static const unsigned int ShiftIndex    = ShiftPDCol;
+  static const unsigned int ShiftAll      = ShiftPDCol;
   static const unsigned int ShiftRest     = ShiftRich + BitsRich;
 
-  static const ContentType  MaskHPDCol    =
-  ( ( ( (ContentType) 1 ) << BitsHPDCol  ) - 1  ) << ShiftHPDCol  ;
+  static const ContentType  MaskPDCol     =
+  ( ( ( (ContentType) 1 ) << BitsPDCol  ) - 1  ) << ShiftPDCol  ;
 
-  static const ContentType  MaskHPDRow    =
-  ( ( ( (ContentType) 1 ) << BitsHPDRow  ) - 1  ) << ShiftHPDRow  ;
+  static const ContentType  MaskPDRow     =
+  ( ( ( (ContentType) 1 ) << BitsPDRow  ) - 1  ) << ShiftPDRow  ;
 
   static const ContentType  MaskPixelRow  =
   ( ( ( (ContentType) 1 ) << BitsPixelRow )  - 1  ) << ShiftPixelRow;

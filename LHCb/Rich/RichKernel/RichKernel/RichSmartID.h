@@ -34,22 +34,22 @@ public:
   /** constructor with all arguments
       @param   Rich        rich detector identifier
       @param   Panel       rich panel identifier
-      @param   HPDRow      rich HPD row identifier
-      @param   HPDCol      rich HPD row identifier
+      @param   PDRow       rich PhotoDetector row identifier
+      @param   PDCol       rich PhotoDetector row identifier
       @param   PixelRow    rich pixel row identifier
       @param   PixelCol    rich pixel column identifier
   */
   RichSmartID ( const unsigned int Rich,
                 const unsigned int Panel,
-                const unsigned int HPDRow,
-                const unsigned int HPDCol,
+                const unsigned int PDRow,
+                const unsigned int PDCol,
                 const unsigned int PixelRow,
                 const unsigned int PixelCol )
     : m_key(0)  {
     setRich     ( Rich ) ;
     setPanel    ( Panel ) ;
-    setHPDRow   ( HPDRow ) ;
-    setHPDCol   ( HPDCol ) ;
+    setPDRow    ( PDRow ) ;
+    setPDCol    ( PDCol ) ;
     setPixelRow ( PixelRow ) ;
     setPixelCol ( PixelCol ) ;
   };
@@ -99,44 +99,44 @@ public:
       ( contents() & RichSmartCode::MaskPanel ) >> RichSmartCode::ShiftPanel ;
   }
 
-  /// Decoding function to return HPD RichSmartID only
-  inline const RichSmartID hpdID () const
+  /// Decoding function to return PD RichSmartID only
+  inline const RichSmartID pdID () const
   {
-    return (RichSmartID) (( contents() & ~RichSmartCode::MaskPixelRow ) 
-                                       & ~RichSmartCode::MaskPixelCol );
+    return (RichSmartID) (( contents() & ~RichSmartCode::MaskPixelRow )
+                          & ~RichSmartCode::MaskPixelCol );
   }
 
   /// Decoding function to return Panel RichSmartID only
   inline const RichSmartID panelID () const
   {
-    return (RichSmartID) (((( contents() & ~RichSmartCode::MaskPixelRow ) 
-                                         & ~RichSmartCode::MaskPixelCol )
-                                         & ~RichSmartCode::MaskHPDRow )
-                                         & ~RichSmartCode::MaskHPDCol );
+    return (RichSmartID) (((( contents() & ~RichSmartCode::MaskPixelRow )
+                            & ~RichSmartCode::MaskPixelCol )
+                           & ~RichSmartCode::MaskPDRow )
+                          & ~RichSmartCode::MaskPDCol );
   }
 
   /// Decoding function to return Rich RichSmartID only
   inline const RichSmartID richID () const
   {
-    return (RichSmartID) ((((( contents() & ~RichSmartCode::MaskPixelRow ) 
-                                          & ~RichSmartCode::MaskPixelCol )
-                                          & ~RichSmartCode::MaskHPDRow )
-                                          & ~RichSmartCode::MaskHPDCol )
-                                          & ~RichSmartCode::MaskPanel );
+    return (RichSmartID) ((((( contents() & ~RichSmartCode::MaskPixelRow )
+                             & ~RichSmartCode::MaskPixelCol )
+                            & ~RichSmartCode::MaskPDRow )
+                           & ~RichSmartCode::MaskPDCol )
+                          & ~RichSmartCode::MaskPanel );
   }
 
-  /// Decoding function to extract HPD row identifier
-  inline const unsigned int HPDRow  () const
+  /// Decoding function to extract PD row identifier
+  inline const unsigned int PDRow  () const
   {
     return
-      ( contents() & RichSmartCode::MaskHPDRow ) >> RichSmartCode::ShiftHPDRow ;
+      ( contents() & RichSmartCode::MaskPDRow ) >> RichSmartCode::ShiftPDRow ;
   }
 
-  /// Decoding function to extract HPD column identifier
-  inline const unsigned int HPDCol  () const
+  /// Decoding function to extract PD column identifier
+  inline const unsigned int PDCol  () const
   {
     return
-      ( contents() & RichSmartCode::MaskHPDCol ) >> RichSmartCode::ShiftHPDCol ;
+      ( contents() & RichSmartCode::MaskPDCol ) >> RichSmartCode::ShiftPDCol ;
   }
 
   /// Decoding function to extract pixel row identifier
@@ -204,11 +204,11 @@ public:
   /// update pixel col identifier
   inline RichSmartID& setPixelCol( const unsigned int PixelCol );
 
-  /// update HPD row identifier
-  inline RichSmartID& setHPDRow( const unsigned int HPDRow  );
+  /// update PD row identifier
+  inline RichSmartID& setPDRow( const unsigned int PDRow  );
 
-  /// update HPD col identifier
-  inline RichSmartID& setHPDCol( const unsigned int HPDCol  );
+  /// update PD col identifier
+  inline RichSmartID& setPDCol( const unsigned int PDCol  );
 
   /// update sicb identifier
   inline RichSmartID& set( const ContentType&,
@@ -247,14 +247,14 @@ inline RichSmartID& RichSmartID::setPixelCol ( const unsigned int PixelCol ) {
     set( PixelCol, RichSmartCode::ShiftPixelCol, RichSmartCode::MaskPixelCol );
 }
 
-inline RichSmartID& RichSmartID::setHPDRow  ( const unsigned int HPDRow ){
+inline RichSmartID& RichSmartID::setPDRow  ( const unsigned int PDRow ){
   return
-    set( HPDRow, RichSmartCode::ShiftHPDRow, RichSmartCode::MaskHPDRow );
+    set( PDRow, RichSmartCode::ShiftPDRow, RichSmartCode::MaskPDRow );
 }
 
-inline RichSmartID& RichSmartID::setHPDCol  ( const unsigned int HPDCol ) {
+inline RichSmartID& RichSmartID::setPDCol  ( const unsigned int PDCol ) {
   return
-    set( HPDCol, RichSmartCode::ShiftHPDCol, RichSmartCode::MaskHPDCol  );
+    set( PDCol, RichSmartCode::ShiftPDCol, RichSmartCode::MaskPDCol  );
 }
 
 inline RichSmartID& RichSmartID::setIndex( const unsigned int Index ) {
@@ -291,8 +291,8 @@ inline const std::string RichSmartID::bits( const char del ) const
       else if ( RichSmartCode::ShiftPanel     == pos ) { str += del ; }
       else if ( RichSmartCode::ShiftPixelRow  == pos ) { str += del ; }
       else if ( RichSmartCode::ShiftPixelCol  == pos ) { str += del ; }
-      else if ( RichSmartCode::ShiftHPDRow    == pos ) { str += del ; }
-      else if ( RichSmartCode::ShiftHPDCol    == pos ) { str += del ; }
+      else if ( RichSmartCode::ShiftPDRow    == pos ) { str += del ; }
+      else if ( RichSmartCode::ShiftPDCol    == pos ) { str += del ; }
       else if ( RichSmartCode::ShiftAll       == pos ) { str += del ; }
     }
   return str += "]";
@@ -335,8 +335,8 @@ inline std::ostream& operator << ( std::ostream& os, const RichSmartID& id ) {
 
 /// overloaded output to MsgStream
 inline MsgStream& operator << ( MsgStream& os, const RichSmartID& id ) {
-  os << "'Rich=" << id.rich() << " Panel=" << id.panel() << " HPD(r/c)=" 
-     << id.HPDRow() << "/" << id.HPDCol() << " Pixel(r/c)=" << id.pixelRow() 
+  os << "'Rich=" << id.rich() << " Panel=" << id.panel() << " PD(r/c)="
+     << id.PDRow() << "/" << id.PDCol() << " Pixel(r/c)=" << id.pixelRow()
      << "/" << id.pixelCol() << "'";
   return os;
 }
