@@ -1,8 +1,11 @@
-// $Id: PhotonParticleMaker.cpp,v 1.1 2003-01-22 16:43:24 ibelyaev Exp $
+// $Id: PhotonParticleMaker.cpp,v 1.2 2003-02-12 19:33:31 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/01/22 16:43:24  ibelyaev
+//  new tools for Photons
+// 
 // ============================================================================
 // Include files
 // from Gaudi
@@ -331,7 +334,7 @@ StatusCode PhotonParticleMaker::makeParticles ( ParticleVector & particles )
   MsgStream log( msgSvc() , name() ) ;
   log << MSG::INFO 
       << " Create " << nAccepted   << " Photons "  
-      << " from   " << pps->size() << " ProtoParticles " << std::endreq ;
+      << " from   " << pps->size() << " ProtoParticles " << endreq ;
   
   return StatusCode::SUCCESS ;
 };
