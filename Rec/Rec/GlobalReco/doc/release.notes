@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!===================== GlobalReco v4r1 2003-07-29 ===========================
 ! 2003-07-16 - Yuehong Xie
  - src/ChargedProtoPAlg.cpp src/ChargedProtoPAlg.h
    . correct confusion with Property "Chi2NdFofITracks" and "Chi2NdFofOTracks"
