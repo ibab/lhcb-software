@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.15 2002-09-07 11:01:49 ibelyaev Exp $
+! $Id: release.notes,v 1.16 2002-09-12 12:11:49 gcorti Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -6,6 +6,9 @@
 ! =============================================================================
 ! Responsible : Ivan Belyaev
 ! =============================================================================
+
+! 2002-09-10 - Gloria Corti
+ - move NPPs2MCPs and NeutralPPMCTrughAlg to DaVinciAssociators
 
 ! 2002-09-07 - Ivan Belyaev
  - options/NPPs2MCPs.opts      - fix the bug, kindly found by Gloria and Galina 
