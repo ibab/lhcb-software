@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.28 2002-05-03 16:11:22 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.29 2002-05-06 07:38:55 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -561,7 +561,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
                 gddRelType = gddRelation->type().transcode(),
                 gddRealRelType = (multRel) ? 
                                  "SmartRefVector<" + gddRelType + ">" : 
-                                 "SmartRef<" + gddRelType + ">";
+                                 gddRelType + "*";
 
     if (getMeth)
     {
@@ -570,9 +570,10 @@ void printCppDictionary(DaDiPackage* gddPackage,
         << "_" << methodCounter++ << "(void* v)" << std::endl
         << remLine << std::endl 
         << "{" << std::endl
-        << "  const " << gddRealRelType << "& ret = ((" << gddClassName << "*)v)->"
+        << (multRel ? "  const " : "  ") << gddRealRelType << (multRel ? "&" : "")
+        << " ret = ((" << gddClassName << "*)v)->"
         << DaDiTools::retGetName(gddRelName) << "();" << std::endl
-        << "  return (void*)&ret;" << std::endl
+        << "  return " <<(multRel ? "(void*)&ret" : " (void*)ret") << ";" << std::endl
         << "}" << std::endl
         << std::endl;
     }
@@ -586,8 +587,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
         << remLine << std::endl
         << "{" << std::endl
         << "  ((" << gddClassName << "*)v)->set"
-          << DaDiTools::firstUp(gddRelName) << "(*(" << gddRealRelType
-          << "*)argList[0]);" << std::endl
+        << DaDiTools::firstUp(gddRelName) << (multRel ? "(*(" : "((") << gddRealRelType
+        << (multRel ? "*" : "" ) << ")argList[0]);" << std::endl
         << "}" << std::endl
         << std::endl;
     }
@@ -617,8 +618,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
           << remLine << std::endl
           << "{" << std::endl
           << "  ((" << gddClassName << "*)v)->addTo"
-          << DaDiTools::firstUp(gddRelName) << "(*(SmartRef<" << gddRelType
-            << ">*)argList[0]);" << std::endl
+          << DaDiTools::firstUp(gddRelName) << "((" << gddRelType
+            << "*)argList[0]);" << std::endl
           << "}" << std::endl
           << std::endl;
       }
@@ -632,8 +633,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
           << remLine << std::endl
           << "{" << std::endl
           << "  ((" << gddClassName << "*)v)->removeFrom"
-          << DaDiTools::firstUp(gddRelName) << "(*(SmartRef<" << gddRelType
-            << ">*)argList[0]);" << std::endl
+          << DaDiTools::firstUp(gddRelName) << "((" << gddRelType
+            << "*)argList[0]);" << std::endl
           << "}" << std::endl
           << std::endl;
       }
@@ -849,7 +850,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
          multRel = (gddRelation->ratio().equals("1")) ? false : true;
     std::string gddRealRelType = (multRel) ? 
                                  "SmartRefVector<" + gddRelType + ">" : 
-                                 "SmartRef<" + gddRelType + ">";
+                                 gddRelType;
 
     if (getMeth)
     {
