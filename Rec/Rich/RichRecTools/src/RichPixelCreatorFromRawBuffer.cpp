@@ -1,40 +1,33 @@
 
-/** @file RichPixelCreatorFromRichDigits.cpp
+/** @file RichPixelCreatorFromRawBuffer.cpp
  *
- *  Implementation file for tool : RichPixelCreatorFromRichDigits
+ *  Implementation file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.16 2004-10-30 19:38:44 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.1 2004-10-30 19:38:44 jonrob Exp $
  *  $Log: not supported by cvs2svn $
- *  Revision 1.15  2004/10/27 14:39:41  jonrob
- *  Various updates
- *
- *  Revision 1.14  2004/10/13 09:52:41  jonrob
- *  Speed improvements + various minor changes
- *
- *  Revision 1.13  2004/07/27 20:15:32  jonrob
- *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @date   30/10/2004
  */
 
 // local
-#include "RichPixelCreatorFromRichDigits.h"
+#include "RichPixelCreatorFromRawBuffer.h"
 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichPixelCreatorFromRichDigits>          s_factory ;
-const        IToolFactory& RichPixelCreatorFromRichDigitsFactory = s_factory ;
+static const  ToolFactory<RichPixelCreatorFromRawBuffer>          s_factory ;
+const        IToolFactory& RichPixelCreatorFromRawBufferFactory = s_factory ;
 
 // Standard constructor
-RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::string& type,
-                                                                const std::string& name,
-                                                                const IInterface* parent )
+RichPixelCreatorFromRawBuffer::RichPixelCreatorFromRawBuffer( const std::string& type,
+                                                              const std::string& name,
+                                                              const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
     m_pixels        ( 0 ),
     m_idTool        ( 0 ),
+    m_decoder       ( 0 ),
     m_allDone       ( false ),
     m_bookKeep      ( true  ),
     m_usedDets      ( Rich::NRiches, true )
@@ -45,14 +38,12 @@ RichPixelCreatorFromRichDigits::RichPixelCreatorFromRichDigits( const std::strin
   // Define job option parameters
   declareProperty( "RichRecPixelLocation",
                    m_richRecPixelLocation = RichRecPixelLocation::Default );
-  declareProperty( "RecoDigitsLocation",
-                   m_recoDigitsLocation = RichDigitLocation::Default );
   declareProperty( "DoBookKeeping", m_bookKeep );
   declareProperty( "UseDetectors", m_usedDets );
 
 }
 
-StatusCode RichPixelCreatorFromRichDigits::initialize()
+StatusCode RichPixelCreatorFromRawBuffer::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -60,6 +51,7 @@ StatusCode RichPixelCreatorFromRichDigits::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichSmartIDTool", m_idTool );
+  acquireTool( "RichSmartIDDecoder", m_decoder );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -71,14 +63,14 @@ StatusCode RichPixelCreatorFromRichDigits::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPixelCreatorFromRichDigits::finalize()
+StatusCode RichPixelCreatorFromRawBuffer::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichPixelCreatorFromRichDigits::handle ( const Incident& incident )
+void RichPixelCreatorFromRawBuffer::handle ( const Incident& incident )
 {
   // Update prior to start of event. Used to re-initialise data containers
   if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
@@ -89,38 +81,23 @@ void RichPixelCreatorFromRichDigits::handle ( const Incident& incident )
   }
 }
 
-// Forms a new RichRecPixel object from a RichDigit
+// Forms a new RichRecPixel object
 RichRecPixel *
-RichPixelCreatorFromRichDigits::newPixel( const ContainedObject * obj ) const
+RichPixelCreatorFromRawBuffer::newPixel( const ContainedObject * /* obj */ ) const
 {
-  // Try to cast to RichDigit
-  const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
-  if ( !digit ) {
-    Warning("Parent not of type RichDigit");
-    return NULL;
-  }
-
-  // See if this RichRecPixel already exists
-  RichRecPixel * pixel = ( m_bookKeep && m_pixelDone[digit->key()] ?
-                           m_pixelExists[digit->key()] : buildPixel(digit) );
-
-  // Add to reference map
-  if ( m_bookKeep ) {
-    m_pixelExists[ digit->key() ] = pixel;
-    m_pixelDone  [ digit->key() ] = true;
-  }
-
-  return pixel;
+  // This method is not valid for this implementation
+  Exception( "Unimplemented method RichPixelCreatorFromRawBuffer::newPixel" );
+  return 0;
 }
 
 RichRecPixel *
-RichPixelCreatorFromRichDigits::buildPixel( const RichDigit * digit ) const
+RichPixelCreatorFromRawBuffer::buildPixel( const RichSmartID id ) const
 {
 
-  RichRecPixel * newPixel = NULL;
+  // See if this RichRecPixel already exists
+  RichRecPixel * pixel = ( m_bookKeep && m_pixelDone[id] ? m_pixelExists[id] : 0 );
+  if ( pixel ) return pixel;
 
-  // RichDigit key
-  const RichSmartID id = digit->key();
   if ( id.pixelDataAreValid() ) { // check it is valid
 
     // Check if we are using this detector
@@ -128,13 +105,13 @@ RichPixelCreatorFromRichDigits::buildPixel( const RichDigit * digit ) const
 
       // Make a new RichRecPixel
       const HepPoint3D gPos = m_idTool->globalPosition( id );
-      newPixel = new RichRecPixel( id,                              // SmartID for pixel
-                                   gPos,                            // position in global coords
-                                   m_idTool->globalToPDPanel(gPos), // position in local coords
-                                   Rich::PixelParent::Digit,        // parent type
-                                   digit                            // pointer to parent
-                                   );
-      richPixels()->insert( newPixel );
+      pixel = new RichRecPixel( id,                              // SmartID for pixel
+                                gPos,                            // position in global coords
+                                m_idTool->globalToPDPanel(gPos), // position in local coords
+                                Rich::PixelParent::RawBuffer,    // parent type
+                                0                                // pointer to parent (not available)
+                                );
+      richPixels()->insert( pixel );
 
     }
 
@@ -142,26 +119,30 @@ RichPixelCreatorFromRichDigits::buildPixel( const RichDigit * digit ) const
     Warning("RichSmartID does not contain valid pixel data !");
   }
 
-  return newPixel;
+  // Add to reference map
+  if ( m_bookKeep ) {
+    m_pixelExists[ id ] = pixel;
+    m_pixelDone  [ id ] = true;
+  }
+
+  return pixel;
 }
 
-StatusCode RichPixelCreatorFromRichDigits::newPixels() const
+StatusCode RichPixelCreatorFromRawBuffer::newPixels() const
 {
   if ( !m_allDone ) {
     m_allDone = true;
 
-    // Obtain smart data pointer to RichDigits
-    const RichDigits * digits = get<RichDigits>( m_recoDigitsLocation );
+    // Obtain RichSmartIDs
+    const RichSmartID::Vector & smartIDs = m_decoder->allRichSmartIDs();
 
     // Loop over RichDigits and create working pixels
-    richPixels()->reserve( digits->size() );
-    for ( RichDigits::const_iterator digit = digits->begin();
-          digit != digits->end(); ++digit ) { newPixel( *digit ); }
+    richPixels()->reserve( smartIDs.size() );
+    for ( RichSmartID::Vector::const_iterator iID = smartIDs.begin();
+          iID != smartIDs.end(); ++iID ) { buildPixel(*iID); }
 
     if ( msgLevel(MSG::DEBUG) ) {
-      debug() << "Located " << digits->size() << " RichDigits at "
-              << m_recoDigitsLocation << endreq
-              << "Created " << richPixels()->size() << " RichRecPixels at "
+      debug() << "Created " << richPixels()->size() << " RichRecPixels at "
               << m_richRecPixelLocation << endreq;
     }
 
@@ -170,7 +151,7 @@ StatusCode RichPixelCreatorFromRichDigits::newPixels() const
   return StatusCode::SUCCESS;
 }
 
-RichRecPixels * RichPixelCreatorFromRichDigits::richPixels() const
+RichRecPixels * RichPixelCreatorFromRawBuffer::richPixels() const
 {
   if ( !m_pixels ) {
 

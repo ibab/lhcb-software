@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2004-10-30 - Chris Jones
+ - Add RichRecPixel creator to for pixels directly from the RawBuffer.
+   Saves a few ms for the HLT.
+
 ! 2004-10-13 - Chris Jones
  - Speed improvements to RichPixelCreatorFromRichDigits
  - Various other minor changes

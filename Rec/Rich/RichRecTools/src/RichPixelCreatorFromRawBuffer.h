@@ -1,26 +1,18 @@
 
-/** @file RichPixelCreatorFromRichDigits.h
+/** @file RichPixelCreatorFromRawBuffer.h
  *
- *  Header file for tool : RichPixelCreatorFromRichDigits
+ *  Header file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.h,v 1.11 2004-10-30 19:38:44 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.1 2004-10-30 19:38:44 jonrob Exp $
  *  $Log: not supported by cvs2svn $
- *  Revision 1.10  2004/10/27 14:39:41  jonrob
- *  Various updates
- *
- *  Revision 1.9  2004/10/13 09:52:41  jonrob
- *  Speed improvements + various minor changes
- *
- *  Revision 1.8  2004/07/27 20:15:32  jonrob
- *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @date   30/10/2004
  */
 
-#ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
-#define RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H 1
+#ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRAWBUFFER_H
+#define RICHRECTOOLS_RICHPIXELCREATORFROMRAWBUFFER_H 1
 
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
@@ -34,32 +26,33 @@
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichKernel/IRichSmartIDTool.h"
+#include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
 // Event
-#include "Event/RichDigit.h"
+#include "Event/RawEvent.h"
 
-/** @class RichPixelCreatorFromRichDigits RichPixelCreatorFromRichDigits.h
+/** @class RichPixelCreatorFromRawBuffer RichPixelCreatorFromRawBuffer.h
  *
  *  Tool for the creation and book-keeping of RichRecPixel objects.
- *  Uses RichDigits from the digitisation as the parent objects.
+ *  Works directly from RichSmartIDs decoded from the RawEvent
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   15/03/2002
+ *  @date   30/10/2004
  */
 
-class RichPixelCreatorFromRichDigits : public RichRecToolBase,
-                                       virtual public IRichPixelCreator,
-                                       virtual public IIncidentListener {
+class RichPixelCreatorFromRawBuffer : public RichRecToolBase,
+                                      virtual public IRichPixelCreator,
+                                      virtual public IIncidentListener {
 
 public: // Methods for Gaudi Framework
 
   /// Standard constructor
-  RichPixelCreatorFromRichDigits( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent );
+  RichPixelCreatorFromRawBuffer( const std::string& type,
+                                 const std::string& name,
+                                 const IInterface* parent );
 
   /// Destructor
-  virtual ~RichPixelCreatorFromRichDigits(){}
+  virtual ~RichPixelCreatorFromRawBuffer(){}
 
   // Initialize method
   StatusCode initialize();
@@ -77,7 +70,7 @@ public: // methods (and doxygen comments) inherited from public interface
   // If if it not possible NULL is return.
   RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
-  // Form all possible RichRecPixels from input RichDigits.
+  // Form all possible RichRecPixels from RawBuffer
   // The most efficient way to make all RichRecPixel objects in the event.
   StatusCode newPixels() const;
 
@@ -90,7 +83,7 @@ private: // methods
   void InitNewEvent();
 
   /// Build a new RichRecPixel
-  RichRecPixel * buildPixel ( const RichDigit * digit ) const;
+  RichRecPixel * buildPixel ( const RichSmartID id ) const;
 
 private: // data
 
@@ -100,8 +93,8 @@ private: // data
   /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_idTool;
 
-  /// String containing input RichDigits location in TES
-  std::string m_recoDigitsLocation;
+  /// Raw Buffer Decoding tool 
+  IRichRawBufferToSmartIDsTool * m_decoder;
 
   /// Location of RichRecPixels in TES
   std::string m_richRecPixelLocation;
@@ -121,7 +114,7 @@ private: // data
 
 };
 
-inline void RichPixelCreatorFromRichDigits::InitNewEvent()
+inline void RichPixelCreatorFromRawBuffer::InitNewEvent()
 {
   // Initialise navigation data
   m_allDone = false;
@@ -132,4 +125,4 @@ inline void RichPixelCreatorFromRichDigits::InitNewEvent()
   }
 }
 
-#endif // RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
+#endif // RICHRECTOOLS_RICHPIXELCREATORFROMRAWBUFFER_H
