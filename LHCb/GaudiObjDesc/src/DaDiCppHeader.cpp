@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.20 2001-11-30 12:53:41 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.21 2001-12-07 10:01:29 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -1715,32 +1715,31 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     for(i=0; i<gddClass->sizeDaDiAttribute(); i++)
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
-      if(i==0)
+    if(i==0)
 	  {
-        xmlOut << "  s ";
-		seriAtt = true;
+      xmlOut << "  s << \"class " << gddClass->className().transcode()
+             << ":\"";
+		  seriAtt = true;
 	  }
-	  else
-      {
-        xmlOut << std::endl << "    ";
-      }
-      if (gddAttribute->type().equals("bool"))
-      {
-        xmlOut << "<< l_";
-      }
-      else if (gddAttribute->type().equals("double"))
-      {
-        xmlOut << "<< (float)m_";
-      }
-      else
-      {
-        xmlOut << "<< m_";
-      }
-      xmlOut << gddAttribute->name().transcode();    
+    xmlOut  << " << std::endl"<< std::endl << "    << \"   " 
+            << gddAttribute->name().transcode() << ":\\t\" ";
+    if (gddAttribute->type().equals("bool"))
+    {  
+      xmlOut << "<< l_";
     }
+    else if (gddAttribute->type().equals("double"))
+    {
+      xmlOut << "<< (float)m_";
+    }
+    else
+    {
+      xmlOut << "<< m_";
+    }
+    xmlOut << gddAttribute->name().transcode();
+  }
 	if (seriAtt)
 	{
-      xmlOut << ";" << std::endl;
+      xmlOut << " << std::endl << std::endl;" << std::endl;
 	}
     xmlOut << "  return s;" << std::endl << "}" << std::endl << std::endl;
   }
