@@ -1,9 +1,9 @@
 package GenEvent
-version v2r1p1
+version v2r3
 
 branches cmt dict doc src xml Event
 
-use HepMC        v3r121p*	Sim
+use HepMC        v*		Sim
 use EventKernel  v*		Event
 use GaudiObjDesc v*
 

@@ -1,9 +1,10 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski
 
-!================== GenEvent v2r1p1 ==================
-! 2002-09-24 - Florence Ranjard
+!================== GenEvent v2r3 ==================
+! 2002-11-11 - Florence Ranjard
   requirements - remove use GaudiKernel. It is given by EventKernel
+                 use -no_auto_import and -import= 
 
 !================== GenEvent v2r1 =====================
 ! 2002-07-19 - Witek Pokorski
