@@ -2,7 +2,7 @@
 // (based on CMS code by P.Arce)
 // 
 #include "GaussG4UserLimits.h"
-#include <pair.h>
+#include <map>
 
 GaussG4UserLimits::GaussG4UserLimits(const G4String& type) 
 :fType(type)
