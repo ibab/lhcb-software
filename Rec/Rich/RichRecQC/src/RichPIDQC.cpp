@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.7 2003-07-02 09:37:31 jonrob Exp $
+// $Id: RichPIDQC.cpp,v 1.8 2003-07-02 15:58:53 jonesc Exp $
 // Include files
 
 // local
@@ -488,7 +488,8 @@ StatusCode RichPIDQC::finalize() {
     trPIDRate[0] = ( m_nTracks[0]>0 ? 100.*m_nTracks[1]/m_nTracks[0] : 100 );
     trPIDRate[1] = ( m_nTracks[0]>0 ? sqrt(trPIDRate[0]*(100.-trPIDRate[0])/m_nTracks[0]) : 100 );
 
-    msg << "Tracks     | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c : " 
+    msg << "-----------+-----------------------------------------------+-----------"
+        << endreq << "Tracks     | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c : " 
         << m_trNames << endreq
         << "-----------+-----------------------------------------------+-----------"
         << endreq
