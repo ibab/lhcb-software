@@ -11,7 +11,7 @@
 //
 // ... and for the corresponding algorithm
 //
-//Particle2MCWithChi2.InputData  = { "Phys/Production/Particles" };
+//Particle2MCWithChi2.InputData  = { "Phys/Prod/Particles" };
 // OutputTable is automatically set by default to Location of the Asct
 //Particle2MCWithChi2.OutputTable  = "Phys/Relations/Particle2MCWithChi2";
 Particle2MCWithChi2.FillHistos = true;
@@ -27,7 +27,7 @@ Particle2MCWithChi2.FillHistos = true;
 //
 // ... and for the corresponding algorithm
 //
-//Particle2MCChi2.InputData  = { "Phys/Production/Particles" };
+//Particle2MCChi2.InputData  = { "Phys/Prod/Particles" };
 // OutputTable is automatically set by default to Location of the Asct
 //Particle2MCChi2.OutputTable  = "Phys/Relations/Particle2MC";
 Particle2MCChi2.Chi2Cut = 100.;
@@ -52,7 +52,7 @@ ToolSvc.LinkAsct.AlgorithmType = "Particle2MCLinks";
 ToolSvc.LinkAsct.AlgorithmName = "Particle2MCLinks";
 
 // ... definition for the link algorithm
-//Particle2MCLinks.InputData  = { "Phys/Production/Particles" };
+//Particle2MCLinks.InputData  = { "Phys/Prod/Particles" };
 // OutputTable is automatically set by default to Location of the Asct
 //Particle2MCLinks.OutputTable = "Phys/Relations/Particle2MCLinks";
 //
