@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2005-03-03 - Chris Jones
+ - Print out track selection during initialisation. To monitor for missing
+   track types.
+
 ! 2005-01-13 - Chris Jones
  - Disable creation of dictionary library, until it is needed
 
