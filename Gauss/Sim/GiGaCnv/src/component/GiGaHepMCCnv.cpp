@@ -169,8 +169,8 @@ StatusCode GiGaHepMCCnv::updateRep
            (*pVertex)->particles_out_const_begin();
            (*pVertex)->particles_out_const_end() != pParticle ; ++pParticle )
         {
-          // skip particles with end vertices
-          if((*pParticle)->status()==1){
+          // skip particles with status diffrent from 1 or from 888
+          if(((*pParticle)->status()==1)||((*pParticle)->status()==888)){
             
             G4PrimaryParticle* Particle=GenPartG4Part(*pParticle);
 
