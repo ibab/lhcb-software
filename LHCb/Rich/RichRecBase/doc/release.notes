@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v1r9p1 2004-03-08 ======================
+! 2004-03-08 - Marco Cattaneo
+ - In RichTrackID.cpp: use TrStoredTrack::isDownstream() instead of upstream() 
+
 !======================= RichRecBase v1r9 2004-02-09 =======================
 ! 2004-01-13 - Chris Jones
  - Add RichRecRing object to reconstruction event model, to support development

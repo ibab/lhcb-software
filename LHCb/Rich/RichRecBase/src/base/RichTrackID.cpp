@@ -1,4 +1,4 @@
-// $Id: RichTrackID.cpp,v 1.1 2003-10-13 16:10:54 jonrob Exp $
+// $Id: RichTrackID.cpp,v 1.2 2004-03-08 15:30:56 cattanem Exp $
 
 // local
 #include "RichRecBase/RichTrackID.h"
@@ -58,7 +58,7 @@ Rich::Track::Type Rich::Track::type( const TrStoredTrack * track ) {
   if ( track ) {
     if      ( track->forward() )  { return Rich::Track::Forward;  }
     else if ( track->match() )    { return Rich::Track::Match;    }
-    else if ( track->upstream() ) { return Rich::Track::UpStream; }
+    else if ( track->isDownstream() ) { return Rich::Track::UpStream; }
     else if ( track->seed() )     { return Rich::Track::Seed;     }
     else if ( track->veloTT() )   { return Rich::Track::VeloTT;   }
     else if ( track->velo() )     { return Rich::Track::Velo;     }
