@@ -16,8 +16,8 @@
 // all the C++ generated histograms, not those filled in Fortran
 //--------------------------------------------------------------
 #include "$STDOPTS/Hbook.opts"
-// #include "$STDOPTS/RootHist.opts"
 HistogramPersistencySvc.OutputFile = "Histos.hbook";
+// #include "$STDOPTS/RootHist.opts"
 // HistogramPersistencySvc.OutputFile = "Histos.rt";
 
 //--------------------------------------------------------------
@@ -45,16 +45,20 @@ ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
 // or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
-// Uncomment the next line to execute the L0 trigger algorithms
-//#include "$DAVINCIROOT/options/L0.opts"
 
 ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
 ApplicationMgr.TopAlg += { "FillParticleAlgorithm" };
 ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
-ApplicationMgr.TopAlg += { "SelectJPsiMuMu"  };
-ApplicationMgr.TopAlg += { "SelectKsPiPi" };
-ApplicationMgr.TopAlg += { "SelectB0JPsiKs" };
-//ApplicationMgr.TopAlg += { "DaVinciTestAlgorithm" }; 
+//ApplicationMgr.TopAlg += { "SelectJPsiMuMu"  };
+//ApplicationMgr.TopAlg += { "SelectKsPiPi" };
+//ApplicationMgr.TopAlg += { "SelectB0JPsiKs" };
+
+//--------------------------------------------------------------
+// Test suite 
+// Comment all algorithms above.............
+// Uncomment each options files to test a specific tool one by one
+//--------------------------------------------------------------
+//#include "$DAVINCITESTROOT/options/AsctTestAlg.opts"
 
 //--------------------------------------------------------------
 // DaVinci Algorithms to be always executed as the last one,
@@ -76,9 +80,9 @@ ApplicationMgr.TopAlg += { "DaVinciFinalisation" };
 // The next lines are an example of changing the default behaviour
 // of algorithms in the library 
 //          Execute the PhysSelectAlgorithm for B0JM
-PhysSelectAlgorithm.DecayName    = "B0JM";
-PhysSelectAlgorithm.SelMode      = 1;
-PhysSelectAlgorithm.SelLevel     = 2;
+//PhysSelectAlgorithm.DecayName    = "B0JM";
+PhysSelectAlgorithm.SelMode      = 0;
+PhysSelectAlgorithm.SelLevel     = 0;
 PhysSelectAlgorithm.Histograms   = 1;
 
 //-----------------------------------------------------------------
@@ -89,15 +93,15 @@ PhysSelectAlgorithm.Histograms   = 1;
 // If a relative path is used you need to copy them to the batch
 // area when running.
 //-----------------------------------------------------------------
-#include "$DAVINCIROOT/options/SelectJPsiMuMu.opts"
-#include "$DAVINCIROOT/options/SelectKsPiPi.opts"
-#include "$DAVINCIROOT/options/SelectB0JPsiKs.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectJPsiMuMu.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectKsPiPi.opts"
+//#include "$PHYSSELECTIONSDAVINCIROOT/options/SelectB0JPsiKs.opts"
 
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 //--------------------------------------------------------------
 MessageSvc.OutputLevel                  = 3;
-ToolSvc.OutputLevel                     = 3;
+ToolSvc.OutputLevel                     = 2;
 XmlParserSvc.OutputLevel                = 4;
 AxPrimaryVertexAlgorithm.OutputLevel    = 3;
 PhysSelectAlgorithm.OutputLevel         = 3;
@@ -115,11 +119,12 @@ SelectKsPiPi.PhysDeskTop.OutputLevel                = 3;
 SelectB0JPsiKs.PhysDeskTop.OutputLevel              = 3;
 SelectKsPiPi.LagrangeMassVertexFitter.OutputLevel   = 3;
 SelectB0JPsiKs.LagrangeMassVertexFitter.OutputLevel = 3;
+DaVinciTestAlgorithm.OutputLevel = 2;
  
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax = 500;
+ApplicationMgr.EvtMax = 5;
 EventSelector.FirstEvent = 1;
 //EventSelector.PrintFreq = 1;
    
@@ -127,6 +132,7 @@ EventSelector.FirstEvent = 1;
 // Examples of input data
 //---------------------------------------------------------------
 // B->J/PsiKs, Brunel v5r1
-EventSelector.Input = {"JOBID='64042'"};
+//EventSelector.Input = {"JOBID='64042'"};
+#include "$STDOPTS/SicbTestDataFile.opts"
 //################################################################
 
