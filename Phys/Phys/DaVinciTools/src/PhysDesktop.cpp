@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.11 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.12 2004-04-29 08:41:29 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -715,12 +715,16 @@ StatusCode PhysDesktop::getInput(){
   return StatusCode::SUCCESS;
   }
 
-// Impose output location
+//=============================================================================
+// Impose OutputLOcation.
+//=============================================================================
 void PhysDesktop::imposeOutputLocation(std::string outputLocationString){
-  MsgStream          msg( msgSvc(), name() );
-  msg << MSG::WARNING << "Non-standard output location imposed: "
-      << outputLocationString << endreq;
-  m_outputLocn = outputLocationString;
+  if (outputLocationString != m_outputLocn) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::WARNING << "Non-standard output location imposed: "
+        << outputLocationString << endreq;
+    m_outputLocn = outputLocationString;
+  }
   return;
 }
 

@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.82 2004-04-27 10:14:39 pkoppenb Exp $
+! $Id: release.notes,v 1.83 2004-04-29 08:41:29 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
+
+!========================== DaVinciTools v9r3p1 2004-04-29 ==================
+! 2004-04-29 - P. Koppenburg for Gerhard Raven
+ - src/PhysDesktop.cpp
+   . Issue Warning in InmposeOutputLocation only when this is changed
+     form it's default value. Avoids a non-necessary warning from LoKi.
 
 !========================== DaVinciTools v9r3 2004-04-27 ==================
 ! 2004-04-22 - Vanya BELYAEV

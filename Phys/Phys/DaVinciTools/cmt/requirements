@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.36 2004-04-21 07:01:55 pkoppenb Exp $
+# $Id: requirements,v 1.37 2004-04-29 08:41:29 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v9r3
+version           v9r3p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
