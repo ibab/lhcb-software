@@ -29,4 +29,4 @@ BrunelRecoRICHSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
 BrunelRecoRICHSeq.Members += { "RichPIDSimpleMerge/MergeRichPIDs" };           
 
 // Algorithm parameters
-#include "$RICHRECCOMMONOPTS/RecoAlgPara.opts"
+#include "$RICHRECSYSOPTS/RecoAlgPara.opts"
