@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2002-04-03 16:02:56 cattanem Exp $
+# $Id: requirements,v 1.11 2002-04-05 10:27:19 roiser Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -30,6 +30,7 @@ library LHCbKernel *.cpp \
 apply_pattern package_linkopts
 apply_pattern package_stamps
 apply_pattern linker_path
+apply_pattern ld_library_path
 
 # =============================================================================
 # Private stuff 
