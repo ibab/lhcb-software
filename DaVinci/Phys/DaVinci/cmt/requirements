@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.26 2002-06-17 07:38:20 gcorti Exp $
+# $Id: requirements,v 1.27 2002-06-28 12:59:10 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -33,81 +33,86 @@ use GaudiPolicy  v5r5
 #--- It is possible to select the appropriate database version in DaVinci.job
 #--- Uncomment and modify next line to select an appropriate database version
 #--- It must be consistent with the file you are reading
-#use dbase v241 SICB
+#use dbase v246r0 SICB
 
 #--- External libraries - Gaudi v10r1
 use ExternalLibs   v3r6
 use AIDA           v2r2
 use CLHEP          v17r10p1
 use HTL            v13r10p1
-#use NAGC           v5r0
-#use ROOT           v3r01p1
+use NAGC           v5r0
 use XERCES         v16r0p1
 use CERNLIB        v2001
+use ROOT           v3r01p1
 
 #--- Gaudi libraries - Gaudi v10r1
 use GaudiKernel        v12r2
-use GaudiSvc           v8r0
+use GaudiSvc           v8r1
 use GaudiAlg           v6r0
 use GaudiAud           v6r0
 use GaudiNagC          v7r0
-use GaudiDb            v7r0
+use GaudiDb            v8r0
 use GaudiRootDb        v7r0
 
 #--- Histogram persistency ( choose the one you prefer )
 use HbookCnv           v12r0
-#use RootHistCnv        v6r0
+use RootHistCnv        v6r0
 
 #---LHCb common libraries
 use GaudiConf      v6r3
 use BookKeeping    v1r1   Tools
-use LHCbKernel     v1r1   Kernel
-use Finclude       v12r2  SICB
-use Futio          v11    SICB
+use LHCbKernel     v1r2   Kernel
+#use Finclude       v13r0  SICB
+#use Futio          v12r0  SICB
 
 #--- Subdetector Kernels ( add any other Kernel you need )
 
 #--- Detector description ( add any other Det package you need )
-use XmlDDDB        v12r0   Det
-use DetDesc        v10r2   Det
-use VeloDet        v5r0    Det
+use DetDesc        v10r3   Det
+use XmlDDDB        v12r1   Det
+use OTDet          v2r0    Det
+use VeloDet        v6r0    Det
 use Magnet         v1r1    Det
 
 #--- Event Model ( via EventSys the whole Event Model is available )
-use EventSys       v10r1  Event
+#use PhysEvent      v5r0   Event
+use EventSys       v11r0  Event
 
 #--- SicB event data persistency
-use SicbCnv        v16r2  SICB
-use PhysSicbCnv    v1r0   SICB
+#use SicbCnv        v17r0  SICB
+#use PhysSicbCnv    v2r0   SICB
 
 #--- SICBDST necessary libraries
 #--- Please note that if it is necessary to process event with additional
 #    fortran packages a detdes package consistent with such packages has
 #    to be used
-use Futil          v10r3  SICB
-use detdes         v14    SICB
-use digvdet        v2r3   SICB
-use trivert        v5r3   SICB
-use axreclib       v4r3   SICB
-use axsellib       v6r3   SICB
+#use Futil          v10r3  SICB
+#use detdes         v14    SICB
+#use digvdet        v2r3   SICB
+#use trivert        v5r3   SICB
+#use axreclib       v4r3   SICB
+#use axsellib       v6r3   SICB
+
+#--- Associators
+use CaloAssociators  v2r0  Calo
+use TrAssociators    v2r0  Tr
+
 
 #--- DaVinci packages
-use DaVinciSicb          v3r0   Phys
-use DaVinciTools         v4r0   Phys
-use DaVinciAssociators   v1r0p1 Phys
-use DaVinciMCTools       v1r0   Phys
-use PhysSelections       v1r1   Phys
-use FlavourTagging       v1r0   Phys
-use DaVinciTest          v1r0   Phys
-use DaVinciUser          v1r0   Phys
+#use DaVinciSicb          v4r0   Phys
+use DaVinciTools         v5r0   Phys
+use DaVinciAssociators   v2r0   Phys
+use DaVinciMCTools       v2r0   Phys
+use DaVinciTest          v2r0   Phys
+#use PhysSelections       v2r0   Phys
+#use FlavourTagging       v2r0   Phys
+#use DaVinciUser          v2r0   Phys
 
 # Build DaVinci Application with standard executable and user example code
 # Note that user code can also be located in a component library (see details
 # in Gaudi User Guide)
 #============================================================================
-application      DaVinci    ../src/Main/DaVinciMain.cpp \
-                            $(DAVINCISICBROOT)/src/Objs/*.F \
-                            ../src/User/*.F 
+application      DaVinci    ../src/Main/DaVinciMain.cpp
 
 # define link options
 #============================================================================
@@ -115,15 +120,15 @@ apply_pattern application_path
 
 macro DaVinci_linkopts    "${application_linkopts}"
 
-macro_append DaVinci_linkopts " "\
-             Linux            " -g -Wl,--start-group "\
-             Linuxdbx         " -g -Wl,--start-group "
+#macro_append DaVinci_linkopts " "\
+#             Linux            " -g -Wl,--start-group "\
+#             Linuxdbx         " -g -Wl,--start-group "
 
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append fflags   " -DDaVinciVersion=400200 " \
-             VisualC  " /DDaVinciVersion=400200 "
+#macro_append fflags   " -DDaVinciVersion=400200 " \
+#             VisualC  " /DDaVinciVersion=400200 "
 
-macro_append cppflags " -DDaVinciVersion=400200 " \
-             VisualC  " /DDaVinciVersion=400200 "
+macro_append cppflags " -DDaVinciVersion=500000 " \
+             VisualC  " /DDaVinciVersion=500000 "
