@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.15 2005-02-09 09:08:37 cattanem Exp $
+  * $Id: RichSmartID.xml,v 1.16 2005-02-22 13:11:19 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -35,20 +35,20 @@
             name = "key" 
             init = "0" 
             type = "bitfield">
-            <bitfield desc="The RICH Detector"                   length="1"  name="rich"          setMeth="FALSE" getMeth="FALSE" />
-            <bitfield desc="The RICH panel"                      length="1"  name="panel"         setMeth="FALSE" getMeth="FALSE" />
-            <bitfield desc="The photon detector row number"      length="5"  name="PDRow"         setMeth="FALSE" />
-            <bitfield desc="The photon detector column number"   length="5"  name="PDCol"         setMeth="FALSE" />
+            <bitfield desc="The sub-pixel number"                length="3"  name="subPixel"      setMeth="FALSE" />
             <bitfield desc="The pixel row number"                length="5"  name="pixelRow"      setMeth="FALSE" />
             <bitfield desc="The pixel column number"             length="5"  name="pixelCol"      setMeth="FALSE" />
-            <bitfield desc="The sub-pixel number"                length="3"  name="subPixel"      setMeth="FALSE" />
-            <bitfield desc="Rich field is Set"                   length="1"  name="richIsSet"     setMeth="FALSE" />
-            <bitfield desc="Panel field is set"                  length="1"  name="panelIsSet"    setMeth="FALSE" />
-            <bitfield desc="Photon detector row field is set"    length="1"  name="PDRowIsSet"    setMeth="FALSE" />
-            <bitfield desc="Photon detector column field is set" length="1"  name="PDColIsSet"    setMeth="FALSE" />
+            <bitfield desc="The photon detector row number"      length="5"  name="PDRow"         setMeth="FALSE" />
+            <bitfield desc="The photon detector column number"   length="5"  name="PDCol"         setMeth="FALSE" />
+            <bitfield desc="The RICH panel"                      length="1"  name="panel"         setMeth="FALSE" getMeth="FALSE" />
+            <bitfield desc="The RICH Detector"                   length="1"  name="rich"          setMeth="FALSE" getMeth="FALSE" />
+            <bitfield desc="Sub-pixel field is set"              length="1"  name="subPixelIsSet" setMeth="FALSE" />
             <bitfield desc="Pixel row field is set"              length="1"  name="pixelRowIsSet" setMeth="FALSE" />
             <bitfield desc="Pixel column field is set"           length="1"  name="pixelColIsSet" setMeth="FALSE" />
-            <bitfield desc="Sub-pixel field is set"              length="1"  name="subPixelIsSet" setMeth="FALSE" />
+            <bitfield desc="Photon detector row field is set"    length="1"  name="PDRowIsSet"    setMeth="FALSE" />
+            <bitfield desc="Photon detector column field is set" length="1"  name="PDColIsSet"    setMeth="FALSE" />
+            <bitfield desc="RICH panel field is set"             length="1"  name="panelIsSet"    setMeth="FALSE" />
+            <bitfield desc="RICH detector field is set"          length="1"  name="richIsSet"     setMeth="FALSE" />
         </attribute>
 
         <constructor 
@@ -169,11 +169,37 @@
                 const = "TRUE" 
                 name  = "shift" 
                 type  = "int"  />
+            <arg 
+                const = "TRUE" 
+                inout = "INOUT" 
+                name  = "message" 
+                type  = "std::string"  />
             <code>
-              const bool ok = ( value &lt; (1 &lt;&lt; shift) );
-              if (!ok) throw GaudiException("Data out of value for given bit field","*RichSmartID*",StatusCode::FAILURE);
+              const bool ok = ( value &lt; (1&lt;&lt;shift) );
+              if (!ok) rangeError( value, (1&lt;&lt;shift)-1, message );
               return ok;
             </code>
+        </method>
+
+        <method             
+            name   = "rangeError" 
+            access = "PRIVATE" 
+            const  = "TRUE" 
+            desc   = "Issue an exception in the case of a range error (not inlined to prevent blow up)" 
+            type   = "void" >
+            <arg 
+                const = "TRUE" 
+                name  = "value" 
+                type  = "int"  />
+            <arg 
+                const = "TRUE" 
+                name  = "max" 
+                type  = "int"  />
+            <arg 
+                const = "TRUE" 
+                inout = "INOUT" 
+                name  = "message" 
+                type  = "std::string"  />
         </method>
 
         <method 
@@ -207,7 +233,7 @@
                 name  = "rich" 
                 type  = "int"  />
             <code>
-              return ( checkRange(rich,panelBits-richBits) ?
+              return ( checkRange(rich,subPixelIsSetBits-richBits,"RICH") ?
                        setData( rich, richBits, richMask, richIsSetMask ) : false );
             </code>
         </method>
@@ -221,22 +247,8 @@
                 name  = "panel" 
                 type  = "int"  />
             <code>
-              return ( checkRange(panel,PDRowBits-panelBits) ?
+              return ( checkRange(panel,richBits-panelBits,"Panel") ?
                        setData( panel, panelBits, panelMask, panelIsSetMask ) : false );
-            </code>
-        </method>
-
-        <method 
-            name = "setPDRow" 
-            desc = "Set the RICH photon detector row identifier" 
-            type = "bool">
-            <arg 
-                const = "TRUE" 
-                name  = "row" 
-                type  = "int"  />
-            <code>
-               return ( checkRange(row,PDColBits-PDRowBits) ?
-                        setData( row, PDRowBits, PDRowMask, PDRowIsSetMask ) : false );
             </code>
         </method>
 
@@ -249,22 +261,22 @@
                 name  = "col" 
                 type  = "int"  />
             <code>
-               return ( checkRange(col,pixelRowBits-PDColBits) ?
+               return ( checkRange(col,panelBits-PDColBits,"PDColumn") ?
                         setData( col, PDColBits, PDColMask, PDColIsSetMask ) : false );
             </code>
         </method>
 
         <method 
-            name = "setPixelRow"
-            desc = "Set the RICH photon detector pixel row identifier"  
+            name = "setPDRow" 
+            desc = "Set the RICH photon detector row identifier" 
             type = "bool">
             <arg 
                 const = "TRUE" 
                 name  = "row" 
                 type  = "int"  />
             <code>
-               return ( checkRange(row,pixelColBits-pixelRowBits) ?
-                        setData( row, pixelRowBits, pixelRowMask, pixelRowIsSetMask ) : false );
+               return ( checkRange(row,PDColBits-PDRowBits,"PDRow") ?
+                        setData( row, PDRowBits, PDRowMask, PDRowIsSetMask ) : false );
             </code>
         </method>
 
@@ -277,8 +289,22 @@
                 name  = "col" 
                 type  = "int"  />
             <code>
-               return ( checkRange(col,subPixelBits-pixelColBits) ?
+               return ( checkRange(col,PDRowBits-pixelColBits,"PixelColumn") ?
                         setData( col, pixelColBits, pixelColMask, pixelColIsSetMask ) : false );
+            </code>
+        </method>
+
+        <method 
+            name = "setPixelRow"
+            desc = "Set the RICH photon detector pixel row identifier"  
+            type = "bool">
+            <arg 
+                const = "TRUE" 
+                name  = "row" 
+                type  = "int"  />
+            <code>
+               return ( checkRange(row,pixelColBits-pixelRowBits,"PixelRow") ?
+                        setData( row, pixelRowBits, pixelRowMask, pixelRowIsSetMask ) : false );
             </code>
         </method>
 
@@ -291,7 +317,7 @@
                 name  = "subpixel" 
                 type  = "int"  />
             <code>
-               return ( checkRange(subpixel,richIsSetBits-subPixelBits) ?
+               return ( checkRange(subpixel,pixelRowBits-subPixelBits,"SubPixel") ?
                         setData( subpixel, subPixelBits, subPixelMask, subPixelIsSetMask ) : false );
             </code>
         </method>

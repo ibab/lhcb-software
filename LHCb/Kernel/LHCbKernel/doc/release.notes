@@ -2,6 +2,13 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-02-22 - Chris Jones
+ - Update RichSmartID with reordered bit field, but this time with the 
+   validity bits in the same place for compatibility with LHCbID.
+   Backwards incompatible.
+ - Update the out of range messaging in RichSmartID to print the field
+   name and also the parameter values.
+
 ! 2005-02-17 - Chris Jones
  - Add entries to generate lcg dictionary information for :-
   + std::vector<HepGeom::Vector3D<double> >

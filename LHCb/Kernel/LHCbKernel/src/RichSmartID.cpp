@@ -4,12 +4,15 @@
  *
  *  Implementation file for RICH Channel ID class : RichSmartID
  *
- *  $Id: RichSmartID.cpp,v 1.3 2005-02-09 09:08:37 cattanem Exp $
+ *  $Id: RichSmartID.cpp,v 1.4 2005-02-22 13:11:19 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2005-01-06
  */
 //-----------------------------------------------------------------------------
+
+// boost
+#include "boost/lexical_cast.hpp"
 
 // local
 #include "Kernel/RichSmartID.h"
@@ -33,10 +36,19 @@ std::ostream& RichSmartID::fillStream(std::ostream& s) const
 
   } else {
 
-    // This SmartID has no valid bits set. This is in correct.
+    // This SmartID has no valid bits set. This is bad...
     s << "WARNING : Invalid RichSmartID";
 
   }
 
   return s;
+}
+
+void RichSmartID::rangeError(const int value,
+                             const int max,
+                             const std::string& message) const
+{
+  throw GaudiException ( message+" value "+boost::lexical_cast<std::string>(value)
+                         +" exceeds field maximum "+boost::lexical_cast<std::string>(max),
+                         "*RichSmartID*", StatusCode::FAILURE );
 }
