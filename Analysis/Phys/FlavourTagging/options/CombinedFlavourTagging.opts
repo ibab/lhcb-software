@@ -5,7 +5,12 @@ ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm/CombTagging" };
 //CombTagging.PrimaryVerticesLocation = "";
 
 CombTagging.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+CombTagging.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+CombTagging.PhysDesktop.CombinedParticleMaker.MuonSelection={"det='MUON' mu-pi='-9.0'"};
+CombTagging.PhysDesktop.CombinedParticleMaker.ElectronSelection={"det='CALO' e-pi='2.0'"};
+CombTagging.PhysDesktop.CombinedParticleMaker.KaonSelection={"det='RICH' k-pi='2.0' k-p='3.0'"};
 CombTagging.PhysDesktop.OutputLevel = 4;
+
 CombTagging.OutputLevel = 4;
 
 CombTagging.TaggingTool = "CategoryTaggingTool";
@@ -39,14 +44,14 @@ CombTagging.CategoryTaggingTool.MuonTagger.ParticleFilter.ParticleTaggerCriterio
 //CombTagging.CategoryTaggingTool.ElectronTagger.PrimaryVertices = "";
 //CombTagging.CategoryTaggingTool.ElectronTagger.InverseCharge = true;
 CombTagging.CategoryTaggingTool.ElectronTagger.AllVertices = true;
-CombTagging.CategoryTaggingTool.ElectronTagger.MinImpactSignificance = 2.;
+CombTagging.CategoryTaggingTool.ElectronTagger.MinImpactSignificance = -1;
 CombTagging.CategoryTaggingTool.ElectronTagger.MaxImpactSignificance = -1;
 CombTagging.CategoryTaggingTool.ElectronTagger.FilterName = "ParticleFilter";
 CombTagging.CategoryTaggingTool.ElectronTagger.ParticleFilter.CriteriaNames = { "ParticleTaggerCriterion" };
 CombTagging.CategoryTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.ParticleName = "e+";
 CombTagging.CategoryTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MinConfLevel = -1;
 CombTagging.CategoryTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MaxConfLevel = -1;
-CombTagging.CategoryTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MinTransverseMomentum = 2000;
+CombTagging.CategoryTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MinTransverseMomentum = 1200;
 CombTagging.CategoryTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MaxTransverseMomentum = -1;
 CombTagging.CategoryTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MinMomentum = 5000;
 CombTagging.CategoryTaggingTool.ElectronTagger.ParticleFilter.ParticleTaggerCriterion.MaxMomentum = -1;
@@ -85,7 +90,7 @@ CombTagging.CategoryTaggingTool.KaonOSTagger.ParticleFilter.ParticleTaggerCriter
 CombTagging.CategoryTaggingTool.KaonSSTagger.AllVertices = true;
 CombTagging.CategoryTaggingTool.KaonSSTagger.MinImpactSignificance = -1;
 CombTagging.CategoryTaggingTool.KaonSSTagger.MaxImpactSignificance = 2.5;
-//CombTagging.CategoryTaggingTool.KaonSSTagger.MaxPhi = 0.9;
+//CombTagging.CategoryTaggingTool.KaonSSTagger.MaxPhi = 1.1;
 //CombTagging.CategoryTaggingTool.KaonSSTagger.MaxEta = 1.0;
 //CombTagging.CategoryTaggingTool.KaonSSTagger.MaxQ = 1500;
 CombTagging.CategoryTaggingTool.KaonSSTagger.FilterName = "ParticleFilter";
@@ -101,3 +106,4 @@ CombTagging.CategoryTaggingTool.KaonSSTagger.ParticleFilter.ParticleTaggerCriter
 //CombTagging.CategoryTaggingTool.KaonSSTagger.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 750;
 CombTagging.CategoryTaggingTool.KaonSSTagger.ParticleFilter.ParticleTaggerCriterion.MinVeloZ = -10000;
 CombTagging.CategoryTaggingTool.KaonSSTagger.ParticleFilter.ParticleTaggerCriterion.MaxVeloZ = 100000;
+
