@@ -1,14 +1,8 @@
-// $Id: CaloTool.cpp,v 1.12 2002-11-13 20:36:51 ibelyaev Exp $
+// $Id: CaloTool.cpp,v 1.13 2002-12-01 14:17:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.11  2002/05/02 08:38:47  ibelyaev
-//  add exception counting into CaloTool&CaloAlgorithm classes
-//
-// Revision 1.10  2002/04/30 18:18:35  ibelyaev
-//  reduce the final printout verbosity
-//
 // ============================================================================
 // Include files
 // GaudiKernel
