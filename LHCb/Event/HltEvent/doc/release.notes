@@ -4,11 +4,11 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
-!======================== v2r0 2003-05-13 ================================
+!======================== HltEvent v2r0 2003-05-13 ===========================
 ! 2003-05-13 - Olivier Callot
  - Add a position and slopes after the field, to allow Muon matching
 
-!======================== v1r1 2003-04-24 ================================
+!======================== HltEvent v1r1 2003-04-24 ===========================
 ! 2003-04-24 - Olivier Callot
  - changed 'momentum' to 'qDivP', 'velo' to 'type' and 'unique' to 'status'
  - added an 'ancestor' to allow a pointer to the track this track was made 
