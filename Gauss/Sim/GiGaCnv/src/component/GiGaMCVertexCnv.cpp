@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.20 2003-01-23 10:06:30 witoldp Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.21 2003-02-24 10:22:48 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.20  2003/01/23 10:06:30  witoldp
+// added handling of shortlived particles
+//
 // Revision 1.19  2002/12/07 21:13:49  ibelyaev
 //  bug fix and small CPU performace optimization
 //
@@ -262,8 +265,8 @@ StatusCode GiGaMCVertexCnv::updateObj
               dynamic_cast<GiGaTrajectoryPoint*> ( trajectory->GetPoint(0) );
 
             m_onepointIDs[trajectory->trackID()] = point;
-            cout << "Found trajectory with one point " << trajectory->trackID() 
-                 << " mother trID " << trajectory->parentID() << endl;
+            //            cout << "Found trajectory with one point " << trajectory->trackID() 
+            //                 << " mother trID " << trajectory->parentID() << endl;
             
 
           }
