@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.8 2005-01-20 17:03:16 cattanem Exp $ 
+! $Id: release.notes,v 1.9 2005-01-25 14:08:08 cattanem Exp $ 
 ! ------------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! ------------------------------------------------------------------------------
@@ -9,8 +9,9 @@
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
 
-!=========================== DetDescChecks v2r2 ================================
-! 2005-01-20 - Marco Cattaneo
+!======================= DetDescChecks v2r2 2005-01-25 =========================
+! 2005-01-25 - Marco Cattaneo
+ - Remove obsolete doxygen configuration files
  - Update to use latest geometry, consistent with latest detector element
    changes
 
