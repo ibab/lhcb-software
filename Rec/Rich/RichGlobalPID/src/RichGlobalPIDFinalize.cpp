@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.cpp,v 1.9 2004-04-19 23:04:00 jonesc Exp $
+// $Id: RichGlobalPIDFinalize.cpp,v 1.10 2004-05-26 16:14:43 jonrob Exp $
 // Include files
 
 // local
@@ -69,6 +69,11 @@ StatusCode RichGlobalPIDFinalize::execute() {
 
     // Set best PID
     pid->setBestParticleID( rRTrack->currentHypothesis() );
+
+    // store used radiator information
+    pid->setUsedAerogel ( rRTrack->inAerogel() );
+    pid->setUsedC4F10   ( rRTrack->inGas1()    );
+    pid->setUsedCF4     ( rRTrack->inGas2()    );
 
     // Finalise delta LL and probability values
     std::vector<float> & deltaLLs = pid->particleLLValues();

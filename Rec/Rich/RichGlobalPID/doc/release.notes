@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2004-05-26 - Chris Jones
+ - Add code to properly set radiator information in RichPIDs
+
 !======================= RichGlobalPID v1r6 2004-04-21 =======================
 ! 2004-04-18 - Chris Jones
  - New track and pixel selection algorithms
