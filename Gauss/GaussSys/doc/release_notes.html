@@ -37,6 +37,15 @@ Package manager : Gloria Corti
      on abs() instead of fabs()
 
 !========================= GeneratorModules v14r0 ======================
+! 2005-01-25 - Gloria Corti
+ - src/Algorithm/EvtDecayAlg.h
+   src/Algorithm/EvtGenTool.{h,cpp}
+   src/Algorithms/MaterialEvalGun.{h,cpp}
+         src/Algorithms/SingleParticleGun.{h,cpp}
+   . replace forward declaration with inclusion of classes from CLHEP in
+     header files (preventing compilation with CLHEP 1.9) and clean up
+     of already included headers from sources
+
 ! 2005-01-10 - Patrick Robbe
  - cleaning of package
  - add HiggsPythiaAlgorithm to generate higgs events with special
