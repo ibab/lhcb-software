@@ -1,4 +1,4 @@
-// $Id: ITTT1Layer.cpp,v 1.8 2003-01-17 14:07:15 sponce Exp $
+// $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -144,7 +144,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
     double xLad = -xSideLad[iLWafer-1]; 
     double uLad = xLad*cosAngle() + ySideLad*sinAngle();
     double vLad = ySideLad*cosAngle() - xLad*sinAngle();
-    double v = -(vLad+((double)(nSensorHigh)/2.0)*waferHeight);
+    double v = vLad-((double)(nSensorHigh)/2.0)*waferHeight;
 
     for (unsigned int iWafer=1; iWafer<=ladderSize2.size();iWafer++){
 
@@ -187,7 +187,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
     double xLad = xSideLad[wafersX2-iRWafer];
     double uLad = xLad*cosAngle() + ySideLad*sinAngle();
     double vLad = ySideLad*cosAngle() - xLad*sinAngle();
-    double v = -(vLad+((double)(nSensorHigh)/2.0)*waferHeight);
+    double v = vLad-((double)(nSensorHigh)/2.0)*waferHeight;
 
     for (unsigned int iWafer=1; iWafer<=ladderSize2.size();iWafer++){
 
