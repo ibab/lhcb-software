@@ -931,11 +931,11 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
           
           forthekeydau++;
 
-          std::map<int, HandleNTuple*>::key_type keydau =  ((offsetdau + (500000*forthekeydau)));
-            
-          std::map<int, HandleNTuple*>::data_type adddau = new HandleNTuple(nt, subdaunr, 
-                                                                            // m_pLifetimeFitter, 
+
+          int keydau =  ((offsetdau + (500000*forthekeydau)));
+          HandleNtuple* adddau = new HandleNTuple(nt, subdaunr, // m_pLifetimeFitter, 
                                                                             m_IPTool);
+
           m_HandleNTupleMap.insert(std::make_pair(keydau, adddau));
           
           verbose() << "Added " << pname << " with key " << keydau
@@ -1158,7 +1158,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
       forthekeydau++;
 
       std::map<int, HandleNTuple*>::iterator jkeydau = m_HandleNTupleMap.find((offsetdau + (500000*forthekeydau)));
-
+      
 #ifndef MCCheck
       if (jkeydau != m_HandleNTupleMap.end()){
         jkeydau->second->FillNTuple(**ichild, PVs, globalPIDs);
