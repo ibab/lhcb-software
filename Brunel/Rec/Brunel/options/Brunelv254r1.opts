@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
-///      Job options for Brunel when using $LHCBDBASE version v254r0       ///
-///     --- To be used also for data produced with dbase v253r1 ----       ///
+///      Job options for Brunel when using $LHCBDBASE version v254r1       ///
+///    To be used also for data produced with dbases v253r1 and v254r0     ///
 ///      ------- LHCb light detector for LHCb-light production -----       ///
 //////////////////////////////////////////////////////////////////////////////
 #pragma print off
@@ -33,7 +33,7 @@ SpillOverSelector.Input = {
   "FILE='/castor/cern.ch/lhcb/prod/L2106217'"  // RAWH2 evtype 61
  }; // evtype 61 RAWH2
 //SpillOverSelector.FirstEvent = 8; // Skip corresponding spillover events
-BrunelDstWriter.Output = "DATAFILE='v254r0.dst' TYP='ROOT' OPT='NEW'";
-HistogramPersistencySvc.OutputFile = "v254r0.hbook";  // Monitoring histos
+BrunelDstWriter.Output = "DATAFILE='v254r1.dst' TYP='ROOT' OPT='NEW'";
+HistogramPersistencySvc.OutputFile = "v254r1.hbook";  // Monitoring histos
 ApplicationMgr.EvtMax = 10;
 //////////////////////////////////////////////////////////////////////////////

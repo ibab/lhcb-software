@@ -1,5 +1,5 @@
 package Brunel
-version v17r1
+version v17r2
 
 branches doc cmt job options
 
@@ -74,7 +74,7 @@ use ITCheckers          v1r2  	IT
 use OTAlgorithms        v12r3 	OT
 
 # Tracking
-use VeloTrack           v4r4  	Velo
+use VeloTrack           v4r5  	Velo
 use TrCheck             v1r3  	Tr
 use LongTrack           v1r5  	Tr
 use TrFitter            v3r5  	Tr
@@ -82,7 +82,7 @@ use TrExtrapolator      v2r5  	Tr
 use TrTools             v2r4  	Tr
 use Seeding             v2r4  	Tr 
 use TrMatching          v2r6  	Tr
-use TrCleanEx           v2r5  	Tr
+use TrCleanEx           v2r6  	Tr
 use TrIntraPR           v2r3  	Tr
 use UpstreamPR          v2r6  	Tr
 use VeloTT              v1r4  	Tr

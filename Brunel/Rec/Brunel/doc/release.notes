@@ -3,6 +3,19 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v17r2>2003-01-?? Brunel v17r2</A></H1><PRE>
+ - New tuning:
+   . Raise IT clustering S/N cut to 3.2 sigma (from 3.0) (Brunel.opts)
+
+ - New features:
+   . Add support for dbase v254r1
+    (Brunelv254r1.opts, to be used also for dbase v254r0 and v253r1 test data)
+
+ - DST changes:
+   . TrStateL of Velo and Veloback tracks is now given at Z of first measured
+     point (actually first used phi sensor) instead of Z=0 previously
+     (VeloTrack v4r5, TrCleanEx v2r6)
+
 </PRE><H1><A NAME=v17r1>2003-01-17 Brunel v17r1</A></H1><PRE>
  - New tuning:
    . Tune Match tracking for field043 (TrTools v2r4, TrMatching v2r5)

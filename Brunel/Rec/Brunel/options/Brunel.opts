@@ -85,6 +85,7 @@ BrunelDigiMUONSeq.Members = { "MuonDigitization" };
 
 // Inner tracker digitisation and reconstruction (clustering)
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
+ITClusterCreator.clusterSignal2Noise = {3.2,3.2,3.2,3.2,3.2};
 
 // Outer tracker digitisation and reconstruction (clustering)
 ApplicationMgr.DLLs   += { "Magnet", "OTDet", "OTAlgorithms" };
