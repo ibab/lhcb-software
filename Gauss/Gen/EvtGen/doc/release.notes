@@ -1,6 +1,9 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2004-03-15 - Patrick Robbe
+ - Fix memory leaks in EvtBToXsll.cpp
+
 ! 2004-03-09 - Patrick Robbe
  - EvtSLN : give a probmax for decays B_c -> tau nu_tau to avoid 
    warnings at EvtGEn initialization. 
