@@ -78,7 +78,7 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/OT/Clusters#1"  // To be filtered
 , "/Event/Rec/Tr#1"
 , "/Event/Rec/Tr/Best#1"
-, "/Event/Rec/Tr/Forward#1"   // To be suppressed 
+  //, "/Event/Rec/Tr/Forward#1"   // To be suppressed 
 , "/Event/Rec/Tr/ITClusters#1"
 , "/Event/Rec/Tr/OTClusters#1"
 , "/Event/Rec/Tr/VeloClusters#1"

@@ -71,13 +71,12 @@ use EventSys     v11r0  Event
 
 # SicB event data persistency
 use SicbCnv      v17r0  SICB
-use ITSicbGeom   v2r0   SICB
+#use ITSicbGeom   v2r0   SICB
 use RiSicbGeom   v2r1   SICB
 use CaloSicbCnv  v7r0   SICB
-use MuonSicbCnv  v6r0   SICB
-use RiSicbCnv    v3r2   SICB
+use MuonSicbCnv  v6r1   SICB
+use RiSicbCnv    v4r0   SICB
 use VSicbCnv     v8r0   SICB
-use TrSicbCnv    v6r1   SICB
 
 # Brunel utilities
 use BrunelKernel v5r0   Rec
@@ -101,7 +100,7 @@ use CaloAlgs       	v7r0 	Calo
 use CaloMonitor         v1r0    Calo
 use CaloAssociators	v2r0	Calo
 use CaloRec		v2r0	Calo
-use CaloTrackTools	v1r2	Calo
+use CaloTrackTools	v1r3	Calo
 
 # Velo
 use VeloKernel		v1r0	Velo

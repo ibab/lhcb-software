@@ -64,11 +64,16 @@ ApplicationMgr.DLLs += { "CaloSicbCnv", "CaloDetXmlCnv" };
 
 // Rich Fortran digitisation and OO digits creator 
 ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };
-BrunelRecoRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
+BrunelDigiRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
 BrunelDigiRICHSeq.Members += { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
 
+// Muon digitisation
+ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet" };
+ApplicationMgr.DLLs += { "MuonAlgs" };
+BrunelDigiMUONSeq.Members = { "MuonDigitization" };
+
 // Inner tracker digitisation and reconstruction (clustering)
-ApplicationMgr.DLLs += { "ITSicbGeom" };
+//ApplicationMgr.DLLs += { "ITSicbGeom" };
 #pragma print off
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
 #pragma print on
@@ -133,29 +138,22 @@ ApplicationMgr.DLLs += { "UpstreamPR" };
 // Clone killer and converter to TrStoredTrack
 ApplicationMgr.DLLs += { "TrCleanEx" };
 BrunelRecoTrSeq.Members += { "TrTrackCloneKiller" };
-BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreForward", 
-                             "TrFit2StoredTrackCnv/StoreBest" };
-//                             "TrFit2StoredTrackCnv/StoreVelo", 
-//                             "TrFit2StoredTrackCnv/StoreSeed", 
-//                             "TrFit2StoredTrackCnv/StoreMatch", 
+BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
+                             //,"TrFit2StoredTrackCnv/StoreForward"
+//                             ,"TrFit2StoredTrackCnv/StoreVelo" 
+//                             ,"TrFit2StoredTrackCnv/StoreSeed" 
+//                             ,"TrFit2StoredTrackCnv/StoreMatch" 
 #pragma print off
 #include "$TRCLEANEXROOT/options/Brunel.opts"
 #pragma print on
 TrTrackCloneKiller.flagMode = true;
 
 // Back conversion of tracks for RICH reconstruction
-BrunelRecoRICHSeq.Members = { "TrStoredTrackToSicbCnv" };
-#pragma print off
-#include "$TRSICBCNVROOT/options/BackCnv.opts"
-#pragma print on
+BrunelRecoRICHSeq.Members = { "TrToRichTrackAlg", "RichTrackToSicbCnv" };
+TrToRichTrackAlg.EnableFiltering = "true"; // Select forward tracks from Tr/Best
 
 // Rich Fortran reconstruction
 BrunelRecoRICHSeq.Members += { "BrunelRecoRICH" };
-
-// Muon digitisation
-ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet" };
-ApplicationMgr.DLLs += { "MuonAlgs" };
-BrunelDigiMUONSeq.Members = { "MuonDigitization" };
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
@@ -172,12 +170,12 @@ BrunelRecoTimingSeq.Members += { "TimingAlg" };
 #pragma print on
 
 // For now, use forward tracks as input to PID algorithms
-TrStoredTrackToSicbCnv.TrStoredTracksInput = "Rec/Tr/Forward";
-RichPidCnvVerifier.InputStoredTracks       = "Rec/Tr/Forward";
-ElectronMatch.Tracks                       = "Rec/Tr/Forward";
-PhotonMatch.Tracks                         = "Rec/Tr/Forward";
-BremMatch.Tracks                           = "Rec/Tr/Forward";
-//MuonIDFOI.TrackLocation                    = "Rec/Tr/Forward";
+//TrToRichTrackAlg.StoredTracksLocation = "Rec/Tr/Forward";
+//RichPidCnvVerifier.InputStoredTracks  = "Rec/Tr/Forward";
+//ElectronMatch.Tracks                  = "Rec/Tr/Forward";
+//PhotonMatch.Tracks                    = "Rec/Tr/Forward";
+//BremMatch.Tracks                      = "Rec/Tr/Forward";
+//MuonIDFOI.TrackLocation           = "Rec/Tr/Forward";
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"

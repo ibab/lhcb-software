@@ -3,6 +3,16 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2002-07-08 - Marco Cattaneo
+ - Add pre-selection of tracks for Rich (currently forward tracks from Tr/Best)
+ - Calo PID now uses Tr/Best tracks as input
+ - Tr/Forward container suppressed
+ - Fix L0 muon and muon PID efficiency (bug fix in muon digitization)
+ - Adapt tracking to ITDet Xml geometry
+ - Seeding only always returns best choice for L/R ambiguity on OT
+ - Track fit sorts measurements by increasing Z prior to fit
+ - Drop support for dbase < v248r0
+
 ! 2002-07-05 - Marco Cattaneo
  - Upstream tracks saved on DST in Tr/Best container
  - MuonID performed on all "unique" long tracks in Tr/Best container
