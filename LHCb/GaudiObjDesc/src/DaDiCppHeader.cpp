@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.28 2002-01-29 09:27:52 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.29 2002-01-29 11:26:55 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -718,7 +718,6 @@ void printClass(std::ofstream& xmlOut,
     classTemplateList = false;
   std::vector<std::string>::iterator coIter, koIter;
 
-
   ///
   /// check if Class is an 'Eventclass'
   ///
@@ -818,7 +817,7 @@ void printClass(std::ofstream& xmlOut,
         xmlOut << "virtual ";
       }
       xmlOut << DaDiTools::chooseAccess(gddBaseClass->access().transcode()) 
-        << " " << baseClName;
+        << " " << fullBaseClName;
     }
   }
   
@@ -1560,8 +1559,8 @@ void printClass(std::ofstream& xmlOut,
   {
     xmlOut << "//Defintion of keyed container for "
       << gddClass->className().transcode() << std::endl
-      << "namespace Containers { class HashMap; };" << std::endl
-      << "template <class TYPE, class MAPPING> class KeyedContainer;" << std::endl
+//      << "namespace Containers { class HashMap; };" << std::endl
+//      << "template <class TYPE, class MAPPING> class KeyedContainer;" << std::endl
       << "typedef KeyedContainer<" << gddClass->className().transcode()
       << ", Containers::HashMap> " << gddClass->className().transcode() << "s;"
       << std::endl;
