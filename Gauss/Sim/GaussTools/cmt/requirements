@@ -6,13 +6,15 @@ version v6r2
 branches          cmt src doc GaussTools
 
 # =============== explicit dependencies =======================================  
-use GiGaCnv       v11r*     Sim
+use GiGaCnv       v12r*     Sim
 
 # =============== Event =======================================================
 use VeloEvent     v*     Event
 use MuonEvent     v*     Event
 use RichEvent     v*     Event
 use CaloEvent     v*     Event 
+
+use SimSvc        v*     Sim  
 
 # ============== linker library ===============================================
 library          GaussToolsLib           Lib/*.cpp

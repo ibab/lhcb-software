@@ -4,7 +4,7 @@
 #include "GaudiKernel/IToolSvc.h"
 // GiGa
 #include "GiGa/GiGaMACROs.h"
-#include "GiGa/IGiGaPhysConstructor.h"
+#include "GiGa/IGiGaPhysicsConstructor.h"
 // G4 
 #include "G4ParticleTypes.hh"
 #include "G4ParticleDefinition.hh"
@@ -74,30 +74,25 @@ StatusCode GiGaPhysListModular::initialize()
   MsgStream log( msgSvc(), name() );
   log << MSG::INFO << "GiGaPhysListModular initializing" << endreq;
   
-  IGiGaPhysConstructor* theconstr;
-  IToolSvc* toolSvc;
+  IGiGaPhysicsConstructor* theconstr;
+
+  if( m_physconstr.empty() ) 
+    { return Error ( "Invalid/Empty list of Physics constructors" ) ; }
   
-  sc = svcLoc()->service( "ToolSvc" , toolSvc , true );
-  if(!sc)
+  for ( std::vector<std::string>::iterator constructor = m_physconstr.begin() ; 
+        m_physconstr.end() != constructor ; ++constructor )
     {
-      log << MSG::ERROR << "Could not find ToolSvc..." << endreq;
+      IGiGaPhysicsConstructor* theconstr = 
+        tool( *constructor , theconstr , this ) ;
+      if( 0 == theconstr ) { return StatusCode::FAILURE ; }
+      
+      if( 0 == theconstr -> physicsConstructor() ) 
+        { return Error ( "G4PhysicsConstructor* points to NULL!" ) ; }
+      
+      // register 
+      RegisterPhysics( theconstr -> physicsConstructor() ) ;
     }
-  else
-    {
-      std::vector<std::string>::iterator i;  
-      for( i=m_physconstr.begin(); i!= m_physconstr.end(); i++)
-        {
-          log << MSG::INFO << "Registering physics list: " << (*i) << endreq;
-          StatusCode scc= toolSvc->retrieveTool( *i , theconstr , this );
-          if(!scc) {
-            return Error("Physics constructor '"+(*i)+"i is not found!",scc);
-          }
-          else
-            {
-              RegisterPhysics(theconstr);
-            }
-        }  
-    }
+  
   return StatusCode::SUCCESS;
 };
 

@@ -4,6 +4,13 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2003-04-06 - Ivan BELYAEV
+ - add 3 new constrete tools 
+   GiGaFieldMgr         - field manager fore GiGa 
+   GiGaEraseFieldMgr    - "erase" teh field from defined regions 
+   GiGaSetSimAttributes - set simulation attributes  for volumes 
+   GiGaPhysListModular.cpp - update for newer interafce 
+
 !========================= GaussTools v6r2 2003-03-11 =======================
 ! 2003-03-10 Vanya Belyaev 
   fix a problems with building a shared library at Win2K 
