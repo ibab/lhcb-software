@@ -1,13 +1,13 @@
 # =============================================================================
 package GaussCalo
-version v1r1
+version v2r0
 
 # =============== package structure ===========================================
 branches          cmt src doc
 
 # =============== explicit dependencies =======================================  
 use AIDA          v*   
-use GaussTools    v5r*     Sim
+use GaussTools    v6r*     Sim
 
 # =============== Event =======================================================
 use CaloEvent     v11r*     Event 

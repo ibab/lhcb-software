@@ -5,7 +5,13 @@
 ! Purpose          : collection of sensitive detectors, converters, 
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
-	
+
+!=========================== GaussCalo v2r0 2002-12-17 ========================
+
+! 2002-12-17 - Witek Pokorski
+ - upgrade version number
+ - use new GaussTools (using new Geant4)
+
 !=========================== GaussCalo v1r1 2002-12-16 ========================
 
 ! 2002-12-15 - Ivan Belyaev
