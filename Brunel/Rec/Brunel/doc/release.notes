@@ -8,7 +8,7 @@ Purpose: LHCb reconstruction program
    Upgraded to use Gaudi v9
    Added VELO digitisation, VELO tracking
    Added Forward tracking (only for dbase < v242r1)
-   Added L0 pileup veto. Removed Fortran L0 code.
+   Added L0 pileup veto
    Added TT1 to IT reconstruction
    --> Use this version to reconstruct data produced with dbase v240 to v243r1
 
@@ -45,8 +45,7 @@ Purpose: LHCb reconstruction program
    - BrunelInitialisation: moved to Brunel Kernel
    - BrunelInit.F: Seeds of SICB random number engine (RanEcu) initialised 
                    at every event with run number and event number.
-   - btrigger.F: Remove L0 Fortran code.
-                 Removes dependency on trihadr,trimuon,trit0v,trielec
+   - btrigger.F: Fix timing problem with t1track code
    - richprod.F: Local version, to remove call to axtrigger
 
    In BrunelKernel
