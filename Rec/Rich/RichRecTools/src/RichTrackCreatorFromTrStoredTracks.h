@@ -4,11 +4,13 @@
  *  Header file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.17 2004-10-13 09:52:41 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.18 2004-11-11 16:51:32 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.17  2004/10/13 09:52:41  jonrob
+ *  Speed improvements + various minor changes
+ *
  *  Revision 1.16  2004/07/27 20:15:33  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -144,8 +146,9 @@ private: // data
   RichTrackSelector m_trSelector;
 
   // Track count
-  typedef std::map< Rich::Track::Type, std::pair<unsigned,unsigned> > TrackTypeCount;
-  mutable TrackTypeCount m_nTracks;
+  typedef std::map< Rich::Track::Type, std::pair< unsigned int, unsigned int > > TrackTypeCount;
+  mutable TrackTypeCount m_nTracksUnique;
+  mutable TrackTypeCount m_nTracksNonUnique;
 
   /// Ray-tracing configuration object
   RichTraceMode m_traceMode;
@@ -158,7 +161,10 @@ inline void RichTrackCreatorFromTrStoredTracks::InitNewEvent()
   m_allDone  = false;
   m_trTracks = 0;
   m_tracks   = 0;
-  if ( msgLevel(MSG::DEBUG) ) m_nTracks.clear();
+  if ( msgLevel(MSG::DEBUG) ) {
+    m_nTracksUnique.clear();
+    m_nTracksNonUnique.clear();
+  }
 }
 
 #endif // RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H

@@ -4,11 +4,13 @@
  *  Implementation file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.20 2004-10-13 09:52:41 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.21 2004-11-11 16:51:31 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.20  2004/10/13 09:52:41  jonrob
+ *  Speed improvements + various minor changes
+ *
  *  Revision 1.19  2004/07/27 20:15:33  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -109,20 +111,38 @@ void RichTrackCreatorFromTrStoredTracks::handle ( const Incident & incident )
   // Debug printout at the end of each event
   else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
   {
-    // Print out of track count
-    unsigned nTotTried(0), nTotSel(0);
-    {for ( TrackTypeCount::iterator i = m_nTracks.begin();
-           i != m_nTracks.end(); ++i ) {
-      nTotTried += (*i).second.first;
-      nTotSel   += (*i).second.second;
-    }}
-    debug() << "Selected " << nTotSel << "/" << nTotTried << " TrStoredTracks :";
-    {for (  TrackTypeCount::iterator iTk = m_nTracks.begin();
-            iTk != m_nTracks.end(); ++iTk ) {
-      debug() << " " << (*iTk).first << "=(" << (*iTk).second.second
-              << "/" << (*iTk).second.first << ")"; 
-    }}
-    debug() << endreq;
+    // Print out of unique track count
+    {
+      unsigned int nTotTried(0), nTotSel(0);
+      for ( TrackTypeCount::iterator i = m_nTracksUnique.begin();
+            i != m_nTracksUnique.end(); ++i ) {
+        nTotTried += (*i).second.first;
+        nTotSel   += (*i).second.second;
+      }
+      debug() << "Selected " << nTotSel << "/" << nTotTried << " Unique TrStoredTracks :";
+      for (  TrackTypeCount::iterator iTk = m_nTracksUnique.begin();
+             iTk != m_nTracksUnique.end(); ++iTk ) {
+        debug() << " " << (*iTk).first << "=(" << (*iTk).second.second
+                << "/" << (*iTk).second.first << ")";
+      }
+      debug() << endreq;
+    }
+    // Print out of non-unique track count
+    {
+      unsigned int nTotTried(0), nTotSel(0);
+      for ( TrackTypeCount::iterator i = m_nTracksNonUnique.begin();
+            i != m_nTracksNonUnique.end(); ++i ) {
+        nTotTried += (*i).second.first;
+        nTotSel   += (*i).second.second;
+      }
+      debug() << "Selected " << nTotSel << "/" << nTotTried << " Non-unique TrStoredTracks :";
+      for (  TrackTypeCount::iterator iTk = m_nTracksNonUnique.begin();
+             iTk != m_nTracksNonUnique.end(); ++iTk ) {
+        debug() << " " << (*iTk).first << "=(" << (*iTk).second.second
+                << "/" << (*iTk).second.first << ")";
+      }
+      debug() << endreq;
+    }
   }
 }
 
@@ -134,7 +154,7 @@ const StatusCode RichTrackCreatorFromTrStoredTracks::newTracks() const {
     // Iterate over all reco tracks, and create new RichRecTracks
     richTracks()->reserve( nInputTracks() );
     for ( TrStoredTracks::const_iterator track = trStoredTracks()->begin();
-          track != trStoredTracks()->end(); ++track) { newTrack( *track ); } 
+          track != trStoredTracks()->end(); ++track) { newTrack( *track ); }
 
   }
 
@@ -183,7 +203,13 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
   }
 
   // count tried tracks
-  if ( msgLevel(MSG::DEBUG) ) ++(m_nTracks[trType].first);
+  if ( msgLevel(MSG::DEBUG) ) {
+    if ( trTrack->unique() ) {
+      ++(m_nTracksUnique[trType].first);
+    } else {
+      ++(m_nTracksNonUnique[trType].first);
+    }
+  }
 
   // Is track a usable type
   if ( !Rich::Track::isUsable(trType) ) return NULL;
@@ -292,7 +318,13 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
           newTrack->setParentTrack( trTrack );
 
           // Count selected tracks
-          if ( msgLevel(MSG::DEBUG) ) ++(m_nTracks[trType].second);
+          if ( msgLevel(MSG::DEBUG) ) {
+            if ( trTrack->unique() ) {
+              ++(m_nTracksUnique[trType].second);
+            } else {
+              ++(m_nTracksNonUnique[trType].second);
+            }
+          }
 
         } else {
           delete newTrack;
