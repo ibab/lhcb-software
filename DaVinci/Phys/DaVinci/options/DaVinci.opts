@@ -79,8 +79,8 @@
 //   The various selections algorithms have each DV*.opts
 //   file(s) in their package that can be given as full options of the
 //   DaVinci executable INSTEAD of DaVinci.opts
-//   ex.: DaVinci.exe $B2HHROOT/options/DVBd2PiPi.opts
-//        DaVinci.exe $BS2DSHROOT/options/DVBs2KKKPi_Pi.opts
+//   ex.: DaVinci.exe $B2HHROOT/options/DVTDRselBd2PiPi.opts
+//        DaVinci.exe $BS2PHIETACROOT/options/DVPreselBs2Phi2KK_Etac.opts
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
