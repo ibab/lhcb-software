@@ -15,7 +15,6 @@ L0mPadBuilder.Regions5 = {12, 8};
 L0mTriggerProc.FoiXSize = {6,5,0,3,5};
 L0mTriggerProc.FoiYSize = {0,0,0,0,0};
 L0mTriggerProc.PtParameters = {545.,670.,305.,1.21};
-
-L0mTriggerProcD.FoiXSize = {6,5,0,3,5};
-L0mTriggerProcD.FoiYSize = {0,0,0,0,0};
-L0mTriggerProcD.PtParameters = {545.,670.,305.,1.21};
+L0mTriggerProc.PtPrecision = 40.;
+// Max integer to encode abs of Pt value
+L0mTriggerProc.PtMaxBits = 128;
