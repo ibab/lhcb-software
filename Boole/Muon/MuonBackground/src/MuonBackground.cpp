@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.16 2003-12-10 16:06:12 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.17 2003-12-11 07:40:17 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -774,8 +774,7 @@ MuonBackground::initializeRNDDistribution2D(IHistogram2D* histoPointer,
       sliceY( "MuBG/1" , *histoPointer, xbin);
     int entries=ySlice->entries();
     if(entries==0) {
-      msg<<MSG::INFO<<" zero entries"<<endreq;
-      histoSvc()->print(ySlice);
+      msg<<MSG::DEBUG<<" zero entries"<<endmsg;
     }
     
     //  msg<<MSG::INFO<<" entries "<<entries<<endreq;
