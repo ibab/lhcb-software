@@ -2,6 +2,10 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2004-09-03 - P. Koppenburg
+ - PhysDesktop
+   . Remove getInput method.
+
 ! 2004-08-25 - P. Koppenburg
   Move src/* to src/component and Lib/* to src/
    

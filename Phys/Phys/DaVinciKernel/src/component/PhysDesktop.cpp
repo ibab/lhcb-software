@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.1 2004-08-25 16:40:40 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.2 2004-09-03 15:30:28 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -16,7 +16,7 @@
 #include "PhysDesktop.h"
 #include "DaVinciTools/IParticleMaker.h"
 
-/**--------------------------------------------------------------------------
+/**----------------------------------------------------------------------------
  * Implementation file for class : PhysDesktop base class 
  *
  * 18/02/2002 : Sandra Amato
@@ -37,8 +37,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_EDS(0),
-    m_pMaker(0),
-    m_getInputWarned(false){
+    m_pMaker(0){
   
   // Declaring implemented interfaces
   declareInterface<IPhysDesktop>(this);
@@ -383,6 +382,9 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
     // Check if this was already in a Gaudi container (hence in TES)
     if( 0 == (*icand)->parent() ) {
       particlesToSave->insert(*icand);
+      verbose() << "Saving " << (*icand)->particleID().pid() 
+                << " with P= " << (*icand)->momentum() << " m=" 
+                << (*icand)->mass() << endreq ;
     }
   }
   
@@ -675,19 +677,6 @@ StatusCode PhysDesktop::getEventInput(){
   
   return StatusCode::SUCCESS;
   
-}
-
-//=============================================================================
-// Obsolete version of getEventInput, kept for backwards compatibility
-// To be removed in some months (now 02-2004)
-//=============================================================================
-StatusCode PhysDesktop::getInput(){
-  if (!m_getInputWarned){
-    warning() << "Obsolete function getInput() called ";
-    warning() << "This is now automatically called by DVAlgorithm ";
-    m_getInputWarned = true;
-  }
-  return StatusCode::SUCCESS;  // change this to failure soon
 }
 
 //=============================================================================

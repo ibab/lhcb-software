@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.1.1.1 2004-08-24 06:59:45 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.2 2004-09-03 15:30:28 pkoppenb Exp $
 #ifndef DAVINCITOOLS_IPHYSDESKTOP_H 
 #define DAVINCITOOLS_IPHYSDESKTOP_H 1
 
@@ -28,9 +28,6 @@ public:
 
   // Fill the particle and vertex containers. Called by DVAlgorithm::sysExecute()
   virtual StatusCode getEventInput() = 0;
-
-  // Obsolete version for backwards compatibility. To be removed in some months (now 02-2004)
-  virtual StatusCode getInput() = 0;
 
   // Retrieve the particles containers
   virtual const ParticleVector& particles() = 0;

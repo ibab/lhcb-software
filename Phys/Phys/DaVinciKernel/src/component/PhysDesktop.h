@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.1 2004-08-25 16:40:40 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.2 2004-09-03 15:30:28 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -50,10 +50,7 @@ public:
   /// requested in jobOptions. The creation of new Particles if delegated
   /// to ParticleMakers. Only DVAlgorithm::sysExecute() should call this function.
   StatusCode getEventInput();
-  
-  // Obsolete version to permit backwards compatibility. To be removed in some months
-  StatusCode getInput();
-  
+
   /// Retrieve the particles container 
   const ParticleVector& particles();
   
@@ -124,12 +121,6 @@ private:
 
   /// Identify specific type of particle maker requested (Property)
   std::string m_pMakerType;  
-
-  // Variable needed to ensure that calling getInput
-  // by user (which is now not needed anymore) will give only one
-  // message warning, not one per event
-  // To be removed from code when calling by user not tolerated anymore
-  bool m_getInputWarned;
 
     
 };
