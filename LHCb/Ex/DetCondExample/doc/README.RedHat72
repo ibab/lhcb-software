@@ -1,4 +1,4 @@
-# $Id: README.RedHat72,v 1.2 2002-04-17 16:19:05 andreav Exp $
+# $Id: README.RedHat72,v 1.3 2002-05-06 16:35:26 andreav Exp $
 
 ------------------------------------------------------------------------------
 Packages needed to execute DetCondExample on tbed0087/88/89 (RedHat7.2)
@@ -9,7 +9,6 @@ Packages needed to execute DetCondExample on tbed0087/88/89 (RedHat7.2)
 cd ~/newmycmt
 
 # You need to getpack the head versions of the following packages
-# You also need to modify DetDesc as explained in doc/README.
 getpack Det/CondDBOracle   v3r10p1  head
 getpack Det/DetCond        v3r0     head
 getpack Det/DetCondExample v3r0     head
@@ -23,70 +22,108 @@ getpack CLHEP              v17r10p1
 getpack ExternalLibs       v3r6
 getpack GaudiAlg           v6r0
 getpack GaudiConf          v6r2
-getpack GaudiKernel        v12r0
+getpack GaudiKernel        v12r2
 getpack GaudiPolicy        v5r5
 getpack GaudiSvc           v8r0
 getpack HTL                v13r10p1
 getpack XERCES             v16r0p1
+
+# You then need to modify some of the packages you downloaded with getpack,
+# since they do not yet support Linux RedHat 7.2.
+
+------------------------------------------------------------------------------
+Modifications to GaudiPolicy v5r5
+------------------------------------------------------------------------------
 
 # You need to define the tag rh72_gcc2952.
 # This indicates Linux RedHat 7.2 (kernel linux24, glibc 2.2) with gcc 2.95.2
 # -> `fs sysname` returns "Current sysname is 'i386_linux24'"
 # -> `uname -msr` returns "Linux 2.4.9-31.1.cernsmp i686"
 # -> `ls -l /lib/libc.so.6` points to "libc-2.2.4.so"
-# -------------------------------------------------------------------
-# ===> EDIT and MODIFY GaudiPolicy/v5r5/cmt/requirements by adding:
-# -------------------------------------------------------------------
+
+#
+# ===> MODIFY GaudiPolicy/v5r5/cmt/requirements by adding:
+#
 > # Linux RedHat 7.2 (kernel linux24, glibc 2.2) with gcc 2.95.2
 > tag i386_linux24        Linux glibc-2.2
 > tag rh72_gcc2952        Linux glibc-2.2 gcc-2.95.2
 > tag rh72_gcc2952dbx     Linux glibc-2.2 gcc-2.95.2 debug
 > tag rh72_gcc2952Static  Linux glibc-2.2 gcc-2.95.2 static
 
-# You need to define the correct path to the LHCXX libraries for RedHat7.2.
-# Currently two version of LHCXX libraries for RedHat7.2 are maintained.
-# They are called gcc-2.95.2-from61/ and gcc-2.95.2-from72/.
-# While the compiler version is the same, the compiler itself is compiled on 
-# 6.1 in one case, on 7.2 in the other. This can result in different stdc++ 
-# libraries (while the glibc library is the same in both cases). 
-# For the moment, version gcc-2.95.2-from61/ is used (soft linked as
-# gcc-2.95.2/): eventually, gcc-2.95.2-from72/ should be used.
-# -------------------------------------------------------------------
-# ===> EDIT and MODIFY ExternalLibs/v3r6/cmt/requirements:
-# -------------------------------------------------------------------
+------------------------------------------------------------------------------
+Modifications to ExternalLibs v3r6
+------------------------------------------------------------------------------
+
+# You need to modify ExternalLibs to link the LHCXX packages.
+# The LHCXX libraries for RedHat7.2 are maintained under 
+# /afs/cern.ch/sw/lhcxx/specific/redhat72/gcc-2.95.2-from72, which is
+# soft-linked as /afs/cern.ch/sw/lhcxx/specific/redhat72/gcc-2.95.2.
+# This is also soft-linked as /afs/cern.ch/sw/lhcxx/specific/rh72_gcc2952,
+# thanks to Andreas Pfeiffer, and can be used with the standard ExternalLibs.
+# Notice that another version gcc-2.95.2-from61 was also produced in the past:
+# while the compiler version was the same, the compiler itself was compiled 
+# on 6.1, so that the old stdc++ libraries would be used. Version 
+# gcc-2.95.2-from61 was only used to test Objectivity and will be abandoned.
+
+#
+# ===> MODIFY ExternalLibs/v3r6/cmt/requirements:
+#
 < macro PLATARCH    "$(PLATARCHdef)"\
 <       egcs-1.1.2  "rh61_egcs112"\
+<       CAMBRIDGE   "rh71_gcc29521"\
 <       STANDALONE  ""
 ---
 > macro PLATARCH     "$(PLATARCHdef)"\
 >       egcs-1.1.2   "rh61_egcs112"\
->       rh72_gcc2952 "redhat72/gcc-2.95.2"\
+>       rh72_gcc2952 "rh72_gcc2952"\
+>       CAMBRIDGE    "rh71_gcc29521"\
 >       STANDALONE   ""
 
+------------------------------------------------------------------------------
+Modifications to CLHEP v17r10p1
+------------------------------------------------------------------------------
+
 # You need to use CLHEP 1.7.0.0 as 1.7.1.0 does not exist yet for RedHat7.2.
-# -------------------------------------------------------------------
-# ===> EDIT and MODIFY CLHEP/v17r10p1/cmt/requirements:
-# -------------------------------------------------------------------
+# A temporary hack is used, instead of modifying the dependencies
+# of dependent packages to use CLHEP v17r00 instead of v17r10p1.
+
+#
+# ===> MODIFY CLHEP/v17r10p1/cmt/requirements:
+#
 < macro CLHEPBASE "${CLHEP_DIR}/1.7.1.0"
 ---
 > macro CLHEPBASE    "${CLHEP_DIR}/1.7.1.0" \
 >       rh72_gcc2952 "${CLHEP_DIR}/1.7.0.0"
 
+------------------------------------------------------------------------------
+Modifications to HTL v13r10
+------------------------------------------------------------------------------
+
 # You need to use HTL 1.3.2.1 as 1.3.1.0 does not exist for RedHat7.2.
-# -------------------------------------------------------------------
-# ===> EDIT and MODIFY HTL/v13r10p1/cmt/requirements:
-# -------------------------------------------------------------------
-< macro HTLBASE    "${HTL_DIR}/1.3.1.0"\
+# A temporary hack is used, instead of modifying the dependencies
+# of dependent packages to use HTL v13r21 instead of v13r10p1.
+
+#
+# ===> MODIFY HTL/v13r10p1/cmt/requirements:
+#
+< macro HTLBASE     "${HTL_DIR}/1.3.1.0"\
 <       Solaris     "${HTL_DIR}/1.3.1.1"
 ---
 > macro HTLBASE      "${HTL_DIR}/1.3.1.0"\
 >       Solaris      "${HTL_DIR}/1.3.1.1"\
 >       rh72_gcc2952 "${HTL_DIR}/1.3.2.1"
 
+------------------------------------------------------------------------------
+Modifications to XERCES v16r0p1
+------------------------------------------------------------------------------
+
 # You need to use XERCES for RedHat 6.1 as libraries for 7.2 do not exist yet
-# -------------------------------------------------------------------
-# ===> EDIT and MODIFY XERCES/v16r0p1/cmt/requirements:
-# -------------------------------------------------------------------
+# This might introduce more problems than the hacks for CLHEP and HTL, since 
+# it involves different glibc libraries... but it seems to work for now.
+
+#
+# ===> MODIFY XERCES/v16r0p1/cmt/requirements:
+#
 < macro XERCESBASE "${XERCES_DIR}/1.6.0/$(PLATARCH)" \
 <       WIN32      "${XERCES_DIR}/1.6.0/Win32"
 ---
@@ -112,7 +149,7 @@ cd Ex/DetCondExample/v3r0/cmt
 # - it assumes CMT v1r12p20020412 is used
 # - it defines CMTCONFIG as rh72_gcc2952
 # - it makes sure that gcc 2.95.2 is used instead of gcc 2.96
-# - it redefines LHCXX_DIR as $SWROOT/lhcxx/specific/redhat72/gcc-2.95.2
+# - it redefines LHCXX_DIR as $SWROOT/lhcxx/specific/rh72_gcc2952
 source setup_RedHat72.csh
 
 # Broadcast "cmt config" to make sure CMT v1r12p20020412 is used everywhere
@@ -228,6 +265,8 @@ set DETCONDEXAMPLE_DBNAME=MYCONDDB_LINUX
 run DetCondExample testCondDB.opts > log.testCondDB.Orac.Windows.DBfilledOnLinux72
 
 # The result of this test is that there are no significant differences
+# between log.testCondDB.Orac.Windows.DBfilledOnLinux72 and [...].Windows, or
+# between log.testCondDB.Orac.Linux72.DBfilledOnWindows and [...].Linux72
 # The only difference is in the standard format to print floats:
 # - on Windows: 1.50000000e+001
 # - on Linux:   1.50000000e+01

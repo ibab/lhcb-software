@@ -1,4 +1,4 @@
-# $Id: README,v 1.20 2002-04-17 16:16:46 andreav Exp $
+# $Id: README,v 1.21 2002-05-06 16:35:26 andreav Exp $
 
 Two examples are distributed in this package: a test of condition data 
 stored in flat XML files, and a test of condition data stored in the CondDB.
@@ -58,18 +58,6 @@ Under Windows:
         getpack Det/CondDBOracle   v3r10p1  head
 Under Linux (RedHat7.2)
         getpack Det/CondDBOracle   v3r10p1  head
-
-In package DetDesc the cmt/ requirements file needs to be modified to use 
-the latest GaudiKernel and XERCES (and fix a small bug under Windows):
-< version v9r3
-< use GaudiKernel v11r*
-< use XERCES v15r*
-< macro_append  DetDescLib_shlibflags "$(GaudiKernel_linkopts) " 
----
-> version v10r0
-> use GaudiKernel v12r*
-> use XERCES v16r*
-> macro_append  DetDescLib_shlibflags " $(GaudiKernel_linkopts) " 
 
 Under Linux (RedHat7.2) many more packages need to be getpack'ed and MODIFIED.
 Refer to the doc/README.RedHat72 for more details.

@@ -1,8 +1,10 @@
 #!/usr/local/bin/tcsh
-# $Id: setup_RedHat72.csh,v 1.6 2002-04-17 16:09:02 andreav Exp $
+# $Id: setup_RedHat72.csh,v 1.7 2002-05-06 16:35:26 andreav Exp $
 
 # Re-configure CMT to use v1r12p20020412 if needed (normally this is default)
 # Do this for both RedHat 6.1 and 7.2
+# Notice that getpack fails to cmt config on RedHat7.2 as it does not find the 
+# 'cmt' command even if it is correctly aliased to ${CMTROOT}/${CMTBIN}/cmt.exe
 set tmp_banner = 0
 if ( ${?CMTROOT} != 1 ) then
   setenv CMTROOT undefined
@@ -64,7 +66,7 @@ g++ -v
 # The default setup in $GAUDISOFT/ExternalLibs/v3r6 does not foresee rh72
 # The best is to modify PLATARCHdef in ExternalLibs and source its setup
 echo " -------------------------------------------------------------------- "
-setenv LHCXX_DIR ${SWROOT}/lhcxx/specific/redhat72/gcc-2.95.2
+setenv LHCXX_DIR ${SWROOT}/lhcxx/specific/rh72_gcc2952
 setenv CLHEP_DIR ${LHCXX_DIR}/CLHEP
 setenv HTL_DIR   ${LHCXX_DIR}/HTL
 setenv NAGC_DIR  ${LHCXX_DIR}/Nag_C

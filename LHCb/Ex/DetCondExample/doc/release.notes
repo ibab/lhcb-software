@@ -1,6 +1,18 @@
-#$Id: release.notes,v 1.15 2002-04-17 16:19:15 andreav Exp $
+#$Id: release.notes,v 1.16 2002-05-06 16:35:26 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020506 - Andrea Valassi
+Upgrade to Gaudi v10r1 (GaudiKernel v12r2)
+- No changes to the code, just test that everything is OK
+  > produce new reference log files
+- A few changes in the configuration scripts (remove cmt/private)
+- Main changes are in the documentation
+  > LHCXX tag rh72_gcc2952 is now in production by Andreas
+  > DetDesc HEAD now is v10r0 with correct dependencies and new code
+  > MsgStream still needs to be changed in GaudiKernel
+Requirements v3r0, private tag h20020506
 
 ==============================================================================
 !20020417 - Andrea Valassi
