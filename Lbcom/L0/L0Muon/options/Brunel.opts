@@ -4,7 +4,7 @@ BrunelTriggerTRIGGERSeq.Members += { "L0mTrigger/L0Muon" };
 
 // Fields of interest in X
 // FOI units are basic pad size in M3	
-L0Muon.FoiXSize = {6,5,0,3,5};
+L0Muon.FoiXSize = {4,5,0,2,4};
 // Fields of interest in Y
 L0Muon.FoiYSize = {0,0,0,1,1};
 // "Apply Limited Y" flag
