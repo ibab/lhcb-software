@@ -156,7 +156,7 @@ void EvtHelAmp::init(){
   delete [] _lambdaB2 ;
   delete [] _lambdaC2 ;
   
-  for ( int ib = 0 ;
+  for ( ib = 0 ;
         ib < _nB ;
         ib++ ) {
     delete [] _HBC[ib] ;
