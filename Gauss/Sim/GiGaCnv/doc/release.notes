@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.87 2004-06-16 08:04:41 ranjard Exp $ 
+! $Id: release.notes,v 1.88 2004-06-17 10:19:12 gcorti Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!====================== GiGaCnv v15r7 2004-06-17 ===========================
+! 2004-06-17 - Gloria CORTI
+ - src/component/GiGaMCVertexCnv.cpp
+   . handle some cases where an appropriate MCVertex is not found when setting 
+     references: the tof is identical but the position does not have to
+     necessarly be "less", so the second vertex on a trajectory could be the
+     previous one that the one provided (BUG# 3783)
 
 !====================== GiGaCnv v15r6 2004-06-15 ===========================
 ! 2004-06-15 - Gloria CORTI

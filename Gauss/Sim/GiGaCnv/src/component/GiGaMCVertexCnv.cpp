@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.33 2004-06-15 12:05:20 gcorti Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.34 2004-06-17 10:19:12 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.33  2004/06/15 12:05:20  gcorti
+// temporary fix for production
+//
 // Revision 1.32  2004/04/20 04:26:46  ibelyaev
 //  fix reference counters and add warning counter
 //
@@ -349,8 +352,8 @@ StatusCode GiGaMCVertexCnv::updateObj
   // sort and eliminate duplicates
   {
     GiGaCnvFunctors::MCVerticesLess  Less ;
-    std::stable_sort( vertices->begin() , vertices->end() , Less );
-    
+    std::stable_sort( vertices->begin() , vertices->end() , Less );    
+
     /** due to close relations between ContainedObject 
      *  and its parent Container we could not use standard 
      *  algorithm std::unique. 
@@ -475,31 +478,51 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
              trajectory->end() != iPoint ; ++iPoint )
           {
             if( 0 == *iPoint  ) 
-              { return Error("GiGaTrajectoryPoint* points to MULL!" ) ; }  
+              { return Error("GiGaTrajectoryPoint* points to NULL!" ) ; }  
             // fill parameters of auxillary vertex                
             miscVertex.setPosition    ( (*iPoint) -> GetPosition () );
             miscVertex.setTimeOfFlight( (*iPoint) -> GetTime     () );
             // look for vertex, special treatment for "first" 
             // vertex. should be quite fast
-
             
             iVertex = 
               std::lower_bound( trajectory -> begin () == iPoint ? 
                                 vertices   -> begin () :  iVertex     , 
                                 vertices   -> end   () ,  &miscVertex , Less  );
             
-            // no vertex is found? 
-            if( vertices->end() == iVertex || !Equal( &miscVertex , *iVertex ) )
-            {
-              return Error("appropriate MCVertex is not found !"); 
+            // no vertex found in container? 
+            if( vertices->end() == iVertex ) {
+              return Error("appropriate MCVertex is not found!");
             }
+            // If the returned vertex is not identical, and it is not the first
+            // one in the container and we are considering the last point on
+            // the trajectory, then check if the previous vertex in the 
+            // containers would be appropriate: precisions problems where tof 
+            // is the same but position is not and the "Less" could be the
+            // end of the trajectory
+            if( !Equal( &miscVertex , *iVertex ) ) 
+            {
+              if( (vertices->begin() != iVertex ) && 
+                  ( trajectory->end()-1 == iPoint ) ) 
+              {
+                if( Equal( &miscVertex , *(iVertex-1) ) ) {
+                  iVertex--;
+                  Warning( "'Less' vertex in reverse order on trajectory" );
+                  // for debugging
+                  // trajectory->ShowTrajectory( std::cout ) ;
+                  // std::cout << std::endl ;
+                } else { return Error("appropriate MCVertex is not found! 1"); } 
+              }              
+              else { return Error("appropriate MCVertex is not found! 2"); }
+            }
+            
             MCVertex* vertex = *iVertex ;
             if( 0 == vertex ) { return Error("MCVertex* points to NULL!") ; }
             // is it the first vertex for track?
             if ( trajectory->begin() == iPoint ) 
             {
-              // the creator of the trajectory
-              
+
+              // the creator of the trajectory              
               if ( MCVertex::Unknown == vertex->type() ) 
               {
                 const G4VProcess* creator = trajectory->creator() ;
