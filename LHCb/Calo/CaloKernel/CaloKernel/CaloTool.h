@@ -1,14 +1,8 @@
-// $Id: CaloTool.h,v 1.11 2002-05-02 08:38:46 ibelyaev Exp $
+// $Id: CaloTool.h,v 1.12 2002-05-07 17:21:35 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.10  2002/04/27 14:38:19  ibelyaev
-//  add more functionality to 'finalize' method
-//
-// Revision 1.9  2002/04/27 10:55:34  ibelyaev
-//  update in template accessors for location of 'tools'
-//
 // ============================================================================
 #ifndef CALOKERNEL_CALOTOOL_H 
 #define CALOKERNEL_CALOTOOL_H 1
@@ -212,9 +206,11 @@ protected:
     if( type.end() != it ) 
       {
         const std::string::size_type pos = it - type.begin() ;
-        return tool( std::string( type , 0       , pos ) , // new type 
-                     std::string( type , pos + 1       ) , // new name 
-                     Tool , parent , create            ) ;
+        const std::string ntype( type , 0       , pos               );
+        const std::string nname( type , pos + 1 , std::string::npos );
+        return tool( ntype , // new type 
+                     nname , // new name 
+                     Tool  , parent , create            ) ;
       }
     StatusCode sc = toolSvc () 
       -> retrieveTool ( type , Tool, parent , create   );

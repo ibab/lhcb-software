@@ -1,17 +1,8 @@
-// $Id: CaloAlgorithm.h,v 1.15 2002-05-07 17:14:18 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.h,v 1.16 2002-05-07 17:21:34 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.14  2002/05/02 08:38:46  ibelyaev
-//  add exception counting into CaloTool&CaloAlgorithm classes
-//
-// Revision 1.13  2002/04/27 14:38:18  ibelyaev
-//  add more functionality to 'finalize' method
-//
-// Revision 1.12  2002/04/27 10:55:33  ibelyaev
-//  update in template accessors for location of 'tools'
-//
 // ============================================================================
 #ifndef CALOKERNEL_CALOALGORITHM_H 
 #define CALOKERNEL_CALOALGORITHM_H 1
@@ -232,8 +223,8 @@ protected:
     if( type.end() != it ) 
       {
         std::string::size_type pos = it - type.begin()   ;
-		const std::string ntype( type , 0       , pos               );
-		const std::string nname( type , pos + 1 , std::string::npos );
+        const std::string ntype( type , 0       , pos               );
+        const std::string nname( type , pos + 1 , std::string::npos );
         return tool( ntype , // new type 
                      nname , // new name 
                      Tool , parent , create            ) ;
