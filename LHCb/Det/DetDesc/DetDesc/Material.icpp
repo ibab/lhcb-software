@@ -1,0 +1,52 @@
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/Material.icpp,v 1.1.1.1 2000-11-23 13:44:44 ranjard Exp $
+
+// Class Material
+
+inline Material::Material( std::string name)
+: DataObject( "Material" ),
+  m_name( name ),
+  m_density(0.0),
+  m_radiationLength(0.0),
+  m_absorptionLength(0.0),
+  m_temperature(STP_Temperature),
+  m_pressure(STP_Pressure),
+  m_state(stateUndefined) {
+  }
+
+inline Material::Material( std::string name, double dens, double rl, double al,
+                    double temp, double press, eState s )
+: DataObject( "Material" ),
+  m_name( name ),
+  m_density(dens),
+  m_radiationLength(rl),
+  m_absorptionLength(al),
+  m_temperature(temp),
+  m_pressure(press),
+  m_state(s) {
+  }
+
+inline Material::Material( char* name, double dens, double rl, double al,
+                    double temp, double press, eState s )
+: DataObject( "Material" ),
+  m_name( std::string(name) ),
+  m_density(dens),
+  m_radiationLength(rl),
+  m_absorptionLength(al),
+  m_temperature(temp),
+  m_pressure(press),
+  m_state(s) {
+  }
+
+
+inline Material::~Material() {
+}
+
+inline bool Material::operator==(const Material* right) const {
+    // Only pointers are compared!!!!!!
+    return( ( this == right) ? true : false );
+}
+
+inline bool Material::operator!=(const Material* right) const {
+    // Only pointers are compared!!!!!!
+    return( ( this != right) ? true : false );
+}

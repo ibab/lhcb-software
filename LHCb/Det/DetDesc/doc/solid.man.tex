@@ -1,0 +1,328 @@
+\documentstyle[a4,epsfig]{article}      
+	
+\title{ Solids } 
+\author{Vanya Belyaev\footnote{E-mail:{\tt Ivan.Belyaev@itep.ru} } \\ {\it ITEP, Moscow}}
+\date{ \today }	
+\begin{document}
+ 
+\maketitle 	
+
+\tableofcontents 
+	 
+  \section{ ISolid interface } 
+  All solids  implements an abstract interface  {\it ISolid }. 
+This interface allows the retrieval of all information which 
+are common for all types of solids.  
+One can ask it the following questions
+\begin{itemize}
+\item 
+\verb+ const std::string& name() const + 
+\\ It returns the name of the solid. This name is not required to be unique or specific. 
+ It is used only for the user convenience.
+\item 
+\verb+ const std::string& typeName() const + 
+\\ It returns the specific type name for the given type f the solid. It could
+be used (in parallel with \verb+dynamic_cast+ and/or \verb+typeid+) for 
+determination of the concrete type of the solid.
+ \item 
+\verb+ bool isInside( const HepPoint3D& LocalPoint ) const + 
+\\ It checks weather the \verb+LocalPoint+ is inside of the given solid or not. 
+Point should be given in a local reference system of the solid!
+\item 
+\verb+ const ISolid* cover() const + 
+\\ It returns the C++ pointer to the "simplified" solid, which can be used 
+for different approximations and simplifications. 
+\item 
+\verb+ const ISolid* coverTop() const + 
+\\ It returns the C++ pointer to "the most simplified" solid, which can be used 
+for different approximations and simplifications. Normally it is just a  
+box. 
+\item an addition an overloaded output operator to
+\verb+std::ostream+ is implemented for objects of type
+{\it ISolid } and {\it ISolid*}.  
+\item The special (technical) method is defined for searching the intersection points
+of the line and the given solid. 
+\begin{verbatim} 
+typedef double             Tick  ;  // "tick"-type 
+typedef std::vector<Tick>  Ticks ;  
+virtual inline  unsigned int intersectionTicks ( 
+        const HepPoint3D& Point  , // initial point for the line 
+        const Hep3Vector& Vector , // vector along the the line 
+        ISolid::Ticks   & ticks  ) const; // output "Ticks"
+\end{verbatim}		
+Line is assumed to be parametrized in the local reference system 
+of the given solid as 	
+$\vec{r} = \vec{p} + \vec{v}*t,$
+where $\vec{p}$ corresponds to {\tt const HepPoint3D\& Point } and 
+$\vec{v}$ corresponds to {\tt const Hep3Vector\& Vector }. 
+The output container {\tt ISolid::Ticks\& ticks}  is ordered. 
+The returned value is just the number of intersecton points
+(size of the output container).
+\end{itemize}
+	
+Please, pay some attention that {\bf all} methods from {\it ISolid} interface 
+are constant methods, which is quite favourable form the safety consideration. 
+
+All specific questions (sizes and so on ) concerning a 
+specific shapes and parameters of the solids, pointer by an 
+{\it  ISolid* } pointer, should be addressed to a 
+specific classes after casting performed. 
+For casting to a specific solid type there exist 3 possibility 
+\begin{itemize}
+\item sequential casting via  \verb+dynamic_cast+ to all hypothesis till successful casting
+  \begin{verbatim}
+  void f( ISolid* solid ) 
+   {
+      SolidBox* box = 0 ;
+      try        { box = dynamic_cast<SolidBox*>(solid); } 
+      catch(...) { }  
+      if( 0 != box )  { /* box  */ }
+      else
+      { 
+       SolidTubs* tubs = 0 ;
+       try        { tubs = dynamic_cast<Solidtubs*>(solid); } 
+       catch(...) { }  
+       if( 0 != tubs ) { /* tubs */ } 
+      }
+   } 
+  \end{verbatim} 
+\item determine the exact type of solid before casting via \verb+dynamic_cast+
+using \verb+typeid+ facility:
+\begin{verbatim}
+  void f( ISolid* solid ) 
+   {
+      if( typeid(solid) == typeid(SolidBox*) ) 
+       { 
+        SolidBox* box = dynamic_cast<SolidBox*>(solid); 
+        /* here one can do something with box */
+       } 
+      else if( typeid(solid) == typeid(SolidTubs*) ) 
+       { 
+        SolidTubs* tubs = dynamic_cast<SolidTubs*>(solid); 
+        /* here one can do something with tubs */
+       } 
+   }
+\end{verbatim}
+\item determine the exact type of solid before casting via \verb+dynamic_cast+
+using \verb+typeName()+ method from {\it ISolid} interface:
+\begin{verbatim}
+  void f( ISolid* solid ) 
+   {
+      if(      solid->typeName() == "SolidBox" ) 
+       { 
+        SolidBox* box = dynamic_cast<SolidBox*>(solid); 
+        /* here one can do something with box */
+       } 
+      else if( solid->typeName() == "SolidTubs" ) 
+       { 
+        SolidTubs* tubs = dynamic_cast<SolidTubs*>(solid); 
+        /* here one can do something with tubs */
+       } 
+   }
+\end{verbatim}
+\end{itemize}
+
+ \section{ Primitive solids } 
+	
+  Currently 5 types of "primitive" solids are implemented.  The most frequently solids ("shapes")
+were chosen from shapes available in { \it GEANT3 } and {\it Geant4 } toolkits. 
+There are no any principal limitations and if one needs some additional shapes from 
+{\it GEANT3} and/or {\it Geant4} toolkits they will be implemented  on demand. 
+
+For all solids, there is no any "setters". One is able to set the parameters only 
+in the creation of the objects via parameters in constructor. 
+
+Further only specific methods (or specific details of common method) are described for 
+all available solids. 
+ 
+   \subsection{ Boxes            } 
+   This shape  is described in class 
+{\it SolidBox}\footnote{ It corresponds to \verb+'BOX '+ shape from {\it GEANT3} package}. 
+   This is the most primitive shape.
+   Essential features of this class are:
+   \begin{itemize} 
+   \item  
+   Constructor requires name of the solid and 3 positive\footnote{Non-positive parameters throw exception via 
+\verb+SolidException+ class} parameters to be given. 
+All parameters are mandatory.  There is no any default values for them. 
+Keeping in mind that a significant number of physicists have some experience with 
+geometry and shapes in {\it GEANT3} a half-sizes  half size in x-,y- and z- directions) 
+of parameters were chosen as base parameters for constructor. 
+   \item 
+Since further "simplification" of this shape  looks not reasonable, 
+\verb+cover()+ and \verb+coverTop()+ methods just returns the \verb+this+ pointer. 
+It means that "simplified box" is exactly the same box. 
+\end{itemize} 
+   
+   \subsection{ Trapezoids       } 
+Trapezoids are implemented in the class 
+{\it SolidTrd}\footnote{ It corresponds to \verb+'TRD '+ shape from {\it GEANT3} package}. 
+Essential features of this class are: 
+\begin{itemize}
+\item 
+   Constructor requires name of the solid and 5 positive\footnote{Non-positive parameters throw exception via 
+\verb+SolidException+ class} parameters to be given. 
+All parameters are mandatory.  There is no any default values for them. 
+They are - half length in z-direction, half sizes on x- and y-directions
+and minimal value of z and at maximum value of z.
+   \item 
+Simplification of {\it SolidTrd } is done by a 2 steps. 
+If sizes in x-direction are not equal to sizes in y-direction, the "simplification" 
+is just the smallest "symmetric" trapezoid which contains the given trapezoid. 
+If the trapezoid is already symmetric, the "simplification" is the minimal box, which 
+contains the given symmetric trapezoid. 
+\end{itemize} 
+
+   \subsection{ Tube    segments } 
+Tube segments are implemented in the class 
+{\it SolidTubs}\footnote{ It corresponds to \verb+'TUBS'+ shape from {\it GEANT3} package}. 
+Essential features of this class are: 
+\begin{itemize}
+\item 
+   Constructor requires name of the solid, the positive half-length of the tube (no default value), 
+the positive outer radius of the tube (no default value), 
+the non-negative inner radius of the tube (default value is 0),
+start of phi angle (in radians, with default value 0.0*degree)
+and the size (non-negative) in phi (in radians, default value is 360.0*degree) 
+and the parameter with describes the covering model (default value is 0)
+   \item 
+Simplification of {\it SolidTubs } is under the control of the special parameter.
+ The default simplification is done according to the following schema:
+ \begin{enumerate}
+  \item simplification for tube segment is tube  (no gaps in $\phi$)
+  \item simplification for tube is cylinder  
+  \item simplification for the cylinder is the box 
+ \end{enumerate}
+Such schema looks quite natural for long tube segments with small gaps in $\phi$. 
+But it looks unnatural for e.g. wafers of vertex detector. 
+Alternative schema is implemented especially for such cases:
+ \begin{enumerate}
+  \item simplification for tube segment is cylinder segment (set inner radius to zero)
+  \item simplification for cylinder segment is the cylinder itself (no gaps in $\phi$)   
+  \item simplification for the cylinder is the box 
+ \end{enumerate}
+Other simplification schemas can be easily implemented on demand. 
+\end{itemize} 
+
+   \subsection{ Conical tube  segments } 
+Conical tube  segments are implemented in the class 
+{\it SolidCons}\footnote{ It corresponds to \verb+'CONS'+ shape from {\it GEANT3} package}. 
+Essential features of this class are: 
+\begin{itemize}
+\item 
+   Constructor requires name of the solid, the positive half-length of the tube (no default value), 
+the positive outer radius of the tube at minimal z-value (no default value), 
+the positive outer radius of the tube at maximal z-value (no default value), 
+the non-negative inner radius of the tube at minimal z-value (default value is 0),
+the non-negative inner radius of the tube at maximal z-value (default value is 0),
+start of phi angle (in radians, with default value 0.0*degree)
+and the size (non-negative) in phi (in radians, default value id 360.0*degree) 
+and the "parameter with describes the covering model (default value is 0)
+   \item 
+Simplification of {\it SolidCons } is under the control of the special parameter.
+ The default simplification is done according to the following schema:
+ \begin{enumerate}
+  \item simplification for conical tube  segment is conical tube  (no gaps in $\phi$)
+  \item simplification for conical tube is the cone (set inner radius to null)  
+  \item simplification for the cone is the cylinder
+ \end{enumerate}
+Such schema looks quite natural for long conical tube segments with small gaps in $\phi$. 
+Alternative schema is implemented especially for such cases:
+ \begin{enumerate}
+  \item simplification for conical tube segment is cone segment (set inner radius to zero)
+  \item simplification for cone segment is cone itself  (no gaps in $\phi$)   
+  \item simplification for the cone is the cylinder
+ \end{enumerate}
+Other simplification schemas can be easily implemented on demand. 
+\end{itemize} 
+
+   \subsection{ Sphere  segments } 
+Sphere  segments are implemented in the class 
+{\it SolidSphere}\footnote{ It corresponds to \verb+'SPHR'+ shape from {\it GEANT3} package}. 
+Essential features of this class are: 
+\begin{itemize}
+\item 
+   Constructor requires name of the solid, the positive half-length of the tube (no default value), 
+the positive outer radius of the sphere(no default value), 
+the non-negative inner radius of the sphere (default value is 0),
+start of $\phi$ angle (in radians, with default value 0*degree)
+and the size (non-negative) in $\phi$ (in radians, default value is 360*degree) 
+start of $\theta$ angle (in radians, with default value 0*degree)
+and the size (non-negative) in $\theta$ (in radians, default value is 180*degree) 
+and the "parameter with describes the covering model (default value is 0)
+   \item 
+Simplification of {\it SolidSphere } is under the control of the special parameter.
+ The default simplification is done according to the following schema:
+ \begin{enumerate}
+  \item simplification for sphere segment is sphere segment  with no gaps in $\theta$
+  \item simplification for sphere segment with no gaps in $\theta$ is just the sphere itself
+  \item simplification for the sphere is sphere with inner radius equals to null 
+  \item simplification for the sphere with inner radius equals to null is the box 
+ \end{enumerate}
+Alternative schema is implemented especially for such cases:
+ \begin{enumerate}
+  \item simplification for sphere segment is sphere segment with null inner radius 
+  \item simplification for sphere segment with  inner radius is sphere segment with no gap in $\phi$    
+  \item simplification for sphere segment with no gap in $\phi$ is sphere itself 
+  \item simplification for sphere is the box
+ \end{enumerate}
+Other simplification schemas can be easily implemented on demand. 
+\end{itemize} 
+ 
+
+ \section{ Boolean  solids } 
+
+   Boolean solids represents a new way of construction of complicated shapes from simple one. 
+   
+   The essential features of all boolean solids implemented within ${\mathcal{GAUGI}}$ framework are
+\begin{itemize}
+ \item all of them are inherited from class {\it SolidBoolean}, which implements {\it ISolid}  interface. 
+ \item class {\it SolidBoolean}  has a notion of "main" (or "first") solid and a (optionally empty) list of 
+ "child solids". This "main"("first") solid defined the overall reference system. Each "child solid" is placed 
+ with respect to this reference system. Pointers to the existing solids (either primitive or boolean) are used 
+ in constructor of boolean solid (where the valid pointer to the "main"("first") solid is mandatory) and in 
+ further boolean operation with "child solids".
+ \item the greats simplification in the current implementation of {\it SolidBoolean} class is that it simply 
+ delegates methods \verb+cover()+ and \verb+covertop()+ to its "main" (or "first") solid, instead of 
+ exact but tedious calculation of the covering.
+ \item all implemented boolean solids - subtraction, unification, and intersection differ only in the implementation of 
+method \\ \verb+isInside( const HepPoint3D& LocalPoint)+.
+\end{itemize} 
+
+ \subsection { Subtraction } 
+Subtraction of solids is implemented in class {\it SolidSubtraction }. 
+The essential features of this class are:
+\begin{itemize}
+ \item constructor gets the name of the solid and mandatory valid pointer to the solid (either primitive or boolean)
+to be used as "main"("first") solid. 
+ \item \verb+isInside( const HepPoint3D& LocalPoint )+ method implemented such a way 
+that local point "is inside" of the given solid if it is inside of "main"("first")  solid, and it is not inside 
+any child solid. 
+\item child solids is added via method \\  \verb+subtract(ISolid* child , HepTransform3D* matrix )+. 
+\end{itemize}   
+
+ \subsection { Union } 
+Unification of solids is implemented in class {\it SolidUnion }. 
+The essential features of this class are:
+\begin{itemize}
+ \item constructor gets the name of the solid and mandatory valid pointer to the solid (either primitive or boolean)
+to be used as "main"("first") solid. 
+ \item \verb+isInside( const HepPoint3D& LocalPoint )+ method implemented such a way 
+that local point "is inside" of the given solid if it is inside of "main"("first")  solid or  it is inside 
+of any child solid. 
+\item child solids is added via method \\ \verb+unite(ISolid* child , HepTransform3D* matrix )+. 
+\end{itemize}   
+
+ \subsection { Intersection } 
+Subtraction of solids is implemented in class {\it Intersection }. 
+The essential features of this class are:
+\begin{itemize}
+ \item constructor gets the name of the solid and mandatory valid pointer to the solid (either primitive or boolean)
+to be used as "main"("first") solid. 
+ \item \verb+isInside( const HepPoint3D& LocalPoint )+ method implemented such a way 
+that local point "is inside" of the given solid if it is inside of "main"("first")  solid and it is inside 
+each  child solid. 
+\item child solids is added via method \\ \verb+intersect(ISolid* child , HepTransform3D* matrix )+.
+\end{itemize}   
+
+\end{document} 

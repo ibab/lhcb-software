@@ -1,0 +1,218 @@
+package DetDesc
+package manager : R Chytracek
+
+! 20001108 - DetDesc v5
+
+! 20001102 - DetDesc pre v5
+Changes done by Radovan Chytracek
+
+Bug fixes
+---------
+
+- Due to small change in Gaudi a few Xml converters have to be fixed to handle it properly,
+  affected converters are XmlGenericCnv, XmlCatalogCnv, XmlIsotopeCnv, XmlElementCnv, XmlMixtureCnv.
+
+New functionality
+-----------------
+
+- New materials.dtd is understood by converters, affected converters are XmlCatalogCnv
+  XmlIsotopeCnv, XmlElementCnv, XmlMixtureCnv.
+
+
+
+! 20001004 - DetDesc  
+Vanya Belyaev 
+ DetDesc/Solid/SolidTrap.h 
+ DetDesc/Solid/SolidTrap.cpp 
+ A new type of Solid is added (general trapezoid) by request of Velo group. 
+
+
+!===========================================================================
+
+! 20000908 - DetDesc pre v4r1
+Changes done by Radovan Chytracek
+
+Bug fixes
+---------
+
+- XML converters assumed the input from XML in absolute numbers. Now they work internally with raw values.
+  The effect is now that user who wants to get the values out of the system in the given units must
+  divide the raw values by the corresponding  units.
+- Fixed inheritance in the material classes hierarchy (hopefully the last change in this area). No side effect.
+- Fixed accessors for the Element class, needed for the conversion into Geant4.
+- Fixed the algorithm for the radiation length in the mixtures.
+- Fixed bug in the XML element converter which did not initialize proiperly the material elements created from
+  scratch.
+
+! 20000717 - DetDesc v4
+Changes done by Radovan Chytracek
+
+New functionality
+-----------------
+1. Switched from XML4C & ICU libraries for XML processing to Apache's XML parser for C++
+   Xerces-C 1.2.0.
+
+2. The new feature allowing generic detector element conversion has been introduced.
+   This feature should be used in cases where either specific information about user defined
+   detector elements is not needed (e.g. visualization) or can be ignored (e.g. testing).
+   This feature is triggered by the new property of the XmlCnvSvc called "AllowGenericConversion".
+
+Bug fixes
+---------
+
+- CLHEP translation vector NAN bug ( appeared after switch to CLEHP 1.5.0.0 )
+- Fixed SAX callbacks for XmlDetectorElementCnv and XMLUserDeCnv.
+- Fixed order of inheritance for DetectorElement subclasses + class ID getters
+
+! 20000410 - DetDesc v3
+! 20000404 - DetDesc v2head
+Changes done by Radovan Chytracek
+
+New functionality
+-----------------
+
+1. XML support for parametric physical volumes. This means that now one is able to place
+   as many copies as required of the same logical volume in space by one definition inside XML file.
+   For example having the logical volume "wafer" one can compose "vertex station" from 6 positioned
+   wafers by only one XML definition instead of repeating the definitions of the positions for each
+   wafer separately. This is the first implementation of this feature. More optimized implementation
+   will come soon.
+2. Changed the way of handling hyperlinks. This change was an implication of the restructuralization
+   of the XML DB for detector description. It's backward compatible in the sense that the old XML DB
+   and new XML DB structure are handled by the current implementation in the same way.
+   There is a constraint, however, due to which the authors of the XML DB files must specify the URIs
+   for references always relative to the location of the bootstrap 'dddb.xml' file.
+   This will be improved in the next version.
+
+! 20000328 - DetDesc v2head
+Changes done by Radovan Chytracek
+
+New functionality
+-----------------
+
+1. Expressions Parser
+   - Check for CLHEP units inside numerical expressions added
+   - eval(...) method now checks for CLHEP units by default, to suppress this behaviour
+     one must call this method like: eval( "1+1", false );
+2. XmlGenericCnv
+   - The new DDDB DTD has been enhanced by version attribute of DDDB tag (defaults to 3.0).
+     This attribute is now checked inside XmlGenericCnv and if differs from version supported
+     by set of XML converters the exception is thrown. The version attribute of DDDB tag does
+     not have to be explicitly mentioned inside XML data files referencing the given DTD. It is,
+     however, available to the XML parser during conversion so the version check can be performed.
+3. CLHEP Units
+   - XML converters assume that CLHEP units are used inside XML data files. The expressions parser
+     is used to evaluate values inside XML files for that purpose where possible. In case the units
+     are missing the exception is thrown with indication where the units are missing. However this
+     behaviour can be suppressed if needed, see point 1. above.
+   - The XML test database has been updated to tagged version v3. Only this version is valid with the
+     new set of XML coverters for detector description. This version of XmlDDDB test database has been
+     copied into xml subdirectory of DDexample. One can checkout this test database from CVS as:
+               cvs checkout XmlDDDB -r v3
+
+! 20000301 - DetDesc v2head
+Changes done by Radovan Chytracek
+
+New functionality
+-----------------
+1. Reflected changes in the detector description DTD concerning
+   positions and rotations of physical volumes and solids
+2. XmlLVolumeCnv converter updated according to the new DTD
+3. New positions
+   a) posXYZ    - position in carthesian coordinate system
+   b) posRPhiZ  - position in cylindrical coordinate system
+   c) posRthPhi - position in spherical coordinate system
+4. New rotations
+   a) rotXYZ    - rotation in carthesian coordinate system
+   b) rotAxis   - rotation by vector and angle (providing theta, phi, angle input)
+
+! 20000226 - DetDesc v2r1
+Changes done by Vanya Belyaev 
+
+New functionality
+-----------------
+
+1) intersectLine methods are added to LVolume and PVolume (and to their interfaces)
+2) reset() method is added to LVolume, Pvolume,Solids, 
+                              GeometryInfo and DetectorElements
+                              (and to their interfaces)
+3) DetDesc/Volumes/doc directory is created and some documentation has been put there
+3) update on solid documentation in DetDesc/Solid/doc directory 
+
+! 20000224 - DetDesc v2r1
+Changes done by Vanya Belyaev 
+
+New functionality
+-----------------
+
+For all solids "intersectionTicks" method is added 
+(to implement the extended ISolid interface). 
+This method is to be used to estimation of the 
+distance (in radiation length units) between 2 points. 
+(request of Tracker group) 
+Also the documentation in directory DetDesc/Solid/doc 
+is updated.
+
+! 20000126 - DetDesc v2r1
+Changes done by Radovan Chytracek
+
+New functionality
+-----------------
+
+Numerical expressions parser support.
+New IXmlSvc interface for XmlCnvSvc service.
+New base template class for user defined detector element converters.
+Support for name based rpath of geometryinfo.
+
+! 19991122 - DetDesc release v2
+Changes done by Rado Chytracek
+
+New functionality
+-----------------
+
+Detector description persistency changed from proprietary text format to industry standard XML.
+Built full set of XML converters for all data objects in detector description model.
+XML conversion uses IBM XML parser for C/C++ and IBM library  of classes for Unicode.
+
+Changes done by Ivan Belyaev
+
+New functionality
+-----------------
+
+Completely rewritten geometry part of detector description model. There are new abstract
+interfaces: IDetectorElement, IValidity, ILVolume, ISolid.
+Updated abstract interface IGeometryInfo.
+Geometry is able now to describe geometry tree of volumes, locate 3D points in volumes,
+translate local to global coordinates and vice-versa.
+
+! =========================================================================
+
+! 19990827 - DetDesc release v2dev
+
+Changes done by Rado Chytracek
+
+New functionality
+-----------------
+
+- Added support for materials, needs some testing and tuning.
+  The design should be able provide data needed either by Geant3 or Geant4.
+  The reconstruction needs are unclear but hopefully this design can be easily extended
+  to provide required data if needed.
+
+Updates
+-------
+- Class IDs changed for LogicalVolume from 3 to 1100 and allocated new IDs for material
+  objects as: isotopes/1201 elements/1202 mixtures/1203
+  list of allocated class IDs can be found on the Web using URL:
+  http://lhcb.cern.ch/computing/components/html/clid.html
+
+! ===========================================================================
+
+! 19990618 - DetDesc release v1
+
+Changes done by Rado Chytracek 
+
+New Functionality
+-----------------
+- This is a new package for the LHCb detector description.
+

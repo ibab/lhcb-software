@@ -1,0 +1,106 @@
+#ifndef         __DETDESC_GEOMETRYINFO_GEOMETRYINFO_ICC__
+#define         __DETDESC_GEOMETRYINFO_GEOMETRYINFO_ICC__
+
+//
+//
+//
+
+#include "DetDesc/GeometryInfo.h" 
+
+
+#include "DetDesc/GeometryInfoException.h"
+
+
+///
+/// assertion 
+///
+
+inline void GeometryInfo::Assert( bool assertion ,  const std::string& name ) const
+{ if( !assertion ) { throw GeometryInfoException( name , this ); } };
+
+
+///
+/// assertion 
+///
+
+inline void GeometryInfo::Assert( bool assertion ,  const std::string& name , const GaudiException& ge ) const
+{ if( !assertion ) { throw GeometryInfoException( name , ge , this ); } };
+
+//
+//
+// 
+inline IDetectorElement* GeometryInfo::detElem() const
+{
+  IDetectorElement* ide = dynamic_cast<IDetectorElement*>( m_gi_iDetectorElement );
+  Assert( 0 != ide , " Fatal Error! Detector Element points to NULL! ");
+  return ide;
+};
+
+//
+//
+//
+
+inline DataObject*       GeometryInfo::dataObj() const
+{
+  DataObject* Obj = dynamic_cast<DataObject*>( m_gi_iDetectorElement );
+  Assert( 0 != Obj , " Fatal Error! DataObject* points to NULL! ");
+  return Obj;
+};
+
+//
+//
+//
+
+inline IDataDirectory*   GeometryInfo::dataDir() const
+{
+  IDataDirectory*  dir = dataObj()->directory();
+  Assert( 0 != dir , " Fatal Error! IDataDirectory* points to NULL! " );
+  return dir;
+};
+
+//
+//
+//
+inline IMessageSvc*      GeometryInfo::msgSvc () const { return m_gi_messSvc; }
+
+//
+//
+//
+inline IDataProviderSvc* GeometryInfo::dataSvc() const 
+{
+  if( 0 != m_gi_dataSvc ) { return m_gi_dataSvc; }
+  m_gi_dataSvc = findDataSvc();
+  Assert( 0 != m_gi_dataSvc   , " FatalError ! IDataProviderSvc* points to NULL! ");
+  return m_gi_dataSvc; 
+};
+
+//
+//
+//
+inline bool GeometryInfo::childLoaded() const { return m_gi_childLoaded; };
+
+//
+//
+//
+
+inline bool GeometryInfo::isInsideDaughter( const HepPoint3D& GlobalPoint ) const 
+{
+  //
+  if( !childLoaded() || loadChildren().isFailure() ) { return false; } // could not load the daughters
+  //
+  IGeometryInfo::IGIChildrens::const_iterator it = 
+    std::find_if( childBegin() , childEnd  () , IGeometryInfo_isInside( GlobalPoint ) ) ;  
+  //
+  return ( ( childEnd() == it ) ? false : true );
+};
+
+
+//
+//
+//
+
+
+#endif   //     __DETDESC_GEOMETRYINFO_GEOMETRYINFO_ICC__
+
+
+

@@ -1,0 +1,214 @@
+#include "DetDesc/SolidCons.h"
+#include "DetDesc/SolidTubs.h"
+#include "DetDesc/SolidTrd.h"
+
+
+#include "DetDesc/SolidTicks.h" 
+#include "DetDesc/SolidException.h"
+
+
+#include "CLHEP/Units/PhysicalConstants.h"
+
+//
+//
+//
+
+
+SolidCons::SolidCons( const std::string & name  ,
+		      double ZHalfLength        , 
+		      double OuterRadiusMinusZ  ,
+		      double OuterRadiusPlusZ   ,
+		      double InnerRadiusMinusZ  , 
+		      double InnerRadiusPlusZ   , 
+		      double StartPhiAngle      , 
+		      double DeltaPhiAngle      ,
+                      int    CoverModel         )
+  : m_cons_name              ( name               )
+  , m_cons_zHalfLength       ( ZHalfLength        )
+  , m_cons_outerRadiusMinusZ ( OuterRadiusMinusZ  )
+  , m_cons_outerRadiusPlusZ  ( OuterRadiusPlusZ   )
+  , m_cons_innerRadiusMinusZ ( InnerRadiusMinusZ  )
+  , m_cons_innerRadiusPlusZ  ( InnerRadiusPlusZ   )
+  , m_cons_startPhiAngle     ( StartPhiAngle      )
+  , m_cons_deltaPhiAngle     ( DeltaPhiAngle      )
+  //
+  , m_cons_coverModel        ( CoverModel         )        
+  , m_cons_cover             (         0          )
+  //
+{
+  if( 0 >= ZHalfLength       ) 
+    { throw SolidException("SolidCons constructor::ZHalfLength       is not positive!");}
+  if( 0 >= OuterRadiusMinusZ )
+    { throw SolidException("SolidCons constructor::OuterRadiusMinusZ is not positive!");}
+  if( 0 >= OuterRadiusPlusZ  )
+    { throw SolidException("SolidCons constructor::OuterRadiusPlusZ  is not positive!");}
+  if( 0 >  InnerRadiusMinusZ )
+    { throw SolidException("SolidCons constructor::InnerRadiusMinusZ is negative !   ");}
+  if( InnerRadiusMinusZ >= OuterRadiusMinusZ ) 
+    { throw SolidException("SolidCons constructor::InnerRadiusMinusZ>=OuterRadiusMinusZ!");}
+  if( 0 >  InnerRadiusPlusZ  ) 
+    { throw SolidException("SolidCons constructor::InnerRadiusPlusZ  is negative !   ");}
+  if( InnerRadiusPlusZ >= OuterRadiusPlusZ ) 
+    { throw SolidException("SolidCons constructor::InnerRadiusPlusZ>=OuterRadiusPlusZ!");}
+  if( -180.0 * degree > StartPhiAngle ) 
+    { throw SolidException("SolidCons constructor::StartPhiAngle  is less than -180  degree!");}
+  if(  360.0 * degree < StartPhiAngle ) 
+    { throw SolidException("SolidCons constructor::StartPhiAngle  is larger than 360 degree!");}
+  if(    0.0 * degree > DeltaPhiAngle ) 
+    { throw SolidException("SolidCons constructor::DeltaPhiAngle  is less than 0 degree!");}
+  if(  360.0 * degree < StartPhiAngle+DeltaPhiAngle ) 
+    { throw SolidException("SolidCons constructor::StartPhiAngle+DeltaPhiAngle > 360 degree!");}
+  //
+};
+
+//
+//
+//
+
+SolidCons::~SolidCons()
+{
+  if( this == m_cons_cover ) {                       m_cons_cover = 0 ;} 
+  if( 0    != m_cons_cover ) { delete m_cons_cover ; m_cons_cover = 0 ;}
+};
+
+
+//
+//
+//
+
+// construction of covering solid:
+//  Model == 0 :
+//    cover for conical tube segment is conical tube 
+//    cover for conical tube is conical cylinder  
+//    cover for conical cylinder is TRD  
+// Model != 0 : 
+//    cover for conical tube     segment is conical cylinder segment 
+//    cover for conical cylinder segment is conical cylinder 
+//    cover for conical cylinder is TRD 
+const ISolid*           SolidCons::cover         () const 
+{
+  if( 0 != m_cons_cover ) { return m_cons_cover; }              // cover is calculated already 
+  //  
+  ISolid* cov = 0 ;
+  if( 0 == m_cons_coverModel ) 
+    {
+      // cover for conical tube segment is conical tube 
+      if      ( 0.0*degree  != startPhiAngle  () || 360.0*degree    != deltaPhiAngle         () )  
+	{ cov = new SolidCons  ("Cover for " + name     () , zHalfLength       () , 
+					      outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() , 
+					      innerRadiusAtMinusZ     () , innerRadiusAtPlusZ() ); }
+      // cover for conical tube is "conical cylinder"  
+      else if ( 0.0 != innerRadiusAtMinusZ() || 0.0 != innerRadiusAtPlusZ() )
+	{ cov = new SolidCons  ("Cover for " + name     () , zHalfLength     () , 
+					      outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() );}
+      // cover for "conical cylinder" is TRD  
+      else                                                                        
+	{ cov = new SolidTrd  ("Cover for " + name     () , zHalfLength      () ,
+					     outerRadiusAtMinusZ     () , outerRadiusAtMinusZ() , 
+					     outerRadiusAtPlusZ      () , outerRadiusAtPlusZ () ); } 
+    }
+  else
+    {
+      //    cover for conical tube     segment is conical cylinder segment 
+      if ( 0.0 != innerRadiusAtMinusZ() || 0.0 != innerRadiusAtPlusZ() )
+	{ cov = new SolidCons  ("Cover for " + name     () , zHalfLength       () , 
+					      outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() , 
+                                              0.0 * mm                   ,  0.0 * mm            , 
+                                              startPhiAngle           () , deltaPhiAngle     () , 
+                                              m_cons_coverModel                                 );}
+      //    cover for conical cylinder segment is conical cylinder 
+      else if ( 0.0*degree  != startPhiAngle  () || 360.0*degree    != deltaPhiAngle         () )  
+	{ cov = new SolidCons  ("Cover for " + name     () , zHalfLength       () , 
+					      outerRadiusAtMinusZ     () , outerRadiusAtPlusZ() , 
+					      innerRadiusAtMinusZ     () , innerRadiusAtPlusZ() ,
+                                              0.0 * degree               , 360.0 * degree       , 
+                                              m_cons_coverModel                                 ); }
+      // cover for "conical cylinder" is TRD  
+      else                                                                        
+	{ cov = new SolidTrd  ("Cover for " + name     () , zHalfLength      () ,
+					     outerRadiusAtMinusZ     () , outerRadiusAtMinusZ() , 
+					     outerRadiusAtPlusZ      () , outerRadiusAtPlusZ () ); } 
+    }
+  //
+  if( 0 == cov ) { return this; } 
+  //
+  m_cons_cover = cov ; 
+  //
+  return m_cons_cover ;
+};
+
+
+///
+///
+///
+
+///
+/// calculate the intersection points("ticks") with a given line. 
+/// Input - line, paramterised by (Point + Vector * Tick) 
+/// "Tick" is just a value of parameter, at which the intercestion occurs 
+/// Return the number of intersection points (=size of Ticks container)   
+inline  unsigned int SolidCons::intersectionTicks ( const HepPoint3D & point  ,          // initial point for teh line 
+						    const HepVector3D& vect   ,          // vector along the line 
+						    ISolid::Ticks    & ticks  ) const    // output container of "Ticks"
+{
+  
+  // line with numm direction vector is not able to intersect any solid 
+  if( vect.mag2() <= 0 )  { return 0 ;}                               // RETURN!!!
+  
+  // intersect with z-planes 
+  SolidTicks::LineIntersectsTheZ( point , vect , -1.0 * zHalfLength() , std::back_inserter( ticks ) ); 
+  SolidTicks::LineIntersectsTheZ( point , vect ,        zHalfLength() , std::back_inserter( ticks ) ); 
+  
+  //intersect with phi 
+  if( ( 0 != startPhiAngle() ) || ( 360 * degree != deltaPhiAngle() ) )
+    {
+      SolidTicks::LineIntersectsThePhi( point , vect , startPhiAngle()                   , std::back_inserter( ticks ) ); 
+      SolidTicks::LineIntersectsThePhi( point , vect , startPhiAngle() + deltaPhiAngle() , std::back_inserter( ticks ) ); 
+    } 
+  
+  /// intersect with outer conical surface
+  SolidTicks::LineIntersectsTheCone( point , vect , 
+				     outerRadiusAtMinusZ() , outerRadiusAtPlusZ () , 
+				     -1.0 * zHalfLength () , zHalfLength        () , std::back_inserter( ticks ) ); 
+  
+  /// intersect with inner conical surface
+  if( ( 0 < innerRadiusAtPlusZ() ) || ( 0 < innerRadiusAtMinusZ() )  )
+    {
+      SolidTicks::LineIntersectsTheCone( point , vect , 
+					 innerRadiusAtMinusZ() , innerRadiusAtPlusZ () , 
+					 -1.0 * zHalfLength () , zHalfLength        () , std::back_inserter( ticks ) );     
+    }
+  
+  /// sort and remove adjancent and some EXTRA ticks and return 
+  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
+  
+};
+
+///
+///
+///
+
+///
+/// calculate the intersection points("ticks") with a given line. 
+/// Input - line, paramterised by (Point + Vector * Tick) 
+/// "Tick" is just a value of parameter, at which the intercestion occurs 
+/// Return the number of intersection points (=size of Ticks container)   
+inline  unsigned int SolidCons::intersectionTicks ( const HepPoint3D &   point   ,          // initial point for teh line 
+						    const HepVector3D&   vect    ,          // vector along the line 
+                                                    const ISolid::Tick& tickMin ,
+                                                    const ISolid::Tick& tickMax ,
+						    ISolid::Ticks&      ticks   ) const    // output container of "Ticks"
+{
+  ///
+  intersectionTicks( point , vect , ticks ); 
+  /// sort and remove adjancent and some EXTRA ticks and return 
+  return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , tickMin , tickMax , *this );  
+  ///
+}
+///
+///
+///
+
+
+
+

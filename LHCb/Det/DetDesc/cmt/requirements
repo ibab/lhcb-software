@@ -1,0 +1,24 @@
+package DetDesc
+version v5
+
+branches DetDesc doc cmt src
+
+include_dirs $(DETDESCROOT)
+
+use GaudiKernel v8 GaudiSys
+use CLHEP v*
+use XML v*
+
+# build a component
+library DetDesc ../src/*.cpp
+
+apply_pattern package_Clinkopts
+
+apply_pattern packageShr
+
+#==================================================================
+private
+
+apply_pattern package_Cshlibflags
+
+
