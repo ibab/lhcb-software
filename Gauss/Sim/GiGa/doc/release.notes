@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.55 2002-09-26 18:05:17 ibelyaev Exp $
+! $Id: release.notes,v 1.56 2002-10-11 08:59:55 ranjard Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Packagxe manager : Vanya Belyaev
+
+!=============================== GiGa v10r0 2002-10-11 ======================
+! 2002-10-11 - Florence Ranjard
+ - requirements - use GaudiKernel v13r*
 
 ! 2002-09-26 - Ivan Belyaev
  - remove ALL concrete implementation to GaussTools package 
