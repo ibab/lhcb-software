@@ -3,6 +3,9 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020327 (M.Cattaneo)
+  - add LHCbStreams.h to include all other needed streams header files
+
 ! 20020319 (M.Cattaneo)
   - add SerializeStl.h for serialisation of std::vector and std::list
 
