@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.60 2004-02-29 19:46:13 mtobin Exp $
+! $Id: release.notes,v 1.61 2004-03-02 13:09:52 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
-!========================= VeloDet v9r0 2004-02-13 =========================
+!========================= VeloDet v9r0 2004-03-02 =========================
    >> Requires XmlDDDB v22r0 or greater <<
+
+! 2004-03-02 - Marco Cattaneo
+ - Use LHCbMath::round instead of VeloRound, and remove VeloKernel dependency
 
 ! 2004-02-29 - Mark Tobin
  - Restored angular limits of zones for R sensors to match those of previous
