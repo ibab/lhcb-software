@@ -1,18 +1,18 @@
-package          EvtGen
-version  v3r4 
+package     EvtGen
+version     v4r0
 
-branches         cmt src doc EvtGen
+branches    cmt src doc EvtGen EvtGenModels EvtGenBase
 
-use CLHEP        v2r1800p*
-use PYTHIA	 v2r6205p*	Gen
-use GaudiPolicy  v*
-use GaudiKernel  v*
+use         CLHEP        v2r1800p*
+use         PYTHIA       v2r6205p*  Gen
+use         GaudiKernel  v*
+use         GaudiPolicy  v*
 
-include_dirs     $(EVTGENROOT)
+include_dirs  $(EVTGENROOT)
 
-library          EvtGen -no_share *.cpp *.F
+library       EvtGen -no_share *.cpp *.F 
 
-macro CERNLIB_link "`cernlib photos mathlib`" 
+macro CERNLIB_link "`cernlib photos mathlib`"
 
 macro_append CERNLIB_linkopts "" \
              WIN32            " kernmd.lib photos.lib"
@@ -20,3 +20,5 @@ macro_append CERNLIB_linkopts "" \
 macro_append EvtGen_cppflags "-DEVTSTANDALONE"
 
 apply_pattern package_linkopts
+
+macro_append EvtGen_pp_fflags "" WIN32 "/DWIN32"
