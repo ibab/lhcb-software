@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.18 2002-09-27 13:59:39 dhcroft Exp $
+! $Id: release.notes,v 1.19 2002-10-01 09:14:00 ranjard Exp $
 ! CVS tag $Name: not supported by cvs2svn $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
 
+!==================== MuonDet v3r3 update 2002-09-27 ========================
 ! 2002-09-27 - David Hutchcroft
  - Removed the unused padx and pady from DeMuonRegion and so from 
    XmlDeMuonRegionCnv
