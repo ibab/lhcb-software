@@ -1,4 +1,4 @@
-// $Id: LinksByKey.cpp,v 1.5 2005-01-27 10:53:59 ocallot Exp $
+// $Id: LinksByKey.cpp,v 1.6 2005-01-31 15:41:43 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/IRegistry.h"
@@ -37,7 +37,7 @@ void LinksByKey::addReference ( int srcKey, int srcLinkID,
 
   //== Create the LinkReference, and push it in the vector
 
-  LinkReference temp( srcLinkID, destLinkID, destKey, -1, weight);
+  LinkReference temp( srcLinkID, destLinkID, destKey, -1, float(weight));
   unsigned int refNum = m_linkReference.size();
 
   //== Now get the map entry for this key, if any.

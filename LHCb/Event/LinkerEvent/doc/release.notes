@@ -6,7 +6,7 @@
 
 !====================== LinkerEvent v1r6 2005-01-31 ==========================
 ! 2005-01-31 - Marco Cattaneo
- - Fix a windows warning in LinkReference constructor
+ - Fix a windows warning in LinkReference constructor and LinksByKey.cpp
 
 ! 2005-01-27 - Olivier Callot
  - Add LinkerTool object. This is NOT a Gaudi Tool, but it has the
