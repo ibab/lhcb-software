@@ -23,7 +23,7 @@ Purpose: LHCb reconstruction program
      - Calo digitisation and clustering
      - MUON Digitisation (old SICB Fortran version), reconstruction, MuonID
      - L0 trigger simulation
-     - First tests of DST output
+     - Complete DST output (except L1 trigger, Rich PID, Calo PID)
    >>>>>>
 
    Backwards incompatible version for use with the new event model.

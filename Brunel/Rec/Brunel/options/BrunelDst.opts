@@ -44,7 +44,7 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Tr/ITClusters#1"
 , "/Event/Rec/Tr/OTClusters#1"
 , "/Event/Rec/Tr/VeloClusters#1"
-  //, "/Event/Rec/Tr/StatesP#1"  // Not yet filled
+, "/Event/Rec/Tr/StatesP#1"
   // Rich PID?
 , "/Event/Rec/Calo#1"
 , "/Event/Rec/Calo/EcalCelAutoClusters#1"
