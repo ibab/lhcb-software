@@ -1,6 +1,6 @@
-// $Id: IBestParticles.h,v 1.1 2005-01-05 17:32:29 pkoppenb Exp $
-#ifndef DAVINCITOOLS_IBESTPARTICLES_H 
-#define DAVINCITOOLS_IBESTPARTICLES_H 1
+// $Id: IBestParticles.h,v 1.2 2005-01-06 10:30:43 pkoppenb Exp $
+#ifndef DAVINCIKERNEL_IBESTPARTICLES_H 
+#define DAVINCIKERNEL_IBESTPARTICLES_H 1
 
 // Include files
 // from Gaudi
@@ -9,7 +9,7 @@
 
 static const InterfaceID IID_IBestParticles ( "IBestParticles", 1, 0 );
 
-/** @class IBestParticles IBestParticles.h DaVinciTools/IBestParticles.h
+/** @class IBestParticles IBestParticles.h Kernel/IBestParticles.h
  *  
  *
  *  @author Patrick KOPPENBURG
@@ -34,4 +34,4 @@ protected:
 private:
 
 };
-#endif // DAVINCITOOLS_IBESTPARTICLES_H
+#endif // DAVINCIKERNEL_IBESTPARTICLES_H

@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.9 2005-01-03 13:09:47 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.10 2005-01-06 10:30:44 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -14,8 +14,8 @@
 
 // local
 #include "PhysDesktop.h"
-#include "DaVinciTools/IParticleMaker.h"
-#include "DaVinciTools/IPVLocator.h"
+#include "Kernel/IParticleMaker.h"
+#include "Kernel/IPVLocator.h"
 
 /**----------------------------------------------------------------------------
  * Implementation file for class : PhysDesktop base class 

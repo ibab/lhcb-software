@@ -1,6 +1,6 @@
 
-#ifndef DAVINCITOOLS_IKFFITTOOL_H
-#define DAVINCITOOLS_IKFFITTOOL_H 1
+#ifndef DAVINCIKERNEL_IKFFITTOOL_H
+#define DAVINCIKERNEL_IKFFITTOOL_H 1
 
 // Include files
 #include "GaudiKernel/IAlgTool.h"
@@ -14,7 +14,7 @@ class HepMatrix;
 
 static const InterfaceID IID_IKFFitTool("IKFFitTool", 1 , 1); 
 
-/** @class IKFFitTool IKFFitTool.h DaVinciTools/IKFFitTool.h 
+/** @class IKFFitTool IKFFitTool.h Kernel/IKFFitTool.h 
  *  
  *  Kalman Filter type kinematic fit interface
  *
@@ -87,4 +87,4 @@ class IKFFitTool : virtual public IAlgTool {
 
 };
 
-#endif // DAVINCITOOLS_IKFFITTOOL_H
+#endif // DAVINCIKERNEL_IKFFITTOOL_H

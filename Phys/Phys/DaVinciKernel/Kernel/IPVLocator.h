@@ -1,6 +1,6 @@
-// $Id: IPVLocator.h,v 1.1 2005-01-06 09:16:15 pkoppenb Exp $
-#ifndef DAVINCITOOLS_IPVLOCATOR_H 
-#define DAVINCITOOLS_IPVLOCATOR_H 1
+// $Id: IPVLocator.h,v 1.2 2005-01-06 10:30:43 pkoppenb Exp $
+#ifndef DAVINCIKERNEL_IPVLOCATOR_H 
+#define DAVINCIKERNEL_IPVLOCATOR_H 1
 
 // Include files
 // from STL
@@ -11,7 +11,7 @@
 
 static const InterfaceID IID_IPVLocator ( "IPVLocator", 1, 0 );
 
-/** @class IPVLocator IPVLocator.h DaVinciTools/IPVLocator.h
+/** @class IPVLocator IPVLocator.h Kernel/IPVLocator.h
  *  
  *  Simple Tool that locates the position of the primary vertices in the TES
  *
@@ -31,4 +31,4 @@ public:
   virtual StatusCode setPVLocation(std::string&) = 0 ;
 
 };
-#endif // DAVINCITOOLS_IPVLOCATOR_H
+#endif // DAVINCIKERNEL_IPVLOCATOR_H

@@ -3,6 +3,31 @@
 ! Responsible : P. Koppenburg
 
 ! 2005-01-06 - P. Koppenburg
+  - DaVinciTools/*, Kernel/*:
+    . moved all interfaces to Kernel/. Please adapt your code. For some time
+      every #include "DaVinciTools/..." will work but produce a 
+      compilation warning.      
+      
+      The script used to move everything is the followig:
+      
+#!/bin/tcsh
+#
+set interfaces = `ls -1 DaVinciTools | grep -v CVS`
+echo $interfaces
+foreach I ( $interfaces )
+  echo moving $I
+  mv DaVinciTools/$I Kernel/
+  echo "#ifdef linux" > DaVinciTools/$I
+  echo "#warning" >> DaVinciTools/${I}
+  echo "#warning Header files in DaVinciKernel/DaVinciTools/ moved to DaVinciKernel/Kernel/" >> DaVinciTools/$I
+  echo "#warning Please change DaVinciTools/$I to Kernel/$I in your code" >> DaVinciTools/$I
+  echo "#warning" >> DaVinciTools/$I
+  echo "#endif" >> DaVinciTools/$I
+  echo "#include "'"'"Kernel/${I}"'"' >> DaVinciTools/$I
+  echo Moved $I
+end
+
+! 2005-01-06 - P. Koppenburg
  - Kernel/IPVLocator.h
    . Moved form DaVinciTools/ to Kernel/
    

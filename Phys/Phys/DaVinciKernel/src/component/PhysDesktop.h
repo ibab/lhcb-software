@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.7 2005-01-03 13:09:47 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.8 2005-01-06 10:30:44 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -10,14 +10,14 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 // from DaVinci
-#include "DaVinciTools/IPhysDesktop.h"
+#include "Kernel/IPhysDesktop.h"
 
 // Forward declarations
 class IDataProviderSvc;
 class IParticleMaker;
 class IPVLocator;
 
-/** @class PhysDesktop PhysDesktop.h DaVinciTools/PhysDesktop.h
+/** @class PhysDesktop PhysDesktop.h Kernel/PhysDesktop.h
  *  A Desktop upon which the user keeps his particles and vertices
  *  @author Sandra Amato and Gloria Corti
  *  @date   18/02/2002
