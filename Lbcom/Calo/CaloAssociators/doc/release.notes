@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.30 2004-07-21 08:07:53 cattanem Exp $
+! $Id: release.notes,v 1.31 2004-07-29 16:51:52 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2004-07-29 - Ivan BELYAEV
+ - remove all factories for rrelations/associators 
+   now all such factories are collected into Associators/Associators package 
+ - cmt/requirement 
+   incremenet the version to v4r3 
 
 !===================== CaloAssociators v4r2 2004-07-19 =====================
 ! 2004-07-19 - Marco Cattaneo
