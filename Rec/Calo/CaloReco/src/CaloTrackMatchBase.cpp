@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchBase.cpp,v 1.4 2004-09-02 18:57:34 ibelyaev Exp $
+// $Id: CaloTrackMatchBase.cpp,v 1.5 2004-10-22 19:08:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -50,6 +50,9 @@ CaloTrackMatchBase::CaloTrackMatchBase
   , m_extrapolator ( 0          )
   , m_extrapolatorName("TrFirstCleverExtrapolator")
   , m_tolerance    ( 5 * mm     ) 
+  //
+  , m_aux_sym      ( 3 , 0 )
+  , m_aux_diag     ( 3 , 0 )
 { 
   // interfaces 
   declareInterface<ICaloTrackMatch>   ( this ) ;

@@ -1,14 +1,8 @@
-// $Id: CaloTrackMatchBase.h,v 1.3 2004-09-02 18:57:34 ibelyaev Exp $
+// $Id: CaloTrackMatchBase.h,v 1.4 2004-10-22 19:08:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2004/02/17 12:08:10  ibelyaev
-//  update for new CaloKernel and CaloInterfaces
-//
-// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
-// new package 
-//
 // ============================================================================
 #ifndef CALOTRACKTOOLS_CALOTRACKMATCHBASE_H 
 #define CALOTRACKTOOLS_CALOTRACKMATCHBASE_H 1
@@ -30,6 +24,7 @@ class ITrExtrapolator ; ///< from TrKernel
 
 #include "CLHEP/Matrix/Vector.h"
 #include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Matrix/DiagMatrix.h"
 
 class CaloPosition  ;
 class TrStoredTrack ;
@@ -139,22 +134,47 @@ protected:
     const double         Z     , 
     const double         zExtr ) const ;
   
-  /** internal type
-   *  type of parameters for mathematical functions
-   */
-  struct MatchStruct
+  /// internal type type of parameters for mathematical functions
+  struct MatchStruct1
   { 
     // parametrs x,y, (e) 
-    HepVector    params;
+    HepVector    params  ;
     // covarinace matrix x,y,(e)
-    HepSymMatrix cov;    
+    HepSymMatrix cov     ;    
+    // error flag 
+    int          error   ;
     // constructor 
-    MatchStruct( const HepVector    & p , 
-                 const HepSymMatrix & m ) : params( p ) , cov( m ) {};
+    MatchStruct1 
+    ( const HepVector    & p , 
+      const HepSymMatrix & m ) 
+      : params ( p )
+    { cov = m.inverse ( error ) ; } ;
+  };
+  
+  /// internal type for type of parameters for mathematical functions
+  struct MatchStruct2
+  { 
+    // parametrs x,y, (e) 
+    HepVector     params  ;
+    // covarinace matrix x,y,(e)
+    HepDiagMatrix cov     ;    
+    // error flag 
+    int           error   ;
+    
+    // constructor 
+    MatchStruct2 
+    ( const HepVector     & p , 
+      const HepDiagMatrix & m ) 
+      : params ( p ) 
+    { cov = m.inverse( error ) ; }
   };
   
   /// internal type for mathematical functions 
-  typedef MatchStruct MatchType;
+  typedef MatchStruct1 MatchType1 ;  
+  typedef MatchType1   MatchType  ;  
+  
+  /// internal type for mathematical functions 
+  typedef MatchStruct2 MatchType2;
   
   /** chi2 method \n
    * implements a formula:
@@ -169,31 +189,141 @@ protected:
   inline double chi2 ( const MatchType& mt1 , 
                        const MatchType& mt2 ) const 
   {
-    int ifail  = 0 ;
-    int ifail1 = 0 ;
-    int ifail2 = 0 ;
+
+    Assert ( 0 == mt1.error  &&  0 == mt2.error && 
+             mt1.cov    .num_row() == mt2.cov    .num_row() && 
+             mt1.params .num_row() == mt2.params .num_row() , 
+             "Matrix/Vector mismatch!" ) ;
     
-    Assert( mt1.cov    .num_row() == mt2.cov    .num_row() && 
-            mt1.params .num_row() == mt2.params .num_row() , 
-            "Matrix/Vector mismatch!");
+    const HepSymMatrix& icov1 = mt1.cov   ;
+    const HepSymMatrix& icov2 = mt2.cov   ;
+    HepSymMatrix&       cov   = m_aux_sym ;
     
-    HepSymMatrix icov1( mt1.cov      .inverse( ifail1 ) );
-    Assert( 0 == ifail1 , "Can not invert mt1 matrix !" );
+    const int ifail = mtrxOp( cov , icov1 , icov2 ) ;
+    Assert ( 0 == ifail  , "Can not invert the matrix !" );
     
-    HepSymMatrix icov2( mt2.cov      .inverse( ifail2 ) );
-    Assert( 0 == ifail2 , "Can not invert mt2 matrix !" );
+    const HepVector vmean ( cov * ( icov1 * mt1.params + icov2 * mt2.params ) );
     
-    HepSymMatrix cov  ( (icov1+icov2).inverse( ifail  ) );
-    Assert( 0 == ifail  , "Can not invert the matrix !" );
+    return 
+      icov1.similarity ( vmean - mt1.params ) + 
+      icov2.similarity ( vmean - mt2.params ) ;
     
-    const HepVector vmean( cov * ( icov1 * mt1.params + icov2 * mt2.params ) );
-    
-    const HepVector dv1( vmean - mt1.params );
-    const HepVector dv2( vmean - mt2.params );
-    
-    return icov1.similarity( dv1 ) + icov2.similarity( dv2 );    
-  }
+  };
   
+  /** chi2 method \n
+   * implements a formula:
+   * chi2 = dp1(T)*C1(-1)*dp1 + dp2(T)*C2(-1)*dp2 \n
+   * where dpi = pi - mean. \n
+   * Ci(-1) is the inverted covariance. \n
+   * In case of failure throws a CaloException.
+   * @param struct with first vector and its covariance
+   * @param struct with second vector and its covariance
+   * @return result chi2
+   */
+  inline double chi2 ( const MatchType2& mt1 , 
+                       const MatchType2& mt2 ) const 
+  {
+    
+    Assert ( 0 == mt1.error  &&  0 == mt2.error && 
+             mt1.cov    .num_row() == mt2.cov    .num_row() && 
+             mt1.params .num_row() == mt2.params .num_row() , 
+             "Matrix/Vector mismatch!" ) ;
+    
+    const HepDiagMatrix& icov1 = mt1.cov    ;
+    const HepDiagMatrix& icov2 = mt2.cov    ;
+    HepDiagMatrix&       cov   = m_aux_diag ;
+    
+    const int ifail = mtrxOp( cov , icov1 , icov2 ) ;
+    Assert ( 0 == ifail  , "Can not invert the matrix !" );
+    
+    const HepVector vmean ( cov * ( icov1 * mt1.params + icov2 * mt2.params ) );
+    
+    return 
+      icov1.similarity ( vmean - mt1.params ) + 
+      icov2.similarity ( vmean - mt2.params ) ;
+    
+  };
+  
+  /** chi2 method \n
+   * implements a formula:
+   * chi2 = dp1(T)*C1(-1)*dp1 + dp2(T)*C2(-1)*dp2 \n
+   * where dpi = pi - mean. \n
+   * Ci(-1) is the inverted covariance. \n
+   * In case of failure throws a CaloException.
+   * @param struct with first vector and its covariance
+   * @param struct with second vector and its covariance
+   * @return result chi2
+   */
+  inline double chi2 ( const MatchType1& mt1 , 
+                       const MatchType2& mt2 ) const 
+  { 
+    
+    Assert ( 0 == mt1.error  &&  0 == mt2.error && 
+             mt1.cov    .num_row() == mt2.cov    .num_row() && 
+             mt1.params .num_row() == mt2.params .num_row() , 
+             "Matrix/Vector mismatch!" ) ;
+    
+    const HepSymMatrix&  icov1 = mt1.cov   ;
+    const HepDiagMatrix& icov2 = mt2.cov   ;
+    HepSymMatrix&        cov   = m_aux_sym ;
+
+    const int ifail = mtrxOp( cov , icov1 , icov2 ) ;
+    Assert ( 0 == ifail  , "Can not invert the matrix !" );
+    
+    const HepVector vmean ( cov * ( icov1 * mt1.params + icov2 * mt2.params ) );
+    
+    return 
+      icov1.similarity ( vmean - mt1.params ) + 
+      icov2.similarity ( vmean - mt2.params ) ;
+    
+  };
+  
+  /** chi2 method \n
+   * implements a formula:
+   * chi2 = dp1(T)*C1(-1)*dp1 + dp2(T)*C2(-1)*dp2 \n
+   * where dpi = pi - mean. \n
+   * Ci(-1) is the inverted covariance. \n
+   * In case of failure throws a CaloException.
+   * @param struct with first vector and its covariance
+   * @param struct with second vector and its covariance
+   * @return result chi2
+   */
+  inline double chi2 ( const MatchType2& mt1 , 
+                       const MatchType1& mt2 ) const 
+  { return chi2 ( mt2 , mt1 ) ; }
+  
+  inline int mtrxOp
+  ( HepSymMatrix&       cov ,
+    const HepSymMatrix& mx1 , 
+    const HepSymMatrix& mx2 ) const 
+  {
+    cov = mx1 + mx2 ;
+    int ifail = 0 ;
+    cov.invert ( ifail ) ;
+    return ifail ; 
+  };
+  
+  inline int mtrxOp 
+  ( HepDiagMatrix&       cov ,
+    const HepDiagMatrix& mx1 , 
+    const HepDiagMatrix& mx2 ) const 
+  {
+    cov = mx1 + mx2 ; 
+    int ifail = 0 ;
+    cov.invert ( ifail ) ;
+    return ifail ; 
+  };
+  
+  inline int mtrxOp 
+  ( HepSymMatrix&        cov ,
+    const HepSymMatrix&  mx1 , 
+    const HepDiagMatrix& mx2 ) const 
+  {
+    cov = mx1 + mx2 ;
+    int ifail = 0 ;
+    cov.invert ( ifail ) ;
+    return ifail ; 
+  };
   
 protected:
   
@@ -264,6 +394,10 @@ private:
 
   // extrapolation tolerance in Z 
   double                       m_tolerance         ;
+
+  // local storages 
+  mutable HepSymMatrix         m_aux_sym  ;
+  mutable HepDiagMatrix        m_aux_diag ;
   
 };
 // ============================================================================

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.54 2004-10-22 16:33:52 ibelyaev Exp $
+! $Id: release.notes,v 1.55 2004-10-22 19:08:03 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,29 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2004-10-22 - Vanya BELYAEV
+
+ - src/CaloTrackMatchBase.h
+   src/CaloTrackMatchBase.cpp
+
+   1) modify the internal match structure MatchStruct1 
+      to invert the matrix in the constructor 
+   2) modify the internal chi2 method to be more efficient 
+      (eliminate the intermediate matrices) 
+   3) introduce local matrix storage
+   4) itoriducet mtrxOp methods for fast evaluation of matrix products 
+
+       in overall (142) gives >10% impromevent in CPU performance 
+
+   5) inproduce new internal structure MatchStruct2 
+   6) introduce set of new "chi2" methods dealing with MatchStruct2 
+  
+        (5) and (6) are the steps toward HLT matching 
+
+ - src/CellularAutomaton.cpp
+   change the Error-Code for 'uclusterized cells' warning message 
+   from FAILURE to SUCCESS to redice a bit the potential confusion 
+ 
 ! 2004-10-22 - Vanya BELYAEV
 
    (requires the recent modifications in Event/CaloEvent  >= 13r6 ) 

@@ -1,8 +1,11 @@
-// $Id: CellularAutomaton.cpp,v 1.5 2004-10-22 16:33:53 ibelyaev Exp $
+// $Id: CellularAutomaton.cpp,v 1.6 2004-10-22 19:08:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/10/22 16:33:53  ibelyaev
+//  update CellularAutomaton and remove obsolete algs
+//
 // Revision 1.4  2004/09/05 20:23:48  ibelyaev
 //  trivial modification to obtain 20-25% CPU gain
 //
@@ -318,7 +321,7 @@ StatusCode CellularAutomaton::execute()
       const long number = taggedCellsSeq.end() - itTagLastClustered ;
       Warning ( " TAGGING NOT FULL - Remain " 
                 + boost::lexical_cast<std::string> ( number  ) 
-                + " not clustered cells" ) ;
+                + " not clustered cells" , StatusCode::SUCCESS ) ;
       itTagLastClustered = taggedCellsSeq.end();
     }
     itTagFirst = itTagLastClustered;
