@@ -113,21 +113,21 @@
 
 
 # DetDesc (v12r0)
-{
-  DetDesc/addParam
-  Value8
-  fun:*
-  fun:*
-  fun:*
-  fun:addParam__8ParamSetGt12basic_string*
-}
+#{
+#  DetDesc/addParam
+#  Value8
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:addParam__8ParamSetGt12basic_string*
+#}
 
-{
-  DetDesc/addParam2
-  Value8
-  fun:*
-  fun:addParam__8ParamSetGt12basic_string*
-}
+#{
+#  DetDesc/addParam2
+#  Value8
+#  fun:*
+#  fun:addParam__8ParamSetGt12basic_string*
+#}
 
 # Property initialisation problems (since Brunel v16r4)
 {

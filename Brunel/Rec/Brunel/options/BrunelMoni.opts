@@ -57,7 +57,7 @@ BrunelMoniRICHSeq.Members += { "RichDigitCnvVerifier" }; // SICB digit Cnv check
 #include "$CALOMONITOROPTS/Brunel.opts"
 
 // Framework monitoring
-EventSelector_0.doHistos = true;
+EventSelector_1.doHistos = true;
 
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false
