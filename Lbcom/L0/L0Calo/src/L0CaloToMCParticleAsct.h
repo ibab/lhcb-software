@@ -1,13 +1,11 @@
-// $Id: L0CaloToMCParticleAsct.h,v 1.3 2004-02-05 12:07:33 ocallot Exp $
+// $Id: L0CaloToMCParticleAsct.h,v 1.4 2005-01-12 09:19:38 ocallot Exp $
 #ifndef L0CALOTOMCPARTICLEASCT_H 
 #define L0CALOTOMCPARTICLEASCT_H 1
 
 // Include files
-// from STL
-#include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 class MCParticle;
 class L0CaloCandidate;
@@ -18,18 +16,14 @@ class L0CaloCandidate;
  *  @author Olivier Callot
  *  @date   2002-07-01
  */
-class L0CaloToMCParticleAsct : public Algorithm {
-  // friend factory for instantiation 
-  friend class AlgFactory<L0CaloToMCParticleAsct>; 
+class L0CaloToMCParticleAsct : public GaudiAlgorithm {
 public:
   /// Standard constructor
   L0CaloToMCParticleAsct( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~L0CaloToMCParticleAsct( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

@@ -1,6 +1,16 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2005-01-12 - Olivier Callot
+ - Remove obsolete option files and directory
+
+! 2005-01-10 - Olivier Callot
+ - Adapt L0CaloAlg to GaudiAlgorithm
+ - Use CaloDAQ to decode the L0 input data, i.e. Ecal/Hcal trigger ADC and
+   Prs/SPD bits.
+ - Adapt L0CaloMonit to GaudiMonitAlg
+ - Adapt L0CaloToMCParticleAsct to GaudiAlgorithm
+
 !========================= L0Calo v7r6 2004-05-24 =========================
 ! 2004-05-19 - Olivier Callot
  - Protect the size of the L1 output bank to not exceed 126 words, to avoid

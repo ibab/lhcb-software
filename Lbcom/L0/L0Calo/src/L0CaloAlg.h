@@ -1,17 +1,14 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.11 2004-03-25 08:54:33 cattanem Exp $
-
-// from STL 
-#include <cmath>
-#include <string>
-#include <vector>
+// $Id: L0CaloAlg.h,v 1.12 2005-01-12 09:19:38 ocallot Exp $
 
 // from Gaudi 
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // from Calo
 #include "CaloDet/DeCalorimeter.h"
+
+#include "CaloDAQ/ICaloTriggerFromRaw.h"
 
 // from DAQEvent
 #include "Event/RawEvent.h"
@@ -78,7 +75,7 @@ public:
  *  @date    4 October 2000
  */ 
 
-class L0CaloAlg : public Algorithm {
+class L0CaloAlg : public GaudiAlgorithm {
 
 public:
 
@@ -95,23 +92,17 @@ public:
   
 protected:
 
-private:   
-
-  void sumEcalData( MsgStream& , RawEvent& );  ///< process Ecal FE card.
-  void sumHcalData( MsgStream& , RawEvent& );  ///< process Hcal FE card.
-  void addPrsData(  MsgStream& , RawEvent& );  ///< process the Prs information
-  void addSpdData(  MsgStream& , RawEvent& );  ///< Produce the Spd data
+  void sumEcalData( );  ///< process Ecal FE card.
+  void sumHcalData( );  ///< process Hcal FE card.
+  void addPrsData(  );  ///< process the Prs information
+  void addSpdData(  );  ///< Produce the Spd data
 
   void saveCandidate( int, L0Candidate&, int ); ///< Save in L1 and RAW buffers
   
-/// Name in the Transient store of the output container.
+private:
 
-  std::string m_nameOfOutputDataContainer ;
-
-/// Name of Detector in Detector Transient Store  e.g. /dd/structure/LHCb/
-
-  std::string m_nameOfGeometryRoot ; 
-
+  std::string m_nameOfOutputDataContainer ;   ///< of the output container.
+  std::string m_nameOfGeometryRoot ;          ///< Name of Detector  e.g. /dd/structure/LHCb/
   double      m_etScale;
 
 // Pi0 trigger parameters
@@ -134,6 +125,10 @@ private:
 
   int         m_spdMult            ; ///< Multiplicity of Spd
 
+  ICaloTriggerFromRaw* m_triggerFromRaw; ///< Tool to decode trigger adcs.
+  ICaloTriggerFromRaw* m_prsFromRaw; ///< Tool to decode trigger adcs.
+  ICaloTriggerFromRaw* m_spdFromRaw; ///< Tool to decode trigger adcs.
+  
 // Trigger cards
 
   std::vector<TriggerCard> ecalFe  ; ///< Ecal front-end card vector

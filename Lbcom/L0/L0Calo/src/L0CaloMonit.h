@@ -1,14 +1,10 @@
-// $Id: L0CaloMonit.h,v 1.2 2002-01-14 10:00:18 cattanem Exp $
+// $Id: L0CaloMonit.h,v 1.3 2005-01-12 09:19:38 ocallot Exp $
 #ifndef L0CALOMONIT_H 
 #define L0CALOMONIT_H 1
 // Include files
 
-// from STL
-#include <string>
-#include <vector>
-
 // from Gaudi 
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 #include "AIDA/IHistogram1D.h"
 
 /** @class L0CaloMonit L0CaloMonit.h
@@ -18,7 +14,7 @@
  *  @author Olivier Callot
  *  @date   31/05/2001
  */
-class L0CaloMonit: public Algorithm {
+class L0CaloMonit: public GaudiHistoAlg {
 public:
   /// Standard constructor
   L0CaloMonit(const std::string& name, ISvcLocator* pSvcLocator );
@@ -28,7 +24,6 @@ public:
 
   StatusCode initialize();    ///< Algorithm initialization
   StatusCode execute   ();    ///< Algorithm execution
-  StatusCode finalize  ();    ///< Algorithm finalization
   
 protected:
 
@@ -36,9 +31,9 @@ private:
   IHistogram1D*            m_histElectron      ;
   IHistogram1D*            m_histPhoton        ;
   IHistogram1D*            m_histHadron        ;
-  IHistogram1D*            m_histHadron2       ;
   IHistogram1D*            m_histPi0Local      ;
   IHistogram1D*            m_histPi0Global     ;
   IHistogram1D*            m_histSumEt         ;
+  IHistogram1D*            m_histSpdMult       ;
 };
 #endif // L0CALOMONIT_H

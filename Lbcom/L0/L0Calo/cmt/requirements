@@ -1,8 +1,8 @@
 package		L0Calo
-version 	v7r6
+version 	v8r0
 
 # ================ structure =============================================
-branches	src cmt doc options
+branches	src cmt doc
 include_path none
 
 # ================ options ===============================================
@@ -13,7 +13,7 @@ use L0Event     v14r*   Event
 use CaloEvent	v13r*	Event
 use CaloDet	v6r*	Det
 use LinkerEvent	v1r*	Event
-
+use CaloDAQ	v1r*	Calo
 # ================ component library =====================================
 library		L0Calo	../src/*.cpp -import=AIDA
 

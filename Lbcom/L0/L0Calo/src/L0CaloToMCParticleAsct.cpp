@@ -1,13 +1,8 @@
-// $Id: L0CaloToMCParticleAsct.cpp,v 1.3 2004-02-05 12:07:33 ocallot Exp $
+// $Id: L0CaloToMCParticleAsct.cpp,v 1.4 2005-01-12 09:19:38 ocallot Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 
 // from Event
 #include "Event/MCParticle.h"
@@ -34,7 +29,7 @@ const        IAlgFactory& L0CaloToMCParticleAsctFactory = s_factory ;
 //=============================================================================
 L0CaloToMCParticleAsct::L0CaloToMCParticleAsct( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator ) 
+  : GaudiAlgorithm ( name , pSvcLocator ) 
   , m_inputContainer       ( L0CaloCandidateLocation::Default )
   , m_minimalFraction      ( 0.10 )
 {
@@ -48,36 +43,18 @@ L0CaloToMCParticleAsct::L0CaloToMCParticleAsct( const std::string& name,
 L0CaloToMCParticleAsct::~L0CaloToMCParticleAsct() {}; 
 
 //=============================================================================
-// Initialisation. Check parameters
-//=============================================================================
-StatusCode L0CaloToMCParticleAsct::initialize() {
-
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
-
-  return StatusCode::SUCCESS;
-};
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode L0CaloToMCParticleAsct::execute() {
 
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
+  debug() << "==> Execute" << endreq;
   
-  SmartDataPtr< L0CaloCandidates > candidates ( eventSvc(), m_inputContainer );
-  if( 0 == candidates ) { 
-    log << MSG::ERROR << "Unable to retrieve " << m_inputContainer << endreq; 
-    return StatusCode::SUCCESS;
-  }   
+  L0CaloCandidates* candidates = get<L0CaloCandidates>( m_inputContainer );
 
   LinkerWithKey< MCParticle > myLink( eventSvc(), msgSvc(), m_inputContainer );
 
-  SmartDataPtr<MCCaloDigits > mcEcalDigs ( eventSvc(), 
-                                           MCCaloDigitLocation::Ecal );
-  SmartDataPtr<MCCaloDigits > mcHcalDigs ( eventSvc(), 
-                                           MCCaloDigitLocation::Hcal );
+  MCCaloDigits* mcEcalDigs = get<MCCaloDigits>( MCCaloDigitLocation::Ecal );
+  MCCaloDigits* mcHcalDigs = get<MCCaloDigits>( MCCaloDigitLocation::Hcal );
 
   MCCaloDigits* mcDigs = 0;
 
@@ -89,12 +66,11 @@ StatusCode L0CaloToMCParticleAsct::execute() {
          ( L0Calo::Pi0Local  == (*cand)->type() ) ||
          ( L0Calo::Pi0Global == (*cand)->type() )   ) {
       mcDigs = mcEcalDigs;
-    } else if ( ( L0Calo::Hadron  == (*cand)->type() ) ||
-                ( L0Calo::Hadron2 == (*cand)->type() )    ) {
+    } else if ( ( L0Calo::Hadron  == (*cand)->type() )  ) {
       mcDigs = mcHcalDigs;
     }
     if ( 0 != mcDigs ) {
-      log << MSG::DEBUG << "Candidate " << *cand << endreq;
+      debug() << "Candidate " << *(*cand) << endreq;
       std::vector<const MCParticle*> parts;
       std::vector<double> energies;
       double eTot = 0.;
@@ -112,9 +88,8 @@ StatusCode L0CaloToMCParticleAsct::execute() {
               const MCParticle* part = (*ith)->particle();
               double energy = (*ith)->activeE();
               eTot += energy;
-              log << MSG::VERBOSE 
-                  << "  cell " << tmpCell << " Part " << part->key() 
-                  << " e " << energy << endreq;
+              verbose() << "  cell " << tmpCell << " Part " << part->key() 
+                        << " e " << energy << endreq;
               bool add = true;
               for ( unsigned int ll = 0; parts.size() > ll; ll++ ) {
                 if ( part == parts[ll] ) {
@@ -135,8 +110,8 @@ StatusCode L0CaloToMCParticleAsct::execute() {
         for ( unsigned int ll = 0; parts.size() > ll; ll++ ) {
           if ( energies[ll] > m_minimalFraction * eTot ) {
             myLink.link( *cand, parts[ll], energies[ll] / eTot );
-            log << MSG::DEBUG << " .. Relate MC " << parts[ll]->key()
-                << " with fraction " << energies[ll] / eTot << endreq;
+            debug() << " .. Relate MC " << parts[ll]->key()
+                    << " with fraction " << energies[ll] / eTot << endreq;
           }
         }
       }
@@ -144,16 +119,5 @@ StatusCode L0CaloToMCParticleAsct::execute() {
   }
   return StatusCode::SUCCESS;
 };
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode L0CaloToMCParticleAsct::finalize() {
-
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-
-  return StatusCode::SUCCESS;
-}
 
 //=============================================================================
