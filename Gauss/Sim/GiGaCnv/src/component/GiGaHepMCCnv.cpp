@@ -1,8 +1,11 @@
-// $Id: GiGaHepMCCnv.cpp,v 1.12 2003-10-31 12:40:05 witoldp Exp $
+// $Id: GiGaHepMCCnv.cpp,v 1.13 2003-11-25 14:01:29 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2003/10/31 12:40:05  witoldp
+// fixed units in GiGaHepMCCnv
+//
 // Revision 1.11  2003/07/11 17:42:59  witoldp
 // added collision converter
 //
@@ -264,11 +267,17 @@ G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
   if (particle->end_vertex()) 
     {
       // assign decay time
-//       Particle -> 
-//         SetProperTime((particle->end_vertex()->position().t())/c_light);
-//       std::cout << "assigning time " 
-//                 << (particle->end_vertex()->position().t())/c_light
-//                 << " to " <<  particle->pdg_id() << std::endl;
+      HepLorentzVector theLorentzV = (particle->end_vertex()->position()
+                        - particle->production_vertex()->position());
+      
+      Hep3Vector theBoost = particle->momentum().boostVector() ;
+      
+      Particle -> 
+        SetProperTime((theLorentzV.boost(-theBoost)).t()/c_light);
+      
+      //       std::cout << "assigning time " 
+      //                 << (particle->end_vertex()->position().t())/c_light
+      //                 << " to " <<  particle->pdg_id() << std::endl;
       
                         
       // if particle has daughters, carry on with the conversion
