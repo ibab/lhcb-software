@@ -5,23 +5,26 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r2 2004-09-21 =======================
+!======================= LHCbSys v16r2 2004-09-23 =======================
 This version is built against Gaudi v15r2
 
-! 2004-09-17 - Marco Cattaneo
+! 2004-09-23 - Marco Cattaneo
  - New packages: MuonDAQ v1r2, VeloDAQ v1r0, STDAQ v1r3
                  (Moved here from application projects)
 
  - Modified packages: KernelSys v4r2, LHCbKernel v5r2, CaloKernel v3r2,
                  EventSys v18r2, CaloEvent v13r5, EventAssoc v1r3, TrgEvent v4r0,
                  AssociatorsSys v1r15, Associators v2r3, CaloAssociators v4r3,
-                 LHCbAlgs v1r1, CaloInterfaces v4r2
+                 LHCbAlgs v1r1, CaloInterfaces v4r2, RichKernel v5r0p1
 
  - In LHCbKernel v5r2:
    . Fix typo in InstanceCounter.h, affecting LoKi
 
  - In CaloKernel v3r2:
    . CaloVector.h: tiny efficiency improvements
+
+ - In RichKernel v5r0p1:
+   . Add an include to fix compilation with Gaudi v15r2
 
  - In LHCbAlgs v1r1:
    . LbAppInit - Protect against undefined APPVERSION environment variable
