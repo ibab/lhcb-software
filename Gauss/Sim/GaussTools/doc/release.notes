@@ -6,6 +6,7 @@
 !-----------------------------------------------------------------------------
 
 !======================== GaussTools v8r8 =================================
+- GaussInitialization - added printing of version number and exectution time
 - TraCutsRunAction - added cut for neutrinos (not to track them)
 - GaussPostStepAction - added possibility of storing trajectories
                         according to their creator process
