@@ -1,0 +1,18 @@
+//**************************************************************
+//
+// DaVinci standard services and DLLs
+//
+//==============================================================
+
+ApplicationMgr.ExtSvc = { "ParticlePropertySvc",
+                          "SicbEventCnvSvc", 
+                          "EventSelector" };
+
+EventPersistencySvc.CnvServices     = { "SicbEventCnvSvc" };  
+
+ApplicationMgr.DLLs = { "SicbCnv", "GaudiAud"};
+ApplicationMgr.DLLs += { "GaudiAlg", "GaudiTools" };
+
+ApplicationMgr.HistogramPersistency = "NONE";
+
+//**************************************************************

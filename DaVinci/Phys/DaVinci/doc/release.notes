@@ -1,0 +1,16 @@
+! $Id: release.notes,v 1.1.1.1 2001-07-09 09:30:15 gcorti Exp $
+! Package     : DaVinci 
+! Responsible : Gloria Corti
+
+! ========================================================================
+
+! 09072001 - DaVinci v1 (GCorti)
+
+  First release of (physics) analysis application.
+  This package contains the requirements file to load all the necessary
+  packages, the options file to configure at run time the application
+  (in directory options), and user example of how to add their own algorithms
+  and access tools/algorithms/data availabel in a DaVinci application
+  
+! ========================================================================
+ 

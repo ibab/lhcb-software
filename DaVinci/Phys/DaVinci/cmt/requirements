@@ -1,0 +1,95 @@
+package DaVinci
+version v1
+
+branches doc cmt src job options DaVinci
+
+ignore_pattern package_stamps
+
+# Set the default paths for DaVinci job options
+set JOBOPTPATH  ${DAVINCIROOT}/options/DaVinci.opts
+
+# Next line to force static build to go into LinuxStatic directory
+ignore_pattern package_tag
+version_strategy first_choice
+
+# Gaudi Configuration options
+use GaudiConf    v5
+
+# Gaudi Framework
+use GaudiSys     v8
+
+# Histogram persistency ( choose the one you prefer )
+#use HbookCnv     v10
+#use RootHistCnv  v4
+
+# Additional external libraries
+use CERNLIB      v2001
+
+# Detector description if necessary ( add any other Det package you need )
+#use DetDesc      v7    Det
+#use XmlDDDB      v6    Det
+
+# Event Model ( add any other Event package you need )
+use LHCbEvent    v11   Event
+use PhysEvent    v1     Event
+
+# SICB database : this has to be consistent with the file you are reading
+use dbase        v239   SICB 
+#use dbase       v229r3 SICB
+
+# SICB components necessary for running Fortran selection routines
+# put them before to ensure reading correct dbase for silicon when
+# reading old SICbDST files
+
+# the followings are the versions for reading Brunel data v4
+use Futio    v11     SICB
+use Futil    v10r3   SICB
+use detdes   v13     SICB
+use digvdet  v2r3    SICB
+use trivert  v5r2    SICB
+use axreclib v4r2    SICB
+use axsellib v6      SICB
+
+# the following are the versions for reading SICBDST v235 files
+#use Futio    v6r7p3 SICB
+#use Futil    v5r7p1 SICB
+#use detdes   v5     SICB
+#use digvdet  v1r2	 SICB
+#use trivert  v4    SICB
+#use axreclib v3r2  SICB
+#use axsellib v6  SICB
+
+# SicB event data persistency ( add any other you need )
+use SicbCnv      v13	  SICB
+
+# DaVinci components
+use DaVinciTools  v1   Phys
+#
+#===== build DaVinci =========================
+application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp \
+                    ../src/*.cpp \
+                    ../src/*.F 
+
+# ========================= set macros ============================
+
+macro DaVinci_linkopts    "${application_linkopts}"
+
+macro_append DaVinci_linkopts " "\
+             Linux            " -g -Wl,--start-group "\
+             Linuxdbx         " -g -Wl,--start-group "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

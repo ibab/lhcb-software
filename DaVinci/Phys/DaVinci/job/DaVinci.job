@@ -1,0 +1,79 @@
+#!/bin/csh
+###########################################################
+#   Initialize LSF queue parameters
+#
+# "-q" gives the queue (1nh by default)
+# "-c" gives the CPU time in minutes
+#
+# -q 8nm  = about 30 min HP735     express
+# -q 1nh           3 hours         short
+# -q 8nh           1 day           medium
+# -q 1nd           3 days          long
+# -q 1nw          10 days HP K260  verylong
+#
+#
+#  define the job name
+#BSUB -J brunel
+#  define the queue
+#BSUB -q z5_8nh
+#
+###########################################################
+#
+# in BATH output files are written in the BATCH machine
+# and copy at the end to your $MYWORKDIR output directory
+# in INTERACTIVE output files are written onto $WORKDIR
+# you have to set $WORKDIR to what you want
+#
+
+if ($?LS_SUBCWD) then 
+# in BATCH go to the BATCH local directory
+  cd $WORKDIR
+else
+# in interactive set WORKDIR to your output directory
+  setenv WORKDIR /tmp
+endif
+#
+# == set the root directory of your job
+setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/v1
+# == reset the dynamic library search path
+unsetenv LD_LIBRARY_PATH
+# == set the program environment
+source $MYJOBROOT/cmt/setup.csh
+#
+# == set the name of the executable
+setenv EXEC DaVinci
+#
+# == in batch copy the executable,======================================= 
+#    in interactive create a link to the executable you want to run =====
+#
+if ($?LS_SUBCWD) then
+  cp $MYJOBROOT/$CMTCONFIG/$EXEC.exe tmpjob.exe
+  cp $MYJOBROOT/options/*.opts .
+  setenv BRUNELOPTS .
+  setenv JOBOPTPATH DaVinci.opts
+else
+  ln -fs $MYJOBROOT/$CMTCONFIG/$EXEC.exe tmpjob.exe
+endif
+#
+# == run $EXEC.exe ============================================
+#
+tmpjob.exe 
+
+# == job is finished: remove temporary files ==========
+rm tmp*
+
+# == job is finished: if in batch copy output files on user directories
+#
+if ($?LS_SUBCWD) then 
+  ls *.* >! RETURN
+endif
+
+exit 0
+
+
+
+
+
+
+
+
