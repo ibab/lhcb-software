@@ -1,5 +1,5 @@
 package Boole
-version v6r2
+version v7r0
 
 branches doc cmt job options
 
@@ -28,13 +28,13 @@ use XmlDDDB	v22r3	Det
 use ParamFiles	v3r8	-no_auto_imports
 use FieldMap	v4r5
 
-#-- LHCb libraries (from LHCB_v16r2)
-use LHCb	v16r2
+#-- LHCb libraries (from LHCB_v17r0)
+use LHCb	v17r0
 
-#-- BooleSys v6r2 packages
+#-- BooleSys v7r0 packages
 
 use DigiAlg		v3r0	Digi
-use AsctToLinker        v1r2    Rec
+use AsctToLinker        v1r3    Rec
 
 # L0 trigger
 use L0Calo              v7r6	L0
@@ -56,8 +56,8 @@ use ITAlgorithms        v14r3	IT
 use ITCheckers          v2r3	IT
 
 # Outer Tracker
-use OTAlgorithms        v13r4p1	OT
-use OTDAQ               v2r0    OT
+use OTSimulation	v1r0	OT
+use OTMonitor		v1r0	OT
 
 # Muon
 use MuonAlgs            v5r6	Muon

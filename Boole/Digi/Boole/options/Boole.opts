@@ -124,11 +124,10 @@ DigiITSeq.Members += { "STClustersToRawBufferAlg/createTTRawBuffer" };
 DigiITSeq.Members += { "STClustersToRawBufferAlg/createITRawBuffer" };
 
 // Outer tracker digitisation
-ApplicationMgr.DLLs   += { "OTAlgorithms", "OTDAQ" };
-#include "$OTALGORITHMSROOT/options/otDigi.opts"
+ApplicationMgr.DLLs   += { "OTSimulation", "OTDAQ" };
 DigiOTSeq.Members += { "MCOTDepositCreator",
-                       "MCOTDigitCreator",
-                       "OTDigitCreator", "OTFillRawBuffer" };
+                       "MCOTTimeCreator",
+                       "OTFillRawBuffer" };
 
 // Velo digitisation and clustering (also for PuVeto and trigger)
 ApplicationMgr.DLLs += { "VeloAlgorithms", "VeloDAQ" };
@@ -154,7 +153,8 @@ ApplicationMgr.DLLs += { "MCTools" };
 
 RelationsVeloSeq.Members += { "VeloCluster2MCHitAlg" };
 RelationsITSeq.Members   += { "ITDigit2MCHitAlg" };
-RelationsOTSeq.Members   += { "OTDigit2MCHitAlg" };
+RelationsOTSeq.Members   += { "OTTimeCreator" };
+RelationsOTSeq.Members   += { "OTTime2MCHitAlg" };
 
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct" };
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
@@ -162,5 +162,5 @@ L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
 
 RelationsLinksSeq.Members += { "VeloTruthFromCluster",
                                "ITTruthFromDigit",
-                               "OTTruthFromDigit",
+                               "OTTruthFromOTTime",
                                "BuildMCTrackInfo" };
