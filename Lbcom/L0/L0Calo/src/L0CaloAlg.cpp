@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.20 2003-12-15 14:42:33 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.21 2004-01-07 16:58:25 cattanem Exp $
 
 /// STL
 #include <stdio.h>
@@ -283,6 +283,11 @@ StatusCode L0CaloAlg::execute() {
 
   // Get the RawEvent
   SmartDataPtr<RawBuffer> rawBuf( eventSvc(), RawBufferLocation::Default );
+  if( 0 == rawBuf ) {
+    msg << MSG::ERROR << "Could not retrieve raw buffer" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
   RawEvent rawEvt( rawBuf );
 
   // Get the ECAL data, store them in the Front-End card
