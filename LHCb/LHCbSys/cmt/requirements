@@ -1,12 +1,12 @@
 package LHCbSys
-version v11r6
+version v11r7
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v11r6
+use LHCb		v11r7
 
 use GaudiConf		v6r5
 
@@ -40,7 +40,7 @@ use MuonTools      	v3r3	Muon
 use RichDet		v3r2	Det
 
 # Event data model
-use EventSys		v13r1	Event
+use EventSys		v13r2	Event
 use EventKernel  	v2r2    Event
 use Event        	v3r2    Event
 use VeloEvent    	v12r0   Event
@@ -51,13 +51,13 @@ use RichEvent    	v4r2    Event
 use CaloEvent    	v11r4   Event
 use MuonEvent    	v2r2    Event
 use L0Event      	v13r1   Event
-use L1Event      	v11r3   Event
+use L1Event      	v11r4   Event
 use PhysEvent    	v7r3    Event
 use DbCnv        	v7r0    Event
 
 # Associators
-use AssociatorsSys	v1r1	Associators
-use ITAssociators      	v2r2    IT
+use AssociatorsSys	v1r2	Associators
+use ITAssociators      	v2r3    IT
 use OTAssociators      	v2r4    OT
 use VeloAssociators    	v1r4    Velo
 use CaloAssociators    	v3r2    Calo
@@ -66,20 +66,20 @@ use TrAssociators      	v3r4    Tr
 use TrFitEvent         	v3r5    Tr
 
 # SICB Converters
-use SICBSys             v1r1    SICB
+use SICBSys             v1r2    SICB
 use SicbCnv      	v17r5   SICB
 use RiSicbGeom   	v3r0    SICB
 use CaloSicbCnv  	v7r3    SICB
-use MuonSicbCnv  	v6r7    SICB
+use MuonSicbCnv  	v6r8    SICB
 use RiSicbCnv    	v5r4    SICB
 use VSicbCnv     	v8r1    SICB
 use Futio        	v13r0   SICB
 use Finclude     	v14r0   SICB
 use GDUMMY       	v2r0    SICB
 use Futil        	v12r0   SICB
-use detdes       	v20r0   SICB
+use detdes       	v21r0   SICB
 
 # LHCb  EXamples
-use DetDescExample      v5r0    Ex
-use DumpEventExample    v6r0    Ex
+use DetDescExample      v5r1    Ex
+use DumpEventExample    v6r1    Ex
 
