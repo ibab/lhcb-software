@@ -2,6 +2,12 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2005-01-13 - P. Koppenburg
+  - Kernel/IPlotTool
+    . Add default argument std::string trailer = "" in fillPlots methods.
+  - DaVinciTools/*.h
+    . Comment out ugly warning
+
 ! 2005-01-06 - P. Koppenburg
   - src/PhysDesktop.cpp
     . Do not issue StatusCode::FAILURE when there is no PV 

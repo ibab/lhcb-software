@@ -1,4 +1,4 @@
-// $Id: IPlotTool.h,v 1.2 2005-01-05 17:32:29 pkoppenb Exp $
+// $Id: IPlotTool.h,v 1.3 2005-01-13 12:34:08 pkoppenb Exp $
 #ifndef KERNEL_IPLOTTOOL_H 
 #define KERNEL_IPLOTTOOL_H 1
 
@@ -10,7 +10,7 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IPlotTool ( "IPlotTool", 1, 0 );
+static const InterfaceID IID_IPlotTool ( "IPlotTool", 1, 1 );
 
 /** @class IPlotTool IPlotTool.h Kernel/IPlotTool.h
  *  
@@ -29,10 +29,12 @@ public:
   virtual StatusCode setPath(const std::string&) = 0;
 
   /// Fill plots using a ParticleVector
-  virtual StatusCode fillPlots(const ParticleVector&) = 0;
+  virtual StatusCode fillPlots(const ParticleVector&,
+                               const std::string trailer = "") = 0;
 
   /// Fill plots using a single Particle
-  virtual StatusCode fillPlots(const Particle*) = 0;
+  virtual StatusCode fillPlots(const Particle*,
+                               const std::string trailer = "") = 0;
 
 
 protected:
