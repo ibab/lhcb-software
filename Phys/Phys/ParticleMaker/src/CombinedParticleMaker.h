@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.h,v 1.1.1.1 2004-08-24 06:47:48 pkoppenb Exp $
+// $Id: CombinedParticleMaker.h,v 1.2 2004-12-14 08:45:29 pkoppenb Exp $
 #ifndef COMBINEDPARTICLEMAKER_H 
 #define COMBINEDPARTICLEMAKER_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -29,7 +29,7 @@
  *  @author Gloria Corti
  *  @date   2003-05-19
  */
-class CombinedParticleMaker : public AlgTool, 
+class CombinedParticleMaker : public GaudiTool, 
                               virtual public IParticleMaker {
 public:
 

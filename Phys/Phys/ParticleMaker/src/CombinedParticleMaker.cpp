@@ -1,13 +1,9 @@
-// $Id: CombinedParticleMaker.cpp,v 1.1.1.1 2004-08-24 06:47:48 pkoppenb Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.2 2004-12-14 08:45:29 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/Tokenizer.h"
@@ -42,18 +38,14 @@ namespace
 CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
-  : AlgTool ( type, name , parent )
-  , m_input( ProtoParticleLocation::Charged )
-  , m_exclusive(true)
-  , m_addBremPhoton(false)
-  , m_longTracks(true)
-  , m_downstreamTracks(false)
-  , m_vttTracks(false)
+  : GaudiTool ( type, name , parent )
+    , m_typeSelections()
+   , m_EDS()
 {
 
   // Declaring implemented interfaces
   declareInterface<IParticleMaker>(this);
-  declareProperty("InputProtoP", m_input );
+  declareProperty("InputProtoP", m_input =  ProtoParticleLocation::Charged);
   
   m_particleList.push_back("muon");
   m_particleList.push_back("electron");
@@ -62,7 +54,7 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   m_particleList.push_back("pion");
   declareProperty("Particles", m_particleList );
 
-  declareProperty("ExclusiveSelection", m_exclusive );
+  declareProperty("ExclusiveSelection", m_exclusive = false );
   
   m_muonSelection.push_back("det='MUON' mu-pi='-8.0'");
   declareProperty("MuonSelection", m_muonSelection );
@@ -79,11 +71,11 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   m_pionSelection.clear();
   declareProperty("PionSelection", m_pionSelection );  
  
-  declareProperty("AddBremPhoton", m_addBremPhoton );
+  declareProperty("AddBremPhoton", m_addBremPhoton = false );
 
-  declareProperty("UseLongTracks",     m_longTracks );
-  declareProperty("UseDownstreamTracks", m_downstreamTracks );
-  declareProperty("UseVTTTracks",      m_vttTracks );
+  declareProperty("UseLongTracks",     m_longTracks = true );
+  declareProperty("UseDownstreamTracks", m_downstreamTracks =false );
+  declareProperty("UseVTTTracks",      m_vttTracks =false );
 
 }
 
@@ -94,20 +86,16 @@ CombinedParticleMaker::~CombinedParticleMaker( ) { } ;
 //=============================================================================
 StatusCode CombinedParticleMaker::initialize() {
   
-  MsgStream msg(msgSvc(), name());
-
   if( m_particleList.empty() ) {
-    msg << MSG::INFO << "A list of particles types must be specified" 
+    info() << "A list of particles types must be specified" 
         << endreq;
     return StatusCode::FAILURE;
   }
 
-  IParticlePropertySvc* ppSvc = 0;
-  StatusCode sc = service("ParticlePropertySvc", ppSvc, true);
-  if( sc.isFailure() ) {
-    msg << MSG::FATAL << "Cannot retrieve ParticlePropertySvc"
-        << endreq;
-    return sc;
+  IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+  if( !ppSvc ) {
+    fatal() << "Cannot retrieve ParticlePropertySvc" << endreq;
+    return StatusCode::FAILURE;
   }
   
   if( m_pionSelection.empty() ) {
@@ -122,9 +110,7 @@ StatusCode CombinedParticleMaker::initialize() {
     }
     const std::string lastPID = m_particleList.back();
     if( makePion && ("PION" != to_upper(lastPID)) ) {
-      msg << MSG::FATAL 
-          << "When PionSelections not specified pion must be last in list"
-          << endreq;
+      fatal() << "When PionSelections not specified pion must be last in list" << endreq;
       return StatusCode::FAILURE;
     }
   }
@@ -164,13 +150,13 @@ StatusCode CombinedParticleMaker::initialize() {
       setSelections(selDescs, selSpecs);
     }
     else {
-      msg << MSG::FATAL << "Unknown particle type" << endreq;
+      fatal() << "Unknown particle type" << endreq;
       return StatusCode::FAILURE;
     }
     
     partProp = ppSvc->find( temp );
     if( 0 == partProp ) {
-      msg << MSG::FATAL << "Unknown property for particle type " 
+      fatal() << "Unknown property for particle type " 
           << temp << endreq;
       return StatusCode::FAILURE;
     }
@@ -185,59 +171,58 @@ StatusCode CombinedParticleMaker::initialize() {
   }
 
   // Retrieve the data service
-  sc = service("EventDataSvc", m_EDS, true);
-  if( sc.isFailure() ) {
-    msg << MSG::FATAL << "Unable to locate Event Data Service" << endreq;
-    return sc;
+  m_EDS = svc<IDataProviderSvc>("EventDataSvc", true);
+  if( !m_EDS ) {
+    fatal() << "Unable to locate Event Data Service" << endreq;
+    return StatusCode::FAILURE;
   }
 
   // Log selection criteria
-  msg << MSG::INFO << "Selection of particle types have been set" << endreq;
-  msg << MSG::INFO << "Particle Type" << "     Criteria" << endreq;
+  info() << "Selection of particle types have been set" << endreq;
+  info() << "Particle Type" << "     Criteria" << endreq;
   for( TypeSelections::const_iterator itype=m_typeSelections.begin();
        m_typeSelections.end()!=itype; ++itype ) {
     std::string ptype = ((*itype).first)->particle();
     partProp = ppSvc->findByStdHepID( -(((*itype).first)->jetsetID()) );
     if( partProp ) { ptype += "/"+partProp->particle(); }
-    msg << MSG ::INFO << ptype << "   ";
+    info() << ptype << "   ";
     for( SelectionSpecs::const_iterator isel=((*itype).second).begin();
          ((*itype).second).end()!=isel; ++isel) {
       std::string det = "";
       if( (*isel)->HasRich() ) det += "RICH ";
       if( (*isel)->HasCalo() ) det += "CALO ";
       if( (*isel)->HasMuon() ) det += "MUON ";
-      msg << MSG::INFO << det << "   ";
+      info() << det << "   ";
       const std::vector<double>& cuts = (*isel)->dllCuts();
       for( unsigned int ipos = 0; ipos < cuts.size(); ++ipos ) {
         if( cuts[ipos] > -999.0 ) {
           PMakerSelection::DLLCuts a = PMakerSelection::DLLCuts(ipos);
           std::string explanation = (*isel)->cutType( a );
-          msg << MSG::INFO << explanation << " > " << cuts[ipos] << "  ";
+          info() << explanation << " > " << cuts[ipos] << "  ";
         }
       }
-      msg << MSG::INFO << std::endl;
+      info() << std::endl;
     }
-    msg << MSG::INFO << endreq;  
+    info() << endreq;  
   }
 
-  msg << MSG::INFO << "The type of tracks to be used are :";
+  info() << "The type of tracks to be used are :";
   bool atLeastOneType = false;
   if( m_longTracks ) {
-    msg << MSG::INFO << " Long";
+    info() << " Long";
     atLeastOneType = true;
   }
   if( m_downstreamTracks ) {
-    msg << MSG::INFO << " Downstream";
+    info() << " Downstream";
     atLeastOneType = true;
   }
   if( m_vttTracks ) {
-    msg << MSG::INFO << " Upstream (VTT)";
+    info() << " Upstream (VTT)";
     atLeastOneType = true;
   }
-  msg << MSG::INFO << endreq;
+  info() << endreq;
   if( !atLeastOneType ) {
-    msg << MSG::INFO << "At least one track type needs to be selected" 
-        << endreq;
+    err() << "At least one track type needs to be selected" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -250,9 +235,7 @@ StatusCode CombinedParticleMaker::initialize() {
 //===========================================================================
 StatusCode CombinedParticleMaker::finalize() {
   
-  MsgStream msg(msgSvc(), name());
-
-  msg << MSG::DEBUG << "Delete selection criteria" << endreq;  
+  debug() << "Delete selection criteria" << endreq;  
   // loop over m_typeSelections, pop back vector of selectionDesc
   // where new was done
   for( TypeSelections::iterator itype=m_typeSelections.begin();
@@ -387,23 +370,21 @@ void CombinedParticleMaker::setDetectorFlag( const std::string detector,
 //=============================================================================
 StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
   
-  MsgStream msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "CombinedParticleMaker::makeParticles()" << endreq;
+  debug() << "CombinedParticleMaker::makeParticles()" << endreq;
 
   int nParticles = 0;   // Counter of particles created  
-  SmartDataPtr<ProtoParticles> protos ( eventSvc(), m_input );
+  ProtoParticles* protos = get<ProtoParticles>( eventSvc(), m_input );
   if( !protos ) {
-    msg << MSG::ERROR << "Charged ProtoParticles do not exist" << endreq;
+    err() << "Charged ProtoParticles do not exist" << endreq;
     return StatusCode::FAILURE;
   }
-  if( 0 == protos->size() ) { 
-    msg << MSG::INFO << "Charged ProtoParticles container is empty at "
-        << m_input << endreq;
+  if( protos->empty() ) { 
+    info() << "Charged ProtoParticles container is empty at " << m_input << endreq;
     return StatusCode::SUCCESS;
   }
   
   // Debug number of ProtoPartCandidates retrieved
-  msg << MSG::DEBUG << "Number of Charged ProtoParticles retrieved from " 
+  debug() << "Number of Charged ProtoParticles retrieved from " 
       << m_input << " = " << protos->size() << endreq;
   
   // Now make Particles based on criterias
@@ -475,8 +456,6 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
 StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
                                                 const ParticleProperty* pprop, 
                                                 Particle* particle ) {
-  // PK  
-  MsgStream msg( msgSvc(), name() );
 // Check it is a Charged ProtoP hence TrStateP is accessible
 
   const TrStateP* trackState = proto->trStateP();
@@ -519,12 +498,6 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
   // Set position of first measured point on track:
   HepPoint3D position( trackState->x(), trackState->y(), trackState->z() ) ;
   particle->setPointOnTrack( position );
-
-  msg << MSG::VERBOSE << "PK:" ;
-  if (proto->track()->isLong())       msg << "long           " ;
-  if (proto->track()->isUpstream())   msg << "upstream (VTT) " ;
-  if (proto->track()->isDownstream()) msg << "downstream     " ;
-  msg << " position z=" << position[2] << endreq ;
     
   // Calculate and set four momentum
   double momentum = trackState->p();

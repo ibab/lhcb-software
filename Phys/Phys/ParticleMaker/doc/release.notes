@@ -2,6 +2,15 @@
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 
+! 2004-12-14 - P. Koppenburg
+ - src/CombinedParticleMaker.{cpp,h}
+   . Make it a GaudiTool
+   . Set ExclusiveSelection to false by default
+     !!! WARNING !!! This is a major change that will change the result
+                     of all selections using the CombinedParticleMaker without
+		     resetting this options. In particular most stripping
+		     preselections use ExclusiveSelection = true ;
+
 !========================== ParticleMaker v1r1 2004-09-16 ===================
 ! 2004-08-25 - P. Koppenburg
  - cmt/requirements
