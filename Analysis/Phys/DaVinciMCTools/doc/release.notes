@@ -1,6 +1,21 @@
-! $Id: release.notes,v 1.15 2002-11-06 08:35:20 odie Exp $
+! $Id: release.notes,v 1.16 2002-11-13 16:29:36 gcorti Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
+
+!========================== DaVinciMCTools v4r0 2002-11-13 =================
+! 2002-11-13 - Gloria Corti
+ - Increase interface ID in IMCDecayFinder.h (modified interface)
+
+! 2002-11-11 - Gloria Corti
+ - Introduce possibility to have veloTT tracks used to make ProtoP in 
+   MCPIDProtoPAlg. This options is controlled by the property
+   VeloTTTracks( default = false ). Additional entry referring to this
+   option in monitoring ntuple.
+ - Introduce in requirements use DaVinciTools v7r* ( interface of
+   IParticleMaker implemented by MCParticleMaker )
+ - New tool MCParticleMaker provided by Gerhard Raven that makes a Particle
+   starting from an MCParticle (look at example options file to see vaious 
+   properties to control its behaviour).
 
 ! 2002-11-05 - Olivier Dormond
  - Added two new methods to the MCDecayFinder:

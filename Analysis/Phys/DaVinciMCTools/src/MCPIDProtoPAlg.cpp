@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.cpp,v 1.7 2002-10-14 09:59:57 gcorti Exp $
+// $Id: MCPIDProtoPAlg.cpp,v 1.8 2002-11-13 16:29:36 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -42,6 +42,7 @@ MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
   , m_electronMatchName( "ElectronMatch" )
   , m_bremMatchName( "BremMatch" )
   , m_upstream( false )
+  , m_velott( false )
   , m_trackClassCut( 0.4 )
   , m_chiSqITracks( 500.0 )
   , m_chiSqOTracks( 100.0 )
@@ -71,6 +72,7 @@ MCPIDProtoPAlg::MCPIDProtoPAlg( const std::string& name,
   
   // Selections
   declareProperty("UpstreamsTracks",  m_upstream );
+  declareProperty("VeloTTTracks",     m_velott );
   declareProperty("ITFracTrackClass", m_trackClassCut );
   declareProperty("Chi2NdFofITracks", m_chiSqOTracks );
   declareProperty("Chi2NdFofOTracks", m_chiSqITracks );
@@ -161,6 +163,7 @@ StatusCode MCPIDProtoPAlg::initialize() {
           if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nunforw", m_nunforw);
           if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nunmath", m_nunmatc);
           if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nunupst", m_nunupst);
+          if( scnt.isSuccess() ) scnt = ntmoni->addItem("Nunvett", m_nunvett);
           if( scnt.isSuccess() ) scnt = ntmoni->addItem("Ntkrej1", m_ntkrej1);
           if( scnt.isSuccess() ) scnt = ntmoni->addItem("Ntkrej2", m_ntkrej2);
           if( scnt.isSuccess() ) scnt = ntmoni->addItem("Ntkrej3", m_ntkrej3);
@@ -310,7 +313,7 @@ StatusCode MCPIDProtoPAlg::execute() {
   
   int countProto[5] = { 0, 0, 0, 0, 0 };
   int countRejTracks[4] = { 0, 0, 0, 0 };
-  int countTypeTracks[4] = { 0, 0, 0, 0 };
+  int countTypeTracks[5] = { 0, 0, 0, 0, 0 };
 
   TrStoredTracks::const_iterator iTrack;
   for( iTrack = tracks->begin(); tracks->end() != iTrack; ++iTrack ) {
@@ -320,6 +323,7 @@ StatusCode MCPIDProtoPAlg::execute() {
       if( (*iTrack)->forward() )  countTypeTracks[UniqueForward]++;
       if( (*iTrack)->match() )    countTypeTracks[UniqueMatch]++;
       if( (*iTrack)->upstream() ) countTypeTracks[UniqueUpstream]++;
+      if( (*iTrack)->veloTT() )   countTypeTracks[UniqueVeloTT]++;
     }
     
     int reject = rejectTrack( (*iTrack) );
@@ -468,6 +472,7 @@ StatusCode MCPIDProtoPAlg::execute() {
     m_nunforw = countTypeTracks[UniqueForward];
     m_nunmatc = countTypeTracks[UniqueMatch];
     m_nunupst = countTypeTracks[UniqueUpstream];
+    m_nunvett = countTypeTracks[UniqueVeloTT];
     m_ntkrej1 = countRejTracks[NoTrack];
     m_ntkrej2 = countRejTracks[NoTrackType];
     m_ntkrej3 = countRejTracks[Chi2Cut];
@@ -549,11 +554,16 @@ int MCPIDProtoPAlg::rejectTrack( const TrStoredTrack* track ) {
       if( m_upstream && (track->unique() && track->upstream()) ) {
         reject = KeepTrack; 
       }
+      if( m_velott && (track->unique() && track->veloTT()) ) {
+        reject = KeepTrack;
+      }
     }
     else {
       reject = NoTrackType;
     }
   }
+
+  if( track->veloTT() ) return reject;
   
   if( !reject ) {
     int nIT = 0;

@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.h,v 1.4 2002-09-09 15:22:41 gcorti Exp $
+// $Id: MCPIDProtoPAlg.h,v 1.5 2002-11-13 16:29:36 gcorti Exp $
 #ifndef MCPIDPROTOPALG_H 
 #define MCPIDPROTOPALG_H 1
 
@@ -31,8 +31,9 @@ public:
 
   enum TrkRejectType { KeepTrack=0, NoTrack, NoTrackType, Chi2Cut };
   enum ProtoType { TrackProto=0, RichProto, MuonProto, ElectronProto,
-                  AsctProto};
-  enum TrkType { UniqueVelo = 0, UniqueForward, UniqueMatch, UniqueUpstream };
+                   AsctProto };
+  enum TrkType { UniqueVelo = 0, UniqueForward, UniqueMatch, UniqueUpstream,
+                 UniqueVeloTT };
   
   /// Standard constructor
   MCPIDProtoPAlg( const std::string& name, ISvcLocator* pSvcLocator );
@@ -64,6 +65,7 @@ private:
   std::string m_protoPath;    ///< Location in TES of output ProtoParticles
   
   bool   m_upstream;       ///< Use or not unique upstream tracks
+  bool   m_velott;         ///< Use or not unique velo-tt tracks
   double m_trackClassCut;  ///< Fraction of IT clusters to separate Tracks types
   double m_chiSqITracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
   double m_chiSqOTracks;   ///< Max Chi2/NoF to make ProtoP from IT Tracks
@@ -98,7 +100,7 @@ private:
   bool m_monitor;                   ///< Fill ntuple and special print
   NTuple::Tuple* m_ntuple;
   NTuple::Item<long> m_ntrk;
-  NTuple::Item<long> m_nunforw, m_nunmatc, m_nunupst;
+  NTuple::Item<long> m_nunforw, m_nunmatc, m_nunupst, m_nunvett;
   NTuple::Item<long> m_ntkrej0, m_ntkrej1, m_ntkrej2, m_ntkrej3;
   NTuple::Item<long> m_nrich, m_nmuon, m_nelec;
   NTuple::Item<long> m_ntkpro, m_nripro, m_nmupro, m_nelpro, m_nproto;

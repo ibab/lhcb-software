@@ -1,4 +1,4 @@
-// $Id: IMCDecayFinder.h,v 1.3 2002-11-06 08:35:14 odie Exp $
+// $Id: IMCDecayFinder.h,v 1.4 2002-11-13 16:29:35 gcorti Exp $
 #ifndef TOOLS_IMCDECAYFINDER_H 
 #define TOOLS_IMCDECAYFINDER_H 1
 
@@ -14,7 +14,7 @@
 //class MCParticle;
 
 // Declaration of the interface ID (interface id, major version, minor version)
-static const InterfaceID IID_IMCDecayFinder("IMCDecayFinder", 1, 0);
+static const InterfaceID IID_IMCDecayFinder("IMCDecayFinder", 2, 0);
 
 /** @class IMCDecayFinder IMCDecayFinder.h DaVinciTools/IMCDecayFinder.h
  *
