@@ -13,6 +13,8 @@ Purpose: LHCb Digitization program
     (MuonAssociators v1r3)
   . Do not retrieve VeloCluster2MCHitAsct tool at every event
     (VeloAssociators v1r10)
+  . Minor fix in a monitor class
+    (RichReadout v1r8, RichdigiQC v1r6)
 
 </PRE><H1><A NAME=v5r5>2004-04-15 Boole v5r5</A></H1><PRE>
 
