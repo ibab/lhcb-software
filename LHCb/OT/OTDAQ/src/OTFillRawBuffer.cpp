@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.cpp,v 1.2 2004-03-25 15:53:38 jnardull Exp $
+// $Id: OTFillRawBuffer.cpp,v 1.3 2004-03-26 16:34:05 jnardull Exp $
 // Include files
 
 // from Gaudi
@@ -119,6 +119,11 @@ StatusCode OTFillRawBuffer::execute()
       iBank++){
     dataBank* aBank = new dataBank();
     vDigi* aDigi = (*iBank).second;
+
+    if(aDigi->size() == 0){
+      break;
+    }
+
 
     // feed vdigi vectors to converter routine
     this->convertToRAWDataBank(aDigi, aBank);
