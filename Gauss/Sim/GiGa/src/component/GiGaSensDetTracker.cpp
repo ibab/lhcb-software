@@ -5,38 +5,21 @@
 #include "GaudiKernel/MsgStream.h"
 /// GiGa 
 #include "GiGa/GiGaMACROs.h"
-
-#include "TrackerHit.h"
 /// Geant4 
 #include "G4Step.hh"
 #include "G4TouchableHistory.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4LogicalVolume.hh"
-
 #include "G4HCofThisEvent.hh"
 #include "G4ios.hh"
-
 /// local
 #include "GiGaSensDetTracker.h"
 
-
-
-// ============================================================================
-/// factory business 
 // ============================================================================
 IMPLEMENT_GiGaFactory( GiGaSensDetTracker );
 // ============================================================================
 
-// ============================================================================
-/** standard constructor 
- *  @see GiGaSensDetBase 
- *  @see GiGaBase 
- *  @see AlgTool 
- *  @param type type of the object (?)
- *  @param name name of the object
- *  @param parent  pointer to parent object
- */
-// ============================================================================
+
 GiGaSensDetTracker::GiGaSensDetTracker
 ( const std::string& type   ,
   const std::string& name   ,
@@ -47,20 +30,13 @@ GiGaSensDetTracker::GiGaSensDetTracker
   G4String HCname;
   collectionName.insert(HCname="trackerCollection");
 };
-// ============================================================================
 
 // ============================================================================
-/// destructor 
-// ============================================================================
+
 GiGaSensDetTracker::~GiGaSensDetTracker(){};
-// ============================================================================
 
 // ============================================================================
-/** process the hit
- *  @param step     pointer to current Geant4 step 
- *  @param history  pointert to touchable history 
- */
-// ============================================================================
+
 void GiGaSensDetTracker::Initialize(G4HCofThisEvent*HCE)
 {
   static int HCID = -1;
@@ -72,31 +48,52 @@ void GiGaSensDetTracker::Initialize(G4HCofThisEvent*HCE)
 }
 
 
-
 bool GiGaSensDetTracker::ProcessHits( G4Step* step , 
                                     G4TouchableHistory* /* history */ ) 
 {
   if( 0 == step ) { return false ; } 
   
-  double     edep = step->GetTotalEnergyDeposit();
-  HepPoint3D pos  = step->GetPostStepPoint()->GetPosition(); 
+  double edep = step->GetTotalEnergyDeposit();
+  double timeof = step->GetDeltaTime();
+  HepPoint3D postpos  = step->GetPostStepPoint()->GetPosition();
+  HepPoint3D prepos  = step->GetPreStepPoint()->GetPosition();
+  int trid = step->GetTrack()->GetTrackID();
   
-  /// 
   G4TouchableHistory* TT =  
     (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
   G4VPhysicalVolume*  PV =   TT->GetVolume();
   G4LogicalVolume*    LV =   PV->GetLogicalVolume();
-  
-  MsgStream log( msgSvc() , name() );
-  log << MSG::INFO << "My TrackerDet: " 
-      << " Pos=("  << pos.x() << "," << pos.y() << "," << pos.z() << ")" 
-      << " PV="    << PV->GetName() 
-      << " LV="    << LV->GetName() 
-      << " edep="  << edep << endreq;
 
+  G4TouchableHistory* postTT =  
+    (G4TouchableHistory*)(step->GetPostStepPoint()->GetTouchable());
+  G4VPhysicalVolume*  postPV =   postTT->GetVolume();
+  G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
+
+  MsgStream log( msgSvc() , name() );
+
+  log << MSG::INFO << "Processing TrackerHit:" << " edep="  << edep << endreq;
+  
+  log << MSG::INFO 
+      << " PrePos=("  << prepos.x() << "," << prepos.y() << "," << prepos.z() 
+      << ")" 
+      << " PrePV="    << PV->GetName()  
+      << " PreLV="    << LV->GetName() << endreq;
+
+  log << MSG::INFO 
+      << " PostPos=("
+      << postpos.x() << "," << postpos.y() << "," << postpos.z() << ")" 
+      << " PostPV="    << postPV->GetName()  
+      << " PostLV="    << postLV->GetName() << endreq;
+  
+  
+  ///
   TrackerHit* newHit = new TrackerHit();
   newHit->SetEdep( edep );
-  newHit->SetPos( step->GetPreStepPoint()->GetPosition() );
+  newHit->SetEntryPos( prepos );
+  newHit->SetExitPos( postpos );
+  newHit->SetTimeOfFlight( timeof );  
+  newHit->SetTrackID( trid );
+  ///
   newHit->Print();
   trackerCollection->insert( newHit );
 
@@ -104,7 +101,4 @@ bool GiGaSensDetTracker::ProcessHits( G4Step* step ,
 };
 // ============================================================================
 
-// ============================================================================
-// The END 
-// ============================================================================
 
