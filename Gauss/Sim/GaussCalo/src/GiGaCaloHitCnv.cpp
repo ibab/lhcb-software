@@ -1,8 +1,11 @@
-// $Id: GiGaCaloHitCnv.cpp,v 1.2 2002-12-13 16:52:57 ibelyaev Exp $
+// $Id: GiGaCaloHitCnv.cpp,v 1.3 2002-12-15 17:19:59 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/13 16:52:57  ibelyaev
+//  put updated versions of the packages
+//
 // Revision 1.2  2002/12/07 21:19:14  ibelyaev
 //  few optimization updates
 //
@@ -66,16 +69,16 @@ GiGaCaloHitCnv::GiGaCaloHitCnv( ISvcLocator* svc )
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits ) ; 
   setConverterName              ( "GiGaCaloHitCnv"          ) ;
   ///
-  GiGaLeaf::Pars spd  ( 1 , "Spd/Hits"  ) ;
+  GiGaLeaf::Pars spd  ( 1 , "Spd/SpdHits"   ) ;
   declareObject( GiGaLeaf( MCCaloHitLocation::Spd  , objType() , spd  ) );
   
-  GiGaLeaf::Pars prs  ( 1 , "Prs/Hits"  ) ;
+  GiGaLeaf::Pars prs  ( 1 , "Prs/PrsHits"   ) ;
   declareObject( GiGaLeaf( MCCaloHitLocation::Prs  , objType() , prs  ) );
   
-  GiGaLeaf::Pars ecal ( 1 , "Ecal/Hits" ) ;
+  GiGaLeaf::Pars ecal ( 1 , "Ecal/EcalHits" ) ;
   declareObject( GiGaLeaf( MCCaloHitLocation::Ecal , objType() , ecal ) );
   
-  GiGaLeaf::Pars hcal ( 1 , "Hcal/Hits" ) ;
+  GiGaLeaf::Pars hcal ( 1 , "Hcal/HcalHits" ) ;
   declareObject( GiGaLeaf( MCCaloHitLocation::Hcal , objType() , hcal ) );
   ///
 };

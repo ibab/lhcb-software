@@ -7,6 +7,12 @@
 !-----------------------------------------------------------------------------
 	
 
+! 2002-12-15 - Ivan Belyaev
+ - src/GiGaCaloHitCnv.cpp      change the names of colelction to suppress G4 
+                               warning about the ambiguouse name of 
+                               G4 collections 
+
+
 ! 2002-12-13 - Ivan Belyaev
  - move updated and modified versions from src/Calo subdirectory
 	of GaussTools package 
