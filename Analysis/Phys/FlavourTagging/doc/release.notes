@@ -4,6 +4,7 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+!==================== FlavourTagging v4r6 2003-07-07 ===================
 ! 2003-07-04 - Olivier Dormond
  - src/FlavourTaggingAlgorithm.h, FlavourTaggingAlgorithm.cpp
    . Added a preselection cut to remove all particles compatible with a pileup
