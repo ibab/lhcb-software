@@ -1,8 +1,10 @@
 package MuonID
-version v3r4
+version v3r6
 
 branches src cmt doc options
 
+# include directory
+include_dirs $(MUONIDROOT)
 # add "use" statements
 use MuonEvent          v2r*  Event
 use MuonTools          v3r*  Muon
@@ -16,5 +18,4 @@ apply_pattern linker_path
 
 #===============================================================
 private
-include_dirs $(MUONIDROOT)
 apply_pattern package_Cshlibflags

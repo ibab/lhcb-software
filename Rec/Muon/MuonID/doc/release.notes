@@ -1,10 +1,18 @@
-! $Id: release.notes,v 1.22 2003-05-22 15:04:41 gcorti Exp $
+! $Id: release.notes,v 1.23 2003-05-30 09:16:31 gcorti Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
 
+! 2003-05-28 - Gloria Corti
+ - MuonID/IMuonIDDLLTool.h
+   src/MuonIDDLLTool.h, MuonIDDLLTool.cpp
+   New tool for evaluating Delta Log Likelihood hypothesis for muon 
+   particle ID and interface. Code provied by Miriam Gandelman and 
+   Joao De Mello
+ - src/MuonID_load.cpp add new tool
+
 ! 2003-05-22 - Gloria Corti
  - Modified MuonIDFOI.h, MuonIDFOI.cpp and options to introduce new tuning
-   in calculating Muon particle ID. Code provied by Joao De Mello.
+   in calculating Muon particle ID. Code provided by Joao De Mello.
 
 !========================= MuonID v3r5 2003-01-08 =========================
 ! 2002-12-18 - Marco Cattaneo
