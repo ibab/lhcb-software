@@ -1,8 +1,11 @@
-// $Id: PhotonParameters.h,v 1.2 2004-03-11 13:02:14 pkoppenb Exp $
+// $Id: PhotonParameters.h,v 1.3 2004-05-11 16:01:25 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/03/11 13:02:14  pkoppenb
+// Split DaVinciTools into DaVinciTools and DaVinciKernel
+//
 // Revision 1.1  2003/01/22 16:43:23  ibelyaev
 //  new tools for Photons
 // 

@@ -1,8 +1,11 @@
-// $Id: PhotonParticleMaker.h,v 1.4 2004-04-21 02:29:30 ibelyaev Exp $
+// $Id: PhotonParticleMaker.h,v 1.5 2004-05-11 16:01:25 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/04/21 02:29:30  ibelyaev
+//  PhotonParticleMaker is modified
+//
 // Revision 1.3  2004/03/11 13:02:14  pkoppenb
 // Split DaVinciTools into DaVinciTools and DaVinciKernel
 //

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.39 2004-05-11 06:17:12 pkoppenb Exp $
+# $Id: requirements,v 1.40 2004-05-11 16:01:24 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -27,24 +27,28 @@ use  CaloInterfaces v*     Calo
 # This is used to generate once the necessary files on Linux that are
 # then committed (tool not available on win)
 #============================================================================
-#macro yaccppflags       " -l -d "
-#macro yaccpp            "yacc $(yaccppflags)
-#make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header
-#document yacc_to_icpp RecParser recparser.ypp
-#macro recparser_ypp_yaccpp_prefix "DecayFinder::"
+# macro yaccppflags       " -l -d "
+# macro yaccpp            "yacc $(yaccppflags)
+# make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header
+# document yacc_to_icpp RecParser recparser.ypp
+# macro recparser_ypp_yaccpp_prefix "DecayFinder::"
 
-#macro lexppflags        " -L "
-#macro lexpp             "lex ${lexppflags}
-#make_fragment lex_to_icpp -suffix=icpp -header=lex_to_icpp_header
-#document lex_to_icpp RecLexer reclexer.lpp
-#macro reclexer_lpp_lexpp_prefix "DecayFinder::"
+# macro lexppflags        " -L "
+# macro lexpp             "lex ${lexppflags}
+# make_fragment lex_to_icpp -suffix=icpp -header=lex_to_icpp_header
+# document lex_to_icpp RecLexer reclexer.lpp
+# macro reclexer_lpp_lexpp_prefix "DecayFinder::"
+
+# Linker library building rule
+#============================================================================
+library          DaVinciToolsLib    ../Lib/*.cpp
 
 # Component library building rule
 #============================================================================
 library          DaVinciTools    ../src/*.cpp
 
-# define component library link options
+# standard patterns (order is essential!)
 #============================================================================
 apply_pattern component_library library=DaVinciTools
-
+apply_pattern linker_library    library=DaVinciToolsLib
 
