@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.4 2002-01-22 09:17:54 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.5 2002-01-22 09:52:31 sponce Exp $
 
 // include files
 #include <string>
@@ -90,7 +90,7 @@ StatusCode XmlBaseConditionCnv::i_createObj (DOM_Element /*element*/,
 // -----------------------------------------------------------------------
 StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
                                            DataObject* refpObject,
-                                           IOpaqueAddress* /*address*/) {
+                                           IOpaqueAddress* address) {
   MsgStream log(msgSvc(), "XmlBaseConditionCnv" );
 
   // gets the object

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.6 2001-12-18 11:19:36 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.7 2002-01-22 09:52:31 sponce Exp $
 
 // Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -132,13 +132,29 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
        log << MSG::DEBUG
            << "Detector Description Markup Language Version "
            << versionAttribute << endreq;
-       if (versionAttribute != "3.3" ) {
-         log << MSG::ERROR << "DDDB DTD Version 3.3 required, "
-             << "Please update your DTD and XML data files. "
+       std::string::size_type dotPos = versionAttribute.find ('.');
+       std::string majorVersion;
+       std::string minorVersion = "0";       
+       if (dotPos == std::string::npos) {
+         majorVersion = versionAttribute;
+       } else {
+         majorVersion = versionAttribute.substr (0, dotPos);
+         minorVersion = versionAttribute.substr (dotPos + 1);
+       }
+       if (majorVersion != "3") {
+         log << MSG::ERROR << "DDDB DTD Version 3.* required. "
+             << "You are currently using Version " << versionAttribute
+             << ". Please update your DTD and XML data files. "
              << "If you are using the XmlDDDB package, please "
              << "get a new version of it."
              << endreq;
          return StatusCode::FAILURE;
+       } else if (minorVersion != "4") {
+         log << MSG::WARNING << "DDDB DTD Version 3.4 recommanded. "
+             << "You are currently using Version " << versionAttribute
+             << ". Everything should work fine but you may get some "
+             << "error messages about unknown tags."
+             << endreq;
        }
      }
    }
