@@ -1,4 +1,4 @@
-// $Id: SerializeStl.h,v 1.3 2002-04-05 10:27:18 roiser Exp $
+// $Id: SerializeStl.h,v 1.4 2002-04-05 14:55:03 roiser Exp $
 /*
     Small header file to serialize vectors and lists
     to standard Gaudi StreamBuffer objects
@@ -7,6 +7,7 @@
 #define LHCBKERNEL_SERIALIZESTL_H
 
 #include "GaudiKernel/StreamBuffer.h"
+#include "GaudiKernel/MsgStream.h"
 #include <vector>
 #include <list>
 #include <utility>
