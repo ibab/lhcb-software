@@ -7,6 +7,7 @@
 
 !========================== GaussRICH v4r1 2003-07-28 ======================
 ! 2003-07-28 - Witek Pokorski
+ - RichPhotoElectron - changed pdg id in order to avoid conflict with e-
  - modified RichInfo to use DetTrackInfo base class introduced to GaussTools
 
 !========================== GaussRICH v4r0 2003-06-16 ======================
