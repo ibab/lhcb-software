@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonTile.cpp,v 1.2 2001-06-08 13:43:48 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonTile.cpp,v 1.3 2001-06-11 20:01:34 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 #include <algorithm>
 
@@ -25,7 +25,7 @@ bool MuonTile::touches(MuonTile& mt) {
   return imt!=vmt.end();
 }	   
 		   
-bool operator==(MuonTile mt1, MuonTile mt2) {
+bool operator==(MuonTile& mt1, MuonTile& mt2) {
     return mt1.quarter()==mt2.quarter() &&
            mt1.region()==mt2.region() &&
 	   mt1.nX()==mt2.nX() &&
