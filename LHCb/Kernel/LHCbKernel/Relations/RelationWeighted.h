@@ -1,8 +1,11 @@
-// $Id: RelationWeighted.h,v 1.3 2002-07-25 15:32:14 ibelyaev Exp $
+// $Id: RelationWeighted.h,v 1.4 2003-01-17 14:07:01 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/07/25 15:32:14  ibelyaev
+//  bug fix in destructors of relation objects
+//
 // Revision 1.2  2002/04/25 08:44:04  ibelyaev
 //  bug fix for Win2K
 //
@@ -60,7 +63,7 @@ namespace Relations
     /// shortcut for direct  interface 
     typedef IBase                                           IDirect  ;
     /// shortcut for inverse base type 
-    typedef IDirect::InverseType                            IInverse ;
+    typedef typename IDirect::InverseType                   IInverse ;
  
   public:
     
@@ -90,9 +93,9 @@ namespace Relations
       , m_inverse ( 0 ) 
     {
       // get all relations 
-      IInverse::Range range = inv.relations() ;
+      typename IInverse::Range range = inv.relations() ;
       // invert all relations 
-      for( IInverse::iterator entry = range.begin() ;
+      for( typename IInverse::iterator entry = range.begin() ;
            range.end() != entry ; ++entry )
         { relate( entry->to() , entry->from() , entry->weight() ); }
     };
@@ -126,11 +129,12 @@ namespace Relations
      *  @param  object  the object
      *  @return pair of iterators for output relations   
      */
-    virtual Range       relations
-    ( const From&       object    ) const 
+    virtual typename RelationWeighted<FROM, TO, WEIGHT>::Range relations
+    ( const typename RelationWeighted<FROM, TO, WEIGHT>::From& object) const
     {
-      Base::IP ip = m_direct.i_relations( object );
-      return Range( ip.first , ip.second );
+      typename Base::IP ip = m_direct.i_relations( object );
+      return 
+        typename RelationWeighted<FROM, TO, WEIGHT>::Range(ip.first, ip.second);
     };
     
     /** retrive ALL relations from ALL objects
@@ -141,10 +145,11 @@ namespace Relations
      *  @param  object  the object
      *  @return pair of iterators for output relations   
      */
-    virtual Range       relations () const 
+    virtual typename RelationWeighted<FROM, TO, WEIGHT>::Range relations() const
     {
-      Base::IP ip = m_direct.i_relations();
-      return Range( ip.first , ip.second );
+      typename Base::IP ip = m_direct.i_relations();
+      return 
+        typename RelationWeighted<FROM, TO, WEIGHT>::Range(ip.first, ip.second);
     };
     
     /** retrive all relations from the object which has weigth 
@@ -154,13 +159,14 @@ namespace Relations
      *  @param  flag      flag for larger/smaller
      *  @return pair of iterators for output relations   
      */
-    virtual  Range      relations
-    ( const  From&      object    , 
-      const  Weight&    threshold , 
+    virtual  typename RelationWeighted<FROM, TO, WEIGHT>::Range      relations
+    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::From&      object,
+      const  typename RelationWeighted<FROM, TO, WEIGHT>::Weight& threshold ,
       const  bool       flag      ) const 
     {
-      Base::IP ip = m_direct.i_relations( object , threshold , flag );
-      return Range( ip.first , ip.second );    
+      typename Base::IP ip = m_direct.i_relations( object , threshold , flag );
+      return
+        typename RelationWeighted<FROM, TO, WEIGHT>::Range(ip.first, ip.second);
     };
 
     /** make the relation between 2 objects 
@@ -170,9 +176,9 @@ namespace Relations
      *  @return status  code 
      */
     virtual  StatusCode relate 
-    ( const  From&      object1 , 
-      const  To&        object2 ,
-      const  Weight&    weight  ) 
+    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::From&      object1 , 
+      const  typename RelationWeighted<FROM, TO, WEIGHT>::To&        object2 ,
+      const  typename RelationWeighted<FROM, TO, WEIGHT>::Weight&    weight  ) 
     {
       StatusCode sc = m_direct.  i_relate ( object1 , object2 , weight );
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -185,8 +191,8 @@ namespace Relations
      *  @return status  code 
      */
     virtual  StatusCode remove 
-    ( const  From&      object1 , 
-      const  To&        object2 ) 
+    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::From&      object1 , 
+      const  typename RelationWeighted<FROM, TO, WEIGHT>::To&        object2 ) 
     { 
       StatusCode sc = m_direct.  i_remove ( object1 , object2 ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -198,7 +204,7 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode removeFrom 
-    ( const  From&      object )
+    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::From&      object )
     { 
       StatusCode sc = m_direct.  i_removeFrom ( object ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -210,7 +216,7 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode removeTo 
-    ( const  To&        object )
+    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::To&        object )
     { 
       StatusCode sc = m_direct.  i_removeTo   ( object ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -225,8 +231,8 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode filterFrom 
-    ( const  From&      object    ,
-      const  Weight&    threshold , 
+    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::From&      object    ,
+      const  typename RelationWeighted<FROM, TO, WEIGHT>::Weight& threshold ,
       const  bool       flag      )  
     { 
       StatusCode sc = m_direct.  i_filterFrom ( object , threshold , flag ) ; 
@@ -242,8 +248,8 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode filterTo 
-    ( const  To&        object    , 
-      const  Weight&    threshold , 
+    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::To&        object,
+      const  typename RelationWeighted<FROM, TO, WEIGHT>::Weight& threshold ,
       const  bool       flag      )  
     { 
       StatusCode sc =  m_direct.  i_filterTo   ( object , threshold , flag ) ; 
@@ -258,7 +264,7 @@ namespace Relations
      *  @return status code 
      */
     virtual  StatusCode filter 
-    ( const  Weight&    threshold , 
+    ( const  typename RelationWeighted<FROM, TO, WEIGHT>::Weight& threshold ,
       const  bool       flag      )  
     { 
       StatusCode sc =  m_direct.  i_filter( threshold , flag ) ; 

@@ -1,8 +1,11 @@
-// $Id: RelationWeightedBase.h,v 1.5 2002-07-25 15:32:15 ibelyaev Exp $
+// $Id: RelationWeightedBase.h,v 1.6 2003-01-17 14:07:02 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/07/25 15:32:15  ibelyaev
+//  bug fix in destructors of relation objects
+//
 // Revision 1.4  2002/04/26 09:42:39  ibelyaev
 //  reduce number of warnings for Microsoft  compiler
 //
@@ -54,34 +57,34 @@ namespace Relations
     /// short cut for type traits
     typedef Relations::RelationWeightedTypeTraits<FROM,TO,WEIGHT> TypeTraits ;
     /// actual "FROM" type
-    typedef TypeTraits::From                                      From       ;
+    typedef typename TypeTraits::From                             From;
     /// actual "TO" type
-    typedef TypeTraits::To                                        To         ;
+    typedef typename TypeTraits::To                               To;
     /// actual "Weight" type
-    typedef TypeTraits::Weight                                    Weight     ;
+    typedef typename TypeTraits::Weight                           Weight;
     /// Entry type 
-    typedef TypeTraits::Entry                                     Entry      ;
+    typedef typename TypeTraits::Entry                            Entry;
     /// container type 
-    typedef TypeTraits::Entries                                   Entries    ;
+    typedef typename TypeTraits::Entries                          Entries;
     /// iterator type 
-    typedef Entries::iterator                                     iterator   ;
+    typedef typename Entries::iterator                            iterator;
     /// iterator type (internal) 
-    typedef Entries::iterator                                     IT         ;
+    typedef typename Entries::iterator                            IT;
     /// iterator pair type (internal) 
-    typedef TypeTraits::IP                                        IP         ;
+    typedef typename TypeTraits::IP                               IP;
     /// const_iterator type (internal) 
-    typedef TypeTraits::CIT                                       CIT        ;
+    typedef typename TypeTraits::CIT                              CIT;
     
   protected:
     
     /// comparison criteria for full ordering
-    typedef TypeTraits::Less                                      Less       ;
+    typedef typename TypeTraits::Less                             Less;
     /// comparison criteria ( "less" by "From" value) 
-    typedef TypeTraits::LessByFrom                                Less1      ;
+    typedef typename TypeTraits::LessByFrom                       Less1;
     /// comparison criteria ( "less" by "Weight" value) 
-    typedef TypeTraits::LessByWeight                              Less2      ;
+    typedef typename TypeTraits::LessByWeight                     Less2;
     /// equality criteria   ( "equal" by "To" value)
-    typedef TypeTraits::EqualByTo                                 Equal      ;
+    typedef typename TypeTraits::EqualByTo                        Equal;
     
     /** @struct  Comp1
      *  comparison/ordering criteria using "Weight" and "To" fields
@@ -465,7 +468,7 @@ namespace Relations
       // reserve the container size to avoid the relocations
       m_entries.reserve( inv.i_entries().size() );
       // invert the relations
-      for( InvType::CIT it = inv.begin() ; inv.end() != it ; ++it )
+      for( typename InvType::CIT it = inv.begin() ; inv.end() != it ; ++it )
         { i_relate( it->to() , it->from() , it->weight() ) ;  }
     };
     

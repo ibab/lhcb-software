@@ -1,8 +1,11 @@
-// $Id: IRelationWeighted.h,v 1.4 2002-05-10 12:29:42 ibelyaev Exp $
+// $Id: IRelationWeighted.h,v 1.5 2003-01-17 14:07:01 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/10 12:29:42  ibelyaev
+//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
+//
 // ============================================================================
 #ifndef RELATIONS_IRELATIONWeighted_H
 #define RELATIONS_IRELATIONWeighted_H 1
@@ -34,21 +37,21 @@ public:
   /// the type traits structure
   typedef Relations::RelationWeightedTypeTraits<FROM,TO,WEIGHT> TypeTraits ;
   /// "FROM" traits
-  typedef TypeTraits::FromTypeTraits         FromTypeTraits   ;
+  typedef typename TypeTraits::FromTypeTraits         FromTypeTraits   ;
   /// "TO" traits
-  typedef TypeTraits::ToTypeTraits           ToTypeTraits     ;
+  typedef typename TypeTraits::ToTypeTraits           ToTypeTraits     ;
   /// "WEIGHT" traits
-  typedef TypeTraits::WeightTypeTraits       WeightTypeTraits ;
+  typedef typename TypeTraits::WeightTypeTraits       WeightTypeTraits ;
   /// actual "FROM" type
-  typedef TypeTraits::From                   From             ;
+  typedef typename TypeTraits::From                   From             ;
   /// actual "TO" type
-  typedef TypeTraits::To                     To               ;
+  typedef typename TypeTraits::To                     To               ;
   /// actual "WEIGHT" type
-  typedef TypeTraits::Weight                 Weight           ;
+  typedef typename TypeTraits::Weight                 Weight           ;
   /// iterator type
-  typedef TypeTraits::iterator               iterator         ;
+  typedef typename TypeTraits::iterator               iterator         ;
   /// iterator range
-  typedef TypeTraits::Range                  Range            ;
+  typedef typename TypeTraits::Range                  Range            ;
   /// shortcut to own type
   typedef IRelationWeighted<FROM,TO,WEIGHT>  OwnType          ;
   /// shortcut to "direct" type

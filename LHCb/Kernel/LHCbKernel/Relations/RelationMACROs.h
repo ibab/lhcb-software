@@ -1,8 +1,11 @@
-// $Id: RelationMACROs.h,v 1.3 2002-04-25 08:44:04 ibelyaev Exp $
+// $Id: RelationMACROs.h,v 1.4 2003-01-17 14:07:01 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/25 08:44:04  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.2  2002/04/08 14:26:01  ibelyaev
 //  new version of 'Relations'-subpackage
 //
@@ -48,9 +51,9 @@
  *  The macro need to be used in your *.cpp file 
  */
 #define IMPLEMENT_Relation1D( T1 , T2 )                          \
- typedef Relation1D<##T1##,##T2##>                               \
+ typedef Relation1D<T1,T2>                                       \
                                 Rel1DFrom##T1##To##T2 ;          \
- static const DataObjectFactory<Rel1DFrom##T1##To##T2##>         \
+ static const DataObjectFactory<Rel1DFrom##T1##To##T2>           \
                               s_Rel1DFrom##T1##To##T2 ;          \
  const                 IFactory&Rel1DFrom##T1##To##T2##Factory = \
                               s_Rel1DFrom##T1##To##T2 ;
@@ -78,9 +81,9 @@
  *  The macro need to be used in your *.cpp file 
  */
 #define IMPLEMENT_Relation2D( T1 , T2 )                           \
- typedef Relation2D<##T1##,##T2##>                                \
+ typedef Relation2D<T1,T2>                                        \
                                 Rel2DFrom##T1##To##T2 ;           \
- static const DataObjectFactory<Rel2DFrom##T1##To##T2##>          \
+ static const DataObjectFactory<Rel2DFrom##T1##To##T2>            \
                               s_Rel2DFrom##T1##To##T2 ;           \
  const                 IFactory&Rel2DFrom##T1##To##T2##Factory  = \
                               s_Rel2DFrom##T1##To##T2 ;
@@ -109,9 +112,9 @@
  *  The macro need to be used in your *.cpp file 
  */
 #define IMPLEMENT_RelationW1D( T1 , T2 , W )                               \
- typedef RelationWeighted1D<##T1##,##T2##,##W##>                           \
+ typedef RelationWeighted1D<T1,T2,W>                                       \
                                 RelW1DFrom##T1##To##T2##With##W ;          \
- static const DataObjectFactory<RelW1DFrom##T1##To##T2##With##W##>         \
+ static const DataObjectFactory<RelW1DFrom##T1##To##T2##With##W>           \
                               s_RelW1DFrom##T1##To##T2##With##W ;          \
  const                 IFactory&RelW1DFrom##T1##To##T2##With##W##Factory = \
                               s_RelW1DFrom##T1##To##T2##With##W ;
@@ -139,9 +142,9 @@
  *  The macro need to be used in your *.cpp file 
  */
 #define IMPLEMENT_RelationW2D( T1 , T2 , W )                               \
- typedef RelationWeighted2D<##T1##,##T2##,##W##>                           \
+ typedef RelationWeighted2D<T1,T2,W>                                       \
                                 RelW2DFrom##T1##To##T2##With##W ;          \
- static const DataObjectFactory<RelW2DFrom##T1##To##T2##With##W##>         \
+ static const DataObjectFactory<RelW2DFrom##T1##To##T2##With##W>           \
                               s_RelW2DFrom##T1##To##T2##With##W ;          \
  const                 IFactory&RelW2DFrom##T1##To##T2##With##W##Factory = \
                               s_RelW2DFrom##T1##To##T2##With##W ;

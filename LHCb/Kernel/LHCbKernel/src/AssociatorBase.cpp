@@ -1,8 +1,11 @@
-// $Id: AssociatorBase.cpp,v 1.6 2002-07-15 08:11:06 phicharp Exp $
+// $Id: AssociatorBase.cpp,v 1.7 2003-01-17 14:07:02 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/07/15 08:11:06  phicharp
+// Relations: Associators set the output location of their algorithm
+//
 // Revision 1.5  2002/05/24 18:36:33  ibelyaev
 //  see $LHCBKERNELROOT/doc/release.notes
 //
@@ -139,15 +142,23 @@ StatusCode Relations::AssociatorBase::initialize ()
       << type ()           << "/" 
       << name ()           << "   #properties = " 
       << properties.size() << endreq ;
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
   const int   buffer_size  = 256 ;
   char buffer[buffer_size]       ;
+#endif
   for( Properties::const_reverse_iterator property = properties.rbegin() ;
        properties.rend() != property ; ++property )  
     {
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
       std::fill( buffer , buffer + buffer_size , 0 );
       std::ostrstream ost ( buffer , buffer_size );
-      (*property)->nameAndValueAsStream( ost );
+#else
+      std::ostringstream ost;
+#endif
+     (*property)->nameAndValueAsStream( ost );
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
       ost.freeze();
+#endif
       log << MSG::DEBUG
           << "Property ['Name': Value] = " 
           << ost.str() << endreq ;

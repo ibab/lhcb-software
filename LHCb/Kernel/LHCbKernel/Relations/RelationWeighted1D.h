@@ -1,8 +1,11 @@
-// $Id: RelationWeighted1D.h,v 1.8 2002-07-25 15:32:15 ibelyaev Exp $
+// $Id: RelationWeighted1D.h,v 1.9 2003-01-17 14:07:02 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/07/25 15:32:15  ibelyaev
+//  bug fix in destructors of relation objects
+//
 // Revision 1.7  2002/04/25 15:30:18  ibelyaev
 //  one more attempt to make Bill Gates happy
 //
@@ -49,7 +52,7 @@ public:
   /// short cut for interface
   typedef IRelationWeighted<FROM,TO,WEIGHT>               IBase   ;
   /// short cut for teh actual implementation type 
-  typedef Relations::RelationWeighted<FROM,TO,WEIGHT>     Base    ;
+  typedef typename Relations::RelationWeighted<FROM,TO,WEIGHT>     Base    ;
   
 public:
   
@@ -68,7 +71,7 @@ public:
    *  @param inv relation object to be inverted 
    *  @param flag artificial argument to distinguish from copy constructor 
    */
-  RelationWeighted1D( const IBase::InverseType & inv , int flag ) 
+  RelationWeighted1D( const typename IBase::InverseType & inv , int flag ) 
     : DataObject() , Base( inv , flag ) {};
 
   /// destructor (virtual)
@@ -113,12 +116,13 @@ public:
     // serialize the base class
     DataObject::serialize( s );
     // get all relations 
-    Range range = relations() ;
+    typename RelationWeighted1D<FROM, TO, WEIGHT>::Range range = relations() ;
     // serialize the number of relations 
     unsigned long _size = range.end() - range.begin() ;
     s << _size ;
     // serialise all relations
-    for( iterator entry = range.begin() ; range.end() != entry ; ++entry ) 
+    for (typename RelationWeighted1D<FROM, TO, WEIGHT>::iterator
+           entry = range.begin() ; range.end() != entry ; ++entry ) 
       {    
         SerializeF::serialize 
           ( s , ApplyF::apply ( (*entry).first.first   , this ) );
@@ -150,7 +154,9 @@ public:
     DataObject::serialize( s );
     unsigned long _size ;
     s >> _size ;
-    From from ; Weight weight  ; To to ;
+    typename RelationWeighted1D<FROM, TO, WEIGHT>::From from ;
+    typename RelationWeighted1D<FROM, TO, WEIGHT>::Weight weight  ;
+    typename RelationWeighted1D<FROM, TO, WEIGHT>::To to ;
     while( _size-- > 0 )
       {
         //

@@ -1,8 +1,11 @@
-// $Id: Relation.h,v 1.4 2002-07-25 15:32:13 ibelyaev Exp $
+// $Id: Relation.h,v 1.5 2003-01-17 14:07:01 sponce Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/07/25 15:32:13  ibelyaev
+//  bug fix in destructors of relation objects
+//
 // Revision 1.3  2002/06/18 16:46:40  ibelyaev
 //  bug fix in Relations/Relation.h file
 //
@@ -80,7 +83,7 @@ namespace Relations
     /// shortcut for direct  interface 
     typedef IBase                            IDirect        ;
     /// shortcut for inverse base type 
-    typedef IDirect::InverseType             IInverse       ;
+    typedef typename IDirect::InverseType             IInverse       ;
     
   public:
     
@@ -108,9 +111,9 @@ namespace Relations
       , m_inverse ( 0 )  
     {
       // get all relations 
-      IInverse::Range range = inv.relations() ;
+      typename IInverse::Range range = inv.relations() ;
       // invert all relations 
-      for( IInverse::iterator entry = range.begin() ;
+      for( typename IInverse::iterator entry = range.begin() ;
            range.end() != entry ; ++entry )
         { relate( entry->second , entry->first ); }
     };
@@ -128,11 +131,11 @@ namespace Relations
      *  @param object  smart reference to the object
      *  @return pair of iterators for output relations
      */
-    virtual Range       relations
-    ( const From&       object    ) const
+    virtual typename IRelation<FROM, TO>::Range       relations
+    ( const typename IRelation<FROM, TO>::From&       object    ) const
     {
-      Base::IP ip = m_direct.i_relations( object );
-      return Range( ip.first , ip.second );
+      typename Base::IP ip = m_direct.i_relations( object );
+      return typename IRelation<FROM, TO>::Range( ip.first , ip.second );
     };
     
     /** retrive all relations from ALL objects 
@@ -142,10 +145,10 @@ namespace Relations
      *  @param object  smart reference to the object
      *  @return pair of iterators for output relations
      */
-    virtual Range       relations () const
+    virtual typename IRelation<FROM, TO>::Range       relations () const
     {
-      Base::IP ip = m_direct.i_relations();
-      return Range( ip.first , ip.second );
+      typename Base::IP ip = m_direct.i_relations();
+      return typename IRelation<FROM, TO>::Range( ip.first , ip.second );
     };
     
     /** make the relation between 2 objects
@@ -168,8 +171,8 @@ namespace Relations
      *  @return status code
      */
     virtual  StatusCode relate
-    ( const  From&      object1 ,
-      const  To&        object2 )
+    ( const  typename IRelation<FROM, TO>::From&      object1 ,
+      const  typename IRelation<FROM, TO>::To&        object2 )
     {
       StatusCode sc = m_direct.    i_relate( object1 , object2 ) ;
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -196,8 +199,8 @@ namespace Relations
      *  @return status code
      */
     virtual  StatusCode remove
-    ( const  From&      object1 ,
-      const  To&        object2 )
+    ( const  typename IRelation<FROM, TO>::From&      object1 ,
+      const  typename IRelation<FROM, TO>::To&        object2 )
     { 
       StatusCode sc = m_direct.    i_remove( object1 , object2 ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -223,7 +226,7 @@ namespace Relations
      *  @return status code
      */
     virtual  StatusCode removeFrom
-    ( const  From&      object )
+    ( const  typename IRelation<FROM, TO>::From&      object )
     { 
       StatusCode sc = m_direct.   i_removeFrom ( object ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }
@@ -244,7 +247,7 @@ namespace Relations
      *  @return status code
      */
     virtual  StatusCode removeTo
-    ( const  To&        object )
+    ( const  typename IRelation<FROM, TO>::To&        object )
     { 
       StatusCode sc = m_direct.    i_removeTo   ( object ) ; 
       if( sc.isFailure() || 0 == m_inverse ) { return sc ; }

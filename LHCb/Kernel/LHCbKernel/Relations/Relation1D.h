@@ -1,8 +1,11 @@
-// $Id: Relation1D.h,v 1.8 2002-07-25 15:32:14 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.9 2003-01-17 14:07:01 sponce Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/07/25 15:32:14  ibelyaev
+//  bug fix in destructors of relation objects
+//
 // Revision 1.7  2002/04/25 15:30:18  ibelyaev
 //  one more attempt to make Bill Gates happy
 //
@@ -69,7 +72,7 @@ public:
   /// short cut for interface 
   typedef IRelation<FROM,TO>               IBase          ;
   /// short cut for the actual implementation type 
-  typedef Relations::Relation<FROM,TO>     Base           ;
+  typedef typename Relations::Relation<FROM,TO>     Base           ;
   
 public:
   
@@ -90,7 +93,7 @@ public:
    *  @param flag artificial argument to distinguisch from 
    *  copy constructor
    */
-  Relation1D ( const IBase::InverseType& inv , int flag ) 
+  Relation1D ( const typename IBase::InverseType& inv , int flag ) 
     : DataObject () , Base( inv  , flag ) {};
   
   /// destructor (virtual)
@@ -133,12 +136,12 @@ public:
     // serialize the base class
     DataObject::serialize( s );
     // get all relations 
-    Range range = relations() ;
+    typename IRelation<FROM, TO>::Range range = relations() ;
     // serialize the number of relations 
     unsigned long _size = range.end() - range.begin() ;
     s << _size ;
     // serialise all relations
-    for( iterator entry = range.begin() ;
+    for( typename Relation1D<FROM, TO>::iterator entry = range.begin() ;
          range.end() != entry ; ++entry ) 
       {
         SerializeF::serialize 
@@ -167,7 +170,8 @@ public:
     DataObject::serialize( s );
     unsigned long _size ;
     s >> _size ;
-    From from ; To to ;
+    typename IRelation<FROM, TO>::From from ;
+    typename IRelation<FROM, TO>::To to ;
     while( _size-- > 0 )
       {
         //

@@ -1,8 +1,11 @@
-// $Id: RelationWeighted2D.h,v 1.9 2002-07-25 15:32:15 ibelyaev Exp $
+// $Id: RelationWeighted2D.h,v 1.10 2003-01-17 14:07:02 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/07/25 15:32:15  ibelyaev
+//  bug fix in destructors of relation objects
+//
 // Revision 1.8  2002/04/25 15:30:18  ibelyaev
 //  one more attempt to make Bill Gates happy
 //
@@ -116,12 +119,13 @@ public:
     // serialize the base class 
     DataObject::serialize( s );
     // get all relations 
-    const Range range = relations() ;
+    const typename RelationWeighted2D<FROM,TO,WEIGHT>::Range range=relations();
     // serialize the number of relations 
     unsigned long _size = ( range.end() - range.begin() ) ;
     s << _size ;
     // serialise all relations
-    for( iterator entry = range.begin() ; range.end() != entry ; ++entry ) 
+    for (typename RelationWeighted2D<FROM,TO,WEIGHT>::iterator entry =
+           range.begin(); range.end() != entry ; ++entry ) 
       {    
         SerializeF::serialize 
           ( s , ApplyF::apply ( (*entry).first.first   , this ) );
@@ -153,7 +157,9 @@ public:
     DataObject::serialize( s );
     unsigned long _size ;
     s >> _size ;
-    From from ; Weight weight  ; To to ;
+    typename RelationWeighted2D<FROM,TO,WEIGHT>::From from;
+    typename RelationWeighted2D<FROM,TO,WEIGHT>::Weight weight;
+    typename RelationWeighted2D<FROM,TO,WEIGHT>::To to;
     while( _size-- > 0 )
       {
         //

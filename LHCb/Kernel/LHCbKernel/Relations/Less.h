@@ -1,8 +1,11 @@
-// $Id: Less.h,v 1.5 2002-05-10 13:15:06 ibelyaev Exp $
+// $Id: Less.h,v 1.6 2003-01-17 14:07:01 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/05/10 13:15:06  ibelyaev
+//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
+//
 // Revision 1.4  2002/05/10 12:29:42  ibelyaev
 //  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
 //
@@ -27,6 +30,8 @@
  */
 
 #ifndef WIN32 
+
+namespace std {
 /** @struct less Less.h Relations/Less.h
  *  
  *  Partial specialiations of std::less.
@@ -53,6 +58,7 @@ struct std::less<SmartRef<TYPE> >
 /// remove "const" qualifier
 template<class TYPE> 
 struct std::less<const SmartRef<TYPE> > : public std::less<SmartRef<TYPE> > {};
+}
 
 #else
 

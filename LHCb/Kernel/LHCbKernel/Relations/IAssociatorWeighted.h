@@ -1,8 +1,11 @@
-// $Id: IAssociatorWeighted.h,v 1.8 2002-05-15 14:43:30 phicharp Exp $
+// $Id: IAssociatorWeighted.h,v 1.9 2003-01-17 14:07:01 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/15 14:43:30  phicharp
+// Make name of associators' methods consistent
+//
 // Revision 1.7  2002/05/13 09:48:26  phicharp
 // Add methods associatedFrom() and To() for single objects
 //
@@ -48,20 +51,20 @@ public:
   /// shortcut for "inverse" relations
   typedef IRelationWeighted<TO,FROM,WEIGHT>     InverseType   ;
   /// definition of "From"   type ("FROM"   and "From"   could be different)
-  typedef DirectType::From        From          ;
+  typedef typename DirectType::From        From          ;
   /// definition of "To"     type ("TO"     and "To"     could be different)
-  typedef DirectType::To          To            ;
+  typedef typename DirectType::To          To            ;
   /// definition of "Weight" type ("WEIGHT" and "Weight" could be different)
-  typedef DirectType::Weight      Weight        ;
+  typedef typename DirectType::Weight      Weight        ;
   
   /// another set of shortcuts may be easier to remember (PhC)
   typedef OwnType                             IAsct;
   typedef DirectType                          Table;
-  typedef Table::Range                        ToRange;
-  typedef Table::iterator                     ToIterator;
+  typedef typename Table::Range               ToRange;
+  typedef typename Table::iterator            ToIterator;
   typedef OwnType::InverseType                InvTable;
-  typedef InvTable::Range                     FromRange;
-  typedef InvTable::iterator                  FromIterator;
+  typedef typename InvTable::Range            FromRange;
+  typedef typename InvTable::iterator         FromIterator;
 
 public:
   

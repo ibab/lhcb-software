@@ -1,8 +1,11 @@
-// $Id: AssociatorMACROs.h,v 1.2 2002-04-25 08:44:03 ibelyaev Exp $
+// $Id: AssociatorMACROs.h,v 1.3 2003-01-17 14:07:01 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/25 08:44:03  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.1  2002/04/08 14:26:01  ibelyaev
 //  new version of 'Relations'-subpackage
 //
@@ -44,9 +47,9 @@
  *  The macro need to be used in your *.cpp file 
  */
 #define IMPLEMENT_Associator( T1 , T2 )                    \
- typedef  Associator<##T1##,##T2##>                        \
+ typedef  Associator<T1,T2>                                \
                           AsctFrom##T1##To##T2 ;           \
- static const ToolFactory<AsctFrom##T1##To##T2##>          \
+ static const ToolFactory<AsctFrom##T1##To##T2>            \
                         s_AsctFrom##T1##To##T2 ;           \
  const       IToolFactory&AsctFrom##T1##To##T2##Factory =  \
                         s_AsctFrom##T1##To##T2             ;
@@ -73,7 +76,7 @@
  *  The macro need to be used in your *.cpp file 
  */
 #define  IMPLEMENT_WAssociator( T1 , T2 , W )                       \
- typedef  AssociatorWeighted<##T1##,##T2##,##W##>                   \
+ typedef  AssociatorWeighted<T1,T2,W>                               \
                           AsctwFrom##T1##To##T2##With##W ;          \
  static const ToolFactory<AsctwFrom##T1##To##T2##With##W>           \
                         s_AsctwFrom##T1##To##T2##With##W ;          \
@@ -101,11 +104,11 @@
  *  The macro need to be used in your *.cpp file 
  */
 #define IMPLEMENT_NamedAssociator( Name , T1 , T2 )               \
- typedef Associator<##T1##,##T2##>                                \
+ typedef Associator<T1,T2>                                        \
                           Name##AsctFrom##T1##To##T2 ;            \
    class Name : public    Name##AsctFrom##T1##To##T2              \
    {                                                              \
-    friend ToolFactory<##Name##>;                                 \
+    friend ToolFactory<Name>;                                     \
     protected:                                                    \
     Name                                                          \
      ( const std::string& type   ,                                \
@@ -118,8 +121,8 @@
     Name ( const    Name & );                                     \
     Name & operator= ( const Name & );                            \
    };                                                             \
- static const ToolFactory<##Name##>         s_##Name##Factory  ;  \
- const       IToolFactory&##Name##Factory = s_##Name##Factory  ;
+ static const ToolFactory<Name>         s_##Name##Factory  ;      \
+ const       IToolFactory& Name##Factory = s_##Name##Factory  ;
 
 /** @def DECLARE_NamedAssociator( Name )
  *  
@@ -141,11 +144,11 @@
  *  The macro need to be used in your *.cpp file 
  */
 #define IMPLEMENT_NamedWAssociator( Name , T1 , T2 , W )                \
- typedef AssociatorWeighted<##T1##,##T2##,##W##>                        \
+ typedef AssociatorWeighted<T1,T2,W>                                    \
                           Name##AsctwFrom##T1##To##T2##With##W ;        \
  class Name : public      Name##AsctwFrom##T1##To##T2##With##W          \
    {                                                                    \
-    friend ToolFactory<##Name##>;                                       \
+    friend ToolFactory<Name>;                                           \
     protected:                                                          \
     Name  ( const std::string& type   ,                                 \
             const std::string& name   ,                                 \
@@ -157,8 +160,8 @@
     Name ( const   Name & );                                            \
     Name & operator= ( const Name & );                                  \
    };                                                                   \
- static const ToolFactory<##Name##>         s_##Name##Factory ;         \
- const       IToolFactory&##Name##Factory = s_##Name##Factory ;
+ static const ToolFactory<Name>         s_##Name##Factory ;             \
+ const       IToolFactory& Name##Factory = s_##Name##Factory ;
 
 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: Associator.h,v 1.8 2002-05-24 18:36:31 ibelyaev Exp $
+// $Id: Associator.h,v 1.9 2003-01-17 14:07:01 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/24 18:36:31  ibelyaev
+//  see $LHCBKERNELROOT/doc/release.notes
+//
 // Revision 1.7  2002/05/15 14:43:28  phicharp
 // Make name of associators' methods consistent
 //
@@ -66,7 +69,7 @@ protected:
 public:
   
   /// friend factory for instantiation
-  friend ToolFactory<OwnType>;
+  friend class ToolFactory<Associator<FROM,TO> >;
   
 public:
   
@@ -76,7 +79,7 @@ public:
    *  @see IRelation
    *  @return pointer to "direct" relation table 
    */
-   virtual       DirectType*   direct  ()   
+   virtual typename Associator<FROM, TO>::DirectType*   direct  ()   
   {
     if( 0 == m_direct  ) { i_direct  () ; }
     return m_direct;
@@ -88,7 +91,7 @@ public:
    *  @see IRelation
    *  @return pointer to "direct" relation table 
    */
-  virtual const DirectType*   direct  () const  
+  virtual const typename Associator<FROM, TO>::DirectType*   direct  () const  
   {
     if( 0 == m_direct  ) { i_direct  () ; }
     return m_direct;
@@ -100,7 +103,7 @@ public:
    *  @see IRelation
    *  @return pointer to "inverse" relation table 
    */
-  virtual       InverseType*  inverse ()   
+  virtual typename Associator<FROM, TO>::InverseType*  inverse ()   
   {
     if( 0 == m_inverse ) { i_inverse () ; }
     return m_inverse ;
@@ -112,7 +115,7 @@ public:
    *  @see IRelation
    *  @return pointer to "inverse" relation table 
    */
-  virtual const InverseType*  inverse  () const  
+  virtual const typename Associator<FROM, TO>::InverseType*  inverse  () const  
   {
     if( 0 == m_inverse ) { i_inverse () ; }
     return m_inverse ;
@@ -152,10 +155,10 @@ public:
    *  @return StatusCode Failure it no table was found
    */
   virtual StatusCode rangeFrom
-  ( const From&      from  , 
-    ToRange&         range ) const 
+  ( const typename Associator<FROM, TO>::From& from  , 
+    typename Associator<FROM, TO>::ToRange&    range ) const 
   {
-    const Table* table = direct();
+    const typename Associator<FROM, TO>::Table* table = direct();
     if( 0 == table ) {
       range = ToRange() ;
       return StatusCode::FAILURE;
@@ -173,10 +176,10 @@ public:
    *  @return StatusCode Failure it no table was found
    */
   virtual StatusCode rangeTo
-  ( const To&        to    , 
-    FromRange&       range ) const 
+  ( const typename Associator<FROM, TO>::To&  to    , 
+    typename Associator<FROM, TO>::FromRange& range ) const 
   {
-    const InvTable* table = inverse();
+    const typename Associator<FROM, TO>::InvTable* table = inverse();
     if( 0 == table ) {
       range = InvTable::Range() ;
       return StatusCode::FAILURE;
@@ -192,10 +195,10 @@ public:
    *  It is empty if no table was found
    *  
    */
-  virtual ToRange    rangeFrom
-  ( const From&      from  ) const 
+  virtual typename Associator<FROM, TO>::ToRange rangeFrom
+  ( const typename Associator<FROM, TO>::From& from  ) const 
   {
-    const Table* table = direct();
+    const typename Associator<FROM, TO>::Table* table = direct();
     if (0 == table) {
       return ToRange();
     }
@@ -208,10 +211,10 @@ public:
    *  @return range  range of associated objects. 
    *  It is empty if no table was found
    */
-  virtual FromRange  rangeTo
-  ( const To&        to    ) const 
+  virtual typename Associator<FROM, TO>::FromRange rangeTo
+  ( const typename Associator<FROM, TO>::To& to ) const 
   {
-    const InvTable* table = inverse();
+    const typename Associator<FROM, TO>::InvTable* table = inverse();
     if( 0 == table ) {
       return FromRange() ;
     }
@@ -225,12 +228,12 @@ public:
    *  It is a null pointer if no table was found
    *  
    */
-  virtual To         associatedFrom
-  ( const From&      from  ) const 
+  virtual typename Associator<FROM, TO>::To associatedFrom
+  ( const typename Associator<FROM, TO>::From& from  ) const 
   {
-    const Table* table = direct();
+    const typename Associator<FROM, TO>::Table* table = direct();
     if (0 != table) {
-      ToRange range = table->relations( from );
+      typename Associator<FROM, TO>::ToRange range = table->relations( from );
       if( !range.empty() ) {
         return range.begin()->to();
       }
@@ -245,12 +248,12 @@ public:
    *  It is a null pointer if no table was found
    *  
    */
-  virtual From       associatedTo
-  ( const To&        to  ) const 
+  virtual typename Associator<FROM, TO>::From associatedTo
+  ( const typename Associator<FROM, TO>::To& to  ) const 
   {
-    const InvTable* table = inverse();
+    const typename Associator<FROM, TO>::InvTable* table = inverse();
     if (0 != table) {
-      FromRange range = table->relations( to );
+      typename Associator<FROM, TO>::FromRange range = table->relations( to );
       if( !range.empty() ) {
         return range.begin()->to();
       }
@@ -280,7 +283,8 @@ protected:
     if( 0 != m_direct ) { return StatusCode::SUCCESS                     ; }
     IInterface* obj = object () ;
     if( 0 == obj      ) { return Error("'Object' is not located/built!") ; }
-    SmartIF<DirectType> aux ( DirectType::interfaceID() , obj );
+    SmartIF<typename Associator<FROM, TO>::DirectType> aux
+      ( DirectType::interfaceID() , obj );
     m_direct = aux ;
     if( 0 == m_direct ) { return Error("'DirectType' points to NULL!"  ) ; }
     m_direct ->addRef () ;
@@ -365,8 +369,8 @@ private:
 private:
   
   // relations 
-  mutable DirectType*   m_direct   ;
-  mutable InverseType*  m_inverse  ;
+  mutable typename Associator<FROM, TO>::DirectType*   m_direct   ;
+  mutable typename Associator<FROM, TO>::InverseType*  m_inverse  ;
   
 };
 

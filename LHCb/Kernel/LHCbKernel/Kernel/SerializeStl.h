@@ -1,4 +1,4 @@
-// $Id: SerializeStl.h,v 1.5 2002-04-19 11:16:44 cattanem Exp $
+// $Id: SerializeStl.h,v 1.6 2003-01-17 14:07:01 sponce Exp $
 /*
     Small header file to serialize vectors and lists
     to standard Gaudi StreamBuffer objects
@@ -19,11 +19,13 @@ template <class T> inline
 std::ostream& operator<< ( std::ostream& s, const std::vector<T>& v ) 
 {
   int cnt = 0;
-  for(std::vector<T>::const_iterator i=v.begin(); i!=v.end(); i++, cnt++) {
+  for(typename std::vector<T>::const_iterator i=v.begin();
+      i!=v.end();
+      i++, cnt++) {
     s << "[" << cnt << "]="; 
     s.width(12); 
     s << (*i) << " ";
-    if ( (++cnt)%NUMBERS_PER_LINE == 0 )  s << endmsg;
+    if ((++cnt)%NUMBERS_PER_LINE == 0)  s << std::endl;
   }
   return s;
 }
@@ -33,11 +35,11 @@ template <class T> inline
 std::ostream& operator<< ( std::ostream& s, const std::list<T>& l ) 
 {
   int cnt = 0;
-  for ( std::list<T>::const_iterator i = l.begin(); i != l.end(); i++ )  {
+  for (typename std::list<T>::const_iterator i = l.begin(); i != l.end(); i++) {
     s << "[" << cnt << "]="; 
     s.width(12); 
     s << (*i) << " ";
-    if ( (++cnt)%NUMBERS_PER_LINE == 0 )  s << endmsg;
+    if ( (++cnt)%NUMBERS_PER_LINE == 0 )  s << std::endl;
   }
   return s;
 }
@@ -71,8 +73,4 @@ std::ostream& operator<< ( std::ostream& s, const std::pair<T1,T2>& p )
   return s;
 }
   
-
-
-
-
-#endif LHCBKERNEL_SERIALIZESTL_H
+#endif //LHCBKERNEL_SERIALIZESTL_H

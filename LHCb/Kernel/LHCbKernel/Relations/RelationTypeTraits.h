@@ -1,8 +1,11 @@
-// $Id: RelationTypeTraits.h,v 1.11 2002-10-29 08:53:29 ibelyaev Exp $
+// $Id: RelationTypeTraits.h,v 1.12 2003-01-17 14:07:01 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/10/29 08:53:29  ibelyaev
+//  add the reverse itereators to relations
+//
 // ============================================================================
 #ifndef RELATIONS_RELATIONTYPETRAITS_H
 #define RELATIONS_RELATIONTYPETRAITS_H 1
@@ -132,11 +135,11 @@ namespace Relations
     /** definition of the standard iterator types
      *  @attention the true  @p iterator type is indeed  @p const_iterator !
      */
-    typedef Entries::const_iterator         iterator               ;
-    typedef Entries::const_iterator         const_iterator         ;
-    typedef Entries::const_reference        reference              ;
-    typedef Entries::const_reference        const_reference        ;
-    typedef Entries::const_reverse_iterator const_reverse_iterator ;
+    typedef typename Entries::const_iterator         iterator               ;
+    typedef typename Entries::const_iterator         const_iterator         ;
+    typedef typename Entries::const_reference        reference              ;
+    typedef typename Entries::const_reference        const_reference        ;
+    typedef typename Entries::const_reverse_iterator const_reverse_iterator ;
     
     typedef std::pair<iterator,iterator>    RangeBase ;
     /** @struct Range
@@ -152,11 +155,11 @@ namespace Relations
     {
       /// short cut for own base class
       typedef RangeBase Base;
-      typedef Entries::const_iterator         iterator               ;
-      typedef Entries::const_reference        reference              ;
-      typedef Entries::const_iterator         const_iterator         ;
-      typedef Entries::const_reference        const_reference        ;
-      typedef Entries::const_reverse_iterator const_reverse_iterator ;
+      typedef typename Entries::const_iterator         iterator               ;
+      typedef typename Entries::const_reference        reference              ;
+      typedef typename Entries::const_iterator         const_iterator         ;
+      typedef typename Entries::const_reference        const_reference        ;
+      typedef typename Entries::const_reverse_iterator const_reverse_iterator ;
       /// default constructor
       Range()                                : Base()              {} ;
       /// constructor
@@ -189,8 +192,8 @@ namespace Relations
     /** technical definitions, useful for  for implementation 
      *  ordinary users should not use them 
      */
-    typedef Entries::iterator       IT  ;
-    typedef Entries::const_iterator CIT ;
+    typedef typename Entries::iterator       IT  ;
+    typedef typename Entries::const_iterator CIT ;
     typedef std::pair<IT,IT>        IP  ;
     typedef std::pair<CIT,CIT>      CIP ;
 

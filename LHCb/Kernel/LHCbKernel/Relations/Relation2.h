@@ -1,8 +1,11 @@
-// $Id: Relation2.h,v 1.3 2002-07-25 15:32:14 ibelyaev Exp $
+// $Id: Relation2.h,v 1.4 2003-01-17 14:07:01 sponce Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/07/25 15:32:14  ibelyaev
+//  bug fix in destructors of relation objects
+//
 // Revision 1.2  2002/04/25 08:44:03  ibelyaev
 //  bug fix for Win2K
 //
@@ -75,9 +78,9 @@ namespace Relations
     /// shortcut for inverse base type 
     typedef InvBase                          Inverse        ;
     /// shortcut for direct subinterface 
-    typedef IBase::DirectType                DirectType     ;
+    typedef typename IBase::DirectType       DirectType     ;
     /// shortcut for inverse subinterface 
-    typedef IBase::InverseType               InverseType     ;
+    typedef typename IBase::InverseType      InverseType     ;
     
   public:
     
@@ -146,7 +149,7 @@ namespace Relations
       else if( IBase::interfaceID()             == id )
         { *ret = static_cast<IBase*>             ( this ); }
       else if( IBase::DirectType::interfaceID() == id )
-        { *ret = static_cast<IBase::DirectType*> ( this ); }
+        { *ret = static_cast<typename IBase::DirectType*> ( this ); }
       else { return Direct::queryInterface( id , ret ) ; } //  RETURN !!!
       ///
       addRef() ;

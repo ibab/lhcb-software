@@ -1,8 +1,11 @@
-// $Id: RelationBase.h,v 1.6 2002-07-25 15:32:14 ibelyaev Exp $
+// $Id: RelationBase.h,v 1.7 2003-01-17 14:07:01 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/07/25 15:32:14  ibelyaev
+//  bug fix in destructors of relation objects
+//
 // Revision 1.5  2002/04/26 09:42:38  ibelyaev
 //  reduce number of warnings for Microsoft  compiler
 //
@@ -56,32 +59,32 @@ namespace Relations
     /// shortcut to type traits structure 
     typedef Relations::RelationTypeTraits<FROM,TO> TypeTraits  ;
     /// actual "FROM" type 
-    typedef TypeTraits::From                       From        ;
+    typedef typename TypeTraits::From                       From        ;
     /// actual "TO"   type 
-    typedef TypeTraits::To                         To          ;  
+    typedef typename TypeTraits::To                         To          ;  
     /// Entry type  
-    typedef TypeTraits::Entry                      Entry       ;
+    typedef typename TypeTraits::Entry                      Entry       ;
     /// container  type  
-    typedef TypeTraits::Entries                    Entries     ;
+    typedef typename TypeTraits::Entries                    Entries     ;
     /// iterator type (internal)
-    typedef Entries::iterator                      iterator    ;
+    typedef typename Entries::iterator                      iterator    ;
     /// iterator type (internal)   
-    typedef TypeTraits::IT                         IT          ;
+    typedef typename TypeTraits::IT                         IT          ;
     /// iterator pair type type (internal)   
-    typedef TypeTraits::IP                         IP          ;
+    typedef typename TypeTraits::IP                         IP          ;
     /// const iterator type (internal)   
-    typedef TypeTraits::CIT                        CIT         ;
+    typedef typename TypeTraits::CIT                        CIT         ;
     /// size_type 
-    typedef Entries::size_type                     size_type   ;
+    typedef typename Entries::size_type                     size_type   ;
     
   protected: 
     
     /// comparison criteria for sorting 
-    typedef TypeTraits::Less                       Less        ;
+    typedef typename TypeTraits::Less                       Less        ;
     /// comparison criteria ( "less" by "From" field )
-    typedef TypeTraits::LessByFrom                 Less1       ;
+    typedef typename TypeTraits::LessByFrom                 Less1       ;
     /// equality criteria   ( "equal" by "To" field ) 
-    typedef TypeTraits::EqualByTo                  Equal       ;
+    typedef typename TypeTraits::EqualByTo                  Equal       ;
     
   public:
     
@@ -286,11 +289,11 @@ namespace Relations
       , m_equal   ()
     {
       // get all relations from "inv"
-      InvType::IP ip = inv.i_relations() ;
+      typename InvType::IP ip = inv.i_relations() ;
       // reserve the space for relations
       m_entries.reserve( ip.second - ip.first  );
       // invert all relations    
-      for( InvType::CIT it = ip.first ; ip.second != it ; ++it ) 
+      for( typename InvType::CIT it = ip.first ; ip.second != it ; ++it ) 
         { i_relate( it->to() , it->from() ) ;  }
     };
     
