@@ -121,11 +121,11 @@ const double EvtLambdaP_BarGamma::g0(double gqm, int n){
 
 
 const double EvtLambdaP_BarGamma::constA(){
-    return _GF/sqrt(2) * _e0 / (8 * EvtConst::pi*EvtConst::pi) * 2 * _c7Eff * _mb * _VtbVtsStar
+    return _GF/sqrt(2.) * _e0 / (8 * EvtConst::pi*EvtConst::pi) * 2 * _c7Eff * _mb * _VtbVtsStar
         * (f0(_f1) - f0(_f2));
 }
 
 const double EvtLambdaP_BarGamma::constB(){
-    return _GF/sqrt(2) * _e0 / (8 * EvtConst::pi*EvtConst::pi) * 2 * _c7Eff * _mb * _VtbVtsStar
+    return _GF/sqrt(2.) * _e0 / (8 * EvtConst::pi*EvtConst::pi) * 2 * _c7Eff * _mb * _VtbVtsStar
         * (g0(_g1) - (_mLambdab - _mLambda0) / (_mLambdab + _mLambda0) * g0(_g2));
 }

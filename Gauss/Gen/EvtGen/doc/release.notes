@@ -1,6 +1,10 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2004-07-09 - Patrick Robbe
+ - EvtLambdaP_BarGamma.cpp : use sqrt(2.) instead of sqrt(2) for windows
+   compilation.
+
 !================= EvtGen v5r4 ====================================
 ! 2004-06-08 - Patrick Robbe
  - EvtDDalitz.cpp : correct Complex amplitude for D0 -> Ks pi pi
