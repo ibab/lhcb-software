@@ -28,6 +28,9 @@ ApplicationMgr.DLLs += { "VeloAssociators", "CaloEvent","MuonAssociators" };
 ApplicationMgr.DLLs += { "CaloAssociators", "CaloRec" };
 ApplicationMgr.DLLs += { "TrAssociators", "L0Calo", "L1VeloTrack" };
 
+// L0 trigger
+ApplicationMgr.DLLs += { "L0DU" };
+
 // Physics packages
 ApplicationMgr.DLLs += { "GlobalReco", "CaloTools" };
 ApplicationMgr.DLLs += { "DaVinciTools" };
