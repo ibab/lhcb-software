@@ -1,4 +1,4 @@
-// $Id: DataStoreLoadAgent.cpp,v 1.1 2005-03-18 15:37:09 cattanem Exp $
+// $Id: DataStoreLoadAgent.cpp,v 1.2 2005-03-18 15:47:08 cattanem Exp $
 // Include files 
 
 #include <iostream>
@@ -10,7 +10,7 @@
 #include "DetDesc/IDetectorElement.h"
 
 // local
-#include "DataStoreLoadAgent.h"
+#include "DetDesc/DataStoreLoadAgent.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DataStoreLoadAgent
