@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.59 2004-10-26 17:51:42 ibelyaev Exp $
+! $Id: release.notes,v 1.60 2004-10-26 20:35:58 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,20 @@
 ! Responsible : Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2004-10-26 - Vanya BELYAEV
+ - src/CaloCluster2TrackAlg.h, src/CaloCluster2TrackAlg.cpp
+ - src/CaloHypo2TrackAlg.h, src/CaloHypo2TrackAlg.cpp
+     update in properties for better dealing with track types 
+   it is done with the helper algorithm base CaloTrackAlg,
+   which allow to select/reject a certain track categories 
+   according to 
+      - general criteria (unique?error?),
+      - track categories ( is'*'?)
+      - algorithms ('*'?)
+- options/BremMatch.opts
+- options/Brem2Match.opts
+   update the configuratin files for new property names 
 
 ! 2004-10-26 - Vanya BELYAEV
  - introduce FAST "photon" matching of trigger track (TrgTrach) with 

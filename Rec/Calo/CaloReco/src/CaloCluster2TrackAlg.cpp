@@ -1,8 +1,8 @@
-// $Id: CaloCluster2TrackAlg.cpp,v 1.4 2004-10-26 17:51:42 ibelyaev Exp $
+// $Id: CaloCluster2TrackAlg.cpp,v 1.5 2004-10-26 20:35:58 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -55,39 +55,28 @@ const        IAlgFactory&CaloCluster2TrackAlgFactory = s_Factory ;
 CaloCluster2TrackAlg::CaloCluster2TrackAlg
 ( const std::string& name   ,
   ISvcLocator*       svcloc )
-  : CaloAlgorithm ( name , svcloc ) 
+  : CaloTrackAlg  ( name , svcloc ) 
   , m_tracks      ( TrStoredTrackLocation::Default )
   , m_cut         ( 100        )
-  //
-  , m_unique      ( false      )  // match ALL tracks, including clones 
-  // 
-  , m_error       ( false      )  // skip error tracks    
-  , m_forward     ( true       )   
-  , m_matched     ( true       )
-  , m_seed        ( true       )
-  , m_velo        ( false      )  // skip velo     tracks 
-  , m_veloTT      ( false      )  // skip veloTT   tracks 
-  , m_veloBack    ( false      )  // skip veloBack tracks 
-  , m_downstream  ( true       )
   //
   , m_matchType   ( "CaloTrackMatchPhoton" ) 
   , m_matchName   ( ""         ) 
   , m_match       ( 0          ) 
 {
-  declareProperty ( "Tracks"      , m_tracks    ) ;
-  declareProperty ( "MatchType"   , m_matchType ) ;
-  declareProperty ( "MatchName"   , m_matchName ) ;
-  declareProperty ( "Cut"         , m_cut       ) ;
+  declareProperty ( "Tracks"         , m_tracks    ) ;
+  declareProperty ( "MatchType"      , m_matchType ) ;
+  declareProperty ( "MatchName"      , m_matchName ) ;
+  declareProperty ( "Cut"            , m_cut       ) ;
   // 
-  declareProperty ( "UseUnique"   , m_unique    ) ;
-  declareProperty ( "UseError"    , m_error     ) ;
-  declareProperty ( "UseForward"  , m_forward   ) ;
-  declareProperty ( "UseMatched"  , m_matched   ) ;
-  declareProperty ( "UseVelo"     , m_velo      ) ;
-  declareProperty ( "UseVeloTT"   , m_veloTT    ) ;
-  declareProperty ( "UseVeloBack" , m_veloBack  ) ;
-  declareProperty ( "UseSeed"     , m_seed      ) ;
-  declareProperty ( "UseDownstream" , m_downstream  ) ;
+  setProperty     ( "UseUniqueOnly"  , "true"      ) ;
+  setProperty     ( "UseErrorAlso"   , "false"     ) ;
+  //
+  setProperty     ( "isLong"         , "true"      ) ;
+  setProperty     ( "isUpstream"     , "false"     ) ;
+  setProperty     ( "isDownstream"   , "true"      ) ;
+  setProperty     ( "isVelotrack"    , "false"     ) ;
+  setProperty     ( "isBackward"     , "false"     ) ;
+  setProperty     ( "isTtrack"       , "true"      ) ;
   //
   // set the approproate default value for input  data 
   setInputData    ( CaloClusterLocation::  Ecal ) ;
@@ -97,8 +86,7 @@ CaloCluster2TrackAlg::CaloCluster2TrackAlg
 // ============================================================================
 
 // ============================================================================
-/** destructor
- */
+/// destructor
 // ============================================================================
 CaloCluster2TrackAlg::~CaloCluster2TrackAlg() {};
 // ============================================================================
@@ -114,30 +102,14 @@ CaloCluster2TrackAlg::~CaloCluster2TrackAlg() {};
 StatusCode CaloCluster2TrackAlg::initialize() 
 {
   // initialize the base class 
-  StatusCode sc = CaloAlgorithm::initialize();
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class CaloAlgorithm",sc);}
+  StatusCode sc = CaloTrackAlg::initialize();
+  if ( sc.isFailure() ) { return sc ; } 
   
   // retrieve the tool from Tool service 
   m_match = tool<ICaloTrackMatch>( m_matchType , m_matchName );
-  if( 0 == m_match ) { return StatusCode::FAILURE ;}
+  if ( 0 == m_match ) { return StatusCode::FAILURE ;}
   
   return StatusCode::SUCCESS;
-};
-// ============================================================================
-
-// ============================================================================
-/** standard algorithm finalization 
- *  @see CaloAlgorithm
- *  @see     Algorithm
- *  @see    IAlgorithm
- *  @return status code 
- */
-// ============================================================================
-StatusCode CaloCluster2TrackAlg::finalize() 
-{
-  /// finalize the base class 
-  return CaloAlgorithm::finalize();
 };
 // ============================================================================
 
@@ -184,56 +156,30 @@ StatusCode CaloCluster2TrackAlg::execute()
         tracks->end() != track ; ++track )
   {  
     // skip NULLs 
-    if ( 0 == *track             ) { continue ; }             /// CONTINUE  
+    if ( 0 == *track       ) { continue ; }                // CONTINUE  
     
-    // use only unique  tracks ? 
-    if (  m_unique   && 1 != (*track)->unique   () ) { continue ; }
-    
-    // use 'error'   tracks ?
-    if ( !m_error    && 0 != (*track)->errorFlag() ) { continue ; }
-    
-    // use 'forward'   tracks ?
-    if ( !m_forward  && 1 == (*track)->forward  () ) { continue ; }
-    
-    // use 'match'     tracks ?
-    if ( !m_matched  && 1 == (*track)->match    () ) { continue ; }
-    
-    // use 'seed'      tracks ?
-    if ( !m_seed     && 1 == (*track)->seed     () ) { continue ; }
-    
-    // use 'velo'      tracks ?
-    if ( !m_velo     && 1 == (*track)->velo     () ) { continue ; }      
-    
-    // use 'veloTT'    tracks ?
-    if ( !m_veloTT   && 1 == (*track)->veloTT   () ) { continue ; }      
-    
-    // use 'veloBack'    tracks ?
-    if ( !m_veloBack && 1 == (*track)->veloBack () ) { continue ; }      
-    
-    // use 'downstream'  tracks ? (new naming convention!)
-    if ( !m_downstream && 1 == (*track)->isDownstream () ) { continue ; }
+    // use track ? 
+    if ( ! use( *track )   ) { continue ; }                // CONTINUE 
     
     // loop over all clusters 
     for ( Clusters::const_iterator cluster = clusters->begin() ; 
           clusters->end() != cluster ; ++cluster )
     {
       // skip NUULs 
-      if ( 0 == *cluster       ) { continue ; }             /// CONTINUE 
+      if ( 0 == *cluster  ) { continue ; }               // CONTINUE 
       
       // perform matching
       double chi2 = 0 ;
-      StatusCode sc = 
-        m_match->match( &((*cluster)->position()) , *track , chi2 );
+      StatusCode sc = m_match -> 
+        match( &((*cluster)->position()) , *track , chi2 );
       
       if ( sc.isFailure() )
       {
-        Warning("Cluster/Track: matching failure, skip the pair", sc ) ;
+        Warning ( "Cluster/Track: matching failure, skip the pair", sc ) ;
         continue ;                                       /// CONTINUIE 
       }
       else if ( 0 <= chi2 && chi2 <=  m_cut ) 
-      { 
-        table->relate( *cluster , *track , chi2 ); 
-      }
+      { table->relate( *cluster , *track , chi2 ); }
       
     }; // end of loop over all clusters 
   }; // end of loop over all  tracks

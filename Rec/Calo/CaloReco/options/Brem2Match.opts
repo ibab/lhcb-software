@@ -1,8 +1,11 @@
-// $Id: Brem2Match.opts,v 1.1 2004-10-25 12:10:13 ibelyaev Exp $ 
+// $Id: Brem2Match.opts,v 1.2 2004-10-26 20:35:58 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/10/25 12:10:13  ibelyaev
+//  add new tool
+//
 // ============================================================================
 
 /** @file 
@@ -24,19 +27,14 @@ Brem2Match.MatchType = "CaloTrackMatchBrem2"   ;
 Brem2Match.Cut       = 1000.0                  ;
 // The default value 
 // Brem2Match.Tracks      = *TrStoredTrackLocation::Default* ;
-// The default value 
-// Brem2Match.UseUnique   = false ; 
-// The default value 
-// Brem2Match.UseError    = false ; 
-// The default value 
-// Brem2Match.UseForward  = true  ;
-// the default value 
-// Brem2Match.UseMatched  = true  ;
-Brem2Match.UseDownstream = false  ;
-Brem2Match.UseVeloTT     = false  ;
-Brem2Match.UseVeloBack   = false  ;
-Brem2Match.UseVelo       = false  ;
-Brem2Match.UseSeed       = false  ; 
+//
+Brem2Match.IsLong       = true  ;
+Brem2Match.IsUpstream   = true  ;
+Brem2Match.IsDownstream = true  ;
+Brem2Match.IsVeloTrack  = false ;
+Brem2Match.IsBackward   = false ;
+Brem2Match.IsTtrack     = false ;
+
 
 // ============================================================================
 // The END 

@@ -1,8 +1,8 @@
-// $Id: CaloCluster2TrackAlg.h,v 1.3 2004-10-26 17:51:42 ibelyaev Exp $
+// $Id: CaloCluster2TrackAlg.h,v 1.4 2004-10-26 20:35:58 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef CALOREC_CALOCluster2TrackAlg_H 
 #define CALOREC_CALOCluster2TrackAlg_H 1
@@ -13,9 +13,9 @@
 // ============================================================================
 #include <string>
 // ============================================================================
-// from CaloKernel
+// local 
 // ============================================================================
-#include "CaloKernel/CaloAlgorithm.h"
+#include "CaloTrackAlg.h"
 // ============================================================================
 // forward declarations 
 // ============================================================================
@@ -45,7 +45,7 @@ class ICaloTrackMatch;   // CaloInterfaces
  *  @date   02/11/2001
  */
 
-class CaloCluster2TrackAlg : public CaloAlgorithm 
+class CaloCluster2TrackAlg : public CaloTrackAlg 
 {
   /// friend factory for instantiation
   friend class AlgFactory<CaloCluster2TrackAlg>;
@@ -67,14 +67,6 @@ public:
    *  @return status code 
    */
   virtual StatusCode execute   ();   
-  
-  /** standard algorithm finalization 
-   *  @see CaloAlgorithm
-   *  @see     Algorithm
-   *  @see    IAlgorithm
-   *  @return status code 
-   */
-  virtual StatusCode finalize  ();   
   
 protected:
   
@@ -108,28 +100,6 @@ private:
   /// cut value 
   double             m_cut       ;
 
-  // track flags to be used
-  
-  // use *ONLY* 'unique' tracks 
-  bool               m_unique    ;
-  
-  // use 'error' tracks  
-  bool               m_error     ;
-  // use 'forward' tracks  
-  bool               m_forward   ;
-  // use  'match'  tracks
-  bool               m_matched   ;
-  // use  'seed'   tracks
-  bool               m_seed      ;
-  // use  'velo'   tracks
-  bool               m_velo      ;
-  // use  'veloTT' tracks
-  bool               m_veloTT    ;
-  // use  'veloBack' tracks
-  bool               m_veloBack  ;
-  // use  'downstream' tracks (new naming convention!)
-  bool               m_downstream  ;
-  
   // matching tool 
   std::string        m_matchType ;
   std::string        m_matchName ;

@@ -1,19 +1,33 @@
-// $Id: CaloHypo2TrackAlg.cpp,v 1.3 2004-03-08 13:45:25 cattanem Exp $
+// $Id: CaloHypo2TrackAlg.cpp,v 1.4 2004-10-26 20:35:58 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
+// $Log: not supported by cvs2svn $:
+// ============================================================================
 // Include files
+// ============================================================================
+// Relations 
+// ============================================================================
 #include "Relations/RelationWeighted2D.h"
+// ============================================================================
 // from Gaudi
+// ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h" 
+// ============================================================================
 // Event 
+// ============================================================================
 #include "Event/CaloHypo.h"
 #include "Event/TrStoredTrack.h"
+// ============================================================================
 // CaloInterfaces 
+// ============================================================================
 #include "CaloInterfaces/ICaloTrackMatch.h"
+// ============================================================================
 // local
+// ============================================================================
 #include "CaloHypo2TrackAlg.h"
+// ============================================================================
 
 // ============================================================================
 /** @file
@@ -43,22 +57,9 @@ const        IAlgFactory&CaloHypo2TrackAlgFactory = s_Factory ;
 CaloHypo2TrackAlg::CaloHypo2TrackAlg
 ( const std::string& name   ,
   ISvcLocator*       svcloc )
-  : CaloAlgorithm ( name , svcloc ) 
+  : CaloTrackAlg  ( name , svcloc ) 
   , m_tracks      ( TrStoredTrackLocation::Default )
   , m_cut         ( 1.e+30     )
-  //
-  , m_unique      ( false      )  // match ALL tracks, including clones 
-  // 
-  // use 'error'   tracks  
-  , m_error       ( false      )
-  //
-  , m_forward     ( true       )   
-  , m_matched     ( true       )
-  , m_seed        ( true       )
-  , m_velo        ( false      )  // skip velo tracks 
-  , m_veloTT      ( false      )  // skip veloTT tracks 
-  , m_veloBack    ( false      )  // skip veloBack tracks 
-  , m_downstream  ( true       )
   //
   , m_matchType   ( "SomeType" ) 
   , m_matchName   ( ""         ) 
@@ -69,15 +70,17 @@ CaloHypo2TrackAlg::CaloHypo2TrackAlg
   declareProperty( "MatchName"  , m_matchName  ) ;
   declareProperty( "Cut"        , m_cut        ) ;
   // 
-  declareProperty( "UseUnique"   , m_unique    ) ;
-  declareProperty( "UseError"    , m_error     ) ;
-  declareProperty( "UseForward"  , m_forward   ) ;
-  declareProperty( "UseMatched"  , m_matched   ) ;
-  declareProperty( "UseVelo"     , m_velo      ) ;
-  declareProperty( "UseVeloTT"   , m_veloTT    ) ;
-  declareProperty( "UseVeloBack" , m_veloBack  ) ;
-  declareProperty( "UseSeed"     , m_seed      ) ;
-  declareProperty( "UseDownstream" , m_downstream  ) ;
+  // 'electron'-match configuration 
+  setProperty     ( "UseUniqueOnly"  , "true"      ) ;
+  setProperty     ( "UseErrorAlso"   , "false"     ) ;
+  //
+  setProperty     ( "isLong"         , "true"      ) ;
+  setProperty     ( "isUpstream"     , "false"     ) ;
+  setProperty     ( "isDownstream"   , "true"      ) ;
+  setProperty     ( "isVelotrack"    , "false"     ) ;
+  setProperty     ( "isBackward"     , "false"     ) ;
+  setProperty     ( "isTtrack"       , "true"      ) ;
+  //
 };
 // ============================================================================
 
@@ -99,9 +102,9 @@ CaloHypo2TrackAlg::~CaloHypo2TrackAlg() {};
 StatusCode CaloHypo2TrackAlg::initialize() 
 {
   // initialize the base class 
-  StatusCode sc = CaloAlgorithm::initialize();
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class CaloAlgorithm",sc);}
+  StatusCode sc = CaloTrackAlg::initialize();
+  if ( sc.isFailure() ) 
+  { return Error("Could not initialize the base class CaloAlgorithm",sc);}
   
   // retrieve the tool from Tool service 
   m_match = tool<ICaloTrackMatch>( m_matchType , m_matchName );
@@ -129,69 +132,44 @@ StatusCode CaloHypo2TrackAlg::execute()
   
   // get Hypos from Transient Store  
   Hypos*    hypos    = get<Hypos>    ( inputData() ) ;
-  if( 0 ==  hypos              )     { return StatusCode::FAILURE ; }
+  if ( 0 ==  hypos              )     { return StatusCode::FAILURE ; }
   
   // get tracks   from Transient Store  
   Tracks*   tracks   = get<Tracks>   ( m_tracks    );
-  if( 0 ==  tracks             )     { return StatusCode::FAILURE ; }
+  if ( 0 ==  tracks             )     { return StatusCode::FAILURE ; }
   
   // create relation table and register it in the store
   Table*    table = new Table();
   StatusCode sc = put( table , outputData() );
-  if( sc.isFailure()           )     { return StatusCode::FAILURE ; }
+  if ( sc.isFailure()           )     { return StatusCode::FAILURE ; }
   
-  if( 0 == tracks   -> size () )
-  { Warning("Empty container of tracks   '" + m_tracks    + "'"); }
-  if( 0 == hypos    -> size () )
-  { Warning("Empty container of hypos    '" + inputData() + "'"); }
+  if ( 0 == tracks   -> size () )
+  { Warning ( "Empty container of Tracks " , StatusCode::SUCCESS ) ; }
+  if ( 0 == hypos    -> size () )
+  { Warning ( "Empty container of Hypos  " , StatusCode::SUCCESS ) ; }
   
   if( 0 == tracks   -> size () || 
       0 == hypos    -> size () )     { return StatusCode::SUCCESS ; }
   
   // loop over tracks  
-  for( Tracks::const_iterator track = tracks->begin() ; 
-       tracks->end() != track ; ++track )
+  for ( Tracks::const_iterator track = tracks->begin() ; 
+        tracks->end() != track ; ++track )
   {  
     // skip NULLS 
-    if( 0 == *track             ) { continue ; }             /// CONTINUE
+    if ( 0 == *track            ) { continue ; }             // CONTINUE
     
-    
-    // use only unique  tracks ? 
-    if(  m_unique   && 1 != (*track)->unique    () ) { continue ; }
-    
-    // use 'error'   tracks ?
-    if( !m_error    && 0 != (*track)->errorFlag () ) { continue ; }
-    
-    // use 'forward'   tracks ?
-    if( !m_forward  && 1 == (*track)->forward   () ) { continue ; }
-    
-    // use 'match'     tracks ?
-    if( !m_matched  && 1 == (*track)->match     () ) { continue ; }
-    
-    // use 'seed'      tracks ?
-    if( !m_seed     && 1 == (*track)->seed      () ) { continue ; }
-    
-    // use 'velo'      tracks ?
-    if( !m_velo     && 1 == (*track)->velo      () ) { continue ; }      
-    
-    // use 'veloTT'    tracks ?
-    if( !m_veloTT   && 1 == (*track)->veloTT    () ) { continue ; }      
-    
-    // use 'veloBack'    tracks ?
-    if( !m_veloBack && 1 == (*track)->veloBack  () ) { continue ; }      
-    
-    // use 'downstream'  tracks ? (new naming convention!)
-    if( !m_downstream && 1 == (*track)->isDownstream  () ) { continue ; }
+    // use track ?
+    if ( ! use ( *track )       ) { continue ; }             // CONTINUE 
     
     // loop over hypos 
-    for( Hypos::const_iterator hypo = hypos->begin() ; 
-         hypos->end() != hypo ; ++hypo )
+    for ( Hypos::const_iterator hypo = hypos->begin() ; 
+          hypos->end() != hypo ; ++hypo )
     {
       // skip NUULs 
-      if( 0 == *hypo          ) { continue ; }             /// CONTINUE 
+      if ( 0 == *hypo          ) { continue ; }             /// CONTINUE 
       
       // valid hypo ? 
-      if( 0 == (*hypo)->position() )
+      if ( 0 == (*hypo)->position() )
       {
         Warning("CaloPosition* points to NULL!");
         continue ;                                      /// CONTINUE 
@@ -199,20 +177,23 @@ StatusCode CaloHypo2TrackAlg::execute()
       
       // perform the matching
       double chi2 = 0 ;
-      StatusCode sc = 
-        m_match->match( (*hypo)->position() , *track , chi2 );
+      StatusCode sc = m_match -> 
+        match( (*hypo)->position() , *track , chi2 );
       
-      if( sc.isFailure() )
+      if ( sc.isFailure() )
       {
         Warning("Hypo/Track: matching failure, skip pair" );
         continue ;
       }
       else if ( 0 <= chi2 && chi2 <=  m_cut ) 
-      { table->relate( *hypo , *track , chi2 ); }
+      { table -> relate( *hypo , *track , chi2 ); }
       
     }; // loop over all hypos 
     
   }; // loop over all tracks 
+  
+  if ( msgLevel( MSG::DEBUG ) ) 
+  { debug() << "Entries in the table " << table->relations().size() << endreq ; }
   
   return StatusCode::SUCCESS ;
 };
