@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.11 2004-10-28 16:35:20 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.12 2004-10-28 18:29:22 abuckley Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 
@@ -162,6 +162,31 @@ private: // data
   Histos1DByDetectorAndRecType m_MarkovSegPdPointError;
   Histos1DByDetectorAndRecType m_RingTrackRecCategory;
   Histos1DByDetectorAndRecType m_RingTrackOriginInVeloRecCategory;
+
+
+  // Backtrace monitoring
+  // for exit points
+  Histos1DByDetectorAndRecType m_normalBacktracePointErrorMag;
+  Histos1DByDetectorAndRecType m_meanBacktracePointErrorMag;
+  Histos1DByDetectorAndRecType m_normalBacktracePointErrorX;
+  Histos1DByDetectorAndRecType m_meanBacktracePointErrorX;
+  Histos1DByDetectorAndRecType m_normalBacktracePointErrorY;
+  Histos1DByDetectorAndRecType m_meanBacktracePointErrorY;
+  Histos2DByDetectorAndRecType m_normalBacktracePointError;
+  Histos2DByDetectorAndRecType m_meanBacktracePointError;
+  // and for slopes
+  Histos1DByDetectorAndRecType m_normalBacktraceSlopeErrorMag;
+  Histos1DByDetectorAndRecType m_meanBacktraceSlopeErrorMag;
+  Histos1DByDetectorAndRecType m_normalBacktraceSlopeErrorX;
+  Histos1DByDetectorAndRecType m_meanBacktraceSlopeErrorX;
+  Histos1DByDetectorAndRecType m_normalBacktraceSlopeErrorY;
+  Histos1DByDetectorAndRecType m_meanBacktraceSlopeErrorY;
+  Histos2DByDetectorAndRecType m_normalBacktraceSlopeError;
+  Histos2DByDetectorAndRecType m_meanBacktraceSlopeError;
+  // and for angles
+  Histos1DByDetectorAndRecType m_normalBacktraceAngleError;
+  Histos1DByDetectorAndRecType m_meanBacktraceAngleError;
+
 
   /// Ring track origin points
   Histos1DByDetectorAndRecType m_RingTrackOriginZ;
