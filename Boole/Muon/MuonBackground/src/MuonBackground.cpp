@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.8 2003-04-16 08:51:33 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.9 2003-05-16 17:40:34 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -879,9 +879,12 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
     
     for(int i=0;i<m_gaps;i++){      
       int gap=allgap/max;      
-      if(gap==1)gapHitTmp.push_back(m_gaps-i-1);      
+      if(gap>1)gap=1;      
+      if(gap==1)gapHitTmp.push_back(m_gaps-i-1);
       allgap=allgap-gap*max;      
-      // msg<<MSG::INFO<<"allgap "<<gap<<" "<<gapHitTmp.back()<<max<<endreq;
+      if(gap==1)
+        msg<<MSG::DEBUG<<"allgap "<<gap<<" "<<gapHitTmp.back()<<" "<<
+          max<<endreq;
       max=max/2;      
     }
     std::vector<int> gapHit;
