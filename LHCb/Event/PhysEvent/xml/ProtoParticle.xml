@@ -15,12 +15,24 @@
         access="PUBLIC"
        />
        <typedef
+        type="std::pair&lt;int,double&gt;"
+        def="PIDInfoPair"
+        desc="Pair with info for combined pIDs: PDG id number and estimator"
+        access="PUBLIC"
+       />
+       <typedef
         type="std::vector&lt;std::pair&lt;int,double&gt; &gt;"
         def="PIDDetVector"
         desc="Vector of information for separate detectors pIDs"
         access="PUBLIC"
        />
-       <base name="KeyedObject&lt;int&gt;"/>
+        <typedef
+        type="std::pair&lt;int,double&gt;"
+        def="PIDDetPair"
+        desc="Pair with info for separate detectors pIDs: technique and corresponding value which meaning depend on the technique"
+        access="PUBLIC"
+       />
+      <base name="KeyedObject&lt;int&gt;"/>
        <import name="CLHEP/Vector/LorentzVector"/>
        <import name="CLHEP/Geometry/Point3D"/>       
        <import name="Event/ParticleID" soft="TRUE"/>
@@ -31,7 +43,7 @@
        <enum
         desc="Store a detector specific particleID type or technique for which the likelyhood or discriminating value is then stored"
         name="detectorPID"
-        value="Unknown=-1, RichElectron, RichMuon, RichPion, RichKaon, RichProton, MuonYes, MuonNo, CaloTrackMatch, CaloEMatch"
+        value="NoPID=0, RichElectron, RichMuon, RichPion, RichKaon, RichProton, MuonMuon, CaloTrackMatch, CaloEMatch"
         access="PUBLIC"
        />
        <location
@@ -82,9 +94,13 @@
         desc="Bit packing to store combination of which info (if any) is stored in pIDInfo"
         type="bitfield"
        >
-         <bitfield name="richBit" length='1' desc="Rich combined flag"/>
-         <bitfield name="muonBit" length='1' desc="Muon combined flag"/>
-         <bitfield name="caloeBit" length='1' desc="Calo Electron combined flag"/>
+         <bitfield name="noneBit" length='1' desc="No particleID available"/>
+         <bitfield name="richBit" length='1' desc="Rich is available"/>
+         <bitfield name="richCombined" length='1' desc="Rich combined flag"/>
+         <bitfield name="muonBit" length='1' desc="Muon is available"/>
+         <bitfield name="muonCombined" length='1' desc="Muon combined flag"/>
+         <bitfield name="caloeBit" length='1' desc="Calo Electron is available"/>
+         <bitfield name="caloeCombined" length='1' desc="Calo Electron combined flag"/>
        </attribute>
        <method
         name="pIDList"
