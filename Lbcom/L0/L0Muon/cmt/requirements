@@ -7,7 +7,7 @@ branches src doc options
 include_dirs $(L0MUONROOT)
 
 use DetDesc   v6*  Det
-use LHCbEvent v10* Event
+use LHCbEvent v9* Event
 use CLHEP v*
 
 library L0Muon ../src/*.cpp
@@ -20,7 +20,6 @@ apply_pattern packageShr
 private
 
 apply_pattern package_Cshlibflags  
-include_dirs ${L0MUONROOT}/src
 
 
 
