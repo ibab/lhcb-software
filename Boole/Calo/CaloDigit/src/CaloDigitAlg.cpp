@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.1.1.1 2002-11-04 10:29:51 ocallot Exp $
+// $Id: CaloDigitAlg.cpp,v 1.2 2002-11-18 12:21:29 ocallot Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -67,32 +67,32 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   declareProperty("PhotoElectronPerMeV", m_pePerMeV        ) ;
 
   if ( "SpdDigit" == name ) {
-    setDetData(       "/dd/Structure/LHCb/Spd"    );
-    setInputData(     MCCaloDigitLocation::Spd    );
-    setOutputData(    "Raw/Spd/AllDigits"         );
+    setDetData(       "/dd/Structure/LHCb/Spd"   );
+    setInputData(     MCCaloDigitLocation::Spd   );
+    setOutputData(    CaloDigitLocation::FullSpd );
     m_inputPrevData   = "Prev/"+MCCaloDigitLocation::Spd;
-    m_pePerMeV        = 40.;
+    m_pePerMeV        = 30.;
     m_coherentNoise   = 0.0;
     m_incoherentNoise = 0.0;
     m_gainError       = 0.0;
   } else if ( "PrsDigit" == name ) {
-    setDetData(       "/dd/Structure/LHCb/Prs"    );
-    setInputData(     MCCaloDigitLocation::Prs    );
-    setOutputData(    "Raw/Prs/AllDigits"         );
+    setDetData(       "/dd/Structure/LHCb/Prs"   );
+    setInputData(     MCCaloDigitLocation::Prs   );
+    setOutputData(    CaloDigitLocation::FullPrs );
     m_inputPrevData   = "Prev/"+MCCaloDigitLocation::Prs;
-    m_pePerMeV        = 40.;
+    m_pePerMeV        = 30.;
     m_coherentNoise   = 0.0;
     m_incoherentNoise = 1.0;
   } else if ( "EcalDigit" == name ) {
-    setDetData(       "/dd/Structure/LHCb/Ecal"    );
-    setInputData(     MCCaloDigitLocation::Ecal    );
-    setOutputData(    "Raw/Ecal/AllDigits"         );
+    setDetData(       "/dd/Structure/LHCb/Ecal"   );
+    setInputData(     MCCaloDigitLocation::Ecal   );
+    setOutputData(    CaloDigitLocation::FullEcal );
     m_pePerMeV        = 0.;
     m_pedShift        = 0.40;
   } else if ( "HcalDigit" == name ) {
-    setDetData(       "/dd/Structure/LHCb/Hcal"    );
-    setInputData(     MCCaloDigitLocation::Hcal    );
-    setOutputData(    "Raw/Hcal/AllDigits"         );
+    setDetData(       "/dd/Structure/LHCb/Hcal"   );
+    setInputData(     MCCaloDigitLocation::Hcal   );
+    setOutputData(    CaloDigitLocation::FullEcal );
     m_pePerMeV        = 0.;
     m_pedShift        = 0.40;
   }

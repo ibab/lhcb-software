@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.1.1.1 2002-11-04 10:29:51 ocallot Exp $
+// $Id: CaloZSupAlg.cpp,v 1.2 2002-11-18 12:21:29 ocallot Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -59,34 +59,32 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
 
   //=== Default values according to the name of the algorithm !
   if ( "SpdZSup" == name ) {
-    setDetData(        "/dd/Structure/LHCb/Spd"  );
-    setInputData(      "Raw/Spd/AllDigits"       );
-    setOutputData(     CaloDigitLocation::Spd    );
+    setDetData(        "/dd/Structure/LHCb/Spd"   );
+    setInputData(      CaloDigitLocation::FullSpd );
+    setOutputData(     CaloDigitLocation::Spd     );
     m_inputMCData    = MCCaloDigitLocation::Spd;
     m_zsupThreshold  = 1;
   } else if ( "PrsZSup" == name ) {
-    setDetData(        "/dd/Structure/LHCb/Prs"  );
-    setInputData(      "Raw/Prs/AllDigits"       );
-    setOutputData(     CaloDigitLocation::Prs    );
+    setDetData(        "/dd/Structure/LHCb/Prs"   );
+    setInputData(      CaloDigitLocation::FullPrs );
+    setOutputData(     CaloDigitLocation::Prs     );
     m_inputMCData    = MCCaloDigitLocation::Prs;
     m_tagData        = CaloDigitLocation::Spd;
     m_zsupThreshold  = 15;
   } else if ( "EcalZSup" == name ) {
-    setDetData(        "/dd/Structure/LHCb/Ecal"  );
-    setInputData(      "Raw/Ecal/AllDigits"       );
-    setOutputData(     CaloDigitLocation::Ecal    );
+    setDetData(        "/dd/Structure/LHCb/Ecal"   );
+    setInputData(      CaloDigitLocation::FullEcal );
+    setOutputData(     CaloDigitLocation::Ecal     );
     m_inputMCData    = MCCaloDigitLocation::Ecal;
     m_zsupMethod     = "2D";
     m_zsupThreshold  = 20;
   } else if ( "HcalZSup" == name ) {
-    setDetData(        "/dd/Structure/LHCb/Hcal"  );
-    setInputData(      "Raw/Hcal/AllDigits"       );
-    setOutputData(     CaloDigitLocation::Hcal    );
+    setDetData(        "/dd/Structure/LHCb/Hcal"   );
+    setInputData(      CaloDigitLocation::FullHcal );
+    setOutputData(     CaloDigitLocation::Hcal     );
     m_inputMCData    = MCCaloDigitLocation::Hcal;
     m_zsupThreshold  = 4;
   }
-
-
 };
 
 //=============================================================================
@@ -229,7 +227,6 @@ StatusCode CaloZSupAlg::execute() {
       }
     }
   }
-
 
   //** write tagged data as MCCaloDigit
 
