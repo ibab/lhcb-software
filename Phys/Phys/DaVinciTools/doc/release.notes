@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.35 2002-10-29 10:55:53 gcorti Exp $
+! $Id: release.notes,v 1.36 2002-10-30 13:19:47 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
+!=========================== DaVinciTools v6r0 2002-10-30 ===================
 ! 2002-10-29 - Gloria Corti
  - Comment temporarly the use of setIsResonance(true) in ParticleStuffer
    and LagrangeMassVertexFitter because of consequent missing step of
