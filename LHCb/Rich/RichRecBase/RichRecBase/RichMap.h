@@ -9,13 +9,13 @@
 // Include files
 #ifdef WIN32
 #include "GaudiKernel/HashTable.h"   // GaudiKernel (only for Visual-C Win32)
-#include "RichRecKernel/RichHash.h"  // LHCbKernel  (only for Visual-C Win32)
+#include "RichRecBase/RichHash.h"    // LHCbKernel  (only for Visual-C Win32)
 #include <vector>
 #else
 #include <map>                       // STD & STL   (except for Visual-C Win32)
 #endif
 
-/** @class RichMap RichMap.h RichRecKernel/RichMap.h
+/** @class RichMap RichMap.h RichRecBase/RichMap.h
  *
  *  An auxillary class to hide underlying
  *  std::map implementation for Microsoft Visual-C++ (Win32)
