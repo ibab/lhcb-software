@@ -1,8 +1,5 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlDetectorElementCnv.cpp,v 1.4 2001-01-25 16:28:49 mato Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlDetectorElementCnv.cpp,v 1.5 2001-01-29 13:59:51 ibelyaev Exp $
 
-/// Include files
-#include "DetDesc/XmlDetectorElementCnv.h"
-#include "DetDesc/XmlCnvException.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -12,27 +9,25 @@
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/GenericLink.h"
-
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
-
 #include "GaudiKernel/MsgStream.h"
-
 #include "GaudiKernel/RegistryEntry.h"
-#include "DetDesc/DetectorElement.h"
 
+#include "DetDesc/DetectorElement.h"
 #include "DetDesc/IUserSax8BitDocHandler.h"
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvSvc.h"
 #include "DetDesc/XmlCnvAttrList.h"
+#include "DetDesc/XmlCnvException.h"
 
-
-#include "DetDesc/GeometryInfo.h"
+/// local 
+#include "XmlDetectorElementCnv.h"
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.4 2001-01-25 16:28:49 mato Exp $";
+///static const char* rcsid = "$Id: XmlDetectorElementCnv.cpp,v 1.5 2001-01-29 13:59:51 ibelyaev Exp $";
 
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service
@@ -226,10 +221,8 @@ void XmlDetectorElementCnv::startElement( const char* const name,
       if( 0 == getUserSaxDocHandler() && CLID_DetectorElement == m_objRcpt->clID() ) {
         // We're converter for this concrete XML tag, generic DetectorElement
         // We need to create our transient representation
-        m_dataObj = new DetectorElement( m_objRcpt->objectName(),
-                                         dataProvider(),
-                                         msgSvc()
-                                       );
+        m_dataObj = new DetectorElement( m_objRcpt->objectName() );
+                                      
         log << MSG::DEBUG << "Normal generic detector element conversion" << endreq;
       } else {
         /// We are called by user defined XML detector element converter
@@ -416,8 +409,8 @@ void XmlDetectorElementCnv::endElement( const char* const name ) {
     } catch ( ... ) {
       log << MSG::ERROR << "Bad cast exception caught" << endreq;
     }
-
-    IGeometryInfo*   gInfo = 0;
+    
+    const IGeometryInfo*   gInfo = 0;
     std::string logVolName  = m_lvname;
     std::string support     = m_support;
     std::string replicaPath = m_rpath;
@@ -429,84 +422,61 @@ void XmlDetectorElementCnv::endElement( const char* const name ) {
     log << MSG::DEBUG << "GI support: " << support     << endreq;
     log << MSG::DEBUG << "GI rpath  : " << replicaPath << endreq;
     log << MSG::DEBUG << "GI npath  : " << namePath    << endreq;
-
-    try                                                                    {
-      if( !logVolName.empty() )                                            {
-        if( !support.empty() )                                             {
-          
-          ILVolume::ReplicaPath repPath;
-          
-          if( !replicaPath.empty() )                                       {
-            // Replica path has the format "1/3/7/2"
-            const char*  rp = replicaPath.c_str();
-            char         buf[512]; char* replica = buf;
-            bool         wasColon = false; unsigned int i = 0;
-            
-            do                                                             {
-              wasColon = false;
-              if( *rp == '/')                                              {
-                wasColon = true;
-              }
-              else if( isdigit(*rp) )                                      {
-                *replica = *rp;
-                replica++; i++;
-              }
-              
-              if( true == wasColon || *(rp + 1) == '\0' )                  {
-                if( i > 0 )                                                {
-                  *replica = '\0';
-                  i = (unsigned int)atol( buf );
-                  repPath.push_back( i );
-                  
-                  log << MSG::DEBUG << "Found replica number "
-                    << repPath.back() << endreq;
-                  replica = buf; i = 0;
-                }
-              }
-              rp++;
-            }while( *rp != 0 );
-            
-            gInfo = new GeometryInfo(de,logVolName,support,repPath,
-                                     dataProvider(),msgSvc());
-          } else if( !namePath.empty() )                                   {
-            gInfo = new GeometryInfo(de,logVolName,support,namePath,
-                                     dataProvider(),msgSvc());
-          } else                                                           {
-            log << MSG::ERROR
-              << "File " << m_objRcpt->dbName()
-              << ": " << aname
-              << " Missing \"rpath\" or \"npath\" element, please correct XML data\n"
-              << " Either remove support element or provide proper rpath or npath"
-              << endreq;
-
-            StatusCode stcod;
-            stcod.setCode( CORRUPTED_DATA );  
-            throw XmlCnvException( " Corrupted XML data", stcod );
-          }
-        } else                                                             {
-          // Orphan
-          gInfo = new GeometryInfo( de, logVolName,
-                                    dataProvider(), msgSvc() );
-        }
-      } else                                                               {
-        // Ghost
-        gInfo = new GeometryInfo( de, dataProvider(), msgSvc() );
-      }
-    }
-    catch( XmlCnvException& )                                              {
-      throw;
-    }
-    catch( ... )                                                           {
-      log << MSG::ERROR << "What is going on here?\a" << endreq;
-    }
-
-    if( de != 0 )                                                          {
-      de->setGeometry( gInfo );
-    }
-
     
+    try{
+      /// ghost? 
+      if      ( logVolName  .empty() ) { gInfo = de->createGeometryInfo()                                 ; }  /// ghost
+      else if ( support     .empty() ) { gInfo = de->createGeometryInfo( logVolName )                     ; }  /// orphan 
+      else if ( !namePath   .empty() ) { gInfo = de->createGeometryInfo( logVolName , support , namePath ); }
+      else if ( !replicaPath.empty() ) 
+	{ 
+	  ILVolume::ReplicaPath repPath;	    
+	  // Replica path has the format "1/3/7/2"
+	  const char*  rp = replicaPath.c_str();
+	  char         buf[512]; char* replica = buf;
+	  bool         wasColon = false; unsigned int i = 0;
+	  
+	  do{
+	    wasColon = false;
+	    if     ( *rp == '/') { wasColon = true; }
+	    else if( isdigit(*rp) )
+	      {
+		*replica = *rp;
+		replica++; i++;
+	      }
+	    if( true == wasColon || *(rp + 1) == '\0' )                  
+	      {
+		if( i > 0 )                                                
+		  {
+		    *replica = '\0';
+		    i = (unsigned int)atol( buf );
+		    repPath.push_back( i );
+		    
+		    log << MSG::DEBUG << "Found replica number "
+			<< repPath.back() << endreq;
+		    replica = buf; i = 0;
+		  }
+	      }
+	    rp++;
+	  } while( *rp != 0 ); 
+	  ///
+	  gInfo = de->createGeometryInfo(logVolName,support,repPath );	      
+	  ///
+	}
+      else                                                           
+	{
+	  log << MSG::ERROR << "File " << m_objRcpt->dbName() << ": " << aname
+	      << " Missing \"rpath\" or \"npath\" element, please correct XML data\n"
+	      << " Either remove support element or provide proper rpath or npath"
+	      << endreq;
+          StatusCode st( CORRUPTED_DATA );
+	  throw XmlCnvException( " Corrupted XML data", st );	    
+	}
+    }
+    catch( XmlCnvException& )   {  throw;  }
+    catch( ... )                {  log << MSG::FATAL << "What is going on here?\a" << endreq; }
   }
-
+  
   // At this point we have to call UserSax8BitDocHandler uEndElement callback
   // if we have registered one
   try {

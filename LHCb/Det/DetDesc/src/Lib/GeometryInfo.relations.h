@@ -3,6 +3,7 @@
 
 
 
+#include "GeometryInfo.h"
 
 ///
 ///  implementation of some inline methods from GeometryInfo class

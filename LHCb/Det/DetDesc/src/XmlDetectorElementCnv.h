@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlDetectorElementCnv.h,v 1.1.1.1 2000-11-23 13:44:44 ranjard Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlDetectorElementCnv.h,v 1.1 2001-01-29 13:59:51 ibelyaev Exp $
 #ifndef DETDESC_XMLCNVSVC_XMLDECNV_H
 #define DETDESC_XMLCNVSVC_XMLDECNV_H
 

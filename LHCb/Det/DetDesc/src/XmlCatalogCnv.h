@@ -1,4 +1,4 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlCatalogCnv.h,v 1.3 2001-01-25 15:36:44 ibelyaev Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCatalogCnv.h,v 1.1 2001-01-29 13:59:50 ibelyaev Exp $
 #ifndef DETDESC_XMLCNVSVC_XMLCATALOGCNV_H
 #define DETDESC_XMLCNVSVC_XMLCATALOGCNV_H
 

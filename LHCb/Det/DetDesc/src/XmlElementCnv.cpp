@@ -1,6 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlElementCnv.cpp,v 1.5 2001-01-25 14:19:55 ibelyaev Exp $
-#include "DetDesc/XmlElementCnv.h"
-#include "DetDesc/XmlCnvException.h"
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlElementCnv.cpp,v 1.6 2001-01-29 13:59:51 ibelyaev Exp $
 
 // STD & STL Headers
 #include <cstdlib>
@@ -9,30 +7,28 @@
 #include <vector>
 #include <map>
 
-// Headers
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/DataObject.h"
-
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
-
 #include "GaudiKernel/MsgStream.h"
-
 #include "GaudiKernel/RegistryEntry.h"
 
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvSvc.h"
-
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
+#include "DetDesc/XmlCnvException.h"
 
+/// local 
+#include "XmlElementCnv.h"
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service

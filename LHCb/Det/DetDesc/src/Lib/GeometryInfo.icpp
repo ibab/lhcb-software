@@ -1,0 +1,32 @@
+#ifndef         __DETDESC_GEOMETRYINFO_GEOMETRYINFO_ICC__
+#define         __DETDESC_GEOMETRYINFO_GEOMETRYINFO_ICC__
+
+//
+//
+//
+
+#include "GeometryInfo.h" 
+#include "GeometryInfoException.h"
+
+/// assertion 
+inline void GeometryInfo::Assert( bool assertion ,  const std::string& name ) const
+{ if( !assertion ) { throw GeometryInfoException( name , this ); } };
+/// assertion 
+inline void GeometryInfo::Assert( bool assertion ,  const std::string& name , const GaudiException& ge ) const
+{ if( !assertion ) { throw GeometryInfoException( name , ge , this ); } };
+// 
+inline bool GeometryInfo::isInsideDaughter( const HepPoint3D& GlobalPoint ) const 
+{
+  if( !childLoaded() || loadChildren().isFailure() ) { return false; } // could not load the daughters
+  IGeometryInfo::IGIChildrens::const_iterator it = 
+    std::find_if( childBegin() , childEnd  () , IGeometryInfo_isInside( GlobalPoint ) ) ;  
+  return ( ( childEnd() == it ) ? false : true );
+};
+//
+
+
+
+#endif   //     __DETDESC_GEOMETRYINFO_GEOMETRYINFO_ICC__
+
+
+

@@ -2,87 +2,43 @@
 #define    __DETDESC_LVOLUME_ICPP__  1 
 
 
+#include <string>
 
-///
-///
+
+
 ///  implementation of inline methods from LVolume class 
-///
-///
-
-
-///
 ///  from IValidity Interface:
-///
-
 inline bool LVolume::isValid ()                 { return validSince() <           validTill() ;};
 inline bool LVolume::isValid ( const ITime& t ) { return validSince() < t &&  t < validTill() ;};
-
-///
-///
 ///
 inline const  ISolid*      LVolume::solid       () const { return m_lv_solid        ;};
 inline const  std::string& LVolume::materialName() const { return m_lv_materialName ;}; 
-inline const  Material*    LVolume::material    ()
+inline const  Material*    LVolume::material    () const
 {       
   if ( 0 != m_lv_material ) { return m_lv_material; }
-  ///
   m_lv_material = findMaterial() ; 
-  ///
   Assert( 0 != m_lv_material , "LVolume::material(), could not locate material name="+materialName() );
-  ///
   return m_lv_material;
 };
-
-
-///
 /// number of daughters 
-///
-
 inline ILVolume::ReplicaType  LVolume::noPVolumes() const { return m_lv_pvolumes.size(); }  
-///
-
-///
 /// get daughter by index 
-///
-
 inline IPVolume*  LVolume::operator[]( const ILVolume::ReplicaType& index ) const
 { return ( ( index < noPVolumes() ) ? *(pvBegin()+index) : 0 );  };
-///
-
-///
 /// get daughter by name 
-///
-
 inline IPVolume*  LVolume::operator[]( const std::string&           name  ) const
 { 
   ILVolume::PVolumes::const_iterator pvi = std::find_if( pvBegin() , pvEnd()   , IPVolume_byName( name ) );
   return ( ( pvi != pvEnd() ) ? *pvi : 0 ); 
 };
-/// 
-
-///
 /// get daughter by index 
-///
-
 inline IPVolume* LVolume::pvolume( const ILVolume::ReplicaType& index ) const { return (*this)[ index ]; }; 
-
-///
 /// get daughter by name 
-/// 
 inline IPVolume* LVolume::pvolume( const std::string&           name  ) const { return (*this)[ name  ]; }; 
-
-///
 /// translate replica path into PVolume path 
-///
-
 inline StatusCode LVolume::traverse ( const ILVolume::ReplicaPath&  path , ILVolume::PVolumePath& pVolumePath )
 { return traverse( path.begin() , path.end() , pVolumePath ); }
-///
-
-///
 /// translate replicapath into PVolume path 
-///
-
 inline StatusCode LVolume::traverse ( ILVolume::ReplicaPath::const_iterator pathBegin,
 				      ILVolume::ReplicaPath::const_iterator pathEnd  ,
 				      ILVolume::PVolumePath&                pVolumePath )
@@ -108,23 +64,9 @@ inline StatusCode LVolume::traverse ( ILVolume::ReplicaPath::const_iterator path
   pVolumePath.push_back( pv );  
   return pv->lvolume()->traverse( pathBegin+1 , pathEnd , pVolumePath ); 
 };
-
-
-///
-///
 /// the notorious "isInside" method
-///
-
 inline bool LVolume::isInside ( const HepPoint3D& LocalPoint ) const { return solid()->isInside( LocalPoint ); };
-
 ///
-///
-///
-
-///
-///
-///
-
 inline StatusCode LVolume::belongsTo( const HepPoint3D&        LocalPoint ,
 				      const int                Level      , 
 				      ILVolume::PVolumePath&   pVolumePath )
@@ -145,12 +87,7 @@ inline StatusCode LVolume::belongsTo( const HepPoint3D&        LocalPoint ,
   pVolumePath.push_back( pv ) ;
   return pv->lvolume()->belongsTo( pv->matrix()*LocalPoint , Level - 1 , pVolumePath );
 };
-
-
 ///
-///
-///
-
 inline StatusCode LVolume::belongsTo( const HepPoint3D&        localPoint ,
 				      const int                level      , 
 				      ILVolume::ReplicaPath&   replicaPath )
@@ -173,12 +110,7 @@ inline StatusCode LVolume::belongsTo( const HepPoint3D&        localPoint ,
   replicaPath.push_back( replica ) ;
   return pv->lvolume()->belongsTo( pv->matrix() * localPoint , level - 1 , replicaPath );
 };
-
-
-///
 /// pritout to std::ostream 
-///
-
 inline std::ostream& LVolume::printOut( std::ostream& os ) const
 {
   os << " LVolume:: name=" << fullpath    () 
@@ -188,12 +120,12 @@ inline std::ostream& LVolume::printOut( std::ostream& os ) const
      << "(" ;
   std::copy( pvBegin() , pvEnd(), std::ostream_iterator<IPVolume*>(os,";") );
   os << ")";
-  //
+  ///
+  if( !sdName().empty() ) { os <<  "Sensitivity=" << sdName() ; } 
+  if( !mfName().empty() ) { os <<  "Magnetic="    << mfName() ; } 
+  ///
   return os; 
 };
-
-///
-///
 /// reset to the initial state
 inline const ILVolume* LVolume::reset () const 
 {
@@ -211,40 +143,21 @@ inline const ILVolume* LVolume::reset () const
   return this;
 };
 ///
-///
-///
-
-
-//
-// pure internal technical 
-//
 inline ILVolume::PVolumes::const_iterator LVolume::pvBegin() const { return m_lv_pvolumes.begin(); };
 inline ILVolume::PVolumes::iterator       LVolume::pvBegin()       { return m_lv_pvolumes.begin(); };
 inline ILVolume::PVolumes::const_iterator LVolume::pvEnd  () const { return m_lv_pvolumes.end  (); };  
 inline ILVolume::PVolumes::iterator       LVolume::pvEnd  ()       { return m_lv_pvolumes.end  (); };  
-
-///
 /// assertion 
-///
-
 inline void LVolume::Assert( bool assertion , const std::string& name , const StatusCode& sc ) const
 { if( !assertion ) throw LVolume::LVolumeException( name, this , sc ); };
-
-///
 /// assertion 
-///
-
 inline void LVolume::Assert( bool assertion , const std::string& name , const GaudiException& Exception , const StatusCode& sc ) const
 { if( !assertion ) throw LVolume::LVolumeException( name, Exception , this , sc ); };
-
-
-///
-///
-/// get the message service 
-inline IMessageSvc*      LVolume::msgSvc() const { return m_lv_messSvc; } 
-
-///
-///
 ///
 
 #endif  // __DETDESC_LVOLUME_ICPP__ 
+
+
+
+
+

@@ -2,6 +2,7 @@
 #define    __DETDESC_GEOMETRYINFO_GEOMETRYINFO_METHODS_H__ 1 
 
 
+#include "GeometryInfo.h"
 
 ///
 ///  implementation of some methods from GeometryInfo class 

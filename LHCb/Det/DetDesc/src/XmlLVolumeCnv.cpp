@@ -1,7 +1,4 @@
-/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlLVolumeCnv.cpp,v 1.5 2001-01-25 15:36:44 ibelyaev Exp $
-
-#include "DetDesc/XmlLVolumeCnv.h"
-#include "DetDesc/XmlCnvException.h"
+/// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlLVolumeCnv.cpp,v 1.6 2001-01-29 13:59:52 ibelyaev Exp $
 
 /// Include files
 #include <cstdlib>
@@ -19,27 +16,26 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
-
 #include "GaudiKernel/MsgStream.h"
-
 #include "GaudiKernel/RegistryEntry.h"
 
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvSvc.h"
-
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
-
 #include "DetDesc/LVolume.h"
-#include "DetDesc/PVolume.h"
-
 #include "DetDesc/Solids.h"
+#include "DetDesc/XmlCnvException.h"
+
+
+///local
+#include "XmlLVolumeCnv.h"
 
 
 /// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.5 2001-01-25 15:36:44 ibelyaev Exp $";
+///static const char* rcsid = "$Id: XmlLVolumeCnv.cpp,v 1.6 2001-01-29 13:59:52 ibelyaev Exp $";
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service
@@ -210,9 +206,9 @@ void XmlLVolumeCnv::startElement( const char* const name,
       
       // Create the corresponding transient version of the logical volume
       if( CLID_LVolume == clsID )                                    {
-        // We move this to endElement() callback because we need to
-        // collect XML data for LVolume() constructor
-        //m_dataObj = new LVolume();
+        /// We move this to endElement() callback because we need to
+        /// collect XML data for LVolume() constructor
+        ///m_dataObj = new LVolume();
       }
       else                                                                 {
         log << MSG::ERROR       << "Found invalid class ID " << clsID
@@ -748,8 +744,7 @@ void XmlLVolumeCnv::endElement( const char* const name )                   {
 
   if( true == m_tagRead && "logvol" == tagName )                           {
     m_tagRead = false;
-    LVolume* vol = new LVolume( m_volName, m_solid, m_materialName,
-                                dataProvider(), msgSvc());
+    LVolume* vol = new LVolume( m_volName, m_solid, m_materialName );
     
     //  Add all of the physical volumes
     std::vector<PVitem>::iterator pvit;

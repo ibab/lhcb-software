@@ -1,6 +1,21 @@
 package DetDesc
 package manager : Vanya Belyaev
 
+! 20010129 - Vanya Belyaev 
+   - LVolume:
+      o remove IDataProvider, IMessageSvc* from constructor
+      o add ISvcLocator* as data member, initialize it in constructor fro Gaudi::svcLocator()
+      o update for change in ILVoluem interface (backward compatible)
+   - PVolume:
+      o Now this class is ABSOLUTELY internal. User shoudl use only interface.
+   - all PVolume.* files are moved into src/Lib, where they are used by LVolume.cpp 
+   - all CONCRETE Xml*Cnv.h are moved from DetDesc directrory 
+   - GeometryInfo
+      o Now this class is ABSOLUTELY internal, user shoudl use only interface 
+   - all GeometryInfo.* fileas are moved into src/Lib directory, where hey are used by DetectorElement.cpp
+   - Xml converters updated to incorporate these changes 
+     
+!===========================================================================
 ! 20010125 - Vanya Belyaev 
    Package polishing:
    - small modification to reduce a little bit some compiler warnings 
@@ -13,6 +28,7 @@ package manager : Vanya Belyaev
    - rename CLID_LogicalVolume into CLID_LVolume for better mnemonics 
    - a lot of unnesessary "#include" directives removed from header files. 
  
+!===========================================================================
 ! 20010125 - Pere Mato
   - Fixed some bugs in Material/Element converters that didn't comply to the latest DTD.
   - Fixed some bugs in the calculation of radiation and absorption lenght.
@@ -25,6 +41,7 @@ package manager : Vanya Belyaev
     - default class ID for detelem
     - elementref can now have a fractionmass in addition to natoms attribute
 
+!===========================================================================
 ! 20010122 - DetDesc 
  Vanya Belyaev 
   new functionality: 

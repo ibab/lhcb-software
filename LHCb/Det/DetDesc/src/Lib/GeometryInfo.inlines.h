@@ -4,45 +4,19 @@
 
 
 
+#include "GeometryInfo.h"
+#include "GeometryInfo.icpp"
 
 
 ///
-/// implementation of some inline methods from GeometryInfo class
-///
-/// Author: Vanya Belyaev
-///
-
-//
-//
-//
-
 inline MsgStream& operator<<( MsgStream& os , const GeometryInfo& gi ) { return gi.printOut(os); };
-
-//
-//
-//
-
+///
 inline MsgStream& operator<<( MsgStream& os , const GeometryInfo* gi ) 
 { return  ( (0 == gi) ?  (os << "GeometryInfo* points to NULL") : gi->printOut(os) ); };
-
-//
-
-//
-//   inline functions , public, "native" :-)) 
-//
-
+///
 inline bool GeometryInfo::hasLVolume () const { return m_gi_has_logical; };
 inline bool GeometryInfo::hasSupport () const { return m_gi_has_support; } 
-
-//
-//
-//
-
-
-//
-//
-//
-
+///
 inline const HepTransform3D& GeometryInfo::matrix()  const 
 {
   ///
@@ -60,11 +34,7 @@ inline const HepTransform3D& GeometryInfo::matrix()  const
   ///  
   return *m_gi_matrix;
 };
-
 //
-//
-//
-
 inline const HepTransform3D& GeometryInfo::matrixInv() const 
 {
   if( 0 != m_gi_matrixInv )   { return *m_gi_matrixInv             ; }      // matrix is calculated
@@ -72,23 +42,11 @@ inline const HepTransform3D& GeometryInfo::matrixInv() const
   if( 0 == m_gi_matrixInv )   { m_gi_matrixInv = new HepTransform3D; }      // default value 
   return *m_gi_matrixInv;
 };
-
-//
-//
-//
-
+///
 inline HepPoint3D GeometryInfo::toLocal ( const HepPoint3D& GlobalPoint ) const { return ( matrix   () * GlobalPoint ); };
-
-//
-//
-//
-
+///
 inline HepPoint3D GeometryInfo::toGlobal( const HepPoint3D& localPoint  ) const { return ( matrixInv() * localPoint  ); };
-
-//
-//
-//
-
+///
 inline bool GeometryInfo::isInside ( const HepPoint3D& globalPoint )  const
 {
   //
@@ -96,17 +54,9 @@ inline bool GeometryInfo::isInside ( const HepPoint3D& globalPoint )  const
   //
   return  isInsideDaughter( globalPoint ) ;
 };       
-
-//
-//
-//
-
+///
 inline const std::string&  GeometryInfo::lvolumeName() const { return m_gi_lvolumeName; };
-
-//
-//
-//
-
+///
 inline ILVolume* GeometryInfo::lvolume    () const  
 {
   if( !hasLVolume() )     { return  0              ; }     
@@ -123,10 +73,6 @@ inline ILVolume* GeometryInfo::lvolume    () const
   ///
   return m_gi_lvolume; 
 }; 
-
-
-//
-//
 // look for daughter to which the given point belongs to 
 inline std::string GeometryInfo::belongsToPath( const HepPoint3D& globalPoint )
 {
@@ -138,10 +84,6 @@ inline std::string GeometryInfo::belongsToPath( const HepPoint3D& globalPoint )
   //
   return ( childEnd() == it ) ? std::string("") : *(m_gi_childrensNames.begin()+(it-childBegin())); 
 };
-
-
-//
-//
 // look for daughter to which the given point belongs to 
 inline IGeometryInfo* GeometryInfo::belongsTo ( const HepPoint3D& globalPoint )
 {
@@ -153,22 +95,15 @@ inline IGeometryInfo* GeometryInfo::belongsTo ( const HepPoint3D& globalPoint )
   //
   return ( childEnd() == it ? 0 : *it );   
 };
-
-//
-//
-//
 // be careful! use first "isInside" method! 
 inline std::string    GeometryInfo::belongsToPath( const HepPoint3D& globalPoint , 
 						   const int         level       )
 {
-  if( 0 == level ){  return dataDir()->fullpath(); } 
+  if( 0 == level ){  return detElem()->name() ; } 
   IGeometryInfo* gi =  belongsTo( globalPoint );
-  return ( 0 == gi ) ? dataDir()->fullpath() : gi->belongsToPath( globalPoint , level - 1 ) ; 
-//
+  return ( 0 == gi ) ? detElem()->name()     : gi->belongsToPath( globalPoint , level - 1 ) ; 
+  //
 };
-
-//
-//
 // be careful! use first "isInside" method! 
 inline IGeometryInfo* GeometryInfo::belongsTo    ( const HepPoint3D& globalPoint , 
 						   const int         level       )
@@ -177,11 +112,19 @@ inline IGeometryInfo* GeometryInfo::belongsTo    ( const HepPoint3D& globalPoint
   IGeometryInfo* gi = belongsTo( globalPoint );
   return  ( ( 0 == gi ) ? this : gi->belongsTo( globalPoint , level - 1 ) ); 
 };
-
+///
 
 
 
 
 
 #endif   // __DETDESC_GEOMETRYINFO_GEOMETRYINFO_INLINE_H__
+
+
+
+
+
+
+
+
 

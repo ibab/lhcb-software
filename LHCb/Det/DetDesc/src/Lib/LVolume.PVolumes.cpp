@@ -3,8 +3,10 @@
 #include <strstream>
 
 #include "DetDesc/LVolume.h"
-#include "DetDesc/PVolume.h"
 #include "GaudiKernel/MsgStream.h" 
+
+/// local 
+#include "PVolume.h"
 
 ///
 ///  inmplementation of LVolume::createPVolume  methods 

@@ -1,40 +1,39 @@
-///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCatalogCnv.cpp,v 1.5 2001-01-25 15:36:44 ibelyaev Exp $
+///	$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/XmlCatalogCnv.cpp,v 1.6 2001-01-29 13:59:50 ibelyaev Exp $
 
 /// Include files
-#include "DetDesc/XmlCatalogCnv.h"
-#include "DetDesc/XmlCnvException.h"
 
 #include <stdlib.h>
 #include <iostream>
 #include <string>
 #include <vector>
 
+
+// gaudi kernel 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/System.h"
-
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/Converter.h"
-
 #include "GaudiKernel/MsgStream.h"
-
 #include "GaudiKernel/RegistryEntry.h"
 
+// detdesc 
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvAttrList.h"
-
 #include "DetDesc/CLIDIsotope.h"
 #include "DetDesc/CLIDElement.h"
 #include "DetDesc/CLIDMixture.h"
+#include "DetDesc/XmlCnvException.h"
 
 
-/// RCS Id for identification of object version
-///static const char* rcsid = "$Id: XmlCatalogCnv.cpp,v 1.5 2001-01-25 15:36:44 ibelyaev Exp $";
+// local 
+#include "XmlCatalogCnv.h"
+
 
 /// Instantiation of a static factory class used by clients to create
 /// instances of this service

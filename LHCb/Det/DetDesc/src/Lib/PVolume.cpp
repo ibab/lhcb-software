@@ -4,36 +4,20 @@
 #include <string> 
 #include <vector>
 
-
-//
-//
-//  Implementation of PVolume class
-//
-//
-
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
-
-
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
-
 #include "GaudiKernel/MsgStream.h" 
-
 #include "GaudiKernel/SmartDataPtr.h" 
-
-
 #include "GaudiKernel/TransientStore.h"
 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
 
-//
-// constructor 
-//
-
-#include "DetDesc/PVolume.h"
+/// local 
+#include "PVolume.h"
 
 
 PVolume::PVolume           ( const     std::string&     PhysVol_name       ,

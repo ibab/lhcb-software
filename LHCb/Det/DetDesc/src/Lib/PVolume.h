@@ -195,9 +195,10 @@ inline MsgStream& operator<<( MsgStream&  os ,  const PVolume* ppv )
 ///
 ///
 
-#include "DetDesc/PVolume.PVolumeException.h"
-
-#include "DetDesc/PVolume.inlines.h" 
+/// local 
+#include "PVolume.PVolumeException.h"
+/// local 
+#include "PVolume.inlines.h" 
 
 
 ///

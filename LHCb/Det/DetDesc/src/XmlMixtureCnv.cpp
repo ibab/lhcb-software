@@ -1,5 +1,3 @@
-#include "DetDesc/XmlMixtureCnv.h"
-#include "DetDesc/XmlCnvException.h"
 
 // STD & STL Headers
 #include <cstdlib>
@@ -13,24 +11,24 @@
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/GenericLink.h"
 #include "GaudiKernel/DataObject.h"
-
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataDirectory.h"
-
 #include "GaudiKernel/MsgStream.h"
-
 #include "GaudiKernel/RegistryEntry.h"
 
 #include "DetDesc/XmlCnvAttrList.h"
 #include "DetDesc/XmlAddress.h"
 #include "DetDesc/XmlCnvSvc.h"
-
 #include "DetDesc/Isotope.h"
 #include "DetDesc/Element.h"
 #include "DetDesc/Mixture.h"
+#include "DetDesc/XmlCnvException.h"
+
+/// local 
+#include "XmlMixtureCnv.h"
 
 // Instantiation of a static factory class used by clients to create
 // instances of this service

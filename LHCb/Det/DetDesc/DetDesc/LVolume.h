@@ -15,7 +15,7 @@ class HepVector3D;
 class HepRotation;
 class HepTransform3D;
 
-
+class ISvcLocator;
 class IDataProviderSvc;
 class GaudiException; 
 
@@ -53,135 +53,91 @@ class LVolume: public DataObject ,
   ///
  public: 
   
-  //
-  // constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
-  LVolume( const std::string& name            , 
-	   ISolid*            Solid           ,
-           const std::string& material        ,
-           const ITime&       validSince      , 
-           const ITime&       validTill       , 
-           IDataProviderSvc*  dataService = 0 , 
-           IMessageSvc*       messService = 0 );
-
-  // constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
-  LVolume( const std::string& name            , 
-	   ISolid*            Solid           ,
-           const std::string& material        ,
-           const std::string& sdname          ,
-           const ITime&       validSince      , 
-           const ITime&       validTill       , 
-           IDataProviderSvc*  dataService = 0 , 
-           IMessageSvc*       messService = 0 );
-  // constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
-  LVolume( const std::string& name            , 
-	   ISolid*            Solid           ,
-           const std::string& material        ,
-           IDataProviderSvc*  dataService = 0 , 
-           IMessageSvc*       messService = 0 );
-  // constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
-  LVolume( const std::string& name            , 
-	   ISolid*            Solid           ,
-           const std::string& material        ,
-           const std::string& sdname          ,
-           IDataProviderSvc*  dataService = 0 , 
-           IMessageSvc*       messService = 0 );
+  /// constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
+  LVolume( const std::string& name             , 
+	   ISolid*            Solid            ,
+           const std::string& material         ,
+           const ITime&       validSince       , 
+           const ITime&       validTill        , 
+           const std::string& sensitivity = "" ,
+           const std::string& magnetic    = "" );
   
-  // destructor 
+  /// constructor, pointer to ISolid* must be valid!, overvise constructor throws LVolumeException!  
+  LVolume( const std::string& name             , 
+	   ISolid*            Solid            ,
+           const std::string& material         ,
+           const std::string& sensitivity = "" ,
+           const std::string& magnetic    = "" );
+  
+  /// destructor 
   virtual ~LVolume();
   
  public:
 
-  ///
   /// from DataObject base class
-  ///
   inline const CLID& clID   () const { return classID(); } 
-  ///
   static const CLID& classID()       { return CLID_LVolume; };
-  ///
   /// Serialize the object for writing
   virtual StreamBuffer& serialize(StreamBuffer& s );
   /// Serialize the object for writing
   virtual StreamBuffer& serialize(StreamBuffer& s )  const;
   ///
 
-  ///
   /// functions from ILVolume - see ILVolume.h for description
-  ///
-
   /// return the name(full path) for this LVolume
   inline const   std::string&  name        () const { return DataObject::fullpath() ; } 
-
   /// return the C++ pointer to solid 
-  inline const   ISolid*       solid       () const;
-
+  inline const   ISolid*       solid       () const ;
   /// return the material (C++ pointer)
-  inline  const  Material*     material    ()      ;
-
+  inline  const  Material*     material    () const ;
   /// return the material (name)
-  inline  const  std::string&  materialName() const;
-
+  inline  const  std::string&  materialName() const ;
   /// get number of daughter volumes 
   inline         ILVolume::ReplicaType   noPVolumes() const; 
-  
   /// get daughter physical volume by index 
-  inline         IPVolume*               operator[]( const ILVolume::ReplicaType& index ) const;
-  
+  inline         IPVolume*               operator[]( const ILVolume::ReplicaType& index ) const;  
   /// get daughter physical volume by name  
   inline         IPVolume*               operator[]( const std::string&           name  ) const;
-
   /// get daughter (Physical Volume) by index 
   inline         IPVolume*               pvolume   ( const ILVolume::ReplicaType& index ) const;
-  
   /// get daughter (Physical Volume) by name 
-  inline         IPVolume*               pvolume   ( const std::string&           name  ) const;
-  
+  inline         IPVolume*               pvolume   ( const std::string&           name  ) const;  
   /// iterators for manipulation with daughters  
-  
   /// begin iterator 
   inline ILVolume::PVolumes::iterator       pvBegin     (); 
-
   /// begin iterator (const version)
   inline ILVolume::PVolumes::const_iterator pvBegin     () const; 
-
   /// end iterator 
   inline ILVolume::PVolumes::iterator       pvEnd       (); 
-
   /// end iterator   (const version)
   inline ILVolume::PVolumes::const_iterator pvEnd       () const; 
-  
   /// traverse the sequence of paths  (transform the sequence of replicas to sequence of  physical volumes
   inline StatusCode traverse ( ILVolume::ReplicaPath::const_iterator pathBegin,
 			       ILVolume::ReplicaPath::const_iterator pathEnd  ,
 			       ILVolume::PVolumePath&                pVolumePath );
-
   /// traverse the sequence of paths  (transform the sequence of replicas to sequence of  physical volumes
   inline StatusCode traverse ( const ILVolume::ReplicaPath&  path,
 			       ILVolume::PVolumePath&        pVolumePath );
-  
   /// is this point inside?
   inline bool       isInside ( const HepPoint3D& LocalPoint ) const; 
-  
   /// return the PVolumePath to the local point at the givel Level 
   inline StatusCode belongsTo( const HepPoint3D&        LocalPoint ,
 			       const int                Level      , 
 			       ILVolume::PVolumePath&   pVolumePath );
-  
   /// return the ReplicaPath to the local point at the givel Level 
   inline StatusCode belongsTo( const HepPoint3D&        LocalPoint ,
 			       const int                Level      , 
 			       ILVolume::ReplicaPath&   replicaPath );        
-  
   /// for overloading of std::ostream& << 
-  inline std::ostream& printOut( std::ostream& ) const;
-  
+  std::ostream& printOut( std::ostream& ) const;
   /// for overloading of MsgStream& << 
   MsgStream&    printOut( MsgStream&    ) const;
-
   /// reset to the initial state
   inline const ILVolume* reset () const; 
-
   /// return the name of sensitive "detector" (needed for simulation)
   inline const std::string& sdName () const { return m_lv_sdName; } ;  
+  /// return the name of special magnetic fielad object (if needed)
+  inline const std::string& mfName () const { return m_lv_mfName; } ;  
   ///
   /// intersection of the logical volume with with line.
   /// line is parametrized in the local reference system of the logical volume 
@@ -206,34 +162,24 @@ class LVolume: public DataObject ,
 			      const ISolid::Tick        tickMax       , // maximum value of possible Tick
 			      const double              Threshold     );// threshold value 
   
-  //
-  //   
   // from IValidity interface
-  //   
   inline       bool    isValid          ()                ;   
-  inline       bool    isValid          ( const ITime& )  ;   
-  
+  inline       bool    isValid          ( const ITime& )  ;     
   const        ITime&  validSince       ()                ;    
   const        ITime&  validTill        ()                ;   
-  
   void                 setValidity      ( const ITime& , 
 					  const ITime& )  ;  
   void                 setValiditySince ( const ITime& )  ;  
   void                 setValidityTill  ( const ITime& )  ;   
-  
   StatusCode           updateValidity   ()                ;   // not yet
   
-  ///
+
   ///  from IInspectable interface 
-  ///
   virtual bool acceptInspector( IInspector* pInspector )       ; 
   ///
   virtual bool acceptInspector( IInspector* pInspector ) const ; 
 
-  ///
   /// specific for this implementation 
-  ///
-    
   IPVolume* createPVolume( const std::string&    PVname         , 
 			   const std::string&    LVnameForPV    );
   IPVolume* createPVolume( const std::string&    PVname         , 
@@ -246,10 +192,7 @@ class LVolume: public DataObject ,
   IPVolume* createPVolume( const std::string&    PVname         , 
 			   const std::string&    LVnameForPV    ,
                            const HepTransform3D& Transform      );
-  ///
   /// create group of physical volumes  
-  /// 
-
   /// one loop 
   IPVolume* createMultiPVolume( const std::string&   PVname_base     , 
 				const std::string&   LVnameForPV     , 
@@ -286,77 +229,62 @@ class LVolume: public DataObject ,
 
   ///
  private: 
-  
-  
-  // copy constructor is private! 
+  ///    
+  /// copy constructor is private! 
   LVolume           ( const LVolume& );
-  
-  // assignment operator is private! 
+  /// assignment operator is private! 
   LVolume& operator=( const LVolume& ); 
-  
+  ///
  private:
-  
-  //
-  // technicalities:
-  
   // find C++ pointer to material by it's name 
-  Material*                          findMaterial() ;
-  
-  //
-  // exceptions:
+  Material*                          findMaterial() const ;
+  /// exceptions:
   class LVolumeException;                                                                  
-  
-  // assertion
+  /// assertion
   inline void Assert( bool               assertion                       , 
 		      const std::string& name                            ,
                       const StatusCode&  sc        = StatusCode::FAILURE ) const;  
-  // assertion
+  /// assertion
   inline void Assert( bool                  assertion , 
 		      const std::string&    name      ,
                       const GaudiException& Exception , 
                       const StatusCode&     sc        = StatusCode::FAILURE ) const;  
   
   // data service used for retriving of the material 
-  IDataProviderSvc*            dataSvc       ();
-  
+  inline IDataProviderSvc*     dataSvc       ()  const { return m_lv_dataSvc ; } 
+  // service locator 
+  inline ISvcLocator*          svcLoc        ()  const { return m_lv_svcLoc  ; }   
   // message service used for printing in the exceptions 
-  inline IMessageSvc*          msgSvc        ()  const;
-
-  ///
+  inline IMessageSvc*          msgSvc        ()  const { return m_lv_msgSvc  ; } 
   /// Auxillary method  to calculate intersections with daughter volumes  
-  ///
   unsigned int  intersectDaughters( const HepPoint3D&        Point              , 
 				    const HepVector3D&       Vector             , 
 				    ILVolume::Intersections& childIntersections , 
 				    const ISolid::Tick       tickMin            , 
 				    const ISolid::Tick       tickMax            , 
 				    const double             Threshold          );  
-
-  ///
   /// Auxillary method  to calculate intersections with daughter volumes  
-  ///
   unsigned int  intersectDaughters( const HepPoint3D&        Point              , 
 				    const HepVector3D&       Vector             , 
 				    ILVolume::Intersections& childIntersections , 
 				    const double             Threshold          );  
-  
-  
  private:
-  //
+  ///
   ISolid*                      m_lv_solid        ;  //    pointer to solid
   std::string                  m_lv_materialName ;  //    name of material 
   ILVolume::PVolumes           m_lv_pvolumes     ;  //    container of daughter's physical volumes 
-  //
+  ///
   mutable  Material*           m_lv_material     ;  //    pointer to material 
-  //
+  ///
   std::string                  m_lv_sdName       ;  //     name of sensitive "detector" for simulation   
-  // IValidity:
+  std::string                  m_lv_mfName       ;  //     name of magnetic field object(if needed) for simulation   
+  /// IValidity:
   ITime*                       m_lv_validSince   ;  //     
   ITime*                       m_lv_validTill    ;  // 
-  
   // "very private" 
   IDataProviderSvc*            m_lv_dataSvc      ;  //     data service used for manipulations 
-  IMessageSvc*                 m_lv_messSvc      ;  //     message service used for printing 
+  IMessageSvc*                 m_lv_msgSvc       ;  //     message service used for printing 
+  ISvcLocator*                 m_lv_svcLoc       ;  //     service locator
   //
 
 };
