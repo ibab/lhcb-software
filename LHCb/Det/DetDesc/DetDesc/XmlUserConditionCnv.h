@@ -145,7 +145,7 @@ template <class DeType>
 StatusCode
 XmlUserConditionCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
                                                 DeType* dataObj,
-                                                IOpaqueAddress* /*address*/)
+                                                IOpaqueAddress* /*address*/) {
   return i_fillSpecificObj (childElement, dataObj);
 }
 
