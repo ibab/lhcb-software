@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.28 2004-03-20 20:16:13 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.29 2004-03-20 21:27:13 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.28  2004/03/20 20:16:13  ibelyaev
+//  fix for MCVertex type
+//
 // Revision 1.27  2004/02/20 19:12:00  ibelyaev
 //  upgrade for newer GiGa
 //
@@ -127,6 +130,9 @@ GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator )
   m_hadronicProcesses.push_back ( "LCapture"                      ) ;
   m_hadronicProcesses.push_back ( "AntiNeutronAnnihilationAtRest" ) ;
   m_hadronicProcesses.push_back ( "AntiProtonAnnihilationAtRest"  ) ;  
+  m_hadronicProcesses.push_back ( "AntiLambdaInelastic"           ) ; // I.B.
+  m_hadronicProcesses.push_back ( "AntiXiZeroInelastic"           ) ; // I.B.
+
   
   std::sort ( m_hadronicProcesses.begin () ,
               m_hadronicProcesses.end   () ) ;

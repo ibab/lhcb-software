@@ -2,6 +2,11 @@ Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
 ! 2004-03-20 - Ivan BELYAEV
+ - add "AntiLambdaInelastic" and  "AntiXiZeroInelastic" into the list of known 
+   hadronic processes to reduce the amount of 
+   MCVertices with status 'Unknown'
+
+! 2004-03-20 - Ivan BELYAEV
  - src/component/GiGaMCVertexCnv.h,.cpp 
    fix with definition of MCVertex type 
    add a warning printout for MCVertex::Unknown (hope it helps to 
