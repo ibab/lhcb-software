@@ -1,4 +1,4 @@
-// $Id: OTTimeMonitor.h,v 1.1 2004-09-10 13:13:50 cattanem Exp $
+// $Id: OTTimeMonitor.h,v 1.2 2004-12-10 08:10:56 jnardull Exp $
 #ifndef OTMONITOR_OTTIMEMONITOR_H
 #define OTMONITOR_OTTIMEMONITOR_H 1
 
@@ -32,9 +32,6 @@ public:
 
   /// execute
   StatusCode execute();
-
-  /// finalize
-  StatusCode finalize();
 
 private:
 

@@ -1,4 +1,4 @@
-// $Id: OTTimeChecker.cpp,v 1.3 2004-11-10 13:03:42 jnardull Exp $
+// $Id: OTTimeChecker.cpp,v 1.4 2004-12-10 08:10:56 jnardull Exp $
 
 // local
 #include "OTTimeChecker.h"
@@ -32,22 +32,14 @@ OTTimeChecker::~OTTimeChecker()
 
 StatusCode OTTimeChecker::initialize()
 {
-  StatusCode sc = StatusCode::SUCCESS;
-
   // intialize histos
   this->initHistograms();
 
   // associator time to hit tool   
-  sc = toolSvc()->retrieveTool(m_nameHitAsct, m_hitAsct);
-  if( sc.isFailure() || 0 == m_hitAsct) {
-    return Error("Unable to retrieve Associator tool", sc);
-  }
+  m_hitAsct = tool<OTTime2MCHitAsct::IAsct>( m_nameHitAsct );
 
   // Loading OT Geometry from XML
-  SmartDataPtr<DeOTDetector> tracker( detSvc(), "/dd/Structure/LHCb/OT" );
-  if ( !tracker ) {
-    return Error("Unable to retrieve OT detector element from xml");
-  }
+  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   m_tracker = tracker;
 
   return StatusCode::SUCCESS;
@@ -58,25 +50,13 @@ StatusCode OTTimeChecker::execute()
 {
   
   // retrieve times
-  SmartDataPtr<OTTimes> timeCont(eventSvc(),OTTimeLocation::Default);
-  if (0 == timeCont){ 
-    warning () << "Failed to find OTTimes container" << endreq;
-    return StatusCode::FAILURE;
-  }
+  OTTimes* timeCont = get<OTTimes>( OTTimeLocation::Default );
 
   // retrieve hits
-  SmartDataPtr<MCHits> mcHitCont(eventSvc(),MCHitLocation::OTHits);
-  if (0 == mcHitCont){ 
-    warning () << "Failed to find mcHits" << endreq;
-    return StatusCode::FAILURE;
-  }
+  MCHits* mcHitCont = get<MCHits>( MCHitLocation::OTHits );
 
   // retrieve table
   OTTime2MCHitAsct::DirectType* aTable = m_hitAsct->direct();
-  if (0 == aTable){
-    warning () << "Failed to find table" << endreq;
-    return StatusCode::FAILURE;
-  }
 
   // Calculate efficiencies from MCHits to OTTimes
   // loop over OTTimes, find the MCHit and store multiplicity
@@ -262,14 +242,6 @@ StatusCode OTTimeChecker::execute()
     m_nParticlesHisto->fill( (float) partMultCont.size() );
     partMultCont.erase(partMultCont.begin(), partMultCont.end());
   }
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode OTTimeChecker::finalize()
-{
-  // Release all tools
-  if( 0 != m_hitAsct ) toolSvc()->releaseTool( m_hitAsct );
 
   return StatusCode::SUCCESS;
 }

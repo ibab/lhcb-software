@@ -1,12 +1,9 @@
-// $Id: OTTimeChecker.h,v 1.2 2004-11-10 13:03:42 jnardull Exp $
+// $Id: OTTimeChecker.h,v 1.3 2004-12-10 08:10:56 jnardull Exp $
 #ifndef OTMONITOR_OTTIMECHECKER_H
 #define OTMONITOR_OTTIMECHECKER_H 1
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
 
 // CLHEP
@@ -61,9 +58,6 @@ public:
   /// execute
   StatusCode execute();
 
-  /// finalize
-  StatusCode finalize();
-
 private:
  
   /// book the histograms
@@ -88,6 +82,7 @@ private:
   typedef std::vector<PartMultiplicity> PartMultVector;
   
   std::string m_nameHitAsct;             ///< name of the associator
+
   OTTime2MCHitAsct::IAsct* m_hitAsct; ///< pointer to associator
   DeOTDetector* m_tracker;               ///< pointer to geometry
   /// flag to cut on momentum used for resolution plot 

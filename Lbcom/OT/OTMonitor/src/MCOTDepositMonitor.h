@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.h,v 1.1 2004-09-10 13:13:49 cattanem Exp $
+// $Id: MCOTDepositMonitor.h,v 1.2 2004-12-10 08:10:56 jnardull Exp $
 #ifndef OTMONITOR_MCOTDEPOSITMONITOR_H
 #define OTMONITOR_MCOTDEPOSITMONITOR_H 1
 
@@ -42,9 +42,6 @@ public:
 
   /// execute
   StatusCode execute();
-
-  /// finalize
-  StatusCode finalize();
 
 private:
 

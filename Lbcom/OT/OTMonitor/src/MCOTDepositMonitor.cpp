@@ -1,9 +1,7 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.3 2004-11-10 13:03:42 jnardull Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.4 2004-12-10 08:10:56 jnardull Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IHistogramSvc.h"
 
 // CLHEP
@@ -48,10 +46,8 @@ MCOTDepositMonitor::~MCOTDepositMonitor()
 StatusCode MCOTDepositMonitor::initialize()
 {
   // Loading OT Geometry from XML
-  SmartDataPtr<DeOTDetector> tracker( detSvc(), "/dd/Structure/LHCb/OT" );
-  if ( !tracker ) {
-    return Error("Unable to retrieve OT detector element from xml");
-  }
+  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
+
   m_numStations = tracker->numStations();
   m_firstOTStation = tracker->firstOTStation();  
 
@@ -68,11 +64,7 @@ StatusCode MCOTDepositMonitor::execute()
   m_nCrossTalkHits = 0;
 
   // retrieve MCOTDeposits
-  SmartDataPtr<MCOTDeposits> depCont(eventSvc(),MCOTDepositLocation::Default);
-  if (!depCont){
-    warning () << "Failed to find OT deposits container" << endreq;
-    return StatusCode::FAILURE;
-  }
+  MCOTDeposits* depCont = get<MCOTDeposits>( MCOTDepositLocation::Default );
 
   // number of deposits
   m_nDepositsHisto->fill((double)depCont->size(),1.0);
@@ -86,12 +78,6 @@ StatusCode MCOTDepositMonitor::execute()
 
  if ( fullDetail() ) m_nCrossTalkHisto->fill((double)m_nCrossTalkHits,1.);
  
-  return StatusCode::SUCCESS;
-}
-
-StatusCode MCOTDepositMonitor::finalize()
-{
-  // Finalize
   return StatusCode::SUCCESS;
 }
 

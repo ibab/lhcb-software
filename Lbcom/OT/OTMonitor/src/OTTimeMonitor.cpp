@@ -1,7 +1,6 @@
-// $Id: OTTimeMonitor.cpp,v 1.3 2004-11-10 13:03:42 jnardull Exp $
+// $Id: OTTimeMonitor.cpp,v 1.4 2004-12-10 08:10:56 jnardull Exp $
 
 // Gaudi
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/AlgFactory.h"
 
 // CLHEP
@@ -44,10 +43,8 @@ OTTimeMonitor::~OTTimeMonitor()
 StatusCode OTTimeMonitor::initialize()
 {
   // Loading OT Geometry from XML
-  SmartDataPtr<DeOTDetector> tracker( detSvc(), "/dd/Structure/LHCb/OT" );
-  if ( !tracker ) {
-    return Error ( "Unable to retrieve Tracker detector element from xml");
-  }
+ 
+  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   m_tracker = tracker;
   m_numStations = m_tracker->numStations();
   m_firstOTStation = m_tracker->firstOTStation();
@@ -99,12 +96,8 @@ StatusCode OTTimeMonitor::execute()
   // execute
   
   // retrieve OTTimes
-  SmartDataPtr<OTTimes> times(eventSvc(), OTTimeLocation::Default);
-  if (!times){
-    warning () << "Failed to find OTTimes container" << endreq;
-    return StatusCode::FAILURE;
-  }
-
+  OTTimes* times = get<OTTimes>( OTTimeLocation::Default );
+ 
   // number of times
   m_nTimesHisto->fill( (double)times->size(), 1.0);
 
@@ -115,12 +108,6 @@ StatusCode OTTimeMonitor::execute()
   } // loop iterDep
 
   
-  return StatusCode::SUCCESS;
-}
-
-StatusCode OTTimeMonitor::finalize()
-{
-  // Finalize
   return StatusCode::SUCCESS;
 }
 

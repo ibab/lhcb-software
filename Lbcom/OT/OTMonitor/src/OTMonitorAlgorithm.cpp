@@ -1,7 +1,6 @@
-// $Id: OTMonitorAlgorithm.cpp,v 1.3 2004-11-10 13:03:42 jnardull Exp $
+// $Id: OTMonitorAlgorithm.cpp,v 1.4 2004-12-10 08:10:56 jnardull Exp $
 
 // Gaudi
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/xtoa.h"
 #include <stdio.h>
 
