@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.49 2004-08-23 13:31:31 pkoppenb Exp $
+# $Id: requirements,v 1.50 2004-08-24 07:33:23 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,11 +6,11 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v10r3
+version           v11r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc options src Lib DaVinciTools
+branches          cmt doc src
 
 # Exported header files
 #============================================================================
@@ -18,16 +18,17 @@ include_dirs     $(DAVINCITOOLSROOT)
 
 # Used packages. 
 #============================================================================
-use  PhysEvent      v*     Event
-use  TrgEvent       v*     Event
-use  CaloUtils      v*     Calo
-use  CaloInterfaces v*     Calo
-# use  Boost          v* LCG_Interfaces
+# use  Boost               v* LCG_Interfaces
+use  DaVinciKernel         v* Phys
+use  ParticleMaker         v* Phys
+use  DaVinciTransporter    v* Phys
+use  VertexFit             v* Phys
+use  DaVinciFilter         v* Phys
 
 # For DV v11r12
-macro_append BOOST_linkopts " -lboost_regex"\
-             Linux&debug " -lboost_regex_debug"\
-             WIN32 " boost_regex_debug.lib" 
+# macro_append BOOST_linkopts " -lboost_regex"\
+#              Linux&debug " -lboost_regex_debug"\
+#              WIN32 " boost_regex_debug.lib" 
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
@@ -45,10 +46,6 @@ macro_append BOOST_linkopts " -lboost_regex"\
 # document lex_to_icpp RecLexer reclexer.lpp
 # macro reclexer_lpp_lexpp_prefix "DecayFinder::"
 
-# Linker library building rule
-#============================================================================
-library          DaVinciToolsLib    ../Lib/*.cpp
-
 # Component library building rule
 #============================================================================
 library          DaVinciTools    ../src/*.cpp -import=AIDA
@@ -60,6 +57,5 @@ macro_append Boost_linkopts $(Boost_linkopts_regex)
 # standard patterns (order is essential!)
 #============================================================================
 apply_pattern component_library library=DaVinciTools
-apply_pattern linker_library    library=DaVinciToolsLib
 	     
 

@@ -1,7 +1,23 @@
-! $Id: release.notes,v 1.128 2004-08-23 13:58:03 pkoppenb Exp $
+! $Id: release.notes,v 1.129 2004-08-24 07:33:24 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2004-08-23 - P. Koppenburg
+ - Split package into 
+   . Phys/DaVinciKernel : DVAlgorithm, PhysDesktop and all Interfaces
+   . Phys/ParticleMaker : All particle makers and the ParticleStuffer
+   . Phys/DaVinciFilter : All Filter
+   . Phys/VertexFit : All vertex fitters and the GeomDispCalculator.cpp
+   . Phys/DaVinciTransporter : All transporters
+   . Phys/DaVinciTools : Basically all high-level tools that are none
+        of the abvove, f.i. DecayFinder, PreDV, CheckOverlap...    
+   This split became necessary since DaVinciTools was become a huge monster
+   containing unrelated stuff (what do the TrackTypeFilterCriterion and the 
+   CombinedParticleMaker have in common?). Also DaVinciTools was evolving
+   with all versions of DaVinci. In the short term, I hope that most 
+   developments will affect DaVinciFilter, while the other packages will
+   be rather stable except for bug fixes.
+   
 !========================== DaVinciTools v10r3 2004-08-23 ===================
 ! 2004-08-23 - Florence RANJARD
  - replace GaudiTools/ with GaudiAlg
@@ -64,6 +80,7 @@
    . GaudiTools -> GaudiAlg
  - cmt/requirements
    . Don't use but import AIDA
+
 !========================== DaVinciTools v10r0 2004-07-22 ===================
 ! 2004-07-22 - P. Koppenburg for Yuehong Xie
  - src/NsctVeloTransporter.cpp
@@ -198,11 +215,9 @@
          declareProperty ( "UseLongTracks",     m_longTracks );
          declareProperty ( "UseDownstreamTracks", m_downstreamTracks );
          declareProperty ( "UseUpstreamTracks",      m_vttTracks );
-      For HLT
-      
+      For HLT      
   - src/PVIPFilterCriterion.*
-    . Made it a GaudiTool
-    
+    . Made it a GaudiTool   
   - src/TrackTypeFilterCriterion.*
     . New filter criterion that filters particles according to track types.
          declareProperty( "RequireLong",       m_reqLong         = false );
@@ -380,13 +395,13 @@ file. (probably not for all cases)
    . Handle neutral particles correctly. 
    . Update energy after transport to avoid negative masses.
   
-! 2004-03-30 - P. Koppenburg
+! 2004-03-30 - P. Koppenburg for Miriam Gandelman
  - src/GeomDispCalculator.cpp
-  Bug fix by Miriam Gandelman
+   . Bug fix
   
 ! 2004-03-29 - P. Koppenburg
  - src/LifetimeSignificanceCriterion.cpp,  src/MassFilterCriterion.cpp
-  Small modifications to allow compilation on Windows.
+   . Small modifications to allow compilation on Windows.
   
 ! 2004-03-25 - P. Koppenburg for Sandra Amato
  - src/ParticleStuffer.*
@@ -448,7 +463,7 @@ file. (probably not for all cases)
    . use v* to allow compilation against fifferent versions of LHCb
  - DaVinciTools/IGeomDispCalCulator.h
    src/GeomDispCalculator.{h,cpp}
-   . propagate change from DaVinci v8r3 that was built on a brach  
+   . propagate change from DaVinci v8r3 that was built on a branch  
  - src/MassDifferenceFilterCriterion.cpp,
        LifetimeSignificanceCriterion.cpp,
        MassFilterCriterion.cpp,
@@ -460,7 +475,7 @@ file. (probably not for all cases)
    . little backward compatible change preventing compilation against
      LHCb v15r0 ( CaloCellID() != operator does not exist )
  - src/CheckOverlap.cpp
-       ElectronParticleMaker.cpp, ElectronParticleMaker_bbincl.cpp
+ - ElectronParticleMaker.cpp, ElectronParticleMaker_bbincl.cpp
        LinearTransporter.cpp, NoPIDsParticleMaker.cpp, 
        ParabolicTransporter.cpp, ParticleFilter.cpp, TrTransporter.cpp
    . little fixes to remove warning messages (implicit typename, 
