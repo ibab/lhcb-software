@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.13 2002-01-30 20:29:04 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.14 2002-02-01 18:01:51 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -60,7 +60,7 @@ public:
 	std::string popImpSoftList();
 	void pushImpSoftList(std::string value);
 	int sizeImpSoftList();
-    void remDblImpSoftList();
+  void remDblImpSoftList();
   
 	std::string popImpStdList();
 	void pushImpStdList(std::string value);

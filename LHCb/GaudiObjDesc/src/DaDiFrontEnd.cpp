@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.21 2002-01-31 15:13:55 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.22 2002-02-01 18:01:52 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -1005,6 +1005,24 @@ void parseNamespace(DOM_Node node,
           gddClass = new DaDiClass();
           gddNamespace->pushDaDiClass(gddClass);
           parseClass(node, gddClass);
+        }
+
+//
+// ParseImport
+//
+        if(node.getNodeName().equals("import"))
+        {
+          parseImport(node,gddNamespace);
+        }
+
+//
+// Parse attributes
+//
+        else if(node.getNodeName().equals("attribute"))
+        {
+          DaDiAttribute* gddAttribute = new DaDiAttribute();
+          gddNamespace->pushDaDiAttribute(gddAttribute);
+          parseAttribute(node, gddAttribute);
         }
 
 //

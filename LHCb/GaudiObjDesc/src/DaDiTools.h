@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.3 2002-01-28 18:49:18 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiTools.h,v 1.4 2002-02-01 18:01:52 mato Exp $
 #ifndef DADITOOLS_H 
 #define DADITOOLS_H 1
 
@@ -36,7 +36,7 @@ public:
   void resetErrors();
 
     
-  static char* chooseAccess(const DOMString& s);
+  static std::string chooseAccess(const std::string& str);
   static bool isSimple(std::string value);
 
   static void pushAddImport(std::string value);
@@ -44,6 +44,7 @@ public:
 
 private:
   static std::vector<std::string> additionalImports;
+  static std::string name;
 
 };
 

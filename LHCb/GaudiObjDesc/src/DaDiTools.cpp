@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.5 2002-01-28 18:49:18 mato Exp $
+// $Id: DaDiTools.cpp,v 1.6 2002-02-01 18:01:52 mato Exp $
 
 
 // Include files
@@ -22,17 +22,19 @@
 std::vector<std::string> DaDiTools::additionalImports;
 
 //-----------------------------------------------------------------------------
-char* DaDiTools::chooseAccess(const DOMString& s)
+std::string DaDiTools::chooseAccess(const std::string& str)
 //-----------------------------------------------------------------------------
 {
-  std::string str = s.transcode();
   if (str == "PUBLIC") {return "public";}
   else if (str == "PROTECTED") {return "protected";}
   else if (str == "PRIVATE") {return "private";}
   else {return "";}
 }
 
+
+//-----------------------------------------------------------------------------
 bool DaDiTools::isSimple(std::string value)
+//-----------------------------------------------------------------------------
 {
   int i = value.find_last_of(" ");
   value = value.substr(i+1, value.size()-i);

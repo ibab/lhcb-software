@@ -34,7 +34,7 @@
    name CDATA #REQUIRED
    place CDATA #REQUIRED
 >
-<!ELEMENT namespace ((enum?, class?)*)>
+<!ELEMENT namespace ((enum?, class?, import?, attribute?)*)>
 <!ATTLIST namespace
 	name CDATA #REQUIRED
 	desc CDATA #REQUIRED

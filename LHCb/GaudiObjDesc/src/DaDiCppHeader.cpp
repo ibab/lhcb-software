@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.35 2002-01-31 15:13:56 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.36 2002-02-01 18:01:51 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -57,6 +57,16 @@ DOMString firstUp(const DOMString s)
   return DOMString::transcode(p);
 }
 
+//-----------------------------------------------------------------------------
+std::string firstUp(const std::string& s)
+//-----------------------------------------------------------------------------
+{ 
+  std::string r;
+  r = toupper(s[0]);
+  r += s.substr(1,std::string::npos);
+  return r;
+}
+
 
 
 //-----------------------------------------------------------------------------
@@ -111,32 +121,40 @@ template <class T> void printArguments(std::ofstream& xmlOut,
   for(j=0; j<gdd->sizeDaDiMethArgument(); j++)
   {
     DaDiMethArgument* gddArg = gdd->popDaDiMethArgument();
+    std::string gddArgType = gddArg->type().transcode(),
+                gddArgInout = gddArg->inout().transcode(),
+                gddArgName = gddArg->name().transcode();
+
+    bool gddArgIsConst = gddArg->const_(),
+         gddArgIsPointer = gddArg->isPointer();
+
+
     if (j>0)
     {
       xmlOut << ", ";
     }
-    if (!DaDiTools::isSimple(gddArg->type().transcode()) && gddArg->const_())
+    if (!DaDiTools::isSimple(gddArgType) && gddArgIsConst)
     {
       xmlOut << "const ";
     }
-	  else if (gddArg->const_())
+	  else if (gddArgIsConst)
     {
       xmlOut << "const ";
     }
-    xmlOut << gddArg->type().transcode();
-    if (gddArg->isPointer()) 
+    xmlOut << gddArgType;
+    if (gddArgIsPointer) 
     {
       xmlOut << "*";
     }
-    if (gddArg->inout().equals("BOTH") ||
-        !DaDiTools::isSimple(gddArg->type().transcode()) )
+    if (gddArgInout == "BOTH" ||
+        !DaDiTools::isSimple(gddArgType) )
     {
       xmlOut << "&";
     }
 
-    if (gddArg->name() != NULL)
+    if (gddArgName != "")
     {
-      xmlOut << " " << gddArg->name().transcode();
+      xmlOut << " " << gddArgName;
     }
     else
     {
@@ -147,76 +165,77 @@ template <class T> void printArguments(std::ofstream& xmlOut,
  /*       if (gddMethArgument->const_() ||
           (!DaDiTools::isSimple(gddMethArgument->type().transcode()) &&
 			 gddMethArgument->const_()) ) */
-      
-      
-      
-      
-
-    
-    
-
-    
-    
-
-
-
 }
 
 
 //-----------------------------------------------------------------------------
 void printMethodDecl(std::ofstream& xmlOut,
                      DaDiClass* gddClass, 
-                     char* accessor)
+                     const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
   int i;
   for(i=0; i < gddClass->sizeDaDiMethod(); i++)
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
+    std::string gddMethodAccess = gddMethod->access().transcode(),
+                gddMethodDesc = gddMethod->desc().transcode(),
+                gddMethodVirtual = gddMethod->virtual_().transcode(),
+                gddMethodName = gddMethod->name().transcode(),
+                gddMethodCode = gddMethod->code().transcode(),
+                gddMethReturnType = gddMethod->daDiMethReturn()->type().transcode();
+    bool gddMethodIsFriend = gddMethod->friend_(),
+         gddMethodIsStatic = gddMethod->static_(),
+         gddMethodIsConst = gddMethod->const_(),
+         gddMethReturnIsConst = gddMethod->daDiMethReturn()->const_();
       
-    if (gddMethod->access().equals(accessor))
+    if (gddMethodAccess == accessor)
     {
-    xmlOut << "  /// " << gddMethod->desc().transcode() << std::endl << "  ";
-    if (gddMethod->friend_())
-    {
-      xmlOut << "friend ";
-    }
-    if (gddMethod->virtual_().equals("TRUE") ||
-        gddMethod->virtual_().equals("PURE"))
-    {
-      xmlOut << "virtual ";
-    }
-    if (gddMethod->static_())
-    {
-      xmlOut << "static ";
-    }
-    if (gddMethod->daDiMethReturn()->const_())
-    {
-      xmlOut << "const ";
-    }
-    xmlOut << gddMethod->daDiMethReturn()->type().transcode() << " " 
-      << gddMethod->name().transcode() << "(";
+      xmlOut << "  /// " << gddMethodDesc << std::endl << "  ";
+      if (gddMethodIsFriend)
+      {
+        xmlOut << "friend ";
+      }
+      if (gddMethodVirtual == "TRUE" ||
+          gddMethodVirtual == "PURE")
+      {
+        xmlOut << "virtual ";
+      }
+      if (gddMethodIsStatic)
+      {
+        xmlOut << "static ";
+      }
+      if (gddMethReturnIsConst)
+      {
+        xmlOut << "const ";
+      }
+      xmlOut << gddMethReturnType << " " << gddMethodName << "(";
     
-    printArguments(xmlOut, gddMethod);    
+      printArguments(xmlOut, gddMethod);    
     
-    xmlOut << ")";
-    if (gddMethod->const_())
-    {
-      xmlOut << " const";
-    }
-    if (gddMethod->virtual_().equals("PURE"))
-    {
-      xmlOut << " = 0";
-    }
-    if (gddMethod->friend_())
-    {
-      xmlOut << std::endl << "  {" << std::endl << gddMethod->code().transcode()
-        << std::endl << "  }" << std::endl << std::endl;
-    }
-    else
-    {
-      xmlOut << ";" << std::endl << std::endl;
-    }
+      xmlOut << ")";
+
+      if (gddMethodIsConst)
+      {
+        xmlOut << " const";
+      }
+      if (gddMethodVirtual == "PURE")
+      {
+        xmlOut << " = 0";
+      }
+      if (gddMethodIsFriend)
+      {
+        xmlOut << std::endl 
+          << "  {" << std::endl 
+          << gddMethodCode << std::endl 
+          << "  }" << std::endl 
+          << std::endl;
+      }
+      else
+      {
+        xmlOut << ";" << std::endl 
+          << std::endl;
+      }
     }
   }
 }
@@ -226,43 +245,55 @@ void printMethodDecl(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 void printMethodImpl(std::ofstream& xmlOut,
                      DaDiClass* gddClass,
-                     char* accessor)
+                     const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
   int i;
   for(i=0; i<gddClass->sizeDaDiMethod(); i++)
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
-    if (gddMethod->access().equals(accessor) && 
-        gddMethod->code() != NULL && !gddMethod->friend_())
+    std::string gddMethodName = gddMethod->name().transcode(),
+                gddMethodAccess = gddMethod->access().transcode(),
+                gddMethodArgList = gddMethod->argList().transcode(),
+                gddMethodCode = gddMethod->code().transcode(),
+                gddMethodVirtual = gddMethod->virtual_().transcode(),
+                gddMethReturnType = gddMethod->daDiMethReturn()->type().transcode(),
+                gddClassName = gddClass->className().transcode();
+
+    bool gddMethodIsConst = gddMethod->const_(),
+         gddMethodIsStatic = gddMethod->static_(),
+         gddMethodIsFriend = gddMethod->friend_(),
+         gddMethReturnIsConst = gddMethod->daDiMethReturn()->const_();
+
+
+    if (gddMethodAccess == accessor && gddMethodCode != "" && !gddMethodIsFriend)
     {
       xmlOut << "inline ";
-      if(gddMethod->virtual_().equals("TRUE") || 
-         gddMethod->virtual_().equals("PURE"))
+      if(gddMethodVirtual == "TRUE" ||  gddMethodVirtual == "PURE")
       {
         xmlOut << "virtual ";
       }
-      if (gddMethod->static_())
+      if (gddMethodIsStatic)
       {
         xmlOut << "static ";
       }
-      if (gddMethod->daDiMethReturn()->const_())
+      if (gddMethReturnIsConst)
       {
         xmlOut << "const ";
       }
-      xmlOut << gddMethod->daDiMethReturn()->type().transcode() << " " 
-        << gddClass->className().transcode() << "::" 
-        << gddMethod->name().transcode() << "(";
+      xmlOut << gddMethReturnType << " " << gddClassName << "::" << gddMethodName << "(";
 
       printArguments(xmlOut, gddMethod);
             
       xmlOut << ")";
-      if (gddMethod->const_())
+      if (gddMethodIsConst)
       {
         xmlOut << " const";
       }
-      xmlOut << std::endl << "{" << std::endl << "   " 
-        << gddMethod->code().transcode() << std::endl << "}" << std::endl 
+      xmlOut << std::endl 
+        << "{" << std::endl 
+        << "   " << gddMethodCode << std::endl 
+        << "}" << std::endl 
         << std::endl;
     }
   }
@@ -278,39 +309,43 @@ void printSetGetAttDecl(std::ofstream& xmlOut,
   for(i=0; i < gddClass->sizeDaDiAttribute(); i++) 
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+    std::string gddAttGetMeth = gddAttribute->getMeth().transcode(),
+                gddAttSetMeth = gddAttribute->setMeth().transcode(),
+                gddAttDesc = gddAttribute->desc().transcode(),
+                gddAttType = gddAttribute->type().transcode(),
+                gddAttName = gddAttribute->name().transcode();
 
-    if(gddAttribute->getMeth().equals(accessor))
+    if(gddAttGetMeth == accessor)
     {
-      xmlOut << "  /// Retrieve " << gddAttribute->desc().transcode() 
-        << std::endl << "  ";
-      if (!DaDiTools::isSimple(gddAttribute->type().transcode()))
+      xmlOut << "  /// Retrieve " << gddAttDesc << std::endl << "  ";
+      if (!DaDiTools::isSimple(gddAttType))
       {
         xmlOut << "const ";
       }
-      xmlOut << gddAttribute->type().transcode();
-      if (!DaDiTools::isSimple(gddAttribute->type().transcode()))
+      xmlOut << gddAttType;
+      if (!DaDiTools::isSimple(gddAttType))
       {
         xmlOut << "&";
       }
-      xmlOut << " " << gddAttribute->name().transcode() << "() const; " 
-        << std::endl << std::endl;
+      xmlOut << " " << gddAttName << "() const; "  << std::endl 
+        << std::endl;
     }
       
-    if(gddAttribute->setMeth().equals(accessor))
+    if(gddAttSetMeth == accessor)
     {
-      xmlOut << "  /// Update " << gddAttribute->desc().transcode() << std::endl 
-        << "  void set" << firstUp(gddAttribute->name()).transcode() 
-        << "(";
-      if (!DaDiTools::isSimple(gddAttribute->type().transcode()))
+      xmlOut << "  /// Update " << gddAttDesc << std::endl 
+        << "  void set" << firstUp(gddAttName) << "(";
+      if (!DaDiTools::isSimple(gddAttType))
       {
         xmlOut << "const ";
       }
-      xmlOut << gddAttribute->type().transcode();
-      if (!DaDiTools::isSimple(gddAttribute->type().transcode()))
+      xmlOut << gddAttType;
+      if (!DaDiTools::isSimple(gddAttType))
       {
         xmlOut << "&";
       }
-      xmlOut << " value);" << std::endl << std::endl;
+      xmlOut << " value);" << std::endl 
+        << std::endl;
     }
   }
 }
@@ -319,7 +354,7 @@ void printSetGetAttDecl(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 void printSetGetAttImpl(std::ofstream& xmlOut,
                         DaDiClass* gddClass,
-                        char* accessor)
+                        const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
   int i=0;
@@ -327,41 +362,48 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
   for(i=0; i<gddClass->sizeDaDiAttribute(); i++) 
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+    std::string gddAttGetMeth = gddAttribute->getMeth().transcode(),
+                gddAttSetMeth = gddAttribute->setMeth().transcode(),
+                gddAttType = gddAttribute->type().transcode(),
+                gddAttName = gddAttribute->name().transcode(),
+                gddClassName = gddClass->className().transcode();
       
-    if(gddAttribute->getMeth().equals(accessor))
+    if(gddAttGetMeth == accessor)
     {
       xmlOut << "inline ";
-      if (!DaDiTools::isSimple(gddAttribute->type().transcode()))
+      if (!DaDiTools::isSimple(gddAttType))
       {
         xmlOut << "const ";
       }      
-      xmlOut << gddAttribute->type().transcode();
-      if (!DaDiTools::isSimple(gddAttribute->type().transcode()))
+      xmlOut << gddAttType;
+      if (!DaDiTools::isSimple(gddAttType))
       {
         xmlOut << "&";
       }
-      xmlOut << " " << gddClass->className().transcode() << "::" 
-        << gddAttribute->name().transcode() << "() const " << std::endl << "{" 
-        << std::endl << "  return m_" << gddAttribute->name().transcode() 
-        << ";" << std::endl << "}" << std::endl << std::endl ;
+      xmlOut << " " << gddClassName << "::"  << gddAttName << "() const " << std::endl 
+        << "{" << std::endl 
+        << "  return m_" << gddAttName << ";" << std::endl 
+        << "}" << std::endl 
+        << std::endl ;
     }
       
-    if(gddAttribute->setMeth().equals(accessor))
+    if(gddAttSetMeth == accessor)
     {
-      xmlOut << "inline void " << gddClass->className().transcode() << "::set" 
-        << firstUp(gddAttribute->name()).transcode() << "(";
-      if (!DaDiTools::isSimple(gddAttribute->type().transcode()))
+      xmlOut << "inline void " << gddClassName << "::set" << firstUp(gddAttName) << "(";
+      if (!DaDiTools::isSimple(gddAttType))
       {
         xmlOut << "const ";
       }      
-      xmlOut << gddAttribute->type().transcode();
-      if (!DaDiTools::isSimple(gddAttribute->type().transcode()))
+      xmlOut << gddAttType;
+      if (!DaDiTools::isSimple(gddAttType))
       {
         xmlOut << "&";
       }
-      xmlOut << " value)" << std::endl << "{" << std::endl << "  m_" 
-        << gddAttribute->name().transcode() << " = value; " << std::endl << "}" 
-        << std::endl << std::endl;
+      xmlOut << " value)" << std::endl 
+        << "{" << std::endl 
+        << "  m_" << gddAttName << " = value; " << std::endl 
+        << "}" << std::endl 
+        << std::endl;
     }
   }
 }
@@ -370,7 +412,7 @@ void printSetGetAttImpl(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 void printSetGetRelDecl(std::ofstream& xmlOut,
                         DaDiClass* gddClass,
-                        char* accessor)
+                        const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
   int i;
@@ -378,14 +420,23 @@ void printSetGetRelDecl(std::ofstream& xmlOut,
   {
     char *get_ret, *set_arg, *add_arg;      
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
+    std::string gddRelRatio = gddRelation->ratio().transcode(),
+                gddRelGetMeth = gddRelation->getMeth().transcode(),
+                gddRelSetMeth = gddRelation->setMeth().transcode(),
+                gddRelAddMeth = gddRelation->addMeth().transcode(),
+                gddRelRemMeth = gddRelation->remMeth().transcode(),
+                gddRelClrMeth = gddRelation->clrMeth().transcode(),
+                gddRelType = gddRelation->type().transcode(),
+                gddRelName = gddRelation->name().transcode(),
+                gddRelDesc = gddRelation->desc().transcode();
       
-    if (gddRelation->ratio().equals("1"))
+    if (gddRelRatio == "1")
     {
       get_ret = "SmartRef<";
       set_arg = "SmartRef<";
       add_arg = "";
     }
-    else if (gddRelation->ratio().equals("*"))
+    else if (gddRelRatio == "*")
     {
       get_ret = "SmartRefVector<";
       set_arg = "SmartRefVector<";
@@ -398,64 +449,58 @@ void printSetGetRelDecl(std::ofstream& xmlOut,
       add_arg = "";
     }
 
-    if (gddRelation->getMeth().equals(accessor))
+    if (gddRelGetMeth == accessor)
     {
-      xmlOut << "  /// Retrieve " << gddRelation->desc().transcode() << std::endl;
-      if( gddRelation->ratio().equals("1"))
+      xmlOut << "  /// Retrieve " << gddRelDesc << std::endl;
+      if( gddRelRatio == "1")
       {
-        xmlOut << "  const " << gddRelation->type().transcode() << "* " 
-               << gddRelation->name().transcode() << "() const;" << std::endl;
-        xmlOut << "  " << gddRelation->type().transcode() << "* "
-          << gddRelation->name().transcode() << "();" << std::endl << std::endl;
-      } else {
-        xmlOut << "  const " << get_ret << gddRelation->type().transcode() << ">& " 
-               << gddRelation->name().transcode() << "() const;" << std::endl 
-               << std::endl;
-      }
-    }
-    if (gddRelation->setMeth().equals(accessor))
-    {
-      xmlOut << "  /// Update " << gddRelation->desc().transcode() << std::endl;
-      if (gddRelation->ratio().equals("1") ) {
-        xmlOut << "  void " << "set" << firstUp(gddRelation->name()).transcode()
-          << "(const " << gddRelation->type().transcode() << "* value); "
+        xmlOut << "  const " << gddRelType << "* " << gddRelName << "() const;" << std::endl
+          << "  " << gddRelType << "* " << gddRelName << "();" << std::endl 
+          << std::endl;
+      } 
+      else 
+      {
+        xmlOut << "  const " << get_ret << gddRelType << ">& " << gddRelName 
+            << "() const;" << std::endl 
           << std::endl;
       }
-      xmlOut  << "  void " << "set"
-        << firstUp(gddRelation->name()).transcode() << "(const "
-        << set_arg << gddRelation->type().transcode() << ">& value);"
-        << std::endl << std::endl;
+    }
+    if (gddRelSetMeth == accessor)
+    {
+      xmlOut << "  /// Update " << gddRelDesc << std::endl;
+      if (gddRelRatio == "1") 
+      {
+        xmlOut << "  void " << "set" << firstUp(gddRelName) << "(const " 
+          << gddRelType << "* value); " << std::endl;
+      }
+      xmlOut  << "  void " << "set" << firstUp(gddRelName) << "(const " 
+          << set_arg << gddRelType << ">& value);" << std::endl 
+        << std::endl;
     }
     if (strcmp("", add_arg) != 0)
     {
-      if (gddRelation->addMeth().equals(accessor))
+      if (gddRelAddMeth == accessor)
       {
-        xmlOut << "  /// Add " << gddRelation->desc().transcode() << std::endl
-        << "  void " << "addTo"
-        << firstUp(gddRelation->name()).transcode() 
-        << "(" << gddRelation->type().transcode() << "* value);"
-        << std::endl << "  void " << "addTo"
-        << firstUp(gddRelation->name()).transcode()
-        << "(const " << add_arg << gddRelation->type().transcode()
-        << ">& value); " << std::endl << std::endl;
+        xmlOut << "  /// Add " << gddRelDesc << std::endl
+        << "  void " << "addTo" << firstUp(gddRelName) << "(" << gddRelType 
+          << "* value);" << std::endl 
+        << "  void " << "addTo" << firstUp(gddRelName) << "(const " << add_arg 
+          << gddRelType << ">& value); " << std::endl << std::endl;
       }
-      if (gddRelation->remMeth().equals(accessor))
+      if (gddRelRemMeth == accessor)
       {
-        xmlOut << "  /// Remove " << gddRelation->desc().transcode() << std::endl
-          << "  void " << "removeFrom"
-          << firstUp(gddRelation->name()).transcode() << "("
-          << gddRelation->type().transcode() << "* value);" << std::endl
-          << "  void " << "removeFrom"
-          << firstUp(gddRelation->name()).transcode()
-          << "(const SmartRef<" << gddRelation->type().transcode() << ">& value); "
-          << std::endl << std::endl;
+        xmlOut << "  /// Remove " << gddRelDesc << std::endl
+          << "  void " << "removeFrom" << firstUp(gddRelName) << "("
+            << gddRelType << "* value);" << std::endl
+          << "  void " << "removeFrom" << firstUp(gddRelName)
+            << "(const SmartRef<" << gddRelType << ">& value); " << std::endl 
+          << std::endl;
       }
-      if (gddRelation->clrMeth().equals(accessor))
+      if (gddRelClrMeth == accessor)
       {
-        xmlOut << "  /// Clear " << gddRelation->desc().transcode() << std::endl
-        << "  void " << "clear" 
-              << firstUp(gddRelation->name()).transcode() << "();" 
-              << std::endl << std::endl;
+        xmlOut << "  /// Clear " << gddRelDesc << std::endl
+          << "  void " << "clear" << firstUp(gddRelName) << "();"  << std::endl 
+          << std::endl;
       }
     }      
   }
@@ -465,7 +510,7 @@ void printSetGetRelDecl(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 void printSetGetRelImpl(std::ofstream& xmlOut,
                         DaDiClass* gddClass,
-                        char* accessor)
+                        const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
   int i;
@@ -473,14 +518,24 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
   {
     char *get_ret, *set_arg, *add_arg;
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
+    std::string gddRelGetMeth = gddRelation->getMeth().transcode(),
+                gddRelSetMeth = gddRelation->setMeth().transcode(),
+                gddRelAddMeth = gddRelation->addMeth().transcode(),
+                gddRelRemMeth = gddRelation->remMeth().transcode(),
+                gddRelClrMeth = gddRelation->clrMeth().transcode(),
+                gddClassName = gddClass->className().transcode(),
+                gddRelName = gddRelation->name().transcode(),
+                gddRelType = gddRelation->type().transcode(),
+                gddRelDesc = gddRelation->desc().transcode(),
+                gddRelRatio = gddRelation->ratio().transcode();
       
-    if (gddRelation->ratio().equals("1"))
+    if (gddRelRatio == "1")
     {
       get_ret = "SmartRef<";
       set_arg = "SmartRef<";
       add_arg = "";
     }
-    else if (gddRelation->ratio().equals("*"))
+    else if (gddRelRatio == "*")
     {
       get_ret = "SmartRefVector<";
       set_arg = "SmartRefVector<";
@@ -493,106 +548,105 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
       add_arg = "";
     }
 
-    if (gddRelation->getMeth().equals(accessor))
+    if (gddRelGetMeth == accessor)
     {
-      if (gddRelation->ratio().equals("1"))
+      if (gddRelRatio == "1")
       {
-        xmlOut << "inline const " << gddRelation->type().transcode() << "* "
-          << gddClass->className().transcode() << "::"
-          << gddRelation->name().transcode()
-          << "() const" << std::endl << "{" << std::endl
-          << "   return m_" << gddRelation->name().transcode() << ";" 
-          << std::endl << "}" << std::endl << std::endl;
-        xmlOut << "inline " << gddRelation->type().transcode() << "* "
-          << gddClass->className().transcode() << "::"
-          << gddRelation->name().transcode()
-          << "() " << std::endl << "{" << std::endl
-          << "   return m_" << gddRelation->name().transcode() << ";" 
-          << std::endl << "}" << std::endl << std::endl;
+        xmlOut << "inline const " << gddRelType << "* " 
+            << gddClassName << "::"<< gddRelName << "() const" << std::endl 
+          << "{" << std::endl 
+          << "   return m_" << gddRelName << ";" << std::endl 
+          << "}" << std::endl 
+          << std::endl;
+        xmlOut << "inline " << gddRelType << "* "
+            << gddClassName << "::" << gddRelName << "() " << std::endl 
+          << "{" << std::endl 
+          << "   return m_" << gddRelName << ";" << std::endl 
+          << "}" << std::endl 
+          << std::endl;
       } else {
-        xmlOut << "inline const " << get_ret << gddRelation->type().transcode() << ">& "
-          << gddClass->className().transcode() << "::"
-          << gddRelation->name().transcode()
-          << "() const" << std::endl << "{" << std::endl
-          << "   return m_" << gddRelation->name().transcode() << ";" 
-          << std::endl << "}" << std::endl << std::endl;
+        xmlOut << "inline const " << get_ret << gddRelType << ">& "
+            << gddClassName << "::" << gddRelName << "() const" << std::endl 
+          << "{" << std::endl 
+          << "   return m_" << gddRelName << ";" << std::endl 
+          << "}" << std::endl 
+          << std::endl;
       }
     }
-    if (gddRelation->setMeth().equals(accessor))
+    if (gddRelSetMeth == accessor)
     { 
-      if (gddRelation->ratio().equals("1") ) { 
-        xmlOut << "inline void " << gddClass->className().transcode() << "::" 
-          << "set" << firstUp(gddRelation->name()).transcode() << "(const " 
-          << gddRelation->type().transcode() << "* value)" << std::endl << "{" 
-          << std::endl << "   m_" << gddRelation->name().transcode() 
-          << " = value;" << std::endl << "}" << std::endl << std::endl;
+      if (gddRelRatio == "1") 
+      { 
+        xmlOut << "inline void " << gddClassName << "::" << "set" 
+            << firstUp(gddRelName) << "(const " << gddRelType << "* value)" << std::endl 
+          << "{" << std::endl 
+          << "   m_" << gddRelName << " = value;" << std::endl 
+          << "}" << std::endl 
+          << std::endl;
       }
-      xmlOut  << "inline void " << gddClass->className().transcode() << "::" << "set"
-        << firstUp(gddRelation->name()).transcode() << "(const "
-        << set_arg << gddRelation->type().transcode() << ">& value)" 
-        << std::endl << "{" << std::endl << "   m_"
-        << gddRelation->name().transcode() << " = value;" << std::endl << "}" 
-        << std::endl << std::endl;
+      xmlOut  << "inline void " << gddClassName << "::" << "set" 
+          << firstUp(gddRelName) << "(const " << set_arg << gddRelType 
+          << ">& value)" << std::endl 
+        << "{" << std::endl 
+        << "   m_" << gddRelName << " = value;" << std::endl 
+        << "}" << std::endl 
+        << std::endl;
     }
     if (strcmp("", add_arg) != 0)
     {
-      if (gddRelation->addMeth().equals(accessor))
+      if (gddRelAddMeth == accessor)
       {
-        xmlOut << "inline void " << gddClass->className().transcode() << "::" 
-          << "addTo" << firstUp(gddRelation->name()).transcode() 
-          << "(" << gddRelation->type().transcode() << "* value)"  
-          << std::endl << "{" << std::endl << "   m_"  
-          << gddRelation->name().transcode() << ".push_back(value);"
+        xmlOut << "inline void " << gddClassName << "::" 
+          << "addTo" << firstUp(gddRelName) 
+          << "(" << gddRelType << "* value)" << std::endl << "{" << std::endl 
+          << "   m_"  << gddRelName << ".push_back(value);"
           << std::endl << "}" << std::endl << std::endl 
-          << "inline void " << gddClass->className().transcode() << "::" 
-          << "addTo" << firstUp(gddRelation->name()).transcode() 
-          << "(const " << add_arg << gddRelation->type().transcode() 
-          << ">& value)" << std::endl << "{" << std::endl 
-          << "   m_" << gddRelation->name().transcode() 
-          << ".push_back(value);" << std::endl << "}" 
-          << std::endl << std::endl;          
+          << "inline void " << gddClassName << "::" 
+          << "addTo" << firstUp(gddRelName) 
+          << "(const " << add_arg << gddRelType << ">& value)" << std::endl 
+          << "{" << std::endl << "   m_" << gddRelName << ".push_back(value);" 
+          << std::endl << "}" << std::endl << std::endl;          
       }
-      if (gddRelation->remMeth().equals(accessor))
-      {
-        xmlOut << "inline void " << gddClass->className().transcode() << "::"
-          << "removeFrom" << firstUp(gddRelation->name()).transcode()
-          << "(" << gddRelation->type().transcode() << "* value)" 
-          << std::endl << "{" << std::endl 
 
-		  << "  SmartRefVector<" << gddRelation->type().transcode()
-		  << ">::iterator iter;" << std::endl
-		  << "  for (iter = m_" << gddRelation->name().transcode()
-		  << ".begin(); iter != m_" << gddRelation->name().transcode()
-		  << ".end(); ++iter)" << std::endl << "  {" << std::endl
-		  << "    if (iter->target() == value)" << std::endl << "    {" 
-		  << std::endl << "      m_" << gddRelation->name().transcode()
-		  << ".erase(iter);" << std::endl << "    }" << std::endl << "  }"
-		  
-		  << std::endl << "}" << std::endl << std::endl << "inline void " 
-          << gddClass->className().transcode() << "::" << "removeFrom" 
-          << firstUp(gddRelation->name()).transcode() << "(const SmartRef<"
-          << gddRelation->type().transcode() << ">& value)" << std::endl 
+      if (gddRelRemMeth == accessor)
+      {
+        xmlOut << "inline void " << gddClassName << "::"
+            << "removeFrom" << firstUp(gddRelName)
+            << "(" << gddRelType << "* value)"  << std::endl 
           << "{" << std::endl 
-		  
-		  << "  SmartRefVector<" << gddRelation->type().transcode()
-		  << ">::iterator iter =" << std::endl
-		  << "    std::find(m_" << gddRelation->name().transcode()
-		  << ".begin(), m_" << gddRelation->name().transcode()
-		  << ".end(), value);" << std::endl << "  if (iter != m_"
-		  << gddRelation->name().transcode() << ".end() )" << std::endl 
-		  << "  {" << std::endl << "    m_" << gddRelation->name().transcode()
-		  << ".erase(iter);" << std::endl << "  }" 
-		  
-		  << std::endl << "}" << std::endl 
+		      << "  SmartRefVector<" << gddRelType << ">::iterator iter;" << std::endl
+		      << "  for (iter = m_" << gddRelName << ".begin(); iter != m_" 
+            << gddRelName << ".end(); ++iter)" << std::endl 
+          << "  {" << std::endl
+		      << "    if (iter->target() == value)" << std::endl 
+          << "    {" << std::endl 
+          << "      m_" << gddRelName << ".erase(iter);" << std::endl 
+          << "    }" << std::endl 
+          << "  }" << std::endl 
+          << "}" << std::endl 
+          << std::endl 
+          << "inline void " << gddClassName << "::" 
+            << "removeFrom" << firstUp(gddRelName) 
+            << "(const SmartRef<" << gddRelType << ">& value)" << std::endl 
+          << "{" << std::endl 
+          << "  SmartRefVector<" << gddRelType << ">::iterator iter =" << std::endl
+		      << "    std::find(m_" << gddRelName << ".begin(), m_" 
+            << gddRelName << ".end(), value);" << std::endl 
+          << "  if (iter != m_" << gddRelName << ".end() )" << std::endl 
+		      << "  {" << std::endl 
+          << "    m_" << gddRelName << ".erase(iter);" << std::endl 
+          << "  }" << std::endl 
+          << "}" << std::endl 
           << std::endl;        
       }
-      if (gddRelation->clrMeth().equals(accessor))
+      if (gddRelClrMeth == accessor)
       {
-        xmlOut << "inline void " << gddClass->className().transcode() << "::"
-          << "clear" << firstUp(gddRelation->name()).transcode() << "()"
-          << std::endl << "{" << std::endl << "   m_" 
-          << gddRelation->name().transcode() << ".clear();" << std::endl 
-          << "}" << std::endl << std::endl;        
+        xmlOut << "inline void " << gddClassName << "::"
+            << "clear" << firstUp(gddRelName) << "()" << std::endl 
+          << "{" << std::endl 
+          << "   m_" << gddRelName << ".clear();" << std::endl 
+          << "}" << std::endl 
+          << std::endl;        
       }
     }
   }
@@ -602,19 +656,22 @@ void printSetGetRelImpl(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 template<class T> void printEnums(std::ofstream& xmlOut,
                                   T* gdd,
-                                  char* accessor)
+                                  const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
   int i;
   for (i=0; i<gdd->sizeDaDiEnum(); ++i)
   {
     DaDiEnum* gddEnum = gdd->popDaDiEnum();
+    std::string gddEnumName = gddEnum->name().transcode(),
+                gddEnumValue = gddEnum->value().transcode(),
+                gddEnumDesc = gddEnum->desc().transcode(),
+                gddEnumAccess = gddEnum->access().transcode();
 
-    if ((strcmp(accessor,"") == 0) || (gddEnum->access().equals(accessor))) 
+    if (accessor == "" || gddEnumAccess == accessor) 
     {
-      xmlOut << "  enum " << gddEnum->name().transcode() << " {" 
-        << gddEnum->value().transcode() << "};   ///<" 
-        << gddEnum->desc().transcode() << std::endl;
+      xmlOut << "  enum " << gddEnumName << " {" << gddEnumValue << "};   ///<" 
+          << gddEnumDesc << std::endl;
     }
   }
 }
@@ -623,7 +680,7 @@ template<class T> void printEnums(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 void printMembers(std::ofstream& xmlOut,
                   DaDiClass* gddClass,
-                  char* accessor)
+                  const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
   int i;
@@ -632,35 +689,40 @@ void printMembers(std::ofstream& xmlOut,
   for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+    std::string gddAttName = gddAttribute->name().transcode(),
+                gddAttType = gddAttribute->type().transcode();
     
-    if (strlen(gddAttribute->name().transcode()) > maxLengthName)
+    if (gddAttName.length() > maxLengthName)
     { 
-      maxLengthName = strlen(gddAttribute->name().transcode()); 
+      maxLengthName = gddAttName.length(); 
     }
 
-    if (strlen(gddAttribute->type().transcode()) > maxLengthType)
+    if (gddAttType.length() > maxLengthType)
     { 
-      maxLengthType = strlen(gddAttribute->type().transcode()); 
+      maxLengthType = gddAttType.length(); 
     }
   }
-
+  
   for(i=0; i<gddClass->sizeDaDiRelation(); ++i)
   {
     unsigned int lengthType = 0;
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
+    std::string gddRelRatio = gddRelation->ratio().transcode(),
+                gddRelName = gddRelation->name().transcode(),
+                gddRelType = gddRelation->type().transcode();
 
-    if (gddRelation->ratio().equals("1"))
+    if (gddRelRatio == "1")
     { 
-      lengthType = 10 + strlen(gddRelation->type().transcode()); 
+      lengthType = 10 + gddRelType.length(); 
     }
     else 
     { 
-      lengthType = 16 + strlen(gddRelation->type().transcode()); 
+      lengthType = 16 + gddRelType.length(); 
     }
 
-    if (strlen(gddRelation->name().transcode()) > maxLengthName)
+    if (gddRelName.length() > maxLengthName)
     { 
-      maxLengthName = strlen(gddRelation->name().transcode()); 
+      maxLengthName = gddRelName.length(); 
     }
 
     if (lengthType > maxLengthType)
@@ -679,19 +741,21 @@ void printMembers(std::ofstream& xmlOut,
   for(i=0; i<gddClass->sizeDaDiAttribute(); i++)
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+    std::string gddAttAccess = gddAttribute->access().transcode(),
+                gddAttName = gddAttribute->name().transcode(),
+                gddAttType = gddAttribute->type().transcode(),
+                gddAttDesc = gddAttribute->desc().transcode();
 
-    if (gddAttribute->access().equals(accessor))
+    if (gddAttAccess == accessor)
     {
-      std::string tAttName = gddAttribute->name().transcode();
-      std::string attName = " m_" + tAttName + ";";
+      std::string fullAttName = " m_" + gddAttName + ";";
       xmlOut << "  ";
       xmlOut.width(maxLengthType);
       xmlOut.setf(std::ios::left, std::ios::adjustfield);
-      xmlOut << gddAttribute->type().transcode(); 
+      xmlOut << gddAttType; 
       xmlOut.width(maxLengthName);
       xmlOut.setf(std::ios::left, std::ios::adjustfield);
-      xmlOut << attName << " ///< " << gddAttribute->desc().transcode() 
-        << std::endl;
+      xmlOut << fullAttName << " ///< " << gddAttDesc << std::endl;
     }
   }
 
@@ -702,27 +766,29 @@ void printMembers(std::ofstream& xmlOut,
   {
     std::string rel_type;
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
+    std::string gddRelAccess = gddRelation->access().transcode(),
+                gddRelRatio = gddRelation->ratio().transcode(),
+                gddRelType = gddRelation->type().transcode(),
+                gddRelName = gddRelation->name().transcode(),
+                gddRelDesc = gddRelation->desc().transcode();
 
-    if (gddRelation->access().equals(accessor))
+    if (gddRelAccess == accessor)
     {
-      if (gddRelation->ratio().equals("1"))
+      if (gddRelRatio == "1")
       {
-        rel_type = "SmartRef";
+        rel_type = "SmartRef<";
       }
-      else if (gddRelation->ratio().equals("*"))
+      else if (gddRelRatio == "*")
       {
-        rel_type = "SmartRefVector";
+        rel_type = "SmartRefVector<";
       }
-      std::string tRelType = gddRelation->type().transcode();
-      std::string tRelName = gddRelation->name().transcode();
-      std::string relType = rel_type + '<' + tRelType + '>';
-      std::string relName = " m_" + tRelName + ";";
+      std::string relType = rel_type + gddRelType + '>';
+      std::string relName = " m_" + gddRelName + ";";
       xmlOut << "  ";
       xmlOut.width(maxLengthType);
       xmlOut << relType; 
       xmlOut.width(maxLengthName);
-      xmlOut << relName << " ///< " << gddRelation->desc().transcode() 
-        << std::endl;
+      xmlOut << relName << " ///< " << gddRelDesc << std::endl;
     }
   }
   xmlOut.unsetf(std::ios::adjustfield);                  
@@ -742,6 +808,15 @@ void printClass(std::ofstream& xmlOut,
     classTemplateList = false;
   std::vector<std::string>::iterator coIter, koIter;
 
+  std::string gddClassName = gddClass->className().transcode(),
+              gddClassID = gddClass->classID().transcode(),
+              gddClassLocation = gddClass->location().transcode(),
+              gddPackName = gddPackage->packageName().transcode(),
+              gddClassDesc = gddClass->classDesc().transcode(),
+              gddClassLongDesc = gddClass->longDesc().transcode(),
+              gddClassAuthor = gddClass->classAuthor().transcode();
+
+
   ///
   /// check if Class is an 'Eventclass'
   ///
@@ -753,7 +828,7 @@ void printClass(std::ofstream& xmlOut,
       isEventClass = true;
     }
   }*/
-  if (gddClass->classID() != NULL)
+  if (gddClassID != "")
   {
     isEventClass = true;
   }
@@ -765,8 +840,8 @@ void printClass(std::ofstream& xmlOut,
   if (isEventClass)
   {
     xmlOut << "// Class ID definition" << std::endl 
-      << "  static const CLID& CLID_" << gddClass->className().transcode()
-      << " = " << gddClass->classID().transcode() << ";" << std::endl 
+      << "  static const CLID& CLID_" << gddClassName << " = " << gddClassID 
+        << ";" << std::endl 
       << std::endl;
   }
 
@@ -775,23 +850,27 @@ void printClass(std::ofstream& xmlOut,
 //
 // create namespace for locations
 //
-  if ((gddClass->location() != NULL) || gddClass->sizeDaDiLocation())
+  if ((gddClassLocation != "") || gddClass->sizeDaDiLocation())
   {
     xmlOut << "// Namespace for locations in TDS" << std::endl
-      << "namespace " << gddClass->className().transcode() << "Location {"
-      << std::endl;
-    if (gddClass->location() != NULL)
+      << "namespace " << gddClassName << "Location {" << std::endl;
+    if (gddClassLocation != "")
     {
       xmlOut << "  static const std::string& Default = \"" 
-        << gddClass->location().transcode() << "\";" << std::endl;
+          << gddClassLocation << "\";" << std::endl;
     }
     for (i = 0; i < gddClass->sizeDaDiLocation(); ++i)
     {
       DaDiLocation* gddLocation = gddClass->popDaDiLocation();
-      xmlOut << "  static const std::string& " << gddLocation->name().transcode()
-        << " = \"" << gddLocation->place().transcode() << "\";" << std::endl;
+      std::string gddLocName = gddLocation->name().transcode(),
+                  gddLocPlace = gddLocation->place().transcode();
+
+      xmlOut << "  static const std::string& " << gddLocName << " = \"" 
+          << gddLocPlace << "\";" << std::endl;
     }
-    xmlOut << "}" << std::endl << std::endl << std::endl;
+    xmlOut << "}" << std::endl 
+      << std::endl 
+      << std::endl;
   }
       
 
@@ -824,36 +903,36 @@ void printClass(std::ofstream& xmlOut,
 //
 // class description
 //
-  xmlOut << "/** @class " << gddClass->className().transcode() << " "
-    << gddClass->className().transcode() << ".h ";
+  xmlOut << "/** @class " << gddClassName << " " << gddClassName << ".h ";
 
-  if (gddPackage->packageName().equals("__NO_PACKAGE__"))
+  if (gddPackName == "__NO_PACKAGE__")
   {
-    xmlOut << gddPackage->packageName().transcode() << "/" 
-      << gddClass->className().transcode() << ".h";
+    xmlOut << gddPackName << "/" << gddClassName << ".h";
   }
 
   xmlOut << std::endl << " *" << std::endl;
 
-  if (gddClass->classDesc() != NULL)
+  if (gddClassDesc != "")
   {
-    xmlOut << " *  " << gddClass->classDesc().transcode();
+    xmlOut << " *  " << gddClassDesc;
   }
 
-  if (gddClass->longDesc() != NULL)
+  if (gddClassLongDesc != "")
   {
-    xmlOut << std::endl << gddClass->longDesc().transcode();
+    xmlOut << std::endl 
+      << gddClassLongDesc;
   }
 
   xmlOut << std::endl << " *" << std::endl
-    << " *  @author " << gddClass->classAuthor().transcode() << std::endl
+    << " *  @author " << gddClassAuthor << std::endl
     << " *  created " << ctime(&ltime) << " *" << std::endl
-    << " */" << std::endl << std::endl;
+    << " */" << std::endl 
+    << std::endl;
 
 //
 // class definition
 //
-  xmlOut << "class " << gddClass->className().transcode();
+  xmlOut << "class " << gddClassName;
   
   if (gddClass->sizeDaDiBaseClass() > 0) 
   {
@@ -861,12 +940,15 @@ void printClass(std::ofstream& xmlOut,
     for (i = 0; i < gddClass->sizeDaDiBaseClass(); ++i)
     {
       DaDiBaseClass* gddBaseClass = gddClass->popDaDiBaseClass();
-      std::string fullBaseClName = gddBaseClass->name().transcode();
-      std::string baseClName = fullBaseClName.substr(0,fullBaseClName.find_first_of("<"));
+      std::string fullBaseClName = gddBaseClass->name().transcode(),
+                  baseClName = fullBaseClName.substr(0,fullBaseClName.find_first_of("<")),
+                  gddBaseClassAccess = gddBaseClass->access().transcode();
+      bool gddBaseClassIsVirtual = gddBaseClass->virtual_();
+
       koIter = std::find(KeyedObjectClasses.begin(), KeyedObjectClasses.end(), baseClName);
       if (koIter != KeyedObjectClasses.end())
       {
-        KeyedObjectClasses.push_back(gddClass->className().transcode());
+        KeyedObjectClasses.push_back(gddClassName);
         classTemplate = true;
       }
       //////////////////////  tbd
@@ -885,23 +967,24 @@ void printClass(std::ofstream& xmlOut,
       }
       //////////////////////////
       if (i>0) {xmlOut << ", ";}
-      if (gddBaseClass->virtual_())
+      if (gddBaseClassIsVirtual)
       {
         xmlOut << "virtual ";
       }
-      xmlOut << DaDiTools::chooseAccess(gddBaseClass->access().transcode()) 
-        << " " << fullBaseClName;
+      xmlOut << DaDiTools::chooseAccess(gddBaseClassAccess) << " " << fullBaseClName;
     }
   }
   
   
-  xmlOut << std::endl << "{" << std::endl << std::endl;
+  xmlOut << std::endl << "{" << std::endl 
+    << std::endl;
   
   
   // 
   //   PUBLIC AREA
   //
-  xmlOut << "public: " << std::endl << std::endl;
+  xmlOut << "public: " << std::endl 
+    << std::endl;
 
 //
 // (Standard) constructor & destructor
@@ -914,12 +997,16 @@ void printClass(std::ofstream& xmlOut,
   for(int h=0; h<gddClass->sizeDaDiConstructor(); ++h)
   {
     DaDiConstructor* gddConstructor = gddClass->popDaDiConstructor();
+    std::string gddConsDesc = gddConstructor->desc().transcode(),
+                gddConsCode = gddConstructor->code().transcode(),
+                gddConsInitList = gddConstructor->initList().transcode();
+
     
-    if (gddConstructor->desc() != NULL)
+    if (gddConsDesc != "")
     {
-      xmlOut << "  /// " << gddConstructor->desc().transcode() << std::endl;
+      xmlOut << "  /// " << gddConsDesc << std::endl;
     }
-    xmlOut << "  " << gddClass->className().transcode() << "(";
+    xmlOut << "  " << gddClassName << "(";
 
     if (gddConstructor->sizeDaDiMethArgument() == 0) {constWithZeroArgs = true;}
 
@@ -927,20 +1014,28 @@ void printClass(std::ofstream& xmlOut,
     
     xmlOut << ")";
 
-    if (gddConstructor->code() != NULL)
-    {
-      if (gddConstructor->initList() != NULL)
-      {
-        xmlOut << std::endl << "    : " << gddConstructor->initList().transcode();
-      }
 
-      xmlOut << std::endl << "  {" << std::endl
-        << gddConstructor->code().transcode() << std::endl
-        << "  }" << std::endl << std::endl;
+    if (gddConstructor->initList() != NULL)
+    {
+      xmlOut << std::endl << "    : " << gddConstructor->initList().transcode();
+      if (gddConsCode == "")
+      {
+        gddConsCode == " ";
+      }
+    }
+    
+    if (gddConsCode != "")
+    {
+      xmlOut << std::endl 
+        << "  {" << std::endl
+        << gddConsCode << std::endl
+        << "  }" << std::endl 
+        << std::endl;
     }
     else
     {
-      xmlOut << ";" << std::endl << std::endl;
+      xmlOut << ";" << std::endl 
+        << std::endl;
     }
   }
 
@@ -950,27 +1045,29 @@ void printClass(std::ofstream& xmlOut,
   if (!constWithZeroArgs)
   {
     xmlOut << "  /// Default Constructor " << std::endl 
-           << "  " << gddClass->className().transcode() << "() ";
+           << "  " << gddClassName << "() ";
 
     bool firstLine = true;
     for (i=0; i<gddClass->sizeDaDiAttribute(); ++i)
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
-      std::string attType = gddAttribute->type().transcode();
-      int lastspace = attType.find_last_of(" ");
-      attType = attType.substr(lastspace+1, attType.size()-lastspace);
-      std::string initValue;
-      if (gddAttribute->init() != NULL)
+      std::string initValue,
+                  gddAttName = gddAttribute->name().transcode(),
+                  gddAttType = gddAttribute->type().transcode(),
+                  gddAttInit = gddAttribute->init().transcode();
+      int lastspace = gddAttType.find_last_of(" ");
+      gddAttType = gddAttType.substr(lastspace+1, gddAttType.size()-lastspace);
+      if (gddAttInit != "")
       {
-        initValue = gddAttribute->init().transcode();
+        initValue = gddAttInit;
       }
-      else if ((attType == "int") || (attType == "unsigned") ||
-               (attType == "short") || (attType == "signed") ||
-               (attType == "long"))
+      else if ((gddAttType == "int") || (gddAttType == "unsigned") ||
+               (gddAttType == "short") || (gddAttType == "signed") ||
+               (gddAttType == "long"))
       {
         initValue = "0";
       }
-      else if ((attType == "float") || (attType == "double"))
+      else if ((gddAttType == "float") || (gddAttType == "double"))
       {
         initValue = "0.0";
       }
@@ -979,26 +1076,28 @@ void printClass(std::ofstream& xmlOut,
       {
         if (firstLine)
         {
-          xmlOut << std::endl << "    : ";
+          xmlOut << std::endl 
+            << "    : ";
           firstLine = false;
         }
         else
         {
-          xmlOut << "," << std::endl << "    ";
+          xmlOut << "," << std::endl 
+            << "    ";
         }
-        xmlOut << "m_" << gddAttribute->name().transcode() << "(" << initValue
-          << ")";
+        xmlOut << "m_" << gddAttName << "(" << initValue << ")";
       }
     }
-    xmlOut << " {}" << std::endl << std::endl;
+    xmlOut << " {}" << std::endl 
+      << std::endl;
   }
 
   
 
   if (gddClass->sizeDaDiDestructor() == 0)
   {
-    xmlOut << "  /// Destructor " << std::endl << "  virtual " << "~"
-      << gddClass->className().transcode() << "() " << "{}" << std::endl
+    xmlOut << "  /// Destructor " << std::endl 
+      << "  virtual " << "~" << gddClassName << "() {}" << std::endl
       << std::endl;
   }
   else
@@ -1009,25 +1108,32 @@ void printClass(std::ofstream& xmlOut,
     for(int h=0; h<gddClass->sizeDaDiDestructor(); ++h)
     {
       DaDiDestructor* gddDestructor = gddClass->popDaDiDestructor();
-    
-      if (gddDestructor->desc() != NULL)
+      std::string gddDestDesc = gddDestructor->desc().transcode(),
+                  gddDestCode = gddDestructor->code().transcode();
+
+
+      if (gddDestDesc != "")
       {
-        xmlOut << "  /// " << gddDestructor->desc().transcode() << std::endl;
+        xmlOut << "  /// " << gddDestDesc << std::endl;
       }
-      xmlOut << "  ~" << gddClass->className().transcode() << "(";
+      xmlOut << "  ~" << gddClassName << "(";
 
       printArguments(xmlOut, gddDestructor);
 
       xmlOut << ")";
-      if (gddDestructor->code() != NULL)
+
+      if (gddDestCode != "")
       {
-        xmlOut << std::endl << "  {" << std::endl
-          << gddDestructor->code().transcode() << std::endl
-          << "  }" << std::endl << std::endl;
+        xmlOut << std::endl 
+          << "  {" << std::endl
+          << gddDestCode << std::endl
+          << "  }" << std::endl 
+          << std::endl;
       }
       else
       {
-        xmlOut << ";" << std::endl << std::endl;
+        xmlOut << ";" << std::endl 
+          << std::endl;
       }
     }
   }
@@ -1037,10 +1143,11 @@ void printClass(std::ofstream& xmlOut,
 //
   if (isEventClass)
   {
-    xmlOut << "  /// Retrieve pointer to class definition structure" 
-      << std::endl << "  virtual const CLID& clID() const; " << std::endl;
+    xmlOut << "  /// Retrieve pointer to class definition structure" << std::endl 
+      << "  virtual const CLID& clID() const; " << std::endl;
 
-    xmlOut << "  static const CLID& classID(); " << std::endl << std::endl;
+    xmlOut << "  static const CLID& classID(); " << std::endl 
+      << std::endl;
   }
 
 
@@ -1081,18 +1188,20 @@ void printClass(std::ofstream& xmlOut,
 //
   if (!isEventClass)
   {
-	xmlOut << "  /// Operator overloading for serializing (writing)" 
-	  << std::endl 
+	xmlOut << "  /// Operator overloading for serializing (writing)"  << std::endl 
 	  << "  friend StreamBuffer& operator<< (StreamBuffer& s, const "
-	  << gddClass->className().transcode() << "& obj)" << std::endl << "  {" 
-	  << std::endl << "    return obj.serialize(s);" << std::endl << "  }" 
-	  << std::endl << std::endl;
+	    << gddClassName << "& obj)" << std::endl 
+    << "  {" << std::endl 
+    << "    return obj.serialize(s);" << std::endl 
+    << "  }" << std::endl 
+    << std::endl;
 
-	xmlOut << "  /// Operator overloading for serializing (reading)"
-	  << std::endl
+	xmlOut << "  /// Operator overloading for serializing (reading)" << std::endl
 	  << "  friend StreamBuffer& operator>> (StreamBuffer& s, "
-	  << gddClass->className().transcode() << "& obj)" << "  {" << std::endl
-	  << "    return obj.serialize(s);" << std::endl << "  }" << std::endl
+    << gddClassName << "& obj)" << std::endl 
+    << "  {" << std::endl
+	  << "    return obj.serialize(s);" << std::endl 
+    << "  }" << std::endl
 	  << std::endl;
 
 	xmlOut << "  /// Operator overloading for stringoutput" << std::endl
@@ -1118,20 +1227,21 @@ void printClass(std::ofstream& xmlOut,
   for (i=0; i<gddClass->sizeDaDiMethod(); ++i)
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
-    if (gddMethod->name().equals("serialize") &&
-        gddMethod->daDiMethReturn()->type().equals("StreamBuffer&") &&
-		!gddMethod->const_())
+    std::string gddMethodName = gddMethod->name().transcode(),
+                gddMethRetType = gddMethod->daDiMethReturn()->type().transcode();
+    bool gddMethodIsConst = gddMethod->const_();
+
+    if (gddMethodName == "serialize" && gddMethRetType == "StreamBuffer&" 
+        && !gddMethodIsConst)
     {
       streamIn = true;
     }
-    if (gddMethod->name().equals("serialize") &&
-        gddMethod->daDiMethReturn()->type().equals("StreamBuffer&") &&
-		gddMethod->const_())
+    if (gddMethodName == "serialize" && gddMethRetType == "StreamBuffer&" 
+        && gddMethodIsConst)
     {
       streamOut = true;
     }
-    if (gddMethod->name().equals("fillStream") &&
-        gddMethod->daDiMethReturn()->type().equals("std::ostream&"))
+    if (gddMethodName == "fillStream" && gddMethRetType == "std::ostream&")
     {
       ostreamOut = true;
     }
@@ -1145,20 +1255,20 @@ void printClass(std::ofstream& xmlOut,
   if (!streamOut)
   {
     xmlOut << "  /// Serialize the object for writing" << std::endl
-	  << "  virtual StreamBuffer& serialize(StreamBuffer& s) const;" 
-    << std::endl << std::endl;
+	    << "  virtual StreamBuffer& serialize(StreamBuffer& s) const;" << std::endl 
+      << std::endl;
   }
   if (!streamIn)
   {
     xmlOut << "  /// Serialize the object for reading" << std::endl
-	  << "  virtual StreamBuffer& serialize(StreamBuffer& s);"
-    << std::endl << std::endl;
+	    << "  virtual StreamBuffer& serialize(StreamBuffer& s);" << std::endl 
+      << std::endl;
   }
   if (!ostreamOut)
   {
-     xmlOut << "  /// Fill the ASCII output stream" << std::endl
-	  << "  virtual std::ostream& fillStream(std::ostream& s) const;"
-	  << std::endl << std::endl;
+    xmlOut << "  /// Fill the ASCII output stream" << std::endl
+	    << "  virtual std::ostream& fillStream(std::ostream& s) const;" << std::endl 
+      << std::endl;
   }
 
 
@@ -1170,7 +1280,9 @@ void printClass(std::ofstream& xmlOut,
   //   PROTECTED AREA
   //
 
-  xmlOut << std::endl << "protected: " << std::endl << std::endl;
+  xmlOut << std::endl << "protected: " 
+    << std::endl 
+    << std::endl;
 
   printMethodDecl(xmlOut, gddClass, "PROTECTED");
   printEnums(xmlOut, gddClass, "PROTECTED");
@@ -1181,7 +1293,9 @@ void printClass(std::ofstream& xmlOut,
   //   PRIVATE AREA
   //
 
-  xmlOut << std::endl << "private: " << std::endl << std::endl;
+  xmlOut << std::endl << "private: " 
+    << std::endl 
+    << std::endl;
 
 
   // print declarations of private functions
@@ -1193,9 +1307,12 @@ void printClass(std::ofstream& xmlOut,
   printEnums(xmlOut, gddClass, "PRIVATE");
   printMembers(xmlOut, gddClass, "PRIVATE");
   
-  xmlOut << std::endl << "};" << std::endl << std::endl
+  xmlOut << std::endl 
+    << "};" << std::endl 
+    << std::endl
     << "// -----------------------------------------------------------------------------"
-    << std::endl << "//   end of class" << std::endl
+    << std::endl 
+    << "//   end of class" << std::endl
     << "// -----------------------------------------------------------------------------"
     << std::endl;
 
@@ -1208,11 +1325,12 @@ void printClass(std::ofstream& xmlOut,
 //
 
   if (gddPackage->sizeImpSoftList() || gddClass->sizeImpSoftList())
-    {
-    xmlOut << std::endl << std::endl
+  {
+    xmlOut << std::endl 
+      << std::endl
       << "// Including forward declarations" << std::endl;
     for(i=0; i<gddPackage->sizeImpSoftList(); i++)
-        {
+    {
       std::string impName = gddPackage->popImpSoftList();
       if (dbExportClass[impName] != "")
       {
@@ -1220,14 +1338,14 @@ void printClass(std::ofstream& xmlOut,
       }
       else
       {
-        std::cerr << std::endl << argV0 << ": No information found for type: "
-          << impName << std::endl << argV0 << ": Line written: #include \""
-          << impName << ".h\"" << std::endl;
+        std::cerr << std::endl 
+          << argV0 << ": No information found for type: " << impName << std::endl 
+          << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
       }
       xmlOut << "#include \"" << impName << ".h\"" << std::endl;
     }
-      for(i=0; i<gddClass->sizeImpSoftList(); i++)
-        {
+    for(i=0; i<gddClass->sizeImpSoftList(); i++)
+    {
       std::string impName = gddClass->popImpSoftList();
       if (dbExportClass[impName] != "")
       {
@@ -1235,15 +1353,16 @@ void printClass(std::ofstream& xmlOut,
       }
       else
       {
-        std::cerr << std::endl << argV0 << ": No information found for type: "
-          << impName << std::endl << argV0 << ": Line written: #include \""
-          << impName << ".h\"" << std::endl;
+        std::cerr << std::endl 
+          << argV0 << ": No information found for type: " << impName << std::endl 
+          << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
       }
-      xmlOut << "#include \"" << impName << ".h\"" << std::endl;
-        }
-    }
+      xmlOut << "#include \"" << impName << ".h\"" << std::endl;      
+    }    
+  }
   
-  xmlOut << std::endl << std::endl;
+  xmlOut << std::endl 
+    << std::endl;
 
 
   if (isEventClass)
@@ -1251,18 +1370,20 @@ void printClass(std::ofstream& xmlOut,
   // 
   // Function clID()
   //
-    xmlOut << "inline const CLID& " << gddClass->className().transcode() 
-      << "::clID() const " << std::endl << "{" << std::endl << "  return "
-      << gddClass->className().transcode() << "::classID();" << std::endl << "}"
-      << std::endl << std::endl;
+    xmlOut << "inline const CLID& " << gddClassName << "::clID() const " << std::endl 
+      << "{" << std::endl 
+      << "  return " << gddClassName << "::classID();" << std::endl 
+      << "}" << std::endl 
+      << std::endl;
 
   //
   // Function classID()
   //
-    xmlOut << "inline const CLID& " << gddClass->className().transcode() 
-      << "::classID()" << std::endl << "{" << std::endl 
-      << "  return CLID_" << gddClass->className().transcode() 
-      << ";" << std::endl << "}" << std::endl << std::endl;
+    xmlOut << "inline const CLID& " << gddClassName << "::classID()" << std::endl 
+      << "{" << std::endl 
+      << "  return CLID_" << gddClassName << ";" << std::endl 
+      << "}" << std::endl 
+      << std::endl;
   }
 
 
@@ -1331,37 +1452,39 @@ void printClass(std::ofstream& xmlOut,
   if (!streamOut)
   {
     /// function header
-    xmlOut << "inline StreamBuffer& " << gddClass->className().transcode()
-		<< "::serialize(StreamBuffer& s) const " << std::endl
+    xmlOut << "inline StreamBuffer& " << gddClassName 
+        << "::serialize(StreamBuffer& s) const " << std::endl
       << "{" << std::endl;
 
     /// treating boolean values
     for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+      std::string gddAttName = gddAttribute->name().transcode(),
+                  gddAttType = gddAttribute->type().transcode();
 
-      if (gddAttribute->type().equals("bool"))
+      if (gddAttType == "bool")
       {
-        xmlOut << "  unsigned char " << "l_" 
-          << gddAttribute->name().transcode() << " = (m_"
-          << gddAttribute->name().transcode() << ") ? 1 : 0;"
-          << std::endl;
+        xmlOut << "  unsigned char " << "l_" << gddAttName << " = (m_"
+            << gddAttName << ") ? 1 : 0;" << std::endl;
       } 
     }
 
     bool seriAtt = false;
     for(i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
     {
-      DOMString baseName = gddClass->popDaDiBaseClass()->name();
-      if (!baseName.equals("ContainedObject") &&
-          !baseName.equals("DataObject"))
+      std::string gddBaseName = gddClass->popDaDiBaseClass()->name().transcode();
+      if (gddBaseName != "ContainedObject" &&
+          gddBaseName != "DataObject")
       {
-        xmlOut << "  " << baseName.transcode() << "::serialize(s);";
+        xmlOut << "  " << gddBaseName << "::serialize(s);" << std::endl;
       }
     }
     for(i=0; i<gddClass->sizeDaDiAttribute(); i++)
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+      std::string gddAttType = gddAttribute->type().transcode(),
+                  gddAttName = gddAttribute->name().transcode();
       if(i==0 && !seriAtt)
       {
         xmlOut << "  s ";
@@ -1371,11 +1494,11 @@ void printClass(std::ofstream& xmlOut,
       {
         xmlOut << std::endl << "    ";
       }
-      if (gddAttribute->type().equals("bool"))
+      if (gddAttType == "bool")
       {
         xmlOut << "<< l_";
       }
-      else if (gddAttribute->type().equals("double"))
+      else if (gddAttType == "double")
       {
         xmlOut << "<< (float)m_";
       }
@@ -1383,28 +1506,29 @@ void printClass(std::ofstream& xmlOut,
       {
         xmlOut << "<< m_";
       }
-      xmlOut << gddAttribute->name().transcode();    
+      xmlOut << gddAttName;    
     }
     for(i=0; i<gddClass->sizeDaDiRelation(); i++)
     {
+      std::string gddRelName = gddClass->popDaDiRelation()->name().transcode();
       if (i==0 && !seriAtt)
       {
-        xmlOut << "s << m_" 
-          << gddClass->popDaDiRelation()->name().transcode() << "(this)";
+        xmlOut << "s << m_" << gddRelName << "(this)";
         seriAtt = true;
       }
       else
       {
-        xmlOut << std::endl << "    << m_" 
-          << gddClass->popDaDiRelation()->name().transcode() << "(this)";
+        xmlOut << std::endl << "    << m_" << gddRelName << "(this)";
       }
     }
-	if (seriAtt)
-	{
+	  if (seriAtt)
+    {
       xmlOut << ";" << std::endl;
-	}
+    }
     
-    xmlOut << "  return s;" << std::endl << "}" << std::endl << std::endl;
+    xmlOut << "  return s;" << std::endl 
+      << "}" << std::endl 
+      << std::endl;
   }
 
   
@@ -1415,8 +1539,8 @@ void printClass(std::ofstream& xmlOut,
   if(!streamIn)
   {
     /// function header
-    xmlOut << "inline StreamBuffer& " << gddClass->className().transcode()
-	  << "::serialize(StreamBuffer& s)" << std::endl
+    xmlOut << "inline StreamBuffer& " << gddClassName 
+        << "::serialize(StreamBuffer& s)" << std::endl
       << "{" << std::endl;
 
     bool attBool=false, attFloat=false;
@@ -1425,8 +1549,10 @@ void printClass(std::ofstream& xmlOut,
     for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+      std::string gddAttType = gddAttribute->type().transcode(),
+                  gddAttName = gddAttribute->name().transcode();
 
-      if (gddAttribute->type().equals("bool"))
+      if (gddAttType == "bool")
       {
         if (!attBool)
         {
@@ -1437,17 +1563,22 @@ void printClass(std::ofstream& xmlOut,
         {
           xmlOut << ", ";
         }
-        xmlOut << "l_" << gddAttribute->name().transcode();
+        xmlOut << "l_" << gddAttName;
       }
     }
-    if (attBool) { xmlOut << ";" << std::endl; }
+    if (attBool) 
+    { 
+      xmlOut << ";" << std::endl; 
+    }
 
     /// treating float values
     for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+      std::string gddAttType = gddAttribute->type().transcode(),
+                  gddAttName = gddAttribute->name().transcode();
 
-      if (gddAttribute->type().equals("double"))
+      if (gddAttType == "double")
       {
         if (!attFloat)
         {
@@ -1458,24 +1589,29 @@ void printClass(std::ofstream& xmlOut,
         {
           xmlOut << ", ";
         }
-        xmlOut << "l_" << gddAttribute->name().transcode();
+        xmlOut << "l_" << gddAttName;
       }
     }
-    if (attFloat) { xmlOut << ";" << std::endl; }
+    if (attFloat) 
+    { 
+      xmlOut << ";" << std::endl; 
+    }
 
     bool seriAtt = false;
     for(i=0; i<gddClass->sizeDaDiBaseClass(); ++i)
     {
-      DOMString baseName = gddClass->popDaDiBaseClass()->name();
-      if (!baseName.equals("ContainedObject") &&
-          !baseName.equals("DataObject"))
+      std::string gddBaseName = gddClass->popDaDiBaseClass()->name().transcode();
+      if (gddBaseName != "ContainedObject" && gddBaseName != "DataObject")
       {
-		  xmlOut << "  " << baseName.transcode() << "::serialize(s);" << std::endl;
+		  xmlOut << "  " << gddBaseName << "::serialize(s);" << std::endl;
       }
     }
     for(i=0; i<gddClass->sizeDaDiAttribute(); i++)
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+      std::string gddAttType = gddAttribute->type().transcode(),
+                  gddAttName = gddAttribute->name().transcode();
+
       if(i==0 && !seriAtt)
       {
         xmlOut << "  s ";
@@ -1485,8 +1621,7 @@ void printClass(std::ofstream& xmlOut,
       {
         xmlOut << std::endl << "    ";
       }
-      if (gddAttribute->type().equals("bool") ||
-          gddAttribute->type().equals("double"))
+      if (gddAttType == "bool" || gddAttType == "double")
       {
         xmlOut << ">> l_";
       }
@@ -1494,47 +1629,52 @@ void printClass(std::ofstream& xmlOut,
       {
         xmlOut << ">> m_";
       }
-      xmlOut << gddAttribute->name().transcode();    
+      xmlOut << gddAttName;    
     }
     for(i=0; i<gddClass->sizeDaDiRelation(); i++)
     {
+      std::string gddRelName = gddClass->popDaDiRelation()->name().transcode();
       if (i==0 && !seriAtt)
       {
-        xmlOut << "s >> m_" 
-          << gddClass->popDaDiRelation()->name().transcode() << "(this)";
+        xmlOut << "s >> m_" << gddRelName << "(this)";
         seriAtt = true;
       }
       else
       {
-        xmlOut << std::endl << "    " << ">> m_" 
-          << gddClass->popDaDiRelation()->name().transcode() << "(this)";
+        xmlOut << std::endl << "    " << ">> m_" << gddRelName << "(this)";
       }
     }
-	if (seriAtt)
-	{
+  	if (seriAtt)
+    {
       xmlOut << ";" << std::endl;
-	}
+    }
     
     for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
-      if (gddAttribute->type().equals("bool"))
+      std::string gddAttType = gddAttribute->type().transcode(),
+                  gddAttName = gddAttribute->name().transcode();
+
+      if (gddAttType == "bool")
       {
-        xmlOut << "  m_" << gddAttribute->name().transcode()
-          << " = (l_" << gddAttribute->name().transcode()
+        xmlOut << "  m_" << gddAttName << " = (l_" << gddAttName
           << ") ? true : false;" << std::endl;
       }
     }
     for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
-      if (gddAttribute->type().equals("double"))
+      std::string gddAttType = gddAttribute->type().transcode(),
+                  gddAttName = gddAttribute->name().transcode();
+
+      if (gddAttType == "double")
       {
-        xmlOut << "  m_" << gddAttribute->name().transcode()
-          << " = l_" << gddAttribute->name().transcode() << ";" << std::endl;
+        xmlOut << "  m_" << gddAttName << " = l_" << gddAttName << ";" << std::endl;
       }
     }
-    xmlOut << "  return s;" << std::endl << "}" << std::endl << std::endl;
+    xmlOut << "  return s;" << std::endl 
+      << "}" << std::endl 
+      << std::endl;
   }
   
 
@@ -1545,8 +1685,8 @@ void printClass(std::ofstream& xmlOut,
   if (!ostreamOut)
   {
     /// function header
-    xmlOut << "inline std::ostream& " << gddClass->className().transcode()
-	  << "::fillStream(std::ostream& s) const" << std::endl
+    xmlOut << "inline std::ostream& " << gddClassName 
+        << "::fillStream(std::ostream& s) const" << std::endl
       << "{" << std::endl;
 
 
@@ -1554,13 +1694,13 @@ void printClass(std::ofstream& xmlOut,
     for(i=0; i<gddClass->sizeDaDiAttribute(); ++i)
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
+      std::string gddAttType = gddAttribute->type().transcode(),
+                  gddAttName = gddAttribute->name().transcode();
 
-      if (gddAttribute->type().equals("bool"))
+      if (gddAttType == "bool")
       {
-        xmlOut << "  char " << "l_" 
-          << gddAttribute->name().transcode() << " = (m_"
-          << gddAttribute->name().transcode() << ") ? 'T' : 'F';"
-          << std::endl;
+        xmlOut << "  char " << "l_" << gddAttName << " = (m_"
+          << gddAttName << ") ? 'T' : 'F';" << std::endl;
       }     
     }
 
@@ -1568,38 +1708,42 @@ void printClass(std::ofstream& xmlOut,
     for(i=0; i<gddClass->sizeDaDiAttribute(); i++)
     {
       DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
-    if(i==0)
-	{
-      /*xmlOut << "  s << \"class " << gddClass->className().transcode()
+      std::string gddAttName = gddAttribute->name().transcode(),
+                  gddAttType = gddAttribute->type().transcode();
+      if(i==0)
+      {
+        /*xmlOut << "  s << \"class " << gddClass->className().transcode()
              << ":\""; */
-      xmlOut << "  s << \"{ \"" << std::endl << "    << \" " 
-           << gddAttribute->name().transcode() << ":\\t\" ";
-		  seriAtt = true;
-	}
-	else
-	{
-		xmlOut << " << std::endl" << std::endl << "    << \"   " 
-           << gddAttribute->name().transcode() << ":\\t\" ";
-	}
-    if (gddAttribute->type().equals("bool"))
-    {  
-      xmlOut << "<< l_";
+        xmlOut << "  s << \"{ \"" << std::endl << "    << \" " 
+           << gddAttName << ":\\t\" ";
+		    seriAtt = true;
+      }
+	    else
+      {
+		    xmlOut << " << std::endl" << std::endl << "    << \"   " 
+          << gddAttName << ":\\t\" ";
+      }
+      if (gddAttType == "bool")
+      {  
+        xmlOut << "<< l_";
+      }
+      else if (gddAttType == "double")
+      {
+        xmlOut << "<< (float)m_";
+      }
+      else
+      {
+        xmlOut << "<< m_";
+      }
+      xmlOut << gddAttName;
     }
-    else if (gddAttribute->type().equals("double"))
+	  if (seriAtt)
     {
-      xmlOut << "<< (float)m_";
-    }
-    else
-    {
-      xmlOut << "<< m_";
-    }
-    xmlOut << gddAttribute->name().transcode();
-  }
-	if (seriAtt)
-	{
       xmlOut << " << \" } \";" << std::endl;
-	}
-    xmlOut << "  return s;" << std::endl << "}" << std::endl << std::endl;
+    }
+    xmlOut << "  return s;" << std::endl 
+      << "}" << std::endl 
+      << std::endl;
   }
  
 
@@ -1628,13 +1772,11 @@ void printClass(std::ofstream& xmlOut,
 //
   if (classTemplate)
   {
-    xmlOut << "//Defintion of keyed container for "
-      << gddClass->className().transcode() << std::endl
+    xmlOut << "//Defintion of keyed container for " << gddClassName << std::endl
 //      << "namespace Containers { class HashMap; };" << std::endl
 //      << "template <class TYPE, class MAPPING> class KeyedContainer;" << std::endl
-      << "typedef KeyedContainer<" << gddClass->className().transcode()
-      << ", Containers::HashMap> " << printPlural(gddClass->className().transcode()) << ";"
-      << std::endl;
+      << "typedef KeyedContainer<" << gddClassName << ", Containers::HashMap> " 
+        << printPlural(gddClassName) << ";" << std::endl;
   }
 
 /////////////////////////////// tbd - to be deleted   
@@ -1643,20 +1785,18 @@ void printClass(std::ofstream& xmlOut,
   //
   if (classTemplateVector)
   {
-    xmlOut << "// Defintion of vector container type for " 
-      << gddClass->className().transcode() << std::endl
+    xmlOut << "// Defintion of vector container type for " << gddClassName << std::endl
       << "template <class TYPE> class ObjectVector;" << std::endl
-      << "typedef ObjectVector<" << gddClass->className().transcode()
-      << "> " << gddClass->className().transcode() << "Vector;" << std::endl;
+      << "typedef ObjectVector<" << gddClassName << "> " << gddClassName 
+        << "Vector;" << std::endl;
   }
   
   if (classTemplateList)
   {
-    xmlOut << "// Defintion of all list container types for " 
-      << gddClass->className().transcode() << std::endl
+    xmlOut << "// Defintion of all list container types for " << gddClassName << std::endl
       << "template <class TYPE> class ObjectList;" << std::endl
-      << "typedef ObjectList<" << gddClass->className().transcode() << "> "
-      << gddClass->className().transcode() << "List;" << std::endl;
+      << "typedef ObjectList<" << gddClassName << "> " << gddClassName 
+        << "List;" << std::endl;
   }
 /////////////////////////////////////  
 }
@@ -1670,12 +1810,38 @@ void printNamespace(std::ofstream& xmlOut,
 //-----------------------------------------------------------------------------
 {
   int i;
-  xmlOut << std::endl << "/** @namespace " << gddNamespace->name().transcode()
-    << std::endl << " *" << std::endl << " *  " << gddNamespace->desc().transcode()
-    << std::endl << " */" << std::endl << "namespace " << gddNamespace->name().transcode()
-    << std::endl << "{" << std::endl;
+  std::string gddNamespName = gddNamespace->name().transcode(),
+              gddNamespDesc = gddNamespace->desc().transcode();
+
+  xmlOut << std::endl 
+    << "/** @namespace " << gddNamespName << std::endl 
+    << " *" << std::endl 
+    << " *  " << gddNamespDesc << std::endl 
+    << " */" << std::endl 
+    << "namespace " << gddNamespName << std::endl 
+    << "{" << std::endl;
 
   printEnums(xmlOut, gddNamespace, "");
+
+  xmlOut << std::endl;
+
+  for (i=0; i<gddNamespace->sizeDaDiAttribute(); ++i)
+  {
+    DaDiAttribute* gddAttribute = gddNamespace->popDaDiAttribute();
+    std::string gddAttType = gddAttribute->type().transcode(),
+                gddAttName = gddAttribute->name().transcode(),
+                gddAttDesc = gddAttribute->desc().transcode(),
+                gddAttInit = gddAttribute->init().transcode();
+
+    xmlOut << "  /// " << gddAttDesc << std::endl
+      << "  " << gddAttType << " " << gddAttName;
+    if (gddAttInit != "")
+    {
+      xmlOut << " = " << gddAttInit;
+    }
+    xmlOut << ";" << std::endl
+      << std::endl;
+  }
 
   for (i=0; i<gddNamespace->sizeDaDiClass(); ++i)
   {
@@ -1700,6 +1866,7 @@ void printCppHeader(DaDiPackage* gddPackage,
   std::map<std::string,std::string> dbExportClass;
   ContainedObjectClasses.push_back("ContainedObject");
   KeyedObjectClasses.push_back("KeyedObject");
+  std::string gddPackName = gddPackage->packageName().transcode();
 
 //
 // Parser initialization
@@ -1856,18 +2023,19 @@ void printCppHeader(DaDiPackage* gddPackage,
 
   for(k=0; k<gddPackage->sizeDaDiNamespace(); ++k)
   {
-
-
     DaDiNamespace* gddNamespace = gddPackage->popDaDiNamespace();
+    std::string gddNamespName = gddNamespace->name().transcode();
 
+    
     char* fileName = new char[256];
     strcpy(fileName, envOut);
-    strcat(fileName, gddNamespace->name().transcode());
+    strcat(fileName, gddNamespName.data());
     strcat(fileName, ".h");
     std::cout << "Writing " << fileName;
     std::ofstream xmlOut(fileName);  
 
-    xmlOut << std::endl << std::endl
+    xmlOut << std::endl 
+      << std::endl
       << "//   **************************************************************************" << std::endl
       << "//   *                                                                        *" << std::endl
       << "//   *                      ! ! ! A T T E N T I O N ! ! !                     *" << std::endl
@@ -1880,16 +2048,17 @@ void printCppHeader(DaDiPackage* gddPackage,
       << "//   *  are using it from inside a Gaudi-package).                            *" << std::endl
       << "//   *                                                                        *" << std::endl
       << "//   **************************************************************************" << std::endl
-      << std::endl << std::endl << std::endl;
+      << std::endl 
+      << std::endl 
+      << std::endl;
 
 
     //
     // IFNDEF
     //
-    xmlOut << "#ifndef " << gddPackage->packageName().transcode() << "_" 
-      << gddNamespace->name().transcode() << "_H" << std::endl << "#define " 
-      << gddPackage->packageName().transcode() << "_" 
-      << gddNamespace->name().transcode() << "_H 1" << std::endl << std::endl;
+    xmlOut << "#ifndef " << gddPackName << "_" << gddNamespName << "_H" << std::endl 
+      << "#define " << gddPackName << "_" << gddNamespName << "_H 1" << std::endl 
+      << std::endl;
 
     //
     // Includes
@@ -1898,8 +2067,12 @@ void printCppHeader(DaDiPackage* gddPackage,
 
     for(i=0; i<gddPackage->sizeImpStdList(); i++)
     {
-      xmlOut << "#include <" << gddPackage->popImpStdList() << ">"
-        << std::endl;
+      xmlOut << "#include <" << gddPackage->popImpStdList() << ">" << std::endl;
+    }
+
+    for(i=0; i<gddNamespace->sizeImpStdList(); i++)
+    {
+      xmlOut << "#include <" << gddNamespace->popImpStdList() << ">" << std::endl;
     }
 
     for (j=0; j<gddNamespace->sizeDaDiClass(); ++j)
@@ -1907,8 +2080,7 @@ void printCppHeader(DaDiPackage* gddPackage,
       DaDiClass* gddClass = gddNamespace->popDaDiClass();
       for(i=0; i<gddClass->sizeImpStdList(); i++)
       {
-        xmlOut << "#include <" << gddClass->popImpStdList() << ">"
-          << std::endl;
+        xmlOut << "#include <" << gddClass->popImpStdList() << ">" << std::endl;
       }
     }
   
@@ -1923,9 +2095,27 @@ void printCppHeader(DaDiPackage* gddPackage,
       }
       else
       {
-        std::cerr << std::endl << argV0 << ": No information found for type: "
-          << impName << std::endl << argV0 << ": Line written: #include \""
-          << impName << ".h\"" << std::endl;
+        std::cerr << std::endl 
+          << argV0 << ": No information found for type: " << impName << std::endl 
+          << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
+      }
+      xmlOut << "#include \"" << impName << ".h\"" << std::endl;
+    }
+
+    gddNamespace->remDblImportList();
+
+    for(i=0; i<gddNamespace->sizeImportList(); i++)
+    {
+      std::string impName = gddNamespace->popImportList();
+      if(dbExportClass[impName] != "")
+      {
+        impName = dbExportClass[impName];
+      }
+      else
+      {
+        std::cerr << std::endl 
+          << argV0 << ": No information found for type: " << impName << std::endl 
+          << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
       }
       xmlOut << "#include \"" << impName << ".h\"" << std::endl;
     }
@@ -1944,9 +2134,9 @@ void printCppHeader(DaDiPackage* gddPackage,
         }
         else
         {
-          std::cerr << std::endl << argV0 << ": No information found for type: " 
-            << impName << std::endl << argV0 << ": Line written: #include \"" 
-            << impName << ".h\"" << std::endl;
+          std::cerr << std::endl 
+            << argV0 << ": No information found for type: " << impName << std::endl 
+            << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
         }
         xmlOut << "#include \"" << impName << ".h\"" << std::endl;
       }
@@ -1968,13 +2158,19 @@ void printCppHeader(DaDiPackage* gddPackage,
       }
     }
 
-    if (gddPackage->sizeImpSoftList() || classForwardDecl)
+    if (gddPackage->sizeImpSoftList() || classForwardDecl ||
+        gddNamespace->sizeImpSoftList())
     {
-      xmlOut << std::endl << std::endl
+      xmlOut << std::endl 
+        << std::endl
         << "// Forward declarations" << std::endl;
       for(i=0; i<gddPackage->sizeImpSoftList(); i++)
       {
         xmlOut << "class " << gddPackage->popImpSoftList() << ";" << std::endl;
+      }
+      for(i=0; i<gddNamespace->sizeImpSoftList(); i++)
+      {
+        xmlOut << "class " << gddNamespace->popImpSoftList() << ";" << std::endl;
       }
       for (j=0; j<gddNamespace->sizeDaDiClass(); ++j)
       {
@@ -1987,7 +2183,8 @@ void printCppHeader(DaDiPackage* gddPackage,
       }
     }
   
-    xmlOut << std::endl << std::endl;
+    xmlOut << std::endl 
+      << std::endl;
 
     printNamespace(xmlOut,gddNamespace,gddPackage,dbExportClass);
 
@@ -1996,8 +2193,7 @@ void printCppHeader(DaDiPackage* gddPackage,
     //
     xmlOut << std::endl;
   
-    xmlOut << "#endif   ///" << gddPackage->packageName().transcode() << "_" 
-      << gddNamespace->name().transcode() << "_H" << std::endl;
+    xmlOut << "#endif   ///" << gddPackName << "_" << gddNamespName << "_H" << std::endl;
 
     xmlOut.close();
     delete [] fileName;
@@ -2013,6 +2209,7 @@ void printCppHeader(DaDiPackage* gddPackage,
   {  
 
     DaDiClass* gddClass = gddPackage->popDaDiClass();
+    std::string gddClassName = gddClass->className().transcode();
 
 
     dbExportClass[std::string(gddClass->className().transcode())] =
@@ -2025,7 +2222,7 @@ void printCppHeader(DaDiPackage* gddPackage,
 
     char* fileName = new char[256];
     strcpy(fileName, envOut);
-    strcat(fileName, gddClass->className().transcode());
+    strcat(fileName, gddClassName.data());
     strcat(fileName, ".h");
     std::cout << "Writing " << fileName;
     std::ofstream xmlOut(fileName);  
@@ -2035,7 +2232,8 @@ void printCppHeader(DaDiPackage* gddPackage,
     // 'donotedit'-message
     //
 
-    xmlOut << std::endl << std::endl
+    xmlOut << std::endl 
+      << std::endl
       << "//   **************************************************************************" << std::endl
       << "//   *                                                                        *" << std::endl
       << "//   *                      ! ! ! A T T E N T I O N ! ! !                     *" << std::endl
@@ -2048,17 +2246,17 @@ void printCppHeader(DaDiPackage* gddPackage,
       << "//   *  are using it from inside a Gaudi-package).                            *" << std::endl
       << "//   *                                                                        *" << std::endl
       << "//   **************************************************************************" << std::endl
-      << std::endl << std::endl << std::endl;
-
+      << std::endl 
+      << std::endl 
+      << std::endl;
 
 
     //
     // IFNDEF
     //
-    xmlOut << "#ifndef " << gddPackage->packageName().transcode() << "_" 
-      << gddClass->className().transcode() << "_H" << std::endl << "#define " 
-      << gddPackage->packageName().transcode() << "_" 
-      << gddClass->className().transcode() << "_H 1" << std::endl << std::endl;
+    xmlOut << "#ifndef " << gddPackName << "_" << gddClassName << "_H" << std::endl 
+      << "#define " << gddPackName << "_" << gddClassName << "_H 1" << std::endl 
+      << std::endl;
 
     //
     // Includes
@@ -2088,9 +2286,9 @@ void printCppHeader(DaDiPackage* gddPackage,
       }
       else
       {
-        std::cerr << std::endl << argV0 << ": No information found for type: "
-          << impName << std::endl << argV0 << ": Line written: #include \""
-          << impName << ".h\"" << std::endl;
+        std::cerr << std::endl 
+          << argV0 << ": No information found for type: " << impName << std::endl 
+          << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
       }
       xmlOut << "#include \"" << impName << ".h\"" << std::endl;
     }
@@ -2106,9 +2304,9 @@ void printCppHeader(DaDiPackage* gddPackage,
       }
       else
       {
-        std::cerr << std::endl << argV0 << ": No information found for type: " 
-          << impName << std::endl << argV0 << ": Line written: #include \"" 
-          << impName << ".h\"" << std::endl;
+        std::cerr << std::endl 
+          << argV0 << ": No information found for type: " << impName << std::endl 
+          << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
       }
       xmlOut << "#include \"" << impName << ".h\"" << std::endl;
     }
@@ -2122,7 +2320,8 @@ void printCppHeader(DaDiPackage* gddPackage,
 
     if (gddPackage->sizeImpSoftList() || gddClass->sizeImpSoftList())
     {
-      xmlOut << std::endl << std::endl
+      xmlOut << std::endl 
+        << std::endl
         << "// Forward declarations" << std::endl;
       for(i=0; i<gddPackage->sizeImpSoftList(); i++)
       {
@@ -2134,8 +2333,8 @@ void printCppHeader(DaDiPackage* gddPackage,
       }
     }
   
-    xmlOut << std::endl << std::endl;
-
+    xmlOut << std::endl 
+      << std::endl;
 
     printClass(xmlOut, gddClass, gddPackage, dbExportClass);
 
@@ -2145,8 +2344,7 @@ void printCppHeader(DaDiPackage* gddPackage,
     //
     xmlOut << std::endl;
   
-    xmlOut << "#endif   ///" << gddPackage->packageName().transcode() << "_" 
-      << gddClass->className().transcode() << "_H" << std::endl;
+    xmlOut << "#endif   ///" << gddPackName << "_" << gddClassName << "_H" << std::endl;
 
     xmlOut.close();
     delete [] fileName;
