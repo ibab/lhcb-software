@@ -2,6 +2,7 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!======================= LHCbKernel v2r7 2003-05-19 =======================
 ! 2003-05-15 - Vanya BELYAEV
  -  Relations/RelationTypeTraits.h 
     Relations/RelationWeightedTypeTraits.h 
