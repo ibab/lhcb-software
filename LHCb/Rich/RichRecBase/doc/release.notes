@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v1r10 2004-03-18 =======================
 ! 2004-03-14 - Chris Jones
  - Adapt to new Gaudi Base classes
 
