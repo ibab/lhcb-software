@@ -24,6 +24,7 @@ include_dirs           $(FLAVOURTAGGINGROOT)
 #============================================================================
 use DaVinciTools	v6r*	Phys
 use DaVinciAssociators  v3r*    Phys
+use DaVinciMCTools	v3r*	Phys
 
 #============================================================================
 # Component library building rule
