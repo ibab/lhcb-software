@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.18 2002-07-25 12:25:52 gcorti Exp $
+! $Id: release.notes,v 1.19 2002-07-26 12:59:00 odie Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+| 2002-07-26 - Olivier Dormond
+ - Added alternative decay at top level, i.e. you can write 
+   "{B0 -> K+ pi-, B0 -> K- pi+}".
+ - Added alternative set of decay products, i.e. you can write
+   "B0 -> {K+ pi-, K- pi+}".
 
 ! 2002-07-25 - Gloria Corti
  - Introduce std namespace in reclexer.lpp and icpp to allow compilation
@@ -225,4 +231,4 @@
                           interfaces to the Fortran user routine suanal.
 
 ! ===========================================================================
-  
+
