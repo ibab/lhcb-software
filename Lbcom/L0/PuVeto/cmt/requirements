@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.22 2004-11-30 14:49:25 cattanem Exp $
+# $Id: requirements,v 1.23 2005-03-07 16:54:30 cattanem Exp $
 # Created    : 11/01/2002
 # Maintainer : Olivier Callot
 
 package           PuVeto
-version           v6r0
+version           v6r0p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,7 +14,7 @@ include_path none
 #============================================================================
 use	L0Event		v14r*	Event
 use	VeloEvent	v13r*	Event
-use     DAQEvent        v4r*    Event
+use     DAQEvent        v*      Event
 use     VeloDet         v9r*    Det
 
 # Component library building rule
