@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.23 2002-02-04 10:07:00 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.24 2002-02-05 17:30:55 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -1119,7 +1119,7 @@ void parsePackage(DOM_Node node,
 {
   gddPackage->setPackageName(node.getAttributes().    
     getNamedItem(DOMString::transcode("name")).
-        getNodeValue());
+    getNodeValue());
   
   node = node.getFirstChild();
   

@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.38 2002-02-04 10:43:44 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.39 2002-02-05 17:30:55 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -48,14 +48,14 @@ std::string printPlural(const std::string& singular)
 }
 
 
-//-----------------------------------------------------------------------------
+/*/-----------------------------------------------------------------------------
 DOMString firstUp(const DOMString s)
 //-----------------------------------------------------------------------------
 {
   char *p = s.transcode();
   p[0] = toupper(p[0]);
   return DOMString::transcode(p);
-}
+}*/
 
 //-----------------------------------------------------------------------------
 std::string firstUp(const std::string& s)
@@ -698,6 +698,7 @@ void printTypeDefs(std::ofstream& xmlOut,
           << gddTypeDefDesc << std::endl;
     }
   }
+  xmlOut << std::endl;
 }
 
 
@@ -774,11 +775,11 @@ void printMembers(std::ofstream& xmlOut,
     {
       std::string fullAttName = " m_" + gddAttName + ";";
       xmlOut << "  ";
+//      xmlOut.setf(std::ios::left, std::ios::adjustfield);
       xmlOut.width(maxLengthType);
-      xmlOut.setf(std::ios::left, std::ios::adjustfield);
       xmlOut << gddAttType; 
+//      xmlOut.setf(std::ios::left, std::ios::adjustfield);
       xmlOut.width(maxLengthName);
-      xmlOut.setf(std::ios::left, std::ios::adjustfield);
       xmlOut << fullAttName << " ///< " << gddAttDesc << std::endl;
     }
   }
@@ -1009,6 +1010,11 @@ void printClass(std::ofstream& xmlOut,
   //
   xmlOut << "public: " << std::endl 
     << std::endl;
+
+  //
+  //  print public typedefs
+  //
+  printTypeDefs(xmlOut, gddClass, "PUBLIC");
 
 //
 // (Standard) constructor & destructor
@@ -1298,7 +1304,6 @@ void printClass(std::ofstream& xmlOut,
 
   // print public members
   printEnums(xmlOut, gddClass, "PUBLIC");
-  printTypeDefs(xmlOut, gddClass, "PUBLIC");
   printMembers(xmlOut, gddClass, "PUBLIC");
 
   //
@@ -1309,9 +1314,9 @@ void printClass(std::ofstream& xmlOut,
     << std::endl 
     << std::endl;
 
+  printTypeDefs(xmlOut, gddClass, "PROTECTED");
   printMethodDecl(xmlOut, gddClass, "PROTECTED");
   printEnums(xmlOut, gddClass, "PROTECTED");
-  printTypeDefs(xmlOut, gddClass, "PROTECTED");
   printMembers(xmlOut,gddClass, "PROTECTED");
 
 
@@ -1323,6 +1328,8 @@ void printClass(std::ofstream& xmlOut,
     << std::endl 
     << std::endl;
 
+  // print private typedefs
+  printTypeDefs(xmlOut, gddClass, "PRIVATE");
 
   // print declarations of private functions
   printMethodDecl(xmlOut, gddClass, "PRIVATE");
@@ -1331,7 +1338,6 @@ void printClass(std::ofstream& xmlOut,
 //  Private members (attributes)
 //
   printEnums(xmlOut, gddClass, "PRIVATE");
-  printTypeDefs(xmlOut, gddClass, "PRIVATE");
   printMembers(xmlOut, gddClass, "PRIVATE");
   
   xmlOut << std::endl 

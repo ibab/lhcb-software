@@ -1,6 +1,6 @@
 @echo off
 
-if exist ..\xml goto :copydtd else goto :end
+if exist ..\xml (goto :copydtd) else (goto :end)
 
 :copydtd
   echo Copying gdd.dtd to local xml-directory
