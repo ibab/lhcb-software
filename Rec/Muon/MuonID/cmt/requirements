@@ -1,21 +1,16 @@
 package MuonID
-version v3r6
+version v3r7
 
 branches src cmt doc options
 
 # include directory
 include_dirs $(MUONIDROOT)
+
 # add "use" statements
-use MuonEvent          v2r*  Event
+use MuonEvent          v3r*  Event
 use MuonTools          v3r*  Muon
-use MuonDet            v4r*  Det
+
 # build a MuonID library
 library MuonID ../src/*.cpp
 
-apply_pattern package_Clinkopts
-apply_pattern packageShr
-apply_pattern linker_path
-
-#===============================================================
-private
-apply_pattern package_Cshlibflags
+apply_pattern component_library library=MuonID

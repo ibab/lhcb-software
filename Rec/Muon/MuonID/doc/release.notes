@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.24 2003-06-03 16:05:06 gcorti Exp $
+! $Id: release.notes,v 1.25 2004-01-08 16:17:29 cattanem Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
+
+!========================= MuonID v3r7 2004-01-08 =========================
+! 2004-01-08 - Marco Cattaneo
+ - Move to Gaudi v14 (use MuonEvent v3r* in requirements)
 
 !========================= MuonID v3r6 2003-05-28 =========================
 ! 2003-05-28 - Gloria Corti
