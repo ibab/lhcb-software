@@ -8,6 +8,11 @@
 !-----------------------------------------------------------------------------
 
 ! 2003-07-07 - Vanya BELYAEV
+ - substitute G4Material with G4MaterialCutsCouple for 
+   DEDX evaluation for all classes. 
+
+
+! 2003-07-07 - Vanya BELYAEV
  - src/GaussSensPlaneHit.h,.cpp    :
           new class for G4 hits in Calorimeter Sensitive plane
  - src/GaussSensPlaneHitCnv.h,.cpp :

@@ -1,8 +1,11 @@
-// $Id: SpdPrsSensDet.h,v 1.1 2003-07-07 08:21:13 ibelyaev Exp $ 
+// $Id: SpdPrsSensDet.h,v 1.2 2003-07-07 16:27:46 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/07/07 08:21:13  ibelyaev
+//  split the general CaloSensDet class
+//
 // ============================================================================
 #ifndef       GAUSSCALO_SpdPrsSensDet_H
 #define       GAUSSCALO_SpdPrsSensDet_H 1 
@@ -64,7 +67,7 @@ protected:
     const double                deposit     ,
     const G4Track*              track       , 
     const G4ParticleDefinition* pdef        ,
-    const G4Material*           material    ,
+    const G4MaterialCutsCouple* material    ,
     const G4Step*               step        ) const ;
   
   /** The fractions of energy deposited in consequitive time-bins 

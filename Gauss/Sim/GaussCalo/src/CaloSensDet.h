@@ -1,23 +1,10 @@
-// $Id: CaloSensDet.h,v 1.5 2003-07-07 15:40:26 ibelyaev Exp $ 
+// $Id: CaloSensDet.h,v 1.6 2003-07-07 16:27:46 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2003/07/07 08:21:06  ibelyaev
-//  split the general CaloSensDet class
-//
-// Revision 1.3  2003/05/14 08:43:42  robbep
-// Addition of specific calo corrections in CaloSensDet :
-// - Birk's law
-// - timing
-// - local non uniformity
-//
-// Revision 1.2  2002/12/13 16:52:57  ibelyaev
-//  put updated versions of the packages
-//
-// Revision 1.1  2002/12/07 14:41:44  ibelyaev
-//  add new Calo stuff
-//
+// Revision 1.5  2003/07/07 15:40:26  ibelyaev
+//  inverse the sign of 'DeltaT'
 // ============================================================================
 #ifndef       GAUSSCALO_CaloSensDet_H
 #define       GAUSSCALO_CaloSensDet_H 1 
@@ -230,7 +217,7 @@ protected:
     const double                deposit     ,
     const G4Track*              track       , 
     const G4ParticleDefinition* pdef        ,
-    const G4Material*           material    ,
+    const G4MaterialCutsCouple* material    ,
     const G4Step*               step        ) const = 0 ;
   
   /** The fractions of energy deposited in consequitive time-bins 
@@ -264,7 +251,7 @@ protected:
   double  birkCorrection 
   ( const G4ParticleDefinition* particle , 
     const double                eKine    ,
-    const G4Material*           material ) const ;
+    const G4MaterialCutsCouple* material ) const ;
   
   /** evaluate the correction for Birk's law 
    *  @param charge   the charge of the particle 

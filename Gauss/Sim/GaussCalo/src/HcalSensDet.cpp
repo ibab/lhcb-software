@@ -1,8 +1,11 @@
-// $Id: HcalSensDet.cpp,v 1.2 2003-07-07 15:43:00 ibelyaev Exp $ 
+// $Id: HcalSensDet.cpp,v 1.3 2003-07-07 16:27:46 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/07/07 15:43:00  ibelyaev
+//  fix a bug with error slot counter
+//
 // Revision 1.1  2003/07/07 08:21:11  ibelyaev
 //  split the general CaloSensDet class
 //
@@ -105,7 +108,7 @@ StatusCode    HcalSensDet::fillHitInfo
   const double                   deposit       ,
   const G4Track*                 track         , 
   const G4ParticleDefinition*    particle      ,
-  const G4Material*              material      ,
+  const G4MaterialCutsCouple*    material      ,
   const G4Step*                  step          ) const 
 {
   

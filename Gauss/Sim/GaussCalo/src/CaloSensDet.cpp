@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.cpp,v 1.7 2003-07-07 09:52:16 ibelyaev Exp $ 
+// $Id: CaloSensDet.cpp,v 1.8 2003-07-07 16:27:46 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2003/07/07 09:52:16  ibelyaev
+//  remove buf from birkCorrection - 3
+//
 // Revision 1.6  2003/07/07 08:21:06  ibelyaev
 //  split the general CaloSensDet class
 //
@@ -289,15 +292,15 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
   const G4Track*              const track    = step     -> GetTrack      () ;
   const int                         trackID  = track    -> GetTrackID    () ;
   const G4ParticleDefinition* const particle = track    -> GetDefinition () ;
-  const double                charge         = particle -> GetPDGCharge  () ;
+  const double                      charge   = particle -> GetPDGCharge  () ;
   
   if( 0 == int ( charge * 10 ) ) { return false ; }                // RETURN 
   
-  const G4StepPoint* const preStepPoint = step         -> GetPreStepPoint () ;
-  const HepPoint3D&        prePoint     = preStepPoint -> GetPosition     () ;
-  const double             time         = preStepPoint -> GetGlobalTime   () ;
-  const G4Material*  const material     = preStepPoint -> 
-    GetMaterialCutsCouple() ->GetMaterial() ;
+  const G4StepPoint* const          preStep  = step    -> GetPreStepPoint () ;
+  const HepPoint3D&                 prePoint = preStep -> GetPosition     () ;
+  const double                      time     = preStep -> GetGlobalTime   () ;
+  const G4MaterialCutsCouple* const material = preStep -> 
+    GetMaterialCutsCouple () ;
   
   G4TouchableHistory* tHist  = (G4TouchableHistory*)
     ( step->GetPreStepPoint()->GetTouchable() ) ;
@@ -451,7 +454,7 @@ double CaloSensDet::birkCorrection(const G4Step* step) const
 double CaloSensDet::birkCorrection 
 ( const G4ParticleDefinition* particle , 
   const double                eKine    ,
-  const G4Material*           material ) const 
+  const G4MaterialCutsCouple* material ) const 
 {
   if (  0 == particle || 0 == material ) 
     { Error("birkCorrection(): invalid parameters " ) ; return 1. ; } // RETURN
@@ -464,7 +467,8 @@ double CaloSensDet::birkCorrection
   const double dEdX  = 
     G4EnergyLossTables::GetDEDX ( particle , eKine , material ) ;
   
-  return birkCorrection ( charge , dEdX , material->GetDensity() ) ;
+  return birkCorrection ( charge , 
+                          dEdX   , material->GetMaterial()->GetDensity() ) ;
 } ;
 // ============================================================================
 

@@ -1,8 +1,11 @@
-// $Id: SpdPrsSensDet.cpp,v 1.1 2003-07-07 08:21:12 ibelyaev Exp $ 
+// $Id: SpdPrsSensDet.cpp,v 1.2 2003-07-07 16:27:46 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/07/07 08:21:12  ibelyaev
+//  split the general CaloSensDet class
+//
 // ============================================================================
 /// SRD & STD 
 #include <algorithm>
@@ -101,7 +104,7 @@ StatusCode    SpdPrsSensDet::fillHitInfo
   const double                   deposit       ,
   const G4Track*              /* track      */ , 
   const G4ParticleDefinition* /* pdef       */ ,
-  const G4Material*           /* material   */ ,
+  const G4MaterialCutsCouple* /* material   */ ,
   const G4Step*               /* step       */ ) const 
 {
   
