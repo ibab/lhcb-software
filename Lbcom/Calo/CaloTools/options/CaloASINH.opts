@@ -1,0 +1,82 @@
+// $Id: CaloASINH.opts,v 1.1 2002-04-30 20:37:56 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ * 
+ *  parameters for "Hollebeek" S-correction functions 
+ *  @see Hollebeek
+ *  @see hollebeek
+ *  @see CaloCorrASINH
+ *
+ *
+ *  @f[
+ *  \begin{large}
+ *   \begin{array}{l}
+ *   x^{\prime} = x_0 + p_0 \times {\mathrm{asinh}} 
+ *   \left( \frac{\displaystyle \Delta x }{\displaystyle S / 2 } 
+ *   \times {\mathrm{sinh}} 
+ *   \left( \frac {\displaystyle S/2 } { \displaystyle p_0 } \right)\right), \\
+ *  {\mathrm{where}} \ 
+ *  \Delta x = \frac{\displaystyle x - x_0 }{\displaystyle S}, 
+ *  \ x_0 \ - \ {\mathrm{barycenter}}, 
+ *  \ x_0 \ - \ {\mathrm{seed}},  
+ *  \ S \ - \ {\mathrm{cell size}}
+ *   \end{array}
+ *  \end{large}
+ *  @f]
+ *  
+ *
+ *
+ *  Hi Vanya,
+ *  The S-shape function I use is 
+ * (from  "Topics in calorimetry for HEP', Hollebeek, SLAC Summer School
+ *  Lectures)
+ *
+ *                Xc=b*asinh(Xo/D*sinh(D/b))
+ *
+ * - > > >  Xo is energy weighted  barycenter 
+ *
+ * - > > >  Xc is the S-shape corrected barycenter
+ * 
+ * - > > >  D  is the half size of cell
+ * 
+ * - > > >   b  is the parameter to be fit
+ *
+ * The b value I've fit is 
+ *
+ * - > > > 4x4 cm -> b=0.16
+ *
+ * - > > > 6x6 cm -> b=0.14 
+ *
+ * - > > > 12x12 cm -> b=0.10
+ * 
+ * For Xo and Xc un cell size unit (so D=0.5) 
+ * (More precise values on my slides .)
+ * (
+ * Let me know in case of problem...
+ * 
+ * Cheers, Olivier.
+ *
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   30 Apr 2002  
+ */
+// ============================================================================
+
+
+ToolSvc.CaloASINH0.XParameters = { 0.10 }; 
+ToolSvc.CaloASINH0.YParameters = { 0.10 };
+ToolSvc.CaloASINH1.XParameters = { 0.14 }; 
+ToolSvc.CaloASINH1.YParameters = { 0.14 };
+ToolSvc.CaloASINH2.XParameters = { 0.16 }; 
+ToolSvc.CaloASINH2.YParameters = { 0.16 };
+ 
+
+// ============================================================================
+// Th END of file $CALOTOOLSOPTS/CaloASINH.opts
+// ============================================================================

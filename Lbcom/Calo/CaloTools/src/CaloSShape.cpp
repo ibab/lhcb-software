@@ -1,8 +1,11 @@
-// $Id: CaloSShape.cpp,v 1.1 2002-04-27 19:21:30 ibelyaev Exp $
+// $Id: CaloSShape.cpp,v 1.2 2002-04-30 20:37:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/27 19:21:30  ibelyaev
+//  several 'technical' tools are added
+//
 // Revision 1.1  2002/04/07 18:15:01  ibelyaev
 //  preliminary version ('omega'-release)
 // 
@@ -59,12 +62,10 @@ CaloSShape::CaloSShape
   const std::string& name   ,
   const IInterface*  parent ) 
   : CaloTool ( type , name , parent ) 
-  , m_areaCorrectionTypes ()
-  , m_areaCorrectionNames ()
+  , m_areaCorrectionsTypeNames ()
 {
   declareInterface<ICaloHypoTool>( this ); 
-  declareProperty ( "AreaCorrectionTypes" , m_areaCorrectionTypes );
-  declareProperty ( "AreaCorrectionNames" , m_areaCorrectionNames );
+  declareProperty ( "AreaCorrections" , m_areaCorrectionsTypeNames );
 };
 // ============================================================================
 
@@ -86,16 +87,11 @@ CaloSShape::initialize  ()
   const DeCalorimeter* calo = get( detSvc() , detName() , calo ) ;
   setDet( calo );
   /// locate corrections
-  if( m_areaCorrectionTypes.size() != m_areaCorrectionNames.size() )
-    { return Error("mismatch of type/names containers"); }
   /// locate all area corrections 
-  for( Names::const_iterator Type = m_areaCorrectionTypes.begin() ;
-       m_areaCorrectionTypes.end() != Type  ; ++Type )
+  for( Names::const_iterator Type = m_areaCorrectionsTypeNames.begin() ;
+       m_areaCorrectionsTypeNames.end() != Type  ; ++Type )
     {
-      Names::const_iterator Name = m_areaCorrectionNames.begin() 
-        + ( Type - m_areaCorrectionTypes.begin() );
-      ICaloCorrection* corr = (*Name).empty() ? 
-        tool( *Type         , corr ) : tool( *Type , *Name , corr ) ;
+      ICaloCorrection* corr = tool( *Type , corr ) ;
       m_areaCorrections.push_back( corr );
     };
   ///
@@ -119,9 +115,8 @@ CaloSShape::finalize   ()
             m_areaCorrections.end   () , 
             std::mem_fun(&IInterface::release) );
   /// clear containers 
-  m_areaCorrectionTypes .clear();
-  m_areaCorrectionNames .clear();
-  m_areaCorrections     .clear();  
+  m_areaCorrectionsTypeNames .clear();
+  m_areaCorrections          .clear();  
   /// finalize the base class 
   return CaloTool::finalize () ;
 };

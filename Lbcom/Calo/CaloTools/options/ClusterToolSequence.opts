@@ -1,0 +1,24 @@
+// $Id: ClusterToolSequence.opts,v 1.1 2002-04-30 20:37:56 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ * 
+ *  The Example of configuration of CaloClusterToolSequence
+ * 
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   27/04/2002
+ */
+// ============================================================================
+
+ClusterToolSeq.ClusterTools += { "FirstToolType/FirstToolName"   } ;
+ClusterToolSeq.ClusterTools += { "SecondCaloType/SecondToolName" } ;
+ClusterToolSeq.ClusterTools += { "ThirdCaloType/ThirdToolName"   } ;
+
+// ============================================================================
+// The END of file ClusterToolSequence.opts 
+// ============================================================================

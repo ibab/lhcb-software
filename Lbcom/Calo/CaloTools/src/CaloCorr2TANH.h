@@ -1,8 +1,11 @@
-// $Id: CaloCorr2TANH.h,v 1.1 2002-04-07 18:15:00 ibelyaev Exp $
+// $Id: CaloCorr2TANH.h,v 1.2 2002-04-30 20:37:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/07 18:15:00  ibelyaev
+//  preliminary version ('omega'-release)
+// 
 // ============================================================================
 #ifndef CALOTOOLS_CALOCORR2TANH_H 
 #define CALOTOOLS_CALOCORR2TANH_H 1
@@ -16,9 +19,44 @@
  *  
  *  concrete S-correction tool, 
  *  which uses "tanh" parametrization, used by 
- *  Ivan Korolko ITEP/Moscow Ivan.Korolko@cern.ch,
- *  Frederic Machefert LAL/Orsay frederic.machefert@in2p3.fr and 
- *  Konstantin Belous IHEP/Protvino  <belous@mx.ihep.su>
+ *
+ *  - Ivan Korolko,       ITEP/Moscow  Ivan.Korolko@cern.ch
+
+ *  - Frederic Machefert, LAL/Orsay    frederic.machefert@in2p3.fr and 
+
+ *  - Konstantin Belous, IHEP/Protvino  belous@mx.ihep.su
+ *  
+ *  The formula used is:
+ *
+ *  @f[
+ *  \begin{large}
+ *  \begin{array}{l}
+ *  x^{\prime} = \frac{\displaystyle S}{\displaystyle 2} \left[ 
+ *  p_0 \tanh \left( p_1 \Delta x \right) + 
+ *  p_2 \tanh \left( p_3 \Delta x \right) \right] + p_4 x_0 + p_5, \\ 
+ *  {\mathrm{where}} \ 
+ *  \Delta x = \frac{\displaystyle x - x_0 }{\displaystyle S}, 
+ *  \ x_0 \ - \ {\mathrm{barycenter}}, 
+ *  \ x_0 \ - \ {\mathrm{seed}},  
+ *  \ S \ - \ {\mathrm{cell size}}
+ *  \end{array}
+ *  \end{large}
+ *  @f]
+ *
+ *  @see ::doubleTanh  
+ *
+ *  Configuration via job-options:
+ *
+ *  - Calo2tanh0.XParameters = { vector of parameters for x-correction } ;
+ *
+ *  - Calo2tanh0.YParameters = { vector of parameters for y-correction } ;
+ *
+ *  - Calo2tanh0.CellSize    = the cell size
+ *
+ *  - Calo2tanh0.NewZ        = new z position of cluster  
+ *
+ *  - Calo2tanh0.UpdateZ     = flag for updating the z position
+ *
  *  
  *  @author Vanya Belyaev Ivan.Belyaev.itep.ru
  *  @date   27/03/2002

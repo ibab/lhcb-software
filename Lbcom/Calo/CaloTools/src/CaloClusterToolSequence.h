@@ -1,8 +1,11 @@
-// $Id: CaloClusterToolSequence.h,v 1.1 2002-04-27 19:21:30 ibelyaev Exp $
+// $Id: CaloClusterToolSequence.h,v 1.2 2002-04-30 20:37:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/27 19:21:30  ibelyaev
+//  several 'technical' tools are added
+// 
 // ============================================================================
 #ifndef CALOTOOLS_CALOCLUSTERTOOLSEQUENCE_H 
 #define CALOTOOLS_CALOCLUSTERTOOLSEQUENCE_H 1
@@ -16,8 +19,16 @@
 
 /** @class CaloClusterToolSequence CaloClusterToolSequence.h
  *  
- *  Helper concrete tool for CaloCluster processing
+ *  Helper concrete tool for CaloCluster processing.  
+ *  It is just a sequence of actual cluster processing tools 
  *  
+ *  All participating members must implement ICaloClusterTool interface
+ *
+ *  Configuration via job-options file:
+ *
+ *  ClusterToolSeq.ClusterTools += { "FirstToolType/FirstToolName" ,
+ *  "SecondToolType/SecondToolName" , "ThirdToolType/ThirdToolName"}   ;
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   27/04/2002
  */

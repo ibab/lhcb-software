@@ -1,0 +1,27 @@
+// $Id: SShapeAsinh.opts,v 1.1 2002-04-30 20:37:56 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+
+// ============================================================================
+/** @file 
+ *  Configuration of S-correction using ASING parametrisation
+ *  
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   30 Apr 2002  
+ */
+// ============================================================================
+
+ToolSvc.SShapeAsinh.AreaCorrections = 
+{ 
+  "CaloCorrASINH/CaloASINH0" ,
+  "CaloCorrASINH/CaloASINH1" ,
+  "CaloCorrASINH/CaloASINH2"
+};
+
+// ============================================================================
+// The END  of file $CALOTOOLSOPTS/SShapeAsing.opts 
+// ============================================================================

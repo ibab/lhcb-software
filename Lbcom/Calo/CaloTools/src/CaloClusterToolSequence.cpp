@@ -1,8 +1,11 @@
-// $Id: CaloClusterToolSequence.cpp,v 1.1 2002-04-27 19:21:30 ibelyaev Exp $
+// $Id: CaloClusterToolSequence.cpp,v 1.2 2002-04-30 20:37:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/27 19:21:30  ibelyaev
+//  several 'technical' tools are added
+// 
 // ============================================================================
 // Include files 
 // STD & STL 
@@ -15,10 +18,13 @@
 #include "CaloClusterToolSequence.h"
 
 // ============================================================================
-// Implementation file for class : CaloClusterToolSequence
-//
-// 27/04/2002 : Ivan Belyaev
-// ============================================================================
+/** @file 
+ *
+ *  Implementation file for class CaloClusterToolSequence
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   27/04/2002
+ */
 
 // ============================================================================
 /** @var CaloClusterToolSequenceFactory
