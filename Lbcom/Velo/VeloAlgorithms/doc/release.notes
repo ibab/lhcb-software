@@ -1,6 +1,15 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+
+! 2002-06-30 - Chris Parkes
+ - Adding Rounding function for windows comptibility.
+ - Allow possibility of pileup detector simulation in VeloSim
+
+! 2002-06-24 - Chris Parkes
+ - add std:: in front of all STL stuff I can find, in order to make 
+   compilation windows compatible.
+
 ! 2002-06-21 - Olivier Callot
  - Protect against insertion in m_fes_coupling container.
 
