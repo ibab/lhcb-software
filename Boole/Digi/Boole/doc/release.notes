@@ -20,7 +20,7 @@ Purpose: LHCb Digitization program
   - Execute new Trg (L1) tracking starting from L1Buffer
     (TrgTools v2r0, TrgVelo v2r0, TrgVeloTT v1r0, L1Reco v2r0, TrgChecker v2r0)
   - Create MCTrackInfo (acceptance and reconstructible info for MCParticle)
-    Currently only stores reconstructible info for Trg tracking (MCTools v1r2)
+    Currently uses the Trg tracking definition of reconstructible (MCTools v1r2)
 
 - oodigi changes
   - Options file DigiContent.opts moved to Boole from GaudiConf. 
