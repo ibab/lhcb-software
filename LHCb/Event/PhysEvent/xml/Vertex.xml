@@ -1,0 +1,104 @@
+<!-- ****************************************************************
+     * Vertex                                                       *
+     ****************************************************************-->
+
+     <class 
+      author="Gloria Corti"
+      desc="Physics analysis Vertex. It holds geometrical information and is part of the tree structure"
+      name="Vertex"
+      stdVectorTypeDef="TRUE"
+      id="802"
+     >
+       <enum
+        desc="Describe how a vertex was constructed"
+        name="VertexType"
+        value="Unknown=0, Primary, Decay, DecayWithMass, Interaction, Brem, Pair, Kink"
+        access="PUBLIC"
+       />
+       <base name="KeyedObject&lt;int&gt;"/>
+       <import name="CLHEP/Units/SystemOfUnits"/>
+       <location
+        name="User"
+        place="/Event/Phys/User/Vertices"
+       />
+       <location
+        name="Production"
+        place="/Event/Phys/Prod/Vertices"
+       />       
+       <location
+        name="Primary"
+        place="/Event/Phys/PrimaryVertices"
+       />
+       <attribute
+        desc="Position in LHCb reference system"
+        name="position"
+        type="HepPoint3D"
+        init="0.0, 0.0, -1*km"
+       />
+       <attribute
+        desc="Covariance matrix containing errors on vertex position"
+        name="positionErr"
+        type="HepSymMatrix"
+        init="3, 0"
+       />
+       <attribute
+        desc="Chi square of vertex fit"
+        name="chi2"
+        type="double"
+        init="-1.0"
+       />
+       <attribute
+        desc="Number of degree of freedom"
+        name="nDoF"
+        type="int"
+        init="-1"
+       />
+       <!--attribute
+        desc="How the vertex was made"
+        name="type"
+        type="VertexType"
+        init="Vertex::Unknown"
+       /-->
+       <attribute
+        desc="How the vertex was made"
+        name="type"
+        type="VertexType"
+        init="Vertex::Unknown"
+        getMeth="FALSE"
+        setMeth="FALSE"
+       />
+       <method
+        desc="Retrieve how the vertex was made"
+        name="type"
+        type="VertexType"
+       />
+       <method
+        const="TRUE"
+        desc="Retrieve how the vertex was made"
+        name="type"
+        type="VertexType"
+       />
+       <method
+        desc="Set how the vertex was made"
+        name="setType"
+        argList="VertexType value"
+       />
+       <method
+        desc="Serialize the object for reading"
+        name="serialize"
+        type="StreamBuffer&amp;"
+       >
+         <arg name="s" type="StreamBuffer"/>
+       </method>
+       <relation
+        desc="Reference to outgoing particles"
+        multiplicity="N"
+        name="products"
+        type="Particle"
+       />
+       <attribute
+        desc="internal flag for location relative to physdesktop"
+        name="desktop"
+        type="int"
+       />
+     </class>

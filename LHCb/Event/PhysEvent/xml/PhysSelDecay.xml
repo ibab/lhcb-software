@@ -1,0 +1,134 @@
+<!-- ****************************************************************
+     * PhysSelDecay                                                 *
+     ****************************************************************-->
+
+    <class 
+     author="Gloria Corti"
+     desc="Results of standards selection for a specific decay channel"
+     name="PhysSelDecay"
+     templateList="FALSE"
+     templateVector="FALSE"
+    >
+      <enum 
+       access="PUBLIC"
+       desc="Bit position for results"
+       name="selFlags"
+       value="MCFlag=0, TRKFlag, PQUALFlag, SELFlag, AGRFlag, TAGFlag"
+      />
+      <method
+       const="TRUE"
+       desc="Retrieve all results"
+       name="results">
+        <arg inout="BOTH" name="mc" type="bool"/>
+        <arg inout="BOTH" name="trk" type="bool"/>
+        <arg inout="BOTH" name="pqual" type="bool"/>
+        <arg inout="BOTH" name="sel" type="bool"/>
+        <arg inout="BOTH" name="agr" type="bool"/>
+        <arg inout="BOTH" name="tag" type="bool"/>
+      </method>
+      <method
+       argList="bool mc, bool trk, bool pqual, bool sel, bool agr, bool tag"
+       desc="Retrieve all results"
+       name="setResults"
+      />
+      <method
+       const="TRUE"
+       desc="Return if decay is present in MC truth"
+       name="decayIsInMCTree"
+       type="bool"
+      >
+        <code>return ( 0 != ( m_result &amp; (1&lt;&lt;MCFlag) ) );</code>
+      </method>
+      <method
+       const="TRUE"
+       desc="Return if decay has end particles reconstructed"
+       name="decayHasTrkRecon"
+       type="bool"
+      >
+        <code>return ( 0 != ( m_result &amp; (1&lt;&lt;TRKFlag) ) );</code>
+      </method>
+      <method
+       const="TRUE"
+       desc="Return if decay has end particles of physics quality"
+       name="decayHasTrkPQual"
+       type="bool"
+      >
+        <code>return ( 0 != ( m_result &amp; (1&lt;&lt;PQUALFlag) ) );</code>
+      </method>
+      <method
+       const="TRUE"
+       desc="Return if event satisfy the decay selection"
+       name="decayIsSelected"
+       type="bool"
+      >
+        <code>return ( 0 != ( m_result &amp; (1&lt;&lt;SELFlag) ) );</code>
+      </method>
+      <method
+       const="TRUE"
+       desc="Return if event satisfy the decay selection and one combination is the MC truth"
+       name="decaySelectedIsMC"
+       type="bool"
+      >
+        <code>return ( 0 != ( m_result &amp; (1&lt;&lt;AGRFlag) ) );</code>
+      </method>
+      <method
+       const="TRUE"
+       desc="Return if one selected combination is also flavour tagged"
+       name="decayIsFlavourTagged"
+       type="bool"
+      >
+        <code>return ( 0 != (m_result &amp; (1&lt;&lt;TAGFlag) ) );</code>
+      </method>
+      <method
+       desc="Set if decay channel is present in MC truth"
+       name="setDecayIsInMCTree"
+       type="void"
+      >
+        <code>m_result |= 1&lt;&lt;MCFlag;</code>
+      </method>
+      <method
+       desc="Set if decay channel has all end particles reconstructed"
+       name="setDecayHasTrkRecon"
+       type="void"
+      >
+        <code>m_result |= 1&lt;&lt;TRKFlag;</code>
+      </method>
+      <method
+       desc="Set if decay channel has all end particles reconstructed and of physics quality"
+       name="setDecayHasTrkPQual"
+       type="void"
+      >
+        <code>m_result |= 1&lt;&lt;PQUALFlag;</code>
+      </method>
+      <method
+       desc="Set if event satisfy the decay selection"
+       name="setDecayIsSelected"
+       type="void"
+      >
+        <code>m_result |= 1&lt;&lt;SELFlag;</code>
+      </method>
+      <method
+       desc="Set if event satisfy the decay selection and one combination is the MC truth"
+       name="setDecaySelectedIsMC"
+       type="void"
+      >
+        <code>m_result |= 1&lt;&lt;AGRFlag;</code>
+      </method>
+      <method
+       desc="Set if one selected combination is also flavour tagged"
+       name="setDecayIsFlavourTagged"
+       type="void"
+      >
+        <code>m_result |= 1&lt;&lt;TAGFlag;</code>
+      </method>
+      <attribute
+       desc="decayCode as used in Bookkeeping"
+       name="decayID"
+       type="int"
+      />
+      <attribute
+       desc="bitset with results of selection analysis"
+       name="result"
+       type="int"
+      />
+    </class>

@@ -1,0 +1,179 @@
+<!-- ****************************************************************
+     * Particle                                                     *
+     ****************************************************************-->
+
+     <class
+      author="Gloria Corti"
+      desc="Physics Analysis Particle. A chosen hypotesis for a possible candidate particle."
+      name="Particle"
+      stdVectorTypeDef="TRUE"
+      id="801"
+     >
+       <base name="KeyedObject&lt;int&gt;"/>
+       <import name="CLHEP/Units/SystemOfUnits"/>
+       <!-- the following line is necessary until using LHCbKernel-->
+       <import name="Event/HepMatrixStream"/>
+       <import name="Event/Vertex" soft="TRUE"/>
+       <location
+        name="User"
+        place="/Event/Phys/User/Particles"
+        />
+       <location
+        name="Production"
+        place="/Event/Phys/Prod/Particles"
+       />
+       <attribute
+        desc="PDG code"
+        name="particleID"
+        type="ParticleID"
+       />
+       <attribute
+        desc="Confidence Level of the particleID"
+        name="confLevel"
+        type="double"
+        init="1.0"
+       />
+       <attribute
+        desc="Momentum four vector "
+        name="momentum"
+        type="HepLorentzVector"
+        init="0.0, 0.0, 0.0, -1*GeV"
+       />
+       <attribute
+        desc="Point at which the momentum is given in LHCb reference frame"
+        name="pointOnTrack"
+        type="HepPoint3D"
+        init="0.0, 0.0, -1*km"
+       />
+       <attribute
+        desc="Measured Mass"
+        name="mass"
+        type="double"
+        init="-1.0"
+       />
+       <attribute
+        desc="Error on measured mass"
+        name="massErr"
+        type="double"
+        init="0.0"
+       />
+       <attribute
+        desc="Covariance matrix relative to momentum (4x4)"
+        name="momentumErr"
+        type="HepSymMatrix"
+        init="4,0"
+        setMeth="FALSE"
+       />
+       <method
+        desc="Set covariance matrix relative to momentum (4x4) and propagate to (sx, sy, P)"
+        name="setMomentumErr"
+        type="void"
+        argList="HepSymMatrix value"
+       />        
+       <attribute
+        desc="Covariance matrix relative to point at which the momentum is given (3x3)"
+        name="pointOnTrackErr"
+        type="HepSymMatrix"
+        init="3, 0"
+       />
+       <attribute
+        desc="Matrix with correlation errors between momemtum and pointOnTrack (momentum x point)"
+        name="posMomCorr"
+        type="HepMatrix"
+        init="3, 3, 0"
+        setMeth="FALSE"
+       />
+       <method
+        desc="Set matrix with correlation errors between momemtum and pointOnTrack (momentum x point)"
+        name="setPosMomCorr"
+        type="void"
+        argList="HepMatrix value"
+       />
+       <attribute
+        desc="Describe if a particle flies or not (i.e. is a resonance) and its
+product should be taken if used in a vertex"
+        name="isResonance"
+        type="bool"
+        init="false"
+       />
+       <relation
+        desc="Reference to end vertex (ex. decay)"
+        name="endVertex"
+        type="Vertex"
+       />
+       <relation
+        desc="Reference to originator (ProtoParticle, MCParticle for smearing, or AxPartCandidate for Zebra DST). Void for composite particles"
+        name="origin"
+        type="ContainedObject"
+       />
+       <!--method
+        desc="Templated method to return actual pointer to originator class"
+        name="originator"
+        type="template &lt;class T&gt; T*"
+       /--> 
+       <method
+        const="TRUE"
+        desc="Charge in units of +e (i.e. electron charge = -1.0), temporarly it works only for basic particles"
+        name="charge"
+        type="double"
+       />
+       <method
+        desc="Retrieve slopeX from momentum - line rapresentation of a Particle"
+        name="slopeX"
+        type="double"
+       >
+         <code>return (momentum().px()/momentum().pz()); </code>
+       </method>
+       <method
+        desc="Retrieve slopeY from momentum - line rapresentaion of a Particle"
+        name="slopeY"
+        type="double"
+       >
+         <code>return (momentum().py()/momentum().pz()); </code>
+       </method>
+       <method
+        desc="short cut for transerve momentum"
+        name="pt"
+        type="double"
+       >
+         <code> return m_momentum.perp(); </code>
+       </method>
+       <method
+        desc="short cut for |P|" 
+        name="p"
+        type="double"
+       > 
+         <code> return m_momentum.vect().mag(); </code>
+       </method>
+       <attribute
+        desc="error matrix on (slopeX, slopeY, P)"
+        name="slopesMomErr"
+        type="HepSymMatrix"
+        init="3, 0"
+        setMeth="FALSE"
+       />
+       <method
+        desc="Set error matrix on (slopeX, slopeY, P) and propagate to momentum"
+        name="setSlopesMomErr"
+        type="void"
+        argList="HepSymMatrix value"
+       />
+       <attribute
+        desc="Correlation matrix with errors between (slopeX, slopeY, P) and pointOnTrack"
+        name="posSlopesCorr"
+        type="HepMatrix"
+        init="3, 3, 0"
+        setMeth="FALSE"
+       />
+       <method
+        desc="Set correlation matrix with errors between (slopeX, slopeY, P) and pointOnTrack and propagate to posMomCorr"
+        name="setPosSlopesCorr"
+        type="void"
+        argList="HepMatrix value"
+       />
+       <attribute
+        desc="internal flag for location relative to physdesktop"
+        name="desktop"
+        type="int"
+       />
+    </class>
