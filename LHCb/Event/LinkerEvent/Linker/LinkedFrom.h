@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.7 2005-01-27 10:53:59 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.8 2005-03-29 14:56:02 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -56,6 +56,10 @@ public:
     //== check that the target's container is known.
     const DataObject* container = target->parent();
     LinkManager::Link* link = m_links->linkMgr()->link( container );
+    if ( 0 == link ) {  // try with name, and store pointer if OK
+      link = m_links->linkMgr()->link( container->registry()->identifier() ); 
+      if ( 0 != link )  link->setObject( container );
+    }
     if ( 0 == link ) return NULL;
     //== Define the target's linkID and key
     m_curReference.setLinkID( link->ID() );
@@ -95,13 +99,17 @@ public:
     //== check that the target's container is known.
     const DataObject* container = target->parent();
     LinkManager::Link* link = m_links->linkMgr()->link( container );
+    if ( 0 == link ) {  // try with name, and store pointer if OK
+      link = m_links->linkMgr()->link( container->registry()->identifier() ); 
+      if ( 0 != link )  link->setObject( container );
+    }
     if ( 0 == link ) return m_int;
     //== Define the target's linkID and key
     m_curReference.setLinkID( link->ID() );
     m_curReference.setObjectKey( target->key() );
     int key = m_links->firstSource( m_curReference, m_srcIterator );
     while ( m_wantedKey == m_curReference.objectKey() ) {
-      if ( 0 > m_curReference.srcLinkID() ) m_int.push_back( key );
+      m_int.push_back( key );
       key = m_links->nextSource( m_curReference, m_srcIterator );
     }
     return m_int;

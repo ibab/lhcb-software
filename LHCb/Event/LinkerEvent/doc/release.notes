@@ -4,6 +4,16 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2005-03-29 - Olivier Callot
+ - Fixed a major bug in LinkedFrom, as the containers are not loaded by default.
+   An explicit resolution of the links is performed whenever needed. This affects
+   the methods 'first' and 'intRange'. This was not properly saved in the change
+   made on 2005-01-27 apparently.
+ - intRange( TARGET ) in LinkedFrom was returning only keys created as int,
+   not all keys. This is a small change of philosophy made in January, as 
+   access by key gives access to all objects with that key, while before it was
+   giving access only to associations established with a key.
+
 !====================== LinkerEvent v1r7 2005-03-22 ==========================
 ! 2005-03-22 - Olivier Callot
  - Make non const the methods direct() and inverse() to LinkerTool
