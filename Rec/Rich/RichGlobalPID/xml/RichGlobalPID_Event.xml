@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+    <package name="RichGlobalPID">
+        <import name="Kernel/CLHEPStreams"/>
+        <import name="Kernel/SerializeStl"/>
+        <class author="Chris Jones    (Christopher.Rob.Jones@cern.ch)" desc="Summary object for RICH Global PID analysis" id="12431" location="Rec/Rich/GlobalPID/Summary" name="RichGlobalPIDSummary">
+            <base name="DataObject"/>
+            <method desc="Push back this value in event LL vector" name="addToEventLL">
+                <arg name="logL" type="double"/>
+                <code>m_eventLL.push_back( logL );</code>
+            </method>
+            <!--aComment-->
+            <attribute desc="History of overall event LogLikelihood values" name="eventLL" type="std::vector&lt;float&gt;"/>
+        </class>
+        <class author="Chris Jones     Christopher.Rob.Jones@cern.ch" desc="Working track object for Rich Global PID" id="12432" keyedContTypeDef="TRUE" location="Rec/Rich/GlobalPID/Tracks" name="RichGlobalPIDTrack" serializers="TRUE" stdVectorTypeDef="TRUE">
+            <import name="Event/RichRecTrack"/>
+            <import name="RichGlobalPID/RichGlobalPIDTkQuality"/>
+            <import ignore="TRUE" name="Rich"/>
+            <import ignore="TRUE" name="ParticleIDType"/>
+            <import ignore="TRUE" name="TkQuality"/>
+            <import ignore="TRUE" name="GlobalPID"/>
+            <base name="KeyedObject&lt;long&gt;"/>
+            <constructor desc="Default Constructor" initList="m_trQuality(Rich::GlobalPID::Unknown)">
+                <code/>
+            </constructor>
+            <attribute desc="Integer code describing the quality of this track for the Global likelihood method" name="trQuality" type="Rich::GlobalPID::TkQuality"/>
+            <relation desc="SmartRef to RichRecTrack" name="richRecTrack" type="RichRecTrack"/>
+            <relation desc="Associated GlobalPID object" name="globalPID" type="RichGlobalPID"/>
+        </class>
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich particle identification object for the global track based algorithm" id="12434" keyedContTypeDef="TRUE" location="Rec/Rich/GlobalPID/PIDs" name="RichGlobalPID" stdVectorTypeDef="TRUE">
+            <base name="RichPID"/>
+            <import name="Event/RichPID"/>
+            <constructor desc="Default constructor">
+                <code>this-&gt;setGlobal(1);</code>
+            </constructor>
+        </class>
+    </package>
+</gdd>

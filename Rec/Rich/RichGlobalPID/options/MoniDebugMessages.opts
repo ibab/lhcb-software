@@ -1,0 +1,7 @@
+// Turn on debug printout
+
+// alg monitor
+RichGloAlgMoni.OutputLevel = 2;
+
+// global results
+RiGloPIDMoni2To100.OutputLevel = 2;
