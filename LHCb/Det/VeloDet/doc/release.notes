@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.57 2004-02-24 18:25:56 mtobin Exp $
+! $Id: release.notes,v 1.58 2004-02-25 13:24:37 mtobin Exp $
 package VeloDet
 package manager : Velo Group
 
 !========================= VeloDet v9r0 2004-02-13 =========================
    >> Requires XmlDDDB v22r0 or greater <<
+
+! 2004-02-25 - Mark Tobin
+ - Returned makeSpacePoint to previous behaviour
 
 ! 2004-02-24 - Mark Tobin
  - Replicate behaviour of old VeloDet by adding routines trgPhiMatchingStrips,
