@@ -3,6 +3,500 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r1>2004-09-16 DaVinci v12r1 - version with updated L1 and more HLT</A></H1><PRE>
+
+ Identical to DaVinci v11r13 except:
+      
+ - Built on Gaudi v15r2 and LHCb v16r2
+ 
+ - CaloDigitsFromRaw is now an "algorithm-on-demand"
+ 
+ - New Trg Event model and updated L1 trigger
+ 
+ - All DaVinci tools now run on particles made from trigger tracks for HLT.
+   User selections can be adapted easily too:
+   1) if you use the PV from VertexLocation::Primary, foresee the 
+      possibility to get it from TrgVertexLocation::Velo3D in HLT mode
+   2) Check always that the protoparticle is actually there
+        PP = dynamic_cast<ProtoParticle*>((*iPart)->origin());
+      might be NULL. In this case you can do
+        TT = dynamic_cast<TrgTrack*>((*iPart)->origin());
+      You will need to #include "Event/TrgTrack.h" for this.
+   3) Replace DaVinciReco.opts by Hlt.opts and do not run any particle maker.
+      You can decide if you want to make all particles both as pions and
+      kaons (default), or only as kaons with
+        TrgParticleMaker.MakeKaon = false ;
+      Your particles will be in /Event/Phys/Trg
+ 
+   This version uses the new CMT environment. The $CMTPATH points now to
+   $HOME/cmtuser. Do not use $HOME/newmycmt anymore.
+ 
+################################################################################
+#                               DAVINCI v12r1                                  #
+################################################################################
+##################################### CALO #####################################
+!======================== CaloPIDs v2r4 2004-09-08 ======================
+! 2004-09-02 - Vanya BELYAEV
+   make the preparation for HLT/Trigger development 
+ - update for modifier CaloInterfaces 
+ - cmt/requirements 
+   version increment to v2r4 
+!======================= CaloReco v2r5 2004-09-08 ======================
+! 2004-09-08 - Marco Cattaneo
+ - Remove associator factories from CaloReco_load.cpp, as these have been
+   move to Associators/Associators package
+
+! 2004-09-05 - Vanya BELYAEV
+  - src/CelAutoTaggedCell.h
+    src/CellularAutomaton.h
+    src/CellularAutomaton.cpp
+   trivial modification to obtain 25% CPU gain 
+
+! 2004-09-05 - Vanya BELYAEV
+ - src/CaloCheckObjectsAlg.h(.cpp)
+   new trivial algorithm for checking the existence 
+   (and by product, the loading!) of objects in Gaudi transient store 
+ - src/CaloReco_load.cpp
+   add the decalration of the new algorithm 
+
+! 2004-09-02 - Vanya BELYAEV
+ - prepare for HLT/Trigger developments 
+
+###################################### IT ######################################
+###################################### L0 ######################################
+!=================== L0MuonTrigger v2r2 2004-09-14 =======================
+! 2004-09-14 - Luisanna Tocco
+ - Fix new pT kick (1.39) in Boole.opts 
+##################################### PHYS #####################################
+!========================== CommonParticles v1r5p3 2004-09-16 ===================
+! 2004-09-02 - P. Koppenburg
+ - src/<someAlgorithms>.cpp
+   . Remove getInput that is not in PhysDesktop anymore.
+
+!========================== DaVinciAssociators v5r2 2004-09-16===================
+! 2004-09-16 - P. Koppenburg
+ - src/Particle2MCLink.cpp
+   . Temporary hack suggested by Olivier Callot that solved the TrgTrack association
+     problem. Not a definitive solution as it involes the hard-codeing of the 
+     container. A better solution is being implemented in the TrgParticleMaker.     
+! 2004-09-16 - P. Koppenburg
+ - src/Particle2MCLink.cpp
+   . Try to check if origin() is a TrgTrack if it is not a ProtoParticle.
+     This does not allow yet to associate TrgTracks as they are not 
+     stored in a container at creation. 
+!========================== DaVinci v12r1 2004-09-16 ===================
+! 2004-09-15 - P. Koppenburg for Luisanna Tocco
+  - options/L0Muon.opts
+    . Use same options as Boole except for some details.
+    . Still se old Pt kick of 1.21 GeV (should be 1.39) until
+      L0Du is adapted accordingly.
+    
+! 2004-09-15 - P. Koppenburg for Vanya Belyaev
+  - options/DVStripping.opts
+  - options/DVMerge.opts
+    . Do also ETC for merging.
+  
+! 2004-09-14 - P. Koppenburg for Vanya Belyaev
+Vanya writes:
+    I've put few modifications into Event/CaloEvent package 
+    to provide the appropriate "loading-on-demand"  for 
+    Calorimeter digits
+
+    From now there is no nesessity to execute "CaloDigitsFromRaw" 
+    algorithm at all.
+    Algorithm itself is modified to produce only 1 
+    containerner per instance (thus one need to have 4 
+    instances for 4 calorimeters). The overall speed of 4 
+    instances is improved by 20% by replacement of "sort" 
+    with "stable_sort" algorithm and  with the proper 
+    "reserve" manipulations.
+
+    The corresponding instance will be invoked 
+    automatically by nice Markus' service  "DataOnDemand".
+
+    for new configuration one need to add the following
+    lines into the "main"-options file (e.g. Brunel.opts):
+
+    // add the service ito the list of external servcies 
+    ApplicationMgr.ExtSvc += { "DataOnDemandSvc" } ;
+    // enable "DataFault" incidents from Event Data Svc 
+    EventDataSvc.EnableFaultHandler  = true ;
+
+    The specific configuration is described into the file 
+    $CALOEVENTOPTS/options/CaloEvent.opts 
+    which needs to be included from the "main"-options file:
+
+    #include "$CALOEVENTOPTS/options/CaloEvent.opts"
+
+
+! 2004-09-13 - P. Koppenburg for Olivier Callot
+Olivier writes:
+    The head revision of the Trg packages is ready to be tagged and used with 
+    LHCb v16r2 (now in DEV). 
+    This means the following packages to be tagged 
+
+    Trg/L1Decision	v3r0
+    Trg/L1Reco		v5r0
+    Trg/TrgChecker	v5r0
+    Trg/TrgForward	v3r0
+    Trg/TrgMonitor	v3r0
+    Trg/TrgMuonID	v2r0
+    Trg/TrgPrimVertex	v3r0
+    Trg/TrgTools	v5r0
+    Trg/TrgVelo		v5r0
+    Trg/TrgVeloTT	v5r0
+
+    Some changes are also needed in DaVinci options, namely
+
+    - In L1Decision.opts replace algorithm L1Dimuon by L1Muon 
+    - in Hlt.opts, add TrgMuonID in the DLLs, and in the after TrgForward 
+      in the algorithm, 
+    Remove TrgTrackToContainer. Add the options 
+    TrgVeloTTHlt.AcceptInHole = true;  
+    #include "$TRGMUONIDROOT/options/TrgMuonID.opts"
+    - In L1Checking : remove the TrgTrackToConatiner.prefix option
+    - in HltChecking, add the options
+     HltTrgTrack2MCParticle.prefix = "Hlt/";
+     HltTrgChecker.prefix          = "Hlt/";
+    If not the monitoring of L1 and HLT can not be set together.
+
+! 2004-09-07 - P. Koppenburg
+  - doc/doxyFile.cfg
+    . Update package list
+! 2004-09-01 - P. Koppenburg for Federica Legger
+  - job/DaVinci.job, job/Stripping.job
+    . Use cmtuser directory
+    
+!========================== DaVinciFilter v1r1 2004-09-16 ===================
+! 2004-09-13 - P. Koppenburg
+ - cmt/requirements
+   . Add Relations to requirements as they are not obtained through 
+     Calo anymore   
+! 2004-09-08 - P. Koppenburg
+ - src/ParticleFilter.*
+   . Remove histogramming, not used by anyone
+   . Remove counters, not used by anyone
+   . Remove duplicated code from filterPositive and filterNegative
+ - src/KinFilterCriterion.*
+ - src/VtxFilterCriterion.*
+  . Add some verbose() printout. Make them GaudiTools.
+! 2004-09-07 - P. Koppenburg
+ - src/BooleanFilterCriterion.*
+ - src/ParticleFilter.*
+   . Make it a GaudiTool
+! 2004-08-25 - P. Koppenburg
+ - cmt/requirements
+   . Do not export header files
+! 2004-08-24 - P. Koppenburg
+ - cmt/requirements
+   . No need of TrgEvent
+!========================== DaVinciKernel v1r1 2004-09-16 ===================
+! 2004-09-08 - P. Koppenburg
+ - IParticleFilter
+   . Remove statistics
+ - PhysDesktop.*
+   . Warn only once when output location is changed
+! 2004-09-06 - P. Koppenburg
+ - (I)PhysDesktop.*
+   . Add getOutputLocation() method
+   . Add saveDesktop(ParticleVector&,VertexVector& ) method to IPhysDesktop
+! 2004-09-03 - P. Koppenburg
+ - (I)PhysDesktop.*
+   . Remove getInput method.
+! 2004-08-25 - P. Koppenburg
+  Move src/* to src/component and Lib/* to src/
+!========================== DaVinciMCTools v5r5 2004-09-16 ===================
+! 2004-09-14 - P. Koppenburg
+ - src/DumpEvent.cpp
+   .  Algorithm that runs the debug tool, moved from DaVinciTest
+  - src/PrintTree.* NEW
+    . Prints content of PhysDesktop.InputLocation as tree
+  - src/PrintMCTree.* NEW
+    . Prints MC particles of given ID as tree.
+! 2004-09-13 - P. Koppenburg
+ - src/TrueMCFilterCriterion.*
+   . New ParticleFilter (like in Phys/DaVinciFilter) filtering
+     particles depending on whether they are associated to the true MC 
+     B decay tree. Allows to run on signal only.
+ - options/DVTrueMCFilterCriterion.opts
+   . Example option file that checks that both the K+ and the K- 
+     in Bs->KK are reconstruted before running the preselection.
+!========================== DaVinciTest v5r2 2004-09-16 ===================
+! 2004-09-14 - P. Koppenburg
+  - src/DumpEvent.cpp
+  - src/PrintMCTree.cpp
+  - src/PrintTree.cpp
+    . Moved to DaVinciMCTools
+! 2004-09-14 - P. Koppenburg
+  - options/DVChargedProtoP.opts
+    . Add warning that PrimVertAnalysis does not work with ROOT format.
+      Bug reported by Laura Somerville.
+! 2004-09-13 - P. Koppenburg
+  - src/ChargedProtoPAlg.cpp
+    . Added errors on track state to ntuple
+! 2004-09-10 - P. Koppenburg
+  - src/PrintTree.* NEW
+    . Prints content of PhysDesktop.InputLocation as treee
+  - src/PrintMCTree.* NEW
+    . Prints MC particles of given ID as tree.
+ Note: These algorithms should be one in DaVinciTools, the other in DaVincMCTools.
+       But this requires the splitting of the debug tool in a MC part
+       and a non-MC part. There's quite some work involved in that...
+  - src/DumpEvent.* 
+   . Make debug tool private
+! 2004-09-08 - P. Koppenburg
+  - src/TestParticleFilter.*
+  - options/DVTestParticleFilter.opts
+    . Removed as they essentially test obsolete features of the ParticleFilter
+      If you want to learn about the particle filter refer to Hlt/HltSelections
+      that uses it a lot.
+!========================== DaVinciTools v11r1 2004-09-16 ===================
+! 2004-09-02 - P. Koppenburg
+  - src/<someAlgorithms>.cpp
+    . Remove getInput that is not in PhysDesktop anymore.
+! 2004-09-02 - P. Koppenburg
+  - src/DecayFinder.*
+    . Make it a GaudiTool   
+! 2004-08-25 - P. Koppenburg
+  - cmt/requirements
+   . Do not export header files
+  - Remove DaVinciTools and Lib directories
+!========================== DaVinciTransporter v1r1 2004-09-16 ===================
+! 2004-08-25 - P. Koppenburg
+ - cmt/requirements
+   . Do not export header files
+!========================== DaVinciUser v5r1p2 2004-09-16 ===================
+! 2004-09-03 - P. Koppenburg
+ - src/<someAlgorithms>.cpp
+   . Remove getInput that is not in physdesktop anymore.
+!========================== FlavourTagging v5r3 2004-09-16 ===================
+! 2004-09-13 - P. Koppenburg for Julien Babel
+  Include trigger again
+!========================== ParticleMaker v1r1 2004-09-16 ===================
+! 2004-08-25 - P. Koppenburg
+ - cmt/requirements
+   . Do not export header files
+!========================== PhysSelections v6r10 2004-09-16 ===================
+! 2004-09-14 - P. Koppenburg
+ - src/RefineSelections.cpp
+   . Do not set initial particle as origin. 
+! 2004-09-02 - P. Koppenburg
+ - src/RefineSelections.cpp
+   . Remove getInput that is not in PhysDesktop anymore.
+!========================== VertexFit v1r1 2004-09-16 ===================
+! 2004-08-25 - P. Koppenburg
+ - cmt/requirements
+   . Do not export header files
+#################################### PHYSSEL ###################################
+!========================== B2HH v2r4 2004-09-16 ===================
+! 2004-09-16 - P. Koppenburg
+ - DV*.opts
+   . Replace all DoDV* files by Do* files for consistency with other
+     preselections.
+! 2004-09-02 - P. Koppenburg
+ - DV*.opts
+   . Make DoDV*.opts file that include all what is needed except
+     DaVinciCommon and DaVinciReco. This helps for the HLT studies.
+!========================== B2RhoRho v1r7p1 2004-09-16 ===================
+! 2004-09-02 - P. Koppenburg
+ - src/<someAlgorithms>.cpp
+   . Remove getInput that is not in physdesktop anymore.
+!========================== B2XGamma v2r4 2004-09-16 ===================
+! 2004-09-02 - P. Koppenburg
+ - DVTDRselBs2PhiGamma.opts
+   . Make Do*.opts file that include all what is needed except
+     DaVinciCommon and DaVinciReco. This helps for the HLT studies.
+!========================== Bd2D0Kstar v4r3 2004-09-16 ===================
+! 2004-09-03 - P. Koppenburg
+ - src/<someAlgorithms>.cpp
+   . Remove getInput that is not in physdesktop anymore.
+! 2004-09-02 - P. Koppenburg
+ - DV*.opts
+   . Make Do*.opts file that include all what is needed except
+     DaVinciCommon and DaVinciReco. This helps for the HLT studies.
+!========================== Bd2DstarPi v2r7 2004-09-16 ===================
+! 2004-09-02 - P. Koppenburg
+ - DV*.opts
+   . Make Do*.opts file that include all what is needed except
+     DaVinciCommon and DaVinciReco. This helps for the HLT studies.
+!========================== Bd2JpsiKs v2r6 2004-09-16 ===================
+! 2004-09-03 - P. Koppenburg
+ - src/<someAlgorithms>.cpp
+   . Remove getInput that is not in physdesktop anymore.
+! 2004-09-02 - P. Koppenburg
+ - DV*.opts
+   . Make Do*.opts file that include all what is needed except
+     DaVinciCommon and DaVinciReco. This helps for the HLT studies.
+!========================== Bd2MuMuKstar v2r3 2004-09-16 ===================
+! 2004-09-02 - P. Koppenburg
+ - DV*.opts
+   . Make Do*.opts file that include all what is needed except
+     DaVinciCommon and DaVinciReco. This helps for the HLT studies.
+!========================== Bs2DsH v3r3 2004-09-16 ===================
+! 2004-09-02 - P. Koppenburg
+ - DV*.opts
+   . Make Do*.opts file that include all what is needed except
+     DaVinciCommon and DaVinciReco. This helps for the HLT studies.
+!========================== Bs2JpsiPhi v2r3 2004-09-16 ===================
+! 2004-09-02 - P. Koppenburg
+ - DV*.opts
+   . Make Do*.opts file that include all what is needed except
+     DaVinciCommon and DaVinciReco. This helps for the HLT studies.
+!========================== Bs2MuMu v2r4 2004-09-16 ===================
+! 2004-09-03 - P. Koppenburg
+ - src/<someAlgorithms>.cpp
+   . Remove getInput that is not in physdesktop anymore.
+! 2004-09-02 - P. Koppenburg
+ - DV*.opts
+   . Make Do*.opts file that include all what is needed except
+     DaVinciCommon and DaVinciReco. This helps for the HLT studies.
+!========================== Bs2PhiPhi v2r3 2004-09-16 ===================
+! 2004-09-02 - P. Koppenburg
+ - DV*.opts
+   . Make Do*.opts file that include all what is needed except
+     DaVinciCommon and DaVinciReco. This helps for the HLT studies.
+!========================== D02MuMu v1r4p3 2004-09-16 ===================
+! 2004-09-03 - P. Koppenburg
+ - src/<someAlgorithms>.cpp
+   . Remove getInput that is not in physdesktop anymore.
+!========================== PhysSelSys v7r9 2004-09-16 ===================
+#####################################  REC  ####################################
+!========================== GlobalReco v4r8p1 2004-09-16 ===================
+! 2004-09-13 -P. Koppenburg
+  - cmt/requirements
+    . Depend on Kernel/Relations
+##################################### TOOLS ####################################
+!========================== LoKi v3r4p2 2004-09-16 ===================
+! 2004-09-13 - P. Koppenburg
+ - src/Tuple.cpp
+   . Temporarily comment out L1Score functions that are not exsiting anymore.
+!========================== Stripping v1r4 2004-09-16 ===================
+! 2004-09-15 - P. Koppenburg for Hugo Ruiz
+  - src/OverWriteSelResult.cpp
+    . Bug fix: forgot to overwrite the SelResult.
+  - options/DVMerge.opts
+    . Add ETC    
+! 2004-09-14 - P. Koppenburg for Hugo Ruiz
+  - python/checkPrep.py
+  - python/strip.py
+    . By default produce 1 DST instead of 2 and do not post-scale.  
+! 2004-09-08 - P. Koppenburg
+  - src/OverWriteSelResult.{cpp,h}
+    . Checks SelResult output, makes some statistics
+      and verwrites selresult value for too noisy
+      algorthms. This replaces the PostScaler for 
+      the merging of stripped data.
+  - options/DVMerge.opts
+    . Options for merging of stripped DST.
+! 2004-09-01 - P. Koppenburg
+  - python/strip.py
+    . Change $Presel_Filename to ${Presel_Filename} (and others) 
+      to allow the file catalog to expand the variable. Bug reported 
+      by Joel.
+!========================== Utilities v1r10 2004-09-16 ===================
+! 2004-09-10 - P. Koppenburg
+  - src/SelResultCombinatorics.*
+    . Small changes in output
+! 2004-09-02 - P. Koppenburg
+  - src/SelResultCombinatorics.*
+    . Algorithm that checks correlations of SelResult outputs. It prints
+      a list or a table (default). Just give the list of algorithms:
+         SelResultCorrelations.Algorithms = { "alg1", "alg2", ...  } ;
+      This makes all the combinatorics of algorithms. One can also give
+         SelResultCorrelations.AlgorithmsColumn = { "alg1", "alg2", ...  } ;
+      which then provides the efficiencies of the "Algorithms" versus
+      "AlgorithmsColumn". The same algorithm may be in both lists.
+      (two identical lists are equivalent to an empty AlgorithmsColumn list).
+         SelResultCorrelations.PrintTable = true ; // (default)
+      switched between table and list printout. The latter is ugly but
+      helpful if one wants to `grep' the output file.
+  - options/DVSelResultCombinatorics.opts
+    . Example otion file that shows the correlations between the
+      B->llK and J/psi preselections for both the ee and mumu modes.
+###################################### TR ######################################
+###################################### TRG #####################################
+!========================== L1Decision v3r0 2004-09-16 ===================
+! 2004-09-16 - Thomas Schietinger
+ - src/L1Decision.cpp
+   . Good suggestion from Hans about the treatment of
+     J/psi's (he wants to have the cut on IP removed, which in fact 
+     is well compatible with bandwidth constraints.)
+ 
+! 2004-09-13 - Olivier Callot
+ - Remove inclusion of Relations/IAssociator.h which are not needed and invalid
+   with LHCb v16r2
+
+! 2004-09-10 - Olivier Callot
+ - Use TrgTools v5r0
+
+! 2004-09-10 - Thomas Martin Schietinger
+ - new decision logic with parallel subtriggers, including single-muon 
+   trigger. Preliminary version with hardcoded thresholds.
+
+! 2004-09-02 - Thomas Martin Schietinger
+ - add L1SigAnalyser tool with corresponding ROOT macro (F. Legger).
+ - update and add more options files for use in DaVinci.
+ - remove TrgScore* code (replaced by L1Score in Event)
+!========================== L1Reco v5r0 2004-09-16 ===================
+! 2004-09-08 - Olivier Callot
+ - use TrgTools v5r*
+!========================== TrgChecker v5r0 2004-09-16 ===================
+! 2004-09-08 - Olivier Callot
+ - use TrgTools v5r* and TrgVeloTT v5r*
+ - Monitor also Downstream and KShort tracks, for future use.
+
+! 2004-09-08 - Olivier Callot
+ - Don't print the PID statistics with no entries. Useful for L1 monitoring !
+
+! 2004-09-02 - Olivier Callot
+ - Fix the counting of OT reference when assigning truth to TrgTracks. They 
+   were almost ignored...
+
+! 2004-08-30 - Olivier Callot
+ - New type of counter to measure PID efficiecies, and use it for Muons inside
+   TrgChecker.
+!========================== TrgForward v3r0 2004-09-16 ===================
+! 2004-09-08 - Olivier Callot
+ - use TrgTools v5r*
+
+! 2004-09-02 - Olivier Callot
+ - Fix the OT station number in the decoding, was wrong by one unit !
+ - Tag the hits used in pass 1, and don't reuse them in pass 2.
+
+! 2004-08-25 - Olivier Callot
+ - Use the clone method to create the output track. This sets the ancestor and
+   copies the previous states.
+ - Remove time counter in FwdHitFromRawBuffer
+ - fix a typo : The y slope of the state in th eT stations was in fact the x 
+   slope ! Random efficiency for matching in RICH, Muon, Calo ...
+!========================== TrgMonitor v3r0 2004-09-16 ===================
+! 2004-09-08 - Olivier Callot
+ - use TrgTools v5r*
+!========================== TrgMuonID v2r0 2004-09-16 ===================
+! 2004-09-08 - Olivier Callot
+ - use TrgTools v5r*
+ - JobOption 'useM1' to validate (default) or invalidate the use of M1 for
+   muon identification.
+
+! 2004-08-30 - Olivier Callot
+ - Initial implementation, based on the Hlt version of end 2003. This is a 
+   trimmed version of the offline Muon ID. The algorithm also includes a fast 
+   decoding of the Raw Buffer, based on Muon/MuonDAQ package, and a building 
+   of pads from strip based on Muon/MuonRec. Speed is the main concern here. 
+   No object is created by 'new' during the dtaa processing. 
+!========================== TrgPrimVertex v3r0 2004-09-16 ===================
+! 2004-09-08 - Olivier Callot
+ - use TrgTools v5r*
+!========================== TrgTools v5r0 2004-09-16 ===================
+! 2004-09-08 - Olivier Callot
+ - Use TrgEvent v4r*
+!========================== TrgVelo v5r0 2004-09-16 ===================
+! 2004-09-08 - Olivier Callot
+ - Use TrgTools v5r*
+!========================== TrgVeloTT v5r0 2004-09-16 ===================
+! 2004-09-08 - Olivier Callot
+ - use TrgTools v5r*
+
 </PRE><H1><A NAME=v12r0>2004-08-24 DaVinci v12r0 - first version with Gaudi v15</A></H1><PRE>
 
  Identical to DaVinci v11r13 except:

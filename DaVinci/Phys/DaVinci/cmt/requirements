@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.173 2004-09-15 16:03:39 pkoppenb Exp $
+# $Id: requirements,v 1.174 2004-09-16 15:57:30 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -24,16 +24,14 @@ use GaudiPolicy v5r18
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v15r1)
-use GaudiKernel         v16r1
-use GaudiSvc            v12r2p1
-use GaudiAud            v6r5
-use GaudiAlg            v8r0
-use GaudiGSL            v6r1
-use GaudiPoolDb         v1r8p1
-use GaudiObjDesc        v6r3
-use RootHistCnv         v9r3
-use HbookCnv            v14r2
+#-- Gaudi libraries
+use GaudiSys            v*
+# Event persistency
+use GaudiPoolDb         v*
+
+# Histogram persistency 
+use HbookCnv            v*
+use RootHistCnv         v*
 
 #-- Database
 use XmlDDDB             v22r3   Det
@@ -73,7 +71,7 @@ use  VeloDAQ            	v1r0     Velo
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
-use  CaloReco           	v2r6     Calo
+use  CaloReco           	v2r5     Calo
 
 # Muon PID
 use  MuonID             	v3r7p1   Muon
@@ -100,12 +98,12 @@ use  DaVinciUser        	v5r1p2   Phys
 use  FlavourTagging     	v5r3     Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r1     Phys
-use  PhysSelections		v6r9p1   Phys
+use  PhysSelections		v6r10    Phys
 use  DaVinciTransporter 	v1r1     Phys
 use  VertexFit			v1r1     Phys
 
 # Physics MC packages
-use  DaVinciAssociators 	v5r1     Phys
+use  DaVinciAssociators 	v5r2     Phys
 use  DaVinciEff         	v3r1     Phys
 use  DaVinciMCTools     	v5r5     Phys
 use  DaVinciTest        	v5r2     Phys
