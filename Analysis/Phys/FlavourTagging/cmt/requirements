@@ -14,7 +14,7 @@ branches          cmt doc src options summary
 # Set the default paths for the Tagging options
 #============================================================================
 set FLAVOURTAGGINGOPTS ${FLAVOURTAGGINGROOT}/options
-#include_dirs           $(FLAVOURTAGGINGROOT)
+include_dirs           $(FLAVOURTAGGINGROOT)
 
 # Used packages. 
 #============================================================================

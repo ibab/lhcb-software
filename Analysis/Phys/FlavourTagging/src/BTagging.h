@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.8 2005-01-31 10:07:46 pkoppenb Exp $
+// $Id: BTagging.h,v 1.9 2005-02-02 07:10:27 pkoppenb Exp $
 #ifndef USER_BTAGGING_H 
 #define USER_BTAGGING_H 1
 
@@ -17,15 +17,15 @@
 #include "Event/TamperingResults.h"
 // from RecoTools
 #include "RecoTools/ITrVeloCharge.h"
-#include "ISecondaryVertexTool.h"
-#include "INNetTool.h"
+#include "FlavourTagging/ISecondaryVertexTool.h"
+#include "FlavourTagging/INNetTool.h"
 
 #define MAXSIZETAGS 100
 
 /** @class BTagging BTagging.h 
  *  
  *  @author Marco Musy
- *  @date   15/12/2004
+ *  @date   01/02/2005
  */
 
 class BTagging : public DVAlgorithm {
@@ -90,7 +90,7 @@ private:
   double m_ProbMin;
   double m_VchOmega;
 
-  bool m_RequireL0, m_RequireL1, m_RequireHLT;
+  bool m_RequireL0, m_RequireL1, m_RequireHLT, m_RequireTamp;
 };
 //===========================================================================//
 #endif // USER_BTAGGING_H

@@ -1,18 +1,25 @@
-! $Id: release.notes,v 1.54 2005-02-01 14:31:57 pkoppenb Exp $
+! $Id: release.notes,v 1.55 2005-02-02 07:10:27 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
-! 2005-02-01- P. Koppenburg
+! 2005-02-02 - P. Koppenburg for Marco Musy
+  - src/BTagging.{h,cpp}
+    . Allow the use without L0 L1 and Tampering.
+    !! WARNING: results will be slightly different !!      
+  - src/ISecondaryVertexTool.h and src/INNetTool.h
+    moved to FlavourTagging/
+  
+! 2005-02-01 - P. Koppenburg
   - FlavourTagging/IFlavourTaggingTool.h
     . Removed
   - options/CheatedSelection.opts
     . Removed DaVinciCommon and DaVinciReco already included in 
       DVBTagging.opts
 
-! 2005-01-31- P. Koppenburg for Marco Musy
+! 2005-01-31 - P. Koppenburg for Marco Musy
 Main changes/upgrades are the following:
 
 - tagging efficiencies and performance calculation are now moved

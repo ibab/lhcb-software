@@ -63,6 +63,10 @@ int main(int argc, char **argv) {
       in >> categ;
       in >> truetag;
     } 
+ 
+    //---------------------------------- optional cuts
+    //if( mass < 5.0 ) continue; 
+    //----------------------------------
 
     HLT= (int)  Trig/100;
     L1 = (int) (Trig-100*HLT)/10;

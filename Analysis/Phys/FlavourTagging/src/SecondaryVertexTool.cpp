@@ -1,4 +1,4 @@
-// $Id: SecondaryVertexTool.cpp,v 1.1 2005-01-31 10:07:46 pkoppenb Exp $
+// $Id: SecondaryVertexTool.cpp,v 1.2 2005-02-02 07:10:27 pkoppenb Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"

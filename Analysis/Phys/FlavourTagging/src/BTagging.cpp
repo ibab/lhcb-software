@@ -51,6 +51,9 @@ BTagging::BTagging(const std::string& name,
   declareProperty( "VchOmega", m_VchOmega = 0.40);
 
   declareProperty( "TagOutputLocation", m_TagLocation = "" );
+
+  declareProperty( "RequireTampering", m_RequireTamp = true );
+
   declareProperty( "RequireL0", m_RequireL0 = false );
   declareProperty( "RequireL1", m_RequireL1 = false );
   declareProperty( "RequireHLT",m_RequireHLT= false );
@@ -106,30 +109,35 @@ StatusCode BTagging::execute() {
     return StatusCode::SUCCESS;
   }
 
-  // Retrieve trigger info
-  TrgDecision* trg = get<TrgDecision> (TrgDecisionLocation::Default);
-  if( 0 == trg ) warning() << "Unable to find Trigger." << endreq;
+  int trigger=-1;
+  double tamper=100;
+  if( m_RequireTamp ) {
+    // Retrieve trigger info
+    TrgDecision* trg = get<TrgDecision> (TrgDecisionLocation::Default);
+    if( 0 == trg ){
+      fatal() 
+	<< "You required the Tampering: please run the Trigger!" << endreq;
+      return StatusCode::FAILURE;
+    } 
 
-  // Select on trigger
-  debug()<< "Check if passes trigger.."<<endreq;
-  if(m_RequireL0)  if(trg) if( trg->L0() == 0 ) return StatusCode::SUCCESS;
-  if(m_RequireL1)  if(trg) if( trg->L1() == 0 ) return StatusCode::SUCCESS;
-  if(m_RequireHLT) if(trg) if( trg->HLT()== 0 ) return StatusCode::SUCCESS;
+    // Select on trigger
+    debug()<< "Check if passes trigger.."<<endreq;
+    if(m_RequireL0)  if( trg->L0() == 0 ) return StatusCode::SUCCESS;
+    if(m_RequireL1)  if( trg->L1() == 0 ) return StatusCode::SUCCESS;
+    if(m_RequireHLT) if( trg->HLT()== 0 ) return StatusCode::SUCCESS;
+    trigger = trg->L0() + trg->L1() *10 + trg->HLT() *100;
 
-  // Retrieve Tampering info
-  double tamper = 0;
-  TamperingResults* tampres = 
-                    get<TamperingResults>(TamperingResultsLocation::Default);
-  if( tampres ) {
-    tamper = tampres->L1TIS() + tampres->L1TOS()*10 + tampres->L1TOB()*100;
-    debug() << " Results read ( TIS, TOS, TOB ): "
-	    << tampres->L1TIS() << " "
-	    << tampres->L1TOS() << " "
-	    << tampres->L1TOB() << endreq;
-  } else {
-    err() << " TamperingResults not found at "
-	  << TamperingResultsLocation::Default << endreq;
-    return StatusCode::SUCCESS;
+    // Retrieve Tampering info
+    TamperingResults* tampres = 
+      get<TamperingResults>(TamperingResultsLocation::Default);
+    if( tampres ) {
+      tamper = tampres->L1TIS() + tampres->L1TOS()*10 + tampres->L1TOB()*100;
+      debug() << " Results read ( TOB, TOS, TIS ): " << tamper <<endreq;
+    } else {
+      err() << " TamperingResults not found at "
+	    << TamperingResultsLocation::Default << endreq;
+      return StatusCode::SUCCESS;
+    }
   }
 
   //----------------------------------------------------------------------
@@ -678,8 +686,6 @@ StatusCode BTagging::execute() {
       pnsum=0.50;
       tagdecision = 0;
     }
-    debug()<<"pnsum_a=" << pnsum_a <<endreq;
-    debug()<<"pnsum_b=" << pnsum_b <<endreq;
     debug()<<"pnsum  =" << pnsum <<endreq;
 
     //sort into categories
@@ -697,7 +703,7 @@ StatusCode BTagging::execute() {
   ///OUTPUT to Logfile -----------------------------------------------------
   info() << "BTAGGING TAG  " << evt->runNum()
 	 << std::setw(4) << evt->evtNum()
-	 << std::setw(4) << trg->L0() + trg->L1() *10 + trg->HLT() *100
+	 << std::setw(4) << trigger
 	 << std::setw(5) << tagdecision
 	 << std::setw(3) << ix  
 	 << std::setw(5) << itag[1]
