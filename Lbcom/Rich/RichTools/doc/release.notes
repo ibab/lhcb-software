@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2005-02-17 - Chris Jones
+ - Update RichTrSegMakerFromTrStoredTracks with ability to avoid multiple
+   state extrapolations and a few other minor improvements
+
 !=========================== RichTools v1r4 2005-02-08 =======================
 ! 2005-02-02 - Chris Jones
  - Various updates

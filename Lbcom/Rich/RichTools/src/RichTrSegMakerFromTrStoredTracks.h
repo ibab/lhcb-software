@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrSegMakerFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.8 2005-02-02 10:12:48 jonrob Exp $
+ *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.9 2005-02-17 09:57:59 jonrob Exp $
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
@@ -56,13 +56,17 @@
 //---------------------------------------------------------------------------------
 /** @class RichTrSegMakerFromTrStoredTracks RichTrSegMakerFromTrStoredTracks.h
  *
- *  Tool to create RichTrackSegments from TrStoredTracks. Use the tracking extrapolation tools
- *  to access the state information at the entrance and exit points to the radiators, which is
- *  then used to create the RichTrackSegments.
+ *  Tool to create RichTrackSegments from TrStoredTracks. 
+ *
+ *  Uses the tracking extrapolation tools to access the state information at the 
+ *  entrance and exit points to the radiators, which is then used to create the 
+ *  RichTrackSegments.
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   14/01/2002
+ *
+ *  @todo Reduce the verbose level printout, once tool is stabilised
  */
 //---------------------------------------------------------------------------------
 
@@ -97,60 +101,67 @@ private: // methods
    *  is contained inside this medium. This means the start of the visable C4F10
    *  segment is the aerogel exit point, and not the C4F10 entrance point.
    *
-   *  @param state State information to correct
+   *  @param state        State information to correct
+   *  @param refState     Reference starting state.
    */
-  void fixC4F10EntryPoint( TrStateP * state ) const;
+  void fixC4F10EntryPoint( TrStateP *& state, 
+                           TrStateP * refState = 0  ) const;
 
-  /** Correct the exit state to the point the track traverses the spherical mirror
+  /** Correct the exit state to the point where the track traverses the spherical mirror
    *
-   *  @param radiator  Pointer to the apropriate radiator detector element
-   *  @param state     State information to correct
+   *  @param radiator     Pointer to the apropriate radiator detector element
+   *  @param state        State information to correct
+   *  @param refState     Reference starting state.
    */
   void correctRadExitMirror( DeRichRadiator* radiator, 
-                             TrStateP * state ) const;
+                             TrStateP *& state,
+                             TrStateP * refState = 0  ) const;
 
   /** Extrapolate a state to a new z position
    *
-   * @param state  The state to extrapolate
-   * @param z      The z position to extrapolate the state to
+   * @param stateToMove  The state to extrapolate
+   * @param z            The z position to extrapolate the state to
+   * @param refState     Reference starting state.
    *
    * @return The status of the extrapolation
    * @retval StatusCode::SUCCESS State was successfully extrapolated to the new z position
-   * @retval StatusCode::FAILURE State could not be extrapolated to the z position. Remains unaltered.
+   * @retval StatusCode::FAILURE State could not be extrapolated to the z position. 
+   *         State remains unaltered.
    */
-  StatusCode moveState( TrStateP* state,
-                        const double z ) const;
+  StatusCode moveState( TrStateP *& stateToMove,
+                        const double z,
+                        TrStateP * refState = 0 ) const;
 
 private: // data
 
-  /// Rich1 and Rich2
+  /// Ray tracing tool
+  IRichRayTracing* m_rayTracing;
+
+  /// Rich1 and Rich2 detector elements
   DeRich* m_rich[Rich::NRiches];
 
   /// Spherical mirror nominal centre of curvature
   HepPoint3D m_nominalCoC[Rich::NRiches][2];
 
   /// Spherical mirror radius of curvature
-  double m_nomSphMirrorRadius[Rich::NRiches];
+  std::vector<double> m_nomSphMirrorRadius;
 
   /// typedef of array of DeRichRadiators
-  typedef boost::array<DeRichRadiator*, Rich::NRadiatorTypes> Radiators;
+  typedef std::vector< DeRichRadiator* > Radiators;
   /// Array of radiators
   Radiators m_radiators;
 
   /// Allowable tolerance on state z positions
-  double m_zTolerance[Rich::NRadiatorTypes];
+  std::vector<double> m_zTolerance;
 
   /// Nominal z positions of states at RICHes
-  double m_nomZstates[4];
+  std::vector<double> m_nomZstates;
 
   // shifts for mirror correction
-  double m_mirrShift[Rich::NRiches];
+  std::vector<double> m_mirrShift;
 
   // sanity checks on state information
-  double m_minStateDiff[Rich::NRadiatorTypes];
-
-  /// Ray tracing tool
-  IRichRayTracing* m_rayTracing;
+  std::vector<double> m_minStateDiff;
 
   // Track extrapolators
   ITrExtrapolator * m_trExt1; ///< Primary track extrapolation tool
@@ -160,6 +171,9 @@ private: // data
 
   /// Flags to turn on/off individual radiators
   std::vector<bool> m_usedRads;
+
+  /// Flag to indicate if extrapolation should always be done from the reference states
+  bool m_extrapFromRef;
 
 };
 
