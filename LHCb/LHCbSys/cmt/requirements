@@ -27,7 +27,7 @@ use RichKernel  	v3r1	Rich
 use VeloKernel  	v1r3    Velo
 
 # Detector description
-use DetSys		v2r0	Det
+use DetSys		v2r1	Det
 use VeloDet        	v8r5	Det
 use DetDesc        	v12r0	Det
 use DetDescCnv        	v2r0	Det
@@ -39,7 +39,7 @@ use CaloDetXmlCnv	v2r3	Det
 use MuonDet        	v4r4	Det
 use Magnet         	v2r1	Det
 use MuonTools      	v3r6	Muon
-use RichDet		v4r2	Det
+use RichDet		v5r0	Det
 
 # Event data model
 use EventSys		v14r1	Event
