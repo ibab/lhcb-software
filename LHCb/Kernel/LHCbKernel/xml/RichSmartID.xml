@@ -1,178 +1,384 @@
-        <class author="Chris Jones   Christopher.Rob.Jones@cern.ch" desc="Identifier for RICH detector objects" name="RichSmartID" stdVectorTypeDef="FALSE">
-            <import name="Kernel/RichDetectorType"/>
-            <import name="Kernel/RichSide"/>
-            <import ignore="TRUE" name="Rich"/>
-            <import ignore="TRUE" name="DetectorType"/>
-            <import ignore="TRUE" name="Side"/>
-            <template name="VectorDict" t1="THIS"/>
-            <typedef access="PUBLIC" def="KeyType" desc="Type for internal key" type="unsigned long"/>
-            <constructor desc="Copy constructor" initList="m_key( id.key() )">
-                <arg const="TRUE" inout="INOUT" name="id" type="RichSmartID"/>
-            </constructor>
-            <constructor desc="Constructor from internal type" initList="m_key( key )">
-                <arg const="TRUE" name="key" type="unsigned long"/>
-            </constructor>
-            <constructor desc="Constructor from data fields including sub-pixel information" initList="m_key( 0 )">
-                <arg const="TRUE" name="rich" type="int"/>
-                <arg const="TRUE" name="panel" type="int"/>
-                <arg const="TRUE" name="pdRow" type="int"/>
-                <arg const="TRUE" name="pdCol" type="int"/>
-                <arg const="TRUE" name="pixelRow" type="int"/>
-                <arg const="TRUE" name="pixelCol" type="int"/>
-                <arg const="TRUE" name="subPixel" type="int"/>
-                <code>setRich( rich );
-setPanel( panel );
-setPDRow( pdRow );
-setPDCol( pdCol );
-setPixelRow( pixelRow );
-setPixelCol( pixelCol );
-setSubPixel( subPixel );</code>
-            </constructor>
-            <constructor desc="Constructor from data fields" initList="m_key( 0 )">
-                <arg const="TRUE" name="rich" type="int"/>
-                <arg const="TRUE" name="panel" type="int"/>
-                <arg const="TRUE" name="pdRow" type="int"/>
-                <arg const="TRUE" name="pdCol" type="int"/>
-                <arg const="TRUE" name="pixelRow" type="int"/>
-                <arg const="TRUE" name="pixelCol" type="int"/>
-                <code>setRich( rich );
-setPanel( panel );
-setPDRow( pdRow );
-setPDCol( pdCol );
-setPixelRow( pixelRow );
-setPixelCol( pixelCol );</code>
-            </constructor>
-            <method const="TRUE" desc="implicit conversion to internal type" name="operator RichSmartID::KeyType" type="">
-                <code>return m_key;</code>
-            </method>
-            <method desc="Set the RICH detector identifier" name="setRich" type="bool">
-                <arg const="TRUE" name="rich" type="int"/>
-                <code>if ( !checkRange(rich,panelBits-richBits) ) {
- std::cout &lt;&lt; &quot;RichSmartID ERROR : RICH &quot; &lt;&lt; rich &lt;&lt; &quot; out of range&quot; &lt;&lt; std::endl;
- return false;
-}
-set( rich, richBits, richMask, richIsSetMask );
-return true;</code>
-            </method>
-            <method desc="Set the RICH detector panel identifier" name="setPanel" type="bool">
-                <arg const="TRUE" name="panel" type="int"/>
-                <code>if ( !checkRange(panel,PDRowBits-panelBits) ) {
- std::cout &lt;&lt; &quot;RichSmartID ERROR : Panel &quot; &lt;&lt; panel &lt;&lt; &quot; out of range&quot; &lt;&lt; std::endl;
- return false;
-}
-set( panel, panelBits, panelMask, panelIsSetMask ); 
-return true;</code>
-            </method>
-            <method desc="Set the RICH photon detector row identifier" name="setPDRow" type="bool">
-                <arg const="TRUE" name="row" type="int"/>
-                <code>if ( !checkRange(row,PDColBits-PDRowBits) ) {
- std::cout &lt;&lt; &quot;RichSmartID ERROR : PD row &quot; &lt;&lt; row &lt;&lt; &quot; out of range&quot; &lt;&lt; std::endl;
- return false;
-}
-set( row, PDRowBits, PDRowMask, PDRowIsSetMask );
-return true;</code>
-            </method>
-            <method desc="Set the RICH photon detector column identifier" name="setPDCol" type="bool">
-                <arg const="TRUE" name="col" type="int"/>
-                <code>if ( !checkRange(col,pixelRowBits-PDColBits) ) {
- std::cout &lt;&lt; &quot;RichSmartID ERROR : PD column &quot; &lt;&lt; col &lt;&lt; &quot; out of range&quot; &lt;&lt; std::endl;
- return false;
-}
-set( col, PDColBits, PDColMask, PDColIsSetMask ); 
-return true;</code>
-            </method>
-            <method desc="Set the RICH photon detector pixel row identifier" name="setPixelRow" type="bool">
-                <arg const="TRUE" name="row" type="int"/>
-                <code>if ( !checkRange(row,pixelColBits-pixelRowBits) ) {
- std::cout &lt;&lt; &quot;RichSmartID ERROR : Pixel row &quot; &lt;&lt; row &lt;&lt; &quot; out of range&quot; &lt;&lt; std::endl;
- return false;
-}
-set( row, pixelRowBits, pixelRowMask, pixelRowIsSetMask ); 
-return true;</code>
-            </method>
-            <method desc="Set the RICH photon detector pixel column identifier" name="setPixelCol" type="bool">
-                <arg const="TRUE" name="col" type="int"/>
-                <code>if ( !checkRange(col,subPixelBits-pixelColBits) ) {
- std::cout &lt;&lt; &quot;RichSmartID ERROR : Pixel column &quot; &lt;&lt; col &lt;&lt; &quot; out of range&quot; &lt;&lt; std::endl;
- return false;
-}
-set( col, pixelColBits, pixelColMask, pixelColIsSetMask ); 
-return true;</code>
-            </method>
-            <method desc="Set the RICH photon detector sub-pixel identifier" name="setSubPixel" type="bool">
-                <arg const="TRUE" name="subpixel" type="int"/>
-                <code>if ( !checkRange(subpixel,richIsSetBits-subPixelBits) ) {
- std::cout &lt;&lt; &quot;RichSmartID ERROR : Sub-pixel &quot; &lt;&lt; subpixel &lt;&lt; &quot; out of range&quot; &lt;&lt; std::endl;
- return false;
-}
-set( subpixel, subPixelBits, subPixelMask, subPixelIsSetMask ); 
-return true;</code>
-            </method>
-            <method const="TRUE" desc="Returns true if the SmartID is valid" name="isValid" type="bool">
-                <code>return ( (0 != richIsSet()) || (0 != panelIsSet()) || 
-            (0 != PDRowIsSet()) || (0 != PDColIsSet()) || 
-            (0 != pixelRowIsSet()) || (0 != pixelColIsSet()) || 
-            (0 != subPixelIsSet()) );</code>
-            </method>
-            <method const="TRUE" desc="Decoding function to strip the sub-pixel information and return a pixel RichSmartID" name="pixelID" type="RichSmartID">
-                <code>return ( key() &amp; ~(subPixelMask+subPixelIsSetMask) );</code>
-            </method>
-            <method const="TRUE" desc="Decoding function to strip all the pixel information and return a photon detector RichSmartID" name="pdID" type="RichSmartID">
-                <code>return ( key() &amp; (richMask+panelMask+PDRowMask+PDColMask+
-            richIsSetMask+panelIsSetMask+PDRowIsSetMask+PDColIsSetMask) );</code>
-            </method>
-            <method const="TRUE" desc="Decoding function to strip the photon-detector information and return a panel RichSmartID" name="panelID" type="RichSmartID">
-                <code>return ( key() &amp; (richMask+panelMask+richIsSetMask+panelIsSetMask) );</code>
-            </method>
-            <method const="TRUE" desc="Decoding function to strip all but the RICH information and return a RICH RichSmartID" name="richID" type="RichSmartID">
-                <code>return ( key() &amp; (richMask+richIsSetMask) );</code>
-            </method>
-            <method desc="Prints all data fields" name="printAllFields" type="std::ostream&amp;">
-                <arg name="stream" type="std::ostream"/>
-                <code>stream &lt;&lt; &quot;data &quot; &lt;&lt; rich() &lt;&lt; &quot; &quot; &lt;&lt; panel() &lt;&lt; &quot; &quot; &lt;&lt; PDRow() &lt;&lt; &quot; &quot; &lt;&lt; PDCol() 
-           &lt;&lt; &quot; &quot; &lt;&lt; pixelRow() &lt;&lt; &quot; &quot; &lt;&lt; pixelCol() &lt;&lt; &quot; &quot; &lt;&lt; subPixel()
-           &lt;&lt; &quot; valid &quot; &lt;&lt; richIsSet() &lt;&lt; &quot; &quot; &lt;&lt; panelIsSet() &lt;&lt; &quot; &quot; &lt;&lt; PDRowIsSet()
-           &lt;&lt; &quot; &quot; &lt;&lt; PDColIsSet() &lt;&lt; &quot; &quot; &lt;&lt; pixelRowIsSet() &lt;&lt; &quot; &quot; &lt;&lt; pixelColIsSet()
-           &lt;&lt; &quot; &quot; &lt;&lt; subPixelIsSet();
-return stream;</code>
-            </method>
-            <method const="TRUE" desc="Prints only the data fields" name="dataBitsOnly" type="RichSmartID::KeyType">
-                <code>return (key() &amp; (richMask+panelMask+PDRowMask+PDColMask+
-                    pixelRowMask+pixelColMask+subPixelMask) );</code>
-            </method>
-            <method access="PRIVATE" desc="Set the data" name="set" type="void">
-                <arg const="TRUE" name="value" type="int"/>
-                <arg const="TRUE" name="shift" type="int"/>
-                <arg const="TRUE" name="mask" type="long"/>
-                <arg const="TRUE" name="okMask" type="long"/>
-                <code>setKey( ((value &lt;&lt; shift) &amp; mask) | (key() &amp; ~mask) | okMask );</code>
-            </method>
-            <method access="PRIVATE" const="TRUE" desc="Checks if a data value is within range for a given field" name="checkRange" type="bool">
-                <arg const="TRUE" name="value" type="int"/>
-                <arg const="TRUE" name="shift" type="int"/>
-                <code>return ( value &lt; (1 &lt;&lt; shift) );</code>
-            </method>
-            <method const="TRUE" desc="Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="rich" type="Rich::DetectorType">
-                <code>return static_cast&lt;Rich::DetectorType&gt;((m_key &amp; richMask) &gt;&gt; richBits);</code>
-            </method>
-            <method const="TRUE" desc="Get the RICH panel identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." name="panel" type="Rich::Side">
-                <code>return static_cast&lt;Rich::Side&gt;((m_key &amp; panelMask) &gt;&gt; panelBits);</code>
-            </method>
-            <attribute desc="The internal data" name="key" type="bitfield">
-                <bitfield desc="The RICH Detector" length="1" name="rich" getMeth="FALSE" setMeth="FALSE"/>
-                <bitfield desc="The RICH panel" length="1" name="panel" getMeth="FALSE" setMeth="FALSE"/>
-                <bitfield desc="The photon detector row number" length="5" name="PDRow" setMeth="FALSE"/>
-                <bitfield desc="The photon detector column number" length="5" name="PDCol" setMeth="FALSE"/>
-                <bitfield desc="The pixel column number" length="5" name="pixelRow" setMeth="FALSE"/>
-                <bitfield desc="The pixel row number" length="5" name="pixelCol" setMeth="FALSE"/>
-                <bitfield desc="The sub-pixel number" length="3" name="subPixel" setMeth="FALSE"/>
-                <bitfield desc="Rich field is Set" length="1" name="richIsSet" setMeth="FALSE"/>
-                <bitfield desc="Panel field is set" length="1" name="panelIsSet" setMeth="FALSE"/>
-                <bitfield desc="Photon detector row field is set" length="1" name="PDRowIsSet" setMeth="FALSE"/>
-                <bitfield desc="Photon detector column field is set" length="1" name="PDColIsSet" setMeth="FALSE"/>
-                <bitfield desc="Pixel row field is set" length="1" name="pixelRowIsSet" setMeth="FALSE"/>
-                <bitfield desc="Pixel column field is set" length="1" name="pixelColIsSet" setMeth="FALSE"/>
-                <bitfield desc="Sub-pixel field is set" length="1" name="subPixelIsSet" setMeth="FALSE"/>
-            </attribute>
-        </class>
+<!-- **************************************************************************
+  * $Id: RichSmartID.xml,v 1.6 2004-06-29 14:28:39 jonesc Exp $
+  *****************************************************************************
+  * XML-description of RichSmartID class                                      *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
 
+     <class 
+        name   = "RichSmartID"
+        author = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+        desc   = "Identifier for RICH detector objects">
+
+        &StlVector;
+
+        <import name = "Kernel/RichDetectorType"                  />
+        <import name = "Kernel/RichSide"                          />
+        <import name = "Rich"                    ignore = "TRUE"  />
+        <import name = "DetectorType"            ignore = "TRUE"  />
+        <import name = "Side"                    ignore = "TRUE"  />
+
+        <template name = "VectorDict" t1="THIS"/>
+
+        <typedef access="PUBLIC" def="KeyType" desc="Type for internal key" type="unsigned long"/>
+
+        <attribute 
+            desc = "The internal data" name="key" 
+            type = "bitfield">
+            <bitfield desc="The RICH Detector"                   length="1"  name="rich"          setMeth="FALSE" getMeth="FALSE" />
+            <bitfield desc="The RICH panel"                      length="1"  name="panel"         setMeth="FALSE" getMeth="FALSE" />
+            <bitfield desc="The photon detector row number"      length="5"  name="PDRow"         setMeth="FALSE" />
+            <bitfield desc="The photon detector column number"   length="5"  name="PDCol"         setMeth="FALSE" />
+            <bitfield desc="The pixel column number"             length="5"  name="pixelRow"      setMeth="FALSE" />
+            <bitfield desc="The pixel row number"                length="5"  name="pixelCol"      setMeth="FALSE" />
+            <bitfield desc="The sub-pixel number"                length="3"  name="subPixel"      setMeth="FALSE" />
+            <bitfield desc="Rich field is Set"                   length="1"  name="richIsSet"     setMeth="FALSE" />
+            <bitfield desc="Panel field is set"                  length="1"  name="panelIsSet"    setMeth="FALSE" />
+            <bitfield desc="Photon detector row field is set"    length="1"  name="PDRowIsSet"    setMeth="FALSE" />
+            <bitfield desc="Photon detector column field is set" length="1"  name="PDColIsSet"    setMeth="FALSE" />
+            <bitfield desc="Pixel row field is set"              length="1"  name="pixelRowIsSet" setMeth="FALSE" />
+            <bitfield desc="Pixel column field is set"           length="1"  name="pixelColIsSet" setMeth="FALSE" />
+            <bitfield desc="Sub-pixel field is set"              length="1"  name="subPixelIsSet" setMeth="FALSE" />
+        </attribute>
+
+        <constructor 
+            desc     = "Copy constructor" 
+            initList = "m_key( id.key() )">
+            <arg 
+                name  = "id"  
+                type  = "RichSmartID"
+                const = "TRUE" 
+                inout = "INOUT" 
+            />
+        </constructor>
+
+        <constructor 
+            desc     = "Constructor from internal type"
+            initList = "m_key( key )">
+            <arg 
+                name  = "key" 
+                type  = "RichSmartID::KeyType"
+                const = "TRUE" 
+                inout = "BYVALUE" 
+             />
+        </constructor>
+
+        <constructor 
+            desc     = "Constructor from data fields including sub-pixel information" 
+            initList = "m_key( 0 )">
+            <arg  const="TRUE"  name="rich"      type="int"  />
+            <arg  const="TRUE"  name="panel"     type="int"  />
+            <arg  const="TRUE"  name="pdRow"     type="int"  />
+            <arg  const="TRUE"  name="pdCol"     type="int"  />
+            <arg  const="TRUE"  name="pixelRow"  type="int"  />
+            <arg  const="TRUE"  name="pixelCol"  type="int"  />
+            <arg  const="TRUE"  name="subPixel"  type="int"  />
+            <code>
+               setRich( rich );
+               setPanel( panel );
+               setPDRow( pdRow );
+               setPDCol( pdCol );
+               setPixelRow( pixelRow );
+               setPixelCol( pixelCol );
+               setSubPixel( subPixel );
+            </code>
+        </constructor>
+
+        <constructor 
+            desc     = "Constructor from data fields" 
+            initList = "m_key( 0 )" >
+            <arg  const="TRUE"  name="rich"      type="int"  />
+            <arg  const="TRUE"  name="panel"     type="int"  />
+            <arg  const="TRUE"  name="pdRow"     type="int"  />
+            <arg  const="TRUE"  name="pdCol"     type="int"  />
+            <arg  const="TRUE"  name="pixelRow"  type="int"  />
+            <arg  const="TRUE"  name="pixelCol"  type="int"  />
+            <code>
+              setRich( rich );
+              setPanel( panel );
+              setPDRow( pdRow );
+              setPDCol( pdCol );
+              setPixelRow( pixelRow );
+              setPixelCol( pixelCol );
+            </code>
+        </constructor>
+
+        <method 
+            name   = "setData"
+            access = "PRIVATE" 
+            desc   = "Set the given data into the given field"  
+            type   = "bool" >
+            <arg 
+                const = "TRUE" 
+                name  = "value"
+                type  = "int"  />
+            <arg 
+                const = "TRUE" 
+                name  = "shift"  
+                type  = "int"  />
+            <arg 
+                const = "TRUE" 
+                name  = "mask"
+                type  = "long" />
+            <arg 
+                const = "TRUE" 
+                name  = "okMask" 
+                type  = "long" />
+            <code>
+              setKey( ((value &lt;&lt; shift) &amp; mask) | (m_key &amp; ~mask) | okMask );
+              return true;
+            </code>
+        </method>
+
+        <method             
+            name   = "checkRange" 
+            access = "PRIVATE" 
+            const  = "TRUE" 
+            desc   = "Checks if a data value is within range for a given field" 
+            type   = "bool" >
+            <arg 
+                const = "TRUE" 
+                name  = "value" 
+                type  = "int"  />
+            <arg 
+                const = "TRUE" 
+                name  = "shift" 
+                type  = "int"  />
+            <code>
+              return ( value &lt; (1 &lt;&lt; shift) );
+            </code>
+        </method>
+
+        <method 
+            name  = "operator RichSmartID::KeyType" 
+            const = "TRUE" 
+            desc  = "implicit conversion to internal type" 
+            type  = "" >
+            <code>
+              return m_key;
+            </code>
+        </method>
+
+        <method
+             desc    = "Comparison operator using internal representation"
+             name    = "operator=="
+             argList = "const RichSmartID id"
+             type    = "bool"
+             const   = "TRUE"
+             access  = "PUBLIC" >
+             <code>
+               return ( key() == id.key() );
+             </code>
+        </method>
+
+        <method 
+            name = "setRich" 
+            desc = "Set the RICH detector identifier" 
+            type = "bool" >
+            <arg 
+                const = "TRUE" 
+                name  = "rich" 
+                type  = "int"  />
+            <code>
+              return ( checkRange(rich,panelBits-richBits) ?
+                       setData( rich, richBits, richMask, richIsSetMask ) : false );
+            </code>
+        </method>
+
+        <method 
+            name = "setPanel"
+            desc = "Set the RICH detector panel identifier"  
+            type = "bool">
+            <arg 
+                const = "TRUE" 
+                name  = "panel" 
+                type  = "int"  />
+            <code>
+              return ( checkRange(panel,PDRowBits-panelBits) ?
+                       setData( panel, panelBits, panelMask, panelIsSetMask ) : false );
+            </code>
+        </method>
+
+        <method 
+            name = "setPDRow" 
+            desc = "Set the RICH photon detector row identifier" 
+            type = "bool">
+            <arg 
+                const = "TRUE" 
+                name  = "row" 
+                type  = "int"  />
+            <code>
+               return ( checkRange(row,PDColBits-PDRowBits) ?
+                        setData( row, PDRowBits, PDRowMask, PDRowIsSetMask ) : false );
+            </code>
+        </method>
+
+        <method 
+            name = "setPDCol" 
+            desc = "Set the RICH photon detector column identifier" 
+            type = "bool">
+            <arg 
+                const = "TRUE" 
+                name  = "col" 
+                type  = "int"  />
+            <code>
+               return ( checkRange(col,pixelRowBits-PDColBits) ?
+                        setData( col, PDColBits, PDColMask, PDColIsSetMask ) : false );
+            </code>
+        </method>
+
+        <method 
+            name = "setPixelRow"
+            desc = "Set the RICH photon detector pixel row identifier"  
+            type = "bool">
+            <arg 
+                const = "TRUE" 
+                name  = "row" 
+                type  = "int"  />
+            <code>
+               return ( checkRange(row,pixelColBits-pixelRowBits) ?
+                        setData( row, pixelRowBits, pixelRowMask, pixelRowIsSetMask ) : false );
+            </code>
+        </method>
+
+        <method 
+            name = "setPixelCol"
+            desc = "Set the RICH photon detector pixel column identifier"  
+            type = "bool">
+            <arg 
+                const = "TRUE" 
+                name  = "col" 
+                type  = "int"  />
+            <code>
+               return ( checkRange(col,subPixelBits-pixelColBits) ?
+                        setData( col, pixelColBits, pixelColMask, pixelColIsSetMask ) : false );
+            </code>
+        </method>
+
+        <method 
+            name = "setSubPixel"
+            desc = "Set the RICH photon detector sub-pixel identifier"  
+            type = "bool">
+            <arg 
+                const = "TRUE" 
+                name  = "subpixel" 
+                type  = "int"  />
+            <code>
+               return ( checkRange(subpixel,richIsSetBits-subPixelBits) ?
+                        setData( subpixel, subPixelBits, subPixelMask, subPixelIsSetMask ) : false );
+            </code>
+        </method>
+
+        <method 
+            name  = "richDataAreValid"
+            const = "TRUE" 
+            desc  = "Returns true if the RichSmartID contains valid RICH detector data"  
+            type  = "bool">
+            <code>
+               return richIsSet();
+            </code>
+        </method>
+
+        <method 
+            name  = "hpdDataAreValid"
+            const = "TRUE" 
+            desc  = "Returns true if the RichSmartID contains valid HPD data"  
+            type  = "bool">
+            <code>
+               return ( richIsSet() &amp;&amp; panelIsSet() &amp;&amp; PDRowIsSet() &amp;&amp; PDColIsSet() );
+            </code>
+        </method>
+
+        <method 
+            name  = "pixelDataAreValid"
+            const = "TRUE" 
+            desc  = "Returns true if the RichSmartID contains valid pixel data"  
+            type  = "bool">
+            <code>
+               return ( hpdDataAreValid() &amp;&amp; pixelRowIsSet() &amp;&amp; pixelColIsSet() );
+            </code>
+        </method>
+
+        <method 
+            name  = "isValid"
+            const = "TRUE" 
+            desc  = "Returns true if at least one data field has been set"  
+            type  = "bool">
+            <code>
+               return ( richIsSet() || panelIsSet() || PDRowIsSet() || PDColIsSet() ||
+                        pixelRowIsSet() || pixelColIsSet() || subPixelIsSet() );
+            </code>
+        </method>
+
+        <method 
+            name  = "pixelID"
+            const = "TRUE" 
+            desc  = "Decoding function to strip the sub-pixel information and return a pixel RichSmartID" 
+            type  = "RichSmartID">
+            <code>
+               return RichSmartID( m_key &amp; ~(subPixelMask+subPixelIsSetMask) );
+            </code>
+        </method>
+
+        <method 
+            name  = "pdID"
+            const = "TRUE" 
+            desc  = "Decoding function to strip all the pixel information and return a photon detector RichSmartID"  
+            type = "RichSmartID">
+            <code>
+               return RichSmartID( m_key &amp; (richMask+panelMask+PDRowMask+PDColMask+
+                                   richIsSetMask+panelIsSetMask+PDRowIsSetMask+PDColIsSetMask) );
+            </code>
+        </method>
+
+        <method 
+            name  = "panelID"
+            const = "TRUE" 
+            desc  = "Decoding function to strip the photon-detector information and return a panel RichSmartID"  
+            type  = "RichSmartID">
+            <code>
+               return RichSmartID( m_key &amp; (richMask+panelMask+richIsSetMask+panelIsSetMask) );
+            </code>
+        </method>
+
+        <method 
+            name  = "richID"
+            const = "TRUE" 
+            desc  = "Decoding function to strip all but the RICH information and return a RICH RichSmartID"  
+            type  = "RichSmartID">
+            <code>
+               return RichSmartID( m_key &amp; (richMask+richIsSetMask) );
+            </code>
+        </method>
+
+        <method 
+            name  = "dataBitsOnly"
+            const = "TRUE" 
+            desc  = "Returns only the data fields, with the validity bits stripped"  
+            type  = "RichSmartID">
+            <code>
+               return RichSmartID( m_key &amp; (richMask+panelMask+PDRowMask+PDColMask+pixelRowMask+pixelColMask+subPixelMask) );
+            </code>
+        </method>
+
+        <method 
+            name  = "rich"
+            const = "TRUE" 
+            desc  = "Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values."  
+            type  = "Rich::DetectorType">
+            <code>
+               return static_cast&lt;Rich::DetectorType&gt;( (m_key &amp; richMask) &gt;&gt; richBits );
+            </code>
+        </method>
+
+        <method 
+            const = "TRUE" 
+            desc  = "Get the RICH panel identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." 
+            name  = "panel" type="Rich::Side">
+            <code>
+               return static_cast&lt;Rich::Side&gt;( (m_key &amp; panelMask) &gt;&gt; panelBits );
+            </code>
+        </method>
+
+    </class>

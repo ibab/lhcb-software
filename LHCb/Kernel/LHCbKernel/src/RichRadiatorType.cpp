@@ -1,4 +1,4 @@
-// $Id: RichRadiatorType.cpp,v 1.1 2004-02-02 14:13:06 jonesc Exp $
+// $Id: RichRadiatorType.cpp,v 1.2 2004-06-29 14:28:38 jonesc Exp $
 // Include files 
 
 // local
@@ -11,11 +11,13 @@
 //-----------------------------------------------------------------------------
 
 // Text conversion for RadiatorType enumeration
-std::string Rich::text( const Rich::RadiatorType& radiator ) {
+std::string Rich::text( const Rich::RadiatorType & radiator ) 
+{
   switch( radiator ) {
-  case Rich::Aerogel:          return "aerogel";
-  case Rich::C4F10:            return "C4F10";
-  case Rich::CF4:              return "CF4";
-  default:                     return "?"; // should never happen
+  case Rich::Aerogel:            return "aerogel";
+  case Rich::C4F10:              return "C4F10";
+  case Rich::CF4:                return "CF4";
+  case Rich::InvalidRadiator:    return "Invalid Radiator";
+  default:                       return "?"; // should never happen
   }
 }

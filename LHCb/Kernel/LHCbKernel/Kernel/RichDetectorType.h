@@ -1,4 +1,4 @@
-// $Id: RichDetectorType.h,v 1.1 2004-02-02 14:13:04 jonesc Exp $
+// $Id: RichDetectorType.h,v 1.2 2004-06-29 14:28:36 jonesc Exp $
 #ifndef LHCBKERNEL_RICHDETECTORTYPE_H
 #define LHCBKERNEL_RICHDETECTORTYPE_H 1
 
@@ -24,16 +24,19 @@ namespace Rich {
    *  @date   2002-06-19
    */
   enum DetectorType {
-    Rich1       = 0,
-    Rich2       = 1
+    InvalidDetector = -1,
+    Rich1           = 0,
+    Rich2           = 1
   };
 
   /// Text conversion for DetectorType enumeration
-  inline std::string text( const Rich::DetectorType& detector ) {
+  inline std::string text( const Rich::DetectorType & detector ) 
+  {
     switch( detector ) {
-    case Rich::Rich1:        return "Rich1";
-    case Rich::Rich2:        return "Rich2";
-    default:                 return "?"; // should never happen
+    case Rich::Rich1:              return "Rich1";
+    case Rich::Rich2:              return "Rich2";
+    case Rich::InvalidDetector:    return "Invalid Detector";
+    default:                       return "?"; // should never happen
     }
   }
 
@@ -43,8 +46,8 @@ namespace Rich {
 }
 
 /// Implement StreamBuffer >> method for Rich::DetectorType enumeration
-inline StreamBuffer& operator >> ( StreamBuffer& s,
-                                   Rich::DetectorType& detector ) {
+inline StreamBuffer& operator >> ( StreamBuffer & s,
+                                   Rich::DetectorType & detector ) {
   int intType;
   s >> intType;
   detector = static_cast<Rich::DetectorType>(intType);
@@ -52,22 +55,22 @@ inline StreamBuffer& operator >> ( StreamBuffer& s,
 }
 
 /// Implement StreamBuffer << method for Rich::DetectorType enumeration
-inline StreamBuffer& operator << ( StreamBuffer& s,
-                                   const Rich::DetectorType& detector ) {
+inline StreamBuffer& operator << ( StreamBuffer & s,
+                                   const Rich::DetectorType & detector ) {
   s << static_cast<int>(detector);
   return s;
 }
 
 /// Implement textual ostream << method for Rich::DetectorType enumeration
-inline std::ostream& operator << ( std::ostream& s,
-                                   const Rich::DetectorType& detector ) {
+inline std::ostream& operator << ( std::ostream & s,
+                                   const Rich::DetectorType & detector ) {
   s << Rich::text( detector );
   return s;
 }
 
 /// Implement textual MsgStream << method for Rich::DetectorType enumeration
 inline MsgStream& operator << ( MsgStream& s,
-                                const Rich::DetectorType& detector ) {
+                                const Rich::DetectorType detector ) {
   s << Rich::text( detector );
   return s;
 }

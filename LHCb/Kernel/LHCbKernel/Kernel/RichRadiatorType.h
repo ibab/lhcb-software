@@ -1,4 +1,4 @@
-// $Id: RichRadiatorType.h,v 1.1 2004-02-02 14:13:04 jonesc Exp $
+// $Id: RichRadiatorType.h,v 1.2 2004-06-29 14:28:38 jonesc Exp $
 #ifndef LHCBKERNEL_RICHRADIATORTYPE_H
 #define LHCBKERNEL_RICHRADIATORTYPE_H 1
 
@@ -23,6 +23,7 @@ namespace Rich {
    *  @date   2002-06-19
    */
   enum RadiatorType {
+    InvalidRadiator = -1,
     Aerogel         = 0,
     Rich1Gas        = 1,
     Rich2Gas        = 2,
@@ -31,7 +32,7 @@ namespace Rich {
   };
 
   /// Text conversion for RadiatorType enumeration
-  std::string text( const Rich::RadiatorType& radiator ) ;
+  std::string text( const Rich::RadiatorType & radiator );
 
   /// Std Vector typedef
   typedef std::vector<RadiatorType> RadiatorTypeVector;
@@ -40,14 +41,14 @@ namespace Rich {
 
 /// Implement textual ostream << method for Rich::RadiatorType enumeration
 inline std::ostream& operator << ( std::ostream& s,
-                                   const Rich::RadiatorType& radiator ) {
+                                   const Rich::RadiatorType & radiator ) {
   s << Rich::text( radiator );
   return s;
 }
 
 /// Implement textual MsgStream << method for Rich::RadiatorType enumeration
 inline MsgStream& operator << ( MsgStream& s,
-                                const Rich::RadiatorType& radiator ) {
+                                const Rich::RadiatorType & radiator ) {
   s << Rich::text( radiator );
   return s;
 }

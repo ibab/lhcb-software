@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2004-06-29 - Chris Jones
+ - Added "Invalid" to the RichDetectorType, RichRadiatorType and 
+   RichSide enumerations.
+ - Reorganisation of RichSmartID.xml to improve human-readability
+
 !====================== LHCbKernel v4r7 2004-06-14 ========================
 ! 2004-06-14 - Marco Cattaneo
  - ProcessPhase removed (moved to LHCbAlgs component library)
