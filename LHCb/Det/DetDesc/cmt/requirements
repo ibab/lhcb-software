@@ -1,9 +1,7 @@
-# $Id: requirements,v 1.43 2002-07-03 13:33:29 cattanem Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $
+# $Id: requirements,v 1.44 2002-07-17 08:16:17 ranjard Exp $ 
 # =============================================================================
 package       DetDesc
-version       v10r3
+version       v11r0
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -13,8 +11,8 @@ include_dirs  $(DETDESCROOT)
 
 # =========== dependencies ====================================================
 use           GaudiKernel       v12r*
-use           CLHEP             v17r*
-use           XERCES            v16r*
+use           CLHEP             v2r1800p*
+use           XERCES            v2r160p*
 
 # =========== constituents =====================================================
 library       DetDescLib        Lib/*.cpp

@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.112 2002-07-13 17:09:35 ocallot Exp $ 
+! $Id: release.notes,v 1.113 2002-07-17 08:16:17 ranjard Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+!===================== DetDesc v11r0 2002-07-16 ==============================
+! 2002-07-16 - Florence Ranjard
+ - requirements - use CLHEP 1.8.0.0
 
 ! 2002-07-13 - Olivier Callot
  - Change the LAssembly cover creation message from INFO to DEBUG.
