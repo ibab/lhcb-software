@@ -1,6 +1,10 @@
-# $Id: requirements,v 1.6 2004-07-21 08:05:34 cattanem Exp $
+#============================================================================
 # Created    : 17/06/2004
 # Maintainer : Antonis Papanestis, Chris Jones
+#============================================================================
+# $Id: requirements,v 1.7 2004-07-30 11:17:04 jonrob Exp $
+# $Log: not supported by cvs2svn $
+#============================================================================
 
 package RichTools
 version v1r0
