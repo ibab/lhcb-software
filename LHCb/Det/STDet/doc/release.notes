@@ -1,7 +1,10 @@
 !Package         : STDet
 !Package manager : M. Needham
 
-!========================= STDet v1r2 2004-05-26 ========================
+!========================= STDet v1r2 2004-07-19 ========================
+! 2004-07-19 - Marco Cattaneo
+ - Move to Gaudi v15 (use LHCbKernel v5r* in requirements)
+
 ! 2004-05-26 - Marco Cattaneo
  - Make GSL dependency no_auto_imports (only needed for gsl macros)
 

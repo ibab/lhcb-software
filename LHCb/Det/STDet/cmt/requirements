@@ -6,8 +6,8 @@ branches cmt doc src STDet
 include_dirs $(STDETROOT)
 
 use DetDescCnv	v2r*	Det
-use LHCbKernel	v4r*	Kernel
-use GSL		v*	-no_auto_imports
+use LHCbKernel	v5r*	Kernel
+use GSL		v*	LCG_Interfaces -no_auto_imports
 
 #---- link library
 library STDetLib ../src/Lib/*.cpp -import=GSL
