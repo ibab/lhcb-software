@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !======================== LHCbAlgs v1r1 2004-09-06 ========================
+! 2004-09-17 - Marco Cattaneo
+ - Add TESCheck algorithm from Vanya, to preload and/or check existence of
+   objects in the transient store
+
 ! 2004-09-06 - Marco Cattaneo
  - LbAppInit: Protect against undefined APPVERSION environment variable
 
