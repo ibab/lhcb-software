@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.20 2002-07-27 20:27:56 gcorti Exp $
+! $Id: release.notes,v 1.21 2002-07-28 17:29:27 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-07-28 - Gloria Corti
+ - replace macro "and" with && for compilation on windows in 
+   ParticleFilter
 
 ! 2002-07-27 - Gloria Corti
  - Always return success in ChargeParticleMaker even if ProtoParticles

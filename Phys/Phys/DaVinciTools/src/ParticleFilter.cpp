@@ -1,4 +1,4 @@
-// $Id: ParticleFilter.cpp,v 1.2 2002-07-27 20:24:53 gcorti Exp $
+// $Id: ParticleFilter.cpp,v 1.3 2002-07-28 17:29:10 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -203,7 +203,7 @@ StatusCode ParticleFilter::filterPositive( const ParticleVector& input,
     bool passed = true;
     int index_criteria = 0;
     for( ic = m_criteria.begin(); ic != m_criteria.end(); ic++ ) { 
-      if ((*ic)->isSatisfied(*ip) and (*ip)->charge() > 0) {
+      if( (*ic)->isSatisfied(*ip) && (*ip)->charge() > 0) {
         ++m_independentCounter[index_criteria] ;
         if(m_produceHistogram ) m_hIndCounter->fill(index_criteria,1);
         if (partPassed[index_part]){
@@ -263,7 +263,7 @@ StatusCode ParticleFilter::filterNegative( const ParticleVector& input,
     bool passed = true;
     int index_criteria = 0;
     for( ic = m_criteria.begin(); ic != m_criteria.end(); ic++ ) { 
-      if ((*ic)->isSatisfied(*ip) and (*ip)->charge() < 0) {
+      if( (*ic)->isSatisfied(*ip) && (*ip)->charge() < 0) {
         ++m_independentCounter[index_criteria] ;
         if(m_produceHistogram )m_hIndCounter->fill(index_criteria,1);
         if (partPassed[index_part]){
