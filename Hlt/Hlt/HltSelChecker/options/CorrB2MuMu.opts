@@ -6,7 +6,8 @@ B2MuMuAndTDR.AvoidSelResult = false ;
 
 // correlation of HLT and TDR
 HLTCorrelations.Members += { "SelResultCorrelations/CorrB2MuMu" };
-CorrB2MuMu.Algorithms = { "AllB2MuMuTracks", 
+CorrB2MuMu.Algorithms = { "CheckHLTGeneric"	
+                        ,"AllB2MuMuTracks", 
                         "HLTDimuons",
                         "HLTFilterB2MuMu", 
 			"HLTFilterB2HH", 

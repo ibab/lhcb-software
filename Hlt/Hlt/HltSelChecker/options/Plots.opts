@@ -58,7 +58,7 @@ HLTDimuons.MakePlots = true ;
 HLTDimuons.DaughterPlots.Variables = { "P", "Pt", "IPs" } ;
 HLTDimuons.MotherPlots.Variables =   { "WM",     "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
 HLTDimuons.MotherPlots.Minima    = { -3000.*MeV, -1., 0., -150*mm, 0.*GeV, 0.*GeV, 0., 0. };
-HLTDimuons.MotherPlots.Maxima    = { 10000.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
+HLTDimuons.MotherPlots.Maxima    = {  7000.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
 HLTDimuons.DaughterPlotsPath = "MuMuIn" ;
 HLTDimuons.MotherPlotsPath   = "MuMuOut";
 
@@ -69,7 +69,7 @@ HLTUnbiasedJpsis.InputPlots.Minima    = { -3000.*MeV, -1., 0., -150*mm, 0.*GeV, 
 HLTUnbiasedJpsis.InputPlots.Maxima    = { 10000.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
 HLTUnbiasedJpsis.OutputPlots.Variables = { "WM",     "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
 HLTUnbiasedJpsis.OutputPlots.Minima    = { -600.*MeV, -1., 0., -150*mm, 0.*GeV, 0.*GeV, 0., 0. };
-HLTUnbiasedJpsis.OutputPlots.Maxima     = { 10000.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
+HLTUnbiasedJpsis.OutputPlots.Maxima     = { 4400.*MeV, -1., 20., 150*mm, 100.*GeV, 20.*GeV, 10., 20. };
 HLTUnbiasedJpsis.InputPlotsPath  = "JpsiIn" ;
 HLTUnbiasedJpsis.OutputPlotsPath = "JpsiOut";
 

@@ -20,8 +20,8 @@ PrintTrueD.Depth = 2;
 #include "$HLTSELCHECKERROOT/options/TrueBs2PhiGamma.opts"
 #include "$HLTSELCHECKERROOT/options/TrueB2MuMu.opts"
 #include "$HLTSELCHECKERROOT/options/TrueBd2MuMuKstar.opts"
-#include "$HLTSELCHECKERROOT/options/TrueBs2JpsiPhi.opts"
-#include "$HLTSELCHECKERROOT/options/TrueBd2JpsiKs.opts"
+//#include "$HLTSELCHECKERROOT/options/TrueBs2JpsiPhi.opts"
+#include "$HLTSELCHECKERROOT/options/TrueB2JpsiX.opts"
 //==============================================================================
 #include "$HLTSELCHECKERROOT/options/TrueDstar.opts"   
 #include "$HLTSELCHECKERROOT/options/TrueJpsi.opts"  
@@ -40,9 +40,9 @@ PrintBTracks.PhysDesktop.InputLocations = { "Phys/AllBd2D0KstarTracks"
                                             ,"Phys/AllBs2PhiPhiTracks"
                                            , "Phys/AllB2HHTracks"
 					    ,"Phys/AllB2MuMuTracks"
-					    ,"Phys/AllBd2JpsiKsTracks"
+					    ,"Phys/AllJpsiTracks"
 					   , "Phys/AllBd2MuMuKstarTracks"
-					   , "Phys/AllBs2JpsiPhiTracks"
+//					   , "Phys/AllBs2JpsiPhiTracks"
 					     } ;
 
 // links

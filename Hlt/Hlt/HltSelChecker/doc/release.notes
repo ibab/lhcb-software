@@ -4,6 +4,43 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-01-27 - P. Koppenburg
+  Correlations: check result of HltGeneric
+  - src/CheckHLTGeneric.{cpp,h}
+    . Algorithm that checks result of HltGeneric. Temporary.
+  - src/HltSelChecker_load.cpp
+    . Added CheckHLTGeneric
+  - options/CorrB2HH.opts
+  - options/CorrB2MuMu.opts
+  - options/CorrBd2D0Kstar.opts
+  - options/CorrBd2DstarPi.opts
+  - options/CorrBd2MuMuKstar.opts
+  - options/CorrBs2DsH.opts
+  - options/CorrBs2JpsiPhi.opts
+  - options/CorrBs2PhiGamma.opts
+  - options/CorrBs2PhiPhi.opts
+  - options/CorrDiMuons.opts
+  - options/CorrDstar.opts
+  - options/CorrHLTsels.opts
+  - options/Correlations.opts
+    . Added CheckHLTGeneric    
+  J/psi: trat all B -> J/psi decays in the same way
+  - options/CorrB2JpsiX.opts
+    . New correlations for all J/psi -> mu mu
+  - options/TrueB2JpsiX.opts
+    . New truth file of all J/Psi-> mu+ mu-
+  - options/TrueBd2JpsiKs.opts
+    . Removed
+  - options/DVHLTCorr.opts
+  - options/Truth.opts
+  - options/TruthInput.opts
+    . Updated accordingly
+  Other minor stuff:
+  - options/Plots.opts
+    . Change some mass boundaries
+  - options/TrueBs2PhiPhi.opts
+    . Check pions for truth association
+  
 !========================== HltSelChecker v2r0 2005-01-19 ===========================
 ! 2005-01-19 - P. Koppenburg
   - options/TrueJpsi.opts

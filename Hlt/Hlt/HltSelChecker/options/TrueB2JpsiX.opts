@@ -1,0 +1,10 @@
+TrueSignals.Members += {"FilterDesktop/SelectB2JpsiX"};
+SelectB2JpsiX.PhysDesktop.InputLocations = { "Phys/HLTMuons" } ;
+SelectB2JpsiX.Filter.Selections =  {  "mu+ : TrueMCFilterCriterion" } ;                           // select pi-, pi+
+SelectB2JpsiX.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay = "{<Xb>, <Xb~>, [<Xb~>]os, [<Xb>]os} -> (J/psi(1S) -> ^mu+ ^mu- {,gamma} {,gamma}) ..." ; // only require muons
+SelectB2JpsiX.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
+
+// check that all 2 tracks are there
+TrueSignals.Members += {"MakeResonances/AllJpsiTracks"};
+AllJpsiTracks.PhysDesktop.InputLocations = {"Phys/SelectB2JpsiX"};
+AllJpsiTracks.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;  // only two muons

@@ -5,6 +5,11 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/HLTCorrelations" };
 HLTCorrelations.IgnoreFilterPassed = true ;
 
 HLTCorrelations.Members += { "IsBEvent" }; // with default options
+HLTCorrelations.Members += { "IsBEvent/IsbcEvent" }; // for c-quark
+IsbcEvent.RequiredParticles = { "b" , "c" } ;
+IsbcEvent.AndMode = false ;
+
+HLTCorrelations.Members += { "CheckHLTGeneric" };
 
 #include "$HLTSELCHECKERROOT/options/CorrB2HH.opts"
 #include "$HLTSELCHECKERROOT/options/CorrBd2D0Kstar.opts"
@@ -14,8 +19,8 @@ HLTCorrelations.Members += { "IsBEvent" }; // with default options
 #include "$HLTSELCHECKERROOT/options/CorrBs2PhiGamma.opts"
 #include "$HLTSELCHECKERROOT/options/CorrB2MuMu.opts"
 #include "$HLTSELCHECKERROOT/options/CorrBd2MuMuKstar.opts"
-#include "$HLTSELCHECKERROOT/options/CorrBs2JpsiPhi.opts"
-#include "$HLTSELCHECKERROOT/options/CorrBd2JpsiKs.opts"
+//#include "$HLTSELCHECKERROOT/options/CorrBs2JpsiPhi.opts"
+#include "$HLTSELCHECKERROOT/options/CorrB2JpsiX.opts"
 #include "$HLTSELCHECKERROOT/options/CorrDstar.opts"
 #include "$HLTSELCHECKERROOT/options/CorrDiMuons.opts"
 #include "$HLTSELCHECKERROOT/options/CorrHLTsels.opts"

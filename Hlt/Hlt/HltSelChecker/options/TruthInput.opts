@@ -9,8 +9,8 @@ HLTPreselPions.PhysDesktop.InputLocations = { "Phys/SelectB2HH"
                                               ,"Phys/SelectBs2PhiGamma" 
                                               ,"Phys/SelectB2MuMu" 
                                               ,"Phys/SelectBd2MuMuKstar" 
-                                              ,"Phys/SelectBs2JpsiPhi" 
-                                              ,"Phys/SelectBd2JpsiKs" 
+//                                              ,"Phys/SelectBs2JpsiPhi" 
+                                              ,"Phys/SelectB2JpsiX" 
 //                                              ,"Phys/SelectDstar2Dpi" 
 					      } ;
 HLTPreselKaons.PhysDesktop.InputLocations = {"Phys/SelectB2HH"
@@ -21,17 +21,18 @@ HLTPreselKaons.PhysDesktop.InputLocations = {"Phys/SelectB2HH"
                                               ,"Phys/SelectBs2PhiGamma" 
                                               ,"Phys/SelectB2MuMu" 
                                               ,"Phys/SelectBd2MuMuKstar" 
-                                              ,"Phys/SelectBs2JpsiPhi" 
-                                              ,"Phys/SelectBd2JpsiKs" 
+//                                              ,"Phys/SelectBs2JpsiPhi" 
+                                              ,"Phys/SelectB2JpsiX" 
 //                                              ,"Phys/SelectDstar2Dpi" 
 					      };
 HLTDimuons.PhysDesktop.InputLocations = {"Phys/SelectBs2JpsiPhi"
-                                       ,"Phys/SelectBd2JpsiKs"
+                                       ,"Phys/SelectB2JpsiX"
                                        ,"Phys/SelectB2MuMu"
 				       ,"Phys/SelectBd2MuMuKstar"};
 
-HLTSingleMuons.PhysDesktop.InputLocations = {"Phys/SelectBs2JpsiPhi"
-                                       ,"Phys/SelectBd2JpsiKs"
+HLTSingleMuons.PhysDesktop.InputLocations = {
+                                       "Phys/SelectB2JpsiX"
+//                                       ,"Phys/SelectBs2JpsiPhi"
                                        ,"Phys/SelectB2MuMu"
 				       ,"Phys/SelectBd2MuMuKstar"};
 

@@ -13,7 +13,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // Include this to overwrite input to take *only* MC truth particles into account
 // #include "$HLTSELCHECKERROOT/options/Truth.opts"
 // Include this to overwrite input to take *only* MC truth particles into account
-//#include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
+// #include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
 
 //==============================================================================
 // correlations
@@ -22,11 +22,11 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //==============================================================================
 // plots
 //==============================================================================
-//#include "$HLTSELCHECKERROOT/options/Plots.opts"
+// #include "$HLTSELCHECKERROOT/options/Plots.opts"
 
 //==============================================================================
 // PK's stripping of MB passing L0 and L1:
-#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+//#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //==============================================================================
 // PK's stripping of signal passing L0, L1 and TDR:
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
@@ -35,10 +35,10 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // Warning: Files are added up to EventSelector
 // in these options
 // Hence: re-initalize event selector
-//EventSelector.Input   = {};
-//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2DsK.opts"
+// EventSelector.Input   = {};
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JpsiPhi.opts"
 
-ApplicationMgr.EvtMax    = 10000 ;
+ApplicationMgr.EvtMax    = 50 ;
 EventSelector.FirstEvent = 1 ;
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
@@ -78,5 +78,5 @@ HLTPreselKaons.OutputLevel = 2;
 TrgParticleMaker.KaonDLLCut = 15 ; // default
 
 #include "$HLTGENERICROOT/options/HltGeneric.opts"
-HltGenericDecision.Filter = true; // false is default
+HltGenericDecision.Filter = true ; // false is default
 

@@ -6,7 +6,8 @@ Bs2PhiPhiAndTDR.AvoidSelResult = false ;
 
 // correlation of HLT and TDR
 HLTCorrelations.Members += { "SelResultCorrelations/CorrBs2PhiPhi" };
-CorrBs2PhiPhi.Algorithms = { "AllBs2PhiPhiTracks", 
+CorrBs2PhiPhi.Algorithms = { "CheckHLTGeneric"	
+                             ,"AllBs2PhiPhiTracks", 
 			      "HLTSharedPhi", 
 			      "HLTFilterBs2PhiPhi", 
 			      "TDRselBs2PhiPhi",

@@ -1,7 +1,8 @@
 
 // correlation of HLT and truth
 HLTCorrelations.Members += { "SelResultCorrelations/CorrDstar" };
-CorrDstar.Algorithms = { "AllDstar2DpiTracks"
+CorrDstar.Algorithms = { "CheckHLTGeneric"	
+                        , "AllDstar2DpiTracks"
                         ,"HLTSharedD02HH"
                         ,"HLTLooseD02PiPi"
 			,"HLTFilterDstar" } ;

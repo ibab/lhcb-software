@@ -1,0 +1,27 @@
+// check for TDR and MC truth
+HLTCorrelations.Members += { "CheckSelResult/B2JpsiXAndTDR" };
+B2JpsiXAndTDR.ANDmode = true ;
+B2JpsiXAndTDR.Algorithms = { "TDRselBs2Jpsi2MuMu_Phi2KK" , "AllB2JpsiXTracks" } ;
+B2JpsiXAndTDR.AvoidSelResult = false ;
+
+// correlation of HLT and TDR
+HLTCorrelations.Members += { "SelResultCorrelations/CorrB2JpsiX" };
+CorrB2JpsiX.Algorithms = { "CheckHLTGeneric"	
+                        ,"AllJpsiTracks", 
+                        "HLTDimuons", 
+                        "HLTHotJpsis", 
+                        "TDRselBd2Jpsi2MuMu_Ks2PiPi",
+                         "TDRselBs2Jpsi2MuMu_Phi2KK",
+                        "B2JpsiXAndTDR" } ;
+
+// check for TDR and MC truth
+HLTCorrelations.Members += { "GaudiSequencer/ShowFoundB2JpsiX" };
+ShowFoundB2JpsiX.Members += { "CheckSelResult/B2JpsiXIsFound",  "PrintTree/PrintFoundB2JpsiX"};
+
+B2JpsiXIsFound.ANDmode = true ;
+B2JpsiXIsFound.Algorithms = { "HLTFilterB2JpsiX" } ; // , "AllB2JpsiXTracks" } ;
+B2JpsiXIsFound.AvoidSelResult = false ;
+
+PrintFoundB2JpsiX.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundB2JpsiX.PhysDesktop.InputLocations = { "Phys/HLTFilterB2JpsiX" } ;
+PrintFoundB2JpsiX.OutputLevel = 4 ;
