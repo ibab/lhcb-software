@@ -1,47 +1,22 @@
+
+/** @file GiGaRichTrackCnv.cpp
+ *
+ *  Implementation file for GiGa converter : GiGaRichTrackCnv
+ *
+ *  CVS History :
+ *  $Id: GiGaMCRichTrackCnv.cpp,v 1.3 2004-07-30 13:42:14 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
+
 //  ===========================================================================
 #define GIGACNV_GiGaRichTrackCnv_CPP 1
 // ============================================================================
-#include "CLHEP/Geometry/Point3D.h"
-// STL
-#include <string>
-#include <vector>
-#include <algorithm>
-#include <numeric>
-// GaudiKernel
-#include "GaudiKernel/CnvFactory.h"
-#include "GaudiKernel/IAddressCreator.h"
-#include "GaudiKernel/IOpaqueAddress.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-// GaudiKernel
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/LinkManager.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/GaudiException.h"
-// GiGa
-#include "GiGa/IGiGaSvc.h"
-#include "GiGaCnv/IGiGaHitsCnvSvc.h"
-#include "GiGa/GiGaTrajectory.h"
-#include "GiGa/GiGaUtil.h"
-#include "GiGa/GiGaHitsByID.h"
-#include "GiGa/GiGaHitsByName.h"
-// GiGaCnv
-#include "GiGaCnv/GiGaKineRefTable.h"
-#include "GiGaCnv/GiGaCnvUtils.h"
-#include "GiGaCnv/IGiGaHitsCnvSvc.h"
-#include "GiGaCnv/IGiGaKineCnvSvc.h"
-#include "GiGaCnv/GiGaKineRefTable.h"
-// Rich Event
-#include "Event/MCRichTrack.h"
-// Geant4 includes
-#include "G4VHitsCollection.hh"
-#include "G4HCofThisEvent.hh"
-#include "G4SDManager.hh"
+
 // local
 #include "GiGaMCRichTrackCnv.h"
-#include "RichG4HitCollName.h"
-#include "RichG4Hit.h"
 
 // ======================================================================
 
@@ -176,7 +151,7 @@ StatusCode GiGaRichTrackCnv::updateObj ( IOpaqueAddress*  address ,
     // Iterate over segments and sort according to MCParticle
     for ( MCRichSegments::iterator iSeg = segments->begin();
           iSeg != segments->end(); ++iSeg ) {
-      if ( !(*iSeg) ) { 
+      if ( !(*iSeg) ) {
         msg << MSG::WARNING << "Null RichRecSegment pointer" << endreq;
         continue;
       }
@@ -210,7 +185,7 @@ StatusCode GiGaRichTrackCnv::updateObj ( IOpaqueAddress*  address ,
         if ( !(*iSeg) ) continue;
         mcTrack->addToMcSegments( *iSeg );
         (*iSeg)->setMCRichTrack( mcTrack );
-        msg << MSG::DEBUG << " Adding " << (*iSeg)->radiator() 
+        msg << MSG::DEBUG << " Adding " << (*iSeg)->radiator()
             << " MCRichSegment " << (*iSeg)->key() << endreq;
       }
 

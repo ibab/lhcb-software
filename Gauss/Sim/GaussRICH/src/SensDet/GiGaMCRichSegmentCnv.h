@@ -1,3 +1,16 @@
+
+/** @file GiGaRichSegmentCnv.h
+ *
+ *  Header file for GiGa converter : GiGaRichSegmentCnv
+ *
+ *  CVS History :
+ *  $Id: GiGaMCRichSegmentCnv.h,v 1.2 2004-07-30 13:42:14 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
+
 // ============================================================================
 #ifndef GIGACNV_GiGaRichSegmentCnv_H
 #define GIGACNV_GiGaRichSegmentCnv_H  1
@@ -7,10 +20,8 @@
 #include <set>
 #include <string>
 #include <vector>
-//#include <algorithm>
-//#include <numeric>
 
-/// GaudiKernel
+// GaudiKernel
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/CnvFactory.h"
@@ -22,7 +33,7 @@
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/GaudiException.h"
 
-/// LHCbEvent
+// LHCbEvent
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 #include "Event/MCRichSegment.h"
@@ -35,7 +46,7 @@
 #include "GiGa/GiGaHitsByID.h"
 #include "GiGa/GiGaHitsByName.h"
 
-/// GiGaCnv
+// GiGaCnv
 #include "GiGaCnv/GiGaCnvBase.h"
 #include "GiGaCnv/GiGaKineRefTable.h"
 #include "GiGaCnv/GiGaCnvUtils.h"
@@ -43,7 +54,7 @@
 #include "GiGaCnv/IGiGaKineCnvSvc.h"
 #include "GiGaCnv/GiGaKineRefTable.h"
 
-/// G4
+// G4
 #include "G4ParticleDefinition.hh"
 #include "G4VHitsCollection.hh"
 #include "G4HCofThisEvent.hh"
@@ -56,11 +67,19 @@
 #include "RichG4HitCollName.h"
 #include "RichG4Hit.h"
 
-/// forward declarations
+// forward declarations
 template <class TYPE>
 class CnvFactory;
 class GiGaTrajectory;
 class RichG4HitCollName;
+
+/** @class GiGaMCRichSegmentCnv GiGaMCRichSegmentCnv.h
+ *
+ *  GiGa converter for the RICH event model object MCRichSegment
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
 
 class GiGaRichSegmentCnv : public GiGaCnvBase {
 
@@ -82,7 +101,6 @@ public:
    *  @return status code
    */
   virtual StatusCode initialize() ;
-
   /** finalize  the converter
    *  @return status code
    */
@@ -121,9 +139,9 @@ public:
 
 private: // methods
 
-  GiGaRichSegmentCnv () ; /// no default constructor
-  GiGaRichSegmentCnv( const GiGaRichSegmentCnv& ) ; /// no copy
-  GiGaRichSegmentCnv& operator=( const GiGaRichSegmentCnv& ) ; /// no assignment
+  GiGaRichSegmentCnv () ; ///< Default constructor
+  GiGaRichSegmentCnv( const GiGaRichSegmentCnv& ) ; ///< Copy constructor
+  GiGaRichSegmentCnv& operator=( const GiGaRichSegmentCnv& ) ; ///< assignment operator
 
 private: // data
 

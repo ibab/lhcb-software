@@ -1,45 +1,64 @@
+
+/** @file GiGaMCRichHitCnv.h
+ *
+ *  Header file for GiGa converter : GiGaMCRichHitCnv
+ *
+ *  CVS History :
+ *  $Id: GiGaMCRichHitCnv.h,v 1.2 2004-07-30 13:42:13 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
+
 // ============================================================================
 #ifndef GIGACNV_GiGaMCRichHitCnv_H
 #define GIGACNV_GiGaMCRichHitCnv_H  1
 // ============================================================================
-/// STL
+
+// STL
 #include <set>
-/// GaudiKernel
+// GaudiKernel
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-/// LHCbEvent
+// LHCbEvent
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
-/// GiGa
+// GiGa
 #include "GiGa/GiGaTrajectory.h"
-/// GiGaCnv
+// GiGaCnv
 #include "GiGaCnv/GiGaCnvBase.h"
-/// G4
+// G4
 #include "G4ParticleDefinition.hh"
 
-/// forward declarations
+// forward declarations
 template <class TYPE>
 class CnvFactory;
-///
 class GiGaTrajectory;
-///
 class  RichG4HitCollName;
 
+/** @class GiGaMCRichHitCnv GiGaMCRichHitCnv.h
+ *
+ *  GiGa converter for the RICH event model object MCRichHit
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
 
-class GiGaMCRichHitCnv: public GiGaCnvBase
+class GiGaMCRichHitCnv : public GiGaCnvBase
 {
-  ///
+
   friend class CnvFactory<GiGaMCRichHitCnv>;
-  ///
+
 protected:
 
   /** Standard Constructor
    *  @param loc pointer to service locator
    */
   GiGaMCRichHitCnv( ISvcLocator* loc );
+
   /// virtual destructor
   virtual ~GiGaMCRichHitCnv();
-  ///
 
 public:
 
@@ -94,44 +113,25 @@ public:
    *  @return storage type  for created object
    */
   static const unsigned char storageType() ;
-  ///
+
+
   RichG4HitCollName* RichG4HitCollectionName()
   {
     return m_RichG4HitCollectionName ;
   }
 
+private: // methods
 
+  GiGaMCRichHitCnv () ; ///< Default constructor
+  GiGaMCRichHitCnv( const GiGaMCRichHitCnv& ) ; ///< Copy constructor
+  GiGaMCRichHitCnv& operator=( const GiGaMCRichHitCnv& ) ; ///< assignment operator
 
-protected:
-
-private:
-  ///
-  GiGaMCRichHitCnv () ; /// no default constructor
-  GiGaMCRichHitCnv( const GiGaMCRichHitCnv& ) ; /// no copy
-  GiGaMCRichHitCnv& operator=( const GiGaMCRichHitCnv& ) ; /// no assignement
-  ///
-private:
+private: // data
 
   RichG4HitCollName* m_RichG4HitCollectionName;
 
-
-  ///
 };
 
 // ============================================================================
-#endif   ///< GIGACNV_GiGaMCRichHitCnv_H
+#endif   // GIGACNV_GiGaMCRichHitCnv_H
 // ============================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-

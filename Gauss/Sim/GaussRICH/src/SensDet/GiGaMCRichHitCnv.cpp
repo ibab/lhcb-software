@@ -1,3 +1,16 @@
+
+/** @file GiGaMCRichHitCnv.cpp
+ *
+ *  Implementation file for GiGa converter : GiGaMCRichHitCnv
+ *
+ *  CVS History :
+ *  $Id: GiGaMCRichHitCnv.cpp,v 1.10 2004-07-30 13:42:13 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
+
 //  ===========================================================================
 #define GIGACNV_GiGaMCRichHitCnv_CPP 1
 // ============================================================================
@@ -262,20 +275,20 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
                                    !mchit->richInfoValid() );
 
           /*
-          if ( mchit->chargedTrack() || mchit->scatteredPhoton() ||
-               !mchit->richInfoValid() || !mchit->radiatorInfoValid() ) {
+            if ( mchit->chargedTrack() || mchit->scatteredPhoton() ||
+            !mchit->richInfoValid() || !mchit->radiatorInfoValid() ) {
             msg << MSG::DEBUG << "G4Hit " << globalKey << " :"
-                << " RichDetNum=" << g4hit->GetCurRichDetNum()
-                << " RadiatorNum=" << g4hit->GetRadiatorNumber()
-                << " TrackID=" << g4hit->GetTrackID()
-                << " ChTrackID=" << g4hit->GetChTrackID()
-                << " OptPhotID=" << g4hit->GetOptPhotID()
-                << " PETrackID=" << g4hit->GetPETrackID()
-                << " ChTrackPDG=" << g4hit->GetChTrackPDG()
-                << " PETrackPDG=" << g4hit->GetPETrackPDG()
-                << " OptPhotRayleighFlag=" << g4hit->OptPhotRayleighFlag()
-                << endreq;
-          }
+            << " RichDetNum=" << g4hit->GetCurRichDetNum()
+            << " RadiatorNum=" << g4hit->GetRadiatorNumber()
+            << " TrackID=" << g4hit->GetTrackID()
+            << " ChTrackID=" << g4hit->GetChTrackID()
+            << " OptPhotID=" << g4hit->GetOptPhotID()
+            << " PETrackID=" << g4hit->GetPETrackID()
+            << " ChTrackPDG=" << g4hit->GetChTrackPDG()
+            << " PETrackPDG=" << g4hit->GetPETrackPDG()
+            << " OptPhotRayleighFlag=" << g4hit->OptPhotRayleighFlag()
+            << endreq;
+            }
           */
 
           // get MCParticle information

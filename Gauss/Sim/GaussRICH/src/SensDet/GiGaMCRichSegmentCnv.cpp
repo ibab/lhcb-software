@@ -1,3 +1,16 @@
+
+/** @file GiGaRichSegmentCnv.cpp
+ *
+ *  Implementation file for GiGa converter : GiGaRichSegmentCnv
+ *
+ *  CVS History :
+ *  $Id: GiGaMCRichSegmentCnv.cpp,v 1.4 2004-07-30 13:42:14 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
+
 //  ===========================================================================
 #define GIGACNV_GiGaRichSegmentCnv_CPP 1
 // ============================================================================

@@ -1,27 +1,48 @@
+/** @file GiGaMCRichOpticalPhotonCnv.h
+ *
+ *  Header file for GiGa converter : GiGaMCRichOpticalPhotonCnv
+ *
+ *  CVS History :
+ *  $Id: GiGaMCRichOpticalPhotonCnv.h,v 1.2 2004-07-30 13:42:14 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
+
 // ============================================================================
 #ifndef GIGACNV_GiGaMCRichOpticalPhotonCnv_H
 #define GIGACNV_GiGaMCRichOpticalPhotonCnv_H  1
 // ============================================================================
-/// STL
+
+// STL
 #include <set>
-/// GaudiKernel
+// GaudiKernel
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-/// LHCbEvent
+// LHCbEvent
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
-/// GiGa
+// GiGa
 #include "GiGa/GiGaTrajectory.h"
-/// GiGaCnv
+// GiGaCnv
 #include "GiGaCnv/GiGaCnvBase.h"
-/// G4
+// G4
 #include "G4ParticleDefinition.hh"
 
-/// forward declarations
+// forward declarations
 template <class TYPE>
 class CnvFactory;
 class GiGaTrajectory;
 class RichG4HitCollName;
+
+/** @class GiGaMCRichOpticalPhotonCnv GiGaMCRichOpticalPhotonCnv.h
+ *
+ *  GiGa converter for the RICH event model object MCRichOpticalPhoton
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2004-03-29
+ */
 
 class GiGaMCRichOpticalPhotonCnv : public GiGaCnvBase {
 
@@ -82,9 +103,9 @@ public:
 
 private: // methods
 
-  GiGaMCRichOpticalPhotonCnv () ; /// no default constructor
-  GiGaMCRichOpticalPhotonCnv( const GiGaMCRichOpticalPhotonCnv& ) ; /// no copy
-  GiGaMCRichOpticalPhotonCnv& operator=( const GiGaMCRichOpticalPhotonCnv& ) ; /// no assignment
+  GiGaMCRichOpticalPhotonCnv () ; ///< Default constructor
+  GiGaMCRichOpticalPhotonCnv( const GiGaMCRichOpticalPhotonCnv& ) ; ///< Copy constructor
+  GiGaMCRichOpticalPhotonCnv& operator=( const GiGaMCRichOpticalPhotonCnv& ) ; ///< assignment operator
 
 private: // data
 
@@ -94,19 +115,5 @@ private: // data
 };
 
 // ============================================================================
-#endif   ///< GIGACNV_GiGaMCRichOpticalPhotonCnv_H
+#endif  // GIGACNV_GiGaMCRichOpticalPhotonCnv_H
 // ============================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
