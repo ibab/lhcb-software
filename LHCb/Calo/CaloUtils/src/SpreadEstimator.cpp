@@ -1,8 +1,11 @@
-// $Id: SpreadEstimator.cpp,v 1.1 2001-11-22 16:02:35 ibelyaev Exp $
+// $Id: SpreadEstimator.cpp,v 1.2 2001-11-24 11:43:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/22 16:02:35  ibelyaev
+//  new utilities
+// 
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -63,15 +66,16 @@ StatusCode SpreadEstimator::operator()
   typedef CaloCluster::Digits::const_iterator const_iterator;
   
   ///
-  double xmean = cluster->x () ;
-  double ymean = cluster->y () ;
-  double etot  = cluster->e () ;
+  const double xmean = cluster->x () ;
+  const double ymean = cluster->y () ;
+  const double etot  = cluster->e () ;
   
   double covxx = 0 ;
   double covyx = 0 ;
   double covyy = 0 ;
 
   unsigned int n = 0 ;
+
   for( const_iterator idigit = cluster->digits().begin() ;
        cluster->digits().end() != idigit ; ++idigit ) 
     {
@@ -87,12 +91,14 @@ StatusCode SpreadEstimator::operator()
       const HepPoint3D& pos = 
         detector()->cellCenter( digit->cellID() );
       ///
-      const double dx =  energy * pos.x() / etot - xmean ;
-      const double dy =  energy * pos.y() / etot - ymean ;
+      const double dx =  pos.x() - xmean ;
+      const double dy =  pos.y() - ymean ;
       ///
-      covxx += dx * dx ;
-      covyx += dy * dx ;
-      covyy += dy * dy ;
+      const double weight = energy / etot ;
+      ///
+      covxx += dx * dx * weight ;
+      covyx += dy * dx * weight ;
+      covyy += dy * dy * weight ;
       ///
     }
   /// 
@@ -102,7 +108,7 @@ StatusCode SpreadEstimator::operator()
       cluster->position().spread().fast( 2 , 1 ) =  covyx ;
       cluster->position().spread().fast( 2 , 2 ) =  covyy ;
     }
-  /// 
+  ///
   return StatusCode::SUCCESS ;
 };
 
