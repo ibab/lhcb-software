@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.5 2002-05-01 18:45:47 ibelyaev Exp $ 
+// $Id: Simulation.opts,v 1.6 2002-05-02 11:57:24 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -41,7 +41,7 @@ Simulation.Members +=
   "GiGaInputStream/Geo"              ,   // load the geometry 
   "GiGaInputStream/Kine"             ,   // load the kinematics 
   "GiGaFlushAlgorithm/GiGaFlush"     ,   // flush the event 
-  "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCPartcile/MCVertices
+  "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCParticles/MCVertices
 
 // ============================================================================
 // configuration of GiGa Data Store 
@@ -52,15 +52,18 @@ GiGaStore.ConversionServices   =
 
 GiGaSvc.OutputLevel = 1 ;
 // ============================================================================
-// configuration of kinematics event data stream 
+// configuration of kinematics event "Kine" data stream 
 // ============================================================================
 Kine.ConversionSvcName         = "GiGaKineCnvSvc" ; 
 Kine.DataProviderSvcName       = "EventDataSvc"   ; 
-Kine.StreamItems               = 
-{ "/Event/Gen/HepMCEvents" } ;
+Kine.StreamItems              += 
+{ 
+  "/Event/Gen/HepMCEvents" 
+  ,"/Event/Gen/Vertices"   
+};
 
 // ============================================================================
-// configuration of geometry data stream 
+// configuration of geometry "Geo" data stream 
 // ============================================================================
 Geo.ExecuteOnce          = true ;  
 Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
@@ -101,7 +104,7 @@ SimpleTrack.StoreAll           = true                                    ;
 // Stepping action to be used and its configuration  
 // ============================================================================
 GiGaSvc.SteppingAction            =   "GiGaStepActionSequence/StepSeq"  ;
-StepSeq.Members                 += { "GiGaStepActionDraw/DrawStep"   } ;
+StepSeq.Members                  += { "GiGaStepActionDraw/DrawStep"   } ;
 DrawStep.OutputLevel              = 6;
 
 
@@ -153,7 +156,7 @@ RunCommand.BeginOfRunCommands     =
 // ============================================================================
 // List of user interface sessions (with priorities)
 // ============================================================================
-GiGaSvc.UIsessions =  { "tcsh" , "Xm" , "Wo" , "GAG", "Xaw"  , "terminal" } ;
+// GiGaSvc.UIsessions =  { "tcsh" , "Xm" , "Wo" , "GAG", "Xaw"  , "terminal" } ;
 
 // ============================================================================
 // Global(world) magnetic field 

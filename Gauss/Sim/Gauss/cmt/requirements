@@ -20,6 +20,7 @@ use GaudiSys      v10r*
 
 # ROOT event persistency
 use GaudiRootDb   v7r*
+use DbCnv         v6r* Event 
 
 # Histogram persistency
 use HbookCnv      v12r*

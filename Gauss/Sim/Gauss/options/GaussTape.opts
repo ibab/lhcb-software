@@ -1,0 +1,39 @@
+// $Id: GaussTape.opts,v 1.1 2002-05-02 11:57:24 ibelyaev Exp $ 
+// ============================================================================
+// CVS  tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ *  The content of "Gauss Tape" prototype for future OO-RAWH tape
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   2 May 2002 
+ */ 
+// ============================================================================
+
+/// create and add the output stream 
+ApplicationMgr.OutStream +=  { "GaussTape" };
+
+/// content of CaloDstTape
+GaussTape.ItemList = 
+{  
+  // event Header
+  "/Event#1"      
+  // Generator information
+  ,"/Event/Gen#1"
+  ,"/Event/Gen/HepMCEvents#1"
+  ,"/Event/Gen/Vertices"
+  ,"/Event/Gen/Particles"
+  // MC Truth  
+  ,"/Event/MC#1"                     
+  ,"/Event/MC/Particles#1"         
+  ,"/Event/MC/Vertices#1"          
+};
+GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
+GaussTape.OutputLevel = 1;
+
+// ============================================================================
+// The END of file $GAUSSOPTS/GaussTape.opts
+// ============================================================================

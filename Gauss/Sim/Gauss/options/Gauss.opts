@@ -1,8 +1,11 @@
-// $Id: Gauss.opts,v 1.4 2002-05-01 18:45:47 ibelyaev Exp $ 
+// $Id: Gauss.opts,v 1.5 2002-05-02 11:57:24 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/01 18:45:47  ibelyaev
+//  minor changes
+//
 // Revision 1.3  2002/04/09 17:19:40  ibelyaev
 //  fix problems with event-drawing and magnetic field
 //
@@ -20,6 +23,7 @@
 // load "standard" options 
 // ============================================================================
 #include "$STDOPTIONS"
+
 // ============================================================================
 // remove SicbCnv 
 // ============================================================================
@@ -40,7 +44,6 @@ EventDataSvc.ForceLeaves = true ;
 // ============================================================================
 // load additional dynamic libraries needed to run Gauss
 // ============================================================================
-ApplicationMgr.DLLs += { "GaudiDb"          } ;
 ApplicationMgr.DLLs += { "GaudiAlg"         } ;
 
 // ============================================================================
@@ -73,18 +76,27 @@ ApplicationMgr.TopAlg          =
 #include "$GAUSSOPTS/Digitisation.opts"
 
 // ============================================================================
-// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+/** Output the data to GaussTape (pre-"OO-RAWH")
+ *  define the output stream, output file etc
+ */
+// ============================================================================
+#include "$GAUSSOPTS/GaussRootIO.opts"
+#include "$GAUSSOPTS/GaussTape.opts"
+GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='NEW'";
+
+// ============================================================================
+/** General global options,  
+ *  like outpout level, number of events , event selector etc 
+ */
 // ============================================================================
 MessageSvc.OutputLevel    = 3 ;
 XmlParserSvc.OutputLevel  = 5 ;
+RootEvtCnvSvc.OutputLevel = 1 ;
+ROOT.OutputLevel          = 1 ;
 
-ApplicationMgr.EvtSel    = "NONE" ;
-EventDataSvc.ForceLeaves = 1;
 
-// ============================================================================
-// Event related parameters
-// ============================================================================
-ApplicationMgr.EvtMax = 3 ;
+ApplicationMgr.EvtSel     = "NONE" ;
+ApplicationMgr.EvtMax     = 3 ;
 
 // ============================================================================
 // The end of main Gauss's job-options file 
