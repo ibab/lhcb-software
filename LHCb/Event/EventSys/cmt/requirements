@@ -22,3 +22,22 @@ use GenEvent	v3r2	Event
 use EventAssoc	v1r1	Event
 use LinkerEvent v1r3    Event
 use TrgEvent    v2r3    Event
+
+private
+
+# Check completeness of LCG dictionaries. Only for Linux optimized 
+
+use GaudiPoolDb v*
+apply_pattern application_path
+
+macro doCheck "true" \
+        WIN32 "0==1" \
+        debug "false"
+make_fragment dict_check -header=dict_check_header
+document dict_check LCG_dict_check
+
+#
+# this can be used from cmt version v1r16pX
+#
+# action dict_check " source setup.sh ; lcgdictcheck --cmt --info -s $(GAUDIPOOLDBROOT)/rh73_gcc32/libGaudiPoolDb.so libSealSTLDict.so "
+# macro_append constituents " dict_check "
