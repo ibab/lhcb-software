@@ -4,6 +4,12 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!====================== LHCbSys v11r8 2003-01-23 =============================
+! 2003-01-23 - Marco Cattaneo
+ - requirements:
+   use DetSys v1r3, EventSys v13r3, updated examples
+ 
+!====================== LHCbSys v11r7 2003-01-16 =============================
 ! 2003-01-16 - Marco Cattaneo
  - requirements:
    use SICBSys v1r2, AssociatorsSys v1r2, EventSys v13r2, updated examples 
