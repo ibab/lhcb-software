@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RichRec
 !-----------------------------------------------------------------------------
 
+! 2003-04-09 - Marco Cattaneo
+ - Release tools and interfaces
+
 ! 2003-03-13 - Chris Jones
  - First version - Merger of previous RichRecEvent, RichRecKernel and 
    RichRecInterfaces packages due to increasing commonality

@@ -1,4 +1,4 @@
-// $Id: RichRecToolBase.cpp,v 1.1.1.1 2003-04-01 13:21:55 jonesc Exp $
+// $Id: RichRecToolBase.cpp,v 1.2 2003-04-09 12:37:13 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -70,18 +70,19 @@ StatusCode RichRecToolBase::initialize() {
   this->queryInterface( IID_IProperty, (void**)&algIProp );
   msgLevel.assign( algIProp->getProperty( "OutputLevel" ) );
   m_msgLevel = msgLevel;
+  algIProp->release();
 
   return sc;
 }
 
 StatusCode RichRecToolBase::finalize() {
 
-  // Release all tools - Doesn't seem to work though
-  //if ( m_richRecPhotonTool )  toolSvc()->releaseTool( m_richRecPhotonTool );
-  //if ( m_richRecSegmentTool ) toolSvc()->releaseTool( m_richRecSegmentTool );
-  //if ( m_richRecTrackTool )   toolSvc()->releaseTool( m_richRecTrackTool );
-  //if ( m_richRecPixelTool )   toolSvc()->releaseTool( m_richRecPixelTool );
-  //if ( m_richDetInterface )   toolSvc()->releaseTool( m_richDetInterface );
+  // Release all tools
+  if ( m_richRecPhotonTool )  toolSvc()->releaseTool( m_richRecPhotonTool );
+  if ( m_richRecSegmentTool ) toolSvc()->releaseTool( m_richRecSegmentTool );
+  if ( m_richRecTrackTool )   toolSvc()->releaseTool( m_richRecTrackTool );
+  if ( m_richRecPixelTool )   toolSvc()->releaseTool( m_richRecPixelTool );
+  if ( m_richDetInterface )   toolSvc()->releaseTool( m_richDetInterface );
   
   return StatusCode::SUCCESS;  
 }
