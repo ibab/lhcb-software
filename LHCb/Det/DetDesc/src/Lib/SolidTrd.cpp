@@ -3,7 +3,6 @@
 #include "DetDesc/SolidBox.h" 
 #include "DetDesc/SolidTicks.h" 
 #include "DetDesc/SolidException.h" 
-
 //
 //
 //
@@ -184,6 +183,7 @@ void SolidTrd::makeAll()
     points.push_back( p4 ) ; 
     points.push_back( p5 ) ; 
     points.push_back( p6 ) ; 
+    points.push_back( p7 ) ; 
     ///
   }
   if( 8 != points.size() ) 
@@ -194,8 +194,8 @@ void SolidTrd::makeAll()
   ///
   addFace( points[0] , points[4] , points[5] , points[1] ) ;
   addFace( points[2] , points[3] , points[7] , points[6] ) ;
-  addFace( points[0] , points[2] , points[6] , points[4] ) ;
-  addFace( points[1] , points[5] , points[7] , points[3] ) ;
+  addFace( points[1] , points[2] , points[6] , points[5] ) ;
+  addFace( points[0] , points[3] , points[7] , points[4] ) ;
   addFace( points[0] , points[1] , points[3] , points[2] ) ; /// bottom face
   addFace( points[5] , points[4] , points[6] , points[7] ) ; /// top    face
   ///
