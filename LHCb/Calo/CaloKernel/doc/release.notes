@@ -1,16 +1,19 @@
-! $Id: release.notes,v 1.23 2002-11-19 09:57:12 cattanem Exp $
+! $Id: release.notes,v 1.24 2002-11-28 11:38:44 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
-! The package contains the general Calo Kernel classes and utilities, 
-! which are essentially independent from Detector and Event models 
+! The package contains the general Calo Kernel classes and utilities,
+! which are essentially independent from Detector and Event models
 ! =============================================================================
+
+! 2002-11-28 - Ivan Belyaev
+ - cmt/requirements                    remove some confusing lines
 
 ! ====================== CaloKernel v2r1 2002-11-19 ===========================
 ! 2002-11-12 - Ivan Belyaev
- - CaloKernel/CaloALhorithm.h, CaloTool.h   - introduce "maximal number of 
- - src/CaloALhorithm.cpp, CaloTool.cpp        error/warning printouts"
+ - CaloKernel/CaloAlgorithm.h, CaloTool.h   - introduce "maximal number of
+ - src/CaloAlhorithm.cpp, CaloTool.cpp        error/warning printouts"
 
 
 ! 2002-10-29 - Ivan Belyaev
@@ -19,27 +22,27 @@
 
 ! ====================== CaloKernel v2r0 2002-05-02 ===========================
 ! 2 May 2002 - Vanya Belyaev
-! CaloKernel/CaloAlgorithm.h - bug fix for Win32 
-! CaloKernel/CaloTool.h      - bug fix for Win32 
+! CaloKernel/CaloAlgorithm.h - bug fix for Win32
+! CaloKernel/CaloTool.h      - bug fix for Win32
 ! =============================================================================
 
 ! =============================================================================
 ! 2 May 2002 - Vanya Belyaev
-! add the exception counting into CaloTool & CaloAlgorithm base classes 
+! add the exception counting into CaloTool & CaloAlgorithm base classes
 ! =============================================================================
 
 ! =============================================================================
 ! 30/04/2002 - Vanya Belyaev
 ! CaloTool.cpp, CaloAlgorithm.cpp
-! reduce a little bit the verbosity of the final printout 
+! reduce a little bit the verbosity of the final printout
 ! =============================================================================
 
 ! =============================================================================
 ! 27/04/2002 - Vanya Belyaev
-! CaloTool.h, CaloAlgorithm.h 
+! CaloTool.h, CaloAlgorithm.h
 ! 1) now templated "tool" method coudl be used with "type" = 'ToolType/ToolName'
-! 2) at the end ("finalize" method) CaloAlgorithm and CaloTool print 
-!    the overal statistics of all error and warning messages 
+! 2) at the end ("finalize" method) CaloAlgorithm and CaloTool print
+!    the overal statistics of all error and warning messages
 ! =============================================================================
 
 ! =============================================================================
@@ -60,61 +63,61 @@
 
 ! =============================================================================
 ! 09/04/2002 - Ivan Belyaev
-! - requirements - fix teh poroblems with building of test executable  
+! - requirements - fix teh poroblems with building of test executable
 ! =============================================================================
 
 ! =============================================================================
 ! 06/04/2002 - Ivan Belyaev
-! - CaloTool::initialize() and CaloAlgorithm::initialize() now print in 
+! - CaloTool::initialize() and CaloAlgorithm::initialize() now print in
 !   MSG::DEBUG mode all properties with their values
-! - CaloMap::end() and CaloHashMap::end()  bug fixes 
+! - CaloMap::end() and CaloHashMap::end()  bug fixes
 ! =============================================================================
 
 ! =============================================================================
 ! 05/04/2002 - Ivan Belyaev
-! - add some printout to CaloTool::tool() and CaloAlgorthm::tool() methods 
+! - add some printout to CaloTool::tool() and CaloAlgorthm::tool() methods
 ! =============================================================================
 
 ! =============================================================================
 ! 04/04/2002 - Ivan Belyaev
-! - CaloAlgorithm.cpp: bug fix in "put()" method 
+! - CaloAlgorithm.cpp: bug fix in "put()" method
 ! =============================================================================
 
 ! =============================================================================
 ! 01/04/2002 - Ivan Belyaev
-! - CaloTool.h & CaloAlgorithm.h: add templated methods for location of tools 
+! - CaloTool.h & CaloAlgorithm.h: add templated methods for location of tools
 ! - CaloTool.cpp & CaloAlgorithm.cpp: improve the messge from exceptions
 ! =============================================================================
 
 ! =============================================================================
 ! 1/04/2002 - v2r0 Ivan Belyaev
-! - add 'tempalte<DATA> get<DATA>()' and 'put()' methods to CaloAlgorithm 
-!   base class to perform easier access to dta registered into Gaudi 
-!   Transient store. In the case of errors printout is persormed and 
+! - add 'tempalte<DATA> get<DATA>()' and 'put()' methods to CaloAlgorithm
+!   base class to perform easier access to dta registered into Gaudi
+!   Transient store. In the case of errors printout is persormed and
 !   exception thrown
-! - add 'tempalte<DATA> get<DATA>()' method to CaloTool 
-!   base class to perform easier access to dta registered into Gaudi 
-!   Transient store. In the case of errors printout is persormed and 
+! - add 'tempalte<DATA> get<DATA>()' method to CaloTool
+!   base class to perform easier access to dta registered into Gaudi
+!   Transient store. In the case of errors printout is persormed and
 !   exception thrown
-! - enrich a little bit interface for CaloMap and CaloHashMap classes 
+! - enrich a little bit interface for CaloMap and CaloHashMap classes
 !   by "erase" & "clear" methods,
 ! =============================================================================
 
 !==============================================================================
 ! 27/03/2002 - v2r0 Ivan Belyaev
 !  1) Improve OutputStreamIterator class
-!  2) rename in into OS_itrerator  
-! ============================================================================= 
+!  2) rename in into OS_itrerator
+! =============================================================================
 
 !==============================================================================
 ! 26/03/2002 - v2r0 Ivan Belyaev
-! add CaloMap.h and CaloHashMap.h wrapper classes to deals with maps/hash_maps 
+! add CaloMap.h and CaloHashMap.h wrapper classes to deals with maps/hash_maps
 ! for Linux/Win32 in teh same way
-! ============================================================================= 
+! =============================================================================
 
 ! =============================================================================
 ! 20/03/2002 - Vanya  Belyaev
-! CaloMap.h: add the simplest adaptor for std::map/HashTable classes 
+! CaloMap.h: add the simplest adaptor for std::map/HashTable classes
 ! =============================================================================
 
 ! =============================================================================
@@ -124,19 +127,19 @@
 
 ! =============================================================================
 ! 16/03/2002 - Vanya  Belyaev
-! move CaloCellID CaloCellCode and CaloHypotheses to LHCbKernel package 
+! move CaloCellID CaloCellCode and CaloHypotheses to LHCbKernel package
 ! =============================================================================
 
 ! =============================================================================
 ! 15/03/2002 - Vanya Belyaev
 !  - move CaloCellCode, CaloCellID and CaloHypotheses into "Kernel" directory
-!  - for compatibility still keep the "link"-files  into CaloKernel directory 
-!  - remove accessor to "IToolSvc" from CaloAlgorithm class 
+!  - for compatibility still keep the "link"-files  into CaloKernel directory
+!  - remove accessor to "IToolSvc" from CaloAlgorithm class
 ! =============================================================================
 
 ! =============================================================================
 ! 09/12/2001 - v1 Vanya  Belyaev
-! update for newer version of Gaudi 
+! update for newer version of Gaudi
 ! =============================================================================
 
 ! =============================================================================

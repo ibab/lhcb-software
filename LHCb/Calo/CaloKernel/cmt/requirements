@@ -1,11 +1,8 @@
-# $Id: requirements,v 1.13 2002-11-13 20:36:51 ibelyaev Exp $
+# $Id: requirements,v 1.14 2002-11-28 11:38:44 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.12  2002/10/29 13:18:04  ibelyaev
-#  bug fix in 'setDetData' method
-#
 # =============================================================================
 # Created    : 25/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru 
@@ -30,26 +27,7 @@ library           CaloKernel            *.cpp
 apply_pattern     package_stamps 
 
 # =============== mandatory patterns ==========================================
-apply_pattern     package_linkopts
-apply_pattern     linker_path 
-apply_pattern     package_libraries 
-
-# =============== private stuff ===============================================
-private
-apply_pattern     package_shlibflags    
-# macro_append      CaloKernel_shlibflags " $(LHCbKernel_linkopts) "
-# macro_append      CaloKernel_shlibflags " $(GaudiKernel_linkopts) "
-# macro_append      CaloKernel_shlibflags " $(CLHEP_linkopts) "
-
-# =============== test application ============================================
-private
-application       CaloKernelTest  -check Test/*.cpp 
-macro CaloKernelTestlinkopts " $(CaloKernel_linkopts) "
-apply_pattern     application_path
-
-# =============== make the executable "visible" ===============================
-path_remove       PATH               "CaloKernel"
-path_prepend      PATH               ${CALOKERNELROOT}/${BINDIR}
+apply_pattern     linker_library library=CaloKernel
 
 # ============================================================================= 
 # The End 
