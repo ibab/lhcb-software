@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.2 2001-12-13 19:04:33 andreav Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.3 2002-01-21 14:46:47 sponce Exp $
 
 // include files
 #include <string>
@@ -55,7 +55,7 @@ StatusCode XmlBaseConditionCnv::initialize() {
 // -----------------------------------------------------------------------
 // Resolve the references of the created transient object.
 // -----------------------------------------------------------------------
-StatusCode XmlBaseConditionCnv::fillObjRefs (IOpaqueAddress* childElement,
+StatusCode XmlBaseConditionCnv::fillObjRefs (IOpaqueAddress* /*childElement*/,
                                              DataObject* refpObject) {
   // gets the object
   Condition* dataObj = dynamic_cast<Condition*> (refpObject);
@@ -69,7 +69,7 @@ StatusCode XmlBaseConditionCnv::fillObjRefs (IOpaqueAddress* childElement,
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlBaseConditionCnv::i_createObj (DOM_Element element,
+StatusCode XmlBaseConditionCnv::i_createObj (DOM_Element /*element*/,
                                              DataObject*& refpObject) {
   MsgStream log(msgSvc(), "XmlBaseConditionCnv" );
   

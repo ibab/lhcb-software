@@ -1,8 +1,11 @@
-// $Id: SimpleValidity.cpp,v 1.1 2001-11-18 15:32:45 ibelyaev Exp $
+// $Id: SimpleValidity.cpp,v 1.2 2002-01-21 14:46:46 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/18 15:32:45  ibelyaev
+//  update for Logical Assemblies
+// 
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -44,8 +47,8 @@ SimpleValidity::SimpleValidity( const ITime& since ,
   : m_since ( 0 ) 
   , m_till  ( 0 ) 
 {
-  m_since = new TimePoint( since ) ;
-  m_till  = new TimePoint( since ) ;  
+  m_since = new TimePoint (since) ;
+  m_till  = new TimePoint (till) ;  
 };
 
 // ============================================================================

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/08/09 18:13:38  ibelyaev
+/// modification for solid factories
+///
 /// Revision 1.4  2001/08/09 16:48:03  ibelyaev
 /// update in interfaces and redesign of solids
 /// 
@@ -48,7 +51,7 @@ SolidSubtraction::SolidSubtraction( const std::string& name  ,
  */
 // ============================================================================
 SolidSubtraction::SolidSubtraction( const std::string& Name)
-  : SolidBoolean( "Name" )
+  : SolidBoolean (Name)
 {};
 
 // ============================================================================

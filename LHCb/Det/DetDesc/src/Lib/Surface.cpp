@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Surface.cpp,v 1.5 2001-11-20 15:22:24 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/Surface.cpp,v 1.6 2002-01-21 14:46:46 sponce Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
@@ -7,8 +7,8 @@
 #include "DetDesc/TabulatedProperty.h"
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////
-Surface::Surface ( const std::string& name   ) 
+////////////////////////////////////////////////////////////////////////////////
+Surface::Surface ( const std::string& /*name*/ ) 
   : DataObject   (        )
   , m_model      ()
   , m_finish     ()
@@ -18,9 +18,9 @@ Surface::Surface ( const std::string& name   )
   , m_secondVol  ()
   , m_props      ()
 {}; 
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Surface::~Surface() { m_props.clear() ;}
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 StreamBuffer&     Surface::serialize( StreamBuffer& s ) const 
 {
   DataObject::serialize( s ) ;
@@ -32,7 +32,7 @@ StreamBuffer&     Surface::serialize( StreamBuffer& s ) const
            << secondVol () 
            << m_props( this ) ;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 StreamBuffer&     Surface::serialize( StreamBuffer& s )       
 {
   DataObject::serialize( s ) ;
@@ -44,7 +44,7 @@ StreamBuffer&     Surface::serialize( StreamBuffer& s )
            >> m_secondVol  
            >> m_props( this ) ;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::ostream&     Surface::fillStream ( std::ostream& s ) const 
 {
   s << " Surface " 
@@ -56,11 +56,11 @@ std::ostream&     Surface::fillStream ( std::ostream& s ) const
     << "\tsecondVol='" << secondVol()    << "'" 
     << "\t#props="     << std::setw(2)   << m_props.size() 
     << std::endl;
-  for( Tables::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it )
+  for (Tables::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it)
     { s << "\t" << (*it) ; } 
   return s;
 };    
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 MsgStream&        Surface::fillStream ( MsgStream&    s ) const 
 {
   s << " Surface " 
@@ -72,11 +72,11 @@ MsgStream&        Surface::fillStream ( MsgStream&    s ) const
     << "\tsecondVol='" << secondVol()   <<"'" 
     << "\t#props="     << std::setw(2)  << m_props.size() 
     << endreq ;
-  for( Tables::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it )
+  for (Tables::const_iterator it = m_props.begin() ; m_props.end() != it ; ++it)
     { s << "\t" << (*it) ; } 
   return s;
 };    
-/////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 
 

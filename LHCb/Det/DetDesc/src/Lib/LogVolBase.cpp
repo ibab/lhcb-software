@@ -1,8 +1,24 @@
-// $Id: LogVolBase.cpp,v 1.3 2001-11-20 15:22:23 sponce Exp $
+// $Id: LogVolBase.cpp,v 1.4 2002-01-21 14:46:46 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2001/11/20 15:22:23  sponce
+// Lots of changes here :
+//    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
+//    is the removal of the class XmlAddress
+//    - centralization of address creations in conversion services, as suggested
+//    by the new architecture
+//    - add a parseString method on the XMLParserSvc. This allows to parse XML
+//    directly from a string
+//    - use of the new Assembly objects in the XML converters
+//    - update of the converters to handle the definition of detelem inside
+//    detelems, without using detelemrefs
+//    - take care of a possible indexing of detelems and parametrized detelems.
+//    The numbering is given by adding :<digits> to the name of the element.
+//    - add support for polycones in the converters
+//    - add code convention compliance to many files
+//
 // Revision 1.2  2001/11/18 16:08:26  ibelyaev
 //  bug fix for Win2K
 //
@@ -44,7 +60,7 @@ unsigned long LogVolBase::s_volumeCounter = 0 ;
  *  @param magnetic  nam eof magnetic field object (for simulation)
  */
 // ============================================================================
-LogVolBase::LogVolBase( const std::string& name        , 
+LogVolBase::LogVolBase( const std::string& /*name*/    , 
                         const std::string& sensitivity ,
                         const std::string& magnetic    )
   : DataObject (             )
@@ -70,7 +86,7 @@ LogVolBase::LogVolBase( const std::string& name        ,
  *  @param magnetic     name of magnetic field object (for simulation)
  */
 // ============================================================================
-LogVolBase::LogVolBase( const std::string& name        , 
+LogVolBase::LogVolBase( const std::string& /*name*/    , 
                         const ITime&       validSince  , 
                         const ITime&       validTill   , 
                         const std::string& sensitivity ,
@@ -97,7 +113,7 @@ LogVolBase::LogVolBase( const std::string& name        ,
  *  @param magnetic     nam eof magnetic field object (for simulation)
  */
 // ============================================================================
-LogVolBase::LogVolBase( const std::string& name        ,
+LogVolBase::LogVolBase( const std::string& /*name*/    ,
                         const IValidity  & validity    ,
                         const std::string& sensitivity ,
                         const std::string& magnetic    )

@@ -1,8 +1,11 @@
-// $Id: DetectorElement.cpp,v 1.14 2002-01-18 18:23:09 ibelyaev Exp $ 
+// $Id: DetectorElement.cpp,v 1.15 2002-01-21 14:46:46 sponce Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2002/01/18 18:23:09  ibelyaev
+//  bug fixes(materials), warning reduced, printout improved
+//
 // Revision 1.13  2001/12/13 19:14:01  andreav
 // *** empty log message ***
 //
@@ -70,7 +73,7 @@
 
 unsigned long DetectorElement::s_count = 0 ;
 
-DetectorElement::DetectorElement( const std::string&   name        ,
+DetectorElement::DetectorElement( const std::string&   /*name*/    ,
                                   const ITime&         validSince  ,   
                                   const ITime&         validTill   )
   : DataObject           (         )

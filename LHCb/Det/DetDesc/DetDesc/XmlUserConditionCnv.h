@@ -73,7 +73,8 @@ template <class DeType> class XmlUserConditionCnv : public XmlBaseConditionCnv {
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
-                                        Condition* refpObject);
+                                        Condition* refpObject,
+                                        IOpaqueAddress* address);
 
   /** This fills the current object for specific child.
    * This should never be called directly but always through the other
@@ -133,9 +134,10 @@ StatusCode XmlUserConditionCnv<DeType>::i_createObj(DOM_Element /*element*/,
 template <class DeType>
 StatusCode
 XmlUserConditionCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
-                                                Condition* refpObject) {
+                                                Condition* refpObject,
+                                                IOpaqueAddress* address) {
   DeType* dataObj = dynamic_cast<DeType*> (refpObject);
-  return i_fillSpecificObj (childElement, dataObj);
+  return i_fillSpecificObj (childElement, dataObj, address);
 }
 
 // -----------------------------------------------------------------------
@@ -155,7 +157,7 @@ XmlUserConditionCnv<DeType>::i_fillSpecificObj (DOM_Element childElement,
 template <class DeType>
 StatusCode
 XmlUserConditionCnv<DeType>::i_fillSpecificObj (DOM_Element /*childElement*/,
-                                              DeType* /*dataObj*/) {
+                                                DeType* /*dataObj*/) {
   return StatusCode::SUCCESS;
 }
 

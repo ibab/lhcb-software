@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCatalogCnv.cpp,v 1.7 2001-12-11 10:02:28 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCatalogCnv.cpp,v 1.8 2002-01-21 14:46:47 sponce Exp $
 
 // include files
 #include <stdlib.h>
@@ -60,7 +60,7 @@ XmlCatalogCnv::XmlCatalogCnv (ISvcLocator* svc) :
 // -----------------------------------------------------------------------
 // Create an object corresponding to a DOM element
 // -----------------------------------------------------------------------
-StatusCode XmlCatalogCnv::i_createObj (DOM_Element element,
+StatusCode XmlCatalogCnv::i_createObj (DOM_Element /*element*/,
                                        DataObject*& refpObject) {
   // creates an object for the node found
   refpObject = new DataObject();
@@ -97,7 +97,7 @@ CLID XmlCatalogCnv::getCLID (DOM_Element element) {
     return CLID_Condition;
   } else {
     // the tag is unknown : return -1
-    return -1;
+    return CLID (-1);
   }
 }
 
@@ -105,7 +105,7 @@ CLID XmlCatalogCnv::getCLID (DOM_Element element) {
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
 StatusCode XmlCatalogCnv::i_fillObj (DOM_Element childElement,
-                                     DataObject* refpObject,
+                                     DataObject* /*refpObject*/,
                                      IOpaqueAddress* address) {
   MsgStream log( msgSvc(), "XmlCatalogCnv" );
   // the registry entry corresponding to the current object
@@ -114,7 +114,7 @@ StatusCode XmlCatalogCnv::i_fillObj (DOM_Element childElement,
   std::string tagName (dom2Std (childElement.getNodeName()));
   // first get the CLID and checks a converter exists for this type
   CLID clsID = getCLID (childElement);
-  if (-1 == clsID) {
+  if (CLID (-1) == clsID) {
     // bad CLID
     MsgStream log (msgSvc(), "XmlCatalogCnv");
     log << MSG::ERROR << tagName << " : unable to find a CLID for this tag."
