@@ -1,17 +1,12 @@
 HltWithTrg.Members += { "GaudiSequencer/HLTChecking"};
 
-HLTChecking.Members = { "TrgTrackToContainer/HltTrgTrackToContainer"
-                        ,"TrgTrack2MCParticle/HltTrgTrack2MCParticle"
-                        ,"TrgParticleMaker"
+HLTChecking.Members = { "TrgTrack2MCParticle/HltTrgTrack2MCParticle"
                         ,"TrgChecker/HltTrgChecker"
                         ,"TrgVertexMonit/HltVertexMonit"
                        };
-HltTrgTrackToContainer.prefix = "Hlt/";
-HltTrgTrack2MCParticle.prefix = "Hlt/";
-HltTrgChecker.prefix = "Hlt/";
+//HltTrgChecker.prefix = "Hlt/";
 
 //HltWithTrg.measureTime = true;
 HltProcessing.measureTime = true;
 //HltChecking.measureTime = true;
 
-TrgParticleMaker.InputTracks = "Hlt/Rec/Trg/LongTracks";
