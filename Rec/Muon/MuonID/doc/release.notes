@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.15 2002-10-09 12:31:35 dhcroft Exp $
+! $Id: release.notes,v 1.16 2002-10-11 13:12:40 cattanem Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
 
+!========================= MuonID v3r2 2002-10-11 =========================
 ! 2002-10-09 - David Hutchcroft
  - Corrected a bug in the debug printout of FOI sizes
 
