@@ -125,92 +125,92 @@
 
 
 # Random number SmartIF  release problems
-{
-  SmartIF/SicbLumiTool
-  Addr4
-  fun:*
-  fun:*
-  fun:*
-  fun:getInteractions__12SicbLumiToolRi
-}
+#{
+#  SmartIF/SicbLumiTool
+#  Addr4
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:getInteractions__12SicbLumiToolRi
+#}
 
-{
-  SmartIF/release_RndmGen
-  Addr4
-  fun:release__7RndmGen
-}
+#{
+#  SmartIF/release_RndmGen
+#  Addr4
+#  fun:release__7RndmGen
+#}
 
-{
-  SmartIF/ITDigitCreator
-  Addr4
-  fun:*
-  fun:*
-  fun:*
-  fun:_._14ITDigitCreator
-}
+#{
+#  SmartIF/ITDigitCreator
+#  Addr4
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:_._14ITDigitCreator
+#}
 
-{
-  SmartIF/ITCrossTalk
-  Addr4
-  fun:*
-  fun:*
-  fun:*
-  fun:_._11ITCrossTalk
-}
+#{
+#  SmartIF/ITCrossTalk
+#  Addr4
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:_._11ITCrossTalk
+#}
 
-{
-  SmartIF/ITEffcalculator
-  Addr4
-  fun:*
-  fun:*
-  fun:*
-  fun:_._15ITEffCalculator
-}
+#{
+#  SmartIF/ITEffcalculator
+#  Addr4
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:_._15ITEffCalculator
+#}
 
-{
-  SmartIF/ITNoiseTailTool
-  Addr4
-  fun:*
-  fun:*
-  fun:*
-  fun:_._15ITNoiseTailTool
-}
+#{
+#  SmartIF/ITNoiseTailTool
+#  Addr4
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:_._15ITNoiseTailTool
+#}
 
-{
-  SmartIF/ITNoiseTool
-  Addr4
-  fun:*
-  fun:*
-  fun:*
-  fun:_._11ITNoiseTool
-}
+#{
+#  SmartIF/ITNoiseTool
+#  Addr4
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:_._11ITNoiseTool
+#}
 
-{
-  SmartIF/ITDepositedCharge
-  Addr4
-  fun:*
-  fun:*
-  fun:*
-  fun:_._17ITDepositedCharge
-}
+#{
+#  SmartIF/ITDepositedCharge
+#  Addr4
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:_._17ITDepositedCharge
+#}
 
-{
-  SmartIF/OTSmearer
-  Addr4
-  fun:*
-  fun:*
-  fun:*
-  fun:_._9OTSmearer
-}
+#{
+#  SmartIF/OTSmearer
+#  Addr4
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:_._9OTSmearer
+#}
 
-{
-  SmartIF/OTEffCalculator
-  Addr4
-  fun:*
-  fun:*
-  fun:*
-  fun:_._15OTEffCalculator
-}
+#{
+#  SmartIF/OTEffCalculator
+#  Addr4
+#  fun:*
+#  fun:*
+#  fun:*
+#  fun:_._15OTEffCalculator
+#}
 
 
 # Calo problems (Brunel v16r4)
@@ -222,6 +222,7 @@
   fun:__13DeCalorimeteriRCt12basic_string3ZcZt18string_char_traits1ZcZt24__default_alloc_template2b1i0
 }
 
+# Call sequence too deeply nested for valgrind
 #{
 #  Calo/CellParam2
 #  Value8
@@ -232,6 +233,7 @@
 #  fun:buildCells__13DeCalorimeter
 #}
 
+# Call sequence too deeply nested for valgrind
 #{
 #  Calo/CellParam3
 #  Value8
@@ -319,7 +321,8 @@
   fun:shoot__Q24Rndm7Numbers
 }
 
-{ RanluxEngine/MCITDepositCreator
+{
+  RanluxEngine/MCITDepositCreator
   Value8
   fun:flat__12RanluxEngine
   fun:shoot__8RandFlatP15HepRandomEnginedd
@@ -327,7 +330,8 @@
   fun:charge__C17ITDepositedChargeRd
 }
 
-{ RanluxEngine/ITEffCalculator-ITNoiseTailTool-ITDigitCreator-OTEffCalculator
+{
+  RanluxEngine/ITEffCalculator-ITNoiseTailTool-ITDigitCreator-OTEffCalculator
   Value8
   fun:flat__12RanluxEngine
   fun:shoot__8RandFlatP15HepRandomEnginedd
