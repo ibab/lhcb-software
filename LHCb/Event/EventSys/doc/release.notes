@@ -1,6 +1,13 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v15r0 2003-11-03 ========================
+ N.B. Data produced with this version cannot be read by programs liinked with
+ previous versions, and vice versa (due to incompatble change in RichKernel)
+
+! 2003-11-03 - Marco Cattaneo
+ - Use DAQEvent v2r0, RichEvent v6r0
+
 !======================== EventSys v14r3 2003-10-06 ========================
 ! 2003-10-06 - Marco Cattaneo
  - Add DAQEvent v1r1
