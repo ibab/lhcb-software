@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDFinalize.cpp,v 1.2 2003-07-02 09:02:59 jonrob Exp $
+// $Id: RichGlobalPIDFinalize.cpp,v 1.3 2003-07-02 10:44:04 jonrob Exp $
 // Include files
 
 // local
@@ -55,7 +55,7 @@ StatusCode RichGlobalPIDFinalize::execute() {
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // update pointers to global PID working objects
-  if ( !gpidPIDs() || !gpidTracks()  ) return StatusCode::FAILURE;
+  if ( !gpidPIDs() || !gpidTracks() ) return StatusCode::FAILURE;
 
   // Iterate over working tracks and keep/delete PID results
   for ( RichGlobalPIDTracks::iterator track = m_GPIDtracks->begin();

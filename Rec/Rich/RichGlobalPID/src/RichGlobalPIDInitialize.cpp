@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDInitialize.cpp,v 1.1.1.1 2003-06-30 16:10:54 jonesc Exp $
+// $Id: RichGlobalPIDInitialize.cpp,v 1.2 2003-07-02 10:44:04 jonrob Exp $
 // Include files
 
 // local
@@ -53,7 +53,6 @@ StatusCode RichGlobalPIDInitialize::execute() {
   }
 
   // RichGlobalPIDTrack container
-  // new track container
   RichGlobalPIDTracks * GPIDtracks = new RichGlobalPIDTracks();
   if ( !eventSvc()->registerObject( m_richGPIDTrackLocation, GPIDtracks ) ) {
     msg << MSG::ERROR << "Failed to register RichGlobalTracks at "
