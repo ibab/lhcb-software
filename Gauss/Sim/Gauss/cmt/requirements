@@ -14,7 +14,7 @@ apply_pattern GaussVersion
 #get information from DBASE and PARAM 
 use XmlDDDB             v22r1   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
-use DecFiles            v5r0    Gen   -no_auto_imports
+use DecFiles            v5r1    Gen   -no_auto_imports
 use ParamFiles          v3r6          -no_auto_imports
 
 #========================================================================
