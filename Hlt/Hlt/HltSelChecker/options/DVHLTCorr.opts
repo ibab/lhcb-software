@@ -4,17 +4,17 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 //==============================================================================
 // The offline selections
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
-#include "$HLTSELCHECKERROOT/options/PlotTDR.opts"
+// #include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
+// #include "$HLTSELCHECKERROOT/options/PlotTDR.opts"
 
 //==============================================================================
 // MC truth
 //==============================================================================
 // Include this to overwrite input to take *only* MC truth particles into account
-//#include "$HLTSELCHECKERROOT/options/Truth.opts"
+// #include "$HLTSELCHECKERROOT/options/Truth.opts"
 // Include this to overwrite input to take *only* MC truth particles into account
-//#include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
-//#include "$HLTSELCHECKERROOT/options/NoCuts.opts" // No Cuts
+// #include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
+// #include "$HLTSELCHECKERROOT/options/NoCuts.opts" // No Cuts
 
 //==============================================================================
 // correlations
@@ -41,8 +41,8 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // Warning: Files are added up to EventSelector
 // in these options
 // Hence: re-initalize event selector
-//EventSelector.Input   = {};
-//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
+EventSelector.Input   = {};
+#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
 
 ApplicationMgr.EvtMax    = -1 ;
 EventSelector.FirstEvent = 1 ;
