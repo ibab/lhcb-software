@@ -54,7 +54,6 @@ ApplicationMgr.DLLs += { "MuonDet" };
 ApplicationMgr.DLLs += { "STDet" };
 ApplicationMgr.DLLs += { "OTDet" };
 ApplicationMgr.DLLs += { "VeloDet" };
-DeVelo.Design = 1;  // 45 degree Velo sectors
 ApplicationMgr.DLLs += { "Magnet" };
 
 //--------------------------------------------------------------
@@ -82,9 +81,12 @@ BrunelRecoITSeq.Members +={"ITClusterCreator","ITSummaryCreator"};
 // Outer tracker reconstruction (clustering) done by RawBuffer decoding algorithm
 
 // Velo Tracking
-ApplicationMgr.DLLs += { "VeloTrack" };
-BrunelRecoVELOSeq.Members += { "VeloTrackAlg" };
-VeloTrackAlg.AbortNumTrack = 300;
+ApplicationMgr.DLLs += { "TrgTools", "TrgVelo", "TrgBrunel" };
+BrunelRecoVELOSeq.Members = { "DecodeRawVelo"
+                             ,"VeloRTracking"
+                             ,"VeloSpaceTracking"
+                             ,"ConvertToTrFitTrack"
+};
 
 // Forward tracking
 ApplicationMgr.DLLs += { "LongTrack", "TrFitter", "TrExtrapolator" };

@@ -4,9 +4,18 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
+!======================= BrunelSys v25r2 2004-12-10 =======================
+! 2004-12-10 - Marco Cattaneo
+ - Modified requirements for Brunel v25r2
+
+   Packages removed:  VeloTrack (obsolete)
+   Packages added:    TrgTools, TrgVelo, TrgBrunel (replaces VeloTrack)
+   Packaged modified: TrFitEvent v4r8, TrCheck v2r7, RichRecSys v1r13p1,
+                      RichRecBase v1r14p1, RichLocalPID v1r9p1, OTSimulation v1r1
+
 !======================= BrunelSys v25r1 2004-11-25 =======================
 ! 2004-11-25 - Marco Cattaneo
- - Modified requirements for Brunel v25r0
+ - Modified requirements for Brunel v25r1
 
    Packages removed:  CaloMonitor (obsolete)
    Packages added:    CaloMiniDst (replaces CaloMonitor)

@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////
-///   Job options for Brunel for data produced with Boole v5r6 or greater   ///
-/// and with XmlDDDB v22r0 or greater, geometry compatible with lhcb-200402 ///
-///             and with default magnetic field (Field045)                  ///
+///   Job options for Brunel for data produced with Boole v7r2 or greater   ///
+///               geometry compatible with lhcb-200402 (DC04)               ///
+///                    default magnetic field (Field045)                    ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
@@ -11,7 +11,7 @@ ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 //---------------------------------------------------------------------------
 // Geometry specific options
 //---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402-NewVelo.xml";
 #include "$STDAQROOT/options/stDAQ-v1.opts"
 #pragma print on
 
@@ -41,8 +41,8 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
- "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v7r0/BooleTest.digi' TYP='POOL_ROOT' OPT='READ'"
-}; // DC04 geometry: Boole v7r0,Gauss v15r4,XmlDDDB v22r2, evttype 11144100 (Bd_JpsiKS,mm)
+ "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v7r2/BooleTest.digi' TYP='POOL_ROOT' OPT='READ'"
+}; // DC04 geometry: Boole v7r2,Gauss v15r4,XmlDDDB v23r1, evttype 11144100 (Bd_JpsiKS,mm)
 
 //---------------------------------------------------------------------------
 // Event output

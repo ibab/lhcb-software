@@ -3,9 +3,37 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v25r2>2004-12-10 Brunel v25r2</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r2.
+Requires data produced by Boole v7r2 or later. It *cannot* process DC04 data
+
+- New functionality:
+  . Support for v200412 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout,
+                                  new Velo numbering)
+    Not yet tested, needs new Gauss data (v200412.opts, XmlDDDB v23r1)
+
+- Modified functionality
+  . Uses new Velo detector element and geometry. Sensor numbering incompatible
+    with DC04 version. (LHCbKernel v5r5, VeloEvent v13r2, VeloDet v9r1,
+    VeloDAQ v2r1, TrFitEvent v4r8)
+  . "Offline" Velo tracking replaced by "Online" version
+    (TrgTools v7r0, TrgVelo v7r0, TrgBrunel v1r1)
+  . Improved handling of events with no pixels fired
+    (RichRecBase v1r14p1, RichLocalPID v1r9p1)
+
+- Removed functionality
+  . Support for v200411 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout)
+
+- Persistency changes
+  . New velo sensor numbering in RawBuffer, requires VeloDet v9r1, VeloDAQ v2r1
+    to decode
+
+- Packaging changes
+  . Move to new GaudiAlgorithm base classes (OTDAQ v3r2, OTMonitor v1r1)
+
 </PRE><H1><A NAME=v25r1>2004-11-22 Brunel v25r1</A></H1><PRE>
 This version uses Gaudi v15r3, LHCb v17r1.
-Requires data produced by Boole v7r0 or later. It *cannot* process DC04 data
+Requires data produced by Boole v7r0 or v7r1. It *cannot* process DC04 data
 
 - New functionality:
   . Support for v200411 geometry (Rich1 EDR, Rotated Rich2, TT KLM layout)
