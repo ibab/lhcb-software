@@ -1,8 +1,11 @@
-// $Id: CaloTool.cpp,v 1.8 2002-04-27 14:38:20 ibelyaev Exp $
+// $Id: CaloTool.cpp,v 1.9 2002-04-27 16:25:50 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/04/27 14:38:20  ibelyaev
+//  add more functionality to 'finalize' method
+//
 // Revision 1.7  2002/04/07 15:32:00  ibelyaev
 //  improve printout and bug fix
 //
@@ -196,7 +199,7 @@ StatusCode    CaloTool::finalize   ()
   if(  0 == m_errors.size () )
     { log << MSG::INFO << " #ERRORS " << print( 0 ) << endreq ; }
   for( Counter::const_iterator error = m_errors.begin() ;
-       m_errors.end() != error ; ++error )
+       error != m_errors.end() ; ++error )
     {
       log << MSG::INFO 
           << " #ERRORS  = " << print( error->second ) 
@@ -207,7 +210,7 @@ StatusCode    CaloTool::finalize   ()
   if(  0 == m_errors.size () )
     { log << MSG::INFO << " #WARNINGS= " << print( 0 ) << endreq ; }
   for( Counter::const_iterator warning = m_warnings.begin() ;
-       m_warnings.end() != warning ; ++warning )
+       warning != m_warnings.end() ; ++warning )
     {
       log << MSG::INFO 
           << " #WARNINGS= " << print( warning->second ) 

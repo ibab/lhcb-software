@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.11 2002-04-27 14:38:20 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.12 2002-04-27 16:25:50 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/04/27 14:38:20  ibelyaev
+//  add more functionality to 'finalize' method
+//
 // Revision 1.10  2002/04/07 15:32:00  ibelyaev
 //  improve printout and bug fix
 //
@@ -42,7 +45,6 @@
 // ============================================================================
 #define  CALOKERNEL_CALOALGORITHM_CPP 1 
 // ============================================================================
-
 // Include files
 #include <algorithm>
 #include <cstdlib> 
@@ -326,8 +328,8 @@ StatusCode CaloAlgorithm::finalize()
   // print error counter 
   if(  0 == m_errors.size () )
     { log << MSG::INFO << " #ERRORS " << print( 0 ) << endreq ; }
-  for( Counter::const_iterator error = m_errors.begin() ;
-       m_errors.end() != error ; ++error )
+  for( Counter::iterator error = m_errors.begin() ;
+       error != m_errors.end()  ; ++error )
     {
       log << MSG::INFO 
           << " #ERRORS  = " << print( error->second ) 
@@ -337,8 +339,8 @@ StatusCode CaloAlgorithm::finalize()
   // print warning counter 
   if(  0 == m_errors.size () )
     { log << MSG::INFO << " #WARNINGS= " << print( 0 ) << endreq ; }
-  for( Counter::const_iterator warning = m_warnings.begin() ;
-       m_warnings.end() != warning ; ++warning )
+  for( Counter::iterator warning = m_warnings.begin() ;
+       warning != m_warnings.end() ; ++warning )
     {
       log << MSG::INFO 
           << " #WARNINGS= " << print( warning->second ) 
