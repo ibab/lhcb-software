@@ -47,8 +47,8 @@ namespace std
 
 };
 
-inline double asinh ( double x ) 
- { return log( x + sqrt( x * x + 1. ) ) ; } 
+inline double asinh ( double x )
+ { return log( x + sqrt( x * x + 1. ) ) ; }
 #endif
 
 
@@ -85,7 +85,7 @@ CaloSCorrectionFinal::CaloSCorrectionFinal(const std::string& type,
   , m_Coeff_border_area_1_X()
   , m_Coeff_border_area_1_Y()
   , m_Coeff_border_area_2_X()
-  , m_Coeff_border_area_2_Y() 
+  , m_Coeff_border_area_2_Y()
   ///
   , m_a2GeV        ()
   , m_b2           ()
@@ -357,13 +357,22 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		//return StatusCode::FAILURE;
   }
 
+	// update cluster parameters
+	{ // V.B.
+	  if( 0 == hypo->position() )
+	    { hypo->setPosition( cluster->position().clone() ) ; }
+	}
+
+	CaloPosition::Parameters& oldparameters = hypo->position()->parameters();
+	const double baryx = oldparameters( CaloPosition::X );
+	const double baryy = oldparameters( CaloPosition::Y );
+  msg << MSG::VERBOSE << "cluster barycenter position: " << baryx << "," << baryy << endreq;
+
 	double E[3][3];
-	double cov_ii[3][3];
 	double gain[3][3];
 	for (i=0;i<3;i++) {
 		for (j=0;j<3;j++) {
 			E[i][j]=0.0;
-			cov_ii[i][j]=0.0;
 			gain[i][j]=0.0;
 		}
 	}
@@ -376,19 +385,9 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		int col=srcd->cellID().col()-colseed+1;
 		if ((row>=0)&&(row<=2)&&(col>=0)&&(col<=2)) {
 			E[col][row]=srcd->e()*cce->fraction();
-			// intrinsic resolution
-			cov_ii[col][row] = fabs(srcd->e()*cce->fraction())*m_a2GeV;
-			if( 0 != m_b2 ) {
-				cov_ii[col][row] += srcd->e()*cce->fraction()*srcd->e()*cce->fraction()*m_b2;
-			}
-			//  gain fluctuation
-			if( 0 != m_s2gain) {
-				cov_ii[col][row] += srcd->e()*cce->fraction()*srcd->e()*cce->fraction()*m_s2gain;
-			}
 			//  noise (both coherent and incoherent)
 			if( 0 != (m_s2coherent + m_s2incoherent) ) {
 				gain[col][row]   = det()->cellGain(srcd->cellID());
-				cov_ii[col][row] += (m_s2coherent + m_s2incoherent)*gain[col][row]*gain[col][row] ;
 			}
 		}
 	}
@@ -411,8 +410,6 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		int row=srcd->cellID().row()-rowseed+1;
 		int col=srcd->cellID().col()-colseed+1;
 		if ((row>=0)&&(row<=2)&&(col>=0)&&(col<=2)) {
-			E[col][row]=srcd->e()*cce->fraction();
-			if( 0 == m_s2coherent ) {continue;}
 			CaloClusterEntry* cce2;
 			for (cce2=sac.begin();cce2!=sac.end();++cce2) {
 				if (cce2==0) {continue;}
@@ -423,15 +420,27 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 				if ((row_l>=0)&&(row_l<=2)&&(col_l>=0)&&(col_l<=2)) {
 					if ((row_l!=row)&&(col_l!=col)) {
 						cov_ij[col][row][col_l][row_l] = m_s2coherent*gain[col][row]*gain[col_l][row_l];
+					} else {
+						cov_ij[col][row][col_l][row_l] = 
+							fabs(E[col][row])*m_a2GeV
+							+E[col][row]*E[col][row]*(m_b2+m_s2gain)
+							+gain[col][row]*gain[col][row]*m_s2coherent;
 					}
 				}
 			}
 		}
 	}
 
-
+	msg << MSG::VERBOSE << "energy matrix:" << endreq;
 	for (i=0;i<3;i++) {
 		msg << MSG::VERBOSE << "|" << E[2][i] << "|" << E[1][i] << "|" << E[0][i] << endreq;
+	}
+
+	msg << MSG::VERBOSE << "cov_ii matrix:" << endreq;
+	for (i=0;i<3;i++) {
+		msg << MSG::VERBOSE << "|" << cov_ij[2][i][2][i] << "|" 
+			<< cov_ij[1][i][1][i] << "|" 
+			<< cov_ij[0][i][0][i] << endreq;
 	}
 
 	bool border=false;
@@ -467,7 +476,7 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		if ((ebottom==0.)||(etop==0.)) {bordery=true;}
 		if ((borderx==false)&&(bordery==false)) {
 			msg << MSG::ERROR << "(border)&&(borderx==false)&&(bordery==false)" << endreq;
-			update_data = StatusCode::FAILURE;
+			//update_data = StatusCode::FAILURE;
 		}
 	}
 	msg << MSG::VERBOSE << "borderx: " << borderx << endreq;
@@ -475,8 +484,9 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 
 	double EDiffX[3][3],EDiffY[3][3];
 	for (i=0;i<3;i++) {
-		for (j=0;j<3;j++) {EDiffX[i][j]=0.0;EDiffY[i][j]=0.0;}
+		for (j=0;j<3;j++) {EDiffX[i][j]=0.;EDiffY[i][j]=0.;}
 	}
+	double BorderDiffX,BorderDiffY;
 
 	double x=0.,temp_x=0.,param_x=0.;
 	if (!borderx) {
@@ -487,8 +497,8 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		const double Enum = (eright-eleft);
 		const double Edenom = (eright+m_Coeff_X[areaseed][1]*evert+eleft);
 		temp_x=2*m_Coeff_X[areaseed][0]*Enum/Edenom*sinh(1./param_x);
-		x=param_x*asinh(temp_x)/2.;
-		const double Difffactor = param_x*m_Coeff_X[areaseed][0]*sinh(1./param_x)/sqrt(1.+temp_x*temp_x);
+		x=sizeseed*param_x*asinh(temp_x)/2.;
+		const double Difffactor = sizeseed*param_x*m_Coeff_X[areaseed][0]*sinh(1./param_x)/sqrt(1.+temp_x*temp_x);
 		// in eright
 		EDiffX[2][0]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
 		EDiffX[2][1]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
@@ -504,39 +514,24 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		msg << MSG::VERBOSE << "X standart correction..." << endreq;
 	} else {
 		param_x=m_Coeff_border_X[areaseed][0];
-		const double Enum = (eright-eleft);
-		const double Edenom = (eright+m_Coeff_X[areaseed][1]*evert+eleft);
-		temp_x=Enum/Edenom;
-		x=param_x*asinh(temp_x)/2.;
-		const double Difffactor = param_x*sinh(1./param_x)/sqrt(1.+temp_x*temp_x);
-		// in eright
-		EDiffY[2][0]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
-		EDiffY[2][1]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
-		EDiffY[2][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
-		// in evert
-		EDiffY[1][0]=Difffactor*-Enum/(Edenom*Edenom);
-		EDiffY[1][1]=Difffactor*-Enum/(Edenom*Edenom);
-		EDiffY[1][2]=Difffactor*-Enum/(Edenom*Edenom);
-		// in eleft
-		EDiffY[0][0]=Difffactor*(-Edenom-Enum)/(Edenom*Edenom);
-		EDiffY[0][1]=Difffactor*(-Edenom-Enum)/(Edenom*Edenom);
-		EDiffY[0][2]=Difffactor*(-Edenom-Enum)/(Edenom*Edenom);
+		temp_x=(baryx-xseed)/sizeseed;
+		x=sizeseed*param_x*asinh(temp_x)/2.;
+		BorderDiffX=param_x*sinh(1./param_x)/sqrt(1.+temp_x*temp_x*4.*sinh(1./param_x)*sinh(1./param_x));
 		msg << MSG::VERBOSE << "X border correction..." << endreq;
 	}
-	x*=sizeseed;
 	x+=xseed;
 
 	double y=0.,temp_y=0.,param_y=0.;
 	if (!bordery) {
 		param_y=m_Coeff_Y[areaseed][2]
-			+m_Coeff_Y[areaseed][3]*fabs(xseed)
+			+m_Coeff_Y[areaseed][3]*fabs(yseed)
 			+m_Coeff_Y[areaseed][4]*log(energy)
 			+m_Coeff_Y[areaseed][5]*log(energy)*log(energy);
 		const double Enum = (etop-ebottom);
 		const double Edenom = (etop+m_Coeff_Y[areaseed][1]*ehori+ebottom);
 		temp_y=2*m_Coeff_Y[areaseed][0]*Enum/Edenom*sinh(1./param_y);
-		x=param_y*asinh(temp_y)/2.;
-		const double Difffactor = param_y*m_Coeff_Y[areaseed][0]*sinh(1./param_y)/sqrt(1.+temp_y*temp_y);
+		y=sizeseed*param_y*asinh(temp_y)/2.;
+		const double Difffactor = sizeseed*param_y*m_Coeff_Y[areaseed][0]*sinh(1./param_y)/sqrt(1.+temp_y*temp_y);
 		// in etop
 		EDiffY[0][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
 		EDiffY[1][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
@@ -552,33 +547,12 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		msg << MSG::VERBOSE << "Y standart correction..." << endreq;
 	} else {
 		param_y=m_Coeff_border_Y[areaseed][0];
-		const double Enum = (etop-ebottom);
-		const double Edenom = (etop+m_Coeff_Y[areaseed][1]*ehori+ebottom);
-		temp_y=Enum/Edenom;
-		x=param_y*asinh(temp_y)/2.;
-		const double Difffactor = param_y*sinh(1./param_y)/sqrt(1.+temp_y*temp_y);
-		// in etop
-		EDiffY[0][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
-		EDiffY[1][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
-		EDiffY[2][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
-		// in ehori
-		EDiffY[0][1]=Difffactor*-m_Coeff_Y[areaseed][1]*Enum/(Edenom*Edenom);
-		EDiffY[1][1]=Difffactor*-m_Coeff_Y[areaseed][1]*Enum/(Edenom*Edenom);
-		EDiffY[2][1]=Difffactor*-m_Coeff_Y[areaseed][1]*Enum/(Edenom*Edenom);
-		// in ebottom
-		EDiffY[0][0]=Difffactor*(-Edenom-Enum)/(Edenom*Edenom);
-		EDiffY[1][0]=Difffactor*(-Edenom-Enum)/(Edenom*Edenom);
-		EDiffY[2][0]=Difffactor*(-Edenom-Enum)/(Edenom*Edenom);
+		temp_y=(baryy-yseed)/sizeseed;
+		y=sizeseed*param_y*asinh(temp_y)/2.;
+		BorderDiffY=param_y*sinh(1./param_y)/sqrt(1.+temp_y*temp_y*4.*sinh(1./param_y)*sinh(1./param_y));
 		msg << MSG::VERBOSE << "Y border correction..." << endreq;
 	}
-	y*=sizeseed;
 	y+=yseed;
-
-	// update cluster parameters
-	{ // V.B.
-	  if( 0 == hypo->position() )
-	    { hypo->setPosition( cluster->position().clone() ) ; }
-	}
 
 	if (update_data == StatusCode::SUCCESS ) {
 		CaloPosition::Parameters& parameters = hypo->position()->parameters();
@@ -588,57 +562,42 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		parameters( CaloPosition::Y ) = y ;
 		msg << MSG::VERBOSE << "X/Y/E updated..." << endreq;
 
-
-/*
-		for (i=0;i<3;i++) {
-			for (j=0;j<3;j++) {EDiffX[i][j]=1.0;EDiffY[i][j]=1.0;}
-		}
-*/
-		double SumEE =0.;
-		double SumEX =0.;
-		double SumEY =0.;
-		double SumXX =0.;
-		double SumXY =0.;
-		double SumYY =0.;
+		// covariance initialisation
+		double CovEE = 0.;
+		double CovEX = 0.;
+		double CovEY = 0.;
+		double CovXX = 0.;
+		double CovXY = 0.;
+		double CovYY = 0.;
+		// I USE THE COVARIANCE DEFINITION
 		for (i=0;i<3;i++) {
 			for (j=0;j<3;j++) {
-				double xi = xseed+(double)(i-1)*sizeseed;
-				double yj = yseed+(double)(j-1)*sizeseed;
-				SumEE+=cov_ii[i][j];
-				SumEX+=cov_ii[i][j]*EDiffX[i][j]*xi;
-				SumEY+=cov_ii[i][j]*EDiffY[i][j]*yj;
-				SumXX+=cov_ii[i][j]*EDiffX[i][j]*xi*EDiffX[i][j]*xi;
-				SumXY+=cov_ii[i][j]*EDiffX[i][j]*xi*EDiffY[i][j]*yj;
-				SumYY+=cov_ii[i][j]*EDiffY[i][j]*yj*EDiffY[i][j]*yj;
-				// i*m sure that:
-				// [i][j][i][j] = 0.
-				// [i][j][k][l] = [k][l][i][j]
-				for (k=0;k<=i;k++) {
-					for (l=0;l<=j;l++) {
-						if ((i==k)&&(j==l)) {continue;}
-						double xk = xseed+(double)(k-1)*sizeseed;
-						double yl = yseed+(double)(l-1)*sizeseed;
-						SumEE+=cov_ij[i][j][k][l];
-						SumEX+=cov_ij[i][j][k][l]*(EDiffX[i][j]*xi+EDiffX[k][l]*xk)/2.;
-						SumEY+=cov_ij[i][j][k][l]*(EDiffY[i][j]*yj+EDiffY[k][l]*yl)/2.;
-						SumXX+=cov_ij[i][j][k][l]*EDiffX[i][j]*xi*EDiffX[k][l]*xk;
-						SumXY+=cov_ij[i][j][k][l]*(EDiffX[i][j]*xi*EDiffY[k][l]*yl+EDiffY[i][j]*yj*EDiffX[k][l]*xk)/2.;
-						SumYY+=cov_ij[i][j][k][l]*EDiffY[i][j]*yj*EDiffY[k][l]*yl;
+				for (k=0;k<3;k++) {
+					for (l=0;l<3;l++) {
+						CovEE+=cov_ij[i][j][k][l];
+						CovEX+=cov_ij[i][j][k][l]*EDiffX[i][j];
+						CovEY+=cov_ij[i][j][k][l]*EDiffY[i][j];
+						CovXX+=cov_ij[i][j][k][l]*EDiffX[i][j]*EDiffX[k][l];
+						CovXY+=cov_ij[i][j][k][l]*EDiffX[i][j]*EDiffY[k][l];
+						CovYY+=cov_ij[i][j][k][l]*EDiffY[i][j]*EDiffY[k][l];
 					}
 				}
 			}
 		}
-
-		// from V.B.
-		double CovEE = SumEE;
-		double CovEX = SumEX/energy - x*SumEE/energy;
-		double CovEY = SumEY/energy - y*SumEE/energy;
-		double CovXX = SumXX/energy/energy + x*x*SumEE/energy/energy - 2.*x*SumEX/energy/energy;
-		double CovXY = SumXY/energy/energy + x*y*SumEE/energy/energy - y*SumEX/energy/energy - x*SumEY/energy/energy;
-		double CovYY = SumYY/energy/energy + y*y*SumEE/energy/energy - 2.*y*SumEY/energy/energy;
-
 		CaloPosition::Covariance& covariance = hypo->position()->covariance();
-
+		if (borderx) {
+			CovEX=BorderDiffX*covariance( CaloPosition::E , CaloPosition::X );
+			CovXX=BorderDiffX*BorderDiffX*covariance( CaloPosition::X , CaloPosition::X );
+			CovXY=BorderDiffX*covariance( CaloPosition::X , CaloPosition::Y );
+		}
+		if (bordery) {
+			CovEY=BorderDiffY*covariance( CaloPosition::E , CaloPosition::Y );
+			CovYY=BorderDiffY*BorderDiffY*covariance( CaloPosition::Y , CaloPosition::Y );
+			CovXY=BorderDiffY*covariance( CaloPosition::X , CaloPosition::Y );
+		}
+		if ((borderx)&&(bordery)) {
+			CovXY=BorderDiffX*BorderDiffY*covariance( CaloPosition::X , CaloPosition::Y );
+		}
 		msg << MSG::VERBOSE << "covariance EE:" << CovEE
 			<< " was:" << covariance( CaloPosition::E , CaloPosition::E ) << endreq;
 		covariance( CaloPosition::E , CaloPosition::E ) = CovEE;
@@ -663,7 +622,6 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 	  msg << MSG::INFO << "something wrong detected, hypo position NOT updated..." << endreq;
 	}
 
-  msg << MSG::VERBOSE << "CaloHypo ok..." << endreq;
-
-  return StatusCode::SUCCESS;
+	msg << MSG::VERBOSE << "CaloHypo ok..." << endreq;
+	return StatusCode::SUCCESS;
 }
