@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.20 2004-02-24 18:24:28 mtobin Exp $
+// $Id: DeVelo.h,v 1.21 2004-02-28 21:42:49 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -280,19 +280,13 @@ public:
       (different R and stereo) for the phi sensors */
   double rMax(unsigned int sensor, unsigned int zone) ;
 
-  /// Smallest Phi at R (local frame) of the R or phi strips
+  /// Smallest Phi at R (local frame) of the R strips in a zone
   StatusCode phiMin(unsigned int sensor, unsigned int zone, 
                     double &phiMin) ;
   
-  /// Largest Phi (local frame) of the R or phi strips
+  /// Largest Phi (local frame) of the R strips in a zone
   StatusCode phiMax(unsigned int sensor, unsigned int zone, 
                     double &phiMax) ;
-
-  /// Smallest Phi at R (local frame) of the R or phi strips
-  StatusCode phiMin(unsigned int sensor, double r, double &phiMin) ;
-  
-  /// Largest Phi (local frame) of the R or phi strips
-  StatusCode phiMax(unsigned int sensor, double r, double &phiMax) ;
 
   // minimum phi at R (overlap in x) for a given zone
   StatusCode phiMin(unsigned int sensor, unsigned int zone,
