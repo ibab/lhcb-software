@@ -1,0 +1,23 @@
+
+// write an output file in POOL format
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+
+// Job option to tell POOL to load  Event Model dictionaries
+
+PoolDbCacheSvc.Dlls += {"SealSTLDict" };
+PoolDbCacheSvc.Dlls += {"LHCbKernelDict", "MuonKernelDict" };
+PoolDbCacheSvc.Dlls += {"DAQEventDict" };
+PoolDbCacheSvc.Dlls += {"EventDict" };
+PoolDbCacheSvc.Dlls += {"GenEventDict" };
+PoolDbCacheSvc.Dlls += {"TrEventDict" };
+PoolDbCacheSvc.Dlls += {"ITEventDict" };
+PoolDbCacheSvc.Dlls += {"OTEventDict" };
+PoolDbCacheSvc.Dlls += {"RichEventDict" };
+PoolDbCacheSvc.Dlls += {"CaloEventDict" };
+PoolDbCacheSvc.Dlls += {"VeloEventDict" };
+PoolDbCacheSvc.Dlls += {"MuonEventDict" };
+
+
+/// content of Gauss.oosim 
+#include "$GAUSSOPTS/GaussTape.opts"
+
