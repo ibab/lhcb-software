@@ -1,3 +1,6 @@
+
+ApplicationMgr.DLLs += { "Associators" };
+
 // MCPArticle to Velo MCHits association
 ToolSvc.MCP2VeloMCHitAsc.Location      = "Rec/Relations/MCP2VeloMCHit";
 ToolSvc.MCP2VeloMCHitAsc.AlgorithmType = "MCParticle2MCVeloHitAlg";
