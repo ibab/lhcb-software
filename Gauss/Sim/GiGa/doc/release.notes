@@ -1,8 +1,7 @@
-! $Id: release.notes,v 1.96 2004-02-22 19:01:51 ibelyaev Exp $
-! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
 
+!============================ GiGa v16r0 ====================================
 ! 2004-02-20 - Vanya BELYAEV
  - GiGa/IGiGa*.h  
     move al IGiGaXXX::interface() and IGiGaXXX::~IGiGaXXX() into *.cpp file 
@@ -38,7 +37,7 @@ Package manager : Vanya Belyaev
      new function for extensive G4Event dump
  - cmt/requirements 
      1) add "use GaudiTools v*"
-     2) increase teh version to GiGa v16r0   
+     2) increase the version to GiGa v16r0   
 
 
 ! 2004-02-17 - Vanya BELYAEV
