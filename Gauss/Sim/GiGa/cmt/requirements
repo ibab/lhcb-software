@@ -2,6 +2,9 @@
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.21  2001/07/23 13:12:54  ibelyaev
+# v6 and the package restructurisation(II)
+#
 # Revision 1.20  2001/07/17 14:52:43  ranjard
 # v5 - add component library linkopts
 #
@@ -11,7 +14,7 @@
 # =============================================================================
 
 package  GiGa
-version  v6
+version  v6r1
 
 branches         cmt src doc GiGa
 

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/08/12 15:42:55  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.6  2001/08/01 09:42:24  ibelyaev
 /// redesign and reimplementation of GiGaRunManager class
 ///
@@ -23,6 +26,17 @@
 #include  "GaudiKernel/StatusCode.h"
 #include  "GaudiKernel/System.h" 
 #include  "GaudiKernel/MsgStream.h" 
+/// G4 
+#include  "G4VUserDetectorConstruction.hh"
+#include  "G4VPhysicalVolume.hh"
+#include  "G4VUserPrimaryGeneratorAction.hh"
+#include  "G4VUserPhysicsList.hh"
+#include  "G4UserRunAction.hh"
+#include  "G4UserEventAction.hh"
+#include  "G4UserStackingAction.hh"
+#include  "G4UserTrackingAction.hh"
+#include  "G4UserSteppingAction.hh"
+
 /// GiGa
 #include "GiGa/IGiGaRunManager.h"
 #include "GiGa/GiGaException.h"

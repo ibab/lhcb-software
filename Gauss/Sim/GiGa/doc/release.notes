@@ -1,12 +1,17 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.37 2001-08-01 09:42:23 ibelyaev Exp $
+! $Id: release.notes,v 1.38 2001-10-08 14:08:12 ranjard Exp $
 ! =============================================================================
 
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
+!==========================================================================
+! 20011008 - v6r1 Flr & S.Ponce
+  src/component/GiGaSvc.cpp, GiGaSvcIGiGaSetUpSvc.cpp - include some G4 
+     include file to please new compiler.
+            
 !===========================================================================
 ! 20010801    Vanya Belyaev
      redesign and reimplementation of GiGaRunManager class
