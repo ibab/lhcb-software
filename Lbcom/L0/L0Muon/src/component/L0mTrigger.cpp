@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.5 2002-05-07 08:49:49 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.6 2002-06-28 09:13:19 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -156,6 +156,8 @@ StatusCode L0mTrigger::execute() {
   
   for( id = digits->begin() ; id != digits->end() ; id++ ){
     MuonTileID mkey = (*id)->key();
+    mkey.setReadout(0);
+    mkey.setLayer(0);
     int sta = mkey.station();
     int reg = mkey.region();
     if( m_lulayout.regionLayout(sta,reg).isDefined() ) {
@@ -169,7 +171,7 @@ StatusCode L0mTrigger::execute() {
       // This is a pad, let it go as it is
     } else {
       m_pads.push_back(L0mPad(mkey));
-      //cout << mkey << endl;
+      // cout << "mpad: " << mkey << endl;
     }
   }
   //==============================
@@ -185,7 +187,7 @@ StatusCode L0mTrigger::execute() {
       MuonTileID cross = ih->intercept(*iv);
       if ( cross.isValid() ) {
         m_pads.push_back(L0mPad(cross));
-	//cout << cross << endl;
+	// cout << "cross: " << cross << endl;
       }
     }
   }
@@ -324,7 +326,7 @@ L0mTower* L0mTrigger::createTower(L0mPad* pad, const std::vector<L0mPad>& pads){
   
   int nx = pad->padId().nX();
   int ny = pad->padId().nY();
-  //cout << "seed pad: " << st << " " << nr<< " " << nq << " " << nx << " " << ny << endl;
+  // cout << "seed pad: " << st << " " << nr<< " " << nq << " " << nx << " " << ny << endl;
   
   L0mTower* lt = new L0mTower(pad->padId()); 
   
@@ -345,10 +347,10 @@ L0mTower* L0mTrigger::createTower(L0mPad* pad, const std::vector<L0mPad>& pads){
   ptmp.setStation(4);
   vtiles[4] = m_layout.tilesInArea(ptmp , 12, 1 );
   
-  // cout << "vtiles: " << vtiles[0].size() << " " <<
-//                         vtiles[1].size() << " " <<
-// 		        vtiles[3].size() << " " <<
-// 		        vtiles[4].size() << endl;
+//   cout << "vtiles: " << vtiles[0].size() << " " <<
+//                          vtiles[1].size() << " " <<
+//  		        vtiles[3].size() << " " <<
+//  		        vtiles[4].size() << endl;
     
   // look through all the pads
   for ( ind = pads.begin(); ind != pads.end(); ind++ ) {
@@ -358,25 +360,26 @@ L0mTower* L0mTrigger::createTower(L0mPad* pad, const std::vector<L0mPad>& pads){
     // for all the pads in the same quarter and the nearest region 
     // except those in M3
     
-    //cout << "Look for pads " << ist << " " << ir << " " << iq << endl;
+    // cout << "Look for pads " << ist << " " << ir << " " << iq << endl;
     
     if(ist !=2 && iq==nq && (abs(ir-nr))<2  ) {   
       // Check if the pad coincides with some tile
       for (ivmt = vtiles[ist].begin(); ivmt != vtiles[ist].end(); ivmt++ ) {
-        //cout << (*ind).padId() << "->" << *ivmt << endl;
+        
 	if ( (*ind).padId() == *ivmt  ) {
+	  // cout << (*ind).padId() << "->" << *ivmt << endl;
 	  // Check how many M3 pads covers the touched pad in other station
 	  // These the M3 pads defined in terms of nr region 
 	  MuonTileID pvmt = *ivmt;
 	  pvmt.setStation(2);
 	  vmt3 = m_layout.tilesInRegion( pvmt, nr);
-	  //cout << "vmt3 size " << vmt3.size() << endl;
+	  // cout << "vmt3 size " << vmt3.size() << endl;
 	  for (ivmt3 = vmt3.begin(); ivmt3 != vmt3.end(); ivmt3++ ) {
 	    int iny = (*ivmt3).nY() - ny;
 	    if( abs(iny) < 2) {
 	      int inx = (*ivmt3).nX();
     	      lt->addBit(inx-nx, iny, ist, (*ind).padId());	
-	      //cout << "Adding bit to tower: " << (*ind).padId() << endl;      
+	      // cout << "Adding bit to tower: " << (*ind).padId() << endl;      
 	    }
           }
 	}
