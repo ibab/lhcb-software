@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.19 2003-01-17 14:03:39 sponce Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.20 2003-04-15 10:16:57 sponce Exp $
 
 // include files
 
@@ -14,6 +14,11 @@
 
 #include <cstdlib>
 #include <iostream>
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
+#include <strstream> 
+#else
+#include <sstream>
+#endif
 #include <string>
 #include <vector>
 #include <cctype>

@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.136 2003-04-15 10:00:01 cattanem Exp $ 
+! $Id: release.notes,v 1.137 2003-04-15 10:16:56 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
@@ -8,6 +8,7 @@
 !======================== DetDesc v11r9 2003-04-15 ========================
 ! 2003-04-15 - Sebastien Ponce
  - fix a memory leak in DetectorElement reported by David Hutchcroft
+ - fix missing include file for compiling under windows
 
 ! 2003-04-04 - Ivan BELYAEV
  - src/SolidSphere.cpp        the next iteration of bug removal from setBP method   

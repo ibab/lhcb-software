@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.cpp,v 1.10 2003-01-17 14:03:40 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlTabulatedPropertyCnv.cpp,v 1.11 2003-04-15 10:16:57 sponce Exp $
 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
@@ -17,6 +17,11 @@
 
 #include <cstdlib>
 #include <iostream>
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
+#include <strstream> 
+#else
+#include <sstream>
+#endif
 #include <string>
 #include <vector>
 #include <algorithm>

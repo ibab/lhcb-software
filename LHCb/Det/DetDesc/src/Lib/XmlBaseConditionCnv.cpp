@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.8 2003-01-17 14:03:39 sponce Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.9 2003-04-15 10:16:56 sponce Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -10,6 +10,11 @@
 #include "DetDesc/XmlBaseConditionCnv.h"
 #include "DetDesc/IXmlSvc.h"
 
+#if defined (__GNUC__) && ( __GNUC__ <= 2 )
+#include <strstream> 
+#else
+#include <sstream>
+#endif
 #include <string>
 #include <vector>
 
