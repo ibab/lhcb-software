@@ -1,7 +1,11 @@
+// $Id: CaloData.h,v 1.2 2001-11-25 15:26:20 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
+// New package: The first commit into CVS
+//
 // Revision 1.3  2001/07/17 20:00:48  ibelyaev
 // modifications to improve Doxygen documentation
 //
@@ -12,16 +16,15 @@
 #ifndef     CALOALGS_CALODATA_H
 #define     CALOALGS_CALODATA_H 1 
 // ===========================================================================
-
 // from STL 
 #include <string>
-
 // from Gaudi 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StatusCode.h" 
 #include "GaudiKernel/SmartDataPtr.h"
-#include "CaloGen/CaloException.h"
-
+// from CaloKernel
+#include "CaloKernlel/CaloException.h"
+// From CaloEvent 
 #include "CaloEvent/CaloDigit.h"
 
 class  IMessageSvc; 
@@ -29,10 +32,10 @@ class  IDataProviderSvc;
 
 /** @namespace CaloData   CaloData.h CaloAlgs/CaloData.h
  * 
- * simple utility functions to get the calorimeter data in an easy way 
+ *  simple utility functions to get the calorimeter data in an easy way 
  *
- * @author: Vanya Belyaev 
- * @date:   Dec 1,   1999
+ *  @author: Vanya Belyaev Ivan.Belyaev@itep.ru 
+ *  @date:   Dec 1,   1999
  */
 
 namespace CaloData
@@ -72,10 +75,10 @@ namespace CaloData
   ///
 }; // end of namespace CaloData
 
-///
-
 // ===========================================================================
-#endif  //  CALOALGS_CALODATA_H
+// The End 
+// ===========================================================================
+#endif  //  CALOUTILS_CALODATA_H
 // ===========================================================================
 
 

@@ -1,8 +1,11 @@
-// $Id: CellMatrix.h,v 1.3 2001-11-22 16:02:33 ibelyaev Exp $
+// $Id: CellMatrix.h,v 1.4 2001-11-25 15:26:20 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2001/11/22 16:02:33  ibelyaev
+//  new utilities
+//
 // Revision 1.2  2001/11/08 20:04:22  ibelyaev
 //  update and bug fix
 //
@@ -17,8 +20,8 @@
 #include <functional>
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
-// CaloGen 
-#include "CaloGen/CaloCellID.h"
+// CaloKernel 
+#include "CaloKernel/CaloCellID.h"
 // forward declaration
 class DeCalorimeter ;   ///< from CaloDet package 
 

@@ -1,18 +1,17 @@
-// $Id: CellNeighbour.h,v 1.1 2001-11-22 16:02:33 ibelyaev Exp $
+// $Id: CellNeighbour.h,v 1.2 2001-11-25 15:26:20 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/22 16:02:33  ibelyaev
+//  new utilities
+// 
 // ============================================================================
 #ifndef CALOUTILS_CELLNEIGHBOUR_H 
 #define CALOUTILS_CELLNEIGHBOUR_H 1
 // Include files
-// CaloGen 
-#include "CaloGen/CaloException.h"
 // CaloUtils
 #include "CaloUtils/CellMatrix.h"
-// CaloDet 
-#include "CaloDet/DeCalorimeter.h"
 
 /** @class CellNeighbour CellNeighbour.h CaloUtils/CellNeighbour.h
  *  
@@ -30,9 +29,8 @@ public:
   /** the standard constructor
    *  @param Det pointer to calorimeter detector 
    */
-  CellNeighbour( const DeCalorimeter* Det = 0 )
-    : CellMatrix( Det ){};
-  
+  CellNeighbour( const DeCalorimeter* Det = 0 );
+    
   virtual ~CellNeighbour( ); ///< Destructor
   
   /** the major method. It returns "true" if the cell 
@@ -43,23 +41,9 @@ public:
    *  @return fraction of area of the second cell which fits inside 
    *          "neighbour" aroud the seed cell, equivalently 0 or 1 
    */
-  inline double operator() 
+  double operator() 
     ( const CaloCellID& seed , 
-      const CaloCellID& cell ) const
-  {
-    /// trivial case 
-    if( seed == cell                                   ) { return 1 ; } 
-    if( 0 == det() ) { Exception("CellNeighbour:: Detector points to NULL!");}
-    ///
-    if( !det()->valid( seed ) || !det()->valid( cell ) ) { return 0 ; }
-    /// 
-    const CaloNeighbors& neighbours = det()->neighborCells( seed ) ;
-    CaloNeighbors::const_iterator it = 
-      std::find( neighbours.begin () , neighbours.end () , cell ) ;
-    ///
-    return neighbours.end() == it ? 0.0 : 1.0 ;
-  };
-  
+      const CaloCellID& cell ) const ;
 };
 
 // ============================================================================

@@ -1,14 +1,18 @@
-// $Id: CellMatrix.cpp,v 1.2 2001-11-22 16:02:34 ibelyaev Exp $
+// $Id: CellMatrix.cpp,v 1.3 2001-11-25 15:26:20 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/22 16:02:34  ibelyaev
+//  new utilities
+//
 // Revision 1.1  2001/11/07 17:24:49  ibelyaev
 //  new utilities for determination of relative positions of cells
 // 
 // ============================================================================
 // Include files
-#include "CaloGen/CaloException.h"
+// CaloKernel
+#include "CaloKernel/CaloException.h"
 // local
 #include "CaloUtils/CellMatrix.h"
 
