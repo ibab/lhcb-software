@@ -4,6 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2005-01-13 - Chris Jones
+ - Update to the latest version of RichDAQ
+
 !===================== RichRecSys v1r13p1 2004-12-09 =====================
 ! 2004-12-09 - Marco Cattaneo
  - Some fixes to use GaudiObjDesc v7

@@ -2,8 +2,11 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.31 2004-12-09 15:41:09 cattanem Exp $
+# $Id: requirements,v 1.32 2005-01-13 14:45:48 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.31  2004/12/09 15:41:09  cattanem
+# remove dictionary creation
+#
 # Revision 1.30  2004/11/18 08:02:58  cattanem
 # v1r13
 #
@@ -19,7 +22,7 @@
 #============================================================================
 
 package           RichRecSys
-version           v1r13p1
+version           v1r14
 
 # ================ structure ================================================
 branches          cmt doc options
@@ -30,23 +33,23 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # ================ dependencies =============================================
 
 # DAQ Decoding
-use RichDAQ         v1r6   Rich
+use RichDAQ         v2r0	Rich
 
 # Common RICH reconstruction packages
-use RichRecBase     v1r14p1  Rich
-use RichRecTools    v2r12  Rich
-use RichRecCommon   v1r10  Rich
+use RichRecBase     v1r14p1	Rich
+use RichRecTools    v2r12	Rich
+use RichRecCommon   v1r10	Rich
 
 # "Offline" PID packages
-use RichGlobalPID   v1r8   Rich
-use RichLocalPID    v1r9p1 Rich
-use RichRingRefit   v1r9   Rich
+use RichGlobalPID   v1r8	Rich
+use RichLocalPID    v1r9p1	Rich
+use RichRingRefit   v1r9	Rich
 
 # Result merging algorithms
-use RichPIDMerge    v1r5   Rich
+use RichPIDMerge    v1r5	Rich
 
 # MC packages
-use RichRecMCTools  v1r7   Rich
+use RichRecMCTools  v1r7	Rich
 
 # =================================
 # Developmental algorithms ...
