@@ -1,8 +1,11 @@
-// $Id: LoKiExample_load.cpp,v 1.2 2004-04-09 07:23:44 ibelyaev Exp $
+// $Id: LoKiExample_load.cpp,v 1.3 2004-04-22 09:24:28 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/04/09 07:23:44  ibelyaev
+//  add 3 new examples
+//
 // Revision 1.1.1.1  2003/07/24 16:43:49  ibelyaev
 //  new package with LoKi examples 
 //
@@ -43,6 +46,8 @@ DECLARE_FACTORY_ENTRIES( LoKiExample )
 
   DECLARE_ALGORITHM( LoKi_MCEvent         ) ;
   DECLARE_ALGORITHM( LoKi_MCMuon          ) ;
+
+  DECLARE_ALGORITHM( LoKi_VeloClusterMC   ) ;
   
 };
 
