@@ -3,51 +3,33 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v5r3>2004-02-23 Boole v5r3</A></H1><PRE>
+</PRE><H1><A NAME=v5r3>2004-03-05 Boole v5r3</A></H1><PRE>
 
-Backwards incompatible changes to Velo geometry and VeloChannelID.
 Requires XmlDDDB v22r0 or greater
 
->>> Temporarily remove things to be ported to new VeloDet:
-  - in Boole.opts:
-    . Remove ProcessPhase/Trigger
-    . Disable L0 and Trg in Relations phase
-    . Disable loading of L0 DLLs
-    . Disable loading of TrgTools DLL and include of L1WithTrg.opts
-    . Disable PrepareTTL1Buffer, PrepareVeloL1BufferFPGA, PrepareVeloRawBuffer
-
-  - in BooleMoni.opts
-    . Disable L0 and Trg in BrunelMoni sequence
-
-  - in v200402.opts
-    . Disable writing of output file
-
-  - In requirements
-    . Disable use PuVeto, TrgTools, TrgChecker, TrgVelo, TrgVeloTT, L1Reco 
->>>>
-
 - New features
-  - Linked against Gaudi_v14r2, makes available new base classes for monitoring
+  - Linked against Gaudi_v14r3, makes available new base classes for monitoring
     algorithms and tools 
-    (GaudiAlg v7r0, GaudiTools v8r0, CaloMonitor v2r0, CaloDigit v1r6)
-  - Fill L1Buffer and RawBuffer for ST
+    (GaudiAlg v7r1, GaudiTools v8r0, CaloMonitor v2r0, CaloDigit v1r6)
+  - New ST code to fill L1Buffer and RawBuffer (and remove old PrepareTTL1Buffer)
     (STDAQ v1r0, ITAlgorithms v14r1, ITCheckers v2r1)
 
+>>> Temporarily disable TrgVeloTT in L1WithTrg.opts to allow porting to 
+    new ST L1Buffer
+
 - Persistency changes
-  - Backwards incompatible change to encoding of VeloChannelID, including 
-    changed sensor numbering 
-    (XmlDDDB v22r0, LHCbKernel v4r3, VeloDet v9r0, VeloEvent v14r0)
+  - Backwards incompatible change to internal encoding of VeloChannelID
+    (LHCbKernel v4r3, VeloEvent v14r0)
   - Remove IT Digits from Digi output (can be rebuilt from RawBuffer) 
   - Remove OT Digits from Digi output
     (relations problem fixed in Brunel by OTDAQ v1r1)
   - Fix Spillover with POOL (GaudiPoolDb v1r5)
 
-- New tuning
-  - Adapt to changes in VeloDet and VeloChannelID (VeloAlgorithms v3r0)
-
 - New packaging
   - Valgrind error suppression file for Gaudi and external package errors moved
     to $STDOPTS/Gaudi.supp (GaudiConf v7r6, valgrind.job)
+  - Removed VeloRound, round() function now implemented in Kernel/LHCbMath.h
+    (LHCbKernel v4r3, VeloKernel v1r4, VelDet v8r8p1, VeloAlgorithms v2r9p1)
 
 </PRE><H1><A NAME=v5r2>2004-02-10 Boole v5r2</A></H1><PRE>
 

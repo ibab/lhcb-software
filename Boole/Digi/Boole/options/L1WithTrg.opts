@@ -3,7 +3,7 @@
 ApplicationMgr.DLLs += { "TrgVelo", 
                          "TrgChecker",
                          "L1Reco", 
-                         "TrgVeloTT",
+                         //                         "TrgVeloTT",
                          "MCTools" };
 
 TriggerTrgSeq.Members  = { "DecodeL1VeloR"
@@ -15,7 +15,7 @@ TriggerTrgSeq.Members  = { "DecodeL1VeloR"
                            ,"DecodeL1VeloPhi"
                            ,"VeloSpaceTracking"
                            ,"L1Match3dL0"
-                           ,"TrgVeloTT"
+                           //                           ,"TrgVeloTT"
                            ,"PrepareL1Tracks"
                          };
 RelationsTrgSeq.Members  = { "VeloTruthFromCluster",

@@ -7,7 +7,7 @@ InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" }; // Adds Spillover
 InitDataSeq.Members += { "MergeEventAlg/LHCbkgAlg" };    // Adds LHC background
 #include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
 #include "$BOOLEOPTS/BooleMoniProd.opts"  // Default monitoring for production
-//ApplicationMgr.OutStream += { "DigiWriter" };  // Comment to switch off output
+ApplicationMgr.OutStream += { "DigiWriter" };  // Comment to switch off output
 //---------------------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------------------- 

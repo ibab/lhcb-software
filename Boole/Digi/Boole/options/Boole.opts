@@ -28,7 +28,7 @@ EventDataSvc.RootCLID    =    1;
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "ProcessPhase/Init",
                            "ProcessPhase/Digi",
-                           //                           "ProcessPhase/Trigger",
+                           "ProcessPhase/Trigger",
                            "ProcessPhase/Relations", 
                            "ProcessPhase/Moni" }; 
 #include "$BOOLEOPTS/BooleMoni.opts"
@@ -39,8 +39,7 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
 Init.DetectorList += { "Boole", "Data" };
 Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 Trigger.DetectorList = { "L0", "Trg" };
-//Relations.DetectorList = { "VELO", "IT", "OT", "L0", "Trg" };
-Relations.DetectorList = { "VELO", "IT", "OT" };
+Relations.DetectorList = { "VELO", "IT", "OT", "L0", "Trg" };
 
 //--------------------------------------------------------------
 // Geometry and magnetic field
@@ -66,7 +65,7 @@ InitBooleSeq.Members += { "BooleInit" };
 // Subdetector algorithms
 //--------------------------------------------------------------
 // L0 trigger
-//ApplicationMgr.DLLs += { "L0Calo", "L0Muon", "PuVeto", "L0DU" };
+ApplicationMgr.DLLs += { "L0Calo", "L0Muon", "PuVeto", "L0DU" };
 ApplicationMgr.DLLs += { "MuonTools" };
 TriggerL0Seq.Members += { "L0CaloAlg/L0Calo" };
 TriggerL0Seq.Members += { "L0mTrigger/L0Muon" };
@@ -76,8 +75,8 @@ TriggerL0Seq.Members += { "DecisionUnit" };
 TriggerL0Seq.Members += { "PrepareL0DUL1Buffer" };
 
 // L1 trigger
-//ApplicationMgr.DLLs += { "TrgTools" };
-//#include "$BOOLEOPTS/L1WithTrg.opts"
+ApplicationMgr.DLLs += { "TrgTools" };
+#include "$BOOLEOPTS/L1WithTrg.opts"
 
 // Calorimeter digitisation and reconstruction
 ApplicationMgr.DLLs += { "CaloDigit", "CaloEvent" };
@@ -142,8 +141,8 @@ ApplicationMgr.DLLs += { "VeloAlgorithms" };
 DigiVELOSeq.Members += { "VeloSim" };
 DigiVELOSeq.Members += { "VeloDataProcessor" };
 DigiVELOSeq.Members += { "VeloClusterMaker" };
-//DigiVELOSeq.Members += { "PrepareVeloL1BufferFPGA" };
-//DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
+DigiVELOSeq.Members += { "PrepareVeloL1BufferFPGA" };
+DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 
 // Modify printout defaults
 #include "$BOOLEOPTS/BooleMessage.opts"
