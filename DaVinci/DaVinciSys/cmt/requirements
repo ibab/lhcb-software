@@ -1,5 +1,5 @@
 package DaVinciSys
-version v7r3
+version v7r3p1
 
 branches doc cmt
 
@@ -36,3 +36,10 @@ use  CaloReco		 v1r3p1	Calo
 
 #--- Necessary tools
 use  TrExtrapolator      v2r5   Tr
+
+#--- TriggerFilter
+use  Associators         v2r0   Associators
+use  Utilities           v1r0   Tools
+use  TriggerFilter       v1r0   Tools
+use  GaudiConf           v6r6   
+
