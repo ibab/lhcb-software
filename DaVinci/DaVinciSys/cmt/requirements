@@ -1,5 +1,5 @@
 package DaVinciSys
-version v9r3
+version v10r0
 
 branches doc cmt
 
@@ -8,7 +8,7 @@ branches doc cmt
 #=======================================================
 
 # DaVinci application
-use  DaVinci             v9r3  Phys
+use  DaVinci             v10r0  Phys
 
 #--- DaVinci packages
 #    General Use
@@ -45,7 +45,7 @@ use  Bs2JpsiPhi          v1r3   PhysSel
 use  Bs2MuMu             v1r4   PhysSel
 use  Bs2PhiEtac          v1r4p1 PhysSel
 use  Bu2KsPi             v1r3p1 PhysSel
-#    not buildable on Win32
+#    not buildable on Win32: NEED TO CHECK
 use  B2DstarX2D02hh      v1r0   PhysSel
 use  Bc2JpsiPi           v1r0   PhysSel
 use  Bd2D0Kstar          v2r3   PhysSel
@@ -56,37 +56,28 @@ use  Bs2DsH              v2r2   PhysSel
 use  Bs2PhiGamma         v1r2   PhysSel
 use  Bs2PhiPhi           v1r2   PhysSel
 
-
 #--- Trigger
 use  L0DU                v6r5	L0
-use  L1Decision          v2r1   L1
-use  HltEvent            v4r0   Event
-use  HltTools            v4r0   Hlt
-use  HltVelo             v4r0   Hlt
-use  HltVeloTT		 v4r0   Hlt
-use  HltLongTrack        v4r0   Hlt
-use  HltMuonID           v2r0   Hlt
-use  HltChecker          v4r0   Hlt
-use  HltPrimaryVertex    v2r0   Hlt
+use  L1Decision          v2r3   L1
 
 #--- ProtoParticles 
-use  CaloInterfaces      v2r4   Calo
-use  CaloUtils           v4r4   Calo
-use  CaloReco	         v1r6   Calo
+use  CaloInterfaces      v3r0   Calo
+use  CaloUtils           v4r5   Calo
+use  CaloReco	         v1r7   Calo
 
 #--- Particle ID
-use  CaloPIDs   	 v1r1   Calo
+use  CaloPIDs   	 v1r2   Calo
 use  MuonID              v3r6   Muon
 
 #--- Necessary for DaVinciTools
-use  TrExtrapolator      v2r6   Tr
+use  TrExtrapolator      v2r9   Tr
 
 #--- TriggerFilter
 use  Utilities           v1r2   Tools
-use  TriggerFilter       v2r2   Tools
+use  TriggerFilter       v3r0   Tools
 
 #--- DecayPreselections
-use  DecayPresel         v2r3   Tools
+use  DecayPresel         v3r0   Tools
 
 #--- Tools
 #    not buildable on Win32

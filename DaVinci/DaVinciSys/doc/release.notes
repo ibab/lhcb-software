@@ -4,6 +4,29 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================  DaVinciSys v10r0 2004-02-06 ============================
+! 2004-02-06 - Gloria CORTI
+ - new version of packages used respect to v9r3
+   . L1Decision          v2r3
+   . CaloInterfaces      v3r0
+   . CaloUtils           v4r5
+   . CaloReco	           v1r7
+   . CaloPIDs   	       v1r2
+   . TrExtrapolator      v2r9
+   . DaVinci             v10r0
+   . TriggerFilter       v3r0
+   . DecayPresel         v3r0
+
+ - removed packages
+   . HltEvent            v4r0
+   . HltTools            v4r0
+   . HltVelo             v4r0
+   . HltVeloTT           v4r0
+   . HltLongTrack        v4r0
+   . HltMuonID           v2r0
+   . HltChecker          v4r0
+   . HltPrimaryVertex    v2r0
+
 !====================  DaVinciSys v9r3 2004-01-28 =============================
 ! 2004-01-28 - Gloria CORTI
  - modified packages respect to v9r2 are
@@ -13,6 +36,7 @@
    . Bs2JpsiEta          v2r1
    . Bd2D0Kstar          v2r3
    . B2DstarX2D02hh      v1r0  NEW
+   . DaVinci             v9r4
 
 ! 2004-01-14 - Gloria CORTI
  - modified packages respect to v9r2 are
