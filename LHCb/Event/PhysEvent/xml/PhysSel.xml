@@ -11,44 +11,43 @@
      templateVector="FALSE"
     >
       <base name="DataObject"/>
-      <!--import name="PhysSelDecay"/-->
       <constructor desc="std constructor">
         <code>  setVersion(1);</code>
       </constructor>
       <destructor desc="std destructor"/>
       <method
-       desc="Remove all PhysSelDecays entries"
        name="removePhysSelDecays"
+       desc="Remove all PhysSelDecays entries"
       />
       <method
-       desc="Add single PhysSelDecay to map"
        name="addPhysSelDecay"
+       desc="Add single PhysSelDecay to map"
       >
         <arg name="name" type="std::string"/>
         <arg name="value" type="PhysSelDecay*"/>
       </method>
       <method
-       desc="Remove single PhysSelDecay entry from map via its name"
        name="removePhysSelDecay"
+       desc="Remove single PhysSelDecay entry from map via its name"
       >
         <arg name="name" type="std::string"/>
       </method>
       <method
-       desc="Retrieve list of names for which a PhysSelDecay has been stored"
        name="whichPhysSelDecays"
+       desc="Retrieve list of names for which a PhysSelDecay has been stored"
       >
         <arg name="nameList" type="std::vector&lt;std::string&gt;"/>
       </method>
       <method
-       desc="Retrieve the PhysSelDecay results for a decay channel by its name"
        name="retrievePhysSelDecay"
+       desc="Retrieve the PhysSelDecay results for a decay channel by its name"
       >
         <arg name="name" type="std::string"/>
         <arg name="value" type="PhysSelDecay*" inout="BOTH"/>
       </method>
       <method
-       desc="Retrieve results as a set of true/false for a decay channel specifying its name"
        name="results"
+       desc="Retrieve results as a set of true/false for a decay channel specifying its name"
       >
         <arg name="name" type="std::string"/>
         <arg inout="BOTH" name="mc" type="bool"/>
@@ -59,73 +58,73 @@
         <arg inout="BOTH" name="tag" type="bool"/>
       </method>
       <method
-       desc="Return MC true result for a specific decay channel"
        name="decayIsInMCTree"
+       desc="Return MC true result for a specific decay channel"
        type="bool"
       >
         <arg name="name" type="std::string"/>
       </method>
       <method
-       desc="Return acceptance result for a specific decay channel"
        name="decayHasTrkRecon"
+       desc="Return acceptance result for a specific decay channel"
        type="bool"
       >
         <arg name="name" type="std::string"/>
       </method>
       <method
-       desc="Return physics quality result for a specific decay channel"
        name="decayHasTrkPQual"
+       desc="Return physics quality result for a specific decay channel"
        type="bool"
       >
         <arg name="name" type="std::string"/>
       </method>
       <method
-       desc="Return selection result for a specific decay channel"
        name="decayIsSelected"
+       desc="Return selection result for a specific decay channel"
        type="bool"
       >
         <arg name="name" type="std::string"/>
       </method>
       <method
-       desc="Return agreement results  for a specific decay channel"
        name="decaySelectedIsMC"
+       desc="Return agreement results  for a specific decay channel"
        type="bool"
       >
         <arg name="name" type="std::string"/>
       </method>
       <method
-       desc="Return flavour tag results for a specific decay channel"
        name="decayIsFlavourTagged"
+       desc="Return flavour tag results for a specific decay channel"
        type="bool"
       >
         <arg name="name" type="std::string"/>
       </method>
       <method
+       name="serialize"
        const="TRUE"
        desc="Serialize the object for writing"
-       name="serialize"
        type="StreamBuffer&amp;"
       >
         <arg name="s" type="StreamBuffer"/>
       </method>
       <method
-       desc="Serialize the object for reading"
        name="serialize"
+       desc="Serialize the object for reading"
        type="StreamBuffer&amp;"
       >
         <arg name="s" type="StreamBuffer"/>
       </method>
       <method const="TRUE"
-       desc="Fill the ASCII output stream"
        name="fillStream"
+       desc="Fill the ASCII output stream"
        type="std::ostream&amp;"
       >
         <arg name="s" type="std::ostream"/>
       </method>
       <attribute
+       name="table"
        desc="Map with decay selection results"
        getMeth="FALSE"
-       name="table"
        setMeth="FALSE"
        type="std::map&lt;std::string,PhysSelDecay*&gt;"
       />

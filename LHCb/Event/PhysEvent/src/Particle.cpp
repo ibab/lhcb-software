@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.1 2002-03-27 20:05:30 gcorti Exp $
+// $Id: Particle.cpp,v 1.2 2002-04-15 11:37:31 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -21,32 +21,9 @@
 //=============================================================================
 double Particle::charge() const {
 
-  // Derive charge from particleID
-  int myid = particleID().id();
+  double ch = (particleID().threeCharge())/3.0;
+  return ch;
 
-  // gamma
-  if( myid == 1 ) {
-    return 0.0;
-  }
-  // e-, mu-, pi-, K-, p~
-  if( (myid == 11) || (myid == 13) || (myid == -211) || 
-      (myid == -321) || (myid == -2212) ) {
-    return -1.0;
-  }
-  // e+, mu+, pi+, K+, p
-  if( (myid == -11) || (myid == -13) || (myid == 211) || 
-      (myid == 321) || (myid == 2212) ) {
-    return 1.0;
-  }
-  // pi0, Kl, Ks
-  if( (myid == 111) || (myid == 130) || (myid == 310) ) {
-    return 0.0;
-  }
-  // J/Psi and B0
-  if( (myid == 443) || (abs(myid) == 511) ) {
-    return 0.0;
-  }
-  return 0.0;
 };
 
 //=============================================================================

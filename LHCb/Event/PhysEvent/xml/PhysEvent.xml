@@ -7,6 +7,8 @@
 <!ENTITY PhysSelDecay.xml     SYSTEM "PhysSelDecay.xml"    >
 <!ENTITY PhysSel.xml          SYSTEM "PhysSel.xml"         >
 
+<!ENTITY AxPartCandidate.xml  SYSTEM "AxPartCandidate.xml" >
+
 ]>
 
 <gdd>
@@ -15,7 +17,7 @@
 
 
     <!-- next line needed until GOD knows not to look in LHCbEvent /-->
-    <!--import name="Kernel/CLHEPStreams"/-->
+    <import name="Kernel/CLHEPStreams"/>
   
     <!-- Basic classes -->
     &Particle.xml;
@@ -25,6 +27,8 @@
     &PhysSelDecay.xml;
     &PhysSel.xml;
     
+    <!-- Input class, needed until ProtoParticles input from DST -->
+    &AxPartCandidate.xml;
 
   </package>
 

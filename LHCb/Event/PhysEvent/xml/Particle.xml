@@ -12,7 +12,9 @@
        <base name="KeyedObject&lt;int&gt;"/>
        <import name="CLHEP/Units/SystemOfUnits"/>
        <!-- the following line is necessary until using LHCbKernel-->
-       <import name="Event/HepMatrixStream"/>
+       <!-- import name="Event/HepMatrixStream"/-->
+       <!-- the following line is necessary to not use LHCbEvent -->
+       <import name="Event/ParticleID"/>
        <import name="Event/Vertex" soft="TRUE"/>
        <location
         name="User"
@@ -23,62 +25,62 @@
         place="/Event/Phys/Prod/Particles"
        />
        <attribute
-        desc="PDG code"
         name="particleID"
+        desc="PDG code"
         type="ParticleID"
        />
        <attribute
-        desc="Confidence Level of the particleID"
         name="confLevel"
+        desc="Confidence Level of the particleID"
         type="double"
         init="1.0"
        />
        <attribute
-        desc="Momentum four vector "
         name="momentum"
+        desc="Momentum four vector "
         type="HepLorentzVector"
         init="0.0, 0.0, 0.0, -1*GeV"
        />
        <attribute
-        desc="Point at which the momentum is given in LHCb reference frame"
         name="pointOnTrack"
+        desc="Point at which the momentum is given in LHCb reference frame"
         type="HepPoint3D"
         init="0.0, 0.0, -1*km"
        />
        <attribute
-        desc="Measured Mass"
         name="mass"
+        desc="Measured Mass"
         type="double"
         init="-1.0"
        />
        <attribute
-        desc="Error on measured mass"
         name="massErr"
+        desc="Error on measured mass"
         type="double"
         init="0.0"
        />
        <attribute
-        desc="Covariance matrix relative to momentum (4x4)"
         name="momentumErr"
+        desc="Covariance matrix relative to momentum (4x4)"
         type="HepSymMatrix"
         init="4,0"
         setMeth="FALSE"
        />
        <method
-        desc="Set covariance matrix relative to momentum (4x4) and propagate to (sx, sy, P)"
         name="setMomentumErr"
+        desc="Set covariance matrix relative to momentum (4x4) and propagate to (sx, sy, P)"
         type="void"
         argList="HepSymMatrix value"
        />        
        <attribute
-        desc="Covariance matrix relative to point at which the momentum is given (3x3)"
         name="pointOnTrackErr"
+        desc="Covariance matrix relative to point at which the momentum is given (3x3)"
         type="HepSymMatrix"
         init="3, 0"
        />
        <attribute
-        desc="Matrix with correlation errors between momemtum and pointOnTrack (momentum x point)"
         name="posMomCorr"
+        desc="Matrix with correlation errors between momemtum and pointOnTrack (momentum x point)"
         type="HepMatrix"
         init="3, 3, 0"
         setMeth="FALSE"
@@ -90,20 +92,20 @@
         argList="HepMatrix value"
        />
        <attribute
+        name="isResonance"
         desc="Describe if a particle flies or not (i.e. is a resonance) and its
 product should be taken if used in a vertex"
-        name="isResonance"
         type="bool"
         init="false"
        />
        <relation
-        desc="Reference to end vertex (ex. decay)"
         name="endVertex"
+        desc="Reference to end vertex (ex. decay)"
         type="Vertex"
        />
        <relation
-        desc="Reference to originator (ProtoParticle, MCParticle for smearing, or AxPartCandidate for Zebra DST). Void for composite particles"
         name="origin"
+        desc="Reference to originator (ProtoParticle, MCParticle for smearing, or AxPartCandidate for Zebra DST). Void for composite particles"
         type="ContainedObject"
        />
        <!--method
@@ -112,68 +114,68 @@ product should be taken if used in a vertex"
         type="template &lt;class T&gt; T*"
        /--> 
        <method
+        name="charge"
         const="TRUE"
         desc="Charge in units of +e (i.e. electron charge = -1.0), temporarly it works only for basic particles"
-        name="charge"
         type="double"
        />
        <method
-        desc="Retrieve slopeX from momentum - line rapresentation of a Particle"
         name="slopeX"
+        desc="Retrieve slopeX from momentum - line rapresentation of a Particle"
         type="double"
        >
          <code>return (momentum().px()/momentum().pz()); </code>
        </method>
        <method
-        desc="Retrieve slopeY from momentum - line rapresentaion of a Particle"
         name="slopeY"
+        desc="Retrieve slopeY from momentum - line rapresentaion of a Particle"
         type="double"
        >
          <code>return (momentum().py()/momentum().pz()); </code>
        </method>
        <method
-        desc="short cut for transerve momentum"
         name="pt"
+        desc="short cut for transerve momentum"
         type="double"
        >
          <code> return m_momentum.perp(); </code>
        </method>
        <method
-        desc="short cut for |P|" 
         name="p"
+        desc="short cut for |P|" 
         type="double"
        > 
          <code> return m_momentum.vect().mag(); </code>
        </method>
        <attribute
-        desc="error matrix on (slopeX, slopeY, P)"
         name="slopesMomErr"
+        desc="error matrix on (slopeX, slopeY, P)"
         type="HepSymMatrix"
         init="3, 0"
         setMeth="FALSE"
        />
        <method
-        desc="Set error matrix on (slopeX, slopeY, P) and propagate to momentum"
         name="setSlopesMomErr"
+        desc="Set error matrix on (slopeX, slopeY, P) and propagate to momentum"
         type="void"
         argList="HepSymMatrix value"
        />
        <attribute
-        desc="Correlation matrix with errors between (slopeX, slopeY, P) and pointOnTrack"
         name="posSlopesCorr"
+        desc="Correlation matrix with errors between (slopeX, slopeY, P) and pointOnTrack"
         type="HepMatrix"
         init="3, 3, 0"
         setMeth="FALSE"
        />
        <method
-        desc="Set correlation matrix with errors between (slopeX, slopeY, P) and pointOnTrack and propagate to posMomCorr"
         name="setPosSlopesCorr"
+        desc="Set correlation matrix with errors between (slopeX, slopeY, P) and pointOnTrack and propagate to posMomCorr"
         type="void"
         argList="HepMatrix value"
        />
        <attribute
-        desc="internal flag for location relative to physdesktop"
         name="desktop"
+        desc="internal flag for location relative to physdesktop"
         type="int"
        />
     </class>

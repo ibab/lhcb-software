@@ -30,75 +30,75 @@
         place="/Event/Phys/PrimaryVertices"
        />
        <attribute
-        desc="Position in LHCb reference system"
         name="position"
+        desc="Position in LHCb reference system"
         type="HepPoint3D"
         init="0.0, 0.0, -1*km"
        />
        <attribute
-        desc="Covariance matrix containing errors on vertex position"
         name="positionErr"
+        desc="Covariance matrix containing errors on vertex position"
         type="HepSymMatrix"
         init="3, 0"
        />
        <attribute
-        desc="Chi square of vertex fit"
         name="chi2"
+        desc="Chi square of vertex fit"
         type="double"
         init="-1.0"
        />
        <attribute
-        desc="Number of degree of freedom"
         name="nDoF"
+        desc="Number of degree of freedom"
         type="int"
         init="-1"
        />
        <!--attribute
-        desc="How the vertex was made"
         name="type"
+        desc="How the vertex was made"
         type="VertexType"
         init="Vertex::Unknown"
        /-->
        <attribute
-        desc="How the vertex was made"
         name="type"
+        desc="How the vertex was made"
         type="VertexType"
         init="Vertex::Unknown"
         getMeth="FALSE"
         setMeth="FALSE"
        />
        <method
-        desc="Retrieve how the vertex was made"
         name="type"
+        desc="Retrieve how the vertex was made"
         type="VertexType"
        />
        <method
+        name="type"
         const="TRUE"
         desc="Retrieve how the vertex was made"
-        name="type"
         type="VertexType"
        />
        <method
-        desc="Set how the vertex was made"
         name="setType"
+        desc="Set how the vertex was made"
         argList="VertexType value"
        />
        <method
-        desc="Serialize the object for reading"
         name="serialize"
+        desc="Serialize the object for reading"
         type="StreamBuffer&amp;"
        >
          <arg name="s" type="StreamBuffer"/>
        </method>
        <relation
+        name="products"
         desc="Reference to outgoing particles"
         multiplicity="N"
-        name="products"
         type="Particle"
        />
        <attribute
-        desc="internal flag for location relative to physdesktop"
         name="desktop"
+        desc="internal flag for location relative to physdesktop"
         type="int"
        />
      </class>

@@ -248,19 +248,18 @@ std::ostream& PhysSel::fillStream( std::ostream& s ) const {
   
   std::map<std::string,PhysSelDecay*>::size_type siz = m_table.size();
   if( 0 != siz ) {
-    s << "\nSize of the PhysSel results table :"
-      << LHCbEventField( LHCbEvent::field4 )
+    s << "{ "
+      << " table:\t"
+      << " size:\t" 
       << siz;
     long count = 0;
     std::map<std::string,PhysSelDecay*>::const_iterator iter;
     for( iter = m_table.begin(), count = 0;
-              iter!=m_table.end();
-                    iter++, count++ ) {
-      s << "\nIndex "
-        << LHCbEventField( LHCbEvent::field4 )
-        << count
-        << " of decay code " << (*iter).first
-        << " bitset result " << (*iter).second;
+              iter!=m_table.end(); iter++, count++ ) {
+      s << " index:\t" << count
+        << " decay:\t" << (*iter).first
+        << " result:\t" << (*iter).second 
+        <<  " } ";
     }    
   }
   return s;

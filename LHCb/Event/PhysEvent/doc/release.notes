@@ -1,6 +1,24 @@
-! $Id: release.notes,v 1.7 2002-04-03 15:54:45 gcorti Exp $
+! $Id: release.notes,v 1.8 2002-04-15 11:39:09 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+! 20020415 - PhysEvent v4r0 (G.Corti)
+  Adapt to new Event Model
+  New files:
+   xml/AxPartCandidates.xml - moved and clean from LHCbEvent
+
+   src/AxPartCandidate.cpp  - moved from LHCbEvent
+  Removed files:
+   Event/HepMatrixStream.h  - now in EventKernel
+  Modifications:
+   cmt/requirements         - use Event v1r0
+   xml/PhysEvent.xml        - introduce AxPartCandidate
+   xml/Vertex.xml, Particle.xml, PhysSel.xml
+                            - make files more readable
+   src/Particle.cpp         - adapt to new ParticleID
+   src/PhysSel.cpp          - adapt serializer dropping LHCbEvent dependecie
+   src/PhysEvent_load.cpp   - declare AxPartCandidate(s) factories
+   
 
 ! 20020402 - PhysEvent v3r0 (G.Corti)
 	New event model for Physics Event part.
