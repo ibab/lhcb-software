@@ -4,6 +4,7 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+!======================= RichPIDMerge v1r0 2003-07-07 =======================
 ! 2003-05-11 - Chris Jones
  - First version
  - Former package RichRecAlgs split according to different algorithms
