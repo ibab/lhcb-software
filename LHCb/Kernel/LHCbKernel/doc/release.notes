@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
+! 20020409 M. Needham
+ - add uniqueLayer/uniqueWafer members to ITChannelID.h
+
 ! 20020405 Stefan Roiser
  - operator-overloading for pairs added to SerializeStl.h
  - bugfix: ostream operator for vector
