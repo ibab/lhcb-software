@@ -1,8 +1,11 @@
-// $Id: LVolume.cpp,v 1.21 2002-05-15 14:56:29 cattanem Exp $ 
+// $Id: LVolume.cpp,v 1.22 2002-06-03 09:52:36 ocallot Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.21  2002/05/15 14:56:29  cattanem
+// fix for windows
+//
 // Revision 1.20  2002/05/15 14:51:56  cattanem
 // fix for windows
 //
@@ -18,6 +21,7 @@
 // ===========================================================================
 /// STD & STL includes 
 #include <iostream> 
+#include <stdio.h> 
 #include <string> 
 #include <functional> 
 #include <algorithm> 
@@ -452,10 +456,15 @@ unsigned int LVolume::intersectBody
           useThisVolume = false ; 
         }      
     }
+  double minInterval =  Threshold * m_material->radiationLength() / TickLength;
+  
   /// transform container of its own intervals into own intersection container 
   for( Intervals::const_iterator it = intervals.begin() ; 
-       intervals.end() != it ; ++it ) 
-    { intersections.push_back( ILVolume::Intersection( *it , m_material ) ) ; }
+       intervals.end() != it ; ++it ) { 
+    if ( minInterval < fabs( (*it).second - (*it).first ) ) {
+      intersections.push_back( ILVolume::Intersection( *it , m_material ) ) ; 
+    }
+  }
   ///  
   return intersections.size(); 
 };
@@ -591,11 +600,14 @@ unsigned int LVolume::intersectBody
   /** transform container of its own intervals 
    *  into own intersection container
    */ 
+  double minInterval =  Threshold * m_material->radiationLength() / TickLength;
+
   for( Intervals::const_iterator it = intervals.begin() ; 
-       intervals.end() != it ; ++it ) 
-    { 
-      intersections.push_back( ILVolume::Intersection( *it , m_material ) );
+       intervals.end() != it ; ++it )    { 
+    if ( minInterval < fabs( (*it).second - (*it).first ) ) {
+      intersections.push_back( ILVolume::Intersection( *it , m_material ) ) ; 
     }
+  }
   ///
   return intersections.size(); 
   ///
@@ -805,50 +817,51 @@ unsigned int LVolume::intersectLine
         MergeOwnAndChildContainers
         ( own , childrens , std::back_inserter( intersections ) );
       // check the result !
-      if( sc.isFailure() )
-        {
+      if( sc.isFailure() ) {
           MsgStream log( DetDesc::msgSvc() , "DetectorDataSvc" );
+          char line[140];
+          sprintf( line, 
+                   " x %7.2f y %7.2f z %7.2f %d own, %d child, status ",
+                   Point.x(), Point.y(), Point.z(), own.size(), 
+                   childrens.size());
           log << MSG::ERROR
               << "===== Failure to merge " << name()
-              << " type " << m_solid->typeName()
-              << " x " << Point.x()
-              << " y " << Point.y()
-              << " z " << Point.z()
-              << " #own   " << own.size() 
-              << " #child " << childrens.size()            
-              << endreq ;
+              << " type " << m_solid->typeName() << endreq 
+              << line << sc << endreq;
           
           for ( ILVolume::Intersections::const_iterator itI = own.begin();
                 own.end() != itI; itI++ ) {
             double s = (*itI).first.first;
             double t = (*itI).first.second;
-            log << MSG::INFO 
-                << "Own : s " << s
-                << " x " << Point.x() + s * Vector.x()
-                << " y " << Point.y() + s * Vector.y()
-                << " z " << Point.z() + s * Vector.z()
-                << " to t " << t
-                << " x " << Point.x() + t * Vector.x()
-                << " y " << Point.y() + t * Vector.y()
-                << " z " << Point.z() + t * Vector.z()
-                << " radl " << (*itI).second->radiationLength()
-                << endreq ;
+            sprintf( line, 
+ "s%9.6f x%8.2f y%8.2f z%9.2f  t%9.6f x%8.2f y%8.2f z%9.2f Radl %9.1f",
+                     s,
+                     Point.x() + s * Vector.x(),
+                     Point.y() + s * Vector.y(),
+                     Point.z() + s * Vector.z(),
+                     t,
+                     Point.x() + t * Vector.x(),
+                     Point.y() + t * Vector.y(),
+                     Point.z() + t * Vector.z(),
+                     (*itI).second->radiationLength() );
+            log << "Own   : " << line << endreq;
           }
           for ( ILVolume::Intersections::const_iterator itJ = childrens.begin();
                 childrens.end() != itJ; itJ++ ) {
             double s = (*itJ).first.first;
             double t = (*itJ).first.second;
-            log << MSG::INFO
-                << "Child : s " << s
-                << " x " << Point.x() + s * Vector.x()
-                << " y " << Point.y() + s * Vector.y()
-                << " z " << Point.z() + s * Vector.z()
-                << " to t " << t
-                << " x " << Point.x() + t * Vector.x()
-                << " y " << Point.y() + t * Vector.y()
-                << " z " << Point.z() + t * Vector.z()
-                << " radl " << (*itJ).second->radiationLength()
-                << endreq ;
+            sprintf( line, 
+ "s%9.6f x%8.2f y%8.2f z%9.2f  t%9.6f x%8.2f y%8.2f z%9.2f Radl %9.1f",
+                     s,
+                     Point.x() + s * Vector.x(),
+                     Point.y() + s * Vector.y(),
+                     Point.z() + s * Vector.z(),
+                     t,
+                     Point.x() + t * Vector.x(),
+                     Point.y() + t * Vector.y(),
+                     Point.z() + t * Vector.z(),
+                     (*itJ).second->radiationLength() );
+            log << "Child : " << line << endreq;
           }
           
           intersections.clear();          

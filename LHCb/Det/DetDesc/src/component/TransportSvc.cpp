@@ -1,8 +1,11 @@
-// $Id: TransportSvc.cpp,v 1.7 2002-04-24 10:53:05 ibelyaev Exp $
+// $Id: TransportSvc.cpp,v 1.8 2002-06-03 09:52:36 ocallot Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/04/24 10:53:05  ibelyaev
+//  fix problems with TransportSvc ('LHCb Geane')
+//
 // Revision 1.6  2002/04/03 11:01:45  ibelyaev
 //  fix the problems with Assemblies for TransportSvc
 //
@@ -114,6 +117,7 @@ StatusCode    TransportSvc::queryInterface
 StatusCode TransportSvc::initialize()
 {
   MsgStream log( msgSvc() , name() + ".initialize()" );  
+  
   {
     /// initialise the base class 
     StatusCode statusCode = Service::initialize() ;  

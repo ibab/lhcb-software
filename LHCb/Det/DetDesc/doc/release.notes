@@ -1,9 +1,22 @@
 ! =============================================================================
-! $Id: release.notes,v 1.101 2002-05-31 17:24:35 mato Exp $ 
+! $Id: release.notes,v 1.102 2002-06-03 09:52:36 ocallot Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-06-03 - Olivier Callot
+ - Fix the TransportSvc initial step, where a good local geometry has to be
+   found and memorized. Affects TransportSvc.cpp, TransportSvcFindLocalGI.h and
+   TransportSvcGoodLocalGI.h . Note that the debug printing is still there, 
+   with a flag to switch it off by default.
+ - Try to remove some print of inconsistencies when merging Ticks in the
+   transport service, allowing two intersection of the same material to
+   overlap. This occurs in Rich1.
+ - Introduce a tolerance in DetDesc/VolumeIntersectionIntervals.h when 
+   comparing floating point numbers for equality.
+ - Remove intersections with radlength below threshold in LVolume.cpp, and also
+   improve the printing of clashes in the merging of intersections.
 
 ! 2002-05-31 - Pere Mato
  - Modified the function that calculates the radiation length of a mixture.
