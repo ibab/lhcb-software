@@ -45,10 +45,10 @@ use XmlDDDB	v22r2	Det
 use ParamFiles	v3r6	-no_auto_imports
 use FieldMap	v4r5
 
-#-- LHCb libraries (from LHCB_v15r9)
-use LHCb	v15r9
+#-- LHCb libraries (from LHCB_v15r10)
+use LHCb	v15r10
 
-#-- BooleSys v5r8 packages
+#-- BooleSys v5r9 packages
 
 use DigiAlg		v2r3	Digi
 use LHCbTools		v1r1	Kernel
@@ -57,7 +57,7 @@ use LHCbTools		v1r1	Kernel
 use L0Calo              v7r5	L0
 use PuVeto              v5r7	L0
 use L0DU                v6r7	L0
-use L0mConf		v2r2	L0
+use L0mConf		v2r2p1	L0
 use L0MuonKernel	v1r1	L0
 use L0MuonTrigger	v1r1p1	L0
 
