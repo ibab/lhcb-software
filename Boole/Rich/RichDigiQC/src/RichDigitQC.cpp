@@ -5,8 +5,11 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.6 2005-01-13 13:04:05 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.7 2005-01-13 14:10:53 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2005/01/13 13:04:05  jonrob
+ *  Update monitoring information
+ *
  *  Revision 1.5  2005/01/07 12:38:09  jonrob
  *  Updates for new RichDAQ package
  *
@@ -86,7 +89,7 @@ StatusCode RichDigitQC::execute()
   ++m_evtC;
 
   // Various tallies and plots
-  unsigned int totDet[Rich::NRiches];
+  std::vector< unsigned int > totDet(Rich::NRiches,0);
   L1Counter totL1R1, totL1R2;
   {for ( HPDCounter::const_iterator iHPD = nHPD[Rich::Rich1].begin();
          iHPD != nHPD[Rich::Rich1].end(); ++iHPD )
@@ -135,7 +138,7 @@ StatusCode RichDigitQC::finalize()
 
   // Form final numbers
   L1Counter totL1R1, totL1R2;
-  unsigned int totDet[Rich::NRiches];
+  std::vector< unsigned int > totDet(Rich::NRiches,0);
   debug() << "   RICH1 : Individual HPD info :-" << endreq;
   {for ( HPDCounter::const_iterator iHPD = m_nHPD[Rich::Rich1].begin();
          iHPD != m_nHPD[Rich::Rich1].end(); ++iHPD )
