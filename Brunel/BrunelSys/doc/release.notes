@@ -4,6 +4,12 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
+! 2003-06-05 - Marco Cattaneo
+ - Modified requirements for Brunel v18r1
+   Packages removed:  BrunelKernel
+   Packages modified: BrunelAlgs v2r0, CaloReco v1r6, ITCheckers v1r3,
+                      LongTrack v1r6, MuonBackground v1r1, RichRecAlgs v2r0p1
+
 !======================= BrunelSys v18r0 2003-04-15 =======================
 ! 2003-04-15 - Marco Cattaneo
  - Modified requirements for Brunel v18r0.

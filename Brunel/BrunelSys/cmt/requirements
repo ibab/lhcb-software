@@ -1,5 +1,5 @@
 package BrunelSys
-version v18r0
+version v18r1
 
 branches cmt doc
  
@@ -8,11 +8,10 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v18r0   Rec
+use Brunel              v18r1   Rec
 
 # Brunel utilities
-use BrunelKernel        v5r4    Rec
-use BrunelSicb          v4r1    Rec
+use BrunelSicb          v2r0    Rec
 use BrunelAlgs          v1r9    Rec
 use KsReco              v1r4	Rec
 
@@ -30,7 +29,7 @@ use L1Decision		v1r7	L1
 use CaloInterfaces      v2r4  	Calo
 use CaloUtils           v4r4  	Calo
 use CaloMonitor         v1r4  	Calo
-use CaloReco            v1r4    Calo
+use CaloReco            v1r6    Calo
 use CaloDigit           v1r2  	Calo
 use CaloPIDs		v1r0	Calo
 
@@ -39,7 +38,7 @@ use VeloAlgorithms      v2r7  	Velo
 
 # Inner Tracker
 use ITAlgorithms        v12r9 	IT
-use ITCheckers          v1r2  	IT
+use ITCheckers          v1r3  	IT
 
 # Outer Tracker
 use OTAlgorithms        v12r4 	OT
@@ -47,7 +46,7 @@ use OTAlgorithms        v12r4 	OT
 # Tracking
 use VeloTrack           v5r0  	Velo
 use TrCheck             v1r3  	Tr
-use LongTrack           v1r5  	Tr
+use LongTrack           v1r6  	Tr
 use TrFitter            v3r5  	Tr
 use TrExtrapolator      v2r5  	Tr
 use TrTools             v2r4  	Tr
@@ -63,12 +62,12 @@ use MuonUtils		v1r0	Muon
 use MuonAlgs            v4r0    Muon
 use MuonRec             v2r3    Muon
 use MuonID              v3r5    Muon
-use MuonBackground	v1r0	Muon
+use MuonBackground	v1r1	Muon
 
 # Rich
 use RichRecBase		v1r0	Rich
 use RichMonitor         v3r0  	Rich
-use RichRecAlgs		v2r0  	Rich
+use RichRecAlgs		v2r0p1 	Rich
 use RichRecTools	v2r0  	Rich
 use RichUtils		v3r0  	Rich
 use RichDetTools	v2r0  	Rich
