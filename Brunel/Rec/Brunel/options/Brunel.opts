@@ -93,17 +93,12 @@ BrunelDigiOTSeq.Members += { "OTInitialization",
 #pragma print on
 BrunelRecoOTSeq.Members += { "OTClusterCreator" };
 
-
-// Velo digitisation
+// Velo digitisation and clustering (also for PuVeto and trigger)
 ApplicationMgr.DLLs += { "VSicbCnv", "VeloAlgorithms", "VeloDet" };
-BrunelDigiVELOSeq.Members += { "VeloSim", "VeloDataProcessor", "VeloClusterMaker" };
-
-// Velo digitisation for L1 and PuVeto
-ApplicationMgr.DLLs += { "VeloDigit" };
-BrunelDigiVELOSeq.Members += { "VeloFEToL1",
-                               "PuVetoDigitAlg" };
-// Location of the VeloCluster to MCParticle
-ToolSvc.VeloClusToMCP.Location = "/Event/MC/Velo/ClusterToParticle";
+BrunelDigiVELOSeq.Members += { "VeloSim" };
+BrunelDigiVELOSeq.Members += { "VeloDataProcessor" };
+BrunelDigiVELOSeq.Members += { "VeloClusterMaker" };
+BrunelDigiVELOSeq.Members += { "VeloFEToL1" };
 
 // Velo Tracking
 ApplicationMgr.DLLs += { "VeloTrack" };
@@ -139,21 +134,16 @@ ApplicationMgr.DLLs += { "UpstreamPR" };
 ApplicationMgr.DLLs += { "TrCleanEx" };
 BrunelRecoTrSeq.Members += { "TrTrackCloneKiller" };
 BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
-                             //,"TrFit2StoredTrackCnv/StoreForward"
-//                             ,"TrFit2StoredTrackCnv/StoreVelo" 
-//                             ,"TrFit2StoredTrackCnv/StoreSeed" 
-//                             ,"TrFit2StoredTrackCnv/StoreMatch" 
 #pragma print off
 #include "$TRCLEANEXROOT/options/Brunel.opts"
 #pragma print on
 TrTrackCloneKiller.flagMode = true;
 
-// Back conversion of tracks for RICH reconstruction
-BrunelRecoRICHSeq.Members = { "TrToRichTrackAlg", "RichTrackToSicbCnv" };
-TrToRichTrackAlg.EnableFiltering = "true"; // Select forward tracks from Tr/Best
-
 // Rich Fortran reconstruction
+BrunelRecoRICHSeq.Members += { "TrToRichTrackAlg", "RichTrackToSicbCnv" };
 BrunelRecoRICHSeq.Members += { "BrunelRecoRICH" };
+BrunelRecoRICHSeq.Members += { "RichDSTPrepare" };
+TrToRichTrackAlg.EnableFiltering = "true"; // Select forward tracks from Tr/Best
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };

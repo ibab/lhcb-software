@@ -22,6 +22,7 @@ BrunelMoni.DetectorList = { "IT","OT","Tr","TRACK","RICH","CALO","TRIGGER" };
 // Trigger
 BrunelMoniTRIGGERSeq.Members += { "L0Monitor" };
 BrunelMoniTRIGGERSeq.Members += { "L0CaloToMCParticleAsct" };
+BrunelMoniTRIGGERSeq.Members += { "L1Track2dTruth" };
 BrunelMoniTRIGGERSeq.Members += { "L1Track3dTruth" };
 BrunelMoniTRIGGERSeq.Members += { "L1TrackMonitor" };
 

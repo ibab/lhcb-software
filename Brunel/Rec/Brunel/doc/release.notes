@@ -3,9 +3,70 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2002-07-10 - Marco Cattaneo
- - Change version to v11r1, to use XmlDDDB v12r2 (fixes to Muon+Rich2 overlaps)
- - Set TransportSvc.OutputLevel back to 3.
+</PRE><H1><A NAME=v12r0>2002-07-19 Brunel v12r0</A></H1><PRE>
+Second release of Brunel for summer 2002 pre-production.
+
+Supported geometry: dbase v248r2
+Complete OO-Dst output.
+
+ - New Functionality:
+   . Add refit to upstream tracks (UpstreamPR v2r0)
+   . New ProcStatus class to hold the abort condition of an event, and
+     the list of algorithms with bad status (TrEvent v11r1, EventSys v11r1)
+     Processing aborted if:
+      > 200 VeloTracks found (and set ABORT flag) (VeloTrack v4r0)
+      > 1000 hits in a tracking sector (Seeding v2r0)
+     Do not process if ABORT flag set (Seeding v2r0, FwTrack v4r0)
+   . New Velo digitisation used also for PuVeto, remove PuVetoDigit 
+                                                 algorithm and VeloDigit DLL
+     (VeloAlgorithms v2r0, VeloDet v7r0, PuVeto v4r0, Brunel.opts)
+   . Improvements to Clone Killer (TrFitEvent v3r0, TrCleanEx v2r0)
+   . New tool for combined SPD/PRS single photon ID 
+     (CaloTools v4r1, CaloInterfaces v2r2)
+   . Use all track types for matching in Calo (CaloRec v2r1)
+   . Check that RichPIDs refer to correct track container (RichMonitor v1r1)
+
+ - DST changes:
+   . Save ProcStatus (BrunelDst.opts)
+   . Store PuVeto multiplicities in L0PuVeto::sTot (PuVeto v4r0)
+   . Save L1Track2d2MCP (BrunelDst.opts, BrunelMoni.opts)
+   . Save MuonDigits and MuonDigits2MCParticles (BrunalAlgs v1r1, BrunelDst.opts)
+   . New RichDSTPrepare algorithm to fix PID SmartRefs on DST
+     (RiSicbCnv v4r1, Brunel.opts)
+   . Set track charge according to sign of momentum 
+     (FwTrack v4r0, TrMatching v2r0)
+
+ - Tuning:
+   . Forward tracking, improved TT1 matching, monitor efficiency (FwTrack v4r0)
+   . Pt Kick tuned and now used (TrTools v2r0, Seeding v2r0)
+   . Fit parameters to fix negative covariance (Seeding v2r0, TrMatching v2r0)
+   . Matching (TrMatching v2r0)
+   . Velo digitisation (VeloKernel v1r1, VeloAlgorithms v2r0)
+   . L1VeloTrack parameters (L1VeloTrack v2r0)
+
+ - Fixes:
+   . Fix memory leaks and/or missing constructors/destructors in:
+       VeloSim (VeloAlgorithms v2r0)
+       TrSeedEvent (Seeding v2r0)
+       TrLayerPartition, RoI (TrIntraPR v2r0)
+       FwtFitParams (FwTrack v4r0)
+       Calo Event classes (CaloEvent v11r1)
+       CellularAutomaton (CaloAlgs v7r1)
+   . Fix compilation on Windows (TrIntraPR v2r0)
+   . Fix crash when printing statistics for zero events (FwTrack v4r0) 
+   . Fix Velo numbering scheme (VeloDet v7r0, VeloTrack v4r0, L1VeloTrack v2r0)
+   . Change to AssociatorBase class to always produce output table at correct 
+     location (LHCbKernel v1r3)
+   . Bug fixes in Gaudi+ROOT I/O (ROOT v2r303p0, GaudiRootDb v9r0, GaudiDb v8r1) 
+   . Fixes to Velo, Muon, Rich1, Rich2 geometry overlaps (XmlDDDB v11r2)
+       TransportSvc reports any remaining overlaps (BrunelMessage.opts)
+   . Fixes to OutputLevel (many algorithms, and BrunelMessage.opts)
+
+ - Change requirements files for version consistency:
+   (VeloAssociators v1r1, TrAssociators v3r0, TrFitter v3r0, L0Calo v6r1, 
+    CaloSicbCnv v7r1, CaloAssociators v2r1, CaloUtils v4r1, CaloTrackTools v1r4,
+    CaloMonitor v1r1)
+
 
 </PRE><H1><A NAME=v11r0>2002-07-09 Brunel v11r0</A></H1><PRE>
 Release of Brunel for summer 2002 pre-production.

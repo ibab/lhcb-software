@@ -1,5 +1,5 @@
 package Brunel
-version v11r1
+version v12r0
 
 branches doc cmt job options
 
@@ -12,10 +12,6 @@ set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
 # Next line to force static build to go into LinuxStatic directory
 #ignore_pattern   package_tag
 
-# Next line to get around SICB/detdes version clashes. 
-# Makes order of package use important
-#version_strategy first_choice
-
 #---CMT and Gaudi policy
 use GaudiPolicy  v5r5
 
@@ -27,7 +23,7 @@ use HTL            	v13r10p1
 use NAGC           	v5r0
 use XERCES         	v16r0p1
 use CERNLIB        	v2001
-use ROOT		v2r302p0
+use ROOT		v2r303p0
 
 #---Gaudi libraries - Gaudi v10r1
 use GaudiKernel        v12r3
@@ -35,23 +31,17 @@ use GaudiSvc           v8r2
 use GaudiAlg           v6r1
 use GaudiAud           v6r0
 use GaudiNagC          v7r0
-use GaudiDb            v8r0
-use GaudiRootDb        v8r1
+use GaudiDb            v8r1
+use GaudiRootDb        v9r0
 use HbookCnv           v12r0
-#use RootHistCnv        v6r0
+#use RootHistCnv        v8r0
 
 #---LHCb common libraries
 use GaudiConf    v6r3
 use BookKeeping  v1r1   Tools
-use LHCbKernel   v1r2   Kernel
+use LHCbKernel   v1r3   Kernel
 use Finclude     v13r0  SICB
 use Futio        v12r0  SICB
-
-# Subdetector kernels
-use CaloKernel   v2r0   Calo
-use MuonKernel   v2r1   Muon
-use RichKernel   v1r2   Rich
-use TrKernel     v11r0  Tr
 
 # Detector description
 use DetDesc      v10r3  Det
@@ -61,52 +51,49 @@ use CaloDetXmlCnv v2r0  Det
 use ITDet         v1r0  Det
 use MuonDet       v3r1  Det
 use OTDet         v2r0  Det
-use VeloDet       v6r0  Det
+use VeloDet       v7r0  Det
 use Magnet        v1r1  Det
 
-use MuonTools    v2r1   Muon
-
 # Event Model
-use EventSys     v11r0  Event
+use EventSys     v11r1  Event
 
 # SicB event data persistency
 use SicbCnv      v17r0  SICB
-#use ITSicbGeom   v2r0   SICB
 use RiSicbGeom   v2r1   SICB
-use CaloSicbCnv  v7r0   SICB
+use CaloSicbCnv  v7r1   SICB
 use MuonSicbCnv  v6r1   SICB
-use RiSicbCnv    v4r0   SICB
+use RiSicbCnv    v4r1   SICB
 use VSicbCnv     v8r0   SICB
 
 # Brunel utilities
 use BrunelKernel v5r0   Rec
 use BrunelSicb   v4r0   Rec
-use BrunelAlgs   v1r0   Rec
+use BrunelAlgs   v1r1   Rec
 
 # L0 trigger
-use L0Calo              v6r0    L0
+use L0Calo              v6r1    L0
 use L0Muon              v6r0    L0
-use PuVeto              v3r0    L0
+use PuVeto              v4r0    L0
 use L0DU                v6r0    L0
 
 # L1 trigger
-use L1VeloTrack         v1r0    L1
+use L1VeloTrack         v2r0    L1
 
 # Calorimeter
-use CaloInterfaces 	v2r1 	Calo
-use CaloUtils      	v4r0 	Calo
-use CaloTools      	v4r0 	Calo
-use CaloAlgs       	v7r0 	Calo
-use CaloMonitor         v1r0    Calo
-use CaloAssociators	v2r0	Calo
-use CaloRec		v2r0	Calo
-use CaloTrackTools	v1r3	Calo
+use CaloKernel          v2r0    Calo
+use CaloInterfaces 	v2r2 	Calo
+use CaloUtils      	v4r1 	Calo
+use CaloTools      	v4r1 	Calo
+use CaloAlgs       	v7r1 	Calo
+use CaloMonitor         v1r1    Calo
+use CaloAssociators	v2r1	Calo
+use CaloRec		v2r1	Calo
+use CaloTrackTools	v1r4	Calo
 
 # Velo
-use VeloKernel		v1r0	Velo
-use VeloAlgorithms	v1r0	Velo
-use VeloAssociators	v1r0	Velo
-use VeloDigit		v3r0	Velo
+use VeloKernel		v1r1	Velo
+use VeloAlgorithms	v2r0	Velo
+use VeloAssociators	v1r1	Velo
 
 # Inner Tracker
 use ITAlgorithms	v12r0  	IT
@@ -117,27 +104,31 @@ use OTAlgorithms  	v11r0  	OT
 use OTAssociators  	v2r0  	OT
 
 # Tracking
-use TrFitEvent          v2r0    Tr
-use VeloTrack           v3r0    Velo
-use TrAssociators       v2r0    Tr
-use FwTrack             v3r0    Tr
-use TrFitter            v2r0    Tr
+use TrKernel            v11r0   Tr
+use TrFitEvent          v3r0    Tr
+use VeloTrack           v4r0    Velo
+use TrAssociators       v3r0    Tr
+use FwTrack             v4r0    Tr
+use TrFitter            v3r0    Tr
 use TrExtrapolator      v2r0    Tr
-use TrTools             v1r0    Tr
-use Seeding	        v1r0    Tr
-use TrMatching          v1r0    Tr
-use TrCleanEx           v1r0    Tr
-use TrIntraPR		v1r0	Tr
-use UpstreamPR		v1r0	Tr
+use TrTools             v2r0    Tr
+use Seeding	        v2r0    Tr
+use TrMatching          v2r0    Tr
+use TrCleanEx           v2r0    Tr
+use TrIntraPR		v2r0	Tr
+use UpstreamPR		v2r0	Tr
 
 # Muon
+use MuonKernel          v2r1    Muon
+use MuonTools           v2r1    Muon
 use MuonAlgs		v2r1	Muon
 use MuonRec     	v2r0	Muon
 use MuonID      	v2r0	Muon
 use MuonAssociators	v1r0	Muon
 
 # Rich
-use RichMonitor v1r0    Rich
+use RichKernel          v1r2    Rich
+use RichMonitor         v1r1    Rich
 
 # SICBDST packages
 use Futil        v11r0  SICB

@@ -13,7 +13,6 @@ EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
 ApplicationMgr.TopAlg += { "BrunelPhase/BrunelOutput" };
 BrunelOutput.DetectorList = { "Filters" };
 
-
 // Filter algorithms
 BrunelOutputFiltersSeq.Members += { "CaloDigitsFilterAlg/PrsFilter" };
 BrunelOutputFiltersSeq.Members += { "CaloDigitsFilterAlg/SpdFilter" };
@@ -22,6 +21,7 @@ BrunelOutputFiltersSeq.Members += { "MuonDSTPrepare" };
 
 // Recreate the Muon table after coordinate filtering
 ApplicationMgr.DLLs += { "MuonAssociators" };
+BrunelOutputFiltersSeq.Members += { "MuonDigit2MCParticleAlg" };
 BrunelOutputFiltersSeq.Members += { "MuonCoord2MCParticleAlg" };
 
 // Filter the MCParticles/MCVertices after everything else
@@ -37,6 +37,7 @@ BrunelDstWriter.OptItemList =
 , "/Event/PrevPrev/Header#1"
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
+, "/Event/Rec/Status#1"
 }; 
 BrunelDstWriter.ItemList = 
 {
@@ -115,5 +116,6 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Relations/MuonCoords2MCParticles#1"
 , "/Event/Rec/Relations/Tr2MCP#1"
 , "/Event/Rec/Relations/L0CaloCandidates#1"
+, "/Event/Rec/Relations/L1Track2d2MCP#1"
 , "/Event/Rec/Relations/L1Track3d2MCP#1"
 };
