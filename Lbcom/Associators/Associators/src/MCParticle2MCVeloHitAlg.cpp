@@ -1,5 +1,5 @@
 //
-// This File contains the implementation of the MCParticle2MCVeloHitAlg interface
+// This File contains the implementation of the MCParticle2MCVeloHitAlg class
 //
 // C++ code for 'LHCb Tracking package(s)'
 //
@@ -74,7 +74,9 @@ StatusCode MCParticle2MCVeloHitAlg::execute()
     log << MSG::DEBUG << "MCVeloHits retrieved from " << m_inputData<< endreq;
   }
   else {
-    log << MSG::FATAL << "*** Could not retrieve MCVeloHits from" << m_inputData<< endreq;
+    log << MSG::FATAL << "*** Could not retrieve MCVeloHits from "
+        << m_inputData<< endreq;
+    return StatusCode::FAILURE;
   }
 
   // create an association table

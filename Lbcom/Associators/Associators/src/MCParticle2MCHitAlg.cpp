@@ -74,7 +74,9 @@ StatusCode MCParticle2MCHitAlg::execute()
     log << MSG::DEBUG << "MCHits retrieved from " << m_inputData<< endreq;
   }
   else {
-    log << MSG::FATAL << "*** Could not retrieve MCHits from" << m_inputData<< endreq;
+    log << MSG::FATAL << "*** Could not retrieve MCHits from "
+        << m_inputData<< endreq;
+    return StatusCode::FAILURE;
   }
 
   // create an association table
