@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.27 2003-11-02 21:38:04 jonrob Exp $
+! $Id: release.notes,v 1.28 2003-11-03 08:36:39 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+!======================= RichKernel v4r0 2003-11-03 =======================
+! 2003-11-03 - Marco Cattaneo
+ - Fixes to comments to suppress doxygen warnings
 
 ! 2003-10-30 - Chris Jones
  - Upgrade RichSmartID class. NB - Not backward compatible

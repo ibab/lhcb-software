@@ -1,4 +1,4 @@
-// $Id: Rich1Side.h,v 1.7 2003-06-30 14:17:03 jonrob Exp $
+// $Id: Rich1Side.h,v 1.8 2003-11-03 08:36:39 cattanem Exp $
 #ifndef RICHKERNEL_RICH1SIDE_H
 #define RICHKERNEL_RICH1SIDE_H 1
 
@@ -13,7 +13,8 @@
 /// namespace for RICH detector specifics
 namespace Rich {
 
-  /** Enumeration for RICH1 detector splits.
+  /** @enum Rich::Rich1Side
+   *  Enumeration for RICH1 detector splits.
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2002-06-19

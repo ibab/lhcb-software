@@ -1,4 +1,4 @@
-// $Id: RichSide.h,v 1.7 2003-06-30 14:17:04 jonrob Exp $
+// $Id: RichSide.h,v 1.8 2003-11-03 08:36:39 cattanem Exp $
 #ifndef RICHKERNEL_RICHSIDE_H
 #define RICHKERNEL_RICHSIDE_H 1
 
@@ -13,7 +13,8 @@
 /// namespace for RICH detector specifics
 namespace Rich {
 
-  /** Enumeration for RICH detector splits
+  /** @enum Rich::Side
+   *  Enumeration for RICH detector splits
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2002-06-19
@@ -29,7 +30,7 @@ namespace Rich {
   inline std::string text( const Rich::Side& side ) {
     switch( side ) {
     case Rich::top:    return "top or left"; // Note also covers  Rich::left
-    case Rich::bottom: return "bottom or right"; // Note also covers  Rich::right
+    case Rich::bottom: return "bottom or right"; // Note also covers Rich::right
     default:           return "?"; // should never happen
     }
   }

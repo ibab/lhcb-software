@@ -1,4 +1,4 @@
-// $Id: RichDetectorType.h,v 1.5 2003-06-30 14:17:03 jonrob Exp $
+// $Id: RichDetectorType.h,v 1.6 2003-11-03 08:36:39 cattanem Exp $
 #ifndef RICHKERNEL_RICHDETECTORTYPE_H
 #define RICHKERNEL_RICHDETECTORTYPE_H 1
 
@@ -17,7 +17,8 @@ namespace Rich {
   /// Number of RICH detectors
   static const int NRiches = 2;
 
-  /** Enumeration for the main RICH detectors 
+  /** @enum Rich::DetectorType 
+   *  Enumeration for the main RICH detectors 
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2002-06-19

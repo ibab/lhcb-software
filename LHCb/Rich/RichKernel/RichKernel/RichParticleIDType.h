@@ -1,4 +1,4 @@
-// $Id: RichParticleIDType.h,v 1.7 2003-06-30 14:17:04 jonrob Exp $
+// $Id: RichParticleIDType.h,v 1.8 2003-11-03 08:36:39 cattanem Exp $
 #ifndef RICHKERNEL_PARTICLEIDTYPE_H
 #define RICHKERNEL_PARTICLEIDTYPE_H 1
 
@@ -20,7 +20,8 @@ namespace Rich {
   /// Number of RICH particle types, kept for backward compatibility
   static const int NRichParticleTypes = 5;
 
-  /** Enumeration for RICH particle ID mass hypotheses
+  /** @enum Rich::ParticleIDType
+   *  Enumeration for RICH particle ID mass hypotheses
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2002-06-19
