@@ -9,7 +9,7 @@ branches doc cmt
 
 use LHCb		v16r0
 
-use GaudiConf		v7r8
+use GaudiConf		v8r0
 
 # External package used by GenEvent
 use HepMC	v4r121p0	Sim
@@ -68,9 +68,9 @@ use CaloAssociators    	v4r1	Calo
 use MuonAssociators    	v1r3	Muon
 
 # Other stuff
+use LHCbInterfaces	v1r0	Kernel
 use LHCbAlgs		v1r0	Kernel
-use LHCbTools		v1r1	Kernel
-use MCTools		v1r6	Phys
+use MCTools		v1r7	Phys
 use CaloInterfaces	v4r0	Calo
 use CaloUtils		v4r7	Calo
 use RichTools		v1r0	Rich
@@ -80,5 +80,4 @@ use RichDAQ		v1r5	Rich
 # LHCb  Examples
 use DetDescChecks	v2r1	Det
 use DetDescExample      v6r2	Ex
-use DumpEventExample    v7r3	Ex
 use IOExample    	v1r2	Ex

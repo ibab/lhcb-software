@@ -7,8 +7,8 @@
 
 !======================= LHCbSys v16r0 2004-07-09 =======================
 ! 2004-07-09 - Marco Cattaneo
- - New packages: LHCbTools v1r1 (moved here from applications projects)
-                 LHCbAlgs v1r0 (for general purpose algorithms)
+ - New packages: LHCbInterfaces v1r0 (for public interfaces of tools etc.)
+                 LHCbAlgs v1r0 (for general purpose algorithms and tools)
                  RichTools v1r0 (previously RichDetTools, 
                                  moved here from applications projects)
                  RichMCTools v2r0 (moved here from applications projects)
@@ -18,13 +18,18 @@
  - Removed  packages: L1Event. Obsolete, completely superseded by TrgEvent
                       PYTHIA. No longer needed to compile HepMC - removes last
                               Fortran dependency from LHCbSys
+                      DumpEventExample. Obsolete, functionality in IOExample
 
  - Modified packages: KernelSys v3r7, LHCbKernel v4r7, RichKernel v5r0
                       EventSys v18r0, EventAssoc v1r2, RichEvent v7r4,
                       DAQEvent v5r0, HepMC v4r121p0, DetSys v5r7,
                       DetDesc v14r1p1, STDet v1r2, RichDet v7r2, OTDet v5r3, 
                       Magnet v2r1, AssociatorsSys v1r14, ITAssociators v2r9, 
-                      Associators v2r2p1, IOExample v1r2
+                      Associators v2r2p1, IOExample v1r2, MCTools v1r7, 
+                      GaudiConf v8r0
+
+ - In GaudiConf v8r0:
+   . Remove RootDb.opts, which is obsolete with Gaudi v15
 
  - In LHCbKernel v4r7:
    . Remove ProcessPhase (moved to LHCbAlgs)
@@ -66,8 +71,13 @@
  - in OTDet v5r3
    . Improved definition of isInside()
 
+ - in MCTools v1r7
+   . Add DumpMCEventAlg
+
  - In IOExample v1r2
    . StoreBrowser Algorithm moved to LHCbAlgs, example is now just job options
+   . Read example also calls new DumpMCEventAlg
+   . Write example no longer reads obsolete GaudiRootDb files
 
  - In DetDescChecks v2r1
    . Package to check integrity and material distribution of XmlDDDB. See 
