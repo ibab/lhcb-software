@@ -4,5 +4,11 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== v1r1 2003-04-24 ================================
+! 2003-04-24 - Olivier Callot
+ - changed 'momentum' to 'qDivP', 'velo' to 'type' and 'unique' to 'status'
+ - added an 'ancestor' to allow a pointer to the track this track was made 
+   from.
+
 ! 2003-04-10 - Olivier Callot
  - Initial creation. Simple HltTrack with list of clusters and a single 'state'

@@ -8,6 +8,7 @@
     <class author="Olivier Callot" desc="Hlt Track" id="12345" name="HltTrack" templateList="FALSE" templateVector="TRUE">
       <location name="Velo2d" place="Rec/Hlt/TrVelo2d"/>
       <location name="Velo3d" place="Rec/Hlt/TrVelo3d"/>
+      <location name="VeloTT" place="Rec/Hlt/TrVeloTT"/>
       <location name="Forward" place="Rec/Hlt/TrForward"/>
       <location name="Hough" place="Rec/Hlt/TrHough"/>
       <base name="KeyedObject&lt;int&gt;"/>
@@ -50,19 +51,25 @@ m_veloCluster.reserve( 30 );
 
       <attribute
         type      = "double"
-        name      = "momentum"
-        desc      = "momentum of the track" />
+        name      = "qDivP"
+        desc      = "inverse momentum of the track" />
       
       <attribute
         type      = "int"
-        name      = "velo"
-        desc      = "Is this track a Velo track" />
+        name      = "type"
+        desc      = "What is the type of this track ?" />
       
       <attribute
         type      = "int"
-        name      = "unique"
-        desc      = "Is this track unique" />
+        name      = "status"
+        desc      = "Used inside computation, what is currently this track" />
       
+      <relation
+	type      = "HltTrack"
+	name      = "ancestor"
+	desc      = "Track it was made from"
+	multiplicity = "1" />
+
       <relation 
         type      = "VeloCluster" 
         name      = "veloCluster" 
