@@ -20,7 +20,7 @@ Purpose: LHCb reconstruction program
  - Fix units for crosstalk region in Muon (XmlDDDB v12r3)
  - Latest Gaudi bug fixes (GaudiSvc v8r3) 
  - Fixes to run on Windows
-   (CaloTools v4r2, UpstreamPR v2r1, MuonID v2r1, RiSicbCnv v4r2)
+   (CaloTools v4r2, UpstreamPR v2r1, MuonID v2r1, RiSicbCnv v4r2, FwTrack v4r1)
  - Fix problem of inconsistent Velo numbering between SICBMC and Brunel
    (VeloSim v2r1)
  - Write all MuonCoords to DST (remove filtering), do not write MuonDigits
