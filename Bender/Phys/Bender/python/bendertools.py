@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendertools.py,v 1.1 2005-03-04 19:30:43 ibelyaev Exp $ 
+# $Id: bendertools.py,v 1.2 2005-03-05 11:43:40 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ version $Revison:$
 # =============================================================================
@@ -13,7 +13,7 @@ Helper module  to locate/cast to different tools
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.1 $ "
+__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.2 $ "
 # =============================================================================
 
 import gaudimodule
@@ -46,6 +46,46 @@ IDirectionFitter         = _gbl.IDirectionFitter
 IParticleMaker           = _gbl.IParticleMaker
 IPhysDesktop             = _gbl.IPhysDesktop
 ITrExtrapolator          = _gbl.ITrExtrapolator
+IMCDecayFinder           = _gbl.IMCDecayFinder
+IMCEffBreakdown          = _gbl.IMCEffBreakdown
+IMCEffReconstructed      = _gbl.IMCEffReconstructed
+IMCEffReconstructible    = _gbl.IMCEffReconstructible
+IMCParticleSelector      = _gbl.IMCParticleSelector
+IVisPrimVertTool         = _gbl.IVisPrimVertTool 
+IDebugTool               = _gbl.IDebugTool
+
+Tools = ( IBestParticles           ,
+          IFilterCriterion         ,
+          IKFFitTool               ,
+          IParticleStuffer         ,
+          IPlotTool                ,
+          ICheckOverlap            ,
+          IGeomDispCalculator      ,
+          ILifetimeFitter          ,
+          IParticleTransporter     ,
+          IPVLocator               ,
+          IDecayFinder             ,
+          IGeomVertexFitter        ,
+          IMassVertexFitter        ,
+          IPhotonFromMergedParams  ,
+          IVertexFitter            ,
+          IDecodeSimpleDecayString ,
+          IParticleFilter          ,
+          IPhotonParams            ,
+          IDirectionFitter         ,
+          IParticleMaker           ,
+          IPhysDesktop             ,
+          #
+          ITrExtrapolator          ,
+          #
+          IMCDecayFinder           ,
+          IMCEffBreakdown          ,
+          IMCEffReconstructed      ,
+          IMCEffReconstructible    ,
+          IMCParticleSelector      ,
+          IVisPrimVertTool         ,
+          #
+          IDebugTool               )
 
 Interface = _gbl.Bender.Interface
 
