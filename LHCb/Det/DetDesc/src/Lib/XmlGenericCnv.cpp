@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.4 2001-12-11 10:02:28 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.5 2001-12-13 08:45:40 sponce Exp $
 
 // Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -133,11 +133,12 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
            << "Detector Description Markup Language Version "
            << versionAttribute << endreq;
        if (versionAttribute != "3.3" ) {
-         StatusCode sc;
-         sc.setCode(WRONG_DTD_VERSION);
-         std::string msg = "DDDB DTD Version 3.3 required, ";
-         msg += "please update your DTD and XML data files.";
-         throw XmlCnvException(msg.c_str(), sc);
+         log << MSG::ERROR << "DDDB DTD Version 3.3 required, "
+             << "Please update your DTD and XML data files. "
+             << "If you are using the XmlDDDB package, please "
+             << "get a new version of it."
+             << endreq;
+         return StatusCode::FAILURE;
        }
      }
    }
