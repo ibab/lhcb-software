@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2003-12-16 14:09:54 frankb Exp $
+# $Id: requirements,v 1.6 2003-12-16 15:13:53 frankb Exp $
 package IOExample
 version v1r0
 
@@ -13,7 +13,6 @@ use GaudiRootDb           v*
 use GaudiODBCDb           v*
 use GaudiPoolDb           v*
 
-#use GaudiIntrospection	  v*
 use Event         	  v*  Event
 use GaudiConf             v*
 #use SicbCnv     	  v*  SICB
