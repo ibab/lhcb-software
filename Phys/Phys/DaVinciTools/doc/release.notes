@@ -1,9 +1,55 @@
-! $Id: release.notes,v 1.8 2002-04-03 16:57:12 gcorti Exp $
+! $Id: release.notes,v 1.9 2002-05-15 23:48:09 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti
 
+! >>>>>>>>>>>>>>>>>>>>>>>>>> DaVinciTools v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<
 
-! 02042002 - DaVinciTools v3r0 (G.Corti)
+! 20021506 Gloria Corti
+  - PhysDesktop: implementation of IListner to clean up at end of events (GC)
+  - FillParticleAlgorithm: adapt to new ParticleID and move check of
+    AxPartCandidate before creating a Particle
+
+! 20021006 Gloria Corti
+  - New tool category of tool IParticleMaker to which PhysDesktop 
+    delegates creations of Particles from different type of objects:
+    one implementation AxParticleMaker making Particles from
+    AxPartCandidates (Helder Lopes)
+  - PhysDesktop: make use of IParticleMaker (Helder Lopes)
+  - New DVAlgorithm base class for selection algorithms (Claudia Nunes)
+  - IMassVertexFitter: modify names of method to generic names (GC)
+  - LagrangeVertexFitter: shortcut methods (Joao de Mello)
+
+! 20020506 Gloria Corti
+  - Merge contributions for new release (Sandra Amato & GC)
+  - Comments in all interfaces and header files for Doxygen documentation
+  - cmt/requirements updated to use Gaudi v10 & PhysEventModel v4r0
+  - Removed MCUtilityTool (including interface)
+  - Removed AxPart2MCParticleAsct (replaced by DaVinciAssociators package)
+  - src/PIDFilterCriterion.cpp - adapt to new ParticleID,
+    bug fix for CL .ge. , throw exception in constructor if service not
+    available, use new template method for service retrieval (test),
+    introduce protection if no CL list is specified
+  - Change version number in modified interfaces
+  - Introduce different transporter tools (Edgar de Oliveira)      
+    LinearTransporter: simple linear transport with no material
+    NsctVeloTransporter: simple linear transport with multiple scattering
+    contribution in error matrix
+    ParabolicTransporter: parabolic tranporter for magnetic field zone    
+    CombinedTransporter: uses different transporters in VELO and in z>500mm
+  - DaVinciTools/IParticleTransporter.h: return arguments changed
+    from Point+momentum+errors to Particle 
+    Additional methods with Particle& and const Particle& as input arguments
+    (Edgar de Oliveira)
+  - DaVinciTools/IGeomDispCalculator.h: return type of method changed from
+    void to StatusCode (Miriam Gandelman)
+  - src/GeomDispCalculator: use transporter (Miriam Gandelman)
+  - DaVinciTools/IVertexFitter.h: new methods (short-cuts) for 2 and 3 
+    particle vertices (Sandra Amato)
+  - src/UnconsVertexFitter: short cut methods implementation (Sandra Amato)
+  
+
+! ======================================================================
+! 20020402 - DaVinciTools v3r0 (G.Corti)
   - Remove obsolete tool on AxPartCandidates: interfaces, header and 
     cpp files (AddFourMom, ImpactPar)
 
