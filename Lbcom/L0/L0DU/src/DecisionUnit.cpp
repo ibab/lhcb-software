@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.12 2002-09-21 16:41:19 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.13 2003-01-30 11:01:10 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -47,45 +47,60 @@ DecisionUnit::DecisionUnit( const std::string& name,
   , m_nameOfInputL0MuonCandidate  ( L0MuonCandidateLocation::Default )
   , m_nameOfInputPileUpVeto       ( L0PuVetoLocation::Default        )
   , m_nameOfOutputDecisionUnit    ( L0DUReportLocation::Default      ) 
-{  
+{ 
+  //=== Define the parameters
+  // Tuning by Eduardo Rodrigues and Frederic Teubert, 20/01/2003
+  double thrElectron   = 2.60 * GeV;
+  double thrPhoton     = 3.00 * GeV;
+  double thrHadron     = 3.52 * GeV;
+  double thrSumHadron  = 5.00 * GeV;
+  double thrPi0Local   = 4.85 * GeV;
+  double thrPi0Global  = 4.90 * GeV;
+  double thrMuon       = 1.23 * GeV;
+  double thrSumMuon    = 1.42 * GeV;
+  double thrSumPeak2   = 3.0 ;
+  
 
   declareProperty( "L0CaloCandidateData" , m_nameOfInputL0CaloCandidate );
   declareProperty( "L0MuonCandidateData" , m_nameOfInputL0MuonCandidate );
   declareProperty( "PuVetoData"          , m_nameOfInputPileUpVeto      );
   declareProperty( "AcceptedData"        , m_nameOfOutputDecisionUnit   );
 
-  declareProperty( "EElCut1"             , m_eElCut1    = 2.40 * GeV );
-  declareProperty( "EElCut2"             , m_eElCut2    = 2.40 * GeV );
+  declareProperty( "EElCut1"             , m_eElCut1    = thrElectron );
+  declareProperty( "EElCut2"             , m_eElCut2    = thrElectron );
   declareProperty( "ScalEl"              , m_scalEl     = 0 );
 
-  declareProperty( "EPhCut1"             , m_ePhCut1    = 3.99 * GeV);
-  declareProperty( "EPhCut2"             , m_ePhCut2    = 3.99 * GeV);
+  declareProperty( "EPhCut1"             , m_ePhCut1    = thrPhoton );
+  declareProperty( "EPhCut2"             , m_ePhCut2    = thrPhoton );
   declareProperty( "ScalPh"              , m_scalPh     = 0 );
 
-  declareProperty( "EHaCut1"             , m_eHaCut1    = 3.18 * GeV );
-  declareProperty( "EHaCut2"             , m_eHaCut2    = 3.18 * GeV );
+  declareProperty( "EHaCut1"             , m_eHaCut1    = thrHadron );
+  declareProperty( "EHaCut2"             , m_eHaCut2    = thrHadron );
   declareProperty( "ScalHa"              , m_scalHa     = 0 );
 
-  declareProperty( "ESumEtCut1"          , m_eSumEtCut1 = 5.00 * GeV );
-  declareProperty( "ESumEtCut2"          , m_eSumEtCut2 = 5.00 * GeV );
+  declareProperty( "ESumEtCut1"          , m_eSumEtCut1 = thrSumHadron );
+  declareProperty( "ESumEtCut2"          , m_eSumEtCut2 = thrSumHadron );
   declareProperty( "ScalSumEt"           , m_scalSumEt  = 0 );
 
-  declareProperty( "EPi0LCut1"           , m_ePi0LCut1  = 4.10 * GeV );
-  declareProperty( "EPi0LCut2"           , m_ePi0LCut2  = 4.10 * GeV );
+  declareProperty( "EPi0LCut1"           , m_ePi0LCut1  = thrPi0Local );
+  declareProperty( "EPi0LCut2"           , m_ePi0LCut2  = thrPi0Local );
   declareProperty( "ScalPi0L"            , m_scalPi0L   = 0 );
 
-  declareProperty( "EPi0GCut1"           , m_ePi0GCut1  = 4.60 * GeV );
-  declareProperty( "EPi0GCut2"           , m_ePi0GCut2  = 4.60 * GeV);
+  declareProperty( "EPi0GCut1"           , m_ePi0GCut1  = thrPi0Global );
+  declareProperty( "EPi0GCut2"           , m_ePi0GCut2  = thrPi0Global);
   declareProperty( "ScalPi0G"            , m_scalPi0G   = 0 );
 
-  declareProperty( "EMu1Cut1"            , m_eMu1Cut1   = 0.46 * GeV );
-  declareProperty( "EMu1Cut2"            , m_eMu1Cut2   = 0.46 * GeV );
+  declareProperty( "EMu1Cut1"            , m_eMu1Cut1   = thrMuon );
+  declareProperty( "EMu1Cut2"            , m_eMu1Cut2   = thrMuon );
   declareProperty( "ScalMu1"             , m_scalMu1    = 0 );
 
-  declareProperty( "ESumMuCut1"          , m_eSumMuCut1 = 4.01 * GeV );
-  declareProperty( "ESumMuCut2"          , m_eSumMuCut2 = 4.01 * GeV );
+  declareProperty( "ESumMuCut1"          , m_eSumMuCut1 = thrSumMuon );
+  declareProperty( "ESumMuCut2"          , m_eSumMuCut2 = thrSumMuon );
   declareProperty( "ScalSumMu"           , m_scalSumMu  = 0 );
-  declareProperty( "NMuSumMu"            , m_nMuSumMu   = 8 );
+
+  declareProperty( "NMuSumMu"            , m_nMuSumMu   = 2 );
+
+  declareProperty( "SumPeak2Veto"        , m_sumPeak2Veto = thrSumPeak2 );
   
   m_typeL0Trig     = 0;
   
@@ -136,7 +151,9 @@ StatusCode DecisionUnit::initialize() {
   log << format( "Pi0Local    : %5.2f GeV", m_ePi0LCut1/GeV ) << endreq;
   log << format( "Pi0Global   : %5.2f GeV", m_ePi0GCut1/GeV ) << endreq;
   log << format( "Muon        : %5.2f GeV", m_eMu1Cut1/GeV ) << endreq;
-  log << format( "SumMuon     : %5.2f GeV", m_eSumMuCut1/GeV ) << endreq;
+  log << format( "SumMuon(%1d)  : %5.2f GeV", 
+                 m_nMuSumMu,
+                 m_eSumMuCut1/GeV ) << endreq;
   log << "=============================" << endreq;
   
   return StatusCode::SUCCESS;
@@ -348,14 +365,17 @@ StatusCode DecisionUnit::execute() {
     }
   }
 
-  // Retrieve the Pile-Up VETO from FORTRAN
+  // Retrieve the Pile-Up VETO information. CUt on the sum of Peak2.
 
   bool L0NotVeto = true;
 
   SmartDataPtr<L0PuVeto>  L0PileUp ( eventSvc(), m_nameOfInputPileUpVeto );
   if ( 0 != L0PileUp ) {
-    log << MSG::DEBUG << "Pile Up VETO : " << L0PileUp->decision() << endreq;
-    if ( 0 != L0PileUp->decision() ) {
+    log << MSG::DEBUG << "Pile Up VETO : " << L0PileUp->decision() 
+        << " sumPeak2 " << L0PileUp->sumPeak2()
+        << endreq;
+    if ( m_sumPeak2Veto <= L0PileUp->sumPeak2() ) {
+    //if ( 0 != L0PileUp->decision() ) {
       L0NotVeto = false;
     }
   } else {

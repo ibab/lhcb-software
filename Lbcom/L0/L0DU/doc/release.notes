@@ -1,6 +1,12 @@
-$Id: release.notes,v 1.19 2002-12-05 15:51:08 ranjard Exp $
+$Id: release.notes,v 1.20 2003-01-30 11:01:10 ocallot Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+! 2003-01-28 - Olivier Callot
+ - Take the PuVeto decision on the sum of the second peak, not on the PuVeto
+   internal decision. New jobOption SumPeak2Veto to control the threshold,
+   default 3. This means 3 or more are vetoed.
+ - Thresholds adjusted by Frederic Teubert and Eduardo Rodrigues on 20/01/2003.
 
 !========================== L0DU v6r2 2002-12-05 =======================
 ! 2002-10-17 - Florence Ranjard

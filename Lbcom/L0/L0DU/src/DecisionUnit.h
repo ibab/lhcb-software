@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.h,v 1.4 2002-04-05 15:20:44 ocallot Exp $
+// $Id: DecisionUnit.h,v 1.5 2003-01-30 11:01:11 ocallot Exp $
 #ifndef L0DU_DECISIONUNIT_H
 #define L0DU_DECISIONUNIT_H
 
@@ -101,6 +101,8 @@ private:
   double m_eSumMuCut2;
   int    m_scalSumMu;
   int    m_nMuSumMu;
+
+  double m_sumPeak2Veto;
   
 };
 
