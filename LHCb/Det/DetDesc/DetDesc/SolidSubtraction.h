@@ -1,8 +1,8 @@
-// $Id: SolidSubtraction.h,v 1.9 2004-07-09 14:19:42 cattanem Exp $
+// $Id: SolidSubtraction.h,v 1.10 2004-07-09 14:37:07 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-#ifndef       DETDESC_SOLISSUBTRACTION_H
+#ifndef       DETDESC_SOLIDSUBTRACTION_H
 #define       DETDESC_SOLIDSUBTRACTION_H 1 
 ///@{
 /** STD & STL */

@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.162 2004-07-09 14:19:42 cattanem Exp $ 
+! $Id: release.notes,v 1.163 2004-07-09 14:37:07 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
@@ -7,7 +7,7 @@
 
 !======================= DetDesc v14r1p1 2003-07-09 =======================
 ! 2004-07-09 - Marco Cattaneo
- - Fix a wrong ifndef in SolidIntersection.h
+ - Fix a wrong ifndef in SolidIntersection.h and SolidSubtraction.h
  - Fix many doxygen warnings
 
 !======================== DetDesc v14r1 2003-12-15 ========================
