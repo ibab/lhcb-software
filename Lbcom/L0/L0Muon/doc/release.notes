@@ -1,10 +1,11 @@
-!  $Id: release.notes,v 1.11 2002-05-07 12:37:52 cattanem Exp $
+!  $Id: release.notes,v 1.12 2002-05-07 17:19:48 cattanem Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
 ! >>>>>>>>>>>>>>>>>>>>>>>> L0Muon v5r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<
 ! 20020507 - Marco Cattaneo
   - L0mCrate.h: add include <cmath>, for Windows
+  - requirements: fix for Windows
 
 ! 20020506 - Andrei Tsaregorodtsev
   Major modifications of the Muon trigger code to adapt to the

@@ -25,4 +25,4 @@ private
 
 apply_pattern package_Cshlibflags
 apply_pattern package_Lshlibflags  
-macro_append L0MuonLib_shlibflags "$(GaudiKernel_linkopts)"
+macro_append L0MuonLib_shlibflags " $(L0Event_linkopts) $(MuonKernel_linkopts) $(GaudiKernel_linkopts)"
