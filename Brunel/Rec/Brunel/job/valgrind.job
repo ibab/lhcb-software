@@ -83,7 +83,7 @@ else
   set SuppFile = "./Brunel.supp"
 endif
 
-valgrind.new --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$SuppFile tmpjob_$Dver.exe >& mem_errors.log
+valgrind --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$SuppFile tmpjob_$Dver.exe >& mem_errors.log
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$Dver.exe

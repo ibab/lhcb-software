@@ -31,7 +31,6 @@ BrunelDigi.DetectorList += { "Bkg" };
 BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList  = {"VELO","OT","IT","Tr","RICH","CALO","MUON" };
-BrunelReco.DetectorList += { "V0" };
 BrunelReco.DetectorList += { "Timing" };
 
 //--------------------------------------------------------------
@@ -189,11 +188,6 @@ ApplicationMgr.DLLs += { "RichDetTools", "RichRecTools", "RichRecCommon",
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };
 BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
-
-// V0s and Kshort
-ApplicationMgr.DLLs += { "KsReco" };
-BrunelRecoV0Seq.Members += { "UpstreamProtoPAlg", "SelectKs2pipi", "V0Reco" };
-#include "$KSRECOROOT/options/Brunel.opts"
 
 // Algorithm timing
 BrunelRecoTimingSeq.Members += { "TimingAlg" };

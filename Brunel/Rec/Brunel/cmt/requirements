@@ -46,7 +46,6 @@ use MCTools		v1r1p1	Phys
 # Brunel utilities
 use BrunelSicb          v4r1    Rec
 use BrunelAlgs          v2r1	Rec
-use KsReco              v1r5	Rec
 
 # LHC background
 use DigiAlg		v1r0p1	Digi

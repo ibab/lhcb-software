@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v19r1>2003-07-07 Brunel v19r1</A></H1><PRE>
+</PRE><H1><A NAME=v19r1>2003-07-08 Brunel v19r1</A></H1><PRE>
 - New tuning:
    . Update of Rich reconstruction software. Includes repackaging of algorithms.
      (RichUtils v3r2, RichRecBase v1r2, RichGlobalPID v1r0, RichLocalPID v1r0,
@@ -19,9 +19,14 @@ Purpose: LHCb reconstruction program
    . Add support for valgrind 1.9.6 with gcc32 
      (new file Brunel.supp.gcc32, invoked by valgrind.job)
 
+- Removed funtionality:
+   . Remove V0 reconstruction ("upstream " KsReco package)
+     replaced by new DaVinci algorithm 
+
 - DST changes:
    . Update list of algorithms to be timed with new Rich Global PID iterations
      (BrunelAlgs v2r1)
+   . Remove V0s (GaudiConf v6r10)
 
 - Bug fixes
    . Release services etc. after use, to please valgrind
