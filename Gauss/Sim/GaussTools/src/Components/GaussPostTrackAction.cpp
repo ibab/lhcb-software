@@ -57,7 +57,7 @@ GaussPostTrackAction::GaussPostTrackAction
   ///  all primaries are stored
     , m_storePrimaries        ( true   ) 
   /// all forced decay products are stored
-    , m_storeDecayProducts(true)
+    , m_storeDecayProducts    ( true   )
   ///  all tracks  with kinetic energy over threshold are stored  
     , m_storeByOwnEnergy      ( false  )
   ///  all tracks  with given type are stored 
@@ -88,6 +88,9 @@ GaussPostTrackAction::GaussPostTrackAction
  ///
     , m_storeByOwnProcess ( false )
     , m_ownStoredProcess()
+    , m_storeUpToZmax( true )
+    , m_zMaxToStore(11290 * mm)
+    , m_rejectRICHphe ( true )
 {
   // declare own properties
   declareProperty( "StoreAll"              , m_storeAll              ) ; 
@@ -106,6 +109,10 @@ GaussPostTrackAction::GaussPostTrackAction
   declareProperty( "StoredChildProcesses"  , m_childStoredProcess);
   declareProperty( "StoreByOwnProcess"     , m_storeByOwnProcess);
   declareProperty( "StoredOwnProcesses"    , m_ownStoredProcess);
+  declareProperty( "StoreUpToZ"            , m_storeUpToZmax);
+  declareProperty( "ZmaxForStoring"        , m_zMaxToStore);
+  declareProperty( "RejectRICHPhotoelectrons", m_rejectRICHphe );
+
 };
 // ============================================================================
 
@@ -240,8 +247,13 @@ void GaussPostTrackAction::PreUserTrackingAction ( const G4Track* track )
     }
   //  
   if( storeByOwnEnergy() 
-      && ( track->GetKineticEnergy() > ownEnergyThreshold() ) ) 
-    { ti->setToBeStored( true ); }
+      && ( track->GetKineticEnergy() > ownEnergyThreshold() ) ) {
+    if( m_storeUpToZmax 
+        && (track->GetVertexPosition().z() > m_zMaxToStore) ) {
+      return;
+    }    
+    ti->setToBeStored( true ); 
+  }
   //
 };
 
@@ -262,8 +274,23 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   // if (      trackMgr()->GetStoreTrajectory () )  { return ; } /// RETURN  
   //
   trackMgr()->SetStoreTrajectory( false );
+  // if only to a certain z, check z and set flag
+  bool zstore = true;
+  if( m_storeUpToZmax && (track->GetVertexPosition().z() > m_zMaxToStore) ) { 
+      zstore = false; 
+  }
+  if( m_rejectRICHphe ) {
+    const G4VProcess* process  = track->GetCreatorProcess() ;
+    if ( 0 == process ) 
+    { Error ( "G4VProcess points to NULL!" ) ; } 
+    else if ( "RichHpdPhotoelectricProcess" == process->GetProcessName() ) {
+      Warning ( "RichHpdPhotoelectricProcess particles not kept" );
+      return;
+    } 
+  }
+  // if reject rich photoelectrons check and store
   // (3) store  all     particles ? 
-  if ( m_storeAll )                                        
+  if ( m_storeAll && zstore )                                        
     {      
       trackMgr()->SetStoreTrajectory( true );
       
@@ -416,7 +443,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   //     See also PreAction
   if( m_storeByOwnEnergy 
       && ( track->GetKineticEnergy() > 
-           m_ownEnergyThreshold      ) ) 
+           m_ownEnergyThreshold      ) 
+      && zstore ) 
     { 
       if(track->GetCreatorProcess())
         {
@@ -456,7 +484,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
        && ( std::find( m_ownStoredTypes.begin() ,  
                        m_ownStoredTypes.end  () , 
                        track->GetDefinition  () ) 
-            != m_ownStoredTypes.end() )         )
+            != m_ownStoredTypes.end() )
+       && zstore )
     { 
       if(track->GetCreatorProcess())
         {
@@ -496,7 +525,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   //     or at least one from secondaries  particle have kinetic energy over 
   //     threshold  
   if( m_storeByChildType || m_storeByChildEnergy 
-      && 0 != trackMgr()->GimmeSecondaries()    )
+      && 0 != trackMgr()->GimmeSecondaries()    
+      && zstore )
     {
       const G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ; 
       for( unsigned int index = 0 ; index < childrens->size() ; ++index )
@@ -547,7 +577,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
               && ( std::find( m_childStoredTypes.begin() ,  
                               m_childStoredTypes.end  () , 
                               tr->GetDefinition       () ) 
-                   != m_childStoredTypes.end() )         ) 
+                   != m_childStoredTypes.end() )         
+              && zstore ) 
             { 
               if(track->GetCreatorProcess())
                 {
@@ -588,7 +619,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
     }
 
   // (7.5) store tracks according to creator process of its daughters
-  if( m_storeBySecondariesProcess && 0 != trackMgr()->GimmeSecondaries())
+  if( m_storeBySecondariesProcess && 0 != trackMgr()->GimmeSecondaries()
+      && zstore )
     {
       const G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ; 
       for( unsigned int index = 0 ; index < childrens->size() ; ++index )
@@ -639,7 +671,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
         }
     }
   // (7.6) store tracks according to creator process 
-  if( m_storeByOwnProcess )
+  if( m_storeByOwnProcess && zstore )
     {
       // 
       if(std::find(m_ownStoredProcess.begin(), m_ownStoredProcess.end(), 

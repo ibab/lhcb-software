@@ -161,6 +161,14 @@ private:
   /// container for own process names
   std::vector<std::string> m_ownStoredProcess;
 
+  /// for flags above beside primary, forced decays and marked store up
+  /// to a certain z
+  bool m_storeUpToZmax;
+  /// value of z max for storage
+  double m_zMaxToStore;
+  /// bool to keep or not RICHPhotoelectrons
+  bool m_rejectRICHphe;
+
 };
 
 // ============================================================================

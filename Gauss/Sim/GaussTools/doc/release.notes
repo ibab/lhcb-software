@@ -4,6 +4,16 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!========================= GaussTools v10r4 ==================================
+! 2004-04-22 - Gloria CORTI
+ - src/Components/GaussPostTrackAction.{h,cpp}
+   . introduce new features to specify a cut in z for processes beside
+     Primary, Marked and Forced Decay. This is controlled by job options
+     StoreUpToZ (def=true) and ZmaxForStoring (def=11290 * mm)
+   . introduce possibility to exclude photoelectron (important when choice
+     in energy or particle type is set). This is controlled by job options
+     RejectRICHPhotoelectrons (def=true)
+
 !========================= GaussTools v10r3 ==================================
 ! 2004-04-20 - Vanya BELYAEV 
 
