@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.12 2002-07-03 08:08:56 ranjard Exp $ 
+// $Id: Simulation.opts,v 1.13 2002-07-03 08:23:32 ranjard Exp $ 
 // ============================================================================
 
 ApplicationMgr.DLLs += 
@@ -122,7 +122,7 @@ GiGaSvc.RunCommand.BeginOfRunCommands     =
 GiGaSvc.UseVisManager          = true;
 
 //   "Global Magnetifc field" (usisng Magnetic Field Service)
-//GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
+GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
 GiGaGeomCnvSvc.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
 //   "Uniform Magnetifc field" 
 // GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldUniform/UniformField";
