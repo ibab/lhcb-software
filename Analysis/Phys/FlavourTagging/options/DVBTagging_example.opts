@@ -1,6 +1,13 @@
 //##############################################################
 //  Example DaVinci job Options to run Selection + BTagging
 
+// Get Trigger info 
+// Re-run L0 and L1 Trigger with DC04 tuning - FOR EXPERTS!  
+// Note that L0Muon does not work with hbook persistency :-( 
+#include "$DAVINCIROOT/options/L0.opts"
+#include "$DAVINCIROOT/options/L1Decision.opts"
+#include "$DAVINCIROOT/options/Hlt.opts"
+
 ///e.g. Bs Channel Selection -------------------------------------
 #include "$B2HHROOT/options/DVTDRselBd2PiPi.opts"
 BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselB2PiPi" };

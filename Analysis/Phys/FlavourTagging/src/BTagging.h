@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.5 2004-07-28 14:18:05 pkoppenb Exp $
+// $Id: BTagging.h,v 1.6 2004-09-13 12:13:58 pkoppenb Exp $
 #ifndef USER_BTagging_H 
 #define USER_BTagging_H 1
 
@@ -26,10 +26,9 @@
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
 #include "Event/ProtoParticle.h"
-#include "Event/L0DUReport.h"
-//#include "Event/L1Report.h"
 #include "Event/FlavourTag.h"
 #include "Event/GenMCLink.h"
+#include "Event/TrgDecision.h"
 // from RecoTools
 #include "RecoTools/ITrVeloCharge.h"
 // CLHEP
@@ -75,6 +74,7 @@ private:
   long      m_Event;
   long      m_trig0;
   long      m_trig1;
+  long      m_trigHLT;
   float     m_B0the;
   float     m_B0phi;
   float     m_B0mass;

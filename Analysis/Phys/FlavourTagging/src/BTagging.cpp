@@ -100,13 +100,21 @@ StatusCode BTagging::execute() {
     return StatusCode::FAILURE;
   }
 
-  // Retrieve L0-trigger info
-  SmartDataPtr<L0DUReport> l0du( eventSvc(), L0DUReportLocation::Default );
-  m_trig0 = 0; if( 0 != l0du ) if( l0du->decision() ) m_trig0 = 1;
-
-  // Retrieve L1-trigger info
-  //  SmartDataPtr<L1Report> L1Report( eventSvc(), L1ReportLocation::Default );
-  //  m_trig1 = 0; if( 0 != L1Report ) if( L1Report->decision() ) m_trig1 = 1;
+  //Retrieve Trigger info 
+  SmartDataPtr<TrgDecision> trg(eventSvc(), TrgDecisionLocation::Default);
+  m_trig1 = 0;
+  m_trig0 = 0;
+  m_trigHLT = 0;
+  
+  if( 0 == trg ) {
+    err() << "Unable to find Trigger at " << TrgDecisionLocation::Default 
+          <<endreq;
+    return StatusCode::FAILURE;
+  } else {
+    if ( trg->L0() ) m_trig0 = 1;
+    if ( trg->L1() ) m_trig1 = 1;
+    if ( trg->HLT() ) m_trigHLT = 1;
+  }
 
   // Counter of events processed
   req << MSG::DEBUG << ">>>>>  Tagging Event Nr " << evt->evtNum()
@@ -500,7 +508,8 @@ StatusCode BTagging::execute() {
       else req << MSG::DEBUG << "Registered tag into new container."<< endreq;
     }
 
-    SmartDataPtr<Particles> tagCands(eventSvc(),"/Event/Phys/BTagging/Taggers");
+    SmartDataPtr<Particles> tagCands(eventSvc(),
+                                     "/Event/Phys/BTagging/Taggers");
     if( tagCands ) {
       req << MSG::DEBUG << "Inserting in already existing container: "
 	  << "/Event/Phys/BTagging/Taggers" << endreq;
@@ -571,8 +580,8 @@ StatusCode BTagging::finalize() {
       << "======================================================="<<endreq;
   req << MSG::INFO << "Summary : " <<endreq;
   req << MSG::INFO << "After L0 and L1 triggers, " <<endreq;
-  req << MSG::INFO << " Category            EFF.          Etag         Wrong TF"
-      << "      r       w       "<<endreq;
+  req << MSG::INFO << " Category            EFF.          Etag        
+ Wrong TF"     << "      r       w       "<<endreq;
 
   for( int it=1; it < 12+1; it++ ) {
 
@@ -645,7 +654,8 @@ StatusCode BTagging::finalize() {
 
   req << MSG::INFO 
       << "---------------------------------------------------------"<<endreq;
-  req << MSG::INFO << "Total nr of events =  "<<std::setw(5) << nsele << endreq;
+  req << MSG::INFO << "Total nr of events =  "<<std::setw(5) << nsele << 
+    endreq;
   req << MSG::INFO << "Tagging efficiency =  "
       <<std::setprecision(2)<<std::setw(5)
       << ef_tot*100 << " +/- "<<eftot_err*100<< " %"<< endreq;
@@ -680,7 +690,8 @@ void BTagging::PileUpIP( Particle* axp, double& ip, double& ipe) {
   double ipmin = 100000.0;
   double ipminerr = 0.0;
 
-  for(Vertices::const_iterator iv=PileUpVtx.begin(); iv!=PileUpVtx.end(); iv++){
+  for(Vertices::const_iterator iv=PileUpVtx.begin(); 
+      iv!=PileUpVtx.end(); iv++){
 
     double ipx, ipex;
     StatusCode sc = geomDispCalculator()->calcImpactPar(*axp, **iv, ipx,
@@ -779,14 +790,14 @@ double BTagging::VertexCharge( ParticleVector vtags, int& nroftracks ) {
     ContainedObject* contObj1 = (*jp)->origin();
     if (!contObj1) continue;
     ProtoParticle* proto1 = dynamic_cast<ProtoParticle*>(contObj1);
-    if( ! (proto1->track()->forward()) ) continue;               //preselection 
+    if( ! (proto1->track()->forward()) ) continue;         //preselection 
 
     sc = geomDispCalculator()->calcImpactPar(**jp, *RecVert, ipl,
 					     iperrl, ipVec, errMatrix);
     if( sc.isFailure() ) continue;
-    if( iperrl > 1.0 ) continue;                                 //preselection 
-    if( ipl/iperrl < 2.0 ) continue;                             //preselection 
-    if( ipl/iperrl > 100.0 ) continue;                           //preselection 
+    if( iperrl > 1.0 ) continue;                           //preselection 
+    if( ipl/iperrl < 2.0 ) continue;                       //preselection 
+    if( ipl/iperrl > 100.0 ) continue;                     //preselection 
 
     //SECOND particle ---------------------------------------
     for ( kp = (jp+1) ; kp != vtags.end(); kp++ ) {
@@ -854,7 +865,7 @@ double BTagging::VertexCharge( ParticleVector vtags, int& nroftracks ) {
       // total
       probs=probi1*probi2*probp1*probp2*proba;
       probb=(1-probi1)*(1-probi2)*(1-probp1)*(1-probp2)*(1-proba);
-      if( probs/(probs+probb) < 0.2 ) continue;                   //preselection
+      if( probs/(probs+probb) < 0.2 ) continue;           //preselection
       if( probs/(probs+probb) > probf ) {
 	probf = probs/(probs+probb);
 	Vfit = vtx;
@@ -916,7 +927,7 @@ double BTagging::VertexCharge( ParticleVector vtags, int& nroftracks ) {
       sc = vertexFitter()->fitVertex( Pfit, VfitTMP ); /////////FIT///////////
       if( !sc ) { Pfit.pop_back(); continue; }
     
-      int ndf = 2 * Pfit.size() - 2;                              //correct NDoF ?
+      int ndf = 2 * Pfit.size() - 2;                      //correct NDoF ?
 
       if( VfitTMP.chi2() / ndf    > 5.0 ) 
 	{ Pfit.pop_back(); continue; }                                   //cut
@@ -960,7 +971,7 @@ double BTagging::VertexCharge( ParticleVector vtags, int& nroftracks ) {
 	}
       }
     }
-    sc = vertexFitter()->fitVertex( Pfit, Vfit ); //RE-FIT//////////////////////
+    sc = vertexFitter()->fitVertex( Pfit, Vfit ); //RE-FIT////////////////////
     if( !sc ) Pfit.clear();
   }
   req <<MSG::DEBUG<< "================ Fit Results: " << Pfit.size() <<endreq;
