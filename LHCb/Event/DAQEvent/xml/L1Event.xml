@@ -1,3 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+
+  <package name="DAQEvent">
 <!-- ****************************************************************
      * L1Event                                                    *
      ****************************************************************-->
@@ -38,3 +43,5 @@
          <code> return (m_eventMap[bankType]); </code>
        </method>
       </class>
+  </package>
+</gdd>

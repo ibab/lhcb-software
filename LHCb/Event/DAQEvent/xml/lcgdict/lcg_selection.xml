@@ -3,4 +3,6 @@
   <class name="std::vector<L1Bank>"/>
   <class name="std::map<int,std::vector<L1Bank> >"/>
   <class name="std::map<int,std::vector<RawBank> >"/>
+  <class name="BufferSerializer<RawBuffer>"/>
+  <class name="BufferSerializer<L1Buffer>"/>
 </lcgdict>

@@ -3,7 +3,7 @@
 # Maintainer : Helder Lopes
 #============================================================================
 package           DAQEvent
-version           v4r5p1
+version           v4r6
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -20,14 +20,14 @@ use Event       v4r*    Event
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
-document obj2doth DAQEventObj2Doth ../xml/DAQEvent.xml
-document obj2dict DAQEventObj2Dict ../xml/DAQEvent.xml
+document obj2doth DAQEventObj2Doth ../xml/*.xml
+document obj2dict DAQEventObj2Dict ../xml/*.xml
 
 # Produce lcg dictionary for stl containers used in DAQEvent
 document lcg_dictionary_generator DAQEventGen \
       $(DAQEVENTROOT)/Event/lcgStl.h dictionary=DAQEvent
 macro_append DAQEvent_lcgdict_options \
-      '--select=$(DAQEVENTROOT)/xml/lcg_selection.xml --split --pool \
+      '--select=$(DAQEVENTROOT)/xml/lcgdict/lcg_selection.xml --split --pool \
        -I"$(POOL_home)/../include" $(includes)'
 
 # ==================== linker library =======================================

@@ -1,5 +1,5 @@
-#ifndef DAQTypes_H
-#define DAQTypes_H 1
+#ifndef DAQEVENT_DAQTypes_H
+#define DAQEVENT_DAQTypes_H 1
 
 
 /** @file
@@ -23,8 +23,7 @@ typedef int32_t raw_int ;
 typedef int16_t l1_int ;
 #endif   // WIN32
 
-typedef raw_int* RawBufferPtr;
-typedef l1_int*  L1BufferPtr;
+template <class T> class BufferSerializer {};
 #include <map>
 
-#endif  // DAQTypes_H
+#endif  // DAQEVENT_DAQTypes_H

@@ -1,3 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+
+  <package name="DAQEvent">
 <!-- ****************************************************************
      * L1Bank                                                    *
      ****************************************************************-->
@@ -13,7 +18,6 @@
         desc="Pointer to each data bank(Header+body)"
         name="data"
         type="l1_int *"
-        dictalias="L1BufferPtr"
         getMeth="FALSE"
         setMeth="FALSE"
      />
@@ -56,3 +60,5 @@
         <code> return (m_data+1); </code>
        </method>     
      </class>
+  </package>
+</gdd>

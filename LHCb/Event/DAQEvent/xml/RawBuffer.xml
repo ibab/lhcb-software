@@ -1,3 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+
+  <package name="DAQEvent">
 <!-- ****************************************************************
      * RawBuffer                                                    *
      ****************************************************************-->
@@ -24,6 +29,7 @@
         name="initialSize"
         type="long"
         init="10000"
+        transient="TRUE"
         getMeth="FALSE"
         setMeth="FALSE"
        />
@@ -31,21 +37,28 @@
         desc="Current amount of memory allocated in words(32 bit)"
         name="allocatedSize"
         type="long"
+        transient="TRUE"
         setMeth="FALSE"
        />
        <attribute
         desc="Current amount of memory filled with data in words(32 bit)"
         name="currentSize"
         type="long"
+        transient="TRUE"
         setMeth="FALSE"
        />
        <attribute
         desc="Pointer to beggining of Raw buffer"
         name="buffer"
         type="raw_int*"
-        dictalias="RawBufferPtr"
+        transient="TRUE"
         setMeth="FALSE"
         getMeth="FALSE"
+       />
+       <attribute
+        desc="Object to trigger offline serialization"
+        name="serializationTrigger"
+        type="BufferSerializer&lt;RawBuffer&gt;"
        />
        <attribute
         desc="Magic pattern to check integrity of data buffer"
@@ -206,3 +219,5 @@
         <arg name = "s" type = "std::ostream" inout = "BOTH" /> 
        </method>
      </class>
+  </package>
+</gdd>
