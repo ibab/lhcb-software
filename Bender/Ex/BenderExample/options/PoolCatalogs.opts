@@ -1,6 +1,6 @@
-// $Id: PoolCatalogs.opts,v 1.6 2005-02-10 12:27:21 ibelyaev Exp $ 
+// $Id: PoolCatalogs.opts,v 1.7 2005-02-16 10:14:45 ibelyaev Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.6 $ 
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.7 $ 
 // ============================================================================
 
 PoolDbCacheSvc.Catalog = 
@@ -8,7 +8,6 @@ PoolDbCacheSvc.Catalog =
     // Ex/BenderExample
     "xmlcatalog_file:$HOME/BenderExampleMutableCatalog.xml"        ,
     "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_DstA1.xml"              ,
-    "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_JpsiKst.xml"            ,       
     "xmlcatalog_file:$BENDEREXAMPLEOPTS/Bd_JpsiKst.xml"            ,       
     "xmlcatalog_file:$BENDEREXAMPLEOPTS/BBinclusive.xml"           ,       
     // Ex/LoKiExample
@@ -18,18 +17,14 @@ PoolDbCacheSvc.Catalog =
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phigamma_DC04.xml"        ,
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.xml"          ,
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/Higgs_bb_DC04.xml"           ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phimumu_DC04.xml"         ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phimumu_photos_DC04.xml"  ,
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bd_pipipi_CPV_DC04.xml"      ,
     "xmlcatalog_file:$LOKIEXAMPLEOPTS/Mixture_DC04.xml"
   };
 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2005/02/08 20:34:24  ibelyaev
-//  add VeloClusterMC example
-//
-// Revision 1.4  2005/02/07 16:38:18  ibelyaev
-//  add new algorithm Pi0.py
-//
 // ============================================================================
 // The END 
 // ============================================================================

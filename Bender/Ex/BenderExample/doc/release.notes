@@ -1,12 +1,22 @@
-! $Id: release.notes,v 1.5 2005-02-07 16:38:15 ibelyaev Exp $
+! $Id: release.notes,v 1.6 2005-02-16 10:14:45 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.5 $
+! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.6 $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! 2005-02-16 - Vanya  BELYAEV
+ - add new algorihtms 
+  
+    python/Higgs1.py
+      trivial algorithm which allows to plot energy flows 2D-distributions 
+      suitable for seach of H->bb with "tagging" high-pt muon from W or Z 
+ 
+    python/Bs2PhiMM.py
+      simple algorithm which fills an "analysis" N-Tuple for Bs- > phi mu+ mu- 
 
 ! 2005-02-07 - Vanya BELYAEV
  - add new algorithm Pi0.py,
