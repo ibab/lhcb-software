@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich1
  *
  *  CVS Log :-
- *  $Id: DeRich1.cpp,v 1.11 2004-10-18 11:17:45 papanest Exp $
+ *  $Id: DeRich1.cpp,v 1.12 2004-10-20 22:41:55 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/10/18 11:17:45  papanest
+ *  mirror reflectivity
+ *
  *  Revision 1.10  2004/10/18 09:21:49  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -161,4 +164,25 @@ StatusCode DeRich1::initialize()
 
   log << MSG::DEBUG << "Finished initialisation for DeRich1" << endmsg;
   return sc;
+}
+
+const HepPoint3D & DeRich1::nominalCentreOfCurvature(const Rich::Side side) const
+{
+  return ( Rich::bottom == side ? m_nominalCentreOfCurvatureBottom :
+           m_nominalCentreOfCurvature );
+}
+
+const HepNormal3D & DeRich1::nominalNormal(const Rich::Side side) const
+{
+  return ( Rich::bottom == side ? m_nominalNormalBottom : m_nominalNormal );
+}
+
+const HepPlane3D & DeRich1::nominalPlane(const Rich::Side side) const
+{
+  return ( Rich::top == side ? m_nominalPlaneTop : m_nominalPlaneBottom );
+}
+
+Rich::Side DeRich1::side( const HepPoint3D & point) const
+{
+  return ( point.y() >= 0.0 ? Rich::top : Rich::bottom );
 }

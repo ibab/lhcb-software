@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.10 2004-10-20 16:16:36 jonrob Exp $
+ *  $Id: DeRich.h,v 1.11 2004-10-20 22:41:54 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/10/20 16:16:36  jonrob
+ *  More minor updates to functions (adding const etc.)
+ *
  *  Revision 1.9  2004/10/18 11:17:44  papanest
  *  mirror reflectivity
  *
@@ -207,7 +210,10 @@ public:
    * @retval true  The vector exists as a user parameter in the xml
    * @retval false The vector is not in the xml description
    */
-  bool hasParamVector( const std::string & vectorName ) const;
+  inline bool hasParamVector( const std::string & vectorName ) const
+  {
+    return ( m_vectorNames.end() != std::find(m_vectorNames.begin(),m_vectorNames.end(),vectorName) );
+  }
 
   /**
    * Method to test if the user parameter is in the xml description
@@ -216,7 +222,10 @@ public:
    * @retval true  The parameter exists as a user parameter in the xml
    * @retval false The parameter is not in the xml description
    */
-  bool hasParam( const std::string & paramName ) const;
+  inline bool hasParam( const std::string & paramName ) const
+  {
+    return ( m_paramNames.end() != std::find(m_paramNames.begin(),m_paramNames.end(),paramName) );
+  }
 
 protected:
 

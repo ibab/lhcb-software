@@ -7,8 +7,11 @@
  *  one less HPD than even columns
  *
  *  CVS Log :-
- *  $Id: DeRich1CdfHPDPanel.cpp,v 1.19 2004-10-20 17:02:44 jonrob Exp $
+ *  $Id: DeRich1CdfHPDPanel.cpp,v 1.20 2004-10-20 22:41:55 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.19  2004/10/20 17:02:44  jonrob
+ *  Updates for windows
+ *
  *  Revision 1.18  2004/10/20 16:16:36  jonrob
  *  More minor updates to functions (adding const etc.)
  *
@@ -17,7 +20,6 @@
  *
  *  Revision 1.16  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -117,7 +119,7 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
 // ===========================================================================
 
 bool DeRich1CdfHPDPanel::findHPDRowCol ( const HepPoint3D& inPanel,
-                                         RichSmartID& id ) const 
+                                         RichSmartID& id ) const
 {
 
   // find the correct HPD inside the panel
@@ -160,3 +162,53 @@ HepPoint3D DeRich1CdfHPDPanel::globalPosition( const HepPoint3D& localPoint,
 }
 //============================================================================
 
+
+const double DeRich1CdfHPDPanel::localOffset() const
+{
+  return m_detPlaneVertEdge;
+}
+
+unsigned int DeRich1CdfHPDPanel::PDMax() const
+{
+  return static_cast<int>(0.5*m_HPDColumns)*m_HPDsIn2Cols + m_HPDsInBigCol;
+}
+
+unsigned int DeRich1CdfHPDPanel::PDRow(const unsigned int PD) const
+{
+  const unsigned int HPDsLeft = PD%m_HPDsIn2Cols;
+  return ( HPDsLeft >= m_HPDsInBigCol ? HPDsLeft - m_HPDsInBigCol : HPDsLeft );
+}
+
+unsigned int DeRich1CdfHPDPanel::PDCol(const unsigned int PD) const
+{
+  const unsigned int HPDsLeft = PD%m_HPDsIn2Cols;
+  return ( HPDsLeft >= m_HPDsInBigCol ? 2*(PD/m_HPDsIn2Cols)+1 : 2*(PD/m_HPDsIn2Cols) );
+}
+
+unsigned int DeRich1CdfHPDPanel::HPDForNS() const
+{
+  return static_cast<int>(ceil(m_HPDRows/2.0));
+}
+
+unsigned int DeRich1CdfHPDPanel::HPDForB() const
+{
+  return static_cast<int>(ceil(m_HPDRows/2.0)) -1;
+}
+
+unsigned int DeRich1CdfHPDPanel::HPDForC() const
+{
+  return static_cast<int>(0.5*m_HPDColumns)*m_HPDRows;
+}
+
+unsigned int DeRich1CdfHPDPanel::HPDRowColToNum(const unsigned int HPDRow,
+                                                const unsigned int HPDCol ) const
+{
+  unsigned int HPDNumber;
+  const unsigned int HPDColDiv2 = HPDCol/2;
+  if (0 == HPDCol%2) {
+    HPDNumber = HPDColDiv2 * m_HPDsIn2Cols + HPDRow;
+  } else {
+    HPDNumber = HPDColDiv2 * m_HPDsIn2Cols + HPDRow + m_HPDsInBigCol;
+  }
+  return HPDNumber;
+}

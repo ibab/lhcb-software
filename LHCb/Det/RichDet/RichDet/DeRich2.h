@@ -4,11 +4,13 @@
  *  Header file for detector description class : DeRich2
  *
  *  CVS Log :-
- *  $Id: DeRich2.h,v 1.11 2004-10-18 09:21:49 jonrob Exp $
+ *  $Id: DeRich2.h,v 1.12 2004-10-20 22:41:54 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2004/10/18 09:21:49  jonrob
+ *  Minor updates to functions (adding const etc.)
+ *
  *  Revision 1.10  2004/07/27 08:55:22  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -71,11 +73,7 @@ public:
    * @param side Which side: left or right
    * @return The nominal centre of curvature
    */
-  virtual inline const HepPoint3D & nominalCentreOfCurvature(const Rich::Side side) const
-  {
-    return ( Rich::right == side ? m_nominalCentreOfCurvatureRight :
-             m_nominalCentreOfCurvature );
-  }
+  virtual const HepPoint3D & nominalCentreOfCurvature(const Rich::Side side) const;
 
   /**
    * Returns the nominal normal vector of the flat mirror plane for this Rich
@@ -83,10 +81,7 @@ public:
    * @param side Which side: left or right
    * @return The nominal normal vector
    */
-  virtual inline const HepNormal3D & nominalNormal(const Rich::Side side) const
-  {
-    return ( Rich::right == side ? m_nominalNormalRight : m_nominalNormal );
-  }
+  virtual const HepNormal3D & nominalNormal(const Rich::Side side) const;
 
   /**
    * Returns the nominal flat mirror plane for this Rich
@@ -94,10 +89,7 @@ public:
    * @param side Which side: left or right
    * @return The nominal flat mirror plane
    */
-  virtual inline const HepPlane3D & nominalPlane(const Rich::Side side) const
-  {
-    return ( Rich::left == side ? m_nominalPlaneLeft : m_nominalPlaneRight );
-  }
+  virtual const HepPlane3D & nominalPlane(const Rich::Side side) const;
 
   /**
    * Check on which side of this Rich lies this point
@@ -105,10 +97,7 @@ public:
    * @param point A point in the global coordinate system
    * @return The side for this point
    */
-  inline virtual Rich::Side side( const HepPoint3D & point ) const
-  {
-    return ( point.x() >= 0.0 ? Rich::left : Rich::right );
-  }
+  virtual Rich::Side side( const HepPoint3D & point ) const;
 
 private:
 

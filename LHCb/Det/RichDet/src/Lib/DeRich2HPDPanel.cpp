@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.cpp,v 1.16 2004-10-20 17:02:44 jonrob Exp $
+ *  $Id: DeRich2HPDPanel.cpp,v 1.17 2004-10-20 22:41:55 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.16  2004/10/20 17:02:44  jonrob
+ *  Updates for windows
+ *
  *  Revision 1.15  2004/10/20 16:16:36  jonrob
  *  More minor updates to functions (adding const etc.)
  *
@@ -14,7 +17,6 @@
  *
  *  Revision 1.13  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -140,7 +142,7 @@ bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
 //  convert a point from the panel to the global coodinate system
 //=========================================================================
 HepPoint3D DeRich2HPDPanel::globalPosition( const HepPoint3D& localPoint,
-                                            const Rich::Side side) const 
+                                            const Rich::Side side) const
 {
   const int sign = ( side == Rich::left ? -1 : 1 );
   return (geometry()->
@@ -152,5 +154,44 @@ HepPoint3D DeRich2HPDPanel::globalPosition( const HepPoint3D& localPoint,
 //============================================================================
 
 
+const double DeRich2HPDPanel::localOffset() const
+{
+  return m_detPlaneHorizEdge;
+}
 
+unsigned int DeRich2HPDPanel::PDMax() const
+{
+  return m_HPDColumns * m_HPDRows;
+}
 
+unsigned int DeRich2HPDPanel::PDRow(const unsigned int PD) const
+{
+  return PD%m_HPDRows;
+}
+
+unsigned int DeRich2HPDPanel::PDCol(const unsigned int PD) const
+{
+  return PD/m_HPDRows;
+}
+
+unsigned int DeRich2HPDPanel::HPDForNS() const
+{
+  return m_HPDRows;
+}
+
+unsigned int DeRich2HPDPanel::HPDForB() const
+{
+  return m_HPDRows -1;
+}
+
+unsigned int DeRich2HPDPanel::HPDForC() const
+{
+  return m_HPDRows*m_HPDColumns -
+    static_cast<unsigned int>(0.5*m_HPDColumns);
+}
+
+unsigned int DeRich2HPDPanel::HPDRowColToNum(const unsigned int HPDRow,
+                                             const unsigned int HPDCol ) const
+{
+  return HPDCol * m_HPDRows + HPDRow;
+}

@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich1HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich1HPDPanel.h,v 1.15 2004-10-20 17:02:44 jonrob Exp $
+ *  $Id: DeRich1HPDPanel.h,v 1.16 2004-10-20 22:41:54 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.15  2004/10/20 17:02:44  jonrob
+ *  Updates for windows
+ *
  *  Revision 1.14  2004/10/20 16:16:36  jonrob
  *  More minor updates to functions (adding const etc.)
  *
@@ -17,7 +20,6 @@
  *
  *  Revision 1.11  2004/07/27 08:55:22  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -88,25 +90,11 @@ public:
   virtual StatusCode initialize();
 
   /**
-   * Retrieves the detection plane of the HPD panel. The plane is defined
-   * at the top of the HPDs (a plane resting on the HPDs "touching" the
-   * INSIDE surface of the window).
-   * @return The detection plane
-   */
-  inline virtual const HepPlane3D & detectionPlane() const 
-  {
-    return m_detectionPlane;
-  }
-
-  /**
    * Returns the offset (y in Rich1) so that the two panels of
    * each detector appear side-by-side using the globalToPanel method.
    * @return The offset for the globalToPanel method
    */
-  virtual const double localOffset() const 
-  {
-    return m_detPlaneVertEdge;
-  }
+  virtual const double localOffset() const;
 
   /**
    * Returns the global position given a local position and panel number.
@@ -122,52 +110,34 @@ protected:
   /**
    * Returns the number of HPDs in the panel
    */
-  inline virtual unsigned int PDMax() const
-  {
-    return  m_HPDColumns * m_HPDRows;
-  }
+  virtual unsigned int PDMax() const;
 
   /**
    * Returns the HPD row in the panel, given the HPD number
    */
-  inline virtual unsigned int PDRow(const unsigned int PD) const 
-  {
-    return PD/m_HPDColumns;
-  }
+  virtual unsigned int PDRow(const unsigned int PD) const;
 
   /**
    * Returns the HPD column in the panel, given the HPD number
    */
-  inline virtual unsigned int PDCol(const unsigned int PD) const
-  {
-    return PD%m_HPDColumns;
-  }
+  virtual unsigned int PDCol(const unsigned int PD) const;
 
   /**
    * Returns the HPD at the next row/column depending on panel configurartion
    */
-  inline virtual unsigned int HPDForNS() const 
-  {
-    return m_HPDColumns;
-  }
+  virtual unsigned int HPDForNS() const;
 
   /**
    * Returns an HPD number that can be used as the second point for the
    * detection plane.
    */
-  inline virtual unsigned int HPDForB() const 
-  {
-    return m_HPDColumns -1;
-  }
+  virtual unsigned int HPDForB() const;
 
   /**
    * Returns an HPD number that can be used as the third point for the
    * detection plane.
    */
-  inline virtual unsigned int HPDForC() const 
-  {
-    return m_HPDRows*m_HPDColumns - static_cast<unsigned int>(0.5*m_HPDRows);
-  }
+  virtual unsigned int HPDForC() const;
 
   /**
    * Finds the HPD row and column that corresponds to the x,y coordinates
@@ -183,11 +153,8 @@ protected:
    * Converts an HPD row and column to a number corresponding
    * to the position of this physical volume in the physical volumes vector
    */
-  inline virtual unsigned int HPDRowColToNum(const unsigned int HPDRow,
-                                             const unsigned int HPDCol ) const 
-  {
-    return HPDRow * m_HPDColumns + HPDCol;
-  }
+  virtual unsigned int HPDRowColToNum(const unsigned int HPDRow,
+                                      const unsigned int HPDCol ) const;
 
 private:
 

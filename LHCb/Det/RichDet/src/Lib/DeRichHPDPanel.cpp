@@ -4,11 +4,13 @@
  *  Implementation file for detector description class : DeRichHPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRichHPDPanel.cpp,v 1.18 2004-10-20 17:02:44 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.19 2004-10-20 22:41:55 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.18  2004/10/20 17:02:44  jonrob
+ *  Updates for windows
+ *
  *  Revision 1.17  2004/07/27 08:55:23  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -46,7 +48,7 @@ StatusCode DeRichHPDPanel::initialize() {
 
   // store the name of the panel, without the /dd/Structure part
   const std::string::size_type pos = name().find("Rich");
-  if( std::string::npos != pos ) {
+  if ( std::string::npos != pos ) {
     m_name = name().substr(pos);
   }
   else
@@ -189,11 +191,11 @@ StatusCode DeRichHPDPanel::initialize() {
 //=========================================================================
 // convert a point on the silicon sensor to smartID
 //=========================================================================
-StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
-                                    RichSmartID& id) const
+StatusCode DeRichHPDPanel::smartID ( const HepPoint3D& globalPoint,
+                                     RichSmartID& id ) const
 {
 
-  HepPoint3D inPanel = geometry()->toLocal(globalPoint);
+  const HepPoint3D inPanel = geometry()->toLocal(globalPoint);
 
   // find the HPD row/col of this point
   if ( !findHPDRowCol(inPanel, id) ) return StatusCode::FAILURE;
@@ -205,7 +207,7 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
   const IPVolume* pvSilicon = pvHPDSMaster->lvolume()->pvolume(4);
   //  const ISolid* siliconSolid = pvSilicon->lvolume()->solid();
 
-  HepPoint3D inSilicon =
+  const HepPoint3D inSilicon =
     pvSilicon->toLocal(pvHPDSMaster->toLocal(pvHPDMaster->toLocal(inPanel)));
 
   double inSiliconX = inSilicon.x();
@@ -250,11 +252,11 @@ StatusCode DeRichHPDPanel::smartID (const HepPoint3D& globalPoint,
 //=========================================================================
 //  convert a smartID to a point on the inside of the HPD window
 //=========================================================================
-StatusCode DeRichHPDPanel::detectionPoint (const RichSmartID& smartID,
-                                           HepPoint3D& windowHitGlobal) const
+StatusCode DeRichHPDPanel::detectionPoint ( const RichSmartID& smartID,
+                                            HepPoint3D& windowHitGlobal ) const
 {
 
-  const unsigned int HPDNumber=HPDRowColToNum(smartID.PDRow(),smartID.PDCol());
+  const unsigned int HPDNumber = HPDRowColToNum(smartID.PDRow(),smartID.PDCol());
 
   // find the correct HPD and silicon block inside it
   const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPDNumber);
@@ -284,7 +286,7 @@ StatusCode DeRichHPDPanel::detectionPoint (const RichSmartID& smartID,
 //=========================================================================
 //  convert a point from the global to the panel coodinate system
 //=========================================================================
-HepPoint3D DeRichHPDPanel::globalToPDPanel( const HepPoint3D& globalPoint ) const 
+HepPoint3D DeRichHPDPanel::globalToPDPanel( const HepPoint3D& globalPoint ) const
 {
   const HepPoint3D localPoint( geometry()->toLocal( globalPoint ) );
   return HepPoint3D(localPoint.x(), localPoint.y(),
@@ -299,20 +301,20 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
                                           const HepPoint3D& pGlobal,
                                           HepPoint3D& windowPointGlobal,
                                           RichSmartID& smartID,
-                                          const RichTraceMode mode) const 
+                                          const RichTraceMode mode ) const
 {
 
   // transform point and vector to the HPDPanel coordsystem.
-  HepPoint3D pLocal = geometry()->toLocal(pGlobal);
+  const HepPoint3D pLocal = geometry()->toLocal(pGlobal);
   HepVector3D vLocal = vGlobal;
   vLocal.transform(m_vectorTransf);
 
   // find the intersection with the detection plane (localPlane2)
-  double scalar = vLocal*m_localPlaneNormal2;
+  const double scalar = vLocal*m_localPlaneNormal2;
   if ( scalar == 0.0 ) return StatusCode::FAILURE;
 
-  double distance = -m_localPlane2.distance( pLocal )/scalar;
-  HepPoint3D panelIntersection( pLocal + distance*vLocal );
+  const double distance = -m_localPlane2.distance( pLocal )/scalar;
+  const HepPoint3D panelIntersection( pLocal + distance*vLocal );
 
   unsigned int  HPDNumber(0), HPDRow(0), HPDColumn(0);
   RichSmartID id;
@@ -416,10 +418,11 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
 //=========================================================================
 //  return a list with all the valid readout channels (smartIDs)
 //=========================================================================
-StatusCode DeRichHPDPanel::readoutChannelList(std::vector<RichSmartID>&
-                                              readoutChannels) {
+StatusCode DeRichHPDPanel::readoutChannelList ( std::vector<RichSmartID>&
+                                                readoutChannels ) const
+{
 
-  double activeRadius = m_activeRadius * m_deMagFactor[0];
+  const double activeRadius = m_activeRadius * m_deMagFactor[0];
   double xcorn = 0;
   double ycorn = 0;
 
@@ -427,8 +430,8 @@ StatusCode DeRichHPDPanel::readoutChannelList(std::vector<RichSmartID>&
     for (unsigned int pixRow = 0; pixRow < m_pixelRows; ++pixRow ) {
       for (unsigned int pixCol = 0; pixCol < m_pixelColumns; ++pixCol ) {
 
-        double xpix = (pixRow + 0.5)*m_pixelSize - m_siliconHalfLengthX;
-        double ypix = (pixCol + 0.5)*m_pixelSize - m_siliconHalfLengthY;
+        const double xpix = (pixRow + 0.5)*m_pixelSize - m_siliconHalfLengthX;
+        const double ypix = (pixCol + 0.5)*m_pixelSize - m_siliconHalfLengthY;
 
         if( xpix < 0.0 )
           xcorn = xpix + 0.5*m_pixelSize ;
@@ -461,7 +464,7 @@ StatusCode DeRichHPDPanel::readoutChannelList(std::vector<RichSmartID>&
 bool DeRichHPDPanel::detPlanePoint( const HepPoint3D& pGlobal,
                                     const HepVector3D& vGlobal,
                                     HepPoint3D& hitPosition,
-                                    const RichTraceMode mode) const 
+                                    const RichTraceMode mode) const
 {
 
   // transform point and vector to the MaPMT Panel coordsystem.

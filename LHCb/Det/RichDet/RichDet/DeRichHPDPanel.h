@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichHPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRichHPDPanel.h,v 1.19 2004-10-20 17:02:44 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.20 2004-10-20 22:41:54 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.19  2004/10/20 17:02:44  jonrob
+ *  Updates for windows
+ *
  *  Revision 1.18  2004/10/20 16:16:36  jonrob
  *  More minor updates to functions (adding const etc.)
  *
@@ -17,7 +20,6 @@
  *
  *  Revision 1.15  2004/07/27 08:55:22  jonrob
  *  Add doxygen file documentation and CVS information
- *
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -101,7 +103,10 @@ public:
    * INSIDE surface of the window).
    * @return The detection plane
    */
-  virtual const HepPlane3D & detectionPlane() const = 0;
+  inline const HepPlane3D & detectionPlane() const
+  {
+    return m_detectionPlane;
+  }
 
   /**
    * Returns the offset (y in Rich1, x in Rich2) so that the two panels of
@@ -191,8 +196,8 @@ public:
    *
    * @return Status
    */
-  virtual StatusCode readoutChannelList(std::vector<RichSmartID>&
-                                        readoutChannels);
+  virtual StatusCode readoutChannelList( std::vector<RichSmartID>&
+                                         readoutChannels ) const;
 
 
 protected:
