@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.15 2002-08-05 18:14:08 asatta Exp $
+! $Id: release.notes,v 1.16 2002-09-26 13:23:40 ranjard Exp $
 ! CVS tag $Name: not supported by cvs2svn $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
 
+!===================== MuonDet v4r0 2002-09-25 ===========================
 ! 2002-08-05 Alessia Satta
   - Few bug fixes in MuonReadoutCond.h and MuonReadoutCond.cpp , those
     bugs disabled the pad edge effect in the cross talk calculation
