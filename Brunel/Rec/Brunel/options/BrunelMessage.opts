@@ -1,8 +1,8 @@
 // Modify this file to change default printing options
 //--------------------------------------------------------------
 
-// Print event number at every event
-EventSelector.PrintFreq = 1;
+// Do not print event number at every event (done already by Brunel)
+EventSelector.PrintFreq = -1;
 
 // Modify Message Format to print algorithm name with 80 characters
 //MessageSvc.Format = "% F%80W%S%7W%R%T %0W%M";
@@ -11,16 +11,19 @@ EventSelector.PrintFreq = 1;
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 //--------------------------------------------------------------
 
-// Global output level: only print by default WARNINGs and above
-//MessageSvc.OutputLevel = 4;
+// Conventions for Brunel:
+//  - INFO     allowed at initialisation/finalisation, not in event loop
+//  - WARNING  if problem affecting only current algorithm
+//  - ERROR    if problem affecting only current event
+//  - FATAL    if processing should be stopped
+
 MessageSvc.OutputLevel = 3;
 
-// Print Chrono statistics at end of job
-ChronoStatSvc.OutputLevel = 3;
-ChronoStatSvc.ChronoPrintLevel = 4;
-ChronoStatSvc.StatPrintLevel = 4;
-
-// Suppress excessive warnings from some algorithms
-TrFit.OutputLevel = 5;
-TrMonitor.OutputLevel = 5;
-//ITHitsCreator.OutputLevel = 5;
+// Suppress excessive messages from some algorithms/components
+ApplicationMgr.OutputLevel = 4;
+XmlDetElemCnv.OutputLevel = 4;
+RichMCDigitToDigitAlg.OutputLevel = 4;
+BrunelDigi.OutputLevel = 4;
+BrunelTrigger.OutputLevel = 4;
+BrunelReco.OutputLevel = 4;
+BrunelMoni.OutputLevel = 4;

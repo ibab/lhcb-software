@@ -4,7 +4,7 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v10r0>20020515 Brunel v10r0</A></H1><PRE>
+</PRE><H1><A NAME=v10r0>20020521 Brunel v10r0</A></H1><PRE>
    >>>>>>>>>>>>>>>>>>>>>>>>>>> Beware!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
    >>>>>>>>> Current head revision has limited functionality!! <<<<<<<<<<<<
 
@@ -18,7 +18,8 @@ Purpose: LHCb reconstruction program
      - Inner Tracker digitisation and clustering
      - Outer Tracker digitisation and clustering
      - Velo digitisation and standalone tracking
-     - Forward tracking (not in OT), including "StoredTracks" as output
+     - Forward tracking (not in OT) and track fit 
+     - StoredTracks as output, including 5 states (for RICHes)
      - RICH Digitisation (old SICB Fortran version)
      - Calo digitisation and clustering
      - MUON Digitisation (old SICB Fortran version), reconstruction, MuonID
@@ -46,15 +47,17 @@ Purpose: LHCb reconstruction program
    - use EventSys v10r0 Event (new Event model)
    - remove all SICB dig*, tr*, rec* packages, except digmuon, recrich
 
-   - use ITAlgorithms v10r0 IT
-   - use OTAlgorithms v10r0 OT
-   - use VeloDigit     v2r0 Velo
-   - use VeloTrack     v2r0 Velo 
-   - use TrAssociators v1r0   Tr
-   - use FwTrack       v2r0   Tr
-   - use MuonTools     v2r0 Muon
-   - use MuonRec       v1r0 Muon
-   - use MuonID        v1r0 Muon
+   - use ITAlgorithms  v10r0 IT
+   - use OTAlgorithms  v10r0 OT
+   - use VeloDigit      v2r0 Velo
+   - use VeloTrack      v2r0 Velo 
+   - use TrAssociators  v1r0 Tr
+   - use FwTrack        v2r0 Tr
+   - use TrFitter       v1r0 Tr
+   - use TrExtrapolator v1r0 Tr
+   - use MuonTools      v2r0 Muon
+   - use MuonRec        v1r0 Muon
+   - use MuonID         v1r0 Muon
    - use CaloInterfaces v2r0 Calo
    - use CaloUtils      v2r0 Calo
    - use CaloTools      v2r0 Calo

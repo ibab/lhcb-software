@@ -59,6 +59,7 @@ use CaloDet       v4r0  Det
 use CaloDetXmlCnv v1r0  Det
 use MuonDet       v3r0  Det
 use VeloDet       v5r0  Det
+use Magnet        v1r0  Det
 
 use MuonTools    v2r0   Muon
 
@@ -66,7 +67,7 @@ use MuonTools    v2r0   Muon
 use EventSys     v10r0  Event
 
 # SicB event data persistency
-use SicbCnv      v16r0  SICB
+use SicbCnv      v16r1  SICB
 use ITSicbGeom   v1r0   SICB
 use OTSicbGeom   v1r0   SICB
 use RiSicbGeom   v1r0   SICB
@@ -102,12 +103,14 @@ use ITAlgorithms  v10r0  IT
 use OTAlgorithms  v10r0  OT
 
 # Tracking
-use TrFitEvent    v1r0   Tr
-#use TrAlgorithms v7r1   Tr
+use TrFitEvent     v1r0  Tr
+#use TrAlgorithms  v7r1  Tr
 
-use VeloTrack     v2r0   Velo
-use TrAssociators v1r0   Tr
-use FwTrack       v2r0   Tr
+use VeloTrack      v2r0  Velo
+use TrAssociators  v1r0  Tr
+use FwTrack        v2r0  Tr
+use TrFitter       v1r0  Tr
+use TrExtrapolator v1r0  Tr
 
 # Muon
 use MuonRec       v1r0   Muon

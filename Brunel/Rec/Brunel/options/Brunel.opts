@@ -70,6 +70,7 @@ BrunelDigiRICHSeq.Members = { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
 
 // Outer tracker digitisation and reconstruction (clustering)
+ApplicationMgr.DLLs += { "Magnet" };
 #include "$OTALGORITHMSROOT/options/Brunel.opts"
 
 // Velo digitisation and tracking
@@ -78,8 +79,9 @@ ApplicationMgr.DLLs += { "VSicbCnv", "VeloDet", "VeloTrack" };
 BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
 
 // Forward tracking
-ApplicationMgr.DLLs += { "FwTrack" };
-BrunelRecoTRACKSeq.Members = { "FwtFind", "StoreTracks" };
+ApplicationMgr.DLLs += { "FwTrack", "TrFitter", "TrExtrapolator" };
+ApplicationMgr.ExtSvc += { "TransportSvc" };
+BrunelRecoTRACKSeq.Members = { "FwtFind", "TrEventTracksFitter/FitFw", "StoreTracks" };
 
 // Tracking and back conversion of tracks to AXTK
 //#include "$TRALGORITHMSROOT/options/Brunel.opts"
