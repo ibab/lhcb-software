@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.6 2002-01-28 18:41:41 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.7 2002-01-29 08:30:31 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -217,7 +217,13 @@ StatusCode DeVelo::initialize() {
           wafer->setType( 0 );
           loging << " R z=" << wafer->z();
         }
-        m_puWafer.push_back( wafer );
+        if ( inVeto ) {
+          m_puWafer.push_back( wafer );
+        }
+        else {
+          m_wafer.push_back( wafer );
+        }
+          
       
       } else {
         loging << " no geometry !" << endreq;
