@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2002-02-08 18:06:59 gcorti Exp $
+# $Id: requirements,v 1.5 2002-02-13 12:26:22 cattanem Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -14,7 +14,7 @@ branches          cmt doc options src DaVinciTools
 
 # Exported header files
 #============================================================================
-include_dirs     ${DAVINCITOOLSROOT}
+include_dirs     $(DAVINCITOOLSROOT)
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
