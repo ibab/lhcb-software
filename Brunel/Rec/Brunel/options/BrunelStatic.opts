@@ -1,5 +1,2 @@
-//##############################################################
-// Additional options for executing Brunel in Static mode
-//==============================================================
-// Over-ride all previous DLL load requests...
-ApplicationMgr.DLLs = {"NONE"};
+// Uncomment this option for static execution
+//ApplicationMgr.DLLs = {"NONE"};

@@ -1,0 +1,20 @@
+// Modify this file to change default printing options
+//--------------------------------------------------------------
+
+// Print event number at every event
+EventSelector.PrintFreq = 1;
+
+// Modify Message Format to print algorithm name with 80 characters
+MessageSvc.Format = "% F%80W%S%7W%R%T %0W%M";
+
+//--------------------------------------------------------------
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+//--------------------------------------------------------------
+
+// Global output level
+MessageSvc.OutputLevel = 3;
+
+// Next two are needed due to a bug in GaudiKernel v9: 
+// Tools have output level set to zero if parent algorithm uses default 
+ToolSvc.OutputLevel    = 3;
+OTDigitize.OutputLevel = 3;

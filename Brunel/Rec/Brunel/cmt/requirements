@@ -1,5 +1,5 @@
 package Brunel
-version v2
+version v3
 
 branches doc cmt src job options Brunel
 
@@ -14,82 +14,89 @@ set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
 ignore_pattern package_tag
 
 
-# TODO: remove * everywhere: need definite versions for production
-# TODO: make sure we are using compatible versions
-use BrunelKernel  v1* Rec
-
 # Gaudi Configuration options
-use GaudiConf v4*
+use GaudiConf    v4
 
-# Gaudi Framework
-use GaudiSys v7*
-use HbookCnv v9*
-#
-# SicB event data persistency
-use SicbCnv v12*	SICB
-#
+# Gaudi Framework 
+use GaudiSys     v7r2
+use HbookCnv     v9
+
+# Additional external libraries
+use XML          v3r1
+use CERNLIB      v2000
+
+# Brunel utilities
+use BrunelKernel v1     Rec
+
+# Detector description
+use DetDesc      v6     Det
+use XmlDDDB      v5     Det
+use CaloDet      v1     Det
+
+# Event Model
+use LHCbEvent    v10    Event
+use VeloEvent    v4     Event
+use ITEvent      v4     Event
+use OTEvent      v4     Event
+use TrEvent      v4     Event
+use CaloEvent    v5     Event
+
 # Calorimeter digitisation
-use CaloAlgs    v2* Calo
-use CaloSicbCnv v3* SICB
+use CaloAlgs     v2     Calo
 
-# Detector description database
-use DetDesc     v6* Det
-use XmlDDDB     v5* Det
+# Tracking
+use TrKernel     v4     Tr
+use ITAlgorithms v4	IT
+use OTAlgorithms v4	OT
+use TrAlgorithms v4	Tr
 
-# tracking
-use TrAlgorithms v4*	Tr
-use OTAlgorithms v4*	OT
-use ITAlgorithms v4*	IT
-use TrSicbCnv    v1*    SICB
-use VSicbCnv     v4*	SICB
-#
-use dbase   v237*       SICB
+# SicB event data persistency
+use SicbCnv      v12    SICB
+use CaloSicbCnv  v3     SICB
+use TrSicbCnv    v1     SICB
+use VSicbCnv     v4	SICB
 
-# SICBDST packages (from SICBDST v252)
-#use SICBDST v252*	SICB
+use dbase        v237   SICB
+use Futio        v11    SICB
+use GDUMMY       v1r4   SICB
 
+# SICBDST packages
 version_strategy first_choice
-use Futio v9            SICB
-use Futil v8            SICB
-use detdes v10          SICB
 
-use recevt v3r4         SICB
+use Futil        v10    SICB
+use detdes       v12    SICB
+use recevt       v3r4   SICB
 
-#use digwtra v2r1        SICB
-use digmuon v4          SICB
-use digvdet v2r2        SICB
-use rececal v7          SICB
-use rechcal v6          SICB
-use recrich v5r4        SICB
-#use kalman v4r2         SICB
-use axreclib v4r1       SICB
-use trihadr v4          SICB
-use trilvl2 v5r1        SICB
-use trimuon v5          SICB
-use trit0v v5           SICB
-use triskel v4          SICB
-use trit1tr v3r3        SICB
-use trivert v5r1        SICB
-use trielec v5r1        SICB
+use digmuon      v4     SICB
+use digvdet      v2r2   SICB
 
-use GDUMMY  v*          SICB
+use rececal      v7     SICB
+use rechcal      v6     SICB
+use recrich      v5r4   SICB
+
+use axreclib     v4r1   SICB
+
+use trihadr      v4     SICB
+use trilvl2      v5r1   SICB
+use trimuon      v5     SICB
+use trit0v       v5     SICB
+use triskel      v4     SICB
+use trit1tr      v3r3   SICB
+use trivert      v5r1   SICB
+use trielec      v5r1   SICB
 
 #
 #===== build Brunel =========================
 application Brunel $(GAUDICONFROOT)/src/GaudiMain.cpp \
                    ../src/BrunelSicb/*.F ../src/BrunelSicb/*.cpp
-#                   ${SICBDSTROOT}/src/sicbvers.F
-# ${SICBDSTROOT}/dst/*.F
+
+# Files below generate SICBDST monitoring. Need to use SICBDST to pick them up
+# ${SICBDSTROOT}/dst/*.F 
 
 # ========================= set macros ============================
 
-#macro Brunel_linkopts    "$(application_linkopts) $(NAGC_linkopts)"
 macro Brunel_linkopts    "$(application_linkopts)"
 
 macro_append Brunel_linkopts " "\
                 Linux        " -g -Wl,--start-group "\
                 Linuxdbx     " -g -Wl,--start-group "
-
-#macro stdhep " ${CERNLIB_DIR}/lib/libstdhep.a "
-
-#macro_append CERNLIB_link " $(stdhep) $(kernlib)"

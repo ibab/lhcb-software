@@ -1,75 +1,79 @@
-//##############################################################
-// Default Brunel job Options
+// Default Brunel job Options.
 //
-// You should adapt this file to your needs. 
-// It should not be necessary to modify the included files
-// Do not modify the order of the included files!
+// This file defines, sequences and configures the algorithms to be executed
+// You only need to modify it if you want to add or remove algorithms
+// !! Do not modify position or order of included files !!
+//
+// User configuration is done by modifying the following included files
+// - BrunelInput.opts:   to define input data and switch on/off SpillOver
+// - BrunelMoni.opts:    to modify monitoring behaviour
+// - BrunelMessage.opts: to modify printing behaviour
+// - BrunelUser.opts:    to add additional user options
+// - BrunelStatic.opts:  to enable/disable static execution mode
 //==============================================================
 
-// >>>>>>>>>>>>>> SPILLOVER <<<<<<<<<<<<<<<<
-// Uncomment next line if you want Brunel to add spillover events.
-// #include "$SICBCNVROOT/options/Brunel.opts"
-// Define input file for spillover events (SICBMC v241 minimum bias)
-// SpillOverSelector.JobInput = "FILE SICBMC_v241_mbias_1.rawh";
+#include "$BRUNELOPTS/BrunelInputs.opts"
+#include "$BRUNELOPTS/BrunelMessage.opts"
 
-// >>> PILEUP now done at generator level, no longer supported in Brunel <<<
+//--------------------------------------------------------------
+// Standard Gaudi configuration and additional DLLs
+//--------------------------------------------------------------
+#include "$STDOPTIONS"
+#include "$STDOPTS/DetDesc.opts"
+ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
 
-// Common options - defines Brunel phases and detectors to be processed
-#include "$BRUNELOPTS/BrunelCommon.opts"
+//--------------------------------------------------------------
+// Brunel Phases to be executed
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg += { "BrunelInitialisation/BrunelInit",
+                           "BrunelPhase/BrunelDigi",
+                           "BrunelPhase/BrunelTrigger",
+                           "BrunelPhase/BrunelReco",
+                           "BrunelPhase/BrunelFinalFit",
+                           "BrunelFinalisation/BrunelFinish" };
+#include "$BRUNELOPTS/BrunelMoni.opts"
 
-// C++ sub-detector reconstruction algorithms
+//--------------------------------------------------------------
+// Detectors to be processed in each phase
+//--------------------------------------------------------------
+BrunelDigi.DetectorList = { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
+BrunelTrigger.DetectorList = { "TRIGGER" };
+BrunelReco.DetectorList = { "OT", "IT", "Tr" , "RICH" , "CALO" };
+BrunelFinalFit.DetectorList = { "TRAC" };
 
+//--------------------------------------------------------------
+// Fortran processing sequences
+//--------------------------------------------------------------
+BrunelDigiVELOSeq.Members = { "BrunelDigiVELO" };
+BrunelDigiRICHSeq.Members = { "BrunelDigiRICH" };
+BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
+
+BrunelTriggerTRIGGERSeq.Members = { "BrunelTriggerTRIGGER" };
+
+BrunelRecoRICHSeq.Members = { "BrunelRecoRICH" };
+BrunelRecoCALOSeq.Members = { "BrunelRecoECAL", "BrunelRecoHCAL" };
+
+BrunelFinalFitTRACSeq.Members = { "BrunelFinalFitTRAC" };
+
+// Next two are obsolete
+//BrunelDigiCALOSeq.Members = { "BrunelDigiECAL", "BrunelDigiHCAL" };
+//BrunelRecoTRACSeq.Members = { "BrunelRecoTRAC" };
+
+//--------------------------------------------------------------
+// C++ subdetector algorithms
+//--------------------------------------------------------------
 // Calorimeter digitisation, and back conversion of digits to SICB bank
 #include "$CALOALGSROOT/options/Brunel.opts"
 #include "$CALOSICBCNVROOT/options/CaloSicbCnv.opts"
 BrunelDigiCALOSeq.Members += { "CaloDigitToSicbConverter" };
 
-// Tracking
+// Tracking and back conversion of tracks to AXTK
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
 #include "$OTALGORITHMSROOT/options/Brunel.opts"
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
 #include "$TRALGORITHMSROOT/options/Brunel.opts"
 #include "$TRSICBCNVROOT/options/Brunel.opts"
 
-//--------------------------------------------------------------
-// Define the main event input data: SICBMC v243 (new CALO, TRAC RAWH format)
-//--------------------------------------------------------------
-//EventSelector.Input = {"JOBID='44814'"};
-//EventSelector.Input = {"FILE='/castor/cern.ch/lhcb/mc/L221553'"};
-EventSelector.Input = {"FILE='/shift/shd18/data29/z5/stage/L221553.282724'"};
-ApplicationMgr.EvtMax = 100;
-//EventSelector.FirstEvent = 6;
-
-//--------------------------------------------------------------
-// Over-ride global output level for some algorithms
-// (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-//--------------------------------------------------------------
-// Next two are needed due to a bug in GaudiKernel v9: 
-// Tools have output level set to zero if parent algorithm uses default 
-ToolSvc.OutputLevel = 3;
-OTDigitize.OutputLevel = 3;
-
-// Remove excessive printout (to be fixed at source!)
-//TrTrueTracksCreator.OutputLevel = 4;
-//TrTracksCreator.OutputLevel = 4;
-//TrEventTracksFitter_trackFitter_extrapolator1_shortFieldExtrapolator.OutputLevel = 4;
-//TrMonitor_xtrp1_longFieldExtrapolator.OutputLevel = 4;
-//TrMonitor_xtrp1_freeFieldExtrapolator.OutputLevel = 4;
-//TrMonitor_xtrp1_shortFieldExtrapolator.OutputLevel = 4;
-//TrMonitor_xtrp1.OutputLevel = 4;
-MessageSvc.Format = "% F%80W%S%7W%R%T %0W%M";
-
-//--------------------------------------------------------------
-// Enable/Disable some monitoring by setting lines below to true/false
-//--------------------------------------------------------------
-NameAuditor.Enable   = false;
-ChronoAuditor.Enable = true;
-MemoryAuditor.Enable = false;
-
-//--------------------------------------------------------------
-// Next line switches on monitoring histos. Must use HbookCnv in requirements
-//--------------------------------------------------------------
-#include "$BRUNELOPTS/BrunelMoni.opts"
-
-// Uncomment next line if you want to run Brunel in static mode.
-// #include "$BRUNELOPTS/BrunelStatic.opts"
+// Leave next two lines as last lines
+#include "$BRUNELOPTS/BrunelUser.opts"
+#include "$BRUNELOPTS/BrunelStatic.opts"

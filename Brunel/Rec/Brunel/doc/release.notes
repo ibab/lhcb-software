@@ -3,7 +3,9 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
-! 20010507 Brunel v2 (MC)
+! 20010521 Brunel v3 (MC)
+  This is the first version to be used for an official LHCB production 
+
   This version has been restructured as two packages. Rec/Brunel contains the
   statically linked code needed to run SICBDST routines. C++ components of the
   reconstruction framework have been moved to the package Rec/BrunelKernel
@@ -15,7 +17,7 @@ Purupose: LHCb reconstruction program
                  C++ algorithms.
   Files have been rename to avoid multiple . in filenames (to please nmake)
 
-  Job option structure has been simplified relative to Brunel v1r6
+  Job options file structure has been modified relative to Brunel v1r6
 
   requirements use explicitly the SICB packages, no longer SICBDST
 

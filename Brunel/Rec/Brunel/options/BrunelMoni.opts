@@ -1,19 +1,43 @@
-// Options to switch on monitoring in Brunel
-//==========================================
-#include "$STDOPTS/Hbook.opts"
-HistogramPersistencySvc.OutputFile = "$WORKDIR/Histos.hbook";
-//ApplicationMgr.ExtSvc += { "NTupleSvc" };
-NTupleSvc.Output={"FILE1 DATAFILE='$WORKDIR/Tuples.hbook' TYP='HBOOK' OPT='NEW'"};
+// Modify this file to change the default Brunel monitoring. 
+// Provide a dummy file to switch off Brunel monitoring. 
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg += { "BrunelPhase/BrunelMoni" };
 
+//--------------------------------------------------------------
+// Hbook persistency (use HBookCnv v* in requirements).
+// See Gaudi manual for equivalent options for Root persistency
+//--------------------------------------------------------------
+#include "$STDOPTS/Hbook.opts"
+HistogramPersistencySvc.OutputFile = "Histos.hbook";
+
+//--------------------------------------------------------------
 // Detectors to monitor
+//--------------------------------------------------------------
 BrunelMoni.DetectorList = { "IT", "OT", "Tr" };
 
+//--------------------------------------------------------------
 // Monitoring algorithms
+//--------------------------------------------------------------
 BrunelMoniOTSeq.Members = { "OTDigitChecker" };
 BrunelMoniTrSeq.Members = { "TrMonitor" };
-//>> ITDigiMOnitor no good for production (produces N-tuple)
-// BrunelMoniITSeq.Members = { "ITDigiMonitor" };
 
+//--------------------------------------------------------------
 // Suppress excessive error messages
+//--------------------------------------------------------------
 OTDigitChecker.OutputLevel = 4;
 TrMonitor.OutputLevel = 4;
+
+//--------------------------------------------------------------
+// No IT monitoring by default (produces ntuple). Uncomment to switch on
+//--------------------------------------------------------------
+// ApplicationMgr.ExtSvc += { "NTupleSvc" };
+// NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
+// BrunelMoniITSeq.Members = { "ITDigiMonitor" };
+
+//--------------------------------------------------------------
+// Set up some profiling. Enable/Disable setting lines below to true/false
+//--------------------------------------------------------------
+AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+NameAuditor.Enable   = false;
+ChronoAuditor.Enable = true;
+MemoryAuditor.Enable = false;
