@@ -5,6 +5,7 @@ Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v15r4>2002-12-04 Brunel v15r4</A></H1><PRE>
  - New tuning:
+   . Fine tuning of VTT tracking (VeloTT v1r4)
    . Add material to central OT modules (XmlDDDB v14r3, v252r0 geometry)
    . New velo clustering for L1. Includes common mode noise simulation and
      correction (L1VeloTrack v3r4)
@@ -16,6 +17,7 @@ Purpose: LHCb reconstruction program
    . Remove support for dbase v251r*
 
  - Bug fixes:
+   . Fix edge problem in Velo detector element (VeloDet v8r1)
    . Fix loop index range (found by valgrind) (PuVeto v5r1)
    . Fix some mismatched new[]/delete to please valgrind (L1Decision v1r3)
 
