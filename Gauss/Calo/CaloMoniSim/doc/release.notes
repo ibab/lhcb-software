@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.1.1.1 2004-10-25 08:53:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2004-12-14 16:40:48 gcorti Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,9 @@
 ! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2004-12-14 - Gloria CORTI
+ - fix environment variable in requirements
 
 ! 2004-10-25 - Vanya BELYAEV
  - new package, the code is copies from Calo/CaloMonitor package, 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2004-10-25 08:53:25 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2004-12-14 16:40:48 gcorti Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # ============================================================================
@@ -12,7 +12,7 @@ version           v1r0
 branches          cmt doc src options 
 
 # =============== environment ================================================
-set               CALOMONISIMOPTS  $(CALOMONIROOT)/options 
+set               CALOMONISIMOPTS  $(CALOMONISIMROOT)/options 
 
 # =============== dependencies ===============================================
 use               CaloUtils      v* Calo
