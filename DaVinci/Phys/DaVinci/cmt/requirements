@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.222 2005-01-05 17:36:47 pkoppenb Exp $
+# $Id: requirements,v 1.223 2005-01-06 12:34:58 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -87,7 +87,7 @@ use  Utilities          	v1r13    Tools
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v1r4     Phys
-use  DaVinciKernel      	v2r2     Phys
+use  DaVinciKernel      	v3r0     Phys
 use  DaVinciTools       	v11r4    Phys
 use  FlavourTagging     	v5r3p1   Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
