@@ -41,7 +41,7 @@ Jpsi2MuMu.OutputLevel = 3 ;
 Jpsi2MuMu.HistoProduce = true ;
 
 ApplicationMgr.HistogramPersistency = "HBOOK";
-HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+HistogramPersistencySvc.OutputFile = "DVHistos1.hbook";
 
 ApplicationMgr.EvtMax = 500 ;
 

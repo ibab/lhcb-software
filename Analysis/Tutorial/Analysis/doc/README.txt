@@ -4,7 +4,7 @@
 ! Purpose     : Analysis tutorial
 !-----------------------------------------------------------------------------
  
-  1) You are welcome to write the codee yourself, following the tutorial
+  1) You are welcome to write the code yourself, following the tutorial
   
   2) To get it to work quickly, go through the following:
      

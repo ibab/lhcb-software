@@ -94,12 +94,12 @@ PrintFoundBs.OutputLevel = 3 ;
 // Print MC decay tree
 Tutorial.Members += { "PrintMCTree/PrintTrueBs" };
 PrintTrueBs.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
-PrintTrueB.ParticleNames = {  "B_s0", "B_s~0" } ;
+PrintTrueBs.ParticleNames = {  "B_s0", "B_s~0" } ;
 PrintTrueBs.OutputLevel = 3 ;
-PrintTrueB.Depth = 2;  // down to the K and mu
+PrintTrueBs.Depth = 2;  // down to the K and mu
 
 ApplicationMgr.HistogramPersistency = "HBOOK";
-HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+HistogramPersistencySvc.OutputFile = "DVHistos2.hbook";
 
 ApplicationMgr.EvtMax = 500 ;
 
