@@ -1,5 +1,5 @@
 #include "ProcessorKernel/TileRegister.h"
-#include <stdio.h>
+
 
 L0Muon::TileRegister::TileRegister() {
 
@@ -281,7 +281,7 @@ void L0Muon::TileRegister::print_bits(long unsigned int event, FILE *file){
 }
 
 
-void L0Muon::TileRegister::print_words(FILE *file, int nword_per_line){
+void L0Muon::TileRegister::print_words(FILE *file, int nwords_per_line){
   int ib=0;
   int word=0;
   int iw=0;
@@ -299,7 +299,7 @@ void L0Muon::TileRegister::print_words(FILE *file, int nword_per_line){
       //std::cout << "<L0BufferUnit::dump>  iword" << iword << std::endl; 
       word=0;
       iw++;
-      if ((iw%nword_per_line)==0) {
+      if ((iw%nwords_per_line)==0) {
       fprintf(file,"\n");
       }
     }
@@ -311,6 +311,15 @@ void L0Muon::TileRegister::print_words(FILE *file, int nword_per_line){
 }
   
 
+void L0Muon::TileRegister::print_tiles(FILE *file,int ntiles_per_line){
+  int ic=0;
+  for (std::vector<MuonTileID> ::iterator im = m_ids.begin();im!=m_ids.end();im++) {
+    if ((ic % ntiles_per_line)==0)  fprintf(file,"\n\t");
+    fprintf(file," M%d(%2d,%2d)Q%dR%d %2d-%2d ;",im->station()+1,im->layout().xGrid(),im->layout().yGrid(),im->quarter()+1,im->region()+1,im->nX(),im->nY());
+    ic++;
+  }
+  fprintf(file,"\n");
+}
 
 
       

@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.2 2005-03-21 15:15:18 jucogan Exp $
+// $Id: TileRegister.h,v 1.3 2005-03-31 16:04:56 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
@@ -19,6 +19,8 @@
 #include "L0mConf/L0MBase.h"
 #include "ProcessorKernel/Register.h"
 #include "MuonKernel/MuonTileID.h"
+#include <stdio.h>
+
 //#include "MuonKernel/MuonSystemLayout.h"
 
 namespace L0Muon {
@@ -97,7 +99,9 @@ public:
   /// Print the tile register for debug
   void print_bits(long unsigned int event, FILE *file);
 
-  void print_words(FILE *file, int nword_per_line=1);
+  void print_words(FILE *file, int nwords_per_line=1);
+
+  void print_tiles(FILE *file, int ntiles_per_line=4);
   
 private:
 

@@ -23,6 +23,17 @@ void L0Muon::Unit::setParent(L0Muon::Unit * unit)
 //return (*iunit).second;  
 //}
 
+std::string L0Muon::Unit::getProperty(std::string name) {
+  std::map<std::string,std::string>::iterator im;
+  im = m_properties.find(name);
+  if (im!=m_properties.end()) {
+    return (*im).second;
+  } else {
+    return "Unknown";
+  }
+}
+
+
 void L0Muon::Unit::addInputRegister(L0Muon::Register* in, std::string rname) {
 
   m_inputs[rname] = in ;
@@ -107,6 +118,7 @@ void L0Muon::Unit::dumpRegisters() {
 
 
 void L0Muon::Unit::execute() {
+  if (m_debug) std::cout <<"*** "<< type() <<"::execute" << std::endl;
   // execute the subunits
   if ( ! m_units.empty() ) {
     std::map<std::string,L0Muon::Unit*>::iterator iu;
@@ -124,6 +136,18 @@ void L0Muon::Unit::initialize() {
     std::map<std::string,L0Muon::Unit*>::iterator iu;
     for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
       (*iu).second->initialize();
+    }
+  } 
+}
+
+void L0Muon::Unit::bootstrap() {
+
+  if (m_debug) std::cout <<"*** "<< type() <<"::bootstrap" << std::endl;
+  // initialize the subunits
+  if ( ! m_units.empty() ) {
+    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
+      (*iu).second->bootstrap();
     }
   } 
 }
@@ -155,6 +179,7 @@ L0Muon::Unit* L0Muon::Unit::parentByType(std::string utype) {
 
   L0Muon::Unit* uparent = parent();
   if (uparent) {
+    if (m_debug) std::cout << "parentByType: <"<<uparent->type() << ">\n";
     if ( uparent->type() != utype ) {
       uparent = uparent->parentByType(utype);
     }

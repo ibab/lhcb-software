@@ -1,4 +1,4 @@
-// $Id: Unit.h,v 1.1.1.1 2005-02-02 21:56:38 atsareg Exp $
+// $Id: Unit.h,v 1.2 2005-03-31 16:04:56 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_UNIT_H
 #define PROCESSORKERNEL_UNIT_H     1
@@ -76,7 +76,8 @@ public:
   */
   void addUnit(L0Muon::Unit* unit, std::string uname);
  
-  
+  virtual void bootstrap();
+
   /// Virtual method to initialize the hierarchy of units
   virtual void initialize();
 
@@ -104,6 +105,14 @@ public:
   /// Print out the unit definition for all the unit tree
   void dumpUnitTree(int offset=0 );
 
+  /// Set a new property
+  void setProperty(std::string name, std::string value) {m_properties[name]=value;}
+  /// Set a new property
+  void setProperties(std::map<std::string,std::string>properties) {m_properties=properties;}
+
+  /// Retrieve a property
+  std::string getProperty(std::string name);
+
 protected:
 
   std::string m_name;
@@ -112,6 +121,7 @@ protected:
   std::map<std::string,L0Muon::Register*> m_inputs;    // input registers    
   std::map<std::string,L0Muon::Register*> m_outputs;   // output registers
   std::map<std::string,L0Muon::Unit*> m_units;         // subunits  
+  std::map<std::string,std::string> m_properties;      // properties
   
   bool m_debug;
 
