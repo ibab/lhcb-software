@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-06-17 =======================
+!======================= LHCbSys v16r0 2004-06-18 =======================
 ! 2004-06-17 - Marco Cattaneo
  - New packages: LHCbTools v1r1 (moved here from applications projects)
                  LHCbAlgs v1r0 (for general purpose algorithms)
@@ -53,12 +53,13 @@
  - In IOExample v1r2
    . StoreBrowser Algorithm moved to LHCbAlgs, example is now just job options
 
-!====================== LHCbSys v15r12 2004-06-16 =======================
+!====================== LHCbSys v15r12 2004-06-18 =======================
 Built against Gaudi v14r6
 
-! 2004-06-16 - Marco Cattaneo
+! 2004-06-18 - Marco Cattaneo
  - Modified packages: EventSys v17r11, Event v4r4, DAQEvent v4r3, TrgEvent v3r0,
-                      EventAssoc v1r1p1, DetSys v5r6p2, MuonTools v3r7
+                      PhysEvent v8r4, EventAssoc v1r1p1, 
+                      DetSys v5r6p2, MuonTools v3r7
 
  - In EventSys v17r11:
    . Add check on completeness of LCG dictionaries, executed when building
@@ -67,12 +68,18 @@ Built against Gaudi v14r6
  - In Event v4r4:
    . Fix a bug MCHit::dxdz and MCHit::dydz, slope was only returned if entry
      and exit points were closer than 0.1 um
+   . Add class MCEffTree to represent a decay of interest and provide
+     reconstructible/reconstructed information for it.
+   . Add class MCEffParticle used internally by MCEffTree.
 
  - In DAQEvent v4r3:
    . Add missing LCG dictionaries for STL containers used in L1Event, RawEvent
 
  - In TrgEvent v3r0:
    . Add new class L1Score to store L1Decision result and monitoring info
+
+ - In PhysEvent v8r4:
+   . Add new class EffCheckEvent to access MCParticle info from efficiency algs.
 
  - In EventAssoc v1r1p1:
    . Add missing dictionaries for relations instantiated in LoKi
