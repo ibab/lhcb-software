@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.7 2003-07-07 08:20:58 ibelyaev Exp $ 
+# $Id: requirements,v 1.8 2003-07-07 08:44:22 ibelyaev Exp $ 
 # =============================================================================
 package GaussCalo
-version v3r0
+version v4r0
 
 # =============== package structure ===========================================
 branches          cmt src doc

@@ -7,6 +7,10 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-07-07 - Vanya BELYAEV
+  - options/Calo.opts    adjust the location of input histogram file to 
+                         $LHCBHOME/sim/data directory 
+
 ! 2003-07-05 - Vanya BELYAEV
  - src/CaloSensDet.h,cpp: 
      1) define and implement generic ProcessHit method 

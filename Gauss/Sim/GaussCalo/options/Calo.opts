@@ -1,8 +1,11 @@
-// $Id: Calo.opts,v 1.5 2003-07-07 08:21:02 ibelyaev Exp $ 
+// $Id: Calo.opts,v 1.6 2003-07-07 08:44:23 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/07/07 08:21:02  ibelyaev
+//  split the general CaloSensDet class
+//
 // ============================================================================
 
 // ============================================================================
@@ -16,7 +19,7 @@
 
 /// Input Histograms
 HistogramDataSvc.Input += 
-  { "GaussCalo DATAFILE='./gausscalo.hbook' TYP='HBOOK'" };
+  { "GaussCalo DATAFILE='$LHCBHOME/sim/data/gausscalo.hbook' TYP='HBOOK'" };
 
 /// configuration of Spd  sensitive detector 
 #include "$GAUSSCALOOPTS/Spd.opts"
