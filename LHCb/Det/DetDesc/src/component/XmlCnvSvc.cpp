@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.14 2002-05-29 14:37:28 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlCnvSvc.cpp,v 1.15 2002-05-30 17:03:13 sponce Exp $
 
 // Include Files
 #include <util/PlatformUtils.hpp>
@@ -435,10 +435,10 @@ unsigned int XmlCnvSvc::skipExpr (std::string s,
                                   unsigned int start,
                                   unsigned int end) {
   MsgStream log (msgSvc(), "DetDescUnit");
-  // deal with the unary minus
+  // deal with the unary plus/minus
   unsigned int realStart = s.find_first_not_of(' ', start);
   if (realStart != s.npos) {
-    if (s[realStart] == '-') {
+    if ((s[realStart] == '-') || (s[realStart] == '+')) {
       realStart = s.find_first_not_of(' ', realStart + 1);
     }
   }
@@ -490,7 +490,7 @@ unsigned int XmlCnvSvc::skipExpr (std::string s,
       } else {
         return end;
       }
-    } else if (isdigit(s[realStart])) {
+    } else if ((isdigit(s[realStart])) || (s[realStart] == '.')) {
       // We have a number, look whether we have an exponent
       // if yes, skip it
       if ((index != s.npos) && ((s[index] == '-') || (s[index] == '+'))) {

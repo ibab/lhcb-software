@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.98 2002-05-29 14:37:27 sponce Exp $ 
+! $Id: release.notes,v 1.99 2002-05-30 17:03:12 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-05-30 - Sebastien Ponce
+ - yet another bugfix on the unit checker : number may start with a dot.
 
 ! 2002-05-29 - Sebastien Ponce
  - bugfix on the unit checker : floats with exponents were not correctly
