@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.227 2005-01-11 16:07:18 pkoppenb Exp $
+# $Id: requirements,v 1.228 2005-01-12 14:30:36 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -98,7 +98,7 @@ use  VertexFit			v1r3     Phys
 use  Tampering                  v1r0     Phys
 
 # Physics MC packages
-use  DaVinciAssociators 	v5r2p1   Phys
+use  DaVinciAssociators 	v5r2p2   Phys
 use  DaVinciEff         	v3r2     Phys
 use  DaVinciMCTools     	v5r8     Phys
 use  DaVinciTest        	v5r5     Phys
