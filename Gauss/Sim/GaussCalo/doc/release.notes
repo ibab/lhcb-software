@@ -2,7 +2,7 @@
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
 !                    Patrick Robbe
-! Responsible	     : Vanya Belyaev
+! Responsible	   : Patrick Robe, Vanya Belyaev
 ! Purpose          : collection of sensitive detectors, converters, 
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
