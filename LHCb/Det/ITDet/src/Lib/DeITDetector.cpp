@@ -73,7 +73,7 @@ StatusCode DeITDetector::initialize() {
   double holeX =(*iterStation)->userParameterAsDouble("holeX");
   double holeY =(*iterStation)->userParameterAsDouble("holeY");
   double ladderDist=(*iterStation)->userParameterAsDouble("DzLadder");
-  double numStrips =(*iterStation)->userParameterAsInt("numStrips");
+  unsigned int numStrips =(*iterStation)->userParameterAsInt("numStrips");
   double pitch =(*iterStation)->userParameterAsDouble("pitch");
 
   ITDetectionStation* station = new ITDetectionStation(itZ, itThickness, numLayers, iStation);  
@@ -92,8 +92,8 @@ StatusCode DeITDetector::initialize() {
       std::string boxName = (*iterBox)->name();       
       log << MSG::DEBUG << "*****get parameters from"<<boxName <<endreq;
 
-      double NSensorX = (*iterBox)->userParameterAsInt("NSensorX");
-      double NSensorY = (*iterBox)->userParameterAsInt("NSensorY");
+      unsigned int NSensorX = (*iterBox)->userParameterAsInt("NSensorX");
+      unsigned int NSensorY = (*iterBox)->userParameterAsInt("NSensorY");
      
 
       log << MSG::DEBUG << "*****now loop over layers"<<endreq;
@@ -149,8 +149,8 @@ StatusCode DeITDetector::initialize() {
 
      //new TT1
      std::vector<int> ladderSize1, ladderSize2;
-     double NSensorX1   =(*iterStation)->userParameterAsInt("NSensorX1");
-     double NSensorX2   =(*iterStation)->userParameterAsInt("NSensorX2");
+     unsigned int NSensorX1   =(*iterStation)->userParameterAsInt("NSensorX1");
+     unsigned int NSensorX2   =(*iterStation)->userParameterAsInt("NSensorX2");
      ladderSize1 =(*iterStation)->userParameterVectorAsInt("VSensor1");
      ladderSize2 =(*iterStation)->userParameterVectorAsInt("VSensor2");
 

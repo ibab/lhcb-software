@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.27 2002-12-04 18:48:59 ranjard Exp $
+! $Id: release.notes,v 1.28 2003-01-17 14:03:55 sponce Exp $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
+
+! 2003-01-17 - Sebastien Ponce
+ - support for gcc 3.2
 
 !======================== MuonDet v4r3 2002-12-04 ========================
 ! 2002-11-29 - Florence Ranjard

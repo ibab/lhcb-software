@@ -1,4 +1,4 @@
-// $Id: MuonBasicGeometry.cpp,v 1.3 2002-10-22 07:11:45 cattanem Exp $
+// $Id: MuonBasicGeometry.cpp,v 1.4 2003-01-17 14:03:55 sponce Exp $
 // Include files
 // local
 #include "MuonDet/MuonBasicGeometry.h"
@@ -68,8 +68,8 @@ std::string MuonBasicGeometry::getStationName(int station  ) {
 }
 
 
-std::string  MuonBasicGeometry::findName(std::string allname,std::string
-                                        rootName){
+std::string  MuonBasicGeometry::findName(std::string allname,
+                                         std::string /*rootName*/){
   std::string::size_type allsize=allname.size();
   //  std::cout<<"allsize "<< allsize <<endl;
   

@@ -1,4 +1,4 @@
-// $Id: ITTT1Layer.cpp,v 1.7 2002-11-18 09:45:38 mneedham Exp $
+// $Id: ITTT1Layer.cpp,v 1.8 2003-01-17 14:07:15 sponce Exp $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -317,11 +317,7 @@ unsigned int ITTT1Layer::rowID(const unsigned int iWafer) const {
     } 
   
     std::vector<double>::difference_type n = 0;
-#ifdef WIN32
     n = std::distance(m_rowsVector.begin(),iter);
-#else
-    distance(m_rowsVector.begin(),iter,n);
-#endif
     iRow = (unsigned int)(n+1u);
   }  // valid wafer
 

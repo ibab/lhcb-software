@@ -1,4 +1,4 @@
-// $Id: ITDetectionLayer.cpp,v 1.3 2002-09-05 07:10:34 mneedham Exp $
+// $Id: ITDetectionLayer.cpp,v 1.4 2003-01-17 14:07:15 sponce Exp $
 //
 // This File contains the definition of the ITDetectionLayer-class
 //
@@ -147,7 +147,7 @@ ITChannelID ITDetectionLayer::nextRight(const ITChannelID testChan) const{
     return ITChannelID(testChan.station(),testChan.layer(),testChan.wafer(),aStrip+1u);
   }
   else {
-   return ITChannelID(0.,0.,0.,0.);
+   return ITChannelID(0,0,0,0);
   }
 }
 
@@ -157,7 +157,7 @@ ITChannelID ITDetectionLayer::nextLeft(const ITChannelID testChan) const{
     return ITChannelID(testChan.station(),testChan.layer(),testChan.wafer(),aStrip-1u);
   }
   else {
-   return ITChannelID(0.,0.,0.,0.);
+   return ITChannelID(0,0,0,0);
   }
 }
 
