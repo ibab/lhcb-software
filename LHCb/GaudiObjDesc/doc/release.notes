@@ -4,6 +4,7 @@ Package manager : Stefan Roiser
 
 ! 20020314 - Stefan Roiser
  - bugfix when using methods inside namespaces
+ - bugfix declaring public enums before method-definitions
 
 ! 20020313 - Stefan Roiser
  - attribute 'array' introduced in <attribute>-element
