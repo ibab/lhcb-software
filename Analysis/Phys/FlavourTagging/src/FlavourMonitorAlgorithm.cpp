@@ -1,4 +1,4 @@
-// $Id: FlavourMonitorAlgorithm.cpp,v 1.2 2002-09-05 08:16:48 odie Exp $
+// $Id: FlavourMonitorAlgorithm.cpp,v 1.3 2002-09-06 07:17:12 odie Exp $
 // Include files 
 #include <algorithm>
 
@@ -224,9 +224,9 @@ StatusCode FlavourMonitorAlgorithm::finalize()
     log << "Statistics for tags in : " << *loc_i << endl;
     log << "----------------------------------------------------------\n";
     log << "Event without associated B : " << m_n_noB[i] << endl;
-    log << "Efficency           : " << e << " ±" << se << endl;
-    log << "Wrong-tag fraction  : " << w << " ±" << sw << endl;
-    log << "Effective efficency : " << eff << " ±" << seff << endreq;
+    log << "Efficiency           : " << e << " ±" << se << endl;
+    log << "Wrong-tag fraction   : " << w << " ±" << sw << endl;
+    log << "Effective efficiency : " << eff << " ±" << seff << endreq;
   }
   return StatusCode::SUCCESS;
 }
