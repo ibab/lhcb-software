@@ -1,29 +1,29 @@
-// $Id: RichPhotonSignal.cpp,v 1.6 2003-08-26 14:40:19 jonrob Exp $
+// $Id: RichPhotonSignalMaPMT.cpp,v 1.1 2003-09-04 07:12:52 jonrob Exp $
 
 // local
-#include "RichPhotonSignal.h"
+#include "RichPhotonSignalMaPMT.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RichPhotonSignal
+// Implementation file for class : RichPhotonSignalMaPMT
 //
 // 15/03/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichPhotonSignal>          s_factory ;
-const        IToolFactory& RichPhotonSignalFactory = s_factory ;
+static const  ToolFactory<RichPhotonSignalMaPMT>          s_factory ;
+const        IToolFactory& RichPhotonSignalMaPMTFactory = s_factory ;
 
 // Standard constructor
-RichPhotonSignal::RichPhotonSignal( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
+RichPhotonSignalMaPMT::RichPhotonSignalMaPMT( const std::string& type,
+                                              const std::string& name,
+                                              const IInterface* parent )
   : RichRecToolBase( type, name, parent ) {
 
   declareInterface<IRichPhotonSignal>(this);
 
 }
 
-StatusCode RichPhotonSignal::initialize() {
+StatusCode RichPhotonSignalMaPMT::initialize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Initialize" << endreq;
@@ -37,22 +37,27 @@ StatusCode RichPhotonSignal::initialize() {
   acquireTool( "RichCherenkovResolution", m_ckRes   );
 
   // Get Rich Detector elements
-  SmartDataPtr<IDetectorElement> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
-  SmartDataPtr<IDetectorElement> Rich2DE( detSvc(), "/dd/Structure/LHCb/Rich2" );
+  SmartDataPtr<DeRich1> Rich1DE( detSvc(), "/dd/Structure/LHCb/Rich1" );
+  SmartDataPtr<DeRich2> Rich2DE( detSvc(), "/dd/Structure/LHCb/Rich2" );
 
-  // Detector parameters
-  // Rich1 radius of curvature in mm
-  m_radiusCurv[Rich::Rich1] = Rich1DE->userParameterAsDouble("Rich1Mirror1RadiusQ1");
-  // Rich2 radius of curvature in mm
-  m_radiusCurv[Rich::Rich2] = Rich2DE->userParameterAsDouble("Rich2SphMirrorRadius");
+  // Mirror radii of curvature in mm
+  m_radiusCurv[Rich::Rich1] = Rich1DE->sphMirrorRadius();
+  m_radiusCurv[Rich::Rich2] = Rich2DE->sphMirrorRadius();
+
   // area of pixel in mm^2
-  double xSize = Rich1DE->userParameterAsDouble("RichHpdPixelXsize");
-  double ySize = Rich1DE->userParameterAsDouble("RichHpdPixelYsize");
-  double demagScale = Rich1DE->userParameterAsDouble("HPDDemagScaleFactor");
-  m_pixelArea = demagScale*xSize * demagScale*ySize;
-  
+  double pixXsize  = Rich1DE->userParameterAsDouble("RichMapmtPixelXsize");
+  double pixYsize  = Rich1DE->userParameterAsDouble("RichMapmtPixelYsize");
+  double nPix      = Rich1DE->userParameterAsDouble("RichMapmtTotNumPixel");
+  double pixXsep   = Rich1DE->userParameterAsDouble("RhMapmtPixelDeltaX");
+  double pixYsep   = Rich1DE->userParameterAsDouble("RhMapmtPixelDeltaY");
+  double QWxSize   = Rich1DE->userParameterAsDouble("RhMapmtQWXSize");
+  double QWySize   = Rich1DE->userParameterAsDouble("RhMapmtQWYSize");
+  double activeF   = (pixXsize/pixXsep) * (pixYsize/pixYsep);
+  m_pixelArea      = activeF * (QWxSize*QWySize)/nPix;
+
   // Informational Printout
   msg << MSG::DEBUG
+      << " Using MaPMT variant" << endreq
       << " Mirror radii of curvature    = "
       << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endreq
       << " Pixel area                   = " << m_pixelArea << endreq;
@@ -60,7 +65,7 @@ StatusCode RichPhotonSignal::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPhotonSignal::finalize() {
+StatusCode RichPhotonSignalMaPMT::finalize() {
 
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Finalize" << endreq;
@@ -74,8 +79,8 @@ StatusCode RichPhotonSignal::finalize() {
   return RichRecToolBase::finalize();
 }
 
-double RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
-                                               const Rich::ParticleIDType id ) {
+double RichPhotonSignalMaPMT::predictedPixelSignal( RichRecPhoton * photon,
+                                                    const Rich::ParticleIDType id ) {
 
   if ( !photon->expPixelSignalPhots().dataIsValid(id) ) {
 
@@ -101,8 +106,8 @@ double RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
   return photon->expPixelSignalPhots( id );
 }
 
-double RichPhotonSignal::signalProb( RichRecPhoton * photon,
-                                     const Rich::ParticleIDType id ) {
+double RichPhotonSignalMaPMT::signalProb( RichRecPhoton * photon,
+                                          const Rich::ParticleIDType id ) {
 
   // Expected Cherenkov theta angle
   double thetaExp = m_ckAngle->avgCherenkovTheta( photon->richRecSegment(), id );
@@ -124,8 +129,8 @@ double RichPhotonSignal::signalProb( RichRecPhoton * photon,
            ( sqrt(2.*M_PI)*2.*M_PI*thetaExpRes ) );
 }
 
-double RichPhotonSignal::scatterProb( RichRecPhoton * photon,
-                                      const Rich::ParticleIDType id ) {
+double RichPhotonSignalMaPMT::scatterProb( RichRecPhoton * photon,
+                                           const Rich::ParticleIDType id ) {
 
   Rich::RadiatorType rad = photon->richRecSegment()->trackSegment().radiator();
 

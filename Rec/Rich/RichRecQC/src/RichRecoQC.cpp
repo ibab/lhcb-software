@@ -1,4 +1,4 @@
-// $Id: RichRecoQC.cpp,v 1.4 2003-08-06 09:58:26 jonrob Exp $
+// $Id: RichRecoQC.cpp,v 1.5 2003-09-04 07:09:07 jonrob Exp $
 // Include files
 
 // local
@@ -133,13 +133,13 @@ StatusCode RichRecoQC::execute() {
       const MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton( photon );
       if ( photonParent ) {
         ++truePhotons;
-        m_ckTrueDTheta[rad]->fill( thetaRec-thetaExpTrue, 1 );
+        m_ckTrueDTheta[rad]->fill( thetaRec-thetaExpTrue );
       }
 
     } // photon loop
 
     // number of true photons
-    m_trueSignalPhots[rad]->fill( truePhotons, 1 );
+    m_trueSignalPhots[rad]->fill( truePhotons );
 
   } // end loop over segments
 

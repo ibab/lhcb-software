@@ -1,4 +1,4 @@
-// $Id: RichRecTools_load.cpp,v 1.7 2003-08-26 14:40:19 jonrob Exp $
+// $Id: RichRecTools_load.cpp,v 1.8 2003-09-04 07:12:52 jonrob Exp $
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -19,7 +19,8 @@ DECLARE_FACTORY_ENTRIES( RichRecTools ) {
 
   // signal calculators
   DECLARE_TOOL( RichExpectedTrackSignal );
-  DECLARE_TOOL( RichPhotonSignal );
+  DECLARE_TOOL( RichPhotonSignalHPD );
+  DECLARE_TOOL( RichPhotonSignalMaPMT );
   DECLARE_TOOL( RichTabulatedHPDSignalDetectionEff );
   DECLARE_TOOL( RichSignalDetectionEffSICB ); // temporary
 
@@ -40,6 +41,7 @@ DECLARE_FACTORY_ENTRIES( RichRecTools ) {
   // Cherenkov angle tools
   DECLARE_TOOL( RichCherenkovAngle );
   DECLARE_TOOL( RichBinnedCherenkovResolution );
+  DECLARE_TOOL( RichInterpCherenkovResolution );
 
   // The tool registry
   DECLARE_TOOL( RichToolRegistry );

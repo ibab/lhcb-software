@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.11 2003-08-06 09:58:26 jonrob Exp $
+// $Id: RichPIDQC.cpp,v 1.12 2003-09-04 07:09:07 jonrob Exp $
 // Include files
 
 // local
@@ -23,25 +23,19 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "TrackAsctName", m_tkMCTruthName = "TrackToMCP" );
   declareProperty( "TrackAsctType", m_tkMCTruthType =
                    "AssociatorWeighted<TrStoredTrack,MCParticle,double>" );
-  declareProperty( "InputPIDs", m_pidTDS = RichPIDLocation::Default );
+  declareProperty( "InputPIDs",   m_pidTDS = RichPIDLocation::Default );
   declareProperty( "InputTracks", m_trackTDS = TrStoredTrackLocation::Default );
   declareProperty( "MCHistoPath", m_mcHstPth = "RICH/PIDQC/MC/" );
-  declareProperty( "HistoPath", m_hstPth = "RICH/PIDQC/" );
-  declareProperty( "MinPCut", m_pMinCut = 2.0 );
-  declareProperty( "MaxPCut", m_pMaxCut = 100.0 );
-  declareProperty( "MCTruth", m_truth = true );
-  m_trNames.push_back( "unique" );
-  m_trNames.push_back( "seed" );
-  m_trNames.push_back( "match" );
-  m_trNames.push_back( "forward" );
-  m_trNames.push_back( "upstream" );
-  m_trNames.push_back( "veloTT" );
+  declareProperty( "HistoPath",   m_hstPth = "RICH/PIDQC/" );
+  declareProperty( "MinPCut",     m_pMinCut = 2.0 );
+  declareProperty( "MaxPCut",     m_pMaxCut = 100.0 );
+  declareProperty( "MCTruth",     m_truth = true );
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
   declareProperty( "MinimumTrackMultiplicity", m_minMultCut = 1 );
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
-  declareProperty( "HistoBins", m_bins = 50 );
+  declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos", m_extraHistos = false );
+  declareProperty( "ExtraHistos",   m_extraHistos = true );
 
 }
 
@@ -151,67 +145,45 @@ StatusCode RichPIDQC::bookHistograms() {
 StatusCode RichPIDQC::bookMCHistograms() {
 
   std::string title;
+  int id;
   HYPOTHESIS_NAMES;
 
   title = "PID Performance Table";
   m_perfTable = histoSvc()->book( m_mcHstPth, 1, title,
                                   6, 0.5, 6.5, 6, 0.5, 6.5 );
 
-  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; iHypo++ ) {
-    title = "True " + hypothesis[iHypo] + " Ptot : All";
-    m_trueSpec[iHypo] = histoSvc()->book( m_mcHstPth, 10*(1+iHypo)+1, title,
-                                          m_bins, m_pMinCut, m_pMaxCut );
-    title = "True " + hypothesis[iHypo] + " Ptot : ID";
-    m_trueIDSpec[iHypo] = histoSvc()->book( m_mcHstPth, 10*(1+iHypo)+2, title,
-                                            m_bins, m_pMinCut, m_pMaxCut );
-    title = "True " + hypothesis[iHypo] + " Ptot : misID";
-    m_trueMisIDSpec[iHypo] = histoSvc()->book( m_mcHstPth, 10*(1+iHypo)+3, title,
-                                               m_bins, m_pMinCut, m_pMaxCut );
-    title = "Fake " + hypothesis[iHypo] + " Ptot : ID";
-    m_fakeIDSpec[iHypo] = histoSvc()->book( m_mcHstPth, 10*(1+iHypo)+4, title,
-                                            m_bins, m_pMinCut, m_pMaxCut );
-  }
-
-  title = "True pion Ptot : ID (light)";
-  m_lightIdSpec = histoSvc()->book( m_mcHstPth, 61, title,
-                                    m_bins, m_pMinCut, m_pMaxCut );
-  title = "True pion Ptot : misID (light)";
-  m_lightMisIdSpec = histoSvc()->book( m_mcHstPth, 62, title,
-                                       m_bins, m_pMinCut, m_pMaxCut );
-  title = "True kaon Ptot : ID (heavy)";
-  m_heavyIdSpec = histoSvc()->book( m_mcHstPth, 63, title,
-                                    m_bins, m_pMinCut, m_pMaxCut );
-  title = "True kaon Ptot : misID (heavy)";
-  m_heavyMisIdSpec = histoSvc()->book( m_mcHstPth, 64, title,
-                                       m_bins, m_pMinCut, m_pMaxCut );
+  {for ( int iTrue = 0; iTrue < Rich::NParticleTypes; ++iTrue ) {
+    for ( int iID = 0; iID < Rich::NParticleTypes; ++iID ) {
+      title = "Ptot : MC=" + hypothesis[iTrue] + " ID=" + hypothesis[iID];
+      id = 10*(1+iTrue) + (1+iID) + 100;
+      m_ptotSpec[iTrue][iID] = histoSvc()->book( m_mcHstPth, id, title,
+                                                 m_bins, m_pMinCut, m_pMaxCut );
+    }
+  }}
 
   if ( m_extraHistos ) {
 
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; iHypo++ ) {
-      title =  hypothesis[iHypo] + " true ID : delta LogLikelihood";
+      title = hypothesis[iHypo] + " true ID : delta LogLikelihood";
       m_deltaLLTrue[iHypo] = histoSvc()->book( m_mcHstPth, 70 + iHypo+1, title,
                                                m_bins, 0.0, 150.0 );
-      title =  hypothesis[iHypo] + " fake ID : delta LogLikelihood";
+      title = hypothesis[iHypo] + " fake ID : delta LogLikelihood";
       m_deltaLLFake[iHypo] = histoSvc()->book( m_mcHstPth, 80 + iHypo+1, title,
                                                m_bins, 0.0, 150.0 );
     } // end hypo loop
 
-    title = "dLL(pi-el) True El";
-    m_dLLPiElTrueEl = histoSvc()->book( m_mcHstPth, 91, title, m_bins, -100, 100 );
-    title = "dLL(pi-el) Fake El";
-    m_dLLPiElFakeEl = histoSvc()->book( m_mcHstPth, 92, title, m_bins, -100, 100 );
-    title = "dLL(pi-mu) True Mu";
-    m_dLLPiMuTrueMu = histoSvc()->book( m_mcHstPth, 101, title, m_bins, -100, 100 );
-    title = "dLL(pi-mu) Fake Mu";
-    m_dLLPiMuFakeMu = histoSvc()->book( m_mcHstPth, 102, title, m_bins, -100, 100 );
-    title = "dLL(pi-K) True K/Pr";
-    m_dLLPiKaTrueKaPr = histoSvc()->book( m_mcHstPth, 111, title, m_bins, -100, 100 );
-    title = "dLL(pi-K) Fake K/Pr";
-    m_dLLPiKaFakeKaPr = histoSvc()->book( m_mcHstPth, 112, title, m_bins, -100, 100 );
-    title = "dLL(K-pr) True K";
-    m_dLLKaPrTrueKa = histoSvc()->book( m_mcHstPth, 121, title, m_bins, -100, 100 );
-    title = "dLL(pi-K) True Pr";
-    m_dLLKaPrTruePr = histoSvc()->book( m_mcHstPth, 122, title, m_bins, -100, 100 );
+    for ( int iID = 0; iID < Rich::NParticleTypes; ++iID ) {
+      for ( int iSec = 0; iSec < Rich::NParticleTypes; ++iSec ) {
+        if ( iSec != iID ) {
+          title = "Dll("+hypothesis[iID]+"-"+hypothesis[iSec]+") true " + hypothesis[iID];
+          id = 10*(1+iSec) + (1+iID) + 200;
+          m_dLLTrue[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title, m_bins, -100, 100 );
+          title = "Dll("+hypothesis[iID]+"-"+hypothesis[iSec]+") false " + hypothesis[iID];
+          id = 10*(1+iSec) + (1+iID) + 300;
+          m_dLLFalse[iID][iSec] = histoSvc()->book( m_mcHstPth, id, title, m_bins, -100, 100 );
+        }
+      }
+    }
 
   } // extra histos if
 
@@ -261,7 +233,7 @@ StatusCode RichPIDQC::execute() {
         continue;
       }
 
-      // Track selection 
+      // Track selection
       if ( !m_trSelector.trackSelected( trTrack ) ) continue;
 
       // Track momentum in GeV/C
@@ -280,13 +252,15 @@ StatusCode RichPIDQC::execute() {
           << " (" << trTrack->history()<< ") " << tkPtot << " GeV/c, "
           << "Dlls " << iPID->particleLLValues() << "PID '" << pid << "'";
 
-      // Fill histos
-      m_ids->fill( pid+1, 1. );
+      // Fill histos for deltaLLS and probabilities
+      m_ids->fill( pid+1 );
+
+      // Extra histograms
       if ( m_extraHistos ) {
         for ( int iHypo = 0; iHypo < Rich::NParticleTypes; iHypo++ ) {
-          m_pRaw[iHypo]->fill( iPID->particleRawProb((Rich::ParticleIDType)iHypo), 1 );
-          m_pNorm[iHypo]->fill( iPID->particleNormProb((Rich::ParticleIDType)iHypo), 1 );
-          m_deltaLL[iHypo]->fill( iPID->particleDeltaLL((Rich::ParticleIDType)iHypo), 1 );
+          m_pRaw[iHypo]->fill( iPID->particleRawProb((Rich::ParticleIDType)iHypo) );
+          m_pNorm[iHypo]->fill( iPID->particleNormProb((Rich::ParticleIDType)iHypo) );
+          m_deltaLL[iHypo]->fill( iPID->particleDeltaLL((Rich::ParticleIDType)iHypo) );
         }
       }
 
@@ -302,87 +276,49 @@ StatusCode RichPIDQC::execute() {
         msg << ", MCID '" << mcpid << "'" << endreq;
 
         // Fill performance tables
-        m_perfTable->fill( mcpid+1, pid+1, 1. );
+        m_perfTable->fill( mcpid+1, pid+1 );
         if ( mcpid>=0 && pid>=0 ) { m_sumTab[mcpid][pid] += 1; }
 
+        // Momentum spectra
+        if ( iPID->isAboveThreshold(mcpid) &&
+             mcpid>=0 && pid>=0 &&
+             mcpid != Rich::BelowThreshold &&
+             pid != Rich::BelowThreshold ) {
+          (m_ptotSpec[mcpid][pid])->fill( tkPtot );
+        }
+
+        // Extra histograms
         if ( m_extraHistos ) {
 
-          // MC delta LLs
-          for ( int iHypo = 0; iHypo < Rich::NParticleTypes; iHypo++ ) {
+          // Delta LL values with respect to the best ID
+          for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
             if ( iHypo == mcpid ) {
-              m_deltaLLTrue[iHypo]->fill( iPID->particleDeltaLL((Rich::ParticleIDType)iHypo), 1 );
+              m_deltaLLTrue[iHypo]->fill(iPID->particleDeltaLL((Rich::ParticleIDType)iHypo));
             } else {
-              m_deltaLLFake[iHypo]->fill( iPID->particleDeltaLL((Rich::ParticleIDType)iHypo), 1 );
+              m_deltaLLFake[iHypo]->fill(iPID->particleDeltaLL((Rich::ParticleIDType)iHypo));
             }
           }
 
-          double dllPiEl =  ( iPID->particleDeltaLL(Rich::Pion) -
-                              iPID->particleDeltaLL(Rich::Electron) );
-          if ( Rich::Electron == mcpid ) {
-            m_dLLPiElTrueEl->fill( dllPiEl, 1 );
-          } else {
-            m_dLLPiElFakeEl->fill( dllPiEl, 1 );
+          // Delta LL between particle types
+          for ( int iID = 0; iID < Rich::NParticleTypes; ++iID ) {
+            for ( int iSec = 0; iSec < Rich::NParticleTypes; ++iSec ) {
+              if ( iSec != iID ) {
+                double Dll = ( iPID->particleDeltaLL((Rich::ParticleIDType)iID) -
+                               iPID->particleDeltaLL((Rich::ParticleIDType)iSec) );
+                if ( mcpid == iID ) {
+                  (m_dLLTrue[iID][iSec])->fill( Dll );
+                } else {
+                  (m_dLLFalse[iID][iSec])->fill( Dll );
+                }
+              }
+            }
           }
-          double dllPiMu = ( iPID->particleDeltaLL(Rich::Pion) -
-                             iPID->particleDeltaLL(Rich::Muon) );
-          if ( Rich::Muon == mcpid ) {
-            m_dLLPiMuTrueMu->fill( dllPiMu, 1 );
-          } else {
-            m_dLLPiMuFakeMu->fill( dllPiMu, 1 );
-          }
-          double dllpik = ( iPID->particleDeltaLL(Rich::Pion) -
-                            iPID->particleDeltaLL(Rich::Kaon) );
-          if ( Rich::Kaon == mcpid || Rich::Proton == mcpid ) {
-            m_dLLPiKaTrueKaPr->fill( dllpik, 1 );
-          } else {
-            m_dLLPiKaFakeKaPr->fill( dllpik, 1 );
-          }
-          double dllkpr = ( iPID->particleDeltaLL(Rich::Kaon) -
-                            iPID->particleDeltaLL(Rich::Proton) );
-          if ( Rich::Kaon == mcpid ) {
-            m_dLLKaPrTrueKa->fill( dllkpr, 1 );
-          } else if ( Rich::Proton == mcpid ) {
-            m_dLLKaPrTruePr->fill( dllkpr, 1 );
-          }
+
         } // extra histos
-
-        // Pion and Kaon ID momentum spectra
-        if ( iPID->isAboveThreshold(mcpid) &&
-             mcpid>=0 && pid>=0 && mcpid != Rich::BelowThreshold ) {
-
-          m_trueSpec[mcpid]->fill( tkPtot, 1 ); // True Ptot spectrum
-          if ( mcpid == pid ) {
-            m_trueIDSpec[mcpid]->fill( tkPtot, 1 ); // True Ptot spectrum : correct ID
-          } else {
-            m_trueMisIDSpec[mcpid]->fill( tkPtot, 1 ); // True Ptot spectrum : mis ID
-            if ( pid != Rich::BelowThreshold ) {
-              m_fakeIDSpec[pid]->fill( tkPtot, 1 ); // Fake Ptot spectrum : mis ID
-            }
-          }
-
-          // light ID for pions
-          if ( mcpid == Rich::Pion ) {
-            if ( pid == Rich::Pion || pid == Rich::Electron || pid == Rich::Muon ) {
-              m_lightIdSpec->fill( tkPtot, 1. );
-            } else {
-              m_lightMisIdSpec->fill( tkPtot, 1. );
-            }
-          }
-
-          // heavy ID for kaons
-          if ( mcpid == Rich::Kaon ) {
-            if ( pid == Rich::Kaon || pid == Rich::Proton ) {
-              m_heavyIdSpec->fill( tkPtot, 1. );
-            } else {
-              m_heavyMisIdSpec->fill( tkPtot, 1. );
-            }
-          }
-
-        } // threshold if
 
       } else {
         msg << endreq;
-      }
+      } 
 
     } // end PID loop
   } // end empty if
@@ -392,10 +328,10 @@ StatusCode RichPIDQC::execute() {
   if ( !m_richPIDs.empty() ) ++m_nEvents[1];
   m_nTracks[0] += totalSelTracks;
   m_nTracks[1] += pidCount;
-  m_Nids->fill( pidCount, 1 );
-  m_eventRate->fill( (m_richPIDs.empty() ? 0 : 1), 1 );
+  m_Nids->fill( pidCount );
+  m_eventRate->fill( (m_richPIDs.empty() ? 0 : 1) );
   if ( totalSelTracks>0 ) {
-    m_pidRate->fill( (double)pidCount/(double)totalSelTracks, 1 );
+    m_pidRate->fill( (double)pidCount/(double)totalSelTracks );
   }
 
   return StatusCode::SUCCESS;
@@ -473,7 +409,7 @@ StatusCode RichPIDQC::finalize() {
     piMisIDEff[1] = ( trueTotExcludeX[Rich::Pion]>0 ?
                       sqrt( piMisIDEff[0]*(100.-piMisIDEff[0])/
                             trueTotExcludeX[Rich::Pion] ) : 0 );
-    
+
     // Scale entries to percent of total number of entries
     for ( iTrue = 0; iTrue<6; iTrue++ ) {
       for ( iRec = 0; iRec<6; iRec++ ) {
@@ -490,8 +426,8 @@ StatusCode RichPIDQC::finalize() {
     trPIDRate[1] = ( m_nTracks[0]>0 ? sqrt(trPIDRate[0]*(100.-trPIDRate[0])/m_nTracks[0]) : 100 );
 
     msg << "-----------+-----------------------------------------------+-----------"
-        << endreq << "  Tracks   | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c : " 
-        << m_trNames << endreq
+        << endreq << "  Tracks   | " << m_pMinCut << "-" << m_pMaxCut << " GeV/c : "
+        << m_trSelector.selectedTrackTypes() << endreq
         << "-----------+-----------------------------------------------+-----------"
         << endreq
         << "  %total   | Electron Muon   Pion   Kaon  Proton   X  (MC) |  %Purity"

@@ -1,4 +1,4 @@
-// $Id: RichBinnedCherenkovResolution.cpp,v 1.2 2003-08-12 13:35:42 jonrob Exp $
+// $Id: RichBinnedCherenkovResolution.cpp,v 1.3 2003-09-04 07:12:52 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -136,7 +136,8 @@ StatusCode RichBinnedCherenkovResolution::initialize() {
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
   // Informational Printout
-  msg << MSG::DEBUG;
+  msg << MSG::DEBUG
+      << " Using binned track resolutions" << endreq;
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
     msg << " " << (Rich::RadiatorType)iR << " Resolution bins = " << m_thebin[iR] << endreq;
     for ( int iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {

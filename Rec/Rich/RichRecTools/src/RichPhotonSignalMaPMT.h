@@ -1,6 +1,6 @@
-// $Id: RichPhotonSignal.h,v 1.4 2003-08-12 13:35:44 jonrob Exp $
-#ifndef RICHRECTOOLS_RICHPHOTONSIGNAL_H
-#define RICHRECTOOLS_RICHPHOTONSIGNAL_H 1
+// $Id: RichPhotonSignalMaPMT.h,v 1.1 2003-09-04 07:12:52 jonrob Exp $
+#ifndef RICHRECTOOLS_RICHPHOTONSIGNALMAPMT_H
+#define RICHRECTOOLS_RICHPHOTONSIGNALMAPMT_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -13,7 +13,8 @@
 #include "Event/RichRecPhoton.h"
 
 // Detector Description
-#include "DetDesc/DetectorElement.h"
+#include "RichDet/DeRich1.h"
+#include "RichDet/DeRich2.h"
 
 // Interfaces
 #include "RichRecBase/IRichPhotonSignal.h"
@@ -27,28 +28,29 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
-/** @class RichPhotonSignal RichPhotonSignal.h
+/** @class RichPhotonSignalMaPMT RichPhotonSignalMaPMT.h
  *
- *  Tool to calculate for a given photon the probabilities of it 
+ *  Tool to calculate for a given photon the probabilities of it
  *  being a signal or scattered photon, and its predicted contribution
- *  to its associated RichRecPixel, under a certain mass hypothesis
+ *  to its associated RichRecPixel, under a certain mass hypothesis.
+ *  This version is tuned for MaPMTs
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 
-class RichPhotonSignal : public RichRecToolBase,
-                         virtual public IRichPhotonSignal {
+class RichPhotonSignalMaPMT : public RichRecToolBase,
+                              virtual public IRichPhotonSignal {
 
 public:
 
   /// Standard constructor
-  RichPhotonSignal( const std::string& type,
-                    const std::string& name,
-                    const IInterface* parent );
+  RichPhotonSignalMaPMT( const std::string& type,
+                         const std::string& name,
+                         const IInterface* parent );
 
   /// Destructor
-  virtual ~RichPhotonSignal(){}
+  virtual ~RichPhotonSignalMaPMT(){}
 
   /// Initialize method
   StatusCode initialize();
@@ -86,4 +88,4 @@ private: // private data
 
 };
 
-#endif // RICHRECTOOLS_RICHPHOTONSIGNAL_H
+#endif // RICHRECTOOLS_RICHPHOTONSIGNALMAPMT_H

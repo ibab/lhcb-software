@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.h,v 1.2 2003-07-03 13:12:15 jonesc Exp $
+// $Id: RichPIDQC.h,v 1.3 2003-09-04 07:09:07 jonrob Exp $
 #ifndef RICHRECQC_RICHPIDQC_H
 #define RICHRECQC_RICHPIDQC_H 1
 
@@ -103,18 +103,18 @@ private: // data
   int m_maxMultCut;              ///< Maximum track multiplicity
   bool m_truth;                  ///< MCTruth available
   bool m_doHistos;               ///< Flag controlling the creation of histograms
-  std::vector<std::string> m_trNames; ///< Track types to accept
   int m_bins;                    ///< Number of bins
   bool m_finalPrintOut;          ///< Perform final prinout of PID tables
   bool m_extraHistos;            ///< Fill full set of histograms
-
-  /// TrStoredTrack selector
-  TrTrackSelector m_trSelector;
-  
+  TrTrackSelector m_trSelector;  ///< TrStoredTrack selector
   IParticlePropertySvc* m_ppSvc; ///< Particle property service
-
   TrackFitAsct* m_trackToMCP;    ///< Track MCTruth
   std::map<int,int> m_localID;   ///< Local PID mapping
+
+  // Summary information
+  double m_sumTab[6][6];
+  int m_nEvents[2];
+  int m_nTracks[2];
 
   // Histograms
 
@@ -126,34 +126,19 @@ private: // data
   IHistogram1D* m_deltaLL[Rich::NParticleTypes];  ///< Delta Log-Likelihood
   IHistogram1D* m_deltaLLTrue[Rich::NParticleTypes];  ///< Delta Log-Likelihood true particle hypothesis
   IHistogram1D* m_deltaLLFake[Rich::NParticleTypes];  ///< Delta Log-Likelihood fakeparticle hypothesis
-  IHistogram1D* m_dLLPiElTrueEl;
-  IHistogram1D* m_dLLPiElFakeEl;
-  IHistogram1D* m_dLLPiMuTrueMu;
-  IHistogram1D* m_dLLPiMuFakeMu;
-  IHistogram1D* m_dLLPiKaTrueKaPr;
-  IHistogram1D* m_dLLPiKaFakeKaPr;
-  IHistogram1D* m_dLLKaPrTrueKa;
-  IHistogram1D* m_dLLKaPrTruePr;
+  
+  /// dll between types : True type
+  IHistogram1D* m_dLLTrue[Rich::NParticleTypes][Rich::NParticleTypes];
+  /// dll between types : Fake type
+  IHistogram1D* m_dLLFalse[Rich::NParticleTypes][Rich::NParticleTypes];
 
-  IHistogram1D* m_trueSpec[Rich::NParticleTypes];      ///< Momentum spectrum for true Particles
-  IHistogram1D* m_trueIDSpec[Rich::NParticleTypes];    ///< Momentum spectrum for true IDed Particles
-  IHistogram1D* m_fakeIDSpec[Rich::NParticleTypes];    ///< Momentum spectrum for fake IDed Particles
-  IHistogram1D* m_trueMisIDSpec[Rich::NParticleTypes]; ///< Momentum spectrum for true misIDed Particles
-
-  IHistogram1D* m_lightIdSpec;      ///< Momentum spectrum for true Pions IDed as light
-  IHistogram1D* m_lightMisIdSpec;   ///< Momentum spectrum for true Pions misIDed as heavy
-  IHistogram1D* m_heavyIdSpec;      ///< Momentum spectrum for true Kaons IDed as heavy
-  IHistogram1D* m_heavyMisIdSpec;   ///< Momentum spectrum for true Kaons misIDed as light
+  /// Momentum spectrum for IDed type versus true type
+  IHistogram1D* m_ptotSpec[Rich::NParticleTypes][Rich::NParticleTypes];
 
   IHistogram2D* m_perfTable;        ///< Overall PID performance table
 
   IHistogram1D* m_pidRate;          ///< Fraction of selected tracks with PID results
   IHistogram1D* m_eventRate;        ///< Events with/without PID results
-
-  // Summary information
-  double m_sumTab[6][6];
-  int m_nEvents[2];
-  int m_nTracks[2];
 
 };
 #endif // RICHRECQC_RICHPIDQC_H
