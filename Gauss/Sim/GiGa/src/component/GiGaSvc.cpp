@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.8  2001/07/27 14:29:01  ibelyaev
+/// bug fix
+///
 /// Revision 1.7  2001/07/25 17:18:09  ibelyaev
 /// move all conversions from GiGa to GiGaCnv
 ///
@@ -37,15 +40,15 @@
 #include    "GiGa/IGiGaStepAction.h"
 #include    "GiGa/IGiGaEventAction.h"
 #include    "GiGa/IGiGaRunAction.h"
+#include    "GiGa/IGiGaRunManager.h" 
+#include    "GiGa/IGiGaGeoSrc.h" 
 #include    "GiGa/GiGaException.h"
-#include    "GiGa/GiGaRunManager.h" 
 #include    "GiGa/GiGaUtil.h"
+#include    "GiGa/GiGa.h"
+/// G4 
+#include     "G4VVisManager.hh"
 // local 
 #include    "GiGaSvc.h"
-/// visualization stuff I hope that it is temporary!
-#ifdef G4VIS_USE
-#include    "GiGa/GiGaVisManager.h" 
-#endif ///< G4VIS_USE
 
 /// ===========================================================================
 /**  implementation of general non-inline methods from class GiGaSvc
@@ -69,14 +72,16 @@ extern const ISvcFactory&          GiGaSvcFactory = s_Factory ;
 GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   : Service( name , svcloc )
   ///
-  , m_GiGaRunManager       (   0              )
+  , m_runMgr               (   0              )
+  , m_visMgr               (   0              )
   , m_chronoSvc            (   0              ) 
   ///
   , m_objMgr               ( 0                ) 
-  , m_objMgrName           ( "ApplicationMgr" )
+  , m_geoSrc               ( 0                ) 
   ///
-  , m_startUIcommands      (                  )
-  , m_endUIcommands        (                  )
+  , m_objMgrName           ( "ApplicationMgr" )
+  , m_geoSrcName           ( "GiGaGeomCnvSvc" )
+  , m_runMgrName           ( "GiGaMgr"        )
   ///
   , m_GiGaPhysList         (                  )
   ///
@@ -89,13 +94,14 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   , m_UseVisManager        ( false            )
   ///
 {
-  /// Geant4 commands to be executed by G4UImanager 
-  declareProperty( "StartUIcommands"        , m_startUIcommands      ) ;
-  declareProperty( "EndUIcommands"          , m_endUIcommands        ) ;
   /// list of User Intreface sessions 
   declareProperty( "UIsessions"             , m_UIsessions           ) ;
   /// name of object manager 
   declareProperty( "ObjectManager"          , m_objMgrName           ) ; 
+  /// name of geometry source 
+  declareProperty( "GeometrySource"         , m_geoSrcName           ) ; 
+  /// name of runmanager  
+  declareProperty( "RunManager"             , m_runMgrName           ) ; 
   /// type and name of Physics List object 
   declareProperty( "PhysicsList"            , m_GiGaPhysList         ) ;
   /// type and Name of Stacking Action object 
@@ -118,8 +124,13 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
 /// ===========================================================================
 GiGaSvc::~GiGaSvc() 
 { 
-if( 0 != m_GiGaRunManager  ) 
-{ delete m_GiGaRunManager  ; m_GiGaRunManager  = 0 ; } 
+  if( 0 != runMgr()  ) 
+    { 
+      runMgr()->release() ; 
+      delete m_runMgr ; 
+      m_runMgr  = 0 ; 
+    } 
+  if( 0 != visMgr() ) { delete m_visMgr ; m_visMgr = 0 ; }
 };
 
 /// ===========================================================================
@@ -185,6 +196,8 @@ StatusCode GiGaSvc::initialize()
   {
     StatusCode sc = createGiGaRunManager(); 
     if( sc.isFailure() ) 
+      { return Error("Unable to create GiGaRunManager ", sc ); }
+    if( 0 == runMgr () ) 
       { return Error("Unable to create GiGaRunManager ", sc ); }
   } 
   /// try to locate Physics List Object and make it known for GiGa 
@@ -336,34 +349,50 @@ StatusCode GiGaSvc::initialize()
       Print("Used Run Action Object is " + 
             GiGaUtil::ObjTypeName( RA ) + "/"+RA->name() );
     }
-  else { Print("Run Action Object is not required to be loaded") ; } 
-  ///
+  else { Print("Run Action Object is not required to be loaded") ; }  
 
+  /// try to locate GiGa Geometry source  and make it known for GiGa 
+  if( !m_geoSrcName.empty() )
+    {
+      StatusCode sc = svcLoc()->service( m_geoSrcName , m_geoSrc ); 
+      if( sc.isFailure()   ) 
+        { return Error("Unable to locate GiGa Geometry Source='" + 
+                       m_geoSrcName + "'", sc ); } 
+      if( 0 == geoSrc() ) 
+        { return Error("Unable to locate GiGa Geometry Source='" + 
+                       m_geoSrcName + "'"     ); } 
+      geoSrc()->addRef();
+      if( 0 != runMgr() ){ runMgr()->declare( geoSrc() ); }
+    }
+  else { Print("GiGa Geometry Source is not required to be loaded") ; } 
+  ///
+  
+  /// UI session business 
+  if( !m_UIsessions.empty() )
+    {
+      G4UIsession* session = 0 ;
+      for( std::vector<std::string>::const_iterator iSes = 
+             m_UIsessions.begin() ; m_UIsessions.end() != iSes ; ++iSes )
+        {
+          session = GiGa::createUIsession( *iSes );
+          if( 0 != session )
+            { 
+              Print(" UI session created of type '" +
+                    GiGaUtil::ObjTypeName( session) );
+              runMgr()->declare( session );
+              break;
+            }
+        }
+    }
   /// instantiate Visualisation Manager
   if( m_UseVisManager )
     {
       ///
-#ifdef G4VIS_USE
-      ///
-      G4VisManager* VM = new GiGaVisManager(); 
-      ///
-      try{ *this << VM ; } 
-      catch ( const GaudiException& Excpt )
-        { return Exception( "VisManager" , Excpt ) ; } 
-      catch ( const std::exception& Excpt ) 
-        { return Exception( "VisManager" , Excpt ) ; } 
-      catch(...)                            
-        { return Exception( "VisManager"         ) ; }  
-      ///
-      Print( "Visualization manager is created=" + 
-             GiGaUtil::ObjTypeName( VM ) );
-      ///
-#else 
-      ///
-      Warning( "Visualization Manager could not be created" + 
-               " due to absebce of G4VIS_USE flag!");
-      ///
-#endif 
+      if( 0 != G4VVisManager::GetConcreteInstance() )
+        { Error("Visuaalization manager is already instantiated!");}
+      G4VVisManager* m_visMgr = GiGa::createVisManager() ;
+      if( 0 == m_visMgr ) 
+        { Error("GiGa VisualisationManager is not created!");}
       ///
     }
   else { Warning("Visualisation Manager is not required to be created!") ; } 
@@ -378,26 +407,33 @@ StatusCode GiGaSvc::initialize()
 /// ===========================================================================
 StatusCode GiGaSvc::finalize()
 {  
-  const std::string Tag( name() + ".finalize()" ) ; 
-  MsgStream log( msgSvc(), name() ); 
+  Print("finalization");
   /// finalize Run Manager 
   StatusCode sc ( StatusCode::SUCCESS ); 
-  if( 0 != m_GiGaRunManager ) { sc = m_GiGaRunManager->finalizeRunManager() ;} 
+  if( 0 != runMgr() ) { sc = runMgr()->finalize() ;} 
   if( sc.isFailure() ) 
-    { Error(" Error in ->finalizeRunManager() method!", sc ); } 
+    { Error("coudlnot finalize RunManager", sc ); } 
   /// release all used services 
   if( 0 != objMgr   () ) { objMgr   ()->release() ; m_objMgr    = 0 ; } 
   if( 0 != chronoSvc() ) { chronoSvc()->release() ; m_chronoSvc = 0 ; } 
-  ///  
-  {  
-    StatusCode sc(StatusCode::FAILURE); 
-    const std::string m1("::delete RunManager  "); 
-    ___GIGA_TRY___                         
-      { if( 0 != m_GiGaRunManager  ) 
-        { delete m_GiGaRunManager ; m_GiGaRunManager = 0 ; } }
-    ___GIGA_CATCH_PRINT_AND_RETURN___(Tag,m1,msgSvc(),chronoSvc(),sc);
-  }
-  ///  
+  if( 0 != geoSrc   () ) { geoSrc   ()->release() ; m_geoSrc    = 0 ; } 
+  /// 
+  try
+    {
+      if( 0 != runMgr()  )
+        { 
+          runMgr()->release  ()   ;
+          delete m_runMgr ;
+          m_runMgr  = 0   ;
+        }
+    }
+  catch ( const GaudiException& Excpt ) 
+    { return Exception( "finalize" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { return Exception( "finalize" , Excpt ) ; } 
+  catch(...)                            
+    { return Exception( "finalize"         ) ; }
+  ///  finalize the base class 
   return Service::finalize();
 };
 
@@ -409,24 +445,12 @@ StatusCode GiGaSvc::finalize()
 StatusCode GiGaSvc::createGiGaRunManager() 
 {
   ///
-  if( 0 != m_GiGaRunManager ) { return StatusCode::SUCCESS; }     /// RETURN !!!
+  if( 0 != runMgr() ) { return StatusCode::SUCCESS; }     /// RETURN !!!
   ///
-  Assert( 0 == G4RunManager::GetRunManager() , 
-          "There exist another instance of G4RunManager!" ) ; 
+  m_runMgr = GiGa::createRunManager( m_runMgrName , serviceLocator() ); 
   ///
-  m_GiGaRunManager = 
-    new  GiGaRunManager( "GiGaMgr" , serviceLocator() ); 
-  ///
-  Assert( 0 != m_GiGaRunManager              , 
-          " Unable to create GiGaRunManager" ) ; 
-  Assert( 0 != G4RunManager::GetRunManager() , 
-          " Unable to create G4RunManager"   ) ; 
-  ///
-  m_GiGaRunManager->set_startUIcommands      ( m_startUIcommands      ) ; 
-  m_GiGaRunManager->set_endUIcommands        ( m_endUIcommands        ) ; 
-  ///
-  m_GiGaRunManager->set_UIsessions           ( m_UIsessions           ) ; 
-  ///
+  if( 0 == runMgr() ) { return Error(" Unable to create GiGaRunManager"); }
+  ///  
   return StatusCode::SUCCESS;                                     /// RETURN !!!
   ///
 };
@@ -439,32 +463,20 @@ StatusCode GiGaSvc::createGiGaRunManager()
 /// ===========================================================================
 StatusCode GiGaSvc::prepareTheEvent( G4PrimaryVertex * vertex ) 
 {
-  const std::string Tag     ( name() + ".prepareTheEvent(G4PrimaryVertex*)" );
-  const std::string method1 ( " createGiGaRunManager() " ) ; 
-  const std::string method2 ( " GiGaRunManager::prepareTheEvent() " ) ; 
-  MsgStream  log( msgSvc() , name() + "prepareTheEvent" ) ; 
-  StatusCode sc( StatusCode::SUCCESS ) ; 
-  ///
-  ___GIGA_TRY___ 
-    {
-      if( 0 == m_GiGaRunManager )
-        { 
-          sc = createGiGaRunManager() ;   
-          Assert( sc.isSuccess()        , 
-                  " prepareTheEvent(): failure from createGiGaRunManager " , 
-                  sc ) ; 
-          Assert( 0 != m_GiGaRunManager ,
-                  " prepareTheEvent(): unable to create GiGaRunManager   ") ; 
-        }
+  try
+    { 
+      StatusCode sc( StatusCode::SUCCESS ) ; 
+      if( 0 == runMgr () ) { sc = createGiGaRunManager()     ; }
+      if( sc.isFailure() ) { Exception("prepareTheEvent()" ) ; }
+     sc = runMgr()->prepareTheEvent( vertex ) ; 
+      if( sc.isFailure() ) { Exception("prepareTheEvent()" ) ; } 
     }
-  ___GIGA_CATCH_AND_THROW___(Tag,method1) ; 
-  ///
-  ___GIGA_TRY___ 
-    {
-      sc = m_GiGaRunManager->prepareTheEvent( vertex ) ; 
-      Assert( sc.isSuccess() , "preparetheEvent() failure", sc ) ; 
-    }
-  ___GIGA_CATCH_AND_THROW___(Tag,method2) ; 
+  catch ( const GaudiException& Excpt ) 
+    { return Exception( "prepareTheEvent()" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { return Exception( "prepareTheEvent()" , Excpt ) ; } 
+  catch(...)                            
+    { return Exception( "prepareTheEvent()"         ) ; }
   ///
   return StatusCode::SUCCESS; 
   ///
@@ -478,30 +490,20 @@ StatusCode GiGaSvc::prepareTheEvent( G4PrimaryVertex * vertex )
 /// ===========================================================================
 StatusCode GiGaSvc::retrieveTheEvent( const G4Event*& event) 
 {
-  const std::string Tag     ( name() + ".retrieveTheEvent(const G4Event*&)" );
-  const std::string method1 ( " createGiGaRunManager() " ) ; 
-  const std::string method2 ( " GiGaRunManager::retrieveTheEvent() " ) ; 
-  StatusCode sc( StatusCode::SUCCESS ) ; 
-  MsgStream  log( msgSvc() , name() + ".retrieveTheEvent" ) ; 
-  ___GIGA_TRY___ 
+  try
     { 
-      if( 0 == m_GiGaRunManager )
-        { 
-          sc = createGiGaRunManager() ;   
-          Assert( sc.isSuccess()        , std::string(" retrieveTheEvent:") + 
-                  " failure from createGiGaRunManager " , sc     ) ; 
-          Assert( 0 != m_GiGaRunManager , std::string(" retrieveTheEvent:") + 
-                  " unable to create GiGaRunManager   "          ) ; 
-        }
+      StatusCode sc( StatusCode::SUCCESS ) ; 
+      if( 0 == runMgr () ) { sc = createGiGaRunManager()      ; }
+      if( sc.isFailure() ) { Exception("retrieveTheEvent()" ) ; }
+      sc = runMgr()->retrieveTheEvent( event ) ; 
+      if( sc.isFailure() ) { Exception("retrieveTheEvent()" ) ; }
     }
-  ___GIGA_CATCH_AND_THROW___(Tag,method1) ; 
-  ///
-  ___GIGA_TRY___ 
-    { 
-      sc = m_GiGaRunManager->retrieveTheEvent( event ) ; 
-      Assert( sc.isSuccess() , " retrieveTheEvent failure" ) ; 
-    }
-  ___GIGA_CATCH_AND_THROW___(Tag,method2) ; 
+  catch ( const GaudiException& Excpt ) 
+    { return Exception( "retrieveTheEvent()" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { return Exception( "retrieveTheEvent()" , Excpt ) ; } 
+  catch(...)                            
+    { return Exception( "retrieveTheEvent()"         ) ; }
   ///
   return StatusCode::SUCCESS; 
   ///

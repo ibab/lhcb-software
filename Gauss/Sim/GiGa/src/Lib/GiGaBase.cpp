@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/07/27 17:03:17  ibelyaev
+/// improved printout
+///
 /// Revision 1.5  2001/07/27 15:06:14  ibelyaev
 /// printout improvements in base class GiGaBase
 ///
@@ -381,8 +384,8 @@ StatusCode GiGaBase::Exception ( const std::string    & msg ,
 {
   Stat stat( chronoSvc() , exc.tag() );
   MsgStream log( msgSvc() , name() ); 
-  log << lvl << "GaudiException: catch and re-throw:" << msg << endreq ; 
-  throw   GiGaException( msg , exc , sc );
+  Print( "GaudiException: catch and re-throw " + msg , sc , lvl );
+  throw   GiGaException( myType()+"/"+name()+": " + msg , exc , sc );
   return  sc;
 };
 
@@ -402,8 +405,8 @@ StatusCode GiGaBase::Exception ( const std::string    & msg ,
 {
   Stat stat( chronoSvc() , "std::exception" );
   MsgStream log( msgSvc() , name() ); 
-  log << lvl << "std::exception: catch and throw:" << msg << endreq ; 
-  throw   GiGaException( msg , sc );
+  Print( "std::exception: catch and re-throw " + msg , sc , lvl );
+  throw   GiGaException( myType()+"/"+name()+": " + msg , sc );
   return  sc;
 };
 
@@ -421,7 +424,7 @@ StatusCode GiGaBase::Exception ( const std::string    & msg ,
 {
   Stat stat( chronoSvc() , "GiGaException" );
   MsgStream log( msgSvc() , name() ); 
-  log << lvl << "GiGaException throw:" << msg << endreq ; 
+  Print( "GiGaException throw " + msg , sc , lvl );
   throw   GiGaException( msg , sc );
   return  sc;
 };

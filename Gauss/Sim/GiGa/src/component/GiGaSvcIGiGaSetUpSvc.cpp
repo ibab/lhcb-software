@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/23 13:12:29  ibelyaev
+/// the package restructurisation(II)
+///
 /// Revision 1.4  2001/07/15 20:54:36  ibelyaev
 /// package restructurisation
 /// 
@@ -18,8 +21,9 @@
 #include  "GaudiKernel/System.h" 
 #include  "GaudiKernel/MsgStream.h" 
 /// GiGa
+#include "GiGa/IGiGaRunManager.h"
 #include "GiGa/GiGaException.h"
-#include "GiGa/GiGaRunManager.h"
+#include "GiGa/GiGaUtil.h"
 /// local 
 #include "GiGaSvc.h"
 
@@ -67,7 +71,25 @@
  */
 /// ===========================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserDetectorConstruction   * obj )
-{  ___GIGA_MACRO_TRICK1___; };
+{
+  try
+    {
+      StatusCode sc = StatusCode::SUCCESS;
+      if( 0 == runMgr  () ) { sc = createGiGaRunManager(); }
+      if( sc.isFailure () ) { Exception("Unable to create IGiGaRunManager!");}
+      sc = runMgr()->declare( obj ) ;
+      if( sc.isFailure () ) { Exception("Unable to declare" +
+                                        GiGaUtil::ObjTypeName( obj ) ); }
+    }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "operator<<(G4VUserDetectorConstruction*)" , Excpt) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "operator<<(G4VUserDetectorConstruction*)" , Excpt) ; } 
+  catch(...)                            
+    { Exception( "operator<<(G4VUserDetectorConstruction*)"        ) ; }
+  ///
+  return *this;
+};
 
 /// ===========================================================================
 /** set new world wolume 
@@ -80,7 +102,25 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserDetectorConstruction   * obj )
  */
 /// ===========================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4VPhysicalVolume             * obj )
-{  ___GIGA_MACRO_TRICK1___; }; 
+{ 
+  try
+    {
+      StatusCode sc = StatusCode::SUCCESS;
+      if( 0 == runMgr  () ) { sc = createGiGaRunManager(); }
+      if( sc.isFailure () ) { Exception("Unable to create IGiGaRunManager!");}
+      sc = runMgr()->declare( obj ) ;
+      if( sc.isFailure () ) { Exception("Unable to declare" +
+                                        GiGaUtil::ObjTypeName( obj ) ); }
+    }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "operator<<(G4VPhysicalVolume*)" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "operator<<(G4VPhysicalVolume*)" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "operator<<(G4VPhysicalVolume*)"         ) ; }
+  ///
+  return *this;
+}; 
 
 /// ===========================================================================
 /** set new generator 
@@ -93,7 +133,25 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VPhysicalVolume             * obj )
  */
 /// ===========================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPrimaryGeneratorAction * obj )
-{  ___GIGA_MACRO_TRICK1___; }; 
+{ 
+  try
+    {
+      StatusCode sc = StatusCode::SUCCESS;
+      if( 0 == runMgr  () ) { sc = createGiGaRunManager(); }
+      if( sc.isFailure () ) { Exception("Unable to create IGiGaRunManager!");}
+      sc = runMgr()->declare( obj ) ;
+      if( sc.isFailure () ) { Exception("Unable to declare" +
+                                        GiGaUtil::ObjTypeName( obj ) ); }
+    }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "operator<<(G4VUserPrimaryGenerator*)" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "operator<<(G4VUserPrimaryGenerator*)" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "operator<<(G4VUserPrimaryGenerator*)"         ) ; }
+  ///
+  return *this;
+}; 
 
 /// ===========================================================================
 /** set new physics list 
@@ -106,7 +164,25 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPrimaryGeneratorAction * obj )
  */
 /// ===========================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPhysicsList            * obj )
-{  ___GIGA_MACRO_TRICK1___; }; 
+{
+  try
+    {
+      StatusCode sc = StatusCode::SUCCESS;
+      if( 0 == runMgr  () ) { sc = createGiGaRunManager(); }
+      if( sc.isFailure () ) { Exception("Unable to create IGiGaRunManager!");}
+      sc = runMgr()->declare( obj ) ;
+      if( sc.isFailure () ) { Exception("Unable to declare" +
+                                        GiGaUtil::ObjTypeName( obj ) ); }
+    }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "operator<<(G4VUserPhysicsList*)" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "operator<<(G4VUserPhysicsList*)" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "operator<<(G4VUserPhysicsList*)"         ) ; }
+  ///
+  return *this;
+}; 
 
 /// ===========================================================================
 /** set new run action 
@@ -119,7 +195,25 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPhysicsList            * obj )
  */
 /// ===========================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserRunAction               * obj )
-{  ___GIGA_MACRO_TRICK1___; }; 
+{
+  try
+    {
+      StatusCode sc = StatusCode::SUCCESS;
+      if( 0 == runMgr  () ) { sc = createGiGaRunManager(); }
+      if( sc.isFailure () ) { Exception("Unable to create IGiGaRunManager!");}
+      sc = runMgr()->declare( obj ) ;
+      if( sc.isFailure () ) { Exception("Unable to declare" +
+                                        GiGaUtil::ObjTypeName( obj ) ); }
+    }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "operator<<(G4UserRunAction*)" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "operator<<(G4UserRunAction*)" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "operator<<(G4UserRunAction*)"         ) ; }
+  ///
+  return *this;
+}; 
 
 /// ===========================================================================
 /** set new event action 
@@ -132,7 +226,25 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserRunAction               * obj )
  */
 /// ===========================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserEventAction             * obj )
-{  ___GIGA_MACRO_TRICK1___; }; 
+{
+  try
+    {
+      StatusCode sc = StatusCode::SUCCESS;
+      if( 0 == runMgr  () ) { sc = createGiGaRunManager(); }
+      if( sc.isFailure () ) { Exception("Unable to create IGiGaRunManager!");}
+      sc = runMgr()->declare( obj ) ;
+      if( sc.isFailure () ) { Exception("Unable to declare" +
+                                        GiGaUtil::ObjTypeName( obj ) ); }
+    }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "operator<<(G4UserEventAction*)" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "operator<<(G4UserEventAction*)" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "operator<<(G4UserEventAction*)"         ) ; }
+  ///
+  return *this;
+}; 
 
 /// ===========================================================================
 /** set new stacking action 
@@ -145,8 +257,27 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserEventAction             * obj )
  */
 /// ===========================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserStackingAction          * obj ) 
-{  ___GIGA_MACRO_TRICK1___; }; 
+{
+  try
+    {
+      StatusCode sc = StatusCode::SUCCESS;
+      if( 0 == runMgr  () ) { sc = createGiGaRunManager(); }
+      if( sc.isFailure () ) { Exception("Unable to create IGiGaRunManager!");}
+      sc = runMgr()->declare( obj ) ;
+      if( sc.isFailure () ) { Exception("Unable to declare" +
+                                        GiGaUtil::ObjTypeName( obj ) ); }
+    }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "operator<<(G4UserStackingAction*)" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "operator<<(G4UserStackingAction*)" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "operator<<(G4UserStackingAction*)"         ) ; }
+  ///
+  return *this;
+};
 
+    
 /// ===========================================================================
 /** set new tracking  action 
  *               implementation of IGiGaSetUpSvc abstract interface 
@@ -158,7 +289,25 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserStackingAction          * obj )
  */
 /// ===========================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserTrackingAction          * obj ) 
-{  ___GIGA_MACRO_TRICK1___; }; 
+{
+  try
+    {
+      StatusCode sc = StatusCode::SUCCESS;
+      if( 0 == runMgr  () ) { sc = createGiGaRunManager(); }
+      if( sc.isFailure () ) { Exception("Unable to create IGiGaRunManager!");}
+      sc = runMgr()->declare( obj ) ;
+      if( sc.isFailure () ) { Exception("Unable to declare" +
+                                        GiGaUtil::ObjTypeName( obj ) ); }
+    }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "operator<<(G4UserTrackingAction*)" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "operator<<(G4UserTrackingAction*)" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "operator<<(G4UserTrackingAction*)"         ) ; }
+  ///
+  return *this;
+};
 
 /// ===========================================================================
 /** set new stepping  action 
@@ -171,20 +320,25 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserTrackingAction          * obj )
  */
 /// ===========================================================================
 IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserSteppingAction          * obj ) 
-{  ___GIGA_MACRO_TRICK1___; }; 
-
-/// ===========================================================================
-/** set new visualization manager  
- *               implementation of IGiGaSetUpSvc abstract interface 
- *
- *  NB: errors are reported through exception thrown 
- * 
- *  @param  obj            pointer to new visualization manager      
- *  @return self-reference ot IGiGaSetUpSvc interface 
- */
-/// ===========================================================================
-IGiGaSetUpSvc& GiGaSvc::operator << ( G4VisManager                  * obj ) 
-{  ___GIGA_MACRO_TRICK1___; }; 
+{ 
+  try
+    {
+      StatusCode sc = StatusCode::SUCCESS;
+      if( 0 == runMgr  () ) { sc = createGiGaRunManager(); }
+      if( sc.isFailure () ) { Exception("Unable to create IGiGaRunManager!");}
+      sc = runMgr()->declare( obj ) ;
+      if( sc.isFailure () ) { Exception("Unable to declare" +
+                                        GiGaUtil::ObjTypeName( obj ) ); }
+    }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "operator<<(G4UserSteppingAction*)" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "operator<<(G4UserSteppingAction*)" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "operator<<(G4UserSteppingAction*)"         ) ; }
+  ///
+  return *this;
+};
 
 /// ===========================================================================
 /** set detector constructon module 
@@ -195,7 +349,17 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VisManager                  * obj )
  */
 /// ===========================================================================
 StatusCode GiGaSvc::setConstruction ( G4VUserDetectorConstruction   * obj )
-{  ___GIGA_MACRO_TRICK2___; }; 
+{
+  try { *this << obj ; }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "setConstruction()" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "setConstruction()" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "setConstruction()"         ) ; }
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 /** set new world wolume 
@@ -206,7 +370,17 @@ StatusCode GiGaSvc::setConstruction ( G4VUserDetectorConstruction   * obj )
  */
 /// ===========================================================================
 StatusCode GiGaSvc::setDetector     ( G4VPhysicalVolume             * obj )
-{  ___GIGA_MACRO_TRICK2___; }; 
+{
+  try { *this << obj ; }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "setDetector()" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "setDetector()" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "setDetector()"         ) ; }
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 /** set new generator 
@@ -217,7 +391,17 @@ StatusCode GiGaSvc::setDetector     ( G4VPhysicalVolume             * obj )
  */
 /// ===========================================================================
 StatusCode GiGaSvc::setGenerator    ( G4VUserPrimaryGeneratorAction * obj )
-{  ___GIGA_MACRO_TRICK2___; }; 
+{
+  try { *this << obj ; }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "setGenerator()" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "setGenerator()" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "setGenerator()"         ) ; }
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 /** set new physics list 
@@ -228,7 +412,17 @@ StatusCode GiGaSvc::setGenerator    ( G4VUserPrimaryGeneratorAction * obj )
  */
 /// ===========================================================================
 StatusCode GiGaSvc::setPhysics      ( G4VUserPhysicsList            * obj )
-{  ___GIGA_MACRO_TRICK2___; }; 
+{
+  try { *this << obj ; }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "setPhysics()" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "setPhysics()" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "setPhysics()"         ) ; }
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 /** set new run action 
@@ -239,7 +433,17 @@ StatusCode GiGaSvc::setPhysics      ( G4VUserPhysicsList            * obj )
  */
 /// ===========================================================================
 StatusCode GiGaSvc::setRunAction    ( G4UserRunAction               * obj )
-{  ___GIGA_MACRO_TRICK2___; }; 
+{
+  try { *this << obj ; }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "setRunAction()" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "setRunAction()" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "setRunAction()"         ) ; }
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 /** set new event action 
@@ -250,7 +454,17 @@ StatusCode GiGaSvc::setRunAction    ( G4UserRunAction               * obj )
  */
 /// ===========================================================================
 StatusCode GiGaSvc::setEvtAction    ( G4UserEventAction             * obj )
-{  ___GIGA_MACRO_TRICK2___; }; 
+{
+  try { *this << obj ; }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "setEvtAction()" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "setEvtAction()" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "setEvtAction()"         ) ; }
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 /** set new stacking action 
@@ -261,7 +475,17 @@ StatusCode GiGaSvc::setEvtAction    ( G4UserEventAction             * obj )
  */
 /// ===========================================================================
 StatusCode GiGaSvc::setStacking     ( G4UserStackingAction          * obj )
-{  ___GIGA_MACRO_TRICK2___; }; 
+{
+  try { *this << obj ; }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "setStacking()" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "setStacking()" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "setStacking()"         ) ; }
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 /** set new tracking  action 
@@ -272,7 +496,17 @@ StatusCode GiGaSvc::setStacking     ( G4UserStackingAction          * obj )
  */
 /// ===========================================================================
 StatusCode GiGaSvc::setTracking     ( G4UserTrackingAction          * obj )
-{  ___GIGA_MACRO_TRICK2___; }; 
+{
+  try { *this << obj ; }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "setTracking()" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "setTracking()" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "setTracking()"         ) ; }
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 /** set new stepping  action 
@@ -283,18 +517,17 @@ StatusCode GiGaSvc::setTracking     ( G4UserTrackingAction          * obj )
  */
 /// ===========================================================================
 StatusCode GiGaSvc::setStepping     ( G4UserSteppingAction          * obj )
-{  ___GIGA_MACRO_TRICK2___; }; 
-
-/// ===========================================================================
-/** set new visualization manager  
- *               implementation of IGiGaSetUpSvc abstract interface 
- *
- *  @param  obj            pointer to new visualization manager      
- *  @return status code  
- */
-/// ===========================================================================
-StatusCode GiGaSvc::setVisManager   ( G4VisManager                  * obj )
-{  ___GIGA_MACRO_TRICK2___; }; 
+{
+  try { *this << obj ; }
+  catch ( const GaudiException& Excpt ) 
+    { Exception( "setStepping()" , Excpt ) ; } 
+  catch ( const std::exception& Excpt ) 
+    { Exception( "setStepping()" , Excpt ) ; } 
+  catch(...)                            
+    { Exception( "setStepping()"         ) ; }
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 

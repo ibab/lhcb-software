@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/27 14:29:01  ibelyaev
+/// bug fix
+///
 /// Revision 1.4  2001/07/25 17:18:10  ibelyaev
 /// move all conversions from GiGa to GiGaCnv
 ///
@@ -33,16 +36,16 @@ class     ISvcLocator                     ;
 class     IObjManager                     ;
 template   <class TYPE> class SvcFactory  ;
 /// forwad declarations  from GiGa  
-class     GiGaRunManager     ; 
-/// forwad declarations  from G4
-class     G4UImanager        ; 
-class     G4VisManager       ;
+class     IGiGaRunManager    ; 
 class     IGiGaPhysList      ;
 class     IGiGaStackAction   ;
 class     IGiGaTrackAction   ;
 class     IGiGaStepAction    ;
 class     IGiGaEventAction   ;
 class     IGiGaRunAction     ;
+/// forwad declarations  from G4
+class     G4UImanager        ; 
+class     G4VVisManager      ;
 
 /**  @class GiGaSvc GiGaSvc.h 
      
@@ -272,18 +275,7 @@ class GiGaSvc: public         Service       ,
    *  @return self-reference ot IGiGaSetUpSvc interface 
    */
   virtual IGiGaSetUpSvc& 
-  operator << ( G4UserSteppingAction          * action        ) ; 
-  
-  /** set new visualization manager  
-   *               implementation of IGiGaSetUpSvc abstract interface 
-   *
-   *  NB: errors are reported through exception thrown 
-   * 
-   *  @param  visualization  pointer to new visualization manager      
-   *  @return self-reference ot IGiGaSetUpSvc interface 
-   */
-  virtual IGiGaSetUpSvc& 
-  operator << ( G4VisManager                  * visualization ) ;
+  operator << ( G4UserSteppingAction          * action        ) ;
 
   /** set detector constructon module 
    *               implementation of IGiGaSetUpSvc abstract interface 
@@ -366,15 +358,6 @@ class GiGaSvc: public         Service       ,
   virtual StatusCode 
   setStepping     ( G4UserSteppingAction          * action        ) ;
 
-  /** set new visualization manager  
-   *               implementation of IGiGaSetUpSvc abstract interface 
-   *
-   *  @param  visualization  pointer to new visualization manager      
-   *  @return status code  
-   */
-  virtual StatusCode 
-  setVisManager   ( G4VisManager                  * visualization ) ;
-  
   /** service initialization 
    *  @return status code 
    */
@@ -397,7 +380,7 @@ protected:
   /** create GiGa Run Manager 
    *  @return status code 
    */
-  StatusCode      createGiGaRunManager    () ;  
+  StatusCode createGiGaRunManager () ;  
   
   /** prepare the event 
    *  @param  vertex pointer to primary vertex 
@@ -411,15 +394,20 @@ protected:
    */
   StatusCode      retrieveTheEvent ( const G4Event   *& event  ); 
   
-private: 
+private:
   
+  /// accessor to IGiGaRunManager object
+  inline IGiGaRunManager* runMgr    () const { return m_runMgr         ; } ;
+  /// accessor to visualization manager 
+  inline G4VVisManager*   visMgr    () const { return m_visMgr         ; } ;
+  /// accessor to GiGa Geometry Source  
+  inline IGiGaGeoSrc*     geoSrc    () const { return m_geoSrc         ; } ;
   /// accessor to Chrono & Stat  service 
-  inline  IChronoStatSvc*        chronoSvc () const { return m_chronoSvc ; } ;
+  inline IChronoStatSvc*  chronoSvc () const { return m_chronoSvc      ; } ;
   /// accessor to object manager 
-  inline  IObjManager*           objMgr    () const { return m_objMgr    ; } ;
+  inline IObjManager*     objMgr    () const { return m_objMgr         ; } ;
   /// accessor to Service Locator 
-  inline  ISvcLocator*           svcLoc    () const 
-  { return serviceLocator() ; }
+  inline ISvcLocator*     svcLoc    () const { return serviceLocator() ; } ;
   
   /** assertion 
    *  @param assertion   assertion condition
@@ -550,29 +538,31 @@ private:
    */
   StatusCode runAction     ( const std::string& TypeAndName , 
 			     IGiGaRunAction*&   RunAction  ) ;
-
- private:
+  
+  
+private:
   
   ///
-  GiGaRunManager* m_GiGaRunManager ; ///< pointer to GiGaRunManager  object
+  IGiGaRunManager* m_runMgr      ; ///< pointer to IGiGaRunManager  object
+  G4VVisManager*   m_visMgr      ; ///< visualization manager 
   ///
-  IChronoStatSvc* m_chronoSvc   ; ///< pointer to Chtono&Stat service
-  IObjManager*    m_objMgr      ; ///< pointer to ObjectManager object 
-  std::string     m_objMgrName  ; ///< name of object manager object  
+  IChronoStatSvc*  m_chronoSvc   ; ///< pointer to Chtono&Stat service
+  IObjManager*     m_objMgr      ; ///< pointer to ObjectManager object
+  IGiGaGeoSrc*     m_geoSrc      ; ///< pointer to GiGa Geometry Source 
+  std::string      m_objMgrName  ; ///< name of object manager object
+  std::string      m_geoSrcName  ; ///< name of object manager object
+  std::string      m_runMgrName  ; ///< name of Run manager  
   ///
-  Strings m_startUIcommands           ; ///< command list 
-  Strings m_endUIcommands             ; ///< command list
+  Strings m_UIsessions           ; ///< list of sessions 
   ///
-  Strings m_UIsessions                ; ///< list of sessions 
+  std::string m_GiGaPhysList     ; ///< type/name of PhysicsList Object
+  std::string m_GiGaStackAction  ; ///< type/name of Stacking Action Object 
+  std::string m_GiGaTrackAction  ; ///< type/name of Tracking Action Object 
+  std::string m_GiGaStepAction   ; ///< type/name of Stepping Action Object 
+  std::string m_GiGaEventAction  ; ///< type/name of Event    Action Object 
+  std::string m_GiGaRunAction    ; ///< type/name of Run      Action Object 
   ///
-  std::string m_GiGaPhysList    ; ///< type/name of PhysicsList Object
-  std::string m_GiGaStackAction ; ///< type/name of Stacking Action Object 
-  std::string m_GiGaTrackAction ; ///< type/name of Tracking Action Object 
-  std::string m_GiGaStepAction  ; ///< type/name of Stepping Action Object 
-  std::string m_GiGaEventAction ; ///< type/name of Event    Action Object 
-  std::string m_GiGaRunAction   ; ///< type/name of Run      Action Object 
-  ///
-  bool        m_UseVisManager ;  ///< flag to use vis manager 
+  bool        m_UseVisManager    ; ///< flag to use vis manager 
   ///
 };
 

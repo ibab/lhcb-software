@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.9  2001/07/27 14:28:59  ibelyaev
+/// bug fix
+///
 /// Revision 1.8  2001/07/25 17:18:07  ibelyaev
 /// move all conversions from GiGa to GiGaCnv
 ///
@@ -26,6 +29,8 @@
 #include   "GaudiKernel/IChronoStatSvc.h"
 /// GiGa 
 #include   "GiGa/GiGaException.h"
+#include   "GiGa/GiGaBase.h"
+#include   "GiGa/IGiGaRunManager.h"
 /// Geant4 
 #include   "G4RunManager.hh" 
 /// forward declarations (Gaudi)
@@ -33,20 +38,8 @@ class     IParticlePropertySvc          ;
 class     IChronoStatSvc                ;
 class     ISvcLocator                   ;
 class     IGiGaGeoSrc                   ;
-/// forward declarations (Geant4) 
-class     G4VUserPrimaryGeneratorAction ;
-class     G4VUserDetectorConstruction   ;
-class     G4VUserPhysicsList            ;
-class     G4UserRunAction               ;
-class     G4UserEventAction             ;
-class     G4UserStackingAction          ;
-class     G4UserSteppingAction          ;
-class     G4UserTrackingAction          ;
-class     G4VisManager                  ; 
 class     G4UIsession                   ;
 class     G4UImanager                   ; 
-/// GiGa
-class     GiGaSvc                       ; 
 
 
 /** @class GiGaRunManager GiGaRunManager.h GiGa/GiGaRunManager.h
@@ -57,16 +50,12 @@ class     GiGaSvc                       ;
  *  @date xx/xx/xxx 
  */
 
-class GiGaRunManager: private G4RunManager
+class GiGaRunManager: public  virtual IGiGaRunManager ,
+                      private            G4RunManager ,
+                      private          GiGaBase    
 {
-  /// only GiGa Svc can instantiate the run manager! 
-  friend class GiGaSvc;
   ///
 public:
-  /// useful typedef 
-  typedef std::vector<std::string>        Strings;
-  ///
- protected:
   
   /** standard onstructor 
    *  @param name name of the run manager object
@@ -77,7 +66,12 @@ public:
   /// virtual destructor 
   virtual ~GiGaRunManager();  
 
- public:
+public:
+
+  /** identification 
+   *  @return name of concrete inteface instance 
+   */
+  virtual const std::string& GiGaRunManager::name () const;
   
   /** declare the Geant4 Primary Generator Action 
    *  @param obj pointer  to Geant4 Primary Generator Action 
@@ -102,6 +96,12 @@ public:
    *  @return  status code 
    */
   virtual StatusCode declare( G4VUserPhysicsList             * obj ) ;
+
+  /** declare the GiGa geometry source  
+   *  @param obj pointer  to GiGa Geometry source   
+   *  @return  status code 
+   */
+  virtual StatusCode declare( IGiGaGeoSrc                    * obj ) ;
 
   /** declare the Geant4 Run Action 
    *  @param obj pointer  to Geant4 Run action  
@@ -133,12 +133,6 @@ public:
    */
   virtual StatusCode declare( G4UserTrackingAction           * obj ) ;
 
-  /** declare the Geant4 Visual Manager  
-   *  @param obj pointer  to Geant4 Visual Manager
-   *  @return  status code 
-   */
-  virtual StatusCode declare( G4VisManager                   * obj ) ;
-
   /** Prepare the event 
    *  @param vertex pointer to (main) primary vertex 
    *  @return status code 
@@ -156,17 +150,22 @@ public:
    */
   virtual StatusCode  retrieveTheEvent( const G4Event      *& event     ) ;
 
-
-  /** set user interface session 
-   *  @param st    ordered list of sessions 
-   */
-  void       set_UIsessions  ( const Strings& st ) { m_UIsessions = st; }  
-
-  /** create  user interface session 
+  /** declare the Geant4 User Interface session 
+   *  @param obj pointer  to Geant4 User Interface session  
    *  @return  status code 
    */
-  StatusCode createUIsession () ;
+  virtual StatusCode declare( G4UIsession                    * obj     ) ;
+
+  /** initialize the run manager 
+   *  @return status code
+   */ 
+  virtual StatusCode initialize () ;
   
+  /** finalize the run manager 
+   *  @return status code
+   */ 
+  virtual StatusCode finalize   () ;
+
   /** retrieve the status of Geant4 kernel
    *  @return true if kernel is initialized properly 
    */
@@ -187,47 +186,15 @@ public:
    */
   inline bool evt_Is_Processed   () const { return m_pro_st ; } ;
 
-  /** retrieve the status of Geant4 vis manager 
-   *  @return true if Vis Manager is initializesd 
-   */
-  inline bool vis_Is_Initialized () const { return m_vis_st ; } ;
-
   /** retrieve the status of Geant4 User Interface Session 
    *  @return true if user interafce session is initializesd 
    */
   inline bool uis_Is_Started     () const { return m_uis_st ; } ;
 
-  /** retrieve the name of run manager 
-   *  @return name of run manager 
-   */
-  inline const std::string& name      () const { return m_name      ; } ;
-
-  /** retrieve the pointer to message service 
-   *  @return pointer to message service 
-   */
-  inline IMessageSvc*       msgSvc    () const { return m_msgSvc    ; } ;
-
-  /** retrieve the pointer to Chrono & Stats service  
-   *  @return pointer to Chrono & Stat service   
-   */
-  inline IChronoStatSvc*    chronoSvc () const { return m_chronoSvc ; } ;
-
-  /** retrieve the pointer to Service Locator 
-   *  @return pointer to Service Locator    
-   */
-  inline ISvcLocator*       svcLoc    () const { return m_svcLoc    ; } ;
-
   /** retrieve the pointer minimal geometry information source 
    *  @return pointer to minimal geometry information source  
    */
   inline IGiGaGeoSrc*       geoSrc    () const { return m_geoSrc    ; } ;
-
-  /// UI commands to be executed at start
-  inline const Strings&  startUIcommands      () const { return m_s  ; } ;
-  /// UI commands to be executed at end                                   
-  inline const Strings&  endUIcommands        () const { return m_e  ; } ;
-  /// defined UI sessions:                                                
-  inline const Strings&  UIsessions           () const { return m_UIsessions ;}
 
  protected:
 
@@ -259,11 +226,6 @@ public:
    */
   StatusCode finalizeRunManager () ;
   
-  /// UI commands to be executed at start                                   
-  inline void set_startUIcommands     ( const Strings& c ) { m_s   = c ; } ;
-  /// UI commands to be executed at end                                     
-  inline void set_endUIcommands       ( const Strings& c ) { m_e   = c ; } ;
-
 private:
   
   /// no default constructor 
@@ -279,7 +241,6 @@ private:
   inline void set_run_Is_Initialized ( bool st ) { m_run_st = st ; }
   inline void set_evt_Is_Prepared    ( bool st ) { m_pre_st = st ; }
   inline void set_evt_Is_Processed   ( bool st ) { m_pro_st = st ; }
-  inline void set_vis_Is_Initialized ( bool st ) { m_vis_st = st ; }
   inline void set_uis_Is_Started     ( bool st ) { m_uis_st = st ; }
   
   /** Assertion
@@ -292,27 +253,15 @@ private:
                       const StatusCode&  sc = StatusCode::FAILURE  ) ;
  private: 
 
-  ISvcLocator*               m_svcLoc       ; 
+  bool                       m_krn_st       ;
+  bool                       m_run_st       ;
+  bool                       m_pre_st       ;
+  bool                       m_pro_st       ;
+  bool                       m_uis_st       ;
+  
   G4VPhysicalVolume*         m_rootGeo      ;
   IGiGaGeoSrc*               m_geoSrc       ;
   G4UIsession*               m_g4UIsession  ;
-  G4VisManager*              m_g4VisManager ;
-
-  bool                       m_krn_st ;
-  bool                       m_run_st ;
-  bool                       m_pre_st ;
-  bool                       m_pro_st ;
-  bool                       m_vis_st ;
-  bool                       m_uis_st ;
-
-  std::string                m_name       ; 
-  IMessageSvc*               m_msgSvc     ; 
-  IChronoStatSvc*            m_chronoSvc  ;
-  
-  Strings                    m_s          ;
-  Strings                    m_e          ;
-  
-  Strings                    m_UIsessions ;
 
 };
 
@@ -326,8 +275,7 @@ private:
 inline void GiGaRunManager::Assert( bool  assertion        , 
                                     const std::string& msg , 
                                     const StatusCode &  sc ) 
-{ if( !assertion ) { throw GiGaException("GiGaRunManager::"+msg , sc ) ; } };
-
+{ if( !assertion ) { Exception(msg , MSG::FATAL , sc ) ; } };
 
 
 /// ===========================================================================

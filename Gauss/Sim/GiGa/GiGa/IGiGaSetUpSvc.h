@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/23 13:11:45  ibelyaev
+/// the package restructurisation(II)
+///
 /// Revision 1.1  2001/07/15 20:53:57  ibelyaev
 /// package restructurisation
 ///
@@ -128,14 +131,6 @@ public:
    */
   virtual IGiGaSetUpSvc& operator << ( G4UserSteppingAction          * ) = 0 ;
 
-  
-  /** set new visualization manager  
-   * 
-   *  @param  visualization  pointer to new visualization manager      
-   *  @return self-reference ot IGiGaSetUpSvc interface 
-   */
-  virtual IGiGaSetUpSvc& operator << ( G4VisManager                  * ) = 0 ;
-  
   /** set detector constructon module 
    *
    *  @param  detector pointer to detector construction module  
@@ -198,13 +193,6 @@ public:
    *  @return status code  
    */
   virtual StatusCode setStepping     ( G4UserSteppingAction          * ) = 0 ;
-  
-  /** set new visualization manager  
-   *
-   *  @param  visualization  pointer to new visualization manager      
-   *  @return status code  
-   */
-  virtual StatusCode setVisManager   ( G4VisManager                  * ) = 0 ;
 
 };
 

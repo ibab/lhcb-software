@@ -1,12 +1,15 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.36 2001-07-27 17:56:04 ibelyaev Exp $
+! $Id: release.notes,v 1.37 2001-08-01 09:42:23 ibelyaev Exp $
 ! =============================================================================
 
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
+!===========================================================================
+! 20010801    Vanya Belyaev
+     redesign and reimplementation of GiGaRunManager class
 !===========================================================================
 ! 20010726    Vanya Belyaev
     (1) add several concrete Run Action components 
