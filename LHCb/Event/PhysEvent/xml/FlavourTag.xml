@@ -1,0 +1,97 @@
+<!-- ****************************************************************
+     * FlavourTag                                                   *
+     ****************************************************************-->
+
+     <class
+      name="FlavourTag"
+      author="Olivier Dormond"
+      desc="The result of any tagging algorithm" 
+      stdVectorTypeDef="TRUE"
+      serializers="FALSE"
+      >
+
+      <base name="KeyedObject&lt;int&gt;"/>
+      <import name="Event/Particle" soft="TRUE"
+        />
+      <location
+        name="User"
+        place="/Event/Phys/User/Tags"
+        />
+      <location
+        name="Production"
+        place="/Event/Phys/Prod/Tags"
+        />
+
+      <enum
+        name="TagResult"
+        desc="Possible result of the tagging algorithm"
+        value="b = -1, bbar = 1, none = 0" access="PUBLIC"
+        />
+
+      <enum
+        name="TagType"
+        desc="The type of tagging algorithm which has produced this tag"
+        value="unTagged, singleParticle, jetCharge, vertexCharge, topology"
+        access="PUBLIC"
+        />
+
+      <relation
+        name="taggedB"
+        multiplicity="1"
+        type="Particle"
+        desc="The B meson for which this tag has been made"
+        />
+
+      <relation
+        name="tagger"
+        multiplicity="1"
+        type="Particle"
+        desc="The particle used to make the descision"
+        />
+
+      <attribute
+        name="decision"
+        type="TagResult"
+        desc="The result of the tagging algorithm"
+        init="none"
+        getMeth="FALSE"
+        />
+      <method
+        name="decision"
+        desc="Retrieve the result of the tagging algorithm (non-const)"
+        type="TagResult"
+        />
+      <method
+        name="decision"
+        const="TRUE"
+        desc="Retrieve the result of the tagging algorithm"
+        type="TagResult"
+        />
+
+      <attribute
+        name="type"
+        type="TagType"
+        desc="The kind of tagging algorithm used"
+        init="unTagged"
+        getMeth="FALSE"
+        />
+      <method
+        name="type"
+        desc="Retrieve the kind of tagging algorithm used (non-const)"
+        type="TagType"
+        />
+      <method
+        name="type"
+        const="TRUE"
+        desc="Retrieve the kind of tagging algorithm used"
+        type="TagType"
+        />
+
+      <!-- Unimplemented yet
+      <attribute
+        name="mistag"
+        type="double"
+        desc="The wrong tag fraction associated to the kind tagging used"
+        init="0.5"
+        /> -->
+    </class>

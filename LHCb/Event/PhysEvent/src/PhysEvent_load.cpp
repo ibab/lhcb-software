@@ -1,4 +1,4 @@
-// $Id: PhysEvent_load.cpp,v 1.4 2002-04-15 11:37:31 gcorti Exp $
+// $Id: PhysEvent_load.cpp,v 1.5 2002-05-23 23:03:19 gcorti Exp $
 
 // Include files
 #include "Event/EventFactoryDefs.h"
@@ -18,6 +18,11 @@ _ImplementDataObjectFactory( Particles )
 #include "Event/Vertex.h"
 _ImplementContainedObjectFactory( Vertex )
 _ImplementDataObjectFactory( Vertices )
+
+/// ====================================================================
+#include "Event/FlavourTag.h"
+_ImplementContainedObjectFactory( FlavourTag )
+_ImplementDataObjectFactory( FlavourTags )
 
 /// ====================================================================
 #include "Event/PhysSel.h"
@@ -40,6 +45,9 @@ void PhysEvent_load()  {
 
   DLL_DECL_OBJECTFACTORY( Vertex );
   DLL_DECL_OBJECTFACTORY( Vertices );
+  
+  DLL_DECL_OBJECTFACTORY( FlavourTag );
+  DLL_DECL_OBJECTFACTORY( FlavourTags );
   
   DLL_DECL_OBJECTFACTORY( AxPartCandidate );
   DLL_DECL_OBJECTFACTORY( AxPartCandidates );

@@ -11,6 +11,8 @@
 
 <!ENTITY AxPartCandidate.xml  SYSTEM "AxPartCandidate.xml" >
 
+<!ENTITY FlavourTag.xml       SYSTEM "FlavourTag.xml"      >
+
 ]>
 
 <gdd>
@@ -29,6 +31,8 @@
     <!-- High Level classes -->
     &PhysSelDecay.xml;
     &PhysSel.xml;
+    
+    &FlavourTag.xml;
     
     <!-- Input class, needed until ProtoParticles input from DST -->
     &AxPartCandidate.xml;
