@@ -1,0 +1,39 @@
+package DaVinciSys
+version v6r0
+
+branches doc cmt
+
+#=======================================================
+# packages included in the DAVINCI tree
+#=======================================================
+
+# DaVinci application
+use DaVinci              v6r0	Phys
+
+#--- DaVinci packages
+use DaVinciTools         v6r0   Phys
+use DaVinciAssociators   v3r0   Phys
+use DaVinciMCTools       v3r0   Phys
+use DaVinciTest          v3r0   Phys
+use PhysSelections       v3r0   Phys
+use FlavourTagging       v3r0   Phys
+use DaVinciEff           v1r0   Phys
+use DaVinciUser          v3r0   Phys
+
+use  L0Calo		v6r1p1	L0
+use  L1VeloTrack 	v3r1p1	L1
+
+#--- Trigger
+use  L0DU               v6r1p1	L0
+
+#--- ProtoParticles 
+use  CaloInterfaces     v2r2p1  Calo
+use  CaloUtils          v4r2p1  Calo
+use  CaloTools          v4r4	Calo
+use  GlobalReco         v2r0	Rec
+
+#--- Reprocessing
+use  CaloAlgs           v7r2p1   Calo
+
+#--- Necessary tools
+use  TrExtrapolator     v2r2p1   Tr
