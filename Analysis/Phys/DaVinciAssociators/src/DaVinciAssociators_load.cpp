@@ -1,4 +1,4 @@
-// $Id: DaVinciAssociators_load.cpp,v 1.1.1.1 2002-04-25 15:57:35 phicharp Exp $
+// $Id: DaVinciAssociators_load.cpp,v 1.2 2002-05-10 15:08:21 phicharp Exp $
 // Include files 
 
 
@@ -22,6 +22,7 @@ DECLARE_FACTORY_ENTRIES( PhysAssociators ) {
 
   DECLARE_TOOL( Part2MCPartAsct );
   
-  DECLARE_ALGORITHM( Part2MCPartChi2Alg );
+  DECLARE_ALGORITHM( Part2MCChi2 );
+  DECLARE_ALGORITHM( Part2MCLink );
 
 }

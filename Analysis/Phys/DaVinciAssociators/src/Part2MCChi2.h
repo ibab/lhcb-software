@@ -1,6 +1,6 @@
-// $Id: Part2MCPartChi2Alg.h,v 1.2 2002-04-26 17:05:12 gcorti Exp $
-#ifndef PART2MCPARTCHI2ALG_H 
-#define PART2MCPARTCHI2ALG_H 1
+// $Id: Part2MCChi2.h,v 1.1 2002-05-10 15:08:21 phicharp Exp $
+#ifndef Part2MCChi2_H 
+#define Part2MCChi2_H 1
 
 // Include files
 // from STL
@@ -23,20 +23,20 @@
 #include "DaVinciAssociators/Part2MCPartAsct.h"
 
 #include "CLHEP/Units/PhysicalConstants.h"
-/** @class Part2MCPartChi2Alg Part2MCPartChi2Alg.h
+/** @class Part2MCChi2 Part2MCChi2.h
  *  
  *
  *  @author Philippe Charpentier
  *  @date   11/04/2002
  */
-class Part2MCPartChi2Alg : public Algorithm {
-  friend AlgFactory<Part2MCPartChi2Alg>;
+class Part2MCChi2 : public Algorithm {
+  friend AlgFactory<Part2MCChi2>;
   
 public:
   /// Standard constructor
-  Part2MCPartChi2Alg( const std::string& name, ISvcLocator* pSvcLocator );
+  Part2MCChi2( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~Part2MCPartChi2Alg( ); ///< Destructor
+  virtual ~Part2MCChi2( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -70,4 +70,4 @@ private:
   IHistogram2D* m_hisMinChi2vsDiffP; ///< Min Chi2 vs Dp/p histo
 
 };
-#endif // PART2MCPARTCHI2ALG_H
+#endif // Part2MCChi2_H

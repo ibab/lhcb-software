@@ -1,10 +1,20 @@
-! $Id: release.notes,v 1.1.1.1 2002-04-25 15:57:35 phicharp Exp $
+! $Id: release.notes,v 1.2 2002-05-10 15:08:21 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+!==============================================================================
+! 10052002 - Philippe Charpentier
+   - Example on how to use two different algorithms with the same
+      associator (with Chi2 or with links to AxPartCandidates)
+   - Changed naming of algorithms to be shorter:
+      Part2MCChi2 (default)
+      Part2MCLink
+   - Part2MCLink not tested until DaVinci v4r0 is available in CVS
+
+!==============================================================================
 ! 25042002 - DaVinciAssociators v1r0 (Ph.Charpentier)
 
-  - Example on how to set up an associator from AxPartCandidate to MCParticle
+  - Example on how to set up an associator from Particle to MCParticle
     (Part2MCPartAsct.h)
 	- Example of an algorithm to instantiate the above associator
     An example on how to retrieve information can be found in Phys/DavinciTest

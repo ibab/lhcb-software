@@ -2,15 +2,27 @@
 // Default Associators options
 
 //
-// This is the default parameters for the Part2MCPart Associator
+// This is the default parameters for the Part2MCPart Associator with Chi2
 //
 //Toolsvc.Part2MCPartAsct.Location      = "Phys/Relations/Part2MC";
-//ToolSvc.Part2MCPartAsct.AlgorithmType = "Part2MCPartChi2Alg";
+//ToolSvc.Part2MCPartAsct.AlgorithmType = "Part2MCChi2";
 //ToolSvc.Part2MCPartAsct.AlgorithmName = "Part2MC";
 //
+
 // ... and for the corresponding algorithm
 //
 //Part2MC.InputData  = "Phys/Production/Particles";
 Part2MC.OutputData  = "Phys/Relations/Part2MC";
 Part2MC.Chi2Cut = 100.;
 Part2MC.FillHistos = true;
+
+/* Define specific parameters for another associator based on the same scheme
+   but with a different algorithm
+*/
+Toolsvc.LinkAsct.Location      = "Phys/Relations/Part2MCLink";
+ToolSvc.LinkAsct.AlgorithmType = "Part2MCLink";
+ToolSvc.LinkAsct.AlgorithmName = "Part2MCfromLinks";
+
+// ... definition for the link algorithm
+//Part2MC.InputData  = "Phys/Production/Particles";
+Part2MCfromLinks.OutputData = "Phys/Relations/Part2MCLink";

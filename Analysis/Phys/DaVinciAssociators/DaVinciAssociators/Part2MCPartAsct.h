@@ -1,4 +1,4 @@
-// $Id: Part2MCPartAsct.h,v 1.3 2002-04-29 09:08:25 phicharp Exp $
+// $Id: Part2MCPartAsct.h,v 1.4 2002-05-10 15:08:21 phicharp Exp $
 #ifndef ASSOCIATORS_Part2MCPartASCT_H 
 #define ASSOCIATORS_Part2MCPartASCT_H 1
 
@@ -27,7 +27,7 @@ class Part2MCPartAsct : public Associator<Particle,MCParticle>
   
 public:
   // Define data types
-  typedef Relation2D<Particle,MCParticle>       Table;
+  typedef Relation1D<Particle,MCParticle>       Table;
   typedef OwnType                               Asct;
   typedef FromRange                             Parts;
   typedef FromIterator                          PartsIterator;
@@ -43,7 +43,7 @@ protected:
     : Asct( type, name, parent) {
 
     setProperty( "Location", Part2MCPartAsctLocation );
-    setProperty( "AlgorithmType", "Part2MCPartChi2Alg" );
+    setProperty( "AlgorithmType", "Part2MCChi2" );
     setProperty( "AlgorithmName", "Part2MC" );
     
   }; 

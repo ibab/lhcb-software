@@ -1,4 +1,4 @@
-// $Id: Part2MCPartChi2Alg.cpp,v 1.2 2002-04-26 17:05:11 gcorti Exp $
+// $Id: Part2MCChi2.cpp,v 1.1 2002-05-10 15:08:21 phicharp Exp $
 // Include files 
 #include <math.h>
 
@@ -13,23 +13,23 @@
 #include  "GaudiKernel/IHistogramSvc.h"
 
 // local
-#include "Part2MCPartChi2Alg.h"
+#include "Part2MCChi2.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : Part2MCPartChi2Alg
+// Implementation file for class : Part2MCChi2
 //
 // 11/04/2002 : Philippe Charpentier
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<Part2MCPartChi2Alg>          s_factory ;
-const        IAlgFactory& Part2MCPartChi2AlgFactory = s_factory ; 
+static const  AlgFactory<Part2MCChi2>          s_factory ;
+const        IAlgFactory& Part2MCChi2Factory = s_factory ; 
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Part2MCPartChi2Alg::Part2MCPartChi2Alg( const std::string& name,
+Part2MCChi2::Part2MCChi2( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator ) 
   , m_inputData( ParticleLocation::Production )
@@ -38,23 +38,21 @@ Part2MCPartChi2Alg::Part2MCPartChi2Alg( const std::string& name,
   , m_histos( false )
 
 {
-
   declareProperty( "InputData", m_inputData );
   declareProperty( "OutputData", m_outputData );
   declareProperty( "Chi2Cut", m_chi2 );
   declareProperty( "FillHistos", m_histos );
-
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-Part2MCPartChi2Alg::~Part2MCPartChi2Alg() {}; 
+Part2MCChi2::~Part2MCChi2() {}; 
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode Part2MCPartChi2Alg::initialize() {
+StatusCode Part2MCChi2::initialize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
@@ -73,7 +71,7 @@ StatusCode Part2MCPartChi2Alg::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode Part2MCPartChi2Alg::execute() {
+StatusCode Part2MCChi2::execute() {
 
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
@@ -187,7 +185,7 @@ StatusCode Part2MCPartChi2Alg::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode Part2MCPartChi2Alg::finalize() {
+StatusCode Part2MCChi2::finalize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
@@ -201,7 +199,7 @@ StatusCode Part2MCPartChi2Alg::finalize() {
 //=============================================================================
 // Compute the chi2 between an part and an MCPart
 //=============================================================================
-double Part2MCPartChi2Alg::Part2MCPartChi2(const HepVector& pVector, 
+double Part2MCChi2::Part2MCPartChi2(const HepVector& pVector, 
                                            const HepVector& mcpVector,
                                            const HepSymMatrix& cov)
 {
@@ -213,7 +211,7 @@ double Part2MCPartChi2Alg::Part2MCPartChi2(const HepVector& pVector,
   return dot( v, diff );
 }
 
-void Part2MCPartChi2Alg::get6Vector( const Particle* part, 
+void Part2MCChi2::get6Vector( const Particle* part, 
                                      HepVector& pVector)
 {
   // Now copy the vector from the Part
@@ -226,7 +224,7 @@ void Part2MCPartChi2Alg::get6Vector( const Particle* part,
   
 }
 
-void Part2MCPartChi2Alg::get6Vector( const MCParticle* mcPart, 
+void Part2MCChi2::get6Vector( const MCParticle* mcPart, 
                                      HepVector& mcpVector, const double axz)
 {
   // Make the vector from the MCparticle
