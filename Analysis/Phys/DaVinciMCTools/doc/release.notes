@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.32 2004-09-13 18:14:48 pkoppenb Exp $
+! $Id: release.notes,v 1.33 2004-09-14 11:59:07 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
+
+! 2004-09-14 - P. Koppenburg
+ - src/DumpEvent.cpp
+   .  Algorithm that runs the debug tool, moved from DaVinciTest
+  - src/PrintTree.* NEW
+    . Prints content of PhysDesktop.InputLocation as tree
+  - src/PrintMCTree.* NEW
+    . Prints MC particles of given ID as tree.
 
 ! 2004-09-13 - P. Koppenburg
  - src/TrueMCFilterCriterion.*
