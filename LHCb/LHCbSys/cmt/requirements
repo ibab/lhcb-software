@@ -1,14 +1,14 @@
 package LHCbSys
-version v12r2
+version v13r0
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v12r2
+use LHCb		v13r0
 
-use GaudiConf		v6r11
+use GaudiConf		v7r0
 
 use BookKeeping 	v1r2	Tools
 
@@ -69,21 +69,7 @@ use MuonAssociators    	v1r1    Muon
 use TrAssociators      	v3r5    Tr
 use TrFitEvent         	v3r6    Tr
 
-# SICB Converters
-use SICBSys             v1r6	SICB
-use SicbCnv      	v17r7	SICB
-use RiSicbGeom   	v3r3	SICB
-use CaloSicbCnv  	v7r5	SICB
-use MuonSicbCnv  	v7r1    SICB
-use RiSicbCnv    	v6r1	SICB
-use VSicbCnv     	v8r1    SICB
-use Futio        	v13r2	SICB
-use Finclude     	v14r1   SICB
-use GDUMMY       	v2r0    SICB
-use Futil        	v12r1   SICB
-use detdes       	v21r0   SICB
-
 # LHCb  Examples
 use DetDescExample      v6r0    Ex
-use DumpEventExample    v6r2    Ex
+use DumpEventExample    v7r0    Ex
 

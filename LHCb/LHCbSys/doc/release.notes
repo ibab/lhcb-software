@@ -4,17 +4,21 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================== LHCbSys v12r2 2003-07-16 ========================
-! 2003-07-16 - Marco Cattaneo
- - Modified packages:
-      GaudiConf v6r11,
+!======================== LHCbSys v13r0 2003-07-17 ========================
+! 2003-07-17 - Marco Cattaneo
+ - Removed all packages under SICB hat (moved to new SICBOO project)
+
+ - Modified packages to support to Boole/Brunel split and Gauss integration:
+      GaudiConf v7r0,
       AssociatorsSys v1r5, VeloAssociators v1r6, ITAssociators v2r5, 
                            OTAssociators v2r6, CaloAssociators v3r4
-      DetSys v2r2, ITDet v1r5
       EventSys v14r2, CaloEvent v12r0, PhysEvent v7r7
-      SICBSys v1r6, CaloSicbCnv v7r5, RiSicbCnv v6r1, Futio v13r2
- - Removed packages:
-      SicbToOORawh (moved to BOOLE project)
+
+ - Modified packages for bug fixes:
+      DetSys v2r2, ITDet v1r5
+ 
+ - Modified package to remove dependency on SICB converters:
+      DumpEventExample v7r0
 
 !======================== LHCbSys v12r1 2003-07-08 ========================
 ! 2003-07-08 - Marco Cattaneo
