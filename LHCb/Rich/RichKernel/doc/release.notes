@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.43 2004-07-01 11:16:42 papanest Exp $
+! $Id: release.notes,v 1.44 2004-07-01 15:43:03 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
@@ -24,6 +24,7 @@
  - Remove dummy includes RichDetectorType.h, RichRadiatorType.h, RichSide.h,
    to use directly the versions in LHCbKernel 
 
+!======================= RichKernel v4r6 2004-06-30 =======================
 ! 2004-06-03 - Chris Jones
  - Remove default initialisation value for RichHypoData, to fix windows problems.
    Users must now always specify an initialisation value in the constructor and
