@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v1r7p1 2004-03-08 ======================
+! 2004-03-08 - Marco Cattaneo
+ - Use RichRecBase v1r9p1
+
 !======================= RichRecSys v1r7 2004-02-09 =======================
 ! 2004-01-29 - Chris Jones
  - Removal of SICB options and packages.
