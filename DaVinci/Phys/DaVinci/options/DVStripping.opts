@@ -3,11 +3,6 @@
 // directory
 #include "$STRIPPINGROOT/options/DVComb.opts" 
 
-ApplicationMgr.EvtMax    = 100 ;
+ApplicationMgr.EvtMax    = 1000 ;
 EventSelector.PrintFreq  = 1;
-
-CombinedForTDRselBs2Jpsi2MuMu_Phi2KK.OutputLevel = 1 ;
-PreselBs2Phi2KK_Etac2KKKK.OutputLevel = 1 ;
-PreselBs2Phi2KK_Etac2PiPiKK.OutputLevel = 1 ;
-PreselBs2Phi2KK_Etac2PiPiPiPi.OutputLevel = 1 ;
 
