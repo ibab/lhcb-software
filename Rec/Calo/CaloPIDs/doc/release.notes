@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.9 2004-03-08 14:03:22 cattanem Exp $ 
+! $Id: release.notes,v 1.10 2004-03-17 16:11:39 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,26 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+! 2004-03-17 - Vanya BELYAEV
+ - src/CaloPhotonEstimatorTool.h,cpp
+   new tool for photon ID estimate from Frederic Machefert
+   The origina version from Frederic is udapted a bit to 
+   new GaudiTool/CaloTool methods and to 
+   "typo"-fix ICaloLikelyhood -> ICaloLikelihood 
+ - src/CaloPIDsData.h/.cpp  
+   new algorithm to fill NTuple needed to populate 
+   the reference histograms for charged particle ID 
+
+ - src/CaloPIDs_load.cpp - add new tool and new 
+                           algorithm to the list of 
+                           known components 
+
+ - cmt/requirements  increment the version to v2r1 
+
+ - options/PhotonPDF.opts 
+   configuration of CaloPhotonEstimatorTool/PhotonPID 
+   ********** ATTENTION: tool name is choosen to be 'PhotonPID' *********
 
 !======================== CaloPIDs v2r0 2004-03-08 ======================
 ! 2004-03-08 - Marco Cattaneo
