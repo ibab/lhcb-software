@@ -137,9 +137,7 @@ RichG4EventAction::~RichG4EventAction( ){
   delPointer( m_RichG4HistoFillSet1 );
   delPointer( m_RichG4HistoFillSet2 );
   delPointer( m_RichG4HistoFillSet3 );
-  if ( m_RichG4HistoFillSet4 != 0 ) {
-    delPointer( m_RichG4HistoFillSet4 );
-  }
+  delPointer( m_RichG4HistoFillSet4 );
   delPointer( m_RichG4HistoFillTimer );
   delPointer( m_RichG4EventHitCounter );
 
