@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.8 2004-04-19 23:06:16 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.9 2004-05-30 16:28:38 jonesc Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -46,7 +46,7 @@ public:
                                       const IInterface* parent );
 
   /// Destructor
-  virtual ~RichTrackCreatorFromTrStoredTracks() {}
+  virtual ~RichTrackCreatorFromTrStoredTracks() { }
 
   /// Initialize method
   StatusCode initialize();
