@@ -1,9 +1,10 @@
 package PhysEvent
-version v1r1
+version v2r0
 
 branches PhysEvent cmt doc src
 
-use LHCbEvent v11* Event
+use GaudiObjDesc v3r*
+use LHCbEvent    v12r* Event
 
 include_dirs $(PHYSEVENTROOT)
 
@@ -18,10 +19,9 @@ library PhysEvent  ../src/PhysEvent_dll.cpp \
                    ../src/PhysEvent_load.cpp
 
 #--- Produce Dictionaries
-macro GODflags " -i "
-document obj2dict PhysEventObj2Dict -group=dict ../xml/PhysEvent.xml
-library PhysEventDict -group=dict ../src/dictionary/*.cpp
-macro PhysEventDict_shlibflags  "$(use_linkopts) $(libraryshr_linkopts)"
+#document obj2dict PhysEventObj2Dict -group=dict ../xml/PhysEvent.xml
+#library PhysEventDict -group=dict ../dict/*.cpp
+#macro PhysEventDict_shlibflags  "$(use_linkopts) $(libraryshr_linkopts)"
 
 
 apply_pattern package_Llinkopts
