@@ -1,9 +1,7 @@
-#ifndef MUONALGS_MUONPHYSICALCHANNEL_CPP
-#define MUONALGS_MUONPHYSICALCHANNEL_CPP 1 
+// $Id: MuonPhysicalChannel.cpp,v 1.10 2005-04-05 09:21:08 cattanem Exp $
 
 #include "MuonAlgs/MuonPhysicalChannel.h"
 #include "MuonAlgs/SortHitsInTime.h"
-
 
 double MuonPhysicalChannel::m_timeGate;
 double MuonPhysicalChannel::m_timeBX;
@@ -314,4 +312,3 @@ void MuonPhysicalChannel::applyDeadtime(int BX){
     }		 
   }	  	
 }
-#endif

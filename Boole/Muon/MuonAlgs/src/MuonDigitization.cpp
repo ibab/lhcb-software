@@ -1,15 +1,14 @@
-#ifndef MUONALGS_MUONDIGITIZATION_CPP
-#define MUONALGS_MUONDIGITIZATION_CPP 1
+//$Id: MuonDigitization.cpp,v 1.25 2005-04-05 09:21:08 cattanem Exp $
 
 #include "GaudiKernel/AlgFactory.h"  
 #include "GaudiKernel/IToolSvc.h"  
 #include "GaudiKernel/IAlgManager.h"
 #include "MuonAlgs/MuonDigitization.h"
-#include "GaudiKernel/LinkManager.h" 
 #include "MuonAlgs/ComparePC.h"
-#include "GaudiKernel/IChronoStatSvc.h"
 
 #include <iostream>
+#include <algorithm>
+#include <vector>
 
 
 static const AlgFactory<MuonDigitization>  Factory;
@@ -123,9 +122,6 @@ StatusCode MuonDigitization::initialize()
  					
 StatusCode MuonDigitization::execute()
 {
-  //	IChronoStatSvc* svc = chronoSvc();	
-  
-  //  IChronoStatSvc::ChronoTime time;	 
   MsgStream log(msgSvc(), name());
   
  	StatusCode sc=StatusCode::SUCCESS ;
@@ -1328,8 +1324,4 @@ addElectronicNoise(MuonDigitizationData
 	}		
   return StatusCode::SUCCESS;	 
   
-}					 
-
-#endif
-
- 
+}

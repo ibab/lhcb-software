@@ -4,9 +4,10 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
-!======================== MuonAlgs v5r7 2005-04-01 ========================
-! 2005-04-01 - Marco Cattaneo
+!======================== MuonAlgs v5r7 2005-04-05 ========================
+! 2005-04-05 - Marco Cattaneo
  - Adapt to MuonEvent v4r0 (backward incompatible change to MCMuonHit)
+ - Remove some obsolete or unneccessary #include statements
 
 !======================== MuonAlgs v5r6 2004-07-22 ========================
 ! 2004-07-22 - Marco Cattaneo

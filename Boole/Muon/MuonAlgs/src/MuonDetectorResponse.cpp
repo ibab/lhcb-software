@@ -1,4 +1,5 @@
-#define MUONALGS_MUONDETECTORRESPONSE_CPP 1
+// $Id: MuonDetectorResponse.cpp,v 1.10 2005-04-05 09:21:08 cattanem Exp $
+#include <vector>
 #include "MuonAlgs/MuonDetectorResponse.h"
 
 static std::string spill[] = {"","/Prev","/PrevPrev","/Next","/NextNext"};

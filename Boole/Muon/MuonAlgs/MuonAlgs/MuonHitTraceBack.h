@@ -2,11 +2,6 @@
 #define  MUONALGS_MUONHITTRACEBACK_H 1
 
 // Include files
-#include <vector>
-#include <algorithm>
-#include "Kernel/CLHEPStreams.h"
-#include "Event/MuonEventBase.h"
-#include "MuonAlgs/MuonPhChID.h"
 #include "Event/MCMuonHit.h"
 #include "Event/MCMuonHitHistory.h"
 #include "GaudiKernel/SmartRef.h"

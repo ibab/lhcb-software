@@ -2,15 +2,7 @@
 #define MuonAlgs_MuonPhChID_H  1
 
 // Include files
-#include <vector>
-#include <algorithm>
-#include "Kernel/CLHEPStreams.h"
-#include "Event/MuonEventBase.h"
 #include "MuonKernel/MuonTileID.h"
-#include "GaudiKernel/ObjectList.h"
-#include "GaudiKernel/ObjectVector.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/SmartRefVector.h"
 #include "MuonAlgs/MuonPhChIDPack.h"
 #include "GaudiKernel/MsgStream.h" 
 
