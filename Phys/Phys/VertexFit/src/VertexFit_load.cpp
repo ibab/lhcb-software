@@ -17,6 +17,8 @@ DECLARE_FACTORY_ENTRIES( VertexFit ) {
 
   // Associated tools
   DECLARE_TOOL( GeomDispCalculator );
+  DECLARE_TOOL( TrgDispCalculator );
+
   DECLARE_TOOL( LifetimeFitter );
 
 }

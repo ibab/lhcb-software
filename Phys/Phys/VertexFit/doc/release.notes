@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.15 2005-02-04 10:12:53 pkoppenb Exp $
+! $Id: release.notes,v 1.16 2005-02-08 08:50:22 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie, P. Koppenburg
 
+! 2005-02-08 - P. Koppenburg for Hugo Ruiz
+  - src/TrgVertexFitter.{cpp,h}
+    . New version that accepts intermediate states. Works fine with
+      short-lived resonances but not yet well with long-lived like D0.
+  - src/TrgDispCalculator.{cpp,h}
+    . New tool that performs the job of the GeomDispCalculator
+      and uses the sames assumptions as the TRgVertexFitter. Gets identical
+      results under these assumptions.
+  
 ! 2005-02-04 - P. Koppenburg
   - src/TrgVertexFitter.{cpp,h}
     . Fast Unconstrained Vertex Fitter by Hugo Ruiz.

@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.1 2005-02-04 10:12:53 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.2 2005-02-08 08:50:22 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -41,210 +41,33 @@ TrgVertexFitter::~TrgVertexFitter() {};
 
 //=============================================================================
 // Method to fit the vertex between two given Particles
-// Just finds the pair of corresponding TrgTracks and does the vertex
 //=============================================================================
 
 StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart,  Vertex& V)
 {
-
-  // Get first track
-  const TrgTrack* iTrackPointer = (dynamic_cast<const TrgTrack*>(iPart.origin()));
-  if (!iTrackPointer){
-    fatal() << "Could not dynamic_cast TrgTrack from particle" << endreq;
-    fatal() << "Try with fitVertex(const ParticleVector&, Vertex&)" << endreq;
-    return StatusCode::FAILURE;
-  }
-  const TrgTrack& iTrack = *iTrackPointer;
-
-  // Get second track
-  const TrgTrack* jTrackPointer = (dynamic_cast<const TrgTrack*>(jPart.origin()));
-  if (!jTrackPointer){
-    fatal() << "Could not dynamic_cast TrgTrack from particle" << endreq;
-    fatal() << "Try with fitVertex(const ParticleVector&, Vertex&)" << endreq;
-    return StatusCode::FAILURE;
-  }
-  const TrgTrack& jTrack = *jTrackPointer;
-
-  // Get vertex from tracks
-  StatusCode status = fitVertexFromTracks(iTrack,jTrack,V);
-  if (!status) {
-    fatal() << "fitVertexFromTracks(iTrack,jTrack,V) failed" << endreq;
-    fatal() << "Try with fitVertex(const ParticleVector&, Vertex&)" << endreq;
-    return StatusCode::FAILURE;
-  };
-
-  // Add vertex daughters
-  V.addToProducts(&iPart);
-  V.addToProducts(&jPart);
-  debug() << "Returning vertex " << V.position() << " with error " 
-          <<  V.positionErr() << " size: " << V.products().size() << endmsg ;  
-
-  return status;
-}
-
-//=============================================================================
-// Method to fit the vertex between three given Particles
-// Just finds the the three corresponding TrgTracks and does the vertex
-//=============================================================================
-
-  StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart, Particle& kPart,  Vertex& V)
-{
-
-  // Get first track
-  const TrgTrack* iTrackPointer = (dynamic_cast<const TrgTrack*>(iPart.origin()));
-  if (!iTrackPointer){
-    fatal() << "Could not dynamic_cast TrgTrack from particle" << endreq;
-    fatal() << "Try with fitVertex(const ParticleVector&, Vertex&)" << endreq;
-    return StatusCode::FAILURE;
-  }
-  const TrgTrack& iTrack = *iTrackPointer;
-
-  // Get second track
-  const TrgTrack* jTrackPointer = (dynamic_cast<const TrgTrack*>(jPart.origin()));
-  if (!jTrackPointer){
-    fatal() << "Could not dynamic_cast TrgTrack from particle" << endreq;
-    fatal() << "Try with fitVertex(const ParticleVector&, Vertex&)" << endreq;
-    return StatusCode::FAILURE;
-  }
-  const TrgTrack& jTrack = *jTrackPointer;
-
-  // Get third track
-  const TrgTrack* kTrackPointer = (dynamic_cast<const TrgTrack*>(kPart.origin()));
-  if (!kTrackPointer){
-    fatal() << "Could not dynamic_cast TrgTrack from particle" << endreq;
-    fatal() << "Try with fitVertex(const ParticleVector&, Vertex&)" << endreq;
-    return StatusCode::FAILURE;
-  }
-  const TrgTrack& kTrack = *kTrackPointer;
-
-  // Fit vertex from tracks
-  StatusCode status = fitVertexFromTracks(iTrack,jTrack,kTrack,V);
-  if (!status) {
-    fatal() << "fitVertexFromTracks(iTrack,jTrack,kTrack,V) failed" << endreq;
-    return StatusCode::FAILURE;
-  };
-
-  // Add vertex daughters
-  V.addToProducts(&iPart);
-  V.addToProducts(&jPart);
-  V.addToProducts(&kPart);
-  debug() << "Returning vertex " << V.position() << " with error " 
-          <<  V.positionErr() << " size: " << V.products().size() << endmsg ;  
-
-  return status;
-}
-
-
-//=============================================================================
-// Method to fit the vertex from a vector of Particles
-// Just finds the vector of corresponding TrgTracks and does the vertex
-//=============================================================================
-
-StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
-{
-
-  StatusCode status;
+  // Track point and error on point
+  const Hep3Vector& iPoint = iPart.pointOnTrack();
+  const Hep3Vector& jPoint = jPart.pointOnTrack();
+  const HepSymMatrix& iCov = iPart.pointOnTrackErr();
+  const HepSymMatrix& jCov = jPart.pointOnTrackErr();
   
-  // Get list of tracks
-  std::vector<const TrgTrack*> tracks;
-  for (ParticleVector::const_iterator iPart=parts.begin();iPart!=parts.end();++iPart) {
-
-    const Particle& par = *(*iPart);
-    const TrgTrack* tra = dynamic_cast<const TrgTrack*>(par.origin());
-    if (!tra){
-      if (!par.isResonance()){
-        fatal() << "Fed with a composite which is not a resonance: " << par.particleID() << endreq;
-        fatal() << "TrgVertexFitter cannot handle with that!" << endreq;
-        return StatusCode::FAILURE;
-      }
-      else{
-        const Vertex& iVertex =  *(par.endVertex());
-        const SmartRefVector<Particle>& daughters= iVertex.products();
-        for (SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();iDaught!=daughters.end();++iDaught) {
-          const Particle& daught = *(*iDaught);
-          const TrgTrack* daughtTra = dynamic_cast<const TrgTrack*>(daught.origin());
-          if (!daughtTra){
-            fatal() << "A daughter of a composite is a composite." << endreq;
-            fatal() << "TrgVertexFitter cannot handle with that!" << endreq;
-            return StatusCode::FAILURE;
-          }
-          else{
-            tracks.push_back(daughtTra);
-          }
-        }
-      }
-    }
-    else{
-      tracks.push_back(tra);
-    }
-  }
-
-  // Fit vertex with tracks
-  status = fitVertexFromTracks(tracks,V);
-  if (!status) {
-    fatal() << "fitVertexFromTracks(tracks,V) failed" << endreq;
-    return StatusCode::FAILURE;
-  };
-
-  // Define daugthers
-  for(ParticleVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
-    V.addToProducts(*iterP);
-  }
-
-  debug() << "Returning vertex " << V.position() << " with error " 
-          <<  V.positionErr() << " size: " << V.products().size() << endmsg ;  
-
-  return status;
-}
-
-/*
-
-//=============================================================================
-// Fit the vertex from a vector of Particles
-// Just finds the vector of corresponding TrgTracks and does the vertex
-//=============================================================================
-
-StatusCode TrgVertexFitter::getTracksFromElementaries ( const  ParticleVector& parts,
-                                                        ParticleVector& tracks,  Vertex& V)
-{
-  for (ParticleVector::const_iterator iPart=parts.begin();iPart!=parts.end();++iPart) {
-    const Particle& par = *(*iPart);
-    const TrgTrack* tra = dynamic_cast<const TrgTrack*>(par.origin());
-    if (!tra){
-      allElementary = false;
-      break;
-    }
-    tracks.push_back(tra);
-
-{
-*/
-
-//=============================================================================
-// Method to fit a vertex between two given tracks
-// Code duplicated in order to get optimal time performance!
-//=============================================================================
-
-StatusCode TrgVertexFitter::fitVertexFromTracks( const TrgTrack& iTrack, const TrgTrack& jTrack,  Vertex& V)
-{
-
-  const TrgState& iState = iTrack.firstState();
-  const TrgState& jState = jTrack.firstState();
-  
-  double iInvSig2X = 1/iState.covariance()(1,1);
-  double iInvSig2Y = 1/iState.covariance()(2,2);
-  double jInvSig2X = 1/jState.covariance()(1,1);
-  double jInvSig2Y = 1/jState.covariance()(2,2);
-  
-  double iMX = iState.xSlope();
-  double iMY = iState.ySlope();
-  double jMX = jState.xSlope();
-  double jMY = jState.ySlope();
+  // Slopes
+  const double& iMX = iPart.slopeX();
+  const double& iMY = iPart.slopeY();
+  const double& jMX = jPart.slopeX();
+  const double& jMY = jPart.slopeY();
 
   // x0 and y0, at z=0
-  double iX0 = iState.x() - iMX * iState.z();
-  double iY0 = iState.y() - iMY * iState.z();
-  double jX0 = jState.x() - jMX * jState.z();
-  double jY0 = jState.y() - jMY * jState.z();
+  double iX0 = iPoint.x() - iMX * iPoint.z();
+  double iY0 = iPoint.y() - iMY * iPoint.z();
+  double jX0 = jPoint.x() - jMX * jPoint.z();
+  double jY0 = jPoint.y() - jMY * jPoint.z();
+
+  // Inverse of x and y errors of track
+  double iInvSig2X = 1/iCov(1,1);
+  double iInvSig2Y = 1/iCov(2,2);
+  double jInvSig2X = 1/jCov(1,1);
+  double jInvSig2Y = 1/jCov(2,2);
   
   // Terms needed
   double AX = iX0*iInvSig2X       + jX0*jInvSig2X;
@@ -260,11 +83,12 @@ StatusCode TrgVertexFitter::fitVertexFromTracks( const TrgTrack& iTrack, const T
   double EY = iY0*iMY*iInvSig2Y   + jY0*jMY*jInvSig2Y;
 
   double vX,vY,vZ;
-  StatusCode status = vertexPositionAndError( AX,  BX,  CX,  DX,  EX,
-                                              AY,  BY,  CY,  DY,  EY,
-                                              vX, vY, vZ, V);
+  StatusCode status = vertexPositionAndError( AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, vX, vY, vZ, V);
 
-  if (!status){fatal() << "vertexPositionAndError failed" << endreq;};
+  if (!status){
+    fatal() << "vertexPositionAndError failed" << endreq;
+    return StatusCode::FAILURE;
+  };
 
 
   // Chi2
@@ -273,44 +97,55 @@ StatusCode TrgVertexFitter::fitVertexFromTracks( const TrgTrack& iTrack, const T
   V.setChi2(chi2);
   V.setNDoF(1);
 
-  return StatusCode::SUCCESS;
 
+  // Add vertex daughters
+  V.addToProducts(&iPart);
+  V.addToProducts(&jPart);
+  debug() << "Returning vertex " << V.position() << " with error " 
+          <<  V.positionErr() << " size: " << V.products().size() << endmsg ;  
+
+  return StatusCode::SUCCESS;
 }
 
+
 //=============================================================================
-// Method to fit a vertex between three given TrgTracks
-// Code duplicated in order to get optimal time performance!
+// Method to fit the vertex between three given Particles
+// Just finds the the three corresponding TrgTracks and does the vertex
 //=============================================================================
 
-StatusCode TrgVertexFitter::fitVertexFromTracks( const TrgTrack& iTrack, const TrgTrack& jTrack,
-                                                 const TrgTrack& kTrack, Vertex& V)
+  StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart, Particle& kPart,  Vertex& V)
 {
-
-  const TrgState& iState = iTrack.firstState();
-  const TrgState& jState = jTrack.firstState();
-  const TrgState& kState = kTrack.firstState();
-
-  double iInvSig2X = 1/iState.covariance()(1,1);
-  double iInvSig2Y = 1/iState.covariance()(2,2);
-  double jInvSig2X = 1/jState.covariance()(1,1);
-  double jInvSig2Y = 1/jState.covariance()(2,2);
-  double kInvSig2X = 1/kState.covariance()(1,1);
-  double kInvSig2Y = 1/kState.covariance()(2,2);
+  // Track point and error on point
+  const Hep3Vector& iPoint = iPart.pointOnTrack();
+  const Hep3Vector& jPoint = jPart.pointOnTrack();
+  const Hep3Vector& kPoint = kPart.pointOnTrack();
+  const HepSymMatrix& iCov = iPart.pointOnTrackErr();
+  const HepSymMatrix& jCov = jPart.pointOnTrackErr();
+  const HepSymMatrix& kCov = kPart.pointOnTrackErr();
   
-  double iMX = iState.xSlope();
-  double iMY = iState.ySlope();
-  double jMX = jState.xSlope();
-  double jMY = jState.ySlope();
-  double kMX = kState.xSlope();
-  double kMY = kState.ySlope();
+  // Slopes
+  const double& iMX = iPart.slopeX();
+  const double& iMY = iPart.slopeY();
+  const double& jMX = jPart.slopeX();
+  const double& jMY = jPart.slopeY();
+  const double& kMX = kPart.slopeX();
+  const double& kMY = kPart.slopeY();
 
   // x0 and y0, at z=0
-  double iX0 = iState.x() - iMX * iState.z();
-  double iY0 = iState.y() - iMY * iState.z();
-  double jX0 = jState.x() - jMX * jState.z();
-  double jY0 = jState.y() - jMY * jState.z();
-  double kX0 = kState.x() - kMX * kState.z();
-  double kY0 = kState.y() - kMY * kState.z();
+  double iX0 = iPoint.x() - iMX * iPoint.z();
+  double iY0 = iPoint.y() - iMY * iPoint.z();
+  double jX0 = jPoint.x() - jMX * jPoint.z();
+  double jY0 = jPoint.y() - jMY * jPoint.z();
+  double kX0 = kPoint.x() - kMX * kPoint.z();
+  double kY0 = kPoint.y() - kMY * kPoint.z();
+
+  // Inverse of x and y errors of track
+  double iInvSig2X = 1/iCov(1,1);
+  double iInvSig2Y = 1/iCov(2,2);
+  double jInvSig2X = 1/jCov(1,1);
+  double jInvSig2Y = 1/jCov(2,2);
+  double kInvSig2X = 1/kCov(1,1);
+  double kInvSig2Y = 1/kCov(2,2);
   
   // Terms needed
   double AX = iX0*iInvSig2X       + jX0*jInvSig2X       + kX0*kInvSig2X;
@@ -324,13 +159,13 @@ StatusCode TrgVertexFitter::fitVertexFromTracks( const TrgTrack& iTrack, const T
   double CY = iMY*iInvSig2Y       + jMY*jInvSig2Y       + kMY*kInvSig2Y;
   double DY = iMY*iMY*iInvSig2Y   + jMY*jMY*jInvSig2Y   + kMY*kMY*kInvSig2Y;
   double EY = iY0*iMY*iInvSig2Y   + jY0*jMY*jInvSig2Y   + kY0*kMY*kInvSig2Y;
-    
-  double vX,vY,vZ;
-  StatusCode status = vertexPositionAndError( AX,  BX,  CX,  DX,  EX,
-                                              AY,  BY,  CY,  DY,  EY,
-                                              vX, vY, vZ, V);
 
-  if (!status){fatal() << "vertexPositionAndError failed" << endreq;};
+  double vX,vY,vZ;
+  StatusCode status = vertexPositionAndError( AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, vX, vY, vZ, V);
+  if (!status){
+    fatal() << "vertexPositionAndError failed" << endreq;
+    return StatusCode::FAILURE;
+  };
   
   // Chi2
   double chi2 = pow( (iX0+iMX*vZ-vX), 2)*iInvSig2X + pow( (jX0+jMX*vZ-vX), 2)*jInvSig2X  + pow( (kX0+kMX*vZ-vX), 2)*kInvSig2X +
@@ -338,57 +173,201 @@ StatusCode TrgVertexFitter::fitVertexFromTracks( const TrgTrack& iTrack, const T
   V.setChi2(chi2);
   V.setNDoF(3);
 
+  // Add vertex daughters
+  V.addToProducts(&iPart);
+  V.addToProducts(&jPart);
+  V.addToProducts(&kPart);
+
+  debug() << "Returning vertex " << V.position() << " with error " 
+          <<  V.positionErr() << " size: " << V.products().size() << endmsg ;  
+
   return StatusCode::SUCCESS;
 }
 
-
+/*
 //=============================================================================
-// Method to fit the vertex from a vector of TrgTracks
-// Works on the assumption that tracks are straight lines
-// And they have cylindrical errors (as in HLT when error comes from 1/pT param)
+// Fit the vertex from a vector of Particles
 //=============================================================================
 
-StatusCode TrgVertexFitter::fitVertexFromTracks( const std::vector<const TrgTrack*> tracks,  Vertex& V)
+StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
 {
 
-  int nParts=tracks.size();
-  int ndof = (2*nParts) - 3;
+  StatusCode status;
 
-  double AX = 0, BX = 0, CX = 0, DX = 0, EX = 0 , AY = 0, BY = 0, CY = 0, DY = 0, EY = 0;
+  // Number of particles used for the vertexing, can be different from size of particlevector!!
+  int nParts = 0;
 
-  double MXArray [nParts], MYArray [nParts];
-  double X0Array [nParts], Y0Array [nParts];
-  double InvSig2XArray [nParts], InvSig2YArray [nParts];
-  
-  int i = 0;
-  for (std::vector<const TrgTrack*>::const_iterator iTrack=tracks.begin();iTrack!=tracks.end();++iTrack) {
+  // Vects of track data
+  std::vector<double> MXVect, MYVect, X0Vect, Y0Vect, InvSig2XVect, InvSig2YVect;
 
-    const TrgTrack* traPointer = *iTrack;
-    if ( !traPointer ) {
-      fatal() << "Empty pointer passed to fitVertexFromTracks" << endreq;
+
+  // Main loop on particles
+
+  for ( ParticleVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
+    const Particle* parPointer = *iPart;
+    if ( !parPointer) {
+      fatal() << "Pointer to mother particle failed!" << endreq;
       return StatusCode::FAILURE;
     }
+    const Particle& par = *(parPointer);
+    const Vertex* endVertexPointer = par.endVertex();
+    
+    if ( ( endVertexPointer ) && par.isResonance() ){
+      const Vertex& endvert =  *(endVertexPointer);
+      const SmartRefVector<Particle>& daughters= endvert.products();
+      for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();iDaught!=daughters.end();++iDaught) {
+        const Particle* daughtPointer = *iDaught;
+        if ( !daughtPointer) {
+          fatal() << "Pointer to daughter particle failed!" << endreq;
+          return StatusCode::FAILURE;
+        }
+        const Particle& daught = *(daughtPointer);
+        const Hep3Vector& pointDaught = daught.pointOnTrack();
+        const HepSymMatrix& cov = daught.pointOnTrackErr();
+        MXVect.push_back(daught.slopeX());
+        MYVect.push_back(daught.slopeY());
+        X0Vect.push_back(pointDaught.x() - daught.slopeX() * pointDaught.z());
+        Y0Vect.push_back(pointDaught.y() - daught.slopeY() * pointDaught.z());
+        InvSig2XVect.push_back(1/cov(1,1));
+        InvSig2YVect.push_back(1/cov(2,2));
+        nParts+=1;
+        debug() << "Added one doughter" << endreq;
+        
+      }
+      
+    }
+    else{    // Elementary particles
+      const Hep3Vector& point = par.pointOnTrack();
+      const HepSymMatrix& cov = par.pointOnTrackErr();
+      MXVect.push_back(par.slopeX());
+      MYVect.push_back(par.slopeY());
+      X0Vect.push_back(point.x() - par.slopeX() * point.z());
+      Y0Vect.push_back(point.y() - par.slopeY() * point.z());
+      InvSig2XVect.push_back(1/cov(1,1));
+      InvSig2YVect.push_back(1/cov(2,2));
+      nParts+=1;
+      debug() << "Added one mother" << endreq;
+    }
+  }
 
-    const TrgTrack& tra = *traPointer;
-    const TrgState& iState = tra.firstState();
-  
-    double iInvSig2X = 1/iState.covariance()(1,1);
-    double iInvSig2Y = 1/iState.covariance()(2,2);
-    InvSig2XArray[i] = iInvSig2X;
-    InvSig2YArray[i] = iInvSig2Y;
+  debug() << "Particles used for the fit:" << nParts << endreq;
 
-    double iMX = iState.xSlope();
-    double iMY = iState.ySlope();
-    MXArray[i] = iMX;
-    MYArray[i] = iMY;
-  
-    // x0 and y0, at z=0
-    double iX0 = iState.x() - iMX * iState.z();
-    double iY0 = iState.y() - iMY * iState.z();
-    X0Array[i] = iX0;
-    Y0Array[i] = iY0;
-  
+  int ndof = (2*nParts) - 3;
+
+  // Initialize relevant terms
+  double AX = 0, BX = 0, CX = 0, DX = 0, EX = 0 , AY = 0, BY = 0, CY = 0, DY = 0, EY = 0;
+
+  for (int i = 0; i != nParts; i++ ){
     // Terms needed
+    AX += X0Vect[i] * InvSig2XVect[i];
+    BX += InvSig2XVect[i];
+    CX += MXVect[i]*InvSig2XVect[i];
+    DX += MXVect[i]*MXVect[i]*InvSig2XVect[i];
+    EX += X0Vect[i]*MXVect[i]*InvSig2XVect[i];
+    
+    AY += Y0Vect[i] * InvSig2YVect[i];
+    BY += InvSig2YVect[i];
+    CY += MYVect[i]*InvSig2YVect[i];
+    DY += MYVect[i]*MYVect[i]*InvSig2YVect[i];
+    EY += Y0Vect[i]*MYVect[i]*InvSig2YVect[i];
+  }
+    
+  double vX,vY,vZ;
+
+  status = vertexPositionAndError( AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, vX, vY, vZ, V);
+  if (!status){
+    fatal() << "vertexPositionAndError failed" << endreq;
+    return StatusCode::FAILURE;
+    };
+
+  // Chi2
+  double chi2 = 0;
+  for (int i=0; i!=nParts; i++){
+    chi2 += pow( (X0Vect[i]+MXVect[i]*vZ-vX), 2)*InvSig2XVect[i];
+    chi2 += pow( (Y0Vect[i]+MYVect[i]*vZ-vY), 2)*InvSig2YVect[i];
+  }
+
+  V.setChi2(chi2);
+  V.setNDoF(ndof);
+
+  // Define daugthers
+  for(ParticleVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
+    V.addToProducts(*iterP);
+  }
+
+  debug() << "Returning vertex " << V.position() << " with error " 
+          <<  V.positionErr() << " size: " << V.products().size() << endmsg ;  
+
+  return StatusCode::SUCCESS;
+}
+
+*/
+
+//=============================================================================
+// Fit the vertex from a vector of Particles
+//=============================================================================
+
+StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
+{
+  
+  StatusCode status;
+  
+  // Vector of particles to use in fit
+  std::vector<const Particle*> partsToFit;
+  
+  // Main loop on particles
+  for ( ParticleVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
+    
+    const Particle* parPointer = *iPart;
+    if ( !parPointer) {
+      fatal() << "Pointer to mother particle failed!" << endreq;
+      return StatusCode::FAILURE;
+    }
+    const Particle& par = *(parPointer);
+    const Vertex* endVertexPointer = par.endVertex();
+    
+    if ( ( endVertexPointer ) && par.isResonance() ){
+      const Vertex& endvert =  *(endVertexPointer);
+      const SmartRefVector<Particle>& daughters= endvert.products();
+      for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();iDaught!=daughters.end();++iDaught) {
+        const Particle* daughtPointer = *iDaught;
+        if ( !daughtPointer) {
+          fatal() << "Pointer to daughter particle failed!" << endreq;
+          return StatusCode::FAILURE;
+        }
+        debug() << "Added one doughter" << endreq;
+        partsToFit.push_back(daughtPointer);
+      }
+      
+    }
+    else{    // Non-composite particles
+      partsToFit.push_back(parPointer);
+      debug() << "Added one mother" << endreq;
+    }
+  }
+
+  // Number of particles used for the vertexing, can be different from size of particlevector!!
+  int nParts = partsToFit.size();
+  debug() << "Particles used for the fit:" << nParts << endreq;
+  int ndof = (2*nParts) - 3;
+
+  // Initialize relevant terms
+  double iMX, iMY, iX0, iY0, iInvSig2X, iInvSig2Y;
+  double X0Array [nParts],  Y0Array [nParts], MXArray [nParts], MYArray [nParts], InvSig2XArray [nParts], InvSig2YArray [nParts];
+  double AX = 0, BX = 0, CX = 0, DX = 0, EX = 0 , AY = 0, BY = 0, CY = 0, DY = 0, EY = 0;
+  int i=0;
+  for ( ParticleVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
+    const Particle* parPointer = *iPart;
+    const Particle& par = *(parPointer);
+    const Hep3Vector& point = par.pointOnTrack();
+    const HepSymMatrix& cov = par.pointOnTrackErr();
+    iMX = par.slopeX();
+    iMY = par.slopeY();
+    iX0 = point.x() - par.slopeX() * point.z();
+    iY0 = point.y() - par.slopeY() * point.z();
+    iInvSig2X = 1/cov(1,1);
+    iInvSig2Y = 1/cov(2,2);
+
     AX += iX0 * iInvSig2X;
     BX += iInvSig2X;
     CX += iMX*iInvSig2X;
@@ -400,15 +379,23 @@ StatusCode TrgVertexFitter::fitVertexFromTracks( const std::vector<const TrgTrac
     CY += iMY*iInvSig2Y;
     DY += iMY*iMY*iInvSig2Y;
     EY += iY0*iMY*iInvSig2Y;
-
+  
+    X0Array[i] = iX0;
+    MXArray[i] = iMX;
+    InvSig2XArray[i] = iInvSig2X;
+    
+    Y0Array[i] = iY0;
+    MYArray[i] = iMY;
+    InvSig2YArray[i] = iInvSig2Y;
     i++;
   }
     
   double vX,vY,vZ;
-  StatusCode status = vertexPositionAndError( AX,  BX,  CX,  DX,  EX,
-                                              AY,  BY,  CY,  DY,  EY,
-                                              vX, vY, vZ, V);
-  if (!status){fatal() << "vertexPositionAndError failed" << endreq;};
+  status = vertexPositionAndError( AX, BX, CX, DX, EX, AY, BY, CY, DY, EY, vX, vY, vZ, V);
+  if (!status){
+    fatal() << "vertexPositionAndError failed" << endreq;
+    return StatusCode::FAILURE;
+    };
 
   // Chi2
   double chi2 = 0;
@@ -416,11 +403,19 @@ StatusCode TrgVertexFitter::fitVertexFromTracks( const std::vector<const TrgTrac
     chi2 += pow( (X0Array[i]+MXArray[i]*vZ-vX), 2)*InvSig2XArray[i];
     chi2 += pow( (Y0Array[i]+MYArray[i]*vZ-vY), 2)*InvSig2YArray[i];
   }
+
   V.setChi2(chi2);
   V.setNDoF(ndof);
 
-  return StatusCode::SUCCESS;
+  // Define daugthers
+  for(ParticleVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
+    V.addToProducts(*iterP);
+  }
 
+  debug() << "Returning vertex " << V.position() << " with error " 
+          <<  V.positionErr() << " size: " << V.products().size() << endmsg ;  
+
+  return StatusCode::SUCCESS;
 }
 
 
@@ -434,6 +429,7 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX, const doubl
                                                    const double& DY, const double& EY,
                                                    double& vX, double& vY, double& vZ, Vertex &V)
 {
+
   // Vertex position
   vZ = ( CX*AX/BX + CY*AY/BY - EX - EY ) / (DX +DY - CX*CX/BX - CY*CY/BY);
   vY = CY*vZ/BY + AY/BY;

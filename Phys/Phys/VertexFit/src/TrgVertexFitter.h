@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.h,v 1.1 2005-02-04 10:12:53 pkoppenb Exp $
+// $Id: TrgVertexFitter.h,v 1.2 2005-02-08 08:50:22 pkoppenb Exp $
 #ifndef TRGVERTEXFITTER_H 
 #define TRGVERTEXFITTER_H 1
 
@@ -37,18 +37,6 @@ public:
   /// Method to fit a vertex between three given Particles
   StatusCode fitVertex( Particle&, Particle&, Particle&, Vertex&); 
 
-  /// Method to fit a vertex from a vector of tracks
-  StatusCode fitVertexFromTracks( const std::vector<const TrgTrack*>,  Vertex&);
-
-  /// Method to fit a vertex from a vector of tracks
-  StatusCode fitVertexFromTracks( const int, const TrgTrack* trackArray[],  Vertex& );
-
-  /// Method to fit a vertex from two tracks
-  StatusCode fitVertexFromTracks( const TrgTrack&, const TrgTrack&,  Vertex&);
-  
-  /// Method to fit a vertex from three tracks
-  StatusCode fitVertexFromTracks( const TrgTrack&, const TrgTrack&, const TrgTrack&,  Vertex&);
-  
   virtual ~TrgVertexFitter( ); ///< Destructor
 
 protected:
