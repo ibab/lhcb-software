@@ -1,14 +1,16 @@
-! $Id: release.notes,v 1.51 2003-04-30 13:41:25 gcorti Exp $
+! $Id: release.notes,v 1.52 2003-04-30 17:01:04 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
 ! 2003-04-30 - Gloria Corti
  - src/DecayFinder.cpp
-   . remove redefinition of defalut value that does not allow compilation
-     on windows
+   . remove redefinition of default value for arguments that does not
+     allow compilation on windows
  - src/NoPIDsParticleMaker.h, NoPIDsParticleMaker.cpp
    . new tool that allows to assign an arbitrary particle ID when making
      a charged Particle (Ivan Belyaev)
+ - src/ElectronParticleMaker_bbincl.h, ElectronParticleMaker_bbincl.cpp
+   . new electron particle maker for generic bb filtering
 
 ! 2003-04-29 - Gloria Corti
  - src/MassFilterCriterion.h, MassFilterCriterion.cpp, 
