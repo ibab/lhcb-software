@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2002-10-10 - Vanya Belyaev 
+  Relations/RelatuinTypeTraits.h
+  Relations/RelationWeightedTypeTraits.h 
+     - remove trivial misprints 
+
 ! 2002-09-04 - Ivan Belyaev
  - introduce STL-like methods 'front()' and 'back()'
    for all 'Ranges' from Relations-subpackage.

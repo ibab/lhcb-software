@@ -1,8 +1,11 @@
-// $Id: RelationWeightedTypeTraits.h,v 1.9 2002-09-04 15:39:16 ibelyaev Exp $
+// $Id: RelationWeightedTypeTraits.h,v 1.10 2002-10-10 10:02:27 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/09/04 15:39:16  ibelyaev
+//  small improvement in Ranges
+//
 // Revision 1.8  2002/05/10 12:29:43  ibelyaev
 //  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
 //
@@ -180,6 +183,8 @@ namespace Relations
     typedef Entries::const_reference  reference       ;
     typedef Entries::const_reference  const_reference ;
     
+    typedef std::pair<Entries::const_iterator,Entries::const_iterator> RangeBase ;
+
     /** @struct Range
      *
      *  An auxillary structure to provide a little bit
@@ -190,8 +195,7 @@ namespace Relations
      *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date   27/01/2002
      */
-    struct Range : 
-      public std::pair<Entries::const_iterator,Entries::const_iterator>
+    struct Range : public RangeBase 
     {
       /// short cut for own base class
       typedef RangeBase Base;
@@ -201,7 +205,7 @@ namespace Relations
       typedef Entries::const_reference  const_reference ;
       /// default constructor
       Range()                                : Base()              {} ;
-      y/// constructor
+      /// constructor
       Range( iterator begin , iterator end ) : Base( begin , end ) {} ;
       /// the aliases for standard "first" and "second"
       /// begin-iterator (non-const version)
