@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.h,v 1.5 2005-02-24 09:01:35 pkoppenb Exp $
+// $Id: CheckOverlap.h,v 1.6 2005-02-24 12:49:17 pkoppenb Exp $
 #ifndef CHECKOVERLAP_H 
 #define CHECKOVERLAP_H 1
 
@@ -71,11 +71,6 @@ public:
   bool foundOverlap( ConstParticleVector & parts,
                      std::vector<const ContainedObject* > & proto );
   
-  //===========================================================================
-  // Only look at protoparticles
-  //===========================================================================
-  bool foundOverlap( std::vector<const ContainedObject* > & proto );
-  
   /// Check for duplicate use of a protoparticle to produce decay tree of
   /// any particle in vector. Removes found particles from vector.
   StatusCode removeOverlap( ParticleVector& ) ;
@@ -88,6 +83,9 @@ protected:
   
   StatusCode addOrigins( ConstParticleVector&, std::vector<const ContainedObject*>);
 
+  /// Only look at protoparticles
+  bool searchOverlap( std::vector<const ContainedObject* > & proto );
+  
 private:
   
 }; // End of class header. 
