@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethArgument.h,v 1.3 2001-10-19 17:28:31 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethArgument.h,v 1.4 2001-11-09 08:37:11 mato Exp $
 #ifndef DADIMETHARGUMENT_H 
 #define DADIMETHARGUMENT_H 1
 
@@ -23,12 +23,12 @@ public:
   
   DOMString name();
   void setName(DOMString value);
-  
-  DOMString const_();
-  void setConst_(DOMString value);
-  
+    
   DOMString inout();
   void setInout(DOMString value);
+
+  bool const_();
+  void setConst_(bool value);
 
   bool isPointer();
   void setIsPointer(bool value);
@@ -39,9 +39,9 @@ private:
 
   DOMString m_type, 
             m_name,
-            m_constant, 
             m_inout;
-  bool      m_isPointer;
+  bool      m_constant, 
+            m_isPointer;
   
 };
 
@@ -53,16 +53,6 @@ inline DOMString DaDiMethArgument::type()
 inline void DaDiMethArgument::setType(DOMString value)
 {
   m_type = value;
-}
-
-inline DOMString DaDiMethArgument::const_()
-{
-  return m_constant;
-}
-
-inline void DaDiMethArgument::setConst_(DOMString value)
-{
-  m_constant = value;
 }
 
 inline DOMString DaDiMethArgument::name()
@@ -83,6 +73,16 @@ inline DOMString DaDiMethArgument::inout()
 inline void DaDiMethArgument::setInout(DOMString value)
 {
   m_inout = value;
+}
+
+inline bool DaDiMethArgument::const_()
+{
+  return m_constant;
+}
+
+inline void DaDiMethArgument::setConst_(bool value)
+{
+  m_constant = value;
 }
 
 inline bool DaDiMethArgument::isPointer()

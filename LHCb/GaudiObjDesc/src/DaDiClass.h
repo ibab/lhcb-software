@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.6 2001-11-05 19:51:58 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.7 2001-11-09 08:37:10 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -40,17 +40,17 @@ public:
 	DOMString classDerived();
 	void setClassDerived(DOMString value);
 
-	DOMString classTemplateVector();
-	void setClassTemplateVector(DOMString value);
-  
-	DOMString classTemplateList();
-	void setClassTemplateList(DOMString value);
-
 	DOMString classID();
 	void setClassID(DOMString value);
 
 	DOMString longDesc();
 	void setLongDesc(DOMString value);
+
+	bool classTemplateVector();
+	void setClassTemplateVector(bool value);
+  
+	bool classTemplateList();
+	void setClassTemplateList(bool value);
 
 	std::string popImpSoftList();
 	void pushImpSoftList(std::string value);
@@ -99,10 +99,10 @@ private:
                               m_classDesc,
                               m_classAuthor, 
                               m_classDerived,
-                              m_classTemplateVector,
-                              m_classTemplateList,
                               m_classID,
                               m_longDesc;
+  bool                        m_classTemplateVector,
+                              m_classTemplateList;
 	std::list<std::string>      m_impSoftList,
                               m_impStdList,
                               m_importList;
@@ -154,26 +154,6 @@ inline void DaDiClass::setClassDerived(DOMString value)
 	m_classDerived = value;
 }
 
-inline DOMString DaDiClass::classTemplateVector()
-{
-	return m_classTemplateVector;
-}
-
-inline void DaDiClass::setClassTemplateVector(DOMString value)
-{
-	m_classTemplateVector = value;
-}
-
-inline DOMString DaDiClass::classTemplateList()
-{
-	return m_classTemplateList;
-}
-
-inline void DaDiClass::setClassTemplateList(DOMString value)
-{
-	m_classTemplateList = value;
-}
-
 inline DOMString DaDiClass::classID()
 {
 	return m_classID;
@@ -194,7 +174,25 @@ inline void DaDiClass::setLongDesc(DOMString value)
 	m_longDesc = value;
 }
 
+inline bool DaDiClass::classTemplateVector()
+{
+	return m_classTemplateVector;
+}
 
+inline void DaDiClass::setClassTemplateVector(bool value)
+{
+	m_classTemplateVector = value;
+}
+
+inline bool DaDiClass::classTemplateList()
+{
+	return m_classTemplateList;
+}
+
+inline void DaDiClass::setClassTemplateList(bool value)
+{
+	m_classTemplateList = value;
+}
 
 inline std::string DaDiClass::popImpSoftList()
 {

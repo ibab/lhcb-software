@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiBaseClass.h,v 1.1.1.1 2001-10-03 16:39:17 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiBaseClass.h,v 1.2 2001-11-09 08:37:10 mato Exp $
 #ifndef DADIBASECLASS_H 
 #define DADIBASECLASS_H 1
 
@@ -21,19 +21,19 @@ public:
   DOMString name();
   void setName(DOMString value);
 
-  DOMString virtual_();
-  void setVirtual_(DOMString value);
-
   DOMString access();
   void setAccess(DOMString value);
+
+  bool virtual_();
+  void setVirtual_(bool value);
   
 protected:
 
 private:
 
   DOMString m_name, 
-            m_virtual,
-			m_access;
+			      m_access;
+  bool      m_virtual;
   
 };
 
@@ -47,16 +47,6 @@ inline void DaDiBaseClass::setName(DOMString value)
   m_name = value;
 }
 
-inline DOMString DaDiBaseClass::virtual_()
-{
-  return m_virtual;
-}
-
-inline void DaDiBaseClass::setVirtual_(DOMString value)
-{
-  m_virtual = value;
-}
-
 inline DOMString DaDiBaseClass::access()
 {
   return m_access;
@@ -65,6 +55,16 @@ inline DOMString DaDiBaseClass::access()
 inline void DaDiBaseClass::setAccess(DOMString value)
 {
   m_access = value;
+}
+
+inline bool DaDiBaseClass::virtual_()
+{
+  return m_virtual;
+}
+
+inline void DaDiBaseClass::setVirtual_(bool value)
+{
+  m_virtual = value;
 }
 
 #endif // DADIBASECLASS_H

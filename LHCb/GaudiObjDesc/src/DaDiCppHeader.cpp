@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.14 2001-11-07 14:49:34 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.15 2001-11-09 08:37:10 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -565,7 +565,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     {
       if (i>0) {xmlOut << ", ";}
       DaDiBaseClass* gddBaseClass = gddClass->popDaDiBaseClass();
-      if (gddBaseClass->virtual_().equals("TRUE"))
+      if (gddBaseClass->virtual_())
       {
         xmlOut << "virtual ";
       }
@@ -605,11 +605,15 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
       {
         xmlOut << ", ";
       }
-      if (gddMethArgument->const_().equals("TRUE"))
+      if (gddMethArgument->const_())
       {
         xmlOut << "const ";
       }
       xmlOut << gddMethArgument->type().transcode();
+      if (gddMethArgument->isPointer())
+      {
+        xmlOut << "*";
+      }
       if (gddMethArgument->name() != NULL)
       {
         xmlOut << " " << gddMethArgument->name().transcode();
@@ -709,11 +713,15 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
         {
           xmlOut << ", ";
         }
-        if (gddMethArgument->const_().equals("TRUE"))
+        if (gddMethArgument->const_())
         {
           xmlOut << "const ";
         }
         xmlOut << gddMethArgument->type().transcode();
+        if (gddMethArgument->isPointer())
+        {
+          xmlOut << "*";
+        }
         if (gddMethArgument->name() != NULL)
         {
           xmlOut << " " << gddMethArgument->name().transcode();
@@ -756,15 +764,19 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
       
     xmlOut << "/// " << gddMethod->desc().transcode() << std::endl;
-    if (gddMethod->virtual_().equals("TRUE"))
+    if (gddMethod->friend_())
+    {
+      xmlOut << "friend ";
+    }
+    if (gddMethod->virtual_())
     {
       xmlOut << "virtual ";
     }
-    if (gddMethod->static_().equals("TRUE"))
+    if (gddMethod->static_())
     {
       xmlOut << "static ";
     }
-    if (gddMethod->daDiMethReturn()->const_().equals("TRUE"))
+    if (gddMethod->daDiMethReturn()->const_())
     {
       xmlOut << "const ";
     }
@@ -778,8 +790,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
       {
         xmlOut << ", ";
       }
-      if ( gddMethArgument->const_().equals("TRUE") ||
-          !isSimple(gddMethArgument->type().transcode()) )
+      if ( gddMethArgument->const_() )
       {
         xmlOut << "const ";
       }
@@ -788,8 +799,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
       {
         xmlOut << "*";
       }
-      if ( gddMethArgument->inout().equals("BOTH") ||
-          !isSimple(gddMethArgument->type().transcode()) )
+      if ( gddMethArgument->inout().equals("BOTH") )
       {
         xmlOut << "&";
       }
@@ -803,7 +813,20 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
         xmlOut << " value" << j;
       }
     }
-    xmlOut << ");" << std::endl << std::endl;
+    xmlOut << ")";
+    if (gddMethod->const_())
+    {
+      xmlOut << " const";
+    }
+    if (gddMethod->friend_())
+    {
+      xmlOut << std::endl << "{" << std::endl << gddMethod->code().transcode()
+        << std::endl << "}" << std::endl << std::endl;
+    }
+    else
+    {
+      xmlOut << ";" << std::endl << std::endl;
+    }
   }
 
 
@@ -816,7 +839,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
       
-    if(gddAttribute->getMeth().equals("TRUE"))
+    if(gddAttribute->getMeth())
     {
       xmlOut << "/// Retrieve " << gddAttribute->desc().transcode() 
         << std::endl;
@@ -833,7 +856,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
         << std::endl;
     }
       
-    if(gddAttribute->setMeth().equals("TRUE"))
+    if(gddAttribute->setMeth())
     {
       xmlOut << "/// Update " << gddAttribute->desc().transcode() << std::endl 
         << "void set" << firstUp(gddAttribute->name()).transcode() 
@@ -879,13 +902,13 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
       add_arg = "";
     }
 
-    if (gddRelation->getMeth().equals("TRUE"))
+    if (gddRelation->getMeth())
     {
       xmlOut << "/// Retrieve " << gddRelation->desc().transcode() << std::endl
         << "const " << get_ret << gddRelation->type().transcode() << ">& " 
                 << gddRelation->name().transcode() << "() const;" << std::endl;
     }
-    if (gddRelation->setMeth().equals("TRUE"))
+    if (gddRelation->setMeth())
     {
       xmlOut << "/// Update " << gddRelation->desc().transcode() << std::endl;
       if (gddRelation->ratio().equals("1") ) {
@@ -900,7 +923,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     }
     if (strcmp("", add_arg) != 0)
     {
-      if (gddRelation->addMeth().equals("TRUE"))
+      if (gddRelation->addMeth())
       {
         xmlOut << "/// Add " << gddRelation->desc().transcode() << std::endl
         << "void " << "addTo"
@@ -911,7 +934,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
         << "(" << add_arg << gddRelation->type().transcode()
         << ">& value); " << std::endl;
       }
-      if (gddRelation->remMeth().equals("TRUE"))
+      if (gddRelation->remMeth())
       {
         xmlOut << "/// Remove " << gddRelation->desc().transcode() << std::endl
           << "void " << "removeFrom"
@@ -922,7 +945,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
           << "(SmartRef<" << gddRelation->type().transcode() << ">& value); "
           << std::endl;
       }
-      if (gddRelation->clrMeth().equals("TRUE"))
+      if (gddRelation->clrMeth())
       {
         xmlOut << "/// Clear " << gddRelation->desc().transcode() << std::endl
         << "void " << "clear" 
@@ -958,17 +981,17 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
     if (gddMethod->name().equals("operator>>") &&
-        gddMethod->daDiMethReturn()->type().equals("StreamBuffer"))
+        gddMethod->daDiMethReturn()->type().equals("StreamBuffer&"))
     {
       streamIn = true;
     }
     if (gddMethod->name().equals("operator<<") &&
-        gddMethod->daDiMethReturn()->type().equals("StreamBuffer"))
+        gddMethod->daDiMethReturn()->type().equals("StreamBuffer&"))
     {
       streamOut = true;
     }
     if (gddMethod->name().equals("operator<<") &&
-        gddMethod->daDiMethReturn()->type().equals("std::ostream"))
+        gddMethod->daDiMethReturn()->type().equals("std::ostream&"))
     {
       ostreamOut = true;
     }
@@ -1417,18 +1440,18 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
   for(i=0; i<gddClass->sizeDaDiMethod(); i++)
   {
     DaDiMethod* gddMethod = gddClass->popDaDiMethod();
-    if (gddMethod->code() != NULL)
+    if (gddMethod->code() != NULL && !gddMethod->friend_())
     {
       xmlOut << "inline ";
-      if(gddMethod->virtual_().equals("TRUE"))
+      if(gddMethod->virtual_())
       {
         xmlOut << "virtual ";
       }
-      if (gddMethod->static_().equals("TRUE"))
+      if (gddMethod->static_())
       {
         xmlOut << "static ";
       }
-      if (gddMethod->daDiMethReturn()->const_().equals("TRUE"))
+      if (gddMethod->daDiMethReturn()->const_())
       {
         xmlOut << "const ";
       }
@@ -1442,8 +1465,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
         {
           xmlOut << ", ";
         }
-        if (gddMethArgument->const_().equals("TRUE") ||
-            !isSimple(gddMethArgument->type().transcode()) )
+        if (gddMethArgument->const_() )
         {
           xmlOut << "const ";
         }
@@ -1452,8 +1474,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
         {
           xmlOut << "*";
         }
-        if ( gddMethArgument->inout().equals("BOTH") ||
-            !isSimple(gddMethArgument->type().transcode()) )
+        if ( gddMethArgument->inout().equals("BOTH") )
         {
           xmlOut << "&";
         }
@@ -1467,7 +1488,12 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
           xmlOut << " value" << j;
         }
       }
-      xmlOut << ")" << std::endl << "{" << std::endl << "   " 
+      xmlOut << ")";
+      if (gddMethod->const_())
+      {
+        xmlOut << " const";
+      }
+      xmlOut << std::endl << "{" << std::endl << "   " 
         << gddMethod->code().transcode() << std::endl << "}" << std::endl 
         << std::endl;
     }
@@ -1483,7 +1509,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
   {
     DaDiAttribute* gddAttribute = gddClass->popDaDiAttribute();
       
-    if(gddAttribute->getMeth().equals("TRUE"))
+    if(gddAttribute->getMeth())
     {
       xmlOut << "inline ";
       if (!isSimple(gddAttribute->type().transcode()))
@@ -1501,7 +1527,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
         << ";" << std::endl << "}" << std::endl << std::endl ;
     }
       
-    if(gddAttribute->setMeth().equals("TRUE"))
+    if(gddAttribute->setMeth())
     {
       xmlOut << "inline void " << gddClass->className().transcode() << "::set" 
         << firstUp(gddAttribute->name()).transcode() << "(";
@@ -1548,7 +1574,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
       add_arg = "";
     }
 
-    if (gddRelation->getMeth().equals("TRUE"))
+    if (gddRelation->getMeth())
     {
       xmlOut << "inline const " << get_ret << gddRelation->type().transcode()
         << ">& " << gddClass->className().transcode() << "::"
@@ -1557,7 +1583,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
         << "   return m_" << gddRelation->name().transcode() << ";" 
         << std::endl << "}" << std::endl << std::endl;
     }
-    if (gddRelation->setMeth().equals("TRUE"))
+    if (gddRelation->setMeth())
     { 
       if (gddRelation->ratio().equals("1") ) { 
         xmlOut << "inline void " << gddClass->className().transcode() << "::" 
@@ -1575,7 +1601,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     }
     if (strcmp("", add_arg) != 0)
     {
-      if (gddRelation->addMeth().equals("TRUE"))
+      if (gddRelation->addMeth())
       {
         xmlOut << "inline void " << gddClass->className().transcode() << "::" 
           << "addTo" << firstUp(gddRelation->name()).transcode() 
@@ -1591,7 +1617,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
           << ".push_back(value);" << std::endl << "}" 
           << std::endl << std::endl;          
       }
-      if (gddRelation->remMeth().equals("TRUE"))
+      if (gddRelation->remMeth())
       {
         xmlOut << "inline void " << gddClass->className().transcode() << "::"
           << "removeFrom" << firstUp(gddRelation->name()).transcode()
@@ -1606,7 +1632,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
           << ".pop_back();" << std::endl << "}" << std::endl 
           << std::endl;        
       }
-      if (gddRelation->clrMeth().equals("TRUE"))
+      if (gddRelation->clrMeth())
       {
         xmlOut << "inline void " << gddClass->className().transcode() << "::"
           << "clear" << firstUp(gddRelation->name()).transcode() << "()"
@@ -1640,7 +1666,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
 //
 // Definition of container types
 //
-  if (gddClass->classTemplateVector().equals("TRUE"))
+  if (gddClass->classTemplateVector())
   {
     xmlOut << "// Defintion of vector container type for " 
       << gddClass->className().transcode() << std::endl
@@ -1649,7 +1675,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
       << "> " << gddClass->className().transcode() << "Vector;" << std::endl;
   }
   
-  if (gddClass->classTemplateList().equals("TRUE"))
+  if (gddClass->classTemplateList())
   {
     xmlOut << "// Defintion of all list container types for " 
       << gddClass->className().transcode() << std::endl

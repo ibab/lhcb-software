@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiRelation.h,v 1.1.1.1 2001-10-03 16:39:17 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiRelation.h,v 1.2 2001-11-09 08:37:11 mato Exp $
 #ifndef DADIRELATION_H 
 #define DADIRELATION_H 1
 
@@ -33,20 +33,20 @@ public:
   DOMString ratio();
   void setRatio(DOMString value);
   
-  DOMString setMeth();
-  void setSetMeth(DOMString value);
+  bool setMeth();
+  void setSetMeth(bool value);
   
-  DOMString getMeth();
-  void setGetMeth(DOMString value);
+  bool getMeth();
+  void setGetMeth(bool value);
   
-  DOMString addMeth();
-  void setAddMeth(DOMString value);
+  bool addMeth();
+  void setAddMeth(bool value);
   
-  DOMString remMeth();
-  void setRemMeth(DOMString value);
+  bool remMeth();
+  void setRemMeth(bool value);
   
-  DOMString clrMeth();
-  void setClrMeth(DOMString value);
+  bool clrMeth();
+  void setClrMeth(bool value);
 
 protected:
 
@@ -56,8 +56,8 @@ private:
             m_type, 
             m_desc, 
             m_access, 
-            m_ratio, 
-            m_setMeth, 
+            m_ratio; 
+  bool      m_setMeth, 
             m_getMeth, 
             m_addMeth, 
             m_remMeth, 
@@ -116,52 +116,52 @@ inline void DaDiRelation::setRatio(DOMString value)
   m_ratio = value;
 }
 
-inline DOMString DaDiRelation::setMeth()
+inline bool DaDiRelation::setMeth()
 {
   return m_setMeth;
 }
 
-inline void DaDiRelation::setSetMeth(DOMString value)
+inline void DaDiRelation::setSetMeth(bool value)
 {
   m_setMeth = value;
 }
 
-inline DOMString DaDiRelation::getMeth()
+inline bool DaDiRelation::getMeth()
 {
   return m_getMeth;
 }
 
-inline void DaDiRelation::setGetMeth(DOMString value)
+inline void DaDiRelation::setGetMeth(bool value)
 {
   m_getMeth = value;
 }
 
-inline DOMString DaDiRelation::addMeth()
+inline bool DaDiRelation::addMeth()
 {
   return m_addMeth;
 }
 
-inline void DaDiRelation::setAddMeth(DOMString value)
+inline void DaDiRelation::setAddMeth(bool value)
 {
   m_addMeth = value;
 }
 
-inline DOMString DaDiRelation::remMeth()
+inline bool DaDiRelation::remMeth()
 {
   return m_remMeth;
 }
 
-inline void DaDiRelation::setRemMeth(DOMString value)
+inline void DaDiRelation::setRemMeth(bool value)
 {
   m_remMeth = value;
 }
 
-inline DOMString DaDiRelation::clrMeth()
+inline bool DaDiRelation::clrMeth()
 {
   return m_clrMeth;
 }
 
-inline void DaDiRelation::setClrMeth(DOMString value)
+inline void DaDiRelation::setClrMeth(bool value)
 {
   m_clrMeth = value;
 }

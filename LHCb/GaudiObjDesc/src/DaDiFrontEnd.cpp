@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.10 2001-11-07 14:49:34 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.11 2001-11-09 08:37:11 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -31,6 +31,21 @@ extern std::string argV0;
 
 
 //-----------------------------------------------------------------------------
+DOMString remSpaces(DOMString value)
+//-----------------------------------------------------------------------------
+{
+  while (value.substringData(0,1).equals(" "))
+  {
+    value.deleteData(0,1);
+  }
+  while (value.substringData(value.length()-1,1).equals(" "))
+  {
+    value.deleteData(value.length()-1,1);
+  }
+  return value;
+}
+
+//-----------------------------------------------------------------------------
 std::vector<std::string> findWords(std::string value, 
                                    std::string delim)
 //-----------------------------------------------------------------------------
@@ -54,18 +69,34 @@ std::vector<std::string> findWords(std::string value,
   return words;
 }
 
+//-----------------------------------------------------------------------------
+std::vector<DOMString> findWords(DOMString value, 
+                                 DOMString delim)
+//-----------------------------------------------------------------------------
+{
+  std::vector<DOMString> words;
+  unsigned int i = 0, j = 0;
+
+  for (i=0; i<value.length(); ++i)
+  {
+    if (value.substringData(i,1).equals(delim))
+    {
+      words.push_back(remSpaces(value.substringData(j, i-j)));
+      j = i+1;
+    }
+  }
+  words.push_back(remSpaces(value.substringData(j,i-j)));
+  return words;
+}
+
 
 //-----------------------------------------------------------------------------
 bool isPointer(DOMString value)
 //-----------------------------------------------------------------------------
 {
-  while (value.substringData(value.length()-1,1).equals(" "))
-  {
-    value = value.substringData(value.length()-1,1);
-  }
+  value = remSpaces(value);
   return value.substringData(value.length()-1,1).equals("*");
 }
-
 
 
 //-----------------------------------------------------------------------------
@@ -86,12 +117,13 @@ DaDiPackage* DDFE::DaDiFrontEnd(char* filename)
   }
 
   catch(const XMLException& toCatch)
-    {
+  {
     std::cerr << "Error during Xerces-c Initialization.\n"
       << " Exception message: "
       << toCatch.getMessage() << std::endl;
       exit(1);
-    }
+  }
+
 
   gXmlFile = filename;
 
@@ -308,18 +340,34 @@ void DDFE::parseClass(DOM_Node node,
     getNamedItem(DOMString::transcode("author")).
     getNodeValue());
 
-  gddClass->setClassTemplateVector(node.getAttributes().
+  if (node.getAttributes().
     getNamedItem(DOMString::transcode("templateVector")).
-    getNodeValue());
-  if (gddClass->classTemplateVector().equals("TRUE"))
+    getNodeValue().equals("TRUE"))
+  {
+    gddClass->setClassTemplateVector(true);
+  }
+  else
+  {
+    gddClass->setClassTemplateVector(false);
+  }
+
+  if (gddClass->classTemplateVector())
   {
     gddClass->pushImportList("ObjectVector");
   }
   
-  gddClass->setClassTemplateList(node.getAttributes().
+  if (node.getAttributes().
     getNamedItem(DOMString::transcode("templateList")).
-    getNodeValue());
-  if (gddClass->classTemplateList().equals("TRUE"))
+    getNodeValue().equals("TRUE"))
+  {
+    gddClass->setClassTemplateList(true);
+  }
+  else
+  {
+    gddClass->setClassTemplateList(false);
+  }
+
+  if (gddClass->classTemplateList())
   {
     gddClass->pushImportList("ObjectList");
   }
@@ -351,7 +399,7 @@ void DDFE::parseClass(DOM_Node node,
         if(node.getNodeName().equals("desc"))
         {
           gddClass->setLongDesc(node.getFirstChild().
-                  getNodeValue().transcode());
+                  getNodeValue());
           classHasDesc = true;
         }
 //
@@ -378,9 +426,16 @@ void DDFE::parseClass(DOM_Node node,
             getNamedItem(DOMString::transcode("name")).getNodeValue().
             transcode());
 
-          gddBaseClass->setVirtual_(node.getAttributes().
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("virtual")).getNodeValue().
-            transcode());
+            equals("TRUE"))
+          {
+            gddBaseClass->setVirtual_(true);
+          }
+          else
+          {
+            gddBaseClass->setVirtual_(false);
+          }
 
           gddBaseClass->setAccess(node.getAttributes().
             getNamedItem(DOMString::transcode("access")).getNodeValue().
@@ -398,14 +453,14 @@ void DDFE::parseClass(DOM_Node node,
 
           gddMethod->setName(node.getAttributes().
             getNamedItem(DOMString::transcode("name")).
-                        getNodeValue().transcode());
+                        getNodeValue());
           
           if (!node.getAttributes().
             getNamedItem(DOMString::transcode("desc")).isNull())
           {
             gddMethod->setDesc(node.getAttributes().
               getNamedItem(DOMString::transcode("desc")).
-              getNodeValue().transcode());
+              getNodeValue());
           }
           else
           {
@@ -414,26 +469,65 @@ void DDFE::parseClass(DOM_Node node,
             
           gddMethod->setAccess(node.getAttributes().
             getNamedItem(DOMString::transcode("access")).
-                        getNodeValue().transcode());
+                        getNodeValue());
             
-          gddMethod->setConst_(node.getAttributes().
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("const")).
-                        getNodeValue().transcode());
+                        getNodeValue().equals("TRUE"))
+          {
+            gddMethod->setConst_(true);
+          }
+          else
+          {
+            gddMethod->setConst_(false);
+          }
             
-          gddMethod->setVirtual_(node.getAttributes().
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("virtual")).
-                        getNodeValue().transcode());
+                        getNodeValue().equals("TRUE"))
+          {
+            gddMethod->setVirtual_(true);
+          }
+          else
+          {
+            gddMethod->setVirtual_(false);
+          }
             
-          gddMethod->setStatic_(node.getAttributes().
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("static")).
-                        getNodeValue().transcode());            
+                        getNodeValue().equals("TRUE"))
+          {
+            gddMethod->setStatic_(true);
+          }
+          else
+          {
+            gddMethod->setStatic_(false);
+          }
 
-          gddMethod->setInline_(node.getAttributes().
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("inline")).
-                        getNodeValue().transcode());            
+                        getNodeValue().equals("TRUE"))
+          {
+            gddMethod->setInline_(true);
+          }
+          else
+          {
+            gddMethod->setInline_(false);
+          }
+
+          if (node.getAttributes().
+            getNamedItem(DOMString::transcode("friend")).
+                        getNodeValue().equals("TRUE"))
+          {
+            gddMethod->setFriend_(true);
+          }
+          else
+          {
+            gddMethod->setFriend_(false);
+          }
 
           DaDiMethReturn* gddMethReturn = new DaDiMethReturn();
-          gddMethReturn->setConst_("FALSE");
+          gddMethReturn->setConst_(false);
           if (!node.getAttributes().
             getNamedItem(DOMString::transcode("type")).isNull())
           {
@@ -447,13 +541,13 @@ void DDFE::parseClass(DOM_Node node,
             {
               gddMethReturn->setType(node.getAttributes().
                 getNamedItem(DOMString::transcode("type")).
-                getNodeValue().transcode());
+                getNodeValue());
             }
             else
             {
               gddMethReturn->setType(DOMString::transcode(typeStr.substr(
                 typeStr.find(' ')+1, std::string::npos).data()));
-              gddMethReturn->setConst_("TRUE");
+              gddMethReturn->setConst_(true);
             }
           }
           else
@@ -461,34 +555,24 @@ void DDFE::parseClass(DOM_Node node,
             gddMethReturn->setType(0);
           }
 
-          std::string argList, argInOut;
+          //
+          // Handling of argList and argInOut
+          //
+          std::vector<DOMString> argList, argInOut;
           if (!node.getAttributes().
             getNamedItem(DOMString::transcode("argList")).isNull())
           {
-            argList = node.getAttributes().
+            argList = findWords(node.getAttributes().
               getNamedItem(DOMString::transcode("argList")).
-              getNodeValue().transcode();
+              getNodeValue(), ",");
 
-            bool lastElem = false;
-            while(!lastElem)
+            for (std::vector<DOMString>::iterator iterL = argList.begin();
+            iterL != argList.end(); ++iterL)     
             {
-              std::vector<std::string> args;
-              unsigned int i = argList.find(",");
-              if (i != std::string::npos)
-              {
-                args = findWords(argList.substr(0,i)," ");
-                argList = argList.substr(i+1,argList.size()-i);
-              }
-              else
-              {
-                args = findWords(argList," ");
-                lastElem = true;
-              }
+              DOMString argType = "", argEType = "";
+              std::vector<DOMString> argWords = findWords(*iterL," ");
 
-              DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
-              gddMethod->pushDaDiMethArgument(gddMethArgument);
-
-              if (args.size() < 2)
+              if (argWords.size() < 2)
               {
                 std::cerr << argV0 
                   << ": Error in 'argList'-description of method "
@@ -499,60 +583,53 @@ void DDFE::parseClass(DOM_Node node,
                 exit(1);
               }
 
-              gddMethArgument->setName(DOMString::transcode(args[args.size()-1].
-                data()));
+              DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
+              gddMethod->pushDaDiMethArgument(gddMethArgument);
 
-              DOMString argType = DOMString::transcode(args[args.size()-2].
-                data());
+              gddMethArgument->setName(argWords[argWords.size()-1]);
+              argWords.pop_back();
+
+              argType = argWords[argWords.size()-1];
+              argWords.pop_back();  
 
               if (isPointer(argType))
               {
+                argType.deleteData(argType.length()-1,1);
                 gddMethArgument->setIsPointer(true);
-                while (argType.substringData(argType.length()-1,1).equals(" "))
-                {
-                  argType = argType.substringData(argType.length()-1,1);
-                }
-                gddMethArgument->setType(argType.
-                  substringData(0,argType.length()-1));
               }
               else
               {
                 gddMethArgument->setIsPointer(false);
-                gddMethArgument->setType(argType);
               }
               
-              for (int j = (args.size()-3); j>=0; --j)
+              for (std::vector<DOMString>::iterator iterW = argWords.begin();
+              iterW != argWords.end(); ++iterW)
               {
-                if (args[j] == "const")
+                if (iterW->equals("const"))
                 {
-                  gddMethArgument->setConst_("TRUE");
+                  gddMethArgument->setConst_(true);
                 }
-
                 else
                 {
-                std::cerr << argV0 << ": Don't know how to handle modifier: " 
-                  << args[j] << "." << std::endl;
+                  argEType += *iterW;
+                  argEType += " ";
                 }
               }
+              argEType += argType;
+              gddMethArgument->setType(argEType);
+
 //
 // handling of Input/Output arguments here !!!!
 //
 
               gddMethArgument->setInout("INPUT");
-//
-//
+
             }
           }
 
-          if (!node.getAttributes().
-            getNamedItem(DOMString::transcode("argInOut")).isNull())
-          {
-            argInOut = node.getAttributes().
-              getNamedItem(DOMString::transcode("argInOut")).
-              getNodeValue().transcode();           
-          }
-
-          
+          //
+          // Child Elements of Method
+          //
           gddMethod->setCode(0);
           
           DOM_Node met_child;
@@ -572,16 +649,23 @@ void DDFE::parseClass(DOM_Node node,
 
                 gddMethReturn->setType(met_child.getAttributes().
                   getNamedItem(DOMString::transcode("type")).
-                  getNodeValue().transcode());
-                gddMethReturn->setConst_(met_child.getAttributes().
+                  getNodeValue());
+                
+                if (met_child.getAttributes().
                   getNamedItem(DOMString::transcode("const")).
-                  getNodeValue().transcode());
-                          
+                  getNodeValue().equals("TRUE"))
+                {
+                  gddMethReturn->setConst_(true);
+                }
+                else
+                {
+                  gddMethReturn->setConst_(false);
+                }         
               }
               if(met_child.getNodeName().equals("code"))
               {
                 gddMethod->setCode(met_child.getFirstChild().
-                  getNodeValue().transcode());
+                  getNodeValue());
               }
               if(met_child.getNodeName().equals("arg"))
               {
@@ -589,7 +673,7 @@ void DDFE::parseClass(DOM_Node node,
                 gddMethod->pushDaDiMethArgument(gddMethArgument);
                 DOMString argType = met_child.getAttributes().
                   getNamedItem(DOMString::transcode("type")).
-                  getNodeValue().transcode();
+                  getNodeValue();
                 if (isPointer(argType))
                 {
                   gddMethArgument->setIsPointer(true);
@@ -607,18 +691,27 @@ void DDFE::parseClass(DOM_Node node,
                 {
                   gddMethArgument->setName(met_child.getAttributes().
                     getNamedItem(DOMString::transcode("name")).
-                    getNodeValue().transcode());
+                    getNodeValue());
                 }
                 else
                 {
                   gddMethArgument->setName(0);
                 }
-                gddMethArgument->setConst_(met_child.getAttributes().
+
+                if (met_child.getAttributes().
                   getNamedItem(DOMString::transcode("const")).
-                  getNodeValue().transcode());
+                  getNodeValue().equals("TRUE"))
+                {
+                  gddMethArgument->setConst_(true);
+                }
+                else
+                {
+                  gddMethArgument->setConst_(false);
+                }
+
                 gddMethArgument->setInout(met_child.getAttributes().
                   getNamedItem(DOMString::transcode("inout")).
-                  getNodeValue().transcode());
+                  getNodeValue());
               }
               }
             default:
@@ -643,69 +736,89 @@ void DDFE::parseClass(DOM_Node node,
           {
             gddConstructor->setDesc(node.getAttributes().
               getNamedItem(DOMString::transcode("desc")).
-              getNodeValue().transcode());
+              getNodeValue());
           }
           else
           {
             gddConstructor->setDesc(0);
           }
-            
-          std::string argList, argInOut;
+
+          
+          //
+          // Handling of argList and argInOut
+          //
+          std::vector<DOMString> argList, argInOut;
           if (!node.getAttributes().
             getNamedItem(DOMString::transcode("argList")).isNull())
           {
-            argList = node.getAttributes().
+            argList = findWords(node.getAttributes().
               getNamedItem(DOMString::transcode("argList")).
-              getNodeValue().transcode();
+              getNodeValue(), ",");
 
-            bool lastElem = false;
-            while(!lastElem)
+            for (std::vector<DOMString>::iterator iterL = argList.begin();
+            iterL != argList.end(); ++iterL)     
             {
-              std::vector<std::string> args;
-              unsigned int i = argList.find(",");
-              if (i != std::string::npos)
+              DOMString argType = "", argEType = "";
+              std::vector<DOMString> argWords = findWords(*iterL," ");
+
+              if (argWords.size() < 2)
               {
-                args = findWords(argList.substr(0,i)," ");
-                argList = argList.substr(i+1,argList.size()-i);
-              }
-              else
-              {
-                args = findWords(argList," ");
-                lastElem = true;
+                std::cerr << argV0 
+                  << ": Error in 'argList'-description of constructor in Class "
+                  << gddClass->className().transcode()
+                  << ", you have to provide at least a type-name-pair" 
+                  << std::endl;
+                exit(1);
               }
 
               DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
               gddConstructor->pushDaDiMethArgument(gddMethArgument);
-              
-              gddMethArgument->setName(DOMString::transcode(args[args.size()-1].
-                data()));
-              gddMethArgument->setType(DOMString::transcode(args[args.size()-2].
-                data()));
-              
-              for (int j = (args.size()-3); j>=0; --j)
+
+              gddMethArgument->setName(argWords[argWords.size()-1]);
+              argWords.pop_back();
+
+              argType = argWords[argWords.size()-1];
+              argWords.pop_back();  
+
+              if (isPointer(argType))
               {
-                if (args[j] == "const")
+                argType.deleteData(argType.length()-1,1);
+                gddMethArgument->setIsPointer(true);
+              }
+              else
+              {
+                gddMethArgument->setIsPointer(false);
+              }
+              
+              for (std::vector<DOMString>::iterator iterW = argWords.begin();
+              iterW != argWords.end(); ++iterW)
+              {
+                if (iterW->equals("const"))
                 {
-                  gddMethArgument->setConst_("TRUE");
+                  gddMethArgument->setConst_(true);
                 }
                 else
                 {
-                std::cerr << argV0 << ": Don't know how to handle modifier: " 
-                  << args[j] << "." << std::endl;
+                  argEType += *iterW;
+                  argEType += " ";
                 }
               }
+              argEType += argType;
+              gddMethArgument->setType(argEType);
+
+//
+// handling of Input/Output arguments here !!!!
+//
+
+              gddMethArgument->setInout("INPUT");
+
             }
           }
 
-          if (!node.getAttributes().
-            getNamedItem(DOMString::transcode("argInOut")).isNull())
-          {
-            argInOut = node.getAttributes().
-              getNamedItem(DOMString::transcode("argInOut")).
-              getNodeValue().transcode();           
-          }
 
-          
+          //
+          // Child Elements of Constructor
+          //
           gddConstructor->setCode(0);
           
           DOM_Node met_child;
@@ -720,7 +833,7 @@ void DDFE::parseClass(DOM_Node node,
               if(met_child.getNodeName().equals("code"))
               {
                 gddConstructor->setCode(met_child.getFirstChild().
-                  getNodeValue().transcode());
+                  getNodeValue());
               }
               if(met_child.getNodeName().equals("arg"))
               {
@@ -728,24 +841,33 @@ void DDFE::parseClass(DOM_Node node,
                 gddConstructor->pushDaDiMethArgument(gddMethArgument);
                 gddMethArgument->setType(met_child.getAttributes().
                   getNamedItem(DOMString::transcode("type")).
-                  getNodeValue().transcode());
+                  getNodeValue());
                 if (!met_child.getAttributes().
                   getNamedItem(DOMString::transcode("name")).isNull())
                 {
                   gddMethArgument->setName(met_child.getAttributes().
                     getNamedItem(DOMString::transcode("name")).
-                    getNodeValue().transcode());
+                    getNodeValue());
                 }
                 else
                 {
                   gddMethArgument->setName(0);
                 }
-                gddMethArgument->setConst_(met_child.getAttributes().
+
+                if (met_child.getAttributes().
                   getNamedItem(DOMString::transcode("const")).
-                  getNodeValue().transcode());
+                  getNodeValue().equals("TRUE"))
+                {
+                  gddMethArgument->setConst_(true);
+                }
+                else
+                {
+                  gddMethArgument->setConst_(false);
+                }
+
                 gddMethArgument->setInout(met_child.getAttributes().
                   getNamedItem(DOMString::transcode("inout")).
-                  getNodeValue().transcode());
+                  getNodeValue());
               }
               }
             default:
@@ -770,69 +892,89 @@ void DDFE::parseClass(DOM_Node node,
           {
             gddDestructor->setDesc(node.getAttributes().
               getNamedItem(DOMString::transcode("desc")).
-              getNodeValue().transcode());
+              getNodeValue());
           }
           else
           {
             gddDestructor->setDesc(0);
           }
-            
-          std::string argList, argInOut;
+
+          
+          //
+          // Handling of argList and argInOut
+          //
+          std::vector<DOMString> argList, argInOut;
           if (!node.getAttributes().
             getNamedItem(DOMString::transcode("argList")).isNull())
           {
-            argList = node.getAttributes().
+            argList = findWords(node.getAttributes().
               getNamedItem(DOMString::transcode("argList")).
-              getNodeValue().transcode();
+              getNodeValue(), ",");
 
-            bool lastElem = false;
-            while(!lastElem)
+            for (std::vector<DOMString>::iterator iterL = argList.begin();
+            iterL != argList.end(); ++iterL)     
             {
-              std::vector<std::string> args;
-              unsigned int i = argList.find(",");
-              if (i != std::string::npos)
+              DOMString argType = "", argEType = "";
+              std::vector<DOMString> argWords = findWords(*iterL," ");
+
+              if (argWords.size() < 2)
               {
-                args = findWords(argList.substr(0,i)," ");
-                argList = argList.substr(i+1,argList.size()-i);
-              }
-              else
-              {
-                args = findWords(argList," ");
-                lastElem = true;
+                std::cerr << argV0 
+                  << ": Error in 'argList'-description of destructor in Class "
+                  << gddClass->className().transcode()
+                  << ", you have to provide at least a type-name-pair" 
+                  << std::endl;
+                exit(1);
               }
 
               DaDiMethArgument* gddMethArgument = new DaDiMethArgument();
               gddDestructor->pushDaDiMethArgument(gddMethArgument);
-              
-              gddMethArgument->setName(DOMString::transcode(args[args.size()-1].
-                data()));
-              gddMethArgument->setType(DOMString::transcode(args[args.size()-2].
-                data()));
-              
-              for (int j = (args.size()-3); j>=0; --j)
+
+              gddMethArgument->setName(argWords[argWords.size()-1]);
+              argWords.pop_back();
+
+              argType = argWords[argWords.size()-1];
+              argWords.pop_back();  
+
+              if (isPointer(argType))
               {
-                if (args[j] == "const")
+                argType.deleteData(argType.length()-1,1);
+                gddMethArgument->setIsPointer(true);
+              }
+              else
+              {
+                gddMethArgument->setIsPointer(false);
+              }
+              
+              for (std::vector<DOMString>::iterator iterW = argWords.begin();
+              iterW != argWords.end(); ++iterW)
+              {
+                if (iterW->equals("const"))
                 {
-                  gddMethArgument->setConst_("TRUE");
+                  gddMethArgument->setConst_(true);
                 }
                 else
                 {
-                std::cerr << argV0 << ": Don't know how to handle modifier: " 
-                  << args[j] << "." << std::endl;
+                  argEType += *iterW;
+                  argEType += " ";
                 }
               }
+              argEType += argType;
+              gddMethArgument->setType(argEType);
+
+//
+// handling of Input/Output arguments here !!!!
+//
+
+              gddMethArgument->setInout("INPUT");
+
             }
           }
 
-          if (!node.getAttributes().
-            getNamedItem(DOMString::transcode("argInOut")).isNull())
-          {
-            argInOut = node.getAttributes().
-              getNamedItem(DOMString::transcode("argInOut")).
-              getNodeValue().transcode();           
-          }
 
-          
+          //
+          // Child Elements of Destructor
+          //
           gddDestructor->setCode(0);
           
           DOM_Node met_child;
@@ -847,7 +989,7 @@ void DDFE::parseClass(DOM_Node node,
               if(met_child.getNodeName().equals("code"))
               {
                 gddDestructor->setCode(met_child.getFirstChild().
-                  getNodeValue().transcode());
+                  getNodeValue());
               }
               if(met_child.getNodeName().equals("arg"))
               {
@@ -855,24 +997,33 @@ void DDFE::parseClass(DOM_Node node,
                 gddDestructor->pushDaDiMethArgument(gddMethArgument);
                 gddMethArgument->setType(met_child.getAttributes().
                   getNamedItem(DOMString::transcode("type")).
-                  getNodeValue().transcode());
+                  getNodeValue());
                 if (!met_child.getAttributes().
                   getNamedItem(DOMString::transcode("name")).isNull())
                 {
                   gddMethArgument->setName(met_child.getAttributes().
                     getNamedItem(DOMString::transcode("name")).
-                    getNodeValue().transcode());
+                    getNodeValue());
                 }
                 else
                 {
                   gddMethArgument->setName(0);
                 }
-                gddMethArgument->setConst_(met_child.getAttributes().
+
+                if (met_child.getAttributes().
                   getNamedItem(DOMString::transcode("const")).
-                  getNodeValue().transcode());
+                  getNodeValue().equals("TRUE"))
+                {
+                  gddMethArgument->setConst_(true);
+                }
+                else
+                {
+                  gddMethArgument->setConst_(false);
+                }
+
                 gddMethArgument->setInout(met_child.getAttributes().
                   getNamedItem(DOMString::transcode("inout")).
-                  getNodeValue().transcode());
+                  getNodeValue());
               }
               }
             default:
@@ -892,11 +1043,11 @@ void DDFE::parseClass(DOM_Node node,
           gddClass->pushDaDiAttribute(gddAttribute);
           gddAttribute->setName(node.getAttributes().
             getNamedItem(DOMString::transcode("name")).
-            getNodeValue().transcode());
+            getNodeValue());
             
           gddAttribute->setType(node.getAttributes().
             getNamedItem(DOMString::transcode("type")).
-            getNodeValue().transcode());
+            getNodeValue());
           gddClass->pushImportList(node.getAttributes().
               getNamedItem(DOMString::transcode("type")).
             getNodeValue().transcode());
@@ -906,7 +1057,7 @@ void DDFE::parseClass(DOM_Node node,
           {
             gddAttribute->setDesc(node.getAttributes().
               getNamedItem(DOMString::transcode("desc")).
-              getNodeValue().transcode());
+              getNodeValue());
           }
           else
           {
@@ -915,15 +1066,29 @@ void DDFE::parseClass(DOM_Node node,
             
           gddAttribute->setAccess(node.getAttributes().
             getNamedItem(DOMString::transcode("access")).
-            getNodeValue().transcode());
-            
-          gddAttribute->setSetMeth(node.getAttributes().
+            getNodeValue());
+          
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("setMeth")).
-                    getNodeValue().transcode());
-            
-          gddAttribute->setGetMeth(node.getAttributes().
+            getNodeValue().equals("TRUE"))
+          {
+            gddAttribute->setSetMeth(true);
+          }
+          else
+          {
+            gddAttribute->setSetMeth(false);
+          }
+           
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("getMeth")).
-              getNodeValue().transcode());
+            getNodeValue().equals("TRUE"))
+          {
+            gddAttribute->setGetMeth(true);
+          }
+          else
+          {
+            gddAttribute->setGetMeth(false);
+          }
 
           if(!node.getAttributes().getNamedItem(DOMString::transcode("init")).
              isNull())
@@ -949,11 +1114,11 @@ void DDFE::parseClass(DOM_Node node,
           gddClass->pushDaDiRelation(gddRelation);
           gddRelation->setName(node.getAttributes().
             getNamedItem(DOMString::transcode("name")).
-            getNodeValue().transcode());
+            getNodeValue());
             
           gddRelation->setType(node.getAttributes().
             getNamedItem(DOMString::transcode("type")).
-            getNodeValue().transcode());
+            getNodeValue());
           gddClass->pushImpSoftList(node.getAttributes().
             getNamedItem(DOMString::transcode("type")).
             getNodeValue().transcode());
@@ -963,7 +1128,7 @@ void DDFE::parseClass(DOM_Node node,
           {
             gddRelation->setDesc(node.getAttributes().
               getNamedItem(DOMString::transcode("desc")).
-              getNodeValue().transcode());
+              getNodeValue());
           }
           else
           {
@@ -972,7 +1137,7 @@ void DDFE::parseClass(DOM_Node node,
             
           gddRelation->setAccess(node.getAttributes().
             getNamedItem(DOMString::transcode("access")).
-            getNodeValue().transcode());
+            getNodeValue());
           
           if (!node.getAttributes().
             getNamedItem(DOMString::transcode("multiplicity")).isNull())
@@ -1004,25 +1169,60 @@ void DDFE::parseClass(DOM_Node node,
 
           gddRelation->setRatio(gddRelationRatio);
             
-          gddRelation->setSetMeth(node.getAttributes().
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("setMeth")).
-            getNodeValue().transcode());
+            getNodeValue().equals("TRUE"))
+          {
+            gddRelation->setSetMeth(true);
+          }
+          else
+          {
+            gddRelation->setSetMeth(false);
+          }
             
-          gddRelation->setGetMeth(node.getAttributes().
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("getMeth")).
-            getNodeValue().transcode());
+            getNodeValue().equals("TRUE"))
+          {
+            gddRelation->setGetMeth(true);
+          }
+          else
+          {
+            gddRelation->setGetMeth(false);
+          }
             
-          gddRelation->setAddMeth(node.getAttributes().
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("addMeth")).
-            getNodeValue().transcode());
+            getNodeValue().equals("TRUE"))
+          {
+            gddRelation->setAddMeth(true);
+          }
+          else
+          {
+            gddRelation->setAddMeth(false);
+          }
             
-          gddRelation->setRemMeth(node.getAttributes().
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("remMeth")).
-            getNodeValue().transcode());
+            getNodeValue().equals("TRUE"))
+          {
+            gddRelation->setRemMeth(true);
+          }
+          else
+          {
+            gddRelation->setRemMeth(false);
+          }
             
-          gddRelation->setClrMeth(node.getAttributes().
+          if (node.getAttributes().
             getNamedItem(DOMString::transcode("clrMeth")).
-            getNodeValue().transcode());
+            getNodeValue().equals("TRUE"))
+          {
+            gddRelation->setClrMeth(true);
+          }
+          else
+          {
+            gddRelation->setClrMeth(false);
+          }
             
           if (gddRelationRatio.equals("1"))
           {

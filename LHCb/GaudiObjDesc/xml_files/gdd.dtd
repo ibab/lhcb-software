@@ -25,7 +25,6 @@
 	templateList (TRUE | FALSE) "TRUE"
 >
 <!ELEMENT desc (#PCDATA)>
-
 <!ELEMENT base EMPTY>
 <!ATTLIST base
 	name CDATA #REQUIRED
@@ -53,6 +52,7 @@
 	virtual (TRUE | FALSE) "FALSE"
 	static (TRUE | FALSE) "FALSE"
 	inline (TRUE | FALSE) "FALSE"
+	friend (TRUE | FALSE) "FALSE"
 	type CDATA "void"
 	argList CDATA #IMPLIED
 	argInOut CDATA #IMPLIED

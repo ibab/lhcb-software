@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.3 2001-10-17 08:32:12 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiMethod.h,v 1.4 2001-11-09 08:37:11 mato Exp $
 #ifndef DADIMETHOD_H 
 #define DADIMETHOD_H 1
 
@@ -32,18 +32,6 @@ public:
   DOMString access();
   void setAccess(DOMString value);
 
-  DOMString const_();
-  void setConst_(DOMString value);
-
-  DOMString virtual_();
-  void setVirtual_(DOMString value);
-
-  DOMString static_();
-  void setStatic_(DOMString value);
-
-  DOMString inline_();
-  void setInline_(DOMString value);
-
   DOMString argList();
   void setArgList(DOMString value);
 
@@ -52,6 +40,21 @@ public:
 
   DOMString code();
   void setCode(DOMString value);
+
+  bool const_();
+  void setConst_(bool value);
+
+  bool virtual_();
+  void setVirtual_(bool value);
+
+  bool static_();
+  void setStatic_(bool value);
+
+  bool inline_();
+  void setInline_(bool value);
+
+  bool friend_();
+  void setFriend_(bool value);
 
   DaDiMethReturn* daDiMethReturn();
   void setDaDiMethReturn(DaDiMethReturn* value);
@@ -67,13 +70,14 @@ private:
   DOMString                    m_name, 
                                m_desc, 
                                m_access, 
-                               m_const, 
-                               m_virtual, 
-                               m_static, 
-							                 m_inline,
                                m_argList,
                                m_argInOut,
                                m_code;
+  bool                         m_const, 
+                               m_virtual, 
+                               m_static, 
+							                 m_inline,
+                               m_friend;
   DaDiMethReturn*              m_daDiMethReturn;
   std::list<DaDiMethArgument*> m_daDiMethArgument;
 
@@ -109,46 +113,6 @@ inline void DaDiMethod::setAccess(DOMString value)
   m_access = value;
 }
 
-inline DOMString DaDiMethod::const_()
-{
-  return m_const;
-}
-
-inline void DaDiMethod::setConst_(DOMString value)
-{
-  m_const = value;
-}
-
-inline DOMString DaDiMethod::virtual_()
-{
-  return m_virtual;
-}
-
-inline void DaDiMethod::setVirtual_(DOMString value)
-{
-  m_virtual = value;
-}
-
-inline DOMString DaDiMethod::static_()
-{
-  return m_static;
-}
-
-inline void DaDiMethod::setStatic_(DOMString value)
-{
-  m_static = value;
-}
-
-inline DOMString DaDiMethod::inline_()
-{
-  return m_inline;
-}
-
-inline void DaDiMethod::setInline_(DOMString value)
-{
-  m_inline = value;
-}
-
 inline DOMString DaDiMethod::argList()
 {
   return m_argList;
@@ -177,6 +141,56 @@ inline DOMString DaDiMethod::code()
 inline void DaDiMethod::setCode(DOMString value)
 {
   m_code = value;
+}
+
+inline bool DaDiMethod::const_()
+{
+  return m_const;
+}
+
+inline void DaDiMethod::setConst_(bool value)
+{
+  m_const = value;
+}
+
+inline bool DaDiMethod::virtual_()
+{
+  return m_virtual;
+}
+
+inline void DaDiMethod::setVirtual_(bool value)
+{
+  m_virtual = value;
+}
+
+inline bool DaDiMethod::static_()
+{
+  return m_static;
+}
+
+inline void DaDiMethod::setStatic_(bool value)
+{
+  m_static = value;
+}
+
+inline bool DaDiMethod::inline_()
+{
+  return m_inline;
+}
+
+inline void DaDiMethod::setInline_(bool value)
+{
+  m_inline = value;
+}
+
+inline bool DaDiMethod::friend_()
+{
+  return m_friend;
+}
+
+inline void DaDiMethod::setFriend_(bool value)
+{
+  m_friend = value;
 }
 
 inline DaDiMethReturn* DaDiMethod::daDiMethReturn()
