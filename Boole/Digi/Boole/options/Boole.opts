@@ -8,14 +8,19 @@
 
 ApplicationMgr.DLLs += { "GaudiAlg", "DigiAlg", "LHCbTools" };
 
-// ROOT Persistency
+// GaudiDb persistency - can be removed if only using POOL
 #include "$STDOPTS/RootDb.opts"
 RootEvtCnvSvc.AgeLimit = 4;
 
+// POOL persistency - can be removed if only using GaudiRootDb
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+#include "$EVENTSYSROOT/options/PoolDicts.opts"
+
+// Transient store setup
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
-// Output file definition
+// Objects to be written to output file
 #include "$BOOLEOPTS/DigiContent.opts"
 
 //--------------------------------------------------------------
@@ -33,8 +38,8 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
 //--------------------------------------------------------------
 Init.DetectorList += { "Boole", "Data" };
 Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
-Trigger.DetectorList = { "L0", "L1", "Trg" };
-Relations.DetectorList = { "VELO", "IT", "OT", "L0", "L1", "Trg" };
+Trigger.DetectorList = { "L0", "Trg" };
+Relations.DetectorList = { "VELO", "IT", "OT", "L0", "Trg" };
 
 //--------------------------------------------------------------
 // Geometry and magnetic field
@@ -42,9 +47,8 @@ Relations.DetectorList = { "VELO", "IT", "OT", "L0", "L1", "Trg" };
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
 ApplicationMgr.DLLs += { "RichDet" };
-ApplicationMgr.DLLs += { "RiSicbGeom" };
 ApplicationMgr.DLLs += { "MuonDet" };
-ApplicationMgr.DLLs += { "ITDet" };
+ApplicationMgr.DLLs += { "STDet" };
 ApplicationMgr.DLLs += { "OTDet" };
 ApplicationMgr.DLLs += { "VeloDet" };
 ApplicationMgr.DLLs += { "Magnet" };
@@ -72,14 +76,7 @@ TriggerL0Seq.Members += { "PuVetoAlg" };
 TriggerL0Seq.Members += { "DecisionUnit" };
 TriggerL0Seq.Members += { "PrepareL0DUL1Buffer" };
 
-// Old L1 trigger (Obsolete)
-//TriggerL1Seq.Members = { "CreateL1Event" };
-ApplicationMgr.DLLs += { "L1VeloTrack" };
-ApplicationMgr.DLLs += { "L1Decision" };
-TriggerL1Seq.Members += { "Level1" };
-Level1.minimizeL1ExeTime = false;
-
-// New L1 + Hlt trigger
+// L1 trigger
 ApplicationMgr.DLLs += { "TrgTools" };
 #include "$BOOLEOPTS/L1WithTrg.opts"
 
@@ -104,37 +101,39 @@ DigiCALOSeq.Members = {
 // Rich digitisation
 ApplicationMgr.DLLs += { "RichDetTools", "RichUtils", "RichReadout", "RichDAQ"};
 #include "$RICHREADOUTOPTS/BooleDigi.opts"
-DigiRICHSeq.Members += { "MCRichDigitsToRawBufferAlg" };
+#include "$RICHDAQROOT/options/Boole_FillRawBuffer.opts"
 
 // Muon digitisation
-ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground" };
+ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground", "MuonDAQ" };
 DigiMUONSeq.Members += { "MuonBackground/MuonLowEnergy" };
 #include "$MUONBACKGROUNDROOT/options/MuonLowEnergy.opts"
 DigiMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
 #include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover.opts"
 DigiMUONSeq.Members += { "MuonDigitization" };
+DigiMUONSeq.Members += { "MuonDigitToRawBuffer" };
 
 // Silicon Tracker digitisation
 ApplicationMgr.DLLs   += { "ITAlgorithms" };
 DigiITSeq.Members += { "MCITDepositCreator", "MCITDigitCreator" };
 DigiITSeq.Members += { "ITDigitCreator" };
-DigiITSeq.Members += { "ITDigitToL1" }; // Obsolete (for old L1)
 DigiITSeq.Members += { "PrepareTTL1Buffer" };
 #include "$ITALGORITHMSROOT/options/itDigi.opts"
+// Switch off LHC background until it can be done in Gauss
+MCITDepositCreator.spillVector = { "/", "/Prev/", "/PrevPrev/" };
+MCITDepositCreator.spillTimes  = { 0., -25., -50. };
 
 // Outer tracker digitisation
-ApplicationMgr.DLLs   += { "OTAlgorithms" };
+ApplicationMgr.DLLs   += { "OTAlgorithms", "OTDAQ" };
 #include "$OTALGORITHMSROOT/options/otDigi.opts"
 DigiOTSeq.Members += { "MCOTDepositCreator",
                        "MCOTDigitCreator",
-                       "OTDigitCreator" };
+                       "OTDigitCreator", "OTFillRawBuffer" };
 
 // Velo digitisation and clustering (also for PuVeto and trigger)
 ApplicationMgr.DLLs += { "VeloAlgorithms" };
 DigiVELOSeq.Members += { "VeloSim" };
 DigiVELOSeq.Members += { "VeloDataProcessor" };
 DigiVELOSeq.Members += { "VeloClusterMaker" };
-DigiVELOSeq.Members += { "VeloFEToL1" }; // Obsolete (for old L1)
 DigiVELOSeq.Members += { "PrepareVeloL1BufferFPGA" };
 DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 
@@ -157,8 +156,4 @@ RelationsOTSeq.Members   += { "OTDigit2MCHitAlg" };
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct" };
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
 L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
-L0CaloFullTruth.OutputTable    = "Rec/Relations/L0CaloFullCandidates";
-
-RelationsL1Seq.Members += { "L1Track2dTruth" };
-RelationsL1Seq.Members += { "L1Track3dTruth" };
-#include "$L1VELOTRACKROOT/options/L1Track3dToMCP.opts"
+//L0CaloFullTruth.OutputTable    = "Rec/Relations/L0CaloFullCandidates";

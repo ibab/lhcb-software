@@ -6,13 +6,14 @@ ApplicationMgr.DLLs += { "TrgVelo",
                          "TrgVeloTT",
                          "MCTools" };
 
-TriggerTrgSeq.Members  = { "DecodeL1VeloR",
-                           "VeloRTracking",
-                           "L1PrimaryVtx2d",
-                           "L1Select2dIP",
-                           "DecodeL1VeloPhi",
-                           "VeloSpaceTracking",
-                           "TrgVeloTT" };
+TriggerTrgSeq.Members  = { "DecodeL1VeloR"
+                           ,"VeloRTracking"
+                           ,"L1PrimaryVtx2d"
+                           ,"L1Select2dIP"
+                           ,"DecodeL1VeloPhi"
+                           ,"VeloSpaceTracking"
+//                           ,"TrgVeloTT"
+                         };
 
 RelationsTrgSeq.Members  = { "VeloTruthFromCluster",
                              "ITTruthFromDigit",
@@ -21,5 +22,6 @@ RelationsTrgSeq.Members  = { "VeloTruthFromCluster",
                              "TrgTrackToContainer",
                              "TrgTrack2MCParticle" };
 
-MoniTrgSeq.Members        = { "TrgChecker",
-                              "L1RecoCheck" };
+MoniTrgSeq.Members        = { "TrgChecker"
+//                              ,"L1RecoCheck"
+                            };

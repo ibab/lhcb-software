@@ -3,6 +3,49 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v5r2>2004-02-05 Boole v5r2</A></H1><PRE>
+
+Backwards incompatible changes to TT geometry.
+Requires data produced with XmlDDDB v21r0 or greater.
+
+>> Document changes in LHCb v15r2
+
+- New functionality
+  - Support for new TT layouts (4-3-3-4: v200402.opts, 4-2-1-1-2-4: TT-alt.opts) 
+    (XmlDDDB v21r0, STDet v1r0, ITAlgorithms v14r0, ITCheckers v2r0)
+  - First adaptation of Trg software to new TT geometry, to be reviewed
+    (TrgVeloTT v2r0)
+  - Possibility to use LHC background events in Rich digitization
+    (RichReadout v1r5)
+  - Support for mirror segmentation in Rich geometry (switched off by default)
+    (RichReadout v1r5, RichDetTools v3r6)
+  - Add Muon digits to Raw buffer (MuonDAQ v1r0, MuonDet v4r5, XmlDDDB v21r0)
+  - Add OT digits to Raw buffer (OTDAQ v1r0)
+
+- New tuning
+  - Updated TT detector geometry (beam pipe hole, guard ring size etc.)
+    (XmlDDDB v21r0)
+  - Fix physical pad size in M1R1 (XmlDDDB v21r0)
+
+- Disabled features
+  - Usage of LHC background in Rich and ST is switched off in job options
+    until LHC background events can be generated in Gauss with latest geometry
+  - TrgVeloTT and L1RecoCheck algorithms disabled, to be adapted to new STDet
+
+- Event model / persistency changes
+  - Add depositedCharge() to ITCluster (ITEvent v13r1, ITAlgorithms v14r0)
+  - Add one significant bit to time field of MuonDigit
+    (MuonEvent v3r1, MuonAlgs v5r1)
+  - Replace Relations/L0CaloCandidates and Relations/L0CaloFullCandidates old
+    style relations with new style Link/Trig/L0/Calo, FullCalo (L0Calo v7r3)
+  - Remove OTDigits from Digi output (can be rebuilt from RawBuffer)
+  - Remove MuonDigits from Digi output (can be rebuilt from RawBuffer)
+  - Remove all (old) L1 objects from Digi output. To be replaced by new Trg
+
+- Dropped functionality
+  - Dropped support for pre-2004 geometries (removed v200311.opts, RiSicbGeom)
+  - Dropped old L1 trigger algorithms (removed L1VeloTrack, L1Decision)
+
 </PRE><H1><A NAME=v5r1>2004-01-23 Boole v5r1</A></H1><PRE>
 
 - New tuning

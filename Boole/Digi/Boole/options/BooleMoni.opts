@@ -11,18 +11,15 @@
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0", "L1", "Trg" };
+Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0", "Trg" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
 
-// Trigger
-//ApplicationMgr.DLLs += { "Associators" };
+// L0 Trigger
 MoniL0Seq.Members += { "L0CaloMonit" };
 MoniL0Seq.Members += { "L0Monitor" };
-MoniL1Seq.Members += { "L1TrackMonitor" };
-//MoniL1Seq.Members += { "Level1Check" }; // Uses Cluster2MCP associators
 
 // Velo
 MoniVELOSeq.Members += { "VeloMonitor" };

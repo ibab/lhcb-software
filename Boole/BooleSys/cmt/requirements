@@ -1,5 +1,5 @@
 package BooleSys
-version v5r1
+version v5r2
 
 branches cmt doc
  
@@ -8,25 +8,21 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v5r1	Digi
+use Boole		v5r2	Digi
 use DigiAlg		v2r3	Digi
 use LHCbTools		v1r0	Kernel
 
 # L0 trigger
-use L0Calo              v7r2	L0
+use L0Calo              v7r3	L0
 use L0Muon              v6r7	L0
 use PuVeto              v5r5	L0
 use L0DU                v6r7	L0
 
 # L1 trigger
-use L1VeloTrack         v5r6	L1
-use L1Decision		v2r4	L1
-
-# New L1+Hlt trigger
-use TrgTools            v2r0    Trg
+use TrgTools            v2r1    Trg
 use TrgChecker          v2r0    Trg
 use TrgVelo             v2r0    Trg
-use TrgVeloTT           v1r0    Trg
+use TrgVeloTT           v2r0    Trg
 use L1Reco              v2r0    Trg
 
 # Calorimeter
@@ -37,19 +33,21 @@ use CaloDigit           v1r5	Calo
 use VeloAlgorithms      v2r9	Velo
 
 # Inner Tracker
-use ITAlgorithms        v13r2	IT
-use ITCheckers          v1r4	IT
+use ITAlgorithms        v14r0	IT
+use ITCheckers          v2r0	IT
 
 # Outer Tracker
 use OTAlgorithms        v13r4	OT
+use OTDAQ               v1r0    OT
 
 # Muon
-use MuonAlgs            v5r1	Muon
+use MuonAlgs            v5r2	Muon
 use MuonBackground	v1r5	Muon
+use MuonDAQ             v1r0    Muon
 
 # Rich
 use RichDigiQC		v1r4	Rich
-use RichUtils		v3r6	Rich
-use RichDetTools	v3r5	Rich
-use RichReadout		v1r4	Rich
-use RichDAQ		v1r1	Rich
+use RichUtils		v3r7	Rich
+use RichDetTools	v3r6	Rich
+use RichReadout		v1r5	Rich
+use RichDAQ		v1r2	Rich
