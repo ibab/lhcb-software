@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.16 2002-10-11 13:12:40 cattanem Exp $
+! $Id: release.notes,v 1.17 2002-10-16 08:54:34 dhcroft Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
+
+! 2002-10-16 - David Hutchcroft
+ - Added an options file MuonIDFOI-v249r1.opts to do Muon ID in a system with 
+	4 stations
 
 !========================= MuonID v3r2 2002-10-11 =========================
 ! 2002-10-09 - David Hutchcroft
