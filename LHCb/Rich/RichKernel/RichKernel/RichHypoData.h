@@ -1,4 +1,4 @@
-// $Id: RichHypoData.h,v 1.8 2004-07-15 15:36:53 jonrob Exp $
+// $Id: RichHypoData.h,v 1.9 2004-07-19 13:38:41 jonrob Exp $
 #ifndef RICHKERNEL_RICHHYPODATA_H
 #define RICHKERNEL_RICHHYPODATA_H 1
 
@@ -34,16 +34,20 @@ public: // definitions
 
 public: // methods
 
-  /** Constructor with initialisation value
+  /** Constructor with explicit data initialisation value
    *
-   * @param value the value use to initialise the data for each mass hypothesis
+   * @param value The data initialisation value for each mass hypothesis
    */
   RichHypoData( const TYPE & value ) { resetData(value); }
 
   /// Destructor
   ~RichHypoData() { }
 
-  /// Read access operator
+  /**  Read access operator
+   *
+   *  @param type  The mass hypothesis for which the data is requested
+   *  @return The data value
+   */
   const TYPE & operator[] ( const Rich::ParticleIDType type ) const;
 
   /** Set the data value for a given particle hypothesis
@@ -68,7 +72,10 @@ public: // methods
    */
   void resetData( const Rich::ParticleIDType type, const TYPE & value );
 
-  /// Const Accessor to data array
+  /** Const Accessor to data array
+   *
+   *  @return Const reference to the internal data array
+   */
   const DataArray & dataArray() const;
 
   /** Check whether a piece of data has been initialised

@@ -1,4 +1,4 @@
-// $Id: RichAlgBase.cpp,v 1.2 2004-07-12 14:51:18 jonrob Exp $
+// $Id: RichAlgBase.cpp,v 1.3 2004-07-19 13:38:41 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -34,7 +34,7 @@ StatusCode RichAlgBase::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize();
 
   // Printout from initialization
-  debug() << "Initilize" << endreq;
+  debug() << "Initialize" << endreq;
 
   // return status
   return sc;
