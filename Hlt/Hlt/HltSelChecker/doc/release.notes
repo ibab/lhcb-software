@@ -5,6 +5,19 @@
 !-----------------------------------------------------------------------------
 
 ! 2005-01-12 - P. Koppenburg
+  - options/CorrB2HH.opts
+  - options/CorrBd2D0Kstar.opts
+  - options/CorrBd2DstarPi.opts
+  - options/CorrBd2MuMuKstar.opts
+  - options/CorrBs2JpsiPhi.opts
+  - options/CorrBs2PhiGamma.opts
+  - options/CorrBs2PhiPhi.opts
+  - options/CorrDstar.opts
+  - options/DVHLTCorr.opts
+  - options/Plots.opts
+    . Reflect new locations of K*, D0 and Phi
+
+! 2005-01-12 - P. Koppenburg
   - options/Correlations.opts
     . New file that conatins all correlatins stuff
 

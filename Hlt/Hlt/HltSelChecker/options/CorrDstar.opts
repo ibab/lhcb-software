@@ -2,7 +2,6 @@
 // correlation of HLT and truth
 HLTCorrelations.Members += { "SelResultCorrelations/CorrDstar" };
 CorrDstar.Algorithms = { "AllDstar2DpiTracks"
-                        , "WrongSignD0"
                         ,"HLTSharedD02HH"
 			,"HLTFilterDstar" } ;
 

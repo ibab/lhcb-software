@@ -7,6 +7,7 @@ Bs2PhiGammaAndTDR.AvoidSelResult = false ;
 // correlation of HLT and TDR
 HLTCorrelations.Members += { "SelResultCorrelations/CorrBs2PhiGamma" };
 CorrBs2PhiGamma.Algorithms = { "AllBs2PhiGammaTracks", 
+                               "HLTSharedPhi", 
                                "HLTFilterBs2PhiGamma", 
                                "TDRselBs2PhiGamma",
                                "Bs2PhiGammaAndTDR" } ;

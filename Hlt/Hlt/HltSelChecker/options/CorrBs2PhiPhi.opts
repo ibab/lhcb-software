@@ -7,6 +7,7 @@ Bs2PhiPhiAndTDR.AvoidSelResult = false ;
 // correlation of HLT and TDR
 HLTCorrelations.Members += { "SelResultCorrelations/CorrBs2PhiPhi" };
 CorrBs2PhiPhi.Algorithms = { "AllBs2PhiPhiTracks", 
+			      "HLTSharedPhi", 
 			      "HLTFilterBs2PhiPhi", 
 			      "TDRselBs2PhiPhi",
 			      "Bs2PhiPhiAndTDR" } ;
@@ -21,4 +22,4 @@ Bs2PhiPhiIsFound.AvoidSelResult = false ;
 
 PrintFoundBs2PhiPhi.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBs2PhiPhi.PhysDesktop.InputLocations = { "Phys/HLTFilterBs2PhiPhi" } ;
-PrintFoundBs2PhiPhi.OutputLevel = 3 ;
+PrintFoundBs2PhiPhi.OutputLevel = 4 ;

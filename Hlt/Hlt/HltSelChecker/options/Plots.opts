@@ -2,24 +2,26 @@
 // All plots
 //-----------------------------------------------------------------
 
-// Seeding
-HLTSeedingVertices.HistoProduce = true ;
-HLTSeedingVertices.DaughterPlots.Variables = { "M", "Chi2", "Pt", "IPs" } ;
-HLTSeedingVertices.MotherPlots.Variables =   { "M", "Chi2", "Pt", "IPs", "FS" } ;
-HLTSeedingVertices.DaughterPlotsPath = "PiPiIn" ;
-HLTSeedingVertices.MotherPlotsPath   = "PiPiOut";
+// Kstar
+HLTSharedKstar.HistoProduce = true ;
+HLTSharedKstar.DaughterPlots.Variables = { "M", "Chi2", "Pt", "IPs" } ;
+HLTSharedKstar.MotherPlots.Variables =   { "M", "Chi2", "Pt", "IPs", "FS" } ;
+HLTSharedKstar.DaughterPlotsPath = "KstarIn" ;
+HLTSharedKstar.MotherPlotsPath   = "KstarOut";
 
-HLTSeedingKPiMother.HistoProduce = true ;
-HLTSeedingKPiMother.DaughterPlots.Variables = { "M", "Chi2", "Pt", "IPs" } ;
-HLTSeedingKPiMother.MotherPlots.Variables =   { "M", "Chi2", "Pt", "IPs", "FS" } ;
-HLTSeedingKPiMother.DaughterPlotsPath = "KPiIn" ;
-HLTSeedingKPiMother.MotherPlotsPath   = "KPiOut";
+// Phi
+HLTSharedPhi.HistoProduce = true ;
+HLTSharedPhi.DaughterPlots.Variables = { "M", "Chi2", "Pt", "IPs" } ;
+HLTSharedPhi.MotherPlots.Variables =   { "M", "Chi2", "Pt", "IPs", "FS" } ;
+HLTSharedPhi.DaughterPlotsPath = "PhiIn" ;
+HLTSharedPhi.MotherPlotsPath   = "PhiOut";
 
-HLTSeedingKKMother.HistoProduce = true ;
-HLTSeedingKKMother.DaughterPlots.Variables = { "M", "Chi2", "Pt", "IPs" } ;
-HLTSeedingKKMother.MotherPlots.Variables =   { "M", "Chi2", "Pt", "IPs", "FS" } ;
-HLTSeedingKKMother.DaughterPlotsPath = "KKIn" ;
-HLTSeedingKKMother.MotherPlotsPath   = "KKOut";
+// D0
+HLTSharedD02HH.HistoProduce = true ;
+HLTSharedD02HH.DaughterPlots.Variables =  { "M", "Chi2", "Pt", "IPs" } ;
+HLTSharedD02HH.MothePlots.Variables = { "M", "Chi2", "Pt", "IPs", "FS" } ;
+HLTSharedD02HH.DaughterPlotsPath  = "D0In" ;
+HLTSharedD02HH.MothePlotsPath = "D0Out";
 
 // single muons
 HLTSingleMuons.HistoProduce = true ;
@@ -48,13 +50,6 @@ HLTHotJpsis.InputPlots.Variables =  { "M", "Chi2", "Pt", "IPs" } ;
 HLTHotJpsis.OutputPlots.Variables = { "M", "Chi2", "Pt", "IPs", "FS" } ;
 HLTHotJpsis.InputPlotsPath  = "HotJpsiIn" ;
 HLTHotJpsis.OutputPlotsPath = "HotJpsiOut";
-
-// D0
-HLTSharedD02HH.HistoProduce = true ;
-HLTSharedD02HH.InputPlots.Variables =  { "M", "Chi2", "Pt", "IPs" } ;
-HLTSharedD02HH.OutputPlots.Variables = { "M", "Chi2", "Pt", "IPs", "FS" } ;
-HLTSharedD02HH.InputPlotsPath  = "SharedD0In" ;
-HLTSharedD02HH.OutputPlotsPath = "SharedD0Out";
 
 // D0 for D0 K*
 FilterD0ForHLTBd2D0Kstar.HistoProduce = true ;
@@ -100,10 +95,10 @@ HLTDstarForBd2DstarPi.MotherPlotsPath   = "Dstar4BdOut";
 
 // Selections
 HLTFilterB2HH.HistoProduce = true ;
-HLTFilterB2HH.InputPlots.Variables  = { "M", "Chi2", "Pt", "IPs" } ;
-HLTFilterB2HH.OutputPlots.Variables = { "M", "Chi2", "Pt", "IPs" } ;
-HLTFilterB2HH.InputPlotsPath  = "B2HHIn" ;
-HLTFilterB2HH.OutputPlotsPath = "B2HHOut" ;
+HLTFilterB2HH.DaughterPlots.Variables  = { "M", "Chi2", "Pt", "IPs" } ;
+HLTFilterB2HH.MotherPlotsPlots.Variables = { "M", "Chi2", "Pt", "IPs" } ;
+HLTFilterB2HH.DaughterPlotsPath  = "B2HHIn" ;
+HLTFilterB2HH.MotherPlotsPlotsPath = "B2HHOut" ;
 
 HLTFilterB2MuMu.HistoProduce = true ;
 HLTFilterB2MuMu.InputPlots.Variables  = { "M", "Chi2", "Pt", "IPs" } ;

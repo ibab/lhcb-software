@@ -7,12 +7,12 @@ Bs2JpsiPhiAndTDR.AvoidSelResult = false ;
 // correlation of HLT and TDR
 HLTCorrelations.Members += { "SelResultCorrelations/CorrBs2JpsiPhi" };
 CorrBs2JpsiPhi.Algorithms = { "AllBs2JpsiPhiTracks", 
-			"HLTKKFrom",
-                        "HLTDimuons",
-                        "HLTHotJpsis",
-                        "HLTFilterBs2JpsiPhi", 
-                        "TDRselBs2Jpsi2MuMu_Phi2KK",
-                        "Bs2JpsiPhiAndTDR" } ;
+                               "HLTSharedPhi", 
+                               "HLTDimuons",
+                               "HLTHotJpsis",
+                               "HLTFilterBs2JpsiPhi", 
+                               "TDRselBs2Jpsi2MuMu_Phi2KK",
+                               "Bs2JpsiPhiAndTDR" } ;
 
 // check for TDR and MC truth
 HLTCorrelations.Members += { "GaudiSequencer/ShowFoundBs2JpsiPhi" };

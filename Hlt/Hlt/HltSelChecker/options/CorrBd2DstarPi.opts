@@ -7,7 +7,6 @@ Bd2DstarPiAndTDR.AvoidSelResult = false ;
 // correlation of HLT and TDR
 HLTCorrelations.Members += { "SelResultCorrelations/CorrBd2DstarPi" };
 CorrBd2DstarPi.Algorithms = { "AllBd2DstarPiTracks", 
-                               "WrongSignD0",
                                "HLTSharedD02HH",
                                "FilterD0ForHLTBd2DstarPi", 
  			      "HLTDstarForBd2DstarPi", 
