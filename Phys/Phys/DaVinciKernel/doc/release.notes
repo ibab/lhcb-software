@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.39 2005-02-21 08:39:58 pkoppenb Exp $
+! $Id: release.notes,v 1.40 2005-02-24 09:13:16 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2005-02-24 - P. Koppenburg
+  - Kernel/ICheckOverlap.h
+    . New method (was missing)
+         bool foundOverlap(Particle* );
+    . New methods 
+         StatusCode removeOverlap( ParticleVector& );
+         StatusCode removeOverlap( ConstParticleVector& );
+      That remove from a ParticleVector	the particles that have overlap
+      in their decendents.
+    
 ! 2005-02-21 - P. Koppenburg
   - Kernel/ICheckOverlap.h
     . Take const arguments.
