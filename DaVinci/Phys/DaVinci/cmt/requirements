@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.46 2002-11-13 17:14:36 gcorti Exp $
+# $Id: requirements,v 1.47 2002-11-13 17:56:36 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -114,7 +114,6 @@ use  PhysSelections     v4r0   Phys
 use  FlavourTagging     v4r0   Phys
 use  DaVinciEff         v2r0   Phys
 use  DaVinciUser        v4r0   Phys
-use  DaVinciChecks      v2r0   Phys
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details
