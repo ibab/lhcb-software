@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.h,v 1.3 2002-02-01 14:32:33 ocallot Exp $
+// $Id: DecisionUnit.h,v 1.4 2002-04-05 15:20:44 ocallot Exp $
 #ifndef L0DU_DECISIONUNIT_H
 #define L0DU_DECISIONUNIT_H
 
@@ -6,8 +6,8 @@
 #include <string>
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/ISvcLocator.h"
-#include "L0Muon/L0MuonCandidate.h"
-
+#include "Event/L0MuonCandidate.h"
+#include "Event/L0Muon.h"
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0DUReport.h"
   

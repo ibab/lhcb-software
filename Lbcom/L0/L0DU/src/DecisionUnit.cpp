@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.6 2002-02-01 14:32:33 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.7 2002-04-05 15:20:44 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -7,6 +7,7 @@
 #include <iostream>
 #include "GaudiKernel/AlgFactory.h"
 
+#include "GaudiKernel/StreamBuffer.h"   // hopefully temporary
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -181,13 +182,13 @@ StatusCode DecisionUnit::execute() {
     while ( itCandCalo != candCalo->end() ) {
       log << MSG::DEBUG 
           << "Cand "
-          << (*itCandCalo)->ID() 
+          << (*itCandCalo)->id() 
           << " "
           << (*itCandCalo)->typeName() 
           << " Et(GeV) = "
           << (*itCandCalo)->et() / GeV 
           << endreq;
-      if ( L0::Electron == (*itCandCalo)->type() ) {
+      if ( L0Calo::Electron == (*itCandCalo)->type() ) {
         m_Electron = (*itCandCalo);
         log << MSG::DEBUG
             <<"  eCut1(GeV) = "       
@@ -198,7 +199,7 @@ StatusCode DecisionUnit::execute() {
             << m_scalEl 
             << endreq;
       }
-      if ( L0::Photon == (*itCandCalo)->type() ) {
+      if ( L0Calo::Photon == (*itCandCalo)->type() ) {
         m_Photon = (*itCandCalo);
         log << MSG::DEBUG
             <<"  eCut1(GeV) = " 
@@ -209,7 +210,7 @@ StatusCode DecisionUnit::execute() {
             << m_scalPh
             << endreq;
       } 
-      if ( L0::Hadron == (*itCandCalo)->type() ) {
+      if ( L0Calo::Hadron == (*itCandCalo)->type() ) {
         m_Hadron = (*itCandCalo);
         log << MSG::DEBUG
             <<"  eCut1(GeV) = " 
@@ -220,7 +221,7 @@ StatusCode DecisionUnit::execute() {
             << m_scalHa
             << endreq;    
       }
-      if ( L0::SumEt == (*itCandCalo)->type() ) {
+      if ( L0Calo::SumEt == (*itCandCalo)->type() ) {
         m_SumEt = (*itCandCalo);
         log << MSG::DEBUG
             <<"  eCut1(GeV) = " 
@@ -230,7 +231,7 @@ StatusCode DecisionUnit::execute() {
             << " scal not used"
             << endreq;
       } 
-      if ( L0::Pi0Local == (*itCandCalo)->type() ) {
+      if ( L0Calo::Pi0Local == (*itCandCalo)->type() ) {
         m_Pi0Local = (*itCandCalo);
         log << MSG::DEBUG
             <<"  eCut1(GeV) = " 
@@ -241,7 +242,7 @@ StatusCode DecisionUnit::execute() {
             << m_scalPi0L
             << endreq;
       }
-      if ( L0::Pi0Global == (*itCandCalo)->type() ) {
+      if ( L0Calo::Pi0Global == (*itCandCalo)->type() ) {
         m_Pi0Global = (*itCandCalo);
         log << MSG::DEBUG
             <<"  eCut1(GeV) = "
@@ -282,10 +283,10 @@ StatusCode DecisionUnit::execute() {
             << "Cand Muon " 
             << " Pt(GeV) = "
             << (*itCandMuon)->pt() / GeV 
-            << "( x y status = "
-            << (*itCandMuon)->x()
+            << "( theta phi status = "
+            << (*itCandMuon)->theta()
             << " "
-            << (*itCandMuon)->y()
+            << (*itCandMuon)->phi()
             << " "
             << (*itCandMuon)->status()
             << " )"
