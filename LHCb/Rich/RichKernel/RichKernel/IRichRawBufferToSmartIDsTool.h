@@ -4,8 +4,11 @@
  *  Header file for tool interface : IRichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.1 2004-10-30 19:18:14 jonrob Exp $
+ *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.2 2004-11-03 09:31:54 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2004/10/30 19:18:14  jonrob
+ *  Add in tool  interface for RawBuffer decoding
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -40,7 +43,7 @@ public:
   /** Access all RichSmartIDs for the current Event
    * @return Container of RichSmartIDs
    */
-  virtual const RichSmartID::Vector & allRichSmartIDs() const = 0;
+  virtual const RichSmartID::Collection & allRichSmartIDs() const = 0;
 
 };
 
