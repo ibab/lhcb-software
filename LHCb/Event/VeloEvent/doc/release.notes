@@ -1,13 +1,18 @@
 package Event/VeloEvent
-package manager: E.Banas
-! ===================================================================
-! 20020415- VeloEvent v10r0 (Chris Parkes)
+package manager: C.Parkes
+
+! >>>>>>>>>>>>>>>>>>>> VeloEvent v10r0 <<<<<<<<<<<<<<<<<<
+! 20020418 (M.Cattaneo)
+  - Move to Gaudi v10
+  - Build separate library for dictionaries
+
+! 20020415 (Chris Parkes)
   clean up my first attempt at the release.
   Change some accessor names to be compatible with IT/OT code
   MCVeloHit now inherits from MCHit
   Add constructors to MCVeloFE/MCVeloFullDigit which take key as input
-! ===================================================================
-! 20020404- VeloEvent v10 (Chris Parkes)
+
+! 20020404 (Chris Parkes)
   First version of VELO Event Model for OO DST.
   Classes are:
 	MCVeloHit.h - geant hit info., common for velo, pile-up and L1

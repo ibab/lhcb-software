@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.12 2002-04-15 13:33:08 cattanem Exp $
+# $Id: requirements,v 1.13 2002-04-22 07:57:01 cattanem Exp $
 package VeloEvent
 version v10r0
 
@@ -9,19 +9,23 @@ use Event v1r* Event
 include_dirs	 $(VELOEVENTROOT)
 
 #---- Produce Header-Files from XML description
+private
+use GaudiObjDesc v4r*
 document obj2doth VeloEventObj2Doth ../xml/VeloEvent.xml
 document obj2dict VeloEventObj2Dict ../xml/VeloEvent.xml
 
-# default library
-library VeloEvent ../src/*.cpp \
-                  ../dict/*.cpp
+# Build libraries (including dictionary)
+#============================================================================
+public
+library          VeloEvent      *.cpp
+library          VeloEventDict  ../dict/*.cpp
 
 apply_pattern package_linkopts
 apply_pattern linker_path
 apply_pattern package_stamps
 
+apply_pattern package_shlibflags
 #============================================================================
 private
-
-macro_remove use_linkopts $(VeloEvent_linkopts)
-macro VeloEvent_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
+macro VeloEventDict_shlibflags  "$(use_linkopts) $(libraryshr_linkopts)"
+#============================================================================
