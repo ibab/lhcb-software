@@ -70,7 +70,7 @@ protected:
   virtual ~CaloLCorrectionSimple() ;
   
 private:
-  double m_Cste,m_Zecal,m_LogCste;
+  double m_Zref,m_Zfactor;
 };
 // ============================================================================
 

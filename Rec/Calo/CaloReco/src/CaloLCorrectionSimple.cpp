@@ -46,13 +46,11 @@ CaloLCorrectionSimple::CaloLCorrectionSimple(const std::string& type,
                                              const std::string& name, 
                                              const IInterface* parent) 
   : CaloTool( type, name, parent )
-  , m_Cste(78.59)
-  , m_Zecal(12490.)
-  , m_LogCste(12.04) {
+  , m_Zref(12625.6)
+  , m_Zfactor(18.553) {
   declareInterface<ICaloHypoTool>(this);
-  declareProperty("Cste",m_Cste);
-  declareProperty("Zecal",m_Zecal);
-  declareProperty("LogCste",m_LogCste);
+  declareProperty("Zref",m_Zref);
+  declareProperty("Zfactor",m_Zfactor);
 }
 // ============================================================================
 
@@ -81,9 +79,9 @@ StatusCode CaloLCorrectionSimple::initialize()
     return StatusCode::FAILURE;
   }
   logmsg << MSG::INFO 
-         << " Cste=" << m_Cste
-         << " Zecal=" << m_Zecal
-         << " LogCste=" << m_LogCste << endreq;
+         << " Zref=" << m_Zref
+         << " Zfactor=" << m_Zfactor
+         << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -132,13 +130,14 @@ StatusCode CaloLCorrectionSimple::operator() ( CaloHypo* hypo  ) const
   // check the position 
   if( 0 == hypo->position() ) { return Error("CaloPosition* points to NULL!");}
   // retrieve energy and position
-  const double e = hypo -> position () -> e () ;
+  const double e = hypo -> position () -> e () /1000. ;
   const double x = hypo -> position () -> x () ;
   const double y = hypo -> position () -> y () ;
   // compute trigonometric things...
-  double result = m_Zecal+
-    (m_Cste+m_LogCste*log(e))
-    /sqrt(1+((x*x+y*y)/(m_Zecal*m_Zecal)));
+  double result = m_Zref+
+    cos(atan(sqrt(x*x+y*y)
+             /(m_Zref+m_Zfactor*log(e))))
+    *m_Zfactor*log(e);
   // talk to user
   MsgStream logmsg(msgSvc(),name());
   logmsg << MSG::VERBOSE << "calculate() has been called"
@@ -152,7 +151,7 @@ StatusCode CaloLCorrectionSimple::operator() ( CaloHypo* hypo  ) const
   return StatusCode::SUCCESS;
 }
 // ============================================================================
-  
+
 // ============================================================================
 // The END 
 // ============================================================================
