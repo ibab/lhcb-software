@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchBase.cpp,v 1.3 2004-03-08 13:45:25 cattanem Exp $
+// $Id: CaloTrackMatchBase.cpp,v 1.4 2004-09-02 18:57:34 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -132,7 +132,8 @@ ICaloTrackMatch::MatchingPair CaloTrackMatchBase::operator()
   ( const CaloPosition *caloObj, const TrStoredTrack *trObj )
 { 
   double chi2;
-  StatusCode sc = match( caloObj, trObj, chi2 );
+  ICaloTrackMatch* p = this ;
+  StatusCode sc = p->match( caloObj, trObj, chi2 );
   return MatchingPair( sc, chi2 );
 };
 // ============================================================================
@@ -212,6 +213,39 @@ StatusCode CaloTrackMatchBase::findState
   m_prevTrack = trObj ;
    
   return StatusCode::SUCCESS ;
+};
+// ============================================================================
+
+// ============================================================================
+/** the main matching method  
+ *
+ *  @param caloObj  pointer to "calorimeter" object (position)
+ *  @param trObj    pointer to tracking object (track)
+ *  @param chi2     returned value of chi2 of the matching
+ *  @return status code for matching procedure 
+ */
+// ============================================================================
+StatusCode CaloTrackMatchBase::match 
+( const CaloPosition*   /* caloObj */  , 
+  const TrgTrack*       /* trObj   */  ,
+  double&               /* chi2    */  ) 
+{ return Error ( "match(TrgTrack*): not implemented(yet)!" ) ; } ;
+// ============================================================================
+
+// ============================================================================
+/** The main matching method (Stl interface) 
+ *  @param caloObj  pointer to "calorimeter" object (position)
+ *  @param trObj    pointer to tracking object (track)
+ *  @return pair of status code/chi2  for matching procedure 
+ */
+// ============================================================================
+ICaloTrackMatch::MatchingPair CaloTrackMatchBase::operator() 
+  ( const CaloPosition*   caloObj  , 
+    const TrgTrack*       trObj    ) 
+{ 
+  double chi2;
+  StatusCode sc = match( caloObj, trObj, chi2 );
+  return MatchingPair( sc, chi2 );
 };
 // ============================================================================
 

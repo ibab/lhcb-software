@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchBase.h,v 1.2 2004-02-17 12:08:10 ibelyaev Exp $
+// $Id: CaloTrackMatchBase.h,v 1.3 2004-09-02 18:57:34 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/17 12:08:10  ibelyaev
+//  update for new CaloKernel and CaloInterfaces
+//
 // Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
 // new package 
 //
@@ -28,10 +31,11 @@ class ITrExtrapolator ; ///< from TrKernel
 #include "CLHEP/Matrix/Vector.h"
 #include "CLHEP/Matrix/SymMatrix.h"
 
-class CaloPosition;
-class TrStoredTrack;
-class TrStateP;
-
+class CaloPosition  ;
+class TrStoredTrack ;
+class TrStateP      ;
+class TrgTrack      ;
+ 
 /** @class CaloTrackMatchBase CaloTrackMatchBase.h
  *  
  *  The base class for concrete implementtaions of matching utilities. \n
@@ -94,6 +98,27 @@ public:
    *  @return teh last used state 
    */
   virtual const TrState *state() const { return m_state; }
+
+  /** the main matching method  
+   *
+   *  @param caloObj  pointer to "calorimeter" object (position)
+   *  @param trObj    pointer to tracking object (track)
+   *  @param chi2     returned value of chi2 of the matching
+   *  @return status code for matching procedure 
+   */
+  virtual StatusCode match 
+  ( const CaloPosition*   caloObj  , 
+    const TrgTrack*       trObj    ,
+    double&               chi2     ) ;
+
+  /** The main matching method (Stl interface) 
+   *  @param caloObj  pointer to "calorimeter" object (position)
+   *  @param trObj    pointer to tracking object (track)
+   *  @return pair of status code/chi2  for matching procedure 
+   */
+  virtual MatchingPair    operator() 
+    ( const CaloPosition*   caloObj  , 
+      const TrgTrack*       trObj    ) ;
 
   /** handle the incident
    *  @see IIncidentListener 

@@ -1,8 +1,11 @@
-// $Id: CaloTrackPrsEval.h,v 1.2 2004-04-19 15:57:27 cattanem Exp $
+// $Id: CaloTrackPrsEval.h,v 1.3 2004-09-02 18:55:36 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/04/19 15:57:27  cattanem
+// v2r2
+//
 // Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
 // The first import of new package 
 //
@@ -65,6 +68,26 @@ public:
    */  
   virtual double     operator() 
     ( const TrStoredTrack* track ) const ;
+
+  /** The main processing method 
+   *  @see ICaloTrackIdEval 
+   *  It evaluated the Track ID estimators using the calorimeter information  
+   *  @param  track  pointer to the object to be processed
+   *  @param  value  (return) the value of the estimator
+   *  @return status code 
+   */  
+  virtual StatusCode process    
+  ( const TrgTrack*      track , 
+    double&              value ) const ;
+  
+  /** The main processing method (functor interface)
+   *  @see ICaloTrackIdEval 
+   *  It evaluated the Track ID estimators using the calorimeter information  
+   *  @param  track  pointer to the object to be processed
+   *  @param  the value of the estimator
+   */  
+  virtual double     operator() 
+    ( const TrgTrack*      track ) const ;
 
   /** standard initialization method 
    *  @see CaloTool 

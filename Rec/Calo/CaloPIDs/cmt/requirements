@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.9 2004-04-27 03:13:26 ibelyaev Exp $ 
+# $Id: requirements,v 1.10 2004-09-02 18:55:36 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package            CaloPIDs
-version            v2r3
+version            v2r4
 
 # ================ structure ==================================================
 branches           cmt doc src options 
@@ -22,17 +22,8 @@ library            CaloPIDs    *.cpp -import=AIDA
 apply_pattern      component_library library=CaloPIDs
 
 # =============================================================================
-# The END 
-# =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.8  2004/04/18 09:43:09  ibelyaev
-#  new version of CaloPhotonEstimatorTool
-#
-# Revision 1.7  2004/03/18 13:38:40  cattanem
-# v2r1
-#
-# Revision 1.6  2004/03/17 16:11:39  ibelyaev
-#  add Frederic's Photon(P)ID tool
-# 
+# =============================================================================
+# The END 
 # =============================================================================
 
