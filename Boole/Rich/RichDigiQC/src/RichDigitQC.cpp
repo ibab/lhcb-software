@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.14 2005-03-05 12:26:29 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.15 2005-03-05 12:27:53 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -58,12 +58,6 @@ StatusCode RichDigitQC::initialize()
 
   // Initialise variables
   m_evtC = 0;
-
-  //m_evtLocs.push_back( "/Event/MC/Rich/Hits" );
-  //m_evtLocs.push_back( "/Event/PrevPrev/MC/Rich/Hits" );
-  //m_evtLocs.push_back( "/Event/Prev/MC/Rich/Hits" );
-  //m_evtLocs.push_back( "/Event/Next/MC/Rich/Hits" );
-  //m_evtLocs.push_back( "/Event/NextNext/MC/Rich/Hits" );
 
   // Warn if extra histos are enabled
   if ( m_extraHists ) Warning( "Extra histograms are enabled", StatusCode::SUCCESS );

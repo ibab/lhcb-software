@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.8 2005-03-03 15:43:25 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.9 2005-03-05 12:26:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -43,6 +43,7 @@
 
 // RichKernel
 #include "RichKernel/RichMap.h"
+#include "RichKernel/RichHashMap.h"
 
 // RICH Interfaces
 #include "RichKernel/IRichHPDToLevel1Tool.h"
@@ -97,13 +98,13 @@ private: // data
   unsigned int m_evtC; 
 
   /// L1 occupancy counter
-  typedef RichMap< const RichDAQ::Level1ID, unsigned int > L1Counter;
+  typedef RichHashMap< const RichDAQ::Level1ID, unsigned int > L1Counter;
 
   /// Counter for hits in each HPD
-  typedef RichMap< const RichSmartID, unsigned int > HPDCounter;
+  typedef RichHashMap< const RichSmartID, unsigned int > HPDCounter;
   HPDCounter m_nHPD[Rich::NRiches]; ///< Tally for HPD occupancy, in each RICH
 
-  typedef std::map< std::string, unsigned int > SpillCount;
+  typedef RichHashMap< std::string, unsigned int > SpillCount;
   typedef std::vector< SpillCount > SpillDetCount;
 
   /// Number of digitised hits per RICH detector and event location
@@ -115,9 +116,8 @@ private: // data
   /// Number of background hits in each RICH
   std::vector< unsigned int > m_bkgHits;
 
-  /// List of event locations to look into
-  std::vector< std::string > m_evtLocs;
-
+  /// List of event locations to look for MCRichHits in
+  RichHashMap< std::string, bool > m_evtLocs;
 
 };
 
