@@ -636,7 +636,7 @@ flavor of the primary string is given as the argument to the
 model and 1 means a $d\bar d$, 2 is $u\bar u$, 3 is $s\bar s$ and
 4 is $c\bar c$. If the flavor is 0 a mixture of the quarks will
 be generated in the appropriate amounts. 
-The first particle that is created is the VPHO which can be
+The first particle that is created is the {\tt vpho} which can be
 decayed using this decay model.
 The primary jets are created according to a $1+\cos^2\theta$
 distribution, where $\theta$ is the angle of the primary jet
@@ -644,7 +644,7 @@ with respect to the beam line, or more precisely the $z$-axis.
 
 \Example
 \begin{verbatim}
-Decay VPHO
+Decay vpho
 1.000          JSCONT 1;
 Enddecay
 \end{verbatim}
@@ -1960,13 +1960,13 @@ $P$ and $F$ wave amplitudes.
 \Expl
 Generates the interaction, $e^+ e^- \rightarrow V \gamma$ where $V$
 is a vector meson according
-to~\cite{Bonn71}. This model should be used as a decay of the {\tt VPHO}.
+to~\cite{Bonn71}. This model should be used as a decay of the {\tt vpho}.
 
 \Example
 Example below shows how to generate the $\phi\gamma$ final state from
 an virtual photon.
 \begin{verbatim}
-Decay VPHO
+Decay vpho
 1.000 phi gamma                    VECTORISR 0.878 0.95;
 Enddecay
 \end{verbatim}

@@ -88,7 +88,8 @@ public:
   {_partlist[i.getId()].includeDecayFactor(yesno);}
   static void changeLS(EvtId i, std::string &newLS ) 
   { _partlist[i.getId()].newLineShape(newLS);}
-
+  static void setPWForDecay(EvtId i, int spin, EvtId d1, EvtId d2) 
+  {  _partlist[i.getId()].setPWForDecay(spin,d1,d2);}
 private:
 
   void setUpConstsPdt();

@@ -37,6 +37,8 @@ public:
 
   static int getNMode(int ipar);
 
+  static EvtDecayBase* getDecay(int ipar, int imode);
+
   static void readDecayFile(const std::string dec_name);
 
   static int findChannel(EvtId parent,std::string model,int ndaug, EvtId *daugs,

@@ -50,6 +50,10 @@ private:
   EvtBtoXsllUtil *_calcprob;
   double         _dGdsProbMax;
   double         _dGdsdupProbMax;
+  double         _mb ;
+  double         _ms ;
+  double         _mq ;
+  double         _pf ;
 };
 
 #endif

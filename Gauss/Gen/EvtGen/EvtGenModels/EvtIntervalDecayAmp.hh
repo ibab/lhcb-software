@@ -1,6 +1,6 @@
 //-----------------------------------------------------------------------
 // File and Version Information: 
-//      $Id: EvtIntervalDecayAmp.hh,v 1.1 2003-10-02 17:26:51 robbep Exp $
+//      $Id: EvtIntervalDecayAmp.hh,v 1.2 2004-01-12 13:50:24 robbep Exp $
 // 
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -31,7 +31,7 @@
 #include "EvtGenBase/EvtAmpFactory.hh"
 #include "EvtGenBase/EvtMultiChannelParser.hh"
 #include "EvtGenBase/EvtAmpPdf.hh"
-#include "EvtGenBase/EvtCPUtil.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include "EvtGenBase/EvtPDL.hh"
 
 template <class T>
@@ -121,7 +121,7 @@ public:
     
     if(_fact->isCPModel()) {
       
-      EvtCPUtil::OtherB(p,t,other_b);
+      EvtIncoherentMixing::OtherB(p,t,other_b);
       EvtComplex A = _fact->getAmp()->evaluate(x);
       EvtComplex Abar = _fact->getAmpConj()->evaluate(x);
       double dm = _fact->dm();

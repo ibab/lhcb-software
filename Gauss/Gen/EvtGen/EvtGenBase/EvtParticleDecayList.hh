@@ -44,6 +44,8 @@ public:
   void setNMode(int nmode);
 
   EvtDecayBase* getDecayModel(EvtParticle *p);
+  EvtDecayBase* getDecayModel(int imode) {
+    return _decaylist[imode]->getDecayModel();}
 
   EvtParticleDecay& getDecay(int nchannel);
 

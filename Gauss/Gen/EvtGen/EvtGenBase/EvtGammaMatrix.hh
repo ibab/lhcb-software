@@ -23,12 +23,15 @@
 #define EVTGAMMAMATRIX_HH
 
 #include "EvtGenBase/EvtComplex.hh"
+#include "EvtGenBase/EvtDiracSpinor.hh" // needed for adjoint
 //#include <iostream>
 #include <iosfwd>
-class EvtDiracSpinor;
 class EvtGammaMatrix;
+class EvtVector4C;
 
 EvtGammaMatrix operator*(const EvtComplex& c,const EvtGammaMatrix& g);
+EvtGammaMatrix operator*(const EvtGammaMatrix& g, const EvtComplex& c);
+EvtGammaMatrix operator/(const EvtGammaMatrix& g, const double d);
 EvtDiracSpinor operator*(const EvtGammaMatrix& g,const EvtDiracSpinor& d);
 EvtComplex operator*(const EvtDiracSpinor& d,const EvtDiracSpinor& dp);
 inline EvtGammaMatrix operator+(const EvtGammaMatrix& g1,const EvtGammaMatrix& g2);
@@ -40,12 +43,15 @@ std::ostream& operator<<(std::ostream& s, const EvtGammaMatrix& v);
 class EvtGammaMatrix {
 
   friend EvtGammaMatrix operator*(const EvtComplex& c,const EvtGammaMatrix& g);
+  friend EvtGammaMatrix operator*(const EvtGammaMatrix& g, const EvtComplex& c);
+  friend EvtGammaMatrix operator/(const EvtGammaMatrix& g, const double d);
   friend EvtDiracSpinor operator*(const EvtGammaMatrix& g,const EvtDiracSpinor& d);
   friend EvtComplex operator*(const EvtDiracSpinor& d,const EvtDiracSpinor& dp);
   friend EvtGammaMatrix operator+(const EvtGammaMatrix& g1,const EvtGammaMatrix& g2);
   friend EvtGammaMatrix operator-(const EvtGammaMatrix& g1,const EvtGammaMatrix& g2);
   friend EvtGammaMatrix operator*(const EvtGammaMatrix& g1,const EvtGammaMatrix& g2);
-  friend std::ostream& operator<<(std::ostream& s, const EvtGammaMatrix& v);  
+  friend std::ostream& operator<<(std::ostream& s, const EvtGammaMatrix& v);
+  friend EvtDiracSpinor EvtDiracSpinor::adjoint() const;
 
 public:
 
@@ -70,6 +76,10 @@ public:
   static const EvtGammaMatrix& v1();
   static const EvtGammaMatrix& v2();
   static const EvtGammaMatrix& v3();
+  // Dirac sigma matrix with upper or lower indices (only one element)
+  static const EvtGammaMatrix& sigmaUpper(unsigned int mu, unsigned int nu);
+  static const EvtGammaMatrix& sigmaLower(unsigned int mu, unsigned int nu);
+  
   EvtGammaMatrix& operator+=(const EvtGammaMatrix &g);
   EvtGammaMatrix& operator-=(const EvtGammaMatrix &g);
   EvtGammaMatrix& operator*=(const EvtGammaMatrix &g);
@@ -93,6 +103,13 @@ inline EvtGammaMatrix operator*(const EvtGammaMatrix& g1,const EvtGammaMatrix& g
   return EvtGammaMatrix(g1)*=g2;
 }
 
+inline EvtGammaMatrix operator/(const EvtGammaMatrix& g, const double d)
+{
+    return g * EvtComplex(1/d,0);
+}
+
+// slash or Feynman dagger a 4-vector
+EvtGammaMatrix slash(const EvtVector4C& p);
 
 #endif
 

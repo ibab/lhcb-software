@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenBase
- *    File: $Id: EvtIntegralDb.hh,v 1.1 2003-10-02 17:25:53 robbep Exp $
+ *    File: $Id: EvtIntegralDb.hh,v 1.2 2004-01-12 13:50:26 robbep Exp $
  *  Author: Alexei Dvoretskii, dvoretsk@slac.stanford.edu, 2001-2002
  *
  * Copyright (C) 2002 Caltech
@@ -40,7 +40,7 @@ private:
   int _nitg[MAX_ENTRIES];
   EvtValError _itg[MAX_ENTRIES];
 
-  int _N;
+  int _n;
 };
 
 #endif

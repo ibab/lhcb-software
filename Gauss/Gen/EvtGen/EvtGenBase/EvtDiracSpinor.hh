@@ -44,7 +44,8 @@ EvtComplex  EvtLeptonPCurrent(const EvtDiracSpinor& d,const EvtDiracSpinor& dp);
 EvtTensor4C  EvtLeptonTCurrent(const EvtDiracSpinor& d,const EvtDiracSpinor& dp);
 inline EvtDiracSpinor operator+(const EvtDiracSpinor& u1, const EvtDiracSpinor& u2); 
 inline EvtDiracSpinor operator-(const EvtDiracSpinor& u1, const EvtDiracSpinor& u2); 
-std::ostream& operator<<(std::ostream& s, const EvtDiracSpinor& c);  
+std::ostream& operator<<(std::ostream& s, const EvtDiracSpinor& c);
+EvtDiracSpinor operator*(const EvtComplex& c, const EvtDiracSpinor& d);
 
 //=====================
 class EvtDiracSpinor {
@@ -71,6 +72,8 @@ class EvtDiracSpinor {
 				  const EvtDiracSpinor& u2); 
   friend EvtDiracSpinor operator-(const EvtDiracSpinor& u1,
 				  const EvtDiracSpinor& u2); 
+  friend EvtDiracSpinor operator*(const EvtComplex& c,
+                                  const EvtDiracSpinor& d);
   friend std::ostream& operator<<(std::ostream& s, const EvtDiracSpinor& c);  
 
 public:
@@ -91,6 +94,7 @@ public:
   void applyRotateEuler(double alpha,double beta,double gamma);
   void applyBoostTo(const EvtVector4R& p4);
   void applyBoostTo(const EvtVector3R& boost);
+  EvtDiracSpinor adjoint() const;
   
 private:
 

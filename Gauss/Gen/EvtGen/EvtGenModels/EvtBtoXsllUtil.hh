@@ -17,6 +17,7 @@
 // Modification history:
 //
 //    Stephane Willocq       Jan  19, 2001       Module created
+//    Stephane Willocq       Nov   6, 2003       Update Wilson Coeffs
 //
 //------------------------------------------------------------------------
 
@@ -27,11 +28,17 @@
 #include "EvtGenBase/EvtDecayIncoherent.hh"
 #include "EvtGenBase/EvtParticle.hh"
 
+class EvtComplex ;
+
 class EvtBtoXsllUtil{
 
 public:
 
-  EvtComplex coeff9(double mb, double sh);
+  EvtComplex GetC7Eff0(double sh, bool nnlo=true);
+  EvtComplex GetC7Eff1(double sh, double mb, bool nnlo=true);
+  EvtComplex GetC9Eff0(double sh, double mb, bool nnlo=true, bool btod=false);
+  EvtComplex GetC9Eff1(double sh, double mb, bool nnlo=true, bool btod=false);
+  EvtComplex GetC10Eff(double sh, bool nnlo=true);
 
   double dGdsProb(double mb, double ms, double ml,
                                   double s);
