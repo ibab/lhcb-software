@@ -1,17 +1,31 @@
-! $Id: release.notes,v 1.32 2002-10-22 17:47:07 gcorti Exp $
+! $Id: release.notes,v 1.33 2002-10-22 21:38:04 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
 ! 2002-10-22 - Gloria Corti
- - Modify UnconstVertexFitter to be able to set which Transporter to use
+ - Modified UnconstVertexFitter, LagrangeMassVertexFitter and
+   GeomDispCalculator to be able to set which Transporter to use
    (CombinedTransporter beeing the default (as in v5r0)). An example of
    how to do it can be found in the DaVinciTest package.
+ - New tool interface IDirectionFitter.h and one implementation 
+   LagrangeDirectionFitter.h/cpp that contrain an input particle to
+   point to a given vertex (B.Viaud)
+ - Introduce new method in IMassVertexFitter to give 4 particles as input
+   (C.Nunes, S.Amato)
+ - Modified LagrangeMassVertexFitter (C.Nunes, A.Amato)
+    + handle fits up to 4 particles,
+    + set the flag isResonance() to new particles if lifetime < exp-15sec
+    + check if a particle is a resonace in which case uses the daughters
+      to perform the fit when widht < 10 MeV
+    + fix error reported by B.Viaud to use transported values of slopes
+      and momentum and not only positions
  - Bug fix reported by M.Musy in ElectronParticleMaker that was setting
    particleID swapped for e+/e- (H.Terrier)
- - Modify UnconstVertexFitter to check if a particle is a resonace in which
-   case uses the daughters to perform the fit and fix error reported by
-   B.Viaud to use transported values of slopes and momentum and not only
-   positions.(S.Amato)
+ - Modified UnconstVertexFitter (S.Amato) 
+    + check if a particle is a resonace in which case uses the daughters
+      to perform the fit
+    + fix error reported by B.Viaud to use transported values of slopes
+      and momentum and not only positions
 
 ! 2002-10-21 - Gloria Corti
  - Changes in ElectronParticleMaker to compile on windows: remove std:: in
