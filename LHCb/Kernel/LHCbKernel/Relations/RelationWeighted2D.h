@@ -1,8 +1,11 @@
-// $Id: RelationWeighted2D.h,v 1.3 2002-04-08 16:17:41 ibelyaev Exp $
+// $Id: RelationWeighted2D.h,v 1.4 2002-04-09 07:58:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/08 16:17:41  ibelyaev
+//  minor fix
+//
 // Revision 1.2  2002/04/03 15:35:18  ibelyaev
 // essential update and redesing of all 'Relations' stuff
 // 
@@ -38,7 +41,7 @@ template<class FROM, class TO, class WEIGHT>
 class RelationWeighted2D :
   public         DataObject                                     ,
   public virtual IRelationWeighted2D           <FROM,TO,WEIGHT> ,
-  public          Relations::Relation2Weighted <FROM,TO,WEIGHT> 
+  public virtual  Relations::Relation2Weighted <FROM,TO,WEIGHT> 
 {
 public:
   

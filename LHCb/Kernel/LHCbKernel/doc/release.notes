@@ -3,6 +3,16 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 ! =============================================================================
+! 9 Apr 2002:  Vanya BElyaev Ivan.Belyaev@itep.ru 
+!   add "virtual" qualifier for public inheritance from "Relation*" - bases
+!   to following following classes:
+! - Relation1D.h, 
+! - Relation2D.h
+! - RelationWeighted1D.h
+! - RelationWeighted2D.h
+! =============================================================================
+
+! =============================================================================
 ! 8 Apr 2002:  Vanya BElyaev Ivan.Belyaev@itep.ru 
 ! - new version of "Relations"-subpackage
 ! - rename *RelationTool*          into *Associator*

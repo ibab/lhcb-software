@@ -1,8 +1,11 @@
-// $Id: Relation1D.h,v 1.2 2002-04-03 15:35:17 ibelyaev Exp $
+// $Id: Relation1D.h,v 1.3 2002-04-09 07:58:53 ibelyaev Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/03 15:35:17  ibelyaev
+// essential update and redesing of all 'Relations' stuff
+//
 // =============================================================================
 #ifndef RELATIONS_RELATIONOBJECT_H
 #define RELATIONS_RELATIONOBJECT_H 1
@@ -50,7 +53,7 @@ template<class FROM,class TO>
 class Relation1D :
   public         DataObject                   ,
   public virtual IRelation <FROM,TO>          ,
-  public          Relations::Relation<FROM,TO>   
+  public virtual  Relations::Relation<FROM,TO>   
 {
   
 public:
