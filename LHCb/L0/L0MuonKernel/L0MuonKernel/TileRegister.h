@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.1.1.1 2004-03-10 11:38:15 ltocco Exp $
+// $Id: TileRegister.h,v 1.2 2004-03-11 15:57:55 ltocco Exp $
 
 #ifndef L0MUONKERNEL_TILEREGISTER_H
 #define L0MUONKERNEL_TILEREGISTER_H     1
@@ -40,6 +40,8 @@ public:
   RegisterType type() { return m_type; }
 
   void setType( std::string str){ m_fieldtype = str ;}
+  void setTypeMT (int sta) { m_type = PAD ;}
+  
   std::string Type() { return m_fieldtype;}
 
   void setType(int sta, int nreg);

@@ -1,4 +1,4 @@
-// $Id: CablingUnit.h,v 1.1.1.1 2004-03-10 11:38:15 ltocco Exp $
+// $Id: CablingUnit.h,v 1.2 2004-03-11 15:57:55 ltocco Exp $
 #ifndef L0MUONKERNEL_CABLINGUNIT_H
 #define L0MUONKERNEL_CABLINGUNIT_H     1
 
@@ -38,6 +38,7 @@ public:
 
   void makePads(MsgStream * log);
   void makeTower(MsgStream * log);
+
   void drawTower(MsgStream * log) {m_tower.draw(log);}
   //boost::dynamic_bitset<> getStatus(); 
   //boost::dynamic_bitset<> getCand1(); 
