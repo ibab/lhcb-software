@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.6 2001-11-20 15:22:25 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.7 2001-11-23 16:09:56 sponce Exp $
 
 // Include Files
 #include <limits.h>
@@ -56,8 +56,8 @@ XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
     }
 
     // gets the maximum number of caches documents from the joboption file
-    // by default, this is 5.
-    declareProperty ("MaxDocNbInCache", m_maxDocNbInCache = 5);
+    // by default, this is 10.
+    declareProperty ("MaxDocNbInCache", m_maxDocNbInCache = 10);
 
     // gets the cacheBehavior from the joboption file. A 0 value means
     // FIFO cache. The bigger this value is, the more you tend to keep
