@@ -1,0 +1,20 @@
+package RichDet
+version v1
+
+branches src RichDet doc cmt
+
+include_dirs $(RICHDETROOT)
+
+# CRJ: Added RichRec here
+use RichRec    v1r4 Rich
+use SicbCnv    v13* SICB
+
+use RichEvent v1 Event
+
+library RichDet ../src/*.cpp
+
+apply_pattern package_linkopts
+
+apply_pattern ld_library_path
+
+apply_pattern package_shlibflags
