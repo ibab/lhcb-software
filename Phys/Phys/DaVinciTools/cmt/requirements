@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2002-07-26 12:58:24 odie Exp $
+# $Id: requirements,v 1.15 2002-07-27 20:27:26 gcorti Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -20,6 +20,7 @@ include_dirs     $(DAVINCITOOLSROOT)
 #============================================================================
 use  PhysEvent     v6r*   Event
 use  DetDesc       v10r*  Det
+use  AIDA          v2r*
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
