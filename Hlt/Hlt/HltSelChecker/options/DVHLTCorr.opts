@@ -45,7 +45,11 @@ ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 
 //------------------------------------------------------------------------------
 // PK's stripping of signal passing L0 and L1:
-#include "$HLTSELECTIONSROOT/options/MBL0L1-new.opts"
+//#include "$HLTSELECTIONSROOT/options/MBL0L1-new.opts"
+//------------------------------------------------------------------------------
+// L0 and L1 and TDR selected sample
+//
+#include "$HLTSELECTIONSROOT/options/DC04_L0L1TDR_Signals.opts"
 //------------------------------------------------------------------------------
 //#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd2PiPi.opts"
 //#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd2KPi.opts"
@@ -64,9 +68,6 @@ ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 //#include "$HLTSELECTIONSROOT/options/DC04_L0L1_B2HH.opts"
 //#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsH.opts"
 //
-// L0 and L1 and TDR selected sample
-//
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1TDR_Signals.opts"
 
 ApplicationMgr.EvtMax    = 100 ;
 //EventSelector.FirstEvent = 91 ;

@@ -7,7 +7,7 @@ Bd2D02KPiKstarAndTDR.AvoidSelResult = false ;
 // correlation of HLT and TDR
 ApplicationMgr.TopAlg += { "SelResultCorrelations/CorrBd2D02KPiKstar" };
 CorrBd2D02KPiKstar.Algorithms = { "AllBd2D02KPiKstarTracks", 
-                               "HLTSharedD02KPi",
+                               "HLTSharedD02HH",
                               "FilterD0ForHLTBd2D0Kstar",
                               "FilterKstarForHLTBd2D0Kstar",
                               "HLTBd2D02KPiKstar",
