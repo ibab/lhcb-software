@@ -24,6 +24,7 @@ Purpose: LHCb reconstruction program
    . New tuning for Rich, use VTT tracks (recrich v7r3, dbase v251r*/v248r5)
      (not available for test data produced with dbase v249r*)
    . Do not pass Velo only tracks to Fortran Rich reco (RiSicbCnv v5r1)
+   . L1 Velo tracking adapted to 45 degree Velo sensors (L1VeloTrack v3r3)
 
  - New features:
    . Add support for dbase v250r0, v250r1 (XmlDDDB v14r1, Seeding v2r3)
@@ -32,6 +33,7 @@ Purpose: LHCb reconstruction program
    . Fix OORich to also run on Windows 
      (RichRecKernel v1r1, RichRecEvent v1r1, RichRecAlgs v1r1)
    . Switch off all L1 histograms by default (L1VeloTrack v3r3)
+   . New L0+L1 summary table in Brunel log file (L1Decision v1r1)
 
  - DST changes:
    . Add /Event/Trig/L1/Decision
@@ -57,6 +59,9 @@ Purpose: LHCb reconstruction program
    . Don't digitize unnecessarily 'Next' hits (ITAlgorithms v12r4)
    . Changes in definitions for entries in efficiency table (TrCheck v1r2)
    . Further tuning of forward tracks (LongTrack v1r3)
+
+ - Bug fixes:
+   . Fix NaN problem in case no primary vertex found (L1VeloTrack v3r3)
 
  - New features:
    . Possibility to use units in job options files (GaudiConf v6r4)
