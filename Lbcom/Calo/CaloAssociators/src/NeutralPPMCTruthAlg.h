@@ -1,8 +1,11 @@
-// $Id: NeutralPPMCTruthAlg.h,v 1.1 2002-09-04 15:16:14 ibelyaev Exp $
+// $Id: NeutralPPMCTruthAlg.h,v 1.2 2002-09-07 11:01:49 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/09/04 15:16:14  ibelyaev
+//  add new associator and it's algorithm
+//
 // Revision 1.1  2002/06/26 19:03:56  ibelyaev
 //  add one more new algorithm for MCTruth
 //
@@ -101,7 +104,7 @@ private:
   std::string m_asctName ;
   /// MC associator itself  
   MCAsct*     m_asct     ;
-
+  
 };
 
 // ============================================================================

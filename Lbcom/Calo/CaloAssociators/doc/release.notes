@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.14 2002-09-06 08:53:22 cattanem Exp $
+! $Id: release.notes,v 1.15 2002-09-07 11:01:49 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -6,14 +6,18 @@
 ! =============================================================================
 ! Responsible : Ivan Belyaev
 ! =============================================================================
-  
+
+! 2002-09-07 - Ivan Belyaev
+ - options/NPPs2MCPs.opts      - fix the bug, kindly found by Gloria and Galina 
+ - src/NeutralPPMCTruthAlh.cpp - fix the bug, kindly found by Gloria and Galina
+
 !=================== CaloAssociators v2r3 2002-09-06 ==========================
-! 2002-09-04 - Ivan Belyaev   
-  - cmt./requirements               - update the version 
-  - options/NPPs2MCPs.opts          - new file with options for 
+! 2002-09-04 - Ivan Belyaev
+  - cmt./requirements               - update the version
+  - options/NPPs2MCPs.opts          - new file with options for
                                      NeutralProtoParticles
-  - src/NeutralPPMCTrithAlg.h,.cpp  - new algorithm to set MCTruth 
-                                     for neutral ProtoParticles  
+  - src/NeutralPPMCTrithAlg.h,.cpp  - new algorithm to set MCTruth
+                                     for neutral ProtoParticles
 
 !=================== CaloAssociators v2r2 2002-07-29 ==========================
 ! 2002-07-29 - Marco Cattaneo

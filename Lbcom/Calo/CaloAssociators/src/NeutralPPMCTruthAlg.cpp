@@ -1,20 +1,8 @@
-// $Id: NeutralPPMCTruthAlg.cpp,v 1.2 2002-09-06 10:57:51 ibelyaev Exp $
+// $Id: NeutralPPMCTruthAlg.cpp,v 1.3 2002-09-07 11:01:49 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2002/09/04 15:16:14  ibelyaev
-//  add new associator and it's algorithm
-//
-// Revision 1.1  2002/06/26 19:03:56  ibelyaev
-//  add one more new algorithm for MCTruth
-//
-// Revision 1.5  2002/06/16 17:19:19  ibelyaev
-//  update
-//
-// Revision 1.4  2002/06/13 12:28:48  ibelyaev
-//  new options and new algorithm
-//
 // ============================================================================
 // Include files
 // LHCbKernel 
@@ -69,7 +57,7 @@ NeutralPPMCTruthAlg::NeutralPPMCTruthAlg
 ( const std::string& name ,
   ISvcLocator*       svc  )
   : CaloAlgorithm ( name , svc                  )
-  , m_asctType ( "AssociatorWeighted<ProtoParticle,MCParticle,float>" )
+  , m_asctType ( "AssociatorWeighted<CaloCluster,MCParticle,float>" )
   , m_asctName ( "CCs2MCPs" )
   , m_asct     ( 0 ) 
 { 
