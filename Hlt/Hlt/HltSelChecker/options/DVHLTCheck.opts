@@ -778,18 +778,10 @@ EventSelector.PrintFreq  = 1;
 // HltTrgChecker.OutputLevel = 2;
 // MessageSvc.OutputLevel  = 2;
 
-// L0L1 stripped (DV v12r2)
-#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd2PiPi.opts"
-// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd2KPi.opts"
-// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs2KK.opts"
-// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs2PiK.opts"
-// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_phiphi.opts"
-// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd_D0_KPi_Kstar.opts"
-// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd_DstarPi.opts"
-// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsPi.opts"
-// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsK.opts"
+//------------------------------------------------------------------------------
+// PK's stripping of MB passing L0 and L1:
+#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+//------------------------------------------------------------------------------
+// PK's stripping of signal passing L0, L1 and TDR:
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
 
-// sums of the above
-// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Signals.opts"
-// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_B2HH.opts"
-// #include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsH.opts"

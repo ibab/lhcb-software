@@ -42,30 +42,11 @@ ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 #include "$HLTSELCHECKERROOT/options/Plots.opts"
 
 //------------------------------------------------------------------------------
-// PK's stripping of signal passing L0 and L1:
-//#include "$HLTSELECTIONSROOT/options/MBL0L1-new.opts"
+// PK's stripping of MB passing L0 and L1:
+#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //------------------------------------------------------------------------------
-// L0 and L1 and TDR selected sample
-//
-#include "$HLTSELECTIONSROOT/options/DC04_L0L1TDR_Signals.opts"
-//------------------------------------------------------------------------------
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd2PiPi.opts"
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd2KPi.opts"
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd_D0_KPi_Kstar.opts"
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bd_DstarPi.opts"
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs2KK.opts"
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs2PiK.opts"
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsK.opts"
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsPi.opts"
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_phiphi.opts"
-//
-// sums of the above
-//
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Signals.opts"
-//
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_B2HH.opts"
-//#include "$HLTSELECTIONSROOT/options/DC04_L0L1_Bs_DsH.opts"
-//
+// PK's stripping of signal passing L0, L1 and TDR:
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
 
 ApplicationMgr.EvtMax    = -1 ;
 //EventSelector.FirstEvent = 91 ;
@@ -77,6 +58,7 @@ HistogramPersistencySvc.OutputFile = "test.hbook";
 
 MessageSvc.OutputLevel = 4 ;
 ToolSvc.OutputLevel    = 4;
+ToolSvc.SequencerTimerTool.OutputLevel = 3 ;// for timing statistics
 
 //PrintTrueB.OutputLevel = 3 ;
 //PrintDstarTracks.OutputLevel = 3 ;
@@ -89,3 +71,4 @@ PrintBTracks.OutputLevel = 4;
 PrintDstarTracks.OutputLevel = 4;
 PrintFoundDstar.OutputLevel = 4;
 PrintTDR.OutputLevel = 4;
+

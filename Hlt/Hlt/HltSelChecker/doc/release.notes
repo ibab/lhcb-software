@@ -4,6 +4,9 @@
 ! Purpose     : High-Level Trigger Exclusive Selections 
 !-----------------------------------------------------------------------------
 
+! 2004-11-25 - P. Koppenburg
+  - options/DV*.opts
+    . Adapt input data to new data in HltSelections.
 ! 2004-11-24 - P. Koppenburg
  - options/DVHLTExSelections.opts
    . Moved to HLtSelections as there is no dependency on HltSelChecker
