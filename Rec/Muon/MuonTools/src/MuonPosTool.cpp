@@ -1,9 +1,8 @@
-// $Id: MuonPosTool.cpp,v 1.2 2005-02-16 10:01:55 pkoppenb Exp $
+// $Id: MuonPosTool.cpp,v 1.3 2005-02-24 16:33:41 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 
 // local
 #include "MuonPosTool.h"
@@ -25,38 +24,45 @@ const        IToolFactory& MuonPosToolFactory = s_factory ;
 MuonPosTool::MuonPosTool( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : AlgTool ( type, name , parent ) {
+  : GaudiTool ( type, name , parent ) 
+    , m_stationNumber(0)
+    , m_regionNumber(0)
+    , m_DDS()
+    ,m_tileTool()
+    ,m_debug(false){
   declareInterface<IMuonPosTool>(this);
+  return ;
+}
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+StatusCode MuonPosTool::initialize(){
+  
+  StatusCode sc = GaudiTool::initialize() ;
+  if (!sc) return sc;
 
-  MsgStream log(msgSvc(), "MuonPosTool");
-  log << MSG::DEBUG << "Initialising the muon get info tool" << endreq;
+  debug() << "Initialising the muon get info tool" << endreq;
 
-
-  std::string numreg[] = {"1","2","3","4"};
-  std::string numsta[] = {"1","2","3","4","5"};
-  int chGridX[] ={1, 1, 1, 2};
-  int chGridY[] ={1, 2, 4, 8};  
+  //  std::string numreg[] = {"1","2","3","4"};
+  //  std::string numsta[] = {"1","2","3","4","5"};
+  //  int chGridX[] ={1, 1, 1, 2};
+  //  int chGridY[] ={1, 2, 4, 8};  
   std::string geoBase="/dd/Structure/LHCb/Muon/";
 
   /// get tile tool
-  StatusCode sc =
-    toolSvc()->retrieveTool("MuonTileIDXYZ", m_tileTool);
-  if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to create MuonTileIDToXYZ tool" << endreq;
-    throw GaudiException (" MuonTileIDXYZ not found ",
-                          "MuonPosToolException",StatusCode::FAILURE);
+  m_tileTool = tool<IMuonTileXYZTool>("MuonTileIDXYZ");
+  if( !m_tileTool ) {
+    fatal() << "    Unable to create MuonTileIDToXYZ tool" << endreq;
+    return StatusCode::FAILURE;
   }
   //  sc=toolSvc()->retrieveTool("MuonGetInfoTool",m_pGetInfo);
   // if(sc.isFailure())return StatusCode::FAILURE;
 
   // Locate the detector service needed by the this tool
-  m_DDS = 0;
-  sc = service( "DetectorDataSvc", m_DDS, true );
-  if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to locate DetectorDataSvc" << endreq;
-    throw GaudiException (" DetectorDataService not found ",
-                          "MuonPosToolException",StatusCode::FAILURE);
-
+  m_DDS = svc<IDataProviderSvc>("DetectorDataSvc", true);
+  if( !m_DDS ) {
+    fatal() << "    Unable to locate DetectorDataSvc" << endreq;
+    return StatusCode::FAILURE;
   }
 
   MuonBasicGeometry basegeometry(m_DDS,msgSvc()); 
@@ -95,14 +101,14 @@ MuonPosTool::MuonPosTool( const std::string& type,
       tile.setRegion(region);
       for(int quarter=0;quarter<4;quarter++){        
         tile.setQuarter(quarter);
-        for(int y=0;y<m_padGridY[station];y++){         
-          for (int x=m_padGridX[station];x<2*m_padGridX[station];x++){
+        for(unsigned y=0;y<m_padGridY[station];y++){         
+          for (unsigned x=m_padGridX[station];x<2*m_padGridX[station];x++){
             tile.setX(x);
             tile.setY(y);   
             // const MuonTileID tt(tile);
             
-            StatusCode sc =
-              m_tileTool->calcTilePos(tile,xp,dx,yp,dy,zp,dz);
+            StatusCode sc = m_tileTool->calcTilePos(tile,xp,dx,yp,dy,zp,dz);
+            if (!sc) return StatusCode::FAILURE ;
             (m_xpos[station])[index]=xp;
             (m_ypos[station])[index]=yp;
             (m_zpos[station])[index]=zp;
@@ -114,8 +120,8 @@ MuonPosTool::MuonPosTool( const std::string& type,
             index++;            
           }          
         }
-        for(int y=m_padGridY[station];y<2*m_padGridY[station];y++){         
-          for (int x=0;x<2*m_padGridX[station];x++){
+        for(unsigned y=m_padGridY[station];y<2*m_padGridY[station];y++){         
+          for (unsigned x=0;x<2*m_padGridX[station];x++){
             tile.setX(x);
             tile.setY(y);            
             m_tileTool->calcTilePos(tile,xp,dx,yp,dy,zp,dz);
@@ -129,12 +135,14 @@ MuonPosTool::MuonPosTool( const std::string& type,
       }      
     }    
   }
+  return StatusCode::SUCCESS ;
 }
 
 
-MuonPosTool::~MuonPosTool() {
+StatusCode MuonPosTool::finalize() {
   if( m_DDS )      m_DDS->release();
   if( m_tileTool ) toolSvc()->releaseTool( m_tileTool ); 
+  return GaudiTool::finalize() ;
 }
 
 
@@ -152,8 +160,7 @@ StatusCode MuonPosTool::calcTilePos(const MuonTileID& tile,
   tillNow=(region*4+quarter)*perQuarter;
   unsigned int xpad=tile.nX();
   unsigned int ypad=tile.nY();
-  unsigned int index=tillNow;
-     
+  unsigned int index=tillNow;     
      
   if(ypad<m_padGridY[station]){
     index=index+m_padGridX[station]*ypad+xpad-m_padGridX[station];

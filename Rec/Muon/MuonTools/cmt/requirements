@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.17 2004-12-06 12:01:34 asatta Exp $
+# $Id: requirements,v 1.18 2005-02-24 16:33:41 pkoppenb Exp $
 # ==========================================================================
 package            MuonTools
 version            v3r8
@@ -13,6 +13,7 @@ set MUONTOOLSOPTS  $(MUONTOOLSROOT)/options
 
 # ================ dependencies ==============================================
 use MuonDet        v4r*    Det 
+use GaudiAlg       v*    
 
 # ================ component library =========================================
 library            MuonTools   *.cpp

@@ -1,4 +1,4 @@
-// $Id: MuonPosTool.h,v 1.1 2004-12-06 12:01:34 asatta Exp $
+// $Id: MuonPosTool.h,v 1.2 2005-02-24 16:33:41 pkoppenb Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // local
 #include "MuonTools/IMuonTileXYZTool.h"
@@ -22,15 +22,15 @@
  *  @author David Hutchcroft
  *  @date   07/03/2002
  */
-class MuonPosTool : public AlgTool, 
-                      virtual public IMuonPosTool {
+class MuonPosTool : public GaudiTool, 
+                    virtual public IMuonPosTool {
 public:
   /// Standard constructor
   MuonPosTool( const std::string& type, 
                  const std::string& name,
                  const IInterface* parent);
   
-  virtual ~MuonPosTool( ) ; ///< Destructor
+  virtual ~MuonPosTool( ){} ; ///< Destructor
 
   /** Calculate the x,y,z and dx,dy,dz of a MuonTileID in mm
    * this ignores gaps: these can never be read out independently
@@ -40,6 +40,10 @@ public:
                                  double& y, double& deltay,
                                  double& z, double& deltaz);
   
+  StatusCode initialize();
+  StatusCode finalize();
+  
+private:
 
   // Number of stations
   int m_stationNumber;
@@ -47,17 +51,11 @@ public:
   int m_regionNumber;
   //Names of the station
   std::vector<std::string> m_stationNames;
-  
-
-
 
   // size of pads
   std::vector<unsigned int> m_padGridX;
   std::vector<unsigned int> m_padGridY;
 
-
-
-private:
   IDataProviderSvc* m_DDS;
   std::vector<float> m_xpos[5];
   std::vector<float> m_ypos[5];
