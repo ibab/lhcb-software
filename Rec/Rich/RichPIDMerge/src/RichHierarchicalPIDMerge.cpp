@@ -5,8 +5,11 @@
  *  Implementation file for RICH algorithm : RichHierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.cpp,v 1.1 2004-08-19 14:04:35 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.cpp,v 1.2 2004-10-13 09:24:24 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2004/08/19 14:04:35  jonrob
+ *  Updage merging algorithms
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
@@ -75,13 +78,6 @@ StatusCode RichHierarchicalPIDMerge::execute()
 {
   debug() << "Execute" << endreq;
 
-  // Locate the processing status object
-  ProcStatus * procStat = get<ProcStatus>( m_procStatLocation );
-  if ( procStat->aborted() ) {
-    Warning("Processing aborted -> No RICH PID results",StatusCode::SUCCESS);
-    return StatusCode::SUCCESS;
-  }
-
   // See if PIDs already exist at requested output location
   RichPIDs * newPIDs = NULL;
   bool pidsExist = false;
@@ -97,6 +93,12 @@ StatusCode RichHierarchicalPIDMerge::execute()
     // Form new container for output PIDs
     newPIDs = new RichPIDs();
     put( newPIDs, m_richPIDLocation );
+  }
+
+  // Locate the processing status object
+  ProcStatus * procStat = get<ProcStatus>( m_procStatLocation );
+  if ( procStat->aborted() ) {
+    return Warning("Processing aborted -> Empty RichPID container",StatusCode::SUCCESS);
   }
 
   unsigned int nUsedglobalPIDs = 0;
@@ -172,8 +174,8 @@ StatusCode RichHierarchicalPIDMerge::execute()
         RichPID * oldPID = newPIDs->object( (*rPID)->key() );
         if ( oldPID ) {
           const bool inRich1 = oldPID->usedAerogel() || oldPID->usedC4F10();
-          if ( m_ringSel || !inRich1 ) { newPIDs->erase( oldPID ); } 
-          else                         { continue;                 } 
+          if ( m_ringSel || !inRich1 ) { newPIDs->erase( oldPID ); }
+          else                         { continue;                 }
         }
 
         // Form new PID object, using existing RichPID as template
