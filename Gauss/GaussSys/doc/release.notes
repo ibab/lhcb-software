@@ -4,6 +4,11 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!=========================== GaussSys v7r1 2002-12-16 ===================
+! 2002-12-16 - Florence Ranjard
+ - requirements - uses LHCb v11r5
+                  GiGa v12r1, GiGaCnv v10r1, GaussCalo v1r1
+
 !=========================== GaussSys v7r0 2002-12-13 ===================
 ! 2002-12-13 - Florence Ranjard
  - new Gauss version uses LHCb v11r4
