@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.29 2002-11-06 16:56:28 sponce Exp $
+! $Id: release.notes,v 1.30 2002-11-08 11:09:57 witoldp Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!========================= GiGaCnv v9r0 ================================
+! 2002-11-08 - Witek Pokorski
+  requirements - use GiGa v11r0
 
 ! 2002-11-06 - Sebastien Ponce
  - insignificant bug fix (delete => delete[]) to please valgrind
