@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.80 2004-04-07 15:47:55 gcorti Exp $ 
+! $Id: release.notes,v 1.81 2004-04-20 04:26:45 ibelyaev Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2004-04-20 - Vanya BELYAEV
+
+- src/component/GiGaGeo.cpp
+    fix a finalize method 
+
+- src/component/GiGaMCVertexCnv.cpp
+    add warning counter for One-Point trajectories 
+
+- cmt/requirements 
+    increment the version to v15r3 
 
 !======================= GiGaCnv v15r2 2004-04-07 ==========================
 ! 2004-04-07 - Gloria CORTI

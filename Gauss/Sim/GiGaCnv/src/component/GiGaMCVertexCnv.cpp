@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.31 2004-04-07 15:47:55 gcorti Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.32 2004-04-20 04:26:46 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.31  2004/04/07 15:47:55  gcorti
+// signal info, extended collision, new vertex types
+//
 // Revision 1.30  2004/03/21 12:42:04  ibelyaev
 //  expand the list of 'known hadronic processes'
 //
@@ -329,7 +332,10 @@ StatusCode GiGaMCVertexCnv::updateObj
               dynamic_cast<GiGaTrajectoryPoint*> ( trajectory->GetPoint(0) );
             
             m_onepointIDs[trajectory->trackID()] = point;
-          }
+            Warning ( " GiGaMCVertexCnv: One-point trajectory is found " ) ;
+            //trajectory->ShowTrajectory( std::cout ) ;
+            //std::cout << std::endl ;
+            }
         
         for (GiGaTrajectory::const_iterator ittr=trajectory->begin(); 
              ittr!=trajectory->end();++ittr)
@@ -526,7 +532,7 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
                     // here we have an intertsting situation
                     // the process is *KNOWN*, but the vertex type 
                     // is still 'Unknown' . What one should do?
-                    Warning ( "GiGaMcVertexCnv: The process is known '" 
+                    Warning ( "GiGaMCVertexCnv: The process is known '" 
                               + pname + 
                               "', but vertex type is still 'Unknown'");
                   }   

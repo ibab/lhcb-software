@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.13 2004-02-20 19:12:00 ibelyaev Exp $ 
+// $Id: GiGaGeo.cpp,v 1.14 2004-04-20 04:26:46 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2004/02/20 19:12:00  ibelyaev
+//  upgrade for newer GiGa
+//
 // Revision 1.12  2003/12/08 16:16:00  ranjard
 // v13r6 - fix in GiGaGeo.cpp to cope with Geant4 5.2.ref06
 //
@@ -528,23 +531,17 @@ StatusCode GiGaGeo::initialize()
 StatusCode GiGaGeo::finalize()   
 { 
   // manually finalize all created sensitive detectors
-  std::for_each( m_SDs.begin () , 
-                 m_SDs.end   () , 
-                 std::mem_fun( &IGiGaSensDet::addRef     ) );
-  // eliminate duplicates
-  std::sort   ( m_SDs.begin() , m_SDs.end() );
-  m_SDs.erase ( std::unique( m_SDs.begin() , m_SDs.end() ) , m_SDs.end() );
-  std::for_each( m_SDs.begin () , 
-                 m_SDs.end   () , 
-                 std::mem_fun( &IGiGaSensDet::finalize   ) );
+  { for( SDobjects::iterator imf = m_SDs.begin() ; m_SDs.end() != imf ; ++imf )
+  {
+      IAlgTool* mf = *imf ;
+      if( 0 != mf && 0 != toolSvc() ) { toolSvc()->releaseTool( mf ) ; }
+    }
+  }
   m_SDs.clear() ;
   
   // finalize all created magnetic field objects 
-  // std::for_each( m_MFs.begin () , 
-  //               m_MFs.end   () , 
-  //               std::mem_fun( &IGiGaMagField::release ) );
   { for( MFobjects::iterator imf = m_MFs.begin() ; m_MFs.end() != imf ; ++imf )
-    {
+  {
       IAlgTool* mf = *imf ;
       if( 0 != mf && 0 != toolSvc() ) { toolSvc()->releaseTool( mf ) ; }
     }
