@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.18 2002-01-29 12:04:57 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.19 2002-01-30 10:24:07 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -500,6 +500,7 @@ void parseConstructor(DOM_Node node,
     gddConstructor->setInitList(node.getAttributes().
       getNamedItem(DOMString::transcode("initList")).
       getNodeValue());
+    gddConstructor->setCode(DOMString::transcode(" "));
   }
   else
   {
