@@ -1,7 +1,8 @@
-!  $Id: release.notes,v 1.14 2002-06-28 15:20:32 cattanem Exp $
+!  $Id: release.notes,v 1.15 2002-07-09 19:05:08 cattanem Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
+!========================= L0Muon v6r0 2002-07-09 =======================
 ! 2002-06-28 - A.Tsaregorodtsev
  - Fix to L0mTrigger to be compatible with new digitization
 
