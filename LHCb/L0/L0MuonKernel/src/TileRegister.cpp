@@ -1,26 +1,31 @@
 #include "L0MuonKernel/TileRegister.h"
 
 L0Muon::TileRegister::TileRegister() {
-  m_type = L0Muon::STRIP;
+  //m_type = L0Muon::STRIP;
+  m_type = STRIP;
 }
 
 
   
 
 L0Muon::TileRegister::TileRegister(int bits) : L0Muon::Register(bits) {
-  m_type = L0Muon::STRIP;
+  //m_type = L0Muon::STRIP;
+  m_type = STRIP;
 }
 
 L0Muon::TileRegister::TileRegister(int bits, unsigned long pattern) : 
   L0Muon::Register(bits,pattern) {
-  m_type = L0Muon::STRIP;
+  //m_type = L0Muon::STRIP;
+  m_type = STRIP;
 }
     
 L0Muon::TileRegister::TileRegister(int bits, 
                                    unsigned long pattern,
 				   std::vector<MuonTileID> ids) : 
     L0Muon::Register(bits,pattern), m_ids(ids) {
-     m_type = L0Muon::STRIP; 
+  // m_type = L0Muon::STRIP; 
+  m_type = STRIP; 
+
 }    
     
 L0Muon::TileRegister::~TileRegister() {}    
@@ -66,9 +71,11 @@ void L0Muon::TileRegister::setType(int sta, int reg){
 
   
   if( slulayout.regionLayout(sta,reg).isDefined() ) {
-    m_type= L0Muon::STRIP ;
+    // m_type= L0Muon::STRIP ;
+    m_type= STRIP ;
   } else {
-    m_type =L0Muon::PAD ;
+    //m_type =L0Muon::PAD ;
+    m_type =PAD ;
   }
   
 }

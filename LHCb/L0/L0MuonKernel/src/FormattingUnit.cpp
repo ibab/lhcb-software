@@ -18,7 +18,8 @@ void L0Muon::FormattingUnit::makePads() {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
     
     std::vector<MuonTileID> tmp = itr->firedTiles();
-    if ( itr->type() == L0Muon::STRIP ){
+    //   if ( itr->type() == L0Muon::STRIP ){
+    if ( itr->type() == STRIP ){
       if ( ! tmp.empty() ) {
         
         int tmpsize = tmp.size();

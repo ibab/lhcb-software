@@ -82,19 +82,19 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
         //std::cout<< "\n TEST"  << *itlist ;
       }
       
-      char buf[80];
+      char buf[4096];
       char* format = "OL_%d_Q%d_%s_%d";
       sprintf(buf,format,sta,(*ilm).quarter(),puNode.name().c_str(),olcounter);
       
       TileRegister* reg = rfactory->createTileRegister(buf,bits);
           
       reg->setType("InputfieldOL");
-      reg->setType(sta, (*itlist).region());
-      
+      itlist = tlist.begin();
+      reg->setType(sta, (*itlist).region());      
       
       reg->setTileVector(tlist);     
       
-      char bufalias[80];
+      char bufalias[4096];
       char* alias = "OL_%d_(Q%d,R%d,%d,%d)";     
           
         sprintf(bufalias,alias,sta,(*ilm).quarter(),
@@ -176,7 +176,14 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
           
           TileRegister* regIn= rfactory->createTileRegister(buf,bits);
           regIn->setTileVector(listoftiles);
-          regIn->setType(sta, (*itiles).region());
+          itiles = tiles.begin();
+          if ( ! (*itiles).isMuonTile()){
+            regIn->setTypeMT(sta);
+          }
+          else {
+            regIn->setType(sta, (*itiles).region());
+          }
+          
           regIn->setType("InputfieldNeigh");
           addInputRegister(regIn);	
           m_cu->addInputRegister(regIn);
@@ -217,8 +224,14 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
         
           TileRegister* nreg= rfactory->createTileRegister(buf,bitsout);
           nreg->setTileVector(listoftilesout);
-          nreg->setType(sta, (*itiles).region());
-       
+
+          itiles = tiles.begin();
+          if ( ! (*itiles).isMuonTile()){
+            nreg->setTypeMT(sta);
+          } else {
+            nreg->setType(sta, (*itiles).region());
+          }
+          
           addOutputRegister(nreg);	  
           m_formatting->addOutputRegister(nreg);
         }

@@ -14,25 +14,41 @@ L0Muon::CablingUnit::~CablingUnit() {};
 
 void L0Muon::CablingUnit::makePads(MsgStream * log) {
   m_pads.clear();
-  dumpRegisters(log);
+  //dumpRegisters(log);
   std::map<std::string,Register*>::iterator ir;
+
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
+    *log << MSG::DEBUG << " " << ir->first << " " << itr->type() <<endreq;
+    boost::dynamic_bitset<> r = itr->getBitset();
+    *log << MSG::DEBUG << " reg size" << " " <<r.size() << endreq;
     std::vector<MuonTileID> tmp = itr->firedTiles();
-    if ( itr->type() == L0Muon::STRIP ){
-   
+    std::vector<MuonTileID>::iterator itmp;
+    for (itmp = tmp.begin(); itmp!= tmp.end(); itmp++){
+      *log << MSG::DEBUG << " " << *itmp << endreq;
+    }
+    
+    //if ( itr->type() == L0Muon::STRIP ){
+    if ( itr->type() == 0 ){
       if ( ! tmp.empty() ) {
         int tmpsize = tmp.size();
+        *log << MSG::DEBUG << "tmpsize" << " " << tmpsize << endreq;
         int i,j;
-      
+ 
+        for (itmp = tmp.begin(); itmp!= tmp.end(); itmp++){
+          *log << MSG::DEBUG << " " << *itmp << endreq;
+        }  
         for ( i = 0; i<(tmpsize-1); i++ ) {
           for ( j=i+1; j<tmpsize; j++) {
             MuonTileID ip = tmp[i];
+            *log << MSG::DEBUG << "make pads: Strip" << " " << tmp[i] << endreq;
             MuonTileID jp = tmp[j];
+            *log << MSG::DEBUG << "make pads:Strip" << " " << tmp[j] << endreq;
 
             MuonTileID ijp = ip.intercept(jp);
             if ( ijp.isValid() ) {
               m_pads.push_back(ijp);
+              *log << MSG::DEBUG << "insert in pad " << ijp << endreq;
               
             }
             
@@ -53,7 +69,8 @@ void L0Muon::CablingUnit::makePads(MsgStream * log) {
              iv != tmp.end();iv++){
           
           m_pads.push_back(*iv);
-          
+          *log << MSG::INFO << "insert in pad the pad " << *iv << endreq;
+    
         }
       }
     }
@@ -62,7 +79,6 @@ void L0Muon::CablingUnit::makePads(MsgStream * log) {
 }
 
 void L0Muon::CablingUnit::makeTower(MsgStream * log) {
-
   unsigned int nreg = m_pu.region();
   MuonLayout layout(48,8);
   MuonLayout pulayout(2,2);
@@ -74,7 +90,8 @@ void L0Muon::CablingUnit::makeTower(MsgStream * log) {
   std::vector<MuonTileID>::iterator ip ;
   std::vector<MuonTileID>::iterator itmp;
   for (ip=m_pads.begin(); ip != m_pads.end(); ip++) {
-
+    
+    *log << MSG::DEBUG << "pads" << " " << *ip << endreq;
     int nsta = ip->station();
     std::vector<MuonTileID> tmp;
     if ( ip->region() == nreg ) {
@@ -84,6 +101,8 @@ void L0Muon::CablingUnit::makeTower(MsgStream * log) {
     }
     
      for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
+
+
        MuonTileID puid = pulayout.contains(*itmp);
        std::pair<int, int>  yx =
          std::make_pair(itmp->nY()-refY+m_tower.maxYFoi(nsta),
@@ -92,7 +111,10 @@ void L0Muon::CablingUnit::makeTower(MsgStream * log) {
        m_tower.setBit(log, nsta,
                       itmp->nY()-refY+m_tower.maxYFoi(nsta),
                       itmp->nX()-refX+m_tower.maxXFoi(nsta));
-       
+       *log << MSG::DEBUG << "XY" << itmp->nX()-refX+m_tower.maxXFoi(nsta) <<
+         " " <<  itmp->nY()-refY+m_tower.maxYFoi(nsta) << " " << "sta" << 
+         " " << nsta << " " << *itmp << endreq;       
+     
        m_tower.setPadIdMap(nsta, yx, *ip);
      
      }
@@ -141,7 +163,7 @@ void L0Muon::CablingUnit::execute() {
   m_tower.processTower(m_pu, log);
   
   //if (m_tower.numberOfCand() > 0){
-    drawTower(log);
+  drawTower(log);
     //}
   m_cand = m_tower.puCandidates();
 
