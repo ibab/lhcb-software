@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.7 2001-11-23 16:09:56 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.cpp,v 1.8 2002-01-23 13:12:12 sponce Exp $
 
 // Include Files
 #include <limits.h>
@@ -81,6 +81,7 @@ XmlParserSvc::~XmlParserSvc() {
 //  Parse
 // -----------------------------------------------------------------------
 DOM_Document XmlParserSvc::parse (const char* fileName) {
+  MsgStream log (msgSvc(), "XmlParserSvc");
   // first look in the cache
   cacheType::iterator it = m_cache.find(fileName);
   // if something was there, update it and return the document
@@ -94,15 +95,19 @@ DOM_Document XmlParserSvc::parse (const char* fileName) {
     // resets it
     m_parser->reset();
     // parses the file
-    m_parser->parse(fileName);
-    MsgStream log (msgSvc(), "XmlParserSvc");
-    log << MSG::INFO << "parsing file " << fileName << endreq;
-    // if the document is not null, cache it
-    if (m_parser->getDocument() != 0) {
-      cacheItem (fileName, m_parser->getDocument());
+    try {
+      m_parser->parse(fileName);
+      log << MSG::INFO << "parsing file " << fileName << endreq;
+      // if the document is not null, cache it
+      if (m_parser->getDocument() != 0) {
+        cacheItem (fileName, m_parser->getDocument());
+      }
+      // returns the parsed document
+      return m_parser->getDocument();
+    } catch (XMLPlatformUtilsException e) {
+      log << MSG::ERROR << "Unable to find file " << fileName
+          << " !" << endreq;      
     }
-    // returns the parsed document
-    return m_parser->getDocument();
   }
   // no way to parse the file, returns an empty document
   DOM_Document null_result;

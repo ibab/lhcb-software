@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.30 2002-01-22 15:24:38 sponce Exp $ 
+# $Id: requirements,v 1.31 2002-01-23 13:12:08 sponce Exp $ 
 # =============================================================================
 package DetDesc
-version v9r2
+version v9r3
 
 branches DetDesc doc cmt src
 
