@@ -3,7 +3,9 @@ package manager: Marco Cattaneo
 
 !======================== EventSys v14r3 2003-10-06 ========================
 ! 2003-10-06 - Marco Cattaneo
- - Add DAQEvent v1r1, use EventKernel v3r0, HltEvent v4r0, RichEvent v5r1
+ - Add DAQEvent v1r1
+ - Use EventKernel v3r0, HltEvent v4r0, RichEvent v5r1, DbCnv v7r2, Event v3r5,
+       L0Event v13r3
 
 !======================== EventSys v14r2 2003-07-16 ========================
 ! 2003-07-16 - Marco Cattaneo

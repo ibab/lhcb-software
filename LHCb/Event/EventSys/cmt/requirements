@@ -6,7 +6,7 @@ branches doc cmt
 # LHCb Event libraries
 
 use EventKernel	v3r0	Event
-use Event	v3r4	Event
+use Event	v3r5	Event
 use VeloEvent	v12r1	Event
 use ITEvent	v12r1	Event
 use OTEvent	v12r1	Event
@@ -14,11 +14,11 @@ use TrEvent	v12r1	Event
 use RichEvent	v5r1	Event
 use CaloEvent	v12r0	Event
 use MuonEvent	v2r4	Event
-use L0Event	v13r2	Event
+use L0Event	v13r3	Event
 use L1Event	v11r7	Event
 use PhysEvent	v7r7	Event
 use HltEvent	v4r0	Event
 use DAQEvent	v1r1	Event
-use DbCnv	v7r1	Event
+use DbCnv	v7r2	Event
 
 
