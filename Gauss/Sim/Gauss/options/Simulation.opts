@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.18 2002-09-16 12:17:41 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.19 2002-10-16 12:21:06 witoldp Exp $ 
 // ============================================================================
 
 ApplicationMgr.DLLs += 
@@ -43,7 +43,7 @@ Kine.StreamItems              +=
 
 // configuration of geometry "Geo" data stream
 
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v249r0.xml";
  
 Geo.ExecuteOnce          = true ;  
 Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
@@ -51,10 +51,10 @@ Geo.DataProviderSvcName  = "DetectorDataSvc" ;
 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
-Geo.StreamItems         += { "/dd/Geometry/Rich1/Rich1Surfaces" };
-Geo.StreamItems         += { "/dd/Geometry/Rich1/RichHPDSurfaces" };
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
+//Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
+//Geo.StreamItems         += { "/dd/Geometry/Rich1/Rich1Surfaces" };
+//Geo.StreamItems         += { "/dd/Geometry/Rich1/RichHPDSurfaces" };
 Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Tracker"   } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Muon"  };
