@@ -5,9 +5,8 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-06-10 =======================
-! 2004-06-10 - Marco Cattaneo
- - New packages: GaudiAlg v7r3 added temporarily, until released with Gaudi
+!======================= LHCbSys v16r0 2004-06-11 =======================
+! 2004-06-11 - Marco Cattaneo
  - Modified packages: DetSys v5r7, STDet v1r2, MuonTools v3r7,
                       AssociatorsSys v1r14, ITAssociators v2r9, MCTools v1r6
 
@@ -23,11 +22,12 @@
  - In MCTools v1r6:
    . Add IMCParticleSelector tool
 
-!====================== LHCbSys v15r12 2004-06-10 =======================
+!====================== LHCbSys v15r12 2004-06-11 =======================
 Built on branch v15r11b
+Built against Gaudi v14r6
 
-! 2004-06-10 - Marco Cattaneo
- - Modified packages: EventSys v17r11, Event v4r4, DAQEvent v4r3
+! 2004-06-11 - Marco Cattaneo
+ - Modified packages: EventSys v17r11, Event v4r4, DAQEvent v4r3, TrgEvent v3r0
 
  - In EventSys v17r11:
    . Add check on completeness of LCG dictionaries, executed when building
@@ -39,6 +39,9 @@ Built on branch v15r11b
 
  - In DAQEvent v4r3:
    . Add missing LCG dictionaries for STL containers used in L1Event, RawEvent
+
+ - In TrgEvent v3r0:
+   . Add new class L1Score to store L1Decision result and monitoring info
 
 !====================== LHCbSys v15r11 2004-05-27 =======================
 ! 2004-05-27 - Marco Cattaneo
