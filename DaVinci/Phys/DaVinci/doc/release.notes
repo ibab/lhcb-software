@@ -3,6 +3,20 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v8r3>2003-06-27 DaVinci v8r4</A></H1><PRE>
+ - New features:
+   . 
+
+ - Bug fixes or clean up:
+   . Fix memory leak when using the same associator twice as done for
+     CaloPIDs in ChargedProtoPAlg
+     .. use LHCb v11r13
+   . Release tools in finalization to please valgrind
+     .. use GlobalReco v4r0p2
+     .. use PrimVtx v2r0p1
+     .. use DaVinciTools v8r1p
+     .. use PhysSelelection v6r0p1   
+
 </PRE><H1><A NAME=v8r2>2003-06-18 DaVinci v8r2</A></H1><PRE>
  - New features:
   . New FlavourTagging setup
