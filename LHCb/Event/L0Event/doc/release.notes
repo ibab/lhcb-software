@@ -1,6 +1,9 @@
-$Id: release.notes,v 1.26 2003-01-08 16:11:41 cattanem Exp $
+$Id: release.notes,v 1.27 2003-06-16 13:10:01 sponce Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+! 2003-06-16 - Sebastien Ponce
+ - use more recent GaudiObjDesc
 
 !======================== L0Event v13r1 2003-01-08 ========================
 ! 2002-12-15 - Olivier Callot
