@@ -1,16 +1,11 @@
-// $Id: MuonIDFOI.cpp,v 1.8 2003-05-22 15:04:26 gcorti Exp $
+// $Id: MuonIDFOI.cpp,v 1.9 2004-03-08 16:05:20 cattanem Exp $
 // Include files
 #include <cstdio>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartRef.h"
 #include "GaudiKernel/SmartDataPtr.h"
-
-// WHY do I have to include this by hand?
-#include "GaudiKernel/IDataProviderSvc.h" 
-#include "GaudiKernel/IToolSvc.h"
 
 // From event packages
 #include "Event/MuonID.h"
@@ -224,9 +219,10 @@ StatusCode MuonIDFOI::execute() {
   TrStoredTracks::const_iterator iTrack;
   for( iTrack = trTracks->begin() ; iTrack != trTracks->end() ; iTrack++){
     // in the clone killed output we want only 
-    // unqiue && (matched || forward || upstream)
+    // unqiue && (matched || forward || downstream)
     if((*iTrack)->unique()  && 
-       ((*iTrack)->forward() || (*iTrack)->match() || (*iTrack)->upstream())){
+       ((*iTrack)->forward() || (*iTrack)->match() 
+                             || (*iTrack)->isDownstream())){
 
       // do the track extrapolations
       StatusCode sc = trackExtrapolate(*iTrack);
