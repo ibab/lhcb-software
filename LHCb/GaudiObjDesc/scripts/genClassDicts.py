@@ -334,12 +334,12 @@ class genClassDicts(importUtils.importUtils):
               for e in self.generatedEnums :
                 if p.find(e) != -1 : p = p.replace(e,'int')
             par = (';').join([(' ').join(x.split()[:-1]) for x in par])
-          mod = ''
+          mod = 'PUBLIC'
           if constAtt['explicit'] == 'TRUE' : mod = 'EXPLICIT'
           s += self.genMethod(clName, constAtt['desc'], clName, par, '%s_constructor_%d'%(clName,self.cNum), mod) 
           self.cNum += 1
       if not self.hasDefaultConstructor :
-        s += self.genMethod(clName,'default constructor', clName, '', '%s_constructor_%d' % ( clName, self.cNum ))
+        s += self.genMethod(clName,'default constructor', clName, '', '%s_constructor_%d' % ( clName, self.cNum ), 'PUBLIC')
     return s
 #--------------------------------------------------------------------------------
   def genDestructor(self,godClass):
@@ -349,7 +349,7 @@ class genClassDicts(importUtils.importUtils):
     if godClass.has_key('destructor'):
       dest = godClass['destructor'][0]
       destAtt = dest['attrs']
-      s += self.genMethod('~'+clName,destAtt['desc'],'','',clName+'_destructor')
+      s += self.genMethod('~'+clName,destAtt['desc'],'','',clName+'_destructor','PUBLIC')
     else :
       s += self.genMethod('~'+clName,'default destructor','','',clName+'_destructor','PUBLIC | VIRTUAL')
     return s
@@ -401,7 +401,7 @@ class genClassDicts(importUtils.importUtils):
             for e in self.generatedEnums :
               if p.find(e) != -1 : p = p.replace(e,'int')
           par = (';').join([(' ').join(x.split()[:-1]) for x in par])
-        mod = []
+        mod = [metAtt['access']]
         if metAtt['const']   == 'TRUE' : mod.append('CONST')
         if metAtt['virtual'] == 'TRUE' : mod.append('VIRTUAL')
         if metAtt['static']  == 'TRUE' : mod.append('STATIC')
