@@ -1,6 +1,7 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+!======================== EvtGen v5r0 ===============================
 ! 2004-01-12 - Patrick Robbe
  - synchronization with BaBar version alpha-00-11-07 (december 2003
    release)
