@@ -1,0 +1,13 @@
+!-----------------------------------------------------------------------------
+! Package          : Sim/GaussPhysics
+! Responsible	   : Witold Pokorski
+! Purpose          : collection of physics constructors for Gauss
+!-----------------------------------------------------------------------------
+	
+
+
+!=========================== GaussPhysics v1r0 2002-12-11 ========================
+! 2002-12-11 - Witek Pokorski
+  - New package: contains physics constructors for Gauss 
+
+!==============================================================================

@@ -1,0 +1,22 @@
+# =============================================================================
+package GaussPhysics
+version v1r0
+
+# =============== package structure ===========================================
+branches          cmt src doc
+
+# =============== explicit dependencies =======================================  
+use GaussTools    v5r*     Sim
+
+# ============== component library ============================================
+library          GaussPhysics      *.cpp   \
+                                   *.cc
+
+# ============== standard includes ============================================
+include_dirs     $(GAUSSPHYSICSROOT)	
+        
+# ============== standard patterns ===========================================
+apply_pattern    component_library library=GaussPhysics
+# ============================================================================
+# The END 
+# ============================================================================
