@@ -1,6 +1,10 @@
 ! Package     : Associators
 ! Responsible : Rutger Hierck
 
+!======================= Associators v2r3 2004-12-12 =======================
+! 2004-02-12 - Marco Cattaneo
+ - Use VeloEvent v14r*
+
 !======================= Associators v2r2 2003-12-16 =======================
 ! 2003-12-16 - Marco Cattaneo
  - Move to Gaudi v14
