@@ -2,6 +2,7 @@
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 
+!========================== ParticleMaker v1r1 2004-09-16 ===================
 ! 2004-08-25 - P. Koppenburg
  - cmt/requirements
    . Do not export header files

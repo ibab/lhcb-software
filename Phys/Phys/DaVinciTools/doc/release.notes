@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.133 2004-09-07 07:04:46 pkoppenb Exp $
+! $Id: release.notes,v 1.134 2004-09-16 12:54:50 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciTools v11r1 2004-09-16 ===================
 ! 2004-09-02 - P. Koppenburg
   - src/DecayFinder.*
-    . Make it a GaudiTool
-    
+    . Make it a GaudiTool   
 ! 2004-08-25 - P. Koppenburg
   - cmt/requirements
    . Do not export header files

@@ -2,21 +2,19 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciKernel v1r1 2004-09-16 ===================
 ! 2004-09-08 - P. Koppenburg
  - IParticleFilter
    . Remove statistics
  - PhysDesktop.*
    . Warn only once when output location is changed
-
 ! 2004-09-06 - P. Koppenburg
  - (I)PhysDesktop.*
    . Add getOutputLocation() method
    . Add saveDesktop(ParticleVector&,VertexVector& ) method to IPhysDesktop
-
 ! 2004-09-03 - P. Koppenburg
  - (I)PhysDesktop.*
    . Remove getInput method.
-
 ! 2004-08-25 - P. Koppenburg
   Move src/* to src/component and Lib/* to src/
    
