@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.58 2005-02-02 07:33:46 cattanem Exp $
+! $Id: release.notes,v 1.59 2005-03-11 13:39:18 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
+
+!======================== PhysEvent v8r9 2005-03-11 ========================
+! 2005-03-11 - Marco Cattaneo
+ - Add Kernel directory, for Interfaces closely related to PhysEvent classes
+ - Move IParticleTransporter.h to Kernel directory, from DaVinciKernel package 
 
 !======================== PhysEvent v8r8 2005-02-02 ========================
 ! 2005-02-02 - Marco Cattaneo
