@@ -4,6 +4,7 @@ Purpose: LHCb specific Kernel classes
 
 !====================== LHCbKernel v4r5 2004-03-25 ========================
 ! 2004-03-26 - Marco Cattaneo
+ - Moved ITDataFunctor.h from ITAlgorithms
  - Add Kernel/LHCbConstants.h, containing constants of general LHCb interest,
    previously in ITAlgorithms/ITGeneral.h
  - Put in LHCbMath.h some Tolerance parameters previously in ITGeneral.h
