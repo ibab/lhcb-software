@@ -40,7 +40,7 @@ ApplicationMgr.DLLs += { "TrAssociators" };
 ApplicationMgr.DLLs += { "DaVinciAssociators" };
 #include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
 
-// ProtoParticles creation
+// ProtoParticles creation: charged and neutrals
 ApplicationMgr.DLLs += { "KsReco" };
 ApplicationMgr.DLLs += { "GlobalReco", "CaloReco", "CaloPIDs" };
 #include "$GLOBALRECOROOT/options/GlobalReco.opts"
@@ -50,14 +50,10 @@ ApplicationMgr.DLLs += { "GlobalReco", "CaloReco", "CaloPIDs" };
 #include "$CALOPIDSOPTS/CaloPIDs.opts"
 #pragma print on
 
-// Primary vertex
-ApplicationMgr.DLLs += { "PrimVtx" };
-#include "$PRIMVTXROOT/options/PrimVtx.opts"
-
 // Physics packages and necessary dependent packages
 ApplicationMgr.DLLs += { "DaVinciTools", "TrExtrapolator" };
 #include "$PHYSSELSYSROOT/options/PhysSelSys.opts"
-ApplicationMgr.DLLs += { "FlavourTagging" };
+//ApplicationMgr.DLLs += { "FlavourTagging" };
 //    ... for physics check on MC data
 ApplicationMgr.DLLs += { "MCTools" };
 ApplicationMgr.DLLs += { "DaVinciMCTools", "DaVinciEff" };
@@ -83,9 +79,5 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 
 // Print Frequency
 EventSelector.PrintFreq  = 1;
-
-// Algorithms to ALWAYS EXECUTE
-ApplicationMgr.TopAlg =  { "ChargedProtoPAlg" };
-ApplicationMgr.TopAlg += { "PrimVtxFinder" };
 
 //**************************************************************

@@ -1,0 +1,12 @@
+//***********************************************************************
+// Specific options for DaVinci when reading data produced with 
+// Brunel v18r0  (dbase v254r1) for Robustness tests
+// ------------ "LHCb light detector for 2003 Robustness production -----------
+
+// DataBase specific configurations
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v254r1-Apr03.xml";
+MagneticFieldSvc.FieldMapFile = "$LHCb_release_area/DBASE/SICB/dbase/v254r1/cdf/field043.cdf";
+ParticlePropertySvc.ParticlePropertiesFile = "$LHCb_release_area/DBASE/SICB/dbase/v254r1/cdf/particle.cdf";
+
+// Velo 45 degrees sectors
+DeVelo.Design = 1;

@@ -5,15 +5,90 @@
 // to be executed
 //==============================================================
 // Standard Gaudi configuration and additional DLLs are in
-// DaVinciCommon while database dependent configurations are in
-// DaVinciXXX.opts. Choose the appropriate one.
+// DaVinciCommon. 
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-// For data produced with Brunel v13r1 or v14r2
-//#include "$DAVINCIROOT/options/DaVinciv248r4.opts"
-// For data produced with Brunel v16r4
-// #include "$DAVINCIROOT/options/DaVinciv253r0.opts"
-// For data produced with Brunel v17r4
+
+// Database dependent configurations are in DaVinciXXX.opts.
+// Choose the appropriate one.
+//     For Summer and November 2002 data.
+//      Produced with Brunel v13r1 or v14r2
+//#include "$DAVINCIROOT/options/DaVinciv248r4.opts" 
+//     For Christmas 2002 data.
+//      Produced with Brunel v16r4
+//#include "$DAVINCIROOT/options/DaVinciv253r0.opts"
+//     For TDR (Winter 2003) data
+//      Produced with Brunel v17r4
 #include "$DAVINCIROOT/options/DaVinciv254r1.opts"
+//     For Robustness test data (April 2003) data
+//      Produced with Brunel v18r0
+//#include "$DAVINCIROOT/options/DaVinciv254r1-Apr03.opts"
+
+//--------------------------------------------------------------
+// Trigger 
+//--------------------------------------------------------------
+// Rerun L0 trigger decision (tuning as in Winter 2003 data)
+//#include "$DAVINCIROOT/options/L0.opts"
+// Rerun L1 trigger decisions (tuning as in Winter 2003 data)
+//#include "$DAVINCIROOT/options/L1Decision.opts"
+
+//--------------------------------------------------------------
+// DaVinci Global Reconstruction Algorithms
+// VERY IMPORTANT:
+//   ChargedProtoPAlg and PrimVtxFinder are executed in
+//   DaVinciReco and MUST not be executed again
+// REMEMBER:
+//   to make Neutral ProtoParticles for channels with neutrals
+// REMEMBER:
+//   to read from DST or to make Kshorts with upstream tracks
+//--------------------------------------------------------------
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+//--- Recalibration for gammas (only for Brunel v13r1 data)
+//#include "$DAVINCIROOT/options/CaloReCalibration.opts"
+ 
+//--- Neutral ProtoParticles
+//    (only available algorithm when reading data produced with Brunel v13r1
+//    or v14r2, it can be used with any version of OODST data)
+//ApplicationMgr.TopAlg += { "NeutralPPCreator/NeutralProtoPAlg" };
+//    (when reading data produced with Brunel v16r4 or v17r4)
+//ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" };
+
+//--- Ks->pi+pi- with Upstream tracks
+//    Read V0 as produced by Brunel and transform them into Particles
+//ApplicationMgr.TopAlg += { "V0MakerAlg" };
+//#include "$DAVINCITOOLSROOT/options/V0MakerAlg.opts"
+//    Redo Ks in DaVinci as done in Brunel
+//ApplicationMgr.TopAlg += { "UpstreamProtoPAlg", "SelectKs2pipi" };
+//#include "$KSRECOROOT/options/KsReco.opts"
+
+//--------------------------------------------------------------
+// Other additional algorithms to be executed, from public 
+// or private code.
+// >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
+//--------------------------------------------------------------
+
+//--- Uncomment the following line to run the example UserAlgorithm
+//ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
+
+ApplicationMgr.DLLs   += { "DaVinciChecks" };
+ApplicationMgr.TopAlg += { "ChargedProtoPAnalysis" };
+
+//----------------------------------------------------------------
+// The various selections algorithms have each a DVDecayName.opts
+// file in their package that can be given as full options of the
+// DaVinci executable
+//----------------------------------------------------------------
+
+// Private algorithm options can be listed here or included from
+// here. 
+// Options for algorithms and tools can be added here to overwrite
+// any of the default options
+// Examples are in the options subdirectory of the packages
+
+//----------------------------------------------------------------
+// Switch on to produce a miniDST file
+//----------------------------------------------------------------
+//#include "$DAVINCIROOT/options/DaVinciMiniDst.opts"
 
 //--------------------------------------------------------------
 // Histogram persistency 
@@ -34,81 +109,12 @@ NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
 //NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
-// Optional DaVinci Algorithms
-// VERY IMPORTANT:
-// ChargedProtoPAlg and PrimVtxFinder are executed in
-// DaVinciCommon and MUST not be executed again
-//Ya
-//--------------------------------------------------------------
-// Rerun L0 trigger decision (tuning as in Winter 2003 data)
-//#include "$DAVINCIROOT/options/L0.opts"
-// Rerun L1 trigger decisions (tuning as in Winter 2003 data)
-//#include "$DAVINCIROOT/options/L1Decision.opts"
-
-// Recalibration for gammas (only for Brunel v13r1 data)
-//#include "$DAVINCIROOT/options/CaloReCalibration.opts"
-
-// Neutral ProtoParticles
-// (only available algorithm when reading data produced with Brunel v13r1
-//  or v14r2, it can be used with any version of OODST data)
-//ApplicationMgr.TopAlg += { "NeutralPPCreator/NeutralProtoPAlg" };
-// (when reading data produced with Brunel v16r4 or v17r4)
-//ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" };
-
-
-//--------------------------------------------------------------
-// Other additional algorithms to be executed, from public 
-// or private code.
-// >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
-//--------------------------------------------------------------
-
-// The various selections algorithms compatible with OODST are 
-// listed here
-// EACH COMPLETE SELECTION HAS TO BE EXECUTED BY ITSELF
-//--------------------------------------------------------------
-
-// Ks->pi+pi- with Upstream tracks
-//----------------------------------------------------------------
-// Read V0 as produced by Brunel and transform them into Particles
-//  ApplicationMgr.TopAlg += { "V0MakerAlg" };
-//  #include "$DAVINCITOOLSROOT/options/V0MakerAlg.opts"
-// Redo Ks in DaVinci as done in Brunel
-//  ApplicationMgr.TopAlg += { "UpstreamProtoPAlg", "SelectKs2pipi" };
-//  #include "$KSRECOROOT/options/KsReco.opts"
-
-
-//----------------------------------------------------------------
-// Channels with Neutrals
-// REMEMBER TO MAKE NEUTRAL PROTOPARTICLES and calibrate the calorimeter
-// for Brunel v13r1 data
-//----------------------------------------------------------------
-
-
-
-//----------------------------------------------------------------
-
-// Uncomment the following line to run the example UserAlgorithm
-//  ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
-
-//----------------------------------------------------------------
-
-// Private algorithm options can be listed here or included from
-// here. 
-// Options for algorithms and tools can be added here to overwrite
-// any of the default options
-// Examples are in the options subdirectory of the packages
-
-//----------------------------------------------------------------
-// Switch on to produce a miniDST file
-//----------------------------------------------------------------
-//  #include "$DAVINCIROOT/options/DaVinciMiniDst.opts"
-
-//--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 //--------------------------------------------------------------
 MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
+ChargedProtoPAlg.OutputLevel            = 3;
 
 // Modify Message Format to print algorithm name with 40 characters
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
@@ -120,8 +126,6 @@ ApplicationMgr.EvtMax    = 500;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
    
-// Test data
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
-
 //################################################################
 
