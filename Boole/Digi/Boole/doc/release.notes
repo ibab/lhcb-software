@@ -3,19 +3,19 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v6r2>2004-09-14 Boole v6r2</A></H1><PRE>
+</PRE><H1><A NAME=v6r2>2004-09-20 Boole v6r2</A></H1><PRE>
+This version uses Gaudi v15r2 and LHCb v16r2. It needs CMT v1r16p*.
+It can process DC04 data
 
 - Modified functionality
   . New test input data files taken from DC04 (v200402.opts)
 
 - New tuning
-  . Use new Pt kick value in L0 Muon trigger (L0MuonTrigger v2r2)
+  . Use new Pt kick value in L0 Muon trigger (L0MuonTrigger v2r2, L0DU v6r7p2)
 
 - Bug fixes
   . Workaround for core dump on exit() (GaudiPoolDb v1r8p1)
   . Various fixes for memory leaks (GaudiSvc v12r2p1, GaudiPoolDb v1r8p1)
-  . Workaround for new CMT feature that setup.csh does not set xxROOT
-    enviroment variables if called with -tag option (Boole.job, valgrind.job)
 
 </PRE><H1><A NAME=v6r1>2004-07-26 Boole v6r1</A></H1><PRE>
 This version uses Gaudi v15r1, needs CMT v1r16. It can process DC04 data
