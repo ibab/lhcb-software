@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!===================== GlobalReco v4r0 2003-06-03 ===========================
+! 2003-06-02 - Gloria CORTI
+ - src/ChargedProtoPAlg.cpp
+   . remove stl:: in front of log and fabs to compile on windows
+
 ! 2003-05-30 - Gloria Corti
  - src/ChargedProtoPAlg.h, ChargedProtoPAlg.cpp
    . introduce combined particle ID and fill all DLL values for separate
