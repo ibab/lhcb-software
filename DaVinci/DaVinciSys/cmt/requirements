@@ -75,7 +75,7 @@ use  DaVinciTest        	v5r2     Phys
 use  Stripping          	v1r5p1   Tools
 
 # Physics selections
-use  PhysSelSys			v7r10    PhysSel
+use  PhysSelSys			v7r11    PhysSel
 
 use  B2DstarX2D02hh     	v2r1p1   PhysSel
 use  B2HH              	 	v2r4p1   PhysSel
