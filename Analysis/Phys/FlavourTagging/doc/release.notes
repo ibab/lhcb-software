@@ -4,6 +4,7 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+!==================== FlavourTagging v4r5 2003-06-18 ===================
 ! 2003-06-16 - Olivier Dormond
  - src/CategoryTaggingTool.h, src/CategoryTaggingTool.cpp
    . Activated the vertex charge code path.

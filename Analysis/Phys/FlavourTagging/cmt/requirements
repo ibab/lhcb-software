@@ -24,7 +24,7 @@ include_dirs           $(FLAVOURTAGGINGROOT)
 use DaVinciTools    v8r*  Phys
 use DaVinciMCTools  v5r*  Phys
 use MCTools         v1r*  Phys
-use L0Event	        v13r*	Event
+use L0Event	    v13r* Event
 use L1Event         v11r* Event
 
 #============================================================================
