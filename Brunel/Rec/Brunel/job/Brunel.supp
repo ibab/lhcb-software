@@ -143,20 +143,20 @@
 }
 
 # L1Decision problems
-{
-  L1Decision/v2r1/VeloTrackTool
-  Cond
-  fun:select2D__15L1VeloTrackTool*
-  fun:execute__6Level1
-}
+#{
+#  L1Decision/v2r1/VeloTrackTool
+#  Cond
+#  fun:select2D__15L1VeloTrackTool*
+#  fun:execute__6Level1
+#}
 
-{
-  L1Decision/v2r1/L1VeloTT
-  Value8
-  fun:f_matchTT__9L1Velo2TT*
-  fun:matchTT__9L1Velo2TT*
-  fun:execute__6Level1
-}
+#{
+#  L1Decision/v2r1/L1VeloTT
+#  Value8
+#  fun:f_matchTT__9L1Velo2TT*
+#  fun:matchTT__9L1Velo2TT*
+#  fun:execute__6Level1
+#}
 
 # Random numbers usage (CLHEP 1.8.0.0)
 {
@@ -272,7 +272,7 @@
   fun:evaluate__Q27HepTool9EvaluatorPCc
 }
 
-# Root 3.05.04 errors
+# Root 3.05.04 errors (reported, known to Fons...)
 {
   Root/longest_match
   Cond
