@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.7 2002-07-15 15:17:16 phicharp Exp $
+! $Id: release.notes,v 1.8 2002-07-17 07:49:21 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
-!================= DaVinciAssociators v2r0 2002-06-15 ======================
+!================= DaVinciAssociators v2r0 2002-06-17 ======================
+! 2002-07-17 - Philippe Charpentier
+ - Transform Particle2MCLinks in order to use the ProtoParticle2MC associator
+ - Base class AsctAlgorithm in order to implement standard Properties and a
+    templated method for setting up a Private auxiliary associator
+    retrievePrivateAsct(...) which defines privat tool, alg and Location.
+    This avoid interference with default or user defined associators of same
+    type
+
 ! 2002-07-15 - Philippe Charpentier
  - Property "InputData" of associators now a vector of strings, allowing
     more than one input location

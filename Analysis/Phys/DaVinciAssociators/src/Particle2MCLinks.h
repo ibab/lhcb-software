@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.h,v 1.2 2002-07-12 15:27:34 phicharp Exp $
+// $Id: Particle2MCLinks.h,v 1.3 2002-07-17 07:49:21 phicharp Exp $
 #ifndef Particle2MCLinks_H 
 #define Particle2MCLinks_H 1
 
@@ -12,6 +12,8 @@
 
 // local
 #include "DaVinciAssociators/Particle2MCAsct.h"
+#include "DaVinciAssociators/ProtoParticle2MCAsct.h"
+#include "DaVinciAssociators/AsctAlgorithm.h"
 
 /** @class Particle2MCLinks Particle2MCLinks.h
  *  
@@ -19,7 +21,7 @@
  *  @author Philippe Charpentier
  *  @date   10/05/2002
  */
-class Particle2MCLinks : public Algorithm {
+class Particle2MCLinks : public AsctAlgorithm {
   friend AlgFactory<Particle2MCLinks>;
   
 public:
@@ -32,13 +34,10 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  /// Location of table in TES
-  std::string outputTable() { return m_outputTable; }
-  
 protected:
 
 private:
-  std::vector<std::string> m_inputData;  ///< location of Particles to associate
-  std::string m_outputTable; ///< location of relations table  
+  ProtoParticle2MCAsct::IAsct* m_pAsctProto;
+  
 };
 #endif // Particle2MCLinks_H
