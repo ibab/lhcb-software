@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.3 2005-01-14 13:38:19 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.4 2005-02-01 16:55:34 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -79,7 +79,7 @@ StatusCode TrueMCFilterCriterion::initialize( ){
 //=============================================================================
 bool TrueMCFilterCriterion::isSatisfied( const Particle* const & part ) {
  
-  debug() << "TrueMCFilterCriterion" << endreq ;
+  verbose() << "TrueMCFilterCriterion" << endreq ;
   // associated MC particle
   MCParticle *MC = m_pAsct->associatedFrom( part );
   if (!MC) {
@@ -92,11 +92,7 @@ bool TrueMCFilterCriterion::isSatisfied( const Particle* const & part ) {
     debug() << "Associated to " << MC->particleID().pid() << " " << MC->momentum() << endreq ;
   }
   if (findMCParticle(MC)) {
-    debug() << "This is a signal particle" << endreq ;
-    debug() << "Particle      " << part->particleID().pid() << " " << part->momentum() 
-           << endreq ;    
-    debug() << "Associated to " << MC->particleID().pid() << " " << MC->momentum() << endreq ;
-    
+    debug() << "which is a signal particle" << endreq ;    
     return (!m_filterOut) ; // false if one wants to kill all, true else
   }
   else return m_filterOut ;     // true if one wants to kill all, false else   
@@ -142,7 +138,7 @@ bool TrueMCFilterCriterion::findMCParticle( const MCParticle* MC ) {
      
   }
   
-  debug() << "Found " << mclist.size() << " MC particles from true decay" << endreq ;
+  verbose() << "Found " << mclist.size() << " MC particles from true decay" << endreq ;
   if (mclist.empty()) return false ;
 
   verbose() << "Looking for " << MC->particleID().pid() << " " << MC->momentum() << endreq ;  

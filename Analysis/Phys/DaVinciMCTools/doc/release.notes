@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.43 2005-01-18 08:31:09 pkoppenb Exp $
+! $Id: release.notes,v 1.44 2005-02-01 16:55:34 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
+! 2005-02-01 - P. Koppenburg
+  - src/TrueMCFilterCriterion.cpp
+    . Remove redundant debug() information
 !========================== DaVinciMCTools v5r8 2005-01-18 ===================
 ! 2005-01-12 - P. Koppenburg
   - src/IsBEvent.{cpp,h}
