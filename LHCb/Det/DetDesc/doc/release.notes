@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.138 2003-04-16 08:06:08 cattanem Exp $ 
+! $Id: release.notes,v 1.139 2003-04-23 10:06:48 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2003-04-23 - Sebastien Ponce
+ - restructuration of the DetectorElement and condition objects in order to
+   share code. The notion of ValidDataObject and ParamValidDataObject as well
+   as the ICondition ans IParamSet interfaces were introduced.
 
 !======================== DetDesc v11r9 2003-04-15 ========================
 ! 2003-04-15 - Sebastien Ponce

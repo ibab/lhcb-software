@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.cpp,v 1.3 2001-12-14 17:57:05 andreav Exp $
+//$Id: ValidDataObject.cpp,v 1.4 2003-04-23 10:06:50 sponce Exp $
 #include <string> 
 
 #include "DetDesc/ValidDataObject.h"
@@ -75,7 +75,9 @@ void ValidDataObject::update ( ValidDataObject& obj )
 ValidDataObject::~ValidDataObject() 
 {
   delete m_validSince;
+  m_validSince = 0;
   delete m_validTill;
+  m_validTill = 0;
 };
 
 //---------------------------------------------------------------------------

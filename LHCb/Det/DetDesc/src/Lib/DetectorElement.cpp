@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.21 2003-04-15 09:56:43 sponce Exp $ 
+// $Id: DetectorElement.cpp,v 1.22 2003-04-23 10:06:49 sponce Exp $ 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -27,53 +27,38 @@
  * @author Vanya Belyaev Ivan.Belyaev@itep.ru
  * @author Sebastien Ponce
  */
-
 DetectorElement::DetectorElement( const std::string&   /*name*/    ,
                                   const ITime&         validSince  ,   
                                   const ITime&         validTill   )
-  : DataObject           (         )
+  : ParamValidDataObject      ( validSince, validTill )
   , m_de_iGeometry       (    0    ) 
   , m_de_iAlignment      (    0    ) 
   , m_de_iCalibration    (    0    )   
   , m_de_iReadOut        (    0    ) 
   , m_de_iSlowControl    (    0    ) 
   , m_de_iFastControl    (    0    ) 
-  //
   , m_de_childrensLoaded (  false  )
   , m_de_childrens       (         ) 
-  //
-  , m_de_validSince      (    0    ) 
-  , m_de_validTill       (    0    )
   , m_services           (    0    )
 {
-  ///
-  m_de_validSince = new TimePoint( validSince ) ;
-  m_de_validTill  = new TimePoint( validTill  ) ; 
   m_services = DetDesc::services();
 };
-///
+
 DetectorElement::DetectorElement( const std::string&   /* name */ )
-  : DataObject           (         )
+  : ParamValidDataObject           (         )
   , m_de_iGeometry       (    0    ) 
   , m_de_iAlignment      (    0    ) 
   , m_de_iCalibration    (    0    )   
   , m_de_iReadOut        (    0    ) 
   , m_de_iSlowControl    (    0    ) 
   , m_de_iFastControl    (    0    ) 
-  //
   , m_de_childrensLoaded (  false  )
-  , m_de_childrens       (         ) 
-  //
-  , m_de_validSince      (    0    ) 
-  , m_de_validTill       (    0    )
+  , m_de_childrens       (         )
   , m_services           (    0    )
 {
-  ///
-  m_de_validSince = new TimePoint( time_absolutepast   ) ;
-  m_de_validTill  = new TimePoint( time_absolutefuture ) ; 
   m_services = DetDesc::services();
 };
-////
+
 DetectorElement::~DetectorElement()
 {
   // release geometry
@@ -94,13 +79,6 @@ DetectorElement::~DetectorElement()
   // release fastcontrol
   if ( 0 != m_de_iFastControl ) 
     { delete m_de_iFastControl; m_de_iFastControl = 0; }
-  // release validity
-  if ( 0 != m_de_validSince ) {
-    delete m_de_validSince; m_de_validSince = 0;
-  }
-  if ( 0 != m_de_validTill ) {
-    delete m_de_validTill; m_de_validTill = 0;
-  }
   // release services
   m_services->release();
 };
@@ -127,28 +105,35 @@ IDetectorElement*  DetectorElement::parentIDetectorElement() const {
   return 0;
 };
 
-///
+unsigned long DetectorElement::addRef  () {
+  return ParamValidDataObject::addRef();
+}
+
+unsigned long DetectorElement::release () {
+  return ParamValidDataObject::release();
+}
+
 StatusCode 
 DetectorElement::queryInterface( const InterfaceID& ID , void** ppI )
 {
-  if ( 0 == ppI ) { return StatusCode::FAILURE; }
+  if (0 == ppI) {
+    return StatusCode::FAILURE;
+  }
   *ppI = 0 ;
-  if      ( IDetectorElement::interfaceID()  == ID ) 
-    { *ppI = static_cast<IDetectorElement*> ( this ) ; } 
-  else if ( ISerialize::       interfaceID() == ID )
-    { *ppI = static_cast<ISerialize*>       ( this ) ; } 
-  else if ( IInterface::       interfaceID() == ID ) 
-    { *ppI = static_cast<IInterface*>       ( this ) ; } 
-  else                                                  
-    { return StatusCode::FAILURE                     ; }
+  if (IDetectorElement::interfaceID() == ID) {
+    *ppI = static_cast<IDetectorElement*> (this);
+  } else if (IInterface::interfaceID() == ID) {
+    *ppI = static_cast<IInterface*> (this);
+  } else if (ISerialize::interfaceID() == ID) {
+    *ppI = static_cast<ISerialize*> (this);
+  } else {
+    return StatusCode::FAILURE;
+  }
   /// add the reference 
   addRef();
   ///
   return StatusCode::SUCCESS;
 };
-///
-unsigned long DetectorElement::addRef  () { return DataObject::addRef(); }
-unsigned long DetectorElement::release () { return DataObject::release(); }
 
 ///
 // bool DetectorElement::acceptInspector( IInspector* pInspector ) 
@@ -176,7 +161,7 @@ StreamBuffer& DetectorElement::serialize( StreamBuffer& sb )
 {
   reset() ; 
   DataObject::serialize( sb ) ; 
-  if( 0 == m_de_iGeometry ) 
+  if (0 == m_de_iGeometry) 
     { m_de_iGeometry = GeoInfo::createGeometryInfo( this ) ; } 
   sb >> *m_de_iGeometry ;
   return sb;
@@ -296,47 +281,6 @@ DetectorElement::createFastControl (const std::string& condition) {
     m_de_iFastControl = new FastControlInfo( this, condition );
   return fastControl();
 }
-
-/// functions from IValidity /
-const ITime&  DetectorElement::validSince ()
-{
-  if ( 0 != m_de_validSince ){  setValiditySince( time_absolutepast ); }
-  return *m_de_validSince; 
-};
-//
-const ITime&  DetectorElement::validTill  () 
-{
-  if ( 0 != m_de_validTill ) { setValidityTill( time_absolutefuture ); }
-  return *m_de_validTill; 
-};
-//
-void DetectorElement::setValidity (const ITime& Since, const ITime& Till)
-{
-  setValiditySince( Since );
-  setValidityTill ( Till  );
-};
-//
-void          DetectorElement::setValiditySince  ( const ITime& Since ) 
-{
-  if( 0 != m_de_validSince ) { delete m_de_validSince; m_de_validSince = 0 ;} 
-  m_de_validSince = new(std::nothrow)  TimePoint( Since );   
-};
-//
-void          DetectorElement::setValidityTill  ( const ITime& Till ) 
-{
-  if( 0 != m_de_validTill ){ delete m_de_validTill; m_de_validTill = 0 ;} 
-  m_de_validTill = new(std::nothrow)  TimePoint( Till );   
-};
-//
-StatusCode    DetectorElement::updateValidity    ()
-{
-  validSince();
-  validTill ();
-  //
-  //  not yet implemented in a proper way 
-  //
-  return StatusCode::SUCCESS;
-};
 //
 StatusCode DetectorElement::initialize() {
   // this is a default implementation that does nothing.
@@ -345,286 +289,8 @@ StatusCode DetectorElement::initialize() {
 }
 
 
+//----------------------------------------------------------------------------
 
-/// addUserParameter
-
-void DetectorElement::addUserParameter (std::string name,
-                                        std::string type,
-                                        std::string comment,
-                                        std::string value,
-                                        double d_value) {
-  UserParam userParam;
-  userParam.type = type;
-  userParam.comment = comment;
-  userParam.value = value;
-  userParam.d_value = d_value;
-  userParam.i_value = 0; // this is never used
-  userParam.kind = DOUBLE;
-  m_userParameters[name] = userParam;
-}
-  
-
-/// addUserParameter
-
-void DetectorElement::addUserParameter (std::string name,
-                                        std::string type,
-                                        std::string comment,
-                                        std::string value,
-                                        double d_value,
-                                        int i_value) {
-  UserParam userParam;
-  userParam.type = type;
-  userParam.comment = comment;
-  userParam.value = value;
-  userParam.d_value = d_value;
-  userParam.i_value = i_value;
-  userParam.kind = INT;
-  m_userParameters[name] = userParam;
-}
-  
-
-/// addUserParameter
-
-void DetectorElement::addUserParameter (std::string name,
-                                        std::string type,
-                                        std::string comment,
-                                        std::string value) {
-  UserParam userParam;
-  userParam.type = type;
-  userParam.comment = comment;
-  userParam.value = value;
-  userParam.d_value = 0.0; // this is never used
-  userParam.i_value = 0; // this is never used
-  userParam.kind = OTHER;
-  m_userParameters[name] = userParam;
-}
-  
-
-/// addUserParameterVector
-
-void DetectorElement::addUserParameterVector (std::string name,
-                                              std::string type,
-                                              std::string comment,
-                                              std::vector<std::string> value,
-                                              std::vector<double> d_value) {
-  UserParamVector userParamVector;
-  userParamVector.type = type;
-  userParamVector.comment = comment;
-  userParamVector.value = value;
-  userParamVector.d_value = d_value;
-  // userParamVector.i_value is is never used
-  userParamVector.kind = DOUBLE;
-  m_userParameterVectors[name] = userParamVector;
-}
-
-
-/// addUserParameterVector
-
-void DetectorElement::addUserParameterVector (std::string name,
-                                              std::string type,
-                                              std::string comment,
-                                              std::vector<std::string> value,
-                                              std::vector<double> d_value,
-                                              std::vector<int> i_value) {
-  UserParamVector userParamVector;
-  userParamVector.type = type;
-  userParamVector.comment = comment;
-  userParamVector.value = value;
-  userParamVector.d_value = d_value;
-  userParamVector.i_value = i_value;
-  userParamVector.kind = INT;
-  m_userParameterVectors[name] = userParamVector;
-}
-
-
-/// addUserParameterVector
-
-void DetectorElement::addUserParameterVector (std::string name,
-                                              std::string type,
-                                              std::string comment,
-                                              std::vector<std::string> value) {
-  UserParamVector userParamVector;
-  userParamVector.type = type;
-  userParamVector.comment = comment;
-  userParamVector.value = value;
-  // userParamVector.d_value is is never used
-  // userParamVector.i_value is is never used
-  userParamVector.kind = OTHER;
-  m_userParameterVectors[name] = userParamVector;
-}
-
-
-/// userParameterType
-
-std::string DetectorElement::userParameterType (std::string name) {
-  if (m_userParameters.find(name) == m_userParameters.end()) {
-    throw DetectorElementException("No userParameter with this name : \""
-                                   + name + "\" !");
-  }
-  return m_userParameters[name].type;
-}
-  
-
-/// userParameterComment
-
-std::string DetectorElement::userParameterComment (std::string name) {
-  if (m_userParameters.find(name) == m_userParameters.end()) {
-    throw DetectorElementException("No userParameter with this name : \""
-                                   + name + "\" !");
-  }
-  return m_userParameters[name].comment;
-}
-  
-
-/// userParameterAsString
-
-std::string DetectorElement::userParameterAsString (std::string name) {
-  if (m_userParameters.find(name) == m_userParameters.end()) {
-    throw DetectorElementException("No userParameter with this name : \""
-                                   + name + "\" !");
-  }
-  return m_userParameters[name].value;
-}
-  
-
-/// userParameterAsInt
-
-int DetectorElement::userParameterAsInt (std::string name) {
-  if (m_userParameters.find(name) == m_userParameters.end()) {
-    throw DetectorElementException("No userParameter with this name : \""
-                                   + name + "\" !");
-  }
-  if (m_userParameters[name].kind != INT) {
-    throw DetectorElementException("userParameter " + name +
-                                   " does not have an integer value.");
-  }
-  return m_userParameters[name].i_value;
-}
-
-
-/// userParameterAsDouble
-
-double DetectorElement::userParameterAsDouble (std::string name) {
-  if (m_userParameters.find(name) == m_userParameters.end()) {
-    throw DetectorElementException("No userParameter with this name : \""
-                                   + name + "\" !");
-  }
-  if (m_userParameters[name].kind != DOUBLE &&
-      m_userParameters[name].kind != INT ) {
-    throw DetectorElementException("userParameter " + name +
-                                   " does not have a numerical value.");
-  }
-  return m_userParameters[name].d_value;
-}
-  
-
-/// userParameter
-
-double DetectorElement::userParameter (std::string name) {
-  return userParameterAsDouble (name);
-}  
-  
-
-/// userParameterVectorType
-
-std::string DetectorElement::userParameterVectorType (std::string name) {
-  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
-    throw DetectorElementException("No userParameterVector with this name : \""
-                                   + name + "\" !");
-  }
-  return m_userParameterVectors[name].type;
-}
-  
-
-/// userParameterVectorComment
-
-std::string
-DetectorElement::userParameterVectorComment (std::string name) {
-  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
-    throw DetectorElementException("No userParameterVector with this name : \""
-                                   + name + "\" !");
-  }
-  return m_userParameterVectors[name].comment;
-}
-  
-
-/// userParameterVectorAsString
-
-std::vector<std::string>
-DetectorElement::userParameterVectorAsString (std::string name) {
-  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
-    throw DetectorElementException("No userParameterVector with this name : \""
-                                   + name + "\" !");
-  }
-  return m_userParameterVectors[name].value;
-}
-  
-
-/// userParameterVectorAsInt
-
-std::vector<int>
-DetectorElement::userParameterVectorAsInt (std::string name) {
-  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
-    throw DetectorElementException("No userParameterVector with this name : \""
-                                   + name + "\" !");
-  }
-  if (m_userParameterVectors[name].kind != INT) {
-    throw DetectorElementException("userParameterVector " + name +
-                                   " does not have integer values.");
-  }
-  return m_userParameterVectors[name].i_value;
-}
-
-
-/// userParameterVectorAsDouble
-
-std::vector<double>
-DetectorElement::userParameterVectorAsDouble (std::string name) {
-  if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
-    throw DetectorElementException("No userParameterVector with this name : \""
-                                   + name + "\" !");
-  }
-  if (m_userParameters[name].kind != DOUBLE &&
-      m_userParameters[name].kind != INT ) {
-    throw DetectorElementException("userParameterVector " + name +
-                                   " does not have numerical values.");
-  }
-  return m_userParameterVectors[name].d_value;
-}
-
-
-/// userParameterVector
-
-std::vector<double>
-DetectorElement::userParameterVector (std::string name) {
-  return userParameterVectorAsDouble (name);
-}
-
-
-/// userParameters
-
-std::vector<std::string> DetectorElement::userParameters() {
-  std::vector<std::string> result;
-  for (UserParamMap::iterator it = m_userParameters.begin();
-       m_userParameters.end() != it;
-       ++it) {
-    result.push_back(it->first);
-  }
-  return result;
-}
-   
-
-/// userParameterVectors
-
-std::vector<std::string> DetectorElement::userParameterVectors() {
-  std::vector<std::string> result;
-  for (UserParamVectorMap::iterator it = m_userParameterVectors.begin();
-       m_userParameterVectors.end() != it;
-       ++it) {
-    result.push_back(it->first);
-  }
-  return result;
-}
 /// (reference to) container of pointers to child detector elements ///////////
 IDetectorElement::IDEContainer&
 DetectorElement::childIDetectorElements() const {

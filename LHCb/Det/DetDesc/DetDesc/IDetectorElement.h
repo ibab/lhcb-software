@@ -1,36 +1,15 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.10  2001/11/20 15:22:20  sponce
-/// Lots of changes here :
-///    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
-///    is the removal of the class XmlAddress
-///    - centralization of address creations in conversion services, as suggested
-///    by the new architecture
-///    - add a parseString method on the XMLParserSvc. This allows to parse XML
-///    directly from a string
-///    - use of the new Assembly objects in the XML converters
-///    - update of the converters to handle the definition of detelem inside
-///    detelems, without using detelemrefs
-///    - take care of a possible indexing of detelems and parametrized detelems.
-///    The numbering is given by adding :<digits> to the name of the element.
-///    - add support for polycones in the converters
-///    - add code convention compliance to many files
-///
-/// Revision 1.9  2001/08/10 16:41:28  ibelyaev
-/// modifitcations in IDetectorElement and related classes
-/// 
-/// ===========================================================================
+// $ID:  $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1
+
 // Include files
 #include <iostream>
 #include <string>
-//
+
+// Framework include files
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/ISerialize.h"
-#include "GaudiKernel/IInspectable.h"
+#include "DetDesc/IParamSet.h"
 
 // Forward declarations
 class IGeometryInfo;
@@ -51,11 +30,13 @@ static const InterfaceID IID_IDetectorElement( 156 , 2 , 0 );
  *   the node in DetectorDescription tree.
  *  Just delegates all questions to right guys.
  *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @author Sebastien Ponce
+ *  @author Vanya Belyaev
  */
 
-class IDetectorElement: virtual public IInterface ,
-                        virtual public ISerialize
+class IDetectorElement : virtual public IInterface,
+                         virtual public ISerialize,
+                         virtual public IParamSet
 {
   ///
  public: 
@@ -64,7 +45,7 @@ class IDetectorElement: virtual public IInterface ,
   ///
  public:
 
-  /** retrieve the uniqie interface identifier 
+  /** retrieve the unique interface identifier 
    *  @return the unique interface identifier 
    */
   static const InterfaceID& interfaceID() { return IID_IDetectorElement; }
@@ -171,7 +152,7 @@ class IDetectorElement: virtual public IInterface ,
   virtual       IDetectorElement* reset()       = 0 ; 
   
   /// destructor
-  virtual ~IDetectorElement(){};
+  virtual ~IDetectorElement() {};
 
   /**
    * This method initializes the detector element. It should be overridden
@@ -179,131 +160,6 @@ class IDetectorElement: virtual public IInterface ,
    * user code easily in the initialization of a detector element.
    */
   virtual StatusCode initialize() = 0;
-
-  /**
-   * this gets the type of a parameter.
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter
-   * @return its type
-   */
-  virtual std::string userParameterType (std::string name) = 0;
-  
-  /**
-   * this gets the comment of a parameter
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter
-   * @return its comment
-   */
-  virtual std::string userParameterComment (std::string name) = 0;
-  
-  /**
-   * this gets the value of a parameter, as a string
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter
-   * @return its value, as a string
-   */
-  virtual std::string userParameterAsString (std::string name) = 0;
-  
-  /**
-   * this gets the value of a parameter, as an int
-   * If the value is not an int, it raises a DetectorElementException.
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter
-   * @return its value, as a string
-   */
-  virtual int userParameterAsInt (std::string name) = 0;
-  
-  /**
-   * this gets the value of a parameter, as a double
-   * If the value is not a number, it raises a DetectorElementException.
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter
-   * @return its value, as a double
-   */
-  virtual double userParameterAsDouble (std::string name) = 0;
-  
-  /**
-   * this gets the value of the parameter as a double. This actually is an
-   * equivalent of userParameterAsDouble.
-   *  If the value is not a double, it raises a DetectorElementException.
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter
-   * @return its value, as a double
-   */
-  virtual double userParameter (std::string name) = 0;
-  
-  /**
-   * this gets the type of a parameter vector
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter vector
-   * @return its type
-   */
-  virtual std::string userParameterVectorType (std::string name) = 0;
-  
-  /**
-   * this gets the comment of a parameter vector
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter vector
-   * @return its comment
-   */
-  virtual std::string userParameterVectorComment (std::string name) = 0;
-  
-  /**
-   * this gets the value of a parameter vector, as a vector of string
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter vector
-   * @return its value, as a string
-   */
-  virtual std::vector<std::string>
-  userParameterVectorAsString (std::string name) = 0;
-  
-  /**
-   * this gets the value of a parameter vector, as a vector of int
-   * If the parameter vector is not made of ints, it raises a
-   * DetectorElementException.
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter vector
-   * @return its value, as a string
-   */
-  virtual std::vector<int>
-  userParameterVectorAsInt (std::string name) = 0;
-  
-  /**
-   * this gets the value of a parameter as a vector of double.
-   * If the parameter vector is not made of numbers, it raises a
-   * DetectorElementException.
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter
-   * @return its value, as a vector of double
-   */
-  virtual std::vector<double>
-  userParameterVectorAsDouble (std::string name) = 0;
-  
-  /**
-   * this gets the value of a parameter as a vector of double. This actually is
-   * an equivalent of userParameterVectorAsDouble.
-   * If the parameter vector is not made of doubles, it raises a
-   * DetectorElementException.
-   * If this parameter does not exist, it raises a DetectorElementException.
-   * @param name the name of the parameter
-   * @return its value, as a vector of double
-   */
-  virtual std::vector<double> userParameterVector (std::string name) = 0;
-
-  /**
-   * this returns the list of existing userParameters as a vector of their
-   * names
-   * @return a list of userParameter names
-   */
-  virtual std::vector<std::string> userParameters() = 0;
-  
-  /**
-   * this returns the list of existing userParameterVectors as a vector of
-   * their names
-   * @return a list of userParameter names
-   */
-  virtual std::vector<std::string> userParameterVectors() = 0;  
-
 };
 ///
 inline std::ostream& operator<<( std::ostream&           os , 

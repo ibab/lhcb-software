@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.icpp,v 1.8 2001-11-20 15:22:19 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.icpp,v 1.9 2003-04-23 10:06:41 sponce Exp $
 
 #ifndef       DETDESC_DETECTORELEMENT_ICPP 
 #define       DETDESC_DETECTORELEMENT_ICPP  1 
@@ -179,11 +179,6 @@ inline DetectorElement::operator       IFastControl& ()
           "DetectorElement::fastcontrol is not available!");
   return *m_de_iFastControl ; 
 };
-//  from IValidity Interface: /////////////////////////////////////////////////
-inline bool DetectorElement::isValid () {
-  return validSince() < validTill() ;};
-inline bool DetectorElement::isValid (const ITime& t) {
-  return validSince() < t &&  t < validTill() ;};
 /// assertion /////////////////////////////////////////////////////////////////
 inline void DetectorElement::Assert (bool assertion,
                                      const std::string& assertionName) const {
