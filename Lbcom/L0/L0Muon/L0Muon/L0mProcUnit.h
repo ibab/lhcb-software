@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mProcUnit.h,v 1.2 2001-07-09 19:38:47 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mProcUnit.h,v 1.3 2001-07-10 10:20:15 atsareg Exp $
 
 #ifndef L0MUON_L0MPROCUNIT_H     
 #define L0MUON_L0MPROCUNIT_H     1 
@@ -68,7 +68,7 @@ private:
     // Pt precision
     double m_precision;
     // Number of bits for Pt encoding
-    int m_bits;
+    int m_bins;
     // PU status
     int m_status;
        

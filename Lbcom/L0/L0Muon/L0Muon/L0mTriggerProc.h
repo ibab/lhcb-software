@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mTriggerProc.h,v 1.2 2001-07-09 19:34:28 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mTriggerProc.h,v 1.3 2001-07-10 10:20:16 atsareg Exp $
 
 #ifndef L0MUON_L0MTRIGGERPROC_H
 #define L0MUON_L0MTRIGGERPROC_H 1
@@ -43,7 +43,9 @@ protected:
   std::vector<int> m_extraM1;          // parameters for extrapolation to M1
   std::string m_outputCandidates; // candidates location in the transient store
   std::string m_inputPads;
-  std::string m_mode;
+  std::string m_mode;  
+  double m_precision;    // Bin width for Pt value encoding
+  int m_bins;            // Number of bins for Pt value encoding
   bool m_limitedY;                // flag to use limitedY mode
   
   ObjectVector<L0mTower>* m_towers;
