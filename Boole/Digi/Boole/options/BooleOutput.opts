@@ -1,0 +1,28 @@
+// This file sets up the Boole output tape content
+// -----------------------------------------------
+ApplicationMgr.DLLs += { "GaudiDb", "GaudiRootDb", "DbCnv" };
+
+// Activate the conversion service 
+ApplicationMgr.ExtSvc += { "DbEventCnvSvc/RootEvtCnvSvc" };
+// Declare the persistency type for the conversion service 
+RootEvtCnvSvc.DbType = "ROOT" ;
+// Declare the conversion service to the Persistency Service 
+EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
+
+// Instantiate phase to filter containers and create relations
+ApplicationMgr.TopAlg += { "ProcessPhase/Output" };
+Output.DetectorList = { "Asct", "Filters" };
+ApplicationMgr.DLLs += { "VeloAssociators" };
+OutputAsctSeq.Members += { "VeloCluster2MCHitAlg" };
+ApplicationMgr.DLLs += { "OTAssociators" };
+OutputAsctSeq.Members += { "OTDigit2MCHitAlg" };
+ApplicationMgr.DLLs += { "MuonAssociators" };
+
+// Filter the MCParticles/MCVertices after everything else
+ApplicationMgr.DLLs += { "MCTools" };
+
+// Define the output data content
+ApplicationMgr.OutStream += { "DigiWriter" };
+#include "$STDOPTS/DigiContent.opts"
+// Remove objects from output depending on event type
+OutputFiltersSeq.Members += { "MCEvTypeFilter" };

@@ -1,0 +1,148 @@
+// Default Boole job Options.
+//
+// This file is included by the LHCBDBASE specific options files.
+//
+// This file defines, sequences and configures the algorithms to be executed
+// You only need to modify it if you want to add or remove algorithms
+// !! Do not modify position or order of included files !!
+//==============================================================
+#include "$STDOPTIONS"
+
+ApplicationMgr.DLLs += { "BrunelAlgs", "GaudiAlg" };
+EventDataSvc.ForceLeaves = true;
+EventDataSvc.RootCLID    =    1;
+
+//--------------------------------------------------------------
+// Phases to be executed
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg += { "BrunelSicbInit",
+                           "BrunelInitialisation",
+                           "ProcessPhase/Digi",
+                           "ProcessPhase/Trigger",
+                           "BrunelFinalisation" };
+ApplicationMgr.TopAlg += { "ProcessPhase/Moni" }; 
+#include "$BOOLEOPTS/BooleMoni.opts"
+//--------------------------------------------------------------
+// Detectors to be processed in each phase
+//--------------------------------------------------------------
+Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
+Trigger.DetectorList = { "L0", "L1" };
+
+//--------------------------------------------------------------
+// Geometry and magnetic field
+//--------------------------------------------------------------
+#include "$STDOPTS/DetDesc.opts"
+ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
+ApplicationMgr.DLLs += { "RichDet" };
+ApplicationMgr.DLLs += { "MuonDet" };
+ApplicationMgr.DLLs += { "ITDet" };
+ApplicationMgr.DLLs += { "OTDet" };
+ApplicationMgr.DLLs += { "VeloDet" };
+ApplicationMgr.DLLs += { "Magnet" };
+ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+
+//--------------------------------------------------------------
+// Sicb converters
+//--------------------------------------------------------------
+ApplicationMgr.DLLs += { "CaloSicbCnv" };
+ApplicationMgr.DLLs += { "RiSicbGeom", "RiSicbCnv" };
+ApplicationMgr.DLLs += { "MuonSicbCnv" };
+ApplicationMgr.DLLs += { "VSicbCnv" };
+
+//--------------------------------------------------------------
+// SpillOver and LHC background
+//--------------------------------------------------------------
+DigiSpillOverSeq.Members = { "SpillOverAlg" };
+#include "$SICBCNVROOT/options/Brunel.opts" // To be modified
+
+ApplicationMgr.DLLs += { "DigiAlg" };
+DigiBkgSeq.Members += { "MergeEventAlg/LHCbkgAlg" };
+#include "$DIGIALGROOT/options/LHCBackground.opts"
+
+//--------------------------------------------------------------
+// Subdetector algorithms
+//--------------------------------------------------------------
+// L0 trigger
+ApplicationMgr.DLLs += { "L0Calo" };
+ApplicationMgr.DLLs += { "PuVeto" };
+ApplicationMgr.DLLs += { "L0DU" };
+ApplicationMgr.DLLs += { "MuonTools" };
+TriggerL0Seq.Members += { "L0CaloDigit", "L0CaloAlg/L0Calo" };
+TriggerL0Seq.Members += { "L0mTrigger/L0Muon" };
+#include "$L0MUONROOT/options/Brunel.opts"  // To be modified
+TriggerL0Seq.Members += { "PuVetoAlg" };
+TriggerL0Seq.Members += { "DecisionUnit" };
+
+// L1 trigger
+ApplicationMgr.DLLs += { "L1VeloTrack" };
+TriggerL1Seq.Members += { "ITDigitToL1", "OTDigitToL1" };
+ApplicationMgr.DLLs += { "L1Decision" };
+TriggerL1Seq.Members += { "Level1" };
+Level1.minimizeL1ExeTime = false;
+
+// Trigger truth relation tables (used by monitoring and for DST)
+TriggerL0Seq.Members += { "L0CaloToMCParticleAsct" };
+TriggerL0Seq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
+L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
+L0CaloFullTruth.OutputTable    = "Rec/Relations/L0CaloFullCandidates";
+
+TriggerL1Seq.Members += { "L1Track2dTruth" };
+TriggerL1Seq.Members += { "L1Track3dTruth" };
+
+// Calorimeter digitisation and reconstruction
+ApplicationMgr.DLLs += { "CaloDigit", "CaloEvent" };
+DigiCALOSeq.Members = {
+  "CaloSignalAlg/SpdSignal",
+  "CaloSignalAlg/PrsSignal",
+  "CaloSignalAlg/EcalSignal",
+  "CaloSignalAlg/HcalSignal",
+  "CaloDigitAlg/SpdDigit",
+  "CaloDigitAlg/PrsDigit",
+  "CaloDigitAlg/EcalDigit",
+  "CaloDigitAlg/HcalDigit",
+  "CaloZSupAlg/SpdZSup",
+  "CaloZSupAlg/PrsZSup",
+  "CaloZSupAlg/EcalZSup",
+  "CaloZSupAlg/HcalZSup"
+};
+#include "$CALOASSOCIATORSOPTS/Brunel.opts"
+
+// Rich Fortran digitisation and OO digits creator 
+DigiRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
+DigiRICHSeq.Members += { "RichMCPhotoHitsToSicbCnv" };
+DigiRICHSeq.Members += { "BrunelDigiRICH", "RichMCDigitToDigitAlg" };
+
+// Muon digitisation
+ApplicationMgr.DLLs += { "MuonAlgs", "MuonBackground" };
+DigiMUONSeq.Members += { "MuonBackground/MuonLowEnergy" };
+#include "$MUONBACKGROUNDROOT/options/MuonLowEnergy.opts"
+DigiMUONSeq.Members += { "MuonBackground/MuonFlatSpillover" };
+#include "$MUONBACKGROUNDROOT/options/MuonFlatSpillover.opts"
+DigiMUONSeq.Members += { "MuonDigitization" };
+
+// Inner tracker digitisation
+ApplicationMgr.DLLs   += { "ITAlgorithms" };
+DigiITSeq.Members += { "MCITDepositCreator", "MCITDigitCreator" };
+DigiITSeq.Members += { "ITDigitCreator" };
+#include "$ITALGORITHMSROOT/options/itDigi.opts"
+
+// Outer tracker digitisation
+ApplicationMgr.DLLs   += { "OTAlgorithms" };
+#include "$OTALGORITHMSROOT/options/otDigi.opts"
+DigiOTSeq.Members += { "MCOTDepositCreator",
+                       "MCOTDigitCreator",
+                       "OTDigitCreator" };
+
+// Velo digitisation and clustering (also for PuVeto and trigger)
+ApplicationMgr.DLLs += { "VeloAlgorithms" };
+DigiVELOSeq.Members += { "VeloSim" };
+DigiVELOSeq.Members += { "VeloDataProcessor" };
+DigiVELOSeq.Members += { "VeloClusterMaker" };
+DigiVELOSeq.Members += { "VeloFEToL1" };
+// 45 degree sectors
+DeVelo.Design = 1;
+
+// Modify printout defaults
+#include "$BOOLEOPTS/BooleMessage.opts"
+
+// Should add a timing normalisation, as in TimingAlg

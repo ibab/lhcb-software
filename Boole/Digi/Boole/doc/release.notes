@@ -1,0 +1,20 @@
+<PRE>
+Package: Digi/Boole
+Package Coordinator: Marco Cattaneo
+Purpose: LHCb Digitization program
+
+</PRE><H1><A NAME=v1r0>2003-07-10 Boole v1r0</A></H1><PRE>
+
+First version of the LHCb digitization program.
+  - Replaces the digitization and trigger phases of Brunel
+  - Produces output to be reconstructed by Brunel v20r0
+
+This verson is based on digitization+trigger phases of Brunel v19r1.
+
+Changes relative to Brunel v19r1
+--------------------------------
+
+Bug fixes:
+ - Correct a bug with rotation of TT stereo layers (ITDet v1r5)
+
+</PRE>

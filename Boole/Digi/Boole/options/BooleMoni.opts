@@ -1,0 +1,66 @@
+// Modify this file to change the default Boole monitoring. 
+//--------------------------------------------------------------
+
+//--------------------------------------------------------------
+// Choice of persistency technology. Default is Hbook, move comments for ROOT
+// Hbook persistency (use HBookCnv v* in requirements).
+#include "$STDOPTS/Hbook.opts"
+// ROOT persistency (use RootHistCnv v* in requirements).
+//#include "$STDOPTS/RootHist.opts"
+
+//--------------------------------------------------------------
+// Detectors to monitor
+//--------------------------------------------------------------
+Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0", "L1" };
+
+//--------------------------------------------------------------
+// Monitoring algorithms
+//--------------------------------------------------------------
+
+// Trigger
+ApplicationMgr.DLLs += { "Associators" };
+MoniL0Seq.Members += { "L0CaloMonit" };
+MoniL0Seq.Members += { "L0Monitor" };
+MoniL1Seq.Members += { "L1TrackMonitor" };
+//MoniL1Seq.Members += { "Level1Check" }; // Uses Cluster2MCP associators
+#include "$L1VELOTRACKROOT/options/L1Track3dToMCP.opts"
+
+// Velo
+MoniVELOSeq.Members += { "VeloMonitor" };
+#include "$VELOALGORITHMSROOT/options/VeloMonitor.opts"
+
+// IT digitisation
+ApplicationMgr.DLLs += {"ITCheckers","ITAssociators"};
+#include "$ITASSOCIATORSROOT/options/ITAssociators.opts"
+MoniITSeq.Members += { "MCITDepositChecker" };
+MoniITSeq.Members += { "MCITDigitChecker" };
+MoniITSeq.Members += { "ITDigitChecker" };
+
+// OT digitisation
+BrunelMoniOTSeq.Members += { "MCOTDepositMonitor" };
+BrunelMoniOTSeq.Members += { "OTDigitMonitor" };
+
+// Rich
+MoniRICHSeq.Members += { "RichDigitCnvVerifier" }; // SICB digit Cnv checks
+ApplicationMgr.DLLs += { "RichDigiQC" };
+#include "$RICHDIGIQCOPTS/DigiQC_Brunel.opts" // Fix phase name
+MoniRICHSeq.Members += { "RichDigitMonitor/RiDigiMon" }; // Remove after fix
+
+// Calorimeters
+ApplicationMgr.DLLs += { "CaloMonitor" };
+MoniCALOSeq.Members += { "CaloDigitMonitor/SpdMoni" };
+MoniCALOSeq.Members += { "CaloDigitMonitor/PrsMoni" };
+MoniCALOSeq.Members += { "CaloDigitMonitor/EcalMoni" };
+MoniCALOSeq.Members += { "CaloDigitMonitor/HcalMoni" };
+#include "$CALOMONITOROPTS/Moni.opts"
+
+// Framework monitoring
+EventSelector_1.doHistos = true;
+
+//--------------------------------------------------------------
+// Set up some profiling. Enable/Disable setting lines below to true/false
+//--------------------------------------------------------------
+AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+NameAuditor.Enable   = false;
+ChronoAuditor.Enable = true;
+MemoryAuditor.Enable = false;

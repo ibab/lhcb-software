@@ -1,0 +1,5 @@
+// Default monitoring options for production jobs
+Moni.DetectorList  = { "VELO", "IT", "L0", "L1", "RICH" };
+
+// Produce only the summary table
+L1TrackMonitor.Histograms = false;

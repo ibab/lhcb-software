@@ -1,0 +1,113 @@
+package Boole
+version v1r0
+
+branches doc cmt job options
+
+#-- CMT and GaudiPolicy
+use GaudiPolicy v5r11p2
+
+#-- External libraries (as defined in GAUDI_v12r0)
+use ExternalLibs	v4r0p1
+use AIDA		v3r22p2
+use CLHEP		v2r1800p0
+use HTL			v2r1321p0
+use NAGC		v2r50p0		
+use XERCES		v2r220p0
+use CERNLIB 		v2r2002p0
+use ROOT 		v2r30504p0
+
+#-- Gaudi libraries (from GAUDI_v12r0)
+use GaudiKernel		v13r4p1
+use GaudiSvc 		v10r2
+use GaudiAlg 		v6r4
+use GaudiAud 		v6r2
+use GaudiNagC 		v7r3
+use GaudiDb 		v8r4
+use GaudiRootDb 	v9r2
+use GaudiIntrospection 	v4r6
+use GaudiObjDesc 	v5r0
+use HbookCnv 		v13r4
+
+#-- Database
+use XmlDDDB	v17r0	Det
+
+#-- LHCb libraries (from LHCB_v12r2)
+use LHCb	v12r2
+
+#-> SICB basic libraries (from LHCB_v12r2)
+use SICBSys	v1r6	SICB
+
+#-- BrunelSys v19r1 packages
+
+# Brunel utilities
+use BrunelSicb          v4r1    Rec
+use BrunelAlgs          v2r2	Rec
+
+# Phys utilities
+use MCTools		v1r1p1	Phys
+
+# LHC background
+use DigiAlg		v1r0p1	Digi
+
+# L0 trigger
+use L0Calo              v7r1	L0
+use L0Muon              v6r5p1	L0
+use PuVeto              v5r4	L0
+use L0DU                v6r5    L0
+
+# L1 trigger
+use L1VeloTrack         v5r2	L1
+use L1Decision		v2r1	L1
+
+# Calorimeter
+use CaloInterfaces      v2r4  	Calo
+use CaloUtils           v4r5	Calo
+use CaloMonitor         v1r4  	Calo
+use CaloDigit           v1r3	Calo
+
+# Velo
+use VeloAlgorithms      v2r7  	Velo
+
+# Inner Tracker
+use ITAlgorithms        v12r10	IT
+use ITCheckers          v1r3  	IT
+
+# Outer Tracker
+use OTAlgorithms        v13r0 	OT
+
+# Muon
+use MuonAlgs            v4r1    Muon
+use MuonBackground	v1r2	Muon
+use MuonUtils		v1r0	Muon
+
+# Rich
+use RichDigiQC	        v1r0  	Rich
+use RichUtils		v3r2  	Rich
+use RichDetTools	v2r2  	Rich
+
+# SICBDST packages
+use recevt              v3r5  	SICB
+use recrich             v7r4  	SICB
+
+#
+#===== build Boole =========================
+application Boole ../src/BooleMain.cpp \
+                   $(BRUNELSICBROOT)/src/Objs/*.F
+# ========================= set macros ============================
+
+macro Boole_linkopts    "$(application_linkopts)"
+
+macro_append Boole_linkopts " "\
+                Linux        " -g -Wl,--start-group "\
+                Linuxdbx     " -g -Wl,--start-group "
+
+#== Set the Boole version = v*10000 + r*100 + p  ==
+macro_append fflags " -DBrunelVersion=10000 " \
+           VisualC  " /DBrunelVersion=10000 "
+
+apply_pattern application_path
+
+# Set the default paths for Boole options and SICBDST data cards.
+set BOOLEOPTS  $(BOOLEROOT)/options
+set SICBCARDS  ${BOOLEOPTS}/Boole.cards
+

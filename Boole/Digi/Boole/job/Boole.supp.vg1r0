@@ -1,0 +1,285 @@
+##----------------------------------------------------------------------##
+
+# Error suppression file for Boole v1r0, valgrind 1.0.x with gcc 2.95.2
+
+# Format of this file is:
+# {
+#     name_of_suppression
+#     kind: one of Param Value1 Value2 Value4 Value8
+#                   Free Addr1 Addr2 Addr4 Addr8
+#                   Cond (previously known as Value0)
+#     (if Param: name of system call param, if Free: name of free-ing fn)
+#     caller0 name, or /name/of/so/file.so
+#     caller1 name, or ditto
+#     (optionally: caller2 name)
+#     (optionally: caller3 name)
+# }
+
+# Pthread bugs (gcc 2.95.2 on rh7.3, Gaudi v11r4-v12r0) 
+{
+  pthread_error/__pthread_mutex_destroy
+  PThread
+  fun:pthread_error
+  fun:__pthread_mutex_destroy
+}
+
+# glibc/Gaudi problems (gcc 2.95.2 on rh7.3, Gaudi v11r4-v12r0) 
+{
+  strlen/ld-2.2.5.so
+  Cond
+  fun:strlen
+  obj:/lib/i686/libc-2.2.5.so
+}
+
+{
+  strchr/ld-2.2.5.so
+  Cond
+  fun:strchr
+  obj:/lib/i686/libc-2.2.5.so
+}
+
+{
+  _dl_relocate_object_internal/ld-2.2.5.so
+  Cond
+  fun:_dl_relocate_object_internal
+  obj:/lib/i686/libc-2.2.5.so
+}
+
+
+# Known DNS system library problems (Linux rh6.1 - rh7.3)
+{
+  dns/getanswer_r
+  Cond
+  fun:getanswer_r
+  obj:/lib/libnss_dns-2.2.5.so
+}
+
+{
+  dns2
+  Value4
+  obj:/lib/i686/libc-2.2.5.so
+  obj:/lib/i686/libc-2.2.5.so
+  fun:rfio_open_ext
+}
+
+{
+  strcmp/libc-2.2.5.so
+  Value4
+  fun:strcmp
+  obj:/lib/i686/libc-2.2.5.so
+}
+
+{
+  strcmp/libc-2.2.5.so
+  Value4
+  fun:strlen
+  obj:/lib/i686/libc-2.2.5.so
+}
+
+
+# Possible rfio problem (libshift.so.1.5.1.3 - 1.5.2.3)
+{
+  rfio
+  Param
+  socketcall.send(msg)
+  obj:/lib/i686/libc-2.2.5.so
+  fun:netwrite_timeout
+}
+
+
+# Gaudi problems (Gaudi v11r4, v12r0)
+{
+  GaudiKernel/v13r2/Timing.cpp
+  Param
+  times(buf)
+  obj:/lib/i686/libc-2.2.5.so
+  fun:userTime__6SystemQ26System8TimeTypeQ26System8InfoTypel
+}
+
+{
+  GaudiKernel/v13r2/SimpleProperty
+  Value8
+  fun:set__t17SimplePropertyRef2ZdZt12NullVerifier1ZdRCd
+}
+
+# Gaudi problems (Gaudi v12r0)
+{
+  HbookCnv/v13r3
+  Cond
+  fun:iucomp_
+  fun:hfinop_
+  fun:hstati_
+}
+
+# DetDesc (v12r0) - may be fixed?
+{
+  DetDesc/addParam
+  Value8
+  fun:*
+  fun:*
+  fun:*
+  fun:addParam__8ParamSetGt12basic_string*
+}
+
+# Property initialisation problems
+{
+  SICB/RiSicbCnv/v5r3
+  Cond
+  fun:initialize__16TrToRichTrackAlg
+}
+
+{
+  SICB/RiSicbCnv/v5r3B
+  Cond
+  fun:execute__16TrToRichTrackAlg
+}
+
+# Random numbers usage (CLHEP 1.8.0.0)
+{
+  RanluxEngine/TimingAlg
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__10RandGaussQP15HepRandomEnginedd
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm5Gauss
+}
+
+{
+  RanluxEngine/VeloSim
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__8RandFlatP15HepRandomEnginedd
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm4Flat
+  fun:shoot__Q24Rndm7Numbers
+}
+
+{
+  RanluxEngine/VeloSim-CaloDigitAlg
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__11RandPoissonP15HepRandomEngined
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm7Poisson
+  fun:shoot__Q24Rndm7Numbers
+}
+
+{
+  RanluxEngine/CaloDigitAlg
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__11RandPoissonP15HepRandomEngined
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm7Poisson
+  fun:shoot__Q24Rndm7Numbers
+}
+
+{
+  RanluxEngine/MuonAlgs-MuonBackground
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__11RandGeneralP15HepRandomEngine
+  fun:*
+  fun:shoot__Q24Rndm7Numbers
+}
+
+{
+  RanluxEngine/MCITDepositCreator
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__8RandFlatP15HepRandomEnginedd
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm6Landau
+  fun:charge__C17ITDepositedChargeRd
+}
+
+{
+  RanluxEngine/ITEffCalculator-ITNoiseTailTool-ITDigitCreator-OTEffCalculator
+  Value8
+  fun:flat__12RanluxEngine
+  fun:shoot__8RandFlatP15HepRandomEnginedd
+  fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm4Flat
+}
+  
+
+# Fortran common block errors
+{
+  Rich/ridthpdpos.F
+  Value8
+  fun:ridthpdpos_sq__
+}
+
+{
+  Rich/ridtpix_sq__
+  Value8
+  fun:ridtpix_sq__
+}
+
+{
+  Rich/rirchitpix_sq.F
+  Value8
+  fun:rirchitpix_sq__
+}
+
+{
+  Seed/newseed.F
+  Value8
+  fun:new_fit_parab__
+}
+
+{
+  Seed/newseed.F1
+  Value4
+  fun:new_fit_parab__
+}
+
+{
+  Seed/newseed.F2
+  Value8
+  fun:new_fit_line__
+}
+
+{
+  Seed/newseed.F2
+  Value4
+  fun:new_fit_line__
+}
+
+# CLHEP 1.8.0.0 errors (reported, fixed in CVS head?)
+{
+  HepTool::Evaluator/__builtin_vec_new
+  Free 
+  fun:__builtin_delete
+  fun:evaluate__Q27HepTool9EvaluatorPCc
+}
+
+# Root 3.05.04 errors (reported, known to Fons...)
+{
+  Root/longest_match
+  Cond
+  fun:R__longest_match
+  fun:R__Deflate
+  fun:R__zip
+  fun:__4TKeyP7TObjectPCci
+}
+
+{
+  Root/deflate
+  Value4
+  fun:R__Deflate
+  fun:R__zip
+  fun:__4TKeyP7TObjectPCci
+}
+
+{
+  Root/ct_tally
+  Value4
+  fun:R__ct_tally
+  fun:R__Deflate
+  fun:R__zip
+  fun:__4TKeyP7TObjectPCci
+}
+
+{
+  Root/compress_block
+  Value4
+  fun:R__compress_block
+  fun:R__flush_block
+  fun:R__Deflate
+  fun:R__zip
+}

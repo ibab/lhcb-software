@@ -1,0 +1,44 @@
+//////////////////////////////////////////////////////////////////////////////
+///      Job options for Boole when using $LHCBDBASE version v256r0       ///
+//////////////////////////////////////////////////////////////////////////////
+#pragma print off
+Digi.DetectorList = { "SpillOver" };      // Comment to switch off spillover
+Digi.DetectorList += { "Bkg" };           // Comment to switch off LHC background
+#include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
+#include "$BOOLEOPTS/BooleMoniProd.opts"  // Default monitoring for production
+#include "$BOOLEOPTS/BooleOutput.opts"    // Comment to switch off output
+
+//---------------------------------------------------------------------------
+// Database specific options
+//---------------------------------------------------------------------------
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v256r0.xml";
+MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field043.cdf";
+#pragma print on
+
+//---------------------------------------------------------------------------
+// Add here any job specific options, to over-ride previously defined options
+//---------------------------------------------------------------------------
+//ApplicationMgr.DLLs = {"NONE"};             // Uncomment if static link
+
+//---------------------------------------------------------------------------
+// Finally, define input and output files, first event, number of events
+//---------------------------------------------------------------------------
+EventSelector.Input = {
+  //  "FILE='/castor/cern.ch/user/r/ranjard/mcv261r0.v256r0.411300_data'"
+ "FILE='/castor/cern.ch/lhcb/prod/00000088_00000001_3.rawh'" 
+}; // RAWH2 evtype 411300
+//EventSelector.FirstEvent = 7; // Skip 6 events
+SpillOverSelector.Input = {
+  //  "FILE='/castor/cern.ch/user/r/ranjard/mcv261r0.v256r0.61_data'"
+ "FILE='/castor/cern.ch/lhcb/prod/00000088_00000001_1.rawh'"
+,"FILE='/castor/cern.ch/lhcb/prod/00000088_00000001_2.rawh'" 
+}; // evtype 61 RAWH2
+//SpillOverSelector.FirstEvent = 10; // Skip corresponding spillover events
+LHCBkgSelector.Input = { 
+  "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000310_00000001_5.oosim' TYP='ROOT' OPT='READ'" 
+}; // "Maximal" LHC background 
+//LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events 
+DigiWriter.Output = "DATAFILE='v256r0.oodigi' TYP='ROOT' OPT='NEW'";
+HistogramPersistencySvc.OutputFile = "v256r0.hbook";  // Monitoring histos
+ApplicationMgr.EvtMax = 10;
+//////////////////////////////////////////////////////////////////////////////
