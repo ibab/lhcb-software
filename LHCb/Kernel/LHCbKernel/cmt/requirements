@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.61 2004-10-20 08:43:15 cattanem Exp $
+# $Id: requirements,v 1.62 2004-10-28 14:42:31 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -8,7 +8,7 @@ version v5r3
 
 include_dirs $(LHCBKERNELROOT)
 
-use GaudiKernel  v16r*
+use GaudiKernel  v*
 use CLHEP        v*    LCG_Interfaces
 
 # Produce Header-Files from XML description, overriding default destination
