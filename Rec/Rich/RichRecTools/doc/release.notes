@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v2r13 2005-01-19 ======================
+! 2005-01-19 - Marco Cattaneo
+ - Add explicit dependency on DAQEvent (no longer inherited via RichEvent)
+
 ! 2005-01-13 - Chris Jones
  - Various minor improvements to creator tools
 
