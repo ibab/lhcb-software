@@ -1,5 +1,5 @@
 # =========================================================================
-# $Id: requirements,v 1.6 2002-03-25 16:24:57 cattanem Exp $
+# $Id: requirements,v 1.7 2002-04-09 16:16:26 dhcroft Exp $
 # =========================================================================
 
 package MuonDet
@@ -36,6 +36,7 @@ private
 apply_pattern package_Cshlibflags
 apply_pattern package_Lshlibflags   
 
+private
 macro_remove use_linkopts $(MuonDet_linkopts)
 macro MuonDetLib_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
 macro_append MuonDet_shlibflags $(MuonDet_linkopts)
