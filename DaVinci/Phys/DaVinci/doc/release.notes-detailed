@@ -4,6 +4,10 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2004-07-28 - P. Koppenburg
+  - options/DaVinciCommon.opts
+    . Remove $STDOPTS/RootDb.opts
+
 ! 2004-07-27 - P. Koppenburg
   - options/DstContents.opts
     . Explicitly add Event/Raw/XXX for DVTriggerFilter.opts

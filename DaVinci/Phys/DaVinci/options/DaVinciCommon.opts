@@ -35,7 +35,7 @@ ApplicationMgr.DLLs   += { "CaloDet", "CaloDetXmlCnv" };
 #include "$EVENTSYSROOT/options/PoolDicts.opts"
 
 // GaudiDb Persistency
-#include "$STDOPTS/RootDb.opts"
+//#include "$STDOPTS/RootDb.opts"
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
