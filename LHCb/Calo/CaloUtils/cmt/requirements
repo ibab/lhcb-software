@@ -1,14 +1,17 @@
-# $Id: requirements,v 1.12 2002-06-15 10:43:51 ibelyaev Exp $
+# $Id: requirements,v 1.13 2002-07-18 13:30:04 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.12  2002/06/15 10:43:51  ibelyaev
+#  version update
+#
 # =============================================================================
 # Created    : 02/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
 # =============================================================================
 package             CaloUtils
-version             v4r0
+version             v4r1
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
