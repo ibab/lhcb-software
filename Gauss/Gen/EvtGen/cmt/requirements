@@ -1,12 +1,12 @@
 package     EvtGen
-version     v8r1
+version     v8r2
  
 branches    cmt src doc EvtGen EvtGenModels EvtGenBase photos
 
+use         GaudiPolicy  v*
 use         CLHEP        v*  LCG_Interfaces
 use         GENSER       v*  Gen
-use         PYTHIA       v*  Gen
-use         GaudiPolicy  v*
+
 
 include_dirs  $(EVTGENROOT) 
 
@@ -22,5 +22,3 @@ macro_append EvtGen_pp_fflags "" WIN32 "/DWIN32"
 macro_prepend EvtGen_linkopts " -Wl,-u,phocin_,-u,phoqed_ " \
               WIN32           " /include:_PHOCIN /include:_PHOQED "
 
-macro_append EvtGen_linkopts " -L$(GENSER_home)/lib -lphotos209.2" \
-             WIN32            " /libpath:$(GENSER_home)/lib photos209.2.lib"

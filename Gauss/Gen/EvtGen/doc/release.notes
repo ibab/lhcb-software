@@ -1,7 +1,12 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
-!==================== EvtGen v8r1 =================================
+!=================== EvtGen v8r2 ===============================
+! 2005-02-01 - Florence RANJARD
+ - requirements - move photos link options to GENSER
+                  remove use PYTHIA which is included in GENSER
+
+!================== EvtGen v8r1 ==================================
 ! 2005-01-25 - Patrick Robbe
  - changes for CLHEP 1.9 (add namespaces in forward declarations)
 
