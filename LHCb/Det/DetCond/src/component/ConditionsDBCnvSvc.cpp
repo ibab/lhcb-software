@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.11 2002-04-17 15:55:14 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.12 2002-12-03 16:59:49 andreav Exp $
 #include <string>
 #include <stdio.h>
 
@@ -671,17 +671,18 @@ ConditionsDBCnvSvc::updateConditionData( DataObject*          pObject,
 /// Decode the string storage type from the folder description string
 StatusCode 
 ConditionsDBCnvSvc::decodeDescription( const std::string& description,
-				       unsigned char& type )
+                                       unsigned char& type )
 {
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::DEBUG << "Decoding description: " << description << endreq;
+  log << MSG::DEBUG << "Decoding description: '" 
+      << description << "'" << endreq;
   std::string theDesc = description;  
 
   // Find keywords
   std::string s1 = "<description type=";
   if ( theDesc.find(s1) != 0 ) {
     log << MSG::ERROR 
-	<< "Could not find '" <<  s1 << "' in description" << endreq;
+        << "Could not find '" <<  s1 << "' in description" << endreq;
     return StatusCode::FAILURE;
   }
   theDesc.erase( 0, s1.length() );
@@ -691,7 +692,7 @@ ConditionsDBCnvSvc::decodeDescription( const std::string& description,
   const char* c_type = s_type.c_str();
   if ( strspn ( c_type, " .0123456789" ) != s_type.length() ) {
     log << MSG::ERROR 
-	<< "Could not find numerical data" << endreq;
+        << "Could not find numerical data" << endreq;
     return StatusCode::FAILURE;
   }
   theDesc.erase( 0, s_type.length() );
@@ -700,7 +701,7 @@ ConditionsDBCnvSvc::decodeDescription( const std::string& description,
   std::string s2 = ">";
   if ( theDesc.find(s2) != 0 ) {
     log << MSG::ERROR << "Could not find '" <<  s2 
-	<< "' in description: " << theDesc << endreq;
+        << "' in description: " << theDesc << endreq;
     return StatusCode::FAILURE;
   }
   theDesc.erase( 0, s2.length() );
@@ -708,7 +709,7 @@ ConditionsDBCnvSvc::decodeDescription( const std::string& description,
   // Any extra characters?
   if ( theDesc.length() != 0 ) {
     log << MSG::ERROR 
-	<< "Extra characters in description: " <<  theDesc << endreq;
+        << "Extra characters in description: " <<  theDesc << endreq;
     return StatusCode::FAILURE;
   }
 

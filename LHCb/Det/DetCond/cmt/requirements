@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.22 2002-11-25 18:01:32 andreav Exp $
+# $Id: requirements,v 1.23 2002-12-03 16:52:43 andreav Exp $
 package DetCond
-version v4r1
+version v4r2
 
 branches DetCond cmt src doc
 
@@ -8,16 +8,26 @@ branches DetCond cmt src doc
 use GaudiKernel v13r*
 use GaudiSvc    v10r*
 
-# ConditionsDB package
-set CONDDB_implementation   "CondDBObjy" \
-      rh72_gcc2952          "CondDBOracle" \
-      rh73_gcc2952          "CondDBOracle" \
-      WIN32                 "CondDBOracle"
-macro CONDDB_use            "CONDDB v3r02p3" \
-      rh72_gcc2952          "CondDBOracle v4r16 Det" \
-      rh73_gcc2952          "CondDBOracle v4r16 Det" \
-      WIN32                 "CondDBOracle v4r16 Det"
-use $(CONDDB_use)
+# Objy-based ConditionsDB
+macro CondDBObjy_use        "CONDDB v3r02p3" \
+      rh72_gcc2952          "" \
+      rh73_gcc2952          "" \
+      WIN32                 ""
+use $(CondDBObjy_use)
+
+# Oracle-based ConditionsDB
+macro CondDBOracle_use      "" \
+      rh72_gcc2952          "CondDBOracle v4r17 Det" \
+      rh73_gcc2952          "CondDBOracle v4r17 Det" \
+      WIN32                 "CondDBOracle v4r17 Det"
+use $(CondDBOracle_use)
+
+# MYSQL-based ConditionsDB
+macro CondDBMySQL_use       "" \
+      rh72_gcc2952          "CondDBMySQL v0r06 Det" \
+      rh73_gcc2952          "CondDBMySQL v0r06 Det" \
+      WIN32                 "CondDBMySQL v0r06 Det"
+use $(CondDBMySQL_use)
 
 # Detector Description
 # This is only needed because updateObj assumes a Condition (TEMPORARY?)

@@ -1,6 +1,21 @@
-# $Id: release.notes,v 1.23 2002-11-26 17:34:34 andreav Exp $
+# $Id: release.notes,v 1.24 2002-12-03 17:00:28 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20021203 - Andrea Valassi
+Include the MySQL implementation on Linux
+- DetCond on RH73 and WIN32 now depends on both implementations!
+  > multiple "use..." in the requirements
+  > if the "use..." statement is removed, some code is #ifndef'd away
+    (as the base packages propagate to DetCond the relevant cppflags)
+  > to make the code more readable, implementation-specific init() and 
+    i_buildCondDBInfo() have been introduced (#ifdef'd in only if necessary!)
+  > I assume RH61 is always Objy only
+- Implementation is read at runtime from the job options
+  > ConditionsDBGate.condDBImpl = one of CondDBObjy, CondDBOracle, CondDBMySQL
+- Remove CondDBKey.h from DetCond (I forgot to remove it on h20020301!)
+Requirements v4r2, private tag h20021203
 
 ==============================================================================
 !20021125 - Andrea Valassi

@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.h,v 1.4 2002-07-23 17:10:17 andreav Exp $
+//$Id: ConditionsDBGate.h,v 1.5 2002-12-03 16:56:22 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBGATE_H
 #define DETCOND_CONDITIONSDBGATE_H 1
 
@@ -26,7 +26,7 @@ class ITime;
 *///--------------------------------------------------------------------------
 
 class ConditionsDBGate : public Service, 
-			 virtual public IConditionsDBGate
+                         virtual public IConditionsDBGate
 {
   
   /// This service is owned by the ConditionsDBCnvSvc
@@ -46,7 +46,7 @@ class ConditionsDBGate : public Service,
 
   /// Query the interface of the service
   virtual StatusCode queryInterface( const IID& riid, 
-				     void** ppvInterface );  
+                                     void** ppvInterface );  
 
  public:
 
@@ -64,11 +64,11 @@ class ConditionsDBGate : public Service,
 
   /// Read range and data of a CondDBObject by folder name, tag and time
   StatusCode readCondDBObject      ( ITime&              refValidSince,
-				     ITime&              refValidTill,
-				     std::string&        data,
-				     const std::string&  folderName,
-				     const std::string&  tagName,
-				     const ITime&        time);
+                                     ITime&              refValidTill,
+                                     std::string&        data,
+                                     const std::string&  folderName,
+                                     const std::string&  tagName,
+                                     const ITime&        time);
 
   /// Read the description of a folder in the CondDB
   StatusCode readCondDBFolder      ( std::string&        description,
@@ -83,12 +83,20 @@ class ConditionsDBGate : public Service,
 
   /// Find a CondDB object in the CondDB by folder name, tag and key
   StatusCode i_findCondDBObject    ( ICondDBObject*&     oblock,
-				     const std::string&  folderName,
-				     const std::string&  tagName,
-				     const CondDBKey&    key);
+                                     const std::string&  folderName,
+                                     const std::string&  tagName,
+                                     const CondDBKey&    key);
   
+  /// Perform the implementation-dependent part of database initialization
+  StatusCode i_initDBObjy   ();
+  StatusCode i_initDBOracle ();
+  StatusCode i_initDBMySQL  ();
+
   /// Build the technology-specific init string to access the database
-  StatusCode i_buildCondDBInfo ( std::string& condDBInfo );
+  StatusCode i_buildCondDBInfo       ( std::string& condDBInfo );
+  StatusCode i_buildCondDBInfoObjy   ( std::string& condDBInfo );
+  StatusCode i_buildCondDBInfoOracle ( std::string& condDBInfo );
+  StatusCode i_buildCondDBInfoMySQL  ( std::string& condDBInfo );
 
   /// Convert CondDBKey to ITime
   StatusCode i_convertToITime ( ITime& refTime, const CondDBKey& key );
@@ -112,6 +120,10 @@ class ConditionsDBGate : public Service,
   // Private data members specific to the ConditionsDB implementation:
   // full path to the database, which can be set using the JobOptionsSvc.
 
+  /// ConditionsDB implementation
+  std::string        m_condDBImpl;
+  short              m_condDBImplCode;
+
   /// Database user name
   std::string        m_condDBUser;
 
@@ -128,6 +140,17 @@ class ConditionsDBGate : public Service,
   bool               m_showCondDBPswd;
 
 };
+
+namespace ConditionsDBGateImplementation 
+{
+  /// Cannot define this as enum as there is no method to read enum properties
+  static const short CONDDBNONE   = 0;
+  static const short CONDDBOBJY   = 1;
+  static const short CONDDBORACLE = 2;
+  static const short CONDDBMYSQL  = 3;
+};
+
+using namespace ConditionsDBGateImplementation;
 
 #endif    // DETCOND_CONDITIONSDBGATE_H
 
