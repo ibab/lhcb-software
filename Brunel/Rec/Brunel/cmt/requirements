@@ -50,7 +50,7 @@ use CaloDet       	v5r1  	Det
 use CaloDetXmlCnv	v2r0  	Det
 use ITDet         	v1r1  	Det
 use MuonDet       	v4r1  	Det
-use OTDet         	v3r0  	Det
+use OTDet         	v3r1  	Det
 use RichDet		v3r0	Det
 use VeloDet       	v7r2  	Det
 use Magnet        	v1r1  	Det
@@ -102,7 +102,7 @@ use ITAssociators	v2r1	IT
 use ITCheckers		v1r0	IT
 
 # Outer Tracker
-use OTAlgorithms  	v12r0  	OT
+use OTAlgorithms  	v12r1  	OT
 use OTAssociators  	v2r2  	OT
 
 # Tracking
@@ -126,8 +126,8 @@ use TrCheck             v1r0    Tr
 use MuonKernel          v2r1    Muon
 use MuonTools           v3r1    Muon
 use MuonAlgs		v3r0	Muon
-use MuonRec     	v2r2	Muon
-use MuonID      	v3r3	Muon
+use MuonRec     	v2r3	Muon
+use MuonID      	v3r4	Muon
 use MuonAssociators	v1r0	Muon
 
 # Rich

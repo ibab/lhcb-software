@@ -17,13 +17,14 @@ Purpose: LHCb reconstruction program
      (XmlDDDB v14r0, RichKernel v1r3, RichDet v3r0)
    . New tool to get S/N of an ST cluster (can be used by tracking algorithms
      to cut on S/N) (ITAlgorithms v12r3)
-   . Add support for variable number of Muon stations
-     (L0Muon v6r2, MuonSicbCnv v6r5, MuonAlgs v3r0, Brunel.opts)
+   . Add support for variable number of Muon stations (L0Muon v6r2, 
+     MuonSicbCnv v6r5, MuonAlgs v3r0, MuonRec v2r3, MuonID v3r4, Brunel.opts)
    . Add support for dbase v249r0 and v249r1
    . Restructure options files to simplify switching on/off of monitoring and/or
      DST output. Monitoring histograms off by default (*.opts, BrunelAlgs v1r5)
    . Implement 45 degree Velo sectors. Currently hardwired for strip layout "1"
 	   (VeloDet v7r2, Brunel.opts)
+   . Possibility to add noise to OT (off by default) (OTAlgorithms v12r1)
 
  - Bug fixes:
    . Small fixes in TrFirstCleverExtrapolator (TrExtrapolator v2r3)
