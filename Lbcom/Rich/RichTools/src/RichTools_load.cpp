@@ -1,4 +1,4 @@
-// $Id: RichTools_load.cpp,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+// $Id: RichTools_load.cpp,v 1.2 2004-06-17 14:52:09 jonesc Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -13,12 +13,11 @@ DECLARE_FACTORY_ENTRIES( RichTools ) {
 
   // Ray tracing
   DECLARE_TOOL( RichRayTracing );  
-  DECLARE_TOOL( CdfRayTracing ); 
 
+  // photon reconstruction
   DECLARE_TOOL( RichPhotonReco );  
-  DECLARE_TOOL( CdfPhotonReco ); 
   
-  DECLARE_TOOL( CdfRichTrSegMakerFromTrStoredTracks ); 
+  // track segment makers
   DECLARE_TOOL( RichTrSegMakerFromTrStoredTracks ); 
   
   // RichSmartID manipulation 

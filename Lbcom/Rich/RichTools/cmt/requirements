@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
-# Created    : 11/03/2002
-# Maintainer : Antonis Papanestis
+# $Id: requirements,v 1.2 2004-06-17 14:52:00 jonesc Exp $
+# Created    : 17/06/2004
+# Maintainer : Antonis Papanestis, Chris Jones
 
 package RichTools
 version v1r0

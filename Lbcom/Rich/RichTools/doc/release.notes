@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !=========================== RichTools v1r0 2004-06-17 =======================
+
+! 2004-06-17 - Chris Jones
+ - Remove old "Cdf" tools and related classes
+ - Add new RichRayTracing.cpp with side bug fix
+
 ! 2004-06-17 - Marco Cattaneo
  - New package, resulting from renaming of RichDetTools package
 
