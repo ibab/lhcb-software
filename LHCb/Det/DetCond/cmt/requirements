@@ -1,0 +1,47 @@
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/cmt/requirements,v 1.1.1.1 2001-09-14 15:07:22 andreav Exp $
+package DetCond
+version v3r03
+
+branches DetCond cmt src doc
+
+# GAUDI framework
+use GaudiSys    v8*
+
+# ConditionsDB package
+use CONDDB      v3r01p01
+
+include_dirs $(DETCONDROOT)
+
+# Build a Linker library
+library DetCondLib   Lib/*.cpp 
+apply_pattern package_Llinkopts
+
+# Build a component library
+library DetCond      component/*.cpp
+
+ignore_pattern package_stamps
+
+apply_pattern ld_library_path
+
+# This is the directory where you will build the dOxygen html doc
+# This is also the directory where you will find the dOxygen tagfile
+set DETCOND_DOXYGEN \
+  /afs/cern.ch/user/v/valassi/www/dOxygen/DetCond/html
+# ${DETCONDROOT}/doc/html
+# This is the URL prefix where you will access the dOxygen documentation
+set DETCOND_DOXYURL \
+  http://www.cern.ch/~valassi/dOxygen/DetCond/html
+# file:${DETCONDROOT}/doc/html
+# This is the package version number
+set DETCOND_DOXYVERSION $(DETCONDVERSION)
+
+#==================================================================
+private
+
+apply_pattern package_Cshlibflags
+apply_pattern package_Lshlibflags
+macro_append DetCond_shlibflags "$(GaudiKernel_linkopts) $(CONDDB_linkopts)"
+
+
+
+
