@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.10 2002-02-27 13:25:35 mato Exp $
+// $Id: DaDiTools.cpp,v 1.11 2002-03-04 21:51:00 mato Exp $
 
 
 // Include files
@@ -108,7 +108,7 @@ bool DaDiTools::isArray(std::string value)
 bool DaDiTools::isStdContainer(std::string value)
 //-----------------------------------------------------------------------------
 {
-  int pos;
+  unsigned int pos;
   pos = value.find("<");
   value = value.substr(0,pos);
   pos = value.find("::");

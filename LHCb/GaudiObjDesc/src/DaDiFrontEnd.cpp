@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.30 2002-02-27 13:25:35 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.31 2002-03-04 21:50:59 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -364,7 +364,7 @@ template <class T> void parseArgList(DOM_Node node,
       gddArg->setType(argEType);
 
 
-      if (!DaDiTools::isSimple(argType.transcode()))
+      if (!DaDiTools::isSimple(argType.transcode()) && !gddArg->isPointer())
 			{
 			  gddArg->setConst_(true);
 			}

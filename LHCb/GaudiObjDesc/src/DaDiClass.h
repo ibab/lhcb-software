@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.17 2002-02-27 13:25:34 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.18 2002-03-04 21:50:58 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -27,7 +27,7 @@
 class DaDiClass {
 public:
 	/// Standard constructor
-	DaDiClass() {}; 
+	DaDiClass() {};
 
 	virtual ~DaDiClass() {}; ///< Standard destructor
 
@@ -140,6 +140,7 @@ private:
   std::list<DaDiLocation*>    m_daDiLocation;
   std::list<DaDiTypeDef*>     m_daDiTypeDef;
 };
+
 
 inline DOMString DaDiClass::className()
 {

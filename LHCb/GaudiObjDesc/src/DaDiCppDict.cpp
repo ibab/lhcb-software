@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.16 2002-02-27 13:25:34 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.17 2002-03-04 21:50:59 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -80,7 +80,7 @@ std::string printAccessor(std::string access)
 std::string checkSymb(std::string word)
 //-----------------------------------------------------------------------------
 {
-  int i;
+  unsigned int i;
   std::string retStr;
   for (i=0; i<word.size(); ++i)
   {

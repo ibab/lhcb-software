@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.46 2002-02-27 13:25:34 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.47 2002-03-04 21:50:59 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -39,12 +39,18 @@ std::string printPlural(const std::string& singular)
   std::map<std::string,std::string> exceptions;
   std::map<std::string,std::string>::iterator iter;
   exceptions["Vertex"] = "Vertices";
+  int pos;
 
   for (iter = exceptions.begin(); iter != exceptions.end(); ++iter)
   {
-    if ((singular.rfind((*iter).first) + ((*iter).first).length()) == singular.length())
+    pos = singular.rfind((*iter).first);
+    std::cout << singular << pos << std::endl;
+    
+    if ( pos != -1 && (pos + ((*iter).first).length()) 
+        == singular.length())
     {
-      return singular.substr(0,singular.rfind((*iter).first))  + exceptions[(*iter).first];
+      return singular.substr(0,singular.rfind((*iter).first))  
+                             + exceptions[(*iter).first];
     }
   }
   return singular + "s";
@@ -115,7 +121,8 @@ template <class T> void printArguments(std::ofstream& xmlOut,
     {
       xmlOut << ", ";
     }
-    if (!DaDiTools::isSimple(gddArgType) && gddArgIsConst)
+    if (!DaDiTools::isFundamental(gddArgType) && 
+        gddArgIsConst && !gddArgIsPointer)
     {
       xmlOut << "const ";
     }
@@ -128,8 +135,8 @@ template <class T> void printArguments(std::ofstream& xmlOut,
     {
       xmlOut << "*";
     }
-    if (gddArgInout == "BOTH" ||
-        !DaDiTools::isSimple(gddArgType) )
+    if (gddArgInout == "BOTH" || 
+        (!DaDiTools::isFundamental(gddArgType) && !gddArgIsPointer) )
     {
       xmlOut << "&";
     }
