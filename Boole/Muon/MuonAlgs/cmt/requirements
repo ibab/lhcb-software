@@ -9,8 +9,9 @@ include_dirs      $(MUONALGSROOT)
 
 # ================ used packages ========================================= 
 use AIDA        v*	 -no_auto_imports
-use MuonSicbCnv v7r* SICB
-use MuonUtils   v1r* Muon
+use MuonUtils   v1r* 	Muon
+use MuonEvent	v2r*	Event	
+
 # build a component library
 library MuonAlgs  *.cpp -import=AIDA
 
