@@ -1,4 +1,4 @@
-// $Id: PhotonRadiator.cpp,v 1.3 2001-10-31 16:50:12 rihill Exp $
+// $Id: PhotonRadiator.cpp,v 1.4 2001-11-15 13:22:49 rihill Exp $
 #include <cmath>
 #include <cassert>
 #include "CLHEP/Random/RandFlat.h"
@@ -67,8 +67,12 @@ PhotonSpectrum
   double energy = m_photonEfficiency->lowerEnergy() + 0.5 * delta;
   int    bins   = m_photonEfficiency->energyBins();
 
+  double ref = this->refractiveIndex(energy);
+  if (mass == 0.00051) {
+    //  cout << "beta " << beta << " n " << ref << " nbeta " << beta * ref << endl;
+  }
   for( int i = 0; i<bins; ++i ) {
-
+    
     // skip empty bins
 
     if ( (*spectrum)[i] <= 0. ) {
