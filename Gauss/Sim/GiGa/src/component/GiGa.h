@@ -1,8 +1,11 @@
-// $Id: GiGa.h,v 1.3 2002-12-13 13:36:31 ibelyaev Exp $ 
+// $Id: GiGa.h,v 1.4 2003-04-06 18:49:48 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/12/13 13:36:31  ibelyaev
+//  add RndmGenSvc, and delete the last G4Event
+//
 // Revision 1.2  2002/12/07 21:05:31  ibelyaev
 //  see $GIGAROOT/doc/release.notes 2002-12-07
 //
@@ -38,7 +41,7 @@ template   <class TYPE> class SvcFactory  ;
 /// forwad declarations  from GiGa  
 class     IGiGaRunManager                 ; 
 class     IGiGaGeoSrc                     ; 
-class     IGiGaPhysList                   ;
+class     IGiGaPhysicsList                ;
 class     IGiGaStackAction                ;
 class     IGiGaTrackAction                ;
 class     IGiGaStepAction                 ;
@@ -630,7 +633,7 @@ private:
   IGiGaGeoSrc*      m_geoSrc              ; ///< pointer to geometry source 
   ///
   std::string       m_GiGaPhysListName    ; ///< type/name of Physics List 
-  IGiGaPhysList*    m_GiGaPhysList        ; ///< pointer to Physics List 
+  IGiGaPhysicsList* m_GiGaPhysList        ; ///< pointer to Physics List 
   std::string       m_GiGaStackActionName ; ///< type/name of Stacking Action 
   IGiGaStackAction* m_GiGaStackAction     ; ///< pointer to   Stacking Action 
   std::string       m_GiGaTrackActionName ; ///< type/name of Tracking Action 

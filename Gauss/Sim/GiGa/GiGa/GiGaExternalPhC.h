@@ -1,8 +1,11 @@
-// $Id: GiGaExternalPhC.h,v 1.1 2002-12-03 18:43:37 ibelyaev Exp $
+// $Id: GiGaExternalPhC.h,v 1.2 2003-04-06 18:49:45 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/03 18:43:37  ibelyaev
+//  add new templated class for import of external Physics Constructors
+//
 // ============================================================================
 #ifndef GIGA_GIGAEXTERNALPHC_H 
 #define GIGA_GIGAEXTERNALPHC_H 1
@@ -39,10 +42,7 @@ class GiGaExternalPhC :
   typedef GiGaExternalPhC<PHYSICSCONSTRUCTOR> MyType ;
   /// friend factory for instantiation 
   friend class GiGaFactory<MyType>                   ;
-  
-public:
-  
-  
+
 protected:
   
   /** standard constructor 
@@ -89,13 +89,15 @@ private:
 };
 // ============================================================================
 
-/** @def IMPLEMENT_ExternalPhysList
+// ============================================================================
+/** @def IMPLEMENT_ExternalPhC
  *  useful macro to implement a static factory for
  *  instantiation of external("imported") physics list
  *  @see IMPLEMENT_GiGaPhysList
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   25/04/2002
  */
+// ============================================================================
 #define IMPLEMENT_ExternalPhC( PC )                                     \
  static const GiGaFactory<GiGaExternalPhC<##PC##> >   s_##PC##Factory ; \
  const           IFactory&##PC##Factory             = s_##PC##Factory ;

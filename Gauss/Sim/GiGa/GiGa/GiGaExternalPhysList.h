@@ -1,8 +1,11 @@
-// $Id: GiGaExternalPhysList.h,v 1.3 2002-05-07 12:21:29 ibelyaev Exp $
+// $Id: GiGaExternalPhysList.h,v 1.4 2003-04-06 18:49:45 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/05/07 12:21:29  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 #ifndef GIGA_GIGAEXTERNALPHYSLIST_H 
 #define GIGA_GIGAEXTERNALPHYSLIST_H 1
@@ -89,7 +92,9 @@ private:
   MyType& operator=    ( const MyType& ) ; 
   ///
 };
+// ============================================================================
 
+// ============================================================================
 /** @def IMPLEMENT_ExternalPhysList
  *  useful macro to implement a static factory for
  *  instantiation of external("imported") physics list
@@ -97,9 +102,11 @@ private:
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   25/04/2002
  */
+// ============================================================================
 #define IMPLEMENT_ExternalPhysList( PL )                            \
  static const GiGaFactory<GiGaExternalPhysList<##PL##> >   s_##PL##Factory ; \
  const           IFactory&##PL##Factory                  = s_##PL##Factory ;
+// ============================================================================
 
 // ============================================================================
 // The END 

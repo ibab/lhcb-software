@@ -1,8 +1,11 @@
-// $Id: GiGaBase.cpp,v 1.14 2002-12-07 14:27:51 ibelyaev Exp $
+// $Id: GiGaBase.cpp,v 1.15 2003-04-06 18:49:47 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2002/12/07 14:27:51  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // ===========================================================================
 #define GIGA_GIGABASE_CPP 1 
 // ============================================================================
@@ -83,6 +86,7 @@ GiGaBase::GiGaBase
   declareInterface<IGiGaInterface>    ( this );
   declareInterface<IIncidentListener> ( this );
   declareInterface<ISerialize>        ( this );
+  declareInterface<IAlgTool>          ( this );
   ///
   declareProperty( "GiGaService"               ,  m_gigaName    ) ;
   declareProperty( "GiGaSetUpService"          ,  m_setupName   ) ;

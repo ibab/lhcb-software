@@ -1,11 +1,8 @@
-// $Id: GiGaMagFieldBase.cpp,v 1.9 2002-12-07 14:27:51 ibelyaev Exp $
+// $Id: GiGaMagFieldBase.cpp,v 1.10 2003-04-06 18:49:47 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2002/05/07 12:21:33  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
 //  ===========================================================================
 #define GIGA_GIGAMAGFIELDBASE_CPP 1 
 ///  ===========================================================================
@@ -44,11 +41,11 @@ namespace GiGaMagFieldBaseLocal
 GiGaMagFieldBase::GiGaMagFieldBase 
 ( const std::string& type , 
   const std::string& nick , 
-  const IInterface*  loc  )
-  
-  : GiGaBase( type ,nick , loc ) 
+  const IInterface*  loc  )  
+  : GiGaFieldMgrBase( type ,nick , loc ) 
   , m_nameMFSvc ( "MagneticFieldSvc" )
   , m_mfSvc     ( 0 )
+  , m_self      ( 0 )
 { 
   declareInterface<IGiGaMagField> (this);
   declareProperty( "MagneticFieldService" , m_nameMFSvc ); 
@@ -77,7 +74,7 @@ GiGaMagFieldBase::~GiGaMagFieldBase()
 StatusCode GiGaMagFieldBase::initialize ()  
 {
   /// initialize base class 
-  StatusCode sc = GiGaBase::initialize (); 
+  StatusCode sc = GiGaFieldMgrBase::initialize (); 
   if( sc.isFailure() ) 
     { return Error("Could not initialize base class!", sc); }
   if( !m_nameMFSvc.empty() ) 
@@ -90,6 +87,8 @@ StatusCode GiGaMagFieldBase::initialize ()
     }
   else { Warning("Magnetic Field Service is not requested") ; }
   ///
+  m_self = this ;
+  //
   return Print("GiGaMagFieldBase initialized successfully" ,
                StatusCode::SUCCESS                         , MSG::VERBOSE ) ;
 };
@@ -107,9 +106,25 @@ StatusCode GiGaMagFieldBase::finalize   ()
   // relese magnetic field service
   if( 0 != mfSvc() ) { mfSvc() -> release() ; m_mfSvc = 0 ; }
   // finalize the base class 
-  return GiGaBase::finalize   (); 
+  return GiGaFieldMgrBase::finalize   (); 
 };
 // ============================================================================
+
+// ============================================================================
+/** accessor to magnetic field 
+ *  @see G4MagneticField 
+ *  @return pointer to the magnetic field object
+ */
+// ============================================================================
+G4MagneticField*        GiGaMagFieldBase::field    () const
+{
+  if( 0 != m_self ) { return m_self ; }
+  const G4MagneticField* mag = this ;
+  m_self = const_cast<G4MagneticField*> ( mag );
+  return m_self ;
+};
+// ============================================================================
+
 
 // ============================================================================
 // The END 

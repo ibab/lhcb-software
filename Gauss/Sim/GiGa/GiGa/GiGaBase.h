@@ -1,8 +1,11 @@
-// $Id: GiGaBase.h,v 1.17 2002-12-07 14:27:50 ibelyaev Exp $
+// $Id: GiGaBase.h,v 1.18 2003-04-06 18:49:45 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2002/12/07 14:27:50  ibelyaev
+//  see $GIGAROOT/cmt/requirements file
+//
 // ============================================================================
 #ifndef     GIGA_GIGABASE_H
 #define     GIGA_GIGABASE_H 1 
@@ -22,6 +25,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 // GiGa
 #include "GiGa/IGiGaInterface.h"
+#include "GiGa/GiGaFactory.h"
 // forward declarations 
 class IMessageSvc          ;
 class ISvcLocator          ;

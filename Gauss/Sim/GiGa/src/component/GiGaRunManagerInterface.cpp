@@ -1,24 +1,13 @@
-// $Id: GiGaRunManagerInterface.cpp,v 1.4 2002-12-16 16:23:17 ibelyaev Exp $ 
+// $Id: GiGaRunManagerInterface.cpp,v 1.5 2003-04-06 18:49:49 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2002/12/15 17:13:21  ibelyaev
-//  bug fixes and improved control over G4 verbosity
-//
-// Revision 1.2  2002/12/07 14:27:52  ibelyaev
-//  see $GIGAROOT/cmt/requirements file
-//
-// Revision 1.1  2002/09/26 18:05:30  ibelyaev
-//  repackaging: remove all concrete implementations
-//
-// Revision 1.5  2002/05/07 12:21:34  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
 // ============================================================================
 /// GiGa 
 #include "GiGa/GiGaUtil.h"
 #include "GiGa/IGiGaGeoSrc.h"
+#include "GiGa/IGiGaTool.h"
 // Local
 #include "GiGaRunManager.h"
 /// G4 
@@ -55,6 +44,14 @@ StatusCode GiGaRunManager::initialize ()
   ///
   G4RunManager::SetVerboseLevel( m_verbosity );
   ///
+  for( Names::const_iterator iname = 
+         m_runToolsList.begin() ; m_runToolsList.end() != iname ; ++iname )
+    {
+      IGiGaTool* runTool = tool( *iname , runTool , this );
+      if( 0 == runTool ) { return StatusCode::FAILURE ; }
+      m_runTools.push_back( runTool );
+    }
+  ///
   return Print("GiGaRunManager initialized successfully" , 
                StatusCode::SUCCESS                       , MSG::VERBOSE );
 };
@@ -73,6 +70,14 @@ StatusCode GiGaRunManager::finalize   ()
     { return Error("could not finalize RunManager base ",sc);}
   // release  "geometry source"
   if( 0 != m_geoSrc ) { m_geoSrc -> release() ; m_geoSrc = 0 ; }
+  // release run tools 
+  for( Tools::const_iterator itool = 
+         m_runTools.begin() ; m_runTools.end() != itool ; ++itool )
+    {
+      IGiGaTool* runTool = *itool ;
+      if( 0 != runTool ) { runTool -> release() ; }
+    }  
+  m_runTools.clear();
   // 
   return GiGaBase::finalize();
 };

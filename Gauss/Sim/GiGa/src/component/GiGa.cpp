@@ -1,8 +1,11 @@
-// $Id: GiGa.cpp,v 1.3 2002-12-13 13:36:31 ibelyaev Exp $ 
+// $Id: GiGa.cpp,v 1.4 2003-04-06 18:49:48 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/12/13 13:36:31  ibelyaev
+//  add RndmGenSvc, and delete the last G4Event
+//
 // Revision 1.2  2002/12/07 21:05:31  ibelyaev
 //  see $GIGAROOT/doc/release.notes 2002-12-07
 //
@@ -35,7 +38,7 @@
 #include    "G4UIsession.hh"
 #include    "G4VVisManager.hh"
 // from GiGa
-#include    "GiGa/IGiGaPhysList.h"
+#include    "GiGa/IGiGaPhysicsList.h"
 #include    "GiGa/IGiGaStackAction.h"
 #include    "GiGa/IGiGaTrackAction.h"
 #include    "GiGa/IGiGaStepAction.h"
@@ -246,7 +249,7 @@ GiGa::initialize()
       m_GiGaPhysList = tool( m_GiGaPhysListName , m_GiGaPhysList , this );
       if( 0 == m_GiGaPhysList ) 
         { return Error("Unable to create Physics List" ) ; }
-      *this << m_GiGaPhysList ;
+      *this << m_GiGaPhysList -> physicsList() ;
       Print("Used Physics List Object is " 
             + GiGaUtil::ObjTypeName( m_GiGaPhysList ) 
             + "/" + m_GiGaPhysList -> name() );

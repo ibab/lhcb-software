@@ -1,3 +1,8 @@
+// $Id: GiGaPhysConstructorBase.cpp,v 1.4 2003-04-06 18:49:47 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
@@ -37,7 +42,8 @@ GiGaPhysConstructorBase::GiGaPhysConstructorBase
 ( const std::string& type   , 
   const std::string& name   , 
   const IInterface*  parent ) 
-  : GiGaBase          ( type , name , parent  )
+  : GiGaPhysicsConstructorBase         ( type , name , parent  )
+  , m_self                             ( 0 )
 { 
   declareInterface<IGiGaPhysConstructor> (this);
 #ifdef GIGA_DEBUG
@@ -67,12 +73,15 @@ GiGaPhysConstructorBase::~GiGaPhysConstructorBase()
 // ============================================================================
 StatusCode GiGaPhysConstructorBase::initialize ()  
 {
-  /// initialize base class
-  StatusCode sc = GiGaBase::initialize (); 
+  // initialize base class
+  StatusCode sc = GiGaPhysicsConstructorBase::initialize (); 
   if( sc.isFailure() )
-    { return Error("Could not initialize GiGaBase class!", sc); }
+    { return Error("Could not initialize GiGaPhysicsConstructorBase!", sc); }
   MsgStream log( msgSvc() , name() ); 
-  ///
+  
+  // initialise the self pointer 
+  m_self = this ;
+  //
   return Print("GiGaPhysConstructorBase initialized succesfully" ,
                StatusCode::SUCCESS                        , MSG::VERBOSE );
 };
@@ -91,9 +100,31 @@ StatusCode GiGaPhysConstructorBase::finalize   ()
   Print("GiGaPhysConstructorBase Finalization" ,
         StatusCode::SUCCESS             , MSG::VERBOSE );
   // finalze the base class 
-  return GiGaBase::finalize   (); 
+  return GiGaPhysicsConstructorBase::finalize   (); 
 };
 // ============================================================================
+
+// ============================================================================
+/** accessor to G4VPhysicsConstructor
+ *  @see IGiGaPhysConstructor
+ *  @see IGiGaPhysicsConstructor
+ *  @see G4VPhysicsConstructor
+ *  @return pointer to G4VPhysicsConstructor object
+ */
+// ============================================================================
+G4VPhysicsConstructor* GiGaPhysConstructorBase::physicsConstructor ()  const
+{
+  if( 0 == m_self ) 
+    {
+      const G4VPhysicsConstructor* aux = this ;
+      m_self = const_cast<G4VPhysicsConstructor*> ( aux ) ;
+    }
+  if( 0 == m_self ) 
+    { Error("physicsConstructor(): invalid G4VPhysicsConstructor!") ; }
+  return m_self ;
+};
+// ============================================================================
+
 
 // ============================================================================
 // The END 

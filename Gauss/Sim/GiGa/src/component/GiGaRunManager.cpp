@@ -1,8 +1,11 @@
-// $Id: GiGaRunManager.cpp,v 1.10 2002-12-16 16:23:16 ibelyaev Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.11 2003-04-06 18:49:48 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/12/16 16:23:16  ibelyaev
+//  update for newer version of Geant4 (release 5.0)
+//
 // Revision 1.9  2002/12/15 17:13:21  ibelyaev
 //  bug fixes and improved control over G4 verbosity
 //
@@ -97,6 +100,9 @@ GiGaRunManager::GiGaRunManager
   , m_delTrackAction ( false   ) 
   , m_delStepAction  ( false   ) 
   //
+  , m_runToolsList   ()
+  , m_runTools       ()  
+  //
 #ifdef GIGA_DEBUG 
   , m_verbosity      ( 100     )
 #else 
@@ -114,6 +120,8 @@ GiGaRunManager::GiGaRunManager
   declareProperty ( "DeleteTrackAction"          , m_delTrackAction ) ;
   declareProperty ( "DeleteStepAction"           , m_delStepAction  ) ;
   /// 
+  declareProperty ( "RunTools"                   , m_runToolsList   ) ;
+  ///
   declareProperty ( "Verbosity"                  , m_verbosity      ) ;
   ///
 #ifdef GIGA_DEBUG
@@ -350,6 +358,14 @@ StatusCode  GiGaRunManager::initializeRun()
     { return Exception("initializeRun(): G4 kernel must be initialised!");}
   if( !G4RunManager::ConfirmBeamOnCondition()          )
     { return Exception("initializeRun(): no G4 Beam-On conditions!");}
+  ///
+  // execute all run tools 
+  for( Tools::const_iterator itool = m_runTools.begin() ;
+       m_runTools.end() != itool ; ++itool ) 
+    {
+      const IGiGaTool* runTool = *itool ;
+      if( 0 != runTool ) { runTool -> process () ; }
+    }
   ///
   G4RunManager::RunInitialization();
   set_run_Is_Initialized( true );

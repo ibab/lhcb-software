@@ -1,27 +1,30 @@
-// $Id: GiGaPhysListBase.h,v 1.8 2002-05-07 12:21:29 ibelyaev Exp $
+// $Id: GiGaPhysListBase.h,v 1.9 2003-04-06 18:49:45 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/07 12:21:29  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 #ifndef       GIGA_GiGaPhysListBase_H
 #define       GIGA_GiGaPhysListBase_H 1 
 // ============================================================================
 /// base classes 
 #include "GiGa/IGiGaPhysList.h"
-#include "GiGa/GiGaBase.h"
+#include "GiGa/GiGaPhysicsListBase.h"
 
 /** @class GiGaPhysListBase GiGaPhysListBase.h GiGa/GiGaPhysListBase.h
  * 
  *  "implementation" of basis "Physics List"     
  *  it still has 3 pure abstract methods from G4VUserPhysicsList! 
  *
- *  @author Vanya Belyaev
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  */
 
 class GiGaPhysListBase: 
   public virtual IGiGaPhysList   , 
-  public          GiGaBase
+  public          GiGaPhysicsListBase
 {
 protected:
   
@@ -56,20 +59,35 @@ public:
    */
   virtual StatusCode   finalize       () ; 
   
-protected:
-  ///
-  double    defCut() const { return m_DefaultCutValue; } 
-  ///
-private:
-  ///
-  GiGaPhysListBase() ; ///< no default constructor 
-  GiGaPhysListBase           ( const GiGaPhysListBase& ) ; //< no copy
-  GiGaPhysListBase& operator=( const GiGaPhysListBase& ) ; //< no assignment  
-  ///
+  /** get G4VUserPhysicsList 
+   *  @see IGiGaPhysList
+   *  @see IGiGaPhysicsList
+   *  @see G4VUserPhysicsList
+   *  @return pointer to G4VUserPhysicsList object
+   */
+  virtual G4VUserPhysicsList* physicsList ()  const ;
+  
+  /** "SetCuts" method sets a cut value for all particle types 
+   *   in the particle table
+   *   @see IGiGaPhysList 
+   *   @see IGiGaPhysicsList 
+   *   @see G4VUserPhysicsList 
+   */
+  virtual void SetCuts () ;
+
 private:
 
-  double    m_DefaultCutValue  ; //default cut value
+  // the default constructor is disabled 
+  GiGaPhysListBase() ;
+  // the copy constructor is disabled 
+  GiGaPhysListBase           ( const GiGaPhysListBase& ) ; 
+  // the assignement operator is disabled
+  GiGaPhysListBase& operator=( const GiGaPhysListBase& ) ; 
 
+private:
+
+  mutable G4VUserPhysicsList* m_self ;
+  
 };
 // ============================================================================
  
