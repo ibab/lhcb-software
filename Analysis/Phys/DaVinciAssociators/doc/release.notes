@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.33 2004-01-22 10:47:50 jvantilb Exp $
+! $Id: release.notes,v 1.34 2004-01-26 14:39:05 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
-! 2004-01-07 - Jeroen van Tilburg
+!================= DaVinciAssociators v4r3 2004-01-26 ======================
+! 2004-01-22 - Jeroen van Tilburg
  - CompositeParticle2MCLinks.h/.cpp - Added options to ignore decays 
    through resonances and to allow associations with inclusive decay mode:
       - inclusiveMode: if true not all particles need to be reconstructed.
@@ -11,7 +12,6 @@
       - maxResonanceLifeTime: Boundary to determine whether MCParticle 
                               should be considered as resonance.
 
-!================= DaVinciAssociators v4r3 2004-01-14 ======================
 ! 2004-01-14 - Gloria CORTI
  - use PhysEvent v* to have same package for LHCb v12r1 and LHCb >= v14r0
 
