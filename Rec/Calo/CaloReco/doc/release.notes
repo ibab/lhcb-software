@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.25 2003-03-24 11:12:26 ranjard Exp $
+! $Id: release.notes,v 1.26 2003-04-08 08:36:08 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,10 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2003-04-08 - Vanya BELYAEV
+ - src/CaloHyposMerge.cpp    Add split photons (CaloHypoLocation::SplitPhotons)
+                             to the default list of "merged" hypos 
 
 !====================== CaloReco v1r4 2003-03-24 ==========================
 ! 2003-03-13 - Vanya BELYAEV

@@ -1,8 +1,11 @@
-// $Id: CaloHyposMerge.cpp,v 1.2 2002-11-14 14:28:38 ibelyaev Exp $
+// $Id: CaloHyposMerge.cpp,v 1.3 2003-04-08 08:36:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/14 14:28:38  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
 // new package 
 //
@@ -54,6 +57,7 @@ CaloHyposMerge::CaloHyposMerge( const std::string& name ,
   m_hypos.push_back ( CaloHypoLocation::Photons      ) ;
   m_hypos.push_back ( CaloHypoLocation::Electrons    ) ;  
   m_hypos.push_back ( CaloHypoLocation::MergedPi0s   ) ;
+  m_hypos.push_back ( CaloHypoLocation::SplitPhotons ) ;
   /// addresses for input hypos  
   declareProperty   ( "InputHypos" , m_hypos         ) ;
   /// set the default value for input data 
@@ -87,6 +91,12 @@ StatusCode CaloHyposMerge::initialize()
     { return Error("Base class CaloAlgorithm could not be initialized",sc); }
   /// input data?
   if( m_hypos.empty() ) { Warning("No input data is specified!"); }
+  
+  // eliminate duplicates 
+  std::sort     ( m_hypos.begin ()  , m_hypos.end () );
+  Addresses::iterator it = std::unique ( m_hypos.begin () , m_hypos.end () );
+  m_hypos.erase ( it                , m_hypos.end () ) ;
+  
   return sc ;
 };
 // ============================================================================
