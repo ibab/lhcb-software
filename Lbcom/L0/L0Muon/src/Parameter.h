@@ -1,3 +1,4 @@
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Parameter.h,v 1.2 2001-05-03 09:10:32 atsareg Exp $
 #ifndef PARAMETER_H
 #define PARAMETER_H 1
 
@@ -30,9 +31,9 @@ public:
   // Get parameters
   
   double  get(const std::string& name) ;
-  double  get(const std::string& name, long index) ;
+  double  get(const std::string& name, unsigned int index) ;
   long    getInt(const std::string& name) ;
-  long    getInt(const std::string& name, long index) ;
+  long    getInt(const std::string& name, unsigned int index) ;
   std::vector<double> getVector(const std::string& name) ;
   std::vector<long> getVectorInt(const std::string& name) ;
   long    sizeVector(const std::string& name) const;

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Parameter.cpp,v 1.1.1.1 2001-04-06 14:26:03 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Parameter.cpp,v 1.2 2001-05-03 09:10:31 atsareg Exp $
 #define PARAMETER_CPP
 
 // Include files
@@ -24,45 +24,93 @@ Parameter::~Parameter()
 
 
 double  Parameter::get(const std::string& name) {
-    return m_parameter[name];
+    std::map<std::string, double>::const_iterator ci;
+    ci = m_parameter.find(name);
+    if ( ci != m_parameter.end() ) {
+        return m_parameter[name];
+    } else {
+        return 0.;
+    }	
 }
   
-double  Parameter::get(const std::string& name, long index) {
-    return m_parameterVector[name][index];
+double  Parameter::get(const std::string& name, unsigned int index) {
+    std::map<std::string, std::vector<double> >::iterator ci;
+    ci = m_parameterVector.find(name);
+    if ( ci != m_parameterVector.end() ) {
+        if( index < (*ci).second.size() ) {
+            return m_parameterVector[name][index];
+	} else {
+	    return 0.;
+	}   
+    } else {
+        return 0.;
+    }	
 }  
 
 long  Parameter::getInt(const std::string& name) {
-    return toLong(m_parameter[name]);
+    std::map<std::string, double>::const_iterator ci;
+    ci = m_parameter.find(name);
+    if ( ci != m_parameter.end() ) {
+        return toLong(m_parameter[name]);
+    } else {
+        return 0;
+    }	
 }
   
-long  Parameter::getInt(const std::string& name, long index) {
-    return toLong(m_parameterVector[name][index]);				    
+long  Parameter::getInt(const std::string& name, unsigned int index) {
+    std::map<std::string, std::vector<double> >::const_iterator ci;
+    ci = m_parameterVector.find(name);
+    if ( ci != m_parameterVector.end() ) {
+        if( index < (*ci).second.size() ) {
+            return toLong(m_parameterVector[name][index]);
+	} else {
+	    return 0;
+	}   
+    } else {
+        return 0;
+    }
 } 
 
 std::vector<double> Parameter::getVector(const std::string& name) {
-    return m_parameterVector[name];
+    std::map<std::string, std::vector<double> >::const_iterator ci;
+    ci = m_parameterVector.find(name);
+    if ( ci != m_parameterVector.end() ) {
+        return m_parameterVector[name];
+    } else {
+        return std::vector<double>();
+    }
 }
 
 std::vector<long> Parameter::getVectorInt(const std::string& name) {
-    std::vector<long> tmp;
-    std::vector<double>::iterator it;
-    
-    for (it=m_parameterVector[name].begin();
-         it != m_parameterVector[name].end(); it++) {
-        tmp.push_back(toLong(*it));
+    std::map<std::string, std::vector<double> >::const_iterator ci;
+    ci = m_parameterVector.find(name);
+    if ( ci != m_parameterVector.end() ) {
+        std::vector<long> tmp;
+	std::vector<double>::iterator it;
+
+	for (it=m_parameterVector[name].begin();
+             it != m_parameterVector[name].end(); it++) {
+            tmp.push_back(toLong(*it));
+	}
+	return tmp;	
+    } else {
+        return std::vector<long>();
     }
-    return tmp;	
 }
 
 long Parameter::sizeVector(const std::string& name) const {
-    return m_parameter.size();
+    std::map<std::string, std::vector<double> >::const_iterator ci;
+    ci = m_parameterVector.find(name);
+    if ( ci != m_parameterVector.end() ) {
+        return (*ci).second.size();
+    } else {
+        return 0;
+    }	
 }   
  
 
 void Parameter::addParameter( double x, const std::string& name) {
-//    cout << " adding to "+name+" " << x << endl;
     m_parameter[name] = x;
-//    cout << "added " << m_parameter[name] << endl;
 }
 
 void Parameter::addParameterVector( double y, const std::string& name) {
