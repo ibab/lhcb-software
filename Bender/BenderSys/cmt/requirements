@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.44 2005-01-21 10:29:07 ibelyaev Exp $ 
+# $Id: requirements,v 1.45 2005-01-25 09:12:15 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -9,7 +9,7 @@ package       BenderSys
 version       v4r5 	
 author        Vanya BELYAEV
 
-use           GaudiPython    v6r10 
+use           GaudiPython    v6r11
 
 # =========== Bender Application itself =======================================
 use           Bender         v4r5   Phys 
@@ -41,6 +41,9 @@ use           LoKiHybrid     v4r5   Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.44  2005/01/21 10:29:07  ibelyaev
+#  preparation for v4r5
+#
 # =============================================================================
 # The END 
 # =============================================================================
