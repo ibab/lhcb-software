@@ -4,6 +4,11 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v1r14p1 2004-12-09 ======================
+! 2004-12-09 - Marco Cattaneo
+ - Suppress creation of dictionaries, as they do not work with GaudiObjDesc v7,
+   and are in any case not necessary for transient-only classes
+
 ! 2004-11-20 - Chris Jones
  - Improved handling of events with no pixels.
 

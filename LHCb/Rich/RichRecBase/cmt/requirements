@@ -2,8 +2,11 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.26 2004-11-02 13:00:52 jonrob Exp $
+# $Id: requirements,v 1.27 2004-12-09 15:36:59 cattanem Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.26  2004/11/02 13:00:52  jonrob
+# Update the XML files for improved handling by cmt and make
+#
 # Revision 1.25  2004/10/27 14:34:16  jonrob
 # Various updates
 #
@@ -19,7 +22,7 @@
 #============================================================================
 
 package   RichRecBase
-version   v1r14
+version   v1r14p1
 
 #============================================================================
 # Structure
@@ -40,15 +43,15 @@ include_dirs $(RICHRECBASEROOT)
 # Build GOD objects
 #============================================================================
 document obj2doth RichRecBase_CommonObj2Doth   ../xml/*.xml
-document obj2dict RichRecBase_CommonObj2Dict   ../xml/*.xml
+#document obj2dict RichRecBase_CommonObj2Dict   ../xml/*.xml
 
 #============================================================================
 # Build libraries (including dictionary)
 #============================================================================
 library RichRecBase           ../src/event/*.cpp ../src/base/*.cpp
-library RichRecBaseEventDict  ../dict/*.cpp
+#library RichRecBaseEventDict  ../dict/*.cpp
 
-apply_pattern component_library library=RichRecBaseEventDict
+#apply_pattern component_library library=RichRecBaseEventDict
 apply_pattern linker_library    library=RichRecBase
 
 #============================================================================
