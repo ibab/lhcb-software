@@ -11,6 +11,8 @@ Purpose: LHCb reconstruction program
 
 - Dst changes
   . Remove L0/Calo and L0/FullCalo, can be rebuilt from RawBuffer
+  . Backwards incompatible update of CaloCluster - new seed attribute
+    (CaloEvent v13r0, CaloReco v1r8)
 
 
 </PRE><H1><A NAME=v22r0>2003-12-12 Brunel v22r0</A></H1><PRE>

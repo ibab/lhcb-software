@@ -55,7 +55,7 @@ use BrunelAlgs          v3r3	Rec
 use CaloInterfaces      v3r1  	Calo
 use CaloUtils           v4r6  	Calo
 use CaloMonitor         v1r6  	Calo
-use CaloReco            v1r7	Calo
+use CaloReco            v1r8	Calo
 use CaloPIDs		v1r2	Calo
 
 # Velo

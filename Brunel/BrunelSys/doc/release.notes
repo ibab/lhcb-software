@@ -4,7 +4,8 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
-! 2004-01-08 - Marco Cattaneo
+!======================= BrunelSys v23r0 2003-01-13 =======================
+! 2004-01-13 - Marco Cattaneo
  - Modified requirements for Brunel v23r0. Uses LHCB v15r0, GAUDI v14r0
 
    Packages modified: RiSicbGeom v3r8, ITAlgorithms v13r1, CaloInterfaces v3r1,
@@ -12,7 +13,8 @@
                       RichRecSys v1r6, RichDAQ v1r1, RichDetTools v3r5,
                       RichRecBase v1r8, BrunelAlgs v3r3, TrExtrapolator v2r10,
                       MuonRec v2r4, MuonID v3r7, TrCleanEx v2r7p2, 
-                      TrMatching v2r8, TrIntraPR v2r8, UpstreamPR v2r9
+                      TrMatching v2r8, TrIntraPR v2r8, UpstreamPR v2r9,
+                      CaloReco v1r8
 
 !======================= BrunelSys v22r0 2003-12-12 =======================
 ! 2003-12-10 - Marco Cattaneo
