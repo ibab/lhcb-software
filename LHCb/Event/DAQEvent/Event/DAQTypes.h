@@ -13,8 +13,8 @@
  */
  
 #ifdef WIN32
-typedef __int32 raw_int ;
-typedef __int16 l1_int ;
+typedef int   raw_int ;
+typedef short l1_int ;
 
 #else
 //(See at /usr/include/sys/types.h)

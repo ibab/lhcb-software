@@ -3,6 +3,10 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
+!=============== DAQEvent v4r5p1 2005-01-31 ===========================
+! 2005-01-31 - Marco Cattaneo
+ - Fix typedefs in DAQTypes.h to compile on Windows
+
 !=============== DAQEvent v4r5 2004-10-26 =============================
 ! 2004-10-26 - Marco Cattaneo
  - Change meaning of "BankType" field in RawBank header. Now top 8 bits are
