@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.h,v 1.5 2004-07-21 08:01:50 cattanem Exp $
+// $Id: XmlCnvSvc.h,v 1.6 2005-03-18 14:52:34 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_H
 #define DETDESCCNV_XMLCNVSVC_H
@@ -62,12 +62,12 @@ public:
   /**
    * Create an XML address using explicit arguments to identify a single object
    * @param svc_type the service type
-   * @param CLID the CLID of the XML Element for which an address is created
+   * @param clid the CLID of the XML Element for which an address is created
    * @param par an array of two strings containing the dbname and objectname 
    * in this order
-   * @param ip can be ignored for XML addresses
    * @param refpAddress the new address created
    * @return a StatusCode giving the status of the address creation
+   * @note unsigned long fourth argument can be ignored for XML addresses
    */
   virtual StatusCode createAddress(long  svc_type,
                                    const CLID& clid,

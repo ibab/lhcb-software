@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.5 2004-07-21 08:01:50 cattanem Exp $
+// $Id: XmlParserSvc.cpp,v 1.6 2005-03-18 14:52:34 cattanem Exp $
 
 // Include Files
 #include <limits.h>
@@ -101,12 +101,15 @@ xercesc::DOMDocument* XmlParserSvc::parse (const char* fileName) {
     try {
       m_parser->parse(fileName);
       log << MSG::DEBUG << "parsing file " << fileName << endreq;
+      // get a pointer to the DOM Document and also take the responsibility of
+      // freeing the memory
+      xercesc::DOMDocument *doc = m_parser->adoptDocument();
       // if the document is not null, cache it
-      if (m_parser->getDocument() != 0) {
-        cacheItem (fileName, m_parser->getDocument());
+      if (doc != 0) {
+        cacheItem (fileName, doc);
       }
       // returns the parsed document
-      return m_parser->getDocument();
+      return doc;
     } catch (xercesc::XMLPlatformUtilsException e) {
       log << MSG::ERROR << "Unable to find file " << fileName
           << " !" << endreq;      
@@ -146,8 +149,15 @@ xercesc::DOMDocument* XmlParserSvc::parseString (std::string source) {
 //  Parse
 // -----------------------------------------------------------------------
 void XmlParserSvc::clearCache() {
-  // just remove everything from the cache
-  m_cache.erase(m_cache.begin(), m_cache.end());
+  // remove everything from the cache
+  //    first delete the DOM documents
+  m_parser->resetDocumentPool();
+  //    release the memory used by the cached objects
+  for (cacheType::iterator i = m_cache.begin(); i != m_cache.end(); ++i){
+    i->second.document->release();
+  }
+  //    then clear the chached pointers
+  m_cache.clear();
 }
 
 
@@ -266,7 +276,9 @@ void XmlParserSvc::cacheItem (std::string fileName,
       log << MSG::ERROR << "The cache is full and empty at the same time !!!"
           << endreq;
     } else {
-      // else remove the winner
+      // else release the memory used by the winner
+      winner->second.document->release();
+      // and its entry in the map
       m_cache.erase (winner);
     }
   }

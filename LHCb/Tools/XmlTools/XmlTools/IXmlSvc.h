@@ -1,4 +1,4 @@
-// $Id: IXmlSvc.h,v 1.3 2003-04-25 08:53:56 sponce Exp $
+// $Id: IXmlSvc.h,v 1.4 2005-03-18 14:52:34 cattanem Exp $
 
 #ifndef DETDESCCNV_IXMLSVC_H
 #define DETDESCCNV_IXMLSVC_H
@@ -82,7 +82,7 @@ public:
    * @param value string which defines the value of the parameter.
    * @return true if success 
    */
-  virtual bool addParameter (const char*,
+  virtual bool addParameter (const char* name,
                              const char* value) = 0;
 
   /**
