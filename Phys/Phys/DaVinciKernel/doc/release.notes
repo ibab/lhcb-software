@@ -3,6 +3,8 @@
 ! Responsible : P. Koppenburg
 
 ! 2004-09-08 - P. Koppenburg
+ - IParticleFilter
+   . Remove statistics
  - PhysDesktop.*
    . Warn only once when output location is changed
 
