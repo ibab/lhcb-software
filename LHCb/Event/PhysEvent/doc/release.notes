@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.49 2004-06-18 08:29:02 pkoppenb Exp $
+! $Id: release.notes,v 1.50 2004-06-18 09:08:36 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
+!======================== PhysEvent v8r4 2004-06-18 ========================
 ! 2004-06-18 - P. Koppenburg for P. Igo-Kemenes and C. Jacoby
  - xml/EffCheckEvent.xml
    Access to MC particle information for efficiency algorithms
