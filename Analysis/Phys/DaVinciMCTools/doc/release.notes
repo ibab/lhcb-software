@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.1.1.1 2002-05-21 07:32:01 gcorti Exp $
+! $Id: release.notes,v 1.2 2002-05-24 16:11:16 gcorti Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
 
 ! >>>>>>>>>>>>>>>>>>>>>>> DaVinciMCTools v1r0 <<<<<<<<<<<<<<<<<<<<<
+
+! 2002-05-24 - Gloria Corti
+ - Use commited version of yacc automatically generated code (win)
+ - Remove YYCLASS in mcparser.ypp to fix compilation error on win
+ - Replace strndup in mclexer.lpp (not available on win) with 
+   strncpy (Pere Mato)
 
 ! 2002-05-19 Gloria Corti
   Package holding tools for analysis of Monte Carlo events

@@ -51,10 +51,10 @@
 union YYSTYPE {
   char *text;
   double dval;
-  MCDecayFinder::Quarks quarkval;
-  MCDecayFinder::Quantums quantumval;
-  MCDecayFinder::Descriptor *desc;
-  MCDecayFinder::ParticleMatcher *match;
-  std::vector<MCDecayFinder::ParticleMatcher *> *mvect;
+  Quarks quarkval;
+  Quantums quantumval;
+  Descriptor *desc;
+  ParticleMatcher *match;
+  std::vector<ParticleMatcher *> *mvect;
 } ;
 

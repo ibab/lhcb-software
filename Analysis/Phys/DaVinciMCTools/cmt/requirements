@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2002-05-21 07:32:01 gcorti Exp $
+# $Id: requirements,v 1.2 2002-05-24 16:11:03 gcorti Exp $
 # Created    : 19/05/2002
 # Maintainer : Gloria Corti
 #
@@ -24,18 +24,20 @@ use  PhysEvent           v4r*  Event
 use  DaVinciAssociators  v1r*  Phys
 
 # Extra language for translating yacc to c++
+# This is used to generate once the necessary files on Linux that are
+# then committed (tool not available on win)
 #============================================================================
-macro yaccppflags       " -l -d "
-macro yaccpp            "yacc $(yaccppflags)
-make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header
-document yacc_to_icpp MCParser mcparser.ypp
+#macro yaccppflags       " -l -d "
+#macro yaccpp            "yacc $(yaccppflags)
+#make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header
+#document yacc_to_icpp MCParser mcparser.ypp
 
-macro lexppflags        " -L "
-macro lexpp             "lex ${lexppflags}
-make_fragment lex_to_icpp -suffix=icpp -header=lex_to_icpp_header
-document lex_to_icpp MCLexer mclexer.lpp
-macro mcparser_ypp_yaccpp_prefix "MCDecayFinder::"
-macro mclexer_lpp_lexpp_prefix "MCDecayFinder::"
+#macro lexppflags        " -L "
+#macro lexpp             "lex ${lexppflags}
+#make_fragment lex_to_icpp -suffix=icpp -header=lex_to_icpp_header
+#document lex_to_icpp MCLexer mclexer.lpp
+#macro mcparser_ypp_yaccpp_prefix "MCDecayFinder::"
+#macro mclexer_lpp_lexpp_prefix "MCDecayFinder::"
 
 # Component library building rule
 #============================================================================

@@ -71,7 +71,7 @@ PARTICLE	{P_NAME}{Q_STATE}{P_MASS}{P_CHARGE}
 "..."		return ELIPSIS;
 "pp"		return PP;
 "?"		return QMARK;
-{PARTICLE}	{ yylval.text = strndup(yytext,yyleng); return NAME; }
+{PARTICLE}	{ yylval.text = strncpy((char*)malloc(strlen(yytext)+1,yytext,yyleng); return NAME; }
 [[:blank:]\n]	/* eat the blanks! */
 .		throw YYCLASSDescriptorError(std::string("Unexpected char '")+(yytext[0])+"'");
 

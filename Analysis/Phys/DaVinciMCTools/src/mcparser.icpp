@@ -36,11 +36,11 @@ static char yysccsid[] = "@(#)yaccpar	1.9 (Berkeley) 02/21/93";
 #if 0
   char *text;
   double dval;
-  MCDecayFinder::Quarks quarkval;
-  MCDecayFinder::Quantums quantumval;
-  MCDecayFinder::Descriptor *desc;
-  MCDecayFinder::ParticleMatcher *match;
-  std::vector<MCDecayFinder::ParticleMatcher *> *mvect;
+  Quarks quarkval;
+  Quantums quantumval;
+  Descriptor *desc;
+  ParticleMatcher *match;
+  std::vector<ParticleMatcher *> *mvect;
 #endif
 #define LPAREN 257
 #define RPAREN 258
