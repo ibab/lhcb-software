@@ -1,4 +1,4 @@
-// $Id: L0mProcUnit.cpp,v 1.6 2001-07-26 13:05:37 cattanem Exp $
+// $Id: L0mProcUnit.cpp,v 1.7 2001-10-04 16:25:00 atsareg Exp $
 
 #ifdef WIN32
 // Disable warning C4786 identifier truncated to 255 characters in debug info.
@@ -80,28 +80,26 @@ L0Muon::StatusCode L0mProcUnit::execute(MsgStream& log) {
       m_status = L0Muon::PU_EMPTY;
     } else {
       // Take account of the limited to 7 bits Pt presentation
-      precisionPt();
+      for(ilmc=m_candidates.begin(); ilmc != m_candidates.end(); ilmc++) {
+        precisionPt(*ilmc);
+      }
       m_status = L0Muon::OK;	
     }	
     
     return L0Muon::StatusCode(m_status);
 }
 
-void L0mProcUnit::precisionPt() {
+void L0mProcUnit::precisionPt(L0MuonCandidate* plmc) {
 
   // Take account of the limited to x bits Pt presentation
-  std::vector<L0MuonCandidate*>::iterator ilmc;
-  if(!m_candidates.empty()) {
-    for (ilmc = m_candidates.begin(); ilmc != m_candidates.end(); ilmc++) {
-      double realPt = (*ilmc)->pt();
-      int roundedPt = int((fabs(realPt)+m_precision/2.)/m_precision);
-      if ( roundedPt > m_bins ) roundedPt = m_bins;
-      double newPt = roundedPt*m_precision;
-      if ( realPt < 0.) newPt = -newPt;
-      (*ilmc)->setPt(newPt);
-    }
-  }  
-}
+  double realPt = plmc->pt();
+  int roundedPt = int((fabs(realPt)+m_precision/2.)/m_precision);
+  if ( roundedPt > m_bins ) roundedPt = m_bins;
+  double newPt = roundedPt*m_precision;
+  if ( realPt < 0.) newPt = -newPt;
+  plmc->setPt(newPt);
+}  
+
 
 void L0mProcUnit::clear() {
   m_towers.clear();
