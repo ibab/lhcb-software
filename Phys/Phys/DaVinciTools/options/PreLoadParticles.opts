@@ -4,8 +4,7 @@
 //========================================================================
 //  ApplicationMgr.TopAlg += { "PreLoadParticles" };
 PreLoadParticles.PhysDesktop.ParticleMakerType = "ChargedParticleMaker";
-PreLoadParticles.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};
-PreLoadParticles.PhysDesktop.OutputLocation = "/Event/Phys/Prod";
+//PreLoadParticles.PhysDesktop.ChargedParticleMaker.ParticleNames = {"All"};
 
 // Example of out to set property of subsequent algorithm
-// MyAlgorithm.PhysDesktop.InputLocations = {"/Event/Phys/Prod"};
+// MyAlgorithm.PhysDesktop.InputLocations = {"/Event/Phys/BlaBla"};
