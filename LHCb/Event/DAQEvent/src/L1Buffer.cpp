@@ -1,4 +1,4 @@
-// $Id: L1Buffer.cpp,v 1.3 2003-11-24 16:06:06 cattanem Exp $
+// $Id: L1Buffer.cpp,v 1.4 2004-01-12 09:14:41 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -39,7 +39,7 @@ StreamBuffer& L1Buffer::serialize( StreamBuffer& s ) {
     >> m_currentSize;
 
   if( 0 != m_buffer ) delete[] m_buffer;
-  m_buffer = new l1_int[m_currentSize];
+  m_buffer = new l1_int[m_allocatedSize];
   long i = 0;
   while( i < this->currentSize() ) {
 #ifdef WIN32 // VERY temporary hack for Windows!

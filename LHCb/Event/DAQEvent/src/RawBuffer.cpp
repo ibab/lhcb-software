@@ -1,4 +1,4 @@
-// $Id: RawBuffer.cpp,v 1.1 2003-11-24 16:06:06 cattanem Exp $
+// $Id: RawBuffer.cpp,v 1.2 2004-01-12 09:14:41 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -40,7 +40,7 @@ StreamBuffer& RawBuffer::serialize( StreamBuffer& s ) {
     >> m_currentSize;
 
   if( 0 != m_buffer ) delete[] m_buffer;
-  m_buffer = new raw_int[m_currentSize];
+  m_buffer = new raw_int[m_allocatedSize];
   long i = 0;
   while( i < this->currentSize() ) {
 #ifdef WIN32 // VERY temporary hack for Windows!
