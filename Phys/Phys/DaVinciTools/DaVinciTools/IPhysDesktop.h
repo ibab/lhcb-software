@@ -1,10 +1,9 @@
-// $Id: IPhysDesktop.h,v 1.1 2002-03-27 20:27:46 gcorti Exp $
+// $Id: IPhysDesktop.h,v 1.2 2002-05-15 23:13:34 gcorti Exp $
 #ifndef DAVINCITOOLS_IPHYSDESKTOP_H 
 #define DAVINCITOOLS_IPHYSDESKTOP_H 1
 
 // Include files
 #include "GaudiKernel/IAlgTool.h"
-//#include "GaudiKernel/IDataProviderSvc.h"
 
 // Forward declarations
 class StatusCode;
@@ -15,9 +14,9 @@ class Particle;
 static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 0);
 
 
-/** @class IPhysDesktop IPhysDesktop.h
- *  
- *  This class creates a particle and a vertex keyed containers
+/** @class IPhysDesktop IPhysDesktop.h DaVinciTools/IPhysDesktop.h
+ *  Interface for the Desk Top
+ *  upon which the user keeps his particles and vertices
  *  @author Sandra Amato
  *  @date   18/02/2002
  */
