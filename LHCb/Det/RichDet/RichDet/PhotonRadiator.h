@@ -20,7 +20,7 @@ class PhotonRadiator {
 
 public:
   typedef int RadiatorID;        // in principle, would be nicer to have
-  enum {C4F10, CF4, Aerogel=0};  // "enum RadiatorID {C4F10, CF4, Aerogel=0}"
+  enum {CF4, C4F10, Aerogel=0};  // "enum RadiatorID {C4F10, CF4, Aerogel=0}"
                                  // but then looping is ugly
 
   PhotonRadiator (const RadiatorID id, const Rich &rich);
