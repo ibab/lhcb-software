@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.5 2002-03-20 15:49:09 ibelyaev Exp $
+# $Id: requirements,v 1.6 2002-03-20 21:50:45 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2002/03/20 15:49:09  ibelyaev
+#  add simple adaptor for std::map/HashTable classes
+#
 # Revision 1.4  2002/03/18 18:16:21  ibelyaev
 #  small update for LHCbKernel package
 #
@@ -21,7 +24,7 @@
 # =============================================================================
 
 package           CaloKernel
-version           v1r2
+version           v1r3
 
 # =============== structure ===================================================
 branches          src cmt doc CaloKernel
