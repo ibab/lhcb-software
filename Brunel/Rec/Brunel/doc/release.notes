@@ -4,10 +4,26 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v10r0>20020423 Brunel v10r0</A></H1><PRE>
+   >>>>>>>>>>>>>>>>>>>>>>>>>>> Beware!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
+   >>>>>> Current head revision has very limited functionality!! <<<<<<<<<<
+   >>>>>>>>>>>>>>> Currently supports only dbase v241 <<<<<<<<<<<<<<<<<<<<<
+
+   Backwards incompatible version for use with the new event model.
+   All Fortran support removed, except for RICH digitisation and reconstruction.
+
+   In requirements
+   - use Gaudi    v10 and corresponding external packages
+   - use EventSys v10r0 Event (new Event model)
+   - remove all SICB dig*, tr*, rec* packages, except recrich
+
+
+! =================================================================
 </PRE><H1><A NAME=v9r1p1>20020419 Brunel v9r1p1</A></H1><PRE>
    - Brunelv243r3.opts: fix typo in included filename
      (#include "$BRUNELOPTS/BrunelTrOtItTT1.opts" was ItOt)
 
+! =================================================================
 </PRE><H1><A NAME=v9r1>20020320 Brunel v9r1</A></H1><PRE>
    Adds support for dbases v243r3, v243r1p1 (comparative study of TT1 options). 
    Includes several bug fixes (see below)

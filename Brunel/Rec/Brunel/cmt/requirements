@@ -17,7 +17,7 @@ set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
 #version_strategy first_choice
 
 #---CMT and Gaudi policy
-use GaudiPolicy  v5r4
+use GaudiPolicy  v5r5
 
 # External libraries - Gaudi v10
 use ExternalLibs   v3r6
@@ -99,16 +99,13 @@ use Futil        v10r3  SICB
 use detdes       v14    SICB
 use recevt       v3r4   SICB
 
-# digmuon needed for mu_cham_addr_ called by detdes/mudginit
-use digmuon      v4     SICB
+#use digmuon      v4     SICB
 #use digvdet      v2r3   SICB
 
 #use simmubg      v5r3   SICB
 
-# rececal needed for ecdinit, called from recevt/detinit
-use rececal      v7     SICB
-# rechcal needed for hcdinit, called from recevt/detinit
-use rechcal      v6r1   SICB
+# use rececal      v7     SICB
+# use rechcal      v6r1   SICB
 use recrich      v5r4   SICB
 
 #use axreclib     v4r3   SICB
@@ -117,10 +114,8 @@ use recrich      v5r4   SICB
 #use trilvl2      v5r1   SICB
 #use trimuon      v5     SICB
 #use trit0v       v5     SICB
-# triskel needed for trlast, called from recevt/uglast
-use triskel      v4     SICB
-# trit1tr needed for ptime, called by triskel/tevsum
-use trit1tr      v3r3   SICB
+#use triskel      v4     SICB
+#use trit1tr      v3r3   SICB
 #use trivert      v5r3   SICB
 #use trielec      v5r1   SICB
 
