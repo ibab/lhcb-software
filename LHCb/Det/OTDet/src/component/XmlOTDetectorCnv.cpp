@@ -1,7 +1,7 @@
-// $Id: XmlOTDetectorCnv.cpp,v 1.1.1.1 2002-05-26 22:36:33 jvantilb Exp $
+// $Id: XmlOTDetectorCnv.cpp,v 1.2 2003-06-16 13:40:41 sponce Exp $
 
 /// DetDesc
-#include "DetDesc/XmlUserDetElemCnv.h"
+#include "DetDescCnv/XmlUserDetElemCnv.h"
 /// OTDet 
 #include "OTDet/DeOTDetector.h"
 

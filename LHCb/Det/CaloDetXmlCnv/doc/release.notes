@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.7 2002-12-04 18:27:40 ranjard Exp $
+! $Id: release.notes,v 1.8 2003-06-16 13:36:27 sponce Exp $
 ! =============================================================================
 ! Package     : CaloDetXmlCnv
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2003-06-16 - Sebastien Ponce
+ - use new package DetDescCnv
 
 !===================== CaloDetXmlCnv v2r2 2002-12-04 ======================
 ! 2002-11-29 - Ivan Belyaev

@@ -1,7 +1,7 @@
-// $Id: XmlOTLayerCnv.cpp,v 1.1 2003-06-11 11:49:36 cattanem Exp $
+// $Id: XmlOTLayerCnv.cpp,v 1.2 2003-06-16 13:40:41 sponce Exp $
 
 /// DetDesc
-#include "DetDesc/XmlUserDetElemCnv.h"
+#include "DetDescCnv/XmlUserDetElemCnv.h"
 /// OTDet 
 #include "OTDet/DeOTLayer.h"
 

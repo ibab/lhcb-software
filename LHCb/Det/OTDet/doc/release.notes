@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.19 2003-06-11 11:49:36 cattanem Exp $
+! $Id: release.notes,v 1.20 2003-06-16 13:40:41 sponce Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
+
+! 2003-06-16 - Sebastien Ponce
+ - use new package DetDescCnv
 
 ! 2003-03-19 - Jeroen van Tilburg
  - Removed OTLayer. Functionality is now in new class DeOTModule, which 

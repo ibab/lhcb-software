@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2003-06-11 11:49:36 cattanem Exp $
+# $Id: requirements,v 1.10 2003-06-16 13:40:41 sponce Exp $
 # =========================================================================
 
 package  OTDet 
@@ -12,7 +12,8 @@ include_dirs      $(OTDETROOT)
 
 # =============== used packages ===========================================
 use LHCbKernel   v2r*   Kernel
-use DetDesc      v11r*  Det 
+use DetDesc      v12r*  Det 
+use DetDescCnv   v2r*   Det 
 
 # =============== own options ==========================================
 set OTDETOPTS  ${OTDETROOT}/options

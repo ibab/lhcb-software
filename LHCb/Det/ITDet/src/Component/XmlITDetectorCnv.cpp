@@ -1,6 +1,6 @@
 
 /// DetDesc
-#include "DetDesc/XmlUserDetElemCnv.h"
+#include "DetDescCnv/XmlUserDetElemCnv.h"
 /// ITDet 
 #include "ITDet/DeITDetector.h"
 
