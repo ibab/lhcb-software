@@ -1,5 +1,5 @@
 package DaVinciSys
-version v8r0
+version v8r0p1
 
 branches doc cmt
 
@@ -40,6 +40,11 @@ use  Bs2MuMu             v1r1   PhysSel
 use  Bd2KstarGamma       v1r1   PhysSel
 use  Bs2PhiGamma         v1r0   PhysSel
 
+use  B2HH                v1r2   PhysSel
+use  Bd2DstarPi          v1r0   PhysSel
+use  Bs2PhiEtac          v1r0   PhysSel
+use  Bs2PhiPhi           v1r0   PhysSel
+
 #--- Trigger
 use  L0DU                v6r4	L0
 use  L1Decision          v1r7   L1
@@ -58,6 +63,9 @@ use  TrExtrapolator      v2r5   Tr
 #--- TriggerFilter
 use  Utilities           v1r0   Tools
 use  TriggerFilter       v1r2   Tools
+
+#--- DecayPreselections
+use  DecayPresel         v1r1   Tools
 
 #--- Tools
 use  LoKi                v1r1   Tools
