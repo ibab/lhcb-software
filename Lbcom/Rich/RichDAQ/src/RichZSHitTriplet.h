@@ -4,8 +4,11 @@
  *  Header file for RICH DAQ utility class : RichZSHitTriplet
  *
  *  CVS Log :-
- *  $Id: RichZSHitTriplet.h,v 1.8 2005-01-13 13:12:41 jonrob Exp $
+ *  $Id: RichZSHitTriplet.h,v 1.9 2005-01-13 17:31:47 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2005/01/13 13:12:41  jonrob
+ *  Various updates
+ *
  *  Revision 1.7  2005/01/07 12:35:59  jonrob
  *  Complete rewrite
  *
@@ -202,7 +205,7 @@ private: // methods
   inline void dataInRange( const RichDAQ::ShortType value,
                            const RichDAQ::ShortType max ) const
   {
-    if ( value > max ) throw GaudiException( "Data out of range", "*RichZSPacked*", StatusCode::FAILURE );
+    if ( value > max ) throw GaudiException( "Data out of range", "*RichZSHitTriplet*", StatusCode::FAILURE );
   }
 
 private: // data
