@@ -1,4 +1,4 @@
-// $Id: SelectJPsiMuMu.cpp,v 1.2 2002-03-28 18:56:55 gcorti Exp $
+// $Id: SelectJPsiMuMu.cpp,v 1.3 2002-03-28 19:22:45 gcorti Exp $
 // Include files 
 
 // from STL
@@ -472,8 +472,9 @@ StatusCode SelectJPsiMuMu::execute() {
                         << " " << MuMuVertex.position().z() 
                         << endreq;       
                     log << MSG::DEBUG << ">>> error matrix " << endreq;       
-                    HepSymMatrix mat = MuMuVertex.positionErr();       
-                    for ( int i = 1; i != 4; i++ ) { 
+                    HepSymMatrix mat = MuMuVertex.positionErr(); 
+                    int i;
+                    for ( i = 1; i != 4; i++ ) { 
                       log << MSG::DEBUG << ">>> ";         
                       for ( int j = 1; j != 4; j++ ) {          
                         log << MSG::DEBUG << mat( i, j ) << "  ";           
@@ -493,7 +494,7 @@ StatusCode SelectJPsiMuMu::execute() {
                         << endreq;       
                     log << MSG::DEBUG << ">>> point error matrix " << endreq;
                     HepSymMatrix matp = candJpsi.pointOnTrackErr();       
-                    for ( int i = 1; i != 4; i++ ) { 
+                    for ( i = 1; i != 4; i++ ) { 
                       log << MSG::DEBUG << ">>> ";         
                       for ( int j = 1; j != 4; j++ ) {          
                         log << MSG::DEBUG << matp( i, j ) << "  ";           
@@ -509,7 +510,7 @@ StatusCode SelectJPsiMuMu::execute() {
                     log << MSG::DEBUG << ">>> four-momentum error matrix " 
                         << endreq;
                     HepSymMatrix matm = candJpsi.momentumErr();       
-                    for ( int i = 1; i != 5; i++ ) { 
+                    for ( i = 1; i != 5; i++ ) { 
                       log << MSG::DEBUG << ">>> ";         
                       for ( int j = 1; j != 5; j++ ) {          
                         log << MSG::DEBUG << matm( i, j ) << "  ";           
