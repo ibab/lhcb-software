@@ -4,6 +4,14 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-03-21 - Luis Fernandez
+ - src/DecayChainNTuple.{h, cpp}
+   . Removed, will be in DaVinciMCTools
+ - src/HltSelChecker_load.cpp
+   . DecayChainNTuple
+ - cmt/requirements
+   . Remove flag
+
 ! 2005-03-16 - P. Koppenburg
   - options/DVWriteDST.opts
    . Writes out DST with trigger-accepted events.

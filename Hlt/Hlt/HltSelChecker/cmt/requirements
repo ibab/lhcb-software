@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2005-03-21 10:08:05 pkoppenb Exp $
+# $Id: requirements,v 1.9 2005-03-21 15:23:27 lfernan Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 
@@ -22,5 +22,3 @@ library           HltSelChecker   ../src/*.cpp
 #============================================================================
 apply_pattern component_library library=HltSelChecker
 	     
-macro     HltSelChecker_cppflags " -DMCCheck " \
-          VisualC  " /DMCCheck "
