@@ -1,12 +1,11 @@
 package GenEvent
-version v2r1
+version v2r1p1
 
 branches cmt dict doc src xml Event
 
 use HepMC        v3r121p*	Sim
-use GaudiKernel  v12r*
-use GaudiObjDesc v4r* 
-use EventKernel  v2r*		Event
+use EventKernel  v*		Event
+use GaudiObjDesc v* 	-no_auto_imports
 
 include_dirs $(GENEVENTROOT)
 
