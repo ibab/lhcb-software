@@ -1,4 +1,6 @@
-# $Id: Minimalistic.py,v 1.1 2004-10-27 14:13:48 ibelyaev Exp $
+#!/usr/bin/env python
+# =============================================================================
+# $Id: Minimalistic.py,v 1.2 2004-10-27 14:20:44 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -50,6 +52,9 @@ if __name__ == '__main__' :
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/10/27 14:13:48  ibelyaev
+# *** empty log message ***
+#
 # Revision 1.1.1.1  2004/10/13 17:45:21  ibelyaev
 # New package: Star-Up Tutorial for Bender
 # 
