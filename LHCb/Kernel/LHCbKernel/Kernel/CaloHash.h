@@ -1,8 +1,11 @@
-// $Id: CaloHash.h,v 1.5 2004-07-28 13:25:16 ibelyaev Exp $
+// $Id: CaloHash.h,v 1.6 2004-07-28 17:11:04 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/07/28 13:25:16  ibelyaev
+//  fix a bug in Kernel/CaloHash.h VC++
+//
 // Revision 1.4  2004/07/27 14:01:37  ibelyaev
 //  modification/simplification of classes CaloMap&CaloHashMap
 //
@@ -47,7 +50,7 @@ struct CaloHash<const TYPE*>
   size_t operator() ( const TYPE* key ) const 
   { return 0 == key ? 0 : m_type( *key ) ; };
 private: 
-  Hash<TYPE> m_type ;
+  CaloHash<TYPE> m_type ;
 };
 
 template <class TYPE> 
