@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2004-03-22 11:57:55 ibelyaev Exp $ 
+# $Id: requirements,v 1.8 2004-03-26 10:10:51 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -14,7 +14,7 @@ use HIPPODRAW   v1r133
 use GaudiPython v6r4 
 
 # =========== Bender Application itself =======================================
-use           Bender         v3r0 Phys 
+use           Bender         v3r1 Phys 
 # =========== Bender Libraries ================================================
 use           BenderLibs     v3r0 Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
@@ -42,6 +42,9 @@ use           BenderUser     v3r0 Phys
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2004/03/22 11:57:55  ibelyaev
+#  update for Doc/LoKiDoc
+#
 # Revision 1.6  2004/03/16 09:48:20  ibelyaev
 #  version fix
 #

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2004-03-18 12:59:12 ibelyaev Exp $ 
+# $Id: requirements,v 1.6 2004-03-26 10:09:55 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 package           Bender
-version           v3r0
+version           v3r1
 
 #============================================================================
 branches          cmt doc src python
@@ -36,7 +36,7 @@ path_remove       LD_PRELOAD  GaudiKernel
 path_append       LD_PRELOAD  "" \
 	          Linux $(GAUDIKERNELROOT)/$(CMTCONFIG)/libGaudiKernel.so
 
-clean_script      cleanLDPRELOAD
+#clean_script      cleanLDPRELOAD
 
 # =============== application macro ===========================================
 macro             Bender_linkopts    "${application_linkopts}"
@@ -53,6 +53,9 @@ apply_pattern     application_path
 # The END
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2004/03/18 12:59:12  ibelyaev
+#  add clean scripts
+#
 # Revision 1.4  2004/03/16 08:46:22  ibelyaev
 #   fix a version
 #
