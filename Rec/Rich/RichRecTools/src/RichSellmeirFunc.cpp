@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichSellmeirFunc.cpp
  *
  *  Implementation file for tool : RichSellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.10 2004-07-27 20:15:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichSellmeirFunc.cpp,v 1.11 2005-02-17 09:56:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -116,10 +117,10 @@ StatusCode RichSellmeirFunc::initialize() {
     m_X[rad] = (RC3*sqrt(RE02)/(4.*RT));
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
-StatusCode RichSellmeirFunc::finalize() 
+StatusCode RichSellmeirFunc::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -128,7 +129,7 @@ StatusCode RichSellmeirFunc::finalize()
 double RichSellmeirFunc::photonsInEnergyRange( RichRecSegment * segment,
                                                const Rich::ParticleIDType id,
                                                const double botEn,
-                                               const double topEn ) const 
+                                               const double topEn ) const
 {
 
   // Some parameters of the segment
@@ -146,11 +147,12 @@ double RichSellmeirFunc::photonsInEnergyRange( RichRecSegment * segment,
 
   // correct for wavelength independant transmission coeff. in aerogel
   if ( Rich::Aerogel == rad ) nPhot *= m_waveIndepTrans;
-  return nPhot;
+
+  return ( nPhot < 0 ? 0 : nPhot );
 }
 
 double RichSellmeirFunc::paraW ( const Rich::RadiatorType rad,
-                                 const double energy ) const 
+                                 const double energy ) const
 {
   const double X = m_RXSPscale[rad] * log( (m_REP[rad]+energy)/(m_REP[rad]-energy) );
   const double Y = m_RXSMscale[rad] * log( (m_REM[rad]+energy)/(m_REM[rad]-energy) );

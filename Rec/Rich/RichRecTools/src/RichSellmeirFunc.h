@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichSellmeirFunc.h
  *
  *  Header file for tool : RichSellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.h,v 1.8 2004-07-27 20:15:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichSellmeirFunc.h,v 1.9 2005-02-17 09:56:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHSELLMEIRFUNC_H
 #define RICHRECTOOLS_RICHSELLMEIRFUNC_H 1
@@ -32,16 +33,18 @@
 #include "RichRecBase/IRichSellmeirFunc.h"
 #include "RichRecBase/IRichParticleProperties.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichSellmeirFunc RichSellmeirFunc.h
  *
  *  Tool to calculate quantities using the Sellmeir function and related
  *  parameters.
  *
- *  Uses formulae 37-39 in CERN-EP/89-150  (Ypsilantis)      
+ *  Uses formulae 37-39 in CERN-EP/89-150  (Ypsilantis)
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichSellmeirFunc : public RichRecToolBase,
                          virtual public IRichSellmeirFunc {
