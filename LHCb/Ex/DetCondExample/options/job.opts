@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/options/job.opts,v 1.1.1.1 2001-09-14 15:45:04 andreav Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/options/job.opts,v 1.2 2001-09-14 17:24:12 andreav Exp $
 //==============================================================
 // Standard Job options file
 //==============================================================
@@ -8,7 +8,7 @@
 //--------------------------------------------------------------
 
 // Dynamically load component library for DetCond services and converters
-ApplicationMgr.DLLs    = { "DetCond" };
+ApplicationMgr.DLLs    = { "DetCond", "GaudiAlg"  };
 
 // Configure which DetDataSvc and DetPersistencySvc should be used
 ApplicationMgr.DetectorDataSvc = "ConditionsDBDataSvc";
