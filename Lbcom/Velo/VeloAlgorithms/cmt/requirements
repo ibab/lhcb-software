@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes
 #
 package           VeloAlgorithms
-version           v2r3
+version           v2r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,12 +14,11 @@ include_dirs $(VELOALGORITHMSROOT)
 #============================================================================
 use  VeloEvent  v11r*   Event
 use  VeloDet    v7r*   	Det
-use  VeloKernel v1r*    Velo -no_auto_imports
 use  NAGC v5r*
 
 # Component library building rule
 #============================================================================
-library          VeloAlgorithms    ../src/*.cpp -import=VeloKernel
+library          VeloAlgorithms    ../src/*.cpp
 
 # define component library link options
 #============================================================================
