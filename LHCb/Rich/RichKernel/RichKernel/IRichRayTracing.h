@@ -1,4 +1,4 @@
-// $Id: IRichRayTracing.h,v 1.4 2004-07-02 14:09:27 jonrob Exp $
+// $Id: IRichRayTracing.h,v 1.5 2004-07-15 14:12:10 papanest Exp $
 #ifndef RICHKERNEL_IRICHRAYTRACING_H
 #define RICHKERNEL_IRICHRAYTRACING_H 1
 
@@ -76,8 +76,7 @@ public:
   virtual StatusCode reflectSpherical ( HepPoint3D& position,
                                         HepVector3D& direction,
                                         const HepPoint3D& CoC,
-                                        double radius,
-                                        const RichTraceMode mode = RichTraceMode() ) const = 0;
+                                        double radius ) const = 0;
 };
 
 #endif // RICHKERNEL_IRICHRAYTRACING_H
