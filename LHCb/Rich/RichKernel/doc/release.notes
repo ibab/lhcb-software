@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.36 2004-03-18 14:44:18 cattanem Exp $
+! $Id: release.notes,v 1.37 2004-06-03 16:18:12 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2004-06-03 - Chris Jones
+ - Remove default initialisation value for RichHypoData, to fix windows problems
+   Users must now always specify an initialisation value in the constructor and
+   reset functions (no bad thing...)
 
 !======================= RichKernel v4r5 2004-03-18 =======================
 ! 2004-03-14 - Chris Jones

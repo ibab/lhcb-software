@@ -1,4 +1,4 @@
-// $Id: RichHypoData.h,v 1.6 2004-03-16 13:34:51 jonesc Exp $
+// $Id: RichHypoData.h,v 1.7 2004-06-03 16:18:12 jonrob Exp $
 #ifndef RICHKERNEL_RICHHYPODATA_H
 #define RICHKERNEL_RICHHYPODATA_H 1
 
@@ -30,8 +30,8 @@ public:
   typedef boost::array<TYPE,Rich::NParticleTypes> DataArray;
   typedef boost::array<bool,Rich::NParticleTypes> ValidityArray;
 
-  /// Default Constructor
-  RichHypoData( TYPE value = static_cast<TYPE>(-1) ) { resetData(value); }
+  /// Constructor with initialisation value
+  RichHypoData( const TYPE value ) { resetData(value); }
 
   /// Destructor
   ~RichHypoData() { }
@@ -43,11 +43,10 @@ public:
   void setData( const Rich::ParticleIDType type, const TYPE value );
 
   /// Reset all data
-  void resetData( const TYPE value = static_cast<TYPE>(-1) );
+  void resetData( const TYPE value );
 
   /// Reset data for given particle hypothesis
-  void resetData( const Rich::ParticleIDType type,
-                  const TYPE value = static_cast<TYPE>(-1) );
+  void resetData( const Rich::ParticleIDType type, const TYPE value );
 
   /// Const Accessor to data array
   const DataArray & dataArray() const;
@@ -55,7 +54,12 @@ public:
   /// Check whether a piece of data has been initialised
   bool dataIsValid( const Rich::ParticleIDType type );
 
-private:
+private: // methods
+
+  /// Dis-allow default constructor
+  RichHypoData() {}
+
+private: // data
 
   /// The internal representation of the data
   DataArray     m_data;
