@@ -1,4 +1,4 @@
-// $Id: Generator.opts,v 1.24 2003-08-19 10:00:33 witoldp Exp $ 
+// $Id: Generator.opts,v 1.25 2003-10-02 16:51:34 witoldp Exp $ 
 
 ApplicationMgr.DLLs += { "GeneratorModules" } ;
 
@@ -37,4 +37,5 @@ ParticleGun.Mode=0;
 // #include "$DECFILESROOT/options/event_type.opts" with event_type replaced by the
 // appropriete int
 
+//#include "$DECFILESROOT/options/360000.opts"
 //#include "$DECFILESROOT/options/411300.opts"
