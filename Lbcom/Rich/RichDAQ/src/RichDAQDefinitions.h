@@ -1,9 +1,10 @@
-// $Id: RichDAQDefinitions.h,v 1.4 2003-11-26 11:11:29 cattanem Exp $
+// $Id: RichDAQDefinitions.h,v 1.5 2003-12-11 07:36:12 cattanem Exp $
 #ifndef RICHDAQ_RICHDAQDEFINITIONS_H 
 #define RICHDAQ_RICHDAQDEFINITIONS_H 1
 
 // from STL
 #include <vector>
+#include <map>
 
 // Event model
 #include "Event/DAQTypes.h"

@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
-!========================== RichDAQ vv1r0 2003-11-26 =========================
+!========================== RichDAQ v1r0p1 2003-12-10 ========================
+! 2003-12-10 - Marco Cattaneo
+ - Add a missing #include <map> for vc71
+ 
+!========================== RichDAQ v1r0 2003-11-26 =========================
 ! 2003-11-08 - Chris Jones
  - First version in CVS
