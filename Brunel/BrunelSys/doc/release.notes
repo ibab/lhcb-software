@@ -4,6 +4,17 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
+! 2003-04-15 - Marco Cattaneo
+ - Modified requirements for Brunel v18r0.
+   Packages added:    CaloPIDs v1r0, MuonUtils v1r0, MuonBackground v1r0,
+						          MCTools v1r1, RichRecBase v1r0
+   Packages removed:  RichRecKernel, RichRecEvent, RichRecInterfaces
+   Packages modified: BrunelAlgs v1r9, BrunelSicb v4r1, CaloDigit v1r2,
+     CaloMonitor v1r4, CaloReco v1r4, ITAlgorithms v12r9, L0Calo v7r0,
+     L0Muon v6r5, L1VeloTrack v5r0, MuonAlgs v4r0, OTAlgorithms v12r4,
+     recrich v7r4, RichMonitor v3r0, RichRecTools v2r0, RichRecAlgs v2r0,
+     RichUtils v3r0, VeloAlgorithms v2r7
+
 !======================= BrunelSys v17r4 2003-02-05 =======================
 ! 2003-02-05 - Marco Cattaneo
  - Modified packages for Brunel v17r4:
