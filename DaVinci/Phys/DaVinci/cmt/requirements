@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.179 2004-10-05 06:21:28 pkoppenb Exp $
+# $Id: requirements,v 1.180 2004-10-07 07:24:54 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -80,7 +80,7 @@ use  TrExtrapolator     	v2r13    Tr
 use  LoKi               	v3r4p2   Tools  
 
 # Reconstruction tools 
-use  Utilities          	v1r10    Tools
+use  Utilities          	v1r11    Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
