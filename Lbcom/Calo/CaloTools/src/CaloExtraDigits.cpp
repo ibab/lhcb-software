@@ -1,8 +1,11 @@
-// $Id: CaloExtraDigits.cpp,v 1.1 2002-04-07 18:15:00 ibelyaev Exp $
+// $Id: CaloExtraDigits.cpp,v 1.2 2002-04-23 10:49:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/07 18:15:00  ibelyaev
+//  preliminary version ('omega'-release)
+// 
 // ============================================================================
 // Include files
 // STL 
@@ -95,8 +98,7 @@ StatusCode CaloExtraDigits::initialize ()
   if( sc.isFailure() ) 
     { return Error( "Could not initialize the base class CaloTool!", sc ) ; }
   // check the detector data 
-  const DeCalorimeter* detector = 
-    get<const DeCalorimeter>( detSvc() , detName() );
+  const DeCalorimeter* detector = get( detSvc() , detName() , detector );
   if( 0 == detector ) { return Error("DeCalorimeter* points to NULL!");}
   setDet( detector );
   const IGeometryInfo* geoinf = det()->geometry() ;
@@ -172,7 +174,7 @@ StatusCode CaloExtraDigits::process    ( CaloHypo* hypo  ) const
  *   - 201 : CaloHypo::position()   points to NULL
  *   - 202 : CaloHypo::clusters()  is empty! 
  *   - 203 : No valid 'Ecal' clusters are found! 
- *   - 204 : Clsuter has no 'Seed' cell! 
+ *   - 204 : Cluster has no 'Seed' cell! 
  *   - 205 : 'Seed' digit points to NULL!
  *
  *  @exception 
@@ -190,7 +192,7 @@ StatusCode CaloExtraDigits::operator() ( CaloHypo* hypo  ) const
   if( 0 == position    ) { return Error("CaloPosition* is invalid!" , 201 ) ; }
 
   // locate digits 
-  if( 0 == m_digits ) { m_digits = get<CaloDigits>( m_evtSvc , m_inputData ); }
+  if( 0 == m_digits ) { m_digits = get( m_evtSvc , m_inputData , m_digits ); }
   
   // add the digits in front of seed digit of Ecal cluster
   if( m_addSeed ) 
@@ -259,7 +261,7 @@ StatusCode CaloExtraDigits::operator() ( CaloHypo* hypo  ) const
   {
     // remove duplicates (if any)
     CaloHypo::Digits& digits = hypo->digits() ;
-    std::sort( digits.begin() , digits.end() );
+    std::sort( digits.begin() , digits.end() , std::less<const CaloDigit*>() );
     CaloHypo::Digits::iterator i = 
       std::unique( digits.begin() , digits.end() );
     if( digits.end() != i ) { digits.erase( i , digits.end() ) ; }

@@ -1,8 +1,11 @@
-// $Id: CaloCorrASINH.cpp,v 1.1 2002-04-07 18:15:00 ibelyaev Exp $
+// $Id: CaloCorrASINH.cpp,v 1.2 2002-04-23 10:49:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/07 18:15:00  ibelyaev
+//  preliminary version ('omega'-release)
+//
 // ============================================================================
 // Include files
 // STD & STL 
@@ -30,6 +33,24 @@
 static const  ToolFactory<CaloCorrASINH>         s_factory ;
 const        IToolFactory&CaloCorrASINHFactory = s_factory ;
 
+namespace
+{ 
+
+	/** @fn Asinh
+	 *   @frief temporary fix fro absence of "asinh" function on WIN32 platform
+	 *   @author Vanya Belyaev Ivan.Belyaev@itep.ru
+	 *   @date 32 Apr 2002
+	 */
+	double
+		Asinh( double x )
+	{
+#ifndef WIN32
+	 return asinh( x );
+#else
+	 return log( x + sqrt( x * x + 1. ) );
+#endif 
+	};
+
 /** @fn hollebeck 
  *  @brief s-correction function
  *
@@ -48,7 +69,7 @@ const        IToolFactory&CaloCorrASINHFactory = s_factory ;
  *  @date 27/03/2002 
  *
  */
-static inline double 
+double 
 hollebeck ( const double                      cluster    ,
             const double                      seed       , 
             const double                      size       , 
@@ -59,7 +80,7 @@ hollebeck ( const double                      cluster    ,
   const double D  = 0.5 * size     ;
   const double b  = parameters[0]  ;
   // use formula! 
-  const double Xc = b * asinh( Xo / D * sinh( D/b ) ) ;
+  const double Xc = b * Asinh( Xo / D * sinh( D/b ) ) ;
   // adjast teh center again 
   return seed + Xc ;
 };
@@ -83,7 +104,7 @@ hollebeck ( const double                      cluster    ,
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date 27/03/2002 
  */
-static inline double 
+double 
 hollebeckPrime ( const double                      cluster    ,
                  const double                      seed       , 
                  const double                      size       , 
@@ -100,6 +121,8 @@ hollebeckPrime ( const double                      cluster    ,
     * ( 1.0 + arg / arg2 ) / ( arg + arg2 ) ;
   /// 
   return prime ;
+};
+
 };
 
 //=============================================================================
