@@ -5,12 +5,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v18r0 2005-01-24 =======================
-! 2005-01-24 - Marco Cattaneo
+!======================= LHCbSys v18r0 2005-01-27 =======================
+! 2005-01-27 - Marco Cattaneo
  - Move to Gaudi v16r0
  - Packages removed:  GaudiObjDesc (go back to version picked up from Gaudi)
- - Packages modified: GaudiConf v9r0, KernelSys v4r7, LHCbKernel v5r7
-                      EventSys v20r0, PhysEvent v8r2, TrEvent v14r2
+ - Packages added:    AsctToLinker (previously in Boole, Brunel)
+ - Packages modified: GaudiConf v9r0, DAQSys v1r0p1, STDAQ v1r4p1, MCTools v1r12,
+     KernelSys v4r7, LHCbKernel v5r7, Relations v2r2, EventSys v20r0,
+     PhysEvent v8r2, TrEvent v14r2, RichEvent v8r1p1, LinkerEvent v1r6,
 
  - In GaudiConf v9r0
    . Remove ROOT_native_version fix, not needed for ROOT 4.*
@@ -20,6 +22,21 @@
 
  - In PhysEvent v8r2, TrEvent v14r2:
    . Changes for GaudiObjDesc v7r*
+
+ - In LinkerEvent v1r6
+   . Several improvements (see details in release notes)
+
+ - In Relations v2r2
+   . Few modifications to improve performance (many details in release notes)
+
+ - In AsctToLinker v1r4
+   . Changes to avoid duplicate entries
+
+ - In STDAQ v1r4p1, RichEvent v8r1p1
+   . Backwards compatible fixes for gcc 3.3
+
+ - In MCTools v1r12, AsctToLinker v1r14
+   . Move to new Gaudi base classes
 
 !======================= LHCbSys v17r3 2005-01-20 =======================
 ! 2005-01-20 - Marco Cattaneo
