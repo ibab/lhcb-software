@@ -1,18 +1,18 @@
 ! =============================================================================
-! $Id: release.notes,v 1.117 2002-10-30 15:02:45 ibelyaev Exp $ 
+! $Id: release.notes,v 1.118 2002-10-30 15:31:37 ranjard Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
+!===================== DetDesc v11r2 2002-10-29 =============================
 ! 2002-10-30 - Ivan Belyaev
  - DetDesc/SolidMath.h  
   fix a trivial bug (my stupid misprint!!!) for calculation of 
   intersection of the line with the cone 
 
-!===================== DetDesc v11r2 2002-10-29 =============================
-                        merge v11r1b branch with main trunk
 ! 2002-10-29 - Florence Ranjard
+   merge v11r1b branch with main trunk
  - requirements - use new versions
 
 ! 2002-10-29 - Vanya Belyaev
