@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.54 2004-09-16 07:00:56 pkoppenb Exp $
+! $Id: release.notes,v 1.55 2004-09-16 14:29:22 pkoppenb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+! 2004-09-16 - P. Koppenburg
+ - src/Particle2MCLink.cpp
+   . Dirty hack suggested by Olivier Callot that solved the TrgTrack association
+     problem. Not a definitive solution as it involes the hard-codeing of the 
+     container. A better solution is being implemented in the TrgParticleMaker.
+     
 ! 2004-09-16 - P. Koppenburg
  - src/Particle2MCLink.cpp
    . Try to check if origin() is a TrgTrack if it is not a ProtoParticle.

@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.16 2004-09-16 07:00:56 pkoppenb Exp $
+// $Id: Particle2MCLinks.cpp,v 1.17 2004-09-16 14:29:22 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -110,6 +110,9 @@ StatusCode Particle2MCLinks::execute() {
     ifMsg(MSG::DEBUG) << "    " << npp 
                       << " Particles retrieved from " << *inp << endreq;
     
+    // PK: dirty hack from Olivier Callot <- to be removed
+    LinkedTo<MCParticle> myLink( evtSvc(), msgSvc(), TrgTrackLocation::Long );
+
     // loop on Parts and MCParts to match them
     for( Particles::const_iterator pIt=parts->begin() ;
          parts->end() != pIt; ++pIt ) {
@@ -130,20 +133,21 @@ StatusCode Particle2MCLinks::execute() {
         // Use the Linker 
         mcPart = link->first( protoPart );
       } else {
-        ifMsg(MSG::VERBOSE) << " not from a ProtoParticle" ;
       // check if it is from a Trigger track
         const TrgTrack* TrgT = dynamic_cast<const TrgTrack*>( PPP->origin() );
-        ifMsg(MSG::VERBOSE) << " " << TrgT << " " ;
         if ( TrgT ) {
-          if( msg.level() <= MSG::VERBOSE ) {
-            std::string strCharged = (*pIt)->charge() ? "Charged" : "Neutral";
-            msg << " from " << strCharged << " TrgTrack " << TrgT->key();
-          }
-          // Use the Linker 
+          if( msg.level() <= MSG::VERBOSE ) 
+            msg << " from TrgTrack " << TrgT->key();
           mcPart = link->first( TrgT );
-          ifMsg(MSG::VERBOSE) << " " << mcPart ;
+          if ( mcPart ){
+            always() << "Yahooo! The linker works now for TrgTracks!" 
+                     << " -> remove dirty hack from Particle2MCLInks" << endreq ;
+          } else {
+            // PK: dirty hack from Olivier Callot <- to be removed 
+            mcPart = myLink.first( TrgT->key() );
+          }
         } else {
-          ifMsg(MSG::VERBOSE) << " nor from a TrgTrack";
+          ifMsg(MSG::VERBOSE) << " from nothing";
         } // Trg
       } // Proto
       if( NULL == mcPart ) {
