@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Job options for Boole, for data produced by Gauss v18r3 or greater and   //
+//  Job options for Boole, for data produced by Gauss v19r0 or greater and   //
 //  geometry lhcb-200412 (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo) //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
@@ -30,7 +30,7 @@ ApplicationMgr.EvtMax = -1;
 // Input and output files. 
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "boole.hbook";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "boole-0412.root";  // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
@@ -51,10 +51,10 @@ SpilloverSelector.Input = {
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-   "DATAFILE='PFN:/afs/cern.ch/user/r/ranjard/w1/data/Gauss_0412.sim' TYP='POOL_ROOT' OPT='READ'" 
-};  // Test data (10 events) produced by Florence with Gauss v19r0 pre-release
+   "DATAFILE='PFN:/afs/cern.ch/user/r/ranjard/w1/data/Gauss_v19r0_0412.sim' TYP='POOL_ROOT' OPT='READ'" 
+};  // Test data produced by Florence with Gauss v19r0 pre-release
 
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-DigiWriter.Output = "DATAFILE='PFN:Boole200412.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:Boole-0412.digi' TYP='POOL_ROOTTREE' OPT='REC'";

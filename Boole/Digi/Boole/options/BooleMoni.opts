@@ -1,12 +1,9 @@
 // Modify this file to change the default Boole monitoring. 
 //--------------------------------------------------------------
 
-//--------------------------------------------------------------
-// Choice of persistency technology. Default is Hbook, move comments for ROOT
-// Hbook persistency (use HBookCnv v* in requirements).
-#include "$STDOPTS/Hbook.opts"
-// ROOT persistency (use RootHistCnv v* in requirements).
-//#include "$STDOPTS/RootHist.opts"
+// ROOT persistency (see user guide to use Hbook instead) 
+#include "$STDOPTS/RootHist.opts"
+RootHistCnv.ForceAlphaIds = true;
 
 //--------------------------------------------------------------
 // Detectors to monitor

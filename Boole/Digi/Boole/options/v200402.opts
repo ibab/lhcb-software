@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-/// Job options for Boole, for data produced by Gauss v15r4 or greater and ///
+/// Job options for Boole, for data produced by Gauss v19r0 or greater and ///
 /// with XmlDDDB v22r0 or greater and geometry compatible with lhcb-200402 ///
 ///            and with default magnetic field (Field045)                  ///
 //////////////////////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ ApplicationMgr.EvtMax = -1;
 // Input and output files. 
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "boole.hbook";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "boole-0402.root";  // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
@@ -59,4 +59,4 @@ EventSelector.Input = {
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-DigiWriter.Output = "DATAFILE='PFN:Boole200402.digi' TYP='POOL_ROOTTREE' OPT='REC'";
+DigiWriter.Output = "DATAFILE='PFN:Boole-0402.digi' TYP='POOL_ROOTTREE' OPT='REC'";

@@ -27,7 +27,7 @@ use OTSimulation	v1r3	OT
 
 # Muon
 use MuonAlgs            v5r6	Muon
-use MuonBackground	v1r8	Muon
+use MuonBackground	v1r9	Muon
 
 # Rich
 use RichDigiQC		v2r0	Rich
