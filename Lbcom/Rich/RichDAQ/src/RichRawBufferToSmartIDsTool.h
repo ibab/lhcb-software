@@ -4,8 +4,11 @@
  *  Header file for tool : RichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.1 2004-10-30 19:13:05 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.2 2004-11-03 09:30:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2004/10/30 19:13:05  jonrob
+ *  Reworking RawBuffer decoding as a tool, to allow reconstruction to skip RichDigit creation
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -74,7 +77,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from interface
 
   // Access all RichSmartIDs for the current Event
-  const RichSmartID::Vector & allRichSmartIDs() const;
+  const RichSmartID::Collection & allRichSmartIDs() const;
 
 private: // definitions
 
@@ -101,8 +104,11 @@ private: // private data
   /// Input location for RawEvent in TES
   std::string m_rawEventLoc;
 
+  /// Flag to turn on the sorting of the RichSmartIDs
+  bool m_sortIDs;
+
   /// RichSmartIDs
-  mutable RichSmartID::Vector m_smartIDs;
+  mutable RichSmartID::Collection m_smartIDs;
 
   /// New event flag
   mutable bool m_newEvent;

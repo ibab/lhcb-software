@@ -4,8 +4,11 @@
  *  Implementation file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.10 2004-11-02 13:13:49 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.cpp,v 1.11 2004-11-03 09:30:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/11/02 13:13:49  jonrob
+ *  minro update
+ *
  *  Revision 1.9  2004/10/30 19:13:05  jonrob
  *  Reworking RawBuffer decoding as a tool, to allow reconstruction to skip RichDigit creation
  *
@@ -70,10 +73,10 @@ StatusCode RawBufferToRichDigitsAlg::execute()
   put( digits, m_richDigitsLoc );
 
   // Get RichSmartIDs decoded from RawEvent
-  const RichSmartID::Vector & smartIDs = m_decoder->allRichSmartIDs();
+  const RichSmartID::Collection & smartIDs = m_decoder->allRichSmartIDs();
 
   // Create a RichDigit for each SmartID
-  for ( RichSmartID::Vector::const_iterator iID = smartIDs.begin();
+  for ( RichSmartID::Collection::const_iterator iID = smartIDs.begin();
         iID != smartIDs.end(); ++iID ) {
     digits->insert( new RichDigit(), *iID );
   }

@@ -5,17 +5,21 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.3 2004-11-02 13:13:38 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.4 2004-11-03 09:30:16 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2004/11/02 13:13:38  jonrob
+ * minro update - add constness
+ *
  * Revision 1.2  2004/10/30 21:45:57  jonrob
  * update decoding tool
  *
  * Revision 1.1  2004/10/30 19:13:05  jonrob
  * Reworking RawBuffer decoding as a tool, to allow reconstruction to skip RichDigit creation
  *
- *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
+ *
+ * @todo Review RichSmartID bit packing to facilitate more efficient and finer grained sorting
  */
 //-----------------------------------------------------------------------------
 
@@ -26,19 +30,33 @@
 static const  ToolFactory<RichRawBufferToSmartIDsTool>          s_factory ;
 const        IToolFactory& RichRawBufferToSmartIDsToolFactory = s_factory ;
 
+/// Namespace for RichSmartID sorting
+namespace SmartIDFuncs {
+  /// Functor to sort RichSmartIDs by Rich then panel numbers
+  struct SortByRichAndPanel
+  {
+    bool operator() ( const RichSmartID & p1, const RichSmartID & p2 ) const
+    {
+      return ( 10*p1.rich() + p1.panel() < 10*p2.rich() + p2.panel() );
+    }
+  };
+}
+
 // Standard constructor
 RichRawBufferToSmartIDsTool::RichRawBufferToSmartIDsTool( const std::string& type,
                                                           const std::string& name,
                                                           const IInterface* parent )
   : RichToolBase       ( type, name, parent ),
-    m_newEvent         ( true ),
-    m_rawEvent         ( 0    )
+    m_sortIDs          ( false ),
+    m_newEvent         ( true  ),
+    m_rawEvent         ( 0     )
 {
 
   declareInterface<IRichRawBufferToSmartIDsTool>(this);
 
   declareProperty( "RawEventLocation",
                    m_rawEventLoc = RawEventLocation::Default );
+  declareProperty( "SortRichSmartIDs", m_sortIDs = false );
 
 }
 
@@ -97,7 +115,7 @@ RawEvent * RichRawBufferToSmartIDsTool::rawEvent() const
   return m_rawEvent;
 }
 
-const RichSmartID::Vector & RichRawBufferToSmartIDsTool::allRichSmartIDs() const
+const RichSmartID::Collection & RichRawBufferToSmartIDsTool::allRichSmartIDs() const
 {
   if ( m_newEvent ) {
     fillRichSmartIDs(); // Fill for this event
@@ -134,6 +152,13 @@ void RichRawBufferToSmartIDsTool::fillRichSmartIDs() const
 
   } // end loop over data banks
 
+  // Finally, sort into order of Rich and Panel
+  // This can be removed when RichSmartIDs have their bit fields ordered so that the most
+  // significant bit is RICH, then panel etc. 
+  if ( m_sortIDs ) std::sort( m_smartIDs.begin(), 
+                              m_smartIDs.end(), 
+                              SmartIDFuncs::SortByRichAndPanel() );
+  
   if ( msgLevel(MSG::DEBUG) ) {
     debug() << "Decoded " << m_smartIDs.size()
             << " RichSmartIDs from " << richBanks.size() << " Raw banks" << endreq;
