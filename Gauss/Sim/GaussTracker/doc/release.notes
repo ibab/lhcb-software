@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !=========================== GaussTracker v2r1 2002-02-17 =======================
+! 2003-02-17 - Florence Ranjard
+ - requirements - does not specify the bug fix version of various packages
+
 ! 2003-02-17 - Witek Pokorski
  - added protection against hits with zero deposited energy in Tracker and Velo
  - change of the version number

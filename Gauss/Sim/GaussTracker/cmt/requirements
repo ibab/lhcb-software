@@ -13,12 +13,12 @@ use VeloEvent     v12r*     Event
 use MuonEvent     v2r*      Event
 
 # =============== Digitizatin and Monitoring =================================
-use OTAlgorithms        v12r2   OT
-use OTAssociators       v2r3    OT
-use VeloAlgorithms      v2r5    Velo
-use VeloAssociators     v1r4    Velo
-use ITAlgorithms        v12r6   IT
-use ITCheckers          v1r2    IT
+use OTAlgorithms        v12r*   OT
+use OTAssociators       v2r*    OT
+use VeloAlgorithms      v2r*    Velo
+use VeloAssociators     v1r*    Velo
+use ITAlgorithms        v12r*   IT
+use ITCheckers          v1r*    IT
 
 # ============== component library ============================================
 library          GaussTracker   *.cpp                  
