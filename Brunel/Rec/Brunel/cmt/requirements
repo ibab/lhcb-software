@@ -99,7 +99,7 @@ use TrAlgorithms v7r1   Tr
 
 # Forward Tracking
 use VeloDigit    v1r0   Velo
-use VeloTrack    v1r0   Velo
+use VeloTrack    v1r1   Velo
 use FwTrack      v1r0   Tr
 
 # SICBDST packages

@@ -4,7 +4,7 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v9r0>20020215 Brunel v9r0</A></H1><PRE>
+</PRE><H1><A NAME=v9r0>20020219 Brunel v9r0</A></H1><PRE>
    Upgraded to use Gaudi v9
    Added VELO digitisation, VELO tracking, Forward tracking, Calo reconstruction
    Added L0 pileup veto. Removed Fortran L0 code.
@@ -59,7 +59,7 @@ Purpose: LHCb reconstruction program
    standard tracking, output not saved. New packages:
      use Det/VeloDet    v3r0
      use Velo/VeloDigit v1r0
-     use Velo/VeloTrack v1r0
+     use Velo/VeloTrack v1r1
      use Tr/FwTrack     v1r0
    
    Added C++ PileUp Veto code, uses Velo TDR geometry from XmlDDDB. 
