@@ -14,6 +14,9 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 #include "$STDAQROOT/options/stDAQ-v1.opts"
 #pragma print on
 
+// Uncomment next line to use field045. Default is field043
+//MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field045.cdf";
+
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
 //---------------------------------------------------------------------------
