@@ -1,20 +1,8 @@
-// $Id: CaloReco_load.cpp,v 1.10 2004-06-03 09:34:12 ibelyaev Exp $
+// $Id: CaloReco_load.cpp,v 1.11 2004-09-05 15:25:19 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2004/06/03 06:33:03  ibelyaev
-//  add the tool into *_load.cpp file
-//
-// Revision 1.8  2004/03/19 16:03:20  cattanem
-// add missing factories...
-//
-// Revision 1.7  2003/04/11 09:33:42  ibelyaev
-//  add new E-,S- and L-corrections from Olivier Deschamps
-//
-// Revision 1.6  2003/03/13 18:47:50  ibelyaev
-//  see ../doc/release.notes file
-//
 // ============================================================================
 // Include files
 // LHCbKernel
@@ -47,6 +35,7 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   // From CaloAlgs package 
   
   DECLARE_ALGORITHM   ( CaloDeleteObjectsAlg                ) ;
+  DECLARE_ALGORITHM   ( CaloCheckObjectsAlg                 ) ;
   DECLARE_ALGORITHM   ( CaloDigitsFilterAlg                 ) ;
   DECLARE_ALGORITHM   ( CaloHypoAlg                         ) ;
   DECLARE_ALGORITHM   ( CaloHyposMerge                      ) ;

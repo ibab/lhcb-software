@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.50 2004-09-02 18:57:34 ibelyaev Exp $
+! $Id: release.notes,v 1.51 2004-09-05 15:25:19 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,15 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2004-09-05 - Vanya BELYAEV
+ - src/CaloCheckObjectsAlg.h(.cpp)
+  new trivial algorithm for checking teh existence 
+	(and by product, the loading!)
+  of objects in Gaudi transient store 
+ - src/CaloReco_load.cpp
+   add the decalration of the new algorithm 
+ - cmt/requirements 
+   version increment to v2r7 
 
 ! 2004-09-02 - Vanya BELYAEV
   prepare for HLT/Trigger developments 
