@@ -4,6 +4,10 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! =================== FlavourTagging v4r1 2002-12-20 ======================
+! 2002-12-20 - Gloria Corti
+ - Remove explicit dependecy of EventKernel in requirements
+
 ! 2002-11-20 - Olivier Dormond
  - Restructured the option files (have a look in 
    /afs/cern.ch/user/o/odie/public/DaVinciOptionsForTheTagging for a set of
