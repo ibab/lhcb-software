@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderaux.py,v 1.6 2004-08-26 19:34:36 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.7 2004-10-13 17:51:04 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2004/08/26 19:34:36  ibelyaev
+#  remove explict PyLCGDict
+#
 # =============================================================================
 
 
@@ -118,6 +121,7 @@ SelectPrimaryVertexMin = gbl.Bender.Select.SelectPrimaryVertexMin
 SelectPrimaryVertexMax = gbl.Bender.Select.SelectPrimaryVertexMax
 
 pidFromName            = gbl.Bender.ParticleProperties.pidFromName
+nameFromPID            = gbl.Bender.ParticleProperties.nameFromPID
 ppFromName             = gbl.Bender.ParticleProperties.ppFromName
 ppFromPID              = gbl.Bender.ParticleProperties.ppFromPID
 massFromPID            = gbl.Bender.ParticleProperties.massFromPID

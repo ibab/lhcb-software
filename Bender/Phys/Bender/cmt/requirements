@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2004-10-06 18:43:27 ibelyaev Exp $ 
+# $Id: requirements,v 1.17 2004-10-13 17:51:04 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -11,18 +11,22 @@ version           v4r1
 #============================================================================
 branches          cmt doc src python
 
+# =============== environemnt =================================================
+set               BENDERPYTHON $(BENDERROOT)/python
+
 # =============== dependencies ================================================
 use               BenderGCC   v*  Tools 
 use               BenderDict  v*  Tools 
 use               BenderDet   v*  Det  
 use               LoKiHybrid  v*  Tools 
 use               DaVinci     v*  Phys 	
+
 # =============== consituents =================================================
 application       Bender      -import=Boost Bender.cpp
 
 # =============== paths =======================================================
 path_remove       PYTHONPATH "/Bender/" WIN32 "\Bender\"              
-path_prepend      PYTHONPATH "$(BENDERROOT)/python"
+path_prepend      PYTHONPATH "$(BENDERPYTHON)"
 path_remove       PATH       "/Bender/" WIN32 "\Bender\"                
 path_prepend      PATH       "$(BENDERROOT)/$(BINDIR)"
 
@@ -49,9 +53,6 @@ apply_pattern     application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.15  2004/08/21 18:18:41  ibelyaev
-#  v4r0
-#
 # =============================================================================
 # The END
 # ============================================================================

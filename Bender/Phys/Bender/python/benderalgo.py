@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.4 2004-08-26 19:34:36 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.5 2004-10-13 17:51:04 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2004/08/26 19:34:36  ibelyaev
+#  remove explict PyLCGDict
+#
 # Revision 1.3  2004/08/06 12:07:06  ibelyaev
 #  minor improvements
 #
@@ -323,7 +326,7 @@ class Algo(BenderAlgo):
         message = args.get ( 'message' , 'Unspecified Error' )
         code    = args.get ( 'code'    , FAILURE             )
         prints  = args.get ( 'prints'  , 10                  ) 
-        return BenderAlgo.Warning( self , msg , code , prints )
+        return BenderAlgo.Warning( self , message , code , prints )
     
     def Print        ( self , **args ) :
         """
