@@ -1,5 +1,5 @@
 package Brunel
-version v26r0
+version v26r1
 
 branches doc cmt job options
 
@@ -12,10 +12,10 @@ use GaudiPolicy v5r20
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v16r1)
-use GaudiKernel		v18r2
-use GaudiSvc 		v13r0
-use GaudiAlg 		v8r5
+#-- Gaudi libraries (from GAUDI_v16r2)
+use GaudiKernel		v19r0
+use GaudiSvc 		v13r2
+use GaudiAlg 		v8r6
 use GaudiGSL		v6r2
 use GaudiPoolDb		v1r12
 use GaudiObjDesc 	v7r3
@@ -24,14 +24,14 @@ use RootHistCnv         v9r4
 #-- Database
 use XmlDDDB		v23r2	Det
 use FieldMap		v4r5
-use ParamFiles          v3r10   -no_auto_imports
+use ParamFiles          v3r11   -no_auto_imports
 use BrunelDQ		v1r0	DQ
 
-#-- LHCb libraries (from LHCB_v18r0)
-use LHCb	v18r0
+#-- LHCb libraries (from LHCB_v18r1)
+use LHCb	v18r1
 
-#-- Lbcom packages (from LBCOM_v1r0)
-use LbcomSys    v1r0
+#-- Lbcom packages (from LBCOM_v1r1)
+use LbcomSys    v1r1
 
 #-- BrunelSys v26r0 packages
 
@@ -66,7 +66,7 @@ use MuonRec             v2r4	Muon
 use MuonID              v3r7p1	Muon
 
 # Rich
-use RichRecSys		v1r15	Rich
+use RichRecSys		v1r16	Rich
 
 #
 #===== build Brunel =========================

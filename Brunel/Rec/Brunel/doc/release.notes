@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v26r1>2005-03-08 Brunel v26r1</A></H1><PRE>
+- Adapt requirements to Gaudi v16r2, Lbcom v1r1 and LHCb v18r1
+- Use ParamFiles v3r11 (latest version, no side effects for Brunel)
+
 </PRE><H1><A NAME=v26r0>2005-02-14 Brunel v26r0</A></H1><PRE>
 - Adapt requirements to Gaudi v16r0, Lbcom v1r0 and LHCb v18r0
 - Use ParamFiles v3r10 (latest version, no side effects for Brunel)
