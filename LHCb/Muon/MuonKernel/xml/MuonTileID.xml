@@ -154,6 +154,9 @@ given IMuonLayout"
       <method const="TRUE"  name="isDefined" type="bool"
           desc="Check that the MuonTileID is defined. It means that its code is not 0">
       </method>
+      <method const="TRUE"  name="toString" type="std::string"
+          desc="presents the MuonTileID as a readable string">
+      </method>
       <method  name="setStation" inline="TRUE"
           desc="update station identifier"
 	  argList="const unsigned int station">
