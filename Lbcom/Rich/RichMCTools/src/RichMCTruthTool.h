@@ -4,8 +4,11 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.13 2004-12-13 17:25:55 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.14 2005-01-13 13:25:38 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.13  2004/12/13 17:25:55  jonrob
+ *  tidy up methods
+ *
  *  Revision 1.12  2004/11/25 17:45:39  jonrob
  *  Add warnings when Linker objects not available
  *
@@ -44,6 +47,7 @@
 #include "Relations/IRelationWeighted.h"
 
 // RichKernel
+#include "RichKernel/RichMap.h"
 #include "RichKernel/RichParticleIDType.h"
 
 // Event model
@@ -197,7 +201,7 @@ private: // private data
   std::string m_mcRichDigitsLocation;
 
   /// PID information
-  mutable std::map<int,Rich::ParticleIDType> m_localID;
+  mutable RichMap<int,Rich::ParticleIDType> m_localID;
 
   /// MC Tracking truth
   std::string m_trAsctName;
