@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!===================== GlobalReco v3r0 2003-02-13 ===========================
 ! 2003-02-07 - Gloria Corti
  - Make file with list of default options NeutralPPsFromCPsAlg.opts
 
