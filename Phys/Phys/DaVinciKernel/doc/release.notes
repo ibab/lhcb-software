@@ -5,6 +5,7 @@
 ! 2004-09-06 - P. Koppenburg
  - (I)PhysDesktop.*
    . Add getOutputLocation() method
+   . Add saveDesktop(ParticleVector&,VertexVector& ) method to IPhysDesktop
 
 ! 2004-09-03 - P. Koppenburg
  - (I)PhysDesktop.*

@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.3 2004-09-06 08:06:16 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.4 2004-09-07 14:05:55 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -690,6 +690,3 @@ void PhysDesktop::imposeOutputLocation(std::string outputLocationString){
   }
   return;
 }
-
-
-

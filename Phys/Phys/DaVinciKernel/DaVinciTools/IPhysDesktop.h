@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.4 2004-09-06 08:18:34 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.5 2004-09-07 14:05:55 pkoppenb Exp $
 #ifndef DAVINCITOOLS_IPHYSDESKTOP_H 
 #define DAVINCITOOLS_IPHYSDESKTOP_H 1
 
@@ -44,6 +44,9 @@ public:
   // Save the particles to the TES
   virtual StatusCode saveDesktop() = 0;
  
+  // Save the particles to the TES
+  virtual StatusCode saveDesktop(ParticleVector&,VertexVector& ) = 0;
+ 
   // Save a vector of Particles
   // If a particle is composite its descendents are also saved
   virtual StatusCode saveTrees( ParticleVector& ) = 0;
@@ -68,8 +71,8 @@ public:
   virtual std::string getOutputLocation() = 0 ;
   
   /// Find all particles & vertices in a tree. 
-  virtual void findAllTree( Particle*, ParticleVector&, VertexVector& ) = 0;
-  virtual void findAllTree( Vertex*, ParticleVector&, VertexVector& )= 0;
+  // virtual void findAllTree( Particle*, ParticleVector&, VertexVector& ) = 0;
+  // virtual void findAllTree( Vertex*, ParticleVector&, VertexVector& )= 0;
   
 
 protected:
