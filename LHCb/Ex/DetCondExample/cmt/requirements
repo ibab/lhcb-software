@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.4 2001-10-29 12:43:16 andreav Exp $
+# $Id: requirements,v 1.5 2001-11-23 17:59:22 andreav Exp $
 package DetCondExample
-version v1
+version v2
 
 branches doc src job options cmt DB
 ignore_pattern package_stamps 
@@ -9,7 +9,7 @@ ignore_pattern package_stamps
 use GaudiConf     v5
 
 # Detector Conditions (also inherit dependency on GAUDI framework)
-use DetCond       v1  Det
+use DetCond       v2  Det
 
 set DETCONDEXAMPLE_FDID     30997
 set DETCONDEXAMPLE_BOOTHOST ${OBJY_LS_HOST}

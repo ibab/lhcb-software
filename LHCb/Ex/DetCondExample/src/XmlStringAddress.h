@@ -1,13 +1,12 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/XmlStringAddress.h,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: XmlStringAddress.h,v 1.2 2001-11-23 18:12:23 andreav Exp $
 #ifndef DETCONDEXAMPLE_XMLSTRINGADDRESS_H
 #define DETCONDEXAMPLE_XMLSTRINGADDRESS_H 1
 
-// Base classes
-#include "GaudiKernel/IOpaqueAddress.h"
-#include "DetCond/SimpleStringAddress.h"
+// Base class
+#include "GaudiKernel/GenericAddress.h"
 
-// Friends
-#include "GaudiKernel/AddrFactory.h"
+// Forward declarations
+class XmlStringCnvSvc;
 
 ///---------------------------------------------------------------------------
 /** @class XmlStringAddress XmlStringAddress.h Det/DetCond/XmlStringAddress.h
@@ -18,11 +17,9 @@
     @date August 2001
 *///---------------------------------------------------------------------------
 
-class XmlStringAddress : virtual public IOpaqueAddress, 
-                         public SimpleStringAddress {
+class XmlStringAddress : public GenericAddress {
 
-  /// Only factories can access protected constructors
-  friend class AddrFactory<XmlStringAddress> ;
+  friend XmlStringCnvSvc;
 
  public:
     
@@ -31,22 +28,17 @@ class XmlStringAddress : virtual public IOpaqueAddress,
 
  protected:
 
-  // These methods are required by AddressFactory and IAddressCreator
+  // Only XmlStringCnvSvc (IAddressCreator) can use protected constructors
 
   /// Constructor
-  XmlStringAddress( const CLID& clid,             // classID
-		    const std::string& xmlString, // the Xml string data
-		    int,                          // DUMMY
-		    const std::string& );         // DUMMY
-
-  /// Constructor
-  XmlStringAddress( const GenericLinkBase& link );  
+  XmlStringAddress( const CLID& clid,               // classID
+		    const std::string& xmlString ); // the Xml string data
 
  public:
 
   // XmlString-specific methods
 
-  /// Get the Xml string data
+  /// Get the XML string data
   const std::string xmlString ( );
 
 };

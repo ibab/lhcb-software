@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/XmlStringTemperatureCnv.cpp,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: XmlStringTemperatureCnv.cpp,v 1.2 2001-11-23 18:05:06 andreav Exp $
 #include <string>
 
 #include "XmlStringTemperatureCnv.h"
@@ -34,7 +34,7 @@ StatusCode XmlStringTemperatureCnv::initialize()      {
   msgSvc()->setOutputLevel( "XmlStringTemperatureCnv",
 			    msgSvc()->outputLevel( "XmlStringCnvSvc" ) );
   MsgStream log( msgSvc(), "XmlStringTemperatureCnv" );
-  log << MSG::DEBUG << "Initializing" << endreq;
+  log << MSG::DEBUG << "Specific initialization starting" << endreq;
   
   // Locate the Detector Data Service
   IDataProviderSvc* dp;
@@ -49,7 +49,7 @@ StatusCode XmlStringTemperatureCnv::initialize()      {
   setDataProvider( dp );
 
   // Initialization completed
-  log << MSG::DEBUG << "Initialization completed" << endreq;
+  log << MSG::DEBUG << "Specific initialization completed" << endreq;
   return status;
 
 }

@@ -1,4 +1,4 @@
-//$Id: XmlStringCnvSvc.h,v 1.2 2001-11-01 13:50:57 andreav Exp $
+//$Id: XmlStringCnvSvc.h,v 1.3 2001-11-23 18:08:59 andreav Exp $
 #ifndef DETCOND_XMLSTRINGCNVSVC_H
 #define DETCOND_XMLSTRINGCNVSVC_H 1
 
@@ -43,14 +43,13 @@ class XmlStringCnvSvc : public ConversionSvc
   /// Finalise the service
   virtual StatusCode finalize();
   
-  /// Create a transient representation from another rep of this object.
-  virtual StatusCode createObj(IOpaqueAddress* pAddress, 
-			       DataObject*&    refpObject);
-  
-  /// Update a transient representation from another rep of this object.
-  virtual StatusCode updateObj(IOpaqueAddress* pAddress, 
-			       DataObject*     pObject);
-  
+  /// Create an address using explicit arguments to identify a single object.
+  virtual StatusCode createAddress( unsigned char svc_type,
+                                    const CLID& clid,
+                                    const std::string* par, 
+                                    const unsigned long* ip,
+                                    IOpaqueAddress*& refpAddress);
+
 };
 
 #endif    // DETCOND_XMLSTRINGCNVSVC_H

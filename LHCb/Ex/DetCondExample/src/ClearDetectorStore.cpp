@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/ClearDetectorStore.cpp,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: ClearDetectorStore.cpp,v 1.2 2001-11-23 18:14:42 andreav Exp $
 #include <stdio.h>
 
 #include "ClearDetectorStore.h"
@@ -73,9 +73,6 @@ StatusCode ClearDetectorStore::execute( ) {
 //----------------------------------------------------------------------------
 
 StatusCode ClearDetectorStore::finalize( ) {
-
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Finalize()" << endreq;
   return StatusCode::SUCCESS;
 }
 

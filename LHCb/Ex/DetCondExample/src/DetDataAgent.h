@@ -1,11 +1,11 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/DetDataAgent.h,v 1.1.1.1 2001-09-14 15:45:02 andreav Exp $
+//$Id: DetDataAgent.h,v 1.2 2001-11-23 18:14:20 andreav Exp $
 #ifndef DETCONDEXAMPLE_DETDATAAGENT_H
 #define DETCONDEXAMPLE_DETDATAAGENT_H
 
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IDataStoreAgent.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/RegistryEntry.h"
+#include "GaudiKernel/IRegistry.h"
 
 class IMessageSvc;
 
@@ -27,7 +27,7 @@ class DetDataAgent : virtual public IDataStoreAgent                        {
   
   virtual ~DetDataAgent();
   
-  virtual bool analyse(IDataDirectory* dir, int level );
+  virtual bool analyse( IRegistry* dir, int level );
   
  private:
   
@@ -47,7 +47,7 @@ inline DetDataAgent::~DetDataAgent( ) { }
 
 //---------------------------------------------------------------------------
 
-inline bool DetDataAgent::analyse(IDataDirectory* dir, int level ) {
+inline bool DetDataAgent::analyse( IRegistry* dir, int level ) {
   
   MsgStream log( m_msgSvc, "DetDataAgent" );
   
@@ -55,7 +55,7 @@ inline bool DetDataAgent::analyse(IDataDirectory* dir, int level ) {
     log << MSG::INFO 
 	<< "Dumping the contents of the DetectorDataSvc store" << endreq;
 
-  log << MSG::INFO << "(" << level << ")" << dir->fullpath();
+  log << MSG::INFO << "(" << level << ")" << dir->identifier();
   
   if( 0 != dir->object() ) {
     log << " with class ID " << dir->object()->clID() << endreq;

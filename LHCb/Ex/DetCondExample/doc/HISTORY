@@ -1,4 +1,30 @@
-# $Id: HISTORY,v 1.5 2001-10-29 17:21:55 andreav Exp $
+# $Id: HISTORY,v 1.6 2001-11-23 18:16:36 andreav Exp $
+
+------------------------------------------------
+23.11.2001 Ex/DetCondExample v2 (LINUX only)
+------------------------------------------------
+Upgrade to Gaudi v9 (i.e. default releases of GaudiKernel v11 and GaudiSys v7).
+Main changes include:
+-> addresses now inherit from GenericAddress (which has been simplified a lot)
+-> there are no address factories any more
+-> adapt to changes in RegistryEntry (which now implements IRegistry)
+-> add dummy methods fillObjRefs and updateObjRefs in ConditionsDBCnvSvc
+-> notify (by flag "true") ServiceLocator to create services not existing yet
+-> do not overload methods createObj and updateObj in XmlStringCnvSvc
+-> add method createAddress in XmlStringCnvSvc
+
+The full set of packages are: 
+- Ex/DetCondExample/v2      (the example)
+- Det/DetCond/v2            (the services)
+- CONDDB/v3r02
+  > includes ConditionsDB 0.3.0.2 (only as an external library)
+  > includes HepUtilities 0.6.0.0
+  > includes HepODBMS     0.3.3.1
+  > includes Objectivity    6.1.3
+  > includes LHC++          3.6.4
+Private tag: h20011123.
+
+===============================================================================
 
 ------------------------------------------------
 29.10.2001 Ex/DetCondExample v1 (LINUX only)
@@ -10,7 +36,7 @@ Main new feature: support for gcc2.95.2 (with Objectivity 6.1).
 - Make sure that you do not need to setup the LHCXX scripts in advance
 - Minor changes to the cleanup script machinery
 - Document CONDBDB debug levels
-Private tags: h20011029.
+Private tag: h20011029.
 
 ------------------------------------------------
 17.09.2001 Ex/DetCondExample v1 (LINUX only)
@@ -28,7 +54,8 @@ The full set of released packages are based on Gaudi v8 and include:
 - GaudiKernel v10 HEAD
 - GaudiSvc v6 HEAD
   > ApplicationMgr.cpp is not yet in CVS and must be taken from ~andreav/public
-Private tags: h20010917.
+Private tag: h20010917.
+Official tags.
 
 ===============================================================================
 

@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.2 2001-10-29 12:43:17 andreav Exp $
+//$Id: PopulateDB.cpp,v 1.3 2001-11-23 18:13:27 andreav Exp $
 #include <stdio.h>
 
 #include "PopulateDB.h"
@@ -74,17 +74,12 @@ StatusCode PopulateDB::initialize() {
 //----------------------------------------------------------------------------
 
 StatusCode PopulateDB::execute( ) {
-  MsgStream log(msgSvc(), name());
-  //log << MSG::INFO << "Execute()" << endreq;
   return StatusCode::SUCCESS;
 }
 
 //----------------------------------------------------------------------------
 
 StatusCode PopulateDB::finalize( ) {
-
-  MsgStream log(msgSvc(), name());
-  //log << MSG::INFO << "Finalize()" << endreq;
   return StatusCode::SUCCESS;
 }
 

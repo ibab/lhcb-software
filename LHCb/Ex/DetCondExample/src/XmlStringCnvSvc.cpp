@@ -1,23 +1,18 @@
-//$Id: XmlStringCnvSvc.cpp,v 1.2 2001-11-01 13:50:53 andreav Exp $
+//$Id: XmlStringCnvSvc.cpp,v 1.3 2001-11-23 18:08:59 andreav Exp $
 #include <string>
 
 #include "XmlStringCnvSvc.h"
 
 #include "XmlStringAddress.h"
 
-#include "GaudiKernel/AddrFactory.h"
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataSvc.h"
 #include "GaudiKernel/IConverter.h"
-#include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/TimePoint.h"
-
-/// Reference to the address factory for this storage type
-extern const IAddrFactory& XmlStringAddressFactory;
 
 /// Instantiation of a static factory to create instances of this service
 static SvcFactory<XmlStringCnvSvc>          XmlStringCnvSvc_factory;
@@ -30,7 +25,7 @@ XmlStringCnvSvc::XmlStringCnvSvc( const std::string& name,
 				  ISvcLocator* svc)
   : ConversionSvc(name, svc, XMLSTRING_StorageType)
 {
-  setAddressFactory( &XmlStringAddressFactory );
+  setAddressCreator( this );
 }
 
 //----------------------------------------------------------------------------
@@ -52,7 +47,7 @@ StatusCode XmlStringCnvSvc::initialize()
 
   // Now we can get a handle to the MessageSvc
   MsgStream log(msgSvc(), "XmlStringCnvSvc" );
-  log << MSG::DEBUG << "Initialization starting" << endreq;
+  log << MSG::DEBUG << "Specific initialization starting" << endreq;
 
   // Locate the DetectorDataSvc
   IDataProviderSvc* pDDS = 0;
@@ -64,13 +59,13 @@ StatusCode XmlStringCnvSvc::initialize()
   }
   
   // Set the detector data store
-  status = setStore ( pDDS );
+  status = setDataProvider ( pDDS );
   if ( !status.isSuccess() ) {
     log << MSG::ERROR << "Could not set transient store" << endreq;
     return status;
   }
   
-  log << MSG::DEBUG << "Initialization completed" << endreq;
+  log << MSG::DEBUG << "Specific initialization completed" << endreq;
   return status;
 }
 
@@ -86,127 +81,30 @@ StatusCode XmlStringCnvSvc::finalize()
 
 //----------------------------------------------------------------------------
 
-/// Create a transient representation from another representation of an object.
-StatusCode XmlStringCnvSvc::createObj ( IOpaqueAddress* pAddress, 
-					DataObject*&    refpObject) {
-  
-  /// This overloaded method:
-  /// - does NOT register the object in the data store
-  /// - does NOT associate the address to the object it created
-  /// - therefore, its implementation does NOT call the base class method
+/// Create an address using explicit arguments to identify a single object.
+StatusCode XmlStringCnvSvc::createAddress( unsigned char svc_type,
+					   const CLID& clid,
+					   const std::string* par, 
+					   const unsigned long*,
+					   IOpaqueAddress*& refpAddress) {
 
   MsgStream log(msgSvc(), "XmlStringCnvSvc" );
-  log << MSG::DEBUG << "Method createObj() starting" << endreq;
 
-  const CLID&  obj_class = pAddress->clID();
-  IConverter*  cnv       = converter(obj_class);
-  StatusCode   status    = NO_CONVERTER;
-  if ( 0 != cnv )   {
-
-    status = updateServiceState(pAddress);
-    if ( status.isSuccess() )  {
-
-      status = cnv->createObj(pAddress, refpObject);
-      if ( status.isSuccess() )  {
-
-	status = cnv->fillObjRefs(pAddress, refpObject);
-	if ( status.isSuccess() )  {
-	  
-	  log << MSG::DEBUG 
-	      << "Method createObj() exiting successfully" << endreq;
-	  return status;
-	  
-	} else {
-	  
-	  log << MSG::ERROR 
-	      << "Could not fill object references" << endreq;
-	}
-
-      } else {
-	
-	log << MSG::ERROR 
-	    << "Could not create object" << endreq;
-      }
-
-    } else {
-
-      log << MSG::ERROR 
-	  << "Could not update service state" << endreq;
-    }
-
-  } else {
-
+  // First check that address is of type XMLSTRING_StorageType
+  if ( svc_type!= XMLSTRING_StorageType ) {
     log << MSG::ERROR 
-	<< "No converter found for classID " << obj_class << endreq;
-
+	<< "Cannot create addresses of type " << (int)svc_type 
+	<< " which is different from " << (int)XMLSTRING_StorageType 
+	<< endreq;
+    return StatusCode::FAILURE;
   }
-
-  // On fatal errors throw exception
-  refpObject = 0;
-  return status;
+  
+  // Now create the address
+  refpAddress = new XmlStringAddress ( clid, par[0] );
+  return StatusCode::SUCCESS;
 
 }
 
-//----------------------------------------------------------------------------
-/// Update a transient representation from another representation of an object.
-StatusCode XmlStringCnvSvc::updateObj ( IOpaqueAddress* pAddress, 
-					DataObject*     pObject) {
-  
-  /// This overloaded method:
-  /// - does NOT register the object in the data store
-  /// - does NOT associate the address to the object it created
-  /// - therefore, its implementation does NOT call the base class method
-
-  MsgStream log(msgSvc(), "XmlStringCnvSvc" );
-  log << MSG::DEBUG << "Method updateObj() starting" << endreq;
-
-  const CLID&  obj_class = pAddress->clID();
-  IConverter*  cnv       = converter(obj_class);
-  StatusCode   status    = NO_CONVERTER;
-  if ( 0 != cnv )   {
-
-    status = updateServiceState(pAddress);
-    if ( status.isSuccess() )  {
-
-      status = cnv->updateObj(pAddress, pObject);
-      if ( status.isSuccess() )  {
-
-	status = cnv->updateObjRefs(pAddress, pObject);
-	if ( status.isSuccess() )  {
-	  
-	  log << MSG::DEBUG 
-	      << "Method updateObj() exiting successfully" << endreq;
-	  return status;
-	  
-	} else {
-	  
-	  log << MSG::ERROR 
-	      << "Could not update object references" << endreq;
-	}
-
-      } else {
-	
-	log << MSG::ERROR 
-	    << "Could not update object" << endreq;
-      }
-
-    } else {
-
-      log << MSG::ERROR 
-	  << "Could not update service state" << endreq;
-    }
-
-  } else {
-
-    log << MSG::ERROR 
-	<< "No converter found for classID " << obj_class << endreq;
-
-  }
-
-  // On fatal errors throw exception
-  return status;
-
-}
 
 //----------------------------------------------------------------------------
 
