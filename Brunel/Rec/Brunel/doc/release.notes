@@ -3,15 +3,17 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v23r1>2004-01-23 Brunel v23r1</A></H1><PRE>
+</PRE><H1><A NAME=v23r1>2004-01-28 Brunel v23r1</A></H1><PRE>
 
 - New functionality
   . New KShort tracking replaces old "upstream" tracking. See TrKShort
     release notes for details (TrKShort v1r0). UpstreamPR and TrIntraPR removed
+  . All DST classes can now be written to POOL (LHCbKernel v4r1)
 
 - New tuning
   . New normalisation for timingAlg, for consistency with Boole. Updated list of
     algorithms to be timed (BrunelAlgs v3r4, LHCbTools v1r0)
+  . Adapt Seeding algorithm to latest IT+OT geometry (Seeding v2r7)
 
 </PRE><H1><A NAME=v23r0>2004-01-22 Brunel v23r0</A></H1><PRE>
 - Built against GAUDI v14r0

@@ -64,9 +64,9 @@ DstWriter.ItemList =
 , "/Event/Rec/Calo/Electrons#1"
 , "/Event/Rec/Calo/MergedPi0s#1"
 , "/Event/Rec/Calo/SplitPhotons#1"
-, "/Event/Rec/Calo/PhotonMatch#1"   // Comment out for POOL dst
-, "/Event/Rec/Calo/ElectronMatch#1" // Comment out for POOL dst
-, "/Event/Rec/Calo/BremMatch#1"     // Comment out for POOL dst
+, "/Event/Rec/Calo/PhotonMatch#1"
+, "/Event/Rec/Calo/ElectronMatch#1"
+, "/Event/Rec/Calo/BremMatch#1"
 , "/Event/Rec/Calo/HcalE#1"
 , "/Event/Rec/Calo/PrsE#1"
 , "/Event/Rec/Calo/EcalE#1"
@@ -85,8 +85,8 @@ DstWriter.ItemList =
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITClusters2MCParticles#1"
 , "/Event/Rec/Relations/OTClusters2MCParticles#1"
-, "/Event/Rec/Relations/VeloClusters2MCParticles#1" // Comment out for POOL dst
-, "/Event/Rec/Relations/EcalClusters2MCParticles#1" // Comment out for POOL dst
+, "/Event/Rec/Relations/VeloClusters2MCParticles#1"
+, "/Event/Rec/Relations/EcalClusters2MCParticles#1"
 , "/Event/Rec/Relations/MuonCoords2MCParticles#1"
 , "/Event/Rec/Relations/Tr2MCP#1"
 , "/Event/Rec/Relations/L0CaloCandidates#1"
@@ -94,3 +94,5 @@ DstWriter.ItemList =
 , "/Event/Rec/Relations/L1Track2d2MCP#1"
 , "/Event/Rec/Relations/L1Track3d2MCP#1"
 };
+// Additional objects from new L1 simulation
+#include "$BRUNELOPTS/L1Truth.opts"

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-///   Job options for Brunel for data produced with Boole v3r1 or greater   ///
+///   Job options for Brunel for data produced with Boole v5r1 or greater   ///
 /// and with XmlDDDB v19r0 or greater, geometry compatible with lhcb-200311 ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
@@ -29,19 +29,18 @@ ApplicationMgr.EvtMax = 100;
 //#include "$EVENTSYSROOT/options/PoolDicts.opts"
 
 // GaudiDb input. Comment next line if POOL input
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r0/412400.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r1/412400.oodigi' TYP='ROOT' opt='READ'" }; // evtype 412400
 
-// Example for POOL input. This file must exist in MyCatalog.xml.
-// Comment next two lines of GaudiDb input
-//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r0/Pool412400.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 412400
+// Uncomment next 2 lines for POOL input. Input file must exist in MyCatalog.xml.
+//EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r1/Pool412400.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 412400
 //PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
 
-// GaudiDb output (not possible with POOL input). 
-// Comment next two lines if using POOL.
-DstWriter.Output = "DATAFILE='412400.oodst' TYP='ROOT' OPT='NEW'";
-#include "$BRUNELOPTS/L1Truth.opts" // Classes not yet working with POOL
+// Define output file - choose either GaudiDb or POOL
 
-// POOL output. Comment next line if GaudiDb output
+// GaudiDb output (possible only with GaudiDb input)
+DstWriter.Output = "DATAFILE='412400.oodst' TYP='ROOT' OPT='NEW'";
+
+// POOL output
 //DstWriter.Output = "DATAFILE='PFN:412400.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 
 //////////////////////////////////////////////////////////////////////////////

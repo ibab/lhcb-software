@@ -73,7 +73,7 @@ use LongTrack           v1r9	Tr
 use TrFitter            v3r7	Tr
 use TrExtrapolator      v2r10	Tr
 use TrTools             v2r5 	Tr
-use Seeding             v2r6	Tr 
+use Seeding             v2r7	Tr 
 use TrMatching          v2r8	Tr
 use TrCleanEx           v2r7p2	Tr
 use VeloTT              v1r6p1	Tr
