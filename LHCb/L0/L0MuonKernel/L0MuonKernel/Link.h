@@ -1,9 +1,9 @@
-// $Id: Link.h,v 1.5 2005-02-03 19:49:51 atsareg Exp $
+// $Id: Link.h,v 1.6 2005-04-05 11:23:05 cattanem Exp $
 
 #ifndef PROCESSORKERNEL_LINK_H
 #define PROCESSORKERNEL_LINK_H     1
 
-/** @class Unit Unit.h L0MuonKernel/Unit.h
+/** @class Link Link.h L0MuonKernel/Link.h
 
    Class representing a unit of data processing logic 
    of the level-0 muon trigger in order to create a link between 

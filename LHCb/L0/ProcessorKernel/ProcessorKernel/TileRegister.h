@@ -1,9 +1,9 @@
-// $Id: TileRegister.h,v 1.3 2005-03-31 16:04:56 jucogan Exp $
+// $Id: TileRegister.h,v 1.4 2005-04-05 11:24:40 cattanem Exp $
 
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
 
-/** @class TileRegister TileRegister L0MuonKernel/TileRegister.h
+/** @class TileRegister TileRegister.h ProcessorKernel/TileRegister.h
 
    Class representing a register where each 
    bit corresponds to a MuonTileID.
