@@ -7,7 +7,7 @@
 #============================================================================
 
 package   RichRecBase
-version   v1r0
+version   v1r1
 
 #============================================================================
 # Structure
@@ -21,7 +21,7 @@ use   RichEvent      v4r*  Event
 use   RichKernel     v3r*  Rich
 use   RichUtils      v3r*  Rich
 use   RichDetTools   v2r*  Rich
-use   GaudiObjDesc   v4r*  -no_auto_imports
+use   GaudiObjDesc   v5r*  -no_auto_imports
 
 #============================================================================
 # Environment
