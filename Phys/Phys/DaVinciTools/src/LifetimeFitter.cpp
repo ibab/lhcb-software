@@ -1,4 +1,4 @@
-// $Id: LifetimeFitter.cpp,v 1.1 2003-05-05 13:05:32 graven Exp $
+// $Id: LifetimeFitter.cpp,v 1.2 2003-06-03 07:30:20 gcorti Exp $
 
 // Include files from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -155,8 +155,8 @@ LifetimeFitter::iterate(HepVector& p, HepSymMatrix& Cp,
   // [] start from [0], () start from (1)...
 
   HepVector R(9);
-  for (unsigned i=0;i<6;++i) R[i] = O[i]-p[i];
-  for (unsigned i=0;i<3;++i) R[6+i] = O[6+i]-(p[i]-p[6]*p[3+i]/mass);
+  { for (unsigned i=0;i<6;++i) R[i] = O[i]-p[i]; }
+  { for (unsigned i=0;i<3;++i) R[6+i] = O[6+i]-(p[i]-p[6]*p[3+i]/mass); }
   
   static const HepMatrix I6(  -1. * HepMatrix(6,6,1) );
   static const HepMatrix I3(  -1. * HepMatrix(3,3,1) );
