@@ -35,8 +35,8 @@ PVolume::PVolume           ( const     std::string&     PhysVol_name       ,
 {
   // NB!!! transformaion is given by Translation and then Rotation!!!
   Hep3Vector translation = -1.0 * Position;
-  //  m_pv_matrix = HepRotate3D(Rotation)*HepTranslate3D(translation ) ;
-  m_pv_matrix = HepTranslate3D(translation)*HepRotate3D(Rotation);
+  m_pv_matrix = HepRotate3D(Rotation)*HepTranslate3D(translation ) ;
+  //m_pv_matrix = HepTranslate3D(translation)*HepRotate3D(Rotation);
   //
   Assert( 0 != dataService , "PVolume Fatal Error in constructor(1)!" );
   //

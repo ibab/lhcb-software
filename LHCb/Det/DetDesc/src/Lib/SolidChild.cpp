@@ -52,7 +52,7 @@ SolidChild::SolidChild( ISolid*              solid    ,
   else 
     {
       m_sc_matrix    = 
-	new HepTransform3D( HepTranslate3D( -1.0 * Position ) * HepRotate3D( Rotation ) );
+	new HepTransform3D( HepRotate3D( Rotation)*HepTranslate3D( -1.0 * Position ) );
       if( 0 != m_sc_matrix ) { m_sc_simple = false ; } 
     }
   
