@@ -4,7 +4,7 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v10r0>20020426 Brunel v10r0</A></H1><PRE>
+</PRE><H1><A NAME=v10r0>20020430 Brunel v10r0</A></H1><PRE>
    >>>>>>>>>>>>>>>>>>>>>>>>>>> Beware!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
    >>>>>> Current head revision has very limited functionality!! <<<<<<<<<<
 
@@ -16,6 +16,7 @@ Purpose: LHCb reconstruction program
      - Calo digitisation and reconstruction
      - MUON Digitisation (old SICB Fortran version) and reconstruction
      - L0 trigger simulation (except L0 Muon)
+     - First tests of DST output
    >>>>>>
 
    Backwards incompatible version for use with the new event model.
@@ -28,6 +29,7 @@ Purpose: LHCb reconstruction program
 
    In options
    - All files touched to support new event model algorithms
+   - New file BrunelDst.opts to set up DST output
 
    In cmt/requirements
    - use Gaudi    v10 and corresponding external packages

@@ -9,11 +9,15 @@ SpillOverSelector.Input = {"JOBID='92113'"}; // evtype 61 RAWH3 for spillover
 EventSelector.Input = {"JOBID='92119'"}; // evtype 412100 RAWH3 signal
 #pragma print off
 
-// Define outputs
-HistogramPersistencySvc.OutputFile = "brunel_v243r3.hbook";  // Monitoring histos
-
 //--------------------------------------------------------------
 #include "$BRUNELOPTS/Brunel.opts"  // Generic options for all jobs
+//--------------------------------------------------------------
+
+// Define outputs
+HistogramPersistencySvc.OutputFile = "brunel_v243r3.hbook";  // Monitoring histos
+#include "$BRUNELOPTS/BrunelDst.opts"  // Define DST content
+BrunelDstWriter.Output = "DATAFILE='dst_92119.root' TYP='ROOT' OPT='NEW'";
+
 //--------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------

@@ -1,0 +1,44 @@
+// This file sets up the Brunel DST content
+// ----------------------------------------
+ApplicationMgr.DLLs += { "GaudiDb", "GaudiRootDb", "DbCnv" };
+
+// Activate the conversion service 
+ApplicationMgr.ExtSvc += { "DbEventCnvSvc/RootEvtCnvSvc" };
+// Declare the persistency type for the conversion service 
+RootEvtCnvSvc.DbType = "ROOT" ;
+// Declare the conversion service to Persistency Service 
+EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
+
+ApplicationMgr.OutStream += { "BrunelDstWriter" };
+
+BrunelDstWriter.ItemList = 
+{
+  "/Event#1"
+, "/Event/Header#1"
+, "/Event/Gen#1"
+, "/Event/Gen/Header#1"
+, "/Event/MC#1"
+  //, "/Event/MC/Collisions#1"
+, "/Event/MC/Particles#1"  // To be filtered
+, "/Event/MC/Vertices#1"   // To be filtered
+, "/Event/Trig#1"
+, "/Event/Trig/L0#1"
+  //, "/Event/Trig/L0/Calo#1"
+  //, "/Event/Trig/L0/Muon"
+, "/Event/Trig/L0/PuVeto#1"
+, "/Event/Trig/L0/Decision#1"
+, "/Event/Raw#1"
+, "/Event/Raw/Velo#1"
+  //, "/Event/Raw/Velo/Cluster#1"
+, "/Event/Raw/IT#1"
+  //, "/Event/Raw/IT/Summary#1"
+  //, "/Event/Raw/Rich#1"
+  //, "/Event/Raw/Rich/Digits#1"
+, "/Event/Rec#1"
+, "/Event/Rec/IT#1"
+  //, "/Event/Rec/IT/Clusters#1"  // To be filtered
+, "/Event/Rec/Calo#1"  // To be filtered
+  //, "/Event/Rec/Calo/EcalCelAutoClusters#1"
+  //, "/Event/Rec/Calo/EcalLocMaxClusters#1" 
+};
+

@@ -2,10 +2,8 @@ LIST
 DEBU  1 1000 1
 C
 IOPA
-C SAVX is event output file 
-C 'SAVX' 'XO' '$LHCBHOME/scratch/Brunel/v4/brunel_52310.dst!'
-C Below are some examples of SICBDST monitoring histograms
-C    'T1VE' 'HO' 'TrigL1.hbook!'
+C Use this card only to switch on RICH monitoring. 
+C SICBDST Zebra output ('SAVX' card) is no longer supported
 C    'RHIS' 'HO' 'Rich.hbook!'
 C End of IOPA card
 C

@@ -20,6 +20,7 @@
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLs += { "BrunelKernel", "GaudiAlg" };
 EventDataSvc.ForceLeaves = true;
+EventDataSvc.RootCLID    =    1;
 
 #pragma print on
 //--------------------------------------------------------------

@@ -35,8 +35,9 @@ use GaudiAlg           v6r0
 use GaudiAud           v6r0
 use GaudiNagC          v7r0
 use GaudiDb            v7r0
+use GaudiRootDb        v7r0
 use HbookCnv           v12r0
-use RootHistCnv        v6r0
+#use RootHistCnv        v6r0
 
 #---LHCb common libraries
 use GaudiConf    v6r2
