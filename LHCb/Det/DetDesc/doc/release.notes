@@ -1,16 +1,17 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.46 2001-08-10 14:59:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.47 2001-08-10 16:41:29 ibelyaev Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
 
 ! =============================================================================
+! 20010810  - Vanya Belyaev 
+   - modification in IDetectorElement interface and related classes  
+! =============================================================================
 ! 20010810  - Vanya Belyaev
    - modification in IGeometryInfo interface and related classes  
-! =============================================================================
-
 ! =============================================================================
 ! 20010809  - v8 Vanya Belyaev
    - change in ISolid, ILVolume and IPVolume interfaces

@@ -1,9 +1,13 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.9  2001/08/10 14:59:02  ibelyaev
+/// modifications in IGeometryInfo and related classes
+/// 
 /// ===========================================================================
 #include "GaudiKernel/Kernel.h"
+#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataDirectory.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IMessageSvc.h"
@@ -15,6 +19,7 @@
 ///
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/DetectorElement.h"
+#include "DetDesc/DetDesc.h"
 /// local !!!
 #include "GeoInfo.h"
 
@@ -24,6 +29,8 @@
  * @author Vanya Belyaev Ivan.Belyaev@itep.ru
  * @date xx/xx/xxxx
  */
+
+unsigned long DetectorElement::s_count = 0 ;
 
 DetectorElement::DetectorElement( const std::string&   name        ,
                                   const ITime&         validSince  ,   
@@ -42,35 +49,12 @@ DetectorElement::DetectorElement( const std::string&   name        ,
   //
   , m_de_validSince      (    0    ) 
   , m_de_validTill       (    0    )
-  //
-  , m_de_dataSvc         (    0    )
-  , m_de_msgSvc          (    0    ) 
-  , m_de_svcLoc          (    0    ) 
 {
   ///
   m_de_validSince = new(std::nothrow) TimePoint( validSince ) ;
   m_de_validTill  = new(std::nothrow) TimePoint( validTill  ) ; 
   ///
-  m_de_svcLoc = Gaudi::svcLocator(); 
-  if( 0 == svcLoc() ) 
-    { throw DetectorElementException("ISvcLocator* points to NULL!"); }
-  svcLoc()->addRef();
-  ///
-  {  
-    const std::string tmp("DetectorDataSvc") ;
-    StatusCode sc = svcLoc()->service( tmp , m_de_dataSvc );
-    if( sc.isFailure() ) { throw DetectorElementException("DetectorElement(1), could no tload IDataProviderSvc="+tmp  ); }
-    if( 0 == dataSvc() ) { throw DetectorElementException("DetectorElement(1), IDataProviderSvc* points to NULL, "+tmp ); }
-    dataSvc()->addRef();
-  }
-  ///
-  {  
-    const std::string tmp("MessageSvc") ;
-    StatusCode sc = svcLoc()->service( tmp , m_de_msgSvc );
-    if( sc.isFailure() ) { throw DetectorElementException("DetectorElement(1), could no load IMessageSvc="+tmp  ); }
-    if( 0 == msgSvc () ) { throw DetectorElementException("DetectorElement(1), IMessageSvc* points to NULL, "+tmp ); }
-    msgSvc()->addRef();
-  }
+  addRef();
 };
 ////
 DetectorElement::DetectorElement( const std::string&   name   )
@@ -88,55 +72,74 @@ DetectorElement::DetectorElement( const std::string&   name   )
   //
   , m_de_validSince      (    0    ) 
   , m_de_validTill       (    0    )
-  //
-  , m_de_dataSvc         (    0    )
-  , m_de_msgSvc          (    0    ) 
-  , m_de_svcLoc          (    0    ) 
 {
   ///
   m_de_validSince = new(std::nothrow) TimePoint( time_absolutepast   ) ;
   m_de_validTill  = new(std::nothrow) TimePoint( time_absolutefuture ) ; 
   ///
-  m_de_svcLoc = Gaudi::svcLocator(); 
-  if( 0 == svcLoc() ) { throw DetectorElementException("DetectorElement(2), ISvcLocator* points to NULL!"); }
-  svcLoc()->addRef();
-  ///
-  {  
-    const std::string tmp("DetectorDataSvc") ;
-    StatusCode sc = svcLoc()->service( tmp , m_de_dataSvc );
-    if( sc.isFailure() ) { throw DetectorElementException("DetectorElement(2), could no tload IDataProviderSvc="+tmp  ); }
-    if( 0 == dataSvc() ) { throw DetectorElementException("DetectorElement(2), IDataProviderSvc* points to NULL, "+tmp ); }
-    dataSvc()->addRef();
-  }
-  ///
-  {  
-    const std::string tmp("MessageSvc") ;
-    StatusCode sc = svcLoc()->service( tmp , m_de_msgSvc );
-    if( sc.isFailure() ) { throw DetectorElementException("DetectorElement(2), could no load IMessageSvc="+tmp  ); }
-    if( 0 == msgSvc () ) { throw DetectorElementException("DetectorElement(2), IMessageSvc* points to NULL, "+tmp ); }
-    msgSvc()->addRef();
-  }
+  addRef();
 };
 ////
 DetectorElement::~DetectorElement()
 {
-  if( 0 != msgSvc  () ) { msgSvc  ()->release() ; m_de_msgSvc  = 0 ; }  
-  if( 0 != dataSvc () ) { dataSvc ()->release() ; m_de_dataSvc = 0 ; }
-  if( 0 != svcLoc  () ) { svcLoc  ()->release() ; m_de_svcLoc  = 0 ; }
+  reset();
   ///
-  if ( 0 != m_de_iGeometry     ) { delete m_de_iGeometry     ;  m_de_iGeometry     = 0 ; } 
-  ///
-
-  //  if ( 0 != m_de_iAlignment    ) { delete m_de_iAlignment    ;  m_de_iAlignment    = 0 ; }
-  //  if ( 0 != m_de_iCalibration  ) { delete m_de_iCalibration  ;  m_de_iCalibration  = 0 ; }
-  //  if ( 0 != m_de_iReadOut      ) { delete m_de_iReadOut      ;  m_de_iReadOut      = 0 ; }
-  //  if ( 0 != m_de_iSlowControl  ) { delete m_de_iSlowControl  ;  m_de_iSlowControl  = 0 ; }
-  //  if ( 0 != m_de_iFastConrol   ) { delete m_de_iFastConstrol ;  m_de_iFastControl  = 0 ; }
-  
-  //  if ( 0 != m_de_validSince    ) { delete m_de_validSince    ;  m_de_validSince    = 0 ; }
-  //  if ( 0 != m_de_validTill     ) { delete m_de_validTill     ;  m_de_validTill     = 0 ; }
+  if ( 0 != m_de_iGeometry     ) 
+    { delete m_de_iGeometry     ;  m_de_iGeometry     = 0 ; } 
+  ///release
+  release();  
 };
-//
+///
+IDataProviderSvc*  DetectorElement::dataSvc () 
+{ return DetDesc::detSvc(); }
+///
+IMessageSvc*  DetectorElement::msgSvc () 
+{
+  /// static pointer to message service 
+  static IMessageSvc* s_msgSvc = 0 ;
+  if( 0 == s_msgSvc ) 
+    {
+      ISvcLocator* svcLoc = Gaudi::svcLocator();
+      if( 0 == svcLoc ) 
+        { throw DetectorElementException("ISvcLocator* points to NULL!"); }
+      StatusCode sc = 
+        svcLoc->service( "MessageSvc" , s_msgSvc );
+      if( sc.isFailure() ) 
+        { throw DetectorElementException("Could not locate 'MessageSvc'!");}
+      if( 0 == s_msgSvc ) 
+        { throw DetectorElementException("IMessageSvc* points to NULL!");}
+      /// add the reference 
+      s_msgSvc->addRef();
+    }
+  ///
+  return s_msgSvc; 
+};
+
+///
+StatusCode 
+DetectorElement::queryInterface( const InterfaceID& ID , void** ppI )
+{
+  if ( 0 == ppI ) { return StatusCode::FAILURE; }
+  *ppI = 0 ;
+  if      ( IDetectorElement::interfaceID()  == ID ) 
+    { *ppI = static_cast<IDetectorElement*> ( this ) ; } 
+  else if ( ISerialize::       interfaceID() == ID )
+    { *ppI = static_cast<ISerialize*>       ( this ) ; } 
+  else if ( IInterface::       interfaceID() == ID ) 
+    { *ppI = static_cast<IInterface*>       ( this ) ; } 
+  else                                                  
+    { return StatusCode::FAILURE                     ; }
+  /// add the reference 
+  addRef();
+  ///
+  return StatusCode::SUCCESS;
+};
+///
+unsigned long DetectorElement::addRef  () { return ++s_count ; }
+unsigned long DetectorElement::release ()
+{ return 0 < s_count ? --s_count : 0 ; }
+
+///
 bool DetectorElement::acceptInspector( IInspector* pInspector ) 
 {
   if( 0 == pInspector ) { return false; } 

@@ -1,5 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.14 2001-07-02 14:11:00 sponce Exp $
-
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -509,23 +512,25 @@ public:
    */
   virtual std::vector<std::string> userParameterVectors();
   
- 
 
+public:
+
+  virtual StatusCode 
+  queryInterface( const InterfaceID& , void** );
+  virtual unsigned long addRef  ();
+  virtual unsigned long release ();
+  
 protected:
-
+  
   /// specific 
   void setGeometry( IGeometryInfo* geoInfo ) { m_de_iGeometry = geoInfo; }
-
-  inline IMessageSvc*       msgSvc         () const { return m_de_msgSvc ; }  
-  inline IMessageSvc*       messageService () const { return msgSvc()    ; }
-  inline ISvcLocator*       svcLoc         () const { return m_de_svcLoc ; } 
-  inline ISvcLocator*       svcLocator     () const { return svcLoc()    ; } 
-
-
+  
+  static IDataProviderSvc*  dataSvc ();
+  static IMessageSvc*       msgSvc  ();
+  
 private:
 
   // technicalities 
-  inline IDataProviderSvc*  dataSvc () const { return m_de_dataSvc ; } 
 
   inline void Assert (bool assertion,
                       const std::string& name =
@@ -546,11 +551,9 @@ private:
   ITime*                 m_de_validSince    ;
   ITime*                 m_de_validTill     ;
 
-  // technicalities:
-  IDataProviderSvc*      m_de_dataSvc       ;
-  IMessageSvc*           m_de_msgSvc        ; 
-  ISvcLocator*           m_de_svcLoc        ;
-
+  /// reference/object counter 
+  static unsigned long   s_count;
+  
   /// This defines the type of a userParameter
   enum userParamKind { DOUBLE, INT, OTHER };
 

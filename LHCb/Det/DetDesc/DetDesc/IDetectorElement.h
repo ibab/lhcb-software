@@ -1,14 +1,16 @@
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2001/06/28 14:24:15  ibelyaev
-// remove 'inline' attributes (IDetectorElement.h)
-//
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef  DETDESC_IDETECTORELEMENT_H 
-#define  DETDESC_IDETECTORELEMENT_H 1 
-
+#define  DETDESC_IDETECTORELEMENT_H 1
 // Include files
 #include <iostream>
 #include <string>
-
+//
+#include "GaudiKernel/IInterface.h"
+#include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/IInspectable.h"
 
 // Forward declarations
@@ -19,14 +21,23 @@ class IReadOut;
 class ISlowControl;
 class IFastControl; 
 
-/** @class IDetectorElement IDetectorElement.h DetDesc/IDetectorElement.h
-    
-    An abstract Interface accees 
-    the node in DetectorDescription tree.
-    Just delegates all questions to right guys. 
-*/
+/** the unique interface identifier 
+ * ( unique interface identifier , major & minor versions)
+ */
+static const InterfaceID IID_IDetectorElement( 156 , 2 , 0 );
 
-class IDetectorElement: virtual public IInspectable
+/** @interface IDetectorElement IDetectorElement.h "DetDesc/IDetectorElement.h"
+ *
+ *  An abstract Interface accees 
+ *   the node in DetectorDescription tree.
+ *  Just delegates all questions to right guys.
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ */
+
+class IDetectorElement: virtual public IInterface ,
+                        virtual public ISerialize ,
+                        virtual public IInspectable
 {
   ///
  public: 
@@ -34,7 +45,12 @@ class IDetectorElement: virtual public IInspectable
   typedef std::vector<IDetectorElement*>   IDEContainer; 
   ///
  public:
-  ///
+
+  /** retrieve the uniqie interface identifier 
+   *  @return the unique interface identifier 
+   */
+  static const InterfaceID& interfaceID() { return IID_IDetectorElement; }
+  
   /// "accessor":  name/identifier of the Detector Element
   virtual          const std::string&   name       ()   const = 0;
   ///
@@ -289,7 +305,9 @@ inline std::ostream& operator<<( std::ostream&           os ,
     ( (0 == de) ? (os << "IDetectorElement* points to NULL") : (os << *de) ) ; 
 };
 
-#endif  //    GAUDIKERNEL_IDETECTORELEMENT_H
+/// ===========================================================================
+#endif  ///<   DETDESC_IDETECTORELEMENT_H
+/// ===========================================================================
 
 
 

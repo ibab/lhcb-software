@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.11  2001/08/09 16:48:01  ibelyaev
+/// update in interfaces and redesign of solids
+/// 
 /// ===========================================================================
 ///@{
 /** STD & STL includes */ 
@@ -27,7 +30,6 @@
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/StreamBuffer.h" 
 #include "GaudiKernel/SmartRefVector.h" 
-#include "GaudiKernel/Bootstrap.h" 
 ///@} 
 ///@{
 /** DetDesc includes */ 
@@ -41,6 +43,7 @@
 #include "DetDesc/Solid.h"
 #include "DetDesc/Surface.h"
 #include "DetDesc/ClhepToStream.h"
+#include "DetDesc/DetDesc.h"
 ///@}
 /// local 
 #include "PVolume.h"
@@ -399,29 +402,7 @@ Material* LVolume::findMaterial() const
  *  @return pointer to data service 
  */
 // ============================================================================
-IDataProviderSvc* LVolume::dataSvc()
-{
-  /// static pointer to Data Service 
-  IDataProviderSvc*  s_dataSvc = 0 ;
-  ISvcLocator*       s_svcLoc  = 0 ;
-  /// located 
-  if( 0 != s_dataSvc ) { return s_dataSvc ; }
-  /// locate 
-  if( 0 == s_svcLoc  ) { s_svcLoc = Gaudi::svcLocator(); }
-  if( 0 == s_svcLoc  ) 
-    { throw LVolumeException("LVolume:: Could not locate ISvcLocator!"); }
-  if( 0 == s_dataSvc ) 
-    {
-      StatusCode sc = 
-        s_svcLoc->service( "DetectorDataSvc" , s_dataSvc );
-      if( sc.isFailure() ) 
-        { throw LVolumeException("LVolume:: Could not locate DataSvc!"); }
-    }
-  if( 0 == s_dataSvc  ) 
-    { throw LVolumeException("LVolume:: Could not locate ISvcLocator!"); }   
-  /// return
-  return s_dataSvc ;
-};
+IDataProviderSvc* LVolume::dataSvc() { return DetDesc::detSvc(); };
 
 // ============================================================================
 /** set solid for logical volume
