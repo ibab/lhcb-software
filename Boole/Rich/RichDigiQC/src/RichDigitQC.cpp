@@ -1,12 +1,15 @@
 
 //------------------------------------------------------------------------------------
-/** @file RichDigitQC.h
+/** @file RichDigitQC.cpp
  *
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.7 2005-01-13 14:10:53 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.8 2005-01-17 14:08:10 cattanem Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2005/01/13 14:10:53  jonrob
+ *  fix un-initialized variables
+ *
  *  Revision 1.6  2005/01/13 13:04:05  jonrob
  *  Update monitoring information
  *
