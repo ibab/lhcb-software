@@ -2,6 +2,8 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
+! 2002-06-18 - Stefan Roiser
+ - changed use-statement of GaudiObjDesc to v4r4
 
 ! 2002-06-18 - Vanya Belyaev
  - Relations/Relation.h: fix bug affecting inverse relations (found by Marco)
