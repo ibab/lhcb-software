@@ -1,4 +1,4 @@
-// $Id: PrepareL0DUL1Buffer.cpp,v 1.3 2005-01-31 16:29:12 cattanem Exp $
+// $Id: PrepareL0DUL1Buffer.cpp,v 1.4 2005-03-07 16:30:49 cattanem Exp $
 // Include files 
 
 // from STL
@@ -225,8 +225,8 @@ StatusCode PrepareL0DUL1Buffer::execute() {
   //----------------//
   std::vector<l1_int> data;
   
-  int sourceID =0;
-  int bankType = L1Buffer::L0DU;
+  int sourceID = L1Buffer::L0DUID;
+  int bankType = L1Buffer::L0;
 
   data.push_back( L0DUHeaderWord );
   data.push_back( Peak1Word      );
