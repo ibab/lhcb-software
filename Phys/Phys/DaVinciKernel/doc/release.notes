@@ -1,7 +1,8 @@
-! $Id: 
+// $Id: release.notes,v 1.32 2005-01-18 08:30:40 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciKernel v3r0 2005-01-18 ===================
 ! 2005-01-18 - P. Koppenburg
   - DaVinciTools/IBestParticles.h
   - DaVinciTools/IGeomVertexFitter.h
