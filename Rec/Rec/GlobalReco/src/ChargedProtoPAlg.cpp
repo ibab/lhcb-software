@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.12 2003-06-02 11:12:43 gcorti Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.13 2003-06-02 11:14:26 gcorti Exp $
 // Include files 
 #include <memory>
 
@@ -848,7 +848,7 @@ StatusCode ChargedProtoPAlg::muonProbDLL( ProtoParticle* proto,
   double rp  = 0.;
   
   double mmu = proto->detPIDvalue( ProtoParticle::MuonMuon );
-  if (std::fabs(1./qp) < 10000.) {
+  if (fabs(1./qp) < 10000.) {
     if (mmu < 0.01) {
       mulik = 295.;
       mubkg = 945.;
@@ -861,11 +861,11 @@ StatusCode ChargedProtoPAlg::muonProbDLL( ProtoParticle* proto,
       mulik = exp(1.762+2.621*mmu);
       mubkg = exp(2.243+1.026*mmu);
     }
-    rmu = rmu + std::log(mulik / 35.47);  // Update muon log-likelihood
-    re  = re  + std::log(mubkg / 28.27);   // and background hypotheses
-    rpi = rpi + std::log(mubkg / 28.27);
-    rk  = rk  + std::log(mubkg / 28.27);
-    rp  = rp  + std::log(mubkg / 28.27);
+    rmu = rmu + log(mulik / 35.47);  // Update muon log-likelihood
+    re  = re  + log(mubkg / 28.27);   // and background hypotheses
+    rpi = rpi + log(mubkg / 28.27);
+    rk  = rk  + log(mubkg / 28.27);
+    rp  = rp  + log(mubkg / 28.27);
   }
   else if (fabs(1./qp) < 20000.) {
     if (mmu < 0.01) {
@@ -880,11 +880,11 @@ StatusCode ChargedProtoPAlg::muonProbDLL( ProtoParticle* proto,
       mulik = exp(-0.851+5.864*mmu);
       mubkg = exp(0.185+2.982*mmu);
     }
-    rmu = rmu + std::log(mulik / 34.63);                               
-    re  = re  + std::log(mubkg / 11.20);  
-    rpi = rpi + std::log(mubkg / 11.20);
-    rk  = rk  + std::log(mubkg / 11.20);
-    rp  = rp  + std::log(mubkg / 11.20);
+    rmu = rmu + log(mulik / 34.63);                               
+    re  = re  + log(mubkg / 11.20);  
+    rpi = rpi + log(mubkg / 11.20);
+    rk  = rk  + log(mubkg / 11.20);
+    rp  = rp  + log(mubkg / 11.20);
   }
   else {
     if (mmu < 0.01) {
@@ -899,11 +899,11 @@ StatusCode ChargedProtoPAlg::muonProbDLL( ProtoParticle* proto,
       mulik = exp(-5.608+11.490*mmu);
       mubkg = exp(-0.816+3.588*mmu);
     }
-    rmu = rmu + std::log(mulik / 65.31);
-    re  = re  + std::log(mubkg / 6.81); 
-    rpi = rpi + std::log(mubkg / 6.81);
-    rk  = rk  + std::log(mubkg / 6.81);
-    rp  = rp  + std::log(mubkg / 6.81);
+    rmu = rmu + log(mulik / 65.31);
+    re  = re  + log(mubkg / 6.81); 
+    rpi = rpi + log(mubkg / 6.81);
+    rk  = rk  + log(mubkg / 6.81);
+    rp  = rp  + log(mubkg / 6.81);
   }
 
   (combDLL->m_muDLL) += rmu;
