@@ -1,4 +1,4 @@
-// $Id: Particle2MCLink.cpp,v 1.1 2004-06-15 15:54:56 phicharp Exp $
+// $Id: Particle2MCLink.cpp,v 1.2 2004-06-17 08:58:09 phicharp Exp $
 // Include files 
 
 
@@ -317,3 +317,14 @@ Object2MCLink::linkerTable( const std::string& name, To& test)
   return NULL;
 }
 
+bool
+Object2MCLink::checkAssociation( const KeyedObject<int>* obj,
+                                 const MCParticle* mcPart)
+{
+  const MCParticle* mcp = firstMCP(obj);
+  while( NULL != mcp ) {
+    if( mcp == mcPart ) return true;
+    mcp = nextMCP();
+  }
+  return false;
+}

@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.42 2004-06-16 16:16:26 pkoppenb Exp $
+! $Id: release.notes,v 1.43 2004-06-17 08:58:09 phicharp Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2004-06-17 - Ph.Charpentier
+  - Particle2MCLink.h and .cpp : add method
+    bool checkAssociation( const KeyedObject*, const MCParticle*)
+    to check if an object has any association with a given MCParticle
 
 ! 2004-06-16 - P. Koppenburg
   - DaVinciAssociators/Particle2MCAsct.h

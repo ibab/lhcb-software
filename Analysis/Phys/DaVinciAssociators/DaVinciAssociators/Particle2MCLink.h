@@ -1,4 +1,4 @@
-// $Id: Particle2MCLink.h,v 1.2 2004-06-16 16:16:25 pkoppenb Exp $
+// $Id: Particle2MCLink.h,v 1.3 2004-06-17 08:58:08 phicharp Exp $
 #ifndef DAVINCIASSOCIATORS_PARTICLE2MCLINK_H 
 #define DAVINCIASSOCIATORS_PARTICLE2MCLINK_H 1
 
@@ -165,6 +165,8 @@ class Object2MCLink
     return m_linkTo.weight(); } ;
   bool notFound();
   bool notFound( const std::string& contname);
+  bool checkAssociation( const KeyedObject<int>* obj, 
+                         const MCParticle* mcPart);
 
  protected:
   void createLinks( const std::string& contName = "") ;
