@@ -157,6 +157,7 @@ StatusCode RichFrontEndResponse::Simple() {
         if( !mcRichDigits->object( (*iSumDep)->key() ) ){
           mcRichDigits->insert( newDigit, ((*iSumDep)->key()) );
         } else {
+          delete newDigit;
           log << MSG::ERROR << "Attempted duplicate digit" << endreq;
           return StatusCode::FAILURE;
         }
@@ -188,7 +189,7 @@ StatusCode RichFrontEndResponse::Analog() {
 
     PixelProperties* props = actual_base->DecodeUniqueID( (*iSumDep)->key().index()  );
 
-    if(props != 0) {
+    if ( props != 0 ) {
 
       Pixel* pid = new Pixel( props );
       const PixelReadout *readOut = props->Readout();
@@ -266,8 +267,8 @@ StatusCode RichFrontEndResponse::Digital(){
   for (tsc_it = tscache.begin(); tsc_it != tscache.end(); tsc_it++) {
 
     PixelProperties* props = actual_base->DecodeUniqueID( (*tsc_it).first  );
-    const PixelReadout* readOut = new PixelReadout;
-    readOut = props->Readout();
+    //const PixelReadout* readOut = new PixelReadout;
+    const PixelReadout* readOut = props->Readout();
     if(readOut) {
 
       const RichFrontEndDigitiser* ADC = readOut->ADC();
@@ -279,6 +280,7 @@ StatusCode RichFrontEndResponse::Digital(){
         if( !mcRichDigits->object(id) ){
           mcRichDigits->insert( newDigit, id );
         } else {
+          delete newDigit;
           log << MSG::ERROR << "Attempt to duplicate digit" << endreq;
           return StatusCode::FAILURE;
         }
