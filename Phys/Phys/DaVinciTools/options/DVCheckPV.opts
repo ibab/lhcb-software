@@ -1,0 +1,57 @@
+/** @file 
+ * 
+ *  Example file to run a DaVinci job.
+ *  This file defines, sequences and configures the algorithms 
+ *  to be executed
+ *
+ *  @author G.Corti
+ *  @date 2004-01-26
+ */
+
+//--------------------------------------------------------------
+// Standard Gaudi configuration and additional DLLs are in
+// DaVinciCommon. 
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print on
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+// PV sequence. Put your favourite algorithms after PrintPV
+ApplicationMgr.TopAlg += { "GaudiSequencer/CheckPVSeq" } ;
+CheckPVSeq.Members += { "CheckPV", "PrintHeader/PrintPV" } ;
+CheckPV.MinPVs = 1 ;  // default
+CheckPV.MaxPVs = -1 ; // default -> no max
+CheckPV.OutputLevel = 3 ;
+PrintPV.OutputLevel = 2 ;
+
+//--------------------------------------------------------------
+// Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
+ChargedProtoPAlg.OutputLevel            = 3;
+
+// Modify Message Format to print algorithm name with 40 characters
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+
+//---------------------------------------------------------------
+// Number of events to process, skip and printing frequency
+//---------------------------------------------------------------
+// Sample input file 
+
+ApplicationMgr.EvtMax    = -1;
+EventSelector.FirstEvent = 1;
+EventSelector.PrintFreq  = 1;
+
+// some minimum bias data. Should get ~80% of reconstructed PV.
+EventSelector.Input   = {
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000622_00008138_10.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000622_00008142_10.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000622_00008145_10.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000622_00008148_10.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000622_00008149_10.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000622_00008150_10.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000622_00008152_10.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000622_00008153_10.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000622_00008155_10.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+};

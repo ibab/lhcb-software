@@ -1,4 +1,4 @@
-// $Id: CheckPV.h,v 1.1 2004-11-18 07:56:51 pkoppenb Exp $
+// $Id: CheckPV.h,v 1.2 2004-11-18 09:07:25 pkoppenb Exp $
 #ifndef CHECKPV_H 
 #define CHECKPV_H 1
 
@@ -27,7 +27,8 @@ public:
 protected:
 
 private:
-  IPVLocator* m_PVLocator ;   ///< 
-
+  IPVLocator* m_PVLocator ;   ///< PVLocator Tool
+  int m_minPV ; ///< minimal number of reconstructed PVs required
+  int m_maxPV ; ///< maximal number of reconstructed PVs required. -1 means no requirement.
 };
 #endif // CHECKPV_H

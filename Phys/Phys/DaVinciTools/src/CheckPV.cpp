@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.1 2004-11-18 07:56:51 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.2 2004-11-18 09:07:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -26,8 +26,10 @@ const        IAlgFactory& CheckPVFactory = s_factory ;
 CheckPV::CheckPV( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
-    , m_PVLocator()
+  , m_PVLocator()
 {
+  declareProperty( "MinPVs", m_minPV = 1  );
+  declareProperty( "MaxPVs", m_maxPV = -1 ); // -1 -> No maximum defined
 
 }
 //=============================================================================
@@ -47,6 +49,16 @@ StatusCode CheckPV::initialize() {
     err() << " Unable to retrieve PV Locator tool" << endreq;
     return StatusCode::FAILURE;
   }
+  if ( m_minPV > 0 && m_maxPV > 0 ){
+    info() << "will select events with between " << m_minPV << " and " << m_maxPV 
+           << " reconstructed PVs" << endreq ;
+  } else if ( m_minPV > 0 ){
+    info() << "will select events with " << m_minPV 
+           << " or more reconstructed PVs" << endreq ;
+   } else if ( m_minPV == 0 ){
+    info() << "will select events with no reconstructed PVs" << endreq ;
+  }    
+
   return StatusCode::SUCCESS;
 };
 
@@ -55,25 +67,28 @@ StatusCode CheckPV::initialize() {
 //=============================================================================
 StatusCode CheckPV::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  debug() << "==> Execute" << endmsg; 
 
   std::string m_PVContainer = m_PVLocator->getPVLocation() ;
   
   verbose() << "Getting PV from " << m_PVContainer << endreq ;  
   Vertices* PV = get<Vertices>(m_PVContainer);
 
-  if ( !PV ) {
-    err() << "Could not find primary vertex location " 
-          <<  m_PVContainer << endreq;
+  if ( !PV ) { err() << "Could not find primary vertex location " 
+                     <<  m_PVContainer << endreq;
     return StatusCode::FAILURE ;
   }
-  if ( PV->empty() ) {
-    warning() << "PV container is empty " << endreq;
-    setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
-  } else {
-    debug() << "There are " << PV->size() << " primary vertices." << endreq ;
-    setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
+  int n =  PV->size() ;
+  debug() << "There are " << n << " primary vertices." << endreq ;
+
+  bool ok = ( n >= m_minPV );      // more than m_minPV
+  if ( m_maxPV >= 0 ){              // some maximum?
+    ok = (ok && ( n <= m_maxPV ));  // less than m_maxPV
   }
+
+  setFilterPassed(ok);
+  if (ok) info() << "Event accepted because there are " << n << " primary vertices." << endreq ;
+  else    info() << "Event rejected because there are " << n << " primary vertices." << endreq ; 
   
   return StatusCode::SUCCESS;
 };
