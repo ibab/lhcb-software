@@ -11,6 +11,7 @@
 > use  DaVinciEff         v2r10    Phys
 > use  DaVinciMCTools     v5r4     Phys
 > use  DaVinciTest        v4r3     Phys
+> use  DaVinciChecks      v2r3     Phys
 > use  DaVinciTools       v9r2     Phys
 > use  FlavourTagging     v4r9     Phys
 > use  Ks2PiPiSel         v1r2     Phys

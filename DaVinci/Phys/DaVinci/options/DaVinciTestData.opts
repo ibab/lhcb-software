@@ -12,11 +12,11 @@
 // };
 // 
 
-//-- LHCb v15r4, Brunel v23r3
+//-- LHCb v15r4, Brunel v23r4
 //   Example for POOL input. This file must exist in MyCatalog.xml.
 //   If the catalogue is local use xmlcatalog_file instead of xmlcatalog_http
   EventSelector.Input = { 
-     "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r3/Pool411300.dst' TYP='POOL_ROOT' OPT='READ'" 
+     "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r4/Pool411300-Field043.dst' TYP='POOL_ROOT' OPT='READ'" 
      }; // evtype 411300
   PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
 
