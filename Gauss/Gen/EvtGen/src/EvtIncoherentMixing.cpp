@@ -1,4 +1,4 @@
-// $Id: EvtIncoherentMixing.cpp,v 1.3 2003-10-27 16:35:07 robbep Exp $
+// $Id: EvtIncoherentMixing.cpp,v 1.4 2003-10-29 09:25:33 robbep Exp $
 // Include files 
 
 
@@ -22,8 +22,8 @@ bool EvtIncoherentMixing::_doBsMixing = false ;
 bool EvtIncoherentMixing::_enableFlip = false ;
 double EvtIncoherentMixing::_dGammad = 0. ;
 double EvtIncoherentMixing::_deltamd = 0.489e12 ;
-double EvtIncoherentMixing::_dGammas = 0. ;
-double EvtIncoherentMixing::_deltams = 0. ;
+double EvtIncoherentMixing::_dGammas = 6.517e10 ;
+double EvtIncoherentMixing::_deltams = 15.e12 ;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -86,8 +86,8 @@ void EvtIncoherentMixing::incoherentB0Mix( const EvtId id, double &t ,
 void EvtIncoherentMixing::incoherentBsMix( const EvtId id, double &t , 
                                            int &mix )
 {
-  static EvtId BS  = EvtPDL::getId( "Bs" ) ;
-  static EvtId BSB = EvtPDL::getId( "anti-Bs" ) ;
+  static EvtId BS  = EvtPDL::getId( "B_s0" ) ;
+  static EvtId BSB = EvtPDL::getId( "anti-B_s0" ) ;
  
   if ( ( BS != id ) && ( BSB != id ) ) {
     report(ERROR,"EvtGen") << "Bad configuration in incoherentBsMix" 
@@ -97,7 +97,7 @@ void EvtIncoherentMixing::incoherentBsMix( const EvtId id, double &t ,
   
   double x = getdeltams() * EvtPDL::getctau( BS ) / EvtConst::c ;
 
-  double y = getdGammas() / ( 2. * EvtPDL::getctau( BS ) / EvtConst::c ) ;
+  double y = getdGammas() * ( EvtPDL::getctau( BS ) / EvtConst::c ) / 2. ;
 
   double fac = 1. ; // No CP violation
 
@@ -115,7 +115,7 @@ void EvtIncoherentMixing::incoherentBsMix( const EvtId id, double &t ,
     t = -log( EvtRandom::Flat() ) * EvtPDL::getctau( BS ) ;
     prob = 1. + exp( y * t / EvtPDL::getctau( BS ) ) +
       mixsign * 2. * exp( 0.5 * y * t / EvtPDL::getctau( BS ) ) * 
-      cos( getdeltamd() * t / EvtConst::c ) ;
+      cos( getdeltams() * t / EvtConst::c ) ;
   } while ( prob < 4. * EvtRandom::Flat() ) ;
  
   mix = 0 ;

@@ -3,6 +3,9 @@ Package manager : Patrick Robbe and Witek Pokorski
 
 
 !===================== EvtGen v4r1 =====================================
+! 2003-10-29 - Patrick Robbe
+ - EvtIncoherentMixing : fix B_s0 name
+
 ! 2003-10-27 - Patrick Robbe
  - EvtIncoherentMixing : if B0/B0s has already mixed and the CP models
    need to flip the flavour of the B, flip both flavours (B0 mother
