@@ -1,11 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.94 2002-05-26 10:47:13 ibelyaev Exp $ 
+! $Id: release.notes,v 1.95 2002-05-26 13:04:45 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
 ! 2002-05-26 - Vanya Belyaev
+ - doc/DoxyFile.cfg                : new file 
  - src/Test/SolidsTest.cpp         : remove 
  - cmt/requirements                : use new standard patterns
 
