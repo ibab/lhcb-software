@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!========================= GaussTools v10r3 ==================================
 ! 2004-04-20 - Vanya BELYAEV 
 
 - src/Components/GaussTrackActionByEnergy.cpp
