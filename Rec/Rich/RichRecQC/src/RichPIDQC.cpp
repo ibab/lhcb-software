@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.31 2004-10-30 22:14:54 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.32 2004-11-04 16:30:45 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.31  2004/10/30 22:14:54  jonrob
+ *  removed debug compile warnings
+ *
  *  Revision 1.30  2004/10/30 19:28:36  jonrob
  *  update final PID table printout
  *
@@ -223,12 +226,17 @@ StatusCode RichPIDQC::execute()
   // get first PID to test track type
   RichPID * fPID = dynamic_cast<RichPID*>(*m_richPIDs.begin());
 
-  if ( fPID->isTrStoredTrackPID() ) {
-    countTrStoredTracks();
-  } else if ( fPID->isTrgTrackPID() ) {
-    countTrgTracks();
-  } else {
-    return Error( "Unknown Track Type in RichPIDs" );
+  try {
+    if ( fPID->isTrStoredTrackPID() ) {
+      countTrStoredTracks();
+    } else if ( fPID->isTrgTrackPID() ) {
+      countTrgTracks();
+    } else {
+      return Error( "Unknown Track Type in RichPIDs" );
+    }
+  }
+  catch ( const GaudiException & exp ) {
+    return Warning("Failed to load Tracking objects",StatusCode::SUCCESS);
   }
 
   // apply track multiplicity cuts
