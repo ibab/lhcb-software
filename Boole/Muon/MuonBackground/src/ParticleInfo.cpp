@@ -1,4 +1,4 @@
-// $Id: ParticleInfo.cpp,v 1.1.1.1 2003-04-04 09:10:14 asatta Exp $
+// $Id: ParticleInfo.cpp,v 1.2 2003-04-16 09:24:40 cattanem Exp $
 // Include files 
 
 #include <iostream> 
@@ -13,9 +13,9 @@
 //-----------------------------------------------------------------------------
 int ParticleInfo::m_stationNumber=0;
 int ParticleInfo::m_gapsNumber=0;
- int ParticleInfo::maxDimension=20;  
+int ParticleInfo::maxDimension=20;  
 
-  
+#define MAXGAPS 4  
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -61,7 +61,7 @@ std::vector<int> ParticleInfo::multiplicityResults()
   std::vector<int>::iterator foundHit,deleteHit;  
   int multiplicity;
   
-  int trackFound[m_gapsNumber];  
+  int trackFound[MAXGAPS];  
   std::vector<int> startOfStorage;  
   for(station=0;station<m_stationNumber;station++){
     trackFound[0]=0;
@@ -82,17 +82,18 @@ std::vector<int> ParticleInfo::multiplicityResults()
           
           for(secondGap=gap+1;secondGap<m_gapsNumber;secondGap++){
             secondPosition=station*m_gapsNumber+secondGap;
-            foundHit=find(((*m_storagePointer)[secondPosition]).begin(),
+            foundHit=std::find(((*m_storagePointer)[secondPosition]).begin(),
                  ((*m_storagePointer)[secondPosition]).end(),chamber);
             if(foundHit!=((*m_storagePointer)[secondPosition]).end()){
               multiplicity++;
               ((*m_storagePointer)[secondPosition]).erase(foundHit);
-              deleteHit=find(((*m_storagePointer)[secondPosition]).begin(),
+              deleteHit=std::find(((*m_storagePointer)[secondPosition]).begin(),
                              ((*m_storagePointer)[secondPosition]).end(),
                              chamber);
               while(deleteHit!=((*m_storagePointer)[secondPosition]).end()){
                 ((*m_storagePointer)[secondPosition]).erase(deleteHit);
-                deleteHit=find(((*m_storagePointer)[secondPosition]).begin(),
+                deleteHit=std::find(
+                               ((*m_storagePointer)[secondPosition]).begin(),
                                ((*m_storagePointer)[secondPosition]).end(),
                                chamber);
               }
