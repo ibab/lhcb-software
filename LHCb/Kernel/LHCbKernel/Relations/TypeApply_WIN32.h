@@ -1,8 +1,11 @@
-// $Id: TypeApply_WIN32.h,v 1.1 2002-04-24 21:16:41 ibelyaev Exp $
+// $Id: TypeApply_WIN32.h,v 1.2 2002-04-25 07:05:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/24 21:16:41  ibelyaev
+//  fix one more problem for Win2K
+//
 // Revision 1.1  2002/04/03 15:35:16  ibelyaev
 // essential update and redesing of all 'Relations' stuff
 // 
@@ -37,7 +40,7 @@ namespace Relations
   struct TypeApply
   { 
     /// true type (not used) 
-    typedef OBJECT          TYPE  
+    typedef OBJECT          TYPE  ;
     /// object type 
     typedef TYPE            Type  ;
     /// own type 
@@ -193,7 +196,7 @@ namespace Relations
   struct TypeApply<short>
   {
     /// true type (not used)
-    typedef short           TYPE 
+    typedef short           TYPE  ;
     /// object type 
     typedef TYPE            Type  ;
     /// own type 
