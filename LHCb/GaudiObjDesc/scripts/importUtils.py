@@ -12,6 +12,7 @@ class importUtils:
     self.forwardIncl = []
     self.excludes = []
     self.typedefenums = []
+    self.alpha = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','0','_']
 #--------------------------------------------------------------------------------
   def reset(self,godClass):
     self.typedefenums = []
@@ -26,9 +27,9 @@ class importUtils:
     for tde in self.typedefenums:
       pos = type.find(tde)
       if pos != -1:
-        if pos == 0 or (pos > 0 and (type[pos-1].isspace() or not type[pos-1].isalpha())) : pass
+        if pos == 0 or (pos > 0 and (type[pos-1].isspace() or not type[pos-1] in self.alpha)) : pass
         else : break
-        if  (pos+len(tde) == len(type)) or ((pos+len(tde)) < len(type) and (type[pos+len(tde)].isspace() or not type[pos+len(tde)].isalpha())): pass
+        if  (pos+len(tde) == len(type)) or ((pos+len(tde)) < len(type) and (type[pos+len(tde)].isspace() or not type[pos+len(tde)] in self.alpha)): pass
         else : break
         type = type.replace(tde,'%s::%s'%(className,tde))
     return type

@@ -51,6 +51,7 @@ class genClassDicts(importUtils.importUtils):
             i = 0
             for p in paramList :
               if s[-1] != '(': s += ',\n%s' % (indent*' ')
+              if p.find('=') != -1: p = p.split('=')[0]
               p = (' ').join(p.split()[:-1])
               p = self.checkTypedefEnums(p,godClass['attrs']['name'])
               if self.tools.isReferenceT(p) : p = p.strip()[:-1]
@@ -136,6 +137,7 @@ class genClassDicts(importUtils.importUtils):
           i = 0
           for p in paramList :
             if s[-1] != '(': s += ',\n%s' % (indent*' ')
+            if p.find('=') != -1: p = p.split('=')[0]
             p = (' ').join(p.split()[:-1])
             p = self.checkTypedefEnums(p,godClass['attrs']['name'])
             if self.tools.isReferenceT(p) : p = p.strip()[:-1]
