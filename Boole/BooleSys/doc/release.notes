@@ -4,6 +4,10 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
+!======================== BooleSys v6r1 2004-07-26 ========================
+! 2004-07-26 - Marco Cattaneo
+ - Same as v6r0, but built against Gaudi v15r1
+
 !======================== BooleSys v6r0 2004-07-22 ========================
 ! 2004-07-22 - Marco Cattaneo
  - Packages added   : AsctToLinker (converts "Relations" to "Linker")

@@ -1,5 +1,5 @@
 package Boole
-version v6r0
+version v6r1
 
 branches doc cmt job options
 
@@ -15,23 +15,23 @@ use GaudiPolicy v5r17
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v15r0)
+#-- Gaudi libraries (from GAUDI_v15r1)
 use GaudiKernel		v16r1
-use GaudiSvc 		v12r1
+use GaudiSvc 		v12r2
 use GaudiAlg 		v8r0
 use GaudiPoolDb		v1r8
 use GaudiObjDesc 	v6r3
 use HbookCnv 		v14r2
 
 #-- Databases
-use XmlDDDB	v22r2	Det
+use XmlDDDB	v22r3	Det
 use ParamFiles	v3r8	-no_auto_imports
 use FieldMap	v4r5
 
-#-- LHCb libraries (from LHCB_v16r0)
-use LHCb	v16r0
+#-- LHCb libraries (from LHCB_v16r1)
+use LHCb	v16r1
 
-#-- BooleSys v6r0 packages
+#-- BooleSys v6r1 packages
 
 use DigiAlg		v3r0	Digi
 use AsctToLinker        v1r2    Rec

@@ -1,5 +1,5 @@
 package BooleSys
-version v6r0
+version v6r1
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v6r0	Digi
+use Boole		v6r1	Digi
 use DigiAlg		v3r0	Digi
 use AsctToLinker	v1r2	Rec
 

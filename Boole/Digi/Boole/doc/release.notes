@@ -3,8 +3,15 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v6r1>2004-07-26 Boole v6r1</A></H1><PRE>
+This version uses Gaudi v15r1, needs CMT v1r16. It can process DC04 data
+
+- Bug fixes
+  . Fix EventSelector.FirstEvent, in v6r0 was skipping twice the requested 
+    events (GaudiSvc v12r2)
+
 </PRE><H1><A NAME=v6r0>2004-07-22 Boole v6r0</A></H1><PRE>
-This version uses Gaudi v15, needs CMT v1r16. It can process DC04 data
+This version uses Gaudi v15r0, needs CMT v1r16. It can process DC04 data
 
 - Modified functionality
   . GaudiAuditors no longer used for algorithm timing, uses GaudiSequencer
