@@ -58,7 +58,7 @@ public:
    * @param ppvInterface Pointer to Location for interface pointer
    * @return status depending on the completion of the call
    */
-  virtual StatusCode queryInterface (const IID& riid, void** ppvInterface);
+  virtual StatusCode queryInterface (const InterfaceID& riid, void** ppvInterface);
 
   ///////////////////////////////////////////////////////
   // implementation of the ISimulationSvc interface //

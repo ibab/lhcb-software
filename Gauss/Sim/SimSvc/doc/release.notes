@@ -5,6 +5,11 @@
 !               volumes
 !-----------------------------------------------------------------------------
 
+!======================== SimSvc v4r1 ==================================
+! 2004-08-02 - Gloria CORTI
+ - SimulationSvc.{h,cpp}
+   . use InterfaceID instead of IID to adapt to Gaudi v16
+
 !======================== SimSvc v4r0 ==================================
 ! 2003-12-10 - Florence RANJARD
  - SimSvc_dll.cpp - use LOAD_FACTORY_ENTRIES macro

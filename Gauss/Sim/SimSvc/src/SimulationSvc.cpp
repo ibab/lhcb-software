@@ -434,7 +434,7 @@ const std::vector<RegionCuts>* SimulationSvc::regionsDefs () const
 // Query interface
 // -----------------------------------------------------------------------
 StatusCode
-SimulationSvc::queryInterface(const IID& riid, void** ppvInterface) {
+SimulationSvc::queryInterface(const InterfaceID& riid, void** ppvInterface) {
   if (IID_ISimulationSvc.versionMatch(riid))  {
     *ppvInterface = (ISimulationSvc*)this;
   } else {
