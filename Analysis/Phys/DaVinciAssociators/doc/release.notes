@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.62 2005-02-02 09:49:13 pkoppenb Exp $
+! $Id: release.notes,v 1.63 2005-02-15 07:29:48 pkoppenb Exp $
 !===================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !===================================================================================
 
+!========================== DaVinciAssociators v5r3 2005-02-15 ===================
 ! 2005-02-01 - P. Koppenburg
  - src/Particle2MCLinks.cpp
    . < myLink = LinkedTo<MCParticle>( evtSvc(), msgSvc(), TrgTrackLocation::Long );
