@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.23 2004-07-22 16:06:58 pkoppenb Exp $
+# $Id: requirements,v 1.24 2004-07-27 16:50:10 pkoppenb Exp $
 # Created    : 24/04/2002
 # Maintainer : Philippe Charpentier
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciAssociators
-version           v5r0p1
+version           v5r0p2
 
 # This template is an example for a standard Algorithm package
 #
@@ -20,7 +20,6 @@ include_dirs     $(DAVINCIASSOCIATORSROOT)
 
 # Used packages. 
 #============================================================================
-use AIDA            v* 
 use PhysEvent       v*     Event
 use TrAssociators   v*     Tr 
 use CaloAssociators v*     Calo  
@@ -32,7 +31,7 @@ library          DaVinciAssociatorsLib   ../src/Lib/*.cpp
 
 # Component library building rule
 #============================================================================
-library          DaVinciAssociators      ../src/*.cpp
+library          DaVinciAssociators      ../src/*.cpp -import=AIDA
 
 # define component library link options
 #============================================================================

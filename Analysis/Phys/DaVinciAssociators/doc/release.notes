@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.47 2004-07-22 17:23:03 pkoppenb Exp $
+! $Id: release.notes,v 1.48 2004-07-27 16:50:11 pkoppenb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+! 2004-07-23 - P. Koppenburg
+ - cmt/requirements
+   . Don't use but import AIDA
 !========================== DaVinciAssociators v5r0p1 2004-07-22 ===================
 ! 2004-07-22 - P. Koppenburg
   - options/TestAssociators.opts, TestLinker.opts
