@@ -1,4 +1,4 @@
-// $Id: ICaloParticleTool.h,v 1.1.1.1 2001-11-01 13:17:37 ibelyaev Exp $
+// $Id: ICaloParticleTool.h,v 1.1.1.2 2001-11-02 16:53:14 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -7,7 +7,10 @@
 #ifndef CALOINTERFACES_ICALOPARTICLETOOL_H 
 #define CALOINTERFACES_ICALOPARTICLETOOL_H 1
 // Include files
-#include "GaudiKernel/IAlgtool.h"
+// STD & STL 
+#include <functional>
+// GaudiKernel
+#include "GaudiKernel/IAlgTool.h"
 // local
 #include "CaloInterfaces/IIDICaloParticleTool.h"
 
@@ -27,10 +30,12 @@ class    CaloParticle                ;  ///< from CaloEvent
  *  @date   30/10/2001
  */
 
-class ICaloParticleTool: public IAlgTool
+class ICaloParticleTool: 
+  public virtual IAlgTool ,
+  public std::unary_function<CaloParticle*,StatusCode>
 {
   
-public:
+ public:
   
   /** static interface identification
    *  @return unique interface identifier
@@ -41,23 +46,27 @@ public:
    *  @att It is not invoked  automatically! 
    *  @return status code 
    */ 
-  StatusCode initialize ()  = 0 ;
+  virtual StatusCode initialize ()  = 0 ;
   
   /** Standard finalization of the tool
    *  @att It is not invoked  automatically! 
    *  @return status code 
    */ 
-  StatusCode finalize   ()  = 0 ;
+  virtual StatusCode finalize   ()  = 0 ;
   
   /** The main processing method 
    *  @param  particle pointer to CaloParticle object to be processed
    *  @return status code 
    */  
-  StatusCode process    ( CaloParticle* particle ) = 0 ;
+  virtual StatusCode process    ( CaloParticle* particle ) const = 0 ;
+
+  /** The main processing method (functor interface)
+   *  @param  particle pointer to CaloParticle object to be processed
+   *  @return status code 
+   */  
+  virtual StatusCode operator() ( CaloParticle* particle ) const = 0 ;
   
-protected:
-  
-  /** destructor, virtual and protected  
+  /** destructor, virtual 
    */
   virtual ~ICaloParticleTool(){};
   

@@ -1,4 +1,4 @@
-// $Id: ICaloHypoTool.h,v 1.1.1.1 2001-11-01 13:17:37 ibelyaev Exp $
+// $Id: ICaloHypoTool.h,v 1.1.1.2 2001-11-02 16:53:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -7,7 +7,10 @@
 #ifndef CALOINTERFACES_ICALOHYPOTOOL_H 
 #define CALOINTERFACES_ICALOHYPOTOOL_H 1
 // Include files
-#include "GaudiKernel/IAlgtool.h"
+// STD & STL 
+#include <functional>
+// GaudiKernel
+#include "GaudiKernel/IAlgTool.h"
 // local
 #include "CaloInterfaces/IIDICaloHypoTool.h"
 
@@ -26,7 +29,9 @@ class    CaloHypo                ;  ///< from CaloEvent
  *  @date   30/10/2001
  */
 
-class ICaloHypoTool: public IAlgTool
+class ICaloHypoTool: 
+  public virtual IAlgTool ,
+  public std::unary_function<CaloHypo*,StatusCode>
 {
   
 public:
@@ -40,23 +45,27 @@ public:
    *  @att It is not invoked  automatically! 
    *  @return status code 
    */ 
-  StatusCode initialize ()  = 0 ;
+  virtual StatusCode initialize ()  = 0 ;
   
   /** Standard finalization of the tool
    *  @att It is not invoked  automatically! 
    *  @return status code 
    */ 
-  StatusCode finalize   ()  = 0 ;
+  virtual StatusCode finalize   ()  = 0 ;
   
   /** The main processing method 
    *  @param  hypo  pointer to CaloHypo object to be processed
    *  @return status code 
    */  
-  StatusCode process    ( CaloHypo* hypo  ) = 0 ;
+  virtual StatusCode process    ( CaloHypo* hypo  ) const = 0 ;
   
-protected:
+  /** The main processing method (functor interface)
+   *  @param  hypo  pointer to CaloHypo object to be processed
+   *  @return status code 
+   */  
+  virtual StatusCode operator() ( CaloHypo* hypo  ) const = 0 ;
   
-  /** destructor, virtual and protected  
+  /** destructor, virtual 
    */
   virtual ~ICaloHypoTool(){};
   

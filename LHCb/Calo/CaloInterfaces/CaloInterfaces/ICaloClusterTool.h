@@ -1,4 +1,4 @@
-// $Id: ICaloClusterTool.h,v 1.1.1.1 2001-11-01 13:17:37 ibelyaev Exp $
+// $Id: ICaloClusterTool.h,v 1.1.1.2 2001-11-02 16:53:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -7,14 +7,19 @@
 #ifndef CALOINTERFACES_ICALOCLUSTERTOOL_H 
 #define CALOINTERFACES_ICALOCLUSTERTOOL_H 1
 // Include files
-#include "GaudiKernel/IAlgtool.h"
-// local
+// STD & STL 
+#include <functional>
+// GaudiKernel
+#include "GaudiKernel/IAlgTool.h"
+// CaloGen 
+#include "CaloGen/CaloHypotheses.h"
+// CaloInterfaces
 #include "CaloInterfaces/IIDICaloClusterTool.h"
 
-typename CaloHypotheses::Hypothesis ;  ///< from CaloGen 
 class    CaloCluster                ;  ///< from CaloEvent 
 
-/** @class ICaloClusterTool ICaloClusterTool.h CaloInterfaces/ICaloClusterTool.h
+/** @class ICaloClusterTool ICaloClusterTool.h 
+ *           CaloInterfaces/ICaloClusterTool.h
  *  
  *  The generic interface for "Calorimeter tools" , which deals with 
  *  CaloCluster objects, the potential candidates are: 
@@ -30,7 +35,9 @@ class    CaloCluster                ;  ///< from CaloEvent
  *  @date   30/10/2001
  */
 
-class ICaloClusterTool: public IAlgTool
+class ICaloClusterTool: 
+  public virtual IAlgTool ,
+  public std::unary_function<CaloCluster*,StatusCode>
 {
   
 public:
@@ -44,31 +51,36 @@ public:
    *  @att It is not invoked  automatically! 
    *  @return status code 
    */ 
-  StatusCode initialize ()  = 0 ;
+  virtual StatusCode initialize ()  = 0 ;
   
   /** Standard finalization of the tool
    *  @att It is not invoked  automatically! 
    *  @return status code 
    */ 
-  StatusCode finalize   ()  = 0 ;
+  virtual StatusCode finalize   ()  = 0 ;
   
   /** The main processing method 
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  StatusCode process    ( CaloCluster* cluster ) = 0 ;
+  virtual StatusCode process    ( CaloCluster* cluster ) const = 0 ;
+  
+  /** The main processing method (functor interface) 
+   *  @param cluster pointer to CaloCluster object to be processed
+   *  @return status code 
+   */  
+  virtual StatusCode operator() ( CaloCluster* cluster ) const = 0 ;
   
   /** The main processing method with hypothesis 
    *  @param cluster pointer to CaloCluster object to be processed
    *  @param hypo    processing hypothesis 
    *  @return status code 
    */  
-  StatusCode process    ( CaloCluster* cluster                   , 
-                          const CaloHypotheses::Hypothesis& hypo ) = 0;
+  virtual StatusCode process    
+    ( CaloCluster* cluster                   , 
+      const CaloHypotheses::Hypothesis& hypo ) const = 0;
   
-protected:
-  
-  /** destructor, virtual and protected  
+  /** destructor, virtual
    */
   virtual ~ICaloClusterTool(){};
   

@@ -1,4 +1,4 @@
-// $Id: ICaloTrackMatch.h,v 1.1.1.1 2001-11-01 13:17:37 ibelyaev Exp $
+// $Id: ICaloTrackMatch.h,v 1.1.1.2 2001-11-02 16:53:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
@@ -68,9 +68,7 @@ public:
                              const TrState*      trObj    ,
                              double&             chi2     ) = 0 ;
 
-protected:
-  
-  /** destructor, it is virtual and protected!
+  /** destructor
    */
   virtual ~ICaloTrackMatch(){}; 
   
