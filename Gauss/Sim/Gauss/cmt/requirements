@@ -7,22 +7,21 @@ version v19r0
 branches src doc options cmt job
 
 #== Set the Gauss version environment variable, read by GaussInit ==
-pattern GaussVersion path_append APPVERSION <version>
-apply_pattern GaussVersion
+set APPVERSION <version>
 
 #set behaviour of inelastic scattering
 set AlwaysKillLeadingHadron 1
 
 #=========================================================================
 #get information from DBASE and PARAM 
-use XmlDDDB             v23r0   Det   -no_auto_imports
+use XmlDDDB             v23r1   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
-use DecFiles            v6r3    Gen   -no_auto_imports
-use ParamFiles          v3r8          -no_auto_imports
+use DecFiles            v6r4    Gen   -no_auto_imports
+use ParamFiles          v3r9          -no_auto_imports
 
 #========================================================================
 #generator
-use GeneratorModules    v13r0   Gen
+use GeneratorModules    v14r0   Gen
 
 #GiGa staff...
 use GiGaCnv             v15r8   Sim
@@ -41,7 +40,6 @@ use GaussAlgs		v1r3    Sim
 #Monitoring
 use GaussMonitor        v1r2    Sim
 use CaloMoniSim         v1r0    Calo
-
 #======================================================================
 # Main program and standard job options
 use GaudiConf           v*     

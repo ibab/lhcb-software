@@ -3,6 +3,10 @@ Package : Gauss
 Package manager : Witek Pokorski
 </PRE>
 
+<H1><A NAME="v19r0">2005-01-11 - Gauss v19r0</A></H1><PRE>
+    is built with LHCb v17r2, Geant4 v70r0, GENSER_0_3_0, Pythia 6.226.2
+    it uses XmlDDDB v23r1
+
 ! 2004-12-14 - Gloria CORTI
  - Modify options Gauss.opts and Monitor.opts to have a GenMonitor and 
    SimMonitor phase in order to be able to easily switch on/off one or
@@ -10,7 +14,71 @@ Package manager : Witek Pokorski
  - Use new version of packages for compatibility with geant4.7.0
  - Introduce new package CaloMoniSim for monitoring of Calorimeters
 
-<H1><A NAME="v18r2">2004-11-29 - Gauss v18r3</A></H1><PRE>
+!========================= GeneratorModules v14r0 ======================
+! 2005-01-10 - Patrick Robbe
+ - cleaning of package
+ - add HiggsPythiaAlgorithm to generate higgs events with special
+   Pythia settings.
+
+!=================== EvtGen v8r0 =================================
+! 2005-01-10 - Patrick Robbe
+ - changes for new PHOTOS version
+ 
+!======================== PYTHIA v2r6226p0 ========================
+! 2005-01-11 - Patrick Robbe
+ - requirements - get hepevt.inc from GENSER
+ 
+!========================== CaloMoniSim v1r0 ================================
+! 2004-12-14 - Gloria CORTI
+ - fix environment variable in requirements
+
+! 2004-10-25 - Vanya BELYAEV
+ - new package, the code is copies from Calo/CaloMonitor package, 
+   currently cintains only the algorithm from Carlos, 
+   to be extended in future 
+
+!====================== GaussTools v10r7 ========= ========================
+! 2004-12-14 - Gloria CORTI
+ - src/Components/SpecialCuts.cpp
+   . adapt to use with geant4.7.0 by replacing obsolete methods names with
+     new one (G4VParticleChange) :
+     SetEnergyChange       -> ProposeEnergy
+     SetLocalEnergyDeposit -> ProposeLocalEnergyDeposit
+     SetStatusChange       -> ProposeTrackStatus
+
+!======================== GaussRICH v4r10 ==================================
+! 2004-12-16 - Gloria CORTI, Sajan EASO
+ - src/PhysProcess/RichHpdSiEnergyLoss.cpp
+   . introduce fix to adapt to new behaviour of Geant4 for stopping and
+     killing of particles in AlongStepDoIt of continuous processes by setting
+     final energy to 0.0 as suggested by V.Ivantchenko (G4)
+
+!====================== GaussCalo v7r2 ===================================
+! 2004-12-14 - Gloria CORTI
+ - src/GaussSensPlaneHit.cpp
+   introduce include of GiGa/GiGaUtil.h to allow compilation
+ 
+! 2004-10-08 - Vanya BELYAEV
+ - fix a bug in mapping G4 space points -> CaloCellID.
+   The problem is due to *DIFERENT* actual size of
+   scintillate plate and *EFFECTIVE* cell size in DeCalorimeter
+   description.
+   It results in the fact that 2-5% of single EM-showers has
+   distorted shape (the energy is prescribed to wrong cell)
+ 
+  To restor ethe "old" behaviour one need to UNCOMMENT two lines
+  in src/CaloSensDet.cpp file
+  ( method  CaloCellID CaloSensDet::cell ( const G4StepPoint* point ) const )
+ 
+  // current solution!
+  // CaloCellID id = calo() -> Cell ( point->GetPosition() ) ;
+  // return id ;
+ 
+ - cmt/requirements
+   increment the version to v7r2
+
+
+<H1><A NAME="v18r3">2004-11-29 - Gauss v18r3</A></H1><PRE>
     is built with LHCb v17r1, Geant4 v62r5, GENSER_0_3_0, Pythia 6.226.2
     it uses XmlDDDB v23r0
 !========================= GaussRICH v4r9 =================================
