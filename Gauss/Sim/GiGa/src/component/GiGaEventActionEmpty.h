@@ -1,7 +1,10 @@
-/// ===========================================================================
+/// ===a========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/23 13:12:26  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 #ifndef       GIGA_GiGaEventActionEmpty_H
 #define       GIGA_GiGaEventActionEmpty_H 1 
@@ -19,7 +22,6 @@ class GiGaEventActionFactory;
  *  @author  Vanya Belyaev
  *  @date    17/03/2001
 */
-
 
 class GiGaEventActionEmpty: virtual public GiGaEventActionBase
 {
