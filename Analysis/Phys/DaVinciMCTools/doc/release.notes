@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.29 2004-03-25 16:44:43 pkoppenb Exp $
+! $Id: release.notes,v 1.30 2004-03-29 11:45:55 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
+
+! 2004-03-29 - P. Koppenburg
+ - src/DaVinciMCTools_load.cpp
+   . Remove MCDecayFinder
 
 ! 2004-03-25 - P. Koppenburg
  - src/MCDecayFinder.*, mclexer.*, mcparser.*

@@ -1,4 +1,4 @@
-// $Id: DaVinciMCTools_load.cpp,v 1.3 2002-11-13 16:29:36 gcorti Exp $
+// $Id: DaVinciMCTools_load.cpp,v 1.4 2004-03-29 11:45:55 pkoppenb Exp $
 // Include files 
 
 
@@ -15,7 +15,6 @@
 DECLARE_FACTORY_ENTRIES(DaVinciMCTools) {
 
   DECLARE_TOOL( DebugTool );
-  DECLARE_TOOL( MCDecayFinder );
   DECLARE_TOOL( MCParticleMaker );
 
   DECLARE_ALGORITHM( MCPIDProtoPAlg );
