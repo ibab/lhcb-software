@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mPadBuilder.h,v 1.2 2001-07-09 19:21:55 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/L0Muon/L0mPadBuilder.h,v 1.3 2001-07-09 19:27:15 atsareg Exp $
 
 #ifndef L0MUON_L0MPADBUILDER_H
 #define L0MUON_L0MPADBUILDER_H 1
@@ -35,8 +35,6 @@ private:
   MuonLogicalPadLayout* m_layout;
   bool m_layout_xml;
   std::vector<double> m_zStation;
-  std::vector<double> m_basicCellX;
-  std::vector<double> m_basicCellY;
   std::vector<int> m_regions[5];
   std::string m_outputPads;
   
