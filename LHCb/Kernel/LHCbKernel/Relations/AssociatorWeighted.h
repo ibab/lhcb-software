@@ -1,8 +1,11 @@
-// $Id: AssociatorWeighted.h,v 1.7 2002-05-15 14:43:28 phicharp Exp $
+// $Id: AssociatorWeighted.h,v 1.8 2002-05-24 18:36:32 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/15 14:43:28  phicharp
+// Make name of associators' methods consistent
+//
 // Revision 1.6  2002/05/13 15:54:19  ibelyaev
 //  bug fix
 //
@@ -508,7 +511,7 @@ protected:
     if( 0 != tmp ) { m_inverse = tmp -> inverse () ; }
     else 
       {    
-        Warning("The 'inverse' relation table is created as temporary!");
+        // Warning("The 'inverse' relation table is created as temporary!");
         m_inverse = new LocalInverseType( *m_direct , 1 );
       }
     ///
@@ -560,6 +563,7 @@ private:
   mutable InverseType*  m_inverse      ;
   
 };
+// ============================================================================
 
 // ============================================================================
 // The End 

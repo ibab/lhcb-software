@@ -1,8 +1,11 @@
-// $Id: RelationUtils.cpp,v 1.2 2002-04-03 15:35:19 ibelyaev Exp $
+// $Id: RelationUtils.cpp,v 1.3 2002-05-24 18:36:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $name:$
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/03 15:35:19  ibelyaev
+// essential update and redesing of all 'Relations' stuff
+// 
 // ============================================================================
 // Include files
 // STD & STL
@@ -41,12 +44,13 @@
  *  @param minor    interface minor version 
  */
 // ============================================================================
-InterfaceID Relations::interfaceID ( const std::string&  id       ,
-                                     const unsigned long idFrom   ,
-                                     const unsigned long idTo     ,
-                                     const unsigned long weight   ,
-                                     const unsigned long major    , 
-                                     const unsigned long minor    )
+InterfaceID Relations::interfaceID 
+( const std::string&  id       ,
+  const unsigned long idFrom   ,
+  const unsigned long idTo     ,
+  const unsigned long weight   ,
+  const unsigned long major    , 
+  const unsigned long minor    )
 {
   std::string name( id ) ;
   char a[128];
@@ -76,12 +80,13 @@ InterfaceID Relations::interfaceID ( const std::string&  id       ,
  *  @param minor    minor version 
  */
 // ============================================================================
-CLID        Relations::clid        ( const std::string&  id       ,
-                                     const unsigned long idFrom   ,
-                                     const unsigned long idTo     ,
-                                     const unsigned long weight   , 
-                                     const unsigned long major    , 
-                                     const unsigned long minor    ) 
+CLID        Relations::clid        
+( const std::string&  id       ,
+  const unsigned long idFrom   ,
+  const unsigned long idTo     ,
+  const unsigned long weight   , 
+  const unsigned long major    , 
+  const unsigned long minor    ) 
 {
   std::string name( id ) ;
   char a[128];
@@ -90,9 +95,16 @@ CLID        Relations::clid        ( const std::string&  id       ,
   if( 0 != weight  ) 
     { name += "," + std::string( a , a + sprintf( a , "%d" , (int) weight ) ) ;}
   name += ">" ;
-  ///
-  return (CLID) InterfaceID( name.c_str() , major , minor ).id() ;
+  //
+  CLID cl = InterfaceID( name.c_str() , major , minor ).id() ;
+  // set ObjectVector bit to NULL 
+  cl = ~CLID_ObjectVector & cl ;
+  // set ObjectList   bit to NULL 
+  cl = ~CLID_ObjectList   & cl ;
+  //
+  return cl ;
 };
+// ============================================================================
 
 // ============================================================================
 // The End 

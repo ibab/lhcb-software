@@ -3,6 +3,15 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
+! 2002-05-24 - Ivan Belyaev
+ - src/RelationUtils.cpp  : 
+   explicitely suppress ObjectVector&ObjectList bits for generated CLIDs
+ - src/AssociatorBase.cpp :
+   remove misprints in Warning/Error counters  
+ - Relations/Associator.h 
+ - Relations/AssociatorWeighted.h 
+   suppress warning printout for inverse relation table 
+
 >>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 !20020515 - Marco Cattaneo
   - Remove CaloCellCode.h in DoxyFile.cfg (causes doxygen crash)

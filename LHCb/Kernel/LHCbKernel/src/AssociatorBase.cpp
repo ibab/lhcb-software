@@ -1,8 +1,11 @@
-// $Id: AssociatorBase.cpp,v 1.4 2002-05-12 08:45:28 ibelyaev Exp $
+// $Id: AssociatorBase.cpp,v 1.5 2002-05-24 18:36:33 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/12 08:45:28  ibelyaev
+//  see $LHCBKERNELROOT/dc/release.notes 12 May 2002
+//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -249,7 +252,7 @@ StatusCode Relations::AssociatorBase::Warning
   const StatusCode & st  ) const 
 {
   // increase local warnings  counter 
-  m_errors [ msg ] += 1 ;
+  m_warnings [ msg ] += 1 ;
   // use global warnings counter 
   Stat stat( chronoSvc() , name()+":Warning" ); 
   return Print( msg , st , MSG::WARNING ); 
@@ -355,7 +358,7 @@ StatusCode Relations::AssociatorBase::Exception
 // ============================================================================
 /** The "base" method for access the relation data 
  *
- *  @attention it is virtual method ! One coudl 
+ *  @attention it is virtual method ! One could 
  *  redefine it for "specific" behaviour 
  *
  *  'Default' behaviour:
@@ -385,7 +388,7 @@ StatusCode Relations::AssociatorBase::locateOrBuild () const
   if( 0 == algorithm () ) { return Error("'Builder' is invalid!"        ) ; }
   // (3) use builder to build relation tables
   StatusCode sc = algorithm() -> sysExecute() ;
-  if( sc.isFailure   () ) { return Error("Error form 'Builder'!"  ,  sc ) ; }
+  if( sc.isFailure   () ) { return Error("Error from 'Builder'!"  ,  sc ) ; }
   // (4) locate data in ETS again
   SmartDataPtr<IInterface> object2( evtSvc() , location () );
   if( !object2 ) { return Error("Data after 'Builder' are not available!" ) ; }
@@ -424,8 +427,8 @@ StatusCode Relations::AssociatorBase::locateAlgorithm() const
   IAlgManager* algMgr = 0 ;
   StatusCode sc = serviceLocator()->
     getService( "" , IAlgManager::interfaceID() , (IInterface*&) algMgr );
-  if( sc.isFailure() ) { return Error("Could not locate IAlgManager 1", sc );}
-  if( 0 == algMgr    ) { return Error("Could not locate IAlgManager 3"     );}
+  if( sc.isFailure() ) { return Error("Could not locate IAlgManager ", sc );}
+  if( 0 == algMgr    ) { return Error("Could not locate IAlgManager "     );}
   // check the existence of the algorithm
   typedef std::list<IAlgorithm*> Algs;
   Algs& algs = algMgr->getAlgorithms() ;
@@ -440,8 +443,8 @@ StatusCode Relations::AssociatorBase::locateAlgorithm() const
     }
   // algorithm is nor found: try to create it! 
   sc = algMgr->createAlgorithm( m_builderType , m_builderName , m_algorithm );
-  if( sc.isFailure()   ) { return Error("Could not create algorithm!", sc ) ; }
-  if( 0 == m_algorithm ) { return Error("Could not create algorithm!"     ) ; }
+  if( sc.isFailure()   ) { return Error("Could not create algorithm", sc ) ; }
+  if( 0 == m_algorithm ) { return Error("Could not create algorithm"     ) ; }
   // add the reference to the new algorithm 
   m_algorithm -> addRef() ;
   // initialize the new algorithm
