@@ -15,8 +15,8 @@
 #include "RiSicbGeom/PixelFinder.h"
 #include "RichDetTools/IRichDetInterface.h"
 
-// Rich Kernel
-#include "RichKernel/RichSmartID.h"
+// Kernel
+#include "Kernel/RichSmartID.h"
 #include "RichKernel/RichDetectorType.h"
 
 // local
@@ -42,7 +42,8 @@ class RichDetailedFrontEndResponse : public RichAlgBase {
 
 public:
 
-  RichDetailedFrontEndResponse( const std::string& name, ISvcLocator* pSvcLocator );
+  RichDetailedFrontEndResponse( const std::string& name, 
+                                ISvcLocator* pSvcLocator );
 
   virtual ~RichDetailedFrontEndResponse();
 
@@ -50,7 +51,7 @@ public:
   virtual StatusCode finalize();
   virtual StatusCode execute();
 
-  typedef std::map<MCRichSummedDeposit*, RichTimeSample > samplecache_t;
+  typedef std::map< MCRichSummedDeposit*, RichTimeSample > samplecache_t;
 
 private: // methods
 

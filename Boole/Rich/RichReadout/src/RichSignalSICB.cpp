@@ -119,10 +119,10 @@ StatusCode RichSignalSICB::ProcessEvent( std::string hitLoc,
 
       // positions on HPD window and correlated pixelID
       HepPoint3D position( (*iHit)->entry()/10.0  );
-      RichSmartID id = m_finder->smartID(position);
+      RichSmartID id = m_finder->smartID(position).pixelID();
 
       // Is hit in active pixel
-      if ( 0 != id.index() && m_finder->isActive(id) ) {
+      if ( 0 != id.key() && m_finder->isActive(id) ) {
 
         // Find out if we already have a hit for this super-pixel
         MCRichSummedDeposit * dep = mcSummedDeposits->object(id);
@@ -165,10 +165,10 @@ StatusCode RichSignalSICB::ProcessEvent( std::string hitLoc,
 
       // positions on HPD window and correlated pixelID
       HepPoint3D position( (*iHit)->entry()/10.0  );
-      RichSmartID id = m_finder->smartID(position);
+      RichSmartID id = m_finder->smartID(position).pixelID();
 
       // select valid hits
-      if ( 0 != id.index() ) {
+      if ( 0 != id.key() ) {
 
         // SicbCnv puts direction into exit !!!
         HepVector3D globalDirection = (*iHit)->exit();
@@ -188,7 +188,7 @@ StatusCode RichSignalSICB::ProcessEvent( std::string hitLoc,
              && (*iHit)->timeOfFlight() < 50.0
              && (*iHit)->mcParticle()->momentum().isTimelike()
              && fabs( local.z() ) <= 10.0
-             && id.index() != 0 ) {
+             && id.key() != 0 ) {
 
           HepPoint3D hpdPosition = m_finder->hpdLocalPosition( id );
 
@@ -294,12 +294,12 @@ StatusCode RichSignalSICB::ProcessEvent( std::string hitLoc,
 
               SicbPixelLocation sicbLocal(id.rich(), id.panel(),  X , Y  );
               HepPoint3D global = m_finder->globalPosition(sicbLocal);
-              RichSmartID newid = m_finder->smartID(global);
+              RichSmartID newid = m_finder->smartID(global).pixelID();
 
               if ( id.PDCol() == newid.PDCol() &&
                    id.PDRow() == newid.PDRow() ) {
 
-                if ( ( newid.index() != 0 ) && m_finder->isActive(newid) ) {
+                if ( ( newid.key() != 0 ) && m_finder->isActive(newid) ) {
 
                   MCRichSummedDeposit * dep = mcSummedDeposits->object(newid);
                   if ( tofOffset < -1 && dep ) {

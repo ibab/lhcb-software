@@ -109,7 +109,7 @@ StatusCode RichSimpleFrontEndResponse::Simple() {
         iSumDep != SummedDeposits->end(); ++iSumDep ) {
 
     RichPixelProperties* props = 
-      actual_base->DecodeUniqueID( (*iSumDep)->key().index() );
+      actual_base->DecodeUniqueID( (*iSumDep)->key() );
     if ( props ) {
 
       // Make new MCRichDigit

@@ -26,7 +26,8 @@ void RichBase::upDate( std::vector<RichSmartID> & pixelList ) {
   for ( std::vector<RichSmartID>::iterator intIndex = pixelList.begin();
         intIndex != pixelList.end();
         ++intIndex ) {
-    RichPixelProperties* prop = new RichPixelProperties( RichSmartID(*intIndex) );
+    // NB - Stripping sub-pixel infortamtion
+    RichPixelProperties* prop = new RichPixelProperties( (*intIndex).pixelID() );
     m_activePixels.insert( activemap::value_type( *intIndex, prop ) );
   }
 

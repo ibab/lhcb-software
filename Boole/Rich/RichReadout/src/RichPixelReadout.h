@@ -28,7 +28,7 @@ public:
   void setShape_flat ( RichShape_flat * ) ;
   void setNoisifier( RichNoisifier * ) ;
   void setADC( RichFrontEndDigitiser *) ;
-  void setBaseLine ( unsigned int index, double ) ;
+  void setBaseLine ( unsigned long index, double ) ;
   void setBaseLine ( double ) ;  //! same value for all index
   void setSigmaElecNoise ( double ) ;
   void setBinOfMaximum ( int ) ;
@@ -110,7 +110,7 @@ void RichPixelReadout::setADC (RichFrontEndDigitiser* p )
   m_frontEnd = p;
 }
 
-inline void RichPixelReadout::setBaseLine (unsigned int, double d)
+inline void RichPixelReadout::setBaseLine (unsigned long, double d)
 {
   m_baseline = d ;
 }

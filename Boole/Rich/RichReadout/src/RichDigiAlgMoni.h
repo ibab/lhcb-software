@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.5 2003-11-04 14:25:38 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.6 2003-11-25 15:01:08 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -11,12 +11,10 @@
 #include "GaudiKernel/ParticleProperty.h"
 
 // Event model
-#include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
 #include "Event/MCRichDeposit.h"
 #include "Event/MCRichSummedDeposit.h"
 #include "Event/MCRichHit.h"
-#include "Event/MCTruth.h"
 
 // RichKernel
 #include "RichKernel/RichDetectorType.h"
@@ -102,7 +100,6 @@ private: // data
 
   // job options
   std::string m_histPth;        ///< Output histogram path
-  std::string m_digitTES;       ///< Location of RichDigits in TES
   std::string m_mcdigitTES;     ///< Location of MCRichDigits in TES
   std::string m_mcdepTES;       ///< Location of MCRichDeposits in TES
   std::string m_mchitTES;       ///< Location of MCRichHits in TES

@@ -9,8 +9,8 @@ RichPDSignal.ChargedTrackTreatment = true;
 DigiRICHSeq.Members += { "RichDetailedFrontEndResponse/RichPDResponse" };
 RichPDResponse.DetectorMode = "SICB"; // tell alg to use old SICB tool
 
-// Create final container of digits
-DigiRICHSeq.Members += { "RichDigitCreator" };
+// Create final container of digits. Use HltBuffer instead 
+//DigiRICHSeq.Members += { "RichDigitCreator" };
 
 // temporary. 
 //Tell the monitor what sort of digits we have

@@ -1,4 +1,4 @@
-// $Id: RichDigitQC.h,v 1.2 2003-11-02 21:55:00 jonrob Exp $
+// $Id: RichDigitQC.h,v 1.3 2003-11-25 15:02:32 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGITQC_H
 #define RICHMONITOR_RICHDIGITQC_H 1
 
@@ -10,10 +10,10 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // Event model
-#include "Event/RichDigit.h"
+#include "Event/MCRichDigit.h"
 
-// RichKernel
-#include "RichKernel/RichSmartID.h"
+// Kernel
+#include "Kernel/RichSmartID.h"
 #include "RichKernel/RichDetectorType.h"
 
 // Histogramming
@@ -53,7 +53,7 @@ private: // data
 
   // job options
   std::string m_histPth;         ///< Output histogram path
-  std::string m_digitTDS;        ///< Location of target RichPIDs in TDS
+  std::string m_digitTDS;        ///< Location of MCRichDigits in TES
 
   // Histograms
   IHistogram1D* m_rich1;         ///< RICH1 digit multiplicity

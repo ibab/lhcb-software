@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.5 2003-11-04 14:25:38 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.6 2003-11-25 15:01:08 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -22,7 +22,6 @@ RichDigiAlgMoni::RichDigiAlgMoni( const std::string& name,
     m_detInt  (0) {
 
   // Declare job options
-  declareProperty( "InputRichDigits", m_digitTES = RichDigitLocation::Default );
   declareProperty( "InputMCRichDigits", m_mcdigitTES = MCRichDigitLocation::Default );
   declareProperty( "InputMCRichDeposits", m_mcdepTES = MCRichDepositLocation::Default );
   declareProperty( "InputMCRichHits", m_mchitTES = MCRichHitLocation::Default );
@@ -242,19 +241,19 @@ StatusCode RichDigiAlgMoni::bookHistograms() {
   }
 
   // PD Close Up plots - Digits
-  title = rich[Rich::Rich1]+" PD closeUp xVz RichDigit";
+  title = rich[Rich::Rich1]+" PD closeUp xVz MCRichDigit";
   id = richOffset+51;
   m_pdCloseUpXZ[Rich::Rich1] = histoSvc()->book(m_histPth,id,title,
                                                 nBins, 1485, 1560, nBins, -50, 50 );
-  title = rich[Rich::Rich1]+" PD closeUp yVz RichDigit";
+  title = rich[Rich::Rich1]+" PD closeUp yVz MCRichDigit";
   id = richOffset+52;
   m_pdCloseUpYZ[Rich::Rich1] = histoSvc()->book(m_histPth,id,title,
                                                 nBins, 1485, 1560, nBins, 920, 1020 );
-  title = rich[Rich::Rich2]+" PD closeUp xVz RichDigit";
+  title = rich[Rich::Rich2]+" PD closeUp xVz MCRichDigit";
   id = 2*richOffset+51;
   m_pdCloseUpXZ[Rich::Rich2] = histoSvc()->book(m_histPth,id,title,
                                                 nBins, 10720, 10800, nBins, 3800, 4000 );
-  title = rich[Rich::Rich2]+" PD closeUp yVz RichDigit";
+  title = rich[Rich::Rich2]+" PD closeUp yVz MCRichDigit";
   id = 2*richOffset+52;
   m_pdCloseUpYZ[Rich::Rich2] = histoSvc()->book(m_histPth,id,title,
                                                 nBins, 10720, 10800, nBins, -70, 30 );
@@ -311,55 +310,6 @@ StatusCode RichDigiAlgMoni::execute() {
   PhotMap ckPhotMapDig;
   PhotMap ckPhotMapDep;
 
-  // Locate RichDigits
-  // ================================================================================
-  SmartDataPtr<RichDigits> richDigits( eventSvc(), m_digitTES );
-  if ( !richDigits ) {
-    msg << MSG::WARNING << "Cannot locate RichDigits at " << m_mcdigitTES << endreq;
-  } else {
-
-    // PD occupancy
-    PDMulti pdMult;
-
-    // Initialise mult counts
-    double digMult[Rich::NRiches];
-    digMult[Rich::Rich1] = 0;
-    digMult[Rich::Rich2] = 0;
-
-    // Loop over all RichDigits
-    for ( RichDigits::const_iterator iDigit = richDigits->begin();
-          iDigit != richDigits->end(); ++iDigit ) {
-
-      RichSmartID id = (*iDigit)->key();
-
-      // increment digit count
-      ++digMult[id.rich()];
-
-      // increment PD multiplicity count
-      ++pdMult[id.pdID()];
-
-      // Check that MCRichDigit link works
-      MCRichDigit * mcDigit = MCTruth<MCRichDigit>(*iDigit);
-      if ( !mcDigit ) {
-        msg << MSG::WARNING
-            << "MCRichDigit link broken for RichDigit " << (int)(*iDigit)->key()
-            << endreq;
-      }
-
-    } // end RichDigit loop
-
-      // Fill multiplicity plots
-    m_digitMult[Rich::Rich1]->fill( digMult[Rich::Rich1] );
-    m_digitMult[Rich::Rich2]->fill( digMult[Rich::Rich2] );
-
-    // Fill PD occupancy plots
-    for ( PDMulti::const_iterator iOcc = pdMult.begin();
-          iOcc != pdMult.end(); ++iOcc ) {
-      m_pdOcc[ ((*iOcc).first).rich() ]->fill( (*iOcc).second );
-    }
-
-  } // RichDigits exist
-
   // Locate MCRichDigits
   // ================================================================================
   SmartDataPtr<MCRichDigits> mcRichDigits( eventSvc(), m_mcdigitTES );
@@ -373,6 +323,14 @@ StatusCode RichDigiAlgMoni::execute() {
     nChargedTracks[Rich::Rich1] = 0;
     nChargedTracks[Rich::Rich2] = 0;
 
+    // PD occupancy
+    PDMulti pdMult;
+
+    // Initialise mult counts
+    double digMult[Rich::NRiches];
+    digMult[Rich::Rich1] = 0;
+    digMult[Rich::Rich2] = 0;
+
     // Loop over all MCRichDigits
     for ( MCRichDigits::const_iterator iMcDigit = mcRichDigits->begin();
           iMcDigit != mcRichDigits->end(); ++iMcDigit ) {
@@ -383,6 +341,12 @@ StatusCode RichDigiAlgMoni::execute() {
       if ( !getPosition( id, point ) ) {
         msg << MSG::WARNING << "Position conversion error : ID = " << id << endreq;
       }
+
+      // increment digit count
+      ++digMult[id.rich()];
+
+      // increment PD multiplicity count
+      ++pdMult[id.pdID()];
 
       // Position plots
       m_pdDigsXGlobal[id.rich()]->fill( point.x() );
@@ -426,6 +390,16 @@ StatusCode RichDigiAlgMoni::execute() {
       } // end hits loop
 
     } // MCRichDigits Loop
+
+      // Fill multiplicity plots
+    m_digitMult[Rich::Rich1]->fill( digMult[Rich::Rich1] );
+    m_digitMult[Rich::Rich2]->fill( digMult[Rich::Rich2] );
+
+    // Fill PD occupancy plots
+    for ( PDMulti::const_iterator iOcc = pdMult.begin();
+          iOcc != pdMult.end(); ++iOcc ) {
+      m_pdOcc[ ((*iOcc).first).rich() ]->fill( (*iOcc).second );
+    }
 
     m_chargedTkDigs[Rich::Rich1]->fill( nChargedTracks[Rich::Rich1] );
     m_chargedTkDigs[Rich::Rich2]->fill( nChargedTracks[Rich::Rich2] );
@@ -472,12 +446,9 @@ StatusCode RichDigiAlgMoni::execute() {
 
   } // MCRichDeposits exist
 
-    // Map to link MCRichHits to MCParticles
-    //typedef std::map< MCParticle*, std::vector<unsigned int> > MCP2Hits;
-    //MCP2Hits mcPhits;
 
-    // Locate MCRichHits
-    // ================================================================================
+  // Locate MCRichHits
+  // ================================================================================
   SmartDataPtr<MCRichHits> hits( eventSvc(), m_mchitTES );
   if ( !hits ) {
     msg << MSG::DEBUG << "Cannot locate MCRichHits at "
@@ -503,12 +474,9 @@ StatusCode RichDigiAlgMoni::execute() {
         m_tofHitB[rich]->fill( (*iHit)->timeOfFlight() ); // background TOF
         m_depEnHit[rich]->fill( (*iHit)->energy() );      // background energy
       }
- 
+
       // increment hit count
       ++hitMult[rich];
-
-      // Add to MCP2Hits
-      //mcPhits[(*iHit)->mcParticle()].push_back( (*iHit)->key() );
 
       // Increment PES count for high beta tracks
       countNPE( ckPhotMapHit, *iHit );
@@ -559,31 +527,6 @@ StatusCode RichDigiAlgMoni::execute() {
 
   }}
 
-  // All MCParticles
-  /*
-    SmartDataPtr<MCParticles> mcPs( eventSvc(), MCParticleLocation::Default );
-    if ( !mcPs ) {
-    msg << MSG::DEBUG << "Cannot locate MCParticles at "
-    << MCRichDepositLocation::Default << endreq;
-    } else {
-
-    for ( MCParticles::const_iterator iMP = mcPs->begin();
-    iMP != mcPs->end(); ++iMP ) {
-
-    double pTot = momentum( *iMP );
-    if ( pTot < 1000 ) continue;
-
-    msg << MSG::DEBUG << "MCParticle " << (*iMP)->key()
-    << " hypo " << massHypothesis( *iMP )
-    << " Ptot " << pTot
-    << " mass " << mass( *iMP )
-    << " beta " << mcBeta( *iMP ) << endreq
-    << " MCRichHits " << mcPhits[*iMP] << endreq;
-    }
-
-    }
-  */
-
   return StatusCode::SUCCESS;
 };
 
@@ -625,7 +568,7 @@ bool RichDigiAlgMoni::trueCKHit(  const MCRichHit * hit ) {
            !hit->chargedTrack()
            && ( rad == Rich::Aerogel ||
                 rad == Rich::Rich1Gas ||
-                rad == Rich::Rich2Gas ) ); 
+                rad == Rich::Rich2Gas ) );
 }
 
 //  Finalize

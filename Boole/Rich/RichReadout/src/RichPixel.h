@@ -4,7 +4,7 @@
 
 #include <vector>
 
-#include "RichKernel/RichSmartID.h"
+#include "Kernel/RichSmartID.h"
 #include "RichBase.h"
 #include "RichPixelProperties.h"
 #include "RichPixelReadout.h"
@@ -19,17 +19,17 @@ public:
   //Basic constructor, takes a base and an index
   RichPixel(const RichPixelProperties* p) : property(p){}
 
-  RichPixel(const RichSmartID& sid)
+  RichPixel( const RichSmartID sid )
   {
     const RichBase* MyBase = NULL;
     if ( sid.rich() == 0 ) MyBase = RichRegistry::GetBase();
-    property = MyBase->DecodeUniqueID( sid.index());
+    property = MyBase->DecodeUniqueID( sid );
   }
 
   RichPixel( const RichBase * b,
-             const RichSmartID & sid )
+             const RichSmartID sid )
   {
-    property = b->DecodeUniqueID(sid.index());
+    property = b->DecodeUniqueID( sid );
     //unsigned int num = property->getNum();
   }
 
@@ -38,7 +38,7 @@ public:
     return property->Readout();
   }
 
-  unsigned int GetUniqueNum()
+  RichSmartID::KeyType GetUniqueNum()
   {
     return property->getNum();
   }

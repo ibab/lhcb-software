@@ -1,12 +1,12 @@
-// $Id: RichDigitCreator.cpp,v 1.5 2003-11-01 16:32:00 jonrob Exp $
+// $Id: RichDigitCreator.cpp,v 1.6 2003-11-25 15:01:08 jonrob Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 
-// RichKernel
-#include "RichKernel/RichSmartID.h"
+// Kernel
+#include "Kernel/RichSmartID.h"
 
 // local
 #include "RichDigitCreator.h"

@@ -7,8 +7,8 @@ RichPDSignal.UseSpillover = true;
 // Detailed treatment of HPD response
 DigiRICHSeq.Members += { "RichDetailedFrontEndResponse/RichPDResponse" };
 
-// Create final container of digits
-DigiRICHSeq.Members += { "RichDigitCreator" };
+// Create final container of digits. Use HltBuffer instead
+//DigiRICHSeq.Members += { "RichDigitCreator" };
 
 // temporary. 
 //Tell the monitor what sort of digits we have

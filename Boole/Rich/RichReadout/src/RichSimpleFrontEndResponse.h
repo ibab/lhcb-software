@@ -14,8 +14,8 @@
 #include "RiSicbGeom/PixelFinder.h"
 #include "RichDetTools/IRichDetInterface.h"
 
-// Rich Kernel
-#include "RichKernel/RichSmartID.h"
+// Kernel
+#include "Kernel/RichSmartID.h"
 #include "RichKernel/RichDetectorType.h"
 
 // local

@@ -1,7 +1,7 @@
 #ifndef RichPixelProperties_h
 #define RichPixelProperties_h 1
 
-#include "RichKernel/RichSmartID.h"
+#include "Kernel/RichSmartID.h"
 #include "RichPixelReadout.h"
 
 class RichPixel;
@@ -37,9 +37,9 @@ public:
     readout = r;
   }
 
-  const unsigned int getNum() const
+  const RichSmartID::KeyType getNum() const
   {
-    return index.index();
+    return index.key();
   }
 
   const RichSmartID * Index() const

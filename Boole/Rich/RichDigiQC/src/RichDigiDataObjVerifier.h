@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.h,v 1.2 2003-11-02 21:55:00 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.h,v 1.3 2003-11-25 15:02:32 jonrob Exp $
 #ifndef RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H
 #define RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H 1
 
@@ -17,8 +17,8 @@
 #include "Event/MCRichSummedDeposit.h"
 #include "Event/MCRichHit.h"
 
-// RichKernel
-#include "RichKernel/RichSmartID.h"
+// Kernel
+#include "Kernel/RichSmartID.h"
 #include "RichKernel/RichDetectorType.h"
 
 // Histogramming

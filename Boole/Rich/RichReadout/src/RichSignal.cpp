@@ -117,10 +117,13 @@ StatusCode RichSignal::ProcessEvent( std::string hitLoc,
   for ( MCRichHits::const_iterator iHit = hits->begin();
         iHit != hits->end(); ++iHit ) {
 
-    RichSmartID id;
+    RichSmartID tempID;
     // Is hit in active pixel
-    if ( (m_DetInterface->smartID((*iHit)->entry(),id)).isSuccess() 
-         && id.isValid() ) {
+    if ( (m_DetInterface->smartID((*iHit)->entry(),tempID)).isSuccess() 
+         && tempID.isValid() ) {
+
+      // For the time being strip sub-pixel information
+      RichSmartID id = tempID.pixelID();
       
       // Find out if we already have a hit for this super-pixel
       MCRichSummedDeposit * dep = mcSummedDeposits->object(id);

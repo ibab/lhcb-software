@@ -110,7 +110,7 @@ StatusCode RichDetailedFrontEndResponse::Analog() {
         iSumDep != SummedDeposits->end(); ++iSumDep ) {
 
     RichPixelProperties* props =
-      actual_base->DecodeUniqueID( (*iSumDep)->key().index()  );
+      actual_base->DecodeUniqueID( (*iSumDep)->key() );
     if ( !props ) continue;
 
     const RichPixelReadout * readOut = props->Readout();
@@ -152,7 +152,7 @@ StatusCode RichDetailedFrontEndResponse::Analog() {
           double e = ( (*iDep)->energy()*m_Calibration ) + m_gaussNoise()/el_per_adc;
           summedEnergy += (*iDep)->energy();
 
-          for ( unsigned int bin = 0; bin < tsize; ++bin ) {
+          for ( unsigned int bin = 0; bin < ts.size(); ++bin ) {
             binTime += 25./tsize;
             if ( binZero < 0 && binZero > -50 ) {
               // make pixel dead for this event
@@ -166,7 +166,7 @@ StatusCode RichDetailedFrontEndResponse::Analog() {
       } // MCrichDeposit loop
       (*iSumDep)->setSummedEnergy(summedEnergy);
  
-      tscache.insert( samplecache_t::value_type( (*iSumDep), ts ) );
+      tscache.insert( samplecache_t::value_type( *iSumDep, ts ) );
 
     } // if shape
 
@@ -179,20 +179,14 @@ StatusCode RichDetailedFrontEndResponse::Analog() {
 
 StatusCode RichDetailedFrontEndResponse::Digital() {
 
-  // Register new RichDigit container to Gaudi data store
-  MCRichDigits* mcRichDigits = new MCRichDigits();
-  if ( !eventSvc()->registerObject(m_mcRichDigitsLocation, mcRichDigits) ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Failed to register RichDigits at "
-        << m_mcRichDigitsLocation << endreq;
-    return StatusCode::FAILURE;
-  }
+  // new RichDigit container to Gaudi data store
+  MCRichDigits * mcRichDigits = new MCRichDigits();
 
   for ( samplecache_t::iterator tsc_it = tscache.begin();
         tsc_it != tscache.end(); ++tsc_it ) {
 
     RichPixelProperties* props = 
-      actual_base->DecodeUniqueID( ((*tsc_it).first)->key().index() );
+      actual_base->DecodeUniqueID( ((*tsc_it).first)->key() );
     const RichPixelReadout* readOut = props->Readout();
     if ( readOut ) {
 
@@ -201,7 +195,8 @@ StatusCode RichDetailedFrontEndResponse::Digital() {
       if ( readOut->ADC()->process((*tsc_it).second,temp_threshold) ) {
 
         MCRichDigit* newDigit = new MCRichDigit();
-        mcRichDigits->insert( newDigit, ((*tsc_it).first)->key() );
+        mcRichDigits->insert( newDigit, ((*tsc_it).first)->key().pixelID() );
+
         // Create MCRichHit links
         SmartRefVector<MCRichDeposit> & deps = ((*tsc_it).first)->deposits();
         for ( SmartRefVector<MCRichDeposit>::iterator iDep = deps.begin();
@@ -212,6 +207,18 @@ StatusCode RichDetailedFrontEndResponse::Digital() {
       }
 
     } // readout exits
+  }
+
+  if ( !eventSvc()->registerObject(m_mcRichDigitsLocation, mcRichDigits) ) {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to register RichDigits at "
+        << m_mcRichDigitsLocation << endreq;
+    return StatusCode::FAILURE;
+  }
+  if ( msgLevel(MSG::DEBUG) ) {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::DEBUG << "Registered " << mcRichDigits->size() 
+        << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
   }
 
   return StatusCode::SUCCESS;

@@ -1,4 +1,4 @@
-// $Id: RichDigitQC.cpp,v 1.2 2003-11-02 21:55:00 jonrob Exp $
+// $Id: RichDigitQC.cpp,v 1.3 2003-11-25 15:02:32 jonrob Exp $
 
 // local
 #include "RichDigitQC.h"
@@ -19,7 +19,7 @@ RichDigitQC::RichDigitQC( const std::string& name,
   : RichAlgBase ( name, pSvcLocator ) {
 
   // Declare job options
-  declareProperty( "InputDigits", m_digitTDS = RichDigitLocation::Default );
+  declareProperty( "InputDigits", m_digitTDS = MCRichDigitLocation::Default );
   declareProperty( "HistoPath", m_histPth = "RICH/DIGI/DIGITQC" );
 
 }
@@ -56,10 +56,10 @@ StatusCode RichDigitQC::execute() {
   MsgStream msg( msgSvc(), name() );
   msg << MSG::DEBUG << "Execute" << endreq;
 
-  // Locate RichDigits
-  SmartDataPtr<RichDigits> richDigits( eventSvc(), m_digitTDS );
+  // Locate MCRichDigits
+  SmartDataPtr<MCRichDigits> richDigits( eventSvc(), m_digitTDS );
   if ( !richDigits ) {
-    msg << MSG::WARNING << "Cannot locate RichDigits at " << m_digitTDS << endreq;
+    msg << MSG::WARNING << "Cannot locate MCRichDigits at " << m_digitTDS << endreq;
     return StatusCode::FAILURE;
   } else {
     msg << MSG::DEBUG << "Successfully located " << richDigits->size()
@@ -68,7 +68,7 @@ StatusCode RichDigitQC::execute() {
 
   // Loop over all digits
   int nR1 = 0; int nR2 =0;
-  for ( RichDigits::const_iterator iDigit = richDigits->begin();
+  for ( MCRichDigits::const_iterator iDigit = richDigits->begin();
         iDigit != richDigits->end();
         ++iDigit ) {
 

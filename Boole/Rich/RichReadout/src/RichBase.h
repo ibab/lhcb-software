@@ -8,7 +8,7 @@
 
 #include "RichPixelProperties.h"
 
-#include "RichKernel/RichSmartID.h"
+#include "Kernel/RichSmartID.h"
 #include "Event/Kernel.h"
 #include "GaudiKernel/ObjectList.h"
 #include "GaudiKernel/ObjectVector.h"
@@ -75,9 +75,9 @@ public:
 
   long size() const { return m_activePixels.size(); }
 
-  RichPixelProperties* DecodeUniqueID(const unsigned int &) const;
+  RichPixelProperties* DecodeUniqueID(const RichSmartID id) const;
 
-  typedef std::map<unsigned int, RichPixelProperties*> activemap;
+  typedef std::map< RichSmartID::KeyType, RichPixelProperties*> activemap;
 
   activemap::const_iterator begin() const;
 
@@ -109,9 +109,9 @@ inline RichBase& RichBase::operator=( const RichBase& b )
   return *this;
 }
 
-inline RichPixelProperties* RichBase::DecodeUniqueID (const unsigned int& idx ) const
+inline RichPixelProperties* RichBase::DecodeUniqueID ( const RichSmartID id ) const
 {
-  activemap::const_iterator it = m_activePixels.find( idx );
+  activemap::const_iterator it = m_activePixels.find( id );
   return ( it != m_activePixels.end() ? (*it).second : 0 );
 }
 
