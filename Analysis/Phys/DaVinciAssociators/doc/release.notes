@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.8 2002-07-17 07:49:21 phicharp Exp $
+! $Id: release.notes,v 1.9 2002-07-18 18:26:26 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
-!================= DaVinciAssociators v2r0 2002-06-17 ======================
+! 2002-07-18 - Gloria Corti
+ - Use PhysEvent v6r* and remove use of EventSys
+
 ! 2002-07-17 - Philippe Charpentier
  - Transform Particle2MCLinks in order to use the ProtoParticle2MC associator
  - Base class AsctAlgorithm in order to implement standard Properties and a
