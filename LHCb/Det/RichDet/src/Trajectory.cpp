@@ -1,4 +1,4 @@
-// $Id: Trajectory.cpp,v 1.2 2001-11-16 15:54:55 jonrob Exp $
+// $Id: Trajectory.cpp,v 1.3 2001-11-16 16:02:32 jonrob Exp $
 
 #include <cmath>
 #include <cassert>
@@ -21,9 +21,8 @@ void Trajectory::angleToDirection (const double distance,
                                    const HepVector3D &direction,
                                    const HepVector3D &axis,
                                    double &theta,
-                                   double &phi)
+                                   double &phi) const
 {
-  cout << "Error : runiing with debug comment-out " << endl;
   HepVector3D rotDirection = rotation(distance,axis).inverse() * direction;
   theta = rotDirection.theta();
   phi   = rotDirection.phi();
