@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.cpp,v 1.10 2002-12-16 16:23:15 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.11 2003-03-11 09:34:55 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/12/16 16:23:15  ibelyaev
+//  update for newer version of Geant4 (release 5.0)
+//
 // Revision 1.9  2002/12/07 14:27:51  ibelyaev
 //  see $GIGAROOT/cmt/requirements file
 //
@@ -102,7 +105,7 @@ GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
  *  @param right object to be copied 
  */
 // ============================================================================
-inline GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
+GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
   : G4VTrajectory                     (                              )
   , std::vector<GiGaTrajectoryPoint*> (                              )
   , m_trackID                         ( right.trackID       ()       )

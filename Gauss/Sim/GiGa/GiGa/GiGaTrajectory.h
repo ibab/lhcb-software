@@ -1,20 +1,8 @@
-// $Id: GiGaTrajectory.h,v 1.16 2003-03-11 08:54:11 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.h,v 1.17 2003-03-11 09:34:55 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.15  2002/12/16 16:23:15  ibelyaev
-//  update for newer version of Geant4 (release 5.0)
-//
-// Revision 1.14  2002/12/07 21:36:29  ibelyaev
-//  trivial fix
-//
-// Revision 1.13  2002/12/07 21:05:30  ibelyaev
-//  see $GIGAROOT/doc/release.notes 2002-12-07
-//
-// Revision 1.12  2002/12/07 14:27:50  ibelyaev
-//  see $GIGAROOT/cmt/requirements file
-//
 // ============================================================================
 #ifndef    GIGA_GIGATRAJECTORY_H
 #define    GIGA_GIGATRAJECTORY_H 1 
