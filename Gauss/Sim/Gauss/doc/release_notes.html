@@ -3,6 +3,78 @@ Package : Gauss
 Package manager : Witek Pokorski
 </PRE>
 
+<H1><A NAME="v15r4">2004-04-07 - Gauss v15r4</A></H1><PRE>
+this version is built on LHCb v15r6, Gaudi v14r4, Geant4 6.1.0
+
+!======================= GiGaCnv v15r2 2004-04-07 ==========================
+! 2004-04-07 - Gloria CORTI
+ - GiGaCnv/GiGaPrimaryParticleInformation.h
+   src/GiGaHepMCCnv.{h,cpp}
+   . modification provided by Patrick ROBBE to trasfer signal info from
+     HepMC to G4 and keep it in G4
+ - src/component/GiGaMCParticleCnv.cpp
+   . create and fill new objects in transient store (GenMCLink) when signal
+     exist with pointers to signal MCParticle and corresponding HepMC info
+ - src/component/GiGaCollisionCnv.cpp
+   . now the converter create a new type of object GenCollision that is
+     an extention of Collision where a pointer to the HardInfo is kept
+     The container is still of type Collision
+ - src/component/GiGaMCVertexCnv.cpp
+   . add setting of some more vertex types  
+
+!====================== GiGa v16r3 2004-04-07 ==============================
+! 2004-04-07 - Gloria CORTI
+ - GiGa/GiGaTrajectory.h
+   src/Lib/GiGaTrajectory.cpp
+   . changes proviede by Patrick ROBBE to transfer signal information 
+     including reference to HepMC event and particle
+
+!===================== GaussTools v10r2 ==================================
+! 2004-04-07 - Gloria CORTI
+ - src/Lib/OscillationFlag.cpp
+   src/Components/GaussPostTrackAction.cpp
+   . Changes by Patrick ROBBE to pass signal information from G4 to Event model
+
+! 2004-04-05 - Gloria CORTI
+ - src/Components/GaussTrackActionByEnergy.{h,cpp}
+   src/Components/GaussTrackActionByEnergyType.{h,cpp}
+   src/Components/GaussTrackActionByType.{h,cpp}
+   . introduce new options to not consider photoelectrons when storing
+     particles by energy, type or their combination
+ - src/Components/GaussTrackActionFinal.cpp
+   . change default to store Marked tracks instead of with hits
+
+!========================= GaussMonitor v1r0 2004-04-07 =======================
+! 2004-04-07 - Gloria CORTI
+ - New package to hold generic monitors for Gauss. This first import
+   contains one algorihtm that fill ntuple with basic quantities for
+   MCParticles (MCTruthFullMonitor) and for HepMC (GeneratorFullMonitor by
+   Patrick ROBBE)
+
+!======================== GeneratorModules v11r3 ======================
+! 2004-04-07 - Gloria CORTI
+ - GenBaseAlg.{h,cxx}
+   introduce new dummy method to retrieve hard process information and
+   once retrieved fill HardInfo in Event store for each pile-up event
+ - PythiaAlg.{h,cxx}
+   implement method to retrieve hard process information from Pythia
+   common block mapping
+
+! 2004-04-05 - Patrick Robbe
+ - PythiaAlg : read pythia settings from job options. Uses a new
+   option BasePythiaCommand which are set by default to standard minimum
+   bias settings (incl. prompt charmonium and excited states production)
+ - PythiaAlg, EvtGenTool, EvtDecayAlg : handle case where the signal
+   particle has non zero width
+
+! 2004-04-02 - Patrick Robbe
+ - EvtGenTool : do not stop execution when signal is not present in 
+   DECAY.DEC, only print error message.
+
+! 2004-03-27 - Patrick Robbe
+ - EvtGenTool : use repeated hadronization by default
+
+!==================================================================
 <H1><A NAME="v15r3">2004-03-29 - Gauss v15r3</A></H1><PRE>
 same version as v15r2 but built with Geant4 6.1.0
 
