@@ -1,8 +1,11 @@
-// $Id: RelationWeighted2D.h,v 1.2 2002-04-03 15:35:18 ibelyaev Exp $
+// $Id: RelationWeighted2D.h,v 1.3 2002-04-08 16:17:41 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/03 15:35:18  ibelyaev
+// essential update and redesing of all 'Relations' stuff
+// 
 // ============================================================================
 #ifndef RELATIONS_BIRELATIONWITHWEIGHTOBJECT_H 
 #define RELATIONS_BIRELATIONWITHWEIGHTOBJECT_H 1
@@ -109,9 +112,9 @@ public:
     // serialize the base class 
     DataObject::serialize( s );
     // get all relations 
-    Range range = relations() ;
+    const Range range = relations() ;
     // serialize the number of relations 
-    unsigned long _size = range.end() - range.begin() ;
+    unsigned long _size = ( range.end() - range.begin() ) ;
     s << _size ;
     // serialise all relations
     for( iterator entry = range.begin() ; range.end() != entry ; ++entry ) 
