@@ -1,5 +1,8 @@
 # =========================================================================	
 # $Log: not supported by cvs2svn $
+# Revision 1.12  2001/10/28 18:29:32  ibelyaev
+#  version match for DetDecs v8*
+#
 # Revision 1.11  2001/07/12 21:53:38  ibelyaev
 # adaptation for Win2K
 #
@@ -19,7 +22,7 @@ include_dirs      $(CALODETROOT)
 
 # =============== used packages ===========================================
 use DetDesc      v8*  Det 
-use CaloGen      v2*  Calo 
+use CaloGen      v3*  Calo 
 
 # =============== own options ==========================================
 set CALODETOPTS  ${CALODETROOT}/options
