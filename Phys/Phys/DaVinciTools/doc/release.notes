@@ -1,6 +1,17 @@
-! $Id: release.notes,v 1.25 2002-10-13 21:25:45 gcorti Exp $
+! $Id: release.notes,v 1.26 2002-10-15 18:13:32 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-10-15 - Gloria Corti
+ - Modify ParticleStuffer to by default setResonance in a new particle
+   when lifetime < e-15 sec (S.Amato)
+ - Add options for PreLoadParticles algorithm
+ - Add RichParticleMaker
+
+! 2002-10-14 - Gloria Corti
+ - Change message level to DEBUG (S.Amato) and remove comments to
+	 allow filtering of positive/negative particle even without any
+	 criteria (D.Huthcroft) in ParticleFilter.cpp
 
 ! 2002-10-13 - Gloria Corti
  - PreLoadParticles algorithms for testing.
@@ -14,7 +25,7 @@
    account different dimension in error correlation matrix in Particle
  - Changes in PhysDesktop to fix bug noted by Sandra of copying initial
    particle when daughters of a new particle.
- - Use PhysEvent v7 and increase version number
+ - Use PhysE and increase version number
 
 ! 2002-09-04 - Gloria Corti
  - Some clean up of message levels in MuonParticleMaker, and set CL default
