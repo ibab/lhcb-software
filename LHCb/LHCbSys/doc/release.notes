@@ -5,8 +5,8 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v18r0 2005-02-02 =======================
-! 2005-02-02 - Marco Cattaneo
+!======================= LHCbSys v18r0 2005-02-03 =======================
+! 2005-02-03 - Marco Cattaneo
  - Move to Gaudi v16r0
  - Packages removed:  GaudiObjDesc (go back to version picked up from Gaudi)
  - Packages added:    AsctToLinker (previously in Boole, Brunel)
@@ -14,7 +14,7 @@
  - Packages modified: GaudiConf v9r0, DAQSys v1r0p1, STDAQ v1r4p1, CaloDAQ v1r0p1,
      KernelSys v4r7, LHCbKernel v5r7, Relations v2r2, EventSys v20r0,
      PhysEvent v8r2, TrEvent v14r2, RichEvent v8r1p1, LinkerEvent v1r6,
-     DAQEvent v4r5p1, LHCbAlgs v1r3p1, MCTools v1r12
+     DAQEvent v4r6, LHCbAlgs v1r3p1, MCTools v1r12
 
  - In GaudiConf v9r0
    . Remove ROOT_native_version fix, not needed for ROOT 4.*
@@ -22,7 +22,7 @@
  - In LHCbKernel v5r7
    . Changes for CLHEP 1.9
 
- - In PhysEvent v8r2, TrEvent v14r2:
+ - In PhysEvent v8r2, TrEvent v14r2, DAQEvent v4r6:
    . Changes for GaudiObjDesc v7r*
 
  - In LinkerEvent v1r6
