@@ -1,4 +1,4 @@
-// $Id: MuonStationCabling.cpp,v 1.1 2004-02-03 11:40:27 asatta Exp $
+// $Id: MuonStationCabling.cpp,v 1.2 2004-02-05 08:53:37 cattanem Exp $
 // Include files 
 
 
@@ -29,7 +29,7 @@ MuonStationCabling::~MuonStationCabling() {};
 StatusCode MuonStationCabling::update(std::string newL1Pointer){
   m_numberOfL1Board++;
   m_listOfL1.push_back(newL1Pointer);
-  
+  return StatusCode::SUCCESS;
 };
 
 //long MuonStationCabling::getNumberOfL1Board(){
