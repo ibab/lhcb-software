@@ -283,7 +283,7 @@ G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd )
 	{ g4total = new G4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , g4total , g4child , child->matrix() ) ; }
       else if ( 0 != sInt    )
 	{ g4total = new G4IntersectionSolid ( Sd->first()->name()+"*"+child->name() , g4total , g4child , child->matrix() ) ; }
-      else if ( 0 != sInt    )
+      else if ( 0 != sUni    )
 	{ g4total = new G4UnionSolid        ( Sd->first()->name()+"+"+child->name() , g4total , g4child , child->matrix() ) ; }
       else
 	{ Error("g4BoolSolid, Unknown type of Boolean solid="+Sd->typeName())                 ; return 0; }

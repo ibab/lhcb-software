@@ -30,7 +30,7 @@ Package manager : Vanya Belyaev
       o  GiGaPhysListL - implementation of base class for any CONCRETE physics list object 
       o  GiGaPhysListGeantino - a  "minimal" Physics List (geantino), "cut&paste" from ExN01PhysicsList
       o  GiGaPhysListEm       - an "electromgnetic" Physics List, "cut&paste" from ExN02PhysicsList
-      o  GiGaPhysListFull     - a  "quiet extensive"(full?) Physics List, "cut&paste" from ExN04PhysicsList
+      o  GiGaPhysListFull     - a  "quite extensive"(full?) Physics List, "cut&paste" from ExN04PhysicsList
       o  GiGaSvc is updated accordingly ( property: "PhysicsList", format: "Type/Name" )
    - Sensitive Detector business
       o  new "pseudo-adstract" interface IGiGaSensDet for Sensitive Detector Objects
