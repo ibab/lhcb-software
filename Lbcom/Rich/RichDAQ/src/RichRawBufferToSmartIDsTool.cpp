@@ -5,8 +5,11 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.6 2005-01-07 12:35:59 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.7 2005-01-13 13:11:33 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2005/01/07 12:35:59  jonrob
+ * Complete rewrite
+ *
  * Revision 1.5  2004/11/05 20:05:00  jonrob
  * update functor
  *
@@ -35,19 +38,6 @@
 // Declaration of the Tool Factory
 static const  ToolFactory<RichRawBufferToSmartIDsTool>          s_factory ;
 const        IToolFactory& RichRawBufferToSmartIDsToolFactory = s_factory ;
-
-/// Namespace for RichSmartID sorting
-namespace SmartIDFuncs {
-  /// Functor to sort RichSmartIDs by Rich then panel numbers
-  class SortByRichAndPanel {
-  public:    
-    /// Sort operator
-    bool operator() ( const RichSmartID p1, const RichSmartID p2 ) const
-    {
-      return ( 10*p1.rich() + p1.panel() < 10*p2.rich() + p2.panel() );
-    }
-  };
-}
 
 // Standard constructor
 RichRawBufferToSmartIDsTool::RichRawBufferToSmartIDsTool( const std::string& type,
@@ -110,11 +100,11 @@ void RichRawBufferToSmartIDsTool::fillRichSmartIDs() const
   // Use raw format tool to decode event
   m_rawFormatT->decodeToSmartIDs( m_smartIDs );
 
-  // Sort into order of Rich and Panel
-  // This can be removed when RichSmartIDs have their bit fields ordered so that the most
-  // significant bit is RICH, then panel etc. 
-  if ( m_sortIDs ) std::sort( m_smartIDs.begin(), 
-                              m_smartIDs.end(), 
-                              SmartIDFuncs::SortByRichAndPanel() );
+  // Sort into order of Rich/Panel/HPD/Pixel
+  if ( m_sortIDs )
+  {
+    RichSmartIDSorter sorter;
+    sorter.sortByRegion( m_smartIDs );
+  }
 
 }

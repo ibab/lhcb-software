@@ -4,8 +4,11 @@
  *  Header file for tool : RichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.3 2005-01-07 12:35:59 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.4 2005-01-13 13:11:33 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2005/01/07 12:35:59  jonrob
+ *  Complete rewrite
+ *
  *  Revision 1.2  2004/11/03 09:30:16  jonrob
  *  Update RichSmartID + add functionality to sort the data
  *
@@ -30,6 +33,9 @@
 
 // RichDAQ utility classes
 #include "RichHPDDataBank.h"
+
+// from RichKernel
+#include "RichKernel/RichSmartIDSorter.h"
 
 // Interfaces
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
