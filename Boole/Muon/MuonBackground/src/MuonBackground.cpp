@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.7 2003-04-11 15:54:13 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.8 2003-04-16 08:51:33 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,7 @@
 // local
 #include "MuonBackground.h"
 
-
+#define DIMENSIONMAX 20
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonBackground
@@ -184,13 +184,15 @@ StatusCode MuonBackground::execute() {
     calculateNumberOfCollision(ispill);  
     if(!collisions())return  StatusCode::SUCCESS;
 
-    KeyedContainer<MCMuonHit>* hitsContainer[m_regionNumber*m_stationNumber];
-    for(int station=0;station<m_stationNumber;station++){
+    // KeyedContainer<MCMuonHit>* hitsContainer[m_regionNumber*m_stationNumber];
+    KeyedContainer<MCMuonHit>* hitsContainer[DIMENSIONMAX]; // fix for VC6
+    {for(int station=0;station<m_stationNumber;station++){
       for(int region=0;region<m_regionNumber;region++){          
         hitsContainer[station*m_regionNumber+region]
           =new KeyedContainer<MCMuonHit>();
       }
     }
+    } // Fix for VC6 scoping bug
      
     m_resultPointer = new std::vector<std::vector<int> > (collisions()) ;
     calculateStartingNumberOfHits(ispill);    
@@ -229,7 +231,7 @@ StatusCode MuonBackground::execute() {
         }      
       }    
     }
-    for(int station=0;station<m_stationNumber;station++){
+    {for(int station=0;station<m_stationNumber;station++){
       for(int region=0;region<m_regionNumber;region++){
         //  std::string path="/Event"+spill[ispill]+"/MC/Muon/"+numsta[k]+
         //  "/R"+numreg[s]+"/"+TESPathOfHitsContainer[3];   
@@ -242,9 +244,7 @@ StatusCode MuonBackground::execute() {
                                                  +region]);   
       }      
     }
-    
-    //}
-        
+    } // Fix for VC6 scoping bug
     
     delete m_resultPointer;    
   }
@@ -299,17 +299,19 @@ StatusCode MuonBackground::initializeGeometry() {
   
   MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
   
-  for(int i=0;i<20;i++){     
+  {for(int i=0;i<20;i++){     
     msg<<MSG::DEBUG<<" partition "<<i<<" chamber "<<
       usefull.getChamberPerRegion(i)<<endreq;  
   }
+  } // Fix for VC6 scoping bug
   int gap=0;
   
-  for(int i=0;i< (int)m_partition;i++){
+  {for(int i=0;i< (int)m_partition;i++){
     gap=(gap>=(int)usefull.getGapPerRegion((unsigned int)i))?
       gap:usefull.getGapPerRegion(i);
     
   }
+  } // Fix for VC6 scoping bug
   
   m_gaps=gap;
   m_maxDimension=m_gaps*m_stationNumber;
@@ -329,7 +331,7 @@ StatusCode MuonBackground::initializeGeometry() {
 
   
   
-  for(int i=0;i< m_partition;i++){
+  {for(int i=0;i< m_partition;i++){
     m_numberOfGaps.push_back(usefull.getGapPerRegion(i));    
     station=i/m_regionNumber;
     chamberInPartition=(int)usefull.getChamberPerRegion(i);   
@@ -361,9 +363,9 @@ StatusCode MuonBackground::initializeGeometry() {
     // msg<<MSG::INFO<<" number of gap stored "<<gapContainer->size()<<endreq;
     // for(int i=0;i<(int)gapContainer->size();i++){
     //   msg<<MSG::INFO<<" gap position "<<(*gapContainer)[i]<<endreq;
-    // }
-    
+    // }    
   }
+  } // Fix for VC6 scoping bug
   
   //  msg<<MSG::INFO<<"ciao"<<endreq;
   
@@ -648,9 +650,10 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
     
   int partCollision;
   
-  for(int i=0;i<collisions();i++){
+  {for(int i=0;i<collisions();i++){
     (*m_resultPointer)[i].resize(m_maxDimension);      
   }    
+  } // Fix for VC6 scoping bug
   std::vector<int> m_particleResult(m_maxDimension) ;    
   
   //all hits in the event have been added
@@ -675,12 +678,13 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
   
   //  msg<<MSG::INFO<<collisions()<<" "<<m_maxDimension<<endreq;
   
-  for (int i=0; i<collisions();i++){
+  {for (int i=0; i<collisions();i++){
     for(int j=0;j<m_maxDimension;j++){ 
       //    msg<<MSG::INFO<<"multiplicity for collison "
       //   <<i<<" "<< j<<" "<<((* m_resultPointer)[i])[j]<<endreq;
     }      
   }
+  } // Fix for VC6 scoping bug
   
   
   msg<<MSG::DEBUG<<" --- end of routine "<< endreq;  
