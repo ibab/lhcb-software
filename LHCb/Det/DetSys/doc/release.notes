@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+!========================== DetSys v1r1 2002-12-13 ========================
+! 2002-12-13 - Florence Ranjard
+ - requirements - use bug fix DetDesc v11r8
+
 !========================== DetSys v1r0 2002-12-03 =========================
 ! 2002-12-03 - Florence Ranjard
  - requirements - based on Brunel v15r3 and DetDesc v11r6
