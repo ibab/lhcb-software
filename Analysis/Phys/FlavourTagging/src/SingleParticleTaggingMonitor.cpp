@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingMonitor.cpp,v 1.2 2003-01-06 14:44:00 gcorti Exp $
+// $Id: SingleParticleTaggingMonitor.cpp,v 1.3 2003-05-30 17:12:36 gcorti Exp $
 // Include files 
 #include <algorithm>
 
@@ -46,7 +46,7 @@ SingleParticleTaggingMonitor( const std::string& name,
   declareProperty("BeAFilter", m_beAFilter = false);
   declareProperty("TaggerName", m_partName = "");
   declareProperty("TagsLocations", m_tags_locations);
-  declareProperty("MCAssociator",  m_nameMCAsct = "Particle2MCWeightedAsct");
+  declareProperty("MCAssociator",  m_nameMCAsct = "Particle2MCLinksAsct");
 }
 
 //=============================================================================

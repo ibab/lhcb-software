@@ -1,4 +1,4 @@
-// $Id: SingleParticleTaggingMonitor.h,v 1.1 2002-11-20 08:24:46 odie Exp $
+// $Id: SingleParticleTaggingMonitor.h,v 1.2 2003-05-30 17:12:36 gcorti Exp $
 #ifndef SINGLEPARTICLETAGGINGMONITOR_H 
 #define SINGLEPARTICLETAGGINGMONITOR_H 1
 
@@ -9,7 +9,7 @@
 
 // from DaVinci
 #include "DaVinciTools/DVAlgorithm.h"
-#include "DaVinciAssociators/Particle2MCWeightedAsct.h"
+#include "DaVinciAssociators/Particle2MCLinksAsct.h"
 
 class MCParticle;
 class IDebugTool;
@@ -68,7 +68,7 @@ private:
   std::string m_partName;    ///< Name of the particle used for tagging
   ParticleProperty *m_pp;    ///< Property of the above particle.
   std::string m_nameMCAsct;  ///< Name of tool for Part to MCPart Association
-  Particle2MCWeightedAsct::IAsct* m_pAsctLinks; ///< Pointer to asso using links
+  Particle2MCLinksAsct::IAsct* m_pAsctLinks; ///< Pointer to asso using links
   IDebugTool *m_debug;
   ITrReconstructible *m_trRecoQ;
 };

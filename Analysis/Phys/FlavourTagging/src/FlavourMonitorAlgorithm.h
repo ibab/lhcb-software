@@ -1,4 +1,4 @@
-// $Id: FlavourMonitorAlgorithm.h,v 1.3 2002-11-20 08:24:45 odie Exp $
+// $Id: FlavourMonitorAlgorithm.h,v 1.4 2003-05-30 17:12:36 gcorti Exp $
 #ifndef FLAVOURMONITORALGORITHM_H 
 #define FLAVOURMONITORALGORITHM_H 1
 
@@ -9,7 +9,7 @@
 
 // from DaVinci
 #include "DaVinciTools/DVAlgorithm.h"
-#include "DaVinciAssociators/Particle2MCWeightedAsct.h"
+#include "DaVinciAssociators/Particle2MCLinksAsct.h"
 
 /** @class FlavourMonitorAlgorithm FlavourMonitorAlgorithm.h
  *  
@@ -45,6 +45,6 @@ private:
   std::vector<unsigned int> m_n_collisions;
 
   std::string m_nameMCAsct;  ///< Name of tool for Part to MCPart Association
-  Particle2MCWeightedAsct::IAsct* m_pAsctLinks; ///< Pointer to asso using links
+  Particle2MCLinksAsct::IAsct* m_pAsctLinks; ///< Pointer to asso using links
 };
 #endif // FLAVOURMONITORALGORITHM_H

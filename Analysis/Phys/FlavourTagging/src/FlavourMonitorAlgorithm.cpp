@@ -1,4 +1,4 @@
-// $Id: FlavourMonitorAlgorithm.cpp,v 1.8 2003-03-25 09:58:52 odie Exp $
+// $Id: FlavourMonitorAlgorithm.cpp,v 1.9 2003-05-30 17:12:36 gcorti Exp $
 // Include files 
 #include <algorithm>
 
@@ -43,7 +43,7 @@ FlavourMonitorAlgorithm::FlavourMonitorAlgorithm( const std::string& name,
   m_tags_locations.clear();
   m_tags_locations.push_back( FlavourTagLocation::User );
   declareProperty("TagsLocations", m_tags_locations);
-  declareProperty("MCAssociator",  m_nameMCAsct = "Particle2MCWeightedAsct");
+  declareProperty("MCAssociator",  m_nameMCAsct = "Particle2MCLinksAsct");
   declareProperty("StatNPartial", m_fractions );
   declareProperty("MaxNCollisions", m_maxCollisions = 4 );
 }
