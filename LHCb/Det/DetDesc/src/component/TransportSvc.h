@@ -1,8 +1,11 @@
-// $Id: TransportSvc.h,v 1.2 2002-06-21 13:43:44 ocallot Exp $ 
+// $Id: TransportSvc.h,v 1.3 2002-07-11 07:15:05 ibelyaev Exp $ 
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/06/21 13:43:44  ocallot
+// Fix findLocalGI for the transport service.
+//
 // Revision 1.1  2002/04/03 11:01:45  ibelyaev
 //  fix the problems with Assemblies for TransportSvc
 //
@@ -33,7 +36,7 @@ class GaudiException;
  *
  *  Implementation of abstract interface ITransportSvc 
  *
- *   @author Vanya Belyaev
+ *  @author Vanya Belyaev
  */
 
 class TransportSvc: public         Service        , 

@@ -1,17 +1,8 @@
-// $Id: SolidBase.cpp,v 1.7 2002-05-26 10:47:14 ibelyaev Exp $
+// $Id: SolidBase.cpp,v 1.8 2002-07-11 07:15:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2002/05/14 06:59:48  cattanem
-// Fix typo found on Windows
-//
-// Revision 1.5  2002/05/13 18:29:54  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 13 May 2002
-//
-// Revision 1.4  2002/05/11 18:25:47  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-//
 // ============================================================================
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -312,13 +303,13 @@ SolidBase::intersectionTicks
 // ============================================================================
 StatusCode SolidBase::checkBP() const
 {
-  const std::string msg("SolidBase("+typeName()+"/"+name()+")::checkBP(): ");
+  const std::string msg("SolidBase("+m_name+")::checkBP(): ");
   if     ( xMax()   <= xMin() ) 
     { 
       MsgStream log( DetDesc::msgSvc() , "Solid" );
       log << MSG::FATAL
           << " SolidBase::checkPB "
-          << typeName() << "/" << name() 
+          << m_name 
           << " Wrong Bounding Parameters "            << endreq ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
@@ -339,7 +330,7 @@ StatusCode SolidBase::checkBP() const
       MsgStream log( DetDesc::msgSvc() , "Solid" );
       log << MSG::FATAL
           << " SolidBase::checkPB "
-          << typeName() << "/" << name() 
+          << m_name  
           << " Wrong Bounding Parameters "            << endreq ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
@@ -360,7 +351,7 @@ StatusCode SolidBase::checkBP() const
       MsgStream log( DetDesc::msgSvc() , "Solid" );
       log << MSG::FATAL
           << " SolidBase::checkPB "
-          << typeName() << "/" << name() 
+          << m_name 
           << " Wrong Bounding Parameters "            << endreq ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
@@ -381,7 +372,7 @@ StatusCode SolidBase::checkBP() const
       MsgStream log( DetDesc::msgSvc() , "Solid" );
       log << MSG::FATAL
           << " SolidBase::checkPB "
-          << typeName() << "/" << name() 
+          << m_name 
           << " Wrong Bounding Parameters "            << endreq ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 
@@ -401,7 +392,7 @@ StatusCode SolidBase::checkBP() const
       MsgStream log( DetDesc::msgSvc() , "Solid" );
       log << MSG::FATAL
           << " SolidBase::checkPB "
-          << typeName() << "/" << name() 
+          << m_name
           << " Wrong Bounding Parameters "            << endreq ;
       log << MSG::ERROR 
           << " BPs: (x,y,z,r,rho)[Min/Max][mm]=(" 

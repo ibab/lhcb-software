@@ -1,22 +1,24 @@
-// $Id: TransportSvcFindLocalGI.h,v 1.8 2002-07-03 08:15:37 ocallot Exp $ 
-// ============================================================================
-#ifndef        __DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H__
-#define        __DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H__ 1
+// $Id: TransportSvcFindLocalGI.h,v 1.9 2002-07-11 07:15:05 ibelyaev Exp $
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $ 
+// ===========================================================================
+#ifndef DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H
+#define DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H 1
 
 #include <strstream> 
 
 // local
 #include "TransportSvc.h" 
 
-/** @file TransportSvcFindLocalGI.cpp 
- *  
- * 
- * simple implementation of TransportSvc::findLocalGI method 
+/** @file
+ *
+ *  simple implementation of TransportSvc::findLocalGI method 
  *  @see TranpsortSvc 
  *  @see ITransportSvc 
- *
  * 
- * @author: Vanya Belyaev
+ *  @author: Vanya Belyaev
  */
 
 IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 , 
@@ -25,7 +27,7 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
                                             IGeometryInfo*    topGi  ) const  {
   if( 0 == gi ) { return 0 ; } 
 
-  MsgStream log( DetDesc::msgSvc() , "TransportSvc" );
+  MsgStream log( msgSvc() , name() );
 
   /// output :-))
   IGeometryInfo* goodGI = 0  ; 

@@ -1,51 +1,29 @@
-// $Id: TransportSvc.cpp,v 1.9 2002-06-22 15:58:36 ocallot Exp $
+// $Id: TransportSvc.cpp,v 1.10 2002-07-11 07:15:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2002/06/03 09:52:36  ocallot
-// fixes in the TransportService
-//
-// Revision 1.7  2002/04/24 10:53:05  ibelyaev
-//  fix problems with TransportSvc ('LHCb Geane')
-//
-// Revision 1.6  2002/04/03 11:01:45  ibelyaev
-//  fix the problems with Assemblies for TransportSvc
-//
-// Revision 1.5  2001/11/18 15:32:45  ibelyaev
-//  update for Logical Assemblies
-// 
 // ============================================================================
-/// from Gaudi 
-#include "GaudiKernel/Kernel.h" 
-#include "GaudiKernel/SvcFactory.h" 
-
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IMessageSvc.h" 
-#include "GaudiKernel/IChronoStatSvc.h"
-#include "GaudiKernel/IMagneticFieldSvc.h"
-
-
-#include "DetDesc/IGeometryInfo.h" 
-#include "DetDesc/IDetectorElement.h" 
-
-#include "DetDesc/ISolid.h" 
-#include "DetDesc/ILVolume.h" 
-#include "DetDesc/IPVolume.h" 
-
-#include "GaudiKernel/SmartDataPtr.h" 
-#include "GaudiKernel/MsgStream.h" 
-
-///
 /// from CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
-
-
-#include "DetDesc/VolumeIntersectionIntervals.h" 
-
-
+/// from GaudiKErnel 
+#include "GaudiKernel/Kernel.h" 
+#include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IMessageSvc.h" 
+#include "GaudiKernel/IChronoStatSvc.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
+#include "GaudiKernel/SmartDataPtr.h" 
+#include "GaudiKernel/MsgStream.h" 
+// DetDesc 
+#include "DetDesc/IGeometryInfo.h" 
+#include "DetDesc/IDetectorElement.h"
+#include "DetDesc/ISolid.h" 
+#include "DetDesc/ILVolume.h" 
+#include "DetDesc/IPVolume.h"
+#include "DetDesc/VolumeIntersectionIntervals.h"
 /// local 
 #include "TransportSvc.h" 
 #include "TransportSvcDistanceInRadUnits.h" 
@@ -60,14 +38,22 @@
  *  @author Author: Vanya Belyaev
  */
 
-
-/// Instantiation of a static factory class used by clients to create
-/// instances of this service
+// ============================================================================
+/** @varTransportSvcFactory
+ *  Instantiation of a static factory class used by clients to create
+ *  instances of this service
+ */
+// ============================================================================
 static const  SvcFactory<TransportSvc>                       s_factory ;
 extern const ISvcFactory&              TransportSvcFactory = s_factory ;
+// ============================================================================
+
+// ============================================================================
 /// Constructor 
-TransportSvc::TransportSvc( const std::string& name, 
-                            ISvcLocator* ServiceLocator )
+// ============================================================================
+TransportSvc::TransportSvc
+( const std::string& name           , 
+  ISvcLocator*       ServiceLocator )
   : Service                       ( name , ServiceLocator ) 
   /// names of "standard" services
   , m_chronoStatSvc_name          (  "ChronoStatSvc"      )
@@ -98,10 +84,17 @@ TransportSvc::TransportSvc( const std::string& name,
   declareProperty( "DetectorDataService"  , m_detDataSvc_name          ) ; 
   declareProperty( "StandardGeometryTop"  , m_standardGeometry_address ) ;
 };
-///
+// ============================================================================
+
+// ============================================================================
 /// Destructor:  
+// ============================================================================
 TransportSvc::~TransportSvc(){};
+// ============================================================================
+
+// ============================================================================
 /// Implementation of IInterface::queryInterface()
+// ============================================================================
 StatusCode    TransportSvc::queryInterface
 ( const IID& riid, void** ppvInterface)
 {
@@ -116,11 +109,11 @@ StatusCode    TransportSvc::queryInterface
   return StatusCode::SUCCESS;
   ///
 };
+
 /// Implementation of initialize() method 
 StatusCode TransportSvc::initialize()
 {
-  MsgStream log( msgSvc() , name() + ".initialize()" );  
-
+  MsgStream log( msgSvc() , name() );
   
   {
     /// initialise the base class 
@@ -188,13 +181,17 @@ StatusCode TransportSvc::initialize()
   return StatusCode::SUCCESS;
   ///
 };
+// ============================================================================
+
+// ============================================================================
 /// Implementation of finalize() method 
+// ============================================================================
 StatusCode TransportSvc::finalize()
 {
   MsgStream log ( msgSvc() , name() ); 
   {
     /// release all services 
-    MsgStream log  ( msgSvc() , name() + ".finalize()" ); 
+    MsgStream log  ( msgSvc() , name() ); 
     /// release Chrono & Stat Service 
     if( 0 != chronoSvc   () ) 
       { chronoSvc()->release()    ; m_chronoStatSvc    = 0 ; } 
@@ -204,17 +201,16 @@ StatusCode TransportSvc::finalize()
     /// release Detector Data  Service 
     if( 0 != detSvc      () ) 
       { detSvc()->release()       ; m_detDataSvc       = 0 ; } 
-    /// finalize the base class 
-    StatusCode statusCode  = Service::finalize(); 
-    if( statusCode.isFailure() ) { return statusCode; } /// RETURN !!!
   }  
   ///
   log << MSG::DEBUG << "Service finalised successfully" << endreq;
   ///  
-  return StatusCode::SUCCESS;
+  return Service::finalize();
   ///
 };
-///
+// ============================================================================
+
+// ============================================================================
 IGeometryInfo*       TransportSvc::findGeometry
 ( const std::string& address ) const 
 {
@@ -235,6 +231,7 @@ IGeometryInfo*       TransportSvc::findGeometry
   ///
   return gi;
 };
+// ============================================================================
 
 
 // ============================================================================
