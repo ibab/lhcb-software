@@ -14,6 +14,7 @@
 #include "DaVinciTools/IParticleMaker.h"
 
 // Forward declarations
+class DeCalorimeter; 
 class IParticlePropertySvc;
 
 /** @class NeutralParticleMaker NeutralParticleMaker.h
@@ -39,11 +40,17 @@ public:
   /// The standard event data service. Method not in IParticleMaker.h.
   IDataProviderSvc* eventSvc() const;
 
+  /// The standard event data service. Method not in IParticleMaker.h.
+  IDataProviderSvc* detSvc() const;
+
   /// The Particle property service.
   IParticlePropertySvc* ppSvc() const;
   
+  /// Selection
+  virtual double applySelection( SmartRef<ProtoParticle> );
+
   /// Functional method to make particles.
-  virtual StatusCode makeParticles( ParticleVector & parts );
+  virtual StatusCode makeParticles( ParticleVector& );
   
   /// Finalize
   StatusCode finalize();
@@ -56,18 +63,46 @@ public:
 protected:
  
 private:
-
+  
   std::string m_input;
-
+  
   std::vector<std::string>  m_particleNames; ///< Names of Particles to make
   std::vector< std::pair<int,double> > m_ids; ///< PDGid of Particles to make
   std::vector<double> m_confLevels;  ///< Cut Value on the CL of pid Hypothesis
-
+	
+    //  std::vector<double> m_vertexPosError; // Error on the Vertex Position for Error 
+    //	                                // Matrix Calculations
+  double m_x0;
+  double m_y0;
+  double m_z0;
+  double m_vertexErr_x;
+  double m_vertexErr_y;
+  double m_vertexErr_z;
+  
   IParticlePropertySvc* m_ppSvc;  ///<  Reference to Particle Property Service
   IDataProviderSvc* m_EDS;        ///<  Reference to Event Data Service
-
+  IDataProviderSvc* m_DDS;        ///<  Reference to Detector Data Service
+	      
   int m_pi0ID;
   int m_gammaID;
+
+  DeCalorimeter *m_detEcal;
+  DeCalorimeter *m_detPrs;
+  DeCalorimeter *m_detSpd;
+  
+  double                           m_zEcal     ;
+  double                           m_zSpd      ;
+  double                           m_zPrs      ;
+
+  double                           m_shiftSpd;
+  
+  std::string m_nameEcal;
+  std::string m_nameSpd;
+  std::string m_namePrs;
+
+  ClusterFunctors::ClusterFromCalo m_calo                        ;
+
+  HepPoint3D                       m_vertex;
 
 };
 #endif // NEUTRALPARTICLEMAKER_H
