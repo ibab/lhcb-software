@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.h,v 1.5 2003-07-03 13:08:35 jonesc Exp $
+// $Id: RichRecAlgBase.h,v 1.6 2003-07-03 14:46:39 jonesc Exp $
 #ifndef RICHRECALGS_RICHRECALGBASE_H
 #define RICHRECALGS_RICHRECALGBASE_H 1
 
@@ -63,10 +63,8 @@ protected:  // Protected methods
 
   /// Acquire type for given tool name from registry
   template <typename TOOL> inline
-  TOOL* acquireTool( std::string tName, TOOL*& pTool) {
-    if ( toolSvc()->retrieveTool(m_toolReg->toolType(tName),tName,pTool) ) {
-      m_toolList.push_back(pTool);
-    } else {
+  TOOL* acquireTool( std::string tName, TOOL*& pTool ) {
+    if ( !toolSvc()->retrieveTool(m_toolReg->toolType(tName),tName,pTool) ) {
       pTool = NULL;
       throw GaudiException( "Unable to retrieve tool '" + tName +
                             "' of type '" + m_toolReg->toolType(tName) + "'" ,
@@ -76,7 +74,10 @@ protected:  // Protected methods
   }
 
   /// Release a tool
-  void releaseTool( IAlgTool *& pTool );
+  template <typename TOOL> inline
+  void releaseTool( TOOL *& pTool ) {
+    if ( pTool ) { toolSvc()->releaseTool( pTool ); pTool = NULL; }
+  }
 
 private:   // Private data
 
@@ -107,16 +108,11 @@ private:   // Private data
   /// Message service printout level
   int m_msgLevel;
 
-  /// list of tool names currently in use
-  typedef std::list<IAlgTool*> ToolList;
-  ToolList m_toolList;
-
-  // Internal tool pointers
-  IRichSegmentCreator * m_segTool;
-  IRichPhotonCreator * m_photTool;
   IRichPixelCreator * m_pixTool;
   IRichTrackCreator * m_tkTool;
   IRichStatusCreator * m_statTool;
+  IRichSegmentCreator * m_segTool;
+  IRichPhotonCreator * m_photTool;
 
 };
 
@@ -153,14 +149,6 @@ inline bool RichRecAlgBase::msgLevel( int mLevel )
 inline int RichRecAlgBase::msgLevel()
 {
   return m_msgLevel;
-}
-
-inline void RichRecAlgBase::releaseTool( IAlgTool *& pTool ) {
-  if ( pTool ) {
-    m_toolList.remove(pTool);
-    toolSvc()->releaseTool(pTool);
-    pTool = NULL;
-  }
 }
 
 #endif // RICHRECALGS_RICHRECALGBASE_H

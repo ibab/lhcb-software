@@ -1,4 +1,4 @@
-// $Id: RichRecAlgBase.cpp,v 1.7 2003-07-03 13:08:35 jonesc Exp $
+// $Id: RichRecAlgBase.cpp,v 1.8 2003-07-03 14:46:40 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -27,8 +27,7 @@ RichRecAlgBase::RichRecAlgBase( const std::string& name,
     m_richPixels(0),
     m_richSegments(0),
     m_richPhotons(0),
-    m_richStatus(0),
-    m_toolList() { 
+    m_richStatus(0) { 
   
   declareProperty( "ToolRegistryName", m_regName = "RichToolRegistry" );
 
@@ -74,11 +73,12 @@ StatusCode RichRecAlgBase::initialize() {
 StatusCode RichRecAlgBase::finalize() {
 
   // Release all tools
-  for ( ToolList::iterator it = m_toolList.begin();
-        it != m_toolList.end(); ++it ) {
-    if ( *it ) { toolSvc()->releaseTool(*it); (*it) = NULL; }
-  }
-  if ( m_toolReg ) { toolSvc()->releaseTool( m_toolReg ); m_toolReg = NULL; }
+  releaseTool( m_toolReg );
+  releaseTool( m_pixTool );
+  releaseTool( m_tkTool );
+  releaseTool( m_statTool );
+  releaseTool( m_segTool );
+  releaseTool( m_photTool );
 
   return StatusCode::SUCCESS;
 }

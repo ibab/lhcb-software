@@ -1,4 +1,4 @@
-// $Id: RichRecToolBase.h,v 1.3 2003-07-03 13:08:35 jonesc Exp $
+// $Id: RichRecToolBase.h,v 1.4 2003-07-03 14:46:40 jonesc Exp $
 #ifndef RICHRECALGS_RICHRECTOOLBASE_H
 #define RICHRECALGS_RICHRECTOOLBASE_H 1
 
@@ -46,10 +46,8 @@ protected:   // Protected methods
 
    /// Acquire type for given tool name from registry
   template <typename TOOL> inline
-  TOOL* acquireTool( std::string tName, TOOL*& pTool) {
-    if ( toolSvc()->retrieveTool(m_toolReg->toolType(tName),tName,pTool) ) {
-      m_toolList.push_back(pTool);
-    } else {
+  TOOL* acquireTool( std::string tName, TOOL*& pTool ) {
+    if ( !toolSvc()->retrieveTool(m_toolReg->toolType(tName),tName,pTool) ) {
       pTool = NULL;
       throw GaudiException( "Unable to retrieve tool '" + tName +
                             "' of type '" + m_toolReg->toolType(tName) + "'" ,
@@ -59,7 +57,10 @@ protected:   // Protected methods
   }
 
   /// Release a tool
-  void releaseTool( IAlgTool *& pTool );
+  template <typename TOOL> inline
+  void releaseTool( TOOL *& pTool ) {
+    if ( pTool ) { toolSvc()->releaseTool( pTool ); pTool = NULL; }
+  }
 
 private:   // Private data
 
@@ -68,10 +69,6 @@ private:   // Private data
 
   /// Message service printout level
   int m_msgLevel;
-
-  /// list of tool names currently in use
-  typedef std::list<IAlgTool*> ToolList;
-  ToolList m_toolList;
 
   /// Runtime name for RichToolRegistry
   std::string m_regName;
@@ -86,14 +83,6 @@ inline int RichRecToolBase::msgLevel()
 inline bool RichRecToolBase::msgLevel( int mLevel )
 {
   return ( m_msgLevel && m_msgLevel <= mLevel );
-}
-
-inline void RichRecToolBase::releaseTool( IAlgTool *& pTool ) {
-  if ( pTool ) {
-    m_toolList.remove(pTool);
-    toolSvc()->releaseTool(pTool);
-    pTool = NULL;
-  }
 }
 
 #endif // RICHRECALGS_RICHRECTOOLBASE_H

@@ -1,4 +1,4 @@
-// $Id: RichRecToolBase.cpp,v 1.4 2003-07-03 13:08:36 jonesc Exp $
+// $Id: RichRecToolBase.cpp,v 1.5 2003-07-03 14:46:40 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -21,8 +21,7 @@ RichRecToolBase::RichRecToolBase( const std::string& type,
                                   const IInterface* parent )
   : AlgTool ( type, name, parent ),
     m_toolReg(0),
-    m_msgLevel(0),
-    m_toolList() {
+    m_msgLevel(0) {
   
   declareProperty( "ToolRegistryName", m_regName = "RichToolRegistry" );
 
@@ -51,11 +50,7 @@ StatusCode RichRecToolBase::initialize() {
 StatusCode RichRecToolBase::finalize() {
 
   // Release all tools
-  for ( ToolList::iterator it = m_toolList.begin();
-        it != m_toolList.end(); ++it ) {
-    if ( *it ) { toolSvc()->releaseTool(*it); (*it) = NULL; }
-  }
-  if ( m_toolReg ) { toolSvc()->releaseTool( m_toolReg ); m_toolReg = NULL; }
+  releaseTool( m_toolReg );
   
   return StatusCode::SUCCESS;
 }
