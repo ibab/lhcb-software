@@ -1,4 +1,4 @@
-// $Id: AxParticleMaker.cpp,v 1.2 2002-05-17 11:41:51 gcorti Exp $
+// $Id: AxParticleMaker.cpp,v 1.3 2002-05-20 23:12:10 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -93,7 +93,7 @@ StatusCode AxParticleMaker::initialize() {
     return StatusCode::FAILURE;
   }
 
-  if( m_particleNames[0] != "all" ){  
+  if( m_particleNames[0] != "All" ){  
     // Retrieve the PDG Code of required particles 
     m_ids.clear();
     
@@ -135,7 +135,7 @@ StatusCode AxParticleMaker::initialize() {
       icount++;
     }
     
-  }  //if( m_particleNames[0] != "all" )
+  }  //if( m_particleNames[0] != "All" )
   return StatusCode::SUCCESS;
   
 };
@@ -204,7 +204,7 @@ StatusCode AxParticleMaker::makeParticles( ParticleVector & parts ) {
            || ((*icand)->charge() == 0) ){
         
         bool goodAxCand = false;
-        if ( m_particleNames[0] == "all" ){
+        if ( m_particleNames[0] == "All" ){
           goodAxCand = true;
         }
         else{
