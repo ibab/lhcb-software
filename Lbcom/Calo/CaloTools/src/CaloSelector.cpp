@@ -1,8 +1,11 @@
-// $Id: CaloSelector.cpp,v 1.1 2002-04-07 18:15:01 ibelyaev Exp $
+// $Id: CaloSelector.cpp,v 1.2 2002-04-26 13:36:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/07 18:15:01  ibelyaev
+//  preliminary version ('omega'-release)
+// 
 // ============================================================================
 // Include files
 // from Gaudi
@@ -10,6 +13,8 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IToolSvc.h"
+// from LHCbKernel
+#include "Kernel/CaloHypotheses.h"
 // CaloInterfaces 
 #include "CaloInterfaces/ICaloLikelyhood.h"
 // local

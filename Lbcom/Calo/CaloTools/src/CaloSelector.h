@@ -1,4 +1,4 @@
-// $Id: CaloSelector.h,v 1.1 2002-04-07 18:15:01 ibelyaev Exp $
+// $Id: CaloSelector.h,v 1.2 2002-04-26 13:36:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -9,6 +9,8 @@
 // Include files
 // from STL
 #include <string>
+// from LHCbKernel
+#include "Kernel/CaloHypotheses.h"
 // from CaloKernel
 #include "CaloKernel/CaloTool.h"
 // from CaloInterfaces 
