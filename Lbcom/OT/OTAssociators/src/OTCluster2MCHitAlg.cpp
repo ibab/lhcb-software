@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCHitAlg.cpp,v 1.6 2002-09-27 09:41:05 jvantilb Exp $
+// $Id: OTCluster2MCHitAlg.cpp,v 1.7 2002-10-17 08:38:24 jvantilb Exp $
 
 // Event
 #include "Event/OTCluster.h"
@@ -43,7 +43,7 @@ OTCluster2MCHitAlg::OTCluster2MCHitAlg( const std::string& name,
 OTCluster2MCHitAlg::~OTCluster2MCHitAlg() 
 {
   // destructor
-}; 
+}
 
 StatusCode OTCluster2MCHitAlg::initialize() 
 {
@@ -57,7 +57,7 @@ StatusCode OTCluster2MCHitAlg::initialize()
   }
  
   return StatusCode::SUCCESS;
-};
+}
 
 
 StatusCode OTCluster2MCHitAlg::execute() 
@@ -91,9 +91,13 @@ StatusCode OTCluster2MCHitAlg::execute()
   OTClusters::const_iterator iterClus;
   for(iterClus = clusterCont->begin(); 
       iterClus != clusterCont->end(); iterClus++){
-    MCHit* aHit = 0;
-    associateToTruth(*iterClus,aHit);
-    if (0 != aHit ) aTable->relate(*iterClus,aHit);
+    std::vector<MCHit*> hitVector;
+    associateToTruth(*iterClus, hitVector);
+    std::vector<MCHit*>::iterator iHit = hitVector.begin();
+    while (iHit != hitVector.end()) {
+      aTable->relate(*iterClus, *iHit);
+      iHit++;
+    }
   } // loop iterClus
 
   // register table in store
@@ -107,7 +111,7 @@ StatusCode OTCluster2MCHitAlg::execute()
   }
  
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode OTCluster2MCHitAlg::finalize() 
 {
@@ -119,7 +123,7 @@ StatusCode OTCluster2MCHitAlg::finalize()
 
 
 StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
-                                                MCHit*& aHit) 
+                                                std::vector<MCHit*>& hitVector) 
 {
   // make link to truth  to MCHit
   // retrieve table
@@ -130,15 +134,17 @@ StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
     return StatusCode::FAILURE;
   }
  
-  MCOTDeposit* aDeposit = 0;
   OTCluster2MCDepositAsct::MCDeposits range = aTable->relations(aCluster);
   if ( !range.empty() ) {
-    OTCluster2MCDepositAsct::MCDepositsIterator iterDep = range.begin();
-    aDeposit = iterDep->to();
-    if (0 != aDeposit) {
-      aHit = aDeposit->mcHit();
-      if (!m_spillOver && 0 != aHit) {
-        if (m_mcHits != aHit->parent()) aHit = 0;
+    OTCluster2MCDepositAsct::MCDepositsIterator iterDep;
+    for (iterDep = range.begin(); iterDep != range.end(); iterDep++) {      
+      MCOTDeposit* aDeposit = iterDep->to();
+      if (0 != aDeposit) {
+        MCHit* aHit = aDeposit->mcHit();
+        if (0 != aHit) {
+          if (m_spillOver || m_mcHits == aHit->parent() ) 
+            hitVector.push_back(aHit);
+        }
       }
     }
   }

@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCParticleAlg.h,v 1.3 2002-09-27 09:41:05 jvantilb Exp $
+// $Id: OTCluster2MCParticleAlg.h,v 1.4 2002-10-17 08:38:27 jvantilb Exp $
 #ifndef OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H
 #define OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H 1
 
@@ -44,7 +44,7 @@ public:
 
   // associator function
   virtual StatusCode associateToTruth(const OTCluster* aCluster,
-                                      MCParticle*& aParticle);
+                                      std::vector<MCParticle*>& partVector);
 
   /// path to put table
   std::string outputData() const;

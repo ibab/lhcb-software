@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.9 2002-10-04 11:37:35 cattanem Exp $
+! $Id: release.notes,v 1.10 2002-10-17 08:38:21 jvantilb Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
+
+! 2002-10-16 - Jeroen van Tilburg
+ - The associators are now able to have more than one
+   deposits/hits/particles associated to one cluster. Deposits (or hits or
+   particles) which are lost due to dead time can be recovered when they
+   are within a given time-window from the first deposit.
+ - This time window can be set with a job-option.
 
 !====================== OTAssociators v2r1 2002-10-04 ======================
 ! 2002-09-26 - Jeroen van Tilburg

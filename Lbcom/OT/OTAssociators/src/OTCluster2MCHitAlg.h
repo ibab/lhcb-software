@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCHitAlg.h,v 1.4 2002-09-27 09:41:05 jvantilb Exp $
+// $Id: OTCluster2MCHitAlg.h,v 1.5 2002-10-17 08:38:25 jvantilb Exp $
 #ifndef OTASSOCIATORS_OTCLUSTER2MCHITALG_H
 #define OTASSOCIATORS_OTCLUSTER2MCHITALG_H 1
 
@@ -44,7 +44,7 @@ public:
 
   /// find the MCHit given a OTCluster
   virtual StatusCode associateToTruth(const OTCluster* aCluster,
-                                      MCHit*& aHit);
+                                      std::vector<MCHit*>& hitVector);
 
   /// path to put relation table
   std::string outputData() const;

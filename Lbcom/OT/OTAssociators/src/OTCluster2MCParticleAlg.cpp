@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCParticleAlg.cpp,v 1.5 2002-09-27 09:41:05 jvantilb Exp $
+// $Id: OTCluster2MCParticleAlg.cpp,v 1.6 2002-10-17 08:38:26 jvantilb Exp $
 
 // Event
 #include "Event/OTCluster.h"
@@ -40,7 +40,7 @@ OTCluster2MCParticleAlg::OTCluster2MCParticleAlg( const std::string& name,
 
 OTCluster2MCParticleAlg::~OTCluster2MCParticleAlg() {
   // destructor
-}; 
+}
 
 StatusCode OTCluster2MCParticleAlg::initialize() {
 
@@ -55,7 +55,7 @@ StatusCode OTCluster2MCParticleAlg::initialize() {
   }
  
   return StatusCode::SUCCESS;
-};
+}
 
 
 StatusCode OTCluster2MCParticleAlg::execute() {
@@ -77,9 +77,13 @@ StatusCode OTCluster2MCParticleAlg::execute() {
   OTClusters::const_iterator iterClus;
   for(iterClus = clusterCont->begin(); 
       iterClus != clusterCont->end(); iterClus++){
-    MCParticle* aParticle = 0;
-    associateToTruth(*iterClus,aParticle);
-    if (0 != aParticle) aTable->relate(*iterClus,aParticle); 
+    std::vector<MCParticle*> partVector;
+    associateToTruth(*iterClus, partVector);
+    std::vector<MCParticle*>::iterator iPart = partVector.begin();
+    while (iPart != partVector.end()) {
+      aTable->relate(*iterClus, *iPart);
+      iPart++;
+    }
   } // loop iterClus
 
   // register table in store
@@ -93,7 +97,7 @@ StatusCode OTCluster2MCParticleAlg::execute() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode OTCluster2MCParticleAlg::finalize() {
 
@@ -104,7 +108,7 @@ StatusCode OTCluster2MCParticleAlg::finalize() {
 }
 
 StatusCode OTCluster2MCParticleAlg::associateToTruth(const OTCluster* aCluster,
-                                                     MCParticle*& aParticle) {
+                                         std::vector<MCParticle*>& partVector) {
   // make truth link to MCParticle
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -116,13 +120,15 @@ StatusCode OTCluster2MCParticleAlg::associateToTruth(const OTCluster* aCluster,
     return StatusCode::FAILURE;
   }
  
-  MCHit* aHit = 0;
   OTCluster2MCHitAsct::MCHits range = aTable->relations(aCluster);
   if ( !range.empty() ) {
-    OTCluster2MCHitAsct::MCHitsIterator iterHit = range.begin();
-    aHit = iterHit->to();
-    if (0 != aHit) {
-      aParticle = aHit->mcParticle();
+    OTCluster2MCHitAsct::MCHitsIterator iterHit;
+    for (iterHit = range.begin(); iterHit != range.end(); iterHit++) {
+      MCHit* aHit = iterHit->to();
+      if (0 != aHit) {
+        MCParticle* aParticle = aHit->mcParticle();
+        if (0 != aParticle) partVector.push_back(aParticle);
+      }
     }
   }
 

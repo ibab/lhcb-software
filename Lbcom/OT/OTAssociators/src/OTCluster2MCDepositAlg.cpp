@@ -1,4 +1,4 @@
-// $Id: OTCluster2MCDepositAlg.cpp,v 1.3 2002-09-27 09:41:05 jvantilb Exp $
+// $Id: OTCluster2MCDepositAlg.cpp,v 1.4 2002-10-17 08:38:23 jvantilb Exp $
 
 // Event
 #include "Event/OTCluster.h"
@@ -13,6 +13,9 @@
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+
+// CLHEP
+#include "CLHEP/Units/SystemOfUnits.h"
 
 // local
 #include "OTCluster2MCDepositAlg.h"
@@ -36,11 +39,12 @@ OTCluster2MCDepositAlg::OTCluster2MCDepositAlg( const std::string& name,
 {
   // constructor
   declareProperty( "OutputData", m_outputData  = OTCluster2MCDepositLocation );
+  declareProperty( "acceptTime", m_acceptTime  = 7.8*ns );
 }
 
 OTCluster2MCDepositAlg::~OTCluster2MCDepositAlg() {
   // destructor
-}; 
+}
 
 StatusCode OTCluster2MCDepositAlg::initialize() {
 
@@ -48,8 +52,7 @@ StatusCode OTCluster2MCDepositAlg::initialize() {
   log << MSG::DEBUG << "==> Initialise" << endreq;
  
   return StatusCode::SUCCESS;
-};
-
+}
 
 StatusCode OTCluster2MCDepositAlg::execute() 
 {
@@ -63,6 +66,18 @@ StatusCode OTCluster2MCDepositAlg::execute()
     log << MSG::WARNING << "Failed to find OTClusters" << endreq;
     return StatusCode::FAILURE;
   }
+
+  // get MCOTDeposits to be able to find other deposits killed by dead-time
+  if (m_acceptTime > 0.0 ) {
+    SmartDataPtr<MCOTDeposits> deposits(eventSvc(), 
+                                        MCOTDepositLocation::Default);
+    if (0 == deposits){ 
+      MsgStream log(msgSvc(), name());
+      log << MSG::WARNING << "Failed to find MCOTDeposits" << endreq;
+      return StatusCode::FAILURE;
+    }
+    m_deposits = deposits;
+  }
   
   // create an association table 
   Table* aTable = new Table();
@@ -71,9 +86,13 @@ StatusCode OTCluster2MCDepositAlg::execute()
   OTClusters::const_iterator iterClus;
   for(iterClus = clusterCont->begin(); 
       iterClus != clusterCont->end(); iterClus++){
-    MCOTDeposit* aDeposit = 0;
-    associateToTruth(*iterClus, aDeposit);
-    if (0 != aDeposit ) aTable->relate(*iterClus, aDeposit);
+    std::vector<MCOTDeposit*> depVector;
+    associateToTruth(*iterClus, depVector);
+    std::vector<MCOTDeposit*>::iterator iDep = depVector.begin();
+    while (iDep != depVector.end()) {
+      aTable->relate(*iterClus, *iDep);
+      iDep++;
+    }
   } // loop iterClus
 
   // register table in store
@@ -87,7 +106,7 @@ StatusCode OTCluster2MCDepositAlg::execute()
   }
  
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode OTCluster2MCDepositAlg::finalize() {
 
@@ -97,9 +116,8 @@ StatusCode OTCluster2MCDepositAlg::finalize() {
   return StatusCode::SUCCESS;
 }
 
-
 StatusCode OTCluster2MCDepositAlg::associateToTruth(const OTCluster* aCluster,
-                                                    MCOTDeposit*& aDeposit) {
+                                        std::vector<MCOTDeposit*>& depVector) {
   // make link to truth  to MCOTDeposit
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -154,17 +172,40 @@ StatusCode OTCluster2MCDepositAlg::associateToTruth(const OTCluster* aCluster,
   }
 
   // link digit to truth
-  const MCOTDigit* mcDigit = mcTruth<MCOTDigit>(aDigit); 
+  MCOTDeposit* deposit = 0;
+  const MCOTDigit* mcDigit = mcTruth<MCOTDigit>(aDigit);
   if (0 != mcDigit && timeNumber != -1) {
 
     // link to deposits
     SmartRefVector<MCOTDeposit> depCont = mcDigit->deposits();
     if ( 0 == depCont.size()) return StatusCode::FAILURE;
-    MCOTDeposit* deposit = depCont[timeNumber];
+    deposit = depCont[timeNumber];
     if ( 0 == deposit) return StatusCode::FAILURE;
-    aDeposit = deposit;
+    depVector.push_back(deposit);
   } else {
     return StatusCode::FAILURE;
+  }
+
+  // find other deposits killed by dead-time, but within certain time window.
+  if (m_acceptTime > 0.0 ) {
+    bool keepAdding = true;
+    while (keepAdding) {
+      // Go to the next MCOTDeposit (they should be ordered)
+      const int key = deposit->key();
+      MCOTDeposit* nextDeposit = m_deposits->object(key+1);
+      if (nextDeposit == 0) {
+          keepAdding = false;
+          continue;
+      }
+      // Check for same channel and within acceptTime cut
+      if ( nextDeposit->channel() == deposit->channel() &&
+           nextDeposit->tdcTime() < deposit->tdcTime() + m_acceptTime ) {
+        depVector.push_back(nextDeposit);
+        deposit = nextDeposit;
+      } else {
+        keepAdding = false;
+      }
+    }    
   }
 
   return sc;
