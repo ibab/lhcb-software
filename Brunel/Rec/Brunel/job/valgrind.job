@@ -53,7 +53,8 @@ else
 endif
 
 # == set the program environment
-source $LHCb_release_area/BrunelEnv/$Bversion/cmt/setup.csh
+setenv Brunel_release_area $LHCBDEV
+source $Brunel_release_area/BrunelEnv/$Bversion/cmt/setup.csh
 source $MYJOBROOT/cmt/setup.csh -tag=$CMTDEB
 
 # Go to working directory

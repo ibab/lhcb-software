@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Errors to suppress by default with Brunel v17r2
+# Errors to suppress by default with Brunel v19r0
 
 # Format of this file is:
 # {
@@ -15,20 +15,15 @@
 #     (optionally: caller3 name)
 # }
 
-# Pthread bugs
+# Pthread bugs (gcc 2.95.2 on rh7.3, Gaudi v11r4-v12r0) 
 {
   pthread_error/__pthread_mutex_destroy
   PThread
   fun:pthread_error
   fun:__pthread_mutex_destroy
 }
-{
-  pthread_error/__pthread_mutex_unlock
-  PThread
-  fun:__pthread_mutex_unlock
-}
 
-# glibc/Gaudi problems (gcc 2.95.2 on rh7.3, Gaudi v11r4) 
+# glibc/Gaudi problems (gcc 2.95.2 on rh7.3, Gaudi v11r4-v12r0) 
 {
   strlen/ld-2.2.5.so
   Cond
@@ -50,7 +45,23 @@
   obj:/lib/i686/libc-2.2.5.so
 }
 
-# glibc/rfio problems (gcc 2.95.2 on rh7.3, libshift.so.1.5.1.3) 
+
+# Known DNS system library problems (Linux rh6.1 - rh7.3)
+{
+  dns/getanswer_r
+  Cond
+  fun:getanswer_r
+  obj:/lib/libnss_dns-2.2.5.so
+}
+
+{
+  dns2
+  Value4
+  obj:/lib/i686/libc-2.2.5.so
+  obj:/lib/i686/libc-2.2.5.so
+  fun:rfio_open_ext
+}
+
 {
   strcmp/libc-2.2.5.so
   Value4
@@ -66,32 +77,17 @@
 }
 
 
-# rfio problems (libshift.so.1.5.1.3)
+# Possible rfio problem (libshift.so.1.5.1.3 - 1.5.2.3)
 {
-  rfio1
-  Cond
-  fun:getanswer_r
-  obj:/lib/libnss_dns-2.2.5.so
-}
-
-{
-  rfio2
-  Value4
-  obj:/lib/i686/libc-2.2.5.so
-  obj:/lib/i686/libc-2.2.5.so
-  fun:rfio_open_ext
-}
-
-{
-  rfio3
+  rfio
   Param
   socketcall.send(msg)
   obj:/lib/i686/libc-2.2.5.so
   fun:netwrite_timeout
 }
-  
 
-# Gaudi problems (Gaudi v11r4)
+
+# Gaudi problems (Gaudi v11r4, v12r0)
 {
   GaudiKernel/v13r2/Timing.cpp
   Param
@@ -101,28 +97,36 @@
 }
 
 {
-  GaudiKernel/v13r2/SimplePropertyRef
-  Value8
-  fun:*
-  fun:*
-  fun:valueElementFromStream__t17SimplePropertyRef2Zt6vector2ZdZt9allocator1ZdZt12NullVerifier1Zt6vector2ZdZt9allocator1ZdR7istream
-}
-
-{
   GaudiKernel/v13r2/SimpleProperty
   Value8
   fun:set__t17SimplePropertyRef2ZdZt12NullVerifier1ZdRCd
 }
 
-
-# DetDesc (since v11r7) problem (bug in valgrind?)
+# Gaudi problems (Gaudi v12r0)
 {
-  DetDesc/DetectorElement
+  HbookCnv/v13r3
+  Cond
+  fun:iucomp_
+  fun:hfinop_
+  fun:hstati_
+}
+
+
+# DetDesc (v12r0)
+{
+  DetDesc/addParam
   Value8
   fun:*
   fun:*
   fun:*
-  fun:addUserParameter__15DetectorElementGt12basic_string*
+  fun:addParam__8ParamSetGt12basic_string*
+}
+
+{
+  DetDesc/addParam2
+  Value8
+  fun:*
+  fun:addParam__8ParamSetGt12basic_string*
 }
 
 # Property initialisation problems (since Brunel v16r4)
@@ -138,13 +142,28 @@
   fun:execute__16TrToRichTrackAlg
 }
 
-# Random numbers usage (Gaudi v11r4)
+# L1Decision problems
 {
-  RanluxEngine/TimingAlg-VeloSim
+  L1Decision/v2r1/VeloTrackTool
+  Cond
+  fun:select2D__15L1VeloTrackTool*
+  fun:execute__6Level1
+}
+
+{
+  L1Decision/v2r1/L1VeloTT
+  Value8
+  fun:f_matchTT__9L1Velo2TT*
+  fun:matchTT__9L1Velo2TT*
+  fun:execute__6Level1
+}
+
+# Random numbers usage (CLHEP 1.8.0.0)
+{
+  RanluxEngine/TimingAlg
   Value8
   fun:flat__12RanluxEngine
-  fun:shoot__9RandGaussP15HepRandomEngine
-  fun:shoot__9RandGaussP15HepRandomEnginedd
+  fun:shoot__10RandGaussQP15HepRandomEnginedd
   fun:shoot__CQ27HepRndmt9Generator1ZQ24Rndm5Gauss
 }
 
@@ -176,7 +195,7 @@
 }
 
 {
-  RanluxEngine/MuonAlgs
+  RanluxEngine/MuonAlgs-MuonBackground
   Value8
   fun:flat__12RanluxEngine
   fun:shoot__11RandGeneralP15HepRandomEngine
@@ -253,59 +272,38 @@
   fun:evaluate__Q27HepTool9EvaluatorPCc
 }
 
-# Xerces 1.6.0 errors
-{
-  libxerces/__builtin_vec_new
-  Free
-  fun:__builtin_delete
-  obj:*libxerces*.so
-}
-
-{
-  Xerces/DOMString
-  Cond
-  fun:transcode__C9DOMString
-}
-
-{
-  Xerces/getWideCharLength
-  Cond
-  fun:getWideCharLength__FPCUs
-}
-
-
-# Root 3.03.09 errors
-{
-  Root/Realloc
-  Free
-  fun:__builtin_vec_delete
-  obj:/afs/cern.ch/sw/root/v3.03.09/rh72_gcc2953/root/lib/libCore.so
-}
-
+# Root 3.05.04 errors
 {
   Root/longest_match
   Cond
   fun:R__longest_match
-  obj:/afs/cern.ch/sw/root/v3.03.09/rh72_gcc2953/root/lib/libCore.so
+  fun:R__Deflate
+  fun:R__zip
+  fun:__4TKeyP7TObjectPCci
 }
 
 {
   Root/deflate
   Value4
   fun:R__Deflate
-  obj:/afs/cern.ch/sw/root/v3.03.09/rh72_gcc2953/root/lib/libCore.so
+  fun:R__zip
+  fun:__4TKeyP7TObjectPCci
 }
 
 {
   Root/ct_tally
   Value4
   fun:R__ct_tally
-  obj:/afs/cern.ch/sw/root/v3.03.09/rh72_gcc2953/root/lib/libCore.so
+  fun:R__Deflate
+  fun:R__zip
+  fun:__4TKeyP7TObjectPCci
 }
 
 {
   Root/compress_block
   Value4
   fun:R__compress_block
-  obj:/afs/cern.ch/sw/root/v3.03.09/rh72_gcc2953/root/lib/libCore.so
+  fun:R__flush_block
+  fun:R__Deflate
+  fun:R__zip
 }
