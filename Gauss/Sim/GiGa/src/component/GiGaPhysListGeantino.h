@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/23 13:12:28  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 #ifndef    GIGA_GiGaPhysListGEANTINO_H
 #define    GIGA_GiGaPhysListGEANTINO_H 1 
@@ -35,7 +38,18 @@ class GiGaPhysListGeantino : public GiGaPhysListBase
   GiGaPhysListGeantino( const std::string& , ISvcLocator* );
   virtual ~GiGaPhysListGeantino();
   ///
-public:
+public: 
+
+  /** initialization of the object
+   *  @return status code 
+   */
+  virtual StatusCode initialize();
+  
+  /** finalization of the object
+   *  @return status code 
+   */
+  virtual StatusCode finalize  ();
+
   /// from G4VUserPhysicsList 
   void ConstructParticle ();
   void ConstructProcess  ();

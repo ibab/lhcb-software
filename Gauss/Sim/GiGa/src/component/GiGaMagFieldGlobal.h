@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/23 13:12:27  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 #ifndef    GIGA_GIGAMagFieldGLOBAL_H
 #define    GIGA_GIGAMagFieldGLOBAL_H 1 
@@ -26,16 +29,35 @@ class GiGaMagFieldGlobal: public GiGaMagFieldBase
   friend class GiGaMagFieldFactory<GiGaMagFieldGlobal>;
   ///
  protected:
-  /// constructor 
-  GiGaMagFieldGlobal( const std::string& , ISvcLocator*); 
+
+  /** standard constructor 
+   *  @param Name name of the instance
+   *  @param Loc pointer to servcie locator 
+   */
+  GiGaMagFieldGlobal( const std::string& Name , 
+                      ISvcLocator* Loc ); 
   /// virtual destructor 
   virtual ~GiGaMagFieldGlobal();
   ///
- public:
-  ///
+public:
+  
+  /** initialization of the object
+   *  @return status code 
+   */
+  virtual StatusCode initialize();
+  
+  /** finalization of the object
+   *  @return status code 
+   */
+  virtual StatusCode finalize  ();
+  
+  /** get the field value 
+   *  @param  point 
+   *  @param   B field 
+   */
   virtual void GetFieldValue ( const double [3], double *B  ) const ;
   ///
- private:
+private:
   ///
   GiGaMagFieldGlobal(); ///< no default constructor! 
   GiGaMagFieldGlobal( const GiGaMagFieldGlobal& ) ; ///< no copy constructor!

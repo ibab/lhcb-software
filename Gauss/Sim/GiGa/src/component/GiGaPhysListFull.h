@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/23 13:12:27  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 #ifndef    GIGA_GiGaPhysListFULL_H
 #define    GIGA_GiGaPhysListFULL_H 1 
@@ -33,7 +36,18 @@ protected:
   GiGaPhysListFull( const std::string& nick , ISvcLocator* loc );
   virtual ~GiGaPhysListFull();
   ///
-public:
+public: 
+
+  /** initialization of the object
+   *  @return status code 
+   */
+  virtual StatusCode initialize();
+  
+  /** finalization of the object
+   *  @return status code 
+   */
+  virtual StatusCode finalize  ();
+
   /// from G4VUserPhysicsList 
   void ConstructParticle ();
   void ConstructProcess  ();

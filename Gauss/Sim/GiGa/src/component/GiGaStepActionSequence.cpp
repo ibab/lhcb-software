@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/27 14:29:01  ibelyaev
+/// bug fix
+///
 /// Revision 1.3  2001/07/24 09:07:26  ibelyaev
 /// bug fix
 ///
@@ -143,7 +146,7 @@ StatusCode GiGaStepActionSequence::initialize()
       Print("Member '"+Type+"'/'"+Name+"' is added to the sequence");
     }
   /// 
-  Print("The Action initialized successfully");
+  Print("initialized successfully");
   ///
   return StatusCode::SUCCESS;
 };
@@ -155,6 +158,8 @@ StatusCode GiGaStepActionSequence::initialize()
 /// ===========================================================================
 StatusCode GiGaStepActionSequence::finalize() 
 {
+  ///
+  Print("finalization");
   /// finalize all members 
   std::for_each  ( m_actions.begin () , 
                    m_actions.end   () ,
@@ -170,7 +175,6 @@ StatusCode GiGaStepActionSequence::finalize()
 /// ===========================================================================
 void GiGaStepActionSequence::UserSteppingAction ( const G4Step* step )
 {
-  if( 0 == step ) { return ; }
   /// stepping actions of all members  
   std::for_each  ( m_actions.begin () , 
                    m_actions.end   () ,

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.11  2001/07/27 15:06:14  ibelyaev
+/// printout improvements in base class GiGaBase
+///
 /// Revision 1.10  2001/07/23 13:11:41  ibelyaev
 /// the package restructurisation(II)
 /// 
@@ -149,9 +152,8 @@ protected:
   /** object type 
    *  @return object type 
    */
-  inline const std::string& myType   () const { return m_myType ; }
-  
-  
+  inline const std::string& myType   () const ;
+
   /** is the base is initialized properly?
    *  @return true if it is initialized 
    */
@@ -226,6 +228,12 @@ protected:
    */
   StatusCode setProperties  () ; 
   ///
+
+  /** set the type of the object
+   *  @return object type 
+   */
+  const std::string&  setMyType() const;
+  
 protected:
   
   /** Print the error    message and return status code 
@@ -302,7 +310,7 @@ private:
   /// name of the object 
   std::string           m_name       ; 
   /// type of the object 
-  std::string           m_myType     ;
+  mutable std::string   m_myType     ;
   /// name of GiGa Service   
   std::string           m_gigaName   ; 
   /// name of GiGa SetUp Service   
@@ -376,6 +384,14 @@ inline StatusCode GiGaBase::Print( const std::string& Message ,
  */
 /// ===========================================================================
 inline const std::string& GiGaBase::name () const { return m_name ; };
+
+/// ===========================================================================
+/** object type 
+ *  @return object type 
+ */
+/// ===========================================================================
+inline const std::string& GiGaBase::myType() const 
+{ return m_myType.empty() ? setMyType() : m_myType ; }
 
 /// ===========================================================================
 #endif ///<   GIGA_GIGABASE_H

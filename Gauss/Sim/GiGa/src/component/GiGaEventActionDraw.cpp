@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/23 13:12:26  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 // Geant4 
 #include "G4VVisManager.hh"
@@ -35,12 +38,25 @@ GiGaEventActionDraw::~GiGaEventActionDraw(){};
 /// ===========================================================================
 /// ===========================================================================
 StatusCode GiGaEventActionDraw::initialize () 
-{ return GiGaEventActionBase::initialize() ; } ;
+{ 
+  StatusCode sc = GiGaEventActionBase::initialize() ; 
+  if( sc.isFailure() )
+    { return Error("Could not initialize the base class ",sc); }
+  ///
+  Print("initialized successfully");
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 /// ===========================================================================
 StatusCode GiGaEventActionDraw::finalize   () 
-{ return GiGaEventActionBase::initialize() ; } ;
+{ 
+  ///
+  Print("finalization");
+  ///
+  return GiGaEventActionBase::initialize() ; 
+} ;
 
 /// ===========================================================================
 /// ===========================================================================
@@ -51,10 +67,7 @@ void GiGaEventActionDraw::EndOfEventAction( const G4Event* event )
   ///
   if      ( 0 == visMgr    ) { Error("Could not locate G4VVisManager* !" ) ; }
   else if ( 0 == event     ) { Error("G4Event* points to NULL!"          ) ; } 
-  else 
-    {
-      event->Draw();
-    }
+  else { event->Draw(); }
   ///
 };
 

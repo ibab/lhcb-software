@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/07/23 13:12:27  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
@@ -40,6 +43,36 @@ GiGaPhysListEm::GiGaPhysListEm( const std::string& nick , ISvcLocator* loc )
 /// ===========================================================================
 /// ===========================================================================
 GiGaPhysListEm::~GiGaPhysListEm(){};
+
+//// ===========================================================================
+/** initialization of the object
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaPhysListEm::initialize()
+{
+  /// initialize the base class 
+  StatusCode sc = GiGaPhysListBase::initialize();
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize the base class",sc);}
+  ///
+  Print("initialized succesfully") ;
+  ///
+  return StatusCode::SUCCESS;  
+};
+
+/// ===========================================================================
+/** finalization of the object
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaPhysListEm::finalize  ()
+{
+  ///
+  Print("finalization") ;
+  ///
+  return GiGaPhysListBase::finalize();
+};
 
 /// ===========================================================================
 /// ===========================================================================

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/27 14:29:00  ibelyaev
+/// bug fix
+///
 /// Revision 1.2  2001/07/26 16:09:21  ibelyaev
 /// GiGaRunActions budiness
 ///
@@ -73,6 +76,8 @@ StatusCode GiGaEventActionCommand::initialize()
   if( m_endCmds  .empty() ) 
     { Print("'EndOfEventCommands' list is empty"  ) ;}
   ///
+  Print("initialized succesfully");
+  ///
   return StatusCode::SUCCESS;
 };
 
@@ -83,6 +88,8 @@ StatusCode GiGaEventActionCommand::initialize()
 /// ===========================================================================
 StatusCode GiGaEventActionCommand::finalize()
 {
+  ///
+  Print("finalization");
   /// finalize the base class 
   return GiGaEventActionBase::finalize();
 };

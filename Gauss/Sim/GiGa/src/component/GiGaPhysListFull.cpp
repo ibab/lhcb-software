@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/23 13:12:27  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
@@ -51,6 +54,38 @@ GiGaPhysListFull::GiGaPhysListFull( const std::string& nick ,
 /// ===========================================================================
 GiGaPhysListFull::~GiGaPhysListFull()
 {};
+
+
+
+//// ===========================================================================
+/** initialization of the object
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaPhysListFull::initialize()
+{
+  /// initialize the base class 
+  StatusCode sc = GiGaPhysListBase::initialize();
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize the base class",sc);}
+  ///
+  Print("initialized succesfully") ;
+  ///
+  return StatusCode::SUCCESS;  
+};
+
+/// ===========================================================================
+/** finalization of the object
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaPhysListFull::finalize  ()
+{
+  ///
+  Print("finalization") ;
+  ///
+  return GiGaPhysListBase::finalize();
+};
 
 /// ===========================================================================
 /// ===========================================================================

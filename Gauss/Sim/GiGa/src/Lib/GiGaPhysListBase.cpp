@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/23 13:12:11  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
@@ -60,13 +63,22 @@ StatusCode GiGaPhysListBase::initialize ()
   log << MSG::INFO << " Default Cut Value is set to be " 
       << GetDefaultCutValue() / mm << " [mm]" << endreq; 
   ///
+  Print("GiGaPhysListBase initialized succesfully" ,
+        StatusCode::SUCCESS , MSG::DEBUG );
+  ///
   return StatusCode::SUCCESS;
 };
 
 /// ===========================================================================
 /// ===========================================================================
-StatusCode GiGaPhysListBase::finalize   ()  { return GiGaBase::finalize   (); };
-
+StatusCode GiGaPhysListBase::finalize   ()  
+{ 
+  ///
+  Print("GiGaPhysListBase finalization" ,
+        StatusCode::SUCCESS , MSG::DEBUG );
+  ///
+  return GiGaBase::finalize   (); 
+};
 
 /// ===========================================================================
 

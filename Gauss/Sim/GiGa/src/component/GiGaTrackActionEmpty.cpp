@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/07/23 16:37:55  ibelyaev
+/// bug(misprint) fix
+///
 /// Revision 1.6  2001/07/23 15:44:48  ibelyaev
 /// bug(misprint) fix
 ///
@@ -46,12 +49,26 @@ GiGaTrackActionEmpty::~GiGaTrackActionEmpty(){};
 /// ===========================================================================
 /// ===========================================================================
 StatusCode GiGaTrackActionEmpty::initialize () 
-{ return GiGaTrackActionBase::initialize() ; } ;
+{ 
+  /// initialize the base class 
+  StatusCode sc = GiGaTrackActionBase::initialize() ; 
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize the base class",sc);}
+  ///  
+  Print("initialized succesfully");
+  ///
+  return StatusCode::SUCCESS;
+} ;
 
 /// ===========================================================================
 /// ===========================================================================
 StatusCode GiGaTrackActionEmpty::finalize   () 
-{ return GiGaTrackActionBase::initialize() ; } ;
+{ 
+  ///  
+  Print("initialized succesfully");
+  ///
+  return GiGaTrackActionBase::initialize() ; 
+} ;
 
 /// ===========================================================================
 /// ===========================================================================

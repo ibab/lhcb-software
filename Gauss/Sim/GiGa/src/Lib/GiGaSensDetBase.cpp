@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/23 13:12:12  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 // from STL
 #include <vector>
@@ -114,7 +117,8 @@ StatusCode GiGaSensDetBase::initialize()
         <<  endreq; /// ATTENTION !!! 
   }
   ///
-  m_init = true;
+  Print("GiGaSensDetBase initialized successfully" ,
+        StatusCode::SUCCESS , MSG::DEBUG ) ;
   ///
   return StatusCode::SUCCESS;
 }; 
@@ -124,7 +128,14 @@ StatusCode GiGaSensDetBase::initialize()
  *  @return status code 
  */
 /// ===========================================================================
-StatusCode GiGaSensDetBase::finalize() { return GiGaBase::finalize();  };
+StatusCode GiGaSensDetBase::finalize() 
+{ 
+  ///
+  Print("GiGaSensDetBase finalization" ,
+        StatusCode::SUCCESS , MSG::DEBUG ) ;
+  ///
+  return GiGaBase::finalize();  
+};
 
 /// ===========================================================================
 /** query the interface

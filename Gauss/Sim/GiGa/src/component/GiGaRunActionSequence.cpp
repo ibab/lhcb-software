@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/27 14:29:01  ibelyaev
+/// bug fix
+///
 /// Revision 1.1  2001/07/26 16:09:22  ibelyaev
 /// GiGaRunActions budiness
 /// 
@@ -132,7 +135,7 @@ StatusCode GiGaRunActionSequence::initialize  ()
       Print("Member '"+Type+"'/'"+Name+"' is added to the sequence");
     }
   ///
-  Print("The Action initialized successfully");
+  Print("initialized successfully");
   ///
   return StatusCode::SUCCESS; 
 };
@@ -144,6 +147,8 @@ StatusCode GiGaRunActionSequence::initialize  ()
 /// ===========================================================================
 StatusCode GiGaRunActionSequence::finalize()
 {
+  ///
+  Print("finalization");
   /// finalize all members 
   std::for_each  ( m_actions.begin () , 
                    m_actions.end   () ,
@@ -159,7 +164,6 @@ StatusCode GiGaRunActionSequence::finalize()
 /// ===========================================================================
 void GiGaRunActionSequence::BeginOfRunAction ( const G4Run* run )
 {
-  if( 0 == run ) { return ; }
   /// run actions of all members  
   std::for_each ( m_actions.begin () , m_actions.end   () ,
                   std::bind2nd( std::mem_fun1(&IGiGaRunAction::
@@ -173,7 +177,6 @@ void GiGaRunActionSequence::BeginOfRunAction ( const G4Run* run )
 /// ===========================================================================
 void GiGaRunActionSequence::EndOfRunAction ( const G4Run* run )
 {
-  if( 0 == run ) { return ; }
   /// run actions of all members  
   std::for_each ( m_actions.begin () , m_actions.end   () ,
                   std::bind2nd( std::mem_fun1(&IGiGaRunAction::

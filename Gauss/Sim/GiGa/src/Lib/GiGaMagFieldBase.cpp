@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/23 13:12:11  ibelyaev
+/// the package restructurisation(II)
+/// 
 //  ===========================================================================
 #define GIGA_GIGAMAGFIELDBASE_CPP 1 
 ///  ===========================================================================
@@ -81,6 +84,9 @@ StatusCode GiGaMagFieldBase::initialize ()
     }
   else { Warning("Magnetic Field Service is not requested") ; }
   ///
+  Print("GiGaMagFieldBase initialized successfully" ,
+        StatusCode::SUCCESS , MSG::DEBUG ) ;
+  ///
   return StatusCode::SUCCESS;
 };
 
@@ -90,9 +96,12 @@ StatusCode GiGaMagFieldBase::initialize ()
  */
 /// ===========================================================================
 StatusCode GiGaMagFieldBase::finalize   ()  
-{ 
-  /// relese magnetic field service 
+{
+  /// relese magnetic field service
   if( 0 != mfSvc() ) { mfSvc() -> release() ; m_mfSvc = 0 ; }
+  ///
+  Print("GiGaMagFieldBase finalization" ,
+        StatusCode::SUCCESS , MSG::DEBUG ) ;
   ///
   return GiGaBase::finalize   (); 
 };

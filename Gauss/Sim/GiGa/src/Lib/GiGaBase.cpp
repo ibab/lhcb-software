@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/27 15:06:14  ibelyaev
+/// printout improvements in base class GiGaBase
+///
 /// Revision 1.4  2001/07/23 13:12:11  ibelyaev
 /// the package restructurisation(II)
 ///
@@ -29,7 +32,6 @@
 #include "GaudiKernel/IJobOptionsSvc.h"
 ///  GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
-#include "GaudiKernel/System.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/Stat.h"
@@ -37,6 +39,7 @@
 #include "GiGa/IGiGaSvc.h"
 #include "GiGa/IGiGaSetUpSvc.h"
 #include "GiGa/GiGaException.h"
+#include "GiGa/GiGaUtil.h" 
 #include "GiGa/GiGaBase.h" 
 
 /// ===========================================================================
@@ -50,8 +53,6 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   : m_count      ( 0                     ) 
   /// name 
   , m_name       ( Name                  ) 
-  /// type 
-  , m_myType     (""                     )
   ///
   , m_gigaName   ( "GiGaSvc"             ) 
   , m_setupName  ( "GiGaSvc"             ) 
@@ -91,8 +92,6 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   declareProperty( "DetectorDataProvider"      ,  m_detName     );
   declareProperty( "IncidentService"           ,  m_incName     );
   declareProperty( "ObjectManager"             ,  m_omName      );
-  /// set own type 
-  m_myType = System::typeinfoName( typeid( *this ) ) ;
   ///
 };
 
@@ -106,6 +105,15 @@ GiGaBase::~GiGaBase()
 } 
 
 
+/// ===========================================================================
+/** set the type of the object
+ *  @return object type 
+ */
+/// ===========================================================================
+const std::string&  GiGaBase::setMyType() const
+{
+  return m_myType = GiGaUtil::ObjTypeName( this );
+};
 
 /// ===========================================================================
 /** query the interface
@@ -179,7 +187,8 @@ StatusCode GiGaBase::initialize()
       m_output = 
         m_output < (int) MSG::NIL   ? (int) MSG::NIL   : 
         m_output > (int) MSG::FATAL ? (int) MSG::FATAL : m_output ; 
-      msgSvc()->setOutputLevel( name(), m_output );
+      if( MSG::NIL != m_output ) 
+        { msgSvc()->setOutputLevel( name(), m_output ); }
     }
   else { Warning("Message Service is not requested to be located"); }
   ///
@@ -259,6 +268,8 @@ StatusCode GiGaBase::initialize()
       objMgr()->addRef() ; 
     }
   else { Print("IObjManager is not required to be located"); }
+  ///
+  m_init = true ;
   ///
   Print("GiGaBase initialized successfully" , 
         StatusCode::SUCCESS , MSG::VERBOSE ) ;

@@ -28,12 +28,22 @@ StatusCode GiGaStepActionBase::initialize()
   StatusCode sc = GiGaBase::initialize() ; 
   if( sc.isFailure() ) { return Error("Could not initialize Base class!"); } 
   ///
+  Print("GiGaStepActionBase initialized successfully" ,
+        StatusCode::SUCCESS , MSG::DEBUG ) ;
+  ///
   return StatusCode::SUCCESS;
 }; 
 
 /// ===========================================================================
 /// ===========================================================================
-StatusCode GiGaStepActionBase::finalize() { return GiGaBase::finalize();  };
+StatusCode GiGaStepActionBase::finalize() 
+{ 
+  ///
+  Print("GiGaStepActionBase finalization" ,
+        StatusCode::SUCCESS , MSG::DEBUG ) ;
+  ///
+  return GiGaBase::finalize();  
+};
 
 /// ===========================================================================
 /// ===========================================================================

@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/23 13:12:26  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 // GiGa 
 #include "GiGa/GiGaEventActionFactory.h"
@@ -32,12 +35,26 @@ GiGaEventActionEmpty::~GiGaEventActionEmpty(){};
 /// ===========================================================================
 /// ===========================================================================
 StatusCode GiGaEventActionEmpty::initialize () 
-{ return GiGaEventActionBase::initialize() ; } ;
+{
+  /// initialize the base class 
+  StatusCode sc = GiGaEventActionBase::initialize() ; 
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize the base class",sc); }
+  ///
+  Print("initialized succesfully");
+  ///
+  return StatusCode::SUCCESS;
+} ;
 
 /// ===========================================================================
 /// ===========================================================================
 StatusCode GiGaEventActionEmpty::finalize   () 
-{ return GiGaEventActionBase::initialize() ; } ;
+{ 
+  ///
+  Print("finalization");
+  ///
+  return GiGaEventActionBase::initialize() ; 
+} ;
 
 /// ===========================================================================
 /// ===========================================================================

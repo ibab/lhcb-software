@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/23 13:12:26  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
@@ -33,6 +36,36 @@ GiGaMagFieldGlobal::GiGaMagFieldGlobal( const std::string& nick ,
 /// ===========================================================================
 /// ===========================================================================
 GiGaMagFieldGlobal::~GiGaMagFieldGlobal(){};
+
+/// ===========================================================================
+/** initialization of the object
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaMagFieldGlobal::initialize()
+{
+  /// initialize the base class 
+  StatusCode sc = GiGaMagFieldBase::initialize();
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize the base class",sc);}
+  ///
+  Print("initialized succesfully") ;
+  ///
+  return StatusCode::SUCCESS;  
+};
+
+/// ===========================================================================
+/** finalization of the object
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaMagFieldGlobal::finalize  ()
+{
+  ///
+  Print("finalization") ;
+  ///
+  return GiGaMagFieldBase::finalize();
+};
 
 /// ===========================================================================
 /// ===========================================================================

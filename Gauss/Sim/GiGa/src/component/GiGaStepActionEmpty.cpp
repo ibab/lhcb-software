@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/23 13:12:28  ibelyaev
+/// the package restructurisation(II)
+///
 /// ===========================================================================
 #include "CLHEP/Geometry/Point3D.h"
 ///
@@ -41,11 +44,25 @@ GiGaStepActionEmpty::~GiGaStepActionEmpty(){};
 /// ===========================================================================
 /// ===========================================================================
 StatusCode GiGaStepActionEmpty::initialize () 
-{ return GiGaStepActionBase::initialize() ; } ;
+{ 
+  /// initialize the base class 
+  StatusCode sc = GiGaStepActionBase::initialize() ; 
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize the base class",sc); }
+  ///
+  Print("initialized succesfully");
+  ///
+  return StatusCode::SUCCESS;
+} ;
 
 /// ===========================================================================
 /// ===========================================================================
 StatusCode GiGaStepActionEmpty::finalize   () 
-{ return GiGaStepActionBase::initialize() ; } ;
+{ 
+  ///
+  Print("finalization");
+  ///
+  return GiGaStepActionBase::initialize() ; 
+} ;
 
 /// ===========================================================================

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/07/27 14:29:02  ibelyaev
+/// bug fix
+///
 /// Revision 1.5  2001/07/23 13:12:29  ibelyaev
 /// the package restructurisation(II)
 ///
@@ -163,7 +166,7 @@ StatusCode GiGaTrackActionSimple::initialize ()
 	} 
     }
   ///
-  Print(" Action initialized successfully");
+  Print("initialized successfully");
   ///
   return StatusCode::SUCCESS ;
 } ;
@@ -172,7 +175,12 @@ StatusCode GiGaTrackActionSimple::initialize ()
 /// finalize 
 /// ===========================================================================
 StatusCode GiGaTrackActionSimple::finalize   () 
-{ return GiGaTrackActionBase::finalize() ; } ;
+{ 
+  ///
+  Print("finalization");
+  ///
+  return GiGaTrackActionBase::finalize() ; 
+} ;
 
 /// ===========================================================================
 /**  perform action 

@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/26 14:24:46  ibelyaev
+/// new base class for Run Action
+/// 
 /// ===========================================================================
 /// GiGa 
 #include "GiGa/GiGaRunActionBase.h"
@@ -45,7 +48,16 @@ const std::string& GiGaRunActionBase::name() const
  */
 /// ===========================================================================
 StatusCode GiGaRunActionBase::initialize  ()
-{ return GiGaBase::initialize(); }
+{ 
+  StatusCode sc = GiGaBase::initialize();   
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize base class!",sc); }
+  ///
+  Print("GiGaRunActionBase initialized successfully" ,
+        StatusCode::SUCCESS , MSG::DEBUG ) ;
+  ///
+  return StatusCode::SUCCESS;
+};
 
 /// ===========================================================================
 /** finalization method 
@@ -53,7 +65,13 @@ StatusCode GiGaRunActionBase::initialize  ()
  */
 /// ===========================================================================
 StatusCode GiGaRunActionBase::finalize  ()
-{ return GiGaBase::finalize(); }
+{
+  /// 
+  Print("GiGaRunActionBase finalization" ,
+        StatusCode::SUCCESS , MSG::DEBUG ) ;
+  ///
+  return GiGaBase::finalize(); 
+};
 
 /// ===========================================================================
 /** perform begin-of-run action

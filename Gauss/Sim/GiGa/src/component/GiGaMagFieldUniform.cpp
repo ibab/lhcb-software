@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/23 13:12:27  ibelyaev
+/// the package restructurisation(II)
+/// 
 /// ===========================================================================
 /// GaudiKernel
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -41,6 +44,37 @@ GiGaMagFieldUniform::GiGaMagFieldUniform( const std::string& nick ,
 GiGaMagFieldUniform::~GiGaMagFieldUniform(){};
 
 /// ===========================================================================
+/** initialization of the object
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaMagFieldUniform::initialize()
+{
+  /// initialize the base class 
+  StatusCode sc = GiGaMagFieldBase::initialize();
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize the base class",sc);}
+  ///
+  Print("initialized succesfully") ;
+  ///
+  return StatusCode::SUCCESS;  
+};
+
+/// ===========================================================================
+/** finalization of the object
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaMagFieldUniform::finalize  ()
+{
+  ///
+  Print("finalization") ;
+  ///
+  return GiGaMagFieldBase::finalize();
+};
+
+
+/// ===========================================================================
 /// ===========================================================================
 void GiGaMagFieldUniform::GetFieldValue ( const double Point[3], 
                                           double *B  ) const 
@@ -53,9 +87,4 @@ void GiGaMagFieldUniform::GetFieldValue ( const double Point[3],
 };
 
 /// ===========================================================================
-
-
-
-
-
 

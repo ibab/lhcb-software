@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/27 14:29:00  ibelyaev
+/// bug fix
+///
 /// Revision 1.1  2001/07/24 09:48:14  ibelyaev
 /// new component GiGaEventActionSequence
 /// 
@@ -133,7 +136,7 @@ StatusCode GiGaEventActionSequence::initialize()
       Print("Member '"+Type+"'/'"+Name+"' is added to the sequence");
     }
   ///  
-  Print("The Action initialized successfully");
+  Print("initialized successfully");
   ///
   return StatusCode::SUCCESS;
 };
@@ -145,6 +148,8 @@ StatusCode GiGaEventActionSequence::initialize()
 /// ===========================================================================
 StatusCode GiGaEventActionSequence::finalize() 
 {
+  ///
+  Print("finalization");
   /// finalize all members 
   std::for_each  ( m_actions.begin () , 
                    m_actions.end   () ,
@@ -160,7 +165,6 @@ StatusCode GiGaEventActionSequence::finalize()
 /// ===========================================================================
 void GiGaEventActionSequence::BeginOfEventAction ( const G4Event* event )
 {
-  if( 0 == event ) { return ; }
   /// stepping actions of all members  
   std::for_each ( m_actions.begin () , 
                   m_actions.end   () ,
@@ -176,7 +180,6 @@ void GiGaEventActionSequence::BeginOfEventAction ( const G4Event* event )
 /// ===========================================================================
 void GiGaEventActionSequence::EndOfEventAction ( const G4Event* event )
 {
-  if( 0 == event ) { return ; }
   /// stepping actions of all members  
   std::for_each ( m_actions.begin () , 
                   m_actions.end   () ,

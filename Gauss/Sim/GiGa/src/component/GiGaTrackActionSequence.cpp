@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2001/07/27 14:29:01  ibelyaev
+/// bug fix
+///
 /// Revision 1.1  2001/07/24 09:08:14  ibelyaev
 /// new component GiGaTrackActionSequence
 /// 
@@ -131,7 +134,7 @@ StatusCode GiGaTrackActionSequence::initialize ()
       Print("Member '"+Type+"'/'"+Name+"' is added to the sequence");
     }
   ///
-  Print("The Action initialized successfully");
+  Print("initialized successfully");
   ///
   return StatusCode::SUCCESS;
 };
@@ -143,6 +146,8 @@ StatusCode GiGaTrackActionSequence::initialize ()
 /// ===========================================================================
 StatusCode GiGaTrackActionSequence::finalize   () 
 {
+  ///
+  Print("finalization");
   /// finalize all actions 
   std::for_each( m_actions.begin () ,
                  m_actions.end   () ,

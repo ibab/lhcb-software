@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/23 13:12:28  ibelyaev
+/// the package restructurisation(II)
+///
 /// Revision 1.4  2001/07/15 20:54:34  ibelyaev
 /// package restructurisation
 /// 
@@ -51,7 +54,16 @@ GiGaStepActionDraw::~GiGaStepActionDraw(){};
  */
 /// ===========================================================================
 StatusCode GiGaStepActionDraw::initialize () 
-{ return GiGaStepActionBase::initialize() ; } ;
+{ 
+  /// initialize the base class 
+  StatusCode sc = GiGaStepActionBase::initialize() ; 
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize base class",sc);}
+  ///
+  Print("initialized succesfully");
+  ///
+  return StatusCode::SUCCESS;
+} ;
 
 /// ===========================================================================
 /** finalization 
@@ -59,7 +71,12 @@ StatusCode GiGaStepActionDraw::initialize ()
  */
 /// ===========================================================================
 StatusCode GiGaStepActionDraw::finalize   () 
-{ return GiGaStepActionBase::initialize() ; } ;
+{ 
+  ///
+  Print("finalisation");
+  ///
+  return GiGaStepActionBase::initialize() ; 
+} ;
 
 /// ===========================================================================
 /** the "main" method
