@@ -5,7 +5,9 @@ package manager : N.N
 ! 20010614 - Sebastien Ponce
  - New implementation of the whole geometry converters. Several
  functionnalities had been added by the way : recursivity on boolean solids
- and parametrised volumes, 2D and 3D parametrised volumes
+ and parametrised volumes, 2D and 3D parametrised volumes, composition of
+ transformations and a new way to define transformations to be applied to
+ solids.
  - this new version was tested with the current detector descriptions
  (mainly Rich1) and had the same result than the old one. However new
  features have not been tested at this time
