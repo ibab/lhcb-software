@@ -1,0 +1,7 @@
+package VeloDet
+package manager : Velo Group
+
+! 20010205 - Bruce Hay, Pere Mato
+
+- This is a new package for the Velo detector description.
+

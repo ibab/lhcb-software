@@ -3,6 +3,8 @@ version v1
 
 branches doc cmt src VeloDet
 
+include_dirs $(VELODETROOT)
+
 ignore_pattern package_stamps
 
 
