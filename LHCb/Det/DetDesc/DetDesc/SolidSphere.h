@@ -1,8 +1,11 @@
-// $Id: SolidSphere.h,v 1.8 2002-05-11 18:25:46 ibelyaev Exp $ 
+// $Id: SolidSphere.h,v 1.9 2002-05-21 17:02:57 ibelyaev Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/11 18:25:46  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 #ifndef     DETDESC_SOLIDSPHERE_H
 #define     DETDESC_SOLIDSPHERE_H 1 
@@ -140,7 +143,7 @@ public:
    *  @return the inner radius of sphere segment 
    */
   inline       double               insideRadius   () const 
-  { return sqrt( insideR2() )   ; };
+  { return m_sphere_insideR  ; };
   
   /**  return the squared inner radius of sphere segment  
    *  @return the squared inner radius of sphere segment 
@@ -152,7 +155,7 @@ public:
    *  @return the outer radius of sphere segment 
    */ 
   inline       double               outerRadius  () const 
-  { return sqrt( outerR2() ) ; };
+  { return m_sphere_outerR  ; };
   
   /**  return the squared outer radius of sphere segment  
    *  @return the squared outer radius of sphere segment 
@@ -284,6 +287,9 @@ private:
   double                m_sphere_deltaThetaAngle ;
   /// cover model 
   int                   m_sphere_coverModel      ;
+  //
+  double                m_sphere_outerR          ;  
+  double                m_sphere_insideR         ; 
   // 
   bool                  m_noPhiGap               ;
   bool                  m_noThetaGap             ;

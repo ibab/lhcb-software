@@ -1,8 +1,11 @@
-// $Id: SolidSphere.cpp,v 1.8 2002-05-11 18:25:48 ibelyaev Exp $ 
+// $Id: SolidSphere.cpp,v 1.9 2002-05-21 17:02:58 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/11 18:25:48  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 // CLHEP 
 #include "CLHEP/Units/PhysicalConstants.h" 
@@ -56,6 +59,8 @@ SolidSphere::SolidSphere
   , m_sphere_startThetaAngle ( StartThetaAngle ) 
   , m_sphere_deltaThetaAngle ( DeltaThetaAngle )
   , m_sphere_coverModel      (   CoverModel    )  
+  , m_sphere_outerR          ( OuterRadius     )
+  , m_sphere_insideR         ( InsideRadius    )
 {
   if( 0 >= OuterRadius ) 
     { throw SolidException("SolidSphere::OuterRadius  is not positive!"); } 
@@ -461,9 +466,10 @@ const ISolid* SolidSphere::cover () const
  */
 // ============================================================================
 unsigned int 
-SolidSphere::intersectionTicks ( const HepPoint3D&  point  ,       
-                                 const HepVector3D& vect   ,      
-                                 ISolid::Ticks&     ticks  ) const 
+SolidSphere::intersectionTicks 
+( const HepPoint3D&  point  ,       
+  const HepVector3D& vect   ,      
+  ISolid::Ticks&     ticks  ) const 
 {
   ticks.clear();
   /// line with null direction vector in not able to intersect something
@@ -479,7 +485,7 @@ SolidSphere::intersectionTicks ( const HepPoint3D&  point  ,
   if( insideRadius() > 0 ) 
     { SolidTicks::LineIntersectsTheSphere( point                       , 
                                            vect                        , 
-                                           outerRadius ()              , 
+                                           insideRadius ()             , 
                                            std::back_inserter( ticks ) ) ; }
   // check for phi angle 
   if( 0   * degree != startPhiAngle() || 

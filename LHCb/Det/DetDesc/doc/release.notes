@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.89 2002-05-15 14:25:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.90 2002-05-21 17:02:58 ibelyaev Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
+
+! 2002-05-21 - Ivan Belyaev
+ - DetDesc/SolidSphrere.h
+ - src/Lib/SolidSphere.cpp 
+   fix the bug in calculation of intersection ticks. 
+   Add the tiny optimization into "intersectionTicks" method  
 
 !=============================================================================
 !20020515 - Vanya Belyaev
