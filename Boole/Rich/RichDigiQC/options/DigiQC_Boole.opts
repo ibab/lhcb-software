@@ -3,9 +3,12 @@
 MoniRICHSeq.Members += { "RichDigitQC/RiDigitQC" };
 //RiDigitQC.HistoDir = "somewhereElse";
 
-// Low level data object debugger
 /*
+// DAQ decoding
 #include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
+//MoniRICHSeq.Members += { "RawBufferToRichDigitsAlg/RichDecodeRawEvent" };
+
+// Low level data object debugger
 MoniRICHSeq.Members += { "RichDigiDataObjVerifier/RichDigiEventCheck" };
 RichDigiEventCheck.CheckRichDigits           = true;
 RichDigiEventCheck.CheckMCRichDigits         = true;

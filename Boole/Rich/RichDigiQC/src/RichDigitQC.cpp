@@ -5,8 +5,10 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.5 2005-01-07 12:38:09 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.6 2005-01-13 13:04:05 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2005/01/07 12:38:09  jonrob
+ *  Updates for new RichDAQ package
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -28,13 +30,11 @@ RichDigitQC::RichDigitQC( const std::string& name,
   : RichMoniAlgBase ( name, pSvcLocator ),
     m_level1        ( 0                 ),
     m_hpdID         ( 0                 ),
-    m_smartIDs      ( 0                 ),
-    m_rawEvent      ( 0                 )
+    m_smartIDs      ( 0                 )
 {
 
   // Declare job options
-  declareProperty( "InputDigits",      m_digitTDS = MCRichDigitLocation::Default );
-  declareProperty( "RawEventLocation", m_rawEventLoc = RawEventLocation::Default );
+  declareProperty( "InputDigits", m_digitTDS = MCRichDigitLocation::Default );
 
 }
 
@@ -63,9 +63,6 @@ StatusCode RichDigitQC::initialize()
 StatusCode RichDigitQC::execute()
 {
   debug() << "Execute" << endreq;
-
-  // trigger acquisition of a new RawEvent
-  m_rawEvent = 0;
 
   // Locate MCRichDigits
   MCRichDigits * richDigits = get<MCRichDigits>( m_digitTDS );
@@ -129,99 +126,85 @@ StatusCode RichDigitQC::execute()
 StatusCode RichDigitQC::finalize()
 {
 
-  try {
+  // Statistical calculator
+  RichStatDivFunctor occ;
 
-    // Statistical calculator
-    RichStatDivFunctor occ;
+  info() << "================================================================================" << endreq
+         << "                  RICH Digitisation and DAQ Simuation Summary" << endreq
+         << "--------------------------------------------------------------------------------" << endreq;
 
-    info() << "================================================================================" << endreq
-           << "                  RICH Digitisation and DAQ Simuation Summary" << endreq
-           << "--------------------------------------------------------------------------------" << endreq;
+  // Form final numbers
+  L1Counter totL1R1, totL1R2;
+  unsigned int totDet[Rich::NRiches];
+  debug() << "   RICH1 : Individual HPD info :-" << endreq;
+  {for ( HPDCounter::const_iterator iHPD = m_nHPD[Rich::Rich1].begin();
+         iHPD != m_nHPD[Rich::Rich1].end(); ++iHPD )
+  {
+    const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( (*iHPD).first );
+    const RichDAQ::Level1ID l1ID     = m_level1->levelL1ID( (*iHPD).first );
+    const HepPoint3D hpdGlo = m_smartIDs->hpdPosition( (*iHPD).first );
+    const HepPoint3D hpdLoc = m_smartIDs->globalToPDPanel( hpdGlo );
+    totL1R1[l1ID]       += (*iHPD).second;
+    totDet[Rich::Rich1] += (*iHPD).second;
+    // comment out "D plots until released GaudiHistoAlg supports them
+    //plot( hpdLoc.x(), hpdLoc.y(), "RICH1 : HPD hardware ID layout", -800, 800, -600, 600, 100, 100, hID );
+    //plot( hpdLoc.x(), hpdLoc.y(), "RICH1 : Level1 ID layout", -800, 800, -600, 600, 100, 100, l1ID );
+    //plot( hpdLoc.x(), hpdLoc.y(), "RICH1 : SmartID Row layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.PDRow() );
+    //plot( hpdLoc.x(), hpdLoc.y(), "RICH1 : SmartID Col layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.PDCol() );
+    debug() << "      HPD " << (*iHPD).first << " hardID "
+            << format("%3i",hID) << " : L1 board" << format("%3i",l1ID) << endreq
+            << "        Global position : " << hpdGlo << endreq
+            << "        Local position  : " << hpdLoc << endreq
+            << "        Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
+  }}
 
-    // Form final numbers
-    L1Counter totL1R1, totL1R2;
-    unsigned int totDet[Rich::NRiches];
-    debug() << "   RICH1 : Individual average HPD occupancies :-" << endreq;
-    {for ( HPDCounter::const_iterator iHPD = m_nHPD[Rich::Rich1].begin();
-           iHPD != m_nHPD[Rich::Rich1].end(); ++iHPD )
-    {
-      const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( (*iHPD).first );
-      const RichDAQ::Level1ID l1ID     = m_level1->levelL1ID( (*iHPD).first );
-      debug() << "      HPD " << (*iHPD).first << " hardID "
-              << format("%3i",hID) << " : L1 board" << format("%3i",l1ID)
-              << " : " << occ((*iHPD).second,m_evtC) << endreq;
-      totL1R1[l1ID]       += (*iHPD).second;
-      totDet[Rich::Rich1] += (*iHPD).second;
-    }}
+  info() << "   RICH1 : Av. overall hit occupancy       = " << occ(totDet[Rich::Rich1],m_evtC) << endreq
+         << "   RICH1 : Av. HPD hit occupancy           = " << occ(totDet[Rich::Rich1],m_evtC*m_nHPD[Rich::Rich1].size())
+         << endreq;
 
-    info() << "   RICH1 : Av. overall hit occupancy       = " << occ(totDet[Rich::Rich1],m_evtC) << endreq
-           << "   RICH1 : Av. HPD hit occupancy           = " << occ(totDet[Rich::Rich1],m_evtC*m_nHPD[Rich::Rich1].size())
-           << endreq;
+  {int iC = 0;
+  for ( L1Counter::const_iterator iL1 = totL1R1.begin(); iL1 != totL1R1.end(); ++iL1, ++iC )
+  {
+    debug() << "   RICH1 : Av. L1 board" << format("%3i",(*iL1).first)
+            << " hit occupancy   = " << occ((*iL1).second,m_evtC) << endreq;
+  }}
 
-    {int iC = 0;
-    for ( L1Counter::const_iterator iL1 = totL1R1.begin(); iL1 != totL1R1.end(); ++iL1, ++iC )
-    {
-      debug() << "   RICH1 : Av. L1 board" << format("%3i",(*iL1).first)
-              << " hit occupancy   = " << occ((*iL1).second,m_evtC) << endreq;
-    }}
+  debug() << "   RICH2 : Individual HPD info :-" << endreq;
+  {for ( HPDCounter::const_iterator iHPD = m_nHPD[Rich::Rich2].begin();
+         iHPD != m_nHPD[Rich::Rich2].end(); ++iHPD )
+  {
+    const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( (*iHPD).first );
+    const RichDAQ::Level1ID l1ID     = m_level1->levelL1ID( (*iHPD).first );
+    const HepPoint3D hpdGlo = m_smartIDs->hpdPosition( (*iHPD).first );
+    const HepPoint3D hpdLoc = m_smartIDs->globalToPDPanel( hpdGlo );
+    totL1R2[l1ID]       += (*iHPD).second;
+    totDet[Rich::Rich2] += (*iHPD).second;
+    // comment out "D plots until released GaudiHistoAlg supports them
+    //plot( hpdLoc.x(), hpdLoc.y(), "RICH2 : HPD hardware ID layout", -800, 800, -800, 800, 100, 100, hID );
+    //plot( hpdLoc.x(), hpdLoc.y(), "RICH2 : Level1 ID layout", -800, 800, -800, 800, 100, 100, l1ID );
+    //plot( hpdLoc.x(), hpdLoc.y(), "RICH2 : SmartID Row layout", -800, 800, -800, 800, 100, 100, (*iHPD).first.PDRow() );
+    //plot( hpdLoc.x(), hpdLoc.y(), "RICH2 : SmartID Col layout", -800, 800, -800, 800, 100, 100, (*iHPD).first.PDCol() );
+    debug() << "      HPD " << (*iHPD).first << " hardID "
+            << format("%3i",hID) << " : L1 board" << format("%3i",l1ID) << endreq
+            << "        Global position : " << hpdGlo << endreq
+            << "        Local position  : " << hpdLoc << endreq
+            << "        Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
+  }}
 
-    debug() << "   RICH2 : Individual average HPD occupancies :-" << endreq;
-    {for ( HPDCounter::const_iterator iHPD = m_nHPD[Rich::Rich2].begin();
-           iHPD != m_nHPD[Rich::Rich2].end(); ++iHPD )
-    {
-      const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( (*iHPD).first );
-      const RichDAQ::Level1ID l1ID     = m_level1->levelL1ID( (*iHPD).first );
-      debug() << "      HPD " << (*iHPD).first << " hardID"
-              << format("%4i",hID) << " : L1 board" << format("%3i",l1ID)
-              << " : " << occ((*iHPD).second,m_evtC) << endreq;
-      totL1R2[l1ID]       += (*iHPD).second;
-      totDet[Rich::Rich2] += (*iHPD).second;
-    }}
+  info() << "   RICH2 : Av. overall hit occupancy       = " << occ(totDet[Rich::Rich2],m_evtC) << endreq
+         << "   RICH2 : Av. HPD hit occupancy           = " << occ(totDet[Rich::Rich2],m_evtC*m_nHPD[Rich::Rich2].size())
+         << endreq;
 
-    info() << "   RICH2 : Av. overall hit occupancy       = " << occ(totDet[Rich::Rich2],m_evtC) << endreq
-           << "   RICH2 : Av. HPD hit occupancy           = " << occ(totDet[Rich::Rich2],m_evtC*m_nHPD[Rich::Rich2].size())
-           << endreq;
+  {int iC = 0;
+  for ( L1Counter::const_iterator iL1 = totL1R2.begin(); iL1 != totL1R2.end(); ++iL1, ++iC )
+  {
+    debug() << "   RICH2 : Av. L1 board" << format("%3i",(*iL1).first)
+            << " hit occupancy   = " << occ((*iL1).second,m_evtC) << endreq;
+  }}
 
-    {int iC = 0;
-    for ( L1Counter::const_iterator iL1 = totL1R2.begin(); iL1 != totL1R2.end(); ++iL1, ++iC )
-    {
-      debug() << "   RICH2 : Av. L1 board" << format("%3i",(*iL1).first)
-              << " hit occupancy   = " << occ((*iL1).second,m_evtC) << endreq;
-    }}
-
-    info() << "================================================================================" << endreq;
-
-  }
-  catch ( const GaudiException & excpt ) { }
+  info() << "================================================================================" << endreq;
 
   // finalize base class
   return RichMoniAlgBase::finalize();
 }
 
-RawEvent * RichDigitQC::rawEvent() const
-{
-  if ( !m_rawEvent ) {
-
-    // Try and load from TES. If it exists return, overwise try to create one
-    SmartDataPtr<RawEvent> rawEventTES( evtSvc(), m_rawEventLoc );
-    if ( rawEventTES ) { m_rawEvent = rawEventTES; }
-    else {
-      debug() << "Creating RawEvent from RawBuffer" << endreq;
-
-      // Retrieve the RawBuffer
-      SmartDataPtr<RawBuffer> rawBuffer( evtSvc(), RawBufferLocation::Default );
-      if ( !rawBuffer ) { m_rawEvent = 0; Exception("Unable to locate RawBuffer"); }
-
-      // make new RawEvent and put into TES
-      m_rawEvent = new RawEvent( rawBuffer );
-      if ( !m_rawEvent ) {
-        m_rawEvent = 0;
-        Exception("Unable to allocate memory to RawEvent");
-      }
-      put( m_rawEvent, RawEventLocation::Default );
-    }
-
-  }
-
-  return m_rawEvent;
-}

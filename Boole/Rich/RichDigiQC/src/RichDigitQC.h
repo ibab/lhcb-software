@@ -5,8 +5,10 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.5 2005-01-07 12:38:09 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.6 2005-01-13 13:04:05 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2005/01/07 12:38:09  jonrob
+ *  Updates for new RichDAQ package
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -28,7 +30,6 @@
 
 // Event model
 #include "Event/MCRichDigit.h"
-#include "Event/RawEvent.h"
 
 // Kernel
 #include "Kernel/RichSmartID.h"
@@ -42,6 +43,9 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
+// RichKernel
+#include "RichKernel/RichMap.h"
+
 // RICH Interfaces
 #include "RichKernel/IRichHPDToLevel1Tool.h"
 #include "RichKernel/IRichHPDIDTool.h"
@@ -49,7 +53,7 @@
 
 /** @class RichDigitQC RichDigitQC.h RichDigiQC/RichDigitQC.h
  *
- *  Monitor for RichDigits
+ *  Monitor for Rich digitisation and DAQ simulation
  *
  *  @author Chris Jones   (Christopher.Rob.Jones@cern.ch)
  *  @date   2003-09-08
@@ -68,11 +72,6 @@ public:
   virtual StatusCode execute   ();    // Algorithm execution
   virtual StatusCode finalize  ();    // Algorithm finalization
 
-private: // methods
-
-  /// Retrieves the raw event. If not available tries to build one from RawBuffer
-  RawEvent * rawEvent() const;
-
 private: // data
 
   /// Pointer to RICH Level1 tool
@@ -84,21 +83,17 @@ private: // data
   // Pointer to RichSmartID tool
   IRichSmartIDTool * m_smartIDs;
 
-  /// Pointer to Raw Event
-  mutable RawEvent * m_rawEvent;
-
   // job options
-  std::string m_digitTDS;        ///< Location of MCRichDigits in TES
-  std::string m_rawEventLoc;     ///< Input location for RawEvent in TES
+  std::string m_digitTDS;  ///< Location of MCRichDigits in TES
 
   /// Number of events processed
   unsigned int m_evtC; 
 
   /// L1 occupancy counter
-  typedef std::map< const RichDAQ::Level1ID, unsigned int > L1Counter;
+  typedef RichMap< const RichDAQ::Level1ID, unsigned int > L1Counter;
 
   /// Counter for hits in each HPD
-  typedef std::map< const RichSmartID, unsigned int > HPDCounter;
+  typedef RichMap< const RichSmartID, unsigned int > HPDCounter;
   HPDCounter m_nHPD[Rich::NRiches]; ///< Tally for HPD occupancy, in each RICH
 
 };
