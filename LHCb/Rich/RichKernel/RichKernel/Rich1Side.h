@@ -1,4 +1,4 @@
-// $Id: Rich1Side.h,v 1.5 2003-04-15 17:50:48 jonrob Exp $
+// $Id: Rich1Side.h,v 1.6 2003-04-16 10:48:37 jonrob Exp $
 #ifndef RICHKERNEL_RICH1SIDE_H 
 #define RICHKERNEL_RICH1SIDE_H 1
 
@@ -27,7 +27,13 @@ namespace Rich {
   };
 
   /// Text conversion for Rich1Side enumeration
-  std::string text( const Rich::Rich1Side& side ) ;
+  inline std::string text( const Rich::Rich1Side& side ) {
+    switch( side ) {
+    case Rich::top:     return "top";
+    case Rich::bottom:  return "bottom";
+    default:            return "?"; // should never happen
+    }
+  }
 
   /// Std Vector typedef
   typedef std::vector<Rich1Side> Rich1SideVector;
@@ -46,15 +52,6 @@ inline MsgStream& operator << ( MsgStream& s,
                                 const Rich::Rich1Side& side ) {
   s << Rich::text( side );
   return s;
-}
-
-// Text conversion for Rich1Side enumeration
-inline std::string Rich::text( const Rich::Rich1Side& side ) {
-  switch( side ) {
-  case Rich::top:     return "top";
-  case Rich::bottom:  return "bottom";
-  default:            return "?"; // should never happen
-  }
 }
 
 #endif // RICHKERNEL_RICH1SIDE_H
