@@ -434,14 +434,15 @@ class genClasses(genSrcUtils.genSrcUtils):
       s += 'typedef KeyedContainer<%s, Containers::HashMap> %s;\n\n' \
            % (classname, self.genClassnamePlurial(classname))
     if self.gContainedObjectTypedef:
-      self.addInclude('ContainedObject')
+      self.addInclude('ObjectVector')
       s += '// Definition of vector container type for %s\n' % classname
-      s += 'template <class TYPE> class ObjectVector;'
+      s += 'template <class TYPE> class ObjectVector;\n'
       s += 'typedef ObjectVector<%s> %sVector;\n\n' % (classname, classname)
+      self.addInclude('ObjectList')
       s += '// Definition of list container type for %s\n' % classname
       s += 'template <class TYPE> class ObjectList;\n'
-      s += 'typedef ObjectList<%s> %sList' % (classname, classname)
-    if godCass['attrs']['stdVectorTypeDef'] == 'TRUE' and not self.gContainedObjectTypedef:
+      s += 'typedef ObjectList<%s> %sList;' % (classname, classname)
+    if godClass['attrs']['stdVectorTypeDef'] == 'TRUE' and not self.gContainedObjectTypedef:
       self.addInclude('std::vector')
       s += '// typedef for std::vector of %s\n' % className
       s += 'typedef std::vector<%s*> %sVector;\n\n' % ( className, className )
