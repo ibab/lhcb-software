@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.17 2002-10-10 18:56:36 gcorti Exp $
+! $Id: release.notes,v 1.18 2002-10-11 10:47:13 gcorti Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
+
+! 2002-10-11 - Gloria Corti
+ - Uncomment options for a generic ChargedPP2MC associator 
 
 ! 2002-10-10 - Gloria Corti
  - Changes to compile and run on Windows

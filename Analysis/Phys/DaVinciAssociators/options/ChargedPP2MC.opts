@@ -2,9 +2,9 @@
 
 /* Definition for the Proto2MC Associator (this is the default)
  */
-//Toolsvc.ChargedPP2MCAsct.Location = "Rec/Relations/ChargedPP2MC";
-//Toolsvc.ChargedPP2MCAsct.AlgorithmType = "ChargedPP2MC";
-//Toolsvc.ChargedPP2MCAsct.AlgorithmName = "ChargedPP2MC";
+Toolsvc.ChargedPP2MCAsct.Location = "Rec/Relations/ChargedPP2MC";
+Toolsvc.ChargedPP2MCAsct.AlgorithmType = "ChargedPP2MC";
+Toolsvc.ChargedPP2MCAsct.AlgorithmName = "ChargedPP2MC";
 
 // ... definition for the algorithm Proto2MC
 //ChargedPP2MC.InputData    = { "Rec/ProtoP/Charged" };
