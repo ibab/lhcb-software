@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/07/27 14:29:02  ibelyaev
+/// bug fix
+///
 /// Revision 1.6  2001/07/26 16:09:23  ibelyaev
 /// GiGaRunActions budiness
 ///
@@ -74,7 +77,7 @@ void GiGa_load()
   DLL_DECL_PLFACTORY    (    GiGaPhysListEm          );
   DLL_DECL_PLFACTORY    (    GiGaPhysListFull        );
   /// Sensitive Detector 
-  /// DLL_DECL_SDFACTORY    (    GiGaSensDetPrint        );
+  DLL_DECL_SDFACTORY    (    GiGaSensDetPrint        );
   /// Magnetic Field  
   DLL_DECL_MFFACTORY    (    GiGaMagFieldGlobal      );
   DLL_DECL_MFFACTORY    (    GiGaMagFieldUniform     );
