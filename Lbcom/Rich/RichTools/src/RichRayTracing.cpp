@@ -5,15 +5,10 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.12 2004-10-27 14:41:03 jonrob Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.11  2004/10/21 12:59:35  papanest
- * new method traceBackFromDetector
- *
- * Revision 1.10  2004/07/26 18:03:05  jonrob
- * Various improvements to the doxygen comments
+ * $Id: RichRayTracing.cpp,v 1.13 2005-02-02 10:11:51 jonrob Exp $
  *
  * @author Antonis Papanestis
+ * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2003-11-14
  */
 //-----------------------------------------------------------------------------
@@ -50,7 +45,6 @@ RichRayTracing::RichRayTracing( const std::string& type,
 
   declareProperty( "Monitor", m_moni = false );
   declareProperty( "HistoPath", m_histPth = "RICH/TRACE_TEST/" );
-
 }
 
 //=============================================================================

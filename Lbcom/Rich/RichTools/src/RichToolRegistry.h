@@ -1,20 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichToolRegistry.h
  *
  *  Header file for tool : RichToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.6 2005-01-13 13:19:51 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/10/13 09:54:04  jonrob
- *  various minor changes
- *
- *  Revision 1.4  2004/07/26 18:03:05  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: RichToolRegistry.h,v 1.7 2005-02-02 10:12:10 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHTOOLS_RICHTOOLREGISTRY_H
 #define RICHTOOLS_RICHTOOLREGISTRY_H 1
@@ -34,6 +30,7 @@
 #include "RichKernel/RichHashMap.h"
 #include "RichKernel/StringHashFuncs.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichToolRegistry RichToolRegistry.h
  *
  *  Tool providing a mapping between tool "nicknames" and types
@@ -41,6 +38,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichToolRegistry : public GaudiTool,
                          virtual public IRichToolRegistry {

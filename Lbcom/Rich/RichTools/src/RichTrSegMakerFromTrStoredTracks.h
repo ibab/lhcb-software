@@ -1,27 +1,17 @@
 
+//---------------------------------------------------------------------------------
 /** @file RichTrSegMakerFromTrStoredTracks.h
  *
  *  Header file for tool : RichTrSegMakerFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.7 2005-01-17 13:04:14 cattanem Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.6  2004/12/13 17:28:31  jonrob
- *  fix doxygen typos
- *
- *  Revision 1.5  2004/10/13 09:54:04  jonrob
- *  various minor changes
- *
- *  Revision 1.4  2004/07/27 17:01:02  jonesc
- *  Add option to turn off individual radiators in RichTrackSegment maker tool
- *
- *  Revision 1.3  2004/07/26 18:03:05  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.8 2005-02-02 10:12:48 jonrob Exp $
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   14/01/2002
  */
+//---------------------------------------------------------------------------------
 
 #ifndef RICHTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H
 #define RICHTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H 1
@@ -63,6 +53,7 @@
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Units/PhysicalConstants.h"
 
+//---------------------------------------------------------------------------------
 /** @class RichTrSegMakerFromTrStoredTracks RichTrSegMakerFromTrStoredTracks.h
  *
  *  Tool to create RichTrackSegments from TrStoredTracks. Use the tracking extrapolation tools
@@ -73,6 +64,7 @@
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   14/01/2002
  */
+//---------------------------------------------------------------------------------
 
 class RichTrSegMakerFromTrStoredTracks : public RichToolBase,
                                          virtual public IRichTrSegMaker {

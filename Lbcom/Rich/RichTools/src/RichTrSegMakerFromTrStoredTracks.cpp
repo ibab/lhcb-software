@@ -1,28 +1,16 @@
 
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 /** @file RichTrSegMakerFromTrStoredTracks.cpp
  *
  * Implementation file for class : RichTrSegMakerFromTrStoredTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.8 2004-11-16 18:05:59 jonrob Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.7  2004/10/27 14:41:03  jonrob
- * Various updates
- *
- * Revision 1.6  2004/10/13 09:54:04  jonrob
- * various minor changes
- *
- * Revision 1.5  2004/07/27 17:01:02  jonesc
- * Add option to turn off individual radiators in RichTrackSegment maker tool
- *
- * Revision 1.4  2004/07/26 18:03:05  jonrob
- * Various improvements to the doxygen comments
+ * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.9 2005-02-02 10:12:48 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
  */
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 // local
 #include "RichTrSegMakerFromTrStoredTracks.h"
@@ -78,6 +66,11 @@ StatusCode RichTrSegMakerFromTrStoredTracks::initialize()
 
   // Get the ray tracing tool
   acquireTool( "RichRayTracing", m_rayTracing );
+
+  // Check which radiators to use
+  if ( !m_usedRads[Rich::Aerogel] ) Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS);
+  if ( !m_usedRads[Rich::C4F10]   ) Warning("Track segments for C4F10 are disabled",StatusCode::SUCCESS);
+  if ( !m_usedRads[Rich::CF4]     ) Warning("Track segments for CF4 are disabled",StatusCode::SUCCESS);
   
   // get Detector elements for RICH1 and RICH2
   m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
@@ -88,12 +81,10 @@ StatusCode RichTrSegMakerFromTrStoredTracks::initialize()
     nominalCentreOfCurvature(Rich::top);
   m_nominalCoC[Rich::Rich1][Rich::bottom] = m_rich[Rich::Rich1]->
     nominalCentreOfCurvature(Rich::bottom);
-
   m_nominalCoC[Rich::Rich2][Rich::left] = m_rich[Rich::Rich2]->
     nominalCentreOfCurvature(Rich::left);
   m_nominalCoC[Rich::Rich2][Rich::right] = m_rich[Rich::Rich2]->
     nominalCentreOfCurvature(Rich::right);
-
   m_nomSphMirrorRadius[Rich::Rich1] = m_rich[Rich::Rich1]->sphMirrorRadius();
   m_nomSphMirrorRadius[Rich::Rich2] = m_rich[Rich::Rich2]->sphMirrorRadius();
 
@@ -124,7 +115,7 @@ StatusCode RichTrSegMakerFromTrStoredTracks::initialize()
   m_minStateDiff[Rich::C4F10]   = 25*mm;
   m_minStateDiff[Rich::CF4]     = 50*mm;
 
-  return StatusCode::SUCCESS;
+  return sc;
 };
 
 //=============================================================================
@@ -146,11 +137,13 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
 
   // Try to cast input data to required type for this implementation
   const TrStoredTrack * track = dynamic_cast<const TrStoredTrack *>(obj);
-  if ( !track ) {
+  if ( !track ) 
+  {
     Warning("::constructSegments : Input data object is not of type TrStoredTrack");
     return 0;
   }
-  if ( msgLevel(MSG::VERBOSE) ) {
+  if ( msgLevel(MSG::VERBOSE) ) 
+  {
     verbose() << "Analysing TrStoredTrack " << track->key() << endreq;
   }
 
@@ -465,21 +458,33 @@ StatusCode RichTrSegMakerFromTrStoredTracks::moveState( TrStateP * state,
   if ( fabs(state->z() - z) > 1*mm ) {
 
     // debug printout
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << "    --> Extrapolating state from " << HepPoint3D(state->x(),state->y(),state->z()) << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) 
+    {
+      verbose() << "    --> Extrapolating state from " 
+                << HepPoint3D(state->x(),state->y(),state->z()) << endreq;
+    }
 
     // try first with the primary extrapolator
-    if ( !m_trExt1->propagate(state,z) ) {
+    if ( !m_trExt1->propagate(state,z) ) 
+    {
       // if that fails, try the backup one
-      if ( m_trExt2->propagate(state,z) ) {
+      if ( m_trExt2->propagate(state,z) ) 
+      {
         Warning(m_Ext1+" failed -> reverted to "+m_Ext2,StatusCode::SUCCESS);
-      } else {
+      } else 
+      {
+        // Both failed ...
         Warning("Failed to transport state using "+m_Ext1+" or "+m_Ext2);
         return StatusCode::FAILURE;
       }
     }
 
     // debug printout
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << "                            to   " << HepPoint3D(state->x(),state->y(),state->z()) << endreq;
+    if ( msgLevel(MSG::VERBOSE) ) 
+    {
+      verbose() << "                            to   " 
+                << HepPoint3D(state->x(),state->y(),state->z()) << endreq;
+    }
 
   }
 
