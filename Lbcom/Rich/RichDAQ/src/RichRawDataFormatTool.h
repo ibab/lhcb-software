@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.5 2005-03-06 14:08:33 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.6 2005-04-06 20:23:32 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -107,7 +107,7 @@ public: // methods (and doxygen comments) inherited from interface
   // Creates a bank data from RichSmartIDs, sorted by Level 1 ID
   void createDataBank( const RichDAQ::L1Map & L1Data,
                        const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const;
-  
+
   // Decode a RawBank into RichSmartID identifiers
   void decodeToSmartIDs( const RawBank & bank,
                          RichSmartID::Collection & smartIDs ) const;
@@ -124,8 +124,11 @@ private: // definitions
 
 private: // methods
 
-  /// Initialise for a new event
-  void InitNewEvent();
+  /// Initialise for each event
+  void InitEvent();
+
+  /// Finalise for each event
+  void FinishEvent();
 
   /// Retrieves the raw event. If not available tries to build one from RawBuffer
   RawEvent * rawEvent() const;
@@ -167,12 +170,20 @@ private: // data
   /// Number of events processed
   mutable unsigned int m_evtCount;
 
+  /// Flag to indicate if the tool has been used in a given event
+  mutable bool m_hasBeenCalled;
+
 };
 
-inline void RichRawDataFormatTool::InitNewEvent()
+inline void RichRawDataFormatTool::InitEvent()
 {
-  ++m_evtCount;
   m_rawEvent = 0;
+  m_hasBeenCalled = false;
+}
+
+inline void RichRawDataFormatTool::FinishEvent()
+{
+  if ( m_hasBeenCalled ) ++m_evtCount;
 }
 
 #endif // RICHDAQ_RICHRAWDATAFORMATTOOL_H

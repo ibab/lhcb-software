@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2005-04-06 - Chris Jones
+ - Fix stats for cases when some events are not processed (such as in HLT)
+
 !========================= RichDAQ v2r1p1 2005-03-07 ========================
 ! 2005-03-07 - Marco Cattaneo
  - Fix requirements to use DAQEvent v*

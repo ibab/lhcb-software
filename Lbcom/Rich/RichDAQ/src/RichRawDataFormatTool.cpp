@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.10 2005-03-08 10:34:59 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.11 2005-04-06 20:23:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -25,11 +25,12 @@ const        IToolFactory& RichRawDataFormatToolFactory = s_factory ;
 RichRawDataFormatTool::RichRawDataFormatTool( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
-  : RichToolBase ( type, name , parent ),
-    m_hpdID      ( 0                   ),
-    m_l1Tool     ( 0                   ),
-    m_rawEvent   ( 0                   ),
-    m_evtCount   ( 0                   )
+  : RichToolBase    ( type, name , parent ),
+    m_hpdID         ( 0                   ),
+    m_l1Tool        ( 0                   ),
+    m_rawEvent      ( 0                   ),
+    m_evtCount      ( 0                   ),
+    m_hasBeenCalled ( false               )
 {
   // interface
   declareInterface<IRichRawDataFormatTool>(this);
@@ -58,7 +59,7 @@ StatusCode RichRawDataFormatTool::initialize()
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
-  if ( msgLevel(MSG::DEBUG) ) incSvc()->addListener( this, IncidentType::EndEvent );
+  incSvc()->addListener( this, IncidentType::EndEvent );
 
   return sc;
 }
@@ -67,11 +68,14 @@ StatusCode RichRawDataFormatTool::initialize()
 void RichRawDataFormatTool::handle ( const Incident& incident )
 {
   // Update prior to start of new event.
-  if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
-  // Debug printout at the end of each event
-  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
+  if ( IncidentType::BeginEvent == incident.type() )
   {
-    // Add event by event printout
+    InitEvent();
+  }
+  // End of event
+  else if ( IncidentType::EndEvent == incident.type() )
+  {
+    FinishEvent();
   }
 }
 
@@ -79,7 +83,8 @@ StatusCode RichRawDataFormatTool::finalize()
 {
 
   // Print out L1 information
-  if ( m_summary ) {
+  if ( m_summary ) 
+  {
     printL1Stats( m_l1decodeSummary, "RICH Level 1 : Decoding Summary" );
     printL1Stats( m_l1encodeSummary, "RICH Level 1 : Encoding Summary" );
   }
@@ -101,7 +106,7 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
 
     // Printout
     info() << "=========================================================================================================" << endreq
-           << "                                      " << title << endreq;
+           << "                              " << title << " : " << m_evtCount << " events" << endreq;
 
     debug() << "---------------------------------------------------------------------------------------------------------" << endreq;
     std::vector< unsigned long > totWordSize(Rich::NRiches,0), totBanks(Rich::NRiches,0), totHits(Rich::NRiches,0);
@@ -146,13 +151,13 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
   RichHPDDataBank * dataBank = 0;
 
   // Check bank is not empty
-  if ( smartIDs.empty() ) 
+  if ( smartIDs.empty() )
   {
     Warning( "RichSmartID vector is empty -> No data bank" );
     return dataBank;
   }
 
-  if ( RichDAQ::LHCb2 == version ) 
+  if ( RichDAQ::LHCb2 == version )
   {
     // Third iteration of bank format
 
@@ -172,7 +177,7 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
       dataBank = (RichHPDDataBank*)zsData;
     }
 
-  } else if ( RichDAQ::LHCb1 == version ) 
+  } else if ( RichDAQ::LHCb1 == version )
   {
     // Second iteration of bank format
 
@@ -186,7 +191,7 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( hID, smartIDs );
     }
 
-  } else if ( RichDAQ::LHCb0 == version ) 
+  } else if ( RichDAQ::LHCb0 == version )
   {
     // Version 0 of data banks (DC04 compatibility)
 
@@ -200,14 +205,14 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV0::RichNonZeroSuppData( pdID, smartIDs );
     }
 
-  } else 
+  } else
   {
     Warning ( "Unknown RICH Raw Buffer version " +
               boost::lexical_cast<std::string>(version) + " -> No data bank" );
     return NULL;
   }
 
-  if ( msgLevel(MSG::VERBOSE) ) 
+  if ( msgLevel(MSG::VERBOSE) )
   {
     // Print out SmartIDs to encode
     verbose() << " Creating data bank from " << smartIDs.size() << " RichSmartIDs :-" << endreq;
@@ -252,7 +257,7 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( dataStart );
     }
 
-  } else if ( RichDAQ::LHCb1 == version ) 
+  } else if ( RichDAQ::LHCb1 == version )
   {
     // Second iteration of bank format
 
@@ -266,7 +271,7 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( dataStart );
     }
 
-  } else if ( RichDAQ::LHCb0 == version ) 
+  } else if ( RichDAQ::LHCb0 == version )
   {
     // Version 0 of data banks (DC04 compatibility)
 
@@ -307,10 +312,10 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
     // To be removed.....
 
     // Loop over all HPDs
-    for ( RichDAQ::L1Map::const_iterator iL1 = L1Data.begin(); iL1 != L1Data.end(); ++iL1 ) 
+    for ( RichDAQ::L1Map::const_iterator iL1 = L1Data.begin(); iL1 != L1Data.end(); ++iL1 )
     {
       for ( RichDAQ::PDMap::const_iterator iHPD = (*iL1).second.begin();
-            iHPD != (*iL1).second.end(); ++iHPD ) 
+            iHPD != (*iL1).second.end(); ++iHPD )
       {
 
         // Make a new data bank
@@ -322,7 +327,7 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
         // Add this bank to the Raw buffer
         rawBuffer->addBank( (*iL1).first, RawBuffer::Rich, dataBank, version );
 
-        if ( m_summary ) 
+        if ( m_summary )
         {
           // Count the number of banks and size
           L1CountAndSize & cands = m_l1encodeSummary[ L1IDandV(version,(*iL1).first) ];
@@ -339,7 +344,7 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
 
     }
 
-  } else 
+  } else
   {
     // Proper handling...
 
@@ -362,7 +367,7 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
 
       } // end photon detector loop
 
-      if ( m_summary ) 
+      if ( m_summary )
       {
         // Count the number of banks and size
         L1CountAndSize & cands = m_l1encodeSummary[ L1IDandV(version,(*iL1).first) ];
@@ -415,7 +420,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
   unsigned int nHPDbanks(0), startSize(smartIDs.size());
 
   // DC04 bug fix hack
-  if ( RichDAQ::LHCb0 == version ) 
+  if ( RichDAQ::LHCb0 == version )
   {
     // Special handling for this format, due to bug in header word....
 
@@ -427,7 +432,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
     delete hpdBank;
     ++nHPDbanks;
 
-  } else 
+  } else
   {
     // Proper handling...
 
@@ -491,7 +496,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
         ++nHPDbanks;
         delete hpdBank;
 
-      } else 
+      } else
       {
         ++lineC;
       }
@@ -500,7 +505,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
 
   } // DC04 bug fix if...
 
-  if ( m_summary ) 
+  if ( m_summary )
   {
     // Count the number of banks and size
     L1CountAndSize & cands = m_l1decodeSummary[ L1IDandV(version,L1ID) ];
@@ -537,6 +542,9 @@ void
 RichRawDataFormatTool::decodeToSmartIDs( RichSmartID::Collection & smartIDs ) const
 {
 
+  // flag the tool as having been used this event
+  m_hasBeenCalled = true;
+
   // Get the banks for the Rich
   const RichDAQ::RAWBanks & richBanks = rawEvent()->banks( RawBuffer::Rich );
 
@@ -548,7 +556,7 @@ RichRawDataFormatTool::decodeToSmartIDs( RichSmartID::Collection & smartIDs ) co
 
   // Loop over data banks
   for ( RichDAQ::RAWBanks::const_iterator iBank = richBanks.begin();
-        iBank != richBanks.end(); ++iBank ) 
+        iBank != richBanks.end(); ++iBank )
   {
 
     // Decode this bank to RichSmartIDs
