@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.40 2002-10-09 14:32:34 gcorti Exp $
+# $Id: requirements,v 1.41 2002-10-13 21:29:09 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -40,7 +40,7 @@ use  GaudiRootDb        v9r0
 
 #--- Histogram persistency ( choose the one you prefer )
 use  HbookCnv           v12r0
-use  RootHistCnv        v8r0
+use  RootHistCnv        v8r0p2
 
 #---LHCb common libraries
 use  GaudiConf      v6r3
@@ -65,9 +65,7 @@ use  CaloDetXmlCnv  v2r0    Det
 use  Magnet         v1r1    Det
 use  MuonDet        v3r1    Det
 
-#--- Event Model ( via EventSys the whole Event Model is available )
-#    explicit packages now becuase of DEV development
-#use  EventSys       v13r0  Event
+#--- Event Model
 use EventKernel  v2r0    Event
 use Event        v2r0    Event
 use VeloEvent    v11r0   Event
