@@ -1,8 +1,16 @@
-!  $Id: release.notes,v 1.15 2002-07-09 19:05:08 cattanem Exp $
+!  $Id: release.notes,v 1.16 2002-08-02 10:44:51 atsareg Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
-!========================= L0Muon v6r0 2002-07-09 =======================
+! 2002-06-23 - A.Tsaregorodtsev
+
+  - Allow input from MuonDigits or from MuonCoords controlled
+    by a job option InputFromMuonCoords (bool);
+  - Additional mode "ignore M1" switched on by a job option IgnoreM1(bool);
+  - Additional mode suppressing seed clusters switched on by a 
+    job option SeedClustering(bool).  
+
+!========================= L0Muon v6r0 2002-07-09 ====================
 ! 2002-06-28 - A.Tsaregorodtsev
  - Fix to L0mTrigger to be compatible with new digitization
 
