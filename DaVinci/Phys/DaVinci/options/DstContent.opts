@@ -1,6 +1,5 @@
-// Define DST content for stripped events, identical to Brunel
+// Define DST content for Brunel
 
-DstWriter.PreLoad     = false;
 DstWriter.OptItemList =
 {
   "/Event/Prev#1"
@@ -9,9 +8,7 @@ DstWriter.OptItemList =
 , "/Event/PrevPrev/Header#1"
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
-, "/Event/LHCBackground#1"
-, "/Event/LHCBackground/Header#1"
-, "/Event/Gen/HepMCEvents#1"
+, "/Event/MC/Signal#1"
 }; 
 DstWriter.ItemList = 
 {
@@ -20,34 +17,27 @@ DstWriter.ItemList =
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
+, "/Event/Gen/HepMCEvents#1"
+, "/Event/Gen/HardProcesses#1"
 , "/Event/MC#1"
-, "/Event/MC/Particles#1"  // Filtered
-, "/Event/MC/Vertices#1"   // Filtered
-, "/Event/MC/MCTrackInfo#1" 
+, "/Event/MC/Particles#1"
+, "/Event/MC/Vertices#1"
+, "/Event/MC/MCTrackInfo#1"
 , "/Event/Trig#1"
 , "/Event/Trig/AlgUsedTimes#1"
 , "/Event/Trig/L0#1"
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
 , "/Event/Trig/L0/Decision#1" 
-//, "/Event/Trig/L1#1"
-//, "/Event/Trig/L1/Summary#1"
-//, "/Event/Trig/L1/Decision#1" 
 , "/Event/DAQ#1"
 , "/Event/DAQ/L1Buffer#1"
 , "/Event/DAQ/RawBuffer#1"
-, "/Event/Raw#1"
-, "/Event/Raw/Velo#1"
-, "/Event/Raw/Velo/Clusters#1"
-, "/Event/Raw/OT#1"        // To be removed when POOL crash is fixed
-, "/Event/Raw/OT/Digits#1" // To be removed when POOL crash is fixed
+, "/Event/Raw#2"
 , "/Event/Rec#1"
 , "/Event/Rec/Status#1"
 , "/Event/Rec/IT#1"
 , "/Event/Rec/IT/Summary#1"
-, "/Event/Rec/IT/Clusters#1"
 , "/Event/Rec/OT#1"
-, "/Event/Rec/OT/Clusters#1"
 , "/Event/Rec/Tr#1"
 , "/Event/Rec/Tr/Best#1"
 , "/Event/Rec/Tr/ITClusters#1"
@@ -65,13 +55,14 @@ DstWriter.ItemList =
 , "/Event/Rec/Calo/Electrons#1"
 , "/Event/Rec/Calo/MergedPi0s#1"
 , "/Event/Rec/Calo/SplitPhotons#1"
-, "/Event/Rec/Calo/PhotonMatch#1"   
+, "/Event/Rec/Calo/PhotonMatch#1"
 , "/Event/Rec/Calo/ElectronMatch#1"
-, "/Event/Rec/Calo/BremMatch#1"     
+, "/Event/Rec/Calo/BremMatch#1"
 , "/Event/Rec/Calo/HcalE#1"
 , "/Event/Rec/Calo/PrsE#1"
 , "/Event/Rec/Calo/EcalE#1"
 , "/Event/Rec/Muon#1"
+  // Muon coordinates need by MuonID log likelihood
 , "/Event/Rec/Muon/M1#1"
 , "/Event/Rec/Muon/M2#1"
 , "/Event/Rec/Muon/M3#1"

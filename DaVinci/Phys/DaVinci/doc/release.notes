@@ -4,6 +4,19 @@ Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
 </PRE><H1><A NAME=v11r6>2004-04-05 DaVinci v11r6 - Development Version</A></H1><PRE>
+ This version gets close to the DC'04 version.
+
+ - based on LHCB v15r9
+ 
+ - The L0Decision box and the HLT is there
+ 
+ - Many updated Selections. See PhysSelSys
+ 
+ - FlavourTagging now only contains BTagging. All the rest is obsolete.
+   Yet IFlavourTagging.h is still there to allow LoKi to compile. Please
+   avoid using Tagging in LoKi for now.
+ 
+</PRE><H1><A NAME=v11r6>2004-04-05 DaVinci v11r6 - Development Version</A></H1><PRE>
  This version is mostly for developement and the main focus is for new data.
  TDR data can be read but not all features are supported beside decay channel
  selections. See details for DaVinci v11r0 and v10r0.

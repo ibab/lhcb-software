@@ -1,1 +1,33 @@
-// nothing there
+// Extra DLL for HLT
+ApplicationMgr.DLLs   += { "TrgPrimVertex" ,"TrgForward" };
+
+// Sequencer for HLT processing and checking
+ApplicationMgr.TopAlg += { "Sequencer/HltWithTrg" };
+
+
+HltWithTrg.Members = { //"TrgL0Filter",
+                       "TrgInitEvent/InitHltEvent",
+                       "Sequencer/HLTProcessing",
+                       "Sequencer/HLTChecking"
+                      };
+
+HLTProcessing.Members =  { "DecodeRawVelo"
+                           ,"VeloRTracking/VeloRTrackingHlt"
+                           ,"VeloSpaceTracking/VeloSpaceTrackingHlt"
+                           ,"TrgVeloTT/TrgVeloTTHlt"
+                           ,"TrgPrimVertexFinder"
+                           ,"FwdHitFromRawBuffer"
+                           ,"TrgForwardAlg"
+                         };
+
+#include "$TRGFORWARDROOT/options/Field045.opts"
+TrgVeloTTHlt.InputFromRawBuffer = true;
+ 
+HLTChecking.Members = { "TrgTrackToContainer/HltTrgTrackToContainer"
+                        ,"TrgTrack2MCParticle/HltTrgTrack2MCParticle"
+                        ,"TrgChecker/HltTrgChecker"
+                        ,"TrgVertexMonit/HltVertexMonit"
+                       };
+HltTrgTrackToContainer.prefix = "Hlt/";
+HltTrgTrack2MCParticle.prefix = "Hlt/";
+HltTrgChecker.prefix = "Hlt/";

@@ -1,34 +1,45 @@
 // This file sets up the Writing of Mini DST content
 // ----------------------------------------------------------
+// If you are not a Pool expert, remove the file before overwriting it
+// and remove also all file catalogs in this directory.
 
 ApplicationMgr.OutStream = { "MiniDstWriter" };
 MiniDstWriter.PreLoad = false;
 
+DstWriter.OptItemList =
+{
+    "/Event/MC/Signal#1"
+}; 
 MiniDstWriter.ItemList = {
-  "/Event#1"
+    "/Event#1"
   , "/Event/Header#1"
   , "/Event/Gen#1"
   , "/Event/Gen/Header#1"
   , "/Event/Gen/Collisions#1"
+  , "/Event/Gen/HepMCEvents#1"
+  , "/Event/Gen/HardProcesses#1"
   , "/Event/MC#1"
   , "/Event/MC/Particles#1"
   , "/Event/MC/Vertices#1"
+  , "/Event/MC/MCTrackInfo#1"
   , "/Event/Trig#1"
-  , "/Event/Trig/AlgUsedTimes#1"
+//  , "/Event/Trig/AlgUsedTimes#1"
   , "/Event/Trig/L0/Decision#1" 
-  , "/Event/Trig/L1#1"
-  , "/Event/Trig/L1/Summary#1"
+//  , "/Event/Trig/L1#1"
+//  , "/Event/Trig/L1/Summary#1"
   , "/Event/Rec#1"
+  , "/Event/Rec/Tr#1"
+  , "/Event/Rec/Tr/Best#1"
+//  , "/Event/Rec/Tr/StatesP#1"
+//  , "/Event/Rec/Tr/StatesL#1"
   , "/Event/Rec/ProtoP#*"
   , "/Event/Rec/Relations#*"
-  , "/Event/Rec/ProtoParticle2MC#1"
-  , "/Event/Rec/NeutralPPs2MCParticles#1"
+//  , "/Event/Rec/ProtoParticle2MC#1"
+//  , "/Event/Rec/NeutralPPs2MCParticles#1"
   , "/Event/Phys#*"
+//  , "/Event/Phys/Combined#1"
+//  , "/Event/Phys/Combined/Particles#1"
+//  , "/Event/Phys/Combined/Vertices#1"
 };
 
-// GaudiDb output (not possible with POOL input). 
-// Comment next two lines if using POOL.
-MiniDstWriter.Output = "DATAFILE='412400.oomdst' TYP='ROOT' OPT='NEW'";
-
-// POOL output. Comment next line if GaudiDb output
-//MiniDstWriter.Output = "DATAFILE='PFN:412400.mdst' TYP='POOL_ROOTTREE' OPT='REC'";
+MiniDstWriter.Output = "DATAFILE='PFN:MiniDst.mdst' TYP='POOL_ROOTTREE' OPT='CREATE'";

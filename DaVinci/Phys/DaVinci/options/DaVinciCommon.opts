@@ -13,8 +13,11 @@
 #units "$GAUDICONFROOT/options/units.opts"
 
 // Framework
-ApplicationMgr.ExtSvc = { "ParticlePropertySvc",
-                          "EventSelector" };
+// ToolSvc has to be first to be sure it's the last
+// to be deleted at the end
+ApplicationMgr.ExtSvc = { "ToolSvc" ,
+                           "ParticlePropertySvc",
+                           "EventSelector" };
 ApplicationMgr.DLLs  += { "GaudiAud", "GaudiAlg" };
 
 // Detector Description & Magnetic Field
@@ -98,7 +101,7 @@ EventSelector.PrintFreq  = 1;
 // might be needed for users. 
 ApplicationMgr.DLLs += { "RootHistCnv" };
 ApplicationMgr.DLLs += { "HbookCnv" };
-// Need a histogram persistency or Calo crashed :-(
+// Need a histogram persistency or Calo crashes :-(
 ApplicationMgr.HistogramPersistency = "ROOT";
 
 //--------------------------------------------------------------

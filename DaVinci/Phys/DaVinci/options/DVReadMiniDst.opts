@@ -1,0 +1,60 @@
+/** @file 
+ * 
+ *  This file reads the miniDST file generated with
+ *  options/WriteMiniDst.opts and executes the B->HH 
+ *  preselection using the stored particles.
+ *
+ *  @author P. Koppenburg
+ *  @date 2004-05-04
+ */
+
+//--------------------------------------------------------------
+// Standard Gaudi configuration and additional DLLs are in
+// DaVinciCommon. 
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print on
+#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
+
+// Particles are already there. 
+// Now apply selectionalgorithm
+ApplicationMgr.DLLs  += { "B2HH" };
+ApplicationMgr.TopAlg += { "PreselB2hh" };
+PreselB2hh.PhysDesktop.InputLocations = {"/Event/Phys/Combined"};
+PreselB2hh.OutputLevel = 1 ;
+
+//--------------------------------------------------------------
+ApplicationMgr.HistogramPersistency = "HBOOK";
+HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
+
+//--------------------------------------------------------------
+// Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
+PrintJpsi2MuMu.OutputLevel  = 2;
+PreselJpsi2MuMu.OutputLevel = 4;
+
+// Modify Message Format to print algorithm name with 40 characters
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+
+//---------------------------------------------------------------
+// Number of events to process, skip and printing frequency
+//---------------------------------------------------------------
+// POOL file catalogs. First one is read-write, others are read only
+EventSelector.Input   = {
+   "DATAFILE='MiniDst.mdst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+
+ApplicationMgr.EvtMax    = 20;
+EventSelector.FirstEvent = 1;
+EventSelector.PrintFreq  = 1;
+//***************************************************************
+// Interactive prompt. 
+// WORKS ONLY WITH ROOT INPUT FOR NOW -> EDIT DaVinciTestData.opts 
+//ApplicationMgr.DLLs += { "GaudiPython" };
+//ApplicationMgr.Runable = "PythonScriptingSvc";
+//***************************************************************
+
