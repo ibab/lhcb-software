@@ -1,4 +1,4 @@
-// $Id: RichPhotonSpectra.h,v 1.3 2003-08-26 14:37:22 jonrob Exp $
+// $Id: RichPhotonSpectra.h,v 1.4 2003-09-04 08:45:52 jonrob Exp $
 #ifndef RICHRECBASE_RICHPHOTONSPECTRA_H
 #define RICHRECBASE_RICHPHOTONSPECTRA_H 1
 
@@ -170,13 +170,12 @@ RichPhotonSpectra::energyDist( const Rich::ParticleIDType id ) const
   return m_photdata[id];
 }
 
-inline RichPhotonSpectra::RichPhotonSpectra::HypoPhotonData & 
-RichPhotonSpectra::hypoData()
+inline RichPhotonSpectra::HypoPhotonData & RichPhotonSpectra::hypoData()
 {
   return m_photdata;
 }
 
-inline const RichPhotonSpectra::RichPhotonSpectra::HypoPhotonData & 
+inline const RichPhotonSpectra::HypoPhotonData & 
 RichPhotonSpectra::hypoData() const
 {
   return m_photdata;
