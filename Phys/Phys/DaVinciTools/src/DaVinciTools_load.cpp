@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.1 2002-02-08 18:25:42 gcorti Exp $
+// $Id: DaVinciTools_load.cpp,v 1.2 2002-03-27 20:34:59 gcorti Exp $
 // Include files 
 
 
@@ -14,9 +14,18 @@
 
 DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
 
-  DECLARE_TOOL( AddFourMom );
   DECLARE_TOOL( AxPart2MCParticleAsct );
-  DECLARE_TOOL( ImpactPar );
   DECLARE_TOOL( MCUtilityTool );
+  DECLARE_TOOL( PhysDesktop );
+  DECLARE_TOOL( ParticleTransporter );
+  DECLARE_TOOL( LagrangeMassVertexFitter );
+  DECLARE_TOOL( UnconstVertexFitter );  
+  DECLARE_TOOL( GeomDispCalculator );
+  DECLARE_TOOL( PIDFilterCriterion );
+  DECLARE_TOOL( KinFilterCriterion );
+  DECLARE_TOOL( ParticleFilter );
+  DECLARE_TOOL( ParticleStuffer );
 
+  DECLARE_ALGORITHM( FillParticleAlgorithm );
+  
 }
