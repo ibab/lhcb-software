@@ -2,9 +2,7 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
-! 2002-06-21 - Vanya Belyaev
- - update linkoptions for test-application 
-
+!========================= LHCbKernel v1r2 2002-07-09 ===================
 ! 2002-06-18 - Stefan Roiser
  - changed use-statement of GaudiObjDesc to v4r4
 
