@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.12 2002-09-18 08:57:03 odie Exp $
+! $Id: release.notes,v 1.13 2002-10-14 10:00:04 gcorti Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
+
+! 2002-10-13 - Gloria Corti
+ - Improve printing of counters in MCPIDProtoPAlg
 
 ! 2002-09-18 - Olivier Dormond
  - Small fix to the DebugTool printout.
