@@ -173,7 +173,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
   // get MCparticles
   const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
   if( 0 == mcps )
-  { return Error( "Can not locate MCparticles at '" + mcpath + "'");}
+    { return Error( "Can not locate MCparticles at '" + mcpath + "'");}
   //  }
 
   // retrieve the hits container from GiGa Service
@@ -223,9 +223,9 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           hits->insert( mchit, globalKey );
 
           // Set data
-          mchit->setEntry( g4hit->GetGlobalPos() );
-          mchit->setEnergy( g4hit->GetEdep() );
-	  //          mchit->setEnergy( g4hit->GetEdep()/10 ); // Fix for energy bug
+          mchit->setEntry  ( g4hit->GetGlobalPos() );
+          mchit->setEnergy ( g4hit->GetEdep()      );
+          // mchit->setEnergy( g4hit->GetEdep()/10 ); // Fix for energy bug
           // changed by back by SE May 26, 2004.
           mchit->setTimeOfFlight( g4hit->RichHitGlobalTime() );
 
@@ -248,15 +248,11 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           //end of filling the Rich Specific word.
 
           // get MCParticle information
-          const int traid = g4hit->GetTrackID();
-          const MCParticle * mcPart = table[traid].particle();
+          const MCParticle * mcPart = table[g4hit->GetTrackID()].particle();
           if ( mcPart ) {
             mchit->setMCParticle( mcPart );
           } else {
-            msg << MSG::WARNING
-                << "MCRichHit " << mchit->key() 
-                << " has no parent MCParticle !, RichG4HitCollection " << iii 
-                << " TrackID " << traid << endreq;
+            Warning( "Found RichG4Hit with no MCParticle parent !" ); 
           }
 
           // finally increment key

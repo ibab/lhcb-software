@@ -4,6 +4,10 @@
 ! Responsible	     : Witold Pokorski
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+
+! 2004-06-04 - Chris Jones
+ - Update GiGaMCRichOpticalPhotonCnv to use the mirror reflection points
+
 ! 2004-06-02 - Sajan Easo
   - Created RichPhotoelectron particle for transport inside HPD.
   - It still has 2 GeV/c momentum to ensure straight line tracking.

@@ -157,7 +157,7 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
   // get MCparticles
   const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
   if( 0 == mcps )
-  { return Error("Can not locate MCparticles at '" + mcpath + "'");}
+    { return Error("Can not locate MCparticles at '" + mcpath + "'");}
   //  }
 
   G4HCofThisEvent* hitscollections = 0 ;
@@ -210,27 +210,53 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
           photons->insert( mcPhoton, globalKey );
 
           // Copy required info from RichG4Hit to RichMCOpticalPhoton
-          // More info may be copied in the future.
-          //
+
+          // Incidence point on HPD
           mcPhoton-> setPdIncidencePoint( HepPoint3D(g4hit->GetGlobalPEOriginPos().x(),
                                                      g4hit->GetGlobalPEOriginPos().y(),
                                                      g4hit->GetGlobalPEOriginPos().z() ) );
+
+          // Photon energy at production
           mcPhoton->setEnergyAtProduction( static_cast<float>(g4hit->PhotEnergyAtProd()) );
 
-          mcPhoton->setEmissionPoint
-            ( HepPoint3D(g4hit->GetPhotEmisPt().x(),
-                         g4hit->GetPhotEmisPt().y(),
-                         g4hit->GetPhotEmisPt().z()) );
-          mcPhoton->setParentMomentum
-            ( HepPoint3D( g4hit->ChTrackMomVect().x(),
-                          g4hit->ChTrackMomVect().y(),
-                          g4hit->ChTrackMomVect().z()) );
+          // Emission point on track
+          mcPhoton->setEmissionPoint( HepPoint3D(g4hit->GetPhotEmisPt().x(),
+                                                 g4hit->GetPhotEmisPt().y(),
+                                                 g4hit->GetPhotEmisPt().z()) );
 
-          mcPhoton->setCherenkovTheta( g4hit->ThetaCkvAtProd() );
-          mcPhoton->setCherenkovPhi( g4hit->PhiCkvAtProd() );
+          // The momentum of the parent track at production
+          mcPhoton->setParentMomentum( HepPoint3D( g4hit->ChTrackMomVect().x(),
+                                                   g4hit->ChTrackMomVect().y(),
+                                                   g4hit->ChTrackMomVect().z() ) );
+
+          // Cherenkov theta and phi at production
+          mcPhoton->setCherenkovTheta ( g4hit->ThetaCkvAtProd() );
+          mcPhoton->setCherenkovPhi   ( g4hit->PhiCkvAtProd()   );
+
+          // Spherical mirror reflection point
+          if ( g4hit->Mirror1PhotonReflPosition().z() < 100 ) {
+            msg << MSG::WARNING << "Spherical mirror reflection point = "
+                << (HepPoint3D)g4hit->Mirror1PhotonReflPosition() << endreq;
+          }
+          mcPhoton->setSphericalMirrorReflectPoint
+            ( HepPoint3D( g4hit->Mirror1PhotonReflPosition().x(),
+                          g4hit->Mirror1PhotonReflPosition().y(),
+                          g4hit->Mirror1PhotonReflPosition().z() ) );
+
+          // Flat mirror reflection point
+          if ( g4hit->Mirror2PhotonReflPosition().z() < 100 ) {
+            msg << MSG::WARNING << "Flat mirror reflection point = "
+                << (HepPoint3D)g4hit->Mirror2PhotonReflPosition() << endreq;
+          }
+          mcPhoton->setFlatMirrorReflectPoint
+            ( HepPoint3D( g4hit->Mirror2PhotonReflPosition().x(),
+                          g4hit->Mirror2PhotonReflPosition().y(),
+                          g4hit->Mirror2PhotonReflPosition().z() ) );
+
+          // SmartRef to associated MCRichHit
           mcPhoton->setMcRichHit( mcHits->object(globalKey) );
 
-          // finally, increment key
+          // finally, increment the key
           ++globalKey;
 
         } // loop over g4 hits
@@ -239,7 +265,8 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
 
       // Should have one opticalphoton for each and every MCRichHit
       if ( photons->size() != mcHits->size() ) {
-        msg << MSG::ERROR << "Created " << photons->size() << " photons and"
+        msg << MSG::ERROR << "Created " << photons->size()
+            << " MCRichOpticalPhotons and"
             << mcHits->size() << " MCRichHits !!" << endreq;
       }
 
