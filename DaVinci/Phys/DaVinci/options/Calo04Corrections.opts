@@ -1,0 +1,25 @@
+// $Id: Calo04Corrections.opts,v 1.1 2004-05-11 11:46:47 pkoppenb Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+
+/** @file
+ *  The Calo E/S/L-correction which need to be applied for 
+ *  DC04 data producs with XmlDDDB v22r2, Gauss v14r3 and Brunel v23r6
+ *  @author Olivier DESCHAMPS odescham@in2p3.fr
+ *  @author Vanya   BELYAEV   Ivan.Belyaev@itep.ru
+ *  @date 2004-05-11
+ */
+
+// Energy Correction for SplitPhotons
+Neutrals.Members += { "CaloHypoAlg/PhotonFromMergedCalibration" };
+// For Single Photons
+Neutrals.Members += { "CaloHypoAlg/PhotonCalibration" };
+
+// Configuration 
+#include "$CALORECOOPTS/PhotonCalibration04.opts"
+
+
+// ============================================================================
+// The END 
+// ============================================================================

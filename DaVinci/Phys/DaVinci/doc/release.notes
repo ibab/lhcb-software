@@ -3,7 +3,18 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v11r6>2004-04-05 DaVinci v11r6 - Development Version</A></H1><PRE>
+</PRE><H1><A NAME=v11r6>2004-11-XX DaVinci v11r8 - Development Version</A></H1><PRE>
+ This version gets close to the DC'04 version.
+
+ - based on LHCB v15r9
+ 
+ - Updated CaloReco, GlobalReco, Ks2PiPiSel
+ 
+ - Updated preselections
+ 
+ - LoKi v2r5
+ 
+</PRE><H1><A NAME=v11r6>2004-05-07 DaVinci v11r7 - Development Version</A></H1><PRE>
  This version gets close to the DC'04 version.
 
  - based on LHCB v15r9
