@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.42 2005-02-25 14:36:13 pkoppenb Exp $
+! $Id: release.notes,v 1.43 2005-03-03 14:57:23 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciKernel v3r2 2005-03-03 ===================
 ! 2005-02-25 - P. Koppenburg
   - src/component/PhysDesktop.cpp
     . Print only once the warning about the vertices() method.
