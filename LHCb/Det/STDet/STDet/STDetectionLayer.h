@@ -55,7 +55,7 @@ public:
             double& u, double& v) const;
 
   void toXY(const double u, const double v,
-            double& u, double& v) const;
+            double& x, double& y) const;
 
   virtual ITChannelID stripID(const double u, const double v) const;
   virtual double U(const ITChannelID stripID) const;
