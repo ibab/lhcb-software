@@ -1,9 +1,10 @@
-$Id: release.notes,v 1.20 2003-06-16 13:50:28 sponce Exp $
+$Id: release.notes,v 1.21 2003-06-17 09:29:40 cattanem Exp $
 Package: DetDescExample
 Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
 
+!==================DetDescExample v6r0 2003-06-17 ====================
 ! 2003-06-16 - Sebastien Ponce
  - fixes for gcc 3.2/3.3
 

@@ -4,6 +4,7 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!================= XmlTools v2r0 2003-06-17 ==========================
 ! 2003-04-25 - Sebastien Ponce
  - fixes after valgrind tests
  - application of code conventions

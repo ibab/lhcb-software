@@ -4,6 +4,7 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================= DetDescCnv v2r0 2003-06-17 ==========================
 ! 2003-06-16 - Sebastien Ponce
  - fixes for gcc 3.2/3.3
 
