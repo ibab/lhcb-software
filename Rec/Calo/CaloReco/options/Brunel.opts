@@ -1,8 +1,11 @@
-// $Id: Brunel.opts,v 1.2 2002-11-17 17:09:26 ibelyaev Exp $ 
+// $Id: Brunel.opts,v 1.3 2002-11-18 10:23:48 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/17 17:09:26  ibelyaev
+//  new set of options and tools
+//
 // Revision 1.1.1.1  2002/11/13 20:46:44  ibelyaev
 // new package 
 //
@@ -37,13 +40,14 @@ BrunelRecoCALOSeq.Members +=
 /// Variouse identification techniques 
 BrunelRecoCALOSeq.Members += 
 {
-  /// must be done in Brunel 
-  "CaloTrack2EstimatorAlg/HcalE"            /// estimator for Hcal energy
+  /// must be done in Brunel
+  /// -------- is not working now  :-(((  
+  /// "CaloTrack2EstimatorAlg/HcalE"            /// estimator for Hcal energy
   /// optional, could be (re)done later in DaVinci
   ,"CaloTrack2EstimatorAlg/PrsE"            /// estimator for Prs ebnergy 
-  ,"CaloTrack2IdAlg/HcalPIDe"               /// estimator for Hcal e+/e-   PID 
-  ,"CaloTrack2IdAlg/HcalPIDmu"              /// estimator for Hcal mu+/mu- PID 
-  ,"CaloTrack2IdAlg/PrsPIDe"                /// estimator for Prs  e+/e-   PID 
+  /// ,"CaloTrack2IdAlg/HcalPIDe"               /// estimator for Hcal e+/e-   PID 
+  /// ,"CaloTrack2IdAlg/HcalPIDmu"              /// estimator for Hcal mu+/mu- PID 
+  /// ,"CaloTrack2IdAlg/PrsPIDe"                /// estimator for Prs  e+/e-   PID 
 };
 
 

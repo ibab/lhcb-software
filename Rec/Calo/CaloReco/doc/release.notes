@@ -4,6 +4,10 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 !-----------------------------------------------------------------------------
 
+! 2002-11-18 - Ivan Belyaev
+ - options/Brunel.opts    quick fix to remove Hcal estrimators 
+ - options/PrsPID*.opts   remove "pragma" directives used for debugging 
+
 ! 2002-11-17 - Ivan Belyaev 
   - src/CaloSCorrectionFinal.cpp  - add missing std::max fro WIN32 compilation
 ! 2002-11-17 - Ivan Belyaev
