@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer2Digit.cpp,v 1.6 2004-04-14 14:11:01 cattanem Exp $
+// $Id: MuonRawBuffer2Digit.cpp,v 1.7 2004-08-31 10:06:10 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -6,7 +6,7 @@
 #include "GaudiKernel/MsgStream.h" 
 
 // local
-#include "MuonRawBuffer2Digit.h"
+#include "MuonDAQ/MuonRawBuffer2Digit.h"
 
 
 

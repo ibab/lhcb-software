@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.4 2004-02-10 17:08:25 asatta Exp $
+// $Id: MuonDigitToRawBuffer.cpp,v 1.5 2004-08-31 10:06:10 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -6,8 +6,9 @@
 #include "GaudiKernel/MsgStream.h" 
 
 // local
-#include "SortDigitInL1.h"
-#include "MuonDigitToRawBuffer.h"
+#include "MuonDAQ/SortDigitInL1.h"
+#include "MuonDAQ/MuonDigitToRawBuffer.h"
+#include "MuonDAQ/MuonHLTDigitFormat.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonDigitToRawBuffer

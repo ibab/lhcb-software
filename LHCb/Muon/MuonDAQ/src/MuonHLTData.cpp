@@ -1,10 +1,10 @@
-// $Id: MuonHLTData.cpp,v 1.1.1.1 2004-02-05 16:26:03 cattanem Exp $
+// $Id: MuonHLTData.cpp,v 1.2 2004-08-31 10:06:10 asatta Exp $
 // Include files 
 
 
 
 // local
-#include "MuonHLTData.h"
+#include "MuonDAQ/MuonHLTData.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonHLTData

@@ -1,4 +1,4 @@
-// $Id: MuonHLTData.h,v 1.1.1.1 2004-02-05 16:26:03 cattanem Exp $
+// $Id: MuonHLTData.h,v 1.1 2004-08-31 10:06:10 asatta Exp $
 #ifndef MUONHLTDATA_H 
 #define MUONHLTDATA_H 1
 

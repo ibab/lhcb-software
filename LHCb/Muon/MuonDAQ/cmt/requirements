@@ -1,10 +1,10 @@
 package MuonDAQ
-version v1r1
+version v1r2
 
 # ================ structure ===========================================
-branches src cmt doc
+branches src MuonDAQ cmt doc
 
-include_path none    
+include_dirs      $(MUONDAQROOT)
 
 # ================ used packages ========================================= 
 use MuonTools   v3r* 	Muon

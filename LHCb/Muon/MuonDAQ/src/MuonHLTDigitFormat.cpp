@@ -1,10 +1,10 @@
-// $Id: MuonHLTDigitFormat.cpp,v 1.1.1.1 2004-02-05 16:26:03 cattanem Exp $
+// $Id: MuonHLTDigitFormat.cpp,v 1.2 2004-08-31 10:06:10 asatta Exp $
 // Include files 
 
 
 
 // local
-#include "MuonHLTDigitFormat.h"
+#include "MuonDAQ/MuonHLTDigitFormat.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonHLTDigitFormat

@@ -4,9 +4,14 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+!========================== MuonDAQ v1r2 2004-08-31 
+=======================
+! 2004-08-31 - Alessia Satta
+ - Move the header files in a separate directory
+
 !========================== MuonDAQ v1r1 2004-04-13 =======================
 ! 2004-04-13 - Alessia Satta
- - Fix warining for unsigned intinitialization to a negative value
+ - Fix warning for unsigned intinitialization to a negative value
 
 !========================== MuonDAQ v1r0 2004-02-10 =======================
 ! 2004-02-10 - Alessia Satta

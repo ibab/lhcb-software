@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.h,v 1.1.1.1 2004-02-05 16:26:03 cattanem Exp $
+// $Id: MuonDigitToRawBuffer.h,v 1.1 2004-08-31 10:06:10 asatta Exp $
 #ifndef MUONDIGITTORAWBUFFER_H 
 #define MUONDIGITTORAWBUFFER_H 1
 

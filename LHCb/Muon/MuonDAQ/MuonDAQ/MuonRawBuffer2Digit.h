@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer2Digit.h,v 1.2 2004-02-10 17:08:25 asatta Exp $
+// $Id: MuonRawBuffer2Digit.h,v 1.1 2004-08-31 10:06:10 asatta Exp $
 #ifndef MUONRAWBUFFER2DIGIT_H 
 #define MUONRAWBUFFER2DIGIT_H 1
 
@@ -31,7 +31,7 @@
 #include "GaudiKernel/Algorithm.h"
 #include "MuonKernel/MuonTile.h"
 #include "MuonHLTData.h"
-#include "MuonHLTDigitFormat.h"
+#include "MuonDAQ/MuonHLTDigitFormat.h"
 
 //#include "MuonRawBuffer.h"
 
