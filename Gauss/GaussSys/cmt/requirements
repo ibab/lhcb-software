@@ -25,7 +25,7 @@ use VisSvc              v3r3    Vis
 use SimSvc              v4r1    Sim
 
 # Gauss stuff...
-use GaussAlgs		v1r3    Sim
+use GaussAlgs		v1r4    Sim
 use GaussTools		v10r7	Sim
 use GaussRICH		v4r10	Sim
 use GaussTracker	v3r2	Sim

@@ -3,11 +3,23 @@ Package : GaussSys
 Package manager : Gloria Corti
 </PRE>
 
-<H1><A NAME="v19r0">2005-01-13 - GaussSys v19r0</A></H1><PRE>
-    is built with LHCb v17r2, Geant4 v70r0, GENSER_0_3_0, Pythia 6.226.2
+<H1><A NAME="v19r0">2005-02-07 - GaussSys v19r0</A></H1><PRE>
+    is built with LHCb v18r0, Geant4 v70r0, GENSER_0_3_0, Pythia 6.226.2
     it uses XmlDDDB v23r1
 
+!==================== GaussAlgs v1r4 2005-02-02 ===========================
+! 2005-02-02 - Gloria Corti
+ - src/GiGaGetEventAlg.cpp
+   . introduce statistical count of particles and vertices multiplicity
+ - src/GiGaGetHitsAlg.{h,cpp}
+   . adapt to GaudiAlgorithm
+   . introduce statistical counts of hits separately for each detector
+   . have more details in verbose mode for hits
+
 !=========================== GaussTracker v3r2 ================================
+ 2005-02-07 - Florence Ranjard
+ - src/GiGaSensDetMuon.cpp : rejetc hits which are in "Universe"
+
 ! 2005-01-27 - Gloria Corti
  - cmt/requirements
    . increase version number
