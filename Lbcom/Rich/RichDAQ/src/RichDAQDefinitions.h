@@ -1,4 +1,4 @@
-// $Id: RichDAQDefinitions.h,v 1.2 2003-11-10 14:59:59 jonrob Exp $
+// $Id: RichDAQDefinitions.h,v 1.3 2003-11-21 13:08:04 jonrob Exp $
 #ifndef RICHDAQ_RICHDAQDEFINITIONS_H 
 #define RICHDAQ_RICHDAQDEFINITIONS_H 1
 
@@ -11,8 +11,8 @@
 #include "Event/RichDigit.h"
 #include "Event/HltEvent.h"
 
-// Include files
-#include "RichKernel/RichSmartID.h"
+// Kernel
+#include "Kernel/RichSmartID.h"
 
 namespace Rich {
 
