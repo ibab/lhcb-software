@@ -1,4 +1,4 @@
-// $Id: ProtoParticle2MCLinks.cpp,v 1.3 2002-07-27 19:32:32 gcorti Exp $
+// $Id: ProtoParticle2MCLinks.cpp,v 1.4 2002-09-09 13:48:50 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,7 @@ ProtoParticle2MCLinks::ProtoParticle2MCLinks( const std::string& name,
   , m_trackAsctName( "Track2MCParticleAsct" )
 {
   m_inputData.push_back( ProtoParticleLocation::Charged );
+  m_inputData.push_back( ProtoParticleLocation::Upstream );
   m_inputData.push_back( ProtoParticleLocation::Neutrals );
 
   declareProperty( "InputData", m_inputData );
