@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.13 2003-01-30 11:01:10 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.14 2003-01-31 09:33:23 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -288,8 +288,11 @@ StatusCode DecisionUnit::execute() {
       if ( 0 != eMuons.size() ) {
         std::greater<double> greater_than;
         std::sort( eMuons.begin(), eMuons.end(), greater_than );
-        eMuons.erase( std::unique(eMuons.begin(), eMuons.end() ),
-                      eMuons.end() );
+        //== Remove the clean up of equal pt candidates.
+        //== May be a problem for identification of who is eMuon[0] later.
+        //== But if two are equal, the choice is probably irrelevant.
+        //eMuons.erase( std::unique(eMuons.begin(), eMuons.end() ),
+        //              eMuons.end() );
         log << MSG::DEBUG 
             << "Data eCut1, eCut2, scal for the greater muon"
             << endreq;

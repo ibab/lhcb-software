@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.21 2003-01-30 13:04:31 cattanem Exp $
+$Id: release.notes,v 1.22 2003-01-31 09:33:23 ocallot Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
 
@@ -8,6 +8,8 @@ Package Manager : Pascal Perret
    internal decision. New jobOption SumPeak2Veto to control the threshold,
    default 3. This means 3 or more are vetoed.
  - Thresholds adjusted by Frederic Teubert and Eduardo Rodrigues on 20/01/2003.
+ - Removed the clean-up of muon with same Pt. Muon ghosts now cleaned in the
+   L0Muon system.
 
 !========================== L0DU v6r2 2002-12-05 =======================
 ! 2002-10-17 - Florence Ranjard
