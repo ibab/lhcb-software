@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.89 2004-03-11 17:38:20 pkoppenb Exp $
+# $Id: requirements,v 1.90 2004-03-15 15:16:55 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -62,7 +62,7 @@ use  FieldMap           v4r3
 #--- LHCb libraries (from LHCB_v15r2)
 use  LHCb               v15r3
 
-#--- DaVinciSys v11r0 packages 
+#--- DaVinciSys v11r3 packages 
 
 #    Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           v2r0     Calo 
