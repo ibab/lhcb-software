@@ -2,7 +2,7 @@
 
   /// Standard constructor
 DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
-  : GaudiHistoAlg ( name , pSvcLocator )
+  : GaudiTupleAlg ( name , pSvcLocator )
   , m_typeVertexFit("UnconstVertexFitter")
   , m_typeLagFit("LagrangeMassVertexFitter")
   , m_decayDescriptor("not specified")
@@ -249,8 +249,8 @@ StatusCode DVAlgorithm::sysInitialize () {
   // initialize Algorithm base class first -> calls initialize()
   StatusCode sc = this->Algorithm::sysInitialize();
   if (!sc ) return sc;
-  // initialize GaudiHistoAlg base class then
-  sc = this->GaudiHistoAlg::initialize();  
+  // initialize GaudiTupleAlg base class then
+  sc = this->GaudiTupleAlg::initialize();  
   if (!sc ) return sc;
 
   if (m_decayDescriptor == "not specified"){
@@ -301,8 +301,8 @@ StatusCode DVAlgorithm::sysFinalize () {
   sc = Algorithm::sysFinalize();
   if (!sc) return sc;
   
-  // finalize GaudiHistoAlg base class
-  sc = GaudiHistoAlg::finalize();
+  // finalize GaudiTupleAlg base class
+  sc = GaudiTupleAlg::finalize();
   return sc;
 
 }

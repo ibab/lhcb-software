@@ -2,7 +2,7 @@
 #define DAVINCITOOLS_DVALGORITHM_H 1
 
 // from Gaudi
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/MsgStream.h" 
 //#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
@@ -30,9 +30,9 @@
  *  @date   19/04/2002
  *  04/03/2004: Hugo Ruiz: automatically produce SelResult object
  *  use always algorithm name as output location in TES
- *  16/07/2004: P. Koppenburg: Make it a GaudiHistoAlg
+ *  16/07/2004: P. Koppenburg: Make it a GaudiTupleAlg
  */
-class DVAlgorithm : public GaudiHistoAlg {
+class DVAlgorithm : public GaudiTupleAlg {
 public:
 
   /// Standard constructor
