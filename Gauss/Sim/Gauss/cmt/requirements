@@ -43,7 +43,7 @@ use GaussAlgs		v1r0	Sim
 #use GiGaVisUI           v3r0    Sim
 
 # generator
-use GeneratorModules    v11r0    Gen
+use GeneratorModules    v11r1    Gen
 
 #get information from DBASE and PARAM 
 use XmlDDDB             v22r0   Det   -no_auto_imports
