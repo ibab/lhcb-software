@@ -90,7 +90,7 @@ use  Gamma2ee        v1r1    PhysSel
 use  Jpsi            v1r0    PhysSel
 
 #--- TriggerFilter
-use  TriggerFilter       v4r7   Tools
+use  TriggerFilter       v4r8   Tools
 
 #--- DecayPreselections
 use  DecayPresel         v4r6   Tools
