@@ -1,8 +1,11 @@
-// $Id: DumpG4Step.cpp,v 1.4 2004-03-17 08:54:59 ranjard Exp $
+// $Id: DumpG4Step.cpp,v 1.5 2004-03-20 20:12:58 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/03/17 08:54:59  ranjard
+// v16r1 - fix printout
+//
 // Revision 1.3  2004/02/22 16:51:09  ibelyaev
 //  add DumpG4Event
 //
@@ -70,55 +73,67 @@ namespace GiGaUtil
   {
     static const std::string s_name  = " GiGaUtil::DumpG4Step  " ;
     static const std::string s_stars = std::string ( 50 , '*' ) ;
+    static unsigned long     s_DumpG4Step = 0 ;
     //
-    //    stream << s_name << (void*) step << " " << s_stars << std::endl ;
-    
     if ( 0 == step  ) 
-    { return stream << s_name << " G4Step*  points to NULL" << std::endl ; }
-
+    { return stream << s_name << " G4Step*  points to NULL" 
+                    << std::flush << std::endl ; }
+    
+    stream << s_name 
+           << " (#"    << ++s_DumpG4Step << ")"  
+           << (void*) step << " " << s_stars 
+           << std::flush << std::endl ;
     
     { //  pre 
       const G4StepPoint* point = step->GetPreStepPoint() ;
       if ( 0 == point )
       { stream << s_name 
                << " GetPreStepPoint   : "
-               << " G4StepPoint*          points to NULL" << std::endl; }
+               << " G4StepPoint*          points to NULL" 
+               << std::flush << std::endl; }
       else 
       { 
         stream << s_name 
                << " PreStepPointPosition   :" 
-               << point -> GetPosition   () << std::endl ; 
+               << point -> GetPosition   ()
+               << std::flush << std::endl ; 
         stream << s_name 
                << " PreStepPointGlobalTime :" 
-               << point -> GetGlobalTime () << std::endl ; 
+               << point -> GetGlobalTime () 
+               << std::flush << std::endl ; 
         stream << s_name 
                << " PreStepPointLocalTime  :" 
-               << point -> GetLocalTime  () << std::endl ; 
+               << point -> GetLocalTime  () 
+               << std::flush << std::endl ; 
         stream << s_name 
                << " PreStepPointProperTime :" 
-               << point -> GetProperTime () << std::endl ; 
+               << point -> GetProperTime () 
+               << std::flush << std::endl ; 
         stream << s_name 
                << " PreStepPointMomentum   :" 
-               << point -> GetMomentum   () << std::endl ; 
+               << point -> GetMomentum   () 
+               << std::flush << std::endl ; 
         G4Material* mat = point->GetMaterial() ;
-        if ( 0 != mat ) { stream << (*mat) << std::endl ; }
+        if ( 0 != mat ) { stream << (*mat) << std::flush << std::endl ; }
         const G4VProcess* proc = point->GetProcessDefinedStep() ;
         if ( 0 != proc )
         {
           stream << s_name 
                  << " Pre.  Process Type     : " 
-                 << proc->GetProcessType() << std::endl ;
+                 << proc->GetProcessType() 
+                 << std::flush << std::endl ;
           stream << s_name 
                  << " Pre.  Process TypeName : " 
                  << G4VProcess::GetProcessTypeName( proc->GetProcessType() ) 
-                 << std::endl ;
+                 << std::flush << std::endl ;
           stream << s_name
                  << " Pre.  Process Name     : "
-                 << proc->GetProcessName() << std::endl ;
+                 << proc->GetProcessName() 
+                 << std::flush << std::endl ;
           stream << s_name
                  << " Pre.  Process Class    : "
                  << System::typeinfoName( typeid( *proc ) ) 
-                 << std::endl ;
+                 << std::flush << std::endl ;
         }        
       }
     }
@@ -128,74 +143,91 @@ namespace GiGaUtil
       if ( 0 == point )
       { stream << s_name 
                << " GetPostStepPoint  : "
-               << " G4StepPoint*          points to NULL" << std::endl; }
+               << " G4StepPoint*          points to NULL" 
+               << std::flush << std::endl; }
       else 
       { 
         stream << s_name 
                << " PostStepPointPosition  :" 
-               << point -> GetPosition   () << std::endl ; 
+               << point -> GetPosition   () 
+               << std::flush << std::endl ; 
         stream << s_name 
                << " PostStepPointGlobalTime:" 
-               << point -> GetGlobalTime () << std::endl ; 
+               << point -> GetGlobalTime () 
+               << std::flush << std::endl ; 
         stream << s_name 
                << " PostStepPointLocalTime :" 
-               << point -> GetLocalTime  () << std::endl ; 
+               << point -> GetLocalTime  () 
+               << std::flush << std::endl ; 
         stream << s_name 
                << " PostStepPointProperTime:" 
-               << point -> GetProperTime () << std::endl ; 
+               << point -> GetProperTime ()
+               << std::flush << std::endl ; 
         stream << s_name 
                << " PostStepPointMomentum  :" 
-               << point -> GetMomentum   () << std::endl ; 
+               << point -> GetMomentum   ()
+               << std::flush << std::endl ; 
         G4Material*       mat  = point->GetMaterial() ;
-        if ( 0 != mat  ) { stream << (*mat) << std::endl ; }
+        if ( 0 != mat  ) { stream << (*mat) << std::flush << std::endl ; }
         const G4VProcess* proc = point->GetProcessDefinedStep() ;
         if ( 0 != proc )
         {
           stream << s_name 
                  << " Post. Process Type     : " 
-                 << proc->GetProcessType() << std::endl ;
+                 << proc->GetProcessType() 
+                 << std::flush << std::endl ;
           stream << s_name 
                  << " Post. Process TypeName : " 
                  << G4VProcess::GetProcessTypeName( proc->GetProcessType() ) 
-                 << std::endl ;
+                 << std::flush << std::endl ;
           stream << s_name
                  << " Post. Process Name     : "
-                 << proc->GetProcessName() << std::endl ;
+                 << proc->GetProcessName() 
+                 << std::flush << std::endl ;
           stream << s_name
                  << " Post. Process Class    : "
                  << System::typeinfoName( typeid( *proc ) ) 
-                 << std::endl ;
+                 << std::flush << std::endl ;
         }        
       }      
     }
-    
+
     stream << s_name 
            << " StepLength         :"          
-           << step -> GetStepLength         () << std::endl ;
+           << step -> GetStepLength         ()
+           << std::flush << std::endl ;
     
     stream << s_name 
            << " TotalEnergyDeposit :"          
-           << step -> GetTotalEnergyDeposit () << std::endl ;
+           << step -> GetTotalEnergyDeposit () 
+           << std::flush << std::endl ;
     
     stream << s_name 
            << " ControlFlag        :"          
-           << step -> GetControlFlag        () << std::endl ;
+           << step -> GetControlFlag        () 
+           << std::flush << std::endl ;
 
     stream << s_name 
            << " DeltaPosition      :"          
-           << step -> GetDeltaPosition      () << std::endl ;
+           << step -> GetDeltaPosition      () 
+           << std::flush << std::endl ;
 
     stream << s_name 
            << " DeltaMomentum      :"          
-           << step -> GetDeltaMomentum      () << std::endl ;
-    
+           << step -> GetDeltaMomentum      () 
+           << std::flush << std::endl ;    
 
     stream << s_name 
            << " DeltaEnergy        :"          
-           << step -> GetDeltaEnergy        () << std::endl ;
+           << step -> GetDeltaEnergy        () 
+           << std::flush << std::endl ;
     
+    GiGaUtil::DumpG4Track( stream , step->GetTrack() )  ;
     
-    return GiGaUtil::DumpG4Track( stream , step->GetTrack() )  ;
+    stream << std::flush ;
+    
+    return stream ;
+    
   };
   
 };

@@ -1,6 +1,13 @@
 Package:          GiGa
 Package manager : Vanya Belyaev
 
+! 2004-03-20 - Ivan BELYAEV
+ - src/Lib/DumpG4Track.cpp
+ - src/Lib/DumpG4Step.cpp   - add few std::flush into printouts + 
+                              static counters for total number of occurance
+
+ - cmt/requirements         - increment the version
+ 
 !=========================== GiGa v16r1 ===================================
 ! 2004-03-16 - Florence RANJARD
  - DumpG4Track.cpp, DumpG4Step.cpp, GiGaTrajectory.cpp - fix printout in case

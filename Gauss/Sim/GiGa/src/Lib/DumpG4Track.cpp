@@ -1,8 +1,11 @@
-// $Id: DumpG4Track.cpp,v 1.4 2004-03-17 08:54:59 ranjard Exp $
+// $Id: DumpG4Track.cpp,v 1.5 2004-03-20 20:12:58 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/03/17 08:54:59  ranjard
+// v16r1 - fix printout
+//
 // Revision 1.3  2004/02/22 16:51:09  ibelyaev
 //  add DumpG4Event
 //
@@ -71,22 +74,28 @@ namespace GiGaUtil
   {
     static const std::string s_name  = " GiGaUtil::DumpG4Track " ;
     static const std::string s_stars = std::string ( 50 , '*' ) ;
-    //
-    //stream << s_name << (void*) track << " " << s_stars << std::endl  ;
-
+    
+    static unsigned long s_DumpG4Track = 0 ;
+    
     if ( 0 == track ) 
     { return stream << s_name << " G4Track* points to NULL" << std::endl  ; }
     
+    stream << s_name << (void*) track << " " << s_stars 
+           << std::flush << std::endl  ;
+    
     stream << s_name 
+           << " (#"    << ++s_DumpG4Track << ")"  
            << " TrackID/ParentID " << track->GetTrackID  () 
-           << " / "                << track->GetParentID () << std::endl  ;
+           << " / "                << track->GetParentID () 
+           << std::flush << std::endl  ;
     
     { // particle 
       const G4DynamicParticle* dp = track->GetDynamicParticle() ;
       if (  0 == dp ) 
       { stream << s_name 
                << " GetDynamicParticle: " 
-               << " G4DynamicParticle*    points to NULL" << std::endl ; }
+               << " G4DynamicParticle*    points to NULL" 
+               << std::flush << std::endl ; }
     }
     
     { // definition 
@@ -94,96 +103,117 @@ namespace GiGaUtil
       if ( 0 == pd  ) 
       { stream << s_name 
                << " GetDefinition:      "
-               << " G4ParticleDefinition* points to NULL" << std::endl ; }
+               << " G4ParticleDefinition* points to NULL" 
+               << std::flush << std::endl ; }
       else 
       { stream << s_name 
-               << " Particle      : " << pd->GetParticleName () << std::endl  ; }
+               << " Particle      : " << pd->GetParticleName () 
+               << std::flush << std::endl  ; }
       
     }
     
     stream << s_name 
-           << " Position      : " << track -> GetPosition      () << std::endl  ;
+           << " Position      : " << track -> GetPosition      ()
+           << std::flush << std::endl  ;
     stream << s_name 
-           << " GlobalTime    : " << track -> GetGlobalTime    () << std::endl  ;
+           << " GlobalTime    : " << track -> GetGlobalTime    () 
+           << std::flush << std::endl  ;
     stream << s_name 
-           << " LocalTime     : " << track -> GetLocalTime     () << std::endl  ;
+           << " LocalTime     : " << track -> GetLocalTime     () 
+           << std::flush << std::endl  ;
     stream << s_name 
-           << " ProperTime    : " << track -> GetProperTime    () << std::endl  ;
+           << " ProperTime    : " << track -> GetProperTime    () 
+           << std::flush << std::endl  ;
 
            
     stream << s_name 
-           << " KineticEnergy : " << track -> GetKineticEnergy () << std::endl  ;
+           << " KineticEnergy : " << track -> GetKineticEnergy () 
+           << std::flush << std::endl  ;
     stream << s_name 
            << " Direction     : " << track -> GetMomentumDirection () 
-           << std::endl  ;
+           << std::flush << std::endl  ;
     stream << s_name 
-           << " Momentum      : " << track -> GetMomentum     ()  << std::endl  ;
+           << " Momentum      : " << track -> GetMomentum     () 
+           << std::flush << std::endl  ;
     stream << s_name 
-           << " Velocity      : " << track -> GetVelocity     ()  << std::endl  ;
+           << " Velocity      : " << track -> GetVelocity     ()  
+           << std::flush << std::endl  ;
     stream << s_name 
-           << " Polarization  : " << track -> GetPolarization ()  << std::endl  ;
+           << " Polarization  : " << track -> GetPolarization ()  
+           << std::flush << std::endl  ;
     
     stream << s_name 
-           << " TrackStatus   : " << track -> GetTrackStatus  ()  << std::endl  ;
+           << " TrackStatus   : " << track -> GetTrackStatus  ()  
+           << std::flush << std::endl  ;
     
     stream << s_name 
-           << " BelowThreshold: " << track -> IsBelowThreshold()  << std::endl  ;
+           << " BelowThreshold: " << track -> IsBelowThreshold()  
+           << std::flush << std::endl  ;
     stream << s_name 
-           << " GoodForTracking " << track -> IsGoodForTracking() << std::endl  ;
+           << " GoodForTracking " << track -> IsGoodForTracking()
+           << std::flush << std::endl  ;
     
     stream << s_name 
-           << " TrackLength   : " << track -> GetTrackLength  ()  << std::endl  ;
+           << " TrackLength   : " << track -> GetTrackLength  ()  
+           << std::flush << std::endl  ;
     
     { // step 
       const G4Step* step = track -> GetStep () ;
       if ( 0 == step ) 
       { stream << s_name 
                << " GetStep:            "
-               << " G4Step:               points to NULL" << std::endl ; }
+               << " G4Step:               points to NULL" 
+               << std::flush << std::endl ; }
       else 
       { stream << s_name 
-               << " Step          : " << (void*) step << std::endl  ; }
+               << " Step          : " << (void*) step 
+               << std::flush << std::endl  ; }
     }  
     
     stream << s_name 
            << " StepNumber    : " << track -> GetCurrentStepNumber ()  
-           << std::endl  ;
+           << std::flush << std::endl  ;
     
     stream << s_name 
-           << " StepLength    : " << track -> GetStepLength    () << std::endl  ;
+           << " StepLength    : " << track -> GetStepLength    () 
+           << std::flush << std::endl  ;
     
     stream << s_name 
-           << " VertexPosition: " << track -> GetVertexPosition() << std::endl  ;
+           << " VertexPosition: " << track -> GetVertexPosition() 
+           << std::flush << std::endl  ;
     stream << s_name 
-           << " VertexMomentumDirection " << 
-      track -> GetVertexMomentumDirection() << std::endl  ;
+           << " VertexMomentumDirection " 
+           << track -> GetVertexMomentumDirection() 
+           << std::flush << std::endl  ;
     stream << s_name 
            << " VertexKineticEnergy     " << track -> GetVertexKineticEnergy() 
-           << std::endl  ;
+           << std::flush << std::endl  ;
     
     { // logical volume at vertex 
       const G4LogicalVolume* lVol = track->GetLogicalVolumeAtVertex() ;
       if ( 0 == lVol ) 
       { stream << s_name 
                << " GetLogicalVolumeAtVertex: "
-               << " G4LogicalVolume*    points to NULL" << std::endl ; }
+               << " G4LogicalVolume*    points to NULL" 
+               << std::flush << std::endl ; }
       else 
       {
         stream << s_name
                << " LogicalVolumeAtVertex : "
-               << lVol->GetName() << std::endl  ;
+               << lVol->GetName() << std::flush << std::endl  ;
         if( 0 != lVol->GetMaterial() )
         {
           stream << s_name 
                  << " Material of the LogicalVolumeAtVertex " 
-                 << std::endl  ;
-          stream << (*(lVol->GetMaterial())) << std::endl  ;
+                 << std::flush << std::endl  ;
+          stream << (*(lVol->GetMaterial())) 
+                 << std::flush << std::endl  ;
         }
         else 
         {
           stream << s_name 
                  << " Material of the LogicalVolumeAtVertex " 
-                 << " NULL " << std::endl  ;
+                 << " NULL " << std::flush << std::endl  ;
         } 
       }
     }
@@ -194,29 +224,34 @@ namespace GiGaUtil
       if ( 0 == proc ) 
       { stream << s_name 
                << " GetCreatorProcess   "
-               << " G4VProcess*         points to NULL" << std::endl ; }
+               << " G4VProcess*         points to NULL" 
+               << std::flush << std::endl ; }
       else 
       {
         stream << s_name 
                << " CreatorProcess Type     : " 
-               << proc->GetProcessType() << std::endl  ;
+               << proc->GetProcessType() << std::flush << std::endl  ;
         stream << s_name 
                << " CreatorProcess TypeName : " 
                << G4VProcess::GetProcessTypeName( proc->GetProcessType() ) 
-               << std::endl  ;
+               << std::flush << std::endl  ;
         stream << s_name
                << " CreatorProcess Name     : "
-               << proc->GetProcessName() << std::endl  ;
+               << proc->GetProcessName() 
+               << std::flush << std::endl  ;
         stream << s_name
                << " CreatorProcess Class    : "
                << System::typeinfoName( typeid( *proc ) ) 
-               << std::endl  ;
+               << std::flush << std::endl  ;
       }
     }
     
     stream << s_name 
-           << " Weight        : " << track -> GetWeight        () << std::endl  ;
+           << " Weight        : " << track -> GetWeight        () 
+           << std::flush << std::endl  ;
     
+    stream << std::flush ;
+
     return stream ;
   };
 
