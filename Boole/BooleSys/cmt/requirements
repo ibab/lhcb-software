@@ -40,5 +40,5 @@ use MuonAlgs            v5r6	Muon
 use MuonBackground	v1r8	Muon
 
 # Rich
-use RichDigiQC		v1r8	Rich
-use RichReadout		v1r10	Rich
+use RichDigiQC		v2r0	Rich
+use RichReadout		v1r11	Rich
