@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/24 09:05:36  ibelyaev
+/// bug fix
+///
 /// Revision 1.2  2001/07/24 07:11:04  ibelyaev
 /// new methods for object deletion in GiGaUtil namespace
 ///
@@ -73,7 +76,7 @@ namespace GiGaUtil
     return 
       obj ? 
       std::string( System::typeinfoName( typeid(*obj) ) ) : 
-      std::string( "UNKNOWN_object"                     ) ; 
+      std::string( "'UNKNOWN_type'" ) ;
   };
   
   /** @class Delete 

@@ -1,14 +1,21 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.32 2001-07-24 09:48:14 ibelyaev Exp $
+! $Id: release.notes,v 1.33 2001-07-25 17:18:09 ibelyaev Exp $
 ! =============================================================================
 
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
 !===========================================================================
-! 20010723   v Vanya Belyaev 
+! 20010724    Vanya Belyaev 
+
+     1) Remove ALL conversions from GiGa!
+     2) Introduce new interface IGiGaGeoSrc - minimal source of geometry 
+        information. 
+
+!===========================================================================
+! 20010723    Vanya Belyaev 
      src/component/GiGaTrackActionSequence.h/.cpp
       - a new concrete Tracking Actions, it is just a sequence of 
         other tracking actions 
@@ -17,7 +24,7 @@ Package manager : Vanya Belyaev
         other event actions 
 
 !===========================================================================
-! 20010723   v Vanya Belyaev 
+! 20010723    Vanya Belyaev 
      GiGa/GiGaUtil.h 
      three new useful utilities for deletion of object
           GiGaUtil::Delete     - class swith templated method  

@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.5  2001/07/23 13:12:12  ibelyaev
+/// the package restructurisation(II)
+///
 /// Revision 1.4  2001/07/15 20:54:26  ibelyaev
 /// package restructurisation
 ///
@@ -21,8 +24,9 @@
 #include  "GaudiKernel/Chrono.h" 
 /// GiGa 
 #include  "GiGa/GiGaException.h"
-#include  "GiGa/IGiGaGeoCnvSvc.h" 
+#include  "GiGa/IGiGaGeoSrc.h" 
 #include  "GiGa/GiGaRunManager.h" 
+#include  "GiGa/GiGaUtil.h" 
 /// G4 
 #include  "G4Timer.hh"
 #include  "G4StateManager.hh"
@@ -128,7 +132,7 @@ GiGaRunManager::GiGaRunManager( const std::string & Name   ,
   : G4RunManager   (         )
   , m_svcLoc       (   svc   )  
   , m_rootGeo      (    0    ) 
-  , m_cnvSvc       (    0    ) 
+  , m_geoSrc       (    0    ) 
   , m_g4UIsession  (    0    ) 
   , m_g4VisManager (    0    ) 
   , m_krn_st       (  false  ) 
@@ -162,11 +166,17 @@ GiGaRunManager::GiGaRunManager( const std::string & Name   ,
   };
   ///
   {
-    sc = svcLoc()->service("CiGaGeomCnvSvc" , m_cnvSvc ) ;
-    if( sc.isSuccess() && 0 != m_cnvSvc ) 
-      { m_cnvSvc ->addRef() ; } 
-  };
-  ///
+    StatusCode sc = svcLoc()->service( "GiGaGeomCnvSvc", m_geoSrc ); 
+
+    if( sc.isSuccess() && 0 != geoSrc() ) 
+      { geoSrc()->addRef() ; }
+    std::cerr 
+      << " Like4 Svc located??" <<  sc.isSuccess()  << " 1 < 2 " << ( 1 < 2 ) 
+      << GiGaUtil::ObjTypeName( m_geoSrc ) 
+      << std::endl;    
+  }
+
+
 };
 
 /// ===========================================================================
@@ -175,7 +185,7 @@ GiGaRunManager::GiGaRunManager( const std::string & Name   ,
 GiGaRunManager::~GiGaRunManager()
 {
   /// release services
-  if( 0 != m_cnvSvc     ) { m_cnvSvc    ->release() ;  m_cnvSvc    = 0 ; } 
+  if( 0 != geoSrc    () ) { geoSrc    ()->release() ;  m_geoSrc    = 0 ; } 
   if( 0 != chronoSvc () ) { chronoSvc ()->release() ;  m_chronoSvc = 0 ; } 
   if( 0 != msgSvc    () ) { msgSvc    ()->release() ;  m_msgSvc    = 0 ; } 
 };
@@ -432,7 +442,7 @@ StatusCode GiGaRunManager::initializeKernel()
           Tag + " Wrong curent state (must be PreInit or Idle)" ) ; 
   Assert( ( G4RunManager::geometryInitialized || 
             ( 0 != G4RunManager::userDetector ) || 
-            ( 0 != m_rootGeo ) || ( 0 != cnvSvc() ) ) , 
+            ( 0 != m_rootGeo ) || ( 0 != geoSrc() ) ) , 
           Tag + " It is not possible to initialize the Detector!"   ) ; 
   Assert( ( G4RunManager::physicsInitialized  || 
             ( 0 != G4RunManager::physicsList ) ) , 
@@ -938,7 +948,7 @@ void GiGaRunManager::InitializeGeometry()
   ///
   MsgStream log( msgSvc() , name()+"::initializeGeometry()" ) ; 
   ///
-  Assert( 0 != G4RunManager::userDetector || 0 != m_rootGeo || 0 != cnvSvc() , 
+  Assert( 0 != G4RunManager::userDetector || 0 != m_rootGeo || 0 != geoSrc() , 
           "::InitializeGeometry(), no any geometry souces are available!" );  
   ///
   G4VPhysicalVolume* root = 0; 
@@ -956,13 +966,13 @@ void GiGaRunManager::InitializeGeometry()
       log << MSG::DEBUG << " Geometry is      constructed using " 
           << objType( G4RunManager::userDetector ) << endreq;
     }
-  else if ( 0 != cnvSvc()                  )
+  else if ( 0 != geoSrc()                  )
     {
       log << MSG::INFO  << " Geometry will be converted using " 
-          << objType( cnvSvc() ) << endreq; 
-      root = cnvSvc()->G4WorldPV(); 
+          << objType( geoSrc() ) << endreq; 
+      root = geoSrc()->G4WorldPV(); 
       log << MSG::DEBUG << " Geometry is      converted using " 
-          << objType( cnvSvc() ) << endreq; 
+          << objType( geoSrc() ) << endreq; 
     }
   else   
     { log << MSG::FATAL 
@@ -994,32 +1004,6 @@ void GiGaRunManager::Initialize()
     }
   ___GIGA_CATCH_AND_THROW___(Tag,method);  
   ///
-};
-
-/// ===========================================================================
-/** retrieve the pointer minimal geometry conversion service 
- *  @return pointer to minimal geometry conversion service 
- */
-/// ===========================================================================
-IGiGaGeoCnvSvc*   GiGaRunManager::cnvSvc    () const 
-{
-  /// service is not located 
-  if( 0 != m_cnvSvc ) { return m_cnvSvc; }  /// RETURN!!
-  /// locate service
-  {
-    IService* iS = 0 ; 
-    const std::string tmp("GiGaGeomCnvSvc");
-    StatusCode sc = svcLoc()->getService( tmp , iS ) ;
-    if( sc.isSuccess() && 0 != iS ) 
-      { m_cnvSvc = dynamic_cast<IGiGaGeoCnvSvc*> ( iS ); }  
-    if( 0 != m_cnvSvc ) 
-      { m_cnvSvc->addRef() ;  return m_cnvSvc; }         /// RETURN   
-    ///
-    MsgStream log( msgSvc() , name() ) ; 
-    log << MSG::ERROR << " Couldn't locate ConversionService="+tmp << endreq; 
-  } 
-  ///
-  return 0;
 };
 
 /// ===========================================================================

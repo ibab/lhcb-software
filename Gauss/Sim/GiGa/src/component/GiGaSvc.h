@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/15 20:54:35  ibelyaev
+/// package restructurisation
+///
 /// ===========================================================================
 #ifndef       GIGA_GIGASVC_H
 #define       GIGA_GIGASVC_H   1 
@@ -410,6 +413,9 @@ private:
   inline  IChronoStatSvc*        chronoSvc () const { return m_chronoSvc ; } ;
   /// accessor to object manager 
   inline  IObjManager*           objMgr    () const { return m_objMgr    ; } ;
+  /// accessor to Service Locator 
+  inline  ISvcLocator*           svcLoc    () const 
+  { return serviceLocator() ; }
   
   /** assertion 
    *  @param assertion   assertion condition

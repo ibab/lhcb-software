@@ -1,7 +1,10 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/23 20:53:46  ibelyaev
+/// reorganization of GiGaUtil namespace
+/// 
 /// ===========================================================================
 /// STD & STL 
 #include <algorithm> 
@@ -84,11 +87,11 @@ StatusCode GiGaUtil::SplitTypeAndName ( const std::string& TypeAndName ,
       /// construct the name and the type
       Type = std::string( TypeAndName , 0   , pos );
       if( Type.empty()    ) { return StatusCode::FAILURE ; }  ///< RETURN 
-      Name = std::string( TypeAndName , pos , std::string::npos ) ;
+      Name = std::string( TypeAndName , pos + 1 , std::string::npos ) ;
       if( Name.empty()    ) { Name = Type ; }
     }  
   ///
-  return StatusCode::FAILURE; 
+  return StatusCode::SUCCESS; 
   ///
 };
 

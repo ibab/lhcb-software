@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.7  2001/07/23 13:11:42  ibelyaev
+/// the package restructurisation(II)
+///
 /// ===========================================================================
 #ifndef   GIGA_GIGARUNMANAGER_H
 #define   GIGA_GIGARUNMANAGER_H  1
@@ -19,7 +22,6 @@
 #include   "GaudiKernel/IMessageSvc.h"
 #include   "GaudiKernel/IChronoStatSvc.h"
 /// GiGa 
-#include   "GiGa/IGiGaGeoCnvSvc.h"
 #include   "GiGa/GiGaException.h"
 /// Geant4 
 #include   "G4RunManager.hh" 
@@ -27,7 +29,7 @@
 class     IParticlePropertySvc          ;
 class     IChronoStatSvc                ;
 class     ISvcLocator                   ;
-class     IGiGaGeomCnvSvc               ;
+class     IGiGaGeoSrc                   ;
 /// forward declarations (Geant4) 
 class     G4VUserPrimaryGeneratorAction ;
 class     G4VUserDetectorConstruction   ;
@@ -212,10 +214,10 @@ public:
    */
   inline ISvcLocator*       svcLoc    () const { return m_svcLoc    ; } ;
 
-  /** retrieve the pointer minimal geometry conversion service 
-   *  @return pointer to minimal geometry conversion service 
+  /** retrieve the pointer minimal geometry information source 
+   *  @return pointer to minimal geometry information source  
    */
-  IGiGaGeoCnvSvc*           cnvSvc    () const                          ;
+  inline IGiGaGeoSrc*       geoSrc    () const { return m_geoSrc    ; } ;
 
   /// UI commands to be executed at start
   inline const Strings&  startUIcommands      () const { return m_s  ; } ;
@@ -244,7 +246,7 @@ public:
   void       InitializeGeometry() ;
   /// initialize 
   void       Initialize()         ; 
-  
+
  protected:
 
   /** initialize the Geant4 kernel
@@ -296,7 +298,7 @@ public:
 
   ISvcLocator*               m_svcLoc       ; 
   G4VPhysicalVolume*         m_rootGeo      ;
-  mutable IGiGaGeoCnvSvc*    m_cnvSvc       ;
+  IGiGaGeoSrc*               m_geoSrc       ;
   G4UIsession*               m_g4UIsession  ;
   G4VisManager*              m_g4VisManager ;
 
