@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.4 2004-05-18 11:44:18 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.5 2004-05-18 14:25:11 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -85,7 +85,7 @@ protected:
 private:
   LinksByKey*                        m_links;
   LinkReference                      m_curReference;
-  std::vectgor<std::pair<int,int> >::const_iterator m_srcIterator;
+  std::vector<std::pair<int,int> >::const_iterator m_srcIterator;
   int                                m_wantedKey;
 };
 #endif // LINKER_LINKEDFROM_H
