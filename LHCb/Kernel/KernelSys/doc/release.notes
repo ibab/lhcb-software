@@ -4,6 +4,10 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+!======================== KernelSys v1r6 2003-10-14 ========================
+! 2003-10-14 - Marco Cattaneo
+ - Use RichKernel v3r3, CaloKernel v2r3p1
+
 !======================== KernelSys v1r5 2003-09-26 ========================
 ! 2003-09-26 - Marco Cattaneo
  - Use RichKernel v3r2
