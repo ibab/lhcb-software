@@ -5,11 +5,15 @@
  *  Header file for RICH reconstruction tool interface : IRichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: IRichExpectedTrackSignal.h,v 1.5 2004-07-26 18:00:57 jonrob Exp $
+ *  $Id: IRichExpectedTrackSignal.h,v 1.6 2004-10-30 19:21:56 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/26 18:00:57  jonrob
+ *  Various improvements to the doxygen comments
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Turn back to forward declaration for RichPID once hack in RichEvent is removed
  */
 //-----------------------------------------------------------------------------
 
@@ -19,7 +23,9 @@
 // Event model
 class RichRecSegment;
 class RichRecTrack;
-class RichPID;
+// Change to include whilst we have the two RichPIDs hack
+//class RichPID;
+#include "Event/RichPID.h"
 
 // Kernel
 #include "RichKernel/RichParticleIDType.h"
