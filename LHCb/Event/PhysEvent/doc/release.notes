@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.32 2002-12-03 17:35:54 cattanem Exp $
+! $Id: release.notes,v 1.33 2002-12-04 15:28:24 ranjard Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
+
+!========================= PhysEvent v7r3 2002-1204 =====================
+! 2002-11-28 - Florence Ranjard
+ - requirements - use new versions to use Gaudi v11r3
 
 !========================= PhysEvent v7r2 2002-12-03 ========================
 ! 2002-12-03 - Gloria Corti
