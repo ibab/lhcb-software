@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.5 2004-03-18 09:21:30 cattanem Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.6 2004-06-28 07:08:29 mneedham Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -71,6 +71,9 @@ private:
   std::vector<double> m_Q;       ///< Field vector
   double m_Dxyz[3];              ///< Steps in x, y and z
   int    m_Nxyz[3];              ///< Number of steps in x, y and z
+  double m_max_FL[3];    
+  double m_min_FL[3];
+
   double m_zOffSet;              ///< The z offset
 
 };

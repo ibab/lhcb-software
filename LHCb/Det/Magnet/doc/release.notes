@@ -3,6 +3,9 @@
 ! Responsible : Edgar De Oliveira
 ! Purpose     : Provides magnetic field map
 !-----------------------------------------------------------------------------
+! 2004-04-28 M. Needham
+  - Clean up fieldGrid() - Avoid temporary copying to arrays
+                         - Intialize start/stop field once per event
 
 !====================== Magnet v2r6 2004-04-07 ==========================
 ! 2004-04-07 - Marco Cattaneo

@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.10 2004-04-07 13:34:43 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.11 2004-06-28 07:08:29 mneedham Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -41,6 +41,9 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
     m_filename = std::string( "field045.cdf" );
   }
   declareProperty( "FieldMapFile", m_filename ); 
+
+  m_Q.reserve(736278);
+
 }
 //=============================================================================
 // Standard destructor
@@ -68,7 +71,13 @@ StatusCode MagneticFieldSvc::initialize()
   status = parseFile();
   if ( status.isSuccess() ) {
       log << MSG::DEBUG << "Magnetic field parsed successfully" << endreq;
-      return status;
+
+    for (int iC = 0; iC< 3; ++iC ){
+      m_min_FL[iC] = 0.0;
+      m_max_FL[iC] = m_min_FL[iC]+( m_Nxyz[iC]-1 )* m_Dxyz[iC];
+    } // iC
+    
+    return status;
   }
   else {
     log << MSG::DEBUG << "Magnetic field parse failled" << endreq;
@@ -213,9 +222,11 @@ StatusCode MagneticFieldSvc::parseFile() {
       return StatusCode::FAILURE;
     }
   }
-  else
+  else {
   	log << MSG::ERROR << "Unable to open magnetic field file : " 
         << m_filename << endreq;
+  }
+  
   return sc;
 }
 
@@ -237,136 +248,111 @@ StatusCode MagneticFieldSvc::fieldVector(const HepPoint3D& r,
 //=============================================================================
 void MagneticFieldSvc::fieldGrid (const HepPoint3D& r, 
                                    HepVector3D& bf ) const {
-  
-  double xmin_FL, ymin_FL, zmin_FL;
-  double xmax_FL, ymax_FL, zmax_FL;
-  
-  // step size in x, y and z
-  double dx_FL, dy_FL, dz_FL;
-  
-  // number of steps in x, y and z 
-  int nx_FL, ny_FL, nz_FL;
+    
+  bf[0] = 0.0;
+  bf[1] = 0.0;
+  bf[2] = 0.0;
 
+  ///  Linear interpolated field
+  double z = r.z() - m_zOffSet;
+  if( z < m_min_FL[2] || z >= m_max_FL[2] )  return;
+  double x = fabs( r.x() );  
+  if( x < m_min_FL[0] || x >= m_max_FL[0] )  return;
+  double y = fabs( r.y() );
+  if( y < m_min_FL[1] || y >= m_max_FL[1] )  return;
+  int i = int( x/m_Dxyz[0]);
+  int j = int( y/m_Dxyz[1] );
+  int k = int( z/m_Dxyz[2] );
+  
+  int ijk000 = 3*( m_Nxyz[0]*( m_Nxyz[1]*k     + j )     + i );
+  int ijk001 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j )     + i );
+  int ijk010 = 3*( m_Nxyz[0]*( m_Nxyz[1]*k     + j + 1 ) + i );
+  int ijk011 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j + 1)  + i );
+  int ijk100 = 3*( m_Nxyz[0]*( m_Nxyz[1]*k     + j)      + i + 1 );
+  int ijk101 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j)      + i + 1 );
+  int ijk110 = 3*( m_Nxyz[0]*( m_Nxyz[1]*k     + j + 1)  + i + 1 );
+  int ijk111 = 3*( m_Nxyz[0]*( m_Nxyz[1]*(k+1) + j + 1 ) + i + 1 );
+
+  
   // auxiliary variables defined at the vertices of the cube that
   // contains the (x, y, z) point where the field is interpolated
-  double     x,     y,     z,   hx0,   hx1,   hy0,   hy1,   hz0, hz1;
-  double   h000,  h001,  h010,  h011,  h100,  h101,  h110,  h111;
-  double  cx000, cx001, cx010, cx011, cx100, cx101, cx110, cx111;
-  double  cy000, cy001, cy010, cy011, cy100, cy101, cy110, cy111;
-  double  cz000, cz001, cz010, cz011, cz100, cz101, cz110, cz111;
-  
-  int i, j, k;
-  int ijk000, ijk001, ijk010, ijk011, ijk100, ijk101, ijk110, ijk111;
+  double cx000 = m_Q[ ijk000 ];
+  double cx001 = m_Q[ ijk001 ];
+  double cx010 = m_Q[ ijk010 ];
+  double cx011 = m_Q[ ijk011 ];
+  double cx100 = m_Q[ ijk100 ];
+  double cx101 = m_Q[ ijk101 ];
+  double cx110 = m_Q[ ijk110 ];
+  double cx111 = m_Q[ ijk111 ];
+  double cy000 = m_Q[ ijk000+1 ];
+  double cy001 = m_Q[ ijk001+1 ];
+  double cy010 = m_Q[ ijk010+1 ];
+  double cy011 = m_Q[ ijk011+1 ];
+  double cy100 = m_Q[ ijk100+1 ];
+  double cy101 = m_Q[ ijk101+1 ];
+  double cy110 = m_Q[ ijk110+1 ];
+  double cy111 = m_Q[ ijk111+1 ];
+  double cz000 = m_Q[ ijk000+2 ];
+  double cz001 = m_Q[ ijk001+2 ];
+  double cz010 = m_Q[ ijk010+2 ];
+  double cz011 = m_Q[ ijk011+2 ];
+  double cz100 = m_Q[ ijk100+2 ];
+  double cz101 = m_Q[ ijk101+2 ];
+  double cz110 = m_Q[ ijk110+2 ];
+  double cz111 = m_Q[ ijk111+2 ];
+  double hx1 = ( x-i*m_Dxyz[0] )/m_Dxyz[0];
+  double hy1 = ( y-j*m_Dxyz[1] )/m_Dxyz[1];
+  double hz1 = ( z-k*m_Dxyz[2] )/m_Dxyz[2];
+  double hx0 = 1.0-hx1;
+  double hy0 = 1.0-hy1;
+  double hz0 = 1.0-hz1;
 
-  bf[0] = 0.;
-  bf[1] = 0.;
-  bf[2] = 0.;
-
-  dx_FL = m_Dxyz[0];
-  dy_FL = m_Dxyz[1];
-  dz_FL = m_Dxyz[2];
-  nx_FL = m_Nxyz[0];
-  ny_FL = m_Nxyz[1];
-  nz_FL = m_Nxyz[2];
-  
-  xmin_FL = 0.;
-  ymin_FL = 0.;
-  zmin_FL = 0.;
-  xmax_FL = xmin_FL+( nx_FL-1 )*dx_FL;
-  ymax_FL = ymin_FL+( ny_FL-1 )*dy_FL;
-  zmax_FL = zmin_FL+( nz_FL-1 )*dz_FL;
-  
-  double xvect[3];
-  xvect[0] = r.x();
-  xvect[1] = r.y();
-  xvect[2] = r.z();
-  
-  ///  Linear interpolated field
-  z = xvect[2] - m_zOffSet;
-  if( z < zmin_FL || z >= zmax_FL )  return;
-  x = fabs( xvect[0] );  
-  if( x < xmin_FL || x >= xmax_FL )  return;
-  y = fabs( xvect[1] );
-  if( y < ymin_FL || y >= ymax_FL )  return;
-  i = int( x/dx_FL );
-  j = int( y/dy_FL );
-  k = int( z/dz_FL );
-  
-  ijk000 = 3*( nx_FL*( ny_FL*k     + j )     + i );
-  ijk001 = 3*( nx_FL*( ny_FL*(k+1) + j )     + i );
-  ijk010 = 3*( nx_FL*( ny_FL*k     + j + 1 ) + i );
-  ijk011 = 3*( nx_FL*( ny_FL*(k+1) + j + 1)  + i );
-  ijk100 = 3*( nx_FL*( ny_FL*k     + j)      + i + 1 );
-  ijk101 = 3*( nx_FL*( ny_FL*(k+1) + j)      + i + 1 );
-  ijk110 = 3*( nx_FL*( ny_FL*k     + j + 1)  + i + 1 );
-  ijk111 = 3*( nx_FL*( ny_FL*(k+1) + j + 1 ) + i + 1 );
-  cx000 = m_Q[ ijk000 ];
-  cx001 = m_Q[ ijk001 ];
-  cx010 = m_Q[ ijk010 ];
-  cx011 = m_Q[ ijk011 ];
-  cx100 = m_Q[ ijk100 ];
-  cx101 = m_Q[ ijk101 ];
-  cx110 = m_Q[ ijk110 ];
-  cx111 = m_Q[ ijk111 ];
-  cy000 = m_Q[ ijk000+1 ];
-  cy001 = m_Q[ ijk001+1 ];
-  cy010 = m_Q[ ijk010+1 ];
-  cy011 = m_Q[ ijk011+1 ];
-  cy100 = m_Q[ ijk100+1 ];
-  cy101 = m_Q[ ijk101+1 ];
-  cy110 = m_Q[ ijk110+1 ];
-  cy111 = m_Q[ ijk111+1 ];
-  cz000 = m_Q[ ijk000+2 ];
-  cz001 = m_Q[ ijk001+2 ];
-  cz010 = m_Q[ ijk010+2 ];
-  cz011 = m_Q[ ijk011+2 ];
-  cz100 = m_Q[ ijk100+2 ];
-  cz101 = m_Q[ ijk101+2 ];
-  cz110 = m_Q[ ijk110+2 ];
-  cz111 = m_Q[ ijk111+2 ];
-  hx1 = ( x-i*dx_FL )/dx_FL;
-  hy1 = ( y-j*dy_FL )/dy_FL;
-  hz1 = ( z-k*dz_FL )/dz_FL;
-  hx0 = 1.0-hx1;
-  hy0 = 1.0-hy1;
-  hz0 = 1.0-hz1;
-  h000 = hx0*hy0*hz0;
+  double h000 = hx0*hy0*hz0;
   if( fabs(h000) > 0.0 &&
       cx000 > 9.0e5 && cy000 > 9.0e5 && cz000 > 9.0e5) return;
-  h001 = hx0*hy0*hz1;
+ 
+  double h001 = hx0*hy0*hz1;
   if( fabs(h001) > 0.0 && 
       cx001 > 9.0e5 && cy001 > 9.0e5 && cz001 > 9.0e5) return;
-  h010 = hx0*hy1*hz0;
+
+  double h010 = hx0*hy1*hz0;
   if( fabs(h010) > 0.0 && 
       cx010 > 9.0e5 && cy010 > 9.0e5 && cz010 > 9.0e5) return;
-  h011 = hx0*hy1*hz1;
+
+  double h011 = hx0*hy1*hz1;
   if( fabs(h011) > 0.0 && 
       cx011 > 9.0e5 && cy011 > 9.0e5 && cz011 > 9.0e5) return;
-  h100 = hx1*hy0*hz0;
+
+  double h100 = hx1*hy0*hz0;
   if( fabs(h100) > 0.0 && 
       cx100 > 9.0e5 && cy100 > 9.0e5 && cz100 > 9.0e5) return;
-  h101 = hx1*hy0*hz1;
+ 
+  double h101 = hx1*hy0*hz1;
   if( fabs(h101) > 0.0 && 
       cx101 > 9.0e5 && cy101 > 9.0e5 && cz101 > 9.0e5) return;
-  h110 = hx1*hy1*hz0;
+ 
+  double h110 = hx1*hy1*hz0;
   if( fabs(h110) > 0.0 && 
       cx110 > 9.0e5 && cy110 > 9.0e5 && cz110 > 9.0e5) return;
-  h111 = hx1*hy1*hz1;
+
+  double h111 = hx1*hy1*hz1;
   if( fabs(h111) > 0.0 && 
       cx111 > 9.0e5 && cy111 > 9.0e5 && cz111 > 9.0e5) return;
+
   bf(0) = ( cx000*h000 + cx001*h001 + cx010*h010 + cx011*h011 +
             cx100*h100 + cx101*h101 + cx110*h110 + cx111*h111);
   bf(1) = ( cy000*h000 + cy001*h001 + cy010*h010 + cy011*h011 +
             cy100*h100 + cy101*h101 + cy110*h110 + cy111*h111 );
   bf(2) = ( cz000*h000 + cz001*h001 + cz010*h010 + cz011*h011 +
             cz100*h100 + cz101*h101 + cz110*h110 + cz111*h111 );
-  if( xvect[0] < 0. && xvect[1] >= 0. ){
+
+  if( r.x() < 0. && r.y() >= 0. ){
     bf(0) = -bf(0);
   }
-  else if( xvect[0] < 0. && xvect[1] < 0. ){
+  else if(  r.x() < 0. &&  r.y()  < 0. ){
     bf(2) = -bf(2);
   }
-  else if( xvect[0] >= 0. && xvect[1] < 0. ){    
+  else if( r.x() >= 0. && r.y() < 0. ){    
     bf(0) = -bf(0);
     bf(2) = -bf(2);
   } 
