@@ -1,6 +1,15 @@
-!  $Id: release.notes,v 1.22 2002-12-05 15:54:30 ranjard Exp $
+!  $Id: release.notes,v 1.23 2003-01-29 14:55:24 atsareg Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
+
+! 2003-01-28 - A.Tsaregorodtsev
+  - Changed logic for treating the PU overflow conditions: now
+    PU always returns 2 randomly chosen candidates if there are
+    more than 2 candidates found; No more the whole quarter of the
+    processor is empty in this case;
+  - M3 seeds cleaning is done by default as supposed to be in hardware;
+  - Default FoIs are set to reasonable values for the 125 KHz L0Muon
+    bandwidth (O.Leroy)
 
 !======================== L0Muon v6r3 2002-12-06 ======================
 ! 2002-11-15 - Florence Ranjard
