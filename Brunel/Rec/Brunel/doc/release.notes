@@ -41,7 +41,6 @@ Purpose: LHCb reconstruction program
      (GaudiDb v9r2, CaloReCreateMCLinks algorithm from CaloEvent v13r1)
 
  - Bug fixes:
-   . Fix TT beam hole size (XmlDDDB v22r0)
    . Minor fix to IT clustering (ITAlgorithms v14r1)
 
  - New packaging:
