@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.16 2003-05-29 09:13:41 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.17 2004-09-20 11:39:04 ooleroy Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -56,8 +56,8 @@ DecisionUnit::DecisionUnit( const std::string& name,
   double thrSumHadron  = 5.00 * GeV;
   double thrPi0Local   = 4.50 * GeV;
   double thrPi0Global  = 4.00 * GeV;
-  double thrMuon       = 1.10 * GeV;
-  double thrSumMuon    = 1.30 * GeV;
+  double thrMuon       = 1.30 * GeV;
+  double thrSumMuon    = 1.50 * GeV;
   double thrSumPeak2   = 3.0;
   double thrVetoMult   = 112.;
   double thrSpdMult    = 280.;
