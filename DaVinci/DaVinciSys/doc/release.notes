@@ -1,8 +1,51 @@
 !-----------------------------------------------------------------------------
 ! Package     : DaVinciSys
 ! Responsible : P. Koppenburg
-! Purpose     : 
+! Purpose     : Explicit list of all DaVinci packages
 !-----------------------------------------------------------------------------
+
+!====================  DaVinciSys v11r4 2004-03-17 ============================
+! 2004-03-16 -P. Koppenburg
+ - Bug fixes in PreLoadParticles, *DecayFinder
+   . DaVinciTools        v9r1     Phys
+   . DaVinciMCTools      v5r3     Phys
+   
+!====================  DaVinciSys v11r3 2004-03-11 ============================
+! 2004-03-11 -P. Koppenburg
+ - New DVAlgorithm, new Calo packages, new LoKi, new track nomenclature
+   . CaloPIDs            v2r0     Calo 
+   . CaloReco            v2r0     Calo
+   . MuonID              v3r7p1   Muon
+   . GlobalReco          v4r4     Rec
+   . RecoTools           v1r1     Rec
+   . DaVinci             v11r3    Phys
+   . DaVinciAssociators  v4r4     Phys
+   . DaVinciChecks       v2r1     Phys
+   . DaVinciEff          v2r9     Phys
+   . DaVinciMCTools      v5r2     Phys
+   . DaVinciTools        v9r0     Phys
+   . FlavourTagging      v4r8     Phys
+   . Ks2PiPiSel          v1r1     Phys
+   . PhysSelections      v6r2     Phys
+   . PhysSelSys          v6r3     PhysSel
+   . DecayPresel         v4r3     Tools
+   . TriggerFilter       v4r3     Tools
+   . Utilities           v1r2     Tools
+   . LoKi                v2r0     Tools
+
+- Selection packages that do not compile anymore are in quarantine
+   . B2DstarX2D02hh      v1r0    PhysSel
+   . Bc2JpsiPi           v1r0    PhysSel
+   . Bd2D0Kstar          v2r4    PhysSel
+   . Bd2JpsiKs           v1r4    PhysSel
+   . Bd2KstarGamma       v1r3    PhysSel
+   . Bd2OmegaGamma       v1r0    PhysSel
+   . Bd2PhiKs            v3r2    PhysSel
+   . Bd2PiPiPi0          v1r3    PhysSel
+   . Bs2DsH              v2r2    PhysSel
+   . Bs2PhiGamma         v1r2    PhysSel
+   . Bs2PhiPhi           v1r2    PhysSel
+   . Bu2KsPi             v1r3p2  PhysSel
 
 !====================  DaVinciSys v11r2 2004-02-23 ============================
 ! 2004-02-23 -P. Koppenburg

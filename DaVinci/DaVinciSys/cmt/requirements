@@ -33,9 +33,9 @@ use  CommonParticles    v1r0     Phys
 use  DaVinciAssociators v4r4     Phys
 use  DaVinciChecks      v2r1     Phys
 use  DaVinciEff         v2r9     Phys
-use  DaVinciMCTools     v5r2     Phys
+use  DaVinciMCTools     v5r3     Phys
 use  DaVinciTest        v4r2     Phys
-use  DaVinciTools       v9r0     Phys
+use  DaVinciTools       v9r1     Phys
 use  DaVinciUser        v4r2     Phys
 use  FlavourTagging     v4r8     Phys
 use  Ks2PiPiSel         v1r1     Phys
