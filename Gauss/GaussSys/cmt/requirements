@@ -7,7 +7,7 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 # Gauss application
-use Gauss		v10r1	Sim
+use Gauss		v10r0	Sim
 
 # GEANT4 libraries
 use GEANT4	        v5r1    Sim
