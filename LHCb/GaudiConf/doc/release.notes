@@ -1,6 +1,12 @@
 package GaudiConf
 package manager: F.Ranjard
 
+!========================== GaudiConf v6r4 2002-11-14 ======================
+! 2002-11-14 - Marco Cattaneo
+ - Added units.opts and included it from Common.opts. This file could be modified
+   in future to add units that should be parsed in job options
+
+!========================== GaudiConf v6r3 2002-05-03 ======================
 ! 20020503 - v6r3 - Pere Mato
   added options/Interactive.opts for enabling phython interactivity on
   applications
