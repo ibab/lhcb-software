@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v24r0>2004-06-14 Brunel v24r0</A></H1><PRE>
+</PRE><H1><A NAME=v24r0>2004-06-18 Brunel v24r0</A></H1><PRE>
 Development version
 
 - Modified functionality
@@ -22,8 +22,8 @@ Development version
 - New packaging and code cleanups
   . Use new GaudiSequencer base class for ProcessPhase (LHCbAlgs v1r0)
   . Use new GaudiAlg and GaudiTools base classes
-    (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithmsv14r3,
-     ITCheckers v2r3, TrExtrapolator v2r12, TrFitter v4r0)   
+    (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithms v14r3,
+     ITCheckers v2r3, TrExtrapolator v2r12, TrFitter v4r0, RichRecSys v1r11)
   . Move ITrFitter interface to TrFitEvent package, thus removing dependencies
     on TrFitter package 
     (TrFitEvent v4r6, TrFitter v4r0, TrCheck v2r5, TrCleanEx v2r10, VeloTT v1r10)
