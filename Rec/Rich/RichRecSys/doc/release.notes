@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v1r12 2004-07-22 ======================
+! 2004-07-22 - Marco Cattaneo
+ - Updates to packages for release with Gaudi v15
+
 !====================== RichRecSys v1r11 2004-06-18 ======================
 ! 2004-06-18 - Chris Jones
  - New version for RichPIDMerge due to package restructuring

@@ -3,7 +3,7 @@
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
 package           RichRecSys
-version           v1r11
+version           v1r12
 
 # ================ structure ================================================
 branches          cmt doc options
@@ -17,20 +17,20 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 use RichDAQ         v1r5   Rich
 
 # Common RICH reconstruction packages
-use RichRecBase     v1r12  Rich
-use RichRecTools    v2r10  Rich
-use RichRecCommon   v1r8   Rich
+use RichRecBase     v1r13  Rich
+use RichRecTools    v2r11  Rich
+use RichRecCommon   v1r9   Rich
 
 # PID packages
 use RichGlobalPID   v1r7   Rich
 use RichLocalPID    v1r8   Rich
-use RichRingRefit   v1r7   Rich
+use RichRingRefit   v1r8   Rich
 
 # Result merging algorithms
 use RichPIDMerge    v1r4   Rich
 
 # MC packages
-use RichRecMCTools  v1r5   Rich
+use RichRecMCTools  v1r6   Rich
 
 # =================================
 # Developmental algorithms..
