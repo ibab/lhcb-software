@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis3.cpp,v 1.2 2003-07-16 13:24:07 seaso Exp $
+// $Id: RichG4StepAnalysis3.cpp,v 1.3 2003-07-22 15:44:47 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -82,18 +82,34 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
       if(aParticle->GetDefinition() == G4OpticalPhoton::OpticalPhoton() ) {
 
         if(   aParticleKE > 0.0 ) {
+
+          //          G4cout<<"Now in Step analysis 3 "<<G4endl;
+          
           
         const G4ThreeVector prePos=aPreStepPoint->GetPosition();
 
          if(prePos.z() >= ZUpsRich1Analysis &&
             prePos.z() <= ZDnsRich1Analysis ){
+
+           //          G4cout<<"Now in Step analysis 3 inside Rich1 "<<G4endl;
+
            G4int aRadiatorNum=-1;
            const G4ThreeVector aPhotProdPos = aTrack->  GetVertexPosition();
            const G4ThreeVector postPos=aPostStepPoint->GetPosition();
+           //           G4cout<<"Now in Step analysis 3 postPosZ  "
+           //      << postPos<< G4endl;
+
+           G4String postPosMaterialName="NoMaterial";
+           G4String aPostVolName="NoVolName ";
+           
+           
+
+           
           
               if(aPhotProdPos.z()  >=  C4F10ZBeginAnalysis &&
                 aPhotProdPos.z()  <=  C4F10ZEndAnalysis ) {
                 aRadiatorNum=1;
+                //                G4cout<<" Step Analysis radiator num "<<aRadiatorNum<<G4endl;
                 
               }else if (aPhotProdPos.z()  >=  AgelZBeginAnalysis &&
                         aPhotProdPos.z()  <=  AgelZEndAnalysis && 
@@ -103,24 +119,34 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
                         aPhotProdPos.y()  <=  AgelYEndAnalysis){
 
                 aRadiatorNum=0;
-                 
+ 
+
+
+                //                 G4cout<<" Step Analysis radiator num "<<aRadiatorNum<<G4endl;
+                
               }
               
-                            
+              if(aPostStepPoint->GetPhysicalVolume()) {
+                if(  aPostStepPoint->GetPhysicalVolume()-> GetLogicalVolume()) {
+                  
+             postPosMaterialName=aPostStepPoint->GetPhysicalVolume()->
+               GetLogicalVolume()->GetMaterial()->GetName(); 
+                }
+              }
+              
+              
              G4ThreeVector PhotCurDir = aTrack->GetMomentumDirection();
 
             G4String aPreVolName=
               aPreStepPoint->GetPhysicalVolume()->GetLogicalVolume()->GetName();
-            G4String aPostVolName=
-              aPostStepPoint->GetPhysicalVolume()
-               ->GetLogicalVolume()->GetName();
  
            G4String prePosMaterialName=aPreStepPoint->GetPhysicalVolume()->
             GetLogicalVolume()->GetMaterial()->GetName(); 
 
-           G4String postPosMaterialName=aPostStepPoint->GetPhysicalVolume()->
-            GetLogicalVolume()->GetMaterial()->GetName(); 
-
+           //           G4cout<<"pre and Post step material name "
+           //      <<  prePosMaterialName <<"   "
+           // <<postPosMaterialName<<G4endl;
+           
             // Now for the photon production point in c4f10.
 
            if( aRadiatorNum == 0 || aRadiatorNum == 1 ) {
@@ -145,14 +171,25 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
              
              
              
+             
             if(aPostStepPoint->GetStepStatus() == fGeomBoundary) {
 
-              //                           G4cout<<" RichStepAnalysis Prevol Postvol  RadiatorNum"<<aPreVolName<<"   "
+              if(aPostStepPoint->GetPhysicalVolume()) {
+                if(  aPostStepPoint->GetPhysicalVolume()->GetLogicalVolume()){
+                  
+             aPostVolName=
+              aPostStepPoint->GetPhysicalVolume()
+               ->GetLogicalVolume()->GetName();
+                }
+              }
+              
+              
+              //             G4cout<<" RichStepAnalysis Prevol Postvol  RadiatorNum"<<aPreVolName<<"   "
               //                   <<aPostVolName<<"   "<<aRadiatorNum<<G4endl;
 
               // Now for the Aerogel photons entering the C4F10 volume.
 
-             G4String  aPreVolNameA =std::string(aPostVolName,0,33);
+             G4String  aPreVolNameA =std::string(aPreVolName,0,33);
 
              if(aRadiatorNum == 0 ) {
                
@@ -177,6 +214,7 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
                 
               }
              }
+             
              
 
               
@@ -290,12 +328,16 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
             
             
              
-            
+           
          }
          
          
          
+         
+         
         }
+        
+        //          G4cout<<"Now in Step analysis 3 A "<<G4endl;
         
       }else if( aParticle->GetDefinition() == G4Electron::Electron() ) {
         
@@ -390,8 +432,9 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
             
          }
          
-        
+         
       }
+      
       
       
       
