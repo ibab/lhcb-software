@@ -10,21 +10,21 @@
 #include "GiGa/GiGaPhysConstructorBase.h"
 
 //G4
-#include "G4HadronQEDBuilder.hh"
-#include "G4StoppingHadronBuilder.hh"
-#include "G4MiscLHEPBuilder.hh"
+#include "Packaging/G4HadronQEDBuilder.hh"
+#include "Packaging/G4StoppingHadronBuilder.hh"
+#include "Packaging/G4MiscLHEPBuilder.hh"
 
-#include "G4PiKBuilder.hh"
-#include "G4LEPPiKBuilder.hh"
-#include "G4QGSPPiKBuilder.hh"
+#include "Packaging/G4PiKBuilder.hh"
+#include "Packaging/G4LEPPiKBuilder.hh"
+#include "Packaging/G4QGSPPiKBuilder.hh"
 
-#include "G4ProtonBuilder.hh"
-#include "G4LEPProtonBuilder.hh"
-#include "G4QGSPProtonBuilder.hh"
+#include "Packaging/G4ProtonBuilder.hh"
+#include "Packaging/G4LEPProtonBuilder.hh"
+#include "Packaging/G4QGSPProtonBuilder.hh"
 
-#include "G4NeutronBuilder.hh"
-#include "G4LEPNeutronBuilder.hh"
-#include "G4QGSPNeutronBuilder.hh"
+#include "Packaging/G4NeutronBuilder.hh"
+#include "Packaging/G4LEPNeutronBuilder.hh"
+#include "Packaging/G4QGSPNeutronBuilder.hh"
 // forward declarations 
 template <class TYPE> class GiGaFactory;
 

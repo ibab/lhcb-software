@@ -38,6 +38,7 @@ class G4ElectroNuclearBuilder
     G4QGSModel< G4GammaParticipants > theStringModel;
     G4QGSMFragmentation theFragmentation;
     G4ExcitedStringDecay * theStringDecay;
+    G4bool wasActivated;
 };
 
 // 2002 by J.P. Wellisch

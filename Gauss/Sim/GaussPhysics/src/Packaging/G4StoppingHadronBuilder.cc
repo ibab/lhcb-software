@@ -10,14 +10,29 @@
 #include "G4AntiNeutron.hh"
 
 G4StoppingHadronBuilder::
-G4StoppingHadronBuilder() {}
+G4StoppingHadronBuilder(): wasActivated(false) {}
 
 G4StoppingHadronBuilder::
-~G4StoppingHadronBuilder() {}
+~G4StoppingHadronBuilder() 
+{
+  if(wasActivated)
+  {
+  G4ProcessManager * aProcMan = 0;
+  aProcMan = G4PionMinus::PionMinusDefinition()->GetProcessManager();
+  if(aProcMan) aProcMan->RemoveProcess(&thePionMinusAbsorption);
+  aProcMan = G4KaonMinus::KaonMinusDefinition()->GetProcessManager();
+  if(aProcMan) aProcMan->RemoveProcess(&theKaonMinusAbsorption);
+  aProcMan = G4AntiProton::AntiProtonDefinition()->GetProcessManager();
+  if(aProcMan) aProcMan->RemoveProcess(&theAntiProtonAnnihilation);
+  aProcMan = G4AntiNeutron::AntiNeutronDefinition()->GetProcessManager();
+  if(aProcMan) aProcMan->RemoveProcess(&theAntiNeutronAnnihilation);
+  }
+}
 
 void G4StoppingHadronBuilder::Build()
 {
   G4ProcessManager * aProcMan = 0;
+  wasActivated=true;
   
   // PionMinus
   aProcMan = G4PionMinus::PionMinusDefinition()->GetProcessManager();

@@ -1,12 +1,13 @@
 #ifndef G4ProtonBuilder_h
 #define G4ProtonBuilder_h 1
 
-#include<vector>
 #include "globals.hh"
 
 #include "G4HadronElasticProcess.hh"
 #include "G4ProtonInelasticProcess.hh"
 #include "G4VProtonBuilder.hh"
+
+#include <vector>
 
 class G4ProtonBuilder
 {
@@ -24,6 +25,7 @@ class G4ProtonBuilder
     
     std::vector<G4VProtonBuilder *> theModelCollections;
 
+    G4bool wasActivated;
 };
 
 // 2002 by J.P. Wellisch

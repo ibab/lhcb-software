@@ -1,7 +1,6 @@
 #ifndef G4NeutronBuilder_h
 #define G4NeutronBuilder_h 1
 
-#include<vector>
 #include "globals.hh"
 
 #include "G4HadronElasticProcess.hh"
@@ -10,6 +9,7 @@
 #include "G4NeutronInelasticProcess.hh"
 #include "G4VNeutronBuilder.hh"
 
+#include <vector>
 
 class G4NeutronBuilder
 {
@@ -28,6 +28,8 @@ class G4NeutronBuilder
     G4HadronCaptureProcess  theNeutronCapture;
     
     std::vector<G4VNeutronBuilder *> theModelCollections;
+
+    G4bool wasActivated;
 
 };
 

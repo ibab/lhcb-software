@@ -5,6 +5,19 @@
 #include "GiGa/GiGaMACROs.h"
 // local
 #include "MuonPhysics.h"
+// G4
+#include "G4ProcessManager.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+
+#include "G4MuonPlus.hh"
+#include "G4MuonMinus.hh"
+#include "G4TauMinus.hh"
+#include "G4TauPlus.hh"
+#include "G4NeutrinoTau.hh"
+#include "G4AntiNeutrinoTau.hh"
+#include "G4NeutrinoMu.hh"
+#include "G4AntiNeutrinoMu.hh"
 
 /** @file 
  * 
@@ -31,22 +44,34 @@ MuonPhysics::MuonPhysics
 // ============================================================================
 /// destructor 
 // ============================================================================
-MuonPhysics::~MuonPhysics(){};
+MuonPhysics::~MuonPhysics()
+{
+  if(wasActivated)
+    {
+      G4ProcessManager * pManager = 0;
+      pManager = G4MuonPlus::MuonPlus()->GetProcessManager();
+      if(pManager) pManager->RemoveProcess(&fMuPlusIonisation);
+      if(pManager) pManager->RemoveProcess(&fMuPlusBremsstrahlung);
+      if(pManager) pManager->RemoveProcess(&fMuPlusPairProduction);
+      if(pManager) pManager->RemoveProcess(&fMuPlusMultipleScattering);
+      pManager = G4MuonMinus::MuonMinus()->GetProcessManager();
+      if(pManager) pManager->RemoveProcess(&fMuMinusIonisation);
+      if(pManager) pManager->RemoveProcess(&fMuMinusBremsstrahlung);
+      if(pManager) pManager->RemoveProcess(&fMuMinusPairProduction);
+      if(pManager) pManager->RemoveProcess(&fMuMinusMultipleScattering);
+      if(pManager) pManager->RemoveProcess(&fMuMinusCaptureAtRest);
+      pManager = G4TauPlus::TauPlus()->GetProcessManager();
+      if(pManager) pManager->RemoveProcess(&fTauPlusIonisation);
+      if(pManager) pManager->RemoveProcess(&fTauPlusMultipleScattering);
+      pManager = G4TauMinus::TauMinus()->GetProcessManager();
+      if(pManager) pManager->RemoveProcess(&fTauMinusIonisation);
+      if(pManager) pManager->RemoveProcess(&fTauMinusMultipleScattering);
+    }
+};
 // ============================================================================
 
 // ============================================================================
 // ============================================================================
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
-
-#include "G4MuonPlus.hh"
-#include "G4MuonMinus.hh"
-#include "G4TauMinus.hh"
-#include "G4TauPlus.hh"
-#include "G4NeutrinoTau.hh"
-#include "G4AntiNeutrinoTau.hh"
-#include "G4NeutrinoMu.hh"
-#include "G4AntiNeutrinoMu.hh"
 
 void MuonPhysics::ConstructParticle()
 {
@@ -65,12 +90,12 @@ void MuonPhysics::ConstructParticle()
 
 // ============================================================================
 // ============================================================================
-#include "G4ProcessManager.hh"
 
 void MuonPhysics::ConstructProcess()
 {
   G4ProcessManager * pManager = 0;
 
+  wasActivated = true;
   // Muon Plus Physics
   pManager = G4MuonPlus::MuonPlus()->GetProcessManager();
    // add processes

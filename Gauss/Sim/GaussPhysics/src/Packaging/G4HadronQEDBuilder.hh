@@ -19,6 +19,7 @@ class G4HadronQEDBuilder
 
   private:  
     void RegisterOne(G4ProcessManager* aP, G4MultipleScattering * aM, G4hIonisation* aI);
+    void RemoveOne(G4ProcessManager* aP, G4MultipleScattering * aM, G4hIonisation* aI);
 
   private:
   
@@ -78,6 +79,7 @@ class G4HadronQEDBuilder
    G4MultipleScattering theAntiOmegaMinusMult;
    G4hIonisation theAntiOmegaMinusIonisation;
 
+   G4bool wasActivated;
    
 };
 

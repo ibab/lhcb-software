@@ -40,8 +40,9 @@ public:
   virtual void ConstructProcess();
 
 protected:
+  G4bool wasActivated;
+private:
   G4Decay fDecayProcess;
-
 };
 // ============================================================================
 

@@ -13,18 +13,18 @@
 #include "globals.hh"
 #include "G4ios.hh"
 
-#include "G4HadronQEDBuilder.hh"
-#include "G4StoppingHadronBuilder.hh"
-#include "G4MiscLHEPBuilder.hh"
+#include "Packaging/G4HadronQEDBuilder.hh"
+#include "Packaging/G4StoppingHadronBuilder.hh"
+#include "Packaging/G4MiscLHEPBuilder.hh"
 
-#include "G4LHEPPiKBuilder.hh"
-#include "G4PiKBuilder.hh"
+#include "Packaging/G4LHEPPiKBuilder.hh"
+#include "Packaging/G4PiKBuilder.hh"
 
-#include "G4ProtonBuilder.hh"
-#include "G4LHEPProtonBuilder.hh"
+#include "Packaging/G4ProtonBuilder.hh"
+#include "Packaging/G4LHEPProtonBuilder.hh"
 
-#include "G4NeutronBuilder.hh"
-#include "G4LHEPNeutronBuilder.hh"
+#include "Packaging/G4NeutronBuilder.hh"
+#include "Packaging/G4LHEPNeutronBuilder.hh"
 
 // forward declarations 
 template <class TYPE> class GiGaFactory;

@@ -149,6 +149,7 @@ class G4MiscLHEPBuilder
    G4LEAntiOmegaMinusInelastic*  theLEAntiOmegaMinusModel;
    G4HEAntiOmegaMinusInelastic*  theHEAntiOmegaMinusModel;
    
+   G4bool wasActivated;
 };
 // 2002 by J.P. Wellisch
 

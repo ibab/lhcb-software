@@ -88,6 +88,8 @@ protected:
   G4HadronElasticProcess      theHe3ElasticProcess;
   G4MultipleScattering        fHe3MultipleScattering;
   G4hIonisation               fHe3Ionisation;
+
+  G4bool wasActivated;
 };
 // ============================================================================
 

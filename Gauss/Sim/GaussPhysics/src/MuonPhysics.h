@@ -67,6 +67,7 @@ protected:
    G4MultipleScattering   fTauMinusMultipleScattering;
    G4hIonisation          fTauMinusIonisation;
 
+  G4bool wasActivated;
 };
 // ============================================================================
 

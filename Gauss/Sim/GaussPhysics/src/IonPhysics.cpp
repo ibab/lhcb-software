@@ -6,6 +6,12 @@
 // local
 #include "IonPhysics.h"
 
+// G4
+#include "G4ProcessManager.hh"
+#include "G4ParticleDefinition.hh"
+#include "G4ParticleTable.hh"
+#include "G4IonConstructor.hh"
+
 /** @file 
  * 
  *  implementation of class IonPhysics
@@ -23,7 +29,7 @@ IonPhysics::IonPhysics
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : GiGaPhysConstructorBase (type, name, parent)
+  : GiGaPhysConstructorBase (type, name, parent), wasActivated(false)
 {
 };
 // ============================================================================
@@ -31,15 +37,45 @@ IonPhysics::IonPhysics
 // ============================================================================
 /// destructor 
 // ============================================================================
-IonPhysics::~IonPhysics(){};
+IonPhysics::~IonPhysics()
+{
+  if(wasActivated)
+    {
+  G4ProcessManager * pManager = 0;
+  
+  pManager = G4GenericIon::GenericIon()->GetProcessManager();
+  if(pManager) pManager->RemoveProcess(&theIonElasticProcess);
+  if(pManager) pManager->RemoveProcess(&fIonIonisation);
+  // if(pManager) pManager->RemoveProcess(&fIonMultipleScattering);
+
+  pManager = G4Deuteron::Deuteron()->GetProcessManager();
+  if(pManager) pManager->RemoveProcess(&theDElasticProcess);
+  if(pManager) pManager->RemoveProcess(&fDeuteronProcess);
+  if(pManager) pManager->RemoveProcess(&fDeuteronIonisation);
+  if(pManager) pManager->RemoveProcess(&fDeuteronMultipleScattering);
+ 
+  pManager = G4Triton::Triton()->GetProcessManager();
+  if(pManager) pManager->RemoveProcess(&theTElasticProcess);
+  if(pManager) pManager->RemoveProcess(&fTritonProcess);
+  if(pManager) pManager->RemoveProcess(&fTritonIonisation);
+  if(pManager) pManager->RemoveProcess(&fTritonMultipleScattering);
+ 
+  pManager = G4Alpha::Alpha()->GetProcessManager();
+  if(pManager) pManager->RemoveProcess(&theAElasticProcess);
+  if(pManager) pManager->RemoveProcess(&fAlphaProcess);
+  if(pManager) pManager->RemoveProcess(&fAlphaIonisation);
+  if(pManager) pManager->RemoveProcess(&fAlphaMultipleScattering);
+ 
+  pManager = G4He3::He3()->GetProcessManager();
+  if(pManager) pManager->RemoveProcess(&theHe3ElasticProcess);
+  if(pManager) pManager->RemoveProcess(&fHe3Ionisation);
+  if(pManager) pManager->RemoveProcess(&fHe3MultipleScattering);
+  }
+};
 // ============================================================================
 
 // ============================================================================
 // ============================================================================
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
-// Nuclei
-#include "G4IonConstructor.hh"
 
 void IonPhysics::ConstructParticle()
 {
@@ -50,7 +86,6 @@ void IonPhysics::ConstructParticle()
 
 // ============================================================================
 // ============================================================================
-#include "G4ProcessManager.hh"
 
 void IonPhysics::ConstructProcess()
 {
@@ -130,6 +165,8 @@ void IonPhysics::ConstructProcess()
   pManager->AddProcess(&fHe3MultipleScattering);
   pManager->SetProcessOrdering(&fHe3MultipleScattering, idxAlongStep,  1);
   pManager->SetProcessOrdering(&fHe3MultipleScattering, idxPostStep,  1);
+
+  wasActivated = true;
 };
 
 // ============================================================================

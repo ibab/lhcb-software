@@ -1,14 +1,4 @@
-#include "G4EMBuilder.hh"
-
-#include "globals.hh"
-#include "G4ios.hh"
-
-
-G4EMBuilder::
-G4EMBuilder() {}
-
-G4EMBuilder::
-~G4EMBuilder() {}
+#include "G4EMModelBuilder.hh"
 
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
@@ -17,10 +7,49 @@ G4EMBuilder::
 #include "G4Positron.hh"
 #include "G4ProcessManager.hh"
 
+#include "globals.hh"
+#include "G4ios.hh"
 
-void G4EMBuilder::Build()
+G4EMModelBuilder::
+G4EMModelBuilder() : wasActivated(false) {}
+
+G4EMModelBuilder::
+~G4EMModelBuilder() 
+{
+  if(wasActivated)
+  {
+  G4ProcessManager * pManager = 0;
+  pManager = G4Gamma::Gamma()->GetProcessManager();
+  if(pManager)
+  {
+  pManager->RemoveProcess(&thePhotoEffect);
+  pManager->RemoveProcess(&theComptonEffect);
+  pManager->RemoveProcess(&thePairProduction);
+  }
+
+  pManager = G4Electron::Electron()->GetProcessManager();
+  if(pManager)
+  {
+  pManager->RemoveProcess(&theElectronBremsStrahlung);  
+  pManager->RemoveProcess(&theElectronIonisation);
+  pManager->RemoveProcess(&theElectronMultipleScattering);
+  }
+
+  pManager = G4Positron::Positron()->GetProcessManager();
+  if(pManager)
+  {
+  pManager->RemoveProcess(&thePositronBremsStrahlung);
+  pManager->RemoveProcess(&theAnnihilation);
+  pManager->RemoveProcess(&thePositronIonisation);
+  pManager->RemoveProcess(&thePositronMultipleScattering);
+  }
+  }
+}
+
+void G4EMModelBuilder::Build()
 {
   G4ProcessManager * pManager = 0;
+  wasActivated=true;
   
   pManager = G4Gamma::Gamma()->GetProcessManager();
   pManager->AddDiscreteProcess(&thePhotoEffect);

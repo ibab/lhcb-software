@@ -4,7 +4,6 @@
 #include "globals.hh"
 #include "G4ios.hh"
 
-
 // At rest processes
 #include "G4AntiProtonAnnihilationAtRest.hh"
 #include "G4AntiNeutronAnnihilationAtRest.hh"
@@ -34,6 +33,7 @@ class G4StoppingHadronBuilder
    // anti-neutron
    G4AntiNeutronAnnihilationAtRest  theAntiNeutronAnnihilation;
          
+   G4bool wasActivated;
 };
 // 2002 by J.P. Wellisch
 

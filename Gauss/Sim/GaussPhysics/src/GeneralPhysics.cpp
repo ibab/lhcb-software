@@ -5,6 +5,11 @@
 #include "GiGa/GiGaMACROs.h"
 // local
 #include "GeneralPhysics.h"
+// G4
+#include "G4ParticleDefinition.hh"
+#include "G4ProcessManager.hh"
+#include "G4ChargedGeantino.hh"
+#include "G4Geantino.hh"
 
 // ============================================================================
 /// Factory
@@ -17,24 +22,31 @@ GeneralPhysics::GeneralPhysics
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : GiGaPhysConstructorBase( type , name , parent )
+  : GiGaPhysConstructorBase( type , name , parent ), wasActivated(false)
 {};
 // ============================================================================
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GeneralPhysics::~GeneralPhysics(){};
+GeneralPhysics::~GeneralPhysics()
+{
+  if(wasActivated)
+    {
+      theParticleIterator->reset();
+      while( (*theParticleIterator)() ){
+        G4ParticleDefinition* particle = theParticleIterator->value();
+        G4ProcessManager* pmanager = particle->GetProcessManager();
+        if (fDecayProcess.IsApplicable(*particle)) { 
+          if(pmanager) pmanager ->RemoveProcess(&fDecayProcess);
+        }
+      }
+    }
+};
 // ============================================================================
 
 // ============================================================================
 // ============================================================================
-
-#include "G4ParticleDefinition.hh"
-#include "G4ProcessManager.hh"
-// Bosons
-#include "G4ChargedGeantino.hh"
-#include "G4Geantino.hh"
 
 void GeneralPhysics::ConstructParticle()
 {

@@ -4,6 +4,12 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!===================== GaussPhysics v2r5 ===================================
+! 2003-10-23 - Witek Pokorski
+ - small reorganization, created a directory Packaging where all the common
+   files are located
+ - updated with the latest version of physics list released by H-P. Wellish
+
 !===================== GaussPhysics v2r4 2003-10-17 ========================
 ! 2003-10-17 - Florence RANJARD
  - G4HadronQEDBuilder.cc - include G4Proton.hh and G4AntiProton.hh to please

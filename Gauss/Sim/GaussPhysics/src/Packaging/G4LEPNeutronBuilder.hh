@@ -37,13 +37,20 @@ class G4LEPNeutronBuilder : public G4VNeutronBuilder
     }
     void SetMaxEnergy(G4double aM) 
     {
+      theIMax = aM;
       theMax=aM;
+    }
+    void SetMaxInelasticEnergy(G4double aM)
+    {
+      theIMax = aM;
     }
     
   private:
     G4double theMin;
     G4double theIMin;
     G4double theMax;
+    G4double theIMax;
+
     G4LElastic * theElasticModel;
     G4LENeutronInelastic * theLENeutronModel;
     G4LFission * theNeutronFissionModel;

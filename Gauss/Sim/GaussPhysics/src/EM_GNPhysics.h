@@ -12,8 +12,8 @@
 #include "globals.hh"
 #include "G4ios.hh"
 #include "G4VPhysicsConstructor.hh"
-#include "G4EMBuilder.hh"
-#include "G4ElectroNuclearBuilder.hh"
+#include "Packaging/G4EMBuilder.hh"
+#include "Packaging/G4ElectroNuclearBuilder.hh"
 // forward declarations 
 template <class TYPE> class GiGaFactory;
 

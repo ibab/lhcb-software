@@ -1,6 +1,6 @@
 # =============================================================================
 package GaussPhysics
-version v2r4
+version v2r5
 
 # =============== package structure ===========================================
 branches          cmt src doc
@@ -10,10 +10,10 @@ use GaussTools    v*     Sim
 
 # ============== component library ============================================
 library          GaussPhysics      *.cpp   \
-                                   *.cc
+                                   Packaging/*.cc
 
 # ============== standard includes ============================================
-include_dirs     $(GAUSSPHYSICSROOT)	
+include_dirs     $(GAUSSPHYSICSROOT)  
         
 # ============== standard patterns ===========================================
 apply_pattern    component_library library=GaussPhysics

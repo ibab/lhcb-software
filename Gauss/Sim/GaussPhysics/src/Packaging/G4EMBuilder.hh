@@ -12,6 +12,10 @@
 #include "G4eBremsstrahlung.hh"
 #include "G4eplusAnnihilation.hh"
 
+#include "G4EMTailorer.hh"
+#include "G4SynchrotronRadiation.hh"
+#include "G4ElectroNuclearBuilder.hh"
+
 class G4EMBuilder 
 {
   public: 
@@ -20,6 +24,9 @@ class G4EMBuilder
 
   public: 
     void Build();
+    
+    void Synch(G4String & aState);
+    void GammaNuclear(G4String & aState);
 
   protected:
     G4PhotoElectricEffect thePhotoEffect;
@@ -34,6 +41,14 @@ class G4EMBuilder
     G4eIonisation thePositronIonisation; 
     G4eBremsstrahlung thePositronBremsStrahlung;  
     G4eplusAnnihilation theAnnihilation;
+    G4bool wasActivated;
+    
+    G4EMTailorer * theT;
+    G4SynchrotronRadiation theElectronSynch;
+    G4SynchrotronRadiation thePositronSynch;
+    G4bool synchOn;
+    G4ElectroNuclearBuilder theGNPhysics;
+    G4bool gammNucOn;
 };
 // 2002 by J.P. Wellisch
 #endif

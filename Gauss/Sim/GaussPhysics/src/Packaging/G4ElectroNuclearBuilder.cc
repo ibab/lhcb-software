@@ -10,7 +10,7 @@
 #include "G4Positron.hh"
 #include "G4ProcessManager.hh"
 
-G4ElectroNuclearBuilder::G4ElectroNuclearBuilder() 
+G4ElectroNuclearBuilder::G4ElectroNuclearBuilder() : wasActivated(false)
 {
   theElectroReaction = new G4ElectroNuclearReaction;
   theGammaReaction = new G4GammaNuclearReaction;
@@ -22,7 +22,24 @@ G4ElectroNuclearBuilder::G4ElectroNuclearBuilder()
   theStringModel.SetFragmentationModel(theStringDecay);
 }
 
-G4ElectroNuclearBuilder::~G4ElectroNuclearBuilder() {delete theStringDecay;}
+G4ElectroNuclearBuilder::~G4ElectroNuclearBuilder() 
+{
+  delete theStringDecay;
+  delete theElectroReaction;
+  delete theGammaReaction;
+  delete theModel;
+  delete theCascade;
+  if(wasActivated)
+  {
+    G4ProcessManager * pManager = 0;
+    pManager = G4Gamma::Gamma()->GetProcessManager();
+    if(pManager) pManager->RemoveProcess(&thePhotoNuclearProcess);
+    pManager = G4Electron::Electron()->GetProcessManager();
+    if(pManager) pManager->RemoveProcess(&theElectronNuclearProcess);
+    pManager = G4Positron::Positron()->GetProcessManager();
+    if(pManager) pManager->RemoveProcess(&thePositronNuclearProcess);
+  }
+}
 
 void G4ElectroNuclearBuilder::Build()
 {
