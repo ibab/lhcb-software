@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.12 2002-12-03 16:59:49 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.13 2004-12-08 17:19:17 marcocle Exp $
 #include <string>
 #include <stdio.h>
 
@@ -18,6 +18,7 @@
 #include "GaudiKernel/TimePoint.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/CnvFactory.h"
 
 /// Instantiation of a static factory to create instances of this service
 static SvcFactory<ConditionsDBCnvSvc>          ConditionsDBCnvSvc_factory;
@@ -173,7 +174,7 @@ StatusCode ConditionsDBCnvSvc::finalize()
 //----------------------------------------------------------------------------
 
 /// Query interface
-StatusCode ConditionsDBCnvSvc::queryInterface(const IID& riid, 
+StatusCode ConditionsDBCnvSvc::queryInterface(const InterfaceID& riid, 
 					      void** ppvInterface)
 {
   if ( IID_IConditionsDBCnvSvc == riid )  {
@@ -189,224 +190,19 @@ StatusCode ConditionsDBCnvSvc::queryInterface(const IID& riid,
 
 //----------------------------------------------------------------------------
 
-/// Create a transient representation from another representation of an object.
-/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
-StatusCode ConditionsDBCnvSvc::createObj ( IOpaqueAddress* pAddress, 
-					   DataObject*&    refpObject ) {
-
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::DEBUG << "Method createObj starting" << endreq;
-
-  // Check that the event time has been defined
-  // The event time is obtained from the ConditionDataSvc
-  if ( !m_detDataSvc->validEventTime() ) {
-    log << MSG::ERROR
-	<< "Cannot create DataObject: event time undefined"
-	<< endreq; 
-    return StatusCode::FAILURE;
-  } else {
-    ITime::AbsoluteTime absTime;
-    absTime = m_detDataSvc->eventTime().absoluteTime();
-    log << MSG::DEBUG << endreq; 
-  }
-
-  // Create the object according to folder, tag, time, clid, string type
-  // Notice that the ConditionsDBCnvSvc has no converters of its own:
-  // object creation is delegated to another CnvSvc via a temporary address
-  // The IOpaqueAddress specifies folderName and clid
-  // The tagName is a property of this service
-  // The secondary storage type is always discovered dynamically
-  StatusCode sc;
-  sc = createConditionData( refpObject, 
-			    pAddress->par()[0], 
-			    globalTag(), 
-			    pAddress->par()[1], 
-			    m_detDataSvc->eventTime(), 
-			    pAddress->clID(), 
-			    pAddress->registry() );
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not create condition DataObject" << endreq;
-  }
-
-  log << MSG::DEBUG << "Method createObj exiting" << endreq;
-  return sc;
-
-}
-
-//----------------------------------------------------------------------------
-
-/// Resolve the references of the created transient object.
-/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
-StatusCode ConditionsDBCnvSvc::fillObjRefs ( IOpaqueAddress* /*pAddress*/, 
-					     DataObject*     /*pObject */ ) {
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::DEBUG << "Method fillObjRefs is not implemented" << endreq;
-  return StatusCode::SUCCESS;
-}
-  
-//----------------------------------------------------------------------------
-
-/// Update a transient representation from another representation of an object.
-/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
-/// Always update even if ConditionData is valid at the specified time:
-/// previous ConditionData may refer to a different tag at the same time.
-StatusCode ConditionsDBCnvSvc::updateObj ( IOpaqueAddress* pAddress, 
-					   DataObject*     pObject  ) {
-
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::DEBUG << "Method updateObj starting" << endreq;
-
-  // Check that the event time has been defined
-  // The event time is obtained from the ConditionDataSvc
-  if ( !m_detDataSvc->validEventTime() ) {
-    log << MSG::ERROR
-	<< "Cannot update DataObject: event time undefined"
-	<< endreq; 
-    return StatusCode::FAILURE;
-  } else {
-    ITime::AbsoluteTime absTime;
-    absTime = m_detDataSvc->eventTime().absoluteTime();
-    log << MSG::DEBUG
-	<< "Event time: " << absTime 
-	<< "(0x" << std::hex 
-	<< absTime 
-	<< std::dec << ")" 
-	<< endreq; 
-  }
-
-  // Update the object according to folder, tag, time, clid, string type
-  // Notice that the ConditionsDBCnvSvc has no converters of its own:
-  // object creation is delegated to another CnvSvc via a temporary address
-  // The IOpaqueAddress specifies folderName and clid
-  // The tagName is a property of this service
-  // The secondary storage type is always discovered dynamically
-  if( 0 == pObject ) {
-    log << MSG::ERROR << "There is no object to update" << endreq;
-    return StatusCode::FAILURE;
-  }
-  IValidity* pValidity = dynamic_cast<IValidity*>(pObject);
-  if ( 0 == pValidity ) {
-    log << MSG::WARNING
-	<< "Object to update does not implement IValidity: assume up-to-date" 
-	<< endreq;
-    return StatusCode::SUCCESS;
-  }
-  log << MSG::DEBUG << "Old condition DataObject was valid since "
-      << pValidity->validSince().absoluteTime() 
-      << "(0x" << std::hex 
-      << pValidity->validSince().absoluteTime() 
-      << std::dec << ")" 
-      << " till " << pValidity->validTill().absoluteTime()  
-      << "(0x" << std::hex 
-      << pValidity->validTill().absoluteTime() 
-      << std::dec << ")" 
-      << endreq;
-  StatusCode sc;
-  sc = updateConditionData( pObject, 
-			    pAddress->par()[0], 
-			    globalTag(), 
-			    pAddress->par()[1], 
-			    m_detDataSvc->eventTime(), 
-			    pAddress->clID(), 
-			    pAddress->registry() );
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not update condition DataObject" << endreq;
-    return sc;
-  }
-
-  // Last, check that everything is OK
-  pValidity = dynamic_cast<IValidity*>(pObject);
-  if ( 0 == pValidity ) {
-    log << MSG::ERROR 
-	<< "Updated object does not implement IValidity" << endreq;
-    return StatusCode::FAILURE;
-  }
-  log << MSG::DEBUG << "New condition DataObject is valid since "
-      << pValidity->validSince().absoluteTime() 
-      << "(0x" << std::hex 
-      << pValidity->validSince().absoluteTime() 
-      << std::dec << ")" 
-      << " till " << pValidity->validTill().absoluteTime()  
-      << "(0x" << std::hex 
-      << pValidity->validTill().absoluteTime() 
-      << std::dec << ")" 
-      << endreq;
-
-  log << MSG::DEBUG << "Method updateObj exiting" << endreq;
-  return StatusCode::SUCCESS;
-
-}
-
-//----------------------------------------------------------------------------
-
-/// Update the references of an updated transient object.
-/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
-StatusCode ConditionsDBCnvSvc::updateObjRefs ( IOpaqueAddress* /*pAddress*/, 
-					       DataObject*     /*pObject */ ) {
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::WARNING << "Method updateObjRefs is not implemented" << endreq;
-  return StatusCode::SUCCESS;
-}
-  
-//----------------------------------------------------------------------------
-
-/// Convert a transient object to a requested representation.
-/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
-StatusCode ConditionsDBCnvSvc::createRep( DataObject* /*pObject*/,
-					  IOpaqueAddress*& /*refpAddress*/ ) {
-
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::WARNING << "Method createRep is not implemented" << endreq;
-  return StatusCode::SUCCESS;
-}
-  
-//----------------------------------------------------------------------------
-
-/// Resolve the references of a converted object.
-/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
-StatusCode ConditionsDBCnvSvc::fillRepRefs ( IOpaqueAddress* /*pAddress*/, 
-					     DataObject*     /*pObject */ ) {
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::WARNING << "Method fillRepRefs is not implemented" << endreq;
-  return StatusCode::SUCCESS;
-}
-  
-//----------------------------------------------------------------------------
-
-/// Update a converted representation of a transient object.
-/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
-StatusCode ConditionsDBCnvSvc::updateRep ( IOpaqueAddress* /*pAddress*/, 
-					   DataObject*     /*pObject */ ) {
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::WARNING << "Method updateRep is not implemented" << endreq;
-  return StatusCode::SUCCESS;
-}
-  
-//----------------------------------------------------------------------------
-
-/// Update the references of an already converted object.
-/// Overloaded from ConversionSvc because ConditionsDBCnvSvc has no converters.
-StatusCode ConditionsDBCnvSvc::updateRepRefs ( IOpaqueAddress* /*pAddress*/, 
-					       DataObject*     /*pObject */ ) {
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  log << MSG::WARNING << "Method updateRepRefs is not implemented" << endreq;
-  return StatusCode::SUCCESS;
-}
-  
-//----------------------------------------------------------------------------
-
 /// Create an address using explicit arguments to identify a single object.
 /// Par[0] is folder name in the ConditionsDB.
 /// Par[1] is entry name in the string (which may contain many conditions,
 /// for instance in the case of XML files with more than one element).
-StatusCode ConditionsDBCnvSvc::createAddress( unsigned char svc_type,
+StatusCode ConditionsDBCnvSvc::createAddress( long svc_type,
 					      const CLID& clid,
 					      const std::string* par, 
 					      const unsigned long* /*ipar*/,
 					      IOpaqueAddress*& refpAddress ) {
-
+  
   // First check that requested address is of type CONDDB_StorageType
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+  log << MSG::INFO << "entering createAddress" << endmsg;
   if ( svc_type!= CONDDB_StorageType ) {
     log << MSG::ERROR 
 	<< "Cannot create addresses of type " << (int)svc_type 
@@ -467,7 +263,7 @@ ConditionsDBCnvSvc::createConditionData( DataObject*&         refpObject,
   log << MSG::DEBUG << "CondDBObject data successfully read" << endreq;
 
   // Discover the string storage type in the ConditionsDB
-  unsigned char theType;
+  long theType;
   log << MSG::DEBUG 
       << "Read string storage type in the folder description" << endreq;
   std::string description;
@@ -565,7 +361,7 @@ ConditionsDBCnvSvc::updateConditionData( DataObject*          pObject,
   }
 
   // Discover the string storage type in the ConditionsDB
-  unsigned char theType;
+  long theType;
   log << MSG::DEBUG 
       << "Read string storage type in the folder description" << endreq;
   std::string description;
@@ -671,7 +467,7 @@ ConditionsDBCnvSvc::updateConditionData( DataObject*          pObject,
 /// Decode the string storage type from the folder description string
 StatusCode 
 ConditionsDBCnvSvc::decodeDescription( const std::string& description,
-                                       unsigned char& type )
+                                       long& type )
 {
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Decoding description: '" 
@@ -713,7 +509,7 @@ ConditionsDBCnvSvc::decodeDescription( const std::string& description,
     return StatusCode::FAILURE;
   }
 
-  type    = (unsigned char)atoi( c_type );
+  type    = (long)atol( c_type );
   log << MSG::DEBUG << "Decoded: stringType=" << (int)type << endreq;
   return StatusCode::SUCCESS;
 
@@ -723,14 +519,14 @@ ConditionsDBCnvSvc::decodeDescription( const std::string& description,
 
 /// Encode the string storage type into the folder description string
 StatusCode 
-ConditionsDBCnvSvc::encodeDescription( const unsigned char& type,
+ConditionsDBCnvSvc::encodeDescription( const long& type,
 				       std::string& description )
 {
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
-  unsigned int i_type = (unsigned int) type;
+  long i_type = (long) type;
   log << MSG::DEBUG << "Encoding: type=" << i_type << endreq;
   char c_type[4];
-  if ( 3 != sprintf ( c_type, "%3.3i", i_type ) ) 
+  if ( 3 != sprintf ( c_type, "%3.3li", i_type ) ) 
     log << MSG::ERROR << "Error encoding type="    << i_type << endreq;
   std::string s_type  = std::string( c_type );
   std::string s1 = "<description type=";
@@ -755,10 +551,49 @@ IConditionsDBGate* ConditionsDBCnvSvc::conditionsDBGate ( ) {
 }
 
 //----------------------------------------------------------------------------
+extern ICnvFactory &XmlRelyCnvFactory;
 
+StatusCode ConditionsDBCnvSvc::addConverter(const CLID& clid){
+  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+  StatusCode status = ConversionSvc::addConverter(clid);
+  if (status.isSuccess()){
+    return status;
+  }else{ // not found in the std way, try the delegation one
+    long typ = repSvcType();
+    log << MSG::DEBUG << "converter not found, instantiating XmlRelyCnv" << endmsg;
+    IConverter* pConverter = XmlRelyCnvFactory.instantiate(serviceLocator());
+    if ( 0 != pConverter )    {
+      StatusCode status = configureConverter( typ, 0, pConverter );
+      if ( status.isSuccess() )   {
+        status = initializeConverter( typ, 0, pConverter );
+        if ( status.isSuccess() )   {
+          status = activateConverter( typ, 0, pConverter );
+          if ( status.isSuccess() )   {
+            return ConversionSvc::addConverter(pConverter);
+          }
+        }
+      }
+      pConverter->release();
+    }
+  }
+  return NO_CONVERTER;
+}
 
-
-
-
-
-
+/// Retrieve converter from list
+IConverter* ConditionsDBCnvSvc::converter(const CLID& clid)     {
+  IConverter* cnv = 0;
+  Workers::iterator i = std::find_if(m_workers->begin(),m_workers->end(),CnvTest(clid));
+  if ( i != m_workers->end() )      {
+    cnv = (*i).converter();
+  }
+  if ( 0 == cnv )     {
+    StatusCode status = addConverter(clid);
+    if ( status.isSuccess() )   {
+      i = std::find_if(m_workers->begin(),m_workers->end(),CnvTest(clid));
+      if ( i != m_workers->end() )      {
+        cnv = (*i).converter();
+      }
+    }
+  }
+  return cnv;
+}

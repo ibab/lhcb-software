@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.h,v 1.8 2001-12-16 15:22:45 andreav Exp $
+//$Id: ConditionsDBCnvSvc.h,v 1.9 2004-12-08 17:19:17 marcocle Exp $
 #ifndef DETCOND_CONDITIONSDBCNVSVC_H
 #define DETCOND_CONDITIONSDBCNVSVC_H 1
 
@@ -21,6 +21,8 @@ class IOpaqueAddress;
 
     @author Andrea Valassi 
     @date February 2001
+    @author Marco Clemencic 
+    @date November 2004
 *///--------------------------------------------------------------------------
 
 class ConditionsDBCnvSvc : public ConversionSvc, 
@@ -38,12 +40,13 @@ class ConditionsDBCnvSvc : public ConversionSvc,
   /// Destructor
   virtual ~ConditionsDBCnvSvc();
 
+
  public:
   
   // Reimplemented from IInterface
 
   /// Query the interface of the service
-  virtual StatusCode queryInterface( const IID& riid, 
+  virtual StatusCode queryInterface( const InterfaceID& riid, 
 				     void** ppvInterface );  
 
  public:
@@ -55,46 +58,30 @@ class ConditionsDBCnvSvc : public ConversionSvc,
   
   /// Finalize the service
   virtual StatusCode finalize();
-  
-  /// Create a transient representation from another rep of this object.
-  virtual StatusCode createObj     ( IOpaqueAddress* pAddress, 
-				     DataObject*&    refpObject );
-  
-  /// Resolve the references of the created transient object.
-  virtual StatusCode fillObjRefs   ( IOpaqueAddress* pAddress, 
-				     DataObject* pObject );
-  
-  /// Update a transient representation from another rep of this object.
-  virtual StatusCode updateObj     ( IOpaqueAddress* pAddress, 
-				     DataObject* pObject );
-
-  /// Update the references of an updated transient object.
-  virtual StatusCode updateObjRefs ( IOpaqueAddress* pAddress, 
-				     DataObject* pObject );
-
-  /// Convert a transient object to a requested representation.
-  virtual StatusCode createRep     ( DataObject* pObject, 
-				     IOpaqueAddress*& refpAddress );
-
-  /// Resolve the references of a converted object. 
-  virtual StatusCode fillRepRefs   ( IOpaqueAddress* pAddress,
-				     DataObject* pObject );
-
-  /// Update a converted representation of a transient object.
-  virtual StatusCode updateRep     ( IOpaqueAddress* pAddress, 
-				     DataObject* pObject );
-
-  /// Update the references of an already converted object.
-  virtual StatusCode updateRepRefs ( IOpaqueAddress* pAddress, 
-				     DataObject* pObject );
 
   /// Create an address using explicit arguments to identify a single object.
-  virtual StatusCode createAddress ( unsigned char svc_type,
+  virtual StatusCode createAddress (long svc_type,
 				     const CLID& clid,
 				     const std::string* par, 
 				     const unsigned long* ip,
 				     IOpaqueAddress*& refpAddress );
-  
+
+  class CnvTest : public std::unary_function<WorkerEntry, bool>   {
+  protected:
+    const CLID m_test;
+  public:
+    CnvTest(const CLID& test) : m_test(test)    {
+    }
+    virtual ~CnvTest()    {
+    }
+    bool operator()( const WorkerEntry& testee )  {
+        return (m_test == testee.clID() || testee.clID() == 0) ? true : false;
+    }
+  };
+
+  /// Add converter object to conversion service.
+  virtual StatusCode addConverter(const CLID& clid);
+
  public:
 
   // Implementation of IConditionsDBCnvSvc.
@@ -112,7 +99,7 @@ class ConditionsDBCnvSvc : public ConversionSvc,
 				     const ITime&         time,
 				     const CLID&          classID,
 				     IRegistry*           entry = 0);
-  
+
   /// Update a condition DataObject by folder name, tag and time.
   /// This method does not register DataObject in the transient data store,
   /// but may register TDS addresses for its children if needed (e.g. Catalog).
@@ -128,10 +115,10 @@ class ConditionsDBCnvSvc : public ConversionSvc,
   
   /// Decode the string storage type from the folder description string
   StatusCode decodeDescription     ( const std::string&   description,
-				     unsigned char&       type);
+				     long&       type);
 
   /// Encode the string storage type into the folder description string
-  StatusCode encodeDescription     ( const unsigned char& type,
+  StatusCode encodeDescription     ( const long& type,
 				     std::string&         description);
   
   /// Get the global tag name
@@ -140,6 +127,9 @@ class ConditionsDBCnvSvc : public ConversionSvc,
 
   /// Handle to the ConditionsDBGate
   IConditionsDBGate* conditionsDBGate ( );
+
+  /// Retrieve converter from list
+  virtual IConverter* converter(const CLID& clid);
 
  private:
 
@@ -154,6 +144,8 @@ class ConditionsDBCnvSvc : public ConversionSvc,
 
   /// Handle to the IDetDataSvc interface of the DetectorDataSvc
   IDetDataSvc*         m_detDataSvc;
+
+protected:
 
 };
 

@@ -1,4 +1,4 @@
-//$Id: IConditionsDBCnvSvc.h,v 1.7 2002-03-01 11:11:49 andreav Exp $
+//$Id: IConditionsDBCnvSvc.h,v 1.8 2004-12-08 17:19:16 marcocle Exp $
 #ifndef DETCOND_ICONDITIONSDBCNVSVC_H
 #define DETCOND_ICONDITIONSDBCNVSVC_H 1
 
@@ -27,8 +27,11 @@ class ITime;
     Allows to create and update condition data objects (i.e. DataObjects
     implementing IValidity).
 
-    @author Andrea Valassi 
+    @author Andrea Valassi
     @date February 2001
+    @author Marco Clemencic
+    @author Nicolas Gilardi
+    @date November 2004
 *///--------------------------------------------------------------------------
 
 class IConditionsDBCnvSvc : virtual public IInterface
@@ -76,11 +79,11 @@ class IConditionsDBCnvSvc : virtual public IInterface
   /// Decode the string storage type from the folder description string
   virtual 
     StatusCode decodeDescription( const std::string&   description,
-				  unsigned char&       type ) = 0;
+				  long&       type ) = 0;
   
   /// Encode the string storage type into the folder description string
   virtual 
-    StatusCode encodeDescription( const unsigned char& type,
+    StatusCode encodeDescription( const long& type,
 				  std::string&         description ) = 0;
   
   /// Get the global tag name
