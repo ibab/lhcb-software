@@ -5,13 +5,15 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v18r2 2005-03-24 =======================
-! 2005-03-24 - Marco Cattaneo
+!======================= LHCbSys v18r2 2005-04-01 =======================
+! 2005-04-01 - Marco Cattaneo
  - Packages modified: KernelSys v4r9, Relations v2r4, LHCbAlgs v1r4, 
-     EventSys v20r2, PhysEvent v8r9, Event v4r7,ITEvent v13r2p1,LinkerEvent v1r7,
-     DetSys v6r4, XmlTools v3r4, DetDesc v14r4, VeloDet v9r4, DetDescCnv v2r3p1,
-     AssociatorsSys v2r4, ITAssociators v2r11, OTAssociators v3r2, 
-     VeloAssociators v1r14, TrAssociators v5r1p1, MCTools v1r12p1
+     EventSys v20r2, PhysEvent v8r9, Event v4r7, ITEvent v13r2p1, RichEvent v8r3,
+     LinkerEvent v1r7, MuonEvent v4r0, MCTools v1r12p1, DetSys v6r4,
+     XmlTools v3r4, DetDesc v14r4, VeloDet v9r4, STDet v1r2p1, DetDescCnv v2r3p1,
+     AssociatorsSys v2r4, ITAssociators v2r11, MuonAssociators v1r5p1,
+     OTAssociators v3r2, VeloAssociators v1r14, TrAssociators v5r1p1,
+     DAQSys v1r1p2, MuonDAQ v1r2p2
 
  - In Relations v2r4
    . Optimisation of constructors
@@ -32,8 +34,17 @@
    . Add Kernel/IParticleTransporter.h, moved here from DaVinciKernel 
 
  - In LinkerEvent v1r7
+   . Major bug fix in LinkedFrom (methods 'first' and 'intRange')
    . Make non const the methods direct() and inverse() to LinkerTool
    . Add the 'bool empty()' method to LinkerRange
+
+ - In MuonEvent v4r0
+   . Add inheritance from MCHit to MCMuonHit. Interface change due to replacement
+     of setExit() by setDisplacement(), and Energy() by energy()
+
+ - In RichEvent v8r3
+   . Remove inheritance from MCHit from MCRichHit, since exit point (and so 
+     displacement) are meaningless in this context. Saves 12 bytes per hit
 
  - In XmlTools v3r4
    . Fix a memory loak in XmlParserSvc
