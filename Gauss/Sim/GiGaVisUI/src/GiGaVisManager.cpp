@@ -1,8 +1,11 @@
-// $Id: GiGaVisManager.cpp,v 1.3 2003-02-18 08:14:04 ranjard Exp $
+// $Id: GiGaVisManager.cpp,v 1.4 2003-09-25 12:17:59 ranjard Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/02/18 08:14:04  ranjard
+// v1r2 - remove use of G4VIS_NONE and G4UI_NONE
+//
 // Revision 1.2  2003/02/11 15:50:48  ibelyaev
 //  package works now!
 //
@@ -27,7 +30,6 @@
 #include "G4ASCIITree.hh"
 #include "G4DAWNFILE.hh"
 #include "G4GAGTree.hh"
-#include "G4HepRepFile.hh"
 #include "G4RayTracer.hh"
 #include "G4VRML1File.hh"
 #include "G4VRML2File.hh"
@@ -91,7 +93,6 @@ namespace GiGaVisManagerLocal
       RegisterGraphicsSystem (new G4ASCIITree);
       RegisterGraphicsSystem (new G4GAGTree);
       RegisterGraphicsSystem (new G4DAWNFILE);
-      RegisterGraphicsSystem (new G4HepRepFile);
       RegisterGraphicsSystem (new G4RayTracer);
       RegisterGraphicsSystem (new G4VRML1File);
       RegisterGraphicsSystem (new G4VRML2File);

@@ -1,15 +1,15 @@
 # =============================================================================
 package GiGaVisUI
-version v2r1
+version v2r2
 
 # =============== package structure ===========================================
 branches         cmt src doc
 
 # =============== explicit dependencies ======================================
 use GiGa         v14r*     Sim
-use G4VisUI      v*        Sim
-
+use G4useVisUI   v*        Geant4
 use VisSvc       v*        Vis 
+
 # ============== component library ============================================
 library          GiGaVisUI   *.cpp                  
 

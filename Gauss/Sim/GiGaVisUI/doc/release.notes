@@ -4,6 +4,11 @@
 ! Purpose          : GiGa visualisation and UI 
 !-----------------------------------------------------------------------------
 
+!========================= GiGaVisUI v2r2 2003-09-25 ======================
+! 2003-09-25 - Florence RANJARD
+ - requirements - use G4useVisUI instead of G4VisUI
+ - GiGaVisManager.cpp - remove HepRep
+
 !========================== GiGaVisUI v2r1 2003-07-10 ======================
 ! 2003-07-10 - Florence Ranjard
  - fix for gcc32 (S.Ponce)
