@@ -1,4 +1,4 @@
-// $Id: L0Event_load.cpp,v 1.4 2003-12-18 15:33:25 cattanem Exp $
+// $Id: L0Event_load.cpp,v 1.5 2004-12-10 14:48:23 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/ContainerFactoryDefs.h"
@@ -35,7 +35,6 @@ _ImplementDataObjectFactory(L0MuonCandidates)
 /// ===================================================================
 #include "Event/L0PrsSpdHit.h"
 _ImplementContainedObjectFactory(L0PrsSpdHit)
-_ImplementDataObjectFactory(L0PrsSpdHitVector)
 
 /// ====================================================================
 
@@ -56,7 +55,6 @@ void L0Event_load() {
   DLL_DECL_OBJECTFACTORY( L0MuonCandidates );
   
   DLL_DECL_OBJECTFACTORY( L0PrsSpdHit );
-  DLL_DECL_OBJECTFACTORY( L0PrsSpdHitVector );
 }
 
 extern "C" void L0Event_loadRef()  {

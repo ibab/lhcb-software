@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.34 2004-07-21 08:05:40 cattanem Exp $
+$Id: release.notes,v 1.35 2004-12-10 14:48:23 cattanem Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+!======================= L0Event v14r1p2 2004-12-10 =======================
+! 2004-12-10 - Marco Cattaneo
+ - Remove obsolete L0PrsSpdHitVector factory
 
 !======================= L0Event v14r1p1 2004-07-20 =======================
 ! 2004-07-20 - Marco Cattaneo

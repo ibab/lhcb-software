@@ -55,7 +55,7 @@
       </constructor>
     </class>
 
-    <class author="Olivier Callot" desc=" Fired cells in Prs or Spd." id="6007" name="L0PrsSpdHit" templateList="FALSE" templateVector="TRUE">
+    <class author="Olivier Callot" desc=" Fired cells in Prs or Spd." id="6007" name="L0PrsSpdHit">
       <location name="Prs" place="/Event/Trig/L0/PrsRaw"/>
       <location name="Spd" place="/Event/Trig/L0/SpdRaw"/>
       <base name="ContainedObject"/>
