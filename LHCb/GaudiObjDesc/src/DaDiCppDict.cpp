@@ -1,6 +1,5 @@
-// $Id: DaDiCppDict.cpp,v 1.29 2002-05-06 07:38:55 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.30 2002-05-13 17:05:12 mato Exp $
 
-//#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
 #include "DaDiPackage.h"
@@ -404,9 +403,11 @@ void printCppDictionary(DaDiPackage* gddPackage,
     std::string gddMethName = gddMethod->name().transcode(),
                 gddMethRetType =gddMethod->daDiMethReturn()->type().transcode();
     bool toReturn = (gddMethRetType == "void") ? false : true,
+         gddMethIsTemplated = (gddMethod->template_().length() == 0) ? false : true,
          gddMethIsConst = gddMethod->const_();
 
-    if (gddMethName != "serialize" && gddMethRetType != "")
+    if (gddMethName != "serialize" && !DaDiTools::isEmpty(gddMethRetType) 
+        && !gddMethIsTemplated)
     {
       metaOut << remLine << std::endl
         << "static void";
@@ -757,9 +758,11 @@ void printCppDictionary(DaDiPackage* gddPackage,
     std::string gddMethName = gddMethod->name().transcode(),
                 gddMethDesc = gddMethod->desc().transcode(),
                 gddMethRetType =gddMethod->daDiMethReturn()->type().transcode();
-    bool gddMethIsConst = gddMethod->const_();
+    bool gddMethIsConst = gddMethod->const_(),
+      gddMethIsTemplated = (gddMethod->template_().length() == 0) ? false : true;
     
-    if (gddMethName != "serialize" && gddMethRetType != "")
+    if (gddMethName != "serialize" && !DaDiTools::isEmpty(gddMethRetType) 
+        && !gddMethIsTemplated)
     {
       metaOut << constructTypes(gddMethRetType);
 
