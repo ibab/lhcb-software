@@ -5,6 +5,7 @@ BrunelRecoRICHSeq.MeasureTime = true;
 HLTVeloTracking.MeasureTime = true;
 HLTFullTracking.MeasureTime = true;
 HLTParticles.MeasureTime = true;
+HLTGenericSeq.MeasureTime = true ;
 
 //Also, if you wish to get the RichPID tables (useful to see if things are 
 //working...) then you can add
