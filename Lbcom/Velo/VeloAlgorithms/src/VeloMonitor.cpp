@@ -490,7 +490,6 @@ StatusCode VeloMonitor::bookHistograms() {
     //Velo Cluster
     m_VCNHits = histoSvc()->
       book("velo/301", "Number of VeloClusters per event", 50, 0., 3000.);
-    std::cout << "TESTVELOCLUSTER " << m_2DHist << std::endl;
     
     if(m_2DHist){
       m_VCZR0 = histoSvc()->
