@@ -3,6 +3,12 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v9r1p4>2003-11-25 DaVinci v9r1p4</A></H1><PRE>
+ "Patch" version for a preselection production
+ 
+  - Modifications in (Pre)Selections ( PhysSelSys v5r14 )
+    . Bd -> Phi Ks
+
 </PRE><H1><A NAME=v9r1p3>2003-11-20 DaVinci v9r1p3</A></H1><PRE>
  "Patch" version for a preselection production
  
