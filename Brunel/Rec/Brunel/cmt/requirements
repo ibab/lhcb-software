@@ -26,6 +26,13 @@ use SicbCnv v11*	SICB
 #
 use SICBDST v251*	SICB
 #
+# Calorimeter digitisation
+use CaloAlgs    v1* Calo
+use CaloSicbCnv v2* SICB
+
+# Detector description database
+use XmlDDDB     v5* Det
+
 # tracking
 #use TrAlgorithms v2*	Tr
 #use OTAlgorithms v2*	OT

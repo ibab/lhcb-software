@@ -8,9 +8,11 @@ Purupose: LHCb reconstruction program
   statically linked code needed to run SICBDST routines. C++ components of the
   reconstruction framework have been moved to the package Rec/BrunelKernel
 
+  This version can use the C++ Calorimeter digitisation
+
   Other changes, relative to Brunel v1r6 are: 
 
-  requirements      - use SicbCnv v11, SICBDST v250, GaudiSys v7
+  requirements      - use SicbCnv v11, SICBDST v251, GaudiSys v7, GaudiConf v4
   Brunel/*.h, *.cpp - files renamed to remove multiple . in filenames (to please nmake)
   options/*.txt     - file extension changed to .opts to conform to new convention
                     - simplify file structure by using ApplicationMgr.DLLs = {"NONE"}; 

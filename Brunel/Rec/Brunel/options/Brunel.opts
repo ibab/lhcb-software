@@ -26,6 +26,14 @@
 // Uncomment next line if you want to run Brunel in static mode.
 // #include "$BRUNELOPTS/BrunelStatic.opts"
 
+// >>>>>>>>>>>>>> CALORIMETERS <<<<<<<<<<<<<
+// Uncomment next line to suppress Fortran digitisation
+BrunelDigiCALOSeq.Members = { };
+// Uncomment next line to enable C++ digitisation
+#include "$CALOALGSROOT/options/Brunel.opts"
+// Uncomment next line to convert C++ digits back to SICB bank
+BrunelDigiCALOSeq.Members += { "CaloDigitToSicbConverter" };
+
 //--------------------------------------------------------------
 // Define the main event input data: SICBMC v241 (new CALO RAWH format)
 //--------------------------------------------------------------
