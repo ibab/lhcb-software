@@ -4,6 +4,7 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v2r3 2005-03-16 ===================
 ! 2005-03-13 - Luis Fernandez
  - src/DecayChainNTuple.{h, cpp}
    . Some modernization and possibility to use the TrgDispCalculator
