@@ -1,4 +1,0 @@
-// Degraded resolutions for robustness test
-
-ToolSvc.RichSignalDetectionEff.ScalePhotonEff  = 0.8;
-ToolSvc.RichCherenkovAngle.ScaleEmisPntErr = { 1, 1.25, 1 };
