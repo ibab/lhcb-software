@@ -1,8 +1,9 @@
-#ifndef       __CALODET_DECALORIMETER_H__
-#define       __CALODET_DECALORIMETER_H__ 1 
+#ifndef       CALODET_DECALORIMETER_H
+#define       CALODET_DECALORIMETER_H 1 
 
 /// from STL 
 ///
+#include <iostream>
 #include <vector>
 
 /// from CLHEP 
@@ -26,6 +27,7 @@
 #include "CaloDet/CaloCardParams.h"
 #include "CaloDet/CLIDDeCalorimeter.h"
 
+class MsgStream;
 
 //-----------------------------------------------------------------------------
 //
@@ -41,21 +43,25 @@ class DeCalorimeter: public DetectorElement {
 
 public:
   
-// ** Constructors
+  // ** Constructors
 
   DeCalorimeter( const std::string& name    = "" );
   
-// ** Destructor
-
+  // ** Destructor
+  
   virtual ~DeCalorimeter() ;
   
-// ** Retrieve reference to class identifier
-
+  // ** Retrieve reference to class identifier
+  
   virtual const CLID& clID    () const { return classID()          ; } 
   static  const CLID& classID ()       { return CLID_DeCalorimeter ; } 
   
-// ** if initialized in a proper way? 
-
+  // ** printout to std::ostream 
+  virtual std::ostream& printOut( std::ostream& s = std::cerr ) const;
+  virtual MsgStream&    printOut( MsgStream&                  ) const;
+  
+  // ** if initialized in a proper way? 
+  
   inline  bool  isInitialized() const  { return m_initialized ; }  
   
 // ** Initialization methods
@@ -337,25 +343,27 @@ private:
   std::vector<CardParam> feCards ;
 
 };
+///
+#include "CaloDet/DeCalorimeter.icpp"
+///
 
-//----------------------------------------------------------------------------
-// Explicit inline methods, those needing more than a single statement...
-//----------------------------------------------------------------------------
+#endif  //    CALODET_DECALORIMETER_H
 
-inline void DeCalorimeter::Assert( bool assertion , 
-				   const char* message ) const {
-  if( !assertion ) {
-    std::string msg("DeCalorimeter:: ");  
-    throw CaloException( msg += message  );  
-  }
-}; 
-  
-inline void DeCalorimeter::Assert( bool assertion , 
-				   const std::string&  message ) const {
-  if( !assertion ) {
-    std::string msg("DeCalorimeter:: ");  
-    throw CaloException( msg += message  );  
-  }
-}; 
 
-#endif  //    __CALODET_DECALORIMETER_H__
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

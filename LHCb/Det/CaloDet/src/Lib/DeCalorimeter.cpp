@@ -16,6 +16,10 @@
 #include "GaudiKernel/ILVolume.h"
 #include "GaudiKernel/TransientStore.h"
 
+/// CaloGen 
+
+#include "CaloGen/OutputStreamIterator.h"
+
 ///
 /// from Det/CaloDet
 
@@ -209,13 +213,14 @@ StatusCode DeCalorimeter::buildCells( ) {
       } /// end of loop over all areas 
     }
 
-    log << MSG::VERBOSE << "Cell " << id << " Neighbors ";
-    CaloNeighbors::const_iterator neighbor = neighborCells( id ).begin() ; 
-    while ( neighbor != neighborCells( id ).end() ) {   
-      log << (*neighbor) ;
-      ++neighbor;
-    }
-    log << endreq;
+// // Commented by V.B. 
+//      log << MSG::VERBOSE << "Cell " << id << " Neighbors ";
+//      CaloNeighbors::const_iterator neighbor = neighborCells( id ).begin() ; 
+//      while ( neighbor != neighborCells( id ).end() ) {   
+//        log << (*neighbor) ;
+//        ++neighbor;
+//      }
+//      log << endreq;
 
   } // end of loop ovel all cells 
 
@@ -380,3 +385,117 @@ StatusCode DeCalorimeter::buildCards( )  {
 
   return StatusCode::SUCCESS; 
 };
+
+/// print to std::stream 
+std::ostream& DeCalorimeter::printOut( std::ostream& os ) const 
+{
+  
+  os << "\tDeCalorimeter index=" 
+     << std::setw(2)          << m_caloIndex 
+     << ", name from index ='" << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
+     << ", fullname ='"   << fullpath()  << "'" 
+     << "\tCellsInitialized=" ; 
+  if( m_initialized ) { os <<  "true" ; } 
+  else                { os << "false" ; }    
+  os << "\tCardsInitialized=" ; 
+  if( m_cardsInitialized ) { os <<  "true" ; } 
+  else                     { os << "false" ; }    
+  os << std::endl;
+  
+  os << "\t Parameters" 
+     << std::endl
+     << "\t\tEt value for maximum ADC value at theta(0) =  " << std::setw(12) << m_maxEtInCenter 
+     << std::endl
+     << "\t\tIncrease in Et per radian                  =  " << std::setw(12) << m_maxEtSlope   
+     << std::endl
+     << "\t\tMaximum codage in the ADC                  =  " << std::setw(12) << m_adcMax 
+     << std::endl
+     << "\t\tConversion from activeE() to energy seen   =  " << std::setw(12) << m_activeToTotal 
+     << std::endl
+     << "\t\tZ of the shower maximum in the local frame =  " << std::setw(12) << m_zShowerMax 
+     << std::endl
+     << "\t\tMaximum value for Row/Columnt              =  " << std::setw(12) << maxRowCol 
+     << std::endl
+     << "\t\tFirst Row or Column  over center           =  " << std::setw(12) << firstRowUp
+     << std::endl
+     << "\t\tCentral Value = maxRowCol/2                =  " << std::setw(12) << centerRowCol
+     << std::endl ;
+  
+  if( m_initialized ) 
+    {
+      CaloVector<CellParam>::const_iterator pCell = cells.begin() ; 
+      while( cells.end() != pCell ) 
+	{
+          CaloCellID id = (pCell++)->cellID();
+	  os << "Cell " << id << " Neighbors ";
+	  std::copy( neighborCells( id ).begin() ,  
+		     neighborCells( id ).end()   ,  
+		     OutputStreamIterator<CaloCellID,std::ostream>(os) );
+	  os << std::endl; 
+	}
+    }
+  
+  return os ; 
+}; 
+
+/// print to MsgStream
+MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const 
+{
+  
+  os << "\tDeCalorimeter index="   << std::setw(2) << m_caloIndex 
+     << ", name from index='"      << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
+     << ", fullname ='"            << fullpath()  << "'" 
+     << "\tCellsInitialized=" ;
+  if( m_initialized ) { os <<  "true" ; } 
+  else                { os << "false" ; }    
+  os << "\tCardsInitialized " ; 
+  if( m_cardsInitialized ) { os <<  "true" ; } 
+  else                     { os << "false" ; }    
+  os << endreq   ;
+  
+  os << "\t Parameters" 
+     << endreq   
+     << "\t\tEt value for maximum ADC value at theta(0) =  " << std::setw(12) << m_maxEtInCenter 
+     << endreq   
+     << "\t\tIncrease in Et per radian                  =  " << std::setw(12) << m_maxEtSlope   
+     << endreq   
+     << "\t\tMaximum codage in the ADC                  =  " << std::setw(12) << m_adcMax 
+     << endreq   
+     << "\t\tConversion from activeE() to energy seen   =  " << std::setw(12) << m_activeToTotal 
+     << endreq   
+     << "\t\tZ of the shower maximum in the local frame =  " << std::setw(12) << m_zShowerMax 
+     << endreq   
+     << "\t\tMaximum value for Row/Columnt              =  " << std::setw(12) << maxRowCol 
+     << endreq   
+     << "\t\tFirst Row or Column  over center           =  " << std::setw(12) << firstRowUp 
+     << endreq   
+     << "\t\tCentral Value = maxRowCol/2                =  " << std::setw(12) << centerRowCol
+     << endreq ; 
+  
+  if( m_initialized ) 
+    {
+      CaloVector<CellParam>::const_iterator pCell = cells.begin() ; 
+      while( cells.end() != pCell ) 
+	{
+          CaloCellID id = (pCell++)->cellID();
+	  os << " Cell " << id << " Neighbors ";
+	  std::copy( neighborCells( id ).begin() ,  
+		     neighborCells( id ).end()   ,  
+		     OutputStreamIterator<CaloCellID,MsgStream>(os) );
+	  os << endreq;
+	}
+    }
+  
+  return os ; 
+}; 
+
+
+
+
+
+
+
+
+
+
+

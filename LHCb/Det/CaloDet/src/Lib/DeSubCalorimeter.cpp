@@ -1,4 +1,3 @@
-#define __CALODET_DESUBCALORIMETER_CPP__ 1 
 
 // Include files
 #include "CaloDet/DeSubCalorimeter.h"
@@ -20,4 +19,23 @@ DeSubCalorimeter::DeSubCalorimeter( const std::string& name )
 // Standard Destructor
 DeSubCalorimeter::~DeSubCalorimeter()
 {};
-  
+
+std::ostream& DeSubCalorimeter::printOut( std::ostream& os ) const 
+{
+  os << "\tDeSubCalorimeter" 
+     << " fullname ='" << fullpath() 
+     << std::endl; 
+  os << "\t\t\tCellSize=" << std::setw(12) << m_size
+     << std::endl;    
+  return os;
+};
+
+MsgStream&    DeSubCalorimeter::printOut( MsgStream&    os ) const 
+{
+  os << "\tDeSubCalorimeter" 
+     << " fullname ='" << fullpath() 
+     << endreq   ; 
+  os << "\t\t\tCellSize=" << std::setw(12) << m_size
+     << endreq   ;    
+  return os;
+};

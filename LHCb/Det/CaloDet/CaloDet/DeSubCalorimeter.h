@@ -1,11 +1,13 @@
-#ifndef __CALODET_DESUBCALORIMETER_H__
-#define __CALODET_DESUBCALORIMETER_H__ 1
+#ifndef   CALODET_DESUBCALORIMETER_H
+#define   CALODET_DESUBCALORIMETER_H   1
 
 
 // Include files
 #include "DetDesc/DetectorElement.h"
 
 #include "CaloDet/CLIDDeSubCalorimeter.h"
+
+class MsgStream;
 
 
 //------------------------------------------------------------------------------
@@ -34,6 +36,9 @@ public:
   virtual const CLID& clID   () const { return classID()             ; } 
   static  const CLID& classID()       { return CLID_DeSubCalorimeter ; } 
 
+  virtual std::ostream& printOut( std::ostream& os = std::cerr ) const ; 
+  virtual MsgStream&    printOut( MsgStream&                   ) const ; 
+
 // ** Get/Set size
 
   inline double size   ()            const    { return m_size; };
@@ -44,5 +49,8 @@ private:
   double    m_size;      // ** Cell dimension
 
 };
+///
+#include "CaloDet/DeSubCalorimeter.icpp"
+///
 
-#endif    // __CALODET_DESUBCALORIMETER_H__
+#endif    //   CALODET_DESUBCALORIMETER_H
