@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.61 2003-11-25 14:01:29 witoldp Exp $
+! $Id: release.notes,v 1.62 2003-12-08 16:16:00 ranjard Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
 !========================== GiGaCnv v13r6 ===========================
+! 2003-12-08 - Witek Pokorski
+ - GiGaGeo.cpp - includes G4MagIntegratorStepper.hh to cope with 
+                 Geant4 5.2.ref06
+
 ! 2003-11-25 - Witek Pokorski
  - GiGaHepMCCnv - added preassigned decay time 
 

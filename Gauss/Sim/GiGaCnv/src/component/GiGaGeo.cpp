@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.11 2003-10-09 15:44:39 witoldp Exp $ 
+// $Id: GiGaGeo.cpp,v 1.12 2003-12-08 16:16:00 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2003/10/09 15:44:39  witoldp
+// changed level of printouts
+//
 // Revision 1.10  2003/09/22 13:58:20  ibelyaev
 //  polishing of addRef/release/releaseTools/finalize
 //
@@ -61,6 +64,7 @@
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
 #include "G4SDManager.hh"
+#include "G4MagIntegratorStepper.hh"
 // from GiGa 
 #include "GiGa/IGiGaSensDet.h"
 #include "GiGa/IGiGaMagField.h"
