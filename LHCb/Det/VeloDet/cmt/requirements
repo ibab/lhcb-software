@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.25 2003-12-09 10:14:34 cattanem Exp $
+# $Id: requirements,v 1.26 2003-12-18 15:31:46 cattanem Exp $
 # =========================================================================
 
 package  VeloDet 
-version  v8r7
+version  v8r8
 
 # =============== structure ===============================================	
 branches         src cmt doc VeloDet 
@@ -12,11 +12,11 @@ include_dirs      $(VELODETROOT)
 
 # =============== used packages ===========================================
 use DetDescCnv   v2r*   Det 
-use VeloKernel   v1r*   Velo
-use LHCbKernel	v3r*	Kernel
+use VeloKernel   v1r*   Velo -no_auto_imports
+use LHCbKernel	v4r*	Kernel
 
 # =============== link library (base classes) =============================
-library          VeloDetLib        Lib/*.cpp 
+library          VeloDetLib        Lib/*.cpp -import=VeloKernel
 
 # =============== component library =======================================
 library          VeloDet           component/*.cpp

@@ -1,6 +1,6 @@
-// $Id: VeloEvent_load.cpp,v 1.1 2002-05-08 17:32:09 cattanem Exp $
+// $Id: VeloEvent_load.cpp,v 1.2 2003-12-18 15:33:09 cattanem Exp $
 // Include files 
-#include "Event/EventFactoryDefs.h"
+#include "GaudiKernel/ContainerFactoryDefs.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for classes in VeloEvent

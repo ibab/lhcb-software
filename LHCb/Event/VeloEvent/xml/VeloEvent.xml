@@ -13,6 +13,7 @@ and VPRW (pile-up) classes."
            keyedContTypeDef="TRUE" >
       <location name="PuVeto" place="MC/Velo/PuHits" />
       <base name="MCHit"/>
+      &KeyedObject;
       <import name="Event/MCHit"/>
       <attribute name="sensor" type="long" desc="Sensor Number"/>
     </class>
@@ -26,8 +27,10 @@ stored for a single silicon/output channel. Constructed from MCVeloHits
 (i.e. GEANT deposits), MCVeloFE of previous events (spill over), noise 
 (above a threshold)"
            location="MC/Velo/FE">
+      <template name="KeyedObjectDict" t1="VeloChannelID"/>
       <location name="PuVeto" place="MC/Velo/PuFE" />
       <base name="KeyedObject&lt;VeloChannelID&gt;"/>
+      &KeyedContainer;
       <import name="Kernel/VeloChannelID"/>
       <import name="Kernel/SerializeStl"/>
       <constructor desc="Constructor with key" 
@@ -99,6 +102,7 @@ output on DAQ stream for all channels. It does not contain any simulation
 information"
 	   location="Raw/Velo/FullDigits">
            <base name="KeyedObject&lt;VeloChannelID&gt;"/>
+           &KeyedContainer;
            <constructor desc="Constructor with key" 
                         initList="KeyedObject&lt;VeloChannelID&gt;(key),
                                   m_ADCValue(0.0),
@@ -140,6 +144,7 @@ without applying any additional processing. It contains no simulation info."
            <import name="Kernel/SerializeStl"/>
            <import name="Kernel/VeloChannelID"/>
            <base name="KeyedObject&lt;int&gt;"/>
+           &KeyedObject;
            <attribute name="sensor" type="long" desc="Sensor Number"/>
            <attribute name="stripSignals" type="std::vector&lt;std::pair&lt;long,double&gt; &gt;" desc="strip numbers and their signals"/>
            <method name="size" type="long" desc="number of strips in cluster" const="TRUE">
@@ -154,6 +159,8 @@ without applying any additional processing. It contains no simulation info."
            <method name="channelID" type="VeloChannelID" argList="long num" desc="combined sensor and strip number ID (key) of strip in cluster" const="TRUE">
                    <code>return  VeloChannelID(sensor(),strip(num));</code>
            </method>
+           <assoc type="2D" weight="double" to="MCVeloHit" />
+           <assoc type="2D" weight="double" to="MCParticle" />
 
     </class>
 

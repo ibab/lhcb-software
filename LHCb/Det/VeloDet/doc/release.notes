@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.47 2003-12-09 10:14:34 cattanem Exp $
+! $Id: release.notes,v 1.48 2003-12-18 15:33:12 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
-!========================= VeloDet v8r6 2003-12-08 =========================
+!========================= VeloDet v8r8 2003-12-16 =========================
+! 2003-12-16 - Marco Cattaneo
+ - Move to Gaudi v14 (use LHCbKernel v4r* in requirements)
+
+!========================= VeloDet v8r7 2003-12-08 =========================
 ! 2003-12-08 - Marco Cattaneo
  - Move to Gaudi v13 (use LHCbKernel v3r* in requirements)
 

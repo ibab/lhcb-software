@@ -1,11 +1,10 @@
-# $Id: requirements,v 1.24 2003-06-17 07:18:13 cattanem Exp $
+# $Id: requirements,v 1.25 2003-12-18 15:31:43 cattanem Exp $
 package VeloEvent
-version v12r1
+version v13r0
 
 branches Event src xml cmt doc dict
 
-use Event        v3r* Event
-use GaudiObjDesc v5r* -no_auto_imports
+use Event        v4r* Event
 
 include_dirs	 $(VELOEVENTROOT)
 
@@ -16,16 +15,8 @@ document obj2dict VeloEventObj2Dict ../xml/VeloEvent.xml
 # Build libraries (including dictionary)
 #============================================================================
 library          VeloEvent      *.cpp
-library          VeloEventDict  ../dict/*.cpp -import=GaudiIntrospection
+library          VeloEventDict  ../dict/*.cpp
 
-apply_pattern package_linkopts
-apply_pattern linker_path
-apply_pattern package_stamps
+apply_pattern component_library library=VeloEventDict
+apply_pattern linker_library    library=VeloEvent
 macro_append VeloEvent_linkopts "" WIN32 "/include:_VeloEvent_loadRef"
-
-
-apply_pattern package_shlibflags
-#============================================================================
-private
-macro VeloEventDict_shlibflags  "$(GaudiIntrospection_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
-#============================================================================
