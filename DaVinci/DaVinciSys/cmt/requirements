@@ -1,14 +1,11 @@
 package DaVinciSys
-version v6r0
+version v6r1
 
 branches doc cmt
 
 #=======================================================
 # packages included in the DAVINCI tree
 #=======================================================
-
-# DaVinci application
-use DaVinci              v6r0	Phys
 
 #--- DaVinci packages
 use DaVinciTools         v6r0   Phys
