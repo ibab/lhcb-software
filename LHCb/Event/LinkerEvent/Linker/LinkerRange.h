@@ -1,4 +1,4 @@
-// $Id: LinkerRange.h,v 1.1 2005-01-27 14:52:21 cattanem Exp $
+// $Id: LinkerRange.h,v 1.2 2005-03-22 12:23:11 ocallot Exp $
 #ifndef LINKER_LINKERRANGE_H 
 #define LINKER_LINKERRANGE_H 1
 
@@ -46,6 +46,11 @@ public:
    *  @return  size
    */
   int size()       const { return m_entries.size(); }
+
+  /** returns true if the range is empty
+   *  @return  is range empty ?
+   */
+  bool empty()     const { return m_entries.empty(); }
 
   /** clear the range, remove all entries
    */

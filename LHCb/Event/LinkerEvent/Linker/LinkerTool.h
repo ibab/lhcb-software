@@ -1,4 +1,4 @@
-// $Id: LinkerTool.h,v 1.1 2005-01-27 14:52:21 cattanem Exp $
+// $Id: LinkerTool.h,v 1.2 2005-03-22 12:23:11 ocallot Exp $
 #ifndef LINKER_LINKERTOOL_H 
 #define LINKER_LINKERTOOL_H 1
 
@@ -52,7 +52,7 @@ public:
    *  @return     The direct table of relation.
    */
 
-  const DirectType* direct ( ) {
+  DirectType* direct ( ) {
     SmartDataPtr<LinksByKey> links( m_evtSvc, m_location );
     if ( 0 != links ) links->resolveLinks( m_evtSvc );
     const LinksByKey* linkPtr = links;
@@ -65,7 +65,7 @@ public:
    *  @return     The inverse table of relation.
    */
 
-  const InverseType* inverse ( ) {
+  InverseType* inverse ( ) {
     SmartDataPtr<LinksByKey> links( m_evtSvc, m_invLocation );
     LinksByKey* linkPtr = links;
     if ( 0 == linkPtr ) {
