@@ -1,4 +1,4 @@
-// $Id: GetGiGaHitsAlg.h,v 1.2 2003-06-17 15:54:36 witoldp Exp $
+// $Id: GetGiGaHitsAlg.h,v 1.3 2004-02-09 17:34:07 jonesc Exp $
 #ifndef GETGIGAHITSALG_H 
 #define GETGIGAHITSALG_H 1
 
@@ -9,15 +9,17 @@
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
 
-
 /** @class GetGiGaHitsAlg GetGiGaHitsAlg.h
  *  
  *
  *  @author Witold Pokorski
  *  @date   2002-08-13
  */
+
 class GetGiGaHitsAlg : public Algorithm {
+
 public:
+
   /// Standard constructor
   GetGiGaHitsAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -38,6 +40,8 @@ private:
   std::string    m_muonhits    ;
   std::string    m_richhits    ;
   std::string    m_richop      ;
+  std::string    m_richsegments  ;
+  std::string    m_richtracks    ;
   
   typedef std::vector<std::string> Addresses ;
   Addresses      m_caloHits    ;

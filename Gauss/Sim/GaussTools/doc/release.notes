@@ -1,9 +1,12 @@
 
 !-----------------------------------------------------------------------------
 ! Package       : Sim/GaussTools
-! Responsible	: Witold Pokorski
-! Purpose       : G4 actions, and some miscealenous algs for Gauss
+! Responsible	  : Witold Pokorski
+! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
+
+! 2004-01-29 - Chris Jones
+ - Minor additions to GetGiGaHitsAlg for RICH debug objects
 
 !======================= GaussTools v9r0 =================================
 ! 2003-12-10 - Florence RANJARD
