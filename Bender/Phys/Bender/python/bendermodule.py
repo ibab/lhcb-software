@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.17 2005-01-21 10:36:35 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.18 2005-01-21 12:44:02 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.17  2005/01/21 10:36:35  ibelyaev
+#  preparation for v4r5
+#
 # Revision 1.16  2005/01/21 09:33:06  ibelyaev
 # *** empty log message ***
 #
@@ -41,17 +44,11 @@ _libs_ = ( ''     ,
            'OT'   ,
            'L0'   ,
            'Trg'  )
-for lib in _libs_ :
-    print '1) loading '+`lib`
-    gaudimodule.loaddict( lib + 'EventDict' )
-    print 'after loading '+`lib`
+for lib in _libs_ : gaudimodule.loaddict( lib + 'EventDict' )
 
 _libs_ = ( 'BenderDict'     ,
            'LoKiHybridDict' )
-for lib in _libs_ :    
-    print '2) loading '+`lib`
-    gaudimodule.loaddict( lib               )
-    print 'after loading '+`lib`
+for lib in _libs_ :    gaudimodule.loaddict( lib               )
 
 
 from   bendertypes     import *
