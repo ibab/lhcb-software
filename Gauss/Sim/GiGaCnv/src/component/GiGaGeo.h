@@ -1,14 +1,8 @@
-// $Id: GiGaGeo.h,v 1.3 2003-01-30 20:08:31 witoldp Exp $ 
+// $Id: GiGaGeo.h,v 1.4 2003-04-06 18:55:32 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/12/15 17:17:45  ibelyaev
-//  clear static G4 geoemtry stores / temporary fix
-//
-// Revision 1.1  2002/12/07 14:36:26  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes
-//
 // ============================================================================
 #ifndef  GIGACNV_GiGaGeo_H 
 #define  GIGACNV_GiGaGeo_H 1 
@@ -19,8 +13,6 @@
 /// GiGa 
 #include "GiGaCnv/GiGaCnvSvcBase.h" 
 #include "GiGaCnv/IGiGaGeomCnvSvc.h" 
-// SimulationSvc
-#include "SimSvc/ISimulationSvc.h"
 
 ///
 class G4VPhysicalVolume; 
@@ -33,8 +25,7 @@ class SolidBoolean;
 class IGiGaSensDet;
 ///
 class IGiGaMagField;
-///
-class ISimulationSvc       ;
+class IGiGaFieldMgr;
 ///
 template <class SERVICE> 
 class SvcFactory;
@@ -61,6 +52,7 @@ public:
   ///
   typedef  std::vector<IGiGaSensDet*>                SDobjects; 
   typedef  std::vector<IGiGaMagField*>               MFobjects; 
+  typedef  std::vector<IGiGaFieldMgr*>               FMobjects; 
   ///
 protected:
   
@@ -203,15 +195,15 @@ public:
   ( const std::string& name      , 
     IGiGaSensDet*&     det       )  ;
   
-  /** Instantiate the Magnetic Field Object 
+  /** Instantiate the Field Manager Object 
    *  @see IGiGaGeo 
-   *  @param name  Type/Name of the Magnetic Field Object
-   *  @param mag   reference to Magnetic Field Object 
+   *  @param name  Type/Name of the Field Manager Object
+   *  @param mag   reference to Field Manager Object 
    *  @return  status code 
    */
-  virtual StatusCode   magnetic 
+  virtual StatusCode   fieldMgr 
   ( const std::string& name      , 
-    IGiGaMagField*&    mag       )  ;
+    IGiGaFieldMgr*&    mgr      )  ;
 
   /** Create new G4LogicalVolume. All arguments must be valid!
    *  One should not invoke the 
@@ -273,6 +265,17 @@ public:
   
   /** Instantiate the Magnetic Field Object 
    *  @att obsolete method 
+   *  @see IGiGaGeo 
+   *  @param name  Type/Name of the Magnetic Field Object
+   *  @param mag   reference to Magnetic Field Object 
+   *  @return  status code 
+   */
+  virtual StatusCode   magnetic 
+  ( const std::string& name      , 
+    IGiGaMagField*&    mag       )  ;
+
+  /** Instantiate the Magnetic Field Object 
+   *  @att obsolete method 
    *  @param Name  Type/Name of the Magnetic Field Object
    *  @param Mag   reference to Magnetic Field Object 
    *  @return  status code 
@@ -280,11 +283,15 @@ public:
   virtual StatusCode magField  
   ( const std::string& Name , 
     IGiGaMagField*&    Mag  ) ;
-
+  
 protected:
-  ///
-  G4VSolid* g4BoolSolid( const SolidBoolean * );
-  ///
+  
+  /** convert Gaudi/DetDesc boolean solid into Geant4 boolean solid 
+   *  @param  solid boolean solid to be converted  
+   *  @return pointer to converted solid
+   */
+  G4VSolid* g4BoolSolid( const SolidBoolean * solid );
+
 private:
   ///
   GiGaGeo()                                  ;
@@ -304,27 +311,26 @@ private:
   float                            m_worldY        ;
   float                            m_worldZ        ;
   // global magnetic field 
-  std::string                      m_worldMagField ; ///< global mag field  
+  std::string                      m_worldMagField ; 
   // special sensitive detector for estimation of material budget 
   std::string                      m_budget        ;
-
+  
   // flag for clearing all G4 geometry stores    
   bool                             m_clearStores   ;
   
   // list of all sensitive detector
-  SDobjects                        m_SDs  ; ///< created sensitive detectors 
+  SDobjects                        m_SDs  ; 
   // list of all magnetic fields
-  MFobjects                        m_MFs  ; ///< created magnetic field objects 
-
-  // SimulationSvc
-  ISimulationSvc* m_simSvc;
-  
+  MFobjects                        m_MFs  ; 
+  // list of all field managers 
+  FMobjects                        m_FMs  ; 
 
 };        
+// ============================================================================
 
 
 // ============================================================================
-// end 
+// The END 
 // ============================================================================
 #endif  //   GIGACNV_GiGaGeo_H__ 
 // ============================================================================

@@ -1,11 +1,8 @@
-// $Id: GiGaLVolumeCnv.cpp,v 1.13 2002-12-07 14:36:27 ibelyaev Exp $ 
+// $Id: GiGaLVolumeCnv.cpp,v 1.14 2003-04-06 18:55:32 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2002/07/09 20:33:54  ibelyaev
-//  move GiGaVolumeUtils into public location
-//
 // ============================================================================
 #define GIGACNV_GIGALVOLUMECNV_CPP 1 
 // ============================================================================
@@ -22,6 +19,7 @@
 #include "DetDesc/Surface.h"
 /// Geant4
 #include "G4LogicalVolume.hh"
+#include "G4VisAttributes.hh"
 #include "G4PVPlacement.hh"
 /// GiGa & GiGaCnv 
 #include "GiGa/IGiGaSensDet.h"
@@ -58,7 +56,7 @@ const        ICnvFactory&GiGaLVolumeCnvFactory = s_Factory ;
 // ============================================================================
 GiGaLVolumeCnv::GiGaLVolumeCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
-  , m_leaf ( "" , classID() )
+  , m_leaf       ( "" , classID()     ) 
 {
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
   setConverterName              ( "GiGaLVCnv"              ) ; 
@@ -68,7 +66,7 @@ GiGaLVolumeCnv::GiGaLVolumeCnv( ISvcLocator* Locator )
 /** destructor
  */
 // ============================================================================
-GiGaLVolumeCnv::~GiGaLVolumeCnv(){}; 
+GiGaLVolumeCnv::~GiGaLVolumeCnv(){};
 
 // ============================================================================
 /** Class ID
@@ -210,18 +208,21 @@ StatusCode GiGaLVolumeCnv::updateRep
         }
     }
   /// magnetic field 
-  if( !lv->mfName().empty()) 
-    { return Error("Magnetic field per volume is not yet implemented!"); }
-  /// convert surfaces (if any) 
-  //    {
-  //      for( LVolume::Surfaces::iterator it = lv->surfaces().begin() ; 
-  //           lv->surfaces().end() != it ; ++it )
-  //        { 
-  //          StatusCode sc = GiGaCnvUtils::createRep( cnvSvc() , *it );
-  //          if( sc.isFailure() ) 
-  //           { return Error("Could not convert surfaces!"); }
-  //        }
-  //    }
+  if( !lv->mfName().empty() ) 
+    { 
+      IGiGaFieldMgr* mgr = 0 ;
+      StatusCode sc = geoSvc() -> fieldMgr ( lv -> mfName() ,  mgr  ) ;
+      if( sc.isFailure() ) 
+        { return Error ( "updateRep:: Could no create FieldMgr " , sc ) ; }
+      if( 0 == mgr          ) 
+        { return Error ( "updateRep:: Could no create FieldMgr "      ) ; }
+      if( mgr -> global ()  )
+        { return Error ( "updateRep:: FieldMgr is 'global'"           ) ; }
+      if( 0 == mgr -> fieldMgr() ) 
+        { return Error ( "updateRep:: FieldMgr is invalid "           ) ; }
+      // set sensitive detector 
+      G4LV -> SetFieldManager( mgr -> fieldMgr() , false ) ;
+    }
   /// look again at the Geant4 static store
   if( 0 != GiGaVolumeUtils::findLVolume( lv->name() ) ) 
     { return StatusCode::SUCCESS ; }                          ///< RETURN !!!

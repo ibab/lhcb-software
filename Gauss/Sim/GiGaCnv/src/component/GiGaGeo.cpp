@@ -1,23 +1,8 @@
-// $Id: GiGaGeo.cpp,v 1.6 2003-01-30 20:08:31 witoldp Exp $ 
+// $Id: GiGaGeo.cpp,v 1.7 2003-04-06 18:55:32 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2003/01/23 09:20:37  ibelyaev
-//  few fixes for Win2K platform
-//
-// Revision 1.4  2002/12/16 18:09:36  ibelyaev
-//  update for new release of Geant4 (5.0)
-//
-// Revision 1.3  2002/12/15 17:17:45  ibelyaev
-//  clear static G4 geoemtry stores / temporary fix
-//
-// Revision 1.2  2002/12/13 14:25:22  ibelyaev
-//  few trivial bug fixes
-//
-// Revision 1.1  2002/12/07 14:36:26  ibelyaev
-//  see $GIGACNVROOT/doc/release.notes
-//
 // ===========================================================================
 #define GIGACNV_GiGaGeo_CPP 1 
 // ============================================================================
@@ -67,6 +52,7 @@
 // from GiGa 
 #include "GiGa/IGiGaSensDet.h"
 #include "GiGa/IGiGaMagField.h"
+#include "GiGa/IGiGaFieldMgr.h"
 #include "GiGa/GiGaUtil.h"
 // From GiGaCnv 
 #include "GiGaCnv/GiGaAssembly.h"
@@ -123,23 +109,25 @@ GiGaGeo::GiGaGeo
   //
   , m_SDs             ()
   , m_MFs             ()
-  ///
+  , m_FMs             ()
+  //
 {
   ///
   setNameOfDataProviderSvc("DetectorDataSvc"); 
   ///
-  declareProperty ( "WorldMaterial"             , m_worldMaterial   ) ;
-  declareProperty ( "WorldPhysicalVolumeName"   , m_worldNamePV     ) ;
-  declareProperty ( "WorldLogicalVolumeName"    , m_worldNameLV     ) ;
+  declareProperty ( "WorldMaterial"             , m_worldMaterial    ) ;
+  declareProperty ( "WorldPhysicalVolumeName"   , m_worldNamePV      ) ;
+  declareProperty ( "WorldLogicalVolumeName"    , m_worldNameLV      ) ;
   // /
-  declareProperty ( "XsizeOfWorldVolume"        , m_worldX          ) ;
-  declareProperty ( "YsizeOfWorldVolume"        , m_worldY          ) ;
-  declareProperty ( "XsizeOfWorldVolume"        , m_worldZ          ) ;
+  declareProperty ( "XsizeOfWorldVolume"        , m_worldX           ) ;
+  declareProperty ( "YsizeOfWorldVolume"        , m_worldY           ) ;
+  declareProperty ( "XsizeOfWorldVolume"        , m_worldZ           ) ;
   ///
-  declareProperty ( "GlobalSensitivity"         , m_budget          ) ;
-  declareProperty ( "WorldMagneticField"        , m_worldMagField   ) ;
-  ///
-  declareProperty ( "ClearStores"              , m_clearStores      ) ;
+  declareProperty ( "GlobalSensitivity"         , m_budget           ) ;
+  declareProperty ( "WorldMagneticField"        , m_worldMagField    ) ;
+  declareProperty ( "FieldManager"              , m_worldMagField    ) ;
+  /// 
+  declareProperty ( "ClearStores"               , m_clearStores      ) ;
   
 };
 // ============================================================================
@@ -386,8 +374,10 @@ G4VSolid*    GiGaGeo::solid ( const ISolid*      Sd     )
     if( 0 != sBool ) { return g4BoolSolid( sBool ); }
   }
   /// unknown solid!
-  Error("g4solid Unknown Solid="+solidType+"/" + 
-        System::typeinfoName(typeid(Sd))+"/"+Sd->name());
+  Error( "g4solid(): Unknown Solid=" + 
+         solidType + "/"             + 
+         GiGaUtil::ObjTypeName( Sd ) + 
+         "/" + Sd -> name ()         ) ;
   ///
   return 0;
 };
@@ -475,17 +465,11 @@ StatusCode GiGaGeo::initialize()
   //
   StatusCode sc = GiGaCnvSvcBase::initialize();
   if(sc.isFailure() ) 
-    { return Error(" Failed to initialize GiGaCnvSvc", sc      ) ; }
+    { return Error ( " Failed to initialize GiGaCnvSvc", sc      ) ; }
   // we explicitely need detSvc(), check it! 
   if( 0 == detSvc() ) 
-    { return Error(" DetectorProviderSvc is not located! "     ) ; }
+    { return Error ( " DetectorProviderSvc is not located! "     ) ; }
 
-  /// locate SimSvc
-  StatusCode status = serviceLocator()
-    ->service("SimulationSvc", m_simSvc, true);
-  if (status.isFailure()) {
-    return Error("Cannot locate SimulationSvc!");} 
-  
   // check for special run with  material budget counters:
   if( !m_budget.empty() )
     { Warning(" Special run for material budget calculation! " ) ; }
@@ -501,15 +485,22 @@ StatusCode GiGaGeo::initialize()
 StatusCode GiGaGeo::finalize()   
 { 
   // release all created sensitive detectors 
-//    std::for_each( m_SDs.begin () , 
-//                   m_SDs.end   () , 
-//                   std::mem_fun( &IGiGaSensDet::release  ) );
+  //    std::for_each( m_SDs.begin () , 
+  //                   m_SDs.end   () , 
+  //                   std::mem_fun( &IGiGaSensDet::release  ) );
   m_SDs.clear() ;
+
   // finalize all created magnetic field objects 
   std::for_each( m_MFs.begin () , 
                  m_MFs.end   () , 
                  std::mem_fun( &IGiGaMagField::release ) );
   m_MFs.clear() ;
+
+  // finalize all created field managers objects 
+  std::for_each( m_FMs.begin () , 
+                 m_FMs.end   () , 
+                 std::mem_fun( &IGiGaFieldMgr::release ) );
+  m_FMs.clear() ;
   
   // clear store of assemblies!
   StatusCode sc = GiGaAssemblyStore::store()->clear();
@@ -533,12 +524,12 @@ StatusCode GiGaGeo::finalize()
       Print( " G4PhysicalVolumeStore is cleaned "  ,
              MSG::VERBOSE , StatusCode::SUCCESS ) ;
       // ugly trick to "hide" some erros 
-//        if( 0 != geo && ! geo->IsGeometryClosed() ) 
-//          {
-//            geo->CloseGeometry( false , false ) ;
-//            Warning( " G4 Geometry is closed " + 
-//                     std::string(" (temporary trick, to be fixed soon) " ) );
-//          }
+      //        if( 0 != geo && ! geo->IsGeometryClosed() ) 
+      //          {
+      //            geo->CloseGeometry( false , false ) ;
+      //            Warning( " G4 Geometry is closed " + 
+      //  std::string(" (temporary trick, to be fixed soon) " ) );
+      //          }
       G4SolidStore          :: Clean     () ;
       Print( " G4SolidStore          is cleaned only partially " , 
              MSG::VERBOSE , StatusCode::SUCCESS ) ;
@@ -582,31 +573,42 @@ G4VPhysicalVolume* GiGaGeo::world ()
   if( !m_worldMagField.empty() )
     {
       ///
-      IGiGaMagField* mf = 0;
-      StatusCode sc = magnetic( m_worldMagField , mf );  
+      IGiGaFieldMgr* mf = 0;
+      StatusCode sc = fieldMgr( m_worldMagField , mf );  
       if( sc.isFailure() ) 
-        { Error("world():: could not construct Global Magnetic Field=" + 
-                m_worldMagField, sc ) ; return 0 ; }  
+        { Error   ( "world():: could not construct GiGa Field Manager=" + 
+                    m_worldMagField, sc ) ; return 0 ; }  
       if( 0 == mf        ) 
-        { Error("world():: could not construct Global Magnetic Field=" +
-                m_worldMagField, sc ) ; return 0 ; }  
+        { Error   ( "world():: could not construct GiGa Field Manager=" +
+                    m_worldMagField, sc ) ; return 0 ; }  
+      if( ! mf->global() )
+        { Error   ( "world():: GiGa Field Manager '" + m_worldMagField + 
+                    "' is not 'global'  "                   ) ; return 0 ; }  
+      if( 0 == mf -> fieldMgr () ) 
+        { Error   ( "world():: GiGa Field Manager '" + m_worldMagField + 
+                    "' has invalid G4FieldManager  "        ) ; return 0 ; }  
+      if( 0 == mf -> field    () ) 
+        { Error   ( "world():: GiGa Field Manager '" + m_worldMagField + 
+                    "' has invalid G4MagneticField "        ) ; return 0 ; }  
+      if( 0 == mf -> stepper  () ) 
+        { Error   ( "world():: GiGa Field Manager '" + m_worldMagField + 
+                    "' has invalid G4MagIntegratorStepper " ) ; return 0 ; }
+      /// one more check
+      G4TransportationManager* trMgr = 
+        G4TransportationManager::GetTransportationManager () ;
+      if( 0 == trMgr ) 
+        { Error ( "world():: G4TransportationMgr is invalid!" ) ; return 0 ; }
+      if( trMgr->GetFieldManager () != mf -> fieldMgr () ) 
+        { Error ( "world():: Mismatch in the G4FieldManager!" ) ; return 0 ; }
       ///
-      {
-        G4TransportationManager* trnspMgr = 
-          G4TransportationManager::GetTransportationManager() ; 
-        if( 0 == trnspMgr  )
-          { Error("world():: could not locate G4TranspostationManager*") ; 
-          return 0 ; }         
-        G4FieldManager*          fieldMgr = trnspMgr->GetFieldManager(); 
-        if( 0 == fieldMgr  ) 
-          { Error("world():: could not locate G4FieldManager* object ") ; 
-          return 0 ; }         
-        fieldMgr->SetDetectorField  ( mf );
-        fieldMgr->CreateChordFinder ( mf );  
-      }
-      ///
-      Print("world():: World Magnetic Field is set to be = " + 
-            System::typeinfoName( typeid( *mf ) )+"/"+mf->name() );
+      Print("world():: Global          'Field Manager' is set to be = " + 
+            GiGaUtil::ObjTypeName ( mf ) +"/" + mf -> name () ) ;
+      Print("world():: Global        'G4Field Manager' is set to be = " + 
+            GiGaUtil::ObjTypeName ( mf -> fieldMgr () )          ) ;
+      Print("world():: Global        'G4MagneticField' is set to be = " + 
+            GiGaUtil::ObjTypeName ( mf -> field    () )          ) ;
+      Print("world():: Global 'G4MagIntegratorStepper' is set to be = " + 
+            GiGaUtil::ObjTypeName ( mf -> stepper  () )          ) ;
     }
   else { Warning("world():: Magnetic Field is not requested to be loaded "); }
   ///
@@ -838,6 +840,7 @@ StatusCode   GiGaGeo::magnetic
 ( const std::string& name , 
   IGiGaMagField*&    mag  )  
 {
+  Warning(" magnetic() is the obsolete method, use fieldMgr()!");
   // reset the output value 
   mag = 0 ;
   // locate the magnetic field  
@@ -846,6 +849,31 @@ StatusCode   GiGaGeo::magnetic
     { return Error( "Could not locate Magnetic Field='" + name + "'" ) ; }
   // keep local copy 
   m_MFs.push_back( mag );
+  ///
+  return StatusCode::SUCCESS;
+  ///
+};
+// ============================================================================
+
+// ============================================================================
+/** Instantiate the Magnetic Field Object 
+ *  @param name  Type/Name of the Magnetic Field Object
+ *  @param mag   reference to Magnetic Field Object 
+ *  @return  status code 
+ */
+// ============================================================================
+StatusCode   GiGaGeo::fieldMgr 
+( const std::string& name , 
+  IGiGaFieldMgr*&    mgr  )  
+{
+  // reset the output value 
+  mgr = 0 ;
+  // locate the magnetic field  
+  mgr = tool( name , mgr , this );
+  if( 0 == mgr ) 
+    { return Error( "Could not locate Field Manager'" + name + "'" ) ; }
+  // keep local copy 
+  m_FMs.push_back( mgr );
   ///
   return StatusCode::SUCCESS;
   ///
@@ -864,7 +892,7 @@ StatusCode GiGaGeo::magField
 ( const std::string& TypeNick , 
   IGiGaMagField*&    MF       )
 {
-  Warning(" magField() is the obsolete method, use magnetic()!");
+  Warning(" magField() is the obsolete method, use fieldMgr()!");
   return magnetic( TypeNick , MF ) ;  
 };
 // ============================================================================
@@ -891,48 +919,6 @@ G4LogicalVolume* GiGaGeo::createG4LV
   // create 
   G4LogicalVolume* G4LV = 
     new G4LogicalVolume( solid , material , Name , 0 , 0 , 0 );
-
-  // user limits
-  if(m_simSvc->hasSimAttribute(Name))
-  {
-    SimAttribute attr = m_simSvc->simAttribute(Name);
-
-    // instanciate G4UserLimits
-    G4UserLimits* ulimit=new G4UserLimits();
-
-    // set max allowed step
-    if(attr.maxAllowedStep() != -1.0) 
-      {
-        ulimit->SetMaxAllowedStep(attr.maxAllowedStep ());
-      }
-    
-    // set max track length
-    if(attr.maxTrackLength() != -1.0)
-      {
-        ulimit->SetUserMaxTrackLength(attr.maxTrackLength());
-      }
-    
-    // set max time
-    if(attr.maxTime() != -1.0)
-      {
-        ulimit->SetUserMaxTime(attr.maxTime());
-      }    
-    
-    // set minimum kinetic energy
-    if(attr.minEkine() != -1.0)
-      {
-        ulimit->SetUserMinEkine(attr.minEkine());
-      }
-    
-    // set minimum range
-    if(attr.minRange() != -1.0)
-      {
-        ulimit->SetUserMinRange(attr.minRange());    
-      }
-    
-    // attach user limits to the given G4 volume
-    G4LV->SetUserLimits(ulimit);
-  }
 
   // look for global material budget counter 
   if( !m_budget.empty() )

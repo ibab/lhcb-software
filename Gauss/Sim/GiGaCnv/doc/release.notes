@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.44 2003-03-05 15:19:19 ranjard Exp $
+! $Id: release.notes,v 1.45 2003-04-06 18:55:31 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2003-04-06 - Ivan BELYAEV
+ - remove the dependencies fro Simulaiton and Visualization services
+ - make an adaptation to newer version of GiGa
 
 !======================== GiGaCnv v11r2 ===============================
 ! 2003-03-05 - Florence Ranjard

@@ -1,8 +1,11 @@
-// $Id: GiGaCnvBase.h,v 1.10 2002-12-07 21:13:48 ibelyaev Exp $ 
+// $Id: GiGaCnvBase.h,v 1.11 2003-04-06 18:55:31 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/12/07 21:13:48  ibelyaev
+//  bug fix and small CPU performace optimization
+//
 // Revision 1.9  2002/12/07 14:36:25  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes
 //
@@ -90,6 +93,12 @@ public:
   virtual StatusCode finalize   () ;
   
 protected: 
+
+  /** acessor to teh service locator 
+   *  @return pointer to service locator
+   */
+  inline ISvcLocator*          svcLoc    () const 
+  { return serviceLocator ()                          ; }
   
   /** accessor to own conversion service 
    *  @return pointer to own conversion service 

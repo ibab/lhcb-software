@@ -1,8 +1,11 @@
-// $Id: IGiGaGeomCnvSvc.h,v 1.5 2002-05-04 20:39:35 ibelyaev Exp $ 
+// $Id: IGiGaGeomCnvSvc.h,v 1.6 2003-04-06 18:55:31 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/05/04 20:39:35  ibelyaev
+//  see $GIGACNVROOT/release.notes (4 May 2002)
+//
 // ============================================================================
 #ifndef  GIGACNV_IGIGAGEOMCNVSVC_H 
 #define  GIGACNV_IGIGAGEOMCNVSVC_H 1
@@ -23,6 +26,7 @@ class G4Material;
 
 class IGiGaSensDet  ;
 class IGiGaMagField ;
+class IGiGaFieldMgr ;
 
 /** @class IGiGaGeomCnv IGiGaGeomCnvSvc.h GiGa/IGiGaGeomCnvSvc.h
  *
@@ -72,14 +76,14 @@ class IGiGaGeomCnvSvc: virtual public IGiGaCnvSvc ,
   ( const std::string& name   , 
     IGiGaSensDet*&     det    ) = 0 ;
   
-  /** Instantiate the Magnetic Field Object 
-   *  @param name  Type/Name of the Magnetic Field Object
-   *  @param mag   reference to Magnetic Field Object 
+  /** Instantiate the Field Manager 
+   *  @param name  Type/Name of the Field Manager Object
+   *  @param mgr   reference to Field Manager Object 
    *  @return  status code 
    */
-  virtual StatusCode   magnetic 
+  virtual StatusCode   fieldMgr 
   ( const std::string& name   , 
-    IGiGaMagField*&    mag    ) = 0 ;
+    IGiGaFieldMgr*&    mgr    ) = 0 ;
   
   /** Create new G4LogicalVolume. 
    *  All arguments must be valid!
@@ -131,6 +135,16 @@ class IGiGaGeomCnvSvc: virtual public IGiGaCnvSvc ,
   virtual StatusCode          sensDet  
   ( const std::string& Name   , 
     IGiGaSensDet*&     Det    ) = 0 ;
+  
+  /** Instantiate the Magnetic Field Object 
+   *  @obsolete method 
+   *  @param name  Type/Name of the Magnetic Field Object
+   *  @param mag   reference to Magnetic Field Object 
+   *  @return  status code 
+   */
+  virtual StatusCode   magnetic 
+  ( const std::string& name   , 
+    IGiGaMagField*&    mag    ) = 0 ;
   
   /** Instantiate the Magnetic Field Object 
    *  @obsolete method 
