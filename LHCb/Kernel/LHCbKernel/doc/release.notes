@@ -2,6 +2,26 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2004-07-27 - Vanya BELYAEV
+  drastical simplification of "maps"
+  - Kernel/CaloHash.h 
+    extend the hashing techniques for variouse specific cases 
+    through template partial specialization 
+  - Kernel/CaloMap.h 
+    remove all #ifdef/#else/#endif platform dependent directives 
+  - Kernel.CaloHashMap 
+    remove all #ifdef/#else/#endif platform dependent directives 
+    From now *ALL* platform-dependent preprocessor "code" comes from
+    GaudiKernel/stl_hash.h
+    From now the class GaudiKernel/HAshTabel is not in use anymore,  
+    as a result one COULD expect significant reduce in run-time errors 
+    on Win32 platform  ( a number of segmentation faults were 
+    detected by T.Ruf on Win32 platform in HashTable code)
+  
+  Indeed now the code in Kernel/CaloHash.h, Kernel/CaloHashMap.h 
+  and Kernel/CaloMap.h is *IDENTICAL* to LoKi/Hash.h, LoKi/Map.h 
+  and  LoKi/HashMap.h 
+ 
 !===================== LHCbKernel v5r0p1 2004-07-26 =======================
 ! 2004-07-26 - Vanya Belyaev
  - Kernel/InstanceCounter.h

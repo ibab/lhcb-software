@@ -1,14 +1,8 @@
-// $Id: CaloHash.h,v 1.3 2002-04-30 16:18:16 ibelyaev Exp $
+// $Id: CaloHash.h,v 1.4 2004-07-27 14:01:37 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/27 16:26:24  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.1  2002/04/27 15:31:02  ibelyaev
-//  add CaloHash.h for efficient hashing on Win32 platform
-// 
 // ============================================================================
 #ifndef KERNEL_CALOHASH_H 
 #define KERNEL_CALOHASH_H 1
@@ -16,7 +10,8 @@
 #include <string>
 
 /** @class CaloHash CaloHash.h Kernel/CaloHash.h
- *  
+ *
+ *  The simple hashing function 
  * 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   27/04/2002
@@ -35,19 +30,66 @@ struct CaloHash : public std::unary_function<TYPE,size_t>
   };
 };
 
+template <class TYPE> 
+struct CaloHash <const TYPE>  :  public CaloHash <TYPE> {} ;
+template <class TYPE> 
+struct CaloHash <const TYPE&> :  public CaloHash <TYPE> {} ;
+template <class TYPE> 
+struct CaloHash       <TYPE&> :  public CaloHash <TYPE> {} ;
+
+template <class TYPE> 
+struct CaloHash<const TYPE*> 
+  : public std::unary_function<const TYPE*,size_t>
+{
+  size_t operator() ( const TYPE* key ) const 
+  { return 0 == key ? 0 : m_type( *key ) ; };
+private: 
+  Hash<TYPE> m_type ;
+};
+
+template <class TYPE> 
+struct CaloHash       <TYPE*>  :  public CaloHash <const TYPE*> {} ;
+template <class TYPE> 
+struct CaloHash       <TYPE*&> :  public CaloHash <const TYPE*> {} ;
+template <class TYPE> 
+struct CaloHash <const TYPE*&> :  public CaloHash <const TYPE*> {} ;
+
 template <>
 struct CaloHash<std::string>
-  : public std::unary_function<std::string,size_t>
+  : public std::unary_function<const std::string,size_t>
 {
   size_t operator() ( const std::string& key ) const
   {
     typedef std::string::const_iterator CI;
     size_t res  = 0 ;
-    CI end = key.end   () ;
-    for( CI p = key.begin(); end != p ; ++p ) { res = ( res << 1 )^*p ;}
+    for( CI p = key.begin() ; key.end() != p ; ++p ) 
+    { res = ( res << 1 )^(*p) ; }
     return res ;
   };
 };
+
+template <>
+struct CaloHash<const std::string>  : public CaloHash<std::string> {} ;
+template <>
+struct CaloHash<std::string&>       : public CaloHash<std::string> {} ;
+template <>
+struct CaloHash<const std::string&> : public CaloHash<std::string> {} ;
+
+struct CaloHash<char*>
+  : public std::unary_function<char*,size_t>
+{
+  size_t operator() ( const char* key ) const
+  {
+    size_t res = 0 ;
+    if    ( 0 == key ) { return 0 ; }
+    while ( *key ) { res = ( res<<1)^*key++ ; }
+    return res ;
+  };
+};
+
+template <>
+struct CaloHash<const char*> : public CaloHash<char*>        {} ;
+
 
 // ============================================================================
 // The END 
