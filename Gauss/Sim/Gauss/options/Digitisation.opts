@@ -1,10 +1,10 @@
-// $Id: Digitisation.opts,v 1.3 2002-11-08 11:26:41 witoldp Exp $
+// $Id: Digitisation.opts,v 1.4 2002-11-08 17:34:27 witoldp Exp $
  
 //ApplicationMgr.DLLs   += { "OTDet", "OTAlgorithms" };
 
 //Digitisation.Members += { "MCOTDepositCreator" ,
-                          "MCOTDigitCreator",
-                          "OTDigitCreator" };
+//                          "MCOTDigitCreator",
+//                          "OTDigitCreator" };
 
 //MCOTDepositCreator.OutputLevel = 1;
 
