@@ -1,10 +1,13 @@
 <PRE>
 Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
-
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v10r0>2002-06-06 Brunel v10r1</A></H1><PRE>
+! 2002-06-07 - Marco Cattaneo
+ - Change version to v11r0 to use new versions of Event Model, OTDet etc.
+ - Remove obsolete options files BrunelTrSiTT12.opts, BrunelTrOtItTT1.opts
+
+! 2002-06-07 - Marco Cattaneo
  - Add support for dbase v245 (without RICH for now)
 
 </PRE><H1><A NAME=v10r0>2002-06-04 Brunel v10r0</A></H1><PRE>

@@ -21,8 +21,8 @@ BrunelDstWriter.Output = "DATAFILE='dst_92119.root' TYP='ROOT' OPT='NEW'";
 //--------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------
-#include "$BRUNELOPTS/BrunelTrOtItTT1.opts"  // dbase v243r3 tracking layout
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v243r3.xml";
+#include "$FWTRACKROOT/options/Brunelv243r1.opts" // Forward tracking
 
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options

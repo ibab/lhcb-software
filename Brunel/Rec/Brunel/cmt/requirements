@@ -1,5 +1,5 @@
 package Brunel
-version v10r1
+version v11r0
 
 branches doc cmt job options
 
@@ -43,14 +43,14 @@ use HbookCnv           v12r0
 use GaudiConf    v6r3
 use BookKeeping  v1r1   Tools
 use LHCbKernel   v1r1   Kernel
-use Finclude     v12r2  SICB
-use Futio        v11    SICB
+use Finclude     v13r0  SICB
+use Futio        v12r0  SICB
 
 # Subdetector kernels
 use CaloKernel   v2r0   Calo
 use MuonKernel   v2r1   Muon
 use RichKernel   v1r0   Rich
-use TrKernel     v10r0  Tr
+use TrKernel     v11r0  Tr
 
 # Detector description
 use DetDesc      v10r2  Det
@@ -58,69 +58,69 @@ use XmlDDDB      v12r1  Det
 use CaloDet       v4r0  Det
 use CaloDetXmlCnv v1r0  Det
 use MuonDet       v3r1  Det
-use OTDet         v1r0  Det
+use OTDet         v2r0  Det
 use VeloDet       v5r0  Det
 use Magnet        v1r1  Det
 
 use MuonTools    v2r0   Muon
 
 # Event Model
-use EventSys     v10r1  Event
+use EventSys     v11r0  Event
 
 # SicB event data persistency
-use SicbCnv      v16r2  SICB
-use ITSicbGeom   v1r1   SICB
-use RiSicbGeom   v1r0   SICB
-use CaloSicbCnv  v6r0   SICB
-use MuonSicbCnv  v5r0   SICB
-use RiSicbCnv    v2r1   SICB
-use VSicbCnv     v7r0   SICB
-use TrSicbCnv    v5r0   SICB
+use SicbCnv      v17r0  SICB
+use ITSicbGeom   v2r0   SICB
+use RiSicbGeom   v2r0   SICB
+use CaloSicbCnv  v7r0   SICB
+use MuonSicbCnv  v6r0   SICB
+use RiSicbCnv    v3r0   SICB
+use VSicbCnv     v8r0   SICB
+use TrSicbCnv    v6r0   SICB
 
 # Brunel utilities
-use BrunelKernel v4r0   Rec
-use BrunelSicb   v3r0   Rec
+use BrunelKernel v5r0   Rec
+use BrunelSicb   v4r0   Rec
 
 # L0 trigger
-use L0Calo       v5r0   L0
-use L0Muon       v5r0   L0
-use PuVeto       v2r0   L0
-use L0DU         v5r0   L0
+use L0Calo       v6r0   L0
+use L0Muon       v6r0   L0
+use PuVeto       v3r0   L0
+use L0DU         v6r0   L0
 
 # Calorimeter
 use CaloInterfaces v2r1 Calo
-use CaloUtils      v2r2 Calo
-use CaloTools      v2r0 Calo
-use CaloAlgs       v5r1 Calo
+use CaloUtils      v3r0 Calo
+use CaloTools      v3r0 Calo
+use CaloAlgs       v6r0 Calo
 
 # Velo
-use VeloDigit     v2r0   Velo
+use VeloDigit     v3r0   Velo
 
 # Inner Tracker
-use ITAlgorithms  v10r0  IT
-use ITAssociators  v1r0  IT
+use ITAlgorithms  v11r0  IT
+use ITAssociators  v2r0  IT
 
 # Outer Tracker
-use OTAlgorithms  v10r0  OT
-use OTAssociators  v1r0  OT
+use OTAlgorithms  v11r0  OT
+use OTAssociators  v2r0  OT
 
 # Tracking
-use TrFitEvent     v1r1  Tr
+use TrFitEvent     v2r0  Tr
 #use TrAlgorithms  v7r1  Tr
 
-use VeloTrack      v2r0  Velo
-use TrAssociators  v1r0  Tr
-use FwTrack        v2r0  Tr
-use TrFitter       v1r0  Tr
-use TrExtrapolator v1r0  Tr
+use VeloTrack      v3r0  Velo
+use TrAssociators  v2r0  Tr
+use FwTrack        v3r0  Tr
+use TrFitter       v2r0  Tr
+use TrExtrapolator v2r0  Tr
 
 # Muon
-use MuonRec       v1r0   Muon
-use MuonID        v1r0   Muon
+use MuonRec       v2r0   Muon
+use MuonID        v2r0   Muon
 
 # SICBDST packages
-use Futil        v10r3  SICB
-use detdes       v14    SICB
+use Futil        v11r0  SICB
+use detdes       v17r0  SICB
 use recevt       v3r4   SICB
 
 use digmuon      v4     SICB
@@ -139,7 +139,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=100000 " \
-           VisualC  " /DBrunelVersion=100000 "
+macro_append fflags " -DBrunelVersion=110000 " \
+           VisualC  " /DBrunelVersion=110000 "
 
 apply_pattern application_path
