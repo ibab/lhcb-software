@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.h,v 1.2 2003-08-06 11:08:13 jonrob Exp $
+// $Id: RichPhotonSignal.h,v 1.3 2003-08-08 10:40:44 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHPHOTONSIGNAL_H
 #define RICHRECTOOLS_RICHPHOTONSIGNAL_H 1
 
@@ -31,7 +31,7 @@
 
 class RichPhotonSignal : public RichRecToolBase,
                          virtual public IRichPhotonSignal {
-  
+
 public:
 
   /// Standard constructor
@@ -51,9 +51,6 @@ public:
   /// Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
   double predictedPixelSignal( RichRecPhoton * photon,
                                const Rich::ParticleIDType id );
-
-private: // private methods
-
   /// Signal Probability
   double signalProb( RichRecPhoton * photon,
                      const Rich::ParticleIDType id );

@@ -1,4 +1,4 @@
-// $Id: RichPhotonSignal.cpp,v 1.3 2003-08-06 11:08:13 jonrob Exp $
+// $Id: RichPhotonSignal.cpp,v 1.4 2003-08-08 10:40:44 jonrob Exp $
 
 // local
 #include "RichPhotonSignal.h"
@@ -42,7 +42,10 @@ StatusCode RichPhotonSignal::initialize() {
   m_pixelArea = 0.24*0.24;
 
   // Informational Printout
-  //msg << MSG::DEBUG
+  msg << MSG::DEBUG
+      << " Mirror radia of curvature   = " 
+      << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endreq
+      << " Pixel area                  = " << m_pixelArea << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -92,6 +95,7 @@ double RichPhotonSignal::signalProb( RichRecPhoton * photon,
   // Expected Cherenkov theta angle resolution
   double thetaExpRes = m_ckRes->ckThetaResolution(photon->richRecSegment(),id);
 
+  // The difference between reco and expected
   double thetaDiff = thetaReco-thetaExp;
   if ( fabs(thetaDiff) > 30.0*thetaExpRes ) return 0;
 
@@ -116,8 +120,10 @@ double RichPhotonSignal::scatterProb( RichRecPhoton * photon,
     double thetaExp = m_ckAngle->avgCherenkovTheta( photon->richRecSegment(), id );
     if ( thetaExp < 0.000001 ) return 0.0;
 
+    // Reconstructed Cherenkov theta angle
     double thetaRec = photon->geomPhoton().CherenkovTheta();
 
+    // Compute the scattering  
     double fbkg = 0.0;
     if ( thetaRec < thetaExp ) {
       fbkg = ( exp(17.0*thetaRec) - 1.0 ) / ( exp(17.0*thetaExp) - 1.0 );
@@ -128,7 +134,10 @@ double RichPhotonSignal::scatterProb( RichRecPhoton * photon,
       return 0.0;
     }
 
+    // Which detector
     Rich::DetectorType det = photon->richRecSegment()->trackSegment().rich();
+
+    // return prob
     return 8.*m_pixelArea*fbkg /
       (M_PI*M_PI*m_radiusCurv[det]*m_radiusCurv[det]*thetaRec);
 
