@@ -4,8 +4,10 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDFinalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.cpp,v 1.12 2004-07-27 10:56:36 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.cpp,v 1.13 2004-08-19 09:49:01 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.12  2004/07/27 10:56:36  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -81,7 +83,7 @@ StatusCode RichGlobalPIDFinalize::execute()
     pid->setUsedC4F10   ( rRTrack->inGas1()    );
     pid->setUsedCF4     ( rRTrack->inGas2()    );
 
-    // Finalise delta LL and probability values
+    // Finalise delta LL values
     std::vector<float> & deltaLLs = pid->particleLLValues();
     if ( deltaLLs[pid->bestParticleID()] > 1e-10 ) {
       warning() << "PID " << pid->key() << " best ID " << pid->bestParticleID()
@@ -89,8 +91,9 @@ StatusCode RichGlobalPIDFinalize::execute()
     }
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
       if ( deltaLLs[iHypo] < 0 ) { deltaLLs[iHypo] = 0; }
-      const double prob = 1.0 - gsl_sf_erf( sqrt(deltaLLs[iHypo]) );
-      pid->setParticleRawProb( static_cast<Rich::ParticleIDType>(iHypo), prob );
+      // CRJ : removed from RichPID - now calculated internally when needed
+      //const double prob = 1.0 - gsl_sf_erf( sqrt(deltaLLs[iHypo]) );
+      //pid->setParticleRawProb( static_cast<Rich::ParticleIDType>(iHypo), prob );
     }
 
   }

@@ -4,8 +4,11 @@
  *  Header file for track quality enumeration for the Global PID algorithm
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTkQuality.h,v 1.4 2004-08-17 13:31:26 jonrob Exp $
+ *  $Id: RichGlobalPIDTkQuality.h,v 1.5 2004-08-19 09:49:00 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/08/17 16:46:14  jonrob
+ *  Updates to adapt to the new RichPID object
+ *
  *  Revision 1.3  2004/07/27 10:56:36  jonrob
  *  Add doxygen file documentation and CVS information
  *
