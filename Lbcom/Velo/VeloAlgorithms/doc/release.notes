@@ -1,6 +1,7 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+!===================== VeloAlgorithms v2r7 2003-04-15 =====================
 ! 2003-11-04 - Chris Parkes
  - Add options for robustness test
 - Job option to vary the noise constant are added to VeloSim and DataProcessor.
