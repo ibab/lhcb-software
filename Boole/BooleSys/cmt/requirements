@@ -29,7 +29,7 @@ use VeloAlgorithms      v3r2	Velo
 
 # Inner Tracker
 use ITAlgorithms        v14r4	IT
-use ITCheckers          v2r3	IT
+use ITCheckers          v2r4	IT
 
 # Outer Tracker
 use OTSimulation	v1r3	OT

@@ -42,17 +42,17 @@ PoolDbCacheSvc.Catalog = {
 // Spillover
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
-   //"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000542_00000001_2.sim' TYP='POOL_ROOT' OPT='READ'" 
-   //,"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000542_00000001_3.sim' TYP='POOL_ROOT' OPT='READ'" 
-};  // Gauss data is not yet available with this geometry.
+   "DATAFILE='PFN:$LHCBDEV/GAUSS/GAUSS_v18r3/Sim/Gauss/v18r3/job/30000000_2.sim' TYP='POOL_ROOT' OPT='READ'" 
+,  "DATAFILE='PFN:$LHCBDEV/GAUSS/GAUSS_v18r3/Sim/Gauss/v18r3/job/30000000_3.sim' TYP='POOL_ROOT' OPT='READ'" 
+};  // Test data (5 events) produced by Gloria.
 
 
 //---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  //"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000542_00000001_1.sim' TYP='POOL_ROOT' OPT='READ'" 
-};  // Gauss data is not yet available with this geometry.
+   "DATAFILE='PFN:$LHCBDEV/GAUSS/GAUSS_v18r3/Sim/Gauss/v18r3/job/11144100_1.sim' TYP='POOL_ROOT' OPT='READ'" 
+};  // Test data (5 events) produced by Gloria.
 
 //---------------------------------------------------------------------------
 // Output file

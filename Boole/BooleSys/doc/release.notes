@@ -3,12 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v7r3>2005-01-18 Boole v7r3</A></H1><PRE>
+</PRE><H1><A NAME=v7r3>2005-01-25 Boole v7r3</A></H1><PRE>
 This version uses Gaudi v15r3, LHCb v17r3. Can process DC04 Gauss output.
 Output data incompatible with DC04 versions, needs Brunel v25r3 or greater
 
 - Packages modified: L0Calo v8r0, CaloDigit v1r8, OTSimulation v1r3, 
-                     RichReadout v1r11, RichDigiQC v2r0
+                     RichReadout v1r11, RichDigiQC v2r0, ITCheckers v2r4
 
 - New functionality:
   . Add support for L1 board mapping and for zero suppressed HPD format in Rich
@@ -31,6 +31,7 @@ Output data incompatible with DC04 versions, needs Brunel v25r3 or greater
 
 - Bug fixes:
   . Protect against empty OT banks in RawBuffer (OTSimulation v1r3)
+  . ITMCDepositChecker: Initialise detector element before use (ITCheckers v2r4)
 
 - Packaging changes:
   . Move to new algorithm base classes (L0Calo v8r0)
