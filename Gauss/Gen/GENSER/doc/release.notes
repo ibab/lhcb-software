@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v1r020p0 =================================
+! 2004-09-13 - Florence RANJARD
+ - requirements - use GENSER_0_2_0
+
 !========================== GENSER v1r012p0 =================================
 ! 2004-08-31 - Florence RANJARD
  - requirements - use GENSER_0_1_2
