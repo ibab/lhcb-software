@@ -1,4 +1,4 @@
-// $Id: LVolume.cpp,v 1.26 2002-11-21 15:40:03 sponce Exp $ 
+// $Id: LVolume.cpp,v 1.27 2003-06-04 08:14:35 ibelyaev Exp $ 
 
 /// STD & STL includes 
 #include <iostream> 
@@ -154,7 +154,6 @@ LVolume::LVolume( const std::string& name )
 LVolume::~LVolume()
 {
   /// reset 
-  reset();
   if( 0 != m_solid ) { delete m_solid ; m_solid = 0 ; }
 };
 

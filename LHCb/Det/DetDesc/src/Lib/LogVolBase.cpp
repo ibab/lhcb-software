@@ -1,4 +1,4 @@
-// $Id: LogVolBase.cpp,v 1.8 2002-11-21 15:40:03 sponce Exp $
+// $Id: LogVolBase.cpp,v 1.9 2003-06-04 08:14:36 ibelyaev Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
@@ -123,17 +123,17 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
 // ============================================================================
 LogVolBase::~LogVolBase()
 { 
-  reset();
   /// decrease  volume counter 
   --s_volumeCounter ;
   // release validity
   if( 0 != m_validity ) { delete m_validity ; m_validity = 0 ; }
   // release physical volumes
-  for (PVolumes::const_iterator i = m_pvolumes.begin();
-       i != m_pvolumes.end();
-       i++) {
-    delete *i;
-  }
+  for (PVolumes::const_iterator ipv = m_pvolumes.begin();
+       ipv != m_pvolumes.end() ; ++ipv ) 
+    {
+      IPVolume* pv = *ipv ;
+      if( 0 != pv ) { delete pv ; }
+    }
   m_pvolumes.clear();
   // release services
   m_services->release();

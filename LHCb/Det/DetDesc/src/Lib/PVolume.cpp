@@ -1,4 +1,4 @@
-// $Id: PVolume.cpp,v 1.13 2002-11-21 15:40:03 sponce Exp $ 
+// $Id: PVolume.cpp,v 1.14 2003-06-04 08:14:36 ibelyaev Exp $ 
 
 /// GaudiKernel includes 
 #include "GaudiKernel/IInspector.h"
@@ -85,8 +85,9 @@ PVolume::PVolume
 // ============================================================================
 // destructor 
 // ============================================================================
-PVolume::~PVolume() {
-  reset();
+PVolume::~PVolume() 
+{
+  if( 0 != m_imatrix ) { delete m_imatrix   ; m_imatrix = 0 ; }
   m_services->release();
   --s_volumeCounter;
 };

@@ -1,9 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.144 2003-05-27 11:39:13 cattanem Exp $ 
+! $Id: release.notes,v 1.145 2003-06-04 08:14:35 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2003-06-04 - Vanya BELYAEV
+ - src/Lib/LAssembly.cpp
+ - src/Lib/LVolume.cpp
+ - src/Lib/LogVolBase.cpp
+ - src/Lib/PVolume.cpp
+  Remove calls for virtal methods from destructors. It should fix the problem with 
+  Panoramix's crash.
 
 ! 2003-05-14 - Vanya BELYAEV 
  - src/Lib/Solid*.cpp  - remove call for virtual method reset() from destructors

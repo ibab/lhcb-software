@@ -1,4 +1,4 @@
-// $Id: LAssembly.cpp,v 1.4 2002-11-21 15:40:03 sponce Exp $
+// $Id: LAssembly.cpp,v 1.5 2003-06-04 08:14:35 ibelyaev Exp $
 
 // Include files
 // from Gaudi
@@ -91,7 +91,7 @@ LAssembly::LAssembly()
 /** destructor 
  */
 // ============================================================================
-LAssembly::~LAssembly() { reset(); }
+LAssembly::~LAssembly() {};
 
 // ============================================================================
 /** class/object identifier (static method)
