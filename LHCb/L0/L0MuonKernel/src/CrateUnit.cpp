@@ -10,7 +10,7 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,
                              std::vector<int> & foiy,
                              double & precision,
                              int & bits,
-                             bool & writeL0buffer,
+                             std::string writeL0buffer,
 			     std::vector<MuonTileID> config_pus )
 {
 
@@ -56,7 +56,7 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,
      std::vector<MuonTileID> pusb = pProNet->pusInBoard(*ib);
 
      BoardUnit * board = new BoardUnit();
-     BestCandidateSelectionUnit * bcsu = new BestCandidateSelectionUnit(writeL0buffer);
+     BestCandidateSelectionUnit * bcsu = new BestCandidateSelectionUnit(*ib);
      
      
      for ( ipusb = pusb.begin(); ipusb != pusb.end(); ipusb++ ){
@@ -86,8 +86,9 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,
      bcsu->setParent(board);     
 
      board->addUnit(bcsu, "bcsu");
-     if ( writeL0buffer) {
-       bcsu->setOutputFile(*ib);
+     if ( ! writeL0buffer.empty() ) {
+       // Open output file for the L0Buffer
+       // bcsu->setOutputFile(writeL0buffer);
      }
      
 

@@ -30,11 +30,9 @@ L0Muon::Tower::Tower() {
 
 
   for (int i =0; i<5;i++){
-    if ( m_idmap[i].size()>0){
-      
+    if ( m_idmap[i].size()>0){      
       m_idmap[i].clear();
     }
-    
   }
   
   
@@ -46,8 +44,7 @@ L0Muon::Tower::Tower() {
   for ( sta = 0; sta < 5; sta++) {
     boost::dynamic_bitset<> tmprow(24+2*m_maxXFoI[sta]);
     for ( row = 0; row < 4+2*m_maxYFoI[sta]; row++ ) {
-      m_bittable[sta].push_back(tmprow);
-         
+      m_bittable[sta].push_back(tmprow); 
     }
   }
 
@@ -276,7 +273,8 @@ void L0Muon::Tower::processTower(MuonTileID & puID){
             m_ctower.setOrderedBit(ista, m_bittable[ista], m_maxXFoI[ista],
                                       m_maxYFoI[ista], offset);
           }
-                    
+             
+
           boost::dynamic_bitset<> bits = m_ctower.getBit();
           pCs->searchInSta(ista, bits); 
           m_ctower.setOrderedPadIndex(ista,m_maxXFoI[ista], m_maxYFoI[ista],

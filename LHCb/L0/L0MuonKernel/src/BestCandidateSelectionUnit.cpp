@@ -37,11 +37,11 @@
 */
 
 
-L0Muon::BestCandidateSelectionUnit::BestCandidateSelectionUnit(bool & writeL0buffer){
+L0Muon::BestCandidateSelectionUnit::BestCandidateSelectionUnit(MuonTileID boardid){
   
-  m_writeL0buffer = writeL0buffer;
+  m_id = boardid;
   m_bcsueventnumber = 0;
-  m_bcsul0bufferFile =0;
+  m_bcsul0bufferFile =NULL;
   
 }
 
@@ -93,18 +93,17 @@ void L0Muon::BestCandidateSelectionUnit::execute()
   }
   
 
-  // Write L0Buffer
+  // Build L0Buffer
 
-  if (m_writeL0buffer){
-    fillAddresses();
-    fillInp();
-
-    setInpBCSU();
-    setIdBCSU();
-    setOutBCSU();
-  }
+  fillAddresses();
+  fillInp();
   
-    if (m_bcsul0bufferFile!=NULL) dump(m_bcsul0bufferFile);
+  setInpBCSU();
+  setIdBCSU();
+  setOutBCSU();
+  
+  // Write Buffer
+  writeL0Buffer();
 
   m_bcsueventnumber++;
   
@@ -121,17 +120,15 @@ void L0Muon::BestCandidateSelectionUnit::finalize()
 
 
 
-void L0Muon::BestCandidateSelectionUnit::setOutputFile(MuonTileID boardid)
+void L0Muon::BestCandidateSelectionUnit::setOutputFile(std::string suffixe)
 
 {
   
-  m_id = boardid;
-
-  char * name = "/afs/cern.ch/user/l/ltocco/scratch0/L0Buffers/l0buf_BCSUQ%dR%d%d%d.txt";
+  char * name = "/marmuon3/NewInputFiles/l0buf_BCSUQ%dR%d%d%d_%s.txt";
   
   char buf[4096];
   
-  sprintf(buf,name,boardid.quarter()+1,boardid.region()+1,boardid.nX(),boardid.nY());
+  sprintf(buf,name,m_id.quarter()+1,m_id.region()+1,m_id.nX(),m_id.nY(),suffixe.c_str());
   
   m_bcsul0bufferFile = fopen(buf,"w");
   
@@ -415,8 +412,10 @@ void L0Muon::BestCandidateSelectionUnit::setInpBCSU()
 }
 
 
-void L0Muon::BestCandidateSelectionUnit::dump(FILE *bcsul0bufferFile)
+void L0Muon::BestCandidateSelectionUnit::writeL0Buffer()
 {
+  
+  if (m_bcsul0bufferFile==NULL) return;
 
   boost::dynamic_bitset<> bcsu[3];
   bcsu[0]=m_BcsuId;
@@ -433,12 +432,12 @@ void L0Muon::BestCandidateSelectionUnit::dump(FILE *bcsul0bufferFile)
         iwd+= int(val*pow(2,ind));
         ++i;
       }
-      fprintf(bcsul0bufferFile,"%04x\n",iwd);
+      fprintf(m_bcsul0bufferFile,"%04x\n",iwd);
       --i;
     }
   }
 
-  fprintf(bcsul0bufferFile,"----\n");
+  fprintf(m_bcsul0bufferFile,"----\n");
 
 }
 

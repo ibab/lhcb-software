@@ -1,4 +1,4 @@
-// $Id: L0mProcUnit.h,v 1.5 2005-02-03 19:49:51 atsareg Exp $
+// $Id: L0mProcUnit.h,v 1.6 2005-02-11 09:42:02 jucogan Exp $
 
 #ifndef L0MUONKERNEL_L0MPROCUNIT_H
 #define L0MUONKERNEL_L0MPROCUNIT_H     1
@@ -10,6 +10,8 @@
    
 */
 
+
+
 #include <vector>
 #include "ProcessorKernel/Unit.h"
 #include "L0mConf/L0MPuNodeBase.h"
@@ -18,7 +20,7 @@
 #include "ProcessorKernel/RegisterFactory.h"
 #include "L0MuonKernel/Tower.h"
 #include "L0MuonKernel/CablingUnit.h"
-#include "L0MuonKernel/BuildL0BufferUnit.h"
+#include "L0MuonKernel/L0BufferUnit.h"
 #include "L0MuonKernel/FormattingUnit.h"
 
 namespace L0Muon {
@@ -48,7 +50,7 @@ class L0mProcUnit : public Unit {
               std::vector<int> & foiy,
               double & precision,
               int & bits,
-              bool & writeL0buffer);
+              std::string writeL0buffer);
 
   /// Destructor
   ~L0mProcUnit();
@@ -71,7 +73,7 @@ class L0mProcUnit : public Unit {
   bool ignoreM1(){ return m_ignoreM1;}
  
   /// Return the flag for writing L0Buffer
-  bool writeL0Buffer(){ return m_writeL0buffer;}
+  std::string writeL0Buffer(){ return m_writeL0buffer;}
 
   /// Return the precision for pT
   double precision(){ return m_precision;}
@@ -105,7 +107,8 @@ class L0mProcUnit : public Unit {
 
     
   CablingUnit * m_cu;
-  BuildL0BufferUnit * m_l0b;
+  L0BufferUnit * m_l0b;
+  L0BufferUnit * m_l0bpll;
   FormattingUnit * m_formatting;
   MuonTileID m_puID;
   MuonTileID m_boardID;
@@ -118,7 +121,7 @@ class L0mProcUnit : public Unit {
   int m_bits;
   bool m_ignoreM1;
 
-  bool m_writeL0buffer;
+  std::string m_writeL0buffer;
     
 };
 

@@ -67,75 +67,74 @@ setBit(int sta, std::vector<boost::dynamic_bitset<> >  table, int maxXFoi,
 
   m_bits = bits;
   if (m_yFoi[sta] == 0){
-        bits[0]= table[y][x];
-        if (bits.size()>1) {
-          bits[1]=table[y][x+1];
-          bits[2]=table[y][x-1];
-          //for (boost::dynamic_bitset<>::size_type i =1; 
-          for (int i =1; 
-               //i<= (bits.size()-2)/2; i++){
-               i<= (size-2)/2; i++){
-            if ( (x+i+1)< 24+2*xfoi ) {
-              bits[2*i+1]=table[y][x+i+1];
-            
-        }
-            // if ( (x-i-1)>=0 && (x-i-1)< 999999){
-            if ( (x-i-1)< 999999){
-            bits[2*i+2]=table[y][x-i-1];
-           
-              
-            } else {
-            
-                // else if  ( (x-i-1)<0 && (x-i-1)> 999999) {
-                bits[2*i+2]=0;
-                
-              }
-              
-          }
-          
-        }
-     
-        for (boost::dynamic_bitset<>::size_type i =0; i< bits.size(); i++){
-          m_bits[i] =bits[i];
-        }
+    bits[0]= table[y][x];
+    if (bits.size()>1) {
+      bits[1]=table[y][x+1];
+      bits[2]=table[y][x-1];
+      //for (boost::dynamic_bitset<>::size_type i =1; 
+      for (int i =1; i<= (size-2)/2; i++){
+	if ( (x+i+1)< 24+2*xfoi ) {
+	  bits[2*i+1]=table[y][x+i+1];
+	}
+	// if ( (x-i-1)>=0 && (x-i-1)< 999999){
+	if ( (x-i-1)< 999999){
+	  bits[2*i+2]=table[y][x-i-1];
+	  
+	  
+	} else {
+	  
+	  // else if  ( (x-i-1)<0 && (x-i-1)> 999999) {
+	  bits[2*i+2]=0;
+	  
+	}
+	
+      }
+      
+    }
+    
+    for (boost::dynamic_bitset<>::size_type i =0; i< bits.size(); i++){
+      m_bits[i] =bits[i];
+    }
    
-     } else  if (m_yFoi[sta] > 0){
+  } else  if (m_yFoi[sta] > 0){
 
-       //unsigned 
-       int maxxfoi = m_xFoi[sta];
-       //for (boost::dynamic_bitset<>::size_type i=0; i<(2*maxxfoi+1); i++){
-       for (int i=0; i<(2*maxxfoi+1); i++){
-       //for (boost::dynamic_bitset<>::size_type i=0; i<(2*m_xFoi[sta]+1); i++){
-         if ( y< 4+2*m_yFoi[sta] ) {
-           //bits[i] = table[y][x- maxxfoi+i];
-           bits[i] = table[y][x- m_xFoi[sta]+i];
-         }
-         
-       }
-       //for (boost::dynamic_bitset<>::size_type i=(2*maxxfoi+1);
-       //     i< 2*(2*maxxfoi+1); i++){
-       //for (boost::dynamic_bitset<>::size_type i=(2*m_xFoi[sta]+1);
-       for (int i=(2*m_xFoi[sta]+1);
-            i< 2*(2*m_xFoi[sta]+1); i++){
-         bits[i] = table[y-1][x - m_xFoi[sta]+i-(2*m_xFoi[sta]+1)];
+    std::cout << "!!! <CandidateTower::setBit> m_yFoi[sta] = "<< m_yFoi[sta] << "QUI M'APPELLE ????"  << std::endl;
 
-       }
-       //for (boost::dynamic_bitset<>::size_type i=2*(2*m_xFoi[sta]+1); 
-       for (int  i=2*(2*m_xFoi[sta]+1); 
-            i< 3*(2*m_xFoi[sta]+1); i++){
-         bits[i] = table[y+1][x - m_xFoi[sta]+i-2*(2*m_xFoi[sta]+1)];
-
-         
-       }
-       
-     
-     
-     for (boost::dynamic_bitset<>::size_type i =0; i< bits.size(); i++){
-       m_bits[i] =bits[i];
-     }
-     
-     }
-     
+    //unsigned 
+    int maxxfoi = m_xFoi[sta];
+    //for (boost::dynamic_bitset<>::size_type i=0; i<(2*maxxfoi+1); i++){
+    for (int i=0; i<(2*maxxfoi+1); i++){
+      //for (boost::dynamic_bitset<>::size_type i=0; i<(2*m_xFoi[sta]+1); i++){
+      if ( y< 4+2*m_yFoi[sta] ) {
+	//bits[i] = table[y][x- maxxfoi+i];
+	bits[i] = table[y][x- m_xFoi[sta]+i];
+      }
+      
+    }
+    //for (boost::dynamic_bitset<>::size_type i=(2*maxxfoi+1);
+    //     i< 2*(2*maxxfoi+1); i++){
+    //for (boost::dynamic_bitset<>::size_type i=(2*m_xFoi[sta]+1);
+    for (int i=(2*m_xFoi[sta]+1);
+	 i< 2*(2*m_xFoi[sta]+1); i++){
+      bits[i] = table[y-1][x - m_xFoi[sta]+i-(2*m_xFoi[sta]+1)];
+      
+    }
+    //for (boost::dynamic_bitset<>::size_type i=2*(2*m_xFoi[sta]+1); 
+    for (int  i=2*(2*m_xFoi[sta]+1); 
+	 i< 3*(2*m_xFoi[sta]+1); i++){
+      bits[i] = table[y+1][x - m_xFoi[sta]+i-2*(2*m_xFoi[sta]+1)];
+      
+      
+    }
+    
+    
+    
+    for (boost::dynamic_bitset<>::size_type i =0; i< bits.size(); i++){
+      m_bits[i] =bits[i];
+    }
+    
+  }
+  
 }
 
 

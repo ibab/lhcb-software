@@ -52,7 +52,7 @@ namespace L0Muon {
               std::vector<int> & foix, std::vector<int> & foiy,
               double & precision,
               int & bits,
-              bool & writeL0buffer,
+              std::string writeL0buffer,
 	      std::vector<MuonTileID> config_pus );
 
     /// Destructor

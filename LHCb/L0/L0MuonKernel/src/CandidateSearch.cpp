@@ -172,6 +172,7 @@ bool L0Muon::CandidateSearch::CandidateFound(){
 
  
 void L0Muon::CandidateSearch::setCandidateAddrs(std::pair<int, int> & sd){
+
   if (m_isFull == true){
    
     // address in M1 
@@ -215,12 +216,8 @@ void L0Muon::CandidateSearch::setCandidateAddrs(std::pair<int, int> & sd){
     m_addrM3 = addrM3x ;
    
     
-  }
-  
-  
-  
-  
-  else {
+  } else {
+
     unsigned long int nb = 0;
     boost::dynamic_bitset<> addrM3(7,nb);
     m_addrM3 = addrM3;
@@ -269,12 +266,13 @@ boost::dynamic_bitset<>  L0Muon::CandidateSearch::getAddrs(int sta){
 
 boost::dynamic_bitset<>  L0Muon::CandidateSearch::getCandidateAddrs(){
 
-  boost::dynamic_bitset<> bit ;
-  bit = getAddrs(2);
   if (m_addr.size()!=0){
     m_addr.clear();
   }
+
+  boost::dynamic_bitset<> bit ;
   
+  bit = getAddrs(0);
   for (boost::dynamic_bitset<>::size_type ibit=0; ibit < bit.size(); ibit++){
     bool val = bit[ibit];
     m_addr.push_back(val);
@@ -284,7 +282,7 @@ boost::dynamic_bitset<>  L0Muon::CandidateSearch::getCandidateAddrs(){
     bool val = bit[ibit];
     m_addr.push_back(val);
   }
-  bit = getAddrs(0);
+  bit = getAddrs(2);
   for (boost::dynamic_bitset<>::size_type ibit=0; ibit < bit.size(); ibit++){
     bool val = bit[ibit];
     m_addr.push_back(val);

@@ -29,7 +29,7 @@ namespace L0Muon {
         @param writeL0Buffer : flag for writing L0Buffer on file
 
     */
-    BestCandidateSelectionUnit(bool & writeL0buffer);
+    BestCandidateSelectionUnit(MuonTileID puid);
 
     /// Destructor
     ~BestCandidateSelectionUnit();
@@ -48,10 +48,10 @@ namespace L0Muon {
 
 
     /// Open the output file
-    void setOutputFile(MuonTileID puid); 
+    void setOutputFile(std::string suffixe); 
 
     /// Write the output file
-    void dump(FILE *l0bufferFile);  
+    void writeL0Buffer();  
 
 
     void sortCandidatesbcsu();
@@ -102,10 +102,7 @@ namespace L0Muon {
 
     FILE *m_bcsul0bufferFile;
 
-    std::vector<std::pair<Candidate*, std::vector<int> > > m_offsets;
-
-    bool m_writeL0buffer;
-    
+    std::vector<std::pair<Candidate*, std::vector<int> > > m_offsets;    
 
   };
 

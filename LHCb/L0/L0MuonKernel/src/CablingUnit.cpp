@@ -2,7 +2,7 @@
 
 #include "L0MuonKernel/CablingUnit.h"
 #include "L0MuonKernel/CrateUnit.h"
-#include "L0MuonKernel/BuildL0BufferUnit.h"
+#include "L0MuonKernel/L0BufferUnit.h"
 #include "L0MuonKernel/BestCandidateSelectionUnit.h"
 
 
@@ -199,9 +199,9 @@ void L0Muon::CablingUnit::execute() {
     //addresses for candidates (L0Buffers)
 
 
-    if ( mpu->writeL0Buffer() ){
+    if (! mpu->writeL0Buffer().empty() ){
       L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
-      BuildL0BufferUnit* l0buffer= dynamic_cast<BuildL0BufferUnit*>(m_parent->subUnit("l0buf"));
+      L0BufferUnit* l0buffer= dynamic_cast<L0BufferUnit*>(m_parent->subUnit("l0buf"));
      
       for (int icand= 0; icand<2; icand++){
         int nbits = m_tower.addr(icand).size();
@@ -216,7 +216,10 @@ void L0Muon::CablingUnit::execute() {
          
           //l0ad address in l0buffer
           if (l0buffer != NULL){
-            l0buffer->addInputRegister(pReg);
+	    char * name = "cand%d";      
+	    char buf[4096];      
+	    sprintf(buf,name,icand);      
+            l0buffer->addInputRegister(pReg,buf);
           }
  
           if (bcsu != NULL){
@@ -241,7 +244,10 @@ void L0Muon::CablingUnit::execute() {
       // load register in l0buf
       
       if (l0buffer != NULL){
-        l0buffer->addInputRegister(pReg);
+	char * name = "status";      
+	char buf[4096];      
+	sprintf(buf,name);      
+        l0buffer->addInputRegister(pReg,buf);
       }
           //      
       if (bcsu != NULL){
