@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.24 2005-01-12 09:19:38 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.25 2005-03-07 16:42:10 cattanem Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -598,7 +598,7 @@ StatusCode L0CaloAlg::execute() {
     m_totL1Size  += m_l1Output.size();
     m_totRawSize += m_rawOutput.size();
     L1Buffer* l1Buf = get<L1Buffer>( L1BufferLocation::Default );
-    l1Buf->addBank( 0, L1Buffer::L0Calo, m_l1Output );
+    l1Buf->addBank( L1Buffer::L0CaloID, L1Buffer::L0, m_l1Output );
     RawBuffer* rawBuf = get<RawBuffer>( RawBufferLocation::Default );
     rawBuf->addBank( 0, RawBuffer::L0Calo, m_rawOutput );
   }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.7 2005-02-21 09:07:57 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.8 2005-03-07 16:42:10 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -96,9 +96,10 @@ StatusCode L0CaloMonit::execute() {
       put( event, L1EventLocation::Default );
     }
 
-    std::vector<L1Bank> banks = event->banks( L1Buffer::L0Calo );
+    std::vector<L1Bank> banks = event->banks( L1Buffer::L0 );
     std::vector<L1Bank>::const_iterator itBank;
     for ( itBank = banks.begin() ; banks.end() != itBank ; itBank++ ) {
+      if( L1Buffer::L0CaloID != (*itBank).bankSourceID() ) continue;
       l1_int* ptData = (*itBank).data();
       int length     = (*itBank).dataSize();
       while ( 0 < length ) {

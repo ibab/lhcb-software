@@ -1,6 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!========================= L0Calo v8r1 2005-03-07 =========================
+! 2005-03-07 - Marco Cattaneo
+ - Adapt to new L1Buffer bank types in DAQEvent v5r0 (backwards incompatible)
+
 ! 2005-02-21 - Olivier Callot
  - Fix a typo in the filling of the SpdMult histo in L0CaloMonit
 
