@@ -70,7 +70,7 @@ StatusCode MuonDigitization::execute()
  
  	StatusCode sc=StatusCode::SUCCESS ;
 
-  log<<MSG::INFO<<"starting the Muon Digitization algorithm "<<endreq;
+  log<<MSG::DEBUG<<"starting the Muon Digitization algorithm "<<endreq;
   SmartDataPtr<MCMuonHits> hitPointer(eventSvc(),"/Event/MC/Muon/M2/R1/Hits");
  	 
 
@@ -150,7 +150,7 @@ StatusCode MuonDigitization::execute()
 	if(sc.isFailure())return StatusCode::FAILURE;	 				
 	eventSvc()->registerObject(MuonDigitLocation::MuonDigit,digitContainer);
 
- 	log<<MSG::INFO<<"End of the Muon Digitization"<<endreq;
+ 	log<<MSG::DEBUG<<"End of the Muon Digitization"<<endreq;
   return StatusCode::SUCCESS;
 
 }
