@@ -1,6 +1,7 @@
 HltWithTrg.Members += { "GaudiSequencer/HLTChecking"};
 
-HLTChecking.Members = { "TrgTrack2MCParticle/HltTrgTrack2MCParticle"
+HLTChecking.Members = { "TrgTrackToContainer/HltTrgTrackToContainer"
+                        ,"TrgTrack2MCParticle/HltTrgTrack2MCParticle"
                         ,"TrgChecker/HltTrgChecker"
                         ,"TrgVertexMonit/HltVertexMonit"
                        };
@@ -13,3 +14,6 @@ HltProcessing.measureTime = true;
 // If not the monitoring of L1 and HLT can not be set together.
 // HltTrgTrack2MCParticle.prefix = "Hlt/";
 // HltTrgChecker.prefix          = "Hlt/";
+// HltTrgTrackToContainer.prefix = "Hlt/";
+
+HltTrgChecker.OutputLevel = 2 ;

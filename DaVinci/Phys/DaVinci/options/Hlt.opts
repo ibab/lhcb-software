@@ -17,11 +17,9 @@ HLTProcessing.Members =  { "DecodeRawVelo"
                            ,"TrgPrimVertexFinder"
                            ,"FwdHitFromRawBuffer"
                            ,"TrgForwardAlg"
-			   ,"TrgTrackToContainer/HltTrgTrackToContainer"
+			   ,"TrgMuonID"
                            ,"TrgParticleMaker"
                          };
-
-//HltTrgTrackToContainer.prefix = "Hlt/";
 
 #include "$TRGFORWARDROOT/options/Field045.opts"
 TrgVeloTTHlt.InputFromRawBuffer = true;
