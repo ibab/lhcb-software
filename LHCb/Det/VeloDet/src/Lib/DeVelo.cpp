@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.38 2004-02-13 16:33:02 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.39 2004-02-17 21:37:13 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -52,8 +52,6 @@ const CLID& DeVelo::clID () const { return DeVelo::classID() ; }
 // ============================================================================
 StatusCode DeVelo::initialize() {
 
-  MsgStream msg( msgSvc(), "DeVelo" );
-  msg << MSG::DEBUG << "Initialising DeVelo " << endreq;
   // Trick from old DeVelo to set the output level
   PropertyMgr* pmgr = new PropertyMgr();
   int outputLevel=0;
@@ -66,6 +64,8 @@ StatusCode DeVelo::initialize() {
     msgSvc()->setOutputLevel("DeVelo", outputLevel);
   }
   delete pmgr;
+  MsgStream msg( msgSvc(), "DeVelo" );
+  msg << MSG::DEBUG << "Initialising DeVelo " << endreq;
   // Initialise the detector element
   sc = DetectorElement::initialize();
   if( sc.isFailure() ) { 
@@ -635,7 +635,7 @@ StatusCode DeVelo::stripLimitsR( unsigned int sensor, unsigned int strip,
 				 double& phiMin, double& phiMax )  {
   z = zSensor(sensor);
   VeloChannelID channel(sensor,strip);
-  if(this->isRSensor(sensor)){    
+  if(this->isRSensor(sensor) || this->isPileUpSensor(sensor)){    
     DeVeloRType * rPtr = 
       dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
     StatusCode sc=rPtr->stripLimits(strip,radius,phiMin,phiMax);
@@ -644,10 +644,7 @@ StatusCode DeVelo::stripLimitsR( unsigned int sensor, unsigned int strip,
       phiMax += pi;
     }
     return sc;
-  }else if(this->isPileUpSensor(sensor)){
-    //DeVeloPileUpType * puPtr = 
-    //dynamic_cast<DeVeloPileUpType*>(m_vpSensor[sensorIndex(sensor)]);
-  } else {
+  }else {
       MsgStream msg( msgSvc(), "DeVelo" );
       msg << MSG::ERROR 
           << "Asked for phi type sensor as if r/pu type" << endreq;

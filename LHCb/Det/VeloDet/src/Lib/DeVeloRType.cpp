@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.3 2004-02-13 07:05:48 cattanem Exp $
+// $Id: DeVeloRType.cpp,v 1.4 2004-02-17 21:37:13 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -46,7 +46,6 @@ const CLID& DeVeloRType::clID()
 //==============================================================================
 StatusCode DeVeloRType::initialize() 
 {
-  MsgStream msg(msgSvc(), "DeVeloRType");
   // Trick from old DeVelo to set the output level
   PropertyMgr* pmgr = new PropertyMgr();
   int outputLevel=0;
@@ -59,6 +58,7 @@ StatusCode DeVeloRType::initialize()
     msgSvc()->setOutputLevel("DeVeloRType", outputLevel);
   }
   delete pmgr;
+  MsgStream msg(msgSvc(), "DeVeloRType");
   
   sc = DeVeloSensor::initialize();
   if(!sc.isSuccess()) {
@@ -269,46 +269,18 @@ StatusCode DeVeloRType::residual(const HepPoint3D& /*point*/,
 //==============================================================================
 /// The number of zones in the detector
 //==============================================================================
-unsigned int DeVeloRType::numberOfZones()
+/*unsigned int DeVeloRType::numberOfZones()
 {
   return m_numberOfZones;
-}
+}*/
 //==============================================================================
 /// The zone number for a given strip
 //==============================================================================
-unsigned int DeVeloRType::zoneOfStrip(const unsigned int strip)
+/*unsigned int DeVeloRType::zoneOfStrip(const unsigned int strip)
 {
   return static_cast<unsigned int>(strip/512);
-}
-//==============================================================================
-/// Zone for a given local phi
-//==============================================================================
-unsigned int DeVeloRType::zoneOfPhi(double phi)
-{
-  unsigned int zone=0;
-  if(m_phiMin[0] >= fabs(phi) && m_phiMax[0] < fabs(phi)) {
-    zone = 0;
-  } else if(m_phiMin[1] >= fabs(phi) && m_phiMax[1] < fabs(phi)) {
-    zone = 1;
-  }
-  if(0 > phi) zone += 2;
-  return zone;
-}
-//==============================================================================
-/// Return the minumum strip for each zone
-//==============================================================================
-unsigned int DeVeloRType::firstStrip(unsigned int zone)
-{
-  return zone*512;
-}
+}*/
 
-//==============================================================================
-/// The number of strips in a zone
-//==============================================================================
-unsigned int DeVeloRType::stripsInZone(const unsigned int /*zone*/)
-{
-  return m_stripsInZone;
-}
 //==============================================================================
 /// Store the local radius and phi limits for each strip in the sensor
 //==============================================================================
@@ -439,113 +411,10 @@ void DeVeloRType::phiZoneLimits()
 
 }
 //==============================================================================
-/// Return the radius of the strip
-//==============================================================================
-double DeVeloRType::rOfStrip(const unsigned int strip)
-{
-  return m_rStrips[strip];
-}
-//==============================================================================
-/// Return the radius of the strip+fractional distance to strip.
-//==============================================================================
-double DeVeloRType::rOfStrip(unsigned int strip, double fraction)
-{
-  /*  unsigned int next=strip+1;
-  if(next%512) return m_rStrips[strip]*(1+fraction);
-  return  m_rStrips[strip]*(1-fraction) + fraction*m_rStrips[next];*/
-  return m_rStrips[strip]+fraction*rPitch(strip);
-}
-//==============================================================================
-/// Return the local pitch of the sensor for a given channel...
-//==============================================================================
-double DeVeloRType::rPitch(unsigned int strip)
-{
-  return m_rPitch[strip];
-  
-}
-//==============================================================================
-/// Return the local pitch of the sensor for a given channel...
-//==============================================================================
-double DeVeloRType::rPitch(unsigned int strip, double fraction)
-{
-  return exp(fraction)*m_rPitch[strip];
-  
-}
-//==============================================================================
-/// Return the local pitch of the sensonr
-//==============================================================================
-double DeVeloRType::rPitch(double radius)
-{
-  return m_innerPitch + m_pitchSlope*(radius - m_innerRadius);
-}
-//==============================================================================
-/// The minimum phi for a zone
-//==============================================================================
-double DeVeloRType::phiMinZone(unsigned int zone)
-{
-  return m_phiMin[zone];
-}
-//==============================================================================
-/// Returns the minimum phi in a zone at given radius
-//==============================================================================
-double DeVeloRType::phiMinZone(unsigned int zone, double radius)
-{
-  double phiMin;
-  if(0 == zone){
-    phiMin = acos(m_overlapInX/radius);
-  } else if(2 == zone){
-    phiMin = asin(-m_phiGap/radius);
-  } else {
-    phiMin = this->phiMinZone(zone);
-  }
-  return phiMin;
-}
-//==============================================================================
-/// The maximum phi for a zone
-//==============================================================================
-double DeVeloRType::phiMaxZone(unsigned int zone)
-{
-  return m_phiMax[zone];
-}
-//==============================================================================
-/// Returns the maximum phi in a zone at given radius
-//==============================================================================
-double DeVeloRType::phiMaxZone(unsigned int zone, double radius)
-{
-  double phiMax;
-  if(1 == zone){
-    phiMax = asin(m_phiGap/radius);
-  } else if(3 == zone){
-    phiMax = -acos(m_overlapInX/radius);
-  } else {
-    phiMax = this->phiMaxZone(zone);
-  }
-  return phiMax;
-}
-//==============================================================================
 /// Return the capacitance of the strip
 //==============================================================================
 double DeVeloRType::stripCapacitance(unsigned int /*strip*/)
 {
   double C=0.0;
   return C;
-}
-//==============================================================================
-/// Return the strip geometry for panoramix
-//==============================================================================
-StatusCode DeVeloRType::stripLimits(unsigned int strip, double &radius,
-                                    double &phiMin, double &phiMax)
-{
-  radius = rOfStrip(strip);
-  phiMin = phiMinStrip(strip);
-  phiMax = phiMaxStrip(strip);
-  return StatusCode::SUCCESS;
-}
-double DeVeloRType::phiMinStrip(unsigned int strip)
-{
-  return m_stripLimits[strip].first;
-}
-double DeVeloRType::phiMaxStrip(unsigned int strip)
-{
-  return m_stripLimits[strip].second;
 }

@@ -1,11 +1,8 @@
-// $Id: DeVeloSensor.cpp,v 1.2 2004-02-13 07:05:48 cattanem Exp $
+// $Id: DeVeloSensor.cpp,v 1.3 2004-02-17 21:37:13 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
 // Include files 
-
-// From CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
@@ -44,7 +41,6 @@ const CLID& DeVeloSensor::clID()
 //==============================================================================
 StatusCode DeVeloSensor::initialize() 
 {
-  MsgStream msg(msgSvc(), "DeVeloSensor");
   // Trick from old DeVelo to set the output level
   PropertyMgr* pmgr = new PropertyMgr();
   int outputLevel=0;
@@ -57,6 +53,7 @@ StatusCode DeVeloSensor::initialize()
     msgSvc()->setOutputLevel("DeVeloSensor", outputLevel);
   }
   delete pmgr;
+  MsgStream msg(msgSvc(), "DeVeloSensor");
   sc = DetectorElement::initialize();
   if(!sc.isSuccess()) {
     msg << MSG::ERROR << "Failed to initialise DetectorElement" << endreq;
@@ -72,15 +69,6 @@ StatusCode DeVeloSensor::initialize()
   m_geometry = geom;
   m_z = m_geometry->toGlobal(HepPoint3D(0,0,0)).z();
   return StatusCode::SUCCESS;
-}
-//==============================================================================
-/// Convert local phi to global phi (xml describes Left sensors)
-//==============================================================================
-double DeVeloSensor::localPhiToGlobal(double phiLocal)
-{
-  if(m_isLeft) return phiLocal;
-  phiLocal += pi;
-  return phiLocal;
 }
 //==============================================================================
 /// Convert local position to global position
@@ -114,62 +102,6 @@ StatusCode DeVeloSensor::globalToLocal(const HepPoint3D& globalPos,
       << endreq;
   return StatusCode::SUCCESS;
 }
-//==============================================================================
-/// Return the z position of the sensor
-//==============================================================================
-double DeVeloSensor::z()
-{
-  /*  HepPoint3D local(0,0,0);
-  HepPoint3D global(0,0,0);
-  global = m_geometry->toGlobal(local);
-  m_z = global.z();*/
-  return m_z;
-}
-//==============================================================================
-/// Return true for X<0 side of the detector (-ve x is Right)
-//==============================================================================
-bool DeVeloSensor::isRight()
-{
-  return m_isRight;
-}
-//==============================================================================
-/// Returns true if sensor is downstream
-//==============================================================================
-bool DeVeloSensor::isDownstream()
-{
-  return m_isDownstream;
-}
-//==============================================================================
-/// Return true for Pile Up sensor
-//==============================================================================
-bool DeVeloSensor::isPileUp()
-{
-  return m_isPileUp;
-}
-//==============================================================================
-/// Return true for Pile Up sensor
-//==============================================================================
-bool DeVeloSensor::isR()
-{
-  return m_isR;
-}
-//==============================================================================
-/// Return true for Phi sensor
-//==============================================================================
-bool DeVeloSensor::isPhi()
-{
-  return m_isPhi;
-}
-//==============================================================================
-/// Return +1 for X>0 side of detector [+ve x is Left/L]
-//==============================================================================
-int DeVeloSensor::xSide()
-{
-  return m_xSide;
-}
-//==============================================================================
-/// Set the sensor attributes 
-//==============================================================================
 void DeVeloSensor::initSensor()
 {
   // Set the sensor type from name in XML
@@ -194,67 +126,4 @@ void DeVeloSensor::initSensor()
     m_xSide = 1;
     m_isLeft = true;
   }
-}
-//==============================================================================
-/// Return the sensor type
-//==============================================================================
-std::string DeVeloSensor::type()
-{
-  return m_type;
-}
-//==============================================================================
-/// Set the sensor number
-//==============================================================================
-void DeVeloSensor::sensorNumber(unsigned int sensor)
-{
-  m_sensorNumber=sensor;
-}
-//==============================================================================
-/// Return the sensor number
-//==============================================================================
-unsigned int DeVeloSensor::sensorNumber()
-{
-  return m_sensorNumber;
-}
-//==============================================================================
-/// Set the (phi) sensors associated with this (R) sensor
-//==============================================================================
-void DeVeloSensor::associateSensor(unsigned int sensor)
-{
-  m_associated.push_back(sensor);
-}
-//==============================================================================
-/// Return the (phi) sensors associated with this (R) sensor
-//==============================================================================
-std::vector<unsigned int> DeVeloSensor::associatedSensors()
-{
-  return m_associated;
-}
-//==============================================================================
-/// The minimum radius for the sensitive area of the sensor
-//==============================================================================
-double DeVeloSensor::innerRadius()
-{
-  return m_innerRadius;
-}
-//==============================================================================
-/// The maximum radius for the sensitive area of the sensor
-//==============================================================================
-double DeVeloSensor::outerRadius()
-{
-  return m_outerRadius;
-}
-//==============================================================================
-/// The thickness of the sensor in mm
-//==============================================================================
-double DeVeloSensor::siliconThickness()
-{
-  return m_siliconThickness;
-}
-//==============================================================================
-/// Returns the number of strips
-//==============================================================================
-unsigned int DeVeloSensor::numberOfStrips()
-{
-  return m_numberOfStrips;
 }

@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.4 2004-02-13 16:02:15 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.5 2004-02-17 21:37:13 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -45,7 +45,6 @@ const CLID& DeVeloPhiType::clID()
 //==============================================================================
 StatusCode DeVeloPhiType::initialize() 
 {
-  MsgStream msg(msgSvc(), "DeVeloPhiType");
   // Trick from old DeVelo to set the output level
   PropertyMgr* pmgr = new PropertyMgr();
   int outputLevel=0;
@@ -58,6 +57,7 @@ StatusCode DeVeloPhiType::initialize()
     msgSvc()->setOutputLevel("DeVeloPhiType", outputLevel);
   }
   delete pmgr;
+  MsgStream msg(msgSvc(), "DeVeloPhiType");
   
   sc = DeVeloSensor::initialize();
   if(!sc.isSuccess()) {
@@ -440,38 +440,6 @@ StatusCode DeVeloPhiType::residual(const HepPoint3D& /*point*/,
   return StatusCode::SUCCESS;
 }
 //==============================================================================
-/// The number of zones in the detector
-//==============================================================================
-unsigned int DeVeloPhiType::numberOfZones()
-{
-  return m_numberOfZones;
-}
-//==============================================================================
-/// The zones number for a given strip
-//==============================================================================
-unsigned int DeVeloPhiType::zoneOfStrip(const unsigned int strip)
-{
-  unsigned int zone=0;
-  if(m_nbInner > strip) {
-    zone = 0;
-  } else {
-    zone = 1;
-  }
-  return zone;
-}
-//==============================================================================
-/// The number of strips in a zone
-//==============================================================================
-unsigned int DeVeloPhiType::stripsInZone(const unsigned int zone)
-{
-  if(0 == zone) {
-    return m_nbInner;
-  } else if(1 == zone){
-    return m_numberOfStrips-m_nbInner;
-  }
-  return 0;
-}
-//==============================================================================
 /// The minimum radius for a given zone of the sensor
 //==============================================================================
 double DeVeloPhiType::rMin(const unsigned int zone)
@@ -498,89 +466,6 @@ double DeVeloPhiType::rMax(const unsigned int zone)
   return rMax;
 }
 //==============================================================================
-/// The phi position of a strip at a given radius
-//==============================================================================
-double DeVeloPhiType::phiOfStrip(unsigned int strip, double fraction,
-                                 const double radius)
-{
-  double phiOfStrip;
-  double effectiveStrip=fraction+static_cast<double>(strip);
-  if (m_nbInner > strip) {
-    phiOfStrip = (effectiveStrip*m_innerPitch) + phiOffset(radius);
-  } else {
-    effectiveStrip -= m_nbInner;
-    phiOfStrip = (effectiveStrip*m_outerPitch) + phiOffset(radius);
-  }
-  return phiOfStrip;
-}
-//==============================================================================
-/// the angle of the strip wrt to the x axis
-//==============================================================================
-double DeVeloPhiType::angleOfStrip(unsigned int strip, double fraction)
-{
-  double angleOfStrip;
-  double effectiveStrip=fraction+static_cast<double>(strip);
-  if (m_nbInner > strip) {
-    angleOfStrip = (effectiveStrip*m_innerPitch) + m_innerTilt;
-  } else {
-    effectiveStrip -= m_nbInner;
-    angleOfStrip = (effectiveStrip*m_outerPitch) + m_outerTilt;
-  }
-  return angleOfStrip;
-}
-//==============================================================================
-/// Phi Offset
-//==============================================================================
-double DeVeloPhiType::phiOffset(double radius)
-{
-  if(m_middleRadius > radius){
-    return m_innerTilt - asin(m_innerDistToOrigin / radius);
-  } else {
-    return m_outerTilt - asin(m_outerDistToOrigin / radius);
-  }
-  return 0.;
-}
-//==============================================================================
-/// Returns the distance to the origin
-//==============================================================================
-double DeVeloPhiType::distToOrigin(unsigned int strip)
-{
-  double distance;
-  if(m_nbInner > strip){
-    distance = m_innerDistToOrigin;
-  } else {
-    distance = m_outerDistToOrigin;
-  }
-  if(m_isDownstream) distance *= -1;
-  return distance;
-}
-//==============================================================================
-/// Returns the phi pitch in mm for a given radius
-//==============================================================================
-double DeVeloPhiType::phiPitch(const double radius)
-{
-  double phiPitch;
-  if (m_middleRadius > radius) {
-    phiPitch = m_innerPitch * radius;
-  } else {
-    phiPitch = m_outerPitch * radius;
-  }
-  return phiPitch;
-}
-//==============================================================================
-/// returns the Phi pitch (in radians) for a given strip
-//==============================================================================
-double DeVeloPhiType::phiPitch(unsigned int strip)
-{
-  double phiPitch;
-  if (m_nbInner > strip) {
-    phiPitch = m_innerPitch;
-  } else {
-    phiPitch = m_outerPitch;
-  }
-  return phiPitch;
-}
-//==============================================================================
 /// The minimum phi of the sensor for a given radius
 //==============================================================================
 double DeVeloPhiType::phiMin(const double radius)
@@ -605,17 +490,6 @@ double DeVeloPhiType::phiMax(const double radius)
     maxPhi = m_halfCoverage;
   }
   return maxPhi;
-}
-//==============================================================================
-/// Return the strip geometry for panoramix
-//==============================================================================
-StatusCode DeVeloPhiType::stripLimits(unsigned int strip, HepPoint3D& begin,
-                                      HepPoint3D& end)
-{
-  StatusCode sc=this->localToGlobal(m_stripLimits[strip].first,begin);
-  if(!sc) return sc;
-  sc=this->localToGlobal(m_stripLimits[strip].second,end);
-  return sc;
 }
 //==============================================================================
 /// Return the capacitance of the strip
