@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.2 2004-09-03 15:30:28 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.3 2004-09-06 08:06:16 pkoppenb Exp $
 #ifndef DAVINCITOOLS_IPHYSDESKTOP_H 
 #define DAVINCITOOLS_IPHYSDESKTOP_H 1
 
@@ -63,6 +63,10 @@ public:
   //hrp
 
   virtual void imposeOutputLocation(std::string outputLocationString) = 0;
+
+  //PK
+  virtual std::string getOutputLocation() = 0 ;
+  
 
 protected:
 

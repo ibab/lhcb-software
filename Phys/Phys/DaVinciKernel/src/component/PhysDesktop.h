@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.2 2004-09-03 15:30:28 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.3 2004-09-06 08:06:16 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -100,6 +100,8 @@ public:
   //hrp
   // Set output location
   void imposeOutputLocation(std::string outputLocationString);
+
+  std::string getOutputLocation(){ return m_outputLocn ;};
 
 protected:
   

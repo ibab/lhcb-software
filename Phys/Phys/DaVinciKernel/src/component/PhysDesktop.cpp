@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.2 2004-09-03 15:30:28 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.3 2004-09-06 08:06:16 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -21,7 +21,7 @@
  *
  * 18/02/2002 : Sandra Amato
  * 04/03/2004 : Hugo Ruiz : automatized outputLocation = algorithm name
- * 11/08/2004 : Make it a GaudiTool
+ * 11/08/2004 : Patrick Koppenburg : Make it a GaudiTool
  *-----------------------------------------------------------------------------
  */
 

@@ -2,8 +2,12 @@
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2004-09-06 - P. Koppenburg
+ - (I)PhysDesktop.*
+   . Add getOutputLocation() method
+
 ! 2004-09-03 - P. Koppenburg
- - PhysDesktop
+ - (I)PhysDesktop.*
    . Remove getInput method.
 
 ! 2004-08-25 - P. Koppenburg
