@@ -1,4 +1,4 @@
-// $Id: OTDigit2MCDepositAlg.cpp,v 1.1 2003-06-10 09:04:16 jvantilb Exp $
+// $Id: OTDigit2MCDepositAlg.cpp,v 1.2 2003-07-15 11:31:07 jvantilb Exp $
 
 // Event
 #include "Event/OTDigit.h"
@@ -32,7 +32,7 @@ static const  AlgFactory<OTDigit2MCDepositAlg>          s_factory ;
 const        IAlgFactory& OTDigit2MCDepositAlgFactory = s_factory ; 
 
 OTDigit2MCDepositAlg::OTDigit2MCDepositAlg( const std::string& name,
-                                                ISvcLocator* pSvcLocator)
+                                            ISvcLocator* pSvcLocator)
   : Algorithm (name,pSvcLocator) 
 {
   // constructor
@@ -44,19 +44,13 @@ OTDigit2MCDepositAlg::~OTDigit2MCDepositAlg() {
   // destructor
 }
 
-StatusCode OTDigit2MCDepositAlg::initialize() {
-
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Initialise" << endmsg;
- 
+StatusCode OTDigit2MCDepositAlg::initialize() 
+{
   return StatusCode::SUCCESS;
 }
 
 StatusCode OTDigit2MCDepositAlg::execute() 
 {
-
-  typedef Relation1D<OTDigit, MCOTDeposit>    Table;
-
   // get OTDigits
   SmartDataPtr<OTDigits> digitCont(eventSvc(),OTDigitLocation::Default);
   if (0 == digitCont){ 
@@ -78,18 +72,21 @@ StatusCode OTDigit2MCDepositAlg::execute()
   }
   
   // create an association table 
-  Table* aTable = new Table();
+  OTDigit2MCDepositAsct::Table* aTable = new OTDigit2MCDepositAsct::Table();
 
   // loop and link OTDigits to MC truth
   OTDigits::const_iterator iterDigit;
   for(iterDigit = digitCont->begin(); 
       iterDigit != digitCont->end(); iterDigit++){
     std::vector<MCOTDeposit*> depVector;
-    associateToTruth(*iterDigit, depVector);
+    std::vector<int> depNumbers;
+    associateToTruth(*iterDigit, depVector, depNumbers);
     std::vector<MCOTDeposit*>::iterator iDep = depVector.begin();
+    std::vector<int>::iterator iDepNumber = depNumbers.begin();
     while (iDep != depVector.end()) {
-      aTable->relate(*iterDigit, *iDep);
-      iDep++;
+      aTable->relate(*iterDigit, *iDep, *iDepNumber);
+      ++iDep;
+      ++iDepNumber;
     }
   } // loop iterDigit
 
@@ -106,20 +103,15 @@ StatusCode OTDigit2MCDepositAlg::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTDigit2MCDepositAlg::finalize() {
-
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endmsg;
-
+StatusCode OTDigit2MCDepositAlg::finalize()
+{
   return StatusCode::SUCCESS;
 }
 
 StatusCode 
 OTDigit2MCDepositAlg::associateToTruth(const OTDigit* aDigit,
-                                       std::vector<MCOTDeposit*>& depVector) {
-  // make link to truth  to MCOTDeposit
-  StatusCode sc = StatusCode::SUCCESS;
-
+                                       std::vector<MCOTDeposit*>& depVector,
+                                       std::vector<int>& depNumbers) {
   // link digit to truth
   MCOTDeposit* deposit = 0;
   const MCOTDigit* mcDigit = mcTruth<MCOTDigit>(aDigit);
@@ -128,11 +120,13 @@ OTDigit2MCDepositAlg::associateToTruth(const OTDigit* aDigit,
     // link to deposits
     SmartRefVector<MCOTDeposit> depCont = mcDigit->deposits();
     if ( 0 == depCont.size()) return StatusCode::FAILURE;
+    int depNumber = 0;
     SmartRefVector<MCOTDeposit>::iterator iterDep;
     for ( iterDep = depCont.begin(); iterDep != depCont.end(); ++iterDep ) {
       deposit = (*iterDep);
-      depVector.push_back(deposit);
-
+      depVector.push_back( deposit );
+      depNumbers.push_back( depNumber );
+      
       // find other deposits killed by dead-time,but within certain time window.
       if (m_acceptTime > 0.0 ) {
         bool keepAdding = true;
@@ -147,16 +141,17 @@ OTDigit2MCDepositAlg::associateToTruth(const OTDigit* aDigit,
           // Check for same channel and within acceptTime cut
           if ( nextDeposit->channel() == deposit->channel() &&
                nextDeposit->tdcTime() < deposit->tdcTime() + m_acceptTime ) {
-            depVector.push_back(nextDeposit);
+            depVector.push_back( nextDeposit );
+            depNumbers.push_back( depNumber );
             deposit = nextDeposit;
           } else {
             keepAdding = false;
           }
         }    
       }
-    } 
+      ++depNumber;
+    }
   }
 
-
-  return sc;
+  return StatusCode::SUCCESS;
 }

@@ -1,26 +1,26 @@
-// $Id: OTCluster2MCParticleAlg.h,v 1.5 2003-01-17 14:07:44 sponce Exp $
+// $Id: OTCluster2MCParticleAlg.h,v 1.6 2003-07-15 11:31:07 jvantilb Exp $
 #ifndef OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H
 #define OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H 1
 
-#include "Relations/IAssociator.h" 
-#include "Relations/IRelation.h"
-#include "Relations/Relation1D.h"
-
 #include "GaudiKernel/Algorithm.h"
-#include "OTAssociators/OTCluster2MCHitAsct.h"
+#include "OTAssociators/OTDigit2MCParticleAsct.h"
+
+class OTCluster;
+class MCParticle;
 
 /** @class OTCluster2MCParticleAlg OTCluster2MCParticleAlg.h
  *  
  *  Algorithm which makes the association from OTClusters to MCParticles. 
  *  This is used by the associator tool. This algorithm uses the associator
- *  with MCHits.
+ *  from OTDigits to MCParticles: OTDigit2MCParticleAsct. Since an OTDigit 
+ *  could contain more than one tdc-time (which gives >1 OTClusters), 
+ *  the integer stored in the relation table from OTDigits to MCParticles 
+ *  is used to distinguish between the different OTClusters originating from 
+ *  the same OTDigit.
  *
  *  @author Jeroen van Tilburg
  *  @date   14/05/2002
  */
-
-class OTCluster;
-class MCParticle;
 
 class OTCluster2MCParticleAlg : public Algorithm {
 
@@ -55,11 +55,10 @@ protected:
 private:
 
   // job options:
-  std::string m_outputData;   ///< path to put relation table
-  std::string m_nameAsct;     ///< name of the associator to MCHits
+  std::string m_outputData;               ///< path to put relation table
+  std::string m_nameAsct;                 ///< Asct. from OTDigits 2 MCParticles
 
-  // pointer to associator
-  OTCluster2MCHitAsct::IAsct* m_hAsct; ///< pointer to associator
+  OTDigit2MCParticleAsct::IAsct* m_hAsct; ///< pointer to associator
 
 };
 
@@ -69,10 +68,3 @@ inline std::string OTCluster2MCParticleAlg::outputData() const {
 
 
 #endif // OTASSOCIATORS_OTCLUSTER2MCPARTICLEALG_H
-
-
-
-
-
-
-

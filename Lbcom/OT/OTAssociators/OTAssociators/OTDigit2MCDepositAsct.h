@@ -1,4 +1,4 @@
-// $Id: OTDigit2MCDepositAsct.h,v 1.1 2003-06-10 09:04:15 jvantilb Exp $
+// $Id: OTDigit2MCDepositAsct.h,v 1.2 2003-07-15 11:31:06 jvantilb Exp $
 #ifndef OTASSOCIATORS_OTDIGIT2MCDEPOSITASCT_H 
 #define OTASSOCIATORS_OTDIGIT2MCDEPOSITASCT_H 1
 
@@ -10,8 +10,8 @@
 #include "Event/MCOTDeposit.h"
 
 // Associators
-#include "Relations/Associator.h"
-#include "Relations/Relation1D.h"
+#include "Relations/AssociatorWeighted.h"
+#include "Relations/RelationWeighted1D.h"
 
 static const std::string& OTDigit2MCDepositLocation =
                        "Rec/Relations/OTDigits2MCDeposits";
@@ -21,23 +21,29 @@ static const std::string& OTDigit2MCDepositLocation =
  *  
  *  Associator for the OTDigits with the corresponding MCOTDeposits. 
  *  By default OTDigits coming from spillover are also associated.
+ *  Since an OTDigit could contain more than one tdc-time, an integer is 
+ *  stored in the relation table from OTDigits to MCOTDeposits which points 
+ *  to the tdc-time.
+ *  If other MCOTDeposits on the same channel but killed by dead time, are
+ *  recorded within a certain (small) time-window, they can be associated as 
+ *  well.
  *
  *  @author J. van Tilburg
  *  @date   05/06/2003
  */
 
-class OTDigit2MCDepositAsct: public Associator<OTDigit,MCOTDeposit>
+class OTDigit2MCDepositAsct: public AssociatorWeighted<OTDigit,MCOTDeposit,int>
 {
   friend class ToolFactory<OTDigit2MCDepositAsct>;
   
 public:
   // Define data types
-  typedef Relation1D<OTDigit,MCOTDeposit>         Table;
-  typedef OwnType                                 Asct;
-  typedef FromRange                               Digits;
-  typedef FromIterator                            DigitsIterator;
-  typedef ToRange                                 MCDeposits;
-  typedef ToIterator                              MCDepositsIterator;
+  typedef RelationWeighted1D<OTDigit,MCOTDeposit,int> Table;
+  typedef OwnType                                     Asct;
+  typedef FromRange                                   Digits;
+  typedef FromIterator                                DigitsIterator;
+  typedef ToRange                                     MCDeposits;
+  typedef ToIterator                                  MCDepositsIterator;
     
 private:
 

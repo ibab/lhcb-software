@@ -1,4 +1,4 @@
-// $Id: OTDigit2MCParticleAsct.h,v 1.1 2003-06-10 09:04:15 jvantilb Exp $
+// $Id: OTDigit2MCParticleAsct.h,v 1.2 2003-07-15 11:31:06 jvantilb Exp $
 #ifndef OTASSOCIATORS_OTDIGIT2MCPARTICLEASCT_H
 #define OTASSOCIATORS_OTDIGIT2MCPARTICLEASCT_H 1
 
@@ -10,8 +10,8 @@
 #include "Event/MCParticle.h"
 
 // Associators
-#include "Relations/Associator.h"
-#include "Relations/Relation1D.h"
+#include "Relations/AssociatorWeighted.h"
+#include "Relations/RelationWeighted1D.h"
 
 static const std::string& OTDigit2MCParticleLocation = 
                    "Rec/Relations/OTDigits2MCParticles";
@@ -22,6 +22,9 @@ static const std::string& OTDigit2MCParticleLocation =
  *  Associator for the OTDigits with the corresponding MCParticles. 
  *  Makes use of the associator with the MCHits. By default OTDigits 
  *  coming from spillover are not associated.
+ *  Since an OTDigit could contain more than one tdc-time, an integer is 
+ *  stored in the relation table from OTDigits to MCParticles which points 
+ *  to the tdc-time.
  *
  *  @author J. van Tilburg
  *  @date   14/05/2002
@@ -31,18 +34,18 @@ static const std::string& OTDigit2MCParticleLocation =
 class OTDigit;
 class MCParticle;
 
-class OTDigit2MCParticleAsct: public Associator<OTDigit,MCParticle>
+class OTDigit2MCParticleAsct: public AssociatorWeighted<OTDigit,MCParticle,int>
 {
   friend class ToolFactory<OTDigit2MCParticleAsct>;
   
 public:
   // Define data types
-  typedef Relation1D<OTDigit,MCParticle>          Table;
-  typedef OwnType                                 Asct;
-  typedef FromRange                               Digits;
-  typedef FromIterator                            DigitsIterator;
-  typedef ToRange                                 MCParticles;
-  typedef ToIterator                              MCParticlesIterator;
+  typedef RelationWeighted1D<OTDigit,MCParticle, int> Table;
+  typedef OwnType                                     Asct;
+  typedef FromRange                                   Digits;
+  typedef FromIterator                                DigitsIterator;
+  typedef ToRange                                     MCParticles;
+  typedef ToIterator                                  MCParticlesIterator;
     
 private:
 

@@ -1,6 +1,16 @@
-! $Id: release.notes,v 1.17 2003-06-17 09:16:31 cattanem Exp $
+! $Id: release.notes,v 1.18 2003-07-15 11:31:06 jvantilb Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
+
+! 2003-07-15 - Jeroen van Tilburg
+ - OTDigit2MCxxx associators use a weighted associator, where the weight is 
+   an integer which refers to a tdc-time in the vector of tdc-times in 
+   the OTDigit.
+ - The OTCluster2MCxxx associators use their OTDigit2MCxxx counterparts to
+   make the association. The integer stored in the OTDigit2MCxxx relation
+   table is used to select only the relation with the tdc-time corresponding
+   to the OTCluster.
+ - OTDigit2MCDeposit is the base associator for all others.
 
 !====================== OTAssociators v2r5 2003-06-17 ======================
 ! 2003-06-09 - Jeroen van Tilburg

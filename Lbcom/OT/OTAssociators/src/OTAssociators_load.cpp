@@ -1,25 +1,25 @@
-// $Id: OTAssociators_load.cpp,v 1.4 2003-06-10 09:04:15 jvantilb Exp $
+// $Id: OTAssociators_load.cpp,v 1.5 2003-07-15 11:31:06 jvantilb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "Relations/RelationMACROs.h"
 
 // local
+#include "OTAssociators/OTCluster2MCDepositAsct.h"
 #include "OTAssociators/OTCluster2MCHitAsct.h"
 #include "OTAssociators/OTCluster2MCParticleAsct.h"
-#include "OTAssociators/OTCluster2MCDepositAsct.h"
+#include "OTAssociators/OTDigit2MCDepositAsct.h"
 #include "OTAssociators/OTDigit2MCHitAsct.h"
 #include "OTAssociators/OTDigit2MCParticleAsct.h"
-#include "OTAssociators/OTDigit2MCDepositAsct.h"
 
 
 // Implement the relation factories
 IMPLEMENT_Relation1D( OTCluster , MCParticle );
 IMPLEMENT_Relation1D( OTCluster , MCHit );
 IMPLEMENT_Relation1D( OTCluster , MCOTDeposit );
-IMPLEMENT_Relation1D( OTDigit , MCParticle );
-IMPLEMENT_Relation1D( OTDigit , MCHit );
-IMPLEMENT_Relation1D( OTDigit , MCOTDeposit );
+IMPLEMENT_RelationW1D( OTDigit , MCParticle, int );
+IMPLEMENT_RelationW1D( OTDigit , MCHit, int );
+IMPLEMENT_RelationW1D( OTDigit , MCOTDeposit, int );
 
 // Implement the tool factories
 static const ToolFactory<OTCluster2MCHitAsct>    s_OTCluster2MCHitAsctFactory;
@@ -55,9 +55,9 @@ DECLARE_FACTORY_ENTRIES( OTAssociators )
   DECLARE_Relation1D( OTCluster , MCParticle );
   DECLARE_Relation1D( OTCluster , MCHit );
   DECLARE_Relation1D( OTCluster , MCOTDeposit );
-  DECLARE_Relation1D( OTDigit , MCParticle );
-  DECLARE_Relation1D( OTDigit , MCHit );
-  DECLARE_Relation1D( OTDigit , MCOTDeposit );
+  DECLARE_RelationW1D( OTDigit , MCParticle, int );
+  DECLARE_RelationW1D( OTDigit , MCHit, int );
+  DECLARE_RelationW1D( OTDigit , MCOTDeposit, int );
 
   DECLARE_ALGORITHM( OTCluster2MCHitAlg );
   DECLARE_ALGORITHM( OTCluster2MCParticleAlg );

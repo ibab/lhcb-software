@@ -1,4 +1,4 @@
-// $Id: OTDigit2MCHitAlg.cpp,v 1.1 2003-06-10 09:04:16 jvantilb Exp $
+// $Id: OTDigit2MCHitAlg.cpp,v 1.2 2003-07-15 11:31:07 jvantilb Exp $
 
 // Event
 #include "Event/OTDigit.h"
@@ -46,11 +46,9 @@ OTDigit2MCHitAlg::~OTDigit2MCHitAlg()
 
 StatusCode OTDigit2MCHitAlg::initialize() 
 {
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Initialize" << endmsg;
-
   StatusCode sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
   if( sc.isFailure() || 0 == m_hAsct) {
+    MsgStream msg(msgSvc(), name());
     msg << MSG::FATAL << "Unable to retrieve Associator tool" << endmsg;
     return sc;
   }
@@ -61,8 +59,6 @@ StatusCode OTDigit2MCHitAlg::initialize()
 
 StatusCode OTDigit2MCHitAlg::execute() 
 {
-  typedef Relation1D<OTDigit, MCHit> Table;
-
   // get OTDigits
   SmartDataPtr<OTDigits> digitCont(eventSvc(), OTDigitLocation::Default);
   if (0 == digitCont){ 
@@ -82,49 +78,47 @@ StatusCode OTDigit2MCHitAlg::execute()
   }
   m_mcHits = mcHits;
 
-  // create an association table 
-  Table* aTable = new Table();
-
-  // loop and link OTDigits to MC truth
-  OTDigits::const_iterator iterDigit;
-  for(iterDigit = digitCont->begin(); 
-      iterDigit != digitCont->end(); ++iterDigit){
-    std::vector<MCHit*> hitVector;
-    associateToTruth(*iterDigit, hitVector);
-    std::vector<MCHit*>::iterator iHit = hitVector.begin();
-    while (iHit != hitVector.end()) {
-      aTable->relate(*iterDigit, *iHit);
-      ++iHit;
-    }
-  } // loop iterDigit
-
-  // register table in store
+  // create an association table and register table in store
+  OTDigit2MCHitAsct::Table* aTable = new OTDigit2MCHitAsct::Table();
   StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
   if( sc.isFailure() ) {
     MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL << "     *** Could not register " << outputData()
-        << endmsg;
+    msg << MSG::FATAL << "Could not register " << outputData() << endmsg;
     delete aTable;
     return StatusCode::FAILURE;
   }
- 
+
+  // loop and link OTDigits to MC truth
+  OTDigits::const_iterator iterDigit;
+  for ( iterDigit = digitCont->begin(); 
+        iterDigit != digitCont->end(); ++iterDigit){
+    std::vector<MCHit*> hitVector;
+    std::vector<int> hitNumbers;
+    associateToTruth(*iterDigit, hitVector, hitNumbers);
+    std::vector<MCHit*>::iterator iHit = hitVector.begin();
+    std::vector<int>::iterator iHitNumber = hitNumbers.begin();
+    while (iHit != hitVector.end()) {
+      aTable->relate(*iterDigit, *iHit, *iHitNumber);
+      ++iHit;
+      ++iHitNumber;
+    }
+  } // loop iterDigit
+
   return StatusCode::SUCCESS;
 }
 
 StatusCode OTDigit2MCHitAlg::finalize() 
 {
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endmsg;
-
-  // Release tools
+  // Release tool
   if( m_hAsct ) toolSvc()->releaseTool( m_hAsct );
 
   return StatusCode::SUCCESS;
 }
 
-
-StatusCode OTDigit2MCHitAlg::associateToTruth(const OTDigit* aDigit,
-                                              std::vector<MCHit*>& hitVector) 
+StatusCode 
+OTDigit2MCHitAlg::associateToTruth(const OTDigit* aDigit,
+                                   std::vector<MCHit*>& hitVector,
+                                   std::vector<int>& hitNumbers) 
 {
   // make link to truth to MCHit
   // retrieve table
@@ -144,7 +138,8 @@ StatusCode OTDigit2MCHitAlg::associateToTruth(const OTDigit* aDigit,
         MCHit* aHit = aDeposit->mcHit();
         if (0 != aHit) {
           if (m_spillOver || m_mcHits == aHit->parent() ) 
-            hitVector.push_back(aHit);
+            hitVector.push_back( aHit );
+            hitNumbers.push_back( iterDep->weight() );
         }
       }
     }

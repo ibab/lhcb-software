@@ -1,10 +1,8 @@
-// $Id: OTCluster2MCParticleAlg.cpp,v 1.8 2003-06-10 09:04:16 jvantilb Exp $
+// $Id: OTCluster2MCParticleAlg.cpp,v 1.9 2003-07-15 11:31:07 jvantilb Exp $
 
 // Event
 #include "Event/OTCluster.h"
 #include "Event/OTDigit.h"
-#include "Event/MCOTDigit.h"
-#include "Event/MCOTDeposit.h"
 #include "Event/MCParticle.h"
 
 // from Gaudi
@@ -35,21 +33,18 @@ OTCluster2MCParticleAlg::OTCluster2MCParticleAlg( const std::string& name,
 {
   // constructor
   declareProperty( "OutputData", m_outputData  = OTCluster2MCParticleLocation );
-  declareProperty( "associatorName", m_nameAsct = "OTCluster2MCHitAsct" );
+  declareProperty( "associatorName", m_nameAsct = "OTDigit2MCParticleAsct" );
 }
 
 OTCluster2MCParticleAlg::~OTCluster2MCParticleAlg() {
   // destructor
 }
 
-StatusCode OTCluster2MCParticleAlg::initialize() {
-
-  MsgStream msg(msgSvc(), name());
-  StatusCode sc;
-  msg << MSG::DEBUG << "==> Initialize" << endmsg;
-
-  sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
-  if( sc.isFailure() || 0 == m_hAsct) {
+StatusCode OTCluster2MCParticleAlg::initialize() 
+{
+  StatusCode sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
+  if ( sc.isFailure() || 0 == m_hAsct) {
+    MsgStream msg(msgSvc(), name());
     msg << MSG::FATAL << "Unable to retrieve Associator tool" << endmsg;
     return sc;
   }
@@ -58,10 +53,8 @@ StatusCode OTCluster2MCParticleAlg::initialize() {
 }
 
 
-StatusCode OTCluster2MCParticleAlg::execute() {
-
-  typedef Relation1D<OTCluster, MCParticle>    Table;
-
+StatusCode OTCluster2MCParticleAlg::execute()
+{
   // get OTClusters
   SmartDataPtr<OTClusters> clusterCont(eventSvc(),OTClusterLocation::Default);
   if (0 == clusterCont){ 
@@ -70,13 +63,20 @@ StatusCode OTCluster2MCParticleAlg::execute() {
     return StatusCode::FAILURE;
   }
 
-  // create an association table 
-  Table* aTable = new Table();
-
+  // create an association table and register table in store
+  OTCluster2MCParticleAsct::Table* aTable = 
+    new OTCluster2MCParticleAsct::Table();
+  StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
+  if( sc.isFailure() ) {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::FATAL << "Could not register " << outputData() << endmsg;
+    delete aTable;
+    return StatusCode::FAILURE;
+  }
   // loop and link OTClusters to MC truth
   OTClusters::const_iterator iterClus;
-  for(iterClus = clusterCont->begin(); 
-      iterClus != clusterCont->end(); ++iterClus){
+  for ( iterClus = clusterCont->begin(); 
+        iterClus != clusterCont->end(); ++iterClus){
     std::vector<MCParticle*> partVector;
     associateToTruth(*iterClus, partVector);
     std::vector<MCParticle*>::iterator iPart = partVector.begin();
@@ -86,25 +86,12 @@ StatusCode OTCluster2MCParticleAlg::execute() {
     }
   } // loop iterClus
 
-  // register table in store
-  StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
-  if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL << "     *** Could not register " << outputData()
-        << endmsg;
-    delete aTable;
-    return StatusCode::FAILURE;
-  }
-
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTCluster2MCParticleAlg::finalize() {
-
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endmsg;
-
-  // Release tools
+StatusCode OTCluster2MCParticleAlg::finalize()
+{
+  // Release tool
   if( m_hAsct ) toolSvc()->releaseTool( m_hAsct );
 
   return StatusCode::SUCCESS;
@@ -112,29 +99,51 @@ StatusCode OTCluster2MCParticleAlg::finalize() {
 
 StatusCode
 OTCluster2MCParticleAlg::associateToTruth(const OTCluster* aCluster,
-                                          std::vector<MCParticle*>& partVector){
-  // make truth link to MCParticle
-  StatusCode sc = StatusCode::SUCCESS;
+                                          std::vector<MCParticle*>& partVector)
+{
+  // make link to OTDigit
+  const OTDigit* aDigit = aCluster->digit();
+  if (0 == aDigit) {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::WARNING << "No digit associated with cluster!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  // When there are more than one tdc-times in a OTDigit
+  // do something more elaborate: get the position in the vector of times.
+  int timeNumber = 0;
+  if ( (aDigit->tdcTimes()).size() > 1 ) {
+    // count how many clusters are on the same channel before this cluster
+    SmartDataPtr<OTClusters> clusterCont(eventSvc(),
+                                         OTClusterLocation::Default);
+    int key = aCluster->key();
+    OTCluster* prevClus = clusterCont->object(--key);
+    while ( prevClus != 0 && prevClus->digit() == aDigit ) {    
+      ++timeNumber;
+      prevClus = clusterCont->object(--key);
+    }  
+  }
 
-  // retrieve table
-  OTCluster2MCHitAsct::DirectType* aTable = m_hAsct->direct();
-  if (0 == aTable){
+  // Use the associator from OTDigits to MCParticles
+  OTDigit2MCParticleAsct::DirectType* aTable = m_hAsct->direct();
+  if ( 0 == aTable ) {
     MsgStream msg(msgSvc(), name());
     msg << MSG::WARNING << "Failed to find table" << endmsg;
     return StatusCode::FAILURE;
   }
  
-  OTCluster2MCHitAsct::MCHits range = aTable->relations(aCluster);
+  OTDigit2MCParticleAsct::MCParticles range = aTable->relations(aDigit);
   if ( !range.empty() ) {
-    OTCluster2MCHitAsct::MCHitsIterator iterHit;
-    for (iterHit = range.begin(); iterHit != range.end(); ++iterHit) {
-      MCHit* aHit = iterHit->to();
-      if (0 != aHit) {
-        MCParticle* aParticle = aHit->mcParticle();
-        if (0 != aParticle) partVector.push_back(aParticle);
+    OTDigit2MCParticleAsct::MCParticlesIterator iterPart = range.begin();
+    for ( iterPart = range.begin(); iterPart != range.end(); ++iterPart ) {
+      MCParticle* aParticle = iterPart->to();
+      int depNumber = iterPart->weight();
+      if ( 0 != aParticle && depNumber == timeNumber ) {
+        partVector.push_back(aParticle);
       }
     }
   }
 
-  return sc;
+  return StatusCode::SUCCESS;
 }
+

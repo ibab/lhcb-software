@@ -1,9 +1,7 @@
-// $Id: OTDigit2MCParticleAlg.cpp,v 1.1 2003-06-10 09:04:16 jvantilb Exp $
+// $Id: OTDigit2MCParticleAlg.cpp,v 1.2 2003-07-15 11:31:07 jvantilb Exp $
 
 // Event
 #include "Event/OTDigit.h"
-#include "Event/MCOTDigit.h"
-#include "Event/MCOTDeposit.h"
 #include "Event/MCParticle.h"
 
 // from Gaudi
@@ -41,14 +39,11 @@ OTDigit2MCParticleAlg::~OTDigit2MCParticleAlg() {
   // destructor
 }
 
-StatusCode OTDigit2MCParticleAlg::initialize() {
-
-  MsgStream msg(msgSvc(), name());
-  StatusCode sc;
-  msg << MSG::DEBUG << "==> Initialize" << endmsg;
-
-  sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
-  if( sc.isFailure() || 0 == m_hAsct) {
+StatusCode OTDigit2MCParticleAlg::initialize() 
+{
+  StatusCode sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
+  if ( sc.isFailure() || 0 == m_hAsct ) {
+    MsgStream msg(msgSvc(), name());
     msg << MSG::FATAL << "Unable to retrieve Associator tool" << endmsg;
     return sc;
   } 
@@ -56,10 +51,8 @@ StatusCode OTDigit2MCParticleAlg::initialize() {
 }
 
 
-StatusCode OTDigit2MCParticleAlg::execute() {
-
-  typedef Relation1D<OTDigit, MCParticle>    Table;
-
+StatusCode OTDigit2MCParticleAlg::execute() 
+{
   // get OTDigits
   SmartDataPtr<OTDigits> digitCont(eventSvc(), OTDigitLocation::Default);
   if (0 == digitCont){ 
@@ -68,41 +61,38 @@ StatusCode OTDigit2MCParticleAlg::execute() {
     return StatusCode::FAILURE;
   }
 
-  // create an association table 
-  Table* aTable = new Table();
-
-  // loop and link OTDigits to MC truth
-  OTDigits::const_iterator iterDigit;
-  for(iterDigit = digitCont->begin(); 
-      iterDigit != digitCont->end(); ++iterDigit){
-    std::vector<MCParticle*> partVector;
-    associateToTruth(*iterDigit, partVector);
-    std::vector<MCParticle*>::iterator iPart = partVector.begin();
-    while (iPart != partVector.end()) {
-      aTable->relate(*iterDigit, *iPart);
-      ++iPart;
-    }
-  } // loop iterDigit
-
-  // register table in store
+  // create an association table and register table in store
+  OTDigit2MCParticleAsct::Table* aTable = new OTDigit2MCParticleAsct::Table();
   StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
   if( sc.isFailure() ) {
     MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL << "     *** Could not register " << outputData()
-        << endmsg;
+    msg << MSG::FATAL << "Could not register " << outputData() << endmsg;
     delete aTable;
     return StatusCode::FAILURE;
   }
 
+  // loop and link OTDigits to MC truth
+  OTDigits::const_iterator iterDigit;
+  for ( iterDigit = digitCont->begin(); 
+        iterDigit != digitCont->end(); ++iterDigit){
+    std::vector<MCParticle*> partVector;
+    std::vector<int> partNumbers;
+    associateToTruth(*iterDigit, partVector, partNumbers);
+    std::vector<MCParticle*>::iterator iPart = partVector.begin();
+    std::vector<int>::iterator iPartNumber = partNumbers.begin();
+    while (iPart != partVector.end()) {
+      aTable->relate(*iterDigit, *iPart, *iPartNumber);
+      ++iPart;
+      ++iPartNumber;
+    }
+  } // loop iterDigit
+
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTDigit2MCParticleAlg::finalize() {
-
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endmsg;
-
-  // Release tools
+StatusCode OTDigit2MCParticleAlg::finalize()
+{
+  // Release tool
   if( m_hAsct ) toolSvc()->releaseTool( m_hAsct );
 
   return StatusCode::SUCCESS;
@@ -110,10 +100,9 @@ StatusCode OTDigit2MCParticleAlg::finalize() {
 
 StatusCode 
 OTDigit2MCParticleAlg::associateToTruth(const OTDigit* aDigit,
-                                        std::vector<MCParticle*>& partVector) {
+                                        std::vector<MCParticle*>& partVector,
+                                        std::vector<int>& partNumbers){
   // make truth link to MCParticle
-  StatusCode sc = StatusCode::SUCCESS;
-
   // retrieve table
   OTDigit2MCHitAsct::DirectType* aTable = m_hAsct->direct();
   if (0 == aTable){
@@ -129,10 +118,13 @@ OTDigit2MCParticleAlg::associateToTruth(const OTDigit* aDigit,
       MCHit* aHit = iterHit->to();
       if (0 != aHit) {
         MCParticle* aParticle = aHit->mcParticle();
-        if (0 != aParticle) partVector.push_back(aParticle);
+        if (0 != aParticle) {
+          partVector.push_back( aParticle );
+          partNumbers.push_back( iterHit->weight() );
+        }
       }
     }
   }
 
-  return sc;
+  return StatusCode::SUCCESS;
 }

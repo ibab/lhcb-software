@@ -1,26 +1,24 @@
-// $Id: OTDigit2MCParticleAlg.h,v 1.1 2003-06-10 09:04:16 jvantilb Exp $
+// $Id: OTDigit2MCParticleAlg.h,v 1.2 2003-07-15 11:31:07 jvantilb Exp $
 #ifndef OTASSOCIATORS_OTDIGIT2MCPARTICLEALG_H
 #define OTASSOCIATORS_OTDIGIT2MCPARTICLEALG_H 1
 
-#include "Relations/IAssociator.h" 
-#include "Relations/IRelation.h"
-#include "Relations/Relation1D.h"
-
 #include "GaudiKernel/Algorithm.h"
 #include "OTAssociators/OTDigit2MCHitAsct.h"
+
+class OTDigit;
+class MCParticle;
 
 /** @class OTDigit2MCParticleAlg OTDigit2MCParticleAlg.h
  *  
  *  Algorithm which makes the association from OTDigits to MCParticles. 
  *  This is used by the associator tool. This algorithm uses the associator
- *  with MCHits.
+ *  from OTDigits to MCHits. Since an OTDigit could contain more than one 
+ *  tdc-time, an integer is stored in the relation table from OTDigits to 
+ *  MCParticles which points to the tdc-time.
  *
  *  @author Jeroen van Tilburg
  *  @date   05/06/2003
  */
-
-class OTDigit;
-class MCParticle;
 
 class OTDigit2MCParticleAlg : public Algorithm {
 
@@ -45,7 +43,8 @@ public:
 
   // associator function
   virtual StatusCode associateToTruth(const OTDigit* aDigit,
-                                      std::vector<MCParticle*>& partVector);
+                                      std::vector<MCParticle*>& partVector,
+                                      std::vector<int>& partNumbers);
 
   /// path to put table
   std::string outputData() const;
@@ -55,8 +54,8 @@ protected:
 private:
 
   // job options:
-  std::string m_outputData;   ///< path to put relation table
-  std::string m_nameAsct;     ///< name of the associator to MCHits
+  std::string m_outputData;          ///< path to put relation table
+  std::string m_nameAsct;            ///< Associator from OTDigits to MCHits
 
   // pointer to associator
   OTDigit2MCHitAsct::IAsct* m_hAsct; ///< pointer to associator

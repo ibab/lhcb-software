@@ -1,12 +1,9 @@
-// $Id: OTCluster2MCHitAlg.cpp,v 1.9 2003-06-10 09:04:16 jvantilb Exp $
+// $Id: OTCluster2MCHitAlg.cpp,v 1.10 2003-07-15 11:31:07 jvantilb Exp $
 
 // Event
 #include "Event/OTCluster.h"
 #include "Event/OTDigit.h"
-#include "Event/MCOTDigit.h"
-#include "Event/MCOTDeposit.h"
 #include "Event/MCHit.h"
-#include "Event/MCTruth.h"
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -36,8 +33,7 @@ OTCluster2MCHitAlg::OTCluster2MCHitAlg( const std::string& name,
 {
   // constructor
   declareProperty( "OutputData", m_outputData  = OTCluster2MCHitLocation );
-  declareProperty( "SpillOver", m_spillOver  = false );
-  declareProperty( "associatorName", m_nameAsct = "OTCluster2MCDepositAsct" );
+  declareProperty( "associatorName", m_nameAsct = "OTDigit2MCHitAsct" );
 }
 
 OTCluster2MCHitAlg::~OTCluster2MCHitAlg() 
@@ -47,11 +43,9 @@ OTCluster2MCHitAlg::~OTCluster2MCHitAlg()
 
 StatusCode OTCluster2MCHitAlg::initialize() 
 {
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Initialize" << endmsg;
-
   StatusCode sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
-  if( sc.isFailure() || 0 == m_hAsct) {
+  if ( sc.isFailure() || 0 == m_hAsct ) {
+    MsgStream msg(msgSvc(), name());
     msg << MSG::FATAL << "Unable to retrieve Associator tool" << endmsg;
     return sc;
   }
@@ -62,30 +56,23 @@ StatusCode OTCluster2MCHitAlg::initialize()
 
 StatusCode OTCluster2MCHitAlg::execute() 
 {
-
-  typedef Relation1D<OTCluster, MCHit>    Table;
-
   // get OTClusters
   SmartDataPtr<OTClusters> clusterCont(eventSvc(),OTClusterLocation::Default);
   if (0 == clusterCont){ 
     MsgStream msg(msgSvc(), name());
     msg << MSG::WARNING << "Failed to find OTClusters" << endmsg;
     return StatusCode::FAILURE;
-  }
-  
-  // get the MCHits for the event, in case you do not 
-  // want to make links to spillover
-  SmartDataPtr<MCHits> mcHits(eventSvc(), MCHitLocation::OTHits);
-  if( 0 == mcHits){
+  }  
+
+  // create an association table and register table in store
+  OTCluster2MCHitAsct::Table* aTable = new OTCluster2MCHitAsct::Table();
+  StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
+  if( sc.isFailure() ) {
     MsgStream msg(msgSvc(), name());
-    msg << MSG::ERROR << "Could not find MCHits in " 
-        << MCHitLocation::OTHits << endmsg;
+    msg << MSG::FATAL << "Could not register " << outputData() << endmsg;
+    delete aTable;
     return StatusCode::FAILURE;
   }
-  m_mcHits = mcHits;
-
-  // create an association table 
-  Table* aTable = new Table();
 
   // loop and link OTClusters to MC truth
   OTClusters::const_iterator iterClus;
@@ -99,26 +86,13 @@ StatusCode OTCluster2MCHitAlg::execute()
       ++iHit;
     }
   } // loop iterClus
-
-  // register table in store
-  StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
-  if( sc.isFailure() ) {
-    MsgStream msg(msgSvc(), name());
-    msg << MSG::FATAL << "     *** Could not register " << outputData()
-        << endmsg;
-    delete aTable;
-    return StatusCode::FAILURE;
-  }
  
   return StatusCode::SUCCESS;
 }
 
 StatusCode OTCluster2MCHitAlg::finalize() 
 {
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endmsg;
-
-  // Release tools
+  // Release tool
   if( m_hAsct ) toolSvc()->releaseTool( m_hAsct );
 
   return StatusCode::SUCCESS;
@@ -128,29 +102,48 @@ StatusCode OTCluster2MCHitAlg::finalize()
 StatusCode OTCluster2MCHitAlg::associateToTruth(const OTCluster* aCluster,
                                                 std::vector<MCHit*>& hitVector) 
 {
-  // make link to truth  to MCHit
-  // retrieve table
-  OTCluster2MCDepositAsct::DirectType* aTable = m_hAsct->direct();
-  if (0 == aTable){
+  // make link to OTDigit
+  const OTDigit* aDigit = aCluster->digit();
+  if (0 == aDigit) {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::WARNING << "No digit associated with cluster!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  // When there are more than one tdc-times in a OTDigit
+  // do something more elaborate: get the position in the vector of times.
+  int timeNumber = 0;
+  if ( (aDigit->tdcTimes()).size() > 1 ) {
+    // count how many clusters are on the same channel before this cluster
+    SmartDataPtr<OTClusters> clusterCont(eventSvc(),
+                                         OTClusterLocation::Default);
+    int key = aCluster->key();
+    OTCluster* prevClus = clusterCont->object(--key);
+    while ( prevClus != 0 && prevClus->digit() == aDigit ) {    
+      ++timeNumber;
+      prevClus = clusterCont->object(--key);
+    }  
+  }
+
+  // Use the associator from OTDigits to MCOTDeposits
+  OTDigit2MCHitAsct::DirectType* aTable = m_hAsct->direct();
+  if ( 0 == aTable ) {
     MsgStream msg(msgSvc(), name());
     msg << MSG::WARNING << "Failed to find table" << endmsg;
     return StatusCode::FAILURE;
   }
  
-  OTCluster2MCDepositAsct::MCDeposits range = aTable->relations(aCluster);
+  OTDigit2MCHitAsct::MCHits range = aTable->relations( aDigit );
   if ( !range.empty() ) {
-    OTCluster2MCDepositAsct::MCDepositsIterator iterDep;
-    for (iterDep = range.begin(); iterDep != range.end(); iterDep++) {      
-      MCOTDeposit* aDeposit = iterDep->to();
-      if (0 != aDeposit) {
-        MCHit* aHit = aDeposit->mcHit();
-        if (0 != aHit) {
-          if (m_spillOver || m_mcHits == aHit->parent() ) 
-            hitVector.push_back(aHit);
-        }
+    OTDigit2MCHitAsct::MCHitsIterator iterHit = range.begin();
+    for ( iterHit = range.begin(); iterHit != range.end(); ++iterHit ) {      
+      MCHit* aHit = iterHit->to();
+      int hitNumber = iterHit->weight();
+      if ( 0 != aHit && hitNumber == timeNumber ) {
+        hitVector.push_back(aHit);
       }
     }
   }
-  
+
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: OTDigit2MCHitAsct.h,v 1.1 2003-06-10 09:04:15 jvantilb Exp $
+// $Id: OTDigit2MCHitAsct.h,v 1.2 2003-07-15 11:31:06 jvantilb Exp $
 #ifndef OTASSOCIATORS_OTDIGIT2MCHITASCT_H 
 #define OTASSOCIATORS_OTDIGIT2MCHITASCT_H 1
 
@@ -10,8 +10,8 @@
 #include "Event/MCHit.h"
 
 // Associators
-#include "Relations/Associator.h"
-#include "Relations/Relation1D.h"
+#include "Relations/AssociatorWeighted.h"
+#include "Relations/RelationWeighted1D.h"
 
 static const std::string& OTDigit2MCHitLocation =
                        "Rec/Relations/OTDigits2MCHits";
@@ -21,18 +21,21 @@ static const std::string& OTDigit2MCHitLocation =
  *  
  *  Associator for the OTDigits with the corresponding MCHits. 
  *  By default OTDigits coming from spillover are not associated.
+ *  Since an OTDigit could contain more than one tdc-time, an integer is 
+ *  stored in the relation table from OTDigits to MCHits which points to 
+ *  the tdc-time.
  * 
  *  @author J. van Tilburg
  *  @date   14/05/2002
  */
 
-class OTDigit2MCHitAsct: public Associator<OTDigit,MCHit>
+class OTDigit2MCHitAsct: public AssociatorWeighted<OTDigit,MCHit,int>
 {
   friend class ToolFactory<OTDigit2MCHitAsct>;
   
 public:
   // Define data types
-  typedef Relation1D<OTDigit,MCHit>               Table;
+  typedef RelationWeighted1D<OTDigit,MCHit,int>   Table;
   typedef OwnType                                 Asct;
   typedef FromRange                               Digits;
   typedef FromIterator                            DigitsIterator;
