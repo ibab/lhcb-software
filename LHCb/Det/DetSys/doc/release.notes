@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v1r3 2003-01-22 =========================
+! 2003-01-22 - Marco Cattaneo
+ - requirements - use RichDet v4r0
+
 !========================= DetSys v1r2 2003-01-08 =========================
 ! 2003-01-07 - Marco Cattaneo
  - requirements - use MuonTools v3r3
