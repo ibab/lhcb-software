@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.h,v 1.1.1.1 2004-03-16 14:28:12 cattanem Exp $
+// $Id: PrepareVeloRawBuffer.h,v 1.2 2004-11-29 14:16:06 cattanem Exp $
 #ifndef PREPAREVELORAWBUFFER_H 
 #define PREPAREVELORAWBUFFER_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // from VeloDet
 #include "VeloDet/DeVelo.h"
@@ -21,8 +21,9 @@
  *  @author Olivier Callot
  *  @date   2003-04-11
  *  2004-04-13 : modified and moved to Velo area Chris Parkes
+ *  2004-11-04 : modified to use new GaudiAlgorithm by David Hutchcroft
  */
-class PrepareVeloRawBuffer : public Algorithm {
+class PrepareVeloRawBuffer : public GaudiAlgorithm {
 public:
   /// Standard constructor
   PrepareVeloRawBuffer( const std::string& name, ISvcLocator* pSvcLocator );
@@ -31,7 +32,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   class sortClustersByID {
   public:

@@ -1,4 +1,4 @@
-// $Id: PrepareVeloL1BufferFPGA.h,v 1.3 2004-10-26 15:10:51 dhcroft Exp $
+// $Id: PrepareVeloL1BufferFPGA.h,v 1.4 2004-11-29 14:16:06 cattanem Exp $
 #ifndef PREPAREVELOL1BUFFERFPGA_H 
 #define PREPAREVELOL1BUFFERFPGA_H 1
 

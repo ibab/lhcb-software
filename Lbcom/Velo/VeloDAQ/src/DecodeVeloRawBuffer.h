@@ -6,7 +6,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // from Velo
 #include "VeloDet/DeVelo.h"
@@ -20,7 +20,7 @@
  *  @author Chris Parkes
  *  @date   2004-02-02
  */
-class DecodeVeloRawBuffer : public Algorithm {
+class DecodeVeloRawBuffer : public GaudiAlgorithm {
 public:
   /// Standard constructor
   DecodeVeloRawBuffer( const std::string& name, ISvcLocator* pSvcLocator );
@@ -29,7 +29,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

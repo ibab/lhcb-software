@@ -2,8 +2,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/SmartDataPtr.h"
 
 #include "Event/RawEvent.h"
 
@@ -27,7 +25,7 @@ const        IAlgFactory& DecodeVeloRawBufferFactory = Factory ;
 //=============================================================================
 DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator ) 
+  : GaudiAlgorithm ( name , pSvcLocator ) 
  , m_outputContainer                ( VeloClusterLocation::Default )
 {
    declareProperty( "OutputData"          , m_outputContainer );
@@ -44,16 +42,13 @@ DecodeVeloRawBuffer::~DecodeVeloRawBuffer() {};
 //=============================================================================
 StatusCode DecodeVeloRawBuffer::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Initialise" << endreq;
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  debug () << "==> Initialise" << endreq;
 
   //== Get detector element
-  SmartDataPtr<DeVelo> velo( detDataService(), "/dd/Structure/LHCb/Velo" );
-  if ( 0 == velo ) {
-    msg << MSG::ERROR << "Unable to retrieve Velo detector element." << endreq;
-    return StatusCode::FAILURE;
-  }
-  m_velo = velo;
+  m_velo = getDet<DeVelo>( "/dd/Structure/LHCb/Velo" );
 
   return StatusCode::SUCCESS;
 };
@@ -65,8 +60,8 @@ StatusCode DecodeVeloRawBuffer::execute() {
 
   MsgStream  msg( msgSvc(), name() );
 
-  bool verbose = msg.level() <= MSG::VERBOSE;
-  bool debug   = msg.level() <= MSG::DEBUG;
+  bool isVerbose = msgLevel( MSG::VERBOSE );
+  bool isDebug   = msgLevel( MSG::DEBUG );
 
   // Get the input container
 
@@ -74,8 +69,8 @@ StatusCode DecodeVeloRawBuffer::execute() {
   
   SmartDataPtr<RawEvent> myEvent ( eventSvc(), RawEventLocation::Default );
   if ( 0 == myEvent ) {
-    if ( debug ) msg << MSG::DEBUG << "Access RawBuffer for decoding" 
-                     << endreq;
+    if ( isDebug ) debug() << "Access RawBuffer for decoding" 
+			   << endreq;
     
     SmartDataPtr<RawBuffer> buffer ( eventSvc(), RawBufferLocation::Default );
     if ( 0 == buffer ) {
@@ -88,7 +83,7 @@ StatusCode DecodeVeloRawBuffer::execute() {
     event = myEvent;
   }
 
-  if ( debug ) msg << MSG::DEBUG << "RawEvent found" << endreq;
+  if ( isDebug ) debug() << "RawEvent found" << endreq;
 
   // make cluster container
 
@@ -103,14 +98,14 @@ StatusCode DecodeVeloRawBuffer::execute() {
   int word;
   
   std::vector<RawBank> banks = event->banks( RawBuffer::Velo );
-  if ( debug ) msg << MSG::DEBUG << "Number of banks : " << banks.size()
-                   << endreq;
+  if ( isDebug ) debug() << "Number of banks : " << banks.size()
+			 << endreq;
 
   std::vector<RawBank>::const_iterator itBank;
   
   for ( itBank = banks.begin() ; banks.end() != itBank ; itBank++ ) {
     sensor = (*itBank).bankSourceID(); // Sensor Number
-    if ( verbose ) msg << MSG::VERBOSE << format( "sensor %3d", sensor ) 
+    if ( isVerbose ) verbose() << format( "sensor %3d", sensor ) 
                        << endreq;
     raw_int* ptData = (*itBank).data();
     int length = (*itBank).dataSize();
@@ -118,7 +113,7 @@ StatusCode DecodeVeloRawBuffer::execute() {
       word = (*ptData++);
       length--;
       int size  = word & 0xF; // cluster size
-      if ( verbose ) msg << MSG::VERBOSE << format( "cluster size %2d", size)
+      if ( isVerbose ) verbose() << format( "cluster size %2d", size)
                          << endreq;
       int strip = ( word >> 12 ) & 0x7FF;
       VeloChannelID channelID( sensor, strip );
@@ -135,7 +130,7 @@ StatusCode DecodeVeloRawBuffer::execute() {
           length--;
         }
         int ADCValue = int( (word >> shift) & 0xFF );
-        if ( verbose ) msg << MSG::VERBOSE << format( "ADC Value %3d", ADCValue)
+        if ( isVerbose ) verbose() << format( "ADC Value %3d", ADCValue)
                            << endreq;
 
         // fill cluster with adc values 
@@ -162,8 +157,8 @@ StatusCode DecodeVeloRawBuffer::execute() {
 
   //== End
 
-  if ( debug ) {
-    msg << MSG::DEBUG << "Created " << nbOk << " clusters." << endreq;
+  if ( isDebug ) {
+    debug() << "Created " << nbOk << " clusters." << endreq;
   }
 
   // // initial clusters
@@ -172,7 +167,7 @@ StatusCode DecodeVeloRawBuffer::execute() {
 //     for (itcv=m_clusters->begin(); itcv!=m_clusters->end(); itcv++) {
 
 //     // printout some info. for the cluster
-//     msg << MSG::DEBUG << "testVeloCluster:" 
+//    debug() << "testVeloCluster:" 
 //       	<< " sensorNumber " << (*itcv)->sensor() 
 //         << " First strip in cluster " << (*itcv)->strip(0)
 //         << endmsg;
@@ -180,11 +175,11 @@ StatusCode DecodeVeloRawBuffer::execute() {
 //     int size=(*itcv)->size(); // number of strips
    
 //       for (int i=0;i<size;i++) {
-// 	msg << MSG::DEBUG << " testVeloCluster:"
+// 	debug() << " testVeloCluster:"
 // 	    << " strip " <<   (*itcv)->strip(i) << " / " << size 
 // 	    << " signal " <<  (*itcv)->adcValue(i);
 //       }
-//       msg << MSG::DEBUG << endmsg;
+//      debug()<< endmsg;
    
  
 //   }
@@ -194,7 +189,7 @@ StatusCode DecodeVeloRawBuffer::execute() {
 
 
    if ( sc ) {
-     msg << MSG::DEBUG << "Stored " << m_clusters->size() 
+    debug()<< "Stored " << m_clusters->size() 
 	 << " MCVeloClusters at " << m_outputContainer << endreq;
    } else {
      msg << MSG::ERROR << "Unable to store VeloClusters at " 
@@ -206,17 +201,3 @@ StatusCode DecodeVeloRawBuffer::execute() {
 };
 
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode DecodeVeloRawBuffer::finalize() {
-
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endreq;
-
-
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
