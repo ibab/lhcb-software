@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.h,v 1.2 2005-01-11 12:36:08 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.h,v 1.3 2005-02-08 17:12:38 pkoppenb Exp $
 #ifndef TRUEMCFILTERCRITERION_H 
 #define TRUEMCFILTERCRITERION_H 1
 
@@ -42,7 +42,6 @@ private:
 
   IMCDecayFinder* m_pMCDecFinder ;        ///<  MCDecayFinder
   Particle2MCLinksAsct::IAsct* m_pAsct;   ///<  Composite associator
-  IDataProviderSvc* m_EDS;                ///<  Reference to Event Data Service
   bool m_filterOut ;                      ///<  If true signal will be vetoed
 
 };

@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.4 2005-02-01 16:55:34 pkoppenb Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.5 2005-02-08 17:12:38 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -29,7 +29,6 @@ TrueMCFilterCriterion::TrueMCFilterCriterion( const std::string& type,
   : GaudiTool ( type, name , parent )
   , m_pMCDecFinder(0)
   , m_pAsct(0)
-  , m_EDS(0)
   , m_filterOut(false)
 {
   declareInterface<IFilterCriterion>(this);
@@ -47,15 +46,9 @@ StatusCode TrueMCFilterCriterion::initialize( ){
   StatusCode sc = GaudiTool::initialize() ;
   if ( !sc) return sc ;
 
-  // Retrieve the data service
-  sc = service("EventDataSvc", m_EDS, true);
-  if( sc.isFailure() ) {
-    fatal() << "Unable to locate Event Data Service"<< endreq;
-    return sc;
-  }
 
-  sc = toolSvc()->retrieveTool("MCDecayFinder", m_pMCDecFinder, this); 
-  if(sc.isFailure()){
+  m_pMCDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this); 
+  if(!m_pMCDecFinder){
     fatal() << "Unable to retrieve MCDecayFinder tool" << endreq;
     return sc;
   }
@@ -65,8 +58,8 @@ StatusCode TrueMCFilterCriterion::initialize( ){
     return StatusCode::FAILURE;
   } else info() << "MC decay is " << MCDecay << endreq ;
   
-  sc = toolSvc()->retrieveTool("Particle2MCLinksAsct", m_pAsct, this);
-  if(sc.isFailure()){
+  m_pAsct = tool<Particle2MCLinksAsct::IAsct>("Particle2MCLinksAsct", this);
+  if(!m_pAsct){
     fatal() << "Unable to retrieve the Particle2MCLinks associator" << endreq;
     return sc;
   }
@@ -105,27 +98,15 @@ bool TrueMCFilterCriterion::findMCParticle( const MCParticle* MC ) {
   // MC list
   // std::vector<const MCParticle*> mclist;
   std::vector<MCParticle*> mclist; // LF
-  SmartDataPtr<MCParticles> kmcparts(m_EDS, MCParticleLocation::Default );
+  MCParticles* kmcparts = get<MCParticles>(MCParticleLocation::Default );
   if( !kmcparts ){
     fatal() << "Unable to find MC particles at '" << MCParticleLocation::Default << "'" << endreq;
     return false;
   }
-  // fill MC particles
-
-  // LF: doing like this we get *all* the MC Particles in the decay; we want only the final states to check reconstruction
-  /*
-  const MCParticle* imc = 0;
-  while( m_pMCDecFinder->findDecay (kmcparts, imc) ) {
-    std::vector<MCParticle *> result ;
-    m_pMCDecFinder->descendants(imc,result);
-    std::vector<MCParticle *>::const_iterator r ;
-    for ( r = result.begin() ; r !=result.end() ; ++r ){  mclist.push_back(*r) ; }
-  }
-  */
 
   std::vector<MCParticle*> MCHead;
   const MCParticle* imc = NULL;
-  while ( m_pMCDecFinder->findDecay(kmcparts, imc ) ){
+  while ( m_pMCDecFinder->findDecay(*kmcparts, imc ) ){
     MCParticle* jmc = const_cast<MCParticle*>(imc);
     MCHead.push_back(jmc);
   }
