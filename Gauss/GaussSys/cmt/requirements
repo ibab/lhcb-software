@@ -38,7 +38,4 @@ use OTAlgorithms	v12r4	OT
 use ITAlgorithms        v12r9   IT
 use ITCheckers		v1r2	IT
 
-# OPACS stuff
-use OPACSLIB		v3p1	Vis
-
 	
