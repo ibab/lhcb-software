@@ -1,4 +1,4 @@
-// $Id: L0mTrigger.h,v 1.4 2002-11-04 08:38:19 atsareg Exp $
+// $Id: L0mTrigger.h,v 1.5 2002-11-06 15:51:20 atsareg Exp $
 
 #ifndef L0MUON_L0MTRIGGER_H
 #define L0MUON_L0MTRIGGER_H 1
@@ -59,6 +59,7 @@ private:
   bool m_ignoreM1;                // flag to use ignore M1 mode
   bool m_inputFromMuonCoords;     // flag to take input from MuonCoord's
   bool m_seedClustering;          // flag to perform seed clustering
+  bool m_4stations;               // flag 4 Muon staions in the simulation
   
   std::vector<L0mTower*> m_towers;
   std::vector<L0mPad> m_pads;

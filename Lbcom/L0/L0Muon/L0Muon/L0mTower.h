@@ -1,4 +1,4 @@
-// $Id: L0mTower.h,v 1.7 2002-08-02 10:43:54 atsareg Exp $
+// $Id: L0mTower.h,v 1.8 2002-11-06 15:51:19 atsareg Exp $
 
 #ifndef L0MTOWER_H     
 #define L0MTOWER_H     1 
@@ -73,6 +73,8 @@ public:
     void limitedY();
     /// set the flag to ignore or not M1
     void setFlagIgnoreM1(bool flag){ m_ignoreM1 = flag ;}
+    /// set the flag for 4 stations layout (without M1) 
+    void setFlag4Stations(bool flag){ m_4stations = flag ;}
     
     typedef std::pair<int,int> HitIndex;
     typedef std::map< HitIndex, MuonTileID > StationMap;	
@@ -99,6 +101,8 @@ private:
     bool m_limited;
     // Ignore M1 flag
     bool m_ignoreM1;
+    // 4 stations (without M1 layout) flag
+    bool m_4stations;
     
     
     // Calculated track parameters
