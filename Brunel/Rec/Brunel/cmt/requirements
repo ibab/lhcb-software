@@ -10,6 +10,9 @@ set BRUNELOPTS ${BRUNELROOT}/options
 set JOBOPTPATH ${BRUNELOPTS}/Brunel.opts
 set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
 
+# Uncomment and modify next line to select an appropriate database version
+# use dbase v241 SICB
+
 # Next line to force static build to go into LinuxStatic directory
 ignore_pattern   package_tag
 version_strategy first_choice
