@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.31 2002-09-04 14:46:15 ibelyaev Exp $
+! $Id: release.notes,v 1.32 2002-09-06 07:12:17 cattanem Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
@@ -6,6 +6,7 @@
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!======================== CaloTools v4r3 2002-09-06 ========================
 ! 2002-09-04 - Ivan Belyaev
  - options/E2Corrections.opts 
  - options/E3Corrections.opts 
