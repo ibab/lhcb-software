@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.175 2004-09-22 07:42:41 ranjard Exp $
+# $Id: requirements,v 1.176 2004-09-22 12:18:07 ranjard Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -61,11 +61,6 @@ use  TrgPrimVertex      	v3r0     Trg
 use  TrgTools           	v5r0     Trg
 use  TrgVelo            	v5r0     Trg
 use  TrgVeloTT          	v5r0     Trg
-
-use  STDAQ              	v1r3     IT
-
-# To rebuild velo clusters
-use  VeloDAQ            	v1r0     Velo
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
