@@ -18,6 +18,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 // Old (Field043) tuning for tracking algorithms
 #include "$LONGTRACKROOT/options/BrunelField043.opts"
 #include "$TRKSHORTROOT/options/BrunelField043.opts"
+#include "$VELOTTROOT/options/BrunelField043.opts"
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field043.cdf";
 
 //---------------------------------------------------------------------------

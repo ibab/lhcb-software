@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v23r4>2004-03-30 Brunel v23r4</A></H1><PRE>
+</PRE><H1><A NAME=v23r4>2004-03-31 Brunel v23r4</A></H1><PRE>
 
  Requires data produced by Boole v5r4 or later
  Tuned for XmlDDDB v22r0
@@ -20,7 +20,8 @@ Purpose: LHCb reconstruction program
 
 - New tuning
   . Update signal to noise cuts to be consistent with Boole (ITAlgorithms v14r2)
-  . Tuning of tracking for Field045 (LongTrack v1r11, TrKShort v1r3)
+  . Tuning of tracking for Field045 (LongTrack v1r11, TrKShort v1r3, VeloTT v1r9)
+  . Add a dp/p cut for 4th hit wrt to hits in other TT half (VeloTT v1r9)
 
 - Bug fixes:
   . Avoid multiple includes of job options files (CaloReco v2r1p1)
