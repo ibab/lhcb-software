@@ -1,6 +1,11 @@
 Package : Gauss
 Package manager : Witek Pokorski
 
-! 200201231 - Witek Pokorski
+! 20020304 - Witek Pokorski
+  - addaptation for GiGaCnv v4r0 (to use HepMC to G4 converter)
+    ParticlesPropertiesSvc needs to use the local particle.cdf file (located in /options)
+
+
+! 20020131 - Witek Pokorski
   - New package
 

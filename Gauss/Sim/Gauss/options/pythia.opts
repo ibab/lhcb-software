@@ -1,0 +1,240 @@
+//
+// jobOptions to run Pythia and then feed the output into G4
+//
+// ===========================================================================
+
+#include "$STDOPTIONS"
+
+// remove SicbCnv 
+ApplicationMgr.ExtSvc            = 
+{ "ParticlePropertySvc" ,
+  "EventSelector"       };
+EventPersistencySvc.CnvServices  = {};  
+
+#include "$STDOPTS/DetDesc.opts"
+
+EventDataSvc.ForceLeaves = true ;
+
+// ============================================================================
+// load additional dynamic libraries needed to run GiGa  
+// ============================================================================
+
+ApplicationMgr.DLLs       += { "GeneratorModules" };
+ApplicationMgr.DLLs       += { "GaudiDb" };
+ApplicationMgr.DLLs   += { "GiGa" , "GiGaCnv" } ;
+
+// ============================================================================
+//  apply "event generator" options 
+// ============================================================================
+#include "$EVGENOPTS/EvGen.opts"
+
+// ============================================================================
+// declare external services needed for GiGa 
+// ============================================================================
+ApplicationMgr.ExtSvc += 
+{ "ParticlePropertySvc" , 
+  "MagneticFieldSvc"    ,   
+  "GiGaSvc"             ,          
+  "GiGaKineCnvSvc"      ,  
+  "GiGaGeomCnvSvc"      ,   
+  "GiGaHitsCnvSvc"      } ;
+
+// ============================================================================
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+// ============================================================================
+MessageSvc.OutputLevel     = 3 ;
+XmlPartserSvc.OutputLevel  = 5 ;
+
+// ============================================================================
+// Use GiGa Conversion services as event persistency conversion services 
+// ============================================================================
+EventPersistencySvc.CnvServices = 
+{ "GiGaKineCnvSvc" , 
+  "GiGaHitsCnvSvc" } ;
+
+// ============================================================================
+// Number of events to be processed
+// ============================================================================
+ApplicationMgr.EvtMax    = 3      ;
+ApplicationMgr.EvtSel    = "NONE" ;
+
+// ============================================================================
+// List of top algorithms 
+// ============================================================================
+ApplicationMgr.TopAlg          =  
+{ "PythiaModule","DumpMC",	
+  "GiGaDataStoreAlgorithm/GiGaStore" , 
+  "GiGaInputStream/Geo"              ,
+  "GiGaInputStream/Kine" ,	 
+  "GiGaMiscGetEventAlg/GetEvent"     } ;
+
+// ============================================================================
+// configuration of particle gun algorithm (generator) 
+// ============================================================================
+//Gun.Momentum                   = { 0.0 , 7000.0 , 50000.0          } ;
+//Gun.Vertex                     = { 0.0 ,    0.0 ,     0.0          } ;
+//Gun.Particle                   = "e+"                                ;
+//Gun.OutputLevel                = 1                                   ;
+//Gun.Vertices                   = "/Event/Gen/Vertices"               ;
+//Gun.Particles                  = "/Event/Gen/Particles"              ;
+
+// ============================================================================
+// configuration of GiGa Data Store 
+// ============================================================================
+GiGaStore.ConversionServices   = 
+{ "GiGaKineCnvSvc" , 
+  "GiGaHitsCnvSvc" };
+
+// ============================================================================
+// configuration of kinematics event data stream 
+// ============================================================================
+Kine.ConversionSvcName         = "GiGaKineCnvSvc"                 ; 
+Kine.DataProviderSvcName       = "EventDataSvc"                   ; 
+Kine.StreamItems               = 
+{ "/Event/McEventCollection" } ;
+
+// ============================================================================
+// configuration of geometry data stream 
+// ============================================================================
+Geo.ExecuteOnce                = true                           ;  
+Geo.ConversionSvcName          = "GiGaGeomCnvSvc"               ; 
+Geo.DataProviderSvcName        = "DetectorDataSvc"              ; 
+//Geo.StreamItems                =  { "/dd/Structure/LHCb/Velo" } ; 
+Geo.StreamItems               +=  { "/dd/Structure/LHCb/Pipe" } ; 
+// Geo.StreamItems               +=  { "/dd/Structure/LHCb/Rich1" } ; 
+//Geo.StreamItems               +=  { "/dd/Structure/LHCb/Ecal" } ; 
+//Geo.StreamItems               +=  { "/dd/Structure/LHCb/Hcal" } ; 
+//Geo.StreamItems               +=  { "/dd/Structure/LHCb/Spd"  } ; 
+//Geo.StreamItems               +=  { "/dd/Structure/LHCb/Prs"  } ; 
+
+// ============================================================================
+///  Physics List  to be used and its configuration  
+// ============================================================================
+GiGaSvc.PhysicsList            = "GiGaPhysListEm/EmPhysList" ; 
+EmPhysList.Cut                 = 5.0                         ;
+
+// ============================================================================
+// Stacking action to be used and its configuration  
+// ============================================================================
+GiGaSvc.StackingAction         = "GiGaStackActionEmpty/EmptyStack" ;
+EmptyStack.OutputLevel         = 3                                 ;
+
+// ============================================================================
+// Tracking action to be used and its configuration  
+// ============================================================================
+GiGaSvc.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
+TrackSeq.Members               = { "GiGaTrackActionSimple/SimpleTrack" } ;
+SimpleTrack.StoreAll           = true                                    ; 
+SimpleTrack.StoreByOwnEnergy   = true                                    ; 
+SimpleTrack.OwnEnergyThreshold = 1000.0                                  ; 
+// SimpleTrack.StoreByChildEnergy   = true ; 
+// SimpleTrack.ChildEnergyThreshold = 50.0 ; 
+// SimpleTrack.StoreByOwnType       = true; 
+// SimpleTrack.StoredOwnTypes       = { "e+" , "e-" };
+// SimpleTrack.StoreByChildType     = true; 
+// SimpleTrack.StoredChildTypes     = { "e+"};
+
+
+// ============================================================================
+// Stepping action to be used and its configuration  
+// ============================================================================
+GiGaSvc.SteppingAction            =   "GiGaStepActionSequence/StepSeq"  ;
+StepSeq.Members                   = { "GiGaStepActionDraw/DrawStep"   } ;
+//StepSeq.Members                   += { "SajanAction/MyAction"   } ;
+DrawStep.OutputLevel              = 6;
+
+
+// ============================================================================
+// Event action to be used and its configuration  
+// ============================================================================
+GiGaSvc.EventAction               =   "GiGaEventActionSequence/EventSeq"      ;
+EventSeq.Members                  = { "GiGaEventActionCommand/EventCommand" } ;
+//EventSeq.Members                 += { "GiGaEventActionDraw/EventDraw" } ;
+EventCommand.OutputLevel          = 1                                         ;
+EventCommand.EndOfEventCommands   = 
+{ "/vis/scene/add/volume"               , 
+  "/vis/scene/add/trajectories"         ,
+  "/vis/viewer/update"                  } ;
+#ifdef WIN32
+EventCommand.BeginOfEventCommands = 
+{ "/vis/scene/create"                   , 
+  "/vis/sceneHandler/create OIWIN32"    ,
+  "/vis/viewer/create"                  ,
+  "/vis/scene/add/volume"               , 
+  "/vis/scene/add/trajectories"         ,
+  "/vis/scene/notifyHandlers   "        ,
+  "/vis/viewer/set/culling off"         } ;
+#else 
+EventCommand.BeginOfEventCommands = 
+{ 
+  "/vis/scene/create"                   , 
+  "/vis/sceneHandler/create VRML1FILE"  ,
+  // "/vis/sceneHandler/create Xo"  ,
+  // "/vis/sceneHandler/create OGLIXm"      ,
+  "/vis/sceneHandler/create DAWNFILE"  ,
+  "/vis/viewer/create"                  ,
+  "/vis/scene/add/volume"               , 
+  "/vis/scene/add/trajectories"         ,
+  "/vis/scene/notifyHandlers   "        ,
+  "/vis/viewer/set/culling off"         ,
+  // "/vis/drawTree ! ATree" 
+} ;
+#endif 
+
+// ============================================================================
+// Run Action to be used and its consficgurations  
+// ============================================================================
+GiGaSvc.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
+RunSeq.Members                    = 
+{ "GiGaRunActionCommand/RunCommand" } ;
+RunCommand.OutputLevel            = 2                                     ;
+RunCommand.BeginOfRunCommands     = 
+{ "/control/saveHistory "           ,
+  "/run/verbose 0 "                 ,
+  "/tracking/storeTrajectory  1"    } ;
+
+// ============================================================================
+// List of user interface sessions 
+// ============================================================================
+GiGaSvc.UIsessions           =  { "tcsh" };
+// , "Xm" , "Wo" , "GAG", 
+//                                   "Xaw"  , "terminal" } ;
+
+// ============================================================================
+// Global(world) magnetic field 
+// ============================================================================
+//GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
+
+
+// ============================================================================
+// flag for instantiation and usage of visual manager 
+// ============================================================================
+GiGaSvc.UseVisManager          = true;
+
+// ============================================================================
+// (temporary!) configuration of 'GetEvent' algorithm
+// ============================================================================
+//GetEvent.Particles = "/Event/MC/MCParticles" ;
+//GetEvent.Vertices  = "/Event/MC/MCVertices"  ;
+
+//--------------------------------------------------------------
+// Algorithms Private Options
+//--------------------------------------------------------------
+ParticlePropertySvc.ParticlePropertiesFile = "particle.cdf";
+
+PythiaModule.PythiaCommand = {"pysubs msel 13","pysubs ckin 3 18.","pypars mstp 43 2", "pyin
+it dumpr 1 15", "pyinit pylistf 1"};
+
+
+// ============================================================================
+// The End 
+// ============================================================================
+
+
+
+
+
+
+
+
+

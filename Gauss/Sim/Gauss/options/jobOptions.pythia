@@ -6,16 +6,19 @@
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 
-MessageSvc.OutputLevel     = 1;
 
 ApplicationMgr.DLLs       += { "GeneratorModules" };
 ApplicationMgr.DLLs       += { "GaudiDb" };
 
-//--------------------------------------------------------------
-// Private Application Configuration options
-//--------------------------------------------------------------
 
-ApplicationMgr.TopAlg = {"PythiaModule","DumpMC"};
+MessageSvc.OutputLevel     = 3;
+
+
+ 
+ApplicationMgr.TopAlg = {"PythiaModule","DumpMC"
+                          } ;
+
+//############################################################################
 
 ApplicationMgr.EvtSel      ="NONE";
 

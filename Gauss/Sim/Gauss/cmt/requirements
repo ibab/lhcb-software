@@ -1,5 +1,5 @@
 package Gauss
-version v0r1
+version v1r0
 
 branches doc src job options cmt
 
@@ -7,7 +7,7 @@ use GeneratorModules v0r1 Gen
 
 
 # Main program and standard job options
-use GaudiConf     v5*     
+use GaudiConf     v6*     
 
 # GAUDI framework
 use GaudiSys      v9*
@@ -17,7 +17,27 @@ use GaudiRootDb   v5*
 
 # Histogram persistency
 use HbookCnv      v11r*
-use dbase         v239 SICB
+use dbase         v240 SICB
+
+use SicbCnv       v15r* SICB
+
+#GiGa staff...
+
+use GiGaCnv       v4r*  Sim
+use EvGen         v2r*   Sim
+#geometry source 
+use XmlDDDB       v8r*   Det 
+
+# =============== visualization  ========================================================
+set  G4DAWNFILE_DEST_DIR       "../job/"
+set  G4DAWNFILE_PS_VIEWER      "gv"
+set  G4DAWN_MULTI_WINDOW       "1"
+set  G4DAWNFILE_MULTI_WINDOW   "1"
+set  G4DAWNFILE_VIEWER         dawn
+set  G4VRMLFILE_VIEWER         vrweb \
+                WIN32          netscape
+set  G4VRML_PV_PICKABLE        "1"
+
 
 #==> Main Program
 application Gauss $(GAUDICONFROOT)/src/GaudiMain.cpp

@@ -13,7 +13,7 @@ ApplicationMgr.EvtSel      ="NONE";
 
 ApplicationMgr.EvtMax      =100;
 
-//SingleParticleGun.MinPt = 5.;
+SingleParticleGun.Pt = 50000.;
 //SingleParticleGun.MinPhi = 0.;
 //SingleParticleGun.MinEta = 5.;
 //SingleParticleGun.MaxPt = 100.;
@@ -21,7 +21,7 @@ ApplicationMgr.EvtMax      =100;
 //SingleParticleGun.MaxEta = 3.;
 //SingleParticleGun.PdgCode = 211;
 
-SingleParticleGun.ModePt = 2;
+SingleParticleGun.ModePt = 1;
 SingleParticleGun.ModeEta =2; 
 SingleParticleGun.ModePhi =2; 
 
