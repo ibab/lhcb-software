@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.4 2002-04-01 12:50:24 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.5 2002-04-04 12:54:38 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/01 12:50:24  ibelyaev
+//  add templated accesssors to tools and improve exceptions
+//
 // Revision 1.3  2002/04/01 11:00:36  ibelyaev
 // enrich CaloAlgorithm,CaloTool,CaloMap and CaloHashMap interafces
 //
@@ -207,9 +210,9 @@ StatusCode CaloAlgorithm::put
   const std::string& address ) const 
 {
   // check arguments 
-  Assert( 0 != eventSvc() , " put(): Invalid 'eventSvc()'!" );
-  Assert( 0 != object     , " put(): Invalid 'Object'!"     );
-  Assert( !address.empty(), " put(): Invalid 'address'!"    );
+  Assert( 0 != eventSvc() , " put(): Invalid 'eventSvc()'!"      );
+  Assert( 0 != object     , " put(): Invalid 'Object'!"          );
+  Assert( address.empty() , " put(): Invalid 'address' = '' "    );
   // register the object!
   StatusCode sc = 
     eventSvc()->
@@ -219,7 +222,12 @@ StatusCode CaloAlgorithm::put
   Assert( sc.isSuccess() , " put(): could not register '"
           + System::typeinfoName( typeid( *object ) ) + "' at address '"
           + address + "'" , sc );
-  // 
+  //
+  Print( "The object of type '" + 
+         System::typeinfoName( typeid( *object ) ) +
+         "' is registered in TS at address '" 
+         + address + "'" , sc , MSG::DEBUG );
+  //
   return sc ;
 };
 
