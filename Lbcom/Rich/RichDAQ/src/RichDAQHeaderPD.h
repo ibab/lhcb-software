@@ -3,23 +3,7 @@
  *
  *  Header file for RICH DAQ utility class : RichDAQHeaderPD
  *
- *  CVS Log :-
- *  $Id: RichDAQHeaderPD.h,v 1.12 2005-01-24 21:29:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.11  2005/01/13 13:09:12  jonrob
- *  update print format
- *
- *  Revision 1.10  2005/01/07 12:35:59  jonrob
- *  Complete rewrite
- *
- *  Revision 1.9  2004/10/13 09:16:27  jonrob
- *  Use Data on Demand Service + various speed improvements
- *
- *  Revision 1.8  2004/08/17 17:54:22  jonrob
- *  Update doxygen comments
- *
- *  Revision 1.7  2004/07/27 13:46:06  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichDAQHeaderPD.h,v 1.13 2005-03-07 13:29:18 cattanem Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -234,7 +218,7 @@ inline MsgStream & operator << ( MsgStream & os,
  */
 namespace RichDAQHeaderV1 {
 
-  /** @namespace RichDAQHeaderPDCode
+  /** @namespace RichDAQHeaderV1::RichDAQHeaderPDCode
    *
    *  Namespace for definitions related to RichDAQHeaderV1::RichDAQHeaderPD
    *

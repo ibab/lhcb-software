@@ -2,11 +2,11 @@
 # Created    : 2003-11-06
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.15 2005-02-09 09:16:26 cattanem Exp $
+# $Id: requirements,v 1.16 2005-03-07 13:29:18 cattanem Exp $
 #============================================================================
 
 package           RichDAQ
-version           v2r1
+version           v2r1p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -18,7 +18,7 @@ include_path none
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use   RichEvent      v8r*    Event
-use   DAQEvent       v4r*    Event
+use   DAQEvent       v*      Event
 
 #============================================================================
 # Component library building rule

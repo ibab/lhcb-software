@@ -4,6 +4,11 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================= RichDAQ v2r1p1 2005-03-07 ========================
+! 2005-03-07 - Marco Cattaneo
+ - Fix requirements to use DAQEvent v*
+ - Fix a doxygen warning
+
 !========================== RichDAQ v2r1 2005-02-08 =========================
 ! 2005-02-08 - Marco Cattaneo
  - Adapt to backward incompatible changes in RichSmartID accessors, due to 
