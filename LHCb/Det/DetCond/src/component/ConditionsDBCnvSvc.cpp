@@ -1,13 +1,12 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.6 2001-11-27 18:21:28 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.7 2001-11-28 09:35:12 andreav Exp $
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/param.h>
 
+#include "ConditionsDBAddress.h"
 #include "ConditionsDBCnvSvc.h"
 #include "ConditionsDBGate.h"
-
-#include "DetCond/IConditionsDBAddress.h"
 
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IConverter.h"
@@ -33,9 +32,11 @@ extern const unsigned char& ConditionsDBAddress_undefinedStringType;
 /// Constructor
 ConditionsDBCnvSvc::ConditionsDBCnvSvc( const std::string& name, 
 				        ISvcLocator* svc)
-  : ConversionSvc(name, svc, CONDDB_StorageType)
-  , m_conditionsDBGate ( 0     )
+  : ConversionSvc ( name, svc, CONDDB_StorageType )
+  , m_conditionsDBGate ( 0 )
 {
+  // The default global tag (unless set in the JobOptions) is "HEAD"
+  declareProperty( "condDBGlobalTag",  m_globalTag = "HEAD" );
 }
 
 //----------------------------------------------------------------------------
@@ -139,6 +140,21 @@ StatusCode ConditionsDBCnvSvc::initialize()
 	<< "Cannot set the address creator" 
 	<< endreq;
     return sc;
+  }
+
+  // Get properties from the JobOptionsSvc
+  sc = setProperties();
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Could not set jobOptions properties" << endreq;
+    return sc;
+  }
+  log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
+  log << MSG::DEBUG 
+      << "Global tag name:        " << m_globalTag << endreq;
+  if ( m_globalTag == "DEFAULT" ) {
+    log << MSG::ERROR 
+	<< "Invalid global tag DEFAULT: this is a reserved word" << endreq;
+    return StatusCode::FAILURE;
   }
 
   log << MSG::DEBUG << "Specific initialization completed" << endreq;
@@ -341,6 +357,44 @@ StatusCode ConditionsDBCnvSvc::updateObjRefs ( IOpaqueAddress* /*pAddress*/,
   
 //----------------------------------------------------------------------------
 
+/// Create an address using explicit arguments to identify a single object.
+/// String argument[0] represents the folder.
+/// String argument[1] represents the tag: if "DEFAULT", use the global tag.
+/// Integer argument[0] represents the string type (an unsigned char).
+StatusCode ConditionsDBCnvSvc::createAddress( unsigned char svc_type,
+					      const CLID& clid,
+					      const std::string* par, 
+					      const unsigned long* ipar,
+					      IOpaqueAddress*& refpAddress) {
+
+  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+
+  // First check that address is of type CONDDB_StorageType
+  if ( svc_type!= CONDDB_StorageType ) {
+    log << MSG::ERROR 
+	<< "Cannot create addresses of type " << (int)svc_type 
+	<< " which is different from " << (int)CONDDB_StorageType 
+	<< endreq;
+    return StatusCode::FAILURE;
+  }
+  
+  // Now create the address
+  std::string folderName = par[0];
+  std::string tagName = par[1];
+  if ( tagName == "DEFAULT" ) {
+    tagName = m_globalTag;
+  }
+  unsigned char stringType = (unsigned char)ipar[0];
+  refpAddress = new ConditionsDBAddress ( folderName, 
+					  tagName, 
+					  clid, 
+					  stringType );
+  return StatusCode::SUCCESS;
+
+}
+
+//----------------------------------------------------------------------------
+
 /// Create a condition DataObject by folder name, tag and time.
 /// This method does not register DataObject in the transient data store.
 /// Implementation:
@@ -406,7 +460,7 @@ ConditionsDBCnvSvc::createConditionData ( DataObject*&         refpObject,
   IOpaqueAddress* tmpAddress;
   const std::string par[2] = {stringData, ""};
   status = addressCreator()->createAddress
-    ( theType, theClassID, par, 0, tmpAddress);
+    ( theType, theClassID, par, 0, tmpAddress );
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Persistency service could not create a new address" << endreq;
@@ -693,12 +747,20 @@ ConditionsDBCnvSvc::encodeDescription   ( const CLID&          classID,
 
 //----------------------------------------------------------------------------
 
+/// Get the global tag  
+const std::string& ConditionsDBCnvSvc::globalTag ( ) { 
+  return m_globalTag; 
+}
+
+//----------------------------------------------------------------------------
+
 /// Handle to the ConditionsDBGate
 IConditionsDBGate* ConditionsDBCnvSvc::conditionsDBGate ( ) {
   return m_conditionsDBGate;
 }
 
 //----------------------------------------------------------------------------
+
 
 
 

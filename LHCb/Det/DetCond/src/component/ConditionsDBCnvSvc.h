@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.h,v 1.6 2001-11-27 18:21:28 andreav Exp $
+//$Id: ConditionsDBCnvSvc.h,v 1.7 2001-11-28 09:35:12 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBCNVSVC_H
 #define DETCOND_CONDITIONSDBCNVSVC_H 1
 
@@ -72,6 +72,13 @@ class ConditionsDBCnvSvc : public ConversionSvc,
   virtual StatusCode updateObjRefs ( IOpaqueAddress* pAddress, 
 				     DataObject*     pObject);
 
+  /// Create an address using explicit arguments to identify a single object.
+  virtual StatusCode createAddress ( unsigned char svc_type,
+				     const CLID& clid,
+				     const std::string* par, 
+				     const unsigned long* ip,
+				     IOpaqueAddress*& refpAddress);
+  
  public:
 
   // Implementation of IConditionsDBCnvSvc.
@@ -121,10 +128,17 @@ class ConditionsDBCnvSvc : public ConversionSvc,
 				     const unsigned char& type,
 				     std::string&         description);
   
+  /// Get the global tag name
+  /// The global tag can only be set from the job options
+  virtual const std::string& globalTag ( );
+
   /// Handle to the ConditionsDBGate
-  IConditionsDBGate* conditionsDBGate();
+  IConditionsDBGate* conditionsDBGate ( );
 
  private:
+
+  /// Global tag name (can be set using the JobOptionsSvc)
+  std::string          m_globalTag;
 
   /// Handle to the low-level gate to the ConditionsDB
   ConditionsDBGate*    m_conditionsDBGate;

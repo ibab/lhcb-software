@@ -1,6 +1,12 @@
-# $Id: release.notes,v 1.5 2001-11-27 18:26:53 andreav Exp $
+# $Id: release.notes,v 1.6 2001-11-28 09:35:38 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+!20011128 - Andrea Valassi
+- Move the global tag from the ConditionsDBDataSvc to the ConditionsDBCnvSvc
+-> use IAddressCreator interface of CnvSvc to create addresses with global tag
+   > "DEFAULT" becomes a reserved word to indicate the global tag
+-> remove method setGlobalTag (the tag can only be set in the job options)
 
 !20011127 - Andrea Valassi
 - A few more changes before including my detector data service in GaudiSvc
