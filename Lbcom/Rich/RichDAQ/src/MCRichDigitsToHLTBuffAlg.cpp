@@ -1,4 +1,4 @@
-// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.2 2003-11-08 15:20:51 jonrob Exp $
+// $Id: MCRichDigitsToHLTBuffAlg.cpp,v 1.3 2003-11-08 15:46:24 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -163,6 +163,10 @@ void MCRichDigitsToHLTBuffAlg::fillNonZeroSuppressed ( RichSmartID pdID,
     msg << MSG::VERBOSE << "PD " << pdID << " : Creating " << pdHits.size()
         << " non-zero suppressed hits " << endreq;
     msg << MSG::VERBOSE << " Header : " << pdHeader << endreq;
+    for ( MCRichDigitVector::const_iterator iDig = pdHits.begin();
+          iDig != pdHits.end(); ++iDig ) {
+      msg << MSG::VERBOSE << " Hit " << (*iDig)->key() << endreq;
+    }
   }
 
   // Create the non zero suppressed data block

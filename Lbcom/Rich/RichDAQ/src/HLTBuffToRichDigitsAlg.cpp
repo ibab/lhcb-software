@@ -1,4 +1,4 @@
-// $Id: HLTBuffToRichDigitsAlg.cpp,v 1.3 2003-11-08 15:28:27 jonrob Exp $
+// $Id: HLTBuffToRichDigitsAlg.cpp,v 1.4 2003-11-08 15:46:24 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -107,7 +107,7 @@ StatusCode HLTBuffToRichDigitsAlg::execute() {
   return StatusCode::SUCCESS;
 };
 
-unsigned int 
+unsigned int
 HLTBuffToRichDigitsAlg::decodeZeroSuppressedBank( const HltBank & bank ) {
 
   // Get the link identifier
@@ -173,7 +173,7 @@ HLTBuffToRichDigitsAlg::decodeZeroSuppressedBank( const HltBank & bank ) {
   return nDigitsMade;
 }
 
-unsigned int 
+unsigned int
 HLTBuffToRichDigitsAlg::decodeNonZeroSuppressedBank( const HltBank & bank ) {
 
   // Get the link identifier
@@ -201,8 +201,19 @@ HLTBuffToRichDigitsAlg::decodeNonZeroSuppressedBank( const HltBank & bank ) {
 
   // Get new SmartIDs
   std::vector<RichSmartID> IDs;
-  nonZSdata.fillSmartIDs(ids);
-  
+  nonZSdata.fillSmartIDs( linkN.rich(),linkN.panel(),
+                          linkN.pdRow(),linkN.pdCol(),IDs );
+
+  // Create RichDigits with new RichSmartIDs
+  for ( std::vector<RichSmartID>::const_iterator iID = IDs.begin();
+        iID != IDs.end(); ++iID ) {
+    if ( msgLevel(MSG::VERBOSE) ) {
+      MsgStream  msg( msgSvc(), name() );
+      msg << MSG::VERBOSE << "  Hit " << *iID << endreq;
+    }
+    RichDigit * newDigit = new RichDigit();
+    m_digits->insert( newDigit, *iID );
+  }
 
   return digitCount;
 }
