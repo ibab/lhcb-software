@@ -1,6 +1,8 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+! 2003-11-05 - Patrick Robbe
+ - EvtPartProp.hh : remove EvtPartProp:: declaration
 
 !===================== EvtGen v4r1 =====================================
 ! 2003-10-30 - Patrick Robbe

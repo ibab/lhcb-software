@@ -89,7 +89,7 @@ public:
   void reSetBlatt(double blatt);
   void includeBirthFactor(bool yesno);
   void includeDecayFactor(bool yesno);
-  void EvtPartProp::newLineShape(std::string type);
+  void newLineShape(std::string type);
 
 
 private:
