@@ -1,6 +1,17 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
 
+====================v2r1===========================
+! 20020506 Andrei Tsaregorodtsev
+  Various fixes to suit Muon and L0Muon requirements as well as to
+  satisfy Python version of the package:
+  - unsigned int for all the parameters describing layouts;
+  - (0,0) layout is now possible to denote absence of a layout
+    in a given region;
+  - no virtual inheritance from IMuonLayout;
+  - dropped IMuonTile interface;
+  - MuonTileID: set functions are now public; deltaX and Y functions added;
+
 >>>>>>>>>>>>>>>>> MuonKernel v2r0 <<<<<<<<<<<<<<<<<
 ! 20020418 M.Cattaneo
   - Use GaudiKernel v12r* (Gaudi v10)
