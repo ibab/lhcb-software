@@ -42,8 +42,8 @@ use XmlDDDB		v22r2	Det
 use FieldMap		v4r5
 use ParamFiles          v3r6    -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v15r10)
-use LHCb	v15r10
+#-- LHCb libraries (from LHCB_v15r11)
+use LHCb	v15r11
 
 #-- BrunelSys v24r0 packages
 

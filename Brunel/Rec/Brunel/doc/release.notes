@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v24r0>2004-05-25 Brunel v24r0</A></H1><PRE>
+</PRE><H1><A NAME=v24r0>2004-05-27 Brunel v24r0</A></H1><PRE>
 Development version
 
 - Repackaging and code cleanups
@@ -14,7 +14,8 @@ Development version
     (TrFitEvent v4r6, TrFitter v4r0, TrCheck v2r5, TrCleanEx v2r10, VeloTT v1r10)
 
 - Bug fixes
-  . fix an unprotected pointer in Richdetailed monitoring (RichRecCommon v1r7)
+  . Fix an unprotected pointer in Richdetailed monitoring (RichRecCommon v1r7)
+  . Fix bug in evaluation of overlap of two rectangular areas (CaloUtils v4r7)
 
 </PRE><H1><A NAME=v23r7>2004-04-29 Brunel v23r7</A></H1><PRE>
 Version used for DC04
