@@ -4,11 +4,14 @@
 ! Responsible	     : Witold Pokorski
 ! Purpose            : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
-!========================== GaussRICH v3r0 2003-06-18 ========================
-
+! 2003-6-18 - Sajan Easo
+     Added more info into RichG4Hit. Cleanup of how the
+     hpd energy loss processes was activated.
+     Checks for existence of Gausstracking info in
+       RichG4CherenkovPhotProdTag and  RichPEInfoAttach 
+       (By Witold).
 ! 2003-06-02 - Sajan Easo
-  For cpu optimization, the killing of photons which were going to be
+   For cpu optimization, the killing of photons which were going to be
   killed in the HPDs, is implemented  in the preuser track action of  
   dedicated user track action for photons.
 ! 2003-05-29 - Ivan BELYAEV
