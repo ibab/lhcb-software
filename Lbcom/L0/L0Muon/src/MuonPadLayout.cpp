@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/MuonPadLayout.cpp,v 1.3 2001-05-03 12:06:31 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/MuonPadLayout.cpp,v 1.4 2001-05-04 10:22:28 cattaneb Exp $
 
 #define MUONPADLAYOUT_CPP
 
@@ -159,7 +159,7 @@ int MuonPadLayout::rfactor(int nr) {
 }
 
 std::string operator+(const std::string& st, int ii) {
-        ostrstream ost;
+        std::ostrstream ost;
 	ost << st  << ii << '\0';
         return ost.str();
 }

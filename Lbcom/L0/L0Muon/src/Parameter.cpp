@@ -1,15 +1,18 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Parameter.cpp,v 1.2 2001-05-03 09:10:31 atsareg Exp $
-#define PARAMETER_CPP
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Parameter.cpp,v 1.3 2001-05-04 10:22:28 cattaneb Exp $
 
 // Include files
 #include "Parameter.h"
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 //
 // Implementation of class :  Parameter
 //
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
+#ifdef WIN32
+// Disable warning C4786 identifier truncated to 255 characters in debug info.
+#pragma warning ( disable : 4786 )
+#endif // WIN32
 
 // Standard Constructors
 Parameter::Parameter()
@@ -21,7 +24,6 @@ Parameter::Parameter()
 Parameter::~Parameter()
 {
 }
-
 
 double  Parameter::get(const std::string& name) {
     std::map<std::string, double>::const_iterator ci;
@@ -107,7 +109,12 @@ long Parameter::sizeVector(const std::string& name) const {
         return 0;
     }	
 }   
- 
+
+#ifdef WIN32
+// Re-enable warning C4786
+#pragma warning ( default : 4786 )
+#endif // WIN32
+
 
 void Parameter::addParameter( double x, const std::string& name) {
     m_parameter[name] = x;

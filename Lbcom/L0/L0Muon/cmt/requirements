@@ -6,8 +6,8 @@ branches src doc options
 
 include_dirs $(L0MUONROOT)
 
-use DetDesc   v6*  Det
-use LHCbEvent v9* Event
+use DetDesc    v6*  Det
+use LHCbEvent v10*  Event
 use CLHEP v*
 
 library L0Muon ../src/*.cpp
