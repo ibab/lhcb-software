@@ -1,4 +1,4 @@
-//$Id: Condition.cpp,v 1.1 2001-12-11 10:02:28 sponce Exp $
+//$Id: Condition.cpp,v 1.2 2001-12-13 18:58:30 andreav Exp $
 #include <string> 
 
 #include "DetDesc/Condition.h"
@@ -71,8 +71,8 @@ void Condition::addUserParameter( std::string name,
 				  std::string value,
 				  double d_value ) 
 {
-  return m_parameterSet->
-    addUserParameter( name, type, comment, value, d_value );
+  m_parameterSet->addUserParameter( name, type, comment, value, d_value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -85,8 +85,9 @@ void Condition::addUserParameter( std::string name,
 				  double d_value,
 				  int i_value ) 
 {
-  return m_parameterSet->
+  m_parameterSet->
     addUserParameter( name, type, comment, value, d_value, i_value );
+  return;
 };
   
 //----------------------------------------------------------------------------
@@ -97,7 +98,8 @@ void Condition::addUserParameter( std::string name,
 				  std::string comment,
 				  std::string value ) 
 {
-  return m_parameterSet->addUserParameter( name, type, comment, value );
+  m_parameterSet->addUserParameter( name, type, comment, value );
+  return;
 };
   
 //----------------------------------------------------------------------------
@@ -109,8 +111,9 @@ void Condition::addUserParameterVector( std::string name,
 					std::vector<std::string> value,
 					std::vector<double> d_value ) 
 {
-  return m_parameterSet->
+  m_parameterSet->
     addUserParameterVector( name, type, comment, value, d_value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -123,8 +126,9 @@ void Condition::addUserParameterVector( std::string name,
 					std::vector<double> d_value,
 					std::vector<int> i_value ) 
 {
-  return m_parameterSet->
+  m_parameterSet->
     addUserParameterVector( name, type, comment, value, d_value, i_value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -135,7 +139,8 @@ void Condition::addUserParameterVector( std::string name,
 					std::string comment,
 					std::vector<std::string> value )
 {
-  return m_parameterSet->addUserParameterVector( name, type, comment, value );
+  m_parameterSet->addUserParameterVector( name, type, comment, value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -262,7 +267,8 @@ void Condition::addParam( std::string name,
 			  std::string value,
 			  double d_value ) 
 {
-  return m_parameterSet->addParam( name, type, comment, value, d_value );
+  m_parameterSet->addParam( name, type, comment, value, d_value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -275,8 +281,8 @@ void Condition::addParam( std::string name,
 			  double d_value,
 			  int i_value ) 
 {
-  return m_parameterSet
-    ->addParam( name, type, comment, value, d_value, i_value );
+  m_parameterSet->addParam( name, type, comment, value, d_value, i_value );
+  return;
 };
   
 //----------------------------------------------------------------------------
@@ -287,7 +293,8 @@ void Condition::addParam( std::string name,
 			  std::string comment,
 			  std::string value ) 
 {
-  return m_parameterSet->addParam( name, type, comment, value );
+  m_parameterSet->addParam( name, type, comment, value );
+  return;
 };
   
 //----------------------------------------------------------------------------
@@ -299,7 +306,8 @@ void Condition::addParamVector( std::string name,
 				std::vector<std::string> value,
 				std::vector<double> d_value ) 
 {
-  return m_parameterSet->addParamVector( name, type, comment, value, d_value );
+  m_parameterSet->addParamVector( name, type, comment, value, d_value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -312,8 +320,9 @@ void Condition::addParamVector( std::string name,
 				std::vector<double> d_value,
 				std::vector<int> i_value ) 
 {
-  return m_parameterSet
-    ->addParamVector( name, type, comment, value, d_value, i_value );
+  m_parameterSet->
+    addParamVector( name, type, comment, value, d_value, i_value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -324,7 +333,8 @@ void Condition::addParamVector( std::string name,
 				std::string comment,
 				std::vector<std::string> value )
 {
-  return m_parameterSet->addParamVector( name, type, comment, value );
+  m_parameterSet->addParamVector( name, type, comment, value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -456,6 +466,20 @@ std::vector<std::string> Condition::params()
 std::vector<std::string> Condition::paramVectors() 
 {
   return m_parameterSet->paramVectors();
+};
+
+//----------------------------------------------------------------------------
+
+/// Print the user parameters on a string
+std::string Condition::printParams() {
+  return m_parameterSet->printParams();
+};
+
+//----------------------------------------------------------------------------
+
+/// Print the user parameter vectors on a string
+std::string Condition::printParamVectors() {
+  return m_parameterSet->printParamVectors();
 };
 
 //----------------------------------------------------------------------------

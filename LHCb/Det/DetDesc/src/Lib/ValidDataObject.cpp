@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.cpp,v 1.1 2001-12-11 10:02:28 sponce Exp $
+//$Id: ValidDataObject.cpp,v 1.2 2001-12-13 19:01:56 andreav Exp $
 #include <string> 
 
 #include "DetDesc/ValidDataObject.h"
@@ -127,28 +127,6 @@ void ValidDataObject::setValidityTill( const ITime& till )
 StatusCode ValidDataObject::updateValidity() 
 {
   return StatusCode::SUCCESS;
-};
-
-//---------------------------------------------------------------------------
-
-/// Printout to a message stream
-MsgStream& ValidDataObject::printOut( MsgStream& os ) const {
-  os << "This is a ValidDataObject. Its address in memory is ";
-  os.MsgStream::operator<<( this ); // Print address using base class operator
-  os << ". ";
-  return os;
-};
-
-//---------------------------------------------------------------------------
-
-/// Overloaded MsgStream printout
-MsgStream& operator<<( MsgStream& os , const ValidDataObject* pObj ) 
-{ 
-  if ( 0 == pObj ) {
-    return os << "ValidDataObject* points to NULL";
-  } else { 
-    return pObj->printOut(os);
-  }  
 };
 
 //---------------------------------------------------------------------------

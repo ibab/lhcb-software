@@ -1,6 +1,5 @@
-//$Id: UserParameterSet.cpp,v 1.1 2001-12-11 10:02:28 sponce Exp $
+//$Id: UserParameterSet.cpp,v 1.2 2001-12-13 18:58:38 andreav Exp $
 
-// Include files
 #include "DetDesc/UserParameterSet.h"
 #include "DetDesc/UserParameterException.h"
 
@@ -182,6 +181,7 @@ void UserParameterSet::addParam( std::string name,
   // aParam.i_value is never used
   aParam.kind = IUserParameterSet::DOUBLE;
   m_paramMap[name] = aParam;
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -202,6 +202,7 @@ void UserParameterSet::addParam( std::string name,
   aParam.i_value = i_value;
   aParam.kind = IUserParameterSet::INT;
   m_paramMap[name] = aParam;
+  return;
 };
   
 //----------------------------------------------------------------------------
@@ -220,6 +221,7 @@ void UserParameterSet::addParam( std::string name,
   // aParam.i_value is never used
   aParam.kind = IUserParameterSet::OTHER;
   m_paramMap[name] = aParam;
+  return;
 };
   
 //----------------------------------------------------------------------------
@@ -239,6 +241,7 @@ void UserParameterSet::addParamVector( std::string name,
   // aParamVector.i_value is never used
   aParamVector.kind = IUserParameterSet::DOUBLE;
   m_paramVectorMap[name] = aParamVector;
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -259,6 +262,7 @@ void UserParameterSet::addParamVector( std::string name,
   aParamVector.i_value = i_value;
   aParamVector.kind = IUserParameterSet::INT;
   m_paramVectorMap[name] = aParamVector;
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -277,6 +281,7 @@ void UserParameterSet::addParamVector( std::string name,
   // aParamVector.i_value is never used
   aParamVector.kind = IUserParameterSet::OTHER;
   m_paramVectorMap[name] = aParamVector;
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -497,7 +502,8 @@ void UserParameterSet::addUserParameter( std::string name,
 					 std::string value,
 					 double d_value ) 
 {
-  return addParam( name, type, comment, value, d_value );
+  addParam( name, type, comment, value, d_value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -510,7 +516,8 @@ void UserParameterSet::addUserParameter( std::string name,
 					 double d_value,
 					 int i_value ) 
 {
-  return addParam( name, type, comment, value, d_value, i_value );
+  addParam( name, type, comment, value, d_value, i_value );
+  return;
 };
   
 //----------------------------------------------------------------------------
@@ -521,7 +528,8 @@ void UserParameterSet::addUserParameter( std::string name,
 					 std::string comment,
 					 std::string value ) 
 {
-  return addParam( name, type, comment, value );
+  addParam( name, type, comment, value );
+  return;
 };
   
 //----------------------------------------------------------------------------
@@ -533,7 +541,8 @@ void UserParameterSet::addUserParameterVector( std::string name,
 					       std::vector<std::string> value,
 					       std::vector<double> d_value ) 
 {
-  return addParamVector( name, type, comment, value, d_value );
+  addParamVector( name, type, comment, value, d_value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -546,7 +555,8 @@ void UserParameterSet::addUserParameterVector( std::string name,
 					       std::vector<double> d_value,
 					       std::vector<int> i_value ) 
 {
-  return addParamVector( name, type, comment, value, d_value, i_value );
+  addParamVector( name, type, comment, value, d_value, i_value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -557,7 +567,8 @@ void UserParameterSet::addUserParameterVector( std::string name,
 					       std::string comment,
 					       std::vector<std::string> value )
 {
-  return addParamVector( name, type, comment, value );
+  addParamVector( name, type, comment, value );
+  return;
 };
 
 //----------------------------------------------------------------------------
@@ -677,3 +688,37 @@ std::vector<std::string> UserParameterSet::userParameterVectors()
 
 //----------------------------------------------------------------------------
 
+/// Print the user parameters on a string
+std::string UserParameterSet::printParams() {
+  std::string os;
+  std::vector<std::string>::iterator it;
+  std::vector<std::string> pars = ((UserParameterSet*)this)->params();
+  for( it = pars.begin(); pars.end() != it; ++it ) {
+    if( pars.begin() != it ) os += "\n";
+    os += "\"" + *it + "\" = "; 
+    os += ((UserParameterSet*)this)->paramAsString(*it);
+  }
+  return os;
+};
+
+//----------------------------------------------------------------------------
+
+/// Print the user parameter vectors on a string
+std::string UserParameterSet::printParamVectors() {
+  std::string os;
+  std::vector<std::string>::iterator it;
+  std::vector<std::string> parVecs = ((UserParameterSet*)this)->paramVectors();
+  for( it = parVecs.begin(); parVecs.end() != it; ++it ) {
+    if( parVecs.begin() != it ) os += "\n";
+    os += "\"" + *it + "\" ="; 
+    std::vector<std::string> parVec = 
+      ((UserParameterSet*)this)->paramVectorAsString(*it);
+    std::vector<std::string>::iterator it2;
+    for( it2 = parVec.begin(); parVec.end() != it2; ++it2) {
+      os += " " + *it2;
+    }
+  }
+  return os;
+};
+
+//----------------------------------------------------------------------------

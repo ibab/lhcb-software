@@ -1,4 +1,4 @@
-//$Id: Condition.h,v 1.1 2001-12-11 10:02:20 sponce Exp $
+//$Id: Condition.h,v 1.2 2001-12-13 18:58:55 andreav Exp $
 #ifndef DETDESC_CONDITION_H
 #define DETDESC_CONDITION_H 1
 
@@ -15,7 +15,7 @@
 class UserParameterSet;
 
 ///---------------------------------------------------------------------------
-/** @class Condition Condition.h Det/DetCond/Condition.h
+/** @class Condition Condition.h Det/DetDesc/Condition.h
 
     A DataObject implementing the IUserParameterSet and IValidity interfaces.
     This is the basic type of condition data in the transient data store
@@ -165,6 +165,16 @@ class Condition : public ValidDataObject,
   
   /// Returns list of existing parameter vectors as a vector of their names
   virtual std::vector<std::string> paramVectors();
+
+ public:
+
+  // Implementation of IUserParameter
+
+  /// Print the user parameters on a string
+  virtual std::string printParams();
+
+  /// Print the user parameter vectors on a string
+  virtual std::string printParamVectors();
 
  public:
 

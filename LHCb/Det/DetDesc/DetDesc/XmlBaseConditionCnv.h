@@ -1,4 +1,4 @@
-///  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlBaseConditionCnv.h,v 1.1 2001-12-11 10:02:21 sponce Exp $
+///  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlBaseConditionCnv.h,v 1.2 2001-12-13 19:04:40 andreav Exp $
 
 #ifndef DETDESC_XMLCONDITIONCNV_H
 #define DETDESC_XMLCONDITIONCNV_H
@@ -59,7 +59,8 @@ protected:
   /**
    * Resolves the references of the created transient object.
    */
-  virtual StatusCode fillObjRefs(IOpaqueAddress* pAddress, DataObject* pObject);
+  virtual StatusCode fillObjRefs(IOpaqueAddress* pAddress, 
+				 DataObject* pObject);
 
   /** Creates the transient representation of an object from a DOM_Element.
    * Overrides the default method in XmlGenericCnv
@@ -73,11 +74,13 @@ protected:
   /** Fills the current object for its child element childElement.
    * Overrides the default method in XmlGenericCnv
    * @param element the child processed here
-   * @param refpObject the object to be filled
+   * @param pObject the object to be filled
+   * @param address the address for this object
    * @return status depending on the completion of the call
    */
   virtual StatusCode i_fillObj (DOM_Element childElement,
-                                DataObject* refpObject);
+                                DataObject* refpObject,
+                                IOpaqueAddress* address);
 
   /** This fills the current object for specific child.
    * Specific children are children of children <specific>

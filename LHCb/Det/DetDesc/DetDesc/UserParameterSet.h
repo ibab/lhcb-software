@@ -1,4 +1,4 @@
-//$Id: UserParameterSet.h,v 1.1 2001-12-11 10:02:20 sponce Exp $
+//$Id: UserParameterSet.h,v 1.2 2001-12-13 18:58:45 andreav Exp $
 #ifndef DETDESC_USERPARAMETERSET_H 
 #define DETDESC_USERPARAMETERSET_H 1
 
@@ -8,12 +8,18 @@
 #include "DetDesc/IUserParameterSet.h"
 
 ///---------------------------------------------------------------------------
-/** @class UserParameterSet UserParameterSet.h DetDesc/UserParameterSet.h
+/** @class UserParameterSet UserParameterSet.h Det/DetDesc/UserParameterSet.h
 
     Simple container for a list of user parameters.
-    Now a separate class, it was previously a part of DetectorElement.
-    Two sets of methods are supported in parallel, named after "userParameter"
-    (old style) and "param" (new style).
+    Its methods are implemented as their counterparts in DetectorElement,
+    which eventually could implement IUserParameterSet using this class.
+
+    Two sets of methods are supported in parallel, named after 
+    "userParameter" (old style) and "param" (new style).
+
+    New parameters and parameter vectors are added by giving explicitly
+    their integer, double and string representations: there is no
+    check within this class of their internal consistency. 
 
     @author Andrea Valassi (UserParameterSet)
     @author Vanya Belyaev (DetectorElement)
@@ -297,6 +303,16 @@ class UserParameterSet: virtual public IUserParameterSet
    * @return the list of param names
    */
   virtual std::vector<std::string> paramVectors();  
+
+ public:
+
+  // Implementation of IUserParameter
+
+  /// Print the user parameters on a string
+  virtual std::string printParams();
+
+  /// Print the user parameter vectors on a string
+  virtual std::string printParamVectors();
 
  public:
 

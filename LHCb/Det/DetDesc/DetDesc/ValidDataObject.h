@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.h,v 1.1 2001-12-11 10:02:21 sponce Exp $
+//$Id: ValidDataObject.h,v 1.2 2001-12-13 19:02:03 andreav Exp $
 #ifndef DETDESC_VALIDDATAOBJECT_H
 #define DETDESC_VALIDDATAOBJECT_H 1
 
@@ -7,9 +7,6 @@
 // Base classes
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IValidity.h"
-
-// Modified classes
-#include "GaudiKernel/MsgStream.h"
 
 // Unique ID of the class
 #include "DetDesc/CLIDValidDataObject.h"
@@ -61,13 +58,6 @@ class ValidDataObject : public DataObject,
 
  public:
 
-  // Overloaded from DataObject
-
-  /// Printout to a message stream
-  virtual MsgStream& printOut( MsgStream& os ) const;
-
- public:
-
   // Implementation of IValidity
 
   /// Check if the data object has a well defined validity range
@@ -105,8 +95,5 @@ class ValidDataObject : public DataObject,
   ITime* m_validTill;
   
 };
-
-/// Overloaded MsgStream printout
-MsgStream& operator<<( MsgStream& os, const ValidDataObject* pObj );
 
 #endif // DETDESC_VALIDDATAOBJECT_H

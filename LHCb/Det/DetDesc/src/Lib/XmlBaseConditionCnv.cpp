@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.1 2001-12-11 10:02:28 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseConditionCnv.cpp,v 1.2 2001-12-13 19:04:33 andreav Exp $
 
 // include files
 #include <string>
@@ -89,7 +89,8 @@ StatusCode XmlBaseConditionCnv::i_createObj (DOM_Element element,
 // Fill an object with a new child element
 // -----------------------------------------------------------------------
 StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
-                                           DataObject* refpObject) {
+                                           DataObject* refpObject,
+					   IOpaqueAddress* /*address*/) {
   MsgStream log(msgSvc(), "XmlBaseConditionCnv" );
 
   // gets the object
@@ -141,7 +142,7 @@ StatusCode XmlBaseConditionCnv::i_fillObj (DOM_Element childElement,
           while (isspace(newVal[end])) {
             end--;
           }
-          value += " ";
+          if (i>0) value += " ";
           value += newVal.substr(begin, end - begin + 1);
         }
       }
