@@ -1,11 +1,18 @@
 ! =============================================================================
-! $Id: release.notes,v 1.153 2003-10-06 07:44:26 cattanem Exp $ 
+! $Id: release.notes,v 1.154 2003-10-08 13:49:09 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
-!======================== DetDesc v13r0 2003-09-25 ========================
+!======================== DetDesc v13r0 2003-10-08 ========================
+! 2003-10-08 - Marco Cattaneo
+ - PVolume.cpp constructors
+    Remove code that "ensures agreement between name and copy number" as this
+    breaks the GeometryInfo.
+    N.B. This removal may break the fixes to the handling of copy numbers
+         introduced by Vanya....
+
 ! 2003-09-20 - Vanya BELYAEV
  - DetDesc/IDetectorElement.h, IGeometryInfo.h, ILVolume.h, ISolid.h 
     Add the empty non-implementer constructor, increase interface minor version 

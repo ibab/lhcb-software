@@ -1,4 +1,4 @@
-// $Id: PVolume.cpp,v 1.15 2003-09-20 13:25:42 ibelyaev Exp $ 
+// $Id: PVolume.cpp,v 1.16 2003-10-08 13:49:09 cattanem Exp $ 
 
 /// GaudiKernel includes 
 #include "GaudiKernel/IInspector.h"
@@ -71,12 +71,12 @@ PVolume::PVolume
   m_nominal = HepRotate3D(Rotation)*HepTranslate3D(Position) ;
   m_matrix  = m_nominal ;
   /// 
-  { /// ensure the agreement between name and copy number 
-    std::string::iterator sep = 
-      std::find( m_name.begin() , m_name.end() , ':' ) ;
-    m_name.erase( sep , m_name.end() ) ;
-    m_name += ":" + ITOA( copy_number ) ;
-  }
+  //  { /// ensure the agreement between name and copy number
+  //    std::string::iterator sep = 
+  //      std::find( m_name.begin() , m_name.end() , ':' ) ;
+  //    m_name.erase( sep , m_name.end() ) ;
+  //    m_name += ":" + ITOA( copy_number ) ;
+  //  }
   ///
   m_services = DetDesc::services();
   ++s_volumeCounter ;
@@ -103,12 +103,12 @@ PVolume::PVolume
   , m_lvolume   ( 0              )
   , m_services  ( 0              )
 { 
-  { /// ensure the agreement between name and copy number 
-    std::string::iterator sep = 
-      std::find( m_name.begin() , m_name.end() , ':' ) ;
-    m_name.erase( sep , m_name.end() ) ;
-    m_name += ":" + ITOA( copy_number ) ;
-  }
+  //  { /// ensure the agreement between name and copy number 
+  //    std::string::iterator sep = 
+  //      std::find( m_name.begin() , m_name.end() , ':' ) ;
+  //    m_name.erase( sep , m_name.end() ) ;
+  //    m_name += ":" + ITOA( copy_number ) ;
+  //  }
   ///
   m_services = DetDesc::services();
   ++s_volumeCounter ;
