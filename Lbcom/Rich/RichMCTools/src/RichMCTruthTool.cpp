@@ -5,26 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.12 2004-12-13 17:25:55 jonrob Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.11  2004/11/03 12:27:02  jonrob
- * Add more null pointer protection
- *
- * Revision 1.10  2004/11/03 12:15:11  jonrob
- * Add method to locate the MCRichDigit associated to a given RichSmartID
- *
- * Revision 1.9  2004/10/13 09:23:36  jonrob
- * New MCTruth methods
- *
- * Revision 1.8  2004/08/20 14:49:24  jonrob
- * Add more protection against bad data pointers
- *
- * Revision 1.7  2004/08/19 14:00:29  jonrob
- *  Add new method to RichMCTruthTool
- *
- * Revision 1.6  2004/07/26 17:56:09  jonrob
- * Various improvements to the doxygen comments
- *
+ * $Id: RichMCTruthTool.cpp,v 1.13 2005-02-20 18:45:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -44,16 +25,21 @@ RichMCTruthTool::RichMCTruthTool( const std::string& type,
                                   const IInterface* parent )
   : RichToolBase       ( type, name, parent ),
     m_mcRichDigitsDone ( false ),
+    m_mcRichHitsDone   ( false ),
     m_mcRichDigits     ( 0     ),
+    m_mcRichHits       ( 0     ),
     m_mcTrackLinks     ( 0     ),
     m_mcPhotonLinks    ( 0     ),
-    m_trgTrToMCPLinks  ( 0     )
+    m_trgTrToMCPLinks  ( 0     ),
+    m_trackToMCP       ( 0     )
 {
 
   declareInterface<IRichMCTruthTool>(this);
 
   declareProperty( "MCRichDigitsLocation",
                    m_mcRichDigitsLocation = MCRichDigitLocation::Default );
+  declareProperty( "MCRichHitsLocation",
+                   m_mcRichHitsLocation = MCRichHitLocation::Default );
   declareProperty( "TrackAsctName", m_trAsctName = "TrackToMCP" );
   declareProperty( "TrackAsctType",
                    m_trAsctType = "AssociatorWeighted<TrStoredTrack,MCParticle,double>");
@@ -67,11 +53,8 @@ StatusCode RichMCTruthTool::initialize()
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // Get pointer to Track MC truth
-  m_trackToMCP = tool<TrackAsct>( m_trAsctType, m_trAsctName );
-
   // Retrieve particle property service
-  IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc" );
+  IParticlePropertySvc * ppSvc = svc<IParticlePropertySvc>( "ParticlePropertySvc", true );
 
   // Setup the PDG code mappings
   m_localID[ 0 ]                                   = Rich::Unknown;
@@ -90,7 +73,7 @@ StatusCode RichMCTruthTool::initialize()
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichMCTruthTool::finalize()
@@ -121,8 +104,7 @@ const MCRichDigits * RichMCTruthTool::mcRichDigits() const
               << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
     } else {
       m_mcRichDigits = NULL;
-      debug() << "Failed to locate MCRichDigits at "
-              << m_mcRichDigitsLocation << endreq;
+      Warning( "Failed to locate MCRichDigits at "+m_mcRichDigitsLocation );
     }
 
   }
@@ -130,11 +112,32 @@ const MCRichDigits * RichMCTruthTool::mcRichDigits() const
   return m_mcRichDigits;
 }
 
+const MCRichHits * RichMCTruthTool::mcRichHits() const
+{
+  if ( !m_mcRichHitsDone ) {
+    m_mcRichHitsDone = true;
+
+    SmartDataPtr<MCRichHits> tdsMCHits( evtSvc(),
+                                            m_mcRichHitsLocation );
+    if ( tdsMCHits ) {
+      m_mcRichHits = tdsMCHits;
+      debug() << "Successfully located " << m_mcRichHits->size()
+              << " MCRichHits at " << m_mcRichHitsLocation << endreq;
+    } else {
+      m_mcRichHits = NULL;
+      Warning( "Failed to locate MCRichHits at "+m_mcRichHitsLocation );
+    }
+
+  }
+
+  return m_mcRichHits;
+}
+
 const MCParticle *
 RichMCTruthTool::mcParticle( const TrStoredTrack * track ) const
 {
   if ( track ) {
-    return m_trackToMCP->associatedFrom(track);
+    return trackAsct()->associatedFrom(track);
   } else {
     Warning ( "::mcParticle : NULL TrStoredTrack pointer" );
     return NULL;
@@ -217,10 +220,10 @@ RichMCTruthTool::mcOpticalPhoton( const MCRichHit * mcHit ) const
 
 bool RichMCTruthTool::isBackground( const MCRichDigit * digit ) const
 {
+  // Check digit is OK
   if ( !digit ) return true;
-  const SmartRefVector<MCRichHit> & hits = digit->hits();
-  for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
-        iHit != hits.end(); ++iHit ) {
+  for ( SmartRefVector<MCRichHit>::const_iterator iHit = digit->hits().begin();
+        iHit != digit->hits().end(); ++iHit ) {
     if ( *iHit && !isBackground(*iHit) ) return false;
   }
   return true;
@@ -272,4 +275,26 @@ RichMCTruthTool::TrgTrackToMCP * RichMCTruthTool::trgTrackToMCPLinks() const
     }
   }
   return m_trgTrToMCPLinks;
+}
+
+bool RichMCTruthTool::isSpillover ( const MCRichHit * hit ) const
+{
+  // Compare parent container to known "main event" container
+  return ( hit && mcRichHits() && (hit->parent() != mcRichHits()) );
+}
+
+bool RichMCTruthTool::isSpillover ( const MCRichDigit * digit ) const
+{
+  // Check digit
+  if ( !digit ) return false;
+
+  // iterate over hits and see if any are from signal events
+  for ( SmartRefVector<MCRichHit>::const_iterator iHit = digit->hits().begin();
+        iHit != digit->hits().end(); ++iHit ) 
+  {
+    if ( !isSpillover(*iHit) ) return false;
+  }
+
+  // all are from spillover
+  return true;
 }

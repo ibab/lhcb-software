@@ -4,6 +4,9 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2005-02-20 - Chris Jones
+ - Add new methods to MC truth tool
+
 !========================== RichMCTools v2r4 2005-01-17 ======================
 ! 2005-01-17 - Marco Cattaneo
  - Fix a doxygen warning

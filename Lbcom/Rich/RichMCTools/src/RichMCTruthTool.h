@@ -1,32 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichMCTruthTool.h
  *
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.14 2005-01-13 13:25:38 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.13  2004/12/13 17:25:55  jonrob
- *  tidy up methods
- *
- *  Revision 1.12  2004/11/25 17:45:39  jonrob
- *  Add warnings when Linker objects not available
- *
- *  Revision 1.11  2004/11/03 12:15:11  jonrob
- *  Add method to locate the MCRichDigit associated to a given RichSmartID
- *
- *  Revision 1.10  2004/10/13 09:23:36  jonrob
- *  New MCTruth methods
- *
- *  Revision 1.9  2004/08/19 14:00:29  jonrob
- *   Add new method to RichMCTruthTool
- *
- *  Revision 1.8  2004/07/26 17:56:09  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: RichMCTruthTool.h,v 1.15 2005-02-20 18:45:13 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHMCTOOLS_RICHMCTRUTHTOOL_H
 #define RICHMCTOOLS_RICHMCTRUTHTOOL_H 1
@@ -71,6 +55,7 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichMCTruthTool RichMCTruthTool.h
  *
  *  Tool performing MC truth associations
@@ -78,6 +63,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichMCTruthTool : public RichToolBase,
                         virtual public IRichMCTruthTool,
@@ -144,7 +130,16 @@ public: // methods (and doxygen comments) inherited from interface
   // Checks if the given MCRichHit is the result of a background
   bool isBackground( const MCRichHit * hit ) const;
 
+  // Checks if the given MCRichHit came from a spillover event
+  bool isSpillover ( const MCRichHit * hit ) const;
+
+  // Checks if the given MCRichDigit came from a spillover event
+  bool isSpillover ( const MCRichDigit * digit ) const;
+
 private: // definitions
+
+  /// (offline) tracking MC truth typedef
+  typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackAsct ;
 
   /// typedef of the Linker object for MCParticles to MCRichTracks
   typedef LinkedTo<MCRichTrack,MCParticle> MCPartToRichTracks;
@@ -169,24 +164,43 @@ private: // private methods
   /// clean up current linker objects
   void cleanUpLinkers();
 
-  /** Loads the MCRichDigits into the TES
+  /** Loads the MCRichDigits from the TES
    *
    * @return Pointer to the MCRichDigits
+   * @retval NULL means no MC information is available
    */
   const MCRichDigits * mcRichDigits() const;
+
+  /** Loads the MCRichHits from the TES
+   *
+   * @return Pointer to the MCRichHits
+   * @retval NULL means no MC information is available
+   */
+  const MCRichHits * mcRichHits() const;
 
   /// Initialise for a new event
   void InitNewEvent();
 
+  /// Load the (offline) track associator on demand
+  inline TrackAsct * trackAsct() const
+  {
+    if ( !m_trackToMCP ) { m_trackToMCP = tool<TrackAsct>( m_trAsctType, m_trAsctName ); }
+    return m_trackToMCP;
+  }
+
 private: // private data
 
-  // tracking MC truth
-  typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackAsct ;
-
+  /// Flag to say MCRichDigits have been loaded for this event
   mutable bool m_mcRichDigitsDone;
+
+  /// Flag to say MCRichHits have been loaded for this event
+  mutable bool m_mcRichHitsDone;
 
   /// Pointer to MCRichDigits
   mutable MCRichDigits * m_mcRichDigits;
+
+  /// Pointer to MCRichDigits
+  mutable MCRichHits * m_mcRichHits;
 
   /// Linker for MCParticles to MCRichTracks
   mutable MCPartToRichTracks * m_mcTrackLinks;
@@ -200,13 +214,16 @@ private: // private data
   /// Location of MCRichDigits in EDS
   std::string m_mcRichDigitsLocation;
 
+  /// Location of MCRichHits in EDS
+  std::string m_mcRichHitsLocation;
+
   /// PID information
   mutable RichMap<int,Rich::ParticleIDType> m_localID;
 
-  /// MC Tracking truth
-  std::string m_trAsctName;
-  std::string m_trAsctType;
-  TrackAsct* m_trackToMCP;
+  // MC Tracking truth
+  std::string m_trAsctName; ///< Track associator name
+  std::string m_trAsctType; ///< Track associator type
+  mutable TrackAsct * m_trackToMCP; ///< Pointer to track associator
 
 };
 
