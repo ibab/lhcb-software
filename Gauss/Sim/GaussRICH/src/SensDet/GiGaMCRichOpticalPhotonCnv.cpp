@@ -157,7 +157,7 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
   // get MCparticles
   const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
   if( 0 == mcps )
-    { return Error("Can not locate MCparticles at '" + mcpath + "'");}
+  { return Error("Can not locate MCparticles at '" + mcpath + "'");}
   //  }
 
   G4HCofThisEvent* hitscollections = 0 ;
@@ -244,6 +244,36 @@ StatusCode GiGaMCRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
             ( HepPoint3D( g4hit->Mirror2PhotonReflPosition().x(),
                           g4hit->Mirror2PhotonReflPosition().y(),
                           g4hit->Mirror2PhotonReflPosition().z() ) );
+
+          // Rich detector information
+          if ( g4hit->GetCurRichDetNum() < 0 ) {
+            mcPhoton->setRichInfoValid( false );
+          } else {
+            mcPhoton->setRichInfoValid( true );
+            mcPhoton->setRich(static_cast<Rich::DetectorType>(g4hit->GetCurRichDetNum()));
+          }
+
+          // Photon detector number
+          mcPhoton->setPhotoDetector(g4hit->GetCurHpdNum());
+
+          // Radiator information
+          if ( g4hit->GetRadiatorNumber() < 0 ) {
+            mcPhoton->setRadiatorInfoValid( false );
+          } else {
+            mcPhoton->setRadiatorInfoValid( true );
+            mcPhoton->setRadiator(static_cast<Rich::RadiatorType>(g4hit->GetRadiatorNumber()));
+          }
+
+          // charged track hitting HPD flag
+          mcPhoton->setChargedTrack( g4hit->GetChTrackID() < 0 );
+
+          // Rayleigh scattered flag
+          mcPhoton->setScatteredPhoton( g4hit->OptPhotRayleighFlag() > 0 );
+
+          // Overall background flag
+          mcPhoton->setBackgroundHit( mcPhoton->chargedTrack() ||
+                                      mcPhoton->scatteredPhoton() ||
+                                      !mcPhoton->richInfoValid() );
 
           // SmartRef to associated MCRichHit
           mcPhoton->setMcRichHit( mcHits->object(globalKey) );

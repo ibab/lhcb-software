@@ -90,7 +90,6 @@ const RichG4Hit& RichG4Hit::operator=(const RichG4Hit &right)
 
 int RichG4Hit::operator==(const RichG4Hit &right) const
 {
-
   //  return 0;
   return((m_CurRichNum==right.m_CurRichNum)&&(m_CurHpdNum==right.m_CurHpdNum)
          &&(m_CurPixelXNum==right.m_CurPixelXNum)&&

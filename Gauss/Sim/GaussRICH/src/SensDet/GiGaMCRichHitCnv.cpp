@@ -173,7 +173,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
   // get MCparticles
   const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
   if( 0 == mcps )
-    { return Error( "Can not locate MCparticles at '" + mcpath + "'");}
+  { return Error( "Can not locate MCparticles at '" + mcpath + "'");}
   //  }
 
   // retrieve the hits container from GiGa Service
@@ -222,37 +222,68 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           // add to container
           hits->insert( mchit, globalKey );
 
-          // Set data
-          mchit->setEntry  ( g4hit->GetGlobalPos() );
-          mchit->setEnergy ( g4hit->GetEdep()      );
-          // mchit->setEnergy( g4hit->GetEdep()/10 ); // Fix for energy bug
-          // changed by back by SE May 26, 2004.
+          // hit position
+          mchit->setEntry( g4hit->GetGlobalPos() );
+
+          // energy deposited
+          mchit->setEnergy( g4hit->GetEdep() );
+
+          // time of flight
           mchit->setTimeOfFlight( g4hit->RichHitGlobalTime() );
 
-          // Now for the Rich Specific word.
-          mchit->setHistoryCode(0);
+          // Rich detector information
           if ( g4hit->GetCurRichDetNum() < 0 ) {
             mchit->setRichInfoValid( false );
           } else {
             mchit->setRichInfoValid( true );
             mchit->setRich(static_cast<Rich::DetectorType>(g4hit->GetCurRichDetNum()));
           }
+
+          // Photon detector number
           mchit->setPhotoDetector(g4hit->GetCurHpdNum());
+
+          // Radiator information
           if ( g4hit->GetRadiatorNumber() < 0 ) {
             mchit->setRadiatorInfoValid( false );
           } else {
             mchit->setRadiatorInfoValid( true );
             mchit->setRadiator(static_cast<Rich::RadiatorType>(g4hit->GetRadiatorNumber()));
           }
+
+          // charged track hitting HPD flag
           mchit->setChargedTrack( g4hit->GetChTrackID() < 0 );
-          //end of filling the Rich Specific word.
+
+          // Rayleigh scattered flag
+          mchit->setScatteredPhoton( g4hit->OptPhotRayleighFlag() > 0 );
+
+          // Overall background flag
+          mchit->setBackgroundHit( mchit->chargedTrack() ||
+                                   mchit->scatteredPhoton() ||
+                                   !mchit->richInfoValid() );
+
+          /*
+          if ( mchit->chargedTrack() || mchit->scatteredPhoton() ||
+               !mchit->richInfoValid() || !mchit->radiatorInfoValid() ) {
+            msg << MSG::DEBUG << "G4Hit " << globalKey << " :"
+                << " RichDetNum=" << g4hit->GetCurRichDetNum()
+                << " RadiatorNum=" << g4hit->GetRadiatorNumber()
+                << " TrackID=" << g4hit->GetTrackID()
+                << " ChTrackID=" << g4hit->GetChTrackID()
+                << " OptPhotID=" << g4hit->GetOptPhotID()
+                << " PETrackID=" << g4hit->GetPETrackID()
+                << " ChTrackPDG=" << g4hit->GetChTrackPDG()
+                << " PETrackPDG=" << g4hit->GetPETrackPDG()
+                << " OptPhotRayleighFlag=" << g4hit->OptPhotRayleighFlag()
+                << endreq;
+          }
+          */
 
           // get MCParticle information
           const MCParticle * mcPart = table[g4hit->GetTrackID()].particle();
           if ( mcPart ) {
             mchit->setMCParticle( mcPart );
           } else {
-            Warning( "Found RichG4Hit with no MCParticle parent !" ); 
+            Warning( "Found RichG4Hit with no MCParticle parent !" );
           }
 
           // finally increment key

@@ -99,7 +99,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   // cout<<"Rich SensDet CurEdep "<< CurEdep<<endl;
 
   //if ( CurEdep <= 0.1 ) { return false; }
-   if(  CurEdep <= 0.001 ) { return false; }
+  if(  CurEdep <= 0.001 ) { return false; }
 
   // end of Modif in June 2003 by SE.
 
@@ -209,17 +209,17 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4ThreeVector CurChTrackCkvPostStepPos;
   G4int CurPhotRayleighScatFlag=0;
   G4ThreeVector CurPhotAgelExitPos;
-  G4ThreeVector CurMirror1PhotonReflPosition;   
+  G4ThreeVector CurMirror1PhotonReflPosition;
   G4ThreeVector CurMirror2PhotonReflPosition;
   G4int CurMirror1PhotonDetectorCopyNum=-1;
-  G4int CurMirror2PhotonDetectorCopyNum=-1;  
+  G4int CurMirror2PhotonDetectorCopyNum=-1;
   G4int aRichVerboseFlag=0;
   G4int CurOptPhotID =0;
 
 
-  if( ( (aTrack->GetDefinition() == G4Electron::Electron()) || 
+  if( ( (aTrack->GetDefinition() == G4Electron::Electron()) ||
         (aTrack->GetDefinition() == RichPhotoElectron::PhotoElectron()))  &&
-     (aCreatorProcessName  == "RichHpdPhotoelectricProcess")) {
+      (aCreatorProcessName  == "RichHpdPhotoelectricProcess")) {
 
     G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
     GaussTrackInformation* aRichPETrackInfo
@@ -271,7 +271,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
               CurMirror2PhotonReflPosition= aPEInfo->Mirror2PhotReflPosition();
               CurMirror1PhotonDetectorCopyNum=aPEInfo->Mirror1PhotDetCopyNum();
               CurMirror2PhotonDetectorCopyNum=aPEInfo->Mirror2PhotDetCopyNum();
-                 
+
             }
 
 
@@ -285,7 +285,7 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   G4int CurPETrackID=aTrack->GetTrackID();
   G4int CurPETrackPDG=aTrack->GetDefinition()->GetPDGEncoding();
 
-  RichG4Hit*  newHit = new RichG4Hit();
+  RichG4Hit * newHit = new RichG4Hit();
   newHit -> SetEdep( CurEdep);
   newHit -> SetGlobalPos( CurGlobalPos );
   newHit -> SetCurHpdNum(CurrentHpdNumber);
@@ -320,41 +320,36 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
   newHit -> setMirror2PhotonDetectorCopyNum(CurMirror2PhotonDetectorCopyNum);
   newHit -> setRichVerboseHitInfo(aRichVerboseFlag);
 
-  // now for the trackID from the Gausshit base class.
-  // if the mother of the corresponding optical photon exits it is set
+  // for now the trackID from the Gausshit base class.
+  // if the mother of the corresponding optical photon exists it is set
   // as the trackid. Otherwise the track creating the
   // hit is set as the track id/
-  if(CurOptPhotMotherChTrackID >=0 ) {
-
+  if ( CurOptPhotMotherChTrackID >=0 ) {
     newHit ->setTrackID(CurOptPhotMotherChTrackID);
   } else {
-
     newHit ->setTrackID(CurPETrackID);
-
   }
-
-
-
 
   int CurrentRichCollectionSet=-1;
-  if(  CurrentRichDetNumber == 0 ) {
-    if(CurrentRichDetSector == 0 ) {
+  if ( CurrentRichDetNumber == 0 ) {
+    if ( CurrentRichDetSector == 0 ) {
       CurrentRichCollectionSet=0;
-    }else{ CurrentRichCollectionSet=1; }
-  }else if (CurrentRichDetNumber == 1 ) {
-
-    if(CurrentRichDetSector == 0 ) {
+    } else { 
+      CurrentRichCollectionSet=1; 
+    }
+  } else if ( CurrentRichDetNumber == 1 ) {
+    if ( CurrentRichDetSector == 0 ) {
       CurrentRichCollectionSet=2;
-    }else{ CurrentRichCollectionSet=3; }
-
+    } else { 
+      CurrentRichCollectionSet=3; 
+    }
   }
 
-  if(CurrentRichCollectionSet >= 0 ) {
+  if ( CurrentRichCollectionSet >= 0 ) {
     int NumHitsInCurHC =m_RichHC[CurrentRichCollectionSet] ->insert( newHit );
-    log << MSG::DEBUG <<
-      "RichSensdet: Current collection set and Hit number stored =  "
-        <<CurrentRichCollectionSet<<"   "<< NumHitsInCurHC<<endreq;
-
+    log << MSG::DEBUG
+        << "RichSensdet: Current collection set and Hit number stored = "
+        << CurrentRichCollectionSet << "  " << NumHitsInCurHC << endreq;
   }
 
   return true;

@@ -6,10 +6,11 @@
 #include "G4THitsCollection.hh"
 #include "G4Allocator.hh"
 #include "G4ThreeVector.hh"
-// This is the hit class for the LHCb-RICH. The coordinates of the
-// PreStepPoint at the entrance to the SiDet sensitive detector
-// are stored as the Rich hit coordinates in this class.
-// class RichG4Hit : public G4VHit
+
+// This is the Geant4 hit class for the LHCb-RICH. 
+// The coordinates of the PreStepPoint at the entrance to the 
+// SiDet sensitive detector are stored as the Rich hit coordinates 
+// in this class.
 
 class RichG4Hit : public  GaussHitBase {
 
@@ -64,7 +65,7 @@ private:
   G4ThreeVector m_ChTrackCkvPostStepPos; // Poststep position of charged track during cherenkov  step.
   // Only with RichVerboseTag mode
 
-  G4int m_OptPhotRayleighFlag;           // number if times optical photon is Rayleigh scattered.
+  G4int m_OptPhotRayleighFlag;           // number of times optical photon is Rayleigh scattered.
   // Zero means not Rayleigh scattered.
   // Only with RichVerboseTag mode
 
@@ -72,10 +73,10 @@ private:
   // Only with RichVerboseTag mode and RichStepAnalysis4
 
 
-  G4ThreeVector  m_Mirror1PhotonReflPosition; // Photon Reflection Point on Spherical mirror which is mirror1.
+  G4ThreeVector m_Mirror1PhotonReflPosition; // Photon Reflection Point on Spherical mirror which is mirror1.
   // Only with RichVerboseTag mode and RichStepAnalysis5
 
-  G4ThreeVector  m_Mirror2PhotonReflPosition; // Photon Reflection Point on Flat mirror which is mirror2.
+  G4ThreeVector m_Mirror2PhotonReflPosition; // Photon Reflection Point on Flat mirror which is mirror2.
   // Only with RichVerboseTag mode and RichStepAnalysis5
 
   G4int m_Mirror1PhotonDetectorCopyNum;      // For the reflection point on Sperical mirror, this is 
@@ -247,8 +248,6 @@ public:
   inline const G4ThreeVector & OptPhotAgelExitPos() const
   { return m_OptPhotAgelExitPos; }
 
-
-
   inline void  setMirror1PhotonReflPosition( const G4ThreeVector & aMirror1PhotonReflPosition )
     {m_Mirror1PhotonReflPosition= aMirror1PhotonReflPosition;}
 
@@ -272,7 +271,6 @@ public:
   inline void setRichVerboseHitInfo( const G4int aVerboseValue )
   {m_RichVerboseHitInfo = aVerboseValue; }
   inline G4int RichVerboseHitInfo() const {return m_RichVerboseHitInfo;}
-
 
 };
 
