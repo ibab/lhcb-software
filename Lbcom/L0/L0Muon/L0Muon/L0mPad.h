@@ -8,7 +8,7 @@
 
 #include "LHCbEvent/MCParticle.h" 
 #include "LHCbEvent/MuonDigit.h"    
-#include "MuonTile.h"
+#include "L0Muon/MuonTile.h"
 
 // Externals
 extern const CLID& CLID_L0mPad;           
