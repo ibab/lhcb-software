@@ -1,8 +1,11 @@
-// $Id: IIDICaloHypoTool.h,v 1.2 2001-12-09 14:09:13 ibelyaev Exp $
+// $Id: IIDICaloHypoTool.h,v 1.3 2002-04-02 11:08:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/12/09 14:09:13  ibelyaev
+//  update for newer version of Gaudi
+//
 // Revision 1.1.1.1  2001/11/01 13:17:37  ibelyaev
 // New package: the first release
 // 
@@ -17,11 +20,13 @@
  *  
  *  The definition of unique interface identifier 
  *  for interface ICaloHypoTool
+ *  
+ *  @see ICaloHypoTool
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @date   30/10/2001
  */
-static const InterfaceID IID_ICaloHypoTool( "ICaloHypoTool" , 1 , 0 );
+static const InterfaceID IID_ICaloHypoTool( "ICaloHypoTool" , 2 , 0 );
 
 // ============================================================================
 // The End 

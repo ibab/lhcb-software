@@ -1,33 +1,29 @@
-// $Id: IIDICaloDigitTool.h,v 1.3 2002-04-02 11:08:13 ibelyaev Exp $
+// $Id: IIDICaloPosition2MomentumTool.h,v 1.1 2002-04-02 11:08:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2001/12/09 14:09:13  ibelyaev
-//  update for newer version of Gaudi
-//
-// Revision 1.1.1.1  2001/11/01 13:17:37  ibelyaev
-// New package: the first release
-// 
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
-#ifndef CALOINTERFACES_IIDICALODIGITTOOL_H 
-#define CALOINTERFACES_IIDICALODIGITTOOL_H 1
-// include 
+#ifndef CALOINTERFACES_IIDICALOPOSITION2MOMENTUMTOOL_H 
+#define CALOINTERFACES_IIDICALOPOSITION2MOMENTUMTOOL_H 1
+// Include files
 // GaudiKernel 
 #include "GaudiKernel/IInterface.h"
 
-/** @file IIDICaloClusterTool.h
+/** @file IIDICaloPosition2MomentumTool.h 
  *  
  *  The definition of unique interface identifier 
- *  for interface ICaloDigitTool
+ *  for interface ICaloPosition2MomentumTool
  *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
- *  @date   30/10/2001
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   21/03/2002
  */
-static const InterfaceID IID_ICaloDigitTool( "ICaloDigitTool" , 2 , 0 );
+static const InterfaceID IID_ICaloPosition2MomentumTool
+( "ICaloPosition2MomentumTool" , 1 , 0 );
+
 
 // ============================================================================
 // The End 
 // ============================================================================
-#endif // CALOINTERFACES_IIDICALODIGITTOOL_H
+#endif // CALOINTERFACES_IIDICALOPOSITION2MOMENTUMTOOL_H
 // ============================================================================

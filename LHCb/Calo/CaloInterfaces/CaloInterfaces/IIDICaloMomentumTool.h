@@ -1,29 +1,27 @@
-// $Id: IIDICaloSplitTool.h,v 1.2 2002-04-02 11:08:13 ibelyaev Exp $
+// $Id: IIDICaloMomentumTool.h,v 1.1 2002-04-02 11:08:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/03/19 17:31:27  ibelyaev
-//  add new abstract interface for Cluster Splitting Tools
-// 
+// $Log: not supported by cvs2svn $ 
 // ============================================================================
-#ifndef CALOINTERFACES_IIDICALOSPLITTOOL_H 
-#define CALOINTERFACES_IIDICALOSPLITTOOL_H 1
+#ifndef CALOINTERFACES_IIDICALOMOMENTUMTOOL_H 
+#define CALOINTERFACES_IIDICALOMOMENTUMTOOL_H 1
 // Include files
 // GaudiKernel 
 #include "GaudiKernel/IInterface.h"
 
-/** @file IIDICaloSplitTool.h
+/** @fileIIDICaloMomentumTool.h
  *  
  *  The definition of unique interface identifier 
- *  for interface ICaloSplitTool
+ *  for interface ICaloPositionTool
  *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
- *  @date   30/10/2001
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   21/03/2002
  */
-static const InterfaceID IID_ICaloSplitTool( "ICaloSplitTool" , 2 , 0 );
+static const InterfaceID IID_ICaloMomentumTool( "ICaloMomentumTool" , 1 , 0 );
 
 // ============================================================================
 // The End 
 // ============================================================================
-#endif // CALOINTERFACES_IIDICALOSPLITTOOL_H
+#endif // CALOINTERFACES_IIDICALOMOMENTUMTOOL_H
+// ============================================================================

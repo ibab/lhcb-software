@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.7 2002-03-19 17:31:27 ibelyaev Exp $
+# $Id: requirements,v 1.8 2002-04-02 11:08:13 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.7  2002/03/19 17:31:27  ibelyaev
+#  add new abstract interface for Cluster Splitting Tools
+#
 # Revision 1.6  2001/12/15 18:25:58  ibelyaev
 #  update for new policy of versions
 #
@@ -30,7 +33,7 @@
 # =============================================================================
 
 package           CaloInterfaces
-version           v1r1
+version           v2r0
 
 # =============== structure ===================================================
 branches          cmt doc src CaloInterfaces

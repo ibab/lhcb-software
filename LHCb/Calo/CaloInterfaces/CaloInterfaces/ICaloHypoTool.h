@@ -1,8 +1,11 @@
-// $Id: ICaloHypoTool.h,v 1.1.1.2 2001-11-02 16:53:13 ibelyaev Exp $
+// $Id: ICaloHypoTool.h,v 1.2 2002-04-02 11:08:12 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.2  2001/11/02 16:53:13  ibelyaev
+// New Package: the first release
+//
 // ============================================================================ 
 #ifndef CALOINTERFACES_ICALOHYPOTOOL_H 
 #define CALOINTERFACES_ICALOHYPOTOOL_H 1
@@ -34,24 +37,13 @@ class ICaloHypoTool:
   public std::unary_function<CaloHypo*,StatusCode>
 {
   
-public:
+ public:
   
   /** static interface identification
+   *  @see IInterface
    *  @return unique interface identifier
    */
   static const InterfaceID& interfaceID() { return IID_ICaloHypoTool ; }
-  
-  /** Standard initialization of the tool
-   *  @att It is not invoked  automatically! 
-   *  @return status code 
-   */ 
-  virtual StatusCode initialize ()  = 0 ;
-  
-  /** Standard finalization of the tool
-   *  @att It is not invoked  automatically! 
-   *  @return status code 
-   */ 
-  virtual StatusCode finalize   ()  = 0 ;
   
   /** The main processing method 
    *  @param  hypo  pointer to CaloHypo object to be processed
@@ -65,8 +57,9 @@ public:
    */  
   virtual StatusCode operator() ( CaloHypo* hypo  ) const = 0 ;
   
-  /** destructor, virtual 
-   */
+ protected: 
+  
+  /// destructor, virtual 
   virtual ~ICaloHypoTool(){};
   
 };
