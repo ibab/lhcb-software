@@ -4,7 +4,7 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v10r0>20020506 Brunel v10r0</A></H1><PRE>
+</PRE><H1><A NAME=v10r0>20020507 Brunel v10r0</A></H1><PRE>
    >>>>>>>>>>>>>>>>>>>>>>>>>>> Beware!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
    >>>>>>>>> Current head revision has limited functionality!! <<<<<<<<<<<<
 
@@ -22,7 +22,7 @@ Purpose: LHCb reconstruction program
      - RICH Digitisation (old SICB Fortran version)
      - Calo digitisation and reconstruction
      - MUON Digitisation (old SICB Fortran version) and reconstruction
-     - L0 trigger simulation (except L0 Muon)
+     - L0 trigger simulation
      - First tests of DST output
    >>>>>>
 
@@ -57,6 +57,7 @@ Purpose: LHCb reconstruction program
    - use CaloAlgs       v5r0 Calo
    - use CaloCA         v4r0 Calo
    - use L0Calo         v5r0 L0
+   - use L0Muon         v5r0 L0
    - use PuVeto         v2r0 L0
    - use L0DU           v5r0 L0
 

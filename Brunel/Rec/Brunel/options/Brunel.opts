@@ -67,10 +67,10 @@ BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
 #pragma print off
 // L0 trigger
 #include "$L0CALOROOT/options/Brunel.opts"
-//#include "$L0MUONROOT/options/Brunel.opts"
+#include "$L0MUONROOT/options/Brunel.opts"
 #include "$PUVETOROOT/options/Brunel.opts"
 #include "$L0DUROOT/options/Brunel.opts"
-//ApplicationMgr.DLLs += { "MuonSicbCnv" };
+#include "$MUONTOOLSROOT/options/MuonTools.opts"
 
 // Calorimeter RAWH conversion, digitisation, reconstruction
 ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
