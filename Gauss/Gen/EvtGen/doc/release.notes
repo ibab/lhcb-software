@@ -1,7 +1,11 @@
 Package :EvtGen 
 Package manager : Witek Pokorski
 
-! >>>>>>>>>>>>>>>>>> EvtGen v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+!=================== EvtGen v2r0 ============================================
+! 2002-07-15 - Florence Ranjard
+  requirements - use CLHEP 1.8.0.0
+ 
+! ================== EvtGen v1r0 ============================================
 
 ! 20020411 - EvtGen v1r0 Witek Pokorski
   - New package
@@ -15,7 +19,7 @@ Package manager : Witek Pokorski
     Upsilon(4S) and for generic hadronic decays, e.g. of B mesons, that are 
     not implemented in the generator.   
 
-! >>>>>>>>>>>>>>>>>> EvtGen v0r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+! ================== EvtGen v0r0 ===========================================
 
 
 

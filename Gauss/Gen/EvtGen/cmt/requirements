@@ -1,10 +1,10 @@
 package          EvtGen
-version  v1r0 
+version  v2r0 
 
 branches         cmt src doc EvtGen
 
-use CLHEP        v17r*
-use CERNLIB      v2001
+use CLHEP        v2r1800p*
+use CERNLIB      v2r2002p*
 use GaudiPolicy  v5r*
 
 include_dirs     $(EVTGENROOT)
