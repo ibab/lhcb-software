@@ -1,4 +1,4 @@
-// $Id: DeRich2.cpp,v 1.3 2002-11-04 11:50:47 papanest Exp $
+// $Id: DeRich2.cpp,v 1.4 2003-06-16 09:50:15 jonrob Exp $
 #define DERICH2_CPP
 
 // Include files
@@ -64,37 +64,35 @@ StatusCode DeRich2::initialize() {
 
 HepPoint3D DeRich2::nominalCentreOfCurvature(Rich::Side side) const
 {
-  HepPoint3D  myPoint = m_nominalCentreOfCurvature;
-  
-  if (Rich::right == side) {
-    myPoint.setX(-m_nominalCentreOfCurvature.x());
+
+  if ( Rich::right == side ) {
+    return HepPoint3D( -m_nominalCentreOfCurvature.x(), 
+                       m_nominalCentreOfCurvature.y(),
+                       m_nominalCentreOfCurvature.z() );
+  } else {
+    return m_nominalCentreOfCurvature;
   }
   
-  return myPoint;
 }
 
 //============================================================================
 
 HepNormal3D DeRich2::nominalNormal(Rich::Side side) const
 {
-  HepNormal3D  myNormal = m_nominalNormal;
   
-  if (Rich::right == side) {
-    myNormal.setX(-m_nominalNormal.x());
+  if ( Rich::right == side ) {
+    return HepNormal3D( -m_nominalNormal.x(),
+                        m_nominalNormal.y(),
+                        m_nominalNormal.z() );
+  } else {
+    return m_nominalNormal;
   }
   
-  return myNormal;
 }
 
 //============================================================================
 
 HepPlane3D DeRich2::nominalPlane(Rich::Side side) const
-{
-  
-  if (Rich::left == side) {
-    return m_nominalPlaneLeft;
-  } else {
-    return m_nominalPlaneRight;
-  }
-  
+{ 
+  return ( Rich::left == side ? m_nominalPlaneLeft : m_nominalPlaneRight );
 }

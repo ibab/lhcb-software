@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.cpp,v 1.3 2003-04-01 13:01:50 jonrob Exp $
+// $Id: DeRich1CdfHPDPanel.cpp,v 1.4 2003-06-16 09:50:14 jonrob Exp $
 #define DERICH1CDFHPDPANEL_CPP
 
 // Include files
@@ -256,6 +256,7 @@ StatusCode DeRich1CdfHPDPanel::smartID ( const HepPoint3D& globalPoint,
                    static_cast<unsigned int>(HPDColumn),
                    pixelRow,
                    pixelColumn);
+
   return StatusCode::SUCCESS;
 
 }
@@ -428,7 +429,7 @@ StatusCode DeRich1CdfHPDPanel::HPDWindowPoint( const HepVector3D& vGlobal,
       vInHPDMaster = vLocal;
       vInHPDMaster.transform( m_vectorTransfHPD2s[HPD] );
 
-      noTicks = m_windowSolids[HPD]->intersectionTicks( pInWindow, 
+      noTicks = m_windowSolids[HPD]->intersectionTicks( pInWindow,
                                                         vInHPDMaster,
                                                         HPDWindowTicks );
       if (2 == noTicks) {

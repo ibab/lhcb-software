@@ -1,4 +1,4 @@
-// $Id: DeRich1.h,v 1.2 2003-04-01 13:01:49 jonrob Exp $
+// $Id: DeRich1.h,v 1.3 2003-06-16 09:50:14 jonrob Exp $
 #ifndef RICHDET_DERICH1_H
 #define RICHDET_DERICH1_H 1
 
@@ -16,16 +16,17 @@
 // External declarations
 extern const CLID& CLID_DERich1;
 
-
 /** @class DeRich1 DeRich1.h
  *
  * This is the definition of the Rich1 detector class
  *
  * @author Antonis Papanestis
  */
+
 class DeRich1: public DetectorElement {
 
 public:
+
   /**
    * Constructor for this class
    */
@@ -77,7 +78,6 @@ public:
   
 private:
 
-  ///
   double m_sphMirrorRadius;
   double m_sphMirrorMaxX;
   double m_sphMirrorMaxY;  

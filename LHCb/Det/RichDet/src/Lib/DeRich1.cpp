@@ -1,4 +1,4 @@
-// $Id: DeRich1.cpp,v 1.2 2002-11-04 11:50:47 papanest Exp $
+// $Id: DeRich1.cpp,v 1.3 2003-06-16 09:50:14 jonrob Exp $
 #define DERICH1_CPP
 
 // Include files
@@ -32,7 +32,7 @@ StatusCode DeRich1::initialize() {
   StatusCode sc = StatusCode::SUCCESS;
 
   MsgStream log(msgSvc(), "DeRich1" );
-  log << MSG::DEBUG <<"Starting initialisation for DeRich1"<< endreq;
+  log << MSG::DEBUG << "Starting initialisation for DeRich1" << endreq;
   
   double nominalCoCX = userParameterAsDouble("Rich1Mirror1NominalCoCX");
   double nominalCoCY = userParameterAsDouble("Rich1Mirror1NominalCoCY");
@@ -55,46 +55,44 @@ StatusCode DeRich1::initialize() {
   
   m_nominalPlaneTop = HepPlane3D(nominalNorX, nominalNorY, nominalNorZ, d);
   m_nominalPlaneBottom = HepPlane3D(nominalNorX, -nominalNorY, nominalNorZ, d);
-
-  log << MSG::DEBUG <<"Finished initialisation for DeRich1"<< endreq;
+ 
+  log << MSG::DEBUG << "Finished initialisation for DeRich1" << endreq;
   return sc;
 }
 
 //============================================================================
 
-HepPoint3D DeRich1::nominalCentreOfCurvature(Rich::Side side) const
+HepPoint3D DeRich1::nominalCentreOfCurvature(Rich::Side side) const 
 {
-  HepPoint3D  myPoint = m_nominalCentreOfCurvature;
   
-  if (Rich::bottom == side) {
-    myPoint.setY(-m_nominalCentreOfCurvature.y());
+  if ( Rich::bottom == side ) {
+    return HepPoint3D( m_nominalCentreOfCurvature.x(),
+                       -m_nominalCentreOfCurvature.y(),
+                       m_nominalCentreOfCurvature.z() );
+  } else {
+    return m_nominalCentreOfCurvature;
   }
-  
-  return myPoint;
+
 }
 
 //============================================================================
 
 HepNormal3D DeRich1::nominalNormal(Rich::Side side) const
 {
-  HepNormal3D  myNormal = m_nominalNormal;
   
-  if (Rich::bottom == side) {
-    myNormal.setY(-m_nominalNormal.y());
+  if ( Rich::bottom == side ) {
+    return HepNormal3D( m_nominalNormal.x(),
+                        -m_nominalNormal.y(),
+                        m_nominalNormal.z() );
+  } else {
+    return m_nominalNormal;
   }
-  
-  return myNormal;
+ 
 }
 
 //============================================================================
 
 HepPlane3D DeRich1::nominalPlane(Rich::Side side) const
 {
-  
-  if (Rich::top == side) {
-    return m_nominalPlaneTop;
-  } else {
-    return m_nominalPlaneBottom;
-  }
-  
+  return ( Rich::top == side ? m_nominalPlaneTop : m_nominalPlaneBottom );
 }
