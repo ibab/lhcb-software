@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorSwissCross.h,v 1.2 2001-11-08 20:07:06 ibelyaev Exp $
+// $Id: SubClusterSelectorSwissCross.h,v 1.3 2002-04-07 18:15:04 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/08 20:07:06  ibelyaev
+//  new tools are added into  the package
+//
 // Revision 1.1  2001/11/08 10:58:35  ibelyaev
 //  new tools are added for selection of subclusters within the cluster
 // 
@@ -34,23 +37,30 @@ class SubClusterSelectorSwissCross
 public:  
 
   /** standard initiliazation 
+   *  @see SubClusterSelectorBase
+   *  @see CaloTool
+   *  @see  AlgTool
+   *  @see IAlTool
    *  @return status code 
    */
   virtual StatusCode initialize();
   
   
-  /** The main processing method (functor interface) 
-   *
-   *  Error codes:  
-   *    - 225   cluster points to NULL
-   *    - 226   empty cell/digit container for given cluster 
-   *    - 227   SeedCell is not found 
-   *    - 228   Seed points to NULL
-   *
+  /** The main processing method 
+   *  @see ICaloSubClusterTag
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode operator() ( CaloCluster* cluster ) const ;
+  virtual StatusCode tag 
+  ( CaloCluster* cluster ) const ;
+  
+  /** The main processing method 
+   *  @see ICaloSubClusterTag
+   *  @param cluster pointer to CaloCluster object to be processed
+   *  @return status code 
+   */  
+  virtual StatusCode untag 
+  ( CaloCluster* cluster ) const ;
   
 protected:
   
@@ -63,10 +73,20 @@ protected:
                          const std::string& name   ,
                          const IInterface*  parent );
   
-  /** destructor 
-   */
+  /// destructor 
   virtual ~SubClusterSelectorSwissCross();
   
+private:
+
+  ///  default constructor  is private 
+  SubClusterSelectorSwissCross();
+  ///  copy    constructor  is private 
+  SubClusterSelectorSwissCross
+  ( const SubClusterSelectorSwissCross& );
+  ///  assigenemtn operator is private 
+  SubClusterSelectorSwissCross& operator=
+  ( const SubClusterSelectorSwissCross& );
+
 private:
   
   CellSwissCross        m_matrix;

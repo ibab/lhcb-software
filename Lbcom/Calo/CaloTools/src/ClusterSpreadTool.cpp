@@ -1,8 +1,11 @@
-// $Id: ClusterSpreadTool.cpp,v 1.2 2001-12-09 14:33:09 ibelyaev Exp $
+// $Id: ClusterSpreadTool.cpp,v 1.3 2002-04-07 18:15:02 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/12/09 14:33:09  ibelyaev
+//  update for newer version of Gaudi
+//
 // Revision 1.1  2001/11/23 11:44:51  ibelyaev
 //  new tool for calculation of cluster spread
 // 
@@ -104,51 +107,6 @@ StatusCode ClusterSpreadTool::finalize   ()
 };
 
 // ============================================================================
-/** query interface method  
- *  @param  iiD  unique interface identifier 
- *  @param  pI   placeholder for interface 
- *  @return status code 
- */
-// ============================================================================
-StatusCode ClusterSpreadTool::queryInterface 
-( const InterfaceID& iiD ,
-  void**             pI  )
-{
-  /// check the validity of the placeholder 
-  if( 0 == pI ) {       return StatusCode::FAILURE   ; }
-  ///
-  if      ( iiD == ICaloClusterTool:: interfaceID   () ) 
-    { *pI = static_cast<ICaloClusterTool*> (this)    ; }
-  else if ( iiD == IAlgTool::         interfaceID   () ) 
-    { *pI = static_cast<IAlgTool*>         (this)    ; }
-  else if ( iiD == IInterface::       interfaceID   () )
-    { *pI = static_cast<IInterface*>       (this)    ; }
-  else { return CaloTool::queryInterface( iiD , pI ) ; }
-  ///
-  addRef();
-  ///
-  return StatusCode::SUCCESS ;
-  ///
-};
-
-// ============================================================================
-/** The main processing method with hypothesis 
- *  @param cluster pointer to CaloCluster object to be processed
- *  @param hypo    processing hypothesis 
- *  @return status code 
- */  
-// ============================================================================
-StatusCode ClusterSpreadTool::process    
-( CaloCluster* cluster                         , 
-  const CaloHypotheses::Hypothesis& /* hypo */ ) const 
-{
-  ///
-  Warning( "The hypotheses dispatcher is not yet implemented!" );
-  ///
-  return process( cluster );
-};
-
-// ============================================================================
 /** The main processing method 
  *  @param cluster pointer to CaloCluster object to be processed
  *  @return status code 
@@ -156,9 +114,7 @@ StatusCode ClusterSpreadTool::process
 // ============================================================================
 StatusCode ClusterSpreadTool::process    
 ( CaloCluster* cluster ) const 
-{ 
-  return (*this)( cluster ); 
-};
+{ return (*this)( cluster ); };
 
 // ============================================================================
 /** The main processing method (functor interface) 

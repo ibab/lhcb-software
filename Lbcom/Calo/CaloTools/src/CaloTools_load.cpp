@@ -1,8 +1,11 @@
-// $Id: CaloTools_load.cpp,v 1.5 2001-11-23 11:44:50 ibelyaev Exp $
+// $Id: CaloTools_load.cpp,v 1.6 2002-04-07 18:15:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2001/11/23 11:44:50  ibelyaev
+//  new tool for calculation of cluster spread
+//
 // Revision 1.4  2001/11/12 21:16:14  ibelyaev
 //  new concrete sub-cluster selector is added
 //
@@ -27,9 +30,13 @@ DECLARE_FACTORY_ENTRIES(CaloTools) {
   DECLARE_TOOL( SubClusterSelectorMax2x2     );
   DECLARE_TOOL( SubClusterSelectorSwissCross );
   DECLARE_TOOL( SubClusterSelectorNeighbors  );
-  
-};
 
+  DECLARE_TOOL( CaloCorrASINH                );
+  DECLARE_TOOL( CaloCorr2TANH                );
+
+  DECLARE_TOOL( CaloSelector                 );
+
+};
 
 // ============================================================================
 // The End 

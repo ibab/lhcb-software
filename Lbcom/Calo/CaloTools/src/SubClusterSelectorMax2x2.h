@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorMax2x2.h,v 1.1 2001-11-08 20:07:06 ibelyaev Exp $
+// $Id: SubClusterSelectorMax2x2.h,v 1.2 2002-04-07 18:15:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/08 20:07:06  ibelyaev
+//  new tools are added into  the package
+//
 // ============================================================================
 #ifndef CALOTOOLS_SUBCLUSTERSELECTORMAX2X2_H 
 #define CALOTOOLS_SUBCLUSTERSELECTORMAX2X2_H 1
@@ -30,22 +33,29 @@ class SubClusterSelectorMax2x2
 public:
   
   /** standard initiliazation 
+   *  @see SubclusterSelectorBase 
+   *  @see CaloTool 
+   *  @see  AlgTool 
+   *  @see IAlgTool 
    *  @return status code 
    */
   virtual StatusCode initialize();
   
-  /** The main processing method (functor interface) 
-   *
-   *  Error codes:  
-   *    - 225   cluster points to NULL
-   *    - 226   empty cell/digit container for given cluster 
-   *    - 227   SeedCell is not found 
-   *    - 228   Seed points to NULL
-   *
+  /** The main processing method 
+   *  @see ICaloSubClusterTag
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode operator() ( CaloCluster* cluster ) const ;
+  virtual StatusCode tag 
+  ( CaloCluster* cluster ) const ;
+  
+  /** The main processing method 
+   *  @see ICaloSubClusterTag
+   *  @param cluster pointer to CaloCluster object to be processed
+   *  @return status code 
+   */  
+  virtual StatusCode untag 
+  ( CaloCluster* cluster ) const ;
   
 protected:
   
@@ -58,21 +68,39 @@ protected:
                             const std::string& name   ,
                             const IInterface*  parent );
   
-  /** destructor 
-   */
+  /// destructor 
   virtual ~SubClusterSelectorMax2x2();
   
 private:
 
+  /// default  constructor  is private 
+  SubClusterSelectorMax2x2();
+  /// copy     constructor  is private 
+  SubClusterSelectorMax2x2 
+  ( const SubClusterSelectorMax2x2& );
+  /// assignement operator  is private 
+  SubClusterSelectorMax2x2& operator=
+  ( const SubClusterSelectorMax2x2& );
+
+private:
+  
   /** tag the certain submatrix 
-   *  @param  cluster poiunter to cluster 
-   *  @param  seed    seed cell
+   *  @param  cluster pointer to cluster 
    *  @param  type    submatrix type 
    *  @return status code 
    */
-  StatusCode tag( CaloCluster* cluster                    ,
-                  const CaloCellID&                  seed ,
-                  const CellMatrix2x2::SubMatrixType Type ) const ;
+  StatusCode tag2x2
+  ( CaloCluster* cluster                    ,
+    const CellMatrix2x2::SubMatrixType Type ) const ;
+  
+  /** tag the certain submatrix 
+   *  @param  cluster pointer to cluster 
+   *  @param  type    submatrix type 
+   *  @return status code 
+   */
+  StatusCode untag2x2
+  ( CaloCluster* cluster                    ,
+    const CellMatrix2x2::SubMatrixType Type ) const ;
   
 private:
 

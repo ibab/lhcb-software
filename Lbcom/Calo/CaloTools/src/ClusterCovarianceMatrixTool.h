@@ -1,8 +1,11 @@
-// $Id: ClusterCovarianceMatrixTool.h,v 1.5 2001-12-09 14:33:09 ibelyaev Exp $
+// $Id: ClusterCovarianceMatrixTool.h,v 1.6 2002-04-07 18:15:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2001/12/09 14:33:09  ibelyaev
+//  update for newer version of Gaudi
+//
 // Revision 1.4  2001/11/25 15:50:40  ibelyaev
 //  update for newer CaloKernel package
 //
@@ -59,14 +62,6 @@ public:
    */
   virtual StatusCode finalize   ();
   
-  /** query interafce method  
-   *  @param  iiD  unique interface identifier 
-   *  @param  pI   placeholder for interface 
-   *  @return status code 
-   */
-  virtual StatusCode queryInterface 
-  ( const InterfaceID& iiD ,
-    void**             pI  );
 
   /** The main processing method 
    *  @param cluster pointer to CaloCluster object to be processed
@@ -80,15 +75,6 @@ public:
    */  
   virtual StatusCode operator() ( CaloCluster* cluster ) const ;
   
-  /** The main processing method with hypothesis 
-   *  @param cluster pointer to CaloCluster object to be processed
-   *  @param hypo    processing hypothesis 
-   *  @return status code 
-   */  
-  virtual StatusCode process    
-  ( CaloCluster* cluster                   , 
-    const CaloHypotheses::Hypothesis& hypo ) const ;
-  
 protected:
 
   /** Standard constructor
@@ -101,10 +87,20 @@ protected:
     const std::string& name   ,
     const IInterface*  parent );
   
-  /** destructor, virtual and protected 
-   */
+  /// destructor, virtual and protected 
   virtual ~ClusterCovarianceMatrixTool();
+
+private:
   
+  /// default constructor  is private 
+  ClusterCovarianceMatrixTool();
+  /// copy    constructor  is private 
+  ClusterCovarianceMatrixTool
+  ( const ClusterCovarianceMatrixTool& );  
+  /// assignement operator is private 
+  ClusterCovarianceMatrixTool& operator=
+  ( const ClusterCovarianceMatrixTool& );
+
 private:
   
   ///

@@ -1,8 +1,11 @@
-// $Id: ClusterCovarianceMatrixTool.cpp,v 1.4 2001-12-09 14:33:09 ibelyaev Exp $
+// $Id: ClusterCovarianceMatrixTool.cpp,v 1.5 2002-04-07 18:15:01 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2001/12/09 14:33:09  ibelyaev
+//  update for newer version of Gaudi
+//
 // Revision 1.3  2001/11/25 15:50:40  ibelyaev
 //  update for newer CaloKernel package
 //
@@ -65,6 +68,8 @@ ClusterCovarianceMatrixTool::ClusterCovarianceMatrixTool
   , m_noiseIn   ( 0    ) 
   , m_noiseCo   ( 0    )
 {
+  // inetraface!
+  declareInterface<ICaloClusterTool> (this);
   /// try to get properties from the parent 
   DoubleProperty resolution      ( "Resolution"      , m_a       ) ;
   DoubleProperty gainError       ( "GainError"       , m_gainErr ) ;
@@ -144,13 +149,13 @@ StatusCode ClusterCovarianceMatrixTool::initialize ()
   ///
   CaloPrint Print;
   MsgStream log( msgSvc() , name() );
-  log << MSG::INFO
+  log << MSG::DEBUG
       << " Has initialized with parameters: "                        << endreq 
-      << " \t Detector            = '" << detName()          << "'"  << endreq 
-      << " \t Resolution          = '" << Print( m_a       ) << "'"  << endreq 
-      << " \t Relative Gain Error = '" << Print( m_gainErr ) << "'"  << endreq 
-      << " \t Incoherent Noise    = '" << Print( m_noiseIn ) << "'"  << endreq 
-      << " \t Coherent Noise      = '" << Print( m_noiseCo ) << "'"  << endreq ;
+      << " \t 'Detector'         = '" << detName()          << "'"  << endreq 
+      << " \t 'Resolution'       = '" << Print( m_a       ) << "'"  << endreq 
+      << " \t 'GainError'        = '" << Print( m_gainErr ) << "'"  << endreq 
+      << " \t 'NoiseIncoherent'  = '" << Print( m_noiseIn ) << "'"  << endreq 
+      << " \t 'NoiseCoherent'    = '" << Print( m_noiseCo ) << "'"  << endreq ;
   ///
   return StatusCode::SUCCESS ;
 };
@@ -166,34 +171,6 @@ StatusCode ClusterCovarianceMatrixTool::finalize   ()
   setDet( (const DeCalorimeter*) 0 );
   /// finalize the  the base class
   return CaloTool::finalize ();
-};
-
-// ============================================================================
-/** query interface method  
- *  @param  iiD  unique interface identifier 
- *  @param  pI   placeholder for interface 
- *  @return status code 
- */
-// ============================================================================
-StatusCode ClusterCovarianceMatrixTool::queryInterface 
-( const InterfaceID& iiD ,
-  void**             pI  )
-{
-  /// check the validity of the placeholder 
-  if( 0 == pI ) {       return StatusCode::FAILURE   ; }
-  ///
-  if      ( iiD == ICaloClusterTool:: interfaceID   () ) 
-    { *pI = static_cast<ICaloClusterTool*> (this)    ; }
-  else if ( iiD == IAlgTool::         interfaceID   () ) 
-    { *pI = static_cast<IAlgTool*>         (this)    ; }
-  else if ( iiD == IInterface::       interfaceID   () )
-    { *pI = static_cast<IInterface*>       (this)    ; }
-  else { return CaloTool::queryInterface( iiD , pI ) ; }
-  ///
-  addRef();
-  ///
-  return StatusCode::SUCCESS ;
-  ///
 };
 
 // ============================================================================
@@ -215,24 +192,6 @@ ClusterCovarianceMatrixTool::operator() ( CaloCluster* cluster ) const
 };
 
 // ============================================================================
-/** The main processing method with hypothesis 
- *  @param cluster pointer to CaloCluster object to be processed
- *  @param hypo    processing hypothesis 
- *  @return status code 
- */  
-// ============================================================================
-StatusCode 
-ClusterCovarianceMatrixTool::process 
-( CaloCluster* cluster                          , 
-  const CaloHypotheses::Hypothesis& /* hypo */  ) const 
-{
-  ///
-  Warning( "The hypotheses dispatcher is not yet implemented!" );
-  ///
-  return process( cluster );
-};
-
-// ============================================================================
 /** The main processing method 
  *  @param cluster pointer to CaloCluster object to be processed
  *  @return status code 
@@ -240,9 +199,7 @@ ClusterCovarianceMatrixTool::process
 // ============================================================================
 StatusCode 
 ClusterCovarianceMatrixTool::process ( CaloCluster* cluster ) const 
-{ 
-  return (*this)( cluster ); 
-};
+{ return (*this)( cluster ); };
 
 // ============================================================================
 // The End 

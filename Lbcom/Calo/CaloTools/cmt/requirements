@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.5 2002-02-07 10:01:01 ibelyaev Exp $
+# $Id: requirements,v 1.6 2002-04-07 18:14:58 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2002/02/07 10:01:01  ibelyaev
+#  add Brunel.opts file
+#
 # =============================================================================
 # Created    : 29/10/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -12,7 +15,7 @@
 # =============================================================================
 
 package            CaloTools
-version            v1r1
+version            v2r0
 
 # ================ structure =================================================
 branches           cmt doc src options 
@@ -21,8 +24,8 @@ branches           cmt doc src options
 set CALOTOOLSOPTS  $(CALOTOOLSROOT)/options
 
 # ================ dependencies ==============================================
-use CaloInterfaces v1r*   Calo 
-use CaloUtils      v1r*   Calo 
+use CaloInterfaces v2r*   Calo 
+use CaloUtils      v2r*   Calo 
 
 # ================ component library =========================================
 library            CaloTools    *.cpp

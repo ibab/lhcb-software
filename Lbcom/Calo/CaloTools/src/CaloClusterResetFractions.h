@@ -1,8 +1,11 @@
-// $Id: CaloClusterResetFractions.h,v 1.3 2001-12-09 14:33:08 ibelyaev Exp $
+// $Id: CaloClusterResetFractions.h,v 1.4 2002-04-07 18:14:59 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2001/12/09 14:33:08  ibelyaev
+//  update for newer version of Gaudi
+//
 // Revision 1.2  2001/11/25 15:50:40  ibelyaev
 //  update for newer CaloKernel package
 //
@@ -47,15 +50,6 @@ public:
    */
   virtual StatusCode    finalize   ();
   
-  /** query interafce method  
-   *  @param  iiD  unique interface identifier 
-   *  @param  pI   placeholder for interface 
-   *  @return status code 
-   */
-  virtual StatusCode queryInterface 
-  ( const InterfaceID& iiD ,
-    void**             pI  );
-
   /** The main processing method 
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
@@ -68,15 +62,6 @@ public:
    */  
   virtual StatusCode operator() ( CaloCluster* cluster ) const ;
   
-  /** The main processing method with hypothesis 
-   *  @param cluster pointer to CaloCluster object to be processed
-   *  @param hypo    processing hypothesis 
-   *  @return status code 
-   */  
-  virtual StatusCode process    
-  ( CaloCluster* cluster                   , 
-    const CaloHypotheses::Hypothesis& hypo ) const;
-  
 protected:
 
   /** Standard constructor
@@ -84,18 +69,27 @@ protected:
    *  @param name   tool name 
    *  @param parent tool parent 
    */
-  CaloClusterResetFractions( const std::string& type   ,
-                             const std::string& name   ,
-                             const IInterface*  parent );
-
-  /** destructor, protected and virtual
-   */
-  virtual ~CaloClusterResetFractions( );
-
-protected:
-
+  CaloClusterResetFractions
+  ( const std::string& type   ,
+    const std::string& name   ,
+    const IInterface*  parent );
+  
+  /// destructor, protected and virtual
+  virtual ~CaloClusterResetFractions();
+  
 private:
-
+  
+  /// default constructor is private 
+  CaloClusterResetFractions() ;
+  /// copy    constructor is private 
+  CaloClusterResetFractions
+  ( const CaloClusterResetFractions& );
+  /// sssignement opereator s private 
+  CaloClusterResetFractions& operator=
+  ( const CaloClusterResetFractions& );
+  
+private:
+  
 };
 
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorAll.h,v 1.2 2001-11-08 20:07:05 ibelyaev Exp $
+// $Id: SubClusterSelectorAll.h,v 1.3 2002-04-07 18:15:02 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/08 20:07:05  ibelyaev
+//  new tools are added into  the package
+//
 // Revision 1.1  2001/11/08 10:58:35  ibelyaev
 //  new tools are added for selection of subclusters within the cluster
 // 
@@ -29,16 +32,21 @@ class SubClusterSelectorAll
   
 public:  
   
-  /** The main processing method (functor interface) 
-   *  
-   *  Error Codes:
-   *     - 225  - cluster points to NULL
-   *     - 226  - cell/digit container is empty 
-   * 
+  /** The main processing method  
+   *  @see ICaloSubClusterTag 
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
-  virtual StatusCode operator() ( CaloCluster* cluster ) const ;
+  virtual StatusCode tag 
+  ( CaloCluster* cluster ) const ;
+  
+  /** The main processing method  
+   *  @see ICaloSubClusterTag 
+   *  @param cluster pointer to CaloCluster object to be processed
+   *  @return status code 
+   */  
+  virtual StatusCode untag 
+  ( CaloCluster* cluster ) const ;
   
 protected:
   
@@ -47,15 +55,24 @@ protected:
    *  @param name name of the tool 
    *  @param parent the tool parent 
    */
-  SubClusterSelectorAll( const std::string& type   , 
-                         const std::string& name   ,
-                         const IInterface*  parent );
+  SubClusterSelectorAll
+  ( const std::string& type   , 
+    const std::string& name   ,
+    const IInterface*  parent );
   
-  /** destructor 
-   */
+  /// destructor 
   virtual ~SubClusterSelectorAll();
   
 private:
+  
+  /// default constructor   is  private 
+  SubClusterSelectorAll();
+  /// copy    constructor   is  private 
+  SubClusterSelectorAll
+  ( const SubClusterSelectorAll& );
+  /// assignement operator  is  private 
+  SubClusterSelectorAll* operator=
+  ( const SubClusterSelectorAll& );
   
 };
 

@@ -1,9 +1,12 @@
-// $Id: SubClusterSelectorBase.cpp,v 1.4 2001-12-09 14:33:09 ibelyaev Exp $
+// $Id: SubClusterSelectorBase.cpp,v 1.5 2002-04-07 18:15:02 ibelyaev Exp $
 // Include files 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2001/12/09 14:33:09  ibelyaev
+//  update for newer version of Gaudi
+//
 // Revision 1.3  2001/11/12 19:04:28  ibelyaev
 //  update
 //
@@ -25,7 +28,7 @@
 // CaloDet 
 #include "CaloDet/DeCalorimeter.h"
 // CaloEvent 
-#include "CaloEvent/CaloCluster.h"
+#include "Event/CaloCluster.h"
 // local
 #include "SubClusterSelectorBase.h"
 
@@ -49,17 +52,22 @@
 SubClusterSelectorBase::SubClusterSelectorBase( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
-  : CaloTool ( type, name , parent ) 
+  : CaloTool  ( type, name , parent ) 
+  , m_modify  ( true                )
 {
   /// declare the available interfaces
-  declareInterface<ICaloClusterTool>(this);
+  declareInterface<ICaloClusterTool>   ( this )    ;
+  declareInterface<ICaloSubClusterTag> ( this )    ;
+  /// 
+  declareProperty ( "ModifyFractions" , m_modify ) ;
 };
+// ============================================================================
 
 // ============================================================================
-/** destructor
- */
+/// destructor
 // ============================================================================
 SubClusterSelectorBase::~SubClusterSelectorBase() {};
+// ============================================================================
 
 // ============================================================================
 /** standard finalization method 
@@ -68,6 +76,7 @@ SubClusterSelectorBase::~SubClusterSelectorBase() {};
 // ============================================================================
 StatusCode SubClusterSelectorBase::finalize   ()
 { return CaloTool::finalize(); }
+// ============================================================================
 
 // ============================================================================
 /** standard initialization method 
@@ -76,57 +85,16 @@ StatusCode SubClusterSelectorBase::finalize   ()
 // ============================================================================
 StatusCode SubClusterSelectorBase::initialize ()
 {
-  /// initialize the base class
+  // initialize the base class
   StatusCode sc = CaloTool::initialize() ;
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!",sc);}
-  /// check for detector
-  if( 0 == det()     )
-    {
-      if( 0 == detSvc() ) 
-        { return Error("Detector Data Service is ivnalid!"); }
-      /// 
-      SmartDataPtr<DeCalorimeter> calo( detSvc() , detName() );
-      if( !calo )
-        { return Error("Could not locate detector='"+detName()+"'"); }
-      /// set detector
-      setDet( calo );
-    }
-  ///  
-  if( 0 == det()     )
-    { return Error("Detector '"+detName()+"' is not located!");}
-  ///
+  // load and set the  detector
+  setDet( get<const DeCalorimeter>( detSvc() , detName() ) );
+  // 
   return StatusCode::SUCCESS;
 };
-
 // ============================================================================
-/** Methods for IInterface interface implementation,
- *  Query interface.
- *  @param iiD   ID of Interface to be retrieved
- *  @param pI    Pointer to Location for interface pointer
- *  @return status code 
- */
-// ============================================================================
-StatusCode SubClusterSelectorBase::queryInterface
-( const  InterfaceID& iiD , 
-  void** pI               )
-{
-  /// check the validity of the placeholder 
-  if( 0 == pI ) {       return StatusCode::FAILURE   ; }
-  ///
-  if      ( iiD == ICaloClusterTool:: interfaceID   () ) 
-    { *pI = static_cast<ICaloClusterTool*> (this)    ; }
-  else if ( iiD == IAlgTool::         interfaceID   () ) 
-    { *pI = static_cast<IAlgTool*>         (this)    ; }
-  else if ( iiD == IInterface::       interfaceID   () )
-    { *pI = static_cast<IInterface*>       (this)    ; }
-  else { return CaloTool::queryInterface( iiD , pI ) ; }
-  ///
-  addRef();
-  ///
-  return StatusCode::SUCCESS ;
-  ///
-};
 
 // ============================================================================
 /** The main processing method (functor interface) 
@@ -134,54 +102,21 @@ StatusCode SubClusterSelectorBase::queryInterface
  *  @return status code 
  */  
 // ============================================================================
-StatusCode SubClusterSelectorBase::process ( CaloCluster* cluster ) const 
-{ return (*this) ( cluster ) ; }
-
-  
+StatusCode SubClusterSelectorBase::process     ( CaloCluster* cluster ) const 
+{ return tag ( cluster ) ; }  
 // ============================================================================
-/** The main processing method with hypothesis 
+
+// ============================================================================
+/** The main processing method 
+ *  @see ICaloSubClusterTag
+ *  @see ICaloClusterTool
  *  @param cluster pointer to CaloCluster object to be processed
- *  @param hypo    processing hypothesis 
  *  @return status code 
  */  
 // ============================================================================
-StatusCode SubClusterSelectorBase::process    
-( CaloCluster* cluster                   , 
-  const CaloHypotheses::Hypothesis& /* hypo */ ) const 
-{
-  ///
-  Warning("The hypotheses selector is not implemented yet!");
-  ///
-  return process( cluster );
-};
-
+StatusCode SubClusterSelectorBase::operator() ( CaloCluster* cluster ) const  
+{ return tag ( cluster ) ; }  
 // ============================================================================
-/** untag/unselect the all digits in the clusters
- * 
- *  Error codes 
- *    -  225  - cluster points to NULL
- *
- *  @param cluster pointer to cluster 
- *  @return status code 
- */
-// ============================================================================
-StatusCode 
-SubClusterSelectorBase::untag( CaloCluster* cluster ) const
-{
-  /// check the arguments
-  if( 0 == cluster ) { return StatusCode( 225 ) ; }
-  /// loop over all digits 
-  for( CaloCluster::Digits::iterator iDigit = cluster->digits().begin() ;
-       cluster->digits().end() != iDigit ; ++iDigit ) 
-    {
-      CaloDigitStatus& status = iDigit->second ;
-      status.removeStatus ( DigitStatus::UseForEnergy     ) ;
-      status.removeStatus ( DigitStatus::UseForPosition   ) ;
-      status.removeStatus ( DigitStatus::UseForCovariance ) ;
-    }
-  ///
-  return StatusCode::SUCCESS ;  
-};
 
 // ============================================================================
 // The End 

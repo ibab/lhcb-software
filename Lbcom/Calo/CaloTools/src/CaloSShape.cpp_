@@ -1,0 +1,166 @@
+// $Id: CaloSShape.cpp_,v 1.1 2002-04-07 18:15:01 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+// Include files
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartDataPtr.h"
+// Kernel
+#include "Kernel/CaloHypotheses.h"
+// CaloEvent/Event 
+#include "Event/CaloHypo.h"
+#include "Event/CaloDataFunctor.h"
+// CaloDet 
+#include "CaloDet/DeCalorimeter.h"
+// local
+#include "CaloSShape.h"
+
+// ============================================================================
+/** @file CaloSShape.cpp
+ * 
+ * Implementation file for class : CaloSShape
+ * 
+ * @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ * @date 21/03/2002 
+ */
+// ============================================================================
+
+// ============================================================================
+// Declaration of the Tool Factory
+// ============================================================================
+static const  ToolFactory<CaloSShape>         s_Factory ;
+const        IToolFactory&CaloSShapeFactory = s_Factory ;
+
+// ============================================================================
+/** Standard constructor
+ *  @param  type actual type of the tool (?)
+ *  @param  name the name of the instance
+ *  @parent pointer to parent object 
+ */
+// ============================================================================
+CaloSShape::CaloSShape( const std::string& type   ,
+                        const std::string& name   ,
+                        const IInterface*  parent )
+  : CaloTool ( type, name , parent ) 
+{  
+  declareInterface<ICaloHypoTool>( this );
+};
+
+// ============================================================================
+/** destructor (virtual) 
+ */
+// ============================================================================
+CaloSShape::~CaloSShape(){};
+
+// ============================================================================
+/** initialization of the tool 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode CaloSShape::initialize()
+{
+  // initialize the base class
+  StatusCode sc = CaloTool::initialize();
+  if( sc.isFailure    () ) 
+    { return Error("Could not initialize the base class CaloTool!", sc ); }
+  if( detName().empty () )
+    { return Error("'Detector' is not specified!"                      ); }
+  if( 0 == detSvc     () ) 
+    { return Error(" detSvc() points to NULL!"                         ); }
+  SmartDataPtr<DeCalorimeter>  calo( detSvc() , detName() );
+  if( !calo ) 
+    { return Error( " Detector '" + detName() + "' could not be located!");}
+  setDet( calo );
+  ///
+  if( 0 == det()  ) 
+    { return Error( " Detector information is not avaliable "); }
+  ///
+  return StatusCode::SUCCESS ;
+};
+
+// ============================================================================
+/** The main processing method (functor interface)
+ *  @param  hypo  pointer to CaloHypo object to be processed
+ *  @return status code 
+ */  
+// ============================================================================
+StatusCode CaloSShape::operator() ( CaloHypo* hypo  ) const
+{ return process( hypo ); }
+
+// ============================================================================
+/** The main processing method 
+ *  @param  hypo  pointer to CaloHypo object to be processed
+ *  @return status code 
+ */  
+// ============================================================================
+StatusCode CaloSShape::process    ( CaloHypo* hypo  ) const 
+{
+  // avoid long names 
+  using namespace CaloDataFunctor;
+  
+  // select "good" hypotheses 
+  if( 0 == hypo ) 
+    { return Error("CaloHypo* points to NULL!" , 
+                   StatusCode( 200 ) ) ; }
+  if( CaloHypotheses::Photon != hypo->hypothesis() ) 
+    { return Error("Only for 'Photon' hypotesis is allowed!" , 
+                   StatusCode( 201 ) ) ; }
+  // only 1 cluster 
+  if( 1 != hypo->clusters().size() ) 
+    { return Error("Number of clusters is not equal to 1 !", 
+                   StatusCode( 202 ) ) ; }
+  //
+  if( 0 != hypo->momentum() )
+    { 
+      Warning("CaloHypo::Momentum information is invalidated!");
+      delete hypo->momentum();
+      hypo->setMomentum( 0 ) ;
+    }
+  if( 0 != hypo->position() )
+    { 
+      Warning("CaloHypo::Position information is invalidated!");
+      delete hypo->position();
+      hypo->setPosition( 0 ) ;
+    }
+  
+  // get the cluster 
+  CaloCluster* cluster = hypo->clusters().front();
+  if( 0 == cluster ) 
+    { return Error("Cluster is invalid!", StatusCode( 203 ) ) ; }
+  
+  // get seed cell
+  const CaloCluster::Entries& entries = cluster->entries();
+  CaloCluster::Entries::const_iterator seed = 
+    clusterLocateDigit( entries.begin ()          , 
+                        entries.end   ()          , 
+                        CaloDigitStatus::SeedCell );
+  if( entries.end() == seed ) 
+    { return Error("'Seed' is not found!" , StatusCode( 204 ) ) ; }
+  const CaloDigit* digit = seed->digit() ;
+  if( 0 == digit            )
+    { return Error("'Seed' is invalid!"   , StatusCode( 205 ) ) ; }
+  // get cluster position
+  const CaloCluster::Position& clusPos = cluster->position();
+  // get seed position 
+  const HepPoint3D&            seedPos = det()->cellCenter( digit->cellID() ) ;
+  // get the area 
+  const unsigned int area = digit->cellID().area() ;
+  if( area >= m_corres.size() ) { return Error("Wrong area index!", 206 );}
+  // dispatch 
+  CaloPosition* cp = (*(m_scurves[area]))( clusPos , seedPos );
+  if( 0 == cm ) { return Error("Position is not corrected!",207);
+  hypo->setPosition( cp );
+  //
+  return StatusCode::SUCCESS;
+};
+
+  
+
+
+// ============================================================================
+// The End 
+// ============================================================================

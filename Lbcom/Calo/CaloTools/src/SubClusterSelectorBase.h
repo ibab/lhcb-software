@@ -1,8 +1,11 @@
-// $Id: SubClusterSelectorBase.h,v 1.5 2001-12-09 14:33:09 ibelyaev Exp $
+// $Id: SubClusterSelectorBase.h,v 1.6 2002-04-07 18:15:03 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2001/12/09 14:33:09  ibelyaev
+//  update for newer version of Gaudi
+//
 // Revision 1.4  2001/11/25 15:50:41  ibelyaev
 //  update for newer CaloKernel package
 //
@@ -21,7 +24,7 @@
 // Include files
 // from STL
 // from CaloInterfaces 
-#include "CaloInterfaces/ICaloClusterTool.h"
+#include "CaloInterfaces/ICaloSubClusterTag.h"
 // from CaloKernel
 #include "CaloKernel/CaloTool.h"
 // forwarde declaration 
@@ -37,57 +40,55 @@ class    CaloCluster   ; ///< from CaloEvent package
  */
 
 class SubClusterSelectorBase : 
-  public virtual  ICaloClusterTool ,
+  public virtual  ICaloSubClusterTag ,
   public                  CaloTool 
 {
   
 public:
   
   /** standard initialization method 
+   *  @see CaloTool
+   *  @see  AlgTool
+   *  @see IAlgTool
    *  @return status code 
    */
   virtual StatusCode initialize ();
   
   /** standard finalization method 
+   *  @see CaloTool
+   *  @see  AlgTool
+   *  @see IAlgTool
    *  @return status code 
    */
   virtual StatusCode finalize   ();
   
-  /** query interface method  
-   *  @param  iiD  unique interface identifier 
-   *  @param  pI   placeholder for interface 
-   *  @return status code 
-   */
-  virtual StatusCode queryInterface 
-  ( const InterfaceID& iiD ,
-    void**             pI  );
-  
   /** The main processing method 
+   *  @see ICaloClusterTool 
+   *  @see ICaloSubClusterTag 
    *  @param cluster pointer to CaloCluster object to be processed
    *  @return status code 
    */  
   virtual StatusCode process    ( CaloCluster* cluster ) const  ;
   
-  /** The main processing method with hypothesis 
+  /** The main processing method (functor interface) 
+   *  @see ICaloClusterTool 
+   *  @see ICaloSubClusterTag 
    *  @param cluster pointer to CaloCluster object to be processed
-   *  @param hypo    processing hypothesis 
    *  @return status code 
    */  
-  virtual StatusCode process    
-  ( CaloCluster* cluster                   , 
-    const CaloHypotheses::Hypothesis& hypo ) const ;
+  virtual StatusCode operator() ( CaloCluster* cluster ) const  ;
 
 protected: 
   
-  /** untag/unselect the all digits/subclusters in the clusters
-   * 
-   *  Error codes 
-   *    -  225  - cluster points to NULL
-   *
-   *  @param cluster pointer to cluster 
-   *  @return status code 
+  /**  return  flag to modify the fractions 
+   *   @return flag to modify the fractions 
    */
-  StatusCode untag( CaloCluster* cluster ) const ;
+  inline bool modify() const { return m_modify ; }
+  
+  /** set new value for "modify" parameter
+   *  @param value new value of modify parameter 
+   */
+  inline void setModify( const bool value ) const { m_modify = value ; }
   
 protected:
   
@@ -101,9 +102,20 @@ protected:
                           const IInterface*  parent );
   
   virtual ~SubClusterSelectorBase( ); ///< Destructor
-  
-protected:
 
+private:
+  
+  /// default constructor is private 
+  SubClusterSelectorBase();
+  /// copy    constructor is private 
+  SubClusterSelectorBase( const SubClusterSelectorBase& );
+  /// assignement operator is private 
+  SubClusterSelectorBase& operator=( const SubClusterSelectorBase& );  
+  
+private:
+  
+  mutable bool m_modify ;
+  
 };
 
 // ============================================================================
