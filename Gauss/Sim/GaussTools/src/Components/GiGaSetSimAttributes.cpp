@@ -1,8 +1,11 @@
-// $Id: GiGaSetSimAttributes.cpp,v 1.2 2003-04-11 17:55:36 witoldp Exp $
+// $Id: GiGaSetSimAttributes.cpp,v 1.3 2003-04-29 13:52:57 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/04/11 17:55:36  witoldp
+// new handling of user limits
+//
 // Revision 1.1  2003/04/06 19:07:33  ibelyaev
 //  update foe newer GiGa, add new tools
 // 
@@ -163,6 +166,8 @@ StatusCode GiGaSetSimAttributes::process ( const std::string& vol ) const
   
   if(simSvc()->hasSimAttribute(vol)) 
     {
+      Print("Setting SimAttributes for " + vol);
+
       SimAttribute attr = simSvc() -> simAttribute( vol );
       
       // instanciate GaussG4UserLimits
