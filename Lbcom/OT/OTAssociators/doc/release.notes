@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.13 2002-12-19 09:31:47 cattanem Exp $
+! $Id: release.notes,v 1.14 2003-01-08 16:11:44 cattanem Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg
 
+!====================== OTAssociators v2r4 2003-01-08 ======================
 ! 2002-12-18 - Marco Cattaneo
  - Release tools at finalise
 
