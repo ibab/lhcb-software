@@ -1,8 +1,9 @@
 package GaudiConf
 package manager: F.Ranjard
 
+!========================== GaudiConf v6r5 2002-12-02 ======================
 ! 2002-11-29 - Ivan Belyaev
- - options/units.opts  add few more convinient units (mm,cm)
+ - options/units.opts  add few more convenient units (mm,cm)
 
 ! 2002-11-21 - Sebastien Ponce
  - Release of the Application was missing at the end of GaudiMain
