@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.37 2002-02-04 10:06:59 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.38 2002-02-04 10:43:44 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -2056,7 +2056,7 @@ void printCppHeader(DaDiPackage* gddPackage,
     
     char* fileName = new char[256];
     strcpy(fileName, envOut);
-    strcat(fileName, gddNamespName.data());
+    strcat(fileName, gddNamespace->name().transcode());
     strcat(fileName, ".h");
     std::cout << "Writing " << fileName;
     std::ofstream xmlOut(fileName);  
@@ -2249,7 +2249,7 @@ void printCppHeader(DaDiPackage* gddPackage,
 
     char* fileName = new char[256];
     strcpy(fileName, envOut);
-    strcat(fileName, gddClassName.data());
+    strcat(fileName, gddClass->className().transcode());
     strcat(fileName, ".h");
     std::cout << "Writing " << fileName;
     std::ofstream xmlOut(fileName);  
