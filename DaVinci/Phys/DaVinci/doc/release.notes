@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.31 2002-10-29 22:11:14 gcorti Exp $
+! $Id: release.notes,v 1.32 2002-10-30 11:09:00 gcorti Exp $
 <PRE>
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 ! Purpose     : LHCb analysis program 
+
+! 2002-10-30 - Gloria Corti
+ - Increase version numbers of RootHistCnv (v8r0p2), XmlDDDB (v13r1),
+	 TrEvent (v11r3), TrFitEvent (v3r2), OTDet (v3r0), OTAssociators (v2r2), 
+	 TrExtrapolator (v2r2), MuonDet (v4r1), L1VeloTrack (v3r1)
 
 ! 2002-10-29 - Gloria Corti
  - Introduce example for running efficiency for Bs->phiJpsi in DaVinciEff.opts
@@ -10,6 +15,7 @@
    DaVinci.opts.
 
 ! 2002-10-23 - Gloria Corti
+ - Introduce TrFitEvent (v3r0) explicitely to avoid * problems
  - Modify DaVinci.opts to do some clean up
  - Introduce DaVinci.Eff to show how to use Efficiency Algorithm
  - Introduce DaVinciMiniDst.opts to write a miniDST with MC/Proto and 

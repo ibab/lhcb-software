@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.44 2002-10-23 17:04:46 gcorti Exp $
+# $Id: requirements,v 1.45 2002-10-30 11:08:54 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -29,7 +29,7 @@ use  XERCES         v16r0p1
 use  CERNLIB        v2001
 use  ROOT           v2r303p0
 
-#--- Gaudi libraries - Gaudi v10r1
+#--- Gaudi libraries - Gaudi v10r4
 use  GaudiKernel        v12r3
 use  GaudiSvc           v8r4
 use  GaudiAlg           v6r1
@@ -40,8 +40,7 @@ use  GaudiRootDb        v9r0
 
 #--- Histogram persistency ( choose the one you prefer )
 use  HbookCnv           v12r0
-#use  RootHistCnv        v8r0p2
-use  RootHistCnv        v8r0
+use  RootHistCnv        v8r0p2
 
 #---LHCb common libraries
 use  GaudiConf      v6r3
@@ -57,14 +56,14 @@ use  MuonKernel   v2r1   Muon
 
 #--- Detector description ( add any other Det package you need )
 use  DetDesc        v10r4   Det
-use  XmlDDDB        v13r0   Det
+use  XmlDDDB        v13r1   Det
 use  VeloDet        v7r1    Det
 use  ITDet          v1r1    Det
-use  OTDet          v2r2    Det
+use  OTDet          v3r0    Det
 use  CaloDet        v5r1    Det
 use  CaloDetXmlCnv  v2r0    Det
 use  Magnet         v1r1    Det
-use  MuonDet        v3r1    Det
+use  MuonDet        v4r1    Det
 
 #--- Event Model
 use EventKernel  v2r0    Event
@@ -72,7 +71,7 @@ use Event        v2r0    Event
 use VeloEvent    v11r1   Event
 use ITEvent      v11r0   Event
 use OTEvent      v11r0   Event
-use TrEvent      v11r2   Event
+use TrEvent      v11r3   Event
 use RichEvent    v3r2    Event
 use CaloEvent    v11r2   Event
 use MuonEvent    v2r1    Event
@@ -84,15 +83,16 @@ use DbCnv        v7r0    Event
 
 #--- Associators
 use  ITAssociators      v2r1    IT
-use  OTAssociators      v2r1    OT
+use  OTAssociators      v2r2    OT
 use  VeloAssociators    v1r2    Velo
 use  CaloAssociators    v3r0    Calo
 use  CaloRec   		v2r3    Calo
+#use  CaloRec   		v2r4    Calo
 use  MuonAssociators    v1r0    Muon
-use  TrFitEvent         v3r0    Tr
+use  TrFitEvent         v3r2    Tr
 use  TrAssociators      v3r1    Tr
 use  L0Calo		v6r1	L0
-use  L1VeloTrack 	v3r0	L1
+use  L1VeloTrack 	v3r1	L1
 
 #--- Trigger
 use  L0DU         v6r1	L0
@@ -107,7 +107,7 @@ use  GlobalReco      v2r0   Rec
 use  CaloAlgs        v7r2   Calo
 
 #--- Necessary tools
-use  TrExtrapolator      v2r1   Tr
+use  TrExtrapolator      v2r2   Tr
 
 #--- DaVinci packages
 use DaVinciTools         v6r0   Phys
