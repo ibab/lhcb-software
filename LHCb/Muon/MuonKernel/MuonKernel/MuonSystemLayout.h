@@ -1,11 +1,10 @@
-// $Id: MuonSystemLayout.h,v 1.4 2002-02-28 15:39:35 atsareg Exp $
+// $Id: MuonSystemLayout.h,v 1.5 2002-03-04 16:51:03 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONSYSTEMLAYOUT_H
 #define MUONKERNEL_MUONSYSTEMLAYOUT_H 1   
 
 // Include files
 #include <vector>
-#include "GaudiKernel/MsgStream.h"  
 
 /** @class MuonSystemLayout MuonSystemLayout.h MuonKernel/MuonSystemLayout.h 
    

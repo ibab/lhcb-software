@@ -1,11 +1,14 @@
-// $Id: MuonTileID.h,v 1.1 2002-02-18 09:19:52 atsareg Exp $
+// $Id: MuonTileID.h,v 1.2 2002-03-04 16:51:04 atsareg Exp $
 //
 #ifndef      MUONKERNEL_MUONTILEID_H
 #define      MUONKERNEL_MUONTILEID_H 1  
+
+#ifndef MUONKERNEL_LOCAL
 // GaudiKernel
-#include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h" 
+#endif
+
 // Muon base
 #include "MuonKernel/MuonBase.h"
 #include "MuonKernel/MuonLayout.h"
@@ -152,17 +155,19 @@ public:
   inline bool operator !=( const MuonTileID& id ) const 
   { return !(id == *this) ; }
    
+#ifndef MUONKERNEL_LOCAL   
   /// serialization for reading 
   inline StreamBuffer& serialize( StreamBuffer& )       ;
   
   /// serialization for writing 
   inline StreamBuffer& serialize( StreamBuffer& ) const ;
-
-  /// printout to std::ostream 
-  inline std::ostream& printOut ( std::ostream& ) const ;
-
+  
   /// printout to MsgStream
   inline MsgStream&    printOut ( MsgStream&    ) const ;
+#endif  // MUONKERNEL_LOCAL   
+  
+  /// printout to std::ostream 
+  inline std::ostream& printOut ( std::ostream& ) const ;
   
   /// Find the MuonTileID which is an interception of two MuonTileID's
   MuonTileID intercept(const MuonTileID& id) const;
@@ -280,10 +285,13 @@ inline std::ostream& operator<< ( std::ostream& os , const MuonTileID& id ) {
   return id.printOut( os );  
 }
 
+
+#ifndef MUONKERNEL_LOCAL
 // output to MsgStream 
 inline MsgStream& operator<<( MsgStream&    os , const MuonTileID& id ) {
   return id.printOut( os ); 
 }
+
 
 // output to StreamBuffer
 inline StreamBuffer& operator<< ( StreamBuffer& s  , const MuonTileID& id ) { 
@@ -308,18 +316,6 @@ inline StreamBuffer& MuonTileID::serialize( StreamBuffer& sb ) const {
   return sb << m_muonid; 
 }
 
-// print to std::ostream
-inline std::ostream& MuonTileID::printOut( std::ostream& os ) const { 
-  os << "[" ;
-  return 
-    os <<  layout() << ","
-       <<  station() << ","  
-       <<  region() << "," 
-       <<  quarter() << "," 
-       <<  nX() << "," 
-       <<  nY() << "]" ;  
-}
-
 // print to MsgStream
 inline MsgStream& MuonTileID::printOut( MsgStream& os ) const { 
   os << "[" ;
@@ -330,6 +326,19 @@ inline MsgStream& MuonTileID::printOut( MsgStream& os ) const {
        <<  quarter() << "," 
        <<  nX() << "," 
        <<  nY() << "]" ;   
+}
+#endif  // MUONKERNEL_LOCAL
+
+// print to std::ostream
+inline std::ostream& MuonTileID::printOut( std::ostream& os ) const { 
+  os << "[" ;
+  return 
+    os <<  layout() << ","
+       <<  station() << ","  
+       <<  region() << "," 
+       <<  quarter() << "," 
+       <<  nX() << "," 
+       <<  nY() << "]" ;  
 }
 
 #endif  // MUONKERNEL_MUONTILEID_H 

@@ -1,4 +1,4 @@
-// $Id: MuonVector.h,v 1.2 2002-02-18 09:22:55 atsareg Exp $
+// $Id: MuonVector.h,v 1.3 2002-03-04 16:51:04 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONVECTOR_H
 #define MUONKERNEL_MUONVECTOR_H     1
@@ -19,35 +19,35 @@
 #include "MuonKernel/MuonTileID.h"
 #include "MuonKernel/MuonLayout.h"
 
-template <class MuonTile> 
-class MuonVector : public std::vector<MuonTile> {
+template <class Tile> 
+class MuonVector : public std::vector<Tile> {
 
 public:
 
   // Default constructor
-  MuonVector() {m_default = MuonTile();}
+  MuonVector() {m_default = Tile();}
   ~MuonVector() {}
   
   /// operator[] which takes MuonTileID as an index
-  MuonTile& operator[] (const MuonTileID& id) {
-    std::vector<MuonTile>::iterator it=std::find(begin(), end(), id);
+  Tile& operator[] (const MuonTileID& id) {
+    std::vector<Tile>::iterator it = std::find(begin(), end(), id);
     if(it != end()) {
       return *it;
     } else {
       return m_default;
     }  
   }
-  /// operator[] which takes MuonTileID as an index. This operator
+  /// operator[] which takes int as an index. This operator
   /// was screened from std::vector<MuonTile> implementation
-  MuonTile& operator[] (int ind){
-    return std::vector<MuonTile>::operator[](ind);
+  Tile& operator[] (int ind){
+    return std::vector<Tile>::operator[](ind);
   }
   
-  MuonVector<MuonTile> subset(const MuonTileID& id) {
+  MuonVector<Tile> subset(const MuonTileID& id) {
   
-    MuonVector<MuonTile> result;
+    MuonVector<Tile> result;
     MuonLayout idLayout = id.layout();
-    std::vector<MuonTile>::iterator it;
+    std::vector<Tile>::iterator it;
     for(it=begin();it!=end();it++) {
       MuonTileID container = (*it).id().containerID(idLayout);
       if(container == id) {      
@@ -58,7 +58,7 @@ public:
   }
   
 private:
-  MuonTile m_default;
+  Tile m_default;
 
 };
 

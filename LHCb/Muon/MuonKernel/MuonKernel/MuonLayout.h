@@ -1,4 +1,4 @@
-// $Id: MuonLayout.h,v 1.5 2002-02-28 15:39:33 atsareg Exp $
+// $Id: MuonLayout.h,v 1.6 2002-03-04 16:51:00 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONLAYOUT_H
 #define MUONKERNEL_MUONLAYOUT_H 1   
@@ -6,6 +6,7 @@
 // Include files
 #include <iostream>
 #include <vector>
+
 #ifndef MUONKERNEL_LOCAL
 #include "GaudiKernel/MsgStream.h"  
 #endif  // MUONKERNEL_LOCAL
@@ -186,6 +187,11 @@ inline MsgStream& MuonLayout::printOut( MsgStream& os ) const {
     os <<  xGrid() << ","
        <<  yGrid() << ")" ;  
 }
+
+// output to MsgStream 
+inline MsgStream& operator<<( MsgStream&  os , const MuonLayout& id ) {
+  return id.printOut( os ); 
+}
 #endif  // MUONKERNEL_LOCAL
 
 // output to std::ostream 
@@ -193,10 +199,6 @@ inline std::ostream& operator<< ( std::ostream& os , const MuonLayout& id ) {
   return id.printOut( os );  
 }
 
-// output to MsgStream 
-inline MsgStream& operator<<( MsgStream&    os , const MuonLayout& id ) {
-  return id.printOut( os ); 
-}
 inline bool operator==(const MuonLayout& ml1, const MuonLayout& ml2) {
     return ml1.xGrid()==ml2.xGrid() &&
            ml1.yGrid()==ml2.yGrid();
