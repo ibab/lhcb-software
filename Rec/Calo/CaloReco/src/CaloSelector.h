@@ -1,4 +1,4 @@
-// $Id: CaloSelector.h,v 1.1.1.1 2002-11-13 20:46:42 ibelyaev Exp $
+// $Id: CaloSelector.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -36,7 +36,7 @@ class CaloSelector :
   public                       CaloTool 
 {
   /// friend factory for instantiation`
-  friend ToolFactory<CaloSelector>;
+  friend class ToolFactory<CaloSelector>;
 public:
   
   /** "select"/"preselect" method 

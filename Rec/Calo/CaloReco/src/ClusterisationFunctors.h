@@ -1,8 +1,11 @@
-// $Id: ClusterisationFunctors.h,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $ 
+// $Id: ClusterisationFunctors.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name:4
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // Revision 1.3  2002/04/02 11:06:32  ibelyaev
 // update for new event model
 //
@@ -142,7 +145,7 @@ namespace ClusterisationFunctors
       : m_det   ( det     ) 
     , m_digits( &digcol ){}
     // destructor 
-    SeedFinder(){};
+    ~SeedFinder(){};
     
     /** the only one and essential method 
      *  @param pointer to calodigit object 
@@ -167,13 +170,17 @@ namespace ClusterisationFunctors
                       cells.begin   ()  ,
                       *m_digits         ); 
       // try to find the neighbour with larger energy 
-      Less_by_Energy<const CaloDigit*> Cmp;
-      DigSeq::const_iterator it = 
-        std::find_if( cells.begin() , 
-                      cells.end  () , 
-                      std::not1(std::bind2nd( Cmp , digit ) ) ) ;
+      Less_by_Energy<const CaloDigit*> Less;
+      for( DigSeq::const_iterator it = cells.begin(); 
+           cells.end() != it ; ++it ) 
+        { if( Less( digit , *it ) ) { return 0 ; } }
+      // 
+      // DigSeq::const_iterator it = 
+      // std::find_if( cells.begin () , 
+      //              cells.end   () , 
+      //              std::not1   ( std::bind2nd ( Less , digit ) ) ) ;
       // this digit is NOT local maximum 
-      if( cells.end() != it )                 { return 0; } /// < RETURN!
+      // if( cells.end() != it )                 { return 0; } /// < RETURN!
       // this digit IS a local maximum! 
       CaloCluster* cluster = new CaloCluster();
       // add this digit into cluster with status = SeedCell  

@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchElectron.h,v 1.1.1.1 2002-11-13 20:46:43 ibelyaev Exp $
+// $Id: CaloTrackMatchElectron.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
+// new package 
+//
 // Revision 1.9  2002/07/17 15:55:15  ibelyaev
 //  improved printout
 //
@@ -46,7 +49,7 @@ class CaloTrackMatchElectron:
   /** friend factory for tool creation
    * standard for GaudiTool
    */
-  friend ToolFactory<CaloTrackMatchElectron>;
+  friend class ToolFactory<CaloTrackMatchElectron>;
 
 public:
 

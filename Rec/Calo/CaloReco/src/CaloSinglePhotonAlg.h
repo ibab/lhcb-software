@@ -1,8 +1,11 @@
-// $Id: CaloSinglePhotonAlg.h,v 1.2 2002-12-09 17:43:09 cattanem Exp $
+// $Id: CaloSinglePhotonAlg.h,v 1.3 2003-06-23 13:11:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/09 17:43:09  cattanem
+// bug fixes
+//
 // Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
 // new package 
 //
@@ -35,7 +38,7 @@ class CaloSinglePhotonAlg :
   public CaloAlgorithm
 {  
   /// friend factory for instantiation 
-  friend AlgFactory<CaloSinglePhotonAlg>; 
+  friend class AlgFactory<CaloSinglePhotonAlg>; 
 public:
   
   /// container of names

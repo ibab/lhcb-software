@@ -1,8 +1,11 @@
-// $Id: CaloExtraDigits.h,v 1.1.1.1 2002-11-13 20:46:41 ibelyaev Exp $
+// $Id: CaloExtraDigits.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
+// new package 
+//
 // Revision 1.2  2002/06/13 12:32:39  ibelyaev
 //  version update
 //
@@ -42,7 +45,7 @@ class CaloExtraDigits :
   public                  CaloTool 
 {
   /// friend factory for instantiation 
-  friend ToolFactory<CaloExtraDigits>;
+  friend class ToolFactory<CaloExtraDigits>;
 
 public:
   

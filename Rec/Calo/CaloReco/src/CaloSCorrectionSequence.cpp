@@ -226,18 +226,20 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
   if (hypo->hypothesis()!=CaloHypotheses::Photon) {return StatusCode::FAILURE;}
   SmartRefVector<CaloCluster> clusters = hypo->clusters();
   if (clusters.size()!=1) {return StatusCode::FAILURE;}
-  CaloCluster *cluster;
-  for (SmartRef<CaloCluster> *clusterloop = clusters.begin();
+  CaloCluster* cluster = 0 ;
+  typedef SmartRefVector<CaloCluster> CCs;
+  for (CCs::iterator clusterloop = clusters.begin();
        clusterloop!=clusters.end();
        ++clusterloop) {
-    if (clusterloop!=0) {cluster = *(clusterloop);}
+    if (0 != *clusterloop ) {cluster = *(clusterloop);}
   }
   std::vector<CaloClusterEntry> sac = cluster->entries();
+  typedef std::vector<CaloClusterEntry> CCEs;
   double maxenergy=0.;
   SmartRef<CaloDigit> seed;
   logmsg << MSG::VERBOSE << "looping on digits:" << endreq;
-  for (CaloClusterEntry* i=sac.begin();i!=sac.end();++i) {
-    if (i==0) {continue;}
+  for (CCEs::iterator i=sac.begin();i!=sac.end();++i) {
+    // if (i==0) {continue;}
     SmartRef<CaloDigit> j=i->digit();
     if (j==0) {continue;}
     if (j->e()*i->fraction()>maxenergy) {
@@ -270,7 +272,7 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
   }
   bool border=false;
   int numberofneighbor = 0;
-  for (const CaloCellID *cellloop = 
+  for (CaloNeighbors::const_iterator cellloop = 
          det()->neighborCells(seed->cellID()).begin();
        cellloop!=det()->neighborCells(seed->cellID()).end();
        ++cellloop) {
@@ -285,8 +287,8 @@ StatusCode CaloSCorrectionSequence::operator() ( CaloHypo* hypo ) const {
     for (int j=0;j<3;j++) {E[i][j]=0.0;}
   }
   }
-  { for (CaloClusterEntry* i=sac.begin();i!=sac.end();++i) {
-    if (i==0) {continue;}
+  { for ( CCEs::iterator i=sac.begin();i!=sac.end();++i) {
+    // if (i==0) {continue;}
     SmartRef<CaloDigit> j=i->digit();
     if (j==0) {continue;}
     int row=j->cellID().row()-rowseed+1;

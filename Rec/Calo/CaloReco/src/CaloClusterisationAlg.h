@@ -1,8 +1,11 @@
-// $Id: CaloClusterisationAlg.h,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $
+// $Id: CaloClusterisationAlg.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // Revision 1.3  2002/04/04 20:25:16  ibelyaev
 //  update for new Calo Event Model (v10r0)
 //
@@ -33,7 +36,7 @@
 class CaloClusterisationAlg : public CaloAlgorithm 
 {
   /// friend factory for instantiation
-  friend AlgFactory<CaloClusterisationAlg>;
+  friend class AlgFactory<CaloClusterisationAlg>;
   
 public:
   

@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // Revision 1.1  2002/05/23 11:09:14  ibelyaev
 //  see $CALOALGSROOT/doc/release.notes
 //
@@ -49,7 +52,7 @@
 class CellularAutomaton : public CaloAlgorithm 
 {
   /// friend factory for instantiation
-  friend AlgFactory<CellularAutomaton>;
+  friend class AlgFactory<CellularAutomaton>;
 public:
   
   /// container to tagged  cells with sequential access 

@@ -1,4 +1,4 @@
-// $Id: CaloSShape.cpp,v 1.1.1.1 2002-11-13 20:46:42 ibelyaev Exp $
+// $Id: CaloSShape.cpp,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -75,6 +75,7 @@ CaloSShape::initialize  ()
 {
   // initialize the base class
   StatusCode sc = CaloTool::initialize();
+  if( sc.isFailure() ) { return sc ; }
   //   locate the detector information
   const DeCalorimeter* calo = get( detSvc() , detName() , calo ) ;
   setDet( calo );

@@ -303,19 +303,28 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		msg << MSG::ERROR << "clusters.size()!=1" << endreq;
 		return StatusCode::FAILURE;
 	}
-  CaloCluster *cluster;
-  for (SmartRef<CaloCluster> *clusterloop = clusters.begin();
+//   CaloCluster *cluster;
+//   for (SmartRef<CaloCluster> *clusterloop = clusters.begin();
+//        clusterloop!=clusters.end();
+//        ++clusterloop) {
+//     if (clusterloop!=0) {cluster = *(clusterloop);}
+//   }
+  typedef SmartRefVector<CaloCluster> CCs;
+  CaloCluster* cluster = 0 ;
+  for ( CCs::iterator clusterloop = clusters.begin();
        clusterloop!=clusters.end();
        ++clusterloop) {
-    if (clusterloop!=0) {cluster = *(clusterloop);}
+    if ( 0 != *clusterloop ) {cluster = *(clusterloop);}
   }
+
   std::vector<CaloClusterEntry> sac = cluster->entries();
   double maxenergy=0.;
   SmartRef<CaloDigit> seed;
   msg << MSG::VERBOSE << "looping on digits:" << endreq;
-	CaloClusterEntry* cce;
+  //	CaloClusterEntry* cce;
+  typedef std::vector<CaloClusterEntry> CCEs ;
+  CCEs::iterator cce;
   for (cce=sac.begin();cce!=sac.end();++cce) {
-    if (cce==0) {continue;}
     SmartRef<CaloDigit> srcd=cce->digit();
     if (srcd==0) {continue;}
     if (srcd->e()*cce->fraction()>maxenergy) {
@@ -377,7 +386,7 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		}
 	}
 	for (cce=sac.begin();cce!=sac.end();++cce) {
-		if (cce==0) {continue;}
+		// if (cce==0) {continue;}
 		SmartRef<CaloDigit> srcd=cce->digit();
 		if (srcd==0) {continue;}
 		if (srcd->cellID().area()!=areaseed) {continue;}
@@ -404,15 +413,16 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		}
 	}
 	for (cce=sac.begin();cce!=sac.end();++cce) {
-		if (cce==0) {continue;}
+		// if (cce==0) {continue;}
 		SmartRef<CaloDigit> srcd=cce->digit();
 		if (srcd==0) {continue;}
 		int row=srcd->cellID().row()-rowseed+1;
 		int col=srcd->cellID().col()-colseed+1;
 		if ((row>=0)&&(row<=2)&&(col>=0)&&(col<=2)) {
-			CaloClusterEntry* cce2;
+      //			CaloClusterEntry* cce2;
+			CCEs::iterator cce2;
 			for (cce2=sac.begin();cce2!=sac.end();++cce2) {
-				if (cce2==0) {continue;}
+				// if (cce2==0) {continue;}
 				SmartRef<CaloDigit> srcd2=cce2->digit();
 				if (srcd2==0) {continue;}
 				int row_l=srcd2->cellID().row()-rowseed+1;
@@ -445,7 +455,8 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 
 	bool border=false;
 	int numberofneighbor = 0;
-	const CaloCellID* cellloop;
+	// const CaloCellID* cellloop;
+  CaloNeighbors::const_iterator cellloop ;
 	for (cellloop = det()->neighborCells(seed->cellID()).begin();
 		cellloop!=det()->neighborCells(seed->cellID()).end();
 		++cellloop) {
@@ -486,7 +497,8 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 	for (i=0;i<3;i++) {
 		for (j=0;j<3;j++) {EDiffX[i][j]=0.;EDiffY[i][j]=0.;}
 	}
-	double BorderDiffX,BorderDiffY;
+	double BorderDiffX = 0 ;
+  double BorderDiffY = 0 ;
 
 	double x=0.,temp_x=0.,param_x=0.;
 	if (!borderx) {
@@ -498,7 +510,9 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		const double Edenom = (eright+m_Coeff_X[areaseed][1]*evert+eleft);
 		temp_x=2*m_Coeff_X[areaseed][0]*Enum/Edenom*sinh(1./param_x);
 		x=sizeseed*param_x*asinh(temp_x)/2.;
-		const double Difffactor = sizeseed*param_x*m_Coeff_X[areaseed][0]*sinh(1./param_x)/sqrt(1.+temp_x*temp_x);
+		const double Difffactor = 
+      sizeseed*param_x*m_Coeff_X[areaseed][0]*
+      sinh(1./param_x)/sqrt(1.+temp_x*temp_x);
 		// in eright
 		EDiffX[2][0]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
 		EDiffX[2][1]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
@@ -516,7 +530,9 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		param_x=m_Coeff_border_X[areaseed][0];
 		temp_x=(baryx-xseed)/sizeseed;
 		x=sizeseed*param_x*asinh(temp_x)/2.;
-		BorderDiffX=param_x*sinh(1./param_x)/sqrt(1.+temp_x*temp_x*4.*sinh(1./param_x)*sinh(1./param_x));
+		BorderDiffX=
+      param_x*sinh(1./param_x)/
+      sqrt(1.+ temp_x*temp_x*4.*sinh(1./param_x)*sinh(1./param_x));
 		msg << MSG::VERBOSE << "X border correction..." << endreq;
 	}
 	x+=xseed;
@@ -531,7 +547,9 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		const double Edenom = (etop+m_Coeff_Y[areaseed][1]*ehori+ebottom);
 		temp_y=2*m_Coeff_Y[areaseed][0]*Enum/Edenom*sinh(1./param_y);
 		y=sizeseed*param_y*asinh(temp_y)/2.;
-		const double Difffactor = sizeseed*param_y*m_Coeff_Y[areaseed][0]*sinh(1./param_y)/sqrt(1.+temp_y*temp_y);
+		const double Difffactor = 
+      sizeseed*param_y*m_Coeff_Y[areaseed][0]*
+      sinh(1./param_y)/sqrt(1.+temp_y*temp_y);
 		// in etop
 		EDiffY[0][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
 		EDiffY[1][2]=Difffactor*(Edenom-Enum)/(Edenom*Edenom);
@@ -549,7 +567,9 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 		param_y=m_Coeff_border_Y[areaseed][0];
 		temp_y=(baryy-yseed)/sizeseed;
 		y=sizeseed*param_y*asinh(temp_y)/2.;
-		BorderDiffY=param_y*sinh(1./param_y)/sqrt(1.+temp_y*temp_y*4.*sinh(1./param_y)*sinh(1./param_y));
+		BorderDiffY=
+      param_y*sinh(1./param_y)/
+      sqrt(1.+temp_y*temp_y*4.*sinh(1./param_y)*sinh(1./param_y));
 		msg << MSG::VERBOSE << "Y border correction..." << endreq;
 	}
 	y+=yseed;

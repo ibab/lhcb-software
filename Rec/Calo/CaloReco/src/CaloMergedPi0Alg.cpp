@@ -1,8 +1,11 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.3 2003-03-13 18:47:50 ibelyaev Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.4 2003-06-23 13:11:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/03/13 18:47:50  ibelyaev
+//  see ../doc/release.notes file
+//
 // Revision 1.2  2002/12/01 14:22:57  ibelyaev
 //  Hcal stuff and updated S-coprrections
 //
@@ -11,6 +14,9 @@
 //
 // ============================================================================
 // Include files
+// STD & STL 
+#include <numeric>
+#include <algorithm>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -531,14 +537,14 @@ StatusCode CaloMergedPi0Alg::execute()
             {
               ir=cellrow-seedrow+1;
               ic=cellcol-seedcol+1;
-              SubClusEne[0][ir][ic]=max(ecel,0.) ;
+              SubClusEne[0][ir][ic]=std::max(ecel,0.) ;
               SubClus[0][ir][ic]=dig;
             }
           if (abs(subrow-cellrow)<=1 && abs(subcol-cellcol)<=1) 
             {
               ir=cellrow-subrow+1;
               ic=cellcol-subcol+1;
-              SubClusEne[1][ir][ic]=max(ecel,0.) ;
+              SubClusEne[1][ir][ic]=std::max(ecel,0.) ;
               SubClus[1][ir][ic]=dig;
             }
         }
@@ -667,7 +673,7 @@ StatusCode CaloMergedPi0Alg::execute()
         
         {
           for(int is=0;is<2;++is){
-            int js;
+            int js = 0 ;
             if ( 0 == is ){ js = 1; }
             if ( 1 == is ){ js = 0; }
             for(int ir=0;ir<3;++ir){

@@ -1,8 +1,11 @@
-// $Id: CaloSharedCellAlg.h,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $
+// $Id: CaloSharedCellAlg.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // Revision 1.4  2002/04/05 17:12:20  ibelyaev
 //  remove bugs, bugs, bugs ....
 //
@@ -37,7 +40,7 @@
 class CaloSharedCellAlg : public CaloAlgorithm 
 {
   /// friend factory for instantiation
-  friend AlgFactory<CaloSharedCellAlg>;
+  friend class AlgFactory<CaloSharedCellAlg>;
 public:
   
   /** standard initialization method 
