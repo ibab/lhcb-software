@@ -4,6 +4,7 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v2r1 2005-02-15 ===================
 ! 2005-02-11- P. Koppenburg
   - options/Plots.opts
     . Plot detachd pions
