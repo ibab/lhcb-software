@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!========================= GaussTools v6r2 2003-03-11 =======================
 ! 2003-03-10 Vanya Belyaev 
   fix a problems with building a shared library at Win2K 
   src/Lib/GaussTrajectoryAllocator.cpp  - remove file 
@@ -15,8 +16,6 @@
                                           file. Remove extra "inline" 
                                           directives.
   GaussTools/GaussTrajectory.icpp       - remove obsolete file 
-    
-  
 
 !=========================== GaussTools v6r1 2002-02-14 =====================
 
