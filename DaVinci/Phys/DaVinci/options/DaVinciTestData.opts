@@ -27,11 +27,11 @@
 
 //-- LHCb v15r1, Brunel v23r1
 //   GaudiDb input. Comment next line if POOL input
-// EventSelector.Input = { 
-//  "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r1/412400.oodst' TYP='ROOT' opt='READ'" 
-// };
+EventSelector.Input = { 
+ "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r1/412400.oodst' TYP='ROOT' opt='READ'" 
+};
 //   Example for POOL input. This file must exist in MyCatalog.xml.
 //   If the catalogue is local use xmlcatalog_file instead of xmlcatalog_http
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r1/Pool412400.dst' TYP='POOL_ROOT' OPT='READ'" }; // evtype 412400
-PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
+// EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v23r1/Pool412400.dst' TYP='POOL_ROOT' OPT='READ'" }; // evtype 412400
+// PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";
 

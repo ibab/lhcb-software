@@ -3,12 +3,15 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v11r1>2004-02-06 DaVinci v11r1 - Development Version</A></H1><PRE>
  This version is mostly for developement and the main focus is for new data.
  TDR data can be read but not all features are supported beside decay channel
  selections. See details for DaVinci v11r0 and v10r0.
 
  - Version based on Gaudi v14r1 and LHCb v15r1, refer to release notes of
    LHCb for details regarding those packages.
+ 
+ - Use XmlDDDB v20r1 and ParamFiles v3r1
 
  - Necessary options for reading POOL files are always on in DaVinciCommon.opts
    To read a Pool file it is enough to define its type in 
@@ -20,11 +23,26 @@ Purpose     : LHCb analysis program
    The same applies to MCTools. 
 
  - Use new version of PhysSelSys v6r2 that includes new version of LoKi v1r10
-   with changes for Python and 
+   with changes for Python
 
+ - Adapt the DaVinciTest pacakge options to follow removal and introduction
+   of new options for geometry XmlDDDB (DaVinciTest v4r2)
 
+ - Make ProtoParticles with all type of tracsk by default (GlobalReco v4r3)
 
-</PRE><H1><A NAME=v10r1>2004-02-06 DaVinci v11r0 - Development Version</A></H1><PRE>
+ Bug fixes:
+ . Fix bug in TrTrasporter fix bug in the construction of the covariance
+   matrix passed to the extrapolator. The bug involved the momentum row
+   so any mass constrained fit using the TrExtrapolator could not work
+   properly (DaVinciTools v8r5)
+
+ Known problems: 
+ . Neutral particles cannot be produced currently for new data because not
+   enough information is present on the DST files
+ . ChargedProtoP are not made using TTT tracks when reading a Pool input
+   file 
+
+</PRE><H1><A NAME=v11r0>2004-02-06 DaVinci v11r0 - Development Version</A></H1><PRE>
 
  This version is mostly for developement and the main focus is for new data.
  TDR data can be read but not all features are supported beside decay channel

@@ -29,7 +29,6 @@ MiniDstWriter.ItemList = {
 // GaudiDb output (not possible with POOL input). 
 // Comment next two lines if using POOL.
 MiniDstWriter.Output = "DATAFILE='412400.oomdst' TYP='ROOT' OPT='NEW'";
-#include "$DAVINCIROOT/options/L1Truth.opts" // Classes not yet working with POOL
 
 // POOL output. Comment next line if GaudiDb output
 //MiniDstWriter.Output = "DATAFILE='PFN:412400.mdst' TYP='POOL_ROOTTREE' OPT='REC'";

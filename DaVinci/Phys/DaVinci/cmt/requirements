@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.85 2004-02-10 09:18:32 gcorti Exp $
+# $Id: requirements,v 1.86 2004-02-11 19:52:20 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -37,7 +37,6 @@ use  PCRE		v1r44
 use  UUID		v1r32
 use  SEAL		v1r133p1
 use  POOL		v1r150p1
-use  PYTHON		v3r222p2
 
 #--- Gaudi libraries (from GAUDI_v14r1)
 use  GaudiKernel	v15r1
@@ -57,7 +56,7 @@ use  RootHistCnv    	v9r1
 
 #--- Geometry Database
 use  XmlDDDB		v20r1	 Det
-use  ParamFiles		v2r1	 $(LHCb_release_area)/PARAM -no_auto_imports
+use  ParamFiles		v3r1	 $(LHCb_release_area)/PARAM -no_auto_imports
 use  FieldMap           v4r3
 
 #--- LHCb libraries (from LHCB_v15r1)
@@ -73,7 +72,7 @@ use  CaloPIDs           v1r2     Calo
 use  MuonID             v3r7     Muon
 
 #    Final Reconstruction
-use  GlobalReco         v4r2     Rec
+use  GlobalReco         v4r3     Rec
 use  PrimVtx            v2r1     Rec
 
 #    Utility tools
@@ -84,10 +83,10 @@ use  RecoTools          v1r1     Rec
 use  Utilities          v1r2     Tools
 
 #    Physics packages
-use  DaVinciTools       v8r4     Phys
+use  DaVinciTools       v8r5     Phys
 use  DaVinciAssociators v4r3     Phys
 use  DaVinciMCTools     v5r1     Phys
-use  DaVinciTest        v4r1p2   Phys
+use  DaVinciTest        v4r2     Phys
 use  Ks2PiPiSel         v1r0     Phys
 use  CommonParticles    v1r0     Phys
 use  PhysSelections	v6r1     Phys
