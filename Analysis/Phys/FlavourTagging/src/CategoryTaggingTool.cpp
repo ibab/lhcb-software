@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.cpp,v 1.8 2003-07-01 09:30:40 odie Exp $
+// $Id: CategoryTaggingTool.cpp,v 1.9 2003-07-01 09:37:33 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -371,7 +371,7 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
       msg << 8;
       break;
     case 102: // e + kss
-      comb = int(electron_tag.decision()) + int(kaonOS_tag.decision());
+      comb = int(electron_tag.decision()) + int(kaonSS_tag.decision());
       if( comb == 0 )
         theTag.setDecision(FlavourTag::none);
       else {
