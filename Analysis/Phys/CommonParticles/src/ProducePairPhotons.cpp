@@ -1,4 +1,4 @@
-// $Id: ProducePairPhotons.cpp,v 1.5 2004-04-28 19:01:11 beneyton Exp $
+// $Id: ProducePairPhotons.cpp,v 1.6 2004-05-03 16:01:40 beneyton Exp $
 // Include files
 #include <string>
 
@@ -116,7 +116,7 @@ StatusCode ProducePairPhotons::execute() {
 
 	StatusCode status;
 	MsgStream  msg( msgSvc(), name() );
-	IFD msg << MSG::DEBUG << "==> Execute" << endreq;
+	IFD msg << MSG::VERBOSE << "==> Execute" << endreq;
 
 	setFilterPassed(false);
 	int Nreconstructed = 0;
@@ -169,7 +169,7 @@ StatusCode ProducePairPhotons::execute() {
 		for ( i2partVelo = ipartVelo+1 ; i2partVelo != partVelos.end() ; i2partVelo++ ) {
 			PartVelo partVelo2 = *i2partVelo;
 			if ( partVelo2.second == partVelo.second ) {
-				msg << MSG::DEBUG << "  match " << endreq;
+				msg << MSG::VERBOSE << "  match " << endreq;
 				bool alreadystored = false;
 				VeloCands::iterator iveloCand;
 				for ( iveloCand = veloCands.begin() ; iveloCand != veloCands.end() ; iveloCand++ ) {
@@ -195,7 +195,7 @@ StatusCode ProducePairPhotons::execute() {
 							iveloCand->second.push_back(cand);
 						}
 						alreadystored = true;
-						msg << MSG::DEBUG << "  found... have1:" << have1 << " have2:" << have2 << endreq;
+						msg << MSG::VERBOSE << "  found... have1:" << have1 << " have2:" << have2 << endreq;
 					}
 				}
 				if ( !alreadystored ) {
@@ -210,7 +210,7 @@ StatusCode ProducePairPhotons::execute() {
 					cand2.second = true;
 					veloCand.second.push_back(cand2);
 					veloCands.push_back(veloCand);
-					msg << MSG::DEBUG << "  added... " << endreq;
+					msg << MSG::VERBOSE << "  added... " << endreq;
 				}
 			}
 		}
@@ -383,7 +383,7 @@ StatusCode ProducePairPhotons::execute() {
 			Particle gamma;
 			status = particleStuffer()->fillParticle( gammaVtx, gamma, m_gammaID );
 			if( !status.isSuccess() ) {
-				msg << MSG::DEBUG << " particleStuffer()->fillParticle failed" << endreq;
+				msg << MSG::ERROR << " particleStuffer()->fillParticle failed" << endreq;
 				continue;
 			}
 			// we are sure that it's a gamma (normaly...)
@@ -394,7 +394,7 @@ StatusCode ProducePairPhotons::execute() {
 			// all finished, we add gamma (and so other) in desktop
 			Particle* pInDesktop = desktop()->createParticle(&gamma);
 			if( !pInDesktop) {
-				msg << MSG::DEBUG << " desktop()->createParticle failed" << endreq;
+				msg << MSG::ERROR << " desktop()->createParticle failed" << endreq;
 				continue;
 			}
 			Nreconstructed++;
