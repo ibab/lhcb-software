@@ -1,10 +1,10 @@
 
-/** @file RichPIDSimpleMerge.h
+/** @file RichHierarchicalPIDMerge.h
  *
- *  Header file for RICH algorithm : RichPIDSimpleMerge
+ *  Header file for RICH algorithm : RichHierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichPIDSimpleMerge.h,v 1.5 2004-07-26 17:56:24 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.h,v 1.1 2004-08-19 14:04:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -27,16 +27,16 @@
 #include "Event/RichLocalPID.h"
 #include "Event/RichRingRefitPID.h"
 
-/** @class RichPIDSimpleMerge RichPIDSimpleMerge.h RichRecAlgs/RichPIDSimpleMerge.h
+/** @class RichHierarchicalPIDMerge RichHierarchicalPIDMerge.h RichRecAlgs/RichHierarchicalPIDMerge.h
  *
  *  Prepares RichPIDs using results from all individual PID algorithms.
  *
  *  The PID results are used with the follow order of precedence :-
  *
- *    1. For a given, if configured to do so, the Ring Refit PID result is used. 
+ *    1. For a given, if configured to do so, the Ring Refit PID result is used.
  *       By default, this feature is turned OFF.
- * 
- *    2. The global PID result for each track is used if available and if a Ring 
+ *
+ *    2. The global PID result for each track is used if available and if a Ring
  *       Refit result has not been used.
  *
  *    3. Finally, if no PID result is used and if a local PID result exists, it is used.
@@ -44,17 +44,17 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
  *
- *  @todo Rewrite this algorithm in a m more generic way
+ *  @todo Rewrite this algorithm in a more generic way
  */
 
-class RichPIDSimpleMerge : public RichAlgBase {
+class RichHierarchicalPIDMerge : public RichAlgBase {
 
 public:
 
   /// Standard constructor
-  RichPIDSimpleMerge( const std::string& name, ISvcLocator* pSvcLocator );
+  RichHierarchicalPIDMerge( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~RichPIDSimpleMerge( ); ///< Destructor
+  virtual ~RichHierarchicalPIDMerge( ); ///< Destructor
 
   virtual StatusCode initialize();    // Algorithm initialization
   virtual StatusCode execute   ();    // Algorithm execution
@@ -82,9 +82,13 @@ private:
 
   /// Flag to turn on/off use of Local PID results
   bool m_useLocalPIDs;
-  
+
   /// Flag to turn on/off use of Ring Global PID results
   bool m_useGlobalPIDs;
+
+  /// Flag to turn on the selection of Ring PID results if the corresponding global/local
+  /// only has RICH2 information
+  bool m_ringSel;
 
 };
 

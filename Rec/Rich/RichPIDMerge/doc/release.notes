@@ -4,6 +4,10 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+! 2004-08-19 - Chris Jones
+ - Update and rename main PID merging algorithm
+ - Add new debug merging algorithm RichGPIDSelByRing
+
 ! 2004-07-20 - Chris Jones
  - New version of RichPIDSimpleMerge to handle merging of Ring Refitting results
    Default options are the same behaviour as before (Ring Refit merging disabled)

@@ -1,11 +1,11 @@
 
 //------------------------------------------------------------------------
-/** @file RichPIDSimpleMerge.cpp
+/** @file RichHierarchicalPIDMerge.cpp
  *
- *  Implementation file for RICH algorithm : RichPIDSimpleMerge
+ *  Implementation file for RICH algorithm : RichHierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichPIDSimpleMerge.cpp,v 1.8 2004-07-26 17:56:24 jonrob Exp $
+ *  $Id: RichHierarchicalPIDMerge.cpp,v 1.1 2004-08-19 14:04:35 jonrob Exp $
  *  $Log: not supported by cvs2svn $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -17,16 +17,16 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // local
-#include "RichPIDSimpleMerge.h"
+#include "RichHierarchicalPIDMerge.h"
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<RichPIDSimpleMerge>          s_factory ;
-const        IAlgFactory& RichPIDSimpleMergeFactory = s_factory ;
+static const  AlgFactory<RichHierarchicalPIDMerge>          s_factory ;
+const        IAlgFactory& RichHierarchicalPIDMergeFactory = s_factory ;
 
 
 // Standard constructor, initializes variables
-RichPIDSimpleMerge::RichPIDSimpleMerge( const std::string& name,
-                                        ISvcLocator* pSvcLocator )
+RichHierarchicalPIDMerge::RichHierarchicalPIDMerge( const std::string& name,
+                                                    ISvcLocator* pSvcLocator )
   : RichAlgBase ( name , pSvcLocator )
 {
 
@@ -51,13 +51,15 @@ RichPIDSimpleMerge::RichPIDSimpleMerge( const std::string& name,
   declareProperty( "UseLocalPIDs",     m_useLocalPIDs  = true  );
   declareProperty( "UseGlobalPIDs",    m_useGlobalPIDs = true  );
 
+  declareProperty( "UseRingPIDsIfRICH1Available", m_ringSel = false );
+
 }
 
 // Destructor
-RichPIDSimpleMerge::~RichPIDSimpleMerge() {};
+RichHierarchicalPIDMerge::~RichHierarchicalPIDMerge() {};
 
 // Initialisation.
-StatusCode RichPIDSimpleMerge::initialize()
+StatusCode RichHierarchicalPIDMerge::initialize()
 {
   // initialise base classclean
   const StatusCode sc = RichAlgBase::initialize();
@@ -69,7 +71,7 @@ StatusCode RichPIDSimpleMerge::initialize()
 };
 
 // Main execution
-StatusCode RichPIDSimpleMerge::execute()
+StatusCode RichHierarchicalPIDMerge::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -101,30 +103,6 @@ StatusCode RichPIDSimpleMerge::execute()
   unsigned int nUsedlocalPIDs  = 0;
   unsigned int nUsedRingPIDs   = 0;
 
-  if ( m_useRingPIDs ) {
-    // iterate over Ring PID results and form output persistent objects
-
-    SmartDataPtr<RichRingRefitPIDs> rPIDs(eventSvc(), m_richRingFitPIDLocation);
-    if ( !rPIDs ) {
-      Warning("Cannot locate RichRingRefitPIDs at "+m_richRingFitPIDLocation);
-    } else {
-      if ( msgLevel(MSG::VERBOSE) )
-        verbose()  << "Successfully located " << rPIDs->size()
-                   << " RichRingRefitPIDs at " << m_richRingFitPIDLocation << endreq;
-
-      for ( RichRingRefitPIDs::const_iterator rPID = rPIDs->begin();
-            rPID != rPIDs->end(); ++rPID ) {
-
-        // Form new PID object, using existing RichPID as template
-        newPIDs->insert( new RichPID(*rPID), (*rPID)->key() );
-        ++nUsedRingPIDs;
-
-      }
-
-    }
-
-  }
-
   if ( m_useGlobalPIDs ) {
     // iterate over Global PID results and form output persistent objects
 
@@ -138,9 +116,6 @@ StatusCode RichPIDSimpleMerge::execute()
 
       for ( RichGlobalPIDs::const_iterator gPID = gPIDs->begin();
             gPID != gPIDs->end(); ++gPID ) {
-
-        // if pid with this key exists, skip
-        if ( newPIDs->object( (*gPID)->key() ) ) continue;
 
         // Form new PID object, using existing RichPID as template
         newPIDs->insert( new RichPID(*gPID), (*gPID)->key() );
@@ -179,6 +154,38 @@ StatusCode RichPIDSimpleMerge::execute()
 
   }
 
+  if ( m_useRingPIDs ) {
+    // iterate over Ring PID results and form output persistent objects
+
+    SmartDataPtr<RichRingRefitPIDs> rPIDs(eventSvc(), m_richRingFitPIDLocation);
+    if ( !rPIDs ) {
+      Warning("Cannot locate RichRingRefitPIDs at "+m_richRingFitPIDLocation);
+    } else {
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose()  << "Successfully located " << rPIDs->size()
+                   << " RichRingRefitPIDs at " << m_richRingFitPIDLocation << endreq;
+
+      for ( RichRingRefitPIDs::const_iterator rPID = rPIDs->begin();
+            rPID != rPIDs->end(); ++rPID ) {
+
+        // Do we already have a PID result for this track
+        RichPID * oldPID = newPIDs->object( (*rPID)->key() );
+        if ( oldPID ) {
+          const bool inRich1 = oldPID->usedAerogel() || oldPID->usedC4F10();
+          if ( m_ringSel || !inRich1 ) { newPIDs->erase( oldPID ); } 
+          else                         { continue;                 } 
+        }
+
+        // Form new PID object, using existing RichPID as template
+        newPIDs->insert( new RichPID(*rPID), (*rPID)->key() );
+        ++nUsedRingPIDs;
+
+      }
+
+    }
+
+  }
+
   // Update Rich status words
   procStat->addAlgorithmStatus( name()+":UsedGlobalPIDs",    nUsedglobalPIDs );
   procStat->addAlgorithmStatus( name()+":UsedLocalPIDs",     nUsedlocalPIDs  );
@@ -208,7 +215,7 @@ StatusCode RichPIDSimpleMerge::execute()
 };
 
 //  Finalize
-StatusCode RichPIDSimpleMerge::finalize()
+StatusCode RichHierarchicalPIDMerge::finalize()
 {
   // base class finalise
   return RichAlgBase::finalize();
