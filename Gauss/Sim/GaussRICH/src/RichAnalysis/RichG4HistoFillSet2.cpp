@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet2.cpp,v 1.3 2004-02-10 14:24:10 jonesc Exp $
+// $Id: RichG4HistoFillSet2.cpp,v 1.4 2005-02-21 19:01:31 gcorti Exp $
 // Include files
 
 // local
@@ -387,8 +387,8 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A( const G4Event* anEvent,
   // cout<< "Fill histo2A : NumHitSatRich1Gas NumHitSatAgel "
   //      <<NumSatTrajRich1Gas<<"    "<< NumSatTrajRich1Agel
   //    <<endl;
-  G4cout<<"Fill Histo2A : NumHitSatRich2 "
-        << NumSatTrajRich2Gas<<G4endl;
+//   G4cout<<"Fill Histo2A : NumHitSatRich2 "
+//         << NumSatTrajRich2Gas<<G4endl;
 
 
   for(int ihtra=0; ihtra < NumSatTrajRich1Gas; ++ihtra ) {

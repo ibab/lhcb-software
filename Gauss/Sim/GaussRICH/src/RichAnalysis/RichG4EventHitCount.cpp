@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.3 2004-02-10 14:24:09 jonesc Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.4 2005-02-21 19:01:31 gcorti Exp $
 // Include files
 
 
@@ -1026,7 +1026,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
   TrajIdVectR2.reserve(100);
 
 
-  G4cout<<"  Now counting Saturated numhits in Rich1 Rich2 "<<G4endl;
+//   G4cout<<"  Now counting Saturated numhits in Rich1 Rich2 "<<G4endl;
 
 
   //       G4double MinMomAgelCut=5.0*GeV;
@@ -1185,10 +1185,10 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
     }  // end loop over collections
 
 
-    G4cout<<"TrajIdR1VectSize and  TrajIdR1AgelVectSize "
-          << TrajIdVectR1.size()
-          <<"     "<< TrajIdVectR1Agel.size()<<G4endl;
-    G4cout<<"TrajIdVectRich2Size =  "<< TrajIdVectR2.size()<<G4endl;
+//     G4cout<<"TrajIdR1VectSize and  TrajIdR1AgelVectSize "
+//           << TrajIdVectR1.size()
+//           <<"     "<< TrajIdVectR1Agel.size()<<G4endl;
+//     G4cout<<"TrajIdVectRich2Size =  "<< TrajIdVectR2.size()<<G4endl;
 
     // store the trackid info.
 
@@ -1405,7 +1405,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
 
 
-  G4cout<<"End of   RichG4CountSaturatedHits " <<G4endl;
+//   G4cout<<"End of   RichG4CountSaturatedHits " <<G4endl;
 
 };
 
@@ -1419,7 +1419,7 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
   RichG4Counters* aRichCounter =  RichG4Counters::getInstance();
   if(aRichCounter ) {
 
-    G4cout<<"Begin  Rich hit count "<< G4endl;
+//     G4cout<<"Begin  Rich hit count "<< G4endl;
 
 
     G4int NumRichCollection= NumRichColl;
@@ -1526,7 +1526,7 @@ void RichG4EventHitCount::RichG4CountAndClassifyHits( const G4Event* anEvent,  i
 
   }
 
-  G4cout<<"End  Rich hit count "<< G4endl;
+//   G4cout<<"End  Rich hit count "<< G4endl;
 
 
 }
