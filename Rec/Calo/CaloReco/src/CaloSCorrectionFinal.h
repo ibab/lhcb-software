@@ -72,25 +72,40 @@ protected:
   
 private:
 
-  std::vector<double> m_Coeff_area_0_X;
-  std::vector<double> m_Coeff_area_0_Y;
-  std::vector<double> m_Coeff_area_1_X;
-  std::vector<double> m_Coeff_area_1_Y;
-  std::vector<double> m_Coeff_area_2_X;
-  std::vector<double> m_Coeff_area_2_Y;
-  
-  // covariance parameters
+	// to be set by user
+	std::vector<double> m_Coeff_area_0_X;
+	std::vector<double> m_Coeff_area_0_Y;
+	std::vector<double> m_Coeff_area_1_X;
+	std::vector<double> m_Coeff_area_1_Y;
+	std::vector<double> m_Coeff_area_2_X;
+	std::vector<double> m_Coeff_area_2_Y;
+	// grouped parameter, allocated in initialize
+	std::vector<double> m_Coeff_X[3];
+	std::vector<double> m_Coeff_Y[3];
+	
+	// to be set by user
+	std::vector<double> m_Coeff_border_area_0_X;
+	std::vector<double> m_Coeff_border_area_0_Y;
+	std::vector<double> m_Coeff_border_area_1_X;
+	std::vector<double> m_Coeff_border_area_1_Y;
+	std::vector<double> m_Coeff_border_area_2_X;
+	std::vector<double> m_Coeff_border_area_2_Y;
+	// grouped parameter, allocated in initialize
+	std::vector<double> m_Coeff_border_X[3];
+	std::vector<double> m_Coeff_border_Y[3];
+
+	//covariance things...
   double m_a2GeV                  ; ///< calorimeter resolution ((A**2)*GeV)
   double m_b2                     ; ///< calorimeter resolution ((B**2))
   double m_s2gain                 ; ///< relative gain dispersion
   double m_s2incoherent           ; ///< incoherent noise dispersion
   double m_s2coherent             ; ///< coherent noise dispersion
 
-  double m_resA    ; // calorimeter resolution  (stochastic term) 
+  double m_resA    ; // calorimeter resolution  (stochastic term)
   double m_resB    ; // calorimeter resolution  (constant term)
   double m_gainS   ; // sigma on relative gain
-  double m_sigmaIn ; // sigma of incoherent noise 
-  double m_sigmaCo ; // sigma of incoherent noise 
-
+  double m_sigmaIn ; // sigma of incoherent noise
+  double m_sigmaCo ; // sigma of incoherent noise
+	
 };
 #endif // CALOTOOLS_CALOSCORRECTIONSEQUENCE_H

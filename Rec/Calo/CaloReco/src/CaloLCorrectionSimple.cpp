@@ -8,7 +8,7 @@
 #include "CaloKernel/CaloTool.h"
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
-// Event 
+// Event
 #include "Event/CaloHypo.h"
 // local
 #include "CaloLCorrectionSimple.h"
@@ -30,77 +30,77 @@
  */
 // ============================================================================
 static const  ToolFactory<CaloLCorrectionSimple>         s_factory ;
-const        IToolFactory&CaloLCorrectionSimpleFactory = s_factory ; 
+const        IToolFactory&CaloLCorrectionSimpleFactory = s_factory ;
 // ============================================================================
 
 // ============================================================================
 /** Standard constructor
  *  @see   CaloTool
- *  @see    AlgTool 
+ *  @see    AlgTool
  *  @param type    type of the tool  (?)
- *  @param name    name of the concrete instance 
+ *  @param name    name of the concrete instance
  *  @param parent  pointer to parent object (algorithm, service or tool)
  */
 // ============================================================================
-CaloLCorrectionSimple::CaloLCorrectionSimple(const std::string& type, 
-                                             const std::string& name, 
-                                             const IInterface* parent) 
+CaloLCorrectionSimple::CaloLCorrectionSimple(const std::string& type,
+                                             const std::string& name,
+                                             const IInterface* parent)
   : CaloTool( type, name, parent )
-  , m_Zref     (12638.2     )
-  , m_Zfactor  (    5.83    )
-  , m_Zfactor2 (    2.76    ) {
+  , m_Zref(12480.)
+  , m_Zss(171.1)
+  , m_Zfactor(9.72) {
   declareInterface<ICaloHypoTool>(this);
-  declareProperty("Zref"    ,m_Zref    );
-  declareProperty("Zfactor" ,m_Zfactor );
-  declareProperty("Zfactor2",m_Zfactor2);
+  declareProperty("Zref",m_Zref);
+  declareProperty("Zss",m_Zss);
+  declareProperty("Zfactor",m_Zfactor);
 }
 // ============================================================================
 
 // ============================================================================
-/// destructor 
+/// destructor
 // ============================================================================
 CaloLCorrectionSimple::~CaloLCorrectionSimple() {}
 // ============================================================================
 
 // ============================================================================
 /** standard initialization method
- *  @see CaloTool 
+ *  @see CaloTool
  *  @see  AlgTool
- *  @see IAlgTool 
- *  @return status code 
+ *  @see IAlgTool
+ *  @return status code
  */
 // ============================================================================
 StatusCode CaloLCorrectionSimple::initialize()
 {
-  MsgStream logmsg(msgSvc(), name());
-  logmsg << MSG::VERBOSE << "intialize() has been called" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::VERBOSE << "intialize() has been called" << endreq;
   /// initialize the base class
   StatusCode sc = CaloTool::initialize();
   if( sc.isFailure() ) {
     Error("Could not initialize the base class ",sc);
     return StatusCode::FAILURE;
   }
-  logmsg << MSG::INFO 
-         << " Zref=" << m_Zref
-         << " Zfactor=" << m_Zfactor
-         << " Zfactor2=" << m_Zfactor2
-         << endreq;
+  msg << MSG::INFO
+      << " Zref=" << m_Zref
+      << " Zss=" << m_Zss
+      << " Zfactor=" << m_Zfactor
+      << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 // ============================================================================
 /** standard finalization method
- *  @see CaloTool 
+ *  @see CaloTool
  *  @see  AlgTool
- *  @see IAlgTool 
- *  @return status code 
+ *  @see IAlgTool
+ *  @return status code
  */
 // ============================================================================
 StatusCode CaloLCorrectionSimple::finalize()
 {
-  MsgStream logmsg(msgSvc(), name());
-  logmsg << MSG::VERBOSE << "finalize() has been called" << endreq;
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::VERBOSE << "finalize() has been called" << endreq;
   /// finalize the  the base class
   return CaloTool::finalize ();
 }
@@ -110,10 +110,10 @@ StatusCode CaloLCorrectionSimple::finalize()
 /** The main processing method
  *  @see ICaloHypoTool
  *  @param  hypo  pointer to CaloHypo object to be processed
- *  @return status code 
- */  
+ *  @return status code
+ */
 // ============================================================================
-StatusCode CaloLCorrectionSimple::process    ( CaloHypo* hypo  ) const 
+StatusCode CaloLCorrectionSimple::process    ( CaloHypo* hypo  ) const
 {
   return (*this) ( hypo ) ;
 };
@@ -123,33 +123,34 @@ StatusCode CaloLCorrectionSimple::process    ( CaloHypo* hypo  ) const
 /** The main processing method (functor interface)
  *  @see ICaloHypoTool
  *  @param  hypo  pointer to CaloHypo object to be processed
- *  @return status code 
- */  
+ *  @return status code
+ */
 // ============================================================================
 StatusCode CaloLCorrectionSimple::operator() ( CaloHypo* hypo  ) const
 {
-  // check arguments 
+  // check arguments
   if( 0 == hypo ) { return Error("CaloHypo* points to NULL");}
-  // check the position 
+  // check the position
   if( 0 == hypo->position() ) { return Error("CaloPosition* points to NULL!");}
   // retrieve energy and position
   const double e = hypo -> position () -> e () /1000. ;
+  if (e<=0.) {return StatusCode::FAILURE;}
   const double x = hypo -> position () -> x () ;
+  if (fabs(x)<=0.) {return StatusCode::FAILURE;}
   const double y = hypo -> position () -> y () ;
+  if (fabs(y)<=0.) {return StatusCode::FAILURE;}
   // compute trigonometric things...
-  double result = m_Zref+
-    cos(atan(sqrt(x*x+y*y)
-             /(m_Zref+m_Zfactor*log(e))))
-    *log(e)*(m_Zfactor+m_Zfactor2*log(e));
+  //double result = m_Zref+cos(atan(sqrt(x*x+y*y)/(12490.)))*(m_Zss+m_Zfactor*log(e));
+  double result = m_Zref+12490./sqrt(x*x+y*y+12490.*12490.)*(m_Zss+m_Zfactor*log(e));
   // talk to user
-  MsgStream logmsg(msgSvc(),name());
-  logmsg << MSG::VERBOSE << "calculate() has been called"
+  MsgStream msg(msgSvc(),name());
+  msg << MSG::VERBOSE << "calculate() has been called"
          << " arg:" << " e:" << e
          << " x:" << x << " y:" << y << endreq;
-  logmsg  << MSG::VERBOSE 
-          << " result:" << result 
+  msg  << MSG::VERBOSE
+          << " result:" << result
           << endreq;
-  // set "correct" parameters 
+  // set "correct" parameters
   hypo -> position() -> setZ( result );
   return StatusCode::SUCCESS;
 }

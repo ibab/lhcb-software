@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.17 2003-01-23 14:41:04 cattanem Exp $
+! $Id: release.notes,v 1.18 2003-01-31 14:53:23 beneyton Exp $
 ! Package     : Calo/CaloReco
 ! Responsible : Ivan Belyaev
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 !-----------------------------------------------------------------------------
+
+! 2003-01-31 - Richard Beneyton
+ - src/CaloSCorrectionFinal    - update function, add border and covariance
+ - src/CaloLCorrectionSimplev  - update function
+ - options/LCorrectionSimple   - define parameter 
+ - options/SCorrectionFinal    - define parameter
 
 !======================= CaloReco v1r2p1 2003-01-23 =======================
 ! 2003-01-22 - Ivan BELYAEV 

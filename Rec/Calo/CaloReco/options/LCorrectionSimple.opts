@@ -1,0 +1,5 @@
+ToolSvc.CaloLCorrectionSimple.Zref = 12480. ;
+ToolSvc.CaloLCorrectionSimple.Zss = 171.6 ;
+ToolSvc.CaloLCorrectionSimple.Zfactor = 9.72;
+//ToolSvc.CaloLCorrectionSimple.OutputLevel = 1;
+
