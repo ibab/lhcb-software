@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.9 2002-04-17 07:59:02 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.10 2002-06-20 18:40:54 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -36,11 +36,6 @@
 
 static const AlgFactory<DecisionUnit>    Factory;
 const IAlgFactory& DecisionUnitFactory = Factory;
-
-// Useful local type definitions
-
-typedef ObjectVector<L0MuonCandidate> InputSeqMuon; 
-
 
 // Constructor
 // Algorithm parameters which can be set at run time must be declared here.
@@ -252,11 +247,11 @@ StatusCode DecisionUnit::execute() {
   // Find candidates muon
 
   double eSumMuons = 0.0;
-  SmartDataPtr<InputSeqMuon> smartCandMuon ( eventSvc() ,
+  SmartDataPtr<L0MuonCandidates> smartCandMuon ( eventSvc() ,
                                              m_nameOfInputL0MuonCandidate ); 
   if ( 0 != smartCandMuon ) {
-    InputSeqMuon* candMuon = (InputSeqMuon*) smartCandMuon;
-    InputSeqMuon::const_iterator itCandMuon = candMuon->begin();
+    L0MuonCandidates* candMuon = (L0MuonCandidates*) smartCandMuon;
+    L0MuonCandidates::const_iterator itCandMuon = candMuon->begin();
     if ( candMuon->end() == candMuon->begin() ) {
       log << MSG::DEBUG
           << "No Muon candidates"
@@ -264,18 +259,6 @@ StatusCode DecisionUnit::execute() {
     } else {
       std::vector<double> eMuons; 
       while ( itCandMuon != candMuon->end() ) {
-        log << MSG::DEBUG 
-            << "Cand Muon " 
-            << " Pt(GeV) = "
-            << (*itCandMuon)->pt() / GeV 
-            << "( theta phi status = "
-            << (*itCandMuon)->theta()
-            << " "
-            << (*itCandMuon)->phi()
-            << " "
-            << (*itCandMuon)->status()
-            << " )"
-            << endreq;
         if ( L0Muon::OK == (*itCandMuon)->status() ) {
           eMuons.push_back( fabs( (*itCandMuon)->pt() ) );
         }
@@ -284,26 +267,12 @@ StatusCode DecisionUnit::execute() {
       if ( 0 != eMuons.size() ) {
         std::greater<double> greater_than;
         std::sort( eMuons.begin(), eMuons.end(), greater_than );
-        log << MSG::DEBUG 
-            << "Energies abs. (GeV) Muons ordonned"
-            << endreq;
-        log << MSG::DEBUG
-            << "  ( ordonned to have first the greaters )"
-            << endreq;
-        log << MSG::DEBUG
-            << "Only Muons with status OK and not the same energy"
-            << endreq;
         eMuons.erase( std::unique(eMuons.begin(), eMuons.end() ),
                       eMuons.end() );
         log << MSG::DEBUG 
             << "Data eCut1, eCut2, scal for the greater muon"
             << endreq;
-      } else {
-        log << MSG::DEBUG
-            << "No Muons with status OK"
-            << endreq;
-      }
-      if ( 1 <= eMuons.size() ) {
+
         itCandMuon = candMuon->begin();
         while ( itCandMuon != candMuon->end() ) {
           if ( eMuons[ 0 ] == fabs( (*itCandMuon)->pt() ) ) {
@@ -312,13 +281,19 @@ StatusCode DecisionUnit::execute() {
           itCandMuon++;   
         }
         m_Muon1 = (*itCandMuon);
+        log << MSG::DEBUG << "Cand Muon  Pt(GeV) = "
+            << (*itCandMuon)->pt() / GeV 
+            << "( theta phi status = "
+            << (*itCandMuon)->theta() << " "
+            << (*itCandMuon)->phi() << " "
+            << (*itCandMuon)->status() 
+            << " ) eCut1(Gev) = " << m_eMu1Cut1 / GeV
+            << " eCut2(GeV) = " << m_eMu1Cut2 / GeV
+            << " scal = " << m_scalMu1 
+            << endreq;
+      } else {
         log << MSG::DEBUG
-            << "  eCut1(Gev) = "
-            << m_eMu1Cut1 / GeV
-            <<" eCut2(GeV) = "
-            << m_eMu1Cut2 / GeV
-            << " scal = "
-            << m_scalMu1 
+            << "No Muons with status OK"
             << endreq;
       }
       int indMuon = 0;
