@@ -50,17 +50,7 @@
   fun:R__Deflate_fast
 }
 
-# Error from poolRootTreeContainer
-# Not tested with Boole v6r0-v6r1 (access violation in main()...)
-#{
-#  POOL_1_6_3/RootTreeContainer
-#  Memcheck:Leak
-#  fun:R__huft_build
-#  fun:R__Inflate_fixed
-#  fun:R__Inflate_block
-#}
-
-# Error from seal reflection, should b fixed in 1_4_0 release. 
+# Error from seal reflection, should be fixed in 1_4_0 release. 
 # Not tested with Boole v6r0-v6r1 (access violation in main()...)
 # Seen with Boole v5r9 in event 400, related to memory "jumps"?
 #{ 
@@ -69,4 +59,15 @@
 #  fun:_Znwj
 #  fun:_ZN4seal7reflect12ClassBuilder9addMethodEPKcS3_S3_PFPvS4_Ei
 #  fun:_ZN26std__vector_longsint__dictC1Ev
+#}
+
+# POOL_1_6_3 - POOL_1_7_0-gamma
+# Not tested with Boole v6r1 due to core dump at end of job
+# Not seen with Brunel v24r1
+#{
+#  POOL bug 3171
+#  Memcheck:Leak
+#  fun:__builtin_new
+#  fun:_Znwj
+#  fun:_ZN11xercesc_2_317MemoryManagerImpl8allocateEj
 #}
