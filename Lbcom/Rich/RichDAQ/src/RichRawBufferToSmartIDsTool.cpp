@@ -5,8 +5,11 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.2 2004-10-30 21:45:57 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.3 2004-11-02 13:13:38 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.2  2004/10/30 21:45:57  jonrob
+ * update decoding tool
+ *
  * Revision 1.1  2004/10/30 19:13:05  jonrob
  * Reworking RawBuffer decoding as a tool, to allow reconstruction to skip RichDigit creation
  *
@@ -56,7 +59,6 @@ StatusCode RichRawBufferToSmartIDsTool::initialize()
 
 StatusCode RichRawBufferToSmartIDsTool::finalize()
 {
-
   // Execute base class method
   return RichToolBase::finalize();
 }
@@ -98,8 +100,8 @@ RawEvent * RichRawBufferToSmartIDsTool::rawEvent() const
 const RichSmartID::Vector & RichRawBufferToSmartIDsTool::allRichSmartIDs() const
 {
   if ( m_newEvent ) {
-    m_newEvent = false;
-    fillRichSmartIDs();
+    fillRichSmartIDs(); // Fill for this event
+    m_newEvent = false; // Set this event processed
   }
   return m_smartIDs;
 }
@@ -121,7 +123,7 @@ void RichRawBufferToSmartIDsTool::fillRichSmartIDs() const
         iBank != richBanks.end(); ++iBank ) {
 
     // Get the bank header
-    RichDAQHeaderPD bankHeader( (*iBank).data()[0] );
+    const RichDAQHeaderPD bankHeader( (*iBank).data()[0] );
 
     // Is this a zero suppressed bank or not ?
     if ( bankHeader.zeroSuppressed() ) {
