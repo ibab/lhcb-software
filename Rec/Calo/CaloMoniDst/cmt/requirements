@@ -1,0 +1,27 @@
+# ============================================================================
+# Created    : 2004-10-25
+# Maintainer : Vanya BELYAEV belyaev@lapp.in2p3.fr
+# ============================================================================
+package           CaloMoniDst
+version           v1r0
+
+# =============== structure ==================================================
+branches          cmt doc src options 
+
+# =============== environment ================================================
+set               CALOMONIDSTOPTS $(CALOMONIDSTROOT)/options 
+
+# =============== dependencies ===============================================
+use               CaloInterfaces v* Calo 
+use               CaloUtils      v* Calo 
+use               Relations      v* Kernel
+ 
+# =============== constituents ===============================================
+library           CaloMoniDst   -import=AIDA *.cpp
+
+# =============== patterns ===================================================
+apply_pattern     component_library library=CaloMoniDst
+
+# ============================================================================
+# The END 
+# ============================================================================

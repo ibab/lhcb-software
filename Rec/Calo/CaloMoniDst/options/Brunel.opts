@@ -1,0 +1,42 @@
+// $Id: Brunel.opts,v 1.1.1.1 2004-10-25 09:00:25 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file
+ *  configurtaion filw to run Dst monitoring in Brunel
+ *  @author Vanya BELYAEV  belyaev@lapp.in2p3.fr
+ *  @date 2004-10-25
+ */
+
+ApplicationMgr.DLLs += { "CaloMoniDst"} ;
+
+
+BrunelMoniCALOSeq.Members +=
+  {
+    // clusters 
+    "CaloClusterMonitor/ClusterMoni"             , 
+    "CaloClusterMonitor/SplitClusterMoni"        , 
+    // hypos
+    "CaloHypoMonitor/ElectronMoni"               ,
+    "CaloHypoMonitor/PhotonMoni"                 ,
+    "CaloHypoMonitor/SplitPhotonMoni"            ,
+    "CaloHypoMonitor/MergedPi0Moni"              ,
+    // matching 
+    "CaloClusterMatchMonitor/PhotonMatchMoni"    ,
+    "CaloHypoMatchMonitor/ElectronMatchMoni"     ,
+    "CaloHypoMatchMonitor/BremMatchMoni"         ,
+    // pi0  
+    "CaloPi0Monitor/Pi0Moni"                     ,
+    "CaloMCPi0Monitor/MCPi0Moni"                 ,
+    // MC truth
+    "CaloClusterMCTruthMonitor/CaloMCTruthMoni" 
+  };
+
+#include "$CALOMONIDSTOPTS/MoniDst.opts"
+
+// ============================================================================
+// The END 
+// ============================================================================

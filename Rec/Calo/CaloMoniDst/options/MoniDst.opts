@@ -1,0 +1,106 @@
+// $Id: MoniDst.opts,v 1.1.1.1 2004-10-25 09:00:25 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+/** @file 
+ *  The configuraion file for Dst moniroting algorithms
+ *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+ *  @date 2004-10-25
+ */
+
+
+// Monitoring of clusters  
+ClusterMoni.Input              = "Rec/Calo/EcalClusters" ;
+SplitClusterMoni.Input         = "Rec/Calo/EcalSplitClusters"  ;
+
+// Monitoring of different Hypotehses 
+PhotonMoni.Input               = "Rec/Calo/Photons"             ;
+ElectronMoni.Input             = "Rec/Calo/Electrons"           ;
+MergedPi0Moni.Input            = "Rec/Calo/MergedPi0s"          ;
+SplitPhotonMoni.Input          = "Rec/Calo/SplitPhotons"        ;
+
+// Pi0 Monitoring
+// The default value 
+// Pi0Moni.Input                  = "Rec/Calo/Photons"             ;
+Pi0Moni.PhotonPt               = 200. * MeV                     ;  
+Pi0Moni.Pi0Pt                  = 400. * MeV                     ;
+
+// Pi0 Monitoring with MC 
+// The default value 
+// MCPi0Moni.Detector             = "/dd/Structure/LHCb/Ecal"      ;
+// The default value 
+// MCPi0Moni.Input                = "Rec/Calo/Photons"             ;
+MCPi0Moni.Cut                  = 0.0                            ;
+
+// Monitoring of matching relation tables
+PhotonMatchMoni.Input            = "Rec/Calo/EcalClusters" ;
+PhotonMatchMoni.AssociatorName   = "PhotonMatch"           ;
+
+ElectronMatchMoni.Input          = "Rec/Calo/Electrons"    ;
+ElectronMatchMoni.AssociatorName = "ElectronMatch"         ;
+
+BremMatchMoni.Input              = "Rec/Calo/Photons"      ;
+BremMatchMoni.AssociatorName     = "BremMatch"             ;
+
+CaloMCTruthMoni.Input            = "Rec/Calo/EcalClusters" ;
+CaloMCTruthMoni.AssociatorName   = "CCs2MCPs"              ;
+
+
+PIDeEcalMoni.  Particle      =  11 ;
+PIDeEcalMoni.  Tr2CaloPID    = "Associator<TrStoredTrack,float>/EcalPIDe"  ;
+PIDeEcalMoni.  Normalization =  50.0 * GeV ;
+
+PIDmEcalMoni.  Particle = 13 ;
+PIDmEcalMoni.  Tr2CaloPID = "Associator<TrStoredTrack,float>/EcalPIDmu" ;
+PIDmEcalMoni.  Normalization =  25.0 * GeV ;
+
+PIDeHcalMoni.  Particle = 11 ;
+PIDeHcalMoni.  Tr2CaloPID = "Associator<TrStoredTrack,float>/HcalPIDe"  ;
+PIDeHcalMoni.  Normalization =  50.0 * GeV ;
+
+PIDmHcalMoni.  Particle = 13 ;
+PIDmHcalMoni.  Tr2CaloPID = "Associator<TrStoredTrack,float>/HcalPIDmu" ;
+PIDmHcalMoni.  Normalization =  25.0 * GeV ;
+
+PIDeBremMoni.  Particle = 11 ;
+PIDeBremMoni.  Tr2CaloPID = "Associator<TrStoredTrack,float>/BremPIDe"  ;
+PIDeBremMoni.  Normalization =  50.0 * GeV ;
+
+PIDePrseMoni.  Particle = 11 ;
+PIDePrseMoni.  Tr2CaloPID = "Associator<TrStoredTrack,float>/PrsPIDe"   ;
+PIDePrseMoni.  Normalization =  50.0 * GeV ;
+
+PhotonMonitor.OutputLevel = 3 ;
+PhotonMonitor.HypoToolType= "CaloPhotonEstimatorTool";
+PhotonMonitor.HypoToolName= "PhotonPID";
+PhotonMonitor.Pdf         = true;
+
+// Ebin Edges :
+PhotonMonitor.EBin = {
+  1000.0 ,   2000.0 ,   4000.0 ,   6000.0 ,
+ 10000.0 ,  20000.0 ,  40000.0 ,  70000.0 ,
+100000.0
+};
+
+// Histogram Binning :
+PhotonMonitor.EPrsBin={
+ // Nbin ,   Xmin,   Xmax
+      50.,     0.,   200. // EPrs
+};
+PhotonMonitor.Chi2Bin={
+ // Nbin ,   Xmin,   Xmax
+      26.,     0.,   104. // Chi2(Tr)
+};
+PhotonMonitor.ShapBin={
+ // Nbin ,   Xmin,   Xmax
+      50.,     0., 30000.  // Shower Shape
+};
+
+
+// ============================================================================
+// The END 
+// ============================================================================
+
