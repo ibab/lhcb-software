@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.16 2004-02-13 16:01:58 mtobin Exp $
+// $Id: DeVelo.h,v 1.17 2004-02-13 16:32:51 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -208,6 +208,9 @@ public:
 
   /// returns the R pitch at the given channelID +/- fraction of channel
   StatusCode rPitch( VeloChannelID channel, double fraction, double &rPitch ) ;
+
+  /// returns the R pitch at a given radiusb
+  StatusCode rPitchAtR( VeloChannelID channel, double radius, double &rPitch);
 
   /// returns the phi of the strip at the specified radius for this sensor.
   StatusCode phiOfStrip( VeloChannelID channel,

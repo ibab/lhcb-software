@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.37 2004-02-13 16:02:15 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.38 2004-02-13 16:33:02 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -394,6 +394,19 @@ StatusCode DeVelo::rPitch( VeloChannelID channel, double fraction,
   unsigned int index=sensorIndex(sensor);
   if(DeVeloRType* rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[index])){
     rPitch = rPtr->rPitch(channel.strip(),fraction);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// returns the R pitch at a given radius
+StatusCode DeVelo::rPitchAtR( VeloChannelID channel, double radius,
+			   double &rPitch ) {
+  unsigned int sensor=channel.sensor();
+  unsigned int index=sensorIndex(sensor);
+  if(DeVeloRType* rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[index])){
+    rPitch = rPtr->rPitch(radius);
     return StatusCode::SUCCESS;
   }else{
     return StatusCode::FAILURE;

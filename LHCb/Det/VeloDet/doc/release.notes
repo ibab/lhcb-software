@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.53 2004-02-13 16:02:10 mtobin Exp $
+! $Id: release.notes,v 1.54 2004-02-13 16:32:57 mtobin Exp $
 package VeloDet
 package manager : Velo Group
 
-! 2004-02-13 - Mark Tobin
- - Added angleOfStrip to replace phiDirectionOfStrip in old DeVelo.
-
 !========================= VeloDet v9r0 2004-02-13 =========================
    >> Requires XmlDDDB v22r0 or greater <<
+
+! 2004-02-13 - Mark Tobin
+ - Added angleOfStrip to replace phiDirectionOfStrip in old DeVelo.
+   Added method to calculate rPitch at a given radius (rPitchAtR).
 
 ! 2004-02-13 - Marco Cattaneo
  - Remove unneccessary includes from public include files
