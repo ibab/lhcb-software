@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.h,v 1.1.1.1 2004-08-24 06:28:54 pkoppenb Exp $
+// $Id: UnconstVertexFitter.h,v 1.2 2004-12-14 18:46:31 pkoppenb Exp $
 #ifndef UNCONSTVERTEXFITTER_H
 #define UNCONSTVERTEXFITTER_H 1
 
@@ -8,13 +8,14 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
 #include "DaVinciTools/IVertexFitter.h"
 
 // Forward declarations
 class IParticleTransporter;
+class IPhotonParams;
 
 /** @class UnconstVertexFitter UnconstVertexFitter.h 
  *  Perform an unconstrained vertex fit.
@@ -23,9 +24,13 @@ class IParticleTransporter;
  *
  * @author S. Amato
  * @date 16/12/2001 
+ *
+ * Modified by: Luis Fernandez, 07/12/2004 
+ * - fit with neutral(s) with origin
+ * 
 */
 
-class UnconstVertexFitter : public AlgTool,
+class UnconstVertexFitter : public GaudiTool,
                             virtual public IVertexFitter {
 public:
 
@@ -54,19 +59,31 @@ public:
   /// In case any particle is a resonance, it uses the daughters and call
   /// the doFitVertex to actually perform the fit 
   StatusCode fitVertex( Particle& particle1, Particle& particle2, 
-                        Particle& particle3, Vertex& myVertex ); 
-
-
-  /// get the first estimate for the z position  
-  double getZEstimate (const ParticleVector& particleList);
-  /// Fit the vertex given a vector of Particles as input. 
-  StatusCode doFitVertex( const ParticleVector& particleList,
-                          Vertex& myVertex ); 
-  
+                        Particle& particle3, Vertex& myVertex );
 
 private:
+
+  /// find "charged" and "neutrals"
+  int splitIntoNeutralsAndCharged(const ParticleVector&, ParticleVector&, ParticleVector&);
+  /// special case where there is only a resonance in the list
+  Vertex* singleResonanceVertex(const ParticleVector& );
+  /// Fit the vertex given a vector of Particles as input. 
+  StatusCode doFitVertex( const ParticleVector&, Vertex&);  
+  /// get the first estimate for the z position  
+  double getZEstimate (const ParticleVector& particleList);
+  /// Add neutrals to vertex
+  StatusCode addNeutrals( const ParticleVector&, ParticleVector&, Vertex&);  
+
+  
+
   IParticleTransporter* m_pTransporter; ///< Reference to ParticleTransporter
   std::string m_transporterType;        ///< Type of transporter to use      
+
+  IPhotonParams* m_pPhotonParams; ///< Reference to PhotonParams
+  std::string m_PhotonParamsType; ///< Type
+
+  int m_gammaID; ///< gamma particle ID
+  double m_scale; // for cov matrix of neutrals with origin
 };
 
 #endif // UNCONSTVERTEXFITTER_H

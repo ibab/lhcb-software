@@ -1,7 +1,13 @@
 ! $Id: 
 ! Package     : VertexFit
-! Responsible : P. Koppenburg
+! Responsible : Yuehong Xie
 
+! 2004-12-14 - P. Koppenburg for Luis Fernandez
+  - src/UnconstVertexFitter.*
+    . Add the possibility to treat photons correctly
+    . Make it a GaudiTool
+    -> yet to be tested
+  
 !========================== VertexFit v1r2 2004-12-01 ===================
 ! 2004-11-25 - Yuehong Xie
   - Modified KFFitTool.cpp/.h to make it work with Ks

@@ -1,10 +1,7 @@
-// $Id: UnconstVertexFitter.cpp,v 1.1.1.1 2004-08-24 06:28:54 pkoppenb Exp $
+// $Id: UnconstVertexFitter.cpp,v 1.2 2004-12-14 18:46:31 pkoppenb Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/GaudiException.h"
 
 
 // from Event
@@ -20,6 +17,10 @@
 // local
 #include "UnconstVertexFitter.h"
 #include "DaVinciTools/IParticleTransporter.h"
+#include "DaVinciTools/IPhotonParams.h"
+
+#include "Event/ProtoParticle.h"
+#include "Event/TrgTrack.h"
 
 //--------------------------------------------------------------------
 //
@@ -29,6 +30,10 @@
 //               
 //
 //  Author     : S. Amato  
+//
+//
+// Modified by: Luis Fernandez, 07/12/2004 
+// - fit with neutral(s) with origin
 //
 //--------------------------------------------------------------------
 
@@ -45,14 +50,17 @@ const IToolFactory& UnconstVertexFitterFactory = s_factory;
 UnconstVertexFitter::UnconstVertexFitter(const std::string& type, 
                                          const std::string& name, 
                                          const IInterface* parent) 
-  : AlgTool( type, name, parent )
-  , m_pTransporter(0)
-  , m_transporterType("CombinedTransporter") {
+  : GaudiTool( type, name, parent )
+    , m_pTransporter(0)
+    , m_pPhotonParams(0) 
+    , m_gammaID(22){
 
   declareInterface<IVertexFitter>(this);
 
-  declareProperty("Transporter", m_transporterType);
-  
+  declareProperty("Transporter", m_transporterType = "CombinedTransporter");
+
+  declareProperty("PhotonParamsType", m_PhotonParamsType = "PhotonParameters");
+  declareProperty ("ScaleFactor", m_scale = 2.0); // for cov matrix of neutrals with origin
 }
 
 
@@ -61,15 +69,20 @@ UnconstVertexFitter::UnconstVertexFitter(const std::string& type,
 // Initialize
 //==================================================================
 StatusCode UnconstVertexFitter::initialize() {
-  MsgStream log( msgSvc(), name() );
   
-  StatusCode sc = toolSvc()->retrieveTool( m_transporterType,
-                                           m_pTransporter, this);
-  if(sc.isFailure()) {
-    log << MSG::FATAL << "    Unable to retrieve ParticleTransporter  tool" ;
-    return sc;
+  m_pTransporter = tool<IParticleTransporter>( m_transporterType, this);
+  if(!m_pTransporter) {
+    fatal() << "    Unable to retrieve ParticleTransporter  tool" ;
+    return StatusCode::FAILURE;
   }
-  
+
+  m_pPhotonParams = tool<IPhotonParams>(m_PhotonParamsType, this);
+
+  if (!m_pPhotonParams){
+    fatal() << "Unable to retrieve PhotonParams tool" << endreq;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
 
 }
@@ -106,64 +119,226 @@ StatusCode UnconstVertexFitter::fitVertex( Particle& particle1,
 // Perform vertex fit for a vector of particles.
 // If one of them is a resonance, use the daughters to fit
 //==================================================================
-StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& 
-                                                   pList,
-                                                   Vertex& myVertex ) {
+StatusCode UnconstVertexFitter::fitVertex( const ParticleVector& pList,
+                                           Vertex& myVertex ) {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Hello From Vertex Fitter With Daughters" << endreq;
-  
+  debug() << "Hello From Vertex Fitter With Daughters" << endreq;
+
   if (pList.size() < 2) {
-   log << MSG::INFO << "Particle Vector size is less than 2" << endreq;   
-   return StatusCode::FAILURE;
-  } 
-
-  ParticleVector particleList;
+    info() << "Particle Vector size is less than 2" << endreq;   
+    return StatusCode::FAILURE;
+  }
   
-  ParticleVector::const_iterator iterP;
-  SmartRefVector<Particle>::iterator itMother;
-  for(iterP = pList.begin(); iterP != pList.end(); iterP++) {
-    log << MSG::VERBOSE << "Using " << (*iterP)->particleID().pid() << " " << 
-      (*iterP)->momentum()  << endreq ;
+  // Split vector in two lists:
+  // charged tracks, or composite particles with an endVertex (including neutrals, gammas from e+e-)
+  ParticleVector fromChargedOrResoList;
+
+  // neutrals with origin and no endVertex: gammas
+  ParticleVector fromNeutralWithOriList;
+
+  // Count number of resonances not to refit when one only needs to add gammas
+  int nResonances = splitIntoNeutralsAndCharged(pList,fromChargedOrResoList,fromNeutralWithOriList);
+  
+  if((fromChargedOrResoList.size()<2) && (!fromNeutralWithOriList.empty())){
+    info() << "Needs at least two charged tracks when using neutrals with origin" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  // The vertex without neutrals at the beginning
+  Vertex fromChargedOrResoVtx;
+
+  // Do not refit if only *one* composite particle and neutrals with origin (e.g. B_s0 -> (phi(1020) -> K+ K-) gamma)
+  // special case of only one resonance and neutrals with origin
+  bool special = false ;  
+  if ((nResonances == 1) && (!fromNeutralWithOriList.empty())){
+    Vertex* vp = singleResonanceVertex(pList); 
+    if (vp){
+      special = true;
+      fromChargedOrResoVtx = *vp;
+    }
+  } // special case of only one resonance and neutrals with origin
+
+  // If not the special case of only one resonance and neutrals with origin
+  // Fit the charged tracks and resonances first
+  // Vertex from charged tracks and resonances
+  if(!special){
+    debug() << "Will fit the charged tracks and resonances" << endreq;
+    StatusCode sc = doFitVertex(fromChargedOrResoList,fromChargedOrResoVtx);
+    if (!sc) return StatusCode::FAILURE;
+  }
+  
+  // If no neutrals
+  if (fromNeutralWithOriList.empty()){
+    debug() << "No neutrals" << endreq;    
+
+    // Add products to vertex, from original particle list not to destroy already existing resonances
+    for (ParticleVector::const_iterator iterP = pList.begin(); iterP != pList.end(); iterP++) {
+      fromChargedOrResoVtx.addToProducts(*iterP);
+    }
+
+    // Assignment operator: the original product particles are kept
+    myVertex = fromChargedOrResoVtx;
+
+  // Now add neutrals
+  } else{
+    StatusCode sc = addNeutrals(fromNeutralWithOriList,fromChargedOrResoList,fromChargedOrResoVtx);
+
+    // Refit with the neutrals
+    info() << "Refit vertex with neutrals" << endreq;
+    sc = doFitVertex(fromChargedOrResoList,myVertex);
+    if (!sc ) return StatusCode::FAILURE;
     
-    if ((*iterP)->isResonance()){
-      for ( itMother = (*iterP)->endVertex()->products().begin();
-            itMother != (*iterP)->endVertex()->products().end(); itMother++ ){
-        particleList.push_back(*itMother);
-      }
- 
+    // Add products to vertex, from original particle list not to destroy already existing resonances
+    for(ParticleVector::const_iterator iterP = pList.begin(); iterP != pList.end(); iterP++) {
+      myVertex.addToProducts(*iterP);
     }
-    else{
-      particleList.push_back(*iterP);
-    }
-  }
-  StatusCode sc = doFitVertex(particleList,myVertex);
-  if (!sc ) return StatusCode::FAILURE;
+  } // else neutrals
 
-  for(iterP = pList.begin(); iterP != pList.end(); iterP++) {
-    myVertex.addToProducts(*iterP);
-  }
-  return StatusCode::SUCCESS;
+
+  //------------------------------------------------------------------------------------  
   
 
+  return StatusCode::SUCCESS;
 
 }
 
+//==================================================================
+// Add neutrals
+//==================================================================
+StatusCode UnconstVertexFitter::addNeutrals( const ParticleVector& fromNeutralWithOriList, 
+                                             ParticleVector& fromChargedOrResoList, 
+                                             Vertex& fromChargedOrResoVtx){
+  info() << "Will add " << fromNeutralWithOriList.size() << " neutral(s)" << endreq;
+  
+  // Re-evaluate the photon(s) parameters at the vertex from charged tracks or resonance
+  
+  for (ParticleVector::const_iterator iNeutral = fromNeutralWithOriList.begin(); 
+       iNeutral != fromNeutralWithOriList.end(); 
+       iNeutral++) {
+    
+  // If offline photon with origin
+    
+    const ProtoParticle* proto = dynamic_cast<const ProtoParticle*>((*iNeutral)->origin());
+    
+    if (proto){
+      
+      info() << "Offline neutral ID " << (*iNeutral)->particleID().pid() 
+             << " and momentum before re-evaluation " << (*iNeutral)->momentum() << endreq;
+      
+      StatusCode sc = m_pPhotonParams->process((*iNeutral), &fromChargedOrResoVtx);
+      if (!sc ) return StatusCode::FAILURE;      
+    
+      debug() << "Offline neutral ID " << (*iNeutral)->particleID().pid() 
+             << " and momentum after re-evaluation " << (*iNeutral)->momentum() << endreq;
+    } else{ // online *TEMPORARY*
+      
+      Warning("Using temporary hack - waiting for PhotonParams tool");
+      debug() << "Online neutral ID " << (*iNeutral)->particleID().pid() 
+             << " and momentum " << (*iNeutral)->momentum() << endreq;
+      
+      // Vertex determined with charged tracks:
+      const HepPoint3D& Vtx = fromChargedOrResoVtx.position();      
+      // Covariance matrix, determined with charged tracks:
+      const HepSymMatrix& VtxCov = fromChargedOrResoVtx.positionErr();      
+      // modify the photon parameters
+      // Update Point at which the momentum is given in LHCb reference frame
+      (*iNeutral)->setPointOnTrack(Vtx);
+      // Update Covariance matrix relative to point at which the momentum is given (3x3)
+      (*iNeutral)->setPointOnTrackErr(m_scale * VtxCov);
+      
+    }
+    
+    // Add this neutral to all the particles
+    fromChargedOrResoList.push_back(*iNeutral);      
+  }
+  
+  debug() << "After adding neutrals total number of particles " << fromChargedOrResoList.size() << endreq;
+  return StatusCode::SUCCESS;
+}
+
+    
+//==================================================================
+// Do not refit if only *one* composite particle and neutrals with origin (e.g. B_s0 -> (phi(1020) -> K+ K-) gamma)
+// special case of only one resonance and neutrals with origin
+//==================================================================
+Vertex* UnconstVertexFitter::singleResonanceVertex(const ParticleVector& pList){
+  debug() << "Only one resonance and neutral(s), won't refit the resonance" << endreq;
+  // Get the resonance vertex
+  for(ParticleVector::const_iterator iPart = pList.begin(); iPart != pList.end(); iPart++) {    
+    int partID = (*iPart)->particleID().pid();    
+    if(!((*iPart)->origin() && m_gammaID == partID)){// not neutrals with origin       
+      if ((*iPart)->isResonance()){
+        Vertex* fromChargedOrResoVtx = (*iPart)->endVertex();
+        if (fromChargedOrResoVtx){
+          debug() << "Resonance decay vertex position " << fromChargedOrResoVtx->position() 
+                  << " , and chi2 " << fromChargedOrResoVtx->chi2() << endreq;
+          return fromChargedOrResoVtx;
+        } // if resonanceVtx
+      } // if resonance
+    } // if not neutrals with origin
+  } // for ipart  
+  return NULL;
+}
  
+  
+//==================================================================
+// Perform a fit between a vector of particles 
+// Split vector in two lists:
+// - charged tracks, or composite particles with an endVertex (including neutrals, gammas from e+e-)
+// - neutrals with origin and no endVertex: gammas
+//==================================================================
+int UnconstVertexFitter::splitIntoNeutralsAndCharged(const ParticleVector& pList, 
+                                                     ParticleVector& fromChargedOrResoList, 
+                                                     ParticleVector& fromNeutralWithOriList){
+
+  int nResonances = 0 ;
+  for(ParticleVector::const_iterator iPart = pList.begin(); iPart != pList.end(); iPart++) {
+    
+    int partID = (*iPart)->particleID().pid();
+    
+    if((*iPart)->origin() && m_gammaID == partID){// neutrals with origin
+      verbose() << "Particle in list: " << partID << endreq;
+      fromNeutralWithOriList.push_back(*iPart);
+    }
+    else{ // charged or resonance
+      verbose() << "Particle in list: " << partID << endreq; 
+      if ((*iPart)->isResonance()){
+        nResonances++;
+        for ( SmartRefVector<Particle>::iterator iResoProducts = (*iPart)->endVertex()->products().begin();
+              iResoProducts != (*iPart)->endVertex()->products().end(); 
+              iResoProducts++ ){
+          fromChargedOrResoList.push_back(*iResoProducts);
+        }
+      } // if resonance
+      else{
+        fromChargedOrResoList.push_back(*iPart);     
+      } // else charged and not a resonance
+    } // else if charged or resonance
+  } // for iPart
+  
+  debug() << "Particle Vector size is " << pList.size() << endreq;
+  debug() << "-> Number of charged tracks or resonances products is " << fromChargedOrResoList.size() << endreq;
+
+  if (!fromNeutralWithOriList.empty()){  
+    debug() << "-> Number of neutrals with origin is " << fromNeutralWithOriList.size() << endreq;
+  }
+  return nResonances;
+}
+
+
 //==================================================================
 // Perform a fit between a vector of particles 
 //==================================================================
 StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
                                            Vertex& myVertex ) {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "Hello From Vertex Fitter" << endreq;
+  debug() << "Hello From Vertex Fitter" << endreq;
   
   if (particleList.size() < 2) {
-   log << MSG::INFO << "Particle Vector size is less than 2" << endreq;   
+   info() << "Particle Vector size is less than 2" << endreq;   
    return StatusCode::FAILURE;
   } else {
-    log << MSG::DEBUG << "Particle Vector size is " << 
+    debug() << "Particle Vector size is " << 
       particleList.size()<< endreq;    
   }
   
@@ -173,7 +348,7 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
   // get zestimate (The formula is in the LHC-B/TN/95-01
   double zEstimate = getZEstimate (particleList);
   
-  log << MSG::DEBUG << "   zestimate " << zEstimate << endreq;
+  debug() << "   zestimate " << zEstimate << endreq;
   
   HepSymMatrix cov(2,0); // 2x2 empty  symmetic matrix
   HepSymMatrix hessian(3,0); // 3x3 empty  symmetic matrix
@@ -193,7 +368,7 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
                                                    transParticle);
 
     if ( !sctrans.isSuccess() ) {
-      log << MSG::DEBUG << "Track extrapolation failed" << endreq;
+      debug() << "Track extrapolation failed" << endreq;
       return sctrans;
     }
     
@@ -216,7 +391,7 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
     int iFail;
     cov.invert(iFail); 
     if( 0 != iFail ){
-      log << MSG::WARNING << "Could not invert covariance matrix" << endreq;
+      warning() << "Could not invert covariance matrix" << endreq;
       return StatusCode::FAILURE;
     }
     //    std::cout << " new Cov Matrix Inverted "<< cov <<endl;
@@ -238,7 +413,7 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
                      transParticle.slopeY());
     
     //    HepPoint3D firstp = (*iterP)->pointOnTrack();
-    //    log << MSG::DEBUG << " x firstp  " << firstp.x() << endreq;
+    //    debug() << " x firstp  " << firstp.x() << endreq;
     
     
     divChi(1) += (cov(1,1)*newPoint.x() +  cov(1,2)*newPoint.y());
@@ -267,17 +442,17 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
   // which is VChiZr + (vertex)^T(Hessian)(vertex) - 2*(vertex)^T(divChi)
   vertexChi2 += dot(vertex,(hessian*vertex)) - 2*dot(vertex,divChi);
   
-  log << MSG::DEBUG << "vertexChi2 " << vertexChi2 << endreq;
+  debug() << "vertexChi2 " << vertexChi2 << endreq;
   
   //offset with  initally estimated z: all calculated relative to that
   vertex(3)+=zEstimate;
-  log << MSG::DEBUG << "vertex position " << vertex(1) << "  " << vertex(2) 
+  debug() << "vertex position " << vertex(1) << "  " << vertex(2) 
       <<  " "   <<vertex(3) << endreq;
   
   // update tracks : x,y from vertex, extrapolate to z, I hope
   if(vertex(3)<-500. || vertex(3)>10000.){
-    log << MSG::DEBUG << "Bad vertex reconstruction." << endreq;
-    log << MSG::DEBUG << "Final vertex estimate " << vertex(1) <<" "
+    debug() << "Bad vertex reconstruction." << endreq;
+    debug() << "Final vertex estimate " << vertex(1) <<" "
         << vertex(2) <<" " << vertex(3) <<endreq;
     return StatusCode::FAILURE;
   }
@@ -285,7 +460,7 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
   int inv;
   HepSymMatrix errMat = hessian.inverse(inv);
   if (inv != 0) {
-    log << MSG::DEBUG << "Could not invert hessian matrix" << endreq;
+    debug() << "Could not invert hessian matrix" << endreq;
     return StatusCode::FAILURE; 
   }
 
@@ -309,8 +484,6 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
 // First estimate of z position of vertex
 //=======================================================================
 double UnconstVertexFitter::getZEstimate( const ParticleVector& particleList) {
-
-  MsgStream log(msgSvc(), name());
 
   // **** Estimate the Vertex Position *****
   
@@ -357,7 +530,7 @@ double UnconstVertexFitter::getZEstimate( const ParticleVector& particleList) {
                         - sumCrossedProduct) /det;
   }
   else {
-    log << MSG::INFO << "Unable to make z estimate, set it to 0.0 " << endreq;
+    info() << "Unable to make z estimate, set it to 0.0 " << endreq;
     return 0.;
   }
 // **** End Estimate the Vertex Position *****
