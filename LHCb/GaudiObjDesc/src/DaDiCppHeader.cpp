@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.9 2001-10-29 11:16:17 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.10 2001-11-01 14:26:24 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -860,13 +860,13 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     char *get_ret, *set_arg, *add_arg;      
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
       
-    if (gddRelation->ratio().equals("1-1"))
+    if (gddRelation->ratio().equals("1"))
     {
       get_ret = "SmartRef<";
       set_arg = "SmartRef<";
       add_arg = "";
     }
-    else if (gddRelation->ratio().equals("1-M"))
+    else if (gddRelation->ratio().equals("*"))
     {
       get_ret = "SmartRefVector<";
       set_arg = "SmartRefVector<";
@@ -1083,7 +1083,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     unsigned int lengthType = 0;
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
 
-    if (gddRelation->ratio().equals("1-1"))
+    if (gddRelation->ratio().equals("1"))
     { 
       lengthType = 10 + strlen(gddRelation->type().transcode()); 
     }
@@ -1125,19 +1125,18 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
 // Private members (relations)
 //
   for(i=0; i<gddClass->sizeDaDiRelation(); i++)
-    {
+  {
     std::string rel_type;
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
 
-    if (gddRelation->ratio().equals("1-1"))
-        {
+    if (gddRelation->ratio().equals("1"))
+    {
       rel_type = "SmartRef";
-        }
-      else if ((gddRelation->ratio().equals("1-M")) ||
-      (gddRelation->ratio().equals("M-N")))
-        {
-          rel_type = "SmartRefVector";
-        }
+    }
+    else if (gddRelation->ratio().equals("*"))
+    {
+      rel_type = "SmartRefVector";
+    }
     std::string tRelType = gddRelation->type().transcode();
     std::string tRelName = gddRelation->name().transcode();
     std::string relType = rel_type + '<' + tRelType + '>';
@@ -1147,7 +1146,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     xmlOut.width(maxLengthName);
     xmlOut << relName << " ///< " << gddRelation->desc().transcode() 
       << std::endl;
-    }
+  }
 
   xmlOut.unsetf(std::ios::adjustfield);
 
@@ -1338,13 +1337,13 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
     char *get_ret, *set_arg, *add_arg;
     DaDiRelation* gddRelation = gddClass->popDaDiRelation();
       
-    if (gddRelation->ratio().equals("1-1"))
+    if (gddRelation->ratio().equals("1"))
     {
       get_ret = "SmartRef<";
       set_arg = "SmartRef<";
       add_arg = "";
     }
-    else if (gddRelation->ratio().equals("1-M"))
+    else if (gddRelation->ratio().equals("*"))
     {
       get_ret = "SmartRefVector<";
       set_arg = "SmartRefVector<";

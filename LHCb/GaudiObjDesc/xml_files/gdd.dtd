@@ -1,4 +1,6 @@
-<?xml encoding="ISO-8859-1"?>
+<?xml encoding="UTF-8"?>
+<!-- ?xml encoding="ISO-8859-1"? -->
+
 <!ELEMENT gdd (import*, (package+ | class))>
 <!ATTLIST gdd
 	version CDATA "1.0"
@@ -17,7 +19,7 @@
 <!ATTLIST class
 	name CDATA #REQUIRED
 	author CDATA #REQUIRED
-	desc CDATA #IMPLIED
+	desc CDATA #REQUIRED
 	filename CDATA #IMPLIED
 	id CDATA #IMPLIED
 	templateVector (TRUE | FALSE) "TRUE"
@@ -32,20 +34,20 @@
 >
 <!ELEMENT constructor (arg*, code?)>
 <!ATTLIST constructor
-	desc CDATA #IMPLIED
+	desc CDATA #REQUIRED
 	argList CDATA #IMPLIED
 	argInOut CDATA #IMPLIED
 >
 <!ELEMENT destructor (arg*, code?)>
 <!ATTLIST destructor
-	desc CDATA #IMPLIED
+	desc CDATA #REQUIRED
 	argList CDATA #IMPLIED
 	argInOut CDATA #IMPLIED
 >
 <!ELEMENT method (arg*, return?, code?)>
 <!ATTLIST method
 	name CDATA #REQUIRED
-	desc CDATA #IMPLIED
+	desc CDATA #REQUIRED
 	access (PUBLIC | PROTECTED | PRIVATE) "PUBLIC"
 	const (TRUE | FALSE) "FALSE"
 	virtual (TRUE | FALSE) "FALSE"
@@ -72,19 +74,20 @@
 <!ATTLIST attribute
 	type CDATA #REQUIRED
 	name CDATA #REQUIRED
-	desc CDATA #IMPLIED
+	desc CDATA #REQUIRED
 	init CDATA #IMPLIED
 	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
 	setMeth (TRUE | FALSE) "TRUE"
 	getMeth (TRUE | FALSE) "TRUE"
 >
+
 <!ELEMENT relation EMPTY>
 <!ATTLIST relation
 	type CDATA #REQUIRED
 	name CDATA #REQUIRED
-	desc CDATA #IMPLIED
+	desc CDATA #REQUIRED
 	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
-	ratio (1-1 | 1-M | M-N) "1-1"
+	multiplicity (1 | N | n | M | m) "1"
 	setMeth (TRUE | FALSE) "TRUE"
 	getMeth (TRUE | FALSE) "TRUE"
 	addMeth (TRUE | FALSE) "TRUE"

@@ -1,6 +1,6 @@
 
 parsetool     = GODWriteCppDict.exe
-dest          = ../src/dictionary/ 
+dest          = ../dict/ 
 dtdfile       = ../$(xmlsrc)/gdd.dtd 
 
 ${CONSTITUENT}_output = $(dest)

@@ -2,6 +2,11 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20011101 - Stefan Roiser
+ - relation-attribute 'ratio' renamed to 'multiplicity', possible values '1', 'M', 'm', 'N', 'n'
+   fragment for cpp-file production for dictionaries changed, destination is now /dict
+   classID-information added to cpp-files for passing it to the dictionary
+
 ! 20011029 - Stefan Roiser
  - several changes in order to achieve linux compliance
 

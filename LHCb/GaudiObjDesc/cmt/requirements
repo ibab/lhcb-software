@@ -4,7 +4,7 @@ version v1
 branches doc cmt src
 
 use GaudiKernel v10*
-use XML v3*
+use XERCES v1*
 use GaudiIntrospection v1* 
 
 # Macro defintion used by both fragments below

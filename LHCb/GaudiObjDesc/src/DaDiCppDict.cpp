@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.10 2001-10-29 11:16:17 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.11 2001-11-01 14:26:23 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -474,7 +474,7 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
       << gddAttribute->desc().transcode() << "\", &((" 
       << gddClass->className().transcode() << "*)0)->m_" 
       << gddAttribute->name().transcode() << ", metaC);" 
-      << std::endl << std::endl;
+      << std::endl;
   }
 
   for(i=0; i<gddClass->sizeDaDiRelation(); ++i)
@@ -496,9 +496,10 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
       << gddRelation->desc().transcode() << "\", &(("
       << gddClass->className().transcode() << "*)0)->m_"
       << gddRelation->name().transcode() << ", metaC);" 
-      << std::endl << std::endl;
+      << std::endl;
   }
 
+  metaOut << std::endl;
 
 //
 // Add methods to MetaModel (Workaround)
@@ -520,6 +521,19 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage,
         << gddMethod->name().transcode() << ");" << std::endl;
     }
   }
+
+  metaOut << std::endl;
+
+//
+// Properties
+//
+  metaOut << "    MetaPropertyList* pl = new MetaPropertyList();" 
+    << std::endl << "    pl->setProperty(\"Author\", \""
+    << gddClass->classAuthor().transcode() << "\");" << std::endl
+    << "    pl->setProperty(\"ClassID\", \"" << gddClass->classID().transcode()
+    << "\");" << std::endl;
+
+  metaOut << "    metaC->setPropertyList(pl);" << std::endl;
 
 
 //

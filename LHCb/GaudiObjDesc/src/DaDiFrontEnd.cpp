@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.7 2001-10-29 16:24:05 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.8 2001-11-01 14:26:24 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -959,10 +959,35 @@ void DDFE::parseClass(DOM_Node node,
           gddRelation->setAccess(node.getAttributes().
             getNamedItem(DOMString::transcode("access")).
             getNodeValue().transcode());
-            
-          gddRelationRatio = node.getAttributes().
-            getNamedItem(DOMString::transcode("ratio")).
-            getNodeValue();
+          
+          if (!node.getAttributes().
+            getNamedItem(DOMString::transcode("multiplicity")).isNull())
+          {
+            gddRelationRatio = node.getAttributes().
+              getNamedItem(DOMString::transcode("multiplicity")).
+              getNodeValue();
+            if (gddRelationRatio.equals("n") || 
+                gddRelationRatio.equals("N") ||
+                gddRelationRatio.equals("m") || 
+                gddRelationRatio.equals("M"))
+            {
+              gddRelationRatio = "*";
+            }
+            else if (gddRelationRatio.equals("1")) {}
+            else
+            {
+              std::cerr << argV0 << ": \"" << gddRelationRatio.transcode()  
+                << "\" is not a valid value for RELATION-Attribute "
+                << "\"multiplicity\"" << std::endl << "This error should never"
+                << " happen!!!! Maybe you've changed the DTD?" << std::endl;
+              exit(1);
+            }      
+          }
+          else
+          {
+            gddRelationRatio = "1";
+          }
+
           gddRelation->setRatio(gddRelationRatio);
             
           gddRelation->setSetMeth(node.getAttributes().
@@ -985,12 +1010,12 @@ void DDFE::parseClass(DOM_Node node,
             getNamedItem(DOMString::transcode("clrMeth")).
             getNodeValue().transcode());
             
-          if (gddRelationRatio.equals("1-1"))
+          if (gddRelationRatio.equals("1"))
           {
             gddClass->pushImportList("SmartRef");
           }
-          else if (gddRelationRatio.equals("1-M") ||
-                   gddRelationRatio.equals("M-N"))
+          else if (gddRelationRatio.equals("*")) 
+                   
           {
             gddClass->pushImportList("SmartRef");
             gddClass->pushImportList("SmartRefVector");
