@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.148 2005-01-14 12:55:13 pkoppenb Exp $
+! $Id: release.notes,v 1.149 2005-01-18 08:31:54 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciTools v11r4 2005-01-18 ===================
 ! 2005-01-14 - P. Koppenburg
   - src/SimplePlotTool.{h,cpp}
     . Add "Vx", "Vy", "Vr" and "Vz" variables
