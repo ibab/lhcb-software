@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.h,v 1.6 2002-05-01 18:33:18 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.h,v 1.7 2002-05-04 20:39:34 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/05/01 18:33:18  ibelyaev
+//  import error/warning/exception counter technique from LHCb Calo
+//
 // Revision 1.5  2002/01/22 18:24:41  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -175,6 +178,28 @@ protected:
     const MSG::Level     & lvl = MSG::INFO           ,
     const StatusCode     & sc  = StatusCode::FAILURE ) const ;
   
+  /** assertion 
+   *  @param assertion   assertion condition
+   *  @param msg         assertion message 
+   *  @param sc          assertion status code 
+   *  @return status code 
+   */
+  inline StatusCode Assert
+  ( bool  assertion                                    , 
+    const std::string& msg = "GiGaCnvSvcBase::unknown" , 
+    const StatusCode&  sc  = StatusCode::FAILURE       ) const ;
+  
+  /** assertion 
+   *  @param assertion   assertion condition
+   *  @param msg         assertion message 
+   *  @param sc          assertion status code 
+   *  @return status code 
+   */
+  inline StatusCode Assert
+  ( bool  assertion                              ,
+    const char*        msg                       ,
+    const StatusCode&  sc  = StatusCode::FAILURE ) const ;
+  
   /** exception handling 
    *  @param msg message to be assosiated with the exception 
    *  @param exc "previous" exception
@@ -256,8 +281,43 @@ private:
   /// counter of exceptions
   mutable Counter m_exceptions ;
 };        
-///
- 
+
+// ============================================================================
+/** assertion 
+ *  @param assertion   assertion condition
+ *  @param msg         assertion message 
+ *  @param sc          assertion status code 
+ */
+// ============================================================================
+inline StatusCode  GiGaCnvSvcBase::Assert
+( bool               assertion , 
+  const std::string& msg       , 
+  const StatusCode&  sc        ) const 
+{  
+  StatusCode status = StatusCode::SUCCESS ;
+  return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
+};
+// ============================================================================
+
+// ============================================================================
+/** assertion 
+ *  @param assertion   assertion condition
+ *  @param msg         assertion message 
+ *  @param sc          assertion status code 
+ */
+// ============================================================================
+inline StatusCode  GiGaCnvSvcBase::Assert
+( bool               assertion , 
+  const char*        msg       , 
+  const StatusCode&  sc        ) const 
+{ 
+  StatusCode status = StatusCode::SUCCESS ;
+  return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
+};
+// ============================================================================
+
+// ============================================================================
+// The END 
 // ============================================================================
 #endif  ///<   GIGACNV_GIGACNVSVCBASE_H 
 // ============================================================================

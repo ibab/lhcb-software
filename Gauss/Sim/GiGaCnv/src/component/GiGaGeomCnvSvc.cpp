@@ -1,25 +1,10 @@
-// $Id: GiGaGeomCnvSvc.cpp,v 1.8 2002-03-13 15:37:57 ibelyaev Exp $ 
+// $Id: GiGaGeomCnvSvc.cpp,v 1.9 2002-05-04 20:39:36 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.7  2002/01/22 18:24:43  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.6  2001/08/12 17:24:52  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.5  2001/07/25 17:19:31  ibelyaev
-// all conversions now are moved from GiGa to GiGaCnv
-//
-// Revision 1.4  2001/07/24 11:13:55  ibelyaev
-// package restructurization(III) and update for newer GiGa
-//
-// Revision 1.3  2001/07/15 20:45:10  ibelyaev
-// the package restructurisation
-// 
 // ===========================================================================
-#define GIGAGEOMCNVSVC_CPP 1 
+#define GIGACNV_GIGAGEOMCNVSVC_CPP 1 
 // ============================================================================
 #include <string>
 #include <algorithm>
@@ -101,12 +86,15 @@ GiGaGeomCnvSvc::GiGaGeomCnvSvc
   , m_worldNamePV    ( "Universe"           )
   , m_worldNameLV    ( "World"              )
   , m_worldMaterial  ( "/dd/Materials/Air"  )
+  // parameters of world volume 
   , m_worldX         ( 50. * m              )
   , m_worldY         ( 50. * m              )
   , m_worldZ         ( 50. * m              )
-  ///
+  //
   , m_worldMagField  ( ""                   )
-  ///
+  // special sensitive detector for estimation of material budget 
+  , m_budget         ( ""                   )
+  //
   , m_SDs            ()
   , m_MFs            ()
   ///
@@ -122,6 +110,7 @@ GiGaGeomCnvSvc::GiGaGeomCnvSvc
   declareProperty("YsizeOfWorldVolume"        , m_worldY        );
   declareProperty("XsizeOfWorldVolume"        , m_worldZ        );
   ///
+  declareProperty("MaterialBudget"            , m_budget        );
   declareProperty("WorldMagneticField"        , m_worldMagField );
   ///
 };
@@ -418,16 +407,18 @@ G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd )
 // ============================================================================
 StatusCode GiGaGeomCnvSvc::initialize() 
 { 
-  ///
+  //
   StatusCode sc = GiGaCnvSvcBase::initialize();
   if(sc.isFailure() ) 
-    { return Error(" Failed to initialize GiGaCnvSvc", sc  ) ;}
-  /// we explicitely need detSvc(), check it! 
+    { return Error(" Failed to initialize GiGaCnvSvc", sc      ) ; }
+  // we explicitely need detSvc(), check it! 
   if( 0 == detSvc() ) 
-    { return Error(" DetectorProviderSvc is not located! " ) ;}
-  /// locate own converters 
+    { return Error(" DetectorProviderSvc is not located! "     ) ; }
+  // check for special run with  material budget counters:
+  if( !m_budget.empty() )
+    { Warning(" Special run for material budget calculation! " ) ; }
+  // 
   return StatusCode::SUCCESS;
-  ///
 };
 
 // ============================================================================
@@ -437,9 +428,17 @@ StatusCode GiGaGeomCnvSvc::initialize()
 // ============================================================================
 StatusCode GiGaGeomCnvSvc::finalize()   
 { 
-  /// clear store of assemblies!
+  // finalize all created sensitive detectors 
+  std::for_each( m_SDs.begin () , 
+                 m_SDs.end   () , 
+                 std::mem_fun( &IGiGaSensDet::finalize ) );
+  // finalize all created mag field objects 
+  std::for_each( m_MFs.begin () , 
+                 m_MFs.end   () , 
+                 std::mem_fun( &IGiGaMagField::finalize ) );
+  // clear store of assemblies!
   StatusCode sc = GiGaAssemblyStore::store()->clear();
-  ///
+  //
   return GiGaCnvSvcBase::finalize(); 
 };
 
@@ -452,29 +451,28 @@ StatusCode GiGaGeomCnvSvc::finalize()
 // ============================================================================
 G4VPhysicalVolume* GiGaGeomCnvSvc::world () 
 {
-  /// already created? 
+  // already created? 
   if( 0 != m_worldPV ) { return m_worldPV ; } /// already created 
   ///
   { MsgStream log(msgSvc(),name()); 
   log << MSG::INFO << " Create the WORLD volume!" << endreq; } 
-  /// create it!
+  // create it!
   G4Material* MAT = material ( m_worldMaterial );   
   if( 0 == MAT )
     { Error("world():: could not locate/convert material=" + 
             m_worldMaterial) ; return 0 ; }
-  ///
+  //
   G4VSolid*        SD = 
     new G4Box("WorldBox", m_worldX , m_worldY , m_worldZ ) ; 
-  ///
-  G4LogicalVolume* LV = 
-    new G4LogicalVolume( SD , MAT , m_worldNameLV , 0 , 0 , 0 ); 
+  // create the world volume  
+  G4LogicalVolume* LV = createG4LV ( SD , MAT , m_worldNameLV ); 
   /// make it invisible 
   LV -> SetVisAttributes ( G4VisAttributes::Invisible );
   ///
   m_worldPV           = 
     new G4PVPlacement( 0 , Hep3Vector() , m_worldNamePV , LV , 0 , false , 0 );
   ///
-  /// create the magnetic field for world volume
+  // create the magnetic field for world volume
   if( !m_worldMagField.empty() )
     {
       ///
@@ -504,7 +502,7 @@ G4VPhysicalVolume* GiGaGeomCnvSvc::world ()
       Print("worl():: World Magnetic Field is set to be = " + 
             System::typeinfoName( typeid( *mf ) )+"/"+mf->name() );
     }
-  else { Warning("world():: Magnetic Field is not requetsed to be loaded "); }
+  else { Warning("world():: Magnetic Field is not requested to be loaded "); }
   ///
   return m_worldPV ; 
 }; 
@@ -702,6 +700,46 @@ StatusCode GiGaGeomCnvSvc::magField
   Warning(" magField() is the obsolete method, use magnetic()!");
   return magnetic( TypeNick , MF ) ;  
 };
+// ============================================================================
+
+// ============================================================================
+/** Create new G4LogicalVolume. All arguments must be valid!
+ *  One should not invoke the "new" operator for Logical Volumes directly
+ *  @param solid    pointer to valid solid    object
+ *  @param material pointer to valid material object
+ *  @param Name     name of logical volume 
+ *  @return pointer to new G4LogicalVolume  object 
+ */
+// ============================================================================
+G4LogicalVolume* GiGaGeomCnvSvc::createG4LV 
+( G4VSolid*          solid    , 
+  G4Material*        material , 
+  const std::string& Name     )
+{
+  // check arguments 
+  Assert( 0 != solid    , "createG4LV(): G4VSolid points to NULL!"      ) ;
+  Assert( 0 != material , "createG4LV(): G4VSolid points to NULL!"      ) ;
+  Assert( 0 == GiGaVolumeUtils::findLVolume( Name ) , 
+          "createG4LV(): G4LogicalVolume with name '" +Name+"' exists!" ) ;
+  // create 
+  G4LogicalVolume* G4LV = 
+    new G4LogicalVolume( solid , material , Name , 0 , 0 , 0 );
+  // look for global material budget counter 
+  if( !m_budget.empty() )
+    {
+      std::cout << " I am here " << m_budget << std::endl;
+      IGiGaSensDet* budget = 0 ;
+      StatusCode sc = sensitive( m_budget , budget );
+      Assert( sc.isSuccess() , 
+              "createG4LV(): could not get Material Budget '"+m_budget+"'",sc);
+      Assert( 0 != budget    , 
+              "createG4LV(): could not get Material Budget '"+m_budget+"'"   );
+      G4LV->SetSensitiveDetector( budget );
+    }
+  ///
+  return G4LV ;
+};
+// ============================================================================
 
 // ============================================================================
 // End 

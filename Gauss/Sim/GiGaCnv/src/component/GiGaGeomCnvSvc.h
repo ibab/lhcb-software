@@ -1,8 +1,11 @@
-// $Id: GiGaGeomCnvSvc.h,v 1.5 2002-01-22 18:24:43 ibelyaev Exp $ 
+// $Id: GiGaGeomCnvSvc.h,v 1.6 2002-05-04 20:39:36 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.4  2001/08/12 17:24:52  ibelyaev
 // improvements with Doxygen comments
 //
@@ -103,13 +106,15 @@ public:
     void**             ) ;
   
   /** Retrieve the pointer to top-level "world" volume,
+   *  @see IGiGaGeomCnvSvc 
    *  needed for Geant4 - root for the whole Geant4 geometry tree 
    *  @see class IGiGaGeoSrc 
    *  @return pointer to constructed(converted) geometry tree 
    */  
   virtual G4VPhysicalVolume*  world    () ;
-
- /** Retrieve the pointer for G4 materials from G4MaterialTable, 
+  
+  /** Retrieve the pointer for G4 materials from G4MaterialTable, 
+   *  @see IGiGaGeomCnvSvc 
    *  (could trigger the conversion of the (DetDesc) Material)
    *  @param  name    name/address/location of Material object 
    *  @return pointer to converted G4Material object 
@@ -118,6 +123,7 @@ public:
   ( const std::string& name      )  ;
   
   /** Retrive the pointer to converter volumes/assemblies 
+   *  @see IGiGaGeomCnvSvc 
    *  (could trigger the conversion of the (DetDesc) LVolume/LAssembly)    
    *  @param  name    name/address/location of Volume/Assembly object 
    *  @return pointer to converted GiGaVolume  object 
@@ -126,6 +132,7 @@ public:
   ( const std::string& name      )  ;
   
   /** convert (DetDesc) Solid object into (Geant4) G4VSolid object 
+   *  @see IGiGaGeomCnvSvc 
    *  @param  Solid pointer to Solid object 
    *  @return pointer to converter G4VSolid object 
    */
@@ -133,6 +140,7 @@ public:
   ( const ISolid*      Solid     )  ;
   
   /** Instantiate the Sensitive Detector Object 
+   *  @see IGiGaGeomCnvSvc 
    *  @param name  Type/Name of the Sensitive Detector Object
    *  @param det   reference to Densitive Detector Object 
    *  @return  status code 
@@ -142,6 +150,7 @@ public:
     IGiGaSensDet*&     det       )  ;
   
   /** Instantiate the Magnetic Field Object 
+   *  @see IGiGaGeomCnvSvc 
    *  @param name  Type/Name of the Magnetic Field Object
    *  @param mag   reference to Magnetic Field Object 
    *  @return  status code 
@@ -150,6 +159,20 @@ public:
   ( const std::string& name      , 
     IGiGaMagField*&    mag       )  ;
 
+  /** Create new G4LogicalVolume. All arguments must be valid!
+   *  One should not invoke the 
+   *  "new" operator for Logical Volumes directly
+   *  @see IGiGaGeomCnvSvc 
+   *  @param solid    pointer to valid solid    object
+   *  @param material pointer to valid material object
+   *  @param name     name of logical volume 
+   *  @return pointer to new G4LogicalVolume  object 
+   */
+  virtual G4LogicalVolume*    createG4LV 
+  ( G4VSolid*          solid     , 
+    G4Material*        material  , 
+    const std::string& name      )  ;
+  
   /** Retrieve the pointer to top-level "world" volume,
    *  needed for Geant4 - root for the whole Geant4 geometry tree 
    *  @att obsolete method!
@@ -215,23 +238,26 @@ private:
   GiGaGeomCnvSvc& operator=( const GiGaGeomCnvSvc& );
   ///
 private:
-  ///
+  
+  // the world wolume 
   G4VPhysicalVolume*               m_worldPV       ;
-  ///
+  // identification of world volume 
   std::string                      m_worldNamePV   ; 
   std::string                      m_worldNameLV   ; 
   std::string                      m_worldMaterial ; 
-  ///
+  // world volume parameters 
   float                            m_worldX        ;
   float                            m_worldY        ;
   float                            m_worldZ        ;
-  ///
-  std::string  m_worldMagField ; ///< global magnetic field 
-  ////
-  SDobjects    m_SDs  ; ///< created sensitive detectors 
-  ///
-  MFobjects    m_MFs  ; ///< created magnetic field objects 
-  ///
+  // global magnetic field 
+  std::string                      m_worldMagField ; ///< global mag field  
+  // special sensitive detector for estimation of material budget 
+  std::string                      m_budget        ;
+  // list of all sensitive detector
+  SDobjects                        m_SDs  ; ///< created sensitive detectors 
+  // list of all magnetic fields
+  MFobjects                        m_MFs  ; ///< created magnetic field objects 
+
 };        
 
 

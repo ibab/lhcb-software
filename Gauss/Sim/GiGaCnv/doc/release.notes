@@ -1,10 +1,30 @@
-! $Id: release.notes,v 1.17 2002-05-03 19:33:39 ibelyaev Exp $
+! $Id: release.notes,v 1.18 2002-05-04 20:39:35 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev
 ! =============================================================================
+
+!==============================================================================
+! 4 May 2002  v5r0 Vanya  Belyaev
+! - GiGaCnv/GiGaKineRefTable.h
+!   make usage of GiGa/GiGaHashMap.h instead of "home-made" implementation of 
+!   map-like interface
+! - GiGaCnv/IGiGaGeomCnvSvc.h
+!   add  new method createG4LV to the interface. This method shoudl be 
+!   used instead of ordinary creation of G4LogicalVolume using  "new" operator.
+!   For volumes, created manually, the automatized evaluation of material 
+!   budget is not possible. 
+! - src/component/GiGaGeomCnv.h,.cpp
+!   add new property "MaterialBudget". This property,being defined with 
+!   "Type/Name" of sensitive detector implies the special run, when ALL 
+!   Logical volumes get the conection to this special sensitive detector.
+!   It is primary oriented for special material budget evaluation runs.
+! - src/component/GiGaLVolumeCnv.cpp
+!   substitute manual call for "new G4LogicalVolume" by 
+!   call to "IGiGaGeomCnvSvc::createG4LV" method.
+!==============================================================================
 
 !==============================================================================
 ! 3 May 2002  v5r0 Vanya Belyaev

@@ -1,8 +1,11 @@
-// $Id: GiGaLVolumeCnv.cpp,v 1.10 2002-05-03 19:41:03 ibelyaev Exp $ 
+// $Id: GiGaLVolumeCnv.cpp,v 1.11 2002-05-04 20:39:36 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/05/03 19:41:03  ibelyaev
+//  replace the obsolete 'sensDet()' with 'sensitive()'
+//
 // Revision 1.9  2002/05/03 19:33:39  ibelyaev
 //  re-introduce the creation of Sensitive Detectors
 //
@@ -26,6 +29,8 @@
 /// GiGa & GiGaCnv 
 #include "GiGa/IGiGaSensDet.h"
 #include "GiGa/IGiGaMagField.h"
+#include "GiGa/GiGaUtil.h"
+// GiGaCnv
 #include "GiGaCnv/IGiGaGeomCnvSvc.h"
 #include "GiGaCnv/GiGaCnvUtils.h"
 /// local
@@ -160,7 +165,7 @@ StatusCode GiGaLVolumeCnv::updateRep
     { return Error("CreateRep::Could not locate Material=" + 
                    lv->materialName() ) ; } 
   G4LogicalVolume* G4LV = 
-    new G4LogicalVolume( solid , material , lv->name() , 0 , 0 , 0 );
+    geoSvc()->createG4LV ( solid , material , lv->name() );
   /// printout 
   log << MSG::DEBUG 
       << " new Volume/G4LogicalVolume is created with the name '"
@@ -187,17 +192,25 @@ StatusCode GiGaLVolumeCnv::updateRep
         { return Error("updateRep:: coudl not install DPV for " 
                        + lv->name() ) ; }
     }
-  /// sensitivity
+  // sensitivity
   if( !lv->sdName().empty() ) 
     {
-      IGiGaSensDet* det = 0 ;
-      StatusCode sc = geoSvc()->sensitive ( lv->sdName(),  det );
-      if( sc.isFailure() ) 
-        { return Error("updateRep:: Could no create SensDet " , sc ) ; }
-      if( 0 == det ) 
-        { return Error("updateRep:: Could no create SensDet "      ) ; }
-      // set sensitive detector 
-      G4LV->SetSensitiveDetector( det );
+      if( 0 == G4LV->GetSensitiveDetector() ) 
+        {
+          IGiGaSensDet* det = 0 ;
+          StatusCode sc = geoSvc()->sensitive ( lv->sdName(),  det );
+          if( sc.isFailure() ) 
+            { return Error("updateRep:: Could no create SensDet " , sc ) ; }
+          if( 0 == det ) 
+            { return Error("updateRep:: Could no create SensDet "      ) ; }
+          // set sensitive detector 
+          G4LV->SetSensitiveDetector( det );
+        }
+      else 
+        {
+          Warning( "SensDet is already defined to be '" +
+                   GiGaUtil::ObjTypeName( G4LV->GetSensitiveDetector() ) +"'");
+        }
     }
   /// magnetic field 
   if( !lv->mfName().empty()) 
