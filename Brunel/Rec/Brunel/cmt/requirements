@@ -3,17 +3,42 @@ version v16r4
 
 branches doc cmt job options
 
-#-- Gaudi libraries (version v12r3 fixed by LHCbEnv)
-use GaudiSys	v*
-use HbookCnv	v*
-use GaudiRootDb v*
+#-- CMT and GaudiPolicy
+use GaudiPolicy v5r9
 
-#-- LHCb libraries (version v11r4 fixed by BrunelEnv)
-use LHCb	v*
-use SICBSys	v*	SICB
+#-- External libraries (as defined in GAUDI_v11r4)
+use ExternalLibs	v4r0p1
+use AIDA		v3r22p0
+use BOOST 		v2r1280p0
+use CLHEP		v2r1800p0
+use HTL			v2r1321p0
+use NAGC		v2r50p0		
+use XERCES		v2r160p1
+use CERNLIB 		v2r2002p0
+use ROOT 		v2r30309p1
+
+#-- Gaudi libraries (from GAUDI_v11r4)
+use GaudiKernel		v13r2
+use GaudiSvc 		v10r1p2
+use GaudiAlg 		v6r3p1
+use GaudiTools 		v6r1
+use GaudiAud 		v6r1
+use GaudiNagC 		v7r2
+use GaudiDb 		v8r3p1
+use GaudiRootDb 	v9r1p3
+use GaudiIntrospection 	v4r4p1
+use GaudiObjDesc 	v4r5p1
+use HbookCnv 		v13r2p1
 
 #-- Database
 use XmlDDDB	v14r4	Det
+
+#-- LHCb libraries (from LHCB_v11r4)
+use LHCb	v11r4
+use MuonTools	v3r2	Muon
+
+#-> SICB basic libraries (from LHCB_v11r4)
+use SICBSys	v1r0	SICB
 
 #-- BrunelSys v16r4 packages
 
