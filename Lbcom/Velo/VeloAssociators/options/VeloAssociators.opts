@@ -1,0 +1,9 @@
+// $Id: VeloAssociators.opts,v 1.1 2004-11-23 14:24:54 cattanem Exp $
+ApplicationMgr.DLLs += { "VeloAssociators" };
+DataOnDemandSvc.Algorithms +={ "DATA='/Event/Rec/Relations/VeloClusters2MCParticles' 
+                                TYPE='VeloCluster2MCParticleAlg/VeloCluster2MCParticle'" };
+DataOnDemandSvc.Algorithms +={ "DATA='/Event/Rec/Relations/VeloClusters2MCHits' 
+                                TYPE='VeloCluster2MCHitAlg/VeloCluster2MCHit'" };
+ToolSvc.VeloCluster2MCHitAsct.OutputLevel = 5;
+ToolSvc.VeloCluster2MCParticleAsct.OutputLevel = 5;
+

@@ -1,6 +1,11 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!==================== VeloAssociators v1r12 2004-11-22 =====================
+! 2004-11-22 - Marco Cattaneo
+ - Change dependency to new version of Relations, v2r*
+ - Add options/VeloAssociators.opts to configure DataOnDemandSvc for Relations
+
 !==================== VeloAssociators v1r11 2004-07-19 =====================
 ! 2004-07-19 - Marco Cattaneo
  - Add dependency on new Relations package
