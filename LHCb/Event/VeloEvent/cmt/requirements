@@ -1,0 +1,30 @@
+package VeloEvent
+version v2r1
+
+branches VeloEvent src cmt doc
+
+use GaudiSvc v4r0p1  GaudiSys
+use GaudiAlg v1r1 GaudiSys
+use LHCbEvent v8 Event
+
+include_dirs ${VELOEVENTROOT}
+
+#Linker library
+library VeloEventLib       ../src/VeloCLIDs.cpp
+
+#component library
+library VeloEvent          ../src/VeloEventInstantiation.cpp \
+                           ../src/VeloEvent_dll.cpp
+apply_pattern package_Llinkopts
+
+macro_append VeloEvent_stamps " $(VeloEventDir)/VeloEventLib.stamp"
+
+apply_pattern ld_library_path
+
+# ========================================================================
+private 
+apply_pattern packageLib_shlibflags 
+macro_append VeloEventLib_shlibflags " $(Gaudi_linkopts) $(CLHEP_linkopts)"
+
+apply_pattern package_Cshlibflags 
+
