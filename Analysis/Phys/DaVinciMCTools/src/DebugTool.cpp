@@ -1,4 +1,4 @@
-// $Id: DebugTool.cpp,v 1.4 2002-09-18 08:58:19 odie Exp $
+// $Id: DebugTool.cpp,v 1.5 2003-03-07 11:01:55 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -69,45 +69,29 @@ StatusCode DebugTool::initialize( void )
   MsgStream log(msgSvc(), name());
 
   std::size_t oldpos = 0, pos;
-  do
-  {
+  do {
     pos=m_informations.find( ' ', oldpos );
     std::string tok(m_informations, oldpos, pos-oldpos);
-    if( tok=="Name" )
-      m_keys.push_back(Name);
-    else if( tok=="E" )
-      m_keys.push_back(E);
-    else if( tok=="M" )
-      m_keys.push_back(M);
-    else if( tok=="P" )
-      m_keys.push_back(P);
-    else if( tok=="Pt" )
-      m_keys.push_back(Pt);
-    else if( tok=="Px" )
-      m_keys.push_back(Px);
-    else if( tok=="Py" )
-      m_keys.push_back(Py);
-    else if( tok=="Pz" )
-      m_keys.push_back(Pz);
-    else if( tok=="Vx" )
-      m_keys.push_back(Vx);
-    else if( tok=="Vy" )
-      m_keys.push_back(Vy);
-    else if( tok=="Vz" )
-      m_keys.push_back(Vz);
-    else if( tok=="theta" )
-      m_keys.push_back(theta);
-    else if( tok=="phi" )
-      m_keys.push_back(phi);
-    else if( tok=="eta" )
-      m_keys.push_back(eta);
+    if( tok=="Name" )       m_keys.push_back(Name);
+    else if( tok=="E" )     m_keys.push_back(E);
+    else if( tok=="M" )     m_keys.push_back(M);
+    else if( tok=="P" )     m_keys.push_back(P);
+    else if( tok=="Pt" )    m_keys.push_back(Pt);
+    else if( tok=="Px" )    m_keys.push_back(Px);
+    else if( tok=="Py" )    m_keys.push_back(Py);
+    else if( tok=="Pz" )    m_keys.push_back(Pz);
+    else if( tok=="Vx" )    m_keys.push_back(Vx);
+    else if( tok=="Vy" )    m_keys.push_back(Vy);
+    else if( tok=="Vz" )    m_keys.push_back(Vz);
+    else if( tok=="theta" ) m_keys.push_back(theta);
+    else if( tok=="phi" )   m_keys.push_back(phi);
+    else if( tok=="eta" )   m_keys.push_back(eta);
+    else if( tok=="IDCL" )  m_keys.push_back(idcl);
     else
       log << MSG::ERROR << "Unknown output key '" << tok << "'. Ignoring it."
           << endreq;
-    if( pos != std::string::npos )
-      oldpos = pos+1;
-    else
-      oldpos = pos;
+    if( pos != std::string::npos ) oldpos = pos+1;
+    else                           oldpos = pos;
   }
   while( pos != std::string::npos );
   return StatusCode::SUCCESS;
@@ -121,13 +105,10 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
   static const std::string mctitle = " MCParticle ";
   static const std::string title = " Particle ";
   const std::string *title1, *title2;
-  if( mcfirst )
-  {
+  if( mcfirst ) {
     title1 = &mctitle;
     title2 = &title;
-  }
-  else
-  {
+  } else {
     title1 = &title;
     title2 = &mctitle;
   }
@@ -151,8 +132,7 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
   if( right1 >= 0 )
     log<< std::string(right1,'-') << '>';
 
-  if( associated )
-  {
+  if( associated ) {
     if( left2 >= 0 )
       log << '<' << std::string(left2,'-');
     log << *title2;
@@ -162,8 +142,7 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
   log << std::endl;
 
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
-    switch( *i )
-    {
+    switch( *i ) {
     case Name:      log << std::setw(m_treeWidth) << "Name";   break;
     case E:         log << std::setw(m_fWidth) << "E";         break;
     case M:         log << std::setw(m_fWidth) << "M";         break;
@@ -178,12 +157,12 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
     case theta:     log << std::setw(m_fWidth) << "theta";     break;
     case phi:       log << std::setw(m_fWidth) << "phi";       break;
     case eta:       log << std::setw(m_fWidth) << "eta";       break;
+    case idcl:      log << std::setw(m_fWidth) << "ID CL";     break;
     }
   if( associated )
     for( i = m_keys.begin(); i!= m_keys.end(); i++ )
-      switch( *i )
-      {
-      case Name:    log << std::setw(m_fWidth) << "Name";   break;
+      switch( *i ) {
+      case Name:    log << std::setw(m_fWidth) << "Name";      break;
       case E:       log << std::setw(m_fWidth) << "E";         break;
       case M:       log << std::setw(m_fWidth) << "M";         break;
       case P:       log << std::setw(m_fWidth) << "P";         break;
@@ -197,12 +176,12 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
       case theta:   log << std::setw(m_fWidth) << "theta";     break;
       case phi:     log << std::setw(m_fWidth) << "phi";       break;
       case eta:     log << std::setw(m_fWidth) << "eta";       break;
+      case idcl:    log << std::setw(m_fWidth) << "ID CL";     break;
       }
   log << std::endl;
 
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
-    switch( *i )
-    {
+    switch( *i ) {
     case Name:      log << std::setw(m_treeWidth) << " ";      break;
     case E:         log << std::setw(m_fWidth) << "GeV";       break;
     case M:         log << std::setw(m_fWidth) << "GeV";       break;
@@ -217,12 +196,12 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
     case theta:     log << std::setw(m_fWidth) << "mrad";      break;
     case phi:       log << std::setw(m_fWidth) << "mrad";      break;
     case eta:       log << std::setw(m_fWidth) << "prap";      break;
+    case idcl:      log << std::setw(m_fWidth) << " ";         break;
     }
   if( associated )
     for( i = m_keys.begin(); i!= m_keys.end(); i++ )
-      switch( *i )
-      {
-      case Name:    log << std::setw(m_fWidth) << " ";      break;
+      switch( *i ) {
+      case Name:    log << std::setw(m_fWidth) << " ";         break;
       case E:       log << std::setw(m_fWidth) << "GeV";       break;
       case M:       log << std::setw(m_fWidth) << "GeV";       break;
       case P:       log << std::setw(m_fWidth) << "GeV";       break;
@@ -236,6 +215,7 @@ void DebugTool::printHeader( MsgStream &log, bool mcfirst, bool associated )
       case theta:   log << std::setw(m_fWidth) << "mrad";      break;
       case phi:     log << std::setw(m_fWidth) << "mrad";      break;
       case eta:     log << std::setw(m_fWidth) << "prap";      break;
+      case idcl:    log << std::setw(m_fWidth) << " ";         break;
       }
   log << std::endl;
 }
@@ -251,20 +231,16 @@ void DebugTool::printInfo( const std::string &prefix, const MCParticle *part,
 
   std::vector<InfoKeys>::iterator i;
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
-    switch( *i )
-    {
+    switch( *i ) {
     case Name:
       {
         std::string p_name = p ? p->particle() : "N/A";
         int p_len = p_name.length();
-        if( prefix.length() == 0 )
-        {
+        if( prefix.length() == 0 ) {
           if( p_len > m_treeWidth )
             p_len = m_treeWidth - 1;
           log << p_name << std::string( m_treeWidth - p_len - 1,' ' );
-        }
-        else
-        {
+        } else {
           if( p_len > (int)(m_treeWidth-prefix.length()-m_arrow.length()) )
             p_len = m_treeWidth - prefix.length() - m_arrow.length() - 1;
           log << prefix.substr(0, prefix.length()-1) << m_arrow << p_name
@@ -334,12 +310,15 @@ void DebugTool::printInfo( const std::string &prefix, const MCParticle *part,
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
           << part->momentum().pseudoRapidity();
       break;
+    case idcl:
+      log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+          << 1.0;
+      break;
     default:
       break;
     }
 
-  if( assoc )
-  {
+  if( assoc ) {
     Particle *reco = NULL;
     //StatusCode sc = assoc->retrieveInverse( const_cast<MCParticle *>(part),
     //                                        reco );
@@ -350,8 +329,7 @@ void DebugTool::printInfo( const std::string &prefix, const MCParticle *part,
     reco = assoc->associatedTo( const_cast<MCParticle *>(part) );
     if( reco )
       for( i = m_keys.begin(); i!= m_keys.end(); i++ )
-        switch( *i )
-        {
+        switch( *i ) {
         case Name:
           {
             p = m_ppSvc->findByStdHepID( reco->particleID().pid() );
@@ -424,6 +402,10 @@ void DebugTool::printInfo( const std::string &prefix, const MCParticle *part,
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
               << reco->momentum().pseudoRapidity();
           break;
+        case idcl:
+          log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+              << reco->confLevel();
+          break;
         default:
           break;          
         }
@@ -442,20 +424,16 @@ void DebugTool::printInfo( const std::string &prefix, const Particle *reco,
   ParticleProperty* p = m_ppSvc->findByStdHepID( reco->particleID().pid() );
   std::vector<InfoKeys>::iterator i;
   for( i = m_keys.begin(); i!= m_keys.end(); i++ )
-    switch( *i )
-    {
+    switch( *i ) {
     case Name:
       {
         std::string p_name = p ? p->particle() : "N/A";
         int p_len = p_name.length();
-        if( prefix.length() == 0 )
-        {
+        if( prefix.length() == 0 ) {
           if( p_len > m_treeWidth )
             p_len = m_treeWidth - 1;
           log << p_name << std::string( m_treeWidth - p_len - 1,' ' );
-        }
-        else
-        {
+        } else {
           if( p_len > (int)(m_treeWidth-prefix.length()-m_arrow.length()) )
             p_len = m_treeWidth - prefix.length() - m_arrow.length() - 1;
           log << prefix.substr(0, prefix.length()-1) << m_arrow << p_name
@@ -516,12 +494,15 @@ void DebugTool::printInfo( const std::string &prefix, const Particle *reco,
       log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
           << reco->momentum().pseudoRapidity();
       break;
+    case idcl:
+      log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+          << reco->confLevel();
+      break;
     default:
       break;
     }
 
-  if( assoc )
-  {
+  if( assoc ) {
     MCParticle *part = NULL;
     //StatusCode sc = assoc->retrieveDirect( const_cast<Particle *>(reco),
     //                                       part );
@@ -532,8 +513,7 @@ void DebugTool::printInfo( const std::string &prefix, const Particle *reco,
     part = assoc->associatedFrom( const_cast<Particle *>(reco) );
     if( part )
       for( i = m_keys.begin(); i!= m_keys.end(); i++ )
-        switch( *i )
-        {
+        switch( *i ) {
         case Name:
           {
             p = m_ppSvc->findByStdHepID( reco->particleID().pid() );
@@ -617,6 +597,10 @@ void DebugTool::printInfo( const std::string &prefix, const Particle *reco,
           log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
               << part->momentum().pseudoRapidity();
           break;
+        case idcl:
+          log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+              << 1.0;
+          break;
         default:
           break;
         }
@@ -646,8 +630,7 @@ void DebugTool::printTree( const MCParticle *mother,
   
   MsgStream log(msgSvc(), name());
 
-  if( !mother )
-  {
+  if( !mother ) {
     log << MSG::ERROR << "printTree called with NULL MCParticle" << endreq;
     return;
   }
@@ -681,8 +664,36 @@ void DebugTool::printEventAsTree( const std::vector<MCParticle*> &event,
 
   log.setf(std::ios::fixed,std::ios::floatfield);
   std::vector<MCParticle*>::const_iterator i;
-  for( i=event.begin(); i!=event.end(); i++ )
-  {
+  for( i=event.begin(); i!=event.end(); i++ ) {
+    if( ((*i)->originVertex() == NULL) ||
+        ((*i)->originVertex()->mother() == NULL) )
+      printDecayTree( *i, assoc, "", m_depth, log );
+  }
+  log << endreq;
+}
+
+//=============================================================================
+// printEventAsTree (MCParticle) (KeyedContainer)
+//=============================================================================
+void DebugTool::printEventAsTree( const MCParticles &event )
+{
+  printEventAsTree( event, NULL );
+}
+
+//=============================================================================
+// printEventAsTree (MCParticle) (KeyedContainer)
+//=============================================================================
+void DebugTool::printEventAsTree( const MCParticles &event,
+                                  Particle2MCAsct::IAsct *assoc )
+{
+  MsgStream log(msgSvc(), name());
+
+  log << MSG::INFO << std::endl;
+  printHeader( log, true, assoc != NULL );
+
+  log.setf(std::ios::fixed,std::ios::floatfield);
+  MCParticles::const_iterator i;
+  for( i=event.begin(); i!=event.end(); i++ ) {
     if( ((*i)->originVertex() == NULL) ||
         ((*i)->originVertex()->mother() == NULL) )
       printDecayTree( *i, assoc, "", m_depth, log );
@@ -700,16 +711,13 @@ void DebugTool::printDecayTree( const MCParticle *mother,
 {
   printInfo( prefix, mother, assoc, log );
 
-  if( depth )
-  {
+  if( depth ) {
     SmartRefVector<MCVertex>::const_iterator iv;
     for ( iv = mother->endVertices().begin();
-          iv != mother->endVertices().end(); iv++ )
-    {
+          iv != mother->endVertices().end(); iv++ ) {
       SmartRefVector<MCParticle>::const_iterator idau;
       for ( idau = (*iv)->products().begin();
-            idau != (*iv)->products().end(); idau++ )
-      {
+            idau != (*iv)->products().end(); idau++ ) {
         if ( (*idau == (*iv)->products().back())
              && (*iv == mother->endVertices().back()) )
           printDecayTree( *idau, assoc, prefix+' ', depth-1, log );
@@ -740,8 +748,7 @@ void DebugTool::printTree( const Particle *mother,
   
   MsgStream log(msgSvc(), name());
 
-  if( !mother )
-  {
+  if( !mother ) {
     log << MSG::ERROR << "printTree called with NULL Particle" << endreq;
     return;
   }
@@ -764,14 +771,12 @@ void DebugTool::printDecayTree( const Particle *mother,
 {
   printInfo( prefix, mother, assoc, log );
 
-  if( depth )
-  {
+  if( depth ) {
     if( !mother->endVertex() )
       return;
     SmartRefVector<Particle>::const_iterator iprod;
     for ( iprod = mother->endVertex()->products().begin();
-          iprod != mother->endVertex()->products().end(); iprod++ )
-    {
+          iprod != mother->endVertex()->products().end(); iprod++ ) {
       if ( (*iprod) != mother->endVertex()->products().back() )
         printDecayTree( *iprod, assoc, prefix+'|', depth-1, log );
       else
@@ -789,8 +794,7 @@ void DebugTool::printAncestor( const MCParticle *child )
   ParticleProperty *p = m_ppSvc->findByStdHepID(child->particleID().pid());
   std::string decay = p ? p->particle() : "N/A";
   const MCVertex *origin = child->originVertex();
-  while( origin && (child = origin->mother()) )
-  {
+  while( origin && (child = origin->mother()) ) {
     p = m_ppSvc->findByStdHepID(child->particleID().pid());
     decay = (p ? p->particle() : std::string("N/A")) + " -> "+ decay;
     origin = child->originVertex();
@@ -831,7 +835,7 @@ void DebugTool::printEventAsList( const std::vector<MCParticle*> &event )
 }
 
 //=============================================================================
-// printEventAsList (Particle)
+// printEventAsList (MCParticle)
 //=============================================================================
 void DebugTool::printEventAsList( const std::vector<MCParticle*> &event,
                                   Particle2MCAsct::IAsct *assoc )
@@ -846,3 +850,53 @@ void DebugTool::printEventAsList( const std::vector<MCParticle*> &event,
     printInfo( "", *i, assoc, log );
   log << endreq;
 }
+
+//=============================================================================
+// printEventAsList (Particle) (KeyedContainer)
+//=============================================================================
+void DebugTool::printEventAsList( const Particles &event )
+{
+  printEventAsList( event, NULL );
+}
+
+//=============================================================================
+// printEventAsList (Particle) (KeyedContained)
+//=============================================================================
+void DebugTool::printEventAsList( const Particles &event,
+                                  Particle2MCAsct::IAsct *assoc )
+{
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << std::endl;
+  printHeader( log, false, assoc != NULL );
+
+  Particles::const_iterator i;
+  for( i=event.begin(); i!=event.end(); i++ )
+    printInfo( "", *i, assoc, log );
+  log << endreq;
+}
+
+//=============================================================================
+// printEventAsList (MCParticle) (KeyedContainer)
+//=============================================================================
+void DebugTool::printEventAsList( const MCParticles &event )
+{
+  printEventAsList( event, NULL );
+}
+
+//=============================================================================
+// printEventAsList (MCParticle) (KeyedContainer)
+//=============================================================================
+void DebugTool::printEventAsList( const MCParticles &event,
+                                  Particle2MCAsct::IAsct *assoc )
+{
+  MsgStream log(msgSvc(), name());
+  log << MSG::INFO << std::endl;
+  printHeader( log, true, assoc != NULL );
+  
+  int c = 0;
+  MCParticles::const_iterator i;
+  for( i=event.begin(); i!=event.end(); i++, c++ )
+    printInfo( "", *i, assoc, log );
+  log << endreq;
+}
+

@@ -1,4 +1,4 @@
-// $Id: DebugTool.h,v 1.2 2002-05-24 20:55:58 gcorti Exp $
+// $Id: DebugTool.h,v 1.3 2003-03-07 11:01:55 odie Exp $
 #ifndef DEBUGTOOL_H 
 #define DEBUGTOOL_H 1
 
@@ -61,6 +61,10 @@ public:
   /// Also print the reconstructed info if available.
   virtual void printEventAsTree( const std::vector<MCParticle*> &event,
                                  Particle2MCAsct::IAsct *assoc );
+  /// Same from a keyed container.
+  virtual void printEventAsTree( const MCParticles &event );
+  virtual void printEventAsTree( const MCParticles &event,
+                                 Particle2MCAsct::IAsct *assoc );
 
   /// Print all the (MC)Particles in the event as a flat list.
   virtual void printEventAsList( const ParticleVector &event );
@@ -70,9 +74,17 @@ public:
                                  Particle2MCAsct::IAsct *assoc );
   virtual void printEventAsList( const std::vector<MCParticle*> &event,
                                  Particle2MCAsct::IAsct *assoc );
+  /// Same from a keyed container.
+  virtual void printEventAsList( const Particles &event );
+  virtual void printEventAsList( const MCParticles &event );
+  virtual void printEventAsList( const Particles &event,
+                                 Particle2MCAsct::IAsct *assoc );
+  virtual void printEventAsList( const MCParticles &event,
+                                 Particle2MCAsct::IAsct *assoc );
 
 private:
-  enum InfoKeys { Name, E, M, P, Pt, Px, Py, Pz, Vx, Vy, Vz, theta, phi, eta };
+  enum InfoKeys { Name, E, M, P, Pt, Px, Py, Pz, Vx, Vy, Vz,
+                  theta, phi, eta, idcl };
 
   void printHeader( MsgStream &log, bool mcfirst, bool associated );
   void printInfo( const std::string &prefix, const MCParticle *part,
