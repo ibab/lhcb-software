@@ -2,6 +2,9 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!20040206 - Stefan
+- bugfix: errorReporter attached to Xerces parser was deleted too early
+
 ===============================GaudiObjDesc v6r2p2============================
 !20040122 - Stefan
 - added macros to KeyedDictionary.h and SealDictionary.h in order to allow instantion

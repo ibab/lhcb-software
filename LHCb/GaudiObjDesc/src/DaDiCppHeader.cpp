@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.72 2003-12-18 14:05:33 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.73 2004-02-06 19:08:18 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -2789,7 +2789,6 @@ void printCppHeader(DaDiPackage* gddPackage,
   //  ErrorHandler* errReporter = new DaDiTools();
   DaDiTools* daditools = new DaDiTools();
   ErrorHandler* errReporter = dynamic_cast<ErrorHandler*>(daditools);
-  delete daditools;
   dbParser->setErrorHandler(errReporter);
 
   bool dbErrorsOccured = false;
@@ -2914,6 +2913,7 @@ void printCppHeader(DaDiPackage* gddPackage,
   }
 
   delete dbParser;
+  delete errReporter;
   //XMLString::release(&dbErrReporter);
 
   ///

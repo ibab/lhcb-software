@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.41 2004-01-07 16:49:43 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.42 2004-02-06 19:08:18 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -277,7 +277,6 @@ void printCppDictionary(DaDiPackage* gddPackage,
   //  ErrorHandler* errReporter = new DaDiTools();
   DaDiTools* daditools = new DaDiTools();
   ErrorHandler* errReporter = dynamic_cast<ErrorHandler*>(daditools);
-  delete daditools;
   dbParser->setErrorHandler(errReporter);
 
   bool dbErrorsOccured = false;
@@ -396,6 +395,7 @@ void printCppDictionary(DaDiPackage* gddPackage,
   }
 
   delete dbParser;
+  delete errReporter;
   //XMLString::release(&dbErrReporter);
 
   std::vector<std::string> addImp = DaDiTools::addImport();

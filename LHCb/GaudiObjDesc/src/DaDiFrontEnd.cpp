@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.44 2003-12-18 14:05:34 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.45 2004-02-06 19:08:19 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 #include "DaDiTools.h"
@@ -1962,7 +1962,6 @@ void DDFE::DaDiFrontEnd(DaDiPackage* gddPackage, char* filename)
   //  ErrorHandler* errReporter = new DaDiTools();
   DaDiTools* daditools = new DaDiTools();
   ErrorHandler* errReporter = dynamic_cast<ErrorHandler*>(daditools);
-  delete daditools;
   parser->setErrorHandler(errReporter);
 
   bool errorsOccured = false;
@@ -2067,6 +2066,7 @@ void DDFE::DaDiFrontEnd(DaDiPackage* gddPackage, char* filename)
   }
   //  delete [] gXmlFile;
   delete parser;
+  delete errReporter;
   //  return gddPackage;
 }
 
