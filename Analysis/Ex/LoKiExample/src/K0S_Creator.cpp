@@ -1,8 +1,11 @@
-// $Id: K0S_Creator.cpp,v 1.1 2004-08-05 09:54:15 ibelyaev Exp $
+// $Id: K0S_Creator.cpp,v 1.2 2004-10-21 13:15:27 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/08/05 09:54:15  ibelyaev
+//  version updated for LoKi v3r* and DC04 data
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -174,7 +177,10 @@ StatusCode K0S_Creator::analyse    ()
       
     // make unconstraied vertex fit 
     StatusCode sc = ks -> fit ( FitVertex ) ;
-    if ( sc.isFailure() || !ks )             { continue ; }    // CONTINUE 
+    if ( sc.isFailure() )             { continue ; }    // CONTINUE
+    if ( ks             ) {} 
+    else 
+    { continue ; }
     
     // cut on chi2 of vertex fit 
     const double vChi2 = VCHI2 ( ks ) ;

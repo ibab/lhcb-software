@@ -4,6 +4,12 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+! 2004-10-21 - Vanya BELYAEV 
+   - src/K0S_Creator.cpp 
+    fix compiler ambuguity for Windows 
+   - cmt/requirements 
+    increment the version to v3r3p2 
+
 ! 2004-08-17 - Vanya BELYAEV
 
  - options/DV_LoKi_Bs2PhiGamma_DecayChain.opts
