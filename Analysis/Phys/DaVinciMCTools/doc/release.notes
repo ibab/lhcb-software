@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.24 2003-07-29 17:51:50 gcorti Exp $
+! $Id: release.notes,v 1.25 2003-12-12 14:59:49 gcorti Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
 
+!========================== DaVinciMCTools v5r0p1 2003-12-12 ===============
 ! 2003-07-24 - Gloria CORTI
  - options/MCParticleMaker.opts
    . "new" options with default list for MCParticleMaker (had never been
