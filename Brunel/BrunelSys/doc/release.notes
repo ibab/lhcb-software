@@ -4,6 +4,7 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
+!======================= BrunelSys v18r1 2003-06-05 =======================
 ! 2003-06-05 - Marco Cattaneo
  - Modified requirements for Brunel v18r1
    Packages removed:  BrunelKernel
