@@ -4,7 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!======================= L0MuonKernel v2r6 2004-12-21 ========================
+! 2005-01-03 - P. Koppenburg
+ - Deleted tags v2r4 v2r5 and v2r6
+ - cmt/requirements
+   . increment to version v2r4. 
+ 
 ! 2004-12-21 - Luisanna Tocco
  - Comments for doxygen documentation
  - Cleaning for compilation warnings (remaining warnings concerns L0mConf)
