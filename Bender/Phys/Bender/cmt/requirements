@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2004-07-11 15:47:05 ibelyaev Exp $ 
+# $Id: requirements,v 1.11 2004-07-24 14:04:59 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -51,34 +51,7 @@ apply_pattern     application_path
 
 
 # ============================================================================
+# $Log: not supported by cvs2svn $
+# =============================================================================
 # The END
 # ============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.9  2004/07/08 20:08:20  ibelyaev
-# *** empty log message ***
-#
-# Revision 1.8  2004/06/28 16:35:13  ibelyaev
-#  increment the version
-#
-# Revision 1.7  2004/04/05 07:21:31  ibelyaev
-#  v3r2
-#
-# Revision 1.6  2004/03/26 10:09:55  ibelyaev
-#  update for v3r1
-#
-# Revision 1.5  2004/03/18 12:59:12  ibelyaev
-#  add clean scripts
-#
-# Revision 1.4  2004/03/16 08:46:22  ibelyaev
-#   fix a version
-#
-# Revision 1.3  2004/03/15 18:13:56  ibelyaev
-#  update in requirements
-#
-# Revision 1.2  2004/02/10 12:35:03  ibelyaev
-#  last update
-#
-# Revision 1.1.1.1  2004/01/22 22:29:45  ibelyaev
-# New location of 'old' package
-#
-# =============================================================================

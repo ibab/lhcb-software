@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderaux.py,v 1.2 2004-07-23 13:49:23 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.3 2004-07-24 14:05:00 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/07/23 13:49:23  ibelyaev
+# *** empty log message ***
+#
 # Revision 1.1  2004/07/11 15:47:05  ibelyaev
 #  regular incrment
 #
@@ -21,7 +24,7 @@
 import PyLCGDict   
 import gaudimodule as gaudi
 
-PyLCGDict.loadDict('BenderDict')
+PyLCGDict.loadDict( 'BenderDict'    )
 # global namespaces
 gbl = gaudi.gbl
 
@@ -77,6 +80,9 @@ VertexType.Kink            = 7
 # extract the native ROOT histograms from AIDA
 aida2root = gaudi.gbl.Bender.RootHelper.aida2root
 
+fillStream             = gbl.Bender.FillStream.fillStream 
+
+
 # import useful functions
 vertex                 = gbl.Bender.Accessors.vertex
 particle               = gbl.Bender.Accessors.particle
@@ -92,6 +98,11 @@ ppFromPID              = gbl.Bender.ParticleProperties.ppFromPID
 massFromPID            = gbl.Bender.ParticleProperties.massFromPID
 massFromName           = gbl.Bender.ParticleProperties.massFromName
 ppService              = gbl.Bender.ParticleProperties.ppSvc
+
+ppFromParticle         = gbl.Bender.Extract.ppFromParticle
+trFromParticle         = gbl.Bender.Extract.trFromParticle
+muFromParticle         = gbl.Bender.Extract.muFromParticle
+richFromParticle       = gbl.Bender.Extract.richFromParticle
 
 
 # =============================================================================

@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.1 2004-07-11 15:47:05 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.2 2004-07-24 14:05:00 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2004/07/11 15:47:05  ibelyaev
+#  regular incrment
+#
 # =============================================================================
 
 
@@ -76,6 +79,9 @@ class Algo(BenderAlgo):
         sc = BenderAlgo.initialize_( self )
         if not sc.isSuccess () :
             raise RuntimeError , 'Can not initialize base for ' + self.name()
+        self._evtSvc_   = gaudi.iDataSvc      ( BenderAlgo.evtSvc   ( self ) )
+        self._detSvc_   = gaudi.iDataSvc      ( BenderAlgo.detSvc   ( self ) )
+        self._histoSvc_ = gaudi.iHistogramSvc ( BenderAlgo.histoSvc ( self ) )
         return sc
     
     def analyse  ( self ) :
@@ -246,6 +252,47 @@ class Algo(BenderAlgo):
         " Retrive/Create MC Truth matching object "
         name = args.get('name','<empty>')
         return MCMatch( BenderAlgo.mctruth( self , name ) )
+
+    def evtSvc         ( self ) : return self._evtSvc_
+    def detSvc         ( self ) : return self._detSvc_
+    def histoSvc       ( self ) : return self._histoSvc_
+    
+    def get            ( self , **args ) :
+        """
+        Helper function to locate objects in Gaudi Event Transient Store
+        Usage :
+        # 1 
+        mcps = self.get( address = 'MC/Particles' )
+        # 2 
+        mcps = self.get( address = 'MC/Particles' , vector = TRUE )
+        # 3 
+        mcps = self.get( address = 'MC/Particles' , list   = TRUE )
+        where :
+        -\t 'address' \t is the objects's addres in Gaudi Event Transient Store
+        -\t 'vector'  \t is an indicator to convert the container into std::vector form
+        \t\t\t\t This operation could be expensive!
+        -\t 'list'    \t is an indicator to convert the container into list        form
+        \t\t\t\t This operation could be expensive!
+        Return value: the locate dobject in gaudi Trnasient Store
+        """
+        if   args.has_key( 'address'  ) :
+            obj = self._evtSvc_[args.get('address' ) ]
+        else :
+            raise TypeError, " 'address' is not specified "    
+        if args.has_key( 'vector' ) and hasattr( obj , 'containedObjects') :
+            return obj.containedObjects()
+        if args.has_key( 'list'   ) and hasattr( obj , 'containedObjects') :
+            obj = obj.containedObjects()
+            lst = []
+            for o in obj : lst += [ o ]
+            return lst
+        return obj
+    
+    def getDet         ( self , **args ) :
+        " helper function to locate objects in Gaudi Detector Transient Store "
+        if not args.has_key( "address" ) :
+            raise TypeError, "'address' is not specified "
+        return self._detSvc_[ args.get('address') ]
     
     def point          ( self , **args ) :
         " Helper function for geometry calculation "
