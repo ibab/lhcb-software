@@ -189,7 +189,7 @@ StatusCode GiGaTrackerHitCnv::updateObj
      
      MCHit* mchit =new MCHit();
      mchit->setEntry(pentry);
-     mchit->setExit(pexit);
+     mchit->setDisplacement(pexit-pentry);
      mchit->setEnergy(edep);
      mchit->setTimeOfFlight(toffl);             
      

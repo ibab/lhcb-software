@@ -197,7 +197,7 @@ StatusCode GiGaVeloHitCnv::updateObj
 
              MCVeloHit* mchit =new MCVeloHit();
              mchit->setEntry(pentry);
-             mchit->setExit(pexit);
+             mchit->setDisplacement(pexit-pentry);
              mchit->setEnergy(edep);
              mchit->setTimeOfFlight(toffl);             
              mchit->setSensor(sensnumb);

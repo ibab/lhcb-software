@@ -5,6 +5,10 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+! 2005-03-31 - Gloria Corti
+ - src/GiGaTrackerHitCnv.cpp, GiGaVeloHitCnv.cpp
+   . adapt to changes to MCHit (see Event/Event v4r7)
+
 !=========================== GaussTracker v3r3 ================================
 ! 2005-02-21 - Gloria Corti
  - src/GiGaSensDetMuon.cpp
