@@ -1,0 +1,14 @@
+!-----------------------------------------------------------------------------
+! Package     : Kernel/Relations
+! Responsible : Ivan Belyaev
+! Purpose     : General purposes templated relations between classes
+!-----------------------------------------------------------------------------
+
+!====================== Relations v1r0 2004-07-19 ============================
+! 2004-07-19 - Marco Cattaneo
+ - Use GaudiAlg instead of GaudiTools (classes moved to GaudiAlg in Gaudi v15)
+ - Add Relations/RelationsDict.h (previously in GaudiObjDesc)
+
+! 2004-07-19 - Marco Cattaneo
+ - First import as an independent package, previously a subpackage of
+   LHCbKernel (until version v4r6)

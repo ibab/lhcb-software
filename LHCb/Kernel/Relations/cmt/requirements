@@ -1,0 +1,21 @@
+# $Id: requirements,v 1.1.1.1 2004-07-21 07:57:25 cattanem Exp $
+# =============================================================================
+package Relations
+author  I.Belyaev
+manager I.Belyaev
+
+version v1r0
+
+include_dirs $(RELATIONSROOT)
+
+use GaudiAlg	v*
+
+# Build library
+#============================================================================
+library Relations *.cpp
+apply_pattern linker_library library=Relations
+
+# Uncomment to find memory leaks
+#============================================================================
+macro_append Relations_pp_cppflags '  -DCOUNT_INSTANCES  ' \
+        WIN32                      ' /D"COUNT_INSTANCES" '

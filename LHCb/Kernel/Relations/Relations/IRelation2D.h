@@ -1,0 +1,103 @@
+// $Id: IRelation2D.h,v 1.1.1.1 2004-07-21 07:57:25 cattanem Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/25 08:44:03  ibelyaev
+//  bug fix for Win2K
+//
+// Revision 1.1  2002/04/03 15:35:17  ibelyaev
+// essential update and redesing of all 'Relations' stuff
+//
+// ============================================================================
+#ifndef RELATIONS_IRELATION2D_H 
+#define RELATIONS_IRELATION2D_H 1
+// Include files
+#include "Relations/PragmaWarnings.h"
+// GaudiKernel
+#include "GaudiKernel/IInterface.h"
+#include "GaudiKernel/StatusCode.h"
+/// local
+#include "Relations/RelationTypeTraits.h"
+#include "Relations/RelationUtils.h"
+#include "Relations/IRelation.h"
+
+/// forward declarations
+template <class OBJECT>
+class SmartRef            ; // from GaudiKernel
+
+/** @class IRelation2D IRelation2D.h Relations/IRelation2D.h
+ *  
+ *  An absract interface for bidirectional templated relations
+ *
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date   23/03/2002
+ */
+template< class FROM, class TO>
+class IRelation2D :
+  public virtual IRelation<FROM,TO>
+{
+public:
+  
+  /// shortcut to own type
+  typedef IRelation2D<FROM,TO>                   OwnType        ;
+  /// shortcut to inverse type
+  typedef IRelation2D<TO,FROM>                   InvType        ;
+  /// shortcut to "direct" type
+  typedef IRelation<FROM,TO>                     DirectType     ;
+  /// shortcut to "inverse" type
+  typedef IRelation<TO,FROM>                     InverseType    ;
+  
+public:
+  
+  /** get the "direct" interface 
+   *  @return pointer to the 'direct' interface 
+   */
+  virtual       DirectType*  direct ()       = 0 ;
+  
+  /** get the "direct" interface  (const-version)
+   *  @return pointer to the 'direct' interface 
+   */
+  virtual const DirectType*  direct () const = 0 ;
+  
+  /** get the "inverse" interface 
+   *  @return pointer to the 'inverse' interface 
+   */
+  virtual       InverseType* inverse ()       = 0 ;
+  
+  /** get the "inverse" interface  (const version)
+   *  @return pointer to the 'inverse' interface 
+   */
+  virtual const InverseType* inverse () const = 0 ;
+  
+  /** interface identification (static)
+   *  @attention the unique interface identifier is constructed "on-fly"
+   *  using hash-technique from the generic interface name and 
+   *  unique identifiers of related objects 
+   *  @see IInterface
+   *  @return the uniqie interface identifier
+   */
+  static const InterfaceID& interfaceID()
+  {
+    static const InterfaceID s_iid  =
+      Relations::interfaceID( "IRelation2D"        ,
+                              FromTypeTraits::id() ,
+                              ToTypeTraits::id  () , 
+                              0                    ,
+                              TypeTraits::version  , 0 );
+    return s_iid ;
+  };
+
+protected:
+  
+  /// destructor (virtual and protected)
+  virtual ~IRelation2D(){};
+  
+};
+
+
+// ============================================================================
+// The End 
+// ============================================================================
+#endif // RELATIONS_IRELATION2D_H
+// ============================================================================
