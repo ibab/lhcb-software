@@ -8,7 +8,7 @@
  - src/NeutralPPsFromCPsAlg.cpp
    1) add the usage of Frederic's Machefert CaloPhotonEstimatorTool/'PhotonPID'
    ATTENTION!!!
-             It REQUIRES the usage of newer Calo/CaloPIDa package 
+             It REQUIRES the usage of newer Calo/CaloPIDs package 
    2) remove extra "release" (not needed anymore) 
  -cmt/requirements
    increase the version to v4r5 
