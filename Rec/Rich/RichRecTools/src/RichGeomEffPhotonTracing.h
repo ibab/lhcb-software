@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichGeomEffPhotonTracing.h
  *
  *  Header file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.6 2004-07-27 20:15:30 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.7 2005-02-02 10:06:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H
 #define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
@@ -36,6 +37,7 @@
 // GSL
 #include "gsl/gsl_math.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichGeomEffPhotonTracing RichGeomEffPhotonTracing.h
  *
  *  Tool to perform a full detailed calculation of the geometrical
@@ -46,6 +48,7 @@
  *
  *  @todo  Remove the use of randomn numbers
  */
+//-----------------------------------------------------------------------------
 
 class RichGeomEffPhotonTracing : public RichRecToolBase,
                                  virtual public IRichGeomEff {
@@ -94,15 +97,6 @@ private: // Private data
 
   /// Cherenkov phi incrementation
   double m_incPhi;
-
-  /// Typedef of container type for cached angle parameters
-  typedef std::vector<double> AngleVector;
-
-  /// Cache Sin(angle) for geometrical efficiency calculation
-  AngleVector m_sinCkPhi;
-
-  /// Cache Cos(angle) for geometrical efficiency calculation
-  AngleVector m_cosCkPhi;
 
   /// Flat Randomn distribution between 0 and 1
   mutable Rndm::Numbers m_uniDist;

@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichGeomEffPhotonTracing.cpp
  *
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.7 2004-07-27 20:15:30 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.8 2005-02-02 10:06:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichGeomEffPhotonTracing.h"
@@ -52,20 +53,14 @@ StatusCode RichGeomEffPhotonTracing::initialize()
 
   // randomn number service
   IRndmGenSvc * randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
-  if ( !m_uniDist.initialize( randSvc, Rndm::Flat(0,1) ) ) {
+  if ( !m_uniDist.initialize( randSvc, Rndm::Flat(0,1) ) ) 
+  {
     return Error( "Unable to initialise randomn numbers" );
   }
 
   // Set up cached parameters for geometrical efficiency calculation
   m_pdInc = 1.0 / ( static_cast<double>(m_nGeomEff) );
   m_incPhi = M_PI/2.0 + M_2PI/( static_cast<double>(m_nGeomEff) );
-  double ckPhi = 0.0;
-  m_sinCkPhi.clear();
-  m_cosCkPhi.clear();
-  for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot, ckPhi += m_incPhi ) {
-    m_sinCkPhi.push_back( sin(ckPhi) );
-    m_cosCkPhi.push_back( cos(ckPhi) );
-  }
 
   // Configure the ray-tracing mode
   m_traceMode.setDetPrecision      ( RichTraceMode::circle );
@@ -74,7 +69,7 @@ StatusCode RichGeomEffPhotonTracing::initialize()
   m_traceMode.setOutMirrorBoundary ( false                 );
   m_traceMode.setMirrorSegBoundary ( false                 );
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichGeomEffPhotonTracing::finalize() 
@@ -88,7 +83,8 @@ StatusCode RichGeomEffPhotonTracing::finalize()
 
 double
 RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
-                                           const Rich::ParticleIDType id ) const {
+                                           const Rich::ParticleIDType id ) const 
+{
 
   if ( !segment->geomEfficiency().dataIsValid(id) ) {
     double eff = 0;
@@ -97,38 +93,21 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
     const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
     if ( ckTheta > 0 ) {
 
-      const RichTrackSegment & trackSeg = segment->trackSegment();
-
-      // Define rotation matrix
-      const HepVector3D z = trackSeg.bestMomentum().unit();
-      HepVector3D y = ( fabs( z * HepVector3D(1.,0.,0.) ) < 1. ?
-                        z.cross( HepVector3D(0.,1.,0.) ) :
-                        z.cross( HepVector3D(1.,0.,0.) ) );
-      y.setMag(1);
-      const HepVector3D x = y.cross(z);
-      HepRotation rotation = HepRotation();
-      rotation.rotateAxes(x,y,z);
-
       int nDetect = 0;
-      const double sinCkTheta = sin(ckTheta);
-      const double cosCkTheta = cos(ckTheta);
-      AngleVector::const_iterator iCos = m_cosCkPhi.begin();
-      AngleVector::const_iterator iSin = m_sinCkPhi.begin();
-      for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot, ++iCos, ++iSin ) {
+      double ckPhi = 0.0;
+      for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot, ckPhi+=m_incPhi ) {
 
         // Photon emission point is random between segment start and end points
         //const HepPoint3D emissionPt = trackSeg.bestPoint( m_uniDist() );
         // Photon emission point is half-way between segment start and end points
-        const HepPoint3D & emissionPt = trackSeg.bestPoint();
+        const HepPoint3D & emissionPt = segment->trackSegment().bestPoint();
 
         // Photon direction around loop
-        const HepVector3D photDir = rotation * HepVector3D( sinCkTheta*(*iCos),
-                                                            sinCkTheta*(*iSin),
-                                                            cosCkTheta );
+        const HepVector3D photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
 
         // Ray trace through detector, using fast circle modelling of HPDs
         RichGeomPhoton photon;
-        if ( 0 != m_rayTrace->traceToDetector( trackSeg.rich(),
+        if ( 0 != m_rayTrace->traceToDetector( segment->trackSegment().rich(),
                                                emissionPt,
                                                photDir,
                                                photon,
@@ -161,6 +140,7 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
     } // CK theta IF
 
     segment->setGeomEfficiency( id, eff );
+
   }
 
   return segment->geomEfficiency( id );
@@ -168,7 +148,8 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
 
 double
 RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
-                                               const Rich::ParticleIDType id ) const {
+                                               const Rich::ParticleIDType id ) const 
+{
 
   if ( !segment->geomEfficiencyScat().dataIsValid(id) ) {
     double eff = 0;
@@ -177,40 +158,28 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
     const double ckTheta = m_ckAngle->avgCherenkovTheta( segment, id );
     if ( ckTheta > 0 && segment->trackSegment().radiator() == Rich::Aerogel ) {
 
-      const RichTrackSegment & trackSeg = segment->trackSegment();
-
       // Photon emission point is end of aerogel
-      const HepPoint3D emissionPt = trackSeg.exitPoint();
+      const HepPoint3D emissionPt = segment->trackSegment().exitPoint();
 
-      // Define rotation matrix
-      HepVector3D z = trackSeg.bestMomentum().unit();
-      HepVector3D y = ( fabs( z * HepVector3D(1.,0.,0.) ) < 1. ?
-                        z.cross( HepVector3D(0.,1.,0.) ) :
-                        z.cross( HepVector3D(1.,0.,0.) ) );
-      y.setMag(1);
-      HepVector3D x = y.cross(z);
-      HepRotation rotation = HepRotation();
-      rotation.rotateAxes(x,y,z);
+      // Cos of CK theta - cached for speed
+      const double cosCkTheta = cos(ckTheta);
 
       int nDetect = 0;
       RichGeomPhoton photon;
-      AngleVector::const_iterator iCos = m_cosCkPhi.begin();
-      AngleVector::const_iterator iSin = m_sinCkPhi.begin();
-      for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot , ++iCos, ++iSin ) {
+      double ckPhi = 0.0;
+      for ( int iPhot = 0; iPhot < m_nGeomEff; ++iPhot, ckPhi+=m_incPhi ) {
 
         // generate randomn cos(theta)**2 distribution for thetaCk
         double ckTheta;
         do {
           ckTheta = m_uniDist()*M_PI_2;
-        } while ( m_uniDist() > gsl_pow_2(cos(ckTheta)) );
+        } while ( m_uniDist() > gsl_pow_2(cosCkTheta) );
 
         // Photon direction around loop
-        const HepVector3D photDir = rotation*HepVector3D( sin(ckTheta)*(*iCos),
-                                                          sin(ckTheta)*(*iSin),
-                                                          cos(ckTheta) );
+        const HepVector3D photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
 
         // Ray trace through detector
-        if ( 0 != m_rayTrace->traceToDetector( trackSeg.rich(),
+        if ( 0 != m_rayTrace->traceToDetector( segment->trackSegment().rich(),
                                                emissionPt,
                                                photDir,
                                                photon,
