@@ -1,7 +1,5 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/XmlStringCnvSvc.cpp,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: XmlStringCnvSvc.cpp,v 1.2 2001-11-01 13:50:53 andreav Exp $
 #include <string>
-#include <unistd.h>
-#include <sys/param.h>
 
 #include "XmlStringCnvSvc.h"
 

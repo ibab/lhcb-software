@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/XmlStringCnvSvc.h,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Id: XmlStringCnvSvc.h,v 1.2 2001-11-01 13:50:57 andreav Exp $
 #ifndef DETCOND_XMLSTRINGCNVSVC_H
 #define DETCOND_XMLSTRINGCNVSVC_H 1
 
@@ -6,7 +6,7 @@
 #include "GaudiKernel/ConversionSvc.h"
 
 /// Forward and external declarations
-template <class TYPE> class SvcFactory;
+template <class ConcreteService> class SvcFactory;
 
 ///---------------------------------------------------------------------------
 /** @class XmlStringCnvSvc XmlStringCnvSvc.h Det/DetCond/XmlStringCnvSvc.h
