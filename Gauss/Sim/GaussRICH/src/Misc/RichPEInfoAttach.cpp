@@ -8,9 +8,7 @@
 G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk) 
 {
   G4VUserTrackInformation* aTkInfo=aPhotonTk.GetUserInformation();
-  GaussTrackInformation* CurRichPhotTrackInfo=
-    (0 ==aTkInfo ) ? 0 : 
-                   dynamic_cast<GaussTrackInformation*>(aTkInfo);
+  GaussTrackInformation* CurRichPhotTrackInfo=(GaussTrackInformation*)aTkInfo;
   
   // the test on photon origin is commented out for now. It 
   // can be revived in the future.

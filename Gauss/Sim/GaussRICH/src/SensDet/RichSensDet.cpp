@@ -209,9 +209,8 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
      (aCreatorProcessName  == "RichHpdPhotoelectricProcess")) {
     
    G4VUserTrackInformation* aUserTrackinfo=aTrack->GetUserInformation();
-   GaussTrackInformation* aRichPETrackInfo= (0 == aUserTrackinfo) ? 0 : 
-                 dynamic_cast<GaussTrackInformation*>(aUserTrackinfo);
-
+   GaussTrackInformation* aRichPETrackInfo
+     = (GaussTrackInformation*)aUserTrackinfo;
 
   if(aRichPETrackInfo) 
     {
