@@ -40,7 +40,7 @@ use CaloPIDs		v1r0	Calo
 use VeloAlgorithms      v2r7  	Velo
 
 # Inner Tracker
-use ITAlgorithms        v12r9p1	IT
+use ITAlgorithms        v12r10	IT
 use ITCheckers          v1r3  	IT
 
 # Outer Tracker
@@ -52,7 +52,7 @@ use TrCheck             v1r4  	Tr
 use LongTrack           v1r7  	Tr
 use TrFitter            v3r5  	Tr
 use TrExtrapolator      v2r6  	Tr
-use TrTools             v2r4  	Tr
+use TrTools             v2r4p1	Tr
 use Seeding             v2r5  	Tr 
 use TrMatching          v2r6  	Tr
 use TrCleanEx           v2r6p1	Tr
@@ -69,9 +69,9 @@ use MuonBackground	v1r2	Muon
 
 # Rich
 use RichRecBase		v1r1	Rich
-use RichMonitor         v3r0  	Rich
-use RichRecAlgs		v2r0p1 	Rich
-use RichRecTools	v2r0  	Rich
+use RichMonitor         v3r0p1	Rich
+use RichRecAlgs		v2r0p2 	Rich
+use RichRecTools	v2r0p1	Rich
 use RichUtils		v3r1  	Rich
 use RichDetTools	v2r1  	Rich
 

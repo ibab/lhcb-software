@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v19r0>2003-06-26 Brunel v19r0</A></H1><PRE>
+</PRE><H1><A NAME=v19r0>2003-06-27 Brunel v19r0</A></H1><PRE>
 - Development version for:
    . Port to Gaudi v12
    . Port to gcc 3.2
@@ -19,7 +19,7 @@ Purpose: LHCb reconstruction program
 - New features:
    . Implementation of modules in OT description. Uses backwards incompatible
      modification to OTDet, requires XmlDDDB from v16r0, dbase from v256r0
-     (OTAlgorithms v13r0, Seeding v2r4, LongTrack v1r7, TrIntraPR v2r4,
+     (OTAlgorithms v13r0, Seeding v2r4, LongTrack v1r7, TrIntraPR v2r5,
       L1VeloTrack v5r1)
    . New implementation of "flat spillover" in Muon chambers. Requires 
      installation of the file $LHCBHOME/sim/data/flat-spillo-2.hbook
@@ -35,6 +35,10 @@ Purpose: LHCb reconstruction program
 
 - Bug fixes:
    . Release application manager in BrunelMain.cpp, to please valgrind
+   . Release services etc. after use, to please valgrind
+     (ITAlgorithms v12r10, L1Decision v2r1, L1VeloTrack v5r1, OTAlgorithms v13r0,
+      MCTools v1r1p1, KsReco v1r5, RichMonitor v3r0p1, RichRecAlgs v2r0p2,
+      RichRecTools v2r0p1, TrCheck v1r4, TrIntraPR v2r5, TrTools v2r4p1)
    . Remove IGeometryInfoException from DoxyFile.cfg, to fix doxygen doc
 
 </PRE><H1><A NAME=v18r1>2003-06-24 Brunel v18r1</A></H1><PRE>
