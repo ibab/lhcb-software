@@ -101,15 +101,17 @@ private:
   int m_stationNumber;
   int m_regionNumber;
   int m_partition;
+  int m_spill;
+  int m_container;
   
   
   
   MuonDetectorResponse detectorResponse;
   
-  static std::string spill[5];
+  static std::string spill[6];
   static std::string numreg[4];
   static std::string numsta[5];
-  static std::string TESPathOfHitsContainer[5];
+  static std::string TESPathOfHitsContainer[4];
   const static int OriginOfHitsContainer[5];
   
   Rndm::Numbers m_flatDist;

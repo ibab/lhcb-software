@@ -16,15 +16,15 @@ static const AlgFactory<MuonDigitization>  Factory;
 const IAlgFactory& MuonDigitizationFactory = Factory;
 
 //reserve space for static variable
-std::string MuonDigitization::spill[5] = 
-{"","/Prev","/PrevPrev","/Next","/NextNext"};
+std::string MuonDigitization::spill[6] = 
+{"/LHCBackground","","/Prev","/PrevPrev","/Next","/NextNext"};
 std::string MuonDigitization::numreg[4] = 
 {"1","2","3","4"};
 std::string MuonDigitization::numsta[5]= 
 {"1","2","3","4","5"};
- std::string MuonDigitization::TESPathOfHitsContainer[5]=
+ std::string MuonDigitization::TESPathOfHitsContainer[4]=
 {"Hits","ChamberNoiseHits","FlatSpilloverHits",
-"BackgroundHits", "LHCBackground"};
+"BackgroundHits"};
 const int MuonDigitization::OriginOfHitsContainer[5]=
 {MuonOriginFlag::GEANT,MuonOriginFlag::CHAMBERNOISE,
  MuonOriginFlag::FLATSPILLOVER,MuonOriginFlag::BACKGROUND, 
@@ -108,7 +108,11 @@ StatusCode MuonDigitization::initialize()
   log<<MSG::DEBUG<<m_pGetInfo->getChamberPerRegion(0)<<endreq;
   m_flatDist.initialize( randSvc(), Rndm::Flat(0.0,1.0));	 
   detectorResponse.initialize( toolSvc(),randSvc(), detSvc(), msgSvc());
+  m_spill=6;
+  m_container=4;
+  
   return StatusCode::SUCCESS;
+
 }
  
  					
@@ -258,7 +262,7 @@ MuonDigitization::addChamberNoise(){
 
 	MsgStream log(msgSvc(), name()); 
   int container=1;
-	for (int ispill=0;ispill<m_numberOfEventsNeed;ispill++){
+	for (int ispill=1;ispill<m_numberOfEventsNeed+1;ispill++){
 	  int chamberTillNow=0;
 		double shiftOfTOF=-m_BXTime*ispill;
     for(int k=0;k<m_stationNumber;k++){ 
@@ -357,8 +361,8 @@ MuonDigitization::createInput(
     int station=iterRegion/m_regionNumber+1;
     int region=iterRegion%m_regionNumber+1;	 
     int readoutNumber=m_pGetInfo->getReadoutNumber(iterRegion);		 
-    for (int ispill=0; ispill<m_numberOfEventsNeed;ispill++){
-      for(int container=0; container<5;container++){				
+    for (int ispill=0; ispill<m_numberOfEventsNeed+1;ispill++){
+      for(int container=0; container<m_container;container++){				
         std::string path="/Event"+spill[ispill]+"/MC/Muon/"+
           numsta[station-1]+"/R"+numreg[region-1]+"/"+
           TESPathOfHitsContainer[container];
@@ -604,17 +608,33 @@ MuonDigitization::createInput(
                     ->setHitArrivalTime((*iter)->timeOfFlight()-tofOfLight);
                   inputPointer->getHitTraceBack()
                     ->setCordinate(distanceFromBoundary);
-                  inputPointer->getHitTraceBack()
-                    ->getMCMuonHitOrigin().setBX(ispill);
-                  inputPointer->getHitTraceBack()
+                  if(ispill>0){
+                    inputPointer->getHitTraceBack()->getMCMuonHitOrigin().
+                      setBX(ispill-1);
+                     inputPointer->getHitTraceBack()
                     ->getMCMuonHitOrigin().setHitNature
-                    (OriginOfHitsContainer[container]);										
-                  inputPointer->getHitTraceBack()
-                    ->getMCMuonHistory().setBXOfHit(ispill);			
-                  inputPointer->getHitTraceBack()
+                    (OriginOfHitsContainer[container]);	 
+                     inputPointer->getHitTraceBack()
+                    ->getMCMuonHistory().setBXOfHit(ispill-1);
+                     inputPointer->getHitTraceBack()
+                       ->getMCMuonHistory().setNatureOfHit
+                       (OriginOfHitsContainer[container]);			
+                  }
+                  //patch for machine background
+                  if(ispill==0){
+                    inputPointer->getHitTraceBack()->getMCMuonHitOrigin().
+                      setBX(ispill); 
+                    inputPointer->getHitTraceBack()
+                    ->getMCMuonHitOrigin().setHitNature
+                      (OriginOfHitsContainer[4]);	 
+                    inputPointer->getHitTraceBack()
+                      ->getMCMuonHistory().setBXOfHit(ispill);
+                    inputPointer->getHitTraceBack()
                     ->getMCMuonHistory().setNatureOfHit
-                    (OriginOfHitsContainer[container]);			
-                  /*  if(	OriginOfHitsContainer[container]>1){
+                      (OriginOfHitsContainer[4]);			
+                  }
+                  
+                 /*  if(	OriginOfHitsContainer[container]>1){
                       inputPointer->getHitTraceBack()->
                       getMCMuonHistory().setNatureOfHit
                       (OriginOfHitsContainer[container]);			
@@ -1215,7 +1235,7 @@ addElectronicNoise(MuonDigitizationData
   
 	MsgStream log(msgSvc(), name()); 
 	MuonPhysicalChannel* pFound;
-  for(int ispill=0;ispill<m_numberOfEventsNeed;ispill++){
+  for(int ispill=1;ispill<m_numberOfEventsNeed;ispill++){
     int chamberTillNow=0;
     double shiftOfTOF=-m_BXTime*ispill;
     for(int i=0;i<m_stationNumber;i++){
@@ -1262,8 +1282,8 @@ addElectronicNoise(MuonDigitizationData
                 pointerToHit->setHitArrivalTime(time);							
                 pointerToHit->getMCMuonHitOrigin().
                   setHitNature(MuonOriginFlag::ELECTRONICNOISE);
-                pointerToHit->getMCMuonHitOrigin().setBX(ispill);	
-                pointerToHit->getMCMuonHistory().setBXOfHit(ispill);
+                pointerToHit->getMCMuonHitOrigin().setBX(ispill-1);	
+                pointerToHit->getMCMuonHistory().setBXOfHit(ispill-1);
                 pointerToHit->getMCMuonHistory().
                   setNatureOfHit(MuonOriginFlag::ELECTRONICNOISE);
                 newPhysicalChannel->hitsTraceBack().push_back(*pointerToHit);
