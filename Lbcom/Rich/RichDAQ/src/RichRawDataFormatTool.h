@@ -5,15 +5,15 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.4 2005-03-06 13:16:56 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.5 2005-03-06 14:08:33 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHDAQ_RICHHPDDATABANKTOOL_H
-#define RICHDAQ_RICHHPDDATABANKTOOL_H 1
+#ifndef RICHDAQ_RICHRAWDATAFORMATTOOL_H
+#define RICHDAQ_RICHRAWDATAFORMATTOOL_H 1
 
 // Boost
 #include "boost/lexical_cast.hpp"
@@ -45,6 +45,7 @@
 // Event model
 #include "Event/RawEvent.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichRawDataFormatTool RichRawDataFormatTool.h
  *
  *  Tool to encode and decode the Raw Buffer for the RICH.
@@ -63,6 +64,7 @@
  *
  *  @todo Remove DC04 hacks when no longer needed
  */
+//-----------------------------------------------------------------------------
 
 class RichRawDataFormatTool : public RichToolBase,
                               virtual public IRichRawDataFormatTool,
@@ -173,4 +175,4 @@ inline void RichRawDataFormatTool::InitNewEvent()
   m_rawEvent = 0;
 }
 
-#endif // RICHDAQ_RICHHPDDATABANKTOOL_H
+#endif // RICHDAQ_RICHRAWDATAFORMATTOOL_H
