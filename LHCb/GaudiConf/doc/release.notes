@@ -1,0 +1,33 @@
+package GaudiConf
+package manager: F.Ranjard
+
+! 20001117 - Pere Mato
+  options/ - Changed Dlls.txt and Services.txt to add the ChronoAuditor as default
+    
+! 20001030 - GaudiConf v3 - changes by M.Cattaneo
+  options/ - New files Dlls.txt, Services.txt included by Common.txt, to allow
+             possibility to include only Services.txt by static linked programs
+
+! 20001027 - GaudiConf v3 - changes by M.Cattaneo for GaudiSys v6
+  mgr/     - requirements:  add STDOPTS logical to point to options directory
+  options/ - StandardOptions.txt:  renamed Common.txt
+             Common.txt:           removed SicbEventSelector
+             DetDesc.txt:          additional options to use XML database
+             SicbTestDataFile.txt: EventSelector.Input for test jobs
+           
+! 20000726 - GaudiConf v2
+	   - StandardOptions.txt: remove TapesDatabase option, not needed
+             with GaudiSys v5
+
+! 20000530 - changes for GaudiConf v2 by M.Cattaneo
+           - StandardOptions.txt: use AFSROOT environment variable
+             for TapesDatabase path, and remove #ifdef WIN32
+           - requirements: change version to v2
+             (use of AFSROOT requires GaudiSvc v3)
+ 
+! 20000413 - GaudiConf v1
+             this package must be used by any application, it contains:
+  mgr/     - requirements to set STDOPTIONS environment variable
+  options/ - StandardOptions.txt  the Standard Options
+
+!=====================================================================

@@ -1,0 +1,13 @@
+//--------------------------------------------------------------
+// Standard Options to use the Detector Geometry
+//--------------------------------------------------------------
+ApplicationMgr.ExtSvc += { "XmlCnvSvc" };
+ApplicationMgr.DLLs   += { "DetDesc" };
+
+//--------------------------------------------------------------
+// Location of detector description XML database
+//--------------------------------------------------------------
+ApplicationMgr.DetDbLocation = $(XMLDDDBROOT)/DDDB/dddb.xml
+ApplicationMgr.DetDbRootName  = "dd";
+ApplicationMgr.DetStorageType = 7;
+

@@ -1,0 +1,14 @@
+//**************************************************************
+//
+// DLLs needed by a standard job. 
+// Must not be used for statically linked program
+//
+//==============================================================
+
+ApplicationMgr.DLLs = { "LHCbEvent", "HbookCnv", "SicbCnv", "GaudiAud"};
+
+//==============================================================
+//
+// End of standard DLLs options file
+//
+//**************************************************************
