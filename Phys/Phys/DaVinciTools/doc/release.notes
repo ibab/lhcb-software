@@ -1,6 +1,18 @@
-! $Id: release.notes,v 1.55 2003-05-05 13:05:39 graven Exp $
+! $Id: release.notes,v 1.56 2003-05-30 11:55:12 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2003-05-30 - Gloria Corti
+ - src/CombinedParticleMaker.h, CombinedParticleMaker.cpp
+   . new tool to allow making charged particles from ProtoParticles 
+     choosing based on combination of delta log likelihood values 
+     from various detectors techniques for a particular hypothesis
+ - src/PMakerSelection.h 
+   . new class to hold conditions for selection for a particleID 
+     hypothesis.  
+ - src/DaVinciTools_load.cpp
+   . add new tool CombinedParticleMaker
+
 ! 2003-05-05 - Gerhard Raven
  - DaVinciTools/ILifetimeFitter.h
  - src/LifetimeFitter.{cpp,h}

@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.20 2003-05-05 13:05:32 graven Exp $
+// $Id: DaVinciTools_load.cpp,v 1.21 2003-05-30 11:55:13 gcorti Exp $
 // Include files 
 
 
@@ -21,6 +21,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( MuonParticleMaker );
   DECLARE_TOOL( NeutralParticleMaker );
   DECLARE_TOOL( RichParticleMaker );
+  DECLARE_TOOL( CombinedParticleMaker );
 
   DECLARE_TOOL( LagrangeDirectionFitter );
   DECLARE_TOOL( LagrangeMassVertexFitter );

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.24 2003-04-25 18:17:33 gcorti Exp $
+# $Id: requirements,v 1.25 2003-05-30 11:55:12 gcorti Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v8r0
+version           v8r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
