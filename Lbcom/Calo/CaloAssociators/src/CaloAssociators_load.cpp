@@ -1,8 +1,11 @@
-// $Id: CaloAssociators_load.cpp,v 1.2 2002-04-08 15:53:07 ibelyaev Exp $
+// $Id: CaloAssociators_load.cpp,v 1.3 2002-04-25 17:29:52 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/08 15:53:07  ibelyaev
+//  add trivial/primitive relation builder algorithm as an example
+//
 // Revision 1.1.1.1  2002/04/08 14:27:28  ibelyaev
 // CaloAssociators: New package
 // 
@@ -10,14 +13,17 @@
 // Include files
 // GaudiKernel 
 #include "GaudiKernel/DeclareFactoryEntries.h"
-// LHCbKernel
-#include "Relations/RelationMACROs.h"
-#include "Relations/AssociatorMACROs.h"
+#include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/StreamBuffer.h"
 // Event
+#include "Event/KeyedObject.h"
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 // CaloEvent/Event 
-#include  "Event/CaloCluster.h"
+#include "Event/CaloCluster.h"
+// LHCbKernel
+#include "Relations/RelationMACROs.h"
+#include "Relations/AssociatorMACROs.h"
 
 IMPLEMENT_RelationW2D( CaloCluster , MCParticle , float );
 IMPLEMENT_WAssociator( CaloCluster , MCParticle , float );
@@ -39,7 +45,7 @@ IMPLEMENT_WAssociator( CaloCluster , MCParticle , float );
  */
 
 DECLARE_FACTORY_ENTRIES(CaloAssociators) {
-  
+
   DECLARE_RelationW2D( CaloCluster , MCParticle , float );
   DECLARE_WAssociator( CaloCluster , MCParticle , float );
 

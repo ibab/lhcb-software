@@ -1,8 +1,11 @@
-// $Id: CaloClustersMCTruthAlg.cpp,v 1.2 2002-04-09 10:47:45 ibelyaev Exp $
+// $Id: CaloClustersMCTruthAlg.cpp,v 1.3 2002-04-25 17:29:52 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/04/09 10:47:45  ibelyaev
+//  add options for Tool and Algorithm
+//
 // Revision 1.1  2002/04/08 15:53:07  ibelyaev
 //  add trivial/primitive relation builder algorithm as an example
 // 
@@ -13,8 +16,11 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/StreamBuffer.h"
 // Event 
 #include "Event/MCParticle.h"
+#include "Event/KeyedObject.h"
 // CaloDet
 #include "CaloDet/DeCalorimeter.h"
 // CasloEvent/Event
@@ -73,6 +79,8 @@ StatusCode CaloClustersMCTruthAlg::initialize()
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
   
+//  std::cout << Conversion<char,int>::exists << std::endl ;
+
   // initialize the base class 
   StatusCode sc = CaloAlgorithm::initialize() ;
   if( sc.isFailure() ) 
@@ -118,11 +126,11 @@ StatusCode CaloClustersMCTruthAlg::execute()
   log << MSG::DEBUG << "==> Execute" << endreq;
   
   // get input clusters 
-  Clusters*   clusters  = get<Clusters>   ( eventSvc () , inputData () ) ;
+  Clusters*   clusters  = get ( eventSvc () , inputData () , clusters ) ;
   if( 0 == clusters  ) { return StatusCode::FAILURE ; }
   
   // get the detector 
-  Detector*   detector  = get<Detector>   ( detSvc   () , detData   () );
+  Detector*   detector  = get ( detSvc   () , detData   () , detector );
   if( 0 == detector  ) { return StatusCode::FAILURE ; }
   
   const double activeToTotal = detector->activeToTotal() ;
