@@ -1,4 +1,4 @@
-// $Id: MuBgDistribution.cpp,v 1.2 2003-04-09 12:39:35 cattanem Exp $
+// $Id: MuBgDistribution.cpp,v 1.3 2003-10-01 14:50:52 cattanem Exp $
 // Include files 
 #include <iostream>  
 
@@ -58,7 +58,7 @@ float MuBgDistribution::giveRND()
 float MuBgDistribution::giveRND(float x)
 {
   float lenght = (m_xmax-m_xmin)/m_nbinx;
-  int index =(int) ((x-m_xmin)/lenght);
+  unsigned int index =(int) ((x-m_xmin)/lenght);
   float nd,nc;
   if(index<m_pointerToFlags.size()){
     

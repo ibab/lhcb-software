@@ -5,5 +5,5 @@ MuonLowEnergy.SafetyFactors ={ 0 , 1 ,1, 1, 1};
 MuonLowEnergy.HistogramsNumber = { -1 , 1 , 2 , 3 , 4 , 5, 6, 7};
 MuonLowEnergy.HistogramsDimension = { 2 , 1 , 2 , 2 , 2 , 2 , 2, 1};      
 MuonLowEnergy.HistogramsMeaning =  { "correlation" , "r", "phi", "thetaloc", "philoc", "lintime" , "logtime" , "hitgap"  }; 
-HistogramDataSvc.Input += { "LowEnergy DATAFILE='muonlowv262r0.hbook' TYP='HBOOK'" };     
+HistogramDataSvc.Input += { "LowEnergy DATAFILE='$PARAMFILESROOT/data/muonlowv262r0.hbook' TYP='HBOOK'" };     
 MuonLowEnergy.BackgroundType = "LowEnergy" ;

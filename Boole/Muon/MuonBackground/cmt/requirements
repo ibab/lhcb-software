@@ -9,6 +9,7 @@ include_dirs      $(MUONBACKGROUNDROOT)
 
 # ================ used packages ========================================= 
 use AIDA        v*	 -no_auto_imports
+use ParamFiles  v*      $(LHCb_release_area)/PARAM -no_auto_imports
 use MuonTools	v3r*	Muon
 use MuonEvent	v2r*	Event
 

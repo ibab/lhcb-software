@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.12 2003-10-01 14:20:34 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.13 2003-10-01 14:50:52 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -812,11 +812,15 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
   //first define all the relevant quantities .. if ok then crete the hit!
   //1) extract the radial position
   int index=station*m_gaps+multi;
-  float r,globalPhi;
-  unsigned int chamberIndex,regionIndex;  
+  float r = 0.;
+  float globalPhi = 0.;
+  unsigned int chamberIndex = 0;
+  unsigned int regionIndex  = 0;  
   //  int partitionIndex;
   
-  float xpos,ypos,zpos;
+  float xpos = 0.;
+  float ypos = 0.;
+  float zpos = 0.;
   msg<<MSG::DEBUG<<"new track"<<endreq;
   
   while(!hitInsideCha&&tryR<maxTryR){

@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !======================= MuonBackground v1r3 2003-10-01 =======================
+! 2003-10-01 - Marco Cattaneo
+ - Fix some gcc 3.2 compilation warnings
+
 ! 2003-10-01 - Alessia Satta
  - Remove use of MuonUtils and introduce MuonGetInfoTool
  - introdice the parametrization obtained with GCALOR/SICBMC v262r0 (tof bug fix)
