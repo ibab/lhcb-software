@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.cpp,v 1.2 2004-02-10 14:24:08 jonesc Exp $
+// $Id: RichG4CkvRecon.cpp,v 1.3 2004-08-30 14:41:10 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -23,7 +23,18 @@
 #include "RichG4ReconFlatMirr.h"
 #include "RichG4AnalysisConstGauss.h"
 
-extern "C" void drteq4_(double*,double*,double*,double*,double*,double*,int*);
+// modification made on 30-8-2004 to make windows compatible.
+
+extern "C" {
+#ifdef WIN32
+  void __stdcall DRTEQ4(double*,double*,double*,double*,double*,double*,int*);
+#else
+  void drteq4_(double*,double*,double*,double*,double*,double*,int*);
+#define DRTEQ4 drteq4_
+#endif
+}
+
+//extern "C" void drteq4_(double*,double*,double*,double*,double*,double*,int*);
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichG4CkvRecon
 //
@@ -454,7 +465,10 @@ void RichG4CkvRecon::SolveQuartic( std::vector<std::complex<double> > & z,
     for (int i=0; i<4 ; i++ ) {
       b[i]= a[i]/denom; }
 
-    drteq4_(&b[0],&b[1],&b[2],&b[3],c,&resolv,&ierr);
+    // modificatin made to make it Windows compatible.
+    // SE Aug30-2004.
+    //    drteq4_(&b[0],&b[1],&b[2],&b[3],c,&resolv,&ierr);
+     DRTEQ4(&b[0],&b[1],&b[2],&b[3],c,&resolv,&ierr);
 
     int j=0;
     for(int ii=0; ii< 4 ; ++ii) {
