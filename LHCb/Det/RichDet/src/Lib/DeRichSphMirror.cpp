@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichSphMirror.cpp,v 1.4 2003-10-22 10:48:29 papanest Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichSphMirror.cpp,v 1.5 2003-11-21 17:23:26 papanest Exp $
 #define DERICHSPHMIRROR_CPP
 
 // Include files
@@ -105,21 +105,21 @@ StatusCode DeRichSphMirror::initialize() {
   HepPoint3D localMirrorCentre(sphTicks[0]*toSphCentre);
   m_mirrorCentre = geometry()->toGlobal(localMirrorCentre);
 
-  //m_alignmentConstantX = userParameterAsDouble("AlignmentConstantX");
-  //m_alignmentConstantY = userParameterAsDouble("AlignmentConstantY");
+  //  m_alignmentConstantX = userParameterAsDouble("AlignmentConstantX");
+  //  m_alignmentConstantY = userParameterAsDouble("AlignmentConstantY");
   //  m_radius = userParameterAsDouble("Radius");
 
-  //HepRotateX3D alignX(m_alignmentConstantY);
-  //HepRotateY3D alignY(-m_alignmentConstantX);
+  //  HepRotateX3D alignX(m_alignmentConstantY);
+  //  HepRotateY3D alignY(-m_alignmentConstantX);
 
 
   // get the rotation and translation from local to global
   //HepRotation rotToGlobal = this->geometry()->matrixInv().getRotation();
 
-  HepScale3D s;
-  HepRotate3D rotToGlobal;
-  HepTranslate3D translToGlobal;
-  geometry()->matrixInv().getDecomposition(s, rotToGlobal, translToGlobal);
+  //  HepScale3D s;
+  //  HepRotate3D rotToGlobal;
+  //  HepTranslate3D translToGlobal;
+  //  geometry()->matrixInv().getDecomposition(s, rotToGlobal, translToGlobal);
   
   // we need to vector that points from the centre of the mirror
   // segment to the centre of curvature.
@@ -149,10 +149,8 @@ StatusCode DeRichSphMirror::initialize() {
   // go back to the global coord system. Ignore the rotation, it has been
   // taken care of
   //m_centreOfCurvature = centreVector;
-  m_centreOfCurvature = HepPoint3D(0.0, 0.0, 0.0);
-  m_centreOfCurvature.transform(translToGlobal);
+  m_centreOfCurvature = geometry()->toGlobal(zero);
   //cout << "CoC in global coord system: "<< m_centreOfCurvature<< std::endl;
-
 
   // extract mirror number from detector element name
   const std::string::size_type pos = name().find(':');

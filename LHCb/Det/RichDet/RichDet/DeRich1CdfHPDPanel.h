@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.h,v 1.6 2003-10-22 10:48:28 papanest Exp $
+// $Id: DeRich1CdfHPDPanel.h,v 1.7 2003-11-21 17:23:24 papanest Exp $
 #ifndef RICHDET_DERICH1CDFHPDPANEL_H
 #define RICHDET_DERICH1CDFHPDPANEL_H 1
 
@@ -10,8 +10,22 @@ extern const CLID& CLID_DeRich1CdfHPDPanel;
 
 /** @class DeRich1CdfHPDPanel DeRich1CdfHPDPanel.h
  *
- * This is the definition of the Rich HPDPanel detector class
+ * This is the definition of the Rich1 HPDPanel detector class.
+ * This HPD panel grows in columns, with the first and last (and some middle) 
+ * columns having an extra HPD.  The numbering scheme look like this:
  *
+ *
+ * 3   10
+ *   6
+ * 2   9
+ *   5
+ * 1   8   and so on...
+ *   4
+ * 0   7        numbers 0,4,7... belong to the same row. The top row has some
+ *              gaps.
+ * Note that even columns (starting at 0) have an extra HPD, and that goes for 
+ * the 1st and last columns.
+ * 
  * @author Antonis Papanestis
  */
 
@@ -50,29 +64,6 @@ public:
   
 
   /**
-   * Returns a RichSmartID for a given point in global coordinates.
-   * @return StatusCode
-   */
-  StatusCode smartID(const HepPoint3D& globalPoint, RichSmartID& id);
-
-  /**
-   * Returns the detection point given a smartID
-   * @return StatusCode
-   */
-  StatusCode detectionPoint(const RichSmartID& smartID, 
-                            HepPoint3D& windowHitGlobal); // this is the HPD
-                                                          // window
-  /**
-   * Returns the intersection point with an HPD window given a vector 
-   * and a point.
-   * @return StatusCode
-   */
-
-  StatusCode PDWindowPoint(const HepVector3D& vGlobal, // vector and point
-                            const HepPoint3D& pGlobal,  // define direction
-                            HepPoint3D& windowPointGlobal, // return point
-                            RichSmartID& smartID );
-  /**
    * Returns the detection plane of the HPD panel, defined at the top of the 
    * HPDs (a plane resting on the HPDs touching the window).
    * @return HepPlane3D
@@ -83,67 +74,103 @@ public:
 
 protected:
   
+  /**  
+   * Returns the number of HPDs in the panel
+   */
+  inline virtual unsigned int PDMax() {
+    return static_cast<int>(0.5*m_HPDColumns)*m_HPDsIn2Cols + m_HPDsInBigCol;
+  }
+  
+  /**  
+   * Returns the HPD row in the panel, given the HPD number
+   */
   inline unsigned int PDRow(unsigned int PD) {
-    int HPDsLeft = PD%HPDsIn2Cols;
-    if (HPDsLeft >= HPDsInBigCol){
-      return (HPDsLeft - HPDsInBigCol);
+    unsigned int HPDsLeft = PD%m_HPDsIn2Cols;
+    if (HPDsLeft >= m_HPDsInBigCol){
+      return (HPDsLeft - m_HPDsInBigCol);
     } else {
       return HPDsLeft;
     }
   }
   
+  /**  
+   * Returns the HPD column in the panel, given the HPD number
+   */
   inline unsigned int PDCol(unsigned int PD) {
-    int HPDsLeft = PD%HPDsIn2Cols;
-    if (HPDsLeft >= HPDsInBigCol) {
-      return 2*(PD/HPDsIn2Cols)+1;
+    unsigned int HPDsLeft = PD%m_HPDsIn2Cols;
+    if (HPDsLeft >= m_HPDsInBigCol) {
+      return 2*(PD/m_HPDsIn2Cols)+1;
     } else {
-      return 2*(PD/HPDsIn2Cols);
+      return 2*(PD/m_HPDsIn2Cols);
     }
     
     
   }
   
+  /**  
+   * Returns the HPD at the next row/column depending on panel configurartion 
+   */
+  inline virtual unsigned int HPDForNS() {
+    return static_cast<int>(ceil(m_HPDRows/2.0));
+  }
+
+  /**  
+   * Returns an HPD number that can be used as the second point for the
+   * detection plane.
+   */
+  inline virtual unsigned int HPDForB() {
+    return static_cast<int>(ceil(m_HPDRows/2.0)) -1;
+  }
+  
+  /**  
+   * Returns an HPD number that can be used as the third point for the
+   * detection plane.
+   */
+  inline virtual unsigned int HPDForC() {
+    return static_cast<int>(0.5*m_HPDColumns)*m_HPDRows;
+  }
+
+  /**  
+   * Converts an HPD row and column to a number corresponding
+   * to the position of this physical volume in the physical volumes vector 
+   */
+  inline virtual unsigned int HPDRowColToNum(unsigned int HPDRow, 
+                                             unsigned int HPDCol ) {
+    unsigned int HPDNumber;
+    unsigned int HPDColDiv2 = HPDCol/2;
+    if (0 == HPDCol%2) {
+       HPDNumber = HPDColDiv2 * m_HPDsIn2Cols + HPDRow;
+    } else {
+       HPDNumber = HPDColDiv2 * m_HPDsIn2Cols + HPDRow + m_HPDsInBigCol;
+    }
+    return HPDNumber;
+  }
+
+  /**  
+   * Finds the HPD row and column that corresponds to the x,y coordinates
+   * of a point in the panel.
+   * @returns true if the HPD is found, false if the point is outside the
+   * coverage of the HPDs. The row and column are retuned in the smartID.
+   */
+  virtual bool findHPDRowCol(const HepPoint3D& inPanel, RichSmartID& id);
+
 private:
 
-  ///
-  double pixelSize;
-  double siliconHalfLengthX;
-  double siliconHalfLengthY;
 
   /// the Horizontal Edge of the HPD grid (beggining of numbers). 
-  double panelHorizEdge;
+  double m_panelHorizEdge;
   double m_fabs_panelHorizEdge;
-  double panelHorizEdgeEven;
-  double panelHorizEdgeOdd;
+  double m_panelHorizEdgeEven;
+  double m_panelHorizEdgeOdd;
 
   /// the Vertical Edge of the HPD grid. Even columns are
   /// different from odd columns in Rich1Cdf
-  double panelVerticalEdgeEven;
-  double panelVerticalEdgeOdd;
+  double m_panelVerticalEdgeEven;
+  double m_panelVerticalEdgeOdd;
 
   /// these are the inner-most points to ensure that a point 
   /// is within HPD covered area 
-  double panelVerticalEdge;
-  
-  double rowPitch;
-  double columnPitch;
-
-  /// number of HPD rows and columns
-  int HPDRows;
-  int HPDColumns;
-  int HPDsInBigCol;
-  int HPDsIn2Cols;
-
-  /// the top of the HPD window in silicon coordinates
-  HepPoint3D HPDTop;
-  
-  // CRJ : cache variables
-  const ISolid* m_HPDPanelSolid;
-  std::vector<const IPVolume*> m_pvHPDMasters;
-  std::vector<const IPVolume*> m_pvHPDSMasters;
-  std::vector<const IPVolume*> m_pvWindows;
-  std::vector<const ISolid*>   m_windowSolids;
-  std::vector<HepTransform3D>  m_vectorTransfHPD2s;
+  double m_panelVerticalEdge;  
 
 };
 

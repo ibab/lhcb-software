@@ -1,4 +1,4 @@
-// $Id: RichDet_load.cpp,v 1.4 2003-08-29 08:29:42 papanest Exp $
+// $Id: RichDet_load.cpp,v 1.5 2003-11-21 17:23:26 papanest Exp $
 // Include files 
 
 
@@ -21,10 +21,5 @@ DECLARE_FACTORY_ENTRIES(RichDet) {
   DECLARE_CONVERTER( XmlDeRich1HPDPanelCnv );
   DECLARE_CONVERTER( XmlDeRich2HPDPanelCnv );
   DECLARE_CONVERTER( XmlDeRich1CdfHPDPanelCnv );
-  DECLARE_CONVERTER( XmlDeRichMaPMTPanelCnv );
   DECLARE_CONVERTER( XmlDeRichRadiatorCnv );
-  //  DECLARE_OBJECT( DeRich2 );
-  //  DECLARE_OBJECT( DeRichFlatMirror );
-  //  DECLARE_OBJECT( DeRichSphMirror );
-  
 }

@@ -1,17 +1,9 @@
-// $Id: DeRich2.h,v 1.3 2003-04-01 13:01:49 jonrob Exp $
+// $Id: DeRich2.h,v 1.4 2003-11-21 17:23:24 papanest Exp $
 #ifndef DERICH2_H
 #define DERICH2_H 1
 
-// DetDesc
-#include "DetDesc/DetectorElement.h"
-
-// CLHEP 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Plane3D.h"
-
-// RichKernel
-#include "RichKernel/RichSide.h"
+// local
+#include "RichDet/DeRich.h"
 
 // External declarations
 extern const CLID& CLID_DERich2;
@@ -23,7 +15,7 @@ extern const CLID& CLID_DERich2;
  *
  * @author Antonis Papanestis
  */
-class DeRich2: public DetectorElement {
+class DeRich2: public DeRich {
 
 public:
   /**
@@ -34,7 +26,7 @@ public:
   /**
    * Default destructor
    */
-  ~DeRich2();
+  virtual ~DeRich2();
 
   /**
    * Retrieves reference to class identifier
@@ -57,33 +49,22 @@ public:
   virtual StatusCode initialize();
 
 
-  HepPoint3D nominalCentreOfCurvature(Rich::Side side) const;
+  virtual HepPoint3D nominalCentreOfCurvature(Rich::Side side) const;
 
-  HepNormal3D nominalNormal(Rich::Side side) const;
+  virtual HepNormal3D nominalNormal(Rich::Side side) const;
 
-  HepPlane3D nominalPlane(Rich::Side side) const;
+  virtual HepPlane3D nominalPlane(Rich::Side side) const;
 
-  inline double sphMirrorRadius() const {
-    return m_sphMirrorRadius;
+  inline virtual Rich::Side side(HepPoint3D point) const {
+    if( point.x() >= 0.0 )
+      return Rich::left;
+    else
+      return Rich::right;
   }
   
-  inline double sphMirrorMaxX() const {
-    return m_sphMirrorMaxX;
-  }
-  
-  inline double sphMirrorMaxY() const {
-    return m_sphMirrorMaxY;
-  }
-  
+
 private:
 
-  ///
-  double m_sphMirrorRadius;
-  double m_sphMirrorMaxX;
-  double m_sphMirrorMaxY;  
-
-  HepPoint3D  m_nominalCentreOfCurvature;
-  HepNormal3D m_nominalNormal;
   HepPlane3D m_nominalPlaneLeft;
   HepPlane3D m_nominalPlaneRight;
 

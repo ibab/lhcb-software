@@ -4,6 +4,17 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v6r2 2003-11-21 =========================
+! 2003-11-21 - Antonis Papanestis
+ - Added DeRich.h as a base class for DeRich1 and DeRich2 with a new function
+   to return the side.
+ - Modified heavily RichHPDPanel, Rich1HPDPanel, Rich1CdfHPDPanel and 
+   Rich2HPDPanel so that all the common code in in the HPDPanel class
+ - Added a extra variable in the PDWindow method (with a default value) to
+   use a simple (and quick) algorith for getting the HPD.
+ - Removed support for MaPMTs
+ - Spherical mirrors can now return their radius.
+
 !========================= RichDet v6r1 2003-11-03 =========================
 ! 2003-11-02 - Chris Jones
  - A few speed improvements for digitisation

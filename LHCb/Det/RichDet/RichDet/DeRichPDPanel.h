@@ -1,4 +1,4 @@
-// $Id: DeRichPDPanel.h,v 1.3 2003-10-22 10:48:28 papanest Exp $
+// $Id: DeRichPDPanel.h,v 1.4 2003-11-21 17:23:25 papanest Exp $
 
 #ifndef DERICHPDPANEL_H
 #define DERICHPDPANEL_H 1
@@ -25,9 +25,14 @@ class DeRichPDPanel: public DetectorElement {
 
 public:
 
+  /// traceMode is used in the methods detPlanePoint to set boundaries
+  /// and in PDWindow point to set whether the returned point is actualy
+  /// on the window surface, or a simple algorith is used.
   enum traceMode {
     loose = 0,
-    tight
+    tight,
+    window = 0,
+    circle
   };
   
   /**
@@ -54,13 +59,16 @@ public:
   /**
    * Returns the intersection point with an PD window given a vector
    * and a point.
-   * @return StatusCode
+   * @return StatusCode. With the "circle" option a quick check is performed
+   * to test if there would be an intersection with a flat circle instead
+   * of the HPD window.
    */
 
   virtual StatusCode PDWindowPoint( const HepVector3D& vGlobal,
                                     const HepPoint3D& pGlobal,
                                     HepPoint3D& windowPointGlobal,
-                                    RichSmartID& smartID ) = 0;
+                                    RichSmartID& smartID,
+                                    traceMode mode = window ) = 0;
   /**
    * Returns the intersection point with the detector plane given a vector
    * and a point. If mode is tight, returns true only if point is within
@@ -90,10 +98,15 @@ public:
 
 protected:
 
-  /// detection plane
+  /// detection plane in global coordinates
   HepPlane3D m_detectionPlane;
+  /// detection plane in PDPanel coordinates
   HepPlane3D m_localPlane;
   HepVector3D m_localPlaneNormal;
+
+  /// local plane for HPD row/column purposes
+  HepPlane3D m_localPlane2;
+  HepVector3D m_localPlaneNormal2;
 
   double m_detPlaneHorizEdge;
   double m_detPlaneVertEdge;

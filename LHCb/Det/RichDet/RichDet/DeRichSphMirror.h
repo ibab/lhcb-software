@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichSphMirror.h,v 1.3 2003-10-22 10:48:28 papanest Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/RichDet/DeRichSphMirror.h,v 1.4 2003-11-21 17:23:25 papanest Exp $
 #ifndef DERICHSPHMIRROR_H
 #define DERICHSPHMIRROR_H 1
 
@@ -75,6 +75,14 @@ public:
    */
   inline int mirrorNumber(){
     return m_mirrorNumber;
+  }
+
+  /**
+   * Retrieves the radius of this spherical mirror
+   * @return the radius of this spherical mirror
+   */
+  inline double radius(){
+    return m_radius;
   }
 
   /**

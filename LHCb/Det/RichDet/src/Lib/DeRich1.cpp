@@ -1,4 +1,4 @@
-// $Id: DeRich1.cpp,v 1.3 2003-06-16 09:50:14 jonrob Exp $
+// $Id: DeRich1.cpp,v 1.4 2003-11-21 17:23:25 papanest Exp $
 #define DERICH1_CPP
 
 // Include files
@@ -56,6 +56,9 @@ StatusCode DeRich1::initialize() {
   m_nominalPlaneTop = HepPlane3D(nominalNorX, nominalNorY, nominalNorZ, d);
   m_nominalPlaneBottom = HepPlane3D(nominalNorX, -nominalNorY, nominalNorZ, d);
  
+  m_nominalPlaneTop.normalize();
+  m_nominalPlaneBottom.normalize();
+
   log << MSG::DEBUG << "Finished initialisation for DeRich1" << endreq;
   return sc;
 }
