@@ -4,6 +4,10 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+!======================== KernelSys v3r5 2004-03-25 ========================
+! 2004-03-26 - Marco Cattaneo
+ - Use LHCbKernel v4r5
+
 !======================== KernelSys v3r4 2004-03-18 ========================
 ! 2004-03-18 - Marco Cattaneo
  - Use LHCbKernel v4r4. Introduces dependency on GaudiTools v8r*
