@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes
 #
 package           VeloAssociators
-version           v1r10
+version           v1r11
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -15,6 +15,7 @@ include_dirs $(VELOASSOCIATORSROOT)
 use  VeloEvent  v13r*   Event
 use  VeloDet    v8r*    Det
 use  VeloKernel	v1r*	Velo -no_auto_imports
+use  Relations	v1r*	Kernel
 
 # Component library building rule
 #============================================================================
