@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.8 2003-01-28 19:50:43 parkesb Exp $
+#// $Id: VeloSim.h,v 1.9 2003-04-14 07:34:26 cattanem Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -36,9 +36,6 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  static double noiseSigma();
-  static double noiseSigma(double stripCapacitance);
-
 protected:
 
 private:
@@ -68,10 +65,11 @@ private:
                                   bool& create);
   StatusCode pedestalSim();
   StatusCode noiseSim();
+  double noiseSigma(double stripCapacitance);
   double noiseValue(double stripCapacitance);
   double noiseValueTail(double stripCapacitance);
   StatusCode CMSim();
-  StatusCode deadStrips();
+  StatusCode VeloSim::deadStrips();
   StatusCode finalProcess();
   StatusCode storeOutputData();
   MCVeloFE* findOrInsertFE(VeloChannelID& stripKey);
@@ -105,6 +103,7 @@ private:
   bool m_inhomogeneousCharge;
   bool m_coupling;
   bool m_noiseSim;
+  double m_noiseConstant;
   bool m_pedestalSim;
   bool m_CMSim;
   double m_stripInefficiency; 
@@ -112,6 +111,10 @@ private:
   bool m_spillOver;
   bool m_pileUp;
   bool m_testSim;
+  double m_smearPosition;
+  // allows resolution to be degraded for robustness studies
+
+  HepPoint3D m_movePosition; // used when degrading resolution
 
   std::string m_simMode; // velo or pileup
 

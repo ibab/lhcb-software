@@ -20,6 +20,7 @@
 #include "Event/MCVeloFE.h"
 #include "Event/VeloFullDigit.h"
 #include "VeloKernel/VeloDigiParams.h"
+#include "VeloKernel/VeloSimParams.h"
 #include "VeloAlgorithms/VeloEventFunctor.h"
 
 // Declaration of the Algorithm Factory
@@ -34,9 +35,11 @@ VeloDataProcessor::VeloDataProcessor( const std::string& name,
   : Algorithm ( name , pSvcLocator )
   , m_inputContainer       ( MCVeloFELocation::Default )
   , m_outputContainer      ( VeloFullDigitLocation::Default )
+  , m_noiseConstant        (VeloSimParams::noiseConstant)
   {
   declareProperty( "InputContainer"      ,m_inputContainer  );
   declareProperty( "OutputContainer"     ,m_outputContainer );
+  declareProperty( "NoiseConstant"       ,m_noiseConstant);
 }
 
 //=============================================================================
@@ -93,7 +96,7 @@ StatusCode VeloDataProcessor::execute() {
      mydigit->setSubtractedPedestal(0.);
      mydigit->setSubtractedCM(0.);
      // noise - use sigma of generator distribution
-     float noise=digitise(VeloSim::noiseSigma());
+     float noise=digitise(noiseSigma());
      mydigit->setRawNoise(noise);
      mydigit->setNoise(noise);
      mydigitvector->insert(mydigit);  
@@ -130,7 +133,12 @@ float VeloDataProcessor::digitise(float electrons) {
   return digi;
 }
 
-
-
-
-
+//=========================================================================
+// sigma of noise to generate
+//=========================================================================
+double VeloDataProcessor::noiseSigma(){
+  double stripCapacitance=VeloSimParams::averageStripCapacitance;
+  double noiseSigma=stripCapacitance*VeloSimParams::noiseCapacitance+
+    m_noiseConstant;
+  return noiseSigma;
+}

@@ -1,6 +1,14 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+! 2003-11-04 - Chris Parkes
+ - Add options for robustness test
+- Job option to vary the noise constant are added to VeloSim and DataProcessor.
+These should be set the same.
+- so-called misalignment test added to VeloSim, true MCVeloHit (entry and exit)
+positions are smeared by Gaussian distribution in x/y before diffusion 
+algorithm. job option for sigma of smearing is "SmearPosition".
+
 ! 2003-04-04 - Marco Cattaneo
  - Remove 2D histograms from default set
 

@@ -1,4 +1,4 @@
-// $Id: VeloDataProcessor.h,v 1.2 2002-10-16 13:31:42 parkesb Exp $
+// $Id: VeloDataProcessor.h,v 1.3 2003-04-14 07:34:26 cattanem Exp $
 #ifndef VELODATAPROC_H 
 #define VELODATAPROC_H 1
 
@@ -43,6 +43,9 @@ private:
   std::string m_inputContainer;       ///< Name of input container
   std::string m_outputContainer;      ///< Name of output container
   
+  double noiseSigma();
+  double m_noiseConstant;
+
 };
 
 

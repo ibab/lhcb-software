@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.25 2003-04-04 08:59:47 jpalac Exp $
+// $Id: VeloSim.cpp,v 1.26 2003-04-14 07:34:26 cattanem Exp $
 // Include files
 // STL
 #include <string>
@@ -81,12 +81,14 @@ VeloSim::VeloSim( const std::string& name,
   , m_inhomogeneousCharge  ( true )
   , m_coupling             ( true )
   , m_noiseSim             ( true )
+  , m_noiseConstant        (VeloSimParams::noiseConstant)
   , m_pedestalSim          ( true )
   , m_CMSim                ( true )
   , m_stripInefficiency    ( 0.0 )
   , m_spillOver            ( true )
   , m_pileUp               ( true )
   , m_testSim              ( false )
+  , m_smearPosition        ( 0.0 )
 {
   declareProperty( "InputContainer"      ,m_inputContainer  );
   declareProperty( "SpillOverInputData"  ,m_spillOverInputContainer  );
@@ -98,12 +100,14 @@ VeloSim::VeloSim( const std::string& name,
   declareProperty( "InhomogeneousCharge" ,m_inhomogeneousCharge );
   declareProperty( "Coupling"            ,m_coupling );
   declareProperty( "NoiseSim"            ,m_noiseSim );
+  declareProperty( "NoiseConstant"       ,m_noiseConstant);
   declareProperty( "PedestalSim"         ,m_pedestalSim );
   declareProperty( "CMSim"               ,m_CMSim );
   declareProperty( "StripInefficiency"   ,m_stripInefficiency );
   declareProperty( "SpillOver"           ,m_spillOver );
   declareProperty( "PileUp"              ,m_pileUp );
   declareProperty( "TestSimulation"      ,m_testSim );
+  declareProperty( "SmearPosition"       ,m_smearPosition );
 
   Rndm::Numbers m_gaussDist;
   Rndm::Numbers m_uniformDist;
@@ -196,7 +200,7 @@ StatusCode VeloSim::simulation() {
   // add pedestals - not yet implemented
   if (sc&&m_pedestalSim) sc= pedestalSim(); 
   // common mode - not yet implemented
-  if (sc&&m_CMSim) sc=CMSim(); 
+  if (sc&&m_CMSim) sc=CMSim();
   // dead strips / channels
   if (sc&&(m_stripInefficiency>0.)) sc=deadStrips(); 
   // remove any unwanted elements and sort
@@ -331,6 +335,19 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
   for ( MCVeloHits::const_iterator hitIt = hits->begin() ;
         hits->end() != hitIt ; hitIt++ ) {
     MCVeloHit* hit = (*hitIt);
+
+
+    // degrade resolution for April 2003 Robustness Test
+    if (m_smearPosition>0) {
+      m_movePosition.setX(m_gaussDist()*m_smearPosition);
+      m_movePosition.setY(m_gaussDist()*m_smearPosition);  
+      m_movePosition.setZ(0.);
+    } else
+      {
+      m_movePosition.setX(0.);
+      m_movePosition.setY(0.);  
+      m_movePosition.setZ(0.);
+      }
 
     if (m_testSim) { testSim(hit,spillOver);}
     else{
@@ -553,7 +570,7 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
   }
   HepVector3D path = (hit->exit())-(hit->entry());
   path/=(Npoints*2); // distance between steps on path
-  HepPoint3D point= (hit)->entry()+path;
+  HepPoint3D point= (hit)->entry()+path+m_movePosition;
 // double thickness=m_velo->siliconThickness(hit->sensor())/micron;
       // sensor numbers for hits currently incorrect (7/02) 
       // nasty fudge - use one hardcoded number
@@ -1006,17 +1023,9 @@ StatusCode VeloSim::noiseSim(){
 //=========================================================================
 // sigma of noise to generate
 //=========================================================================
-double VeloSim::noiseSigma(){
-  return noiseSigma(VeloSimParams::averageStripCapacitance);
-}
-
-
-//=========================================================================
-// sigma of noise to generate
-//=========================================================================
 double VeloSim::noiseSigma(double stripCapacitance){
   double noiseSigma=stripCapacitance*VeloSimParams::noiseCapacitance+
-    VeloSimParams::noiseConstant;
+    m_noiseConstant;
   return noiseSigma;
 }
 
@@ -1055,20 +1064,21 @@ StatusCode VeloSim::CMSim(){
 //=========================================================================
 StatusCode VeloSim::deadStrips(){
   MsgStream  log( msgSvc(), name() );
- 
- // Add some strip inefficiency
- // channels are given zero signal, and hence will be removed by the 
- // threshold cut in final process.
- // e.g. set stripInefficiency to 0.01 for 1% dead channels
- for ( MCVeloFEs::iterator itF1 = m_FEs->begin(); m_FEs->end() != itF1;
-       itF1++) {
-   double cut =  m_uniformDist();
-   if ( m_stripInefficiency > cut ) {
-     (*itF1)->setAddedSignal( 0. );
-   }
- }
- return StatusCode::SUCCESS;
+
+  // Add some strip inefficiency
+  // channels are given zero signal, and hence will be removed by the 
+  // threshold cut in final process.
+  // e.g. set stripInefficiency to 0.01 for 1% dead channels
+  for ( MCVeloFEs::iterator itF1 = m_FEs->begin(); m_FEs->end() != itF1;
+        itF1++) {
+    double cut =  m_uniformDist();
+    if ( m_stripInefficiency > cut ) {
+      (*itF1)->setAddedSignal( 0. );
+    }
+  }
+  return StatusCode::SUCCESS;
 }
+
 
 //=========================================================================
 // find a strip in list of FEs, or if it does not currently exist create it
