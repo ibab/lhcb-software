@@ -4,6 +4,8 @@
 ApplicationMgr.ExtSvc.append('XmlCnvSvc')
 ApplicationMgr.ExtSvc.append('XmlParserSvc')
 ApplicationMgr.DLLs.append('DetDesc')
+ApplicationMgr.DLLs.append('XmlTools')
+ApplicationMgr.DLLs.append('DetDescCnv')
 
 #--------------------------------------------------------------
 # Location of detector description XML database is a URL

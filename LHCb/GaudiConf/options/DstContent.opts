@@ -9,7 +9,8 @@ DstWriter.OptItemList =
 , "/Event/PrevPrev/Header#1"
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
-, "/Event/Rec/Rich/OOPIDs#1" // OORICH not yet in production
+, "/Event/LHCBackground#1"
+, "/Event/LHCBackground/Header#1"
 , "/Event/Trig/L1/OTClusters#1" // For L1 trigger studies, only on evtype 61 DSTs
 , "/Event/Trig/L1/ITClusters#1" // For L1 trigger studies, only on evtype 61 DSTs
 , "/Event/Trig/L1/TTClusters#1" // For L1 trigger studies, only on evtype 61 DSTs

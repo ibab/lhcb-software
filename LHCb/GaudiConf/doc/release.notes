@@ -1,6 +1,12 @@
 package GaudiConf
 package manager: F.Ranjard
 
+!======================== GaudiConf v6r9 2003-07-01 ========================
+! 2003-07-01 - Marco Cattaneo
+ - DstContent.opts: remove optional Rec/Rich/OOPIDs, 
+                    add optional LHCBackground/Header
+ - DetDesc.opt, .py - Add XmlCnv and DetDescCnv to DLLs list
+
 !======================== GaudiConf v6r8 2003-05-19 ========================
 ! 2003-04-30 - Marco Cattaneo
  - Make L1/TTClusters, L1/ITClusters, L1/OTClusters optional in DstContent.opts
