@@ -9,6 +9,7 @@
    . remove the  member function ProjectSeed2TT since it is already done 
      in TrKShort
    . change Chi2NdFofUps to Chi2NdFofDown, m_chiSqUps to  m_chiSqDowns
+   . decrease Chi2NdFofDown from 5.0 to 3.0
 
 ! 2004-03-17 - Vanya BELYAEV
  - src/NeutralPPsFromCPsAlg.cpp

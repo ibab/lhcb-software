@@ -53,7 +53,7 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   , m_chiSqITracks( 500.0 )
   , m_chiSqOTracks( 100.0 )
   , m_chiSqVTT( 5.0 )
-  , m_chiSqDowns( 5.0 )
+  , m_chiSqDowns( 3.0 )
   , m_photonMatch(0)
   , m_electronMatch(0)
   , m_bremMatch(0)
