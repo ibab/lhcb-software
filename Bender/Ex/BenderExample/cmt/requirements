@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.2 2003-12-07 16:14:29 ibelyaev Exp $ 
+# $Id: requirements,v 1.3 2004-01-22 22:35:42 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # ============================================================================
@@ -7,32 +7,26 @@
 # ============================================================================
 package          BenderExample
 author           Vanya BELYAEV
-version          v1r0
+version          v2r0
 
 # ============== structure ===================================================
-branches         cmt doc src python options scripts 
+branches         cmt doc src python 
 
 # ============== environment =================================================
-set              BENDEREXAMPLEOPTS    $(BENDEREXAMPLEROOT)/options 
-set              BENDEREXAMPLESRC     $(BENDEREXAMPLEROOT)/src 
-set              BENDEREXAMPLEPYTHON  $(BENDEREXAMPLEROOT)/python
+aset              BENDEREXAMPLEPYTHON  $(BENDEREXAMPLEROOT)/python
 
 # ============== dependencies ================================================
-use              Bender      v*    Tools
+use              Bender      v*   Phys 
 
 # ============== nesessary paths =============================================
 path_remove      PYTHONPATH "/BenderExample/"  WIN32  "\BenderExample\"
-path_prepend     PYTHONPATH "$(BENDEREXAMPLEROOT)/src"
 path_prepend     PYTHONPATH "$(BENDEREXAMPLEROOT)/python"
 
-path_remove      PATH       "/BenderExample/"  WIN32  "\BenderExample\"
-path_prepend     PATH       "$(BENDEREXAMPLEROOT)/scripts"
+# ============== patterns =====================================================
+apply_pattern    application_path
 
 # ============================================================================
 # The END 
 # ============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.1.1.1  2003/09/10 13:02:00  ibelyaev
-# New package
-#
 # ============================================================================

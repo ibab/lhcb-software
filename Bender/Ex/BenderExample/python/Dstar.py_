@@ -1,4 +1,4 @@
-# $Id: Dstar.py,v 1.1 2003-12-07 16:14:30 ibelyaev Exp $
+# $Id: Dstar.py_,v 1.1 2004-01-22 22:35:43 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -9,8 +9,18 @@
 # @date   2003-12-04 
 # =============================================================================
 
-# import the bender itself  
-from BenderModule import *
+# import the Bender itself  
+from   bendermodule import *
+import benderconfig as bender 
+
+g.JobOptionsType = 'NONE'
+g.OutputLevel = 3
+g.config()
+
+# =============================================================================
+# Specific physics analysis algorithm 
+# =============================================================================
+
 
 # create my own algorithm  
 class Dstar(Bender):
@@ -18,7 +28,8 @@ class Dstar(Bender):
     def analyse ( self ) :
 
         # select all primary vertices 
-        PVs    = self.vselect( tag = "PVs" , cuts = VTYPE == VertexType.Primary )
+        # PVs    = self.vselect( tag = "PVs" , cuts = VTYPE == VertexType.Primary )
+        PVs    = self.vselect( tag = "PVs" , cuts = VTYPE == 1 )
         if PVs.empty() : return SUCCESS
         
         # minimal IP significance with respect to ALL primary vertices 
@@ -138,4 +149,7 @@ g.execute(1)
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1  2003/12/07 16:14:30  ibelyaev
+#  update for Bender application and project
+#
 # =============================================================================
