@@ -37,4 +37,13 @@ namespace @@@namespacename@@@
 @@@methods@@@
 };
 
+// -----------------------------------------------------------------------------
+//   end of namespace
+// -----------------------------------------------------------------------------
+
+// Including forward declarations
+@@@forwardIncludes@@@
+
+@@@methodDefs@@@
+
 #endif ///@@@packagename@@@_@@@namespacename@@@_H

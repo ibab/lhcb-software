@@ -7,22 +7,21 @@ class tools:
     self.booleanT =       ['bool']
     self.characterT =     ['char','signed char', 'unsigned char', 'w_chart']
     self.integerT =       ['short int', 'short', 'signed short', 'short signed',
-                           'signed short int', 'short signed int', 
-                           'int', 'signed', 'signed int',
-                           'long int', 'long', 'signed long', 'long signed', 
-                             'signed long int', 'long signed int', 
-                           'unsigned short int', 'unsigned short', 'short unsigned', 
-                             'short unsigned int', 
-                           'unsigned int', 'unsigned', 
+                           'signed short int', 'short signed int', 'int', 'signed',
+                           'signed int', 'long int', 'long', 'signed long',
+                           'long signed', 'signed long int', 'long signed int',
+                           'unsigned short int', 'unsigned short', 'short unsigned',
+                           'short unsigned int', 'unsigned int', 'unsigned', 
                            'unsigned long int', 'unsigned long', 'long unsigned', 
-                             'long unsigned int',
-                           'longlong', 'long long', 'long long int',
-                           'ulonglong', 'long long unsigned', 'unsigned long long', 
-                           'unsigned long long int', 'long long unsigned int']
+                           'long unsigned int', 'longlong', 'long long',
+                           'long long int', 'ulonglong', 'long long unsigned',
+                           'unsigned long long',  'unsigned long long int',
+                           'long long unsigned int']
     self.floatingPointT = ['float', 'double', 'long double']
     self.stlT           = ['vector','list','deque','queue','stack','map','set',
                            'bitset','pair','string','utility','istream','ostream',
                            'iostream']
+    self.bitfieldT       = ['bitfield']
     self.cppKeywords    = ['and', 'and_eq', 'asm', 'auto', 'bitand', 'bitor',
                            'bool', 'break', 'case', 'catch', 'char', 'class',
                            'compl', 'const', 'const_cast', 'continue', 'default',
@@ -37,6 +36,10 @@ class tools:
                            'throw', 'true', 'try', 'typedef', 'typeid',
                            'typename', 'union', 'unsigned', 'usign', 'virtual',
                            'void', 'volatile', 'wchar_t', 'while', 'xor', 'xor_eq']
+#--------------------------------------------------------------------------------
+  def isBitfieldT( self, type ):
+    if ( type in self.bitfieldT ) : return 1
+    return 0
 #--------------------------------------------------------------------------------
   def isFundamentalT( self, type ):
     if ( self.isBooleanT( type ) or self.isCharacterT( type ) or 

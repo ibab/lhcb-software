@@ -45,12 +45,6 @@ class genClasses(genSrcUtils.genSrcUtils):
   def parseClassImport(self, dict):
     self.parseImport(dict, self.include, self.stdIncludes, self.forwardDecl, self.forwardIncl)
 #--------------------------------------------------------------------------------
-  def genForwardIncludes(self):
-    s = ''
-    for imp in self.forwardIncl :
-      if imp not in self.include : s += '#include "%s.h"\n' % imp
-    return s
-#--------------------------------------------------------------------------------
   def genClassID(self, godClass):
     s = ''
     classAtt = godClass['attrs']
@@ -171,15 +165,14 @@ class genClasses(genSrcUtils.genSrcUtils):
       if godClass.has_key('attribute') :                                        # if there are attributes
         for att in godClass['attribute'] :                                      # loop over them
           attAtt = att['attrs']
-          if ( attAtt.has_key('init') or \
-               self.tools.isIntegerT(attAtt['type']) or \
-               self.tools.isFloatingPointT(attAtt['type'])) :
-            if ( s[-1] != ',' ) : s += ' : '                                     # this is the first item
-            else : s += '\n' + indent
-            s += 'm_%s' % attAtt['name'] 
-            if attAtt.has_key('init') : s += '(%s),' % attAtt['init'] 
-            elif self.tools.isIntegerT(attAtt['type']) : s += '(0),'
-            elif self.tools.isFloatingPointT(attAtt['type']) : s += '(0.0),'
+          if ( s[-1] != ',' ) : s += ' : '                                     # this is the first item
+          else : s += '\n' + indent
+          s += 'm_%s' % attAtt['name'] 
+          if attAtt.has_key('init')                        : s += '(%s),' % attAtt['init'] 
+          elif self.tools.isIntegerT(attAtt['type']) or \
+               self.tools.isBitfieldT(attAtt['type'])      : s += '(0),'
+          elif self.tools.isFloatingPointT(attAtt['type']) : s += '(0.0),'
+          else                                             : s += '(),'
         if s[-1] == ',' : s = s[:-1]                                             # strip off the last ','
       s += ' {}\n\n'
     return s[:-1]
@@ -187,7 +180,7 @@ class genClasses(genSrcUtils.genSrcUtils):
   def genDestructor(self,godClass,dest,scopeName=''):
     s = ''
     if (scopeName and not dest.has_key('code')) : return s
-    if ( not scopeName ) : s += '  /// %s\n' % dest['attrs']['desc']
+    if ( not scopeName ) : s += '  /// %s\n  ' % dest['attrs']['desc']
     else :
       s += 'inline '
       scopeName += '::'
