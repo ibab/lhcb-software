@@ -7,7 +7,7 @@ version v15r0
 branches doc options cmt job data
 
 #== Set the Gauss version environment variable, read by GaussInit ==
-pattern GaussVersion path_append GAUSSVERS <version>
+pattern GaussVersion set GAUSSVERS <version>
 apply_pattern GaussVersion
 
 # Main program and standard job options
