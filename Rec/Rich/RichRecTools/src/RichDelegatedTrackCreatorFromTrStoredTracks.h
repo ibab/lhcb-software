@@ -1,17 +1,16 @@
 
+//---------------------------------------------------------------------------------------------
 /** @file RichDelegatedTrackCreatorFromTrStoredTracks.h
  *
  *  Header file for tool : RichDelegatedTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.h,v 1.4 2005-01-13 14:34:26 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.3  2004/07/27 20:15:30  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.h,v 1.5 2005-02-02 10:05:23 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//---------------------------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RichDelegatedTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichDelegatedTrackCreatorFromTrStoredTracks_H 1
@@ -29,6 +28,7 @@
 #include "RichRecBase/IRichTrackCreator.h"
 
 // RichKernel
+#include "RichKernel/RichMap.h"
 #include "RichKernel/RichHashMap.h"
 #include "RichKernel/StringHashFuncs.h"
 
@@ -96,11 +96,8 @@ private: // methods
   /// Initialise for a new event
   void InitNewEvent();
 
-  /// Returns the name of the tool to use for a given track
-  const std::string & toolName( const TrStoredTrack * track ) const;
-
-  /// Returns the RichTrackCreator tool appropriate for a given track
-  IRichTrackCreator * tkTool( const TrStoredTrack * track ) const;
+  /// Returns the RichTrackCreator tool appropriate for a given track type
+  IRichTrackCreator * tkTool( const Rich::Track::Type tkType ) const;
 
 private: // data
 
@@ -119,6 +116,9 @@ private: // data
   /// Flag to signify all tracks have been formed for current event
   mutable bool m_allDone;
 
+  /// Flag to turn on or off the book keeping features to save cpu time.
+  bool m_bookKeep;
+
   /// Working object to keep track of formed objects
   mutable RichHashMap<long int, bool> m_trackDone;
 
@@ -126,13 +126,9 @@ private: // data
   /// Tool data from job options
   ToolList m_names;
 
-  /// mapping type between track types and RichTrackCreator tools
-  typedef RichHashMap<std::string,std::string> TypeToCreator;
-  mutable TypeToCreator m_trackToTool; ///< Map between track types and RichTrackCreator tools
-
-  /// mapping type between tool name and pointer to instance
-  typedef RichHashMap<std::string,IRichTrackCreator*> ToolNameToPnt;
-  mutable ToolNameToPnt m_nameToPnt; ///< Map between tool name and pointer to instance
+  /// mapping type between track type and  RichTrackCreator tool pointer
+  typedef std::vector< IRichTrackCreator* > TrackToPnt;
+  TrackToPnt m_tkToPtn;
 
 };
 
@@ -144,18 +140,14 @@ inline void RichDelegatedTrackCreatorFromTrStoredTracks::InitNewEvent()
   m_tracks   = 0;
 }
 
-inline const std::string & 
-RichDelegatedTrackCreatorFromTrStoredTracks::toolName( const TrStoredTrack * track ) const
-{
-  return m_trackToTool[Rich::text(track)];
-}
-
 inline IRichTrackCreator *
-RichDelegatedTrackCreatorFromTrStoredTracks::tkTool( const TrStoredTrack * track ) const
+RichDelegatedTrackCreatorFromTrStoredTracks::tkTool( const Rich::Track::Type tkType ) const
 {
-  const std::string & toolType = toolName(track);
-  if ( 0 == m_nameToPnt[toolType] ) acquireTool( toolType, m_nameToPnt[toolType] );
-  return m_nameToPnt[toolType];
+  if ( !m_tkToPtn[tkType] ) 
+  {
+    Exception("No creator tool configured for track type '"+Rich::text(tkType)+"'");
+  }
+  return m_tkToPtn[tkType];
 }
 
 #endif // RICHRECTOOLS_RichDelegatedTrackCreatorFromTrStoredTracks_H

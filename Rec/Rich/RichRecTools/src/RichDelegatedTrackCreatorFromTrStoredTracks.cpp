@@ -1,23 +1,21 @@
 
+//---------------------------------------------------------------------------------------------
 /** @file RichDelegatedTrackCreatorFromTrStoredTracks.cpp
  *
  *  Implementation file for tool : RichDelegatedTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.5 2005-01-13 14:34:26 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/07/27 20:15:29  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.6 2005-02-02 10:05:23 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//---------------------------------------------------------------------------------------------
 
 // local
 #include "RichDelegatedTrackCreatorFromTrStoredTracks.h"
 
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichDelegatedTrackCreatorFromTrStoredTracks>          s_factory ;
@@ -31,13 +29,16 @@ RichDelegatedTrackCreatorFromTrStoredTracks( const std::string& type,
   : RichRecToolBase  ( type, name, parent ),
     m_tracks         ( 0     ),
     m_trTracks       ( 0     ),
-    m_allDone        ( false )
+    m_allDone        ( false ),
+    m_bookKeep       ( false ),
+    m_tkToPtn        ( Rich::Track::NTrTypes, 0 )
 {
 
   // declare interface for this tool
   declareInterface<IRichTrackCreator>(this);
 
   // job options
+  declareProperty( "DoBookKeeping", m_bookKeep );
   declareProperty( "TrStoredTracksLocation",
                    m_trTracksLocation = TrStoredTrackLocation::Default );
   declareProperty( "RichRecTrackLocation",
@@ -57,23 +58,29 @@ StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::initialize()
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
   // setup mapping between track type and tool pointer
-  m_nameToPnt.clear();
-  m_trackToTool.clear();
+  RichMap< std::string, IRichTrackCreator * > tmpMap;
   for ( ToolList::iterator it = m_names.begin();
         it != m_names.end(); ++it ) {
     const int slash = (*it).find_first_of( "/" );
     const std::string trackType = ( slash>0 ? (*it).substr(0,slash) : *it );
     const std::string toolType  = ( slash>0 ? (*it).substr(slash+1) : *it );
-    debug() << " Tracktype '" << trackType
-            << "' will use tool '" << toolType << "'" << endreq;
-    m_trackToTool[trackType] = toolType;
+    debug() << "Track type '" << trackType
+            << "' will use RichTrackCreator '" << toolType << "'" << endreq;
+    const Rich::Track::Type tkType = Rich::Track::type(trackType);
+    if ( 0 == tmpMap[toolType] ) {
+      if ( !m_tkToPtn[tkType] ) acquireTool( toolType, m_tkToPtn[tkType] );
+      tmpMap[toolType] = m_tkToPtn[tkType];
+    } else {
+      m_tkToPtn[tkType] = tmpMap[toolType];
+    }
+
   }
   m_names.clear();
 
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::finalize()
@@ -88,7 +95,8 @@ void RichDelegatedTrackCreatorFromTrStoredTracks::handle ( const Incident & inci
   if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
 }
 
-const StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::newTracks() const {
+const StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::newTracks() const 
+{
 
   if ( ! m_allDone ) {
     m_allDone = true;
@@ -133,8 +141,9 @@ RichDelegatedTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * 
 
   // track type
   const Rich::Track::Type trType = Rich::Track::type(trTrack);
-  if ( Rich::Track::Unknown == trType ) {
-    Warning( "TrStoredTrack of unknown algorithm type");
+  if ( Rich::Track::Unknown == trType )
+  {
+    Warning( "TrStoredTrack of unknown algorithm type" );
     return NULL;
   }
 
@@ -142,24 +151,28 @@ RichDelegatedTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * 
   if ( !Rich::Track::isUsable(trType) ) return NULL;
 
   // See if this RichRecTrack already exists
-  if ( m_trackDone[trTrack->key()] ) {
+  if ( m_bookKeep && m_trackDone[trTrack->key()] ) {
 
     // track already done
     return richTracks()->object(trTrack->key());
 
   } else {
 
-    if ( msgLevel(MSG::VERBOSE) ) {
+    if ( msgLevel(MSG::VERBOSE) )
+    {
       verbose() << "TrStoredTrack " << trTrack->key()
-                << " type " << Rich::Track::type(trTrack) 
-                << " -> delegating to " << toolName(trTrack) << endreq;
+                << " type " << trType
+                << " -> delegating to " << tkTool(trType)->name() << endreq;
     }
-    
+
+    // Add to reference map
+    if ( m_bookKeep ) m_trackDone[trTrack->key()] = true;
+
     // delegate work to appropriate tool
-    return tkTool(trTrack)->newTrack( trTrack );
-    
+    return tkTool(trType)->newTrack( trTrack );
+
   }
-  
+
   return 0;
 }
 
@@ -177,17 +190,22 @@ RichRecTracks * RichDelegatedTrackCreatorFromTrStoredTracks::richTracks() const
 
     } else {
 
-      debug() << "Found " << tdsTracks->size() << " pre-existing RichRecTracks in TES at "
-              << m_richRecTrackLocation << endreq;
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Found " << tdsTracks->size() << " pre-existing RichRecTracks in TES at "
+                << m_richRecTrackLocation << endreq;
+      }
 
       // Set smartref to TES track container
       m_tracks = tdsTracks;
 
-      // Remake local track reference map
-      for ( RichRecTracks::const_iterator iTrack = tdsTracks->begin();
-            iTrack != tdsTracks->end();
-            ++iTrack ) {
-        m_trackDone[(*iTrack)->key()] = true;
+      if ( m_bookKeep ) {
+        // Remake local track reference map
+        for ( RichRecTracks::const_iterator iTrack = tdsTracks->begin();
+              iTrack != tdsTracks->end();
+              ++iTrack ) {
+          m_trackDone[(*iTrack)->key()] = true;
+        }
       }
 
     }
