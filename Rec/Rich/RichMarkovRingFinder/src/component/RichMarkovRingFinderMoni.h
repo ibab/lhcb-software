@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderMoni.h,v 1.9 2004-10-08 19:00:40 abuckley Exp $
+// $Id: RichMarkovRingFinderMoni.h,v 1.10 2004-10-22 19:15:28 abuckley Exp $
 #ifndef COMPONENT_RICHMARKOVRINGFINDERMONI_H 
 #define COMPONENT_RICHMARKOVRINGFINDERMONI_H 1
 
@@ -6,12 +6,17 @@
 #include "Event/ProcStatus.h"
 #include "Event/RichRecStatus.h"
 #include "Event/MCRichSegment.h"
+#include "Event/MCRichOpticalPhoton.h"
 #include "Event/RichRecRing.h"
+#include "Event/RichRecPixel.h"
 
 // interfaces
 #include "RichKernel/IRichMCTrackInfoTool.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
+#include "RichKernel/IRichRayTracing.h"
+#include "RichRecBase/IRichCherenkovAngle.h"
+#include "MCTools/IMCEffReconstructible.h"
 
 // base class
 #include "RichRecBase/RichRecAlgBase.h"
@@ -75,8 +80,11 @@ private: // methods
 private: // data
 
   IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
-  IRichMCTruthTool* m_richMCTruth;
-  IRichMCTrackInfoTool* m_mcTrackInfo;
+  IRichMCTruthTool* m_richMCTruth; ///< Pointer to RichMCTruthTool interface
+  IRichMCTrackInfoTool* m_mcTrackInfo; ///< Pointer to RichMCTrackInfoTool interface
+  IRichCherenkovAngle* m_ckAngle; ///< Pointer to RichCherenkovAngle tool interface
+  IRichRayTracing* m_raytrace; ///< Pointer to RichRaytracing tool interface
+  IMCEffReconstructible* m_mcReconstructible; ///< Pointer to MCEffReconstructible tool interface
 
   // Job options
   std::string m_mcHistPth; ///< Output MC truth histogram path
@@ -86,11 +94,25 @@ private: // data
   /// be exceeded for a track to be considered matched to a Markov ring
   double m_RingMatchFractionCutoff;
 
+  /// Variables for tracking how well MC matching and rec-matching agree
+  std::map<Rich::DetectorType, std::map<bool, unsigned int> > m_numMcVsRecMatchAgreements;
+
   // Histograms
+  std::map<Rich::DetectorType, IHistogram1D*> m_NumRingsPerEvent;
+  std::map<Rich::DetectorType, IHistogram1D*> m_NumPixsPerEvent;
+  std::map<Rich::DetectorType, IHistogram1D*> m_MarkovRingRadius;
+  std::map<Rich::DetectorType, IHistogram1D*> m_MarkovRingNumPixs;
+  std::map<Rich::DetectorType, IHistogram2D*> m_MarkovRingRadiusVsNumPixs;
+  std::map<Rich::DetectorType, IHistogram1D*> m_MarkovRingBestMCMatchFraction;
+  std::map<Rich::DetectorType, IHistogram1D*> m_MarkovRingBestMCMatchNumber;
+
   std::map<std::string, IHistogram1D*> m_RingTrackMCType;
   std::map<std::string, IHistogram1D*> m_RingTrackOriginInVeloVertexType;
   std::map<std::string, IHistogram1D*> m_RingTrackOriginInVeloElectronVertexType;
-
+  std::map<std::string, IHistogram1D*> m_CkPull;
+  std::map<std::string, IHistogram1D*> m_RingTrackRecCategory;
+  std::map<std::string, IHistogram1D*> m_RingTrackOriginInVeloRecCategory;
+  
   std::map<std::string, IHistogram1D*> m_RingTrackOriginZ;
   std::map<std::string, IHistogram1D*> m_RingTrackOriginZ1;
   std::map<std::string, IHistogram2D*> m_RingTrackOriginXY1;

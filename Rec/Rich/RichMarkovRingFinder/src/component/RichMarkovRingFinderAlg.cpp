@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.11 2004-10-08 19:00:40 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.12 2004-10-22 19:15:28 abuckley Exp $
 // Include files
 
 // local
@@ -49,6 +49,7 @@ RichMarkovRingFinderAlg<MyFinder>::RichMarkovRingFinderAlg( const std::string& n
   declareProperty( "InitialiseUsingRich", m_useRichSeed = true );
   declareProperty( "HitOnCircleProbCutoff", m_CutoffHitOnCircleProbability = 0.1 );
   declareProperty( "SegPositionInRingCutoff", m_CutoffSegPositionInRing = 0.5 );
+  declareProperty( "HitIsBgProbabilityLowCut", m_HitIsBgProbabilityLowCut = 0.5 );
 }
 
 
@@ -211,6 +212,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
     // ring container exists, so just add to it
     matchedRings = tesMatchedRings;
   }
+
   SmartDataPtr<RichRecPixels> tesPixels( eventSvc(), m_pixelLocation );
   RichRecPixels * pixels(0);
   if ( !tesPixels ) {
@@ -257,7 +259,6 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
       const double prob( inf.probabilityHitWasMadeByGivenCircle(hIt, iCircle) );
       const double bgprob( inf.probabilityHitWasMadeBySomethingOtherThanACircle(hIt) );
 
-      const double m_HitIsBgProbabilityLowCut(0.5); // move this to a class variable
       if ( bgprob < m_HitIsBgProbabilityLowCut ) {
         // Loop over all the circles to see if any match this hit better than the current ring
         bool thisIsTheBestCircle(true);
@@ -300,7 +301,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
       newRing->setCentrePointGlobal ( m_smartIDTool->globalPosition( centreLocal, rich(), panel() ) );
 
       newRing->setRadius ( (*iCircle).radius() );
-      const double ringRadiusOnPDPlane = newRing->radius() / scale;
+      const double ringRadiusOnPDPlane( newRing->radius() / scale );
 
       // Set detector information
       newRing->setRich  ( rich()  );
@@ -334,7 +335,7 @@ const StatusCode RichMarkovRingFinderAlg<MyFinder>::processEvent() {
           if ( rich() != (*iSeg)->trackSegment().rich() ) continue;
           
           // Do some ring-segment matching...
-          const double normSeparation = segPoint.distance(centreLocal) / ringRadiusOnPDPlane;
+          const double normSeparation( segPoint.distance(centreLocal) / ringRadiusOnPDPlane );
           // If the projected segment lies within the specified fraction of the ring radius ...
           if (normSeparation < m_CutoffSegPositionInRing) {
             // ... and it's a better match than we've seen so far ...

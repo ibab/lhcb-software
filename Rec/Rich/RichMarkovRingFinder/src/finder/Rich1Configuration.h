@@ -16,8 +16,8 @@ namespace RichMarkov {
 
     Rich1Configuration( const Pane pane );
 
-    inline double geometricXYAcceptanceBottomBound() const { return m_pane != upperPane ? -600 :  -30 ; }
-    inline double geometricXYAcceptanceTopBound   () const { return m_pane != upperPane ?  30  :   600 ; }
+    inline double geometricXYAcceptanceBottomBound() const { return m_pane != upperPane ? -610 :  -30 ; } // 600+10 because otherwise segfaults!
+    inline double geometricXYAcceptanceTopBound   () const { return m_pane != upperPane ?  30  :   610 ; } // same as above
     inline double geometricXYAcceptanceLeftBound  () const { return -730; }
     inline double geometricXYAcceptanceRightBound () const { return  730; }
 

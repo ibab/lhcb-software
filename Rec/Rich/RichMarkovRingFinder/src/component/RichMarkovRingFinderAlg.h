@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.10 2004-10-08 19:00:40 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.11 2004-10-22 19:15:28 abuckley Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -128,6 +128,9 @@ private: // data
   /// Fraction of ring radius which an extrapolated track segment must lie within
   /// to be considered associated to the ring
   double m_CutoffSegPositionInRing;
+
+  /// Probability of being a background hit, above which the hit is discarded
+  double m_HitIsBgProbabilityLowCut;
 
 };
 
