@@ -1,12 +1,10 @@
-// $Id: OTTime2MCDepositAlg.h,v 1.2 2004-11-10 12:59:57 jnardull Exp $
+// $Id: OTTime2MCDepositAlg.h,v 1.3 2004-11-23 14:21:17 cattanem Exp $
 #ifndef OTASSOCIATORS_OTTIME2MCDEPOSITALG_H
 #define OTASSOCIATORS_OTTIME2MCDEPOSITALG_H 1
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // Event
 #include "Event/OTTime.h"
@@ -45,14 +43,8 @@ public:
   /// Destructor
   virtual ~OTTime2MCDepositAlg(); 
 
-  /// initialize
-  virtual StatusCode initialize();    
-
   /// execute
   virtual StatusCode execute();    
-
-  /// finalize
-  virtual StatusCode finalize();    
 
   // associator function
   virtual StatusCode associateToTruth(const OTTime* aTime, 

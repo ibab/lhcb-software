@@ -1,4 +1,4 @@
-// $Id: OTTime2MCHitAlg.h,v 1.2 2004-11-10 12:59:57 jnardull Exp $
+// $Id: OTTime2MCHitAlg.h,v 1.3 2004-11-23 14:21:17 cattanem Exp $
 #ifndef OTASSOCIATORS_OTTIME2MCHITALG_H
 #define OTASSOCIATORS_OTTIME2MCHITALG_H 1
 
@@ -46,9 +46,6 @@ public:
 
   /// execute
   virtual StatusCode execute();    
-
-  /// finalize
-  virtual StatusCode finalize();    
 
   /// find the MCHit given a OTTime
   virtual StatusCode associateToTruth(const OTTime* aTime,

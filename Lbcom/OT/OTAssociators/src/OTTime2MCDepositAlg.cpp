@@ -1,4 +1,4 @@
-// $Id: OTTime2MCDepositAlg.cpp,v 1.2 2004-11-10 12:59:57 jnardull Exp $
+// $Id: OTTime2MCDepositAlg.cpp,v 1.3 2004-11-23 14:21:17 cattanem Exp $
 
 // Event
 #include "Event/MCTruth.h"
@@ -32,30 +32,16 @@ OTTime2MCDepositAlg::~OTTime2MCDepositAlg() {
   // destructor
 }
 
-StatusCode OTTime2MCDepositAlg::initialize() 
-{
-  return StatusCode::SUCCESS;
-}
-
 StatusCode OTTime2MCDepositAlg::execute() 
 {
 
   StatusCode sc;
 
  // get OTTimes
-  SmartDataPtr<OTTimes> timeCont(eventSvc(), OTTimeLocation::Default);
-  if (0 == timeCont){ 
-    return Error ("Failed to find OTTimes");
-  }
+  OTTimes* timeCont = get<OTTimes>( OTTimeLocation::Default );
 
   // Retrieve MCOTTime
-  SmartDataPtr<MCOTTimes>
-    mcTime ( eventDataService(), MCOTTimeLocation::Default);
-  if ( !mcTime ) {
-    msg () << "Could not find MCOTTime in " << MCOTTimeLocation::Default 
-           << endreq;
-    return StatusCode::FAILURE;
-  }
+  MCOTTimes* mcTime = get<MCOTTimes>( MCOTTimeLocation::Default );
   sc  = setMCTruth(timeCont, mcTime);
   if ( !sc.isSuccess() )  {
     return Error (" Failed to set the MC truth link ",sc);
@@ -63,12 +49,7 @@ StatusCode OTTime2MCDepositAlg::execute()
 
   // create an association table 
   OTTime2MCDepositAsct::Table* aTable = new OTTime2MCDepositAsct::Table();
-  sc = eventSvc()->registerObject(outputData(), aTable);
-  if( sc.isFailure() ) {
-    msg () << "Could not register " << outputData() << endreq;
-    delete aTable;
-    return StatusCode::FAILURE;
-  } 
+  put( aTable, outputData() );
 
   // loop and link OTTimes to MC truth
   OTTimes::const_iterator iterTime;
@@ -85,11 +66,6 @@ StatusCode OTTime2MCDepositAlg::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTTime2MCDepositAlg::finalize()
-{
-  return StatusCode::SUCCESS;
-}
-
 StatusCode 
 OTTime2MCDepositAlg::associateToTruth( const OTTime* aTime,
                                        std::vector<MCOTDeposit*>& depVector ) {
@@ -101,7 +77,7 @@ OTTime2MCDepositAlg::associateToTruth( const OTTime* aTime,
     // link to deposits
     SmartRefVector<MCOTDeposit> depCont = mcTime->deposits();
     if ( 0 == depCont.size()){
-      msg () << " Deposits Size" << depCont.size() << endreq;
+      error() << " Deposits Size" << depCont.size() << endreq;
       return StatusCode::FAILURE;
     }
     

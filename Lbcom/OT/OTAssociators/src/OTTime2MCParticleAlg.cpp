@@ -1,4 +1,4 @@
-// $Id: OTTime2MCParticleAlg.cpp,v 1.2 2004-11-10 12:59:57 jnardull Exp $
+// $Id: OTTime2MCParticleAlg.cpp,v 1.3 2004-11-23 14:21:17 cattanem Exp $
 
 // local
 #include "OTTime2MCParticleAlg.h"
@@ -31,10 +31,10 @@ OTTime2MCParticleAlg::~OTTime2MCParticleAlg() {
 
 StatusCode OTTime2MCParticleAlg::initialize() 
 {
-  StatusCode sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
-  if ( sc.isFailure() || 0 == m_hAsct ) {
-    return Error ("Unable to retrieve Associator tool",sc);
-  } 
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  m_hAsct = tool<OTTime2MCHitAsct::IAsct>( m_nameAsct );
   return StatusCode::SUCCESS;
 }
 
@@ -42,19 +42,11 @@ StatusCode OTTime2MCParticleAlg::initialize()
 StatusCode OTTime2MCParticleAlg::execute() 
 {
   // get OTTimes
-  SmartDataPtr<OTTimes> timeCont(eventSvc(), OTTimeLocation::Default);
-  if (0 == timeCont){ 
-    return Error ("Failed to find OTTimes");
-  }
+  OTTimes* timeCont = get<OTTimes>( OTTimeLocation::Default );
 
   // create an association table and register table in store
   OTTime2MCParticleAsct::Table* aTable = new OTTime2MCParticleAsct::Table();
-  StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
-  if( sc.isFailure() ) {
-    msg () << "Could not register " << outputData() << endreq;
-    delete aTable;
-    return StatusCode::FAILURE;
-  }
+  put( aTable, outputData() );
 
   // loop and link OTTimes to MC truth
   OTTimes::const_iterator iterTime;
@@ -72,13 +64,6 @@ StatusCode OTTime2MCParticleAlg::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTTime2MCParticleAlg::finalize()
-{
-  // Release tool
-  if( m_hAsct ) toolSvc()->releaseTool( m_hAsct );
-
-  return StatusCode::SUCCESS;
-}
 
 StatusCode 
 OTTime2MCParticleAlg::associateToTruth(const OTTime* aTime,

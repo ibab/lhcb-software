@@ -1,4 +1,4 @@
-// $Id: OTTime2MCHitAlg.cpp,v 1.2 2004-11-10 12:59:57 jnardull Exp $
+// $Id: OTTime2MCHitAlg.cpp,v 1.3 2004-11-23 14:21:17 cattanem Exp $
 
 // local
 #include "OTTime2MCHitAlg.h"
@@ -33,10 +33,11 @@ OTTime2MCHitAlg::~OTTime2MCHitAlg()
 
 StatusCode OTTime2MCHitAlg::initialize() 
 {
-  StatusCode sc = toolSvc()->retrieveTool(m_nameAsct, m_hAsct);
-  if( sc.isFailure() || 0 == m_hAsct) {
-    return Error ("Unable to retrieve Associator tool",sc);
-  } 
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  m_hAsct = tool<OTTime2MCDepositAsct::IAsct>( m_nameAsct );
+
   return StatusCode::SUCCESS;
 }
 
@@ -44,28 +45,14 @@ StatusCode OTTime2MCHitAlg::initialize()
 StatusCode OTTime2MCHitAlg::execute() 
 {
   // get OTTimes
-  SmartDataPtr<OTTimes> timeCont(eventSvc(), OTTimeLocation::Default);
-  if (0 == timeCont){ 
-    return Error ("Failed to find OTTimes");
-  }
+  OTTimes* timeCont = get<OTTimes>( OTTimeLocation::Default );
   
   //Get the MCHits for the event, in case you don't want to make links to spill.
-  SmartDataPtr<MCHits> mcHits(eventSvc(), MCHitLocation::OTHits);
-  if( 0 == mcHits){
-    msg() << "Could not find MCHits in " << MCHitLocation::OTHits 
-          << endreq;
-    return StatusCode::FAILURE;
-  }
-  m_mcHits = mcHits;
+  m_mcHits = get<MCHits>( MCHitLocation::OTHits );
 
   // create an association table and register table in store
   OTTime2MCHitAsct::Table* aTable = new OTTime2MCHitAsct::Table();
-  StatusCode sc = eventSvc()->registerObject(outputData(), aTable);
-  if( sc.isFailure() ) {
-    msg() << "Could not register " << outputData() << endreq;
-    delete aTable;
-    return StatusCode::FAILURE;
-  }
+  put( aTable, outputData() );
 
   // loop and link OTTimes to MC truth
   OTTimes::const_iterator iterTime;
@@ -83,13 +70,6 @@ StatusCode OTTime2MCHitAlg::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTTime2MCHitAlg::finalize() 
-{
-  // Release tool
-  if( m_hAsct ) toolSvc()->releaseTool( m_hAsct );
-
-  return StatusCode::SUCCESS;
-}
 
 StatusCode 
 OTTime2MCHitAlg::associateToTruth(const OTTime* aTime,

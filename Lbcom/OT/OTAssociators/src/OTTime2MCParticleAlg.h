@@ -1,4 +1,4 @@
-// $Id: OTTime2MCParticleAlg.h,v 1.2 2004-11-10 12:59:57 jnardull Exp $
+// $Id: OTTime2MCParticleAlg.h,v 1.3 2004-11-23 14:21:17 cattanem Exp $
 #ifndef OTASSOCIATORS_OTTIME2MCPARTICLEALG_H
 #define OTASSOCIATORS_OTTIME2MCPARTICLEALG_H 1
 
@@ -9,8 +9,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "OTAssociators/OTTime2MCHitAsct.h"
 
 class OTTime;
@@ -43,9 +41,6 @@ public:
 
   /// execute
   virtual StatusCode execute();    
-
-  /// finalize
-  virtual StatusCode finalize();    
 
   // associator function
   virtual StatusCode associateToTruth(const OTTime* aTime,
