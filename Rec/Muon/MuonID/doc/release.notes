@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.4 2002-05-15 07:13:46 cattanem Exp $
+! $Id: release.notes,v 1.5 2002-05-17 13:13:44 dhcroft Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
+
+! 20020517 - David Hutchcroft
+  Added algorithm MuonDSTPrepare that removes MuonCoords from TES that are not
+  refenced by MuonID objects
 
 <<<<<<<<<<<<<<<<<<<<<<<<<< v1r0 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ! 20020514 - David Hutchcroft
   Modified requirements file to point at Event/MuonEvent not (now removed) 
   Event/MuonIdentification
+  Removed spurious options files
 
 ! 20020510 - MuonID v1r0  David Hutchcroft
   Major rewrite to switch from AXTK tracks and MURW muon hits to 
