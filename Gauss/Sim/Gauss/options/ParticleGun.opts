@@ -1,0 +1,28 @@
+// ParticleGun Generator joboptions
+// ==========================================================================
+// include this file in Gauss.opts instead of Generator.opts
+// =========================================================================
+
+Generator.Members = {"ParticleGun"};
+
+//Generator.Members += {"DumpMC"};
+
+// Particle Gun's options
+ParticleGun.xVertexMin = 0.0;
+ParticleGun.xVertexMax = 0.0;
+ParticleGun.yVertexMin = 0.0;
+ParticleGun.yVertexMax = 0.0;
+ParticleGun.zVertexMin = 0.0;
+ParticleGun.zVertexMax = 0.0;
+
+ParticleGun.MomentumMax = 10.0;
+ParticleGun.MomentumMin = 10.0;
+ParticleGun.ThetMin = 1.0;
+ParticleGun.ThetMax = 1.0;
+ParticleGun.PhiMin = 0.0;
+ParticleGun.PhiMax = 0.0;
+
+ParticleGun.PdgCode = -211;
+ParticleGun.GunMode=1;
+ParticleGun.Mode=0;
+

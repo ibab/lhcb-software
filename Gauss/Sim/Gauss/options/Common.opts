@@ -1,0 +1,47 @@
+// Common.opts
+//=========================================================================
+// this option file is common to all generator option files
+// it must be included in Gauss.opts as first one
+//========================================================================
+
+#units "$STDOPTS/units.opts"
+
+AuditorSvc.Auditors = { "ChronoAuditor" };
+
+ApplicationMgr.ExtSvc = { "ToolSvc" ,"ParticlePropertySvc" ,"EventSelector" };
+
+EventPersistencySvc.CnvServices  = {};  
+
+ApplicationMgr.DLLs  = { "GaudiAud"};
+ApplicationMgr.DLLs += { "GaudiAlg"} ;
+ApplicationMgr.DLLs += { "GaussTools"} ;
+ApplicationMgr.DLLs += { "GaussAlgs"  } ;
+ApplicationMgr.DLLs += { "GeneratorModules" } ;
+
+RndmGenSvc.Engine.SetSingleton = true;
+
+ApplicationMgr.HistogramPersistency = "NONE";
+
+EventDataSvc.ForceLeaves = true ;
+
+ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/ParticleTable.txt" ;
+
+MessageSvc.setWarning += { "XmlGenericCnv" };
+// MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+
+ApplicationMgr.EvtSel  = "NONE" ;
+
+ApplicationMgr.TopAlg  = 
+{ "GaussInitialisation/GaussInit", "Sequencer/Generator"};
+
+#include "$GAUSSOPTS/PythiaSettings.opts"
+
+ToolSvc.EvtGenTool.OutputLevel = 4;
+SetDecayAlg.OutputLevel = 4;
+
+// to write an output file
+#include "$GAUSSOPTS/GaussTape.opts"
+// in ROOT format
+#include "$GAUSSOPTS/GaussRootIO.opts"
+// in POOL format
+#include "$GAUSSOPTS/GaussPoolIO.opts"

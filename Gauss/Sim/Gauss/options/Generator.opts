@@ -1,43 +1,16 @@
-// $Id: Generator.opts,v 1.33 2004-04-07 16:29:02 gcorti Exp $ 
+// Pythia Generator jobOptions
+//===========================================================================
+// That is the default options to generate Pythia events
+// this file is included in Gauss.opts
+// this file should be replaced in Gauss.opts with GenStandAlone.opts or
+// ParticleGun.opts
+//==========================================================================
 
-ApplicationMgr.DLLs += { "GeneratorModules" } ;
-
-// to use particle gun, uncomment the line below and comment out the other generators
-//Generator.Members += {"ParticleGun"};
-
-Generator.Members += {"SignalDecayAlg", "PythiaAlg", "SetDecayAlg", "EvtDecayAlg"};
+Generator.Members = {"SignalDecayAlg", "PythiaAlg", "SetDecayAlg", "EvtDecayAlg"};
 Generator.Members += {"SmearVertexAlg"};
-
-// limit output of EvtGen and SetDecayAlg
-ToolSvc.EvtGenTool.OutputLevel = 4;
-SetDecayAlg.OutputLevel = 4;
 
 //Generator.Members += {"DumpMC"};
 
 // any Pythia commands (flags) should be specified in the following form:
 // PythiaAlg.PythiaUserCommand = {"pyinit pylisti 11", "pyinit dumpr 1 100", "pyinit pylistf 1"};
 
-// Particle Gun's options
-ParticleGun.xVertexMin = 0.0;
-ParticleGun.xVertexMax = 0.0;
-ParticleGun.yVertexMin = 0.0;
-ParticleGun.yVertexMax = 0.0;
-ParticleGun.zVertexMin = 0.0;
-ParticleGun.zVertexMax = 0.0;
-
-ParticleGun.MomentumMax = 10.0;
-ParticleGun.MomentumMin = 10.0;
-ParticleGun.ThetMin = 1.0;
-ParticleGun.ThetMax = 1.0;
-ParticleGun.PhiMin = 0.0;
-ParticleGun.PhiMax = 0.0;
-
-ParticleGun.PdgCode = -211;
-ParticleGun.GunMode=1;
-ParticleGun.Mode=0;
-
-// in order to generate specific decays put below the following line:
-// #include "$DECFILESROOT/options/event_type.opts" with event_type replaced by the
-// appropriete int
-
-//#include "$DECFILESROOT/options/370000.opts"
