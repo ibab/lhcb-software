@@ -1,0 +1,22 @@
+# $Id: requirements,v 1.1.1.1 2003-12-07 09:34:02 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $
+# =============================================================================
+package       BenderSys
+version       v1r0
+
+# =========== Bender Application ==============================================
+use           Bender     v1r0 Tools 
+# =========== Bender Linraries ================================================
+use           BenderLibs v1r0 Tools 
+# =========== Python image of some important classes from LHCb Event Model ====
+use           PyEvent    v1r0 Tools 
+# =========== Python image of some important classes from CLHEP library =======
+use           PyClhep    v1r0 Tools 
+# =============================================================================
+ 
+# =============================================================================
+# The END 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
+# =============================================================================

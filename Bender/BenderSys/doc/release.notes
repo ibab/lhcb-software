@@ -1,0 +1,15 @@
+! $Id: release.notes,v 1.1.1.1 2003-12-07 09:34:02 ibelyaev Exp $ 
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $ 
+! -----------------------------------------------------------------------------
+! Package     : BenderSys
+! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
+! Purpose     : Easy/interactive python-based LHCb physics analysis
+! -----------------------------------------------------------------------------
+
+! 2003-12-07 - Vanya BELYAEV
+ - convert Bender package into Bender application and Bender project
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
