@@ -20,8 +20,8 @@ use PYTHIA	v2r6205p3	Gen
 use HepMC	v3r121p2	Sim
 
 # Kernel packages
-use KernelSys   	v3r4	Kernel
-use LHCbKernel  	v4r4	Kernel
+use KernelSys   	v3r5	Kernel
+use LHCbKernel  	v4r5	Kernel
 use CaloKernel  	v3r0	Calo
 use MuonKernel  	v2r5	Muon
 use TrKernel    	v11r3	Tr
@@ -74,7 +74,7 @@ use CaloAssociators    	v4r1	Calo
 use MuonAssociators    	v1r2	Muon
 
 # Other stuff
-use MCTools		v1r4	Phys
+use MCTools		v1r5	Phys
 use CaloInterfaces	v4r0	Calo
 use CaloUtils		v4r6	Calo
 
