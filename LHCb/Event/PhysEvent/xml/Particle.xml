@@ -25,15 +25,22 @@
         place="/Event/Phys/Prod/Particles"
        />
        <constructor
-        argList='Particle part'
-        desc='copy constructor'
+        argList="Particle part"
+        desc="Copy constructor, note that end vertex is cloned"
+       />          
+       <method
+        name="clone"
+        desc="Clone particle and related vertex"
+        type="Particle*"
+        const="TRUE"
        />
        <method
-        name='clone'
-        desc='clone'
-        type='Particle*'
-        const='TRUE'
-       />
+        desc="Assignment operator, note that the original vertex and protoParticle are kept"
+        name="operator="
+        type="Particle&amp;"
+       >
+         <arg name="orig" type="Particle" const='TRUE'/>
+       </method>
        <attribute
         name="particleID"
         desc="PDG code"
@@ -122,7 +129,16 @@ product should be taken if used in a vertex"
         desc="Templated method to return actual pointer to originator class"
         name="originator"
         type="template &lt;class T&gt; T*"
-       /--> 
+       >
+        <code>
+if( !this->origin() ) {
+  return NULL;
+}
+else {
+  return from = dynamic_cast&lt;T*&gt;( this->origin() );
+}
+        </code>
+       </method-->
        <method
         name="charge"
         const="TRUE"

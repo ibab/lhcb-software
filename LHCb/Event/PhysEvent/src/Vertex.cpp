@@ -1,4 +1,4 @@
-// $Id: Vertex.cpp,v 1.2 2002-05-15 15:38:48 gcorti Exp $
+// $Id: Vertex.cpp,v 1.3 2002-07-24 16:20:27 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -20,20 +20,19 @@
 // Copy constructor
 //=============================================================================
 Vertex::Vertex(const Vertex& vert)
-  : KeyedObject<int>() {
-  
-  m_position = vert.m_position;
-  m_positionErr = vert.m_positionErr;
-  m_chi2 = vert.m_chi2;
-  m_type = vert.m_type;
-  m_desktop = vert.m_desktop;
+  : KeyedObject<int>()
+  , m_position( vert.position() )
+  , m_positionErr( vert.positionErr() )
+  , m_chi2( vert.chi2() )
+  , m_type( vert.type() )
+
+{
   // clone the end particles
-  SmartRefVector<Particle>::const_iterator ip = vert.m_products.begin();
-  while( ip != vert.m_products.end() ) {
+  SmartRefVector<Particle>::const_iterator ip = vert.products().begin();
+  while( ip != vert.products().end() ) {
     m_products.push_back((*ip)->clone());
     ip++;
   }
-  
 }
 
 //=============================================================================
@@ -42,6 +41,24 @@ Vertex::Vertex(const Vertex& vert)
 Vertex* Vertex::clone() const
 {
   return new Vertex(*this);
+}
+
+//=============================================================================
+// Assignment operator
+//=============================================================================
+Vertex& Vertex::operator=(const Vertex& orig) {
+
+  // protect against self assignement
+  if( this != &orig ) {
+    m_position = orig.position();
+    m_positionErr = orig.positionErr();
+    m_chi2 = orig.chi2();
+    m_type = orig.type();
+    m_desktop = 0;
+    // Keep the same reference to particle products
+    m_products = orig.products();
+  }
+  return *this;
 }
 
 //=============================================================================

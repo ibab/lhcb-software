@@ -30,15 +30,22 @@
         place="/Event/Phys/PrimaryVertices"
        />
        <constructor
-        argList='Vertex vert'
-        desc='copy constructor'
+        argList="Vertex vert"
+        desc="Copy constructor, note that the product particles are cloned"
        />
        <method
-        name='clone'
-        desc='clone'
-        type='Vertex*'
-        const='TRUE'
+        name="clone"
+        desc="Clone vertex and related particles"
+        type="Vertex*"
+        const="TRUE"
        />
+       <method
+        desc="Assignment operator, note that the original product particles are kept"
+        name="operator="
+        type="Vertex&amp;"
+       >
+         <arg name="orig" type="Vertex" const='TRUE'/>
+       </method>
        <attribute
         name="position"
         desc="Position in LHCb reference system"

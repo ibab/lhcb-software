@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.5 2002-05-15 15:38:43 gcorti Exp $
+// $Id: Particle.cpp,v 1.6 2002-07-24 16:20:22 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -19,26 +19,18 @@
 // Copy constructor
 //=============================================================================
 Particle::Particle(const Particle& part)
-  : KeyedObject<int>() {
-  
-  m_particleID = part.m_particleID;
-  m_confLevel = part.m_confLevel;  
-  m_momentum = part.m_momentum;
-  m_pointOnTrack = part.m_pointOnTrack;
-  m_mass = part.m_mass;
-  m_massErr = part.m_massErr;  
-  m_momentumErr = part.m_momentumErr;
-  m_pointOnTrackErr = part.m_pointOnTrackErr;
-  m_posMomCorr = part.m_posMomCorr;
-  m_isResonance = part.m_isResonance;
-  m_slopesMomErr = part.m_slopesMomErr;
-  m_posSlopesCorr = part.m_posSlopesCorr;
-  m_desktop = part.m_desktop;
-  // Clone the end-vertex
-  m_endVertex = part.m_endVertex->clone();
-  // Keep the same pointer to origination object
-  m_origin = part.m_origin;
-
+  : KeyedObject<int>()
+  , m_particleID( part.particleID() ), m_confLevel( part.confLevel() )
+  , m_momentum( part.momentum() ), m_pointOnTrack( part.pointOnTrack() )
+  , m_mass( part.mass() ), m_massErr( part.massErr() )
+  , m_momentumErr( part.momentumErr() )
+  , m_pointOnTrackErr( part.pointOnTrackErr() )
+  , m_posMomCorr( part.posMomCorr() ), m_isResonance( part.isResonance() )
+  , m_slopesMomErr( part.slopesMomErr() )
+  , m_posSlopesCorr( part.posSlopesCorr() ), m_desktop( 0 )
+  , m_origin( part.origin() )
+{
+  m_endVertex = part.endVertex()->clone();
 }
 
 //=============================================================================
@@ -49,6 +41,32 @@ Particle* Particle::clone() const
   return new Particle(*this);
 }
 
+//=============================================================================
+// Assignment operator
+//=============================================================================
+Particle& Particle::operator=(const Particle& orig) {
+  
+  // protect against self assignement
+  if( this != &orig ) {
+    m_confLevel = orig.confLevel();  
+    m_momentum = orig.momentum();
+    m_pointOnTrack = orig.pointOnTrack();
+    m_mass = orig.mass();
+    m_massErr = orig.massErr();  
+    m_momentumErr = orig.momentumErr();
+    m_pointOnTrackErr = orig.pointOnTrackErr();
+    m_posMomCorr = orig.posMomCorr();
+    m_isResonance = orig.isResonance();
+    m_slopesMomErr = orig.slopesMomErr();
+    m_posSlopesCorr = orig.posSlopesCorr();
+    m_desktop = 0;
+    // Keep the same reference to end vertex ???
+    m_endVertex = orig.endVertex();
+    // Keep the same reference to origination object
+    m_origin = orig.origin();
+  }
+  return *this;
+}
 
 //=============================================================================
 // charge in units of positron charge
