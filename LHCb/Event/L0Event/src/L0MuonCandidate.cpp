@@ -1,11 +1,14 @@
-// $Id: L0MuonCandidate.cpp,v 1.5 2002-07-24 17:04:42 atsareg Exp $
+// $Id: L0MuonCandidate.cpp,v 1.6 2002-09-12 09:43:24 atsareg Exp $
 
 #include <cmath>
 #include <vector>
 #include "Event/L0MuonCandidate.h"
 #include "L0MuonBase.h"
 
-L0MuonCandidate::L0MuonCandidate(int status) {
+L0MuonCandidate::L0MuonCandidate(int status) : m_bitcode(0),
+					       m_theta(0.0),
+					       m_phi(0.0),
+					       m_pads() {
   setStatus(status);
 }
 
@@ -14,6 +17,7 @@ L0MuonCandidate::L0MuonCandidate(double pt,
 				 double phi, 
 				 const std::vector<MuonTileID>& pads, 
 				 int status) {
+  m_bitcode = 0;				 
   setPt(pt);
   m_theta = theta;
   m_phi = phi;
