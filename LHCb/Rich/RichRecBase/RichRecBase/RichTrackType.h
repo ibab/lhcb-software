@@ -1,4 +1,4 @@
-// $Id: RichTrackType.h,v 1.1.1.1 2003-04-01 13:21:56 jonesc Exp $
+// $Id: RichTrackType.h,v 1.2 2003-04-16 12:21:07 jonrob Exp $
 #ifndef RICHRECKERNEL_RICHTRACKTYPE_H 
 #define RICHRECKERNEL_RICHTRACKTYPE_H 1
 
@@ -45,7 +45,10 @@ namespace Rich {
 
   /// Text conversion for Rich::Track::Type enumeration
   std::string text( const Rich::Track::Type& side );
-  std::string text( const TrStoredTrack * track );
+
+  inline std::string text( const TrStoredTrack * track ) {
+    return Rich::text( Rich::Track::type(track) );
+  }
 
 }
 
@@ -77,10 +80,6 @@ inline MsgStream& operator << ( MsgStream& s,
                                 const Rich::Track::Type& qual ) {
   s << Rich::text( qual );
   return s;
-}
-
-inline std::string Rich::text( const TrStoredTrack * track ) {
-  return Rich::text( Rich::Track::type(track) );
 }
 
 #endif // RICHRECKERNEL_RICHTRACKTYPE_H
