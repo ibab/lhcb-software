@@ -1,4 +1,4 @@
-	// $Id: MuonDigitToRawBuffer.cpp,v 1.2 2004-02-06 08:12:49 cattanem Exp $
+	// $Id: MuonDigitToRawBuffer.cpp,v 1.3 2004-02-06 14:24:04 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -85,6 +85,10 @@ StatusCode MuonDigitToRawBuffer::initialize() {
           +l1->getODEName(ODEBoard);
         msg<<MSG::DEBUG<<"ODE number "<<l1->getODEName(ODEBoard)<<endreq;
         SmartDataPtr<MuonODEBoard>  ode(detSvc(),ODEpath);
+		if( 0 == ode ) {
+			msg << MSG::ERROR << ODEpath << " not found in XmlDDDB" << endmsg;
+			return StatusCode::FAILURE;
+		}
         long region=ode->region();  
         msg<<MSG::DEBUG<<"ODE region "<<region<<endreq;
         
