@@ -47,7 +47,7 @@ BrunelReco.DetectorList += { "Timing" };
 ApplicationMgr.DLLs += { "L1VeloTrack" };
 BrunelTriggerTRIGGERSeq.Members += { "L1VeloTrackAlg" };
 ApplicationMgr.DLLs += { "L1Decision" };
-//BrunelRecoL1Seq.Members += { "Level1" };
+BrunelRecoL1Seq.Members += { "Level1" };
 
 // Trigger truth relation tables (used by monitoring and for DST)
 BrunelTriggerTRIGGERSeq.Members += { "L0CaloToMCParticleAsct" };

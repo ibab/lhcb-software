@@ -108,14 +108,14 @@ use OTAssociators  	v2r2  	OT
 use TrKernel            v11r1   Tr
 use TrFitEvent          v3r4    Tr
 use VeloTrack           v4r3    Velo
-use TrAssociators       v3r2    Tr
+use TrAssociators       v3r3    Tr
 use LongTrack           v1r4    Tr
 use TrFitter            v3r5    Tr
 use TrExtrapolator      v2r3    Tr
 use TrTools             v2r2    Tr
 use Seeding	        v2r3    Tr
-use TrMatching          v2r3    Tr
-use TrCleanEx           v2r2    Tr
+use TrMatching          v2r4    Tr
+use TrCleanEx           v2r3    Tr
 use TrIntraPR		v2r2	Tr
 use UpstreamPR		v2r4	Tr
 use VeloTT		v1r2	Tr
