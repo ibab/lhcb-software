@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.5 2002-06-18 16:39:45 jonesc Exp $
+# $Id: requirements,v 1.6 2002-06-21 15:33:35 jonesc Exp $
 # Maintainer : Christopher Rob Jones
 
 package RichKernel
-version v1r1
+version v1r2
 
 # ================ structure =================================================
 branches RichKernel cmt doc src
@@ -11,7 +11,7 @@ branches RichKernel cmt doc src
 include_dirs $(RICHKERNELROOT)
 
 # ================ dependencies ==============================================
-use LHCbKernel	v1r* Kernel
+use LHCbKernel	v1r*  Kernel
 
 # ================ linker library ============================================
 library RichKernel ../src/*.cpp
