@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.4 2005-01-26 11:33:54 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.5 2005-02-02 10:08:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -51,8 +51,12 @@ StatusCode RichPixelCreatorFromRawBuffer::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDTool", m_idTool );
+  acquireTool( "RichSmartIDTool",    m_idTool  );
   acquireTool( "RichSmartIDDecoder", m_decoder );
+
+  // Check which detectors to use
+  if ( !m_usedDets[Rich::Rich1] ) Warning("Pixels for RICH1 are disabled",StatusCode::SUCCESS);
+  if ( !m_usedDets[Rich::Rich2] ) Warning("Pixels for RICH2 are disabled",StatusCode::SUCCESS);
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -61,7 +65,7 @@ StatusCode RichPixelCreatorFromRawBuffer::initialize()
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichPixelCreatorFromRawBuffer::finalize()
