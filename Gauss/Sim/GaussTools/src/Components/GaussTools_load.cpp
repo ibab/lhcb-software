@@ -1,8 +1,11 @@
-// $Id: GaussTools_load.cpp,v 1.9 2003-05-30 17:55:52 ibelyaev Exp $
+// $Id: GaussTools_load.cpp,v 1.10 2003-06-04 16:56:10 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/05/30 17:55:52  ibelyaev
+//  add GiGaRegionTool - 'Cuts per Region'
+//
 // Revision 1.8  2003/04/23 15:45:54  witoldp
 // removed obsolete files
 //
@@ -82,6 +85,7 @@ void GaussTools_load()
 
   // Regions 
   DECLARE_GiGaFactory     (    GiGaRegionTool          ) ;
+  DECLARE_GiGaFactory     (    GiGaRegionsTool         ) ;
 
 };
 // ============================================================================

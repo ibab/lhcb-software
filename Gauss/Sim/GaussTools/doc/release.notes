@@ -4,6 +4,11 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2003-06-04 - Ivan BELYAEV
+ - src/GiGaRegionsTool.h,.cpp   - new tool to create ALL cuts per regions.
+ - src/GaussTools_load.cpp      - add declaration of new tool  
+ - cmt/requirements             - increase the version 
+
 ! 2003-06-03 - Vanya BELYAEV
  - src/Components/GaussG4UserLimits.cpp    Add comparison operator 
  - src/Components/GaussG4UserLimits.h      Add comparison operator 
