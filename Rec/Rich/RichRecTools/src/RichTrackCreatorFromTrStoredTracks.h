@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.10 2004-05-30 16:48:13 jonrob Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.11 2004-05-31 21:30:51 jonrob Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromTrStoredTracks_H 1
 
@@ -14,7 +14,7 @@
 // interfaces
 #include "RichRecBase/IRichTrackCreator.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
-#include "RichRecBase/IRichRecRingCreator.h"
+#include "RichRecBase/IRichMassHypothesisRingCreator.h"
 #include "RichDetTools/IRichRayTracing.h"
 #include "RichDetTools/IRichSmartIDTool.h"
 #include "RichDetTools/IRichTrSegMaker.h"
@@ -96,7 +96,7 @@ private: // data
   IRichSmartIDTool * m_smartIDTool;
 
   /// Pointer to ring creator
-  IRichRecRingCreator * m_ringCreator;
+  IRichMassHypothesisRingCreator * m_massHypoRings;
 
   /// Pointer to track segment maker
   IRichTrSegMaker * m_segMaker;

@@ -9,7 +9,10 @@ ToolSvc.RichTrackCreator.TrackMinPtotPerClass = { 0,       0,     0,        0,  
 ToolSvc.RichTrackCreator.BuildMassHypothesisRings = false;
 
 // RichRecRing creator for mass hypothesis rings
-ToolSvc.RichToolRegistry.Tools += { "RichRecRingCreator/RichMassHypothesisRingCreator" };
+ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/RichMassHypoRings" };
+
+// Cherenkov Cone ray tracing
+ToolSvc.RichToolRegistry.Tools += { "RichRayTraceCherenkovCone/RichRayTraceCKCone" };
 
 // Segment creator
 ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };

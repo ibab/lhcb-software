@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2004-05-31 - Chris Jones
+ - Add new debug printout for used radiators in RichPIDQC
+
 !======================== RichRecQC v1r7 2004-04-20 ========================
 ! 2004-04-20 - Chris Jones
  - Disable RichRecoQC algorithm due to problems with POOL and missing MC

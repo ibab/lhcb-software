@@ -1,4 +1,4 @@
-// $Id: RichCherenkovAngle.cpp,v 1.7 2004-04-19 23:06:08 jonesc Exp $
+// $Id: RichCherenkovAngle.cpp,v 1.8 2004-05-31 21:30:50 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -53,8 +53,16 @@ StatusCode RichCherenkovAngle::finalize()
   return RichRecToolBase::finalize();
 }
 
-double RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
-                                              const Rich::ParticleIDType id ) const {
+double 
+RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
+                                       const Rich::ParticleIDType id ) const 
+{
+  
+  // Protect against invalid particle type
+  if ( Rich::Unknown == id ) {
+    Error("Particle ID type is unknown !");
+    return 0;
+  }
 
   if ( !segment->averageCKTheta().dataIsValid(id) ) {
     double angle = 0;

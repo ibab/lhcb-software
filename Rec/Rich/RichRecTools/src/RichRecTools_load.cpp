@@ -1,8 +1,9 @@
-// $Id: RichRecTools_load.cpp,v 1.14 2004-05-30 16:48:13 jonrob Exp $
+// $Id: RichRecTools_load.cpp,v 1.15 2004-05-31 21:30:51 jonrob Exp $
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
-DECLARE_FACTORY_ENTRIES( RichRecTools ) {
+DECLARE_FACTORY_ENTRIES( RichRecTools ) 
+{
 
   // Rich reconstruction working object creators
   DECLARE_TOOL( RichTrackCreatorFromTrStoredTracks );
@@ -11,7 +12,7 @@ DECLARE_FACTORY_ENTRIES( RichRecTools ) {
   DECLARE_TOOL( RichPhotonCreator );
   DECLARE_TOOL( RichPhotonPredictor );
   DECLARE_TOOL( RichStatusCreator ); 
-  DECLARE_TOOL( RichRecRingCreator );
+  DECLARE_TOOL( RichMassHypothesisRingCreator );
 
   // Geometrical efficiency calculators
   DECLARE_TOOL( RichGeomEffPhotonTracing );
@@ -35,5 +36,8 @@ DECLARE_FACTORY_ENTRIES( RichRecTools ) {
   DECLARE_TOOL( RichInterpCKResVthetaForTrStoredTracks );
   DECLARE_TOOL( RichFunctionalCKResVpForTrStoredTracks );
   DECLARE_TOOL( RichInterpCKResVpForTrStoredTracks );
+
+  // ray tracing
+  DECLARE_TOOL( RichRayTraceCherenkovCone );
 
 };

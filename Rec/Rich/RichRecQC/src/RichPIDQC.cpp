@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.19 2004-04-19 23:00:57 jonesc Exp $
+// $Id: RichPIDQC.cpp,v 1.20 2004-05-31 21:32:34 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -251,8 +251,9 @@ StatusCode RichPIDQC::execute() {
       if ( !iPID->isAboveThreshold(pid) ) { pid = Rich::BelowThreshold; }
       debug() << "PID " << iPID->key() << " ("
               << iPID->pidType() << "), Track " << trTrack->key()
-              << " (" << tkType << ") " << tkPtot << " GeV/c, "
-              << "Dlls " << iPID->particleLLValues() << "PID '" << pid << "'";
+              << " (" << tkType << ") " << tkPtot << " GeV/c,"
+              << " Rads " << iPID->usedAerogel() << " " << iPID->usedC4F10() << " " << iPID->usedCF4()
+              << " Dlls " << iPID->particleLLValues() << "PID '" << pid << "'";
 
       // Fill histos for deltaLLS and probabilities
       m_ids->fill( pid+1 );

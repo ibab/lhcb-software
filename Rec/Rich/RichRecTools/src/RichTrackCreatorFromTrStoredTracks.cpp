@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.12 2004-05-30 16:48:13 jonrob Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.13 2004-05-31 21:30:51 jonrob Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -22,7 +22,7 @@ RichTrackCreatorFromTrStoredTracks::RichTrackCreatorFromTrStoredTracks( const st
     m_trTracks       ( 0 ),
     m_rayTrace       ( 0 ),
     m_smartIDTool    ( 0 ),
-    m_ringCreator    ( 0 ),
+    m_massHypoRings  ( 0 ),
     m_segMaker       ( 0 ),
     m_signal         ( 0 ),
     m_skipNonUnique  ( true ),
@@ -46,7 +46,7 @@ RichTrackCreatorFromTrStoredTracks::RichTrackCreatorFromTrStoredTracks( const st
 
 }
 
-StatusCode RichTrackCreatorFromTrStoredTracks::initialize() 
+StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
 {
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
@@ -57,7 +57,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
   acquireTool( "RichExpectedTrackSignal", m_signal      );
   acquireTool( "RichSmartIDTool",         m_smartIDTool );
   acquireTool( "RichDetTrSegMaker",       m_segMaker    );
-  if ( m_buildHypoRings ) acquireTool( "RichMassHypothesisRingCreator", m_ringCreator );
+  if ( m_buildHypoRings ) acquireTool( "RichMassHypoRings", m_massHypoRings );
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
@@ -70,7 +70,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichTrackCreatorFromTrStoredTracks::finalize() 
+StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -80,7 +80,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
 void RichTrackCreatorFromTrStoredTracks::handle ( const Incident & incident )
 {
   if      ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
-  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() ) 
+  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() )
     {
       debug() << "Selected " << richTracks()->size() << " TrStoredTracks :";
       for ( int iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
@@ -202,7 +202,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
                                                       hitPoint,
                                                       DeRichHPDPanel::loose )
                && m_signal->hasRichInfo(newSegment) ) {
-            if ( msgLevel(MSG::VERBOSE) ) 
+            if ( msgLevel(MSG::VERBOSE) )
               verbose() << " TrackSegment in " << (*iSeg).radiator() << " selected" << endreq;
 
             // keep track
@@ -230,11 +230,11 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
             // Set the average photon energy (for Pion hypothesis)
             newSegment->trackSegment().setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,Rich::Pion) );
 
-            // make RichRecRings for the mass hypotheses
-            if ( m_buildHypoRings ) m_ringCreator->newRings( newSegment );
+            // make RichRecRings for the mass hypotheses if requested
+            if ( m_buildHypoRings ) m_massHypoRings->newMassHypoRings( newSegment );
 
           } else {
-            if ( msgLevel(MSG::VERBOSE) ) 
+            if ( msgLevel(MSG::VERBOSE) )
               verbose() << " TrackSegment in " << (*iSeg).radiator() << " rejected" << endreq;
             delete newSegment;
             newSegment = NULL;
@@ -256,7 +256,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
           // Set parent information
           newTrack->setParentTrack( trTrack );
 
-          // Count selected tracks 
+          // Count selected tracks
           if ( msgLevel(MSG::DEBUG) ) ++(m_nTracks[trType].second);
 
         } else {
