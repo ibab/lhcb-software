@@ -1,8 +1,11 @@
-// $Id: CaloReco_load.cpp,v 1.3 2002-11-18 15:19:05 cattanem Exp $
+// $Id: CaloReco_load.cpp,v 1.4 2002-11-18 15:35:48 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/11/18 15:19:05  cattanem
+// add missing factory
+//
 // Revision 1.2  2002/11/17 17:09:26  ibelyaev
 //  new set of options and tools
 //
@@ -119,6 +122,7 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_TOOL        ( CaloSCorrectionLinear               ) ;
   DECLARE_TOOL        ( CaloSCorrectionDoubleTanh           ) ;
   DECLARE_TOOL        ( CaloSCorrectionComplex              ) ;
+  DECLARE_TOOL        ( CaloSCorrectionFinal                ) ;
 
   // From CaloTrackMatch package 
   DECLARE_TOOL        ( CaloTrackMatchPhoton                ) ;

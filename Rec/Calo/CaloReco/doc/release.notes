@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.8 2002-11-18 15:19:05 cattanem Exp $
+! $Id: release.notes,v 1.9 2002-11-18 15:35:48 cattanem Exp $
 ! Package     : Calo/CaloReco
 ! Responsible : Ivan Belyaev
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
@@ -6,6 +6,7 @@
 
 !======================== CaloReco v1r0 2002-11-18 =====================
 ! 2002-11-18 - Marco Cattaneo
+ - Add missing factory for CaloSCorrectionFinal Tool
  - Add missing factory for CaloHyposMerge algorithm
 
 ! 2002-11-18 - Ivan Belyaev
