@@ -1,0 +1,26 @@
+package GaussTools
+version v1r0
+
+branches         cmt src doc GaussTools
+
+use GaudiKernel  v12r* 
+use GEANT4       v2r4101p0 Sim 
+use GiGa         v9r*      Sim
+use GiGaCnv      v7r*      Sim
+
+# ============== Event ========================================================
+use Event        v3r*      Event
+use VeloEvent    v11r*     Event
+use MuonEvent    v2r*      Event
+
+include_dirs     $(GAUSSTOOLSROOT)
+
+# ============== component library ============================================
+library          GaussTools   *.cpp  Tracking/*.cpp RICH/*.cpp 
+apply_pattern    libraryShr library=GaussTools
+
+# ============= link options ==================================================
+apply_pattern    library_Clinkopts library=GaussTools
+
+# ============== private stuff ================================================
+apply_pattern library_Cshlibflags library=GaussTools
