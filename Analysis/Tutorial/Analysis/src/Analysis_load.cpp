@@ -1,22 +1,16 @@
-//====================================================================
-// Analysis_load.cpp
-//--------------------------------------------------------------------
-//
-//	Package   : Components
-//
-//	Author    : Markus Frank
-//  History   :
-// +---------+----------------------------------------------+---------
-// |    Date |                 Comment                      | Who     
-// +---------+----------------------------------------------+---------
-// | 21/07/99| Initial version                              | MF
-// +---------+----------------------------------------------+---------
-//====================================================================
-#define ANALYSIS_LOAD_CPP  1
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
+// Declare  OBJECT / CONVERTER / ALGORITHM / TOOL using the macros DECLARE_xxx
+// The statements are like that:
+//
+// DECLARE_CONVERTER( MyConverter );
+// DECLARE_OBJECT( DataObject );
+//
+// They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
+
 DECLARE_FACTORY_ENTRIES(Analysis) {
-  DECLARE_ALGORITHM(AnalysisAlgorithm)
-  DECLARE_TOOL(MCUtilityTool)
+
+  DECLARE_ALGORITHM( TutorialAlgorithm );
+
 }

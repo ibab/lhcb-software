@@ -1,22 +1,31 @@
-package Analysis
-version v3
+#============================================================================
+# Created    : 2004-11-04
+# Maintainer : P. Koppenburg
+#============================================================================
+package           Analysis
+version           v4
 
-branches src cmt doc
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src solution options
 
-use GaudiSys    v8*
-use LHCbEvent   v11* Event
+#============================================================================
+# Used packages.
+#============================================================================
+use DaVinciTools       v*    Phys
 
-# interface include files
-include_dirs ${ANALYSISROOT}
+#============================================================================
+# Component library building rule
+#============================================================================
+library          Analysis    ../src/*.cpp -import=AIDA
 
-# build the component library
-library Analysis ../src/*.cpp
-
+#============================================================================
 # define component library link options
-apply_pattern package_Clinkopts
-apply_pattern packageShr
+#============================================================================
+apply_pattern    package_Clinkopts
+apply_pattern    packageShr
 
-#===============================================================
+#============================================================================
 private
-
-apply_pattern package_Cshlibflags
+apply_pattern    package_Cshlibflags

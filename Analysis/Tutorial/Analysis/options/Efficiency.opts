@@ -1,0 +1,9 @@
+//
+ApplicationMgr.TopAlg += { "MCEffBuilder/EffMcTruth" };
+EffMcTruth.MCDecay =  "[B_s0 -> (phi(1020) -> ^K+ ^K-) (J/psi(1S) -> ^mu+ ^mu- {, gamma})]cc";
+
+ApplicationMgr.TopAlg += { "EffSelCheck/EffBs2JpsiPhi" };
+EffBs2JpsiPhi.Histograms = true;
+EffBs2JpsiPhi.MCDecay = "[B_s0 -> (phi(1020) -> ^K+ ^K-) (J/psi(1S) -> ^mu+ ^mu- {, gamma})]cc";
+EffBs2JpsiPhi.SelDecay = "[B_s0 -> (phi(1020) -> K+ K-) (J/psi(1S) -> mu+ mu-)]cc";
+

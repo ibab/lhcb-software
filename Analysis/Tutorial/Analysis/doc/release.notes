@@ -1,46 +1,27 @@
-Package Tutorial/Analysis
+!-----------------------------------------------------------------------------
+! Package     : Tutorial/Analysis
+! Responsible : P. Koppenburg
+! Purpose     : Analysis tutorial
+!-----------------------------------------------------------------------------
 
-! 20011019 - GCorti
-  - New package
+! 2004-11-08 - P. Koppenburg 
+  New implementation
+  
+  1) You are welcome to write the codee yourself, following the tutorial
+  
+  2) To get it to work quickly, go through the following:
+     
+    > cd $DAVINCIROOT/cmt/
+    # add  to requirements:
+         use Analysis v4 Tutorial  
+    > cmt config
+    > source setup.csh
+    > cd $ANALYSISROOT
+    > cp solution/TutorialAlgorithm.* src/
+    > cd cmt
+    > make
+    > DaVinci ../options/DVTutorial_1.opts
+  
+  3) To alos have the Phi, the Bs and the efficiency:   
 
-
-The executable Main.exe in Tutorial/Main/v3 should be available 
-Remember to set corresponding options in jobOptions.txt
-
-Necessary commands to run through the tutorial:
-
-cd ~/tutorial
-getpack Tutorial/Analysis v3
-
-cd ~tutorial/Tutorial/Analysis/v3/cmt
-cmt config
-cd ../Analysis
-cp ../Analysis.solution/*.* .
-cd ../src
-cp ../src.mctool/*.* .
-cd ../cmt
-gmake tag=Linuxdbx
-
-cd ~tutorial/Tutorial/Main/v3/cmt
-source setup.csh
-~tutorial/Tutorial/Main/v3/Linuxdbx/Main.exe ../options/jobOptions.txt
-
-cd ~tutorial/Tutorial/Analysis/v3/cmt
-cd ../src
-cp ../src.mymctool/*.* .
-cd ../cmt
-gmake tag=Linuxdbx
-cd ~tutorial/Tutorial/Main/v3/cmt
-~tutorial/Tutorial/Main/v3/Linuxdbx/Main.exe ../options/jobOptions.txt
-
-cd ~tutorial/Tutorial/Analysis/v3/cmt
-cd ../src
-cp ../src.solution/*.* .
-cd ../cmt
-gmake tag=Linuxdbx
-cd ~tutorial/Tutorial/Main/v3/cmt
-~tutorial/Tutorial/Main/v3/Linuxdbx/Main.exe ../options/jobOptions.txt
-
-
-
-
+    > DaVinci ../options/DVTutorial_2.opts
