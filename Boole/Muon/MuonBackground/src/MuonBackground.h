@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.4 2003-10-03 12:52:41 cattanem Exp $
+// $Id: MuonBackground.h,v 1.5 2004-04-14 13:49:50 cattanem Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -142,7 +142,7 @@ private:
   std::vector<MuBgDistribution*> m_logtimevsradial;  
   std::vector<MuBgDistribution*> m_lintimevsradial;
   std::vector<MuBgDistribution*> m_hitgap;
-  float m_luminosityFactor; 
+  double m_luminosityFactor; 
   IMuonTileXYZTool* m_pMuonTileXYZ ;
   IMuonGetInfoTool* m_pGetInfo ;
   //only to test the histos  

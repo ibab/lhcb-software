@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.18 2004-04-09 16:09:38 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.19 2004-04-14 13:49:50 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -212,13 +212,12 @@ StatusCode MuonBackground::execute() {
 
  
     KeyedContainer<MCMuonHit>* hitsContainer[DIMENSIONMAX]; // fix for VC6
-    {for(int station=0;station<m_stationNumber;station++){
+    for(int station=0;station<m_stationNumber;station++){
       for(int region=0;region<m_regionNumber;region++){          
         hitsContainer[station*m_regionNumber+region]
           =new KeyedContainer<MCMuonHit>();
       }
     }
-    }// Fix for VC6 scoping bug
     
     m_resultPointer = new std::vector<std::vector<int> > (collisions()) ;
 
@@ -235,7 +234,7 @@ StatusCode MuonBackground::execute() {
             
             // extract number of hits to be added
             int hitToAdd=0;
-            float floatHit=0;          
+            double floatHit = 0;          
             if(numsta[station]=="M1"){
               floatHit=(startingHits*(m_safetyFactor[station]));   
               hitToAdd=howManyHit( floatHit);            
@@ -275,7 +274,7 @@ StatusCode MuonBackground::execute() {
       for(int station=0;station<m_stationNumber;station++){        
         for (int multi=0;multi<m_gaps;multi++){
           int index=station*m_gaps+multi;
-          float floatHit=m_flatSpilloverHit[index]*m_luminosityFactor
+          double floatHit = m_flatSpilloverHit[index]*m_luminosityFactor
             *m_safetyFactor[station];         
           for (int fspill=0;fspill<=m_numberOfFlatSpill;fspill++){
             int hitToAdd=0;
@@ -294,7 +293,7 @@ StatusCode MuonBackground::execute() {
     msg<<MSG::DEBUG<<" starting saveing the ocntainer "<<endreq;
     
       
-    {for(int station=0;station<m_stationNumber;station++){
+    for(int station=0;station<m_stationNumber;station++){
       for(int region=0;region<m_regionNumber;region++){
         std::string path="/Event"+spill[ispill]+"/MC/Muon/"+numsta[station]+
           "/R"+numreg[region]+"/"+m_containerName;
@@ -305,7 +304,6 @@ StatusCode MuonBackground::execute() {
                                                  +region]);   
       }      
     }
-    } // Fix for VC6 scoping bug    
     delete m_resultPointer;    
   }  
   return StatusCode::SUCCESS;
@@ -359,20 +357,18 @@ StatusCode MuonBackground::initializeGeometry() {
   
   //  MuonGeometryStore::Parameters usefull( toolSvc(),detSvc(), msgSvc());
   
-  {for(int i=0;i<20;i++){       
+  for(int i=0;i<20;i++){       
     msg<<MSG::DEBUG<<" partition "<<i<<" chamber "<<m_pGetInfo<<endreq;    
     msg<<MSG::DEBUG<<" partition "<<i<<" chamber "<<
       m_pGetInfo->getChamberPerRegion(i)<<endreq;  
   }
-  } // Fix for VC6 scoping bug
   int gap=0;
   
-  {for(int i=0;i< (int)m_partition;i++){
+  for(int i=0;i< (int)m_partition;i++){
     gap=(gap>=(int)m_pGetInfo->getGapPerRegion((unsigned int)i))?
       gap:m_pGetInfo->getGapPerRegion(i);
     
   }
-  } // Fix for VC6 scoping bug
   
   m_gaps=gap;
   m_maxDimension=m_gaps*m_stationNumber;
@@ -392,7 +388,7 @@ StatusCode MuonBackground::initializeGeometry() {
 
   
   
-  {for(int i=0;i< m_partition;i++){
+  for(int i=0;i< m_partition;i++){
     m_numberOfGaps.push_back(m_pGetInfo->getGapPerRegion(i));    
     station=i/m_regionNumber;
     chamberInPartition=(int)m_pGetInfo->getChamberPerRegion(i);   
@@ -420,8 +416,6 @@ StatusCode MuonBackground::initializeGeometry() {
       chamberNumber++;      
     }
   }
-  } // Fix for VC6 scoping bug
-  
   
   return StatusCode::SUCCESS;
 }
@@ -657,10 +651,9 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
   
    int partCollision;
   
-  {for(int i=0;i<collisions();i++){
+  for(int i=0;i<collisions();i++){
     (*m_resultPointer)[i].resize(m_maxDimension);      
   }    
-  } // Fix for VC6 scoping bug
   std::vector<int> m_particleResult(m_maxDimension) ;    
   
   //all hits in the event have been added
@@ -685,13 +678,12 @@ StatusCode MuonBackground::calculateStartingNumberOfHits(int ispill) {
   
   //  msg<<MSG::INFO<<collisions()<<" "<<m_maxDimension<<endreq;
   
-  {for (int i=0; i<collisions();i++){
-    for(int j=0;j<m_maxDimension;j++){ 
+  //  for (int i=0; i<collisions();i++){
+  //    for(int j=0;j<m_maxDimension;j++){
       //    msg<<MSG::INFO<<"multiplicity for collison "
       //   <<i<<" "<< j<<" "<<((* m_resultPointer)[i])[j]<<endreq;
-    }      
-  }
-  } // Fix for VC6 scoping bug
+  //    }      
+  //  }
   
   
   msg<<MSG::DEBUG<<" --- end of routine "<< endreq;  
@@ -814,15 +806,14 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
   //first define all the relevant quantities .. if ok then crete the hit!
   //1) extract the radial position
   int index=station*m_gaps+multi;
-  float r = 0.;
-  float globalPhi = 0.;
+  float r = 0.F;
   unsigned int chamberIndex = 0;
   unsigned int regionIndex  = 0;  
   //  int partitionIndex;
   
-  float xpos = 0.;
-  float ypos = 0.;
-  float zpos = 0.;
+  float xpos = 0.F;
+  float ypos = 0.F;
+  float zpos = 0.F;
   msg<<MSG::DEBUG<<"new track"<<endreq;
   
   while(!hitInsideCha&&tryR<maxTryR){
@@ -832,7 +823,7 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
     tryPhi=0;  
     while(!hitInsideCha&&tryPhi<maxTryPhi){
       
-      globalPhi=((m_phiglobvsradial[index])->giveRND(r))*pi/180.0;
+      double globalPhi = ((m_phiglobvsradial[index])->giveRND(r))*pi/180.0;
       //3) test whether the r,phi is inside the sensitive chamber volume 
       // getVectorOfGapPosition(int station);
       //  transform r and phi in x,y
@@ -917,15 +908,12 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
     int maxTryPhiLoc=20;
     bool allHitsInsideCha=false;
     bool hitsToAdd;    
-    float phiLoc;
-    float thetaLoc;
     float xSlope,ySlope;
     for(tryPhiLoc=0;tryPhiLoc<maxTryPhiLoc&&!allHitsInsideCha;tryPhiLoc++){
       allHitsInsideCha=true;      
       hitsToAdd=false;      
-      phiLoc=((m_philocvsradial[index])->giveRND(r))*pi/180.0;
-      thetaLoc=((m_thetalocvsradial[index])->giveRND(r))*pi/180.0;    
-      //      thetaLoc=0;
+      double phiLoc=((m_philocvsradial[index])->giveRND(r))*pi/180.0;
+      double thetaLoc=((m_thetalocvsradial[index])->giveRND(r))*pi/180.0;    
       
       //define the more confortable slope in x-y direction 
       if(cos(thetaLoc)!=0){        
@@ -933,14 +921,14 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
         ySlope=sin(thetaLoc)*sin(phiLoc)/cos(thetaLoc);    
       }      
       else{
-        xSlope=1.0;
-        ySlope=1.0;
+        xSlope = 1.0F;
+        ySlope = 1.0F;
       }
         
       //define the z of the average gaps position
       float averageZ=m_pGetInfo->getStartPositionFirstGapZ(chamberGlobal)+
         (m_pGetInfo->getStartGapZ(firstGap,partition)+
-         m_pGetInfo->getStopGapZ(lastGap,partition))/2.0;
+         m_pGetInfo->getStopGapZ(lastGap,partition))/2.0F;
       for(int igap=0;igap<=multi;igap++){
        
         
@@ -961,9 +949,9 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
         xexit=xpos+xSlope*(zexit-averageZ);
         yentry=ypos+ySlope*(zentry-averageZ);
         yexit=ypos+ySlope*(zexit-averageZ);
-        float x=(xentry+xexit)/2.0;
-        float y=(yentry+yexit)/2.0;
-        float z=(zentry+zexit)/2.0;
+        float x = (xentry+xexit)/2.0F;
+        float y = (yentry+yexit)/2.0F;
+        float z = (zentry+zexit)/2.0F;
         
         
         DeMuonGasGap* pGasGap;
@@ -1002,7 +990,7 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
     
 
     if(hitsToAdd){
-      float scale=log(10.0);      
+      float scale = log(10.0F);      
       float time= exp(scale*(m_logtimevsradial[index])->giveRND(r));
       float timeBest=0;    
       //patch to extract the timein linear mode if needed other 
@@ -1014,7 +1002,7 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
       }
       float averageZ=m_pGetInfo->getStartPositionFirstGapZ(chamberGlobal)+
         (m_pGetInfo->getStartGapZ(firstGap,partition)+
-         m_pGetInfo->getStopGapZ(lastGap,partition))/2.0;
+         m_pGetInfo->getStopGapZ(lastGap,partition))/2.0F;
       for(int igap=0;igap<=multi;igap++){
         bool correct=true;        
         int gapNumber=gapHit[igap];
@@ -1031,9 +1019,9 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
         xexit=xpos+xSlope*(zexit-averageZ);
         yentry=ypos+ySlope*(zentry-averageZ);
         yexit=ypos+ySlope*(zexit-averageZ);
-        float x=(xentry+xexit)/2.0;
-        float y=(yentry+yexit)/2.0;
-        float z=(zentry+zexit)/2.0;
+        float x=(xentry+xexit)/2.0F;
+        float y=(yentry+yexit)/2.0F;
+        float z=(zentry+zexit)/2.0F;
         MCMuonHit* pHit = new MCMuonHit();
         pHit->setEntry(HepPoint3D(xentry,yentry,zentry));                     
         pHit->setExit(HepPoint3D(xexit,yexit,zexit));
@@ -1130,9 +1118,9 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
             float yup=ylow+ Ylenght;
             float zlow=zentry;
             float zup=zexit;
-            float xave=(xentry+xexit)/2.0;
-            float yave=(yentry+yexit)/2.0;
-            float zave=(zentry+zexit)/2.0;
+            float xave = (xentry+xexit)/2.0F;
+            float yave = (yentry+yexit)/2.0F;
+            float zave = (zentry+zexit)/2.0F;
             msg<<MSG::DEBUG<<" entry position "<<xentry<<" "<<yentry<<" "<<
               zentry<<endreq;
             msg<<MSG::DEBUG<<" exit position "<<xexit<<" "<<yexit<<" "<<

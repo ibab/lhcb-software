@@ -1,15 +1,18 @@
 !-----------------------------------------------------------------------------
 ! Package     : Muon/MuonBackground
 ! Responsible : Alessia Satta
-! Purpose     : Add varius types of background in the muon system : 
+! Purpose     : Add various types of background in the muon system : 
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
 
-!======================= MuonBackground v1r6 2004-04-09 
-=======================
+!======================= MuonBackground v1r6 2004-04-14 =======================
+! 2004-04-14 - Marco Cattaneo
+ - Change some floats to double, to fix data truncation warnings on Windows
+ - Remove VC6 hacks
+
 ! 2004-04-09 - Alessia Satta
  - Fix a bug in backgroudn addition to spillover events
- - Fix to work with (non-SICB) slippover events
+ - Fix to work with (non-SICB) spillover events
 
 !======================= MuonBackground v1r5 2004-01-07 =======================
 ! 2004-01-07 - Marco Cattaneo

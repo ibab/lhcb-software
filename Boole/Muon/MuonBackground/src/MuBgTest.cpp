@@ -1,4 +1,4 @@
-// $Id: MuBgTest.cpp,v 1.3 2003-10-01 14:20:34 asatta Exp $
+// $Id: MuBgTest.cpp,v 1.4 2004-04-14 13:49:50 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -227,11 +227,11 @@ StatusCode MuBgTest::fillHisto(int station,int region, int ispill,
       // collect information
       int chamber=(*i)->chamberID();
       int gap=(*i)->gapID();
-      float xpos=((*i)->entry().x()+(*i)->exit().x())/2.0;
-      float ypos=((*i)->entry().y()+(*i)->exit().y())/2.0;
-      float zpos=((*i)->entry().z()+(*i)->exit().z())/2.0;
-      float time=(*i)->timeOfFlight();
-      float tof=time-sqrt(xpos*xpos+ypos*ypos+zpos*zpos)/300.0;      
+      double xpos = ((*i)->entry().x()+(*i)->exit().x())/2.0;
+      double ypos = ((*i)->entry().y()+(*i)->exit().y())/2.0;
+      double zpos = ((*i)->entry().z()+(*i)->exit().z())/2.0;
+      double time = (*i)->timeOfFlight();
+      double tof = time-sqrt(xpos*xpos+ypos*ypos+zpos*zpos)/300.0;      
       if(tof<0.1)tof=0.1;
       
       msg<<MSG::DEBUG<<" hit "<<region<<" "<<
@@ -239,8 +239,8 @@ StatusCode MuBgTest::fillHisto(int station,int region, int ispill,
         xpos<<" "<<ypos<<endreq;
       int multi=0;
       stop=false;
-      float r=sqrt(xpos*xpos+ypos*ypos);
-      float phi;
+      double r = sqrt(xpos*xpos+ypos*ypos);
+      double phi;
       
       if(xpos!=0){phi=atan(ypos/xpos);
       }
@@ -253,9 +253,9 @@ StatusCode MuBgTest::fillHisto(int station,int region, int ispill,
       for (m=i+1;m<(hitPointer)->end()&&!stop;m++){
         int chamberloop=(*m)->chamberID();
         int gaploop=(*m)->gapID();
-        float xposloop=((*m)->entry().x()+(*m)->exit().x())/2.0;
-        float yposloop=((*m)->entry().y()+(*m)->exit().y())/2.0;
-        float timeloop=(*m)->timeOfFlight();
+        double xposloop = ((*m)->entry().x()+(*m)->exit().x())/2.0;
+        double yposloop = ((*m)->entry().y()+(*m)->exit().y())/2.0;
+        double timeloop = (*m)->timeOfFlight();
         msg<<MSG::DEBUG<<" hit in loop "<<chamberloop<<" "
            <<gaploop<<" "<<timeloop<<" "<<
           xposloop<<" "<<yposloop<<endreq;
