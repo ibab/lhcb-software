@@ -1,8 +1,11 @@
-// $Id: GiGaSvcIGiGaSetUpSvc.cpp,v 1.9 2002-05-07 12:21:36 ibelyaev Exp $ 
+// $Id: GiGaIGiGaSetUpSvc.cpp,v 1.1 2002-12-07 14:27:52 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/05/07 12:21:36  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 #define GIGA_GIGASVCIGIGASETUPSVC_CPP 1 
 // ============================================================================
@@ -31,13 +34,13 @@
 #include "GiGa/GiGaException.h"
 #include "GiGa/GiGaUtil.h"
 /// local 
-#include "GiGaSvc.h"
+#include "GiGa.h"
 
 
 // ============================================================================
 /**  @file
  * 
- *   Implementation of class GiGaSvc  
+ *   Implementation of class GiGa  
  *   all methods from abstract interface IGiGaSetUpSvc 
  *
  *   @author: Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -55,7 +58,7 @@
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
 // ============================================================================
-IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserDetectorConstruction   * obj )
+IGiGaSetUpSvc& GiGa::operator << ( G4VUserDetectorConstruction   * obj )
 {
   try
     {
@@ -86,7 +89,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserDetectorConstruction   * obj )
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
 // ============================================================================
-IGiGaSetUpSvc& GiGaSvc::operator << ( G4VPhysicalVolume             * obj )
+IGiGaSetUpSvc& GiGa::operator << ( G4VPhysicalVolume             * obj )
 { 
   try
     {
@@ -117,7 +120,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VPhysicalVolume             * obj )
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
 // ============================================================================
-IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPrimaryGeneratorAction * obj )
+IGiGaSetUpSvc& GiGa::operator << ( G4VUserPrimaryGeneratorAction * obj )
 { 
   try
     {
@@ -149,7 +152,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPrimaryGeneratorAction * obj )
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
 // ============================================================================
-IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPhysicsList            * obj )
+IGiGaSetUpSvc& GiGa::operator << ( G4VUserPhysicsList            * obj )
 {
   try
     {
@@ -182,7 +185,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4VUserPhysicsList            * obj )
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
 // ============================================================================
-IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserRunAction               * obj )
+IGiGaSetUpSvc& GiGa::operator << ( G4UserRunAction               * obj )
 {
   try
     {
@@ -215,7 +218,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserRunAction               * obj )
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
 // ============================================================================
-IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserEventAction             * obj )
+IGiGaSetUpSvc& GiGa::operator << ( G4UserEventAction             * obj )
 {
   try
     {
@@ -248,7 +251,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserEventAction             * obj )
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
 // ============================================================================
-IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserStackingAction          * obj ) 
+IGiGaSetUpSvc& GiGa::operator << ( G4UserStackingAction          * obj ) 
 {
   try
     {
@@ -280,7 +283,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserStackingAction          * obj )
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
 // ============================================================================
-IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserTrackingAction          * obj ) 
+IGiGaSetUpSvc& GiGa::operator << ( G4UserTrackingAction          * obj ) 
 {
   try
     {
@@ -311,7 +314,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserTrackingAction          * obj )
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
 // ============================================================================
-IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserSteppingAction          * obj ) 
+IGiGaSetUpSvc& GiGa::operator << ( G4UserSteppingAction          * obj ) 
 { 
   try
     {
@@ -340,7 +343,7 @@ IGiGaSetUpSvc& GiGaSvc::operator << ( G4UserSteppingAction          * obj )
  *  @return self-reference ot IGiGaSetUpSvc interface 
  */
 // ============================================================================
-StatusCode GiGaSvc::setConstruction ( G4VUserDetectorConstruction   * obj )
+StatusCode GiGa::setConstruction ( G4VUserDetectorConstruction   * obj )
 {
   try { *this << obj ; }
   catch ( const GaudiException& Excpt ) 
@@ -361,7 +364,7 @@ StatusCode GiGaSvc::setConstruction ( G4VUserDetectorConstruction   * obj )
  *  @return status code  
  */
 // ============================================================================
-StatusCode GiGaSvc::setDetector     ( G4VPhysicalVolume             * obj )
+StatusCode GiGa::setDetector     ( G4VPhysicalVolume             * obj )
 {
   try { *this << obj ; }
   catch ( const GaudiException& Excpt ) 
@@ -382,7 +385,7 @@ StatusCode GiGaSvc::setDetector     ( G4VPhysicalVolume             * obj )
  *  @return status code  
  */
 // ============================================================================
-StatusCode GiGaSvc::setGenerator    ( G4VUserPrimaryGeneratorAction * obj )
+StatusCode GiGa::setGenerator    ( G4VUserPrimaryGeneratorAction * obj )
 {
   try { *this << obj ; }
   catch ( const GaudiException& Excpt ) 
@@ -403,7 +406,7 @@ StatusCode GiGaSvc::setGenerator    ( G4VUserPrimaryGeneratorAction * obj )
  *  @return status code  
  */
 // ============================================================================
-StatusCode GiGaSvc::setPhysics      ( G4VUserPhysicsList            * obj )
+StatusCode GiGa::setPhysics      ( G4VUserPhysicsList            * obj )
 {
   try { *this << obj ; }
   catch ( const GaudiException& Excpt ) 
@@ -424,7 +427,7 @@ StatusCode GiGaSvc::setPhysics      ( G4VUserPhysicsList            * obj )
  *  @return status code  
  */
 // ============================================================================
-StatusCode GiGaSvc::setRunAction    ( G4UserRunAction               * obj )
+StatusCode GiGa::setRunAction    ( G4UserRunAction               * obj )
 {
   try { *this << obj ; }
   catch ( const GaudiException& Excpt ) 
@@ -445,7 +448,7 @@ StatusCode GiGaSvc::setRunAction    ( G4UserRunAction               * obj )
  *  @return status code  
  */
 // ============================================================================
-StatusCode GiGaSvc::setEvtAction    ( G4UserEventAction             * obj )
+StatusCode GiGa::setEvtAction    ( G4UserEventAction             * obj )
 {
   try { *this << obj ; }
   catch ( const GaudiException& Excpt ) 
@@ -466,7 +469,7 @@ StatusCode GiGaSvc::setEvtAction    ( G4UserEventAction             * obj )
  *  @return status code  
  */
 // ============================================================================
-StatusCode GiGaSvc::setStacking     ( G4UserStackingAction          * obj )
+StatusCode GiGa::setStacking     ( G4UserStackingAction          * obj )
 {
   try { *this << obj ; }
   catch ( const GaudiException& Excpt ) 
@@ -487,7 +490,7 @@ StatusCode GiGaSvc::setStacking     ( G4UserStackingAction          * obj )
  *  @return status code  
  */
 // ============================================================================
-StatusCode GiGaSvc::setTracking     ( G4UserTrackingAction          * obj )
+StatusCode GiGa::setTracking     ( G4UserTrackingAction          * obj )
 {
   try { *this << obj ; }
   catch ( const GaudiException& Excpt ) 
@@ -508,7 +511,7 @@ StatusCode GiGaSvc::setTracking     ( G4UserTrackingAction          * obj )
  *  @return status code  
  */
 // ============================================================================
-StatusCode GiGaSvc::setStepping     ( G4UserSteppingAction          * obj )
+StatusCode GiGa::setStepping     ( G4UserSteppingAction          * obj )
 {
   try { *this << obj ; }
   catch ( const GaudiException& Excpt ) 

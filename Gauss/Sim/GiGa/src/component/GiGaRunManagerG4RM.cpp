@@ -1,8 +1,11 @@
-// $Id: GiGaRunManagerG4RM.cpp,v 1.1 2002-09-26 18:05:30 ibelyaev Exp $ 
+// $Id: GiGaRunManagerG4RM.cpp,v 1.2 2002-12-07 14:27:52 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/09/26 18:05:30  ibelyaev
+//  repackaging: remove all concrete implementations
+//
 // Revision 1.5  2002/05/01 18:23:38  ibelyaev
 //  import errors/warnings/exception counterf from LHCb Calo software
 //
@@ -62,7 +65,7 @@ void GiGaRunManager::InitializeGeometry()
     } 
   else if ( 0 != geoSrc()                  )
     {
-      Print(" Geometry will be exxtracted from " + 
+      Print(" Geometry will be extracted from " + 
             GiGaUtil::ObjTypeName( geoSrc() ) ); 
       root = geoSrc()->world (); 
     }
@@ -73,10 +76,10 @@ void GiGaRunManager::InitializeGeometry()
       root = G4RunManager::userDetector->Construct() ;
     }
   else   
-    { Error(" There are NO ANY sources of Geometry information!"); }
+    { Error(" There are NO known sources of Geometry information!"); }
   //
   if( 0 == root ) 
-    { Exception("InitializeGeometry: no any geometry sources abvailable");}
+    { Exception("InitializeGeometry: NO 'geometry sources' abvailable");}
   ///  
   DefineWorldVolume( root ) ; 
   G4RunManager::geometryInitialized = true;

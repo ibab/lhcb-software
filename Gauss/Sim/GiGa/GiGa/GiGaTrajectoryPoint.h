@@ -1,19 +1,15 @@
+// $Id: GiGaTrajectoryPoint.h,v 1.10 2002-12-07 14:27:51 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.8  2001/07/23 13:11:44  ibelyaev
-/// the package restructurisation(II)
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef     GIGA_GIGATRAJECTORYPOINT_H
 #define     GIGA_GIGATRAJECTORYPOINT_H 1 
 // ============================================================================
-
-
+// CLHEP 
 #include "CLHEP/Vector/LorentzVector.h"
-
-/// base class form G4 
+// G4 
 #include "G4TrajectoryPoint.hh" 
 
 
@@ -31,38 +27,67 @@ class GiGaTrajectoryPoint: public G4TrajectoryPoint
   ///
 public:
   ///
-  inline GiGaTrajectoryPoint ();
-  inline GiGaTrajectoryPoint ( const Hep3Vector&  Pos  , const double& Time );
-  inline GiGaTrajectoryPoint ( const HepLorentzVector&    right );
-  inline GiGaTrajectoryPoint ( const GiGaTrajectoryPoint& right ); 
-  ///
-  virtual inline ~GiGaTrajectoryPoint();
-  ///
-  inline void* operator new    ( size_t );
-  inline void  operator delete ( void*  );
-  ///
+
+  /// default empty constructor
+  GiGaTrajectoryPoint ();
+  
+  /** constructor from position and time 
+   *  @param Pos position 
+   *  @param Time time 
+   */
+  GiGaTrajectoryPoint ( const Hep3Vector&  Pos   , const double&      Time );
+
+  /** constructor from position and time 
+   *  @param Time time 
+   *  @param Pos position 
+   */
+  GiGaTrajectoryPoint ( const double&      Time  , const Hep3Vector&  Pos  );
+
+  /** constructor from 4-vector
+   *  @param right 4-vector
+   */
+  GiGaTrajectoryPoint ( const HepLorentzVector&    right );
+  
+  /** copy constructor 
+   *  @param right object to be copied 
+   */
+  GiGaTrajectoryPoint ( const GiGaTrajectoryPoint& right ); 
+  
+  /// destructor (virtual)
+  virtual ~GiGaTrajectoryPoint();
+
+  /** clone method (virtual constructor)
+   *  @return new trajectory point
+   */
+  GiGaTrajectoryPoint*    clone      () const 
+  { return new GiGaTrajectoryPoint( *this ); }
+  
+  /// overloaded "new"
+  void* operator new    ( size_t );
+  
+  /// overloaded "delete"
+  void  operator delete ( void*  );
+  
+  /// comparison,needed by G4 
   bool operator==( const GiGaTrajectoryPoint& right ) 
   { return (&right) == this ; } /// ?
+  
   ///
   inline const double&           time       () const        
   { return m_time                ; } 
-  inline GiGaTrajectoryPoint&    setTime    ( double Time ) 
-  { m_time = Time ; return *this ; }  
   inline const double&           GetTime    () const        
   { return time()                ; } 
+  inline GiGaTrajectoryPoint&    setTime    ( double Time ) 
+  { m_time = Time ; return *this ; }  
   inline const HepLorentzVector  fourVector () const        
   { return HepLorentzVector( GetPosition() , GetTime() ) ; };  
-  ///
-  inline GiGaTrajectoryPoint*    clone      () const ;
   ///
 private:
   ///
   double m_time; 
   ///
 };
-///
-#include "GiGa/GiGaTrajectoryPoint.icpp"
-///
+// ============================================================================
 
 // ============================================================================
 #endif  ///<  GIGA_GIGATRAJECTORYPOINT_H

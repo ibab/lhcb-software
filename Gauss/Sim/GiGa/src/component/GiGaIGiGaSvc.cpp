@@ -1,8 +1,11 @@
-// $Id: GiGaSvcIGiGaSvc.cpp,v 1.7 2002-05-01 18:23:39 ibelyaev Exp $ 
+// $Id: GiGaIGiGaSvc.cpp,v 1.1 2002-12-07 14:27:52 ibelyaev Exp $ 
 // ================================`============================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ================================`============================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/01 18:23:39  ibelyaev
+//  import errors/warnings/exception counterf from LHCb Calo software
+//
 // ============================================================================
 #define GIGA_GIGASVCIGIGASVC_CPP 1 
 // ============================================================================
@@ -23,13 +26,16 @@
 /// GiGa 
 #include    "GiGa/GiGaException.h"
 /// local 
-#include    "GiGaSvc.h"
+#include    "GiGa.h"
 // G4 
 #include    "G4Event.hh"
+#include    "G4VHitsCollection.hh"
+#include    "G4HCofThisEvent.hh"
+#include    "G4SDManager.hh"
 
 // ============================================================================
 /**  @file 
- *   Implementation of class GiGaSvc  
+ *   Implementation of class GiGa  
  *   all methods from abstract interface IGiGaSvc 
  *
  *   @author: Vanya Belyaev 
@@ -47,7 +53,7 @@
  *  @return  self-reference ot IGiGaSvc interface 
  */
 // ============================================================================
-IGiGaSvc&   GiGaSvc::operator <<         ( G4PrimaryVertex * vertex   )
+IGiGaSvc&   GiGa::operator <<         ( G4PrimaryVertex * vertex   )
 {
   ///
   StatusCode sc = prepareTheEvent( vertex ) ; 
@@ -68,7 +74,7 @@ IGiGaSvc&   GiGaSvc::operator <<         ( G4PrimaryVertex * vertex   )
  *  @return  self-reference ot IGiGaSvc interface 
  */
 // ============================================================================
-IGiGaSvc& GiGaSvc::operator >> ( const G4Event*         & event        )    
+IGiGaSvc& GiGa::operator >> ( const G4Event*         & event        )    
 {
   ///
   StatusCode sc = retrieveTheEvent( event ) ; 
@@ -87,7 +93,7 @@ IGiGaSvc& GiGaSvc::operator >> ( const G4Event*         & event        )
  *  @return  self-reference ot IGiGaSvc interface 
  */
 // ============================================================================
-IGiGaSvc& GiGaSvc::operator >> ( G4HCofThisEvent*       & collections  )
+IGiGaSvc& GiGa::operator >> ( G4HCofThisEvent*       & collections  )
 {
   ///
   const G4Event* event = 0 ; 
@@ -108,12 +114,36 @@ IGiGaSvc& GiGaSvc::operator >> ( G4HCofThisEvent*       & collections  )
  *  @return  self-reference ot IGiGaSvc interface 
  */
 // ============================================================================
-IGiGaSvc& GiGaSvc::operator >> ( CollectionPair         & collection   )
+IGiGaSvc& GiGa::operator >> ( CollectionPair         & collection   )
 {
   G4HCofThisEvent* collections = 0 ; 
   *this >> collections             ; 
   collection.second = 
     ( 0 != collections)  ? collections->GetHC( collection.first ) : 0 ; 
+  ///
+  return *this ;  
+}; 
+// ============================================================================
+
+// ============================================================================
+/** get the concrete hit collection from GiGa/G4 
+ *                  implementation of IGiGaSvc abstract interface 
+ *
+ *  NB: errors are reported through exception thrown
+ * 
+ *  @param   collection  reference to collection pair   
+ *  @return  self-reference ot IGiGaSvc interface 
+ */
+// ============================================================================
+IGiGaSvc& GiGa::operator >> ( CollectionNamePair         & collection   )
+{
+  // get the unique collection ID from collection name 
+  G4SDManager* sdm = G4SDManager::GetSDMpointer () ;
+  Assert( 0 != sdm , " G4SDManager* poits to NULL ");
+  const int colID = sdm -> GetCollectionID( collection.first );
+  CollectionPair col( colID , (G4VHitsCollection *) 0 );
+  *this >> col ;
+  collection.second = col.second ;
   ///
   return *this ;  
 }; 
@@ -129,7 +159,7 @@ IGiGaSvc& GiGaSvc::operator >> ( CollectionPair         & collection   )
  *  @return  self-reference ot IGiGaSvc interface 
  */
 // ============================================================================
-IGiGaSvc& GiGaSvc::operator >> ( G4TrajectoryContainer* & trajectories )
+IGiGaSvc& GiGa::operator >> ( G4TrajectoryContainer* & trajectories )
 {
   ///
   const G4Event* event = 0 ; 
@@ -148,7 +178,7 @@ IGiGaSvc& GiGaSvc::operator >> ( G4TrajectoryContainer* & trajectories )
  *  @return status code  
  */
 // ============================================================================
-StatusCode  GiGaSvc::addPrimaryKinematics( G4PrimaryVertex  * vertex   ) 
+StatusCode  GiGa::addPrimaryKinematics( G4PrimaryVertex  * vertex   ) 
 {
   ///
   StatusCode sc(StatusCode::FAILURE);
@@ -169,7 +199,7 @@ StatusCode  GiGaSvc::addPrimaryKinematics( G4PrimaryVertex  * vertex   )
  *  @return status code  
  */
 // ============================================================================
-StatusCode GiGaSvc::retrieveEvent  ( const G4Event*          & event )
+StatusCode GiGa::retrieveEvent  ( const G4Event*          & event )
 { 
   ///
   StatusCode sc( StatusCode::FAILURE ); 
@@ -190,7 +220,7 @@ StatusCode GiGaSvc::retrieveEvent  ( const G4Event*          & event )
  *  @return  status code  
  */
 // ============================================================================
-StatusCode GiGaSvc::retrieveHitCollections  ( G4HCofThisEvent* & collections  )
+StatusCode GiGa::retrieveHitCollections  ( G4HCofThisEvent* & collections  )
 {
   ///
   StatusCode sc( StatusCode::FAILURE ); 
@@ -211,7 +241,28 @@ StatusCode GiGaSvc::retrieveHitCollections  ( G4HCofThisEvent* & collections  )
  *  @return  status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::retrieveHitCollection  ( CollectionPair & collection   )
+StatusCode GiGa::retrieveHitCollection  ( CollectionPair & collection   )
+{
+  ///
+  StatusCode sc( StatusCode::FAILURE ); 
+  ///
+  ___GIGA_TRY___
+    { *this >> collection       ; } 
+  ___GIGA_CATCH_PRINT_AND_RETURN___(name(),"getHits",msgSvc(),chronoSvc(),sc); 
+  ///
+  return StatusCode::SUCCESS; 
+};
+// ============================================================================
+
+// ============================================================================
+/** get the concrete hit collection from GiGa/G4 
+ *                  implementation of IGiGaSvc abstract interface 
+ *
+ *  @param   collection  reference to collection pair   
+ *  @return  status code 
+ */
+// ============================================================================
+StatusCode GiGa::retrieveHitCollection  ( CollectionNamePair & collection   )
 {
   ///
   StatusCode sc( StatusCode::FAILURE ); 
@@ -234,7 +285,7 @@ StatusCode GiGaSvc::retrieveHitCollection  ( CollectionPair & collection   )
  *  @return  self-reference ot IGiGaSvc interface 
  */
 // ============================================================================
-StatusCode GiGaSvc::retrieveTrajectories( G4TrajectoryContainer*& trajectories)
+StatusCode GiGa::retrieveTrajectories( G4TrajectoryContainer*& trajectories)
 {
   ///
   StatusCode sc( StatusCode::FAILURE ); 

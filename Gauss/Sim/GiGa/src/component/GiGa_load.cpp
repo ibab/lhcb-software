@@ -1,8 +1,11 @@
-// $Id: GiGa_load.cpp,v 1.14 2002-09-26 18:05:37 ibelyaev Exp $
+// $Id: GiGa_load.cpp,v 1.15 2002-12-07 14:27:53 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2002/09/26 18:05:37  ibelyaev
+//  repackaging: remove all concrete implementations
+//
 // Revision 1.13  2002/05/07 12:21:37  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -32,9 +35,9 @@
 void GiGa_load() 
 { 
   /// GiGa Service itself
-  DECLARE_SERVICE         (    GiGaSvc                 ); 
+  DECLARE_SERVICE         (    GiGa                    ) ; 
   /// Run manager  (GiGa)
-  DECLARE_GiGaFactory     (    GiGaRunManager          );
+  DECLARE_GiGaFactory     (    GiGaRunManager          ) ;
 };
 
 // ============================================================================

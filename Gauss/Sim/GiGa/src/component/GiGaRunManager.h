@@ -1,8 +1,11 @@
-// $Id: GiGaRunManager.h,v 1.3 2002-09-26 18:05:30 ibelyaev Exp $ 
+// $Id: GiGaRunManager.h,v 1.4 2002-12-07 14:27:52 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/09/26 18:05:30  ibelyaev
+//  repackaging: remove all concrete implementations
+//
 // Revision 1.2  2002/05/07 12:21:34  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -264,16 +267,25 @@ private:
   
 private: 
   
-  bool                       m_krn_st       ;
-  bool                       m_run_st       ;
-  bool                       m_pre_st       ;
-  bool                       m_pro_st       ;
-  bool                       m_uis_st       ;
+  bool                       m_krn_st          ;
+  bool                       m_run_st          ;
+  bool                       m_pre_st          ;
+  bool                       m_pro_st          ;
+  bool                       m_uis_st          ;
   
-  G4VPhysicalVolume*         m_rootGeo      ;
-  IGiGaGeoSrc*               m_geoSrc       ;
-  G4UIsession*               m_g4UIsession  ;
-  
+  G4VPhysicalVolume*         m_rootGeo         ;
+  IGiGaGeoSrc*               m_geoSrc          ;
+  G4UIsession*               m_g4UIsession     ;
+
+  bool                       m_delDetConstr    ;
+  bool                       m_delPrimGen      ;
+  bool                       m_delPhysList     ;
+  bool                       m_delRunAction    ;
+  bool                       m_delEventAction  ;
+  bool                       m_delStackAction  ;
+  bool                       m_delTrackAction  ;
+  bool                       m_delStepAction   ;
+
 };
 // ============================================================================
 

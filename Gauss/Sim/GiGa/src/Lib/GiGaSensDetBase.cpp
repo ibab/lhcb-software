@@ -1,8 +1,11 @@
-// $Id: GiGaSensDetBase.cpp,v 1.5 2002-08-26 12:27:58 witoldp Exp $ 
+// $Id: GiGaSensDetBase.cpp,v 1.6 2002-12-07 14:27:51 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/08/26 12:27:58  witoldp
+// small changed to GiGaSensDetBase
+//
 // Revision 1.4  2002/05/07 12:21:34  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -17,6 +20,7 @@
 #include "GaudiKernel/StreamBuffer.h"
 // GiGa
 #include "GiGa/GiGaSensDetBase.h" 
+#include "GiGa/GiGaUtil.h" 
 
 /** @file 
  *  impementation of class GiGaSensDetBase
@@ -24,6 +28,16 @@
  *  @author Vanya Belyaev 
  *  @date   22/07/2001 
  */
+
+namespace GiGaSensDetBaseLocal
+{
+#ifdef GIGA_DEBUG
+  /** @var   s_Counter
+   *  static instance counter 
+   */
+  static GiGaUtil::InstanceCounter<GiGaSensDetBase> s_Counter ;
+#endif   
+};
 
 // ============================================================================
 /** standard constructor 
@@ -49,14 +63,21 @@ GiGaSensDetBase::GiGaSensDetBase
   declareInterface<IGiGaSensDet> ( this );
   declareProperty( "Active"       , m_active   );
   declareProperty( "DetectorPath" , m_detPath   );
+#ifdef GIGA_DEBUG
+  GiGaSensDetBaseLocal::s_Counter.increment () ;
+#endif 
 };
 // ============================================================================
 
 // ============================================================================
 // virtual destructor 
 // ============================================================================
-GiGaSensDetBase::~GiGaSensDetBase(){};
-
+GiGaSensDetBase::~GiGaSensDetBase()
+{
+#ifdef GIGA_DEBUG
+  GiGaSensDetBaseLocal::s_Counter.decrement () ;
+#endif 
+};
 // ============================================================================
 /** initialize the sensitive detector  
  *  @see GiGaBase 

@@ -1,14 +1,8 @@
-// $Id: GiGaSvc.h,v 1.10 2002-12-04 21:12:51 ibelyaev Exp $ 
+// $Id: GiGa.h,v 1.1 2002-12-07 14:27:52 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2002/05/07 12:21:36  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
-// Revision 1.8  2002/05/01 18:23:39  ibelyaev
-//  import errors/warnings/exception counterf from LHCb Calo software
-//
 // ============================================================================
 #ifndef       GIGA_GIGASVC_H
 #define       GIGA_GIGASVC_H   1 
@@ -50,7 +44,7 @@ class     IGiGaVisManager                 ;
 class     G4UImanager                     ; 
 class     G4VVisManager                   ;
 
-/**  @class GiGaSvc GiGaSvc.h 
+/**  @class GiGa GiGa.h 
  *    
  *   implementation of abstract Interfaces IGiGaSvc          
  *   (for event-by-event communications with Geant4)         
@@ -59,12 +53,12 @@ class     G4VVisManager                   ;
  *    @author: Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 
-class GiGaSvc: public         Service       , 
+class GiGa: public         Service       , 
                virtual public IGiGaSvc      ,
                virtual public IGiGaSetUpSvc 
 {
   /// friend factory 
-  friend class SvcFactory<GiGaSvc>;
+  friend class SvcFactory<GiGa>;
   ///
  public:
   /// useful typedef 
@@ -77,11 +71,11 @@ class GiGaSvc: public         Service       ,
    *  @param name instrance name 
    *  @param svc  pointer to service locator 
    */
-  GiGaSvc( const std::string& name , 
-           ISvcLocator*       svc  );
-
+  GiGa( const std::string& name , 
+        ISvcLocator*       svc  );
+  
   /// (virtual destructor)
-  virtual ~GiGaSvc();
+  virtual ~GiGa();
   ///
 
  public:
@@ -125,6 +119,16 @@ class GiGaSvc: public         Service       ,
    *  @return  self-reference ot IGiGaSvc interface 
    */
   virtual IGiGaSvc& operator >> ( CollectionPair         & collection   ); 
+
+  /** get the concrete hit collection from GiGa/G4 
+   *                  implementation of IGiGaSvc abstract interface 
+   *
+   *  NB: errors are reported through exception thrown
+   * 
+   *  @param   collection  reference to collection pair   
+   *  @return  self-reference ot IGiGaSvc interface 
+   */
+  virtual IGiGaSvc& operator >> ( CollectionNamePair     & collection   ); 
   
   /** get all trajectories(trajectory container) from GiGa/G4 
    *                  implementation of IGiGaSvc abstract interface 
@@ -169,6 +173,15 @@ class GiGaSvc: public         Service       ,
    */
   virtual StatusCode 
   retrieveHitCollection  ( CollectionPair          & collection   );
+
+  /** get the concrete hit collection from GiGa/G4 
+   *                  implementation of IGiGaSvc abstract interface 
+   *
+   *  @param   collection  reference to collection pair   
+   *  @return  status code 
+   */
+  virtual StatusCode 
+  retrieveHitCollection  ( CollectionNamePair       & collection   );
   
   /** get all trajectories(trajectory container) from GiGa/G4 
    *                  implementation of IGiGaSvc abstract interface 
@@ -642,7 +655,7 @@ private:
  *  @param sc          assertion status code 
  */
 // ============================================================================
-inline StatusCode  GiGaSvc::Assert
+inline StatusCode  GiGa::Assert
 ( bool               assertion , 
   const std::string& msg       , 
   const StatusCode&  sc        ) const 
@@ -659,7 +672,7 @@ inline StatusCode  GiGaSvc::Assert
  *  @param sc          assertion status code 
  */
 // ============================================================================
-inline StatusCode  GiGaSvc::Assert
+inline StatusCode  GiGa::Assert
 ( bool               assertion , 
   const char*        msg       , 
   const StatusCode&  sc        ) const 

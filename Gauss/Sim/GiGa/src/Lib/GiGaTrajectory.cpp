@@ -1,25 +1,19 @@
+// $Id: GiGaTrajectory.cpp,v 1.9 2002-12-07 14:27:51 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.7  2001/08/12 15:42:50  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.6  2001/07/23 13:12:12  ibelyaev
-/// the package restructurisation(II)
-///
-/// Revision 1.5  2001/07/15 20:54:26  ibelyaev
-/// package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #define  GIGA_GIGATRAJECTORY_CPP 1 
 // ============================================================================
 /// from GiGa
 #include "GiGa/GiGaTrajectory.h"
+#include "GiGa/GiGaUtil.h"
 /// from Geant4 
 #include "G4Polyline.hh"
 #include "G4Circle.hh"
 #include "G4Colour.hh"
+#include "G4Allocator.hh"
 #include "G4VisAttributes.hh"
 #include "G4VVisManager.hh"
 ///
@@ -28,6 +22,137 @@
 #include "G4Track.hh"
 #include "G4SteppingManager.hh"
 
+// ============================================================================
+/** @file 
+ *  iplementation of class GiGaTrajectory
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @date    22/02/2001 
+ */
+// ============================================================================
+
+// ============================================================================
+namespace GiGaTrajectoryLocal
+{
+  // ==========================================================================
+  /** @var s_Allocator 
+   *  G4 allocator for GiGaTrakectory objects  
+   */
+  // ==========================================================================
+  G4Allocator<GiGaTrajectory> s_Allocator;
+  // ==========================================================================
+  /** @var s_Counter 
+   *  static instance counter
+   */
+  // ==========================================================================
+#ifdef GIGA_DEBUG
+  static GiGaUtil::InstanceCounter<GiGaTrajectory> s_Counter ;
+#endif 
+  // ==========================================================================
+};
+// ============================================================================
+
+// ============================================================================
+/// constructor 
+// ============================================================================
+GiGaTrajectory::GiGaTrajectory (   )
+  : G4VTrajectory                     (   ) 
+  , std::vector<GiGaTrajectoryPoint*> (   ) 
+  , m_trackID                         ( 0 ) 
+  , m_parentID                        ( 0 )
+  , m_partDef                         ( 0 ) 
+  , m_4vect                           (   )
+{
+#ifdef GIGA_DEBUG
+  GiGaTrajectoryLocal::s_Counter.increment () ;
+#endif 
+};
+// ============================================================================
+
+// ============================================================================
+/** constructor 
+ *  @param aTrack pointer to the track
+ */
+// ============================================================================
+GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
+  : G4VTrajectory(                                              ) 
+  , std::vector<GiGaTrajectoryPoint*>   (                       )
+  , m_trackID    ( aTrack->GetTrackID        ()                 ) 
+  , m_parentID   ( aTrack->GetParentID       ()                 )
+  , m_partDef    ( aTrack->GetDefinition     ()                 ) 
+  , m_4vect      ( aTrack->GetDynamicParticle()->Get4Momentum() )
+{
+  ///
+  GiGaTrajectoryPoint* firstPoint = 
+    new GiGaTrajectoryPoint( aTrack->GetPosition() , aTrack->GetGlobalTime() );
+  push_back( firstPoint );
+  ///
+#ifdef GIGA_DEBUG
+  GiGaTrajectoryLocal::s_Counter.increment () ;
+#endif
+};
+// ============================================================================
+
+// ============================================================================
+/** constructor 
+ *  @param right object to be copied 
+ */
+// ============================================================================
+inline GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
+  : G4VTrajectory                     (                              )
+  , std::vector<GiGaTrajectoryPoint*> (                              )
+  , m_trackID                         ( right.trackID       ()       )
+  , m_parentID                        ( right.parentID      ()       )
+  , m_partDef                         ( right.partDef       ()       )
+  , m_4vect                           ( right.fourMomentum  ()       )
+{
+  clear();
+  for( const_iterator it = right.begin() ; right.end() != it ; ++it ) 
+    {  push_back( (*it)->clone() ) ; }
+#ifdef GIGA_DEBUG
+  GiGaTrajectoryLocal::s_Counter.increment () ;
+#endif
+};
+// ============================================================================
+
+// ============================================================================
+/// destructor 
+// ============================================================================
+GiGaTrajectory::~GiGaTrajectory()
+{
+  /// delete all points 
+  for( iterator it = begin() ; it != end() ; ++it )
+    { if( 0 != *it ) { delete *it ; *it = 0 ; } }  
+  /// clear container 
+  clear();
+  ///
+#ifdef GIGA_DEBUG
+  GiGaTrajectoryLocal::s_Counter.decrement () ;
+#endif
+};
+// ============================================================================
+
+// ============================================================================
+/** clone (virtual constructor) method 
+ *  @return clone of current trajectory
+ */
+// ============================================================================
+GiGaTrajectory* GiGaTrajectory::clone() const 
+{ return new GiGaTrajectory( *this ); }
+// ============================================================================
+
+// ============================================================================
+/// overloaded new  operator 
+// ============================================================================
+void* GiGaTrajectory::operator new(size_t)
+{ return (void*) GiGaTrajectoryLocal::s_Allocator.MallocSingle(); };
+// ============================================================================
+
+// ============================================================================
+/// overloaded delete operator 
+// ============================================================================
+void  GiGaTrajectory::operator delete(void* traj )
+{ GiGaTrajectoryLocal::s_Allocator.FreeSingle( (GiGaTrajectory*) traj ); };
+// ============================================================================
 
 ///
 void GiGaTrajectory::DrawTrajectory  ( G4int i_mode ) const 
@@ -77,33 +202,33 @@ void GiGaTrajectory::AppendStep      ( const G4Step*  step )
   /// 
   if     ( empty()                                       )  
     { append = true ; } 
-  /// if some information is not available, 
-  /// follow ordinary routine and just add the step
-  else if( 0 == step->GetTrack()                      || 
-	   0 == stepMgr()                             || 
-	   step != stepMgr()->GetStep()               || 
-	   step->GetTrack() != stepMgr()->GetTrack    () ) 
-    { append = true ; }   
+  // if some information is not available
+  // follow ordinary routine and just add the step
+  // else if( 0 == step->GetTrack()                      || 
+  //          0 == stepMgr()                             || 
+  //         step != stepMgr()->GetStep()               || 
+  //         step->GetTrack() != stepMgr()->GetTrack    () ) 
+  //  { append = true ; }   
   /// if  it is the last step, the step must be appended 
   else if ( fAlive != step->GetTrack()->GetTrackStatus() ) 
     { append = true ; }
   //   if  there are some secondaries, the step must be appended  
   //   else if ( 0 != stepMgr()->GetSecondary()            && 
   //  	    0 != stepMgr()->GetSecondary()->size   () ) { append = true ; }
-  /// for optical photons also the reflection/refraction step must be appended  
+  // for optical photons also the reflection/refraction step must be appended  
   else if ( step->GetPostStepPoint()->GetStepStatus() == 
-	    fGeomBoundary &&
-	    step->GetTrack()->GetDefinition        () == 
-	    G4OpticalPhoton::OpticalPhoton         ()    ) { append = true ; }
+            fGeomBoundary &&
+            step->GetTrack()->GetDefinition        () == 
+            G4OpticalPhoton::OpticalPhoton         ()    ) { append = true ; }
   ///
   if( append && 
       ( empty()                                                              || 
-	step->GetPostStepPoint()->GetGlobalTime () != back()->GetTime     () ||
-	step->GetPostStepPoint()->GetPosition() != back()->GetPosition () ) ) 
+        step->GetPostStepPoint()->GetGlobalTime () != back()->GetTime     () ||
+        step->GetPostStepPoint()->GetPosition() != back()->GetPosition () ) ) 
     {
       GiGaTrajectoryPoint* p = 
-	new GiGaTrajectoryPoint( step->GetPostStepPoint()->GetPosition   () ,
-				 step->GetPostStepPoint()->GetGlobalTime () ) ; 
+        new GiGaTrajectoryPoint( step->GetPostStepPoint()->GetPosition   () ,
+                                 step->GetPostStepPoint()->GetGlobalTime () ) ; 
       push_back( p );
       ///
     };
@@ -129,7 +254,9 @@ void GiGaTrajectory::MergeTrajectory ( G4VTrajectory* st )
 };
 ///
 
-
+// ============================================================================
+// The END 
+// ============================================================================
 
 
 

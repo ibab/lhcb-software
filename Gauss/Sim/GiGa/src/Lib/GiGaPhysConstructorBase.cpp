@@ -4,6 +4,7 @@
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa
 #include "GiGa/GiGaPhysConstructorBase.h"
+#include "GiGa/GiGaUtil.h"
 
 // ============================================================================
 /** @file 
@@ -12,6 +13,16 @@
  *  @author Witek Pokorski   Witold.Pokorski@cern.ch 
  */
 // ============================================================================
+
+namespace GiGaPhysConstructorBaseLocal
+{
+#ifdef GIGA_DEBUG
+  /** @var   s_Counter
+   *  static instance counter 
+   */
+  static GiGaUtil::InstanceCounter<GiGaPhysConstructorBase> s_Counter ;
+#endif   
+};
 
 // ============================================================================
 /** standard constructor
@@ -29,13 +40,21 @@ GiGaPhysConstructorBase::GiGaPhysConstructorBase
   : GiGaBase          ( type , name , parent  )
 { 
   declareInterface<IGiGaPhysConstructor> (this);
+#ifdef GIGA_DEBUG
+  GiGaPhysConstructorBaseLocal::s_Counter.increment () ;
+#endif
 };
 // ============================================================================
 
 // ============================================================================
 /// destructor
 // ============================================================================
-GiGaPhysConstructorBase::~GiGaPhysConstructorBase(){};
+GiGaPhysConstructorBase::~GiGaPhysConstructorBase()
+{
+#ifdef GIGA_DEBUG
+  GiGaPhysConstructorBaseLocal::s_Counter.decrement () ;
+#endif 
+};
 // ============================================================================
 
 // ============================================================================

@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.38 2002-12-04 21:12:50 ibelyaev Exp $ 
+# $Id: requirements,v 1.39 2002-12-07 14:27:51 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package  GiGa
-version  v11r2
+version  v12r0
 
 # ============== package structure ============================================ 
 branches         cmt src doc GiGa
@@ -20,6 +20,11 @@ library          GiGaLib           Lib/*.cpp
 
 # ============== component library ============================================
 library          GiGa              component/*.cpp
+
+# =============== some additional cpp flags ===================================
+macro_append GiGa_pp_cppflags  ""                 \
+             Win32Debug        ' /D"GIGA_DEBUG" ' \
+             debug             "  -DGIGA_DEBUG  " 
 
 # ============== standard patterns ============================================
 apply_pattern    component_library library=GiGa 

@@ -1,14 +1,12 @@
-// $Id: GiGaEventActionBase.cpp,v 1.9 2002-05-07 12:21:33 ibelyaev Exp $
+// $Id: GiGaEventActionBase.cpp,v 1.10 2002-12-07 14:27:51 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.8  2002/04/25 13:02:04  ibelyaev
-//  small update
-//
 // ============================================================================
 // GiGa 
 #include "GiGa/GiGaEventActionBase.h"
+#include "GiGa/GiGaUtil.h"
 
 // ============================================================================
 /** @file 
@@ -18,6 +16,16 @@
  *  @date 6 May 2002 
  */
 // ============================================================================
+
+namespace GiGaEventActionBaseLocal
+{
+#ifdef GIGA_DEBUG
+  /** @var   s_Counter
+   *  static instance counter 
+   */
+  static GiGaUtil::InstanceCounter<GiGaEventActionBase> s_Counter ;
+#endif   
+};
 
 // ============================================================================
 /** standard  constructor
@@ -33,13 +41,23 @@ GiGaEventActionBase::GiGaEventActionBase
   const std::string& nick , 
   const IInterface*  svc  )
   : GiGaBase          ( type , nick , svc ) 
-{ declareInterface<IGiGaEventAction> (this); };
+{ 
+  declareInterface<IGiGaEventAction> (this); 
+#ifdef GIGA_DEBUG
+  GiGaEventActionBaseLocal::s_Counter.increment () ;
+#endif 
+};
 // ============================================================================
 
 // ============================================================================
 // virtual destructor
 // ============================================================================
-GiGaEventActionBase::~GiGaEventActionBase(){};
+GiGaEventActionBase::~GiGaEventActionBase()
+{
+#ifdef GIGA_DEBUG
+  GiGaEventActionBaseLocal::s_Counter.decrement () ;
+#endif 
+};
 // ============================================================================
 
 // ============================================================================

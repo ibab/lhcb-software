@@ -1,14 +1,8 @@
-// $Id: GiGaBase.cpp,v 1.13 2002-12-04 12:57:00 ibelyaev Exp $
+// $Id: GiGaBase.cpp,v 1.14 2002-12-07 14:27:51 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.12  2002/05/07 12:21:33  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
-// Revision 1.11  2002/05/01 18:23:38  ibelyaev
-//  import errors/warnings/exception counterf from LHCb Calo software
-//
 // ===========================================================================
 #define GIGA_GIGABASE_CPP 1 
 // ============================================================================
@@ -26,7 +20,6 @@
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/IMagneticFieldSvc.h" 
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 ///  GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
@@ -40,6 +33,16 @@
 #include "GiGa/GiGaException.h"
 #include "GiGa/GiGaUtil.h" 
 #include "GiGa/GiGaBase.h" 
+
+namespace GiGaBaseLocal
+{
+#ifdef GIGA_DEBUG
+  /** @var s_Counter
+   *  static instance counter 
+   */
+  static GiGaUtil::InstanceCounter<GiGaBase> s_Counter ;
+#endif   
+};
 
 // ============================================================================
 /** standard constructor 
@@ -55,13 +58,12 @@ GiGaBase::GiGaBase
   const IInterface*  parent )
   : AlgTool( type , Name , parent )
   ///
-  , m_gigaName   ( "GiGaSvc"             ) 
-  , m_setupName  ( "GiGaSvc"             ) 
+  , m_gigaName   ( "GiGa"                ) 
+  , m_setupName  ( "GiGa"                ) 
   , m_chronoName ( "ChronoStatSvc"       ) 
   , m_evtName    ( "EventDataSvc"        )
   , m_detName    ( "DetectorDataSvc"     )
   , m_incName    ( "IncidentSvc"         ) 
-  , m_omName     ( "ApplicationMgr"      ) 
   ///
   , m_gigaSvc    ( 0                     ) 
   , m_setupSvc   ( 0                     ) 
@@ -69,7 +71,6 @@ GiGaBase::GiGaBase
   , m_evtSvc     ( 0                     )
   , m_detSvc     ( 0                     ) 
   , m_incSvc     ( 0                     ) 
-  , m_objMgr     ( 0                     ) 
   ///
   , m_errors      ()
   , m_warnings    ()
@@ -89,15 +90,22 @@ GiGaBase::GiGaBase
   declareProperty( "EventDataProvider"         ,  m_evtName     ) ;
   declareProperty( "DetectorDataProvider"      ,  m_detName     ) ;
   declareProperty( "IncidentService"           ,  m_incName     ) ;
-  declareProperty( "ObjectManager"             ,  m_omName      ) ;
   ///
+#ifdef GIGA_DEBUG
+  GiGaBaseLocal::s_Counter.increment () ;
+#endif 
 };
 // ============================================================================
 
 // ============================================================================
 // destructor 
 // ============================================================================
-GiGaBase::~GiGaBase() {} 
+GiGaBase::~GiGaBase() 
+{
+#ifdef GIGA_DEBUG
+  GiGaBaseLocal::s_Counter.decrement () ;
+#endif 
+};
 // ============================================================================
 
 // ============================================================================
@@ -152,26 +160,6 @@ StatusCode GiGaBase::initialize()
     }
   else { Warning("Chrono & Stat Service is not requested to be located"); }
   ///
-  if( !m_gigaName.empty() )
-    {
-      StatusCode sc = svcLoc()->service( m_gigaName ,  m_gigaSvc  , true ); 
-      if( sc.isFailure () ) 
-        { return Error("Could not locate IGiGaSvc="+ m_gigaName , sc ) ; }
-      if( 0 == gigaSvc () ) 
-        { return Error("Could not locate IGiGaSvc="+ m_gigaName      ) ; }
-    }
-  else { Warning("GiGa Service is not requested to be located"); }
-  ///
-  if( !m_setupName.empty() )
-    {
-      StatusCode sc = svcLoc()->service( m_setupName , m_setupSvc ); 
-      if( sc.isFailure   () ) 
-        { return Error("Could not locate IGiGaSetUpSvc="+ m_setupName , sc ) ; }
-      if( 0 == setupSvc  () ) 
-        { return Error("Could not locate IGiGaSetUpSvc="+ m_setupName      ) ; }
-    }
-  else { Warning("GiGaSetUp Service is not requested to be located"); }
-  ///
   if( !m_evtName.empty() )
     {
       StatusCode sc = svcLoc()->service( m_evtName , m_evtSvc , true ); 
@@ -202,16 +190,26 @@ StatusCode GiGaBase::initialize()
     }
   else { Print("Incident Service is not requested to be located"); }
   ///
-  if( !m_omName.empty() )
+  if( !m_gigaName.empty() )
     {
-      StatusCode sc = svcLoc()->service( m_omName , m_objMgr ); 
-      if( sc.isFailure   () ) 
-        { return Error("Could not locate IObjManager="+ m_omName , sc );}
-      if( 0 == objMgr    () )
-        { return Error("Could not locate IObjManager="+ m_omName      );}
+      StatusCode sc = svcLoc()->service( m_gigaName ,  m_gigaSvc  , true ); 
+      if( sc.isFailure () ) 
+        { return Error("Could not locate IGiGaSvc="+ m_gigaName , sc ) ; }
+      if( 0 == gigaSvc () ) 
+        { return Error("Could not locate IGiGaSvc="+ m_gigaName      ) ; }
     }
-  else { Print("IObjManager is not required to be located"); }
-  //
+  else { Warning("GiGa Service is not requested to be located"); }
+  ///
+  if( !m_setupName.empty() )
+    {
+      StatusCode sc = svcLoc()->service( m_setupName , m_setupSvc ); 
+      if( sc.isFailure   () ) 
+        { return Error("Could not locate IGiGaSetUpSvc="+ m_setupName , sc ) ; }
+      if( 0 == setupSvc  () ) 
+        { return Error("Could not locate IGiGaSetUpSvc="+ m_setupName      ) ; }
+    }
+  else { Warning("GiGaSetUp Service is not requested to be located"); }
+  ///
   return Print("GiGaBase initialized successfully" , 
                StatusCode::SUCCESS                 , MSG::VERBOSE ) ;
 };
@@ -226,7 +224,6 @@ StatusCode GiGaBase::initialize()
 // ============================================================================
 StatusCode GiGaBase::finalize()
 {
-  //
   Print( "GiGaBase Finalization" , StatusCode::SUCCESS , MSG::VERBOSE ) ;
   // error printout 
   if( 0 != m_errors     .size() || 
@@ -265,17 +262,16 @@ StatusCode GiGaBase::finalize()
               << " Message='"     << warning->first  << "'" << endreq ; 
         }  
     }
-  m_errors      .clear();
-  m_warnings    .clear();
-  m_exceptions  .clear();
+  m_errors      .clear () ;
+  m_warnings    .clear () ;
+  m_exceptions  .clear () ;
   // release services inreverse order !!!
-  if( 0 != objMgr    () ) { objMgr    ()->release() ; m_objMgr    = 0 ; }
-  if( 0 != incSvc    () ) { incSvc    ()->release() ; m_incSvc    = 0 ; } 
-  if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc    = 0 ; } 
-  if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc    = 0 ; } 
-  if( 0 != setupSvc  () ) { setupSvc  ()->release() ; m_setupSvc  = 0 ; } 
-  if( 0 != gigaSvc   () ) { gigaSvc   ()->release() ; m_gigaSvc   = 0 ; } 
-  if( 0 != chronoSvc () ) { chronoSvc ()->release() ; m_chronoSvc = 0 ; } 
+  if( 0 != setupSvc  () ) { setupSvc  () -> release() ; m_setupSvc  = 0 ; } 
+  if( 0 != gigaSvc   () ) { gigaSvc   () -> release() ; m_gigaSvc   = 0 ; } 
+  if( 0 != incSvc    () ) { incSvc    () -> release() ; m_incSvc    = 0 ; } 
+  if( 0 != detSvc    () ) { detSvc    () -> release() ; m_detSvc    = 0 ; } 
+  if( 0 != evtSvc    () ) { evtSvc    () -> release() ; m_evtSvc    = 0 ; } 
+  if( 0 != chronoSvc () ) { chronoSvc () -> release() ; m_chronoSvc = 0 ; } 
   // finalize the base class 
   return AlgTool::finalize() ;
   ///

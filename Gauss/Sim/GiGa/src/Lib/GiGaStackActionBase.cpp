@@ -1,17 +1,31 @@
-// $Id: GiGaStackActionBase.cpp,v 1.7 2002-05-07 12:21:34 ibelyaev Exp $ 
+// $Id: GiGaStackActionBase.cpp,v 1.8 2002-12-07 14:27:51 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/07 12:21:34  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 // GiGa 
 #include "GiGa/GiGaStackActionBase.h"
+#include "GiGa/GiGaUtil.h"
 
 /** @file 
  *  implementation of class GiGaStackActionBase
  *
  *  @author Vanya Belyaev 
  */
+
+namespace GiGaStackActionBaseLocal
+{
+#ifdef GIGA_DEBUG
+  /** @var   s_Counter
+   *  static instance counter 
+   */
+  static GiGaUtil::InstanceCounter<GiGaStackActionBase> s_Counter ;
+#endif   
+};
 
 // ============================================================================
 /** standard constructor 
@@ -28,13 +42,23 @@ GiGaStackActionBase::GiGaStackActionBase
   const IInterface*  parent ) 
   : G4UserStackingAction () 
   , GiGaBase             ( type , name , parent ) 
-{ declareInterface<IGiGaStackAction> (this) ; };
+{ 
+  declareInterface<IGiGaStackAction> (this) ; 
+#ifdef GIGA_DEBUG
+  GiGaStackActionBaseLocal::s_Counter.increment () ;
+#endif
+};
 // ============================================================================
 
 // ============================================================================
 // Destructor 
 // ============================================================================
-GiGaStackActionBase::~GiGaStackActionBase(){};
+GiGaStackActionBase::~GiGaStackActionBase()
+{
+#ifdef GIGA_DEBUG
+  GiGaStackActionBaseLocal::s_Counter.decrement () ;
+#endif 
+};
 // ============================================================================
 
 // ============================================================================

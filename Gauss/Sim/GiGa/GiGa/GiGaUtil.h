@@ -1,8 +1,11 @@
-// $Id: GiGaUtil.h,v 1.7 2002-05-07 12:21:30 ibelyaev Exp $ 
+// $Id: GiGaUtil.h,v 1.8 2002-12-07 14:27:51 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/07 12:21:30  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 #ifndef GIGA_GIGAUTIL_H 
 #define GIGA_GIGAUTIL_H 1
@@ -126,6 +129,34 @@ namespace GiGaUtil
     if( 0 != obj ) { delete obj ; obj = 0 ; }
     return obj ;
   };
+  
+  /** @class InstanceCounter 
+   *  Static class used to instrument constructors 
+   *  and destructors to search for memory leaks
+   *
+   *  @author Markus Frank
+   *  @date   2002-07-17
+   */
+  template <class T> class InstanceCounter    {
+    long m_count;
+  public:
+    long increment ()      { return ++m_count; }
+    long decrement ()      { return --m_count; }
+    long count     ()const { return   m_count; }
+    InstanceCounter() : m_count(0) {};
+    virtual ~InstanceCounter()   
+    {
+      if( 0 != m_count ) 
+        {
+          std::cout << "Number of objects of type: "
+                    << System::typeinfoName(typeid(T))
+                    << " created, but not destroyed:" 
+                    << m_count
+                    << std::endl;
+        }
+    };
+  };
+
 
 }; ///< end of namespace 
 

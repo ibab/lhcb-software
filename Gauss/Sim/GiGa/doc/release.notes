@@ -1,9 +1,46 @@
-! $Id: release.notes,v 1.63 2002-12-04 21:12:50 ibelyaev Exp $
+! $Id: release.notes,v 1.64 2002-12-07 14:27:51 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2002-12-07 - Ivan Belyaev
+ - GiGa/GiGaTrajectory.icpp          - remove the obsolete file 
+ - GiGa/GiGaTrajectoryPoint.icpp     - remove the obsolete file 
+ - GiGa/GiGaTrajectoryPoint.h        - update
+ - GiGa/GiGaTrajectory.h             - update, inparticular  
+                                       the ugly m_stepMgr field was eliminated
+ - GiGa/IGiGaSvc.h                   - add new method for extratcion of 
+                                       hit collections from Geant4  by name
+ - GiGa/IIDIGiGaSvc.h                - update the interface major version 
+ - GiGa/GiGaUtil.h                   - Import the useful InstanceCounter<> 
+                                       by Markus Frank from Kernel packages
+ - GiGa/GiGaBase.h                   - eliminate IObjManager
+ 
+ - src/Lib/GiGaTrajectoryAllocator.cpp       - remove the obsolete file 
+ - src/Lib/GiGaTrajectoryPointAllocator.cpp  - remove the obsolete file 
+
+ - src/Lib/GiGaTrajectoryPoint.cpp  - new file with non-inline implementation 
+                                      of constructors/destructors/new/delete etc. 
+ - src/Lib/GiGa'*'Base.cpp          - eliminate IObjManager, 
+                                      remove extra calls of "addRef"
+                                      improduce proper calls of "release"
+ - src/component/GiGaSvc.h                renamed to  
+      src/component/GiGa.h
+ - src/component/GiGaSvc.cpp              renamed to  
+      src/component/GiGa.cpp
+ - src/component/GiGaSvcIGiGaSvc.cpp      renamed to  
+      src/component/GiGaIGiGaSvc.cpp
+ - src/component/GiGaSvcIGiGaSetUpSvc.cpp renamed to  
+      src/component/GiGaIGiGaSetUpSvc.cpp
+
+ - src/component/GiGaRunManager.cpp  introduce the proper handling of tools, 
+                                     remove extra calls of "addRef"
+                                     improduce proper calls of "release"
+
+- cmt/requirements                   introduce new compiler flag GIGA_DEBUG
+                                     update the major version 
 
 ! 2002-12-04 - Ivan Belyaev 
   eliminate the dependency of GiGa fron *ANY* UI and Vis stuff!

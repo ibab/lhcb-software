@@ -1,8 +1,11 @@
-// $Id: GiGaMagFieldBase.cpp,v 1.8 2002-05-07 12:21:33 ibelyaev Exp $
+// $Id: GiGaMagFieldBase.cpp,v 1.9 2002-12-07 14:27:51 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/07 12:21:33  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 //  ===========================================================================
 #define GIGA_GIGAMAGFIELDBASE_CPP 1 
 ///  ===========================================================================
@@ -12,6 +15,7 @@
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa  
 #include "GiGa/GiGaMagFieldBase.h"
+#include "GiGa/GiGaUtil.h"
 
 // ============================================================================
 /** @file 
@@ -19,6 +23,17 @@
  *  @author Vanya Belyaev
  */
 // ============================================================================
+
+namespace GiGaMagFieldBaseLocal
+{
+#ifdef GIGA_DEBUG
+  /** @var   s_Counter
+   *  static instance counter 
+   */
+  static GiGaUtil::InstanceCounter<GiGaMagFieldBase> s_Counter ;
+#endif   
+};
+
 
 // ============================================================================
 /** standard constructor
@@ -37,13 +52,21 @@ GiGaMagFieldBase::GiGaMagFieldBase
 { 
   declareInterface<IGiGaMagField> (this);
   declareProperty( "MagneticFieldService" , m_nameMFSvc ); 
+#ifdef GIGA_DEBUG
+  GiGaMagFieldBaseLocal::s_Counter.increment () ;
+#endif 
 };
 // ============================================================================
 
 // ============================================================================
 /// virtual destructor 
 // ============================================================================
-GiGaMagFieldBase::~GiGaMagFieldBase(){};
+GiGaMagFieldBase::~GiGaMagFieldBase()
+{
+#ifdef GIGA_DEBUG
+  GiGaMagFieldBaseLocal::s_Counter.decrement () ;
+#endif
+};
 // ============================================================================
 
 // ============================================================================
@@ -64,7 +87,6 @@ StatusCode GiGaMagFieldBase::initialize ()
         { return Error("Could not locate MagneticField Service!", sc ) ; }
       if( 0 == mfSvc()   ) 
         { return Error("IMagneticFieldSvc* points to NULL") ; }
-      mfSvc()->addRef();
     }
   else { Warning("Magnetic Field Service is not requested") ; }
   ///

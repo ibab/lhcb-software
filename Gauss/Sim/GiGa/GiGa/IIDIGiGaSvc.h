@@ -1,4 +1,4 @@
-// $Id: IIDIGiGaSvc.h,v 1.4 2002-05-07 12:21:32 ibelyaev Exp $
+// $Id: IIDIGiGaSvc.h,v 1.5 2002-12-07 14:27:51 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -18,7 +18,7 @@
  *  ( interface id, major and  minor versions) for class IGiGaSvc 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
-static const InterfaceID IID_IGiGaSvc( "IGiGaSvc" , 4 , 0); 
+static const InterfaceID IID_IGiGaSvc( "IGiGaSvc" , 5 , 0); 
 
 // ============================================================================
 // The End 

@@ -1,8 +1,11 @@
-// $Id: GiGaRunManager.cpp,v 1.6 2002-09-26 18:05:29 ibelyaev Exp $ 
+// $Id: GiGaRunManager.cpp,v 1.7 2002-12-07 14:27:52 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/09/26 18:05:29  ibelyaev
+//  repackaging: remove all concrete implementations
+//
 // Revision 1.14  2002/05/07 12:21:33  ibelyaev
 //  see $GIGAROOT/doc/release.notes  7 May 2002
 //
@@ -54,6 +57,16 @@
 IMPLEMENT_GiGaFactory( GiGaRunManager ) ;
 // ============================================================================
 
+namespace GiGaRunManagerLocal
+{
+#ifdef GIGA_DEBUG
+  /** @var   s_Counter
+   *  static instance counter 
+   */
+  static GiGaUtil::InstanceCounter<GiGaRunManager> s_Counter ;
+#endif   
+};
+
 // ============================================================================
 /** standard onstructor 
  *  @see  GiGaBase 
@@ -67,23 +80,68 @@ GiGaRunManager::GiGaRunManager
 ( const std::string&  type   , 
   const std::string&  name   , 
   const IInterface*   parent ) 
-  : G4RunManager   (         )
-  , GiGaBase       ( type , name , parent )
-  , m_krn_st       (  false  ) 
-  , m_run_st       (  false  ) 
-  , m_pre_st       (  false  ) 
-  , m_pro_st       (  false  ) 
-  , m_uis_st       (  false  ) 
-  , m_rootGeo      (    0    ) 
-  , m_geoSrc       (    0    ) 
-  , m_g4UIsession  (    0    ) 
-{ declareInterface<IGiGaRunManager> ( this ) ; };
+  : G4RunManager     (         )
+  , GiGaBase         ( type , name , parent )
+  , m_krn_st         (  false  ) 
+  , m_run_st         (  false  ) 
+  , m_pre_st         (  false  ) 
+  , m_pro_st         (  false  ) 
+  , m_uis_st         (  false  ) 
+  , m_rootGeo        (    0    ) 
+  , m_geoSrc         (    0    ) 
+  , m_g4UIsession    (    0    ) 
+  ///
+  , m_delDetConstr   ( true    ) 
+  , m_delPrimGen     ( true    )
+  , m_delPhysList    ( true    )
+  , m_delRunAction   ( false   ) 
+  , m_delEventAction ( false   ) 
+  , m_delStackAction ( false   ) 
+  , m_delTrackAction ( false   ) 
+  , m_delStepAction  ( false   ) 
+{ 
+  ///
+  declareInterface<IGiGaRunManager> ( this ) ; 
+  ///
+  declareProperty ( "DeleteDetectorConstruction" , m_delDetConstr   ) ;
+  declareProperty ( "DeletePrimaryGenerator"     , m_delPrimGen     ) ;
+  declareProperty ( "DeleteRunAction"            , m_delRunAction   ) ;
+  declareProperty ( "DeleteEventAction"          , m_delEventAction ) ;
+  declareProperty ( "DeleteStackAction"          , m_delStackAction ) ;
+  declareProperty ( "DeleteTrackAction"          , m_delTrackAction ) ;
+  declareProperty ( "DeleteStepAction"           , m_delStepAction  ) ;
+  ///
+#ifdef GIGA_DEBUG
+  GiGaRunManagerLocal::s_Counter.increment () ;
+#endif 
+};
 // ============================================================================
 
 // ============================================================================
 // destructor 
 // ============================================================================
-GiGaRunManager::~GiGaRunManager() {};
+GiGaRunManager::~GiGaRunManager() 
+{  
+  if( !m_delDetConstr   ) { G4RunManager::SetUserInitialization
+                              ( ( G4VUserDetectorConstruction*   ) 0 ) ; }
+  if( !m_delPrimGen     ) { G4RunManager::SetUserAction        
+                              ( ( G4VUserPrimaryGeneratorAction* ) 0 ) ; }
+  if( !m_delPhysList    ) { G4RunManager::SetUserInitialization
+                              ( ( G4VUserPhysicsList*            ) 0 ) ; }
+  if( !m_delRunAction   ) { G4RunManager::SetUserAction        
+                              ( ( G4UserRunAction*               ) 0 ) ; }
+  if( !m_delEventAction ) { G4RunManager::SetUserAction
+                              ( ( G4UserEventAction*             ) 0 ) ; }
+  if( !m_delStackAction ) { G4RunManager::SetUserAction
+                              ( ( G4UserStackingAction*          ) 0 ) ; }
+  if( !m_delTrackAction ) { G4RunManager::SetUserAction
+                              ( ( G4UserTrackingAction*          ) 0 ) ; }
+  if( !m_delStepAction  ) { G4RunManager::SetUserAction 
+                              ( ( G4UserSteppingAction*          ) 0 ) ; }
+#ifdef GIGA_DEBUG
+    GiGaRunManagerLocal::s_Counter.decrement () ;
+#endif
+};
 // ============================================================================
 
 // ============================================================================
@@ -124,7 +182,7 @@ StatusCode GiGaRunManager::retrieveTheEvent( const G4Event*& event )
 StatusCode GiGaRunManager::processTheEvent()
 {
   ///
-  Chrono    chrono ( chronoSvc () , name()+"processTheEvent()" ) ; 
+  Chrono    chrono ( chronoSvc () , name()+"::processTheEvent()" ) ; 
   ///
   set_evt_Is_Processed( false ) ;                      
   ///   
@@ -192,7 +250,7 @@ StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
 {
   ///
   set_evt_Is_Prepared ( false ); 
-  const std::string Tag( name() + ".prepareTheEvent()" );
+  const std::string Tag( name() + "::prepareTheEvent()" );
   const std::string method( " initializeRun() " ) ;
   ///
   try { if( !run_Is_Initialized() ) { initializeRun() ; } }

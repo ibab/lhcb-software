@@ -1,11 +1,8 @@
-// $Id: GiGaSvc.cpp,v 1.15 2002-12-04 21:12:51 ibelyaev Exp $ 
+// $Id: GiGa.cpp,v 1.1 2002-12-07 14:27:52 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.14  2002/05/07 12:21:36  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
 // ============================================================================
 #define GIGA_GIGASVC_CPP 1 
 // ============================================================================
@@ -44,7 +41,7 @@
 #include    "GiGa/GiGaException.h"
 #include    "GiGa/GiGaUtil.h"
 // local 
-#include    "GiGaSvc.h"
+#include    "GiGa.h"
 
 // ============================================================================
 /**  @file 
@@ -55,12 +52,12 @@
 // ============================================================================
 
 // ============================================================================
-/** @var GiGaSvcFactory
+/** @var GiGaFactory
  *  declaration of mandatory factory for servic instantiation
  */
 // ============================================================================
-static const  SvcFactory<GiGaSvc>         s_Factory ;
-extern const ISvcFactory&GiGaSvcFactory = s_Factory ;
+static const  SvcFactory<GiGa>         s_Factory ;
+extern const ISvcFactory&GiGaFactory = s_Factory ;
 // ============================================================================
 
 
@@ -70,7 +67,7 @@ extern const ISvcFactory&GiGaSvcFactory = s_Factory ;
  *  @param svc  pointer to service locator 
  */
 // ============================================================================
-GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
+GiGa::GiGa( const std::string& name, ISvcLocator* svcloc )
   : Service( name , svcloc )
   ///
   , m_chronoSvc            (   0              ) 
@@ -79,7 +76,7 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
   , m_runMgrName           ( "GiGaRunManager/GiGaMgr" )
   , m_runMgr               (   0              )
   ///
-  , m_geoSrcName           ( "GiGaGeomCnvSvc" )
+  , m_geoSrcName           ( "GiGaGeo"        )
   , m_geoSrc               (   0              ) 
   ///
   , m_GiGaPhysListName     (                  )
@@ -135,7 +132,7 @@ GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )
 // ============================================================================
 /// destructor
 // ============================================================================
-GiGaSvc::~GiGaSvc() {};
+GiGa::~GiGa(){};
 // ============================================================================
 
 // ============================================================================
@@ -146,7 +143,7 @@ GiGaSvc::~GiGaSvc() {};
  */
 // ============================================================================
 StatusCode 
-GiGaSvc::queryInterface
+GiGa::queryInterface
 ( const IID& id , void** ppI  ) 
 {
   if       ( 0 == ppI  )               
@@ -169,7 +166,7 @@ GiGaSvc::queryInterface
  */
 // ============================================================================
 StatusCode 
-GiGaSvc::initialize()
+GiGa::initialize()
 {
   /// initialize the base class 
   {
@@ -362,16 +359,14 @@ GiGaSvc::initialize()
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::finalize()
+StatusCode GiGa::finalize()
 {  
   Print("Finalization" , MSG::DEBUG , StatusCode::SUCCESS );
-  // release Run Manager 
-  StatusCode sc ( StatusCode::SUCCESS ); 
-  if( 0 != runMgr   ()  ) { runMgr    () -> release () ; m_runMgr    = 0 ; } 
   // release all used services and tools 
   if( 0 != toolSvc  ()  ) { toolSvc   () -> release () ; m_toolSvc    = 0 ; } 
   if( 0 != chronoSvc()  ) { chronoSvc () -> release () ; m_chronoSvc  = 0 ; } 
   if( 0 != geoSrc   ()  ) { geoSrc    () -> release () ; m_geoSrc     = 0 ; } 
+
   if( 0 != m_visManager ) { m_visManager -> release () ; m_visManager = 0 ; }
   if( 0 != m_uiSession  ) { m_uiSession  -> release () ; m_uiSession  = 0 ; }
   
@@ -379,15 +374,17 @@ StatusCode GiGaSvc::finalize()
     { m_GiGaRunAction   -> release () ; m_GiGaRunAction    = 0 ; }
   if( 0 != m_GiGaEventAction )
     { m_GiGaEventAction -> release () ; m_GiGaEventAction  = 0 ; }
-  if( 0 != m_GiGaStepAction  )
-    { m_GiGaStepAction  -> release () ; m_GiGaStepAction   = 0 ; }
+  // if( 0 != m_GiGaStepAction  )
+  //  { m_GiGaStepAction  -> release () ; m_GiGaStepAction   = 0 ; }
   if( 0 != m_GiGaTrackAction )
     { m_GiGaTrackAction -> release () ; m_GiGaTrackAction  = 0 ; }
   if( 0 != m_GiGaStackAction )
     { m_GiGaStackAction -> release () ; m_GiGaStackAction  = 0 ; }
-  if( 0 != m_GiGaPhysList    )
-    { m_GiGaPhysList    -> release () ; m_GiGaPhysList     = 0 ; }
+  //  if( 0 != m_GiGaPhysList    )
+  //  { m_GiGaPhysList    -> release () ; m_GiGaPhysList     = 0 ; }
   
+  // release the run manager 
+  if( 0 != runMgr   ()  ) { runMgr    () -> release () ; m_runMgr    = 0 ; } 
   // error printout 
   if( 0 != m_errors     .size() || 
       0 != m_warnings   .size() || 
@@ -440,7 +437,7 @@ StatusCode GiGaSvc::finalize()
  */
 // ============================================================================
 StatusCode 
-GiGaSvc::prepareTheEvent
+GiGa::prepareTheEvent
 ( G4PrimaryVertex * vertex ) 
 {
   try
@@ -470,7 +467,7 @@ GiGaSvc::prepareTheEvent
  */
 // ============================================================================
 StatusCode 
-GiGaSvc::retrieveTheEvent
+GiGa::retrieveTheEvent
 ( const G4Event*& event) 
 {
   try
@@ -499,7 +496,7 @@ GiGaSvc::retrieveTheEvent
  *  @return status code
  */
 // ============================================================================
-StatusCode GiGaSvc::retrieveRunManager() 
+StatusCode GiGa::retrieveRunManager() 
 {
   if( 0 != runMgr  () ) { return StatusCode::SUCCESS ; }
   if( 0 == toolSvc () )
@@ -520,7 +517,7 @@ StatusCode GiGaSvc::retrieveRunManager()
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::Print
+StatusCode GiGa::Print
 ( const std::string& Message , 
   const MSG::Level & level   , 
   const StatusCode & Status ) const 
@@ -538,7 +535,7 @@ StatusCode GiGaSvc::Print
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::Error
+StatusCode GiGa::Error
 ( const std::string& Message , 
   const StatusCode & Status ) const
 { 
@@ -556,7 +553,7 @@ StatusCode GiGaSvc::Error
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::Warning
+StatusCode GiGa::Warning
 ( const std::string& Message , 
   const StatusCode & Status ) const 
 { 
@@ -576,7 +573,7 @@ StatusCode GiGaSvc::Warning
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::Exception
+StatusCode GiGa::Exception
 ( const std::string    & Message , 
   const GaudiException & Excp    ,
   const MSG::Level     & level   , 
@@ -600,7 +597,7 @@ StatusCode GiGaSvc::Exception
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::Exception
+StatusCode GiGa::Exception
 ( const std::string    & Message , 
   const std::exception & Excp    ,
   const MSG::Level     & level   , 
@@ -624,7 +621,7 @@ StatusCode GiGaSvc::Exception
  *  @return status code 
  */
 // ============================================================================
-StatusCode GiGaSvc::Exception
+StatusCode GiGa::Exception
 ( const std::string    & Message , 
   const MSG::Level     & level   , 
   const StatusCode     & Status  )  const 

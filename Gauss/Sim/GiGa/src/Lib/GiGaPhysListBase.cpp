@@ -1,14 +1,18 @@
-// $Id: GiGaPhysListBase.cpp,v 1.8 2002-05-07 12:21:33 ibelyaev Exp $
+// $Id: GiGaPhysListBase.cpp,v 1.9 2002-12-07 14:27:51 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/07 12:21:33  ibelyaev
+//  see $GIGAROOT/doc/release.notes  7 May 2002
+//
 // ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa
 #include "GiGa/GiGaPhysListBase.h"
+#include "GiGa/GiGaUtil.h"
 
 // ============================================================================
 /** @file 
@@ -17,6 +21,16 @@
  *  @author Vanya Belyaev 
  */
 // ============================================================================
+
+namespace GiGaPhysListBaseLocal
+{
+#ifdef GIGA_DEBUG
+  /** @var   s_Counter
+   *  static instance counter 
+   */
+  static GiGaUtil::InstanceCounter<GiGaPhysListBase> s_Counter ;
+#endif   
+};
 
 // ============================================================================
 /** standard constructor
@@ -36,13 +50,21 @@ GiGaPhysListBase::GiGaPhysListBase
 { 
   declareInterface<IGiGaPhysList> (this);
   declareProperty( "Cut" , m_DefaultCutValue ); 
+#ifdef GIGA_DEBUG
+  GiGaPhysListBaseLocal::s_Counter.increment () ;
+#endif
 };
 // ============================================================================
 
 // ============================================================================
 /// destructor
 // ============================================================================
-GiGaPhysListBase::~GiGaPhysListBase(){};
+GiGaPhysListBase::~GiGaPhysListBase()
+{
+#ifdef GIGA_DEBUG
+  GiGaPhysListBaseLocal::s_Counter.decrement () ;
+#endif
+};
 // ============================================================================
 
 // ============================================================================

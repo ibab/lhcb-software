@@ -1,11 +1,8 @@
-// $Id: GiGaBase.h,v 1.16 2002-09-03 12:47:41 witoldp Exp $
+// $Id: GiGaBase.h,v 1.17 2002-12-07 14:27:50 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.15  2002/05/07 12:21:29  ibelyaev
-//  see $GIGAROOT/doc/release.notes  7 May 2002
-//
 // ============================================================================
 #ifndef     GIGA_GIGABASE_H
 #define     GIGA_GIGABASE_H 1 
@@ -15,10 +12,14 @@
 #include <exception>
 #include <map>
 // GaudiKernel 
+#include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgTool.h"
+#include "GaudiKernel/System.h"
+#include "GaudiKernel/SmartDataPtr.h"
 // GiGa
 #include "GiGa/IGiGaInterface.h"
 // forward declarations 
@@ -131,13 +132,151 @@ public:
    */
   inline IIncidentSvc*     incSvc    () const { return m_incSvc    ; }; 
 
-  /** accessor to Object Manager
-   *  @return pointer to Object Manager  
-   */
-  inline IObjManager*      objMgr    () const { return m_objMgr    ; };  
-  ///
-  
 protected:
+  
+  /** @brief templated  access to the data in Gaudi transient store 
+   * 
+   *  Quick and safe access to the data in Gaudi transient store.
+   *  The method located the data at given address and perform the 
+   *  debug printout about located data
+   *    
+   *  Usage:
+   *
+   *  - 
+   *  MCCaloDigits*        digits = get( evtSvc () , inputData () , digits );
+   *  if( 0 == digits ) { return StatusCode::FAILURE ;}
+   *
+   *  -
+   *  const DeCalorimeter* det    = get( detSvc () , detData   () , det    );
+   *  if( 0 == det ) { return StatusCode::FAILURE ;}
+   *
+   *  @warning the third argument is artificial to please MicroSoft
+   *           stupid compiler!
+   *
+   *  @see IDataProviderSvc
+   *  @see SmartDataPtr
+   *  @exception GiGaException for Invalid Data Provider Service 
+   *  @exception GiGaException for invalid/unavailable  data  
+   *  @param svc pointer to data service (data provider)
+   *  @param location data location/address in Gaudi Transient Store 
+   *  @param type artificial algument (to please MicroSoft compiler)
+   */
+  template<class TYPE>
+  TYPE* 
+  get
+  ( IDataProviderSvc*  svc        , 
+    const std::string& location   ,
+    const TYPE*        /* type */ ) const 
+  {
+    // check the environment 
+    Assert( 0 != svc   , "  get():: IDataProvider* points to NULL!"      );
+    SmartDataPtr<TYPE> object( svc, location ) ;
+    Assert( !(!object) ,  " get():: No valid data at '" + location + "'" );
+    TYPE* aux = object ;
+    Assert( 0 != aux   ,  " get():: No valid data at '" + location + "'" );
+    const std::string type( System::typeinfoName( typeid( *aux ) ) );
+    // debug printout 
+    // return located valid data 
+    Print( " The data from address '"     + location     + 
+           "' are retrieved from TS "                    , 
+           StatusCode::SUCCESS            , MSG::DEBUG   ) ;
+    Print( " [ The actual data type is '" + type         + 
+           "' ] "                                        ,
+           StatusCode::SUCCESS            , MSG::VERBOSE ) ;
+    return aux ;
+  };
+  
+  /** the useful method for location of tools. 
+   *  for empty "name" delegates to another method  
+   *  @see IToolSvc
+   *  @see IAlgTool
+   *  @attention do not forget to 'release' tool after the usage!
+   *  @exception GiGaException for invalid Tool Service 
+   *  @exception GiGaException for error from Tool Service 
+   *  @exception GiGaException for invalid tool 
+   *  @param type   tool type 
+   *  @param name   tool name
+   *  @param Tool   tool itself (return) 
+   *  @param parent tool parent
+   *  @param create flag for creation of nonexisting tools 
+   *  @return pointer to the tool
+   */
+  template<class TOOL>
+  TOOL* 
+  tool
+  ( const std::string& type           , 
+    const std::string& name           , 
+    TOOL*&             Tool           , 
+    const IInterface*  parent  = 0    , 
+    bool               create  = true ) const 
+  {
+    // for empty names delegate to another method 
+    if( name.empty() ) { return tool( type , Tool , parent , create ) ; }
+    Assert( 0 != toolSvc() , "IToolSvc* points toNULL!" );
+    // get the tool from Tool Service 
+    StatusCode sc = toolSvc () 
+      -> retrieveTool ( type , name , Tool, parent , create );
+    Assert( sc.isSuccess() , 
+            "Could not retrieve Tool'" + type + "'/'" + name + "'", sc ) ;
+    Assert( 0 != Tool      , 
+            "Could not retrieve Tool'" + type + "'/'" + name + "'"     ) ;
+    // debug printout 
+    Print( " The Tool of type '" + Tool->type() + 
+           "'/'"                 + Tool->name() + 
+           "' is retrieved from IToolSvc " , sc , MSG::DEBUG ) ;
+    // return located tool 
+    return Tool ;
+  };
+  
+  /** the useful method for location of tools.
+   *  @see IToolSvc
+   *  @see IAlgTool
+   *  @attention do not forget to 'release' tool after the usage!
+   *  @exception GiGaException for invalid Tool Service 
+   *  @exception GiGaException for error from Tool Service 
+   *  @exception GiGaException for invalid tool 
+   *  @param type   tool type, could be of "Type/Name" format 
+   *  @param Tool   tool itself (return)
+   *  @param parent tool parent
+   *  @param create flag for creation of nonexisting tools 
+   *  @return pointer to the tool
+   */
+  template<class TOOL>
+  TOOL* 
+  tool
+  ( const std::string& type          , 
+    TOOL*&             Tool          , 
+    const IInterface*  parent = 0    , 
+    bool               create = true ) const
+  {
+    // check the environment 
+    Assert( 0 != toolSvc() , "IToolSvc* points toNULL!" );
+    // "type" or "type/name" ?
+    std::string::const_iterator it = 
+      std::find( type.begin() , type.end () , '/' );
+    // "type" is compound!
+    if( type.end() != it ) 
+      {
+        std::string::size_type pos = it - type.begin()   ;
+        const std::string ntype( type , 0       , pos               );
+        const std::string nname( type , pos + 1 , std::string::npos );
+        return tool( ntype , // new type 
+                     nname , // new name 
+                     Tool , parent , create            ) ;
+      }
+    // retrieve the tool from Tool Service 
+    StatusCode sc = toolSvc () 
+      -> retrieveTool ( type , Tool, parent , create   );
+    Assert( sc.isSuccess() , "Could not retrieve Tool'" + type + "'" , sc ) ;
+    Assert( 0 != Tool      , "Could not retrieve Tool'" + type + "'"      ) ;
+    // debug printout 
+    Print( " The Tool of type '" + Tool->type() + 
+           "'/'"                 + Tool->name() + 
+           "' is retrieved from IToolSvc " ,  sc  , MSG::DEBUG ) ;
+    // return located tool 
+    return Tool ;
+  };
+
 
   /** assertion 
    *  @param assertion   assertion condition
@@ -261,16 +400,15 @@ private:
   IDataProviderSvc*     m_detSvc     ; 
   /// pointer to Incident  Service 
   IIncidentSvc*         m_incSvc     ; 
-  /// pointer to Object Manager  
-  IObjManager*          m_objMgr     ;
   ///
   typedef std::map<std::string,unsigned int> Counter;
   /// counter of errors 
-  mutable Counter m_errors     ;
+  mutable Counter       m_errors     ;
   /// counter of warning 
-  mutable Counter m_warnings   ; 
+  mutable Counter       m_warnings   ; 
   /// counter of exceptions
-  mutable Counter m_exceptions ;
+  mutable Counter       m_exceptions ;
+  ///
 };
 // ============================================================================
 
