@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.14 2002-03-01 11:35:14 andreav Exp $
+# $Id: requirements,v 1.15 2002-03-01 11:46:42 andreav Exp $
 package DetCond
 version v2r1
 
@@ -10,7 +10,7 @@ use GaudiSvc    v7r*
 
 # ConditionsDB package (only on Linux)
 macro CONDDB_use "CONDDB v3r02*" \
-      WIN32 "Det/CondDBOracle v1r00"
+      WIN32 "CondDBOracle v1r00 Det"
 use $(CONDDB_use)
 
 # Detector Description
