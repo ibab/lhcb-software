@@ -1,8 +1,11 @@
-// $Id: CaloLCorrection.h,v 1.1 2002-06-14 17:46:05 ibelyaev Exp $
+// $Id: CaloLCorrection.h,v 1.2 2002-06-19 17:09:46 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/06/14 17:46:05  ibelyaev
+//  new L-correction
+// 
 // ============================================================================
 #ifndef CALOEX_CALOLCorrection_H 
 #define CALOEX_CALOLCorrection_H 1
@@ -98,6 +101,8 @@ private:
   double  m_tprs                              ;
   // shower barycenter wrt maximum 
   double  m_tbar                              ;
+  // the constant position of reference plane  
+  double  m_z                                 ;
   // allowed hypos
   typedef std::vector<int> Hypotheses         ;
   Hypotheses               m_hypos            ;

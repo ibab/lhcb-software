@@ -1,8 +1,11 @@
-// $Id: CaloLCorrection.cpp,v 1.2 2002-06-17 16:02:29 ibelyaev Exp $
+// $Id: CaloLCorrection.cpp,v 1.3 2002-06-19 17:09:46 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/06/17 16:02:29  ibelyaev
+//  remove the obvious bug in L-correction
+//
 // Revision 1.1  2002/06/14 17:46:05  ibelyaev
 //  new L-correction
 // 
@@ -52,19 +55,21 @@ CaloLCorrection::CaloLCorrection
   const std::string& name   ,
   const IInterface*  parent  )
   : CaloTool ( type, name , parent ) 
-  , m_ec       ( 7.32 * MeV  )// critical energy ( in MeV )
-  , m_x0       ( 17.1 * mm   )// radiation length  
-  , m_tprs     (  2.0        )// thickness of preshower ( in x0 units) 
-  , m_tbar     (  1.7        )// shower barycenter wrt maximum 
-  , m_hypos    (             )// list of allowed hypos 
+  , m_ec       ( 7.32 * MeV    ) // critical energy ( in MeV )
+  , m_x0       ( 17.1 * mm     ) // radiation length  
+  , m_tprs     (  2.0          ) // thickness of preshower ( in x0 units) 
+  , m_tbar     (  1.7          ) // shower barycenter wrt maximum 
+  , m_z        ( 12490         ) // the position of "the reference plane" 
+  , m_hypos    (               ) // list of allowed hypos
 {
   // interafce 
   declareInterface<ICaloHypoTool> (this);
   // properties 
-  declareProperty( "Ec"   , m_ec   ) ;
-  declareProperty( "X0"   , m_x0   ) ;
-  declareProperty( "TPrs" , m_tprs ) ;
-  declareProperty( "Tbar" , m_tbar ) ;
+  declareProperty ( "Ec"   , m_ec   ) ;
+  declareProperty ( "X0"   , m_x0   ) ;
+  declareProperty ( "TPrs" , m_tprs ) ;
+  declareProperty ( "Tbar" , m_tbar ) ;
+  declareProperty ( "Z"    , m_z    ) ;
   //
   m_hypos.push_back( CaloHypotheses::Photon               ) ;
   m_hypos.push_back( CaloHypotheses::PhotonFromMergedPi0  ) ;
@@ -153,7 +158,7 @@ StatusCode CaloLCorrection::operator() ( CaloHypo* hypo  ) const
   const double e = hypo -> position () -> e () ;
   const double x = hypo -> position () -> x () ;
   const double y = hypo -> position () -> y () ;
-  const double z = hypo -> position () -> z () ;
+  const double z = m_z ;
   
   double tanTheta = sqrt( x * x + y * y ) / z ;
   double cosTheta = cos( atan( tanTheta ) )   ;
@@ -162,12 +167,13 @@ StatusCode CaloLCorrection::operator() ( CaloHypo* hypo  ) const
   const double TPrS = m_tprs / cosTheta ;
   const double Tbar = ( Tmax - TPrS + m_tbar ) * m_x0 ;
   
-  tanTheta = tanTheta / ( 1.0  + Tbar * cosTheta / z ) ;
-  cosTheta = cos( atan( tanTheta ) ) ;
+  const double xCorr = x * ( 1. - Tbar / sqrt( x * x + z * z ) ) ;
+  const double yCorr = y * ( 1. - Tbar / sqrt( y * y + z * z ) ) ;
   
-  const double deltaZ = cosTheta * Tbar ;
-
-  hypo -> position() -> setZ( z + deltaZ );
+  // "correct" parameters 
+  hypo -> position() -> setZ( z );
+  hypo -> position() -> parameters()( CaloPosition::X ) = xCorr ;
+  hypo -> position() -> parameters()( CaloPosition::Y ) = yCorr ;
   
   return StatusCode::SUCCESS ;
   

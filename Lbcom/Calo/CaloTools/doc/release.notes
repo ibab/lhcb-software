@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.18 2002-06-18 18:06:27 ibelyaev Exp $
+! $Id: release.notes,v 1.19 2002-06-19 17:09:45 ibelyaev Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 ! Package     : CaloTools
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2002-06-19 - Ivan Belyaev
+ - src/CaloLCorrection.h,.cpp   rewrite a little bit to make it identical to 
+                                Frederic Machefert's LongitudCorr tool 
 
 ! 2002-06-18 - Ivan Belyaev
  - options/CaloTools.opts    bug/typo fix (observed by Richard)
