@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaTrackActionEmpty.cpp,v 1.4 2001-03-18 14:56:15 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaTrackActionEmpty.cpp,v 1.5 2001-03-18 19:37:46 ibelyaev Exp $ 
 
 #include "CLHEP/Geometry/Point3D.h"
 ///
@@ -31,10 +31,10 @@ StatusCode GiGaTrackActionEmpty::initialize () { return GiGaTrackActionBase::ini
 StatusCode GiGaTrackActionEmpty::finalize   () { return GiGaTrackActionBase::initialize() ; } ;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void GiGaTrackActionEmpty::PreUserTrackingAction  ( const G4Track* /* track */ ) 
-{ Print("PreUserTrackingAction() is invoked"); };
+{ Print("PreUserTrackingAction() is invoked"  , StatusCode::SUCCESS , MSG::DEBUG ); };
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void GiGaTrackActionEmpty::PostUserTrackingAction ( const G4Track* /* track */ )
-{ Print("PostUserTrackingAction() is invoked"); };
+{ Print("PostUserTrackingAction() is invoked" , StatusCode::SUCCESS , MSG::DEBUG ); };
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 

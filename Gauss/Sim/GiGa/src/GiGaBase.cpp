@@ -1,6 +1,8 @@
-/// STL
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/GiGaBase.cpp,v 1.10 2001-03-18 19:37:46 ibelyaev Exp $ 
+
+//  STL
 #include <string>
-/// GaudiKernel
+//  GaudiKernel
 #include "GaudiKernel/ISvcLocator.h" 
 #include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/ISerialize.h"
@@ -14,13 +16,13 @@
 #include "GaudiKernel/IGiGaSvc.h"
 #include "GaudiKernel/IGiGaSetUpSvc.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
-/// GaudiKernel
+//  GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/Stat.h"
-/// from GiGa 
+//  from GiGa 
 #include "GiGa/GiGaException.h"
 #include "GiGa/GiGaBase.h" 
 

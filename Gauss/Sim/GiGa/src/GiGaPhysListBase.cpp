@@ -8,9 +8,7 @@
 GiGaPhysListBase::GiGaPhysListBase( const std::string& nick , ISvcLocator* loc) 
   : GiGaBase          ( nick , loc  )
   , m_DefaultCutValue ( 2.0 * mm    )
-{ 
-  declareProperty( "Cut" , m_DefaultCutValue ); 
-};
+{ declareProperty( "Cut" , m_DefaultCutValue ); };
 ///////////////////////////////////////////////////////////////////////////////////////
 GiGaPhysListBase::~GiGaPhysListBase(){};
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -18,8 +16,10 @@ StatusCode GiGaPhysListBase::queryInterface( const InterfaceID& id , void** ppI)
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0 ; 
-  if   ( IGiGaPhysList::interfaceID() == id ) { *ppI = static_cast<IGiGaPhysList*> (this)    ; } 
-  else                                        {  return GiGaBase::queryInterface( id , ppI ) ; } /// RETURN ;
+  if   ( IGiGaPhysList::interfaceID() == id ) 
+    { *ppI = static_cast<IGiGaPhysList*> (this)    ; } 
+  else                                        
+    {  return GiGaBase::queryInterface( id , ppI ) ; } /// RETURN ;
   addRef();
   return StatusCode::SUCCESS; 
 };
