@@ -30,7 +30,6 @@ use GaudiAlg 		v7r3
 use GaudiTools          v8r1
 use GaudiGSL		v6r0
 use GaudiDb 		v9r2
-use GaudiRootDb 	v9r4
 use GaudiPoolDb		v1r6p1
 use GaudiObjDesc 	v6r2p1
 use RootHistCnv         v9r1p1

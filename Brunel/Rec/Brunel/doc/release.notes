@@ -10,6 +10,7 @@ Development version
   . GaudiAuditors no longer used for algorithm timing, uses GaudiSequencer
     internal timing instead
   . Remove obsolete TimingAlg
+  . Remove obsolete GaudiRootDb capability
   . Added test1.opts to reproduce a known crash
 
 - DST changes

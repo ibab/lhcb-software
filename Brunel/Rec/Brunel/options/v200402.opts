@@ -27,12 +27,6 @@ ApplicationMgr.EvtMax = -1;
 
 //---------------------------------------------------------------------------
 // Input and output files.
-// For event data, choose either POOL or GaudiDb following these rules:
-// - If the input files is POOL:
-//   . The output file must be POOL
-//   . The POOL input file should be described in PoolDbCacheSvc.Catalog
-//     (If not, it will not be possible to follow links to it from the DST)
-// - If the input files is GaudiDb, output file can be GaudiDb or POOL
 //---------------------------------------------------------------------------
 
 HistogramPersistencySvc.OutputFile = "Pool411300.root";  // Monitoring histos
@@ -47,21 +41,11 @@ PoolDbCacheSvc.Catalog = {
 //---------------------------------------------------------------------------
 // Event input
 //---------------------------------------------------------------------------
-
-// POOL
 EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r8/Pool411300.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 411300
-
-// Format for GaudiRootDb input (no Boole v5r6 files available)
-//EventSelector.Input = { "DATAFILE='411300.oodigi' TYP='ROOT' OPT='READ'" };
 
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-
-// POOL
 DstWriter.Output = "DATAFILE='PFN:Pool411300.dst' TYP='POOL_ROOTTREE' OPT='REC'";
-
-// GaudiDb
-//DstWriter.Output = "DATAFILE='411300.oodst' TYP='ROOT' OPT='NEW'";
 
 //////////////////////////////////////////////////////////////////////////////

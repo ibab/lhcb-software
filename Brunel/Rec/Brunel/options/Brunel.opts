@@ -11,14 +11,11 @@
 #units "$STDOPTS/units.opts"
 
 // Framework
-ApplicationMgr.DLLs += { "GaudiAlg", "LHCbTools", "LHCbAlgs" };
+ApplicationMgr.DLLs += { "GaudiAlg", "LHCbAlgs" };
 
 // POOL Persistency
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 #include "$EVENTSYSROOT/options/PoolDicts.opts"
-
-// ROOT Persistency
-#include "$STDOPTS/RootDb.opts"
 
 // Define DST content
 #include "$BRUNELOPTS/DstContent.opts"
