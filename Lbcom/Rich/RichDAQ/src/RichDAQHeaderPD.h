@@ -1,4 +1,4 @@
-// $Id: RichDAQHeaderPD.h,v 1.3 2003-11-10 14:59:59 jonrob Exp $
+// $Id: RichDAQHeaderPD.h,v 1.4 2003-11-26 14:18:29 cattanem Exp $
 #ifndef RICHDAQ_RICHDAQHEADERPD_H
 #define RICHDAQ_RICHDAQHEADERPD_H 1
 
@@ -17,6 +17,28 @@
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
+  // Define the number of bits for each field
+  #define BitsHitCount    10
+  #define BitsLinkNum     12
+  #define BitsUnUsed1     7
+  #define BitsZS          1
+  #define BitsStartPD     1
+
+  // Create the shift registers
+  #define ShiftHitCount   0
+  #define ShiftLinkNum    ShiftHitCount + BitsHitCount
+  #define ShiftZS         ShiftLinkNum  + BitsUnUsed1 + BitsLinkNum
+  #define ShiftStartPD    ShiftZS       + BitsZS
+
+  // Create the Masks
+  #define MaskHitCount  (((Rich::LongType)1 << BitsHitCount)-1) << ShiftHitCount
+  #define MaskLinkNum   (((Rich::LongType)1 << BitsLinkNum)-1)  << ShiftLinkNum
+  #define MaskZS        (((Rich::LongType)1 << BitsZS)-1)       << ShiftZS
+  #define MaskStartPD   (((Rich::LongType)1 << BitsStartPD)-1)  << ShiftStartPD
+
+  // Create the max values that can be stored in each field
+  #define MaxHitCount    ( (Rich::ShortType)1 << BitsHitCount ) - 1
+  #define MaxLinkNum     ( (Rich::ShortType)1 << BitsLinkNum )  - 1
 
 class RichDAQHeaderPD {
 
@@ -110,28 +132,6 @@ public: // methods
 
 private: // definitions
 
-  // Define the number of bits for each field
-  static const Rich::ShortType BitsHitCount   = 10;
-  static const Rich::ShortType BitsLinkNum    = 12;
-  static const Rich::ShortType BitsUnUsed1    = 7;
-  static const Rich::ShortType BitsZS         = 1;
-  static const Rich::ShortType BitsStartPD    = 1;
-
-  // Create the shift registers
-  static const Rich::ShortType ShiftHitCount  = 0;
-  static const Rich::ShortType ShiftLinkNum   = ShiftHitCount + BitsHitCount;
-  static const Rich::ShortType ShiftZS        = ShiftLinkNum  + BitsUnUsed1 + BitsLinkNum;
-  static const Rich::ShortType ShiftStartPD   = ShiftZS       + BitsZS;
-
-  // Create the Masks
-  static const Rich::LongType MaskHitCount = (((Rich::LongType)1 << BitsHitCount)-1) << ShiftHitCount;
-  static const Rich::LongType MaskLinkNum  = (((Rich::LongType)1 << BitsLinkNum)-1)  << ShiftLinkNum;
-  static const Rich::LongType MaskZS       = (((Rich::LongType)1 << BitsZS)-1)       << ShiftZS;
-  static const Rich::LongType MaskStartPD  = (((Rich::LongType)1 << BitsStartPD)-1)  << ShiftStartPD;
-
-  // Create the max values that can be stored in each field
-  static const Rich::ShortType MaxHitCount   = ( (Rich::ShortType)1 << BitsHitCount ) - 1;
-  static const Rich::ShortType MaxLinkNum    = ( (Rich::ShortType)1 << BitsLinkNum )  - 1;
 
 private: // methods
 

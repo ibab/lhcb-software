@@ -1,4 +1,4 @@
-// $Id: RichZSHitTriplet.h,v 1.2 2003-11-09 12:39:29 jonrob Exp $
+// $Id: RichZSHitTriplet.h,v 1.3 2003-11-26 14:18:30 cattanem Exp $
 #ifndef RICHDAQ_RICHZSHITTRIPLET_H
 #define RICHDAQ_RICHZSHITTRIPLET_H 1
 
@@ -18,6 +18,28 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
+
+  // Define the number of bits for each field
+  #define BitsHit    5
+
+  // shift registers
+  #define ShiftRow0  0
+  #define ShiftCol0  ShiftRow0 + BitsHit
+  #define ShiftRow1  ShiftCol0 + BitsHit
+  #define ShiftCol1  ShiftRow1 + BitsHit
+  #define ShiftRow2  ShiftCol1 + BitsHit
+  #define ShiftCol2  ShiftRow2 + BitsHit
+
+  // The masks
+  #define  MaskRow0    (((Rich::LongType)1 << BitsHit)-1) << ShiftRow0
+  #define  MaskCol0    (((Rich::LongType)1 << BitsHit)-1) << ShiftCol0
+  #define  MaskRow1    (((Rich::LongType)1 << BitsHit)-1) << ShiftRow1
+  #define  MaskCol1    (((Rich::LongType)1 << BitsHit)-1) << ShiftCol1
+  #define  MaskRow2    (((Rich::LongType)1 << BitsHit)-1) << ShiftRow2
+  #define  MaskCol2    (((Rich::LongType)1 << BitsHit)-1) << ShiftCol2
+
+  // the max row/column values storable
+  #define MaxRowCol  ( (Rich::ShortType)1 << BitsHit ) - 1
 
 class RichZSHitTriplet {
 
@@ -167,27 +189,6 @@ public: // methods
 
 private: // definitions
 
-  // Define the number of bits for each field
-  static const Rich::ShortType BitsHit   = 5;
-
-  // shift registers
-  static const Rich::ShortType ShiftRow0 = 0;
-  static const Rich::ShortType ShiftCol0 = ShiftRow0 + BitsHit;
-  static const Rich::ShortType ShiftRow1 = ShiftCol0 + BitsHit;
-  static const Rich::ShortType ShiftCol1 = ShiftRow1 + BitsHit;
-  static const Rich::ShortType ShiftRow2 = ShiftCol1 + BitsHit;
-  static const Rich::ShortType ShiftCol2 = ShiftRow2 + BitsHit;
-
-  // The masks
-  static const Rich::LongType  MaskRow0  =  (((Rich::LongType)1 << BitsHit)-1) << ShiftRow0;
-  static const Rich::LongType  MaskCol0  =  (((Rich::LongType)1 << BitsHit)-1) << ShiftCol0;
-  static const Rich::LongType  MaskRow1  =  (((Rich::LongType)1 << BitsHit)-1) << ShiftRow1;
-  static const Rich::LongType  MaskCol1  =  (((Rich::LongType)1 << BitsHit)-1) << ShiftCol1;
-  static const Rich::LongType  MaskRow2  =  (((Rich::LongType)1 << BitsHit)-1) << ShiftRow2;
-  static const Rich::LongType  MaskCol2  =  (((Rich::LongType)1 << BitsHit)-1) << ShiftCol2;
-
-  // the max row/column values storable
-  static const Rich::ShortType MaxRowCol = ( (Rich::ShortType)1 << BitsHit ) - 1;
 
 private: // methods
 

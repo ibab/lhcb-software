@@ -1,4 +1,4 @@
-// $Id: RichDAQLinkNumber.h,v 1.3 2003-11-10 14:59:59 jonrob Exp $
+// $Id: RichDAQLinkNumber.h,v 1.4 2003-11-26 14:18:30 cattanem Exp $
 #ifndef RICHDAQ_RICHDAQLINKNUMBER_H
 #define RICHDAQ_RICHDAQLINKNUMBER_H 1
 
@@ -15,6 +15,29 @@
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */
+  // Define the number of bits for each field
+  #define BitsRich    1
+  #define BitsPanel   1
+  #define BitsPDRow   5
+  #define BitsPDCol   5
+
+  // Create the shift registers
+  #define ShiftRich   0
+  #define ShiftPanel  ShiftRich  + BitsRich
+  #define ShiftPDRow  ShiftPanel + BitsPanel
+  #define ShiftPDCol  ShiftPDRow + BitsPDRow
+
+  // Create the Masks
+  #define MaskRich     (((Rich::LongType)1 << BitsRich)-1) << ShiftRich
+  #define MaskPanel    (((Rich::LongType)1 << BitsPanel)-1) << ShiftPanel
+  #define MaskPDRow    (((Rich::LongType)1 << BitsPDRow)-1) << ShiftPDRow
+  #define MaskPDCol    (((Rich::LongType)1 << BitsPDCol)-1) << ShiftPDCol
+
+  // Create the max values that can be stored in each field
+  #define MaxRich     ( (Rich::ShortType)1 << BitsRich ) - 1
+  #define MaxPanel    ( (Rich::ShortType)1 << BitsPanel ) - 1
+  #define MaxPDRow    ( (Rich::ShortType)1 << BitsPDRow ) - 1
+  #define MaxPDCol    ( (Rich::ShortType)1 << BitsPDCol ) - 1
 
 class RichDAQLinkNumber {
 
@@ -123,29 +146,6 @@ public:
 
 private: // definitions
 
-  // Define the number of bits for each field
-  static const Rich::ShortType BitsRich   = 1;
-  static const Rich::ShortType BitsPanel  = 1;
-  static const Rich::ShortType BitsPDRow  = 5;
-  static const Rich::ShortType BitsPDCol  = 5;
-
-  // Create the shift registers
-  static const Rich::ShortType ShiftRich  = 0;
-  static const Rich::ShortType ShiftPanel = ShiftRich  + BitsRich;
-  static const Rich::ShortType ShiftPDRow = ShiftPanel + BitsPanel;
-  static const Rich::ShortType ShiftPDCol = ShiftPDRow + BitsPDRow;
-
-  // Create the Masks
-  static const Rich::LongType MaskRich    = (((Rich::LongType)1 << BitsRich)-1) << ShiftRich;
-  static const Rich::LongType MaskPanel   = (((Rich::LongType)1 << BitsPanel)-1) << ShiftPanel;
-  static const Rich::LongType MaskPDRow   = (((Rich::LongType)1 << BitsPDRow)-1) << ShiftPDRow;
-  static const Rich::LongType MaskPDCol   = (((Rich::LongType)1 << BitsPDCol)-1) << ShiftPDCol;
-
-  // Create the max values that can be stored in each field
-  static const Rich::ShortType MaxRich    = ( (Rich::ShortType)1 << BitsRich ) - 1;
-  static const Rich::ShortType MaxPanel   = ( (Rich::ShortType)1 << BitsPanel ) - 1;
-  static const Rich::ShortType MaxPDRow   = ( (Rich::ShortType)1 << BitsPDRow ) - 1;
-  static const Rich::ShortType MaxPDCol   = ( (Rich::ShortType)1 << BitsPDCol ) - 1;
 
 private: // methods
 

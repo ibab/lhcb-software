@@ -1,4 +1,4 @@
-// $Id: RichNonZeroSuppData.h,v 1.8 2003-11-26 11:11:29 cattanem Exp $
+// $Id: RichNonZeroSuppData.h,v 1.9 2003-11-26 14:18:30 cattanem Exp $
 #ifndef RICHDAQ_RICHNONZEROSUPPDATA_H
 #define RICHDAQ_RICHNONZEROSUPPDATA_H 1
 
@@ -15,6 +15,8 @@
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
  */
+
+#define MaxBits 32
 
 class RichNonZeroSuppData {
 
@@ -115,7 +117,6 @@ public:
 
 private: // definitions
 
-  static const Rich::ShortType MaxBits = 32;
 
 private: // methods
 
