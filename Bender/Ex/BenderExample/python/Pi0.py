@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Pi0.py,v 1.1 2005-02-07 16:38:19 ibelyaev Exp $
+# $Id: Pi0.py,v 1.2 2005-02-08 20:34:24 ibelyaev Exp $
 # =============================================================================
-# CVS tag     $Name: not supported by cvs2svn $; version $Revision: 1.1 $
+# CVS tag     $Name: not supported by cvs2svn $; version $Revision: 1.2 $
 # =============================================================================
 # @file 
 # "Demo" algorithm for pi0 -> gamma gamma reconstruction "
@@ -12,6 +12,11 @@
 # =============================================================================
 """
 Simple 'demo' module to fill a proper NTuple of 'good' pi0->gamma gamma
+
+The algorithm is 'identical' to C++/LoKi algorithm LoKi_Pi0 from
+Ex/LoKiExample package, see 
+$LOKIEXAMPLEROOT/src/LoKi_Pi0.cpp and
+$LOKIEXAMPLEOPTS/DV_LoKi_Pi0.opts
 """
 # =============================================================================
 __author__ = 'Vanya BELYAEV belyaev@lapp.in2p3.fr'
@@ -103,19 +108,18 @@ def energyFromMC ( cluster , mc , table ) :
 # Specific physics analysis algorithm 
 # =============================================================================
 class Pi0(Algo):
-    """ My own analysis algorithm for analysis pi0-> gamma gamma  """
-    def clFromGamma ( self , gamma ) :
-        pp = ppFromParticle( gamma )
-        if not pp          : return None
-        ch = pp.calo()
-        if 1 != ch.size()  : return None
-        ch = ch[0]
-        if not ch          : return None
-        cs = ch.clusters()
-        if 1 != cs.size()  : return None
-        cs = cs[0]
-        return cs
+    """
+    My own analysis algorithm for analysis pi0-> gamma gamma
     
+    The algorithm is 'identical' to C++/LoKi algorithm LoKi_Pi0 from
+    Ex/LoKiExample package, see 
+    $LOKIEXAMPLEROOT/src/LoKi_Pi0.cpp and
+    $LOKIEXAMPLEOPTS/DV_LoKi_Pi0.opts
+    
+    """
+    def __init__ ( self , name = 'Pi0' ) :
+        Algo.__init__ ( self , name )
+        
     def analyse ( self ) :
 
         # select true MC pi0 which originates near the primary vertex 
@@ -254,11 +258,7 @@ class Pi0(Algo):
 def configure() :
     gaudi.config( files   =
                   [ '$BENDEREXAMPLEOPTS/BenderExample.opts'     ,   # general options 
-                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'      ,   # pool catalogs
-                    '$DAVINCIROOT/options/DaVinciTestData.opts'  
-                    #'$LOKIEXAMPLEOPTS/Bd_pipipi_CPV_DC04.opts'  
-                    ]  # input data 
-                  )
+                    '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) # input data 
     
     # specific job configuration 
     gaudi.addAlgorithm ( 'LoKiPreLoad/Photons'    )
