@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.cpp,v 1.16 2004-02-20 18:13:35 ibelyaev Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.17 2004-02-22 13:38:19 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.16  2004/02/20 18:13:35  ibelyaev
+//  major update in GiGaBase and GiGaTrajectory
+//
 // ============================================================================
 #define  GIGA_GIGATRAJECTORY_CPP 1 
 // ============================================================================
@@ -25,8 +28,8 @@
 #include "G4ParticleDefinition.hh"
 
 // local 
-#include "DumpG4Track.h"
-#include "DumpG4Step.h"
+#include "GiGa/DumpG4Track.h"
+#include "GiGa/DumpG4Step.h"
 
 // ============================================================================
 /** @file 

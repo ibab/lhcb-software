@@ -1,8 +1,11 @@
-// $Id: DumpG4Track.cpp,v 1.1 2004-02-20 18:13:35 ibelyaev Exp $
+// $Id: DumpG4Track.cpp,v 1.2 2004-02-22 13:38:19 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 18:13:35  ibelyaev
+//  major update in GiGaBase and GiGaTrajectory
+// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -18,7 +21,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4Material.hh"     
 // ============================================================================
-#include "DumpG4Track.h"
+#include "GiGa/DumpG4Track.h"
 // ============================================================================
 
 /** @file

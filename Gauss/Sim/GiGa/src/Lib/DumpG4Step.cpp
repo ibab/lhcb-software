@@ -1,8 +1,11 @@
-// $Id: DumpG4Step.cpp,v 1.1 2004-02-20 18:13:35 ibelyaev Exp $
+// $Id: DumpG4Step.cpp,v 1.2 2004-02-22 13:38:19 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/20 18:13:35  ibelyaev
+//  major update in GiGaBase and GiGaTrajectory
+// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -16,8 +19,8 @@
 #include "G4StepPoint.hh"
 #include "G4VProcess.hh"
 // ============================================================================
-#include "DumpG4Step.h"
-#include "DumpG4Track.h"
+#include "GiGa/DumpG4Step.h"
+#include "GiGa/DumpG4Track.h"
 // ============================================================================
 
 /** @file
