@@ -1,26 +1,8 @@
-// $Id: RelationWeightedTypeTraits.h,v 1.10 2002-10-10 10:02:27 ibelyaev Exp $
+// $Id: RelationWeightedTypeTraits.h,v 1.11 2002-10-29 08:53:29 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2002/09/04 15:39:16  ibelyaev
-//  small improvement in Ranges
-//
-// Revision 1.8  2002/05/10 12:29:43  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes 10 May 2002
-//
-// Revision 1.7  2002/04/28 09:35:44  ibelyaev
-//  update a little bit the RelationTypeTraits
-//
-// Revision 1.6  2002/04/25 08:44:04  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.5  2002/04/25 08:02:03  ibelyaev
-//  bug fix on Win2K
-//
-// Revision 1.4  2002/04/24 21:16:40  ibelyaev
-//  fix one more problem for Win2K
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONWEIGTEDTYPETRAITS_H
 #define RELATIONS_RELATIONWEIGTEDTYPETRAITS_H 1
@@ -178,12 +160,13 @@ namespace Relations
     /** definition of the standard iterator type.
      *  @warning The true type of 'iterator' is 'const_iterator'
      */
-    typedef Entries::const_iterator   iterator        ;
-    typedef Entries::const_iterator   const_iterator  ;
-    typedef Entries::const_reference  reference       ;
-    typedef Entries::const_reference  const_reference ;
+    typedef Entries::const_iterator         iterator               ;
+    typedef Entries::const_iterator         const_iterator         ;
+    typedef Entries::const_reference        reference              ;
+    typedef Entries::const_reference        const_reference        ;
+    typedef Entries::const_reverse_iterator const_reverse_iterator ;
     
-    typedef std::pair<Entries::const_iterator,Entries::const_iterator> RangeBase ;
+    typedef std::pair<iterator,iterator> RangeBase ;
 
     /** @struct Range
      *
@@ -199,10 +182,11 @@ namespace Relations
     {
       /// short cut for own base class
       typedef RangeBase Base;
-      typedef Entries::const_iterator   iterator        ;
-      typedef Entries::const_reference  reference       ;
-      typedef Entries::const_iterator   const_iterator  ;
-      typedef Entries::const_reference  const_reference ;
+      typedef Entries::const_iterator         iterator               ;
+      typedef Entries::const_reference        reference              ;
+      typedef Entries::const_iterator         const_iterator         ;
+      typedef Entries::const_reference        const_reference        ;
+      typedef Entries::const_reverse_iterator const_reverse_iterator ;
       /// default constructor
       Range()                                : Base()              {} ;
       /// constructor
@@ -216,6 +200,12 @@ namespace Relations
       iterator&       end   ()       { return Base::second                ; }
       /// end-iterator   (    const version)
       iterator        end   () const { return Base::second                ; }
+      /// reverse iterator "begin"
+      const_reverse_iterator rbegin () const 
+      { return const_reverse_iterator( end   () )  ; }
+      /// reverse iterator "end"
+      const_reverse_iterator rend   () const 
+      { return const_reverse_iterator( begin () )  ; }
       /// front element (applied only for valid range)
       const_reference front () const { return *(Base::first)              ; }
       /// back  element (applied only for valid range)

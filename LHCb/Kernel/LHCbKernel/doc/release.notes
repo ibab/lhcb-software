@@ -2,6 +2,13 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2002-10-29 - Ivan Belyaev
+ - Relations/RelationTypeTraits.h
+ - Relations/RelationWeightedTypeTraits.h
+   add the notion of "const_reverse_iterator" for Range class for 
+   "reverse" iteration over selected range of relations.
+   The STL-like methods "rbegin" and "rend" are added to Range class.
+
 ! 2002-10-10 - Vanya Belyaev 
   Relations/RelatuinTypeTraits.h
   Relations/RelationWeightedTypeTraits.h 
