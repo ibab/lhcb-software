@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v1r13 2004-11-16 ======================
+! 2004-11-16 - Marco Cattaneo
+ - Remove "online" PID packages, as these should not be in BrunelSys for now
+
 ! 2004-10-27 - Chris Jones
  - New packages : RichDAQ, RichRecBase, RichRecTools, RichRecCommon, 
    RichGlobalPID, RichLocalPID, RichRingRefit, RichPIDMerge, 
