@@ -4,8 +4,9 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!======================= RichRecSys v1r9 2004-04-21 ======================
 ! 2004-04-18 - Chris Jones
- - Updated pacakges : RichDAQ, RichRecBase, RichRecCommon, RichGlobalPID,
+ - Updated packages : RichDAQ, RichRecBase, RichRecCommon, RichGlobalPID,
    RichLocalPID, RichRingRefit, RichRecMCTools, RichRecQC and RichRecTools
 
 ! 2004-04-06 - Chris Jones
