@@ -9,8 +9,6 @@
       name        = 'Node'
       author      = 'Jose Hernando, Eduardo Rodrigues'
       desc        = 'Node is a base class for classes linking track states to measurements.'
-      id          = '10013'
-      location    = 'Rec/Track/Nodes'
       serializers = 'FALSE'>
 
       <import name='Event/State' />

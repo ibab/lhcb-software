@@ -9,8 +9,6 @@
       name        = 'Measurement'
       author      = 'Jose Hernando, Eduardo Rodrigues'
       desc        = 'Measurement is the base class for offline and online measurements.'
-      id          = '10012'
-      location    = 'Rec/Track/Measurements'
       serializers = 'FALSE'>
 
       <import name='Kernel/LHCbID' />
