@@ -3,13 +3,6 @@ version v5r0
 
 branches cmt doc
 
-#=====================================================================
-# fix versions
-#=====================================================================
-macro GAUSSVERS "v5r0"
-
-use GaussEnv	"$(GAUSSVERS)"
-
 #==================================================================
 # Gauss packages
 #==================================================================
@@ -21,8 +14,11 @@ use EvtGen              v3r1    Gen
 use GeneratorModules    v4r0    Gen
 
 # GiGa stuff...
-use GiGa        	v10r0  Sim        
+use GiGa        	v10r0	Sim        
 use GiGaCnv     	v8r0    Sim
+
+# Gauss stuff...
+use GaussTools		v2r0	Sim
 
 # OPACS stuff
 use OPACSLIB		v3	Vis
