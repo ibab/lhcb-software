@@ -1,4 +1,4 @@
-# $Id: README,v 1.28 2002-11-26 00:12:51 andreav Exp $
+# $Id: README,v 1.29 2002-11-26 00:22:40 andreav Exp $
 
 Three examples are distributed in this package: a test of condition data 
 stored in flat XML files, a test of condition data stored in the CondDB,
@@ -46,7 +46,7 @@ It is assumed that CMTPATH contains the release directory in ${HOME}/newmycmt
 Put the following line in .cshrc to achieve this:
     setenv CMTPATH ${HOME}/newmycmt
     setenv CMTPATH ${CMTPATH}:${GAUDISOFT}/GAUDI_v11r2
-    setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/LHCB_v11r2
+    setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/project/LHCB/LHCB_v11r2
 Check the result with
     printenv CMTPATH
 
