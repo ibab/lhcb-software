@@ -131,8 +131,10 @@ EvtSpinDensity EvtDiracParticle::rotateToHelicityBasis() const{
     spplus.set(1.0,0.0,0.0,0.0);
     spminus.set(0.0,1.0,0.0,0.0);
   } else {
-    spplus.set(0.0,0.0,0.0,1.0);
-    spminus.set(0.0,0.0,1.0,0.0);
+// FL:   spplus.set(0.0,0.0,0.0,1.0);
+// FL:   spminus.set(0.0,0.0,1.0,0.0);
+	 spplus.set(0.0,0.0,1.0,0.0);
+	 spminus.set(0.0,0.0,0.0,1.0);
   }
       
   EvtDiracSpinor sp0=sp(0);
@@ -154,7 +156,7 @@ EvtSpinDensity EvtDiracParticle::rotateToHelicityBasis() const{
 EvtSpinDensity EvtDiracParticle::rotateToHelicityBasis(double alpha,
 						       double beta,
 						       double gamma) const{
-
+  
   EvtDiracSpinor spplus;
   EvtDiracSpinor spminus;
       
@@ -164,8 +166,10 @@ EvtSpinDensity EvtDiracParticle::rotateToHelicityBasis(double alpha,
     spplus.set(1.0,0.0,0.0,0.0);
     spminus.set(0.0,1.0,0.0,0.0);
   } else {
-    spplus.set(0.0,0.0,0.0,1.0);
-    spminus.set(0.0,0.0,1.0,0.0);
+// FL:    spplus.set(0.0,0.0,0.0,1.0);
+// FL:   spminus.set(0.0,0.0,1.0,0.0);
+	 spplus.set(0.0,0.0,1.0,0.0);
+	 spminus.set(0.0,0.0,0.0,1.0);
   }
       
   EvtDiracSpinor sp0=sp(0);
