@@ -93,7 +93,7 @@ private:
   /// IEvtSelector interface of additional event selector 
   IEvtSelector*             m_mergeISelector;
   /// EventSelector iterator
-  IEvtSelector::Iterator*   m_mergeIt;
+  IEvtSelector::Context*    m_mergeIt;
   /// Luminosity tool
   ILumiTool*                m_lumiTool;
 };

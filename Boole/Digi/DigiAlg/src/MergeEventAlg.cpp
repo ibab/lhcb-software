@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.5 2004-06-23 12:39:12 cattanem Exp $
+// $Id: MergeEventAlg.cpp,v 1.6 2004-07-22 10:14:48 cattanem Exp $
 #define MERGEEVENTALG_CPP 
 // Include files 
 
@@ -224,19 +224,17 @@ StatusCode MergeEventAlg::readAndLoadEvent( std::string& subPath ) {
   debug() << "Loading " << subPath << endmsg;
  
   if ( m_mergeIt == 0 ) {  // first event from this algorithm event selector
-     m_mergeIt = m_mergeISelector->begin(); // Open file and read event
+    m_mergeISelector->createContext(m_mergeIt);
   }
-  else {    // Read next event
-    *(m_mergeIt) = m_mergeISelector->next(*m_mergeIt);
-  }  
-
-  if( *(m_mergeIt) == *(m_mergeISelector->end()) ) {
+  // Read next event
+  if( m_mergeISelector->next(*m_mergeIt).isFailure() ) {
     return Error("Last event reached on "+m_mergeSelectorName+" input stream");
   }
   
   // Find the /Event directory node of the background event.
   std::string eventPath = "/Event/"+subPath; 
-  IOpaqueAddress* iadd = *(*m_mergeIt);
+  IOpaqueAddress* iadd;
+  m_mergeISelector->createAddress( *m_mergeIt, iadd );
   SmartIF<IDataManagerSvc> dataMgr( eventSvc() );
   StatusCode sc = dataMgr->registerAddress( eventPath, iadd );
   if( !sc.isSuccess() ) {

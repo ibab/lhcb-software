@@ -8,6 +8,7 @@
 ! 2004-06-28 - Marco Cattaneo
  - Remove BooleInit algorithm (superseded by LbAppInit in Kernel/LHCbAlgs)
  - Remove CreateL1Event algorithm (moved to Event/DAQEvent)
+ - Adapt MergeEventAlg to new version of IEventSelector interface
 
 ! 2004-06-22 - Marco Cattaneo
  - Adopt GaudiAlgorithm and GaudiTool base classes
