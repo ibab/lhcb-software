@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.9 2002-04-22 07:53:23 cattanem Exp $
+! $Id: release.notes,v 1.10 2002-04-26 13:40:05 gcorti Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
 
 ! >>>>>>>>>>>>>>>>>>>>>>> PhysEvent v4r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020426 (G.Corti)
+  - Particle.cpp: bug fix in propagation from slopes to momentum error
+    and propagation of non diagonal component in error matrix
+
 ! 20020419 (M.Cattaneo)
   - Separate library for dictionaries
 
