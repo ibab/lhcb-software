@@ -902,11 +902,9 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
 
         forthekeymother++;
 
-        std::map<int, HandleNTuple*>::key_type key =  ((offsetmother + (500000*forthekeymother)));
-          
-        std::map<int, HandleNTuple*>::data_type add = new HandleNTuple(nt, mothernr, 
-                                                                       //m_pLifetimeFitter, 
-                                                                       m_IPTool);
+        int key =  ((offsetmother + (500000*forthekeymother)));
+        HandleNTuple* add = new HandleNTuple(nt, mothernr, //m_pLifetimeFitter, 
+                                             m_IPTool);
         m_HandleNTupleMap.insert(std::make_pair(key, add));
 
         verbose() << "Added " << pnamemother << " with key " << key
