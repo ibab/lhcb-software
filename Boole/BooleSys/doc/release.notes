@@ -4,6 +4,11 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
+!======================== BooleSys v5r4 2004-03-25 ========================
+! 2004-03-25 - Marco Cattaneo
+ - Packages modified: L0mConf v2r2, L0MuonKernel v1r1, L0MuonTrigger v1r1,
+                      L0Calo v7r4, PuVeto v5r6, VeloAlgorithms v2r9p2
+
 !======================== BooleSys v5r3 2004-03-19 ========================
 ! 2004-03-19 - Marco Cattaneo
  - Packages added:    STDAQ v1r0, VeloDAQ v1r0, TrgMonitor v1r0, L0mConf,
