@@ -3,18 +3,24 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v24r0>2004-05-27 Brunel v24r0</A></H1><PRE>
+</PRE><H1><A NAME=v24r0>2004-06-02 Brunel v24r0</A></H1><PRE>
 Development version
 
-- Repackaging and code cleanups
-  . Use new GaudiTool and GaudiAlgorithm base classes
-    (TrExtrapolator v2r12, TrFitter v4r0)   
+- New tuning
+  . Initialize MuonGeometry tool completely at intialisation, not during first
+    ~10 events (MuonTools v3r7)
+
+- New packaging and code cleanups
+  . Use new GaudiAlg and GaudiTools base classes
+    (STDet v1r2, ITAssociators v2r9, STDAQ v1r2, ITAlgorithmsv14r3,
+     ITCheckers v2r3, TrExtrapolator v2r12, TrFitter v4r0)   
   . Move ITrFitter interface to TrFitEvent package, thus removing dependencies
     on TrFitter package 
     (TrFitEvent v4r6, TrFitter v4r0, TrCheck v2r5, TrCleanEx v2r10, VeloTT v1r10)
 
 - Bug fixes
   . Fix an unprotected pointer in Richdetailed monitoring (RichRecCommon v1r7)
+  . Add a missing job option for detailed Calo monitoring (BrunelMoni.opts)
   . Fix bug in evaluation of overlap of two rectangular areas (CaloUtils v4r7)
 
 </PRE><H1><A NAME=v23r7>2004-04-29 Brunel v23r7</A></H1><PRE>

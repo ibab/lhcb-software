@@ -27,7 +27,6 @@ use POOL		v1r163p0	-no_auto_imports
 #-- Gaudi libraries (from GAUDI_v14r5)
 use GaudiKernel		v15r3
 use GaudiSvc 		v11r6p1
-use GaudiAlg 		v7r2
 use GaudiTools          v8r1
 use GaudiAud 		v6r4
 use GaudiGSL		v6r0
@@ -42,8 +41,9 @@ use XmlDDDB		v22r2	Det
 use FieldMap		v4r5
 use ParamFiles          v3r6    -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v15r11)
-use LHCb	v15r11
+#-- LHCb libraries (from LHCB_v16r0)
+use LHCb	v16r0
+use GaudiAlg 		v7r3
 
 #-- BrunelSys v24r0 packages
 
@@ -63,9 +63,9 @@ use CaloPIDs		v2r3	Calo
 use VeloDAQ		v1r0	Velo
 
 # Inner Tracker
-use ITAlgorithms        v14r2	IT
-use ITCheckers          v2r2	IT
-use STDAQ               v1r1    IT
+use ITAlgorithms        v14r3	IT
+use ITCheckers          v2r3	IT
+use STDAQ               v1r2    IT
 
 # Outer Tracker
 use OTAlgorithms        v13r4	OT

@@ -21,6 +21,8 @@ BrunelMoni.DetectorList = { "IT","OT","Tr","RICH","CALO" };
 ApplicationMgr.DLLs     += { "ITCheckers" };
 BrunelMoniITSeq.Members += { "ITClusterChecker" };
 BrunelMoniITSeq.Members += { "ITEffMonitor" };
+ITEffMonitor.MCParticleSelector.betaGammaMin = 0.0;
+//#include "$ITCHECKERSROOT/options/Brunel.opts"
 //ITEffMonitor.fullDetail = true;
 //ITEffMonitor.OutputLevel = 2;
 
@@ -74,6 +76,7 @@ BrunelMoniCALOSeq.Members +=
   "CaloClusterMCTruthMonitor/CaloMCTruthMoni"
 };
 #include "$CALOMONITOROPTS/Moni.opts"
+#include "$CALOASSOCIATORSOPTS/CaloAssociators.opts"
 
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false
