@@ -1,8 +1,11 @@
 // JP Palacios Options file for VeloMonitor algorithm
-VeloMonitor.TestMCVeloHit       = true;
-VeloMonitor.TestMCVeloFE        = true;
-VeloMonitor.TestVeloFullDigit = false;
-VeloMonitor.TestVeloCluster   = false;
-VeloMonitor.Resolution          = false;
-VeloMonitor.Printout            = 5;
-VeloMonitor.OutputLevel = 2;
+VeloMonitor.DetailedMonitor     = false;  // default false
+VeloMonitor.DetElement          = false;  // default false
+VeloMonitor.TestMCVeloHit       = true; // default true
+VeloMonitor.TestPUMCVeloHit     = true; // default true
+VeloMonitor.TestMCVeloFE        = true; // default true
+VeloMonitor.TestVeloFullDigit   = true; // default true
+VeloMonitor.TestVeloCluster     = true; // default true
+VeloMonitor.Resolution          = true;  // default false
+VeloMonitor.Printout            = 5;    // default 0
+VeloMonitor.OutputLevel = 3;

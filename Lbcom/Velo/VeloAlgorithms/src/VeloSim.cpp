@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.24 2003-01-28 19:50:42 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.25 2003-04-04 08:59:47 jpalac Exp $
 // Include files
 // STL
 #include <string>
@@ -627,7 +627,7 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
         if (valid){
           MCVeloFE* myFE = findOrInsertFE(stripKey);
           if (!spillOver) fillFE(myFE,hit,charge); // update and add MC link
-          else fillFE(myFE,charge); // update and add MC link
+          else fillFE(myFE,charge); // update, no MC link
         }
       }
     } // neighbours loop
