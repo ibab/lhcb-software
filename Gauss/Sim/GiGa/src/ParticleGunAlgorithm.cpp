@@ -1,9 +1,7 @@
 
-#include "GiGa/ParticleGunAlgorithm.h" 
+#include <string>
+#include <vector>
 
-///
-///
-///
 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -29,6 +27,10 @@
 /// Author: Vanya Belyaev 
 /// Date:   10 Aug 2000 
 ///
+
+
+/// local 
+#include "ParticleGunAlgorithm.h" 
 
 
 // IMPORTANT: global declarations for factory.

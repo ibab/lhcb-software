@@ -20,8 +20,6 @@
 ///  Date   9 Aug 2000 
 ///  
 
-extern unsigned char GiGaKine_StorageType; 
-
 ///
 /// XmlAddress Factory definition
 ///

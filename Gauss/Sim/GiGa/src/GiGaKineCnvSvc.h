@@ -8,6 +8,7 @@
 ///
 /// from GiGa 
 #include "GiGa/GiGaCnvSvc.h" 
+#include "GiGa/IGiGaKineCnvSvc.h" 
 
 ///
 /// forward declarations
@@ -27,7 +28,8 @@ class    IDataSelector;
 ///  Date    7 Aug 2000 
 
 
-class GiGaKineCnvSvc:  public GiGaCnvSvc   
+class GiGaKineCnvSvc:  public          GiGaCnvSvc   ,
+                       virtual public IGiGaKineCnvSvc 
 {
   
   friend class SvcFactory<GiGaKineCnvSvc>;
@@ -49,8 +51,10 @@ class GiGaKineCnvSvc:  public GiGaCnvSvc
  public: 
 
   ///
-  virtual StatusCode initialize() ;
-  virtual StatusCode finalize  () ; 
+  virtual StatusCode            initialize() ;
+  virtual StatusCode            finalize  () ; 
+  ///
+  virtual IParticlePropertySvc* ppSvc     () { return GiGaCnvSvc::ppSvc(); } 
   ///
 };        
 

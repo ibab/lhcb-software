@@ -1,81 +1,29 @@
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *   base classes         (from STL )                                      * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 
 #include <string>
 #include <list>
 #include <vector> 
+#include <algorithm> 
 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *   base classes         (from GiGa)                                      * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-#include "GiGa/GiGaSvc.h"
-#include "GiGa/GiGaException.h"
-#include "GiGa/GiGaRunManager.h" 
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *   base classes         (from Gaudi framework)                           * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 
 #include    "GaudiKernel/ISvcLocator.h"
 #include    "GaudiKernel/IMessageSvc.h"
 #include    "GaudiKernel/IChronoStatSvc.h"
-#include    "GaudiKernel/ParticleProperty.h"
+#include    "GaudiKernel/IObjManager.h"
 #include    "GaudiKernel/SvcFactory.h"
 #include    "GaudiKernel/MsgStream.h"
+#include    "GaudiKernel/ParticleProperty.h"
 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *   base classes         (from LHCbEvent package)                         * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
+#include    "GaudiKernel/Bootstrap.h"
 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *   base classes         (from Geant4 Tool Kit)                           * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
+#include    "GiGa/IGiGaPhysList.h"
+#include    "GiGa/IGiGaPhysListFactory.h"
+#include    "GiGa/GiGaException.h"
 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-///////////////////////////////////////////////////////////////////////////////////
-///                                                                             ///
-/// *************************************************************************** ///
-/// *                                                                         * ///
-/// * * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * * ///
-/// *                                                                         * ///
-/// *            Geant4 Interface for Gaudi  Applications                     * ///
-/// *                                                                         * ///
-/// * * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * * ///
-/// *                                                                         * ///
-/// *            Gaudi  Interface for Geant4 Applications                     * ///
-/// *                                                                         * ///
-/// * * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * * ///
-/// *                                                                         * ///
-/// *************************************************************************** ///
-///                                                                             ///
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-///////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
+// local 
+#include    "GiGaRunManager.h" 
+#include    "GiGaSvc.h"
+#include    "SplitTypeAndName.h"
 
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
@@ -90,206 +38,121 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *                         Factory                                         * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-///                                                                             ///
 static const  SvcFactory<GiGaSvc>                   s_factory ;                 ///
 extern const ISvcFactory&          GiGaSvcFactory = s_factory ;                 ///
-///                                                                             ///
-///////////////////////////////////////////////////////////////////////////////////
 
 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *                         Constructor                                     * ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 GiGaSvc::GiGaSvc( const std::string& name, ISvcLocator* svcloc )                   
   : Service( name , svcloc )
   , m_GiGaRunManager       (   0   )
   , m_chronoSvc            (   0   ) 
+  ///
+  , m_startUIcommands      (   )
+  , m_startOfEvtUIcommands (   )
+  , m_endOfEvtUIcommands   (   )
+  , m_startOfRunUIcommands (   )
+  , m_endOfRunUIcommands   (   )
+  , m_endUIcommands        (   )
+  ///
+  , m_GiGaPhysList               (   )
+  , m_objMgr               ( 0 ) 
+  , m_objMgrName           ( "ApplicationMgr" )
 {
   ///
   /// Geant4 commands to be executed by G4UImanager 
   /// 
-  declareProperty( "StartUIcommands"        , m_startUIcommands      = Strings() ) ;
-  declareProperty( "StartOfEventUIcommands" , m_startOfEvtUIcommands = Strings() ) ;
-  declareProperty( "EndOfEventUIcommands"   , m_endOfEvtUIcommands   = Strings() ) ;
-  declareProperty( "StartOfRunUIcommands"   , m_startOfRunUIcommands = Strings() ) ;
-  declareProperty( "EndOfRunUIcommands"     , m_endOfRunUIcommands   = Strings() ) ;
-  declareProperty( "EndUIcommands"          , m_endUIcommands        = Strings() ) ;
+  declareProperty( "StartUIcommands"        , m_startUIcommands      ) ;
+  declareProperty( "StartOfEventUIcommands" , m_startOfEvtUIcommands ) ;
+  declareProperty( "EndOfEventUIcommands"   , m_endOfEvtUIcommands   ) ;
+  declareProperty( "StartOfRunUIcommands"   , m_startOfRunUIcommands ) ;
+  declareProperty( "EndOfRunUIcommands"     , m_endOfRunUIcommands   ) ;
+  declareProperty( "EndUIcommands"          , m_endUIcommands        ) ;
   ///
-  declareProperty( "UIsessions"             , m_UIsessions           = Strings() ) ;             
+  declareProperty( "UIsessions"             , m_UIsessions           ) ;             
+  ///
+  declareProperty( "PhysicsList"            , m_GiGaPhysList                           ) ;
   ///
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
- 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *                         (Virtual) Destructor                            * ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 GiGaSvc::~GiGaSvc() 
-{
-  ///
-  if( 0 != m_GiGaRunManager  ) 
-    { delete m_GiGaRunManager  ; m_GiGaRunManager  = 0 ; }    
-  ///
-};
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *                         Query Interface                                 * ///
-/// *************************************************************************** /// 
+{ if( 0 != m_GiGaRunManager  ) { delete m_GiGaRunManager  ; m_GiGaRunManager  = 0 ; } };
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaSvc::queryInterface( const IID& id , void** ppI  ) 
 {
-  ///
   if       ( 0 == ppI  )               { return StatusCode::FAILURE             ; }       ///  RETURN !!!  
-  ///
   if       ( IID_IGiGaSvc      == id ) {  *ppI = (IGiGaSvc*)       this         ; } 
   else if  ( IID_IGiGaSetUpSvc == id ) {  *ppI = (IGiGaSetUpSvc*)  this         ; } 
   else                                 { return Service::queryInterface(id,ppI) ; }    
-  ///
   addRef(); 
-  ///
   return StatusCode::SUCCESS;
 };
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *                         Initialize                                      * ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaSvc::initialize()
 {
-  
-  MsgStream log( msgSvc() , name()+"initialize()" ) ; 
-  
-  ///
   /// initialize the base class 
+  {
+    StatusCode sc = Service::initialize(); 
+    if( sc.isFailure() ) { return Error("Unable to initialize the base class Service ", sc ); } 
+  }
   ///
-  
-  StatusCode sc = Service::initialize(); 
-  if( sc.isFailure() ) 
-    { log << MSG::ERROR << "Unable to initialize the base class Service " <<  endreq ; return sc ; } 
-  
-  ///
-  ///
-  ///
-  
   setProperties(); 
-  
-  ///
   /// locate  services, 
+  {
+    StatusCode sc = serviceLocator()-> service( "ChronoStatSvc" , m_chronoSvc ); 
+    if( sc.isFailure()   ) { return Error("Unable to locate Chrono & Stat Service", sc ); } 
+    if( 0 == chronoSvc() ) { return Error("Unable to locate Chrono & Stat Service"     ); } 
+    chronoSvc()->addRef();
+  }
   ///
-  
-  sc = serviceLocator()->
-    getService( "ChronoStatSvc", IID_IChronoStatSvc, (IInterface*&) m_chronoSvc ); 
-  
-  if( sc.isFailure() || 0 == m_chronoSvc ) 
-    { log << MSG::ERROR << "Unable to create locate Chrono & Stat Service  " << endreq; return sc ;} 
-  
+  {
+    StatusCode sc = serviceLocator()-> service( m_objMgrName , m_objMgr ); 
+    if( sc.isFailure() ) { return Error("Unable to locate IObjManager="+m_objMgrName, sc ); } 
+    if( 0 == objMgr () ) { return Error("Unable to locate IObjManager="+m_objMgrName     ); } 
+    objMgr()->addRef();
+  }
   ///
+  {
+    StatusCode sc = createGiGaRunManager(); 
+    if( sc.isFailure() ) { return Error("Unable to create GiGaRunManager ", sc ); }
+  } 
+  /// try to locate Physics List Object and make it known for GiGa 
+  {
+    IGiGaPhysList* PL   = 0 ;
+    StatusCode sc = physList ( m_GiGaPhysList , PL );
+    if( sc.isFailure() ) { return Error(" Unable to instantiate Physics List Object "+m_GiGaPhysList, sc );} 
+    if( 0 == PL        ) { return Error(" Unable to instantiate Physics List Object "+m_GiGaPhysList     );} 
+    ///
+    *this << PL ;  /// 
+    ///
+    Print("Used Phisics List Object is "+System::typeinfoName( typeid( *PL ) ) + "/"+PL->name() );
+  }
   ///
-  /// 
-  
-  sc = createGiGaRunManager(); 
-  
-  if( sc.isFailure() ) 
-    { log << MSG::ERROR << "Unable to create GiGaRunManager " << endreq; return sc ;} 
-
-  ///
-  ///
-  ///
-  
   return StatusCode::SUCCESS ; 
 };
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *                         Finalize                                        * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaSvc::finalize()
 {  
-  
   const std::string Tag( name() + ".finalize()" ) ; 
-  
   MsgStream log( msgSvc(), name() ); 
-  
-  ///
   /// finalize Run Manager 
-  ///
-  
   StatusCode sc ( StatusCode::SUCCESS ); 
   if( 0 != m_GiGaRunManager ) { sc = m_GiGaRunManager->finalizeRunManager() ;} 
-  if( sc.isFailure() ) 
-    { log << MSG::ERROR << " Error in ->finalizeRunManager() method!" << endreq ; } 
-  
-  ///
+  if( sc.isFailure() ) { Error(" Error in ->finalizeRunManager() method!", sc ); } 
   /// release all used services 
-  ///
-  
+  if( 0 != objMgr   () ) { objMgr   ()->release() ; m_objMgr    = 0 ; } 
   if( 0 != chronoSvc() ) { chronoSvc()->release() ; m_chronoSvc = 0 ; } 
-  
+  ///  
   {  
-    ///
     StatusCode sc(StatusCode::FAILURE); 
     const std::string m1("::delete RunManager  "); 
-    ///
     ___GIGA_TRY___                         
-      {
-	///
-	if( 0 != m_GiGaRunManager  ) 
-	  { delete m_GiGaRunManager ; m_GiGaRunManager = 0 ; } 
-	///
-      }
+      { if( 0 != m_GiGaRunManager  ) { delete m_GiGaRunManager ; m_GiGaRunManager = 0 ; } }
     ___GIGA_CATCH_PRINT_AND_RETURN___(Tag,m1,msgSvc(),chronoSvc(),sc);
-    ///
   }
-  
+  ///  
   return Service::finalize();
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// * internal features                                                       * ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaSvc::createGiGaRunManager() 
 {
@@ -299,8 +162,7 @@ StatusCode GiGaSvc::createGiGaRunManager()
   Assert( 0 == G4RunManager::GetRunManager() , 
 	  "There exist another instance of G4RunManager!" ) ; 
   ///
-  m_GiGaRunManager = 
-    new  GiGaRunManager( name()+".Manager" , serviceLocator() ); 
+  m_GiGaRunManager = new  GiGaRunManager( name()+".Manager" , serviceLocator() ); 
   ///
   Assert( 0 != m_GiGaRunManager              , " Unable to create GiGaRunManager" ) ; 
   Assert( 0 != G4RunManager::GetRunManager() , " Unable to create G4RunManager"   ) ; 
@@ -314,268 +176,100 @@ StatusCode GiGaSvc::createGiGaRunManager()
   ///
   m_GiGaRunManager->set_UIsessions           ( m_UIsessions           ) ; 
   ///
-  
   return StatusCode::SUCCESS;                                     /// RETURN !!!
   ///
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaSvc::prepareTheEvent( G4PrimaryVertex * vertex ) 
 {
   const std::string Tag     ( name() + ".prepareTheEvent(G4PrimaryVertex*)" );
   const std::string method1 ( " createGiGaRunManager() " ) ; 
   const std::string method2 ( " GiGaRunManager::prepareTheEvent() " ) ; 
-  
   MsgStream  log( msgSvc() , name() + "prepareTheEvent" ) ; 
-  
   StatusCode sc( StatusCode::SUCCESS ) ; 
-  
   ///
   ___GIGA_TRY___ 
     {
-      ///
       if( 0 == m_GiGaRunManager )
 	{ 
 	  sc = createGiGaRunManager() ;   
 	  Assert( sc.isSuccess()        , " prepareTheEvent(): failure from createGiGaRunManager " , sc     ) ; 
 	  Assert( 0 != m_GiGaRunManager , " prepareTheEvent(): unable to create GiGaRunManager   "          ) ; 
-	  ///
 	}
-      ///
     }
   ___GIGA_CATCH_AND_THROW___(Tag,method1) ; 
   ///
-  
-  ///
   ___GIGA_TRY___ 
     {
-      ///
       sc = m_GiGaRunManager->prepareTheEvent( vertex ) ; 
-      ///
       Assert( sc.isSuccess() , "preparetheEvent() failure from GiGaRunManager::prepareTheEvent() ", sc ) ; 
-      ///
     }
   ___GIGA_CATCH_AND_THROW___(Tag,method2) ; 
-  ///
   ///
   return StatusCode::SUCCESS; 
   ///
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaSvc::retrieveTheEvent( const G4Event*& event) 
 {
   const std::string Tag     ( name() + ".retrieveTheEvent(const G4Event*&)" );
   const std::string method1 ( " createGiGaRunManager() " ) ; 
   const std::string method2 ( " GiGaRunManager::retrieveTheEvent() " ) ; 
-  
   StatusCode sc( StatusCode::SUCCESS ) ; 
-
   MsgStream  log( msgSvc() , name() + ".retrieveTheEvent" ) ; 
-  
-  ///
   ___GIGA_TRY___ 
     { 
-      ///
       if( 0 == m_GiGaRunManager )
 	{ 
-	  ///
 	  sc = createGiGaRunManager() ;   
-	  ///
 	  Assert( sc.isSuccess()        , " retrieveTheEvent: failure from createGiGaRunManager " , sc     ) ; 
-	  ///
 	  Assert( 0 != m_GiGaRunManager , " retrieveTheEvent: unable to create GiGaRunManager   "          ) ; 
-	  ///
 	}
-      ///
     }
   ___GIGA_CATCH_AND_THROW___(Tag,method1) ; 
   ///
-  ///
   ___GIGA_TRY___ 
     { 
-      ///
       sc = m_GiGaRunManager->retrieveTheEvent( event ) ; 
-      ///
       Assert( sc.isSuccess() , " retrieveTheEvent: failure from GiGaRunManager::retrieveTheEvent" , sc ) ; 
-      ///
     }
   ___GIGA_CATCH_AND_THROW___(Tag,method2) ; 
   ///
-  ///
   return StatusCode::SUCCESS; 
   ///
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
+///
+StatusCode GiGaSvc::physList( const std::string& TypeName , IGiGaPhysList*& PL )
+{
+  PL = 0 ; /// reset output value 
+  if( 0 == objMgr()  ) { return Error("RetrievePhysicsList:  IObjManager* pointd to NULL"); }
+  std::string Type , Name ; 
+  StatusCode sc = SplitTypeAndName( TypeName , Type , Name );
+  if( sc.isFailure() ) { return Error("RetrievePhysicsList: Physics List Type/Name="+TypeName+" is unresolved!",sc);}
+  /// locate the factory
+  const IGiGaPhysListFactory* PLF = 0 ;  
+  {
+    bool exist = objMgr()->existsObjFactory( Type ); 
+    if( !exist   ) { return Error("RetrievePhysicsList:  Factory  for "+Type+" is not located") ; }  
+    const IFactory* fac   = objMgr()->objFactory( Type );
+    if( 0 == fac ) { return Error("RetrievePhisicsList: IFactory* for "+Type+" points to NULL" ); }
+    PLF = dynamic_cast<const IGiGaPhysListFactory*> ( fac ); 
+    if( 0 == PLF ) { return Error("RetrievePhysicsList: IGiGaPhysListFactory* for "+Type+" points to NULL" );}
+  }
+  ///
+  PL = PLF->instantiate( Name , serviceLocator() ) ; 
+  if( 0 == PL        ) { return Error("RetrievePhysicsList: could not instantiate IGiGaPhysList* Object "+Type+"/"+Name );} 
+  ///
+  PL->addRef(); 
+  if( PL->initialize().isSuccess() ) { return StatusCode::SUCCESS; } 
+  //// 
+  PL->release(); delete PL ; PL = 0 ;  
+  ///
+  return Error("RetrievePhysicsList: could not initialize IGiGaPhysList* Object "+Type+"/"+Name, sc) ;
+  ///
+};
 ///////////////////////////////////////////////////////////////////////////////////
 
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-IGiGaSvc&   GiGaSvc::operator <<         ( G4PrimaryVertex * vertex   )
-{
-  ///
-  StatusCode sc = prepareTheEvent( vertex ) ; 
-  ///
-  Assert( sc.isSuccess(), " operator<<(G4PrimaryVertex*) " , sc );   
-  ///
-  return *this; 
-  ///
-}; 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-StatusCode  GiGaSvc::addPrimaryKinematics( G4PrimaryVertex  * vertex   ) 
-{
-  ///
-  StatusCode sc(StatusCode::FAILURE);
-  ///
-  ___GIGA_TRY___
-    { *this << vertex           ; } 
-  ___GIGA_CATCH_PRINT_AND_RETURN___(name(),"addPrimaryKinematics",msgSvc(),chronoSvc(),sc ) ; 
-  ///
-  return StatusCode::SUCCESS;  
-};
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-IGiGaSvc& GiGaSvc::operator >> ( const G4Event*         & event        )    
-{
-  ///
-  StatusCode sc = retrieveTheEvent( event ) ; 
-  Assert( sc.isSuccess(), "operator>>(G4Event*)" , sc );   
-  return *this;
-}; 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-IGiGaSvc& GiGaSvc::operator >> ( G4HCofThisEvent*       & collections  )
-{
-  ///
-  const G4Event* event = 0 ; 
-  *this >> event           ; 
-  collections = 
-    ( 0 != event )  ? event->GetHCofThisEvent() : 0 ; 
-  ///
-  return *this;   
-};
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-IGiGaSvc& GiGaSvc::operator >> ( CollectionPair         & collection   )
-{
-  G4HCofThisEvent* collections = 0 ; 
-  *this >> collections             ; 
-  collection.second = 
-    ( 0 != collections)  ? collections->GetHC( collection.first ) : 0 ; 
-  ///
-  return *this ;  
-}; 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-IGiGaSvc& GiGaSvc::operator >> ( G4TrajectoryContainer* & trajectories )
-{
-  ///
-  const G4Event* event = 0 ; 
-  *this >> event ;
-  trajectories = 
-    ( 0 != event ) ? event->GetTrajectoryContainer() : 0 ; 
-  /// 
-  return *this ; 
-};
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaSvc::retrieveEvent  ( const G4Event*          & event )
-{ 
-  ///
-  StatusCode sc( StatusCode::FAILURE ); 
-  ///
-  ___GIGA_TRY___
-    { *this >> event            ; } 
-  ___GIGA_CATCH_PRINT_AND_RETURN___(name(),"retrieveEvent",msgSvc(),chronoSvc(),sc ) ; 
-  ///
-  return StatusCode::SUCCESS ;  
-};
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaSvc::retrieveHitCollections  ( G4HCofThisEvent*        & collections  )
-{
-  ///
-  StatusCode sc( StatusCode::FAILURE ); 
-  ///
-  ___GIGA_TRY___
-    { *this >> collections      ; } 
-  ___GIGA_CATCH_PRINT_AND_RETURN___(name(),"retrieveHitCollections",msgSvc(),chronoSvc(),sc ) ; 
-  ///
-  return StatusCode::SUCCESS; 
-};
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaSvc::retrieveHitCollection  ( CollectionPair          & collection   )
-{
-  ///
-  StatusCode sc( StatusCode::FAILURE ); 
-  ///
-  ___GIGA_TRY___
-    { *this >> collection       ; } 
-  ___GIGA_CATCH_PRINT_AND_RETURN___(name(),"retrieveHitCollection",msgSvc(),chronoSvc(),sc ) ; 
-  ///
-  return StatusCode::SUCCESS; 
-};
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaSvc::retrieveTrajectories  ( G4TrajectoryContainer*  & trajectories )
-{
-  ///
-  StatusCode sc( StatusCode::FAILURE ); 
-  ///
-  ___GIGA_TRY___
-    { *this >> trajectories     ; } 
-  ___GIGA_CATCH_PRINT_AND_RETURN___(name(),"retrieveTrajectories",msgSvc(),chronoSvc(),sc ) ; 
-  ///
-  return StatusCode::SUCCESS; 
-};
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 
 
 

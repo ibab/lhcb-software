@@ -24,64 +24,28 @@ class G4ParticleDefinition;
 
 class GiGaMCVertexCnv: public GiGaCnv
 {
-  
   ///
-  ///
-  ///
-
   friend class CnvFactory<GiGaMCVertexCnv>; 
-
-  ///
-  ///
   ///
  
  protected: 
- 
-  ///
+
   /// Standard Constructor
-  ///
-  
   GiGaMCVertexCnv( ISvcLocator* Locator );
-
-  ///
   /// Standard (virtual) destructor 
-  ///
-
   virtual ~GiGaMCVertexCnv();
+  ///
 
-  ///
-  ///
-  ///
-  
  public:
 
-  ///
   /// Create representation 
-  ///
-  
   virtual StatusCode createRep(DataObject*     Object  , IOpaqueAddress*& Address ) ;
-  
-  ///
   /// Update representation 
-  ///
-  
   virtual StatusCode updateRep(DataObject*     Object  , IOpaqueAddress*  Address ) ; 
-  
-  ///
   /// Class ID for created object == class ID for this specific converter
-  ///
-
   static const CLID&          classID();
-
-
-  ///
   /// storage Type 
-  ///
-
   static const unsigned char storageType() ; 
-
-  ///
-  ///
   ///
 
  protected: 
@@ -94,10 +58,6 @@ class GiGaMCVertexCnv: public GiGaCnv
   G4ParticleDefinition* ParticleDefinition     ( const MCParticle* particle ) ; 
 
  private: 
-
-  ///
-  /// 
-  ///
  
 };
 

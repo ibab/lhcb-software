@@ -1,111 +1,64 @@
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *   base classes (from Standard Library)                                  * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
 #include <string> 
 #include <typeinfo> 
-
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *   base classes         (from Gaudi)                                     * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
 #include  "GaudiKernel/Kernel.h"
 #include  "GaudiKernel/System.h"
+#include  "GaudiKernel/IService.h" 
 #include  "GaudiKernel/ISvcLocator.h" 
+#include  "GaudiKernel/IMessageSvc.h" 
+#include  "GaudiKernel/IChronoStatSvc.h" 
 #include  "GaudiKernel/Chrono.h" 
-
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *   base classes         (from GiGa)                                      * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
 #include  "GiGa/GiGaException.h"
-#include  "GiGa/GiGaRunManager.h" 
-
+#include  "GiGa/IGiGaGeomCnvSvc.h" 
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *   base classes         (from Geant4)                                    * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
 #include  "G4Timer.hh"
 #include  "G4StateManager.hh"
 #include  "G4VisManager.hh" 
 #include  "G4UIsession.hh"
-#include "G4UImanager.hh"
-
+#include  "G4UImanager.hh"
+///////////////////////////////////////////////////////////////////////////////////
 #include  "G4VUserPrimaryGeneratorAction.hh"
 #include  "G4VUserDetectorConstruction.hh"
-
+///////////////////////////////////////////////////////////////////////////////////
 #ifdef G4UI_USE_WO
 #include "G4UIWo.hh"   
 #endif // G4UI_USE_WO 
-
+///////////////////////////////////////////////////////////////////////////////////
 #ifdef G4UI_USE_GAG
 #include "G4UIGAG.hh" 
 #endif // G4UI_USE_GAG
-
+///////////////////////////////////////////////////////////////////////////////////
 #ifdef G4UI_USE_XM
 #include "G4UIXm.hh"  
 #endif // G4UI_USE_XM 
-
+///////////////////////////////////////////////////////////////////////////////////
 #ifdef G4UI_USE_XAW
 #include "G4UIXaw.hh"  
 #endif // G4UI_USE_XAW
-
+///////////////////////////////////////////////////////////////////////////////////
 #ifdef G4UI_USE_TERMINAL
 #include "G4UIterminal.hh"   	  
 #include "G4UItcsh.hh"   	  
 #include "G4UIcsh.hh"   	  
 #endif // G4UI_USE_TERMINAL 
-
+///////////////////////////////////////////////////////////////////////////////////
 #ifdef G4UI_USE
 #include "G4UIterminal.hh"   	  
 #include "G4UItcsh.hh"   	  
 #include "G4UIcsh.hh"   	  
 #endif // G4UI_USE
-
+///////////////////////////////////////////////////////////////////////////////////
 //#ifdef G4UI_USE_WIN32
 //#include "G4Win32.hh"
 //#endif
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
+/// local 
+#include  "GiGaRunManager.h" 
 ///////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-///////////////////////////////////////////////////////////////////////////////////
-///                                                                             ///
-/// *************************************************************************** ///
-/// *                                                                         * ///
-/// * * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * * ///
-/// *                                                                         * ///
-/// *            Geant4 Interface for Gaudi  Applications                     * ///
-/// *                                                                         * ///
-/// * * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * * ///
-/// *                                                                         * ///
-/// *            Gaudi  Interface for Geant4 Applications                     * ///
-/// *                                                                         * ///
-/// * * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * * ///
-/// *                                                                         * ///
-/// *************************************************************************** ///
-///                                                                             ///
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-///////////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
@@ -118,10 +71,6 @@
 ///////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 static inline G4UImanager*    g4UImanager   () { return G4UImanager::GetUIpointer(); } ; 
 //////////////////////////////////////////////////////////////////////////////////
 static inline G4StateManager* g4StateManager() { return G4StateManager::GetStateManager(); } ; 
@@ -132,39 +81,26 @@ template <class TYPE> inline const std::string objType( TYPE* type)
   return System::typeinfoName( typeid( *type ) ) ;
 };  
 ///////////////////////////////////////////////////////////////////////////////////
-static inline G4UImanager* operator<<( G4UImanager* ui , const std::string& cmd ) 
+inline G4UImanager* operator<<( G4UImanager* ui , const std::string& cmd ) 
 { 
-  ///
   if( 0 != ui ) { ui->ApplyCommand( cmd ) ; }  
-  ///
   return  ui ; 
-  ///
 }; 
 ///////////////////////////////////////////////////////////////////////////////////
-static inline G4UImanager* operator<<( G4UImanager* ui , 
-				       const GiGaRunManager::Strings& cmds ) 
+inline G4UImanager* operator<<( G4UImanager* ui , 
+				const GiGaRunManager::Strings& cmds ) 
 {
-  ///
-  for( GiGaRunManager::Strings::const_iterator ci = cmds.begin() ; cmds.end() != ci ; ++ci ){ if( 0 != ui ) { ui << *ci; } }  
-  ///
+  for( GiGaRunManager::Strings::const_iterator ci = cmds.begin() ; cmds.end() != ci ; ++ci )
+    { if( 0 != ui ) { ui << *ci; } }  
   return  ui ;  
 }; 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// * Constructor                                                             * ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 GiGaRunManager::GiGaRunManager( const std::string & Name   ,
                                 ISvcLocator*        svc    ) 
   : G4RunManager   (         )
   , m_svcLoc       (   svc   )  
   , m_rootGeo      (    0    ) 
+  , m_cnvSvc       (    0    ) 
   , m_g4UIsession  (    0    ) 
   , m_g4VisManager (    0    ) 
   , m_krn_st       (  false  ) 
@@ -185,44 +121,36 @@ GiGaRunManager::GiGaRunManager( const std::string & Name   ,
 {
   ///
   StatusCode sc; 
-  sc = svcLoc()->
-    getService("MessageSvc"    , IID_IMessageSvc    , (IInterface*&) m_msgSvc    ) ; 
-  sc = svcLoc()->
-    getService("ChronoStatSvc" , IID_IChronoStatSvc , (IInterface*&) m_chronoSvc ) ; 
+  {
+    IService* iS = 0 ; 
+    sc = svcLoc()->getService("MessageSvc" , iS ) ;
+    if( sc.isSuccess() && 0 != iS ) { m_msgSvc = dynamic_cast<IMessageSvc*> ( iS ); }  
+    if( 0 != msgSvc() ) { msgSvc()->addRef() ; } 
+  };
+  ///
+  {
+    IService* iS = 0 ; 
+    sc = svcLoc()->getService("ChronoStatSvc" , iS ) ;
+    if( sc.isSuccess() && 0 != iS ) { m_chronoSvc = dynamic_cast<IChronoStatSvc*> ( iS ); }  
+    if( 0 != chronoSvc() ) { chronoSvc()->addRef() ; } 
+  };
+  ///
+  {
+    IService* iS = 0 ; 
+    sc = svcLoc()->getService("CiGaGeomCnvSvc" , iS ) ;
+    if( sc.isSuccess() && 0 != iS ) { m_cnvSvc = dynamic_cast<IGiGaGeomCnvSvc*> ( iS ); }  
+    if( 0 != m_cnvSvc ) { m_cnvSvc ->addRef() ; } 
+  };
   ///
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *  (virtual) destructor                                                   * ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 GiGaRunManager::~GiGaRunManager()
 {
   /// release services
-  if( 0 != msgSvc    () ) { msgSvc    ()->release() ;  m_msgSvc    = 0 ; } 
+  if( 0 != m_cnvSvc     ) { m_cnvSvc    ->release() ;  m_cnvSvc    = 0 ; } 
   if( 0 != chronoSvc () ) { chronoSvc ()->release() ;  m_chronoSvc = 0 ; } 
-  /// ATTENTION !!! delete root geoemtry object !!
-  // Do not do it, Geometry Conversion Service does both new and delete!
-//if( 0 != m_rootGeo    ) { delete m_rootGeo        ;  m_rootGeo   = 0 ; } 
+  if( 0 != msgSvc    () ) { msgSvc    ()->release() ;  m_msgSvc    = 0 ; } 
 }
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// * retrieve the event                                                      * ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::retrieveTheEvent( const G4Event*& event ) 
 {
@@ -236,36 +164,23 @@ StatusCode GiGaRunManager::retrieveTheEvent( const G4Event*& event )
   /// 
   ___GIGA_TRY___
     {
-      /// 
       if( !evt_Is_Processed() ) { sc = processTheEvent() ; } 
-      ///
       Assert( sc.isSuccess() , Tag + " failure from " + method , sc ) ; 
-      ///
     }
   ___GIGA_CATCH_AND_THROW___(Tag,method)           ;  /// ATTENTION !!!
   ///
   set_evt_Is_Prepared( false ) ; 
-  ///
   event = G4RunManager::GetCurrentEvent() ;  
   ///
   return StatusCode::SUCCESS;
   ///
 };
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// * process the event                                                       * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::processTheEvent()
 {
   ///
   const std::string Tag(name()+".processTheEvent()"); 
+  const std::string method( " prepareTheEvent() " ); 
   ///
   MsgStream log    ( msgSvc    () , Tag ) ;
   Chrono    chrono ( chronoSvc () , Tag ) ; 
@@ -273,68 +188,42 @@ StatusCode GiGaRunManager::processTheEvent()
   set_evt_Is_Processed( false ) ;                      
   ///   
   StatusCode sc( StatusCode::SUCCESS ) ;
-  ///  
-  const std::string method( " prepareTheEvent() " ); 
-  ///  
   ___GIGA_TRY___ 
     {
-      /// 
       if( !evt_Is_Prepared() ) { sc = prepareTheEvent() ; } 
-      ///
       Assert( sc.isSuccess() , Tag + " failure from " + method , sc ) ;   
-      ///
     }
   ___GIGA_CATCH_AND_THROW___(Tag,method)           ;  /// ATTENTION !!!
   ///
   if( !evt_Is_Prepared() ) { return StatusCode::FAILURE ; }  /// RETURN !!! 
-  ///
-
   ///  to be changed soon  
   ///  if( G4RunManager::pauseAtBeginOfEvent && 0 != g4StateManager() ) 
   ///  { g4StateManager()->Pause("BeginOfEvent") ; }
-
-  ///
   if( G4RunManager::verboseLevel > 0    ) { (G4RunManager::timer)->Start() ; } 
-  ///
   /// apply commands to UI manager 
-  ///
   g4UImanager() << startOfEvtUIcommands();
-  ///
   if( G4RunManager::GetCurrentEvent()->GetNumberOfPrimaryVertex() == 0 )
     { log << MSG::WARNING << " Empty event to be processed " << endreq; } 
   else
     { 
-      ///
       G4RunManager::eventManager->ProcessOneEvent( G4RunManager::currentEvent); 
-      ///
       log << MSG::DEBUG << " internal process one event " << endreq; 
-      ///
       /// G4RunManager::AnalyzeEvent( G4RunManager::currentEvent );
-      ///
     } 
   /// apply commands to UI manager 
   g4UImanager() << endOfEvtUIcommands();
-  ///
-
   ///  to be changed soon  
   ///  if( G4RunManager::pauseAtEndOfEvent && 0 != g4StateManager() ) 
   ///  { g4StateManager()->Pause("EndOfEvent"); }
-
-  ///
   if( G4RunManager::verboseLevel > 0 )
     {
       (G4RunManager::timer)->Stop();
       G4cout << "Run terminated." << endl;
       G4cout << "Run Summary"     << endl;
-      if( G4RunManager::runAborted )
-        { G4cout << "  Run Aborted after " << 1 << " events processed." << endl; }
-      else
-        { G4cout << "  Number of events processed : " << 1 << endl; }
-      ///
+      if( G4RunManager::runAborted ) { G4cout << "  Run Aborted after " << 1 << " events processed." << endl; }
+      else                           { G4cout << "  Number of events processed : " << 1 << endl; }
       G4cout << "  "  << *(G4RunManager::timer) << endl;
-      ///
     }
-  ///
   ///
   set_evt_Is_Processed( true  ); 
   set_evt_Is_Prepared ( false ); 
@@ -345,40 +234,21 @@ StatusCode GiGaRunManager::processTheEvent()
   ///
 };
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *  Prepare The event                                                      * ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
 {
   ///
   set_evt_Is_Prepared ( false ); 
-  ///
   const std::string Tag( name() + ".prepareTheEvent()" );
-  ///
-  MsgStream log    ( msgSvc    () , Tag ) ;
-  /// 
   const std::string method( " initializeRun() " ) ;
   ///
+  MsgStream log    ( msgSvc    () , Tag ) ;
+  ///
   ___GIGA_TRY___ 
-    {
-      ///
-      if( !run_Is_Initialized() ) { initializeRun() ; }
-      /// 
-    }
+    { if( !run_Is_Initialized() ) { initializeRun() ; } }
   ___GIGA_CATCH_AND_THROW___(Tag,method)          ;   /// ATTENTION !!!
   ///
-  ///
   if( !run_Is_Initialized() ) { return StatusCode::FAILURE ; }  /// RETURN !!!   
-  ///  
   /// "clear" the previous event  
-  ///
   if( evt_Is_Processed() )
     {
       if( 0 != G4RunManager::GetCurrentEvent() )
@@ -390,11 +260,8 @@ StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
       set_evt_Is_Processed( false );
     }
   ///
-  ///
   if     ( 0 != G4RunManager::GetCurrentEvent() )
-    {  
-      log << MSG::VERBOSE << " Current G4Event is kept  " << endreq; 
-    }
+    {  log << MSG::VERBOSE << " Current G4Event is kept  " << endreq;  }
   else if( 0 != G4RunManager::userPrimaryGeneratorAction ) 
     {  
       G4RunManager::currentEvent = G4RunManager::GenerateEvent(0) ; 
@@ -408,8 +275,7 @@ StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
   ///
   if( 0 == G4RunManager::currentEvent ) { return StatusCode::FAILURE; }  /// RETURN !!!  
   ///
-  if( 0 !=  vertex ) 
-    { G4RunManager::currentEvent->AddPrimaryVertex( vertex ); } 
+  if( 0 !=  vertex ) { G4RunManager::currentEvent->AddPrimaryVertex( vertex ); } 
   ///
   set_evt_Is_Prepared ( true   ); 
   ///
@@ -418,16 +284,6 @@ StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
   return StatusCode::SUCCESS;
   ///
 }; 
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *   Initialize Run                                                        * ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode  GiGaRunManager::initializeRun()
 {
@@ -442,7 +298,6 @@ StatusCode  GiGaRunManager::initializeRun()
       G4RunManager::RunTermination();
       /// Apply commands to UI manager
       g4UImanager() << endOfRunUIcommands(); 
-      ///
     }
   ///
   set_run_Is_Initialized( false );
@@ -452,18 +307,12 @@ StatusCode  GiGaRunManager::initializeRun()
   const std::string method(" initializeKernel() ");
   ///
   ___GIGA_TRY___ 
-    {
-      ///
-      if( !krn_Is_Initialized() ) { initializeKernel() ; }  
-      ///
-    }
+    { if( !krn_Is_Initialized() ) { initializeKernel() ; }  }
   ___GIGA_CATCH_AND_THROW___(Tag,method)              ; /// ATTENTION !!!  
-  ///
   ///
   if( !krn_Is_Initialized() )  {  return StatusCode::FAILURE; }      /// RETURN !!!
   ///
-  G4ApplicationState currentState = 
-    G4StateManager::GetStateManager()->GetCurrentState();
+  G4ApplicationState currentState = G4StateManager::GetStateManager()->GetCurrentState();
   ///
   Assert( ( currentState == PreInit || currentState == Idle ) , 
 	  Tag +  " Wrong Geant4 State (must be PreInit or Idle)" ) ;  
@@ -473,27 +322,14 @@ StatusCode  GiGaRunManager::initializeRun()
           Tag + " Geant4 Beam-On conditions are not satisfied!"  ) ; 
   ///
   G4RunManager::RunInitialization();  
-  /// 
   set_run_Is_Initialized( true );
   ///
   log  << MSG::DEBUG << " Geant4 Run is initialized  successfully " << endreq;
-  //
   /// Apply commands to UI manager
   g4UImanager() << startOfRunUIcommands(); 
   //
-  //  
   return StatusCode::SUCCESS;
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// * Initialize Kernel                                                       * ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::initializeKernel() 
 {
@@ -521,28 +357,35 @@ StatusCode GiGaRunManager::initializeKernel()
     { log << MSG::VERBOSE << " Geant4 Visualization Manager is initialized " << endreq; }
   else
     { log << MSG::DEBUG   << " Geant4 Visualization Manager is NOT created " << endreq; }
-  //
-  Assert( ( PreInit == currentState  || Idle ==  currentState ) , 
-	  Tag + " Wrong curent state (must be PreInit or Idle)"     ) ; 
-  Assert( ( (G4RunManager::geometryInitialized)    ||
-	    ( 0 != (G4RunManager::userDetector) )  || ( 0 != m_rootGeo ) ) , 
-          Tag + " It is not possible to initialize the Detector!"   ) ; 
-  Assert( ( (G4RunManager::physicsInitialized ) || ( 0 != (G4RunManager::physicsList ) ) ) , 
-          Tag + " It is not possible to initialize the Physics!"    ) ; 
-  Assert( ( (G4RunManager::cutoffInitialized  ) || ( 0 != (G4RunManager::physicsList ) ) ) ,   
-          Tag + " It is not possible to initialize the CutOff!"     ) ; 
+  ////
+
+  std::cout << " check once more init=" << G4RunManager::geometryInitialized  << std::endl ; 
+  std::cout << " check once more usde=" << G4RunManager::userDetector         << std::endl ; 
+  std::cout << " check once more root=" << m_rootGeo                          << std::endl ; 
+  std::cout << " check once more cnvs=" << cnvSvc()                           << std::endl ; 
+
+  Assert( ( PreInit == currentState  || Idle ==  currentState ) , Tag + " Wrong curent state (must be PreInit or Idle)" ) ; 
+  Assert( ( G4RunManager::geometryInitialized || 
+	    ( 0 != G4RunManager::userDetector ) || ( 0 != m_rootGeo ) || ( 0 != cnvSvc() ) ) , 
+	  Tag + " It is not possible to initialize the Detector!"   ) ; 
+  Assert( ( G4RunManager::physicsInitialized  || ( 0 != G4RunManager::physicsList ) ) , 
+	  Tag + " It is not possible to initialize the Physics!"    ) ; 
+  Assert( ( G4RunManager::cutoffInitialized  || ( 0 != G4RunManager::physicsList ) ) ,   
+	  Tag + " It is not possible to initialize the CutOff!"     ) ; 
   ///
   if( 0 == m_g4UIsession ) { createUIsession() ; } 
+  ///
+  std::cout << " 2check once more init=" << G4RunManager::geometryInitialized  << std::endl ; 
+  std::cout << " 2check once more usde=" << G4RunManager::userDetector         << std::endl ; 
+  std::cout << " 2check once more root=" << m_rootGeo                          << std::endl ; 
+  std::cout << " 2check once more cnvs=" << cnvSvc()                           << std::endl ; 
   ///
   G4RunManager::Initialize();
   ///
   if( 0 != m_g4VisManager && !vis_Is_Initialized() ) 
     { m_g4VisManager->Initialize()  ; set_vis_Is_Initialized( true ) ; }
-  ///
   /// Apply commands to UI manager
-  ///
   g4UImanager() << startUIcommands(); 
-  ///
   /// 
   set_krn_Is_Initialized( true );
   ///
@@ -558,26 +401,13 @@ StatusCode GiGaRunManager::initializeKernel()
 //	  << endreq ; 
       ///
       set_uis_Is_Started( true  ) ; 
-      ///
       m_g4UIsession->SessionStart() ; 
-      ///
       set_uis_Is_Started( false ) ; 
     } 
   ///
   return StatusCode::SUCCESS; 
   ///
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// * finalize                                                                * ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::finalizeRunManager()
 {
@@ -596,10 +426,6 @@ StatusCode GiGaRunManager::finalizeRunManager()
   return StatusCode::SUCCESS; 
   ///
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::declare( G4VUserPrimaryGeneratorAction  * obj )  
 { 
@@ -634,10 +460,6 @@ StatusCode GiGaRunManager::declare( G4VUserPrimaryGeneratorAction  * obj )
   return StatusCode::SUCCESS ; 
 };
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::declare( G4VUserDetectorConstruction    * obj ) 
 {
   ///
@@ -671,26 +493,22 @@ StatusCode GiGaRunManager::declare( G4VUserDetectorConstruction    * obj )
   return StatusCode::SUCCESS ; 
 };
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::declare( G4VPhysicalVolume              * obj ) 
 {
   ///
   MsgStream log( msgSvc() , name() + ".declare(G4VPhysicalVolume*)" ); 
   ///
-//  Assert ( 0 == m_rootGeo                                    , 
-//	   ".declare(G4VPhysicalVolume*)::attempt to replace the existing G4VPhysicalVolume=" 
-//	   + objType( m_rootGeo ) 
-//	   + " by " 
-//	   + objType ( obj ) );  
+  Assert ( 0 == m_rootGeo                                    , 
+	   ".declare(G4VPhysicalVolume*)::attempt to replace the existing G4VPhysicalVolume=" 
+	   + objType( m_rootGeo ) 
+	   + " by " 
+	   + objType ( obj ) );  
   ///
-//  Assert ( 0 == G4RunManager::GetUserDetectorConstruction() , 
-//	   ".declare(G4VPhysicalVolume*)::attempt to replace the existing G4VUserDetectorConstruction=" 
-//	   + objType( G4RunManager::GetUserDetectorConstruction() ) 
-//	   + " by " 
-//	   + objType ( obj ) );  
+  Assert ( 0 == G4RunManager::GetUserDetectorConstruction() , 
+	   ".declare(G4VPhysicalVolume*)::attempt to replace the existing G4VUserDetectorConstruction=" 
+	   + objType( G4RunManager::GetUserDetectorConstruction() ) 
+	   + " by " 
+	   + objType ( obj ) );  
   ///
   Assert( 0 != obj , ".declare(G4PhysicalVolume*)::obj points to NULL!" ); 
   ///
@@ -708,10 +526,6 @@ StatusCode GiGaRunManager::declare( G4VPhysicalVolume              * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
 {
@@ -740,10 +554,6 @@ StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
   return StatusCode::SUCCESS ; 
 };
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::declare( G4UserRunAction                * obj )
 {
   ///
@@ -756,10 +566,6 @@ StatusCode GiGaRunManager::declare( G4UserRunAction                * obj )
   G4RunManager::SetUserAction( obj ); 
   return StatusCode::SUCCESS ; 
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::declare( G4UserEventAction              * obj )
 {
@@ -775,10 +581,6 @@ StatusCode GiGaRunManager::declare( G4UserEventAction              * obj )
   return StatusCode::SUCCESS ; 
 };
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::declare( G4UserStackingAction           * obj )
 {
   ///
@@ -792,10 +594,6 @@ StatusCode GiGaRunManager::declare( G4UserStackingAction           * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::declare( G4UserSteppingAction           * obj )
 {
@@ -811,10 +609,6 @@ StatusCode GiGaRunManager::declare( G4UserSteppingAction           * obj )
   return StatusCode::SUCCESS ; 
 };
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::declare( G4UserTrackingAction           * obj )
 {
   ///
@@ -829,19 +623,11 @@ StatusCode GiGaRunManager::declare( G4UserTrackingAction           * obj )
   return StatusCode::SUCCESS ; 
 };
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 StatusCode GiGaRunManager::declare( G4VisManager                   * obj )
 {
   m_g4VisManager = obj ; 
   return StatusCode::SUCCESS ; 
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 StatusCode  GiGaRunManager::createUIsession() 
 {
@@ -923,6 +709,9 @@ StatusCode  GiGaRunManager::createUIsession()
 	  }
 	else if ( "csh"  == session  ) 
 	  {
+#ifdef G4UI_USE_TERMINAL
+	    m_g4UIsession = new G4UIterminal( new G4UIcsh ()  ) ;
+#endif // G4UI_USE_TERMINAL 
 	  }
 	else if ( "terminal"  == session  ) 
 	  {
@@ -956,10 +745,6 @@ StatusCode  GiGaRunManager::createUIsession()
   ///
 }; 
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
 void GiGaRunManager::BeamOn( int         n_event       ,                      
 			     const char* macroFile ,                       
 			     int         n_select      )
@@ -971,14 +756,13 @@ void GiGaRunManager::BeamOn( int         n_event       ,
   ///
   log << MSG::ERROR 
       << " The direct invocation of method: " << name() 
-      << "::BeamOn() is UNRECOMMENDED and could be dangerous  within GiGa environment!" << endreq; 
+      << "::BeamOn() is *NOT RECOMMENDED* and could be dangerous  within GiGa environment!" << endreq; 
   
   log << MSG::WARNING 
       << "::BeamOn() avoid usage of /run/beamOn command in your macros! " << endreq;
   
   log << MSG::WARNING 
       << " the processEvent() method will be invoked on your own risk! " << endreq ;
-  ///
   ///
   StatusCode sc( StatusCode::SUCCESS ) ;
   ///
@@ -1002,36 +786,50 @@ void GiGaRunManager::BeamOn( int         n_event       ,
 ///////////////////////////////////////////////////////////////////////////////////
 void GiGaRunManager::InitializeGeometry()
 {
-//  {
-//    if(!userDetector)
-//    {
-//      G4Exception
-//      ("G4RunManager::InitializeGeometry - G4VUserDetectorConstruction is not defined.");
-//    }
-
-//    if(verboseLevel>1) G4cout << "userDetector->Construct() start." << G4endl;
-//    DefineWorldVolume(userDetector->Construct());
-//    geometryInitialized = true;
-//  }
-  
   ///
   MsgStream log( msgSvc() , name()+"::initializeGeometry()" ) ; 
   ///
-  Assert( 0 != G4RunManager::userDetector || 0 != m_rootGeo , 
-	  "::InitializeGeometry(), not any geometry souces are available!" );  
+  std::cout << " 3 check usde=" << G4RunManager::userDetector << std::endl; 
+  std::cout << " 3 check mroo=" << m_rootGeo                  << std::endl; 
+  std::cout << " 3 check cnvs=" << cnvSvc()                   << std::endl; 
+
   ///
-  G4VPhysicalVolume* root = 
-    ( 0 != m_rootGeo ) ? m_rootGeo : G4RunManager::userDetector->Construct() ;
+  Assert( 0 != G4RunManager::userDetector || 0 != m_rootGeo || 0 != cnvSvc() , 
+	  "::InitializeGeometry(), no any geometry souces are available!" );  
+
+  std::cout << " 4 check usde=" << G4RunManager::userDetector << std::endl; 
+  std::cout << " 4 check mroo=" << m_rootGeo                  << std::endl; 
+  std::cout << " 4 check cnvs=" << cnvSvc()                   << std::endl; 
+
   ///
+  G4VPhysicalVolume* root = 0; 
+  if      ( 0 != m_rootGeo                  ) 
+    { 
+      log << MSG::INFO << " Already converted geometry will be used! " << endreq; 
+      root = m_rootGeo ;   
+    } 
+  else if ( 0 != G4RunManager::userDetector )
+    {
+      log << MSG::INFO << " Geometry will be constructed using " << objType( G4RunManager::userDetector ) << endreq;
+      root = G4RunManager::userDetector->Construct() ;
+    }
+  else if ( 0 != cnvSvc()                  )
+    {
+      log << MSG::INFO << " Geometry will be converted using " << objType( cnvSvc() ) << endreq; 
+      root = cnvSvc()->G4WorldPV(); 
+    }
+  else   
+    {
+      log << MSG::FATAL << " There are NO ANY sources of Geometry information! "<< endreq; 
+    }
+  //
   Assert( 0 != root , "::InitializeGeometry(): root is not created");
   ///
   DefineWorldVolume( root ) ; 
   ///
+  G4RunManager::geometryInitialized = true;
+  ///
 };
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
 ///////////////////////////////////////////////////////////////////////////////////
 void GiGaRunManager::Initialize()
 {
@@ -1043,45 +841,10 @@ void GiGaRunManager::Initialize()
   ///
   ___GIGA_TRY___ 
     {
-      ///
       if(  !krn_Is_Initialized() ) { sc = initializeKernel() ; }   
-      ///
       Assert( sc.isSuccess() , "::Initialize() method ", sc );
-      ///
     }
   ___GIGA_CATCH_AND_THROW___(Tag,method);  
   ///
 };
-
 ///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-///////////////////////////////////////////////////////////////////////////////////
-///                                                                             ///
-/// *************************************************************************** ///
-/// *                                                                         * ///
-/// * * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * * ///
-/// *                                                                         * ///
-/// *            Geant4 Interface for Gaudi  Applications                     * ///
-/// *                                                                         * ///
-/// * * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * * ///
-/// *                                                                         * ///
-/// *            Gaudi  Interface for Geant4 Applications                     * ///
-/// *                                                                         * ///
-/// * * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * * ///
-/// *                                                                         * ///
-/// *************************************************************************** ///
-///                                                                             ///
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-///////////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////////
-/// *************************************************************************** ///
-/// *************************************************************************** ///
-/// *************************************************************************** /// 
-///////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-

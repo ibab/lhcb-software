@@ -7,13 +7,12 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IService.h"
 
-#include "GaudiKernel/DetectorElement.h"
 #include "GaudiKernel/IGeometryInfo.h"
 #include "GaudiKernel/ILVolume.h"
 #include "GaudiKernel/ISolid.h"
 #include "DetDesc/Solids.h"
 #include "DetDesc/LVolume.h"
-#include "DetDesc/PVolume.h"
+#include "DetDesc/DetectorElement.h"
 
 // G4 include files
 #include "G4VPhysicalVolume.hh"
@@ -38,11 +37,9 @@
 static CnvFactory<GiGaDetElemCnv> s_factory;
 extern const ICnvFactory& GiGaDetElemCnvFactory = s_factory;
 
-extern const CLID& CLID_DetectorElement;
-extern unsigned char GiGaGeom_StorageType;
-extern const IID& IID_IGiGaGeomCnvSvc;
 
-GiGaDetElemCnv::GiGaDetElemCnv( ISvcLocator* aSvcLoc ):GiGaCnv(GiGaGeom_StorageType, CLID_DetectorElement, aSvcLoc)
+GiGaDetElemCnv::GiGaDetElemCnv( ISvcLocator* aSvcLoc ) 
+  : GiGaCnv(GiGaGeom_StorageType, CLID_DetectorElement, aSvcLoc)
 {
   setNameOfGiGaConversionService( "GiGaGeomCnvSvc" ); 
   setConverterName              ( "GiGaDetElemCnv" );
@@ -51,7 +48,6 @@ GiGaDetElemCnv::GiGaDetElemCnv( ISvcLocator* aSvcLoc ):GiGaCnv(GiGaGeom_StorageT
 
 StatusCode GiGaDetElemCnv::initialize()
 {
-
   MsgStream log( msgSvc(), "GiGaDetElemCnv" ); 
   StatusCode sc = GiGaCnv::initialize() ; 
   if( sc.isFailure() ) { return Error("Initialize::unable to initialize GiGaCnv base class"); } 

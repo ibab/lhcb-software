@@ -10,7 +10,6 @@
 #include "GaudiKernel/ParticleProperty.h"
 
 
-#include "GiGa/GiGaMCVertexCnv.h" 
 #include "GiGa/GiGaException.h" 
 
 
@@ -27,89 +26,56 @@
 #include "G4ParticleTable.hh"
 
 
-///
-/// useful typedefs 
-/// 
+// local 
+#include "GiGaMCVertexCnv.h" 
 
-
-extern unsigned char GiGaKine_StorageType ; 
 
 static const  CnvFactory<GiGaMCVertexCnv>                               s_GiGaMCVertexCnvFactory ;
 const        ICnvFactory&                      GiGaMCVertexCnvFactory = s_GiGaMCVertexCnvFactory ;
 
 
-///
 /// constructor 
-///
-
 GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator ) 
   : GiGaCnv( storageType() , classID() , Locator ) 
 {
   setNameOfGiGaConversionService( "GiGaKineCnvSvc"  ); 
   setConverterName              ( "GiGaMCVertexCnv" );
 }; 
-
-///
 /// destructor 
-///
-
 GiGaMCVertexCnv::~GiGaMCVertexCnv(){}; 
-
-///
 /// Class ID
-///
-
 const CLID&         GiGaMCVertexCnv::classID     () { return ObjectVector<MCVertex>::classID(); }
-
-///
 /// StorageType 
-///
-
 const unsigned char GiGaMCVertexCnv::storageType () { return GiGaKine_StorageType; } 
-
-///
-///
 /// 
-
 StatusCode GiGaMCVertexCnv::createRep( DataObject*     Object  , IOpaqueAddress*& Address ) 
 {
   ///
   Address = 0 ; 
   ///
   if( 0 == Object        ) { return Error("CreateRep::DataObject* points to NULL"); } 
-  ///
   ObjectVector<MCVertex>* obj = 0 ; 
   try        { obj = dynamic_cast<ObjectVector<MCVertex>*>( Object ) ; } 
   catch(...) { obj =                                               0 ; } 
-  ///
   if( 0 == obj  ) { return Error("CreateRep::Bad cast to ObjectVector<MCVertex>"); }
-  ///
   if( 0 == cnvSvc()      ) { return Error("CreateObj::Conversion SErvice is unavailable"); } 
-  ///
   /// create IOpaqueAddress
   IAddressCreator* addrCreator = 0 ; 
   try        { addrCreator = dynamic_cast<IAddressCreator*> ( cnvSvc() ) ; } 
   catch(...) { addrCreator =                                           0 ; } 
   if( 0 == addrCreator   ) { return Error("CreateRep::AddressCreator is not available"); } 
-  ///
   StatusCode status = addrCreator->createAddress( repSvcType() , classID() , "GiGaKine" , "GiGaPrimaryEvent" , -1 , Address );   
-  ///
   if( status.isFailure() ) { return Error("CreateRep::Error from Address Creator",status) ; }
-  ///
   if( 0 == Address       ) { return Error("CreateRe::Invalid address is created") ; } 
   ///
   return updateRep( Object , Address ) ; 
   /// 
 }; 
-
-///
 /// Update representation 
-///
-
 StatusCode GiGaMCVertexCnv::updateRep( DataObject*     Object  , IOpaqueAddress*  Address ) 
 { 
   ///
-  { MsgStream log( msgSvc(),  ConverterName() ) ; log << MSG::VERBOSE << "UpdateRep::start" << endreq; }
+  { MsgStream log( msgSvc(),  name() ) ; log << MSG::VERBOSE << "UpdateRep::start" << endreq; }
   ///
   if( 0 == Object        ) { return Error("UpdateRep::DataObject*     points to NULL"); } 
   if( 0 == Address       ) { return Error("UpdateRep::IopaqueAddress* points to NULL"); } 
@@ -117,15 +83,12 @@ StatusCode GiGaMCVertexCnv::updateRep( DataObject*     Object  , IOpaqueAddress*
   ObjectVector<MCVertex>* vertices = 0 ; 
   try        { vertices = dynamic_cast<ObjectVector<MCVertex>*>( Object ) ; } 
   catch(...) { vertices =                                               0 ; } 
-  ///
   if( 0 == vertices      ) { return Error("UpdateRep::Bad cast to ObjectVector<MCVertex>"      ); }
   if( 0 == cnvSvc()      ) { return Error("UpdateRep::Conversion Service is unavailable"       ); } 
   if( 0 == gigaSvc()     ) { return Error("UpdateRep::GiGa Service is unavailable"             ); } 
   if( 0 == ppSvc()       ) { return Error("UpdateRep::ParticleProperty Service is unavailable" ); } 
   ///
-  ///
   unsigned int nVertex=0; 
-  ///
   /// loop over all vertices and "convert" them 
   ObjectVector<MCVertex>::const_iterator pVertex = vertices->begin(); 
   while( vertices->end()  != pVertex ) 
@@ -148,14 +111,14 @@ StatusCode GiGaMCVertexCnv::updateRep( DataObject*     Object  , IOpaqueAddress*
       ///
       G4PrimaryVertex* Vertex = VertexFromMCVertex( vertex );
       ///
-      { MsgStream log( msgSvc(),  ConverterName() ) ; log << MSG::VERBOSE << "UpdateRep::Add Vertex to GiGa" << endreq; }
+      { MsgStream log( msgSvc(),  name() ) ; log << MSG::VERBOSE << "UpdateRep::Add Vertex to GiGa" << endreq; }
       ///
       if( 0 != gigaSvc() ) { *gigaSvc() << Vertex ; ++nVertex ; } 
       else                 { return Error("CreateRep::IGiGaSvc* points to NULL!") ; }
       /// 
     }
   ///
-  { MsgStream log( msgSvc(),  ConverterName() ) ; log << MSG::VERBOSE << "UpdateRep::end " << 
+  { MsgStream log( msgSvc(),  name() ) ; log << MSG::VERBOSE << "UpdateRep::end " << 
 						    nVertex << " primary vertices converted " << endreq; }
   ///
   return StatusCode::SUCCESS; 

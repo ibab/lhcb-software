@@ -8,11 +8,11 @@
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/SmartDataPtr.h"
 
-#include "GiGa/GiGaStream.h" 
 
 
 
-
+/// local 
+#include "GiGaStream.h" 
 
 
 

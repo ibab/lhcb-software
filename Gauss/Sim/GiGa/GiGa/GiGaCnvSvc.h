@@ -9,240 +9,136 @@
 ///
 /// from Gaudi - base class 
 #include "GaudiKernel/ConversionSvc.h"
-///
-/// from Gaudi - interfaces 
-#include "GaudiKernel/IGiGaSvc.h" 
-#include "GaudiKernel/IGiGaSetUpSvc.h" 
-#include "GaudiKernel/IParticlePropertySvc.h" 
-#include "GaudiKernel/ISvcLocator.h" 
-#include "GaudiKernel/IDataProviderSvc.h" 
 
 
+class IGiGaSvc; 
+class IGiGaSetUpSvc;
+class IDataProviderSvc;
+class IParticlePropertySvc;
+class IMagneticFieldSvc;
+class IObjManager;
+class IChronoStatSvc;
 
-///
 ///
 #include "GiGa/IGiGaCnvSvc.h" 
 
-///
-/// forward declarations
-///
 
-template <class SERVICE> class SvcFactory; 
+/**  
+     @class GiGaCnvSvc GiGaCnvSvc.h GiGa/GiGaCnvSvc.h
+     
+     Base conversion service  for converting of Gaudi 
+     structures into Geant4 primary event record  
+     
+     @author Vanya Belyaev 
+     @date    07/08/2000 
+*/
 
-class    IGiGaSvc; 
-class    IParticlePropertySvc; 
-class    IDataSelector; 
-
-///
-///  GiGaCnvSvc: base conversion service  for converting of Gaudi 
-///                  structures into Geant4 primary event record  
-///  
-///  Author: Vanya Belyaev 
-///  Date    7 Aug 2000 
-
-
-class GiGaCnvSvc:  public          ConversionSvc, 
-                   virtual public  IGiGaCnvSvc      
+class GiGaCnvSvc: virtual public  IGiGaCnvSvc ,       
+                  public        ConversionSvc
 {
-  ///
-  /// 
   ///  
  public:
-  
-  ///   
+
   /// constructor 
-  ///
   GiGaCnvSvc( const std::string&   ServiceName       , 
 	      ISvcLocator*         ServiceLocator    ,
-	      const unsigned int   StorageType       )
-    : ConversionSvc(               ServiceName       , 
-		                   ServiceLocator    , 
-		                   StorageType       )  
-    ///
-    , m_NameOfDataProviderSvc     ( "EventDataSvc"        )
-    , m_DataProviderSvc           (     0                 )
-    ///
-    , m_NameOfGiGaSvc             ( "GiGaSvc"             ) 
-    , m_GiGaSvc                   (     0                 ) 
-    ///
-    , m_NameOfGiGaSetUpSvc        ( "GiGaSvc"             ) 
-    , m_GiGaSetUpSvc              (     0                 ) 
-    ///
-    , m_NameOfParticlePropertySvc ( "ParticlePropertySvc" )  
-    , m_ParticlePropertySvc       (            0          ) 
-    ///
-    { 
-      declareProperty   ( "NameOfDataProviderService"       , m_NameOfDataProviderSvc     );
-      declareProperty   ( "NameOfGiGaService"               , m_NameOfGiGaSvc             ); 
-      declareProperty   ( "NameOfGiGaSetUpService"          , m_NameOfGiGaSetUpSvc        ); 
-      declareProperty   ( "NameOfParticlePropertyService"   , m_NameOfParticlePropertySvc );
-    };
-  
-  /// 
+	      const unsigned int   StorageType       );
   /// virtual destructor
+  virtual ~GiGaCnvSvc();
   ///
-  
-  virtual ~GiGaCnvSvc(){} 
   
  public: 
   
-  inline virtual StatusCode              initialize (); 
-  inline virtual StatusCode              finalize   ();
-  inline virtual StatusCode              queryInterface( const IID& , void** );
-
-  inline virtual StatusCode              createReps(IDataSelector* pSelector) ;
- 
-  virtual        IGiGaSvc*               gigaSvc  () { return m_GiGaSvc             ; }  
-  virtual        IGiGaSetUpSvc*          setupSvc () { return m_GiGaSetUpSvc        ; } 
-  virtual        IParticlePropertySvc*   ppSvc    () { return m_ParticlePropertySvc ; } 
+  ///  
+  virtual StatusCode              initialize (); 
+  ///
+  virtual StatusCode              finalize   ();
+  ///
+  virtual StatusCode              queryInterface( const IID& , void** );
+  ///
 
  protected:
-
-  inline StatusCode Error( const std::string& Message , const StatusCode& status = StatusCode::FAILURE ); 
-
-  void setNameOfDataProviderSvc( const std::string& NameOfDataProviderSvc ) 
-    { m_NameOfDataProviderSvc = NameOfDataProviderSvc; }  
-   
+  ///
+  /// "main" data provider         (mandatory) 
+  virtual        IDataProviderSvc*       dpSvc     () { return m_dpSvc       ; }  
+  ///  event data provider         (optional) 
+  virtual        IDataProviderSvc*       evtSvc    () { return m_evtSvc      ; }  
+  /// detector data provider       (optional)
+  virtual        IDataProviderSvc*       detSvc    () { return m_detSvc      ; }  
+  /// GiGa service                 (mandatory)
+  virtual        IGiGaSvc*               gigaSvc   () { return m_gigaSvc     ; }  
+  /// GiGaSetUp service            (mandatory)
+  virtual        IGiGaSetUpSvc*          setupSvc  () { return m_setupSvc    ; } 
+  /// Magnetic field service       (optional)
+  virtual        IMagneticFieldSvc*      mfSvc     () { return m_mfSvc       ; } 
+  /// particle properties service  (optional)
+  virtual        IParticlePropertySvc*   ppSvc     () { return m_ppSvc       ; } 
+  /// chrono  service              (optional)
+  virtual        IChronoStatSvc*         chronoSvc () { return m_chronoSvc   ; } 
+  /// object manager               (optiona)
+  virtual        IObjManager*            objMgr    () { return m_objMgr      ; } 
+  ///
+  StatusCode    setNameOfDataProviderSvc( const std::string& Name ) { m_dpName = Name ; } 
+  ///
+  inline StatusCode Error   ( const std::string & msg ,  
+			      const StatusCode  & sc  = StatusCode::FAILURE );
+  inline StatusCode Warning ( const std::string & msg ,  
+			      const StatusCode  & sc  = StatusCode::FAILURE );
+  inline StatusCode Print   ( const std::string & msg ,  
+                              const MSG::Level  & lvl = MSG::INFO           ,
+			      const StatusCode  & sc  = StatusCode::FAILURE );
+  ///
  private: 
-  
   ///
+  GiGaCnvSvc()                               ; // no default constructor  
+  GiGaCnvSvc           ( const GiGaCnvSvc& ) ; // no copy
+  GiGaCnvSvc& operator=( const GiGaCnvSvc& ) ; // no assignment 
   ///
+ private: 
   ///
-  
-  std::string                          m_NameOfDataProviderSvc       ; 
-  IDataProviderSvc*                    m_DataProviderSvc             ; 
-
-  std::string                          m_NameOfGiGaSvc               ; 
-  IGiGaSvc*                            m_GiGaSvc                     ; 
-  
-  std::string                          m_NameOfGiGaSetUpSvc          ; 
-  IGiGaSetUpSvc*                       m_GiGaSetUpSvc                ; 
-  
-  std::string                          m_NameOfParticlePropertySvc   ; 
-  IParticlePropertySvc*                m_ParticlePropertySvc         ;
-  
+  std::string                          m_dpName     ; 
+  IDataProviderSvc*                    m_dpSvc      ; 
   ///
-  ///  
+  std::string                          m_evtName    ; 
+  IDataProviderSvc*                    m_evtSvc     ; 
+  ///
+  std::string                          m_detName    ; 
+  IDataProviderSvc*                    m_detSvc     ; 
+  ///
+  std::string                          m_gigaName   ; 
+  IGiGaSvc*                            m_gigaSvc    ; 
+  ///
+  std::string                          m_setupName  ; 
+  IGiGaSetUpSvc*                       m_setupSvc   ; 
+  ///
+  std::string                          m_ppName     ; 
+  IParticlePropertySvc*                m_ppSvc      ;
+  /// 
+  std::string                          m_mfName     ; 
+  IMagneticFieldSvc*                   m_mfSvc      ;
+  ///
+  std::string                          m_chronoName ; 
+  IChronoStatSvc*                      m_chronoSvc  ;
+  ///
+  std::string                          m_omName     ; 
+  IObjManager*                         m_objMgr     ;
+  ///
 };        
-
-
-///
-///
-///
-
-inline StatusCode GiGaCnvSvc::initialize()
+///////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GiGaCnvSvc::Error( const std::string& Message , const StatusCode & Status )
+{ return  Print( Message , MSG::ERROR  , Status  ) ; };  
+///////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GiGaCnvSvc::Warning( const std::string& Message , const StatusCode & Status )
+{ return  Print( Message , MSG::WARNING , Status ) ; };  
+///////////////////////////////////////////////////////////////////////////////////
+inline StatusCode GiGaCnvSvc::Print( const std::string& Message , 
+				     const MSG::Level & level   , 
+				     const StatusCode & Status )
 {
-  ///
-  StatusCode status = ConversionSvc::initialize() ; 
-  ///  
-  if( status.isFailure()     )  { return Error("Initialize::Could not initialize base class ConversionSvc", status); } 
-  ///
-  { MsgStream log(msgSvc() , name() ); log << MSG::VERBOSE << "Initialize::begin" << endreq; }
-  ///
-  IDataProviderSvc* m_DataProviderSvc = 0 ; 
-  status = serviceLocator()->getService( m_NameOfDataProviderSvc          , 
-					 IID_IDataProviderSvc             , 
-					 (IInterface*&) m_DataProviderSvc ) ; 
-  if( status.isFailure()     ) { return Error("Initialize::Could not locate IDataProvider="+m_NameOfDataProviderSvc, status );}      
-  if( 0 == m_DataProviderSvc ) { return Error("Initialize::Could not locate IDataProvider="+m_NameOfDataProviderSvc         );}      
-  ///
-  setStore( m_DataProviderSvc ); 
-  ///
-  status = serviceLocator()->getService( m_NameOfGiGaSvc          , 
-					 IID_IGiGaSvc             , 
-					 (IInterface*&) m_GiGaSvc ) ; 
-  ///
-  if( status.isFailure()     ) { return Error("Initialize::Could not locate IGiGaSvc="+m_NameOfGiGaSvc, status );}      
-  if( 0 == m_GiGaSvc         ) { return Error("Initialize::Could not locate IGiGaSvc="+m_NameOfGiGaSvc         );}      
-  ///
-  ///
-  status = serviceLocator()->getService( m_NameOfGiGaSetUpSvc          , 
-					 IID_IGiGaSetUpSvc             , 
-					 (IInterface*&) m_GiGaSetUpSvc ) ; 
-  ///
-  if( status.isFailure()     ) { return Error("Initialize::Could not locate IGiGaSetUpSvc="+m_NameOfGiGaSetUpSvc, status );}      
-  if( 0 == m_GiGaSetUpSvc    ) { return Error("Initialize::Could not locate IGiGaSetUpSvc="+m_NameOfGiGaSetUpSvc         );}      
-  ///
-  ///
-  status = serviceLocator()->getService( m_NameOfParticlePropertySvc          , 
-					 IID_IParticlePropertySvc             , 
-					 (IInterface*&) m_ParticlePropertySvc ) ; 
-  ///
-  if( status.isFailure()     ) { return Error("Initialize::Could not locate IParticlePropertySvc="+m_NameOfParticlePropertySvc, status );}      
-  if( 0 == m_GiGaSetUpSvc    ) { return Error("Initialize::Could not locate IParticlePropertySvc="+m_NameOfParticlePropertySvc         );}      
-  ///
-  { MsgStream log(msgSvc() , name() ); log << MSG::VERBOSE << "Initialize::end" << endreq; }
-  ///
-  return StatusCode::SUCCESS; 
-  ///
-};
-
-///
-///
-///
-
-inline StatusCode GiGaCnvSvc::finalize()
-{
-  ///
-  StatusCode st = ConversionSvc::finalize(); 
-  ///
-  return st; 
-  ///
-};
-
-///
-///
-///
-
-StatusCode GiGaCnvSvc::queryInterface( const IID& iid , void** ppInterface )
-{ 
-  ///
-  if( 0 == ppInterface        ) { return StatusCode::FAILURE                                ; } 
-  if( IID_IGiGaCnvSvc  == iid ) { *ppInterface = static_cast<IGiGaCnvSvc*>(this)            ; } 
-  else                          { return ConversionSvc::queryInterface( iid , ppInterface ) ; } 
-  ///
-  addRef();
-  ///
-  return StatusCode::SUCCESS;  
-  ///
-};
-
-///
-///
-///
-
-StatusCode GiGaCnvSvc::createReps(IDataSelector* pSelector)
-{
-  ///
-  { MsgStream log(msgSvc() , name() ); log << MSG::VERBOSE << "CreateReps::begin" << endreq; }
-  ///
-  if( 0 == gigaSvc  ()   ) { return Error("CreateReps::IGiGaSvc* points to NULL!"            ) ; } 
-  if( 0 == setupSvc ()   ) { return Error("CreateReps::IGiGaSetUpSvc* points to NULL!"       ) ; } 
-  if( 0 == ppSvc    ()   ) { return Error("CreateReps::IParticlePropertySvc* points to NULL!") ; } 
-  ///
-  StatusCode status = ConversionSvc::createReps( pSelector ) ;
-  ///
-  if( status.isFailure() ) { return Error("CreateReps::Error brom ConversionService::createReps(IDataSelector*)",status); }
-  ///
-  { MsgStream log(msgSvc() , name() ); log << MSG::VERBOSE << "CreateReps::end" << endreq; }
-  ///
-  return status; 
-  ///
-};
-
-///
-///
-///
-
-inline StatusCode GiGaCnvSvc::Error( const std::string& Message , const StatusCode& status )
-{
-  MsgStream log( msgSvc() , name() ) ; log << MSG::ERROR << Message << endreq; 
-  return status; 
-};
-
-///
-///
-/// 
+  MsgStream log( msgSvc() , name() ); log << level << Message << endreq ; 
+  return  Status;
+};  
+///////////////////////////////////////////////////////////////////////////////////
 
 #endif  //   __GIGA_CONVERSION_GIGACNVSVC_H__ 
 

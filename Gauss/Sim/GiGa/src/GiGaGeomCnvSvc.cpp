@@ -1,14 +1,52 @@
 ///
+#include <string>
+#include <algorithm>
+
 ///
 /// from Gaudi 
 #include "GaudiKernel/AddrFactory.h" 
 #include "GaudiKernel/SvcFactory.h" 
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/DetectorElement.h"
-#include"GaudiKernel/IDataSelector.h"
-#include"GaudiKernel/IConverter.h"
-/// from GiGa  
-#include "GiGa/GiGaGeomCnvSvc.h" 
+#include "GaudiKernel/IDataSelector.h"
+#include "GaudiKernel/IConverter.h"
+#include "GaudiKernel/IObjManager.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/DataObject.h"
+
+// from DetDesc 
+#include "DetDesc/DetectorElement.h"
+#include "DetDesc/Solids.h"
+
+
+// Include G4 Stuff
+#include "G4VPhysicalVolume.hh"
+#include "G4LogicalVolume.hh"
+#include "G4LogicalVolumeStore.hh"
+#include "G4PVPlacement.hh"
+#include "G4Material.hh"
+
+#include "G4Box.hh"
+#include "G4Cons.hh"
+#include "G4Sphere.hh"
+#include "G4Trd.hh"
+#include "G4Trap.hh"
+#include "G4Tubs.hh"
+#include "G4IntersectionSolid.hh"
+#include "G4SubtractionSolid.hh"
+#include "G4UnionSolid.hh"
+
+#include "G4VisAttributes.hh"
+
+/// from GiGa 
+#include "GiGa/IGiGaSensDet.h"
+#include "GiGa/IGiGaSensDetFactory.h"
+#include "GiGa/IGiGaMagField.h"
+#include "GiGa/IGiGaMagFieldFactory.h"
+
+
+// local 
+#include "GiGaGeomCnvSvc.h" 
+#include "SplitTypeAndName.h"
 
 
 ///
@@ -20,19 +58,7 @@
 /// Date  : 7 Aug 2000
 ///
 
-// Include G4 Stuff
-#include "G4VPhysicalVolume.hh"
-#include "G4LogicalVolume.hh"
-#include "G4PVPlacement.hh"
-#include "G4Material.hh"
-#include "G4Element.hh"
-#include "G4Box.hh"
 
-///
-///
-///
-
-extern unsigned char GiGaGeom_StorageType        ; 
 extern const IAddrFactory& GiGaGeomAddressFactory ; 
 
 
@@ -40,110 +66,287 @@ static const  SvcFactory<GiGaGeomCnvSvc>                         s_GiGaGeomCnvSv
 const        ISvcFactory&                GiGaGeomCnvSvcFactory = s_GiGaGeomCnvSvcFactory ; 
 
 
-///
 /// constructor
-///
-
 GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          , 
   				ISvcLocator*         ServiceLocator       ) 
   : GiGaCnvSvc(                                      ServiceName          , 
 		                                     ServiceLocator       , 
 						     GiGaGeom_StorageType )
+  , m_worldPV       ( 0                   ) 
+  , m_worldMaterial ( "/dd/Materials/Air" )
+  , m_worldNamePV   ( "Universe"          )
+  , m_worldNameLV   ( "World"             )
+  , m_worldX        ( 50. * m             )
+  , m_worldY        ( 50. * m             )
+  , m_worldZ        ( 50. * m             )
+  ///
+  , m_SDs           ()
+  , m_SDFs          ()
+  , m_MFs           ()
+  , m_MFFs          ()
   ///
 {
+  ///
   setAddressFactory(&GiGaGeomAddressFactory) ;
   setNameOfDataProviderSvc("DetectorDataSvc"); 
+  ///
+  declareProperty("WorldMaterial"             , m_worldMaterial );
+  declareProperty("WorldPhysicalVolumeName"   , m_worldNamePV   );
+  declareProperty("WorldLogicalVolumeName"    , m_worldNameLV   );
+  ///
+  declareProperty("XsizeOfWorldVolume"        , m_worldX        );
+  declareProperty("YsizeOfWorldVolume"        , m_worldY        );
+  declareProperty("XsizeOfWorldVolume"        , m_worldZ        );
+  ///
+  /// declareProperty("GlobalMagneticField"       , m_magFieldName  );
 };
-
 ///
+G4Material*    GiGaGeomCnvSvc::g4Material( const std::string& Name )
+{
+  /// first look throught G4MaterialTable
+  {
+    G4Material* mat = G4Material::GetMaterial( Name ) ;
+    if( 0 != mat ) { return mat ; } 
+  }
+  /// retrieve material by name and convert it to G4 representation  
+  {
+    SmartDataPtr<DataObject>  so( detSvc() , Name ); 
+    DataObject* Obj = so;  
+    if( 0 == Obj       ) { Error("Failed to locate DataObject with name:"+Name) ; return 0 ;  } 
+    IDataSelector dS; dS.push_back( Obj ) ; 
+    StatusCode sc = createReps( &dS );
+    if( sc.isFailure() ) { Error("Failed to create G4 representation of Material="+Name,sc) ; return 0 ; }
+  }
+  /// look throught G4MaterialTable
+  {
+    G4Material* mat = G4Material::GetMaterial( Name ) ;
+    if( 0 != mat ) { return mat ; } 
+  }
+  ///
+  Error("Failed to find G4Material with name="+Name);
+  ///
+  return 0;     
+};
 /// 
-
-StatusCode GiGaGeomCnvSvc::initialize() { 
+G4LogicalVolume* GiGaGeomCnvSvc::g4LVolume( const std::string& Name )
+{
+  /// first look through G4LogicalVolumeStore
+  {
+    G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
+    for( int indx = 0 ; indx < store.entries() ; ++indx )
+      { if( Name == store[indx]->GetName() ) { return store[indx] ; }  }   /// RETURN !!!
+  }
+  /// locate the object in the transient store and convert it! 
+  {
+    SmartDataPtr<DataObject>  so( detSvc() , Name ); 
+    DataObject* Obj = so;  
+    if( 0 == Obj       ) { Error("Failed to locate DataObject with name:"+Name) ;  return 0 ; } 
+    ///
+    IDataSelector dS; dS.push_back( Obj ) ; 
+    StatusCode sc = createReps( &dS );
+    if( sc.isFailure() ) { Error("Failed to create G4 representation of LOgicalVolume="+Name,sc); return 0 ; }
+  } 
+  /// again look through G4LogicalVolumeStore
+  {
+    G4LogicalVolumeStore& store = *G4LogicalVolumeStore::GetInstance();
+    for( int indx = 0 ; indx < store.entries() ; ++indx )
+      { if( Name == store[indx]->GetName() ) { return store[indx] ; }  }   /// RETURN !!!
+  }
+  ///
+  Error("Failed to find G4LogicalVolume with name="+Name);
+  ///
+  return 0;      
+};
+///
+G4VSolid*    GiGaGeomCnvSvc::g4Solid( const ISolid* Sd )
+{
+  ///
+  if ( 0 == Sd) { Error("g4Solid ISolid* point to NULL"); return 0;  }  /// RETURN !!!
+  ///
+  const std::string solidType( Sd->typeName() ); 
+  ///
+  /// box?  
+  {
+    const SolidBox* sBox = dynamic_cast<const SolidBox*>(Sd);
+    if( solidType == "SolidBox" && 0 != sBox ) 
+      { return new G4Box( sBox->name(),
+			  sBox->xHalfLength(),
+			  sBox->yHalfLength(),
+			  sBox->zHalfLength()); } 
+  }
+  /// cons?
+  {
+    const SolidCons* sCons = dynamic_cast<const SolidCons*>(Sd);
+    if( solidType == "SolidCons" && 0 != sCons ) 
+      { return new G4Cons( sCons->name(),
+			   sCons->innerRadiusAtMinusZ(),
+			   sCons->outerRadiusAtMinusZ(),
+			   sCons->innerRadiusAtPlusZ(),
+			   sCons->outerRadiusAtPlusZ(),
+			   sCons->zHalfLength(),
+			   sCons->startPhiAngle(),
+			   sCons->deltaPhiAngle() ); }
+  }
+  /// sphere?
+  {
+    const SolidSphere* sSphere = dynamic_cast<const SolidSphere*>(Sd);
+    if ( solidType == "SolidSphere" && 0 != sSphere ) 
+      { return new G4Sphere( sSphere->name            (),
+			     sSphere->insideRadius    (),
+			     sSphere->outerRadius     (), 
+			     sSphere->startPhiAngle   (),
+			     sSphere->deltaPhiAngle   (),
+			     sSphere->startThetaAngle (),
+			     sSphere->deltaThetaAngle () ); }
+  }
+  /// trd? 
+  {
+    const SolidTrd* sTrd = dynamic_cast<const SolidTrd*>(Sd);
+    if (solidType == "SolidTrd" && 0 != sTrd ) 
+      { return new G4Trd( sTrd->name(),
+			  sTrd->xHalfLength1(),
+			  sTrd->xHalfLength2(),
+			  sTrd->yHalfLength1(),
+			  sTrd->yHalfLength2(),
+			  sTrd->zHalfLength()); }
+  }
+  /// tubs ?   
+  { 
+    const SolidTubs* sTubs = dynamic_cast<const SolidTubs*>(Sd);
+    if (solidType == "SolidTubs" && 0 != sTubs ) 
+      { return new G4Tubs( sTubs->name(),
+			   sTubs->innerRadius(),
+			   sTubs->outerRadius(),
+			   sTubs->zHalfLength(),
+			   sTubs->startPhiAngle(),
+			   sTubs->deltaPhiAngle()); }
+  }
+  /// trap ?   
+  {  
+    const SolidTrap* sTrap = dynamic_cast<const SolidTrap*>(Sd);
+    if (solidType == "SolidTrap" && 0 != sTrap ) 
+      { return new G4Trap( sTrap->name            (),
+			   sTrap->zHalfLength     (),
+			   sTrap->theta           (),
+			   sTrap->phi             (),
+			   sTrap->dyAtMinusZ      (),
+			   sTrap->dxAtMinusZMinusY(),
+			   sTrap->dxAtMinusZPlusY (),
+			   sTrap->alphaAtMinusZ   (),
+			   sTrap->dyAtPlusZ       (),
+			   sTrap->dxAtPlusZMinusY (),
+			   sTrap->dxAtPlusZPlusY  (),
+			   sTrap->alphaAtPlusZ    () ); }
+  }
+  /// boolean ? 
+  {
+    const SolidBoolean* sBool = dynamic_cast<const SolidBoolean*> (Sd);
+    if( 0 != sBool ) { return g4BoolSolid( sBool ); }
+  }
+  /// unknown solid!
+  Error("g4solid Unknown Solid="+solidType+"/"+System::typeinfoName(typeid(Sd))+"/"+Sd->name());
+  ///
+  return 0;
+};
+///
+G4VSolid*  GiGaGeomCnvSvc::g4BoolSolid( const SolidBoolean* Sd ) 
+{
+  ///
+  if( 0 == Sd )
+    { Error("g4BoolSolid, SolidBoolean* point to NULL!")                                     ; return 0; }
+  const SolidSubtraction*  sSub = dynamic_cast<const SolidSubtraction*>  ( Sd );
+  const SolidIntersection* sInt = dynamic_cast<const SolidIntersection*> ( Sd );
+  const SolidUnion*        sUni = dynamic_cast<const SolidUnion*>        ( Sd );
+  if( 0 == sSub && 0 == sInt && 0 == sUni ) 
+    { Error("g4BoolSolid, Unknown type of Boolean solid="+Sd->typeName())                    ; return 0; }
+  if( 0 == Sd->first() ) 
+    { Error("g4BoolSolid, Wrong MAIN/FIRST solid for Boolean solid="+Sd->name())             ; return 0; }
+  ///
+  G4VSolid* first = g4Solid( Sd->first() ); 
+  if( 0 == first      )
+    { Error("g4BoolSolid, could not convert MAIN/FIRST solid for Boolean solid="+Sd->name()) ; return 0; }
+  ///
+  G4VSolid* g4total = first;
+  typedef SolidBoolean::SolidChildrens::const_iterator CI;
+  for( CI it = Sd->childBegin() ; Sd->childEnd() != it ; ++it )
+    {
+      const SolidChild* child = *it ; 
+      G4VSolid* g4child = g4Solid( child->solid() );
+      if( 0 == g4child ) 
+	{ Error("g4BoolSolid, could not convert CHILD solid for Boolean solid="+Sd->name())  ; return 0; }
+      if      ( 0 != sSub    ) 
+	{ g4total = new G4SubtractionSolid  ( Sd->first()->name()+"-"+child->name() , g4total , g4child , child->matrix() ) ; }
+      else if ( 0 != sInt    )
+	{ g4total = new G4IntersectionSolid ( Sd->first()->name()+"*"+child->name() , g4total , g4child , child->matrix() ) ; }
+      else if ( 0 != sInt    )
+	{ g4total = new G4UnionSolid        ( Sd->first()->name()+"+"+child->name() , g4total , g4child , child->matrix() ) ; }
+      else
+	{ Error("g4BoolSolid, Unknown type of Boolean solid="+Sd->typeName())                 ; return 0; }
+    } 
+  ///
+  g4total->SetName( Sd->name() ) ;
+  ///
+  return g4total;
+};
+///
+StatusCode GiGaGeomCnvSvc::initialize() 
+{ 
+  ///
   StatusCode sc = GiGaCnvSvc::initialize();
-  MsgStream log( msgSvc(), name() );  
-  if(!sc.isSuccess()) {return Error(" Failed to initialize GiGaCnvSvc", sc);}
-  // create Air in G4 to create the G4 World volume
-  sc = createAir();
-  if(!sc.isSuccess()) {return Error(" Failed to create Air in G4", sc);}
-  // Create G4 World Volume
-  sc = createG4WorldVol();
-  if(!sc.isSuccess()) {return Error("Failed to create G4 World Volume", sc);}
-  return StatusCode::SUCCESS;
-}
-
-StatusCode GiGaGeomCnvSvc::finalize()   { 
-  delete m_G4WorldSd;
-  delete m_G4WorldLV;
-  delete m_G4WorldPV;
+  if(sc.isFailure() ) { return Error(" Failed to initialize GiGaCnvSvc", sc  ) ;}
+  /// we explicitely need detSvc(), check it! 
+  if( 0 == detSvc() ) { return Error(" DetectorProviderSvc is not located! " ) ;}
+  ///
+  return sc;
+  ///
+};
+///
+StatusCode GiGaGeomCnvSvc::finalize()   
+{ 
+  ///
   return GiGaCnvSvc::finalize(); 
-}
-
-
-StatusCode GiGaGeomCnvSvc::createAir(){
-
-  int nelem;
-  double iz, a;
-
-  std::string name, symbol;
-  a = 14.01*g/mole;
-  G4Element* elN = new G4Element(name="Nitrogen", symbol="N", iz=7., a);
-
-  a = 16.00*g/mole;
-  G4Element* elO = new G4Element(name="Oxygen", symbol="O", iz=8., a);
-
-  double density = 1.29e-03*g/cm3;
-  G4Material* air = new G4Material(name="air", density, nelem=2);
-  air->AddElement(elN, .7);
-  air->AddElement(elO, .3);
-  return StatusCode::SUCCESS;
-}
-
-StatusCode GiGaGeomCnvSvc::createG4WorldVol(){
-  // Initialize G4 World physical volume
-  // It is a big box with no mother volume
-  G4Material* air = G4Material::GetMaterial("air");
-  if(air == 0){
-    return Error(" Failed to create G4 World Volume because air does not exist", StatusCode::FAILURE);
-  }
-  try {
-    m_G4WorldSd = new G4Box("G4World_box", 1000*m,1000*m,1000*m);
-    m_G4WorldLV = new G4LogicalVolume(m_G4WorldSd,air, "G4World_LV", 0,0,0);
-    //sc = insertLV ("G4World_LV", m_G4WorldLV);
-    m_G4WorldPV = new G4PVPlacement(0,Hep3Vector(),"G4World_PV",m_G4WorldLV,0,false,0);
-  } catch(...) {
-    return StatusCode::FAILURE;
-  }
-  return StatusCode::SUCCESS;
-}
-
-
-
-
-// rewrite the createReps function.
-// Has to identify DetElements and subclasses of Det Elements
-
+  ///
+};
+///
+G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV() 
+{
+  /// already created? 
+  if( 0 != m_worldPV ) { return m_worldPV ; } /// already created 
+  ///
+  { MsgStream log(msgSvc(),name()); log << MSG::INFO << " Create the WORLD volume!" << endreq; } 
+  /// create it!
+  G4Material* MAT = g4Material ( m_worldMaterial );   
+  if( 0 == MAT ) { Error("G4WorldPV:: could not locate/convert material="+m_worldMaterial) ; return 0 ; }
+  ///
+  G4VSolid*        SD = new G4Box("WorldBox", m_worldX , m_worldY , m_worldZ ) ; 
+  ///
+  G4LogicalVolume* LV = new G4LogicalVolume( SD , MAT , m_worldNameLV , 0 , 0 , 0 ); 
+  /// make it invisible 
+  LV -> SetVisAttributes ( G4VisAttributes::Invisible );
+  ///
+  m_worldPV           = new G4PVPlacement( 0 , Hep3Vector() , m_worldNamePV , LV , 0 , false , 0 );
+  ///
+  return m_worldPV ; 
+}; 
 /// Convert a collection of transient data objects into another representation.
-StatusCode GiGaGeomCnvSvc::createReps(IDataSelector* pSelector)  {
+StatusCode GiGaGeomCnvSvc::createReps(IDataSelector* pSelector)  
+{
   Context::iterator       i;
   IDataSelector::iterator j;
   Context                 context;
   StatusCode              status = NO_CONVERTER;
   StatusCode              iret   = StatusCode::SUCCESS;
-  // Create context
-  for ( j = pSelector->begin(); j != pSelector->end(); j++ )   {
-    const CLID& obj_class = (*j)->clID();
-    // check if it is a Det Elem.
-    try {
-      DetectorElement* de = dynamic_cast<DetectorElement*>(*j);
-       const CLID& obj_class = de->clID();
-    } catch(...) { 
+  // Create context 
+  for ( j = pSelector->begin(); j != pSelector->end(); j++ )   
+    {    
+      // check if it is a Det Elem.
+      DetectorElement* de = 0 ;
+      try        { de = dynamic_cast<DetectorElement*>(*j); } 
+      catch(...) { de = 0 ;}
+      IConverter*    cnv = converter( 0 != de ? de->clID() : (*j)->clID() );
+      context.push_back(ContextEntry(cnv, 0, (*j)));
+      if ( 0 == cnv )   { iret = NO_CONVERTER; }
     }
-    IConverter*    cnv = converter(obj_class);
-    context.push_back(ContextEntry(cnv, 0, (*j)));
-    if ( 0 == cnv )   {
-      iret = NO_CONVERTER;
-    }
-  }
   // Update primitive representation
   for ( i = context.begin(); i != context.end(); i++ )   {
     ContextEntry& e = (*i);
@@ -173,3 +376,112 @@ StatusCode GiGaGeomCnvSvc::createReps(IDataSelector* pSelector)  {
   }
   return iret;
 }
+///////////////////////////////////////////////////////////////////////////////////////////
+StatusCode GiGaGeomCnvSvc::queryInterface( const IID& iid , void** ppI )
+{ 
+  ///
+  if  ( 0 == ppI                    ) { return StatusCode::FAILURE                     ; } 
+  *ppI = 0 ; 
+  if  ( IID_IGiGaGeomCnvSvc  == iid ) { *ppI  = static_cast<IGiGaGeomCnvSvc*> (this)   ; } 
+  else                                { return GiGaCnvSvc::queryInterface( iid , ppI ) ; } 
+  ///
+  addRef();
+  ///
+  return StatusCode::SUCCESS;  
+  ///
+};
+///////////////////////////////////////////////////////////////////////////////////////////////
+StatusCode GiGaGeomCnvSvc::sensDet( const std::string& TypeNick , IGiGaSensDet*& SD )
+{
+  ///
+  SD = 0 ; /// reset the output value 
+  ///
+  std::string Type,Nick;
+  StatusCode sc = SplitTypeAndName( TypeNick , Type, Nick ); 
+  if( sc.isFailure() ) { return Error("Could not interprete name of SensDet="+TypeNick, sc ) ; }
+  /// look at the local storage:
+  for( SDobjects::const_iterator it = m_SDs.begin() ; m_SDs.end() != it ; ++it ) 
+    {
+      if( 0 != *it && (*it)->name() == Nick && System::typeinfoName( typeid( *it ) ) == Type ) 
+	{ (*it)->addRef() ; SD = *it ; return StatusCode::SUCCESS ; }  
+    } 
+  /// look at local storage of factories: 
+  const IGiGaSensDetFactory* SDfac = 0 ; 
+  for( SDfactories::const_iterator fit = m_SDFs.begin() ; m_SDFs.end() != fit ; ++fit )
+    { if( 0 != *fit  && (*fit)->ident() == Type ) { SDfac = *fit ; break ; } }
+  /// 
+  if( 0 == SDfac )   
+    {
+      if( 0 == objMgr()                       ) { return Error("IObjectManager*    points to NULL!"  ); }
+      if( !objMgr()->existsObjFactory( Type ) ) { return Error("Could not locate  factory for "+Type ); }
+      const IFactory* fac = objMgr()->objFactory( Type ); 
+      if( 0 == fac                            ) { return Error("Could not locate  factory for "+Type ); }
+      SDfac = dynamic_cast<const IGiGaSensDetFactory*> (fac) ; 
+      if( 0 == SDfac                          ) { return Error("Could not cast the actory for "+Type ); }
+      m_SDFs.push_back( SDfac );
+    }
+  /// 
+  SD = SDfac->instantiate( Nick , serviceLocator() );
+  ///
+  StatusCode st = SD->initialize(); 
+  if( st.isFailure() ) { Error("Could Not Initialize the SD Object "+TypeNick, st ); delete SD ; SD = 0 ; } 
+  ///
+  return StatusCode::SUCCESS;
+  ///
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+StatusCode GiGaGeomCnvSvc::magField( const std::string& TypeNick , IGiGaMagField*& MF )
+{
+  ///
+  MF = 0 ; /// reset the output value 
+  ///
+  std::string Type,Nick;
+  StatusCode sc = SplitTypeAndName( TypeNick , Type, Nick ); 
+  if( sc.isFailure() ) { return Error("Could not interprete name of MagField="+TypeNick, sc ) ; }
+  /// look at the local storage:
+  for( MFobjects::const_iterator it = m_MFs.begin() ; m_MFs.end() != it ; ++it ) 
+    {
+      if( 0 != *it && (*it)->name() == Nick && System::typeinfoName( typeid( *it ) ) == Type ) 
+	{ (*it)->addRef() ; MF = *it ; return StatusCode::SUCCESS ; }  
+    } 
+  /// look at local storage of factories: 
+  const IGiGaMagFieldFactory* MFfac = 0 ; 
+  for( MFfactories::const_iterator fit = m_MFFs.begin() ; m_MFFs.end() != fit ; ++fit )
+    { if( 0 != *fit  && (*fit)->ident() == Type ) { MFfac = *fit ; break ; } }
+  /// 
+  if( 0 == MFfac )   
+    {
+      if( 0 == objMgr()                       ) { return Error("IObjectManager*    points to NULL!"  ); }
+      if( !objMgr()->existsObjFactory( Type ) ) { return Error("Could not locate  factory for "+Type ); }
+      const IFactory* fac = objMgr()->objFactory( Type ); 
+      if( 0 == fac                            ) { return Error("Could not locate  factory for "+Type ); }
+      MFfac = dynamic_cast<const IGiGaMagFieldFactory*> (fac) ; 
+      if( 0 == MFfac                          ) { return Error("Could not cast the actory for "+Type ); }
+      m_MFFs.push_back( MFfac );
+    }
+  /// 
+  MF = MFfac->instantiate( Nick , serviceLocator() );
+  ///
+  StatusCode st = MF->initialize(); 
+  if( st.isFailure() ) { delete MF ; MF = 0 ; return Error("Could not Initialize the MagField Object="+TypeNick, st ); } 
+  ///
+  return StatusCode::SUCCESS;
+  ///
+};
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,14 +1,17 @@
 
-///
-///
+
 /// from Gaudi 
 #include "GaudiKernel/AddrFactory.h" 
 #include "GaudiKernel/SvcFactory.h" 
 #include "GaudiKernel/MsgStream.h"
-///
+
+
 /// from GiGa 
 #include "GiGa/GiGaCnvSvc.h" 
-#include "GiGa/GiGaKineCnvSvc.h" 
+
+
+// local
+#include "GiGaKineCnvSvc.h" 
 
 
 ///
@@ -21,22 +24,13 @@
 ///
 
 
-///
-///
-///
-
-extern unsigned char GiGaKine_StorageType        ; 
 extern const IAddrFactory& GiGaKineAddressFactory ; 
-
 
 static const  SvcFactory<GiGaKineCnvSvc>                         s_GiGaKineCnvSvcFactory ; 
 const        ISvcFactory&                GiGaKineCnvSvcFactory = s_GiGaKineCnvSvcFactory ; 
 
 
-///
 /// constructor
-///
-
 GiGaKineCnvSvc::GiGaKineCnvSvc( const std::string&   ServiceName          , 
   				ISvcLocator*         ServiceLocator       ) 
   : GiGaCnvSvc(                                      ServiceName          , 
@@ -47,13 +41,8 @@ GiGaKineCnvSvc::GiGaKineCnvSvc( const std::string&   ServiceName          ,
   setAddressFactory(&GiGaKineAddressFactory);
   setNameOfDataProviderSvc("EventDataSvc");
 }
-
 ///
-///
-/// 
-
 StatusCode GiGaKineCnvSvc::initialize() { return GiGaCnvSvc::initialize(); };  
-
 StatusCode GiGaKineCnvSvc::finalize()   { return GiGaCnvSvc::finalize(); };  
 
 

@@ -1,21 +1,21 @@
 package  GiGa 
 
-version v3
+version v4
 set GIGAOPTIONS "${GIGAROOT}/options/GiGaOptions.txt"
 
 branches cmt src doc GiGa 
 
-# Gaudi
-use GaudiSys   v6*
+# GaudiKernel
+use GaudiKernel   v9*
 
 # Event object library
-use LHCbEvent  v8*	Event
+use LHCbEvent     v9*	Event
 
 # Detector Description package
-use DetDesc    v5*	Det
+use DetDesc       v6*	Det
 
 # Geant4 tool kit 
-use GEANT4     v3r0	Sim
+use GEANT4        v3r0	Sim
 
 
 ###########################################################################

@@ -20,10 +20,8 @@
 ///  Date   9 Aug 2000 
 ///  
 
-extern unsigned char GiGaGeom_StorageType; 
-
 ///
-/// XmlAddress Factory definition
+/// Address Factory definition
 ///
 static const  AddrFactory<GiGaGeomAddress>                                s_GiGaGeomAddressFactory(GiGaGeom_StorageType);
 const        IAddrFactory&                       GiGaGeomAddressFactory = s_GiGaGeomAddressFactory;
