@@ -1,4 +1,5 @@
     <class name='ITChannelID' author='Matthew Needham' desc='ITChannelID is a class that describes a single channel of LHCb Inner tracker.'>
+      &StlVector;
       <desc> *  Now, only the station, layer, wafer and strip number can be retrieved.
  *  All numbers start from 1.</desc>
       <constructor argList='unsigned int station, unsigned int layer, unsigned int wafer, unsigned int strip' desc='constructor with station, layer, wafer, strip'>

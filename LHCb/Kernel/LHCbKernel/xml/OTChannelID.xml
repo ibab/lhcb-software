@@ -2,7 +2,7 @@
            author='Jeroen van Tilburg'
            desc='OTChannelID is a class that describes a single straw'>
       <desc> *  of the LHCb Outer Tracker</desc>
-
+      &StlVector;
       <constructor argList='int iStation, int iLayer, int iQuarter, int iModule, int iStraw' 
                    desc='constructor with station, layer, quarter, module, straw'>
         <code>    

@@ -6,6 +6,7 @@
 <!ENTITY VeloChannelID.xml SYSTEM "VeloChannelID.xml" >
 <!ENTITY RichSmartID.xml   SYSTEM "RichSmartID.xml"   >
 <!ENTITY CaloCellID.xml    SYSTEM "CaloCellID.xml"    >
+<!ENTITY ParticleID.xml    SYSTEM "ParticleID.xml"    >
 ]>
 
 <gdd>
@@ -18,6 +19,7 @@
     &VeloChannelID.xml;
     &RichSmartID.xml;
     &CaloCellID.xml;
+    &ParticleID.xml;
 
   </package>
 </gdd>

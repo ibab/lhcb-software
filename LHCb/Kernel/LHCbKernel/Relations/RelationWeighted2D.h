@@ -1,8 +1,4 @@
-// $Id: RelationWeighted2D.h,v 1.13 2003-11-23 12:42:59 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// $Id: RelationWeighted2D.h,v 1.14 2003-12-18 15:32:58 cattanem Exp $
 // ============================================================================
 #ifndef RELATIONS_RelationWeighted2D_H 
 #define RELATIONS_RelationWeighted2D_H 1
@@ -34,8 +30,8 @@ class StreamBuffer;
  */
 template<class FROM, class TO, class WEIGHT>
 class RelationWeighted2D :
-  public IRelationWeighted2D<FROM,TO,WEIGHT> ,
-  public DataObject
+  public DataObject,
+  public IRelationWeighted2D<FROM,TO,WEIGHT>
 {
 public:
   

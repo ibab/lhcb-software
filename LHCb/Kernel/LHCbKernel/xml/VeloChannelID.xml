@@ -1,4 +1,5 @@
     <class name='VeloChannelID' author='Chris Parkes' desc='VeloChannelID is a class that describes a single channel of LHCb VELO.'>
+      &StlVector;
       <desc> *  Now, only the sensor Number and strip number can be retrieved.
  *  Intend to add R/Phi, station number.</desc>
       <constructor argList='unsigned int sensor, unsigned int strip' desc='constructor with sensor, strip'>
@@ -41,13 +42,3 @@
       <enum access="PUBLIC" desc="general storage enum" name="general" 
       value='nullStrip = 0xFFFF'/>
     </class>
-
-
-
-
-
-
-
-
-
-

@@ -1,16 +1,9 @@
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.2 2003-11-24 22:52:04 ibelyaev Exp $
-  *****************************************************************************
-  * CVS tag $Name: not supported by cvs2svn $                            
+  * $Id: CaloCellID.xml,v 1.3 2003-12-18 15:32:59 cattanem Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
   * date:   2003-11-24                                                        *
-  *****************************************************************************
-  * $Log: not supported by cvs2svn $
-  * Revision 1.1  2003/11/24 14:17:30  ibelyaev
-  *  add XML description of CaloCellID class
-  *
   ************************************************************************* -->
 
   
@@ -18,6 +11,7 @@
     name   = "CaloCellID"
     desc   = "Simple class to represent cell identifier for calorimeter devices"
     author = "Vanya BELYAEV Ivan.Belyaev@itep.ru">
+  &StlVector;
   <desc> *
     *
     *  The class represents the unique cell identifier for all calorimeter devices
@@ -42,9 +36,10 @@
     access = "PUBLIC" />
   
   <attribute
-    name = "ccid"
-    desc = "Representation of CellID (32bits)"
-    type = "ContentType" />
+    name      = "ccid"
+    desc      = "Representation of CellID (32bits)"
+    dictalias = "unsigned int"
+    type      = "ContentType" />
   
   <constructor
     desc     = "Default/empty constructor"

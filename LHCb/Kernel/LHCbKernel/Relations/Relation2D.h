@@ -1,8 +1,11 @@
-// $Id: Relation2D.h,v 1.12 2003-11-23 12:42:59 ibelyaev Exp $
+// $Id: Relation2D.h,v 1.13 2003-12-18 15:32:58 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2003/11/23 12:42:59  ibelyaev
+//  update to remove multiple and virtual inheritance
+//
 // ============================================================================
 #ifndef RELATIONS_Relation2D_H 
 #define RELATIONS_Relation2D_H 1
@@ -32,8 +35,8 @@
 
 template< class FROM, class TO>
 class Relation2D :
-  public IRelation2D<FROM,TO>           , 
-  public DataObject                     
+  public DataObject,            
+  public IRelation2D<FROM,TO>
 {
 public:
   

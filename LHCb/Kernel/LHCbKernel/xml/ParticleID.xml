@@ -1,0 +1,215 @@
+<!-- ****************************************************************
+     * ParticleID                                                   *
+     ****************************************************************-->
+
+     <class
+      author="Gloria Corti"
+      desc="Holds PDG+LHCb extention particle code. Based on HepPDT class"
+      name="ParticleID"
+     >
+       &StlVector;
+       <enum
+        desc="PID digits (base 10) are: n nr nl nq1 ne2 nq3 nj"
+        name="Location"
+        value="nj=1, nq3, nq2, nq1, nr, nl, n, n8, n9, n10"
+        access="PUBLIC"
+       />
+       <enum
+        desc="Quark PDG codes"
+        name="Quark"
+        value="down=1, up, strange, charm, bottom, top"
+        access="PUBLIC"
+       />
+       <constructor
+        desc="Constructor with PDG code"
+        initList="m_pid( pid )"
+       >
+         <arg name="pid" type="int"/>
+         <code></code>
+       </constructor>
+       <constructor
+        desc="Copy Constructor"
+       >
+         <arg const="TRUE" name="orig" type="ParticleID"/>
+         <code>    m_pid = orig.pid();</code>
+       </constructor>
+       <attribute
+         desc="PDG code"
+         name="pid"
+         type="int"
+       />
+       <method
+        const="TRUE"
+        desc="Equality operator"
+        name="operator=="
+        type="bool"
+        argInOut="aValue"
+       >
+         <arg name="other" type="ParticleID const" const="FALSE"/>
+         <code>return ( m_pid == other.pid() );</code>
+       </method>
+       <!--method const="FALSE" desc="Copy operator" inline="TRUE" name="operator=" type="ParticleID&amp;"-->
+         <!--arg const="TRUE" name="orig" type="ParticleID"/-->
+         <!--code>m_pid = orig.pid(); </code-->
+       <!--/method-->
+       <!--method
+        const="TRUE"
+        desc="Convertion (cast) to int"
+        name="operator const int &amp;"
+        type=" ">
+          <code>return m_pid; </code>
+       </method-->
+       <!--method
+        const="FALSE"
+        desc="Convertion (cast) to int"
+        name="operator int &amp;"
+        type=" ">
+          <code>return m_pid; </code>
+       </method-->
+       <method
+        const="TRUE"
+        desc="Absolute value of PDG code"
+        name="abspid"
+        type="int"
+        >
+          <code>return (m_pid &lt; 0) ? -m_pid : m_pid ;</code>
+       </method>
+       <method
+        const="TRUE"
+        desc="Classification of particles"
+        name="isValid"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Classification of particles"
+        name="isMeson" 
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Classification of particles"
+        name="isBaryon"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Classification of particles"
+        name="isDiQuark"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Classification of particles"
+        name="isHadron"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Classification of particles"
+        name="isLepton"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Classification of particles"
+        name="isNucleus"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Quark contents"
+        name="hasUp"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Quark contents"
+        name="hasDown"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Quark contents"
+        name="hasStrange"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Quark contents"
+        name="hasCharm"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Quark contents"
+        name="hasBottom"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Quark contents"
+        name="hasTop"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="Contains quarks but not a nucleus"
+        name="hasQuarks"
+        type="bool"
+       />
+       <method
+        argList="Quark q"
+        const="TRUE"
+        desc="Quark contents"
+        name="hasQuark"
+        type="bool"
+       />
+       <method
+        const="TRUE"
+        desc="First two digits if it is a &apos;fundamental &apos; particle"
+        name="fundamentalID"
+        type="int"
+       />
+       <method
+        const="TRUE"
+        desc="Value of digit in specified location"
+        name="digit"
+        type="unsigned short"
+        argList="Location loc"
+       />
+       <method
+        const="TRUE"
+        desc="Everything behind the 7th digit (e.g. outside the numbering scheme)"
+        name="extraBits"
+        type="int"
+       />
+       <method
+        access="PUBLIC"
+        const="TRUE"
+        desc="Three times the charge (in positron charge units)"
+        name="threeCharge"
+        type="int"
+       />
+       <method
+        access="PUBLIC"
+        const="TRUE"
+        desc="Returns 2J+1, where J is the total spin"
+        name="jSpin"
+        type="int"
+       />
+       <method
+        access="PUBLIC"
+        const="TRUE"
+        desc="Returns 2S+1, where S is the spin"
+        name="sSpin"
+        type="int"
+       />
+       <method
+        access="PUBLIC"
+        const="TRUE"
+        desc="Returns 2L+1, where L is the orbital angular momentum"
+        name="lSpin"
+        type="int"
+       />
+     </class>

@@ -1,4 +1,4 @@
-// $Id: IAssociatorWeighted.h,v 1.10 2003-12-10 09:34:10 cattanem Exp $
+// $Id: IAssociatorWeighted.h,v 1.11 2003-12-18 15:32:58 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -46,11 +46,11 @@ public:
   typedef typename DirectType::Weight      Weight        ;
   
   /// another set of shortcuts may be easier to remember (PhC)
-  typedef OwnType                             IAsct;
-  typedef DirectType                          Table;
+  typedef OwnType                    IAsct;
+  typedef DirectType                 Table;
   typedef typename Table::Range               ToRange;
   typedef typename Table::iterator            ToIterator;
-  typedef typename OwnType::InverseType       InvTable;
+  typedef OwnType::InverseType       InvTable;
   typedef typename InvTable::Range            FromRange;
   typedef typename InvTable::iterator         FromIterator;
 

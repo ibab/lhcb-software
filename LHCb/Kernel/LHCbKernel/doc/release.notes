@@ -2,6 +2,17 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!====================== LHCbKernel v4r0 2003-12-15 ========================
+! 2003-12-15 - Marco Cattaneo
+ - Move to GAUDI_v14r0 
+   . requirements: use GaudiKernel v15r*, GaudiObjDesc v6r*
+   . IAssociatorWighted.h: add some typename's
+   . Relation1,2D.h, RelationWeighted1,2D.h: change order of inheritance
+   . CaloCellID.xml, ITChannelID.xml, OTChannelID.xml, RichSmartID.xml, VeloChannelID.xml:
+     adaptations for SEAL dictionary
+   . Remove dict/CLHEP_dict.cpp (now done by SEAL)
+ - Add ParticleID.xml, ParticleID.cpp (moved from Event/Event)
+
 !====================== LHCbKernel v3r0 2003-12-08 ========================
 ! 2003-12-08 - Marco Cattaneo
  - Move to GAUDI_v13r0 (in requirements: use GaudiKernel v14r*)

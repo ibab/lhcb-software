@@ -1,4 +1,5 @@
        <class author="Chris Jones   Christopher.Rob.Jones@cern.ch" desc="Identifier for RICH detector objects" name="RichSmartID" stdVectorTypeDef="FALSE">
+            &StlVector;
             <typedef access="PUBLIC" def="KeyType" desc="Type for internal key" type="unsigned long"/>
             <constructor desc="Copy constructor" initList="m_key( id.key() )">
                 <arg const="TRUE" inout="INOUT" name="id" type="RichSmartID"/>

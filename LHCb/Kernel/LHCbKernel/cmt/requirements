@@ -1,17 +1,17 @@
-# $Id: requirements,v 1.43 2003-12-09 10:14:29 cattanem Exp $
+# $Id: requirements,v 1.44 2003-12-18 15:31:34 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v3r0
+version v4r0
 
 include_dirs $(LHCBKERNELROOT) $(BOOSTHOME)
 
-use GaudiKernel  v14r*
+use GaudiKernel  v15r*
 use CLHEP        v*
 use BOOST        v*     -no_auto_imports
-use GaudiObjDesc v5r*   -no_auto_imports
+use GaudiObjDesc v6r*
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================
@@ -26,7 +26,7 @@ document obj2dict LHCbKernelObj2Dict ../xml/LHCbKernel.xml
 # Build libraries (including dictionary)
 #============================================================================
 library LHCbKernel     *.cpp
-library LHCbKernelDict ../dict/*.cpp -import=GaudiIntrospection
+library LHCbKernelDict ../dict/*.cpp dict/*.cpp
         
 # Standard patterns (order is essential)
 #============================================================================
