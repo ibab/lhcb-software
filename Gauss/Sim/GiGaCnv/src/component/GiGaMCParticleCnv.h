@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.h,v 1.7 2002-05-02 11:57:03 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.h,v 1.8 2003-07-14 15:26:37 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/05/02 11:57:03  ibelyaev
+//  cleanup of header files
+//
 // ============================================================================
 #ifndef GIGACNV_GIGAMCPARTICLECNV_H
 #define GIGACNV_GIGAMCPARTICLECNV_H  1 
@@ -104,10 +107,14 @@ public:
   /** retrieve the storage type for created object 
    *  @return storage type  for created object 
    */
+
   static const unsigned char storageType() ; 
+  /** auxiliary method to assign collisions to particles and vertices
+   *  @return status code 
+   */
+  StatusCode PointToCollision(MCVertex*, Collision*);
   ///
-protected: 
-  
+
 private:
   ///
   GiGaMCParticleCnv () ; /// no default constructor 

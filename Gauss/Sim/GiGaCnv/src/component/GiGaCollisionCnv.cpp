@@ -140,10 +140,7 @@ StatusCode GiGaCollisionCnv::updateObj
   // clear the container before update 
   collisions->clear(); 
   //
-  SmartDataPtr<HepMCEvents> hevnts(evtSvc(),"/Event/Gen/HepMCEvents");
-  SmartDataPtr<MCParticles> mcparts(evtSvc(),MCParticleLocation::Default);
-  SmartDataPtr<MCVertices> mcvts(evtSvc(), MCVertexLocation::Default);
-  
+  SmartDataPtr<HepMCEvents> hevnts(evtSvc(),"/Event/Gen/HepMCEvents");  
   
   if (!hevnts)
     {
@@ -158,7 +155,7 @@ StatusCode GiGaCollisionCnv::updateObj
           
           // instanciate new collision
           Collision* collision=new Collision;  
-
+          
           collision->setProcessType(evt->signal_process_id());
           
           if(evt->event_scale()>0.0)
@@ -169,67 +166,34 @@ StatusCode GiGaCollisionCnv::updateObj
             {
               collision->setIsSignal(false);
             }
+          // start looping over particles to find one with 
+          // status 1 or 888 to get the coordinates of the production
+          // vertex
           
-          for (HepMC::GenEvent::vertex_const_iterator 
-                 pVertex= evt->vertices_begin();
-               pVertex!= evt->vertices_end();pVertex++)
-            {
-              // start looping over outgoing particles to find one with 
-              // status 1 or 888 to get the coordinates of the production
-              // vertex
+          HepPoint3D primvtx;
 
-              HepPoint3D primvtx;
-
-              for (HepMC::GenVertex::particles_out_const_iterator pParticle = 
-                     (*pVertex)->particles_out_const_begin();
-                   (*pVertex)->particles_out_const_end()!=pParticle;++pParticle)
-                {                  
-                  if(((*pParticle)->status()==1)||((*pParticle)->status()==888))
-                    {
-                      primvtx=((*pParticle)->production_vertex()
-                               ->position()).v();
-                      
-                      continue;
-                    } 
-                  collision->setPrimVtxPosition(primvtx);
-                }
-              for(MCVertices::iterator viter=mcvts->begin();mcvts->end()!=viter;
-                  viter++)
+          HepMC::GenEvent::particle_iterator pParticle=evt->particles_begin();
+          bool test=false;
+          
+          do
+            {  
+              if(((*pParticle)->status()==1)||((*pParticle)->status()==888))
                 {
-                  // find the MCVertex (primary) corresponding to this collision
-                  if((*viter)->position()==primvtx)
-                    {
-                      // set the pointer to the collision in the vertex and 
-                      // in all the daughters
-                      PointToCollision(*viter, collision);
-                    }
+                  primvtx=((*pParticle)->production_vertex()
+                           ->position()).v();
+
+                  test=true;
                 }
-            }              
+              
+              ++pParticle;
+            }         
+          while(evt->particles_end()!=pParticle && !test);
+              
+          collision->setPrimVtxPosition(primvtx);
           collisions->insert(collision);
         }
     }
   //
   return StatusCode::SUCCESS;
 };
-  
-StatusCode GiGaCollisionCnv::PointToCollision(MCVertex* vtx,Collision* collision)
-{
-  //
-  vtx->setCollision(collision);
-  typedef SmartRefVector<MCParticle>::iterator itp;
-  typedef SmartRefVector<MCVertex>::iterator itv;
 
-  // propagate it to all the daughters (and vertices)
-  for(itp dauit=(vtx->products()).begin();
-      (vtx->products()).end()!=dauit; dauit++)
-    {
-      (*dauit)->setCollision(collision);
-      
-      for(itv endvtx=((*dauit)->endVertices()).begin();
-          ((*dauit)->endVertices()).end()!=endvtx;endvtx++)
-        {
-          PointToCollision(*endvtx, collision);
-        }
-    }
-  return StatusCode::SUCCESS;
-};

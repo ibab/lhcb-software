@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.23 2003-07-11 17:42:59 witoldp Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.24 2003-07-14 15:26:36 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.23  2003/07/11 17:42:59  witoldp
+// added collision converter
+//
 // Revision 1.22  2003/07/07 16:45:30  ranjard
 // v12r3 - fix for gcc3.2
 //
@@ -45,6 +48,7 @@
 #include "GiGaCnv/GiGaCnvUtils.h" 
 /// LHCbEvent
 #include "Event/MCParticle.h" 
+#include "Event/HepMCEvent.h"
 /// Geant4 includes
 #include "G4TrajectoryContainer.hh"
 #include "G4ParticleDefinition.hh"
@@ -347,7 +351,33 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
       }      
     }
 
+  SmartDataPtr<Collisions> colls(evtSvc(), CollisionLocation::Default);
   
+  if(!colls)
+     {
+       return Error("Cannot find Collisions!");
+     }
+  else
+     {
+       for(Collisions::const_iterator colit=colls->begin();
+           colls->end()!=colit;colit++)
+         {     
+           HepPoint3D primvtx=(*colit)->primVtxPosition();
+           
+           for(iVertex=vertices->begin();
+               vertices->end()!=iVertex;iVertex++)
+             {
+               // find the MCVertex (primary) corresponding to this collision
+               if((*iVertex)->position()==primvtx && !((*iVertex)->mother()))
+                 {
+                   // set the pointer to the collision in the vertex and 
+                   // in all the daughters
+                   PointToCollision(*iVertex, *colit);
+                 }
+             }
+         }
+     }
+
 //TrajectoryVector* tv = trajectories->GetVector();
 //for( ITC iTrajectory = tv->begin(); tv->end() != iTrajectory ; ++iTrajectory )
 //{
@@ -392,60 +422,34 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
 //             } 
 //           else { return Error("'OriginVertex' is already set!") ; }
 //         }
-//     } 
-  ///
-  return StatusCode::SUCCESS;
-  ///
+//     }
+///
+   
+   return StatusCode::SUCCESS;
+   ///
 };
 
-// ======================================================================
-// End 
-// ======================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+StatusCode GiGaMCParticleCnv::PointToCollision(MCVertex* vtx, Collision* collision)
+{
+  //
+  vtx->setCollision(collision);
+  
+  SmartRefVector<MCParticle>& daughters = vtx->products();
+  SmartRefVector<MCParticle>::iterator idau;  
+  SmartRefVector<MCVertex>::iterator itv;
+  
+  // propagate it to all the daughters (and vertices)
+  
+  for (idau=daughters.begin();idau != daughters.end();idau++)
+    {
+      (*idau)->setCollision(collision);
+      
+      for(itv=((*idau)->endVertices()).begin();
+          ((*idau)->endVertices()).end()!=itv;itv++)
+        {
+          PointToCollision(*itv, collision);
+        }
+    }
+  return StatusCode::SUCCESS;
+};
 

@@ -72,13 +72,7 @@ public:
   /** finalize  the converter
    *  @return status code 
    */
-  virtual StatusCode finalize ();
-
-  /** auxiliary method to assign collisions to particles and vertices
-   *  @return status code 
-   */
-  StatusCode PointToCollision(MCVertex*, Collision*);
-  
+  virtual StatusCode finalize ();  
 
   ///
 private:
