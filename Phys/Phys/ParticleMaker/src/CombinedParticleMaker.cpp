@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.2 2004-12-14 08:45:29 pkoppenb Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.3 2005-02-09 18:01:33 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
@@ -407,6 +407,7 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
       trkeep = true;
     }
     if( !trkeep ) continue;
+    debug() << "Found a nice track " << endmsg ;
     // then loop on all particle types to make and their associated criteria
     for( TypeSelections::const_iterator iSel=m_typeSelections.begin();
          m_typeSelections.end()!=iSel; ++iSel ) {
@@ -420,6 +421,8 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
           Particle* aParticle = new Particle();
           sc = fillParticle( *iProto, (*iSel).first, aParticle );
           if( sc.isSuccess() ) {
+            debug() << "Making a " << ((*iSel).first)->particle() 
+                    << " " << aParticle->particleID().pid() << endmsg ;
             parts.push_back(aParticle);
             ++nParticles;
             kept = true;
@@ -438,6 +441,7 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
         Particle* aParticle = new Particle();
         sc = fillParticle( *iProto, (*iSel).first, aParticle );
         if( sc.isSuccess() ) {
+          debug() << "Making a pi+ " << aParticle->particleID().pid() << endmsg ;
           parts.push_back(aParticle);
           ++nParticles;
         } else {
@@ -501,6 +505,9 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
     
   // Calculate and set four momentum
   double momentum = trackState->p();
+  //  int p10keV = (int)(momentumf*(MeV/(10*keV))+0.5); // HACK
+  //  double momentum = (10*keV/MeV)*p10keV; // HACK
+  //  debug() << "P = " << momentumf << " MeV becomes " << p10keV << " (10keV), becomes " << momentum << " MeV" << endmsg ;
   double slopeX   = trackState->tx();
   double slopeY   = trackState->ty();	  
 
@@ -552,6 +559,7 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
 //=============================================================================
 double CombinedParticleMaker::bremMomentum( const ProtoParticle* proto ) {
 
+  verbose() << "bremMomentum" << endmsg ;
   double bremMom = 0.0;
   const SmartRefVector<CaloHypo>& hypos = proto->calo();
   double XCluster = 1000000;
@@ -685,6 +693,7 @@ bool CombinedParticleMaker::selectionIsSatisfied(const ProtoParticle* proto,
 double CombinedParticleMaker::dllValue(const ProtoParticle* proto,
                                        const ProtoParticle::detectorPID& det) {
   
+  verbose() << "dllValue" << endmsg ;
   double value = -999.0;
   for( ProtoParticle::PIDDetVector::const_reverse_iterator 
          id = proto->pIDDetectors().rbegin();
