@@ -29,23 +29,24 @@ ApplicationMgr.EvtMax = -1;
 // Input and output files.
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "Pool411300.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "brunel.root";  // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
   "xmlcatalog_file:NewCatalog.xml"
  ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
- ,"xmlcatalog_http://gcorti.home.cern.ch/gcorti/POOL/MyCatalog.xml"
 };
 
 //---------------------------------------------------------------------------
 // Event input
 //---------------------------------------------------------------------------
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r8/Pool411300.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 411300
+EventSelector.Input = {
+ "DATAFILE='rfio:/castor/cern.ch/lhcb/DC04/00000542_00000001_4.digi' TYP='POOL_ROOT' OPT='READ'"
+}; // DC04: Boole v5r8,Gauss v15r4,XmlDDDB v22r2, evttype 11144100 (Bd_JpsiKS,mm)
 
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:Pool411300.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:BrunelTest.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 
 //////////////////////////////////////////////////////////////////////////////

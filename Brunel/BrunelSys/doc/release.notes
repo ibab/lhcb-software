@@ -4,6 +4,13 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
+!======================= BrunelSys v24r2 2004-09-08 =======================
+! 2004-09-08 - Marco Cattaneo
+ - Modified requirements for Brunel v24r2
+
+   Packages removed:  VeloDAQ, STDAQ, MuonDAQ (moved to LHCbSys)
+   Packages modified: CaloPIDs v2r4, CaloReco v2r5, VeloTT v1r1
+
 !======================= BrunelSys v24r1 2004-07-26 =======================
 ! 2004-07-26 - Marco Cattaneo
  - Same as v24r0, but built against Gaudi v15r1

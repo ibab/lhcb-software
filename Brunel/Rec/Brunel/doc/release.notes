@@ -3,6 +3,27 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v24r2>2004-09-08 Brunel v24r2</A></H1><PRE>
+
+- New or modified functionality
+  . New test input data file taken from DC04 (v200402.opts)
+  . Enabled new Gaudi DataOnDemand service to allow automatic invocation of 
+    RawBuffer decoding algorithms. In this version it is used to decode the
+    Calorimeter banks (Brunel.opts, CaloEvent v13r5)
+  . Preparation for HLT developments (CaloPIDs v2r4, CaloReco v2r5)
+
+- New tuning
+  . Speed improvements in decoding of Calo RawBuffer banks (CaloEvent v13r5)
+  . Speed improvements in CellularAutomaton (CaloReco v2r5)
+
+- Code cleanups
+  . Z positions of TT stations taken from detector element rather than job
+    options (VeloTT v1r11)
+
+- Bug fixes
+  . Workaround for core dump on exit() (GaudiPoolDb v1r8p1)
+  . Various fixes for memory leaks (GaudiSvc v12r2p1, GaudiPoolDb v1r8p1)
+
 </PRE><H1><A NAME=v24r1>2004-07-26 Brunel v24r1</A></H1><PRE>
 This version uses Gaudi v15r1, needs CMT v1r16. It can process DC04 data
 

@@ -24,6 +24,10 @@ ApplicationMgr.DLLs += { "GaudiAlg", "LHCbAlgs" };
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
+// Configure the DataOnDemand Service 
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+EventDataSvc.EnableFaultHandler  = true ;
+
 //--------------------------------------------------------------
 // Brunel Phases to be executed
 //--------------------------------------------------------------
@@ -65,11 +69,8 @@ InitBrunelSeq.Members += { "CreateRawEvent" };
 //--------------------------------------------------------------
 
 // Calorimeter reconstruction
-ApplicationMgr.DLLs += { "CaloReco"      , 
-                         "CaloPIDs"     ,
-                         "CaloEvent"     };
-BrunelRecoCALOSeq.Members  = { "CaloDigitsFromRaw" };
-BrunelRecoCALOSeq.Members += { "CaloReCreateMCLinks" };
+ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
+#include "$CALOEVENTOPTS/CaloEvent.opts"
 #include "$CALORECOOPTS/Brunel.opts"
 #include "$CALORECOOPTS/Reco.opts"
 #include "$CALORECOOPTS/Filters.opts"
@@ -164,6 +165,7 @@ ApplicationMgr.DLLs += { "OTAssociators" };
 ApplicationMgr.DLLs += { "VeloAssociators" };
 #include "$TRASSOCIATORSROOT/options/Brunel.opts"
 #include "$CALOASSOCIATORSOPTS/CaloAssociators.opts"
+RelationsCaloSeq.Members += { "CaloReCreateMCLinks" };
 RelationsCaloSeq.Members += { "CaloClustersMCTruth5Alg/CCs2MCPs" };
 ApplicationMgr.DLLs += { "MuonAssociators" };
 ApplicationMgr.DLLs += { "AsctToLinker" };
