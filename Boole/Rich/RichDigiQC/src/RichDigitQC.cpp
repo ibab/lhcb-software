@@ -5,8 +5,11 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.8 2005-01-17 14:08:10 cattanem Exp $
+ *  $Id: RichDigitQC.cpp,v 1.9 2005-01-18 09:03:33 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.8  2005/01/17 14:08:10  cattanem
+ *  v2r0
+ *
  *  Revision 1.7  2005/01/13 14:10:53  jonrob
  *  fix un-initialized variables
  *
@@ -97,7 +100,7 @@ StatusCode RichDigitQC::execute()
   {for ( HPDCounter::const_iterator iHPD = nHPD[Rich::Rich1].begin();
          iHPD != nHPD[Rich::Rich1].end(); ++iHPD )
   {
-    plot( (*iHPD).second, "RICH1 : HPD occupancy", 0, 150 );
+    plot( (*iHPD).second, "RICH1 : HPD occupancy", 0, 150, 75 );
     (m_nHPD[Rich::Rich1])[(*iHPD).first] += (*iHPD).second;
     const RichDAQ::Level1ID l1ID = m_level1->levelL1ID( (*iHPD).first );
     totL1R1[l1ID]       += (*iHPD).second;
@@ -106,23 +109,25 @@ StatusCode RichDigitQC::execute()
   {for ( HPDCounter::const_iterator iHPD = nHPD[Rich::Rich2].begin();
          iHPD != nHPD[Rich::Rich2].end(); ++iHPD )
   {
-    plot( (*iHPD).second, "RICH2 : HPD occupancy", 0, 150 );
+    plot( (*iHPD).second, "RICH2 : HPD occupancy", 0, 150, 75 );
     (m_nHPD[Rich::Rich2])[(*iHPD).first] += (*iHPD).second;
     const RichDAQ::Level1ID l1ID = m_level1->levelL1ID( (*iHPD).first );
     totL1R2[l1ID]       += (*iHPD).second;
     totDet[Rich::Rich2] += (*iHPD).second;
   }}
-  plot( totDet[Rich::Rich1], "RICH1 : Detector occupancy", 0, 5000 );
-  plot( totDet[Rich::Rich2], "RICH2 : Detector occupancy", 0, 2000 );
+  plot( totDet[Rich::Rich1], "RICH1 : Detector occupancy", 0, 5000, 50 );
+  plot( totDet[Rich::Rich2], "RICH2 : Detector occupancy", 0, 2000, 50 );
   {for ( L1Counter::const_iterator iL1 = totL1R1.begin(); iL1 != totL1R1.end(); ++iL1 ) {
     std::string l1String =  boost::lexical_cast<std::string>((*iL1).first);
     plot( (*iL1).second, "RICH1 : Average L1 board occupancy", 0, 1000 );
-    plot( (*iL1).second, "RICH1 : L1 board "+l1String+" occupancy", 0, 1000 );
+    // should make a job option to turn on/off
+    //plot( (*iL1).second, "RICH1 : L1 board "+l1String+" occupancy", 0, 1000 );
   }}
   {for ( L1Counter::const_iterator iL1 = totL1R2.begin(); iL1 != totL1R2.end(); ++iL1 ) {
     std::string l1String =  boost::lexical_cast<std::string>((*iL1).first);
     plot( (*iL1).second, "RICH2 : Average L1 board occupancy", 0, 1000 );
-    plot( (*iL1).second, "RICH2 : L1 board "+l1String+" occupancy", 0, 1000 );
+    // should make a job option to turn on/off
+    //plot( (*iL1).second, "RICH2 : L1 board "+l1String+" occupancy", 0, 1000 );
   }}
 
   return StatusCode::SUCCESS;
