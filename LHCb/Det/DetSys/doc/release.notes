@@ -4,6 +4,9 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+! 2003-01-27 - Marco Cattaneo
+ - requirements - use VeloDet v8r4
+
 !========================= DetSys v1r3 2003-01-23 =========================
 ! 2003-01-23 - Marco Cattaneo
  - requirements - use CaloDet v6r4
