@@ -5,14 +5,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v17r0 2004-10-21 =======================
-! 2004-10-21 - Marco Cattaneo
- - New packages: OTDAQ v3r0 (moved here from application projects)
+!======================= LHCbSys v17r0 2004-10-27 =======================
+! 2004-10-27 - Marco Cattaneo
+ - New packages: OTDAQ v3r1 (moved here from application projects)
 
  - Modified packages: KernelSys v4r3, LHCbKernel v5r3, EventSys v19r0,
      CaloEvent v13r5p1, EventAssoc v1r4, MuonEvent v3r1p1, OTEvent v14r0,
      RichEvent v4r0p1, TrEvent v14r0, AssociatorsSys v2r0, OTAssociators v3r0,
-     TrAssociators v5r0, MCTools v1r8, GaudiConf v8r0p1, IOExample v1r3
+     TrAssociators v5r0, MCTools v1r8, IOExample v1r3
 
  - In LHCbKernel v5r3
    . First implementation of LHCbID
@@ -25,8 +25,30 @@
       MCTools v1r8, IOExample v1r3
    . Update for use with new OT Event model (replace OTCluster by OTTime)
 
+!======================= LHCbSys v16r3 2004-10-27 =======================
+This version is built on branch v16r2b2, against Gaudi v15r3
+
+! 2004-10-27 - Marco Cattaneo
+ - Modified packages: KernelSys v4r2p2, LHCbKernel v5r2p2,
+                      EventSys v18r3, CaloEvent v13r6, DAQEvent v4r5,
+                      GaudiConf v8r0p1, LHCbAlgs v1r1p1, CaloUtils v4r8
+
+ - In CaloEvent v13r6
+   . Add a few new 'technical' functors
+
+ - In DAQEvent v4r5
+   . Change RawBank bankType encoding to include a bank version number
+   . Add algorithm EventHeaderFromRaw
+
  - In GaudiConf v8r0p1
    . Update valgrind suppression file for Gaudi v15r2
+
+ - In LHCbAlgs v1r1p1
+   . In LbAppInit: bug fix when creating event header if it does not exist
+
+ - In CaloUtils v4r8
+   . Bug fix in evaluation of energy fractions
+   . New helper class TrTrackUse to simplify selection/rejection of TrStoredTrack
 
 !======================= LHCbSys v16r2 2004-09-23 =======================
 This version is built against Gaudi v15r2
