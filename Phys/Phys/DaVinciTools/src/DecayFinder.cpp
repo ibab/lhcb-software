@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.8 2003-03-07 11:05:52 odie Exp $
+// $Id: DecayFinder.cpp,v 1.9 2003-04-30 12:44:47 gcorti Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -269,7 +269,7 @@ bool DecayFinder::findDecay( const Particle *&previous_result )
 
 void DecayFinder::descendants( const Particle *head,
                                std::vector<Particle *>&result,
-                               bool leaf = false )
+                               bool leaf )
 {
   bool term = true;
   const Vertex *vtx = head->endVertex();
@@ -374,7 +374,7 @@ std::string DecayFinder::Descriptor::describe( void )
 }
   
 bool DecayFinder::Descriptor::test( const Particle *part,
-                                    std::vector<Particle*> *collect=NULL )
+                                    std::vector<Particle*> *collect )
 {
   std::vector<Particle*> local_collect(0);
   std::vector<Particle*> *local = NULL;
@@ -414,7 +414,7 @@ bool DecayFinder::Descriptor::test( const Particle *part,
 
 bool
 DecayFinder::Descriptor::testDaughters( std::list<const Particle*> &parts,
-                                        std::vector<Particle*> *collect=NULL )
+                                        std::vector<Particle*> *collect )
 {
   std::vector<Descriptor *>::iterator di;
   for( di = daughters.begin();
@@ -757,7 +757,7 @@ static int thirdQuark( int id )
 
 bool
 DecayFinder::ParticleMatcher::test( const Particle *part,
-                                    std::vector<Particle*> *collect=NULL )
+                                    std::vector<Particle*> *collect )
 {
   bool result = false;
   switch( type ) {
