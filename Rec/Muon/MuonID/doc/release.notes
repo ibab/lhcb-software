@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.7 2002-07-05 08:58:10 dhcroft Exp $
+! $Id: release.notes,v 1.8 2002-07-09 19:10:01 cattanem Exp $
 ! Package     : MuonID
 ! Responsible : David Hutchcroft
 
+!========================= MuonID v2r0 2002-07-09 =========================
 ! 2002-07-05 - David Hutchcroft
  - Added tests to tracks to make MuonID from: now ID tracks with :
    unqiue && (matched || forward || upstream), needed to run on Rec/Tr/Best
