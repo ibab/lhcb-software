@@ -1,29 +1,8 @@
-// $Id: CovarianceEstimator.cpp,v 1.5 2002-04-07 18:05:41 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.6 2002-05-23 11:07:09 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.4  2002/04/02 10:59:31  ibelyaev
-//  update for new event model
-//
-// Revision 1.3  2001/11/22 16:02:34  ibelyaev
-//  new utilities
-//
-// Revision 1.2  2001/11/08 20:04:23  ibelyaev
-//  update and bug fix
-//
-// Revision 1.1.1.1  2001/11/02 14:39:53  ibelyaev
-// New package: The first commit into CVS
-//
-// Revision 1.3  2001/10/28 19:14:10  ibelyaev
-// update for newer CaloEvent package
-//
-// Revision 1.2  2001/07/17 20:00:49  ibelyaev
-// modifications to improve Doxygen documentation
-//
-// Revision 1.1  2001/07/06 21:20:27  ibelyaev
-// new class CovarianceEstimator
-//
 // ============================================================================
 #define CALOUTILS_COVARIANCEESTIMATOR_CPP 1 
 // ============================================================================
@@ -54,19 +33,21 @@
 
 // ============================================================================
 /** explicit standard constructor
-    @param  det pointer to DeCalorimeter object 
-    @param  ares  calorimeter resolution (stochastic) per sqrt(GeV) 
-    @param  corr should one take into account shower correlations?
-    @param  flsf safety factor to be applied to intrinsic shower fluctuation
-    @param  insf safety factor to be apply to incoherent noise flustuation
-    @param  cnsf safety factor to be apply to coherent noise fluctuation
-*/
+ *
+ *  @param  det pointer to DeCalorimeter object 
+ *  @param  ares  calorimeter resolution (stochastic) per sqrt(GeV) 
+ *  @param  corr should one take into account shower correlations?
+ *  @param  flsf safety factor to be applied to intrinsic shower fluctuation
+ *  @param  insf safety factor to be apply to incoherent noise flustuation
+ *  @param  cnsf safety factor to be apply to coherent noise fluctuation
+ */
 // ============================================================================
-CovarianceEstimator::CovarianceEstimator( const DeCalorimeter* Detector ,
-                                          const double         ResA     ,
-                                          const double         GainS    ,
-                                          const double         NoiseIn  ,  
-                                          const double         NoiseCo  )
+CovarianceEstimator::CovarianceEstimator
+( const DeCalorimeter* Detector ,
+  const double         ResA     ,
+  const double         GainS    ,
+  const double         NoiseIn  ,  
+  const double         NoiseCo  )
   : m_detector     ( Detector             ) 
   , m_a2GeV        ( ResA    * ResA * GeV )
   , m_s2gain       ( GainS   * GainS      )
@@ -93,7 +74,10 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   // the detector information is not available
   if( 0 == detector()            ) { return StatusCode(221)     ; }
   
-  ///// avoid long names 
+  std::cout << " before " 
+            << *cluster << std::endl ;
+  
+  // avoid long names 
   typedef CaloCluster::Entries::iterator       iterator;
   typedef CaloCluster::Entries::const_iterator const_iterator;
   
@@ -206,7 +190,7 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
   // does energy have a reasonable value? 
   if( 0 >= eT ) 
     {
-      CaloPosition::Parameters parameters = cluster->position().parameters();
+      CaloPosition::Parameters& parameters = cluster->position().parameters();
       parameters( 1 ) =  -1 * TeV ;
       parameters( 2 ) =  -1 * km  ;
       parameters( 3 ) =  -1 * km  ;
@@ -239,23 +223,27 @@ StatusCode CovarianceEstimator::operator()( CaloCluster* cluster ) const
     -                2.0 * Ycl * Sey / eT / eT ;
   
   // update cluster patameters  
-  CaloPosition::Parameters parameters = cluster->position().parameters();
+  CaloPosition::Parameters& parameters = cluster->position().parameters();
   parameters( 1 ) = Ecl ;   // E 
   parameters( 2 ) = Xcl ;   // X 
   parameters( 3 ) = Ycl ;   // Y 
 
   // update cluster matrix   
-  CaloPosition::Covariance covariance = cluster->position().covariance();
+  CaloPosition::Covariance& covariance = cluster->position().covariance();
   covariance.fast( 1 , 1 ) = CovEE ;
   covariance.fast( 2 , 1 ) = CovEX ;
   covariance.fast( 2 , 2 ) = CovXX ;
   covariance.fast( 3 , 1 ) = CovEY ;
   covariance.fast( 3 , 2 ) = CovXY ;
   covariance.fast( 3 , 3 ) = CovYY ;
-
+  
+  std::cout << " before " 
+            << *cluster << std::endl ;
+  
   return StatusCode::SUCCESS;
   
 };
+// ============================================================================
 
 // ============================================================================
 // The End 

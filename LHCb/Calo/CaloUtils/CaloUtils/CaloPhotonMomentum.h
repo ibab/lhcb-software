@@ -1,8 +1,8 @@
-// $Id: CaloPhotonMomentum.h,v 1.1 2002-04-02 10:59:30 ibelyaev Exp $
+// $Id: CaloPhotonMomentum.h,v 1.2 2002-05-23 11:07:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 #ifndef CALOUTILS_CALOPHOTONMOMENTUM_H 
 #define CALOUTILS_CALOPHOTONMOMENTUM_H 1
@@ -45,11 +45,18 @@ public:
    */
   CaloMomentum* operator() ( const CaloPosition& position ) const;
   
+  /** set new position of "null" vertex 
+   *  @param null new position of nnull vertex 
+   *  @return position fo null vertex 
+   */
+  void setNull( const HepPoint3D& null = HepPoint3D() ) { m_null = null ;}
+  
 private:
   
   HepPoint3D m_null ;
   
 };
+// ============================================================================
 
 // ============================================================================
 // The End 

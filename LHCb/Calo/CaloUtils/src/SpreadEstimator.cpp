@@ -1,14 +1,8 @@
-// $Id: SpreadEstimator.cpp,v 1.3 2002-04-02 10:59:31 ibelyaev Exp $
+// $Id: SpreadEstimator.cpp,v 1.4 2002-05-23 11:07:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2001/11/24 11:43:09  ibelyaev
-//  bug fix
-//
-// Revision 1.1  2001/11/22 16:02:35  ibelyaev
-//  new utilities
-// 
 // ============================================================================
 // Include files
 // GaudiKernel
@@ -135,6 +129,7 @@ StatusCode SpreadEstimator::operator()
   ///
   return StatusCode::SUCCESS ;
 };
+// ============================================================================
 
 // ============================================================================
 // The End 
