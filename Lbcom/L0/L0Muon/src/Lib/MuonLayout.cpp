@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonLayout.cpp,v 1.2 2001-06-08 13:43:47 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonLayout.cpp,v 1.3 2001-07-09 19:12:04 atsareg Exp $
 // Include files
 #include <iostream>
 #include "L0Muon/MuonLayout.h"
@@ -38,35 +38,35 @@ MuonLayout::~MuonLayout() {}
 
 int MuonLayout::rfactor(int nr) const {
 
-  int rfac = 1 << (nr-1);
+  int rfac = 1 << nr;
   return rfac;
 }  
 
 int MuonLayout::region(int ix, int iy) const {
 
   int nrx;
-  if ( (ix-1)/m_xgrid < 1 ) {
+  if ( ix/m_xgrid < 1 ) {
+    nrx = -1;
+  } else if ( ix/m_xgrid == 1 ) {
     nrx = 0;
-  } else if ( (ix-1)/m_xgrid == 1 ) {
-    nrx = 1;
-  } else if ( (ix-1)/m_xgrid <= 3 ) {
-    nrx = 2;  
-  } else if ( (ix-1)/m_xgrid <= 7 ) {
-    nrx = 3; 	
+  } else if ( ix/m_xgrid <= 3 ) {
+    nrx = 1;  
+  } else if ( ix/m_xgrid <= 7 ) {
+    nrx = 2; 	
   } else {
-    nrx = 4; 	
+    nrx = 3; 	
   }
   int nry;
-  if ( (iy-1)/m_ygrid < 1 ) {
+  if ( iy/m_ygrid < 1 ) {
+    nry = -1;
+  } else if ( iy/m_ygrid == 1 ) {
     nry = 0;
-  } else if ( (iy-1)/m_ygrid == 1 ) {
-    nry = 1;
-  } else if ( (iy-1)/m_ygrid <= 3 ) {
-    nry = 2;  
-  } else if ( (iy-1)/m_ygrid <= 7 ) {
-    nry = 3; 	
+  } else if ( iy/m_ygrid <= 3 ) {
+    nry = 1;  
+  } else if ( iy/m_ygrid <= 7 ) {
+    nry = 2; 	
   } else {
-    nry = 4; 	
+    nry = 3; 	
   }	
   return std::_MAX(nrx,nry);
     
@@ -104,12 +104,12 @@ std::vector<MuonTile> MuonLayout::tiles(const MuonTile& pad,
   yratio = (yratio == 0) ? 1 : yratio ;
 
   // input pad area in terms of the finest grid
-  int maxX = (pad.nX()+areaX)*playout.rfactor(nreg)*xratio;
-  int maxY = (pad.nY()+areaY)*playout.rfactor(nreg)*yratio;
+  int maxX = (pad.nX()+areaX+1)*playout.rfactor(nreg)*xratio-1;
+  int maxY = (pad.nY()+areaY+1)*playout.rfactor(nreg)*yratio-1;
   int minX = maxX - playout.rfactor(nreg)*xratio*(2*areaX+1) + 1;
   int minY = maxY - playout.rfactor(nreg)*yratio*(2*areaY+1) + 1;
-  minX = std::_MAX(1,minX);
-  minY = std::_MAX(1,minY);
+  minX = std::_MAX(0,minX);
+  minY = std::_MAX(0,minY);
 
   // Which tiles are hit ?
 
@@ -118,19 +118,19 @@ std::vector<MuonTile> MuonLayout::tiles(const MuonTile& pad,
 
 
   int nrmin = fineGrid.region(minX,minY);
-  if(nrmin == 0 ) nrmin = 1;
+  if(nrmin == -1 ) nrmin = 0;
 
   int ix = minX;
   int iy = minY;
   while ( ix <= maxX ) {
     int nrx = fineGrid.region(ix,iy);
-    if( nrx == 0 ) nrx = 1;
+    if( nrx == -1 ) nrx = 0;
     while ( iy <= maxY ) {
       // which region	
       int nr = fineGrid.region(ix,iy);
-      if( nr == 0 ) nr = 1;
-      int newx = (ix-1)/rfactor(nr)/xratio+1;	    
-      int newy = (iy-1)/rfactor(nr)/yratio+1;
+      if( nr == -1 ) nr = 0;
+      int newx = ix/rfactor(nr)/xratio; 	  
+      int newy = iy/rfactor(nr)/yratio;
 
       // cout << " New MuonTile " << rfactor(nr)*xratio << " " 
       //      << rfactor(nr)*yratio << " " << quarter << " " 
@@ -144,6 +144,75 @@ std::vector<MuonTile> MuonLayout::tiles(const MuonTile& pad,
   }
   
   return vmt;
+}
+
+std::vector<MuonTile> MuonLayout::tiles() {
+  
+  std::vector<MuonTile> vmt;
+  std::vector<MuonTile> vmtr;
+  
+  for(int iq = 0; iq <4; iq++) {
+    for(int ir = 0; ir <4; ir++) {
+      vmtr = tiles(iq,ir);
+      vmt.insert(vmt.end(),vmtr.begin(),vmtr.end());
+    }
+  }
+  
+  return vmt;
+  
+}
+
+std::vector<MuonTile> MuonLayout::tiles(int iq) {
+  
+  std::vector<MuonTile> vmt;
+  std::vector<MuonTile> vmtr;
+  
+  for(int ir = 0; ir <4; ir++) {
+    vmtr = tiles(iq,ir);
+    vmt.insert(vmt.end(),vmtr.begin(),vmtr.end());
+  }
+  
+  return vmt;
+  
+}
+
+std::vector<MuonTile> MuonLayout::tiles(int iq, int ir) {
+  
+  std::vector<MuonTile> vmt;
+  
+  for(int ix = 0; ix < 2*xGrid(); ix++) {
+    for(int iy = yGrid(); iy < 2*yGrid(); iy++) {
+      vmt.push_back(MuonTile(iq,ir,ix,iy,*this));
+    }
+  }
+  for(int ix = xGrid(); ix < 2*xGrid(); ix++) {
+    for(int iy = 0; iy < yGrid(); iy++) {
+      vmt.push_back(MuonTile(iq,ir,ix,iy,*this));
+    }
+  }
+  
+  return vmt;
+  
+}
+
+bool MuonLayout::validTile(const MuonTile& mt) {
+
+  int nx = mt.nX();
+  int ny = mt.nY();
+  
+  if(nx >= 0 && 
+     nx < (2*xGrid()) && 
+     ny >= (yGrid()) && 
+     ny < 2*yGrid()) {
+    return true;
+  }
+  if(nx >= (xGrid()) && 
+     nx < 2*xGrid() && 
+     ny >= 0 && 
+     ny < yGrid()) {
+    return true;
+  }
+  return false;
 }
 
 MuonTile MuonLayout::contains(const MuonTile& pad) {
