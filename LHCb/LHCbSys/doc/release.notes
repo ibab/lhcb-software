@@ -22,7 +22,8 @@
                         OTDet v5r2, VeloDet v8r8, Magnet v2r4
                       AssociatorsSys v1r9, TrFitEvent v4r2, ITAssociators v2r6,
                         OTAssociators v2r7, TrAssociators v3r8, Associators v2r2,
-                        VeloAssociators v1r7, CaloAssociators v3r5
+                        VeloAssociators v1r7, CaloAssociators v3r5,
+                        MuonAssociators v1r2
 
  - Removed packages:  EventKernel, DbCnv
 
@@ -40,8 +41,8 @@
    . Moved ProcStatus from TrEvent to Event
 
  - In CaloEvent v13r0
-   . Added "seed" attribute to CaloCluster. 
-     Backwards incompatible with existing datasets
+   . Added "seed" attribute to CaloCluster. Old data can still be read,
+     seed is set to zero in this case
 
  - In AssociatorsSys v1r9
    . Added options/DLLs.opts to load all associators DLLs
