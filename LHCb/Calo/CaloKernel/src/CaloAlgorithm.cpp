@@ -1,11 +1,8 @@
-// $Id: CaloAlgorithm.cpp,v 1.14 2002-05-02 08:38:47 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.15 2002-05-02 13:24:56 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.13  2002/04/30 18:18:35  ibelyaev
-//  reduce the final printout verbosity
-//
 // ============================================================================
 #define  CALOKERNEL_CALOALGORITHM_CPP 1 
 // ============================================================================
@@ -309,9 +306,10 @@ StatusCode CaloAlgorithm::finalize()
       // format printout 
       CaloPrint print;
       log << MSG::ALWAYS 
-          << " Errors/Warnings statistics:  " 
-          << m_errors   .size () << "/"
-          << m_warnings .size () << endreq ; 
+          << " Exceptions/Errors/Warnings statistics:  " 
+          << m_exceptions .size () << "/"
+          << m_errors     .size () << "/"
+          << m_warnings   .size () << endreq ; 
       // print exceptions counter 
       for( Counter::const_iterator excp = m_exceptions.begin() ;
            excp  != m_exceptions.end() ; ++excp  )
