@@ -1,30 +1,31 @@
-package MuonKernelStandalone
+package MuonKernel
 
 version v2r6
 
 branches cmt src MuonKernel doc 
 
-use Boost v1 LCG_Interfaces
-use Python v1 LCG_Interfaces
+include_dirs $(MUONKERNELROOT)
 
-use GaudiPolicy v5r*
+use LHCbKernel		v5r*	Kernel
 
-include_dirs $(MUONKERNELSTANDALONEROOT)
+# Produce Header-Files from XML description, overriding default destination
+#============================================================================
+macro MuonKernelObj2Doth_GODflags " -o ../MuonKernel/ " \
+      WIN32                       " -o ..\MuonKernel\ "
+document obj2doth MuonKernelObj2Doth ../xml/MuonKernel.xml
 
-library MuonKernelStandalone  ../src/*.cpp
+macro MuonKernelObj2Dict_GODflags " -l MuonKernel/ " \
+      WIN32                       " -l MuonKernel\ "
+document obj2dict MuonKernelObj2Dict ../xml/MuonKernel.xml
 
-apply_pattern linker_library library=MuonKernelStandalone
+#----------------------------------------------
+library MuonKernelLib  ../src/*.cpp
+library MuonKernelDict ../dict/*.cpp
 
-path_append PYTHONPATH "$(MUONKERNELSTANDALONEROOT)/$(BINDIR)"
-path_append PYTHONPATH "$(MUONKERNELSTANDALONEROOT)/Lib"
+apply_pattern component_library library=MuonKernelDict
+apply_pattern linker_library    library=MuonKernelLib
 
-#++++++++++++++++++++++++++++
+
 private
+use GaudiObjDesc v*
 
-library MuonKernelW -import=Boost ../python_wrapper/*.cpp
-apply_pattern ld_library_path
-
-
-macro Boost_linkopts "-L$(Boost_home)/lib $(Boost_linkopts_python)"
-
-macro MuonKernelW_shlibflags "$(use_linkopts) $(MuonKernelStandalone_linkopts) $(Boost_linkopts) $(libraryshr_linkopts)"
