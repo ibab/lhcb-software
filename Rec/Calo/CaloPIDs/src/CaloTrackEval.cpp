@@ -1,8 +1,11 @@
-// $Id: CaloTrackEval.cpp,v 1.1.1.1 2003-03-13 18:52:02 ibelyaev Exp $
+// $Id: CaloTrackEval.cpp,v 1.2 2003-07-17 14:45:35 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
+// The first import of new package 
+//
 // Revision 1.3  2003/01/19 12:08:31  ibelyaev
 //  fix for tiny memory leak in class CaloTrackEval
 //
@@ -242,7 +245,7 @@ StatusCode CaloTrackEval::process
   m_tr = false ;
   if( 0 != m_state  ) { delete m_state ; m_state = 0 ; }
   
-  // set the initial value to some "bad value"
+  // set the initial value to null 
   value = m_bad ;
   // check arguments 
   if( 0 == track    ) { return Error("Track points to NULL!"      , 100 ) ; }
@@ -303,7 +306,8 @@ StatusCode CaloTrackEval::process
         }
     }
 
-  
+  // reset initial value 
+  value = 0 ;
   if( 0 == digused.size () )  return StatusCode::SUCCESS ;  
   
   if( !digused.empty() )
@@ -314,7 +318,8 @@ StatusCode CaloTrackEval::process
       digused.erase( it , digused.end() );     
     }  
   
-  value = 0.; 
+  // reset initial value 
+  value = 0 ;
   for(DigVec::iterator id = digused.begin(); digused.end() != id; ++id )
     {
       value = value + (*id)->e();

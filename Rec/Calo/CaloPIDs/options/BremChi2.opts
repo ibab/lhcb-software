@@ -1,8 +1,11 @@
-// $Id: BremChi2.opts,v 1.2 2003-07-17 12:45:15 ibelyaev Exp $
+// $Id: BremChi2.opts,v 1.3 2003-07-17 14:45:34 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/07/17 12:45:15  ibelyaev
+//  minor fix to speed-up the execution
+//
 // Revision 1.1.1.1  2003/03/13 18:52:04  ibelyaev
 // The first import of new package 
 //
@@ -40,7 +43,7 @@ BremChi2.UseVeloBack   = false ;
 BremChi2.UseSeed       = false ; 
 BremChi2.UseUpstream   = false ;
 // limits 
-BremChi2.LowLimit      = -50.  ;
+// BremChi2.LowLimit      = -50.  ;
 
 /// configuration of the Evaluator itself 
 

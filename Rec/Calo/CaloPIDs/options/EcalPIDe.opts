@@ -1,8 +1,11 @@
-// $Id: EcalPIDe.opts,v 1.1.1.1 2003-03-13 18:52:04 ibelyaev Exp $
+// $Id: EcalPIDe.opts,v 1.2 2003-07-17 14:45:35 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/03/13 18:52:04  ibelyaev
+// The first import of new package 
+//
 // ============================================================================
 
 /** @file 
@@ -32,8 +35,8 @@ EcalPIDe.UseMatched     = true  ;
 EcalPIDe.UseVelo        = false ;
 EcalPIDe.UseVeloTT      = false ;
 EcalPIDe.UseVeloBack    = false ;
-EcalPIDe.UseSeed        = false ; 
-EcalPIDe.UseUpstream    = false ;
+EcalPIDe.UseSeed        = true  ; 
+EcalPIDe.UseUpstream    = true  ;
 
 EcalPIDe.ValueBins      =  51        ;
 EcalPIDe.MomentumBins   =  51        ;

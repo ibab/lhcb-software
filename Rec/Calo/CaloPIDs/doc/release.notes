@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.4 2003-07-17 12:45:14 ibelyaev Exp $ 
+! $Id: release.notes,v 1.5 2003-07-17 14:45:34 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,13 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+! 2003-07-17 - Ivan BELYAEV
+ - src/CaloTrackEval.cpp 
+   fix an error (return m_bad valeu for zero energy deposition) 
+ - cmt/requirements  increase the version 
+
+
 
 ! 2003-07-17 - Ivan BELYAEV
  - minor change if algorithms to speed-up a code a little bit 

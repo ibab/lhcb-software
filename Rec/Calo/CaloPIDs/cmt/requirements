@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.1.1.1 2003-03-13 18:52:02 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2003-07-17 14:45:33 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package            CaloPIDs
-version            v1r0 
+version            v1r1
 
 # ================ structure ==================================================
 branches           cmt doc src options 
@@ -25,6 +25,9 @@ apply_pattern      component_library library=CaloPIDs
 # =============================================================================
 # The END 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2003/03/13 18:52:02  ibelyaev
+# The first import of new package 
+# 
 # =============================================================================
 

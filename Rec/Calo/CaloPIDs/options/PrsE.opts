@@ -1,8 +1,11 @@
-// $Id: PrsE.opts,v 1.2 2003-07-17 12:45:16 ibelyaev Exp $
+// $Id: PrsE.opts,v 1.3 2003-07-17 14:45:35 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/07/17 12:45:16  ibelyaev
+//  minor fix to speed-up the execution
+//
 // Revision 1.1.1.1  2003/03/13 18:52:04  ibelyaev
 // The first import of new package 
 //
@@ -38,7 +41,7 @@ PrsE.UseVeloTT     = false ;
 PrsE.UseVeloBack   = false ;
 PrsE.UseSeed       = true  ; 
 PrsE.UseUpstream   = true  ;
-PrsE.LowLimit      = -10. * GeV ;
+// PrsE.LowLimit      = -10. * GeV ;
 
 /// configuration of the Evaluator itself 
 /// default 
