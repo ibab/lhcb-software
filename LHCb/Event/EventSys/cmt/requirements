@@ -9,7 +9,7 @@ use Event       v4r6    Event
 use VeloEvent   v13r2   Event
 use ITEvent     v13r2   Event
 use OTEvent     v14r0   Event
-use TrEvent     v14r0   Event
+use TrEvent     v14r1   Event
 use RichEvent   v8r1    Event
 use CaloEvent   v13r7   Event
 use MuonEvent   v3r2    Event
