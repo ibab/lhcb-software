@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.23 2004-03-16 13:34:53 jonesc Exp $
+# $Id: requirements,v 1.24 2004-03-18 14:44:18 cattanem Exp $
 # Maintainer : Christopher Rob Jones
 
 package RichKernel
@@ -12,7 +12,6 @@ include_dirs $(RICHKERNELROOT)
 
 # ================ dependencies ==============================================
 use LHCbKernel	v4r*  Kernel
-use   BOOST     v*    -no_auto_imports
 
 # ================ linker library ============================================
 library RichKernel ../src/*.cpp
