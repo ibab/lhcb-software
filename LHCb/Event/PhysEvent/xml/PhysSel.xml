@@ -11,6 +11,10 @@
      templateVector="FALSE"
     >
       <base name="DataObject"/>
+      <location
+       name="Default"
+       place="/Event/Phys/Selection"
+      />
       <constructor desc="std constructor">
         <code>  setVersion(1);</code>
       </constructor>
