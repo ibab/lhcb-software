@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.10 2005-02-15 07:35:55 pkoppenb Exp $ 
+! $Id: release.notes,v 1.11 2005-03-11 13:49:35 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 
+! 2005-03-11 - P. Koppenburg
+ - src/CombinedParticleMaker.{cpp,h}
+   . Set AddBremPhoton to true by default
 !========================== ParticleMaker v1r3 2005-02-15 ===================
 ! 2005-02-09 - P. Koppenburg
  - src/PhotonFromMergedParameters.h

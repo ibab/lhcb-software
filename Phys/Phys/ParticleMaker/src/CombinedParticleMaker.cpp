@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.3 2005-02-09 18:01:33 pkoppenb Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.4 2005-03-11 13:49:35 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
@@ -71,7 +71,7 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   m_pionSelection.clear();
   declareProperty("PionSelection", m_pionSelection );  
  
-  declareProperty("AddBremPhoton", m_addBremPhoton = false );
+  declareProperty("AddBremPhoton", m_addBremPhoton = true );
 
   declareProperty("UseLongTracks",     m_longTracks = true );
   declareProperty("UseDownstreamTracks", m_downstreamTracks =false );
