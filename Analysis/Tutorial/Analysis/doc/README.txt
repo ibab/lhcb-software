@@ -1,4 +1,4 @@
- !-----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
 ! Purpose     : Analysis tutorial
@@ -19,4 +19,11 @@
   3) To also have the Phi, the Bs and the efficiency:   
 
     > DaVinci ../options/DVTutorial_2.opts
+
+  4) A solution of the "exercise" that extends the
+     TutorialAlgorithm to also accept phi's can be used with
+
+    > cp ../solutio2n/TutorialAlgorithm.* ../src/
+    > make
+    > DaVinci ../options/DVTutorial_3.opts
 
