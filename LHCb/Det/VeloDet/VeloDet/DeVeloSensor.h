@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.4 2004-02-24 18:25:13 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.5 2004-02-28 21:43:16 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -74,9 +74,6 @@ public:
   /// The capacitance of the strip 
   virtual double stripCapacitance(unsigned int strip)=0;
   
-  /// The number of zones in the detector
-  virtual unsigned int numberOfZones()=0;
-  
   /// The zones number for a given strip
   //  virtual unsigned int zoneOfStrip(const VeloChannelID& channel)=0;
   virtual unsigned int zoneOfStrip(const unsigned int strip)=0;
@@ -91,10 +88,10 @@ public:
   virtual double rMax(const unsigned int zone)=0;
 
   /// The minimum phi for a given zone of the sensor
-  virtual double phiMin(const unsigned int zone)=0;
+  //  virtual double phiMin(const unsigned int zone)=0;
   
   /// The maximum phi for a given zone of the sensor
-  virtual double phiMax(const unsigned int zone)=0;
+  //  virtual double phiMax(const unsigned int zone)=0;
   
   /// Determine if point is in corner cut-offs
   virtual  StatusCode isInside(const HepPoint3D& point)=0;
@@ -142,6 +139,9 @@ public:
   /// Return the number of strips
   inline unsigned int numberOfStrips() {return m_numberOfStrips;}
 
+  /// The number of zones in the detector
+  inline unsigned int numberOfZones() {return m_numberOfZones;}
+  
   /// The minimum radius for the sensitive area of the sensor
   inline double innerRadius() {return m_innerRadius;}
 
@@ -172,15 +172,14 @@ public:
 protected:
   bool m_isRight,m_isLeft,m_isDownstream;
   bool m_isR,m_isPhi,m_isPileUp;
-  
+  unsigned int m_numberOfStrips,m_numberOfZones;
+  double m_innerRadius,m_outerRadius;
+
 private:
   void initSensor();
   int m_xSide;
   unsigned int m_sensorNumber;
   std::vector<unsigned int> m_associated;
-  unsigned int m_numberOfStrips;
-  double m_innerRadius;
-  double m_outerRadius;
   double m_siliconThickness;
   std::string m_type;
   double m_z;
