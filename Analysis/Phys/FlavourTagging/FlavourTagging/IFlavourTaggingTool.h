@@ -1,4 +1,4 @@
-// $Id: IFlavourTaggingTool.h,v 1.1.1.1 2002-05-23 23:25:52 gcorti Exp $
+// $Id: IFlavourTaggingTool.h,v 1.2 2002-09-03 08:21:55 odie Exp $
 #ifndef FLAVOURTAGGING_IFLAVOURTAGGINGTOOL_H 
 #define FLAVOURTAGGING_IFLAVOURTAGGINGTOOL_H 1
 
@@ -41,6 +41,10 @@ public:
                          const Particles &theEvent,
                          const Vertex &thePrimVtx,
                          FlavourTag &theTag ) = 0;
+  virtual void tagThisB( const Particle &theB,
+                         const ParticleVector &theEvent,
+                         const Vertex &thePrimVtx,
+                         FlavourTag &theTag ) = 0;
 
   /** tagFromList( theB, theCandidates, thePrimVtx, theTag )
    *  
@@ -67,6 +71,11 @@ public:
    */
   virtual void tagExcludingFromList( const Particle &theB,
                                      const Particles &theEvent,
+                                     const ParticleVector &theExcluded,
+                                     const Vertex &thePrimVtx,
+                                     FlavourTag &theTag ) = 0;
+  virtual void tagExcludingFromList( const Particle &theB,
+                                     const ParticleVector &theEvent,
                                      const ParticleVector &theExcluded,
                                      const Vertex &thePrimVtx,
                                      FlavourTag &theTag ) = 0;
