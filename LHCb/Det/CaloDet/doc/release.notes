@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.32 2003-01-23 18:39:42 ocallot Exp $ 
+! $Id: release.notes,v 1.33 2003-01-23 21:11:35 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!========================= CaloDet v6r4 2003-01-23 =========================
 ! 2003-01-23 - Olivier Callot
  - Fix uninitialized values in the CellParam constructor.
  - Update all local variable names of CellParam to comply to conventions
