@@ -51,7 +51,8 @@ private: // methods
 
   /// Process the event at the given location, with the corresponding TOF offset
   StatusCode ProcessEvent( const std::string & hitLoc, 
-                           const double tofOffset ) const;
+                           const double tofOffset,
+                           const int eventType ) const;
 
 private: // data
 

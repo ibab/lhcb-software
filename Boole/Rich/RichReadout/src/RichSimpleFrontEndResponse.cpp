@@ -97,6 +97,9 @@ StatusCode RichSimpleFrontEndResponse::Simple() {
       }
       (*iSumDep)->setSummedEnergy( summedEnergy );
 
+      // Store history info
+      newDigit->setHistoryCode( (*iSumDep)->historyCode() );
+
       int value = int((summedEnergy+m_Sigma*m_gaussRndm()/1000)*m_Calibration) + m_Baseline;
       if ( !newDigit->hits().empty() && value >= m_AdcCut ) {
         mcRichDigits->insert( newDigit, (*iSumDep)->key() );

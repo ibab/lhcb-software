@@ -191,6 +191,9 @@ StatusCode RichDetailedFrontEndResponse::Digital()
           newDigit->addToHits( (*iDep)->parentHit() );
         }
 
+        // Store history info
+        newDigit->setHistoryCode( ((*tsc_it).first)->historyCode() );
+
       }
 
     } // readout exists

@@ -67,20 +67,20 @@ StatusCode RichSignal::execute()
   put( m_mcDeposits, m_RichDepositLocation );
 
   // Process main event
-  ProcessEvent( m_RichHitLocation,       0  );
+  // must be done first (so that first associated hit is signal)
+  ProcessEvent( m_RichHitLocation, 0, 0 );
 
   // if requested, process spillover events
   if ( m_doSpillover )
   {
-    ProcessEvent( m_RichPrevLocation,     -25 );
-    ProcessEvent( m_RichPrevPrevLocation, -50 );
-    ProcessEvent( m_RichNextLocation,      25 );
-    // not needed yet
-    //ProcessEvent( m_RichNextNextLocation,  50 );
+    ProcessEvent( m_RichPrevPrevLocation, -50, -2 );
+    ProcessEvent( m_RichPrevLocation,     -25, -1 );
+    ProcessEvent( m_RichNextLocation,      25,  1 );
+    ProcessEvent( m_RichNextNextLocation,  50,  2 );
   }
 
   // if requested, process LHC background
-  if ( m_doLHCBkg ) { ProcessEvent( m_lhcBkgLocation, 0 ); }
+  if ( m_doLHCBkg ) { ProcessEvent( m_lhcBkgLocation, 0, 0 ); }
 
   // Debug Printout
   if ( msgLevel(MSG::DEBUG) )
@@ -95,7 +95,8 @@ StatusCode RichSignal::execute()
 }
 
 StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
-                                     const double tofOffset ) const
+                                     const double tofOffset,
+                                     const int eventType ) const
 {
 
   // Load hits
@@ -115,8 +116,7 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
   }
 
   unsigned int nDeps(0), nSumDeps(0);
-  for ( MCRichHits::const_iterator iHit = hits->begin();
-        iHit != hits->end(); ++iHit ) {
+  for ( MCRichHits::const_iterator iHit = hits->begin(); iHit != hits->end(); ++iHit ) {
 
     RichSmartID tempID;
     // Is hit in active pixel
@@ -153,7 +153,7 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
       newDeposit->setTime( tof );
 
       // Add to the set of other deposits in the pixel
-      if ( !sumdep ) 
+      if ( !sumdep )
       {
         sumdep = new MCRichSummedDeposit();
         m_mcSummedDeposits->insert( sumdep, id );
@@ -164,13 +164,20 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
       // summed energy
       sumdep->setSummedEnergy( sumdep->summedEnergy() + newDeposit->energy() );
 
+      // store type event type
+      if      (  0 == eventType ) { newDeposit->setSignalEvent(true);   sumdep->setSignalEvent(true);   }
+      else if ( -1 == eventType ) { newDeposit->setPrevEvent(true);     sumdep->setPrevEvent(true);     }
+      else if ( -2 == eventType ) { newDeposit->setPrevPrevEvent(true); sumdep->setPrevPrevEvent(true); }
+      else if (  1 == eventType ) { newDeposit->setNextEvent(true);     sumdep->setNextEvent(true);     }
+      else if (  2 == eventType ) { newDeposit->setNextNextEvent(true); sumdep->setNextNextEvent(true); }
+
     } // active hit if
 
   } // hit loop
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Created " << nDeps << " MCRichDeposits and " << nSumDeps 
+    debug() << "Created " << nDeps << " MCRichDeposits and " << nSumDeps
             << " MCRichSummedDeposits for " << hitLoc << endreq;
   }
 

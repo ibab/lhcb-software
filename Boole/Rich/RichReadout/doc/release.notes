@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2005-03-03 - Chris Jones
+ - Add history information to MCRichDigits.
+
 ! 2005-02-20 - Chris Jones
  - Fix problem with "Next" spillover event + various minor improvements
 
