@@ -39,4 +39,4 @@ apply_pattern linker_library	library=TrackEvent
 macro_append TrackEvent_linkopts  "" WIN32 "/include:_TrackEvent_loadRef" 
 
 private
-use GaudiObjDesc v*
+use GaudiObjDesc v7r3

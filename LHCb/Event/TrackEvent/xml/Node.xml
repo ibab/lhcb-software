@@ -1,0 +1,136 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackEvent'>
+
+<!-- ==================== Node class definition ==================== -->
+
+    <class
+      name        = 'Node'
+      author      = 'Jose Hernando, Eduardo Rodrigues'
+      desc        = 'Node is a base class for classes linking track states to measurements.'
+      id          = '10013'
+      location    = 'Rec/Track/Nodes'
+      serializers = 'FALSE'>
+
+      <import name='Event/State' />
+      <import name='Event/Measurement' />
+
+      &StlPtrVector;
+
+      <enum
+        name    = 'Type'
+        value   = 'Muon,OT,ST,TT,VeloR,VeloPhi'
+        desc    = 'enumerator for the type of Node (XxxNode)'
+        access  = 'PUBLIC' />
+
+     <attribute
+       type    = 'bitfield'
+       name    = 'flags'
+       desc    = 'the variety of node types'
+       init    = '0'
+       getMeth   = 'FALSE'
+       setMeth = 'FALSE'
+       access  = 'PROTECTED'>
+       <bitfield
+         name      = 'type'
+         length    = '6'
+         type      = 'Type'
+         getMeth   = 'FALSE'
+         setMeth   = 'TRUE'
+         checkMeth = 'TRUE'
+         desc      = 'node type' />
+      </attribute>
+
+      <attribute
+        type    = 'Measurement*'
+        name    = 'measurement'
+        setMeth = 'FALSE'
+        getMeth = 'FALSE'
+        desc    = 'pointer to the measurement' />
+
+      <attribute
+        type    = 'State*'
+        name    = 'state'
+        setMeth = 'FALSE'
+        getMeth = 'FALSE'
+        desc    = 'pointer to the state' />
+
+      <attribute
+        type    = 'double'
+        name    = 'residual'
+        desc    = 'the residual value' />
+
+      <attribute
+        type    = 'double'
+        name    = 'errResidual'
+        desc    = 'the residual error' />
+
+      <attribute
+        type    = 'HepMatrix'
+        name    = 'projectionMatrix'
+        desc    = 'the projection matrix' />
+
+      <method
+        type    = 'double'
+        name    = 'chi2'
+        const   = 'TRUE'
+        desc    = 'Retrieve the local chi2 '>
+        <code>
+  return (m_errResidual >0 ? m_residual/m_errResidual: 0);
+        </code>
+      </method>
+
+      <method
+        type    = 'Measurement &amp;'
+        name    = 'measurement'
+        desc    = 'Retrieve the reference to the measurement'>
+        <code>
+  return *m_measurement;
+        </code>
+      </method>
+
+      <method
+        type    = 'Measurement &amp;'
+        name    = 'measurement'
+        const   = 'TRUE'
+        desc    = 'Retrieve the reference to the measurement'>
+        <code>
+  return *m_measurement;
+        </code>
+      </method>
+
+      <method
+        type    = 'State &amp;'
+        name    = 'state'
+        desc    = 'Retrieve the reference to the state'>
+        <code>
+  return *m_state;
+        </code>
+      </method>
+
+      <method
+        type    = 'State &amp;'
+        name    = 'state'
+        const   = 'TRUE'
+        desc    = 'Retrieve the reference to the state'>
+        <code>
+  return *m_state;
+        </code>
+      </method>
+
+      <method
+        type    = 'Node*'
+        name    = 'clone'
+        desc    = 'Clone the Node'
+        const   = 'TRUE'
+        virtual = 'TRUE'>
+        <code>
+  Node* me = new Node(); *me = *this; return me;
+        </code>
+      </method>
+
+    </class>
+
+  </package>
+</gdd>

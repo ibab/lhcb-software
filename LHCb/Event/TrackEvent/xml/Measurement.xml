@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackEvent'>
+
+<!-- ================= Measurement class definition ================= -->
+
+    <class
+      name        = 'Measurement'
+      author      = 'Jose Hernando, Eduardo Rodrigues'
+      desc        = 'Measurement is the base class for offline and online measurements.'
+      id          = '10012'
+      location    = 'Rec/Track/Measurements'
+      serializers = 'FALSE'>
+
+      <import name='Kernel/LHCbID' />
+
+      &StlPtrVector;
+
+      <enum
+        name    = 'Type'
+        value   = 'Muon,OT,ST,TT,VeloR,VeloPhi'
+        desc    = 'enumerator for the type of Measurement'
+        access  = 'PUBLIC' />
+
+     <attribute
+       type    = 'bitfield'
+       name    = 'mtype'
+       desc    = 'the variety of measurement types'
+       init    = '0'
+       getMeth = 'FALSE'
+       setMeth = 'FALSE'
+       access  = 'PROTECTED'>
+       <bitfield
+         name      = 'type'
+         length    = '6'
+         type      = 'Type'
+         getMeth   = 'FALSE'
+         setMeth   = 'TRUE'
+         checkMeth = 'TRUE'
+         desc      = 'measurement type' />
+      </attribute>
+
+      <method
+        type    = 'double'
+        name    = 'z'
+        const   = 'TRUE'
+        desc    = 'the z-position of the measurement'
+        virtual = 'TRUE'/>
+
+      <attribute
+        type    = 'double'
+        name    = 'measure'
+        desc    = 'the measurement value' />
+
+      <attribute
+        type    = 'double'
+        name    = 'errMeasure'
+        desc    = 'the measurement error' />
+
+      <attribute
+        type    = 'LHCbID'
+        name    = 'lhcbID'
+        desc    = 'the corresponding LHCbID' />
+
+      <method
+        type    = 'Measurement*'
+        name    = 'clone'
+        desc    = 'Clone the Measurement'
+        const   = 'TRUE'
+        virtual = 'TRUE'>
+        <code>
+  Measurement* me = new Measurement(); *me = *this; return me;
+        </code>
+      </method>
+
+    </class>
+
+  </package>
+</gdd>
