@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
+<!-- $Id: structure.xml,v 1.1 2001-12-17 15:46:31 andreav Exp $ -->
+<DDDB>
+
+   <parameter name="InCell"      value="40.666667*mm" />
+   <parameter name="MidCell"     value="1.5*(InCell)" />   
+   <parameter name="OutCell"     value="3.0*(InCell)" />   
+
+  <!-- *********************************************** -->
+  <!-- *  Define detector element for Ecal detector  * -->
+  <!-- *********************************************** -->
+  <detelem name="Ecal" classID="8900">
+ 
+         <author>  Olivier Callot </author>
+         <version> 1.0            </version>
+
+         <geometryinfo lvname="/dd/Geometry/Ecal/lvEcal"  
+                       support="/dd/Structure/LHCb"
+                       npath="EcalSubsystem" />
+
+         <alignmentinfo   condition="/dd/Alignment/Ecal/alEcal"/>
+         <calibrationinfo condition="/dd/Calibration/Ecal/caEcal"/>
+         <readoutinfo     condition="/dd/ReadOut/Ecal/roEcal"/>
+         <slowcontrolinfo condition="/dd/SlowControl/Ecal/scEcal"/>
+         <fastcontrolinfo condition="/dd/FastControl/Ecal/fcEcal"/>
+
+         <detelemref href = "#EcalOuter"/>
+         <detelemref href = "#EcalMiddle"/>
+         <detelemref href = "#EcalInner"/>
+
+         <userParameter name="CodingBit" type="int"> 6 </userParameter>
+         <userParameter name="EtInCenter" type="double"
+                        comment="10 GeV Et Max in center">
+            10.*GeV
+         </userParameter>
+         <userParameter name="EtSlope" type="double"
+                        comment="10 + .3*7 = 12.1 at 300 mrad">
+            7.*GeV
+         </userParameter>
+         <userParameter name="AdcMax"        type="int"> 4095 </userParameter>
+         <userParameter name="ActiveToTotal" type="double"
+                        comment="calibrated 19/04/2001 by F.Machefert">
+            6.6
+         </userParameter>
+         <userParameter name="ZShowerMax" type="double"
+                        comment="110 mm from the start of the Shashlik">
+            -107.5*mm
+         </userParameter>
+
+  </detelem>
+
+
+  <detelem name="EcalOuter" classID="8901" >
+
+    <author>  Olivier Callot </author>
+    <version> 1.0            </version>
+
+    <geometryinfo lvname = "/dd/Geometry/Ecal/lvEcalOuter" 
+                  support = "/dd/Structure/LHCb/Ecal"
+                  npath = "pvEcalOuter" />
+
+    <userParameter name="CellSize" type="double"> OutCell </userParameter>
+
+  </detelem>
+
+  <detelem name="EcalMiddle" classID="8901" >
+
+     <author>  Olivier Callot </author>
+     <version> 1.0            </version>
+
+     <geometryinfo lvname = "/dd/Geometry/Ecal/lvEcalMiddle" 
+                   support = "/dd/Structure/LHCb/Ecal"
+                   npath  = "pvEcalMiddle" />
+
+     <userParameter name="CellSize" type="double"> MidCell </userParameter>
+
+  </detelem>
+
+  <detelem name="EcalInner" classID="8901" >
+
+     <author>  Olivier Callot </author>
+     <version> 1.0            </version>
+
+     <geometryinfo lvname = "/dd/Geometry/Ecal/lvEcalInner"
+                   support = "/dd/Structure/LHCb/Ecal" 
+                   npath  = "pvEcalInner" />
+
+     <userParameter name="CellSize" type="double"> InCell </userParameter>
+    
+  </detelem>
+
+</DDDB>

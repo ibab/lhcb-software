@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: geometry.dtd,v 1.1 2001-12-17 15:46:13 andreav Exp $ -->
+
+<!--XML root element, Gaudi transient root as well-->
+<!ELEMENT DDDB (parameter|catalog|catalogref|logvol|surface|tabproperty)+>
+<!ATTLIST DDDB version CDATA "3.3" >
+
+<!-- include DTD for tags "tabproperty" and "tabpropertyref" -->
+<!ENTITY % dtdForTabproperty SYSTEM "tabproperty.dtd" >
+%dtdForTabproperty;
+
+<!-- include DTD for tags "surface" and "surafceref" -->
+<!ENTITY % dtdForSurface SYSTEM "surface.dtd" >
+%dtdForSurface;
+
+<!-- Some entities usefull for the rest of the definitions -->
+<!ENTITY % solid "(box | cons | polycone | sphere | tubs | trd | trap | union | subtraction | intersection)">
+<!ENTITY % simpleTransformation "((posXYZ | posRPhiZ | posRThPhi), (rotXYZ | rotAxis)?)">
+<!ENTITY % transformation "(%simpleTransformation; | transformation)">
+<!ENTITY % booleanchildren "((%solid;, %transformation;?), (%solid;, %transformation;?)+)">
+<!ENTITY % paramphysvol "(paramphysvol | paramphysvol2D | paramphysvol3D)">
+
+
+<!-- This describe a generic transformation as composition of transformations -->
+<!ELEMENT transformation (%transformation;, (%transformation;)+)>
+
+<!-- Logical volume definition
+Contains 0 or 1 solid definition (shape) with a possible transformation to be
+applied on it and any number (including 0) of references to its children
+(physical volumes and surfaces)
+Attributes:
+name     - logical volume name
+material - material name
+-->
+<!ELEMENT logvol ((%solid;, (%transformation;)?)?, (physvol | %paramphysvol; | surf)*)>
+<!ATTLIST logvol
+ name      ID    #REQUIRED
+ material  CDATA #IMPLIED
+ sensdet   CDATA #IMPLIED
+ magfield  CDATA #IMPLIED
+>
+
+<!-- reference on a logical volume -->
+<!ELEMENT logvolref EMPTY>
+<!ATTLIST logvolref
+  href CDATA #REQUIRED>
+
+<!-- Physical volume definition.
+May contain a transformation that places the logical volume given as attribute inside it
+Attributes :
+name   - physical volume name
+logvol - a logical volume given via its name in the transient data store
+-->
+<!ELEMENT physvol (%transformation;)?>
+<!ATTLIST physvol
+  name ID #REQUIRED
+  logvol CDATA #REQUIRED>
+
+<!-- A reference to a physical volume -->
+<!ELEMENT physvolref EMPTY>
+<!ATTLIST physvolref
+  href CDATA #REQUIRED>
+
+<!--catalog: helps to define a partition of XML dB for domain specific part and flat store,-->
+<!--         e.g. a palette of detector geometric volumes-->
+<!ELEMENT catalog (catalog|catalogref|tabproperty|tabpropertyref|surface|surfaceref|logvol|logvolref)*>
+<!-- <!ELEMENT catalog ANY>-->
+<!--catalog: name -->
+<!ATTLIST catalog
+        name ID #REQUIRED>
+
+<!--catalogref: refer to the location where the actual catalog data reside-->
+<!ELEMENT catalogref EMPTY>
+<!--catalogref: name -->
+<!--     href : the actual URI of the catalog location-->
+<!--            the form of URI is either to refer outside(1) or inside(2) a file-->
+<!--            1) href="protocol://HOSTNAME/path/to/file.xml#catalogID"-->
+<!--            2) href="#catalogID"-->
+<!ATTLIST catalogref
+        href CDATA #REQUIRED>
+
+<!-- Parametrized physical volume definitions
+This allow to copy n times a given physical volume (or a set of them
+defined by another parametrised physical volume) by applying each time
+a given transformation. Note that the transformation is applied in two
+steps. First the volume is rotated and then translated. This means
+that the volumes will be disposed on a grid.
+-->
+
+<!-- Parametrized physical volume 1D definition
+Attribute :
+number - the number of copies to create
+-->
+<!ELEMENT paramphysvol ((physvol | %paramphysvol;), %transformation;)>
+<!ATTLIST paramphysvol number CDATA #REQUIRED>
+
+<!-- Parametrized physical volume 2D definition
+Attribute :
+number1 - the number of copies to create for the first dimension
+number2 - the number of copies to create for the second dimension
+-->
+<!ELEMENT paramphysvol2D ((physvol | %paramphysvol;), %transformation;, %transformation;)>
+<!ATTLIST paramphysvol2D number1 CDATA #REQUIRED number2 CDATA #REQUIRED>
+
+<!-- Parametrized physical volume 3D definition
+Attribute :
+number1 - the number of copies to create for the first dimension
+number2 - the number of copies to create for the second dimension
+number3 - the number of copies to create for the third dimension
+-->
+<!ELEMENT paramphysvol3D ((physvol | %paramphysvol;), %transformation;, %transformation;, %transformation;)>
+<!ATTLIST paramphysvol3D number1 CDATA #REQUIRED number2 CDATA #REQUIRED number3 CDATA #REQUIRED>
+
+<!-- Parameter definition.
+A parameter is a known constant that can be used in any other expression
+of the file where it is defined as well as in files referenced by this one and recursively.
+As an example, your can define detector_length with value 15.4*m and use it in the
+subdetector definition as in x="detector_length/10"
+-->
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter
+  name CDATA #REQUIRED
+  value CDATA #REQUIRED>
+
+
+<!-- The end of this file describes the geometry itself.
+Comments are fewer but most of the definitions are obvious.
+-->
+
+
+<!-- Some transformations : translations and rotations in
+several coordonnate systems
+-->
+<!ELEMENT posXYZ EMPTY>
+<!ATTLIST posXYZ
+  x CDATA #IMPLIED
+  y CDATA #IMPLIED
+  z CDATA #IMPLIED
+>
+
+<!ELEMENT posRPhiZ EMPTY>
+<!ATTLIST posRPhiZ
+  r   CDATA #IMPLIED
+  phi CDATA #IMPLIED
+  z   CDATA #IMPLIED
+>
+
+<!ELEMENT posRThPhi EMPTY>
+<!ATTLIST posRThPhi
+  r     CDATA #IMPLIED
+  theta CDATA #IMPLIED
+  phi   CDATA #IMPLIED
+>
+
+<!ELEMENT rotXYZ EMPTY>
+<!ATTLIST rotXYZ
+  rotX CDATA #IMPLIED
+  rotY CDATA #IMPLIED
+  rotZ CDATA #IMPLIED
+>
+
+<!ELEMENT rotAxis EMPTY>
+<!ATTLIST rotAxis
+  axTheta CDATA #IMPLIED
+  axPhi CDATA #IMPLIED
+  angle CDATA #IMPLIED
+>
+
+
+<!-- CSG solids.
+box is obvious.
+trd is a simple trapezoid defined by two rectangles orthogonal
+    to the z axis and centered on it and a Z size.
+trap is a more generic trapezoid defined by a direction (theta, phi)
+    that replaces the previous Z axis, a length along this axe (sizeZ)
+    and two faces which are kinds of trapezes. Actually, they are
+    defined by two parallel segments of length X?, the distance between
+    the two (Y?) and the angle between the orthogonal line to these
+    segments and the line joining the middle of both segments (alp?)
+tubs is a part of a section of tub. The tub is centered on the z axis
+    and defined by its inner and outer radius. It is then cut to keep
+    a section of length sizeZ centered at the origin. At last, only
+    the part between phi = startPhiAngle and phi = startPhiAngle +
+    deltaPhiAngle is kept.
+cons is a part of a section of cone. The cone is defined along Z and its
+    section is defined by the inner and outer radius at each extremity
+    plus the height of the section. outerRadiusPZ for example gives the
+    outer radius at the extremity that has a positive (the P) Z.
+    At last, only the part between phi = startPhiAngle and phi =
+    startPhiAngle + deltaPhiAngle is kept.
+polycone is several cone sections. The cone is defined along Z and the
+    sections are defined by a number of triplets giving for several
+    location in z the inner and outer radiuses of the polycone in these
+    places. At last, only the part between phi = startPhiAngle and phi =
+    startPhiAngle + deltaPhiAngle is kept.
+sphere is a kind of sphere part but with a thickness. The thick sphere is
+    defined by a inner and an outer radius. Then only a portion of
+    the whole sphere is kept, defined by its theta and phi angles.
+-->
+<!ELEMENT box EMPTY>
+<!ATTLIST box
+	name  ID    #REQUIRED
+	sizeX CDATA #REQUIRED
+	sizeY CDATA #REQUIRED
+	sizeZ CDATA #REQUIRED
+>
+<!ELEMENT trd EMPTY>
+<!ATTLIST trd
+	name   ID    #REQUIRED
+	sizeZ  CDATA #REQUIRED
+	sizeX1 CDATA #REQUIRED
+	sizeY1 CDATA #REQUIRED
+	sizeX2 CDATA #REQUIRED
+	sizeY2 CDATA #REQUIRED
+>
+<!ELEMENT trap EMPTY>
+<!ATTLIST trap
+	name   ID    #REQUIRED
+	sizeZ  CDATA #REQUIRED
+        theta  CDATA #IMPLIED
+        phi    CDATA #IMPLIED
+	sizeY1 CDATA #REQUIRED
+	sizeX1 CDATA #REQUIRED
+	sizeX2 CDATA #REQUIRED
+        alp1   CDATA #IMPLIED
+	sizeY2 CDATA #REQUIRED
+	sizeX3 CDATA #REQUIRED
+	sizeX4 CDATA #REQUIRED
+        alp2   CDATA #IMPLIED
+>
+<!ELEMENT tubs EMPTY>
+<!ATTLIST tubs
+	name          ID    #REQUIRED
+	sizeZ         CDATA #REQUIRED
+	outerRadius   CDATA #REQUIRED
+	innerRadius   CDATA #IMPLIED
+	startPhiAngle CDATA #IMPLIED
+	deltaPhiAngle CDATA #IMPLIED
+>
+<!ELEMENT cons EMPTY>
+<!ATTLIST cons
+	name          ID    #REQUIRED
+	sizeZ         CDATA #REQUIRED
+	outerRadiusPZ CDATA #REQUIRED
+	outerRadiusMZ CDATA #REQUIRED
+	innerRadiusPZ CDATA #IMPLIED
+	innerRadiusMZ CDATA #IMPLIED
+	startPhiAngle CDATA #IMPLIED
+	deltaPhiAngle CDATA #IMPLIED
+>
+<!ELEMENT polycone (zplane, zplane+)>
+<!ATTLIST polycone
+	name          ID    #REQUIRED
+	startPhiAngle CDATA #IMPLIED
+	deltaPhiAngle CDATA #IMPLIED
+>
+<!ELEMENT zplane EMPTY>
+<!ATTLIST zplane
+	z             CDATA #REQUIRED
+	outerRadius   CDATA #REQUIRED
+	innerRadius   CDATA #IMPLIED
+>
+<!ELEMENT sphere EMPTY>
+<!ATTLIST sphere
+	name            ID    #REQUIRED
+	outerRadius     CDATA #REQUIRED
+	innerRadius     CDATA #IMPLIED
+	startPhiAngle   CDATA #IMPLIED
+	deltaPhiAngle   CDATA #IMPLIED
+	startThetaAngle CDATA #IMPLIED
+	deltaThetaAngle CDATA #IMPLIED
+>
+
+<!-- Boolean solids
+The way these boolean solids are processed is that the children
+are processed one by one, the transformation following it (if there
+is one is applied) and finally the boolean operation is applied
+between the preceeding result and the new processed child.
+-->
+<!ELEMENT union (%booleanchildren;)>
+<!ATTLIST union name ID #REQUIRED>
+
+<!ELEMENT subtraction (%booleanchildren;)>
+<!ATTLIST subtraction name ID #REQUIRED>
+
+<!ELEMENT intersection (%booleanchildren;)>
+<!ATTLIST intersection name ID #REQUIRED>
+

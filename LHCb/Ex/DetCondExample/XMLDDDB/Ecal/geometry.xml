@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/geometry.dtd">
+<!-- $Id: geometry.xml,v 1.1 2001-12-17 15:46:31 andreav Exp $ -->
+<DDDB>
+  <parameter name="InCell" value="40.6667*mm"/>
+  <parameter name="MidCell" value="1.5*InCell"/>
+  <parameter name="OutCell" value="3.0*InCell"/>
+  <!--    ECAL has a Z-length of 835 mm (+10 mm gap, ignored here)   -->
+  <!-- Shashlik start at 86 mm from the front, for 435 mm => center off by -114 mm -->
+  <parameter name="WholeSize" value="835.0*mm"/>
+  <parameter name="DetThick" value="435.0*mm"/>
+  <parameter name="DetOffset" value="-114.0*mm"/>
+  <!-- ************************************************************************ -->
+  <!-- * definition of geometry of Ecal detector                              * -->
+  <!-- ************************************************************************ -->
+  <catalog name="Ecal">
+    <logvolref href="#lvEcal"/>
+    <logvolref href="#lvEcalOuter"/>
+    <logvolref href="#lvEcalMiddle"/>
+    <logvolref href="#lvEcalInner"/>
+  </catalog>
+  <!-- ************************************************************************ -->
+  <!-- * definition of logical volumes                                        * -->
+  <!-- ************************************************************************ -->
+  <logvol material="Vacuum" name="lvEcal">
+    <box name="Box_For_The_Whole_Electromagnetic_Calorimeter" sizeX="10000*mm" sizeY="10000*mm" sizeZ="WholeSize"/>
+    <physvol logvol="/dd/Geometry/Ecal/lvEcalOuter" name="pvEcalOuter">
+      <posXYZ z="DetOffset"/>
+    </physvol>
+    <physvol logvol="/dd/Geometry/Ecal/lvEcalMiddle" name="pvEcalMiddle">
+      <posXYZ z="DetOffset"/>
+    </physvol>
+    <physvol logvol="/dd/Geometry/Ecal/lvEcalInner" name="pvEcalInner">
+      <posXYZ z="DetOffset"/>
+    </physvol>
+  </logvol>
+  <!-- Outer: 64 * 52 cells - 32 * 20 cells  -->
+  <logvol material="Vacuum" name="lvEcalOuter">
+    <subtraction  name = "Composite_Box_for_Outer_Part_of_Electromagnetic_Calorimeter" > 
+      <box name  = "Main_Box_for_Outer_Part_of_Electromagnetic_Calorimeter"  
+           sizeZ = "DetThick" 
+           sizeX = "64*OutCell" 
+           sizeY = "52*OutCell"/>
+      <box name  = "Hole_for_Outer_Part_of_Electromagnetic_Calorimeter" 
+           sizeZ = "DetThick" 
+           sizeX = "32*OutCell" 
+           sizeY = "20*OutCell"/>
+    </subtraction>
+  </logvol>
+  <!-- Middle : 64 * 40 cells - 32 * 24 cells  -->
+  <logvol material="Vacuum" name="lvEcalMiddle">
+    <subtraction name="Composite_Box_for_Middle_Part_of_Electromagnetic_Calorimeter">
+      <box name="Main_Box_for_Middle_Part_of_Electromagnetic_Calorimeter" sizeX="64*MidCell" sizeY="40*MidCell" sizeZ="DetThick"/>
+      <box name="Hole_for_Middle_Part_of_Electromagnetic_Calorimeter" sizeX="32*MidCell" sizeY="24*MidCell" sizeZ="DetThick"/>
+    </subtraction>
+  </logvol>
+  <!-- Inner: 48 * 36 cells - 16 * 16 cells  -->
+  <logvol material="Vacuum" name="lvEcalInner">
+    <subtraction name="Composite_Box_for_Inner_Part_of_Electromagnetic_Calorimeter">
+      <box name="Main_Box_for_Inner_Part_of_Electromagnetic_Calorimeter" sizeX="48*InCell" sizeY="36*InCell" sizeZ="DetThick"/>
+      <box name="Hole_for_Inner_Part_of_Electromagnetic_Calorimeter" sizeX="16*InCell" sizeY="16*InCell" sizeZ="DetThick"/>
+    </subtraction>
+  </logvol>
+</DDDB>
+
+

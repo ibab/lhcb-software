@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: surface.dtd,v 1.1 2001-12-17 15:46:14 andreav Exp $ -->
+
+<!-- Surface                    (V.B., March'2k+1 3) -->
+<!ELEMENT surface       (tabprops*)>
+<!ATTLIST surface    
+    name        ID     #REQUIRED
+    model       CDATA  #REQUIRED   
+    finish      CDATA  #REQUIRED   
+    type        CDATA  #REQUIRED  
+    value       CDATA  #REQUIRED 
+    volfirst    CDATA  #REQUIRED 
+    volsecond   CDATA  #IMPLIED 
+>
+
+<!-- Surface Reference (V.B. March'2k+1 3) -->
+<!ELEMENT surfaceref EMPTY>
+<!ATTLIST surfaceref     
+  href    CDATA    #REQUIRED
+>
+
+<!-- Surface definition
+Attribute :
+surf - The name(address) of attached surface V.B.
+-->
+<!ELEMENT surf EMPTY>
+<!ATTLIST surf
+   address CDATA #REQUIRED
+>
+
+<!-- End of the DTD file -->

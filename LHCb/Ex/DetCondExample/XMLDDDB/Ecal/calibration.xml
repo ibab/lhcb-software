@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
+<!-- $Id: calibration.xml,v 1.1 2001-12-17 15:46:31 andreav Exp $ -->
+<DDDB>
+  <catalog name="Ecal">
+    <!-- Ecal calibration catalog -->
+    <conditionref href="#caEcal"/>
+  </catalog>
+  <condition name="caEcal">
+    <param name="ScaleFactor" type="double"> 1. </param>
+  </condition>
+</DDDB>

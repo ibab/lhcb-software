@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE materials SYSTEM "../DTD/materials.dtd">
+<!-- $Id: EcalMaterials.xml,v 1.1 2001-12-17 15:46:23 andreav Exp $ -->
+<materials>
+<catalog name="Ecal">
+
+<!-- ### Ecal Stack Lead ### -->
+   <element  name = "EcalPb"
+             symbol = "Pb"
+             density = "11.35*g/cm3"
+             radlen = "0.56*cm"
+             lambda = "17.09*cm">
+    <atom A = "207.2*g/mole"
+          Zeff = "82.0"/>
+  </element>
+<!-- ### Ecal Stack Scintillator: Polystyrene (C6H5CH=CH2) ### -->
+  <material  name = "EcalSc"
+             density = "1.032*g/cm3"
+             radlen = "42.4*cm"
+             lambda = "79.46*cm">
+    <component name = "Hydrogen" natoms = "8"/>
+    <component name = "Carbon" natoms = "8"/>
+  </material>
+<!-- ### Ecal Stack Plastic: Polystyrene (C6H5CH=CH2) ### -->
+  <material  name = "EcalPlastic"
+             density = "1.032*g/cm3"
+             radlen = "42.4*cm"
+             lambda = "79.46*cm">
+     <component name = "Hydrogen" natoms = "8"/>
+     <component name = "Carbon" natoms = "8"/>
+  </material>
+<!-- ### Ecal Fiber: Polystyrene (C6H5CH=CH2) ### -->
+  <material  name = "EcalFiber"
+             density = "1.032*g/cm3"
+             radlen = "42.4*cm"
+             lambda = "79.46*cm">
+     <component name = "Hydrogen" natoms = "8"/>
+     <component name = "Carbon" natoms = "8"/>
+ </material>
+<!-- ### Ecal Steel ### -->
+  <material name = "EcalSteel" 
+            density = "7.87*g/cm3">
+      <component name = "Iron"    fractionmass = "0.97"/>
+      <component name = "Carbon"  fractionmass = "0.03"/>
+  </material>
+<!-- ### Ecal Paper: TYVEK ### -->
+  <material name = "EcalPaper" 
+            density = "2.265*g/cm3">
+	  <component name = "Carbon"  fractionmass = "1.0"/>
+  </material>
+
+</catalog>
+</materials>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,198 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE materials SYSTEM '../DTD/materials.dtd'>
+<!-- $Id: materials.xml,v 1.1 2001-12-17 15:46:23 andreav Exp $ -->
+<materials>
+<catalog name='Materials'>
+
+<!-- Material isotopes -->
+  <isotope  name='Bor_10' A='10.000*g/mole' Z='5.000' N='10'
+            density='2.3400*g/cm3' radlen='0.0000e+00*cm'
+            lambda='0.0000e+00*cm'
+  />
+
+  <isotope  name='Bor_11' A='11.000*g/mole' Z='5.000' N='11'
+            density='2.3400*g/cm3' radlen='0.0000e+00*cm'
+            lambda='0.0000e+00*cm'
+  />
+    
+<!-- Material element built from isotopes -->
+  <element  name='Boron' symbol='B'
+            density='2.3400*g/cm3' radlen='0.00*cm' lambda='0.00*cm'>
+    <isotoperef href='#Bor_10' fractionmass='0.20' />
+    <isotoperef href='#Bor_11' fractionmass='0.80' />
+  </element>
+
+<!-- Material elements -->
+  <element  name='Oxygen' symbol='O'
+            density='0.14300e-02*g/cm3' radlen='23944.0*cm'
+            lambda='63636.0*cm'>
+    <atom A='15.999*g/mole' Zeff='8.0000' />
+  </element>
+
+  <element  name='Nitrogen' symbol='N'
+            density='0.12500e-02*g/cm3' radlen='47000.0*cm'>
+    <atom A='14.01*g/mole' Zeff='7.0000' />
+  </element>
+
+  <element name='Hydrogen' symbol='H'
+           density='0.70800E-01*g/cm3' radlen='865.54*cm'
+           lambda='717.51*cm'>
+    <atom A='1.00794*g/mole' Zeff='1.0' />
+  </element>
+
+  <element  name='Carbon' symbol='C'
+            density='2.2650*g/cm3' radlen='18.850*cm'
+            lambda='38.102*cm'>
+    <atom A='12.011*g/mole' Zeff='6.0' />
+  </element>
+
+  <element  name='Fluorine' symbol='F'
+	          density='1.1080*g/cm3' radlen='0.00000E+00*cm'
+            lambda='0.00000E+00*cm'>
+    <atom A='18.998*g/mole' Zeff='9.0000' />
+  </element>
+
+  <element  name='Silicon' symbol='Si'
+	          density='2.3300*g/cm3' radlen='9.3648*cm'
+            lambda='45.494*cm'>
+    <atom A='28.090*g/mole' Zeff='14.000' />
+  </element>
+
+  <element  name='Argon' symbol='Ar'
+            density='0.16390E-02*g/cm3' radlen='10983.0*cm'
+            lambda='65842.69*cm'>
+    <atom A='39.948*g/mole' Zeff='18.0' />
+  </element>
+
+  <element  name='Iron' symbol='Fe'
+	          density='7.8700*g/cm3' radlen='1.7585*cm'
+            lambda='16.760*cm'>
+    <atom A='55.850*g/mole' Zeff='26.000' />
+  </element>
+
+  <element  name='Aluminium' symbol='Al'
+	          density='2.7*g/cm3' radlen='8.8926*cm' 
+            lambda='39.407' >
+    <atom A='26.98*g/mole' Zeff='13.000' />
+  </element>
+
+
+<!-- Simple material -->
+  <material name="Vacuum" density='1.e-25*g/cm3' pressure='1.0e-19*pascal' temperature='0.1*kelvin' > 
+	  <component name='Hydrogen' natoms='1' />
+  </material>
+
+  <material name="PureCarbon" > 
+		<!-- This is pure carbon -->
+	  <component name='Carbon' natoms='1' />
+  </material>
+
+
+<!-- Material composites -->
+  <material  name='CO2' density='1.8182E-03*g/cm3' >
+	  <component name='Carbon' natoms='1' />
+	  <component name='Oxygen' natoms='2' />
+  </material>
+
+  <material  name='CF4' 
+          density='0.003884*g/cm3' 
+          temperature='273.0*kelvin'
+          pressure='1.0*atmosphere'>
+          <component name='Carbon' natoms='1' />
+          <component name='Fluorine' natoms='4' />
+  </material>
+
+  <material  name='SiO2' density='2.6400*g/cm3' >
+	  <component name='Silicon' natoms='1' />
+	  <component name='Oxygen' natoms='2' />
+  </material>
+
+  <material  name='Water' density='1.0000*g/cm3' >
+	  <component name='Hydrogen' natoms='2' />
+	  <component name='Oxygen' natoms='1' />
+  </material>
+
+  <material  name='ArgonGas' density='0.16390E-02*g/cm3' >
+	  <component name='Argon' natoms='1' />
+  </material>
+
+
+<!-- Material mixtures -->
+  <material name='Argon_CF4_CO2' density='2.14160E-3*g/cm3' >
+	  <component name='CF4'  fractionmass='0.2' />
+	  <component name='CO2'  fractionmass='0.5' />
+	  <component name='ArgonGas' fractionmass='0.3' />
+  </material>
+
+<!-- Air at 20 degree C and 1 atm. -->
+  <material name='Air' density='1.205*mg/cm3'
+                       pressure='1.*atmosphere'
+                       temperature='293.*kelvin'>
+          <component name='Nitrogen'  fractionmass='0.7' />
+          <component name='Oxygen'    fractionmass='0.3' />
+          <tabprops address='/dd/Materials/AirAbsLengthPT'/>
+          <tabprops address='/dd/Materials/AirRIndexPT'/>
+  </material>
+  <tabpropertyref href="#AirAbsLengthPT" />
+  <tabpropertyref href="#AirRIndexPT" />
+
+  <catalogref    href = "EcalMaterials.xml#Ecal"             />
+
+</catalog>
+
+ <tabproperty name="AirAbsLengthPT"
+              type="ABSLENGTH"
+              xunit ="eV"
+              yunit ="mm"
+              xaxis ="PhotonMomentum"
+              yaxis ="AbsortionLength" >
+       <entry x = '1.5'  y = '1.E32' />
+       <entry x = '2.0'  y = '1.E32' />
+       <entry x = '2.5'  y = '1.E32' />
+       <entry x = '3.0'  y = '1.E32' />
+       <entry x = '3.5'  y = '1.E32' />
+       <entry x = '4.0'  y = '1.E32' />
+       <entry x = '4.5'  y = '1.E32' />
+       <entry x = '5.0'  y = '1.E32' />
+       <entry x = '5.5'  y = '1.E32' />
+       <entry x = '6.0'  y = '1.E32' />
+       <entry x = '6.5'  y = '1.E32' />
+       <entry x = '7.0'  y = '1.E32' />
+       <entry x = '7.5'  y = '1.E32' />
+ </tabproperty>
+
+ <tabproperty name  = 'AirRIndexPT'
+              type  = 'RINDEX'
+              xunit = 'eV'
+              xaxis = 'PhotonMomentum'
+              yaxis = 'RefractionIndex' >
+       <entry x = '1.5'  y = '1.000273' />
+       <entry x = '2.0'  y = '1.000273' />
+       <entry x = '2.5'  y = '1.000273' />
+       <entry x = '3.0'  y = '1.000273' />
+       <entry x = '3.5'  y = '1.000273' />
+       <entry x = '4.0'  y = '1.000273' />
+       <entry x = '4.5'  y = '1.000273' />
+       <entry x = '5.0'  y = '1.000273' />
+       <entry x = '5.5'  y = '1.000273' />
+       <entry x = '6.0'  y = '1.000273' />
+       <entry x = '6.5'  y = '1.000273' />
+       <entry x = '7.0'  y = '1.000273' />
+       <entry x = '7.5'  y = '1.000273' />
+ </tabproperty>
+
+</materials>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

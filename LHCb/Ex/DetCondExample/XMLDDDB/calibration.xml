@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "DTD/structure.dtd">
+<!-- $Id: calibration.xml,v 1.1 2001-12-17 15:45:57 andreav Exp $ -->
+<DDDB>
+  <catalog name="Calibration">
+    <!-- ******************************************************** -->
+    <!-- * main catalog for detector calibration condition data * -->
+    <!-- ******************************************************** -->
+    <catalogref href="Ecal/calibration.xml#Ecal"/>
+  </catalog>
+</DDDB>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
+<!-- $Id: structure.xml,v 1.1 2001-12-17 15:46:38 andreav Exp $ -->
+<DDDB>
+
+  <detelem name="LHCb" type="passive">
+
+    <author>Andrea Valassi</author>
+    <version>CondDB test 0.1</version>
+
+    <geometryinfo lvname="/dd/Geometry/LHCb/lvLHCb"/>
+    <alignmentinfo condition="/dd/Alignment/LHCb/alLHCb"/>
+    <slowcontrolinfo condition="/dd/SlowControl/LHCb/scLHCb"/>
+
+    <detelemref href = "../Ecal/structure.xml#Ecal"       />
+
+  </detelem>
+
+</DDDB>

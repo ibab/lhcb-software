@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/geometry.dtd">
+<DDDB>
+<!-- $Id: geometry.xml,v 1.1 2001-12-17 15:46:38 andreav Exp $ -->
+  <catalog name="LHCb">
+  <!-- LHCb detector geometry  catalog -->
+
+    <logvol material="Vacuum" name="lvLHCb">
+    <!-- Geometry for LHCb detector -->
+
+      <box name  = "caveBox" 
+           sizeX = "50000*mm" 
+           sizeY = "50000*mm" 
+           sizeZ = "50000*mm" />
+
+      <physvol logvol="/dd/Geometry/Ecal/Installation/Ecal" 
+               name="EcalSubsystem">
+          <posXYZ z = "12907.5*mm"/>        
+      </physvol>
+
+    </logvol>  
+
+  </catalog>
+
+</DDDB>

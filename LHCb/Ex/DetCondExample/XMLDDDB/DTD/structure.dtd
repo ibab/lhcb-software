@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: structure.dtd,v 1.1 2001-12-17 15:46:14 andreav Exp $ -->
+
+<!-- DDDB: XML root element, Gaudi transient root as well -->
+<!ELEMENT DDDB (macro|parameter|catalog|catalogref|detelem|condition)+>
+<!ATTLIST DDDB version CDATA "3.3" >
+
+<!-- macro : a macro is a known constant that can be used in any other expression
+     of the file where it is defined as well as in files referenced by this one and 
+     recursively. As an example, your can define detector_length with value 15.4*m 
+     and use it in the subdetector definition as in x="detector_length/10"  
+-->
+<!ELEMENT macro EMPTY>
+<!ATTLIST macro
+  name CDATA #REQUIRED
+  value CDATA #REQUIRED>
+<!-- This is the old name of macro. It stays here for backward compatibility -->
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter
+  name CDATA #REQUIRED
+  value CDATA #REQUIRED
+>
+
+<!-- param : this allow the user to add a parameter, giving its name,
+     type and possibly a comment. This parameter will then be reachable
+     through the getUserParam method of the resulting detector element.
+     Note that the default type is "double" and the default comment is empty.
+-->
+<!ELEMENT param (#PCDATA)>
+<!ATTLIST param xml:space (default|preserve) #FIXED "preserve"
+                        type CDATA "double"
+                        name CDATA #REQUIRED
+                        comment CDATA "">
+<!-- This is the old name of param. It stays here for backward compatibility -->
+<!ELEMENT userParameter (#PCDATA)>
+<!ATTLIST userParameter xml:space (default|preserve) #FIXED "preserve"
+                        type CDATA "double"
+                        name CDATA #REQUIRED
+                        comment CDATA "">
+
+<!-- paramVector : This is an equivalent of userParam but it defines a vector
+     of values. Note that the vector has no given size. The parser will take every
+     value it finds. These should be separated by spaces and/or cariage returns
+-->
+<!ELEMENT paramVector (#PCDATA)>
+<!ATTLIST paramVector xml:space (default|preserve) #FIXED "preserve"
+                              type CDATA "double"
+                              name CDATA #REQUIRED
+                              comment CDATA "">
+<!-- This is the old name of paramVector. It stays here for backward compatibility -->
+<!ELEMENT userParameterVector (#PCDATA)>
+<!ATTLIST userParameterVector xml:space (default|preserve) #FIXED "preserve"
+                              type CDATA "double"
+                              name CDATA #REQUIRED
+                              comment CDATA "">
+
+<!--detelemref: reference to detector element data location.
+                The form of URI is either to refer outside(1) or inside(2) a file
+                  1) href="protocol://HOSTNAME/path/to/file.xml#catalogID"
+                  2) href="#catalogID"   
+-->
+<!ELEMENT detelemref EMPTY>
+<!ATTLIST detelemref
+  href CDATA #REQUIRED
+>
+
+<!--detelem: holds detector element data common for each detector
+             may have references to its subdetectors
+             may have optional user defined custom data, its specific information
+-->
+<!ELEMENT detelem ((author | version | geometryinfo | calibrationinfo |
+                    slowcontrolinfo | fastcontrolinfo | alignmentinfo |
+                    readoutinfo | detelemref | detelem | param | paramVector |
+                    userParameter | userParameterVector | specific)*)>
+
+<!--detelem: name and classID-->
+<!ATTLIST detelem
+  name ID #REQUIRED 
+  classID CDATA "2"
+  type (active | passive) #FIXED "passive"
+>
+
+<!--author: author of the detector element description
+-->
+<!ELEMENT author (#PCDATA)>
+
+<!--version of the detector element
+-->
+<!ELEMENT version (#PCDATA)>
+
+<!--specific: User defined detector parameters.
+              The content model allows to hold any user defined XML tag
+              It's forseen the user defined tags have their corresponding DTD records defined
+              in local DTD section of the XML data file where specific tag is used
+-->
+<!ELEMENT specific ANY>
+
+
+<!-- condition This defines a condition in a very generic way.
+               It is actually a set of parameters and it may have optional
+               user defined custom data, its specific information -->
+<!ELEMENT condition ((param | paramVector | specific)*)>
+<!-- condition: name and classID-->
+<!ATTLIST condition
+  name ID #REQUIRED 
+  classID CDATA "5">
+
+<!--conditionref : reference to detector element data location.
+                The form of URI is either to refer outside(1) or inside(2) a file
+                  1) href="protocol://HOSTNAME/path/to/file.xml#catalogID"
+                  2) href="#catalogID"   
+-->
+<!ELEMENT conditionref EMPTY>
+<!ATTLIST conditionref
+  href CDATA #REQUIRED
+>
+
+<!-- geometryinfo: The needed information for connecting the detector structure information
+                  to the geometrical information. This information consists of:
+                  - lvname: the logical volume name of the detector element
+                  - support: name of the supporting detector element
+                  - npath: path to follow to connect the support volumen to the current volume
+                           e.g a sequence like "calo/left/inner"
+                  - rpath: the same as npath but using numbers. Deprecated.
+
+-->
+<!ELEMENT geometryinfo EMPTY>
+<!ATTLIST geometryinfo
+  lvname  CDATA #REQUIRED
+  support CDATA #IMPLIED
+  npath   CDATA #IMPLIED
+  rpath   CDATA #IMPLIED>
+
+<!-- calibrationinfo: The needed information for connecting the detector structure information
+                  to the calibration information. This information consists of:
+                  - condition : the condition object name that contains calibration info -->
+<!ELEMENT calibrationinfo EMPTY>
+<!ATTLIST calibrationinfo
+  condition  CDATA #REQUIRED>
+
+<!-- readoutinfo: The needed information for connecting the detector structure information
+                  to the readout information. This information consists of:
+                  - condition : the condition object name that contains readout info -->
+<!ELEMENT readoutinfo EMPTY>
+<!ATTLIST readoutinfo
+  condition  CDATA #REQUIRED>
+
+<!-- slowcontrolinfo: The needed information for connecting the detector structure information
+                  to the slow control information. This information consists of:
+                  - condition : the condition object name that contains slow control info -->
+<!ELEMENT slowcontrolinfo EMPTY>
+<!ATTLIST slowcontrolinfo
+  condition  CDATA #REQUIRED>
+
+<!-- fastcontrolinfo: The needed information for connecting the detector structure information
+                  to the fast control information. This information consists of:
+                  - condition : the condition object name that contains fast control info -->
+<!ELEMENT fastcontrolinfo EMPTY>
+<!ATTLIST fastcontrolinfo
+  condition  CDATA #REQUIRED>
+
+<!-- alignmentinfo: The needed information for connecting the detector structure information
+                  to the alignement information. This information consists of:
+                  - condition : the condition object name that contains alignment info -->
+<!ELEMENT alignmentinfo EMPTY>
+<!ATTLIST alignmentinfo
+  condition  CDATA #REQUIRED>
+
+<!--catalog: helps to define a partition of XML dB for domain specific part and flat store,-->
+<!--         e.g. a palette of detector elements -->
+<!ELEMENT catalog (catalog|catalogref|detelem|detelemref|condition|conditionref)*>
+<!-- <!ELEMENT catalog ANY>-->
+<!-- catalog : name-->
+<!ATTLIST catalog
+        name ID #REQUIRED>
+
+<!--catalogref: refer to the location where the actual catalog data reside-->
+<!ELEMENT catalogref EMPTY>
+<!--catalogref: name -->
+<!--     href : the actual URI of the catalog location-->
+<!--            the form of URI is either to refer outside(1) or inside(2) a file-->
+<!--            1) href="protocol://HOSTNAME/path/to/file.xml#catalogID"-->
+<!--            2) href="#catalogID"-->
+<!ATTLIST catalogref
+        href CDATA #REQUIRED>
+

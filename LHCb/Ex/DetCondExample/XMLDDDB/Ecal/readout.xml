@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
+<!-- $Id: readout.xml,v 1.1 2001-12-17 15:46:31 andreav Exp $ -->
+<DDDB>
+  <catalog name="Ecal">
+    <!-- Ecal readout catalog -->
+    <conditionref href="#roEcal"/>
+  </catalog>
+  <condition name="roEcal">
+    <paramVector name="ChannelMap" type="int"> 1 2 3 4 </paramVector>
+  </condition>
+</DDDB>

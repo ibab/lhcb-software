@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "DTD/geometry.dtd">
+<!-- $Id: geometry.xml,v 1.1 2001-12-17 15:45:57 andreav Exp $ -->
+<DDDB>
+  <catalog name="Geometry">
+    <!-- ******************************************************* -->
+    <!-- * definition of main catalog for geometry gescription * -->
+    <!-- ******************************************************* -->
+    <catalogref href="LHCb/geometry.xml#LHCb"/>
+    <catalogref href="Ecal/geometry.xml#Ecal"/>
+  </catalog>
+</DDDB>

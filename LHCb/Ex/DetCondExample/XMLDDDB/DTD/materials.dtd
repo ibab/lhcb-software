@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: materials.dtd,v 1.1 2001-12-17 15:46:14 andreav Exp $ -->
+
+
+<!-- include DTD for tags "tabproperty" and "tabpropertyref" -->
+<!ENTITY % dtdForTabproperty SYSTEM "tabproperty.dtd" >
+%dtdForTabproperty;
+
+
+<!-- Physical conditions shared by all material tags -->
+<!ENTITY % conditions "temperature CDATA                  #IMPLIED
+                       pressure    CDATA                  #IMPLIED
+                       state       (solid|liquid|gas|undefined) 'undefined'"
+>
+
+<!ELEMENT materials (parameter|catalog|catalogref|isotope|element|material|isotoperef|elementref|materialref|tabproperty)+>
+
+<!-- a parameter is a known constant that can be used in any other expression
+ of the file where it is defined as well as in files referenced by this one and recursively-->
+<!-- as an example, your can define detector_length with value 15.4*m and use it in the
+ subdetector definition as in x="detector_length/10"-->
+<!ELEMENT parameter EMPTY>
+<!ATTLIST parameter
+  name CDATA #REQUIRED
+  value CDATA #REQUIRED>
+
+<!-- Version of this DTD for materials -->
+<!ATTLIST materials
+	DTD_Version CDATA #FIXED "v5"
+>
+
+<!-- 
+     References to material, element or isotope
+
+     It allows to split the description of HEP materials in XML across
+     multiple files as needed.
+
+     Reference to a local material defined in the same file:
+     <materialref href='#Material ID' />
+
+     Reference to a material defined in a different file or location:
+     <materialref href='protocol://hostname.in.domain/path/to/the/file.xml#Material ID' />
+
+     where
+     protocol: FILE, HTTP, FTP (depends on the capabilities of the XML parser)
+-->
+
+<!-- Isotope XML tag -->
+<!ELEMENT isotope (tabprops*)>
+<!ATTLIST isotope
+  name      ID    #REQUIRED
+  A         CDATA #REQUIRED
+  Z         CDATA #REQUIRED
+  N         CDATA #REQUIRED
+  density   CDATA #IMPLIED
+  radlen    CDATA #IMPLIED
+  lambda    CDATA #IMPLIED
+  %conditions;
+>
+
+<!ELEMENT isotoperef EMPTY>
+<!ATTLIST isotoperef
+	href      CDATA #REQUIRED
+  fractionmass CDATA #IMPLIED
+>
+
+
+<!-- Element XML tag -->
+<!ELEMENT element ((atom|(isotoperef*)),tabprops*)>
+<!ATTLIST element
+  name      ID    #REQUIRED
+  symbol    CDATA #IMPLIED
+  density   CDATA #IMPLIED
+  radlen    CDATA #IMPLIED
+  lambda    CDATA #IMPLIED
+  %conditions;
+>
+
+<!ELEMENT elementref EMPTY>
+<!ATTLIST elementref
+  href         CDATA #REQUIRED
+  natoms       CDATA "-1"
+  fractionmass CDATA "-1"
+>
+
+<!-- Atom XML tag -->
+<!ELEMENT atom EMPTY>
+<!ATTLIST atom
+  A         CDATA #REQUIRED
+  Zeff      CDATA #REQUIRED
+>
+
+<!-- material XML tag -->
+<!ELEMENT material (component*,tabprops*)>
+<!ATTLIST material
+  name      ID    #REQUIRED
+  Aeff      CDATA #IMPLIED
+  Zeff      CDATA #IMPLIED
+  density   CDATA #IMPLIED
+  radlen    CDATA #IMPLIED
+  lambda    CDATA #IMPLIED
+  %conditions;
+>
+
+<!ELEMENT component EMPTY>
+<!ATTLIST component
+  name         CDATA #REQUIRED
+  natoms       CDATA "-1"
+  fractionmass CDATA "-1"
+>
+
+<!ELEMENT materialref EMPTY>
+<!ATTLIST materialref
+  href         CDATA #REQUIRED
+  fractionmass CDATA #IMPLIED
+>
+
+<!--catalog: helps to define a partition of XML dB for domain specific part and flat store,-->
+<!--         e.g. a palette of materials-->
+<!ELEMENT catalog (catalog|catalogref|isotope|isotoperef|element|elementref|material|materialref|tabproperty|tabpropertyref)*>
+<!-- <!ELEMENT catalog ANY>-->
+<!--catalog: name -->
+<!ATTLIST catalog
+        name ID #REQUIRED>
+
+<!--catalogref: refer to the location where the actual catalog data reside-->
+<!ELEMENT catalogref EMPTY>
+<!--catalogref: name -->
+<!--     href : the actual URI of the catalog location-->
+<!--            the form of URI is either to refer outside(1) or inside(2) a file-->
+<!--            1) href="protocol://HOSTNAME/path/to/file.xml#catalogID"-->
+<!--            2) href="#catalogID"-->
+<!ATTLIST catalogref
+        href CDATA #REQUIRED>
+
+<!-- End of the DTD file -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "DTD/structure.dtd">
+<!-- $Id: structure.xml,v 1.1 2001-12-17 15:45:58 andreav Exp $ -->
+<DDDB>
+<catalog name="Structure">
+   <!--  This is the top level Catalog for the Detector Description  
+         For the time being the only existing detetor setup is LHCb, but
+         others like test beams can be added at the same level -->   
+   <detelemref href="LHCb/structure.xml#LHCb"/>
+</catalog>
+</DDDB>
