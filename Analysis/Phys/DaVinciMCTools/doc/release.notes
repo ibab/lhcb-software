@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.25 2003-12-12 14:59:49 gcorti Exp $
+! $Id: release.notes,v 1.26 2004-01-14 19:02:37 gcorti Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
+
+!========================== DaVinciMCTools v5r1 2003-01-14 =================
+! 2004-01-14 - Gloria CORTI
+ - cmt/requirements
+   . use v* to allow compilcation against different LHCb versions
 
 !========================== DaVinciMCTools v5r0p1 2003-12-12 ===============
 ! 2003-07-24 - Gloria CORTI
