@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.57 2003-09-22 13:58:19 ibelyaev Exp $
+! $Id: release.notes,v 1.58 2003-09-25 12:13:14 ranjard Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!========================== GiGaCnv v13r3 ============================
 ! 2003-09-22 - Vanya BELYAEV
   - cmt/requirements     - increase the version to v13r3 
  - few fixes for unfinalized or undeleted tools.
