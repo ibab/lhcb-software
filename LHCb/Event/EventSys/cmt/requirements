@@ -11,7 +11,7 @@ use VeloEvent    v12r0   Event
 use ITEvent      v12r0   Event
 use OTEvent      v12r0   Event
 use TrEvent      v12r0   Event
-use RichEvent    v4r0    Event
+use RichEvent    v3r2p1  Event
 use CaloEvent    v11r2p1 Event
 use MuonEvent    v2r1p1  Event
 use L0Event      v13r0   Event
