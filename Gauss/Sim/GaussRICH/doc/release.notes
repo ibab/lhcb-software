@@ -4,7 +4,8 @@
 ! Responsible	     : Witold Pokorski
 ! Purpose            : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-	
+
+!========================== GaussRICH v2r0 2003-02-27 =======================
 ! 2003-01-23 - Vanya Belyaev
     few fixes for Win2K platform 
 
