@@ -6,9 +6,11 @@
 
 ! 2002-11-14 - Richard Beneyton
  - Update L Correction coeff and calcul in CaloLCorrectionSimple
+   with default parameters in code (supressed in option file)
  - Add CaloSCorrectionFinal with hardcoded default coeff 
-   (not based on CaloSCorrectionSequence due to special 
-    energies definition)
+   supressed in option file)
+   rq.: alg not based on CaloSCorrectionSequence due to special 
+    energies definition
 
 !======================= CaloRec v1r0 2002-11-14 ============================
 ! 2002-10-31 - Ivan Belyaev
