@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2003-04-08 - Vanya BELYAEV Ivan.Belyaev@itep.ru
+ - src/NeutralPPsFromCPsAlg.cpp   - 1) add PhotonFromMergedPi0 to the list of 
+                                       default accepted hypothesis
+                                    2) Remove few trivial warning messages 
+
 !===================== GlobalReco v3r0 2003-02-13 ===========================
 ! 2003-02-07 - Gloria Corti
  - Make file with list of default options NeutralPPsFromCPsAlg.opts

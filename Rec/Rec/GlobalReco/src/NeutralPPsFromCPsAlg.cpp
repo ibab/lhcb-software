@@ -1,8 +1,11 @@
-// $Id: NeutralPPsFromCPsAlg.cpp,v 1.2 2003-01-19 11:41:20 ibelyaev Exp $
+// $Id: NeutralPPsFromCPsAlg.cpp,v 1.3 2003-04-08 08:37:03 ibelyaev Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/01/19 11:41:20  ibelyaev
+//  bug fix for neutral ProtoParticle creator
+//
 // Revision 1.1  2002/11/20 20:00:24  ibelyaev
 //  new algorithm for creation of Neutral ProtoParticles
 // 
@@ -68,8 +71,9 @@ NeutralPPsFromCPsAlg::NeutralPPsFromCPsAlg( const std::string& name ,
   ///
   , m_calo              ( DeCalorimeterLocation:: Ecal )
 {
-  m_hyposLong.push_back( (long) CaloHypotheses::Photon    ) ;
-  m_hyposLong.push_back( (long) CaloHypotheses::Pi0Merged ) ;
+  m_hyposLong.push_back( (long) CaloHypotheses::Photon              ) ;
+  m_hyposLong.push_back( (long) CaloHypotheses::Pi0Merged           ) ;
+  m_hyposLong.push_back( (long) CaloHypotheses::PhotonFromMergedPi0 ) ;
   // declare the properties 
   declareProperty( "Hypos"        , m_hyposLong  ) ;
   declareProperty( "MatchingType" , m_matchType  ) ;
@@ -329,7 +333,7 @@ double NeutralPPsFromCPsAlg::clusterMass ( const CaloHypo*  hypo  )  const
       if( 0 == momentum ) 
         { Error("clusterMass():CaloMomentum* points to NULL for 'Pi0Merged'"); }
       else 
-        { mass = momentum->momentum().m(); }
+        { mass = momentum -> momentum().m(); }
     }  
   else { mass = 0 ; }
   
@@ -361,7 +365,8 @@ double NeutralPPsFromCPsAlg::showerShape ( const CaloHypo*  hypo  )  const
   const CaloPosition* position = hypo->position();
   if( 0 == position ) 
     {
-      Warning("showerShape(): CaloPosition* points to NULL!");
+      if( hypo->hypothesis() != CaloHypotheses::Pi0Merged ) 
+        { Warning("showerShape(): CaloPosition* points to NULL!"); }
       return shape;                                              // RETURN !!
     }
   
@@ -392,7 +397,7 @@ double  NeutralPPsFromCPsAlg::caloDepositID ( const CaloHypo*  hypo  )  const
       return dep;                                              // RETURN !!
     }
   
-  dep = m_spdprs->likelyhood( hypo ) ;
+  dep = m_spdprs -> likelyhood( hypo ) ;
   
   return dep ;
 };

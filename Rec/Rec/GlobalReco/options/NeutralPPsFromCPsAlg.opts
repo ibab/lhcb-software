@@ -9,10 +9,15 @@
 // Default values for input & output data
 // NeutralPPsFromCPsAlg.Input       = "Rec/Calo/Particles";
 // NeutralPPsFromCPsAlg.OutputData = "Rec/ProtoP/Neutrals";
-// Numbers corresponding to Enum of CaloHypotheses::Photon, 
-// CaloHypotheses::Pi0Merged (refer to LHCbKernel/Kenrnel/CaloHypothesis.h)
-// The enum need to be replaced with numbers
-// NeutralPPsFromCPsAlg.Hypos = { CaloHypotheses::Photon, CaloHypotheses::Pi0Merged }; 
+/** Numbers corresponding to Enum of 
+ *  CaloHypotheses::Photon, 
+ *  CaloHypotheses::Pi0Merged 
+ *  CaloHypotheses::PhotonFromMergedPi0
+ *  @see Kernel/CaloHypothesis.h from LHCbKernel 
+ */
+// NeutralPPsFromCPsAlg.Hypos = { CaloHypotheses::Photon              , 
+//                                CaloHypotheses::Pi0Merged           ,
+//                                CaloHypotehses::PhotonFromMergedPi0 } ; 
 // Default tools
 // NeutralPPsFromCPsAlg.MatchingType = "AssociatorWeighted<CaloCluster,TrStoredTrack,float>"; 
 // NeutralPPsFromCPsAlg.MatchingName = "PhotonMatch"
