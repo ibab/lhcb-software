@@ -1,6 +1,6 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.10 2005-02-05 19:12:22 ibelyaev Exp $
+! $Id: release.notes,v 1.11 2005-02-08 11:29:30 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -10,6 +10,14 @@
 !                of the LoKi package
 ! -----------------------------------------------------------------------------
 
+! 2005-02-08 - Vanya BELYAEV
+ - python/bendersmartrefs.py 
+	 fix a bug 
+ - python/benderstartup.py 
+   new file, prototype for "startup" script 
+ - python/bendermodule.py 
+   execute startup script 
+ 
 ! 2005-02-05 - Vanya BELYAEV
  - python/benderhelper.py
    bug fix for MC predicates

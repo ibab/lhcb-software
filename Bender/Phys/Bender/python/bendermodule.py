@@ -1,18 +1,13 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.20 2005-02-02 19:15:10 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.21 2005-02-08 11:29:30 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.19  2005/01/24 17:44:39  ibelyaev
-#  v4r5
-#
 # =============================================================================
-"""
-This is a major Python Module for Bender application
-Author:      Vanya BELYAEV Ivan.Belyaev@itep.ru
-"""
-
+""" This is a major Python Module for Bender application """
+# =============================================================================
+__author__ = 'Vanya BELYAEV belyaev@lapp.in2p3.fr'
 # =============================================================================
 # @file
 #
@@ -21,6 +16,13 @@ Author:      Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date   2004-07-11
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
+
+try:
+    import os 
+    startup = os.environ.get('PYTHONSTARTUP',None)
+    if startup and os.path.exist( startup ) : execfile( startup )
+except:
+    pass
 
 import gaudimodule
 

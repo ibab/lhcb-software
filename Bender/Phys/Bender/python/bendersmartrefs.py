@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendersmartrefs.py,v 1.5 2005-01-25 09:44:05 ibelyaev Exp $ 
+# $Id: bendersmartrefs.py,v 1.6 2005-02-08 11:29:30 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ version $Revison:$
 # =============================================================================
@@ -13,7 +13,7 @@ Helper module  to (re)define few sipmple methods for few useful event classes
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.5 $ "
+__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.6 $ "
 # =============================================================================
 
 import gaudimodule
@@ -38,7 +38,7 @@ def vector2list( vct ) :
     if list == type( vct ) : return vct
     lst = []
     for i in range( 0 , vct.size() - 1 ) :
-        lst.append( getattr( vct , '[]' )( ia ) ) 
+        lst.append( getattr( vct , '[]' )( i ) ) 
         return lst
     
 def vector2tuple( vct ) :
@@ -105,16 +105,16 @@ _dicts_ = [ 'Event'     ,
             'CaloEvent' ,
             'TrEvent'   ]
 
-_list_ = [ ( 'MCParticle'    , 'endVertices' ) ,
-           ( 'MCVertex'      , 'products'    ) ,
+_list_ = [ #( 'MCParticle'    , 'endVertices' ) ,
+           #( 'MCVertex'      , 'products'    ) ,
            # Event/PhysEvent
-           ( 'Vertex'        , 'products'    ) ,
+           #( 'Vertex'        , 'products'    ) ,
            ( 'PrimVertex'    , 'tracks'      ) ,
-           ( 'ProtoParticle' , 'calo'        ) ,
+           #( 'ProtoParticle' , 'calo'        ) ,
            # Event/CaloEvent
            ( 'CaloParticle'  , 'hypos'       ) ,
            ( 'CaloHypo'      , 'hypos'       ) ,
-           ( 'CaloHypo'      , 'clusters'    ) ,
+           #( 'CaloHypo'      , 'clusters'    ) ,
            ( 'MCCaloDigit'   , 'hits'        ) ]
 
 for klass,method in _list_ :
@@ -150,6 +150,7 @@ _list_ = [ 'MCVertex'      ,
            'Vertex'        ,
            'Particle'      ,
            'CaloHypo'      ,
+           'CaloCluster'   ,
            'TrStoredTrack' ,
            'MCCaloHit'     ]
 
