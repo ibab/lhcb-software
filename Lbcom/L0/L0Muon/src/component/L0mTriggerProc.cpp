@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.8 2001-10-04 16:27:38 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.9 2001-10-18 14:23:36 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -109,7 +109,7 @@ StatusCode L0mTriggerProc::execute() {
   //======================================
   StatusCode sc;
   
-  log << MSG::DEBUG << "Creating towers...  " << endreq;  
+  log << MSG::DEBUG << "Creating towers...  ";  
   
   m_towers = new ObjectVector<L0mTower>;
   if ( !m_towers ) {
@@ -136,7 +136,8 @@ StatusCode L0mTriggerProc::execute() {
       m_towers->push_back(lt);
     }       
   }
-  
+  log << MSG::DEBUG << "Done " << m_towers->size() << " towers created" << endreq;  
+
   //======================================
   // register trigger candidates  
   //======================================
@@ -204,6 +205,7 @@ L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
   MsgStream log(msgSvc(), name());
           
   int st = pad->station();
+  int nq = pad->quarter();
   int nr = pad->region();
   if ( st != 2 ) {
       log << MSG::DEBUG << "!!! Wrong station in createTower " 
@@ -229,13 +231,16 @@ L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
   vtiles[4] = m_layout[4].tiles( *pad , 12, 1 );
     
   // look through all the pads
-//  int nbit = 0;
   for ( ind = pads->begin(); ind != pads->end(); ind++ ) {
-    int st = (*ind)->station();
-    if(st !=2 ) {   // for all the pads except those in M3
+    int ist = (*ind)->station();
+    int iq = (*ind)->quarter();
+    int ir = (*ind)->region();
+    // for all the pads in the same quarter and the nearest region 
+    // except those in M3
+    if(ist !=2 && iq==nq && (abs(ir-nr))<2  ) {   
       // Check if the pad coinsides with some tile
-      for (ivmt = vtiles[st].begin(); ivmt != vtiles[st].end(); ivmt++ ) {
-	if ( MuonTile(**ind) == *ivmt  ) {
+      for (ivmt = vtiles[ist].begin(); ivmt != vtiles[ist].end(); ivmt++ ) {
+	if ( **ind == *ivmt  ) {
 	  // Check how many M3 pads covers the touched pad in other station
 	  // These the M3 pads defined in terms of nr region 
 	  vmt3 = m_layout[2].tilesInRegion( *ivmt, nr);
@@ -246,7 +251,7 @@ L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
 	    int iny = (*ivmt3).nY() - ny;
 	    if( abs(iny) < 2) {
 	      int inx = (*ivmt3).nX();
-    	      lt->addBit(inx-nx, iny, st, *ind);	      
+    	      lt->addBit(inx-nx, iny, ist, *ind);	      
 	    }
           }
 	}
