@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.7 2002-04-02 10:59:31 ibelyaev Exp $
-! =============================================================================
+! $Id: release.notes,v 1.8 2002-04-02 12:30:20 ocallot Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
-! =============================================================================
+
+!=============================================================================
+! 02/04/2002 - Olivier Callot
+  - Fix reference to CaloEvent/CaloDigit.h in CaloUtils/CaloData.h
 
 ! =============================================================================
 ! 02/04/2002 - v2r0 Vanya Belyaev

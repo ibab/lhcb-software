@@ -1,8 +1,11 @@
-// $Id: CaloData.h,v 1.4 2001-11-25 16:18:50 ibelyaev Exp $ 
+// $Id: CaloData.h,v 1.5 2002-04-02 12:30:20 ocallot Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2001/11/25 16:18:50  ibelyaev
+//  bug fix
+//
 // Revision 1.3  2001/11/25 15:55:03  ibelyaev
 //  bug fix
 //
@@ -31,7 +34,7 @@
 // from CaloKernel
 #include "CaloKernel/CaloException.h"
 // From CaloEvent 
-#include "CaloEvent/CaloDigit.h"
+#include "Event/CaloDigit.h"
 
 class  IMessageSvc; 
 class  IDataProviderSvc; 
