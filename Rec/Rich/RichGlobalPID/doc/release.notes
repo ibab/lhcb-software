@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2004-10-13 - Chris Jones
+ - Update for new RichPID object
+
 ! 2004-08-17 - Chris Jones
  - Updates for new RichPID that no longer uses the raw probability vector
 
