@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.197 2004-11-03 07:27:22 pkoppenb Exp $
+# $Id: requirements,v 1.198 2004-11-04 16:42:53 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -21,9 +21,6 @@ apply_pattern DaVinciVersion
 #============================================================================
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
-
-macro_remove ROOT_native_version "3.10.02"
-macro_append ROOT_native_version "3.10.02_0411"
 
 #-- Gaudi libraries
 use GaudiSys            v*
@@ -84,7 +81,7 @@ use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v1r3     Phys
 use  DaVinciKernel      	v2r1     Phys
 use  DaVinciTools       	v11r2    Phys
-use  DaVinciUser        	v5r1p2   Phys
+use  DaVinciUser        	v5r2     Phys
 use  FlavourTagging     	v5r3     Phys
 use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r1     Phys
