@@ -4,6 +4,11 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
+!======================== BooleSys v2r1 2003-10-16 ========================
+! 2003-10-15 - Marco Cattaneo
+ - Packages modified: Boole v2r1, MuonBackground v1r4, DigiAlg v2r0p1
+ - Packages removed:  MuonUtils
+
 !======================== BooleSys v2r0 2003-10-08 ========================
 ! 2003-10-08 - Marco Cattaneo
  - Packages added:    RichReadout v1r0, RiSicbCnv v3r4

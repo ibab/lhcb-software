@@ -1,5 +1,5 @@
 package BooleSys
-version v2r0
+version v2r1
 
 branches cmt doc
  
@@ -8,10 +8,8 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v2r0	Digi
-
-# LHC background
-use DigiAlg		v2r0	Digi
+use Boole		v2r1	Digi
+use DigiAlg		v2r0p1	Digi
 
 # L0 trigger
 use L0Calo              v7r1	L0
@@ -41,8 +39,7 @@ use OTAlgorithms        v13r2	OT
 
 # Muon
 use MuonAlgs            v5r0	Muon
-use MuonBackground	v1r3	Muon
-use MuonUtils		v1r0	Muon
+use MuonBackground	v1r4	Muon
 
 # Rich
 use RichDigiQC		v1r1	Rich
