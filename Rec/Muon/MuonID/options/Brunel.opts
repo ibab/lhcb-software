@@ -1,5 +1,0 @@
-ApplicationMgr.DLLs             += { "MuonIdentification" };  
-
-BrunelFinalFitMUONSeq.Members += { "MuonIdentification" };
-
-#include "$MUONIDENTIFICATIONROOT/options/MuonIdentification.opts"
