@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
+!========================= LHCbKernel v2r0 2002-07-16 ===================
+! 2002-07-16 - Florence Ranjard
+ - requirements - use CLHEP 1.8.0.0
+ 
 !========================= LHCbKernel v1r3 2002-07-15 ===================
 !2002-07-12 - Philippe Charpentier
  - modification in Relations, file src/AssociatorBase.cpp
