@@ -4,6 +4,11 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!========================== GaussSys v12r1 2003-08-13 =================
+! 2003-08-13 - Witek Pokorski
+ - uses geant4 5.2.ref01
+ - various fixes to v12r0. This version will be used for the test production.
+
 !=========================== GaussSys v12r0 2003-07-19 ================
 ! 2003-07-18 - Witek Pokorski
  - use LHCb v13r0 and Gauss head revision
