@@ -1,8 +1,11 @@
-// $Id: NeutralPPsFromCPsAlg.cpp,v 1.3 2003-04-08 08:37:03 ibelyaev Exp $
+// $Id: NeutralPPsFromCPsAlg.cpp,v 1.4 2003-04-08 08:49:12 ibelyaev Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/04/08 08:37:03  ibelyaev
+//  NeutralPPsFromCPsAlg: add PhotonsFromMergedPi0 to the default list
+//
 // Revision 1.2  2003/01/19 11:41:20  ibelyaev
 //  bug fix for neutral ProtoParticle creator
 //
@@ -397,7 +400,8 @@ double  NeutralPPsFromCPsAlg::caloDepositID ( const CaloHypo*  hypo  )  const
       return dep;                                              // RETURN !!
     }
   
-  dep = m_spdprs -> likelyhood( hypo ) ;
+  if( hypo->hypothesis() != CaloHypotheses::Pi0Merged ) 
+    { dep = m_spdprs -> likelyhood( hypo ) ; }
   
   return dep ;
 };
