@@ -1,4 +1,4 @@
-// $Id: MuonDigitToRawBuffer.cpp,v 1.1.1.1 2004-02-05 16:26:03 cattanem Exp $
+	// $Id: MuonDigitToRawBuffer.cpp,v 1.2 2004-02-06 08:12:49 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -300,9 +300,9 @@ std::string MuonDigitToRawBuffer::findODEPath(MuonTileID TS)
     std::string odePath=m_ODEName[ode];
     msg<<MSG::VERBOSE<<odePath<<endreq;    
     //std::cout<<odePath<<std::endl;    
-    SmartDataPtr<MuonODEBoard>  ode(detSvc(),odePath);
-    msg<<MSG::VERBOSE<<ode->isTSContained(TS)<<endreq;  
-    if(ode->isTSContained(TS))return odePath;
+    SmartDataPtr<MuonODEBoard>  odeBoard(detSvc(),odePath);
+    msg<<MSG::VERBOSE<<odeBoard->isTSContained(TS)<<endreq;  
+    if(odeBoard->isTSContained(TS))return odePath;
   }
   return NULL;
   
