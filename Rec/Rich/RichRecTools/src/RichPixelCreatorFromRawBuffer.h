@@ -5,7 +5,7 @@
  *  Header file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.3 2005-01-26 11:33:54 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.4 2005-03-02 14:53:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -120,7 +120,8 @@ inline void RichPixelCreatorFromRawBuffer::InitNewEvent()
   // Initialise navigation data
   m_allDone = false;
   m_pixels  = 0;
-  if ( m_bookKeep ) {
+  if ( m_bookKeep ) 
+  {
     m_pixelExists.clear();
     m_pixelDone.clear();
   }

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.5 2005-02-02 10:08:00 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.6 2005-03-02 14:53:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -61,9 +61,6 @@ StatusCode RichPixelCreatorFromRawBuffer::initialize()
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
-
-  // Make sure we are ready for a new event
-  InitNewEvent();
 
   return sc;
 }
