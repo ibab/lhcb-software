@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.6 2005-01-12 09:19:38 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.7 2005-02-21 09:07:57 ocallot Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -80,7 +80,7 @@ StatusCode L0CaloMonit::execute() {
     } else if ( L0Calo::SumEt == (*cand)->type()  ) {
       m_histSumEt     -> fill( (*cand)->et()/GeV, 1. );
     } else if ( L0Calo::SpdMult == (*cand)->type()  ) {
-      m_histSumEt     -> fill( (*cand)->etCode(), 1. );
+      m_histSpdMult   -> fill( (*cand)->etCode(), 1. );
     }
   }
 
