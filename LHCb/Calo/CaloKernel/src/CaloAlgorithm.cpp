@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.7 2002-04-04 15:25:24 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.8 2002-04-04 20:27:19 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/04/04 15:25:24  ibelyaev
+//  improve a little bit layout of CaloAlgorithm class
+//
 // Revision 1.6  2002/04/04 13:16:26  ibelyaev
 //  bug fix in CaloAlgorithm::put(...) method
 //
@@ -136,7 +139,7 @@ CaloAlgorithm::Print     ( const std::string& msg ,
       << System::typeinfoName( typeid( *this ) ) 
       << " "   << msg ;
   ///
-  if( !st.isSuccess() ) { log << " \tStatusCode=" << st ;}
+  if( st.isFailure() ) { log << " \tStatusCode=" << st ;}
   ///
   log << endreq ; 
   return  st;

@@ -1,8 +1,11 @@
-// $Id: CaloTool.h,v 1.4 2002-04-02 10:33:43 ibelyaev Exp $
+// $Id: CaloTool.h,v 1.5 2002-04-04 20:27:19 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/02 10:33:43  ibelyaev
+//  minor modifications in CaloAlgorithm/CaloTool
+//
 // Revision 1.3  2002/04/01 12:50:24  ibelyaev
 //  add templated accesssors to tools and improve exceptions
 //
@@ -102,13 +105,17 @@ protected:
   template<class TYPE>
   TYPE* get( IDataProviderSvc* svc , const std::string& location ) const
   {
-    if( 0 == svc ) 
-      { Error("get<>(): IDataProviderSvc* points to NULL!"   ) ; return 0 ; }
+    Assert( 0 != svc , " get<>():: IDataProvider* points to NULL!"       );
     SmartDataPtr<TYPE> object( svc, location ) ;
-    if( !object )
-      { Error("get<>(): No valid data at '" + location + "'" ) ; return 0 ; }
-    ///
-    return object ;
+    Assert(  object  ,  " get<>():: No valid data at '" + location + "'" );
+    TYPE* aux = object ;
+    Assert(  aux     ,  " get<>():: No valid data at '" + location + "'" );
+    const std::string type( System::typeinfoName( typeid( *aux ) ) );
+    // debug printout 
+    Print( " The data of type '"      + type                + 
+           "' from address '"         + location            + 
+           "' are retrieved from TS " , StatusCode::SUCCESS , MSG::DEBUG ) ;
+    return aux ;
   };
   
   /** the useful method for location of tools 

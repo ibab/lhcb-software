@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.h,v 1.6 2002-04-04 15:25:23 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.h,v 1.7 2002-04-04 20:27:19 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/04 15:25:23  ibelyaev
+//  improve a little bit layout of CaloAlgorithm class
+//
 // Revision 1.5  2002/04/02 10:33:43  ibelyaev
 //  minor modifications in CaloAlgorithm/CaloTool
 //
@@ -39,6 +42,7 @@
 #include "GaudiKernel/IAlgTool.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/System.h"
 // From CaloKernel 
 #include "CaloKernel/CaloException.h"
 
@@ -123,8 +127,15 @@ protected:
     Assert( 0 != svc , " get<>():: IDataProvider* points to NULL!"       );
     SmartDataPtr<TYPE> object( svc, location ) ;
     Assert(  object  ,  " get<>():: No valid data at '" + location + "'" );
+    TYPE* aux = object ;
+    Assert(  aux     ,  " get<>():: No valid data at '" + location + "'" );
+    const std::string type( System::typeinfoName( typeid( *aux ) ) );
+    // debug printout 
+    Print( " The data of type '"      + type                + 
+           "' from address '"         + location            + 
+           "' are retrieved from TS " , StatusCode::SUCCESS , MSG::DEBUG ) ;
     ///
-    return object ;
+    return aux ;
   };
   
   /** @brief put results into Gaudi Event Transient Store 

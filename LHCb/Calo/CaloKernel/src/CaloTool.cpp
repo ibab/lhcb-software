@@ -1,8 +1,11 @@
-// $Id: CaloTool.cpp,v 1.4 2002-04-01 12:50:24 ibelyaev Exp $
+// $Id: CaloTool.cpp,v 1.5 2002-04-04 20:27:20 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/01 12:50:24  ibelyaev
+//  add templated accesssors to tools and improve exceptions
+//
 // Revision 1.3  2002/03/18 18:16:22  ibelyaev
 //  small update for LHCbKernel package
 //
@@ -185,9 +188,9 @@ StatusCode CaloTool::queryInterface ( const InterfaceID& id ,
  *  @return       status code 
  */
 // ============================================================================
-StatusCode 
-CaloTool::Error     ( const std::string& msg , 
-                      const StatusCode & st  ) const 
+StatusCode CaloTool::Error     
+( const std::string& msg , 
+  const StatusCode & st  ) const 
 {
   Stat stat( chronoSvc() , name()+":Error" ); 
   return Print( msg , st , MSG::ERROR ); 
@@ -200,9 +203,9 @@ CaloTool::Error     ( const std::string& msg ,
  *  @return       status code 
  */
 // ============================================================================
-StatusCode 
-CaloTool::Warning   ( const std::string& msg , 
-                      const StatusCode & st  ) const 
+StatusCode CaloTool::Warning   
+( const std::string& msg , 
+  const StatusCode & st  ) const 
 {
   Stat stat( chronoSvc() , name()+":Warning" ); 
   return Print( msg , st , MSG::WARNING ); 
@@ -216,17 +219,17 @@ CaloTool::Warning   ( const std::string& msg ,
  *  @return       status code 
  */
 // ============================================================================
-StatusCode 
-CaloTool::Print     ( const std::string& msg , 
-                      const StatusCode & st  ,
-                      const MSG::Level & lvl ) const 
+StatusCode CaloTool::Print     
+( const std::string& msg , 
+  const StatusCode & st  ,
+  const MSG::Level & lvl ) const 
 {
   MsgStream log( msgSvc() , name() ); 
   log << lvl 
       << type () 
       << " "   << msg ;
   ///
-  if( !st.isSuccess() ) { log << " \tStatusCode=" << st ;}
+  if( st.isFailure() ) { log << " \tStatusCode=" << st ;}
   ///
   log << endreq ; 
   return  st;
@@ -241,10 +244,11 @@ CaloTool::Print     ( const std::string& msg ,
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode CaloTool::Exception ( const std::string    & msg ,
-                                 const GaudiException & exc ,
-                                 const MSG::Level     & lvl ,
-                                 const StatusCode     & sc  ) const   
+StatusCode CaloTool::Exception 
+( const std::string    & msg ,
+  const GaudiException & exc ,
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const   
 { 
   Error( msg , lvl );
   throw CaloException( name() + ":: " + msg , exc, sc );
@@ -260,10 +264,11 @@ StatusCode CaloTool::Exception ( const std::string    & msg ,
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode CaloTool::Exception ( const std::string    & msg ,  
-                                 const std::exception & exc , 
-                                 const MSG::Level     & lvl ,
-                                 const StatusCode     & sc  ) const   
+StatusCode CaloTool::Exception 
+( const std::string    & msg ,  
+  const std::exception & exc , 
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const   
 { 
   Error( msg , lvl );
   throw CaloException( name() + ":: " + msg+"("+exc.what()+")", sc );
@@ -278,9 +283,10 @@ StatusCode CaloTool::Exception ( const std::string    & msg ,
  *  @return       status code (fictive) 
  */
 // ============================================================================
-StatusCode CaloTool::Exception ( const std::string    & msg ,  
-                                 const MSG::Level     & lvl ,
-                                 const StatusCode     & sc  ) const 
+StatusCode CaloTool::Exception 
+( const std::string    & msg ,  
+  const MSG::Level     & lvl ,
+  const StatusCode     & sc  ) const 
 { 
   Error( msg , lvl );
   throw CaloException( name() + ":: " + msg , sc );
