@@ -7,6 +7,7 @@ Purpose: Define the L1Buffer,  L1Event, L1Bank, HLTBuffer, HLTEvent and
 ! 2003-11-24 - Marco Cattaneo
  - Rename HltBank, HltBuffer and HltEvent to RawBank, RawBuffer and RawEvent
  - Change data-type hlt_int to raw_int
+ - Only one Velo Raw bank type (instead of VeloR and VeloPhi)
 
 !=============== DAQEvent v2r1 2003-11-10 =============================
 ! 2003-11-10 - Marco Cattaneo
