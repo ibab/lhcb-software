@@ -4,6 +4,12 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!========================== GaussSys v15r0 2004-03-08 =====================
+! 2004-03-08 - Florence RANJARD
+ - Gauss v15r0 uses Geant4 6.0.p01, LHCb v15r3, Gaudi v14r3
+ - changes in GiGa, GiGaCnv, GiGaTools, GiGaPhysics to use G4hadlists
+ - changes in Simulation.opts 
+
 !========================== GaussSys v14r3 2004-02-17 ====================
 ! 2004-02-17 - Florence RANJARD
  - Gauss v14r3 uses Geant4 6.0.p01
