@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.4 2002-05-29 13:26:43 cattanem Exp $
+// $Id: DeOTDetector.h,v 1.5 2002-06-06 08:53:38 jvantilb Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -54,15 +54,20 @@ public:
   /// return the channel left from a given channel
   OTChannelID nextChannelLeft(OTChannelID aChannel) const;
 
-  unsigned int numStation()  { return m_numStation; }
+  unsigned int numStations()  { return m_numStations; }
+
+  unsigned int firstOTStation()  { return m_firstOTStation; }
 
   std::vector<OTLayer*> allLayers() const { return m_layers; }
+
+  /// Obsolete method
+  unsigned int numStation()  { return m_numStations; }
 
 private:
 
   /// data members
-  unsigned int m_numStation;
-  unsigned int m_FirstOTStation;
+  unsigned int m_numStations;
+  unsigned int m_firstOTStation;
   std::vector<OTLayer*> m_layers;
 };
 

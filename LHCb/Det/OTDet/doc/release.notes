@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.3 2002-05-29 12:15:36 cattanem Exp $
+! $Id: release.notes,v 1.4 2002-06-06 08:53:38 jvantilb Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
+
+! 2002-06-06 Jeroen van Tilburg
+  - OTLayer: added methods to check in which monolayer a straw is located 
+    and methods to check if module is in top/bottom area.
+    Removed obsolete 'get' methods.
+  - DeOTDetector: renamed method from numStation() to numStations(). 
+    Old method will be removed later. Added method which returns the 
+    number of the first station with OT technology.
 
 ! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OTDet v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ! 2002-05-27 - Olivier Callot

@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.3 2002-05-29 12:20:34 cattanem Exp $
+// $Id: DeOTDetector.cpp,v 1.4 2002-06-06 08:53:38 jvantilb Exp $
 
 // from Det/OTDet
 #include "OTDet/DeOTDetector.h"
@@ -45,10 +45,10 @@ StatusCode DeOTDetector::initialize()
     return sc ; 
   }
 
-  m_numStation = this->userParameterAsInt("numStations");
-  m_FirstOTStation =  this->userParameterAsInt("firstOTStation");
+  m_numStations = this->userParameterAsInt("numStations");
+  m_firstOTStation =  this->userParameterAsInt("firstOTStation");
 
-  unsigned int stationNum = m_FirstOTStation;
+  unsigned int stationNum = m_firstOTStation;
   // loop over station and layer and fill layer container
   IDetectorElement::IDEContainer::const_iterator iStation;
   for (iStation = this->childBegin(); this->childEnd() != iStation; 
@@ -110,7 +110,7 @@ StatusCode DeOTDetector::initialize()
                                       xCen, yCen, xSide, ySide,
                                       xOut, yOut,
                                       nStandStraw, pitchStraw,
-	  	  		      stereoAngle);
+                                      stereoAngle);
       m_layers.push_back(newLayer);
       layerNum++;
     } // loop layers
@@ -153,7 +153,7 @@ OTLayer* DeOTDetector::layer(OTChannelID aChannel) const {
 
   const unsigned int iStation = aChannel.station();
   const unsigned int iLayer   = aChannel.layer();
-  if ((iStation < m_FirstOTStation) || (iStation > m_numStation)) {
+  if ((iStation < m_firstOTStation) || (iStation > m_numStations)) {
     return 0;
   }
 

@@ -1,4 +1,4 @@
-// $Id: OTLayer.h,v 1.2 2002-05-27 14:55:53 ocallot Exp $
+// $Id: OTLayer.h,v 1.3 2002-06-06 08:53:38 jvantilb Exp $
 #ifndef _OTLayer_H
 #define _OTLayer_H 1
 
@@ -22,11 +22,11 @@ public:
 
   /// constructor
   OTLayer(int iLayer, int iStationID, double zLayer, 
-                   double xCen,  double yCen, 
-                   double xSide, double ySide,
-                   double xOut,  double yOut, 
-                   int nStandStraw, double pitchStraw, 
-                   double stereoAngle );
+          double xCen,  double yCen, 
+          double xSide, double ySide,
+          double xOut,  double yOut, 
+          int nStandStraw, double pitchStraw, 
+          double stereoAngle );
 
   /// destructor
   virtual ~OTLayer();
@@ -77,31 +77,25 @@ public:
   /// returns z of the straw
   double zOfStraw(const int iStraw, const int iModule) const;  
 
-private:
-
-  /// get unique layer ID
-  virtual int    getAbsLayerID() const;
-
-  /// layer Id relative to station number
-  virtual int    getLayerID() const ;
-
-  /// station ID
-  virtual int getStationID() const;
-
-  /// z of layer
-  virtual double getZ() const;
-
-  /// returns stereo angle of the layer
-  double getStereoAngle() const;
-
-  /// radius of straw
-  double getCellRadius() const; 
-
   /// number of straw in that module
   int nStrawsInModule(const int iModule) const;
 
   /// cell radius
   double cellRadius()         const { return m_cellRadius ;  }
+
+  /// Check if module is bottom module
+  bool bottomModule(const int iModule) const;
+
+  /// Check if module is top module
+  bool topModule(const int iModule) const;
+
+  /// Check if straw is in monolayer A
+  bool monoLayerA(const int iModule, const int iStraw) const;
+  
+  /// Check if straw is in monolayer B
+  bool monoLayerB(const int iModule, const int iStraw) const;
+
+private:
 
   /// (x,y) -> (u,v) transformation
   void xy2uv(const double x, const double y, 
@@ -119,7 +113,7 @@ private:
                double& zc, double& uc, double& rc);
 
   void hitModuleAndStraw( double u, double v,
-		          int& hitMod, int& hitStrA, int& hitStrB) const;
+                          int& hitMod, int& hitStrA, int& hitStrB) const;
 
 
   int     m_layerID;         // index of layer in this station

@@ -1,4 +1,4 @@
-// $Id: OTLayer.cpp,v 1.2 2002-05-27 14:55:53 ocallot Exp $
+// $Id: OTLayer.cpp,v 1.3 2002-06-06 08:53:38 jvantilb Exp $
 //
 // This File contains the definition of the OTLayer-class
 //
@@ -22,11 +22,11 @@
 
 
 OTLayer::OTLayer(int iLayer, int iStation, double zLayer, 
-                                   double xCen,  double yCen, 
-                                   double xSide, double ySide,
-                                   double xOut,  double yOut, 
-                                   int nStandStraw, double pitchStraw, 
-                                   double stereoAngle ) : 
+                 double xCen,  double yCen, 
+                 double xSide, double ySide,
+                 double xOut,  double yOut, 
+                 int nStandStraw, double pitchStraw, 
+                 double stereoAngle ) : 
       m_layerID(iLayer), 
       m_stationID(iStation), 
       m_zOfLayer(zLayer), 
@@ -227,33 +227,6 @@ OTLayer::~OTLayer()
   delete[] m_yModuleSize;
 }
 
-int OTLayer::getAbsLayerID() const {
-
-  return (100*m_stationID)+m_layerID;
-}
-
-int OTLayer::getLayerID() const {
-
-  return m_layerID;
-}
-
-int OTLayer::getStationID() const {
-
-  return m_stationID;
-}
-
-double OTLayer::getZ() const {
- 
-  return m_zOfLayer;
-}
-
-double OTLayer::getStereoAngle() const{
-  return m_stereoAngle;
-}
-
-double OTLayer::getCellRadius() const {
-  return m_cellRadius;
-}
 
 int OTLayer::nStrawsInModule(const int iModule) const {
  
@@ -266,9 +239,9 @@ int OTLayer::nStrawsInModule(const int iModule) const {
 
 
 bool OTLayer::calculateHits( HepPoint3D entryPoint,
-                                      HepPoint3D exitPoint,
-                                      std::vector<OTChannelID>& channels,
-                                      std::vector<double>& driftDistances) {
+                             HepPoint3D exitPoint,
+                             std::vector<OTChannelID>& channels,
+                             std::vector<double>& driftDistances) {
 
   double x1,y1,z1;
   double x2,y2,z2;
@@ -586,14 +559,14 @@ bool OTLayer::calculateHits( HepPoint3D entryPoint,
 
 
 void OTLayer::xy2uv(const double x, const double y, 
-                             double& u, double& v) const
+                    double& u, double& v) const
 {
   u =  x*m_cosAngle + y*m_sinAngle;
   v = -x*m_sinAngle + y*m_cosAngle;
 }
 
 void OTLayer::uv2xy(const double u, const double v, 
-                             double& x, double& y) const
+                    double& x, double& y) const
 {
   x =  u*m_cosAngle - v*m_sinAngle;
   y =  u*m_sinAngle + v*m_cosAngle;
@@ -625,7 +598,7 @@ void OTLayer::nextRightStraw( int iHitStraw,
 }
 
 void OTLayer::nextLeftStraw(int iHitStraw,int iHitModule,
-                                     int& iLeftStraw,int& iLeftModule) const {
+                            int& iLeftStraw,int& iLeftModule) const {
 
   if( (iHitModule == 1 || iHitModule == m_halfNumModule+1 ) &&
       (iHitStraw  == 1 || iHitStraw == m_halfNumStraw[iHitModule]+1)) {
@@ -701,9 +674,46 @@ HepPoint3D OTLayer::centerOfStraw( const int iStraw,
   return tmpPoint;
 }
 
-double OTLayer::distanceAlongWire(const int iModule, 
-                                           const double xHit, 
-                                           const double yHit) const{ 
+
+bool OTLayer::bottomModule(const int iModule) const 
+{
+  // check if module is top or bottom
+  return (iModule <= m_halfNumModule);
+}
+
+
+bool OTLayer::topModule(const int iModule) const 
+{
+  // check if module is top or bottom
+  return (iModule > m_halfNumModule);
+}
+
+
+bool OTLayer::monoLayerA(const int iModule, const int iStraw) const
+{
+  bool inLayerA = false;
+  if ( iModule > 0 ) {
+    if ((iStraw >= 1) && 
+        (iStraw <= m_halfNumStraw[iModule])) inLayerA = true;
+  }
+  return inLayerA;  
+}
+      
+
+bool OTLayer::monoLayerB(const int iModule, const int iStraw) const
+{
+  bool inLayerB = false;
+  if ( iModule > 0 ) {
+    if ((iStraw >= m_halfNumStraw[iModule]+1) && 
+        (iStraw <= 2*m_halfNumStraw[iModule])) inLayerB = true;
+  }
+  return inLayerB;  
+}
+
+
+double OTLayer::distanceAlongWire(const int iModule,
+                                  const double xHit, 
+                                  const double yHit) const{ 
   
   // distance from x,y to end of wire
   // add check if xHit,yHit indeed inside iModule?
@@ -728,8 +738,8 @@ double OTLayer::distanceAlongWire(const int iModule,
 }
 
 void OTLayer::sCircle(const double z1, const double u1, const double z2, 
-                               const double u2, const double z3c,
-	                       double& zc, double& uc, double& rc) {
+                      const double u2, const double z3c,
+                      double& zc, double& uc, double& rc) {
   
   double zw,uw;
   
@@ -748,7 +758,8 @@ double OTLayer::wireHalfLength(const int iModule) const{
 
 
 void OTLayer::hitModuleAndStraw( double u, double v,
-                         int& hitMod, int& hitStrA, int& hitStrB) const {
+                                 int& hitMod, int& hitStrA, 
+                                 int& hitStrB) const {
 
   hitMod=-1;
   hitStrA=-9999;
