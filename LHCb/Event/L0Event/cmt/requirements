@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.15 2002-04-22 07:49:17 cattanem Exp $
+# $Id: requirements,v 1.16 2002-04-30 08:41:06 cattanem Exp $
 package L0Event
 version v11r0
 
@@ -9,10 +9,10 @@ include_dirs $(L0EVENTROOT)
 use 	LHCbKernel	v1r*    Kernel
 use     EventKernel     v1r*    Event
 use 	MuonKernel 	v2r* 	Muon
+use 	GaudiObjDesc	v4r*    -no_auto_imports
 
 #---- Produce Header-Files and from XML description
 private
-use 	GaudiObjDesc	v4r*
 document obj2doth L0EventObj2Doth ../xml/*.xml
 # Dictionary does not work (problem with MsgStream stuff)
 #document obj2dict L0EventObj2Dict ../xml/*.xml    
@@ -20,14 +20,10 @@ document obj2doth L0EventObj2Doth ../xml/*.xml
 # ================ build library (including dictionary) ==================
 public
 library           L0Event         ../src/*.cpp
-#                                  ../dict/*.cpp
 
 apply_pattern      package_linkopts
 apply_pattern      package_stamps
 apply_pattern      linker_path       
 
+apply_pattern      package_shlibflags
 #===============================================================
-private
-
-macro_remove use_linkopts $(L0Event_linkopts)
-macro L0Event_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
