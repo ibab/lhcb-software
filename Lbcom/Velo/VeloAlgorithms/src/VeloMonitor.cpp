@@ -560,6 +560,7 @@ StatusCode VeloMonitor::testMCVeloHit() {
     if ( (*it)->sensor()==78 || (*it)->sensor()==79 ) {
       m_Thomas2->fill((*it)->energy()/MeV,1.0);
     }
+    m_MCVHEntryZX->fill((*it)->entry().z()/cm,(*it)->entry().x()/cm,1.0);
     m_MCVHEntryXY->fill((*it)->entry().x()/cm,(*it)->entry().y()/cm,1.0);
     m_MCVHExitXY->fill((*it)->exit().x()/cm,(*it)->exit().y()/cm,1.0);
     m_MCVHExitZX->fill((*it)->exit().z()/cm,(*it)->exit().x()/cm,1.0);
@@ -610,6 +611,7 @@ StatusCode VeloMonitor::testPileUpMCVeloHit() {
     }
     // fill histograms
     m_MCVHPEnergy->fill((*it)->energy()/eV,1.0);
+    m_MCVHPEntryZX->fill((*it)->entry().z()/cm,(*it)->entry().x()/cm,1.0);
     m_MCVHPEntryXY->fill((*it)->entry().x()/cm,(*it)->entry().y()/cm,1.0);
     m_MCVHPExitXY->fill((*it)->exit().x()/cm,(*it)->exit().y()/cm,1.0);
     m_MCVHPExitZX->fill((*it)->exit().z()/cm,(*it)->exit().x()/cm,1.0);
@@ -858,10 +860,6 @@ StatusCode VeloMonitor::basicMonitor() {
     }
     size=m_mchits->size(); m_nMCVH+= size; m_nMCVH2+= size*size;
     m_MCVHNHits->fill(size,1.0);
-    MCVeloHits::iterator it;
-    for (it=m_mchits->begin(); it!=m_mchits->end(); it++) {
-      m_MCVHEntryZX->fill((*it)->entry().z()/cm,(*it)->entry().x()/cm,1.0);
-    }
   }
   if (m_testPUMCVeloHit) {
     // MCVeloPileupHits
@@ -875,10 +873,6 @@ StatusCode VeloMonitor::basicMonitor() {
     }
     size=m_pumchits->size(); m_nMCPH+= size; m_nMCPH2+= size*size; 
     m_MCVHPNHits->fill(size,1.0);
-    MCVeloHits::iterator puit;
-    for (puit=m_pumchits->begin(); puit!=m_pumchits->end(); puit++) {
-      m_MCVHPEntryZX->fill((*puit)->entry().z()/cm,(*puit)->entry().x()/cm,1.0);
-    }
   }
   // MCVeloFEs
   if (m_testMCVeloFE) {
@@ -948,13 +942,13 @@ StatusCode VeloMonitor::basicMonitor() {
 	double testRadius=m_velo->rOfStrip(stripFractionCentW, izone);
 	log << MSG::DEBUG << "sensorZ " << sensorZ << " testRadius " << testRadius 
 	    << " testRadius/cm " << testRadius/cm << endmsg;
- 	m_VCZR->fill(sensorZ, testRadius/cm,1.0);
+  // 	m_VCZR->fill(sensorZ, testRadius/cm,1.0);
       } else {
 	double testRadius=20./mm;
 	double testPhi=m_velo->phiOfStrip( stripFractionCentW, testRadius,
                                      (*itcv)->sensor());
 	log << MSG::DEBUG << "sensorZ " << sensorZ << " testPhi " << testPhi <<endmsg;
-	m_VCZPhi->fill(sensorZ, testPhi/degree,1.0);
+  //	m_VCZPhi->fill(sensorZ, testPhi/degree,1.0);
       }
     }
   }
