@@ -12,6 +12,8 @@ Purpose: LHCb reconstruction program
    . Tuning of Upstream tracking for field043 (TrIntraPR v2r4, UpstreamPR v2r7)
    . Improved agreement between Xml and CDF geometry for OO-Rich
      (XmlDDDB v15r0, RichDet v4r0, RichDetTools v1r3, Brunel.opts)
+   . Fix HCAL and ECAL calibrations as result of time information in digitisation
+     (XmlDDDB v15r1)
 
  - New features:
    . Add support for dbase v254r1
@@ -27,7 +29,7 @@ Purpose: LHCb reconstruction program
      (VeloTrack v4r5, TrCleanEx v2r6)
 
  - Bug fixes:
-   . Fix valgrind problems (CaloReco v1r2p1, MuonAlgs v3r3)
+   . Fix valgrind problems (CaloDet v6r4, CaloReco v1r2p1, MuonAlgs v3r3)
    . Introduce fix to inner tracker materials that was mistakenly left out in
      XmlDDDB v14r1 (XmlDDDB v15r0)
 

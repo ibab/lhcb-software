@@ -30,7 +30,7 @@ use GaudiObjDesc 	v4r5p1
 use HbookCnv 		v13r2p1
 
 #-- Database
-use XmlDDDB	v15r0	Det
+use XmlDDDB	v15r1	Det
 
 #-- LHCb libraries (from LHCB_v11r8)
 use LHCb	v11r8

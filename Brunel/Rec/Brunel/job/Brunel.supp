@@ -142,14 +142,14 @@
   fun:makeClusterFromDigit__16VeloClusterMakerP13VeloFullDigitRf
 }
 
-# Calo problems (Brunel v16r4)
-{
-  Calo/CellParam1
-  Value8
-  fun:*
-  fun:*
-  fun:__13DeCalorimeteriRCt12basic_string3ZcZt18string_char_traits1ZcZt24__default_alloc_template2b1i0
-}
+# Calo problems (Brunel v16r4 - fixed  in CaloDet v6r4?)
+#{
+#  Calo/CellParam1
+#  Value8
+#  fun:*
+#  fun:*
+#  fun:__13DeCalorimeteriRCt12basic_string3ZcZt18string_char_traits1ZcZt24__default_alloc_template2b1i0
+#}
 
 # Property initialisation problems (Brunel v16r4)
 {
