@@ -49,7 +49,8 @@ GiGaTrackerHitCnv::GiGaTrackerHitCnv( ISvcLocator* Locator )
   setNameOfGiGaConversionService( "GiGaHitsCnvSvc" ); 
   setConverterName              ( "GiGaTrHitCnv"     );
   ///
-  declareObject( GiGaLeaf( MCHitLocation::OTHits , objType() ) );
+  //  declareObject( GiGaLeaf( MCHitLocation::OTHits , objType() ) );
+  declareObject( GiGaLeaf( "MC/Velo/Hits" , objType() ) );
   ///
 }; 
 
@@ -156,8 +157,8 @@ StatusCode GiGaTrackerHitCnv::updateObj
         // get hitscollections from GiGa 
         *gigaSvc() >> hitscollections ; 
         //
-        if( 0 == hitscollections ) 
-          { return Error("No G4HCofThisEvent* object is found!"); }
+        if( 0 != hitscollections ) 
+          { 
 
           G4SDManager* fSDM=G4SDManager::GetSDMpointer();
           int collectionID=fSDM->GetCollectionID("trackerCollection");
@@ -189,7 +190,16 @@ StatusCode GiGaTrackerHitCnv::updateObj
              
              hits->insert( mchit);
            }      
-    }
+          }
+        else
+          {
+            MsgStream log(   msgSvc(), name());
+            log << MSG::INFO << "No TrackerHits to be converted" 
+                <<endreq;        
+            return StatusCode::SUCCESS; 
+          }
+        
+   }
   
   catch( const GaudiException& Excp )
     {
@@ -233,8 +243,14 @@ StatusCode GiGaTrackerHitCnv::updateObjRefs
   catch( ... )                          
     { return Exception("UpdateObjRefs: "         ) ; }  
   if( 0 == hitscollections      ) 
-    { return Error("No G4HCofThisEvent* object is found!"); } 
-
+    {             
+      MsgStream logg(   msgSvc(), name());
+      logg << MSG::INFO 
+           << "No G4HCOfThisEvent found" << endreq;      
+      return StatusCode::SUCCESS;
+    }
+  
+  
   /// get table 
   GiGaKineRefTable& table = hitsSvc()->table();
 
@@ -253,9 +269,9 @@ StatusCode GiGaTrackerHitCnv::updateObjRefs
 
   if( (size_t) hits->size() != (size_t) myCollection->entries() ) 
     {
-      return Error("MCHits and G4TrackerHitsCollection have different sizes!"); 
+      return Error("MCHits and G4TrackerHitsCollection have different sizes!");
     }
-
+  
   // fill the references
   for (MCHits::const_iterator iter=hits->begin() ; hits->end()!=iter ; ++iter)
     { 
@@ -276,7 +292,7 @@ StatusCode GiGaTrackerHitCnv::updateObjRefs
       
       cout << "TrackID: " << traid << " entry of MCParticle: " 
            << (*iter)->entry()  << endl;    
-
+      
       itr++;
     }
 
