@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!========================== GaussSys v15r6 2004-04-30 =================
+! 2004-04-30 - Florence RANJARD
+ - Gauss v15r6 is a bug fix version built with LHCb v15r8
+
 !=========================== GaussSys v15r5 2004-04-22 =================
 ! 2004-04-22 - Florence RANJARD
  - Gauss v15r5 is built with LHCb v15r7, Gaudi v14r5, Geant4 v61r0
