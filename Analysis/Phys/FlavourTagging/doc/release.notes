@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.56 2005-02-15 07:35:36 pkoppenb Exp $
+! $Id: release.notes,v 1.57 2005-03-01 11:07:59 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy
@@ -6,6 +6,12 @@
 !-----------------------------------------------------------------------------
 
 !========================== FlavourTagging v5r4 2005-02-15 ===================
+! 2005-03-01 - M. Musy
+  - src/BTagging.{h,cpp}
+    . Default is now without L0 L1 and Tampering; without Tampering, results
+      may change (worsen) slightly depending upon the decay channel.
+    . Code structure has been revised.
+
 ! 2005-02-02 - P. Koppenburg for Marco Musy
   - src/BTagging.{h,cpp}
     . Allow the use without L0 L1 and Tampering.
