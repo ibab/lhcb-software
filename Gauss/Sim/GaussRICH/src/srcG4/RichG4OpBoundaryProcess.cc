@@ -491,13 +491,15 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 	      else {
           //Modifcation by SE to kill the total internal reflections
 
-          //	      	G4cout<<"dielec-dielec: Total internal refl from "<<Material1->GetName()<<" to  "
+          //      	G4cout<<"dielec-dielec: Total internal refl from "<<Material1->GetName()<<" to  "
           //   << Material2->GetName() <<" is  with ref index "<<Rindex1
           //      <<"   "<<Rindex2 <<"   Sint1= "<< sint1 
-          //                  << "   Sint2=  "<< sint2 <<endl;
+          //                  << "   Sint2=  "<< sint2 <<G4endl;
           if( (Material1->GetName() ==  AgelMaterialName) ||
                (Material1->GetName() ==  FilterGenericMaterialName) ||
-              (Material1->GetName() ==  FilterD263MaterialName) ) {
+              (Material1->GetName() ==  FilterD263MaterialName) ||
+              (Material1->GetName() == Rich1GasQWindowMaterialName) || 
+              (Material1->GetName() == Rich2GasQWindowMaterialName ) ) {
             
               //              || (Material1->GetName() == RichHpdQWMatName ) ) {
             
@@ -582,9 +584,9 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 	      //   Material2->GetName() == Rich1QuartzMatName   )TransCoeff=1.0;
 	      //  if(Material1->GetName() == Rich1QuartzMatName   ||
 	      //   Material2->GetName() == Rich1QuartzMatName   ){
-	      //		G4cout<<"TransCoef from "<<Material1->GetName()<<" to  "
-        //    << Material2->GetName() <<" is   "<<TransCoeff<<endl;
-	      // }
+          // 		G4cout<<"TransCoef from "<<Material1->GetName()<<" to  "
+          //  << Material2->GetName() <<" is   "<<TransCoeff<<G4endl;
+          // }
 
 	      //              
               if(Material1->GetName() == RichHpdQWMatName   ||
