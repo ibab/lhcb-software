@@ -1,4 +1,4 @@
-///  $Id: XmlBaseConditionCnv.h,v 1.3 2003-04-25 08:53:08 sponce Exp $
+///  $Id: XmlBaseConditionCnv.h,v 1.4 2005-03-24 16:21:17 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLCONDITIONCNV_H
 #define DETDESCCNV_XMLCONDITIONCNV_H
@@ -46,7 +46,7 @@ protected:
 
   /**
    * Constructor for this converter
-   * @param svcs a ISvcLocator interface to find services
+   * @param svc   a ISvcLocator interface to find services
    * @param clsID the type of object the converter is able to convert
    */
   XmlBaseConditionCnv(ISvcLocator* svc, const CLID& clsID );
@@ -73,8 +73,8 @@ protected:
 
   /** Fills the current object for its child element childElement.
    * Overrides the default method in XmlGenericCnv
-   * @param element the child processed here
-   * @param pObject the object to be filled
+   * @param childElement the child processed here
+   * @param refpObject   the object to be filled
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
@@ -83,8 +83,8 @@ protected:
                                 IOpaqueAddress* address);
 
   /** This fills the current object for specific child.
-   * Specific children are children of children <specific>
-   * of the <condition> tag. This is typically used for specializing
+   * Specific children are children of children \<specific\>
+   * of the \<condition\> tag. This is typically used for specializing
    * consditions and define new properties.
    * This will be called for each specific child of the current object
    * @param childElement the specific child processed here

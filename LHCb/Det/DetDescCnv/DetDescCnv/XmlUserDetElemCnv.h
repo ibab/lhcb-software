@@ -82,7 +82,7 @@ template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
    * i_fillSpecificObj. This actually only exist to avoid the user to
    * implement a dynamic cast from DetectorElement into DeType.
    * @param childElement the specific child processed here
-   * @param refpObject the object to be filled
+   * @param dataObj the object to be filled
    * @param address the address for this object
    * @return status depending on the completion of the call
    */
@@ -95,7 +95,7 @@ template <class DeType> class XmlUserDetElemCnv : public XmlBaseDetElemCnv {
    * compatibility. You should use the new one which has a third argument
    * given the address of the created object
    * @param childElement the specific child processed here
-   * @param refpObject the object to be filled
+   * @param dataObj the object to be filled
    * @return status depending on the completion of the call}
    */
   virtual StatusCode i_fillSpecificObj (xercesc::DOMElement* childElement,

@@ -1,4 +1,4 @@
-// $Id: XmlCatalogCnv.cpp,v 1.4 2003-06-16 13:44:15 sponce Exp $
+// $Id: XmlCatalogCnv.cpp,v 1.5 2005-03-24 16:21:18 cattanem Exp $
 
 // include files
 #include <stdlib.h>
@@ -208,7 +208,6 @@ StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
       << ", clsID is " << clsID << endreq;
   xercesc::XMLString::release(&tagNameString);
   checkConverterExistence(clsID);
-  StatusCode sc;
   std::string entryName;
   // We will create an address for this element
   IOpaqueAddress* xmlAddr = 0;
@@ -233,30 +232,27 @@ StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
     xmlAddr = createXmlAddress (address->par()[0], entryName, clsID);
   }
   delete[] tagNameEnd;
-  if (sc.isSuccess()) {
-    // Now we have a new entry name and a corresponding xml address,
-    // just add the new entry to the current registry entry
-    IDataProviderSvc* dsvc = dataProvider();
-    IDataManagerSvc* mgr = 0;
-    StatusCode status =
-      dsvc->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
-    if ( status.isSuccess() ) {
-      status = mgr->registerAddress(searchedDir, xmlAddr->par()[1], xmlAddr);
-      mgr->release();        
-    }
-    if ( !status.isSuccess() )   {
-      log << MSG::FATAL << " File " << __FILE__ << " line "
-          << __LINE__ << endreq;
-      log << MSG::FATAL << " XML address:" << endreq;
-      log << MSG::FATAL << " location : " << xmlAddr->par()[0]
-          << " entryName : " << xmlAddr->par()[1]
-          << " isString : " << xmlAddr->ipar()[0] << endreq;
-      xmlAddr->release();
-      xmlAddr = 0;
-      StatusCode stcod = ERROR_ADDING_TO_TS;
-      throw XmlCnvException 
-        ("Error adding registry entry to detector transient store", stcod);
-    }
+
+  // Now we have a new entry name and a corresponding xml address,
+  // just add the new entry to the current registry entry
+  IDataProviderSvc* dsvc = dataProvider();
+  IDataManagerSvc* mgr = 0;
+  StatusCode status = dsvc->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
+  if ( status.isSuccess() ) {
+    status = mgr->registerAddress(searchedDir, xmlAddr->par()[1], xmlAddr);
+    mgr->release();        
+  }
+  if ( !status.isSuccess() )   {
+    log << MSG::FATAL << " File " << __FILE__ << " line " << __LINE__ << endreq;
+    log << MSG::FATAL << " XML address:" << endreq;
+    log << MSG::FATAL << " location : " << xmlAddr->par()[0]
+        << " entryName : " << xmlAddr->par()[1]
+        << " isString : " << xmlAddr->ipar()[0] << endreq;
+    xmlAddr->release();
+    xmlAddr = 0;
+    StatusCode stcod = ERROR_ADDING_TO_TS;
+    throw XmlCnvException 
+      ("Error adding registry entry to detector transient store", stcod);
   }
   
   // returns

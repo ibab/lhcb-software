@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.h,v 1.4 2003-12-09 10:09:27 cattanem Exp $
+// $Id: XmlGenericCnv.h,v 1.5 2005-03-24 16:21:17 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLGENERICCNV_H
 #define DETDESCCNV_XMLGENERICCNV_H
@@ -146,7 +146,7 @@ protected:
 
   /** This fills the current object for its child element childElement.
    *  This will be called for each element child of the current object
-   *  @param element the child processed here
+   *  @param childElement the child processed here
    *  @param pObject the object to be filled
    *  @param address the address for this object
    *  @return status depending on the completion of the call

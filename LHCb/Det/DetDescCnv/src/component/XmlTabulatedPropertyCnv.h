@@ -1,4 +1,4 @@
-// $Id: XmlTabulatedPropertyCnv.h,v 1.3 2003-04-25 08:53:09 sponce Exp $
+// $Id: XmlTabulatedPropertyCnv.h,v 1.4 2005-03-24 16:21:18 cattanem Exp $
 
 #ifndef     DETDESCCNV_XMLTABULATEDPROPERTYCNV_H
 #define     DETDESCCNV_XMLTABULATEDPROPERTYCNV_H 1 
@@ -56,8 +56,9 @@ class XmlTabulatedPropertyCnv : public XmlGenericCnv {
 
   /** This fills the current object for its child childElement.
    * Overrides the default method in XmlGenericCnv
-   * @param element the DOMElement that addr represents and from which we
+   * @param childElement the DOMElement that addr represents and from which we
    * will get the informations to creates new addresses
+   * @param refpObject the object to be built
    * @param address the address for this object
    * @return status depending on the completion of the call
    */

@@ -1,4 +1,4 @@
-// $Id: XmlElementCnv.h,v 1.2 2003-04-24 09:15:34 sponce Exp $ 
+// $Id: XmlElementCnv.h,v 1.3 2005-03-24 16:21:18 cattanem Exp $ 
 #ifndef DETDESCCNV_XMLCNVSVC_XMLELEMENTCNV_H
 #define DETDESCCNV_XMLCNVSVC_XMLELEMENTCNV_H
 
@@ -59,7 +59,7 @@ protected:
   
   /** Fills the current object for its child element childElement.
    *  Overrides the default method in XmlGenericCnv
-   *  @param element the child processed here
+   *  @param childElement the child processed here
    *  @param refpObject the object to be filled
    *  @param address the address for this object
    *  @return status depending on the completion of the call
