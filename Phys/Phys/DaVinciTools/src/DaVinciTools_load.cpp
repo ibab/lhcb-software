@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.10 2002-10-15 18:12:58 gcorti Exp $
+// $Id: DaVinciTools_load.cpp,v 1.11 2002-10-21 17:58:29 gcorti Exp $
 // Include files 
 
 
@@ -31,6 +31,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( NsctVeloTransporter );
   DECLARE_TOOL( ParabolicTransporter );
   DECLARE_TOOL( DecayFinder );
+  DECLARE_TOOL( CheckOverlap );
 
   DECLARE_ALGORITHM( PreLoadParticles );
   
