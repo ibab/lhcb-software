@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2002-11-13 - Chris Jones
+ - Change RichKernel version to v2r*
+
 !========================= RichDet v3r0 2002-11-07 ===========================
 ! 2002-11-04 - Antonis
   changed the parameter names in DeRich1 & 2

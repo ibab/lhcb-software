@@ -1,19 +1,15 @@
 package RichDet
-version v3r0
+version v3r1
 
 branches src RichDet doc cmt
 
 include_dirs $(RICHDETROOT)
 
+use RichKernel  v2r*   Rich
+use DetDesc     v10*   Det
 
-use RichKernel v1r* Rich
-
-use DetDesc   v10*   Det
-
-
-library RichDetLib Lib/*.cpp 
-
-library RichDet component/*.cpp
+library  RichDetLib  Lib/*.cpp 
+library  RichDet     component/*.cpp
 
 apply_pattern package_Lstamps 
 apply_pattern package_Llinkopts  
