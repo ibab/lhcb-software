@@ -511,7 +511,9 @@ class genClassDicts(importUtils.importUtils):
     if self.tools.isReferenceT(name) :
       ref = 1
       name = name[:-1]
-    if self.tools.isFundamentalT(self.tools.unQualifyT(name)) :
+    uqName = self.tools.unQualifyT(name)
+    if self.tools.isFundamentalT(uqName) or uqName.strip()[:5] == 'std::' :
+      name = name.replace('std::string','std::basic_string<char> ')
       if ref : return 'std::string("'+name + '&")'
       else   : return 'std::string("'+name+'")'
     else :

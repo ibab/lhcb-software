@@ -4,6 +4,9 @@ Package manager : Stefan Roiser
 
 ===============================GaudiObjDesc v7r2============================
 
+!20050127 - Stefan
+- excluding types in namespace std from demangling 
+
 !20050126 - Stefan
 - genClassDicts.py: fix for dictionary (because of problems with persistency 
   tools not handling the new 1.9.1.2 clhep classes). Attribute types and 
