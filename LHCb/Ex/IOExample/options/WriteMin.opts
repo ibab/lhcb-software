@@ -13,7 +13,7 @@ EventSelector.PrintFreq = 1;
 #include "$STDOPTS/RootDb.opts"
 
 // DLLs that contain the necessary dictionaries and factories
-ApplicationMgr.DLLs += { "CaloEvent" };
+ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };
 #include "$EVENTSYSROOT/options/PoolDicts.opts"
 
 // Updates the local POOL catalog with the created file
