@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.48 2004-07-27 16:50:11 pkoppenb Exp $
+! $Id: release.notes,v 1.49 2004-07-27 17:46:28 pkoppenb Exp $
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 
+! 2004-07-23 - Ph. Charpentier
+ - src/Particle2MCLinks*.cpp
+   . Correct handle() method.
+   
 ! 2004-07-23 - P. Koppenburg
  - cmt/requirements
    . Don't use but import AIDA
