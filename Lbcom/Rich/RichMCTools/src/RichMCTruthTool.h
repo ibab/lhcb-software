@@ -4,8 +4,11 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.10 2004-10-13 09:23:36 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.11 2004-11-03 12:15:11 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2004/10/13 09:23:36  jonrob
+ *  New MCTruth methods
+ *
  *  Revision 1.9  2004/08/19 14:00:29  jonrob
  *   Add new method to RichMCTruthTool
  *
@@ -109,6 +112,9 @@ public: // methods (and doxygen comments) inherited from interface
 
   // Finds the MCRichDigit association for a given RichDigit
   const MCRichDigit * mcRichDigit( const RichDigit * digit ) const;
+
+  // Finds the MCRichDigit association for a RichSmartID channel identifier
+  const MCRichDigit * mcRichDigit( const RichSmartID id ) const;
 
   // Finds the MCRichTrack associated to a given TrStoredTrack
   const MCRichTrack * mcRichTrack( const TrStoredTrack * track ) const;

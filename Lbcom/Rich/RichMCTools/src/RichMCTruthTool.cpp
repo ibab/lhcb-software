@@ -5,8 +5,11 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.9 2004-10-13 09:23:36 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.10 2004-11-03 12:15:11 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.9  2004/10/13 09:23:36  jonrob
+ * New MCTruth methods
+ *
  * Revision 1.8  2004/08/20 14:49:24  jonrob
  * Add more protection against bad data pointers
  *
@@ -148,13 +151,18 @@ const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) cons
   // Try fast method
   MCRichDigit * mcDigit = MCTruth<MCRichDigit>(digit);
 
-  // If failed, try accessing MCRichDigit container directly
-  if ( !mcDigit && mcRichDigits() ) mcDigit = m_mcRichDigits->object(digit->key());
+  // If failed, try accessing MCRichDigit container directly via key
+  if ( !mcDigit && mcRichDigits() ) mcDigit = mcRichDigits()->object(digit->key());
 
   // if still failed, issue a warning
   if ( !mcDigit ) Warning("Failed to find MCRichDigit for RichDigit");
 
   return mcDigit;
+}
+
+const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichSmartID id ) const
+{
+  return ( mcRichDigits() ? mcRichDigits()->object(id) : 0 );
 }
 
 Rich::ParticleIDType
