@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.19 2004-07-25 11:34:35 ibelyaev Exp $ 
+# $Id: requirements,v 1.20 2004-08-05 10:13:40 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -6,31 +6,29 @@
 #     Interactive LHCb Physics Analysis with Python  
 # =============================================================================
 package       BenderSys
-version       v3r5
+version       v3r6
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v3r5 Phys 
+use           Bender         v3r6 Phys 
 # =========== Bender Libraries ================================================
-use           BenderLibs     v3r5 Tools 
+use           BenderLibs     v3r6 Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDet      v1r0 Det 
-# =========== Detector Geometry Checks ========================================
-use           DetDescChecks  v2r1 Det 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDict     v3r5 Tools 
+use           BenderDict     v3r6 Tools 
 # =========== Bender & LoKi documentation =====================================
-use           BenderDoc      v3r5 Doc 
-use           LoKiDoc        v2r8 Doc 
+use           BenderDoc      v3r6 Doc 
+use           LoKiDoc        v3r0 Doc 
 # =========== Test suit for Bender ============================================
-use           BenderTest     v3r5 Tests 
+use           BenderTest     v3r6 Tests 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v3r5 Ex  
-use           LoKiExample    v2r8 Ex 
+use           BenderExample  v3r6 Ex  
+use           LoKiExample    v3r0 Ex 
 # =========== Test suit for Bender ============================================
 use           BenderVis      v2r0 Vis 
 # =========== empty 'user' package ============================================
-use           BenderUser     v3r5 Phys  
+use           BenderUser     v3r6 Phys  
 # =========== needed for visualization ========================================
 use           HIPPODRAW      v1r133 
 # =========== temporary : to make easier Hlt studies ==========================
@@ -39,13 +37,7 @@ use           LoKiHybrid     v1r0 Tools
 # =============================================================================
 
 # =============================================================================
-# The END 
-# =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.18  2004/07/24 14:09:40  ibelyaev
-#  v3r5
-#
-# Revision 1.17  2004/07/23 14:08:33  ibelyaev
-#  update for Bender v3r5
-#
+# =============================================================================
+# The END 
 # =============================================================================
