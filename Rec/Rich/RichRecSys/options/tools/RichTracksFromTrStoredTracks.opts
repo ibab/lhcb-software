@@ -7,6 +7,7 @@ ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrac
 //ToolSvc.RichTrackCreator.TrStoredTracksLocation = "Rec/Tr/BestTest";
 
 // Momentum cuts ( in the for tracktype/minP/maxP )
+ToolSvc.RichTrackCreator.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
 ToolSvc.RichTrackCreator.TrackMomentumCuts = { "forward/0/9999999",
                                                "match/0/9999999",
                                                "follow/0/9999999",
@@ -20,7 +21,12 @@ ToolSvc.RichTrackCreator.TrackSegmentTool = "RichDetTrSegMaker";
 
 // Configure the RichTrackSegment maker
 ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegMaker" };
+
+//ToolSvc.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrParabolicExtrapolator";
+//ToolSvc.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrFastParabolicExtrapolator";
+//ToolSvc.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrFirstCleverExtrapolator";
 ToolSvc.RichDetTrSegMaker.PrimaryTrackExtrapolator = "TrHerabExtrapolator";
+
 ToolSvc.RichDetTrSegMaker.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
 
 // which radiators to use                  Aerogel   C4F10    CF4
