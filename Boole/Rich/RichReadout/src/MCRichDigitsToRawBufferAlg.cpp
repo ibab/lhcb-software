@@ -4,8 +4,11 @@
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.1 2005-01-07 13:21:22 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.2 2005-01-13 12:59:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 13:21:22  jonrob
+ *  Add new algorithm
+ *
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -82,11 +85,11 @@ StatusCode MCRichDigitsToRawBufferAlg::execute()
 
   }
 
-  debug() << "Created " << L1Data.size() << " RICH L1 bank(s) for "
-          << digits->size() << " MCRichDigits" << endreq;
-
   // Fill raw buffer
   m_rawFormatT->createDataBank( L1Data, (RichDAQ::BankVersion)m_version );
+
+  debug() << "Created " << L1Data.size() << " RICH L1 bank(s) for "
+          << digits->size() << " MCRichDigits" << endreq;
 
   return StatusCode::SUCCESS;
 };
