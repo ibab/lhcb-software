@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.3 2002-05-21 17:10:17 cattanem Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.4 2002-05-31 13:47:13 ecorread Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -64,7 +64,7 @@ private:
   friend class SvcFactory<MagneticFieldSvc>;
 
   /// Fills Q, the field vector
-  StatusCode fieldGrid( const HepPoint3D& xyz, HepVector3D& fvec ) const;
+  void fieldGrid( const HepPoint3D& xyz, HepVector3D& fvec ) const;
 
   StatusCode parseFile( );       ///< Reads the field map from file 
   

@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.5 2002-05-23 08:55:07 ocallot Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.6 2002-05-31 13:47:13 ecorread Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -247,28 +247,25 @@ StatusCode MagneticFieldSvc::fieldVector(const HepPoint3D& r,
 //=============================================================================
 // routine to fill the field vector
 //=============================================================================
-StatusCode MagneticFieldSvc::fieldGrid (const HepPoint3D& r, 
+void MagneticFieldSvc::fieldGrid (const HepPoint3D& r, 
                                    HepVector3D& bf ) const {
   
-  StatusCode scs = StatusCode::SUCCESS;
-  StatusCode scf = StatusCode::FAILURE;
-  
-  float xmin_FL, ymin_FL, zmin_FL;
-  float xmax_FL, ymax_FL, zmax_FL;
+  double xmin_FL, ymin_FL, zmin_FL;
+  double xmax_FL, ymax_FL, zmax_FL;
   
   // step size in x, y and z
-  float dx_FL, dy_FL, dz_FL;
+  double dx_FL, dy_FL, dz_FL;
   
   // number of steps in x, y and z 
   int nx_FL, ny_FL, nz_FL;
 
   // auxiliary variables defined at the vertices of the cube that
   // contains the (x, y, z) point where the field is interpolated
-  float     x,     y,     z,   hx0,   hx1,   hy0,   hy1,   hz0, hz1;
-  float   h000,  h001,  h010,  h011,  h100,  h101,  h110,  h111;
-  float  cx000, cx001, cx010, cx011, cx100, cx101, cx110, cx111;
-  float  cy000, cy001, cy010, cy011, cy100, cy101, cy110, cy111;
-  float  cz000, cz001, cz010, cz011, cz100, cz101, cz110, cz111;
+  double     x,     y,     z,   hx0,   hx1,   hy0,   hy1,   hz0, hz1;
+  double   h000,  h001,  h010,  h011,  h100,  h101,  h110,  h111;
+  double  cx000, cx001, cx010, cx011, cx100, cx101, cx110, cx111;
+  double  cy000, cy001, cy010, cy011, cy100, cy101, cy110, cy111;
+  double  cz000, cz001, cz010, cz011, cz100, cz101, cz110, cz111;
   
   int i, j, k;
   int ijk000, ijk001, ijk010, ijk011, ijk100, ijk101, ijk110, ijk111;
@@ -298,11 +295,11 @@ StatusCode MagneticFieldSvc::fieldGrid (const HepPoint3D& r,
   
   ///  Linear interpolated field
   z = xvect[2] - m_zOffSet;
-  if( z < zmin_FL || z >= zmax_FL )  return scf;
+  if( z < zmin_FL || z >= zmax_FL )  return;
   x = fabs( xvect[0] );  
-  if( x < xmin_FL || x >= xmax_FL )  return scf;
+  if( x < xmin_FL || x >= xmax_FL )  return;
   y = fabs( xvect[1] );
-  if( y <= ymin_FL || y >= ymax_FL )  return scf;
+  if( y < ymin_FL || y >= ymax_FL )  return;
   i = int( x/dx_FL );
   j = int( y/dy_FL );
   k = int( z/dz_FL );
@@ -347,28 +344,28 @@ StatusCode MagneticFieldSvc::fieldGrid (const HepPoint3D& r,
   hz0 = 1.0-hz1;
   h000 = hx0*hy0*hz0;
   if( fabs(h000) > 0.0 &&
-      cx000> 9.0e05 && cy000 > 9.0e05 && cz000 > 9.0e05) return scf;
+      cx000 > 9.0e5 && cy000 > 9.0e5 && cz000 > 9.0e5) return;
   h001 = hx0*hy0*hz1;
   if( fabs(h001) > 0.0 && 
-      cx001 > 9.0e05 && cy001 > 9.0e05 && cz001 > 9.0e05) return scf;
+      cx001 > 9.0e5 && cy001 > 9.0e5 && cz001 > 9.0e5) return;
   h010 = hx0*hy1*hz0;
   if( fabs(h010) > 0.0 && 
-      cx010 > 9.0e05 && cy010 > 9.0e05 && cz010 > 9.0e05) return scf;
+      cx010 > 9.0e5 && cy010 > 9.0e5 && cz010 > 9.0e5) return;
   h011 = hx0*hy1*hz1;
   if( fabs(h011) > 0.0 && 
-      cx011 > 9.0e05 && cy011 > 9.0e05 && cz011 > 9.0e05) return scf;
+      cx011 > 9.0e5 && cy011 > 9.0e5 && cz011 > 9.0e5) return;
   h100 = hx1*hy0*hz0;
   if( fabs(h100) > 0.0 && 
-      cx100 > 9.0e05 && cy100 > 9.0e05 && cz100 > 9.0e05) return scf;
+      cx100 > 9.0e5 && cy100 > 9.0e5 && cz100 > 9.0e5) return;
   h101 = hx1*hy0*hz1;
   if( fabs(h101) > 0.0 && 
-      cx101 > 9.0e05 && cy101 > 9.0e05 && cz101 > 9.0e05) return scf;
+      cx101 > 9.0e5 && cy101 > 9.0e5 && cz101 > 9.0e5) return;
   h110 = hx1*hy1*hz0;
   if( fabs(h110) > 0.0 && 
-      cx110 > 9.0e05 && cy110 > 9.0e05 && cz110 > 9.0e05) return scf;
+      cx110 > 9.0e5 && cy110 > 9.0e5 && cz110 > 9.0e5) return;
   h111 = hx1*hy1*hz1;
   if( fabs(h111) > 0.0 && 
-      cx111 > 9.0e05 && cy111 > 9.0e05 && cz111 > 9.0e05) return scf;
+      cx111 > 9.0e5 && cy111 > 9.0e5 && cz111 > 9.0e5) return;
   bf(0) = ( cx000*h000 + cx001*h001 + cx010*h010 + cx011*h011 +
             cx100*h100 + cx101*h101 + cx110*h110 + cx111*h111);
   bf(1) = ( cy000*h000 + cy001*h001 + cy010*h010 + cy011*h011 +
@@ -385,5 +382,5 @@ StatusCode MagneticFieldSvc::fieldGrid (const HepPoint3D& r,
     bf(0) = -bf(0);
     bf(2) = -bf(2);
   } 
-  return scs;      
+  return;      
 }
