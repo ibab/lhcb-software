@@ -899,6 +899,9 @@ StatusCode MuonDigitization::createLogicalChannel(MuonDigitizationData<MuonPhysi
  	for( iterMCDigit = mcDigitContainer.begin();iterMCDigit < mcDigitContainer.end() ; iterMCDigit ++){
 	  if((*iterMCDigit)->DigitInfo().isAlive()){		  
       MuonDigit* muonDigit= new MuonDigit((*iterMCDigit)->key());
+			unsigned int time=(unsigned int)(((*iterMCDigit)->firingTime())/3);
+			if(time>7)time=7;
+			muonDigit->setTimeStamp(time);
 			digitContainer.insert(muonDigit);
 			log<<MSG::DEBUG<<"new daq word "<<(*iterMCDigit)->key()<<endreq;
  		}

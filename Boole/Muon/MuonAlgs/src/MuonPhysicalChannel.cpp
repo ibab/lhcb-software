@@ -85,7 +85,7 @@
  	void MuonPhysicalChannel::fireXTalkChannels(int axis, int numberOfXTalkHits,MuonHitTraceBack* iter,unsigned int
 	                                               indexOfChannel, int direction, int maxChannel, 
 																								 std::vector<MuonPhysicalChannel*>& hitDueToXTalk){
-		unsigned int FETile=phChID()->getFETile();
+		unsigned int FETile=phChID()->getID();
 		int newChannel;			
 //		double	  time=iter->hitArrivalTime();
 																					 
