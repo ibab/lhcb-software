@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.13 2002-04-22 07:57:01 cattanem Exp $
+# $Id: requirements,v 1.14 2002-04-22 13:16:01 cattanem Exp $
 package VeloEvent
 version v10r0
 
@@ -27,5 +27,5 @@ apply_pattern package_stamps
 apply_pattern package_shlibflags
 #============================================================================
 private
-macro VeloEventDict_shlibflags  "$(use_linkopts) $(libraryshr_linkopts)"
+macro VeloEventDict_shlibflags  "$(VeloEvent_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
 #============================================================================
