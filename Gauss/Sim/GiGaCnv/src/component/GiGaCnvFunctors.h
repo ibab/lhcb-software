@@ -1,8 +1,11 @@
-// $Id: GiGaCnvFunctors.h,v 1.5 2002-01-22 18:24:43 ibelyaev Exp $
+// $Id: GiGaCnvFunctors.h,v 1.6 2002-04-23 11:23:40 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.4  2001/08/12 17:24:51  ibelyaev
 // improvements with Doxygen comments
 //
@@ -24,9 +27,9 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/SmartIF.h"
-// LHCbEvent 
-#include "LHCbEvent/MCVertex.h"
-#include "LHCbEvent/MCParticle.h"
+// Event 
+#include "Event/MCVertex.h"
+#include "Event/MCParticle.h"
 
 // GiGa 
 #include "GiGa/GiGaTrajectoryPoint.h"
@@ -47,7 +50,7 @@ class G4VTrajectory;
 namespace GiGaCnvFunctors
 {
   
-  /** comparison oprator for 3D-Vector objects
+  /** comparison operator for 3D-Vector objects
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date   30/07/2001
@@ -150,9 +153,9 @@ namespace GiGaCnvFunctors
      */
     inline MCVertex* operator() ( MCVertex* vertex ) const 
     {
-      if( 0 == vertex ) { return 0 ; }      ///< skip NULLs
-      vertex->clearDaughterMCParticles();  ///< remove all daughter particles 
-      vertex->setMotherMCParticle( 0 );     ///< unset the mother particle 
+      if( 0 == vertex ) { return 0 ; }  // skip NULLs
+      vertex->clearProducts ()    ;     // remove all daughter particles 
+      vertex->setMother( (MCParticle*) 0  ) ; // unset the mother particle
       ///
       return vertex ;
     };
@@ -177,8 +180,8 @@ namespace GiGaCnvFunctors
     inline MCParticle* operator() ( MCParticle* particle ) const 
     {
       if( 0 == particle ) { return 0 ; }  ///< skip NULLs
-      particle->clearDecayMCVertices();   ///< remove all decay vertices  
-      particle->setOriginMCVertex( 0 );   ///< remove origin vertex 
+      particle->clearEndVertices();   ///< remove all decay vertices  
+      particle->setOriginVertex( (MCVertex*)0 );   ///< remove origin vertex 
       ///
       return particle;
     };

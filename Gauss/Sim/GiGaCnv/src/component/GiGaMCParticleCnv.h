@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.h,v 1.5 2002-01-22 18:24:44 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.h,v 1.6 2002-04-23 11:23:40 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/01/22 18:24:44  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.4  2001/08/12 17:24:53  ibelyaev
 // improvements with Doxygen comments
 //
@@ -23,8 +26,8 @@
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/ObjectVector.h"
 /// LHCbEvent 
-#include "LHCbEvent/MCParticle.h"
-#include "LHCbEvent/MCVertex.h"
+#include "Event/MCParticle.h"
+#include "Event/MCVertex.h"
 /// GiGa
 #include "GiGa/GiGaTrajectory.h" 
 /// GiGaCnv

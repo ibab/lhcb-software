@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.11 2002-03-12 15:14:08 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.12 2002-04-23 11:23:40 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/03/12 15:14:08  ibelyaev
+//  update of GiGaKineRefTable class
+//
 // Revision 1.10  2002/02/12 17:10:48  ibelyaev
 //  bug fix
 //
@@ -55,7 +58,7 @@
 #include "GiGaCnv/GiGaKineRefTable.h" 
 #include "GiGaCnv/GiGaCnvUtils.h" 
 /// LHCbEvent
-#include "LHCbEvent/MCParticle.h" 
+#include "Event/MCParticle.h" 
 /// Geant4 includes
 #include "G4TrajectoryContainer.hh"
 #include "G4ParticleDefinition.hh"
@@ -356,13 +359,13 @@ StatusCode GiGaMCParticleCnv::updateObjRefs
           if ( trajectory->begin  () != iPoint )           
             { 
               Ref decay( particle , refID , ivIndex , Vertex) ;
-              particle->addToDecayMCVertices ( decay ) ; 
+              particle->addToEndVertices ( decay ) ; 
             } 
           /// first vertex and origin is not yet set   
-          else if ( !particle->originMCVertex() )    
+          else if ( !particle->originVertex() )    
             {  
               Ref origin( particle , refID , ivIndex , Vertex );
-              particle->setOriginMCVertex( origin ) ;
+              particle->setOriginVertex( origin ) ;
             } 
           else { return Error("OriginMCVertex is already set!") ; }
         }

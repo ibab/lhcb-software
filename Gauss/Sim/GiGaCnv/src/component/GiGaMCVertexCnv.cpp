@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.11 2002-03-12 15:14:08 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.12 2002-04-23 11:23:40 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/03/12 15:14:08  ibelyaev
+//  update of GiGaKineRefTable class
+//
 // Revision 1.10  2002/02/12 17:10:48  ibelyaev
 //  bug fix
 //
@@ -58,8 +61,8 @@
 #include "GiGaCnv/GiGaKineRefTable.h"
 #include "GiGaCnv/GiGaCnvUtils.h"
 /// LHCbEvent 
-#include "LHCbEvent/MCVertex.h" 
-#include "LHCbEvent/MCParticle.h" 
+#include "Event/MCVertex.h" 
+#include "Event/MCParticle.h" 
 /// Geant4 includes
 #include "G4PrimaryParticle.hh"
 #include "G4PrimaryVertex.hh"
@@ -378,20 +381,20 @@ StatusCode GiGaMCVertexCnv::updateObjRefs
               {
                 /// add daughter particle to the vertex 
                 Ref dau( vertex , refID , indxPart , particle );
-                vertex->addToDaughterMCParticles( dau) ; 
+                vertex->addToProducts( dau) ; 
                 /// mother is known ?            
-                if ( !vertex->motherMCParticle() 
+                if ( !vertex->mother() 
                      && 0 != mother && 0 <= iMother )
                   { 
                     Ref moth( vertex , refID , iMother , mother ) ;
-                    vertex->setMotherMCParticle ( moth ) ; 
+                    vertex->setMother( moth ) ; 
                   }
               }	       
             /// decay vertex 
-            else if ( !vertex->motherMCParticle()  ) 
+            else if ( !vertex->mother()  ) 
               {
                 Ref moth( vertex , refID , indxPart , particle );
-                vertex->setMotherMCParticle ( moth ) ; 
+                vertex->setMother( moth ) ; 
               }
             /// corrupted data! 
             else 
@@ -472,9 +475,9 @@ StatusCode GiGaMCVertexCnv::updateRep
       ///  skip artificial NULLS 
       if( 0 == vertex                     )             { continue; } 
       /// find primary MCVertices (without origin MCparticle) 
-      if( 0 != vertex->motherMCParticle() )             { continue; } 
+      if( 0 != vertex->mother()           )             { continue; } 
       /// skip empty vertices 
-      if( vertex->daughterMCParticles().empty() )       { continue; } 
+      if( vertex->products().empty()      )       { continue; } 
       /// perform the conversion 
       G4PrimaryVertex* Vertex =  Cnv( vertex );
       /// skip epmty 

@@ -1,5 +1,11 @@
+# $Id: requirements,v 1.18 2002-04-23 11:23:40 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
+# =============================================================================
+# $Log: not supported by cvs2svn $
+# =============================================================================
 package  GiGaCnv 
-version  v4r2
+version  v5r0
 
 branches cmt src doc GiGaCnv 
 
@@ -8,9 +14,9 @@ include_dirs     $(GIGACNVROOT)
 use HepMC         v1r2*  Sim
 use GenEvent      v1r0   Event
 
-use GiGa          v7r*  Sim 
-use LHCbEvent     v12r*	Event
-use DetDesc       v9r*	Det
+use GiGa          v8r*  Sim 
+use Event         v1r*	Event
+use DetDesc       v10r*	Det
 
 # ============== linker library (base classes) ================================
 library          GiGaCnvLib            Lib/*.cpp
@@ -32,6 +38,10 @@ apply_pattern    package_Lshlibflags
 macro_append     GiGaCnvLib_shlibflags " $(GaudiKernel_linkopts) "
 macro_append     GiGaCnvLib_shlibflags " $(GiGa_linkopts) "
 macro_append     GiGaCnvLib_shlibflags " $(DetDesc_linkopts) "
-macro_append     GiGaCnvLib_shlibflags " $(LHCbEvent_linkopts) "
+macro_append     GiGaCnvLib_shlibflags " $(Event_linkopts) "
 macro_append     GiGaCnvLib_shlibflags " $(GEANT4_linkopts) "
 macro_append     GiGaCnvLib_shlibflags " $(CLHEP_linkopts) "
+
+# =============================================================================
+# The End 
+# =============================================================================
