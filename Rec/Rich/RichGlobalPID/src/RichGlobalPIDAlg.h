@@ -1,4 +1,4 @@
-// $Id: RichGlobalPIDAlg.h,v 1.1.1.1 2003-06-30 16:10:54 jonesc Exp $
+// $Id: RichGlobalPIDAlg.h,v 1.2 2003-07-06 09:23:06 jonesc Exp $
 #ifndef RICHRECALGS_RICHGLOBALPIDALG_H
 #define RICHRECALGS_RICHGLOBALPIDALG_H 1
 
@@ -43,6 +43,8 @@ private: // Private methods
 
   // private typedefs
   typedef std::map<RichGlobalPIDTrack*,Rich::ParticleIDType> minTrList;
+  typedef std::pair<double,RichGlobalPIDTrack*> TrackPair;
+  typedef std::vector<TrackPair> TrackList;
 
   /// Starting with all tracks pion, calculate logLikelihood. Then for
   /// each track in turn, holding all others to pion, calculate new
@@ -84,6 +86,9 @@ private:  // Private data members
   /// Threshold for forced hypothesis change in track minimsation
   double m_trDeltaThres;
 
+  /// Threshold for freezing out tracks from minimisation iteration
+  double m_freezeOutDll;
+
   /// Current minimum hypothesis
   double m_currentBestLL;
 
@@ -95,6 +100,12 @@ private:  // Private data members
 
   /// Cached value of log(exp(m_minSig) - 1) for efficiency
   double m_logMinSig;
+
+  /// List of tracks ordered by change in likelihood
+  TrackList m_trackList;
+
+  // working flags
+  bool m_tryAgain, m_lastChance, m_inR1, m_inR2;
 
 };
 
