@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.39 2004-01-29 11:12:22 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.40 2004-02-24 15:01:32 ranjard Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -38,12 +38,12 @@ MessageSvc.OutputLevel    = 3;
 
 // write an output file in ROOT format
 //#include "$GAUSSOPTS/GaussRootIO.opts"
-//GaussTape.Output = "DATAFILE='$W1/GaussRoot.oosim' TYP='ROOT' OPT='RECREATE'";
+//GaussTape.Output = "DATAFILE='GaussRoot.oosim' TYP='ROOT' OPT='RECREATE'";
 
 // write an output file in POOL format
 #include "$GAUSSOPTS/GaussPoolIO.opts"
-GaussTape.Output = "DATAFILE='PFN:$W1/GaussPool.sim' TYP='POOL_ROOTTREE' OPT='REC'";
-PoolDbCacheSvc.OutputCatalog = "xmlcatalog_file:$W1/GaussPool_catalog.xml";
+GaussTape.Output = "DATAFILE='PFN:GaussPool.sim' TYP='POOL_ROOTTREE' OPT='REC'";
+PoolDbCacheSvc.OutputCatalog = "xmlcatalog_file:GaussPool_catalog.xml";
 //PoolDbCacheSvc.OutputLevel = 0; // full debug of PoolIO
 
 
