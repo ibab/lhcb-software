@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.128 2004-07-01 07:20:01 pkoppenb Exp $
+# $Id: requirements,v 1.129 2004-07-01 07:26:45 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -115,7 +115,7 @@ use  DaVinciMCTools     v5r4     Phys
 use  DaVinciTest        v4r5     Phys
 
 # Physics selections
-use  PhysSelSys		v7r3     PhysSel
+use  PhysSelSys		v7r4     PhysSel
 
 # Stripping
 use  Stripping          v1r0     Tools
