@@ -1,11 +1,19 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.48 2001-08-15 14:34:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.49 2001-08-22 11:45:44 sponce Exp $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
 
+! =============================================================================
+! 20010822  - Sebastien Ponce
+   - Implemented a cache on the parsed files in XmlParserSvc. This cache
+   uses 2 options from the joboption file : MaxDocNbInCache and CacheBehavior.
+   The first one is the maximum number of files cached, the second is the
+   behavior of the cache (FIFO for a 0 value, more and more "keep most used"
+   as value grows)
+	       
 ! =============================================================================
 ! 20010815  - Vanya Belyaev 
    - DetDesc/SolidChild.h bug fix ("protected" versus "public")

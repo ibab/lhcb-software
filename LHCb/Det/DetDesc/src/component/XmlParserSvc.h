@@ -1,8 +1,10 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.h,v 1.2 2001-06-28 09:14:07 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlParserSvc.h,v 1.3 2001-08-22 11:45:48 sponce Exp $
 #ifndef DETDESC_XMLPARSERSVC_H
 #define DETDESC_XMLPARSERSVC_H
 
 // Include files
+#include <map>
+
 #include <sax/ErrorHandler.hpp>
 #include <sax/SAXParseException.hpp>
 
@@ -111,11 +113,72 @@ public:
    */
   virtual void resetErrors ();
 
+
+private:
+  
+  /**
+   * Caches the new document, parsed from the given file
+   * Since this adds an item into the cache, this may remove another
+   * item if the cache was full
+   * @param fileName the name of the file that was just parsed
+   * @param document the document that is the result of the parsing
+   */
+  void cacheItem (std::string fileName, DOM_Document document);
+
+  /**
+   * this only increases the age of the cache.
+   * It also checks that the age don't go back to 0. If it is the case,
+   * it puts back every item birthDate to 0 also
+   */
+  void increaseCacheAge ();
+
   
 private:
 
   /// the actual DOM parser
   DOMParser* m_parser;
+
+  /**
+   * this is a parameter that defines the cache behavior.
+   * the default behavior is that an item is released if there is no more space
+   * and if it has the smallest birthDate+cacheAgressivity*utility score.
+   * Thus, a 0 value allows to have a FIFO cache behavior, while a bigger
+   * value tends to keep only reused items.
+   */
+  unsigned int m_cacheBehavior;
+
+  /**
+   * a structure containing a cached document, its birthDate and its utility.
+   * The birthDate is the age of the cache when this item arrived.
+   * The utility is the number of times this item was retrieved since it is
+   * in the cache.
+   * The rule is that an item is released if there is no more space
+   * and if it has the smallest birthDate+cacheBehavior*utility score.
+   */
+  typedef struct _cachedItem {
+    DOM_Document document;
+    unsigned int birthDate, utility;
+  } cachedItem;
+
+  /**
+   * This is the type of the cache : a map of cachedItems,
+   * indexed by a fileName, given as a standard string
+   */
+  typedef std::map<std::string, cachedItem> cacheType;
+
+  /// a map for caching DOMDocuments
+  cacheType m_cache;
+
+  /**
+   * The age of the cache : this is the number of operations done
+   * on it, provided that an operation is either retrieving an element
+   * or puting a new one (eventually removing another one but this is
+   * not taken into account
+   */
+  unsigned int m_cacheAge;
+  
+  /// The maximum number of cached documents
+  unsigned int m_maxDocNbInCache;
 
 };
 
