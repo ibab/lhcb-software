@@ -4,6 +4,11 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2004-06-18 - Chris Jones
+ - Update includes for new package structure
+ - Remove DaVinci includes (Brunel files can be used by simply adding the 
+   appropriate Sequencer to the application
+
 ! 2004-05-31 - Chris Jones
  - Add new debug printout for used radiators in RichPIDQC
 

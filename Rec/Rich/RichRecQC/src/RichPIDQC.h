@@ -1,9 +1,9 @@
-// $Id: RichPIDQC.h,v 1.7 2004-03-16 13:41:10 jonesc Exp $
+// $Id: RichPIDQC.h,v 1.8 2004-06-18 09:58:57 jonesc Exp $
 #ifndef RICHRECQC_RICHPIDQC_H
 #define RICHRECQC_RICHPIDQC_H 1
 
 // base class
-#include "RichUtils/RichAlgBase.h"
+#include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
