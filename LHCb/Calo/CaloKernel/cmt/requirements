@@ -1,0 +1,47 @@
+# $Id: requirements,v 1.1.1.1 2001-11-25 14:07:38 ibelyaev Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
+# =============================================================================
+# Created    : 25/11/2001
+# Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru 
+# =============================================================================
+
+package           CaloKernel
+version           v1
+
+# =============== structure ===================================================
+branches          src cmt doc CaloKernel
+
+# =============== own includes ================================================
+include_dirs      $(CALOKERNELROOT)
+
+# =============== used packages ===============================================
+use GaudiKernel   v10*
+use CLHEP         v1r6* 
+        
+# =============== linker library ==============================================
+library           CaloKernel            *.cpp 
+apply_pattern     package_stamps 
+
+# =============== mandatory patterns ==========================================
+apply_pattern     package_linkopts
+apply_pattern     linker_path 
+apply_pattern     package_libraries 
+
+# =============== private stuff ===============================================
+private
+
+apply_pattern     package_shlibflags 
+macro_append      CaloKernel_shlibflags  $(use_linkopts)
+macro_remove      use_linkopts           $(CaloKernel_linkopts)
+apply_pattern     application_path
+
+# =============== test application ============================================
+application       CaloKernelTest  -check Test/*.cpp 
+
+# =============== make the executable "visible" ===============================
+path_remove       PATH               "CaloKernel"
+path_prepend      PATH               ${CALOKERNELROOT}/${BINDIR}
+ 

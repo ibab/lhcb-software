@@ -1,0 +1,16 @@
+! $Id: release.notes,v 1.1.1.1 2001-11-25 14:07:38 ibelyaev Exp $
+! =============================================================================
+! CVS tag $Name: not supported by cvs2svn $
+! =============================================================================
+! Package     : CaloKernel
+! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
+! =============================================================================
+! The package contains the general Calo Kernel classes and utilities, 
+! which are essentially independent from Detector and Event models 
+! =============================================================================
+
+! =============================================================================
+! 25/11/2001 - v1 Vanya  Belyaev
+  - new package (subsitution of previous CaloGen package)
+! =============================================================================
+
