@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.4 2002-10-29 10:55:54 gcorti Exp $
+// $Id: ParticleStuffer.cpp,v 1.5 2002-11-13 16:21:14 gcorti Exp $
 // Include files 
 
 // 
@@ -68,9 +68,7 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
   
   ParticleProperty*  partProp = m_ppSvc->findByStdHepID(stdHepID  );
   if((*partProp).lifetime()*pow(10,-9) < pow(10,-15)) {
-//      part.setIsResonance(true);
-    // reset because of a problem in verteing to set tree connections
-    part.setIsResonance(false);
+    part.setIsResonance(true);
   }
   
   

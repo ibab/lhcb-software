@@ -1,6 +1,21 @@
-! $Id: release.notes,v 1.37 2002-11-06 08:33:01 odie Exp $
+! $Id: release.notes,v 1.38 2002-11-13 16:21:13 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+!=========================== DaVinciTools v7r0 2002-11-13 ===================
+! 2002-11-13 - Gloria Corti
+ - Version v7r0 in requirements
+ - Increase interface ID in IDecayFinder.h (modified interface)
+
+! 2002-11-11 - Gloria Corti
+ - In ParticleStuffer Remove comment for setIsResonace based on lifetime
+   since link to intermediate particles has been fixed in UnconstVertexFitter.
+ - Fix problem in tree propagation in UnconstVertexFitter when using 
+   resonances and fix bug reported by Gerhard Raven of hessian/2 (Sandra Amato)
+ - Introduce property with cut value on width of mother particle in order to
+   use products or not to make vertex in LagrangeMassVertexFitter (S.Amato)
+   leave uncommented the setIsResonance. When using this tool the tree is still
+   not correctly progagated.
 
 ! 2002-11-05 - Olivier Dormond
  - Added two new methods to the DecayFinder:

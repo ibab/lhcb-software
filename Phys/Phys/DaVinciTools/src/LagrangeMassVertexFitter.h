@@ -215,7 +215,8 @@ private:
   StatusCode chisq(HepVector &e0,HepVector &e, HepSymMatrix &Ce,
                    double &chis);
   
-  
+  /// Cut on the Width in order to use the daughters ot not
+  double m_widthCut;    
   IParticlePropertySvc* m_ppSvc;        ///< Reference to ParticlePropertySvc
   IToolSvc* m_pToolSvc;
   IVertexFitter* m_pVertexUnconst;      ///< Reference to VertexFitter

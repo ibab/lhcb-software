@@ -60,7 +60,7 @@ LagrangeMassVertexFitter::LagrangeMassVertexFitter(const std::string& type,
   declareInterface<IMassVertexFitter>(this);
 
   declareProperty("Transporter", m_transporterType);
-  
+  declareProperty( "WidthCut", m_widthCut = 1. );  
 }
 
 //==================================================================
@@ -84,7 +84,7 @@ StatusCode LagrangeMassVertexFitter::initialize() {
     log << MSG::FATAL << " Unable to retrieve ParticleTransporter tool" ;
     return sc;
   }
-  
+ 
   StatusCode sc1 = toolSvc()->retrieveTool("UnconstVertexFitter",
                                            m_pVertexUnconst,this);
   if(sc1.isFailure()) {
@@ -424,16 +424,17 @@ StatusCode LagrangeMassVertexFitter::fitWithNoRess(const std::string&
   //    check ressonance
   
   // hbar in MeV s
-  float hbar = 6.58211889*pow(10,-22);
+  // float hbar = 6.58211889*pow(10,-22);
   
-  float motherParticleWidth = hbar/(pow(10,-9)*((*partProp).lifetime()));
+  //  float motherParticleWidth = hbar/(pow(10,-9)*((*partProp).lifetime()));
+  
+//  if((motherParticleWidth < 1) && ((*partProp).lifetime()*pow(10,-9) < 
+ //                                   pow(10,-15))) 
+  if((*partProp).lifetime()*pow(10,-9) <
+                                    pow(10,-15))
 
-  if((motherParticleWidth < 10) && ((*partProp).lifetime()*pow(10,-9) < 
-                                    pow(10,-15))) {
-//      motherParticle.setIsResonance(true);
-    // for the moment because of problem in following tree
-    motherParticle.setIsResonance(false);
-  }
+    motherParticle.setIsResonance(true);
+  
   
   motherParticle.setEndVertex(&constrVtx);
   
@@ -574,7 +575,7 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
   
   float part1WidthHBar = hbar/(pow(10,-9)*((*partProp).lifetime()));
   
-  if( (part1->isResonance()) && (part1WidthHBar > 10)) 
+  if( (part1->isResonance()) && (part1WidthHBar > m_widthCut)) 
     part1->setIsResonance(false);
   
   const ParticleID& part2ID = part2->particleID().pid();
@@ -584,7 +585,7 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
   
   float part2WidthHBar = hbar/(pow(10,-9)*((*partProp).lifetime()));
   
-  if( (part2->isResonance()) && (part2WidthHBar > 10)) 
+  if( (part2->isResonance()) && (part2WidthHBar > m_widthCut)) 
     part2->setIsResonance(false);
   
   
@@ -608,7 +609,7 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
       log << MSG::INFO << "Number of ressonances must be 0, 1 or 2  " 
           << endreq;      
       return StatusCode::FAILURE;
-    }//if( (numbRessTwoTracks != 0) && (numbRessTwoTracks != 1) && (numbRessTwoTracks != 2)) 
+    } 
     
     SmartRefVector<Particle>::iterator itPart1;
     SmartRefVector<Particle>::iterator itPart2; 
@@ -700,7 +701,7 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
     
     float part3WidthHBar = hbar/(pow(10,-9)*((*partProp).lifetime()));
     
-    if( (part3->isResonance()) && (part3WidthHBar > 10)) 
+    if( (part3->isResonance()) && (part3WidthHBar > m_widthCut)) 
       part3->setIsResonance(false);
     
     if(part1->isResonance()){
@@ -812,7 +813,7 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
     
     float part3Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
   
-    if( (part3->isResonance()) && (part3Width > 10)) 
+    if( (part3->isResonance()) && (part3Width > m_widthCut)) 
       part3->setIsResonance(false);
     
     const ParticleID& part4ID = part4->particleID().pid();
@@ -822,7 +823,7 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
     
     float part4Width = hbar/(pow(10,-9)*((*partProp).lifetime()));
     
-    if( (part4->isResonance()) && (part4Width > 10)) 
+    if( (part4->isResonance()) && (part4Width > m_widthCut)) 
       part4->setIsResonance(false);
     
     if(part1->isResonance()){
@@ -858,7 +859,7 @@ StatusCode LagrangeMassVertexFitter::fitWithMass(const std::string&
     
   }//if(ntracks == 4)
   
-  return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS; 
   
   
 }
@@ -1199,15 +1200,17 @@ StatusCode LagrangeMassVertexFitter::fitWithOneSubMass(const std::string&
   //    check ressonance
   
    // hbar in MeV s
-  float hbar = 6.58211889*pow(10,-22);
+  // float hbar = 6.58211889*pow(10,-22);
   
-  float motherParticleWidth = hbar/(pow(10,-9)*((*partProp).lifetime()));
+  //  float motherParticleWidth = hbar/(pow(10,-9)*((*partProp).lifetime()));
   
-  if((motherParticleWidth < 10) && ((*partProp).lifetime()*pow(10,-9) <
-  pow(10,-15))){
-    
-//      motherParticle.setIsResonance(true);  // for the moment don't do it
-    motherParticle.setIsResonance(false);
+//  if((motherParticleWidth < 1) && ((*partProp).lifetime()*pow(10,-9) <
+ // pow(10,-15))){
+   
+
+  if((*partProp).lifetime()*pow(10,-9) < pow(10,-15)) {
+ 
+    motherParticle.setIsResonance(true);
     
   }//isRessonance
   
@@ -1563,17 +1566,16 @@ StatusCode LagrangeMassVertexFitter::fitWithTwoSubMass(const std::string&
   //    check ressonance
   
   // hbar in MeV s
-  float hbar = 6.58211889*pow(10,-22);
+  //float hbar = 6.58211889*pow(10,-22);
   
-  float motherParticleWidth = hbar/(pow(10,-9)*((*partProp).lifetime()));
+  //  float motherParticleWidth = hbar/(pow(10,-9)*((*partProp).lifetime()));
   
   
-  if( (motherParticleWidth < 10) && ((*partProp).lifetime()*pow(10,-9) < 
-                                     pow(10,-15))){
+//  if( (motherParticleWidth < 1) && ((*partProp).lifetime()*pow(10,-9) < 
+  //                                   pow(10,-15))){
     
-//      motherParticle.setIsResonance(true);
-    motherParticle.setIsResonance(false);
-    
+  if( (*partProp).lifetime()*pow(10,-9) < pow(10,-15)){
+    motherParticle.setIsResonance(true);
   }//isRessonance
   
   //  motherParticle.setIsResonance(true);

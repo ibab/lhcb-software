@@ -1,4 +1,4 @@
-// $Id: IDecayFinder.h,v 1.3 2002-11-06 08:32:55 odie Exp $
+// $Id: IDecayFinder.h,v 1.4 2002-11-13 16:21:13 gcorti Exp $
 #ifndef TOOLS_IDECAYFINDER_H 
 #define TOOLS_IDECAYFINDER_H 1
 
@@ -14,7 +14,7 @@
 //class Particle;
 
 // Declaration of the interface ID (interface id, major version, minor version)
-static const InterfaceID IID_IDecayFinder("IDecayFinder", 1, 0);
+static const InterfaceID IID_IDecayFinder("IDecayFinder", 2, 0);
 
 /** @class IDecayFinder IDecayFinder.h DaVinciTools/IDecayFinder.h
  *  

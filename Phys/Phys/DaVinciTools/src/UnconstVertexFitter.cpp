@@ -1,4 +1,4 @@
-// $Id: UnconstVertexFitter.cpp,v 1.6 2002-10-22 17:46:31 gcorti Exp $
+// $Id: UnconstVertexFitter.cpp,v 1.7 2002-11-13 16:21:14 gcorti Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -136,14 +136,16 @@ StatusCode UnconstVertexFitter::fitVertex( const ParticleVector&
       
 
     }
-    
-    
   }
+  StatusCode sc = doFitVertex(particleList,myVertex);
+  if (!sc ) return StatusCode::FAILURE;
+
+  for(iterP = pList.begin(); iterP != pList.end(); iterP++) {
+    myVertex.addToProducts(*iterP);
+  }
+  return StatusCode::SUCCESS;
   
 
-
-
-  return doFitVertex(particleList,myVertex);
 
 }
 
@@ -276,21 +278,9 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
         << vertex(2) <<" " << vertex(3) <<endreq;
     return StatusCode::FAILURE;
   }
-  // Remember to swim:
-  // for(iterP = particleList.begin(); iterP != particleList.end(); iterP++)
-  // {
-  //    sc = (*iterP)->extrapolate(fExtrapolator,vertex(3));
-  //    if(!sc.isSuccess()){
-  //      log << MSG::WARNING << "Track extrapolation failed" << endreq;
-  //      myVertex.setPosition(HepPoint3D(999.,999.,999.));
-  //      myVertex.setChisquare(999.);
-  //      return StatusCode::FAILURE;
-  
-  //    }
-  //  }
   
   int inv;
-  HepSymMatrix errMat = hessian.inverse(inv)/2;
+  HepSymMatrix errMat = hessian.inverse(inv);
   if (inv != 0) {
     log << MSG::DEBUG << "Could not invert hessian matrix" << endreq;
     return StatusCode::FAILURE; 
@@ -304,9 +294,6 @@ StatusCode UnconstVertexFitter::doFitVertex( const ParticleVector& particleList,
   myVertex.setNDoF(ndof);
 
   myVertex.setType(Vertex::Decay);  
-  for(iterP = particleList.begin(); iterP != particleList.end(); iterP++) {
-    myVertex.addToProducts(*iterP);
-  }
   
    
 
