@@ -12,7 +12,6 @@ use  DaVinci                 	v12r3    Phys
 # packages included in the DAVINCI tree
 #=======================================================
 # Trigger packages
-# Trigger packages
 use  L0DU               	v6r7p2   L0
 use  L0Calo             	v7r6     L0
 use  L0Checker          	v2r2     L0
@@ -33,8 +32,7 @@ use  TrgVeloTT          	v5r0     Trg
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
-use  CaloReco           	v2r5     Calo
-
+use  CaloReco           	v2r6     Calo
 # Muon PID
 use  MuonID             	v3r7p1   Muon
 
@@ -46,8 +44,8 @@ use  RecoTools          	v1r1     Rec
 # Utility tools
 use  TrExtrapolator     	v2r13    Tr
 
-use  LoKi               	v3r5     Tools  
-use  LoKiHlt             	v1r1     Tools  
+use  LoKi               	v3r5p1   Tools  
+use  LoKiHlt             	v1r1p1   Tools  
 
 # Reconstruction tools 
 use  Utilities          	v1r11p1  Tools
@@ -55,7 +53,7 @@ use  Utilities          	v1r11p1  Tools
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v1r2     Phys
-use  DaVinciKernel      	v1r1     Phys
+use  DaVinciKernel      	v2r0     Phys
 use  DaVinciTools       	v11r1    Phys
 use  DaVinciUser        	v5r1p2   Phys
 use  FlavourTagging     	v5r3     Phys

@@ -5,6 +5,13 @@
 ! See Phys/DaVinci/v*/doc/release.notes for details of modifications
 !-----------------------------------------------------------------------------
 
+!===================  DaVinciSys v12r3 2004-10-27 ============================
+Modified packages:
+CaloReco                  v2r6     Calo
+LoKi                      v3r5p1   Tools  
+LoKiHlt                   v1r1p1   Tools  
+DaVinciKernel             v2r0     Phys
+
 !===================  DaVinciSys v12r2 2004-10-13 ============================
 New packages:
 LoKiHlt                  v1r1     Tools  
