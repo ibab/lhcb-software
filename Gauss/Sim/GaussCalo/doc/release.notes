@@ -7,6 +7,10 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2004-02-20 - Ivan BELYAEV
+ - options/PGUN* remoe all obsolete files 
+
+
 !========================= GaussCalo v6r0 =================================
 ! 2004-01-09 - Florence RANJARD
  - src/CaloSensPlaneHit.h - fix for new LHCb v15r0: PartivleID.h has been moved
