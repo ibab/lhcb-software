@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.9 2004-03-17 16:32:21 ibelyaev Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.10 2004-07-20 12:06:26 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -210,12 +210,13 @@ long CaloMergedPi0Alg::numberOfDigits
  *
  */
 // ============================================================================
-double CaloMergedPi0Alg::TrShape( const int Neig,
-                            const unsigned int area,
-                            const double SpdHit,
-                            const double D3D )
+double CaloMergedPi0Alg::TrShape
+( const int          /* Neig */ ,
+  const unsigned int    area    ,
+  const double          SpdHit  ,
+  const double          D3D     )
 {
-
+  
   Parameters TrShPar;
   
   if ( 0 == area && 0 == SpdHit ) { TrShPar = TrShOut_nospd; }
@@ -256,14 +257,15 @@ double CaloMergedPi0Alg::TrShape( const int Neig,
  *  L-Correction for Photon Shower *
  */
 // ============================================================================
-double CaloMergedPi0Alg::BarZ( const double e,
-                               const double eprs,
-                               const unsigned int area,
-                               const double x,
-                               const double y,
-                               const double z )
+double CaloMergedPi0Alg::BarZ
+( const double       e    ,
+  const double       eprs ,
+  const unsigned int area ,
+  const double       x    ,
+  const double       y    ,
+  const double    /* z */ )
 {
-
+  
   double z0 = LPar_z0[0] ;// Parameter tuned wrt to z0=12566 mm !!
   // Uncorrected angle
   double tth   = sqrt ( pow(x,2) + pow(y,2) ) / z0 ;
@@ -449,10 +451,14 @@ StatusCode CaloMergedPi0Alg::execute()
       log << MSG::DEBUG << " -----> Find SubSeed " << endreq;
       /// Find SubSeed  - Loop on Cluster CaloCluster:Digits
       // (New DigitStatus to be defined)
-
-      double sube=-99;
-      int subrow=0;
-      int subcol=0;
+      
+      // double sube=-99; commented by I.B 2004-08-20
+      // int subrow=0;
+      // int subcol=0;
+      double sube   = -1 * TeV ;
+      int    subrow = -1000    ;
+      int    subcol = -1000    ;
+      
       for( CaloCluster::Digits::const_iterator it1 =
              cluster->entries().begin() ;
            cluster->entries().end() != it1 ; ++it1 ) 
@@ -474,7 +480,9 @@ StatusCode CaloMergedPi0Alg::execute()
             }
         }
       
-
+      if ( -1000 == subrow && -1000 == subcol ) 
+      { Warning("Cluster without 'subcel' is found, skip it") ; continue ; }
+      
       log << MSG::DEBUG << " -----> Define large Cluster " << endreq;
 
       /// Fill  3x3 SubClusters - Loop on all CaloCluster:Digits
@@ -792,11 +800,12 @@ StatusCode CaloMergedPi0Alg::execute()
 
       const CaloDigit*  seedig   = SubClus[0][1][1];;
       const CaloCellID  idig     = seedig->cellID() ;
-      double zpos                = detector->cellZ   ( idig ) ;
-      double csiz                = detector->cellSize( idig ) ;
-      double mpi0=0.1349;
-      double epi0=(ep1+ep2)/GeV;
-      double dmin=zpos*2*mpi0/epi0/csiz;
+      // commented by I.B. 2004-08-20
+      // double zpos                = detector->cellZ   ( idig ) ;
+      // double csiz                = detector->cellSize( idig ) ;
+      // double mpi0=0.1349;
+      // double epi0=(ep1+ep2)/GeV;
+      // double dmin=zpos*2*mpi0/epi0/csiz; 
 
       
 

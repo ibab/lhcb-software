@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.46 2004-06-03 10:01:32 pkoppenb Exp $
+! $Id: release.notes,v 1.47 2004-07-20 12:06:26 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,18 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2004-07-20 - Vanya BELYAEV
+ - CaloMergedPi0Alg.cpp 
+   1. make a fix for segmentation fault for 
+   3-cell cluster at the edge of calorimeter, where 
+   only seed digit has positive energy. 
+   For this case "subrow" and "subcol" values were not defined
+   it result in SubClus[1][1][1] = NULL and a further segmentation 
+   fault. 
+   2.  Few minor fixes to suppress compiler warnings about 
+       the unused variables 
+ - cmt/requirements  increment the version to v2r3p2 
+   
 !======================= CaloReco v2r3p1 2004-06-03 ======================
 ! 2004-06-03 - Ivan Belyaev
  - src/CaloReco_load.cpp
