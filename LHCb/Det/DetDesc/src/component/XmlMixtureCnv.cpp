@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.6 2001-04-12 08:15:14 gracia Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlMixtureCnv.cpp,v 1.7 2001-04-30 09:09:36 gracia Exp $
 
 // Headers
 #include "GaudiKernel/CnvFactory.h"
@@ -257,7 +257,8 @@ void XmlMixtureCnv::startElement( const char* const name,
     std::string entryName = m_objRcpt->containerName () + "/" + attributes.getValue( "name" );
 
     // Check if path is a relative path, if it has ../ 
-    if (-1 != entryName.find_first_of("..")){
+    int dotsPos = entryName.find_first_of("..");
+    if (-1 != dotsPos){
       // get rid of the ".." to get the absolute path
       entryName = compactPath(entryName);
     }
@@ -397,7 +398,8 @@ std::string XmlMixtureCnv::compactPath(std::string path ){
   std::string afterDots = path.substr(dotPos+2);
   std::string parent = beforeDots.substr(0, beforeDots.find_last_of("/"));
   std::string compactPath = parent + afterDots;
-  if(-1 != compactPath.find_first_of("..")){
+  int dotsPos = compactPath.find_first_of("..");
+  if(-1 != dotsPos){
       path = compactPath;
       compactPath = this->compactPath(path);
   }

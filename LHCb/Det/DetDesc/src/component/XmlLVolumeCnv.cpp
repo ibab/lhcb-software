@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.5 2001-03-13 11:58:09 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/component/XmlLVolumeCnv.cpp,v 1.6 2001-04-30 09:09:36 gracia Exp $
 
 // Include files
 
@@ -26,7 +26,6 @@
 #include "DetDesc/XmlCnvException.h"
 
 #include <cstdlib>
-#include <iostream>
 #include <string>
 #include <vector>
 #include <map>
@@ -797,8 +796,7 @@ void XmlLVolumeCnv::endElement( const char* const name )                   {
         {
           const std::string address = *it;
           long linkID = vol->addLink( address , 0 ) ;
-          SmartRef<Surface> ref( m_dataObj, linkID );
-          std::cout << (Surface*) ref << std::endl;
+          SmartRef<Surface> ref( vol, linkID );
           vol->surfaces().push_back(ref); 
         }
       m_surfaces.clear(); 
