@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.3 2004-05-03 15:15:38 cattanem Exp $
+// $Id: lcgStl.h,v 1.4 2004-05-04 06:14:37 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -9,6 +9,8 @@
 #include <vector>
 #include <map>
 #include <utility>
+#include "GaudiKernel/SmartRefVector.h"
+#include "GaudiKernel/ContainedObject.h"
 #include "Kernel/VeloChannelID.h"
 #include "Kernel/ITChannelID.h"
 #include "Kernel/OTChannelID.h"
@@ -20,6 +22,7 @@ namespace {
   std::pair<OTChannelID,int>       d;
   std::map<int,int>                e;
   std::vector<std::pair<long,double> > f;
-  std::vector<std::pair<int,double> > g;
+  std::vector<std::pair<int,double> >  g;
+  SmartRefVector<ContainedObject>      h;
 }
 #endif // KERNEL_LCGSTL_H

@@ -9,4 +9,12 @@
   <class name="std::pair<VeloChannelID,int>"/>
   <class name="std::pair<ITChannelID,int>"/>
   <class name="std::pair<OTChannelID,int>"/>
+  <class name="SmartRef<ContainedObject>">
+    <field name="m_target" transient="true"/>  
+  </class>
+  <class name="SmartRefVector<ContainedObject>">
+    <field name="m_data" transient="true"/>  
+    <field name="m_contd" transient="true"/>  
+  </class>
+  <class name="std::vector<SmartRef<ContainedObject> >"/>
 </lcgdict>
