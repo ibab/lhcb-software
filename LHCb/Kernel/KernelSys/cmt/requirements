@@ -1,0 +1,11 @@
+package KernelSys
+version v0r4
+branches cmt
+
+use LHCbKernel	v1r4	Kernel
+use CaloKernel	v2r0	Calo
+use VeloKernel	v1r1	Velo
+use TrKernel	v11r0	Tr
+use MuonKernel	v2r1	Muon
+use RichKernel	v1r2	Rich
+
