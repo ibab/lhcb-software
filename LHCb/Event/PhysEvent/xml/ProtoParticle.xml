@@ -45,7 +45,7 @@
        <enum
         desc="Store a detector specific particleID type or technique for which the likelyhood or discriminating value is then stored"
         name="detectorPID"
-        value="NoPID=0, RichElectron, RichMuon, RichPion, RichKaon, RichProton, MuonMuon, CaloTrMatch, CaloDepositID, ClusterMass, ShowerShape, CaloEMatch, BremMatch, ECalPIDe, PrsPIDe, BremPIDe, HcalPIDe, HcalPIDmu, EcalPIDmu, MuonPIDmu, RichPIDe, RichPIDmu, RichPIDpi, RichPIDK, RichPIDp, LkhPIDe, LkhPIDmu, LkhPIDpi, LkhPIDK, LkhPIDp"
+        value="NoPID=0, RichElectron, RichMuon, RichPion, RichKaon, RichProton, MuonMuon, CaloTrMatch, CaloDepositID, ClusterMass, ShowerShape, CaloEMatch, BremMatch, ECalPIDe, PrsPIDe, BremPIDe, HcalPIDe, HcalPIDmu, EcalPIDmu, MuonPIDmu, RichPIDe, RichPIDmu, RichPIDpi, RichPIDK, RichPIDp, PhotonID, LkhPIDe, LkhPIDmu, LkhPIDpi, LkhPIDK, LkhPIDp"
         access="PUBLIC"
        />
        <location
@@ -138,7 +138,7 @@
         argList="int pid"
         type="double"
        />
-       <method
+      <method
         name="bestPID"
         const="TRUE"
         desc="PDG code of most likely particleID"
@@ -181,6 +181,24 @@
         desc="TrStateP closest to IP"
         type="TrStateP*"
        />
+       <method
+        name="firstMeasured"
+        desc="TrStateP of first measured hit"
+        const="TRUE"
+        type="const TrStateP*"
+       />
+        <method
+        name="firstMeasured"
+        desc="TrStateP of first measured hit"
+        type="TrStateP*"
+       />
+        <method
+        name="minimalStates"
+        desc="Minimal Number of States on Track"
+        type="const int"
+        const="TRUE"
+        access="PRIVATE"
+       />
        <!--method
         name="momentum"
         desc="Measured three momentum components"
@@ -195,7 +213,7 @@
        /-->
        <!--method
         name="trStateAtFirstPoint"
-        desc="Track state at measured point closedt to IP"
+        desc="Track state at measured point closest to IP"
         type="TrState"
         const="TRUE"
        /-->

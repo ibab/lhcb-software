@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.44 2004-02-09 08:27:33 cattanem Exp $
+! $Id: release.notes,v 1.45 2004-03-03 17:50:48 pkoppenb Exp $
 ! Package     : PhysEvent 
-! Responsible : Gloria Corti
+! Responsible : P. Koppenburg
+
+!======================== PhysEvent v8r2 2003-03-03 ========================
+! 2004-03-03 - P. Koppenburg
+ - src/ProtoParticle.xml:
+   . Add PhotonID to detectorPID enum for later use by Calorimeter group.
+   . Add firstMeasured method, for Ks reconstruction usage.
 
 !======================== PhysEvent v8r1 2003-02-09 ========================
 ! 2004-02-06 - Olivier Callot

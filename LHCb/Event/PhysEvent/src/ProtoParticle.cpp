@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.7 2003-06-02 14:52:33 gcorti Exp $
+// $Id: ProtoParticle.cpp,v 1.8 2004-03-03 17:50:48 pkoppenb Exp $
 // Include files 
 
 // STD and STL
@@ -167,7 +167,8 @@ TrStateP* ProtoParticle::trStateP() {
   for ( SmartRefVector<TrState>::iterator it = states.begin() ;
         states.end() != it; it++ ) {
     TrState* temp = *it;
-    if ( firstZ > temp->z() )  {
+    
+     if ( firstZ > temp->z() )  {
       firstZ = temp->z();
       trackState = dynamic_cast<TrStateP*>(temp);
     }
@@ -189,14 +190,72 @@ const TrStateP* ProtoParticle::trStateP() const {
   for ( SmartRefVector<TrState>::const_iterator it = states.begin() ;
         states.end() != it; it++ ) {
     const TrState* temp = *it;
+    
     if ( firstZ > temp->z() )  {
       firstZ = temp->z();
       trackState = dynamic_cast<const TrStateP*>(temp);
     }
   }
   return trackState;
+}
+//=============================================================================
+// First Measured Point
+//=============================================================================
+const int ProtoParticle::minimalStates() const {
+  // State 0 is the extrapolation to beam axis if available, else it is
+  // the first measured point. This function gives the minimal number of
+  // states per track.
 
+  // forward and match have 5 (1%) or 6 (99%).
+  if (( track()->forward() ) || (track()->match() ) || 
+  // upstream have always 5 states (no extrapolation)
+      ( track()->upstream() ) ){
+    return 5 ;
+  // veloTT have 3 (5%) or 4 (95%).
+  } else if ( track()->veloTT() ){ 
+    return 3 ;
+  }
+  return -1;
 
+}
+//=============================================================================
+// Return TrStateP at first measured point
+//=============================================================================
+TrStateP* ProtoParticle::firstMeasured() {
+
+  TrStateP* trackState = NULL;
+  if( !track() ) return trackState;
+  if( track()->velo() ) return trackState;
+  
+  SmartRefVector<TrState>& states = track()->states();
+  const int MS =  minimalStates();
+  // if the number of states is minimal, the first is also the first measured.
+  // if there is one more, the first state is the extrapolation to the
+  // beam axis -> take the next one.
+  const int FirstState = states.size() - MS;
+  
+  TrState* temp = *(states.begin()+FirstState);
+  trackState = dynamic_cast<TrStateP*>(temp);
+  
+  return trackState;
+}
+//=============================================================================
+// Return TrStateP at first measured point
+//=============================================================================
+const TrStateP* ProtoParticle::firstMeasured() const {
+
+  const TrStateP* trackState = NULL;
+  if( !track() ) return trackState;
+  if( track()->velo() ) return trackState;
+  
+  const SmartRefVector<TrState>& states = track()->states();
+  const int MS =  minimalStates();
+  const int FirstState = states.size() - MS;
+  
+  const TrState* temp = *(states.begin()+FirstState);
+  trackState = dynamic_cast<const TrStateP*>(temp);
+  
+  return trackState;
 }
 
 //=============================================================================
@@ -206,7 +265,7 @@ double ProtoParticle::charge() const {
  
   double tkcharge = 0.0;
   
-  const TrStateP* tkstate = trStateP();
+  const TrStateP* tkstate = trStateP();  
   if( !tkstate ) return tkcharge;
   tkcharge = tkstate->qDivP() > 0.0 ? 1.0 : -1.0;
   return tkcharge;
