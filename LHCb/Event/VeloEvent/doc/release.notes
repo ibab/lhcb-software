@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.25 2003-12-18 15:33:09 cattanem Exp $
+! $Id: release.notes,v 1.26 2004-02-03 17:58:03 mtobin Exp $
 package Event/VeloEvent
 package manager: C.Parkes
+
+! 2004-02-03 - Mark Tobin
+ - Modified VeloEvent.xml to cope with modified VeloChannelID.
 
 !======================= VeloEvent v13r0 2003-12-16 =======================
 ! 2003-12-16 - Marco Cattaneo
