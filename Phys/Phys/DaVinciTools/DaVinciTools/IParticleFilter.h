@@ -1,4 +1,4 @@
-// $Id: IParticleFilter.h,v 1.1 2002-03-27 20:27:45 gcorti Exp $
+// $Id: IParticleFilter.h,v 1.2 2002-05-15 23:06:54 gcorti Exp $
 #ifndef DAVINCITOOLS_IPARTICLEFILTER_H 
 #define DAVINCITOOLS_IPARTICLEFILTER_H 1
 
@@ -9,11 +9,12 @@
 // from Event
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IParticleFilter\
-                           ("IParticleFilter", 1 , 0); 
+static const InterfaceID IID_IParticleFilter("IParticleFilter", 1 , 0); 
 
-/** @class IParticleFilter IParticleFilter.h 
- *
+/** @class IParticleFilter IParticleFilter.h DaVinciTools/IParticleFilter.h
+ *  Interface Class for ParticleFilter. 
+ *  Given a vector of Particles, provides a sub-vector of Particles
+ *  satisfying a set of FilterCriteriums
  *  @author Paul Colrain
  *  @date   14/03/2002
  */

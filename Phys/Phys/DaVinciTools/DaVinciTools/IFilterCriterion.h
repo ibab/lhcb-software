@@ -1,4 +1,4 @@
-// $Id: IFilterCriterion.h,v 1.1 2002-03-27 20:27:45 gcorti Exp $
+// $Id: IFilterCriterion.h,v 1.2 2002-05-15 23:06:37 gcorti Exp $
 #ifndef DAVINCITOOLS_IFILTERCRITERION_H 
 #define DAVINCITOOLS_IFILTERCRITERION_H 1
 
@@ -9,11 +9,11 @@
 // from Event
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IFilterCriterion\
-                           ("IFilterCriterion", 1 , 0); 
+static const InterfaceID IID_IFilterCriterion("IFilterCriterion", 1 , 0); 
 
-/** @class IFilterCriterion IFilterCriterion.h 
- *
+/** @class IFilterCriterion IFilterCriterion.h DaVinciTools/IFilterCriterion.h 
+ *  Interface Class for FilterCriterion.
+ *  Given a Particle, returns a yes/no decision.
  *  @author Paul Colrain
  *  @date   14/03/2002
  */
