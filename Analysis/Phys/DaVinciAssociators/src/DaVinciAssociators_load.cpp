@@ -1,4 +1,4 @@
-// $Id: DaVinciAssociators_load.cpp,v 1.7 2002-10-10 18:42:11 gcorti Exp $
+// $Id: DaVinciAssociators_load.cpp,v 1.8 2003-01-07 09:29:29 ranjard Exp $
 // Include files 
 
 
@@ -18,16 +18,9 @@ DECLARE_TOOL_FACTORY( Particle2MCWeightedAsct);
 DECLARE_TOOL_FACTORY( Particle2MCAsct);
 DECLARE_TOOL_FACTORY( ProtoParticle2MCAsct);
 
-// Declare factory for the relations table
-#ifndef DECLARE_OBJECT_FACTORY
-#define DECLARE_OBJECT_FACTORY(x) \
-static const DataObjectFactory<x> s_##x##Factory; \
-const IFactory& x##Factory = s_##x##Factory;
-#endif
-
-DECLARE_OBJECT_FACTORY( Particle2MCWeightedTable);
-DECLARE_OBJECT_FACTORY( Particle2MCTable);
-DECLARE_OBJECT_FACTORY( ProtoParticle2MCTable);
+DECLARE_DATAOBJECT_FACTORY( Particle2MCWeightedTable);
+DECLARE_DATAOBJECT_FACTORY( Particle2MCTable);
+DECLARE_DATAOBJECT_FACTORY( ProtoParticle2MCTable);
 
 
 // Declare  OBJECT / CONVERTER / ALGORITHM / TOOL using the macros DECLARE_xxx
@@ -44,9 +37,9 @@ DECLARE_FACTORY_ENTRIES( PhysAssociators ) {
   DECLARE_TOOL( Particle2MCAsct );
   DECLARE_TOOL( ProtoParticle2MCAsct );
  
-  DECLARE_OBJECT( Particle2MCWeightedTable );
-  DECLARE_OBJECT( Particle2MCTable );
-  DECLARE_OBJECT( ProtoParticle2MCTable );
+  DECLARE_DATAOBJECT( Particle2MCWeightedTable );
+  DECLARE_DATAOBJECT( Particle2MCTable );
+  DECLARE_DATAOBJECT( ProtoParticle2MCTable );
  
   DECLARE_ALGORITHM( Particle2MCWithChi2 );
   DECLARE_ALGORITHM( Particle2MCChi2 );
