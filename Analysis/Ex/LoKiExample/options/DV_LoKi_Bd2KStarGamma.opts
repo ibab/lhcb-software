@@ -1,8 +1,11 @@
-// $Id: DV_LoKi_Bd2KStarGamma.opts,v 1.4 2004-08-05 09:54:11 ibelyaev Exp $
+// $Id: DV_LoKi_Bd2KStarGamma.opts,v 1.5 2004-08-11 12:12:20 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/08/05 09:54:11  ibelyaev
+//  version updated for LoKi v3r* and DC04 data
+//
 // ============================================================================
 // include files 
 // ============================================================================
@@ -32,9 +35,9 @@ ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi" } ;
 
 // top level algorithms 
 ApplicationMgr.TopAlg +=  {
-  "LoKiPreLoad/Photons"       , // create and put into TES neutral particles  
-  "LoKiPreLoad/Charged"       , // create and put into TES charged particles
-  "LoKi_Bd2KStarGamma/KStarGamma"   // execute the algorithm itsels  
+  "LoKiPreLoad/Photons"            , // create and put into TES neutral particles  
+  "LoKiPreLoad/Charged"            , // create and put into TES charged particles
+  "LoKi_Bd2KStarGamma/KStarGamma"    // execute the algorithm itsels  
 };
 
 // configuration of algorithm 'Charged' 
@@ -43,14 +46,14 @@ Charged.PhysDesktop.ParticleMakerType =  "CombinedParticleMaker";
 // configuration of algorithm 'Neutrals' 
 Photons.PhysDesktop.ParticleMakerType   =  "PhotonParticleMaker";
 Photons.PhysDesktop.PhotonParticleMaker.UseAllPhotons = true ;
-Photons.OutputLocation                  = "Event/Phys/Photons" ;
+Photons.OutputLocation                  = "/Event/Phys/Photons" ;
 
 // configuration of algorithm 'KStarGamma' 
 KStarGamma.PhysDesktop.InputLocations  = {"/Event/Phys/Charged" ,
                                           "/Event/Phys/Photons" } ;
 KStarGamma.OutputLocation  = "/Event/Phys/Bd2KStarGamma" ;
 KStarGamma.NTupleLUN       = "TUPLES"  ; // logical file unit 
-KstarGamma.DecayDescriptor = " [B0 -> ( K*(892)0 -> K+ pi- ) gamma]cc " ;
+KStarGamma.DecayDescriptor = " [B0 -> ( K*(892)0 -> K+ pi- ) gamma]cc " ;
 
 // N-Tuples
 ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
@@ -81,6 +84,9 @@ PoolDbCacheSvc.Catalog =
 
 // The number of events to process 
 ApplicationMgr.EvtMax  = 500 ;
+
+// ApplicationMgr.HistogramPersistency = "ROOT";
+ApplicationMgr.HistogramPersistency = "HBOOK";
 
 // ============================================================================
 // The END 

@@ -4,7 +4,15 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
-! 2004-04-09 - Ivan Belyaev
+! 2004-08-11 - Vanya BELYAEV
+
+ - options/DV_LoKi_Bd2KStarGamma.opts
+   fix a typo (problem has been originally reported by Andreas Wenger)
+
+ - cmt/requiremens 
+   increment the version to v3r1 
+
+! 2004-04-09 - Vanya Belyaev
  - 3 new exampels are added 
 
   src/LoKi_MCEvent.cpp 

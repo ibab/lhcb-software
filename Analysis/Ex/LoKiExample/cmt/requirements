@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.10 2004-08-05 09:54:04 ibelyaev Exp $ 
+# $Id: requirements,v 1.11 2004-08-11 12:12:19 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 
 package         LoKiExample
-version         v3r0
+version         v3r1
 
 # ============= structure =====================================================
 branches        cmt doc src options 
@@ -43,6 +43,8 @@ alias Bd2KStarGamma_exe    "     ${DAVINCIEXE} ${LOKIEXBD2KSTARGAMMA} " \
 alias EvtTag_exe           "     ${DAVINCIEXE} ${LOKIEXEVTTAGS}       " \
       WIN32                " run ${DAVINCIEXE} ${LOKIEXEVTTAGS}       " 
 
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
 # =============================================================================
 # The END 
 # =============================================================================
