@@ -4,6 +4,12 @@
 ! Purpose     : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2002-12-13 - Ivan Belyaev
+ - src/Components/GiGaFlushAlgorithm.cpp   remove extra call of "addRef"
+ src/Components/GiGaPhysListModular.cpp    return StatusCode::FAILURE for
+                                           notexistent Physics Constructors
+ src/Components/GiGaStream.cpp             clear the list of preloaded objects
+
 !============================ GaussTools v5r0 2002-12-11 =====================
 	
 ! 2002-12-11 - Witek Pokorski

@@ -89,7 +89,8 @@ StatusCode GiGaPhysListModular::initialize()
           log << MSG::INFO << "Registering physics list: " << (*i) << endreq;
           StatusCode scc= toolSvc->retrieveTool( *i , theconstr , this );
           if(!scc) {
-            log << MSG::WARNING << "Could not find: " << (*i) << endreq;
+            return Error("Physics constructor '"+(*i)+"i is not found!",scc);
+            // log << MSG::WARNING << "Could not find: " << (*i) << endreq;
           }
           else
             {
