@@ -107,7 +107,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   }
 
  
-  title="Number of Rich1 Hits from Aerogel from primary particle per event ";
+  title="Number of Rich1 Hits from Aerogel from primary particlegun per event ";
 
   m_hNumHitAgelPrim= CurHistoSvc->book(m_RichG4HistoPathSet2+"127",
                               title,100,0.0,50.0);
@@ -116,7 +116,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of saturated Rich1 Hits in Aerogel per track ";
+  title="Number of  saturated(beta gt 0.999)  Rich1 Hits in Aerogel per track ";
 
   m_hNumHitAgelSat= CurHistoSvc->book(m_RichG4HistoPathSet2+"129",
                               title,100,0.0,50.0);
@@ -136,7 +136,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Rich1 Hits in C4F10 from primary particle per event";
+  title="Number of Rich1 Hits in C4F10 from primary particlegun per event";
 
 
   m_hNumHitC4F10Prim= CurHistoSvc->book(m_RichG4HistoPathSet2+"157",
@@ -146,7 +146,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Rich1 saturated Hits in C4F10 per track";
+  title="Number of Rich1 saturated (beta gt 0.999) Hits in C4F10 per track";
 
 
   m_hNumHitC4F10Sat= CurHistoSvc->book(m_RichG4HistoPathSet2+"159",
@@ -169,7 +169,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Rich2 Hits in CF4 from primary particle per event";
+  title="Number of Rich2 Hits in CF4 from primary particlegun per event";
 
 
   m_hNumHitCF4Prim= CurHistoSvc->book(m_RichG4HistoPathSet2+"177",
@@ -179,7 +179,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Rich2 saturated Hits in CF4 per track";
+  title="Number of Rich2 saturated (beta gt 0.999 ) Hits in CF4 per track";
 
 
   m_hNumHitCF4Sat= CurHistoSvc->book(m_RichG4HistoPathSet2+"179",
@@ -189,7 +189,36 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
+ title="Cherenkov Theta Angle at Photon Production in Aerogel vs Track Momentum";
+
+
+  m_hCkvProdAgelRich1= 
+         CurHistoSvc->book(m_RichG4HistoPathSet2+"600",title, 100,0.0,30000.0,60,0.1,0.40);
+  if(! m_hCkvProdAgelRich1) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+  title="Cherenkov Theta Angle at Photon Production in C4F10 vs Track Momemtum ";
+
+
+  m_hCkvProdC4F10Rich1= CurHistoSvc->book(m_RichG4HistoPathSet2+"610",title,
+                                                   100,0.0,100000.0,60,0.03,0.07 );
+  if(! m_hCkvProdC4F10Rich1) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
    
+
+  title="Cherenkov Theta Angle at Photon Production in CF4 vs Track Momemtum ";
+
+
+  m_hCkvProdCF4Rich2= CurHistoSvc->book(m_RichG4HistoPathSet2+"620",
+             title,100,0.0,100000.0,60,0.0,0.05 );
+  if(! m_hCkvProdCF4Rich2) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
 
 }
 

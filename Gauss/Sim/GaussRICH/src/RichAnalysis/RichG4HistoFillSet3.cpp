@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet3.cpp,v 1.2 2004-02-10 14:24:11 jonesc Exp $
+// $Id: RichG4HistoFillSet3.cpp,v 1.3 2005-04-06 12:03:12 seaso Exp $
 // Include files
 
 
@@ -145,23 +145,24 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
     (aRichCounter->NumPhotAgelRich1SiDet())*1.0;
 
 
-  //    cout<<" NumPhot at Prod in C4F10  ="<< aNumPhotProdRich1Gas <<endl;
+      std::cout<<" NumPhot at Prod in C4F10  ="<< aNumPhotProdRich1Gas 
+               <<std::endl;
 
-  //    cout<<"from C4f10 NumPhot at Prod Mirror1 Mirror2 GasQW HpdQW "
-  //    <<"  BefQE AftQE elnSiDet "
-  //    <<aNumPhotProdRich1Gas<<"   " <<aNumPhotGasOnRich1Mirror1
-  //    <<"   "<<aNumPhotGasOnRich1Mirror2<<"   "
-  //    <<aNumPhotGasOnGasQW<<"    "<< aNumPhotGasOnHpdQW<<"   "
-  //    <<aNumPhotGasBeforeQE <<"   "<< aNumPhotGasAfterQE
-  //    <<"  "<< aNumPeGasSiDet <<endl;
+      std::cout<<"from C4f10 NumPhot at Prod Mirror1 Mirror2 GasQW HpdQW "
+      <<"  BefQE AftQE elnSiDet "
+      <<aNumPhotProdRich1Gas<<"   " <<aNumPhotGasOnRich1Mirror1
+      <<"   "<<aNumPhotGasOnRich1Mirror2<<"   "
+      <<aNumPhotGasOnGasQW<<"    "<< aNumPhotGasOnHpdQW<<"   "
+      <<aNumPhotGasBeforeQE <<"   "<< aNumPhotGasAfterQE
+      <<"  "<< aNumPeGasSiDet <<std::endl;
 
-  //  cout<<"from Aerogel NumPhot at Prod Mirror1 Mirror2 "
-  //  <<"  GasQW HpdQW BefQE AftQE elnSiDet "
-  //    <<aNumPhotProdRich1Agel<<"   " <<aNumPhotAgelOnRich1Mirror1
-  //    <<"   "<<aNumPhotAgelOnRich1Mirror2<<"   "
-  //    <<aNumPhotAgelOnGasQW<<"    "<< aNumPhotAgelOnHpdQW<<"   "
-  //    <<aNumPhotAgelBeforeQE <<"   "<< aNumPhotAgelAfterQE
-  //    <<"  "<< aNumPeAgelSiDet <<endl;
+    std::cout<<"from Aerogel NumPhot at Prod Mirror1 Mirror2 "
+    <<"  GasQW HpdQW BefQE AftQE elnSiDet "
+      <<aNumPhotProdRich1Agel<<"   " <<aNumPhotAgelOnRich1Mirror1
+      <<"   "<<aNumPhotAgelOnRich1Mirror2<<"   "
+      <<aNumPhotAgelOnGasQW<<"    "<< aNumPhotAgelOnHpdQW<<"   "
+      <<aNumPhotAgelBeforeQE <<"   "<< aNumPhotAgelAfterQE
+      <<"  "<< aNumPeAgelSiDet <<std::endl;
 
 
 
@@ -170,7 +171,7 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
   if(hNumPhotGasMirror1Rich1)
     hNumPhotGasMirror1Rich1->fill( aNumPhotGasOnRich1Mirror1,1.0);
   if( hNumPhotGasMirror2Rich1)
-    hNumPhotGasMirror1Rich1->fill( aNumPhotGasOnRich1Mirror2,1.0);
+    hNumPhotGasMirror2Rich1->fill( aNumPhotGasOnRich1Mirror2,1.0);
   if(  hNumPhotGasQWRich1)
     hNumPhotGasQWRich1->fill(  aNumPhotGasOnGasQW,1.0);
   if( hNumPhotGasHpdQWRich1)
@@ -178,7 +179,7 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
   if( hNumPhotGasBeforeQERich1)
     hNumPhotGasBeforeQERich1->fill( aNumPhotGasBeforeQE,1.0);
   if( hNumPhotGasAfterQERich1)
-    hNumPhotGasBeforeQERich1->fill(aNumPhotGasAfterQE);
+    hNumPhotGasAfterQERich1->fill(aNumPhotGasAfterQE);
 
   if( hNumPeGasSiDetRich1 )
     hNumPeGasSiDetRich1 ->fill(aNumPeGasSiDet);
@@ -193,7 +194,7 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
   if(hNumPhotAgelMirror1Rich1)
     hNumPhotAgelMirror1Rich1->fill( aNumPhotAgelOnRich1Mirror1,1.0);
   if( hNumPhotAgelMirror2Rich1)
-    hNumPhotAgelMirror1Rich1->fill( aNumPhotAgelOnRich1Mirror2,1.0);
+    hNumPhotAgelMirror2Rich1->fill( aNumPhotAgelOnRich1Mirror2,1.0);
   if(  hNumPhotAgelQWRich1)
     hNumPhotAgelQWRich1->fill(  aNumPhotAgelOnGasQW,1.0);
   if( hNumPhotAgelHpdQWRich1)
@@ -201,7 +202,7 @@ void RichG4HistoFillSet3:: FillRichG4HistoSet3( const G4Event* anEvent,
   if( hNumPhotAgelBeforeQERich1)
     hNumPhotAgelBeforeQERich1->fill( aNumPhotAgelBeforeQE,1.0);
   if( hNumPhotAgelAfterQERich1)
-    hNumPhotAgelBeforeQERich1->fill(aNumPhotAgelAfterQE);
+    hNumPhotAgelAfterQERich1->fill(aNumPhotAgelAfterQE);
 
   if( hNumPeAgelSiDetRich1 )
     hNumPeAgelSiDetRich1 ->fill(aNumPeAgelSiDet);

@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.4 2005-02-21 19:01:31 gcorti Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.5 2005-04-06 12:03:12 seaso Exp $
 // Include files
 
 
@@ -57,10 +57,13 @@ RichG4EventHitCount::RichG4EventHitCount(  ) {
   //  m_MomRich1AgelMin = 3.0*GeV;
   // m_MomRich1GasMin = 3.0*GeV;
 
-  m_MomRich1AgelMin = 10.0*GeV;
-  m_MomRich1GasMin = 10.0*GeV;
+   m_MomRich1AgelMin = 10.0*GeV;
+   m_MomRich1GasMin = 10.0*GeV;
+   m_MomRich2GasMin = 15.0*GeV;
+  //m_MomRich1AgelMin = 20.0*GeV;
+  //m_MomRich1GasMin = 20.0*GeV;
   m_MinTkPtRich1FiducialRegion= 1;
-  m_MomRich2GasMin = 10.0*GeV;
+  // m_MomRich2GasMin = 30.0*GeV;
   // m_MomRich2GasMin = 20.0*GeV;
   //  m_MomRich2GasMin = 20.0*GeV;
 

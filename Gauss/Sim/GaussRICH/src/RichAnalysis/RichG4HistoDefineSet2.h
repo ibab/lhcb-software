@@ -45,8 +45,11 @@ private:
   IHistogram1D*         m_hNumTotHitAgelRich1Large;
   IHistogram1D*         m_hNumTotHitGasRich1Large;
   IHistogram1D*         m_hNumTotHitRich2Large;
+ 
+  IHistogram2D*         m_hCkvProdAgelRich1;
+  IHistogram2D*         m_hCkvProdC4F10Rich1;
+  IHistogram2D*         m_hCkvProdCF4Rich2;
   
-
   std::string m_RichG4HistoPathSet2; ///< Histo path
   ISvcLocator* m_svcLocSet2;
 

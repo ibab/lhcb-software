@@ -1,4 +1,4 @@
-// $Id: RichG4HistoFillSet2.cpp,v 1.4 2005-02-21 19:01:31 gcorti Exp $
+// $Id: RichG4HistoFillSet2.cpp,v 1.5 2005-04-06 12:03:12 seaso Exp $
 // Include files
 
 // local
@@ -87,6 +87,15 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
                                             "RICHG4HISTOSET2/511");
 
 
+  SmartDataPtr<IHistogram2D>hCkvProdAgelRich1(CurrentHistoSvc,
+                                              "RICHG4HISTOSET2/600");
+  SmartDataPtr<IHistogram2D>hCkvProdC4F10Rich1(CurrentHistoSvc,
+                                               "RICHG4HISTOSET2/610");
+  SmartDataPtr<IHistogram2D>hCkvProdCF4Rich2(CurrentHistoSvc,
+                                             "RICHG4HISTOSET2/620");
+  
+
+
   G4HCofThisEvent * HCE;
 
   G4int NumtotAgel=0;
@@ -136,6 +145,9 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
           //    <<"    "<<ChtkId
           //    <<"  ChtrackMom = "<<aChTrackTotMom<<  endl;
 
+          
+
+
           if( aRichDetNum == 0 ) {
 
             NumtotRich1++;
@@ -156,6 +168,9 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
               NumAgelPrim++;
             }
 
+            if(hCkvProdAgelRich1) hCkvProdAgelRich1->fill(aChTrackTotMom,CkvTheta*1.0);
+            
+
 
           }else if( aRadiatorNum == 1 ) {
 
@@ -165,16 +180,15 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
               NumC4F10Prim++;
 
             }
+            if(hCkvProdC4F10Rich1)hCkvProdC4F10Rich1->fill(aChTrackTotMom,CkvTheta*1.0);
 
           }else if (aRadiatorNum == 2 ) {
             Numtotcf4++;
 
             if(  ChtkId <= 1 ) {
               NumCf4Prim++;
-
-
             }
-
+            if(hCkvProdCF4Rich2)hCkvProdCF4Rich2->fill(aChTrackTotMom,CkvTheta*1.0);
 
           }else {
 
