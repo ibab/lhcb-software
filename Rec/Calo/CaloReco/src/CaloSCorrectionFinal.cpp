@@ -234,6 +234,8 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
 
   MsgStream logmsg(msgSvc(), name());
   logmsg << MSG::VERBOSE << "process() has been called" << endreq;
+  int i,j,k,l;
+
   if (hypo==0) {return StatusCode::FAILURE;}
   if (hypo->hypothesis()!=CaloHypotheses::Photon) {return StatusCode::FAILURE;}
   SmartRefVector<CaloCluster> clusters = hypo->clusters();
@@ -242,7 +244,8 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
          << oldenergy << endreq;
   if (clusters.size()!=1) {return StatusCode::FAILURE;}
   CaloCluster *cluster;
-  for (SmartRef<CaloCluster> *clusterloop = clusters.begin();
+  SmartRef<CaloCluster> *clusterloop;
+  for (clusterloop = clusters.begin();
        clusterloop!=clusters.end();
        ++clusterloop) {
     if (clusterloop!=0) {cluster = *(clusterloop);}
@@ -251,15 +254,16 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
   double maxenergy=0.;
   SmartRef<CaloDigit> seed;
   logmsg << MSG::VERBOSE << "looping on digits:" << endreq;
-  for (CaloClusterEntry* i=sac.begin();i!=sac.end();++i) {
-    if (i==0) {continue;}
-    SmartRef<CaloDigit> j=i->digit();
-    if (j==0) {continue;}
-    if (j->e()*i->fraction()>maxenergy) {
-      maxenergy=j->e()*i->fraction();
-      seed=j;
+  CaloClusterEntry* cce;
+  for (cce=sac.begin();cce!=sac.end();++cce) {
+    if (cce==0) {continue;}
+    SmartRef<CaloDigit> cd=cce->digit();
+    if (cd==0) {continue;}
+    if (cd->e()*cce->fraction()>maxenergy) {
+      maxenergy=cd->e()*cce->fraction();
+      seed=cd;
     }
-    logmsg << MSG::VERBOSE << "e()= " << j->e()*i->fraction() << endreq;
+    logmsg << MSG::VERBOSE << "e()= " << cd->e()*cce->fraction() << endreq;
   }
   if (seed==0) {return StatusCode::FAILURE;}
   if (maxenergy==0) {return StatusCode::FAILURE;}
@@ -285,99 +289,98 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
   }
   bool border=false;
   int numberofneighbor = 0;
-  for (const CaloCellID *cellloop = 
-         det()->neighborCells(seed->cellID()).begin();
-       cellloop!=det()->neighborCells(seed->cellID()).end();
-       ++cellloop) {
-    numberofneighbor++;
-    if (areaseed!=cellloop->area()) {border=true;}
+  {
+    for (const CaloCellID *cellloop = 
+           det()->neighborCells(seed->cellID()).begin();
+         cellloop!=det()->neighborCells(seed->cellID()).end();
+         ++cellloop) {
+      numberofneighbor++;
+      if (areaseed!=cellloop->area()) {border=true;}
+    }
   }
   if (numberofneighbor!=8) {border=true;}
 
+  // 'diagonal' covariance allocation
   double E[3][3];
   double cov_ii[3][3];
   double gain[3][3];
-  {
-    for (int i=0;i<3;i++) {
-      for (int j=0;j<3;j++) {
-        E[i][j]=0.0;
-        cov_ii[i][j]=0.0;
-        gain[i][j]=0.0;
-      }
+  for (i=0;i<3;i++) {
+    for (j=0;j<3;j++) {
+      E[i][j]=0.0;
+      cov_ii[i][j]=0.0;
+      gain[i][j]=0.0;
     }
   }
-  { 
-    for (CaloClusterEntry* i=sac.begin();i!=sac.end();++i) {
-      if (i==0) {continue;}
-      SmartRef<CaloDigit> j=i->digit();
-      if (j==0) {continue;}
-      int row=j->cellID().row()-rowseed+1;
-      int col=j->cellID().col()-colseed+1;
+  for (cce=sac.begin();cce!=sac.end();++cce) {
+    if (cce==0) {continue;}
+      SmartRef<CaloDigit> cd=cce->digit();
+      if (cd==0) {continue;}
+      int row=cd->cellID().row()-rowseed+1;
+      int col=cd->cellID().col()-colseed+1;
       if ((row>=0)&&(row<=2)&&(col>=0)&&(col<=2)) {
-        E[col][row]=j->e()*i->fraction();        
+        E[col][row]=cd->e()*cce->fraction();        
         // intrinsic resolution 
-        cov_ii[col][row] = fabs(j->e()*i->fraction())*m_a2GeV; 
+        cov_ii[col][row] = fabs(cd->e()*cce->fraction())*m_a2GeV; 
         if( 0 != m_b2 ) {
-          cov_ii[col][row]+=j->e()*i->fraction()*j->e()*i->fraction()*m_b2;
+          cov_ii[col][row]+=
+            cd->e()*cce->fraction()*cd->e()*cce->fraction()*m_b2;
         }  
         //  gain fluctuation
         if( 0 != m_s2gain) {
-          cov_ii[col][row]+=j->e()*i->fraction()*j->e()*i->fraction()*m_s2gain;
+          cov_ii[col][row]+=
+            cd->e()*cce->fraction()*cd->e()*cce->fraction()*m_s2gain;
         }
         //  noise (both coherent and incoherent) 
         if( 0 != (m_s2coherent + m_s2incoherent) ) { 
-          gain[col][row]   = det()->cellGain(j->cellID()); 
+          gain[col][row]   = det()->cellGain(cd->cellID()); 
           cov_ii[col][row] += (m_s2coherent + m_s2incoherent) 
             * gain[col][row] * gain[col][row] ; 
         }
       }
-    }
   }
+  
+  // non diagonal covariance allocation
   double cov_ij[3][3][3][3];
-  { 
-    for (CaloClusterEntry* i=sac.begin();i!=sac.end();++i) {
-      if (i==0) {continue;}
-      SmartRef<CaloDigit> j=i->digit();
-      if (j==0) {continue;}
-      int row=j->cellID().row()-rowseed+1;
-      int col=j->cellID().col()-colseed+1;
-      if ((row>=0)&&(row<=2)&&(col>=0)&&(col<=2)) {
-        E[col][row]=j->e()*i->fraction();
-        if( 0 == m_s2coherent ) { continue ; } 
-        {
-          for (CaloClusterEntry* k=sac.begin();k!=sac.end();++k) {
-            if (k==0) {continue;}
-            SmartRef<CaloDigit> l=k->digit();
-            if (l==0) {continue;}
-            int row_l=l->cellID().row()-rowseed+1;
-            int col_l=l->cellID().col()-colseed+1;
-            if ((row_l>=0)&&(row_l<=2)&&(col_l>=0)&&(col_l<=2)) {
-              if ((row_l!=row)&&(col_l!=col)) {
-                cov_ij[col][row][col_l][row_l] = m_s2coherent 
-                  * gain[col][row] * gain[col_l][row_l] ;
-              }
-            }
+  for (cce=sac.begin();cce!=sac.end();++cce) {
+    if (cce==0) {continue;}
+    SmartRef<CaloDigit> cd=cce->digit();
+    if (cd==0) {continue;}
+    int row=cd->cellID().row()-rowseed+1;
+    int col=cd->cellID().col()-colseed+1;
+    if ((row>=0)&&(row<=2)&&(col>=0)&&(col<=2)) {
+      E[col][row]=cd->e()*cce->fraction();
+      if( 0 == m_s2coherent ) { continue ; } 
+      CaloClusterEntry* cce2;
+      for (cce2=sac.begin();cce2!=sac.end();++cce2) {
+        if (cce2==0) {continue;}
+        SmartRef<CaloDigit> cd2=cce2->digit();
+        if (cd2==0) {continue;}
+        int row_l=cd2->cellID().row()-rowseed+1;
+        int col_l=cd2->cellID().col()-colseed+1;
+        if ((row_l>=0)&&(row_l<=2)&&(col_l>=0)&&(col_l<=2)) {
+          if ((row_l!=row)&&(col_l!=col)) {
+            cov_ij[col][row][col_l][row_l] = m_s2coherent 
+              * gain[col][row] * gain[col_l][row_l] ;
           }
         }
       }
     }
   }
 
-  {
-    for (int i=0;i<3;i++) {
-      logmsg << MSG::DEBUG << "|" << E[2][i]
-             << "|" << E[1][i] << "|" << E[0][i] << endreq;
-    }
+  // print matrix
+  for (i=0;i<3;i++) {
+    logmsg << MSG::DEBUG << "|" << E[2][i]
+           << "|" << E[1][i] << "|" << E[0][i] << endreq;
   }
-  double energy=0.;
+  
+  // matrix energy definition and allocation
+  // attention: supress 2 cell on 9!!!
   double Eleft[3][3],Evert[3][3],Eright[3][3];
   double Ebottom[3][3],Ehori[3][3],Etop[3][3];
-  {
-    for (int i=0;i<3;i++) {
-      for (int j=0;j<3;j++) {
-        Eleft[i][j]=Evert[i][j]=Eright[i][j]=0.;
-        Ebottom[i][j]=Ehori[i][j]=Etop[i][j]=0.;
-      }
+  for (i=0;i<3;i++) {
+    for (j=0;j<3;j++) {
+      Eleft[i][j]=Evert[i][j]=Eright[i][j]=0.;
+      Ebottom[i][j]=Ehori[i][j]=Etop[i][j]=0.;
     }
   }
   //Eleft
@@ -413,103 +416,147 @@ StatusCode CaloSCorrectionFinal::operator() ( CaloHypo* hypo ) const {
   if (std::max(E[0][2],std::max(E[1][2],E[2][2]))==E[2][2])
     {Etop[0][2]=Etop[1][2]=1.;}
 
+  // simple calcul (will disappear)
+  double energy=0.;
   double eleft=0.,evert=0.,eright=0.;
   double ebottom=0.,ehori=0.,etop=0.;
-  {
-    for (int i=0;i<3;i++) {
-      for (int j=0;j<3;j++) {
-        energy +=           1.*E[i][j];
-        eleft  +=  Eleft[i][j]*E[i][j];
-        evert  +=  Evert[i][j]*E[i][j];
-        eright += Eright[i][j]*E[i][j];
-        ebottom+=Ebottom[i][j]*E[i][j];
-        ehori  +=  Ehori[i][j]*E[i][j];
-        etop   +=   Etop[i][j]*E[i][j];
-      }
+  for (i=0;i<3;i++) {
+    for (j=0;j<3;j++) {
+      energy +=           1.*E[i][j];
+      eleft  +=  Eleft[i][j]*E[i][j];
+      evert  +=  Evert[i][j]*E[i][j];
+      eright += Eright[i][j]*E[i][j];
+      ebottom+=Ebottom[i][j]*E[i][j];
+      ehori  +=  Ehori[i][j]*E[i][j];
+      etop   +=   Etop[i][j]*E[i][j];
     }
   }
   logmsg << MSG::VERBOSE << "energy: " << energy << endreq;
 
-  double x=0.,y=0.;
-  //double xprime=0.,yprime=0.;
-
+  // little mirroring of coeffs, to avoid plenty of times same code...
+  double coeff0X,coeff1X,coeff2X;
+  double coeff0Y,coeff1Y,coeff2Y;
   if (areaseed==0) {
-    x=m_Coeff_area_0_X[0]*(eright-eleft)
-      /(eright+
-        (m_Coeff_area_0_X[1]+m_Coeff_area_0_X[2]*log(energy/1000.))
-        *evert+eleft);
-    y=m_Coeff_area_0_Y[0]*(etop-ebottom)
-      /(etop+
-        (m_Coeff_area_0_Y[1]+m_Coeff_area_0_Y[2]*log(energy/1000.))
-        *ehori+ebottom);
+    coeff0X=m_Coeff_area_0_X[0];
+    coeff1X=m_Coeff_area_0_X[1];
+    coeff2X=m_Coeff_area_0_X[2];
+    coeff0Y=m_Coeff_area_0_Y[0];
+    coeff1Y=m_Coeff_area_0_Y[1];
+    coeff2Y=m_Coeff_area_0_Y[2];
   } else if (areaseed==1) {
-    x=m_Coeff_area_1_X[0]*(eright-eleft)
-      /(eright+
-        (m_Coeff_area_1_X[1]+m_Coeff_area_1_X[2]*log(energy/1000.))
-        *evert+eleft);
-    y=m_Coeff_area_1_Y[0]*(etop-ebottom)
-      /(etop+
-        (m_Coeff_area_1_Y[1]+m_Coeff_area_1_Y[2]*log(energy/1000.))
-        *ehori+ebottom);
+    coeff0X=m_Coeff_area_1_X[0];
+    coeff1X=m_Coeff_area_1_X[1];
+    coeff2X=m_Coeff_area_1_X[2];
+    coeff0Y=m_Coeff_area_1_Y[0];
+    coeff1Y=m_Coeff_area_1_Y[1];
+    coeff2Y=m_Coeff_area_1_Y[2];
   } else if (areaseed==2) {
-    x=m_Coeff_area_2_X[0]*(eright-eleft)
-      /(eright+
-        (m_Coeff_area_2_X[1]+m_Coeff_area_2_X[2]*log(energy/1000.))
-        *evert+eleft);
-    y=m_Coeff_area_2_Y[0]*(etop-ebottom)
-      /(etop+
-        (m_Coeff_area_2_Y[1]+m_Coeff_area_2_Y[2]*log(energy/1000.))
-        *ehori+ebottom);
+    coeff0X=m_Coeff_area_2_X[0];
+    coeff1X=m_Coeff_area_2_X[1];
+    coeff2X=m_Coeff_area_2_X[2];
+    coeff0Y=m_Coeff_area_2_Y[0];
+    coeff1Y=m_Coeff_area_2_Y[1];
+    coeff2Y=m_Coeff_area_2_Y[2];
   }
   
+  // definition and allocation of 3x3 matrix for num and denom for x and y
+  // !!!!
+  // HERE is the S Correction formula
+  // !!!!
+  double matrix_numerator_X[3][3],matrix_denominator_X[3][3];
+  double matrix_numerator_Y[3][3],matrix_denominator_Y[3][3];
+  for (i=0;i<3;i++) {
+    for (j=0;j<3;j++) {
+      matrix_numerator_X[i][j]=
+        coeff0X*(Eright[i][j]-Eleft[i][j]);
+      matrix_denominator_X[i][j]=
+        Eright[i][j]+
+        (coeff1X+coeff2X*log(energy/1000.))
+        *Evert[i][j]
+        +Eleft[i][j];
+      matrix_numerator_Y[i][j]=
+        coeff0Y*(Eright[i][j]-Eleft[i][j]);
+      matrix_denominator_Y[i][j]=
+        Eright[i][j]+
+        (coeff1Y+coeff2Y*log(energy/1000.))
+        *Evert[i][j]
+        +Eleft[i][j];
+    }
+  }
+
+  // calcul of num and denom for x and y
+  double numerator_X,denominator_X;
+  double numerator_Y,denominator_Y;
+  numerator_X=0.;
+  denominator_X=0.;
+  numerator_Y=0.;
+  denominator_Y=0.;
+  for (i=0;i<3;i++) {
+    for (j=0;j<3;j++) {
+      numerator_X+=matrix_numerator_X[i][j];
+      denominator_X+=matrix_denominator_X[i][j];
+      numerator_Y+=matrix_numerator_Y[i][j];
+      denominator_Y+=matrix_denominator_Y[i][j];
+    }
+  }
+  double x=numerator_X/denominator_X;
+  double y=numerator_Y/denominator_Y;
   x*=sizeseed;
   x+=xseed;
   y*=sizeseed;
   y+=yseed;
-  // X/Y/E: pass data to CaloPosition
-  CaloPosition* position = new CaloPosition();
-  //CaloPosition* position  = hypo->position();
-  logmsg << MSG::VERBOSE << "CaloPosition created..." << endreq;
-  HepVector localposition(3);
-  localposition(CaloPosition::X)=x;
-  localposition(CaloPosition::Y)=y;
-  // keep previous energy correction from ECorr
-  localposition(CaloPosition::E)=oldenergy;
-  position->setParameters(localposition);
+
+  // update cluster patameters  
+  CaloPosition::Parameters& parameters = hypo->position()->parameters();
+  // keep old energy from ECorr
+  parameters( CaloPosition::E ) = energy ;
+  parameters( CaloPosition::X ) = x ;
+  parameters( CaloPosition::Y ) = y ;
   logmsg << MSG::VERBOSE << "X/Y/E updated..." << endreq;
 
-  HepSymMatrix localcovariance(3,1);
-  //HepSymMatrix localcovariance((hypo->position())->covariance());
-  /*
-  localcovariance(CaloPosition::E,CaloPosition::E)=
-    ((hypo->position())->covariance())(CaloPosition::E,CaloPosition::E);
-  localcovariance(CaloPosition::E,CaloPosition::X)=xprime
-    *((hypo->position())->covariance())(CaloPosition::E,CaloPosition::X);
-  localcovariance(CaloPosition::E,CaloPosition::Y)=yprime
-    *((hypo->position())->covariance())(CaloPosition::E,CaloPosition::Y);
-  localcovariance(CaloPosition::X,CaloPosition::X)=xprime*xprime
-    *((hypo->position())->covariance())(CaloPosition::X,CaloPosition::X);
-  localcovariance(CaloPosition::X,CaloPosition::Y)=xprime*yprime
-    *((hypo->position())->covariance())(CaloPosition::Y,CaloPosition::Y);
-  localcovariance(CaloPosition::Y,CaloPosition::Y)=yprime*yprime
-    *((hypo->position())->covariance())(CaloPosition::Y,CaloPosition::Y);
-    */
-  position->setCovariance(localcovariance);  
-  /*
-  //CaloPosition *old = hypo->position();
-  //HepSymMatrix oldcov = ((hypo->position())->covariance());
-  //HepSymMatrix cov = (hypo->position())->covariance();
-  CaloPosition* old = hypo->position();
+  double cov_numerator_X[3][3],cov_denominator_X[3][3];
+  double cov_numerator_Y[3][3],cov_denominator_Y[3][3];
+  for (i=0;i<3;i++) {
+    for (j=0;j<3;j++) {
+      cov_numerator_X[i][j]=0.;
+      cov_denominator_X[i][j]=0.;
+      cov_numerator_Y[i][j]=0.;
+      cov_denominator_Y[i][j]=0.;
+      for (k=0;i<3;i++) {
+        for (l=0;j<3;j++) {
+          cov_numerator_X[i][j]+=
+            matrix_numerator_X[i][j]*cov_ij[i][j][k][l];
+          cov_denominator_X[i][j]+=
+            matrix_denominator_X[i][j]*cov_ij[i][j][k][l];
+          cov_numerator_Y[i][j]+=
+            matrix_numerator_Y[i][j]*cov_ij[i][j][k][l];
+          cov_denominator_Y[i][j]+=
+            matrix_denominator_Y[i][j]*cov_ij[i][j][k][l];
+        }
+      }
+    }
+  }
+  // I need to find correct math formulas...
+  double CovXX=0.;
+  double CovXY=0.;
+  double CovEX=0.;
+  double CovYY=0.;
+  double CovEY=0.;
+  double CovEE=0.;
   
-  //CaloPosition::Covariance oldcov(hypo->position()->covariance());  
-  logmsg << MSG::VERBOSE 
-         << ":" << position->covariance()
-         << ":" << old->covariance()
-         << endreq;
-  */
-  logmsg << MSG::VERBOSE << "Covariance updated..." << endreq;
-  hypo->setPosition(position);  
-  logmsg << MSG::VERBOSE << "CaloHypo updated..." << endreq;
 
+  // update cluster matrix   
+  CaloPosition::Covariance& covariance = hypo->position()->covariance();
+  covariance( CaloPosition::X , CaloPosition::X ) = CovXX ;
+  covariance( CaloPosition::Y , CaloPosition::X ) = CovXY ;
+  covariance( CaloPosition::E , CaloPosition::X ) = CovEX ;
+  covariance( CaloPosition::Y , CaloPosition::Y ) = CovYY ;
+  covariance( CaloPosition::E , CaloPosition::Y ) = CovEY ;
+  covariance( CaloPosition::E , CaloPosition::E ) = CovEE ;
+
+
+
+  logmsg << MSG::VERBOSE << "Covariance updated..." << endreq;
+  logmsg << MSG::VERBOSE << "CaloHypo updated..." << endreq;
   return StatusCode::SUCCESS;
 }
