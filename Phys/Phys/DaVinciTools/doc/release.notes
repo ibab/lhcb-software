@@ -1,7 +1,41 @@
-! $Id: release.notes,v 1.94 2004-06-04 12:31:23 pkoppenb Exp $
+! $Id: release.notes,v 1.95 2004-06-18 11:57:04 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-06-18 - P. Koppenburg for Vanya Belyaev
+  - src/ParticleMakerSeq.cpp
+  - src/ParticleMakerSeq.h
+    . new
+Very simple particle maker which just a sequence of concrete particle
+makers. Being invoked this particle maker just execute all "dependent" 
+particle makers. The dependent particle makers can be either private
+or public. The last case can be used for some "standard" particle makers
+or avoid very long configuration lines, like
+
+LongAlgorithmNameForPreselectionalgorithm.PhysDesktop.ParticleMakerSeq.TheFirstPrivateMaker.OutptuLevel = 2 ;
+
+For "public" makers the configuration can be simple:
+ToolSvc.TheFirstPublicMaker.OutputLevel = 2 ;
+
+LongAlgorithmNameForPreselectionalgorithm.PhysDesktop.ParticleMakerSeq.PrivateMakers
+ = { "CombinedParticleMaker/TheFirstPrivateMaker",
+     "PhotonParticleMaker/TheSecondPrivateMaker",
+     "CnvPhotonParticleMaker/TheThirdPrivateMaker" };
+
+LongAlgorithmNameForPreselectionalgorithm.PhysDesktop.ParticleMakerSeq.PublicMakers
+ = { "CombinedParticleMaker/TheFirstPublicMaker",
+     "NoPIDsParticleMaker/PionMaker" , 
+     "NoPIDsPArticleMaker/MuonMaker" };
+
+The MAIN advantage of this particle maker:
+  - one can remove *SOME* of artificial preload algorithms (both
+    "PreLoadParticles" and "LoKiPreLoad"
+  - few intermediate (long) names for addresses in TES are also not used
+    in this approach.
+
+I guess that in sumamry one can get *SOME* simplification fo job-options
+file. (probably not for all cases) 
+    
 !========================= DaVinciTools v9r5 2004-06-04 ===================
 ! 2004-06-04 - P. Koppenburg
   - src/LagrangeGeomVertexFitter.cpp

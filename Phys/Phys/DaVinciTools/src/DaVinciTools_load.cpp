@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.26 2004-05-11 16:01:25 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.27 2004-06-18 11:57:04 pkoppenb Exp $
 // Include files 
 
 
@@ -61,6 +61,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( CnvPhotonParticleMaker ) ;  
   DECLARE_TOOL( PhotonFromMergedParameters );
   DECLARE_TOOL( PhotonFromMergedParticleMaker );
+  DECLARE_TOOL( ParticleMakerSeq );
 
   DECLARE_TOOL( LifetimeSignificanceCriterion );
   DECLARE_TOOL( Particle2VertexAsct );
