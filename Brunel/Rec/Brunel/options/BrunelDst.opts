@@ -93,6 +93,7 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Tr/StatesL#1"
 , "/Event/Rec/Rich#1"
 , "/Event/Rec/Rich/PIDs#1"
+, "/Event/Rec/Rich/OOPIDs#1"
 , "/Event/Rec/Calo#1"
 , "/Event/Rec/Calo/EcalClusters#1"
 , "/Event/Rec/Calo/EcalSplitClusters#1" 

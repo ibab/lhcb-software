@@ -51,7 +51,7 @@ use CaloDetXmlCnv	v2r1  	Det
 use ITDet         	v1r1  	Det
 use MuonDet       	v4r1  	Det
 use OTDet         	v3r2  	Det
-use RichDet		v3r0	Det
+use RichDet		v3r1	Det
 use VeloDet       	v8r0  	Det
 use Magnet        	v1r1  	Det
 
@@ -60,10 +60,10 @@ use EventSys     v12r9  Event
 
 # SicB event data persistency
 use SicbCnv      v17r3  SICB
-use RiSicbGeom   v2r3   SICB
+use RiSicbGeom   v3r0   SICB
 use CaloSicbCnv  v7r2   SICB
 use MuonSicbCnv  v6r6   SICB
-use RiSicbCnv    v4r6   SICB
+use RiSicbCnv    v5r0   SICB
 use VSicbCnv     v8r0   SICB
 
 # Brunel utilities
@@ -130,8 +130,13 @@ use MuonID      	v3r4	Muon
 use MuonAssociators	v1r0	Muon
 
 # Rich
-use RichKernel          v1r3    Rich
-use RichMonitor         v1r2    Rich
+use RichKernel          v2r0    Rich
+use RichMonitor         v2r0    Rich
+use RichRecAlgs         v1r0    Rich
+use RichRecTools        v1r0    Rich
+use RichDetTools        v1r0    Rich
+use RichRecKernel       v1r0    Rich
+use RichRecEvent        v1r0    Rich
 
 # SICBDST packages
 use Futil        v11r0  SICB

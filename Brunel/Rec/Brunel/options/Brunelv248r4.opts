@@ -3,10 +3,10 @@
 /////    ----- "LHCb light detector for Summer 2002 production -----     /////
 //////////////////////////////////////////////////////////////////////////////
 
-#include "$SICBCNVROOT/options/Brunel.opts"   // Comment to switch off spillover
-#include "$BRUNELOPTS/Brunel.opts"            // Generic options for all jobs
-BrunelMoni.DetectorList = { "Tr","TRIGGER" }; // Comment to add histograms
-#include "$BRUNELOPTS/BrunelDst.opts"         // Comment to switch off DST output
+#include "$SICBCNVROOT/options/Brunel.opts" // Comment to switch off spillover
+#include "$BRUNELOPTS/Brunel.opts"          // Generic options for all jobs
+#include "$BRUNELOPTS/BrunelMoniProd.opts"  // Comment to switch on all histos
+#include "$BRUNELOPTS/BrunelDst.opts"       // Comment to switch off DST output
 
 //---------------------------------------------------------------------------
 // Database specific options

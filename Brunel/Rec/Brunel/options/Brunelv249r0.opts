@@ -3,10 +3,10 @@
 /////    --- "LHCb light detector for winter production, with M1" --     /////
 //////////////////////////////////////////////////////////////////////////////
 
-#include "$SICBCNVROOT/options/Brunel.opts"   // Comment to switch off spillover
-#include "$BRUNELOPTS/Brunel.opts"            // Generic options for all jobs
-BrunelMoni.DetectorList = { "Tr","TRIGGER" }; // Comment to add histograms
-#include "$BRUNELOPTS/BrunelDst.opts"         // Comment to switch off DST output
+#include "$SICBCNVROOT/options/Brunel.opts" // Comment to switch off spillover
+#include "$BRUNELOPTS/Brunel.opts"          // Generic options for all jobs
+#include "$BRUNELOPTS/BrunelMoniProd.opts"  // Comment to switch on all histos
+#include "$BRUNELOPTS/BrunelDst.opts"       // Comment to switch off DST output
 
 //---------------------------------------------------------------------------
 // Database specific options
@@ -33,5 +33,6 @@ SpillOverSelector.Input = {
 //SpillOverSelector.FirstEvent = 6; // Skip corresponding spillover events
 BrunelDstWriter.Output = "DATAFILE='v249r0.dst' TYP='ROOT' OPT='NEW'";
 HistogramPersistencySvc.OutputFile = "v249r0.hbook";  // Monitoring histos
-ApplicationMgr.EvtMax = 10;
+//ApplicationMgr.EvtMax = 10;
+ApplicationMgr.EvtMax = 3;
 //////////////////////////////////////////////////////////////////////////////

@@ -43,9 +43,8 @@ BrunelMoniTrSeq.Members += { "TrAnalyse" };
 
 // Rich monitoring
 ApplicationMgr.DLLs += { "RichMonitor" };
-BrunelMoniRICHSeq.Members += { "RichDigitCnvVerifier" };
-BrunelMoniRICHSeq.Members += { "RichPIDCnvVerifier" };
-BrunelMoniRICHSeq.Members += { "RichPIDMonitor" };
+#include "$RICHMONITOROPTS/BrunelMoni.opts" // Standard Rich monitoring
+#include "$RICHMONITOROPTS/OORecoMoni.opts" // OO Reco Rich monitoring
 
 // Framework monitoring
 EventSelector_0.doHistos = true;

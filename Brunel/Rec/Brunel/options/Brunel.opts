@@ -31,7 +31,7 @@ ApplicationMgr.TopAlg += { "BrunelPhase/BrunelMoni" };
 BrunelDigi.DetectorList  = { "SpillOver" };
 BrunelDigi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
-BrunelReco.DetectorList = {"VELO","OT","IT","L1","Tr","RICH","CALO","MUON","Timing"};
+BrunelReco.DetectorList = {"VELO","OT","IT","L1","Tr","RICH","OORICH","CALO","MUON","Timing"};
 
 //--------------------------------------------------------------
 // Subdetector algorithms
@@ -173,6 +173,10 @@ BrunelRecoRICHSeq.Members += { "TrToRichTrackAlg", "RichTrackToSicbCnv" };
 BrunelRecoRICHSeq.Members += { "BrunelRecoRICH" };
 BrunelRecoRICHSeq.Members += { "RichDSTPrepare" };
 TrToRichTrackAlg.EnableFiltering = "true"; // Select forward tracks from Tr/Best
+
+// Rich OO Reconstruction
+ApplicationMgr.DLLs += { "RichDetTools","RichRecAlgs" };
+#include "$RICHRECALGSOPTS/BrunelReco.opts"
 
 // Muon coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonRec", "MuonID" };

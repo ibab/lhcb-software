@@ -31,6 +31,7 @@ Purpose: LHCb reconstruction program
      the DST when  ProtoParticle cration is moved to Brunel.
    . Rename CaloClusters2MCParticles to EcalClusters2MCParticles
      EcalCelAutoClusters to EcalClusters, SplitClusters to EcalSplitClusters
+   . Add /Event/Rec/Rich/OOPIDs for tests (not yet useful for physics!)
 
  - Bug fixes:
    . Fix a memory leak in SicbMuonHitCnv (MuonSicbCnv v6r6)
