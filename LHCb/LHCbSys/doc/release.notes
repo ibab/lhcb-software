@@ -7,8 +7,8 @@
 !======================= LHCbSys v15r5 2004-03-26 =======================
 ! 2004-03-26 - Marco Cattaneo
  - Modified packages: KernelSys v3r5, LHCbKernel v4r5,
-                      DetSys v5r3, VeloDet v8r8p2,
-                      EventSys v17r5, CaloEvent v13r2, MCTools v1r5
+                      DetSys v5r3, VeloDet v8r8p2, MCTools v1r5,
+                      EventSys v17r5, CaloEvent v13r2, Event v4r2
 
  - In LHCbKernel v4r5:
    . Moved ITDataFunctor.h from ITAlgorithms
@@ -18,6 +18,9 @@
 
  - In VeloDet v8r8p2:
    . Add isPhiSensor, isPileUpSensor, type, zoneOfStrip methods to DeVelo
+
+ - In Event v4r2:
+   . Add LHCHalo, RICHPhoto, Annihil, Photo to MCVertexType enum
 
  - In CaloEvent v13r2:
    . Add protection to CaloDigitsFromRaw in case RawBuffer is missing 
