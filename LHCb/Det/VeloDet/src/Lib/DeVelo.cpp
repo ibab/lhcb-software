@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.26 2002-12-03 06:24:12 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.27 2003-01-06 09:31:47 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -43,8 +43,18 @@ DeVelo::DeVelo( const std::string& name )
 
 //
 // Standard Destructor
-DeVelo::~DeVelo()
-{ };
+DeVelo::~DeVelo() {
+  //=== Cleanup to make valgrind happy.
+  std::vector<VeloSensor*>::const_iterator it ;
+  for ( it = m_sensor.begin() ; m_sensor.end() != it; it++ ) {
+    delete *it;
+  }
+  m_sensor.clear();
+  for ( it = m_puSensor.begin() ; m_puSensor.end() != it; it++ ) {
+    delete *it;
+  }
+  m_puSensor.clear();
+};
 
 // ============================================================================
 // object identification

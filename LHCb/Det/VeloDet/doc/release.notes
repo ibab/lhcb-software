@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.34 2002-12-04 16:32:23 ranjard Exp $
+! $Id: release.notes,v 1.35 2003-01-06 09:31:47 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2003-01-06 - Olivier Callot
+ - Delete the VeloSensor objects in the destructor, to make valgrind happy.
 
 !======================== VeloDet v8r2 2002-12-04 =======================
 ! 2002-12-04 - Florence Ranjard
