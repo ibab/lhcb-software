@@ -62,8 +62,6 @@ protected:  // with description
   G4String fType;
 };
 
-string GetULName( ULtype ulType );
-
 #include "GaussG4UserLimits.icc"
 
 /** comparison operator for GaussG4UserLimits class 

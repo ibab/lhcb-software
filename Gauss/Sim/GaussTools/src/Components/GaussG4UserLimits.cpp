@@ -12,7 +12,7 @@ GaussG4UserLimits::GaussG4UserLimits(const G4String& type)
 bool GaussG4UserLimits::GetUserLimitSet( const G4int particleCode, ULtype ultype ) const
 {
   bool isSet = false;
-  pair< mmiul::const_iterator, mmiul::const_iterator> mmpite = fUserLimitSet.equal_range( particleCode );
+  std::pair< mmiul::const_iterator, mmiul::const_iterator> mmpite = fUserLimitSet.equal_range( particleCode );
   mmiul::const_iterator mmite;
   for(mmite = mmpite.first; mmite != mmpite.second; mmite++ ) {
     if( (*mmite).second == ultype ) {
@@ -122,33 +122,6 @@ G4double GaussG4UserLimits::GetCut(const G4Track& aTrack, const mid& partCutMap,
         }
     }
   return cutval;
-}
-
-
-string GetULName( ULtype ulType )
-{
-  string ulName;
-  switch (ulType){
-  case ULMinEkine:
-    ulName = "MinEkineCut";
-    break;
-  case ULMaxTime: 
-    ulName = "MaxTimeCut";
-    break;
-  case ULMaxStepLength:
-    ulName = "MaxStepLengthCut";
-    break;
-  case ULMaxTrackLength:
-    ulName = "MaxTrackLengthCut";
-    break;
-  case ULMinRange:
-    ulName = "MinRangeCut";
-    break;
-  default:
-    cerr << "!!! FATAL ERROR: UserLimitsProcessCreator:SetUserSpecialCuts invalid ULtype " << ulType << endl;
-    abort();
-  }
-  return ulName; 
 }
 
 /** comparison operator for GaussG4UserLimits class 
