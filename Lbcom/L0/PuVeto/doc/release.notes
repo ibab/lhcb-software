@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.12 2002-11-21 13:50:35 mzupan Exp $
+! $Id: release.notes,v 1.13 2002-11-28 14:04:24 cattanem Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
 
+!========================= PuVeto v5r1 2002-11-28 =======================
+! 2002-11-28 - Marko Zupan
+ - Fix a loop index range (reported by valgrind)
+
 !========================= PuVeto v5r0 2002-11-21 =======================
-2002-11-21 - Marko Zupan
+! 2002-11-21 - Marko Zupan
  - Modified the peakValue method to improve peak finding.
  - Added job option MaskingWindow controlling the width of the masking window.
  - Added job options BinningScenario and HistoBins to provide choice of
