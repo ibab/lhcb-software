@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!=========================== GaussSys v12r0 2003-07-19 ================
+! 2003-07-18 - Witek Pokorski
+ - use LHCb v13r0 and Gauss head revision
+
 !=========================== GaussSys v11r2 2003-07-07 ================
 ! 2003-07-07 - Florence RANJARD
  - use new versions to use LHCB v12r0
