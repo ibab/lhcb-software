@@ -48,6 +48,7 @@ m_OTCluster.reserve( 20 );
         type      = "double"
         name      = "slopeX"
         desc      = "X Tangent on the track" />
+
       <attribute
         type      = "double"
         name      = "slopeY"
@@ -72,6 +73,16 @@ m_OTCluster.reserve( 20 );
         type      = "int"
         name      = "status"
         desc      = "Used inside computation, what is currently this track" />
+      
+      <attribute
+        type      = "double"
+        name      = "chargeInVelo"
+        desc      = "Measured charge in Velo. Allow to identify concersions" />
+      
+      <attribute
+        type      = "int"
+        name      = "particleID"
+        desc      = "To store the result of muonID and electronID" />
       
       <relation
 	type      = "HltTrack"

@@ -4,6 +4,10 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2003-06-13 - Olivier Callot
+ - Add two new members, chargeInVelo and particleID to store the relevant 
+	information.  
+
 !======================== HltEvent v2r0 2003-06-03 ===========================
 ! 2003-06-03 - Marco Cattaneo
  - Add HltEvent_loadRef external function, for Windows linking
