@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.4 2004-02-17 21:36:50 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.5 2004-02-24 18:24:54 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -113,10 +113,10 @@ public:
   /// Determines if 3-d point is inside sensor
   StatusCode isInside(const HepPoint3D& point);
 
-  /// Determine if point is in corner cut-offs
+  /// Determine if local point is in corner cut-offs
   bool isCutOff(double x, double y);
 
-  /// The phi position of a strip at a given radius
+  /// The phi position of a strip at a given radius in the local frame
   inline double phiOfStrip(unsigned int strip, double fraction, 
                            const double radius){
     double effectiveStrip=fraction+static_cast<double>(strip);
@@ -128,7 +128,15 @@ public:
     }
   }
   
-  /// The angle of the strip wrt to the x axis
+  /// The phi position of a strip at a given radius using method of DeVelo v8r*
+  inline double trgPhiOfStrip(unsigned int strip, double fraction, 
+                           const double radius){
+    double phi=phiOfStrip(strip,fraction,radius);
+    if(m_isDownstream) phi = -phi;
+    return phi;
+  }
+  
+  /// The angle of the strip wrt to the x axis in the local frame
   inline double angleOfStrip(unsigned int strip, double fraction){
     double effectiveStrip=fraction+static_cast<double>(strip);
     if (m_nbInner > strip) {
@@ -137,6 +145,12 @@ public:
       effectiveStrip -= m_nbInner;
       return (effectiveStrip*m_outerPitch) + m_outerTilt;
     }
+  }
+
+  /// The angle of the strip wrt to the x axis in a rough global frame to mimic
+  /// DeVelo v8r* and earlier verions
+  inline double trgPhiDirectionOfStrip(unsigned int strip, double fraction){
+    return this->localPhiToGlobal(angleOfStrip(strip,fraction));
   }
   
   /// Returns the offset in phi for a given radius
@@ -166,13 +180,16 @@ public:
     }
   }
 
-  /// Return the distance to the origin 
+  /// Return the distance to the origin for sensor
   inline double distToOrigin(unsigned int strip){
+    double distance=0;
     if(m_nbInner > strip){
-      return m_innerDistToOrigin;
+      distance = m_innerDistToOrigin;
     } else {
-      return m_outerDistToOrigin;
+      distance = m_outerDistToOrigin;
     }
+    if(!m_isDownstream) return -distance;
+    return distance;
   }
 
   /// The minimum phi of the sensor for a given radius
