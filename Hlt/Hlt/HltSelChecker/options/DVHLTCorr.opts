@@ -32,7 +32,9 @@ HLTCorrelations.IgnoreFilterPassed = true ;
 #include "$HLTSELCHECKERROOT/options/CorrDstar.opts"
 #include "$HLTSELCHECKERROOT/options/CorrDiMuons.opts"
 #include "$HLTSELCHECKERROOT/options/CorrHLTsels.opts"
+//==============================================================================
 // plots
+//==============================================================================
 //#include "$HLTSELCHECKERROOT/options/Plots.opts"
 
 //==============================================================================
@@ -49,7 +51,7 @@ HLTCorrelations.IgnoreFilterPassed = true ;
 //EventSelector.Input   = {};
 //#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
 
-ApplicationMgr.EvtMax    = 10000 ;
+ApplicationMgr.EvtMax    = 1000 ;
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
 
@@ -72,7 +74,7 @@ PrintDstarTracks.OutputLevel = 4;
 PrintFoundDstar.OutputLevel = 4;
 PrintTDR.OutputLevel = 3;
 
-#include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
+//#include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 
 DaVinci.OutputLevel = 2 ;
 
@@ -84,3 +86,7 @@ HLTKaons.OutputLevel = 2;
 HLTPreselPions.OutputLevel = 2;
 HLTPreselKaons.OutputLevel = 2;
 */
+// HLT generic
+//#include "$HLTGENERICROOT/options/HltGeneric.opts"
+// K-ID
+TrgParticleMaker.KaonDLLCut = 15 ; // default

@@ -11,7 +11,6 @@ CorrBd2D0Kstar.Algorithms = { "AllBd2D0KstarTracks",
                                "HLTSharedD02HH",
                               "FilterD0ForHLTBd2D0Kstar",
                               "FilterKstarForHLTBd2D0Kstar",
-                              "HLTBd2D0Kstar",
 			      "HLTFilterBd2D0Kstar", 
 			      "TDRselBd2D0Kstar",
 			      "Bd2D0KstarAndTDR" } ;
