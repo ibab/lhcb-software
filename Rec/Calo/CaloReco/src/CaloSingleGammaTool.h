@@ -8,7 +8,7 @@
 #include "GaudiKernel/IIncidentListener.h"
 // CaloInterfaces
 #include "Kernel/CaloHypotheses.h" 
-#include "CaloInterfaces/ICaloHypoLikelyhood.h"
+#include "CaloInterfaces/ICaloHypoLikelihood.h"
 // CaloKernel
 #include "CaloKernel/CaloTool.h"
 // from CaloEvent/Event
@@ -25,14 +25,14 @@ class IIncidentSvc ;
 
 class CaloSingleGammaTool : 
   public virtual IIncidentListener ,
-  public virtual ICaloHypoLikelyhood ,
+  public virtual ICaloHypoLikelihood ,
   public         CaloTool
 {
   /// friend class for instantiation
   friend class ToolFactory<CaloSingleGammaTool>;
-
+  
 public:
-
+  
   virtual StatusCode initialize ();
   
   virtual StatusCode finalize   ();
@@ -41,7 +41,7 @@ public:
 
   virtual double operator() (const CaloHypo* hypo ) const ;
   
-  virtual double likelyhood (const CaloHypo* hypo ) const ;
+  virtual double likelihood (const CaloHypo* hypo ) const ;
 
   virtual void handle( const Incident& incident ) ;
   
@@ -60,7 +60,6 @@ protected:
   DeCalorimeter *m_detSpd;
 
   IIncidentSvc*                    m_incSvc    ;
-  IDataProviderSvc*                m_evtSvc    ;
 
   double                           m_z         ;
   double                           m_zSpd      ;

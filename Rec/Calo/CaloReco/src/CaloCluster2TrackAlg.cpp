@@ -1,8 +1,11 @@
-// $Id: CaloCluster2TrackAlg.cpp,v 1.1.1.1 2002-11-13 20:46:39 ibelyaev Exp $
+// $Id: CaloCluster2TrackAlg.cpp,v 1.2 2004-02-17 12:08:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:39  ibelyaev
+// new package 
+//
 // ============================================================================
 // Include files
 #include "Relations/RelationWeighted2D.h"
@@ -109,7 +112,7 @@ StatusCode CaloCluster2TrackAlg::initialize()
     { return Error("Could not initialize the base class CaloAlgorithm",sc);}
   
   // retrieve the tool from Tool service 
-  m_match = tool( m_matchType , m_matchName , m_match );
+  m_match = tool<ICaloTrackMatch>( m_matchType , m_matchName );
   if( 0 == m_match ) { return StatusCode::FAILURE ;}
   
   return StatusCode::SUCCESS;
@@ -126,8 +129,6 @@ StatusCode CaloCluster2TrackAlg::initialize()
 // ============================================================================
 StatusCode CaloCluster2TrackAlg::finalize() 
 {
-  /// release the tool
-  if( 0 != m_match ) { m_match->release() ; m_match = 0 ; }
   /// finalize the base class 
   return CaloAlgorithm::finalize();
 };
@@ -151,11 +152,11 @@ StatusCode CaloCluster2TrackAlg::execute()
   typedef RelationWeighted2D<CaloCluster,TrStoredTrack,float>  Table    ;
   
   // get clusters from Transient Store  
-  Clusters* clusters = get( eventSvc() , inputData() , clusters );
+  Clusters* clusters = get<Clusters> ( inputData() ) ;
   if( 0 ==  clusters           )     { return StatusCode::FAILURE ; }
   
   // get tracks   from Transient Store  
-  Tracks*   tracks   = get( eventSvc() , m_tracks    , tracks   );
+  Tracks*   tracks   = get<Tracks>   (  m_tracks   ) ;
   if( 0 ==  tracks             )     { return StatusCode::FAILURE ; }
   
   // create relation table and register it in the store

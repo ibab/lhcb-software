@@ -1,8 +1,11 @@
-// $Id: CaloSharedCellAlg.cpp,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $ 
+// $Id: CaloSharedCellAlg.cpp,v 1.2 2004-02-17 12:08:10 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // ============================================================================
 #define  CALOALGS_CALOSHAREDECELLALG_CPP 1 
 // ============================================================================
@@ -97,17 +100,6 @@ StatusCode CaloSharedCellAlg::initialize()
 };
 
 // ============================================================================
-//  Finalize
-// ============================================================================
-StatusCode CaloSharedCellAlg::finalize() 
-{
-  MsgStream log( msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-  ///
-  return StatusCode::SUCCESS;
-};
-
-// ============================================================================
 // Main execution
 // ============================================================================
 StatusCode CaloSharedCellAlg::execute() 
@@ -125,28 +117,28 @@ StatusCode CaloSharedCellAlg::execute()
   typedef const DeCalorimeter Detector ;
   
   // locate input data
-  Clusters* clusters = get( eventSvc() , inputData() , clusters );
+  Clusters* clusters = get<Clusters>( inputData() );
   if( 0 == clusters ) { return StatusCode::FAILURE ; }
   
   // locate geometry (if needed) 
   Detector* detector = 0;
   if( m_useDistance )
-    {    
-      detector = get( detSvc() , detData() , detector );
-      if( 0 == detector ){ return StatusCode::FAILURE ;}
-    }
+  {    
+    detector = getDet<DeCalorimeter> ( detData() );
+    if( 0 == detector ){ return StatusCode::FAILURE ;}
+  }
   
   Clusters* output = 0;
   if( m_copy ) ///< make a new container 
-    {
-      output = new Clusters();
-      StatusCode sc = put( output , outputData() );
-      if( sc.isFailure() ) { return StatusCode::FAILURE ; }
-      // make a copy 
-      for( Clusters::const_iterator i = clusters->begin() ;
-           clusters->end() != i ; ++i )
-        { if( 0 != *i ) { output->insert( (*i)->clone() ) ; } }
-    }
+  {
+    output = new Clusters();
+    StatusCode sc = put( output , outputData() );
+    if( sc.isFailure() ) { return StatusCode::FAILURE ; }
+    // make a copy 
+    for( Clusters::const_iterator i = clusters->begin() ;
+         clusters->end() != i ; ++i )
+    { if( 0 != *i ) { output->insert( (*i)->clone() ) ; } }
+  }
   else { output = clusters; } ///< update existing sequence
   
   /** build inverse connection table/object 
@@ -161,45 +153,45 @@ StatusCode CaloSharedCellAlg::execute()
   /// loop over all digits in the table  
   for( Table::Map::iterator entry = table.map().begin() ; 
        table.map().end() != entry ; ++entry ) 
-    {
-      const CaloDigit* dig = entry->first ;
-      /// ignore  artificial zeros  
-      if( 0 == dig ) { continue; }
-      
-      StatusCode sc = StatusCode::SUCCESS; 
-      if      ( m_useSumEnergy &&  !m_useDistance )
-        {    
-          sc = summedEnergyAlgorithm   
-            ( entry->second   , m_numIterations ) ; 
-        }
-      else if ( !m_useSumEnergy && !m_useDistance )
-        { 
-          sc = seedEnergyAlgorithm     
-            ( entry->second   , SeedCell        ) ; 
-        }
-      else if ( m_useSumEnergy &&   m_useDistance )
-        { 
-          sc = summedDistanceAlgorithm 
-            ( entry->second   , 
-              detector        ,
-              dig->cellID()   , 
-              m_showerSizes   ,
-              m_numIterations                   ) ; 
-        }
-      else if ( !m_useSumEnergy &&  m_useDistance )
-        { 
-          sc = seedDistanceAlgorithm   
-            ( entry->second   ,
-              detector        ,
-              SeedCell        ,
-              dig->cellID()   ,
-              m_showerSizes                     ) ;
-        }
-      else { return Error("Funny condition :-)) "); }
-      ///
-      if( sc.isFailure() )
-        { return Error("Could not redistribute the energy!"); }
+  {
+    const CaloDigit* dig = entry->first ;
+    /// ignore  artificial zeros  
+    if( 0 == dig ) { continue; }
+    
+    StatusCode sc = StatusCode::SUCCESS; 
+    if      ( m_useSumEnergy &&  !m_useDistance )
+    {    
+      sc = summedEnergyAlgorithm   
+        ( entry->second   , m_numIterations ) ; 
     }
+    else if ( !m_useSumEnergy && !m_useDistance )
+    { 
+      sc = seedEnergyAlgorithm     
+        ( entry->second   , SeedCell        ) ; 
+    }
+    else if ( m_useSumEnergy &&   m_useDistance )
+    { 
+      sc = summedDistanceAlgorithm 
+        ( entry->second   , 
+          detector        ,
+          dig->cellID()   , 
+          m_showerSizes   ,
+          m_numIterations                   ) ; 
+    }
+    else if ( !m_useSumEnergy &&  m_useDistance )
+    { 
+      sc = seedDistanceAlgorithm   
+        ( entry->second   ,
+          detector        ,
+          SeedCell        ,
+          dig->cellID()   ,
+          m_showerSizes                     ) ;
+    }
+    else { return Error("Funny condition :-)) "); }
+    ///
+    if( sc.isFailure() )
+    { return Error("Could not redistribute the energy!"); }
+  }
   ///
   return StatusCode::SUCCESS;
   ///  

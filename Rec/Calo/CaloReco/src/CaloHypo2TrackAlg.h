@@ -1,8 +1,11 @@
-// $Id: CaloHypo2TrackAlg.h,v 1.2 2002-11-17 17:09:26 ibelyaev Exp $
+// $Id: CaloHypo2TrackAlg.h,v 1.3 2004-02-17 12:08:07 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/17 17:09:26  ibelyaev
+//  new set of options and tools
+//
 // Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
 // new package 
 //
@@ -62,14 +65,6 @@ public:
    *  @return status code 
    */
   virtual StatusCode execute   ();   
-  
-  /** standard algorithm finalization 
-   *  @see CaloAlgorithm
-   *  @see     Algorithm
-   *  @see    IAlgorithm
-   *  @return status code 
-   */
-  virtual StatusCode finalize  ();   
   
 protected:
   

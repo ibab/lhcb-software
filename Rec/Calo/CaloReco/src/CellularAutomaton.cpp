@@ -1,8 +1,11 @@
-// $Id: CellularAutomaton.cpp,v 1.2 2004-01-13 08:47:25 ibelyaev Exp $
+// $Id: CellularAutomaton.cpp,v 1.3 2004-02-17 12:08:11 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/01/13 08:47:25  ibelyaev
+//  update 'seed' and 'version' for Cluster/Clusters
+//
 // Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
 // new package 
 //
@@ -90,7 +93,6 @@ CellularAutomaton::~CellularAutomaton(){};
 // ============================================================================
 StatusCode CellularAutomaton::initialize() 
 {
-  MsgStream log(msgSvc(),name());
   
   StatusCode sc = CaloAlgorithm::initialize() ;
   if( sc.isFailure() ) 
@@ -101,30 +103,12 @@ StatusCode CellularAutomaton::initialize()
       return Error("Path hits, path geom, path clusters must"
                    + std::string(" be defined in job options file!") );
     }
-  
+
   /// Retrieve geometry of detector
-  const DeCalorimeter* detector = get( detSvc() , detData() , detector );
+  const DeCalorimeter* detector = getDet<DeCalorimeter>( detData() );
   if( 0 == detector ) { return StatusCode::FAILURE; }
   
-  log << MSG::DEBUG << "Initalization completed successfully" << endreq;
-  
   return StatusCode::SUCCESS;
-};
-// ============================================================================
-
-// ============================================================================
-/** standard  finalization  method 
- *  @see CaloAlgorithm 
- *  @see     Algorithm 
- *  @see    IAlgorithm 
- *  @return status code 
- */
-// ============================================================================
-StatusCode CellularAutomaton::finalize() 
-{
-  MsgStream log(msgSvc(),name());
-  log << MSG::DEBUG << "finalize" << endreq;
-  return CaloAlgorithm::finalize();
 };
 // ============================================================================
 
@@ -143,14 +127,14 @@ StatusCode CellularAutomaton::execute()
   log << MSG::DEBUG << "Execution" << endreq;
   
   // get the detector 
-  const DeCalorimeter* detector = get(detSvc() , detData() , detector );
+  const DeCalorimeter* detector = getDet<DeCalorimeter>( detData() );
   if( 0 == detector ) { return StatusCode::FAILURE; }
   
   // z-position of cluster 
   ClusterFunctors::ZPosition zPosition( detector );
   
   // get input data (sequential and simultaneously direct access!)  
-  CaloDigits* hits = get( eventSvc() , inputData() , hits  );
+  CaloDigits* hits = get<CaloDigits>( inputData() );
   if( 0 == hits ) { return StatusCode::FAILURE ; }
   
   /** Create the container of clusters and  
@@ -323,9 +307,6 @@ StatusCode CellularAutomaton::execute()
   log << MSG::DEBUG
       << "Execution clusterization manager completed successfully" 
       << endreq;
-  
-  Stat nclust  ( chronoSvc(), name()+" #clus", 
-                 (double) clustersSeq->size()  , 1.);
   
   return StatusCode::SUCCESS; 
 }

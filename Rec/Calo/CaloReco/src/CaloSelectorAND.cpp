@@ -1,8 +1,11 @@
-// $Id: CaloSelectorAND.cpp,v 1.1.1.1 2002-11-13 20:46:42 ibelyaev Exp $
+// $Id: CaloSelectorAND.cpp,v 1.2 2004-02-17 12:08:10 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:42  ibelyaev
+// new package 
+//
 // Revision 1.1  2002/04/27 19:21:30  ibelyaev
 //  several 'technical' tools are added
 //
@@ -82,10 +85,10 @@ StatusCode CaloSelectorAND::initialize ()
   // locate selectors 
   for( Names::const_iterator it = m_selectorsTypeNames.begin() ;
        m_selectorsTypeNames.end() != it ; ++it )
-    {
-      ICaloClusterSelector* selector = tool( *it , selector );
-      m_selectors.push_back( selector );
-    };     
+  {
+    ICaloClusterSelector* selector = tool<ICaloClusterSelector>( *it );
+    m_selectors.push_back( selector );
+  };     
   ///
   return StatusCode::SUCCESS ;
 };
@@ -101,9 +104,7 @@ StatusCode CaloSelectorAND::initialize ()
 // ============================================================================
 StatusCode CaloSelectorAND::finalize   () 
 {
-  // release tools and clear containers 
-  std::for_each( m_selectors.begin () , 
-                 m_selectors.end   () , std::mem_fun(&IInterface::release) );
+  // clear containers 
   m_selectors          .clear() ;
   m_selectorsTypeNames .clear() ;
   // finalize the base class 

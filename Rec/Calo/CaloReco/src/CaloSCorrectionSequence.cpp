@@ -134,7 +134,8 @@ StatusCode CaloSCorrectionSequence::initialize()
       log << MSG::INFO << " area:" << i
           << " name:" << *ToolName
           << endreq;
-      ICaloSCorrectionFunction* mytool = tool(*ToolName,mytool);
+      ICaloSCorrectionFunction* mytool = 
+        tool<ICaloSCorrectionFunction>(*ToolName);
       if (mytool==0) {return StatusCode::FAILURE;}
       m_ISCorrectionX.push_back(mytool);
       m_ISCorrectionY.push_back(mytool);
@@ -149,7 +150,8 @@ StatusCode CaloSCorrectionSequence::initialize()
       log << MSG::INFO << " area:" << i
           << " name:" << *ToolName
           << endreq;
-      ICaloSCorrectionFunction* mytool = tool(*ToolName,mytool);
+      ICaloSCorrectionFunction* mytool = 
+        tool<ICaloSCorrectionFunction>(*ToolName);
       if (mytool==0) {return StatusCode::FAILURE;}
       m_ISCorrectionX.push_back(mytool);
      }
@@ -157,13 +159,14 @@ StatusCode CaloSCorrectionSequence::initialize()
      i=0;
      for (ToolName=m_ISCorrectionNameY.begin();
           ToolName!=m_ISCorrectionNameY.end();
-         ++ToolName,i++) {
-      log << MSG::INFO << " area:" << i
-          << " name:" << *ToolName
-          << endreq;
-      ICaloSCorrectionFunction* mytool = tool(*ToolName,mytool);
-      if (mytool==0) {return StatusCode::FAILURE;}
-      m_ISCorrectionY.push_back(mytool);
+          ++ToolName,i++) {
+       log << MSG::INFO << " area:" << i
+           << " name:" << *ToolName
+           << endreq;
+       ICaloSCorrectionFunction* mytool = 
+         tool<ICaloSCorrectionFunction>(*ToolName);
+       if (mytool==0) {return StatusCode::FAILURE;}
+       m_ISCorrectionY.push_back(mytool);
      }
   }  
 
@@ -175,7 +178,8 @@ StatusCode CaloSCorrectionSequence::initialize()
     log << MSG::INFO << " border" 
         << " name:" << m_ISCorrectionBorderName
         << endreq;
-    m_ISCorrectionBorder = tool(m_ISCorrectionBorderName,m_ISCorrectionBorder);
+    m_ISCorrectionBorder = 
+      tool<ICaloSCorrectionFunction>(m_ISCorrectionBorderName);
   }
   return StatusCode::SUCCESS;
 }

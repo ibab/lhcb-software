@@ -1,8 +1,11 @@
-// $Id: CaloHyposMerge.cpp,v 1.3 2003-04-08 08:36:08 ibelyaev Exp $
+// $Id: CaloHyposMerge.cpp,v 1.4 2004-02-17 12:08:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/04/08 08:36:08  ibelyaev
+//  CaloHyposMerge: add SplitPhotons to the default list
+//
 // Revision 1.2  2002/11/14 14:28:38  ibelyaev
 //  bug fix for Win2K
 //
@@ -88,7 +91,7 @@ StatusCode CaloHyposMerge::initialize()
   /// initialize the base class 
   StatusCode sc = CaloAlgorithm::initialize();
   if( sc.isFailure() ) 
-    { return Error("Base class CaloAlgorithm could not be initialized",sc); }
+  { return Error("Base class CaloAlgorithm could not be initialized",sc); }
   /// input data?
   if( m_hypos.empty() ) { Warning("No input data is specified!"); }
   
@@ -111,9 +114,7 @@ StatusCode CaloHyposMerge::initialize()
 StatusCode CaloHyposMerge::execute() 
 {
   
-  StatusCode sc( StatusCode::SUCCESS );
-  
-  Print(" ===>  Start of execute() " , sc , MSG::DEBUG   );
+  StatusCode sc( StatusCode::SUCCESS );  
   
   // avoid long names 
   typedef CaloParticle       Particle  ;
@@ -130,7 +131,7 @@ StatusCode CaloHyposMerge::execute()
   if( sc.isFailure() ) { return StatusCode::FAILURE ; }
   
   // get the clusters from the store 
-  const Clusters* clusters = get( eventSvc() , inputData() , clusters );
+  const Clusters* clusters = get<Clusters>( inputData() );
   if( 0 == clusters ) { return StatusCode::FAILURE ; }
   
   // the intermediate map for relations between hypos and clusters  
@@ -142,49 +143,46 @@ StatusCode CaloHyposMerge::execute()
   // build the intermediate table of hypo <---> relations 
   for( Addresses::const_iterator address = m_hypos.begin() ; 
        m_hypos.end() != address ; ++address )
+  {
+    const Hypos* hypos = get<Hypos>( *address );
+    if( 0 == hypos ) { return StatusCode::FAILURE ; }
+    for( Hypos::const_iterator hypo = hypos->begin() ; 
+         hypos->end() != hypo ; ++hypo )
     {
-      const Hypos* hypos = get( eventSvc() , *address , hypos );
-      if( 0 == hypos ) { return StatusCode::FAILURE ; }
-      for( Hypos::const_iterator hypo = hypos->begin() ; 
-           hypos->end() != hypo ; ++hypo )
-        {
-          // skip nulls 
-          if( 0 == *hypo ) { continue ; }
-          const Hypo::Clusters& clusters = (*hypo)->clusters();
-          for( Hypo::Clusters::const_iterator cluster = clusters.begin() ; 
-               clusters.end() != cluster ; ++cluster )
-            {
-              if( *cluster == 0 ) { continue ; }
-              theMap.insert( std::make_pair( *cluster , *hypo ) );     
-            }
-        }
+      // skip nulls 
+      if( 0 == *hypo ) { continue ; }
+      const Hypo::Clusters& clusters = (*hypo)->clusters();
+      for( Hypo::Clusters::const_iterator cluster = clusters.begin() ; 
+           clusters.end() != cluster ; ++cluster )
+      {
+        if( *cluster == 0 ) { continue ; }
+        theMap.insert( std::make_pair( *cluster , *hypo ) );     
+      }
     }
+  }
   
   // loop over all clusters 
   for( Clusters::const_iterator cluster = clusters->begin() ; 
        clusters->end() != cluster ; ++cluster ) 
+  {
+    // skip NULLS 
+    if( 0 == *cluster ) { continue ; }
+    // for each valid cluster create CaloParticle 
+    Particle* particle = new CaloParticle();
+    // add newly created particle to the container of particles 
+    particles->insert( particle );
+    // get all connected hypos 
+    IP related = theMap.equal_range( *cluster );
+    for( IT it = related.first ; it != related.second ; ++it )
     {
-      // skip NULLS 
-      if( 0 == *cluster ) { continue ; }
-      // for each valid cluster create CaloParticle 
-      Particle* particle = new CaloParticle();
-      // add newly created particle to the container of particles 
-      particles->insert( particle );
-      // get all connected hypos 
-      IP related = theMap.equal_range( *cluster );
-      for( IT it = related.first ; it != related.second ; ++it )
-        {
-          const Hypo* hypo = it->second ;
-          // add valid hypo to the selected particle
-          if( 0 != hypo ) { particle->addToHypos( hypo ); }
-        }
+      const Hypo* hypo = it->second ;
+      // add valid hypo to the selected particle
+      if( 0 != hypo ) { particle->addToHypos( hypo ); }
     }
+  }
   
   // clear the map 
   theMap.clear();
-  
-  // "good-bye" message 
-  Print(" ===>  End   of execute() " , sc , MSG::VERBOSE );
   
   return StatusCode::SUCCESS;
 };

@@ -1,8 +1,11 @@
-// $Id: CaloClusterisationAlg.cpp,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $ 
+// $Id: CaloClusterisationAlg.cpp,v 1.2 2004-02-17 12:08:06 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // Revision 1.10  2002/05/12 13:45:03  ibelyaev
 //  add correct 'inversion' of comparisons
 //
@@ -123,21 +126,20 @@ StatusCode CaloClusterisationAlg::execute()
   typedef const DeCalorimeter        Detector    ;
   
   /// locate the input data
-  Digits*    digits   = get( eventSvc() , inputData () , digits );
+  Digits*    digits   =    get<Digits>   ( inputData () );
   if( 0 == digits   ) { return Error("'Input'    data are not available!");}
   
   /// locate the detector 
-  Detector*  detector = get( detSvc() , detData   () , detector );
+  Detector*  detector = getDet<Detector> ( detData   () );
   if( 0 == detector ) { return Error("'Detector' data are not available!");}
   
   /// create output container of clusters
   Clusters*  clusters = new Clusters();
   {
     // register clusters in Gaudi Transient Store 
-    StatusCode sc = 
-      eventSvc()->registerObject( outputData() , clusters );
+    StatusCode sc = put( clusters , outputData() ) ;
     if( sc.isFailure() )
-      { return Error("could not register the output='"+outputData()+"'",sc) ;}
+    { return Error("could not register the output='"+outputData()+"'",sc) ;}
   }
   
   // functor to get z-position of cluster 

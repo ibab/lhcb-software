@@ -1,8 +1,11 @@
-// $Id: CaloHypoToolSequence.cpp,v 1.1.1.1 2002-11-13 20:46:41 ibelyaev Exp $
+// $Id: CaloHypoToolSequence.cpp,v 1.2 2004-02-17 12:08:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
+// new package 
+//
 // Revision 1.1  2002/04/27 19:21:30  ibelyaev
 //  several 'technical' tools are added
 // 
@@ -78,10 +81,10 @@ StatusCode CaloHypoToolSequence::initialize ()
   // locate selectors 
   for( Names::const_iterator it = m_hypoToolsTypeNames.begin() ;
        m_hypoToolsTypeNames.end() != it ; ++it )
-    {
-      ICaloHypoTool* hypoTool = tool( *it , hypoTool );
-      m_hypoTools.push_back( hypoTool );
-    };     
+  {
+    ICaloHypoTool* hypoTool = tool<ICaloHypoTool>( *it );
+    m_hypoTools.push_back( hypoTool );
+  };     
   ///
   return StatusCode::SUCCESS ;
 };
@@ -97,9 +100,6 @@ StatusCode CaloHypoToolSequence::initialize ()
 // ============================================================================
 StatusCode CaloHypoToolSequence::finalize   () 
 {
-  // release tools NOT clear containers 
-  std::for_each( m_hypoTools.begin () , 
-                 m_hypoTools.end   () , std::mem_fun(&IInterface::release));
   m_hypoTools          .clear() ;
   m_hypoToolsTypeNames .clear() ;
   // finalize the base class 

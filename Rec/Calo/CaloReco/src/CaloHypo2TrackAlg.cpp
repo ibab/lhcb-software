@@ -1,8 +1,11 @@
-// $Id: CaloHypo2TrackAlg.cpp,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $
+// $Id: CaloHypo2TrackAlg.cpp,v 1.2 2004-02-17 12:08:07 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // ============================================================================
 // Include files
 #include "Relations/RelationWeighted2D.h"
@@ -106,27 +109,9 @@ StatusCode CaloHypo2TrackAlg::initialize()
     { return Error("Could not initialize the base class CaloAlgorithm",sc);}
   
   // retrieve the tool from Tool service 
-  m_match = tool( m_matchType , m_matchName , m_match );
-  if( 0 == m_match ) { return StatusCode::FAILURE ;}
+  m_match = tool<ICaloTrackMatch>( m_matchType , m_matchName );
   
   return StatusCode::SUCCESS;
-};
-// ============================================================================
-
-// ============================================================================
-/** standard algorithm finalization 
- *  @see CaloAlgorithm
- *  @see     Algorithm
- *  @see    IAlgorithm
- *  @return status code 
- */
-// ============================================================================
-StatusCode CaloHypo2TrackAlg::finalize() 
-{
-  /// release the tool
-  if( 0 != m_match ) { m_match->release() ; m_match = 0 ; }
-  /// finalize the base class 
-  return CaloAlgorithm::finalize();
 };
 // ============================================================================
 
@@ -148,22 +133,22 @@ StatusCode CaloHypo2TrackAlg::execute()
   typedef RelationWeighted2D<CaloHypo,TrStoredTrack,float>  Table    ;
   
   // get Hypos from Transient Store  
-  Hypos*    hypos    = get( eventSvc() , inputData() , hypos    );
+  Hypos*    hypos    = get<Hypos>    ( inputData() ) ;
   if( 0 ==  hypos              )     { return StatusCode::FAILURE ; }
   
   // get tracks   from Transient Store  
-  Tracks*   tracks   = get( eventSvc() , m_tracks    , tracks   );
+  Tracks*   tracks   = get<Tracks>   ( m_tracks    );
   if( 0 ==  tracks             )     { return StatusCode::FAILURE ; }
   
   // create relation table and register it in the store
   Table*    table = new Table();
   StatusCode sc = put( table , outputData() );
   if( sc.isFailure()           )     { return StatusCode::FAILURE ; }
-
-//    if( 0 == tracks   -> size () )
-//      { Warning("Empty container of tracks   '" + m_tracks    + "'"); }
-//    if( 0 == hypos    -> size () )
-//      { Warning("Empty container of hypos    '" + inputData() + "'"); }
+  
+  if( 0 == tracks   -> size () )
+  { Warning("Empty container of tracks   '" + m_tracks    + "'"); }
+  if( 0 == hypos    -> size () )
+  { Warning("Empty container of hypos    '" + inputData() + "'"); }
   
   if( 0 == tracks   -> size () || 
       0 == hypos    -> size () )     { return StatusCode::SUCCESS ; }
@@ -171,68 +156,68 @@ StatusCode CaloHypo2TrackAlg::execute()
   // loop over tracks  
   for( Tracks::const_iterator track = tracks->begin() ; 
        tracks->end() != track ; ++track )
-    {  
-      // skip NULLS 
-      if( 0 == *track             ) { continue ; }             /// CONTINUE
-
+  {  
+    // skip NULLS 
+    if( 0 == *track             ) { continue ; }             /// CONTINUE
+    
+    
+    // use only unique  tracks ? 
+    if(  m_unique   && 1 != (*track)->unique    () ) { continue ; }
+    
+    // use 'error'   tracks ?
+    if( !m_error    && 0 != (*track)->errorFlag () ) { continue ; }
+    
+    // use 'forward'   tracks ?
+    if( !m_forward  && 1 == (*track)->forward   () ) { continue ; }
+    
+    // use 'match'     tracks ?
+    if( !m_matched  && 1 == (*track)->match     () ) { continue ; }
+    
+    // use 'seed'      tracks ?
+    if( !m_seed     && 1 == (*track)->seed      () ) { continue ; }
+    
+    // use 'velo'      tracks ?
+    if( !m_velo     && 1 == (*track)->velo      () ) { continue ; }      
+    
+    // use 'veloTT'    tracks ?
+    if( !m_veloTT   && 1 == (*track)->veloTT    () ) { continue ; }      
+    
+    // use 'veloBack'    tracks ?
+    if( !m_veloBack && 1 == (*track)->veloBack  () ) { continue ; }      
+    
+    // use 'upstream'  tracks ?
+    if( !m_upstream && 1 == (*track)->upstream  () ) { continue ; }
+    
+    // loop over hypos 
+    for( Hypos::const_iterator hypo = hypos->begin() ; 
+         hypos->end() != hypo ; ++hypo )
+    {
+      // skip NUULs 
+      if( 0 == *hypo          ) { continue ; }             /// CONTINUE 
       
-      // use only unique  tracks ? 
-      if(  m_unique   && 1 != (*track)->unique    () ) { continue ; }
+      // valid hypo ? 
+      if( 0 == (*hypo)->position() )
+      {
+        Warning("CaloPosition* points to NULL!");
+        continue ;                                      /// CONTINUE 
+      }
       
-      // use 'error'   tracks ?
-      if( !m_error    && 0 != (*track)->errorFlag () ) { continue ; }
-
-      // use 'forward'   tracks ?
-      if( !m_forward  && 1 == (*track)->forward   () ) { continue ; }
+      // perform the matching
+      double chi2 = 0 ;
+      StatusCode sc = 
+        m_match->match( (*hypo)->position() , *track , chi2 );
       
-      // use 'match'     tracks ?
-      if( !m_matched  && 1 == (*track)->match     () ) { continue ; }
+      if( sc.isFailure() )
+      {
+        Warning("Hypo/Track: matching failure, skip pair" );
+        continue ;
+      }
+      else if ( 0 <= chi2 && chi2 <=  m_cut ) 
+      { table->relate( *hypo , *track , chi2 ); }
       
-      // use 'seed'      tracks ?
-      if( !m_seed     && 1 == (*track)->seed      () ) { continue ; }
-      
-      // use 'velo'      tracks ?
-      if( !m_velo     && 1 == (*track)->velo      () ) { continue ; }      
-
-      // use 'veloTT'    tracks ?
-      if( !m_veloTT   && 1 == (*track)->veloTT    () ) { continue ; }      
-
-      // use 'veloBack'    tracks ?
-      if( !m_veloBack && 1 == (*track)->veloBack  () ) { continue ; }      
-      
-      // use 'upstream'  tracks ?
-      if( !m_upstream && 1 == (*track)->upstream  () ) { continue ; }
-  
-      // loop over hypos 
-      for( Hypos::const_iterator hypo = hypos->begin() ; 
-           hypos->end() != hypo ; ++hypo )
-        {
-          // skip NUULs 
-          if( 0 == *hypo          ) { continue ; }             /// CONTINUE 
-          
-          // valid hypo ? 
-          if( 0 == (*hypo)->position() )
-            {
-              Warning("CaloPosition* points to NULL!");
-              continue ;                                      /// CONTINUE 
-            }
-          
-          // perform the matching
-          double chi2 = 0 ;
-          StatusCode sc = 
-            m_match->match( (*hypo)->position() , *track , chi2 );
-          
-          if( sc.isFailure() )
-            {
-              Warning("Hypo/Track: matching failure, skip pair" );
-              continue ;
-            }
-          else if ( 0 <= chi2 && chi2 <=  m_cut ) 
-            { table->relate( *hypo , *track , chi2 ); }
-          
-        }; // loop over all hypos 
-      
-    }; // loop over all tracks 
+    }; // loop over all hypos 
+    
+  }; // loop over all tracks 
   
   return StatusCode::SUCCESS ;
 };

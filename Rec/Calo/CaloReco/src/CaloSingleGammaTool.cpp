@@ -1,24 +1,48 @@
+// $Id: CaloSingleGammaTool.cpp,v 1.5 2004-02-17 12:08:10 ibelyaev Exp $ 
+// ===========================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ===========================================================================
+// $Log: not supported by cvs2svn $ 
+// ===========================================================================
 // Include files
+// ===========================================================================
 // GaudiKernel
+// ===========================================================================
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/IIncidentSvc.h" 
+#include "GaudiKernel/IIncidentSvc.h"
+// =========================================================================== 
 // CaloKernel
+// ===========================================================================
 // DetDesc 
-#include "DetDesc/IGeometryInfo.h" 
+// ===========================================================================
+#include "DetDesc/IGeometryInfo.h"
+// =========================================================================== 
 /// CaloDet 
+// ===========================================================================
 #include "CaloDet/DeCalorimeter.h"
+// ===========================================================================
 // CaloEvent
+// ===========================================================================
 #include "Kernel/CaloHypotheses.h" 
 #include "Event/CaloDigit.h"
 #include "Event/CaloDigitStatus.h"
 #include "Event/CaloHypo.h"
+// ===========================================================================
 // CaloUtils
+// ===========================================================================
 #include "CaloUtils/ClusterFunctors.h"
+// ===========================================================================
 /// local
+// ===========================================================================
 #include "CaloSingleGammaTool.h"
+// ===========================================================================
+
+/** @file 
+ *  @author Frederic Machefert
+ */
 
 // Instantiation of a static factory class used by clients to create
 // instances of this tool
@@ -33,7 +57,6 @@ CaloSingleGammaTool::CaloSingleGammaTool(const std::string& type,
                            const IInterface* parent) 
   : CaloTool( type, name, parent )
   , m_incSvc    ( 0        )
-  , m_evtSvc    ( 0        ) 
   , m_z         ( -100.*km )
   , m_zSpd      ( -100.*km )
   , m_zPrs      ( -100.*km )
@@ -43,7 +66,7 @@ CaloSingleGammaTool::CaloSingleGammaTool(const std::string& type,
   , m_vertex    (          )
   , m_extrapolation ( true )
 {
-  declareInterface<ICaloHypoLikelyhood>( this );
+  declareInterface<ICaloHypoLikelihood>( this );
   declareInterface<IIncidentListener> (this);  
   declareProperty("Extrapolation",m_extrapolation);
   declareProperty("DetEcal",m_nameOfECAL);
@@ -54,12 +77,7 @@ CaloSingleGammaTool::CaloSingleGammaTool(const std::string& type,
 /** destructor, virtual and protected 
  */
 // ============================================================================
-CaloSingleGammaTool::~CaloSingleGammaTool()
-{
-  /// remove detector 
-  setDet( (const DeCalorimeter*) 0 );
-  ///
-};
+CaloSingleGammaTool::~CaloSingleGammaTool(){}
 
 // ============================================================================
 /** standard initialization method 
@@ -124,17 +142,11 @@ StatusCode CaloSingleGammaTool::initialize ()
   m_zPrs = centerPrs.z();
 
   // locate incident service 
-  sc = serviceLocator() -> service ( "IncidentSvc" , m_incSvc );
-  if( sc.isFailure() ) { return Error("Could not locate IncidentSvc!", sc );}
+  m_incSvc = svc<IIncidentSvc>( "IncidentSvc" , true );
   if( 0 == m_incSvc  ) { return Error("Could not locate IncidentSvc!"     );}
   m_incSvc->addRef() ;
-  m_incSvc->addListener( this , "EndEvent"   , 10 );
-  // locate event service 
-  sc = serviceLocator() -> service ( "EventDataSvc" , m_evtSvc );
-  if( sc.isFailure() ) { return Error("Could not locate EventDataSvc!", sc );}
-  if( 0 == m_evtSvc  ) { return Error("Could not locate EventDataSvc!"     );}
-  m_evtSvc->addRef() ;
-
+  m_incSvc->addListener( this , IncidentType::EndEvent   , 10 );
+  
   ///
   return StatusCode::SUCCESS ;
 };
@@ -148,11 +160,7 @@ StatusCode CaloSingleGammaTool::finalize   ()
 {  
   /// remove detector 
   setDet( (const DeCalorimeter*) 0 );
-  // release incident service 
-  if( 0 != m_incSvc ) { m_incSvc->release() ; m_incSvc = 0 ; }
-  // release eventservice 
-  if( 0 != m_evtSvc ) { m_evtSvc->release() ; m_evtSvc = 0 ; }
-   /// finalize the  the base class
+  /// finalize the  the base class
   return CaloTool::finalize ();
 };
 
@@ -179,7 +187,7 @@ const CaloHypotheses::Hypothesis& CaloSingleGammaTool::hypothesis ( ) const
 };
 
 // ============================================================================
-double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
+double CaloSingleGammaTool::likelihood(const CaloHypo* hypo )  const
 {
   MsgStream logbk( msgSvc() , name() );
 
@@ -369,7 +377,7 @@ double CaloSingleGammaTool::likelyhood(const CaloHypo* hypo )  const
 
 double CaloSingleGammaTool::operator() (const CaloHypo* hypo ) const 
 { 
-  return likelyhood(hypo);
+  return likelihood(hypo);
 };
 
 // ============================================================================

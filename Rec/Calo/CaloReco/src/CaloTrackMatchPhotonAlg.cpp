@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchPhotonAlg.cpp,v 1.1.1.1 2002-11-13 20:46:41 ibelyaev Exp $
+// $Id: CaloTrackMatchPhotonAlg.cpp,v 1.2 2004-02-17 12:08:11 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
+// new package 
+//
 // Revision 1.2  2002/06/19 09:54:37  ibelyaev
 //  remove compiler problem kindly reported by Chris Jones
 //
@@ -85,37 +88,17 @@ CaloTrackMatchPhotonAlg::~CaloTrackMatchPhotonAlg() {};
 // ============================================================================
 StatusCode CaloTrackMatchPhotonAlg::initialize() 
 {
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
   // initialize the base class 
   StatusCode sc = CaloAlgorithm::initialize () ;
   if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class CaloAlgorithm" , sc );}
+  { return Error("Could not initialize the base class CaloAlgorithm" , sc );}
   // locate matching tool
-  m_match = tool( m_matchTypeName , m_match );
+  m_match = tool<ICaloTrackMatch>( m_matchTypeName );
   // 
   return StatusCode::SUCCESS;
 };
 // ============================================================================
 
-// ============================================================================
-/**  standard Algorithm finalization
- *   @see CaloAlgorithm
- *   @see     Algorithm
- *   @see    IAlgorithm
- *   @return status code 
- */
-// ============================================================================
-StatusCode CaloTrackMatchPhotonAlg::finalize() 
-{  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-  // release match tool 
-  if( 0 != m_match ) { m_match->release() ; m_match = 0 ; }
-  // finalize the base class 
-  return CaloAlgorithm::finalize () ;
-};
-// ============================================================================
 
 // ============================================================================
 /**  standard Algorithm execution
@@ -133,15 +116,12 @@ StatusCode CaloTrackMatchPhotonAlg::execute()
   /// relation table
   typedef RelationWeighted2D<CaloCluster,TrStoredTrack,float> Table    ; 
   
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
-  
   // get input clusteres 
-  Clusters* clusters = get( eventSvc() , inputData() , clusters );
+  Clusters* clusters = get<Clusters> ( inputData() );
   if( 0 == clusters ) { return StatusCode::FAILURE ; }
   
   // get tracks 
-  Tracks*   tracks   = get( eventSvc() , m_trackData , tracks   );
+  Tracks*   tracks   = get<Tracks>   ( m_trackData );
   if( 0 == tracks   ) { return StatusCode::FAILURE ; }
   
   // create the relation table and register it in Gaudi Event Transient Store
@@ -151,26 +131,26 @@ StatusCode CaloTrackMatchPhotonAlg::execute()
   // loop over clusters and tracks, match all-by-all 
   for( Clusters::const_iterator cluster = clusters->begin() ;
        clusters->end() != cluster ; ++cluster )
+  {
+    // skip NULLs 
+    if( 0 == *cluster )       { continue ; }               // CONTINUE !
+    for( Tracks::const_iterator track = tracks->begin() ;
+         tracks->end() != track ; ++track )
     {
-      // skip NULLs 
-      if( 0 == *cluster )       { continue ; }               // CONTINUE !
-      for( Tracks::const_iterator track = tracks->begin() ;
-           tracks->end() != track ; ++track )
-        {
-          if( 0 == *track )     { continue ; }               // CONTINUE !
-          /// get matching 
-          ICaloTrackMatch::MatchingPair p = 
-            (*m_match)( &(*cluster)->position() , *track );
-          if( p.first.isFailure() )
-            { 
-              Error("Error from matching tool, skip the pair" , p.first );
-              continue ;                                     // CONTINUE ! 
-            }
-          /// make relations 
-          if( p.second < m_chi2Cut )
-            { table->relate( *cluster , *track , (float) p.second ); }
-        }
+      if( 0 == *track )     { continue ; }               // CONTINUE !
+      /// get matching 
+      ICaloTrackMatch::MatchingPair p = 
+        (*m_match)( &(*cluster)->position() , *track );
+      if( p.first.isFailure() )
+      { 
+        Error("Error from matching tool, skip the pair" , p.first );
+        continue ;                                     // CONTINUE ! 
+      }
+      /// make relations 
+      if( p.second < m_chi2Cut )
+      { table->relate( *cluster , *track , (float) p.second ); }
     }
+  }
   ///
   return StatusCode::SUCCESS;
 };

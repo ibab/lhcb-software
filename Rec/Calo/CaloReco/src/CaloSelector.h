@@ -1,4 +1,4 @@
-// $Id: CaloSelector.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
+// $Id: CaloSelector.h,v 1.3 2004-02-17 12:08:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -16,7 +16,7 @@
 // from CaloInterfaces 
 #include "CaloInterfaces/ICaloClusterSelector.h"
 // forward declaratiosn 
-class ICaloLikelyhood ; // from CaloInterfaces ;
+class ICaloLikelihood ; // from CaloInterfaces ;
 
 /** @class CaloSelector CaloSelector.h
  *  
@@ -102,7 +102,7 @@ private:
   // name of Likelyhood tool to be used 
   std::string      m_lhName     ; ///< name of Likelyhood tool to be used 
   //         Likelyhood tool to be used 
-  ICaloLikelyhood* m_likelyhood ; ///<         Likelyhood tool to be used 
+  ICaloLikelihood* m_likelihood ; ///<         Likelyhood tool to be used 
   // cut on likelyhood 
   double           m_cut        ; ///< value of likelihood cut
 

@@ -1,8 +1,11 @@
-// $Id: CaloDeleteObjectsAlg.h,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $
+// $Id: CaloDeleteObjectsAlg.h,v 1.2 2004-02-17 12:08:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // Revision 1.1  2002/09/04 14:41:34  ibelyaev
 //  add new algorithms for recalibration of Ecal
 //
@@ -36,14 +39,6 @@ class CaloDeleteObjectsAlg : public CaloAlgorithm
 
 public:
   
-  /** standard algorithm initialization 
-   *  @see CaloAlgorithm
-   *  @see     Algorithm
-   *  @see    IAlgorithm
-   *  @return status code 
-   */
-  virtual StatusCode initialize();   
-  
   /** standard algorithm execution 
    *  @see CaloAlgorithm
    *  @see     Algorithm
@@ -52,13 +47,6 @@ public:
    */
   virtual StatusCode execute   ();   
   
-  /** standard algorithm finalization 
-   *  @see CaloAlgorithm
-   *  @see     Algorithm
-   *  @see    IAlgorithm
-   *  @return status code 
-   */
-  virtual StatusCode finalize  ();   
   
 protected:
   
@@ -67,13 +55,13 @@ protected:
    *  @param   svcloc pointer to service locator 
    */
   CaloDeleteObjectsAlg( const std::string& name   , 
-              ISvcLocator*       svcloc );
+                        ISvcLocator*       svcloc );
   
   /// destructor (virtual and protected)
   virtual ~CaloDeleteObjectsAlg();
   
 private:
-
+  
   /// default  construstor  is  private 
   CaloDeleteObjectsAlg(); 
   /// copy     construstor  is  private 

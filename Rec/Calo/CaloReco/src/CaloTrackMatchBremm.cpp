@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchBremm.cpp,v 1.2 2002-12-01 14:22:58 ibelyaev Exp $
+// $Id: CaloTrackMatchBremm.cpp,v 1.3 2004-02-17 12:08:11 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/01 14:22:58  ibelyaev
+//  Hcal stuff and updated S-coprrections
+//
 // Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
 // new package 
 //
@@ -12,6 +15,7 @@
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartRef.h"
+#include "GaudiKernel/GaudiException.h"
 
 // Calo related
 #include "Event/CaloCluster.h"

@@ -1,15 +1,16 @@
-# $Id: requirements,v 1.16 2004-01-13 14:33:34 cattanem Exp $
+# $Id: requirements,v 1.17 2004-02-17 12:08:05 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package            CaloReco
-version            v1r8
+version            v2r0
 
 # ================ structure ==================================================
 branches           cmt doc src options 
 
 # ================ dependencies ===============================================
-use CaloInterfaces v3r*	  Calo 
+use CaloInterfaces v4r*	  Calo 
+use CaloKernel     v3r*   Calo 
 use CaloUtils      v4r*   Calo 
 use AIDA           v*   -no_auto_imports
 

@@ -1,8 +1,11 @@
-// $Id: CaloSharedCellAlg.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
+// $Id: CaloSharedCellAlg.h,v 1.3 2004-02-17 12:08:10 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/06/23 13:11:54  ibelyaev
+//  fix for gcc3.2
+//
 // Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
 // new package 
 //
@@ -58,14 +61,6 @@ public:
    *  @return status code 
    */
   virtual StatusCode execute    () ;
-  
-  /** standard finalization method 
-   *  @see CaloAlgorithm
-   *  @see     Algorithm 
-   *  @see    IAlgorithm
-   *  @return status code 
-   */
-  virtual StatusCode finalize   () ;
   
 protected:
   

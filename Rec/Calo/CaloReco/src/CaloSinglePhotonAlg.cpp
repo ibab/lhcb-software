@@ -1,20 +1,8 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.3 2003-05-15 19:27:02 ibelyaev Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.4 2004-02-17 12:08:10 ibelyaev Exp $
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/12/09 17:43:09  cattanem
-// bug fixes
-//
-// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
-// new package 
-//
-// Revision 1.2  2002/06/13 12:36:13  ibelyaev
-//  new algorithms and new options
-//
-// Revision 1.1.1.1  2002/05/21 14:18:21  ibelyaev
-// New package
-// 
 // ============================================================================
 // Include files
 // STD & STL 
@@ -111,49 +99,49 @@ CaloSinglePhotonAlg::initialize()
   // initialize  the base class 
   StatusCode sc = CaloAlgorithm::initialize();
   if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class CaloAlgorithm!",sc);}
+  { return Error("Could not initialize the base class CaloAlgorithm!",sc);}
   // check the geometry information 
-  const DeCalorimeter* det = get( detSvc() , detData() , det ) ;
+  const DeCalorimeter* det = getDet<DeCalorimeter>( detData() ) ;
   if( 0 == det ) { return Error("Detector information is not available!");}
   { // locate selector tools
     for( Names::const_iterator item = m_selectorsTypeNames.begin() ;
          m_selectorsTypeNames.end() != item ; ++item )
-      {
-        ICaloClusterSelector* selector   = tool( *item , selector );
-        m_selectors.push_back( selector );
-      }
+    {
+      ICaloClusterSelector* selector   = tool<ICaloClusterSelector>( *item );
+      m_selectors.push_back( selector );
+    }
   }
   { // locate correction tools
     for( Names::const_iterator item = m_correctionsTypeNames.begin() ;
          m_correctionsTypeNames.end() != item ; ++item )
-      {
-        ICaloHypoTool*  correction       = tool( *item , correction );
-        m_corrections.push_back( correction );
-      }
+    {
+      ICaloHypoTool*  correction       = tool<ICaloHypoTool>( *item );
+      m_corrections.push_back( correction );
+    }
   }
   { // locate other hypo  tools
     for( Names::const_iterator item = m_hypotoolsTypeNames.begin() ;
          m_hypotoolsTypeNames.end() != item ; ++item )
-      {
-        ICaloHypoTool*  hypotool         = tool( *item , hypotool );
-        m_hypotools.push_back(  hypotool  );
-      }
+    {
+      ICaloHypoTool*  hypotool         = tool<ICaloHypoTool>( *item );
+      m_hypotools.push_back(  hypotool  );
+    }
   }
   { // locate correction tools
     for( Names::const_iterator item = m_correctionsTypeNames2.begin() ;
          m_correctionsTypeNames2.end() != item ; ++item )
-      {
-        ICaloHypoTool*  correction       = tool( *item , correction );
-        m_corrections2.push_back( correction );
-      }
+    {
+      ICaloHypoTool*  correction       = tool<ICaloHypoTool>( *item );
+      m_corrections2.push_back( correction );
+    }
   }
   { // locate other hypo  tools
     for( Names::const_iterator item = m_hypotoolsTypeNames2.begin() ;
          m_hypotoolsTypeNames2.end() != item ; ++item )
-      {
-        ICaloHypoTool*  hypotool         = tool( *item , hypotool );
-        m_hypotools2.push_back(  hypotool  );
-      }
+    {
+      ICaloHypoTool*  hypotool         = tool<ICaloHypoTool>( *item );
+      m_hypotools2.push_back(  hypotool  );
+    }
   }
   ///
   return StatusCode::SUCCESS;
@@ -169,22 +157,6 @@ StatusCode
 CaloSinglePhotonAlg::finalize() 
 {
   Print( " == > Finalize  " , StatusCode::SUCCESS , MSG::DEBUG );  
-  // release all tools 
-  std::for_each
-    ( m_selectors    .begin () , 
-      m_selectors    .end   () , std::mem_fun(&IInterface::release) );
-  std::for_each
-    ( m_corrections  .begin () , 
-      m_corrections  .end   () , std::mem_fun(&IInterface::release) );
-  std::for_each
-    ( m_hypotools    .begin () , 
-      m_hypotools    .end   () , std::mem_fun(&IInterface::release) );
-  std::for_each
-    ( m_corrections2 .begin () , 
-      m_corrections2 .end   () , std::mem_fun(&IInterface::release) );
-  std::for_each
-    ( m_hypotools2   .begin () , 
-      m_hypotools2   .end   () , std::mem_fun(&IInterface::release) );
   // clear containers
   m_selectors             .clear () ;
   m_corrections           .clear () ;
@@ -209,16 +181,13 @@ CaloSinglePhotonAlg::finalize()
 StatusCode 
 CaloSinglePhotonAlg::execute() 
 {
-  Print( " == > Execute   " , StatusCode::SUCCESS , MSG::DEBUG );  
-  
   // avoid long names 
   typedef CaloClusters             Clusters ;
   typedef CaloHypos                Hypos    ;
   typedef Clusters::iterator       iterator ;
   
   // get input clusters
-  Clusters* clusters = 
-    get( eventSvc() , inputData() , clusters );
+  Clusters* clusters = get<Clusters>( inputData() );
   
   // create and the output container of hypotheses and put in to ETS  
   Hypos*    hypos = new Hypos() ;
@@ -227,83 +196,80 @@ CaloSinglePhotonAlg::execute()
   // loop over clusters 
   for( iterator cluster = clusters->begin() ; 
        clusters->end() != cluster ; ++cluster )
+  {
+    bool select = true ;
+    // loop over all selectors 
+    for( Selectors::const_iterator selector = m_selectors.begin() ;
+         select && m_selectors.end() != selector ; ++selector )
+    { 
+      select = (**selector)( *cluster ); 
+    }
+    // cluster to be selected? 
+    if( !select ) { continue ; }
+    
+    // create "Hypo"/"Photon" object
+    CaloHypo* hypo = new CaloHypo() ;
+    // set parameters of newly created hypo 
+    hypo->setHypothesis( CaloHypotheses::Photon );      
+    hypo->addToClusters( *cluster );
+    
+    StatusCode sc( StatusCode::SUCCESS );
+    
+    // loop over all corrections and apply corrections  
+    for( Corrections::const_iterator correction = m_corrections.begin() ;
+         sc.isSuccess() && m_corrections.end() != correction ; ++correction )
+    { sc = (**correction) ( hypo ); }
+    
+    if( sc.isFailure() ) 
     {
-      bool select = true ;
-      // loop over all selectors 
-      for( Selectors::const_iterator selector = m_selectors.begin() ;
-           select && m_selectors.end() != selector ; ++selector )
-        { 
-          select = (**selector)( *cluster ); 
-        }
-      // cluster to be selected? 
-      if( !select ) { continue ; }
-
-      // create "Hypo"/"Photon" object
-      CaloHypo* hypo = new CaloHypo() ;
-      // set parameters of newly created hypo 
-      hypo->setHypothesis( CaloHypotheses::Photon );      
-      hypo->addToClusters( *cluster );
-      
-      StatusCode sc( StatusCode::SUCCESS );
-      
-      // loop over all corrections and apply corrections  
-      for( Corrections::const_iterator correction = m_corrections.begin() ;
-           sc.isSuccess() && m_corrections.end() != correction ; ++correction )
-        { sc = (**correction) ( hypo ); }
-      
-      if( sc.isFailure() ) 
-        {
-          delete hypo ; hypo = 0 ;                        // ATTENTION !
-          Error("Error from Correction Tool, skip the cluster  " , sc ); 
-          continue ;                                      // CONTINUE  !  
-        }
-      
-      // loop over other hypo tools (e.g. add extra digits)
-      for( HypoTools::const_iterator hypotool = m_hypotools.begin() ;
-           sc.isSuccess() && m_hypotools.end() != hypotool ; ++hypotool )
-        { sc = (**hypotool) ( hypo ); }
-      
-      if( sc.isFailure() ) 
-        {
-          delete hypo ; hypo = 0 ;                       // ATTENTION !
-          Error("Error from Other Hypo Tool, skip the cluster  " , sc );
-          continue  ;                                    // ATTENTION ! 
-        }
-      
-      // loop over all corrections and apply corrections  
-      for( Corrections::const_iterator cor2 = m_corrections2.begin() ;
-           sc.isSuccess() && m_corrections2.end() != cor2 ; ++cor2 )
-        { sc = (**cor2) ( hypo ); }
-      
-      if( sc.isFailure() ) 
-        {
-          delete hypo ; hypo = 0 ;                      // ATTENTION !
-          Error("Error from Correction Tool 2 skip the cluster" , sc );  
-          continue ;                                    // CONTINUE  ! 
-        }
-      
-      // loop over other hypo tools (e.g. add extra digits)
-      for( HypoTools::const_iterator hypotool2 = m_hypotools2.begin() ;
-           sc.isSuccess() && m_hypotools2.end() != hypotool2 ; ++hypotool2 )
-        { sc = (**hypotool2) ( hypo ); }
-      
-      if( sc.isFailure() ) 
-        {
-          delete hypo ; hypo = 0 ;                      // ATTENTION !
-          Error("Error from Other Hypo Tool 2, skip the cluster" , sc ); 
-          continue ;                                    // CONTINUE !
-        }
-      
-      /// add the hypo into container of hypos 
-      if( 0 != hypo ) { hypos->insert( hypo ); }
-      
-      
-    } // end of the loop over all clusters
+      delete hypo ; hypo = 0 ;                        // ATTENTION !
+      Error("Error from Correction Tool, skip the cluster  " , sc ); 
+      continue ;                                      // CONTINUE  !  
+    }
+    
+    // loop over other hypo tools (e.g. add extra digits)
+    for( HypoTools::const_iterator hypotool = m_hypotools.begin() ;
+         sc.isSuccess() && m_hypotools.end() != hypotool ; ++hypotool )
+    { sc = (**hypotool) ( hypo ); }
+    
+    if( sc.isFailure() ) 
+    {
+      delete hypo ; hypo = 0 ;                       // ATTENTION !
+      Error("Error from Other Hypo Tool, skip the cluster  " , sc );
+      continue  ;                                    // ATTENTION ! 
+    }
+    
+    // loop over all corrections and apply corrections  
+    for( Corrections::const_iterator cor2 = m_corrections2.begin() ;
+         sc.isSuccess() && m_corrections2.end() != cor2 ; ++cor2 )
+    { sc = (**cor2) ( hypo ); }
+    
+    if( sc.isFailure() ) 
+    {
+      delete hypo ; hypo = 0 ;                      // ATTENTION !
+      Error("Error from Correction Tool 2 skip the cluster" , sc );  
+      continue ;                                    // CONTINUE  ! 
+    }
+    
+    // loop over other hypo tools (e.g. add extra digits)
+    for( HypoTools::const_iterator hypotool2 = m_hypotools2.begin() ;
+         sc.isSuccess() && m_hypotools2.end() != hypotool2 ; ++hypotool2 )
+    { sc = (**hypotool2) ( hypo ); }
+    
+    if( sc.isFailure() ) 
+    {
+      delete hypo ; hypo = 0 ;                      // ATTENTION !
+      Error("Error from Other Hypo Tool 2, skip the cluster" , sc ); 
+      continue ;                                    // CONTINUE !
+    }
+    
+    /// add the hypo into container of hypos 
+    if( 0 != hypo ) { hypos->insert( hypo ); }
+    
+    
+  } // end of the loop over all clusters
   
-  
-  MsgStream log( msgSvc() , name() );  
-  log << MSG::DEBUG
-      << " # of created Photon  Hypos is  " << hypos->size() << endreq ;
+  debug() << " # of created Photon  Hypos is  " << hypos->size() << endreq ;
   
   return StatusCode::SUCCESS;
 };

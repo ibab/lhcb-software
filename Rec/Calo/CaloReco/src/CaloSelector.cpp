@@ -1,8 +1,11 @@
-// $Id: CaloSelector.cpp,v 1.1.1.1 2002-11-13 20:46:42 ibelyaev Exp $
+// $Id: CaloSelector.cpp,v 1.2 2004-02-17 12:08:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:42  ibelyaev
+// new package 
+//
 // Revision 1.2  2002/04/26 13:36:40  ibelyaev
 //  update for change in ICaloLikelyhood interface
 //
@@ -19,7 +22,7 @@
 // from LHCbKernel
 #include "Kernel/CaloHypotheses.h"
 // CaloInterfaces 
-#include "CaloInterfaces/ICaloLikelyhood.h"
+#include "CaloInterfaces/ICaloLikelihood.h"
 // local
 #include "CaloSelector.h"
 
@@ -52,7 +55,7 @@ CaloSelector::CaloSelector( const std::string&  type   ,
   : CaloTool ( type, name , parent ) 
   , m_lhType     (        ) 
   , m_lhName     (        ) 
-  , m_likelyhood ( 0      )
+  , m_likelihood ( 0      )
   , m_cut        ( 1.e+50 ) 
 {  
   // interfaces  
@@ -68,8 +71,6 @@ CaloSelector::CaloSelector( const std::string&  type   ,
 // ============================================================================
 CaloSelector::~CaloSelector()
 {
-  // release likelihood tool
-  if( 0 != m_likelyhood ) { m_likelyhood->release() ; m_likelyhood = 0 ; }
 };
 
 // ============================================================================
@@ -85,13 +86,12 @@ StatusCode CaloSelector::initialize()
   // initialialize the base class 
   StatusCode sc = CaloTool::initialize() ;
   if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class CaloTool!",sc);}
+  { return Error("Could not initialize the base class CaloTool!",sc);}
   /// locate the tool 
-  m_likelyhood = m_lhName.empty() ?
-    tool(        m_lhType ,            m_likelyhood ) :
-    tool(        m_lhType , m_lhName , m_likelyhood ) ;
-  if( 0 == m_likelyhood ) { return StatusCode::FAILURE ; }
-  m_likelyhood -> addRef();
+  m_likelihood = m_lhName.empty() ?
+    tool<ICaloLikelihood>( m_lhType            ) :
+    tool<ICaloLikelihood>( m_lhType , m_lhName ) ;
+  if( 0 == m_likelihood ) { return StatusCode::FAILURE ; }
   //
   return StatusCode::SUCCESS ;
 };
@@ -106,8 +106,6 @@ StatusCode CaloSelector::initialize()
 // ============================================================================
 StatusCode CaloSelector::finalize() 
 {
-  // release likelihood tool
-  if( 0 != m_likelyhood ) { m_likelyhood->release() ; m_likelyhood = 0 ; }
   ///finalize the base class 
   return CaloTool::finalize() ;
 };
@@ -122,7 +120,7 @@ StatusCode CaloSelector::finalize()
 bool CaloSelector::operator() ( const CaloCluster* cluster ) const
 {
   if( 0 == cluster ) {  return false ; }
-  return  m_cut <= (*m_likelyhood) (cluster) ;
+  return  m_cut <= (*m_likelihood) (cluster) ;
 };
 
 // ============================================================================

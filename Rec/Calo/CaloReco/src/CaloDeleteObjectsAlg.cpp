@@ -1,8 +1,11 @@
-// $Id: CaloDeleteObjectsAlg.cpp,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $
+// $Id: CaloDeleteObjectsAlg.cpp,v 1.2 2004-02-17 12:08:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // Revision 1.1  2002/09/04 14:41:34  ibelyaev
 //  add new algorithms for recalibration of Ecal
 //
@@ -59,44 +62,6 @@ CaloDeleteObjectsAlg::CaloDeleteObjectsAlg
 // ============================================================================
 CaloDeleteObjectsAlg::~CaloDeleteObjectsAlg() {};
 
-// ============================================================================
-/** standard algorithm initialization 
- *  @see CaloAlgorithm
- *  @see     Algorithm
- *  @see    IAlgorithm
- *  @return status code 
- */
-// ============================================================================
-StatusCode CaloDeleteObjectsAlg::initialize() 
-{  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endreq;
-  
-  StatusCode sc = CaloAlgorithm::initialize();
-  if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class CaloAlgorithm",sc);}
-  
-  return StatusCode::SUCCESS;
-};
-// ============================================================================
-
-// ============================================================================
-/** standard algorithm finalization 
- *  @see CaloAlgorithm
- *  @see     Algorithm
- *  @see    IAlgorithm
- *  @return status code 
- */
-// ============================================================================
-StatusCode CaloDeleteObjectsAlg::finalize() 
-{  
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-  
-  /// finalize the base class 
-  return CaloAlgorithm::finalize();
-};
-// ============================================================================
 
 // ============================================================================
 /** standard algorithm execution 
@@ -109,22 +74,19 @@ StatusCode CaloDeleteObjectsAlg::finalize()
 StatusCode CaloDeleteObjectsAlg::execute() 
 {
   
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
-  
   // loop over all addresses 
   for( Addresses::const_iterator address = 
          m_addresses.begin() ; m_addresses.end() != address ; ++address )
-    {
-      // locate the object in TES 
-      DataObject* object = get( eventSvc() , *address , object );
-      if( 0 == object ) { return StatusCode::FAILURE ; }
-      // unregister the object
-      StatusCode sc = eventSvc()->unregisterObject( object ) ;
-      if( sc.isFailure() ) 
-        { return  Error("Could not unregister "+(*address),sc); }
-      delete object ;
-    }
+  {
+    // locate the object in TES 
+    DataObject* object = get<DataObject>( *address );
+    if( 0 == object ) { return StatusCode::FAILURE ; }
+    // unregister the object
+    StatusCode sc = eventSvc()->unregisterObject( object ) ;
+    if( sc.isFailure() ) 
+    { return  Error("Could not unregister "+(*address),sc); }
+    delete object ;
+  }
   
   return StatusCode::SUCCESS ;
 };

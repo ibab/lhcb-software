@@ -1,8 +1,11 @@
-// $Id: CaloExtraDigits.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
+// $Id: CaloExtraDigits.h,v 1.3 2004-02-17 12:08:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/06/23 13:11:54  ibelyaev
+//  fix for gcc3.2
+//
 // Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
 // new package 
 //
@@ -57,14 +60,6 @@ public:
    */
   virtual StatusCode initialize () ;
   
-  /** standard finalization of the tool
-   *  @see IAlgTool
-   *  @see  AlgTool
-   *  @see CaloTool
-   *  @return status code 
-   */
-  virtual StatusCode finalize () ;
-  
   /** The main processing method 
    *  @see ICaloHypoTool 
    *  @param  hypo  pointer to CaloHypo object to be processed
@@ -111,9 +106,6 @@ private:
   CaloExtraDigits& operator=( const CaloExtraDigits& );
   
 private:
-  
-  IIncidentSvc*                    m_incSvc            ;
-  IDataProviderSvc*                m_evtSvc            ;
   
   std::string                      m_inputData         ;
   mutable CaloDigits*              m_digits            ;

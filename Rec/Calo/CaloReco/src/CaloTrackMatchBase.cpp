@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchBase.cpp,v 1.1.1.1 2002-11-13 20:46:43 ibelyaev Exp $
+// $Id: CaloTrackMatchBase.cpp,v 1.2 2004-02-17 12:08:10 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
+// new package 
+//
 // Revision 1.12  2002/07/17 15:55:15  ibelyaev
 // ============================================================================
 // Include files
@@ -53,7 +56,6 @@ CaloTrackMatchBase::CaloTrackMatchBase
   , m_extrapolator ( 0          )
   , m_extrapolatorName("TrFirstCleverExtrapolator")
   , m_tolerance    ( 5 * mm     ) 
-  , m_incSvc       ( 0          )
 { 
   // interfaces 
   declareInterface<ICaloTrackMatch>   ( this ) ;
@@ -81,18 +83,12 @@ StatusCode CaloTrackMatchBase::initialize()
     return Error( "Could not initialize the base class CaloTool!", TOOL );
   
   // locate the extrapolator 
-  m_extrapolator = tool( m_extrapolatorName , m_extrapolator ) ;
+  m_extrapolator = tool<ITrExtrapolator>( m_extrapolatorName ) ;
   if( 0 == m_extrapolator ) { return StatusCode::FAILURE ; }
   
-  // locate incident service 
-  sc = service( "IncidentSvc" , m_incSvc , true );
-  if( sc.isFailure() ) { return Error("Coudl not locate 'IncidentSvc'",sc);}
-  if( 0 == incSvc()  ) { return Error("Coudl not locate 'IncidentSvc'"   );}
-  incSvc() -> addRef() ;
-  
   // subscribe to incidents 
-  incSvc()->addListener( this , "EndEvent" , 10 );
-
+  incSvc() -> addListener( this , IncidentType::EndEvent , 10 );
+  
   // set particle ID 
   m_pid =  ParticleID( m_pdgID );
   
@@ -111,18 +107,16 @@ StatusCode CaloTrackMatchBase::finalize()
   if ( m_state != 0 ) { delete m_state; m_state = 0; }
   // reset track 
   m_prevTrack = 0 ;
-  // release services 
-  if( 0 != incSvc() ) { incSvc()->release() ; m_incSvc = 0 ; }
   // finalize  the base class
   return CaloTool::finalize();
 };
 // ============================================================================
 
 // ============================================================================
-  /** handle the incident
-   *  @see IIncidentListener 
-   *  @param incident incident to be handled 
-   */
+/** handle the incident
+ *  @see IIncidentListener 
+ *  @param incident incident to be handled 
+ */
 // ============================================================================
 void CaloTrackMatchBase::handle ( const Incident& /* incident */ ) 
 {

@@ -1,9 +1,12 @@
-// $Id: SubClusterSelectorBase.cpp,v 1.1.1.1 2002-11-13 20:46:43 ibelyaev Exp $
+// $Id: SubClusterSelectorBase.cpp,v 1.2 2004-02-17 12:08:11 ibelyaev Exp $
 // Include files 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
+// new package 
+//
 // Revision 1.6  2002/04/23 10:49:03  ibelyaev
 // ============================================================================
 // from Gaudi
@@ -79,7 +82,7 @@ StatusCode SubClusterSelectorBase::initialize ()
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!",sc);}
   // load and set the  detector
-  setDet( get( detSvc() , detName() , (DeCalorimeter*) 0 ) );
+  setDet( getDet<DeCalorimeter>( detName() ) );
   // 
   return StatusCode::SUCCESS;
 };

@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchPhotonAlg.h,v 1.1.1.1 2002-11-13 20:46:41 ibelyaev Exp $
+// $Id: CaloTrackMatchPhotonAlg.h,v 1.2 2004-02-17 12:08:11 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
+// new package 
+//
 // Revision 1.1.1.1  2002/05/21 14:18:21  ibelyaev
 // New package
 //
@@ -50,14 +53,6 @@ public:
    *   @return status code
    */
   virtual StatusCode execute    ();
-
-  /**  standard Algorithm finalization
-   *   @see CaloAlgorithm
-   *   @see     Algorithm
-   *   @see    IAlgorithm
-   *   @return status code
-   */
-  virtual StatusCode finalize   ();
 
 protected:
 

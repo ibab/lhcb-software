@@ -1,4 +1,4 @@
-// $Id: CaloSShape.cpp,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
+// $Id: CaloSShape.cpp,v 1.3 2004-02-17 12:08:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -77,14 +77,14 @@ CaloSShape::initialize  ()
   StatusCode sc = CaloTool::initialize();
   if( sc.isFailure() ) { return sc ; }
   //   locate the detector information
-  const DeCalorimeter* calo = get( detSvc() , detName() , calo ) ;
+  const DeCalorimeter* calo = getDet<DeCalorimeter>( detName() ) ;
   setDet( calo );
   /// locate corrections
   /// locate all area corrections 
   for( Names::const_iterator Type = m_areaCorrectionsTypeNames.begin() ;
        m_areaCorrectionsTypeNames.end() != Type  ; ++Type )
     {
-      ICaloCorrection* corr = tool( *Type , corr ) ;
+      ICaloCorrection* corr = tool<ICaloCorrection>( *Type ) ;
       m_areaCorrections.push_back( corr );
     };
   ///
@@ -103,10 +103,6 @@ CaloSShape::initialize  ()
 StatusCode 
 CaloSShape::finalize   ()
 {
-  /// release all used tools 
-  std::for_each( m_areaCorrections.begin () , 
-                 m_areaCorrections.end   () , 
-                 std::mem_fun(&IInterface::release) );
   /// clear containers 
   m_areaCorrectionsTypeNames .clear();
   m_areaCorrections          .clear();  

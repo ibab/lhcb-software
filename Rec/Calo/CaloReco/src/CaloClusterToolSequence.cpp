@@ -1,14 +1,8 @@
-// $Id: CaloClusterToolSequence.cpp,v 1.1.1.1 2002-11-13 20:46:41 ibelyaev Exp $
+// $Id: CaloClusterToolSequence.cpp,v 1.2 2004-02-17 12:08:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2002/04/30 20:37:56  ibelyaev
-//  new option files and bettwer doxygen documentation
-//
-// Revision 1.1  2002/04/27 19:21:30  ibelyaev
-//  several 'technical' tools are added
-// 
 // ============================================================================
 // Include files 
 // STD & STL 
@@ -80,14 +74,14 @@ StatusCode CaloClusterToolSequence::initialize ()
   // initialize the base class
   StatusCode sc = CaloTool::initialize() ;
   if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class CaloTool",sc);}
+  { return Error("Could not initialize the base class CaloTool",sc);}
   // locate selectors 
   for( Names::const_iterator it = m_clusterToolsTypeNames.begin() ;
        m_clusterToolsTypeNames.end() != it ; ++it )
-    {
-      ICaloClusterTool* clusterTool = tool( *it , clusterTool );
-      m_clusterTools.push_back( clusterTool );
-    };     
+  {
+    ICaloClusterTool* clusterTool = tool<ICaloClusterTool>( *it );
+    m_clusterTools.push_back( clusterTool );
+  };     
   ///
   return StatusCode::SUCCESS ;
 };
@@ -103,9 +97,6 @@ StatusCode CaloClusterToolSequence::initialize ()
 // ============================================================================
 StatusCode CaloClusterToolSequence::finalize   () 
 {
-  // release tools NOT clear containers 
-  std::for_each( m_clusterTools.begin () , 
-                 m_clusterTools.end   () , std::mem_fun(&IInterface::release));
   m_clusterTools          .clear() ;
   m_clusterToolsTypeNames .clear() ;
   // finalize the base class 

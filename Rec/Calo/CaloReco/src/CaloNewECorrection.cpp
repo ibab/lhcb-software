@@ -1,8 +1,11 @@
-// $Id: CaloNewECorrection.cpp,v 1.3 2003-12-11 16:33:40 cattanem Exp $
+// $Id: CaloNewECorrection.cpp,v 1.4 2004-02-17 12:08:09 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/12/11 16:33:40  cattanem
+// Fixes for Gaudi v13
+//
 // Revision 1.2  2003/05/16 08:19:11  cattanem
 // remove unused variables
 //
@@ -137,22 +140,22 @@ StatusCode CaloNewECorrection::initialize ()
   /// first initialize the base class 
   StatusCode sc = CaloTool::initialize();
   if( sc.isFailure() ) 
-    { return Error ( "Unable initialize the base class CaloTool!" , sc ) ; }
+  { return Error ( "Unable initialize the base class CaloTool!" , sc ) ; }
   
   // transform vector of accepted hypos
   m_hypos.clear () ;
   for( Hypotheses_::const_iterator ci = m_hypos_.begin() ; 
        m_hypos_.end() != ci ; ++ci ) 
-    {
-      const int hypo = *ci ;
-      if( hypo <= (int) CaloHypotheses::Undefined || 
-          hypo >= (int) CaloHypotheses::Other      ) 
-        { return Error("Invalid/Unknown  Calorimeter hypothesis object!" ) ; }
-      m_hypos.push_back( (CaloHypotheses::Hypothesis) hypo );
-    }
+  {
+    const int hypo = *ci ;
+    if( hypo <= (int) CaloHypotheses::Undefined || 
+        hypo >= (int) CaloHypotheses::Other      ) 
+    { return Error("Invalid/Unknown  Calorimeter hypothesis object!" ) ; }
+    m_hypos.push_back( (CaloHypotheses::Hypothesis) hypo );
+  }
   
   // locate and set and configure the Detector 
-  const DeCalorimeter* ecal = get( detSvc() , detName () , ecal ) ;
+  const DeCalorimeter* ecal = getDet<DeCalorimeter>( detName () ) ;
   if( 0 == ecal ) { return StatusCode::FAILURE ; }
   setDet( ecal ) ;
   m_calo.setCalo( detName() );
@@ -181,13 +184,11 @@ StatusCode CaloNewECorrection::initialize ()
     { return Error("Empty vector of allowed Calorimeter Hypotheses!" ) ; }
   
   // debug printout of all allowed hypos 
-  log << MSG::DEBUG 
-      << " List of allowed hypotheses : " << endreq;
+  debug() << " List of allowed hypotheses : " << endreq;
   for( Hypotheses::const_iterator it = m_hypos.begin() ; 
        m_hypos.end() != it ; ++it ) 
-    {      log << " \t \t" ; CaloHypoPrint( log , *it ) ; log << endreq ;
-    };
-
+  { debug ()  << " \t \t" ; CaloHypoPrint( log , *it ) ; log << endreq ; };
+  
   return StatusCode::SUCCESS ;
 };
 // ============================================================================
@@ -227,8 +228,6 @@ StatusCode CaloNewECorrection::process    ( CaloHypo* hypo  ) const
   Hypotheses::const_iterator h = 
     std::find( m_hypos.begin() , m_hypos.end() , hypo->hypothesis() ) ;
   if( m_hypos.end() == h ) { return Error ( "Invalid hypothesis!" ) ; }
-  
-
 
   // get all clusters from the hypo 
   const Clusters& clusters = hypo->clusters() ;

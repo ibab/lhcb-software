@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.7 2004-01-13 08:47:25 ibelyaev Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.8 2004-02-17 12:08:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -102,16 +102,16 @@ StatusCode CaloMergedPi0Alg::initialize()
   
   StatusCode sc = CaloAlgorithm::initialize();
   if( sc.isFailure() ) 
-    { return Error("Could not initialize the base class!",sc);}
-
+  { return Error("Could not initialize the base class!",sc);}
+  
   // locate tools
   for ( Names::const_iterator it = m_toolTypeNames.begin() ;
         m_toolTypeNames.end() != it ; ++it )
-    {
-      ICaloHypoTool* t = tool( *it , t );
-      if( 0 == t ) { return StatusCode::FAILURE ; }
-      m_tools.push_back( t ) ;
-    }
+  {
+    ICaloHypoTool* t = tool<ICaloHypoTool>( *it );
+    if( 0 == t ) { return StatusCode::FAILURE ; }
+    m_tools.push_back( t ) ;
+  }
   
 //    /// NTuple identifier 
 //    if( 0 == ntupleSvc() )
@@ -152,14 +152,7 @@ StatusCode CaloMergedPi0Alg::initialize()
 // ============================================================================
 StatusCode CaloMergedPi0Alg::finalize() 
 {
-  
-  MsgStream log( msgSvc() , name() );
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-  
-  std::for_each( m_tools.begin () , 
-                 m_tools.end   () , std::mem_fun(&IInterface::release));
   m_tools.clear() ;
-
   /// finalize the base class 
   return CaloAlgorithm::finalize();
 

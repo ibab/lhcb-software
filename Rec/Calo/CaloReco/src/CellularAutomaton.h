@@ -3,26 +3,6 @@
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
-// new package 
-//
-// Revision 1.1  2002/05/23 11:09:14  ibelyaev
-//  see $CALOALGSROOT/doc/release.notes
-//
-// Revision 1.7  2002/04/04 20:11:41  ibelyaev
-//  update for New Calorimeter Event Model (v10r0)
-//
-// Revision 1.6  2001/11/25 15:31:53  ibelyaev
-//  update for newer CaloKernel package
-//
-// Revision 1.5  2001/11/02 19:17:22  ibelyaev
-//  update for newer packages
-//
-// Revision 1.4  2001/10/28 19:25:01  ibelyaev
-// version match and change base class for CellularAutomaton
-//
-// Revision 1.3  2001/06/23 17:01:41  ibelyaev
-// update due to modifications in CaloCluster class
 // ============================================================================
 #ifndef CALOCA_CELLULARAUTOMATON_H
 #define CALOCA_CELLULARAUTOMATON_H 1
@@ -78,14 +58,6 @@ public:
    */
   virtual StatusCode execute    () ;
   
-  /** standard  finalization  method 
-   *  @see CaloAlgorithm 
-   *  @see     Algorithm 
-   *  @see    IAlgorithm 
-   *  @return status code 
-   */
-  virtual StatusCode finalize   () ;
-
 protected:
   
   /** standard constructor

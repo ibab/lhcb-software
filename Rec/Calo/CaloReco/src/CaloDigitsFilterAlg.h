@@ -1,8 +1,11 @@
-// $Id: CaloDigitsFilterAlg.h,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $
+// $Id: CaloDigitsFilterAlg.h,v 1.2 2004-02-17 12:08:06 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // ============================================================================
 #ifndef CALOALGS_CALODIGITSFILTERALG_H 
 #define CALOALGS_CALODIGITSFILTERALG_H 1
@@ -28,14 +31,6 @@ class CaloDigitsFilterAlg :
   /// friend factory for instantiation
   friend class AlgFactory<CaloDigitsFilterAlg>;
 public:
-  
-  /** standard algorithm initialization 
-   *  @see CaloAlgorithm
-   *  @see     Algorithm
-   *  @see    IAlgorithm
-   *  @return status code 
-   */
-  virtual StatusCode initialize();   
   
   /** standard algorithm execution 
    *  @see CaloAlgorithm

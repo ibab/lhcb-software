@@ -1,8 +1,11 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.2 2002-12-01 14:22:57 ibelyaev Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.3 2004-02-17 12:08:06 ibelyaev Exp $ 
 //  ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/01 14:22:57  ibelyaev
+//  Hcal stuff and updated S-coprrections
+//
 // Revision 1.1.1.1  2002/11/13 20:46:39  ibelyaev
 // new package 
 //
@@ -122,18 +125,18 @@ StatusCode CaloClusterCovarianceAlg::initialize()
   
   // locate the tool for covariance matrix calculations 
   m_cov    = m_covName.empty() ?
-    tool(    m_covType                   , m_cov    , this ) :
-    tool(    m_covType    , m_covName    , m_cov    , this ) ;
+    tool<ICaloClusterTool>(    m_covType                   , this ) :
+    tool<ICaloClusterTool>(    m_covType    , m_covName    , this ) ;
   
   // locate the tool for subcluster selection/tagging 
   m_tagger = m_taggerName.empty() ?
-    tool(    m_taggerType                , m_tagger , this ) :
-    tool(    m_taggerType , m_taggerName , m_tagger , this ) ;
+    tool<ICaloSubClusterTag>(    m_taggerType                , this ) :
+    tool<ICaloSubClusterTag>(    m_taggerType , m_taggerName , this ) ;
   
   // locate the tool for cluster spread(2nd moments) estimation 
   m_spread = m_spreadName.empty() ?
-    tool(    m_spreadType                , m_spread , this ) :
-    tool(    m_spreadType , m_spreadName , m_spread , this ) ;
+    tool<ICaloClusterTool>(    m_spreadType                , this ) :
+    tool<ICaloClusterTool>(    m_spreadType , m_spreadName , this ) ;
   
   // copy flag
   m_copy = 
@@ -154,14 +157,6 @@ StatusCode CaloClusterCovarianceAlg::initialize()
 // ===========================================================================
 StatusCode CaloClusterCovarianceAlg::finalize() 
 {
-  
-  MsgStream log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Finalize" << endreq;
-  
-  if( 0 != cov    () ) { cov    () -> release () ; m_cov    = 0 ; }
-  if( 0 != tagger () ) { tagger () -> release () ; m_tagger = 0 ; }
-  if( 0 != spread () ) { spread () -> release () ; m_spread = 0 ; }
-  
   // finalize the base class 
   return CaloAlgorithm::finalize();
 };
@@ -186,56 +181,55 @@ StatusCode CaloClusterCovarianceAlg::execute()
   typedef const DeCalorimeter Detector ;
   
   // locate input data
-  Clusters* clusters = get( eventSvc() , inputData() , clusters );
+  Clusters* clusters =    get<Clusters> ( inputData() );
   if( 0 == clusters ) { return StatusCode::FAILURE ; }
   
   //
-  Detector* detector = get( detSvc() , detData() , detector );
+  Detector* detector = getDet<Detector> ( detData()   );
   if( 0 == detector ) { return StatusCode::FAILURE ; }
   
   // define the output data 
   Clusters* output = 0;
   if( m_copy )     // make a copy of container 
-    {
-      output = new Clusters();
-      StatusCode sc = 
-        eventSvc()->registerObject( outputData() , output );
-      if( sc.isFailure() ) 
-        { return Error("Could not register '"+outputData()+"'");}
-      // make a copy 
-      for( Clusters::const_iterator i = clusters->begin() ;
-           clusters->end() != i ; ++i )
-        { if( 0 != *i ) { output->insert( (*i)->clone() ) ; } }
-    }
+  {
+    output = new Clusters();
+    StatusCode sc = put( output , outputData() );
+    if( sc.isFailure() ) 
+    { return Error("Could not register '"+outputData()+"'");}
+    // make a copy 
+    for( Clusters::const_iterator i = clusters->begin() ;
+         clusters->end() != i ; ++i )
+    { if( 0 != *i ) { output->insert( (*i)->clone() ) ; } }
+  }
   else { output = clusters; } // update existing sequence
   // 
   for( Clusters::iterator cluster =  output->begin() ;
        output->end() != cluster ; ++cluster )
-    {
-      // skip nulls 
-      if( 0 == *cluster  ) { continue ; }                // CONTINUE !
-      StatusCode sc =   tagger () -> tag    ( *cluster ) ; 
-      if( sc.isFailure() ) 
-        {    
-          Error("Error from tagger, skip cluster ", sc ) ; 
-          log << MSG::DEBUG << *cluster << endreq ;
-          continue ; 
-        }
-      if( sc.isSuccess() )     { sc = cov    () -> process( *cluster ) ; }
-      else 
-        { 
-          Error("Error from cov,    skip cluster ", sc ) ; 
-          log << MSG::DEBUG << *cluster << endreq ;
-          continue ; 
-        }
-      if( sc.isSuccess() )     { sc = spread () -> process( *cluster ) ; }
-      else 
-        { 
-          Error("Error from spread, skip cluster ", sc ) ; 
-          log << MSG::DEBUG << *cluster << endreq ;
-          continue ; 
-        }
+  {
+    // skip nulls 
+    if( 0 == *cluster  ) { continue ; }                // CONTINUE !
+    StatusCode sc =   tagger () -> tag    ( *cluster ) ; 
+    if( sc.isFailure() ) 
+    {    
+      Error("Error from tagger, skip cluster ", sc ) ; 
+      log << MSG::DEBUG << *cluster << endreq ;
+      continue ; 
     }
+    if( sc.isSuccess() )     { sc = cov    () -> process( *cluster ) ; }
+    else 
+    { 
+      Error("Error from cov,    skip cluster ", sc ) ; 
+      log << MSG::DEBUG << *cluster << endreq ;
+      continue ; 
+    }
+    if( sc.isSuccess() )     { sc = spread () -> process( *cluster ) ; }
+    else 
+    { 
+      Error("Error from spread, skip cluster ", sc ) ; 
+      log << MSG::DEBUG << *cluster << endreq ;
+      continue ; 
+    }
+  }
   
   return StatusCode::SUCCESS ;
 };
