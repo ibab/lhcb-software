@@ -1,8 +1,11 @@
-// $Id: GiGaHepMCCnv.cpp,v 1.17 2004-04-07 15:47:55 gcorti Exp $
+// $Id: GiGaHepMCCnv.cpp,v 1.18 2004-04-30 09:46:54 robbep Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2004/04/07 15:47:55  gcorti
+// signal info, extended collision, new vertex types
+//
 // Revision 1.16  2004/03/09 23:37:13  robbep
 // Fix to accept also elastic scattering events.
 //
@@ -219,18 +222,21 @@ StatusCode GiGaHepMCCnv::updateRep
           
           for (HepMC::GenVertex::particles_out_const_iterator pParticle = 
                  (*pVertex)->particles_out_const_begin();
-               (*pVertex)->particles_out_const_end() != pParticle ; ++pParticle)
+               (*pVertex)->particles_out_const_end() != pParticle ; 
+               ++pParticle)
             {
               // Convert it to G4 if 
               // -> the particle has no production vertex (then convert all the
               //             daughters)
-              // -> the particle is a hadron, a lepton or a nucleus
+              // -> the particle is a hadron, a lepton, a nucleus or a photon
               //             and has only one mother which is not a hadron,
-              //             not a lepton and not a nucleus ie in practice
-              //             which is a string (the convert all the daughters)
-              // -> the particle is hadron, a lepton or a nucleus and has
-              //             several mother (in pratice a quark-gluon
-              //             interaction)
+              //             not a lepton and not a nucleus and not a photon 
+              //             ie in practice which is a string (the convert 
+              //             all the daughters)
+              // -> the particle is hadron, a lepton, a nucleus or a photon
+              //             and has several mother (in pratice a quark-gluon
+              //             interaction) or no mother, but a production vertex
+              //             (that is to say a particle gun)
               if ( ( (*pParticle) -> status ( ) == 1 ) ||
                    ( (*pParticle) -> status ( ) == 2 ) ||
                    ( (*pParticle) -> status ( ) == 888 ) ||
@@ -246,13 +252,15 @@ StatusCode GiGaHepMCCnv::updateRep
                     ParticleID pid ( (*pParticle) -> pdg_id ( ) ) ;
                     if ( ( ( ( ! pidM.isHadron( ) ) &&
                              ( ! pidM.isLepton( ) ) &&
-                             ( ! pidM.isNucleus( ) ) ) ||
+                             ( ! pidM.isNucleus( ) ) &&
+                             ( pidM.abspid() != 22 ) ) ||
                            ( (*(*pParticle)->production_vertex()
                               -> particles_in_const_begin()) -> status ()
                              == 3 ) ) && 
                          ( ( pid.isHadron( ) ) ||
                            ( pid.isLepton( ) ) ||
-                           ( pid.isNucleus( ) ) ) )
+                           ( pid.isNucleus( ) ) || 
+                           ( pid.abspid() == 22 ) ) )
                       {
                         outpart.push_back ( *pParticle ) ;
                       }
@@ -261,7 +269,8 @@ StatusCode GiGaHepMCCnv::updateRep
                     ParticleID pid ( (*pParticle) -> pdg_id ( ) ) ;
                     if ( ( pid.isHadron( ) ) ||
                          ( pid.isLepton( ) ) ||
-                         ( pid.isNucleus( ) ) ) 
+                         ( pid.isNucleus( ) ) ||
+                         ( pid.abspid() == 22 ) ) 
                       {
                         outpart.push_back( *pParticle ) ;
                       }
@@ -274,10 +283,14 @@ StatusCode GiGaHepMCCnv::updateRep
       // sort the vector, so we always put them in the same order into G4
       std::sort(outpart.begin(), outpart.end(), comp_bar());
       
-      // here I am assuming that all the particles with status 1, 888 and 889, i.e. 
-      // all particles produced by Pythia are coming from the same physical vertex
-      // if that was not the case, one would need to implement a more sophisticated 
-      // machinery to assign particles to different vertices on a case by case basis      
+      // here I am assuming that all the particles with status 1, 888 and 
+      // 889, i.e. 
+      // all particles produced by Pythia are coming from the same physical 
+      // vertex
+      // if that was not the case, one would need to implement a more 
+      // sophisticated 
+      // machinery to assign particles to different vertices on a case by 
+      // case basis      
       G4PrimaryVertex* OrigVertex = 
         new G4PrimaryVertex
         ((*(outpart.begin()))->production_vertex()->position().x(),
