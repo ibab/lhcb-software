@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.8 2002-12-17 15:43:02 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.9 2003-01-06 18:01:53 ocallot Exp $
 
 // from STL 
 #include <cmath>
@@ -112,6 +112,7 @@ public:
     m_det     = det ;
     m_et      = 0   ;
     m_etScale = scale ;
+    m_tol     = 0   ;
   };
 
   ~L0Candidate()                           { };

@@ -1,6 +1,9 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2003-01-06 - Olivier Callot
+ - Fix an unitialized variable in the local L0Candidate class creator.
+
 ! 2002-12-15 - Olivier Callot
  - Produce in a separate container the list of inputs that the Selection Crate
    will receive, namely up-to (zero are removed) 28 electrons, photons, pi0L,
