@@ -4,11 +4,13 @@
  *  Header file for algorithm base class : RichMoniAlgBase
  *
  *  CVS Log :-
- *  $Id: RichMoniAlgBase.h,v 1.2 2005-01-13 13:42:15 jonrob Exp $
+ *  $Id: RichMoniAlgBase.h,v 1.3 2005-01-13 15:03:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2005/01/13 13:42:15  jonrob
+ *  update doxygen comment
+ *
  *  Revision 1.1  2005/01/07 13:16:27  jonrob
  *  Add to CVS
- *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   19/12/2004

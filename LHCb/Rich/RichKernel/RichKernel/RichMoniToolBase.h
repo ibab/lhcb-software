@@ -4,8 +4,10 @@
  *  Header file for Tool base class : RichMoniToolBase
  *
  *  CVS Log :-
- *  $Id: RichMoniToolBase.h,v 1.1 2005-01-13 13:43:02 jonrob Exp $
+ *  $Id: RichMoniToolBase.h,v 1.2 2005-01-13 15:03:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/13 13:43:02  jonrob
+ *  add monitoring tool base class
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26

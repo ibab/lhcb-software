@@ -5,11 +5,10 @@
  *  Implementation file for class : RichMoniAlgBase
  *
  *  CVS Log :-
- *  $Id: RichMoniAlgBase.cpp,v 1.1 2005-01-07 13:16:42 jonrob Exp $
+ *  $Id: RichMoniAlgBase.cpp,v 1.2 2005-01-13 15:03:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  Revision 1.1  2005/01/07 13:16:42  jonrob
+ *  Add to CVS
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-04-05

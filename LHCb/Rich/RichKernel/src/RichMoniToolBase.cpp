@@ -5,11 +5,10 @@
  *  Implementation file for tool base class : RichMoniToolBase
  *
  *  CVS Log :-
- *  $Id: RichMoniToolBase.cpp,v 1.1 2005-01-13 13:43:02 jonrob Exp $
+ *  $Id: RichMoniToolBase.cpp,v 1.2 2005-01-13 15:03:26 jonrob Exp $
  *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  Revision 1.1  2005/01/13 13:43:02  jonrob
+ *  add monitoring tool base class
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -37,7 +36,7 @@ RichMoniToolBase::RichMoniToolBase( const std::string& type,
 StatusCode RichMoniToolBase::initialize()
 {
   // Execute the base class initialize
-  const StatusCode sc = GaudiTool::initialize();
+  const StatusCode sc = GaudiTupleTool::initialize();
 
   // Printout from initialization
   debug() << "Initialize" << endreq;
@@ -52,5 +51,5 @@ StatusCode RichMoniToolBase::finalize()
   debug() << "Finalize" << endreq;
 
   // Finalise base class and return
-  return GaudiTool::finalize();
+  return GaudiTupleTool::finalize();
 }
