@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2005-04-06 - Chris Jones
+ - Add hack to force loading of pixel and track creators during initialisation.
+   Avoids biased timing numbers.
+
 !======================= RichGlobalPID v1r9 2005-03-08 =======================
 ! 2005-03-08 - Marco Cattaneo
  - Remove obsolete includes from xml

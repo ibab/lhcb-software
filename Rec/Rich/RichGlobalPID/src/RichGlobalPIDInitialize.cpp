@@ -1,15 +1,15 @@
-
+//------------------------------------------------------------------------------------
 /** @file RichGlobalPIDInitialize.cpp
  *
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDInitialize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDInitialize.cpp,v 1.6 2004-07-27 10:56:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichGlobalPIDInitialize.cpp,v 1.7 2005-04-06 21:34:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
+//------------------------------------------------------------------------------------
 
 // local
 #include "RichGlobalPIDInitialize.h"
@@ -35,7 +35,12 @@ StatusCode RichGlobalPIDInitialize::initialize()
   const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  return StatusCode::SUCCESS;
+  // trick to force pre-loading of various tools. avoids loading
+  // during first processed event and thus biased timing numbers
+  trackCreator();
+  pixelCreator();
+
+  return sc;
 }
 
 // Main execution
