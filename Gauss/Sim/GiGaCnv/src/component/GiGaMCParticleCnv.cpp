@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.15 2002-05-20 13:36:16 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.16 2002-07-02 15:15:44 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2002/05/20 13:36:16  ibelyaev
+//  add conversion of primary vertices
+//
 //  ===========================================================================
 #define GIGACNV_GIGAMCPARTICLECNV_CPP 1 
 // ============================================================================
@@ -222,7 +225,8 @@ StatusCode GiGaMCParticleCnv::updateObj
           // convert the trajectory into particle and add it into container 
           MCParticle* mcp = Cnv( trajectory );
           // insert the particle to container and fill the reference table 
-          const int index = particles->insert( mcp );
+          const int index = trajectory->trackID() ;
+          particles -> insert( mcp );
           table( index )  = GiGaKineRefTableEntry( mcp , index );
         }
     }

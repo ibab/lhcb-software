@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.15 2002-07-02 14:38:59 witoldp Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.16 2002-07-02 15:15:44 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2002/07/02 14:38:59  witoldp
+// comment lines that were creating infinite loop (primary vtx converstion)
+//
 // Revision 1.14  2002/05/20 13:36:16  ibelyaev
 //  add conversion of primary vertices
 //
@@ -217,17 +220,17 @@ StatusCode GiGaMCVertexCnv::updateObj
   /// convert all trajectory points into MCVertex  objects
   vertices->reserve( 2 * trajectories->size() + 10 );
   
-//    { // convert "primary" vertices 
-//      // create converter
-//      GiGaCnvFunctors::PrimaryVertex2Vertex Cnv;
-//      const G4PrimaryVertex* vertex = event->GetPrimaryVertex();
-//      while( 0 != vertex ) 
-//        {
-//          MCVertex* mcvertex = Cnv( vertex );
-//          if( 0 != mcvertex ) { vertices->insert( mcvertex ); }
-//          vertex->GetNext();
-//        }
-//    }
+  { // convert "primary" vertices 
+    // create converter
+    GiGaCnvFunctors::PrimaryVertex2Vertex Cnv;
+    const G4PrimaryVertex* vertex = event->GetPrimaryVertex();
+    while( 0 != vertex ) 
+      {
+        MCVertex* mcvertex = Cnv( vertex );
+        if( 0 != mcvertex ) { vertices->insert( mcvertex ); }
+        vertex = vertex->GetNext();
+      }
+  }
   { // convert "secondary" vertices 
     // create "converter"
     GiGaCnvFunctors::Point2Vertex Cnv;
