@@ -11,8 +11,8 @@ branches cmt doc
 use Brunel              v18r1   Rec
 
 # Brunel utilities
-use BrunelSicb          v2r0    Rec
-use BrunelAlgs          v1r9    Rec
+use BrunelSicb          v4r1    Rec
+use BrunelAlgs          v2r0    Rec
 use KsReco              v1r4	Rec
 
 # L0 trigger
