@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           DAQEvent
-version           v3r1
+version           v3r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -18,8 +18,8 @@ include_dirs $(DAQEVENTROOT)
 
 # Used packages.
 #============================================================================
-use LHCbKernel   v2r*    Kernel
-use EventKernel  v3r*    Event
+use LHCbKernel   v3r*	Kernel
+use EventKernel  v4r*	Event
 use GaudiObjDesc v5r* -no_auto_imports
 
 # Produce Header-Files & dictionary from XML description
@@ -32,15 +32,6 @@ document obj2dict DAQEventObj2Dict ../xml/DAQEvent.xml
 library          DAQEvent      *.cpp
 library          DAQEventDict  ../dict/*.cpp -import=GaudiIntrospection
 
-# Define link options
-#============================================================================
-apply_pattern    package_linkopts
-apply_pattern    package_stamps
-apply_pattern    linker_path
-macro_append DAQEvent_linkopts "" WIN32 "/include:_DAQEvent_loadRef"
-
-apply_pattern package_shlibflags
-#============================================================================
-private
-macro DAQEventDict_shlibflags  "$(DAQEvent_linkopts) $(GaudiIntrospection_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
-
+# Standard patterns (order is important!)
+apply_pattern component_library library=DAQEventDict
+apply_pattern linker_library    library=DAQEvent

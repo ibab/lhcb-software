@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.13 2003-12-04 12:42:17 cattanem Exp $
+# $Id: requirements,v 1.14 2003-12-09 10:14:32 cattanem Exp $
 # =========================================================================
 
 package  OTDet 
-version  v5r0
+version  v5r1
 
 # =============== structure ===============================================	
 branches         src cmt doc OTDet 
@@ -12,7 +12,7 @@ include_dirs      $(OTDETROOT)
 
 # =============== used packages ===========================================
 use DetDescCnv   v2r*   Det 
-use LHCbKernel	v2r*	Kernel
+use LHCbKernel	v3r*	Kernel
 
 # =============== own options ==========================================
 set OTDETOPTS  ${OTDETROOT}/options
@@ -24,20 +24,6 @@ library          OTDetLib        Lib/*.cpp
 library          OTDet           component/*.cpp
 
 #================ patterns ================================================
-
-apply_pattern    package_Lstamps
-apply_pattern    package_Llinkopts 
-apply_pattern    linker_path
-
-#================ private stuff ===========================================
-private
-apply_pattern    package_Cshlibflags
-apply_pattern    package_Lshlibflags
-macro_append     OTDetLib_shlibflags  " $(DetDesc_linkopts) "
-macro_append     OTDetLib_shlibflags  " $(GaudiKernel_linkopts) "
-macro_append     OTDetLib_shlibflags  " $(CLHEP_linkopts) "
-
-#macro_append cppflags " -pg "
-#macro_append OTDetLib_shlibflags " -pg "
-#macro_append OTDet_shlibflags " -pg "
+apply_pattern component_library library=OTDet
+apply_pattern linker_library    library=OTDetLib 
 

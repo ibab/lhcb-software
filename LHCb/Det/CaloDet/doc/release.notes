@@ -1,13 +1,16 @@
-! $Id: release.notes,v 1.38 2003-11-24 14:01:12 cattanem Exp $ 
+! $Id: release.notes,v 1.39 2003-12-09 10:14:43 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+!========================= CaloDet v6r7 2003-12-08 =========================
+! 2003-12-08 - Marco Cattaneo
+ - Move to Gaudi v13 (use DetDesc v14r* in requirements)
 
 !======================== CaloDet v6r6p1 2003-11-24 ========================
 ! 2003-11-24 - Marco Cattaneo
  - Fix a doxygen comment in CaloDet_load.cpp
 
-!======================== CaloDet v6r6p1 2003-11-18 ========================
 ! 2003-11-18 - Guy Barrand
  - Use macro in CaloDet_dll.cpp, to compile on Mac OS X
 

@@ -1,19 +1,15 @@
-# $Id: requirements,v 1.5 2003-10-06 07:45:51 cattanem Exp $
+# $Id: requirements,v 1.6 2003-12-09 10:09:24 cattanem Exp $
 #============================================================================
 package           Magnet
-version           v2r2
+version           v2r3
 
 branches          cmt doc src 
 
-use GaudiKernel v13r*
+use GaudiKernel v14r*
 use CLHEP       v*
 use FieldMap    v*
 
 library          Magnet    ../src/*.cpp
 
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
+apply_pattern component_library library=Magnet
 

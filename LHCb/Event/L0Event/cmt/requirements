@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.29 2003-10-06 08:54:01 cattanem Exp $
+# $Id: requirements,v 1.30 2003-12-09 10:14:30 cattanem Exp $
 package L0Event
-version v13r3
+version v13r4
 
 branches Event cmt doc xml src
 
 include_dirs $(L0EVENTROOT)
 
-use 	LHCbKernel	v2r*    Kernel
-use     EventKernel     v3r*    Event
+use 	LHCbKernel	v3r*	Kernel
+use     EventKernel     v4r*	Event
 use 	MuonKernel 	v2r* 	Muon
 use 	GaudiObjDesc	v5r*    -no_auto_imports
 
@@ -21,13 +21,7 @@ public
 library           L0Event         ../src/*.cpp
 library           L0EventDict     ../dict/*.cpp -import=GaudiIntrospection
 
-apply_pattern      package_linkopts
-apply_pattern      package_stamps
-apply_pattern      linker_path
-macro_append L0Event_linkopts "" WIN32 "/include:_L0Event_loadRef"
-
-
-apply_pattern      package_shlibflags
+# Standard patterns (order is important!)
 #===============================================================
-private
-macro L0EventDict_shlibflags  "$(GaudiIntrospection_linkopts) $(L0Event_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
+apply_pattern component_library library=L0EventDict
+apply_pattern linker_library    library=L0Event

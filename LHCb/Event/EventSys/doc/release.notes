@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v16r0 2003-12-08 ========================
+! 2003-12-08 - Marco Cattaneo
+ - Use EventKernel v4r0, Event v3r7, DAQEvent v3r2, L0Event v13r4
+
 !======================== EventSys v15r3 2003-12-02 ========================
 ! 2003-12-02 - Marco Cattaneo
  - Use Event v3r6, DAQEvent v3r1

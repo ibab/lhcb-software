@@ -1,8 +1,12 @@
-$Id: release.notes,v 1.29 2003-10-06 08:54:02 cattanem Exp $
+$Id: release.notes,v 1.30 2003-12-09 10:14:30 cattanem Exp $
 Package : L0Event
 Package manager : Olivier Callot
 
-!======================== L0Event v13r2 2003-10-06 ========================
+!======================== L0Event v13r4 2003-12-08 ========================
+! 2003-12-08 - Marco Cattaneo
+ - Move to Gaudi v13 (use LHCbKernel v3r*, EventKernel v4r* in requirements)
+
+!======================== L0Event v13r3 2003-10-06 ========================
 ! 2003-10-06 - Marco Cattaneo
  - use EventKernel v3r*
 
