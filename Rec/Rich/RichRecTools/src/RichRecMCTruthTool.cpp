@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.9 2003-07-02 15:37:52 jonesc Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.10 2003-07-02 17:03:08 jonesc Exp $
 
 // local
 #include "RichRecMCTruthTool.h"
@@ -228,7 +228,8 @@ const MCParticle * RichRecMCTruthTool::trueCherenkovPhoton( const RichRecPhoton 
   
   if ( const MCRichOpticalPhoton * optPhot = mcRichOpticalPhoton( photon->richRecPixel() ) ) {
     Rich::RadiatorType rad = photon->richRecSegment()->trackSegment().radiator();
-    if ( rad == optPhot->radiator() && !optPhot->scatteredPhoton() ) return mcPart;
+    if ( (unsigned int)rad == optPhot->radiator() && 
+         !optPhot->scatteredPhoton() ) return mcPart;
   }
   
   return NULL;
@@ -241,7 +242,8 @@ const MCParticle * RichRecMCTruthTool::trueCherenkovRadiation( const RichRecPixe
   if ( !mcPart ) return NULL;
   
   if ( const MCRichOpticalPhoton * optPhot = mcRichOpticalPhoton( pixel ) ) {
-    if ( rad == optPhot->radiator() && !optPhot->scatteredPhoton() ) return mcPart;
+    if ( (unsigned int)rad == optPhot->radiator() && 
+         !optPhot->scatteredPhoton() ) return mcPart;
     //if ( ( rad != Rich::Aerogel && optPhot->gas() ) ||
     //     ( rad == Rich::Aerogel && optPhot->aerogel() &&
     //       !optPhot->scatteredAerogel() ) ) return mcPart;
@@ -323,10 +325,8 @@ RichRecMCTruthTool::trueCkPixels( const RichRecSegment * segment ) {
         if ( pixMCPart == tkMCPart ) {
           const MCRichOpticalPhoton * optPhot = mcRichOpticalPhoton( *pix );
           if ( optPhot ) {
-            if ( rad == optPhot->radiator() && !optPhot->scatteredPhoton() ) {
-            //if ( ( rad != Rich::Aerogel && optPhot->gas() ) ||
-            //     ( rad == Rich::Aerogel && optPhot->aerogel() &&
-            //       !optPhot->scatteredAerogel() ) ) {
+            if ( (unsigned int)rad == optPhot->radiator() && 
+                 !optPhot->scatteredPhoton() ) {
               vec.push_back( *pix );
             }
           }
