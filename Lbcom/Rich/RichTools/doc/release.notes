@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2004-06-21 - Chris Jones
+ - Update RichMirrorSegFinder to use distance2 as comparision as opposed to
+   distance, for better efficiency (avoids taking a squre root)
+
 !=========================== RichTools v1r0 2004-06-17 =======================
 
 ! 2004-06-18 - Chris Jones

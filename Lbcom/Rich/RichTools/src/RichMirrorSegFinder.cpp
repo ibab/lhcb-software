@@ -1,21 +1,7 @@
-// $Id: RichMirrorSegFinder.cpp,v 1.2 2004-06-18 09:43:22 jonesc Exp $
-// Include files
-
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
-
-// RichDet
-#include "RichDet/DeRich1.h"
-#include "RichDet/DeRich2.h"
-#include "RichDet/DeRichSphMirror.h"
-#include "RichDet/DeRichFlatMirror.h"
+// $Id: RichMirrorSegFinder.cpp,v 1.3 2004-06-21 13:34:39 jonesc Exp $
 
 // local
 #include "RichMirrorSegFinder.h"
-
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichMirrorSegFinder
@@ -27,14 +13,14 @@
 static const  ToolFactory<RichMirrorSegFinder>          s_factory ;
 const        IToolFactory& RichMirrorSegFinderFactory = s_factory ;
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 RichMirrorSegFinder::RichMirrorSegFinder( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : RichToolBase ( type, name , parent ) {
+  : RichToolBase ( type, name, parent )
+{
 
   declareInterface<IRichMirrorSegFinder>(this);
 
@@ -44,7 +30,6 @@ RichMirrorSegFinder::RichMirrorSegFinder( const std::string& type,
         m_lastMirror[i][j][k] = 0;
 
 }
-
 
 //=============================================================================
 // Destructor
@@ -59,6 +44,7 @@ StatusCode RichMirrorSegFinder::initialize( ) {
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
+  // get the RICH detectors
   DeRich1 * rich1 = getDet<DeRich1>( DeRich1Location::Default );
   DeRich2 * rich2 = getDet<DeRich2>( DeRich2Location::Default );
 
@@ -150,18 +136,18 @@ StatusCode RichMirrorSegFinder::initialize( ) {
     }
   }
 
-  info() << "Stored " << m_lastMirror[Rich::Rich1][Rich::top][sph]
-         << " and " << m_lastMirror[Rich::Rich1][Rich::bottom][sph]
-         << " spherical mirrors in the top and bottom of Rich1, and "
-         << m_lastMirror[Rich::Rich1][Rich::top][flat] << " and "
-         << m_lastMirror[Rich::Rich1][Rich::bottom][flat] << " flat mirrors"
-         << endreq;
-  info() << "Stored " << m_lastMirror[Rich::Rich2][Rich::left][sph]
-         << " and " << m_lastMirror[Rich::Rich2][Rich::left][sph]
-         << " spherical mirrors in the left and right of Rich2, and "
-         << m_lastMirror[Rich::Rich2][Rich::left][flat] << " and "
-         << m_lastMirror[Rich::Rich2][Rich::right][flat] << " flat mirrors"
-         << endreq;
+  debug() << "Stored " << m_lastMirror[Rich::Rich1][Rich::top][sph]
+          << " and " << m_lastMirror[Rich::Rich1][Rich::bottom][sph]
+          << " spherical mirrors in the top and bottom of Rich1, and "
+          << m_lastMirror[Rich::Rich1][Rich::top][flat] << " and "
+          << m_lastMirror[Rich::Rich1][Rich::bottom][flat] << " flat mirrors"
+          << endreq;
+  debug() << "Stored " << m_lastMirror[Rich::Rich2][Rich::left][sph]
+          << " and " << m_lastMirror[Rich::Rich2][Rich::left][sph]
+          << " spherical mirrors in the left and right of Rich2, and "
+          << m_lastMirror[Rich::Rich2][Rich::left][flat] << " and "
+          << m_lastMirror[Rich::Rich2][Rich::right][flat] << " flat mirrors"
+          << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -180,17 +166,19 @@ StatusCode RichMirrorSegFinder::finalize( )
 //=========================================================================
 //  find sph mirror segment and return pointer
 //=========================================================================
-DeRichSphMirror* RichMirrorSegFinder::findSphMirror(const Rich::DetectorType rich,
-                                                    const Rich::Side side,
-                                                    const HepPoint3D& reflPoint
-                                                    ) const {
-  double distance(1e6), temp_d(1e6);
+DeRichSphMirror*
+RichMirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
+                                    const Rich::Side side,
+                                    const HepPoint3D& reflPoint ) const
+{
+  double distance2(1e6);
   unsigned int mirrorNum(0);
 
   for ( unsigned int i=0; i<m_lastMirror[rich][side][sph]; ++i ) {
-    temp_d = m_sphMirrors[rich][side][i]->mirrorCentre().distance(reflPoint);
-    if ( temp_d < distance ) {
-      distance = temp_d;
+    const double temp_d2 = 
+      m_sphMirrors[rich][side][i]->mirrorCentre().distance2(reflPoint);
+    if ( temp_d2 < distance2 ) {
+      distance2 = temp_d2;
       mirrorNum = i;
     }
   }
@@ -198,28 +186,25 @@ DeRichSphMirror* RichMirrorSegFinder::findSphMirror(const Rich::DetectorType ric
   return m_sphMirrors[rich][side][mirrorNum];
 }
 
-
-
 //=========================================================================
 //  find flat mirror segment and return pointer
 //=========================================================================
 DeRichFlatMirror*
-RichMirrorSegFinder::findFlatMirror(const Rich::DetectorType rich,
-                                    const Rich::Side side,
-                                    const HepPoint3D& reflPoint ) const {
-
-  double distance(1e6), temp_d(1e6);
+RichMirrorSegFinder::findFlatMirror( const Rich::DetectorType rich,
+                                     const Rich::Side side,
+                                     const HepPoint3D& reflPoint ) const
+{
+  double distance2(1e6);
   unsigned int mirrorNum(0);
 
-  for (unsigned int i=0; i<m_lastMirror[rich][side][flat]; ++i) {
-    temp_d = m_flatMirrors[rich][side][i]->mirrorCentre().distance(reflPoint);
-    if ( temp_d < distance ) {
-      distance = temp_d;
+  for ( unsigned int i=0; i<m_lastMirror[rich][side][flat]; ++i ) {
+    const double temp_d2 = 
+      m_flatMirrors[rich][side][i]->mirrorCentre().distance2(reflPoint);
+    if ( temp_d2 < distance2 ) {
+      distance2 = temp_d2;
       mirrorNum = i;
     }
   }
 
   return m_flatMirrors[rich][side][mirrorNum];
 }
-
-
