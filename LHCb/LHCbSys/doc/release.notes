@@ -4,8 +4,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-! 2003-06-16 - Sebastien Ponce
- - use newer versions of packages
+! 2003-06-17 - Marco Cattaneo
+ - Update all package versions for v12r0 release
+ - Main changes:
+   . Support for new version of Xerces, to build against Gaudi v12
+   . Support for gcc 3.2
+   . Introduction of OT modules description (OTDet v4r0)
+   . Additional associators from OTDigit to MC truth (OTAssociators v2r5)
+   . Support for Flat Spillover (MuonSicbCnv v5r6)
 
 !====================== LHCbSys v11r12 2003-06-02 ============================
 ! 2003-05-28 - Marco Cattaneo
