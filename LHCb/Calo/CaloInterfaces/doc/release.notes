@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.18 2004-02-26 09:55:48 cattanem Exp $
+! $Id: release.notes,v 1.19 2004-07-21 08:02:07 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+!======================= CaloInterfaces v4r1 2004-07-19 =====================
+! 2004-07-19 - Marco Cattaneo
+ - Move to Gaudi v15 (use LHCbKernel v5r* in requirements)
 
 !======================= CaloInterfaces v4r0 2004-02-26 =====================
 ! 2004-02-17 - Vanya BELYAEV

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.17 2004-02-26 09:55:48 cattanem Exp $
+# $Id: requirements,v 1.18 2004-07-21 08:02:07 cattanem Exp $
 # =============================================================================
 package           CaloInterfaces
 version           v4r0
@@ -10,7 +10,7 @@ branches          cmt doc src CaloInterfaces
 include_dirs      $(CALOINTERFACESROOT)
 
 # =============== dependencies ================================================
-use LHCbKernel    v4r*	Kernel
+use LHCbKernel    v5r*	Kernel
   
 # =============== build the library ===========================================
 library           CaloInterfaces *.cpp 
