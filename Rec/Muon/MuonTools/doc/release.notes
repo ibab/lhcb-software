@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.31 2003-06-17 09:16:11 cattanem Exp $
+! $Id: release.notes,v 1.32 2003-06-18 15:38:27 asatta Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
@@ -9,6 +9,8 @@
  - fixes for gcc 3.2/3.3
 
 !======================== MuonTools v3r4 2003-04-12 ========================
+! 2003-04-18 - Alessia Satta
+ - Modified to cope with machine background
 ! 2003-04-12 - Alessia Satta
  - Fix a bug that causes accessing vector's element outside vector boundaries
  
