@@ -4,10 +4,12 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v7r0 2003-04-28 =======================
 ! 2003-04-11 - Witek Pokorski
  - TrCutsRunAction - implemented new run action which handles the creation
    of a special process for UserLimits
  - added SpecialCuts base class and one implementation MinEkineCuts
+ - added GaussG4UserLimits to handle UserLimits per particle type
  - fixed small bug in GiGaEraseFieldMgr
 
 ! 2003-04-06 - Ivan BELYAEV
