@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/GaudiObjDesc/KeyedDictionary.h,v 1.2 2004-01-22 15:47:50 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/GaudiObjDesc/KeyedDictionary.h,v 1.3 2004-06-10 09:40:58 mato Exp $
 //====================================================================
 //	KeyedDictionary.h
 //--------------------------------------------------------------------
@@ -121,7 +121,7 @@ namespace GaudiDict {
 
 template<class T> __template_method__ 
 GaudiDict::KeyedContainerDict<T>::KeyedContainerDict() {
-  std::string _me_ = keyedContainerName("Containers::KeyedObjectManager<Containers::hashmap> >", typeid(T));
+  std::string _me_ = keyedContainerName("Containers::KeyedObjectManager<Containers::hashmap>", typeid(T));
   if ( 0 == seal::reflect::Class::forName(_me_) )  {
     static char clid_txt[64];
     std::string _v_  = vectorName(typeid(T*));
