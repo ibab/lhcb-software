@@ -1,4 +1,4 @@
-// $Id: RichRecToolBase.h,v 1.4 2003-07-03 14:46:40 jonesc Exp $
+// $Id: RichRecToolBase.h,v 1.5 2003-07-03 14:56:09 jonesc Exp $
 #ifndef RICHRECALGS_RICHRECTOOLBASE_H
 #define RICHRECALGS_RICHRECTOOLBASE_H 1
 
@@ -44,7 +44,7 @@ protected:   // Protected methods
   /// Return message level setting
   int msgLevel();
 
-   /// Acquire type for given tool name from registry
+  /// Acquires a tool of the correct type from the RichToolRegistry for a given name
   template <typename TOOL> inline
   TOOL* acquireTool( std::string tName, TOOL*& pTool ) {
     if ( !toolSvc()->retrieveTool(m_toolReg->toolType(tName),tName,pTool) ) {
