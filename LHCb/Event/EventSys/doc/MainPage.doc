@@ -1,0 +1,28 @@
+/** \mainpage LHCb Event Model 
+
+  This is the code reference manual for the LHCb Event Model. These pages have
+  been generated directly from the code and reflect the exact state of the 
+  software.
+
+  This documentation includes all classes in all the LHCb Event Model packages. 
+
+<table border="1" width="100%" cellspacing="0">
+  <tr><td><b>Package</b></td><td><b>Description</b></td></tr>
+  <tr><td>LHCbEvent</td><td>Base classes to be used by other packages and the Monte Carlo event model</td></tr>
+  <tr><td>CaloEvent</td><td>Calorimeter event classes</td></tr>
+  <tr><td>ITEvent</td><td>Inner Tracker event classes</td></tr>
+  <tr><td>OTEvent</td><td>Outer Tracker event classes</td></tr>
+  <tr><td>TrEvent</td><td>Tracking event classes</td></tr>
+  <tr><td>L0Event</td><td>Trigger Level-0 event classes</td></tr>
+  <tr><td>L1Event</td><td>Trigger Level-1 event classes</td></tr>
+  <tr><td>VeloEvent</td><td>Velo event classes</td></tr>
+  <tr><td>DbCnv</td><td>Set of standard generic converters for all event classes</td></tr>
+</table>
+
+
+ Use the links in the menu at the top of the page to navigate. In particular,
+ the list of classes can be found <a href="annotated.html">here</a> or via
+ the <a href="hierarchy.html">Class Hierarchy</a> link. 
+
+*/
+
