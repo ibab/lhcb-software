@@ -49,6 +49,7 @@ void GiGa_load()
   /// Conversion services and their converters 
   DLL_DECL_SERVICE      (    GiGaKineCnvSvc          );  /// service 
   DLL_DECL_CONVERTER    (    GiGaMCVertexCnv         );  /// converter
+  DLL_DECL_CONVERTER    (    GiGaMCParticleCnv       );  /// converter 
   ///
   DLL_DECL_SERVICE      (    GiGaGeomCnvSvc          );  /// service
   DLL_DECL_CONVERTER    (    GiGaIsotopeCnv          );
@@ -56,6 +57,7 @@ void GiGa_load()
   DLL_DECL_CONVERTER    (    GiGaMixtureCnv          );
   DLL_DECL_CONVERTER    (    GiGaLVolumeCnv          );
   DLL_DECL_CONVERTER    (    GiGaDetectorElementCnv  );
+  DLL_DECL_CONVERTER    (    GiGaSurfaceCnv          );
   ///
   DLL_DECL_SERVICE      (    GiGaHitsCnvSvc          );  /// service 
   /// Algorithms 
