@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-///   Job options for Brunel for data produced with Boole v7r2 or greater   ///
+///   Job options for Brunel for data produced with Boole v8r0 or greater   ///
 ///               geometry compatible with lhcb-200402 (DC04)               ///
 ///                    default magnetic field (Field045)                    ///
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,7 +29,7 @@ ApplicationMgr.EvtMax = -1;
 // Input and output files.
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "brunel.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "brunel-0412.root";  // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
@@ -41,12 +41,12 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
- "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v8r0/Boole200402.digi' TYP='POOL_ROOT' OPT='READ'"
+ "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v8r0/Boole-0402.digi' TYP='POOL_ROOT' OPT='READ'"
 };
 
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:Brunel200402.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:Brunel-0402.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 
 //////////////////////////////////////////////////////////////////////////////

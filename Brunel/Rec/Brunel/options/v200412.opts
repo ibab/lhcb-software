@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-///   Job options for Brunel for data produced with Boole v7r2 or greater   ///
+///   Job options for Brunel for data produced with Boole v8r0 or greater   ///
 //  geometry lhcb-200412 (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo) //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
@@ -28,7 +28,7 @@ ApplicationMgr.EvtMax = -1;
 // Input and output files.
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "brunel.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "brunel-0412.root";  // Monitoring histos
 
 // POOL file catalogs. First one is read-write, others are read only
 PoolDbCacheSvc.Catalog = {
@@ -40,11 +40,11 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v8r0/Boole200412.digi' TYP='POOL_ROOT' OPT='READ'"
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v8r0/Boole-0412.digi' TYP='POOL_ROOT' OPT='READ'"
 };  // Test data
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:Brunel200412.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:Brunel-0412.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 
 //////////////////////////////////////////////////////////////////////////////

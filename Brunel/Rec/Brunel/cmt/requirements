@@ -12,19 +12,19 @@ use GaudiPolicy v5r20
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v16r0)
-use GaudiKernel		v18r1
+#-- Gaudi libraries (from GAUDI_v16r1)
+use GaudiKernel		v18r2
 use GaudiSvc 		v13r0
-use GaudiAlg 		v8r4
+use GaudiAlg 		v8r5
 use GaudiGSL		v6r2
 use GaudiPoolDb		v1r12
-use GaudiObjDesc 	v7r2
+use GaudiObjDesc 	v7r3
 use RootHistCnv         v9r4
 
 #-- Database
 use XmlDDDB		v23r1	Det
 use FieldMap		v4r5
-use ParamFiles          v3r9    -no_auto_imports
+use ParamFiles          v3r10   -no_auto_imports
 use BrunelDQ		v1r0	DQ
 
 #-- LHCb libraries (from LHCB_v18r0)
@@ -56,7 +56,7 @@ use VeloTT              v1r11	Tr
 use TrKShort		v1r5	Tr
 
 # Trg tracking in Velo
-use TrgTools            v7r0p1  Trg
+use TrgTools            v7r1    Trg
 use TrgVelo             v7r0p1  Trg
 use TrgBrunel           v1r1    Trg
 
@@ -66,7 +66,7 @@ use MuonRec             v2r4	Muon
 use MuonID              v3r7p1	Muon
 
 # Rich
-use RichRecSys		v1r14	Rich
+use RichRecSys		v1r15	Rich
 
 #
 #===== build Brunel =========================
