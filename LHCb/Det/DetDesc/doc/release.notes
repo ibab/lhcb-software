@@ -1,9 +1,19 @@
 ! =============================================================================
-! $Id: release.notes,v 1.164 2004-07-21 08:01:54 cattanem Exp $ 
+! $Id: release.notes,v 1.165 2004-12-07 17:49:08 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2004-12-07 - Vanya BELYAEV
+
+ - DetDesc/Material.h 
+    move the constructor and destructor from "protected" to "public" area
+    to please the compilation of LCG dictionatries with Visual C++ 
+ - DetDesc/Element.h 
+    remove invalid "inline" qualifier for method Element::isotopeFraction
+    (again to pleas eLCG dictionaries with Visual C++)
+   
 
 !======================== DetDesc v14r3 2004-07-19 ========================
 ! 2004-07-19 - Marco Cattaneo

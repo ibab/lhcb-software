@@ -1,5 +1,5 @@
-// $Id: Material.h,v 1.5 2003-04-25 08:52:23 sponce Exp $
-/// $Id: Material.h,v 1.5 2003-04-25 08:52:23 sponce Exp $
+// $Id: Material.h,v 1.6 2004-12-07 17:49:08 ibelyaev Exp $
+/// $Id: Material.h,v 1.6 2004-12-07 17:49:08 ibelyaev Exp $
 #ifndef DETDESC_MATERIAL_H
 #define DETDESC_MATERIAL_H
 /// STL
@@ -99,7 +99,9 @@ public:
   inline       Tables&  tabulatedProperties()       ;
   inline const Tables&  tabulatedProperties() const ;
   ///
+  
 protected:
+public: // just to please LCG Dictionaries with Visual C++ 
   
   /// Constructors of a simple material
   Material( const std::string& name  = "", 

@@ -1,5 +1,5 @@
-// $Id: Element.h,v 1.9 2003-04-25 08:52:23 sponce Exp $
-/// $Id: Element.h,v 1.9 2003-04-25 08:52:23 sponce Exp $
+// $Id: Element.h,v 1.10 2004-12-07 17:49:08 ibelyaev Exp $
+/// $Id: Element.h,v 1.10 2004-12-07 17:49:08 ibelyaev Exp $
 #ifndef DETDESC_ELEMENT_H
 #define DETDESC_ELEMENT_H 1 
 /// STL
@@ -58,7 +58,7 @@ public:
   const Isotopes&          isotopes       () const ;
         Isotopes&          isotopes       ()       ;
   /// Return a fraction of an isotope by index
-  inline const double             isotopeFraction( unsigned int i ) const;
+  const double             isotopeFraction( unsigned int i ) const;
   
   /** Add an isotope into this material
       After addition of the last isotope user can call this method
@@ -66,8 +66,9 @@ public:
       do its job automatically, otherwise the user must call compute()
       method explicitly
   */
-  void addIsotope ( const SmartRef<Isotope>& iPtr , const double Fract, const bool comp = false );
-  void addIsotope ( const Entry&             iPtr                     , const bool comp = false );
+  void addIsotope ( const SmartRef<Isotope>& iPtr  , 
+                    const double             Fract , const bool comp = false );
+  void addIsotope ( const Entry&             iPtr  , const bool comp = false );
   
   /** Remove an isotope from the vector of isotopes
       compute() method invocation is done as described above
