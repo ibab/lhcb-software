@@ -8,19 +8,22 @@
 ! 2003-12-04 - Marco Cattaneo
  - Modified packages: GaudiConf v7r4,
                       KernelSys v1r9, LHCbKernel v2r10,
-                      EventSys v15r3, Event v3r6,
+                      EventSys v15r3, Event v3r6, DAQEvent v3r1
                       DetSys v3r3, ITDet v1r7, RichDet v6r3, OTDet v5r0,
-                      AssociatorsSys v1r7p1, TrFitEvent v4r1p1
+                      AssociatorsSys v1r8, TrFitEvent v4r1p1, TrAssociators v3r7
 
  - In GaudiConf v7r4:
    . Remove L1/OT/Clusters from DigiContent.opts
 
- - In LHCbKernel
+ - In LHCbKernel:
    . Modification of bits in OTChannelID - backwards incompatible
 
  - In Event v3r6:
    . MCParticle: add methods beta(), gamma(), pseudoRapidity()
    . MCHit     : add methods pathLength(), dxdz(), dydz()
+
+ - In DAQEvent v3r1:
+   . Add protections to L1Buffer and RawBuffer
 
  - In ITDet v1r7: ** Requires XmlDDDB v19r1 or greater **
    . Add methods to return type of ladder (LR,TB ,TT, )
@@ -31,7 +34,14 @@
    . Restructuring of DeRichRadiator. Backwards compatible, needs recompilation
 
  - In OTDet v5r0:
-   . Introduction of DeOTQuarters
+   . Introduction of DeOTQuarters. Backwards incompatible. Changes station,
+     module and layer numbering. Requires XmlDDDB v20r0 or greater.
+ 
+ - In TrAssociators v3r7:
+   . Adapt to new OTDet numbering
+
+ - In TrFitEvent v4r1p1
+   . Use DeITDetectorLocation::Default instead of explicit path
 
 !======================= LHCbSys v13r4 2003-11-27 =======================
 ! 2003-11-25 - Marco Cattaneo
