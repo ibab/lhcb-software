@@ -1,8 +1,11 @@
-// $Id: Relation.h,v 1.5 2003-01-17 14:07:01 sponce Exp $
+// $Id: Relation.h,v 1.6 2003-01-22 11:29:16 sponce Exp $
 // =============================================================================
 // CV Stag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/01/17 14:07:01  sponce
+// support for gcc 3.2
+//
 // Revision 1.4  2002/07/25 15:32:13  ibelyaev
 //  bug fix in destructors of relation objects
 //
@@ -134,8 +137,9 @@ namespace Relations
     virtual typename IRelation<FROM, TO>::Range       relations
     ( const typename IRelation<FROM, TO>::From&       object    ) const
     {
+      typedef typename IRelation<FROM, TO>::Range localRange;
       typename Base::IP ip = m_direct.i_relations( object );
-      return typename IRelation<FROM, TO>::Range( ip.first , ip.second );
+      return localRange( ip.first , ip.second );
     };
     
     /** retrive all relations from ALL objects 
@@ -147,8 +151,9 @@ namespace Relations
      */
     virtual typename IRelation<FROM, TO>::Range       relations () const
     {
+      typedef typename IRelation<FROM, TO>::Range localRange;
       typename Base::IP ip = m_direct.i_relations();
-      return typename IRelation<FROM, TO>::Range( ip.first , ip.second );
+      return localRange( ip.first , ip.second );
     };
     
     /** make the relation between 2 objects

@@ -1,8 +1,11 @@
-// $Id: AssociatorWeighted.h,v 1.9 2003-01-17 14:07:01 sponce Exp $
+// $Id: AssociatorWeighted.h,v 1.10 2003-01-22 11:29:16 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/01/17 14:07:01  sponce
+// support for gcc 3.2
+//
 // Revision 1.8  2002/05/24 18:36:32  ibelyaev
 //  see $LHCBKERNELROOT/doc/release.notes
 //
@@ -506,8 +509,9 @@ protected:
     if( 0 != m_direct ) { return StatusCode::SUCCESS                     ; }
     IInterface* obj = object () ;
     if( 0 == obj      ) { return Error("'Object' is not located/built!") ; }
-    SmartIF<typename AssociatorWeighted<FROM,TO,WEIGHT>::DirectType> aux
-      ( DirectType::interfaceID() , obj );
+    typedef
+      typename AssociatorWeighted<FROM,TO,WEIGHT>::DirectType localDirectType;
+    SmartIF<localDirectType> aux ( DirectType::interfaceID() , obj );
     m_direct = aux ;
     if( 0 == m_direct ) { return Error("'DirectType' points to NULL!"  ) ; }
     m_direct ->addRef () ;

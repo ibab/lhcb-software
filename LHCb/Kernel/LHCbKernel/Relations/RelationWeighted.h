@@ -1,8 +1,11 @@
-// $Id: RelationWeighted.h,v 1.4 2003-01-17 14:07:01 sponce Exp $
+// $Id: RelationWeighted.h,v 1.5 2003-01-22 11:29:16 sponce Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/01/17 14:07:01  sponce
+// support for gcc 3.2
+//
 // Revision 1.3  2002/07/25 15:32:14  ibelyaev
 //  bug fix in destructors of relation objects
 //
@@ -132,9 +135,9 @@ namespace Relations
     virtual typename RelationWeighted<FROM, TO, WEIGHT>::Range relations
     ( const typename RelationWeighted<FROM, TO, WEIGHT>::From& object) const
     {
+      typedef typename RelationWeighted<FROM, TO, WEIGHT>::Range localRange;
       typename Base::IP ip = m_direct.i_relations( object );
-      return 
-        typename RelationWeighted<FROM, TO, WEIGHT>::Range(ip.first, ip.second);
+      return localRange(ip.first, ip.second);
     };
     
     /** retrive ALL relations from ALL objects
@@ -147,9 +150,9 @@ namespace Relations
      */
     virtual typename RelationWeighted<FROM, TO, WEIGHT>::Range relations() const
     {
+      typedef typename RelationWeighted<FROM, TO, WEIGHT>::Range localRange;
       typename Base::IP ip = m_direct.i_relations();
-      return 
-        typename RelationWeighted<FROM, TO, WEIGHT>::Range(ip.first, ip.second);
+      return localRange(ip.first, ip.second);
     };
     
     /** retrive all relations from the object which has weigth 
@@ -164,9 +167,9 @@ namespace Relations
       const  typename RelationWeighted<FROM, TO, WEIGHT>::Weight& threshold ,
       const  bool       flag      ) const 
     {
+      typedef typename RelationWeighted<FROM, TO, WEIGHT>::Range localRange;
       typename Base::IP ip = m_direct.i_relations( object , threshold , flag );
-      return
-        typename RelationWeighted<FROM, TO, WEIGHT>::Range(ip.first, ip.second);
+      return localRange(ip.first, ip.second);
     };
 
     /** make the relation between 2 objects 
