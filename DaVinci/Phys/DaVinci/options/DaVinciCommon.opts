@@ -1,7 +1,13 @@
-//*****************************************************************
-// DaVinci standard services and DLLs + algorithms for reprocessing
-// and default properties for common algorithms/tools
-//=================================================================
+/** @file 
+ *  Configuration options for the execution of any DaVinci application.
+ *  Standard services and DLLs.
+ *  Algorithms for reprocessing, primary vertex and production of 
+ *  ProtoParticles.
+ *  Default properties for common use algorithms and tools.
+ * 
+ *  @author G.Corti
+ *  @date 2003-03-14
+ */
 
 // Allow units to be used in jobOptions
 #units "$GAUDICONFROOT/options/units.opts"
@@ -36,11 +42,12 @@ ApplicationMgr.DLLs += { "DaVinciAssociators" };
 
 // ProtoParticles creation
 ApplicationMgr.DLLs += { "KsReco" };
-ApplicationMgr.DLLs += { "GlobalReco", "CaloReco" };
+ApplicationMgr.DLLs += { "GlobalReco", "CaloReco", "CaloPIDs" };
 #include "$GLOBALRECOROOT/options/GlobalReco.opts"
 #include "$DAVINCIMCTOOLSROOT/options/MCPIDProtoPAlg.opts"
 #pragma print off
 #include "$CALORECOOPTS/Reco.opts"
+#include "$CALOPIDSOPTS/CaloPIDs.opts"
 #pragma print on
 
 // Primary vertex
@@ -49,7 +56,7 @@ ApplicationMgr.DLLs += { "PrimVtx" };
 
 // Physics packages and necessary dependent packages
 ApplicationMgr.DLLs += { "DaVinciTools", "TrExtrapolator" };
-ApplicationMgr.DLLs += { "PhysSelections" };
+#include "$PHYSSELSYSROOT/options/PhysSelSys.opts"
 ApplicationMgr.DLLs += { "FlavourTagging" };
 //    ... for physics check on MC data
 ApplicationMgr.DLLs += { "MCTools" };
@@ -57,14 +64,28 @@ ApplicationMgr.DLLs += { "DaVinciMCTools", "DaVinciEff" };
 ApplicationMgr.DLLs += { "DaVinciTest" };
 ApplicationMgr.DLLs += { "DaVinciUser" };
 
-// Options for Associators
-
 // No Histogram persistency chosen at this point
 ApplicationMgr.HistogramPersistency = "NONE";
 
-// Set up some profiling
+// Profiling
 AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
 NameAuditor.Enable   = false;
 ChronoAuditor.Enable = true;
 MemoryAuditor.Enable = false;
+
+// General output levels (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL)
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
+
+// Print algorithm name with 40 characters
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+
+// Print Frequency
+EventSelector.PrintFreq  = 1;
+
+// Algorithms to ALWAYS EXECUTE
+ApplicationMgr.TopAlg =  { "ChargedProtoPAlg" };
+ApplicationMgr.TopAlg += { "PrimVtxFinder" };
+
 //**************************************************************

@@ -8,7 +8,7 @@ branches doc cmt
 #=======================================================
 
 # DaVinci application
-use  DaVinci             v7r3	Phys
+use  DaVinci             v7r4	Phys
 
 #--- DaVinci packages
 use  MCTools             v1r0   Phys
@@ -16,14 +16,27 @@ use  DaVinciTools        v7r3   Phys
 use  DaVinciAssociators  v3r1   Phys
 use  DaVinciMCTools      v4r1   Phys
 use  DaVinciTest         v4r0   Phys
-use  PhysSelections      v4r3	Phys
 use  FlavourTagging      v4r2	Phys
-use  DaVinciEff          v2r2   Phys
+use  DaVinciEff          v2r3   Phys
 use  DaVinciUser         v4r0   Phys
 
 use  GlobalReco          v3r0	Rec
 use  KsReco		 v1r4p1 Rec
 use  PrimVtx             v2r0   Rec
+
+use  PhysSelSys		 v5r0	PhysSel
+use  B2DD            	 v1r0   PhysSel
+use  B2HH                v1r0   PhysSel
+use  Bd2D0Kstar	     	 v1r0   PhysSel
+use  Bd2JpsiKs       	 v1r0   PhysSel
+use  Bd2JpsiKstar    	 v1r0   PhysSel
+use  Bd2KstarGamma   	 v1r0   PhysSel
+use  Bd2MuMuKstar    	 v1r0   PhysSel
+use  Bd2PhiKs        	 v1r0   PhysSel
+use  Bd2PiPiPi0      	 v1r0   PhysSel
+use  Bs2DsPi         	 v1r0   PhysSel
+use  Bs2JpsiPhi      	 v1r0   PhysSel
+use  Bs2MuMu         	 v1r0   PhysSel
 
 #--- Trigger
 use  L0DU                v6r4	L0
@@ -32,7 +45,8 @@ use  L1Decision          v1r7   L1
 #--- ProtoParticles 
 use  CaloInterfaces      v2r4   Calo
 use  CaloUtils           v4r4   Calo
-use  CaloReco		 v1r3p1	Calo
+use  CaloReco		 v1r4	Calo
+use  CaloPIDs   	 v1r0   Calo
 
 #--- Necessary tools
 use  TrExtrapolator      v2r5   Tr

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.56 2003-02-12 15:09:33 gcorti Exp $
+# $Id: requirements,v 1.57 2003-03-21 16:56:57 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v7r3
+version           v7r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -25,11 +25,15 @@ use  GaudiRootDb        v*
 use  HbookCnv           v*
 use  RootHistCnv    	v*
 
-#--- LHCb libraries (from LHCB_v11r9)
-use  LHCb               v11r10
+#--- LHCb libraries (from LHCB_v11r10)
+use  LHCb               v11r10	
+#    New GaudiConf with OODST content
+use  GaudiConf          v6r6
+#    Enable reading of trigger candidate relation tables
+use  Associators        v2r0	 Associators
 
 #--- Geometry description (from DBASE)
-use  XmlDDDB		v15r2	Det
+use  XmlDDDB		v15r2	 Det
 
 #--- DaVinciSys v7r3 packages 
 
@@ -37,10 +41,11 @@ use  XmlDDDB		v15r2	Det
 use  L0DU          	v6r4	 L0
 use  L1Decision         v1r7     L1
 
-#    Enable neutral ProtoParticles production  
+#    Enable neutral ProtoParticles production and CaloPIDs
 use  CaloInterfaces     v2r4     Calo
 use  CaloUtils 	        v4r4     Calo
-use  CaloReco           v1r3p1   Calo
+use  CaloReco           v1r4     Calo
+use  CaloPIDs           v1r0     Calo 
 
 #    Final Reconstruction
 use  GlobalReco         v3r0     Rec
@@ -58,9 +63,9 @@ use  DaVinciTools       v7r3     Phys
 use  DaVinciAssociators v3r1     Phys
 use  DaVinciMCTools     v4r1     Phys
 use  DaVinciTest        v4r0     Phys
-use  PhysSelections     v4r3     Phys
+use  PhysSelSys		v5r0     PhysSel
 use  FlavourTagging     v4r2     Phys
-use  DaVinciEff         v2r2     Phys
+use  DaVinciEff         v2r3     Phys
 use  DaVinciUser        v4r0     Phys
 
 # Build DaVinci Application with standard executable
@@ -77,5 +82,5 @@ macro DaVinci_linkopts    "${application_linkopts}"
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append cppflags " -DDaVinciVersion=700300 " \
-             VisualC  " /DDaVinciVersion=700300 "
+macro_append cppflags " -DDaVinciVersion=700400 " \
+             VisualC  " /DDaVinciVersion=700400 "

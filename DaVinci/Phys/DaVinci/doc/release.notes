@@ -3,6 +3,11 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v7r3>2003-03-21 DaVinci v7r4</A></H1><PRE>
+ - New version:
+	 . Split of physics selections in small packages
+   . Use new CaloPIS package and compatible CaloReco v1r4
+
 </PRE><H1><A NAME=v7r3>2003-02-13 DaVinci v7r3</A></H1><PRE>
 
  - New features:
