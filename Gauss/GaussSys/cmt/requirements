@@ -1,5 +1,5 @@
 package GaussSys
-version v10r0
+version v10r1
 
 branches cmt doc
 
@@ -7,10 +7,10 @@ branches cmt doc
 # Gauss packages
 #==================================================================
 # Gauss application
-use Gauss		v10r0	Sim
+use Gauss		v10r1	Sim
 
 # GEANT4 libraries
-use GEANT4	      v2r5020p0 Sim
+use GEANT4	        v5r1    Sim
 use G4VisUI             v1r3    Sim
 
 # Generator stuff ...
