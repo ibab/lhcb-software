@@ -1,8 +1,11 @@
-// $Id: CaloClustersMCTruth3Alg.cpp,v 1.1 2002-06-26 19:03:56 ibelyaev Exp $
+// $Id: CaloClustersMCTruth3Alg.cpp,v 1.2 2002-11-13 20:42:25 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/06/26 19:03:56  ibelyaev
+//  add one more new algorithm for MCTruth
+//
 // Revision 1.5  2002/06/16 17:19:19  ibelyaev
 //  update
 //
@@ -62,8 +65,14 @@ CaloClustersMCTruth3Alg::CaloClustersMCTruth3Alg
   , m_threshold   ( 10 * perCent                ) 
   , m_particles   ( MCParticleLocation::Default )
 { 
-  declareProperty( "Threshold"   , m_threshold  ) ;
-  declareProperty( "MCParticles" , m_particles  ) ;
+  declareProperty ( "Threshold"   , m_threshold  ) ;
+  declareProperty ( "MCParticles" , m_particles  ) ;
+  // set the appropriate default value  for input data
+  setInputData    ( CaloClusterLocation::   Ecal ) ;
+  // set the appropriate default value  for input data
+  setDetData      ( DeCalorimeterLocation:: Ecal ) ;
+  // set the appropriate default value  for ouput data
+  setOutputData   ( "Rec/Relations/EcalClusters2MCParticles" ) ;
 };
 // ============================================================================
 
