@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.6 2001-10-17 08:32:11 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.7 2001-10-18 11:47:09 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -878,7 +878,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage, char* envXmlDB, char* envO
   }
 
 
-  //
+//
 // Serializers & fillStream()
 //
   std::string buf, op, cnst;

@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.6 2001-10-17 08:32:11 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.7 2001-10-18 11:47:23 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -333,6 +333,10 @@ void DDBEdict::printCppDictionary(DaDiPackage* gddPackage, char* envXmlDB, char*
     {  
 
   DaDiClass* gddClass = gddPackage->popDaDiClass();
+
+  dbExportClass[std::string(gddClass->className().transcode())] =
+    std::string(gddPackage->packageName().transcode()) + "/" 
+    + std::string(gddClass->className().transcode());
 
 
 // ------------------------------------------------------------------------
