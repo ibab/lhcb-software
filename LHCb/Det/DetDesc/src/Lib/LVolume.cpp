@@ -1,8 +1,11 @@
-// $Id: LVolume.cpp,v 1.20 2002-05-15 14:51:56 cattanem Exp $ 
+// $Id: LVolume.cpp,v 1.21 2002-05-15 14:56:29 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.20  2002/05/15 14:51:56  cattanem
+// fix for windows
+//
 // Revision 1.19  2002/05/15 14:25:25  ibelyaev
 //  bug fix
 //
@@ -684,10 +687,10 @@ unsigned int LVolume::intersectLine
                 << " radl " << (*itI).second->radiationLength()
                 << endreq ;
           }
-          for ( ILVolume::Intersections::const_iterator itI = childrens.begin();
-                childrens.end() != itI; itI++ ) {
-            double s = (*itI).first.first;
-            double t = (*itI).first.second;
+          for ( ILVolume::Intersections::const_iterator itJ = childrens.begin();
+                childrens.end() != itJ; itJ++ ) {
+            double s = (*itJ).first.first;
+            double t = (*itJ).first.second;
             log << MSG::INFO 
                 << "Child : s " << s
                 << " x " << Point.x() + s * Vector.x()
@@ -697,7 +700,7 @@ unsigned int LVolume::intersectLine
                 << " x " << Point.x() + t * Vector.x()
                 << " y " << Point.y() + t * Vector.y()
                 << " z " << Point.z() + t * Vector.z()
-                << " radl " << (*itI).second->radiationLength()
+                << " radl " << (*itJ).second->radiationLength()
                 << endreq;
           }
           
