@@ -3,7 +3,14 @@ Package manager : Vanya Belyaev
 
 
 ! =====================================================================
+! 2001/02/07  - Vanya Belyaev 
+   
+   DeCalorimeter.cpp  vector ---> std::vector. It is essential fr NT
+           to note explicitely namespace std! 
+
+! =====================================================================
 ! 2001/02/04  - v1 Vanya Belyaev 
   new package 
   move the codes from former Calo (CaloAlg)
+
 

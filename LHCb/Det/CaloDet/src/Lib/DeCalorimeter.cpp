@@ -74,7 +74,7 @@ StatusCode DeCalorimeter::buildCells( ) {
 
   MsgStream log( msgSvc(), "buildCells"+localPath() );
   
-  vector<double> cellSize; 
+  std::vector<double> cellSize; 
 
 //   *** loop over all subparts of calorimeter
 
