@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.h,v 1.2 2003-04-11 16:11:57 jonrob Exp $
+// $Id: RichRecSegmentTool.h,v 1.3 2003-04-11 18:13:28 jonrob Exp $
 #ifndef RICHRECTOOLS_RICHRECSEGMENTTOOL_H
 #define RICHRECTOOLS_RICHRECSEGMENTTOOL_H 1
 
@@ -236,7 +236,7 @@ private:
 
   /// temporary parameters to take into acount degraded performance for robustness tests
   double m_photonEffScale;
-  double m_emisPntErrScale;
+  std::vector<double> m_emisPntErrScale;
 
 };
 

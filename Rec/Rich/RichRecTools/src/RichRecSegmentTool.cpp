@@ -1,4 +1,4 @@
-// $Id: RichRecSegmentTool.cpp,v 1.7 2003-04-11 16:11:57 jonrob Exp $
+// $Id: RichRecSegmentTool.cpp,v 1.8 2003-04-11 18:13:28 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -124,7 +124,10 @@ RichRecSegmentTool::RichRecSegmentTool ( const std::string& type,
 
   // temporary parameters to take into acount degraded performance for robustness tests
   declareProperty( "ScalePhotonEff", m_photonEffScale = 1 );
-  declareProperty( "ScaleEmisPntErr", m_emisPntErrScale = 1 );
+  m_emisPntErrScale.push_back( 1 );
+  m_emisPntErrScale.push_back( 1 );
+  m_emisPntErrScale.push_back( 1 );
+  declareProperty( "ScaleEmisPntErr", m_emisPntErrScale );
 
 }
 
@@ -341,9 +344,7 @@ StatusCode RichRecSegmentTool::initialize() {
   // Informational Printout
   msg << MSG::DEBUG << "Tool Parameters :-" << endreq
       << " Photon Energy Bins         = " << m_EnergyBins << endreq
-      << " GeomEff Phots Max/Bailout  = " << m_nGeomEff << "/" << m_nGeomEffBailout << endreq
-      << " Robustness Smearing        = " << m_photonEffScale << " " << m_emisPntErrScale
-      << endreq;
+      << " GeomEff Phots Max/Bailout  = " << m_nGeomEff << "/" << m_nGeomEffBailout << endreq;
   //<< " Particle masses (MeV)      = " << m_particleMass << endreq
   //<< " Average refractive indices = " << m_AvRefIndex << endreq;
   //for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
@@ -719,7 +720,7 @@ double RichRecSegmentTool::ckThetaResolution( RichRecSegment * segment,
   }
 
   // Scale for robustness tests
-  res *= m_emisPntErrScale;
+  res *= m_emisPntErrScale[rad];
 
   return res;
 }
