@@ -35,24 +35,20 @@ else
 endif
 set current = $PWD
 #
-# == set the LHCB version number
-setenv Lversion "v11r7"
 # == set the root directory of your job
 setenv MYJOBROOT $HOME/newmycmt/Ex/DetDescExample/v5r1
+
+# == set the LHCB version number
+set opts = `grep STDOPTS $MYJOBROOT/cmt/${MODE}.make`
+set Lversion = `echo $opts | awk -F/ '{print $(NF-3)}' | awk -F_ '{print $2}'`
+
 #setenv MYJOBROOT $LHCb_release_area/LHCB/LHCB_${Lversion}/Ex/DetDescExample/v5r1
 
 # == set the environment
-$LHCBHOME/scripts/LHCbEnv.csh ${Lversion}
+source $LHCBHOME/scripts/LHCbEnv.csh ${Lversion}
 
 # == set the program environment
 source $MYJOBROOT/cmt/setup.csh -tag=$MODE
-
-# == create soft_links to use packages
-if ($MODE != "LinuxStatic") then
-  cd $MYJOBROOT/cmt
-  $CMTROOT/mgr/cmt build library_links
-  cd $current
-endif
 
 # == executable name
 setenv EXEC DetDescExample
