@@ -3,12 +3,18 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
-! 20010831 Brunel v6 (MC)
+! 20010904 Brunel v6 (MC)
   This version is to be used for data produced with SICBMC v247/dbase v240
   ("LHCB-classic", tracker cross-geometry)
 
-  In cmt/requirements
+  In options/
+   Brunel.opts
+     Remove tracking ErrorMax options (fixed in tracking code)
+   BrunelMessage.opts
+     Name of TrEventTracksFitter algorithm changed to trFit
 
+  In cmt/requirements
+  ===================
   use dbase v240 SICB
     20010821 - dbase v240
      cdf/     changes for tracking cross geometry, 
@@ -30,7 +36,7 @@ Purupose: LHCb reconstruction program
     Remove triple gem code
 
   use OTEvent      v6     Event 
-    backwards incomtpatible changes for cross geometry  
+    backwards incompatible changes for cross geometry  
     insure channels number from one everywhere
     reserve space in internal vector of OTLayer object - should save time
 
