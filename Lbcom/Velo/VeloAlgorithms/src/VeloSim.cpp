@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.20 2002-09-26 10:31:43 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.21 2002-10-15 13:45:47 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -60,7 +60,8 @@ const         IAlgFactory& VeloSimFactory = Factory ;
 
 struct chargeThreshold : public std::unary_function<MCVeloFE*,  bool> {
   bool operator()(MCVeloFE* FE) {
-    return fabs(FE->charge()) < VeloSimParams::threshold;
+    // decide to cut out large -ve noise
+  return FE->charge() < VeloSimParams::threshold;
   }
 };
 
@@ -1007,7 +1008,6 @@ MCVeloFE* VeloSim::findOrInsertFE(VeloChannelID& stripKey){
 // remove any MCFEs with charge below abs(threshold)
 //=========================================================================
 StatusCode VeloSim::finalProcess(){
-
   // cannot do this by remove_if, erase as storing/erasing pointers.
   // instead sort whole container and erase.
   std::sort(m_FEs->begin(), m_FEs->end(), 
@@ -1016,9 +1016,7 @@ StatusCode VeloSim::finalProcess(){
   MCVeloFEs::iterator it1 = std::find_if(m_FEs->begin(),
                                          m_FEs->end(),
                                          chargeThreshold());
-  MCVeloFEs::iterator it2 = std::find_if(it1,
-                                         m_FEs->end(),
-                                         chargeThreshold());
+  MCVeloFEs::iterator it2 = m_FEs->end();
   m_FEs->erase(it1, it2);
 
   // sort FEs into order of ascending sensor + strip
