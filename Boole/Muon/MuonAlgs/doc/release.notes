@@ -4,6 +4,9 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+! 2002-07-07 - Alessia Satta
+ - Bug fix to MuonDigitizationData.cpp, add MuonTest.cpp
+
 ! 2002-06-27 - Marco Cattaneo
  - Remove NmbOfSpilloverEvents property and get the number directly from the
    SpillOverAlg
