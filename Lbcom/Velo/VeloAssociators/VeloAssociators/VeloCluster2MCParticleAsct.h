@@ -22,8 +22,8 @@ static const std::string& VeloCluster2MCParticleAsctLocation =
  *  @date   22/05/2002
  */
 
-class VeloCluster2MCParticleAsct: public AssociatorWeighted<VeloCluster,MCParticle,double>
-{
+class VeloCluster2MCParticleAsct: 
+  public AssociatorWeighted<VeloCluster,MCParticle,double> {
   friend ToolFactory<VeloCluster2MCParticleAsct>;
   
 public:
@@ -38,7 +38,7 @@ protected:
                   const std::string& name,
                   const IInterface* parent ): 
   Asct( type, name, parent) {
-    setProperty( "Location", "MC/VeloClusters2MCParticles");
+    setProperty( "Location", VeloCluster2MCParticleAsctLocation );
     setProperty( "AlgorithmType", "VeloCluster2MCParticleAlg" );
     setProperty( "AlgorithmName", "VeloCluster2MCParticle" );
   }; 
