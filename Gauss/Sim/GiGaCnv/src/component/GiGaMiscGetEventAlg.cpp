@@ -1,8 +1,11 @@
-// $Id: GiGaMiscGetEventAlg.cpp,v 1.6 2002-01-22 18:24:44 ibelyaev Exp $ 
+// $Id: GiGaMiscGetEventAlg.cpp,v 1.7 2002-02-12 17:10:49 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/01/22 18:24:44  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.5  2001/08/12 17:24:54  ibelyaev
 // improvements with Doxygen comments
 //
@@ -128,7 +131,7 @@ StatusCode GiGaMiscGetEventAlg::execute()
         { 
           log << MSG::INFO
               << "Number of extracted vertices  '"
-              << m_vertices << "' \t" 
+              << m_vertices << "'  \t" 
               << obj->size() 
               << endreq ;
           Stat stat( chronoSvc() , "#vertices" , obj->size() ) ; 
@@ -137,7 +140,7 @@ StatusCode GiGaMiscGetEventAlg::execute()
         { 
           log << MSG::ERROR 
               << " Could not extract 'Vertices' from '"
-              << m_vertices << "'" 
+              << m_vertices << "' \t" 
               << endreq ;
           ///
           return StatusCode::FAILURE;

@@ -1,6 +1,9 @@
-// $Id: GiGaSurfaceCnv.cpp,v 1.6 2002-01-22 18:24:44 ibelyaev Exp $
+// $Id: GiGaSurfaceCnv.cpp,v 1.7 2002-02-12 17:10:49 ibelyaev Exp $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/01/22 18:24:44  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.5  2001/11/19 18:27:00  ibelyaev
 //  bux fix and the new converter for catalogs
 //
@@ -154,37 +157,29 @@ StatusCode GiGaSurfaceCnv::updateRep
   ///
   if( status.isFailure() || 0 == logSurf ) 
     { return Error("Could not create G4LogicalSurface!", status ) ;} 
-  /// create optical surface 
-  G4OpticalSurface* optSurf = 
-    new G4OpticalSurface( surfaceName                                    ,
-                          ( G4OpticalSurfaceModel  ) surface->model   () ,
-                          ( G4OpticalSurfaceFinish ) surface->finish  () ,
-                          ( G4OpticalSurfaceType   ) surface->type    () ,
-                          surface->value                              () );
   ///
-  {
-    if( 0 == optSurf->GetMaterialPropertiesTable() ) 
-      { optSurf->
-          SetMaterialPropertiesTable( new G4MaterialPropertiesTable() ) ; }
-    StatusCode sc = 
-      AddTabulatedProperties ( surface->tabulatedProperties        ()  ,
-                               optSurf->GetMaterialPropertiesTable ()  ) ;
-    if( sc.isFailure() ) 
-      { return Error("Could not set properties forG4OpticalSurface!") ; }
-  }
-  /// 
-  if( 0 != logSurf->GetOpticalSurface() ) 
-    {  
-      G4OpticalSurface* oldOptSurf = logSurf->GetOpticalSurface();
-      Error("Existing Optical surface would be replaced! Old one :"); 
-      oldOptSurf->DumpInfo();
-      Error("Existing Optical surface would be replaced! New one :"); 
-      optSurf->DumpInfo();
-      /// delete oldOptSurf;  /// DO NOT DELETE!!!! why?? is it correct? 
-      logSurf->SetOpticalSurface( 0 ) ;
+  if( 0 == logSurf->GetOpticalSurface() )
+    {    
+      /// create optical surface 
+      G4OpticalSurface* optSurf = 
+        new G4OpticalSurface( surfaceName                                    ,
+                              ( G4OpticalSurfaceModel  ) surface->model   () ,
+                              ( G4OpticalSurfaceFinish ) surface->finish  () ,
+                              ( G4OpticalSurfaceType   ) surface->type    () ,
+                              surface->value                              () );
+      ///
+      if( 0 == optSurf->GetMaterialPropertiesTable() ) 
+        { optSurf-> 
+            SetMaterialPropertiesTable( new G4MaterialPropertiesTable() ) ; }
+      StatusCode sc = 
+        AddTabulatedProperties ( surface->tabulatedProperties        ()  ,
+                                 optSurf->GetMaterialPropertiesTable ()  ) ;
+      if( sc.isFailure() ) 
+        { return Error("Could not set properties forG4OpticalSurface!") ; }
+      /// 
+      logSurf->SetOpticalSurface( optSurf ); 
     }
   ///
-  logSurf->SetOpticalSurface( optSurf ); 
   ///
   return StatusCode::SUCCESS;
 };

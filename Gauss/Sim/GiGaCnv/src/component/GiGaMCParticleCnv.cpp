@@ -1,8 +1,11 @@
-// $Id: GiGaMCParticleCnv.cpp,v 1.9 2002-01-22 18:24:44 ibelyaev Exp $ 
+// $Id: GiGaMCParticleCnv.cpp,v 1.10 2002-02-12 17:10:48 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/01/22 18:24:44  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.8  2001/11/19 18:27:00  ibelyaev
 //  bux fix and the new converter for catalogs
 //
@@ -86,7 +89,7 @@ GiGaMCParticleCnv::GiGaMCParticleCnv( ISvcLocator* Locator )
   setNameOfGiGaConversionService( "GiGaKineCnvSvc" ); 
   setConverterName              ( "GiGaMCPCnv"     );
   ///
-  declareObject( GiGaLeaf( "/Event/MCParticles", objType() ) );
+  declareObject( GiGaLeaf( "/Event/MC/MCParticles", objType() ) );
   ///
 }; 
 

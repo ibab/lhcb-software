@@ -1,8 +1,11 @@
-// $Id: GiGaMCVertexCnv.cpp,v 1.9 2002-01-22 18:24:44 ibelyaev Exp $ 
+// $Id: GiGaMCVertexCnv.cpp,v 1.10 2002-02-12 17:10:48 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/01/22 18:24:44  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.8  2001/08/12 17:24:53  ibelyaev
 // improvements with Doxygen comments
 //
@@ -87,7 +90,7 @@ GiGaMCVertexCnv::GiGaMCVertexCnv( ISvcLocator* Locator )
   setConverterName              ( "GiGaMCVCnv"      );
   ///
   /// declare object name for G4->Gaudi conversion 
-  declareObject( GiGaLeaf( "/Event/MCVertices", objType() ) ); 
+  declareObject( GiGaLeaf( "/Event/MC/MCVertices", objType() ) ); 
   ///
 }; 
 
