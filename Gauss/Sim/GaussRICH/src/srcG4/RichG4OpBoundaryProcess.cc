@@ -178,12 +178,13 @@ RichG4OpBoundaryProcess::PostStepDoIt
 				       (pPreStepPoint->GetPhysicalVolume()->
 						GetLogicalVolume());
 
-	if (Surface != NULL) OpticalSurface = Surface->GetOpticalSurface();
+	if (Surface != NULL) OpticalSurface 
+                         = (G4OpticalSurface*) Surface->GetSurfaceProperty();
 
 	theModel = glisur;
 	theFinish = polished;
 
-	G4OpticalSurfaceType type;
+	G4SurfaceType type;
 	if (Rindex) {
 	   type = dielectric_dielectric;
 //	   if (OpticalSurface) type = OpticalSurface->GetType();
