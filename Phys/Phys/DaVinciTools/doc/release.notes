@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.14 2002-07-12 09:31:58 odie Exp $
+! $Id: release.notes,v 1.15 2002-07-18 18:17:07 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+! 2002-07-18 - Gloria Corti
+ - Use PhysEvent v6r0
+ - Put header files of tools and Particle&Vertex,  accessor method to
+   ParticlePropertySvc in DVAlgorithm base class
+ - Remove obsolete AxParticleMaker (Zebra DST)
+ - Introduce ChargedParticleMaker (OO-DST) that make the choice based
+   on combined PID
+
 
 ! 2002-07-10 - Olivier Dormond
  - Duplication of the interfaces' methods to support keyed container.

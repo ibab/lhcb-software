@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.4 2002-05-20 23:12:37 gcorti Exp $
+// $Id: DaVinciTools_load.cpp,v 1.5 2002-07-18 18:16:50 gcorti Exp $
 // Include files 
 
 
@@ -15,7 +15,7 @@
 DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
 
   DECLARE_TOOL( PhysDesktop );
-  DECLARE_TOOL( AxParticleMaker );
+  DECLARE_TOOL( ChargedParticleMaker );
   DECLARE_TOOL( LagrangeMassVertexFitter );
   DECLARE_TOOL( UnconstVertexFitter );  
   DECLARE_TOOL( GeomDispCalculator );
@@ -28,6 +28,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( NsctVeloTransporter );
   DECLARE_TOOL( ParabolicTransporter );
   DECLARE_TOOL( DecayFinder );
+  //DECLARE_TOOL( DecayTreeTool );
 
   DECLARE_ALGORITHM( FillParticleAlgorithm );
   
