@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.41 2003-10-10 16:51:30 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.42 2003-10-10 18:50:33 witoldp Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -104,7 +104,7 @@ GiGa.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGa.RunSeq.RunCommand.BeginOfRunCommands     = 
 { "/control/saveHistory "           ,
   "/run/verbose 0 "               ,
-  "/tracking/verbose 1"            ,
+  "/tracking/verbose 0"            ,
   "/geometry/navigator/verbose 0",
   "/tracking/storeTrajectory  1"    } ;
 
