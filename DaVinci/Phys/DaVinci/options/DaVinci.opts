@@ -37,10 +37,10 @@ NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
 //  #include "$DAVINCIROOT/options/CaloReCalibration.opts"
 
 // Perfect ParticleID (switch off ChargedProtoPAlg when switching this on)
-//  ApplicationMgr.TopAlg = { "MCPIDProtoPAlg" };
+//  ApplicationMgr.TopAlg += { "MCPIDProtoPAlg" };
 
 // Charged ProtoParticles
-ApplicationMgr.TopAlg = { "ChargedProtoPAlg" };
+ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
 
 // Neutral ProtoParticles
 //  ApplicationMgr.TopAlg += { "NeutralPPCreator/NeutralProtoPAlg" };

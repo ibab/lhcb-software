@@ -3,6 +3,10 @@ Package     : DaVinci
 Responsible : Gloria Corti
 Purpose     : LHCb analysis program 
 
+ 2002-11-07 - Gloria Corti
+ - Fix problem with += for first algorithm executed when introducing
+   L0 rerun or Recalibration (G.Pakhlova)
+
 </PRE><H1><A NAME=v6r0>2002-10-30 DaVinci v6r0</A></H1><PRE>
  2002-10-30 - Gloria Corti
  - Increase version numbers of RootHistCnv (v8r0p2), XmlDDDB (v13r1),
