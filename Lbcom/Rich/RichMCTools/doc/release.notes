@@ -4,6 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2004-06-02 - Chris Jones
+ - Add new tool RichMCTruthTool which contains the non-reconstruction specific
+   methods ported from MCRichRecTruthTool in Rich/RichRecMCTools
+
 !========================== RichMCTools v1r1 2004-03-18 ======================
 ! 2004-02-20 - Chris Jones
  - Adapt to new base class
