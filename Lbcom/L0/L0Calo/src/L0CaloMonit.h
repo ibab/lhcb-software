@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.h,v 1.1 2001-06-12 14:28:02 ocallot Exp $
+// $Id: L0CaloMonit.h,v 1.2 2002-01-14 10:00:18 cattanem Exp $
 #ifndef L0CALOMONIT_H 
 #define L0CALOMONIT_H 1
 // Include files
@@ -9,7 +9,7 @@
 
 // from Gaudi 
 #include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/IHistogram1D.h"
+#include "AIDA/IHistogram1D.h"
 
 /** @class L0CaloMonit L0CaloMonit.h
  *  Monitoring algorithm for the L0 Calorimeter trigger

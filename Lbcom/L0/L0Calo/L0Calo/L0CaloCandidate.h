@@ -1,6 +1,6 @@
+// $Id: L0CaloCandidate.h,v 1.6 2002-01-14 10:00:17 cattanem Exp $
 #ifndef L0CALO_L0CALOCANDIDATE_H
 #define L0CALO_L0CALOCANDIDATE_H 1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/L0Calo/L0CaloCandidate.h,v 1.5 2001-06-12 14:28:01 ocallot Exp $
 
 // Include files
 #include <iostream>
@@ -16,8 +16,8 @@
 #include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/SmartRefVector.h"
 
-/// Calo/CaloGen
-#include "CaloGen/CaloCellID.h"
+/// Calo/CaloKernel
+#include "CaloKernel/CaloCellID.h"
 
 /** @namespace L0
  *

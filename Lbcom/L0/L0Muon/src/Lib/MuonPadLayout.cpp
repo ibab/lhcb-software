@@ -1,4 +1,4 @@
-// $Id: MuonPadLayout.cpp,v 1.4 2001-07-26 13:24:37 cattanem Exp $
+// $Id: MuonPadLayout.cpp,v 1.5 2002-01-14 10:01:04 cattanem Exp $
 
 #define MUONPADLAYOUT_CPP
 
@@ -119,9 +119,9 @@ L0mPad* MuonPadLayout::createPad(int st, double x, double y) {
 
 L0mPad* MuonPadLayout::createPad(MuonDigit* md) {
    
-    double x = md->getX();
-    double y = md->getY();
-    double z = md->getZ();
+    double x = md->x();
+    double y = md->y();
+    double z = md->z();
 //
 //  Crude estimate of the station number
 //

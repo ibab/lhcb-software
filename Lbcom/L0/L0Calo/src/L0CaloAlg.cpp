@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.cpp,v 1.8 2001-07-12 16:15:14 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.9 2002-01-14 10:00:18 cattanem Exp $
 
 /// STL
 #include <string>
@@ -14,9 +14,9 @@
 /// CaloEvent
 #include "CaloEvent/CaloDigit.h"
 
-/// CaloGen
-#include "CaloGen/CaloException.h"
-#include "CaloGen/CaloCollection.h"
+/// CaloKernel
+#include "CaloKernel/CaloException.h"
+#include "CaloKernel/CaloCollection.h"
 
 /// local
 #include "L0Calo/L0CaloCandidate.h"
@@ -36,10 +36,10 @@ const       IAlgFactory& L0CaloAlgFactory = Factory ;
 
 L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
   : Algorithm                   ( name , pSvcLocator            )
-  , m_nameOfEcalDataContainer   ( "/Event/Raw/Ecal/Digit"    )
-  , m_nameOfHcalDataContainer   ( "/Event/Raw/Hcal/Digit"    )
-  , m_nameOfPrsDataContainer    ( "/Event/Raw/Prs/Digit"     )
-  , m_nameOfSpdDataContainer    ( "/Event/Raw/Spd/Digit"     )
+  , m_nameOfEcalDataContainer   ( "/Event/Raw/Ecal/Digits"    )
+  , m_nameOfHcalDataContainer   ( "/Event/Raw/Hcal/Digits"    )
+  , m_nameOfPrsDataContainer    ( "/Event/Raw/Prs/Digits"     )
+  , m_nameOfSpdDataContainer    ( "/Event/Raw/Spd/Digits"     )
   , m_nameOfOutputDataContainer ( "/Event/FE/L0/Calo"   )
   , m_nameOfGeometryRoot        ( "/dd/Structure/LHCb/" )
   , m_etScale                   ( 20. * MeV )
@@ -83,7 +83,7 @@ L0CaloAlg::~L0CaloAlg() {};
 
 StatusCode L0CaloAlg::initialize() {
 
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
 
   log << MSG::INFO << "Initializing" << endreq;
 
@@ -113,7 +113,7 @@ StatusCode L0CaloAlg::initialize() {
   // Retrieve the ECAL detector element, build cards
 
 
-  SmartDataPtr<DeCalorimeter> detEcal( detDataService() ,
+  SmartDataPtr<DeCalorimeter> detEcal( detSvc() ,
 				       m_nameOfGeometryRoot + "Ecal" ) ;
   if( 0 == detEcal ) {
     log << MSG::ERROR << "Unable to retrieve Detector Element = "
@@ -131,7 +131,7 @@ StatusCode L0CaloAlg::initialize() {
 
   // Retrieve the HCAL detector element, build cards
 
-  SmartDataPtr<DeCalorimeter> detHcal( detDataService() ,
+  SmartDataPtr<DeCalorimeter> detHcal( detSvc() ,
 				       m_nameOfGeometryRoot + "Hcal" ) ;
   if( 0 == detHcal ) {
     log << MSG::ERROR << "Unable to retrieve Detector Element = "
@@ -288,7 +288,7 @@ StatusCode L0CaloAlg::initialize() {
 
 StatusCode L0CaloAlg::execute() {
 
-  MsgStream          log( messageService(), name() );
+  MsgStream          log( msgSvc(), name() );
 
   log << MSG::VERBOSE << "Entering L0 trigger " << endreq;
 
@@ -512,13 +512,12 @@ StatusCode L0CaloAlg::execute() {
   // Search first if the directory exists
 
   {
-    SmartDataPtr<DataObject> outDir( eventDataService() ,
-				     m_nameOfOutputDirectory );
+    SmartDataPtr<DataObject> outDir( eventSvc() , m_nameOfOutputDirectory );
     if( 0 == outDir )                         // touch the output directory
       { log << MSG::ERROR << " OutputDirectory="
 	    << m_nameOfOutputDirectory << "\tdoes not exist" << endreq ; }
   }
-  StatusCode sc = eventDataService()->registerObject(
+  StatusCode sc = eventSvc()->registerObject(
                   m_nameOfOutputDataContainer ,  L0Calo ) ;
   if( sc.isFailure() ) {
     if( 0 != L0Calo ) { delete L0Calo ; L0Calo = 0 ; }
@@ -565,7 +564,7 @@ StatusCode L0CaloAlg::execute() {
 //=============================================================================
 
 StatusCode L0CaloAlg::finalize() {
-  MsgStream log(messageService(), name());
+  MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << " >>> Finalize" << endreq;   // End of finalization step
   return StatusCode::SUCCESS;
 }
@@ -584,7 +583,7 @@ void L0CaloAlg::sumEcalData( MsgStream& log ) {
 
   // Get the ECAL input container
 
-  SmartDataPtr< ObjectVector<CaloDigit> > ecalDigit ( eventDataService(),
+  SmartDataPtr< ObjectVector<CaloDigit> > ecalDigit ( eventSvc(),
                                           m_nameOfEcalDataContainer );
   if( 0 == ecalDigit ) {
     log << MSG::ERROR << "Unable to retrieve Ecal data container="
@@ -635,7 +634,7 @@ void L0CaloAlg::sumHcalData( MsgStream& log ) {
 
   // Get the HCAL input container
 
-  SmartDataPtr<ObjectVector<CaloDigit> > hcalDigit ( eventDataService() ,
+  SmartDataPtr<ObjectVector<CaloDigit> > hcalDigit ( eventSvc() ,
                                          m_nameOfHcalDataContainer );
   if( 0 == hcalDigit ) {
     log << MSG::ERROR << "Unable to retrieve Hcal data container="
@@ -680,7 +679,7 @@ void L0CaloAlg::sumHcalData( MsgStream& log ) {
 
 void L0CaloAlg::addPrsData( MsgStream& log ) {
 
-  SmartDataPtr<ObjectVector<CaloDigit> > prsDigit ( eventDataService() ,
+  SmartDataPtr<ObjectVector<CaloDigit> > prsDigit ( eventSvc() ,
                                                     m_nameOfPrsDataContainer );
   if( 0 == prsDigit ) {
     log << MSG::ERROR << "Unable to retrieve Prs data container="
@@ -718,7 +717,7 @@ void L0CaloAlg::addPrsData( MsgStream& log ) {
 
 void L0CaloAlg::addSpdData( MsgStream& log ) {
 
-  SmartDataPtr<ObjectVector<CaloDigit> > spdDigit ( eventDataService() ,
+  SmartDataPtr<ObjectVector<CaloDigit> > spdDigit ( eventSvc() ,
                                                     m_nameOfSpdDataContainer );
   if( 0 == spdDigit ) {
     log << MSG::ERROR << "Unable to retrieve Spd data container="

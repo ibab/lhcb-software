@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonLayout.cpp,v 1.5 2001-11-16 10:08:59 atsareg Exp $
+// $Id: MuonLayout.cpp,v 1.6 2002-01-14 10:01:04 cattanem Exp $
 // Include files
 #include <iostream>
 #include "L0Muon/MuonLayout.h"
@@ -308,7 +308,7 @@ std::vector<MuonTile> MuonLayout::tilesInRegion(const MuonTile& pad,
 	}
       }
     }
-    for(int it=0; it<5; it++) {
+    for(int it1=0; it1<5; it1++) {
       nvmt.push_back(MuonTile(0,0,10,10,*this));
     }
     return nvmt;

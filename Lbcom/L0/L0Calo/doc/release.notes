@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.9 2001-07-12 16:15:14 ocallot Exp $
+! $Id: release.notes,v 1.10 2002-01-14 10:00:17 cattanem Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+!=============================================================================
+! 2002/01/08 - Marco Cattaneo ** v3r0 **
+  Changes for Gaudi v9 and Calo v3:
+  requirements      - use CaloEvent v7r*, CaloDet v3r*, AIDA v1r*
+  L0CaloAlg.cpp     - get includes from CaloKernel instead of CaloGen
+                      change default data container names to Digits (was Digit)
+                      use recommended short names for service accessors
+  L0CaloCandidate.h - get includes from CaloKernel instead of CaloGen
+  L0CaloMonit.h     - get IHistogram1D.h from AIDA instead of GaudiKernel
 !=============================================================================
 ! 12/07/2001 - Olivier Callot ** v2 **
   - Adapt to the new Gaudi/LHCb/Calo release: Increase version numbers and 

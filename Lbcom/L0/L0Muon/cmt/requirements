@@ -1,13 +1,13 @@
 package L0Muon
 
-version v3r1
+version v4r0
 
 branches src doc options
 
 include_dirs $(L0MUONROOT)
 
-use DetDesc   v7*  Det
-use LHCbEvent v11* Event
+use DetDesc   v9r*  Det
+use LHCbEvent v12r* Event
 
 library L0MuonLib ../src/Lib/*.cpp
 library L0Muon ../src/component/*.cpp

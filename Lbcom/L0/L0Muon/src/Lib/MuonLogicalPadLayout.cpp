@@ -1,4 +1,4 @@
-// $Id: MuonLogicalPadLayout.cpp,v 1.3 2001-07-26 13:24:36 cattanem Exp $
+// $Id: MuonLogicalPadLayout.cpp,v 1.4 2002-01-14 10:01:04 cattanem Exp $
 
 // Include files
 #include <strstream>
@@ -165,10 +165,10 @@ MuonLogicalPadLayout::~MuonLogicalPadLayout() {
 
 L0mPad* MuonLogicalPadLayout::createPad(MuonDigit* md) {
       
-  double x = md->getX();
-  double y = md->getY();
-  double z = md->getZ();
-  unsigned int id = md->getPadID();
+  double x = md->x();
+  double y = md->y();
+  double z = md->z();
+  unsigned int id = md->padId();
 
   ID tt = getId(id);
   
