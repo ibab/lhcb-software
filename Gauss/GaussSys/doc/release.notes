@@ -4,6 +4,12 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!========================== GaussSys v15r1 2004-03-17 ====================
+! 2004-03-17 - Florence RANJARD
+ - Gauss v15r1 is a bug fix of Gauss v15r0
+   It uses GEANT4 v60r0p2 to use the fix in G4decay
+   It uses GaussRICH v4r7 to use the fix in Cerenkov tracking
+
 !========================== GaussSys v15r0 2004-03-08 =====================
 ! 2004-03-08 - Florence RANJARD
  - Gauss v15r0 uses Geant4 6.0.p01, LHCb v15r3, Gaudi v14r3
