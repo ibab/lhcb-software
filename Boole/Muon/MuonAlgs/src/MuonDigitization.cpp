@@ -236,6 +236,8 @@ StatusCode MuonDigitization::execute()
 
 StatusCode MuonDigitization::finalize()
 {
+  // Release the tools
+  if( m_pMuonTileXYZ ) toolSvc()->releaseTool( m_pMuonTileXYZ );
 
   return StatusCode::SUCCESS;
 }
