@@ -1,0 +1,60 @@
+//==============================================================================
+// Example on how to use TrueMCFilterCriterion
+//==============================================================================
+// Author: P. Koppenburg 13/09/2004
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print on
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+ApplicationMgr.DLLs  += { "B2HH", "DaVinciTest", "PhysSelections", "LoKi" };
+
+ApplicationMgr.TopAlg += { "Sequencer/SeqPreselB2hh" };
+SeqPreselB2hh.Members = {
+  "PreLoadParticles/Combined",
+  "Sequencer/Find2Kaons",      
+  "PrintMCTree/PrintTruth",
+  "PreselB2hh/PreselB2hh",
+  "PrintTree/PrintFinal"
+};      
+#include "$B2HHROOT/options/PreselB2hh.opts"
+Find2Kaons.Members = {  "RefineSelection/SelectB2KKminus", "RefineSelection/SelectB2KKplus" } ;  // I want both!
+
+SelectB2KKminus.PhysDesktop.InputLocations = { "Phys/Combined" } ;
+SelectB2KKminus.ParticleNames =  { "K-"  } ;                           // select K-
+SelectB2KKminus.FilterNames = { "TrueMC" };                         // filter by TrueMC
+SelectB2KKminus.ExclusiveSelection = true ;                                 // keep only these
+SelectB2KKminus.TrueMC.CriteriaNames =  { "TrueMCFilterCriterion/B2KK" } ;   // 
+SelectB2KKminus.TrueMC.B2KK.VetoSignal = false ; // default value
+SelectB2KKminus.TrueMC.B2KK.MCDecayFinder.Decay =  "[B_s0 -> K- K+]cc" ;
+SelectB2KKminus.TrueMC.B2KK.Particle2MCLinks.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectB2KKminus.OutputLevel = 3 ;
+
+SelectB2KKplus.PhysDesktop.InputLocations = { "Phys/Combined" } ;
+SelectB2KKplus.ParticleNames =  { "K+" } ;                           // select K
+SelectB2KKplus.FilterNames = { "TrueMC" };                         // filter by TrueMC
+SelectB2KKplus.ExclusiveSelection = true ;                                 // keep only these
+SelectB2KKplus.TrueMC.CriteriaNames =  { "TrueMCFilterCriterion/B2KK" } ;   // 
+SelectB2KKplus.TrueMC.B2KK.VetoSignal = false ; // default value
+SelectB2KKplus.TrueMC.B2KK.MCDecayFinder.Decay =  "[B_s0 -> K- K+]cc" ;
+SelectB2KKplus.TrueMC.B2KK.Particle2MCLinks.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectB2KKplus.OutputLevel = 3 ;
+
+// comment this out if you want to runn on all particles
+PreselB2hh.PhysDesktop.InputLocations = {"/Event/Phys/SelectB2KKplus", "/Event/Phys/SelectB2KKminus"};
+
+Particle2MCLinks.InputData = {"Phys/Combined/Particles"};
+
+PrintTruth.ParticleNames = { "B_s0", "B_s~0" } ;
+PrintTruth.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintTruth.Depth = 1 ;
+
+PrintFinal.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFinal.PhysDesktop.InputLocations = { "Phys/PreselB2hh" } ;
+
+// Bs -> KK 
+EventSelector.Input   = {
+"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000523_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+};
+ApplicationMgr.EvtMax    = -1 ;
+

@@ -1,0 +1,60 @@
+// $Id: TrueMCFilterCriterion.cpp~,v 1.1 2004-09-13 18:14:49 pkoppenb Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h" 
+
+// local
+#include "TrueMCFilterCriterion.h"
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : TrueMCFilterCriterion
+//
+// 2004-09-13 : Patrick KOPPENBURG
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+static const  ToolFactory<TrueMCFilterCriterion>          s_factory ;
+const        IToolFactory& TrueMCFilterCriterionFactory = s_factory ; 
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+TrueMCFilterCriterion::TrueMCFilterCriterion( const std::string& type,
+                                              const std::string& name,
+                                              const IInterface* parent )
+  : GaudiTool ( type, name , parent )
+{
+  declareInterface<IFilterCriterion>(this);
+
+}
+//=============================================================================
+// Destructor
+//=============================================================================
+TrueMCFilterCriterion::~TrueMCFilterCriterion() {}; 
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode TrueMCFilterCriterion::initialize( ){
+  StatusCode sc = GaudiTool::initialize() ;
+  if ( !sc) return sc ;
+
+  
+}
+//=============================================================================
+// Test if filter is satisfied
+//=============================================================================
+bool TrueMCFilterCriterion::isSatisfied( const Particle* const & part ) {
+  
+}
+//=============================================================================
+// Test if filter is satisfied
+//=============================================================================
+bool TrueMCFilterCriterion::operator()( const Particle* const & part ) {
+
+  return this->isSatisfied( part );
+
+}
+
+//=============================================================================

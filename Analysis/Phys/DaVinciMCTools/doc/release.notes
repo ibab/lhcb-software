@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.31 2004-03-31 14:31:45 pkoppenb Exp $
+! $Id: release.notes,v 1.32 2004-09-13 18:14:48 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 
+! 2004-09-13 - P. Koppenburg
+ - src/TrueMCFilterCriterion.*
+   . New ParticleFilter (like in Phys/DaVinciFilter) filtering
+     particles depending on whether they are associated to the true MC 
+     B decay tree. Allows to run on signal only.
+ - options/DVTrueMCFilterCriterion.opts
+   . Example option file that checks that both the K+ and the K- 
+     in Bs->KK are reconstruted before running the preselection.
+   
 !========================== DaVinciMCTools v5r4 2004-03-31 =================
 ! 2004-03-29 - P. Koppenburg
  - src/DaVinciMCTools_load.cpp
