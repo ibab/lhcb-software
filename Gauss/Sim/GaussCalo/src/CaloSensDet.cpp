@@ -1,8 +1,12 @@
-// $Id: CaloSensDet.cpp,v 1.4 2003-06-05 08:27:56 robbep Exp $ 
+// $Id: CaloSensDet.cpp,v 1.5 2003-06-17 09:34:01 robbep Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/06/05 08:27:56  robbep
+// In Birk's law use MaterialCouple instead of Material in order to
+// get dEdXTable in newer version of Geant4 (>4.5.1.ref02)
+//
 // Revision 1.3  2003/05/14 08:43:42  robbep
 // Addition of specific calo corrections in CaloSensDet :
 // - Birk's law
@@ -353,16 +357,19 @@ bool CaloSensDet::ProcessHits( G4Step* step ,
   if( 0 == step ) { return false ; } 
   ///
   const double      edeposit  = step-> GetTotalEnergyDeposit                () ;
+  if( edeposit <= 0           ) { return false ; }
+
+  const G4Track*    track     = step -> GetTrack      () ;
+  const int         trackID   = track-> GetTrackID    () ;
+  const double      charge    = track-> GetDefinition () -> GetPDGCharge  () ;
+
+  if( 0 == int( charge * 10 ) ) { return false ; }
+
   const HepPoint3D& prePoint  = step-> GetPreStepPoint  () -> GetPosition   () ;
   const HepPoint3D& postPoint = step-> GetPostStepPoint () -> GetPosition   () ;
   const double      time      = step-> GetPreStepPoint  () -> GetGlobalTime () ;
   ///
-  const G4Track*    track     = step -> GetTrack      () ;
-  const int         trackID   = track-> GetTrackID    () ;
-  const double      charge    = track-> GetDefinition () -> GetPDGCharge  () ;
-  
-  if( edeposit <= 0           ) { return false ; }
-  if( 0 == int( charge * 10 ) ) { return false ; }
+
   
   G4TouchableHistory* tHist  = (G4TouchableHistory*)
     ( step->GetPreStepPoint()->GetTouchable() ) ;
@@ -493,10 +500,6 @@ double CaloSensDet::birkCorrection(G4Step* step)
       double density  = mat->GetDensity() ;
 
       // dEdx
-      //      double dEdx = G4EnergyLossTables::GetDEDX(
-      //                                        track->GetDefinition(),
-      //                                        track->GetKineticEnergy(),
-      //mat ) ;
 
       const G4MaterialCutsCouple *aMaterialCut = 
         track->GetMaterialCutsCouple() ;
@@ -601,10 +604,10 @@ double CaloSensDet::localNonUniformity(G4Step* step, const CaloCellID& cell)
     // The Amplitude of the sin-like function is a function of x and 
     // y
     correction =
-      1. - 
+      1. + 
       A_local * 
-      cos(2.*pi*(x-x0)/d) *
-      cos(2.*pi*(y-y0)/d) ;
+      ( 1. - cos( 2.*pi * (x-x0)/d ) ) *
+      ( 1. - cos( 2.*pi * (y-y0)/d ) ) ;
   }
   
   return correction ;

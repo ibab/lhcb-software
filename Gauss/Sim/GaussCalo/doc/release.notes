@@ -7,6 +7,10 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-06-17 - Patrick Robbe
+  - CaloSensDet      : change LocalNonUniformity correction function for
+                       ECal
+
 ! 2003-06-05 - Patrick Robbe
   - options/Calo.opts : remove zero magnetic field declarations (zero
                         magnetic field is declared in XmlDDDB now)
