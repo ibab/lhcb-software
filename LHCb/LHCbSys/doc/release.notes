@@ -10,8 +10,12 @@ This version is built against Gaudi v15r1
 
 ! 2004-07-28 - Marco Cattaneo
  - Removed  packages: HltEvent (obsolete)
- - Modified packages: KernelSys v4r0p1, LHCbKernel v5r0p1,
+ - Modified packages: KernelSys v4r1, LHCbKernel v5r1,
                       EventSys v18r1, CaloEvent v13r3, TrgEvent v3r1
+
+ - In LHCbKernel v5r1
+   . Major simplification of maps code, including removal of machine specific
+     code and gcc 2.95.* support
 
  - In TrgEvent v3r1:
    . Add new class TrgDecision to contain L0, L1 and Hlt decision only

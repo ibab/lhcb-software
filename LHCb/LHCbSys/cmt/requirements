@@ -15,8 +15,8 @@ use GaudiConf		v8r0
 use HepMC	v4r121p0	Sim
 
 # Kernel packages
-use KernelSys   	v4r0p1	Kernel
-use LHCbKernel  	v5r0p1	Kernel
+use KernelSys   	v4r1	Kernel
+use LHCbKernel  	v5r1	Kernel
 use CaloKernel  	v3r1	Calo
 use MuonKernel  	v2r6	Muon
 use TrKernel    	v11r4	Tr
