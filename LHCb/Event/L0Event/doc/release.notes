@@ -1,6 +1,9 @@
-$Id: release.notes,v 1.21 2002-07-25 08:07:53 cattanem Exp $
+$Id: release.notes,v 1.22 2002-09-12 13:03:13 cattanem Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+! 2002-09-12 - Andrei Tsaregorodtsev
+ - L0MuonCandidate.cpp: initialise member variables in constructor
 
 !========================= L0Event v12r1 2002-07-25 =========================
 ! 2002-07-25 - Andrei Tsaregorodtsev
