@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.49 2005-02-05 19:18:35 ibelyaev Exp $ 
+# $Id: requirements,v 1.50 2005-02-08 11:30:47 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -10,7 +10,6 @@ version       v4r6
 author        Vanya BELYAEV
 
 use           GaudiPython    v6r11
-use           LoKi           v3r8  Tools 
 
 # =========== Bender Application itself =======================================
 use           Bender         v4r6   Phys 
@@ -45,9 +44,6 @@ use           LoKiHybrid     v4r5   Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.48  2005/02/05 13:55:03  ibelyaev
-#  v4r6: add Tools/BenderRels
-#
 # =============================================================================
 # The END 
 # =============================================================================
