@@ -1,4 +1,4 @@
-//$Id: testXml.opts,v 1.1 2001-12-16 16:12:05 andreav Exp $
+//$Id: testXml.opts,v 1.2 2001-12-17 21:35:32 andreav Exp $
 //==============================================================
 // Job options for DetCondExample test of XML files
 //==============================================================
@@ -35,7 +35,7 @@ EvtClock.delayTime = 5;
 
 // Set output level threshold 
 // Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
-MessageSvc.OutputLevel = 1;
+MessageSvc.OutputLevel = 3;
 
 //==============================================================
 // End of job options for DetCondExample test of XML files
