@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.4 2002-07-25 14:11:28 gcorti Exp $
+// $Id: ProtoParticle.cpp,v 1.5 2002-07-25 18:12:00 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -99,6 +99,7 @@ int ProtoParticle::bestPID() const {
   for( PIDInfoVector::const_iterator id=pIDInfo().begin(); 
        pIDInfo().end()!=id; ++id ) {
     if( probmax < (*id).second ) {
+      probmax = (*id).second;
       pid = (*id).first;
     }
   }
