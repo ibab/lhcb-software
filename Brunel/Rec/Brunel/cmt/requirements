@@ -34,7 +34,6 @@ use XmlDDDB	v14r4	Det
 
 #-- LHCb libraries (from LHCB_v11r6)
 use LHCb	v11r6
-use MuonTools	v3r2	Muon
 
 #-> SICB basic libraries (from LHCB_v11r6)
 use SICBSys	v1r1	SICB
