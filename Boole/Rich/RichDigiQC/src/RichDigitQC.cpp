@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.16 2005-03-05 16:49:04 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.17 2005-03-05 19:08:37 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -205,12 +205,12 @@ StatusCode RichDigitQC::finalize()
 {
 
   // Statistical calculators
-  RichStatDivFunctor occ("%8.2f +-%5.2f");
-  RichPoissonEffFunctor eff("%5.2f +-%5.2f");
+  RichStatDivFunctor    occ("%8.2f +-%5.2f");
+  RichPoissonEffFunctor eff("%6.2f +-%5.2f");
 
-  info() << "=============================================================================================" << endreq
-         << "                           RICH Digitisation Simuation Summary" << endreq
-         << "---------------------------------------------------------------------------------------------" << endreq;
+  info() << "===============================================================================================" << endreq
+         << "                            RICH Digitisation Simuation Summary" << endreq
+         << "-----------------------------------------------------------------------------------------------" << endreq;
 
   // Form final numbers
   L1Counter totL1R1, totL1R2;
@@ -242,8 +242,8 @@ StatusCode RichDigitQC::finalize()
                 << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
     }
 
-    info() << " RICH1 : Av. overall hit occupancy   " << occ(totDet[Rich::Rich1],m_evtC) << " hits/event" << endreq
-           << "       : Av. HPD hit occupancy       "
+    info() << " RICH1 : Av. overall hit occupancy    " << occ(totDet[Rich::Rich1],m_evtC) << " hits/event" << endreq
+           << "       : Av. HPD hit occupancy        "
            << occ(totDet[Rich::Rich1],m_evtC*m_nHPD[Rich::Rich1].size()) << " hits/event" << endreq;
     {for ( SpillCount::iterator iC = m_spillDigits[Rich::Rich1].begin(); iC != m_spillDigits[Rich::Rich1].end(); ++iC )
     {
@@ -264,7 +264,7 @@ StatusCode RichDigitQC::finalize()
 
   }
 
-  info() << "---------------------------------------------------------------------------------------------" << endreq;
+  info() << "-----------------------------------------------------------------------------------------------" << endreq;
 
   // RICH2 ----------------------------------------------------------------------------------
   {
@@ -292,8 +292,8 @@ StatusCode RichDigitQC::finalize()
                 << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
     }
 
-    info() << " RICH2 : Av. overall hit occupancy   " << occ(totDet[Rich::Rich2],m_evtC) << " hits/event" << endreq
-           << "       : Av. HPD hit occupancy       "
+    info() << " RICH2 : Av. overall hit occupancy    " << occ(totDet[Rich::Rich2],m_evtC) << " hits/event" << endreq
+           << "       : Av. HPD hit occupancy        "
            << occ(totDet[Rich::Rich2],m_evtC*m_nHPD[Rich::Rich2].size()) << " hits/event" << endreq;
     {for ( SpillCount::iterator iC = m_spillDigits[Rich::Rich2].begin(); iC != m_spillDigits[Rich::Rich2].end(); ++iC )
     {
@@ -314,7 +314,7 @@ StatusCode RichDigitQC::finalize()
 
   }
 
-  info() << "=============================================================================================" << endreq;
+  info() << "===============================================================================================" << endreq;
 
   // finalize base class
   return RichMoniAlgBase::finalize();
