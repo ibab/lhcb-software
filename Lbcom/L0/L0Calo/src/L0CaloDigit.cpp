@@ -1,4 +1,4 @@
-// $Id: L0CaloDigit.cpp,v 1.1 2002-01-30 15:58:20 ocallot Exp $
+// $Id: L0CaloDigit.cpp,v 1.2 2002-02-01 15:08:17 ocallot Exp $
 // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -32,11 +32,14 @@ const        IAlgFactory& L0CaloDigitFactory = Factory ;
 L0CaloDigit::L0CaloDigit( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
-  , m_nameOfEcalDataContainer   ( "/Event/Raw/Ecal/Digit"    )
-  , m_nameOfHcalDataContainer   ( "/Event/Raw/Hcal/Digit"    )
-  , m_nameOfPrsDataContainer    ( "/Event/Raw/Prs/Digit"     )
-  , m_nameOfSpdDataContainer    ( "/Event/Raw/Spd/Digit"     )
-  , m_nameOfOutputRoot          ( "/Event/Trig/L0"   )
+  , m_nameOfEcalDataContainer   ( "/Event/Raw/Ecal/Digits"    )
+  , m_nameOfHcalDataContainer   ( "/Event/Raw/Hcal/Digits"    )
+  , m_nameOfPrsDataContainer    ( "/Event/Raw/Prs/Digits"     )
+  , m_nameOfSpdDataContainer    ( "/Event/Raw/Spd/Digits"     )
+  , m_nameOfEcalOutput          ( L0CaloAdcLocation::Ecal     )
+  , m_nameOfHcalOutput          ( L0CaloAdcLocation::Hcal     )
+  , m_nameOfPrsOutput           ( L0PrsSpdHitLocation::Prs    )
+  , m_nameOfSpdOutput           ( L0PrsSpdHitLocation::Spd    )
   , m_nameOfGeometryRoot        ( "/dd/Structure/LHCb/" )
   , m_etScale                   ( 20. * MeV )
   , m_prsThreshold              ( 10. * MeV )
@@ -49,7 +52,10 @@ L0CaloDigit::L0CaloDigit( const std::string& name,
   declareProperty("GeometryRoot"    , m_nameOfGeometryRoot       ) ;
   declareProperty("EtScale"         , m_etScale                  ) ;
   declareProperty("PrsThreshold"    , m_prsThreshold             ) ;
-  declareProperty("OutputRoot"      , m_nameOfOutputRoot         ) ;
+  declareProperty("EcalOutput"      , m_nameOfEcalOutput         ) ;
+  declareProperty("HcalOutput"      , m_nameOfHcalOutput         ) ;
+  declareProperty("PrsOutput"       , m_nameOfPrsOutput          ) ;
+  declareProperty("SpdOutput"       , m_nameOfSpdOutput          ) ;
 }
 
 //=============================================================================
@@ -110,16 +116,6 @@ StatusCode L0CaloDigit::execute() {
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 
-  // Check the existence of (and create if needed) the output directory
-  {
-    SmartDataPtr<DataObject> outDir( eventDataService() ,
-                                     m_nameOfOutputRoot );
-    if( 0 == outDir ) {                        // touch the output directory
-      log << MSG::ERROR << "OutputDirectory="
-          << m_nameOfOutputRoot << " does not exist" << endreq ;
-    }
-  }
-
   // Get the ECAL input container
 
   SmartDataPtr< ObjectVector<CaloDigit> > ecalDigit ( eventDataService(),
@@ -131,13 +127,12 @@ StatusCode L0CaloDigit::execute() {
   }
 
   L0CaloAdcs* ecalRaw = new L0CaloAdcs();
-  std::string outputContainer = m_nameOfOutputRoot+"/EcalRaw" ;
-  StatusCode sc = eventDataService()->registerObject( outputContainer,
+  StatusCode sc = eventDataService()->registerObject( m_nameOfEcalOutput, 
                                                       ecalRaw ) ;
   if( sc.isFailure() ) {
     if( 0 != ecalRaw ) { delete ecalRaw ; }
     log << MSG::ERROR << "Unable to register the output container="
-        << outputContainer << endreq;
+        << m_nameOfEcalOutput << endreq;
     log << MSG::ERROR << "Status is " << sc << endreq;
     return sc ;
   }
@@ -171,13 +166,12 @@ StatusCode L0CaloDigit::execute() {
 
   L0CaloAdcs* hcalRaw = new L0CaloAdcs();
 
-  outputContainer = m_nameOfOutputRoot+"/HcalRaw" ;
-  sc = eventDataService()->registerObject( outputContainer,
+  sc = eventDataService()->registerObject( m_nameOfHcalOutput,
                                            hcalRaw ) ;
   if( sc.isFailure() ) {
     if( 0 != hcalRaw ) { delete hcalRaw ; }
     log << MSG::ERROR << "Unable to register the output container="
-        << outputContainer << endreq;
+        << m_nameOfHcalOutput << endreq;
     log << MSG::ERROR << "Status is " << sc << endreq;
     return sc ;
   }
@@ -223,13 +217,12 @@ StatusCode L0CaloDigit::execute() {
 
   L0PrsSpdHitVector* prsRaw = new L0PrsSpdHitVector();
 
-  outputContainer = m_nameOfOutputRoot+"/PrsRaw" ;
-  sc = eventDataService()->registerObject( outputContainer,
+  sc = eventDataService()->registerObject( m_nameOfPrsOutput,
                                            prsRaw ) ;
   if( sc.isFailure() ) {
     if( 0 != prsRaw ) { delete prsRaw ; }
     log << MSG::ERROR << "Unable to register the output container="
-        << outputContainer << endreq;
+        << m_nameOfPrsOutput << endreq;
     log << MSG::ERROR << "Status is " << sc << endreq;
     return sc ;
   }
@@ -260,13 +253,12 @@ StatusCode L0CaloDigit::execute() {
 
   L0PrsSpdHitVector* spdRaw = new L0PrsSpdHitVector();
 
-  outputContainer = m_nameOfOutputRoot+"/SpdRaw" ;
-  sc = eventDataService()->registerObject( outputContainer,
+  sc = eventDataService()->registerObject( m_nameOfSpdOutput,
                                            spdRaw ) ;
   if( sc.isFailure() ) {
     if( 0 != spdRaw ) { delete spdRaw ; }
     log << MSG::ERROR << "Unable to register the output container="
-        << outputContainer << endreq;
+        << m_nameOfSpdOutput << endreq;
     log << MSG::ERROR << "Status is " << sc << endreq;
     return sc ;
   }

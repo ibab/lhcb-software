@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.10 2002-01-30 15:58:20 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.11 2002-02-01 15:08:16 ocallot Exp $
 
 /// STL
 #include <stdio.h>
@@ -38,11 +38,11 @@ const       IAlgFactory& L0CaloAlgFactory = Factory ;
 
 L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
   : Algorithm                   ( name , pSvcLocator            )
-  , m_nameOfEcalDataContainer   ( "/Event/Trig/L0/EcalRaw"    )
-  , m_nameOfHcalDataContainer   ( "/Event/Trig/L0/HcalRaw"    )
-  , m_nameOfPrsDataContainer    ( "/Event/Trig/L0/PrsRaw"     )
-  , m_nameOfSpdDataContainer    ( "/Event/Trig/L0/SpdRaw"     )
-  , m_nameOfOutputDataContainer ( "/Event/Trig/L0/Calo"   )
+  , m_nameOfEcalDataContainer   ( L0CaloAdcLocation::Ecal  )
+  , m_nameOfHcalDataContainer   ( L0CaloAdcLocation::Hcal  )
+  , m_nameOfPrsDataContainer    ( L0PrsSpdHitLocation::Prs )
+  , m_nameOfSpdDataContainer    ( L0PrsSpdHitLocation::Spd )
+  , m_nameOfOutputDataContainer ( L0CaloCandidateLocation::Default  )
   , m_nameOfGeometryRoot        ( "/dd/Structure/LHCb/" )
   , m_etScale                   ( 20. * MeV )
   , m_prsThreshold              ( 10. * MeV )

@@ -1,4 +1,4 @@
-// $Id: L0CaloDigit.h,v 1.1 2002-01-30 15:58:20 ocallot Exp $
+// $Id: L0CaloDigit.h,v 1.2 2002-02-01 15:08:17 ocallot Exp $
 #ifndef L0CALODIGIT_H 
 #define L0CALODIGIT_H 1
 
@@ -39,7 +39,10 @@ private:
   std::string m_nameOfHcalDataContainer   ;  ///< HCAL input container  
   std::string m_nameOfPrsDataContainer    ;  ///< Prs input container  
   std::string m_nameOfSpdDataContainer    ;  ///< Spd input container  
-  std::string m_nameOfOutputRoot          ;  ///< Output directory
+  std::string m_nameOfEcalOutput          ;  ///< Ecal Output container
+  std::string m_nameOfHcalOutput          ;  ///< Hcal Output container
+  std::string m_nameOfPrsOutput           ;  ///< Prs Output container
+  std::string m_nameOfSpdOutput           ;  ///< Spd Output container
   std::string m_nameOfGeometryRoot        ; ///< Name of the detector root.
 
   double      m_etScale            ; ///< Energy per bin in Et for trigger
