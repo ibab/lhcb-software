@@ -1,0 +1,9 @@
+
+parsetool = GODWriteCppDict.exe
+dest = dictionary
+destfull = ../src/$(dest)/
+${CONSTITUENT}_output = $(destfull)
+
+${CONSTITUENT} :: ${OBJS}
+	@echo "-----> ${CONSTITUENT} ok"
+

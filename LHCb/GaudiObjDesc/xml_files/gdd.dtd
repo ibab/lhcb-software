@@ -1,0 +1,75 @@
+<?xml encoding="ISO-8859-1"?>
+<!ELEMENT gdd (import*, (package+ | class))>
+<!ATTLIST gdd
+	version CDATA "1.0"
+>
+<!ELEMENT import EMPTY>
+<!ATTLIST import
+	name CDATA #REQUIRED
+	std (TRUE | FALSE) "FALSE"
+	soft (TRUE | FALSE) "FALSE"
+>
+<!ELEMENT package (import*, class*)>
+<!ATTLIST package
+	name CDATA #REQUIRED
+>
+<!ELEMENT class (base*, import*, method*, attribute*, relation*)>
+<!ATTLIST class
+	name CDATA #REQUIRED
+	author CDATA #REQUIRED
+	desc CDATA #IMPLIED
+	filename CDATA #IMPLIED
+	id CDATA #IMPLIED
+	templateVector (TRUE | FALSE) "TRUE"
+	templateList (TRUE | FALSE) "TRUE"
+>
+<!ELEMENT base EMPTY>
+<!ATTLIST base
+	name CDATA #REQUIRED
+	virtual (TRUE | FALSE) "TRUE"
+	access (PUBLIC | PROTECTED | PRIVATE) "PUBLIC"
+>
+<!ELEMENT method (arg?, return, code?)>
+<!ATTLIST method
+	name CDATA #REQUIRED
+	desc CDATA #IMPLIED
+	access (PUBLIC | PROTECTED | PRIVATE) "PUBLIC"
+	const (TRUE | FALSE) "FALSE"
+	virtual (TRUE | FALSE) "FALSE"
+	static (TRUE | FALSE) "FALSE"
+	inline (TRUE | FALSE) "FALSE"
+>
+<!ELEMENT arg EMPTY>
+<!ATTLIST arg
+	type CDATA #REQUIRED
+	const (TRUE | FALSE) "FALSE"
+	inout (INPUT | OUTPUT | BOTH) "BOTH"
+>
+<!ELEMENT return EMPTY>
+<!ATTLIST return
+	type CDATA #REQUIRED
+	const (TRUE | FALSE) "FALSE"
+>
+<!ELEMENT code (#PCDATA)>
+<!ELEMENT attribute EMPTY>
+<!ATTLIST attribute
+	type CDATA #REQUIRED
+	name CDATA #REQUIRED
+	desc CDATA #IMPLIED
+	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
+	set_meth (TRUE | FALSE) "TRUE"
+	get_meth (TRUE | FALSE) "TRUE"
+>
+<!ELEMENT relation EMPTY>
+<!ATTLIST relation
+	type CDATA #REQUIRED
+	name CDATA #REQUIRED
+	desc CDATA #IMPLIED
+	access (PUBLIC | PROTECTED | PRIVATE) "PRIVATE"
+	ratio (1-1 | 1-M | M-N) "1-1"
+	set_meth (TRUE | FALSE) "TRUE"
+	get_meth (TRUE | FALSE) "TRUE"
+	add_meth (TRUE | FALSE) "TRUE"
+	rem_meth (TRUE | FALSE) "TRUE"
+	clr_meth (TRUE | FALSE) "TRUE"
+>

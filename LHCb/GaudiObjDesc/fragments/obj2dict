@@ -1,0 +1,9 @@
+$(destfull)${NAME}.obj2dict : $(destfull)${NAME}Obj2Dict
+#	@echo $@
+
+$(destfull)${NAME}Obj2Dict : ${FULLNAME}
+	@echo Producing ${FULLNAME}
+	@if not exist ..\src\$(dest) mkdir ..\src\$(dest)
+	@cd ..\src\$(dest)
+	@$(GAUDIOBJDESCROOT)\$(tag)\$(parsetool) $(GODflags) ..\..\$(xmlsrc)\${NAME}.xml
+ 

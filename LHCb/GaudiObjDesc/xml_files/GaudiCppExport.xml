@@ -1,0 +1,1183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd version="1.0">
+	<package name="CLHEP/AList">
+		<class name="HepAListIterator" author="Leif Lonnblad" filename="Alterator"/>
+		<class name="HepAListIteratorBase" author="Leif Lonnblad" filename="AlteratorBase"/>
+		<class name="HepAList" author="Leif Lonnblad" filename="AList"/>
+		<class name="HapAListBase" author="Leif Lonnblad" filename="AListBase"/>
+		<class name="HepCListIterator" author="Leif Lonnblad" filename="CIterator"/>
+		<class name="HepCList" author="Leif Lonnblad" filename="CList"/>
+		<class name="HepConstAListIterator" author="Leif Lonnblad" filename="ConstAlterator"/>
+		<class name="HepConstAList" author="Leif Lonnblad" filename="ConstAList"/>
+	</package>
+	<package name="CLHEP/Combination">
+		<class name="HepChooser" author="Paul Rensing" filename="Chooser"/>
+		<class name="HepCombiner" author="Paul Rensing" filename="Combiner"/>
+		<class name="HepLock" author="Paul Rensing" filename="Lock"/>
+		<class name="HepLockable" author="Paul Rensing" filename="Lockable"/>
+	</package>
+	<package name="CLHEP/Geometry">
+		<class name="HepNormal3D" author="Evgeni Chernyaev" filename="Normal3D"/>
+		<class name="HepPlane3D" author="Evgeni Chernyaev" filename="Plane3D"/>
+		<class name="HepPoint3D" author="Evgeni Chernyaev" filename="Point3D"/>
+		<class name="HepTransform3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepRotate3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepRotateX3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepRotateY3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepRotateZ3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepTranslate3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepTranslateX3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepTranslateY3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepTranslateZ3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepReflect3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepReflectX3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepReflectY3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepReflectZ3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepScale3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepScaleX3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepScaleY3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepScaleZ3D" author="Evgeni Chernyaev" filename="Transform3D"/>
+		<class name="HepVector3D" author="Evgeni Chernyaev" filename="Vector3D"/>
+	</package>
+	<package name="CLHEP/Hist">
+		<class name="HBookFile" author="PaulRensing" filename="HBookFile"/>
+		<class name="HBookHistogram" author="PaulRensing" filename="HBookHistogram"/>
+		<class name="HBookTuple" author="PaulRensing" filename="HBookTuple"/>
+		<class name="HepHistogram" author="PaulRensing" filename="Histogram"/>
+		<class name="HepTuple" author="PaulRensing" filename="Tuple"/>
+		<class name="HepTupleManager" author="PaulRensing" filename="TupleManager"/>
+	</package>
+	<package name="CLHEP/Matrix">
+		<class name="HepDiagMatrix" author="Nobu Katazama" filename="DiagMatrix"/>
+		<class name="HepDiagMatrix_row" author="Nobu Katazama" filename="DiagMatrix"/>
+		<class name="HepDiagMatrix_row_const" author="Nobu Katazama" filename="DiagMatrix"/>
+		<class name="HepGenMatrix" author="Nobu Katazama" filename="GenMatrix"/>
+		<class name="HepGenMatrix_row" author="Nobu Katazama" filename="GenMatrix"/>
+		<class name="HepGenMatrix_row_const" author="Nobu Katazama" filename="GenMatrix"/>
+		<class name="HepMatrix" author="Nobu Katazama" filename="Matrix"/>
+		<class name="HepMatrix_row" author="Nobu Katazama" filename="Matrix"/>
+		<class name="HepMatrix_row_const" author="Nobu Katazama" filename="Matrix"/>
+		<class name="HepPile" author="Nobu Katazama" filename="Pile"/>
+		<class name="HepSymMatrix" author="Nobu Katazama" filename="SymMatrix"/>
+		<class name="HepSymMatrix_row" author="Nobu Katazama" filename="SymMatrix"/>
+		<class name="HepSymMatrix_row_const" author="Nobu Katazama" filename="SymMatrix"/>
+		<class name="HepVector" author="Nobu Katazama" filename="Vector"/>
+	</package>
+	<package name="CLHEP/Random">
+		<class name="DRand48Engine" author="Gabriele Cosmo"/>
+		<class name="HepJamesRandom" author="Gabriele Cosmo" filename="JamesRandom"/>
+		<class name="RandBreitWigner" author="Gabriele Cosmo"/>
+		<class name="RandEngine" author="Gabriele Cosmo"/>
+		<class name="RandExponential" author="Gabriele Cosmo"/>
+		<class name="RandFlat" author="Gabriele Cosmo"/>
+		<class name="RandGauss" author="Gabriele Cosmo"/>
+		<class name="HepRandom" author="Gabriele Cosmo" filename="Random"/>
+		<class name="HepRandomEngine" author="Gabriele Cosmo" filename="RandomEngine"/>
+		<class name="RandPoisson" author="Gabriele Cosmo"/>
+		<class name="RanecuEngine" author="Gabriele Cosmo"/>
+		<class name="RanluxEngine" author="Adeyemi Adesanya"/>
+	</package>
+	<package name="CLHEP/String">
+		<class name="HepCmdArg" author="Brad Appleton" filename="CmdArg"/>
+		<class name="HepCmdArgInt" author="Brad Appleton" filename="CmdArg"/>
+		<class name="HepCmdArgFloat" author="Brad Appleton" filename="CmdArg"/>
+		<class name="HepCmdArgString" author="Brad Appleton" filename="CmdArg"/>
+		<class name="HepCmdArgBoolean" author="Brad Appleton" filename="CmdArg"/>
+		<class name="HepCmdArgStringList" author="Brad Appleton" filename="CmdArg"/>
+		<class name="HepCmdLine" author="Brad Appleton" filename="CmdLine"/>
+		<class name="HepString" author="Brad Appleton" filename="Strings"/>
+	</package>
+	<package name="CLHEP/Vector">
+		<class name="HepLorentzRotation" author="Leif Lonnblad" filename="LorentzRotation"/>
+		<class name="HepLorentzVector" author="Leif Lonnblad" filename="LorentzVector"/>
+		<class name="HepRotation" author="Leif Lonnblad" filename="Rotation"/>
+		<class name="Hep3Vector" author="Leif Lonnblad" filename="ThreeVector"/>
+	</package>
+	<package name="GaudiNagC">
+		<class author="__UNKNOWN__" name="AddrFactory"/>
+		<class author="__UNKNOWN__" filename="AddrFactory" name="IAddrFactory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="AlgFactory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="Algorithm"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="AlgTool"/>
+	</package>
+	<package name="GaudiTools">
+		<class author="__UNKNOWN__" name="Associator"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="AudFactory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="Auditor"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="Bootstrap" name="Gaudi"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="Chrono"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="CnvFactory"/>
+		<class author="__UNKNOWN__" filename="CnvFactory" name="CnvFactory2"/>
+		<class author="__UNKNOWN__" filename="CnvFactory" name="CnvFactoryBase"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="CommandProperty"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ContainedObject"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="ConversionSvc" name="ConversionSvc::CnvTest"/>
+		<class author="__UNKNOWN__" filename="ConversionSvc" name="ConversionSvc::ContextEntry"/>
+		<class author="__UNKNOWN__" name="ConversionSvc"/>
+		<class author="__UNKNOWN__" filename="ConversionSvc" name="ConversionSvc::WorkerEntry"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="Converter"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="DataObject"/>
+		<class author="__UNKNOWN__" filename="DataObject" name="DataObject::Link"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="DataSelectionAgent"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="DataStoreItem"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="DataSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="DataTypeInfo"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbAccessObj"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbAddress"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="DbBase" name="dbHandleBase"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbBaseConverter"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="DbCnvFactory" name="DbOOMsCnvFactory"/>
+		<class author="__UNKNOWN__" filename="DbCnvFactory" name="DbOOMsCnvFactoryBase"/>
+		<class author="__UNKNOWN__" filename="DbCnvFactory" name="IDbCnvFactory"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbColumn"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="DbContainer" name="dbHandle&lt; DbContainer >"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbContainerConverter"/>
+		<class author="__UNKNOWN__" filename="DbContainerConverter" name="DbOOMsContainerConverter"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="DbDataBase" name="dbHandle&lt; DbDataBase >"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbDefObject"/>
+		<class author="__UNKNOWN__" filename="DbDefObject" name="DbDefObject::HelperServices"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbFactory"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="DbFederation" name="dbHandle&lt; DbFederation >"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbGenericConverter"/>
+		<class author="__UNKNOWN__" filename="DbGenericConverter" name="DbOOMsConverter"/>
+		<class author="__UNKNOWN__" filename="DbGenericConverter" name="DbOOMsConverter&lt; DataObject >"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="DbHandle" name="dbHandle"/>
+		<class author="__UNKNOWN__" filename="DbHandle" name="dbHandle&lt; DbObject >"/>
+		<class author="__UNKNOWN__" filename="DbHandle" name="DbObjectAccessor"/>
+		<class author="__UNKNOWN__" filename="DbHandle" name="dbObjectHandle"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="DbImplementation" name="DbContainerImplementation"/>
+		<class author="__UNKNOWN__" filename="DbImplementation" name="DbDataBaseImplementation"/>
+		<class author="__UNKNOWN__" filename="DbImplementation" name="DbFederationImplementation"/>
+		<class author="__UNKNOWN__" name="DbImplementation"/>
+		<class author="__UNKNOWN__" filename="DbImplementation" name="DbSessionImplementation"/>
+		<class author="__UNKNOWN__" filename="DbImplementation" name="OODataBaseImplementation"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="DbIter" name="dbIter"/>
+		<class author="__UNKNOWN__" filename="DbIter" name="dbIter&lt; DbObject >"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="DbLink" name="dbHandle&lt; DbLink >"/>
+		<class author="__UNKNOWN__" name="DbLink"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbObject"/>
+		<class author="__UNKNOWN__" filename="DbObject" name="DbObject::Internals"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbObjectGuard"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbOOMs"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbPersistent"/>
+		<class author="__UNKNOWN__" filename="DbPersistent" name="DbPersistentGuard"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="DbSession" name="dbHandle&lt; DbSession >"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbTypeInfo"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbUserCnvFactory"/>
+		<class author="__UNKNOWN__" filename="DbUserCnvFactory" name="IDbUserCnvFactory"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="DbUserConverter"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="DbVArray" name="dbIterator"/>
+		<class author="__UNKNOWN__" filename="DbVArray" name="dbVarray"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="FactoryTable"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="FindByMassRange"/>
+	</package>
+	<package name="GaudiNagC">
+		<class author="__UNKNOWN__" name="GaudiErrorHandler"/>
+	</package>
+	<package name="GaudiNagC">
+		<class author="__UNKNOWN__" name="GaudiNagHandler"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="GenericAddress"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="GenericLink" name="GenericLink::Generic"/>
+		<class author="__UNKNOWN__" filename="GenericLink" name="GenericLinkBase::GENERIC"/>
+		<class author="__UNKNOWN__" name="GenericLink"/>
+		<class author="__UNKNOWN__" filename="GenericLink" name="GenericLinkBase"/>
+		<class author="__UNKNOWN__" filename="GenericLink" name="GenericLink::OBJY"/>
+		<class author="__UNKNOWN__" filename="GenericLink" name="GenericLink::ROOT"/>
+		<class author="__UNKNOWN__" filename="GenericLink" name="GenericLink::SICB"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="HashTable"/>
+		<class author="__UNKNOWN__" filename="HashTable" name="HashTableHasher"/>
+		<class author="__UNKNOWN__" filename="HashTable" name="HashTable::TableEntry"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IAddressCreator"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IAlgFactory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IAlgManager"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IAlgorithm"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IAlgTool"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IAppMgrUI"/>
+	</package>
+	<package name="GaudiTools">
+		<class author="__UNKNOWN__" name="IAssociator"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IAuditor"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IAuditorFactory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IAuditorSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IAxis"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IChronoStatSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IClassInfo"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IClassManager"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ICnvFactory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ICnvManager"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IContainer"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IConversionSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IConverter"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" name="IDataBaseMgr"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IDataDirectory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IDataManagerSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IDataProviderSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IDataSelector"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IDataSourceMgr"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IDataStoreAgent"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IEventProcessor"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IEvtSelector"/>
+		<class author="__UNKNOWN__" filename="IEvtSelector" name="IEvtSelector::Iterator"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IFactory"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IGiGaSetUpSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IGiGaSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IHistogram"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IHistogram1D"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IHistogram2D"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IHistogramSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IIncidentListener"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IIncidentSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IInspectable"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="IInspector" name="IInspector::_T"/>
+		<class author="__UNKNOWN__" filename="IInspector" name="IInspector::_V"/>
+		<class author="__UNKNOWN__" name="IInspector"/>
+		<class author="__UNKNOWN__" filename="IInspector" name="IInspector::IValue"/>
+		<class author="__UNKNOWN__" filename="IInspector" name="IInspector::Tag"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IInterface"/>
+		<class author="__UNKNOWN__" filename="IInterface" name="InterfaceID"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IJobOptionsSvc"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IMagneticFieldSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IMessageSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="Incident"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="INTuple"/>
+		<class author="__UNKNOWN__" filename="INTuple" name="INTupleItem"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="INTupleSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="IObjectFactory" name="IContainedObjectFactory"/>
+		<class author="__UNKNOWN__" filename="IObjectFactory" name="IDataObjectFactory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IObjManager"/>
+	</package>
+	<package name="GaudiDb">
+		<class author="__UNKNOWN__" filename="IOODataBase" name="IDbContainer"/>
+		<class author="__UNKNOWN__" filename="IOODataBase" name="IDbCursor"/>
+		<class author="__UNKNOWN__" filename="IOODataBase" name="IDbDataBase"/>
+		<class author="__UNKNOWN__" filename="IOODataBase" name="IDbFederation"/>
+		<class author="__UNKNOWN__" filename="IOODataBase" name="IDbSession"/>
+		<class author="__UNKNOWN__" name="IOODataBase"/>
+		<class author="__UNKNOWN__" filename="IOODataBase" name="IDbDataBase::Link"/>
+		<class author="__UNKNOWN__" filename="IOODataBase" name="IDbDataBase::Type"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IOpaqueAddress"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IParticlePropertySvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IPersistencySvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IProperty"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IRndmEngine"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IRndmGen"/>
+		<class author="__UNKNOWN__" filename="IRndmGen" name="IRndmGen::Param"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IRndmGenFactory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IRndmGenSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IRunable"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IScriptingSvc"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ISelectStatement"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ISerialize"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IService"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ISvcFactory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ISvcLocator"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ISvcManager"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ITime"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IToolFactory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IToolSvc"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="IValidity"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="Kernel" name="__longlong"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="Message"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="MsgStream"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ObjectContainerBase"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="ObjectFactory" name="ContainedObjectFactory"/>
+		<class author="__UNKNOWN__" filename="ObjectFactory" name="DataObjectFactory"/>
+		<class author="__UNKNOWN__" name="ObjectFactory"/>
+		<class author="__UNKNOWN__" filename="ObjectFactory" name="ObjectFactory2"/>
+		<class author="__UNKNOWN__" filename="ObjectFactory" name="ObjectFactoryBase"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ObjectList"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ObjectVector"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ParticleProperty"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="Property" name="Property::bad_call"/>
+		<class author="__UNKNOWN__" name="Property"/>
+		<class author="__UNKNOWN__" filename="Property" name="SimpleProperty"/>
+		<class author="__UNKNOWN__" filename="Property" name="SimplePropertyRef"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="PropertyCallbackFunctor"/>
+		<class author="__UNKNOWN__" filename="PropertyCallbackFunctor" name="PropertyCallbackMemberFunctor"/>
+		<class author="__UNKNOWN__" filename="PropertyCallbackFunctor" name="PropertyCallbackPointerFunctor"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="PropertyList"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="PropertyMgr"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="PropertyVerifier" name="BoundedVerifier"/>
+		<class author="__UNKNOWN__" filename="PropertyVerifier" name="NullVerifier"/>
+		<class author="__UNKNOWN__" name="PropertyVerifier"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="RefTable" name="RefTable1to1"/>
+		<class author="__UNKNOWN__" filename="RefTable" name="RefTable1toN"/>
+		<class author="__UNKNOWN__" filename="RefTable" name="RefTableBase"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="RegistryEntry"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="SelectStatement"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="Service"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="SmartDataLocator"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="SmartDataObjectPtr" name="SmartDataObjectPtr::ObjectFinder"/>
+		<class author="__UNKNOWN__" filename="SmartDataObjectPtr" name="SmartDataObjectPtr::ObjectLoader"/>
+		<class author="__UNKNOWN__" name="SmartDataObjectPtr"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="SmartDataPtr"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="SmartDataStorePtr"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="SmartIF"/>
+		<class author="__UNKNOWN__" filename="SmartIF" name="SmartIF&lt; IInterface >"/>
+		<class author="__UNKNOWN__" filename="SmartIF" name="SmartIFBase"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="SmartRef"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="SmartRefBase"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="SmartRefVector"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="Stat"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="StatusCode"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="StreamBuffer" name="StreamBuffer::ContainedLink"/>
+		<class author="__UNKNOWN__" filename="StreamBuffer" name="StreamBuffer::DataIO"/>
+		<class author="__UNKNOWN__" filename="StreamBuffer" name="StreamBuffer::IdentifiedLink"/>
+		<class author="__UNKNOWN__" filename="StreamBuffer" name="StreamBuffer::Istream"/>
+		<class author="__UNKNOWN__" filename="StreamBuffer" name="StreamBuffer::Ostream"/>
+		<class author="__UNKNOWN__" name="StreamBuffer"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="SvcFactory"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="TimePoint"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" filename="Tokenizer" name="Tokenizer::Token"/>
+		<class author="__UNKNOWN__" name="Tokenizer"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="ToolFactory"/>
+	</package>
+	<package name="GaudiKernel">
+		<class author="__UNKNOWN__" name="TransientStore"/>
+	</package>
+	<package name="GaudiKernel"/>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="AnalEvent"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="AxPartCandidate"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" filename="BookKeepingDBTracer" name="BookKeepingTracer"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="CalorimeterDigit"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="CellID"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="Classification"/>
+	</package>
+	<package name="LHCbEvent"/>
+	<package name="DetDesc"/>
+	<package name="DetDesc"/>
+	<package name="DetDesc"/>
+	<package name="DetDesc"/>
+	<package name="DetDesc"/>
+	<package name="DetDesc"/>
+	<package name="DetDesc"/>
+	<package name="DetDesc"/>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="DataFile"/>
+	</package>
+	<package name="LHCbEvent"/>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="DetectorDataObject"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="DetectorElement"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="DetectorElementException"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="Element"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="Event"/>
+	</package>
+	<package name="LHCbEvent"/>
+	<package name="LHCbEvent"/>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" filename="EventSelector" name="SicbEventSelector"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="EventTag"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="FortranAlgorithm"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="GaudiSocket"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaBase"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaCnvBase"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaCnvSvcBase"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaEventActionBase"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaEventActionFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaException"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaGeomAddress"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaHitsAddress"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaKineAddress"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaMagFieldBase"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaMagFieldFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaPhysListBase"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaPhysListFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaSensDetBase"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaSensDetFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaStackActionBase"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaStackActionFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaStepActionBase"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaStepActionFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaTrackActionBase"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaTrackActionFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaTrackInformation"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaTrajectory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="GiGaTrajectoryPoint"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="IDetectorElement"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="IGeometryInfo"/>
+		<class author="__UNKNOWN__" filename="IGeometryInfo" name="IGeometryInfo_isInside"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaCnvSvc"/>
+		<class author="__UNKNOWN__" filename="IGiGaCnvSvc" name="IGiGaCnvSvc::Leaf"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaEventAction"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaEventActionFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaGeomCnvSvc"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaHitsCnvSvc"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaKineCnvSvc"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaMagField"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaMagFieldFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaPhysList"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaPhysListFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaSensDet"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaSensDetFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaStackAction"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaStackActionFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaStepAction"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaStepActionFactory"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaTrackAction"/>
+	</package>
+	<package name="GiGa">
+		<class author="__UNKNOWN__" name="IGiGaTrackActionFactory"/>
+	</package>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="GiGa"/>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="ILVolume"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="InputData"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="IPVolume"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" filename="IPVolume_predicates" name="IPVolume_accumulateMatrix"/>
+		<class author="__UNKNOWN__" filename="IPVolume_predicates" name="IPVolume_byName"/>
+		<class author="__UNKNOWN__" filename="IPVolume_predicates" name="IPVolume_fromReplica"/>
+		<class author="__UNKNOWN__" filename="IPVolume_predicates" name="IPVolume_isInside"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="ISax8BitDocHandler"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="ISicbEventCnvSvc"/>
+		<class author="__UNKNOWN__" filename="ISicbEventCnvSvc" name="ISicbEventCnvSvc::Leaf"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="ISolid"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="ISolidFromStream"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="Isotope"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="ITransportSvc"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="IUserSax8BitDocHandler"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="IXmlCnv"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="IXmlSvc"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="JobID"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="LVolume"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="LVolumeException"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="MagneticFieldSvc"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="Material"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="MaterialException"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="MCCalorimeterHit"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="MCECalFacePlaneHit"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="MCEvent"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="MCHitBase"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="MCParticle"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="MCRichPhotodetectorHit"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="MCRichRadiatorHit"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="MCTrackingHit"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="MCVertex"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="Mixture"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="MuonDigit"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="ParticleID"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="PileUpAlg"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="ProcessingVersion"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="RandomNumberSeed"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="RawEvent"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="RawInnerTrackerMeas"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="RawOuterTrackerMeas"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="RecEvent"/>
+	</package>
+	<package name="LHCbEvent"/>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="RichDigit"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbAddress"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbAnalEventCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbAxPartCandidateCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbBaseCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbBookKeeping"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbDataIO"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbEventCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbEventCnvSvc"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbEvtIterator"/>
+	</package>
+	<package name="SicbCnv"/>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbInnerTrackerMeasCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbItemCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbMCCalorimeterHitCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbMCECalFacePlaneHitCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbMCEventCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbMCParticleCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbMCRichPhotodetectorHitCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbMCRichRadiatorHitCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbMCTrackingHitCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbMCVertexCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbOuterTrackerMeasCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbRawEventCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbRecEventCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbRefHop"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SicbRefTable1toNCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" filename="SicbRefTableBaseCnv" name="SicbRefTableCnv"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" filename="SicbRefTracker" name="SicbObjTracker"/>
+		<class author="__UNKNOWN__" name="SicbRefTracker"/>
+		<class author="__UNKNOWN__" filename="SicbRefTracker" name="SicbTracker"/>
+		<class author="__UNKNOWN__" filename="SicbRefTracker" name="SicbTracker::Stub"/>
+	</package>
+	<package name="DetDesc"/>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidBoolean"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidBox"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidChild"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidCons"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidException"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidIntersection"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidPolyHedronHelper"/>
+	</package>
+	<package name="DetDesc"/>
+	<package name="DetDesc"/>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidSphere"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidSubtraction"/>
+	</package>
+	<package name="DetDesc"/>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidTrap"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidTrd"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidTubs"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="SolidUnion"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="SpillOverAlg"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="SubMCEvent"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="SummaryPID"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="SummarySeenDetectors"/>
+		<class author="__UNKNOWN__" name="CLHEPStreams"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="Surface"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="TabulatedProperty"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" name="Tape"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="TimeStamp"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="TrackerDigit"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="TransportSvc"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="TransportSvcException"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="TriggerPattern"/>
+	</package>
+	<package name="SicbCnv">
+		<class author="__UNKNOWN__" filename="ubmacro" name="CBLINK_DEF"/>
+		<class author="__UNKNOWN__" filename="ubmacro" name="CBLINN_DEF"/>
+		<class author="__UNKNOWN__" filename="ubmacro" name="GCBANK_DEF"/>
+	</package>
+	<package name="LHCbEvent">
+		<class author="__UNKNOWN__" name="VertexDigit"/>
+	</package>
+	<package name="DetDesc"/>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="XmlAddress"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" filename="XmlCnvAttrList" name="XmlCnvAttributeList::_attrItem"/>
+		<class author="__UNKNOWN__" filename="XmlCnvAttrList" name="XmlCnvAttributeList"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="XmlCnvException"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="XmlCnvSvc"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="XmlExprParser"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="XmlGenericCnv"/>
+	</package>
+	<package name="DetDesc">
+		<class author="__UNKNOWN__" name="XmlUserDeCnv"/>
+	</package>
+</gdd>

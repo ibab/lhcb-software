@@ -1,0 +1,11 @@
+
+clean :: ${CONSTITUENT}clean
+	@cd .
+
+${CONSTITUENT}clean ::
+	$(cleanup_echo) ROOT dictionary
+	-$(cleanup_silent) rm -f $(destfull)*~;\
+	rm -f $(destfull)${CONSTITUENT}.*;\
+	rm -f $(bin)${CONSTITUENT}.*
+
+ 

@@ -1,0 +1,21 @@
+package GaudiObjDesc
+version v1
+
+branches doc cmt src
+
+use GaudiKernel v10*
+use XML v3*
+use GaudiIntrospection v1* 
+
+# Macro defintion used by both fragments below
+macro xmlsrc "xml"
+
+# Fragment for producing the .h-files of a package
+make_fragment obj2doth -header=obj2doth_header -trailer=obj2doth_trailer
+
+# Fragment for producing the cpp-files which will fill the MetaModel auf GaudiDict
+make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
+
+application GODWriteCppHeader ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppHeader.cpp
+application GODWriteCppDict   ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppDict.cpp
+

@@ -1,0 +1,15 @@
+
+parsetool     = GODWriteCppHeader.exe
+dest          = ..\$(package)\ 
+dtdfile       = ..\$(xmlsrc)\gdd.dtd 
+
+${CONSTITUENT}_output = $(dest)
+
+${CONSTITUENT} :: $(dtdfile) ${OBJS}
+	@echo "-----> ${CONSTITUENT} ok"
+
+$(dtdfile) : $(GAUDIOBJDESCROOT)\xml_files\gdd.dtd
+	@echo "Copying global DTD to current package"
+	@copy $(GAUDIOBJDESCROOT)\xml_files\gdd.dtd $(dtdfile)
+
+

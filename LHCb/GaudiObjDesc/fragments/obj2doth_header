@@ -1,0 +1,9 @@
+
+parsetool = GODWriteCppHeader.exe
+dest = LHCbEvent
+destfull = ../$(dest)/
+${CONSTITUENT}_output = $(destfull)
+
+${CONSTITUENT} :: ${OBJS}
+	@echo "-----> ${CONSTITUENT} ok"
+

@@ -1,0 +1,9 @@
+
+clean :: ${CONSTITUENT}clean
+	@cd .
+
+${CONSTITUENT}clean ::
+	$(cleanup_echo) Deleting dictionaries
+	-$(cleanup_silent) del $(dest)*.cpp
+
+ 
