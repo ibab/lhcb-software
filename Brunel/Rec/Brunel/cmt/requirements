@@ -52,7 +52,7 @@ use ITDet         	v1r1  	Det
 use MuonDet       	v4r1  	Det
 use OTDet         	v3r1  	Det
 use RichDet		v3r0	Det
-use VeloDet       	v7r2  	Det
+use VeloDet       	v8r0  	Det
 use Magnet        	v1r1  	Det
 
 # Event Model
@@ -74,11 +74,12 @@ use BrunelAlgs   v1r5   Rec
 # L0 trigger
 use L0Calo              v6r1    L0
 use L0Muon              v6r2    L0
-use PuVeto              v4r0    L0
+use PuVeto              v4r1    L0
 use L0DU                v6r1    L0
 
 # L1 trigger
-use L1VeloTrack         v3r1    L1
+use L1VeloTrack         v3r2    L1
+use L1Decision          v1r0    L1
 
 # Calorimeter
 use CaloKernel          v2r0    Calo
@@ -88,13 +89,13 @@ use CaloTools      	v4r4 	Calo
 use CaloAlgs       	v7r1 	Calo
 use CaloMonitor         v1r1    Calo
 use CaloAssociators	v3r0	Calo
-use CaloRec		v2r4	Calo
+use CaloRec		v2r5	Calo
 use CaloTrackTools	v1r4	Calo
 
 # Velo
 use VeloKernel		v1r2	Velo
 use VeloAlgorithms	v2r4	Velo
-use VeloAssociators	v1r2	Velo
+use VeloAssociators	v1r3	Velo
 
 # Inner Tracker
 use ITAlgorithms	v12r3  	IT
@@ -107,8 +108,8 @@ use OTAssociators  	v2r2  	OT
 
 # Tracking
 use TrKernel            v11r1   Tr
-use TrFitEvent          v3r2    Tr
-use VeloTrack           v4r1    Velo
+use TrFitEvent          v3r3    Tr
+use VeloTrack           v4r2    Velo
 use TrAssociators       v3r2    Tr
 use LongTrack           v1r2    Tr
 use TrFitter            v3r5    Tr
@@ -120,7 +121,7 @@ use TrCleanEx           v2r2    Tr
 use TrIntraPR		v2r1	Tr
 use UpstreamPR		v2r4	Tr
 use VeloTT		v1r1	Tr
-use TrCheck             v1r0    Tr
+use TrCheck             v1r1    Tr
 
 # Muon
 use MuonKernel          v2r1    Muon

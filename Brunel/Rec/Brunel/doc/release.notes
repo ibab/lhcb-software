@@ -11,6 +11,7 @@ Purpose: LHCb reconstruction program
    . Cut on both strip threshold and total charge in cluster in ST clustering
      (ITAlgorithms v12r3)
    . Use sensible OT gas drift parameters in seed search (Seeding v2r2)
+   . Small changes to Velo Tracking (VeloTrack v4r2)
 
  - New features:
    . Prepare geometry support for C++ Rich reconstruction
@@ -23,13 +24,24 @@ Purpose: LHCb reconstruction program
    . Restructure options files to simplify switching on/off of monitoring and/or
      DST output. Monitoring histograms off by default (*.opts, BrunelAlgs v1r5)
    . Implement 45 degree Velo sectors. Currently hardwired for strip layout "1"
-	   (VeloDet v7r2, Brunel.opts)
+	   (VeloDet v8r0, Brunel.opts)
    . Possibility to add noise to OT (off by default) (OTAlgorithms v12r1)
    . New methods in Relations (LHCbKernel v1r5)
+   . Add VeloBack track type (for backwards going Velo tracks)
+     (TrEvent v11r4,TrFitEvent v3r3,VeloTrack v4r2,TrCleanEx v2r3,CaloRec v2r5)
+   . Skip "error" tracks in Calo reconstruction (CaloRec v2r5) 
+   . Add L1 Decision code. Currently in Brunel Reco phase, as it needs IT 
+     Clusters as input. (L1Decision v1r0, Brunel.opts)
+
+ - DST changes:
+   . Add Trig/L1/Decision (BrunelDst.opts)
+   . Add Level1 to algorithms to be timed (BrunelAlgs v1r5)
 
  - Bug fixes:
    . Small fixes in TrFirstCleverExtrapolator (TrExtrapolator v2r3)
-   . Small fixes in Velo geometry (VeloDet v7r2)
+   . Small fixes in Velo geometry (VeloDet v8r0)
+   . Fix typo in track matching, removes large fraction of large chi2 tracks
+     (TrMatching v2r3)
 
  - Code cleanup:
    . Release all tools (ITAlgorithms v12r3, OTAlgorithms v12r1)
@@ -37,6 +49,8 @@ Purpose: LHCb reconstruction program
    . Fix some valgrind warnings (VeloAlgorithms v2r4)
    . Add private copy constructor to KeyedObject - keyed objects may not be
      copied, as that leads to duplicate key (EventKernel v2r1, EventSys v12r8)
+   . New versions to use new VeloDet
+     (PuVeto v4r1, L1VeloTrack v3r2, VeloAssociators v1r3, TrCheck v1r1)
 
 </PRE><H1><A NAME=v14r2>2002-10-31 Brunel v14r2</A></H1><PRE>
  - New tuning:
