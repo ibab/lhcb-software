@@ -20,7 +20,7 @@
                       EventSys v18r0, EventAssoc v1r2, RichEvent v7r4,
                       DetSys v5r7, STDet v1r2, RichDet v7r2
                       AssociatorsSys v1r14, ITAssociators v2r9, 
-                      Associators v2r2p1, MCTools v1r6
+                      Associators v2r2p1, MCTools v1r6, IOExample v1r2
 
  - In LHCbKernel v4r7:
    . Remove ProcessPhase (moved to LHCbAlgs)
@@ -49,6 +49,9 @@
 
  - In RichEvent v7r4
    . Fix bugs in MCRichSegment::bestMomentum and MCRichSegment::bestPoint
+
+ - In IOExample v1r2
+   . StoreBrowser Algorithm moved to LHCbAlgs, example is now just job options
 
 !====================== LHCbSys v15r12 2004-06-16 =======================
 Built against Gaudi v14r6

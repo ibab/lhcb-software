@@ -81,4 +81,4 @@ use RichDAQ		v1r5	Rich
 # LHCb  Examples
 use DetDescExample      v6r2	Ex
 use DumpEventExample    v7r3	Ex
-use IOExample    	v1r1	Ex
+use IOExample    	v1r2	Ex
