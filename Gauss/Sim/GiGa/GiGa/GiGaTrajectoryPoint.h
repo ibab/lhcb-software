@@ -27,7 +27,7 @@ public:
   inline GiGaTrajectoryPoint ( const HepLorentzVector&    right );
   inline GiGaTrajectoryPoint ( const GiGaTrajectoryPoint& right ); 
   ///
-  virtual inline ~GiGaTrajectoryPoint();
+  virtual ~GiGaTrajectoryPoint();
   ///
   inline void* operator new    ( size_t );
   inline void  operator delete ( void*  );

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/Lib/GiGaRunManager.cpp,v 1.1 2001-04-23 08:52:03 ibelyaev Exp $ 
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/Lib/GiGaRunManager.cpp,v 1.2 2001-04-23 11:05:07 ibelyaev Exp $ 
 //
 #include <string> 
 #include <typeinfo> 
@@ -52,9 +52,11 @@
 #include "G4UIcsh.hh"             
 #endif // G4UI_USE
 //
-#ifdef G4UI_USE_WIN32
-#include "G4Win32.hh"
-#endif
+
+// this lines does not work on Win!!! why??? B.B. 
+//#ifdef G4UI_USE_WIN32
+//#include "G4Win32.hh"
+//#endif
 
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
