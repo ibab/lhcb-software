@@ -1,5 +1,5 @@
 package           MuonAssociators
-version           v1r3
+version           v1r4
         
 # =============== structure =================================================== 
 branches          MuonAssociators src cmt doc 
@@ -8,6 +8,7 @@ include_dirs $(MUONASSOCIATORSROOT)
 
 # =============== used packages ===============================================
 use MuonEvent     v3r*  Event 
+use Relations	v1r*	Kernel
 
 # =============== component library ===========================================
 library           MuonAssociators  ../src/*.cpp
