@@ -97,24 +97,30 @@ G4double GaussG4UserLimits::GetCut(const G4Track& aTrack, const mid& partCutMap,
   G4int partCode = aTrack.GetDefinition()->GetPDGEncoding();
   //---- Look if cut exists for this particle
   mid::const_iterator ite = partCutMap.find( partCode );
-  if( ite != partCutMap.end() ) {
-    cutval = (*ite).second;
-  } else {
-  //---- Look if cut exists for all particles (!!not used)
-    ite = partCutMap.find(0); 
-    if( ite != partCutMap.end() ) {
+  if( ite != partCutMap.end() ) 
+    {
       cutval = (*ite).second;
-    } else {
-      //if cut does not exists, return maximum value
-      if( cutBelow ) {
-	cutval = 0.;
-      } else { 
-	cutval = kInfinity;
-      }
+    } 
+  else 
+    {
+      //---- Look if cut exists for all particles 
+      ite = partCutMap.find(0); 
+      if( ite != partCutMap.end() ) {
+        cutval = (*ite).second;
+      } 
+      else 
+        {
+          //if cut does not exists, return maximum value
+          if( cutBelow ) {
+            cutval = 0.;
+          } 
+          else 
+            { 
+              cutval = kInfinity;
+            }
+        }
     }
-  }
   return cutval;
-
 }
 
 
