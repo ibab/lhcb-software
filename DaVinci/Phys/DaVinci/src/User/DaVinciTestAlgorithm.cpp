@@ -1,9 +1,11 @@
-// $Id: DaVinciTestAlgorithm.cpp,v 1.3 2001-10-08 11:51:26 gcorti Exp $
+// $Id: DaVinciTestAlgorithm.cpp,v 1.1 2002-02-08 19:08:10 gcorti Exp $
 #define DAVINCITESTALGORITHM_CPP 
 
 // Include files
+// from STL
 #include <math.h>
 
+// from Gaudi
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -13,7 +15,7 @@
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiTools/IAssociator.h"
 
-//                 data to be accessed
+// from Event 
 #include "LHCbEvent/Event.h"
 #include "LHCbEvent/AxPartCandidate.h"
 #include "LHCbEvent/MCParticle.h"
@@ -21,8 +23,15 @@
 #include "CLHEP/Units/PhysicalConstants.h"
 #include "PhysEvent/VtxCandidate.h"
 #include "PhysEvent/PhysSel.h"
-#include "L0DU/L0DUReport.h"
+#include "Event/L0DUReport.h"
 
+// from DaVinci
+#include "DaVinciTools/IMCUtilityTool.h"
+#include "DaVinciSicb/IPhysSelTool.h"
+#include "DaVinciSicb/SelComb.h"
+#include "DaVinciSicb/FlavourTag.h"
+
+// local
 #include "DaVinciTestAlgorithm.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : DaVinciTestAlgorithm
@@ -30,6 +39,7 @@
 // Example of how to access various info from DaVinci
 // 
 // 19/06/2001 : Gloria Corti
+// 07/02/2002 : modified to include use of new tools (G.Corti)
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -42,7 +52,8 @@ const IAlgFactory& DaVinciTestAlgorithmFactory = Factory;
 DaVinciTestAlgorithm::DaVinciTestAlgorithm(const std::string& name,
                                            ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator),
-  m_selDec("B0PP"),
+  m_pIDSearch(0),
+  m_daugID(0),
   m_nEvents(0),
   m_nPhysSelMC(0),
   m_nPhysSelTKR(0),
@@ -50,14 +61,18 @@ DaVinciTestAlgorithm::DaVinciTestAlgorithm(const std::string& name,
   m_nPhysSelSEL(0),
   m_nPhysSelAGR(0),
   m_nPhysSelTAG(0),
-  m_pNameSearch("B0"),
-  m_pIDSearch(0),
   m_nL0Trigger(0),
+  m_bIDLower(71),
+  m_bIDUpper(78),
   m_pAsct(0),
+  m_pSelTool(0),
+  m_pUtilTool(0),
   m_ppSvc(0) {
  
-    declareProperty( "PhysSelDecayChannel", m_selDec);  
-    declareProperty( "SearchParticle", m_pNameSearch);
+    m_daugName.clear();
+    declareProperty( "SearchParticle", m_pNameSearch = "B0" );
+    declareProperty( "DecayProducts", m_daugName );
+    declareProperty( "MCUTilityTool", m_nameUtilTool = "MCUtilityTool" );
 
 }
 
@@ -76,18 +91,21 @@ StatusCode DaVinciTestAlgorithm::initialize() {
   log << MSG::INFO << ">>> Initialize" << endreq;
   
   // Retrieve the tools used by this algorithm
-  log << MSG::INFO << "    Looking for Tool Service." << endreq;
-
-  IToolSvc* toolsvc = 0;
-  StatusCode sc = service("ToolSvc", toolsvc );
+  // Note that the ToolSvc is now available via the toolSvc() method
+  //           you can hardcode the type of a tool or set  in the job options  
+  StatusCode sc = toolSvc()->retrieveTool("AxPart2MCParticleAsct", m_pAsct);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to locate Tool Service" << endreq;
+    log << MSG::FATAL << "    Unable to retrieve Associator tool" << endreq;
     return sc;
   }
-
-  sc = toolsvc->retrieveTool("AxPart2MCParticleAsct", m_pAsct);
+  sc = toolSvc()->retrieveTool("PhysSelTool", m_pSelTool);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to create Associator tool" << endreq;
+    log << MSG::FATAL << "    Unable to retrieve PhysSel helper tool" << endreq;
+    return sc;
+  }
+  sc = toolSvc()->retrieveTool(m_nameUtilTool, m_pUtilTool);
+  if( sc.isFailure() ) {
+    log << MSG::FATAL << "    Unable to retrieve " << m_nameUtilTool << endreq;
     return sc;
   }
 
@@ -103,8 +121,22 @@ StatusCode DaVinciTestAlgorithm::initialize() {
   
   // Retrieve Geant3 code for particle to search for: this is what is
   // stored in MCParticle
-  ParticleProperty* pp1 = m_ppSvc->find( m_pNameSearch );
-  m_pIDSearch = pp1->geantID();
+  ParticleProperty* partProp = m_ppSvc->find( m_pNameSearch );
+  m_pIDSearch = partProp->geantID();
+  
+  // The same for decay products notice that the tool only works for 
+  // direct decays
+  std::vector<std::string>::const_iterator idau;
+  for ( idau = m_daugName.begin(); idau != m_daugName.end(); idau++ ) {
+    partProp = m_ppSvc->find( *idau );
+    if ( 0 == partProp )   {
+      log << MSG::ERROR << "Cannot retrieve properties for particle \"" 
+          << *idau << "\" " << endreq;
+      return StatusCode::FAILURE;
+    }
+    m_daugID.push_back( partProp->geantID() );
+  }
+  
 
   // Initialization terminated
   return StatusCode::SUCCESS;
@@ -120,8 +152,6 @@ StatusCode DaVinciTestAlgorithm::execute() {
   // Counter of events processed
   log << MSG::INFO << ">>> Execute" << endreq;
   log << MSG::INFO << "    processing event number " << ++m_nEvents << endreq;
-
-  StatusCode         sc = StatusCode::SUCCESS;
 
   // Retrieve informations about event
   SmartDataPtr<Event> evt(eventSvc(), "/Event" );
@@ -144,16 +174,14 @@ StatusCode DaVinciTestAlgorithm::execute() {
     log << MSG::INFO << "    Number of primary vertices  = " 
         << vertices->size() << endreq;
 
-    VtxCandidateVector::iterator iterV = 0;
-
-    for( iterV = vertices->begin(); iterV != vertices->end(); iterV++ ) {
+    VtxCandidateVector::iterator ivert = 0;
+    for( ivert = vertices->begin(); ivert != vertices->end(); ivert++ ) {
       log << MSG::DEBUG << "    Vertex coordinates = ( " 
-          << (*iterV)->position().x() 
-          << " , " << (*iterV)->position().y() 
-          << " , " << (*iterV)->position().z() << endreq;
-      log << MSG::DEBUG << "    Vertex ChiSquare = " << (*iterV)->chiSquare() 
+          << (*ivert)->position().x() 
+          << " , " << (*ivert)->position().y() 
+          << " , " << (*ivert)->position().z() << endreq;
+      log << MSG::DEBUG << "    Vertex ChiSquare = " << (*ivert)->chiSquare() 
           << " ) " << endreq;  
-      //std::cout << *(*iterV) << std::endl;
     }
   }
 
@@ -173,26 +201,23 @@ StatusCode DaVinciTestAlgorithm::execute() {
     // Example of use of Associator, only for first five particles in
     // container, for details on all possible uses refer to
     // AsctExampleAlgorithm in package Ex/AssociatorExample
-    AxPartCandidateVector::iterator iterP = 0;
-
+    AxPartCandidateVector::iterator icand = 0;
     int icount=0;
-    for( iterP = candidates->begin(); iterP != candidates->end(); iterP++ ) {
+    for( icand = candidates->begin(); icand != candidates->end(); icand++ ) {
       if( icount < 5 ) {
         log << MSG::DEBUG << "    AXCandidate n. " << ++icount << endreq;
         log << MSG::DEBUG << "    Momentum = ( " 
-            << (*iterP)->threeMomentum().x()
-            << " , " << (*iterP)->threeMomentum().y() 
-            << " , " << (*iterP)->threeMomentum().z() << " ) " << endreq;
-        //std::cout << *(*iterP) << std::endl;
+            << (*icand)->threeMomentum().x()
+            << " , " << (*icand)->threeMomentum().y() 
+            << " , " << (*icand)->threeMomentum().z() << " ) " << endreq;
 
         MCParticle* mctry = 0;
-        StatusCode sc = m_pAsct->retrieveDirect( *iterP, mctry );
+        StatusCode sc = m_pAsct->retrieveDirect( *icand, mctry );
         if( sc.isSuccess() ) { 
           log << MSG::DEBUG << "    Corresponding MParticle found " << endreq;
           log << MSG::DEBUG << "    Momentum = " << mctry->fourMomentum().px()
               << " , " << mctry->fourMomentum().py()
               << " , " << mctry->fourMomentum().pz() << " ) " << endreq;
-          //std::cout << *mctry << std::endl;
         }
         else {
           log << MSG::DEBUG << "    No associated MCParticle found" << endreq;
@@ -200,8 +225,6 @@ StatusCode DaVinciTestAlgorithm::execute() {
       }
     }
   }
-  
-  
 
   // Retrive MCParticles
   SmartDataPtr<MCParticleVector> particles (evt,"/MC/MCParticles");
@@ -209,40 +232,52 @@ StatusCode DaVinciTestAlgorithm::execute() {
     log << MSG::INFO << "    No MCParticles retrieved" << endreq;
   }
   else {
-    // Log number of AxPartCandidates retrieved
+    // Log number of MCParticles retrieved
     log << MSG::INFO << "    Number of MCParticles retrieved   = " 
         << particles->size() << endreq;
 
-    // Loop over all particles and find the requested particle, print first
-    // level daughters
-    MCParticleVector::const_iterator ip = 0;
-    for( ip = particles->begin(); ip != particles->end(); ip++ ) {
-      int igid = (*ip)->particleID().id(); 
-      if( igid == m_pIDSearch ) {
+    // Loop over all particles
+    MCParticleVector::const_iterator ipart = 0;
+    for( ipart = particles->begin(); ipart != particles->end(); ipart++ ) {
+
+      // Find the requested particle
+      if( (*ipart)->particleID().id() == m_pIDSearch ) {
         log << MSG::INFO << "    " << m_pNameSearch << " found " << endreq;
-        // std::cout << m_pNameSearch << " found " << *(*ip) << std::endl;
-        const SmartRefVector<MCVertex>& decay = (*ip)->decayMCVertices();
-        SmartRefVector<MCVertex>::const_iterator iv;
-        for( iv = decay.begin(); iv != decay.end(); iv++ ) {
-          const SmartRefVector<MCParticle>& daughters = 
-                                          (*iv)->daughterMCParticles();
-          SmartRefVector<MCParticle>::const_iterator idau;
-          log << MSG::INFO << "    particle has " << daughters.size() 
-              << " daughters " << endreq;
-          log << MSG::DEBUG << "    They are : " << endreq;
-          for( idau = daughters.begin(); idau != daughters.end(); idau++ ) {
-            igid = (*idau)->particleID().id(); 
-            ParticleProperty* pp1 = m_ppSvc->find( igid );
-            std::string pname = pp1->particle();
-            log << MSG::DEBUG << "    " << pname << endreq;
-            //std::cout << "Daughters of particle" << *(*idau) << std::endl;
-          } 
+
+        // Now use tool to check if particle decays as wanted
+        bool result = m_pUtilTool->matchDecayTree( *ipart, m_daugID );
+        if ( result ) {
+          log << MSG::INFO << "Found requested decay tree" << endreq;
         }
+        else {
+          log << MSG::INFO << "Requested decay not found" << endreq;
+        }
+        
+        // Use tool to print all decay chain
+        m_pUtilTool->printDecayTree( 0, " |", *ipart );
       }
+      
+      // Retrieve full history of a particle
+      bool fromB = false;
+      std::vector<long> ancestors;      
+      StatusCode scode = m_pUtilTool->history(*ipart,ancestors);
+      if ( scode.isSuccess() ) {
+        for ( unsigned long i=0; i<2; i++ ) {
+          int gid = ancestors[i];
+          if( (gid >= m_bIDLower) && (gid<= m_bIDUpper) ) {
+            fromB = true;
+          }
+        } 
+      }
+      if( fromB ) {
+        //log << MSG::INFO << "This particle has b as ancestor" << endreq;
+        m_pUtilTool->printHistory(*ipart);
+      }
+      
     }
   }
     
-  /// retrieve the results of PhysSelectAlgorithm
+  /// Retrieve the results of PhysSelectAlgorithm 
   SmartDataPtr<PhysSel> mysel(eventSvc(), "/Event/Phys/Selection" );
 
   if ( ! mysel ) {
@@ -263,12 +298,11 @@ StatusCode DaVinciTestAlgorithm::execute() {
       return StatusCode::SUCCESS;
     }
     
-    std::string tmpName = selList[0];
-    mysel->results(tmpName,lMCFlag,lTKRFlag,lPQUALFlag,
+    std::string selDec = selList[0];
+
+    mysel->results(selDec,lMCFlag,lTKRFlag,lPQUALFlag,
                                  lSELFlag,lAGRFlag,lTAGFlag);
-    //    mysel->results(m_selDec,lMCFlag,lTKRFlag,lPQUALFlag,
-    //                             lSELFlag,lAGRFlag,lTAGFlag);
-    log << MSG::DEBUG << "    PhysSel results for " << m_selDec << std::endl
+    log << MSG::DEBUG << "    PhysSel results for " << selDec << std::endl
         << "                              MCFlag    " << lMCFlag << std::endl
         << "                              TKRFlag   " << lTKRFlag << std::endl
         << "                              PQUALFlag " << lPQUALFlag << std::endl
@@ -276,43 +310,77 @@ StatusCode DaVinciTestAlgorithm::execute() {
         << "                              AGRFlag   " << lAGRFlag << std::endl
         << "                              TAGFlag   " << lTAGFlag << endreq;
 
-    if( mysel->decayIsInMCTree(m_selDec) ) {
+    if( mysel->decayIsInMCTree(selDec) ) {
       m_nPhysSelMC++;
+      //log << MSG::DEBUG << "                             "
+      //    << "The MCDecay is present" << std::endl;
     }
 
-    if( mysel->decayHasTrkRecon(m_selDec) ) {  
+    if( mysel->decayHasTrkRecon(selDec) ) {  
       m_nPhysSelTKR++;
+      //log << MSG::DEBUG << "                             "
+      //    << "All stable particles are reconstructed" << std::endl;
     }
 
-    if( mysel->decayHasTrkPQual(m_selDec) ) {
+    if( mysel->decayHasTrkPQual(selDec) ) {
       m_nPhysSelPQU++;
+      //log << MSG::DEBUG << "                             "
+      //    << "and are of Physics Quality" << std::endl;
     }
 
-    if( mysel->decayIsSelected(m_selDec) ) {
+    if( mysel->decayIsSelected(selDec) ) {
       m_nPhysSelSEL++;
+      //log << MSG::DEBUG << "                             "
+      //    << "the event passed the specified offline selection" << std::endl;
     }
-
-    if( mysel->decaySelectedIsMC(m_selDec) ) {
+ 
+    if( mysel->decaySelectedIsMC(selDec) ) {
       m_nPhysSelAGR++;
+      //log << MSG::DEBUG << "                             "
+      //    << "and a selected comb matches with the MCDecay" << std::endl;
     }
 
-    if( mysel->decayIsFlavourTagged(m_selDec) ) {
+    //log << MSG::DEBUG << endreq;
+
+    if( mysel->decayIsFlavourTagged(selDec) ) {
       m_nPhysSelTAG++;
+      log << MSG::DEBUG << "One sel comb has been flavour tagged" << endreq;
+
+      /// Now recover the information about the flavour tag
+      std::vector<FlavourTag> ftags;
+      m_pSelTool->fTagging( ftags);
+      log << MSG::DEBUG << "ftags.size = " << ftags.size() << endreq;
+      std::vector<FlavourTag>::iterator elem;
+      for(elem=ftags.begin(); elem!=ftags.end(); elem++){
+        FlavourTag iftag = *elem;
+        log << MSG::INFO << " FlavourTag = " << std::endl
+            << "       tagType = " << iftag.tagType() 
+            << " bSign = " << iftag.bSign()
+            << " tParticle P = " << (iftag.tParticle())->fitMomentum()
+            << " selComb = " << iftag.selComb() << endreq;
+        /// Now retrieve the MC B particle that has been tagged
+        int isel = iftag.selComb();
+        std::vector<SelComb> mySelComb;
+        m_pSelTool->selCombs( mySelComb );
+        const MCParticle* pmc = mySelComb[isel].selMCHead();
+        log << MSG::INFO << "pID = " << pmc->particleID().id() 
+            << " Energy = " << pmc->fourMomentum().e() << endreq;
+      }
     }
   }
 
   // Example of how to access L0 Decision Unit info
-  SmartDataPtr<L0DUReport> L0Report( eventSvc(), "/Event/FE/L0/L0Decis" );
+  /*  SmartDataPtr<L0DUReport> L0Report( eventSvc(), "/Event/FE/L0/L0Decis" );
   
   if ( 0 != L0Report ) {
     if ( (*L0Report).decision() ) {
       log << MSG::DEBUG << "The event passed the L0 Decision Unit" << endreq;
       m_nL0Trigger++;
     }
-  }
+    }*/
 
   // End of execution for each event
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
