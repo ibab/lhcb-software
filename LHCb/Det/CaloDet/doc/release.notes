@@ -1,11 +1,17 @@
 ! =====================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =====================================================================
-! $Id: release.notes,v 1.12 2001-07-17 17:26:52 ibelyaev Exp $ 
+! $Id: release.notes,v 1.13 2001-08-21 13:05:09 ibelyaev Exp $ 
 ! =====================================================================
 
 Package         : CaloDet 
 Package manager : Vanya Belyaev 
+
+! =====================================================================
+! 20010821 - Vanya Belyaev 
+   DeCalorimeter.h/.cpp
+   DeSubCalorimeter.h/.cpp 
+   fix problems of user parameters on Win2K 
 
 ! =====================================================================
 ! 20010717 - Vanya Belyaev 

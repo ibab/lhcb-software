@@ -1,5 +1,10 @@
 // ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2001/07/02 17:17:59  ibelyaev
+// improvements in readability of DeCalorimeter.h
+//
 // Revision 1.5  2001/06/29 10:26:17  ibelyaev
 // update to use new features of DetDesc v7 package
 // 
@@ -37,14 +42,13 @@
 /// forwad declarations
 class MsgStream;
 
-//-----------------------------------------------------------------------------
-//
-// ClassName:   DeCalorimeter 
-//  
-// Description: Calorimeter detector element class.
-//
-//-----------------------------------------------------------------------------
-
+/** @class DeCalorimeter DeCalorimeter.h "CaloDet/DeCalorimeter.h" 
+ *
+ *  Calorimeter detector element class.
+ *
+ *  @author Olivier Callot Olivier.Callot@cern.ch
+ *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru  
+ */
 
 class DeCalorimeter: public DetectorElement {
 
@@ -76,18 +80,23 @@ public:
   unsigned int   numberOfCells () { buildCells() ; return cells.size(); };
 
   /// set function for coding 
-  void setCoding     ( unsigned int nb );
+  void setCoding        ( const unsigned int nb     );
   /// set function for maxEt 
-  void setEtInCenter ( double maxEt         ) { m_maxEtInCenter = maxEt; }
+  void setEtInCenter    ( const double maxEt        ) 
+  { m_maxEtInCenter = maxEt; }
   /// set function for maxEtSlope  
-  void setEtSlope    ( double maxEtSlope    ) { m_maxEtSlope    = maxEtSlope; }
+  void setEtSlope       ( const double maxEtSlope   ) 
+  { m_maxEtSlope    = maxEtSlope; }
   /// set function for AdcMax 
-  void setAdcMax     ( unsigned int adcMax  ) { m_adcMax        = adcMax; }
+  void setAdcMax        ( const unsigned int adcMax ) 
+  { m_adcMax        = adcMax; }
   /// set function for active/total ratio 
-  void setActiveToTotal (double actToTotal  ) { m_activeToTotal = actToTotal; }
+  void setActiveToTotal ( const double actToTotal   ) 
+  { m_activeToTotal = actToTotal; }
   /// set function for ZshowerMax 
-  void setZShowerMax ( double ZShowerMax    ) { m_zShowerMax    = ZShowerMax; }
-
+  void setZShowerMax    ( const double ZShowerMax   ) 
+  { m_zShowerMax    = ZShowerMax; }
+  
   /// retrieve max et in center  
   double        maxEtInCenter () const { return m_maxEtInCenter ; }; 
   /// retrieve max et slope 

@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2001/08/21 11:03:57  ibelyaev
+// parameter fix on Win2K
+//
 // Revision 1.7  2001/07/17 17:26:53  ibelyaev
 // modifications to improve Doxygen documentation
 //
@@ -21,11 +24,12 @@
 // CaloDet
 #include "CaloDet/DeSubCalorimeter.h"
 
-//------------------------------------------------------------------------------
-//
-// Implementation of class :  DeSubCalorimeter
-//
-//------------------------------------------------------------------------------
+/** @file DeSubCalorimeter.cpp
+ *
+ *  Implementation of class :  DeSubCalorimeter
+ *  @author Olivier Callot Olivier.Callot@cern.ch
+ *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
+ */
 
 // ============================================================================
 // Standard Constructors

@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2001/08/21 11:03:57  ibelyaev
+// parameter fix on Win2K
+//
 // Revision 1.11  2001/07/17 17:26:52  ibelyaev
 // modifications to improve Doxygen documentation
 //
@@ -38,13 +41,12 @@
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDet/DeSubCalorimeter.h"
 
-
 /** @file DeCalorimeter.cpp
  *
  *  Implementation of class :  DeCalorimeter
  *
- *  @author Olivier Callot
- *
+ *  @author Olivier Callot Olivier.Callot@cern.ch
+ *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru 
  */
 
 
@@ -74,12 +76,12 @@ const CLID& DeCalorimeter::clID () const { return DeCalorimeter::classID() ; }
 //----------------------------------------------------------------------------
 // ** Defines the maximum and center Row and Column in the cell number
 //----------------------------------------------------------------------------
-void DeCalorimeter::setCoding( unsigned int nb ) {
-
+void DeCalorimeter::setCoding( const unsigned int nb ) {
+  
   maxRowCol     = (1<< nb ) - 1;               // 63   (31   for HCAL)
   firstRowUp    = maxRowCol/2 + 1 ;            // 32   (16   for HCAL)
   centerRowCol  = .5 * (double) maxRowCol ;    // 31.5 (15.5 for HCAL)
-}
+};
 
 // ============================================================================
 // intialization method
