@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.121 2004-07-29 16:22:15 pkoppenb Exp $
+! $Id: release.notes,v 1.122 2004-08-03 07:03:14 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciTools v10r1 2004-08-03 ===================
 ! 2004-07-29 - P. Koppenburg
  - src/ChangeDecayChain.*
  - src/ChangePID.*
