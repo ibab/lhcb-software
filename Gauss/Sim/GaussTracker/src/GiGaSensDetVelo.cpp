@@ -74,49 +74,8 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
           
           G4TouchableHistory* TT =  
             (G4TouchableHistory*)(step->GetPreStepPoint()->GetTouchable());
-          G4VPhysicalVolume*  PV =   TT->GetVolume();
-          G4LogicalVolume*    LV =   PV->GetLogicalVolume();
-          
-          std::string pvname=PV->GetName();
-          G4TouchableHistory* MotherTT = TT;
-          MotherTT ->MoveUpHistory(1);
-          
-          std::string stname=MotherTT -> GetVolume()->GetName();
-          
-          int numsens;      
-          int puornot=0;
-          
-          if(SensitiveDetectorName=="VeloPuSDet") puornot=1;
-          
-          // to find the position of "Station" in vol name
-          int stpos=stname.rfind("Station")+7;
-          
-          if(puornot==0)
-            {
-              // normal sensor
-              std::string stnumb=stname.substr(stpos,2);
-              std::string lorr=stname.substr(stpos+2,1);
-              std::string phiorr=pvname.substr(45,2);
-             
-              int ishift1=0;
-              int ishift2=0;
-              
-              if(lorr=="L") ishift1=2;
-              if(phiorr=="UP" || phiorr=="DR") ishift2=1;
-              numsens=4*atoi(stnumb.c_str())+ishift1+ishift2;
-            }
-          else
-            {
-              // PuVeto sensor
-              std::string stnumb=stname.substr(stpos,1);
-              std::string lorr=stname.substr(stpos+1,1);
-              
-              int ishift=0;
-              
-              if(lorr=="L") ishift=1;
-              numsens=98+2*atoi(stnumb.c_str())+ishift;
-            }
-          
+          G4VPhysicalVolume*  PV = TT->GetVolume();
+ 
           ///
           VeloHit* newHit = new VeloHit();
           newHit->SetEdep( edep );
@@ -124,7 +83,8 @@ bool GiGaSensDetVelo::ProcessHits( G4Step* step ,
           newHit->SetExitPos( postpos );
           newHit->SetTimeOfFlight( timeof );  
           newHit->SetTrackID( trid );
-          newHit->SetSensor(numsens);
+          newHit->SetSensor(PV->GetCopyNo() + PV->GetMother()->GetCopyNo());
+ 
           ///
           G4VUserTrackInformation* ui = track->GetUserInformation(); 
           GaussTrackInformation*    gi = (GaussTrackInformation*) ui;

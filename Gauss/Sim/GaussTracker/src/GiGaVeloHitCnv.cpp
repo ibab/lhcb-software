@@ -295,7 +295,6 @@ StatusCode GiGaVeloHitCnv::updateObjRefs
       return StatusCode::SUCCESS;
     }
 
-  int numberofhits=myCollection->entries();
   int itr=0;
 
   if( (size_t) hits->size() != (size_t) myCollection->entries() ) 

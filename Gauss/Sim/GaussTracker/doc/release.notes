@@ -5,6 +5,10 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTracker v3r0 ================================
+! 2003-10-14 - Witek Pokorski
+ - GiGaSensDetVelo - now uses copy numbers to determine the sensor number 
+
 !=========================== GaussTracker v2r7 ================================
 ! 2003-10-10 - Witek Pokorski
  - GiGaSensDetMuon - added storing of GapID and ChanelID (S. De Capua)
