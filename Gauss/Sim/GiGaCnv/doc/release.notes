@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.53 2003-07-14 15:26:36 witoldp Exp $
+! $Id: release.notes,v 1.54 2003-07-15 08:26:40 witoldp Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!======================= GiGaCnv v13r0 ===============================
 ! 2003-07-14 - Witek Pokorski
  - GiGaCollisionCnv - slight restructurisation, some of the stuff
                       moved to GiGaMCParticleCnv 
