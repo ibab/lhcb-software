@@ -112,14 +112,22 @@ DigiMUONSeq.Members += { "MuonDigitization" };
 DigiMUONSeq.Members += { "MuonDigitToRawBuffer" };
 
 // Silicon Tracker digitisation
-ApplicationMgr.DLLs   += { "ITAlgorithms" };
+ApplicationMgr.DLLs   += { "ITAlgorithms", "STDAQ" };
 DigiITSeq.Members += { "MCITDepositCreator", "MCITDigitCreator" };
 DigiITSeq.Members += { "ITDigitCreator" };
-//DigiITSeq.Members += { "PrepareTTL1Buffer" };
+DigiITSeq.Members += { "STL1ClusterCreator" };
 #include "$ITALGORITHMSROOT/options/itDigi.opts"
 // Switch off LHC background until it can be done in Gauss
 MCITDepositCreator.spillVector = { "/", "/Prev/", "/PrevPrev/" };
 MCITDepositCreator.spillTimes  = { 0., -25., -50. };
+
+// Fill L1+RAW buffers for ST
+DigiITSeq.Members += { "STL1ClustersToL1BufferAlg/createTTL1Buffer" };
+DigiITSeq.Members += { "ITClusterCreator/dcSim" };
+DigiITSeq.Members += { "STMCDigitsLinker/stLinker" };
+DigiITSeq.Members += { "STDAQInitialization" };
+DigiITSeq.Members += { "STClustersToRawBufferAlg/createTTRawBuffer" };
+DigiITSeq.Members += { "STClustersToRawBufferAlg/createITRawBuffer" };
 
 // Outer tracker digitisation
 ApplicationMgr.DLLs   += { "OTAlgorithms", "OTDAQ" };

@@ -74,8 +74,9 @@ use CaloDigit           v1r6	Calo
 use VeloAlgorithms      v3r0	Velo
 
 # Inner Tracker
-use ITAlgorithms        v14r0	IT
-use ITCheckers          v2r0	IT
+use ITAlgorithms        v14r1	IT
+use ITCheckers          v2r1	IT
+use STDAQ               v1r0    IT
 
 # Outer Tracker
 use OTAlgorithms        v13r4	OT

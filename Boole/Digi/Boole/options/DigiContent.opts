@@ -55,7 +55,6 @@ DigiWriter.ItemList =
   // Keep the directory nodes of all Digits, even if stored as  RawBuffer
 , "/Event/Raw#2"
 , "/Event/Raw/Velo/Clusters#1"
-, "/Event/Raw/IT/Digits#1"
 , "/Event/Rec#1"
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITDigits2MCHits#1"

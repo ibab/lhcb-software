@@ -11,6 +11,7 @@ InitDataSeq.Members += { "MergeEventAlg/LHCbkgAlg" };    // Adds LHC background
 //---------------------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------------------- 
+#include "$STDAQROOT/options/stDAQ-v1.opts"
 #pragma print on
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 

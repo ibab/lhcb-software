@@ -30,13 +30,16 @@ Requires XmlDDDB v22r0 or greater
   - Linked against Gaudi_v14r2, makes available new base classes for monitoring
     algorithms and tools 
     (GaudiAlg v7r0, GaudiTools v8r0, CaloMonitor v2r0, CaloDigit v1r6)
+  - Fill L1Buffer and RawBuffer for ST
+    (STDAQ v1r0, ITAlgorithms v14r1, ITCheckers v2r1)
 
 - Persistency changes
   - Backwards incompatible change to encoding of VeloChannelID, including 
     changed sensor numbering 
     (XmlDDDB v22r0, LHCbKernel v4r3, VeloDet v9r0, VeloEvent v14r0)
-  - Remove OT Digits from Digi output 
-    (relations problem will be fixed in Brunel by using OTDAQ v1r1)
+  - Remove IT Digits from Digi output (can be rebuilt from RawBuffer) 
+  - Remove OT Digits from Digi output
+    (relations problem fixed in Brunel by OTDAQ v1r1)
   - Fix Spillover with POOL (GaudiPoolDb v1r5)
 
 - New tuning
