@@ -13,6 +13,7 @@
 // DaVinciCommon. 
 #pragma print off
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
+DaVinciMainSeq.Members = { "LbAppInit/DaVinci" }; // not RICH stuff
 #pragma print on
 #include "$DAVINCIROOT/options/DaVinciDDDB.opts"
 
@@ -21,7 +22,6 @@
 ApplicationMgr.DLLs  += { "B2HH" };
 ApplicationMgr.TopAlg += { "PreselB2hh" };
 PreselB2hh.PhysDesktop.InputLocations = {"/Event/Phys/Combined"};
-PreselB2hh.OutputLevel = 1 ;
 
 //--------------------------------------------------------------
 ApplicationMgr.HistogramPersistency = "HBOOK";
@@ -34,8 +34,6 @@ NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
 MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
-PrintJpsi2MuMu.OutputLevel  = 2;
-PreselJpsi2MuMu.OutputLevel = 4;
 
 // Modify Message Format to print algorithm name with 40 characters
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";

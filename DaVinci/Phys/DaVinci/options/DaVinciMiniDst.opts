@@ -28,6 +28,7 @@ MiniDstWriter.ItemList = {
 //  , "/Event/Trig/L1#1"
 //  , "/Event/Trig/L1/Summary#1"
   , "/Event/Rec#1"
+  , "/Event/Rec/Status#1"
   , "/Event/Rec/Tr#1"
   , "/Event/Rec/Tr/Best#1"
 //  , "/Event/Rec/Tr/StatesP#1"
@@ -42,4 +43,4 @@ MiniDstWriter.ItemList = {
 //  , "/Event/Phys/Combined/Vertices#1"
 };
 
-MiniDstWriter.Output = "DATAFILE='PFN:MiniDst.mdst' TYP='POOL_ROOTTREE' OPT='CREATE'";
+MiniDstWriter.Output = "DATAFILE='PFN:MiniDst.mdst' TYP='POOL_ROOTTREE' OPT='REPLACE'";
