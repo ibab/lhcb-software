@@ -25,6 +25,7 @@ Purpose: LHCb reconstruction program
    . Implement 45 degree Velo sectors. Currently hardwired for strip layout "1"
 	   (VeloDet v7r2, Brunel.opts)
    . Possibility to add noise to OT (off by default) (OTAlgorithms v12r1)
+   . New methods in Relations (LHCbKernel v1r5)
 
  - Bug fixes:
    . Small fixes in TrFirstCleverExtrapolator (TrExtrapolator v2r3)
@@ -34,6 +35,8 @@ Purpose: LHCb reconstruction program
    . Release all tools (ITAlgorithms v12r3, OTAlgorithms v12r1)
    . Remove obsolete code and unneccessary calls to msgSvc (TrExtrapolator v2r3)
    . Fix some valgrind warnings (VeloAlgorithms v2r4)
+   . Add private copy constructor to KeyedObject - keyed objects may not be
+     copied, as that leads to duplicate key (EventKernel v2r1, EventSys v12r8)
 
 </PRE><H1><A NAME=v14r2>2002-10-31 Brunel v14r2</A></H1><PRE>
  - New tuning:

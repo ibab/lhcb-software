@@ -56,7 +56,7 @@ use VeloDet       	v7r2  	Det
 use Magnet        	v1r1  	Det
 
 # Event Model
-use EventSys     v12r7  Event
+use EventSys     v12r8  Event
 
 # SicB event data persistency
 use SicbCnv      v17r3  SICB
