@@ -1,9 +1,12 @@
-! CVS tag $Name: not supported by cvs2svn $
 Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
->>>>>>>>>>>>>>> LHCbKernel v1r1 <<<<<<<<<<<<<<<<<<<<<
+! 2002-06-07 - Marco Cattaneo
+ - Change version number to v1r2
+ - Cleanup of OTChannelID.xml to use bitfield descriptions
+ 
+!========================== LHCbKernel v1r1 2002-05-24 =================
 ! 2002-05-24 - Ivan Belyaev
  - src/RelationUtils.cpp  : 
    explicitely suppress ObjectVector&ObjectList bits for generated CLIDs
@@ -13,7 +16,7 @@ Purpose: LHCb specific Kernel classes
  - Relations/AssociatorWeighted.h 
    suppress warning printout for inverse relation table 
 
->>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
+!========================== LHCbKernel v1r0 2002-05-15 =================
 !20020515 - Marco Cattaneo
   - Remove CaloCellCode.h in DoxyFile.cfg (causes doxygen crash)
 
