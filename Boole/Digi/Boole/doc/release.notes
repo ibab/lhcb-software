@@ -6,6 +6,7 @@ Purpose: LHCb Digitization program
 </PRE><H1><A NAME=v5r3>2004-03-15 Boole v5r3</A></H1><PRE>
 
 Requires XmlDDDB v22r0 or greater
+Requires data produced by Gauss v14r3 or greater
 
 - New features
   - Linked against Gaudi_v14r3, makes available new base classes for monitoring
@@ -13,8 +14,14 @@ Requires XmlDDDB v22r0 or greater
     (GaudiAlg v7r1, GaudiTools v8r0, CaloMonitor v2r0, CaloDigit v1r6)
   - New ST code to fill L1Buffer and RawBuffer (and remove old PrepareTTL1Buffer)
     (STDAQ v1r0, ITAlgorithms v14r1, ITCheckers v2r1, ITAssociators v2r8)
+  - New and repackaged Velo code to fill L1Buffer and RawBuffer
+    (VeloDAQ v1r0, VeloAlgorithms v2r9p1)
+  >>> equivalent algorithms to be removed from TrgTools (Duplicate factories) 
+
   - Use new version of ParticlePropertySvc
     (GaudiSvc v11r4, ParamFiles v3r4)
+  - Remove fix for Rich energy deposit, now fixed since Gauss v14r3
+    (RichReadout v1r6)  
 
 >>> Temporarily disable TrgVeloTT in L1WithTrg.opts to allow porting to 
     new ST L1Buffer
@@ -23,7 +30,9 @@ Requires XmlDDDB v22r0 or greater
   - Default output file is now POOL
   - Backwards incompatible change to internal encoding of VeloChannelID
     (LHCbKernel v4r3)
-  - Remove IT and OT Digits from Digi output
+  - Use VeloChannelID of first strip as key of VeloCluster
+    (VeloEvent v13r0p1, backwards incompatible)
+  - Remove VeloClusters, ITDigits and OTDigits from Digi output
     (only if POOL output, due to GaudiDb bug)
   - Fix Spillover with POOL (GaudiPoolDb v1r5)
 

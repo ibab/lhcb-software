@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-//  Job options for Boole, for data produced by Gauss v14r1 or greater and   //
-// XmlDDDB v21r0 geometry lhcb-200402-ITv2 (TT layout 4-2-1-1-2-4 in centre) //
+//  Job options for Boole, for data produced by Gauss v14r3 or greater and   //
+// XmlDDDB v22r0 geometry lhcb-200402-ITv2 (TT layout 4-2-1-1-2-4 in centre) //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" }; // Adds Spillover

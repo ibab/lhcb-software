@@ -137,7 +137,7 @@ DigiOTSeq.Members += { "MCOTDepositCreator",
                        "OTDigitCreator", "OTFillRawBuffer" };
 
 // Velo digitisation and clustering (also for PuVeto and trigger)
-ApplicationMgr.DLLs += { "VeloAlgorithms" };
+ApplicationMgr.DLLs += { "VeloAlgorithms", "VeloDAQ" };
 DigiVELOSeq.Members += { "VeloSim" };
 DigiVELOSeq.Members += { "VeloDataProcessor" };
 DigiVELOSeq.Members += { "VeloClusterMaker" };

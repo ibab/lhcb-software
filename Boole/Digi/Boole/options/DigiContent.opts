@@ -54,7 +54,6 @@ DigiWriter.ItemList =
   //, "/Event/Trig/L1/Decision#1" - to be replaced by new L1 trigger
   // Keep the directory nodes of all Digits, even if stored as  RawBuffer
 , "/Event/Raw#2"
-, "/Event/Raw/Velo/Clusters#1"
 , "/Event/Rec#1"
 , "/Event/Rec/Relations#1"
 , "/Event/Rec/Relations/ITDigits2MCHits#1"
