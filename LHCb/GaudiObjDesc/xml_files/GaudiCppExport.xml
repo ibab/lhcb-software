@@ -103,7 +103,7 @@
 
   <package name="Event">
     <class name="KeyedContainer" author="__UNKNOWN__" desc="__NODESC__"/>
-    <class name="KeyedObject" author="__UNKNOWN__" desc="__NODESC__"/>
+    <class name="KeyedObject" author="__UNKNOWN__" desc="__NODESC__" filename="Kernel"/>
     <class name="KeyedObjectManager" author="__UNKNOWN__" desc="__NODESC__"/>
   </package>   
 
