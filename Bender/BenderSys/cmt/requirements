@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.29 2004-10-06 17:26:24 ibelyaev Exp $ 
+# $Id: requirements,v 1.30 2004-10-06 18:41:25 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -13,11 +13,11 @@ author        Vanya BELYAEV
 use           Bender         v4r0   Phys 
 use           BenderGCC      v1r0   Tools 
 # =========== Bender Libraries ================================================
-use           BenderLibs     v4r0   Tools 
+use           BenderLibs     v4r1   Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDet      v4r0   Det 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDict     v4r0   Tools 
+use           BenderDict     v4r1   Tools 
 # =========== Bender & LoKi documentation =====================================
 use           BenderDoc      v4r0   Doc 
 use           LoKiDoc        v3r3   Doc 
@@ -41,6 +41,9 @@ use           LoKiHybrid     v1r0p1 Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.29  2004/10/06 17:26:24  ibelyaev
+#  v4r1
+#
 # =============================================================================
 # The END 
 # =============================================================================
