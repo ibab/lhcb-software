@@ -1,4 +1,4 @@
-# $Id: README,v 1.13 2002-03-01 16:17:04 andreav Exp $
+# $Id: README,v 1.14 2002-03-01 16:24:18 andreav Exp $
 
 Two examples are distributed in this package: a test of condition data 
 stored in flat XML files, and a test of condition data stored in the CondDB.
@@ -51,9 +51,30 @@ Under Linux:
 Under Windows:
         getpack Det/CondDBOracle   v1r00 
 
+------------------------------------------------------------------------------
+Optional modifications to GaudiKernel
+------------------------------------------------------------------------------
+
 Minor (optional) modifications to GaudiKernel were used to produce the
 logfiles for the examples, to print out int64 integers both in decimal
 and hexadecimal format rather than only in hexadecimal format.
+Change the operator<<(longlong) printout in GaudiKernel/MsgStream.h as follows,
+if you want to reproduce exactly the same logfiles provided in this example.
+
+  MsgStream& operator<<(longlong arg)             {if(isActive())
+	{
+#ifdef __linux__
+	  m_stream << arg << "(0x" << std::hex << arg << std::dec << ")"; 
+#else
+      static char buf[64];
+	  sprintf(buf,"%I64d",arg); // Or equivalently: _i64toa(arg, buf, 10);
+	  std::string darg(buf);
+	  sprintf(buf,"%I64x",arg); // Or equivalently: _i64toa(arg, buf, 16);
+	  std::string xarg(buf);
+	  m_stream << darg << "(0x" << xarg << ")"; 
+#endif
+	}
+	return *this;}
 
 ------------------------------------------------------------------------------
 How to setup the environment and link DetCondExample on lxplus
