@@ -1,6 +1,10 @@
 Package L0Muon
 Package manager: A.Tsaregorodtsev
 
+! 20010418 M.Cattaneo
+  requirements - replace {} with () in macro to please nmake, 
+                 use LHCbEvent v10*
+
 ! 20010406 L0Muon v1
 
   Initial version of the L0Muon - L0 Muon trigger simulation.
