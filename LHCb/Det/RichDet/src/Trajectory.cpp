@@ -1,4 +1,4 @@
-// $Id: Trajectory.cpp,v 1.3 2001-11-16 16:02:32 jonrob Exp $
+// $Id: Trajectory.cpp,v 1.4 2001-11-23 13:38:17 jonrob Exp $
 
 #include <cmath>
 #include <cassert>
@@ -35,7 +35,7 @@ HepRotation & Trajectory::rotation (const double distance,
   if ( distance != m_lastDistance &&
        axis     != m_lastAxis ) {
     HepVector3D z = this->direction(/*distance*/);
-    //      assert( abs(z*axis) < 1.);
+    // assert( abs(z*axis) < 1.);
 
     // temporary fix
     HepVector3D y;

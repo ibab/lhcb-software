@@ -8,10 +8,10 @@
 #include "ParticleCode.h"
 
 #include "RichDet/Rich.h"
+
 class PhotonSpectrum;
 class RichParameters;
 class Trajectory;
-
 class Photon;
 
 class PhotonRadiator {
