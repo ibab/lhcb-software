@@ -1,4 +1,3 @@
-#include "$CALODIGITROOT/options/Brunel.opts"
 //== Ignore time information
 SpdSignal.IgnoreTimeInfo = true;
 PrsSignal.IgnoreTimeInfo = true;
