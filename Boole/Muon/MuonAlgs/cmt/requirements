@@ -1,0 +1,29 @@
+package MuonAlgs version v2r1
+
+
+# ================ structure ===========================================
+branches src cmt MuonAlgs options xml
+
+# ================ own includes ========================================== 
+include_dirs      $(MUONALGSROOT)     
+
+# ================ options ===============================================
+
+# ================ used packages ========================================= 
+use AIDA           v2r2
+use MuonDet     v3r*  Det
+use MuonEvent   v2r*   Event
+use MuonTools   v2r0  Muon
+use MuonKernel   v2r*  Muon
+use MuonSicbCnv  v7r* SICB
+
+
+# build a component library
+library MuonAlgs  *.cpp
+
+apply_pattern package_Clinkopts
+apply_pattern packageShr
+
+#===============================================================
+private
+apply_pattern package_Cshlibflags    
