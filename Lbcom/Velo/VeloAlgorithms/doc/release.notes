@@ -1,6 +1,7 @@
 ! Package     : VeloAlgoithms
 ! Responsible : Chris Parkes
 
+!========================  VeloAlgorithms v2r0 2002-07-18 =====================
 ! 2002-07-17 - Chris Parkes
  - fix memory leak problem for case m_pileUp=false 
 
@@ -18,6 +19,7 @@
  - remove bug in diffusion calculation
  - add very simple charge simulation for testing
 
+!========================  VeloAlgorithms v1r0 2002-07-09 =====================
 ! 2002-07-09 - Chris Parkes
  - Spillover FEs no longer have their MCVeloHits stored.
 
