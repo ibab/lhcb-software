@@ -1,4 +1,4 @@
-// $Id: L1VeloFPGA.h,v 1.1.1.1 2004-03-16 14:28:12 cattanem Exp $
+// $Id: L1VeloFPGA.h,v 1.2 2004-03-19 12:44:05 parkesb Exp $
 #ifndef L1VELFPGA_H 
 #define L1VELOFPGA_H 1
 #include "GaudiKernel/RndmGenerators.h"
@@ -117,7 +117,8 @@ public:
   };
   
   /// make a new L1FPGACluster
-  L1VeloFPGACluster makeCluster( std::vector<int> iDAQchannelsCluster) ;
+  L1VeloFPGACluster makeCluster( std::vector<int> iDAQchannelsCluster, 
+				 double totalCharge);
 
   /// Do clustering
   void   clustering(double thresholdSigma, 

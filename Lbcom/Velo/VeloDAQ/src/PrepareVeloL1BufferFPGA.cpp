@@ -1,4 +1,4 @@
-// $Id: PrepareVeloL1BufferFPGA.cpp,v 1.1.1.1 2004-03-16 14:28:12 cattanem Exp $
+// $Id: PrepareVeloL1BufferFPGA.cpp,v 1.2 2004-03-19 12:44:05 parkesb Exp $
 // Include files 
 
 // from Gaudi
@@ -153,16 +153,21 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
   // NB: Strips should be ordered according to sensor and strip number!!
   // -------------------------------------------------------------------
   for ( MCVeloFEs::const_iterator feIt = fe->begin() ; 
-        fe->end() != feIt ; feIt++ ) {
-    countStrips++;
-    charge = (*feIt)->charge();
-    strip  = (*feIt)->strip();
-    sensor = (*feIt)->sensor();
-    if ( verbose ) msg << MSG::VERBOSE
+        fe->end() >= feIt ; feIt++ ) {
+
+    if ( fe->end() == feIt ) {  //== Extra iteration to flush the FPGA
+      strip = 999;
+      sensor = 999;
+    } else {
+      countStrips++;
+      charge = (*feIt)->charge();
+      strip  = (*feIt)->strip();
+      sensor = (*feIt)->sensor();
+      if ( verbose ) msg << MSG::VERBOSE
                        << " NT Loop over MCVeloFEs: " << sensor 
                        << " " << strip << " " << countStrips 
                        << " " << charge << endreq;    
-
+    }
     if (sensor != previousSensor && countStrips > 1) {
       msg << MSG::DEBUG
           << " NT Sensor "  <<  previousSensor
@@ -208,6 +213,7 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
 
       // Make clusters per 32 channels in FPGA:
       // --------------------------------------
+     
       msg << MSG::VERBOSE << " NT clustering         " << nFPGAs << endreq;
       myFPGA.clustering(m_cluthreshold_ston, m_relthreshold_neig);
 
@@ -239,13 +245,15 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
       nStripshit    = 0; 
     } // end if new FPGA (i.e. new group of 32 channels) 
 
-    nStripshit++;
-    groupOfMCVeloFE.push_back(*feIt);
-    msg << MSG::VERBOSE << "      NT groupOfMCVeloFE.push_back " 
-        << " " << countStrips << " " << nStripshit 
-        << " " << groupOfMCVeloFE.size() <<   endreq;
+    if ( fe->end() != feIt ) {  //== Extra iteration to flush the FPGA
+      nStripshit++;
+      groupOfMCVeloFE.push_back(*feIt);
+      msg << MSG::VERBOSE << "      NT groupOfMCVeloFE.push_back " 
+	  << " " << countStrips << " " << nStripshit 
+	  << " " << groupOfMCVeloFE.size() <<   endreq;
     
-    previousSensor = sensor; // in case a sensor nr is required in ntuple
+      previousSensor = sensor; // in case a sensor nr is required in ntuple
+    }
   } // end loop over MCVeloFEs
   //--------------------------
     
@@ -324,6 +332,11 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
     if ( clu->nStrips() > 1 ) { 
       word += 1 << 14;
     }
+
+    if ( m_chargeThreshold < clu->charge() ) {
+      word += 1 << 13; //== High signal threshold
+    }
+
     nClusterInSensor ++;
     data.push_back( word );
     msg << MSG::VERBOSE << format( "Coded : %4x ", word ) << endreq;

@@ -1,4 +1,4 @@
-// $Id: L1VeloFPGA.cpp,v 1.1.1.1 2004-03-16 14:28:12 cattanem Exp $
+// $Id: L1VeloFPGA.cpp,v 1.1.1.1 2004/03/16 14:28:12 cattanem Exp
 // Include files 
 #include <vector> 
 
@@ -216,7 +216,7 @@ void L1VeloFPGA::cmCorrection(double thresholdSigma, int doSlopeCor) {
 }
 
 //============================================================================
-L1VeloFPGACluster L1VeloFPGA::makeCluster( std::vector<int> iDAQchannelsCluster) {
+L1VeloFPGACluster L1VeloFPGA::makeCluster( std::vector<int> iDAQchannelsCluster, double totalCharge) {
   MCVeloFE* tmpfe = NULL;
   int lowestStripNr     = 9999;
   int stripNr           = 9999;
@@ -246,10 +246,12 @@ L1VeloFPGACluster L1VeloFPGA::makeCluster( std::vector<int> iDAQchannelsCluster)
       mcVeloFEinCluster.push_back(tmpfe);
     }
   }}
+   
+
 
   int sensor = (m_groupOfMCVeloFE[0])->sensor(); 
   L1VeloFPGACluster myclus(sensor, lowestStripNr, nStrips, 
-                       nStripsFE, mcVeloFEinCluster);
+                       nStripsFE, totalCharge, mcVeloFEinCluster);
   return myclus;
 }
 
@@ -362,7 +364,7 @@ void L1VeloFPGA::clustering(double thresholdSigma, double relThresholdNeighbour,
       //----------------------------------------------------------------------
 
       if (F1*totalCharge*totalCharge > m_variance[1] ){
-	L1VeloFPGACluster myclus = makeCluster(iDAQchannelsCluster);
+	L1VeloFPGACluster myclus = makeCluster(iDAQchannelsCluster,totalCharge);
 	FPGAClusters.push_back(myclus);
       }
 

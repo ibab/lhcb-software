@@ -1,4 +1,4 @@
-// $Id: PrepareVeloL1BufferFPGA.h,v 1.1.1.1 2004-03-16 14:28:12 cattanem Exp $
+// $Id: PrepareVeloL1BufferFPGA.h,v 1.2 2004-03-19 12:44:05 parkesb Exp $
 #ifndef PREPAREVELOL1BUFFERFPGA_H 
 #define PREPAREVELOL1BUFFERFPGA_H 1
 
@@ -61,6 +61,7 @@ private:
   int         m_doslopecorrection;  ///< Do a linear or flat CM correction 
   double      m_cluthreshold_ston;  ///< Cluster Threshold (S/N) 
   double      m_relthreshold_neig;  ///< Relative signal of neighbouring strip
+  double      m_chargeThreshold; ///< bit 13 set for high charge clusters
 
   DeVelo*          m_velo;          ///< Detector element 
 };
