@@ -1,4 +1,4 @@
-// $Id: L0mTrigger.h,v 1.5 2002-11-06 15:51:20 atsareg Exp $
+// $Id: L0mTrigger.h,v 1.6 2003-06-23 12:54:45 atsareg Exp $
 
 #ifndef L0MUON_L0MTRIGGER_H
 #define L0MUON_L0MTRIGGER_H 1
@@ -41,7 +41,8 @@ private:
   std::vector<L0mCrate*> m_crates;
   
   /// Create a tower starting from a pad in M3
-  L0mTower* createTower(L0mPad* pad, const std::vector<L0mPad>& pads); 
+  L0mTower* createTower(std::vector<L0mPad>::iterator pad, 
+                        const std::vector<L0mPad>& pads); 
   /// Make L0mPads from MuonDigits 
   StatusCode makePadsFromDigits();
   /// Make L0mPads from MuonCoords 
