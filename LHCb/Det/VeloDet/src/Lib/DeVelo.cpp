@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.39 2004-02-17 21:37:13 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.40 2004-02-24 18:26:22 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -413,13 +413,13 @@ StatusCode DeVelo::rPitchAtR( VeloChannelID channel, double radius,
   }
 }
 
-// returns the phi of the strip at the specified radius for this sensor.
+// returns the local phi of the strip at the specified radius for this sensor.
 StatusCode DeVelo::phiOfStrip( VeloChannelID channel,
 			       double radius, double &phiOfStrip ) {
   return this->phiOfStrip(channel,0.,radius,phiOfStrip);
 }
 
-// returns the phi of the strip +fractional distance to strip
+// returns the local phi of the strip +fractional distance to strip
 // at the specified radius for this sensor.
 StatusCode DeVelo::phiOfStrip( VeloChannelID channel,
                                double fraction, double radius, 
@@ -671,8 +671,8 @@ StatusCode DeVelo::stripLimitsPhi( unsigned int sensor, unsigned int strip,
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-// Construct 3d point from R/phi channels (rFrac is fractional distance 
-// to strip (+/-0.5))
+// Construct 3d point in global frame from R/phi channels 
+// (rFrac is fractional distance to strip (+/-0.5))
 //=============================================================================
 StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan, 
                                    double rFrac,
@@ -747,9 +747,11 @@ StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan,
   }
   if(static_cast<unsigned int>(rZone) != iFind) return StatusCode::FAILURE;
   // Convert a local point to a global point, using the 
-  // localToGlobal method of the R sensor
-  double x=localR*cos(phiLocal);
-  double y=localR*sin(phiLocal);
+  // localToGlobal method of the Phi sensor
+  //  double x=localR*cos(phiLocal);
+  //  double y=localR*sin(phiLocal);
+  double x=rAtPhi*cos(phiLocal);
+  double y=rAtPhi*sin(phiLocal);
   sc=localToGlobal(rSensor,HepPoint3D(x,y,0),point);
   // Compute the pitches. 
   sc = this->rPitch(rChan, rPitch);
@@ -759,12 +761,14 @@ StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan,
   return StatusCode::SUCCESS;
 }
 //=========================================================================
+// REPLICATE OLD DEVELO CODE FOR TRIGGER....
+//=========================================================================
 //  Returns a range of strip matching the point, and the conversion factors
 //=========================================================================
-void DeVelo:: phiMatchingStrips( int sensor, double radius, 
-                                 int rSensor, int zone, double angularTol,
-                                 double& stripMin, double& stripMax, 
-                                 double& pitch, double& offset ) {
+void DeVelo::trgPhiMatchingStrips( int sensor, double radius, 
+                                   int rSensor, int zone, double angularTol,
+                                   double& stripMin, double& stripMax, 
+                                   double& pitch, double& offset ) {
   stripMin = -1.;
   stripMax = -1.;
   pitch    = 0.;
@@ -773,7 +777,9 @@ void DeVelo:: phiMatchingStrips( int sensor, double radius,
   if(isRSensor(sensor)) return;    // R sensor
   if(rMin(sensor) > radius ) return;
   if(rMax(sensor) < radius ) return;
-  
+  //msg << MSG::VERBOSE << "Phi Sensor " << sensor << " is type "
+  //    << (m_vpSensor[sensorIndex(sensor)]->type()) << " R Sensor " << rSensor
+  //    << " isType " << (m_vpSensor[sensorIndex(rSensor)]->type()) << endreq;
   bool isInner=false;
   if(rMin(sensor,0) < radius && rMax(sensor,0) > radius){
     isInner = true;
@@ -783,6 +789,10 @@ void DeVelo:: phiMatchingStrips( int sensor, double radius,
     sc = phiPitch(VeloChannelID(sensor,0),pitch);
   } else {
     sc = phiPitch(VeloChannelID(sensor,stripsInZone(sensor,0)),pitch);
+  }
+  if ( isDownstream(sensor) ) {
+    pitch  = -pitch;
+    offset = -offset;
   }
   //== tolerance in phi angle to match R and Phi...
   double absDz =  fabs(m_vpSensor[sensorIndex(sensor)]->z() - 
@@ -798,31 +808,34 @@ void DeVelo:: phiMatchingStrips( int sensor, double radius,
     sc = this->phiMin(rSensor,static_cast<unsigned int>(zone),phiMin);
     sc = this->phiMax(rSensor,static_cast<unsigned int>(zone),phiMax);
   }
-  phiMin += (-deltaPhi-offset);
-  phiMax += (deltaPhi-offset);
+  //  msg << MSG::VERBOSE << "Zone is " << zone << " phi min " << phiMin/degree 
+  //    << " max " << phiMax/degree << " offset " << offset/degree << endreq;
+  phiMin += -deltaPhi - offset;
+  phiMax += deltaPhi - offset;
+  
   // For unusual pairing, rotate Phi ranges to match the R zone...
   // But only in the appropriate zones...
-  /*  if ( ( phiType + rType )%2 != 0 ) {
-      if ( 0 == zone || 2 == zone ) {
+  //  if ( ( phiType + rType )%2 != 0 ) {
+  if(xSide(sensor) != xSide(rSensor)){
+    if ( 0 == zone || 2 == zone ) {
       phiMin += pi;
       phiMax += pi;
-      } else if ( 4 == zone || 5 == zone ) {
+    } else if ( 4 == zone || 5 == zone ) {
       phiMin -= pi;
       phiMax -= pi;
-      } else {
+    } else {
       return;
-      }
-      }*/
+    }
+  }
 
   stripMin = phiMin / pitch;
   stripMax = phiMax / pitch;
-  
   if ( stripMax < stripMin ) {
     double temp = stripMin;
     stripMin = stripMax;
     stripMax = temp;
   }
-  //== Phi strips are defined from 0 to nbStrips().
+  //== Phi strips are defined from 0 to nbstrips. Strip center is at +.5
   unsigned int nbPhiInner=stripsInZone(sensor,0);
   unsigned int nbStrips=numberStrips(sensor);
   if ( isInner ) {
@@ -853,5 +866,46 @@ void DeVelo:: phiMatchingStrips( int sensor, double radius,
       stripMax = nbStrips;
     }
   }
+  if ( isRight(sensor) ) offset += pi;
 }
-//=========================================================================
+// returns the phi of the strip at the specified radius for this sensor.
+StatusCode DeVelo::trgPhiOfStrip( VeloChannelID channel,
+			       double radius, double &phiOfStrip ) {
+  return this->trgPhiOfStrip(channel,0.,radius,phiOfStrip);
+}
+
+// returns the local phi of the strip +fractional distance to strip
+// at the specified radius for this sensor.
+StatusCode DeVelo::trgPhiOfStrip( VeloChannelID channel,
+                               double fraction, double radius, 
+                               double &phiOfStrip ) {
+  unsigned int sensor=channel.sensor();
+  unsigned int index=sensorIndex(sensor);
+  if(DeVeloPhiType* phiPtr = dynamic_cast<DeVeloPhiType*>(m_vpSensor[index])){
+    phiOfStrip = phiPtr->trgPhiOfStrip(channel.strip(),fraction,radius);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
+// returns the angle of the strip wrt the x axis for the strip
+StatusCode DeVelo::trgPhiDirectionOfStrip( VeloChannelID channel,
+			       double &angleOfStrip ) {
+  return this->trgPhiDirectionOfStrip(channel,0.,angleOfStrip);
+}
+
+// returns the angle of the strip wrt the x axis for
+// the strip+fractional distance to strip
+StatusCode DeVelo::trgPhiDirectionOfStrip( VeloChannelID channel,
+                               double fraction, double &angleOfStrip ) {
+  unsigned int sensor=channel.sensor();
+  unsigned int index=sensorIndex(sensor);
+  if(DeVeloPhiType* phiPtr = dynamic_cast<DeVeloPhiType*>(m_vpSensor[index])){
+    angleOfStrip = phiPtr->trgPhiDirectionOfStrip(channel.strip(),fraction);
+    return StatusCode::SUCCESS;
+  }else{
+    return StatusCode::FAILURE;
+  }
+}
+
