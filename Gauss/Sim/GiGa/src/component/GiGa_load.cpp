@@ -1,5 +1,10 @@
 /// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/15 20:54:37  ibelyaev
+/// package restructurisation
+///
 /// ===========================================================================
 #define GIGA_GIGA_LOAD_CPP 1 
 /// ===========================================================================
@@ -65,17 +70,25 @@ void GiGa_load()
   /// tracking action 
   DLL_DECL_TRACKFACTORY (    GiGaTrackActionEmpty    );
   DLL_DECL_TRACKFACTORY (    GiGaTrackActionSimple   );
+  DLL_DECL_TRACKFACTORY (    GiGaTrackActionSequence );
   /// stepping  action 
   DLL_DECL_STEPFACTORY  (    GiGaStepActionEmpty     );
   DLL_DECL_STEPFACTORY  (    GiGaStepActionDraw      );
+  DLL_DECL_STEPFACTORY  (    GiGaStepActionSequence  );
   /// event action 
   DLL_DECL_EVENTFACTORY (    GiGaEventActionEmpty    );
   DLL_DECL_EVENTFACTORY (    GiGaEventActionDraw     );
+  DLL_DECL_EVENTFACTORY (    GiGaEventActionSequence );
   ///
 }; 
-/////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 extern "C" void GiGa_loadRef() { GiGa_load(); } ; 
-/////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+
+
 
 
 

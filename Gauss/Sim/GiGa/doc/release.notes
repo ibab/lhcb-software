@@ -1,7 +1,7 @@
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
-! $Id: release.notes,v 1.31 2001-07-24 09:08:13 ibelyaev Exp $
+! $Id: release.notes,v 1.32 2001-07-24 09:48:14 ibelyaev Exp $
 ! =============================================================================
 
 Package:          GiGa
@@ -12,6 +12,9 @@ Package manager : Vanya Belyaev
      src/component/GiGaTrackActionSequence.h/.cpp
       - a new concrete Tracking Actions, it is just a sequence of 
         other tracking actions 
+     src/component/GiGaEventActionSequence.h/.cpp
+      - a new concrete Event Actions, it is just a sequence of 
+        other event actions 
 
 !===========================================================================
 ! 20010723   v Vanya Belyaev 
