@@ -1,0 +1,16 @@
+
+// PID Monitors for all tracks
+#include "$RICHRECQCOPTS/sicbpid/BrunelMoni_AllTracks.opts"
+#include "$RICHRECQCOPTS/sicbpid/AllTracks_Para.opts"
+
+// Monitors for different track types
+#include "$RICHRECQCOPTS/sicbpid/BrunelMoni_ForwardTracks.opts"
+#include "$RICHRECQCOPTS/sicbpid/ForwardTracks_Para.opts"
+#include "$RICHRECQCOPTS/sicbpid/BrunelMoni_SeedTracks.opts"
+#include "$RICHRECQCOPTS/sicbpid/SeedTracks_Para.opts"
+#include "$RICHRECQCOPTS/sicbpid/BrunelMoni_MatchTracks.opts"
+#include "$RICHRECQCOPTS/sicbpid/MatchTracks_Para.opts"
+#include "$RICHRECQCOPTS/sicbpid/BrunelMoni_UpStreamTracks.opts"
+#include "$RICHRECQCOPTS/sicbpid/UpStreamTracks_Para.opts"
+#include "$RICHRECQCOPTS/sicbpid/BrunelMoni_VeloTTTracks.opts"
+#include "$RICHRECQCOPTS/sicbpid/VeloTTTracks_Para.opts"

@@ -1,0 +1,48 @@
+
+// Monitor for final combined PIDs : 2-100 GeV/c
+RiOOPIDMonSeed2To100.MinPCut = 2;
+RiOOPIDMonSeed2To100.MaxPCut = 100;
+RiOOPIDMonSeed2To100.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonSeed2To100.MCHistoPath = "OORICH/PIDQC/SEED/2TO100/MC/"; 
+RiOOPIDMonSeed2To100.HistoPath =   "OORICH/PIDQC/SEED/2TO100/";
+RiOOPIDMonSeed2To100.TrackSelection = { "unique", "seed" };
+
+// Monitor for final combined PIDs - 0-2 GeV/c
+RiOOPIDMonSeed0To2.MinPCut = 0;
+RiOOPIDMonSeed0To2.MaxPCut = 2;
+RiOOPIDMonSeed0To2.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonSeed0To2.MCHistoPath = "OORICH/PIDQC/SEED/0TO2/MC/"; 
+RiOOPIDMonSeed0To2.HistoPath = "OORICH/PIDQC/SEED/0TO2/";
+RiOOPIDMonSeed0To2.TrackSelection = { "unique", "seed" };
+
+// Monitor for final combined PIDs - 2-10 GeV/c
+RiOOPIDMonSeed2To10.MinPCut = 2;
+RiOOPIDMonSeed2To10.MaxPCut = 10;
+RiOOPIDMonSeed2To10.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonSeed2To10.MCHistoPath = "OORICH/PIDQC/SEED/2TO10/MC/"; 
+RiOOPIDMonSeed2To10.HistoPath =   "OORICH/PIDQC/SEED/2TO10/";
+RiOOPIDMonSeed2To10.TrackSelection = { "unique", "seed" };
+
+// Monitor for final combined PIDs - 10-70 GeV/c
+RiOOPIDMonSeed10To70.MinPCut = 10;
+RiOOPIDMonSeed10To70.MaxPCut = 70;
+RiOOPIDMonSeed10To70.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonSeed10To70.MCHistoPath = "OORICH/PIDQC/SEED/10TO70/MC/"; 
+RiOOPIDMonSeed10To70.HistoPath =   "OORICH/PIDQC/SEED/10TO70/";
+RiOOPIDMonSeed10To70.TrackSelection = { "unique", "seed" };
+
+// Monitor for final combined PIDs - 70-100 GeV/c
+RiOOPIDMonSeed70To100.MinPCut = 70;
+RiOOPIDMonSeed70To100.MaxPCut = 100;
+RiOOPIDMonSeed70To100.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonSeed70To100.MCHistoPath = "OORICH/PIDQC/SEED/70TO100/MC/"; 
+RiOOPIDMonSeed70To100.HistoPath =   "OORICH/PIDQC/SEED/70TO100/";
+RiOOPIDMonSeed70To100.TrackSelection = { "unique", "seed" };
+
+// Monitor for final combined PIDs - 100+ GeV/c
+RiOOPIDMonSeed100Plus.MinPCut = 100;
+RiOOPIDMonSeed100Plus.MaxPCut = 200;
+RiOOPIDMonSeed100Plus.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonSeed100Plus.MCHistoPath = "OORICH/PIDQC/SEED/100PLUS/MC/"; 
+RiOOPIDMonSeed100Plus.HistoPath =   "OORICH/PIDQC/SEED/100PLUS/";
+RiOOPIDMonSeed100Plus.TrackSelection = { "unique", "seed" };

@@ -1,0 +1,48 @@
+
+// Monitor for final combined PIDs : 2-100 GeV/c
+RiOOPIDMonFrwd2To100.MinPCut = 2;
+RiOOPIDMonFrwd2To100.MaxPCut = 100;
+RiOOPIDMonFrwd2To100.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonFrwd2To100.MCHistoPath = "OORICH/PIDQC/FRWD/2TO100/MC/"; 
+RiOOPIDMonFrwd2To100.HistoPath =   "OORICH/PIDQC/FRWD/2TO100/";
+RiOOPIDMonFrwd2To100.TrackSelection = { "unique", "forward" };
+
+// Monitor for final combined PIDs - 0-2 GeV/c
+RiOOPIDMonFrwd0To2.MinPCut = 0;
+RiOOPIDMonFrwd0To2.MaxPCut = 2;
+RiOOPIDMonFrwd0To2.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonFrwd0To2.MCHistoPath = "OORICH/PIDQC/FRWD/0TO2/MC/"; 
+RiOOPIDMonFrwd0To2.HistoPath = "OORICH/PIDQC/FRWD/0TO2/";
+RiOOPIDMonFrwd0To2.TrackSelection = { "unique", "forward" };
+
+// Monitor for final combined PIDs - 2-10 GeV/c
+RiOOPIDMonFrwd2To10.MinPCut = 2;
+RiOOPIDMonFrwd2To10.MaxPCut = 10;
+RiOOPIDMonFrwd2To10.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonFrwd2To10.MCHistoPath = "OORICH/PIDQC/FRWD/2TO10/MC/"; 
+RiOOPIDMonFrwd2To10.HistoPath =   "OORICH/PIDQC/FRWD/2TO10/";
+RiOOPIDMonFrwd2To10.TrackSelection = { "unique", "forward" };
+
+// Monitor for final combined PIDs - 10-70 GeV/c
+RiOOPIDMonFrwd10To70.MinPCut = 10;
+RiOOPIDMonFrwd10To70.MaxPCut = 70;
+RiOOPIDMonFrwd10To70.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonFrwd10To70.MCHistoPath = "OORICH/PIDQC/FRWD/10TO70/MC/"; 
+RiOOPIDMonFrwd10To70.HistoPath =   "OORICH/PIDQC/FRWD/10TO70/";
+RiOOPIDMonFrwd10To70.TrackSelection = { "unique", "forward" };
+
+// Monitor for final combined PIDs - 70-100 GeV/c
+RiOOPIDMonFrwd70To100.MinPCut = 70;
+RiOOPIDMonFrwd70To100.MaxPCut = 100;
+RiOOPIDMonFrwd70To100.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonFrwd70To100.MCHistoPath = "OORICH/PIDQC/FRWD/70TO100/MC/"; 
+RiOOPIDMonFrwd70To100.HistoPath =   "OORICH/PIDQC/FRWD/70TO100/";
+RiOOPIDMonFrwd70To100.TrackSelection = { "unique", "forward" };
+
+// Monitor for final combined PIDs - 100+ GeV/c
+RiOOPIDMonFrwd100Plus.MinPCut = 100;
+RiOOPIDMonFrwd100Plus.MaxPCut = 200;
+RiOOPIDMonFrwd100Plus.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonFrwd100Plus.MCHistoPath = "OORICH/PIDQC/FRWD/100PLUS/MC/"; 
+RiOOPIDMonFrwd100Plus.HistoPath =   "OORICH/PIDQC/FRWD/100PLUS/";
+RiOOPIDMonFrwd100Plus.TrackSelection = { "unique", "forward" };

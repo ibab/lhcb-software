@@ -1,0 +1,48 @@
+
+// Monitor for final combined PIDs : 2-100 GeV/c
+RiSicbPIDMonMatch2To100.MinPCut = 2;
+RiSicbPIDMonMatch2To100.MaxPCut = 100;
+RiSicbPIDMonMatch2To100.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonMatch2To100.MCHistoPath = "SICBRICH/PIDQC/MATCH/2TO100/MC/"; 
+RiSicbPIDMonMatch2To100.HistoPath =   "SICBRICH/PIDQC/MATCH/2TO100/";
+RiSicbPIDMonMatch2To100.TrackSelection = { "unique", "match" };
+
+// Monitor for final combined PIDs - 0-2 GeV/c
+RiSicbPIDMonMatch0To2.MinPCut = 0;
+RiSicbPIDMonMatch0To2.MaxPCut = 2;
+RiSicbPIDMonMatch0To2.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonMatch0To2.MCHistoPath = "SICBRICH/PIDQC/MATCH/0TO2/MC/"; 
+RiSicbPIDMonMatch0To2.HistoPath = "SICBRICH/PIDQC/MATCH/0TO2/";
+RiSicbPIDMonMatch0To2.TrackSelection = { "unique", "match" };
+
+// Monitor for final combined PIDs - 2-10 GeV/c
+RiSicbPIDMonMatch2To10.MinPCut = 2;
+RiSicbPIDMonMatch2To10.MaxPCut = 10;
+RiSicbPIDMonMatch2To10.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonMatch2To10.MCHistoPath = "SICBRICH/PIDQC/MATCH/2TO10/MC/"; 
+RiSicbPIDMonMatch2To10.HistoPath =   "SICBRICH/PIDQC/MATCH/2TO10/";
+RiSicbPIDMonMatch2To10.TrackSelection = { "unique", "match" };
+
+// Monitor for final combined PIDs - 10-70 GeV/c
+RiSicbPIDMonMatch10To70.MinPCut = 10;
+RiSicbPIDMonMatch10To70.MaxPCut = 70;
+RiSicbPIDMonMatch10To70.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonMatch10To70.MCHistoPath = "SICBRICH/PIDQC/MATCH/10TO70/MC/"; 
+RiSicbPIDMonMatch10To70.HistoPath =   "SICBRICH/PIDQC/MATCH/10TO70/";
+RiSicbPIDMonMatch10To70.TrackSelection = { "unique", "match" };
+
+// Monitor for final combined PIDs - 70-100 GeV/c
+RiSicbPIDMonMatch70To100.MinPCut = 70;
+RiSicbPIDMonMatch70To100.MaxPCut = 100;
+RiSicbPIDMonMatch70To100.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonMatch70To100.MCHistoPath = "SICBRICH/PIDQC/MATCH/70TO100/MC/"; 
+RiSicbPIDMonMatch70To100.HistoPath =   "SICBRICH/PIDQC/MATCH/70TO100/";
+RiSicbPIDMonMatch70To100.TrackSelection = { "unique", "match" };
+
+// Monitor for final combined PIDs - 100+ GeV/c
+RiSicbPIDMonMatch100Plus.MinPCut = 100;
+RiSicbPIDMonMatch100Plus.MaxPCut = 200;
+RiSicbPIDMonMatch100Plus.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonMatch100Plus.MCHistoPath = "SICBRICH/PIDQC/MATCH/100PLUS/MC/"; 
+RiSicbPIDMonMatch100Plus.HistoPath =   "SICBRICH/PIDQC/MATCH/100PLUS/";
+RiSicbPIDMonMatch100Plus.TrackSelection = { "unique", "match" };

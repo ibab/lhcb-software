@@ -1,0 +1,48 @@
+
+// Monitor for final combined PIDs : 2-100 GeV/c
+RiOOPIDMonUpStrm2To100.MinPCut = 2;
+RiOOPIDMonUpStrm2To100.MaxPCut = 100;
+RiOOPIDMonUpStrm2To100.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonUpStrm2To100.MCHistoPath = "OORICH/PIDQC/UPSTRM/2TO100/MC/"; 
+RiOOPIDMonUpStrm2To100.HistoPath =   "OORICH/PIDQC/UPSTRM/2TO100/";
+RiOOPIDMonUpStrm2To100.TrackSelection = { "unique", "upstream" };
+
+// Monitor for final combined PIDs - 0-2 GeV/c
+RiOOPIDMonUpStrm0To2.MinPCut = 0;
+RiOOPIDMonUpStrm0To2.MaxPCut = 2;
+RiOOPIDMonUpStrm0To2.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonUpStrm0To2.MCHistoPath = "OORICH/PIDQC/UPSTRM/0TO2/MC/"; 
+RiOOPIDMonUpStrm0To2.HistoPath = "OORICH/PIDQC/UPSTRM/0TO2/";
+RiOOPIDMonUpStrm0To2.TrackSelection = { "unique", "upstream" };
+
+// Monitor for final combined PIDs - 2-10 GeV/c
+RiOOPIDMonUpStrm2To10.MinPCut = 2;
+RiOOPIDMonUpStrm2To10.MaxPCut = 10;
+RiOOPIDMonUpStrm2To10.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonUpStrm2To10.MCHistoPath = "OORICH/PIDQC/UPSTRM/2TO10/MC/"; 
+RiOOPIDMonUpStrm2To10.HistoPath =   "OORICH/PIDQC/UPSTRM/2TO10/";
+RiOOPIDMonUpStrm2To10.TrackSelection = { "unique", "upstream" };
+
+// Monitor for final combined PIDs - 10-70 GeV/c
+RiOOPIDMonUpStrm10To70.MinPCut = 10;
+RiOOPIDMonUpStrm10To70.MaxPCut = 70;
+RiOOPIDMonUpStrm10To70.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonUpStrm10To70.MCHistoPath = "OORICH/PIDQC/UPSTRM/10TO70/MC/"; 
+RiOOPIDMonUpStrm10To70.HistoPath =   "OORICH/PIDQC/UPSTRM/10TO70/";
+RiOOPIDMonUpStrm10To70.TrackSelection = { "unique", "upstream" };
+
+// Monitor for final combined PIDs - 70-100 GeV/c
+RiOOPIDMonUpStrm70To100.MinPCut = 70;
+RiOOPIDMonUpStrm70To100.MaxPCut = 100;
+RiOOPIDMonUpStrm70To100.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonUpStrm70To100.MCHistoPath = "OORICH/PIDQC/UPSTRM/70TO100/MC/"; 
+RiOOPIDMonUpStrm70To100.HistoPath =   "OORICH/PIDQC/UPSTRM/70TO100/";
+RiOOPIDMonUpStrm70To100.TrackSelection = { "unique", "upstream" };
+
+// Monitor for final combined PIDs - 100+ GeV/c
+RiOOPIDMonUpStrm100Plus.MinPCut = 100;
+RiOOPIDMonUpStrm100Plus.MaxPCut = 200;
+RiOOPIDMonUpStrm100Plus.InputPIDs = "Rec/Rich/OOPIDs"; 
+RiOOPIDMonUpStrm100Plus.MCHistoPath = "OORICH/PIDQC/UPSTRM/100PLUS/MC/"; 
+RiOOPIDMonUpStrm100Plus.HistoPath =   "OORICH/PIDQC/UPSTRM/100PLUS/";
+RiOOPIDMonUpStrm100Plus.TrackSelection = { "unique", "upstream" };

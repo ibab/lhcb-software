@@ -1,0 +1,48 @@
+
+// Monitor for final combined PIDs : 2-100 GeV/c
+RiSicbPIDMonVTT2To100.MinPCut = 2;
+RiSicbPIDMonVTT2To100.MaxPCut = 100;
+RiSicbPIDMonVTT2To100.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonVTT2To100.MCHistoPath = "SICBRICH/PIDQC/VTT/2TO100/MC/"; 
+RiSicbPIDMonVTT2To100.HistoPath =   "SICBRICH/PIDQC/VTT/2TO100/";
+RiSicbPIDMonVTT2To100.TrackSelection = { "unique", "veloTT" };
+
+// Monitor for final combined PIDs - 0-2 GeV/c
+RiSicbPIDMonVTT0To2.MinPCut = 0;
+RiSicbPIDMonVTT0To2.MaxPCut = 2;
+RiSicbPIDMonVTT0To2.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonVTT0To2.MCHistoPath = "SICBRICH/PIDQC/VTT/0TO2/MC/"; 
+RiSicbPIDMonVTT0To2.HistoPath = "SICBRICH/PIDQC/VTT/0TO2/";
+RiSicbPIDMonVTT0To2.TrackSelection = { "unique", "veloTT" };
+
+// Monitor for final combined PIDs - 2-10 GeV/c
+RiSicbPIDMonVTT2To10.MinPCut = 2;
+RiSicbPIDMonVTT2To10.MaxPCut = 10;
+RiSicbPIDMonVTT2To10.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonVTT2To10.MCHistoPath = "SICBRICH/PIDQC/VTT/2TO10/MC/"; 
+RiSicbPIDMonVTT2To10.HistoPath =   "SICBRICH/PIDQC/VTT/2TO10/";
+RiSicbPIDMonVTT2To10.TrackSelection = { "unique", "veloTT" };
+
+// Monitor for final combined PIDs - 10-70 GeV/c
+RiSicbPIDMonVTT10To70.MinPCut = 10;
+RiSicbPIDMonVTT10To70.MaxPCut = 70;
+RiSicbPIDMonVTT10To70.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonVTT10To70.MCHistoPath = "SICBRICH/PIDQC/VTT/10TO70/MC/"; 
+RiSicbPIDMonVTT10To70.HistoPath =   "SICBRICH/PIDQC/VTT/10TO70/";
+RiSicbPIDMonVTT10To70.TrackSelection = { "unique", "veloTT" };
+
+// Monitor for final combined PIDs - 70-100 GeV/c
+RiSicbPIDMonVTT70To100.MinPCut = 70;
+RiSicbPIDMonVTT70To100.MaxPCut = 100;
+RiSicbPIDMonVTT70To100.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonVTT70To100.MCHistoPath = "SICBRICH/PIDQC/VTT/70TO100/MC/"; 
+RiSicbPIDMonVTT70To100.HistoPath =   "SICBRICH/PIDQC/VTT/70TO100/";
+RiSicbPIDMonVTT70To100.TrackSelection = { "unique", "veloTT" };
+
+// Monitor for final combined PIDs - 100+ GeV/c
+RiSicbPIDMonVTT100Plus.MinPCut = 100;
+RiSicbPIDMonVTT100Plus.MaxPCut = 200;
+RiSicbPIDMonVTT100Plus.InputPIDs = "Rec/Rich/SICBPIDs"; 
+RiSicbPIDMonVTT100Plus.MCHistoPath = "SICBRICH/PIDQC/VTT/100PLUS/MC/"; 
+RiSicbPIDMonVTT100Plus.HistoPath =   "SICBRICH/PIDQC/VTT/100PLUS/";
+RiSicbPIDMonVTT100Plus.TrackSelection = { "unique", "veloTT" };

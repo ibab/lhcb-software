@@ -1,0 +1,19 @@
+
+// Setup Track association tools
+ToolSvc.TrackToMCP.Location = "Rec/Relations/Tr2MCP";
+
+// PID Monitors for all tracks
+#include "$RICHRECQCOPTS/oopid/DaVinciMoni_AllTracks.opts"
+#include "$RICHRECQCOPTS/oopid/AllTracks_Para.opts"
+
+// Monitors for different track types
+#include "$RICHRECQCOPTS/oopid/DaVinciMoni_ForwardTracks.opts"
+#include "$RICHRECQCOPTS/oopid/ForwardTracks_Para.opts"
+#include "$RICHRECQCOPTS/oopid/DaVinciMoni_SeedTracks.opts"
+#include "$RICHRECQCOPTS/oopid/SeedTracks_Para.opts"
+#include "$RICHRECQCOPTS/oopid/DaVinciMoni_MatchTracks.opts"
+#include "$RICHRECQCOPTS/oopid/MatchTracks_Para.opts"
+#include "$RICHRECQCOPTS/oopid/DaVinciMoni_UpStreamTracks.opts"
+#include "$RICHRECQCOPTS/oopid/UpStreamTracks_Para.opts"
+#include "$RICHRECQCOPTS/oopid/DaVinciMoni_VeloTTTracks.opts"
+#include "$RICHRECQCOPTS/oopid/VeloTTTracks_Para.opts"

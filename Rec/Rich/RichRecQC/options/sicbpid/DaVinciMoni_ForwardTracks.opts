@@ -1,0 +1,13 @@
+
+// Monitor for final combined PIDs : 2-100 GeV/c
+ApplicationMgr.TopAlg += { "RichPIDQC/RiSicbPIDMonFrwd2To100" };
+// Monitor for final combined PIDs - 0-2 GeV/c
+ApplicationMgr.TopAlg += { "RichPIDQC/RiSicbPIDMonFrwd0To2" };
+// Monitor for final combined PIDs - 2-10 GeV/c
+ApplicationMgr.TopAlg += { "RichPIDQC/RiSicbPIDMonFrwd2To10" };
+// Monitor for final combined PIDs - 10-70 GeV/c
+ApplicationMgr.TopAlg += { "RichPIDQC/RiSicbPIDMonFrwd10To70" };
+// Monitor for final combined PIDs - 70-100 GeV/c
+ApplicationMgr.TopAlg += { "RichPIDQC/RiSicbPIDMonFrwd70To100" };
+// Monitor for final combined PIDs - 100+ GeV/c
+ApplicationMgr.TopAlg += { "RichPIDQC/RiSicbPIDMonFrwd100Plus" };

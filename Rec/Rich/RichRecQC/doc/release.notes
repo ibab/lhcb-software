@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichRecQC
+! Responsible : Chris Jones
+! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
+!-----------------------------------------------------------------------------
+
+! 2003-05-11 - Chris Jones
+ - First version
+ - Formerly contained in RichMonitor 
