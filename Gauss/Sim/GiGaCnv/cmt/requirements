@@ -2,6 +2,9 @@
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2001/07/27 11:24:57  ibelyaev
+# bug fix in MCParticles<->MCVertices relations
+#
 # Revision 1.9  2001/07/24 11:13:54  ibelyaev
 # package restructurization(III) and update for newer GiGa
 # 
@@ -16,7 +19,7 @@ include_dirs     $(GIGACNVROOT)
 
 use GiGa          v6*   Sim 
 use LHCbEvent     v11*	Event
-use DetDesc       v7*	Det
+use DetDesc       v8*	Det
 
 # ============== linker library (base classes) ================================
 library          GiGaCnvLib            Lib/*.cpp

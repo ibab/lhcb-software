@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.6  2001/08/12 17:24:53  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.5  2001/07/25 17:19:32  ibelyaev
 /// all conversions now are moved from GiGa to GiGaCnv
 ///
@@ -24,6 +27,7 @@
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/CLIDLVolume.h"
 #include "DetDesc/LVolume.h"
+#include "DetDesc/Surface.h"
 /// Geant4
 #include "G4LogicalVolume.hh"
 #include "G4LogicalVolumeStore.hh"
