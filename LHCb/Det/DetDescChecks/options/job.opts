@@ -1,0 +1,70 @@
+#include "$STDOPTS/DetDesc.opts"
+
+ApplicationMgr.DLLs   += { "DetDescChecks" };
+ApplicationMgr.DLLs   += { "HbookCnv"};
+
+//ApplicationMgr.TopAlg += { "MaterialBudgetAlg"} ;
+ApplicationMgr.TopAlg += { "VolumeCheckAlg"} ;
+
+ApplicationMgr.HistogramPersistency = "HBOOK";
+
+HistogramPersistencySvc.OutputFile = "histo.hbook";
+
+ApplicationMgr.EvtSel     = "NONE" ;
+ApplicationMgr.EvtMax     = 4 ;
+
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v247r0.xml";
+
+
+// VolumeCheckAlg options:
+
+VolumeCheckAlg.Shoots3D    =200;
+VolumeCheckAlg.ShootsXY    =200;
+VolumeCheckAlg.ShootsYZ    =200;
+VolumeCheckAlg.ShootsZX    =200;
+
+//VolumeCheckAlg.Volume = "/dd/Geometry/Pipe/BeamPipe";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Magnet/Magnet";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Prs/lvPrs";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Spd/lvSpd";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Rich2/lvRich2Master";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Tracker/lvTrackerVolume";
+
+VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo";
+
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvPuStation";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVeloDStation";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVeloUStation";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVeloDetector";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVeloRDetector";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVeloPhiDetector";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVeloPaddle";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVelo2Supports";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvVeloPuSupport";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvMFLO";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvMBLO";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvRFFoil";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvRFTopFrame";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Velo/lvRFBox";
+
+//VolumeCheckAlg.Volume = "/dd/Geometry/Rich1/lvRich1Master";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Muon/lvMuon";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Ecal/Installation/Ecal";
+//VolumeCheckAlg.Volume = "/dd/Geometry/Hcal/Installation/lvHcal";
+
+
+
+////////////////////////////////////////////////////////////////////
+// MaterialBudgetAlg options: 
+
+//MaterialBudgetAlg.Shoots   = 10000;
+
+//MaterialBudgetAlg.ZPlane   = 8000.0;
+
+//MaterialBudgetAlg.xMax     = 1000.0;
+//MaterialBudgetAlg.yMax     = 1000.0;
+//MaterialBudgetAlg.xMin     = -4000.0;
+//MaterialBudgetAlg.yMin     = -3000.0;
+
+
+MessageSvc.OutputLevel = 1;

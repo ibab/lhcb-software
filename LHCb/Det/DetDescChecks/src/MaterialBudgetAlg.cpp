@@ -1,8 +1,11 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.1.1.1 2002-05-26 12:47:06 ibelyaev Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.2 2002-07-03 08:53:27 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/05/26 12:47:06  ibelyaev
+// New package: collection of components for checks of Detector Description
+//
 // ============================================================================
 // Include files
 // STL & STD 
@@ -261,8 +264,7 @@ StatusCode MaterialBudgetAlg::execute()
       // point at reference plane  
       const HepPoint3D point( m_xMin + dx * flat.shoot() ,
                               m_yMin + dy * flat.shoot() ,
-                              m_z                        );
-      
+                              m_z                        );      
       // evaluate the distance 
       const double dist = 
         m_trSvc -> distanceInRadUnits( m_vertex , point );

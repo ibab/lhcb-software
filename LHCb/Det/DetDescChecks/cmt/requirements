@@ -11,11 +11,36 @@ branches          cmt doc src options
 use DetDesc      v10r*  Det
 use AIDA         v2r2   	
 	
+# ==========================================
+# Main program and standard job options
+use GaudiConf     v6*     
+
+# GAUDI framework
+use GaudiSys      v10r*
+
+# Event model converters
+use DbCnv         v7r*   Event
+
+# ROOT event persistency
+# use GaudiRootDb   v7r*
+
+# Histogram persistency
+use HbookCnv      v12r*
+
+#geometry source 
+use XmlDDDB       v12r*   Det
+
 # =============================================================================
 library          DetDescChecks   *.cpp
 
+#==============================================================================
+application      CheckApp *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
+
 # =============================================================================
 apply_pattern    component_library library=DetDescChecks 
+
+apply_pattern application_path 
+macro MatCheck_linkopts  "$(application_linkopts)"
 
 # =============================================================================
 # The END 
