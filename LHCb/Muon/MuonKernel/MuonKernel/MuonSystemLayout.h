@@ -1,4 +1,4 @@
-// $Id: MuonSystemLayout.h,v 1.1.1.1 2002-01-28 08:48:24 atsareg Exp $
+// $Id: MuonSystemLayout.h,v 1.2 2002-01-31 10:13:24 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONSYSTEMLAYOUT_H
 #define MUONKERNEL_MUONSYSTEMLAYOUT_H 1   
@@ -55,12 +55,21 @@ public:
   grid(const  MuonSystemID& id) const { 
     int reg = id.region();
     int st  = id.station();
-    return make_pair(xGrid(st,reg),yGrid(st,reg)); 
+    return std::make_pair(xGrid(st,reg),yGrid(st,reg)); 
   } 
   /// Accessor to X granularity
   int xGrid(int st, int reg) const { return stationLayout(st).xGrid(reg); }
   /// Accessor to Y granularity
   int yGrid(int st, int reg) const { return stationLayout(st).yGrid(reg); }  
+  
+  /** find a vector of MuonSystemID's defined in terms of this MuonLayout
+      which are touched by an area around a given MuonSystemID defined 
+      in its own MuonLayout 
+      
+      @param pad   :  tile defining the area covered
+  */          
+
+  virtual std::vector<MuonSystemID> tiles(const MuonSystemID& pad) const;
   
   /** find a vector of MuonSystemID's defined in terms of this MuonSystemLayout
       which are touched by an area around a given MuonSystemID defined 
@@ -71,9 +80,9 @@ public:
       @param areaY : limits of the search area in Y
   */          
 
-  virtual std::vector<MuonSystemID> tiles(const MuonSystemID& pad, 
-			        	  int areaX = 0 ,
-			        	  int areaY = 0 ) const;    
+  virtual std::vector<MuonSystemID> tilesInArea(const MuonSystemID& pad, 
+			        		int areaX,
+			        		int areaY) const;    
 				    
   /// returns a vector of its MuonSystemID's. 
   /// Implementation of the IMuonLayout	interface

@@ -1,4 +1,4 @@
-// $Id: MuonLayout.cpp,v 1.1.1.1 2002-01-28 08:48:23 atsareg Exp $
+// $Id: MuonLayout.cpp,v 1.2 2002-01-31 10:13:45 atsareg Exp $
 // Include files
 #include <iostream>
 #include "MuonKernel/MuonLayout.h"
@@ -73,8 +73,13 @@ int MuonLayout::region(int ix, int iy) const {
     
 }
 
-std::vector<MuonSystemID> MuonLayout::tiles(const MuonSystemID& pad, 
-					int areaX, int areaY) const {
+std::vector<MuonSystemID> MuonLayout::tiles(const MuonSystemID& pad) const {
+  return tilesInArea(pad,0,0);
+}
+
+std::vector<MuonSystemID> MuonLayout::tilesInArea(const MuonSystemID& pad, 
+					          int areaX, 
+						  int areaY) const {
 					
 //  This function returns all the MuonSystemID's touched by the "pad"
 //  defined with the "playout" MuonLayout +- areaX and +- areaY	
@@ -205,9 +210,9 @@ std::vector<MuonSystemID> MuonLayout::tilesInRegion(const MuonSystemID& pad,
   int nq = pad.quarter();
   
   if(nr == pregion) {
-    return tiles(pad,0,0);    
+    return tiles(pad);    
   } else {
-    std::vector<MuonSystemID> vmt = tiles(pad,0,0); 
+    std::vector<MuonSystemID> vmt = tiles(pad); 
     for(int it=0; it<5; it++) {
       vmt.pop_back();
     }
@@ -232,9 +237,6 @@ std::vector<MuonSystemID> MuonLayout::tilesInRegion(const MuonSystemID& pad,
 	  }
 	}
       }
-    }
-    for(int it=0; it<5; it++) {
-      nvmt.push_back(MuonSystemID(0,0,0,*this,0,0,10,10));
     }
     return nvmt;
   }

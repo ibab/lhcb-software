@@ -1,4 +1,4 @@
-// $Id: MuonStationLayout.cpp,v 1.1.1.1 2002-01-28 08:48:23 atsareg Exp $
+// $Id: MuonStationLayout.cpp,v 1.2 2002-01-31 10:13:45 atsareg Exp $
 // Include files
 #include <iostream>
 #include "MuonKernel/MuonStationLayout.h"
@@ -43,12 +43,16 @@ MuonStationLayout::MuonStationLayout(const MuonLayout& lq) {
 
 MuonStationLayout::~MuonStationLayout() {}
 
+std::vector<MuonSystemID> 
+MuonStationLayout::tiles(const MuonSystemID& pad) const {
+  return tilesInArea(pad,0,0);
+}
 
-std::vector<MuonSystemID> MuonStationLayout::tiles(const MuonSystemID& pad, 
+std::vector<MuonSystemID> MuonStationLayout::tilesInArea(const MuonSystemID& pad, 
 					int areaX, int areaY) const {
 					
   int reg = pad.region();
-  return m_layouts[reg].tiles(pad,areaX,areaY);
+  return m_layouts[reg].tilesInArea(pad,areaX,areaY);
 
 }
 

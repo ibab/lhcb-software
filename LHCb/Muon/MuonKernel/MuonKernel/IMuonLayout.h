@@ -1,4 +1,4 @@
-// $Id: IMuonLayout.h,v 1.1.1.1 2002-01-28 08:48:24 atsareg Exp $
+// $Id: IMuonLayout.h,v 1.2 2002-01-31 10:13:24 atsareg Exp $
 
 #ifndef MUONKERNEL_IMUONLAYOUT_H
 #define MUONKERNEL_IMUONLAYOUT_H     1
@@ -26,6 +26,15 @@ public:
               grid(const MuonSystemID& id) const = 0 ;
 	      
     /** find a vector of MuonSystemID's defined in terms of this MuonLayout
+	which are touched by an area around a given MuonSystemID defined 
+	in its own MuonLayout 
+
+	@param pad   :  tile defining the area covered
+    */          
+
+    virtual std::vector<MuonSystemID> tiles(const MuonSystemID& pad) const = 0; 	      
+	      
+    /** find a vector of MuonSystemID's defined in terms of this MuonLayout
       which are touched by an area around a given MuonSystemID defined 
       in its own MuonLayout 
       
@@ -33,9 +42,9 @@ public:
       @param areaX : limits of the search area in X in units of central pad
       @param areaY : limits of the search area in Y in units of central pad
     */ 
-    virtual std::vector<MuonSystemID> tiles(const MuonSystemID& pad, 
-			                    int areaX = 0 ,
-			                    int areaY = 0 ) const = 0;    	      
+    virtual std::vector<MuonSystemID> tilesInArea(const MuonSystemID& pad, 
+			                	  int areaX,
+			                	  int areaY) const = 0; 		 
 				   	  
     /// Generate all the MuonSystemID's in the layout
     virtual std::vector<MuonSystemID> tiles() const = 0; 					  
