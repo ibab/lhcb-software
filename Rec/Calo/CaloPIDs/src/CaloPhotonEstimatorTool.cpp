@@ -24,6 +24,20 @@
 /// local
 #include "CaloPhotonEstimatorTool.h"
 
+
+// ============================================================================
+/** @file
+ *
+ *  Implementation file for class CaloPhotonEstimatorTool
+ *  Photon Selection Tool
+ *  (LHCb 2004-03)
+ *
+ *  @author Frédéric Machefert frederic.machefert@in2p3.fr
+ *  @date   2004-15-04
+ */
+
+// ============================================================================
+
 // Instantiation of a static factory class used by clients to create
 // instances of this tool
 
@@ -44,12 +58,11 @@ CaloPhotonEstimatorTool::CaloPhotonEstimatorTool(const std::string& type,
 //  , m_nameOfPRS  ("DeCalorimeterLocation::Prs")
 //  , m_nameOfSPD  ("DeCalorimeterLocation::Spd")
 
-
-  , m_z         ( -100.*km )
   , m_zPrs      ( -100.*km )
   , m_zSpd      ( -100.*km )
+  , m_shiftSpd  (  30.5*mm )
 
-  , m_histoSvc  ( 0        )
+//  , m_histoSvc  ( 0        )
 
   , m_matchType   ("AssociatorWeighted<CaloCluster,TrStoredTrack,float>")
   , m_matchName   ("PhotonMatch")
@@ -76,7 +89,7 @@ CaloPhotonEstimatorTool::CaloPhotonEstimatorTool(const std::string& type,
   , m_backgrShapeData    (   )
   , m_backgrShapeSpdData (   )
 
-  , m_monitoring         (true)
+//  , m_monitoring         (true)
   , m_extrapol           (true)
 {
   declareInterface<IIncidentListener> (this);
@@ -86,13 +99,15 @@ CaloPhotonEstimatorTool::CaloPhotonEstimatorTool(const std::string& type,
   declareProperty("DetPrs",m_nameOfPRS);
   declareProperty("DetSpd",m_nameOfSPD);
 
-  declareProperty( "MatchingType" , m_matchType  ) ;
-  declareProperty( "MatchingName" , m_matchName  ) ;
+  declareProperty("ShiftSPDCell",m_shiftSpd);
 
-  declareProperty("EBin"						 ,m_eBin);
-  declareProperty("binningEPrs"			 ,m_binningEPrs);
-  declareProperty("binningChi2"			 ,m_binningChi2);
-  declareProperty("binningShap"			 ,m_binningShap);
+  declareProperty( "MatchType" , m_matchType  ) ;
+  declareProperty( "MatchName" , m_matchName  ) ;
+
+  declareProperty("EBin"             ,m_eBin);
+  declareProperty("EPrsbin"          ,m_binningEPrs);
+  declareProperty("Chi2Bin"          ,m_binningChi2);
+  declareProperty("ShapBin"          ,m_binningShap);
   declareProperty("EPrsSignal"       ,m_signalEPrsData);
   declareProperty("EPrsSpdSignal"    ,m_signalEPrsSpdData);
   declareProperty("EPrsBackground"   ,m_backgrEPrsData);
@@ -106,7 +121,6 @@ CaloPhotonEstimatorTool::CaloPhotonEstimatorTool(const std::string& type,
   declareProperty("ShapBackground"   ,m_backgrShapeData);
   declareProperty("ShapSpdBackground",m_backgrShapeSpdData);
 
-  declareProperty("Monitoring"       ,m_monitoring);
   declareProperty("Extrapolation"    ,m_extrapol);
 }
 // ============================================================================
@@ -161,39 +175,26 @@ StatusCode CaloPhotonEstimatorTool::initialize ()
   m_detSpd = (DeCalorimeter*) detspd;
   m_detPrs = (DeCalorimeter*) detprs;
 
-  const IGeometryInfo* geoinf = m_detEcal->geometry() ;
-  if( 0 == geoinf ) { return Error("IGeotryInfo is not available!"); }
-  // center of the detector in mother reference frame
-  HepPoint3D center = geoinf->toGlobal( HepPoint3D() );
-  m_z = center.z() + m_detEcal->zShowerMax ();
-
   const IGeometryInfo* geoinfSpd = m_detSpd->geometry() ;
   if( 0 == geoinfSpd ) { return Error("IGeotryInfo is not available!"); }
   // center of the detector in mother reference frame
   HepPoint3D centerSpd = geoinfSpd->toGlobal( HepPoint3D() );
   m_zSpd = centerSpd.z();
 
-
-  m_shiftSpd=30.5;
-  logbk<<MSG::WARNING<<"Spd SCINTILLATOR POSITION : HARD CODED !!!"<<endreq;
-  logbk<<MSG::INFO<<"Spd scintillator z position : shift="<<m_shiftSpd<<endreq;
-
   const IGeometryInfo* geoinfPrs = m_detPrs->geometry() ;
   if( 0 == geoinfPrs ) { return Error("IGeotryInfo is not available!"); }
   // center of the detector in mother reference frame
   HepPoint3D centerPrs = geoinfPrs->toGlobal( HepPoint3D() );
   m_zPrs = centerPrs.z();
-  
+
   // locate match
   m_match  = tool<IMatch>( m_matchType  , m_matchName ) ;
   if( 0 == m_match  ) { return StatusCode::FAILURE ; }
-  
+
   // IP
-  logbk<<MSG::WARNING<<"Vertex located at (0.,0.,0.) !"<<endreq;
   m_vertex=HepPoint3D(0.,0.,0.);
 
   // Check data consistency
-  unsigned int nEbin=m_eBin.size()+1;
   if (m_binningEPrs.size()!=3)
   { return Error("Wrong Binning Parameter (EPrs)"); }
   if (m_binningChi2.size()!=3)
@@ -221,13 +222,14 @@ StatusCode CaloPhotonEstimatorTool::initialize ()
   }
 
 
-
+/*
 // Pdf Histograms
   if (m_monitoring){
+    unsigned int nEbin=m_eBin.size()+1;
     m_histoSvc = svc<IHistogramSvc> ( "HistogramDataSvc", true );
-    
+
     logbk<<MSG::DEBUG<<"HistogramDataSvc is loaded properly!!"<<endreq;
-  
+
     m_signalEPrs=makeHisto
       (int(m_binningEPrs[ 0 ]),m_binningEPrs[ 1 ],m_binningEPrs[ 2 ],
        100, std::string("Signal Prs noSpdHit"),
@@ -243,7 +245,7 @@ StatusCode CaloPhotonEstimatorTool::initialize ()
        300, std::string("Signal Shower Shape noSpdHit"),
        std::string("/stat/PhotonPdf"),
        m_signalShapeData,nEbin);
-    
+
     m_signalEPrsSpd=makeHisto
       (int(m_binningEPrs[ 0 ]),m_binningEPrs[ 1 ],m_binningEPrs[ 2 ],
        110, std::string("Signal Prs SpdHit"),
@@ -259,7 +261,7 @@ StatusCode CaloPhotonEstimatorTool::initialize ()
        310, std::string("Signal Shower Shape SpdHit"),
        std::string("/stat/PhotonPdf"),
        m_signalShapeData,nEbin);
-    
+
     m_backgrEPrs=makeHisto
       (int(m_binningEPrs[ 0 ]),m_binningEPrs[ 1 ],m_binningEPrs[ 2 ],
        1100, std::string("Background Prs noSpdHit"),
@@ -275,7 +277,7 @@ StatusCode CaloPhotonEstimatorTool::initialize ()
        1300, std::string("Background Shower Shape noSpdHit"),
        std::string("/stat/PhotonPdf"),
        m_backgrShapeData,nEbin);
-    
+
     m_backgrEPrsSpd=makeHisto
       (int(m_binningEPrs[ 0 ]),m_binningEPrs[ 1 ],m_binningEPrs[ 2 ],
        1110, std::string("Background Prs SpdHit"),
@@ -291,13 +293,20 @@ StatusCode CaloPhotonEstimatorTool::initialize ()
        1310, std::string("Background Shower Shape SpdHit"),
        std::string("/stat/PhotonPdf"),
        m_backgrShapeData,nEbin);
-    
-    m_likelihood = 
+
+    m_likelihood =
       m_histoSvc->book(std::string("/stat/PhotonPdf")         ,
                        10                                         ,
                        "CaloHypo Photon Likelihood Distribution"  ,
                        100,0.,1.                                   ) ;
   }
+*/
+
+  // General WARNING
+  logbk<<MSG::WARNING<<"SPD scintillator offset HARD-CODED : value="
+       <<m_shiftSpd<<endreq;
+  logbk<<MSG::WARNING<<"Vertex location HARD-CODED : IP(0.,0.,0.)"<<endreq;
+
   return StatusCode::SUCCESS ;
 };
 
@@ -332,49 +341,56 @@ void CaloPhotonEstimatorTool::handle( const Incident& /* incident */  )
 // ============================================================================
 double CaloPhotonEstimatorTool::likelihood(const CaloHypo* hypo )  const
 {
+  MsgStream logbk( msgSvc() , name() );
+
   // Get the relevant information - basic checks
 
   if( 0 == hypo )
     { return Exception( " *CaloHypo* points to NULL " );}
 
-  if( 1 != hypo->clusters().size() )
-    { return Exception( " *CaloHypo::clusters* number of clusters != 1" );}
+  if( 1 != hypo->clusters().size() ){
+    logbk<<MSG::DEBUG<<"Number of clusters != 1"<<endreq;
+    return -1.;
+  }
 
   const SmartRef<CaloCluster> cluster=hypo->clusters().front();
-  if (hypo->clusters().size()!=1) {
-    Warning("Photon Hypothesis has more or less 1 cluster...");
+
+  if ( 0 == cluster ){
+    return Exception( " *CaloCluster* points to NULL " );
   }
-  
-  
-  if ( 0 == cluster )
-  { return Exception( " *CaloCluster* points to NULL " ); }
-  
-  if( cluster->entries().empty() )
-  { return Exception( " *CaloCluster* empty " );}
-  
+
+  if( cluster->entries().empty() ){
+    return Exception( " *CaloCluster* empty " );
+  }
+
   CaloCluster::Entries::const_iterator iseed =
     ClusterFunctors::locateDigit( cluster->entries().begin() ,
                                   cluster->entries().end  () ,
                                   CaloDigitStatus::SeedCell  ) ;
-  if( iseed == cluster->entries().end() )
-  { return Exception( " *SeedCell* not found ");}
-  
+
+  if( iseed == cluster->entries().end() ){
+    return Exception( " *SeedCell* not found ");
+  }
+
   const CaloDigit* seed = iseed->digit();
-  if( 0 == seed )
-  { return Exception( " SeedCell *Digit* points to NULL! ");}
+  if( 0 == seed ){
+    return Exception( " SeedCell *Digit* points to NULL! ");
+  }
+
   //***
   // Evaluate Estimator Parameters : Energy, EPrs, Chi2 and Shower Shape ...
-  
+
   const CaloPosition *pos = hypo->position() ;
   const  HepPoint3D position (pos->x(),pos->y(),pos->z());
-  
+
   // Energy
   double energy=hypo->momentum()->momentum().e();
+  double et=hypo->momentum()->momentum().perp();
   /// Chi2
   double chi2;
   const Table* table = m_match->direct();
   if( 0 == table     ) { return Error("Table* points to NULL!");} // RETURN
-  
+
   const Range range = table->relations( cluster ) ;
   if( range.empty() )  { chi2=1.e+6; }            // bad match -> large value !
   else {
@@ -385,7 +401,7 @@ double CaloPhotonEstimatorTool::likelihood(const CaloHypo* hypo )  const
   //Spd hit and Prs deposit
   double eSpd=0.;
   double ePrs=0.;
-  
+
   // point in the detector
   HepPoint3D spdPoint,prsPoint;
   if (!m_extrapol){
@@ -407,10 +423,10 @@ double CaloPhotonEstimatorTool::likelihood(const CaloHypo* hypo )  const
       ( position.z() - m_vertex.z() );
     prsPoint +=  m_vertex ;
   }
-  
+
   const CaloCellID cellSpd = m_detSpd->Cell( spdPoint );
   const CaloCellID cellPrs = m_detPrs->Cell( prsPoint );
-  
+
 	// Get CaloCell Deposits in the SPD and PRS
   if( !(CaloCellID() == cellSpd) ) { // valid cell!
 	  for (SmartRefVector<CaloDigit>::const_iterator
@@ -421,7 +437,7 @@ double CaloPhotonEstimatorTool::likelihood(const CaloHypo* hypo )  const
 	    }
 	  }
 	}
-  
+
 	if( !(CaloCellID() == cellPrs)  ) { // valid cell!
 	  for (SmartRefVector<CaloDigit>::const_iterator
            digit=hypo->digits().begin() ;
@@ -431,10 +447,10 @@ double CaloPhotonEstimatorTool::likelihood(const CaloHypo* hypo )  const
       }
 	  }
   }
-  
+
   // ***
   // Likelihood correspond to that point
-  
+
   // Corresponding Energy bin
 	unsigned int ebin = bin(energy,m_eBin);
 	unsigned int eprsbin, chi2bin,shapbin;
@@ -443,7 +459,7 @@ double CaloPhotonEstimatorTool::likelihood(const CaloHypo* hypo )  const
 	double estimator;
   double signal, backgr;
 	signal=1.; 	backgr=1.;
-  
+
   // SPD Hit
   if (eSpd>1) {
     eprsbin = bin(ePrs,m_ePrsBin);
@@ -478,9 +494,18 @@ double CaloPhotonEstimatorTool::likelihood(const CaloHypo* hypo )  const
 
 
   estimator=(signal+backgr>0.)?signal/(signal+backgr):-1.;
-  
-  if (m_monitoring) {m_likelihood->fill(estimator, 1.);}
-  
+
+  logbk<<MSG::DEBUG<<"Photon Candidate :"<<endreq;
+  logbk<<MSG::DEBUG<<" -E       ="<<energy<<endreq;
+  logbk<<MSG::DEBUG<<" -Et      ="<<et<<endreq;
+  logbk<<MSG::DEBUG<<" -Spd hit ="<<eSpd<<endreq;
+  logbk<<MSG::DEBUG<<" -EPrs    ="<<ePrs<<endreq;
+  logbk<<MSG::DEBUG<<" -Chi2    ="<<chi2<<endreq;
+  logbk<<MSG::DEBUG<<" -ShShape ="<<shape<<endreq;
+  logbk<<MSG::DEBUG<<"      => estimator="<<estimator<<endreq;
+
+//  if (m_monitoring) {m_likelihood->fill(estimator, 1.);}
+
   return estimator;
 
 };
@@ -498,7 +523,7 @@ const CaloHypotheses::Hypothesis& CaloPhotonEstimatorTool::hypothesis ( ) const
 };
 
 // ============================================================================
-
+/*
 std::vector<IHistogram1D*> CaloPhotonEstimatorTool::makeHisto(
 	unsigned int bin, double xmin, double xmax,
   unsigned int nhisto, std::string hname, std::string dir,
@@ -506,19 +531,19 @@ std::vector<IHistogram1D*> CaloPhotonEstimatorTool::makeHisto(
 
   std::vector<IHistogram1D*> histoList;
 	char histoname[60];
-  
+
   if ( (data.size() % n) !=0 ) {
 		Error("Wrong Data field.");
   }
   unsigned int isize=data.size()/n;
-  
+
 	double width=(xmax-xmin)/double(bin);
 
   for (unsigned int i=0; i<n; ++i){
 		IHistogram1D* histo;
     sprintf(histoname,"%s #%i",hname.c_str(),nhisto+i);
 		// logbk<<MSG::DEBUG<<"Processing Histo ..."<<histoname<<endreq;
-    
+
     histo  = m_histoSvc->book( dir                      ,
                                nhisto+i                 ,
                                histoname                ,
@@ -539,7 +564,7 @@ std::vector<IHistogram1D*> CaloPhotonEstimatorTool::makeHisto(
    }
 	return histoList;
 }
-
+*/
 // ============================================================================
 // The End
 // ============================================================================

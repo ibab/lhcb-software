@@ -19,6 +19,16 @@
 // Associator
 #include "Relations/IAssociatorWeighted.h"
 
+
+/** @class CaloPhotonEstimatorTool CaloPhotonEstimatorTool.h
+ *
+ *  Photon Selection Tool
+ *  (LHCb 2004-03)
+ *
+ *  @author Frédéric Machefert frederic.machefert@in2p3.fr
+ *  @date   2004-15-04
+ */
+
 // Forward declarations
 class DeCalorimeter   ;
 class CaloHypo        ;
@@ -41,10 +51,13 @@ public:
   virtual double operator() (const CaloHypo* hypo ) const ;
   virtual double likelihood (const CaloHypo* hypo ) const ;
   virtual void handle( const Incident& incident ) ;
+
+/*
   std::vector<IHistogram1D*> makeHisto(unsigned int, double, double,
                                        unsigned int, std::string,std::string,
                                        std::vector<double>,
                                        unsigned int);
+*/
 
 protected:
   CaloPhotonEstimatorTool
@@ -77,15 +90,10 @@ protected:
   std::string m_nameOfPRS;
   std::string m_nameOfSPD;
 
-  double                           m_z         ;
-  double                           m_zPrs      ;
-  double                           m_zSpd      ;
+  double m_zPrs      ;
+  double m_zSpd      ;
+  double m_shiftSpd  ;
 
-  double m_shiftSpd;
-  
-  // Services
-  IHistogramSvc*                   m_histoSvc  ;
-  
   // Hypothesis
   CaloHypotheses::Hypothesis       m_hypothesis;
 
@@ -124,6 +132,10 @@ protected:
   Data                m_backgrShapeData     ;
   Data                m_backgrShapeSpdData     ;
 
+/*
+  // Services
+  IHistogramSvc*                   m_histoSvc  ;
+
   std::vector<IHistogram1D*>    m_signalEPrs     ;
   std::vector<IHistogram1D*>    m_backgrEPrs     ;
   std::vector<IHistogram1D*>    m_signalChi2     ;
@@ -140,6 +152,8 @@ protected:
 
   IHistogram1D*                 m_likelihood;
   bool                          m_monitoring;
+*/
+
   bool                          m_extrapol;
  };
 
