@@ -1,5 +1,5 @@
 #include "ProcessorKernel/TileRegister.h"
-
+#include <cmath> // For definition of pow on windows
 
 L0Muon::TileRegister::TileRegister() {
 

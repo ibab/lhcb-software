@@ -4,7 +4,10 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
-!========================== ProcessorKernel v1r0 2005-04-04 ===================
+!========================= ProcessorKernel v1r0 2005-04-05 ===================
+! 2005-04-05 - Marco Cattaneo
+ - Add a missing STL include for compilation on windows
+
 ! 2005-04-04 A. Tsaregorodtsev
  - First release of the package  
 
