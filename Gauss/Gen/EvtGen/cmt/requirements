@@ -6,6 +6,7 @@ branches         cmt src doc EvtGen
 use CLHEP        v2r1800p*
 use PYTHIA	 v2r6205p*	Gen
 use GaudiPolicy  v*
+use GaudiKernel  v*
 
 include_dirs     $(EVTGENROOT)
 

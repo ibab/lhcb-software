@@ -1,6 +1,10 @@
 Package :EvtGen 
 Package manager : Witek Pokorski
 
+! 2003-07-15 - Patrick Robbe
+ - cranf.cpp , ranf.F : code to use Gaudi random engine (replace ranf()
+                        which is used in EvtBTo3pi.F
+
 !==================== EvtGen v3r3 ========================================
 ! 2003-07-07 - Florence RANJARD
  - fix for gcc3.2 (S.Ponce)
