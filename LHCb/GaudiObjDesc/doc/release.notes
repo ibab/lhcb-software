@@ -4,6 +4,10 @@ Package manager : Stefan Roiser
 
 
 ===============================GaudiObjDesc v4r6==============================
+!20030115 - Stefan, Pere
+- removed SetDTD setup script from requirements
+- avoided to define GAUDIOBJDESCROOT when building packages
+
 !20030110 - Stefan
 - serialization of enums
 - fillStream called also for base-classes

@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.66 2003-01-10 12:22:53 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.67 2003-01-15 17:04:05 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -2962,9 +2962,10 @@ int main(int argC,
   
   if (getenv("GAUDIOBJDESCROOT") == NULL)
   {
-    std::cerr << argV0 << ": Please set Environmentvariable 'GAUDIOBJDESCROOT'"
-      << std::endl;
-    exit(1);
+//    std::cerr << argV0 << ": Please set Environmentvariable 'GAUDIOBJDESCROOT'"
+//      << std::endl;
+//    exit(1);
+    envXmlDB = "";
   }
   else
   {

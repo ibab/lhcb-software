@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.34 2002-09-25 20:07:47 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.35 2003-01-15 17:04:05 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -1140,9 +1140,10 @@ int main(int argC, char* argV[])
   
   if (getenv("GAUDIOBJDESCROOT") == NULL)
   {
-    std::cerr << "Please set Environmentvariable 'GAUDIOBJDESCROOT'" 
-      << std::endl;
-    exit(1);
+//    std::cerr << "Please set Environmentvariable 'GAUDIOBJDESCROOT'" 
+//      << std::endl;
+//    exit(1);
+    envXmlDB = "";
   }
   else
   {

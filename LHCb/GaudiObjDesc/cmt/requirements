@@ -20,4 +20,4 @@ make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
 application GODWriteCppHeader -import=XERCES ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppHeader.cpp
 application GODWriteCppDict   -import=XERCES ../src/DaDiFrontEnd.cpp ../src/DaDiTools.cpp ../src/DaDiCppDict.cpp
 
-setup_script setDTD
+# setup_script setDTD

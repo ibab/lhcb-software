@@ -3,6 +3,6 @@ $(dest)${NAME}.obj2dict :  ${FULLNAME}
 	@echo Producing Dictionary from ${FULLNAME}
 	@if not exist $(dest) mkdir $(dest)
 	@cd $(dest)
-	@$(GAUDIOBJDESCROOT)\$(tag)\$(dicttool) $(GODflags) $(${CONSTITUENT}_GODflags) ${FULLNAME}
-	@$(GAUDIOBJDESCROOT)\$(tag)\$(headertool) -d $(GODflags) ${FULLNAME}
+	@$(GAUDIOBJDESCROOT)\$(tag)\$(dicttool) $(GODflags) $(${CONSTITUENT}_GODflags) -x $(GAUDIOBJDESCROOT)\xml_files\ ${FULLNAME}
+	@$(GAUDIOBJDESCROOT)\$(tag)\$(headertool) -d $(GODflags) -x $(GAUDIOBJDESCROOT)\xml_files\ ${FULLNAME}
 	@echo "" > ${NAME}.obj2dict
