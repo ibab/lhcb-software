@@ -13,13 +13,13 @@
  */
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 // from Event
 #include "Event/VeloCluster.h"
 // fwd declarations
 class VeloFullDigit;
 
-class VeloClusterMaker : public Algorithm {
+class VeloClusterMaker : public GaudiAlgorithm {
 
   // Constructors, destructors et al.
  public:
@@ -75,7 +75,6 @@ class VeloClusterMaker : public Algorithm {
   /// rejected a cluster allowing the hits in it to be used in other clusters
   void unmarkCluster(VeloCluster* currentCluster);
   /// 
-  void getVeloFullDigits();
   std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator> 
           getVeloFullDigitsOfSensor(int detId);
 

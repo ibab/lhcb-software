@@ -3,7 +3,7 @@
 
 
 // Include files
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/RndmGenerators.h"
 
 #include "Event/MCVeloFE.h"
@@ -16,6 +16,8 @@ class IHistogram2D;
 class VeloChannelID;
 class VeloCluster;
 class DeVelo;
+class DeVeloRType;
+class DeVeloPhiType;
 //--------------------------------------------------------------------
 //
 //	VeloMonitor: simple example to illustrate the functionality
@@ -25,7 +27,7 @@ class DeVelo;
 //
 //--------------------------------------------------------------------
 
-class VeloMonitor : public Algorithm {
+class VeloMonitor : public GaudiAlgorithm {
 
  public:
   // Constructor of this form must be provided
@@ -81,6 +83,9 @@ class VeloMonitor : public Algorithm {
   IHistogram2D*         m_MCVHPhiURXY;
   IHistogram2D*         m_MCVHPhiDRXY;
 
+  IHistogram2D*         m_MCVHRRighZX;
+  IHistogram2D*         m_MCVHRLeftZX;
+
   IHistogram1D*         m_MCPEnergy;
 
   IHistogram1D*         m_MCVHPEnergy;
@@ -128,6 +133,12 @@ class VeloMonitor : public Algorithm {
   IHistogram2D*         m_MCVFEZR3;
   IHistogram2D*         m_MCVFEZPhiInner;
   IHistogram2D*         m_MCVFEZPhiOuter;
+  IHistogram2D*         m_MCVFEZTrgPhiInner;
+  IHistogram2D*         m_MCVFEZTrgPhiOuter;
+  IHistogram2D*         m_MCVFEZPhiDirecInner;
+  IHistogram2D*         m_MCVFEZPhiDirecOuter;
+  IHistogram2D*         m_MCVFEZTrgPhiDirecInner;
+  IHistogram2D*         m_MCVFEZTrgPhiDirecOuter;
 
   IHistogram2D*         m_VDSensorStrip;
   IHistogram1D*         m_VDNHits; 
@@ -157,6 +168,8 @@ class VeloMonitor : public Algorithm {
   IHistogram2D*         m_VCZR3;
   IHistogram2D*         m_VCZPhiInner;
   IHistogram2D*         m_VCZPhiOuter;
+  IHistogram2D*         m_VCZTrgPhiInner;
+  IHistogram2D*         m_VCZTrgPhiOuter;
 
   IHistogram1D*         m_RRes;
   IHistogram1D*         m_RRes1s;
@@ -194,18 +207,17 @@ class VeloMonitor : public Algorithm {
   IHistogram1D* m_stripPhiDR;
 
   // plot residuals
-  IHistogram1D* m_resRRigh;
-  IHistogram1D* m_resRLeft;
-  IHistogram1D* m_resPhiUL;
-  IHistogram1D* m_resPhiDL;
-  IHistogram1D* m_resPhiUR;
-  IHistogram1D* m_resPhiDR;
-  // Radius of strip
+  IHistogram1D* m_residualR;
+  IHistogram1D* m_residualPhi;
+
+  // Radius of strips
   IHistogram1D* m_rOfStrips;
 
   Rndm::Numbers m_uniformDist;
 
   DeVelo* m_velo;
+  std::vector<DeVeloRType*> m_vpVeloR;
+  std::vector<DeVeloPhiType*> m_vpVeloPhi;
 
   MCVeloHits* m_mchits;
   MCVeloHits* m_pumchits;
@@ -223,8 +235,8 @@ class VeloMonitor : public Algorithm {
   bool m_testVeloCluster;
   bool m_resolution;
   bool m_detElement;
-  bool m_2DHist;
- 
+  bool m_drawSensors;
+  
   double m_nMCVH2;
   double m_nMCPH;
   double m_nMCPH2;

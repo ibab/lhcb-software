@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.9 2003-04-14 07:34:26 cattanem Exp $
+#// $Id: VeloSim.h,v 1.10 2004-12-03 18:01:58 dhcroft Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/RndmGenerators.h"
 
 // from Velo
@@ -25,7 +25,7 @@ class VeloChannelID;
  *  @author Chris Parkes, based on code of Oliver Callot
  *  @date   10/01/02
  */
-class VeloSim : public Algorithm {
+class VeloSim : public GaudiAlgorithm {
 public:
   /// Standard constructor
   VeloSim( const std::string& name, ISvcLocator* pSvcLocator );

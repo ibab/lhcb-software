@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.31 2004-10-26 15:08:33 dhcroft Exp $
+// $Id: VeloSim.cpp,v 1.32 2004-12-03 18:01:58 dhcroft Exp $
 // Include files
 // STL
 #include <string>
@@ -17,12 +17,9 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/Stat.h"
 #include "GaudiKernel/ObjectVector.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "Kernel/LHCbMath.h"
@@ -58,7 +55,7 @@ const         IAlgFactory& VeloSimFactory = Factory ;
 struct chargeThreshold : public std::unary_function<MCVeloFE*,  bool> {
   bool operator()(MCVeloFE* FE) {
     // decide to cut out large -ve noise
-  return FE->charge() < VeloSimParams::threshold;
+    return FE->charge() < VeloSimParams::threshold;
   }
 };
 
@@ -67,7 +64,7 @@ struct chargeThreshold : public std::unary_function<MCVeloFE*,  bool> {
 //=============================================================================
 VeloSim::VeloSim( const std::string& name,
                   ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
   , m_inputContainer       ( MCVeloHitLocation::Default )
   , m_spillOverInputContainer ( "Prev/" + m_inputContainer )
   , m_pileUpInputContainer    ( MCVeloHitLocation::PuVeto )
@@ -120,19 +117,9 @@ VeloSim::~VeloSim() {};
 //=============================================================================
 StatusCode VeloSim::initialize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endmsg;
+  debug() << "==> Initialise" << endmsg;
 
-  SmartDataPtr<DeVelo> velo( detSvc(), "/dd/Structure/LHCb/Velo" );
-
-  if ( 0 == velo ) {
-    log << MSG::ERROR << "Unable to retrieve Velo detector element." << endmsg;
-    return StatusCode::FAILURE;
-  } else {
-    log << MSG::INFO << "Velo detector element succesfully retrieved" << endmsg;
-  }
-
-  m_velo = velo;
+  m_velo=getDet<DeVelo>("/dd/Structure/LHCb/Velo" );
 
   // calculation of diffusion parameter
   m_baseDiffuseSigma=sqrt(2*VeloSimParams::kT/VeloSimParams::biasVoltage);
@@ -141,7 +128,7 @@ StatusCode VeloSim::initialize() {
   StatusCode scr1=m_gaussDist.initialize( randSvc(), Rndm::Gauss(0.,1.0));
   StatusCode scr2=m_uniformDist.initialize( randSvc(), Rndm::Flat(0.,1.0));
   if ( !(scr1&scr2) ) {
-    log << MSG::ERROR << "Random number init failure" << endmsg;
+    error() << "Random number init failure" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -153,8 +140,7 @@ StatusCode VeloSim::initialize() {
 //=============================================================================
 StatusCode VeloSim::execute() {
 
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endmsg;
+  debug() << "==> Execute" << endmsg;
 
   StatusCode sc;
   sc=getInputData(); // get Velo MCHits, pile-up MCHits and spillOver data
@@ -192,7 +178,7 @@ StatusCode VeloSim::simulation() {
   if (m_chargeSim) sc= chargeSim(false); 
   // simulate signals in strips from GEANT hits of spillOver event
   if (sc&&m_chargeSim&&m_spillOver) sc= chargeSim(true); 
-  /// charge sharing from capacitive coupling of strips
+  // charge sharing from capacitive coupling of strips
   if (sc&&m_coupling) sc=coupling(); 
   // add noise
   if (sc&&m_noiseSim) sc= noiseSim(); 
@@ -213,91 +199,78 @@ StatusCode VeloSim::simulation() {
 //=========================================================================
 
 StatusCode VeloSim::getInputData() {
-  MsgStream  log( msgSvc(), name() );
 
-  //*** get the velo input data
-  log << MSG::DEBUG << "Retrieving MCVeloHits from " << m_inputContainer
-      << endmsg;
-  SmartDataPtr<MCVeloHits> hits ( eventSvc() , m_inputContainer );
-  m_veloHits=hits;
+  bool isDebug   = msgLevel( MSG::DEBUG   );
 
-  if( 0 == m_veloHits ) {
-    log << MSG::ERROR
-        << "Unable to retrieve input data container="
-        << m_inputContainer << endmsg;
-    return StatusCode::FAILURE;
-  }
-  log << MSG::DEBUG << m_veloHits->size() << " hits retrieved" << endmsg;
+  // *** get the velo input data
+  if(isDebug) debug() << "Retrieving MCVeloHits from " << m_inputContainer
+		      << endmsg;
+  m_veloHits=get<MCVeloHits>( m_inputContainer );
 
-  //*** get the pile-up input data
+  if(isDebug) debug() << m_veloHits->size() << " hits retrieved" << endmsg;
+
+  // *** get the pile-up input data
   if (m_pileUp) {
-    log << MSG::DEBUG << "Retrieving MCVeloHits from " 
-        << m_pileUpInputContainer << endmsg;
-    SmartDataPtr<MCVeloHits> puhits ( eventSvc() , m_pileUpInputContainer );
-    m_pileUpHits=puhits;
+    if(isDebug) debug() << "Retrieving MCVeloHits from " 
+			<< m_pileUpInputContainer << endmsg;
+      
+    m_pileUpHits = get<MCVeloHits>(m_pileUpInputContainer );
 
-    if( 0 == m_pileUpHits ) {
-      log << MSG::ERROR
-          << "Unable to retrieve pile-up input data container="
-          << m_pileUpInputContainer << endmsg;
-      return StatusCode::FAILURE;
-    }
-    log << MSG::DEBUG << m_pileUpHits->size()
-        << " pile-up hits retrieved" << endmsg;
- //     for (MCVeloHits::const_iterator hitIt=m_pileUpHits->begin(); 
-//           hitIt < m_pileUpHits->end(); hitIt++){
-//        // add 100 to pileup sensors number
-//        (*hitIt)->setSensor((*hitIt)->sensor()+100);
-//        log << MSG::DEBUG << " pileup sensors " << (*hitIt)->sensor()<<endmsg;
-//      }
+    if(isDebug) debug() << m_pileUpHits->size()
+			<< " pile-up hits retrieved" << endmsg;
+    //     for (MCVeloHits::const_iterator hitIt=m_pileUpHits->begin(); 
+    //           hitIt < m_pileUpHits->end(); hitIt++){
+    //        // add 100 to pileup sensors number
+    //        (*hitIt)->setSensor((*hitIt)->sensor()+100);
+    //        if(isDebug) debug() << " pileup sensors " << (*hitIt)->sensor()<<endmsg;
+    //      }
 
   }
-
-  //*** get the velo SpillOver input data
+    
+  // *** get the velo SpillOver input data
   if (m_spillOver){
-    log << MSG::DEBUG << "Retrieving MCVeloHits of SpillOver Event from "
-        << m_spillOverInputContainer << endmsg;
-    SmartDataPtr<MCVeloHits> sphits ( eventSvc() , m_spillOverInputContainer );
-    m_veloSpillOverHits=sphits;
-
-    if( 0 == m_veloSpillOverHits ) {
-      log << MSG::DEBUG
-          << "Spill over event not present unable to retrieve input container="
-          << m_spillOverInputContainer << endmsg;
+    if(isDebug) debug() << "Retrieving MCVeloHits of SpillOver Event from "
+			<< m_spillOverInputContainer << endmsg;
+      
+    if( !exist<MCVeloHits>(m_spillOverInputContainer) ) {
+      if(isDebug) debug()
+	<< "Spill over event not present unable to retrieve input container="
+	<< m_spillOverInputContainer << endmsg;
+      m_veloSpillOverHits = 0;
     } else { 
-      log << MSG::DEBUG << m_veloSpillOverHits->size()
-          << " spill over hits retrieved" << endmsg;
+      m_veloSpillOverHits = get<MCVeloHits>(m_spillOverInputContainer);
+      if(isDebug) debug() << m_veloSpillOverHits->size()
+			  << " spill over hits retrieved" << endmsg;
     }
   }
 
-  //*** get the pileUp SpillOver input data
+  // *** get the pileUp SpillOver input data
   if (m_spillOver&&m_pileUp){
-    log << MSG::DEBUG 
-        << "Retrieving MCVeloHits of Pile Up SpillOver Event from "
-        << m_pileUpSpillOverInputContainer << endmsg;
-    SmartDataPtr<MCVeloHits> spuhits ( eventSvc() , 
-                                       m_pileUpSpillOverInputContainer );
-    m_pileUpSpillOverHits=spuhits;
-
-    if( 0 == m_pileUpSpillOverHits ) {
-      log << MSG::DEBUG
-          << "Spill over event for PileUp not present unable to retrieve " 
-          << "input data container=" << m_spillOverInputContainer << endmsg;
+    if(isDebug) debug() 
+      << "Retrieving MCVeloHits of Pile Up SpillOver Event from "
+      << m_pileUpSpillOverInputContainer << endmsg;
+      
+    if( !exist<MCVeloHits>(m_pileUpSpillOverInputContainer) ){      
+      if(isDebug) debug()
+	<< "Spill over event for PileUp not present unable to retrieve " 
+	<< "input data container=" << m_spillOverInputContainer << endmsg;
+      m_pileUpSpillOverHits=0;
     } else {
-      log << MSG::DEBUG << m_pileUpSpillOverHits->size()
-          << " PileUp Spill over hits retrieved" << endmsg;
-//       for (MCVeloHits::const_iterator hitIt=m_pileUpSpillOverHits->begin(); 
-//             hitIt < m_pileUpSpillOverHits->end(); hitIt++){
-//          // add 100 to pileup sensors number
-//          (*hitIt)->setSensor((*hitIt)->sensor()+100);
-//          log << MSG::DEBUG << " pileup sensors " << (*hitIt)->sensor() 
-//              << endmsg;
-//        }
+      m_pileUpSpillOverHits=get<MCVeloHits>(m_pileUpSpillOverInputContainer);
+      if(isDebug) debug() << m_pileUpSpillOverHits->size()
+			  << " PileUp Spill over hits retrieved" << endmsg;
+      //       for (MCVeloHits::const_iterator hitIt=m_pileUpSpillOverHits->begin(); 
+      //             hitIt < m_pileUpSpillOverHits->end(); hitIt++){
+      //          // add 100 to pileup sensors number
+      //          (*hitIt)->setSensor((*hitIt)->sensor()+100);
+      //          if(isDebug) debug() << " pileup sensors " << (*hitIt)->sensor() 
+      //              << endmsg;
+      //        }
     }
   }
-
-  //*** make vectors for output
-
+    
+  // *** make vectors for output
+    
   if (m_pileUp) {m_pileUpFEs = new MCVeloFEs();}
   else          {m_pileUpFEs =NULL;}
 
@@ -310,24 +283,27 @@ StatusCode VeloSim::getInputData() {
 // loop through hits allocating the charge to strips
 //=========================================================================
 StatusCode VeloSim::chargeSim(bool spillOver) {
-  MsgStream  log( msgSvc(), name() );
-  bool verbose = ( log.level() <= MSG::VERBOSE );
-  log << MSG::DEBUG << "===> Charge Simulation";
-  if (spillOver) log << MSG::DEBUG << " for spill over Event";
-  log <<  MSG::DEBUG << endmsg;
+ 
+  bool isDebug   = msgLevel( MSG::DEBUG   );
+  bool isVerbose = msgLevel( MSG::VERBOSE );
+
+  debug() << "===> Charge Simulation";
+
+  if (spillOver) debug() << " for spill over Event";
+  debug() << endreq;
 
   MCVeloHits* hits;
   if (!spillOver){
     // hits from current event
     hits=m_hits;
-  }
-  else{
+  } else{
     // hits from spill Over Event. Return if no spillover
     if( 0 == m_spillOverHits ) return StatusCode::SUCCESS;
     hits=m_spillOverHits;
   }
 
-  log << MSG::DEBUG << "Number of hits to simulate=" << hits->size() << endmsg;
+  if(isDebug) debug() << "Number of hits to simulate=" 
+		      << hits->size() << endmsg;
 
   //loop over input hits
   for ( MCVeloHits::const_iterator hitIt = hits->begin() ;
@@ -340,21 +316,20 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
       m_movePosition.setX(m_gaussDist()*m_smearPosition);
       m_movePosition.setY(m_gaussDist()*m_smearPosition);  
       m_movePosition.setZ(0.);
-    } else
-      {
+    } else{
       m_movePosition.setX(0.);
       m_movePosition.setY(0.);  
       m_movePosition.setZ(0.);
-      }
+    }
 
     if (m_testSim) { testSim(hit,spillOver);}
     else{
       // calculate a set of points in the silicon
       //with which the simulation will work
       int NPoints = simPoints(hit);
-      if( verbose ) {
-        log << MSG::VERBOSE << "Simulating " << NPoints
-            << " points in Si for this hit" << endmsg;
+      if( isVerbose ) {
+        verbose() << "Simulating " << NPoints
+		  << " points in Si for this hit" << endmsg;
       }
       if (NPoints>0){
         // calculate charge to assign to each point
@@ -368,8 +343,8 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
     }
   }
 
-  log << MSG::DEBUG << "Number of MCVeloFEs "
-      << m_FEs->size() << endmsg;
+  if(isDebug) debug() << "Number of MCVeloFEs "
+		      << m_FEs->size() << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -400,8 +375,8 @@ void VeloSim::testSim(MCVeloHit* hit,bool spillOver){
 // calculate how many points in the silicon the simulation will be performed at
 //=========================================================================
 long VeloSim::simPoints(MCVeloHit* hit){
-  MsgStream log(msgSvc(), name());
-  bool verbose = ( log.level() <= MSG::VERBOSE );
+
+  bool isVerbose = msgLevel( MSG::VERBOSE );
 
   double EntryFraction=0.,ExitFraction=0.;
   double pitch=0.;
@@ -411,17 +386,17 @@ long VeloSim::simPoints(MCVeloHit* hit){
                                       pitch);
   ExitValid=m_velo->pointToChannel(hit->exit(),exitChan,ExitFraction,
                                    pitch);
-  if( verbose ) {
-    log << MSG::VERBOSE << "calculate number of points to simulate in Si"
-        << endmsg;
-    log << MSG::VERBOSE << "entry/exit points "
-        << entryChan.sensor() << " " << entryChan.strip()
-        <<  " + " << EntryFraction
-        << " / " <<  exitChan.sensor()  << " " << exitChan.strip()
-        <<  " + " << ExitFraction;
-    if (!EntryValid) log << MSG::VERBOSE << " invalid entry point";
-    if (!ExitValid) log << MSG::VERBOSE << " invalid exit point";
-    log << MSG::VERBOSE <<endmsg;
+  if( isVerbose ) {
+    verbose() << "calculate number of points to simulate in Si"
+	      << endmsg;
+    verbose() << "entry/exit points "
+	      << entryChan.sensor() << " " << entryChan.strip()
+	      <<  " + " << EntryFraction
+	      << " / " <<  exitChan.sensor()  << " " << exitChan.strip()
+	      <<  " + " << ExitFraction;
+    if (!EntryValid) verbose() << " invalid entry point";
+    if (!ExitValid) verbose() << " invalid exit point";
+    verbose() <<endmsg;
   }
   
   double NPoints=0.;
@@ -431,18 +406,18 @@ long VeloSim::simPoints(MCVeloHit* hit){
     int INeighb;
     StatusCode sc=m_velo->channelDistance(entryChan,exitChan,INeighb);
     if (sc) NPoints = fabs(float(INeighb)-(EntryFraction-ExitFraction));
-    if( verbose ) {
-      log << MSG::VERBOSE << "Integer number of strips apart " << INeighb
-          << " floating number " << NPoints << endmsg;
+    if( isVerbose ) {
+      verbose() << "Integer number of strips apart " << INeighb
+		<< " floating number " << NPoints << endmsg;
     }
   }
   else {
     // either entry or exit or both are invalid, ignore this hit
     NPoints=0.;
-    if( (EntryValid!=ExitValid) && verbose ) {
-      log << MSG::VERBOSE
-          << "simPoints: only one of entry and exit point of hit are in "
-          << "silicon - hit ignored " << endmsg;
+    if( isVerbose && (EntryValid!=ExitValid) ) {
+      verbose()
+	<< "simPoints: only one of entry and exit point of hit are in "
+	<< "silicon - hit ignored " << endmsg;
     }
   }
 
@@ -454,29 +429,29 @@ long VeloSim::simPoints(MCVeloHit* hit){
 //=========================================================================
 void VeloSim::chargePerPoint(MCVeloHit* hit, int Npoints,
                              std::vector<double>& Spoints, bool spillOver){
-  MsgStream log(msgSvc(), name());
-  bool verbose = ( log.level() <= MSG::VERBOSE );
+
+  bool isVerbose = msgLevel( MSG::VERBOSE );
 
   // total charge in electrons
   double charge=(hit->energy()/eV)/VeloSimParams::eVPerElectron;
   if (spillOver) charge*=VeloSimParams::spillOverChargeFraction;
-  if( verbose ) {
-    log << MSG::VERBOSE << "calculating charge per simulation point" << endmsg;
-    log << MSG::VERBOSE << "total charge " << charge
-        << " in eV " << hit->energy()/eV;
-    if (spillOver) log << MSG::VERBOSE  << " for spill over event ";
-    log << MSG::VERBOSE << endmsg;
+  if( isVerbose ) {
+    verbose() << "calculating charge per simulation point" << endmsg;
+    verbose() << "total charge " << charge
+	      << " in eV " << hit->energy()/eV;
+    if (spillOver) verbose()  << " for spill over event ";
+    verbose() << endmsg;
   }
   
-    // charge to divide equally
+  // charge to divide equally
   double chargeEqual;
   if (m_inhomogeneousCharge){
     // some of charge allocated by delta ray algorithm
     chargeEqual=VeloSimParams::chargeUniform*
       m_velo->siliconThickness(1)/micron;
-      //      m_velo->siliconThickness(hit->sensor())/micron;
-      // sensor numbers for hits currently incorrect (7/02) 
-      // nasty fudge - use one hardcoded number
+    //      m_velo->siliconThickness(hit->sensor())/micron;
+    // sensor numbers for hits currently incorrect (7/02) 
+    // nasty fudge - use one hardcoded number
 
     if (spillOver) chargeEqual*=VeloSimParams::spillOverChargeFraction;
     if (chargeEqual>charge)  chargeEqual=charge;
@@ -486,21 +461,21 @@ void VeloSim::chargePerPoint(MCVeloHit* hit, int Npoints,
     // all of charge allocated equally to points
     chargeEqual=charge;
   }
-  if( verbose ) {
-    log << MSG::VERBOSE << "total charge " << charge
-        << " charge for equal allocation " << chargeEqual << endmsg;
+  if( isVerbose ) {
+    verbose() << "total charge " << charge
+	      << " charge for equal allocation " << chargeEqual << endmsg;
   }
   
-    // divide equally
+  // divide equally
   double chargeEqualN=chargeEqual/Npoints;
   double fluctuate=0.;
   for (int i=0; i<Npoints; i++){
     // gaussian fluctuations
     if (m_inhomogeneousCharge) fluctuate=m_gaussDist()*sqrt(chargeEqualN);
     Spoints[i]=chargeEqualN+fluctuate;
-    if( verbose ) {
-      log << MSG::VERBOSE << "charge for pt" << i << " is " << Spoints[i] 
-          << endmsg;
+    if( isVerbose ) {
+      verbose() << "charge for pt" << i << " is " << Spoints[i] 
+		<< endmsg;
     }
   }
 
@@ -525,8 +500,9 @@ void VeloSim::chargePerPoint(MCVeloHit* hit, int Npoints,
 //=========================================================================
 void VeloSim::deltaRayCharge(double charge, double tol,
                              int Npoints, std::vector<double>& Spoints){
-  MsgStream log(msgSvc(), name());
-  bool verbose = ( log.level() <= MSG::VERBOSE );
+
+  bool isVerbose = msgLevel( MSG::VERBOSE );
+
   double Tmax= charge;// upper limit on charge of delta ray
   double Tmin= VeloSimParams::deltaRayMinEnergy/VeloSimParams::eVPerElectron;
   // lower limit on charge of delta ray
@@ -541,9 +517,9 @@ void VeloSim::deltaRayCharge(double charge, double tol,
     double charge=ran_inv_E2(Tmin,Tmax);
     // choose pt at random to add delta ray
     int ipt=int(LHCbMath::round(m_uniformDist()*(Npoints-1)));
-    if( verbose ) {
-      log << MSG::VERBOSE << " delta ray charge added to point " << ipt
-          << "/" << Npoints << endmsg;
+    if( isVerbose ) {
+      verbose() << " delta ray charge added to point " << ipt
+		<< "/" << Npoints << endmsg;
     }
     Spoints[ipt]+=charge;
     Tmax-=charge;
@@ -557,18 +533,19 @@ void VeloSim::deltaRayCharge(double charge, double tol,
 //=========================================================================
 void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
                         std::vector<double>& Spoints,bool spillOver){
-  MsgStream log(msgSvc(), name());
-  bool verbose = ( log.level() <= MSG::VERBOSE );
-  if( verbose ) {
-    log << MSG::VERBOSE << "diffusion of charge from simulation points"
-        << endmsg; 
+
+  bool isVerbose = msgLevel( MSG::VERBOSE );
+
+  if( isVerbose ) {
+    verbose() << "diffusion of charge from simulation points"
+	      << endmsg; 
   }
   HepVector3D path = (hit->exit())-(hit->entry());
   path/=(Npoints*2); // distance between steps on path
   HepPoint3D point= (hit)->entry()+path+m_movePosition;
-// double thickness=m_velo->siliconThickness(hit->sensor())/micron;
-      // sensor numbers for hits currently incorrect (7/02) 
-      // nasty fudge - use one hardcoded number
+  // double thickness=m_velo->siliconThickness(hit->sensor())/micron;
+  // sensor numbers for hits currently incorrect (7/02) 
+  // nasty fudge - use one hardcoded number
   double thickness=m_velo->siliconThickness(1)/micron;
   double ZDiffuse=thickness;
   // assume strips are at opposite side of Si to entry point
@@ -577,27 +554,28 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
 
   for (int ipt=0; ipt<Npoints; ipt++){ //loop over points on path
     double fraction,pitch;
-    if( verbose ) {
-      log << MSG::VERBOSE << " ipt " << ipt << " point " << point << endmsg;
+    if( isVerbose ) {
+      verbose() << " ipt " << ipt << " point " << point << endmsg;
     }
     //calculate point on path
     VeloChannelID entryChan;
     StatusCode valid=m_velo->pointToChannel(point,entryChan,fraction,pitch);
 
     if ( !valid){
-      if( verbose ) { 
-      log << MSG::VERBOSE << " point is not in active silicon " << point << 
-	" entry " << hit->entry() << " exit " <<  hit->exit() << endmsg;
+      if( isVerbose ) { 
+	verbose() << " point is not in active silicon " << point << 
+	  " entry " << hit->entry() << " exit " <<  hit->exit() << endmsg;
       }
     }
 
     if (valid) {
-      // a point may be invalid, despite entry and exit points being valid, as it lies 
-      // in say a bias rail dead area. charge from this point is considered lost.
+      // a point may be invalid, despite entry and exit points being valid,
+      // as it lies in say a bias rail dead area.
+      // charge from this point is considered lost.
 
-      if( verbose ) {
-        log << MSG::VERBOSE << "chan " << entryChan.strip() << " fraction "
-            << fraction << " pitch " << pitch << " valid " << valid << endmsg;
+      if( isVerbose ) {
+        verbose() << "chan " << entryChan.strip() << " fraction "
+		  << fraction << " pitch " << pitch << " valid " << valid << endmsg;
       }
       const int neighbs=1; // only consider =/- this many neighbours
       double chargeFraction[2*neighbs+1];
@@ -610,41 +588,41 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
         //      double diffuseDist1=((iNg)-fraction)*pitch/micron;
         //      double diffuseDist2=((iNg+1.)-fraction)*pitch/micron;
         double diffuseSigma=m_baseDiffuseSigma*sqrt(thickness*ZDiffuse);
-        if( verbose ) {
-          log << MSG::VERBOSE << "diffuseDist1 " << diffuseDist1
-              <<   " diffuseDist2 " << diffuseDist2 << " diffuseSigma "
-              << diffuseSigma << " base " << m_baseDiffuseSigma
-              << " zdiff " << ZDiffuse << endmsg;
+        if( isVerbose ) {
+          verbose() << "diffuseDist1 " << diffuseDist1
+		    <<   " diffuseDist2 " << diffuseDist2 << " diffuseSigma "
+		    << diffuseSigma << " base " << m_baseDiffuseSigma
+		    << " zdiff " << ZDiffuse << endmsg;
         }
 
         double prob1= gsl_sf_erf_Q(diffuseDist1/diffuseSigma);
         double prob2= gsl_sf_erf_Q(diffuseDist2/diffuseSigma);
-        if( verbose ) {
-          log << MSG::VERBOSE << " prob1+2 " <<  prob1 << " " << prob2 << endmsg;
+        if( isVerbose ) {
+          verbose() << " prob1+2 " <<  prob1 << " " << prob2 << endmsg;
         }
         int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
         chargeFraction[i]=fabs(prob1-prob2);
         totalFraction+= fabs(prob1-prob2);
-        if( verbose ) {
-          log << MSG::VERBOSE << i << " iNg " << iNg << " cfrac "
-              << chargeFraction[i]  << " tot " << totalFraction << endmsg;
+        if( isVerbose ) {
+          verbose() << i << " iNg " << iNg << " cfrac "
+		    << chargeFraction[i]  << " tot " << totalFraction << endmsg;
         }
       }
 
       // renormalise allocated fractions to 1., and update strip signals
       for  (iNg=-neighbs; iNg<=+neighbs; iNg++ ){
         int i= (iNg<0) ? neighbs+abs(iNg) : iNg;
-        // log << MSG::DEBUG << i << " iNg " << iNg << " ipt " << ipt
+        // if(isDebug) debug() << i << " iNg " << iNg << " ipt " << ipt
         //      << " " << endmsg;
         double charge=Spoints[ipt]*(chargeFraction[i]/totalFraction);
-        //  log << MSG::DEBUG << i << " ipt " << ipt << " charge "
+        //  if(isDebug) debug() << i << " ipt " << ipt << " charge "
         //      << charge << endmsg;
         if (charge>VeloSimParams::threshold*0.1){
           // ignore if below 10% of threshold
           // calculate index of this strip
           VeloChannelID stripKey;
           valid = m_velo->neighbour(entryChan,iNg,stripKey);
-          // log << MSG::DEBUG << " neighbour " << entryChan.strip() << " "
+          // if(isDebug) debug() << " neighbour " << entryChan.strip() << " "
           //     << stripKey.strip() << " iNg " << iNg << endmsg;
           // update charge and MCHit list
           if (valid){
@@ -667,18 +645,19 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
 // update signal and list of MCHits
 //=========================================================================
 void VeloSim::fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge){
-  MsgStream log(msgSvc(), name());
-  bool verbose = ( log.level() <= MSG::VERBOSE );
+
+  bool isVerbose = msgLevel( MSG::VERBOSE );
+
   myFE->setAddedSignal(myFE->addedSignal()+charge);
   // add link to MC hit / update with weight
-  if( verbose ) log << MSG::VERBOSE << "fillFE " << myFE << endmsg;
+  if( isVerbose ) verbose() << "fillFE " << myFE << endmsg;
   int size=myFE->NumberOfMCVeloHits();
   int i=0;
   MCVeloHit* hitChk=NULL;
   while (hit!=hitChk && i<size) { 
-    if( verbose ) {
-      log << MSG::VERBOSE << "hit number " << i << " / " << size 
-          << " charge " << charge << " hit " << hit << endmsg;
+    if( isVerbose ) {
+      verbose() << "hit number " << i << " / " << size 
+		<< " charge " << charge << " hit " << hit << endmsg;
     }
     hitChk = myFE->mcVeloHit(i);  
     i++; 
@@ -686,16 +665,16 @@ void VeloSim::fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge){
   i--;
   if (hit==hitChk){
     double sig=myFE->mcVeloHitCharge(i);
-    if( verbose ) log << MSG::VERBOSE << "hit exists has signal " << sig; 
+    if( isVerbose ) verbose() << "hit exists has signal " << sig; 
     sig+=charge;
     myFE->setMCVeloHitCharge(i,sig);
-    if( verbose ){
-      log << MSG::VERBOSE << " new signal value " << sig << " for hit "
-          << hit << " hit check " << hitChk << endmsg;
+    if( isVerbose ){
+      verbose() << " new signal value " << sig << " for hit "
+		<< hit << " hit check " << hitChk << endmsg;
     }
   }
   else{
-    if( verbose ) log << MSG::VERBOSE << "hit added" << endmsg;
+    if( isVerbose ) verbose() << "hit added" << endmsg;
     myFE->addToMCVeloHits(hit,charge);
   }
   return;
@@ -716,9 +695,9 @@ void VeloSim::fillFE(MCVeloFE* myFE,double charge){
 //=========================================================================
 StatusCode VeloSim::coupling(){
 
-  MsgStream log(msgSvc(), name());
-  bool verbose = ( log.level() <= MSG::VERBOSE );
-  log << MSG::DEBUG <<  "--- strip coupling ------" << endmsg;
+  bool isDebug = msgLevel( MSG::DEBUG );
+  bool isVerbose = msgLevel( MSG::VERBOSE );
+  if(isDebug) debug() <<  "--- strip coupling ------" << endmsg;
   // sort FEs into order of ascending sensor + strip
   std::stable_sort(m_FEs->begin(),m_FEs->end(),
                    VeloEventFunctor::Less_by_key<const MCVeloFE*>());
@@ -731,15 +710,15 @@ StatusCode VeloSim::coupling(){
 
     // calculate signal to couple to neighbouring strips
     double coupledSignal=(*FEIt)->addedSignal()*VeloSimParams::coupling;
-    if( verbose ) {
-      log <<  MSG::VERBOSE << "coupledSignal " <<   coupledSignal
-          << " orig " << (*FEIt)->addedSignal() << endmsg;
+    if( isVerbose ) {
+      verbose() << "coupledSignal " <<   coupledSignal
+		<< " orig " << (*FEIt)->addedSignal() << endmsg;
     }
 
     // subtract coupled signal from this strip
     (*FEIt)->setAddedSignal((*FEIt)->addedSignal()-2.*coupledSignal);
-    if( verbose ) {
-      log << MSG::VERBOSE << " subtracted " << (*FEIt)->addedSignal() << endmsg;
+    if( isVerbose ) {
+      verbose() << " subtracted " << (*FEIt)->addedSignal() << endmsg;
     }
 
     // add to previous strip (if doesn't exist then create)
@@ -749,55 +728,55 @@ StatusCode VeloSim::coupling(){
     MCVeloFE* prevStrip=findOrInsertPrevStrip(FEIt,valid,create);
     if (valid) fillFE(prevStrip,coupledSignal);
 
-    if( verbose ) {
-      log << MSG::VERBOSE << " base " << (*FEIt)->strip() << " "
-          << (*FEIt)->sensor() << endmsg;
-      if(valid) log << MSG::VERBOSE << " prev " << prevStrip->strip()
-                    << " " << prevStrip->sensor() << endmsg;
+    if( isVerbose ) {
+      verbose() << " base " << (*FEIt)->strip() << " "
+		<< (*FEIt)->sensor() << endmsg;
+      if(valid) verbose() << " prev " << prevStrip->strip()
+			  << " " << prevStrip->sensor() << endmsg;
     }
 
     // add to next strip
     MCVeloFE* nextStrip=findOrInsertNextStrip(FEIt,valid,create);
-    if( verbose ) {
-      log << MSG::VERBOSE << " create " << create << " valid " << valid
-          << endmsg;
+    if( isVerbose ) {
+      verbose() << " create " << create << " valid " << valid
+		<< endmsg;
     }
     if (valid) fillFE(nextStrip,coupledSignal);
 
-    if( verbose ) {
-      log << MSG::VERBOSE << " base " << (*FEIt)->strip() << " "
-          << (*FEIt)->sensor() << endmsg;
-      if (valid) log << MSG::VERBOSE << " next " << nextStrip->strip() << " "
-                     << nextStrip->sensor() << endmsg;
+    if( isVerbose ) {
+      verbose() << " base " << (*FEIt)->strip() << " "
+		<< (*FEIt)->sensor() << endmsg;
+      if (valid) verbose() << " next " << nextStrip->strip() << " "
+			   << nextStrip->sensor() << endmsg;
     }
 
   } // end of loop over hits
 
   // add any newly created FEs
-  log << MSG::DEBUG << "FEs created by coupling routine "
-      << m_FEs_coupling->size() << endmsg;
+  if(isDebug) debug() << "FEs created by coupling routine "
+		      << m_FEs_coupling->size() << endmsg;
   for (MCVeloFEs::iterator coupIt=m_FEs_coupling->begin();
        coupIt<m_FEs_coupling->end(); coupIt++){
     MCVeloFE* myFE = m_FEs->object( (*coupIt)->key() );
     if ( 0 != myFE ) {
       myFE->setAddedSignal( myFE->addedSignal() + (*coupIt)->addedSignal() );
-      if( verbose ) {
-        log << MSG::VERBOSE << " -- Existing FE. "
-            << (*coupIt)->sensor() << ","
-            << (*coupIt)->strip() << " Update with coupling FE." << endmsg;
+      if( isVerbose ) {
+        verbose() << " -- Existing FE. "
+		  << (*coupIt)->sensor() << ","
+		  << (*coupIt)->strip() << " Update with coupling FE." << endmsg;
       }
     } else {
-      if( verbose ) {
-        log << MSG::VERBOSE << " -- Add coupling FE "
-            << (*coupIt)->sensor() << ","
-            << (*coupIt)->strip() << endmsg;
+      if( isVerbose ) {
+        verbose() << " -- Add coupling FE "
+		  << (*coupIt)->sensor() << ","
+		  << (*coupIt)->strip() << endmsg;
       }
       m_FEs->insert(*coupIt);
     }
   }
   delete m_FEs_coupling;
-  log << MSG::DEBUG << "Number of FEs after coupling simulation "
-      << m_FEs->size() << endmsg;
+  if(isDebug) debug() << "Number of FEs after coupling simulation "
+		      << m_FEs->size() << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -809,9 +788,7 @@ StatusCode VeloSim::coupling(){
 //=========================================================================
 MCVeloFE* VeloSim::findOrInsertPrevStrip(MCVeloFEs::iterator FEIt,
                                          bool& valid, bool& create){
-  MsgStream  log( msgSvc(), name() );
-  bool verbose = ( log.level() <= MSG::VERBOSE );
-  valid=true;
+  bool isVerbose = msgLevel( MSG::VERBOSE );
   // try previous entry in container
   MCVeloFE* prevStrip=(*FEIt);
   if (FEIt!=m_FEs->begin()){
@@ -821,9 +798,11 @@ MCVeloFE* VeloSim::findOrInsertPrevStrip(MCVeloFEs::iterator FEIt,
   }
   // check this
   int checkDistance;
-  StatusCode exists=m_velo->channelDistance((*FEIt)->key(),prevStrip->key(),
-                                            checkDistance);
-  if(exists.isSuccess()) return prevStrip;
+  StatusCode sc=m_velo->channelDistance((*FEIt)->key(),prevStrip->key(),
+                                        checkDistance);
+  valid = sc.isSuccess();
+  bool exists=(-1 == checkDistance && valid);
+  if(exists) return prevStrip;
 
   // check if just added this strip in other container
   if (m_FEs_coupling->size()!=0){
@@ -831,24 +810,27 @@ MCVeloFE* VeloSim::findOrInsertPrevStrip(MCVeloFEs::iterator FEIt,
     prevStrip=(*last);
   }
   // check this
-  exists=m_velo->channelDistance((*FEIt)->key(),prevStrip->key(),
-                                 checkDistance);
-  if(exists.isSuccess()) return prevStrip;
-
+  sc=m_velo->channelDistance((*FEIt)->key(),prevStrip->key(),
+                             checkDistance);
+  valid = sc.isSuccess();
+  exists=(-1 == checkDistance && valid);
+  if(exists) return prevStrip;
+  
   // doesn't exist so insert a new strip (iff create is true)
   if (create){
     VeloChannelID stripKey;
-    exists = m_velo->neighbour((*FEIt)->key(),-1,stripKey);
-    if(exists.isSuccess()){
+    sc = m_velo->neighbour((*FEIt)->key(),-1,stripKey);
+    if(sc.isSuccess()){
       //== Protect if key already exists ==
       prevStrip = m_FEs_coupling->object(stripKey);
       if ( 0 != prevStrip ) return prevStrip;
-      if( verbose ) {
-        log << MSG::VERBOSE << " create strip" << stripKey.strip() << " "
-            << stripKey.sensor() << endmsg;
+      if( isVerbose ) {
+        verbose() << " create strip" << stripKey.strip() << " "
+		  << stripKey.sensor() << endmsg;
       }
       prevStrip = new MCVeloFE(stripKey);
       m_FEs_coupling->insert(prevStrip);
+      valid=true;
     }
     else{
       valid=false;
@@ -869,10 +851,8 @@ MCVeloFE* VeloSim::findOrInsertNextStrip(MCVeloFEs::iterator FEIt,
                                          bool& valid, bool& create){
   // From an originally sorted list, find the strip with the previous key,
   // or create a new one.
-  MsgStream  log( msgSvc(), name() );
-  bool verbose = ( log.level() <= MSG::VERBOSE );
+  bool isVerbose = msgLevel( MSG::VERBOSE );
 
-  valid=true;
   // try next entry in container
   MCVeloFE* nextStrip=*FEIt;
   MCVeloFEs::iterator last = m_FEs->end(); last--;
@@ -885,24 +865,27 @@ MCVeloFE* VeloSim::findOrInsertNextStrip(MCVeloFEs::iterator FEIt,
   // check this
   // check this
   int checkDistance;
-  StatusCode exists=m_velo->channelDistance((*FEIt)->key(),nextStrip->key(),
-                                            checkDistance);
-  if(exists.isSuccess()) return nextStrip;
+  StatusCode sc=m_velo->channelDistance((*FEIt)->key(),nextStrip->key(),
+					checkDistance);
+  valid = sc.isSuccess();
+  bool exists=(1 == checkDistance && valid);
+  if(exists) return nextStrip;
 
   // doesn't exist so insert a new strip (iff create is true)
   if (create){
     VeloChannelID stripKey;
-    exists=m_velo->neighbour((*FEIt)->key(),+1,stripKey);
-    if(exists.isSuccess()){
+    sc=m_velo->neighbour((*FEIt)->key(),+1,stripKey);
+    if(sc.isSuccess()){
       //== Protect if key already exists ==
       nextStrip = m_FEs_coupling->object(stripKey);
       if ( 0 != nextStrip ) return nextStrip;
-      if( verbose ) {
-        log << MSG::VERBOSE << " create strip" << stripKey.strip() << " "
-            << stripKey.sensor() << endmsg;
+      if( isVerbose ) {
+        verbose() << " create strip" << stripKey.strip() << " "
+		  << stripKey.sensor() << endmsg;
       }
       nextStrip = new MCVeloFE(stripKey);
       m_FEs_coupling->insert(nextStrip);
+      valid=true;
     }
     else{
       valid=false;
@@ -929,9 +912,11 @@ StatusCode VeloSim::pedestalSim(){
 //
 //=========================================================================
 StatusCode VeloSim::noiseSim(){
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "===> Noise simulation" << endmsg;
-  bool verbose = ( log.level() <= MSG::VERBOSE );
+
+  bool isDebug   = msgLevel( MSG::DEBUG   );
+  bool isVerbose = msgLevel( MSG::VERBOSE );
+
+  if(isDebug) debug() << "===> Noise simulation" << endmsg;
   // consider noise contributions due to
   // 1) strip capacitance and 2) leakage current.
 
@@ -956,9 +941,9 @@ StatusCode VeloSim::noiseSim(){
     if ((*FEIt)->addedNoise()==0){
       double noise=noiseValue(stripCapacitance);
       (*FEIt)->setAddedNoise(noise);
-      if( verbose ) {
-        log << MSG::VERBOSE << " noise added to existing strip "
-            << (*FEIt)->addedNoise()<< endmsg;
+      if( isVerbose ) {
+        verbose() << " noise added to existing strip "
+		  << (*FEIt)->addedNoise()<< endmsg;
       }
     }
   }
@@ -967,11 +952,10 @@ StatusCode VeloSim::noiseSim(){
   // have signal
   int maxSensor=0;
   int minSensor=0;
-  if (m_simMode=="velo"){
+  if (m_simMode=="velo") {
     minSensor=m_velo->numberPileUpSensors();
     maxSensor=m_velo->numberSensors();
-  }
-  if (m_simMode=="pileUp") {
+  } else if (m_simMode=="pileUp") {
     maxSensor=m_velo->numberPileUpSensors();
   }
   
@@ -987,21 +971,21 @@ StatusCode VeloSim::noiseSim(){
     int maxStrips= m_velo->numberStrips(sensor);
     int hitNoiseTotal= 
       int(LHCbMath::round(2.*gsl_sf_erf_Q(VeloSimParams::threshold/noiseSig)
-                           *float(maxStrips)));
+			  *float(maxStrips)));
     Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
-    //    log <<  MSG::INFO << " poisson" << poisson() << endmsg;
+    //    info() << " poisson" << poisson() << endmsg;
     hitNoiseTotal = int(poisson());
 
-    if( verbose ) {
-      log << MSG::VERBOSE << "Number of strips to add noise to "
-          << hitNoiseTotal
-          << " sensor Number " << sensor
-          << " maxStrips " << maxStrips
-          <<  " sigma of noise " << noiseSig
-          << " threshold " << VeloSimParams::threshold
-          << " tail probability "
-          << gsl_sf_erf_Q(VeloSimParams::threshold/noiseSig)
-          << endmsg;
+    if( isVerbose ) {
+      verbose() << "Number of strips to add noise to "
+		<< hitNoiseTotal
+		<< " sensor Number " << sensor
+		<< " maxStrips " << maxStrips
+		<<  " sigma of noise " << noiseSig
+		<< " threshold " << VeloSimParams::threshold
+		<< " tail probability "
+		<< gsl_sf_erf_Q(VeloSimParams::threshold/noiseSig)
+		<< endmsg;
     }
     for (int noiseHit=0; noiseHit<hitNoiseTotal; noiseHit++){
       // choose random hit to add noise to
@@ -1013,9 +997,9 @@ StatusCode VeloSim::noiseSim(){
       if (myFE->addedNoise()==0){
         double noise=noiseValueTail(stripCapacitance);
         myFE->setAddedNoise(noise);
-        if( verbose ) {
-          log << MSG::VERBOSE << "hit from tail of noise created "
-              << myFE->addedNoise() << endmsg;
+        if( isVerbose ) {
+          verbose() << "hit from tail of noise created "
+		    << myFE->addedNoise() << endmsg;
         }
       }
       else{
@@ -1025,8 +1009,8 @@ StatusCode VeloSim::noiseSim(){
     }
 
   }
-  log << MSG::DEBUG << "Number of FEs after noise simulation "
-      << m_FEs->size() << endmsg;
+  if(isDebug) debug() << "Number of FEs after noise simulation "
+		      << m_FEs->size() << endmsg;
 
 
   return StatusCode::SUCCESS;
@@ -1068,8 +1052,6 @@ double VeloSim::noiseValueTail(double stripCapacitance){
 // common mode - not yet implemented
 //=========================================================================
 StatusCode VeloSim::CMSim(){
-  MsgStream  log( msgSvc(), name() );
-
   return StatusCode::SUCCESS;
 }
 
@@ -1077,7 +1059,6 @@ StatusCode VeloSim::CMSim(){
 // dead strips
 //=========================================================================
 StatusCode VeloSim::deadStrips(){
-  MsgStream  log( msgSvc(), name() );
 
   // Add some strip inefficiency
   // channels are given zero signal, and hence will be removed by the 
@@ -1098,15 +1079,14 @@ StatusCode VeloSim::deadStrips(){
 // find a strip in list of FEs, or if it does not currently exist create it
 //=========================================================================
 MCVeloFE* VeloSim::findOrInsertFE(VeloChannelID& stripKey){
-  MsgStream  log( msgSvc(), name() );
-  bool verbose = ( log.level() <= MSG::VERBOSE );
+  bool isVerbose = msgLevel( MSG::VERBOSE );
   MCVeloFE* myFE = m_FEs->object(stripKey);
   if (myFE==NULL) {
     // this strip has not been used before, so create
     myFE = new MCVeloFE(stripKey);
-    if( verbose ) {
-      log << MSG::VERBOSE << " -- Add FE " << stripKey.sensor() << ","
-          << stripKey.strip() << endmsg;
+    if( isVerbose ) {
+      verbose() << " -- Add FE " << stripKey.sensor() << ","
+		<< stripKey.strip() << endmsg;
     }
     m_FEs->insert(myFE);
   }
@@ -1140,19 +1120,19 @@ StatusCode VeloSim::finalProcess(){
 // store MCFEs
 //=========================================================================
 StatusCode VeloSim::storeOutputData(){
-  MsgStream  log( msgSvc(), name() );
+  bool isDebug   = msgLevel( MSG::DEBUG   );
 
   StatusCode sc;
   // velo FEs
   sc = eventSvc()->registerObject(m_outputContainer,m_veloFEs);
 
   if ( sc ) {
-    log << MSG::DEBUG << "Stored " << m_veloFEs->size() << " MCVeloFEs at "
-        << m_outputContainer << endmsg;
+    if(isDebug) debug() << "Stored " << m_veloFEs->size() << " MCVeloFEs at "
+			<< m_outputContainer << endmsg;
   }
   else{
-    log << MSG::ERROR << "Unable to store MCVeloFEs at "
-        << m_outputContainer << endmsg;
+    error() << "Unable to store MCVeloFEs at "
+	    << m_outputContainer << endmsg;
   }
 
   // pileup FEs
@@ -1161,12 +1141,12 @@ StatusCode VeloSim::storeOutputData(){
     sc = eventSvc()->registerObject(m_pileUpOutputContainer,m_pileUpFEs);
 
     if ( sc ) {
-      log << MSG::DEBUG << "Stored " << m_pileUpFEs->size() << " MCVeloFEs at "
-          << m_pileUpOutputContainer << endmsg;
+      if(isDebug) debug() << "Stored " << m_pileUpFEs->size() << " MCVeloFEs at "
+			  << m_pileUpOutputContainer << endmsg;
     }
     else{
-      log << MSG::ERROR << "Unable to store MCVeloFEs at "
-          << m_pileUpOutputContainer << endmsg;
+      error() << "Unable to store MCVeloFEs at "
+	      << m_pileUpOutputContainer << endmsg;
     }
   }
 
@@ -1177,9 +1157,8 @@ StatusCode VeloSim::storeOutputData(){
 //  Finalize
 //=============================================================================
 StatusCode VeloSim::finalize() {
-
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endmsg;
+  
+  debug() << "==> Finalize" << endmsg;
 
   return StatusCode::SUCCESS;
 }
