@@ -9,8 +9,10 @@
 ! 2005-02-03 - Marco Cattaneo
  - Move to Gaudi v16r0
  - Packages removed:  GaudiObjDesc (go back to version picked up from Gaudi)
+                      RichTools, RichMCTools (moved to Lbcom)
  - Packages added:    AsctToLinker (previously in Boole, Brunel)
                       L0mConf, L0MuonKernel (previously in Boole, DaVinci)
+                      RichRecBase (previously in Brunel, DaVinci)
  - Packages modified: GaudiConf v9r0, DAQSys v1r0p1, STDAQ v1r4p1, CaloDAQ v1r0p1,
      KernelSys v4r7, LHCbKernel v5r7, Relations v2r2, EventSys v20r0,
      PhysEvent v8r2, TrEvent v14r2, RichEvent v8r1p1, LinkerEvent v1r6,

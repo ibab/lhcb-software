@@ -83,8 +83,7 @@ use LHCbAlgs		v1r3p1	Kernel
 use MCTools		v1r12	Phys
 use CaloInterfaces	v4r3	Calo
 use CaloUtils		v4r8	Calo
-use RichTools		v1r3	Rich
-use RichMCTools		v2r4	Rich
+use RichRecBase		v1r14p1 Rich
 use L0mConf		v2r2p3	L0
 use L0MuonKernel	v2r3	L0
 
