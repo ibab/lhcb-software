@@ -1,16 +1,6 @@
-// $Id: CaloCellCode.h,v 1.1 2002-03-18 17:21:46 ibelyaev Exp $ 
+// $Id: CaloCellCode.h,v 1.2 2003-11-24 15:09:27 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
-// New Package: substitution of the  previous CaloGen package
-//
-// Revision 1.6  2001/07/12 20:12:30  ibelyaev
-// bug fix (Win2K)
-//
-// Revision 1.5  2001/06/23 14:39:31  ibelyaev
-//  fix CVS-keywords and remove long lines
 // ============================================================================
 #ifndef      KERNEL_CALOCELLCODE_H 
 #define      KERNEL_CALOCELLCODE_H 1
@@ -105,7 +95,7 @@ namespace CaloCellCode
     const    char* str;  
     unsigned int   len ;
   };
-  /// return calorimeter number from name, returns -1 for wrong name! 
+  // return calorimeter number from name, returns -1 for wrong name! 
   static inline const int   CaloNumFromName( const char* name ) 
   {
     typedef const char* const* iterator;  
@@ -114,10 +104,10 @@ namespace CaloCellCode
     iterator  it    = std::find_if( begin , end , NameMatch( name ) );        
     return end == it ? -1 : (int) ( it - begin) ;
   };
-  /// return calorimeter number from name, returns -1 for wrong name! 
+  // return calorimeter number from name, returns -1 for wrong name! 
   static inline const int   CaloNumFromName( const std::string & name ) 
   { return CaloNumFromName( name.c_str() ); } 
-  /// return calorimeter names from nums
+  // return calorimeter names from nums
   static inline const std::string CaloNameFromNum( const int num )
   {
     return 

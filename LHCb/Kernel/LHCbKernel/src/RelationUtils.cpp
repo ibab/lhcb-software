@@ -1,17 +1,6 @@
-// $Id: RelationUtils.cpp,v 1.5 2003-06-25 15:40:27 ibelyaev Exp $
+// $Id: RelationUtils.cpp,v 1.6 2003-11-24 15:09:27 cattanem Exp $
 // ============================================================================
 // CVS tag $name:$
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2003/06/25 14:59:02  ibelyaev
-//  Modifications in Relations-subpackage
-//
-// Revision 1.3  2002/05/24 18:36:33  ibelyaev
-//  see $LHCBKERNELROOT/doc/release.notes
-//
-// Revision 1.2  2002/04/03 15:35:19  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-// 
 // ============================================================================
 // Include files
 // STD & STL
@@ -35,8 +24,7 @@
 // ============================================================================
 
 // ============================================================================
-/** @fn interfaceID 
- *   
+/**
  *  funtion to create the uniqie relation 
  *  interfaceID from interface name, CLIDs and types 
  *  
@@ -71,8 +59,7 @@ InterfaceID Relations::interfaceID
 };
 
 // ============================================================================
-/** @fn clid 
- *   
+/**
  *  function to create the uniqie relation 
  *  clid from object name, CLIDs and types 
  *  

@@ -1,20 +1,6 @@
-// $Id: RelationUtils.h,v 1.6 2003-06-26 09:55:44 ibelyaev Exp $
+// $Id: RelationUtils.h,v 1.7 2003-11-24 15:09:27 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2003/06/25 14:59:01  ibelyaev
-//  Modifications in Relations-subpackage
-//
-// Revision 1.4  2002/04/25 08:44:04  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.3  2002/04/24 21:16:40  ibelyaev
-//  fix one more problem for Win2K
-//
-// Revision 1.2  2002/04/03 15:35:18  ibelyaev
-// essential update and redesing of all 'Relations' stuff
-//
 // ============================================================================
 #ifndef RELATIONS_RELATIONUTILS_H 
 #define RELATIONS_RELATIONUTILS_H 1
@@ -29,8 +15,7 @@
 
 namespace Relations
 {
-  /** @fn interfaceID 
-   *   
+  /**
    *  funtion to create the uniqie relation 
    *  interfaceID from interface name, CLIDs and types 
    *  
@@ -51,8 +36,7 @@ namespace Relations
                             const unsigned long major   = 0  , 
                             const unsigned long minor   = 0  ) ;
   
-  /** @fn clid 
-   *   
+  /**
    *  function to create the uniqie relation 
    *  clid from object name, CLIDs and types 
    *  

@@ -2,12 +2,15 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!======================= LHCbKernel v2r9 2003-11-24 =======================
+! 2003-11-24 - Marco Cattaneo
+ - Fix doxygen warnings
+
 ! 2003-11-24 - Vanya BELYAEV
  - xml/CaloCellID.xml    new file : XML description of CaloCellID class
  - xml/LHCbKernel.xml    add reference to CaloCellID.xml file 
  - Kernel/CaloCellID.h   remove the file from cvs 
 
-!======================= LHCbKernel v2r9 2003-11-24 =======================
 ! 2003-11-24 - Guy Barrand
  - CaloPrint.h: add print method for long unsigned int, to please Mac OS X
 
