@@ -1,5 +1,5 @@
 package Brunel
-version v4
+version v5
 
 branches doc cmt src job options Brunel
 
@@ -15,59 +15,59 @@ ignore_pattern   package_tag
 version_strategy first_choice
 
 # Gaudi Configuration options
-use GaudiConf    v4
+use GaudiConf    v5
 
 # Gaudi Framework 
-use GaudiSys     v7r2
-use HbookCnv     v9
+use GaudiSys     v8
+use HbookCnv     v10
 
 # Additional external libraries
 use XML          v3r1
-use CERNLIB      v2000
+use CERNLIB      v2001
 
 # Brunel utilities
-use BrunelKernel v1     Rec
+use BrunelKernel v2     Rec
 
 # Detector description
-use DetDesc      v6     Det
-use XmlDDDB      v5     Det
-use CaloDet      v1     Det
+use DetDesc      v7     Det
+use XmlDDDB      v6     Det
+use CaloDet      v2     Det
 
 # Event Model
-use LHCbEvent    v10    Event
-use L0Event      v2     Event
-use ITEvent      v4     Event
-use OTEvent      v4     Event
-use TrEvent      v4r1   Event
-use CaloEvent    v5     Event
-use VeloEvent    v4     Event
+use LHCbEvent    v11    Event
+use L0Event      v3     Event
+use ITEvent      v5     Event
+use OTEvent      v5     Event
+use TrEvent      v5     Event
+use CaloEvent    v6     Event
+use VeloEvent    v5     Event
 
 # L0 trigger
-use L0Calo       v1     L0
-use L0Muon       v2     L0
-use L0DU         v1     L0
+use L0Calo       v2     L0
+use L0Muon       v3     L0
+use L0DU         v2     L0
 
 # Calorimeter digitisation
-use CaloGen      v1     Calo
-use CaloAlgs     v2     Calo
+use CaloGen      v2     Calo
+use CaloAlgs     v3     Calo
 
 # Tracking
-use TrKernel     v4     Tr
-use ITAlgorithms v4	IT
-use OTAlgorithms v4	OT
-use TrAlgorithms v4r1	Tr
+use TrKernel     v5     Tr
+use ITAlgorithms v5	IT
+use OTAlgorithms v5	OT
+use TrAlgorithms v5	Tr
 
 # SicB event data persistency
-use SicbCnv      v12    SICB
-use CaloSicbCnv  v3     SICB
-use L0SicbCnv    v2     SICB
-use MuonSicbCnv  v2     SICB
-use TrSicbCnv    v1     SICB
-use VSicbCnv     v4	SICB
+use SicbCnv      v13    SICB
+use CaloSicbCnv  v4     SICB
+use L0SicbCnv    v3     SICB
+use MuonSicbCnv  v3     SICB
+use TrSicbCnv    v2     SICB
+use VSicbCnv     v5	SICB
 
 use dbase        v239   SICB
 use Futio        v11    SICB
-use GDUMMY       v1r4   SICB
+use GDUMMY       v1r5   SICB
 
 # SICBDST packages
 use Futil        v10r3  SICB
@@ -105,3 +105,5 @@ macro Brunel_linkopts    "$(application_linkopts)"
 macro_append Brunel_linkopts " "\
                 Linux        " -g -Wl,--start-group "\
                 Linuxdbx     " -g -Wl,--start-group "
+
+apply_pattern application_path

@@ -3,6 +3,9 @@ Package Coordinator: Marco Cattaneo
 
 Purupose: LHCb reconstruction program
 
+! 20010720 Brunel v5 (Flr)
+   use Gaudi v8 and LHCb v8 not completely debugged
+! =================================================================
 ! 20010629 Brunel v4 (MC)
    Add C++ L0 trigger simulation
    Remove old L0_2x2 simulation
