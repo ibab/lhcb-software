@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.52 2004-02-13 13:44:15 cattanem Exp $
+! $Id: release.notes,v 1.53 2004-02-13 16:02:10 mtobin Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2004-02-13 - Mark Tobin
+ - Added angleOfStrip to replace phiDirectionOfStrip in old DeVelo.
 
 !========================= VeloDet v9r0 2004-02-13 =========================
    >> Requires XmlDDDB v22r0 or greater <<
