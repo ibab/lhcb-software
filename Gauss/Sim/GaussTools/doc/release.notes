@@ -4,6 +4,9 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2003-01-23 - Vanya Belyaev 
+   few fixes for Win2K platform 
+
 ! 2003-01008 - Witek Pokorski
  - GaussInitialisation - added new jobOption to specify the number of the 
                          first event to be processed

@@ -1,8 +1,11 @@
-// $Id: GiGaTrackActionSequence.cpp,v 1.1 2002-12-12 15:19:33 witoldp Exp $ 
+// $Id: GiGaTrackActionSequence.cpp,v 1.2 2003-01-23 09:36:56 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/12 15:19:33  witoldp
+// major repackaging
+//
 // Revision 1.2  2002/12/07 14:41:44  ibelyaev
 //  add new Calo stuff
 //
@@ -102,9 +105,13 @@ StatusCode GiGaTrackActionSequence::finalize   ()
 {
   Print("Finalization" , StatusCode::SUCCESS , MSG::VERBOSE );
   // release all memebrs 
-  std::for_each( m_actions.begin () ,
-                 m_actions.end   () ,
-                 std::mem_fun(&IInterface::release) );         
+  for( ACTIONS::iterator iaction = m_actions.begin() ; 
+       m_actions.end() != iaction ; ++iaction )
+    {
+      IInterface*   action = *iaction ;
+      if( 0 != action ) { action->release() ; }
+      *iaction = 0 ;
+    }
   m_actions.clear();
   // finalize the base class
   return GiGaTrackActionBase::finalize() ;
@@ -121,19 +128,22 @@ void GiGaTrackActionSequence::PreUserTrackingAction  ( const G4Track* track )
   // set the tracking manager for all members 
   if( ! m_setMgr ) 
     {
-      G4TrackingManager* mgr = trackMgr();
-      std::for_each( m_actions.begin () , 
-                     m_actions.end   () ,
-                     std::bind2nd( std::mem_fun1(&IGiGaTrackAction::
-                                                 SetTrackingManagerPointer) , 
-                                   mgr ) ) ;
+      for( ACTIONS::iterator iaction = m_actions.begin() ; 
+           m_actions.end() != iaction ; ++iaction )
+        {
+          G4TrackingManager* mgr    = trackMgr();
+          IGiGaTrackAction*   action = *iaction ;
+          if( 0 != action ) { action->SetTrackingManagerPointer( mgr ) ; }
+        }
       m_setMgr = true;
     }
   // tracking actions of all members  
-  std::for_each( m_actions.begin () , 
-                 m_actions.end   () ,
-                 std::bind2nd( std::mem_fun1(&IGiGaTrackAction::
-                                             PreUserTrackingAction),track ) ) ;
+  for( ACTIONS::iterator iaction = m_actions.begin() ; 
+       m_actions.end() != iaction ; ++iaction )
+    {
+      IGiGaTrackAction*   action = *iaction ;
+      if( 0 != action ) { action->PreUserTrackingAction( track ) ; }
+    }
 };
 // ============================================================================
 
@@ -147,19 +157,22 @@ void GiGaTrackActionSequence::PostUserTrackingAction  ( const G4Track* track )
   // set the tracking manager for all members 
   if( ! m_setMgr ) 
     {
-      G4TrackingManager* mgr = trackMgr();
-      std::for_each( m_actions.begin () , 
-                     m_actions.end   () ,
-                     std::bind2nd( std::mem_fun1(&IGiGaTrackAction::
-                                                 SetTrackingManagerPointer) , 
-                                   mgr ) ) ;
+      for( ACTIONS::iterator iaction = m_actions.begin() ; 
+           m_actions.end() != iaction ; ++iaction )
+        {
+          G4TrackingManager* mgr    = trackMgr();
+          IGiGaTrackAction*   action = *iaction ;
+          if( 0 != action ) { action->SetTrackingManagerPointer( mgr ) ; }
+        }
       m_setMgr = true;
     }
   // tracking actions of all members  
-  std::for_each( m_actions.begin () , 
-                 m_actions.end   () ,
-                 std::bind2nd( std::mem_fun1(&IGiGaTrackAction::
-                                             PostUserTrackingAction),track ) );
+  for( ACTIONS::iterator iaction = m_actions.begin() ; 
+       m_actions.end() != iaction ; ++iaction )
+    {
+      IGiGaTrackAction*   action = *iaction ;
+      if( 0 != action ) { action->PostUserTrackingAction( track ) ; }
+    }
 };
 // ============================================================================
 

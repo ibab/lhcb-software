@@ -1,6 +1,6 @@
 # =============================================================================
 package GaussTools
-version v6r0
+version v6r1
 
 # =============== package structure ===========================================
 branches          cmt src doc GaussTools
@@ -9,10 +9,10 @@ branches          cmt src doc GaussTools
 use GiGaCnv       v11r*     Sim
 
 # =============== Event =======================================================
-use VeloEvent     v12r*     Event
-use MuonEvent     v2r*      Event
-use RichEvent     v4r*      Event
-use CaloEvent     v11r*     Event 
+use VeloEvent     v*     Event
+use MuonEvent     v*     Event
+use RichEvent     v*     Event
+use CaloEvent     v*     Event 
 
 # ============== linker library ===============================================
 library          GaussToolsLib           Lib/*.cpp

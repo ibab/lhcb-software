@@ -1,8 +1,11 @@
-// $Id: GiGaStepActionSequence.cpp,v 1.1 2002-12-12 15:19:33 witoldp Exp $ 
+// $Id: GiGaStepActionSequence.cpp,v 1.2 2003-01-23 09:36:56 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/12 15:19:33  witoldp
+// major repackaging
+//
 // Revision 1.2  2002/12/07 14:41:44  ibelyaev
 //  add new Calo stuff
 //
@@ -112,10 +115,15 @@ StatusCode GiGaStepActionSequence::initialize()
 StatusCode GiGaStepActionSequence::finalize() 
 {
   Print("Finalization" , StatusCode::SUCCESS , MSG::VERBOSE );
-  // finalize all members 
-  std::for_each  ( m_actions.begin () , 
-                   m_actions.end   () ,
-                   std::mem_fun(&IInterface::release) );
+  // finalize all members
+  for( ACTIONS::iterator iaction = m_actions.begin() ; 
+       m_actions.end() != iaction ; ++iaction )
+    {
+      IInterface*  action = *iaction ;
+      if( 0 != action ) { action->release() ; }
+      *iaction = 0 ;
+    }
+  m_actions.clear();
   // finalize base class 
   return GiGaStepActionBase::finalize();
 };
@@ -129,10 +137,12 @@ StatusCode GiGaStepActionSequence::finalize()
 void GiGaStepActionSequence::UserSteppingAction ( const G4Step* step )
 {
   /// stepping actions of all members  
-  std::for_each  ( m_actions.begin () , 
-                   m_actions.end   () ,
-                   std::bind2nd( std::mem_fun1(&IGiGaStepAction::
-                                               UserSteppingAction) , step ) );
+  for( ACTIONS::iterator iaction = m_actions.begin() ; 
+       m_actions.end() != iaction ; ++iaction )
+    {
+      IGiGaStepAction*  action = *iaction ;
+      if( 0 != action ) { action->UserSteppingAction( step ) ; }
+    }
 };
 // ============================================================================
 

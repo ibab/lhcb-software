@@ -1,8 +1,11 @@
-// $Id: GiGaRunActionSequence.cpp,v 1.1 2002-12-12 15:19:32 witoldp Exp $ 
+// $Id: GiGaRunActionSequence.cpp,v 1.2 2003-01-23 09:36:56 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/12 15:19:32  witoldp
+// major repackaging
+//
 // Revision 1.2  2002/12/07 14:41:44  ibelyaev
 //  add new Calo stuff
 //
@@ -110,9 +113,13 @@ StatusCode GiGaRunActionSequence::finalize()
 {
   Print("Finalization", StatusCode::SUCCESS , MSG::VERBOSE );
   // release all members 
-  std::for_each  ( m_actions.begin () , 
-                   m_actions.end   () ,
-                   std::mem_fun(&IGiGaRunAction::release) );
+  for( ACTIONS::iterator iaction = m_actions.begin() ; 
+       m_actions.end() != iaction ; ++iaction )
+    {
+      IInterface*  action = *iaction ;
+      if( 0 != action ) { action->release() ; }
+      *iaction = 0 ;
+    }
   m_actions.clear();
   // finalize teh base class 
   return GiGaRunActionBase::finalize();
@@ -126,9 +133,12 @@ StatusCode GiGaRunActionSequence::finalize()
 void GiGaRunActionSequence::BeginOfRunAction ( const G4Run* run )
 {
   // run actions of all members  
-  std::for_each ( m_actions.begin () , m_actions.end   () ,
-                  std::bind2nd( std::mem_fun1(&IGiGaRunAction::
-                                              BeginOfRunAction) , run ) );
+  for( ACTIONS::iterator iaction = m_actions.begin() ; 
+       m_actions.end() != iaction ; ++iaction )
+    {
+      IGiGaRunAction* action = *iaction ;
+      if( 0 != action ) { action->BeginOfRunAction( run ) ; }
+    }
 };
 // ============================================================================
 
@@ -140,9 +150,12 @@ void GiGaRunActionSequence::BeginOfRunAction ( const G4Run* run )
 void GiGaRunActionSequence::EndOfRunAction ( const G4Run* run )
 {
   // run actions of all members  
-  std::for_each ( m_actions.begin () , m_actions.end   () ,
-                  std::bind2nd( std::mem_fun1(&IGiGaRunAction::
-                                              EndOfRunAction) , run ) );
+  for( ACTIONS::iterator iaction = m_actions.begin() ; 
+       m_actions.end() != iaction ; ++iaction )
+    {
+      IGiGaRunAction* action = *iaction ;
+      if( 0 != action ) { action->BeginOfRunAction( run ) ; }
+    }
 };
 // ============================================================================
 

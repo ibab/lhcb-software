@@ -1,8 +1,11 @@
-// $Id: GiGaStream.cpp,v 1.4 2002-12-13 16:58:45 ibelyaev Exp $ 
+// $Id: GiGaStream.cpp,v 1.5 2003-01-23 09:36:56 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/12/13 16:58:45  ibelyaev
+//  put modifications and bug fixes
+//
 // Revision 1.3  2002/12/07 14:41:45  ibelyaev
 //  add new Calo stuff
 //
@@ -187,7 +190,7 @@ StatusCode GiGaStream::LoadObject( const IRegistry*     registry ,
     { return Error("LoadObject:: IDataProviderSvc* points to NULL "  ); }
   ///
   SmartIF<IDataManagerSvc> dataMgr( registry->dataSvc() );
-  if(  0 == dataMgr ) 
+  if( !dataMgr ) 
     { return Error(" LoadObject:: IDataManagerSvc* points to NULL for '"
                    + registry->identifier() + "'" ); }
   ///

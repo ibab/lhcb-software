@@ -1,8 +1,11 @@
-// $Id: GiGaEventActionSequence.cpp,v 1.1 2002-12-12 15:19:31 witoldp Exp $
+// $Id: GiGaEventActionSequence.cpp,v 1.2 2003-01-23 09:36:56 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/12 15:19:31  witoldp
+// major repackaging
+//
 // Revision 1.2  2002/12/07 14:41:44  ibelyaev
 //  add new Calo stuff
 //
@@ -108,9 +111,14 @@ StatusCode GiGaEventActionSequence::finalize()
 {
   Print("Finalization", StatusCode::SUCCESS , MSG::VERBOSE );
   // release  all members 
-  std::for_each  ( m_actions.begin () , 
-                   m_actions.end   () ,
-                   std::mem_fun(&IInterface::release) );
+  for( ACTIONS::iterator iaction = m_actions.begin() ; 
+       m_actions.end() != iaction ; ++iaction )
+    {
+      IInterface*  action = *iaction ;
+      if( 0 != action ) { action->release() ; }
+      *iaction = 0 ;
+    }
+  m_actions.clear();
   //
   return GiGaEventActionBase::finalize();
 };
@@ -124,10 +132,12 @@ StatusCode GiGaEventActionSequence::finalize()
 void GiGaEventActionSequence::BeginOfEventAction ( const G4Event* event )
 {
   // stepping actions of all members  
-  std::for_each ( m_actions.begin () , 
-                  m_actions.end   () ,
-                  std::bind2nd( std::mem_fun1(&IGiGaEventAction::
-                                              BeginOfEventAction) , event ) );
+  for( ACTIONS::iterator iaction = m_actions.begin() ; 
+       m_actions.end() != iaction ; ++iaction )
+    {
+      IGiGaEventAction* action = *iaction ;
+      if( 0 != action ) { action->BeginOfEventAction( event ) ; }
+    }
 };
 // ============================================================================
 
@@ -139,10 +149,12 @@ void GiGaEventActionSequence::BeginOfEventAction ( const G4Event* event )
 void GiGaEventActionSequence::EndOfEventAction ( const G4Event* event )
 {
   // stepping actions of all members  
-  std::for_each ( m_actions.begin () , 
-                  m_actions.end   () ,
-                  std::bind2nd( std::mem_fun1(&IGiGaEventAction::
-                                              EndOfEventAction) , event ) );
+  for( ACTIONS::iterator iaction = m_actions.begin() ; 
+       m_actions.end() != iaction ; ++iaction )
+    {
+      IGiGaEventAction* action = *iaction ;
+      if( 0 != action ) { action->EndOfEventAction( event ) ; }
+    }
 };
 // ============================================================================
 
