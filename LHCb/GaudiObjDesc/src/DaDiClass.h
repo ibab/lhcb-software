@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.5 2001-10-19 17:28:29 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.6 2001-11-05 19:51:58 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -194,6 +194,8 @@ inline void DaDiClass::setLongDesc(DOMString value)
 	m_longDesc = value;
 }
 
+
+
 inline std::string DaDiClass::popImpSoftList()
 {
 	std::string pt = m_impSoftList.front();
@@ -204,7 +206,26 @@ inline std::string DaDiClass::popImpSoftList()
 
 inline void DaDiClass::pushImpSoftList(std::string value)
 {
-	m_impSoftList.push_back(value);
+  int i;
+  bool inList = false;
+  for (i=0; i<sizeImportList(); ++i)
+  {
+    if (value == popImportList())
+    {
+      inList = true;
+    }
+  }
+  for (i=0; i<m_impSoftList.size(); ++i)
+  {
+    if (value == popImpSoftList())
+    {
+      inList = true;
+    }
+  }
+  if (!inList)
+  {
+	  m_impSoftList.push_back(value);
+  }
 }
 
 inline int DaDiClass::sizeImpSoftList()
@@ -228,7 +249,18 @@ inline std::string DaDiClass::popImpStdList()
 
 inline void DaDiClass::pushImpStdList(std::string value)
 {
-	m_impStdList.push_back(value);
+  bool inList = false;
+  for(int i=0; i<m_impStdList.size(); ++i)
+  {
+    if (value == popImpStdList())
+    {
+      inList = true;
+    }
+  }
+  if (!inList)
+  {
+	  m_impStdList.push_back(value);
+  }
 }
 
 inline int DaDiClass::sizeImpStdList()
@@ -252,12 +284,12 @@ inline std::string DaDiClass::popImportList()
 
 inline void DaDiClass::pushImportList(std::string value)
 {
-
+  int i;
 	std::string import;
 
 	while (value != "")
 	{
-		int i = value.find_first_of(":,<>");
+		i = value.find_first_of(":,<>");
 
 		if (i == -1)
 		{
@@ -290,11 +322,29 @@ inline void DaDiClass::pushImportList(std::string value)
 				(import == "stack")  || (import == "map")    ||
 				(import == "set")    || (import == "bitset"))
 			{
-				m_impStdList.push_back(import);
+				pushImpStdList(import);
 			}
 			else
 			{
-				m_importList.push_back(import);
+        for (i=0; i<sizeImpSoftList(); ++i)
+        {
+          if (import == m_impSoftList.front())
+          {
+            m_impSoftList.pop_front();
+          }
+        }
+        bool inList = false;
+        for (i=0; i<m_importList.size(); ++i)
+        {
+          if (import == popImportList())
+          {
+            inList = true;
+          }
+        }
+        if (!inList)
+        {
+				  m_importList.push_back(import);
+        }
 			}
 		}
 	}

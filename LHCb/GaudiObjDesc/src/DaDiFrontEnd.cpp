@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.8 2001-11-01 14:26:24 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.9 2001-11-05 19:51:58 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -54,7 +54,10 @@ std::vector<std::string> findWords(std::string value,
   return words;
 }
 
+
+//-----------------------------------------------------------------------------
 bool isPointer(DOMString value)
+//-----------------------------------------------------------------------------
 {
   while (value.substringData(value.length()-1,1).equals(" "))
   {
@@ -505,6 +508,10 @@ void DDFE::parseClass(DOM_Node node,
               if (isPointer(argType))
               {
                 gddMethArgument->setIsPointer(true);
+                while (argType.substringData(argType.length()-1,1).equals(" "))
+                {
+                  argType = argType.substringData(argType.length()-1,1);
+                }
                 gddMethArgument->setType(argType.
                   substringData(0,argType.length()-1));
               }
@@ -526,7 +533,13 @@ void DDFE::parseClass(DOM_Node node,
                   << args[j] << "." << std::endl;
                 }
               }
+//
+// handling of Input/Output arguments here !!!!
+//
+
               gddMethArgument->setInout("INPUT");
+//
+//
             }
           }
 

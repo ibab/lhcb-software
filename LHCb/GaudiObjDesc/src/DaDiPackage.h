@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.3 2001-10-19 17:28:31 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiPackage.h,v 1.4 2001-11-05 19:51:59 mato Exp $
 #ifndef DADIPACKAGE_H 
 #define DADIPACKAGE_H 1
 
@@ -76,7 +76,18 @@ inline std::string DaDiPackage::popImpSoftList()
 
 inline void DaDiPackage::pushImpSoftList(std::string value)
 {
-  m_impSoftList.push_back(value);
+  bool doImport = true;
+  for (int i=0; i<sizeImportList(); ++i)
+  {
+    if (value == popImportList())
+    {
+      doImport = false;
+    }
+  }
+  if (doImport)
+  {
+	  m_impSoftList.push_back(value);
+  }
 }
 
 inline int DaDiPackage::sizeImpSoftList()
@@ -159,6 +170,13 @@ inline void DaDiPackage::pushImportList(std::string value)
 			}
 			else
 			{
+        for (int i=0; i<sizeImpSoftList(); ++i)
+        {
+          if (import == m_impSoftList.front())
+          {
+            m_impSoftList.pop_front();
+          }
+        }
 				m_importList.push_back(import);
 			}
 		}
