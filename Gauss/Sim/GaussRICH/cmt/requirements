@@ -1,6 +1,6 @@
 # =============================================================================
 package GaussRICH
-version v2r3
+version v3r0
 
 # =============== package structure ===========================================
 branches          cmt src doc
