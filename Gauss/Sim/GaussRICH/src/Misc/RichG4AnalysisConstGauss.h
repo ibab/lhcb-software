@@ -12,10 +12,12 @@ static const G4double AgelXBeginAnalysis=-398.0*mm;
 static const G4double AgelXEndAnalysis=398.0*mm;
 static const G4double AgelYBeginAnalysis=-281.0*mm;
 static const G4double AgelYEndAnalysis=281.0*mm;
+static const G4double Rich1AnalysisXHalfSize = 1.25*m;
+static const G4double Rich1AnalysisYHalfSize = 1.80*m;
 static const G4double HpdSupPlaneTiltcosy=500;
 static const G4double HpdSupPlaneTiltcosz=260;
 static const G4double HpdSupPlaneYMid=1190.0*mm;
-static const G4double CFAnalysisUpstrXHalfSize= 3000.0*mm;
+static const G4double CF4AnalysisUpstrXHalfSize= 3000.0*mm;
 static const G4double CF4AnalysisDnstrXHalfSize= 3700.0*mm;
 static const G4double CF4AnalysisUpstrYHalfSize= 3250.0*mm;
 static const G4double CF4AnalysisDnstrYHalfSize= CF4AnalysisUpstrYHalfSize;
@@ -151,9 +153,9 @@ static const G4double Rich2FiducialUpstrZ=
 static const G4double Rich2FiducialDnstrZ =
     ZDnsRich2Analysis + Rich2FiducialZTolerence;
 static const G4double Rich2FiducialUpstrBeginX=
-     -1.0* CFAnalysisUpstrXHalfSize+Rich2FiducialLateralTolerence;
+     -1.0* CF4AnalysisUpstrXHalfSize+Rich2FiducialLateralTolerence;
 static const G4double Rich2FiducialUpstrEndX=
-     CFAnalysisUpstrXHalfSize-Rich2FiducialLateralTolerence;
+     CF4AnalysisUpstrXHalfSize-Rich2FiducialLateralTolerence;
 static const G4double Rich2FiducialUpstrBeginY= 
      -1.0*CF4AnalysisUpstrYHalfSize+Rich2FiducialLateralTolerence;
 static const G4double Rich2FiducialUpstrEndY=

@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis5.cpp,v 1.1 2004-06-03 12:44:00 seaso Exp $
+// $Id: RichG4StepAnalysis5.cpp,v 1.2 2004-06-08 08:30:14 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -69,6 +69,35 @@ void RichG4StepAnalysis5::UserSteppingAction( const G4Step* aStep )
       if(   aParticleKE > 0.0 ) {
         const G4ThreeVector & prePos=aPreStepPoint->GetPosition();
         const G4ThreeVector & postPos=aPostStepPoint->GetPosition();
+
+        if( ( prePos.z() >= ZUpsRich1Analysis &&
+            postPos.z() <= ZDnsRich1Analysis )  ||
+            ( prePos.z() >= ZUpsRich2Analysis &&
+	      postPos.z() <= ZDnsRich2Analysis )) {
+	  // additional safety to ensure that the photon step
+          // is within rich1 or rich2.
+          if( ( prePos.z() <= ZDnsRich1Analysis &&
+               prePos.x() >= -1.0*  Rich1AnalysisXHalfSize &&
+               prePos.x() <=  Rich1AnalysisXHalfSize &&
+               prePos.y() >= -1.0* Rich1AnalysisYHalfSize &&
+               prePos.y() <= Rich1AnalysisYHalfSize && 
+               postPos.z() >= ZUpsRich1Analysis &&
+               postPos.x() >=  -1.0*  Rich1AnalysisXHalfSize &&
+               postPos.x() <=    Rich1AnalysisXHalfSize &&
+               postPos.y() >= -1.0* Rich1AnalysisYHalfSize &&
+               postPos.y() <=  Rich1AnalysisYHalfSize ) ||
+	      ( prePos.z() <= ZDnsRich2Analysis &&
+                prePos.x() >= -1.0*  CF4AnalysisDnstrXHalfSize &&
+                prePos.x() <=  CF4AnalysisDnstrXHalfSize  &&
+               prePos.y() >= -1.0* CF4AnalysisDnstrYHalfSize &&
+               prePos.y() <= CF4AnalysisDnstrYHalfSize && 
+               postPos.z() >= ZUpsRich2Analysis &&
+               postPos.x() >=  -1.0*  CF4AnalysisDnstrXHalfSize &&
+               postPos.x() <=   CF4AnalysisDnstrXHalfSize &&
+               postPos.y() >= -1.0* CF4AnalysisDnstrYHalfSize &&
+               postPos.y() <=  CF4AnalysisDnstrYHalfSize ) ) {
+
+
         const G4String & aPreVolName=
                               aPreStepPoint->GetPhysicalVolume()->
                               GetLogicalVolume()->GetName();
@@ -105,17 +134,15 @@ void RichG4StepAnalysis5::UserSteppingAction( const G4Step* aStep )
             // now for rich2.    
         } else if ( prePos.z() >= ZUpsRich2Analysis &&
             postPos.z() <= ZDnsRich2Analysis  )
-           CurrentRichDetnum=1;
-           G4String  aPostVolNameM2 =std::string(aPostVolName,0,35);
             // now for mirror1 in rich2.    
          {
-            if(aPreVolName == LogVolCF4NameAnalysis &&
+           CurrentRichDetnum=1;
+           G4String  aPostVolNameM2 =std::string(aPostVolName,0,35);
+           if(aPreVolName == LogVolCF4NameAnalysis &&
                aPostVolNameM2 == LogVolRich2Mirror1NameAnalysis ){
               // the reflection happened at mirror1 at this point.
-
 	      RichG4MirrorReflPointTag(aTrack,  postPos, 1,0, aCurrentCopyNum);
-
-            }
+           }
             // now for Mirror2 in rich2
             if(aPreVolName == LogVolCF4NameAnalysis &&
                aPostVolName == LogVolRich2Mirror2NameAnalysis ){
@@ -123,15 +150,13 @@ void RichG4StepAnalysis5::UserSteppingAction( const G4Step* aStep )
 	      RichG4MirrorReflPointTag(aTrack,  postPos, 1,1, aCurrentCopyNum);
 
             }
-
-        }
-        
-        
+	 }
+	}              
+	}
       }
     }
+  
+  
   }
-  
-  
+
 }
-
-
