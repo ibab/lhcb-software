@@ -1,8 +1,11 @@
-// $Id: GiGaLeaf.cpp,v 1.1 2002-01-22 18:24:42 ibelyaev Exp $
+// $Id: GiGaLeaf.cpp,v 1.2 2002-08-23 08:19:41 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:42  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+// 
 // ============================================================================
 // Include files
 // local
@@ -34,7 +37,9 @@ GiGaLeaf::GiGaLeaf( const std::string& path  ,
   , m_clid  ( clid  ) 
   , m_pars  ( pars  ) 
   , m_ipars ( ipars )
-{};
+{      
+    if(m_pars.size()==1) { m_pars.push_back(""); };
+};
 
 // ============================================================================
 /** destructor

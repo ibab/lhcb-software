@@ -1,8 +1,11 @@
-// $Id: GiGaLeaf.h,v 1.1 2002-01-22 18:24:41 ibelyaev Exp $
+// $Id: GiGaLeaf.h,v 1.2 2002-08-23 08:19:40 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:41  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // ============================================================================
 #ifndef GIGACNV_GIGALEAF_H 
 #define GIGACNV_GIGALEAF_H 1
@@ -96,7 +99,11 @@ public:
   /** set new value for the object parameters 
    *  @param valeu new value for the object parameters 
    */
-  inline void setPars  ( const Pars&        value ) { m_pars  = value ; }
+  inline void setPars  ( const Pars&        value ) 
+  { 
+    m_pars  = value ;
+    if(m_pars.size()==1) { m_pars.push_back(""); }
+  }
 
 
   /** set new value for the object parameters 

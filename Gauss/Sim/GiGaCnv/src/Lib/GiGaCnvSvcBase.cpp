@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.8 2002-05-07 12:24:50 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.9 2002-08-23 08:19:41 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/07 12:24:50  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes 7 May 2002
+//
 // ===========================================================================
 #define GIGACNV_GIGACNVSVCBASE_CPP 1  
 // ============================================================================
@@ -564,6 +567,7 @@ StatusCode GiGaCnvSvcBase::registerGiGaLeaves()
     { 
       /// (1) create IOpaqueAddress 
       IOpaqueAddress* Address = 0 ;
+
       sc = createAddress( repSvcType () , 
                           leaf->clid () , 
                           leaf->par  () , 
