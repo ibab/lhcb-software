@@ -3,6 +3,64 @@ Package     : Phys/DaVinci
 Package Coordinator : Gloria Corti
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v8r1>2003-06-03 DaVinci v8r1</A></H1><PRE>
+ - New features:
+  . Use LHCb v11r12 ( refer to its release.notes for details )
+    .. ProtoParticle set value for detPIDvalue to -999.0 when detector
+       technique does not exist to cope with Delta Log Likelihoods
+    .. New HltEvent (v2r0) package
+  . L0 Tuning for TDR
+    .. use L0DU v6r5
+    .. DaVinci.opts has example of how to execute L0 trigger with TDR tuning
+       (L0.opts contains options for execution)
+  . L1 Tuning for TDR
+    .. use L1Decision v2r0
+    .. DaVinci.opts has example of how to execute L1 trigger with TDR tuning
+       (L1Decision.opts contains options for execution)
+  . Introduce High Level Triggers
+    .. Hlt.opts new option file to execute them
+    .. DaVinci.opts introduce example of how to execute Hlt
+    .. new packages HltTools v2r1, HltChecker v2r0, HltVelo v2r0,
+       HltVeloTT v2r0, HltLongTrack v2r1
+  . New tools for fitting of Lifetime (DaVinciTools v8r1)
+  . New tuning for Muon Particle ID used by DEFAULT (will affect also
+    MuonParticleMaker) 
+    .. use MuonID v3r6
+    .. re-execution of MuonID with new tuning in DaVinciReco.opts
+       (specific options in MuonIDReTuning.opts)
+  . Use dll "tools" from Muon and Calorimeter and add them, plus their
+    addition in ProtoParticles (GlobalReco v4r0)
+  . Make particles with combination of various detector techniques. Use
+    always combination but allow for different cuts when different 
+    techniques are or not available
+    .. use DaVinciTools v8r1
+    .. DaVinci.opts has example of how to use CombinedParticleMaker
+       (specific options for example algo in PreLoadCombinedParticles.opts)
+  . Particle2MCLinks associator works at the same time for charged
+    and Neutrals (DaVinciAssociators v4r1)
+  . CompositeParticle2MCLinks associator transmit input data property
+    to links associator
+  . Introduction of the both available associators for omposite particles 
+    (CompLink and Chi2) in efficiency algorithm (DaVinciEff v2r5)
+  . Set decay decsriptor for MCDecayFinder tools as property of 
+    efficiency algorithm. Modify at least one EffDECAYNAME.opts in packages
+    where they exist to follow (refer to PhysSelSys v5r2 for details) 
+  . New reconstruction tool to evaluate cluster charge (RecoTools v1r0)
+  . Use latest version of XmlDDDB v15r5
+  . Use new versions of new packages for decay selections (refer to
+    PhysSelSys v5r2 for details)
+  . Fix in requirements version of LoKi v1r2
+  . Clean up of DaVinci.opts to have example only for processing data
+    produced with Brunel v17r4
+  . Introduce a new DaVinciNeutrals.opts with all corrections and 
+    processing necessary to make neutral ProtoParticles (including
+    merged pi0 and split photons)
+    .. introduce use as example in DaVinci.opts
+
+ - Bug fixes
+    .. adapt to modified name and removal of include file for associator
+       Particle2MCLink (FlavourTagging v4r4p1, DaVinciTest v4r1p1)
+
 </PRE><H1><A NAME=v8r0>2003-05-02 DaVinci v8r0</A></H1><PRE>
  - New features:
    . Use LHCb v11r11 ( refer to its release.notes for details )

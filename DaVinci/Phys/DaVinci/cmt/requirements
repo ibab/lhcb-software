@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.61 2003-06-02 17:42:23 gcorti Exp $
+# $Id: requirements,v 1.62 2003-06-03 17:54:02 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -29,14 +29,14 @@ use  RootHistCnv    	v*
 use  LHCb               v11r12	
 
 #--- Geometry description (from DBASE)
-use  XmlDDDB		v15r3	 Det
+use  XmlDDDB		v15r5	 Det
 
 #--- DaVinciSys v8r0 packages 
 
 #    Enable L0 and L1 Trigger reprocessing and HLT 
 use  L0DU          	v6r5	 L0
 use  L1Decision         v2r0     L1
-use  HltTools           v2r0     Hlt
+use  HltTools           v2r1     Hlt
 use  HltVelo            v2r0     Hlt
 use  HltVeloTT          v2r0     Hlt
 use  HltLongTrack       v2r1     Hlt
@@ -76,8 +76,11 @@ use  DaVinciEff         v2r5     Phys
 use  DaVinciUser        v4r1     Phys
 use  PhysSelSys		v5r2     PhysSel
 
-# Generic utilities
+#    Generic utilities
 use  Utilities          v1r0     Tools
+
+#    Analysis Tools
+use  LoKi               v1r2     Tools
 
 # Build DaVinci Application with standard executable
 # Note that user code is located in a component library (see details

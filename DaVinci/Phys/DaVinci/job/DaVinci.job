@@ -45,7 +45,7 @@ endif
 set current = $PWD
 #
 # set location of DaVinci executable
-set Dversion = "v8r0"
+set Dversion = "v8r1"
 setenv MYJOBROOT $HOME/newmycmt/Phys/DaVinci/$Dversion
 
 # == set the program environment
@@ -81,6 +81,13 @@ rm -f tmp*
 
 # == job is finished: if in batch copy output files on user directories
 if ($?LS_SUBCWD) then 
+  ls core* > /dev/null
+  if ($status == 0) then
+     gdb tmpjob.exe core* << EOF
+where
+quit
+EOF
+  rm core*
   ls *.* >! RETURN
 endif
 

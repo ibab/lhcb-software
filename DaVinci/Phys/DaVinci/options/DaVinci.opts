@@ -1,5 +1,5 @@
 //##############################################################
-// Default DaVinci job Options for user configuration
+// Example DaVinci job Options for user configuration
 //
 // This file defines, sequences and configures the algorithms 
 // to be executed
@@ -10,26 +10,18 @@
 
 // Database dependent configurations are in DaVinciXXX.opts.
 // Choose the appropriate one.
-//     For Summer and November 2002 data.
-//      Produced with Brunel v13r1 or v14r2
-//#include "$DAVINCIROOT/options/DaVinciv248r4.opts" 
-//     For Christmas 2002 data.
-//      Produced with Brunel v16r4
-//#include "$DAVINCIROOT/options/DaVinciv253r0.opts"
-//     For TDR (Winter 2003) data
-//      Produced with Brunel v17r4
+//     For TDR (Winter 2003) data produced with Brunel v17r4
 #include "$DAVINCIROOT/options/DaVinciv254r1.opts"
-//     For Robustness test data (April 2003) data
-//      Produced with Brunel v18r0
-//#include "$DAVINCIROOT/options/DaVinciv254r1-Apr03.opts"
 
 //--------------------------------------------------------------
 // Trigger 
 //--------------------------------------------------------------
-// Rerun L0 trigger decision (tuning as in Winter 2003 data)
-//#include "$DAVINCIROOT/options/L0.opts"
-// Rerun L1 trigger decisions (tuning as in Winter 2003 data)
-//#include "$DAVINCIROOT/options/L1Decision.opts"
+// Rerun L0 trigger decision - TDR tuning
+#include "$DAVINCIROOT/options/L0.opts"
+// Rerun L1 trigger decisions - TDR tuning
+#include "$DAVINCIROOT/options/L1Decision.opts"
+// Run Hlt triggers
+//#include "$DAVINCIROOT/options/Hlt.opts"
 
 //--------------------------------------------------------------
 // DaVinci Global Reconstruction Algorithms
@@ -48,16 +40,12 @@
 //    CaloMergedPi0Alg and Re-calibration for single gammas and merged pi0
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 
-//--- Neutral ProtoParticles (only single photons) for 
-//--- Recalibration for gammas (only for Brunel v13r1 data)
-//#include "$DAVINCIROOT/options/CaloReCalibration.opts"
-//--- Neutral ProtoParticles
-//    (only available algorithm when reading data produced with Brunel v13r1
-//    or v14r2)
-//ApplicationMgr.TopAlg += { "NeutralPPCreator/NeutralProtoPAlg" };
- 
-//    (when reading data produced with Brunel v16r4 or v17r4)
-ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" };
+//--- For merged and resolved pi0 the corresponding selection algorithm
+//    need to be executed
+//ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
+//#include "$BD2PIPIPI0ROOT/options/ResolvedPi0Alg.opts"
+//ApplicationMgr.TopAlg += { "MergedPi0Alg" };
+//#include "$BD2PIPIPI0ROOT/options/MergedPi0Alg.opts"
 
 //--- Ks->pi+pi- with Upstream tracks
 //    Read V0 as produced by Brunel and transform them into Particles
@@ -69,6 +57,9 @@ ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" };
 
 //--- Particle with Assigned pID only for HLT studies
 //#include "$DAVINCIROOT/options/PreLoadNoPIDParticles.opts"
+
+//--- Example of use of CombinedParticleMaker
+//#include "$DAVINCIROOT/options/PreLoadCombinedParticles.opts"
 
 //--------------------------------------------------------------
 // Other additional algorithms to be executed, from public 
@@ -82,14 +73,15 @@ ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" };
 //----------------------------------------------------------------
 // The various selections algorithms have each a DVDecayName.opts
 // file in their package that can be given as full options of the
-// DaVinci executable
+// DaVinci executable:
+//   ex.: $B2HHROOT/options/DVBd2PiPi.opts
+//        $BS2DSHROOT/options/DVBs2KKKPi_Pi.opts
 //----------------------------------------------------------------
 
 // Private algorithm options can be listed here or included from
 // here. 
 // Options for algorithms and tools can be added here to overwrite
 // any of the default options
-// Examples are in the options subdirectory of the packages
 
 //----------------------------------------------------------------
 // Switch on to produce a miniDST file
@@ -121,6 +113,7 @@ MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
 ChargedProtoPAlg.OutputLevel            = 3;
+//PreLoadParticles.OutputLevel             = 2;
 
 // Modify Message Format to print algorithm name with 40 characters
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";

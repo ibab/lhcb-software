@@ -7,7 +7,7 @@
 //-- 1 datasets(s) - NbEvents = 500
 //-- 
 EventSelector.Input   = {
-"DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000080_00000001_5.oodst' TYP='ROOT' OPT='READ'"
+  "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000080_00000001_5.oodst' TYP='ROOT' OPT='READ'"
 };
 //-- End of Data cards
 
