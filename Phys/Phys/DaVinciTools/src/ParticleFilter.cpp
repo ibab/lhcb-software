@@ -1,4 +1,4 @@
-// $Id: ParticleFilter.cpp,v 1.6 2003-06-26 16:51:51 gcorti Exp $
+// $Id: ParticleFilter.cpp,v 1.7 2004-01-14 19:00:06 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -120,8 +120,8 @@ StatusCode ParticleFilter::filter( const ParticleVector& input,
   
   std::vector<IFilterCriterion*>::iterator ic;
   for( ic = m_criteria.begin(); ic != m_criteria.end(); ic++ ) { 
-    m_independentCounter.push_back(0.);
-    m_cumulativeCounter.push_back(0.);
+    m_independentCounter.push_back(0);
+    m_cumulativeCounter.push_back(0);
   }
 
   std::vector< bool > partPassed;
@@ -178,8 +178,8 @@ StatusCode ParticleFilter::filterPositive( const ParticleVector& input,
   
   std::vector<IFilterCriterion*>::iterator ic;
   for( ic = m_criteria.begin(); ic != m_criteria.end(); ic++ ) { 
-    m_independentCounter.push_back(0.);
-    m_cumulativeCounter.push_back(0.);
+    m_independentCounter.push_back(0);
+    m_cumulativeCounter.push_back(0);
   }
 
   std::vector< bool > partPassed;
@@ -237,8 +237,8 @@ StatusCode ParticleFilter::filterNegative( const ParticleVector& input,
   
   std::vector<IFilterCriterion*>::iterator ic;
   for( ic = m_criteria.begin(); ic != m_criteria.end(); ic++ ) { 
-    m_independentCounter.push_back(0.);
-    m_cumulativeCounter.push_back(0.);
+    m_independentCounter.push_back(0);
+    m_cumulativeCounter.push_back(0);
   }
 
   std::vector< bool > partPassed;

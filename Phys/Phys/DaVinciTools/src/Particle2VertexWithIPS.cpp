@@ -1,4 +1,4 @@
-// $Id: Particle2VertexWithIPS.cpp,v 1.1 2003-12-04 13:40:28 graven Exp $
+// $Id: Particle2VertexWithIPS.cpp,v 1.2 2004-01-14 19:00:06 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -34,8 +34,10 @@ const        IAlgFactory& Particle2VertexWithIPSFactory = s_factory ;
 //=============================================================================
 Particle2VertexWithIPS::Particle2VertexWithIPS( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
-  : AsctAlgorithm ( name , pSvcLocator )
+  : Algorithm ( name , pSvcLocator )
 {
+  declareProperty( "InputData", m_inputData );
+  declareProperty( "OutputTable", m_outputTable );
   declareProperty( "UseSignificance", m_useSignificance=true );
   declareProperty( "MaxToBeAssociated", m_max=-1 );
   m_inputData.push_back("/Event/Phys/Bs2Jpsi2ee_phi2KK/Particles");

@@ -1,8 +1,11 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.1 2003-04-30 13:41:25 gcorti Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.2 2004-01-14 19:00:06 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/30 13:41:25  gcorti
+// new particlemaker for HLT studies
+// 
 // ============================================================================
 // Include files
 // STD/STL
@@ -339,7 +342,7 @@ StatusCode NoPIDsParticleMaker::fillParticle
   // Set position-slopes correlation matrix. 
   // Position X Momentum correlation matrix also automatically set.
   // No correlation with Z
-  HepMatrix posSlopesCorr( 3 , 3 , 0.0 ) ;
+  HepMatrix posSlopesCorr( 3 , 3 , 0 ) ;
   for( int i = 1; i <= 3; i++ ) 
     { 
       for ( int j = 1; j <= 2; j++ ) 

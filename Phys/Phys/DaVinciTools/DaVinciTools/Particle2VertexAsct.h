@@ -1,4 +1,4 @@
-// $Id: Particle2VertexAsct.h,v 1.1 2003-12-04 13:40:31 graven Exp $
+// $Id: Particle2VertexAsct.h,v 1.2 2004-01-14 19:00:06 gcorti Exp $
 #ifndef ASSOCIATORS_Particle2VertexASCT_H 
 #define ASSOCIATORS_Particle2VertexASCT_H 1
 
@@ -23,7 +23,7 @@ Particle2VertexAsctLocation = "/Event/Phys/Relations/Particle2VertexWithIPS";
 
 class Particle2VertexAsct : public AssociatorWeighted<Particle,Vertex,double>
 {
-  friend ToolFactory<Particle2VertexAsct>;
+  friend class ToolFactory<Particle2VertexAsct>;
   
 public:
   // Define data types

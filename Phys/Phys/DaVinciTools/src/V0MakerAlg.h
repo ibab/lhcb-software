@@ -1,4 +1,4 @@
-// $Id: V0MakerAlg.h,v 1.1 2003-02-07 18:41:25 gcorti Exp $
+// $Id: V0MakerAlg.h,v 1.2 2004-01-14 19:00:06 gcorti Exp $
 #ifndef V0MAKERALG_H 
 #define V0MAKERALG_H 1
 
@@ -8,8 +8,8 @@
 
 // from Gaudi
 #include "GaudiKernel/Algorithm.h"
-#include "Event/ParticleID.h"
 
+class ParticleID;
 class IParticleStuffer;
 class IParticlePropertySvc;
 

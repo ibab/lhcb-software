@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.4 2003-06-26 16:51:51 gcorti Exp $
+// $Id: GeomDispCalculator.h,v 1.5 2004-01-14 19:00:06 gcorti Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -52,6 +52,13 @@ public:
   StatusCode calcImpactPar( const Particle& particle,
                             const Vertex& vertex, double& ip, double& ipErr,
                             Hep3Vector& ipVector, HepSymMatrix& errMatrix );
+
+  /// Calculates the Impact Parameter and its error and outputs also
+  /// the impact parameter vector and its error. 
+  /// Inputs: a particle and a vertex.
+  StatusCode calcImpactPar( const Particle& particle,
+                            const Vertex& vertex, double& ip, double& ipErr,
+                            Hep3Vector& ipVector, Hep3Vector& errVector );
 
   /// Calculates the Impact Parameter and its error.
   /// Inputs: a particle and a space point.

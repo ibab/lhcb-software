@@ -1,4 +1,4 @@
-// $Id: IGeomDispCalculator.h,v 1.2 2002-05-15 23:12:28 gcorti Exp $
+// $Id: IGeomDispCalculator.h,v 1.3 2004-01-14 19:00:06 gcorti Exp $
 #ifndef DAVINCITOOLS_IGEOMDISPCALCULATOR_H 
 #define DAVINCITOOLS_IGEOMDISPCALCULATOR_H 1
 
@@ -9,7 +9,7 @@
 // Forward declarations
 class IParticlePropertySvc;
 
-static const InterfaceID IID_IGeomDispCalculator("IGeomDispCalculator", 2 , 0); 
+static const InterfaceID IID_IGeomDispCalculator("IGeomDispCalculator", 2 , 1); 
 
 /** @class IGeomDispCalculator IGeomDispCalculator.h DaVinciTools/IGeomDispCalculator.h
  *  Interface for Geometrical Calculation Tool. 
@@ -26,33 +26,39 @@ class IGeomDispCalculator : virtual public IAlgTool {
   /// Calculates the Impact Parameter and its error.
   /// Inputs: a particle and a vertex.
   virtual StatusCode calcImpactPar( const Particle& ,
-                                  const Vertex&, double&, double& ) = 0; 
+                                    const Vertex&, double&, double& ) = 0; 
 
   /// Calculates the Impact Parameter and its error and outputs also
   /// the impact parameter vector. Inputs: a particle and a vertex.
   virtual StatusCode calcImpactPar( const Particle& ,
-                                  const Vertex&, double&, double&, 
-                                  Hep3Vector&, HepSymMatrix& ) = 0; 
+                                    const Vertex&, double&, double&, 
+                                    Hep3Vector&, HepSymMatrix& ) = 0; 
+
+  /// Calculates the Impact Parameter and its error and outputs also
+  /// the impact parameter vector. Inputs: a particle and a vertex.
+  virtual StatusCode calcImpactPar( const Particle& ,
+                                    const Vertex&, double&, double&, 
+                                    Hep3Vector&, Hep3Vector& ) = 0; 
 
   /// Calculates the Impact Parameter and its error.
   /// Inputs: a particle and a space point.
   virtual StatusCode calcImpactPar( const Particle& ,
-                                  HepPoint3D&, double&, double& ) = 0; 
+                                    HepPoint3D&, double&, double& ) = 0; 
 
   /// Calculates the Impact Parameter and its error and outputs also
   /// the impact parameter vector. Inputs: a particle and a space point.
   virtual StatusCode calcImpactPar( const Particle& ,
-                                  HepPoint3D&, double&, double&,
-                                  Hep3Vector&, HepSymMatrix& ) = 0; 
+                                    HepPoint3D&, double&, double&,
+                                    Hep3Vector&, HepSymMatrix& ) = 0; 
 
   /// Calculates the distance of closest approach between two particles
   /// and its error.
   virtual StatusCode calcCloseAppr( const Particle& ,
-                                  const Particle&, double&, double& ) = 0; 
+                                    const Particle&, double&, double& ) = 0; 
 
   /// Calculates the distance between two vertices and its error.
   virtual StatusCode calcVertexDis( const Vertex& ,
-                                  const Vertex&, double&, double& ) = 0; 
+                                    const Vertex&, double&, double& ) = 0; 
 
 };
 

@@ -1,4 +1,4 @@
-// $Id: LifetimeSignificanceCriterion.cpp,v 1.1 2003-12-04 13:40:27 graven Exp $
+// $Id: LifetimeSignificanceCriterion.cpp,v 1.2 2004-01-14 19:00:06 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -9,8 +9,6 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 
-
-#include "Event/ParticleID.h"
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 

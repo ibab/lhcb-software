@@ -1,4 +1,4 @@
-// $Id: TrTransporter.cpp,v 1.1 2002-10-21 21:33:45 gcorti Exp $
+// $Id: TrTransporter.cpp,v 1.2 2004-01-14 19:00:06 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -207,18 +207,18 @@ StatusCode TrTransporter::trTransport(Particle *workParticle,
   HepPoint3D newPOT = oldPOT;
   
   // initialize and create PointOnTrack matrix error
-  HepSymMatrix oldPOTErr(3, 0.);
+  HepSymMatrix oldPOTErr(3, 0);
   oldPOTErr = workParticle->pointOnTrackErr();
   HepSymMatrix newPOTErr = oldPOTErr;
   
   // initialize and create Slope and Momentum correlation matrix error 
-  HepSymMatrix oldSlopesMomErr(3, 0.);
+  HepSymMatrix oldSlopesMomErr(3, 0);
   oldSlopesMomErr = workParticle->slopesMomErr();
   HepSymMatrix newSlopesMomErr = oldSlopesMomErr;
   
   // initialize and create Position, Slope and Momentum correlation 
   // matrix error
-  HepMatrix oldPosSlopesCorr(3, 3, 0.);
+  HepMatrix oldPosSlopesCorr(3, 3, 0);
   oldPosSlopesCorr = workParticle->posSlopesCorr();
   HepMatrix newPosSlopesCorr = oldPosSlopesCorr;
   

@@ -1,4 +1,4 @@
-// $Id: Particle2VertexWithIPS.h,v 1.1 2003-12-04 13:40:28 graven Exp $
+// $Id: Particle2VertexWithIPS.h,v 1.2 2004-01-14 19:00:06 gcorti Exp $
 #ifndef Particle2VertexWithIPS_H 
 #define Particle2VertexWithIPS_H 1
 
@@ -12,16 +12,16 @@
 class IGeomDispCalculator;
 
 // local
-#include "DaVinciAssociators/Particle2VertexAsct.h"
-#include "AsctAlgorithm.h"
+#include "DaVinciTools/Particle2VertexAsct.h"
+#include "GaudiKernel/Algorithm.h"
 
 /** @class Particle2VertexWithIPS Particle2VertexWithIPS.h
  *  
  *  @author Gerhard Raven
  *  @date   May 2003
  */
-class Particle2VertexWithIPS : public AsctAlgorithm {
-  friend AlgFactory<Particle2VertexWithIPS>;
+class Particle2VertexWithIPS : public Algorithm {
+  friend class AlgFactory<Particle2VertexWithIPS>;
   
 public:
   /// Standard constructor

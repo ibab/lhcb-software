@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.6 2003-06-26 16:51:51 gcorti Exp $
+// $Id: GeomDispCalculator.cpp,v 1.7 2004-01-14 19:00:06 gcorti Exp $
 
 // Include files
 // from Gaudi
@@ -170,6 +170,150 @@ StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
   return StatusCode::SUCCESS;
 }
 
+//==================================================================
+//// Calculate the impact parameter of a particle with respect to
+//// a given vertex - output the ipVector and the error in its
+//// components as well
+////==================================================================
+StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
+                         const Vertex& vertex, double& ip, double& ipErr,
+                         Hep3Vector& ipVector, Hep3Vector& errVector ) { 
+  MsgStream log(msgSvc(), name());
+
+
+  // Get the displacemente vector between a point on the track and 
+  // the vertex. Use the transporter tool to move the first
+  // measured point closer to the vertex position.
+  Hep3Vector vtx = vertex.position();
+
+  Particle transParticle;
+  StatusCode sctrans = m_pTransporter->transport(particle,
+                                                 vtx.z(),
+                                                 transParticle);
+    if ( !sctrans.isSuccess() ) {
+      log << MSG::DEBUG << "Transporter failed" << endreq;
+      return sctrans;
+    }
+
+  Hep3Vector point = transParticle.pointOnTrack();
+  Hep3Vector displacement = point - vtx;
+
+  //find the momentum unitary vector:
+  Hep3Vector p(transParticle.momentum().v()); 
+  double pmag = p.mag();
+  Hep3Vector pUnit(p/pmag);
+
+  //now calculate the impact parameter:
+  ipVector = displacement.cross(pUnit);
+  ip = ipVector.mag();
+  if (ip == 0) return StatusCode::FAILURE;
+
+  //Calculate the error on the impact parameter
+  Hep3Vector ipUnit = ipVector/ip;
+  Hep3Vector derivPoint = pUnit.cross(ipUnit);
+  Hep3Vector derivVtx = - pUnit.cross(ipUnit);
+  Hep3Vector derivP = (ipVector.cross(displacement) - 
+                      ip*ip*pUnit) / pmag; 
+  HepSymMatrix pointErr = transParticle.pointOnTrackErr();
+  HepSymMatrix momErr = transParticle.momentumErr().sub(1,3);
+  HepMatrix errMatrix1 = dsum(pointErr,momErr);
+  HepMatrix posMomCorr = transParticle.posMomCorr().sub(1,3,1,3);
+  errMatrix1.sub(4,1,posMomCorr);
+  errMatrix1.sub(1,4,posMomCorr.T());
+  HepSymMatrix vtxErr = vertex.positionErr();
+  HepMatrix errMatrixTotal = dsum(errMatrix1,vtxErr);
+  HepSymMatrix  errMatrix;
+  errMatrix.assign(errMatrixTotal);
+
+  HepVector u(3);
+  u(1) = derivPoint.x();
+  u(2) = derivPoint.y();
+  u(3) = derivPoint.z();
+  HepVector u1(3);
+  u1(1) = derivP.x();
+  u1(2) = derivP.y();
+  u1(3) = derivP.z();
+  HepVector u2(3);
+  u2(1) = derivVtx.x();
+  u2(2) = derivVtx.y();
+  u2(3) = derivVtx.z();
+  HepVector deriv1 = dsum(u,u1);
+  HepVector derivTotal = dsum(deriv1,u2);
+  ipErr = sqrt(fabs(dot(derivTotal,errMatrix*derivTotal)));
+
+// Turn ipVector 90 degrees to get the right vector to return
+  ipVector = pUnit.cross(ipVector);
+
+// Now calculate the error for each component
+// First for ip_x:
+  HepVector derivPointx(3);
+  derivPointx(1) = 1. -pUnit.x()*pUnit.x();
+  derivPointx(2) = -pUnit.y()*pUnit.x();
+  derivPointx(3) = -pUnit.z()*pUnit.x();
+    
+  HepVector derivVtxx(3);
+  derivVtxx(1) = pUnit.x()*pUnit.x() - 1.;
+  derivVtxx(2) = pUnit.y()*pUnit.x();
+  derivVtxx(3) = pUnit.z()*pUnit.x();
+
+  HepVector derivPx(3);
+  derivPx(1) = (-displacement.x()*pUnit.x()/pmag) + 
+	        (displacement.dot(pUnit)/pmag)*(-1. + 2.* pUnit.x()*pUnit.x()); 
+  derivPx(2) = (-displacement.y()*pUnit.x()/pmag) + 
+	        (displacement.dot(pUnit)/pmag)*(2.* pUnit.y()*pUnit.x()); 
+  derivPx(3) = (-displacement.z()*pUnit.x()/pmag) + 
+	        (displacement.dot(pUnit)/pmag)*(2.* pUnit.z()*pUnit.x()); 
+  deriv1 = dsum(derivPointx,derivPx);
+  derivTotal = dsum(deriv1,derivVtxx);
+  errVector.setX(sqrt(fabs(dot(derivTotal,errMatrix*derivTotal)))); 
+
+// Now for ip_y:
+  HepVector derivPointy(3);
+  derivPointy(1) = -pUnit.x()*pUnit.y();
+  derivPointy(2) = 1. -pUnit.y()*pUnit.y();
+  derivPointy(3) = -pUnit.z()*pUnit.y();
+    
+  HepVector derivVtxy(3);
+  derivVtxy(1) = pUnit.x()*pUnit.y();
+  derivVtxy(2) = pUnit.y()*pUnit.y() - 1.;
+  derivVtxy(3) = pUnit.z()*pUnit.y();
+
+  HepVector derivPy(3);
+  derivPy(1) = (-displacement.x()*pUnit.y()/pmag) + 
+	        (displacement.dot(pUnit)/pmag)*(2.* pUnit.x()*pUnit.y()); 
+  derivPy(2) = (-displacement.y()*pUnit.y()/pmag) + 
+	        (displacement.dot(pUnit)/pmag)*(-1. + 2.* pUnit.y()*pUnit.y()); 
+  derivPy(3) = (-displacement.z()*pUnit.y()/pmag) + 
+	        (displacement.dot(pUnit)/pmag)*(2.* pUnit.z()*pUnit.y()); 
+  deriv1 = dsum(derivPointy,derivPy);
+  derivTotal = dsum(deriv1,derivVtxy);
+  errVector.setY(sqrt(fabs(dot(derivTotal,errMatrix*derivTotal)))); 
+
+// Now for ip_z:
+  HepVector derivPointz(3);
+  derivPointz(1) = -pUnit.x()*pUnit.z();
+  derivPointz(2) = -pUnit.y()*pUnit.z();
+  derivPointz(3) = 1. -pUnit.z()*pUnit.z();
+    
+  HepVector derivVtxz(3);
+  derivVtxz(1) = pUnit.x()*pUnit.z();
+  derivVtxz(2) = pUnit.y()*pUnit.z();
+  derivVtxz(3) = pUnit.z()*pUnit.z() - 1.;
+
+  HepVector derivPz(3);
+  derivPz(1) = (-displacement.x()*pUnit.z()/pmag) + 
+	        (displacement.dot(pUnit)/pmag)*(2.* pUnit.x()*pUnit.z()); 
+  derivPz(2) = (-displacement.y()*pUnit.z()/pmag) + 
+	        (displacement.dot(pUnit)/pmag)*(2.* pUnit.y()*pUnit.z()); 
+  derivPz(3) = (-displacement.z()*pUnit.z()/pmag) + 
+	        (displacement.dot(pUnit)/pmag)*(-1. + 2.* pUnit.z()*pUnit.z()); 
+  deriv1 = dsum(derivPointz,derivPz);
+  derivTotal = dsum(deriv1,derivVtxz);
+  errVector.setZ(sqrt(fabs(dot(derivTotal,errMatrix*derivTotal)))); 
+
+  return StatusCode::SUCCESS;
+
+}
 
 //==================================================================
 // Calculate the impact parameter of a particle with respect to

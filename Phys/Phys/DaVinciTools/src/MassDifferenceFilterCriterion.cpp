@@ -1,4 +1,4 @@
-// $Id: MassDifferenceFilterCriterion.cpp,v 1.2 2002-11-16 15:53:23 graven Exp $
+// $Id: MassDifferenceFilterCriterion.cpp,v 1.3 2004-01-14 19:00:06 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,6 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
-#include "Event/ParticleID.h"
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 

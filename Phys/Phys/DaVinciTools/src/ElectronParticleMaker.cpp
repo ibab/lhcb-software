@@ -1,4 +1,4 @@
-// $Id: ElectronParticleMaker.cpp,v 1.4 2003-08-05 17:25:19 gcorti Exp $
+// $Id: ElectronParticleMaker.cpp,v 1.5 2004-01-14 19:00:06 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -223,7 +223,7 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
                 if ( (*iProtoDetID2).second <= m_CutOnChi2CaloEMatch ){
                   Particle* particle = new Particle();
                   double ProtoPCharge= (*icand)->charge();
-                  double protoID;
+                  int    protoID;
                   double protoCL;
                   if ( ProtoPCharge == 1 ){
                     protoID = -m_eID;
@@ -254,7 +254,7 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
           if ( (*iProtoDetID).second > m_CutOnRichProb ){
             Particle* particle = new Particle();
             double ProtoPCharge= (*icand)->charge();
-            double protoID;
+            int    protoID;
             double protoCL;
             if ( ProtoPCharge == 1 ){
               protoID = -m_eID;
@@ -293,7 +293,7 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
                       if ( (*iProtoDetID3).second <= m_CutOnChi2CaloEMatch ){
                         Particle* particle = new Particle();
                         double ProtoPCharge= (*icand)->charge();
-                        double protoID;
+                        int    protoID;
                         double protoCL;
                         if ( ProtoPCharge == 1 ){
                           protoID = -m_eID;
@@ -327,7 +327,7 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
           if ( (*iProtoDetID).second <= m_CutOnChi2BremMatch ){
             Particle* particle = new Particle();
             double ProtoPCharge= (*icand)->charge();
-            double protoID;
+            int    protoID;
             double protoCL;
             if ( ProtoPCharge == 1 ){
               protoID = -m_eID;
@@ -373,7 +373,7 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
                             if ((*iProtoDetID4).second <= m_CutOnChi2BremMatch){
                               Particle* particle = new Particle();
                               double ProtoPCharge= (*icand)->charge();
-                              double protoID;
+                              int    protoID;
                               double protoCL;
                               if ( ProtoPCharge == 1 ){
                                 protoID = -m_eID;
@@ -553,7 +553,7 @@ StatusCode ElectronParticleMaker::makeParticles( ParticleVector & parts ) {
         if ( de > m_deCut ){
           Particle* particle = new Particle();
           double ProtoPCharge= (*icand)->charge();
-          double protoID;
+          int    protoID;
           double protoCL;
           if ( ProtoPCharge == 1 ){
             protoID = -m_eID;

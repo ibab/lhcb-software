@@ -1,6 +1,42 @@
-! $Id: release.notes,v 1.64 2003-12-04 13:40:23 graven Exp $
+! $Id: release.notes,v 1.65 2004-01-14 19:00:06 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
+
+!========================== DaVinciTools v8r4 2004-01-14 ==================
+! 2004-01-14 - Gloria CORTI
+ - cmt/requirements
+   . use v* to allow compilation against fifferent versions of LHCb
+ - DaVinciTools/IGeomDispCalCulator.h
+   src/GeomDispCalculator.{h,cpp}
+   . propagate change from DaVinci v8r3 that was built on a brach  
+ - src/MassDifferenceFilterCriterion.cpp,
+       LifetimeSignificanceCriterion.cpp,
+       MassFilterCriterion.cpp,
+       V0MakerAlg.cpp
+   . remove inclusion of unnecessary ParticleID.h (preventing compilation
+     against LHCb v12r1 and v15r0 at the same time since in different 
+     locations)
+ - src/NeutralParticleMaker.cpp
+   . little backward compatible change preventing compilation against
+     LHCb v15r0 ( CaloCellID() != operator does not exist )
+ - src/CheckOverlap.cpp
+       ElectronParticleMaker.cpp, ElectronParticleMaker_bbincl.cpp
+       LinearTransporter.cpp, NoPIDsParticleMaker.cpp, 
+       ParabolicTransporter.cpp, ParticleFilter.cpp, TrTransporter.cpp
+   . little fixes to remove warning messages (implicit typename, 
+     passing double instead of int)
+   . little fixes to remove warning messages (passing double instead of
+     int in HepMatrices)       
+
+! 2004-01-12 - Gloria CORTI
+ - DaVinciTools/Particle2VertexAsct.h
+   . little fix for gcc32 compilation
+ - src/DaVinciTools_load.cpp
+   . add declaration of new tools and algorithms
+ - src/Particle2VertexWithIPS.{h,cpp}
+   . remove inheritance from AsctAlgorithm that would create dependecy
+     from DaVinciAssociators and introduce here properties "InputData"
+     and "OutputTable"
 
 ! 2003-12-04 - Gerhard Raven
   - DaVinciTools/Particle2VertexAsct.h
@@ -16,7 +52,19 @@
       the minimum impact parameter of a particle wrt. a vertex, or the
       minimum impact parameter significance.
 
+!========================== DaVinciTools v8r3 2003-12-12 ==================
+! 2003-12-12 - Gloria CORTI for Miriam GANDELMAN
+ Built on a branch v8r2b
+ - DaVinciTools/IGeomDispCalCulator.h
+   src/GeomDispCalculator.{h,cpp}
+   . new interface method introduced to provide the error for each of
+     the component of the IP vector. The method requires a Particle and
+     a Vertex as input and returns 4 variables in the following order:
+     the IP, the IP error, the full IP vector and the error on the IP
+     vector.
+
 !========================== DaVinciTools v8r2 2003-08-05 ==================
+! 2003-08-05  - Gloria CORTI
  - DaVinciTools/DVAlgorithm.h
    src/V0MakerAlg.cpp
    . make ParticleStuffer a private tool in order to set its property

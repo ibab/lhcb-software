@@ -1,4 +1,4 @@
-// $Id: MassFilterCriterion.cpp,v 1.1 2003-04-29 18:38:54 gcorti Exp $
+// $Id: MassFilterCriterion.cpp,v 1.2 2004-01-14 19:00:06 gcorti Exp $
 // Include files 
 #include <algorithm>
 
@@ -7,7 +7,6 @@
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-#include "Event/ParticleID.h"
 
 // local
 #include "MassFilterCriterion.h"

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.28 2003-07-07 09:53:03 gcorti Exp $
+# $Id: requirements,v 1.29 2004-01-14 19:00:06 gcorti Exp $
 # Created    : 05/02/2002
 # Maintainer : Gloria Corti
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v8r2
+version           v8r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -18,10 +18,10 @@ include_dirs     $(DAVINCITOOLSROOT)
 
 # Used packages. 
 #============================================================================
-use  PhysEvent      v7r*   Event
+use  PhysEvent      v*     Event
 use  AIDA           v*
-use  CaloUtils      v4r*   Calo
-use  CaloInterfaces v2r*   Calo
+use  CaloUtils      v*     Calo
+use  CaloInterfaces v*     Calo
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
@@ -45,9 +45,4 @@ library          DaVinciTools    ../src/*.cpp
 
 # define component library link options
 #============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
-
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
+apply_pattern component_library library=DaVinciTools

@@ -349,7 +349,7 @@ double NeutralParticleMaker::applySelection( SmartRef<ProtoParticle> cand ) {
   
   // Look at Spd
   
-  if( CaloCellID() != cellSpd )  // valid cell! 
+  if( !(CaloCellID() == cellSpd) )  // valid cell! 
     {          
       for (SmartRefVector<CaloDigit>::const_iterator 
 	     digit=hypo->digits().begin() ;
@@ -365,7 +365,7 @@ double NeutralParticleMaker::applySelection( SmartRef<ProtoParticle> cand ) {
   
   // Look at Prs	
   
-  if( CaloCellID() != cellPrs )  // valid cell! 
+  if( !(CaloCellID() == cellPrs) )  // valid cell! 
     {    
       for (SmartRefVector<CaloDigit>::const_iterator 
 	     digit=hypo->digits().begin() ;

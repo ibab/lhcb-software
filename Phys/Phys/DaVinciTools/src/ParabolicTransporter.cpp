@@ -1,4 +1,4 @@
-// $Id: ParabolicTransporter.cpp,v 1.4 2002-10-21 21:33:00 gcorti Exp $
+// $Id: ParabolicTransporter.cpp,v 1.5 2004-01-14 19:00:06 gcorti Exp $
 // Include files 
 
 // Utility Classes
@@ -210,18 +210,18 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
   newMomentum = oldMomentum;
   
   // initialize and create PointOnTrack matrix error
-  HepSymMatrix oldPOTErr(3, 0.);
+  HepSymMatrix oldPOTErr(3, 0);
   oldPOTErr = workParticle->pointOnTrackErr();
   HepSymMatrix newPOTErr = oldPOTErr;
 
   // initialize and create Slope and Momentum correlation matrix error
-  HepSymMatrix oldSlopesMomErr(3, 0.);
+  HepSymMatrix oldSlopesMomErr(3, 0);
   oldSlopesMomErr = workParticle->slopesMomErr();
   HepSymMatrix newSlopesMomErr = oldSlopesMomErr;
 
   // initialize and create Position, Slope and Momentum correlation
   // matrix error
-  HepMatrix oldPosSlopesCorr(3, 3, 0.);
+  HepMatrix oldPosSlopesCorr(3, 3, 0);
   oldPosSlopesCorr = workParticle->posSlopesCorr();
   HepMatrix newPosSlopesCorr = oldPosSlopesCorr;
 
@@ -281,7 +281,7 @@ StatusCode ParabolicTransporter::magfTransport(Particle *& workParticle,
   // The new correlation matrix V(X) = V(X0).similarity( TM(X0) )
   // V(X) = TM.V.M(X0)
   HepMatrix TM(5, 5, 1);
-  HepSymMatrix VX0(5, 0.);
+  HepSymMatrix VX0(5, 0);
   // Calculating the elements not equal to zero or 1
   // Some auxiliary derivatives
   double dfAxdSx = sx*fAx/R2 + R*( sy*Bx - 2.*sx*By);

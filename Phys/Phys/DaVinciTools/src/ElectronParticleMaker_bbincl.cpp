@@ -1,4 +1,4 @@
-// $Id: ElectronParticleMaker_bbincl.cpp,v 1.3 2003-08-05 17:25:19 gcorti Exp $
+// $Id: ElectronParticleMaker_bbincl.cpp,v 1.4 2004-01-14 19:00:06 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -270,7 +270,7 @@ StatusCode ElectronParticleMaker_bbincl::makeParticles(
       Particle* particle = new Particle();
       double protoCL = 1.0 ;         
       double protoID = - m_ePID * ( (*icand)->charge() );
-      fillParticle( *icand, protoID, protoCL, particle, 
+      fillParticle( *icand, (int)protoID, protoCL, particle, 
                     m_4momOfBremPhot );
       // Insert particle in particle vector.
       parts.push_back(particle);

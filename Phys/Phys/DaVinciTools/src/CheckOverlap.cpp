@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.1 2002-10-21 17:58:22 gcorti Exp $
+// $Id: CheckOverlap.cpp,v 1.2 2004-01-14 19:00:06 gcorti Exp $
 
 // Include files 
 
@@ -93,7 +93,7 @@ CheckOverlap::CheckOverlap( const std::string& type,
 template <class T> 
 std::vector<T*> toStdVector( SmartRefVector<T>& refvector ) {
   std::vector<T*> tvector;
-  for( SmartRefVector<T>::iterator ip = refvector.begin();ip !=
+  for( typename SmartRefVector<T>::iterator ip = refvector.begin();ip !=
          refvector.end(); ++ip ) {
     tvector.push_back( *ip );
   }
