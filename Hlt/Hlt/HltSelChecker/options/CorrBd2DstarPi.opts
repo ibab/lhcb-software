@@ -24,4 +24,4 @@ Bd2DstarPiIsFound.AvoidSelResult = false ;
 
 PrintFoundBd2DstarPi.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBd2DstarPi.PhysDesktop.InputLocations = { "Phys/HLTFilterBd2DstarPi" } ;
-PrintFoundBd2DstarPi.OutputLevel = 3 ;
+PrintFoundBd2DstarPi.OutputLevel = 4 ;

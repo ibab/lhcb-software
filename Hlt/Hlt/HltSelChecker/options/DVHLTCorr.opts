@@ -35,7 +35,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // in these options
 // Hence: re-initalize event selector
 //EventSelector.Input   = {};
-//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2PiPi.opts"
+//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
 
 ApplicationMgr.EvtMax    = 1000 ;
 EventSelector.FirstEvent = 1 ;
@@ -77,5 +77,3 @@ HLTPreselKaons.OutputLevel = 2;
 //#include "$HLTGENERICROOT/options/HltGeneric.opts"
 // K-ID
 TrgParticleMaker.KaonDLLCut = 15 ; // default
-
-

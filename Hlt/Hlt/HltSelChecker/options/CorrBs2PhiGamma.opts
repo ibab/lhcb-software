@@ -22,4 +22,4 @@ Bs2PhiGammaIsFound.AvoidSelResult = false ;
 
 PrintFoundBs2PhiGamma.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBs2PhiGamma.PhysDesktop.InputLocations = { "Phys/HLTFilterBs2PhiGamma" } ;
-PrintFoundBs2PhiGamma.OutputLevel = 3 ;
+PrintFoundBs2PhiGamma.OutputLevel = 4 ;

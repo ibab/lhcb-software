@@ -23,4 +23,4 @@ B2MuMuIsFound.AvoidSelResult = false ;
 
 PrintFoundB2MuMu.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundB2MuMu.PhysDesktop.InputLocations = { "Phys/HLTFilterB2MuMu" } ;
-PrintFoundB2MuMu.OutputLevel = 3 ;
+PrintFoundB2MuMu.OutputLevel = 4 ;

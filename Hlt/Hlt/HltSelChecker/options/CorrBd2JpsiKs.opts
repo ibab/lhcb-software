@@ -22,4 +22,4 @@ Bd2JpsiKsIsFound.AvoidSelResult = false ;
 
 PrintFoundBd2JpsiKs.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBd2JpsiKs.PhysDesktop.InputLocations = { "Phys/HLTFilterBd2JpsiKs" } ;
-PrintFoundBd2JpsiKs.OutputLevel = 3 ;
+PrintFoundBd2JpsiKs.OutputLevel = 4 ;

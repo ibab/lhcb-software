@@ -24,4 +24,4 @@ Bs2JpsiPhiIsFound.AvoidSelResult = false ;
 
 PrintFoundBs2JpsiPhi.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/HLTFilterBs2JpsiPhi" } ;
-PrintFoundBs2JpsiPhi.OutputLevel = 3 ;
+PrintFoundBs2JpsiPhi.OutputLevel = 4 ;
