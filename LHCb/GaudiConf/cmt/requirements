@@ -1,5 +1,5 @@
 package GaudiConf
-version v8r0p1
+version v8r1
 
 branches doc cmt options src
 
@@ -8,4 +8,5 @@ ignore_pattern package_stamps
 set STDOPTIONS ${GAUDICONFROOT}/options/Common.opts
 set STDOPTS    ${GAUDICONFROOT}/options
 
- 
+macro_append ROOT_native_version "" \
+             rh73_gcc323    "_0411"

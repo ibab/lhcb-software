@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v8r1 2004-11-17 ========================
+! 2004-11-17 - Marco Cattaneo
+ - For rh73_gcc323 only, append "_0411" to ROOT_native_version, to pick up
+   fix for using rootd on Castor
+
 !======================= GaudiConf v8r0p1 2004-09-23 =======================
 ! 2004-09-23 - Marco Cattaneo
  - Update Gaudi.supp for Gaudi v15r2 errors
