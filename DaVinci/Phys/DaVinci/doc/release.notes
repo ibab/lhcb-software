@@ -6,6 +6,8 @@ Purpose     : LHCb analysis program
  - Bug fixes:
   . Modify comment in DaVinciNeutral.opts
   . Modify reported default output location in PreLoadCombinedParticles.opts
+  . Modify DaVinci.job to have explicit $current paths for temporary files
+    to make it work at Cambridge (Andy Buckley)
 
 </PRE><H1><A NAME=v8r1>2003-06-03 DaVinci v8r1</A></H1><PRE>
  - New features:

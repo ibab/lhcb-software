@@ -18,15 +18,15 @@
 #
 ###########################################################
 #
-# in BATH output files are written in the BATCH machine
+# in BATCH output files are written in the BATCH machine
 # and copy at the end to your $MYWORKDIR output directory
 # in INTERACTIVE output files are written onto $WORKDIR
 # you have to set $WORKDIR to what you want
 #
-echo " Usage: DaVinci.job [<mode>]" 
-echo " where:"
-echo "  <mode>          (optional)  is execution mode (e.g. $CMTDEB)"
 if ($#argv >= 1 ) then
+  echo " Usage: DaVinci.job [<mode>]" 
+  echo " where:"
+  echo "  <mode>          (optional)  is execution mode (e.g. $CMTDEB)"
   if ("$1" != "$CMTDEB") then
     exit 0
   endif
@@ -59,21 +59,21 @@ setenv EXEC DaVinci
 #    in interactive create a link to the executable you want to run =======
 #
 if ($?LS_SUBCWD) then
-  cp $MYJOBROOT/$MODE/$EXEC.exe tmpjob.exe
+  cp $MYJOBROOT/$MODE/$EXEC.exe $current/tmpjob.exe
 else
-  ln -fs $MYJOBROOT/$MODE/$EXEC.exe tmpjob.exe
+  ln -fs $MYJOBROOT/$MODE/$EXEC.exe $current/tmpjob.exe
 endif
 #
 #==  create temporary joboptions file ==================
-cp $MYJOBROOT/options/DaVinci.opts tmpjob.opts
+cp $MYJOBROOT/options/DaVinci.opts $current/tmpjob.opts
 
 # == run $EXEC.exe ============================================
 #
 if ($MODE == "$CMTDEB") then
-  setenv JOBOPTPATH tmpjob.opts
-  gvd tmpjob.exe
+  setenv JOBOPTPATH $current/tmpjob.opts
+  gvd $current/tmpjob.exe
 else
-  time tmpjob.exe tmpjob.opts
+  time $current/tmpjob.exe $current/tmpjob.opts
 endif
 
 # == job is finished: remove temporary files ==========
@@ -83,11 +83,12 @@ rm -f tmp*
 if ($?LS_SUBCWD) then 
   ls core* > /dev/null
   if ($status == 0) then
-     gdb tmpjob.exe core* << EOF
+     gdb $current/tmpjob.exe core* << EOF
 where
 quit
 EOF
-  rm core*
+    rm core*
+  endif
   ls *.* >! RETURN
 endif
 
