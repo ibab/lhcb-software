@@ -1,0 +1,104 @@
+/** @file 
+ *  Configuration options for the execution of 
+ *  the preselection of good Muon
+ *
+ *  @author P. Koppenburg
+ *  @date 2004-08-16
+ */
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+#include "$DAVINCIROOT/options/PreLoadNoPIDParticles.opts" // to get a lot!
+
+ApplicationMgr.DLLs += { "HltSelections", "LoKi", "PhysSelections" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqNewAlgorithms" };
+SeqNewAlgorithms.Members = { 
+   "MakeResonances"
+ , "FilterDesktop"
+}; 
+SeqNewAlgorithms.MeasureTime = true ;
+ApplicationMgr.TopAlg += { "GaudiSequencer/SeqOldAlgorithms" };
+SeqOldAlgorithms.Members = { 
+   "CombineParticles"
+ , "RefineSelection"
+}; 
+SeqOldAlgorithms.MeasureTime = true ;
+
+//------------------------------------------------------------------------------
+//Combined.PhysDesktop.ParticleMakerType  = "CombinedParticleMaker" ;
+//Combined.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+//------------------------------------------------------------------------------
+//  The following example options select Ds in a 20 MeV mass window
+//  with chi2<100 made of pions and kaons with PVIP > 2sigma and 
+//  where the pions ahve Pt>300 MeV;
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+// Create Ds
+//------------------------------------------------------------------------------
+//MakeResonances.PhysDesktop.InputLocations = {"Phys/Combined"};
+MakeResonances.PhysDesktop.InputLocations = {"Phys/PreLoadKaons", "Phys/PreLoadPions", "Phys/PreLoadProtons"};
+
+MakeResonances.DecayDescriptor = "[D_s- -> K+ K- pi-]cc";
+//MakeResonances.DaughterFilter.Selections = {"K- : BooleanFilterCriterion",
+//                                           "pi+ : BooleanFilterCriterion"};
+MakeResonances.MotherFilter.Selections = {"D_s- : VtxFilterCriterion/DsFilter"};
+MakeResonances.Window = 50*MeV ;
+MakeResonances.KillOverlap = true ;
+MakeResonances.MotherFilter.DsFilter.MaxChi2 = 200 ; // some filtering
+//
+// Old way of doing the same thing
+//
+CombineParticles.PhysDesktop.InputLocations = {"Phys/PreLoadKaons", "Phys/PreLoadPions", "Phys/PreLoadProtons"};
+
+CombineParticles.DecayDescriptor = "[D_s- -> K+ K- pi-]cc";
+CombineParticles.Selections = {"K+ : BooleanFilterCriterion",
+                                "K- : BooleanFilterCriterion",
+                                "pi+ : BooleanFilterCriterion",
+                                "pi- : BooleanFilterCriterion",
+				"D_s- : BooleanFilterCriterion/DsFilter",
+				"D_s+ : BooleanFilterCriterion/DsFilter"};
+CombineParticles.DsFilter.AndList = {"MassFilterCriterion","VtxFilterCriterion"};
+CombineParticles.DsFilter.VtxFilterCriterion.MaxChi2 = 200 ;		
+CombineParticles.DsFilter.MassFilterCriterion.Window = 50*MeV ;
+//------------------------------------------------------------------------------
+// Filter Ds
+//------------------------------------------------------------------------------
+FilterDesktop.PhysDesktop.InputLocations = {"Phys/MakeResonances"};
+FilterDesktop.Filter.Selections = {
+                                "D_s- : VtxFilterCriterion/DsFilter,    
+				            MassFilterCriterion/DsMass" 
+                                 ,"K+ : PVIPFilterCriterion/PVFilter"
+                               , "pi+ : KinFilterCriterion/PiFilter,
+			                PVIPFilterCriterion/PVFilter"
+				};
+FilterDesktop.Filter.FilterByDescendents = true ; // use pi and K
+FilterDesktop.Filter.DsFilter.MaxChi2 = 100. ;
+FilterDesktop.Filter.DsMass.Window = 20*MeV ;
+FilterDesktop.Filter.PVFilter.MinIPsignif =  2.0;  // same used for both 
+FilterDesktop.Filter.PiFilter.MinPt = 300*MeV ;
+//
+// Old way of doing the same thing
+//
+RefineSelection.PhysDesktop.InputLocations = {"Phys/CombineParticles"};
+RefineSelection.ParticleNames = {"D_s+", "D_s-", "K+", "K-", "pi+", "pi-"};
+RefineSelection.FilterNames = {"DsFilter", "DsFilter", "KFilter", "KFilter", "PiFilter", "PiFilter"};
+RefineSelection.DsFilter.CriteriaNames = {"VtxFilterCriterion", "MassFilterCriterion"};
+RefineSelection.DsFilter.VtxFilterCriterion.MaxChi2 = 100. ;
+RefineSelection.DsFilter.MassFilterCriterion.Window = 20*MeV ;
+RefineSelection.KFilter.CriteriaNames = {"PVIPFilterCriterion"};
+RefineSelection.KFilter.PVIPFilterCriterion.MinIPsignif = 2.0 ;
+RefineSelection.PiFilter.CriteriaNames = {"PVIPFilterCriterion", "KinFilterCriterion"};
+RefineSelection.PiFilter.PVIPFilterCriterion.MinIPsignif = 2.0 ;
+RefineSelection.PiFilter.KinFilterCriterion.MinPt = 300*MeV ;
+
+FilterDesktop.OutputLevel = 3 ;
+RefineSelection.OutputLevel = 3 ;
+// 
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+ApplicationMgr.EvtMax    = 20 ;
+EventSelector.PrintFreq  = 1;
+//
+//MessageSvc.OutputLevel = 1;
+//ToolSvc.OutputLevel    = 1;
+
+//FilterDesktop.OutputLevel = 1 ;

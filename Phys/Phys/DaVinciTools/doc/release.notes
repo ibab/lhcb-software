@@ -1,7 +1,65 @@
-! $Id: release.notes,v 1.154 2005-03-10 16:53:56 pkoppenb Exp $
+! $Id: release.notes,v 1.155 2005-03-11 12:19:13 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-03-11 - P. Koppenburg
+  - src/DaVinciTools_load.cpp
+    . Move MakeResonances from HltSelections
+  - src/MakeResonances.{cpp,h}
+    . Algorithm replacing CombineParticles (in PhysSelections).    
+    ALL entries about MakeResonances copied from HltSelections:
+    2005-03-11 - P. Koppenburg
+    . In cases when two particles of same PID are used in a decay,
+      avoid duplication of the mother. Implementation: sorts vector if PID
+      and checks that keys of particles with identical pids are ordered.
+      Bug reported by Luis Fernandez
+    2005-02-23 - P. Koppenburg
+    . Use CheckOverlap tool to kill overlap. Corrects bug that was affecting
+      decays with intermediate resonances.
+    2005-01-18 - P. Koppenburg
+    . Add MinMomentum and MinPt options to apply to sum 4-momentum
+      *before* mother particle is made
+    2005-01-13 - P. Koppenburg
+    . Override produceHitsos variable from GaudiHistoAlg so that it is off
+      by default
+    . New option "DecayDescriptors", a vector of strings that *supercedes*
+      the DecayDescriptor for the initialisation of the 
+      DecodeSimpleDecayDescriptor tool. This allows the same algorithm to
+      find several decays. 
+      Example:
+    2005-01-10 - P. Koppenburg
+    . Use IPlotTools to make recursive plots.
+      Example:
+         // D* stream
+         HLTselDstar.Members += {"MakeResonances/HLTFilterDstar"};
+         [...]
+         HLTFilterDstar.HistoProduce = true ;
+         HLTFilterDstar.DaughterPlots.Variables = { "M", "Chi2", "Pt", "IPs" } ;
+         HLTFilterDstar.MotherPlots.Variables =   { "M", "Chi2", "Pt", "IPs", "FS" } ;
+         HLTFilterDstar.DaughterPlotsPath = "DstarIn" ;
+         HLTFilterDstar.MotherPlotsPath   = "DstarOut";
+    2004-12-02 - P. Koppenburg
+    . Replacement algorithm for CombineParticles.
+    . Uses the ByPIDFilterCriterion to have the same syntax as 
+      FilterDesktop (replacing RefineSelection), in Phys/DaVinciFilter
+    . Allows to apply a mass window *before* the vertex cut that can 
+      save orders of magnitude in CPU time for a three-body decay 
+      for instance.
+    . Allows to kill overlapping combination of particles (can be switched off
+      by options)  
+    . Practical Example:
+         MakeResonances.PhysDesktop.InputLocations = {"Phys/PreLoadKaons", "Phys/PreLoadPions", "Phys/PreLoadProtons"};
+
+         MakeResonances.DecayDescriptor = "[D_s- -> K+ K- pi-]cc";
+         //MakeResonances.DaughterFilter.Selections = {"K- : BooleanFilterCriterion",
+         //                                           "pi+ : BooleanFilterCriterion"};
+         MakeResonances.MotherFilter.Selections = {"D_s- : VtxFilterCriterion/DsFilter"};
+         MakeResonances.Window = 50*MeV ;
+         MakeResonances.KillOverlap = true ;
+         MakeResonances.MotherFilter.DsFilter.MaxChi2 = 200 ; // some filtering
+  - options/DVTestMakeResonances.opts
+    . Tests that MakeResonances gets the same results as CombineParticles.
+    
 ! 2005-03-10- P. Koppenburg for Luis Fernadez
   - src/CheckOverlap.{h,cpp}
     . Correct another bugs
