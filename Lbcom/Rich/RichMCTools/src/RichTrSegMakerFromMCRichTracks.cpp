@@ -5,8 +5,11 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.6 2004-10-13 09:23:36 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.7 2004-10-21 09:05:22 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.6  2004/10/13 09:23:36  jonrob
+ * New MCTruth methods
+ *
  * Revision 1.5  2004/07/27 16:54:57  jonesc
  * Add option to turn off individual radiators in RichTrackSegment maker tool
  *
@@ -60,10 +63,9 @@ StatusCode RichTrSegMakerFromMCRichTracks::initialize()
   acquireTool( "RichMCTruthTool", m_truth );
 
   // get the radiators
-  const std::string aeroDefault = "/dd/Structure/LHCb/Rich1/Aerogel";
-  m_radiators[Rich::Aerogel] = getDet<DeRichRadiator>( aeroDefault );
-  m_radiators[Rich::C4F10]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::C4F10 );
-  m_radiators[Rich::CF4]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::CF4   );
+  m_radiators[Rich::Aerogel] = getDet<DeRichRadiator>( DeRichRadiatorLocation::Aerogel );
+  m_radiators[Rich::C4F10]   = getDet<DeRichRadiator>( DeRichRadiatorLocation::C4F10   );
+  m_radiators[Rich::CF4]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::CF4     );
 
   return StatusCode::SUCCESS;
 };
