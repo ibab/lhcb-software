@@ -8,7 +8,7 @@ version           v1r0
 branches          cmt doc src options 
 
 # =============================================================================
-use DetDesc      v10r3  Det
+use DetDesc      v10r2  Det
 use AIDA         v2r2   	
 	
 # ==========================================

@@ -1,8 +1,11 @@
-// $Id: MaterialBudgetAlg.h,v 1.2 2002-07-05 10:25:37 witoldp Exp $
+// $Id: MaterialBudgetAlg.h,v 1.3 2002-07-12 07:45:59 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/07/05 10:25:37  witoldp
+// added grid-like shooting
+//
 // Revision 1.1.1.1  2002/05/26 12:47:06  ibelyaev
 // New package: collection of components for checks of Detector Description
 //
@@ -26,7 +29,7 @@ class IHistogram2D;
  *
  *  The algorithm produces 2 2-dimentional plots with the 
  *  evaluationfo the material budget ( in units of radiation length)
- *  between origin vertes and x-y point at the reference plane. 
+ *  between origin vertex and x-y point at the reference plane. 
  *  The plot need to be normalized properly. Normalization is given 
  *  by histogram number 2. The proper normalization is achieved e.g in PAW
  *  @code 
@@ -38,7 +41,7 @@ class IHistogram2D;
  *  <ul>                   
  *  <li> @p ShootingPoint  Position of the "origin vertex" 
  *                             (default value <tt>{ 0. , 0. , 0. }</tt>)
- *  <li> @ Shoots          Number of random shoots per event 
+ *  <li> @ Shots           Number of random shots per event 
  *                                           (default value is @p  1000 ) 
  *  <li> @ zPlane          @p Z -position of the reference plane
  *                                           (default value is @p 12000 )
@@ -65,8 +68,10 @@ class IHistogram2D;
  *  added by W. Pokorski:
  *  Grid                   flag to switch between random shooting (0) and 
  *                         grid (1)
- *  dxgrid                 step in x coordinate (for grid)
- *  dygrid                 step in y coordinate (for grid)
+ *  xbinref                x-size of the reference bin (to be scaled as m_z/m_zref)
+ *  ybinref                y-size of the reference bin (to be scaled as m_z/m_zref)
+ *  zref                   reference z position (at which xbinref and ybinref  
+ *                         are given) 
  */
 
 
@@ -134,8 +139,8 @@ private:
   // point of shooting 
   std::vector<double> m_vrtx          ;
   HepPoint3D          m_vertex        ;
-  // number of shoots per event
-  int                 m_shoots        ;
+  // number of shots per event
+  int                 m_shots        ;
   // z-position of reference plane 
   double              m_z             ;
   // x- and y- size of shooting area (parameters of 2d-histograms)
@@ -145,9 +150,13 @@ private:
   double              m_yMin          ;
   int                 m_nbx           ;
   int                 m_nby           ;
+  // parameters for "grid shooting" (if grid=1) (added by W. Pokorski)
+  // variables ending with "ref" correspond to some reference grid.
+  // the actuall grid will be scaled according to m_z/m_zref
   int                 m_grid          ;
-  double              m_dxgrid        ;
-  double              m_dygrid        ;
+  double              m_xbinref       ;
+  double              m_ybinref       ;
+  double              m_zref          ;
   // material budget histogram itself 
   IHistogram2D*       m_budget        ;
   // Normalization histogram  

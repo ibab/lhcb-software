@@ -1,5 +1,5 @@
 ! ------------------------------------------------------------------------------
-! $Id: release.notes,v 1.2 2002-07-05 10:25:37 witoldp Exp $ 
+! $Id: release.notes,v 1.3 2002-07-12 07:45:59 witoldp Exp $ 
 ! ------------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! ------------------------------------------------------------------------------
@@ -8,6 +8,10 @@
 ! Purpose     : Collection of useful components for checking of 
 !               Detector Description, Material Budget etc 
 ! ------------------------------------------------------------------------------
+
+! 2002-07-12 - Witek Pokorski
+  - improved grid generation
+  - changed/added a few properties for grid
 
 ! 2002-07-05 - Witek Pokorski
   - added a possibility of grid-like shooting

@@ -1,8 +1,11 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.3 2002-07-05 10:25:37 witoldp Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.4 2002-07-12 07:45:59 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/07/05 10:25:37  witoldp
+// added grid-like shooting
+//
 // Revision 1.2  2002/07/03 08:53:27  witoldp
 // added application CheckApp
 //
@@ -66,24 +69,25 @@ MaterialBudgetAlg::MaterialBudgetAlg
   , m_rndmSvc       ( 0              )
   , m_vrtx          ( 3 , 0.0        )
   , m_vertex        (                )
-  , m_shoots        ( 1000           )
+  , m_shots         ( 1000           )
   , m_z             ( 12 * meter     )
   , m_xMax          (  4 * meter     )
   , m_yMax          (  3 * meter     )
   , m_xMin          (  0 * meter     )
   , m_yMin          (  0 * meter     )
-  , m_nbx           ( 50             )
-  , m_nby           ( 50             )
+  , m_nbx           ( 360            )
+  , m_nby           ( 300            )
   , m_budget        (  0             )
   , m_normalization (  0             )
   , m_grid          (  0             )
-  , m_dxgrid        ( 10.0           )
-  , m_dygrid        ( 10.0           )
+  , m_xbinref       ( 20.0           )
+  , m_ybinref       ( 20.0           )
+  , m_zref          ( 10000.0        )
 {  
   declareProperty( "TransportService" , m_trSvcName   ) ;
   declareProperty( "RndmService"      , m_rndmSvcName ) ;
   declareProperty( "ShootingPoint"    , m_vrtx        ) ;
-  declareProperty( "Shoots"           , m_shoots      ) ;
+  declareProperty( "Shots"            , m_shots       ) ;
   declareProperty( "zPlane"           , m_z           ) ;
   declareProperty( "xMax"             , m_xMax        ) ;
   declareProperty( "xMin"             , m_xMin        ) ;
@@ -92,8 +96,9 @@ MaterialBudgetAlg::MaterialBudgetAlg
   declareProperty( "nBx"              , m_nbx         ) ;
   declareProperty( "nBy"              , m_nby         ) ;
   declareProperty( "Grid"             , m_grid        ) ;
-  declareProperty( "dxgrid"           , m_dxgrid      ) ;
-  declareProperty( "dygrid"           , m_dygrid      ) ;
+  declareProperty( "xbinref"          , m_xbinref     ) ;
+  declareProperty( "ybinref"          , m_ybinref     ) ;
+  declareProperty( "zref"             , m_zref        ) ;
 };
 // ============================================================================
 
@@ -193,6 +198,15 @@ StatusCode MaterialBudgetAlg::initialize()
   // adjust number of bins 
   if( 0      >= m_nbx  ) {  m_nbx = 50                    ; }
   if( 0      >= m_nby  ) {  m_nby = 50                    ; }
+
+  // for grid we calculate x/yMin/Max from the size and number of bins 
+  if(m_grid)
+    {
+      m_xMin=-(m_xbinref*m_nbx*m_z)/(2.0*m_zref);
+      m_yMin=-(m_ybinref*m_nby*m_z)/(2.0*m_zref);
+      m_xMax=-m_xMin;
+      m_yMax=-m_yMin;
+    }
   
   // book the histogram
   const std::string hbookdir( Local::dirHbookName( "/stat/" + name() ) );
@@ -209,19 +223,25 @@ StatusCode MaterialBudgetAlg::initialize()
           << endreq ;
       return StatusCode::FAILURE ; 
     }
-  // book the histogram
-  m_normalization = 
-    histoSvc()->book( hbookdir                            ,   // directory 
-                      2                                   ,   // ID 
-                      "Normalization for Material Budget" ,   // title 
-                      m_nbx  ,  m_xMin  ,  m_xMax         ,   // x-bins 
-                      m_nby  ,  m_yMin  ,  m_yMax         ) ; // y-bins
-  if( 0 == m_normalization ) 
+
+  if(!m_grid) 
+    // we do not need normalization histogram for grid
+    // because we have exactly one shot per bin  
     {
-      log << MSG::ERROR 
-          << " Could not book the Material Budget Normalization Histogram!"
-          << endreq ;
-      return StatusCode::FAILURE ; 
+      // book the histogram
+      m_normalization = 
+        histoSvc()->book( hbookdir                            ,   // directory 
+                          2                                   ,   // ID 
+                          "Normalization for Material Budget" ,   // title 
+                          m_nbx  ,  m_xMin  ,  m_xMax         ,   // x-bins 
+                          m_nby  ,  m_yMin  ,  m_yMax         ) ; // y-bins
+      if( 0 == m_normalization ) 
+        {
+          log << MSG::ERROR 
+              << " Could not book the Material Budget Normalization Histogram!"
+              << endreq ;
+          return StatusCode::FAILURE ; 
+        }
     }
   
   return StatusCode::SUCCESS;
@@ -261,10 +281,14 @@ StatusCode MaterialBudgetAlg::execute()
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 
+  // shooting a on grid:
   if(m_grid)
     {
-      double x=m_xMin;
-      double y=m_yMin;
+      double dxgrid=m_xbinref*m_z/m_zref;
+      double dygrid=m_ybinref*m_z/m_zref;
+
+      double x=m_xMin+dxgrid/2;
+      double y=m_yMin+dygrid/2;
       
       while(y<=m_yMax) 
         {
@@ -278,19 +302,15 @@ StatusCode MaterialBudgetAlg::execute()
                 m_trSvc -> distanceInRadUnits( m_vertex , point );
               
               // fill material budget histogram 
-              m_budget        -> fill( point.x() , point.y() , dist ) ;
-              
-              // fill the normalization histogram  
-              m_normalization -> fill( point.x() , point.y()        ) ;
-              
+              m_budget        -> fill( point.x() , point.y() , dist ) ;              
               //move to the next point on the grid
-              x=x+m_dxgrid;
+              x=x+dxgrid;
             }
-          x=m_xMin;
-          y=y+m_dygrid;
+          x=m_xMin+dxgrid/2;
+          y=y+dygrid;
         }
     }
-  else
+  else // random shooting:
     {
       // get random number generator 
       Rndm::Numbers flat( m_rndmSvc , Rndm::Flat( 0. , 1. ) );
@@ -298,8 +318,8 @@ StatusCode MaterialBudgetAlg::execute()
       const double dx = m_xMax - m_xMin ;
       const double dy = m_yMax - m_yMin ;
       
-      // make 'shoots'
-      for( int shoot = 0 ; shoot < m_shoots ; ++shoot ) 
+      // make 'shots'
+      for( int shot = 0 ; shot < m_shots ; ++shot ) 
         {
           // point at reference plane  
           const HepPoint3D point( m_xMin + dx * flat.shoot() ,
