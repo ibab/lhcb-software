@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/Lib/GiGaTrackInformation.cpp,v 1.2 2001-04-23 11:25:35 ibelyaev Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/Lib/GiGaTrackInformation.cpp,v 1.3 2001-04-23 11:27:31 ibelyaev Exp $
 #define GIGA_GIGATRACKINFORMATION_CPP 1
 
 // GiGa 
@@ -15,5 +15,5 @@ GiGaTrackInformation::GiGaTrackInformation()
 {}; 
 /////////////////////////////////////////////////////////////////////////////////////
 GiGaTrackInformation::~GiGaTrackInformation() {}; 
-/////////////////////////////////////////////////////////////////////////////////////
-i
+////////////////////////////////////////////////////////////////////////////////////
+
