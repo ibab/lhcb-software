@@ -1,8 +1,11 @@
-// $Id: RelationWeightedTypeTraits.h,v 1.6 2002-04-25 08:44:04 ibelyaev Exp $
+// $Id: RelationWeightedTypeTraits.h,v 1.7 2002-04-28 09:35:44 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/04/25 08:44:04  ibelyaev
+//  bug fix for Win2K
+//
 // Revision 1.5  2002/04/25 08:02:03  ibelyaev
 //  bug fix on Win2K
 //
@@ -185,11 +188,19 @@ namespace Relations
       /// constructor
       Range( iterator begin , iterator end ) : Base( begin , end ) {};
       /// the aliases for standard "first" and "second"
-      iterator& begin ()       { return Base::first  ; }
-      iterator  begin () const { return Base::first  ; }
-      iterator& end   ()       { return Base::second ; }
-      iterator  end   () const { return Base::second ; }
-    };
+      /// begin-iterator (non-const version)
+      iterator& begin ()       { return Base::first                 ; }
+      /// begin-iterator (    const version)
+      iterator  begin () const { return Base::first                 ; }
+      /// end-iterator   (non-const version)
+      iterator& end   ()       { return Base::second                ; }
+      /// end-iterator   (    const version)
+      iterator  end   () const { return Base::second                ; }
+      /// number of relations 
+      size_t    size  () const { return Base::second -  Base::first ; }
+      /// empty?
+      bool      empty () const { return Base::second == Base::first ; }
+   };
     
     /** technical definitions, useful and needed for implementation 
      */
