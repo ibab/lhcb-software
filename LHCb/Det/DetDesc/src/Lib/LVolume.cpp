@@ -1,8 +1,11 @@
-// $Id: LVolume.cpp,v 1.22 2002-06-03 09:52:36 ocallot Exp $ 
+// $Id: LVolume.cpp,v 1.23 2002-06-21 13:43:43 ocallot Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.22  2002/06/03 09:52:36  ocallot
+// fixes in the TransportService
+//
 // Revision 1.21  2002/05/15 14:56:29  cattanem
 // fix for windows
 //
@@ -697,6 +700,7 @@ unsigned int LVolume::intersectLine
                 << " y " << Point.y() + t * Vector.y()
                 << " z " << Point.z() + t * Vector.z()
                 << " radl " << (*itI).second->radiationLength()
+                << " name " << (*itI).second->name()
                 << endreq ;
           }
           for ( ILVolume::Intersections::const_iterator itJ = childrens.begin();
@@ -713,6 +717,7 @@ unsigned int LVolume::intersectLine
                 << " y " << Point.y() + t * Vector.y()
                 << " z " << Point.z() + t * Vector.z()
                 << " radl " << (*itJ).second->radiationLength()
+                << " name " << (*itJ).second->name()
                 << endreq;
           }
           
@@ -846,8 +851,8 @@ unsigned int LVolume::intersectLine
                      (*itI).second->radiationLength() );
             log << "Own   : " << line << endreq;
           }
-          for ( ILVolume::Intersections::const_iterator itJ = childrens.begin();
-                childrens.end() != itJ; itJ++ ) {
+          ILVolume::Intersections::const_iterator itJ;
+          for ( itJ = childrens.begin(); childrens.end() != itJ; itJ++ ) {
             double s = (*itJ).first.first;
             double t = (*itJ).first.second;
             sprintf( line, 
@@ -862,6 +867,41 @@ unsigned int LVolume::intersectLine
                      Point.z() + t * Vector.z(),
                      (*itJ).second->radiationLength() );
             log << "Child : " << line << endreq;
+          }
+
+          {
+            log << "============ Details on first level children ============"
+                << endreq;
+            
+            const PVolumes& pVol = pvolumes();
+            
+            if( pVol.empty() ) { return 0; } /// RETURN!!!
+            ILVolume::Intersections child; 
+            for( ILVolume::PVolumes::const_iterator ipv = pVol.begin() ; 
+                 pVol.end() != ipv ; ++ipv ) { 
+              IPVolume* pv = *ipv; 
+        /// construct the intersections container for each daughter volumes 
+              ILVolume::Intersections child; 
+              if( 0 != pv ) { 
+                pv->intersectLine( Point     , 
+                                   Vector    , 
+                                   child     , 
+                                   TickMin   , 
+                                   TickMax   , 
+                                   Threshold ) ; 
+              }
+              for ( itJ = child.begin(); child.end() != itJ; itJ++ ) {
+                double s = (*itJ).first.first;
+                double t = (*itJ).first.second;
+                sprintf( line, "s%9.6f t%9.6f Radl %9.1f", s, t,
+                         (*itJ).second->radiationLength() );
+                log << "Child : " << line << " pv " << pv->name()
+                    << "\t material " << (*itJ).second->name() 
+                    << endreq;
+              }
+            }
+            log << "========================================================="
+                << endreq;
           }
           
           intersections.clear();          

@@ -1,8 +1,11 @@
-// $Id: TransportSvcIntersections.h,v 1.5 2002-04-24 10:53:09 ibelyaev Exp $ 
+// $Id: TransportSvcIntersections.h,v 1.6 2002-06-21 13:43:44 ocallot Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/04/24 10:53:09  ibelyaev
+//  fix problems with TransportSvc ('LHCb Geane')
+//
 // Revision 1.4  2002/04/03 11:01:45  ibelyaev
 //  fix the problems with Assemblies for TransportSvc
 // 
@@ -96,22 +99,26 @@ unsigned long TransportSvc::intersections
       ( 0 != guessGeometry       && 
         0 != ( giLocal = findLocalGI( point1 , 
                                       point2 , 
-                                      guessGeometry       ) ) ) ? 
+                                      guessGeometry ,
+                                      standardGeometry() ) ) ) ? 
       guessGeometry       : 
       ( 0 != alternativeGeometry && 
         0 != ( giLocal = findLocalGI( point1 , 
                                       point2 , 
-                                      alternativeGeometry ) ) ) ? 
+                                      alternativeGeometry ,
+                                      standardGeometry() ) ) ) ? 
       alternativeGeometry : 
       ( 0 != previousGeometry()  && 
         0 != ( giLocal = findLocalGI( point1 , 
                                       point2 , 
-                                      previousGeometry()  ) ) ) ? 
+                                      previousGeometry() ,
+                                      standardGeometry() ) ) ) ? 
       previousGeometry()  : 
       ( 0 != standardGeometry()  && 
         0 != ( giLocal = findLocalGI( point1 , 
                                       point2 , 
-                                      standardGeometry()  ) ) ) ? 
+                                      standardGeometry() ,
+                                      standardGeometry() ) ) ) ? 
       standardGeometry()  : 0 ;  
     
     ///

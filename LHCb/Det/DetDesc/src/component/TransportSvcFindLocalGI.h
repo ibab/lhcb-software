@@ -1,4 +1,4 @@
-// $Id: TransportSvcFindLocalGI.h,v 1.4 2002-06-03 09:52:36 ocallot Exp $ 
+// $Id: TransportSvcFindLocalGI.h,v 1.5 2002-06-21 13:43:44 ocallot Exp $ 
 // ============================================================================
 #ifndef        __DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H__
 #define        __DETDESC_TRANSPORTSVC_TRANSPORTSVCFINDLOCALGI_H__ 1
@@ -21,7 +21,8 @@
 
 IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 , 
                                             const HepPoint3D& point2 , 
-                                            IGeometryInfo*    gi     ) const  {
+                                            IGeometryInfo*    gi     ,
+                                            IGeometryInfo*    topGi  ) const  {
   if( 0 == gi ) { return 0 ; } 
 
   bool debug = false;
@@ -61,8 +62,7 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
     IGeometryInfo* gi2   = gi1 ; 
     {  
       bool loc = false ; 
-      for( loc = gi2->isInside( point2 ) ; 
-           !loc && 0 != gi2 && gi != gi2; 
+      for( loc = gi2->isInside( point2 ) ; !loc && 0 != gi2 ; 
            gi2 = gi2->parentIGeometryInfo() ) { 
         loc = gi2->isInside( point2 ); 
         if ( debug ) std::cout << "  p2 : " << loc << " vol " 
@@ -85,6 +85,7 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
       ///  try to find a "good" geometry element in geometry hierarhy
       for( IGeometryInfo* gl = gi1 ; 0 != gl ; 
            gl = gl->parentIGeometryInfo() ) { 
+        if ( 0 == gl ) return 0;
         if( goodLocalGI( point1 , point2 , gl ) ) { 
           if ( debug ) std::cout << "  goodLocalGI geom " << gl->lvolumeName()
                                  << std::endl;
@@ -104,23 +105,21 @@ IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 ,
     IGeometryInfo* vgi;
 
     m_vGi1.clear();   
-    for( vgi = gi1 ; (0 != vgi) && (vgi != gi); 
-         vgi = vgi->parentIGeometryInfo()  ) { 
+    for( vgi = gi1 ; (0 != vgi); vgi = vgi->parentIGeometryInfo() ) { 
       if ( debug ) std::cout << "  store parent 1 " << vgi->lvolumeName() 
                              << std::endl;
       m_vGi1.push_back( vgi ); 
+      if ( topGi == vgi ) break;
     }
-    m_vGi1.push_back( gi );
     
     /// "top" geometry tree for the second point 
     m_vGi2.clear(); 
-    for( vgi = gi2 ; (0 != vgi) && (gi != vgi); 
-         vgi = vgi->parentIGeometryInfo()  ) { 
+    for( vgi = gi2 ; (0 != vgi); vgi = vgi->parentIGeometryInfo()  ) { 
       if ( debug ) std::cout << "  store parent 2 " << vgi->lvolumeName() 
                              << std::endl;
       m_vGi2.push_back( vgi ); 
+      if ( topGi == vgi ) break;
     }  
-    m_vGi2.push_back( gi );
     
     /// "common" top tree for both points 
     m_vGi.clear(); 

@@ -1,8 +1,11 @@
-// $Id: TransportSvc.h,v 1.1 2002-04-03 11:01:45 ibelyaev Exp $ 
+// $Id: TransportSvc.h,v 1.2 2002-06-21 13:43:44 ocallot Exp $ 
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/03 11:01:45  ibelyaev
+//  fix the problems with Assemblies for TransportSvc
+//
 // ============================================================================
 #ifndef     _DETDESC_TRANSPORTSVC_H
 #define     _DETDESC_TRANSPORTSVC_H
@@ -137,7 +140,8 @@ private:
   IGeometryInfo* findLocalGI
   ( const HepPoint3D& point1 ,
     const HepPoint3D& point2 , 
-    IGeometryInfo*    gi     ) const;   
+    IGeometryInfo*    gi     ,
+    IGeometryInfo*    topGi  ) const;   
 private:
   ///  Own private data members:
   /// names of used services:
