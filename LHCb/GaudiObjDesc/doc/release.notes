@@ -2,7 +2,7 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
-
+===============================GaudiObjDesc v4r5============================
 !20020925 - Stefan
 - new database of header-files generated
 - meta-information about constructors added to the dictionary-files
