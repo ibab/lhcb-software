@@ -1,8 +1,20 @@
-! $Id: release.notes,v 1.30 2002-10-21 19:12:10 gcorti Exp $
+! $Id: release.notes,v 1.31 2002-10-21 21:34:56 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
 ! 2002-10-21 - Gloria Corti
+ - Changes in ElectronParticleMaker to compile on windows: remove std:: in
+   front of log( logarithm function ) and rename local variable for
+   MessageSvc from log to logbk
+ - New transporter called TrTransporter that convert particles to tracks
+   and delegate extrapolation to TrExtrapolator. They choice of extrapolator
+   can be steered by the property "Extrapolator" which default value is
+   "TrFirstCleverExtrapolator" (E. de Oliveira)
+ - Change some printing levels in CombinedTransporter.cpp (E. de Oliveira)
+ - Introduce initialize in LinearTransporter.cpp and swap of znew/zold for
+   boundaries in LinearTransporter and NsctTransporter (E. de Oliveira)
+ - Fix bug in ParabolicTransporter for indexing of auxiliary momentum vector
+   (E. de Oliveira) 
  - New ElectronParticleMaker that makes electron using Calorimeter, or Rich
    or Rich and Calorimeters to make eletrons and can add brem (H.Terrier)
  - New tool CheckOverlap (and interface ICheckOverlap) that verify if
