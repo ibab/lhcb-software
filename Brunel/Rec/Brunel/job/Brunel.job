@@ -37,7 +37,7 @@ set current = $PWD
 
 #
 # == set the root directory of your job
-setenv MYJOBROOT $W1/CMTv1r8/Rec/Brunel/v7
+setenv MYJOBROOT $W1/CMTv1r8/Rec/Brunel/v7r1
 # == reset the dynamic library search path
 unsetenv LD_LIBRARY_PATH
 # == set the program environment

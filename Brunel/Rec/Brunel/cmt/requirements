@@ -1,5 +1,5 @@
 package Brunel
-version v5r1
+version v7r1
 
 branches doc cmt src job options Brunel
 
@@ -66,7 +66,7 @@ use CaloAlgs     v3     Calo
 # Tracking
 use ITAlgorithms v6	IT
 use OTAlgorithms v6	OT
-use TrAlgorithms v6	Tr
+use TrAlgorithms v6r1   Tr
 
 # SICBDST packages
 use Futil        v10r3  SICB
@@ -79,7 +79,7 @@ use digvdet      v2r3   SICB
 use simmubg      v5r2   SICB
 
 use rececal      v7     SICB
-use rechcal      v6     SICB
+use rechcal      v6r1   SICB
 use recrich      v5r4   SICB
 
 use axreclib     v4r2   SICB

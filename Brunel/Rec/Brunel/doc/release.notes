@@ -3,6 +3,15 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
+! 20010913 Brunel v7r1 (MC)
+
+   In cmt/requirements
+     use TrAlgorithms v6r1 Tr
+     - fix a memory leak in TrFitIntializer
+
+     use rechcal      v6r1 SICB
+     - Modified hcl0_make to delete the existing map of cell references.
+
 ! 20010904 Brunel v7 (MC)
   This version is to be used for data produced with SICBMC v248/dbase v241
   ("LHCb-Light")
