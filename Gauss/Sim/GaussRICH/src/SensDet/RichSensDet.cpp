@@ -213,40 +213,30 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
                  dynamic_cast<GaussTrackInformation*>(aUserTrackinfo);
 
 
-  if(aRichPETrackInfo) {
-    if(aRichPETrackInfo->richInfo() ) {
-      RichInfo* aRichPETypeInfo=aRichPETrackInfo-> richInfo();
-      if(aRichPETypeInfo && aRichPETypeInfo->HasUserPEInfo()) {
-        
-      
-        RichPEInfo* aPEInfo=aRichPETypeInfo->RichPEInformation();
-      if( aPEInfo) {
-  
-       CurOptPhotMotherChTrackID = aPEInfo-> MotherOfPhotonId();
-       CurOptPhotMotherChTrackPDG = aPEInfo-> MotherOfPhotonPDGcode();
-       CurRadiatorNumber   =   aPEInfo->PhotOriginRadiatorNumber();
-       CurEmissPt          =   aPEInfo->PhotonEmisPoint();
-       CurPhotEnergyAtProd =   aPEInfo->PhotonEnergyAtCkvProd();
-       CurThetaCkvAtProd   =   aPEInfo->CherenkovThetaAtProd();
-       CurPhiCkvAtProd     =   aPEInfo->CherenkovPhiAtProd();
-       CurChTrackTotMom    =   aPEInfo-> MotherofPhotonMomAtProd();
-       CurChTrackMomVect    =   aPEInfo->  MotherofPhotonMomVectAtProd();
-       CurChTrackPDGMass    = aPEInfo-> MotherofPhotonPDGMass();
-
-
-       
-      }
-      
-      }
-      
-      
+  if(aRichPETrackInfo) 
+    {
+      if(aRichPETrackInfo->detInfo()) 
+        {
+          RichInfo* aRichPETypeInfo = (RichInfo*)(aRichPETrackInfo->detInfo());
+          if(aRichPETypeInfo && aRichPETypeInfo->HasUserPEInfo()) 
+            {
+              RichPEInfo* aPEInfo=aRichPETypeInfo->RichPEInformation();
+              if( aPEInfo) 
+                {
+                  CurOptPhotMotherChTrackID = aPEInfo-> MotherOfPhotonId();
+                  CurOptPhotMotherChTrackPDG = aPEInfo-> MotherOfPhotonPDGcode();
+                  CurRadiatorNumber   =   aPEInfo->PhotOriginRadiatorNumber();
+                  CurEmissPt          =   aPEInfo->PhotonEmisPoint();
+                  CurPhotEnergyAtProd =   aPEInfo->PhotonEnergyAtCkvProd();
+                  CurThetaCkvAtProd   =   aPEInfo->CherenkovThetaAtProd();
+                  CurPhiCkvAtProd     =   aPEInfo->CherenkovPhiAtProd();
+                  CurChTrackTotMom    =   aPEInfo-> MotherofPhotonMomAtProd();
+                  CurChTrackMomVect    =   aPEInfo->  MotherofPhotonMomVectAtProd();
+                  CurChTrackPDGMass    = aPEInfo-> MotherofPhotonPDGMass();
+                } 
+            }
+        }
     }
-    
-    
-  }
-  
-  
-  
   }
   
   

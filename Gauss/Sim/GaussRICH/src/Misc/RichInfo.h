@@ -1,4 +1,4 @@
-// $Id: RichInfo.h,v 1.1 2003-04-29 15:04:44 seaso Exp $
+// $Id: RichInfo.h,v 1.2 2003-07-28 10:27:11 witoldp Exp $
 #ifndef MISC_RICHINFO_H 
 #define MISC_RICHINFO_H 1
 
@@ -12,8 +12,9 @@
  */
 #include "RichPhotInfo.h"
 #include "RichPEInfo.h"
+#include "GaussTools/DetTrackInfo.h"
 
-class RichInfo {
+class RichInfo : public DetTrackInfo{
 public:
   /// Standard constructor 
 

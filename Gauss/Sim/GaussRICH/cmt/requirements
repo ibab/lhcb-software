@@ -1,6 +1,6 @@
 # =============================================================================
 package GaussRICH
-version v4r0
+version v4r1
 
 # =============== package structure ===========================================
 branches          cmt src doc
@@ -10,7 +10,6 @@ use GaussTools    v*     Sim
 use AIDA          v*
 # =============== Event =======================================================
 use RichEvent     v4r*      Event
-
 
 # ============== component library ============================================
 library          GaussRICH    *.cpp             \

@@ -61,7 +61,7 @@ G4Track* RichG4CherenkovPhotProdTag(const G4Track& aChTrack,
   else
     {
       aRichPhotTrackInfo = new GaussTrackInformation(); 
-     aRichPhotTrackInfo->setRichInfo(aCkvPhotonTypeRichInfo);
+     aRichPhotTrackInfo->setDetInfo(aCkvPhotonTypeRichInfo);
       aCkvPhotTrack->SetUserInformation(aRichPhotTrackInfo);
     }    
   //

@@ -36,8 +36,8 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
   RichPEInfo* CurRichPEInfo = new   RichPEInfo();  
   
   if(CurRichPhotTrackInfo != 0 ){
-    if(CurRichPhotTrackInfo->richInfo()){                 
-      RichInfo* aPhRichInfo= CurRichPhotTrackInfo->richInfo();
+    if(CurRichPhotTrackInfo->detInfo()){                 
+      RichInfo* aPhRichInfo= (RichInfo*)(CurRichPhotTrackInfo->detInfo());
       if( aPhRichInfo !=0 && aPhRichInfo-> HasUserPhotInfo() ) {
         
         RichPhotInfo* aPhotInfo = 
@@ -87,7 +87,7 @@ G4Track* RichPEInfoAttach(const G4Track& aPhotonTk, G4Track* aPETk)
   else
     {
       aRichPETrackInfo = new GaussTrackInformation(); 
-      aRichPETrackInfo->setRichInfo(aPETypeRichInfo);
+      aRichPETrackInfo->setDetInfo(aPETypeRichInfo);
       aPETk->SetUserInformation(aRichPETrackInfo);
     }    
   //

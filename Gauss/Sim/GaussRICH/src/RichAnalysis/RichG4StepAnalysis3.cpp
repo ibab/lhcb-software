@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis3.cpp,v 1.3 2003-07-22 15:44:47 seaso Exp $
+// $Id: RichG4StepAnalysis3.cpp,v 1.4 2003-07-28 10:27:11 witoldp Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -101,10 +101,6 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
            G4String postPosMaterialName="NoMaterial";
            G4String aPostVolName="NoVolName ";
-           
-           
-
-           
           
               if(aPhotProdPos.z()  >=  C4F10ZBeginAnalysis &&
                 aPhotProdPos.z()  <=  C4F10ZEndAnalysis ) {
@@ -119,8 +115,6 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
                         aPhotProdPos.y()  <=  AgelYEndAnalysis){
 
                 aRadiatorNum=0;
- 
-
 
                 //                 G4cout<<" Step Analysis radiator num "<<aRadiatorNum<<G4endl;
                 
@@ -129,32 +123,32 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
               if(aPostStepPoint->GetPhysicalVolume()) {
                 if(  aPostStepPoint->GetPhysicalVolume()-> GetLogicalVolume()) {
                   
-             postPosMaterialName=aPostStepPoint->GetPhysicalVolume()->
-               GetLogicalVolume()->GetMaterial()->GetName(); 
+                  postPosMaterialName=aPostStepPoint->GetPhysicalVolume()->
+                    GetLogicalVolume()->GetMaterial()->GetName(); 
                 }
               }
               
               
-             G4ThreeVector PhotCurDir = aTrack->GetMomentumDirection();
-
+              G4ThreeVector PhotCurDir = aTrack->GetMomentumDirection();
+              
             G4String aPreVolName=
               aPreStepPoint->GetPhysicalVolume()->GetLogicalVolume()->GetName();
- 
-           G4String prePosMaterialName=aPreStepPoint->GetPhysicalVolume()->
-            GetLogicalVolume()->GetMaterial()->GetName(); 
+            
+            G4String prePosMaterialName=aPreStepPoint->GetPhysicalVolume()->
+              GetLogicalVolume()->GetMaterial()->GetName(); 
 
-           //           G4cout<<"pre and Post step material name "
-           //      <<  prePosMaterialName <<"   "
-           // <<postPosMaterialName<<G4endl;
+            //           G4cout<<"pre and Post step material name "
+            //      <<  prePosMaterialName <<"   "
+            // <<postPosMaterialName<<G4endl;
            
             // Now for the photon production point in c4f10.
-
-           if( aRadiatorNum == 0 || aRadiatorNum == 1 ) {
-             
+            
+            if( aRadiatorNum == 0 || aRadiatorNum == 1 ) {
+              
              G4int aStepNum = aTrack -> GetCurrentStepNumber() ;
-               
+             
              if(aStepNum == 1 ) {
-
+               
                if(    aRadiatorNum == 1 ) {
                  
                  aRichCounter->bumpNumPhotProdRich1Gas();
@@ -162,24 +156,16 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
                }else if ( aRadiatorNum == 0 ) {
                
                  aRichCounter->bumpNumPhotProdRich1Agel();
-
-  
                }
-               
-               
              }
-             
-             
-             
-             
             if(aPostStepPoint->GetStepStatus() == fGeomBoundary) {
 
               if(aPostStepPoint->GetPhysicalVolume()) {
                 if(  aPostStepPoint->GetPhysicalVolume()->GetLogicalVolume()){
                   
-             aPostVolName=
-              aPostStepPoint->GetPhysicalVolume()
-               ->GetLogicalVolume()->GetName();
+                  aPostVolName=
+                    aPostStepPoint->GetPhysicalVolume()
+                    ->GetLogicalVolume()->GetName();
                 }
               }
               
@@ -188,153 +174,101 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
               //                   <<aPostVolName<<"   "<<aRadiatorNum<<G4endl;
 
               // Now for the Aerogel photons entering the C4F10 volume.
-
-             G4String  aPreVolNameA =std::string(aPreVolName,0,33);
-
+              
+              G4String  aPreVolNameA =std::string(aPreVolName,0,33);
+              
              if(aRadiatorNum == 0 ) {
                
-              if(aPreVolNameA ==  LogVolAgelNameAnalysis &&
-                 aPostVolName ==  LogVolC4F10NameAnalysis) {
-                if(PhotCurDir.z() > 0.0 ) {
-                  if(prePos.z() <= 
-                           (AgelZEndAnalysis+m_RichG4AgelPlanePosTolerence) &&
+               if(aPreVolNameA ==  LogVolAgelNameAnalysis &&
+                  aPostVolName ==  LogVolC4F10NameAnalysis) {
+                 if(PhotCurDir.z() > 0.0 ) {
+                   if(prePos.z() <= 
+                      (AgelZEndAnalysis+m_RichG4AgelPlanePosTolerence) &&
                      postPos.z() >=
-                           (AgelZEndAnalysis-m_RichG4AgelPlanePosTolerence) ){
+                      (AgelZEndAnalysis-m_RichG4AgelPlanePosTolerence) ){
+                     
+                     aRichCounter->bumpNumPhotAgelAtAgelDownstrZ();
+                     //                    cout<<"Current numcross at AgeldownstrZ=  "
+                     //    <<aRichCounter->   NumPhotAgelAtAgelDownstrZ()<<endl;
+                   }
+                 }
+               }
+             }              
+             // Now for photon hitting the mirror.
 
-                    aRichCounter->bumpNumPhotAgelAtAgelDownstrZ();
-                    //                    cout<<"Current numcross at AgeldownstrZ=  "
-                    //    <<aRichCounter->   NumPhotAgelAtAgelDownstrZ()<<endl;
-                    
-  
-                  }
+             G4String  aPostVolNameM =std::string(aPostVolName,0,33);             
+             
+             if(aPreVolName == LogVolC4F10NameAnalysis && 
+                aPostVolNameM == LogVolRich1Mirror1NameAnalysis ){
+               // the reflection already happened at this point.
+
+               //                   if(PhotCurDir.z() > 0.0 ) {
+               
+               if( aRadiatorNum == 1 ) {
                   
+                 aRichCounter->  bumpNumPhotGasOnRich1Mirror1();
+                 
+               }else if ( aRadiatorNum == 0 ) {
                   
-                }
-                
-                
-              }
+                 aRichCounter->  bumpNumPhotAgelOnRich1Mirror1();
+                 
+               }                    
+               
              }
              
+             // Now for photons hitting mirror2
              
-
-              
-            // Now for photon hitting the mirror.
-
-             G4String  aPostVolNameM =std::string(aPostVolName,0,33);
-
-
-              if(aPreVolName == LogVolC4F10NameAnalysis && 
-               aPostVolNameM == LogVolRich1Mirror1NameAnalysis ){
+             if(aPreVolName == LogVolC4F10NameAnalysis && 
+                aPostVolName == LogVolRich1Mirror2NameAnalysis ){
                // the reflection already happened at this point.
-
-                //                   if(PhotCurDir.z() > 0.0 ) {
-
-                if( aRadiatorNum == 1 ) {
-                  
-                     aRichCounter->  bumpNumPhotGasOnRich1Mirror1();
-                     
-                }else if ( aRadiatorNum == 0 ) {
-                  
-                     aRichCounter->  bumpNumPhotAgelOnRich1Mirror1();
-                  
-                }
-                
-                
-                     //                   }
-                   
-                   
-              }
-              
-              
-
-              // Now for photons hitting mirror2
-
-              if(aPreVolName == LogVolC4F10NameAnalysis && 
-               aPostVolName == LogVolRich1Mirror2NameAnalysis ){
-               // the reflection already happened at this point.
-
-                //                   if(PhotCurDir.z() < 0.0 ) {
-
-                if(aRadiatorNum == 1 ) {
+               
+               //                   if(PhotCurDir.z() < 0.0 ) {
+               
+               if(aRadiatorNum == 1 ) {
                   aRichCounter->  bumpNumPhotGasOnRich1Mirror2();
-                } else if ( aRadiatorNum == 0 ) {
-                
-                      aRichCounter->  bumpNumPhotAgelOnRich1Mirror2();
- 
-                }
-                
-                
-                     //                   }                  
-              }
-              
-              
-              // now for photon hitting the Gas QW 
- 
-
-
-
+               } else if ( aRadiatorNum == 0 ) {
+                 
+                 aRichCounter->  bumpNumPhotAgelOnRich1Mirror2();
+                 
+               }
+             }
+             // now for photon hitting the Gas QW
+             
              G4String aPreLogVolName1=std::string(aPreVolName,0,31);
-              if(aPreLogVolName1 == LogVolRich1MagShNameAnalysis && 
+             if(aPreLogVolName1 == LogVolRich1MagShNameAnalysis && 
                 aPostVolName == LogColRich1GasQWNameAnalysis ){
+               
+               if(PhotCurDir.z() > 0.0 ) {
 
+                 if( aRadiatorNum == 1 ) {                
+                   aRichCounter->  bumpNumPhotGasOnRich1GasQW();
+                 } else if ( aRadiatorNum == 0 ) {
+                   
+                   aRichCounter->  bumpNumPhotAgelOnRich1GasQW();
+                   
+                 }  
+               }
+             } 
+             // now for photon hitting the HpdQW
+
+             
+             if(aPreVolName == LogVolHpdSMasterNameAnalysis && 
+                aPostVolName ==  LogVolHpdQWindowNameAnalysis ){
+               
                  if(PhotCurDir.z() > 0.0 ) {
-
-                   if( aRadiatorNum == 1 ) {                
-                     aRichCounter->  bumpNumPhotGasOnRich1GasQW();
-                   } else if ( aRadiatorNum == 0 ) {
                    
-                     aRichCounter->  bumpNumPhotAgelOnRich1GasQW();
-  
-                   }
-                   
-                   
-         
-                   
-                 }
-                 
-                 
-              }
-              
-              
-              // now for photon hitting the HpdQW
-
-            
-              if(aPreVolName == LogVolHpdSMasterNameAnalysis && 
-               aPostVolName ==  LogVolHpdQWindowNameAnalysis ){
-                
-                 if(PhotCurDir.z() > 0.0 ) {
-
                    if( aRadiatorNum == 1 ) {                 
                      aRichCounter->  bumpNumPhotGasOnRich1HpdQW();
                    } else if ( aRadiatorNum == 0 ) {
                    
                      aRichCounter->  bumpNumPhotAgelOnRich1HpdQW();
-  
+                     
                    }
-                   
-                 }                 
-                 
-              }
-              
-            
-            
-              
+                 }
+             }  
             }
-            
-           }
-           
-            
-            
-            
-            
-             
-           
-         }
-         
-         
-         
-         
-         
+            }
+         } 
         }
         
         //          G4cout<<"Now in Step analysis 3 A "<<G4endl;
@@ -373,14 +307,14 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
 
                  G4VUserTrackInformation* aUserTrackinfo=
                                   aTrack->GetUserInformation();
-                 GaussTrackInformation* aRichPETrackInfo= 
-                                       (0 == aUserTrackinfo) ? 0 : 
-                    dynamic_cast<GaussTrackInformation*>(aUserTrackinfo);
+                 GaussTrackInformation* aRichPETrackInfo
+                   =(GaussTrackInformation*)aUserTrackinfo;
                  
                     if(aRichPETrackInfo) {
-                      if( aRichPETrackInfo-> richInfo() ) {
+                      if( aRichPETrackInfo->detInfo() ) {
                         
-                        RichInfo* aRichPETypeInfo=aRichPETrackInfo-> richInfo();
+                        RichInfo* aRichPETypeInfo=
+                          (RichInfo*)(aRichPETrackInfo->detInfo());
                         if(aRichPETypeInfo && 
                            aRichPETypeInfo->HasUserPEInfo()) {
 
@@ -394,54 +328,25 @@ void RichG4StepAnalysis3::UserSteppingAction( const G4Step* aStep )
                               aMotherChTkId  
                                     = aPEInfo-> MotherOfPhotonId();
                                         
-                           }
-                           
-                           
+                           }                           
                         }
-                        
-                        
                       }
-                      
                     }
                     if( aPeRadiatorNumber == 1 ) {
                               aRichCounter-> bumpNumPhotGasRich1SiDet();
-
-                        
+                              
+                              
                     }else if( aPeRadiatorNumber == 0 ) {
                     
                                aRichCounter-> bumpNumPhotAgelRich1SiDet();
  
-                    }
-                    
-
-
-
-
-                    
-                    
-                  
-                }          
-                
+                    }                  
+                }
               }
              }
-             
-            }
-            
-              
-            }
-            
+            }  
+            }  
          }
-         
-         
       }
-      
-      
-      
-      
-      
-      
 }
-
-
-
 //=============================================================================
