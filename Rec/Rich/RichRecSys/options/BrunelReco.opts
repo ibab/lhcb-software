@@ -20,9 +20,9 @@ BrunelRecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt2" };
 // Ring refit - uses working IDs to identify good photons and refit angles
 BrunelRecoRICHSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
 // Backgroud alg - Uses global 2nd iter results as working particle hypotheses
-BrunelRecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst3" };
+//BrunelRecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst3" };
 // Final iteration of Global PID
-BrunelRecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt3" };
+//BrunelRecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt3" };
 // Finalise Global PID
 BrunelRecoRICHSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
 // Make final output PID results
