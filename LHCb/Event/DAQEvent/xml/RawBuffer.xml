@@ -16,6 +16,7 @@
        />
        <base name="DataObject"/>
        <import name="Event/DAQTypes" soft="FALSE"/>
+       <import name="GaudiKernel/GaudiException" soft="FALSE"/>
        <import name="raw_int" ignore="TRUE"/>
        <attribute
         desc="Initial amount of memory allocated in words(32 bit)"
@@ -81,6 +82,10 @@
        <arg type="raw_int *" name="data"    />
        <arg type="long" name="dataSize"  />
          <code> 
+  if( raw_int(sourceID)&gt;65535 ) { // Maximum value for 16 bit field
+      throw GaudiException( "sourceID value exceeds maximum (65535).",
+                            "RawBufferException", StatusCode::FAILURE ); 
+  }
   long bankSize = 3 + dataSize ;
   long evtSize=m_currentSize+bankSize;
   if(evtSize &gt; m_allocatedSize ) reallocate( evtSize );
@@ -102,6 +107,10 @@
        <arg type="int" name="bankType"  />
        <arg type="std::vector &lt;raw_int&gt;" name="data"    />
          <code> 
+  if( raw_int(sourceID)&gt;65535 ) { // Maximum value for 16 bit field
+      throw GaudiException( "sourceID value exceeds maximum (65535).",
+                            "RawBufferException", StatusCode::FAILURE );
+  }
   long bankSize = 3 + data.size() ;
   long evtSize=m_currentSize+bankSize;
   if(evtSize &gt; m_allocatedSize ) reallocate( evtSize );

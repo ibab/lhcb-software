@@ -16,6 +16,7 @@
        />
        <base name="DataObject"/>
        <import name="Event/DAQTypes" soft="FALSE"/>
+       <import name="GaudiKernel/GaudiException" soft="FALSE"/>
        <import name="l1_int" ignore="TRUE"/>
        <attribute
         desc="Initial amount of memory allocated in words(16 bit)"
@@ -75,6 +76,15 @@
        <arg type="long" name="dataSize"  />
          <code> 
   long bankSize = 1 + dataSize ;
+  if( bankSize &gt;126 ) {  // The maximum number of items in each banks is 126.
+    bankSize = 126;
+    throw GaudiException( "Size of data bank exceeds maximum (126). Excess ignored.",
+                          "L1BufferException", StatusCode::FAILURE );
+  }
+  if( l1_int(sourceID)&gt;63 ) { // Maximum value for 6 bit field
+      throw GaudiException( "sourceID value exceeds maximum (63).",
+                            "L1BufferException", StatusCode::FAILURE );
+  }
   long evtSize=m_currentSize+bankSize;
   if(evtSize &gt; m_allocatedSize ) reallocate( evtSize );
   long size=m_currentSize;
@@ -96,6 +106,15 @@
        <arg type="std::vector &lt;l1_int&gt;" name="data"    />
          <code> 
   long bankSize = 1 + data.size() ;
+  if( bankSize &gt;126 ) {  // The maximum number of items in each banks is 126.
+    bankSize = 126;
+    throw GaudiException( "Size of data bank exceeds maximum (126). Excess ignored.",
+                          "L1BufferException", StatusCode::FAILURE );
+  }
+  if( l1_int(sourceID)&gt;63 ) { // Maximum value for 6 bit field
+      throw GaudiException( "sourceID value exceeds maximum (63).",
+                            "L1BufferException", StatusCode::FAILURE );
+  }
   long evtSize=m_currentSize+bankSize;
   if(evtSize &gt; m_allocatedSize ) reallocate( evtSize );
   long size=m_currentSize;

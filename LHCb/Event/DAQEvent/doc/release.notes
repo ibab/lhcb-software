@@ -3,6 +3,11 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, HLTBuffer, HLTEvent and 
          HLTBank classes.
 
+!=============== DAQEvent v3r1 2003-12-05 =============================
+! 2003-12-05 - Jose Helder Lopes
+ - Add protections to L1Buffer and RawBuffer if too many banks added or
+   sourceID out of range
+
 !=============== DAQEvent v3r0 2003-11-24 =============================
 ! 2003-11-24 - Marco Cattaneo
  - Rename HltBank, HltBuffer and HltEvent to RawBank, RawBuffer and RawEvent
