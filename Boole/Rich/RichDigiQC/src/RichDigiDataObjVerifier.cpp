@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.5 2004-04-13 15:35:48 jonesc Exp $
+// $Id: RichDigiDataObjVerifier.cpp,v 1.6 2005-01-07 12:38:09 jonrob Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
@@ -20,11 +20,11 @@ RichDigiDataObjVerifier::RichDigiDataObjVerifier( const std::string& name,
 {
 
   // Declare job options
-  declareProperty( "PrintRichDigits", m_bdDigits = true );
-  declareProperty( "PrintMCRichDigits", m_bdMcDigits = true );
-  declareProperty( "PrintMCRichDeposits", m_bdMCDeposits = true );
-  declareProperty( "PrintMCRichSummedDeposits", m_bdMCSumDeposits = true );
-  declareProperty( "PrintMCRichHits", m_bdMCHits = true );
+  declareProperty( "CheckRichDigits", m_bdDigits = true );
+  declareProperty( "CheckMCRichDigits", m_bdMcDigits = true );
+  declareProperty( "CheckMCRichDeposits", m_bdMCDeposits = true );
+  declareProperty( "CheckMCRichSummedDeposits", m_bdMCSumDeposits = true );
+  declareProperty( "CheckMCRichHits", m_bdMCHits = true );
 
 }
 
@@ -43,10 +43,10 @@ StatusCode RichDigiDataObjVerifier::initialize()
 void RichDigiDataObjVerifier::printHitsAt( const std::string & location ) const
 {
   // MCRichHits
-  SmartDataPtr<MCRichHits> mcHits( eventSvc(), location );
-  if ( !mcHits ) {
+  if ( !exist<MCRichHits>(location) ) {
     debug() << "Cannot locate MCRichHits at " << location << endreq;
   } else {
+    MCRichHits * mcHits = get<MCRichHits>(location);
     debug() << "Successfully located " << mcHits->size()
             << " MCRichHits at " << location << endreq;
     for ( MCRichHits::const_iterator iHit = mcHits->begin();
@@ -99,10 +99,10 @@ StatusCode RichDigiDataObjVerifier::execute() {
 
     // MCRichSummedDeposits
   if ( m_bdMCSumDeposits ) {
-    SmartDataPtr<MCRichSummedDeposits> mcSumDeps( eventSvc(), MCRichSummedDepositLocation::Default );
-    if ( !mcSumDeps ) {
+    if ( !exist<MCRichSummedDeposits>(MCRichSummedDepositLocation::Default) ) {
       Warning("Cannot locate MCRichSummedDeposits at "+MCRichSummedDepositLocation::Default);
     } else {
+      MCRichSummedDeposits * mcSumDeps = get<MCRichSummedDeposits>(MCRichSummedDepositLocation::Default);
       debug() << "Successfully located " << mcSumDeps->size()
               << " MCRichSummedDeposits at " << MCRichSummedDepositLocation::Default << endreq;
       for ( MCRichSummedDeposits::const_iterator iSumDep = mcSumDeps->begin();
@@ -121,17 +121,17 @@ StatusCode RichDigiDataObjVerifier::execute() {
   } // end MCRichSummedDeposits print
 
     // MCRichDigits
+  MCRichDigits * richMcDigits( 0 );
   if ( m_bdMcDigits ) {
-    SmartDataPtr<MCRichDigits> richMcDigits( eventSvc(), MCRichDigitLocation::Default );
-    if ( !richMcDigits ) {
+    if ( !exist<MCRichDigits>(MCRichDigitLocation::Default) ) {
       Warning("Cannot locate MCRichDigits at "+MCRichDigitLocation::Default);
     } else {
+      richMcDigits = get<MCRichDigits>(MCRichDigitLocation::Default);
       debug() << "Successfully located " << richMcDigits->size()
               << " MCRichDigits at " << MCRichDigitLocation::Default << endreq;
       for ( MCRichDigits::const_iterator imcDigit = richMcDigits->begin();
             imcDigit != richMcDigits->end(); ++imcDigit ) {
-        debug() << "MCRichDigit key= " << (long)(*imcDigit)->key() << " : "
-                << (*imcDigit)->key() << endreq;
+        debug() << "MCRichDigit " << (*imcDigit)->key() << endreq;
         debug() << "  MCRichHits(" << (*imcDigit)->hits().size() << ") keys= ";
         for ( SmartRefVector<MCRichHit>::const_iterator iHit = (*imcDigit)->hits().begin();
               iHit != (*imcDigit)->hits().end(); ++iHit ) {
@@ -144,19 +144,35 @@ StatusCode RichDigiDataObjVerifier::execute() {
 
     // RichDigits
   if ( m_bdDigits ) {
-    SmartDataPtr<RichDigits> richDigits( eventSvc(), RichDigitLocation::Default );
-    if ( !richDigits ) {
+    if ( !exist<RichDigits>(RichDigitLocation::Default) ) {
       Warning("Cannot locate RichDigits at "+RichDigitLocation::Default);
     } else {
+      RichDigits * richDigits = get<RichDigits>( RichDigitLocation::Default );
       debug() << "Successfully located " << richDigits->size()
               << " RichDigits at " << RichDigitLocation::Default << endreq;
 
+      if ( richMcDigits && richDigits->size() != richMcDigits->size() ) {
+        warning() << "Found " << richDigits->size() << " RichDigits and " 
+                  << richMcDigits->size() << " MCRichDigits" << endreq;
+      }
+
       for ( RichDigits::const_iterator iDigit = richDigits->begin();
             iDigit != richDigits->end(); ++iDigit ) {
-        debug() << "RichDigit key= " << (long)(*iDigit)->key() << " : " 
-                << (*iDigit)->key() << endreq;
+        debug() << "RichDigit " << (*iDigit)->key() << endreq;
+        // locate associated MCRichDigit
+        MCRichDigit * mcDig = ( richMcDigits ? richMcDigits->object( (*iDigit)->key() ) : 0 );
+        if ( !mcDig ) { 
+          warning() << " -> Failed to locate associated MCRichDigit" << endreq; 
+        } else {
+          debug() << " -> Found MCRichDigit " << (long)mcDig->key() << endreq;
+        }
+
       }
+
     }
+    
+    // Compare to MCRichDigits
+
   } // end RichDigit print
 
   return StatusCode::SUCCESS;

@@ -1,6 +1,15 @@
 
 // Main RichDigit Monitor
 MoniRICHSeq.Members += { "RichDigitQC/RiDigitQC" };
+//RiDigitQC.HistoDir = "somewhereElse";
 
 // Low level data object debugger
-//MoniRICHSeq.Members += { "RichDigiDataObjVerifier/RichDigiEventPrint" };
+/*
+#include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
+MoniRICHSeq.Members += { "RichDigiDataObjVerifier/RichDigiEventCheck" };
+RichDigiEventCheck.CheckRichDigits           = true;
+RichDigiEventCheck.CheckMCRichDigits         = true;
+RichDigiEventCheck.CheckMCRichDeposits       = false;
+RichDigiEventCheck.CheckMCRichSummedDeposits = false;
+RichDigiEventCheck.CheckMCRichHits           = false;
+*/

@@ -2,12 +2,15 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.12 2004-10-27 14:20:26 jonrob Exp $
+# $Id: requirements,v 1.13 2005-01-07 12:38:09 jonrob Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.12  2004/10/27 14:20:26  jonrob
+# Update RichEvent usage
+#
 #============================================================================
 
 package           RichDigiQC
-version           v1r8
+version           v2r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -20,6 +23,7 @@ set RICHDIGIQCOPTS $(RICHDIGIQCROOT)/options
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use RichEvent         v8r*  Event
+use DAQEvent          v*    Event
 
 # Component library building rule
 #============================================================================
