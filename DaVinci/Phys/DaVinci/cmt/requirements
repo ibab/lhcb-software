@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.218 2004-12-14 18:47:42 pkoppenb Exp $
+# $Id: requirements,v 1.219 2004-12-16 10:19:53 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -38,6 +38,9 @@ use ParamFiles          v3r8    -no_auto_imports
 
 #-- LHCb libraries 
 use LHCb                v16r4
+
+# TMP:
+use RichTools           v1r2p2 Rich
 
 #=======================================================
 # DaVinciSys v12r6
@@ -79,7 +82,7 @@ use  LoKi               	v3r7     Tools
 use  LoKiHlt             	v2r0     Tools  
 
 # Reconstruction tools 
-use  Utilities          	v1r12    Tools
+use  Utilities          	v1r13    Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
