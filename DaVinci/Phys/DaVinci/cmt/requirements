@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.149 2004-07-28 14:18:30 pkoppenb Exp $
+# $Id: requirements,v 1.150 2004-07-29 06:45:18 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -52,7 +52,7 @@ use FieldMap            v4r5
 use ParamFiles          v3r8    -no_auto_imports
 
 #-- LHCb libraries 
-use LHCb        v15r13
+use LHCb        v15r14
 
 #=======================================================
 # DaVinciSys v11r12

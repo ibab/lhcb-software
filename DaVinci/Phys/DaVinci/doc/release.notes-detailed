@@ -4,6 +4,12 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2004-07-29 - P. Koppenburg
+  - cmt/requirements
+    . Use LHCb v15r14
+  - options/DaVinciCommon.opts
+    . Restore HbookCnv
+
 ! 2004-07-28 - P. Koppenburg
   - options/DaVinciCommon.opts
     . Remove $STDOPTS/RootDb.opts and HbookCnv

@@ -100,6 +100,7 @@ EventSelector.PrintFreq  = 1;
 // Root DLL for histogram persistency is needed for CALOPID. Hbook 
 // might be needed for users. 
 ApplicationMgr.DLLs += { "RootHistCnv" };
+ApplicationMgr.DLLs += { "HbookCnv" };
 // Need a histogram persistency or Calo crashes :-(
 ApplicationMgr.HistogramPersistency = "ROOT";
 
