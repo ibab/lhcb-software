@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDetElemCnv.h,v 1.5 2001-10-17 13:12:43 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/XmlUserDetElemCnv.h,v 1.6 2001-10-18 14:57:55 sponce Exp $
 
 #ifndef DDEXAMPLE_XMLUSERDETELEMCNV_H
 #define DDEXAMPLE_XMLUSERDETELEMCNV_H 1
@@ -102,7 +102,7 @@ XmlUserDetElemCnv<DeType>::XmlUserDetElemCnv (ISvcLocator* svc)
 // -----------------------------------------------------------------------
 template <class DeType>
 StatusCode XmlUserDetElemCnv<DeType>::i_createObj(DOM_Element /*element*/,
-                                                  DataObject*& /*refpObject*/) {
+                                                  DataObject*& refpObject) {
   MsgStream log(msgSvc(), "XmlUserDetElemCnv" );
   log << MSG::DEBUG << "entering i_createObj" << endreq;
   
