@@ -121,7 +121,7 @@ StatusCode KFFitTool::reFit( Particle& part ) {
   if(!isComposite(part)) {
     StatusCode sc=StatusCode::SUCCESS;
     if(part.charge()!=0) {
-      if(fabs(part.particleID().pid())!=11) sc=setStateAtFirstM(part);
+      if(abs(part.particleID().pid())!=11) sc=setStateAtFirstM(part);
       sc=resetTrackParameters(part);
       HepVector para(7,0);
       HepSymMatrix cov(7,0);
