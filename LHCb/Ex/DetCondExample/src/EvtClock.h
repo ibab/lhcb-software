@@ -1,4 +1,4 @@
-//$Id: EvtClock.h,v 1.2 2001-11-27 18:31:57 andreav Exp $
+//$Id: EvtClock.h,v 1.3 2001-12-16 21:58:25 andreav Exp $
 #ifndef DETCONDEXAMPLE_EVTCLOCK_H
 #define DETCONDEXAMPLE_EVTCLOCK_H 1
 
@@ -11,7 +11,7 @@ class IDetDataSvc;
 ///---------------------------------------------------------------------------
 /** @class EvtClock EvtClock.h DetCondExample/EvtClock.h
 
-    Simple algorithm to set fake event times on the ConditionDataSvc.
+    Simple algorithm to set fake event times on the detector data service.
 
     @author Andrea Valassi 
     @date August 2001

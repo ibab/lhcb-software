@@ -1,4 +1,4 @@
-//$Id: EvtClock.cpp,v 1.2 2001-11-27 18:32:06 andreav Exp $
+//$Id: EvtClock.cpp,v 1.3 2001-12-16 21:58:25 andreav Exp $
 #include <stdio.h>
 
 #include "EvtClock.h"
@@ -57,9 +57,20 @@ StatusCode EvtClock::initialize() {
     return sc;
   }
   log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
-  log << MSG::DEBUG << "Time of first event: " << m_startTime << endreq;
-  log << MSG::DEBUG << "Time between events: " << m_delayTime << endreq;
-
+  log << MSG::INFO << "Time of first event: "
+      << (ITime::AbsoluteTime)m_startTime
+      << " (msb:" 
+      << (long)(   (ITime::AbsoluteTime)m_startTime         >> 32 )
+      << ", lsb:" 
+      << (long)( ( (ITime::AbsoluteTime)m_startTime << 32 ) >> 32 )
+      << ")" << endreq; 
+  log << MSG::INFO << "Time between events: "
+      << (ITime::AbsoluteTime)m_delayTime
+      << " (msb:" 
+      << (long)(   (ITime::AbsoluteTime)m_delayTime         >> 32 )
+      << ", lsb:" 
+      << (long)( ( (ITime::AbsoluteTime)m_delayTime << 32 ) >> 32 )
+      << ")" << endreq; 
   log << MSG::INFO << "Initialization completed" << endreq;
   return StatusCode::SUCCESS;
 
@@ -81,7 +92,13 @@ StatusCode EvtClock::execute( ) {
 
   // Set the event time
   long time = i_evtTime();
-  log << MSG::INFO << "Event time: " << time << endreq;
+  log << MSG::INFO << "Event time: "
+      << (ITime::AbsoluteTime)time
+      << " (msb:" 
+      << (long)(   (ITime::AbsoluteTime)time         >> 32 )
+      << ", lsb:" 
+      << (long)( ( (ITime::AbsoluteTime)time << 32 ) >> 32 )
+      << ")" << endreq; 
   m_detDataSvc->setEventTime( TimePoint(time) );
 
   return StatusCode::SUCCESS;
@@ -92,7 +109,9 @@ StatusCode EvtClock::execute( ) {
 StatusCode EvtClock::finalize( ) {
 
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Finalize()" << endreq;
+  log << MSG::INFO 
+      << "------------- FINALIZE!! -------------------------------------------"
+      << endreq;
   log << MSG::INFO << "Total #events: " << m_eventNumber << endreq;
   
   return StatusCode::SUCCESS;
