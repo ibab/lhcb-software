@@ -85,9 +85,15 @@ StatusCode VeloCluster2MCParticleAlg::execute() {
       iterClus != clusterCont->end(); iterClus++){
     double purity = 0;
     MCParticle* aParticle = 0;
-    VeloTruthTool::associateToTruth(*iterClus,aParticle,purity,feCont);
-    log << MSG::DEBUG << "VeloTruthTool output - particle " << aParticle << " purity " << purity << endreq;
-    aTable->relate(*iterClus,aParticle,purity);
+    StatusCode sc = VeloTruthTool::associateToTruth(*iterClus,aParticle,purity,feCont);
+    if (sc){
+      log << MSG::DEBUG << "VeloTruthTool output - particle " << aParticle << " purity " << purity << endreq;
+      aTable->relate(*iterClus,aParticle,purity);
+    }
+    else{
+      log << MSG::DEBUG << "VeloTruthTool output - no particle found, e.g. noise / spillover" << endreq;
+    }
+
   } // loop iterClus
 
   // register table in store

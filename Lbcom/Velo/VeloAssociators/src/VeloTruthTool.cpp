@@ -32,6 +32,7 @@ StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
     if (NULL!=anFE){
       // from FE get hits
       SmartRefVector<MCVeloHit> aHitVector =  anFE->mcVeloHits();
+      if (0==aHitVector.size()) continue;
       MCVeloHit* aHit=NULL;
       if (aHitVector.size()==1) {aHit=(*(aHitVector.begin()));}
       else {
@@ -40,13 +41,13 @@ StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
         // currently just take first hit
         if (aHitVector.size()!=0) aHit=(*(aHitVector.begin()));
 
-        // rare case of two MCHits contributing to the same strip
+        // rare case of more than one MCHits contributing to the same strip
         // pick closest hit at centre of silicon and assign full signal to this
-        // double distance=9999.;
-        // for( SmartRefVector<MCVeloHit>::iterator hitIt = aHitVector.begin();
-        //      hitIt< aHitVector.end(); hitIt++){
-        //   HepPoint3D point=(*hitIt)->entry()+(*hitIt)->exit();
-        //   point/=2;
+	//         double distance=9999.;
+	//         for( SmartRefVector<MCVeloHit>::iterator hitIt = aHitVector.begin();
+	//              hitIt< aHitVector.end(); hitIt++){
+	//              HepPoint3D point=(*hitIt)->entry()+(*hitIt)->exit();
+	//           point/=2;
         //   double fraction,pitch; bool valid;
         //   VeloChannelID chan=deVelo->channelID(point,fraction,pitch,valid);
         //   int Idiff=deVelo->neighbour(anFE->key(),chan,valid);
@@ -97,6 +98,7 @@ StatusCode VeloTruthTool::associateToTruth(const VeloCluster* aCluster,
   MCVeloHit* aHit = 0;
   sc = VeloTruthTool::associateToTruth(aCluster,aHit,purity,mcfes);
 
+  aParticle=NULL;
   if ((sc.isSuccess())&&(0 != aHit)){
     aParticle = aHit->mcParticle();
   }

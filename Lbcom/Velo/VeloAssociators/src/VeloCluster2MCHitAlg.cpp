@@ -84,9 +84,14 @@ StatusCode VeloCluster2MCHitAlg::execute() {
       iterClus != clusterCont->end(); iterClus++){
     double purity = 0;
     MCVeloHit* aHit = 0;
-    VeloTruthTool::associateToTruth(*iterClus,aHit,purity,feCont);
-    log << MSG::DEBUG << "VeloTruthTool output - hit " << aHit << " purity " << purity << endreq;
-    aTable->relate(*iterClus,aHit,purity);
+    StatusCode sc = VeloTruthTool::associateToTruth(*iterClus,aHit,purity,feCont);
+    if (sc){
+      log << MSG::DEBUG << "VeloTruthTool output - hit " << aHit << " purity " << purity << endreq;
+      aTable->relate(*iterClus,aHit,purity);
+    }
+    else{
+      log << MSG::DEBUG << "VeloTruthTool output - no hit found, e.g. noise / spillover" << endreq;
+    }
   } // loop iterClus
 
   // register table in store
