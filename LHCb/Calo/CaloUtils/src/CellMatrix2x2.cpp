@@ -1,8 +1,11 @@
-// $Id: CellMatrix2x2.cpp,v 1.2 2001-11-22 16:02:34 ibelyaev Exp $
+// $Id: CellMatrix2x2.cpp,v 1.3 2004-10-22 09:29:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/22 16:02:34  ibelyaev
+//  new utilities
+//
 // Revision 1.1  2001/11/07 17:24:49  ibelyaev
 //  new utilities for determination of relative positions of cells
 //
@@ -51,6 +54,8 @@ double CellMatrix2x2::treatDifferentAreas( const CaloCellID& seed ,
   /// cell centers
   const HepPoint3D& centerMtrx =         det()->cellCenter ( seed ) ;
   const HepPoint3D& centerCell =         det()->cellCenter ( cell ) ;
+  /// cell area 
+  const double      cellArea   = sizeCell * sizeCell * 4.0 ;
   /// effective halfsize
   const double      sizeMin    =  0.01 * mini ( sizeMtrx , sizeCell ) ;
   /// dispatch
@@ -58,40 +63,40 @@ double CellMatrix2x2::treatDifferentAreas( const CaloCellID& seed ,
   switch( type() )
     {
     case LowerLeft :
-      Area = area( centerMtrx +
-                   HepPoint3D( -1.0 * sizeMtrx , -1.0 * sizeMtrx , 0 ) ,
-                   2.0 * sizeMtrx                                      ,
-                   centerCell                                          ,
-                   sizeCell                                            );
+      Area = area ( centerMtrx +
+                    HepPoint3D( -1.0 * sizeMtrx , -1.0 * sizeMtrx , 0 ) ,
+                    2.0 * sizeMtrx                                      ,
+                    centerCell                                          ,
+                    sizeCell                                            );
       ///
-      return Area <= sizeMin ? 0 : Area / sizeCell / sizeCell ;
+      return Area <= sizeMin ? 0 : Area / cellArea ;
       break;
     case LowerRight :
-      Area = area( centerMtrx +
-                   HepPoint3D(        sizeMtrx , -1.0 * sizeMtrx , 0 ) ,
-                   2.0 * sizeMtrx                                      ,
-                   centerCell                                          ,
-                   sizeCell                                            );
+      Area = area ( centerMtrx +
+                    HepPoint3D(        sizeMtrx , -1.0 * sizeMtrx , 0 ) ,
+                    2.0 * sizeMtrx                                      ,
+                    centerCell                                          ,
+                    sizeCell                                            );
       ///
-      return Area <= sizeMin ? 0 : Area / sizeCell / sizeCell ;
+      return Area <= sizeMin ? 0 : Area / cellArea ;
       break;
     case UpperLeft :
-      Area = area( centerMtrx +
-                   HepPoint3D( -1.0 * sizeMtrx ,        sizeMtrx , 0 ) ,
-                   2.0 * sizeMtrx                                      ,
-                   centerCell                                          ,
-                   sizeCell                                            );
+      Area = area ( centerMtrx +
+                    HepPoint3D( -1.0 * sizeMtrx ,        sizeMtrx , 0 ) ,
+                    2.0 * sizeMtrx                                      ,
+                    centerCell                                          ,
+                    sizeCell                                            );
       ///
-      return Area <= sizeMin ? 0 : Area / sizeCell / sizeCell ;
+      return Area <= sizeMin ? 0 : Area / cellArea  ;
       break;
     case UpperRight :
-      Area = area( centerMtrx +
-                   HepPoint3D(        sizeMtrx ,        sizeMtrx , 0 ) ,
-                   2.0 * sizeMtrx                                      ,
-                   centerCell                                          ,
-                   sizeCell                                            );
+      Area = area ( centerMtrx +
+                    HepPoint3D(        sizeMtrx ,        sizeMtrx , 0 ) ,
+                    2.0 * sizeMtrx                                      ,
+                    centerCell                                          ,
+                    sizeCell                                            );
       //
-      return Area <= sizeMin ? 0 : Area / sizeCell / sizeCell ;
+      return Area <= sizeMin ? 0 : Area / cellArea ;
       break;
     default:
       Exception("CellMatrix2x2: unimplemented case!");

@@ -1,7 +1,31 @@
-! $Id: release.notes,v 1.28 2004-05-27 13:40:03 cattanem Exp $
+! $Id: release.notes,v 1.29 2004-10-22 09:29:08 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2004-10-22 - Vanya BELYAEV
+  - src/CellMatrix2x2.cpp
+  - src/CellMatrix3x3.cpp
+  - src/CellNeighbour.cpp
+  - src/CellSwissCross.cpp
+
+   bug fix in evaluation of energy fractions (kindly reported by O.Deschamps:)
+  """
+      I am looking at the sharing of the energy of cells that belong to several
+      clusters using CellMatrix3x3 method that returns the fraction of 2
+      overlaping squares on the Ecal surface. In the function  
+      "treatDifferentAreas" you return :
+      Area / sizeCell / sizeCel 
+      where Area is the overlaping surface but sizeCell is defined as :
+      0.5 det()->cellSize   ( cell ) ; 
+ 
+      So the returned fraction is wrong by a factor (1/0.5)**2=4 (Indeed I
+      observe Outer->Middle fractions are set to 4 !!).
+      Are these fractions >1 taken into account elsewhere or is it an error?  
+  """
+
+  - cmt/requirements
+   version increment to v4r7p1 
 
 ! ============================= CaloUtils v4r7 2004-05-27 =====================
 ! 2004-05-27 - Marco Cattaneo

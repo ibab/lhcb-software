@@ -1,8 +1,11 @@
-// $Id: CellNeighbour.cpp,v 1.1 2001-11-25 15:26:21 ibelyaev Exp $
+// $Id: CellNeighbour.cpp,v 1.2 2004-10-22 09:29:08 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2001/11/25 15:26:21  ibelyaev
+//  update for newer CaloKernel package
+// 
 // ============================================================================
 // Include files
 // STD & STL 
@@ -53,14 +56,14 @@ double CellNeighbour::operator()
     const CaloCellID& cell ) const
 {
   /// trivial case 
-  if( seed == cell                                   ) { return 1 ; } 
-  if( 0 == det() ) { Exception("CellNeighbour:: Detector points to NULL!");}
+  if ( seed == cell                                   ) { return 1 ; } 
+  if ( 0 == det() ) { Exception("CellNeighbour:: Detector points to NULL!");}
   ///
-  if( !det()->valid( seed ) || !det()->valid( cell ) ) { return 0 ; }
+  if ( !det()->valid( seed ) || !det()->valid( cell ) ) { return 0 ; }
   /// 
   const CaloNeighbors& neighbours = det()->neighborCells( seed ) ;
   CaloNeighbors::const_iterator it = 
-    std::find( neighbours.begin () , neighbours.end () , cell ) ;
+    std::find ( neighbours.begin () , neighbours.end () , cell ) ;
   ///
   return neighbours.end() == it ? 0.0 : 1.0 ;
 };
