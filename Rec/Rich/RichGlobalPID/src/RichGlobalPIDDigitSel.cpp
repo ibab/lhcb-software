@@ -1,13 +1,19 @@
-// $Id: RichGlobalPIDDigitSel.cpp,v 1.11 2004-07-12 14:51:48 jonrob Exp $
-// Include files
+
+/** @file RichGlobalPIDDigitSel.cpp
+ *
+ *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
+ *
+ *  CVS Log :-
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.12 2004-07-27 10:56:36 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   17/04/2002
+ */
 
 // local
 #include "RichGlobalPIDDigitSel.h"
 
-//--------------------------------------------------------------------------
-// Implementation file for class : RichGlobalPIDDigitSel
-//
-// 017/04/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -30,7 +36,7 @@ RichGlobalPIDDigitSel::RichGlobalPIDDigitSel( const std::string& name,
 RichGlobalPIDDigitSel::~RichGlobalPIDDigitSel() {}
 
 //  Initialize
-StatusCode RichGlobalPIDDigitSel::initialize() 
+StatusCode RichGlobalPIDDigitSel::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecAlgBase::initialize();
@@ -70,7 +76,7 @@ StatusCode RichGlobalPIDDigitSel::execute() {
 }
 
 //  Finalize
-StatusCode RichGlobalPIDDigitSel::finalize() 
+StatusCode RichGlobalPIDDigitSel::finalize()
 {
   // Execute base class method
   return RichRecAlgBase::finalize();

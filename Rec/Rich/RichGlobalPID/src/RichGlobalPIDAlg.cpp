@@ -1,14 +1,19 @@
-// $Id: RichGlobalPIDAlg.cpp,v 1.19 2004-07-12 14:51:48 jonrob Exp $
-// Include files
 
+/** @file RichGlobalPIDAlg.cpp
+ *
+ *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDAlg
+ *
+ *  CVS Log :-
+ *  $Id: RichGlobalPIDAlg.cpp,v 1.20 2004-07-27 10:56:36 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   17/04/2002
+ */
 
 // local
 #include "RichGlobalPIDAlg.h"
 
-//--------------------------------------------------------------------------
-// Implementation file for class : RichGlobalPIDAlg
-//
-// 017/04/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -85,7 +90,7 @@ StatusCode RichGlobalPIDAlg::finalize()
 }
 
 // Main execution
-StatusCode RichGlobalPIDAlg::execute() 
+StatusCode RichGlobalPIDAlg::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -172,7 +177,7 @@ StatusCode RichGlobalPIDAlg::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichGlobalPIDAlg::initMinLogLikelihood() 
+StatusCode RichGlobalPIDAlg::initMinLogLikelihood()
 {
   RichGlobalPIDTrackVector minTrack;
   Rich::ParticleIDTypeVector minTrackHypo;
@@ -262,7 +267,7 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood()
   return StatusCode::SUCCESS;
 }
 
-void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks ) 
+void RichGlobalPIDAlg::findMinLogLikelihood( minTrList & minTracks )
 {
 
   // which RICHes to look at ?
@@ -430,7 +435,7 @@ RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
   return deltaLL;
 }
 
-double RichGlobalPIDAlg::logLikelihood() 
+double RichGlobalPIDAlg::logLikelihood()
 {
 
   // Loop over tracks to form total expected hits part of LL
@@ -479,7 +484,7 @@ double RichGlobalPIDAlg::logLikelihood()
 
 // Please don't look at these following methods ....
 
-void RichGlobalPIDAlg::updateDllThres() 
+void RichGlobalPIDAlg::updateDllThres()
 {
   double m(0), c(0), A(0), B(0);
   if ( m_GPIDtracks->size() < m_cP[2] ) {
@@ -512,7 +517,7 @@ void RichGlobalPIDAlg::updateDllThres()
 
 }
 
-void RichGlobalPIDAlg::updateFreezeOutValue() 
+void RichGlobalPIDAlg::updateFreezeOutValue()
 {
   double m(0), c(0), A(0), B(0);
   if ( m_GPIDtracks->size() < m_fP[2] ) {

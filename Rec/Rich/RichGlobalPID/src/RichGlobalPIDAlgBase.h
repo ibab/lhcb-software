@@ -1,4 +1,16 @@
-// $Id: RichGlobalPIDAlgBase.h,v 1.3 2004-03-16 13:43:34 jonesc Exp $
+
+/** @file RichGlobalPIDAlgBase.h
+ *
+ *  Header file for RICH global PID algorithm base class : RichGlobalPIDAlgBase
+ *
+ *  CVS Log :-
+ *  $Id: RichGlobalPIDAlgBase.h,v 1.4 2004-07-27 10:56:36 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2002-11-30
+ */
+
 #ifndef RICHRECALGS_RICHGLOBALPIDALGBASE_H
 #define RICHRECALGS_RICHGLOBALPIDALGBASE_H 1
 

@@ -1,4 +1,16 @@
-// $Id: RichGlobalPIDAlg.h,v 1.6 2004-02-02 14:25:53 jonesc Exp $
+
+/** @file RichGlobalPIDAlg.h
+ *
+ *  Header file for RICH Global PID algorithm class : RichGlobalPIDAlg
+ *
+ *  CVS Log :-
+ *  $Id: RichGlobalPIDAlg.h,v 1.7 2004-07-27 10:56:36 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   12/12/2002
+ */
+
 #ifndef RICHRECALGS_RICHGLOBALPIDALG_H
 #define RICHRECALGS_RICHGLOBALPIDALG_H 1
 
@@ -18,7 +30,8 @@
 
 /** @class RichGlobalPIDAlg RichGlobalPIDAlg.h
  *
- *  Performs a single iteration of the global PID likelihood minimisation.
+ *  Performs a single iteration of the global PID overall event 
+ *  likelihood minimisation.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -34,9 +47,9 @@ public:
 
   virtual ~RichGlobalPIDAlg();        ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize();    // Algorithm initialization
+  virtual StatusCode execute   ();    // Algorithm execution
+  virtual StatusCode finalize  ();    // Algorithm finalization
 
 private: // Private methods
 

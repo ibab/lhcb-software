@@ -1,6 +1,18 @@
-// $Id: RichGlobalPIDFinalize.h,v 1.3 2003-08-06 10:02:10 jonrob Exp $
-#ifndef RICHRECALGS_RICHGLOBALPIDFINALIZE_H
-#define RICHRECALGS_RICHGLOBALPIDFINALIZE_H 1
+
+/** @file RichGlobalPIDFinalize.h
+ *
+ *  Header file for RICH Global PID algorithm class : RichGlobalPIDFinalize
+ *
+ *  CVS Log :-
+ *  $Id: RichGlobalPIDFinalize.h,v 1.4 2004-07-27 10:56:36 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   12/12/2002
+ */
+
+#ifndef RICHGLOBALPID_RICHGLOBALPIDFINALIZE_H
+#define RICHGLOBALPID_RICHGLOBALPIDFINALIZE_H 1
 
 // Base class
 #include "RichGlobalPIDAlgBase.h"
@@ -17,7 +29,7 @@
 
 /** @class RichGlobalPIDFinalize RichGlobalPIDFinalize.h
  *
- *  Finalises the PID results for the Global PID algorithm
+ *  Finalises the RichPID objects for the Global PID algorithm
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -33,15 +45,15 @@ public:
 
   virtual ~RichGlobalPIDFinalize();   ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize();    // Algorithm initialization
+  virtual StatusCode execute   ();    // Algorithm execution
+  virtual StatusCode finalize  ();    // Algorithm finalization
 
 private: // data
-  
+
   /// Location of processing status object in TES
   std::string m_procStatLocation;
-  
+
 };
 
-#endif // RICHRECALGS_RICHGLOBALPIDFINALIZE_H
+#endif // RICHGLOBALPID_RICHGLOBALPIDFINALIZE_H

@@ -1,13 +1,19 @@
-// $Id: RichGlobalPIDInitialize.cpp,v 1.5 2004-07-12 14:51:48 jonrob Exp $
-// Include files
+
+/** @file RichGlobalPIDInitialize.cpp
+ *
+ *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDInitialize
+ *
+ *  CVS Log :-
+ *  $Id: RichGlobalPIDInitialize.cpp,v 1.6 2004-07-27 10:56:36 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   17/04/2002
+ */
 
 // local
 #include "RichGlobalPIDInitialize.h"
 
-//--------------------------------------------------------------------------
-// Implementation file for class : RichGlobalPIDInitialize
-//
-// 017/04/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -23,17 +29,17 @@ RichGlobalPIDInitialize::RichGlobalPIDInitialize( const std::string& name,
 RichGlobalPIDInitialize::~RichGlobalPIDInitialize() {}
 
 //  Initialize
-StatusCode RichGlobalPIDInitialize::initialize() 
+StatusCode RichGlobalPIDInitialize::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
-  
+
   return StatusCode::SUCCESS;
 }
 
 // Main execution
-StatusCode RichGlobalPIDInitialize::execute() 
+StatusCode RichGlobalPIDInitialize::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -56,7 +62,7 @@ StatusCode RichGlobalPIDInitialize::execute()
 }
 
 //  Finalize
-StatusCode RichGlobalPIDInitialize::finalize() 
+StatusCode RichGlobalPIDInitialize::finalize()
 {
   // Execute base class method
   return RichRecAlgBase::finalize();

@@ -1,6 +1,18 @@
-// $Id: RichGlobalPIDTrTrackSel.h,v 1.8 2004-07-12 14:51:48 jonrob Exp $
-#ifndef RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H
-#define RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H 1
+
+/** @file RichGlobalPIDTrTrackSel.h
+ *
+ *  Header file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
+ *
+ *  CVS Log :-
+ *  $Id: RichGlobalPIDTrTrackSel.h,v 1.9 2004-07-27 10:56:37 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   12/12/2002
+ */
+
+#ifndef RICHGLOBALPID_RICHGLOBALPIDTRTRACKSEL_H
+#define RICHGLOBALPID_RICHGLOBALPIDTRTRACKSEL_H 1
 
 // Base class
 #include "RichGlobalPIDAlgBase.h"
@@ -40,9 +52,9 @@ public:
 
   virtual ~RichGlobalPIDTrTrackSel(); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize();    // Algorithm initialization
+  virtual StatusCode execute   ();    // Algorithm execution
+  virtual StatusCode finalize  ();    // Algorithm finalization
 
   // Private methods
 private:
@@ -55,13 +67,13 @@ private:
   Rich::GlobalPID::TkQuality trackStatus( RichRecTrack * track );
 
   // Private data members
-private: 
+private:
 
   /// Location of processing status object in TES
   std::string m_procStatLocation;
 
   IRichExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal
-  
+
   // Selection cuts
   double m_minPhysPtot; ///< Minimum momentum for physics quality tracks
   double m_minLLPtot;   ///< Minimum momentum for use in LL calculation
@@ -86,4 +98,4 @@ inline void RichGlobalPIDTrTrackSel::deleteEvent()
 }
 
 
-#endif // RICHRECALGS_RICHGLOBALPIDTRTRACKSEL_H
+#endif // RICHGLOBALPID_RICHGLOBALPIDTRTRACKSEL_H

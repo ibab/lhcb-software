@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2004-07-27 - Chris Jones
+ - Update doxygen comments
+
 !======================= RichGlobalPID v1r7 2004-06-18 =======================
 ! 2004-06-18 - Chris Jones
  - Update includes for new package structure

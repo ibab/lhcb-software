@@ -1,5 +1,15 @@
-// $Id: RichGlobalPIDMonitor.cpp,v 1.3 2004-07-12 14:51:48 jonrob Exp $
-// Include files
+
+/** @file RichGlobalPIDMonitor.cpp
+ *
+ *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDMonitor
+ *
+ *  CVS Log :-
+ *  $Id: RichGlobalPIDMonitor.cpp,v 1.4 2004-07-27 10:56:37 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   17/04/2002
+ */
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -8,10 +18,6 @@
 // local
 #include "RichGlobalPIDMonitor.h"
 
-//--------------------------------------------------------------------------
-// Implementation file for class : RichGlobalPIDMonitor
-//
-// 017/04/2002 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -27,7 +33,7 @@ RichGlobalPIDMonitor::RichGlobalPIDMonitor( const std::string& name,
 RichGlobalPIDMonitor::~RichGlobalPIDMonitor() {}
 
 //  Initialize
-StatusCode RichGlobalPIDMonitor::initialize() 
+StatusCode RichGlobalPIDMonitor::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecAlgBase::initialize();
@@ -37,7 +43,7 @@ StatusCode RichGlobalPIDMonitor::initialize()
 }
 
 // Main execution
-StatusCode RichGlobalPIDMonitor::execute() 
+StatusCode RichGlobalPIDMonitor::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -45,7 +51,7 @@ StatusCode RichGlobalPIDMonitor::execute()
 }
 
 //  Finalize
-StatusCode RichGlobalPIDMonitor::finalize() 
+StatusCode RichGlobalPIDMonitor::finalize()
 {
   // Execute base class method
   return RichRecAlgBase::finalize();

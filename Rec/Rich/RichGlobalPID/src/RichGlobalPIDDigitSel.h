@@ -1,6 +1,18 @@
-// $Id: RichGlobalPIDDigitSel.h,v 1.3 2004-02-02 14:25:54 jonesc Exp $
-#ifndef RICHRECALGS_RICHGLOBALPIDDIGITSEL_H
-#define RICHRECALGS_RICHGLOBALPIDDIGITSEL_H 1
+
+/** @file RichGlobalPIDDigitSel.h
+ *
+ *  Header file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
+ *
+ *  CVS Log :-
+ *  $Id: RichGlobalPIDDigitSel.h,v 1.4 2004-07-27 10:56:36 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   12/12/2002
+ */
+
+#ifndef RICHGLOBALPID_RICHGLOBALPIDDIGITSEL_H
+#define RICHGLOBALPID_RICHGLOBALPIDDIGITSEL_H 1
 
 // Base
 #include "RichGlobalPIDAlgBase.h"
@@ -31,9 +43,9 @@ public:
 
   virtual ~RichGlobalPIDDigitSel();   ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize();    // Algorithm initialization
+  virtual StatusCode execute   ();    // Algorithm execution
+  virtual StatusCode finalize  ();    // Algorithm finalization
 
 private: // private data
 
@@ -42,7 +54,7 @@ private: // private data
 
   /// Location of processing status object in TES
   std::string m_procStatLocation;
-  
+
 };
 
-#endif // RICHRECALGS_RICHGLOBALPIDDIGITSEL_H
+#endif // RICHGLOBALPID_RICHGLOBALPIDDIGITSEL_H
