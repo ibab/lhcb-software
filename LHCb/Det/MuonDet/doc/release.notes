@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.32 2003-11-24 14:54:39 cattanem Exp $
+! $Id: release.notes,v 1.33 2004-02-04 14:38:10 cattanem Exp $
 !
 ! Package     : MuonDet
-! Responsible : David Hutchcroft
+! Responsible : Alessia Satta
 
+!========================= MuonDet v5r0 2004-02-04 =========================
 !======================== MuonDet v4r4p1 2003-11-24 ========================
 ! 2003-11-24 - Marco Cattaneo
  - Fix a compiler warning, fix doxygen comments

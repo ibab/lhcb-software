@@ -1,4 +1,4 @@
-// $Id: XmlMuonODECnv.cpp,v 1.1 2004-02-03 11:40:27 asatta Exp $
+// $Id: XmlMuonODECnv.cpp,v 1.2 2004-02-04 14:38:10 cattanem Exp $
 // Include files 
 
 #include <vector>
@@ -125,7 +125,7 @@ XmlMuonODECnv::~XmlMuonODECnv() {
 StatusCode 
 XmlMuonODECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
                                           MuonODEBoard* dataObj,
-                                     IOpaqueAddress* address){
+                                          IOpaqueAddress*          ){
   MsgStream msg(msgSvc(), "XmlMuonODECnv");
   const XMLCh* tagName = childElement->getNodeName();
 

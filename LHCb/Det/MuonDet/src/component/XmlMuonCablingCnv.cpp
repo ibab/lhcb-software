@@ -1,4 +1,4 @@
-// $Id: XmlMuonCablingCnv.cpp,v 1.1 2004-02-03 11:40:27 asatta Exp $
+// $Id: XmlMuonCablingCnv.cpp,v 1.2 2004-02-04 14:38:10 cattanem Exp $
 // Include files 
 
 #include <vector>
@@ -159,7 +159,7 @@ XmlMuonCablingCnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
         dom2Std(nodeChildren->item(i)->getNodeName())<<endreq;
       if(dom2Std(nodeChildren->item(i)->getNodeName()) ==   
          dom2Std(L1String)){
-        StatusCode sc=L1BoardReadAndCreate(nodeChildren->item(i),address);
+        L1BoardReadAndCreate(nodeChildren->item(i),address);
         
         const std::string  L1Name =
           dom2Std(nodeChildren->item(i)

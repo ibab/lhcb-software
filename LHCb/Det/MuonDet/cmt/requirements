@@ -1,9 +1,9 @@
 # =========================================================================
-# $Id: requirements,v 1.19 2004-02-03 11:40:27 asatta Exp $
+# $Id: requirements,v 1.20 2004-02-04 14:38:10 cattanem Exp $
 # =========================================================================
 
 package MuonDet
-version  v5r0
+version  v4r5
 
 # =============== structure ===============================================
 branches         src cmt doc options MuonDet
@@ -25,22 +25,5 @@ library   MuonDetLib Lib/*.cpp
 library   MuonDet component/*.cpp    
 
 #================ patterns ================================================
-
-apply_pattern package_Lstamps 
-apply_pattern package_Llinkopts  
-apply_pattern linker_path   
-
-#================ private stuff ===========================================
-private
-
-apply_pattern package_Cshlibflags
-apply_pattern package_Lshlibflags   
-
-private
-macro_append     MuonDetLib_shlibflags " $(DetDesc_linkopts) "
-macro_append     MuonDetLib_shlibflags  " $(GaudiKernel_linkopts) "
-macro_append     MuonDetLib_shlibflags  " $(CLHEP_linkopts) "
-
-# macro_remove use_linkopts $(MuonDet_linkopts)
-# macro MuonDetLib_shlibflags "$(use_linkopts) $(libraryshr_linkopts)"
-# macro_append MuonDet_shlibflags $(MuonDet_linkopts)
+apply_pattern component_library library=MuonDet
+apply_pattern linker_library    library=MuonDetLib
