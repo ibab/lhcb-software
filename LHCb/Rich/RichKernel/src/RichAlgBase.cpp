@@ -5,8 +5,7 @@
  *  Implementation file for class : RichAlgBase
  *
  *  CVS Log :-
- *  $Id: RichAlgBase.cpp,v 1.4 2004-07-26 17:53:17 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichAlgBase.cpp,v 1.5 2005-02-02 09:59:34 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-04-05

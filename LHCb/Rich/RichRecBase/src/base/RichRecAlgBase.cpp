@@ -5,14 +5,7 @@
  *  Implementation file for RICH reconstruction algorithm base class : RichRecAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecAlgBase.cpp,v 1.19 2004-11-09 10:53:49 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.18  2004/10/30 19:24:19  jonrob
- *  minor update
- *
- *  Revision 1.17  2004/07/26 18:00:58  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: RichRecAlgBase.cpp,v 1.20 2005-02-02 10:01:20 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
@@ -54,6 +47,13 @@ StatusCode RichRecAlgBase::initialize()
 
   return sc;
 };
+
+// Main execute method
+StatusCode RichRecAlgBase::execute()
+{
+  // All algorithms should re-implement this method
+  return Error ( "Default RichRecAlgBase::execute() called !!" );
+}
 
 // Finalize
 StatusCode RichRecAlgBase::finalize()

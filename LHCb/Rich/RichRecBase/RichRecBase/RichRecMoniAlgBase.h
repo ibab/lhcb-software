@@ -5,8 +5,7 @@
  *  Header file for reconstruction monitor algorithm base class : RichRecMoniAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecMoniAlgBase.h,v 1.1 2005-01-13 15:57:53 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichRecMoniAlgBase.h,v 1.2 2005-02-02 10:01:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -50,18 +49,36 @@ class RichRecMoniAlgBase : public RichMoniAlgBase {
 
 public:
 
-  // Standard constructor
+  /// Standard constructor
   RichRecMoniAlgBase( const std::string& name,
                       ISvcLocator* pSvcLocator );
 
-  // Destructor
+  /// Destructor
   virtual ~RichRecMoniAlgBase() = 0;
 
-  // Algorithm initialization
+  /** Initialization of the algorithm after creation
+   *
+   * @return The status of the initialization
+   * @retval StatusCode::SUCCESS Initialization was successful
+   * @retval StatusCode::FAILURE Initialization failed
+   */
   virtual StatusCode initialize();
 
-  // Algorithm finalization
-  virtual StatusCode finalize  ();
+  /** The main event processing method. Called once for each event
+   *
+   * @return The status of the event processing
+   * @retval StatusCode::SUCCESS Event processing was successful
+   * @retval StatusCode::FAILURE Event processing failed
+   */
+  virtual StatusCode execute();
+
+  /** Finalization of the algorithm before deletion
+   *
+   * @return The status of the finalization
+   * @retval StatusCode::SUCCESS Finalization was successful
+   * @retval StatusCode::FAILURE Finalization failed
+   */
+  virtual StatusCode finalize();
 
 protected:  // Protected methods
 

@@ -6,8 +6,7 @@
  *  algorithm base class : RichRecMoniAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecMoniAlgBase.cpp,v 1.1 2005-01-13 15:57:53 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichRecMoniAlgBase.cpp,v 1.2 2005-02-02 10:01:20 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -48,7 +47,14 @@ StatusCode RichRecMoniAlgBase::initialize()
   acquireTool( "RichStatusCreator",  m_statTool );
 
   return sc;
-};
+}
+
+// Main execute method
+StatusCode RichRecMoniAlgBase::execute()
+{
+  // All algorithms should re-implement this method
+  return Error ( "Default RichRecMoniAlgBase::execute() called !!" );
+}
 
 // Finalize
 StatusCode RichRecMoniAlgBase::finalize()

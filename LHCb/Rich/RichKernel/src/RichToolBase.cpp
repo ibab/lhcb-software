@@ -5,8 +5,7 @@
  *  Implementation file for tool base class : RichToolBase
  *
  *  CVS Log :-
- *  $Id: RichToolBase.cpp,v 1.4 2004-07-26 17:53:17 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichToolBase.cpp,v 1.5 2005-02-02 09:59:34 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26

@@ -5,11 +5,7 @@
  *  Header file for reconstruction algorithm base class : RichRecAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecAlgBase.h,v 1.17 2004-11-09 10:53:49 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.16  2004/07/26 18:00:58  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: RichRecAlgBase.h,v 1.18 2005-02-02 10:01:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -50,18 +46,36 @@ class RichRecAlgBase : public RichAlgBase {
 
 public:
 
-  // Standard constructor
+  /// Standard constructor
   RichRecAlgBase( const std::string& name,
                   ISvcLocator* pSvcLocator );
 
-  // Destructor
+  /// Destructor
   virtual ~RichRecAlgBase() = 0;
 
-  // Algorithm initialization
+  /** Initialization of the algorithm after creation
+   *
+   * @return The status of the initialization
+   * @retval StatusCode::SUCCESS Initialization was successful
+   * @retval StatusCode::FAILURE Initialization failed
+   */
   virtual StatusCode initialize();
 
-  // Algorithm finalization
-  virtual StatusCode finalize  ();
+  /** The main event processing method. Called once for each event
+   *
+   * @return The status of the event processing
+   * @retval StatusCode::SUCCESS Event processing was successful
+   * @retval StatusCode::FAILURE Event processing failed
+   */
+  virtual StatusCode execute();
+
+  /** Finalization of the algorithm before deletion
+   *
+   * @return The status of the finalization
+   * @retval StatusCode::SUCCESS Finalization was successful
+   * @retval StatusCode::FAILURE Finalization failed
+   */
+  virtual StatusCode finalize();
 
 protected:  // Protected methods
 

@@ -5,11 +5,7 @@
  *  Implementation file for class : RichTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichTrackSelector.cpp,v 1.7 2004-10-13 09:29:43 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.6  2004/07/26 18:00:58  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: RichTrackSelector.cpp,v 1.8 2005-02-02 10:01:20 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-06-20

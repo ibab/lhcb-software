@@ -5,8 +5,7 @@
  * Header file for reconstruction tool base class : RichRecMoniToolBase
  *
  * CVS Log :-
- * $Id: RichRecMoniToolBase.h,v 1.1 2005-01-13 15:57:53 jonrob Exp $
- * $Log: not supported by cvs2svn $
+ * $Id: RichRecMoniToolBase.h,v 1.2 2005-02-02 10:01:20 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2005/01/13
@@ -47,10 +46,20 @@ public:
   /// Destructor
   virtual ~RichRecMoniToolBase() {};
 
-  // Initialize method
+  /** Initialization of the tool after creation
+   *
+   * @return The status of the initialization
+   * @retval StatusCode::SUCCESS Initialization was successful
+   * @retval StatusCode::FAILURE Initialization failed
+   */
   virtual StatusCode initialize();
 
-  // Finalize method
+  /** Finalization of the tool before deletion
+   *
+   * @return The status of the finalization
+   * @retval StatusCode::SUCCESS Finalization was successful
+   * @retval StatusCode::FAILURE Finalization failed
+   */
   virtual StatusCode finalize();
 
 protected:   // Protected methods

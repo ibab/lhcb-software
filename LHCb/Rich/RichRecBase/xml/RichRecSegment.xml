@@ -4,13 +4,16 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecSegment.xml,v 1.3 2004-11-02 13:00:53 jonrob Exp $
+  * $Id: RichRecSegment.xml,v 1.4 2005-02-02 10:01:20 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
   *****************************************************************************
   * $Log: not supported by cvs2svn $
+  * Revision 1.3  2004/11/02 13:00:53  jonrob
+  * Update the XML files for improved handling by cmt and make
+  *
   * Revision 1.2  2004/07/29 09:03:12  jonesc
   * Add CVS Log history information to XML files
   *
@@ -59,7 +62,7 @@
             
         <constructor 
                 desc     = "Constructor from segment information" 
-                initList = "m_nEmittedPhotons(0), m_nDetectablePhotons(0), m_nSignalPhotons(0), m_nScatteredPhotons(0), m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_geomEfficiency(0), m_geomEfficiencyScat(0), m_averageCKTheta(0), m_trackSegment(segment), m_trackInfo(0), m_richRecTrack(pTrk), m_hypothesisRings(NULL)" >
+                initList = "m_nEmittedPhotons(0), m_nDetectablePhotons(0),m_nSignalPhotons(0), m_nScatteredPhotons(0), m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_geomEfficiency(0), m_geomEfficiencyScat(0), m_averageCKTheta(0), m_averageCKRadiusLocal(0), m_avSaturatedRadiusLocal(-999),m_trackSegment(segment), m_trackInfo(0), m_richRecTrack(pTrk), m_hypothesisRings(NULL)" >
                 <arg const="TRUE"                  name="segment" type="RichTrackSegment"  />
                 <arg const="FALSE" inout="BYVALUE" name="pTrk"    type="RichRecTrack*"     />
                 <arg const="TRUE"  inout="BYVALUE" name="enBins"  type="unsigned int"      />
@@ -136,11 +139,23 @@
             
         <method 
                 const = "FALSE" 
-                desc  = "Set the average Cherenkov angle for a given particle type" name="setAverageCKTheta">
+                desc  = "Set the average Cherenkov angle for a given particle type"
+                name  = "setAverageCKTheta">
                 <arg const="TRUE" inout="BYVALUE" name="type"  type="Rich::ParticleIDType"  />
                 <arg const="TRUE" inout="BYVALUE" name="angle" type="RichRecSegment::FloatType"                />
                 <code>
                         m_averageCKTheta.setData(type,angle);
+                </code>
+        </method>
+
+        <method 
+                const = "FALSE" 
+                desc  = "Set the average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
+                name  = "setAverageCKRadiusLocal">
+                <arg const="TRUE" inout="BYVALUE" name="type"  type="Rich::ParticleIDType"  />
+                <arg const="TRUE" inout="BYVALUE" name="radius" type="RichRecSegment::FloatType"                />
+                <code>
+                        m_averageCKRadiusLocal.setData(type,radius);
                 </code>
         </method>
             
@@ -242,6 +257,17 @@
                         return m_averageCKTheta[type];
                 </code>
         </method>
+
+        <method 
+                const = "TRUE" 
+                desc  = "Get the average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
+                name  = "averageCKRadiusLocal" 
+                type  = "RichRecSegment::FloatType" >
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <code>
+                        return m_averageCKRadiusLocal[type];
+                </code>
+        </method>
             
         <method 
                 desc = "Returns the geometrical efficiency per PD for given hypothesis" 
@@ -339,6 +365,20 @@
                 name        = "averageCKTheta" 
                 init        = "0" 
                 type        = "RichHypoData&lt;RichRecSegment::FloatType&gt;"
+        />
+
+        <attribute 
+                desc        = "The average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
+                name        = "averageCKRadiusLocal" 
+                init        = "0" 
+                type        = "RichHypoData&lt;RichRecSegment::FloatType&gt;"
+        />
+
+        <attribute 
+                desc        = "Average radius in local coordinates of Saturated Cherenkov Cone for this segment" 
+                name        = "avSaturatedRadiusLocal" 
+                init        = "-999" 
+                type        = "RichRecSegment::FloatType"
         />
             
         <attribute 

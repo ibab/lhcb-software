@@ -1,17 +1,16 @@
+
+//-----------------------------------------------------------------------------
 /** @file IRichDetParameters.h
  *
  *  Header file for tool interface : IRichDetParameters
  *
  *  CVS Log :-
- *  $Id: IRichDetParameters.h,v 1.5 2004-07-29 09:30:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/07/26 17:53:16  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: IRichDetParameters.h,v 1.6 2005-02-02 09:59:25 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_IRICHDETPARAMETERS_H
 #define RICHKERNEL_IRICHDETPARAMETERS_H 1
@@ -25,6 +24,7 @@
 /// Static Interface Identification
 static const InterfaceID IID_IRichDetParameters( "IRichDetParameters", 1, 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichDetParameters IRichDetParameters.h RichKernel/IRichDetParameters.h
  *
  *  Interface for tools providing access to useful detector parameters
@@ -32,8 +32,53 @@ static const InterfaceID IID_IRichDetParameters( "IRichDetParameters", 1, 0 );
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  */
+//-----------------------------------------------------------------------------
 
 class IRichDetParameters : public virtual IAlgTool {
+
+public:
+
+  /** @class RadLimits IRichDetParameters.h RichKernel/IRichDetParameters.h
+   *
+   *  Helper class for IRichDetParameters to contain HPD acceptance data
+   * 
+   *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+   *  @date   2005-01-29
+   */
+  class RadLimits {
+
+  public:
+
+    /** Constructor from limit data
+     *
+     *  Limits are unsigned, and correspond to a single HPD panel.
+     *
+     *  @param minX The minimum x edge of acceptance
+     *  @param maxX The maximum x edge of acceptance
+     *  @param minY The minimum y edge of acceptance
+     *  @param maxY The maximum y edge of acceptance
+     */
+    RadLimits( const double minX = 0, const double maxX = 0,
+               const double minY = 0, const double maxY = 0 )
+      : m_maxX(maxX), m_minX(minX), m_maxY(maxY), m_minY(minY) { }
+
+    /// Access the minimum x limit
+    inline double minX() const { return m_minX; }
+    /// Access the maximum x limit
+    inline double maxX() const { return m_maxX; }
+    /// Access the minimum y limit
+    inline double minY() const { return m_minY; }
+    /// Access the maximum y limit
+    inline double maxY() const { return m_maxY; }
+
+  private:
+
+    double m_maxX; ///< Maximum X limit
+    double m_minX; ///< Minimum X limit
+    double m_maxY; ///< Maximum Y limit
+    double m_minY; ///< Minimum Y limit
+
+  };
 
 public:
 
@@ -65,6 +110,18 @@ public:
    * @return The value of the mean photon energy for the given radiator
    */
   virtual double meanPhotonEnergy ( const Rich::RadiatorType rad ) const = 0;
+
+  /** Returns the average acceptance outer limits in local HPD coordinates 
+   *  for the given radiator type
+   *
+   *  @param rad The radiator type
+   * 
+   *  @return The average (x,y) outer acceptance limits
+   *          .first  Gives the x limit
+   *          .second Gives the y limit
+   */
+  virtual const IRichDetParameters::RadLimits & 
+  AvAcceptOuterLimitsLocal( const Rich::RadiatorType rad ) const = 0;
   
 };
 

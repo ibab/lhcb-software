@@ -5,10 +5,7 @@
  *  Implementation file for tool base class : RichMoniToolBase
  *
  *  CVS Log :-
- *  $Id: RichMoniToolBase.cpp,v 1.2 2005-01-13 15:03:26 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2005/01/13 13:43:02  jonrob
- *  add monitoring tool base class
+ *  $Id: RichMoniToolBase.cpp,v 1.3 2005-02-02 09:59:34 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26

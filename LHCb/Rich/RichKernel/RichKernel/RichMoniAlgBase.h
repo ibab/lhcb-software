@@ -1,20 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichMoniAlgBase.h
  *
  *  Header file for algorithm base class : RichMoniAlgBase
  *
  *  CVS Log :-
- *  $Id: RichMoniAlgBase.h,v 1.3 2005-01-13 15:03:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2005/01/13 13:42:15  jonrob
- *  update doxygen comment
- *
- *  Revision 1.1  2005/01/07 13:16:27  jonrob
- *  Add to CVS
+ *  $Id: RichMoniAlgBase.h,v 1.4 2005-02-02 09:59:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   19/12/2004
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_RICHMONIALGBASE_H
 #define RICHKERNEL_RICHMONIALGBASE_H 1
@@ -24,6 +20,7 @@
 
 // GaudiAlg
 #include "GaudiAlg/GaudiTupleAlg.h"
+#include "GaudiAlg/TupleObj.h" // Should be included from above file !!
 
 // Interfaces
 #include "RichKernel/IRichToolRegistry.h"

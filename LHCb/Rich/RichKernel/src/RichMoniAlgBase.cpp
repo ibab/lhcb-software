@@ -5,10 +5,7 @@
  *  Implementation file for class : RichMoniAlgBase
  *
  *  CVS Log :-
- *  $Id: RichMoniAlgBase.cpp,v 1.2 2005-01-13 15:03:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2005/01/07 13:16:42  jonrob
- *  Add to CVS
+ *  $Id: RichMoniAlgBase.cpp,v 1.3 2005-02-02 09:59:34 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-04-05

@@ -1,23 +1,16 @@
 
+//============================================================================
 /** @file RichToolBase.h
  *
  *  Header file for Tool base class : RichToolBase
  *
  *  CVS Log :-
- *  $Id: RichToolBase.h,v 1.7 2004-11-03 13:26:35 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.6  2004/08/19 13:55:58  jonrob
- *  Add new method to MC truth tool + various other things after CVS server switch
- *
- *  Revision 1.5  2004/08/16 13:43:59  jonrob
- *  Update doxygen comments
- *
- *  Revision 1.4  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: RichToolBase.h,v 1.8 2005-02-02 09:59:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
  */
+//============================================================================
 
 #ifndef RICHKERNEL_RICHTOOLBASE_H
 #define RICHKERNEL_RICHTOOLBASE_H 1

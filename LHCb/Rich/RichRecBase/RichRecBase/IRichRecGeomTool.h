@@ -5,8 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: IRichRecGeomTool.h,v 1.2 2004-07-26 18:00:57 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: IRichRecGeomTool.h,v 1.3 2005-02-02 10:01:20 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -23,6 +22,7 @@ class RichRecSegment;
 /// Static Interface Identification
 static const InterfaceID IID_IRichRecGeomTool( "IRichRecGeomTool" , 1 , 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichRecGeomTool IRichRecGeomTool.h
  *
  *  Interface for a tool to answer simple geometrical questions
@@ -31,6 +31,7 @@ static const InterfaceID IID_IRichRecGeomTool( "IRichRecGeomTool" , 1 , 0 );
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class IRichRecGeomTool : public virtual IAlgTool {
 
@@ -41,9 +42,10 @@ public:
    */
   static const InterfaceID& interfaceID() { return IID_IRichRecGeomTool; }
 
-  /** Computes the square of distance separating the pixel hit and hit position extrapolated
-   *  using the RichRecSegment direction in global coordinates
-   *  
+  /** Computes the square of the distance separating the pixel hit and track hit
+   *  position extrapolated using the RichRecSegment direction in the LHCb global
+   *  coordinate system
+   *
    *  @param segment Pointer to the RichRecSegment
    *  @param pixel   Pointer to the RichRecPixel
    *
@@ -52,9 +54,10 @@ public:
   virtual double trackPixelHitSep2Global( const RichRecSegment * segment,
                                           const RichRecPixel * pixel ) const = 0;
 
-  /** Returns square of distance separating the pixel hit and hit position extrapolated
-   *  using the RichRecSegment direction in local HPD panel coordinates
-   *  
+  /** Computes the square of the distance separating the pixel hit and track hit
+   *  position extrapolated using the RichRecSegment direction in local
+   *  HPD panel coordinates
+   *
    *  @param segment Pointer to the RichRecSegment
    *  @param pixel   Pointer to the RichRecPixel
    *
@@ -63,6 +66,18 @@ public:
   virtual double trackPixelHitSep2Local( const RichRecSegment * segment,
                                          const RichRecPixel * pixel ) const = 0;
 
+  /** Computes the fraction of the Cherenkov cone for a given segment and mass hypothesis 
+   *  that lies within the average HPD panel acceptance
+   *
+   *  @param segment Pointer the a RichRecSegment
+   *  @param id      The mass hypothesis
+   *
+   *  @return The fraction of the cherenkov ring that is within the averge HPD acceptance
+   */
+  virtual double hpdPanelAcceptance( RichRecSegment * segment,
+                                     const Rich::ParticleIDType id ) const = 0;
+
 };
+
 
 #endif // RICHRECTOOLS_IRICHRECGEOMTOOL_H

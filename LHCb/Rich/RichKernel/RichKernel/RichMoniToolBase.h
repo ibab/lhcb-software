@@ -1,23 +1,23 @@
 
+//============================================================================
 /** @file RichMoniToolBase.h
  *
  *  Header file for Tool base class : RichMoniToolBase
  *
  *  CVS Log :-
- *  $Id: RichMoniToolBase.h,v 1.2 2005-01-13 15:03:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2005/01/13 13:43:02  jonrob
- *  add monitoring tool base class
+ *  $Id: RichMoniToolBase.h,v 1.3 2005-02-02 09:59:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
  */
+//============================================================================
 
 #ifndef RICHKERNEL_RICHMONITOOLBASE_H
 #define RICHKERNEL_RICHMONITOOLBASE_H 1
 
 // GaudiTools
 #include "GaudiAlg/GaudiTupleTool.h"
+#include "GaudiAlg/TupleObj.h" // Should be included from above file !!
 
 // Interfaces
 #include "RichKernel/IRichToolRegistry.h"
