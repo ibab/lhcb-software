@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v1r4 2004-07-19 ==========================
+! 2004-07-19 - Marco Cattaneo
+ - Move to Gaudi v15 (use LHCbKernel v5r* in requirements)
+
 !====================== LinkerEvent v1r3 2004-05-18 ==========================
 ! 2004-05-17 - Olivier Callot
  - Fix two bugs in LinkedFrom, reported by Philippe Charpentier:

@@ -3,15 +3,15 @@ version v5r7
 
 branches cmt doc
 
-use DetDesc	   	v14r1p1	Det
+use DetDesc	   	v14r2	Det
 use DetDescCnv		v2r3	Det
-use XmlTools		v3r2	Tools
-use VeloDet        	v8r8p2 	Det
+use XmlTools		v3r3	Tools
+use VeloDet        	v8r8p3 	Det
 use OTDet          	v5r3	Det
 use CaloDet	   	v6r8	Det
 use CaloDetXmlCnv  	v2r3p1	Det
 use MuonDet        	v4r6	Det
 use Magnet        	v2r7	Det
 use MuonTools	   	v3r7	Muon
-use RichDet	   	v7r2	Det
+use RichDet	   	v8r0	Det
 use STDet          	v1r2	Det

@@ -4,7 +4,7 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
-!======================= EventAssoc v1r2 2004-06-16 ==========================
+!======================= EventAssoc v1r2 2004-07-20 ==========================
 ! 2004-06-16 - Marco Cattaneo
  - Remove   <assoc from="L1Track2d" to="MCParticle" weight="double"/>
             <assoc from="L1Track3d" to="MCParticle" weight="double"/>

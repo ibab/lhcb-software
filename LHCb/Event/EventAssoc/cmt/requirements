@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.3 2004-06-11 12:08:32 cattanem Exp $
+# $Id: requirements,v 1.4 2004-07-21 08:05:49 cattanem Exp $
 # Created    : 19/12/2003
 # Maintainer : Marco Cattaneo
 #
@@ -22,3 +22,6 @@ document obj2dict EventAssocObj2Dict ../xml/EventAssoc.xml
 #============================================================================
 library          EventAssocDict  ../dict/*.cpp
 apply_pattern component_library library=EventAssocDict
+
+private
+use GaudiObjDesc v*

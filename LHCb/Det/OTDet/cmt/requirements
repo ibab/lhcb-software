@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2004-06-24 13:44:48 cattanem Exp $
+# $Id: requirements,v 1.17 2004-07-21 08:03:16 cattanem Exp $
 # =========================================================================
 
 package  OTDet 
@@ -12,7 +12,7 @@ include_dirs      $(OTDETROOT)
 
 # =============== used packages ===========================================
 use DetDescCnv   v2r*   Det 
-use LHCbKernel	v4r*	Kernel
+use LHCbKernel	 v5r*	Kernel
 
 # =============== link library (base classes) =============================
 library          OTDetLib        Lib/*.cpp 

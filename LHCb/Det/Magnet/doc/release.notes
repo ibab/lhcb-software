@@ -5,9 +5,14 @@
 !-----------------------------------------------------------------------------
 
 !====================== Magnet v2r7 2004-06-29 ==========================
+! 2004-07-19 - Marco Cattaneo
+ - Updates for Gaudi v15:
+   . Explicit use if CLHEP in requirements
+   . Use InterfaceID instead of IID in MagneticFieldSvc
+
 ! 2004-04-28 M. Needham
-  - Clean up fieldGrid() - Avoid temporary copying to arrays
-                         - Intialize min/max coords of field grid once only
+ - Clean up fieldGrid() - Avoid temporary copying to arrays
+                        - Initialize min/max coords of field grid once only
 
 !====================== Magnet v2r6 2004-04-07 ==========================
 ! 2004-04-07 - Marco Cattaneo

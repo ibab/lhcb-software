@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.11 2004-06-28 07:08:29 mneedham Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.12 2004-07-21 08:09:42 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -53,14 +53,6 @@ MagneticFieldSvc::~MagneticFieldSvc()
 }
 
 //=============================================================================
-// Return the service
-//=============================================================================
-const IID& MagneticFieldSvc::type() const 
-{ 
-  return IID_IMagneticFieldSvc; 
-}
-
-//=============================================================================
 // Initialize
 //=============================================================================
 StatusCode MagneticFieldSvc::initialize()
@@ -101,8 +93,8 @@ StatusCode MagneticFieldSvc::finalize()
 //=============================================================================
 // QueryInterface
 //=============================================================================
-StatusCode MagneticFieldSvc::queryInterface( const IID& riid, 
-               void** ppvInterface ) 
+StatusCode MagneticFieldSvc::queryInterface( const InterfaceID& riid, 
+                                             void** ppvInterface      ) 
 {
   StatusCode sc = StatusCode::FAILURE;
   if ( ppvInterface ) {

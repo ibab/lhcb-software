@@ -5,21 +5,21 @@ branches doc cmt
 
 # LHCb Event libraries
 
-use Event       v4r4    Event
+use Event       v4r5    Event
 use VeloEvent   v13r0p1 Event
 use ITEvent     v13r2   Event
 use OTEvent     v13r0   Event
 use TrEvent     v13r1   Event
 use RichEvent   v7r4    Event
-use CaloEvent   v13r2   Event
+use CaloEvent   v13r2p1 Event
 use MuonEvent   v3r1    Event
-use L0Event     v14r1   Event
+use L0Event     v14r1p1 Event
 use PhysEvent   v8r4    Event
 use HltEvent    v5r0    Event
 use DAQEvent    v4r4    Event
-use GenEvent    v3r2    Event
+use GenEvent    v3r3    Event
 use EventAssoc  v1r2    Event
-use LinkerEvent v1r3    Event
+use LinkerEvent v1r4    Event
 use TrgEvent    v3r0    Event
 
 private

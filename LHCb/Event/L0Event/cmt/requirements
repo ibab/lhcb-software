@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.34 2004-01-26 15:12:37 odescham Exp $
+# $Id: requirements,v 1.35 2004-07-21 08:05:40 cattanem Exp $
 package L0Event
-version v14r1
+version v14r1p1
 
 branches Event cmt doc xml src
 
@@ -23,3 +23,6 @@ library           L0EventDict     ../dict/*.cpp
 apply_pattern component_library library=L0EventDict
 apply_pattern linker_library    library=L0Event
 macro_append L0Event_linkopts "" WIN32 "/include:_L0Event_loadRef"
+
+private
+use GaudiObjDesc v*

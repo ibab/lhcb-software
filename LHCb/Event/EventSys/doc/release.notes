@@ -1,10 +1,12 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v18r0 2004-06-28 ========================
-! 2004-06-28 - Marco Cattaneo
- - Use EventAssoc v1r2, RichEvent v7r4, DAQEvent v4r4
+!======================== EventSys v18r0 2004-07-19 ========================
+! 2004-07-19 - Marco Cattaneo
+ - Use EventAssoc v1r2, RichEvent v7r4, DAQEvent v4r4, Event v4r5,
+       LinkerEvent v1r4, GenEvent v3r3, L0Event v14r1p1, CaloEvent v13r2p1
  - Remove L1Event, completely superseded by TrgEvent
+ - Add SealCLHEPDict to PoolDicts.opts, for Gaudi v15
 
 !======================= EventSys v17r12 2004-06-30 ========================
 ! 2004-06-30 - Marco Cattaneo

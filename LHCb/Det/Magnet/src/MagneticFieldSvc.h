@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.6 2004-06-28 07:08:29 mneedham Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.7 2004-07-21 08:09:42 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -44,10 +44,11 @@ public:
    * @param ppvInterface Pointer to requested interface
    * @return StatusCode indicating SUCCESS or FAILURE.
    */
-  virtual StatusCode queryInterface( const IID& riid, void** ppvInterface );
+  virtual StatusCode queryInterface( const InterfaceID& riid, 
+                                     void** ppvInterface      );
   
   /// Service type.
-  virtual const IID& type() const;
+  virtual const InterfaceID& type() const { return IID_IMagneticFieldSvc; };
 
   /** IMagneticFieldSvc interface.
    * @param xyz(input) Point at which magnetic field vector will be given

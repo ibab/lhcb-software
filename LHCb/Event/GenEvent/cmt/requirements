@@ -1,10 +1,9 @@
 package GenEvent
-version v3r2
+version v3r3
 
 branches cmt dict doc src xml Event
 
 use HepMC        v*	Sim
-use LHCbKernel   v4r*	Kernel
 use Event        v4*    Event
 
 include_dirs $(GENEVENTROOT)
@@ -17,8 +16,11 @@ document obj2dict GenEventObj2Dict ../xml/GenEvent.xml ../xml/HardInfo.xml \
                                    ../xml/GenMCLink.xml ../xml/GenCollision.xml
 
 # Produce lcg dictionary for HepMC
-apply_pattern lcg_dictionary dictionary=HepMC headerfiles=$(GENEVENTROOT)/src/HepMC_dict.h selectionfile=../xml/HepMC_dict.xml options="--split"
-macro_append HepMC_lcgdict_options '-I "$(HEPMCROOT)" -I "$(CLHEPBASE)/include"'
+document lcg_dictionary_generator HepMCGen \
+      $(GENEVENTROOT)/src/HepMC_dict.h dictionary=HepMC
+macro_append HepMC_lcgdict_options \
+      '--select=$(GENEVENTROOT)/xml/HepMC_dict.xml --split --pool \
+       -I"$(POOL_home)/../include" $(includes)'
 
 library GenEvent      *.cpp
 library GenEventDict  ../dict/*.cpp ../$(BINDIR)/dict/HepMC/*.cpp
@@ -27,3 +29,5 @@ apply_pattern component_library library=GenEventDict
 apply_pattern linker_library    library=GenEvent
 macro_append GenEvent_linkopts "" WIN32 "/include:_GenEvent_loadRef"
 
+private
+use GaudiObjDesc v*

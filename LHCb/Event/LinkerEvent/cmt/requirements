@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           LinkerEvent
-version           v1r3
+version           v1r4
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -20,7 +20,7 @@ include_dirs $(LINKEREVENTROOT)
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 
-use LHCbKernel	v4r*	Kernel	
+use LHCbKernel	v5r*	Kernel	
 
 #============================================================================
 #---- Produce Header-Files and from XML description
@@ -39,3 +39,6 @@ library          LinkerEventDict     ../dict/*.cpp
 apply_pattern component_library library=LinkerEventDict
 apply_pattern linker_library	library=LinkerEvent
 macro_append LinkerEvent_linkopts "" WIN32 "/include:_LinkerEvent_loadRef"
+
+private
+use GaudiObjDesc v*

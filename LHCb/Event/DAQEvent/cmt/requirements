@@ -15,7 +15,7 @@ include_dirs $(DAQEVENTROOT)
 
 # Used packages.
 #============================================================================
-use GaudiAlg    v7r*
+use GaudiAlg    v*
 use Event       v4r*    Event
 
 # Produce Header-Files & dictionary from XML description
@@ -24,10 +24,11 @@ document obj2doth DAQEventObj2Doth ../xml/DAQEvent.xml
 document obj2dict DAQEventObj2Dict ../xml/DAQEvent.xml
 
 # Produce lcg dictionary for stl containers used in DAQEvent
-apply_pattern lcg_dictionary dictionary=DAQEvent                  \
-                             headerfiles=$(DAQEVENTROOT)/Event/lcgStl.h     \
-                             selectionfile=$(DAQEVENTROOT)/xml/lcg_selection.xml \
-                             options="--split"
+document lcg_dictionary_generator DAQEventGen \
+      $(DAQEVENTROOT)/Event/lcgStl.h dictionary=DAQEvent
+macro_append DAQEvent_lcgdict_options \
+      '--select=$(DAQEVENTROOT)/xml/lcg_selection.xml --split --pool \
+       -I"$(POOL_home)/../include" $(includes)'
 
 # ==================== linker library =======================================
 library DAQEventLib     *.cpp
@@ -40,3 +41,6 @@ library DAQEventDict    ../dict/*.cpp ../$(tag)/dict/DAQEvent/*.cpp
 apply_pattern component_library library=DAQEventDict
 apply_pattern component_library library=DAQEvent
 apply_pattern linker_library    library=DAQEventLib
+
+private
+use GaudiObjDesc v*

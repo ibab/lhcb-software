@@ -1,6 +1,11 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
+!================= GenEvent v3r3 2004-07-19 ===========================
+! 2004-07-19 - Marco Cattaneo
+ - Remove explicit dependency on LHCbKernel (taken from Event/Event)
+ - Fix requirements for Gaudi v15
+
 !================= GenEvent v3r2 2004-04-07 ===========================
 ! 2004-04-07 - Gloria CORTI
  - Introduce xml for new classes:
