@@ -10,7 +10,8 @@
    use GaudiConf v6r8, 
        DetSys v1r6, DetDesc v11r9p1,
        KernelSys v1r2, LHCbKernel v2r7,
-       EventSts v13r6
+       EventSys v13r6,
+       SicbToOORawh v1r1
    add HltEvent v2r0 
 
 !====================== LHCbSys v11r11 2003-04-16 ============================

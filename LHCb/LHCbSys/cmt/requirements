@@ -82,7 +82,7 @@ use Futil        	v12r0   SICB
 use detdes       	v21r0   SICB
 
 # LHCb  Examples
-use SicbToOORawh	v1r0	SICB
+use SicbToOORawh	v1r1	SICB
 use DetDescExample      v5r2    Ex
 use DumpEventExample    v6r2    Ex
 
