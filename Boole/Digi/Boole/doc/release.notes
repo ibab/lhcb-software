@@ -19,14 +19,9 @@ Requires XmlDDDB v22r0 or greater
 >>> Temporarily disable TrgVeloTT in L1WithTrg.opts to allow porting to 
     new ST L1Buffer
 
->>> Due to migration to new definition of VeloChannelID, the channelID returned
-    by VeloCluster is not the same as the "key" of the corresponding MCVeloFE.
-    This causes many error messages in VeloMonitor, and probably break the
-    MC truth relations. 
-
 - Persistency changes
   - Backwards incompatible change to internal encoding of VeloChannelID
-    (LHCbKernel v4r3, VeloEvent v14r0)
+    (LHCbKernel v4r3)
   - Remove IT Digits from Digi output (can be rebuilt from RawBuffer) 
   - Remove OT Digits from Digi output
     (relations problem fixed in Brunel by OTDAQ v1r1)
