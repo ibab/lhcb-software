@@ -1,8 +1,11 @@
-# $Id: requirements,v 1.1.1.1 2002-03-15 15:58:17 dhcroft Exp $
+# $Id: requirements,v 1.2 2002-03-20 18:07:59 dhcroft Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.1.1.1  2002/03/15 15:58:17  dhcroft
+# First version of the MuonTools package, incomplete
+#
 
 package            MuonTools
 version            v1r0
@@ -20,12 +23,14 @@ use GaudiKernel    v11r*
 use MuonDet        v1r*    Det 
 use MuonKernel     v1r*    Muon
 
+use LHCbEvent      v12r*   Event
 
 # ================ component library =========================================
 library            MuonTools   *.cpp
 
 apply_pattern      package_Clinkopts 
 apply_pattern      packageShr
+apply_pattern      linker_path
 
 # ================ private stuff (btw, WHY it is private?)  ==================
 private

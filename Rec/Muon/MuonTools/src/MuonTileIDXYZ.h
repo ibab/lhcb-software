@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.h,v 1.1.1.1 2002-03-15 15:58:17 dhcroft Exp $
+// $Id: MuonTileIDXYZ.h,v 1.2 2002-03-20 18:07:59 dhcroft Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -8,9 +8,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
-
-// from MuonKernel
-#include "MuonKernel/MuonTileID.h"
 
 // local
 #include "MuonTools/IMuonTileXYZTool.h"
@@ -36,32 +33,34 @@ public:
   /** Calculate the x,y,z and dx,dy,dz of a MuonTileID in mm
    * this ignores gaps: these can never be read out independently
    */
-  StatusCode calcTilePos(const MuonTileID& tile, 
-                         double& x, double& deltax,
-                         double& y, double& deltay,
-                         double& z, double& deltaz);
+  virtual StatusCode calcTilePos(const MuonTileID& tile, 
+                                 double& x, double& deltax,
+                                 double& y, double& deltay,
+                                 double& z, double& deltaz);
+  
+  /// locate the MuonTileID of the chamber containing x,y,z (in mm)
+  virtual StatusCode locateChamberTile(const double& x, 
+                                       const double& y, 
+                                       const double& z, 
+                                       MuonTileID& tile);
 
-  /// Calculate the MuonTileID of the chamber containing x,y,z (in mm)
-  StatusCode calcChamberTile(const double& x, 
-                             const double& y, 
-                             const double& z, 
-                             MuonTileID& tile);
+  /// locate the MuonTileID of the chamber containing x,y,z (in mm)
+  /// and get the associated gas gap pointer
+  virtual StatusCode locateChamberTileAndGap(const double& x, 
+                                             const double& y, 
+                                             const double& z, 
+                                             MuonTileID& tile,
+                                             DeMuonGasGap* &pGasGap);
 
-  /** Calculate the MuonTileID of the muon pad
-   *  layer returned is 0 if 0th layer or not in a specific gap
-   *  otherwise it is the gap number
+  /** Calculate the position of the Muon front end Channel
    *  containing x,y,z (in mm)
-   *  @param   x           x of pad (mm) 
-   *  @param   y           y of pad (mm) 
-   *  @param   z           z of pad (mm) 
-   *  @param   padLayout   layout of pad (if matches readout 2
-   *  @param   x   x of pad (mm) 
    */
-  StatusCode calcPadTile(const double& x, 
-                         const double& y, 
-                         const double& z,
-                         const MuonLayout& padLayout,
-                         MuonTileID& tile);
+  virtual StatusCode locateFEFromXYZ(const double& x, 
+                                     const double& y, 
+                                     const double& z, 
+                                     MuonTileID &chamber,
+                                     std::vector<MuonChannel> &muonChannels,
+                                     DeMuonGasGap* &pGasGap);
 private:
 
   /// get position of chamber from a tile
@@ -71,12 +70,36 @@ private:
                                double& z, double& deltaz);
 
   /// get position of a "named" chamber 
+  /// NOTE: station and region are indexed from 0 (C style)
+  /// chamberNum is the real chamber number (from 0)
   StatusCode getXYZChamber(const int& station,
                            const int& region,
                            const int& chamberNum,
                            double& x, double& deltax,
                            double& y, double& deltay,
                            double& z, double& deltaz);
+
+  /// get position of a "named" gasgap
+  /// NOTE: station, region and gapNum are indexed from 0 (C style)
+  /// chamberNum is the real chamber number (from 0)
+  StatusCode getXYZGasGap(const int& station,
+                          const int& region,
+                          const int& chamberNum,
+                          const int& gapNum,
+                          double& x, double& deltax,
+                          double& y, double& deltay,
+                          double& z, double& deltaz);
+  
+  /// get position of chamber or gas gap with caching of results and pointers
+  /// NOTE: station, region and gapNum are indexed from 0 (C style)
+  /// chamberNum is the real chamber number (from 0)
+  StatusCode getXYZAndCache(const int& station,
+                            const int& region,
+                            const int& chamberNum,
+                            const int& gapNum,
+                            double& x, double& deltax,
+                            double& y, double& deltay,
+                            double& z, double& deltaz);
 
   // fill the array with the position and size of the stations
   StatusCode fillStationExtent();
@@ -96,15 +119,16 @@ private:
                        double& y, double& deltay,
                        double& z, double& deltaz);
 
-  /// locate the chamber tile given the station, region and quater  
-  StatusCode locateChamberFromXYZ( const int& station,
-                                   const int& region,
-                                   const int& quarter,
-                                   const double& x,
-                                   const double& y,
-                                   const double& z,
-                                   MuonTileID& tile);
-
+  /// locate the GasGap given the station, region and quater  
+  /// and return the gas gap pointer
+  StatusCode locateGasGapFromXYZ( const int& station,
+                                  const int& region,
+                                  const int& quarter,
+                                  const double& x,
+                                  const double& y,
+                                  const double& z,
+                                  MuonTileID& tile,
+                                  DeMuonGasGap* &pGasGap);
 
   // store x,y,z,dx,dy,dz of chambers locally (Cached) to avoid multiple
   // TDS lookups (the other choice is to cache the smartpointers)
@@ -117,15 +141,34 @@ private:
     double dy;
     double dz;
   } ;
-  // only split by region to save a little space 
-  //(about 2000 copies of muonExtent)
-  muonExtent_ chamR1[5][12];
-  muonExtent_ chamR2[5][24];
-  muonExtent_ chamR3[5][48];
-  muonExtent_ chamR4[5][192];
 
   muonExtent_ stationExtent[5];
 
+  class chamberExtent_ : public muonExtent_ {
+  public:
+    DeMuonChamber *pChamber;
+  };
+
+  // only split by region to save a little space 
+  //(about 2000 copies of muonExtent)
+  chamberExtent_ chamR1[5][12];
+  chamberExtent_ chamR2[5][24];
+  chamberExtent_ chamR3[5][48];
+  chamberExtent_ chamR4[5][192];
+
+  class gapExtent_ : public muonExtent_ {
+  public:
+    DeMuonGasGap *pGasGap;
+  };
+
+  // R1, R2 all 4 gap MWPCs, R3 and R4 in M4 and M5 are 2 gap RPCs
+  gapExtent_ gapR1[5][12][4];
+  gapExtent_ gapR2[5][24][4]; 
+  gapExtent_ gapR3MWPC[3][48][4];
+  gapExtent_ gapR3RPC[2][48][2];
+  gapExtent_ gapR4MWPC[3][192][4];
+  gapExtent_ gapR4RPC[2][192][2];
+ 
   // store chamber layout locally
   MuonSystemLayout * m_chamberSystemLayout;
 

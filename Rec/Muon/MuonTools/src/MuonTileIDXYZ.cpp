@@ -1,6 +1,7 @@
-// $Id: MuonTileIDXYZ.cpp,v 1.1.1.1 2002-03-15 15:58:17 dhcroft Exp $
+// $Id: MuonTileIDXYZ.cpp,v 1.2 2002-03-20 18:07:59 dhcroft Exp $
 // Include files 
 #include <cstdio>
+#include <cmath>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -8,6 +9,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // from MuonDet
+#include "MuonDet/DeMuonRegion.h"
 #include "MuonDet/DeMuonChamber.h"
 #include "MuonDet/DeMuonGasGap.h"
 
@@ -27,6 +29,7 @@
 
 // local
 #include "MuonTileIDXYZ.h"
+#include "MuonTools/MuonChannel.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonTileIDXYZ
@@ -191,10 +194,26 @@ StatusCode MuonTileIDXYZ::calcTilePos(const MuonTileID& tile,
   return StatusCode::SUCCESS;
 }
 
-StatusCode MuonTileIDXYZ::calcChamberTile(const double& x, 
-                                          const double& y, 
-                                          const double& z, 
-                                          MuonTileID& tile){
+StatusCode MuonTileIDXYZ::locateChamberTile(const double& x, 
+                                            const double& y, 
+                                            const double& z, 
+                                            MuonTileID& tile){
+  // this code takes an x,y,z position and finds and returns the chamber
+  // containing the point: 
+  // actually look in box defined by the extent of the active gas gaps
+
+  // this function ignores gas gap pointer
+  DeMuonGasGap *tmpGap;
+  StatusCode sc = locateChamberTileAndGap(x, y, z, tile, tmpGap);
+  return sc;
+}
+
+
+StatusCode MuonTileIDXYZ::locateChamberTileAndGap(const double& x, 
+                                                  const double& y, 
+                                                  const double& z, 
+                                                  MuonTileID& tile,
+                                                  DeMuonGasGap* &pGasGap){
   // this code takes an x,y,z position and finds and returns the chamber
   // containing the point: 
   // actually look in box defined by the extent of the active gas gaps
@@ -295,8 +314,8 @@ StatusCode MuonTileIDXYZ::calcChamberTile(const double& x,
       log << MSG::DEBUG << " Trying station " << station
           << " region " << *iRegion
           << " quarter " << *iQuarter << endreq;
-      StatusCode sc = locateChamberFromXYZ(station,*iRegion,*iQuarter,
-                                           x,y,z,tile);
+      StatusCode sc = locateGasGapFromXYZ(station,*iRegion,*iQuarter,
+                                           x,y,z,tile,pGasGap);
       if( !sc.isSuccess() ) {
         log << MSG::ERROR << "Problem locating chamber tile" << endreq;
         return sc;
@@ -314,12 +333,64 @@ StatusCode MuonTileIDXYZ::calcChamberTile(const double& x,
   return StatusCode::FAILURE;
 }
 
-StatusCode MuonTileIDXYZ::calcPadTile(const double& x, 
-                                      const double& y, 
-                                      const double& z, 
-                                      const MuonLayout& padLayout,
-                                      MuonTileID& tile){
-  return StatusCode::FAILURE;
+StatusCode 
+MuonTileIDXYZ::locateFEFromXYZ(const double& x, 
+                               const double& y, 
+                               const double& z, 
+                               MuonTileID &chamber,
+                               std::vector<MuonChannel> &muonChannels,
+                               DeMuonGasGap* &pGasGap){
+  MsgStream log(msgSvc(), name());
+
+  // locate the chamber first
+  StatusCode sc = locateChamberTileAndGap(x,y,z,chamber,pGasGap);
+  if(!sc.isSuccess()){
+    log << MSG::ERROR << "Could not locate chamberTile or gap" << endreq;
+  }
+  // now to determine the position of the FE channel within the chamber
+  
+  double chamX,chamY,chamZ,chamDx,chamDy,chamDz;
+  sc = getXYZChamberTile(chamber,chamX,chamDx,chamY,chamDy,chamZ,chamDz);
+  
+  double localX = x - (chamX - chamDx); // x of hit within chamber
+  double localY = y - (chamY - chamDy); // y of hit within chamber
+
+  // FE sizes are attached to regions, two levels above the gasgaps in the TDS
+  IDetectorElement *ide = 
+    pGasGap->parentIDetectorElement()->parentIDetectorElement();
+  DeMuonRegion *region = dynamic_cast<DeMuonRegion*>(ide);
+  if(!region){
+    log << MSG::ERROR << "Grandparent of " << pGasGap->name()
+        << " could not be found " << endreq;
+  }
+
+
+  if(region->FEAnodeX() > 0){
+    // there is an Anode readout in this region
+    double padSizeX = (2.*chamDx)/(static_cast<double>(region->FEAnodeX()));
+    double padSizeY = (2.*chamDy)/(static_cast<double>(region->FEAnodeY()));
+    
+    int xPos = static_cast<int>(floor(localX/padSizeX));
+    int yPos = static_cast<int>(floor(localY/padSizeY));
+
+    muonChannels.push_back(MuonChannel(xPos,yPos,
+                                        MuonParameters::Anode));
+  }
+    
+  if(region->FECathodeX() > 0){
+    // there is an Cathode readout in this region
+    double padSizeX = (2.*chamDx)/(static_cast<double>(region->FECathodeX()));
+    double padSizeY = (2.*chamDy)/(static_cast<double>(region->FECathodeY()));
+
+    int xPos = static_cast<int>(floor(localX/padSizeX));
+    int yPos = static_cast<int>(floor(localY/padSizeY));
+
+    muonChannels.push_back(MuonChannel(xPos,yPos,
+                                        MuonParameters::Anode));
+  }
+  
+  return StatusCode::SUCCESS;
+   
 }
 
 StatusCode MuonTileIDXYZ::getXYZChamberTile(const MuonTileID& tile, 
@@ -348,21 +419,70 @@ StatusCode MuonTileIDXYZ::getXYZChamber(const int& station,
                                         double& x, double& deltax,
                                         double& y, double& deltay,
                                         double& z, double& deltaz){
+  StatusCode sc = getXYZAndCache(station,region,chamberNum,-1,
+                                 x,deltax,y,deltay,z,deltaz);
+  return sc;
+}
+
+StatusCode MuonTileIDXYZ::getXYZGasGap(const int& station,
+                                       const int& region,
+                                       const int& chamberNum,
+                                       const int& gapNum,
+                                       double& x, double& deltax,
+                                       double& y, double& deltay,
+                                       double& z, double& deltaz){
+  StatusCode sc = getXYZAndCache(station,region,chamberNum,gapNum,
+                                 x,deltax,y,deltay,z,deltaz);
+  return sc;
+}
+
+StatusCode MuonTileIDXYZ::getXYZAndCache(const int& station,
+                                         const int& region,
+                                         const int& chamberNum,
+                                         const int& gapNum,
+                                         double& x, double& deltax,
+                                         double& y, double& deltay,
+                                         double& z, double& deltaz){
   MsgStream log(msgSvc(), name());
-  muonExtent_ *currCham=0;
-  
-  // test if have information already  
+
+  chamberExtent_ *currCham=0;
+  int nGap;
+  gapExtent_ *currGapArray=0;
+
+  // Alright I agree this is officially very ugly code
+  // I probably should use some stl stuff here somewhere
+  // this pointer arimetic is just asking for trouble
+
   if( 0 == region ){
-    currCham = &(chamR1[station][chamberNum]);
+    currCham = &(chamR1[station][chamberNum-1]);
+    nGap = 4;
+    currGapArray = gapR1[station][chamberNum-1];
   }else if( 1 == region ){
-    currCham = &(chamR2[station][chamberNum]);
+    currCham = &(chamR2[station][chamberNum-1]);
+    nGap = 4;
+    currGapArray = gapR2[station][chamberNum-1];
   }else if( 2 == region ){
-    currCham = &(chamR3[station][chamberNum]);
+    currCham = &(chamR3[station][chamberNum-1]);
+    if(station < 3){
+      nGap = 4;
+      currGapArray = gapR3MWPC[station][chamberNum-1];
+    }else{
+      nGap = 2;
+      currGapArray = gapR3RPC[station-3][chamberNum-1];
+    }
   }else {
-    currCham = &(chamR4[station][chamberNum]);
+    currCham = &(chamR4[station][chamberNum-1]);
+    if(station < 3){
+      nGap = 4;
+      currGapArray = gapR4MWPC[station][chamberNum-1];
+    }else{
+      nGap = 2;
+      currGapArray = gapR4RPC[station-3][chamberNum-1];
+    }
   }
 
 
+  // test if have information already  
   if( 0. >= currCham->z ) {
     //TDS path t chamber is of the form /dd/Structure/LHCb/Muon/M1/R1/Cham001
     // Name this chamber
@@ -379,80 +499,86 @@ StatusCode MuonTileIDXYZ::getXYZChamber(const int& station,
       return StatusCode::FAILURE;
     }
 
+    currCham->pChamber = muChamber;
+
     // active volume is defined by the gas gaps, want first and last
     IDetectorElement::IDEContainer::const_iterator itGap;
-    IDetectorElement::IDEContainer::const_iterator itGapFirst;
-    IDetectorElement::IDEContainer::const_iterator itGapLast;
-    itGapFirst = muChamber->childBegin(); 
-    //now loop to end and take iterator prior to childEnd()
-    itGap=itGapFirst;
-    while(itGap != muChamber->childEnd()){
-      itGapLast = itGap;
-      itGap++;
+    int gapIndex;
+    for(itGap = muChamber->childBegin(), gapIndex = 0; 
+        itGap != muChamber->childEnd();
+        itGap++, gapIndex++){
+      log << MSG::DEBUG << "asking TDS for " << (*itGap)->name()
+          << endreq;    
+      SmartDataPtr<DeMuonGasGap> muGap(m_DDS,(*itGap)->name());
+      if( !muGap ){
+        log << MSG::ERROR << "Could not read gas gaps "
+            << (*itGap)->name() << " from TDS" << endreq;
+        return StatusCode::FAILURE;
+      }
+      
+      currGapArray[gapIndex].pGasGap = muGap;
+
+      HepTransform3D vTransForm = muGap->geometry()->matrixInv();
+      Hep3Vector vtrans = vTransForm.getTranslation();
+      
+      currGapArray[gapIndex].x = vtrans.x();
+      currGapArray[gapIndex].y = vtrans.y();
+      currGapArray[gapIndex].z = vtrans.z();
+
+      // get ILVolume pointer
+      const ILVolume *logVol = muGap->geometry()->lvolume();
+      // Get the solid
+      const ISolid *soild = logVol->solid();
+      // check these really are boxes (they ought to be!)
+      const SolidBox *box = dynamic_cast<const SolidBox *>(soild);
+      if( !box ){
+        log << MSG::ERROR << "Could not cast gas gap solid to box" 
+            << endreq;
+        return StatusCode::FAILURE;
+      }
+    
+      currGapArray[gapIndex].dx = box->xHalfLength();
+      currGapArray[gapIndex].dy = box->yHalfLength();
+      currGapArray[gapIndex].dz = box->zHalfLength();
     }    
 
-    log << MSG::DEBUG << "asking TDS for " << (*itGapFirst)->name()
-        << endreq;    
-    SmartDataPtr<DeMuonGasGap> muGapFirst(m_DDS,(*itGapFirst)->name());
-    log << MSG::DEBUG << "asking TDS for " << (*itGapLast)->name()
-        << endreq;    
-    SmartDataPtr<DeMuonGasGap> muGapLast(m_DDS,(*itGapLast)->name());
-    if((!muGapFirst) || (!muGapLast)){
-      log << MSG::ERROR << "Could not read gas gaps "
-          << (*itGapFirst)->name() <<", "
-          << (*itGapLast)->name() << " from TDS" << endreq;
-      return StatusCode::FAILURE;
-    }
-
-    HepTransform3D vTransFormFirst = muGapFirst->geometry()->matrixInv();
-    Hep3Vector vtransFirst = vTransFormFirst.getTranslation();
-
-    HepTransform3D vTransFormLast = muGapLast->geometry()->matrixInv();
-    Hep3Vector vtransLast = vTransFormLast.getTranslation();    
-
-    currCham->x = ( vtransFirst.x() + vtransLast.x() ) / 2.0;
-    currCham->y = ( vtransFirst.y() + vtransLast.y() ) / 2.0;
-    currCham->z = ( vtransFirst.z() + vtransLast.z() ) / 2.0;
+    currCham->x = ( currGapArray[0].x + currGapArray[nGap-1].x ) / 2.0;
+    currCham->y = ( currGapArray[0].y + currGapArray[nGap-1].y ) / 2.0;
+    currCham->z = ( currGapArray[0].z + currGapArray[nGap-1].z ) / 2.0;
 
     log << MSG::DEBUG 
         << " chamber average of first and last gas gaps reported at x="
         << currCham->x << "mm y= " << currCham->y 
         << "mm z="  << currCham->z << "mm" << endreq;
 
-    // get ILVolume pointer
-    const ILVolume *firstLogVol = muGapFirst->geometry()->lvolume();
-    const ILVolume *lastLogVol = muGapLast->geometry()->lvolume();
-    // Get the solid
-    const ISolid *firstSoild = firstLogVol->solid();
-    const ISolid *lastSoild = lastLogVol->solid();
-    // check these really are boxes (they ought to be!)
-    const SolidBox *firstBox = dynamic_cast<const SolidBox *>(firstSoild);
-    const SolidBox *lastBox = dynamic_cast<const SolidBox *>(lastSoild);
-    if( (!firstBox) || (!lastBox) ){
-      log << MSG::ERROR << "Could not cast gas gap solids to box" 
-          << endreq;
-      return StatusCode::FAILURE;
-    }
+    currCham->dx = currGapArray[0].dx;
+    currCham->dy = currGapArray[0].dy;
+    currCham->dz = (fabs( currGapArray[0].z - currGapArray[nGap-1].z ) /2.0) +
+      currGapArray[0].dz;
     
-    currCham->dx = firstBox->xHalfLength();
-    currCham->dy = firstBox->yHalfLength();
-    currCham->dz = (fabs( vtransLast.z() - vtransFirst.z() ) +
-                    firstBox->zHalfLength() + lastBox->zHalfLength()) /2.0;
-
     log << MSG::DEBUG 
         << " chamber size x/2=" << currCham->dx << "mm "
         << "y/2 =" << currCham->dy << "mm "
         << "z/2 =" << currCham->dz << "mm " 
         << endreq;
   }
-
-  x = currCham->x;
-  y = currCham->y;
-  z = currCham->z;
-  deltax = currCham->dx;
-  deltay = currCham->dy;
-  deltaz = currCham->dz;
-
+  
+  if( -1 == gapNum ){
+    x = currCham->x;
+    y = currCham->y;
+    z = currCham->z;
+    deltax = currCham->dx;
+    deltay = currCham->dy;
+    deltaz = currCham->dz;
+  }else{
+    x = currGapArray[gapNum].x;
+    y = currGapArray[gapNum].y;
+    z = currGapArray[gapNum].z;
+    deltax = currGapArray[gapNum].dx;
+    deltay = currGapArray[gapNum].dy;
+    deltaz = currGapArray[gapNum].dz;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -765,13 +891,15 @@ StatusCode MuonTileIDXYZ::getXYZLogical(const MuonTileID& tile,
   return StatusCode::SUCCESS;
 }  
 
-StatusCode MuonTileIDXYZ::locateChamberFromXYZ( const int& station,
-                                                const int& region,
-                                                const int& quarter,
-                                                const double& x,
-                                                const double& y,
-                                                const double& z,
-                                                MuonTileID& tile){
+
+StatusCode MuonTileIDXYZ::locateGasGapFromXYZ( const int& station,
+                                               const int& region,
+                                               const int& quarter,
+                                               const double& x,
+                                               const double& y,
+                                               const double& z,
+                                               MuonTileID& tile,
+                                               DeMuonGasGap* &pGasGap){
   MsgStream log(msgSvc(), name());
   // OK this is the sledgehammer approach (try everything until it works)
 
@@ -855,23 +983,77 @@ StatusCode MuonTileIDXYZ::locateChamberFromXYZ( const int& station,
           xTile = (2*MuonGeometry::chamberGridX[region]) - (1+ix);
           yTile = iy - (2*MuonGeometry::chamberGridY[region]);
         }  
-        // copy to pass back to calling routine
-        tile = MuonTileID(station,
-                          region,
-                          0,
-                          MuonLayout(MuonGeometry::chamberGridX[region],
-                                     MuonGeometry::chamberGridY[region]),
-                          region,
-                          quarter,
-                          xTile,
-                          yTile);
-        return StatusCode::SUCCESS;
+
+        // locate the correct GasGap object
+        int nGap;
+        if( 2 > region ){
+          nGap = 4;
+        }else {
+          if(station < 3){
+            nGap = 4;
+          }else{
+            nGap = 2;
+          }
+        }
+        int iGap;
+        for(iGap = 0 ; iGap < nGap ; iGap++){
+
+          double gapX,gapY,gapZ;
+          double gapDx,gapDy,gapDz;
+
+          sc = getXYZGasGap(station,region,nCham,iGap,
+                            gapX,gapDx,gapY,gapDy,gapZ,gapDz);
+          if(!sc.isSuccess()){
+            log << MSG::ERROR
+                << "Could not get GasGap: " <<iGap 
+                << " in chamber: " << nCham 
+                << " in station " << station
+                << " region " << region
+                << endreq;
+            return sc;
+          }
+          if( (fabs(x-gapX) < 0.1 + gapDx) &&
+              (fabs(y-gapY) < 0.1 + gapDy) &&
+              (fabs(z-gapZ) < 0.1 + gapDz) ) {
+            // also have the correct gasGap!
+
+            // copy to pass back to calling routine
+            tile = MuonTileID(station,
+                              region,
+                              iGap,
+                              MuonLayout(MuonGeometry::chamberGridX[region],
+                                         MuonGeometry::chamberGridY[region]),
+                              region,
+                              quarter,
+                              xTile,
+                              yTile);               
+            if( 0 == region ){
+              pGasGap = gapR1[station][nCham-1][iGap].pGasGap;
+            }else if( 1 == region ){
+              pGasGap = gapR2[station][nCham-1][iGap].pGasGap;
+            }else if( 2 == region ){
+              if(station < 3){
+                pGasGap = gapR3MWPC[station][nCham-1][iGap].pGasGap;
+              }else{
+                pGasGap = gapR3RPC[station-3][nCham-1][iGap].pGasGap;
+              }
+            }else {
+              if(station < 3){
+                pGasGap = gapR4MWPC[station][nCham-1][iGap].pGasGap;
+              }else{
+                pGasGap = gapR4RPC[station-3][nCham-1][iGap].pGasGap;
+              }
+            }
+            return StatusCode::SUCCESS;
+          }
+        }
       }
     }
   }
   // if we got here no chamber was found
   // make an invalid tile to indicate this to the calling routine
   tile = MuonTileID();
+  pGasGap = 0;
   return StatusCode::SUCCESS;
 }
     

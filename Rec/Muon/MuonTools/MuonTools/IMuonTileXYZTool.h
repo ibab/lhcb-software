@@ -1,4 +1,4 @@
-// $Id: IMuonTileXYZTool.h,v 1.1.1.1 2002-03-15 15:58:17 dhcroft Exp $
+// $Id: IMuonTileXYZTool.h,v 1.2 2002-03-20 18:07:53 dhcroft Exp $
 #ifndef MUONTOOLS_IMUONTILEXYZTOOL_H 
 #define MUONTOOLS_IMUONTILEXYZTOOL_H 1
 
@@ -7,6 +7,12 @@
 
 // GaudiKernel
 #include "GaudiKernel/IAlgTool.h"
+
+#include "MuonTools/MuonChannel.h"
+
+//forward definitions
+class DeMuonGasGap;
+
 /** @class IMuonTileXYZTool IMuonTileXYZTool.h MuonTools/IMuonTileXYZTool.h
  *  
  *  Interface for the tools to convert MuonTileID to coordinates 
@@ -34,20 +40,29 @@ public:
                                  double& y, double& deltay,
                                  double& z, double& deltaz) = 0;
 
-  /// Calculate the MuonTileID of the chamber containing x,y,z (in mm)
-  virtual StatusCode calcChamberTile(const double& x, 
-                                     const double& y, 
-                                     const double& z, 
-                                     MuonTileID& tile) = 0;
-  
-  /** Calculate the MuonTileID of the muon pad: gives correct layer
+  /// locate the MuonTileID of the chamber containing x,y,z (in mm)
+  virtual StatusCode locateChamberTile(const double& x, 
+                                       const double& y, 
+                                       const double& z, 
+                                       MuonTileID& tile) = 0;
+
+  /// locate the MuonTileID of the chamber containing x,y,z (in mm)
+  /// and get the associated gas gap pointer
+  virtual StatusCode locateChamberTileAndGap(const double& x, 
+                                             const double& y, 
+                                             const double& z, 
+                                             MuonTileID& tile,
+                                             DeMuonGasGap* &pGasGap) = 0;
+
+  /** Calculate the position of the Muon front end Channel
    *  containing x,y,z (in mm)
    */
-  virtual StatusCode calcPadTile(const double& x, 
-                                 const double& y, 
-                                 const double& z,
-                                 const MuonLayout& padLayout,
-                                 MuonTileID& tile) = 0;
+  virtual StatusCode locateFEFromXYZ(const double& x, 
+                                     const double& y, 
+                                     const double& z, 
+                                     MuonTileID &chamber,
+                                     std::vector<MuonChannel> &muonChannels,
+                                     DeMuonGasGap* &pGasGap) = 0;
 protected:
 
 private:
