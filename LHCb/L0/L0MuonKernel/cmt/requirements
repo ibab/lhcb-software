@@ -1,13 +1,14 @@
 
 package L0MuonKernel
 
-version v1r1
+version v2r1p1
 
 branches cmt doc src L0MuonKernel
 
 use MuonTools       v3r* Muon
 use L0Event         v14r* Event
-use L0mConf         v2r*  L0
+#use L0mConf         v2r*  L0
+use L0mConf         v*  L0
 
 include_dirs $(L0MUONKERNELROOT)
 

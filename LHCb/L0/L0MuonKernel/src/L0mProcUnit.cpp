@@ -39,19 +39,15 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
 
   m_cu->setParent(this);
   m_cu->setPU(puNode.id());
-  
 
-  // m_l0b = new BuildL0BufferUnit();
-  //m_l0b->setParent(this);
-  //addUnit(l0b, "l0buf");
-  //m_l0b->setPU(puNode.id());
 
   int sta;
 
+  log << MSG::DEBUG << endreq;
   m_formatting = new FormattingUnit();
   addUnit(m_formatting);
 
-  log << MSG::DEBUG << "Setting OL's" << endreq;
+
   
   for ( sta = 0; sta < 5; sta++) {
    
@@ -60,10 +56,11 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
     int olcounter = 0;
     std::vector<L0MTile>::iterator ilm;
     for ( ilm = ols.begin(); ilm != ols.end(); ilm++ ) {
+      std::vector<L0MTile> tmpv = ilm->tiles();
+      std::vector<L0MTile>::iterator itmpv ;
       std::vector<MuonTileID> tlist ;
       std::vector<MuonTileID>::iterator itlist;
-       std::vector<L0MTile> tmpv = ilm->tiles();
-       std::vector<L0MTile>::iterator itmpv ;
+      
 
        for (itmpv = tmpv.begin(); itmpv != tmpv.end(); itmpv++){
          if ((*itmpv).isMuonTile()){
@@ -78,9 +75,7 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
        }
 
       int bits = tlist.size();
-      for (itlist =tlist.begin(); itlist < tlist.end(); itlist++){
-        //std::cout<< "\n TEST"  << *itlist ;
-      }
+
       
       char buf[4096];
       char* format = "OL_%d_Q%d_%s_%d";
@@ -90,10 +85,11 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
           
       reg->setType("InputfieldOL");
       itlist = tlist.begin();
-      reg->setType(sta, (*itlist).region());      
       
       reg->setTileVector(tlist);     
       
+      reg->setTag(tmpv);
+            
       char bufalias[4096];
       char* alias = "OL_%d_(Q%d,R%d,%d,%d)";     
           
@@ -102,13 +98,20 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
       
       int testalias=0;
       testalias = rfactory->createAlias(buf,bufalias);
-      //std::cout << "alias for Registers" << " "  << bufalias;
+      log << MSG::DEBUG << "name for Register" <<" " << buf <<  endreq;
+      log << MSG::DEBUG << "alias for Register" <<" " << bufalias <<  endreq;
+      log << MSG::DEBUG << "tiles in reg" <<" " <<  endreq;
+      for (itlist =tlist.begin(); itlist < tlist.end(); itlist++){
+        log<< MSG::DEBUG << " "  << (*itlist).quarter() << " "
+                                 << (*itlist).region()  << " " 
+                                 << (*itlist).nX() << " "
+                                 << (*itlist).nY() << endreq;
+      }
+
       addInputRegister(reg);
       m_cu->addInputRegister(reg); 
       m_formatting->addInputRegister(reg);
      
-      //m_l0b->addInputRegister(reg);
-      
       olcounter++;
       
       
@@ -120,11 +123,11 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
   
   
   //======== Setting neighbours  =================
-  //
+
   enum Function {Horizontal, Vertical, Crossing, Backplane};
-  //enum Ways {From, To};
+
   Function func;
-  //Ways way;
+
   std::vector<MuonTileID>::iterator ilist;
   char buf[4096];
   char bufnamefunc[4096];
@@ -152,15 +155,17 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
     std::vector<MuonTileID> listIn = puNode.pus(bufnamefunc,"From");
     for (ilist= listIn.begin(); ilist!= listIn.end(); ilist++){
       for (int sta =0; sta<5; sta++){
-        std::vector<L0MTile> tiles= puNode.tiles(bufnamefunc, "From",
+        std::vector<L0MTile> tilesIn= puNode.tiles(bufnamefunc, "From",
                                             *ilist, sta);
 
         std::vector<L0MTile>::iterator itiles;
         std::vector<MuonTileID> listoftiles;
-        for (itiles = tiles.begin(); itiles != tiles.end(); itiles++){
+
+        for (itiles = tilesIn.begin(); itiles != tilesIn.end(); itiles++){
             listoftiles.push_back(*itiles); 
-            
         }
+        
+        
         
 
         int bits = listoftiles.size();
@@ -176,23 +181,36 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
           
           TileRegister* regIn= rfactory->createTileRegister(buf,bits);
           regIn->setTileVector(listoftiles);
-          itiles = tiles.begin();
-          if ( ! (*itiles).isMuonTile()){
-            regIn->setTypeMT(sta);
-          }
-          else {
-            regIn->setType(sta, (*itiles).region());
-          }
-          
+         
+          regIn->setTag(tilesIn);
+
           regIn->setType("InputfieldNeigh");
+
+          log << MSG::DEBUG << "name for Register" <<" " << buf <<  endreq;
+          log << MSG::DEBUG << "tiles in input neigh reg" <<" " <<  endreq;
+          //log << MSG::DEBUG << "type of reg" <<" " << regIn->type()<<  endreq;
+          std::vector<MuonTileID>::iterator imtl;
+          for (imtl =listoftiles.begin(); imtl < listoftiles.end(); imtl++){
+            log<< MSG::DEBUG << " "  << (*imtl).quarter() << " "
+               << (*imtl).region()  << " " 
+               << (*imtl).nX() << " "
+               << (*imtl).nY() << endreq;
+          }
+
           addInputRegister(regIn);	
           m_cu->addInputRegister(regIn);
+
           //m_l0b->addInputRegister(regIn);
         }
         
-        }
-       
+        
+      }
+      
+      
+      
     }
+    
+    
     
     
     // ==============  Outputs  ============================
@@ -206,7 +224,7 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
         for (itiles = tiles.begin(); itiles != tiles.end(); itiles++){
            
             listoftilesout.push_back(*itiles);
-          
+            log << MSG::DEBUG << " list of tags"<< " " << (*itiles).tag() <<  endreq;                      
             
         }
 
@@ -225,14 +243,22 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
           TileRegister* nreg= rfactory->createTileRegister(buf,bitsout);
           nreg->setTileVector(listoftilesout);
 
-          itiles = tiles.begin();
-          if ( ! (*itiles).isMuonTile()){
-            nreg->setTypeMT(sta);
-          } else {
-            nreg->setType(sta, (*itiles).region());
-          }
+
+          nreg->setTag(tiles);
+          
           
           addOutputRegister(nreg);	  
+
+          log << MSG::DEBUG << "name for Register" <<" " << buf <<  endreq;
+          log << MSG::DEBUG << "tiles in output neigh reg" <<" " <<  endreq;
+          std::vector<MuonTileID>::iterator imtlout;
+          for (imtlout =listoftilesout.begin(); imtlout < listoftilesout.end(); imtlout++){
+            log<< MSG::DEBUG << " "  << (*imtlout).quarter() << " "
+               << (*imtlout).region()  << " " 
+               << (*imtlout).nX() << " "
+               << (*imtlout).nY() << endreq;
+          }
+
           m_formatting->addOutputRegister(nreg);
         }
         
@@ -248,9 +274,16 @@ L0Muon::L0mProcUnit::L0mProcUnit(L0MPuNodeBase& puNode,
     
   }
   
+  
   //======= end neighbours ========================
   
+
+  
+  
 }
+
+
+
 
 
 
@@ -266,6 +299,7 @@ L0Muon::L0mProcUnit::~L0mProcUnit() {
 }
 
 void L0Muon::L0mProcUnit::execute() {
+
 
   if ( ! m_units.empty() ) {
     std::map<std::string,L0Muon::Unit*>::iterator iu;

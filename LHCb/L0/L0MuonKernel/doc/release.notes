@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================= L0MuonKernel v2r1p1 2004-07-12 ========================
+! 2004-03-24 - Luisanna Tocco
+ - bug fixed in data flow management (XBan, YCorner, YBand):
+	 Modified files: L0mProcUnit, FormattingUnit, CablingUnit, TileRegister
+ - Added functions for analysis 
+
 !======================= L0MuonKernel v1r1 2004-03-24 ========================
 ! 2004-03-24 - Luisanna Tocco
  - Fix a compiler warning

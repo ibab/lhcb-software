@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.2 2004-03-11 15:57:55 ltocco Exp $
+// $Id: TileRegister.h,v 1.3 2004-07-12 16:09:00 ltocco Exp $
 
 #ifndef L0MUONKERNEL_TILEREGISTER_H
 #define L0MUONKERNEL_TILEREGISTER_H     1
@@ -16,6 +16,7 @@
 #include <vector>
 #include "L0mConf/L0MPuNodeBase.h"
 #include "L0mConf/L0MTile.h"
+#include "L0mConf/L0MBase.h"
 #include "L0MuonKernel/Register.h"
 #include "MuonKernel/MuonTileID.h"
 #include "MuonKernel/MuonSystemLayout.h"
@@ -45,15 +46,37 @@ public:
   std::string Type() { return m_fieldtype;}
 
   void setType(int sta, int nreg);
+
+  void setTypePad (int sta) {  m_type = PAD ; }
+  void setTypeStrip (int sta){ m_type = STRIP ;
+  }
+  
   
 
   void setTile(MuonTileID & id);
+  void setTile(MuonTileID & id, MsgStream * log);
+  
+
+  std::vector<MuonTileID> Pads() { return m_pads; }
+  boost::dynamic_bitset<> TilesTag() { return m_tilestag ;}
+  boost::dynamic_bitset<> StripsTag() { return m_stripstag ;}
+  
+  void setTag(std::vector<L0MTile> & tiles);
+  
+  void makePads();
+  
+    
+  
+    
 
 private:
 
   std::vector<MuonTileID> m_ids ;  // MuonTileIDs mapping
+  std::vector<MuonTileID> m_pads;
   RegisterType m_type;
   std::string m_fieldtype ;
+  boost::dynamic_bitset<> m_tilestag ;
+  boost::dynamic_bitset<> m_stripstag ;
 
 };
 

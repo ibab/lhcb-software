@@ -11,10 +11,15 @@ L0Muon::CandidateSearch::CandidateSearch(){
   m_extraM1[4] = -7 ;
   m_extraM1[5] = +11 ;
   m_extraM1[6] = -11 ;
-  m_extraM1[7] = +18;
-  m_extraM1[8] = -18;
-  m_extraM1[9] = +21;
-  m_extraM1[10]= -21;
+  m_extraM1[7] = +14 ;
+  m_extraM1[8] = -14 ;
+  m_extraM1[9] = +18;
+  m_extraM1[10] = -18;
+  m_extraM1[11] = +21;
+  m_extraM1[12]= -21;
+  m_extraM1[13] = +25;
+  m_extraM1[14]= -25;
+
   
   
   m_offset =0;
@@ -25,8 +30,15 @@ L0Muon::CandidateSearch::CandidateSearch(){
   }
 
   for (int sta =0; sta< 5; sta++){
-    m_hitpos[sta] = 999; 
+    if (sta ==2){
+      m_hitpos[sta] = 0;
+    }else {
+      m_hitpos[sta] = 999;
+    }
+    
   }
+  
+  m_useful = false;
   
 }
 
@@ -56,18 +68,25 @@ void L0Muon::CandidateSearch::searchInSta(int sta,
         m_found[sta]=false;	
       }
     }
-    if (m_found[sta]==false){
-    }
+    //if (m_found[sta]==false){
+    //}
+    
   }
+  
   // Station 1
   if (sta ==0) {
+   
     bool val = false ;
+    
+    
     for (boost::dynamic_bitset<>::size_type i=0; i < bits.size(); i++){
       val = bits.test(i);
       if (val == true){
         m_found[sta]=true;
         m_offsetM1 = i;
+      
         m_hitpos[sta] = i;
+       
         break;
       }
     }
@@ -81,8 +100,9 @@ void L0Muon::CandidateSearch::searchInSta(int sta,
   // Stations 4 and 5
   if (sta ==3 || sta == 4){
     anyBitsInSta(sta, bits);
+    bool val = false ;
     for (boost::dynamic_bitset<>::size_type i=0; i < bits.size(); i++){
-      bool val = bits.test(i);
+      val = bits.test(i);
       if (val == true){
         m_hitpos[sta] = i;
         break;
@@ -135,6 +155,7 @@ bool L0Muon::CandidateSearch::CandidateFound(){
   
   return m_isFull;
 }
+
 
 
  
@@ -280,9 +301,33 @@ void L0Muon::CandidateSearch::resetBits()
   }
   
   
+  //m_offset =0;
+  //m_offsetM1 =0;
+  
+  //for (int sta =0; sta< 5; sta++){
+  //m_found[sta] = false; 
+  //}
+
+  //for (int sta =0; sta< 5; sta++){
+  //m_hitpos[sta] = 999; 
+  //}
+  
+  //m_useful = 0;
+
 }
 
 
+
+int L0Muon::CandidateSearch::getHitPos(int sta)
+{
+  int hitpos =999;
+  for (int i =0; i<5; i++){
+    if ( i == sta){
+      hitpos= m_hitpos[i];
+    }
+  }
+  return hitpos;
+}
 
 
 

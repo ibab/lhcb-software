@@ -30,19 +30,20 @@ class CandidateSearch {
   void anyBitsInSta(int sta, boost::dynamic_bitset<> & bits);
   int makeExtrapolation(MsgStream * log );
   bool CandidateFound();
+  bool usefulEvent();
   bool hitFoundInSta(int sta) { return m_found[sta];}
   void setCandidateAddrs(std::pair<int, int> & sd); 
   nbitset getCandidateAddrs();
   nbitset getAddrs(int sta) ;
 
-  int getHitPos(int sta){ return m_hitpos[sta];}
+  int getHitPos(int sta);//{ return m_hitpos[sta];}
   
   void resetBits();
   
   
  private: 
   int m_extraM1[11];
-  bool m_found[5], m_isFull;
+  bool m_found[5], m_isFull, m_useful;
   int m_hitpos[5];
   int m_offset, m_offsetM1 ;
   nbitset m_addrM3, m_addrM2, m_addrM1, m_addr;

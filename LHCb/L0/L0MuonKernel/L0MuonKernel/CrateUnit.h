@@ -44,10 +44,25 @@ namespace L0Muon {
     
     void fillCandidates(L0MuonCandidate * cand);
     std::vector<L0MuonCandidate*> candidates(){ return m_candidates; }
+ 
+    //void fillOffset(std::pair<L0MuonCandidate*, int[5]> off);
+    void fillOffset(std::pair<L0MuonCandidate*, std::vector<int> > off);
+    void fillOffsetyp(std::pair<L0MuonCandidate*, std::vector<int> > off);
+    void fillOffsetym(std::pair<L0MuonCandidate*, std::vector<int> > off);
+
+    std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > 
+    offsets();//{ return m_offsets; }
+
+    //std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > 
+    //offsetsyp(){ return m_offsetsyp; }
     
+    //std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > 
+    //offsetsym(){ return m_offsetsym; }
+   
     void setStatus(int st){ m_status = st; }
     
     void sortCandidates(MsgStream * log);
+    void sortOffsets(MsgStream * log);
     unsigned int sortl0mcStatus() { return m_status; }
     
     
@@ -65,6 +80,12 @@ namespace L0Muon {
 
     std::vector<L0MuonCandidate*>   m_candidates;
 
+    //std::vector<std::pair<L0MuonCandidate*,int[5]> > m_offsets;
+    std::vector<std::pair<L0MuonCandidate*,std::vector<int> > > m_offsets;
+    
+    //std::vector<std::pair<L0MuonCandidate*,std::vector<int> > > m_offsetsyp;
+    //std::vector<std::pair<L0MuonCandidate*,std::vector<int> > > m_offsetsym;
+
     // Muon geometry tool
     IMuonTileXYZTool *m_iTileXYZTool;
 
@@ -80,7 +101,9 @@ namespace L0Muon {
       return fabs(lmc1->pt()) > fabs(lmc2->pt());
     }
   }; 
-    
+
+
+
 
 
 };  // namespace L0Muon

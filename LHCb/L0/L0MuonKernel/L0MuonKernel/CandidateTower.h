@@ -36,6 +36,12 @@ class CandidateTower {
   void setBit(int sta, std::vector<boost::dynamic_bitset<> > table,
               int maxXFoi, int maxYFoi,
               int offset);  
+
+  void setOrderedBit(int sta, std::vector<boost::dynamic_bitset<> > table,
+              int maxXFoi, int maxYFoi,
+              int offset);  
+
+
   //boost::dynamic_bitset<> getBit(int sta);
   boost::dynamic_bitset<> getBit();
   //void reset(int sta);
@@ -48,6 +54,9 @@ class CandidateTower {
   typedef std::pair<int, int> seedind ; 
 
   void setPadIndex(int sta, int maxXfoi, int maxYFoi, int offset, int ind);
+  void setOrderedPadIndex(int sta, 
+                          int maxXfoi, int maxYFoi, int offset, int ind, 
+                          MsgStream * log);
   seedind getPadIndex(int sta) { return m_xyindex[sta];}
   
   

@@ -25,11 +25,10 @@ L0Muon::Register* L0Muon::RegisterFactory::createRegister
   std::map<std::string,L0Muon::Register*>::iterator ind;
   ind = m_registers.find(name);
   if (ind != m_registers.end() ) {
-    // std::cout << "\nRegister already created";
-    
+       
     return (*ind).second;
   } else {
-    //std::cout << "\nRegister not already created";
+    
     Register* pr= new Register(size);
     pr->setName(name);
     m_registers[name] = pr;
@@ -43,15 +42,12 @@ L0Muon::TileRegister* L0Muon::RegisterFactory::createTileRegister
   std::map<std::string,L0Muon::Register*>::iterator ind;
   ind = m_registers.find(name);
   if (ind != m_registers.end() ) {
-    //std::cout << "Found register " 
-    //<< (*ind).first << " " << name << std::endl;
     return dynamic_cast<L0Muon::TileRegister*>((*ind).second);
   } else {
     TileRegister* pr= new TileRegister(size);
     pr->setName(name);
     m_registers[name] = pr;
-    //std::cout << "Made register " << name << " " << pr << std::endl;
-      //return dynamic_cast<L0Muon::TileRegister*>(pr);
+   
     return pr;
   }  
 }
@@ -62,8 +58,7 @@ L0Muon::TileRegister* L0Muon::RegisterFactory::searchTileRegister
   std::map<std::string,L0Muon::Register*>::iterator ind;
   ind = m_registers.find(name);
   if (ind != m_registers.end() ) {
-    //std::cout << "Found register " 
-    //<< (*ind).first << " " << name << std::endl;
+   
     m_found = true;
     
    return dynamic_cast<L0Muon::TileRegister*>((*ind).second);

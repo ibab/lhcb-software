@@ -2,18 +2,26 @@
 #include <boost/dynamic_bitset.hpp>
 #include "L0MuonKernel/CandidateTower.h"
 
-#include <algorithm>  // For make_pair
+#include <algorithm>  
 
 L0Muon::CandidateTower::CandidateTower(){
   m_seed = seedind(0,0);
   m_flag = false ;
+  
+  for (int sta =0; sta<5;sta++){
+    m_xyindex[sta] =seedind(999,999);
+  }
   
 }
 
 L0Muon::CandidateTower::CandidateTower(std::pair<int, int> seedindex){
   m_seed = seedindex;
   m_flag = false ;
+  for (int sta =0; sta<5;sta++){
+    m_xyindex[sta] =seedind(0,0);
+  }
 }
+
 
 L0Muon::CandidateTower::~CandidateTower(){
 }
@@ -48,9 +56,15 @@ setBit(int sta, std::vector<boost::dynamic_bitset<> >  table, int maxXFoi,
   
  
   int size = (2*m_xFoi[sta]+1)*(2*m_yFoi[sta]+1);
+ 
   boost::dynamic_bitset<> bits(size);
+ 
+  //for (boost::dynamic_bitset<>::size_type k =0; k<bits.size();k++){
+  //bits[k]=0;
+    
+  //}
   m_bits = bits;
-     if (m_yFoi[sta] == 0){
+  if (m_yFoi[sta] == 0){
         bits[0]= table[y][x];
         if (bits.size()>1) {
           bits[1]=table[y][x+1];
@@ -59,46 +73,234 @@ setBit(int sta, std::vector<boost::dynamic_bitset<> >  table, int maxXFoi,
                i<= (bits.size()-2)/2; i++){     
             if ( (x+i+1)< 24+2*xfoi ) {
               bits[2*i+1]=table[y][x+i+1];
-            }
+            
+        }
             // if ( (x-i-1)>=0 && (x-i-1)< 999999){
             if ( (x-i-1)< 999999){
             bits[2*i+2]=table[y][x-i-1];
+           
               
             } else {
             
                 // else if  ( (x-i-1)<0 && (x-i-1)> 999999) {
                 bits[2*i+2]=0;
+                
               }
               
           }
           
         }
-        
+     
+        for (boost::dynamic_bitset<>::size_type i =0; i< bits.size(); i++){
+          m_bits[i] =bits[i];
+        }
+   
      } else  if (m_yFoi[sta] > 0){
 
        unsigned int maxxfoi = m_xFoi[sta];
        for (boost::dynamic_bitset<>::size_type i=0; i<(2*maxxfoi+1); i++){
-         bits[i] = table[y][x- maxxfoi+i];
+       //for (boost::dynamic_bitset<>::size_type i=0; i<(2*m_xFoi[sta]+1); i++){
+         if ( y< 4+2*m_yFoi[sta] ) {
+           //bits[i] = table[y][x- maxxfoi+i];
+           bits[i] = table[y][x- m_xFoi[sta]+i];
+         }
          
        }
-       for (boost::dynamic_bitset<>::size_type i=(2*maxxfoi+1); 
-            i< 2*(2*maxxfoi+1); i++){
-         bits[i] = table[y-1][x - m_xFoi[sta]+i-(2*maxxfoi+1)];
+       //for (boost::dynamic_bitset<>::size_type i=(2*maxxfoi+1);
+       //     i< 2*(2*maxxfoi+1); i++){
+       for (boost::dynamic_bitset<>::size_type i=(2*m_xFoi[sta]+1);
+            i< 2*(2*m_xFoi[sta]+1); i++){
+         bits[i] = table[y-1][x - m_xFoi[sta]+i-(2*m_xFoi[sta]+1)];
 
        }
-       for (boost::dynamic_bitset<>::size_type i=2*(2*maxxfoi+1); 
-            i< 3*(2*maxxfoi+1); i++){
-         bits[i] = table[y+1][x - maxxfoi+i-2*(2*maxxfoi+1)];
+       for (boost::dynamic_bitset<>::size_type i=2*(2*m_xFoi[sta]+1); 
+            i< 3*(2*m_xFoi[sta]+1); i++){
+         bits[i] = table[y+1][x - m_xFoi[sta]+i-2*(2*m_xFoi[sta]+1)];
 
          
        }
        
-     }
+     
+     
      for (boost::dynamic_bitset<>::size_type i =0; i< bits.size(); i++){
        m_bits[i] =bits[i];
      }
+     
+     }
+     
+}
+
+
+//=========== ordered bits in M4-M5 =========================
+void  L0Muon::CandidateTower::
+setOrderedBit(int sta, std::vector<boost::dynamic_bitset<> >  table, 
+              int maxXFoi, int maxYFoi, int offset){
+  unsigned int x, y;
+
+  unsigned int xfoi = maxXFoi;
+  unsigned int yfoi = maxYFoi;
+  
+  x = m_seed.first + xfoi +offset;
+  y = m_seed.second + yfoi;  
+  
+  int size = (2*m_xFoi[sta]+1)*(2*m_yFoi[sta]+1);
+  boost::dynamic_bitset<> tmpbits(size);
+  
+  //for (boost::dynamic_bitset<>::size_type k =0; k<tmpbits.size();k++){
+  //tmpbits[k]=1;
+    
+  //}
+  
+
+  //unsigned int maxxfoi = m_xFoi[sta];
+  tmpbits[0]= table[y][x];
+  
+ 
+  tmpbits[1]=table[y][x+1];
+
+  tmpbits[2]=table[y][x-1];
+
+
+  for (int i=1; i<(2*m_xFoi[sta]+1); i++){
+    if ( y< 4+2*m_yFoi[sta] ) {
+      if (tmpbits.size()>1) {
+        
+        if ( i< ((2*m_xFoi[sta]+1)-1)/2){
+          
+          if ( (x+i+1)< 24+2*xfoi ) {
+            tmpbits[2*i+1]=table[y][x+i+1];
+                        
+           
+          }
+          if ( (x-i-1)< 999999){
+            tmpbits[2*i+2]=table[y][x-i-1];
+           
+          } else if ( (x-i-1)> 999999) {
+            tmpbits[2*i+2]=0;
+           
+          }
+          
+          
+            
+          
+        }
+        
+          
+          
+          
+          
+          
+          
+        
+      }
+      
+        
+        
+        
+      
+    }
+    
+      
+      
+    
+  }
+  
+    
+          
+
+  tmpbits[2*m_xFoi[sta]+1]= table[y-1][x];
+
+  tmpbits[1+2*m_xFoi[sta]+1]=table[y-1][x+1];
+ 
+  tmpbits[2+2*m_xFoi[sta]+1]=table[y-1][x-1];
+ 
+  
+  for (int i=1;  i<(2*m_xFoi[sta]+1); i++){
+    
+    if ( i< ((2*m_xFoi[sta]+1)-1)/2){
+      if ( (x+i+1) < 24+2*xfoi ) {
+        tmpbits[2*i+1+2*m_xFoi[sta]+1]=table[y-1][x+i+1];
+                     
+      }
+            
+      if ( (x-i-1)< 999999){
+        tmpbits[2*i+2+2*m_xFoi[sta]+1]=table[y-1][x-i-1];
+               
+      } else  if ( (x-i-1) > 999999) {
+        tmpbits[2*i+2+2*m_xFoi[sta]+1]=0;
+      }
+      
+      
+    }
+    
+          
+    
+  }
+  
+      
+  tmpbits[2*(2*m_xFoi[sta]+1)]= table[y+1][x];
+    
+  tmpbits[1+2*(2*m_xFoi[sta]+1)]=table[y+1][x+1];
+ 
+  tmpbits[2+2*(2*m_xFoi[sta]+1)]=table[y+1][x-1];
+ 
+  
+        
+  for (int i=1; i<(2*m_xFoi[sta]+1); i++){
+        
+    if ( i< ((2*m_xFoi[sta]+1)-1)/2){
+      if ( (x+i+1)< 24+2*xfoi ) {
+        
+        tmpbits[2*i+1+2*(2*m_xFoi[sta]+1)]=table[y+1][x+i+1];
+      
+      }
+      if ( (x-i-1)< 999999){
+        tmpbits[2*i+2+2*(2*m_xFoi[sta]+1)]=table[y+1][x-i-1]; 
+       
+      } 
+      else if  ( (x-i-1)> 999999) {
+        tmpbits[2*i+2+2*(2*m_xFoi[sta]+1)]=0;
+       
+        
+      }
+    }
+    
+    
+    
+      
+       
+    
+  }
+   
+  
+  m_bits = tmpbits;
+  for (boost::dynamic_bitset<>::size_type j=0; j< tmpbits.size(); j++){
+    m_bits[j]= tmpbits[j];
+  }
+  
+  
+
   
 }
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+  
+  
+//=======================================================
 
 //boost::dynamic_bitset<>  L0Muon::CandidateTower::getBit(int sta){
 boost::dynamic_bitset<>  L0Muon::CandidateTower::getBit(){
@@ -107,7 +309,11 @@ boost::dynamic_bitset<>  L0Muon::CandidateTower::getBit(){
 
 //void L0Muon::CandidateTower::reset(int sta){   
 void L0Muon::CandidateTower::reset(){   
-  m_bits.clear();
+  m_bits.reset();
+
+  for (int sta =0; sta<5;sta++){
+    m_xyindex[sta] =seedind(999,999);
+  }
 }
 
 
@@ -119,55 +325,67 @@ void L0Muon::CandidateTower::drawBits(int sta, MsgStream * log) {
   for ( boost::dynamic_bitset<>::size_type ir = 0; ir < m_bits.size(); ir++) {
     *log << MSG::DEBUG << " " << m_bits[ir] ;
   }
+  *log << MSG::DEBUG << endreq ;
+  
+
 }
 
 
  void L0Muon::CandidateTower::setPadIndex(int sta, int maxXFoi, int maxYFoi, 
                                           int offset, int ind)
 {
+  
   int xfoi = maxXFoi;
   int yfoi = maxYFoi;
   
   int x = m_seed.first + xfoi +offset;
   int y = m_seed.second + yfoi;
 
-  if (sta ==2){
+  int index = ind;
+  
+   if (sta ==2){
     m_xyindex[sta]= std::make_pair(m_seed.second, m_seed.first);
+
   } 
   else {
     if (m_yFoi[sta] == 0){   
-      if (ind ==0)
+      if (index ==0) {
         m_xyindex[sta] = std::make_pair(y,x);
-  
-      if (ind >0){
-        if (ind %2 ==0){
-          int xtmp = x -(ind/2);
+       
+      }
+        
+      if (index >0){
+        if (index %2 ==0){
+          int xtmp = x -(index/2);
           m_xyindex[sta] = std::make_pair(y,xtmp);
+         
         }
-        if (ind %2 !=0){
-          int xtmp = x+ (ind+1)/2;
+        if (index %2 !=0){
+          int xtmp = x+ (index+1)/2;
           
           m_xyindex[sta] = std::make_pair(y,xtmp);
+         
         }
         
       }
       
     }
     
+    
   
     if (m_yFoi[sta] > 0){
-    //sta 4 & 5
-      if (ind >=0 && ind <(2* m_xFoi[sta]+1)){
-        int xtmp = ind;
-        m_xyindex[sta] = std::make_pair(y-1,xtmp);
+      //sta 4 & 5
+      if (index >=0 && index <(2* m_xFoi[sta]+1)){
+        int xtmp =x+index;
+        m_xyindex[sta] = std::make_pair(y-1,xtmp-m_xFoi[sta]);
       }
-      if (ind >=(2* m_xFoi[sta]+1) && ind < 2* (2* m_xFoi[sta]+1)){
-        int xtmp = ind -2 *m_xFoi[sta];
-        m_xyindex[sta] = std::make_pair(y,xtmp);
+      if (index >=(2* m_xFoi[sta]+1) && index < 2* (2* m_xFoi[sta]+1)){
+        int xtmp = x+index -(2 *m_xFoi[sta]+1);
+        m_xyindex[sta] = std::make_pair(y-2,xtmp-m_xFoi[sta]);
       }
-      if (ind >=(2*(2* m_xFoi[sta]+1)) && ind < 3* (2* m_xFoi[sta]+1)){
-        int xtmp = ind -2*(2 *m_xFoi[sta]);
-        m_xyindex[sta] = std::make_pair(y,xtmp);
+      if (index >=(2*(2* m_xFoi[sta]+1)) && index < 3* (2* m_xFoi[sta]+1)){
+        int xtmp = x+index -2*(2 *m_xFoi[sta]+1);
+        m_xyindex[sta] = std::make_pair(y,xtmp-m_xFoi[sta]);
       }
       
     
@@ -176,5 +394,135 @@ void L0Muon::CandidateTower::drawBits(int sta, MsgStream * log) {
     
     
   }
+
+}
+
+
+// Ordered bits also in M4&M5
+
+void L0Muon::CandidateTower::setOrderedPadIndex(int sta, 
+                                                int maxXFoi, 
+                                                int maxYFoi,   
+                                                int offset, int ind,
+                                                MsgStream * log)
+{
+  
+
+  *log << MSG::DEBUG << "SetOrderedPadIndex" << endreq;
+  int xfoi = maxXFoi;
+  int yfoi = maxYFoi;
+  
+  int x = m_seed.first + xfoi +offset;
+  int y = m_seed.second + yfoi;
+
+  int index = ind;
+  
+  
+ 
+  if (sta ==2){
+    m_xyindex[sta]= std::make_pair(m_seed.second, m_seed.first);
+  } 
+  else {
+    if (m_yFoi[sta] == 0){   
+      if (index ==0) {
+        m_xyindex[sta] = std::make_pair(y-yfoi,x);
+       
+      }
+      
+      if (index >0){
+        if (index %2 ==0){
+          int xtmp = x -(index/2);
+          m_xyindex[sta] = std::make_pair(y-yfoi,xtmp);
+         
+        }
+        if (index %2 !=0){
+          int xtmp = x+ (index+1)/2;
+          
+          m_xyindex[sta] = std::make_pair(y-yfoi,xtmp);
+         
+        }
+        
+      }
+      
+    }
+    
+    
+    
+    
+  
+    if (m_yFoi[sta] > 0){
+ 
+      if (index ==0) {
+        m_xyindex[sta] = std::make_pair(y-yfoi,x);
+
+      } 
+      else if (index<(2*m_xFoi[sta]+1) && index>0){
+
+        if (index %2 ==0){
+          int xtmp = x -(index/2);
+          m_xyindex[sta] = std::make_pair(y-yfoi,xtmp);
+          
+        }
+        if (index %2 !=0){
+          int xtmp = x+ (index+1)/2;
+          m_xyindex[sta] = std::make_pair(y-yfoi,xtmp);
+
+          
+        }
+        
+      }
+      
+      else if (index == (2*m_xFoi[sta]+1)){
+
+        m_xyindex[sta] = std::make_pair(y-yfoi-1,x);
+
+      }
+      else if (index >(2*m_xFoi[sta]+1) && index<2*(2*m_xFoi[sta]+1)){
+
+        if ((index-2*m_xFoi[sta]+1) %2 ==0){
+          int xtmp = x -((index-2*m_xFoi[sta]+1))/2;
+          m_xyindex[sta] = std::make_pair(y-yfoi-1,xtmp);
+         
+        }
+        if ((index-2*m_xFoi[sta]+1) %2 !=0){
+          int xtmp = x+ (index-(2*m_xFoi[sta]+1)+1)/2;
+          m_xyindex[sta] = std::make_pair(y-yfoi-1,xtmp);
+  
+         
+        }
+      }
+
+      else if (index == 2*(2*m_xFoi[sta]+1)){
+  
+        m_xyindex[sta] = std::make_pair(y,x);
+  
+      }
+      else if (index >2*(2*m_xFoi[sta]+1) && index<3*(2*m_xFoi[sta]+1)){
+  
+        if ((index-2*(2*m_xFoi[sta]+1)) %2 ==0){
+          int xtmp = x -((index-(2*(2*m_xFoi[sta]+1)))/2);
+          m_xyindex[sta] = std::make_pair(y,xtmp);
+    
+        }
+        if ((index-2*(2*m_xFoi[sta]+1)) %2 !=0){
+          int xtmp = x+ (index-2*(2*m_xFoi[sta]+1)+1)/2;
+          m_xyindex[sta] = std::make_pair(y,xtmp);
+            
+        }
+        
+      }
+      
+           
+    
+      
+    }
+    
+    
+    
+    
+  }
+  
   
 }
+
+

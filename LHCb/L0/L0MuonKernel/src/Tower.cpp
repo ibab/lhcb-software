@@ -45,6 +45,8 @@ L0Muon::Tower::Tower() {
   m_pt =0.;
   m_theta =0.;
   m_phi = 0.;
+
+  m_usefulevent = 0;
   
 
 }
@@ -67,7 +69,6 @@ void L0Muon::Tower::reset() {
 
 void L0Muon::Tower::setBit(MsgStream *log, int sta, int row, int col) {
 
-  
   int xFoI = m_maxXFoI[sta];
   int yFoI = m_maxYFoI[sta];
   
@@ -153,7 +154,9 @@ void L0Muon::Tower::drawStation(int sta, MsgStream * log) {
 
   int ir;
   std::string blanc(offset,' ');
-  *log << MSG::DEBUG << "Station: " << " " << (sta+1) << endreq;
+  //*log << MSG::DEBUG << "Station: " << " " << (sta+1) << endreq;
+
+  *log << MSG::DEBUG << "Station: " << " " << (sta) << endreq;
   for( ir = 0; ir < rows; ir++) {
     for( int ic = 0; ic < col; ic++) {
       //*log << MSG::INFO << blanc << stmap[ir][ic] ;
@@ -171,7 +174,9 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream * log){
        << " " << "R" << puID.region() << ","
        <<"Q" << puID.quarter() <<","
        << puID.nX() << "," 
-       << puID.nY() << endreq;
+       << puID.nY() <<" " <<
+       m_xfoi[0] <<" " 
+       <<  m_yfoi[0] << endreq;
   int ncand =0;
 
   int nseed =0;
@@ -181,6 +186,8 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream * log){
   m_clean.cleanSeed(m_bittable[2]);
 
   m_puCandidates.clear();
+  m_offForCand.clear();
+  
   int row =0;
   for (irow =m_bittable[2].begin(); irow !=m_bittable[2].end();irow++){
     for (boost::dynamic_bitset<>::size_type icol = 0; 
@@ -189,26 +196,47 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream * log){
 
         nseed++;
         int col =icol;
-        std::pair<int, int> sd = std::make_pair(col,row); 
+        std::pair<int, int> sd = std::make_pair(col,row);
+        for (int ista =0; ista<5;ista++){
+          m_ctower.reset();
+        }
+        
         m_ctower.setSeed(sd);
-
+        
          //Start Search for seed sd
+
+        *log << MSG::DEBUG << "start search for seed " << " " << sd.first << " " << sd.second << endreq;
+        
          CandidateSearch * pCs = new CandidateSearch();
          pCs->resetBits();
+       
          for (int ista =4 ; ista >= 0; ista--){
            m_ctower.setFoi(ista, m_xfoi[ista], m_yfoi[ista]);
+                   
            int offset=0;
            if (ista ==0) { 
              offset = pCs->makeExtrapolation(log) ;
            } 
-           m_ctower.setBit(ista, m_bittable[ista], m_maxXFoI[ista],
-                           m_maxYFoI[ista], offset);
-           //m_ctower.drawBits(ista, log);
+           if (m_maxYFoI[ista]==0){
+             m_ctower.setBit(ista, m_bittable[ista], m_maxXFoI[ista],
+                             m_maxYFoI[ista], offset);
+           } else {
+             m_ctower.setOrderedBit(ista, m_bittable[ista], m_maxXFoI[ista],
+                                  m_maxYFoI[ista], offset);
+           }
+           
+           m_ctower.drawBits(ista, log);
+           drawStation(ista, log);
            ///boost::dynamic_bitset<> bits = m_ctower.getBit(ista);
            boost::dynamic_bitset<> bits = m_ctower.getBit();
            pCs->searchInSta(ista, bits); 
-           m_ctower.setPadIndex(ista,m_maxXFoI[ista], m_maxYFoI[ista],
-                                offset, pCs->getHitPos(ista));
+           //m_ctower.setPadIndex(ista,m_maxXFoI[ista], m_maxYFoI[ista],
+           //                   offset, pCs->getHitPos(ista));
+          
+             
+           m_ctower.setOrderedPadIndex(ista,m_maxXFoI[ista], m_maxYFoI[ista],
+                                offset, pCs->getHitPos(ista), log);
+ 
            if (pCs->hitFoundInSta(ista) == false) {
              break ;
            }
@@ -216,56 +244,199 @@ void L0Muon::Tower::processTower(MuonTileID & puID, MsgStream * log){
            
            
          }
+         
+         
 
          if (pCs->CandidateFound()) {
            *log << MSG::DEBUG << "candidate found for seed " 
                 << " " << sd.first << " " << sd.second << endreq;
            
+           *log << MSG::DEBUG << "Tower for PU" 
+                << " " << "R" << puID.region() << ","
+                <<"Q" << puID.quarter() <<","
+                << puID.nX() << "," 
+                << puID.nY() <<" " << endreq;
+
            ncand = ncand++;
-           pCs->setCandidateAddrs(sd);
+           //pCs->setCandidateAddrs(sd);
            ptcalc(log);
-           boost::dynamic_bitset<> bitsset = pCs->getCandidateAddrs();
+           //boost::dynamic_bitset<> bitsset = pCs->getCandidateAddrs();
            L0MuonCandidate * mycand =createCandidate(m_pt, m_theta ,m_phi, 
                                                      L0Muon::OK);
          
 
            m_puCandidates.push_back(mycand);
-            
-            
-            
+
+           //offset for ntuple
+           std::vector<int> offsetx;
+           std::pair<int, int> tmp[5];
            
-         }
-         
-         
-         
-         
-         
+           for (int ist = 0; ist <5; ist++){
+             *log << MSG::DEBUG << "Filling offsets for sta" << " " 
+                  << ist << endreq;
+             //*log << MSG::DEBUG << "maxXFoi" <<" " << m_maxXFoI[ist]
+             //   << endreq;
+             //*log << MSG::DEBUG << "maxYFoi" <<" " << m_maxYFoI[ist]
+             //   << endreq;
+             //*log << MSG::DEBUG << "xFoi" <<" " << m_xfoi[ist]
+             //   << endreq;
+             //*log << MSG::DEBUG << "xFoi" <<" " << m_yfoi[ist]
+             //   << endreq;
+
+
+             if ( ist ==0){
+               tmp[ist] = m_ctower.getPadIndex(ist);
+               int extrap = pCs->makeExtrapolation(log) ;
+               offsetx.push_back(tmp[ist].second -
+                                     (sd.first+m_maxXFoI[ist]));
+               
+               offsetx.push_back(extrap);
+               *log << MSG::DEBUG << "pad x index" <<" " << 
+                 tmp[ist].second << endreq;
+
+               *log << MSG::DEBUG << "pad y index" <<" " << 
+                 tmp[ist].first << endreq;
+
+               *log << MSG::DEBUG << "offset" <<" " << 
+                 tmp[ist].second -(sd.first+m_maxXFoI[ist])<< endreq;  
+     
+
+             }
+             
+             if (ist == 1){
+               tmp[ist] = m_ctower.getPadIndex(ist);
+               offsetx.push_back(tmp[ist].second -
+                                 (sd.first+m_maxXFoI[ist]));
+               *log << MSG::DEBUG << "pad x index" <<" " << 
+                 tmp[ist].second << endreq;
+
+               *log << MSG::DEBUG << "pad y index" <<" " << 
+                 tmp[ist].first << endreq;
+
+               *log << MSG::DEBUG << "offset" <<" " << 
+                 tmp[ist].second -(sd.first+m_maxXFoI[ist])<< endreq;
+               
+             }
+             
+           
+
+
+             if (ist ==2){
+               offsetx.push_back(0);
+              
+             }
+             
+             if (ist == 3 || ist ==4){
+
+               tmp[ist] = m_ctower.getPadIndex(ist);
+               int offy =tmp[ist].first -(sd.second);
+               *log << MSG::DEBUG << "tmp.first" <<" " << tmp[ist].first
+                    << endreq; 
+               *log << MSG::DEBUG << "sd.second" <<" " << sd.second
+                    << endreq;
+               *log << MSG::DEBUG << "offsety" <<" " << 
+                 tmp[ist].first -sd.second<< endreq;
+               //hit nella stessa linea del seme
+               if (offy == 0){
+                 offsetx.push_back(tmp[ist].second - 
+                                   (sd.first+m_maxXFoI[ist]));
+                     *log << MSG::DEBUG << "hit pos in bitset" << " " << 
+                          pCs->getHitPos(ist) << endreq;
+                     
+                     *log << MSG::DEBUG << "pad x index" <<" " << 
+                       tmp[ist].second << endreq;
+
+                     *log << MSG::DEBUG << "pad y index" <<" " <<
+                       tmp[ist].first << endreq;
+
+                     *log << MSG::DEBUG << "offset" <<" " << 
+                       tmp[ist].second -(sd.first+m_maxXFoI[ist])<< endreq;
+
+
+                 
+                 offsetx.push_back(999);
+                 offsetx.push_back(999);
+                 
+               } else if (offy > 0){
+               offsetx.push_back(999);
+               offsetx.push_back(999);
+
+               offsetx.push_back(tmp[ist].second -
+                               (sd.first+m_maxXFoI[ist]));
+
+            
+               *log << MSG::DEBUG << "hit pos in bitset" << " " << 
+                 pCs->getHitPos(ist) << endreq;
+               
+               *log << MSG::DEBUG << "pad x index" <<" " << 
+                 tmp[ist].second << endreq;
+
+               *log << MSG::DEBUG << "pad y index" <<" " << 
+                 tmp[ist].first << endreq;
+
+               *log << MSG::DEBUG << "offset" <<" " << 
+                 tmp[ist].second -(sd.first+m_maxXFoI[ist])<< endreq;
+
+               
+
+               } else if (offy < 0){
+                 offsetx.push_back(999);
+                 offsetx.push_back(tmp[ist].second -
+                                 (sd.first+m_maxXFoI[ist]));
+                 
+
+                 offsetx.push_back(999);
+
+                 *log << MSG::DEBUG << "hit pos in bitset" << " " << 
+                   pCs->getHitPos(ist) << endreq;
+                                 
+                 *log << MSG::DEBUG << "pad x index" <<" " << 
+                   tmp[ist].second << endreq;
+            
+                 *log << MSG::DEBUG << "pad y index" <<" " << 
+                   tmp[ist].first << endreq;
+                
+                 *log << MSG::DEBUG << "offset" <<" " << 
+                   tmp[ist].second -(sd.first+m_maxXFoI[ist])<< endreq;
+               }
+               
+               
+             
+             
+               
+             }
+             
+           }
+           
+                     
+           m_offsetx =std::make_pair(mycand, offsetx);
+           
+           m_offForCand.push_back(m_offsetx);
+                   
+           
+         }      
  
          delete pCs;
          
          
       }
        
-       
-      
+         
     }
-    
-    
-    
-    
-    
     
     
     row++;
     
   }
   
-  
-  
-  
 
   m_ncand = ncand;
 }
+
+  
+
+
+
 
 
 
@@ -306,8 +477,9 @@ double L0Muon::Tower::ptcalc(MsgStream * log) {
 
   
   std::pair<int, int> yxM1= m_ctower.getPadIndex(0);
+ 
   MuonTileID p1 = getPadIdMap(0, yxM1);
-  
+   
   MuonSystemLayout  layout=
     MuonSystemLayout(MuonStationLayout(MuonLayout(24,8)),
                      MuonStationLayout(MuonLayout(48,8)),
@@ -319,13 +491,26 @@ double L0Muon::Tower::ptcalc(MsgStream * log) {
   std::vector<MuonTileID>::iterator itmp;
   if ( ! layout.isValidID(p1)){
     *log << MSG::DEBUG <<"layout for p1 is not valid" << endreq;
+
+    *log << MSG::DEBUG <<"prima di tiles" << endreq;
     tmp = layout.tiles(p1);
+    *log << MSG::DEBUG <<"dopo tiles" << endreq;
     double mx =0.;
     double my =0.;
     int count = tmp.size();
+    *log << MSG::DEBUG <<"tmp size" << " " << count << endreq;
     
-    for (itmp = tmp.begin(); itmp != tmp.end(); itmp ++){
+    //scode = m_iTileXYZTool->calcTilePosL0Muon(p1,x1,dx,y1,dy,z,dz);
+    //*log << MSG::DEBUG << "x1 " << " " << x1 << endreq;
+    for (itmp = tmp.begin(); itmp != tmp.end(); itmp++){
       MuonTileID p = layout.contains(*itmp);
+     
+      
+      *log << MSG::DEBUG <<"tiles contained in layout" << endreq;
+      *log << MSG::DEBUG <<"quarter"<< " " << p.quarter() << endreq;
+      *log << MSG::DEBUG <<"region"<< " " << p.region() << endreq;
+      *log << MSG::DEBUG <<"nX"<< " " << p.nX() << endreq;
+      *log << MSG::DEBUG <<"nY"<< " " << p.nY() << endreq;
       scode = m_iTileXYZTool->calcTilePos(p,x1,dx,y1,dy,z,dz);  
       mx += x1;
       my += y1;
@@ -333,26 +518,33 @@ double L0Muon::Tower::ptcalc(MsgStream * log) {
     }
     x1 = mx/count;
     y1 = my/count;
+    *log << MSG::DEBUG << "x1 " << " " << x1 << endreq;
     
   } else {
+    *log << MSG::DEBUG <<"layout for p1 is valid" << endreq;
     scode = m_iTileXYZTool->calcTilePos(p1,x1,dx,y1,dy,z,dz);
   }
   
 
   *log << MSG::DEBUG << "xy " << yxM1.first << " " << yxM1.second  << " " 
-       << "MUONTILE ID IN M1" << p1 << endreq;
+       << "MUONTILE ID IN M1 Q" << p1.quarter() << " R" << p1.region() << "  nx" << p1.nX() << " ny" << p1.nY()<< endreq;
+  //<< "MUONTILE ID IN M1" << p1 << endreq;
 
   std::pair<int, int> yxM2= m_ctower.getPadIndex(1);
   MuonTileID p2 = getPadIdMap(1, yxM2);
 
   if ( ! layout.isValidID(p2)){
+    *log << MSG::DEBUG <<"layout for p2 is not valid" << endreq;
     tmp = layout.tiles(p2);
     double mx =0.;
     double my =0.;
     int count = tmp.size();
+
+    *log << MSG::DEBUG <<"tmp size" << " " << count << endreq;
     
     for (itmp = tmp.begin(); itmp != tmp.end(); itmp ++){
-      scode = m_iTileXYZTool->calcTilePos(p2,x2,dx,y,dy,z,dz);  
+      MuonTileID p = layout.contains(*itmp);
+      scode = m_iTileXYZTool->calcTilePos(p,x2,dx,y,dy,z,dz);  
       mx += x2;
       my += y;
       
@@ -366,14 +558,14 @@ double L0Muon::Tower::ptcalc(MsgStream * log) {
 
 
   *log << MSG::DEBUG << "xy " << yxM2.first << " " << yxM2.second  << " " 
-       << "MUONTILE ID IN M2" << p2 << endreq;
+       << "MUONTILE ID IN M2 Q" << p2.quarter() << " R" << p2.region() << "  nx" << p2.nX() << " ny" << p2.nY()<< endreq;
+  //<< "MUONTILE ID IN M2" << p2 << endreq;  
 
-  
   std::pair<int, int> yxM3= m_ctower.getPadIndex(2);
   MuonTileID p3 = getPadIdMap(2, yxM3);
 
   *log << MSG::DEBUG << "xy " << yxM3.first << " " << yxM3.second  << " " 
-       << "MUONTILE ID IN M3" << p3 << endreq;
+       << "MUONTILE ID IN M3 Q" << p3.quarter() << " R" << p3.region() << "  nx" << p3.nX() << " ny" << p3.nY()<< endreq;
 
 
   x1 /= 10.;
@@ -407,9 +599,9 @@ double L0Muon::Tower::ptcalc(MsgStream * log) {
   m_theta = v.theta();
   m_phi = v.phi();
   
-  *log << MSG::DEBUG <<"Momentum" <<  " " <<  m_pt << endreq;
-  *log << MSG::DEBUG << "Theta" << " " << m_theta << endreq;
-  *log << MSG::DEBUG << " Phi" << " " << m_phi << endreq;
+  *log << MSG::INFO <<"Momentum" <<  " " <<  m_pt << endreq;
+  *log << MSG::INFO << "Theta" << " " << m_theta << endreq;
+  *log << MSG::INFO << " Phi" << " " << m_phi << endreq;
 
   return m_pt;
 

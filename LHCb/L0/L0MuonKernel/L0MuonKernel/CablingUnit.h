@@ -1,4 +1,4 @@
-// $Id: CablingUnit.h,v 1.2 2004-03-11 15:57:55 ltocco Exp $
+// $Id: CablingUnit.h,v 1.3 2004-07-12 16:09:00 ltocco Exp $
 #ifndef L0MUONKERNEL_CABLINGUNIT_H
 #define L0MUONKERNEL_CABLINGUNIT_H     1
 
@@ -57,6 +57,12 @@ private:
   std::vector<MuonTileID> m_pads;
   std::vector<L0MuonCandidate*> m_cand;
   int m_status;
+  //for offsets in ntuple
+  //std::vector<std::pair<L0MuonCandidate*, int[5]> > m_offForCand;
+  std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offForCand;
+  //std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offypForCand;
+  //std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offymForCand;
+ //
   
 };
 

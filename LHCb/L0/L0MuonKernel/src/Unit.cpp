@@ -74,33 +74,26 @@ void L0Muon::Unit::dumpRegisters(MsgStream * log) {
 
   std::map<std::string,L0Muon::Register*>::iterator ir;
   
-  *log << MSG::DEBUG << "\nInput Registers" << endreq;
-  //std::cout << "\nInput registers: " << std::endl;
+  
   int ic = 1;
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++) {
-    *log << MSG::DEBUG << " " << (*ir).first ;
-    //std::cout << (*ir).first << ": " ;   
+   
     boost::dynamic_bitset<> bits = (*ir).second->getBitset();
     for (boost::dynamic_bitset<>::size_type i =0; i < bits.size();i++){
-      *log << MSG::DEBUG << bits[i];
-      //std::cout <<bits[i];
+     
     }
-    *log << MSG::DEBUG << endreq;
+    //*log << MSG::DEBUG << endreq;
     ic++;
   }
-  *log << MSG::DEBUG << "\nOutput registers" << endreq;
-  //std::cout << "\nOutput registers: " << std::endl;
+ 
   ic = 1;
   for ( ir = m_outputs.begin(); ir != m_outputs.end(); ir++) {
-    *log << MSG::DEBUG << " " << (*ir).first ;
-    //std::cout << (*ir).first << ": " ;
+   
     boost::dynamic_bitset<> bits = (*ir).second->getBitset();
     for (boost::dynamic_bitset<>::size_type i =0; i < bits.size();i++){
-      *log << MSG::DEBUG << bits[i] ;
-      //std::cout <<bits[i];
+     
     }
-    *log << MSG::DEBUG << endreq;
-    //std::cout <<"\n";   
+  
     ic++; 
   }
 }
@@ -115,9 +108,7 @@ void L0Muon::Unit::execute() {
 
     }
   }  
-  
-  //int inputs = m_inputs.size();
-  //int outputs = m_outputs.size();
+
 }
 
 void L0Muon::Unit::initialize() {

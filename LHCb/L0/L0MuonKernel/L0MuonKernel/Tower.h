@@ -1,4 +1,4 @@
-// $Id: Tower.h,v 1.3 2004-03-12 17:57:24 cattanem Exp $
+// $Id: Tower.h,v 1.4 2004-07-12 16:09:00 ltocco Exp $
 
 #ifndef L0MUONKERNEL_TOWER_H
 #define L0MUONKERNEL_TOWER_H     1
@@ -80,7 +80,12 @@ namespace L0Muon {
     // Processing with creating L0MuonCandidate
     L0MuonCandidate* createCandidate(double p, double th, double phi,int flag);
     std::vector<L0MuonCandidate*> puCandidates(){ return m_puCandidates;}
-
+    
+    //for offsets in ntuple
+    std::vector< std::pair<L0MuonCandidate*, std::vector<int> > > candOffset(){ return m_offForCand;}
+    // std::vector< std::pair<L0MuonCandidate*, std::vector<int> > > candOffypset(){ return m_offypForCand;}
+    //std::vector< std::pair<L0MuonCandidate*, std::vector<int> > > candOffymset(){ return m_offymForCand;}
+      
     //std::vector<Register*> puRegisters(){ return m_puRegisters;}
     
       
@@ -95,6 +100,9 @@ namespace L0Muon {
     void  setMuonToolInTower(IMuonTileXYZTool* pmto) { m_iTileXYZTool = pmto; }
 
     int numberOfCand(){ return m_ncand ;}
+
+    bool usefulEvent() {return m_usefulevent;}
+    
     
     //std::vector<boost::dynamic_bitset<> > pts() { return m_pts;}
     //std::vector<boost::dynamic_bitset<> > addrs() {return m_addrs;}
@@ -137,7 +145,19 @@ namespace L0Muon {
     //std::vector< double > m_pts;
     //std::vector<boost::dynamic_bitset<> > m_addrs, m_pts;
     
+    // for offset in ntuple
+    //std::pair<L0MuonCandidate*, int[5]> m_offsetx;
+    std::pair<L0MuonCandidate*, std::vector<int> > m_offsetx;
+    //std::pair<L0MuonCandidate*, std::vector<int> > m_offsetyp;
+    //std::pair<L0MuonCandidate*, std::vector<int> > m_offsetym;
+
+    //std::vector<std::pair<L0MuonCandidate*, int[5]> > m_offForCand;
+    std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offForCand;
+    //std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offypForCand;
+    //std::vector<std::pair<L0MuonCandidate*, std::vector<int> > > m_offymForCand;   
+ //
     
+    bool m_usefulevent;
     
 
 };
