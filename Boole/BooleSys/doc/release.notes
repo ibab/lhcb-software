@@ -7,7 +7,7 @@
 !======================== BooleSys v6r2 2004-09-10 ========================
 ! 2004-09-10 - Marco Cattaneo
  - Packages removed:  VeloDAQ, STDAQ, MuonDAQ (Moved to LHCbSys)
- - Packages modified: CaloMonitor v2r2p1, CaloDigit v2r7
+ - Packages modified: CaloMonitor v2r2p1, CaloDigit v2r7, L0MuonTrigger v2r2
 
 !======================== BooleSys v6r1 2004-07-29 ========================
 ! 2004-07-29 - Marco Cattaneo

@@ -3,10 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v6r2>2004-09-08 Boole v6r2</A></H1><PRE>
+</PRE><H1><A NAME=v6r2>2004-09-14 Boole v6r2</A></H1><PRE>
 
 - Modified functionality
   . New test input data files taken from DC04 (v200402.opts)
+
+- New tuning
+  . Use new Pt kick value in L0 Muon trigger (L0MuonTrigger v2r2)
 
 - Bug fixes
   . Workaround for core dump on exit() (GaudiPoolDb v1r8p1)
