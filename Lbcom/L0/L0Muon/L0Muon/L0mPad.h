@@ -1,4 +1,4 @@
-// $Id: L0mPad.h,v 1.6 2002-05-07 07:17:04 atsareg Exp $ 
+// $Id: L0mPad.h,v 1.7 2003-12-10 16:06:44 cattanem Exp $ 
 
 #ifndef L0MUON_L0MPAD_H     
 #define L0MUON_L0MPAD_H     1 
@@ -10,7 +10,7 @@
 class MsgStream;
 class MuonLayout;
 
-/** @class L0mPad L0mPad L0Muon/L0mPad.h
+/** @class L0mPad L0mPad.h L0Muon/L0mPad.h
 
    Muon system pads to be used in the L0 trigger logic
    

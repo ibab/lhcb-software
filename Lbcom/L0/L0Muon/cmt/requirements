@@ -1,6 +1,6 @@
 package L0Muon
 
-version v6r5p1
+version v6r6
 
 branches src doc options
 
@@ -14,14 +14,5 @@ library L0MuonLib ../src/Lib/*.cpp
 library L0Muon ../src/component/*.cpp
 
 # define link options
-apply_pattern package_Clinkopts
-apply_pattern package_Llinkopts
-
-apply_pattern packageShr  
-apply_pattern linker_path
-
-private
-
-apply_pattern package_Cshlibflags
-apply_pattern package_Lshlibflags  
-macro_append L0MuonLib_shlibflags " $(L0Event_linkopts) $(MuonKernel_linkopts) $(GaudiKernel_linkopts)"
+apply_pattern component_library library=L0Muon
+apply_pattern linker_library    library=L0MuonLib

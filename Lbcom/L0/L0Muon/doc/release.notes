@@ -1,6 +1,10 @@
-!  $Id: release.notes,v 1.26 2003-06-23 14:02:13 cattanem Exp $
+!  $Id: release.notes,v 1.27 2003-12-10 16:06:44 cattanem Exp $
 Package L0Muon
 Package manager: A.Tsaregorodtsev
+
+!========================= L0Muon v6r6 2003-12-10 ========================
+! 2003-12-10 - Marco Cattaneo
+ - Fix for Gaudi v13
 
 !======================== L0Muon v6r5p1 2003-06-23 ========================
 ! 2003-06-23 - A.Tsaregorodtsev
