@@ -59,6 +59,7 @@ public:
     declareProperty("DecayDescriptor", m_decayDescriptor="not specified");
     declareProperty("AvoidSelResult", m_avoidSelResult = false);
     declareProperty("PrintSelResult", m_printSelResult = true);
+
   };
 
   virtual ~DVAlgorithm( ){ }; ///< Destructor
@@ -117,7 +118,6 @@ protected:
 
 private:
 
-  
   /// Concrete type Name of MassConstrained vertex to use (Property)
   std::string m_typeVertexFit;
   /// Concrete type of VertexFitter to use (Property)
@@ -148,7 +148,10 @@ private:
   bool m_setFilterCalled;
   /// Have Tools been already loaded?
   bool m_toolsLoaded;
+  /// Count number of times selection filter is used 
+  /// (= number of times alg is called)
   int m_countFilterWrite ;
+  /// Number of passing events
   int m_countFilterPassed ;
   
   

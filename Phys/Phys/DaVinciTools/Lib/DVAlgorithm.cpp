@@ -191,12 +191,14 @@ StatusCode DVAlgorithm::sysExecute () {
     
     if (filterPassed()) m_countFilterPassed++;
     m_countFilterWrite++;
+    msg << MSG::DEBUG << "wrote " << filterPassed() << " -> " << 
+      m_countFilterWrite << " & " << m_countFilterPassed << endreq ;
 
     existingSelRess->insert(myResult);
     msg << MSG::DEBUG << "Number of objects in existingSelRes: "
         << existingSelRess->size() << endreq;
-    
-  }
+  } else msg << MSG::DEBUG << "Avoiding selresult" << endreq ;
+  
   
   // Reset for next event
   m_setFilterCalled = false;
@@ -212,6 +214,9 @@ StatusCode DVAlgorithm::sysInitialize () {
   
   if( isInitialized()) return StatusCode::SUCCESS;
  
+  if (m_avoidSelResult) msg << MSG::WARNING << 
+                          "Avoiding SelResult" << endreq ;
+
   // Load tools
   StatusCode scLT = loadTools();
   if(scLT.isFailure()) {
@@ -227,15 +232,12 @@ StatusCode DVAlgorithm::sysInitialize () {
   else{
     msg << MSG::INFO << "Decay Descriptor: " << m_decayDescriptor << endreq;
   }
-
-  
-
   return sc;
 }
 //=============================================================================
 StatusCode DVAlgorithm::sysFinalize () {
   
-  if (m_printSelResult){
+  if ((m_printSelResult) && (!m_avoidSelResult)){
     
     MsgStream msg( msgSvc(), name() );
     if (m_countFilterWrite < m_countFilterPassed ){
@@ -278,4 +280,3 @@ void DVAlgorithm::imposeOutputLocation
   return;
   
 }
-

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.88 2004-05-11 16:01:24 pkoppenb Exp $
+! $Id: release.notes,v 1.89 2004-05-14 09:18:07 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-05-15 - P. Koppenburg
+ - Lib/DVAlgorithm.cpp
+   . Some more debugging messages
+   
 ! 2004-05-11 - P. Koppenburg
  - Lib/DVAlgorithm.cpp
    . Move all executable code from DVAlgorithm.h to DVAlgorithm.cpp.
