@@ -2,8 +2,13 @@
 ! Responsible : Chris Parkes
 
 
+! 2002-10-16 - Chris Parkes
+ -VeloDataProcessor change digitise routine to return a float.
+ mean noise is then stored as a float ADC, charge of digit as an int.
+ this then has the effect that signal to noise cuts in the clustermaker 
+ behave as expected.
 
-! 2002-10-15
+! 2002-10-15 - Chris Parkes
  -VeloSim reject all FEs below charge threshold. +ve or -ve.
   
 !===================== VeloAlgorithms v2r2 2002-10-11 =====================
