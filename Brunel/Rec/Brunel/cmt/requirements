@@ -113,7 +113,7 @@ use LongTrack           v1r3    Tr
 use TrFitter            v3r5    Tr
 use TrExtrapolator      v2r3    Tr
 use TrTools             v2r2    Tr
-use Seeding	        v2r2    Tr
+use Seeding	        v2r3    Tr
 use TrMatching          v2r3    Tr
 use TrCleanEx           v2r2    Tr
 use TrIntraPR		v2r2	Tr

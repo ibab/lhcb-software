@@ -14,6 +14,7 @@
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
 MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
 #include "$CALODIGITROOT/options/Brunelv248r0.opts"
+seedEvent.dbaseVersion = 248;
 #pragma print on
 //---------------------------------------------------------------------------
 // Add here any job specific options, to over-ride previously defined options
