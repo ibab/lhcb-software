@@ -4,6 +4,20 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v12r6 2005-01-18 ===================
+! 2005-01-18 - P. Koppenburg
+  DoxyGen now in DaVinciSys for compatibility with other projects
+  Detailed release.notes now in DaVinciSys
+  - DoxyFile.cfg
+  - Doxyfooter.html
+  - Doxyheader.html
+  - MainPage.doc
+  - extractdoxy.csh
+  - makedoc
+    . Moved to DaVinciSys
+  - release.notes-detailed
+    . Removed
+
 ! 2004-12-02 - P. Koppenburg
   - doc/extractdoxy.csh
     . Add Gaudi packages to have GaudiAlgorithm, ContainedObject...
