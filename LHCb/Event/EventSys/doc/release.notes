@@ -1,9 +1,14 @@
 package EventSys
 package manager: Marco Cattaneo
 
-! 20020417 - MC EventSys v10r0
+! >>>>>>>>>>>>>>>>>>>>>>>>> EventSys v10r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020430 - MC
+  requirements - Add DbCnv
+
+! 20020417 - MC
   requirements - First version of new Event Model
 
+!===================================================================
 ! 20020114 - MC EventSys v4r0
   requirements - Event Model consistent with Gaudi v9
 
