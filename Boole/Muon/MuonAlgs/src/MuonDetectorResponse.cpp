@@ -53,7 +53,7 @@ void MuonDetectorResponse::initialize(IRndmGenSvc * randSvc,
 
 			MuonChamberResponse* responseOfChamber= new MuonChamberResponse(&m_flatDist,poissonDist,newMean );
 			responseChamber[indexRegion]=responseOfChamber;
-			for(int readout=0;readout<=usefull.getReadoutNumber(indexRegion);readout++){
+			{for(int readout=0;readout<=usefull.getReadoutNumber(indexRegion);readout++){
 			   double min,max; 
          std::vector<double> timeJitterPDF=muReadout->timeJitter( min, max ,  readout);
 			   Rndm::Numbers*	m_time=new Rndm::Numbers;
@@ -72,7 +72,7 @@ void MuonDetectorResponse::initialize(IRndmGenSvc * randSvc,
          MuonPhysicalChannelResponse* response= new
 				 MuonPhysicalChannelResponse(&m_flatDist,&m_gaussDist,m_time,p_electronicNoise,min,max,muReadout, readout );
 				 responseVector[readout][indexRegion]=response;
-			}											
+			}} // for loop, fix for w2k											
   }
 }	 
 MuonDetectorResponse::~MuonDetectorResponse(){
