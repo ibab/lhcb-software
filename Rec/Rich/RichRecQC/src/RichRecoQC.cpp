@@ -1,12 +1,19 @@
-// $Id: RichRecoQC.cpp,v 1.10 2004-07-12 14:32:43 jonrob Exp $
+
+/** @file RichRecoQC.cpp
+ *
+ *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
+ *
+ *  CVS Log :-
+ *  $Id: RichRecoQC.cpp,v 1.11 2004-07-27 13:56:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2002-07-02
+ */
 
 // local
 #include "RichRecoQC.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichRecoQC
-//
-// 2002-07-02 : Chris Jones   Christopher.Rob.Jones@cern.ch
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -30,7 +37,7 @@ RichRecoQC::RichRecoQC( const std::string& name,
 RichRecoQC::~RichRecoQC() {};
 
 // Initialisation
-StatusCode RichRecoQC::initialize() 
+StatusCode RichRecoQC::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecAlgBase::initialize();
@@ -132,7 +139,7 @@ StatusCode RichRecoQC::execute() {
 };
 
 //  Finalize
-StatusCode RichRecoQC::finalize() 
+StatusCode RichRecoQC::finalize()
 {
   // Execute base class method
   return RichRecAlgBase::finalize();

@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2004-07-27 - Chris Jones
+ - Update doxygen documetation
+
 !======================== RichRecQC v1r9 2004-07-22 ========================
 ! 2004-07-22 - Marco Cattaneo
  - Add explicit use of Relations package in requirements

@@ -1,4 +1,16 @@
-// $Id: RichPIDQC.h,v 1.9 2004-06-29 19:39:54 jonesc Exp $
+
+/** @file RichPIDQC.h
+ *
+ *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
+ *
+ *  CVS Log :-
+ *  $Id: RichPIDQC.h,v 1.10 2004-07-27 13:56:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2002-06-13
+ */
+
 #ifndef RICHRECQC_RICHPIDQC_H
 #define RICHRECQC_RICHPIDQC_H 1
 
@@ -36,7 +48,7 @@
  *
  *  Quality control monitor for RichPIDs
  *
- *  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
  */
 
@@ -49,13 +61,13 @@ public:
 
   virtual ~RichPIDQC( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize();    // Algorithm initialization
+  virtual StatusCode execute   ();    // Algorithm execution
+  virtual StatusCode finalize  ();    // Algorithm finalization
 
 private: // definitions
 
-  // tracking MC truth
+  /// tracking MC truth definition
   typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackFitAsct;
 
 private: // methods
@@ -72,9 +84,13 @@ private: // methods
   /// Book MCTruth histograms
   StatusCode bookMCHistograms();
 
-  /// perform c++ gymnastics to get momentum state
-  const TrStateP * getTrStateP( const TrStoredTrack * track,
-                                const double zPos = -999999 ) const;
+  /** Perform C++ gymnastics to get momentum state for a given track
+   *
+   *  @return Pointer to TrStateP at the requested z position
+   */
+  const TrStateP * getTrStateP ( const TrStoredTrack * track, ///< Pointer to a TrStoredTrack
+                                 const double zPos = -999999  ///< z position at which to get the state
+                                 ) const;
 
 private: // data
 
@@ -123,7 +139,7 @@ private: // data
   IHistogram1D* m_deltaLL[Rich::NParticleTypes];  ///< Delta Log-Likelihood
   IHistogram1D* m_deltaLLTrue[Rich::NParticleTypes];  ///< Delta Log-Likelihood true particle hypothesis
   IHistogram1D* m_deltaLLFake[Rich::NParticleTypes];  ///< Delta Log-Likelihood fakeparticle hypothesis
-  
+
   /// dll between types : True type
   IHistogram1D* m_dLLTrue[Rich::NParticleTypes][Rich::NParticleTypes];
   /// dll between types : Fake type
@@ -145,11 +161,11 @@ inline const TrStateP * RichPIDQC::getTrStateP( const TrStoredTrack * track,
   return ( track ? dynamic_cast<const TrStateP*>((const TrState*)track->closestState(zPos)) : 0 );
 }
 
-inline StatusCode RichPIDQC::loadTrackData() 
+inline StatusCode RichPIDQC::loadTrackData()
 {
   SmartDataPtr<TrStoredTracks> tracks( eventSvc(), m_trackTDS );
   m_tracks = tracks;
-  return ( tracks ? StatusCode::SUCCESS : 
+  return ( tracks ? StatusCode::SUCCESS :
            Warning( "Cannot locate TrStoredTracks at " + m_trackTDS ) );
 }
 

@@ -1,4 +1,16 @@
-// $Id: RichRecoQC.h,v 1.4 2003-10-13 16:12:42 jonrob Exp $
+
+/** @file RichRecoQC.h
+ *
+ *  Header file for RICH reconstruction monitoring algorithm : RichRecoQC
+ *
+ *  CVS Log :-
+ *  $Id: RichRecoQC.h,v 1.5 2004-07-27 13:56:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2002-07-02
+ */
+
 #ifndef RICHRECQC_RICHRECOQC_H
 #define RICHRECQC_RICHRECOQC_H 1
 
@@ -46,9 +58,9 @@ public:
 
   virtual ~RichRecoQC( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize();    // Algorithm initialization
+  virtual StatusCode execute   ();    // Algorithm execution
+  virtual StatusCode finalize  ();    // Algorithm finalization
 
 private: // methods
 

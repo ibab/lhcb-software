@@ -1,5 +1,15 @@
-// $Id: RichPIDQC.cpp,v 1.22 2004-07-12 14:32:43 jonrob Exp $
-// Include files
+
+/** @file RichPIDQC.cpp
+ *
+ *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
+ *
+ *  CVS Log :-
+ *  $Id: RichPIDQC.cpp,v 1.23 2004-07-27 13:56:30 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @date   2002-06-13
+ */
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -7,10 +17,6 @@
 // local
 #include "RichPIDQC.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichPIDQC
-//
-// 2002-06-13 : Chris Jones   (Christopher.Rob.Jones@cern.ch)
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -46,7 +52,7 @@ RichPIDQC::RichPIDQC( const std::string& name,
 RichPIDQC::~RichPIDQC() {};
 
 // Initialisation
-StatusCode RichPIDQC::initialize() 
+StatusCode RichPIDQC::initialize()
 {
   // Initialize base class
   const StatusCode sc = RichAlgBase::initialize();
@@ -86,28 +92,28 @@ StatusCode RichPIDQC::initialize()
   if ( m_truth && !bookMCHistograms() ) return StatusCode::FAILURE;
 
   // Initialise summary information
-  for ( int i = 0; i<6; ++i ) { 
+  for ( int i = 0; i<6; ++i ) {
     for ( int j = 0; j<6; ++j ) { m_sumTab[i][j] = 0; }
   }
   m_nEvents[0] = 0;
   m_nEvents[1] = 0;
   m_nTracks[0] = 0;
   m_nTracks[1] = 0;
-  for ( unsigned iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) { 
-    m_trackCount[0][iTk] = 0; 
-    m_trackCount[1][iTk] = 0; 
+  for ( unsigned iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
+    m_trackCount[0][iTk] = 0;
+    m_trackCount[1][iTk] = 0;
   }
-  
+
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
 
-  debug() << " Track types selected   = " << m_trSelector.selectedTrackTypes() 
+  debug() << " Track types selected   = " << m_trSelector.selectedTrackTypes()
           << endreq;
 
   return StatusCode::SUCCESS;
 };
 
-StatusCode RichPIDQC::bookHistograms() 
+StatusCode RichPIDQC::bookHistograms()
 {
   std::string title;
   HYPOTHESIS_NAMES;
@@ -137,7 +143,7 @@ StatusCode RichPIDQC::bookHistograms()
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichPIDQC::bookMCHistograms() 
+StatusCode RichPIDQC::bookMCHistograms()
 {
   std::string title;
   int id;
@@ -186,7 +192,7 @@ StatusCode RichPIDQC::bookMCHistograms()
 }
 
 // Main execution
-StatusCode RichPIDQC::execute() 
+StatusCode RichPIDQC::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -335,7 +341,7 @@ StatusCode RichPIDQC::execute()
 };
 
 //  Finalize
-StatusCode RichPIDQC::finalize() 
+StatusCode RichPIDQC::finalize()
 {
   if ( m_truth && m_finalPrintOut ) {
 
@@ -465,7 +471,7 @@ StatusCode RichPIDQC::finalize()
   return RichAlgBase::finalize();
 }
 
-StatusCode RichPIDQC::loadPIDData() 
+StatusCode RichPIDQC::loadPIDData()
 {
   // Load PIDs
   DataObject *pObject;
