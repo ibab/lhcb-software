@@ -1,5 +1,5 @@
 package BrunelSys
-version v16r0
+version v16r1
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v16r0    Rec
+use Brunel              v16r1    Rec
 
 # Brunel utilities
 use BrunelKernel        v5r1p1   Rec
@@ -17,12 +17,12 @@ use BrunelAlgs          v1r4p1   Rec
 
 # L0 trigger
 use L0Calo              v6r1p1    L0
-use L0Muon              v6r1p1    L0
-use PuVeto              v4r0p1    L0
+use L0Muon              v6r2p1    L0
+use PuVeto              v4r1p1    L0
 use L0DU                v6r1p1    L0
 
 # L1 trigger
-use L1VeloTrack         v3r1p1    L1
+use L1VeloTrack         v3r2p1    L1
 
 # Calorimeter
 use CaloInterfaces      v2r2p1  Calo
@@ -34,33 +34,33 @@ use CaloRec             v2r5p1  Calo
 use CaloTrackTools      v1r4p1  Calo
 
 # Velo
-use VeloAlgorithms      v2r3p1  Velo
+use VeloAlgorithms      v2r4p1  Velo
 
 # Inner Tracker
-use ITAlgorithms        v12r2p1 IT
+use ITAlgorithms        v12r3p1 IT
 use ITCheckers          v1r0p1  IT
 
 # Outer Tracker
-use OTAlgorithms        v12r0p1 OT
+use OTAlgorithms        v12r1p1 OT
 
 # Tracking
-use VeloTrack           v4r1p1  Velo
-use TrCheck             v1r0p1  Tr
+use VeloTrack           v4r2p1  Velo
+use TrCheck             v1r1	Tr
 use LongTrack           v1r2    Tr
 use TrFitter            v3r4    Tr
-use TrExtrapolator      v2r2p1  Tr
+use TrExtrapolator      v2r3p1  Tr
 use TrTools             v2r1    Tr
-use Seeding             v2r1p1  Tr 
-use TrMatching          v2r2p1  Tr
+use Seeding             v2r2p1  Tr 
+use TrMatching          v2r3p1  Tr
 use TrCleanEx           v2r2    Tr
 use TrIntraPR           v2r2    Tr
 use UpstreamPR          v2r3p1  Tr
 use VeloTT              v1r1    Tr
 
 # Muon
-use MuonAlgs            v2r2p1  Muon
-use MuonRec             v2r2p1  Muon
-use MuonID              v3r3    Muon
+use MuonAlgs            v3r0p1  Muon
+use MuonRec             v2r3    Muon
+use MuonID              v3r4    Muon
 
 # Rich
 use RichMonitor         v1r2p1  Rich
