@@ -4,6 +4,10 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!=========================== GaussSys v11r1 2003-07-01 ===============
+! 2003-07-01 - Florence RANJARD
+ - use GEANT4 v5r2, Gauss v11r1
+
 !========================== GaussSys v11r0 2003-06-19 =================
 ! 2003-06-19 - Florence RANJARD
  - use Gauss v11r0, GaussTools v8r0, SimSvc v3r0, GaussCalo v3r0, 
