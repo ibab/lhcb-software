@@ -1,8 +1,11 @@
 #ifndef _ITWAFER_
 #define _ITWAFER_ 1
+#include <iostream>
+
+#include "GaudiKernel/MsgStream.h"
 
 /**
-ITSubdivision is a class describing a parallelogram-like field of strips
+ITWafer is a class describing a rectangular field of strips
 */
 
 class ITWafer {
@@ -66,6 +69,10 @@ class ITWafer {
     /// get lower V
     double lowerV() const;
 
+    /// print 
+    std::ostream& ITWafer::printOut( std::ostream& os ) const;
+    MsgStream& printOut( MsgStream& os) const;
+
  private:
 
     /// Strip pitch
@@ -86,6 +93,11 @@ class ITWafer {
     int m_NumStrips;
 };
 
+inline std::ostream& operator<<( std::ostream& os , const ITWafer* aWafer )
+{ return aWafer->printOut( os ); } 
+
+inline MsgStream& operator<<( MsgStream& os , const ITWafer* aWafer )
+{ return aWafer->printOut( os ); } 
 
 inline int ITWafer::numStrips() const { 
   return m_NumStrips; 

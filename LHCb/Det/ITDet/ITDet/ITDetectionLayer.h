@@ -1,6 +1,9 @@
 #ifndef _ITDETECTIONLAYER_H
 #define _ITDETECTIONLAYER_H 1
 
+#include <iostream>
+#include "GaudiKernel/MsgStream.h"
+
 //
 // This File contains the declaration of the TrSicbOTDetectionLayer-class
 // detection layer means information we can ask the detection layer 
@@ -58,7 +61,11 @@ public:
   unsigned int numWafers() const;
   ITWafer* wafer(const unsigned int waferID) const;
   double waferThickness() const;
- 
+
+  /// print 
+  std::ostream& printOut( std::ostream& os ) const;
+  MsgStream& printOut( MsgStream& os) const;
+
 protected:
  
   std::vector<ITWafer*> m_Wafers;
@@ -130,6 +137,11 @@ inline double ITDetectionLayer::waferThickness() const {
   return m_WaferThickness; 
 }
 
+inline std::ostream& operator<<( std::ostream& os , const ITDetectionLayer* aLayer )
+{ return aLayer->printOut( os ); } 
+
+inline MsgStream& operator<<( MsgStream& os , const ITDetectionLayer* aLayer )
+{ return aLayer->printOut( os ); } 
 
 #endif //_ITDETECTIONLAYER
 

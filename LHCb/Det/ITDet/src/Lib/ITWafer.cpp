@@ -32,7 +32,7 @@ int ITWafer::stripNum(const double u, const double v) const
 /// Get number of nearest strip to the point (u,v)
 int ITWafer::nearestStripNum(const double u) const
 {
-  int id;
+  int id =ITChannelID::nullStrip; ;
   if (u<m_UR && u>m_UL) {
     id = m_FirstStrip + (int)floor((u - m_UL)/m_Pitch);
   }
@@ -48,14 +48,8 @@ int ITWafer::nearestStripNum(const double u) const
 /// Check if point (u,v) is inside of this Wafer
 bool ITWafer::isInside(const double u, const double v) const
 {
-
- bool isOK = false;
- if (((v<m_VU)&&(v>m_VD))&&((u<(m_UR+(0.5*m_Pitch)))&&(u>(m_UL-(0.5*m_Pitch))))){
-   isOK = true;
- }
- return isOK;
-   // return (u<(m_UR+(0.5*m_Pitch)) && u>(m_UL-(0.5*m_Pitch)) 
-   //     && v<m_VU && v>m_VD); 
+ return (u<(m_UR+(0.5*m_Pitch)) && u>(m_UL-(0.5*m_Pitch)) 
+         && v<m_VU && v>m_VD); 
 }
 
 /// Check if point (u,v) is inside of this Wafer with tolerance
@@ -78,10 +72,26 @@ double ITWafer::U(const int strip) const
   return u;
 }
 
+std::ostream& ITWafer::printOut( std::ostream& os ) const{
+
+  os << " wafer: " << std::endl;
+  os << "      pitch " << m_Pitch << " # strips " << m_NumStrips <<std::endl;
+  os << "      uR  " << m_UR << " uL " <<m_UL <<std::endl;
+  os << "      vD  " << m_VD << " uL " <<m_VU <<std::endl;
+
+  return os;
+}
 
 
+MsgStream& ITWafer::printOut( MsgStream& os ) const{
 
+  os << " wafer: " << endreq;
+  os << "      pitch " << m_Pitch << " # strips " << m_NumStrips <<endreq;
+  os << "      uR  " << m_UR << " uL " <<m_UL << endreq;
+  os << "      vD  " << m_VD << " uL " <<m_VU << endreq;
 
+  return os;
+}
 
 
 

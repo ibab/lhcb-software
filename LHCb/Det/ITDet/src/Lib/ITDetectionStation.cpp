@@ -43,6 +43,27 @@ ITDetectionLayer* ITDetectionStation::layerByZ(const double testZ) const {
 
 
 
+std::ostream& ITDetectionStation::printOut( std::ostream& os ) const{
+ 
+  os << " Station : "  << m_StationID << std::endl;
+  os << "z " << m_Z  
+     << " n layer "  << numLayers() 
+     << " Thickness "<< m_Thickness << std::endl;
+   
+  return os;
+}
+
+
+MsgStream& ITDetectionStation::printOut( MsgStream& os ) const{
+
+  os << " Station : "  << m_StationID << endreq;
+  os << "z " << m_Z  
+     << " n layer "  << numLayers() 
+     << " Thickness "<< m_Thickness << endreq;
+
+  return os;
+}
+
 
 
 

@@ -36,6 +36,8 @@ public:
   virtual unsigned int numStrips() const;
   
 private:
+
+  unsigned int m_totNumStrips;
   
 };  
 

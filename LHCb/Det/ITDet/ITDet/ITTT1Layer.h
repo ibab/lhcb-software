@@ -26,8 +26,7 @@ public:
              std::vector<int> ladderSize1,
              std::vector<int> ladderSize2,
              double holeX, double holeY, double ladderDist, 
-                   unsigned int numStrips, 
-		   int position);
+                   unsigned int numStrips);
 
   // Destructor
   virtual ~ITTT1Layer();

@@ -11,6 +11,9 @@
 
 class ITDetectionLayer;
 
+
+#include <iostream>
+#include "GaudiKernel/MsgStream.h"
 #include <vector>
 
 class ITDetectionStation {
@@ -50,6 +53,10 @@ class ITDetectionStation {
 
     /// get pointer to N-th detection layer  
     ITDetectionLayer* layerByZ(const double testZ) const;
+
+    /// print 
+    std::ostream& printOut( std::ostream& os ) const;
+    MsgStream& printOut( MsgStream& os) const;
 
   private:
 
@@ -101,6 +108,11 @@ inline void ITDetectionStation::setLayer(ITDetectionLayer* layer,
 
 }
 
+inline std::ostream& operator<<( std::ostream& os , const ITDetectionStation* aStation )
+{ return aStation->printOut( os ); } 
+
+inline MsgStream& operator<<( MsgStream& os , const ITDetectionStation* aStation )
+{ return aStation->printOut( os ); } 
 
 #endif
 

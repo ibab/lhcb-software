@@ -1,4 +1,4 @@
-// $Id: ITDetectionLayer.cpp,v 1.1.1.1 2002-07-05 09:06:14 mneedham Exp $
+// $Id: ITDetectionLayer.cpp,v 1.2 2002-07-08 12:47:24 mneedham Exp $
 //
 // This File contains the definition of the ITDetectionLayer-class
 //
@@ -118,7 +118,28 @@ ITWafer* ITDetectionLayer::wafer(const unsigned int iWafer) const{
  return aWafer;
 }
 
+std::ostream& ITDetectionLayer::printOut( std::ostream& os ) const{
 
+  os << " Layer: "  << m_LayerID << std::endl;
+  os << "z " << m_Z 
+     <<" n wafer "  << numWafers() 
+     <<" Thickness "<< m_Thickness 
+     << "Stereo angle  " << m_StereoAngle << std::endl;
+        
+  return os;
+}
+
+
+MsgStream& ITDetectionLayer::printOut( MsgStream& os ) const{
+
+  os << " Layer: "  << m_LayerID << endreq;
+  os << "z " << m_Z 
+     << " n wafer "  << numWafers() 
+     << " Thickness "<< m_Thickness  
+     << "Stereo angle  " << m_StereoAngle << endreq;
+
+  return os;
+}
 
 
 

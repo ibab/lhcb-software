@@ -1,4 +1,4 @@
-// $Id: ITTT1Layer.cpp,v 1.1.1.1 2002-07-05 09:06:14 mneedham Exp $
+// $Id: ITTT1Layer.cpp,v 1.2 2002-07-08 12:47:25 mneedham Exp $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -24,7 +24,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
                     std::vector<int> ladderSize2,
                     double holeX, double holeY, 
 		    double ladderDist,
-		    unsigned int numStrips, int position):
+		    unsigned int numStrips):
   ITDetectionLayer(stationID, layerID, z, 
                    stereoAngle, pitch,waferThickness,waferOverlap)
 {
@@ -61,13 +61,13 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
 
     for (unsigned int iWafer=1;iWafer<=wafersX1;iWafer++){
 
-      ITWafer* aWafer = new ITWafer(pitch, 0,
+      ITWafer* aWafer = new ITWafer(pitch, 1,
                           -0.5*sensWaferWidth, 0.5*sensWaferWidth, 
 	   		  v - 0.5*ladderHeight, 
 		 	  v + 0.5*ladderHeight, pow(-1.,iWafer-1)*ladderDist);
 
        m_Wafers[waferOffset+iWafer-1] = aWafer;
-       currStrip += aWafer->lastStrip() + 1;
+       currStrip += aWafer->lastStrip();
 
     }  // iWafer
     v+= (waferHeight*(double)ladderSize1[iBWafer-1])/2.0;
@@ -88,13 +88,13 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
                           -guardRingSize;
 
     for (unsigned int iWafer=1;iWafer<=wafersX1;iWafer++){
-      ITWafer* aWafer = new ITWafer(pitch, 0,  
+      ITWafer* aWafer = new ITWafer(pitch, 1,  
                         -0.5*sensWaferWidth,0.5*sensWaferWidth, 
 			v - 0.5*ladderHeight, 
 			v + 0.5*ladderHeight,pow(-1.,iWafer-1)*ladderDist);
 
        m_Wafers[waferOffset+iWafer-1] = aWafer;
-       currStrip += aWafer->lastStrip() + 1;
+       currStrip += aWafer->lastStrip();
 
     } //iWafer
 
@@ -141,12 +141,12 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
         u = -uMax+(((double)iWafer-0.5)*(waferWidth-waferOverlap));
       }
 
-      ITWafer* aWafer = new ITWafer(pitch, 0,  
+      ITWafer* aWafer = new ITWafer(pitch, 1,  
                         u-0.5*sensWaferWidth,u+0.5*sensWaferWidth, 
 			v - 0.5*ladderHeight, 
 			v + 0.5*ladderHeight, pow(-1,iStart+iWafer)*ladderDist);
       m_Wafers[iWafer+waferOffset-1] = aWafer;
-      currStrip += aWafer->lastStrip() + 1;
+      currStrip += aWafer->lastStrip();
   
     } // iWafer
 
@@ -177,12 +177,12 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
  
       double u = holeX+(((double)iWafer-0.5)*(waferWidth-waferOverlap));
 
-      ITWafer* aWafer = new ITWafer(pitch,0,  
+      ITWafer* aWafer = new ITWafer(pitch,1,  
                         u-0.5*sensWaferWidth,u+0.5*sensWaferWidth, 
 			v - 0.5*ladderHeight, 
 			v + 0.5*ladderHeight, pow(-1,iStart+iWafer)*ladderDist);
       m_Wafers[iWafer+waferOffset-1] = aWafer;
-      currStrip += aWafer->lastStrip() + 1;
+      currStrip += aWafer->lastStrip();
 
     } // iWafer
 
@@ -212,7 +212,7 @@ double ITTT1Layer::centerX(const ITChannelID stripID) const {
   if (waferNum>=1 && waferNum <= m_Wafers.size()) {
     const double u = m_Wafers[waferNum-1]->U(stripID.strip());
     const double v = m_Wafers[waferNum-1]->centerV();
-    xC = u*cosAngle() + v*sinAngle();
+    xC = u*cosAngle() - v*sinAngle();
   }
 
   return xC;

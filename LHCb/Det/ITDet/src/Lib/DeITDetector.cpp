@@ -183,13 +183,13 @@ StatusCode DeITDetector::initialize() {
         }
 
         double  stereoAngle=(*iterLayer)->userParameterAsDouble("stereoAngle");
-        unsigned int position=(*iterLayer)->userParameterAsInt("position");
+	//        unsigned int position=(*iterLayer)->userParameterAsInt("position");
 
           ITTT1Layer* layer = new ITTT1Layer(iStation, iLayer, LayerZ,
                    stereoAngle, pitch, SensorWidth, SensorHeight,
                    SensorThickness, SensorOverlap,
                    NSensorX1, NSensorX2, ladderSize1, ladderSize2,
-                   holeX, holeY, ladderDist, numStrips, position);
+                   holeX, holeY, ladderDist, numStrips);
           station->setLayer(layer, iLayer);
      }// end loop layer
    }// end new TT1
