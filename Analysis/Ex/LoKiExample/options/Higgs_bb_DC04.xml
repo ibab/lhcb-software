@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- POOL XML file catalog: Edited By Gaudi Bookkeeping tools -->
+
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+
+<POOLFILECATALOG>
+<File ID="0225E1D2-0C65-D911-883F-00E081524D39">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000013_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000013_3.dst"/>
+ </logical>
+</File>
+<File ID="2ACD9110-3065-D911-8681-00E0815265F4">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000024_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000024_3.dst"/>
+ </logical>
+</File>
+<File ID="C0054232-0D65-D911-941F-003048420FAA">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000001_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000001_3.dst"/>
+ </logical>
+</File>
+<File ID="CA48D4C3-9665-D911-9125-00E081524A67">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000040_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000040_3.dst"/>
+ </logical>
+</File>
+<File ID="E04D8BEB-1E66-D911-9125-00E081524A70">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000063_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000063_3.dst"/>
+ </logical>
+</File>
+<File ID="90474FAA-1A66-D911-8D8B-003048420FAA">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000061_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000061_3.dst"/>
+ </logical>
+</File>
+<File ID="5AB30163-B665-D911-95BA-00E0815264E1">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000052_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000052_3.dst"/>
+ </logical>
+</File>
+<File ID="98454C3A-1065-D911-9B2B-00E081524736">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000004_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000004_3.dst"/>
+ </logical>
+</File>
+<File ID="08C04509-1265-D911-9AAB-003048420FA6">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000003_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000003_3.dst"/>
+ </logical>
+</File>
+<File ID="36CACBFF-1165-D911-91BA-00E081524A61">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000015_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000015_3.dst"/>
+ </logical>
+</File>
+<File ID="BE2BB483-1165-D911-8393-00E081524737">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000012_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000012_3.dst"/>
+ </logical>
+</File>
+<File ID="44485CAB-B265-D911-9041-00E08152ACDF">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000049_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000049_3.dst"/>
+ </logical>
+</File>
+<File ID="A260E8FC-3165-D911-8828-00E081526C2B">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000027_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000027_3.dst"/>
+ </logical>
+</File>
+<File ID="746E5AED-9965-D911-959D-003048420FA6">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000043_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000043_3.dst"/>
+ </logical>
+</File>
+<File ID="76C53916-9865-D911-8BC1-00E081524A5C">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000031_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000031_3.dst"/>
+ </logical>
+</File>
+<File ID="3AB210CD-1C66-D911-9939-00E081524749">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000057_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000057_3.dst"/>
+ </logical>
+</File>
+<File ID="3EE70D06-1365-D911-98E9-00E081524746">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000008_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000008_3.dst"/>
+ </logical>
+</File>
+<File ID="8EA0EB69-2C65-D911-9C32-00E08152AD2F">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000025_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000025_3.dst"/>
+ </logical>
+</File>
+<File ID="08782F55-B065-D911-88D5-00E08152AD2F">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000046_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000046_3.dst"/>
+ </logical>
+</File>
+<File ID="2E8D99CF-2166-D911-8740-003048420FA6">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000019_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000019_3.dst"/>
+ </logical>
+</File>
+<File ID="444F4175-9365-D911-8D29-0030484204AA">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000035_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000035_3.dst"/>
+ </logical>
+</File>
+<File ID="4CCD3786-9765-D911-9AD1-00E081524A70">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000042_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000042_3.dst"/>
+ </logical>
+</File>
+<File ID="9ABB4363-9565-D911-93B7-003048420FAA">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000030_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000030_3.dst"/>
+ </logical>
+</File>
+<File ID="1AB7F1EF-1165-D911-8E09-00E08152472D">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000007_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000007_3.dst"/>
+ </logical>
+</File>
+<File ID="F2D9B579-1866-D911-8A35-00E081524D39">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000055_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000055_3.dst"/>
+ </logical>
+</File>
+<File ID="947931AD-1D66-D911-8947-00E081524A67">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000064_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000064_3.dst"/>
+ </logical>
+</File>
+<File ID="701AA158-AE65-D911-9DC6-00E08152696D">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000047_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000047_3.dst"/>
+ </logical>
+</File>
+<File ID="76D08527-9465-D911-9A8E-00E081524A6D">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000036_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000036_3.dst"/>
+ </logical>
+</File>
+<File ID="2CDBC4C2-9965-D911-9C3F-00E081524737">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000039_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000039_3.dst"/>
+ </logical>
+</File>
+<File ID="2AAAAC5D-1C66-D911-9BAB-00E081524746">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000062_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000062_3.dst"/>
+ </logical>
+</File>
+<File ID="70DF1C14-2066-D911-9AE0-00E081524A5C">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000065_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000065_3.dst"/>
+ </logical>
+</File>
+<File ID="F8780720-0E65-D911-82AB-00E081524A5C">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000018_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000018_3.dst"/>
+ </logical>
+</File>
+<File ID="1E68D47B-1165-D911-8717-00E081524A67">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000017_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000017_3.dst"/>
+ </logical>
+</File>
+<File ID="A69D9489-1265-D911-8652-00E081524A70">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000011_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000011_3.dst"/>
+ </logical>
+</File>
+<File ID="8A273C66-1A66-D911-9BBB-00E081524751">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000060_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000060_3.dst"/>
+ </logical>
+</File>
+<File ID="266DCEEE-0F65-D911-91A5-00E081524749">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000009_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000009_3.dst"/>
+ </logical>
+</File>
+<File ID="786208B3-1065-D911-9D13-00E081524A6D">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000016_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000016_3.dst"/>
+ </logical>
+</File>
+<File ID="44575CD4-B665-D911-9277-00E081526C2B">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000054_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000054_3.dst"/>
+ </logical>
+</File>
+<File ID="1E39D8F9-2166-D911-8DCE-003048420FAC">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000006_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000006_3.dst"/>
+ </logical>
+</File>
+<File ID="604F15B5-2C65-D911-93DD-00E08152696D">
+ <physical>
+  <pfn name="rfio:/castor/cern.ch/lhcb/Higgs/v1/00000752/00000752_00000023_3.dst" filetype="ROOT_All"/>
+ </physical>
+ <logical>
+  <lfn name="/lhcb/production/Higgs/v1/DST/00000752_00000023_3.dst"/>
+ </logical>
+</File>
+</POOLFILECATALOG>
+
