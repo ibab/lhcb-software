@@ -1,5 +1,5 @@
 package Gauss
-version v8r0
+version v8r1
 
 # =============================================================================
 # structure 
@@ -55,8 +55,6 @@ use XmlDDDB             v14r4   Det
 # =============================================================================
 set  GAUSSOPTS "${GAUSSROOT}/options"
 set  GAUSSDATA "${GAUSSROOT}/data"
-
-set  G4LEVELGAMMADATA "/afs/cern.ch/sw/geant4/releases/share/geant4.4.1.p01/data"
 
 # =============== visualization  ==============================================
 set  G4DAWNFILE_DEST_DIR       "../job/"
