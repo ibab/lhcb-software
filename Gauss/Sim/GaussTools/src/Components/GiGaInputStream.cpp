@@ -1,11 +1,8 @@
-// $Id: GiGaInputStream.cpp,v 1.1 2002-09-26 18:10:56 ibelyaev Exp $
+// $Id: GiGaInputStream.cpp,v 1.2 2002-12-03 17:22:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.1  2002/01/22 18:20:53  ibelyaev
-//  Vanya: update for newer versions of Gaudi and Geant4
-// 
 // ============================================================================
 // Include files
 // from Gaudi
@@ -57,8 +54,8 @@ StatusCode GiGaInputStream::execute()
   ///
   if( !m_execute ) { return StatusCode::SUCCESS; } 
   ///
-  { MsgStream log( msgSvc() , name() ); 
-  log << MSG::VERBOSE << " execute:: start" << endreq; } 
+  MsgStream log( msgSvc() , name() ); 
+  log << MSG::VERBOSE << " execute:: start" << endreq; 
   ///
   if( m_executeOnce      ) { m_execute  = false; }  
   ///
@@ -102,8 +99,7 @@ StatusCode GiGaInputStream::execute()
   ///
   m_dataSelector.clear(); 
   ///
-  { MsgStream log( msgSvc() , name() ); 
-  log << MSG::VERBOSE << "Execute::end" << endreq; } 
+  log << MSG::VERBOSE << "Execute::end" << endreq;  
   ///
   return status; 
   ///

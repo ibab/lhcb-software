@@ -1,17 +1,8 @@
-// $Id: GiGaStream.cpp,v 1.1 2002-09-26 18:11:02 ibelyaev Exp $ 
+// $Id: GiGaStream.cpp,v 1.2 2002-12-03 17:22:05 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.6  2002/01/22 18:20:53  ibelyaev
-//  Vanya: update for newer versions of Gaudi and Geant4
-//
-// Revision 1.5  2001/08/12 15:42:54  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.4  2001/07/23 13:12:28  ibelyaev
-// the package restructurisation(II)
-//
 // ============================================================================
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/IDataManagerSvc.h" 
@@ -61,7 +52,6 @@ GiGaStream::GiGaStream( const std::string& StreamName     ,
   , m_items                 (                  ) 
   ///
   , m_dataSelector          (                  )
-  , m_leaves                ()
   ///
 {
   ///
@@ -78,8 +68,8 @@ GiGaStream::GiGaStream( const std::string& StreamName     ,
 StatusCode GiGaStream::initialize()
 {
   ///
-  {MsgStream log( msgSvc() , name() ); 
-  log << MSG::VERBOSE << "Initialize::start" << endreq; } 
+  MsgStream log( msgSvc() , name() ); 
+  log << MSG::VERBOSE << "Initialize::start" << endreq; 
   ///
   StatusCode status = StatusCode::SUCCESS; 
   ///
@@ -114,7 +104,7 @@ StatusCode GiGaStream::initialize()
       if( std::string::npos != pos ) 
         { 
           obj.erase(pos);
-          std::string levels((*pName).c_str(),pos+1);
+          std::string levels(*pName,pos+1,pName->size());
           if( "*" == levels ) { depth = 9999999                ; }
           else                { depth = atoi( levels.c_str() ) ; }
         }    
@@ -122,8 +112,7 @@ StatusCode GiGaStream::initialize()
       m_items.push_back( item ); 
     }   
   ///
-  { MsgStream log( msgSvc() , name() ); 
-  log << MSG::VERBOSE << "Initialize::end" << endreq; } 
+  log << MSG::VERBOSE << "Initialize::end" << endreq; 
   ///
   return StatusCode::SUCCESS; 
   ///
@@ -154,16 +143,16 @@ StatusCode GiGaStream::LoadObject( const DataStoreItem& item     ,
     { return Error(" LoadObject::IDataSelector* points to NULL for Object '"
                    + item.path() + "'" ) ; } 
   ///
-  Selector->push_back( Object ); 
+  Selector->push_back( Object );
+  // load other levels 
   const IRegistry* registry = Object->registry() ;
   if( 0 == registry )
-    { return Error(" loadObject:: IRegistry* points to NUL for object '" 
+    { return Error(" LoadObject:: IRegistry* points to NUL for object '" 
                    + item.path() + "'" ) ; }
   ///  
-  StatusCode status = LoadObject( registry , item.depth()  , Selector ); 
-  if( status.isFailure() ) 
-    { return Error(" LoadObject::Failure in loading of Directory", 
-                   status ); } 
+  StatusCode sc = LoadObject( registry , item.depth() - 1 , Selector ) ; 
+  if( sc.isFailure() ) 
+    { return Error(" LoadObject::Failure in loading of Directory", sc ); } 
   ///
   return StatusCode::SUCCESS; 
   ///
@@ -192,18 +181,17 @@ StatusCode GiGaStream::LoadObject( const IRegistry*     registry ,
     { return Error("LoadObject:: IDataProviderSvc* points to NULL "  ); }
   ///
   SmartIF<IDataManagerSvc> dataMgr( registry->dataSvc() );
-  if( !dataMgr ) 
+  if(  0 == dataMgr ) 
     { return Error(" LoadObject:: IDataManagerSvc* points to NULL for '"
                    + registry->identifier() + "'" ); }
   ///
-  m_leaves.clear();
-  StatusCode sc = dataMgr->objectLeaves( registry , m_leaves );
+  Leaves leaves;
+  StatusCode sc = dataMgr->objectLeaves( registry , leaves );
   if( sc.isFailure() )
     { return Error(" LoadObject:: Leaves could not be accessed for '" 
                    + registry->identifier() + "'" ); }
   /// loop over the leaves 
-  for( Leaves::iterator leaf = m_leaves.begin() ;
-       m_leaves.end() != leaf ; ++leaf )
+  for( Leaves::iterator leaf = leaves.begin() ; leaves.end() != leaf ; ++leaf )
     {
       if( 0 == *leaf ) { continue ; }           ///< CONTINUE!
       DataObject*  Object = 0 ;
@@ -212,7 +200,7 @@ StatusCode GiGaStream::LoadObject( const IRegistry*     registry ,
         { return Error(" LoadObject:: Leaf '" + (*leaf)->identifier() + "'" 
                        + " could not be retrieved!" ); }
       Selector->push_back( Object ) ;
-      sc = LoadObject( *leaf , Level - 1 , Selector );
+      sc = LoadObject( Object->registry() , Level - 1 , Selector );
       if( sc.isFailure() ) 
         { return Error(" LoadObject:: Could not process the leaf '" +
                        (*leaf)->identifier() + "'" ); } 

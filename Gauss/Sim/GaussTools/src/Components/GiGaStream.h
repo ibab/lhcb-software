@@ -1,9 +1,12 @@
 // ============================================================================
-// $Id: GiGaStream.h,v 1.1 2002-09-26 18:11:02 ibelyaev Exp $
+// $Id: GiGaStream.h,v 1.2 2002-12-03 17:22:05 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/09/26 18:11:02  ibelyaev
+//  repackageing: add all concrete implementations from GiGa
+//
 // Revision 1.6  2002/01/22 18:20:53  ibelyaev
 //  Vanya: update for newer versions of Gaudi and Geant4
 //
@@ -114,7 +117,6 @@ protected:
   Items                       m_items               ;
   
   IDataSelector               m_dataSelector        ;  
-  Leaves                      m_leaves              ;
 
 };
 

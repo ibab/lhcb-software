@@ -4,6 +4,12 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc
 !-----------------------------------------------------------------------------
 
+! 2002-12-03 - Ivan Belyaev
+ - src/Components/GiGaStream.h
+ - src/Components/GiGaStream.cpp
+ - src/Components/GiGaInputStream.cpp    fix the bug with the conversion of 
+                                         hierarchy of the objects 
+
 !============================ GaussTools v3r3 2002-11-27 ======================
 ! 2002-11-27 - Witek Pokorski
  - added new physics lists: LHEP (taken from H-P. Wellisch page)
