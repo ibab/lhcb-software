@@ -1,0 +1,12 @@
+//***********************************************************
+//   Options to run the Calo Level 0 trigger in DaVinci
+//***********************************************************
+
+// L0Calo, needs Sicb converter, CaloEvent and CaloDet
+
+ApplicationMgr.DLLs   += { "CaloDet" };
+ApplicationMgr.DLLs   += { "CaloEvent" };
+ApplicationMgr.DLLs   += { "CaloSicbCnv" };
+ApplicationMgr.DLLs   += { "L0Calo" };
+ApplicationMgr.TopAlg += { "L0CaloDigit", "L0CaloAlg/L0Calo" };
+

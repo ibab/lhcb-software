@@ -1,47 +1,19 @@
-//====================================================================
-//  L0Calo_load.cpp
-//--------------------------------------------------------------------
+// $Id: L0Calo_load.cpp,v 1.3 2002-01-30 15:58:20 ocallot Exp $
+// Include files 
+
+
+#include "GaudiKernel/DeclareFactoryEntries.h"
+
+// Declare  OBJECT / CONVERTER / ALGORITHM / TOOL using the macros DECLARE_xxx
+// The statements are like that:
 //
-//  Package    : L0Calo
+// DECLARE_CONVERTER( MyConverter );
+// DECLARE_OBJECT( DataObject );
 //
-//  Description: Implementation of <Package>_load routine. This routine 
-//               is needed for forcing the linker to load all the components
-//               of the library.. 
-//
-//====================================================================
+// They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
 
-#include "GaudiKernel/ICnvFactory.h"
-#include "GaudiKernel/ISvcFactory.h"
-#include "GaudiKernel/IAlgFactory.h"
-
-#include "GaudiKernel/ObjectFactory.h"
-#include "GaudiKernel/ObjectVector.h"
-#include "GaudiKernel/ObjectList.h"
-
-
-
-#define DLL_DECL_SERVICE(x)    extern const ISvcFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_CONVERTER(x)  extern const ICnvFactory& x##Factory; x##Factory.addRef();
-#define DLL_DECL_ALGORITHM(x)  extern const IAlgFactory& x##Factory; x##Factory.addRef();
-
-
-void L0Calo_load() 
-{
-
-  ///
-  /// Now declare all available converters
-  ///
-
-
-  ///
-  /// algorithms 
-  ///
-  
-  DLL_DECL_ALGORITHM( L0CaloAlg     );
-  DLL_DECL_ALGORITHM( L0CaloMonit   );
-  
+DECLARE_FACTORY_ENTRIES(L0Calo) {
+  DECLARE_ALGORITHM( L0CaloDigit );
+  DECLARE_ALGORITHM( L0CaloAlg   );
+  DECLARE_ALGORITHM( L0CaloMonit );
 }
-
-extern "C" void L0Calo_loadRef()     {  L0Calo_load(); }
-
-

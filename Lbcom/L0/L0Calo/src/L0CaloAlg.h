@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.4 2001-05-10 14:44:33 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.5 2002-01-30 15:58:20 ocallot Exp $
 
 // from STL 
 #include <cmath>
@@ -123,7 +123,7 @@ public:
    *  @param L0Calo : Vector of candidates, to which the current object
    *                  is added after being properly formatted.
    */
-  void        saveCandidate( int type, L0CaloCandidateVector* L0Calo ) ;
+  void        saveCandidate( int type, L0CaloCandidates* L0Calo ) ;
   
   int         et( )        const { return m_et     ; };
   HepPoint3D  center( )    const { return m_center ; };

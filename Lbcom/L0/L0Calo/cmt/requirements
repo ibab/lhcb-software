@@ -1,5 +1,5 @@
 package		L0Calo
-version 	v3r0
+version 	v4r0
 
 # ================ structure =============================================
 branches	L0Calo src cmt doc options
@@ -11,6 +11,7 @@ include_dirs	$(L0CALOROOT)
 set L0CALOOPTS	$(L0CALOROOT)/options
 
 # ================ used packages =========================================
+use L0Event     v10r*   Event
 use CaloEvent	v7r*	Event
 use CaloDet	v3r*	Det
 use AIDA        v1r*

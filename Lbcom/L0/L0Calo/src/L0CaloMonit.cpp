@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.1 2001-06-12 14:28:02 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.2 2002-01-30 15:58:20 ocallot Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -6,8 +6,8 @@
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
-// L0/L0Calo
-#include "L0Calo/L0CaloCandidate.h"
+// Event/L0Event
+#include "Event/L0CaloCandidate.h"
 
 // local
 #include "L0CaloMonit.h"
@@ -75,16 +75,16 @@ StatusCode L0CaloMonit::execute() {
   MsgStream log(messageService(), name());
   log << MSG::DEBUG << " >>> Execute" << endreq;
 
-  std::string containerName = "/Event/FE/L0/Calo";
+  std::string containerName = "/Event/Trig/L0/Calo";
   
-  SmartDataPtr< ObjectVector< L0CaloCandidate > > 
+  SmartDataPtr< L0CaloCandidates > 
     candidates ( eventDataService() , containerName );
   if( 0 == candidates ) { 
     log << MSG::ERROR << "Unable to retrieve " << containerName << endreq; 
     return StatusCode::SUCCESS;
   }   
 
-  ObjectVector< L0CaloCandidate >::const_iterator cand;
+  L0CaloCandidates::const_iterator cand;
   for ( cand = candidates->begin() ; candidates->end() != cand ; ++cand ) {
     if ( L0::Electron == (*cand)->type()  ) {
       m_histElectron  -> fill( (*cand)->et()/GeV, 1. );
