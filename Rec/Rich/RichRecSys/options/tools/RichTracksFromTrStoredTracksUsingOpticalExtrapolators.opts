@@ -51,10 +51,18 @@ ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrS
 
 // Extrapolator tools
 ToolSvc.RichDetTrSegLongVTT.PrimaryTrackExtrapolator = "TrRichExtrapolatorForLongVTT";
-ToolSvc.RichDetTrSegLongVTT.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
+ToolSvc.RichDetTrSegLongVTT.BackupTrackExtrapolator  = "TrHerabExtrapolator";
 
 // which radiators to use                   Aerogel   C4F10    CF4
 ToolSvc.RichDetTrSegLongVTT.UseRadiators = { true,     true,    true   };
+
+// Where to start looking for states          R1 entry    R1 exit   R2 entry    R2 exit
+ToolSvc.RichDetTrSegLongVTT.NominalStateZ = { 0*mm,       0*mm,     9450*mm,    9450*mm };
+// allowed tolerences in each radiator        Aerogel    C4F10     CF4
+ToolSvc.RichDetTrSegLongVTT.ZTolerances   = { 800*mm,    800*mm,   2000*mm };
+
+// Always extrapolate from starting reference states
+ToolSvc.RichDetTrSegLongVTT.ExtrapolateFromReference = true;
 
 //----------------------------------------------------------------------------------------------
 
@@ -89,9 +97,17 @@ ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrS
 
 // Extrapolator tools
 ToolSvc.RichDetTrSegSeedKs.PrimaryTrackExtrapolator = "TrRichExtrapolatorForSeedKs";
-ToolSvc.RichDetTrSegSeedKs.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
+ToolSvc.RichDetTrSegSeedKs.BackupTrackExtrapolator  = "TrHerabExtrapolator";
 
 // which radiators to use                   Aerogel   C4F10    CF4
 ToolSvc.RichDetTrSegSeedKs.UseRadiators = { true,     true,    true   };
+
+// Where to start looking for states          R1 entry    R1 exit   R2 entry    R2 exit
+ToolSvc.RichDetTrSegSeedKs.NominalStateZ =  { 0*mm,       0*mm,     9450*mm,    9450*mm };
+// allowed tolerences in each radiator        Aerogel    C4F10     CF4
+ToolSvc.RichDetTrSegSeedKs.ZTolerances   =  { 800*mm,    800*mm,   2000*mm };
+
+// Always extrapolate from starting reference states
+ToolSvc.RichDetTrSegSeedKs.ExtrapolateFromReference = true;
 
 //----------------------------------------------------------------------------------------------
