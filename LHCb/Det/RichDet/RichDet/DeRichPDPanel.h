@@ -1,4 +1,4 @@
-// $Id: DeRichPDPanel.h,v 1.6 2003-11-22 18:40:50 jonesc Exp $
+// $Id: DeRichPDPanel.h,v 1.7 2003-12-19 15:52:43 papanest Exp $
 
 #ifndef RICHDET_DERICHPDPANEL_H
 #define RICHDET_DERICHPDPANEL_H 1
@@ -69,6 +69,12 @@ public:
                                     HepPoint3D& windowPointGlobal,
                                     RichSmartID& smartID,
                                     traceMode mode = circle ) = 0;
+  /**
+   * Converts a global position to the coordinate system of the
+   * photodetector panel
+   */
+  virtual HepPoint3D globalToPDPanel( const HepPoint3D& globalPoint ) = 0;
+
   /**
    * Returns the intersection point with the detector plane given a vector
    * and a point. If mode is tight, returns true only if point is within

@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.h,v 1.8 2003-11-22 18:40:50 jonesc Exp $
+// $Id: DeRichHPDPanel.h,v 1.9 2003-12-19 15:52:43 papanest Exp $
 
 #ifndef RICHDET_DERICHHPDPANEL_H
 #define RICHDET_DERICHHPDPANEL_H 1
@@ -8,6 +8,9 @@
 
 // Bse class
 #include "RichDet/DeRichPDPanel.h"
+
+// DetDesc
+#include "DetDesc/IGeometryInfo.h"
 
 /** @class DeRichHPDPanel DeRichHPDPanel.h
  *
@@ -73,6 +76,18 @@ public:
                                     HepPoint3D& windowPointGlobal, // return
                                     RichSmartID& smartID,
                                     DeRichPDPanel::traceMode mode = circle );
+
+  /**
+   * Converts a global position to the coordinate system of the
+   * photodetector panel
+   */
+  virtual HepPoint3D globalToPDPanel( const HepPoint3D& globalPoint );
+  
+    //  {
+    //    return ( geometry()->toLocal( globalPoint ) );
+    //  }
+  
+
   /**
    * Returns a list with all the available readout channels, in form of
    * RichSmartIDs.
@@ -156,6 +171,8 @@ protected:
   /// radius squared
   double m_winRsq;
   
+  double m_detPlaneZ;
+
   double m_pixelSize;
   double m_subPixelSize;
   double m_siliconHalfLengthX;
@@ -182,23 +199,6 @@ protected:
 
   std::vector<HepPoint3D> m_HPDCentres;
 
-  /*
-  // CRJ : cache variables
-  std::vector<const IPVolume*> m_pvHPDMasters;
-  std::vector<const IPVolume*> m_pvHPDSMasters;
-  std::vector<const IPVolume*> m_pvWindows;
-  std::vector<const ISolid*>   m_windowSolids;
-  std::vector<HepTransform3D>  m_vectorTransfHPD2s;
-  */
-  /*
-  int m_nTries;
-  int m_failPanel;
-  int m_nSuccess;
-  int m_nFoundByClever;
-  int m_nFoundBySimple;
-  int m_nTryClever;
-  int m_nTrySimple;
-  */
 };
 
 #endif    // RICHDET_DERICHHPDPANEL_H

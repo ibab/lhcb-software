@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.cpp,v 1.8 2003-11-21 22:27:40 jonesc Exp $
+// $Id: DeRichHPDPanel.cpp,v 1.9 2003-12-19 15:52:43 papanest Exp $
 #define DERICHHPDPANEL_CPP
 
 // Include files
@@ -9,7 +9,6 @@
 #include "CLHEP/Geometry/Transform3D.h"
 
 // DetDesc
-#include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
 #include "DetDesc/SolidTubs.h"
 #include "DetDesc/SolidSphere.h"
@@ -27,36 +26,6 @@ DeRichHPDPanel::DeRichHPDPanel()
 
 // Standard Destructor
 DeRichHPDPanel::~DeRichHPDPanel() {
-  /*
-    double rate = 0;
-    std::cout << "DeRichHPDPanel Stats" << std::endl;
-
-    std::cout << "Tries           = " << m_nTries << std::endl;
-
-    rate = 100*( m_nTries>0 ? (double)m_failPanel/(double)m_nTries : 0 );
-    std::cout << "Failed Panel    = " << m_failPanel << " " << rate << " % "
-    << std::endl;
-
-    rate = 100*( m_nTries>0 ? (double)m_nTryClever/(double)m_nTries : 0 );
-    std::cout << "Try clever      = " << m_nTryClever << " " << rate << " % "
-    << std::endl;
-
-    rate = 100*( m_nTries>0 ? (double)m_nFoundByClever/(double)m_nTries : 0 );
-    std::cout << "Found by clever = " << m_nFoundByClever << " " << rate
-    << " % " << std::endl;
-
-    rate = 100*( m_nTries>0 ? (double)m_nTrySimple/(double)m_nTries : 0 );
-    std::cout << "Try simple      = " << m_nTrySimple << " " << rate << " % "
-    << std::endl;
-
-    rate = 100*( m_nTries>0 ? (double)m_nFoundBySimple/(double)m_nTries : 0 );
-    std::cout << "Found by simple = " << m_nFoundBySimple << " " << rate
-    << " % " << std::endl;
-
-    rate = 100*( m_nTries>0 ? (double)m_nSuccess/(double)m_nTries : 0 );
-    std::cout << "Success         = " << m_nSuccess << " " << rate << " % "
-    << std::endl;
-  */
 }
 
 //=========================================================================
@@ -185,6 +154,9 @@ StatusCode DeRichHPDPanel::initialize() {
   //  std::cout << "detectionPlane " <<  m_detectionPlane << std::endl;
   //  std::cout << "localDetectionPlane " <<  m_localPlane << std::endl;
 
+  // store the z coordinate of the detection plane
+  m_detPlaneZ = pointAInPanel.z();
+
   // localPlane2 is used when trying to locate the HPD row/column from
   // a point in the panel.
   m_localPlane2 = m_localPlane;
@@ -197,28 +169,10 @@ StatusCode DeRichHPDPanel::initialize() {
   m_vectorTransf = geometry()->matrix();
   m_HPDPanelSolid = geometry()->lvolume()->solid();
 
-  /*
-    for ( unsigned int HPD = 0; HPD < PDMax(); ++HPD ) {
-    m_pvHPDMasters.push_back( geometry()->lvolume()->pvolume(HPD) );
-    m_pvHPDSMasters.push_back( m_pvHPDMasters[HPD]->lvolume()->pvolume(0));
-    m_pvWindows.push_back( m_pvHPDSMasters[HPD]->lvolume()->pvolume(2) );
-    m_windowSolids.push_back( m_pvWindows[HPD]->lvolume()->solid() );
-    m_vectorTransfHPD2s.push_back( m_pvHPDMasters[HPD]->matrix() );
-    }
-  */
-
   for ( unsigned int HPD = 0; HPD < PDMax(); ++HPD ) {
     const IPVolume* pvHPDMaster = geometry()->lvolume()->pvolume(HPD);
     m_HPDCentres.push_back( pvHPDMaster->toMother(zero) );
   }
-
-  //  m_nTries = 0;
-  //  m_nSuccess = 0;
-  //  m_failPanel = 0;
-  //  m_nFoundBySimple = 0;
-  //  m_nFoundByClever = 0;
-  //  m_nTryClever = 0;
-  //  m_nTrySimple = 0;
 
   log << MSG::DEBUG << "Finished initialization" << endreq;
   return StatusCode::SUCCESS;
@@ -306,9 +260,22 @@ StatusCode DeRichHPDPanel::detectionPoint (const RichSmartID& smartID,
   //  std::cout << windowHit << std::endl;
 
   windowHitGlobal =
-    geometry()->toGlobal(pvHPDMaster->toMother(pvHPDSMaster->toMother(pvWindow->toMother(windowHit))));
+    geometry()->toGlobal(pvHPDMaster->
+                         toMother(pvHPDSMaster->
+                                  toMother(pvWindow->toMother(windowHit))));
 
   return StatusCode::SUCCESS;
+}
+
+
+//=========================================================================
+//  convert a point from the global to the panel coodinate system
+//=========================================================================
+HepPoint3D DeRichHPDPanel::globalToPDPanel( const HepPoint3D& globalPoint ) {
+
+  HepPoint3D localPoint( geometry()->toLocal( globalPoint ) );
+  return HepPoint3D(localPoint.x(), localPoint.y(), 
+                    localPoint.z() - m_detPlaneZ );
 }
 
 
@@ -321,17 +288,16 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
                                           RichSmartID& smartID,
                                           DeRichPDPanel::traceMode mode) {
 
-  //  ++m_nTries;
   // transform point and vector to the HPDPanel coordsystem.
   HepPoint3D pLocal = geometry()->toLocal(pGlobal);
   HepVector3D vLocal = vGlobal;
   vLocal.transform(m_vectorTransf);
 
   // find the intersection with the detection plane (localPlane2)
-  double scalar1 = vLocal*m_localPlaneNormal2;
-  if ( scalar1 == 0.0 ) return StatusCode::FAILURE;
+  double scalar = vLocal*m_localPlaneNormal2;
+  if ( scalar == 0.0 ) return StatusCode::FAILURE;
 
-  double distance = -(m_localPlane2.d() + pLocal*m_localPlaneNormal2) / scalar1;
+  double distance = -m_localPlane2.distance( pLocal )/scalar;
   HepPoint3D panelIntersection( pLocal + distance*vLocal );
 
   unsigned int  HPDNumber(0), HPDRow(0), HPDColumn(0);
@@ -339,8 +305,6 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
 
   if ( mode == circle ) {  // do it quickly
     if ( findHPDRowCol(panelIntersection, id) ) {
-
-      //    ++m_nTryClever;
 
       HPDRow = id.PDRow();
       HPDColumn = id.PDCol();
@@ -354,9 +318,6 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
 
       smartID.setPDRow( HPDRow );
       smartID.setPDCol( HPDColumn );
-      // For the moment do not bother with pixel info
-      //smartID.setPixelRow( ? );
-      //smartID.setPixelCol( ? );
 
       return StatusCode::SUCCESS;
     }
@@ -414,68 +375,25 @@ StatusCode DeRichHPDPanel::PDWindowPoint( const HepVector3D& vGlobal,
                                              HPDWindowTicks );
     if ( 0 != noTicks ) {
       HPDFound = true;
-      //      ++m_nFoundByClever;
     }
 
   }
-  //  else {
-  //    ++m_failPanel;
-  //    return StatusCode::FAILURE;
-  //  }
-
-
-  /*
-    if ( !HPDFound ) {
-    // Not in central HPD : Try all others
-    ++m_nTrySimple;
-    for ( unsigned int HPD = 0; HPD < PDMax(); ++HPD ) {
-    // convert point to local coordinate systems
-    pInWindow = m_pvWindows[HPD]->toLocal(m_pvHPDSMasters[HPD]->
-    toLocal(m_pvHPDMasters[HPD]->
-    toLocal(pLocal)));
-
-    // convert local vector assuming that only the HPD can be rotated
-    vInHPDMaster = vLocal;
-    vInHPDMaster.transform( m_vectorTransfHPD2s[HPD] );
-
-    noTicks = m_windowSolids[HPD]->intersectionTicks( pInWindow,
-    vInHPDMaster,
-    HPDWindowTicks );
-    if ( 2 == noTicks ) {
-    HPDFound = true;
-    HPDNumber = HPD;
-    pvHPDMaster = m_pvHPDMasters[HPD];
-    pvHPDSMaster = m_pvHPDSMasters[HPD];
-    pvWindow = m_pvWindows[HPD];
-    HPDRow = PDRow(HPDNumber);
-    HPDColumn = PDCol(HPDNumber);
-    //        found2 = true;
-    break;
-    }
-    }
-    }
-  */
 
   if ( !HPDFound ) return StatusCode::FAILURE;
 
   HepPoint3D windowPoint = pInWindow + HPDWindowTicks[1]*vInHPDMaster;
-  HepPoint3D windowPointInHPD = pvHPDSMaster->toMother(pvWindow->toMother(windowPoint));
+  HepPoint3D windowPointInHPD = pvHPDSMaster->
+    toMother(pvWindow->toMother(windowPoint));
   // check the active radius.
   double hitRadius2 = ( windowPointInHPD.x()*windowPointInHPD.x() +
                         windowPointInHPD.y()*windowPointInHPD.y() );
   if ( hitRadius2 > m_activeRadiusSq ) return StatusCode::FAILURE;
 
-  //  if (found2) ++m_nFoundBySimple;
-
   windowPointGlobal =
     geometry()->toGlobal( pvHPDMaster->toMother(windowPointInHPD) );
 
-  //  ++m_nSuccess;
   smartID.setPDRow( HPDRow );
   smartID.setPDCol( HPDColumn );
-  // For the moment do not bother with pixel info
-  //smartID.setPixelRow( ? );
-  //smartID.setPixelCol( ? );
 
   return StatusCode::SUCCESS;
 

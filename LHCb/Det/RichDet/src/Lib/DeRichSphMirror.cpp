@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichSphMirror.cpp,v 1.6 2003-11-21 22:46:11 jonesc Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/RichDet/src/Lib/DeRichSphMirror.cpp,v 1.7 2003-12-19 15:52:43 papanest Exp $
 #define DERICHSPHMIRROR_CPP
 
 // Include files
@@ -51,6 +51,9 @@ StatusCode DeRichSphMirror::initialize() {
 
   m_solid = geometry()->lvolume()->solid();
   std::string type = m_solid->typeName();
+
+  double hexRadius = 510.0/2.0;
+  double flatToCentre = hexRadius*sin(60*degree);
 
   const SolidSphere* sphereSolid = 0;
   // find the sphere of the spherical mirror
@@ -105,6 +108,10 @@ StatusCode DeRichSphMirror::initialize() {
   HepPoint3D localMirrorCentre(sphTicks[0]*toSphCentre);
   m_mirrorCentre = geometry()->toGlobal(localMirrorCentre);
 
+  HepPoint3D middleRightSide(sqrt(m_radius*m_radius-flatToCentre*flatToCentre),
+                             0.0,
+                             flatToCentre);
+  
   //  m_alignmentConstantX = userParameterAsDouble("AlignmentConstantX");
   //  m_alignmentConstantY = userParameterAsDouble("AlignmentConstantY");
   //  m_radius = userParameterAsDouble("Radius");
@@ -163,9 +170,10 @@ StatusCode DeRichSphMirror::initialize() {
   }
 
   log << MSG::DEBUG << "Mirror #" << m_mirrorNumber << " Radius:" << m_radius 
-      << " Centre of curvature "
-      << m_centreOfCurvature << " Centre of mirror " << m_mirrorCentre 
-      << endreq;
+      << " Centre of curvature " << m_centreOfCurvature << endreq;
+  log << MSG::DEBUG << "Centre of mirror " << m_mirrorCentre << endreq;
+  log << MSG::VERBOSE << "Right middle " 
+      << geometry()->toGlobal(middleRightSide) << endreq;
 
   log << MSG::DEBUG <<"End initialisation for DeRichSphMirror" << endreq;
   return StatusCode::SUCCESS;
