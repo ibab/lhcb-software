@@ -14,7 +14,7 @@
  *
  *  @author Chris Jones     (christopher.rob.jones@cern.ch)
  *
- *  @date 2003-10-31#
+ *  @date 2003-10-31
  *
  *  @todo Once SICB retires return to full functionality
  */
@@ -92,7 +92,7 @@ public:
     return (key() & (RichSmartCode::MaskRichOK + RichSmartCode::MaskPanelOK + 
                      RichSmartCode::MaskPDRowOK + RichSmartCode::MaskPDColOK + 
                      RichSmartCode::MaskPixelRowOK + RichSmartCode::MaskPixelColOK + 
-                     RichSmartCode::MaskSubPixelOK) ) >> RichSmartCode::ShiftRichOK;
+                     RichSmartCode::MaskSubPixelOK) );
   }
   
   /// Test if the RICH detector field is set.
