@@ -1,13 +1,8 @@
+// $Id: Trajectory2Particle.cpp,v 1.4 2002-05-20 13:36:17 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.2  2001/08/12 17:24:55  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.1  2001/07/24 11:13:56  ibelyaev
-/// package restructurization(III) and update for newer GiGa
-/// 
+// $Log: not supported by cvs2svn $
 // ============================================================================
 // Include files
 /// STD and STL 
@@ -27,9 +22,9 @@
 // local
 #include "Trajectory2Particle.h"
 
-/** @file Tranjectory2Particle.cpp
+/** @file Trajectory2Particle.cpp
  * 
- *  Implementation file for class : Trajectory2Particle
+ *  Implementation file for class Trajectory2Particle
  * 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   22/07/2001 
@@ -40,14 +35,15 @@
  *  @param  Svc   pointer to Particle Property Service 
  */
 // ============================================================================
-Trajectory2Particle::Trajectory2Particle( IParticlePropertySvc* Svc )
+GiGaCnvFunctors::Trajectory2Particle::Trajectory2Particle
+( IParticlePropertySvc* Svc )
   : m_ppSvc ( Svc   )
 { if( 0 != ppSvc() ) { ppSvc()->addRef() ; } };
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-Trajectory2Particle::~Trajectory2Particle()
+GiGaCnvFunctors::Trajectory2Particle::~Trajectory2Particle()
 {
   if( 0 != ppSvc() ) { ppSvc()->release(); m_ppSvc = 0 ;}
 };
@@ -57,7 +53,7 @@ Trajectory2Particle::~Trajectory2Particle()
  *  @param right const reference to object 
  */
 // ============================================================================
-Trajectory2Particle::
+GiGaCnvFunctors::Trajectory2Particle::
 Trajectory2Particle( const Trajectory2Particle& right )
   : m_ppSvc( right.ppSvc() )
 {
@@ -81,7 +77,7 @@ static const std::string
 ErrMsg4("GiGaCnv::Trajectory2Particle::ParticleProperty* points to NULL for ");
 // ============================================================================
 MCParticle* 
-Trajectory2Particle::operator() 
+GiGaCnvFunctors::Trajectory2Particle::operator() 
   ( const GiGaTrajectory* trajectory ) const
 {
   if( 0 == ppSvc ()   ) { throw GiGaException( ErrMsg1 ) ; }
@@ -90,7 +86,7 @@ Trajectory2Particle::operator()
   const G4ParticleDefinition* pDef = trajectory->partDef() ;
   if( 0 == pDef       ) { throw GiGaException( ErrMsg3 );}
   
-  /// create and fill new MCparticle object 
+  // create and fill new MCparticle object 
   MCParticle* particle = new MCParticle();
   particle->setMomentum     ( trajectory->fourMomentum()           ) ;
   particle->setParticleID   ( ParticleID( pDef->GetPDGEncoding() ) ) ;
@@ -98,6 +94,7 @@ Trajectory2Particle::operator()
   return particle;
   ///
 };
+// ============================================================================
 
 // ============================================================================
 // The End 

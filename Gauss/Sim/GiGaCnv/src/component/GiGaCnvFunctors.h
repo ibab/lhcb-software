@@ -1,20 +1,8 @@
-// $Id: GiGaCnvFunctors.h,v 1.6 2002-04-23 11:23:40 ibelyaev Exp $
+// $Id: GiGaCnvFunctors.h,v 1.7 2002-05-20 13:36:16 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.5  2002/01/22 18:24:43  ibelyaev
-//  Vanya: update for newer versions of Geant4 and Gaudi
-//
-// Revision 1.4  2001/08/12 17:24:51  ibelyaev
-// improvements with Doxygen comments
-//
-// Revision 1.3  2001/07/30 14:13:35  ibelyaev
-// update in GiGaCnvFunctors
-//
-// Revision 1.2  2001/07/24 11:13:55  ibelyaev
-// package restructurization(III) and update for newer GiGa
-// 
 // ============================================================================
 #ifndef      GIGACNV_GIGACNVFUNCTORS_H
 #define      GIGACNV_GIGACNVFUNCTORS_H 1 
@@ -30,9 +18,9 @@
 // Event 
 #include "Event/MCVertex.h"
 #include "Event/MCParticle.h"
-
 // GiGa 
 #include "GiGa/GiGaTrajectoryPoint.h"
+// local 
 
 /// forward declarations 
 class GiGaKineRefTable;
@@ -59,8 +47,9 @@ namespace GiGaCnvFunctors
    *  @param vec2 const reference to the second vector
    *  @return true if first vector is "less" than the second vector 
    */
-  inline bool operator< ( const Hep3Vector& vec1 ,
-                          const Hep3Vector& vec2 )
+  inline bool operator< 
+  ( const Hep3Vector& vec1 ,
+    const Hep3Vector& vec2 )
   {
     if( &vec1 == &vec2 ) { return false ; } ///< the same object
     ///
@@ -92,8 +81,9 @@ namespace GiGaCnvFunctors
      *  @param v2 pointer to the second vertex 
      *  @return true if verst vertes is "less" than the second one
      */ 
-    inline bool operator() ( const MCVertex* v1 , 
-                             const MCVertex* v2 ) const 
+    inline bool operator() 
+      ( const MCVertex* v1 , 
+        const MCVertex* v2 ) const 
     {      
       return  
         ( v1 == v2                                   ) ? false :
@@ -124,14 +114,15 @@ namespace GiGaCnvFunctors
      *  @param v2  pointer to the second vertes 
      *  @return true if vertices have the same Time-of-Flight and Position
      */
-    inline bool operator() ( const MCVertex* v1 , 
-                             const MCVertex* v2 ) const 
+    inline bool operator() 
+      ( const MCVertex* v1 , 
+        const MCVertex* v2 ) const 
     {
       return 
-        ( v1 == v2                                 ) ? true  :
-        ( 0  == v1 || 0 == v2                      ) ? false :
-        ( v1->timeOfFlight() == v2->timeOfFlight() &&  
-          v1->position    () == v2->position    () ) ? true  : false ; 
+        ( v1 == v2                                   ) ? true  :
+        ( 0  == v1 || 0 == v2                        ) ? false :
+        ( v1->timeOfFlight () == v2->timeOfFlight () &&  
+          v1->position     () == v2->position     () ) ? true  : false ;
     };
   };
   
@@ -151,7 +142,8 @@ namespace GiGaCnvFunctors
      *  @param vertex reference to MCVertex object
      *  @return pointer to MCVertex object 
      */
-    inline MCVertex* operator() ( MCVertex* vertex ) const 
+    inline MCVertex* operator() 
+      ( MCVertex* vertex ) const 
     {
       if( 0 == vertex ) { return 0 ; }  // skip NULLs
       vertex->clearProducts ()    ;     // remove all daughter particles 
@@ -177,7 +169,8 @@ namespace GiGaCnvFunctors
      *  @param particle reference to MCParticle object
      *  @return pointer to MCParticle object 
      */
-    inline MCParticle* operator() ( MCParticle* particle ) const 
+    inline MCParticle* operator() 
+      ( MCParticle* particle ) const 
     {
       if( 0 == particle ) { return 0 ; }  ///< skip NULLs
       particle->clearEndVertices();   ///< remove all decay vertices  
@@ -186,12 +179,12 @@ namespace GiGaCnvFunctors
       return particle;
     };
   };
-
+  
 }; ///< end of namespace 
 
 
 // ============================================================================
-  // End 
+// End 
 // ============================================================================
 #endif  ///<   GIGACNV_GIGACNVFUNCTORS_H
 // ============================================================================
