@@ -1,8 +1,11 @@
-// $Id: CaloUtil.h,v 1.2 2001-11-26 18:57:19 ibelyaev Exp $ 
+// $Id: CaloUtil.h,v 1.3 2001-11-26 19:02:59 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/11/26 18:57:19  ibelyaev
+//  new utilities added
+//
 // Revision 1.1.1.1  2001/11/25 14:07:38  ibelyaev
 // New Package: substitution of the  previous CaloGen package
 //
@@ -13,6 +16,12 @@
 #ifndef CALOKERNEL_CALOUTIL_H 
 #define CALOKERNEL_CALOUTIL_H 1
 // ===========================================================================
+// include files 
+// STD & STL 
+#include <functional>
+/// forward declarations 
+template<class TYPE>
+class SmartRef;
 
 /** @namespace CaloUtil CaloUtil.h CaloKernel/CaloUtil.h
  *  
@@ -133,7 +142,8 @@ namespace CaloUtil
    */
   template <class TYPE> 
   class CmpSmartRef: 
-    public std::binary_function<const SmartRef<TYPE>,const SmartRef<TYPE>,bool>
+    public 
+  std::binary_function<const SmartRef<TYPE>,const SmartRef<TYPE>,bool>
   {
   public:
     /**  compare smart references via resolving to raw pointers 
@@ -142,8 +152,8 @@ namespace CaloUtil
      *   @return result of comparison (equality test) between resolved pointers
      */
     inline bool operator() 
-      ( const SmartRef<TYPE> o1 , 
-        const SmartRef<TYPE> o2 ) const
+      ( const SmartRef<TYPE>& o1 , 
+        const SmartRef<TYPE>& o2 ) const
     {
       const TYPE* p1 = o1 ; 
       const TYPE* p2 = o2 ;
