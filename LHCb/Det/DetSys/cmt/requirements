@@ -14,4 +14,4 @@ use MuonDet        	v4r5	Det
 use Magnet        	v2r4	Det
 use MuonTools	   	v3r6	Muon
 use RichDet	   	v6r5	Det
-use STDet          	v1r0	Det
+use STDet          	v1r1	Det
