@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.2 2003-07-03 14:47:00 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.3 2003-07-06 09:25:24 jonesc Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -191,9 +191,8 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( ContainedObject * obj ) {
         for ( std::vector<RichTrackSegment>::iterator iSeg = segments.begin();
               iSeg != segments.end(); ++iSeg ) {
 
-          // make a new segment
-          RichRecSegment * newSegment = new RichRecSegment();
-          newSegment->setTrackSegment( *iSeg );
+          // make a new RichRecSegment from this RichTrackSegment
+          RichRecSegment * newSegment = new RichRecSegment( *iSeg, newTrack );
 
           // Is this segment useful ?
           if ( m_segProps->hasRichInfo(newSegment) ) {
@@ -203,9 +202,6 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( ContainedObject * obj ) {
 
             // Save this segment
             m_segCr->saveSegment( newSegment );
-
-            // Set associated RichRecTrack
-            newSegment->setRichRecTrack( newTrack );
 
             // Add to the SmartRefVector of RichSegments for this RichRecTrack
             newTrack->addToRichRecSegments( newSegment );
@@ -221,6 +217,12 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( ContainedObject * obj ) {
               msg << MSG::WARNING << "Segment " << newSegment->key()
                   << " has no HPD panel impact point !!" << endreq;
             }
+
+            // set radiator info
+            Rich::RadiatorType rad = (*iSeg).radiator();
+            if ( Rich::Aerogel  == rad ) { newTrack->setInRICH1(1); newTrack->setInAerogel(1); }
+            if ( Rich::Rich1Gas == rad ) { newTrack->setInRICH1(1); newTrack->setInGas1(1); }
+            if ( Rich::Rich2Gas == rad ) { newTrack->setInRICH2(1); newTrack->setInGas2(1); }
 
           } else {
             delete newSegment;

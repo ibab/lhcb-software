@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromSICB.cpp,v 1.2 2003-07-03 14:46:59 jonesc Exp $
+// $Id: RichPixelCreatorFromSICB.cpp,v 1.3 2003-07-06 09:25:23 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromSICB.h"
@@ -125,7 +125,7 @@ RichRecPixel * RichPixelCreatorFromSICB::newPixel( ContainedObject * obj ) {
 
   // Try to cast to RichDigit
   RichDigit * digit = dynamic_cast<RichDigit*>(obj);
-  if ( !digit ) { 
+  if ( !digit ) {
     MsgStream msg( msgSvc(), name() );
     msg << MSG::WARNING << "Parent not of type RichDigit" << endreq;
     return NULL;

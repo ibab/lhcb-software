@@ -1,4 +1,4 @@
-// $Id: RichToolRegistry.cpp,v 1.3 2003-07-03 13:09:03 jonesc Exp $
+// $Id: RichToolRegistry.cpp,v 1.4 2003-07-06 09:25:23 jonesc Exp $
 
 // local
 #include "RichToolRegistry.h"
@@ -55,6 +55,5 @@ StatusCode RichToolRegistry::finalize() {
 }
 
 std::string RichToolRegistry::toolType( std::string tname ) {
-  std::string type = m_tools[tname];
-  return ( "" == type ? tname : type );
+  return ( "" == m_tools[tname] ? tname : m_tools[tname] );
 }

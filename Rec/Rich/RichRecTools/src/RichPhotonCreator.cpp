@@ -1,4 +1,4 @@
-// $Id: RichPhotonCreator.cpp,v 1.4 2003-07-03 14:46:58 jonesc Exp $
+// $Id: RichPhotonCreator.cpp,v 1.5 2003-07-06 09:25:23 jonesc Exp $
 
 // local
 #include "RichPhotonCreator.h"
@@ -177,25 +177,20 @@ RichRecPhoton * RichPhotonCreator::buildPhoton( RichRecSegment * segment,
          geomPhoton.CherenkovTheta() < m_maxCKtheta[rad] &&
          geomPhoton.CherenkovTheta() > m_minCKtheta[rad] ) {
 
-      newPhoton = new RichRecPhoton();
-
       // give photon same smart ID as pixel
       geomPhoton.setSmartID( pixel->smartID() );
-
-      // set geometrical photon information
-      newPhoton->setGeomPhoton( geomPhoton );
-
-      // Set various navigation info
-      newPhoton->setRichRecSegment( segment );
-      newPhoton->setRichRecTrack( segment->richRecTrack() );
-      newPhoton->setRichRecPixel( pixel );
+      
+      // make new RichRecPhoton
+      newPhoton = new RichRecPhoton( geomPhoton, segment,
+                                     segment->richRecTrack(), pixel );
 
       // check photon has significant probability to be signal for any
       // hypothesis. If not then reject and delete
       bool keepPhoton = false;
       for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
         if ( m_photonSignal->predictedPixelSignal(newPhoton,
-                                                  (Rich::ParticleIDType)iHypo) > m_minPhotonProb[rad] ) {
+                                                  (Rich::ParticleIDType)iHypo) 
+             > m_minPhotonProb[rad] ) {
           keepPhoton = true;
           break;
         }
