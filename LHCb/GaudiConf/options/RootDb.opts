@@ -1,8 +1,0 @@
-//----------------------------------------------------------------
-// Standard options for using Root/IO persistency
-//----------------------------------------------------------------
-ApplicationMgr.DLLs       += { "GaudiDb", "GaudiRootDb" };
-ApplicationMgr.ExtSvc     += { "DbEventCnvSvc/RootEvtCnvSvc" };
-EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
-RootEvtCnvSvc.DbType  = "ROOT";
-RootEvtCnvSvc.AgeLimit = 2;
