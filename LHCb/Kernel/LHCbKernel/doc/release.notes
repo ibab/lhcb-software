@@ -6,6 +6,8 @@ Purpose: LHCb specific Kernel classes
  - Added "Invalid" to the RichDetectorType, RichRadiatorType and 
    RichSide enumerations.
  - Reorganisation of RichSmartID.xml to improve human-readability
+ - Removed std::cout messages from RichSmartID set methods (used for
+   debug purposes). Users can still test the return value (bool) for success
 
 !====================== LHCbKernel v4r7 2004-06-14 ========================
 ! 2004-06-14 - Marco Cattaneo
