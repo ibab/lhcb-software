@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.20 2004-04-28 13:35:29 cattanem Exp $
+# $Id: requirements,v 1.21 2004-10-27 08:47:03 dhcroft Exp $
 # Created    : 11/01/2002
 # Maintainer : Olivier Callot
 
@@ -15,7 +15,7 @@ include_path none
 use	L0Event		v14r*	Event
 use	VeloEvent	v13r*	Event
 use     DAQEvent        v4r*    Event
-use     VeloDet         v8r*    Det
+use     VeloDet         v9r*    Det
 
 # Component library building rule
 #============================================================================

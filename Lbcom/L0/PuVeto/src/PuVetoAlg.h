@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.h,v 1.9 2004-03-25 08:39:48 cattanem Exp $
+// $Id: PuVetoAlg.h,v 1.10 2004-10-27 08:47:03 dhcroft Exp $
 #ifndef PUVETOALG_H 
 #define PUVETOALG_H 1
 
@@ -12,19 +12,22 @@
 // from VeloDet
 #include "VeloDet/DeVelo.h"
 
+// from LHCbKernel
+#include "Kernel/VeloChannelID.h"
+
 class VetoInput {
 public:
   VetoInput( double zSensor )  { m_zSensor = zSensor;  };
   virtual ~VetoInput( ) { };
   double zSensor()               const { return m_zSensor; };
 
-  void addStrip( int strip )        { m_strip.push_back( strip ); };
+  void addStrip( const VeloChannelID &strip )  { m_strip.push_back( strip ); };
   
-  std::vector<int>* strips( )          { return &m_strip;            };
+  std::vector<VeloChannelID>* strips( ) { return &m_strip;            };
   
 private:
   double m_zSensor;
-  std::vector<int> m_strip;
+  std::vector<VeloChannelID> m_strip;
 };
 
 
@@ -101,6 +104,8 @@ private:
   double         m_maskingWindow;
   
   DeVelo*        m_velo;
+
+  unsigned int   m_nbPuSensor;
 
   std::vector< VetoInput > m_input;
   

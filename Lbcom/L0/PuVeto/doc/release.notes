@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.23 2004-04-28 13:35:29 cattanem Exp $
+! $Id: release.notes,v 1.24 2004-10-27 08:47:03 dhcroft Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
+
+! 2004-10-26 - David Hutchcroft
+ - Modified code to work with new DeVelo (everything works from VeloChannelID 
+   instead of strip number now)
+
+! 2004-09-15 - David Hutchcroft
+ - Changed "magic" number for pileup sensors from 100 to 128 for new DeVelo code
+
 
 !========================= PuVeto v5r7 2004-04-28 =========================
 ! 2004-04-28 - Marko Zupan
