@@ -1,4 +1,4 @@
-// $Id: EvtIncoherentMixing.cpp,v 1.7 2003-12-10 11:32:29 robbep Exp $
+// $Id: EvtIncoherentMixing.cpp,v 1.8 2004-03-08 14:32:35 robbep Exp $
 // Include files 
 
 #ifdef WIN32 
@@ -24,10 +24,10 @@ bool EvtIncoherentMixing::_doB0Mixing = false ;
 bool EvtIncoherentMixing::_doBsMixing = false ;
 bool EvtIncoherentMixing::_enableFlip = false ;
 double EvtIncoherentMixing::_dGammad = 0. ;
-double EvtIncoherentMixing::_deltamd = 0.489e12 ;
-// dGamma_s corresponds to DeltaGamma / Gamma = 13 %
-double EvtIncoherentMixing::_dGammas = 8.537e10 ;
-double EvtIncoherentMixing::_deltams = 15.e12 ;
+double EvtIncoherentMixing::_deltamd = 0.502e12 ;
+// dGamma_s corresponds to DeltaGamma / Gamma = 10 %
+double EvtIncoherentMixing::_dGammas = 6.852e10 ;
+double EvtIncoherentMixing::_deltams = 20.e12 ;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -36,10 +36,10 @@ EvtIncoherentMixing::EvtIncoherentMixing(  ) {
   _doB0Mixing = false ;
   _doBsMixing = false ;
   _dGammad = 0. ;
-  // dGammas corresponds to DeltaGamma / Gamma = 13 %
-  _dGammas = 8.537e10 ;
-  _deltamd = 0.489e12 ;
-  _deltams = 15.e12 ;
+  // dGammas corresponds to DeltaGamma / Gamma = 10 %
+  _dGammas = 6.852e10 ;
+  _deltamd = 0.502e12 ;
+  _deltams = 20.e12 ;
   _enableFlip = false ;
 }
 //=============================================================================
@@ -61,7 +61,7 @@ void EvtIncoherentMixing::incoherentB0Mix( const EvtId id, double &t ,
   
   double x = getdeltamd() * EvtPDL::getctau( B0 ) / EvtConst::c ;
 
-  double y = getdGammad() / ( 2. * EvtPDL::getctau( B0 ) / EvtConst::c ) ;
+  double y = getdGammad() * ( EvtPDL::getctau( B0 ) / EvtConst::c ) / 2. ;
 
   double fac = 1. ; // No CP violation
 

@@ -1,4 +1,4 @@
-// $Id: EvtIncoherentMixing.hh,v 1.2 2003-10-21 12:24:56 robbep Exp $
+// $Id: EvtIncoherentMixing.hh,v 1.3 2004-03-08 14:32:32 robbep Exp $
 #ifndef EVTINCOHERENTMIXING_HH 
 #define EVTINCOHERENTMIXING_HH 1
 
@@ -59,9 +59,9 @@ public:
                       double probB ) ;
   static void OtherB( EvtParticle * p , double & t , EvtId & otherb ) ;
 
-  static bool flipIsEnabled() { return _enableFlip ; } ;
-  static void enableFlip() { _enableFlip = true ; } ;
-  static void disableFlip() { _enableFlip = false ; } ;
+  static bool flipIsEnabled() { return _enableFlip ; } 
+  static void enableFlip() { _enableFlip = true ; } 
+  static void disableFlip() { _enableFlip = false ; }  
 
 protected:
 
@@ -74,6 +74,5 @@ private:
   static double _dGammas ;
   static double _deltams ;
   static bool _enableFlip ;
-
 };
 #endif // EVTGENBASE_EVTINCOHERENTMIXING_HH
