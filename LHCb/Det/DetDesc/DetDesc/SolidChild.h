@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.8  2001/08/13 09:51:36  ibelyaev
+/// bug fix in 'reset' method
+///
 /// Revision 1.7  2001/08/09 16:47:58  ibelyaev
 /// update in interfaces and redesign of solids
 /// 
@@ -155,8 +158,8 @@ public:
    */
   virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
   
-protected: 
-  
+public:
+
   /// "new" method - return solid itself 
   inline const ISolid* solid () const { return m_sc_solid; };
   // is solid transformed?  
