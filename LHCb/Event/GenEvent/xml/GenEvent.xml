@@ -6,39 +6,93 @@
     <import name="HepMC/GenEvent"/>
     <class name="HepMCEvent"
       author="W. Pokorski"
-      desc="initial coding April 02 (based on ATLAS code)"
+      desc="Gaudi wrapper for HepMC events"
       location="Gen/HepMCEvents"
       id="2201" >
       <base name="KeyedObject&lt;int&gt;"/>
-      <attribute
-        desc="HepMC generator event"
-        name="pGenEvt"
-        type="HepMC::GenEvent*" />
- 
+      <import name="HepMC" ignore="TRUE"/>
+      <import name="CLHEPStreams" ignore="TRUE"/>
+      <constructor
+        desc="Constructor">
+        <arg type="std::string" name="generatorName" const="TRUE"/>
+        <arg type="int" name="ProcessId"/>
+        <arg type="int" name="EventNum"/>
+      </constructor>      
+      <constructor
+        desc="Copy constructor"
+        argList="const HepMCEvent evt"/>
+      <destructor
+         desc="Destructor">
+        <code>
+          if(m_pGenEvt !=0) 
+          {
+          delete m_pGenEvt;
+          }
+        </code>
+      </destructor> 
       <attribute
         desc="Generator Name"
-        name="generatorName"
+        name="generatorName" init='"Unknown"'
         type="std::string" />
-        
+      <attribute
+        desc="HepMC generator event"
+        name="pGenEvt" init="0"
+        type="HepMC::GenEvent*" />        
       <method
         desc="Assignment operator"
         name="operator="
         type="HepMCEvent&amp;"
         argList="const HepMCEvent evt" />
-       
       <method
+        desc="Serialize the object for reading"
         name="serialize"
         type="StreamBuffer&amp;"
-        argList="const HepMCEvent evt"
+        >
+        <arg name="s" type="StreamBuffer"/>
+      </method>
+      <method
+        desc="Serialize the object for writing"
+        name="serialize"
+        type="StreamBuffer&amp;"
         const="TRUE"
-        desc="Serialize out" />
-       
+        >
+        <arg name="s" type="StreamBuffer"/>
+      </method>
       <method
-        name="serialize"
-        type="StreamBuffer&amp;"
-        argList="const HepMCEvent evt"
-        desc="Serialize in" />
-    
+        desc="Write vertex"
+        name="write_vertex"
+        type="void"
+        const="TRUE"
+        >
+        <arg name="v" type="const HepMC::GenVertex*"/>
+        <arg name="s" type="StreamBuffer"/>
+      </method>
+      <method
+        desc="Write particle"
+        name="write_particle"
+        type="void"
+        const="TRUE"
+        >
+        <arg name="p" type="const HepMC::GenParticle*"/>
+        <arg name="s" type="StreamBuffer"/>
+      </method>
+      <method
+        desc="Read vertex"
+        name="read_vertex"
+        type="HepMC::GenVertex*"
+        >
+        <arg name="s" type="StreamBuffer"/>
+      </method>
+      <method
+        desc="Read particle"
+        name="read_particle"
+        type="HepMC::GenParticle*"
+        >
+        <arg name="bar_end" type="int*"/>
+        <arg name="bar_prod" type="int*"/>
+        <arg name="s" type="StreamBuffer"/>
+      </method>
      </class>
   </package>
 </gdd>
+

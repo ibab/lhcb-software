@@ -2,11 +2,12 @@ package GenEvent
 
 version v2r0
 
-branches cmt src doc GenEvent
+branches cmt dict doc src xml Event
 
 use GaudiKernel  v12r*
 use GaudiObjDesc v4r* 
 use HepMC        v1r2*	Sim
+use EventKernel  v2r*   Event
 
 include_dirs $(GENEVENTROOT)
 
@@ -18,7 +19,4 @@ document obj2dict GenEventObj2Dict ../xml/GenEvent.xml
 library GenEvent -no_share ../src/*.cpp ../dict/*.cpp
 
 apply_pattern package_linkopts
-
-
-
 

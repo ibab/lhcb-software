@@ -3,9 +3,10 @@
 //
 // AuthorList:
 //
-//         W. Pokorski: Initial coding April 02 (based on Atlas code)
+//         W. Pokorski: Initial coding Jully 02 
+// -------------------------------------------------------------------------
  
-#include "GenEvent/HepMCEvent.h"
+#include "Event/HepMCEvent.h"
 #include "GaudiKernel/ObjectFactory.h"
 #include "HepMC/IO_Ascii.h"
 
@@ -14,26 +15,15 @@
 #include <vector>
 #include <algorithm>
 
-_ImplementContainedObjectFactory ( HepMCEvent )
-_ImplementDataObjectFactory ( HepMCEventVector )
-
-
 // -------------------------------------------------------------------------
-HepMCEvent::HepMCEvent() : ContainedObject(), 
-  m_generatorName("Unknown"),m_pEvt(0),m_identifier(0)  {
+HepMCEvent::HepMCEvent(const std::string& Name,int ProcessId, int EventNum) :
+  m_generatorName(Name) {
 // -------------------------------------------------------------------------
+  m_pGenEvt = new HepMC::GenEvent(ProcessId, EventNum);
 }
 
 // -------------------------------------------------------------------------
-HepMCEvent::HepMCEvent(std::string Name,int ProcessId, int EventNum) : ContainedObject(), 
-    m_generatorName(Name), m_identifier(0) {
-// -------------------------------------------------------------------------
-  m_pEvt = new HepMC::GenEvent(ProcessId, EventNum);
-  m_identifier = (uint) m_pEvt;
-}
-
-// -------------------------------------------------------------------------
-HepMCEvent::HepMCEvent(const HepMCEvent& evt) : ContainedObject()
+HepMCEvent::HepMCEvent(const HepMCEvent& evt):KeyedObject<int>() 
 // -------------------------------------------------------------------------
 {
   
@@ -46,22 +36,13 @@ HepMCEvent& HepMCEvent:: operator = (const HepMCEvent& evt)
 // -------------------------------------------------------------------------
 {
   if(this != &evt) {
-     m_generatorName = evt.generatorName();;
-     if(m_pEvt !=0) delete m_pEvt;
-     HepMC::GenEvent* ptr = evt.pGenEvt();
-     m_pEvt = new HepMC::GenEvent(ptr->signal_process_id(),
+     m_generatorName = evt.generatorName();
+     if(m_pGenEvt !=0) delete m_pGenEvt;
+     const HepMC::GenEvent* ptr = evt.pGenEvt();
+     m_pGenEvt = new HepMC::GenEvent(ptr->signal_process_id(),
               ptr->event_number());
-     m_identifier = (uint) m_pEvt;
   }
   return (*this);
-}
-
-// -------------------------------------------------------------------------
-HepMCEvent::~HepMCEvent(){
-// -------------------------------------------------------------------------
-  if(m_pEvt !=0) {
-     delete m_pEvt;
-  }
 }
 
 // -------------------------------------------------------------------------
@@ -69,19 +50,19 @@ StreamBuffer&
 HepMCEvent::serialize( StreamBuffer& s ) const           // write out
 // -------------------------------------------------------------------------
 {
-    ContainedObject::serialize( s );
+    KeyedObject<int>::serialize( s );
     //
  
-    std::vector<long int> random_states = m_pEvt->random_states();
+    std::vector<long int> random_states = m_pGenEvt->random_states();
 
     s << m_generatorName
-      << m_pEvt->event_number() << m_pEvt->event_scale()
-      << m_pEvt->alphaQCD() << m_pEvt->alphaQED()
-      << m_pEvt->signal_process_id()
-      << ( m_pEvt->signal_process_vertex() ? 
-           m_pEvt->signal_process_vertex()->barcode():0 )
-      << m_pEvt->vertices_size()
-      << m_pEvt->particles_size()
+      << m_pGenEvt->event_number() << m_pGenEvt->event_scale()
+      << m_pGenEvt->alphaQCD() << m_pGenEvt->alphaQED()
+      << m_pGenEvt->signal_process_id()
+      << ( m_pGenEvt->signal_process_vertex() ? 
+           m_pGenEvt->signal_process_vertex()->barcode():0 )
+      << m_pGenEvt->vertices_size()
+      << m_pGenEvt->particles_size()
       << (int)random_states.size();
 
     for ( std::vector<long int>::iterator rs = random_states.begin(); 
@@ -89,29 +70,26 @@ HepMCEvent::serialize( StreamBuffer& s ) const           // write out
       s << *rs;
     }
 
-    s << (uint)m_pEvt->weights().size();
-    for ( HepMC::WeightContainer::const_iterator w = m_pEvt->weights().begin(); 
-	  w != m_pEvt->weights().end(); ++w ) {
+    s << (uint)m_pGenEvt->weights().size();
+    for ( HepMC::WeightContainer::const_iterator w = m_pGenEvt->weights().begin(); 
+	  w != m_pGenEvt->weights().end(); ++w ) {
       s << *w ;
     }
 
     //
 
-    for (HepMC::GenEvent::vertex_const_iterator v=m_pEvt->vertices_begin();
-         v!= m_pEvt->vertices_end();v++){
+    for (HepMC::GenEvent::vertex_const_iterator v=m_pGenEvt->vertices_begin();
+         v!= m_pGenEvt->vertices_end();v++){
       write_vertex(*v,s);
       
     }
 
-    for (HepMC::GenEvent::particle_const_iterator p=m_pEvt->particles_begin();
-         p!= m_pEvt->particles_end();p++){
+    for (HepMC::GenEvent::particle_const_iterator p=m_pGenEvt->particles_begin();
+         p!= m_pGenEvt->particles_end();p++){
       write_particle(*p,s);
     }
-    
 
-    return( s );
-    
-    
+    return( s );    
 }
 
 
@@ -120,7 +98,7 @@ StreamBuffer&
 HepMCEvent::serialize( StreamBuffer& s )              // read in
 // -------------------------------------------------------------------------
 {
-    ContainedObject::serialize( s );
+    KeyedObject<int>::serialize( s );
 
     //      
 
@@ -150,14 +128,14 @@ HepMCEvent::serialize( StreamBuffer& s )              // read in
     
     // creating GenEvent and adding vertices to it
  
-    if (m_pEvt == 0) {
-      m_pEvt = new HepMC::GenEvent(signal_process_id, event_number);
+    if (m_pGenEvt == 0) {
+      m_pGenEvt = new HepMC::GenEvent(signal_process_id, event_number);
     } else {
-      m_pEvt->set_signal_process_id( signal_process_id );
-      m_pEvt->set_event_number( event_number );
+      m_pGenEvt->set_signal_process_id( signal_process_id );
+      m_pGenEvt->set_event_number( event_number );
     }
-    m_pEvt->weights() = weights;
-    m_pEvt->set_random_states( random_states );
+    m_pGenEvt->weights() = weights;
+    m_pGenEvt->set_random_states( random_states );
 
 
     int bar_prod;
@@ -165,7 +143,7 @@ HepMCEvent::serialize( StreamBuffer& s )              // read in
 
     for ( int i2 = 1; i2 <= num_vertices; ++i2 ) {
       HepMC::GenVertex* v = read_vertex( s);
-      m_pEvt->add_vertex( v );
+      m_pGenEvt->add_vertex( v );
     }
 
     //
@@ -180,13 +158,13 @@ HepMCEvent::serialize( StreamBuffer& s )              // read in
       HepMC::GenParticle* p = read_particle(&bar_end,&bar_prod,s);      
 
       if(bar_prod){
-        HepMC::GenVertex* prod_Vtx = m_pEvt -> barcode_to_vertex(bar_prod);
+        HepMC::GenVertex* prod_Vtx = m_pGenEvt -> barcode_to_vertex(bar_prod);
         prod_Vtx -> add_particle_out(p);
        }
 
       if(bar_end)
       {      
-       HepMC::GenVertex* end_Vtx = m_pEvt -> barcode_to_vertex(bar_end);
+       HepMC::GenVertex* end_Vtx = m_pGenEvt -> barcode_to_vertex(bar_end);
        end_Vtx -> add_particle_in(p);
       }
       
@@ -199,8 +177,8 @@ HepMCEvent::serialize( StreamBuffer& s )              // read in
     // setting the pointer to the signal_process_vertex (if used) 
 
     if ( signal_process_vertex != 0 ) {
-      m_pEvt->set_signal_process_vertex(
-       m_pEvt->barcode_to_vertex(signal_process_vertex));
+      m_pGenEvt->set_signal_process_vertex(
+       m_pGenEvt->barcode_to_vertex(signal_process_vertex));
     }
 
     //
