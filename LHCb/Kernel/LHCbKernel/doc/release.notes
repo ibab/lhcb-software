@@ -2,18 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-! 2003-06-26 - Vanya BELYAEV 
-  - fix for Win32 
-
+!======================= LHCbKernel v2r8 2003-06-25 =======================
 ! 2003-06-25 - Vanya BELYAEV
  - few modification  for Relations stuff. 
- - cmt/requirements  increase the version     
-
-! 2003-06-25 - Ivan BELYAEV
  - src/AssociatorBase.cpp    fix for memory leak 
 
-
-!======================= LHCbKernel v2r8 2003-06-17 =======================
 ! 2003-06-16 - Sebastien Ponce
  - fixes for gcc 3.2/3.3
  - use more recent GaudiObjDesc

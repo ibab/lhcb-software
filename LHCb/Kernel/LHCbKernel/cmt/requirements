@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.38 2003-06-25 14:59:02 ibelyaev Exp $
+# $Id: requirements,v 1.39 2003-06-26 12:58:02 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v2r9
+version v2r8
 
 include_dirs $(LHCBKERNELROOT) $(BOOSTHOME)
 
