@@ -4,6 +4,14 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
 !=============================================================================
+! 13/05/2002- Philippe Charpentier
+  - Relations/Associator.h and IAssociator.h
+    add method to retrieve THE related object in case there is at most one. 
+	  Otherwise it returns the first one or a null pointer if there is none.
+  - Relations/AssociatorWeighted.h and IAssociatorWeighted
+    add method to retrieve THE related object in case there is at most one. 
+	  Otherwise it returns the first one or a null pointer if there is none.
+!=============================================================================
 ! 12/05/2002 - Vanya Belyaev
   - src/Test/LHCbKernelTest.cpp  removed 
   - src/Test/RelationsTest.cpp   new test application for Relations subpackage
