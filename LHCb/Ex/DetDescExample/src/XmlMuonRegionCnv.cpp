@@ -1,4 +1,4 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.2 2003-01-13 12:55:29 cattanem Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.3 2003-01-17 14:16:22 sponce Exp $
 
 // Include files
 
@@ -167,7 +167,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
           << endmsg;
       return StatusCode::FAILURE;
     }
-    dataObj->setchamberNum (xmlSvc()->eval(Number.c_str(), false));
+    dataObj->setchamberNum ((int) xmlSvc()->eval(Number.c_str(), false));
 
   } else if("ReadoutMap" == tagName){
 
@@ -184,11 +184,11 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
       return StatusCode::FAILURE;
     }
     if("Anode" == ReadoutType){
-      dataObj->setFEAnodeX (xmlSvc()->eval(NFEChamberX.c_str(), false));
-      dataObj->setFEAnodeY (xmlSvc()->eval(NFEChamberY.c_str(), false));
+      dataObj->setFEAnodeX ((int) xmlSvc()->eval(NFEChamberX.c_str(), false));
+      dataObj->setFEAnodeY ((int) xmlSvc()->eval(NFEChamberY.c_str(), false));
     }else{
-      dataObj->setFECathodeX (xmlSvc()->eval(NFEChamberX.c_str(), false));
-      dataObj->setFECathodeY (xmlSvc()->eval(NFEChamberY.c_str(), false));
+      dataObj->setFECathodeX ((int) xmlSvc()->eval(NFEChamberX.c_str(), false));
+      dataObj->setFECathodeY ((int) xmlSvc()->eval(NFEChamberY.c_str(), false));
     }      
 
   }else {

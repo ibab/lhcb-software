@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.17 2003-01-13 12:57:43 cattanem Exp $
+# $Id: requirements,v 1.18 2003-01-17 14:16:21 sponce Exp $
 package DetDescExample
-version v5r1
+version v5r2
 
 branches doc src options cmt
 

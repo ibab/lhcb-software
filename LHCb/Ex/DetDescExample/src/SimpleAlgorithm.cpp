@@ -1,4 +1,4 @@
-// $Id: SimpleAlgorithm.cpp,v 1.14 2003-01-13 12:55:28 cattanem Exp $
+// $Id: SimpleAlgorithm.cpp,v 1.15 2003-01-17 14:16:22 sponce Exp $
 
 /// Include files
 
@@ -260,12 +260,11 @@ StatusCode SimpleAlgorithm::initialize() {
   log << MSG::INFO << "///////////////////////////////////////////" << endmsg;
   std::string path = "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/";
   path += "Rich1Mirror1SurfaceReflectivityPT";
-  SmartDataPtr<TabulatedProperty> tab
-    (detSvc(), path);
+  SmartDataPtr<TabulatedProperty> tab (detSvc(), path);
   if (!tab) {
     log << MSG::ERROR
-        << "Can't retrieve /dd/Geometry/Rich1/Rich1Surfaces"
-        << "/MirrorSurfaceReflectivityPT" << endmsg;
+        << "Can't retrieve /dd/Geometry/Rich1/Rich1SurfaceTabProperties"
+        << "/Rich1Mirror1SurfaceReflectivityPT" << endreq;
     return StatusCode::FAILURE;
   }  
   TabulatedProperty::Table table = tab->table();
