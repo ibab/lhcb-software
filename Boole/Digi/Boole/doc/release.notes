@@ -24,6 +24,7 @@ Requires data produced by Gauss v14r3 or greater
   . Fix a compiler warning (L0MuonKernel v1r1)
   . Use public instead of private tool (L0MuonTrigger v1r1)
   . Add protection for dead regions on Velo sensor (VeloAlgorithms v2r9p2)
+  . Minor fix to test on path length in MCITDepositCreator (ITAlgorithms v14r2)
 
 </PRE><H1><A NAME=v5r3>2004-03-18 Boole v5r3</A></H1><PRE>
 
