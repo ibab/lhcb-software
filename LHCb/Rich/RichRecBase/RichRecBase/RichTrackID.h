@@ -4,7 +4,7 @@
  *
  * Header file for utility class : RichTrackID
  *
- * $Id: RichTrackID.h,v 1.13 2005-03-04 16:22:49 cattanem Exp $
+ * $Id: RichTrackID.h,v 1.14 2005-04-06 20:29:17 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004
@@ -266,6 +266,17 @@ public:
    *  @param track Pointer to an MCParticle from which to initialise
    */
   void initialiseFor( const MCParticle * track );
+
+  /** Operator < For sorting
+   *
+   *  @param id ID object for comparision
+   */
+  inline bool operator < ( const RichTrackID & id ) const
+  {
+    return ( ( trackType()  < id.trackType()  ) && 
+             ( parentType() < id.parentType() ) &&
+             ( unique()   && !id.unique()     )   );
+  }
 
 private: // data
 
