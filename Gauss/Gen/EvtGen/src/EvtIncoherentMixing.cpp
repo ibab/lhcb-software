@@ -1,7 +1,10 @@
-// $Id: EvtIncoherentMixing.cpp,v 1.5 2003-10-30 16:54:00 robbep Exp $
+// $Id: EvtIncoherentMixing.cpp,v 1.6 2003-11-06 10:54:50 robbep Exp $
 // Include files 
 
-
+#ifdef WIN32 
+  #pragma warning( disable : 4786 ) 
+  // Disable anoying warning about symbol size 
+#endif 
 
 // local
 #include "EvtGenBase/EvtIncoherentMixing.hh"
