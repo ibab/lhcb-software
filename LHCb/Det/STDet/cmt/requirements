@@ -1,0 +1,19 @@
+package STDet
+version v1r0
+
+branches cmt doc src options
+
+include_dirs $(STDETROOT)
+
+use DetDescCnv	v2r*	Det
+use LHCbKernel	v4r*	Kernel
+
+#---- link library
+library STDetLib ../src/Lib/*.cpp 
+
+#---- component library
+library STDet ../src/Component/*.cpp
+
+# =========== standard patterns (the order is essential!) ======================
+apply_pattern component_library library=STDet
+apply_pattern linker_library    library=STDetLib

@@ -1,0 +1,7 @@
+!Package         : STDet
+!Package manager : M. Needham
+
+! 2003-01-29 - M Needham
+    - First release of the STDet package
+    - Supports new TT geometries
+    
