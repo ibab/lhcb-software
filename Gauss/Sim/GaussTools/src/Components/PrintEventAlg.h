@@ -1,4 +1,4 @@
-// $Id: PrintEventAlg.h,v 1.1 2002-12-12 15:19:34 witoldp Exp $
+// $Id: PrintEventAlg.h,v 1.2 2003-12-03 15:16:45 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -83,6 +83,9 @@ private:
   std::string    m_vertices    ;
   std::string    m_hits    ;
   long m_depth;
+
+  int m_licznik;
+  int m_liczevent;
 
   void printDecayTree(long, const std::string&, const MCParticle*);
 

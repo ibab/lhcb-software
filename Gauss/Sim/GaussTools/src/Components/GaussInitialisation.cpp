@@ -10,6 +10,7 @@
 #include "Event/EventHeader.h"
 #include "Event/ProcStatus.h"
 #include <vector>
+#include <ctime>
 
 //----------------------------------------------------------------------------
 // Implementation of class :  GaussInitialisation
@@ -37,6 +38,24 @@ GaussInitialisation::~GaussInitialisation() { }
 //-----------------------------------------------------------------------------
 StatusCode GaussInitialisation::initialize() { 
 //-----------------------------------------------------------------------------
+
+  std::string version = (std::string)getenv("GAUSSVERS");
+  time_t ltime;
+  time(&ltime);
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::INFO << endmsg;
+  msg << MSG::INFO
+      << "==================================================================== \n"
+      << endmsg;
+  msg << MSG::INFO
+      << "                 Welcome to Gauss version " << version 
+      << endmsg;
+  msg << MSG::INFO 
+      << "                 job running on  "  << ctime(&ltime) << endmsg;
+  msg << MSG::INFO
+      << "===================================================================="
+      << endmsg;
+  msg << MSG::INFO << endmsg;
 
   // Set event number to the first event
   m_eventNumb=m_firstEvent;

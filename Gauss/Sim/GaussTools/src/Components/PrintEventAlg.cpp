@@ -24,11 +24,6 @@
 #include "Event/MCHit.h"
 #include "Event/GenHeader.h"
 #include "Event/Collision.h"
-
-
-#include"G4Material.hh"
-
-
 /// local 
 #include "PrintEventAlg.h"
 
@@ -61,6 +56,8 @@ PrintEventAlg::PrintEventAlg(const std::string& name,
   , m_particles   ( MCParticleLocation::Default )
   , m_vertices    ( MCVertexLocation::Default   )
   , m_hits        ( MCHitLocation::OTHits   )
+    , m_licznik(0)
+    , m_liczevent(0)
 { 
   declareProperty( "Particles" , m_particles); 
   declareProperty( "Vertices"  , m_vertices); 
@@ -101,10 +98,8 @@ StatusCode PrintEventAlg::initialize()
 // ============================================================================
 StatusCode PrintEventAlg::execute() 
 {
-
-
-  //  std::cout << *(G4Material::GetMaterialTable()) << std::endl;
-
+  m_liczevent++;
+  
   ///
   typedef MCParticles Particles ;
   typedef MCVertices  Vertices  ;
@@ -164,6 +159,8 @@ StatusCode PrintEventAlg::execute()
             }
           log << MSG::INFO << "Number of 'primary' particles " 
               << licz << endreq;
+          m_licznik = m_licznik+licz;
+          
         } 
     }
   else 
@@ -211,7 +208,15 @@ StatusCode PrintEventAlg::execute()
  */
 // ============================================================================
 StatusCode PrintEventAlg::finalize()
-{ return StatusCode::SUCCESS; }
+{ 
+  MsgStream log( msgSvc() , name() ) ;
+
+  log << MSG::INFO << "Average number of 'primary' particles "
+      << m_licznik/m_liczevent << endreq;
+  
+
+  return StatusCode::SUCCESS; 
+}
 
 // printing the decay tree of a given mother particle
 void PrintEventAlg::printDecayTree
