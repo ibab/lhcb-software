@@ -15,7 +15,7 @@ use CaloEvent   v13r5p1 Event
 use MuonEvent   v3r1p1  Event
 use L0Event     v14r1p1 Event
 use PhysEvent   v8r4    Event
-use DAQEvent    v4r4p1  Event
+use DAQEvent    v4r5    Event
 use GenEvent    v3r3    Event
 use EventAssoc  v1r4    Event
 use LinkerEvent v1r4    Event
