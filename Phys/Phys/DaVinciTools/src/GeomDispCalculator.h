@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.2 2002-05-15 23:29:22 gcorti Exp $
+// $Id: GeomDispCalculator.h,v 1.3 2002-10-22 21:35:43 gcorti Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -64,7 +64,8 @@ public:
   /// Calculates the distance of closest approach between two particles
   /// and its error.
   StatusCode calcCloseAppr( const Particle& particle1,
-                            const Particle& particle2, double& dist, 
+       
+                     const Particle& particle2, double& dist, 
                             double& distErr );
 
   /// Calculates the distance between two vertices and its error.
@@ -74,6 +75,7 @@ public:
 
 private:
   IParticleTransporter* m_pTransporter;  ///< Reference to ParticleTransporter
+  std::string m_transporterType;        ///< Type of transporter to use      
 
 };
 

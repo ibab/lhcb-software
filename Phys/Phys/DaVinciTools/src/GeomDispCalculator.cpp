@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.4 2002-09-11 16:45:35 gcorti Exp $
+// $Id: GeomDispCalculator.cpp,v 1.5 2002-10-22 21:35:45 gcorti Exp $
 
 // Include files
 // from Gaudi
@@ -42,10 +42,14 @@ const IToolFactory& GeomDispCalculatorFactory = s_factory;
 //==================================================================
 GeomDispCalculator::GeomDispCalculator(const std::string& type, 
                     const std::string& name, const IInterface* parent) 
-    : AlgTool( type, name, parent),
-      m_pTransporter(0) {
+  : AlgTool( type, name, parent)
+  , m_pTransporter(0)
+  , m_transporterType("CombinedTransporter")
+{
 
   declareInterface<IGeomDispCalculator>(this);
+
+  declareProperty("Transporter", m_transporterType);
 }
 //==================================================================
 // Initialize
@@ -54,8 +58,7 @@ StatusCode GeomDispCalculator::initialize() {
   MsgStream log( msgSvc(), name() );
   
   StatusCode sc = StatusCode::FAILURE;
-  sc = toolSvc()->retrieveTool("CombinedTransporter", 
-                                           m_pTransporter, this);
+  sc = toolSvc()->retrieveTool(m_transporterType, m_pTransporter, this);
   if(sc.isFailure()) {
     log << MSG::FATAL << "    Unable to retrieve ParticleTransporter  tool" ;
     return sc;
