@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.10 2003-01-23 17:28:04 ooleroy Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTrigger.cpp,v 1.11 2003-04-11 06:56:33 cattanem Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -296,6 +296,12 @@ StatusCode L0mTrigger::finalize()  {
   for( ip=m_crates.begin(); ip != m_crates.end(); ip++) {
     delete *ip;
   }
+
+  if( 0 != m_iTileXYZTool ) {
+    toolSvc()->releaseTool( m_iTileXYZTool );
+    m_iTileXYZTool = 0;
+  }
+
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "=====> Final summary of the L0Muon trigger: " << endreq;
   log << MSG::DEBUG << "Total of OK candidates in this job: " <<
@@ -320,7 +326,6 @@ L0mTower* L0mTrigger::createTower(L0mPad* pad, const std::vector<L0mPad>& pads){
   
   int nx = pad->padId().nX();
   int ny = pad->padId().nY();
-  // cout << "seed pad: " << st << " " << nr<< " " << nq << " " << nx << " " << ny << endl;
   
   L0mTower* lt = new L0mTower(pad->padId()); 
   
