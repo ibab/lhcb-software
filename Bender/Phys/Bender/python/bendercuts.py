@@ -1,7 +1,6 @@
 #!/usr/bin/env python
-
 # =============================================================================
-# $Id: bendermodule.py,v 1.8 2004-07-11 15:47:06 ibelyaev Exp $ 
+# $Id: bendercuts.py,v 1.1 2004-07-11 15:47:05 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
@@ -19,22 +18,18 @@
 # =============================================================================
 
 import PyLCGDict
-
-import gaudimodule as gaudi
+import gaudimodule    as gaudi
 
 g = gaudi.AppMgr()
-g.loaddict('EventDict')
-g.loaddict('PhysEventDict')
-g.loaddict('BenderDict')
 
-from bendertypes   import *
-from benderaux     import *
-from bendercuts    import *
-from benderloop    import *
-from bendertuple   import *
-from bendermatch   import *
-from benderalgo    import *
+g.loaddict( 'EventDict'     )
+g.loaddict( 'PhysEventDict' )
+g.loaddict( 'BenderDict'    )
 
+from benderparticlecuts    import *
+from bendervertexcuts      import *
+from bendermcparticlecuts  import *
+from bendermcvertexcuts    import *
 
 # =============================================================================
 # The END 
