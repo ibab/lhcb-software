@@ -11,7 +11,7 @@
 */
 
 #include <vector>
-#include <pair.h>
+#include <utility>  // For std::pair
 #include <boost/dynamic_bitset.hpp>
 
 namespace L0Muon {

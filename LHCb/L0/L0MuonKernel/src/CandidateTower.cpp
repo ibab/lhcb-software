@@ -1,7 +1,8 @@
 #include "GaudiKernel/MsgStream.h"
 #include <boost/dynamic_bitset.hpp>
-#include "L0MuonKernel/CandidateTower.h" 
+#include "L0MuonKernel/CandidateTower.h"
 
+#include <algorithm>  // For make_pair
 
 L0Muon::CandidateTower::CandidateTower(){
   m_seed = seedind(0,0);
@@ -130,22 +131,22 @@ void L0Muon::CandidateTower::drawBits(int sta, MsgStream * log) {
   int y = m_seed.second + yfoi;
 
   if (sta ==2){
-    m_xyindex[sta]= make_pair(m_seed.second, m_seed.first);
+    m_xyindex[sta]= std::make_pair(m_seed.second, m_seed.first);
   } 
   else {
     if (m_yFoi[sta] == 0){   
       if (ind ==0)
-        m_xyindex[sta] = make_pair(y,x);
+        m_xyindex[sta] = std::make_pair(y,x);
   
       if (ind >0){
         if (ind %2 ==0){
           int xtmp = x -(ind/2);
-          m_xyindex[sta] = make_pair(y,xtmp);
+          m_xyindex[sta] = std::make_pair(y,xtmp);
         }
         if (ind %2 !=0){
           int xtmp = x+ (ind+1)/2;
           
-          m_xyindex[sta] = make_pair(y,xtmp);
+          m_xyindex[sta] = std::make_pair(y,xtmp);
         }
         
       }
@@ -157,15 +158,15 @@ void L0Muon::CandidateTower::drawBits(int sta, MsgStream * log) {
     //sta 4 & 5
       if (ind >=0 && ind <(2* m_xFoi[sta]+1)){
         int xtmp = ind;
-        m_xyindex[sta] = make_pair(y-1,xtmp);
+        m_xyindex[sta] = std::make_pair(y-1,xtmp);
       }
       if (ind >=(2* m_xFoi[sta]+1) && ind < 2* (2* m_xFoi[sta]+1)){
         int xtmp = ind -2 *m_xFoi[sta];
-        m_xyindex[sta] = make_pair(y,xtmp);
+        m_xyindex[sta] = std::make_pair(y,xtmp);
       }
       if (ind >=(2*(2* m_xFoi[sta]+1)) && ind < 3* (2* m_xFoi[sta]+1)){
         int xtmp = ind -2*(2 *m_xFoi[sta]);
-        m_xyindex[sta] = make_pair(y,xtmp);
+        m_xyindex[sta] = std::make_pair(y,xtmp);
       }
       
     
@@ -176,6 +177,3 @@ void L0Muon::CandidateTower::drawBits(int sta, MsgStream * log) {
   }
   
 }
-
-
-

@@ -1,4 +1,4 @@
-#include <pair.h>
+#include <utility>  // For std::pair
 #include "L0MuonKernel/CrateUnit.h"
 
 L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet, 

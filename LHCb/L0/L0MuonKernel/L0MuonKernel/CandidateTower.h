@@ -11,7 +11,7 @@
 */
 
 #include <vector>
-#include <pair.h>
+#include <utility>  // For std::pair
 #include <boost/dynamic_bitset.hpp>
 #include "L0MuonKernel/Unit.h"
 #include "GaudiKernel/MsgStream.h"

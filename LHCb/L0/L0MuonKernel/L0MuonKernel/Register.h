@@ -1,4 +1,4 @@
-// $Id: Register.h,v 1.2 2004-03-11 15:57:55 ltocco Exp $
+// $Id: Register.h,v 1.3 2004-03-12 17:57:24 cattanem Exp $
 
 #ifndef L0MUONKERNEL_REGISTER_H
 #define L0MUONKERNEL_REGISTER_H     1
@@ -17,9 +17,7 @@
 
 namespace L0Muon {
 
-class L0Muon::Link;
-
-
+class Link;
 class Register  {
 
 public:

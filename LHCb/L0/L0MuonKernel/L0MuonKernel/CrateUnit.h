@@ -12,6 +12,8 @@
 
 //#include <boost/dynamic_bitset.hpp>
 #include <vector>
+#include <cmath> // for fabs
+
 #include "L0mConf/L0MPuNodeBase.h"
 #include "L0MuonKernel/L0mProcUnit.h"
 #include "L0mConf/L0MXmlReader.h"

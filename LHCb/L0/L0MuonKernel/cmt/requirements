@@ -3,29 +3,13 @@ package L0MuonKernel
 
 version v1r0
 
-branches cmt doc src L0MuonKernel options
-
-tag rh73_gcc32_s rh73_gcc32 standalone
-
-#use BOOST           v2r1290p0 
-#use GaudiPolicy     v5r*
+branches cmt doc src L0MuonKernel
 
 use MuonTools       v3r* Muon
-use L0Event         v13r* Event
-use MuonKernel      v2r*  Muon
+use L0Event         v14r* Event
 use L0mConf         v2r*  L0
-
 
 include_dirs $(L0MUONKERNELROOT)
 
-
 library L0MuonKernel  ../src/*.cpp
-
-apply_pattern linker_path
-#=================================
-
 apply_pattern linker_library library="L0MuonKernel"
-
-#apply_pattern packageShr
-
-#macro_append L0MuonKernel_shlibflags " $(GaudiKernel_linkopts)"
