@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer2Digit.cpp,v 1.1.1.1 2004-02-05 16:26:03 cattanem Exp $
+// $Id: MuonRawBuffer2Digit.cpp,v 1.2 2004-02-09 12:54:23 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -28,13 +28,11 @@ MuonRawBuffer2Digit::MuonRawBuffer2Digit( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : Algorithm ( name , pSvcLocator )
 {
-  basePath[0]="/dd/Cabling/Muon/M1/";
-  basePath[1]="/dd/Cabling/Muon/M2/";
-  
-   basePath[2]= "/dd/Cabling/Muon/M3/";
-   basePath[3]="/dd/Cabling/Muon/M4/";
-   
-      basePath[4]="/dd/Cabling/Muon/M5/";
+  basePath[0]= "/dd/ReadOut/MuonCabling/M1/";
+  basePath[1]= "/dd/ReadOut/MuonCabling/M2/";
+  basePath[2]= "/dd/ReadOut/MuonCabling/M3/";
+  basePath[3]= "/dd/ReadOut/MuonCabling/M4/";
+  basePath[4]= "/dd/ReadOut/MuonCabling/M5/";
 }
 //=============================================================================
 // Destructor
@@ -56,8 +54,12 @@ StatusCode MuonRawBuffer2Digit::initialize() {
     
     std::string cablingBasePath=getBasePath(station);    
     std::string cablingPath=cablingBasePath+"Cabling";
-    SmartDataPtr<MuonStationCabling>  cabling(detSvc(),
-                                              cablingPath);
+    SmartDataPtr<MuonStationCabling>  cabling(detSvc(), cablingPath);
+    if( 0 == cabling ) {
+      msg << MSG::ERROR << cablingPath << " not found in XmlDDDB" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    
     m_TotL1Board=m_TotL1Board+cabling->getNumberOfL1Board();
     int counterInL1=0;
     
