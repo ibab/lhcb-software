@@ -14,7 +14,7 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # ================ dependencies =============================================
 
 # DAQ Decoding
-use RichDAQ        v1r0   Rich
+use RichDAQ        v1r0p1 Rich
 
 # Common packages
 use RichRecBase    v1r7	  Rich
