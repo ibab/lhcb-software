@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.36 2004-07-16 16:12:11 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.37 2004-07-29 14:32:16 pkoppenb Exp $
 // Include files 
 
 
@@ -53,6 +53,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( PVIPFilterCriterion );
   DECLARE_TOOL( TrackTypeFilterCriterion );
   DECLARE_TOOL( VtxFilterCriterion );
+  DECLARE_TOOL( Momentum2FlightAngleFilterCriterion ) ;
 
   // Filter n particles
   DECLARE_TOOL( KinBestParticles );
@@ -82,11 +83,11 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_DATAOBJECT( Particle2VertexTable );
 
   // Algorithms
+  DECLARE_ALGORITHM( ChangeDecayChain );
+  DECLARE_ALGORITHM( ChangePID );
+  DECLARE_ALGORITHM( FilterByBestParticles );
   DECLARE_ALGORITHM( Particle2VertexWithIPS );
   DECLARE_ALGORITHM( PreLoadParticles );
   DECLARE_ALGORITHM( PreDV );
-  DECLARE_ALGORITHM( ChangePID );
-  DECLARE_ALGORITHM( FilterByBestParticles );
-  
 }
 

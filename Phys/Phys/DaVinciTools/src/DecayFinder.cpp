@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.10 2004-03-16 18:49:45 pkoppenb Exp $
+// $Id: DecayFinder.cpp,v 1.11 2004-07-29 14:32:16 pkoppenb Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -305,6 +305,15 @@ void DecayFinder::decayMembers( const Particle *head,
   m_decay->test(head, &members);
 }
 
+void DecayFinder::decaySubTrees(
+                      const Particle *head,
+                      std::vector<std::pair<const Particle*,
+                                            std::vector<Particle*> >
+                                 > & subtrees )
+{
+  m_decay->test(head, NULL, &subtrees);
+}
+
 DecayFinder::Descriptor::Descriptor( IParticlePropertySvc *ppSvc,
                                      double rThre)
   : mother(0), daughters(0), skipResonnance(false),
@@ -374,11 +383,14 @@ std::string DecayFinder::Descriptor::describe( void )
 }
   
 bool DecayFinder::Descriptor::test( const Particle *part,
-                                    std::vector<Particle*> *collect )
+                                    std::vector<Particle*> *collect,
+                            std::vector<std::pair<const Particle*,
+                                                  std::vector<Particle*> >
+                                       > *subtrees )
 {
   std::vector<Particle*> local_collect(0);
   std::vector<Particle*> *local = NULL;
-  if( collect )
+  if( collect || subtrees )
     local = &local_collect;
   bool result = false;
   if( mother && mother->test(part,local) )
@@ -398,30 +410,46 @@ bool DecayFinder::Descriptor::test( const Particle *part,
       if( skipResonnance )
         filterResonnances( parts );
 
-      result = testDaughters(parts,local);
+      if( subtrees ) {
+        std::vector<std::pair<const Particle*,
+          std::vector<Particle*> > > local_subtrees;
+          result = testDaughters(parts,local,&local_subtrees);
+        if( result )
+          subtrees->insert(subtrees->end(),
+                           local_subtrees.begin(),
+                           local_subtrees.end());
+      } else {
+        result = testDaughters(parts,local);
+      }
     }
   }
   if( result ) {
     if( collect )
       collect->insert( collect->end(),
                        local_collect.begin(), local_collect.end() );
+    if( subtrees && !daughters.empty() )
+      subtrees->push_back(std::pair<const Particle*,std::vector<Particle*> >
+                          (part,local_collect) );
     return true;
   }
   if( alternate )
-    return alternate->test(part,collect);
+    return alternate->test(part,collect,subtrees);
   return false;
 }
 
 bool
 DecayFinder::Descriptor::testDaughters( std::list<const Particle*> &parts,
-                                        std::vector<Particle*> *collect )
+                                        std::vector<Particle*> *collect,
+                            std::vector<std::pair<const Particle*,
+                                                  std::vector<Particle*> >
+                                       > *subtrees)
 {
   std::vector<Descriptor *>::iterator di;
   for( di = daughters.begin();
        (di != daughters.end()) && !parts.empty(); di++ )
   {
     std::list<const Particle *>::iterator p = parts.begin();
-    while( p != parts.end() && ((*di)->test(*p,collect) == false) )
+    while( p != parts.end() && ((*di)->test(*p,collect,subtrees) == false) )
       p++;
     if( p == parts.end() )
       return false;   // None of the parts has matched the test

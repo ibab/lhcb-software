@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.7 2003-03-07 11:05:52 odie Exp $
+// $Id: DecayFinder.h,v 1.8 2004-07-29 14:32:16 pkoppenb Exp $
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 
@@ -146,6 +146,12 @@ public:
    */
   void decayMembers( const Particle *head, std::vector<Particle*>&members );
 
+  /// Get a vector of pairs <mother, products> for all sub-trees.
+  void decaySubTrees( const Particle *head,
+                      std::vector<std::pair<const Particle*,
+                                            std::vector<Particle*> >
+                                 > & subtrees );
+
   /// Enumaration types used internally.
   enum Quarks { empty, up, down, charm, strange, top, bottom, antiup,
                 antidown, anticharm, antistrange, antitop, antibottom };
@@ -258,7 +264,9 @@ private:
       }
       return false;
     }
-    bool test(const Particle *mother, std::vector<Particle*> *collect=NULL);
+    bool test(const Particle *mother, std::vector<Particle*> *collect=NULL,
+              std::vector<std::pair<const Particle*,std::vector<Particle*> >
+                         > *subTree=NULL);
 
     void setAlternate( Descriptor *a ) { alternate = a; }
     Descriptor *getAlternate( void ) { return alternate; }
@@ -275,7 +283,9 @@ private:
     std::string describe( void );
   private:
     bool testDaughters( std::list<const Particle*> &parts,
-                        std::vector<Particle*> *collect=NULL );
+                        std::vector<Particle*> *collect=NULL,
+              std::vector<std::pair<const Particle*,std::vector<Particle*> >
+                         > *subTree=NULL );
     void addNonResonnantDaughters( std::list<const Particle*> &parts,
                                    const Particle *part );
     void filterResonnances( std::list<const Particle*> &parts );

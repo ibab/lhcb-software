@@ -1,4 +1,4 @@
-// $Id: IDecayFinder.h,v 1.7 2004-03-11 16:12:34 pkoppenb Exp $
+// $Id: IDecayFinder.h,v 1.8 2004-07-29 14:32:15 pkoppenb Exp $
 #ifndef TOOLS_IDECAYFINDER_H 
 #define TOOLS_IDECAYFINDER_H 1
 
@@ -52,5 +52,10 @@ public:
                             bool leaf=false ) = 0;
   virtual void decayMembers( const Particle *head,
                              std::vector<Particle*>&members ) = 0;
+  virtual void decaySubTrees( const Particle *head,
+                      std::vector<std::pair<const Particle*,
+                                            std::vector<Particle*> >
+                                 > & subtrees ) = 0;
+
 };
 #endif // TOOLS_IDECAYFINDER_H
