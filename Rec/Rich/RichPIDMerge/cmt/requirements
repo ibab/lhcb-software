@@ -1,0 +1,31 @@
+# Created    : 05/04/2002
+# Maintainer : Christopher Rob Jones
+
+package RichPIDMerge
+version v1r0
+
+# ================ structure ================================================
+branches src cmt doc options
+
+# ================ environment ==============================================
+set RICHPIDMERGEOPTS $(RICHPIDMERGEROOT)/options
+include_dirs $(RICHPIDMERGEROOT)
+
+# ================ dependencies =============================================
+use RichGlobalPID     v1r*  Rich
+use RichLocalPID      v1r*  Rich
+use RichRingRefit     v1r*  Rich
+
+# ================ component library=========================================
+library           RichPIDMerge   ../src/*.cpp
+
+# define component library link options
+#============================================================================
+apply_pattern     package_Clinkopts
+apply_pattern     packageShr
+
+#============================================================================
+private
+apply_pattern     package_Cshlibflags
+macro_append  RichPIDMerge_shlibflags " `cernlib kernlib` " \
+                                  WIN32 " $(CERNLIB_linkopts) kernlib.lib "
