@@ -35,7 +35,7 @@ use LHCb	v16r2
 use AsctToLinker        v1r2    Rec
 
 # Calorimeter
-use CaloMonitor         v2r2  	Calo
+use CaloMonitor         v2r2p1	Calo
 use CaloReco            v2r5	Calo
 use CaloPIDs		v2r4	Calo
 

@@ -9,7 +9,8 @@
  - Modified requirements for Brunel v24r2
 
    Packages removed:  VeloDAQ, STDAQ, MuonDAQ (moved to LHCbSys)
-   Packages modified: CaloPIDs v2r4, CaloReco v2r5, VeloTT v1r1
+   Packages modified: CaloPIDs v2r4, CaloReco v2r5, CaloMonitor v2r2p1,
+                      VeloTT v1r1
 
 !======================= BrunelSys v24r1 2004-07-26 =======================
 ! 2004-07-26 - Marco Cattaneo
