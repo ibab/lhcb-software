@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.25 2002-09-13 10:28:46 gcorti Exp $
+! $Id: release.notes,v 1.26 2002-09-13 15:09:30 gcorti Exp $
 <PRE>
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 ! Purpose     : LHCb analysis program 
 
+
 ! 2002-09-13 - Gloria Corti
+ - Include FlavourTagging v3r0
  - New version (use all Phys new packaegs + PhysEvent v7r0)
  - Include L0 packages for reprocessing of L0DU and L0DU dll
  - Include Calo packages for Re-Calibration of gammas

@@ -37,7 +37,7 @@ ApplicationMgr.DLLs += { "DaVinciTools" };
 ApplicationMgr.DLLs += { "DaVinciAssociators", "DaVinciMCTools" };
 ApplicationMgr.DLLs += { "DaVinciTest" };
 ApplicationMgr.DLLs += { "PhysSelections" };
-//ApplicationMgr.DLLs += {  "FlavourTagging" };
+ApplicationMgr.DLLs += { "FlavourTagging" };
 ApplicationMgr.DLLs += { "DaVinciUser" };
 
 // Options for ProtoParticles creation
