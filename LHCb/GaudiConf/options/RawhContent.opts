@@ -18,7 +18,7 @@ RawhWriter.ItemList =
   , "/Event/MC/OT#1"
   , "/Event/MC/OT/Hits#1"
   , "/Event/MC/Rich#1"
-  , "/Event/MC/Rich/Hits#1"
+  , "/Event/MC/Rich/HitsSICB#1" // Incompatible with G4 hits
   , "/Event/MC/Spd#1"
   , "/Event/MC/Spd/Hits#1"
   , "/Event/MC/Prs#1"

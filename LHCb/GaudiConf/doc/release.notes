@@ -1,11 +1,14 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v6r11 2003-07-11 =======================
-! 2003-07-11 - Marco Cattaneo
+!======================== GaudiConf v7r0 2003-07-16 ========================
+! 2003-07-16 - Marco Cattaneo
  - Add DigiContent.opts to define output of Boole
- - DstContent.opts: remove Rich and Calorimeter digits, as it's now possible
-                    to navigate to the oodigi tape if necessary
+ - RawhContent.opts: replace MC/Rich/Hits with MC/Rich/HitsSICB, to highlight
+                     incompatibility between hits produced by SICBMC and by Gauss
+ - DstContent.opts: removed Rich and Calorimeter digits, and all L1 clusters, as
+                    these were only needed for special studies. It is now 
+                    possible to navigate to the oodigi tape if necessary
 
 !======================== GaudiConf v6r10 2003-07-08 =======================
 ! 2003-07-08 - Marco Cattaneo
