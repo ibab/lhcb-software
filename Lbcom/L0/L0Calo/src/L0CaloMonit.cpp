@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.3 2002-04-04 06:04:13 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloMonit.cpp,v 1.4 2002-07-01 08:17:12 ocallot Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -75,10 +75,9 @@ StatusCode L0CaloMonit::execute() {
   MsgStream log(messageService(), name());
   log << MSG::DEBUG << " >>> Execute" << endreq;
 
-  std::string containerName = "/Event/Trig/L0/Calo";
+  std::string containerName = L0CaloCandidateLocation::Default;
   
-  SmartDataPtr< L0CaloCandidates > 
-    candidates ( eventDataService() , containerName );
+  SmartDataPtr< L0CaloCandidates > candidates ( eventSvc(), containerName );
   if( 0 == candidates ) { 
     log << MSG::ERROR << "Unable to retrieve " << containerName << endreq; 
     return StatusCode::SUCCESS;

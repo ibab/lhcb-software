@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.19 2002-06-26 12:36:50 cattanem Exp $
+! $Id: release.notes,v 1.20 2002-07-01 08:17:11 ocallot Exp $
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
+
+! 2002-07-01 - Olivier Callot
+ - New algorithm L0CaloToMCParticleAsct to build the relation between the
+   L0CaloCandidates (electron, photon, pi0local, hadron and hadron2) and 
+   MCParticle. This is based on the activeE from the hits, and a minimal 
+   fraction of the sum is needed, default 10%, jobOption MinimalFraction
+   The relation is stored in Rec/Relations/L0CaloCandidates which can be
+   changed by jobOption OutputTable.
 
 ! 2002-06-25 - Marco Cattaneo
  - Use CaloDet v5r*
