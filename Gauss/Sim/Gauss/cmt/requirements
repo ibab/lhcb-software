@@ -1,5 +1,5 @@
 package Gauss
-version v11r2
+version v12r0
 
 # =============================================================================
 # structure 
@@ -7,7 +7,7 @@ version v11r2
 branches doc options cmt job data
 
 # Main program and standard job options
-use GaudiConf           v6r*     
+use GaudiConf           v7r*     
 
 # GAUDI framework
 use GaudiAlg            v6r*
@@ -25,22 +25,23 @@ use HbookCnv            v13r*
 use Magnet              v2r*    Det
 
 #GiGa staff...
-use GiGaCnv             v12r3   Sim
-use GaussTools          v8r1    Sim
-use GaussTracker        v2r4    Sim
-use GaussRICH           v3r1    Sim
-use GaussCalo           v3r1    Sim
+use GiGaCnv             v13r0   Sim
+use GaussTools          v8r2    Sim
+use GaussTracker        v2r5    Sim
+use GaussRICH           v4r0    Sim
+use GaussCalo           v4r0    Sim
 use GaussPhysics        v2r2    Sim
 use CaloDetXmlCnv       v2r3    Det 
 
 #optional visualisation and UI
-use GiGaVisUI           v2r1    Sim
+#use GiGaVisUI           v2r1    Sim
 
 # generator
-use GeneratorModules    v7r0    Gen
+use GeneratorModules    v8r0    Gen
+use DecFiles            v1r0    Gen
 
 #geometry source 
-use XmlDDDB             v16r1   Det   -no_auto_imports
+use XmlDDDB             v17r0   Det   -no_auto_imports
 use FieldMap            v4r3          -no_auto_imports
 # =============================================================================
 # Essential environment variables 

@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.33 2003-07-09 17:58:02 ranjard Exp $ 
+// $Id: Simulation.opts,v 1.34 2003-07-18 07:00:40 witoldp Exp $ 
 
 ////////////////////////////////////////////////////////////////////
 // configuration of services
@@ -6,17 +6,14 @@
 ApplicationMgr.DLLs  += { "SimSvc" };
 
 #include "$STDOPTS/DetDesc.opts"
-//use XmlDDDB v16r1
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v256r0G.xml";
-//use XmlDDDB v16r0
-//DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v254r1G.xml"; 
+
 // declare external services needed MAGNETIC FIELD 
-ApplicationMgr.ExtSvc +=  
-{ "MagneticFieldSvc"  };  
-MagneticFieldSvc.FieldMapFile = 
-"$FIELDMAP";
+ApplicationMgr.ExtSvc +=  { "MagneticFieldSvc"  };  
+MagneticFieldSvc.FieldMapFile = "$FIELDMAP";
 
 ///////////////////////////////////////////////////////////////////
+
 
 ApplicationMgr.DLLs += 
 { "GiGa"         , 
@@ -67,23 +64,23 @@ Geo.ExecuteOnce          = true ;
 Geo.ConversionSvcName    = "GiGaGeo"  ; 
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Velo2Rich1"};
-Geo.StreamItems         += { "/dd/Structure/LHCb/Rich1"   } ; 
-Geo.StreamItems         += { "/dd/Geometry/Rich1/Rich1Surfaces" };
-Geo.StreamItems         += { "/dd/Geometry/Rich1/RichHPDSurfaces" };
-Geo.StreamItems         += { "/dd/Structure/LHCb/OT"   } ; 
-Geo.StreamItems         += { "/dd/Structure/LHCb/Rich2"   } ; 
-Geo.StreamItems         += { "/dd/Geometry/Rich2/Rich2Surfaces" };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Spd"  };  
-// add the following line to use SpdPrs description in XmlDDDB b16r1
-Geo.StreamItems         += { "/dd/Structure/LHCb/Converter"  };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Prs"  };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Ecal"  };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Hcal"  };
-Geo.StreamItems         += { "/dd/Structure/LHCb/Muon"  };
+Geo.StreamItems         += {"/dd/Structure/LHCb/Pipe"}; 
+Geo.StreamItems         += {"/dd/Structure/LHCb/Magnet"}; 
+Geo.StreamItems         += {"/dd/Structure/LHCb/Velo"}; 
+Geo.StreamItems         += {"/dd/Structure/LHCb/Velo2Rich1"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/Rich1"}; 
+Geo.StreamItems         += {"/dd/Geometry/Rich1/Rich1Surfaces"};
+Geo.StreamItems         += {"/dd/Geometry/Rich1/RichHPDSurfaces"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/OT"}; 
+Geo.StreamItems         += {"/dd/Structure/LHCb/Tracker/IT"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/Rich2"}; 
+Geo.StreamItems         += {"/dd/Geometry/Rich2/Rich2Surfaces"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/Spd"};  
+Geo.StreamItems         += {"/dd/Structure/LHCb/Converter"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/Prs"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/Ecal"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/Hcal"};
+Geo.StreamItems         += {"/dd/Structure/LHCb/Muon"};
 
 // physics list  and the production cuts  
 GiGa.PhysicsList              = "GiGaPhysListModular/ModularPL";
@@ -97,8 +94,8 @@ GiGa.ModularPL.PhysicsConstructors += {"MuonPhysics"};
 GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsLHEP"};
 //GiGa.ModularPL.PhysicsConstructors += {"HadronPhysicsQGSP"};
 GiGa.ModularPL.PhysicsConstructors += {"IonPhysics"};
-//GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp"};
-//GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorHpd"};
+GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorOp"};
+GiGa.ModularPL.PhysicsConstructors += {"GiGaPhysConstructorHpd"};
 
 // mandatory run action  
 GiGa.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
@@ -121,10 +118,11 @@ GiGa.TrackSeq.Members      += { "GaussPreTrackAction/PreTrack" } ;
 // all the subdetector specific actions should be added here:
 
 // specific RICH options
-//#include "$GAUSSRICHROOT/options/Rich.opts"
+#include "$GAUSSRICHROOT/options/Rich.opts"
 
 // specific configuration of calorimeter stuff 
 #include "$GAUSSCALOROOT/options/Calo.opts"
+
 // to be use with XmlDDDB v16r1
 #include "$GAUSSOPTS/SpdPrs.opts"
 //////////////////////////////////////////////////////////////////////

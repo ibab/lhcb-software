@@ -1,4 +1,4 @@
-// $Id: Digitisation.opts,v 1.8 2003-06-18 11:39:07 witoldp Exp $ 
+// $Id: Digitisation.opts,v 1.9 2003-07-18 07:00:40 witoldp Exp $ 
 
 
 HistogramPersistencySvc.OutputFile = "moni.hbook";  // Monitoring histos
@@ -12,7 +12,7 @@ Digitisation.Members += { "MCOTDepositCreator" ,
                           "MCOTDigitCreator",
                           "OTDigitCreator" };
 
-MCOTDepositCreator.OutputLevel = 1;
+MCOTDepositCreator.OutputLevel = 3;
 
 // Not really digitization, but just to check... 
 Digitisation.Members += { "OTClusterCreator"};
@@ -24,9 +24,9 @@ Digitisation.Members += { "MCOTDepositMonitor",
                           "OTClusterMonitor",
                           "OTClusterChecker"};
 
-MCOTDigitCreator.OutputLevel = 1;
-OTDigitCreator.OutputLevel = 1;
-OTClusterCreator.OutputLevel = 1;
+MCOTDigitCreator.OutputLevel = 3;
+OTDigitCreator.OutputLevel = 3;
+OTClusterCreator.OutputLevel = 3;
 
 
 //////////////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ VeloSim.SpillOver = false;
 VeloSim.InhomogeneousCharge = true;
 VeloSim.TestSimulation =  false;
 VeloSim.PileUp= true;
-VeloSim.OutputLevel=2;
+VeloSim.OutputLevel=3;
 
 // JP Palacios Options file for VeloMonitor algorithm
 ApplicationMgr.DLLs += { "VeloAssociators" };

@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.25 2003-07-04 11:15:37 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.26 2003-07-18 07:00:40 witoldp Exp $ 
 
 #units "$STDOPTS/units.opts"
 
@@ -26,19 +26,19 @@ ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSROOT/data/particle.cdf" ;
 ApplicationMgr.TopAlg          =  
 { "GaussInitialisation/GaussInit",
   "Sequencer/Generator", 
-  "Sequencer/Simulation",
-  "Sequencer/Digitisation" 
+  "Sequencer/Simulation"
+// ,"Sequencer/Digitisation" 
 };
 
 // read job options for various steps
 #include "$GAUSSOPTS/Generator.opts"
 #include "$GAUSSOPTS/Simulation.opts"
-#include "$GAUSSOPTS/Digitisation.opts"
+//#include "$GAUSSOPTS/Digitisation.opts"
 
 // write an output file
 #include "$GAUSSOPTS/GaussRootIO.opts"
 #include "$GAUSSOPTS/GaussTape.opts"
-GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='NEW'";
+GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='RECREATE'";
 
 // General global options  
 MessageSvc.OutputLevel    = 3; 
@@ -47,7 +47,7 @@ MessageSvc.OutputLevel    = 3;
 MessageSvc.setWarning += { "XmlGenericCnv" };
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 1;
+ApplicationMgr.EvtMax     = 10;
 
 GaussInit.FirstEventNumber =1;
 
@@ -55,9 +55,6 @@ GaussInit.FirstEventNumber =1;
 
 // Modify Message Format to print algorithm name with 40 characters
 // MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
-
-
-
 
 
 

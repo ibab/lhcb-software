@@ -23,7 +23,7 @@ RootEvtCnvSvc.DbType = "ROOT";
 EventDataSvc.RootCLID = 1;
 
 
-EventSelector.Input = {"DATAFILE='1006.root' TYP='ROOT' OPT='READ'"}; 
+EventSelector.Input = {"DATAFILE='Gauss.root' TYP='ROOT' OPT='READ'"}; 
 
 
 //--------------------------------------------------------------
@@ -36,7 +36,7 @@ ApplicationMgr.TopAlg  = {"PrintEventAlg/PrintEvt"};
 ApplicationMgr.TopAlg += {"GetGiGaHitsAlg/GetHits"};
 //ApplicationMgr.TopAlg += {"DumpMC"};
 
-ApplicationMgr.EvtSel      ="'1006.root'";
+ApplicationMgr.EvtSel      ="'Gauss.root'";
 
 HistogramPersistencySvc.OutputFile = "test.hbook";  // Monitoring histos
 #include "$STDOPTS/Hbook.opts"
