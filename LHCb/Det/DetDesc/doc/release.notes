@@ -1,7 +1,10 @@
 package DetDesc
 package manager : Vanya Belyaev
 
-
+===========================================================================
+! 20010215 - Gonzalo Gracia Abril & Vanya Belyaev
+  Corrections for proper treatment of rotations
+  Mod. files in src/Lib   PVolume.cpp, SolidChild.cpp
 
 !===========================================================================
 ! 20010213 - Marco Cattaneo
