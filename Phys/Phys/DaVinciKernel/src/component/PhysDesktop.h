@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.5 2004-12-01 07:36:49 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.6 2004-12-16 14:38:14 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -111,6 +111,11 @@ protected:
   
   
 private:
+
+  StatusCode makeParticles();      ///< Make particles
+  StatusCode getPrimaryVertices(); ///< get PV
+  StatusCode getParticles();       ///< get Particles
+  
   
   /// TES pathname for Primary Vertices 
   std::string m_primVtxLocn;

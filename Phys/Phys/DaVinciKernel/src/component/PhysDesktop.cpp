@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.7 2004-12-01 07:36:49 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.8 2004-12-16 14:38:14 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -553,147 +553,168 @@ void PhysDesktop::findAllTree( Vertex* vert, ParticleVector& parts,
 // Automatically called by DVAlgorithm::sysExecute()
 //=============================================================================
 StatusCode PhysDesktop::getEventInput(){
-  
 
   debug() << ">>> Hello from getEventInput " << endreq;
   debug() << "Initial size of local containers (P,V) = " 
           << m_parts.size() << ", " << m_verts.size() << endreq;
   
-  //cleanDesktop();
-  
-  if ( 0 != m_pMaker  ) {   
-    // Make particles starting from MC or reconstruction objects
-    
-    debug() << "PhysDesktop:Calling " << m_pMakerType 
-            << "::makeParticles() " 
-            << endreq;
-    
-    // Remember that these particles belong to the Desktop and are not
-    // in a TES container yet
-    StatusCode scMaker = m_pMaker->makeParticles(m_parts);
-    
-    if (!scMaker) {
-      debug() << " not able to make particles " << endreq;
-      return StatusCode::FAILURE;
-    }
-    
-    debug() << "Number of Particles from " << m_pMakerType
-            << " are " << m_parts.size() << endreq;
-    
-    // Flag these particles to be in PhysDesktop
-    for( ParticleVector::iterator ip = m_parts.begin(); 
-         ip != m_parts.end(); ip++ ) {
-      (*ip)->setDesktop(1);
-    }
-    
-  }
-  
+  // Make particles with particle maker
+  if ( m_pMaker ) {
+    StatusCode sc = makeParticles();
+    if (!sc) return sc;
+  } 
   // Retrieve Primary vertices
   if( "None" == m_primVtxLocn ) {
-    debug() << "Not loading any primary vertices" 
-            << endreq;
+    debug() << "Not loading any primary vertices" << endreq;
+  } else {    
+    StatusCode sc = getPrimaryVertices();
+    if (!sc) return sc;
   }
-  else {
-    SmartDataPtr<Vertices> verts ( eventSvc(), m_primVtxLocn );
-    if( ! verts ) {
-      debug() << " Unable to retrieve vertices from " << m_primVtxLocn << endreq;
-    }
-    else if( 0 == verts->size() ) {
-      debug() << " No vertices retrieved from  " << m_primVtxLocn << endreq;
-    }
-    else { 
-      debug() << "    Number of primary vertices  = " << verts->size() << endreq;
-      
-      int count = 0;
-      for( Vertices::iterator ivert = verts->begin();
-           ivert != verts->end(); ivert++ ) {
-        count++;
-        debug() << "    Vertex coordinates = ( " 
-                << (*ivert)->position().x() 
-                << " , " << (*ivert)->position().y() 
-                << " , " << (*ivert)->position().z() << " ) " << endreq;
-        
-        debug() << "    Vertex ChiSquare = " << (*ivert)->chi2() 
-                << endreq;  
-        // Put them in local containers
-        (*ivert)->setDesktop(1);
-        m_verts.push_back(*ivert);
-      }
-    }
-  }
-  
-  debug() << "Number of Vertices from " << m_primVtxLocn
-          << " are " << m_verts.size() << endreq;
-  
+
   // Retrieve Particles & Vertices from all previous processing
   // as specified in jobOptions
-  for( std::vector<std::string>::iterator iloc = m_inputLocn.begin(); 
-       iloc != m_inputLocn.end(); iloc++ ) {
-    
-    // Retrieve the particles:
-    std::string location = (*iloc)+"/Particles";
-    
-    SmartDataPtr<Particles> parts( eventSvc(), location );
-    if ( !parts ) { 
-      debug() << "Unable to retrieve Particles from " 
-              << location << endreq;
-    }
-    else if( 0 == parts->size() ) {
-      debug() << "No Particles retrieved from " 
-              << location << endreq;
-    }      
-    else {
-      
-      // Msg number of Particles retrieved
-      debug() << "    Number of Particles retrieved from "
-              << location << " = " << parts->size() << endreq;
-      
-      for( Particles::iterator icand = parts->begin();
-           icand != parts->end(); icand++ ) {
-        (*icand)->setDesktop(1);
-        m_parts.push_back(*icand);
-      }
-    }
-    debug() << "Number of Particles after adding " 
-            << location << " = " << m_parts.size() << endreq;
-    
-    // Retrieve the vertices:
-    location = (*iloc)+"/Vertices";
-    
-    SmartDataPtr<Vertices> verts ( eventSvc(), location );    
-    
-    if ( !verts ) { 
-      debug() << "Unable to retrieve vertices from " << location << endreq;
-    }
-    else if( 0 == verts->size() ) {
-      debug() << "No vertices retrieved from " << location << endreq;
-    }      
-    else {
-      
-      // Msg number of vertices retrieved
-      debug() << "    Number of vertices retrieved from "
-              << location << " = " << verts->size() << endreq;
-      
-      for( Vertices::iterator ivert = verts->begin();
-           ivert != verts->end(); ++ivert ) {
-        (*ivert)->setDesktop(1);
-        m_verts.push_back(*ivert);
-      }
-    }
-    debug() << "Number of vertices after adding " 
-            << location << " = " << m_verts.size() << endreq;
-    
-    
+  if (!m_inputLocn.empty()) {
+    StatusCode sc = getParticles();
+    if (!sc) return sc;
   }
-  debug() << "    Total number of particles " << m_parts.size() << endreq;
-  debug() << "    Total number of vertices " << m_verts.size() << endreq; 
   
   return StatusCode::SUCCESS;
   
 }
 
 //=============================================================================
-// Impose OutputLocation.
+// Make Particles
+//=============================================================================
+StatusCode PhysDesktop::makeParticles(){
+  // Make particles starting from MC or reconstruction objects
+    
+  debug() << "PhysDesktop:Calling " << m_pMakerType 
+          << "::makeParticles() " 
+          << endreq;
+    
+  // Remember that these particles belong to the Desktop and are not
+  // in a TES container yet
+  StatusCode sc = m_pMaker->makeParticles(m_parts);
+  
+  if (!sc) {
+    debug() << " not able to make particles " << endreq;
+    return sc;
+  }
+  
+  debug() << "Number of Particles from " << m_pMakerType
+          << " are " << m_parts.size() << endreq;
+  
+  // Flag these particles to be in PhysDesktop
+  for( ParticleVector::iterator ip = m_parts.begin(); ip != m_parts.end(); ip++ ) {
+    (*ip)->setDesktop(1);
+  }
+  return sc;
+}
+//=============================================================================
+// Get Particles
+//=============================================================================
+StatusCode PhysDesktop::getParticles(){
+
+  for( std::vector<std::string>::iterator iloc = m_inputLocn.begin(); 
+       iloc != m_inputLocn.end(); iloc++ ) {
+
+    // Retrieve the particles:
+    std::string location = (*iloc)+"/Particles";
+    
+    bool foundpart = exist<Particles>( location ) ;
+    if (!foundpart){
+      Warning("No particles at location "+location);
+    } else {
+      Particles* parts = get<Particles>( location );
+      if ( !parts ) { 
+        debug() << "Unable to retrieve Particles from " << location << endreq;
+      } else if ( parts->empty() ) {
+        debug() << "No Particles retrieved from " << location << endreq;
+      } else {
+      
+        // Msg number of Particles retrieved
+        debug() << "    Number of Particles retrieved from " 
+                << location << " = " << parts->size() << endreq;
+      
+        for( Particles::iterator icand = parts->begin(); icand != parts->end(); icand++ ) {
+          (*icand)->setDesktop(1);
+          m_parts.push_back(*icand);
+        }
+      }    
+      debug() << "Number of Particles after adding " 
+              << location << " = " << m_parts.size() << endreq;
+    }
+    
+    // Retrieve the vertices:
+    location = (*iloc)+"/Vertices";
+    
+    if (!exist<Vertices>( location )){
+      if (foundpart) Warning("No Vertices at location "+location);
+    } else {      
+
+      Vertices* verts = get<Vertices>( location );    
+      
+      if ( !verts ) { 
+        debug() << "Unable to retrieve vertices from " << location << endreq;
+      }
+      else if( 0 == verts->size() ) {
+        debug() << "No vertices retrieved from " << location << endreq;
+      }      
+      else {
+        
+      // Msg number of vertices retrieved
+        debug() << "    Number of vertices retrieved from "
+                << location << " = " << verts->size() << endreq;
+      
+        for( Vertices::iterator ivert = verts->begin();
+             ivert != verts->end(); ++ivert ) {
+          (*ivert)->setDesktop(1);
+          m_verts.push_back(*ivert);
+        }
+      }
+      debug() << "Number of vertices after adding " 
+              << location << " = " << m_verts.size() << endreq;
+      
+    }  
+  }
+  debug() << "    Total number of particles " << m_parts.size() << endreq;
+  debug() << "    Total number of vertices " << m_verts.size() << endreq; 
+  
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+// Get PV
+//=============================================================================
+StatusCode PhysDesktop::getPrimaryVertices(){
+  
+  Vertices* verts = get<Vertices>( m_primVtxLocn );
+  if( ! verts ) {
+    debug() << " Unable to retrieve vertices from " << m_primVtxLocn << endreq;
+  } else if( verts->empty() ) {
+    debug() << " No vertices retrieved from  " << m_primVtxLocn << endreq;
+  } else { 
+    debug() << "    Number of primary vertices  = " << verts->size() << endreq;
+    
+    for( Vertices::iterator ivert = verts->begin();
+         ivert != verts->end(); ivert++ ) {
+      debug() << "    Vertex coordinates = ( " 
+              << (*ivert)->position().x() 
+              << " , " << (*ivert)->position().y() 
+              << " , " << (*ivert)->position().z() << " ) " << endreq;
+      
+      debug() << "    Vertex ChiSquare = " << (*ivert)->chi2() 
+              << endreq;  
+      // Put them in local containers
+      (*ivert)->setDesktop(1);
+      m_verts.push_back(*ivert);
+    }
+  }
+  debug() << "Number of Vertices from " << m_primVtxLocn
+          << " are " << m_verts.size() << endreq;
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+// Impose OutputLocation
 //=============================================================================
 void PhysDesktop::imposeOutputLocation(std::string outputLocationString){
   if (outputLocationString != m_outputLocn) {

@@ -1,4 +1,4 @@
-// $Id: IParticleTransporter.h,v 1.1.1.1 2004-08-24 06:59:45 pkoppenb Exp $
+// $Id: IParticleTransporter.h,v 1.2 2004-12-16 14:38:14 pkoppenb Exp $
 #ifndef DAVINCITOOLS_IPARTICLETRANSPORTER_H 
 #define DAVINCITOOLS_IPARTICLETRANSPORTER_H 1
 
@@ -13,7 +13,7 @@
 // from Event
 #include "Event/Particle.h"
 
-static const InterfaceID IID_IParticleTransporter("IParticleTransporter",2,1); 
+static const InterfaceID IID_IParticleTransporter("IParticleTransporter",3,0); 
 
 /** @class IParticleTransporter IParticleTransporter.h
  *  DaVinciTools/IParticleTranporter.h
@@ -22,6 +22,9 @@ static const InterfaceID IID_IParticleTransporter("IParticleTransporter",2,1);
  *
  *  @author Edgar de Oliveira
  *  @date   22/02/2002
+ *  @author P. Koppenburg
+ *  @date   16/12/2004
+ *  -> Remove non const method. 
  */
 
 class IParticleTransporter : virtual public IAlgTool {
@@ -31,17 +34,13 @@ public:
 
   /// Transport a Particle to specified z position given a Particle iterator.
   virtual StatusCode transport(ParticleVector::const_iterator &, 
-                               double znew,
+                               const double znew,
                                Particle &transParticle) = 0;
   
   /// Transport a Particle to specified z position.
   virtual StatusCode transport(const Particle &, 
-                               double znew,
+                               const double znew,
                                Particle &transParticle) = 0;
 
-  /// Transport a Particle to specified z position.
-  virtual StatusCode transport(Particle &, 
-                               double znew,
-                               Particle &transParticle) = 0;
 };
 #endif // DAVINCITOOLS_IPARTICLETRANSPORTER_H
