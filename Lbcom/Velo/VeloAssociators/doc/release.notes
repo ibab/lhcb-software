@@ -1,9 +1,13 @@
 ! Package     : VeloAssociator
 ! Responsible : Chris Parkes
 
+!===================== VeloAssociators v1r9 2004-03-05 =====================
+! 2004-03-05 - Marco Cattaneo
+ - Go back to VeloDet v8r*
+
 !===================== VeloAssociators v1r8 2004-03-05 =====================
 ! 2004-03-05 - Marco Cattaneo
- - Use VeloEvent v13r* and VeloDet v9r*
+ - Use VeloEvent v13r* and VeloDet v9r*, for VeloDet studies
 
 !===================== VeloAssociators v1r7 2003-12-16 =====================
 ! 2003-12-16 - Marco Cattaneo
