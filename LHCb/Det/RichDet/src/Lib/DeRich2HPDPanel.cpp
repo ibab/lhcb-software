@@ -1,4 +1,4 @@
-// $Id: DeRich2HPDPanel.cpp,v 1.8 2003-10-22 10:48:28 papanest Exp $
+// $Id: DeRich2HPDPanel.cpp,v 1.9 2003-10-31 16:12:45 papanest Exp $
 #define DERICH2HPDPANEL_CPP
 
 // Include files
@@ -263,7 +263,8 @@ StatusCode DeRich2HPDPanel::smartID (const HepPoint3D& globalPoint,
 
   //std::cout << pixelColumn << "  " <<pixelRow << std::endl;
 
-  id = RichSmartID(0,0, HPDRow, HPDColumn, pixelRow, pixelColumn);
+  id = RichSmartID(id.rich(), id.panel(), HPDRow, HPDColumn, 
+                   pixelRow, pixelColumn);
   return StatusCode::SUCCESS;
 }
 

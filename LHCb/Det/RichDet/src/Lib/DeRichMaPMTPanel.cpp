@@ -1,4 +1,4 @@
-// $Id: DeRichMaPMTPanel.cpp,v 1.4 2003-10-22 10:48:28 papanest Exp $
+// $Id: DeRichMaPMTPanel.cpp,v 1.5 2003-10-31 16:12:46 papanest Exp $
 #define DERICHMAPMTPANEL_CPP
 
 // Include files
@@ -224,7 +224,8 @@ StatusCode DeRichMaPMTPanel::smartID (const HepPoint3D& globalPoint,
   unsigned int pixelColumn = (unsigned int)
     floor((pInMaPMT.x() - m_pixelHorizEdge) / m_pixelPitch);
 
-  id = RichSmartID(0, 0, MaPMTRow, MaPMTColumn, pixelRow, pixelColumn);
+  id = RichSmartID(id.rich(), id.panel(), MaPMTRow, MaPMTColumn, 
+                   pixelRow, pixelColumn);
 
   return StatusCode::SUCCESS;
 }

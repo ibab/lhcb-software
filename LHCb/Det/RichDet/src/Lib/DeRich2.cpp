@@ -1,4 +1,4 @@
-// $Id: DeRich2.cpp,v 1.4 2003-06-16 09:50:15 jonrob Exp $
+// $Id: DeRich2.cpp,v 1.5 2003-10-31 16:12:45 papanest Exp $
 #define DERICH2_CPP
 
 // Include files
@@ -7,11 +7,12 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
-//------------------------------------------------------------------------------
+#include "Kernel/CLHEPStreams.h"
+//-----------------------------------------------------------------------------
 //
 // Implementation of class :  DeRich2
 //
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 const CLID& CLID_DERich2 = 12002;  // User defined
 
@@ -41,6 +42,12 @@ StatusCode DeRich2::initialize() {
   m_nominalCentreOfCurvature = 
     HepPoint3D(nominalCoCX, nominalCoCY, nominalCoCZ);
 
+  //  std::vector<double> nominalCoC = paramVector("Rich2NominalCoC");
+  //  m_nominalCentreOfCurvature = 
+  //    HepPoint3D( nominalCoC[0], nominalCoC[1], nominalCoC[2]);
+  log << MSG::DEBUG << "Nominal centre of curvature" 
+      << m_nominalCentreOfCurvature << endreq;
+
   double nominalNorX = userParameterAsDouble("Rich2NominalNorX");
   double nominalNorY = userParameterAsDouble("Rich2NominalNorY");
   double nominalNorZ = userParameterAsDouble("Rich2NominalNorZ");
@@ -52,10 +59,22 @@ StatusCode DeRich2::initialize() {
   m_sphMirrorMaxY = userParameterAsDouble("Rich2SphMirrorMaxY");
 
   double d = userParameterAsDouble("Rich2DParam");
-  
   m_nominalPlaneLeft = HepPlane3D(nominalNorX, nominalNorY, nominalNorZ, d);
-  m_nominalPlaneRight = HepPlane3D(-nominalNorX, nominalNorY, nominalNorZ, d);
-
+  m_nominalPlaneRight =HepPlane3D(-nominalNorX, nominalNorY, nominalNorZ, d);
+  
+// get the parameters of the nominal flat mirror plane in the form
+// Ax+By+Cz+D=0
+//std::vector<double> nominalFMirrorPlane = 
+//  paramVector("Rich2NominalFlatMirrorPlane");
+//m_nominalNormal = HepVector3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
+//                                nominalFMirrorPlane[2]);
+//
+// m_nominalPlaneLeft=HepPlane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
+//                              nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
+//  m_nominalPlaneRight=
+//    HepPlane3D(-nominalFMirrorPlane[0],nominalFMirrorPlane[1],
+//               nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
+  
   log << MSG::DEBUG <<"Finished initialisation for DeRich2"<< endreq;
   return sc;
 }

@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.cpp,v 1.9 2003-10-22 10:48:28 papanest Exp $
+// $Id: DeRich1CdfHPDPanel.cpp,v 1.10 2003-10-31 16:12:45 papanest Exp $
 #define DERICH1CDFHPDPANEL_CPP
 
 // Include files
@@ -254,13 +254,6 @@ StatusCode DeRich1CdfHPDPanel::smartID ( const HepPoint3D& globalPoint,
 
   //std::cout << inSilicon << std::endl;
 
-  //  if (!siliconSolid->isInside(inSilicon)) {
-  //    log << MSG::ERROR << "The point is outside the silicon box "
-  //        << pvHPDMaster->name() <<  endreq;
-  //    id = RichSmartID(0);
-  //    return StatusCode::FAILURE;
-  //  }
-
   if ( (fabs(inSilicon.x()) > siliconHalfLengthX) ||
        (fabs(inSilicon.y()) > siliconHalfLengthY)    ) {
     log << MSG::ERROR << "The point is outside the silicon box "
@@ -277,7 +270,7 @@ StatusCode DeRich1CdfHPDPanel::smartID ( const HepPoint3D& globalPoint,
 
   //std::cout << pixelColumn << "  " <<pixelRow << std::endl;
 
-  id = RichSmartID(0,0,
+  id = RichSmartID(id.rich(), id.panel(),
                    static_cast<unsigned int>(HPDRow),
                    static_cast<unsigned int>(HPDColumn),
                    pixelRow,

@@ -11,6 +11,9 @@
  - improved the algorith the finds the photoDetector withing the Panel
  - added some more debug information.
 
+! 2003-31-10 - Antonis Papanestis
+ - minor improvements.
+
 !========================= RichDet v6r0 2003-08-29 =========================
 ! 2003-08-29 - Antonis Papanestis
  - added DeRichMaPMTPanel with classID = 12015. This will allow the use
