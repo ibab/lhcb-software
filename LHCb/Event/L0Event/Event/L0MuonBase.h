@@ -1,4 +1,4 @@
-// $Id: L0MuonBase.h,v 1.3 2002-07-24 17:04:42 atsareg Exp $
+// $Id: L0MuonBase.h,v 1.1 2004-01-26 16:23:46 cattanem Exp $
 //
 #ifndef      L0MUON_L0MUONBASE_H
 #define      L0MUON_L0MUONBASE_H 1

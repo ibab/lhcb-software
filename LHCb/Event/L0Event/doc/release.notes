@@ -1,10 +1,11 @@
-$Id: release.notes,v 1.32 2004-01-26 15:12:38 odescham Exp $
+$Id: release.notes,v 1.33 2004-01-26 16:23:46 cattanem Exp $
 Package : L0Event
 Package manager : Olivier Callot
 
-!======================== L0Event v14r0 2004-01-26 ========================
+!======================== L0Event v14r1 2004-01-26 ========================
 ! 2004-01-26 - Olivier Deschamps
  - Add Event/L0DUTELL1Base.h . Contains mask for coding/decoding L0DU->L1Buffer
+ - Move L0MuonBase.h from src to Event
 
 !======================== L0Event v14r0 2003-12-16 ========================
 ! 2003-12-16 - Marco Cattaneo
