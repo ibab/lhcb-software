@@ -1,9 +1,23 @@
 ! =============================================================================
-! $Id: release.notes,v 1.131 2003-04-01 13:41:07 sponce Exp $ 
+! $Id: release.notes,v 1.132 2003-04-03 10:56:35 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2003-04-03 - Vanya BELYAEV
+ - src/SolidSphere.cpp     reimplement the SolidSphere::setBP to take into account 
+                           *ALL* exceptional cases. 
+ - src/SolidCons.cpp       reimplement the SolidSphere::setBP to take into account 
+                           *ALL* exceptional cases. 
+ - src/SolidTubs.cpp       reimplement the SolidSphere::setBP to take into account 
+                           *ALL* exceptional cases. 
+ - src/SolidPolycone.cpp   reimplement the SolidSphere::setBP to take into account 
+                           *ALL* exceptional cases. 
+
+      I guess that some day I need to reimplement "setBP" 
+      method for all other solids also :-((( 
+                           
 
 ! 2003-04-01 - Sebastien Ponce
  - add the possibility to use parameters for the indexes of physical volumes

@@ -1,14 +1,8 @@
-// $Id: SolidSphere.cpp,v 1.10 2003-03-28 18:15:35 ibelyaev Exp $ 
+// $Id: SolidSphere.cpp,v 1.11 2003-04-03 10:56:36 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.9  2002/05/21 17:02:58  ibelyaev
-//  bug fix for SolidSphere
-//
-// Revision 1.8  2002/05/11 18:25:48  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-//
 // ===========================================================================
 // STD & STL 
 #include <algorithm>
@@ -120,85 +114,86 @@ StatusCode SolidSphere::setBP()
   // set bounding parameters of SolidBase class
   setRMax ( outerRadius() );
   
-  { /// evaluate ZMin and ZMax
-    typedef std::vector<double> TMP ;
-    TMP tmp;
-    tmp.push_back ( outerRadius  () * cos( startThetaAngle () ) ) ;
-    tmp.push_back ( insideRadius () * cos( startThetaAngle () ) ) ;
-    tmp.push_back ( outerRadius  () * cos( startThetaAngle () + 
-                                           deltaThetaAngle () ) ) ;
-    tmp.push_back ( insideRadius () * cos( startThetaAngle () + 
-                                           deltaThetaAngle () ) ) ;
+  typedef std::vector<double> Values ;
+  
+  const double theta1 = startThetaAngle ()                      ;
+  const double theta2 = startThetaAngle () + deltaThetaAngle () ;
+  const double phi1   = startPhiAngle   ()                      ;
+  const double phi2   = startPhiAngle   () + deltaPhiAngle   () ;
+  
+  { // evaluate ZMin and ZMax
+    Values values ;
+    
+    values.push_back ( outerRadius  () * cos ( theta1 ) ) ;
+    values.push_back ( insideRadius () * cos ( theta1 ) ) ;
+    values.push_back ( outerRadius  () * cos ( theta2 ) ) ;
+    values.push_back ( insideRadius () * cos ( theta2 ) ) ;
     //
-    setZMax ( *std::max_element( tmp.begin () , tmp.end () ) ) ;
-    setZMin ( *std::min_element( tmp.begin () , tmp.end () ) ) ;    
+    setZMax ( *std::max_element ( values.begin () , values.end () ) ) ;
+    setZMin ( *std::min_element ( values.begin () , values.end () ) ) ;    
   };
   
-  // evaluate rho max 
-  if(      startThetaAngle()                        <=   90.0 * degree 
-           && startThetaAngle() + deltaThetaAngle() >=   90.0 * degree  )
-    { setRhoMax ( rMax () ) ; }
-  else 
-    {
-      const double r1     = sin( startThetaAngle()                     );
-      const double r2     = sin( startThetaAngle() + deltaThetaAngle() );
-      const double rhomax = ( r1 > r2 ? r1 : r2 ) * rMax() ;
-      setRhoMax ( rhomax  ) ;
-    }
+  { // evaluate rho max 
+    Values values ;
+    
+    // regular case
+    values.push_back( rMax () * sin ( theta1 ) ) ;
+    values.push_back( rMax () * sin ( theta2 ) ) ;      
+    
+    // special cases 
+    if ( theta1 <= 90 * degree && 90 * degree <= theta2 ) 
+      { values.push_back( rMax () ) ; }
+    
+    setRhoMax ( *std::max_element ( values.begin() , values.end() ) ) ;
+  };
   
-  // evaluate xmax 
-  if(      startPhiAngle()                          <=    0.0 * degree 
-           && startPhiAngle() + deltaPhiAngle()     >=    0.0 * degree )
-    { setXMax (  rhoMax () ) ; }
-  else if( startPhiAngle()                          <=  360.0 * degree 
-           && startPhiAngle() + deltaPhiAngle()     >=  360.0 * degree )
-    { setXMax (  rhoMax () ) ; }
-  else
-    {
-      const double x1   = cos( startPhiAngle()                   );
-      const double x2   = cos( startPhiAngle() + deltaPhiAngle() );
-      const double xmax = ( x1 > x2 ? x1 : x2 ) * rhoMax ()  ;
-      setXMax ( xmax       ) ;
-    }
-  // evaluate xmin 
-  if(      startPhiAngle()                          <=  180.0 * degree 
-           && startPhiAngle() + deltaPhiAngle()     >=  180.0 * degree )
-    { setXMin ( -rhoMax()  ) ; }
-  else if( startPhiAngle()                          <= -180.0 * degree 
-           && startPhiAngle() + deltaPhiAngle()     >= -180.0 * degree )
-    { setXMin ( -rhoMax()  ) ; }
-  else 
-    {
-      const double x1   = cos( startPhiAngle()                   );
-      const double x2   = cos( startPhiAngle() + deltaPhiAngle() );
-      const double xmin = ( x1 < x2 ? x1 : x2 ) * rhoMax ()  ;
-      setXMin ( xmin       ) ;
-    }
-  // evaluate ymax 
-  if(      startPhiAngle()                          <=   90.0 * degree 
-           && startPhiAngle() + deltaPhiAngle()     >=   90.0 * degree )
-    { setYMax (  rhoMax () ) ; }
-  else
-    {
-      const double y1   = sin( startPhiAngle()                   );
-      const double y2   = sin( startPhiAngle() + deltaPhiAngle() );
-      const double ymax = ( y1 > y2 ? y1 : y2 ) * rhoMax ()  ;
-      setYMax ( ymax       ) ;
-    }
-  // evaluate ymin 
-  if(      startPhiAngle()                          <=  -90.0 * degree 
-           && startPhiAngle() + deltaPhiAngle()     >=  -90.0 * degree )
-    { setYMin ( -rhoMax () ) ; }
-  else if( startPhiAngle()                          <=  270.0 * degree 
-           && startPhiAngle() + deltaPhiAngle()     >=  270.0 * degree )
-    { setYMin ( -rhoMax () ) ; }
-  else
-    {
-      const double y1   = sin( startPhiAngle()                   );
-      const double y2   = sin( startPhiAngle() + deltaPhiAngle() );
-      const double ymin = ( y1 < y2 ? y1 : y2 ) * rhoMax ()  ;
-      setYMin ( ymin       ) ;
-    }
+  
+  { // evaluate xmin & xmax
+    Values values ;
+    
+    // regular cases 
+    values.push_back( rhoMax () * cos ( phi1 ) );
+    values.push_back( rhoMax () * cos ( phi2 ) );
+    
+    // special cases 
+    if( phi1 <=    0 * degree &&    0 * degree <= phi2 ) 
+      { values.push_back (   rhoMax () ) ; }
+    if( phi1 <=  360 * degree &&  360 * degree <= phi2 ) 
+      { values.push_back (   rhoMax () ) ; }
+    
+    // special cases 
+    if( phi1 <=  180 * degree &&  180 * degree <= phi2 ) 
+      { values.push_back ( - rhoMax () ) ; }
+    if( phi1 <= -180 * degree && -180 * degree <= phi2 ) 
+      { values.push_back ( - rhoMax () ) ; }
+    
+    setXMax ( *std::max_element ( values.begin () , values.end () ) ) ;
+    setXMin ( *std::min_element ( values.begin () , values.end () ) ) ;
+    
+  }
+
+  { // evaluate ymin & ymax
+    Values values ;
+    
+    // regular cases 
+    values.push_back( rhoMax () * sin (  phi1 ) );
+    values.push_back( rhoMax () * sin ( phi2 ) );
+    
+    // special cases 
+    if( phi1 <=   90 * degree &&   90 * degree <= phi2 ) 
+      { values.push_back (   rhoMax () ) ; }
+    
+    // special cases 
+    if( phi1 <=  -90 * degree &&  -90 * degree <= phi2 ) 
+      { values.push_back ( - rhoMax () ) ; }
+    if( phi1 <=  270 * degree &&  270 * degree <= phi2 ) 
+      { values.push_back ( - rhoMax () ) ; }
+    
+    setYMax ( *std::max_element ( values.begin () , values.end () ) ) ;
+    setYMin ( *std::min_element ( values.begin () , values.end () ) ) ;
+    
+  }
+
   ///
   return checkBP();
 };
