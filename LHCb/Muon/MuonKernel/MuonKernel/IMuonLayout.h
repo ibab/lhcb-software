@@ -1,4 +1,4 @@
-// $Id: IMuonLayout.h,v 1.3 2002-02-18 09:22:51 atsareg Exp $
+// $Id: IMuonLayout.h,v 1.4 2002-02-28 15:39:31 atsareg Exp $
 
 #ifndef MUONKERNEL_IMUONLAYOUT_H
 #define MUONKERNEL_IMUONLAYOUT_H     1
@@ -70,6 +70,16 @@ public:
 	 
     /// find all the MuonTileID's which are neighbours of the argument tile
     virtual std::vector<MuonTileID> neighbours(const MuonTileID& pad) const = 0;
+    
+    /** find all the MuonTileID's which are neighbours of the argument tile
+        in the specified direction. 
+	@param   pad   find the neighbours of this tile
+	@param   dirX  horizontal direction in which to look for neighbours
+	@param   dirY  vertical direction in which to look for neighbours
+    */	
+    virtual std::vector<MuonTileID> neighbours(const MuonTileID& pad,
+                                               int dirX, 
+					       int dirY ) const=0;	
     
     /** find all the MuonTileID's which are neighbours of the argument tile
         in the specified direction. 

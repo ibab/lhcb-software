@@ -1,4 +1,4 @@
-// $Id: MuonStationLayout.h,v 1.3 2002-02-18 09:22:53 atsareg Exp $
+// $Id: MuonStationLayout.h,v 1.4 2002-02-28 15:39:34 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONSTATIONLAYOUT_H
 #define MUONKERNEL_MUONSTATIONLAYOUT_H 1   
@@ -49,9 +49,9 @@ public:
     return std::make_pair(xGrid(reg),yGrid(reg)); 
   }
   /// Accessor to X granularity
-  int xGrid(int reg) const { return regionLayout(reg).xGrid(); }
+  unsigned int xGrid(int reg) const { return regionLayout(reg).xGrid(); }
   /// Accessor to Y granularity
-  int yGrid(int reg) const { return regionLayout(reg).yGrid(); }  
+  unsigned int yGrid(int reg) const { return regionLayout(reg).yGrid(); }  
   
   /** find a vector of MuonTileID's defined in terms of this MuonLayout
       which are touched by an area around a given MuonTileID defined 
@@ -96,6 +96,16 @@ public:
   
   /// find all the MuonTileID's which are neighbours of the argument tile
   virtual std::vector<MuonTileID> neighbours(const MuonTileID& pad) const;
+  
+  /** find all the MuonTileID's which are neighbours of the argument tile
+      in the specified direction. 
+      @param   pad   find the neighbours of this tile
+      @param   dirX  horizontal direction in which to look for neighbours
+      @param   dirY  vertical direction in which to look for neighbours
+  */	
+  virtual std::vector<MuonTileID> neighbours(const MuonTileID& pad,
+                                             int dirX,
+					     int dirY) const;
 
   /** find all the MuonTileID's which are neighbours of the argument tile
       in the specified direction. 

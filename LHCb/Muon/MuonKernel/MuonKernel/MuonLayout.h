@@ -1,4 +1,4 @@
-// $Id: MuonLayout.h,v 1.4 2002-02-25 10:57:34 atsareg Exp $
+// $Id: MuonLayout.h,v 1.5 2002-02-28 15:39:33 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONLAYOUT_H
 #define MUONKERNEL_MUONLAYOUT_H 1   
@@ -6,7 +6,9 @@
 // Include files
 #include <iostream>
 #include <vector>
+#ifndef MUONKERNEL_LOCAL
 #include "GaudiKernel/MsgStream.h"  
+#endif  // MUONKERNEL_LOCAL
 
 /** @class MuonLayout MuonLayout.h MuonKernel/MuonLayout.h 
    
@@ -43,7 +45,7 @@ public:
   virtual ~MuonLayout();
   
     /// Accessor to region layout
-  MuonLayout regionLayout(int reg) const { return *this ; }
+  MuonLayout regionLayout(int) const { return *this ; }
 
     
   /// Accessor to MuonLayout grid corresponding to the given MuonTileID
@@ -54,9 +56,9 @@ public:
   } 
     
   /// Accessor to X granularity
-  int xGrid() const { return m_xgrid; }
+  unsigned int xGrid() const { return m_xgrid; }
   /// Accessor to Y granularity
-  int yGrid() const { return m_ygrid; }  
+  unsigned int yGrid() const { return m_ygrid; }  
   
   /** find a vector of MuonTileID's defined in terms of this MuonLayout
       which are touched by an area around a given MuonTileID defined 
@@ -106,13 +108,23 @@ public:
      
   /// find all the MuonTileID's which are neighbours of the argument tile
   virtual std::vector<MuonTileID> neighbours(const MuonTileID& pad) const;
+  
+  /** find all the MuonTileID's which are neighbours of the argument tile
+      in the specified direction. 
+      @param   pad   find the neighbours of this tile
+      @param   dirX  horizontal direction in which to look for neighbours
+      @param   dirY  vertical direction in which to look for neighbours
+  */	
+  virtual std::vector<MuonTileID> neighbours(const MuonTileID& pad,
+                                             int dirX,
+					     int dirY) const;	 
 
   /** find all the MuonTileID's which are neighbours of the argument tile
       in the specified direction. 
       @param   pad   find the neighbours of this tile
       @param   dirX  horizontal direction in which to look for neighbours
       @param   dirY  vertical direction in which to look for neighbours
-      @param   depth depth of the band in which to look for neighbours
+      @param   depth depth of the band in which to look for neighbours      
   */	
   virtual std::vector<MuonTileID> neighbours(const MuonTileID& pad,
                                              int dirX,
@@ -141,8 +153,10 @@ public:
   /// printout to std::ostream 
   inline std::ostream& printOut ( std::ostream& ) const ;
 
+#ifndef MUONKERNEL_LOCAL
   /// printout to MsgStream
   inline MsgStream&    printOut ( MsgStream&    ) const ;
+#endif  // MUONKERNEL_LOCAL
 
 private:
   /// find magnification factor of pads in the given region
@@ -151,8 +165,8 @@ private:
   int region (int bx, int by) const ;
 
 private:  
-  int m_xgrid; 
-  int m_ygrid;
+  unsigned int m_xgrid; 
+  unsigned int m_ygrid;
     
 };   
 
@@ -164,6 +178,7 @@ inline std::ostream& MuonLayout::printOut( std::ostream& os ) const {
        <<  yGrid() << ")" ;  
 }
 
+#ifndef MUONKERNEL_LOCAL
 // print to MsgStream
 inline MsgStream& MuonLayout::printOut( MsgStream& os ) const { 
   os << "(" ;
@@ -171,6 +186,8 @@ inline MsgStream& MuonLayout::printOut( MsgStream& os ) const {
     os <<  xGrid() << ","
        <<  yGrid() << ")" ;  
 }
+#endif  // MUONKERNEL_LOCAL
+
 // output to std::ostream 
 inline std::ostream& operator<< ( std::ostream& os , const MuonLayout& id ) {
   return id.printOut( os );  
