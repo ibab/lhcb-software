@@ -1,2 +1,2 @@
-ApplicationMgr.DLLs += {"ITSicbGeom"};
+//ApplicationMgr.DLLs += {"ITSicbGeom"};
 

@@ -1,4 +1,3 @@
-// $Id: ITWafer.cpp,v 1.4 2002-09-12 08:41:48 cattanem Exp $
 #include<math.h>
 
 #include "ITDet/ITWafer.h"
@@ -6,9 +5,10 @@
 
 /// Standard constructor. Parameter iFixedEdge determines what edge 
 /// is not clipped if the number of strips is not integer
-ITWafer::ITWafer(double pitch, int firstStrip, unsigned int iStation,
-                 unsigned int iLayer, unsigned int iWafer,
-                 double ul, double ur, double vd, double vu, double dz): 
+ITWafer::ITWafer(double pitch, int firstStrip, unsigned int nWafer, 
+                 unsigned int iStation, unsigned int iLayer, unsigned int iWafer,
+		 double ul, double ur, double vd, double vu, double dz,
+                 double deadWidth): 
   m_Pitch(pitch),
   m_FirstStrip(firstStrip),
   m_station(iStation),
@@ -18,9 +18,17 @@ ITWafer::ITWafer(double pitch, int firstStrip, unsigned int iStation,
   m_UR(ur),
   m_VU(vu),
   m_VD(vd),
-  m_DZ(dz)
+  m_DZ(dz),
+  m_deadWidth(deadWidth)
 {
   m_NumStrips = (int)((m_UR - m_UL)/m_Pitch);
+
+  // dead regions
+  double waferHeight = (fabs(vu-vd)+2*m_deadWidth)/(double)nWafer;
+  for (unsigned int jWafer = 1;jWafer<nWafer;jWafer++){
+    double vDead = vd-m_deadWidth+(waferHeight*(double)jWafer);
+    m_deadRegions.push_back(vDead);
+  } // iWafer
 }
 
 /// Get number of strip at the point (u,v)
@@ -63,6 +71,22 @@ bool ITWafer::isInside(const double u, const double v, double tolerance) const
          && v<(m_VU+tolerance) && v>(m_VD-tolerance));
 }
 
+bool ITWafer::isInsideFullDetail(const double u, const double v) const
+{
+  bool isInside = this->isInside(u,v); 
+  if (isInside == true){
+    // detailed check
+    std::vector<double>::const_iterator iterD = m_deadRegions.begin();
+    while ((iterD != m_deadRegions.end())&&(isInside == true)){
+      if (fabs(v-*iterD)<m_deadWidth){
+        isInside = false;
+      }
+      iterD++;
+    } // iterD
+  } 
+
+  return isInside;
+}
 
 /// Get u-coordinate of a strip
 double ITWafer::U(const int strip) const 

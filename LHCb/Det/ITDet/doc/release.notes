@@ -1,7 +1,12 @@
 Package         : ITDet
 Package manager : M. Needham 
 
-!======================== ITDet v2r0 2002-09-05 ==========================
+!======================== ITDet v1r2 2002-10-03 ==========================
+! M Needham
+Bug fixes in ITSTLayer, ITTT1Layer
+Change ITWafer to allow for dead region between sensors
+
+!======================== ITDet v1r1 2002-09-05 ==========================
 ! 2002-09-05 - M.Needham
   Bug fix in TT1 layers - distance of stagger of wafers was factor 2 to big
   (Missed in 2 places)   

@@ -1,7 +1,7 @@
 #ifndef _ITWAFER_
 #define _ITWAFER_ 1
 #include <iostream>
-
+#include <vector>
 #include "GaudiKernel/MsgStream.h"
 
 /**
@@ -11,11 +11,12 @@ ITWafer is a class describing a rectangular field of strips
 class ITWafer {
 
   public:
-    
+ 
     /// Standard constructor.
-    ITWafer(double Pitch, int FirstStrip, 
-	    unsigned int iStation, unsigned int iLayer, unsigned int iWafer,
-            double UL, double UR, double VD, double VU, double DZ);
+    ITWafer(double Pitch, int FirstStrip, unsigned int nWafers,
+        unsigned int iStation, unsigned int iLayer, unsigned int iWafer,
+        double UL, double UR, double VD, double VU, 
+        double DZ, double deadWidth);
 
     virtual ~ITWafer() {}
 
@@ -42,6 +43,8 @@ class ITWafer {
 
     /// Check if a point (u,v) is inside of this subdivision with tol
     bool isInside(const double u, const double v, const double tolerance) const;
+
+    bool isInsideFullDetail(const double u, const double v) const;
 
     /// Get number of strips in this subdivision
     int numStrips() const;
@@ -84,7 +87,6 @@ class ITWafer {
     MsgStream& printOut( MsgStream& os) const;
 
  private:
-
     
     /// Strip pitch
     double m_Pitch;
@@ -108,6 +110,12 @@ class ITWafer {
     double m_DZ;
     /// Number of strips
     int m_NumStrips;
+
+    // vector of centers of dead areas in u
+    std::vector<double> m_deadRegions;
+
+    // half size of dead regions
+    double m_deadWidth;
 };
 
 inline unsigned int ITWafer::stationID() const{

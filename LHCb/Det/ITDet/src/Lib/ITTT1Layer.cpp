@@ -1,4 +1,4 @@
-// $Id: ITTT1Layer.cpp,v 1.4 2002-09-05 07:10:34 mneedham Exp $
+// $Id: ITTT1Layer.cpp,v 1.5 2002-10-04 07:24:47 mneedham Exp $
 //
 // This File contains the definition of the ITSTLayer-class
 //
@@ -37,7 +37,7 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
   
   // sensitive area of wafer
   double sensWaferWidth = pitch*(double)numStrips;
-  double guardRingSize = (waferWidth -sensWaferWidth);
+  double guardRingSize = 0.5*(waferWidth -sensWaferWidth);
  
   unsigned int nSensorHigh=0;
   // max dimensions
@@ -45,8 +45,14 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
     nSensorHigh += ladderSize1[iLad1]; 
   } // iLad
 
-  double vMax = holeY + (double)nSensorHigh*waferHeight;
-  double uMax = holeX + (double)wafersX2*(waferWidth - waferOverlap);
+  // layout top and bottom boxes...
+  double yLad = holeY + 0.5*((nSensorHigh*waferHeight*cosAngle())
+                             + (waferWidth*fabs(sinAngle())));
+  double xLad = -yLad*sinAngle()/cosAngle();
+  // go to u,v
+  double uLad = xLad*cosAngle() + yLad*sinAngle();
+  double vLad = yLad*cosAngle() - xLad*sinAngle();
+  double vMax = vLad + (0.5*(double)nSensorHigh*waferHeight);
 
   // bottom box
   int currStrip = 0;
@@ -60,12 +66,14 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
                           -2.0*guardRingSize;
 
     for (unsigned int iWafer=1;iWafer<=wafersX1;iWafer++){
-
-      ITWafer* aWafer = new ITWafer(pitch, 1,
+      double dz = -(1.-(2.*(iWafer%2)))*0.5*ladderDist;
+      ITWafer* aWafer = new ITWafer(pitch, 1,ladderSize1[iBWafer-1],
 				    stationID,layerID,waferOffset+iWafer,
-                                    -0.5*sensWaferWidth, 0.5*sensWaferWidth, 
+                                    uLad-0.5*sensWaferWidth, uLad+0.5*sensWaferWidth, 
 	   		            v - 0.5*ladderHeight, 
-		 	            v + 0.5*ladderHeight, 0.5*pow(-1.,iWafer-1)*ladderDist);
+		 	            v + 0.5*ladderHeight, 
+                                    dz,
+                                    guardRingSize);
 
        m_Wafers[waferOffset+iWafer-1] = aWafer;
        currStrip += aWafer->lastStrip();
@@ -79,21 +87,25 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
   // wafer number offset
   startWafer = wafersX2+((1+(ladderSize2.size()/2))*wafersX2*2)
                + (wafersX1*ladderSize1.size());
-  v = holeX;
+
+  v = vMax - ((double)nSensorHigh*waferHeight);
   for (unsigned int iTWafer=1; iTWafer<=ladderSize1.size();iTWafer++){
 
     unsigned waferOffset = startWafer+(iTWafer-1)*((2*wafersX2)+wafersX1);
     
     v += (waferHeight*(double)ladderSize1[ladderSize1.size()-iTWafer])/2.0;
     double ladderHeight = ladderSize1[ladderSize1.size()-iTWafer]*waferHeight
-                          -guardRingSize;
+                          -2.0*guardRingSize;
 
     for (unsigned int iWafer=1;iWafer<=wafersX1;iWafer++){
-      ITWafer* aWafer = new ITWafer(pitch, 1,
+      double dz = -(1.-(2.*(iWafer%2)))*0.5*ladderDist;
+      ITWafer* aWafer = new ITWafer(pitch, 1,ladderSize1[ladderSize1.size()-iTWafer],
 				    stationID,layerID,waferOffset+iWafer,
-                        -0.5*sensWaferWidth,0.5*sensWaferWidth, 
+                        uLad-0.5*sensWaferWidth,uLad+0.5*sensWaferWidth, 
 			v - 0.5*ladderHeight, 
-			v + 0.5*ladderHeight,0.5*pow(-1.,iWafer-1)*ladderDist);
+			v + 0.5*ladderHeight,
+                        dz,
+                        guardRingSize);
 
        m_Wafers[waferOffset+iWafer-1] = aWafer;
        currStrip += aWafer->lastStrip();
@@ -104,94 +116,105 @@ ITTT1Layer::ITTT1Layer(int stationID, int layerID, double z,
 
   } // iTWafer
 
-  int iStart;
-  if (wafersX2%2 == 0) iStart = 1;
-
-  // left box
-
   // recalculate vmax
   // max dimensions
   nSensorHigh = 0;
-  for (unsigned int iLad2=0; iLad2<ladderSize2.size()/2;iLad2++){
+  unsigned int iLad2=0;
+  for (iLad2=0; iLad2<ladderSize2.size()/2;iLad2++){
     nSensorHigh += ladderSize2[iLad2]; 
   } // iLad
-  vMax = ((double)nSensorHigh+0.5)*waferHeight;
+ 
+  // cache the x centers of ladders
+  std::vector<double> xSideLad; 
+  for (iLad2=1;iLad2<=wafersX2;iLad2++){
+    xSideLad.push_back(holeX +
+     ((double)(wafersX2-iLad2)*(waferWidth-waferOverlap)/cosAngle())+
+     (0.5*waferWidth*cosAngle()));
+  } //
 
   startWafer = 0;
-  v = -vMax;
-  for (unsigned int iLWafer=1; iLWafer<=ladderSize2.size();iLWafer++){
+  double ySideLad = 0.;
+  // left box
+  for (unsigned int iLWafer=1;iLWafer<=wafersX2;iLWafer++){
 
-    unsigned int waferOffset;
-    if (iLWafer<=(1+(ladderSize2.size()/2))){
-      waferOffset = startWafer+((iLWafer-1)*((2*wafersX2)+wafersX1));
-    }
-    else {
-      waferOffset = startWafer+((iLWafer-1)*((2*wafersX2)+wafersX1))-1;
-    }
+    double dz = (1.-(2.*(iLWafer%2)))*0.5*ladderDist;
+    double xLad = -xSideLad[iLWafer-1]; 
+    double uLad = xLad*cosAngle() + ySideLad*sinAngle();
+    double vLad = ySideLad*cosAngle() - xLad*sinAngle();
+    double v = -(vLad+((double)nSensorHigh)*waferHeight);
 
-    v += (waferHeight*(double)ladderSize2[iLWafer-1])/2.0; 
-    double ladderHeight = (ladderSize2[iLWafer-1]*waferHeight)
-                          -guardRingSize;
+    for (unsigned int iWafer=1; iWafer<=ladderSize2.size();iWafer++){
 
-    for (unsigned int iWafer=1;iWafer<=wafersX2;iWafer++){
- 
-      double u;
-      if (iWafer == 1){
-        u = -uMax+(((double)iWafer-0.5)*waferWidth);
+      // wafer center in V
+      v += 0.5*(waferHeight*(double)ladderSize2[iWafer-1]); 
+
+      // ladder height
+      double ladderHeight = waferHeight*(double)ladderSize2[iWafer-1]
+	-2.*guardRingSize; 
+               
+      // wafer offset
+      unsigned int waferOffset;
+      if (iWafer<=(1+(ladderSize2.size()/2))){
+        waferOffset = startWafer+((iWafer-1)*((2*wafersX2)+wafersX1));
       }
       else {
-        u = -uMax+(((double)iWafer-0.5)*(waferWidth-waferOverlap));
+       waferOffset = startWafer+((iWafer-1)*((2*wafersX2)+wafersX1))-1;
       }
 
-      ITWafer* aWafer = new ITWafer(pitch, 1,  
-				    stationID,layerID,iWafer+waferOffset,
-                        u-0.5*sensWaferWidth,u+0.5*sensWaferWidth, 
+      ITWafer* aWafer = new ITWafer(pitch, 1, ladderSize2[iWafer-1],  
+				    stationID,layerID,iLWafer+waferOffset,
+                        uLad-0.5*sensWaferWidth,uLad+0.5*sensWaferWidth, 
 			v - 0.5*ladderHeight, 
-			v + 0.5*ladderHeight, 0.5*pow(-1,iStart+iWafer)*ladderDist);
-      m_Wafers[iWafer+waferOffset-1] = aWafer;
+		        v + 0.5*ladderHeight, 
+                        dz,
+                        guardRingSize);
+      m_Wafers[iLWafer+waferOffset-1] = aWafer;
       currStrip += aWafer->lastStrip();
-  
-    } // iWafer
 
-    v += (waferHeight*(double)ladderSize2[iLWafer-1])/2.0; 
+      v += 0.5*(waferHeight*(double)ladderSize2[iWafer-1]); 
 
+    } //iWafer
   } // iLWafer
-  
-  // right box
-  v = -vMax;
+    
+  // right box 
   startWafer = wafersX1+wafersX2;
-  //double uOffset = (double)(wafersX1)*sensWaferWidth;
-  for (unsigned int iRWafer=1; iRWafer<=ladderSize2.size();iRWafer++){
+  for (unsigned int iRWafer=1;iRWafer<=wafersX2;iRWafer++){
 
-    unsigned int waferOffset;
-    if (iRWafer<=(ladderSize2.size()/2)){
-      waferOffset =startWafer+((iRWafer-1)*((2*wafersX2)+wafersX1));
-    }
-    else {
-      waferOffset =startWafer+((iRWafer-1)*((2*wafersX2)+wafersX1))-1;
-    }    
+    double dz = (1.-(2.*(iRWafer%2)))*0.5*ladderDist;
+    double xLad = xSideLad[wafersX2-iRWafer];
+    double uLad = xLad*cosAngle() + ySideLad*sinAngle();
+    double vLad = ySideLad*cosAngle() - xLad*sinAngle();
+    double v = -(vLad+((double)nSensorHigh)*waferHeight);
 
-    v += (waferHeight*(double)ladderSize2[iRWafer-1])/2.0; 
-    double ladderHeight = ladderSize2[iRWafer-1]*waferHeight 
-                          - 2.0*guardRingSize;
+    for (unsigned int iWafer=1; iWafer<=ladderSize2.size();iWafer++){
 
+      // wafer center in V
+      v += 0.5*(waferHeight*(double)ladderSize2[iWafer-1]); 
+      
+      // ladder height
+      double ladderHeight = waferHeight*(double)ladderSize2[iWafer-1]
+	-2.*guardRingSize; 
+       
+      // wafer offset
+      unsigned int waferOffset;
+      if (iWafer<=ladderSize2.size()/2){
+        waferOffset = startWafer+((iWafer-1)*((2*wafersX2)+wafersX1));
+      }
+      else {
+       waferOffset = startWafer+((iWafer-1)*((2*wafersX2)+wafersX1))-1;
+      }
 
-    for (unsigned int iWafer=1;iWafer<=wafersX2;iWafer++){
- 
-      double u = holeX+(((double)iWafer-0.5)*(waferWidth-waferOverlap));
-
-      ITWafer* aWafer = new ITWafer(pitch,1,  
-				    stationID,layerID,iWafer+waferOffset,
-                        u-0.5*sensWaferWidth,u+0.5*sensWaferWidth, 
+      ITWafer* aWafer = new ITWafer(pitch, 1, ladderSize2[iWafer-1],  
+				    stationID,layerID,iRWafer+waferOffset,
+                        uLad-0.5*sensWaferWidth,uLad+0.5*sensWaferWidth, 
 			v - 0.5*ladderHeight, 
-			v + 0.5*ladderHeight,0.5*pow(-1,iStart+iWafer)*ladderDist);
-      m_Wafers[iWafer+waferOffset-1] = aWafer;
+		        v + 0.5*ladderHeight, 
+                        dz,
+                        guardRingSize);
+      m_Wafers[iRWafer+waferOffset-1] = aWafer;
       currStrip += aWafer->lastStrip();
-
-    } // iWafer
-
-    v += (waferHeight*(double)ladderSize2[iRWafer-1])/2.0; 
-
+      v += 0.5*(waferHeight*(double)ladderSize2[iWafer-1]); 
+    } //iWafer
   } // iLWafer
 
   m_totStrips = currStrip;
