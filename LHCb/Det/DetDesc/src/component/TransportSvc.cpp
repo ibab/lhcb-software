@@ -1,4 +1,4 @@
-// $Id: TransportSvc.cpp,v 1.12 2005-01-25 14:09:19 cattanem Exp $
+// $Id: TransportSvc.cpp,v 1.13 2005-01-25 14:40:21 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -35,7 +35,7 @@
  */
 
 // ============================================================================
-/** @varTransportSvcFactory
+/** @var TransportSvcFactory
  *  Instantiation of a static factory class used by clients to create
  *  instances of this service
  */

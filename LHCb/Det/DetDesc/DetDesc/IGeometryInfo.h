@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.9 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: IGeometryInfo.h,v 1.10 2005-01-25 14:40:21 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -482,7 +482,6 @@ public:
   virtual std::ostream& printOut ( std::ostream& os = std::cout ) const = 0;
   
   /** printOut to Message stream
-   *  @param reference to Message stream
    *  return reference to Message stream
    */
   virtual MsgStream&    printOut ( MsgStream&                   ) const = 0;

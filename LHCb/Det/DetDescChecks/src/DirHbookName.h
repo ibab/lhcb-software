@@ -1,8 +1,6 @@
-// $Id: DirHbookName.h,v 1.1.1.1 2002-05-26 12:47:06 ibelyaev Exp $
+// $Id: DirHbookName.h,v 1.2 2005-01-25 14:41:07 cattanem Exp $
 // =============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// =============================================================================
-// $Log: not supported by cvs2svn $
 // =============================================================================
 #ifndef DETDESCCHECKS_DIRHBOOKNAME_H 
 #define DETDESCCHECKS_DIRHBOOKNAME_H 1
@@ -18,7 +16,7 @@ namespace Local
    *
    *  The function is imported from Calo/CaloUtils package 
    * 
-   *  @param   old    old address 
+   *  @param   addr   old address 
    *  @param   maxLen maximum allowed length of directory name (8 for Hbook) 
    *  @return  new  address 
    *

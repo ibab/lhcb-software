@@ -1,11 +1,6 @@
-// $Id: MaterialBudgetAlg.h,v 1.6 2004-06-28 07:10:00 mneedham Exp $
+// $Id: MaterialBudgetAlg.h,v 1.7 2005-01-25 14:41:07 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2004/03/01 15:03:44  ibelyaev
-//  update of the package
-//
 // ============================================================================
 #ifndef DETDESCCHECKS_MaterialBudgetALG_H 
 #define DETDESCCHECKS_MaterialBudgetALG_H 1
@@ -63,7 +58,7 @@ class AIDA::IHistogram2D;
  *                                  (default value is @p "TransportSvc" )
  *  <li> @ RndmService     The name of Gaudi Random Numbers Service 
  *                                    (default value is @p "RndmGenSvc" )
- *
+ *  </ul>
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   23/04/2002
  *

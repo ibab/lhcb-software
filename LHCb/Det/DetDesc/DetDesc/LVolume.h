@@ -1,4 +1,4 @@
-// $Id: LVolume.h,v 1.19 2004-07-09 14:19:41 cattanem Exp $ 
+// $Id: LVolume.h,v 1.20 2005-01-25 14:40:21 cattanem Exp $ 
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
 
@@ -303,7 +303,7 @@ private:
    *  @param intersections output container
    *  @param tickMin minimum value of possible Tick
    *  @param tickMax maximum value of possible Tick
-   *  @param threshold threshold value 
+   *  @param Threshold threshold value 
    *  @return number of intersections  
    */
   unsigned int intersectBody
@@ -319,7 +319,7 @@ private:
    *  @param Point initial point at the line
    *  @param Vector direction vector of the line
    *  @param intersections output container
-   *  @param threshold threshold value 
+   *  @param Threshold threshold value 
    *  @return number of intersections  
    */
   unsigned int intersectBody
