@@ -4,8 +4,8 @@
 ! Purpose     : List of packages in Brunel project
 !-----------------------------------------------------------------------------
 
-!======================= BrunelSys v19r0 2003-06-24 =======================
-! 2003-06-24 - Marco Cattaneo
+!======================= BrunelSys v19r0 2003-07-03 =======================
+! 2003-07-03 - Marco Cattaneo
  - Modified requirements for Brunel v19r0
    Packages removed:  MuonTools (now taken from LHCB_v12r0)
    Packages modified: KsReco v1r5, PuVeto v5r4, L0DU v6r4, L1VeloTrack v5r1,
@@ -14,7 +14,7 @@
    MuonID v3r6, MuonBackground v1r2, RichRecBase v1r1, RichUtils v3r1,
    RichDetTools v2r1, TrCleanEx v2r6p1, MCTools v1r1p1, CaloDigit v1r2p1,
    L0Calo v7r0p1, L0Muon v6r5p1, RichMonitor v3r0p1, RichRecAlgs v2r0p2, 
-   RichRecTools v2r0p1, DigiAlg v1r0p1
+   RichRecTools v2r0p1, DigiAlg v1r0p1, L1VeloTrack v5r2
 
 !======================= BrunelSys v18r1 2003-06-24 =======================
 ! 2003-06-24 - Marco Cattaneo

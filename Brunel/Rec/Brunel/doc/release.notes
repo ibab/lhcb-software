@@ -3,11 +3,8 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v19r0>2003-07-01 Brunel v19r0</A></H1><PRE>
-- Development version for:
-   . Port to Gaudi v12
-   . Port to gcc 3.2
-   . Splitting off of Boole
+</PRE><H1><A NAME=v19r0>2003-07-03 Brunel v19r0</A></H1><PRE>
+  This version is built against Gaudi v12 and introduces support for gcc 3.2
 
 - Removed features:
    . Removed support for dbase < v256r0. 
