@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2002-02-11 10:51:40 gcorti Exp $
+# $Id: requirements,v 1.11 2002-02-12 09:15:47 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -26,11 +26,11 @@ version_strategy first_choice
 #--- CMT and Gaudi policy
 use GaudiPolicy  v5r4
 
-#--- To read data produced with Brunel >= v6 it is possible to 
+#--- To read data produced with Brunel >= v5 it is possible to 
 #    select the appropriate database version at running time
 #--- Reading of files produced with SICBDST is not supported in DaVinci v2r0
 #--- Uncomment and modify next line to select an appropriate database version
-use dbase v241 SICB
+#use dbase v241 SICB
 
 #--- External libraries - Gaudi v9
 use ExternalLibs   v3r4
@@ -75,6 +75,7 @@ use CaloEvent      v7r*   Event
 use VeloEvent      v6r*   Event
 use L0Event        v10r*  Event
 use L1Event        v6r*   Event
+use PhysEvent      v2r*   Event
 
 #--- SicB event data persistency
 use SicbCnv        v15r*  SICB
