@@ -1,5 +1,5 @@
 package GaussSys
-version v19r1
+version v19r2
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v19r1	  Sim
+use Gauss		v19r2	  Sim
 
 # Generator stuff ...
 use GENSER		v2r030p1  Gen
@@ -25,9 +25,9 @@ use VisSvc              v3r3    Vis
 use SimSvc              v4r1    Sim
 
 # Gauss stuff...
-use GaussAlgs		v1r4    Sim
+use GaussAlgs		v1r5    Sim
 use GaussTools		v10r9	Sim
-use GaussRICH		v4r11	Sim
+use GaussRICH		v4r12	Sim
 use GaussTracker	v3r3	Sim
 use GaussCalo		v7r2	Sim
 use GaussPhysics	v3r1	Sim
