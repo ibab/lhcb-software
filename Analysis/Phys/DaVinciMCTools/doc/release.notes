@@ -1,6 +1,17 @@
-! $Id: release.notes,v 1.14 2002-10-30 13:17:32 gcorti Exp $
+! $Id: release.notes,v 1.15 2002-11-06 08:35:20 odie Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
+
+! 2002-11-05 - Olivier Dormond
+ - Added two new methods to the MCDecayFinder:
+    - std::string decay( void ) : Which tells you what the current decay is.
+    - StatusCode setDecay( std::string ) : To change the decay to a new one.
+   When changing a decay, if it fails to compile the new one, the old one will 
+   be retained.
+ - It's now possible to set the decay to an empty string in the job option 
+   file. In such a case, looking for the decay will fails until setDecay has 
+   been successfully called and warning will appear in the log for the 
+   initialization as well as each call to hasDecay/findDecay.
 
 !========================== DaVinciMCTools v3r0 2002-10-30 =================
 ! 2002-10-13 - Gloria Corti
