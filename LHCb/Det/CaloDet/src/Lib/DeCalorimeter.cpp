@@ -1,4 +1,7 @@
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2001/06/29 10:26:18  ibelyaev
+// update to use new features of DetDesc v7 package
+//
 #define  CALODET_DECALORIMETER_CPP 1 
 // from STL
 #include <cmath> 
@@ -30,6 +33,7 @@ DeCalorimeter::DeCalorimeter( const std::string& name )
   :  DetectorElement     ( name       )
   ,  m_initialized       ( false      )
   ,  m_cardsInitialized  ( false      )
+  ,  m_caloIndex         ( -1         )
   ,  m_maxEtInCenter     ( 10.0 * GeV )
   ,  m_maxEtSlope        ( 0.0  * GeV )
   ,  m_adcMax            ( 4095       )           
@@ -118,8 +122,8 @@ StatusCode DeCalorimeter::initialize()
     // should be an error??
   }
   ///
-  if( sc.isSuccess() ) { buildCells(); }
-  if( sc.isSuccess() ) { buildCards(); }
+  if( sc.isSuccess() ) { sc = buildCells(); }
+  if( sc.isSuccess() ) { sc = buildCards(); }
   ///
   return sc;
 };
@@ -130,7 +134,7 @@ StatusCode DeCalorimeter::initialize()
 
 StatusCode DeCalorimeter::buildCells( ) {
 
-// ** do not initialize, if already initialized 
+// ** do not initialize, if already initialize
 
   if( isInitialized() ) { return StatusCode::SUCCESS; } 
   int nbCells = 0;
@@ -162,20 +166,22 @@ StatusCode DeCalorimeter::buildCells( ) {
     Assert( 0 != geoData        , " Unable to extract IGeometryInfo* !"  );
     ILVolume* lv = geoData->lvolume();   
     Assert( 0 != lv             , " Unable to extract ILVolume* !"       );
-      
+
     HepPoint3D pointLocal(0,0,0), pointGlobal(0,0,0);
     pointLocal.setZ( zShowerMax() );
+
 
 // ** The center of each cell is specified by step of one cell
 // ** in the local frame. One has to convert to the global frame
 
     for( int Row = 0 ; maxRowCol >= Row    ; ++Row    ) {  
       pointLocal.setY( cellSize[ Area ] * ( Row - centerRowCol ) ) ;    
+      
       for( int Column = 0; maxRowCol >= Column ; ++Column )  { 
 	pointLocal.setX( cellSize[ Area ] * ( Column - centerRowCol ) ) ;    
 	
 	if( !lv->isInside( pointLocal ) ) {  continue ; }
-
+        
 	CaloCellID id( m_caloIndex, Area , Row , Column ) ;
 	cells.addEntry( CellParam(id) , id );  // store the new cell
 
@@ -288,9 +294,9 @@ StatusCode DeCalorimeter::buildCells( ) {
   } // end of loop ovel all cells 
 
   m_initialized = true ; 
-
-  log << MSG::INFO << "Initialized, index = " << m_caloIndex << ", " 
-      << nbCells << " cells." << endreq;
+  
+  log << MSG::DEBUG << "Initialized, index = " << m_caloIndex << ", " 
+      << nbCells    << " cells." << endreq;
 
   return StatusCode::SUCCESS; 
 };
@@ -442,10 +448,10 @@ StatusCode DeCalorimeter::buildCards( )  {
     } // ** If valid area, i.e. has a first row
   } // ** Area
   m_cardsInitialized = true;
-
-  log << MSG::INFO << "Initialized, " << m_cards 
+  
+  log << MSG::DEBUG          << "Initialized, " << m_cards 
       << " front-end cards." << endreq;
-
+  
   return StatusCode::SUCCESS; 
 };
 
@@ -553,8 +559,12 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
      << std::setw(12) << centerRowCol
      << endreq ; 
   
+  
   if( m_initialized ) 
     {
+      const MSG::Level lev = os.currentLevel();
+      os.report( lev - 1 );
+      ///
       CaloVector<CellParam>::const_iterator pCell = cells.begin() ; 
       while( cells.end() != pCell ) 
 	{
@@ -565,6 +575,8 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
 		     OutputStreamIterator<CaloCellID,MsgStream>(os) );
 	  os << endreq;
 	}
+      ///
+      os.report( lev );
     }
   
   return os ; 

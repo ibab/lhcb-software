@@ -1,6 +1,9 @@
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.4  2001/06/29 10:26:18  ibelyaev
+// update to use new features of DetDesc v7 package
+// 
 
-// Include files
+// CaloDet
 #include "CaloDet/DeSubCalorimeter.h"
 
 //------------------------------------------------------------------------------
