@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.68 2003-04-30 12:04:17 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.69 2003-11-26 08:36:44 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -3290,7 +3290,7 @@ int main(int argC,
   char* sep = new char[2];
 #ifdef WIN32
   strcpy(sep,"\\");
-#elif defined(__linux)
+#elif defined(__linux) || defined(__APPLE__)
   strcpy(sep,"/");
 #endif
 

@@ -1,4 +1,4 @@
-// $Id: DaDiXmlDtd.cpp,v 1.2 2003-04-30 12:04:20 mato Exp $
+// $Id: DaDiXmlDtd.cpp,v 1.3 2003-11-26 08:36:45 mato Exp $
 
 #include <iostream>
 #include <fstream>
@@ -39,7 +39,7 @@ int main(int argC, char* argV[])
 
 #ifdef WIN32
   std::string sep = "\\";
-#elif defined(__linux)
+#elif defined(__linux) || defined(__APPLE__)
   std::string sep = "/";
 #endif
 
