@@ -1,0 +1,20 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichTools
+! Responsible : Antonis Papanestis
+! Purpose     : General purpose Rich Tools
+!-----------------------------------------------------------------------------
+
+!=========================== RichTools v1r0 2004-06-17 =======================
+! 2004-06-17 - Marco Cattaneo
+ - New package, resulting from renaming of RichDetTools package
+
+ - Changes relative to RichDetTools v4r1:
+   . Move interfaces out of the package and into RichKernel
+   . Add RichRegistry tool (from RichUtils)
+   . Reomove RichTrSegMakerFromMCRichTracks (moved to RichMCTools)
+
+! 2004-06-08 (day of the Venus transit) - Antonis Papanestis
+ - Removed dependencies on old objects from 
+   RichTrSegMakerFromTrStoredTracks and RichTrSegMakerFromMCRichTracks
+ - made the reflectSpherical method of RichRayTracing public (and added it
+   to IRichRayTracing)

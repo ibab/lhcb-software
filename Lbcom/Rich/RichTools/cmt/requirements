@@ -1,0 +1,23 @@
+# $Id: requirements,v 1.1.1.1 2004-06-17 12:04:08 cattanem Exp $
+# Created    : 11/03/2002
+# Maintainer : Antonis Papanestis
+
+package RichTools
+version v1r0
+
+# ================ structure ================================================
+branches src cmt doc
+
+# ================ dependencies =============================================
+use RichEvent   v7r*  Event
+use RichDet     v7r*  Det
+
+# ================ environment ==============================================
+include_path none
+
+# ================ component library=========================================
+library RichTools ../src/*.cpp
+
+# define component library link options
+#============================================================================
+apply_pattern component_library library=RichTools
