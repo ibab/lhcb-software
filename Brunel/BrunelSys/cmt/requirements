@@ -11,7 +11,6 @@ branches cmt doc
 use Brunel              v24r0	Rec
 
 # Brunel utilities
-use BrunelAlgs          v3r5	Rec
 use AsctToLinker        v1r2    Rec
 
 # Calorimeter
