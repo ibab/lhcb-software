@@ -3,7 +3,7 @@
 <gdd>
     <package name="RichRecBase">
         <import name="Kernel/CLHEPStreams"/>
-        <import name="RichKernel/SerializeStl"/>
+        <import name="Kernel/SerializeStl"/>
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working track object." id="12421" keyedContTypeDef="TRUE" location="Rec/Rich/RecBase/Tracks" name="RichRecTrack" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
             <import name="GaudiKernel/ContainedObject"/>

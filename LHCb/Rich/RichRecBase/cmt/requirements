@@ -7,7 +7,7 @@
 #============================================================================
 
 package   RichRecBase
-version   v1r6
+version   v1r7
 
 #============================================================================
 # Structure
@@ -38,15 +38,9 @@ document obj2dict RichRecBase_CommonObj2Dict   ../xml/RichRecBase_Event.xml
 #============================================================================
 library RichRecBase           ../src/event/*.cpp ../src/base/*.cpp
 library RichRecBaseEventDict  ../dict/*.cpp -import=GaudiIntrospection
-apply_pattern  package_linkopts
-apply_pattern  package_stamps
-apply_pattern  linker_path
-macro_append   RichRecBase_linkopts "" WIN32 " /include:_RichRecBaseEvent_loadRef"
 
-#============================================================================
+apply_pattern component_library library=RichRecBaseEventDict
+apply_pattern linker_library    library=RichRecBase
+
 private
-apply_pattern package_shlibflags
 include_dirs $(RICHRECBASEROOT)/Event
-macro RichRecBaseEventDict_shlibflags  "$(GaudiIntrospection_linkopts) $(RichRecBase_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
-
-#============================================================================
