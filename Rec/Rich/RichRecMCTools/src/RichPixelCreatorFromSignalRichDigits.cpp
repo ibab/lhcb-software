@@ -4,8 +4,11 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.5 2004-11-09 10:47:10 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.6 2004-11-20 12:33:26 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/11/09 10:47:10  jonrob
+ *  Add filtering on association to tracked MCParticles
+ *
  *  Revision 1.4  2004/07/27 16:14:11  jonrob
  *  Add doxygen file documentation and CVS information
  *
@@ -121,6 +124,8 @@ RichPixelCreatorFromSignalRichDigits::newPixel( const ContainedObject * obj ) co
       const MCParticle * mcP = (*iHit)->mcParticle();
       if ( mcP && trackedMCPs()[mcP] ) { found = true; break; }
     }
+
+    // If no associated tracked MCParticle found, return NULL
     if ( !found ) return NULL;
 
   }
