@@ -53,6 +53,8 @@ ApplicationMgr.DLLs += { "OTDet" };
 ApplicationMgr.DLLs += { "VeloDet" };
 ApplicationMgr.DLLs += { "Magnet" };
 ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+// 45 degree Velo sectors
+DeVelo.Design = 1;
 
 //--------------------------------------------------------------
 // Spillover, LHC background, Initialization (from DigiAlg DLL)
