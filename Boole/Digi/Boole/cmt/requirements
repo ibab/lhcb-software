@@ -42,7 +42,7 @@ use HbookCnv 		v14r1
 
 #-- Databases
 use XmlDDDB	v22r1	Det
-use ParamFiles	v3r4	-no_auto_imports
+use ParamFiles	v3r5	-no_auto_imports
 use FieldMap	v4r5
 
 #-- LHCb libraries (from LHCB_v15r6)
@@ -87,9 +87,9 @@ use OTAlgorithms        v13r4	OT
 use OTDAQ               v2r0    OT
 
 # Muon
-use MuonAlgs            v5r3	Muon
-use MuonBackground	v1r5	Muon
-use MuonDAQ             v1r0    Muon
+use MuonAlgs            v5r4	Muon
+use MuonBackground	v1r6	Muon
+use MuonDAQ             v1r1    Muon
 
 # Rich
 use RichDigiQC	        v1r5  	Rich

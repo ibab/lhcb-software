@@ -3,14 +3,21 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v5r5>2004-04-07 Boole v5r5</A></H1><PRE>
-
-Requires XmlDDDB v22r0 or greater
-Requires data produced by Gauss v14r3 or greater
+</PRE><H1><A NAME=v5r5>2004-04-15 Boole v5r5</A></H1><PRE>
 
 - New features
   . Can now use Copy.opts (GaudiSvc v11r6)
   . Location of XmlDDDB file is printed at start of job (GaudiSvc v11r6)
+
+- Changed features
+  . PoolDbCacheSvc.InputCatalog and .OutputCatalog no longer supported:
+    use PoolDbCacheSvc.Catalog instead, with support for search list;
+    first catalog in list is read/write, others are read only. 
+    (POOL v1r162p0, GaudiPoolDb v1r6)
+
+- New tuning
+  . Tuning of muon background for Gauss data 
+    (ParamFiles v3r5, MuonBackground v1r6, MuonAlgs v5r4)
 
 - Persistency changes
   . Using POOL_1_6_2 (POOL v1r162p0, GaudiPoolDb v1r6)
@@ -20,6 +27,7 @@ Requires data produced by Gauss v14r3 or greater
   . Fix a typo in TimingTool::finalize (LHCbTools v1r1)
   . Fix the physical pad size in M1R2 and M1R3     (XmlDDDB v22r1)
   . Fix the Xtalk edge sigma in M1 (from cm -> mm) (XmlDDDB v22r1)
+  . Fix 1.5 cm shift of a TT ladders near the edge (XmlDDDB v22r1)
 
 </PRE><H1><A NAME=v5r4>2004-04-01 Boole v5r4</A></H1><PRE>
 
