@@ -98,11 +98,19 @@ StatusCode LagrangeMassVertexFitter::initialize() {
   
 }
 
+//=========================================================================
+// Finalize
+//=========================================================================
+StatusCode LagrangeMassVertexFitter::finalize() {
+   
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::DEBUG << "Release tools" << endreq;
 
+  if( m_pTransporter   ) toolSvc()->releaseTool( m_pTransporter );
+  if( m_pVertexUnconst ) toolSvc()->releaseTool( m_pVertexUnconst );
 
-
-
-
+  return StatusCode::SUCCESS;
+}
 
 
 //==================================================================

@@ -1,7 +1,27 @@
-! $Id: release.notes,v 1.60 2003-06-18 12:21:51 gcorti Exp $
+! $Id: release.notes,v 1.61 2003-06-26 16:51:51 gcorti Exp $
 ! Package     : DaVinciTools
 ! Responsible : Gloria Corti, Sandra Amato
 
+!========================== DaVinciTools v8r1p2 2003-06-26 ==================
+! 2003-06-26 - Gloria CORTI
+ - DaVinciTools/DVAlgorithm.h
+   . introduce new method releaseTools() to be called by derived algorithms
+     at finalization to release the tools (valgrind possible memory leak)
+   . rename MsgStream from log to msg
+ - src/LagrangeMassVertexFitter.h & cpp
+   . introduce method finalize where tools are released (valgrind 
+     possible memory leak)
+ - src/GeomDispCalculator.h & cpp
+   . introduce method finalize where tools are released (valgrind
+     possible memory leak )
+   . introduce protection in method calcVertexDis() when dist = 0
+     appearing wtih special configuration of Bd->D0 K* jobs (Miriam
+     GANDELMAN)
+ - src/ParticleFilter.h & cpp
+   . introduce method finalize where tools are released (valgrind
+     possible memory leak)
+   . move m_XXX variable to private
+   
 !========================== DaVinciTools v8r1p1 2003-06-18 ==================
 ! 2003-06-18 - Gloria CORTI
  - src/PhysDesktop.cpp

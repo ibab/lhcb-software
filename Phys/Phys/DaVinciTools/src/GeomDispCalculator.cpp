@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.5 2002-10-22 21:35:45 gcorti Exp $
+// $Id: GeomDispCalculator.cpp,v 1.6 2003-06-26 16:51:51 gcorti Exp $
 
 // Include files
 // from Gaudi
@@ -67,6 +67,19 @@ StatusCode GeomDispCalculator::initialize() {
   return StatusCode::SUCCESS;
   
 }
+
+//==================================================================
+// Initialize
+//==================================================================
+StatusCode GeomDispCalculator::finalize() {
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::DEBUG << " Release tools" << endreq;
+
+  if( m_pTransporter ) toolSvc()->releaseTool( m_pTransporter );
+
+  return StatusCode::SUCCESS;
+}
+
 
 //==================================================================
 // Calculate the impact parameter of a particle with respect to
@@ -357,6 +370,7 @@ StatusCode GeomDispCalculator::calcVertexDis( const Vertex& vertex1,
   //Calculate the distance between two vectors:
   Hep3Vector diff = vertex1.position() - vertex2.position();
   dist = diff.mag();
+  if (dist == 0) return StatusCode::FAILURE;
 
   //Calculate the error on the distance:  
   HepSymMatrix v1Err = vertex1.positionErr();

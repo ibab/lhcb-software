@@ -57,6 +57,9 @@ public:
   /// Method to load all tools. 
   /// The base class provides an instance of all type of tools
   StatusCode loadTools();
+
+  /// Method to release all tools
+  StatusCode releaseTools();
   
   /// Accessor for PhysDesktop Tool
   IPhysDesktop* desktop() const; 
@@ -113,62 +116,62 @@ private:
 //=============================================================================
 inline StatusCode DVAlgorithm::loadTools() {
 
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::INFO << ">>> Retreiving tools" << endreq;
+  MsgStream  msg( msgSvc(), name() );
+  msg << MSG::INFO << ">>> Retrieving tools" << endreq;
   
-  log << MSG::DEBUG << ">>> Retreiving PhysDesktop" << endreq;
+  msg << MSG::DEBUG << ">>> Retreiving PhysDesktop" << endreq;
   StatusCode sc = toolSvc()->retrieveTool("PhysDesktop", m_pDesktop, this);
   if( sc.isFailure() ) {
-    log << MSG::ERROR << ">>> DVAlgorithm[PhysDesktop] not found" << endreq;
+    msg << MSG::ERROR << ">>> DVAlgorithm[PhysDesktop] not found" << endreq;
     return StatusCode::FAILURE;
   }
 
-  log << MSG::DEBUG << ">>> Retreiving " << m_typeLagFit 
+  msg << MSG::DEBUG << ">>> Retreiving " << m_typeLagFit 
       << " as IMassVertexFitter" << endreq;
   sc = toolSvc()->retrieveTool(m_typeLagFit, m_pLagFit, this);
   if( sc.isFailure() ) {
-    log << MSG::ERROR << ">>> DVAlgorithm[" << m_typeLagFit << "] not found"
+    msg << MSG::ERROR << ">>> DVAlgorithm[" << m_typeLagFit << "] not found"
         << endreq;
     return StatusCode::FAILURE;
   }
      
-  log << MSG::DEBUG << ">>> Retreiving " << m_typeVertexFit 
+  msg << MSG::DEBUG << ">>> Retreiving " << m_typeVertexFit 
       << " as IVertexFitter" << endreq;
   sc = toolSvc()->retrieveTool(m_typeVertexFit, m_pVertexFit, this);
   if( sc.isFailure() ) {
-    log << MSG::ERROR << ">>> DVAlgorithm[" << m_typeVertexFit 
+    msg << MSG::ERROR << ">>> DVAlgorithm[" << m_typeVertexFit 
         << "] not found" << endreq;
     return StatusCode::FAILURE;
   }
   
-  log << MSG::DEBUG << ">>> Retreiving GeomDispCalculator" << endreq;
+  msg << MSG::DEBUG << ">>> Retreiving GeomDispCalculator" << endreq;
   sc = toolSvc()->retrieveTool("GeomDispCalculator", m_pGeomDispCalc, this);
   if( sc.isFailure() ) {
-    log << MSG::ERROR << ">>> DVAlgorithm[GeomDispCalculator] not found" 
+    msg << MSG::ERROR << ">>> DVAlgorithm[GeomDispCalculator] not found" 
         << endreq;
     return StatusCode::FAILURE;
   }
   
-  log << MSG::DEBUG << ">>> Retreiving ParticleStuffer" << endreq;
+  msg << MSG::DEBUG << ">>> Retreiving ParticleStuffer" << endreq;
   sc = toolSvc()->retrieveTool("ParticleStuffer", m_pStuffer);
   if( sc.isFailure() ) {
-    log << MSG::ERROR << ">>> DVAlgorithm[ParticleStuffer] not found" 
+    msg << MSG::ERROR << ">>> DVAlgorithm[ParticleStuffer] not found" 
         << endreq;
     return StatusCode::FAILURE;
 
   }
    
-  log << MSG::DEBUG << ">>> Retreiving one ParticleFilter" << endreq;
+  msg << MSG::DEBUG << ">>> Retreiving one ParticleFilter" << endreq;
   sc = toolSvc()->retrieveTool("ParticleFilter", m_pFilter, this);
   if( sc.isFailure() ) {
-    log << MSG::ERROR << ">>> DVAlgorithm[ParticleFilter] not found" << endreq;
+    msg << MSG::ERROR << ">>> DVAlgorithm[ParticleFilter] not found" << endreq;
     return StatusCode::FAILURE;
   }
 
-  log << MSG::DEBUG << ">>> Retrieving ParticlePropertySvc" << endreq;
+  msg << MSG::DEBUG << ">>> Retrieving ParticlePropertySvc" << endreq;
   sc = service("ParticlePropertySvc", m_ppSvc, true);
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "    Unable to locate Particle Property Service" 
+    msg << MSG::FATAL << "    Unable to locate Particle Property Service" 
         << endreq;
     return StatusCode::FAILURE;
   }  
@@ -176,6 +179,19 @@ inline StatusCode DVAlgorithm::loadTools() {
   return StatusCode::SUCCESS;
 }
 
+//=============================================================================
+inline StatusCode DVAlgorithm::releaseTools() {
+
+  MsgStream  msg( msgSvc(), name() );
+  msg << MSG::INFO << ">>> Releasing tools" << endreq;
+  if( m_pDesktop      ) toolSvc()->releaseTool( m_pDesktop );
+  if( m_pLagFit       ) toolSvc()->releaseTool( m_pLagFit );
+  if( m_pVertexFit    ) toolSvc()->releaseTool( m_pVertexFit );
+  if( m_pGeomDispCalc ) toolSvc()->releaseTool( m_pGeomDispCalc );
+  if( m_pStuffer      ) toolSvc()->releaseTool( m_pStuffer );
+  if( m_pFilter       ) toolSvc()->releaseTool( m_pFilter );
+  return StatusCode::SUCCESS;
+}
 
 //=============================================================================
 inline IPhysDesktop* DVAlgorithm::desktop() const {

@@ -1,4 +1,4 @@
-// $Id: ParticleFilter.cpp,v 1.5 2002-10-20 18:27:24 gcorti Exp $
+// $Id: ParticleFilter.cpp,v 1.6 2003-06-26 16:51:51 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -54,30 +54,23 @@ StatusCode ParticleFilter::initialize() {
   MsgStream          log( msgSvc(), name() );
   log << MSG::DEBUG << ">>> ParticleFilter::initialize() " << endreq;
   
-  IToolSvc* tlSvc = 0;
   IHistogramSvc* histoSvc = 0;
   if ( serviceLocator() ) {
-    StatusCode sc = StatusCode::FAILURE;
-    sc = serviceLocator()->service( "ToolSvc", tlSvc );
-    if (!sc){
-      log << MSG::ERROR << "    Cannot retrieve Tool Service" << endreq;
-      return StatusCode::FAILURE;
-    }
     if(m_produceHistogram )   {    
-      sc = serviceLocator()->service( "HistogramDataSvc", histoSvc,true );
+      StatusCode sc = serviceLocator()->service( "HistogramDataSvc", 
+                                                 histoSvc,true );
       if (!sc){
         log << MSG::ERROR << "    Cannot retrieve Histo Service" << endreq;
         return StatusCode::FAILURE;
       }
     }
-    
   }
   
   log << MSG::DEBUG << ">>> Setting FilterCriterion... " << endreq;
   IFilterCriterion* icrit;
   std::vector<std::string>::iterator it;
   for ( it = m_criteriaNames.begin(); it != m_criteriaNames.end(); it++ ) {
-    StatusCode sc = tlSvc->retrieveTool( *it, icrit, this );
+    StatusCode sc = toolSvc()->retrieveTool( *it, icrit, this );
     if( sc.isFailure() ) return StatusCode::FAILURE;
     m_criteria.push_back( icrit );
     log << MSG::DEBUG << ">>> Criteria " << *it << " set successfully" 
@@ -307,6 +300,23 @@ StatusCode ParticleFilter::filterNegative( const ParticleVector& input,
      
    }
      
+//=============================================================================
+// Finalize
+//=============================================================================
+StatusCode ParticleFilter::finalize() {
+
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::DEBUG << ">>> Release criteria tools" << endreq;
+  
+  while ( m_criteria.size() > 0 ) {
+    IFilterCriterion* icrit =  m_criteria.back();
+    m_criteria.pop_back();
+    toolSvc()->releaseTool( icrit );
+  }
+
+  return StatusCode::SUCCESS;
+
+}
 
 
 

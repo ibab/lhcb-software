@@ -61,7 +61,9 @@ public:
   /// Retrieve the Transporter, the Unconstrained Vertex Fitter 
   /// and the ParticlePropertyService.
   StatusCode initialize();    
-  
+
+  /// Release all tools
+  StatusCode finalize();
   
   /// Actual operator function. 
   /// Takes the name of the particle to constrain the mass to.

@@ -1,4 +1,4 @@
-// $Id: ParticleFilter.h,v 1.3 2002-07-27 20:24:51 gcorti Exp $
+// $Id: ParticleFilter.h,v 1.4 2003-06-26 16:51:51 gcorti Exp $
 #ifndef PARTICLEFILTER_H 
 #define PARTICLEFILTER_H 1
 
@@ -39,6 +39,9 @@ public:
   /// Initialize: Retrieve all the Filter Criterion Tools. 
   StatusCode initialize( );
 
+  /// Finalize: Release all the Filter Criterion Tools. 
+  StatusCode finalize( );
+
   /// Apply the filter to the input vector of Particles and outputs the 
   /// result in another vector.
   StatusCode filter( const ParticleVector&, ParticleVector& ); 
@@ -56,10 +59,7 @@ public:
   /// Return the number of events that passed each criterium cumulatively.
   std::vector< int > cumulativeCounters();
 
-  bool      m_produceHistogram; ///< flag for histo production
-  IHistogram1D*         m_hIndCounter;
-  IHistogram1D*         m_hCumCounter;
-  
+
 protected:
   
 private:
@@ -74,8 +74,11 @@ private:
   std::vector< int > m_independentCounter;  
 
 	/// Counter of events that passed each criterium cumulatively
-  std::vector< int > m_cumulativeCounter;  
+  std::vector< int > m_cumulativeCounter;
 
+  bool                  m_produceHistogram; ///< flag for histo production
+  IHistogram1D*         m_hIndCounter;
+  IHistogram1D*         m_hCumCounter;  
 
 };
 

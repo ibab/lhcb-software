@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.h,v 1.3 2002-10-22 21:35:43 gcorti Exp $
+// $Id: GeomDispCalculator.h,v 1.4 2003-06-26 16:51:51 gcorti Exp $
 #ifndef GEOMDISPCALCULATOR_H
 #define GEOMDISPCALCULATOR_H 1
 
@@ -36,9 +36,11 @@ public:
   /// Standard Destructor
   virtual ~GeomDispCalculator() { }
 
-  /// Retrieve the Transporter Tool
+  /// Retrieve the necessary tools
   StatusCode initialize();    
 
+  /// Release the tools
+  StatusCode finalize();    
 
   /// Calculates the Impact Parameter and its error. 
   /// Inputs: a particle and a vertex.
