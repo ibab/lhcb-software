@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/BrunelSicb/BrunelSICBChck.cpp,v 1.1 2001-06-06 16:54:10 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/ObsoleteSicb/BrunelSICBChck.cpp,v 1.1 2001-06-07 09:23:20 cattaneb Exp $
 
 #include "BrunelSICBChck.h"
 #include "GaudiKernel/MsgStream.h"

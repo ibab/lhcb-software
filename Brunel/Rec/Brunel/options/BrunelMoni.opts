@@ -13,14 +13,13 @@ HistogramPersistencySvc.OutputFile = "Histos.hbook";
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-BrunelMoni.DetectorList = { "IT", "OT", "Tr", "SICB" };
+BrunelMoni.DetectorList = { "IT", "OT", "Tr" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
 BrunelMoniOTSeq.Members   = { "OTDigitChecker" };
 BrunelMoniTrSeq.Members   = { "TrMonitor" };
-BrunelMoniSICBSeq.Members = { "BrunelSICBChck" };
 
 //--------------------------------------------------------------
 // Suppress excessive error messages

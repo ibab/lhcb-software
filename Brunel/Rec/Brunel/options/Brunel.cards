@@ -3,9 +3,6 @@ DEBU  1 1000 1
 IOPA
 C SAVX is event output file 
 C 'SAVX' 'XO' '$LHCBHOME/scratch/Brunel/v3r1/brunel_52310.dst!'
-C CHCK are standard SICB DST monitoring histograms
-C   'CHCK' 'HO' '$LHCBHOME/scratch/Brunel/v3r1/CHCK_52310.hbook!'
- 'CHCK' 'HO' 'CHCK_52310.hbook!'
 C T1VE are SICBDST L1 trigger  monitoring histograms
 C    'T1VE' 'HO' '$LHCBHOME/scratch/Brunel/T1VE_brunel.hbook!'
 C End of IOPA card

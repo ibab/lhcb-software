@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/BrunelSicb/BrunelSICBChck.h,v 1.1 2001-06-06 16:54:10 cattaneb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Rec/Brunel/src/ObsoleteSicb/BrunelSICBChck.h,v 1.1 2001-06-07 09:23:20 cattaneb Exp $
 #ifndef BRUNELSICB_BRUNELSICBCHCK_H 
 #define BRUNELSICB_BRUNELSICBCHCK_H 1
 // Include files

@@ -12,7 +12,7 @@ Purupose: LHCb reconstruction program
    - RICH extended tracking executed for all events
    - AXTK updated with PID information from extended tracking
    - New VELO geometry description
-   - Added old SICBDST checking histograms, and dropping of banks from DST
+   - Drop some banks from DST (as with SICBDST)
 
    In options/
    ----------
@@ -25,7 +25,6 @@ Purupose: LHCb reconstruction program
 >    RECO 'RICH' 3
 
    BrunelMessage.opts: Use default Gaudi message format
-   BrunelMoni.opts:    Add SICB DST checking histograms
 
    In src/BrunelSicb/
    -----------------
@@ -35,9 +34,6 @@ Purupose: LHCb reconstruction program
 
    BrunelFinalisation.cpp:   Add call to DROPBANKS
    dropbanks.F:              New, to drop unwanted SICB banks from DST
-
-   BrunelSICBMoni.cpp: New. Calls new Fortran routine SUCHECK to fill SICB
-                       DST checking histograms
 
    In cmt/requirements
    -------------------

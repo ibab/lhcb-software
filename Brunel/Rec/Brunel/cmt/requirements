@@ -83,8 +83,6 @@ use triskel      v4     SICB
 use trit1tr      v3r3   SICB
 use trivert      v5r1   SICB
 use trielec      v5r1   SICB
-
-use dstcheck     v1     SICB
 #
 #===== build Brunel =========================
 application Brunel $(GAUDICONFROOT)/src/GaudiMain.cpp \
