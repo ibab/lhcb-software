@@ -63,7 +63,7 @@ use RichUtils		v3r6	Rich
 use RichDetTools	v3r4	Rich
 use RichRecQC		v1r4	Rich
 use RichRecMCTools	v1r1	Rich
-use RichDAQ		v1r0	Rich
+use RichDAQ		v1r0p1	Rich
 
 # SICB package still needed by RichDetTools
 use RiSicbGeom		v3r7	SICB
