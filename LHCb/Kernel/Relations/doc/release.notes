@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.9 2005-01-27 14:48:48 cattanem Exp $ 
+! $Id: release.notes,v 1.10 2005-02-08 20:55:11 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,18 @@
 ! Responsible : Vanya BELYAEV ibelyaev@lapp.in2p3.fr 
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2005-02-08 - Vanya BELYAEV
+
+ - Relations/RealtionsDict.h
+     modify a  "field-names"  (visible e.g. for Python)
+       now "Entry" has 2 "visible" fields :
+         "_to" ,"_from" for ordinary relations 
+       and 3 visible fields :  
+         "_to" , "_from" and "_weight" for relations with weight 
+
+    DICTIONARIES (AND DATA) ARE NOT COMPATIBLE ANYMORE !!! 
+
 
 ! ====================== Relations v2r2 2005-01-27 ============================
 ! 2005-01-26 - Vanya BELYAEV

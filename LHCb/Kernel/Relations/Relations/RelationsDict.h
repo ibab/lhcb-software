@@ -1,4 +1,4 @@
-// $Id: RelationsDict.h,v 1.2 2004-11-22 09:05:00 cattanem Exp $
+// $Id: RelationsDict.h,v 1.3 2005-02-08 20:55:11 ibelyaev Exp $
 //====================================================================
 //	RelationsDict.h
 //--------------------------------------------------------------------
@@ -88,8 +88,10 @@ GaudiDict::RelationTypeTraitsEntryDict<FROM,TO>::RelationTypeTraitsEntryDict() {
       seal::reflect::NOCONTAINER, 0, PUBLIC);
     std::string _frst_ = typeName(typeid(_From_));
     std::string _scnd_ = typeName(typeid(_To_));
-    _c_.addField("first", _frst_.c_str(), "", (int)(&((_Me_*)64)->first)-64,  PUBLIC);
-    _c_.addField("second",_scnd_.c_str(), "", (int)(&((_Me_*)64)->second)-64, PUBLIC);
+    //
+    _c_.addField( "_from" , _frst_.c_str() , "" , (int)(&((_Me_*)64)->first)-64  , PUBLIC ) ; 
+    _c_.addField( "_to"   , _scnd_.c_str() , "" , (int)(&((_Me_*)64)->second)-64 , PUBLIC ) ;
+    //
     _c_.addMethod("Entry",  "", _me_.c_str(),             ctor,       PUBLIC);
     _c_.addMethod("~Entry", "",                   destructor, PUBLIC);
     _c_.build();
@@ -306,10 +308,12 @@ GaudiDict::RelationWeightedTypeTraitsEntryDict<FROM,TO,WEIGHT>::RelationWeighted
     std::string _frst_   = typeName(typeid(_From_));
     std::string _weight_ = typeName(typeid(_Weight_));
     std::string _scnd_   = typeName(typeid(_To_));
-    _c_.addField("first", _frst_.c_str(),  "", (int)(&((_Me_*)64)->first.first)-64,  PUBLIC);
-    _c_.addField("weight",_weight_.c_str(),"", (int)(&((_Me_*)64)->first.second)-64, PUBLIC);
-    _c_.addField("second",_scnd_.c_str(),  "", (int)(&((_Me_*)64)->second)-64, PUBLIC);
-    _c_.addMethod("Entry", "", _me_.c_str(), ctor,       PUBLIC);
+    //
+    _c_.addField( "_from"   , _frst_   .c_str() , "" , (int)(&((_Me_*)64)->first.first)-64  , PUBLIC );
+    _c_.addField( "_weight" , _weight_ .c_str() , "" , (int)(&((_Me_*)64)->first.second)-64 , PUBLIC );
+    _c_.addField( "_to"     , _scnd_   .c_str() , "" , (int)(&((_Me_*)64)->second)-64       , PUBLIC );
+    //
+    _c_.addMethod("Entry", "", _me_  .c_str() , ctor,       PUBLIC);
     _c_.addMethod("~Entry","",       destructor, PUBLIC);
     _c_.build();
   }
