@@ -1,6 +1,18 @@
-# $Id: release.notes,v 1.12 2002-01-10 11:29:15 ranjard Exp $
+# $Id: release.notes,v 1.13 2002-03-01 11:37:48 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20020301 - Andrea Valassi
+First version supported on Windows using an Oracle implementation of CondDB.
+- Platform-specific support
+  > remove CondDBKey.h from DetCond: use that from the ConditionsDB package
+  > interchange the contents of DetCond_dll and DetCond_load
+  > remove #ifdef's with dummy failure codes for non-Linux platforms
+- Support of Oracle (needed also to suppport Oracle under Linux)
+  > implementation specified in the requirements  is propagated via #ifdef's
+  > new init string for the Oracle database including host, user and password
+  > CondDBOracleMgrFactory or CondDBObjyDBMgrFactory called in either case
 
 ==============================================================================
 !20020110 - Flr
