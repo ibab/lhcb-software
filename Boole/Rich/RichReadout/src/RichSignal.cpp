@@ -69,7 +69,7 @@ StatusCode RichSignal::execute() {
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "Execute" << endreq;
 
-  // Form a new container of MCSummedDeposits
+  // Form a new container of MCRichSummedDeposits
   mcSummedDeposits = new MCRichSummedDeposits();
 
   // Form a new container of MCRichDeposits

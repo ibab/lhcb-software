@@ -21,7 +21,7 @@ public:
     m_coder = new RichCoder();
   };
 
-  virtual ~RichFrontEndDigitiser(){};
+  ~RichFrontEndDigitiser(){ delete m_coder; };
 
   StatusCode process ( RichTimeSample ) const;
 
