@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.2 2002-11-18 12:21:29 ocallot Exp $
+// $Id: CaloDigitAlg.cpp,v 1.3 2002-11-19 09:32:02 cattanem Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -92,7 +92,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   } else if ( "HcalDigit" == name ) {
     setDetData(       "/dd/Structure/LHCb/Hcal"   );
     setInputData(     MCCaloDigitLocation::Hcal   );
-    setOutputData(    CaloDigitLocation::FullEcal );
+    setOutputData(    CaloDigitLocation::FullHcal );
     m_pePerMeV        = 0.;
     m_pedShift        = 0.40;
   }
