@@ -1,4 +1,4 @@
-// $Id: MuonPosTool.cpp,v 1.1 2004-12-06 12:01:34 asatta Exp $
+// $Id: MuonPosTool.cpp,v 1.2 2005-02-16 10:01:55 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -23,8 +23,8 @@ const        IToolFactory& MuonPosToolFactory = s_factory ;
 // Standard constructor, initializes variables
 //=============================================================================
 MuonPosTool::MuonPosTool( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent )
+                          const std::string& name,
+                          const IInterface* parent )
   : AlgTool ( type, name , parent ) {
   declareInterface<IMuonPosTool>(this);
 
@@ -84,7 +84,7 @@ MuonPosTool::MuonPosTool( const std::string& type,
 
   MuonTileID tile;
   int index=0;
-   double xp,dx,yp,dy,zp,dz;
+  double xp,dx,yp,dy,zp,dz;
   for(int station=0;station<m_stationNumber;station++){    
     MuonLayout lay(m_padGridX[station],m_padGridY[station]);
     tile.setStation(station);
@@ -109,7 +109,7 @@ MuonPosTool::MuonPosTool( const std::string& type,
             if(station==4&&region==3&&quarter==0){
               //             log<<MSG::INFO<<index<<" "<<tile.nX()<<" "<<tile.nY()<< " "<<xp<<" "<<yp<<endreq;
               
-                }
+            }
             
             index++;            
           }          
@@ -118,7 +118,7 @@ MuonPosTool::MuonPosTool( const std::string& type,
           for (int x=0;x<2*m_padGridX[station];x++){
             tile.setX(x);
             tile.setY(y);            
-             m_tileTool->calcTilePos(tile,xp,dx,yp,dy,zp,dz);
+            m_tileTool->calcTilePos(tile,xp,dx,yp,dy,zp,dz);
             (m_xpos[station])[index]=xp;
             (m_ypos[station])[index]=yp;
             (m_zpos[station])[index]=zp;
@@ -138,36 +138,38 @@ MuonPosTool::~MuonPosTool() {
 }
 
 
- StatusCode MuonPosTool::calcTilePos(const MuonTileID& tile, 
-                                 double& x, double& deltax,
-                                 double& y, double& deltay,
-                                     double& z, double& deltaz)
-   {
+StatusCode MuonPosTool::calcTilePos(const MuonTileID& tile, 
+                                    double& x, double& deltax,
+                                    double& y, double& deltay,
+                                    double& z, double& deltaz)
+{
      
-     int station=tile.station();
-     int region=tile.region();
-     int quarter=tile.quarter();
-     int tillNow=0;
-     int perQuarter=3*m_padGridX[station]*m_padGridY[station];
-     tillNow=(region*4+quarter)*perQuarter;
-     unsigned int xpad=tile.nX();
-     unsigned int ypad=tile.nY();
-     unsigned int index=tillNow;
+  int station=tile.station();
+  int region=tile.region();
+  int quarter=tile.quarter();
+  int tillNow=0;
+  int perQuarter=3*m_padGridX[station]*m_padGridY[station];
+  tillNow=(region*4+quarter)*perQuarter;
+  unsigned int xpad=tile.nX();
+  unsigned int ypad=tile.nY();
+  unsigned int index=tillNow;
      
      
-     if(ypad<m_padGridY[station]){
-       index=index+m_padGridX[station]*ypad+xpad-m_padGridX[station];
+  if(ypad<m_padGridY[station]){
+    index=index+m_padGridX[station]*ypad+xpad-m_padGridX[station];
        
-     }else{
-       index=index+m_padGridX[station]*m_padGridY[station]+
-         2*m_padGridX[station]*(ypad-m_padGridY[station])+xpad;
-     }
+  }else{
+    index=index+m_padGridX[station]*m_padGridY[station]+
+      2*m_padGridX[station]*(ypad-m_padGridY[station])+xpad;
+  }
      
-     x= (m_xpos[station])[index];
-     y= (m_ypos[station])[index];
-     z= (m_zpos[station])[index];
+  x= (m_xpos[station])[index];
+  y= (m_ypos[station])[index];
+  z= (m_zpos[station])[index];
 
-   }
+  return StatusCode::SUCCESS ;
+
+}
 
 
 

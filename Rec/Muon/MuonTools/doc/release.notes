@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.40 2005-01-18 17:17:37 pkoppenb Exp $
+! $Id: release.notes,v 1.41 2005-02-16 10:01:55 pkoppenb Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
 
 !======================== MuonTools v3r8 2004-01-18 ========================
+! 2004-02-16 - P. Koppenburg
+ - src/MuonPosTool.cpp
+   . Add a return statement for a non-void method that was missing one.
+
 ! 2004-11-06 - Alessia Satta
  - Add a new tool to be used only for trigger pad DO NOT USE FOR STRIP!!!!!
 
