@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.19 2002-09-24 18:43:51 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.20 2002-09-26 10:31:43 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -619,7 +619,7 @@ void VeloSim::fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge){
   int i=0;
   MCVeloHit* hitChk=NULL;
   while (hit!=hitChk && i<size) { 
-   log << MSG::VERBOSE << "hit number " << i << " / " << size << " charge " << charge << " hit " << hit << endl;
+   log << MSG::VERBOSE << "hit number " << i << " / " << size << " charge " << charge << " hit " << hit << endmsg;
     hitChk = myFE->mcVeloHit(i);  
     i++; 
   }; 
@@ -894,7 +894,7 @@ StatusCode VeloSim::noiseSim(){
                        VeloSimParams::threshold/noiseSig ,
                        NAGERR_DEFAULT)*float(maxStrips)));
     Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
-    //    log <<  MSG::INFO << " poisson" << poisson() << endl;
+    //    log <<  MSG::INFO << " poisson" << poisson() << endmsg;
     hitNoiseTotal = int(poisson());
 
     log << MSG::VERBOSE << "Number of strips to add noise to "
