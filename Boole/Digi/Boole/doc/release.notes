@@ -3,13 +3,14 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v6r0>2004-06-28 Boole v6r0</A></H1><PRE>
+</PRE><H1><A NAME=v6r0>2004-07-14 Boole v6r0</A></H1><PRE>
 Development version
 
 - Modified functionality
   . GaudiAuditors no longer used for algorithm timing, uses GaudiSequencer
     internal timing instead
   . L1 trigger simulation removed (Trg packages can be executed on Boole output)
+  . Remove obsolete GaudiRootDb capability
 
 - New tuning
   . Initialize MuonGeometry tool completely at intialisation, not during first

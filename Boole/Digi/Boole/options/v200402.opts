@@ -30,13 +30,6 @@ ApplicationMgr.EvtMax = -1;
 
 //---------------------------------------------------------------------------
 // Input and output files. 
-// For event data, choose either POOL or GaudiDb following these rules:
-// - You can mix GaudiDb and POOL for the input files
-//   (e.g. GaudiDb Spillover, POOL main event, or vice versa)
-// - If any of the input files are POOL:
-//   . The output file must be POOL
-//   . The POOL input files should be described in PoolDbCacheSvc.Catalog
-// - If all the input files are GaudiDb, output file can be GaudiDb or POOL
 //---------------------------------------------------------------------------
 
 HistogramPersistencySvc.OutputFile = "Pool411300.hbook";  // Monitoring histos
@@ -51,11 +44,6 @@ PoolDbCacheSvc.Catalog = {
 //---------------------------------------------------------------------------
 // Spillover
 //---------------------------------------------------------------------------
-
-// Format for GaudiRootDb input (no files available for Gauss v15r4)
-//SpilloverSelector.Input = { "DATAFILE='evtype61.oosim' TYP='ROOT' OPT='READ'" };
-
-// POOL files
 SpilloverSelector.Input = { 
  "DATAFILE='rfio:/castor/cern.ch/user/g/gcorti/Gauss/v15r4/000061.sim' TYP='POOL_ROOT' OPT='READ'" 
 }; // Gauss v15r4, XmlDDDB v22r1, Field045, evtype 61
@@ -64,11 +52,6 @@ SpilloverSelector.Input = {
 //---------------------------------------------------------------------------
 // Main event input
 //---------------------------------------------------------------------------
-
-// Format for GaudiRootDb input (no files available for Gauss v15r4)
-//EventSelector.Input = { "DATAFILE='signal.oosim' TYP='ROOT' OPT='READ'" };
-
-// POOL file
 EventSelector.Input = {
  "DATAFILE='rfio:/castor/cern.ch/user/g/gcorti/Gauss/v15r4/411300.sim' TYP='POOL_ROOT' OPT='READ'" 
 }; // Gauss v15r4, XmlDDDB v22r1, Field045, evtype 411300
@@ -76,12 +59,4 @@ EventSelector.Input = {
 //---------------------------------------------------------------------------
 // Output file
 //---------------------------------------------------------------------------
-
-// GaudiRootDb. Uncomment also extra DigiWriter items!
-//DigiWriter.Output = "DATAFILE='411300.oodigi' TYP='ROOT' OPT='NEW'";
-//DigiWriter.ItemList += { "/Event/Raw/IT/Digits#1"};
-//DigiWriter.ItemList += { "/Event/Raw/OT/Digits#1"};
-//DigiWriter.ItemList += { "/Event/Raw/Velo/Clusters#1" };
-
-// POOL
 DigiWriter.Output = "DATAFILE='PFN:Pool411300.digi' TYP='POOL_ROOTTREE' OPT='REC'";
