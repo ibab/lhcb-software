@@ -2,12 +2,12 @@ Package         : OTMonitor
 Package manager : J. Nardulli
 
 
+!==================== OTMonitor v1r1 2004-12-06 =====================
 ! 2004-12-06 - Jacopo Nardulli
 - Complete move to new base classes
 
 ! 2004-11-09 - Jacopo Nardulli     
 - Move to the New Gaudi Base Classes
-
 
 !==================== OTMonitor v1r0 2004-09-10 =====================
 ! 2004-08-30 - Jacopo Nardulli
