@@ -4,19 +4,10 @@ version v7r0
 # =============================================================================
 # structure 
 # =============================================================================
-branches doc options cmt data
-
-# version_strategy first_choice
-
-# =============================================================================
-# dependencies 
-use ExternalLibs        v4r*
-use GEANT4              v2r4101p*	Sim
-use HepMC               v3r121p*	Sim
-# =============================================================================
+branches doc options cmt job data
 
 # Main program and standard job options
-use GaudiConf           v6*     
+use GaudiConf           v6r5     
 
 # GAUDI framework
 use GaudiAlg            v6r*
@@ -27,35 +18,41 @@ use GaudiSvc            v10r*
 use GaudiRootDb         v9r*
 use DbCnv               v7r*    Event 
 
-# Histogram persistency (optional)
+# Histogram persistency 
 use HbookCnv            v13r*
 
 # Access to magnetic field service
 use Magnet              v2r*    Det
 
-# GiGa staff...
-use GiGaVisUI           v1r0    Sim
-
-# Gauss stuff ...
-#use GaussImports        v4r0    Sim 
-use GaussCalo           v1r0    Sim
-use GaussRICH           v1r0    Sim
+#GiGa staff...
+use GiGaCnv             v10r0   Sim
+use GaussTools          v5r0    Sim
 use GaussTracker        v1r0    Sim
-use GaussPhysics        v1r0    Sim
+use GaussRICH           v1r0    Sim
+use GaussCalo           v1r0    Sim
+use CaloDetXmlCnv       v2r2    Det 
+
+#optional visualisation and UI
+#use GiGaVisU           v1r0    Sim
+
+#optional GaussImports
+#use GaussImports       v4r0    Sim
 
 # generator
 use GeneratorModules    v4r1    Gen
 
 # optional generator: 
-#use EvGen               v4r*    Sim 
+#use EvGen              v4r0    Sim 
 
 #geometry source 
-use XmlDDDB             v14r*   Det 
+use XmlDDDB             v14r4   Det 
 
-# Trackers
+#Trackers
 use OTAlgorithms        v12r2   OT
-use VeloAlgorithms      v2r5    Velo 
-use ITAlgorithms        v12r6   IT     
+use OTAssociators       v2r3    OT
+use VeloAlgorithms      v2r5    Velo
+use VeloAssociators     v1r4    Velo
+use ITAlgorithms        v12r6   IT
 
 #use GaussChecks          v1r0 Sim
 
@@ -64,6 +61,8 @@ use ITAlgorithms        v12r6   IT
 # =============================================================================
 set  GAUSSOPTS "${GAUSSROOT}/options"
 set  GAUSSDATA "${GAUSSROOT}/data"
+
+set  G4LEVELGAMMADATA "/afs/cern.ch/sw/geant4/releases/share/geant4.4.1.p01/data"
 
 # =============== visualization  ==============================================
 set  G4DAWNFILE_DEST_DIR       "../job/"
