@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v1r3 2004-03-18 =========================
 ! 2004-03-03 - Chris Jones
  - Add ability to try to create a RawEvent object from the RawBuffer in
    cases where it has not been created by default. Needed for running
