@@ -5,8 +5,11 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.11 2004-11-03 12:27:02 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.12 2004-12-13 17:25:55 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.11  2004/11/03 12:27:02  jonrob
+ * Add more null pointer protection
+ *
  * Revision 1.10  2004/11/03 12:15:11  jonrob
  * Add method to locate the MCRichDigit associated to a given RichSmartID
  *
@@ -61,7 +64,7 @@ RichMCTruthTool::RichMCTruthTool( const std::string& type,
 StatusCode RichMCTruthTool::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // Get pointer to Track MC truth
@@ -228,4 +231,45 @@ bool RichMCTruthTool::isBackground( const MCRichHit * hit ) const
   return ( hit && ( hit->scatteredPhoton() ||
                     hit->chargedTrack() ||
                     hit->backgroundHit() ) );
+}
+
+RichMCTruthTool::MCRichHitToPhoton * RichMCTruthTool::mcPhotonLinks() const
+{
+  if ( !m_mcPhotonLinks ) {
+    m_mcPhotonLinks =
+      new MCRichHitToPhoton( evtSvc(), msgSvc(),
+                             MCRichOpticalPhotonLocation::LinksFromMCRichHits );
+    if ( m_mcPhotonLinks->notFound() ) {
+      Warning( "Linker for MCRichHits to MCRichOpticalPhotons not found for '" +
+               MCRichOpticalPhotonLocation::LinksFromMCRichHits + "'" );
+    }
+  }
+  return m_mcPhotonLinks;
+}
+
+RichMCTruthTool::MCPartToRichTracks * RichMCTruthTool::mcTrackLinks() const
+{
+  if ( !m_mcTrackLinks ) {
+    m_mcTrackLinks =
+      new MCPartToRichTracks( evtSvc(), msgSvc(),
+                              MCRichTrackLocation::LinksFromMCParticles );
+    if ( m_mcTrackLinks->notFound() ) {
+      Warning( "Linker for MCParticles to MCRichTracks not found for '" +
+               MCRichTrackLocation::LinksFromMCParticles + "'" );
+    }
+  }
+  return m_mcTrackLinks;
+}
+
+RichMCTruthTool::TrgTrackToMCP * RichMCTruthTool::trgTrackToMCPLinks() const
+{
+  if ( !m_trgTrToMCPLinks ) {
+    m_trgTrToMCPLinks =
+      new TrgTrackToMCP( evtSvc(), msgSvc(), TrgTrackLocation::Long );
+    if ( m_trgTrToMCPLinks->notFound() ) {
+      Warning( "Linker for TrgTracks to MCParticles not found for " +
+               TrgTrackLocation::Long + "'" );
+    }
+  }
+  return m_trgTrToMCPLinks;
 }
