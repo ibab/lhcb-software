@@ -18,7 +18,7 @@ WorldCuts::WorldCuts(const G4String& aName, double xmin, double ymin, double zmi
   m_zmax=zmax;
   
   if (verboseLevel>1) {
-    G4cout << GetProcessName() << " is created "<< G4endl;
+    std::cout << GetProcessName() << " is created "<< std::endl;
   }
   SetProcessType(fUserDefined);
 }

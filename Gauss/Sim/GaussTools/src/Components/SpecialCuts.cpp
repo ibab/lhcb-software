@@ -8,9 +8,9 @@
 SpecialCuts::SpecialCuts(const G4String& aName)
   : G4VProcess(aName)
 {
-   if (verboseLevel>1) {
-     G4cout << GetProcessName() << " is created "<< G4endl;
-   }
+  if (verboseLevel>1) {
+    std::cout << GetProcessName() << " is created "<< std::endl;
+  }
 }
 
 SpecialCuts::~SpecialCuts() 
@@ -26,7 +26,6 @@ G4VParticleChange* SpecialCuts::PostStepDoIt(
 // Stop the current particle, if requested by G4UserLimits 
 // 			    			    			    
 {
-  //  cout << " killing particle " << aTrack.GetDefinition()->GetParticleName() << endl;
    aParticleChange.Initialize(aTrack);
    aParticleChange.SetEnergyChange(0.) ;
    aParticleChange.SetLocalEnergyDeposit (aTrack.GetKineticEnergy()) ;

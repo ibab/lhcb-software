@@ -1,8 +1,11 @@
-// $Id: GiGaMagFieldGlobal.cpp,v 1.2 2003-10-23 08:49:44 witoldp Exp $ 
+// $Id: GiGaMagFieldGlobal.cpp,v 1.3 2003-10-30 17:00:27 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/10/23 08:49:44  witoldp
+// command track action added
+//
 // Revision 1.1  2002/09/26 18:10:56  ibelyaev
 //  repackageing: add all concrete implementations from GiGa
 //
@@ -113,9 +116,9 @@ void GiGaMagFieldGlobal::GetFieldValue
           << point.y() / cm << ","  
           << point.z() / cm << ")"
           << " Field[tesla]=(" 
-          << point.x() / tesla << ","  
-          << point.y() / tesla << ","  
-          << point.z() / tesla << ")" << endreq ; 
+          << m_field.x() / tesla << ","  
+          << m_field.y() / tesla << ","  
+          << m_field.z() / tesla << ")" << endreq ; 
     }
   ///
   *(B+0) = m_field.x();

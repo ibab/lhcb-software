@@ -13,7 +13,7 @@ MinEkineCuts::MinEkineCuts(const G4String& aName, double cut)
   m_cut=cut;
   
   if (verboseLevel>1) {
-    G4cout << GetProcessName() << " is created "<< G4endl;
+    std::cout << GetProcessName() << " is created "<< std::endl;
   }
   SetProcessType(fUserDefined);
 }
@@ -51,9 +51,14 @@ PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
   // if UserLimits attached to the volume, use them
   // if not use the default cuts
   if (pUserLimits)      
-    eMin = pUserLimits->GetUserMinEkine(aTrack);
+    {
+      eMin = pUserLimits->GetUserMinEkine(aTrack);
+    }
   
-  if (eKine < eMin ) proposedStep = 0.;
+  if (eKine < eMin ) 
+    {
+      proposedStep = 0.;
+    }
   else if (aParticleDef->GetPDGCharge() != 0.0 
            && G4EnergyLossTables::GetRangeTable(aParticleDef)) 
     {

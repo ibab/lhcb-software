@@ -14,7 +14,7 @@ LoopCuts::LoopCuts(const G4String& aName, int maxs, double minstep)
   m_minstep = minstep;
   
   if (verboseLevel>1) {
-    G4cout << GetProcessName() << " is created "<< G4endl;
+    std::cout << GetProcessName() << " is created "<< std::endl;
   }
   SetProcessType(fUserDefined);
 }

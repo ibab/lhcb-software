@@ -142,28 +142,31 @@ StatusCode PrintEventAlg::execute()
               << obj->size() 
               << endreq ;
           Stat stat( chronoSvc() , "#particles" , obj->size() ) ; 
+          
           MCParticles::const_iterator ipart;
-          for ( ipart = obj->begin(); ipart != obj->end(); ipart++ )  {
-            if ( !((*ipart)->mother()))            
-              {
-                licz++;
-                log << MSG::INFO << " "  << endreq;
-                printDecayTree( 0, " |", *ipart );
-              }
-          }
+          for ( ipart = obj->begin(); ipart != obj->end(); ipart++ )  
+            {
+              if ( !((*ipart)->mother()))            
+                {
+                  licz++;
+                  log << MSG::INFO << " "  << endreq;
+                  printDecayTree( 0, " |", *ipart );
+                }
+            }
           log << MSG::INFO << "Number of 'primary' particles " 
               << licz << endreq;
         } 
-      else 
-        { 
-          log << MSG::ERROR 
-              << " Could not extract 'Particles' from '"
-              << m_particles << "'" 
-              << endreq ;
-          ///
-          return StatusCode::FAILURE;
-        } 
     }
+  else 
+    { 
+      log << MSG::ERROR 
+          << " Could not extract 'Particles' from '"
+          << m_particles << "'" 
+          << endreq ;
+      ///
+      return StatusCode::FAILURE;
+    } 
+
   ///
   if( !m_vertices.empty() )
     {
@@ -176,7 +179,7 @@ StatusCode PrintEventAlg::execute()
               << obj->size() 
               << endreq ;
           Stat stat( chronoSvc() , "#vertices" , obj->size() ) ;
-        } 
+        }
       else 
         { 
           log << MSG::ERROR 
