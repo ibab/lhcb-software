@@ -1,4 +1,4 @@
-// $Id: DaVinciElectrons.opts,v 1.6 2004-10-04 15:36:41 pkoppenb Exp $ 
+// $Id: DaVinciElectrons.opts,v 1.7 2004-10-26 08:06:42 pkoppenb Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -25,7 +25,7 @@ ApplicationMgr.TopAlg        += { "Sequencer/Electrons" } ;
 // For Electrons 
 Electrons.Members            += { "CaloHypoAlg/ElectronCalibration"     } ;
 // For Electrons 
-Electrons.Members            += { "CaloDeleteObjectsAlg/ElectronDelete" } ;
+Electrons.Members            += { "TESFilter/ElectronDelete" } ;
 // For Electrons 
 Electrons.Members            += { "CaloHypo2TrackAlg/ElectronMatch"     } ;
 
@@ -36,7 +36,7 @@ ElectronCalibration.Tools     = { "Calo04ECorrection/ECorrection" } ; // Ecorrec
 ElectronCalibration.Tools    += { "Calo04SCorrection/SCorrection" } ; // Scorrection
 ElectronCalibration.Tools    += { "Calo04LCorrection/LCorrection" } ; // Lcorrection
 
-ElectronDelete.Addresses      = { "/Event/Rec/Calo/ElectronMatch" } ;
+ElectronDelete.DroppedContainers = { "/Event/Rec/Calo/ElectronMatch" } ;
 
 ElectronDelete.OutputLevel = 2 ;
 
