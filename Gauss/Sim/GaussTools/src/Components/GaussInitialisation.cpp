@@ -78,7 +78,7 @@ StatusCode GaussInitialisation::execute() {
     {
       log << MSG::INFO << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"<< endmsg;
 
-      log << MSG::INFO << "Processing event " << m_eventNumb <<
+      log << MSG::ALWAYS << "Processing event " << m_eventNumb <<
         ",     Run "         << m_runNumb << endmsg;
     }
   
