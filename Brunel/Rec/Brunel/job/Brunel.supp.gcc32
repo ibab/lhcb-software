@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Errors to suppress by default with Brunel v20r1, gcc 3.2, valgrind 1.9.6
+# Errors to suppress by default with Brunel v21r0, gcc 3.2, valgrind 1.9.6
 
 # Format of this file is:
 # {
@@ -95,22 +95,13 @@
   fun:_ZN11xercesc_2_215DOMDocumentImpl10deleteHeapEv
 }
 
-# New Root 3.05.04 / GaudiDb v8r4 error in Brunel v21r0p1
-{
-  Root/uninitilized
-  MemCheck:Param
-  write(buf)
-  obj:/lib/i686/libc-2.2.5.so
-  fun:_ZN5TFile8SysWriteEiPKvi
-}
-
 # Root 3.05.04 errors (reported, known to Fons...)
 {
   Root/libc_write
   Memcheck:Param
+  write(buf)
   fun:__libc_write
   fun:_ZN5TFile8SysWriteEiPKvi
-  fun:_ZN5TFile11WriteBufferEPKci
 }
 
 {
