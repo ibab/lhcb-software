@@ -42,7 +42,7 @@ use HbookCnv           v12r0
 #---LHCb common libraries
 use GaudiConf    v6r3
 use BookKeeping  v1r1   Tools
-use LHCbKernel   v1r1   Kernel
+use LHCbKernel   v1r2   Kernel
 use Finclude     v13r0  SICB
 use Futio        v12r0  SICB
 
