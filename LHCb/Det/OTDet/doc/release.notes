@@ -1,11 +1,12 @@
-! $Id: release.notes,v 1.24 2003-12-04 12:42:17 cattanem Exp $
+! $Id: release.notes,v 1.25 2003-12-05 12:17:44 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
 
 !========================== OTDet v5r0 2003-12-04 ==========================
 ! 2003-12-04 - Jacopo Nardulli
  - Introduction of DeOTQuarters. A DeOTLayer is now split into 4 quarters.
-   Each quarter now has nine modules.
+   Each quarter now has nine modules. The station, layer and module numbering
+   as also changed, see LHCbKernel v2r10 changes to OTChannelID for details 
 
 !========================== OTDet v4r1 2003-10-06 ==========================
 ! 2003-10-06 - Marco Cattaneo
