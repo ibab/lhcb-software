@@ -8,6 +8,8 @@
 ! 2004-04-05 - Marco Cattaneo
  - Move to Gaudi v14r4
 
+ - Packages modified: LHCbTools v1r1
+
 !======================== BooleSys v5r4 2004-04-01 ========================
 ! 2004-04-01 - Marco Cattaneo
  - Packages modified: L0mConf v2r2, L0MuonKernel v1r1, L0MuonTrigger v1r1,

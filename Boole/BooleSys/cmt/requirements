@@ -10,7 +10,7 @@ branches cmt doc
 # Boole application
 use Boole		v5r5	Digi
 use DigiAlg		v2r3	Digi
-use LHCbTools		v1r0	Kernel
+use LHCbTools		v1r1	Kernel
 
 # L0 trigger
 use L0Calo              v7r4	L0
