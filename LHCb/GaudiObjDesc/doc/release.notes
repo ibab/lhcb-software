@@ -2,6 +2,8 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 20020328 Stefan Roiser
+  - changes to produce dictionary-information compliant to the new interface of GaudiIntrospection v4r0
 
 ! 20020328 Pere Mato
   - Added ${CONSTITUENT}_GODflags in fragments
