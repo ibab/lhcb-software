@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.51 2002-03-14 12:41:27 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.52 2002-03-14 14:16:51 mato Exp $
 
 //#include "GaudiKernel/Kernel.h"
 
@@ -2468,8 +2468,6 @@ int main(int argC,
          char* argV[])
 //-----------------------------------------------------------------------------
 {
-
-  test::test();
 
   #ifdef WIN32
     char* sep = "\\";

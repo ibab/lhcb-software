@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.20 2002-03-14 10:01:12 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.21 2002-03-14 14:16:51 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -635,16 +635,6 @@ inline void DaDiClass::pushDaDiInnerClass(DaDiClass* value)
 inline int DaDiClass::sizeDaDiInnerClass()
 {
 	return m_daDiInnerClass.size();
-}
-
-namespace test
-{
-  static void test();
-}
-
-inline void test::test()
-{
-  std::cout << "test" << std::endl;
 }
 
 #endif // DADICLASS_H
