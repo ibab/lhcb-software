@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.20 2002-10-03 14:58:33 cattanem Exp $
+! $Id: release.notes,v 1.21 2002-10-03 15:42:08 cattanem Exp $
 !
 ! Package     : MuonDet
 ! Responsible : David Hutchcroft
+
+! 2002-10-03 - Marco Cattaneo
+ - requirements: changed version to v4r0. Has to be used with XmlDDDB v13r0 
+   or greater due to structural changes in the Xml description.
 
 ! 2002-09-27 - David Hutchcroft
  - Removed the unused padx and pady from DeMuonRegion and so from 
