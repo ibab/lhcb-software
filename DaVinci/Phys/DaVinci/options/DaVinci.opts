@@ -86,7 +86,7 @@ DaVinciTestAlgorithm.DecayProducts        = { "pi+", "pi-" };
 //--------------------------------------------------------------
 MessageSvc.OutputLevel = 3;
 ToolSvc.OutputLevel    = 3;
-XmlCnvSvc.OutputLevel  = 4;
+XmlParserSvc.OutputLevel = 4;
 DaVinciTestAlgorithm.OutputLevel        = 2;
 //AxPrimaryVertexAlgorithm.OutputLevel    = 2;
 //PhysSelectAlgorithm.OutputLevel         = 2;
