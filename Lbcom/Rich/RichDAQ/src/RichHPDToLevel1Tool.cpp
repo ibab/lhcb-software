@@ -5,8 +5,11 @@
  * Implementation file for class : RichHPDToLevel1Tool
  *
  * CVS Log :-
- * $Id: RichHPDToLevel1Tool.cpp,v 1.3 2005-01-14 16:57:12 jonrob Exp $
+ * $Id: RichHPDToLevel1Tool.cpp,v 1.4 2005-01-18 09:06:55 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.3  2005/01/14 16:57:12  jonrob
+ * Add functionality to use job options for mapping data
+ *
  * Revision 1.2  2005/01/13 13:10:14  jonrob
  * Update mapping type
  *
@@ -70,7 +73,7 @@ StatusCode RichHPDToLevel1Tool::initialize()
       L1ID = *iD;
       newL1Bank = false;
     } else {
-      if ( *iD > 0 ) { 
+      if ( *iD > 0 ) {
         const RichDAQ::HPDHardwareID hardID = *iD;
         // Get RichSmartID
         const RichSmartID smartID = hpdIDTool->richSmartID( hardID );
@@ -138,7 +141,7 @@ RichHPDToLevel1Tool::levelL1ID( const RichDAQ::HPDHardwareID hardID ) const
 const RichSmartID::Collection &
 RichHPDToLevel1Tool::l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const
 {
-  // See if this Hardware ID is known
+  // See if this L1 ID is known
   RichDAQ::L1ToSmartIDs::const_iterator id = m_l12smartids.find( l1ID );
   if ( m_l12smartids.end() == id )
   {
@@ -152,7 +155,7 @@ RichHPDToLevel1Tool::l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const
 const RichDAQ::HPDHardwareIDs &
 RichHPDToLevel1Tool::l1HPDHardIDs( const RichDAQ::Level1ID l1ID ) const
 {
-  // See if this Hardware ID is known
+  // See if this L1 ID is known
   RichDAQ::L1ToHardIDs::const_iterator id = m_l12hardids.find( l1ID );
   if ( m_l12hardids.end() == id )
   {
@@ -173,6 +176,20 @@ const RichDAQ::L1ToSmartIDs & RichHPDToLevel1Tool::l1HPDSmartIDs() const
 const RichDAQ::L1ToHardIDs & RichHPDToLevel1Tool::l1HPDHardIDs() const
 {
   return m_l12hardids;
+}
+
+const Rich::DetectorType
+RichHPDToLevel1Tool::richDetector( const RichDAQ::Level1ID l1ID ) const
+{
+  // See if this L1 ID is known
+  L1ToRICH::const_iterator rich = m_l1ToRich.find( l1ID );
+  if ( m_l1ToRich.end() == rich )
+  {
+    Exception ( "Unknown RICH Level 1 ID " + boost::lexical_cast<std::string>(l1ID) );
+  }
+
+  // Found, so return RICH
+  return (*rich).second;
 }
 
 // Used for "old" geometries which don't have job option defined layouts
@@ -216,6 +233,7 @@ void RichHPDToLevel1Tool::buildTempMapping()
       if ( m_l12smartids[L1ID].empty() ) ++nL1s[hpdID.rich()]; // temporary count
       m_l12smartids[L1ID].push_back( hpdID );
       m_l12hardids[L1ID].push_back( hardID );
+      m_l1ToRich[L1ID] = rich;
       ++iHPD;
 
       verbose() << "RichSmartID " << hpdID << " HardID " << hardID

@@ -5,8 +5,11 @@
  *  Header file for tool : RichHPDToLevel1Tool
  *
  *  CVS Log :-
- *  $Id: RichHPDToLevel1Tool.h,v 1.3 2005-01-14 16:57:12 jonrob Exp $
+ *  $Id: RichHPDToLevel1Tool.h,v 1.4 2005-01-18 09:06:55 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.3  2005/01/14 16:57:12  jonrob
+ *  Add functionality to use job options for mapping data
+ *
  *  Revision 1.2  2005/01/13 13:10:14  jonrob
  *  Update mapping type
  *
@@ -93,6 +96,9 @@ public: // methods (and doxygen comments) inherited from interface
   // Access mapping between Level 1 IDs and HPD RichSmartIDs
   const RichDAQ::L1ToHardIDs & l1HPDHardIDs() const;
 
+  // Return which RICH detector a given Level 1 is used with
+  const Rich::DetectorType richDetector( const RichDAQ::Level1ID l1ID ) const;
+
 private: //methods
 
   /// Build a temporary mapping between HPD and L1 numbers
@@ -111,6 +117,10 @@ private: // data
   /// Typedef for mapping from HPD Hardware ID to Level1 ID
   typedef RichHashMap< const RichDAQ::HPDHardwareID, RichDAQ::Level1ID > HardIDToL1;
   HardIDToL1 m_hardid2L1; ///< HPD Hardware ID to L1 ID map
+
+  /// Typedef for mapping between L1 boards and RICH detector
+  typedef RichHashMap< const RichDAQ::Level1ID, Rich::DetectorType > L1ToRICH;
+  L1ToRICH m_l1ToRich; ///< L1 to RICH map
 
   RichDAQ::L1ToSmartIDs m_l12smartids; ///< L1 ID to RichSmartIDs map
   RichDAQ::L1ToHardIDs  m_l12hardids;  ///< L1 ID to HPD hardware IDs map
