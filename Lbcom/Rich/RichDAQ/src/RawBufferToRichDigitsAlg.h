@@ -4,8 +4,10 @@
  *  Header file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.h,v 1.5 2004-07-27 13:46:06 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.h,v 1.6 2004-10-30 19:13:05 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/27 13:46:06  jonrob
+ *  Add doxygen file documentation and CVS information
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -20,12 +22,11 @@
 // base class
 #include "RichKernel/RichAlgBase.h"
 
-// RichDAQ utility classes
-#include "RichDAQDefinitions.h"
-#include "RichDAQHeaderPD.h"
-#include "RichZSHitTriplet.h"
-#include "RichDAQLinkNumber.h"
-#include "RichNonZeroSuppData.h"
+// Event
+#include "Event/RichDigit.h"
+
+// Interfaces
+#include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
 /** @class RawBufferToRichDigitsAlg RawBufferToRichDigitsAlg.h
  *
@@ -48,27 +49,13 @@ public:
   virtual StatusCode execute   ();    // Algorithm execution
   virtual StatusCode finalize  ();    // Algorithm finalization
 
-private: // methods
-
-  /// Decode a zero suppress data block
-  unsigned int decodeZeroSuppressedBank( const RawBank & bank ) const;
-
-  /// Decode a non-zero suppress data block
-  unsigned int decodeNonZeroSuppressedBank( const RawBank & bank ) const;
-
-  /// Retrieves the raw event. If not available tries to build one from RawBuffer
-  RawEvent * getRawEvent();
-
 private: // data
-
-  /// Input location for RawEvent in TES
-  std::string m_rawEventLoc;
 
   /// Output location for RichDigits
   std::string m_richDigitsLoc;
 
-  // Pointer to RichDigit contianer
-  RichDigits * m_digits;
+  /// Raw Buffer Decoding tool 
+  IRichRawBufferToSmartIDsTool * m_decoder;
 
 };
 

@@ -1,8 +1,10 @@
 
 // Build RichDigits from HltEvent
-//BrunelRecoRICHSeq.Members += { "RawBufferToRichDigitsAlg/RichDecodeRawEvent" };
+BrunelRecoRICHSeq.Members += { "RawBufferToRichDigitsAlg/RichDecodeRawEvent" };
 
-// Use new on-demand service to create digits when needed
-DataOnDemandSvc.Algorithms += { 
-  "DATA='/Event/Raw/Rich/Digits' TYPE='RawBufferToRichDigitsAlg/RichDecodeRawEvent'"
-};
+// Use new on-demand service when intialisation bug is fixed
+//DataOnDemandSvc.Algorithms += {
+//  //"DATA='/Event/Raw/Rich/Digits' TYPE='RawBufferToRichDigitsAlg/RichRawEventToDigits'"
+//};
+
+ToolSvc.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDecoder" };

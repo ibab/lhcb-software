@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2004-10-30 - Chris Jones
+ - Rework decoding as a tool, so that reconstruction can work directly from
+   RawBuffer, skipping creation of RichDigits - saves time for HLT.
+
 ! 2004-10-19 - Chris Jones
  - Update usage to RichEvent v8r*
 
