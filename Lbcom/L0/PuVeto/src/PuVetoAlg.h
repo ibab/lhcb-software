@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.h,v 1.4 2002-04-24 13:00:19 ocallot Exp $
+// $Id: PuVetoAlg.h,v 1.5 2002-07-13 17:03:17 ocallot Exp $
 #ifndef PUVETOALG_H 
 #define PUVETOALG_H 1
 
@@ -17,16 +17,16 @@
 
 class VetoInput {
 public:
-  VetoInput( int sensor )  { m_sensor = sensor;  };
+  VetoInput( double zSensor )  { m_zSensor = zSensor;  };
   virtual ~VetoInput( ) { };
-  int sensor()                   const { return m_sensor; };
+  double zSensor()               const { return m_zSensor; };
 
   void addStrip( double strip )        { m_strip.push_back( strip ); };
   
   std::vector<int>* strips( )          { return &m_strip;            };
   
 private:
-  int m_sensor;
+  double m_zSensor;
   std::vector<int> m_strip;
 };
 

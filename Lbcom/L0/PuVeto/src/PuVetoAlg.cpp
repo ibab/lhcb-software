@@ -1,4 +1,4 @@
-// $Id: PuVetoAlg.cpp,v 1.6 2002-07-13 10:44:11 ocallot Exp $
+// $Id: PuVetoAlg.cpp,v 1.7 2002-07-13 17:03:17 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -88,7 +88,7 @@ StatusCode PuVetoAlg::initialize() {
   m_totBin = m_nBin[ m_nBin.size()-1 ];
 
   for ( int ks=0 ; m_velo->nbPuSensor() > ks ; ks++ ) {
-    VetoInput a( ks );
+    VetoInput a( m_velo->zSensor(ks+100) );
     m_input.push_back( a );
   }
 
@@ -214,11 +214,6 @@ StatusCode PuVetoAlg::execute() {
   } else {
     decision = 1;    // Multiple interaction
   }
-  log << MSG::DEBUG << "== Decision " << decision 
-      << " Peak1 z,h,s " << pos1 << " " << height1 << " " << sum1
-      << " Peak2 z,h,s " << pos2 << " " << height2 << " " << sum2
-      << " Integral " << integral
-      << endreq;
 
   L0PuVeto* pileUp = new L0PuVeto();
   pileUp->setDecision( decision );
@@ -234,6 +229,12 @@ StatusCode PuVetoAlg::execute() {
     totMult += m_input[ks].strips()->size();
   }
   pileUp->setSTot( totMult );
+
+  log << MSG::DEBUG << "== Decision " << decision 
+      << " Peak1 z,h,s " << pos1 << " " << height1 << " " << sum1
+      << " Peak2 z,h,s " << pos2 << " " << height2 << " " << sum2
+      << " Off peaks " << integral << " TotMult " << totMult
+      << endreq;
   
   StatusCode sc = eventSvc()->registerObject( m_outputContainer, pileUp );
   if ( sc.isFailure() ) {
@@ -288,8 +289,8 @@ void PuVetoAlg::fillHisto ( ) {
     sensA = &(*itSens);
     sensB = &(*(itSens+2));
 
-    zA = m_velo->zSensor( sensA->sensor() );
-    zB = m_velo->zSensor( sensB->sensor() );
+    zA = sensA->zSensor();
+    zB = sensB->zSensor();
 
     std::vector<int>* digsA = sensA->strips();
     std::vector<int>* digsB = sensB->strips() ;
@@ -346,8 +347,8 @@ void PuVetoAlg::maskHits ( double zVertex,
   for ( unsigned int i1 = 0 ; 2 > i1 ; i1++, itSens++ ) {
     sensA = &(*itSens);
     sensB = &(*(itSens+2));
-    zA = m_velo->zSensor( sensA->sensor() );
-    zB = m_velo->zSensor( sensB->sensor() );
+    zA = sensA->zSensor();
+    zB = sensB->zSensor();
 
     std::vector<int>* digsA = sensA->strips();
     std::vector<int>* digsB = sensB->strips() ;
