@@ -6,6 +6,14 @@
 !-----------------------------------------------------------------------------
 
 
+! 2003-05-29 - VanyaBELYAEV
+ - src/GiGaMuonHitCnv.cpp  
+   src/GiGaTrackerHitCnv.cpp  
+   src/GiGaVeloHitCnv.cpp       fix "GiGaFlush" problem. Indeed remove the 
+                                explicit dependence on order of conversion 
+   cmt/requirments              increase the version 
+
+
 !=========================== GaussTracker v2r2 2002-04-29 ======================
 ! 2003-04-29 - Witek Pokorski 
  - requirements - put v* to avoid changing version in the future\

@@ -227,6 +227,22 @@ StatusCode GiGaTrackerHitCnv::updateObjRefs
            << "No G4HCOfThisEvent found" << endreq;      
       return StatusCode::SUCCESS;
     }
+
+  { // be sure that MC particles are already converted! 
+    // just to force the loading of the reference table 
+    // get the registry
+    const IRegistry* registry   = address->registry();
+    if( 0 == registry ) { return Error("IRegistry* points to NULL!");}
+    const std::string& location = registry->identifier();
+    std::string mcpath = 
+      location.substr( 0, location.find( "/MC" ) ) + "/" + 
+      MCParticleLocation::Default;
+    // get MCparticles 
+    const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
+    if( 0 == mcps ) 
+      { return Error("Can not locate MCparticles at '" + mcpath + "'");}   
+  }
+
   
   std::string colname = *(address->par());  
   
