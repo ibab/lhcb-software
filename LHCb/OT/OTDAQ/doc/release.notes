@@ -1,0 +1,31 @@
+Package         : OTDAQ
+Package manager : J. Nardulli
+
+!====================== OTDAQ v1 2004-02-02 ======================
+! 2004-02-02 - Jacopo Nardulli
+
+  The package OTDAQ consists of 2 algorithms:
+  - OTFillRawBuffer:   This algorithm retrieves the OTDigits and fills a RawBuffer
+  - OTRetrieveBuffer:  This algorithm retrieves the RawEvent and creates the OTDigits.
+
+  - The RawBuffer is a container which holds the banks. The banks are vectors of 32 
+    bits-integers. There are 128 banks, each corresponding to a TELL 1 Board. Each bank has a 
+    standard header (see note 2003 - 152).
+  - Each TELL 1 Board has the data from 4 GOLs (every GOL correspond to a short module) and 
+    each GOL takes data from 4 OTIS (each OTIS has 32 channels). See note 2003-041. 
+  - The OTChannelID's are converted to a bank number (7 bits), GOL number (2 bits) and 
+    Otis number (2 bits).
+  - The 32-bit data in the bank consists of GOL-headers (first bit is 0) and the actual hits 
+    (first bit is 1).
+  - GOL-header: -------------------------------------------------------------
+                bit     31  30-29   28-16     15-0
+                         0   ID    nothing  GOL-size
+		-------------------------------------------------------------
+  - For each two hits a data word is filled. The GOL-size is the number of the data-words 
+    inside the GOL.
+  - data word:  -------------First hit---------||-----Next hit----------------
+                bit     31  30-29  28-24  23-16  15  14-13    12-8  7-0
+                         1 OTIS-ID straw  time    1 OTIS-ID  straw  time
+		-------------------------------------------------------------
+  - The straw number runs from 0-31. 
+

@@ -1,0 +1,32 @@
+package OTDAQ
+version v1r0
+
+branches OTDAQ cmt doc src options
+
+include_dirs $(OTDAQROOT)
+
+# Event
+use DAQEvent	        v4r*    Event
+
+# OTDet
+use OTDet               v5r*    Det
+
+# OTEvent
+use OTEvent             v13r*   Event
+
+# OTAlgorithms
+use OTAlgorithms	v13r*	OT
+
+# ================= component library ====================
+library OTDAQ ../src/*.cpp
+
+apply_pattern package_Clinkopts
+apply_pattern packageShr
+
+# =================== private stuff ====================
+private
+apply_pattern  package_Cshlibflags
+
+# apply_pattern ld_library_path
+
+
