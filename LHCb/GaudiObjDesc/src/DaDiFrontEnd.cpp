@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.17 2002-01-29 11:58:21 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.18 2002-01-29 12:04:57 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -148,11 +148,6 @@ void parseBaseClass(DOM_Node node,
   gddBaseClass->setName(node.getAttributes().
     getNamedItem(DOMString::transcode("name")).getNodeValue().
     transcode());
-
-  std::cout << node.getAttributes().
-    getNamedItem(DOMString::transcode("name")).getNodeValue().
-    transcode() << std::endl;
-
 
   gddClass->pushImportList(node.getAttributes().
     getNamedItem(DOMString::transcode("name")).getNodeValue().
