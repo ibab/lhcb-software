@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.8 2001-07-04 17:22:21 mato Exp $
+# $Id: requirements,v 1.9 2001-07-10 13:42:41 ranjard Exp $
 package DetDescExample
 version v2
 
-branches doc src job options cmt
+branches doc src options cmt
 
 # Main program and standard job options
 use GaudiConf     v5*     
@@ -15,6 +15,7 @@ use DetDesc       v7*   Det
 use XmlDDDB       v6*   Det
 
 #==> DetDesc example
+set EXEC DetDescExample
 application DetDescExample *.cpp \
             "$(GAUDICONFROOT)/src/GaudiMain.cpp"
 

@@ -1,0 +1,106 @@
+#!/bin/csh
+###########################################################
+#   Initialize LSF queue parameters
+#
+# "-q" gives the queue (1nh by default)
+# "-c" gives the CPU time in minutes
+#
+# -q 8nm  = about 30 min HP735     express
+# -q 1nh           3 hours         short
+# -q 8nh           1 day           medium
+# -q 1nd           3 days          long
+# -q 1nw          10 days HP K260  verylong
+#
+#
+#  define the job name
+#BSUB -J myjob
+#  define the queue
+#BSUB -q z5_1nh
+#
+###########################################################
+#
+# in BATH output files are written in the BATCH machine
+# and copy at the end to your $MYWORKDIR output directory
+# in INTERACTIVE output files are written onto $WORKDIR
+# you have to set $WORKDIR to what you want
+#
+set MODE = $CMTCONFIG
+if ($?LS_SUBCWD) then 
+# in BATCH go to the BATCH local directory
+  cd $WORKDIR
+else
+# in interactive set WORKDIR to your output directory
+  setenv WORKDIR $HOME/w1
+  if ($#argv == 1) set MODE = "$1" 
+endif
+#
+# == set the root directory of your job
+setenv MYJOBROOT $W1/CMTv1r8/Ex/DetDescExample/v2
+# == reset the dynamic library search path
+unsetenv LD_LIBRARY_PATH
+# == set the program environment
+source $MYJOBROOT/cmt/setup.csh -tag=$MODE
+# == create soft_links to use packages
+$CMTROOT/mgr/cmt build library_links
+#
+# == in batch copy the executable,======================================= 
+#    in interactive create a link to the executable you want to run =======
+#
+if ($?LS_SUBCWD) then
+  cp $MYJOBROOT/$DETDESCEXAMPLECONFIG/$EXEC.exe tmpjob.exe
+else
+  ln -fs $MYJOBROOT/$DETDESCEXAMPLECONFIG/$EXEC.exe tmpjob.exe
+endif
+#
+#==  create temporary joboptions file ==================
+#
+#
+cat >! tmpjob.opts<<EOF
+// Do not use standard options, as we do not need event input
+
+// Define the other standard DLLs and services
+ApplicationMgr.DLLs   = { "GaudiAud" };
+AuditorSvc.Auditors   = { "ChronoAuditor" };
+
+// Set up the detector description service
+#include "$STDOPTS/DetDesc.opts"
+
+//--------------------------------------------------------------
+// Private Application Configuration options
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg =  { "SimpleAlgorithm/Simple" };
+
+// Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel = 3;
+
+EOF
+
+#
+# == run $EXEC.exe ============================================
+#
+if ($MODE == "Linuxdbx") then
+  ddd tmpjob.exe tmpjob.opts
+else
+  time tmpjob.exe tmpjob.opts
+endif
+
+# == job is finished: remove temporary files ==========
+rm tmp*
+
+# == job is finished: if in batch copy output files on user directories
+#
+if ($?LS_SUBCWD) then 
+  ls *.* >! RETURN
+endif
+
+exit 0
+
+
+
+
+
+
+
+
+
+

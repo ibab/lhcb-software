@@ -5,6 +5,9 @@ Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
 
+!20010710 v2 Flr
+ - use Gaudi v8
+ - add options/Gaudi.job to run the example
 
 !20010702 Sebastien Ponce
  - now it's working under windows
