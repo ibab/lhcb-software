@@ -1,6 +1,7 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+!================= EvtGen v5r4 ====================================
 ! 2004-06-08 - Patrick Robbe
  - EvtDDalitz.cpp : correct Complex amplitude for D0 -> Ks pi pi
    decays from B.
