@@ -5,6 +5,48 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v17r2 2004-12-10 =======================
+! 2004-12-10 - Marco Cattaneo
+ - New packages:  GaudiObjDesc v7r0 (added temporarily until released with Gaudi)
+
+ - Modified packages: KernelSys v4r5, LHCbKernel v5r5, Relations v2r1,
+                      EventSys v19r2, TrgEvent v5r2, VeloEvent v13r2, 
+                      PhysEvent v8r7, CaloEvent v13r7, MuonEvent v3r2, 
+                      RichEvent v8r1, Event v4r6, L0Event v14r1p2,
+                      DetSys v6r0, VeloDet v9r2, DetDesc v14r2p1, OTDet v5r4p1,
+                      AssociatorsSys v2r2, VeloAssociators v1r13, MCTools v1r10,
+                      VeloDAQ v2r2, OTDAQ v3r2, LHCbAlgs v1r3, GaudiConf v8r3, 
+                      IOExample v1r4
+
+ - In GaudiConf v8r3
+   . Remove remaining .py options files (obsolete)
+
+ - In LHCbKernel v5r5, TrgEvent v5r2
+   . Add missing POOL dictionaries
+
+ - In LHCbKernel v5r5, VeloEvent v13r2, VeloDet v9r2, VeloDAQ v2r2
+   . Backwards incompatible changes to Velo geometry and wafer numbering
+
+ - In MCTools v1r10
+   . Modified the VeloCluster to MCParticle linker to check each channel ID
+     separately, no longer just one channel in a cluster
+
+ - In LHCbKernel v5r5, CaloEvent v13r7, MuonEvent v3r2, Event v4r6, 
+      RichEvent v8r1, PhysEvent v8r7, L0Event v14r1p2
+   . Modifications to use new version of GaudiObjDesc
+
+ - In Relations v2r1
+   . Remove WIN32 special code, no longer necessary with VC7.1
+
+ - In OTDet v5r4p1
+   . Add a default location for the detector element
+
+ - In OTDAQ v3r2
+   . Move to new GaudiAlgorithm base classes
+
+ - In IOExample v1r4
+   . Update WriteMin.opts to files produced with new Rich Event model
+
 !======================= LHCbSys v17r1 2004-11-26 =======================
 ! 2004-11-26 - Marco Cattaneo
  - Modified packages: KernelSys v4r4, LHCbKernel v5r4, RichKernel v5r1,
