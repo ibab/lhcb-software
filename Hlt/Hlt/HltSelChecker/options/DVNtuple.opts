@@ -1,0 +1,71 @@
+#include "$HLTSELCHECKERROOT/options/DVHLTCorr.opts"
+DaVinci.OutputLevel = 4 ;
+
+//==============================================================================
+// The offline selections
+//==============================================================================
+//#include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
+//#include "$HLTSELCHECKERROOT/options/PlotTDR.opts"
+//==============================================================================
+// plots
+//==============================================================================
+//#include "$HLTSELCHECKERROOT/options/Plots.opts"
+//==============================================================================
+// MC truth
+//==============================================================================
+// Include this to overwrite input to take *only* MC truth particles into account
+//#include "$HLTSELCHECKERROOT/options/Truth.opts"
+// Include this to overwrite input to take *only* MC truth particles into account
+//#include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
+// #include "$HLTSELCHECKERROOT/options/NoCuts.opts" // No Cuts
+
+//==============================================================================
+//#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+//EventSelector.Input   = {};
+//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
+//ApplicationMgr.EvtMax    = 100 ;
+
+HistogramPersistencySvc.OutputFile = "test.hbook"; 
+
+HltGenericDecision.Filter = false ; // false is default
+
+//==============================================================================
+// Use TrgVertexFitter (needs VertexFit v1r4)
+//==============================================================================
+#include "$HLTSELECTIONSROOT/options/TrgVertexFitter.opts"
+//==============================================================================
+// Use TrgDispCalculator (needs VertexFit v1r4)
+//==============================================================================
+#include "$HLTSELECTIONSROOT/options/TrgDispCalculator.opts"
+
+ApplicationMgr.TopAlg += { "GaudiSequencer/TupleSeq" }; 
+ApplicationMgr.DLLs += { "PrimVtx" };
+#include "$PRIMVTXROOT/options/PrimVtx.opts"
+TrueSignals.Members += {"TrgTrackToContainer","TrgTrack2MCParticle"}; // when no truth
+TupleSeq.Members += { "PrimVtxFinder" };
+TupleSeq.Members  += { "TrackNTuple" };
+TrackNTuple.PhysDesktop.InputLocations  = { 
+                          "Phys/HLTFilterB2HH"
+                        , "Phys/HLTFilterBd2D0Kstar"
+                        , "Phys/HLTFilterBd2DstarPi"
+                        , "Phys/HLTFilterBs2DsH"
+                        , "Phys/HLTFilterBs2PhiPhi"
+                        , "Phys/HLTFilterBs2PhiGamma"
+                        , "Phys/HLTFilterB2MuMu"
+                        , "Phys/HLTFilterBd2MuMuKstar"
+                        , "Phys/HLTHotJpsis"
+};
+TrackNTuple.UseTruth = true ;
+
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+
+//HLTSharedD02KH.OutputLevel = 1 ;
+//FilterD0ForHLTBd2D0Kstar.PhysDesktop.OutputLevel = 1 ;
+TrackNTuple.Particle2MCLinksAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBd2D0Kstar";
+TrackNTuple.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
+TrackNTuple.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksHLTBd2D0Kstar";
+Particle2MCLinksHLTBd2D0Kstar.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles", "Phys/HLTPreselPhotons/Particles"};
+
+TrackNTuple.OutputLevel = 4 ;
+
+NTupleSvc.Output={"FILE1 DATAFILE='${NTUPLEFILE}' TYP='HBOOK' OPT='NEW'"};
