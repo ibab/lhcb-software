@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
 !-----------------------------------------------------------------------------
 
+!========================= CaloDAQ v1r0p1 2005-01-31 =========================
+! 2005-01-31 - Marco Cattaneo
+ - Add a missing include for Windows (no longer included via CLHEP...)
+
 !========================== CaloDAQ v1r0 2005-01-14 ==========================
 ! 2005-01-10 - Olivier Callot
  - Tools to decode the Raw buffer: One interface for the trigger and one for

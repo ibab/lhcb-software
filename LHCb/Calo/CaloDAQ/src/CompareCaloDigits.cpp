@@ -1,5 +1,8 @@
-// $Id: CompareCaloDigits.cpp,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CompareCaloDigits.cpp,v 1.2 2005-01-31 14:15:27 cattanem Exp $
 // Include files 
+
+// STL
+#include <math.h> // for fabs() on Windows
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
