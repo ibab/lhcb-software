@@ -1,0 +1,27 @@
+// $Id: Gauss.opts,v 1.1.1.1 2004-10-25 08:53:25 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+
+/** @file 
+ *  prototype file for MC Calo Hit monitoring in Gauss
+ *  @author Carlos Gonzales Bano Carlos.Gonzalez.Bano@cern.ch
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date 2004-01-28
+ */
+
+ApplicationMgr.DLLs += { "CaloMoniSim" } ;
+
+GaussMonitor.Members += 
+  { "MCCaloMonitor/SpdMonitor"  ,
+    "MCCaloMonitor/PrsMonitor"  , 
+    "MCCaloMonitor/EcalMonitor" ,
+    "MCCaloMonitor/HcalMonitor" } ;
+
+#include "$CALOMONISIMOPTS/MoniSim.opts"
+
+// ============================================================================
+// The END 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
