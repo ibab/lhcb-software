@@ -1,11 +1,19 @@
-! $Id: release.notes,v 1.8 2005-02-08 20:29:46 ibelyaev Exp $ 
+! $Id: release.notes,v 1.9 2005-02-12 16:11:25 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.8 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.9 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
-! Responsible :  Vanya BELYAEV     Ivan.Belyaev@itep.ru 
+! Responsible :  Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2005-02-12 - Vanya BELYAEV
+
+ - technical update for LoKi v3r9 
+ - cmt/requirements 
+
+   version increment to v3r9 
+
 
 ! 2005-02-08 - Vanya BELYAEV
   

@@ -1,6 +1,6 @@
-// $Id: LoKi_Bd2KStarGamma.cpp,v 1.7 2005-02-05 19:13:25 ibelyaev Exp $
+// $Id: LoKi_Bd2KStarGamma.cpp,v 1.8 2005-02-12 16:11:25 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.7 $  
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.8 $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
 // ============================================================================
@@ -158,17 +158,17 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
       Cut cuts = dz > 0 && dang > 0.995 && tof/0.482 < 6  ;   // 
       if( !cuts( B0 ) ) { continue ; }                        // CONTINUE 
 
-      const HepLorentzVector& p_B0    = B0->p(0);
-      const HepLorentzVector& p_Kst   = B0->p(1);
-      const HepLorentzVector& p_gamma = B0->p(2);
+      const LoKi::LorentzVector& p_B0    = B0->p(0);
+      const LoKi::LorentzVector& p_Kst   = B0->p(1);
+      const LoKi::LorentzVector& p_gamma = B0->p(2);
 
       // ### Gamma momentum in B meson rest frame
       double ptB_gam =  p_gamma.vect().perp(p_B0.vect());
       if( ptB_gam < ptB_gam_cut ) { continue ; }                // CONTINUE  
 
       // ### K*0 helicity(: angle between P_B0 & P_K boosted into K*0 rest frame
-      HepLorentzVector p_B0_tmp = p_B0;          // tmp vector
-      HepLorentzVector p_K_tmp  = K->momentum(); // tmp vector
+      LoKi::LorentzVector p_B0_tmp = p_B0;          // tmp vector
+      LoKi::LorentzVector p_K_tmp  = K->momentum(); // tmp vector
       // Boost of tmp vector into K*0 rest frame:
       p_B0_tmp.boost(-p_Kst.boostVector()); 
       p_K_tmp.boost(-p_Kst.boostVector()); 
@@ -206,9 +206,29 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
       tuple -> column ( "Kstar" , B0(1)  -> momentum() ) ;
       tuple -> column ( "B0"    , B0     -> momentum() ) ;
       
-      tuple -> column ( "BV"    , B0 -> vertex() -> position() ) ;
+      {
+        // 
+        // commented by V.B. 2005-02-11
+        // tuple -> column ( "BV"    , B0 -> vertex() -> position() ) ;
+        //
+        const LoKi::Point3D& _pos =  B0 -> vertex() -> position() ;
+        tuple -> column ( "BV" , LoKi::ThreeVector( _pos.x() , 
+                                                    _pos.y() , 
+                                                    _pos.z() ) ) ;
+      }
+      
       tuple -> fill   ( "bvchi2,bvdof" ,  VCHI2(B0),VDOF(B0));  
-      tuple -> column ( "PV"    , primary -> position() ) ;
+      {
+        // 
+        // commented by V.B. 2005-02-11
+        // tuple -> column ( "PV"    , primary -> position() ) ;
+        //      
+        const LoKi::Point3D& _pos = primary -> position() ;
+        tuple -> column ( "PV" , LoKi::ThreeVector( _pos.x() , 
+                                                    _pos.y() , 
+                                                    _pos.z() ) ) ;
+      }
+      
       tuple -> fill   ( "pvchi2,pvdof,pvntr", 
                         VCHI2   ( primary ) , 
                         VDOF    ( primary ) ,

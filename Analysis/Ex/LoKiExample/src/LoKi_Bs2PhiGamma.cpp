@@ -1,28 +1,23 @@
-// $Id: LoKi_Bs2PhiGamma.cpp,v 1.3 2004-08-17 15:43:36 ibelyaev Exp $
+// $Id: LoKi_Bs2PhiGamma.cpp,v 1.4 2005-02-12 16:11:25 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2004/03/03 14:17:29  ibelyaev
-//  update for LoKi v2r0
-//
-// Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
-//  new package with LoKi examples 
-//
-// Revision 1.2  2003/05/12 13:21:33  ibelyaev
-//  add the options files for all examples
-//
-// Revision 1.1.1.1  2003/03/12 19:56:56  ibelyaev
-// the first CVS import of new package
-// 
 // ============================================================================
 // Include files
+// ============================================================================
 // LoKi itself 
+// ============================================================================
 #include "LoKi/LoKi.h"
+// ============================================================================
 // DaVinciTools 
+// ============================================================================
 #include "DaVinciTools/IPhotonParams.h"
+// ============================================================================
 // Event 
+// ============================================================================
 #include "Event/EventHeader.h"
+// ============================================================================
 
 /** @file 
  *
@@ -124,9 +119,18 @@ LOKI_ALGORITHM( LoKi_Bs2PhiGamma )
       tuple2->column ( "dist" , dist ( Bs )  ) ;
       tuple2->column ( "zpv"  , VZ( pv )     ) ;
       
-      tuple2->column ( "pv"   , pv->position() ) ;
+      {
+        // 
+        // commented by V.B. 2005-02-11
+        // tuple2->column ( "pv"   , pv->position() ) ;
+        //
+        const LoKi::Point3D& _pos = pv->position() ;
+        tuple2->column ( "pv" , LoKi::ThreeVector( _pos.x() , 
+                                                   _pos.y() , 
+                                                   _pos.z() ) ) ;
+      }
       
-      tuple2->column ( ""     , evthdr         ) ;
+      tuple2 << Tuples::Column( "" , evthdr ) ;
       
       Record rec     ( tuple2 , "vxb,vyb,vzb,vxpv,vypv,vzpv" , 
                        VX( Bs ) , VY( Bs ) , VZ( Bs ) , 
