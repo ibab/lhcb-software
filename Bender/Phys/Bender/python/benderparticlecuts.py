@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderparticlecuts.py,v 1.2 2004-08-06 12:07:08 ibelyaev Exp $ 
+# $Id: benderparticlecuts.py,v 1.3 2004-08-08 13:41:11 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/06 12:07:08  ibelyaev
+#  minor improvements
+#
 # Revision 1.1  2004/07/11 15:47:06  ibelyaev
 #  regular incrment
 #
@@ -62,20 +65,20 @@ MIN        = PMIN
 MAX        = PMAX
 
 # functions 
-ID    =  helper.loadFunID ( gbl.LoKi.Particles.Identifier         ) () 
-ABSID =  helper.loadFunP  ( gbl.LoKi.Particles.AbsIdentifier      ) () 
-CL    =  helper.loadFunP  ( gbl.LoKi.Particles.ConfidenceLevel    ) () 
-Q     =  helper.loadFunP  ( gbl.LoKi.Particles.Charge             ) ()      
-SUMQ  =  helper.loadFunP  ( gbl.LoKi.Particles.SumCharge          ) ()      
-P     =  helper.loadFunP  ( gbl.LoKi.Particles.Momentum           ) ()  
-P2    =  helper.loadFunP  ( gbl.LoKi.Particles.Momentum2          ) ()  
-PT    =  helper.loadFunP  ( gbl.LoKi.Particles.TransverseMomentum ) ()  
-PX    =  helper.loadFunP  ( gbl.LoKi.Particles.MomentumX          ) () 
-PY    =  helper.loadFunP  ( gbl.LoKi.Particles.MomentumY          ) ()  
-PZ    =  helper.loadFunP  ( gbl.LoKi.Particles.MomentumZ          ) () 
-E     =  helper.loadFunP  ( gbl.LoKi.Particles.Energy             ) () 
-M     =  helper.loadFunP  ( gbl.LoKi.Particles.Mass               ) () 
-MM    =  helper.loadFunP  ( gbl.LoKi.Particles.MeasuredMass       ) ()
+ID    =  helper.loadFunID    ( gbl.LoKi.Particles.Identifier         ) () 
+ABSID =  helper.loadFunABSID ( gbl.LoKi.Particles.AbsIdentifier      ) () 
+CL    =  helper.loadFunP     ( gbl.LoKi.Particles.ConfidenceLevel    ) () 
+Q     =  helper.loadFunP     ( gbl.LoKi.Particles.Charge             ) ()      
+SUMQ  =  helper.loadFunP     ( gbl.LoKi.Particles.SumCharge          ) ()      
+P     =  helper.loadFunP     ( gbl.LoKi.Particles.Momentum           ) ()  
+P2    =  helper.loadFunP     ( gbl.LoKi.Particles.Momentum2          ) ()  
+PT    =  helper.loadFunP     ( gbl.LoKi.Particles.TransverseMomentum ) ()  
+PX    =  helper.loadFunP     ( gbl.LoKi.Particles.MomentumX          ) () 
+PY    =  helper.loadFunP     ( gbl.LoKi.Particles.MomentumY          ) ()  
+PZ    =  helper.loadFunP     ( gbl.LoKi.Particles.MomentumZ          ) () 
+E     =  helper.loadFunP     ( gbl.LoKi.Particles.Energy             ) () 
+M     =  helper.loadFunP     ( gbl.LoKi.Particles.Mass               ) () 
+MM    =  helper.loadFunP     ( gbl.LoKi.Particles.MeasuredMass       ) ()
 
 # functions 
 DMASS    =  helper.loadFunP ( gbl.LoKi.Particles.DeltaMass             ) 

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.4 2004-07-11 15:47:05 ibelyaev Exp $ 
+! $Id: release.notes,v 1.5 2004-08-08 13:41:11 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,14 @@
 ! Purpose     : The package is a result of "pythonization procedure" 
 !                of the LoKi package 
 ! -----------------------------------------------------------------------------
+
+! 2004-08-08 - Vanya BELYAEV
+ - python/benderhelper.py
+   add ==/!= operators to ID/ABSID/MCID/MCABSID functions. e.g.
+     'e+' == MCABSID 
+ - cmt/requirements
+   version increment to v3r7 
+
 
 ! 2004-07-11 - Vanya BELYAEV
  - python/*.py

@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendermcparticlecuts.py,v 1.2 2004-08-06 12:07:06 ibelyaev Exp $ 
+# $Id: bendermcparticlecuts.py,v 1.3 2004-08-08 13:41:11 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/06 12:07:06  ibelyaev
+#  minor improvements
+#
 # Revision 1.1  2004/07/11 15:47:06  ibelyaev
 #  regular incrment
 #
@@ -68,17 +71,17 @@ MCPMAX     = helper.loadFunMCP ( gbl.LoKi.Max ( 'const MCParticle*' ) )
 MCMAX      = MCPMAX
 
 # objects 
-MCP     = helper.loadFunMCP ( gbl.LoKi.MCParticles.Momentum           ) ()
-MCE     = helper.loadFunMCP ( gbl.LoKi.MCParticles.Energy             ) ()
-MCPT    = helper.loadFunMCP ( gbl.LoKi.MCParticles.TransverseMomentum ) ()
-MCPX    = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumX          ) ()
-MCPY    = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumY          ) ()
-MCPZ    = helper.loadFunMCP ( gbl.LoKi.MCParticles.MomentumZ          ) ()
-MCMASS  = helper.loadFunMCP ( gbl.LoKi.MCParticles.Mass               ) ()
-MCID    = helper.loadFunMCP ( gbl.LoKi.MCParticles.Identifier         ) ()
-MCABSID = helper.loadFunMCP ( gbl.LoKi.MCParticles.AbsIdentifier      ) ()
-MC3Q    = helper.loadFunMCP ( gbl.LoKi.MCParticles.ThreeCharge        ) ()
-MCCTAU  = helper.loadFunMCP ( gbl.LoKi.MCParticles.ProperLifeTime     ) ()
+MCP     = helper.loadFunMCP     ( gbl.LoKi.MCParticles.Momentum           ) ()
+MCE     = helper.loadFunMCP     ( gbl.LoKi.MCParticles.Energy             ) ()
+MCPT    = helper.loadFunMCP     ( gbl.LoKi.MCParticles.TransverseMomentum ) ()
+MCPX    = helper.loadFunMCP     ( gbl.LoKi.MCParticles.MomentumX          ) ()
+MCPY    = helper.loadFunMCP     ( gbl.LoKi.MCParticles.MomentumY          ) ()
+MCPZ    = helper.loadFunMCP     ( gbl.LoKi.MCParticles.MomentumZ          ) ()
+MCMASS  = helper.loadFunMCP     ( gbl.LoKi.MCParticles.Mass               ) ()
+MCID    = helper.loadFunMCID    ( gbl.LoKi.MCParticles.Identifier         ) ()
+MCABSID = helper.loadFunMCABSID ( gbl.LoKi.MCParticles.AbsIdentifier      ) ()
+MC3Q    = helper.loadFunMCP     ( gbl.LoKi.MCParticles.ThreeCharge        ) ()
+MCCTAU  = helper.loadFunMCP     ( gbl.LoKi.MCParticles.ProperLifeTime     ) ()
 MCTIME  = MCCTAU
 
 

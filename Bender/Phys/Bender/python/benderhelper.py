@@ -57,21 +57,27 @@ def _CallsFun ( fun , calls ) :
     " define call operators "
     fun. __CALL__ =  calls. __fcall__
     fun. __call__ = _CALL_
+    if hasattr( fun , 'printOut' ) : fun.__repr__ = fun.printOut 
     
 def _CallsCut ( cut , calls ) :
     " define call operators "
     cut. __CALL__ =  calls. __ccall__ 
     cut. __call__ = _CALL_
+    if hasattr( cut , 'printOut' ) : cut.__repr__ = cut.printOut 
     
 # import operators 
-_OpsP     = gaudi.gbl.Bender.Operators    ( 'const Particle*'   )
-_OpsV     = gaudi.gbl.Bender.Operators    ( 'const Vertex*'     )
-_OpsMCP   = gaudi.gbl.Bender.Operators    ( 'const MCParticle*' )
-_OpsMCV   = gaudi.gbl.Bender.Operators    ( 'const MCVertex*'   )
-_OpsPID   = gaudi.gbl.Bender.OperatorsPID
-_CallsP   = gaudi.gbl.Bender.Calls        ( 'const Particle*'   )
-_CallsV   = gaudi.gbl.Bender.Calls        ( 'const Vertex*'     )
-_CallsMCP = gaudi.gbl.Bender.CallsMC      ( 'const MCParticle*' )
+_OpsP      = gaudi.gbl.Bender.Operators    ( 'const Particle*'   )
+_OpsV      = gaudi.gbl.Bender.Operators    ( 'const Vertex*'     )
+_OpsMCP    = gaudi.gbl.Bender.Operators    ( 'const MCParticle*' )
+_OpsMCV    = gaudi.gbl.Bender.Operators    ( 'const MCVertex*'   )
+_OpsPID1   = gaudi.gbl.Bender.OperatorsPID ( 'LoKi::Particles::Identifier'      )
+_OpsPID2   = gaudi.gbl.Bender.OperatorsPID ( 'LoKi::Particles::AbsIdentifier'   )
+_OpsPID3   = gaudi.gbl.Bender.OperatorsPID ( 'LoKi::MCParticles::Identifier'    )
+_OpsPID4   = gaudi.gbl.Bender.OperatorsPID ( 'LoKi::MCParticles::AbsIdentifier' )
+
+_CallsP    = gaudi.gbl.Bender.Calls        ( 'const Particle*'   )
+_CallsV    = gaudi.gbl.Bender.Calls        ( 'const Vertex*'     )
+_CallsMCP  = gaudi.gbl.Bender.CallsMC      ( 'const MCParticle*' )
 
 def _OpsFunP   ( fun ) :
     _OpsFun    ( fun ,   _OpsP   )
@@ -98,18 +104,25 @@ def _OpsCutV   ( cut ) :
 def _OpsCutMCP ( cut ) : _OpsCut ( cut , _OpsMCP )
 def _OpsCutMCV ( cut ) : _OpsCut ( cut , _OpsMCV )
 
-def _OpsFunID  ( fun ) : _OpsFunP( fun ) ; _OpsE   ( fun , _OpsPID )
+def _OpsFunID      ( fun ) : _OpsFunP  ( fun ) ; _OpsE   ( fun , _OpsPID1 )
+def _OpsFunABSID   ( fun ) : _OpsFunP  ( fun ) ; _OpsE   ( fun , _OpsPID2 )
+def _OpsFunMCID    ( fun ) : _OpsFunMCP( fun ) ; _OpsE   ( fun , _OpsPID3 )
+def _OpsFunMCABSID ( fun ) : _OpsFunMCP( fun ) ; _OpsE   ( fun , _OpsPID4 )
 
-def  loadFunP   ( val ) : _OpsFunP    ( val ) ; return val
-def  loadFunV   ( val ) : _OpsFunV    ( val ) ; return val
-def  loadFunMCP ( val ) : _OpsFunMCP  ( val ) ; return val
-def  loadFunMCV ( val ) : _OpsFunMCV  ( val ) ; return val
-def  loadFunID  ( val ) : _OpsFunID   ( val ) ; return val
+def  loadFunP     ( val ) : _OpsFunP     ( val ) ; return val
+def  loadFunV     ( val ) : _OpsFunV     ( val ) ; return val
+def  loadFunMCP   ( val ) : _OpsFunMCP   ( val ) ; return val
+def  loadFunMCV   ( val ) : _OpsFunMCV   ( val ) ; return val
+def  loadFunID    ( val ) : _OpsFunID    ( val ) ; return val
+def  loadFunABSID ( val ) : _OpsFunABSID ( val ) ; return val
 
 def  loadCutP   ( val ) : _OpsCutP    ( val ) ; return val
 def  loadCutV   ( val ) : _OpsCutV    ( val ) ; return val
 def  loadCutMCP ( val ) : _OpsCutMCP  ( val ) ; return val
 def  loadCutMCV ( val ) : _OpsCutMCV  ( val ) ; return val
+
+def  loadFunMCID    ( val ) : _OpsFunMCID    ( val ) ; return val
+def  loadFunMCABSID ( val ) : _OpsFunMCABSID ( val ) ; return val
 
 def loadRange  ( val ) :
     val.at    = None
