@@ -1,0 +1,9 @@
+Package         : CaloDet 
+Package manager : Vanya Belyaev 
+
+
+! =====================================================================
+! 2001/02/04  - v1 Vanya Belyaev 
+  new package 
+  move the codes from former Calo (CaloAlg)
+

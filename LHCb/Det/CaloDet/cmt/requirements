@@ -13,7 +13,7 @@ use CaloGen      v1*  Calo
 
 # =============== link library (base classes) =============================
 library          CaloDetLib        Lib/*.cpp 
-macro_append     CaloDet_stamps   "$(CaloDetDir)/CaloDetLib.stamp"
+macro            CaloDet_stamps   "$(CaloDetDir)/CaloDetLib.stamp"
 
 # =============== component library =======================================
 library          CaloDet           component/*.cpp
