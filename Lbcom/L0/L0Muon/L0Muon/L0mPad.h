@@ -132,6 +132,4 @@ inline void L0mPad::addMCParticle( SmartRef<MCParticle> value )
   m_mcParticles.push_back(value);
 }  
 
-bool operator==(L0mPad lpd, MuonTile mt);
-
 #endif  // L0MUON_L0MPAD_H 

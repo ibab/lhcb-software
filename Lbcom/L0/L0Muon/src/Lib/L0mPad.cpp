@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mPad.cpp,v 1.1 2001-06-07 16:35:54 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mPad.cpp,v 1.2 2001-06-11 20:00:34 atsareg Exp $
 
 #include "GaudiKernel/MsgStream.h"
 
@@ -22,10 +22,3 @@ void L0mPad::print(MsgStream log ) {
        << nX() << "/" << nY() << endreq;
 
 }	   
-		   
-bool operator==(L0mPad lpd, MuonTile mt) {
-    return lpd.quarter()==mt.quarter() &&
-           lpd.region()==mt.region() &&
-           lpd.nX()==mt.nX() &&
-           lpd.nY()==mt.nY();
-}
