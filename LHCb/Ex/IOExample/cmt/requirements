@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2003-12-18 15:32:09 cattanem Exp $
+# $Id: requirements,v 1.10 2004-01-06 14:58:26 cattanem Exp $
 package IOExample
 version v1r0
 
@@ -17,3 +17,5 @@ use AssociatorsSys	v* Associators
 #==> IO example
 application IOMin    "$(GAUDICONFROOT)/src/GaudiMain.cpp" \
                      *.cpp
+
+apply_pattern application_path
