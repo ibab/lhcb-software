@@ -8,16 +8,10 @@ branches cmt doc
 #=======================================================
 
 # Boole application
-use Boole		v1r0	Digi
-
-# Brunel utilities
-use BrunelSicb          v4r1    Rec
-use BrunelAlgs          v2r2	Rec
-# MCTools used by BrunelAlgs, but not needed by Boole...
-use MCTools		v1r1p1	Phys
+use Boole		v2r0	Digi
 
 # LHC background
-use DigiAlg		v1r1	Digi
+use DigiAlg		v2r0	Digi
 
 # L0 trigger
 use L0Calo              v7r1	L0
@@ -40,21 +34,21 @@ use VeloAlgorithms      v2r7  	Velo
 
 # Inner Tracker
 use ITAlgorithms        v12r10	IT
-use ITCheckers          v1r3  	IT
+use ITCheckers          v1r3p1	IT
 
 # Outer Tracker
-use OTAlgorithms        v13r0	OT
+use OTAlgorithms        v13r2	OT
 
 # Muon
-use MuonAlgs            v4r1    Muon
-use MuonBackground	v1r2	Muon
+use MuonAlgs            v5r0	Muon
+use MuonBackground	v1r3	Muon
 use MuonUtils		v1r0	Muon
 
 # Rich
-use RichDigiQC		v1r0	Rich
-use RichUtils		v3r2  	Rich
-use RichDetTools	v2r2  	Rich
+use RichDigiQC		v1r1	Rich
+use RichUtils		v3r3  	Rich
+use RichDetTools	v3r0	Rich
+use RichReadout		v1r0	Rich
 
-# SICBDST packages
-use recevt              v3r5  	SICB
-use recrich             v7r4  	SICB
+# SICB packages - included to avoid dependency on SICBOO project
+use RiSicbGeom		v3r4	SICB
