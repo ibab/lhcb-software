@@ -17,7 +17,7 @@
 
 //--------------------------------------------------------------
 // Re-run L0 and L1 Trigger with DC04 tuning - FOR EXPERTS! 
-#include "$DAVINCIROOT/options/L0.opts"
+// #include "$DAVINCIROOT/options/L0.opts"
 // #include "$DAVINCIROOT/options/L1Decision.opts"
 // Run Hlt triggers
 // #include "$DAVINCIROOT/options/Hlt.opts"
@@ -123,7 +123,7 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 // Sample input file 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
 
-ApplicationMgr.EvtMax    = 100;
+ApplicationMgr.EvtMax    = 1000;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 //***************************************************************
