@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.cpp,v 1.17 2004-10-20 22:41:55 jonrob Exp $
+ *  $Id: DeRich2HPDPanel.cpp,v 1.18 2004-10-21 08:55:42 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.17  2004/10/20 22:41:55  jonrob
+ *  Tidy up inline and virtual functions (whilst solving a windows problem)
+ *
  *  Revision 1.16  2004/10/20 17:02:44  jonrob
  *  Updates for windows
  *
@@ -115,7 +118,7 @@ bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
 
   // find HPD row/column and check if the point is withing the covered area
 
-  unsigned int HPDColumn =
+  const unsigned int HPDColumn =
     static_cast<unsigned int> (floor((inPanel.x()-m_panelHorizEdge)/
                                      m_columnPitch));
 

@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRich1HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich1HPDPanel.cpp,v 1.18 2004-10-20 22:41:55 jonrob Exp $
+ *  $Id: DeRich1HPDPanel.cpp,v 1.19 2004-10-21 08:55:42 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.18  2004/10/20 22:41:55  jonrob
+ *  Tidy up inline and virtual functions (whilst solving a windows problem)
+ *
  *  Revision 1.17  2004/10/20 17:02:44  jonrob
  *  Updates for windows
  *
@@ -108,7 +111,7 @@ bool DeRich1HPDPanel::findHPDRowCol (const HepPoint3D& inPanel,
                                      RichSmartID& id) const
 {
 
-  unsigned int HPDRow =
+  const unsigned int HPDRow =
     static_cast<unsigned int>(floor((inPanel.y() - m_panelVerticalEdge) /
                                     m_rowPitch));
 

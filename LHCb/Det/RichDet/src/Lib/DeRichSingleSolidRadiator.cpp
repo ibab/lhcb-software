@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.6 2004-10-20 16:16:36 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.7 2004-10-21 08:55:42 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/10/20 16:16:36  jonrob
+ *  More minor updates to functions (adding const etc.)
+ *
  *  Revision 1.5  2004/10/18 09:21:49  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -100,7 +103,7 @@ DeRichSingleSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
                                                   HepPoint3D&  returnPoint ) const
 {
 
-  HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
+  const HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
   HepVector3D vLocal( vGlobal );
   vLocal.transform( geometry()->matrix() );
 
@@ -127,7 +130,7 @@ DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D&  position,
                                                HepPoint3D& exitPoint ) const
 {
 
-  HepPoint3D pLocal( geometry()->toLocal(position) );
+  const HepPoint3D pLocal( geometry()->toLocal(position) );
   HepVector3D vLocal( direction );
   vLocal.transform( geometry()->matrix() );
 
@@ -137,7 +140,7 @@ DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D&  position,
   if (0 == noTicks)  return StatusCode::FAILURE;
   
   entryPoint = geometry()->toGlobal( pLocal + ticks[0] * vLocal );
-  exitPoint = geometry()->toGlobal( pLocal + ticks[noTicks-1] * vLocal );
+  exitPoint  = geometry()->toGlobal( pLocal + ticks[noTicks-1] * vLocal );
   return StatusCode::SUCCESS;
 
 }
@@ -153,7 +156,7 @@ DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
                                                points) const
 {
 
-  HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
+  const HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
   HepVector3D vLocal( vGlobal );
   vLocal.transform( geometry()->matrix() );
 

@@ -7,8 +7,11 @@
  *  one less HPD than even columns
  *
  *  CVS Log :-
- *  $Id: DeRich1CdfHPDPanel.cpp,v 1.20 2004-10-20 22:41:55 jonrob Exp $
+ *  $Id: DeRich1CdfHPDPanel.cpp,v 1.21 2004-10-21 08:55:42 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.20  2004/10/20 22:41:55  jonrob
+ *  Tidy up inline and virtual functions (whilst solving a windows problem)
+ *
  *  Revision 1.19  2004/10/20 17:02:44  jonrob
  *  Updates for windows
  *
@@ -124,7 +127,7 @@ bool DeRich1CdfHPDPanel::findHPDRowCol ( const HepPoint3D& inPanel,
 
   // find the correct HPD inside the panel
 
-  unsigned int HPDColumn =
+  const unsigned int HPDColumn =
     static_cast<unsigned int>(floor((inPanel.x() - m_panelHorizEdge)
                                     / m_columnPitch));
 

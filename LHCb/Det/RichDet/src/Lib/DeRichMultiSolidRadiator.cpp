@@ -4,8 +4,11 @@
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.5 2004-10-20 16:16:36 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.6 2004-10-21 08:55:42 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/10/20 16:16:36  jonrob
+ *  More minor updates to functions (adding const etc.)
+ *
  *  Revision 1.4  2004/09/01 15:20:19  papanest
  *  added functions for TabProps
  *
@@ -114,18 +117,18 @@ DeRichMultiSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
                                                  HepPoint3D&  returnPoint ) const
 {
 
-  HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
+  const HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
   HepVector3D vLocal( vGlobal );
   vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
   HepPoint3D localNextPoint(0.0, 0.0, 1e6);
   HepPoint3D localNextTempPoint;
-  HepVector3D solidLocalVector;
+  //HepVector3D solidLocalVector;
   bool foundTick(false);
 
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
-    solidLocalVector = vLocal;
+    HepVector3D solidLocalVector = vLocal;
     if ( m_solids[solid]->
          intersectionTicks(m_pVolumes[solid]->toLocal(pLocal),
                            solidLocalVector.transform(m_pVolumes[solid]->
@@ -144,7 +147,6 @@ DeRichMultiSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
   returnPoint = geometry()->toGlobal(localNextPoint);
   return StatusCode::SUCCESS;
 
-
 }
 
 //=========================================================================
@@ -157,7 +159,7 @@ DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D&  position,
                                               HepPoint3D& exitPoint ) const 
 {
 
-  HepPoint3D pLocal( geometry()->toLocal(position) );
+  const HepPoint3D pLocal( geometry()->toLocal(position) );
   HepVector3D vLocal( direction );
   vLocal.transform( geometry()->matrix() );
 
@@ -166,11 +168,11 @@ DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D&  position,
   HepPoint3D localEntryTempPoint;
   HepPoint3D localExitPoint(0.0, 0.0, -1e6);
   HepPoint3D localExitTempPoint;
-  HepVector3D solidLocalVector;
+  //HepVector3D solidLocalVector;
   bool foundTick(false);
 
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
-    solidLocalVector = vLocal;
+    HepPoint3D solidLocalVector = vLocal;
     if ( m_solids[solid]->
          intersectionTicks(m_pVolumes[solid]->toLocal(pLocal),
                            solidLocalVector.transform(m_pVolumes[solid]->
@@ -210,19 +212,19 @@ DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
                                               points) const 
 {
 
-  HepPoint3D pLocal = geometry()->toLocal(pGlobal);
+  const HepPoint3D pLocal = geometry()->toLocal(pGlobal);
   HepVector3D vLocal = vGlobal;
   vLocal.transform( geometry()->matrix() );
 
   ISolid::Ticks ticks;
   //HepPoint3D localNextPoint(0.0, 0.0, 1e6);
   //HepPoint3D localNextTempPoint;
-  HepVector3D solidLocalVector;
+  //HepVector3D solidLocalVector;
   unsigned int noTicks;
   unsigned int totalTicks(0);
 
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
-    solidLocalVector = vLocal;
+    HepVector3D solidLocalVector = vLocal;
     noTicks = m_solids[solid]->
       intersectionTicks(m_pVolumes[solid]->toLocal(pLocal),
                         solidLocalVector.transform(m_pVolumes[solid]->matrix())
