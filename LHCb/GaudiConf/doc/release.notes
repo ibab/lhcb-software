@@ -1,6 +1,9 @@
 package GaudiConf
 package manager: F.Ranjard
 
+! 20010110 - GaudiConf v3r2 (Flr)
+  Services.txt - add ParticlePropertySvc in the EXTSvc list.
+
 ! 20001212 - GaudiConf v3r1 -Flr
   DetDesc.txt - remove DetDbLocation, use the default location instead.
 
