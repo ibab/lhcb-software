@@ -1,6 +1,4 @@
-# $Id: requirements,v 1.5 2002-04-22 08:18:35 cattanem Exp $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $
+# $Id: requirements,v 1.6 2002-05-15 07:10:59 cattanem Exp $
 # =============================================================================
 package            MuonTools
 version            v2r0

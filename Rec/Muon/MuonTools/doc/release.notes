@@ -1,12 +1,10 @@
-! $Id: release.notes,v 1.14 2002-05-10 12:47:08 dhcroft Exp $
-! =============================================================================
-! CVS tag $Name: not supported by cvs2svn $ 
+! $Id: release.notes,v 1.15 2002-05-15 07:10:59 cattanem Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
 
-! >>>>>>>>>>>>>>>>>>>>>>> MuonTools v2r1 <<<<<<<<<<<<<<<<<<<<<<<<<<
+! >>>>>>>>>>>>>>>>>>>>>>> MuonTools v2r0 <<<<<<<<<<<<<<<<<<<<<<<<<<
 ! 20020510 David Hutchcroft
   - Added new interface for MuonGeometryTool that gives pad and region size 
    (uses MuonTileXYZTool to do it).
@@ -16,7 +14,6 @@
 ! 20020425 David Hutchcroft
   - fixed misspelling of variable name
 
-! >>>>>>>>>>>>>>>>>>>>>>> MuonTools v2r0 <<<<<<<<<<<<<<<<<<<<<<<<<<
 ! 20020422 (M.Cattaneo)
   - Changes in requirements for Gaudi v10
 
