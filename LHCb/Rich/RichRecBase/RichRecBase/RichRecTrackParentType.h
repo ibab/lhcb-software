@@ -1,4 +1,4 @@
-// $Id: RichRecTrackParentType.h,v 1.1.1.1 2003-04-01 13:21:56 jonesc Exp $
+// $Id: RichRecTrackParentType.h,v 1.2 2003-06-30 15:11:57 jonrob Exp $
 #ifndef RICHRECKERNEL_RICHRECTRACKPARENTTYPE_H
 #define RICHRECKERNEL_RICHRECTRACKPARENTTYPE_H 1
 
@@ -10,18 +10,17 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
-/** @class RichRecTrackParentType RichRecTrackParentType.h RichRecKernel/RichRecTrackParentType.h
- *
- *  Enumeration for Rich reconstruction working track object
- *
- *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
- *  @date   2002-07-12
- */
-
+/// namespace for RICH detector specifics
 namespace Rich {
 
-  /// Enumeration for RecTrack parent Type
+  /// namespace for RichRecPixel objects
   namespace RecTrack {
+
+    /** @class Enumeration for Rich reconstruction working track object
+     *
+     *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+     *  @date   2002-07-12
+     */
     enum ParentType {
       Unknown = -1,
       TrStoredTrack,

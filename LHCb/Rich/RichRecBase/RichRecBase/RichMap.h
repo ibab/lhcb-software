@@ -56,12 +56,12 @@ public:
   /** the type of iterator
    *  @warning the actual type is platform-dependent!
    */
-  typedef  Map::iterator         iterator       ;
+  typedef  typename Map::iterator         iterator       ;
 
   /** the type of const_iterator
    *  @warning the actual type is platform-dependent!
    */
-  typedef  Map::const_iterator   const_iterator ;
+  typedef  typename Map::const_iterator   const_iterator ;
 
 public:
 
@@ -119,7 +119,7 @@ public:
     for( Keys::const_iterator key = m_keys.begin() ;
          m_keys.end() != key ; ++key ) { m_map.remove( *key  ) ; }
     m_keys.clear();
-#endif;
+#endif
   };
 
   /** erase the sequence from the map
@@ -133,7 +133,7 @@ public:
     m_map.erase  ( it        );
 #else
     m_map.remove ( it->first );
-#endif;
+#endif
   };
 
   /** remove/erase element from the map (by key)
@@ -161,22 +161,22 @@ public:
   /** iterator for sequential access to the content of the "map"
    *  @return begin-iterator (non-const version)
    */
-  Map::iterator       begin ()       { return m_map.begin () ; }
+  typename Map::iterator       begin ()       { return m_map.begin () ; }
 
   /** iterator for sequential access to the content of the "map"
    *  @return begin-iterator (const version)
    */
-  Map::const_iterator begin () const { return m_map.begin () ; }
+  typename Map::const_iterator begin () const { return m_map.begin () ; }
 
   /** iterator for sequential access to the content of the "map"
    *  @return end-iterator (non-const version)
    */
-  Map::iterator       end   ()       { return m_map.end   () ; }
+  typename Map::iterator       end   ()       { return m_map.end   () ; }
 
   /** iterator for sequential access to the content of the "map"
    *  @return end-iterator (const version)
    */
-  Map::const_iterator end   () const { return m_map.end   () ; }
+  typename Map::const_iterator end   () const { return m_map.end   () ; }
 
 private:
 
@@ -192,7 +192,7 @@ private:
 template <class T1, class T2> inline
 std::ostream& operator << ( std::ostream& s, const RichMap<T1,T2>& m )
 {
-  for ( RichMap<T1,T2>::const_iterator i = m.begin(); i != m.end(); i++ ) {
+  for ( typename RichMap<T1,T2>::const_iterator i = m.begin(); i != m.end(); i++ ) {
     s << "[" << i->first << ", " << i->second << "]";
   }
   return s;
@@ -203,7 +203,7 @@ template <class T1, class T2> inline
 StreamBuffer& operator << ( StreamBuffer& s, const RichMap<T1,T2>& m ) 
 {
   s << m.size();
-  for ( RichMap<T1,T2>::const_iterator i = m.begin(); i != m.end(); i++ ) {
+  for ( typename RichMap<T1,T2>::const_iterator i = m.begin(); i != m.end(); i++ ) {
     s << i->first << i->second;
   }
   return s;

@@ -1,4 +1,4 @@
-// $Id: RichRecPhotonKey.h,v 1.1.1.1 2003-04-01 13:21:56 jonesc Exp $
+// $Id: RichRecPhotonKey.h,v 1.2 2003-06-30 15:11:57 jonrob Exp $
 #ifndef RichRecEvent_RichRecPhotonKey_H
 #define RichRecEvent_RichRecPhotonKey_H 1
 
@@ -10,7 +10,8 @@
 
 /** @class RichRecPhotonKey RichRecPhotonKey.h
  *
- *  Smart Key for RichRecPhotons. Knows parent RichRecSegment and RichRecPixel
+ *  Smart Key for RichRecPhotons. Encodes the parent RichRecSegment and 
+ *  RichRecPixel key values.
  *
  *  @author Chris Jones   (Christopher.Rob.Jones@cern.ch)
  *  created Tue Feb 26 09:25:55 2002
@@ -65,7 +66,9 @@ protected:
 
 private:
 
-  unsigned long m_longKey; ///<  32 bit integer key. First 16 bits are segment number, last 16 pixel number.
+  /// 32 bit integer key
+  /// First 16 bits are segment number, last 16 pixel number.
+  unsigned long m_longKey; 
 
 };
 

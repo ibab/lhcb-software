@@ -1,12 +1,24 @@
-// $Id: RichRecAlgBase.cpp,v 1.2 2003-04-16 11:39:50 cattanem Exp $
+// $Id: RichRecAlgBase.cpp,v 1.3 2003-06-30 15:11:57 jonrob Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IToolSvc.h"
+
+// Event
+#include "Event/ProcStatus.h"
+#include "Event/RichRecStatus.h"
 
 // local
 #include "RichRecBase/RichRecAlgBase.h"
+
+// interfaces
+#include "RichRecBase/IRichSegmentCreator.h"
+#include "RichRecBase/IRichTrackCreator.h"
+#include "RichRecBase/IRichPhotonCreator.h"
+#include "RichRecBase/IRichPixelCreator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RichRecAlgBase
@@ -17,20 +29,22 @@
 // Standard constructor
 RichRecAlgBase::RichRecAlgBase( const std::string& name,
                                 ISvcLocator* pSvcLocator )
-  : Algorithm ( name, pSvcLocator ) {
-
+  : Algorithm ( name, pSvcLocator ),
+    m_procStat(0),
+    m_richTracks(0),
+    m_richPixels(0),
+    m_richSegments(0),
+    m_richPhotons(0),
+    m_richStatus(0),
+    m_trTracks(0),
+    m_toolList() {
+  
+  declareProperty( "ProcStatusLocation",
+                   m_procStatLocation = ProcStatusLocation::Default );
   declareProperty( "TrStoredTracksLocation",
                    m_trTracksLocation = TrStoredTrackLocation::Default );
-  declareProperty( "ChronoTiming", m_timing = false );
-
-  // track selection
-  m_trNames.push_back( "unique" );
-  m_trNames.push_back( "seed" );
-  m_trNames.push_back( "match" );
-  m_trNames.push_back( "forward" );
-  m_trNames.push_back( "upstream" );
-  m_trNames.push_back( "veloTT" );
-  declareProperty( "TrackSelection", m_trNames );
+  declareProperty( "RichRecStatusLocation",
+                   m_richRecStatusLocation = RichRecStatusLocation::Default );
 
 }
 
@@ -40,47 +54,6 @@ RichRecAlgBase::~RichRecAlgBase() {};
 // Initialise
 StatusCode RichRecAlgBase::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-
-  StatusCode sc = StatusCode::SUCCESS;
-
-  // Get pointer to Rich Pixel Tool
-  if ( !toolSvc()->retrieveTool( "RichRecPixelTool", m_richRecPixelTool ) ) {
-    msg << MSG::ERROR << "Unable to retrieve RichRecPixelTool" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // Get pointer to Rich Track Tool
-  if ( !toolSvc()->retrieveTool( "RichRecTrackTool", m_richRecTrackTool ) ) {
-    msg << MSG::ERROR << "Unable to retrieve RichRecTrackTool" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // Get pointer to Rich Photon Tool
-  if ( !toolSvc()->retrieveTool( "RichRecPhotonTool", m_richRecPhotonTool ) ) {
-    msg << MSG::ERROR << "Unable to retrieve RichRecPhotonTool" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // Get pointer to Rich Segment Tool
-  if ( !toolSvc()->retrieveTool( "RichRecSegmentTool", m_richRecSegmentTool) ){
-    msg << MSG::ERROR << "Unable to retrieve RichRecSegmentTool" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // Get pointer to Rich Detector Tool
-  if ( !toolSvc()->retrieveTool( "RichDetInterface", m_richDetInterface ) ) {
-    msg << MSG::ERROR << "Unable to retrieve RichDetInterface" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // ChronoStat timing
-  if ( !serviceLocator()->service( "ChronoStatSvc", m_chrono, true ) ) {
-    msg << MSG::ERROR << "ChronoStatSvc not found" << endreq;
-    m_timing = false;
-    sc = StatusCode::FAILURE;
-  }
-
   // Get the current message service printout level
   IntegerProperty msgLevel;
   IProperty* algIProp;
@@ -88,113 +61,79 @@ StatusCode RichRecAlgBase::initialize() {
   msgLevel.assign( algIProp->getProperty( "OutputLevel" ) );
   m_msgLevel = msgLevel;
 
-  // Initialise track bit selection
-  m_trBits = 0;
-  m_uniqueTrOnly = false;
-  for ( std::vector<std::string>::const_iterator iName = m_trNames.begin();
-        iName != m_trNames.end();
-        iName++ ) {
-    if      ( *iName == "unique"   ) { m_uniqueTrOnly = true; }
-    else if ( *iName == "velo"     ) { m_trBits += 2;   } 
-    else if ( *iName == "seed"     ) { m_trBits += 4;   } 
-    else if ( *iName == "match"    ) { m_trBits += 8;   } 
-    else if ( *iName == "forward"  ) { m_trBits += 16;  } 
-    else if ( *iName == "upstream" ) { m_trBits += 32;  } 
-    else if ( *iName == "veloTT"   ) { m_trBits += 64;  }
-    else if ( *iName == "veloBack" ) { m_trBits += 128; }
-    else { 
-      msg << MSG::ERROR << "Unknown track type " << *iName << endreq;
-      sc = StatusCode::FAILURE;
-    }
+  // Get pointer to Rich Tool Registry
+  if ( !toolSvc()->retrieveTool( "RichToolRegistry", m_toolReg) ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::ERROR << "RichToolRegistry not found" << endreq;
+    return StatusCode::FAILURE;
   }
+  
+  // initialise data pointers
+  IRichSegmentCreator * segTool; acquireTool("RichSegmentCreator", segTool);
+  m_richSegments = &(segTool->richSegments());
+  IRichPhotonCreator * photTool; acquireTool("RichPhotonCreator", photTool);
+  m_richPhotons = &(photTool->richPhotons());
+  IRichPixelCreator * pixTool; acquireTool("RichPixelCreator", pixTool);
+  m_richPixels = &(pixTool->richPixels());
+  IRichTrackCreator * tkTool; acquireTool("RichTrackCreator", tkTool);
+  m_richTracks = &(tkTool->richTracks());
 
-  return sc;
+  return StatusCode::SUCCESS;
 };
 
-// Execute
-StatusCode RichRecAlgBase::execute() { return StatusCode::SUCCESS; }
-
-StatusCode RichRecAlgBase::richTracks() {
-
-  MsgStream msg(msgSvc(), name());
-
-  // Update RichRecTracks pointer
-  m_richTracks = m_richRecTrackTool->richTracks();
-  if ( !m_richTracks ) {
-    msg << MSG::WARNING << "Failed to locate RichRecTracks" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode RichRecAlgBase::richPixels() {
-
-  MsgStream msg(msgSvc(), name());
-
-  // Update RichRecPixels pointer
-  m_richPixels = m_richRecPixelTool->richPixels();
-  if ( !m_richPixels ) {
-    msg << MSG::WARNING << "Failed to locate RichRecPixels" << endreq;
-    return StatusCode::FAILURE;
-  } 
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode RichRecAlgBase::richSegments() {
-
-  MsgStream msg(msgSvc(), name());
-
-  // Update RichRecSegments pointer
-  m_richSegments = m_richRecSegmentTool->richSegments();
-  if ( !m_richSegments ) {
-    msg << MSG::WARNING << "Failed to locate RichRecSegments" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode RichRecAlgBase::richPhotons() {
-
-  MsgStream msg(msgSvc(), name());
-
-  // Update RichRecPhotons pointer
-  m_richPhotons = m_richRecPhotonTool->richPhotons();
-  if ( !m_richPhotons ) {
-    msg << MSG::WARNING << "Failed to locate RichRecPhotons" << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode RichRecAlgBase::trTracks() {
-
-  MsgStream msg(msgSvc(), name());
+TrStoredTracks * RichRecAlgBase::updateTrTracks() {
 
   // Obtain smart data pointer to TrStoredTracks
   SmartDataPtr<TrStoredTracks> tracks( eventSvc(), m_trTracksLocation );
   if ( !tracks ) {
+    MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "Failed to locate TrStoredTracks at "
         << m_trTracksLocation << endreq;
-    return StatusCode::FAILURE;
   }
-  m_trTracks = tracks;
 
-  return StatusCode::SUCCESS;
+  return (m_trTracks = tracks);
+}
+
+RichRecStatus * RichRecAlgBase::updateRichStatus() {
+
+  SmartDataPtr<RichRecStatus> status( eventSvc(), m_richRecStatusLocation );
+  if ( status ) {
+    m_richStatus = status;
+  } else {
+    m_richStatus = new RichRecStatus();
+    if ( !eventSvc()->registerObject(m_richRecStatusLocation, m_richStatus) ) {
+      MsgStream msg( msgSvc(), name() );
+      msg << MSG::ERROR << "Failed to register RichRecStatus at "
+          << m_richRecStatusLocation << endreq;
+      delete m_richStatus;
+      m_richStatus = NULL;
+    }
+  }
+
+  return m_richStatus;
+}
+
+ProcStatus * RichRecAlgBase::updateProcStatus()  {
+  
+  SmartDataPtr<ProcStatus> procStat( eventSvc(), m_procStatLocation );
+  if ( !procStat ) {
+    MsgStream msg ( msgSvc(), name() );
+    msg << MSG::WARNING << "Failed to locate ProcStatus at " 
+        << m_procStatLocation << endreq;
+  }
+
+  return ( m_procStat = procStat );
 }
 
 //  Finalize
 StatusCode RichRecAlgBase::finalize() {
 
   // Release all tools
-  if ( m_richRecPhotonTool  ) toolSvc()->releaseTool( m_richRecPhotonTool );
-  if ( m_richRecSegmentTool ) toolSvc()->releaseTool( m_richRecSegmentTool );
-  if ( m_richRecPixelTool   ) toolSvc()->releaseTool( m_richRecPixelTool );
-  if ( m_richRecTrackTool   ) toolSvc()->releaseTool( m_richRecTrackTool );
-  if ( m_richDetInterface   ) toolSvc()->releaseTool( m_richDetInterface );
+  for ( ToolList::iterator it = m_toolList.begin();
+        it != m_toolList.end(); ++it ) {
+    if ( (*it).second ) { releaseTool((*it).first); }
+  }
+  if ( m_toolReg ) { toolSvc()->releaseTool( m_toolReg ); m_toolReg = NULL; }
 
   return StatusCode::SUCCESS;
 }

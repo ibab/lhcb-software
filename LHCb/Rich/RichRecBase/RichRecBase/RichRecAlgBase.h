@@ -1,30 +1,27 @@
-// $Id: RichRecAlgBase.h,v 1.2 2003-04-16 11:37:18 cattanem Exp $
+// $Id: RichRecAlgBase.h,v 1.3 2003-06-30 15:11:56 jonrob Exp $
 #ifndef RICHRECALGS_RICHRECALGBASE_H
 #define RICHRECALGS_RICHRECALGBASE_H 1
 
-// from Gaudi
+// from GaudiAlg
+//#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
-//#include "GaudiKernel/IChronoStatSvc.h"
+#include "GaudiKernel/IAlgTool.h"
 
-// Interfaces from reconstruction kernel
-#include "RichRecBase/IRichRecPhotonTool.h"
-#include "RichRecBase/IRichRecTrackTool.h"
-#include "RichRecBase/IRichRecPixelTool.h"
-#include "RichRecBase/IRichRecSegmentTool.h"
+// Interfaces
+#include "RichRecBase/IRichToolRegistry.h"
 
-// Rich Detector
-#include "RichDetTools/IRichDetInterface.h"
+// Event
+class ProcStatus;
+class RichRecStatus;
+#include "Event/RichRecTrack.h"
+#include "Event/RichRecSegment.h"
+#include "Event/RichRecPixel.h"
+#include "Event/RichRecPhoton.h"
 
-// units
-#include "CLHEP/Units/PhysicalConstants.h"
-
-/** @class RichRecAlgBase RichRecAlgBase.h RichRecAlgs/RichRecAlgBase.h
+/** @class RichRecAlgBase RichRecAlgBase.h RichRecBase/RichRecAlgBase.h
  *
- *  Base class for Rich Reconstruction Algorithms providing some 
- *  basic functionality.
+ *  Abstract base class for RICH reconstruction algorithms providing
+ *  some basic functionality.
  *
  *  @author Chris Jones
  *  @date   05/04/2002
@@ -38,78 +35,138 @@ public:
   RichRecAlgBase( const std::string& name,
                   ISvcLocator* pSvcLocator );
 
-  virtual ~RichRecAlgBase(); ///< Destructor
+  virtual ~RichRecAlgBase() = 0;   ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize(); ///< Algorithm initialization
+  virtual StatusCode finalize  (); ///< Algorithm finalization
 
-  /// Get Rich Reconstruction data
-  StatusCode richTracks();   ///< Update RichRecTracks pointer
-  StatusCode trTracks();     ///< Update TrStoredTracks pointer
-  StatusCode richPixels();   ///< Update RichRecPixels pointer
-  StatusCode richSegments(); ///< Update RichRecSegments pointer
-  StatusCode richPhotons();  ///< Update RichRecPhotons pointer
+protected:  // Protected methods
+
+  // Get Rich Reconstruction data
+  RichRecTracks * richTracks();     ///< Returns RichRecTracks pointer
+  RichRecPixels * richPixels();     ///< Returns RichRecPixels pointer
+  RichRecSegments * richSegments(); ///< Returns RichRecSegments pointer
+  RichRecPhotons * richPhotons();   ///< Returns RichRecPhotons pointer
+  RichRecStatus * richStatus();     ///< Returns RichRecStatus pointer
+
+  // Miscellaneous data
+  TrStoredTracks * trTracks();     ///< Returns TrStoredTracks pointer
+  ProcStatus * procStatus();       ///< Returns ProcStatus pointer
 
   /// Test printout level
-  bool msgLevel( int mLevel ); 
+  bool msgLevel( int mLevel );
 
-protected:
+  /// Return message level setting
+  int msgLevel();
 
-  /// Pointer to RichRecDataTool interface
-  IRichRecPixelTool * m_richRecPixelTool;
+  /// Acquire a tool from the RichToolRegistry
+  template <typename TOOL> inline
+  TOOL* acquireTool( std::string name, TOOL*& pTool) {
+    m_toolList[name] = true;
+    return (pTool=dynamic_cast<TOOL*>(m_toolReg->acquireTool(name)));
+  }
+  
+  /// Release a tool
+  void releaseTool( std::string name );
 
-  /// Pointer to RichRecPhotonTool interface
-  IRichRecPhotonTool * m_richRecPhotonTool;
+private:  // private methods
 
-  /// Pointer to RichRecTrackTool interface
-  IRichRecTrackTool * m_richRecTrackTool;
+  RichRecStatus * updateRichStatus();    ///< Updates RichRecStatus pointer
+  ProcStatus * updateProcStatus();       ///< Updates ProcStatus pointer
+  TrStoredTracks * updateTrTracks();     ///< Updates TrStoredTracks pointer
 
-  /// Pointer to RichRecSegmentTool interface
-  IRichRecSegmentTool * m_richRecSegmentTool;
+private:   // Private data
 
-  /// Pointer to RichDetInterface tool
-  IRichDetInterface * m_richDetInterface;
-
+  /// Pointer to tool registry
+  IRichToolRegistry * m_toolReg;
+  
+  ///< pointer to ProcStatus
+  ProcStatus * m_procStat;
+  
   /// Pointer to RichRecTracks
-  RichRecTracks * m_richTracks;
-
+  RichRecTracks ** m_richTracks;
+  
   /// Pointer to RichRecPixels
-  RichRecPixels * m_richPixels;
-
+  RichRecPixels ** m_richPixels;
+  
   /// Pointer to RichRecSegments
-  RichRecSegments * m_richSegments;
-
+  RichRecSegments ** m_richSegments;
+  
   /// Pointer to RichRecPhotons
-  RichRecPhotons * m_richPhotons;
-
-  /// Pointer to TrStoredTracks
+  RichRecPhotons ** m_richPhotons;
+  
+  /// Pointer to RichRecStatus
+  RichRecStatus * m_richStatus;
+  
+  /// Handle object for TrStoredTracks
   TrStoredTracks * m_trTracks;
+
+  /// Location of processing status object in TES
+  std::string m_procStatLocation;
 
   /// Location of TrStoredTracks in TES
   std::string m_trTracksLocation;
 
-  /// Flag for code profiling using ChronoStatSvc
-  bool m_timing;
-
-  /// Pointer to ChronoStat Service
-  IChronoStatSvc * m_chrono;
+  /// Location of RichRecStatus in TES
+  std::string m_richRecStatusLocation;
 
   /// Message service printout level
   int m_msgLevel;
 
-  /// Track types to accept
-  std::vector<std::string> m_trNames; 
-  
-  /// Bit filed for track selection
-  unsigned long m_trBits;
-  bool m_uniqueTrOnly;
+  /// Vector of tool names currently in use
+  typedef std::map<std::string,bool> ToolList;
+  ToolList m_toolList;
 
 };
 
-inline bool RichRecAlgBase::msgLevel( int mLevel ) 
-{ 
-  return ( m_msgLevel && m_msgLevel <= mLevel ); 
+inline RichRecTracks * RichRecAlgBase::richTracks()
+{
+  return *m_richTracks;
+}
+
+inline RichRecPixels * RichRecAlgBase::richPixels()
+{
+  return *m_richPixels;
+}
+
+inline RichRecSegments * RichRecAlgBase::richSegments()
+{
+  return *m_richSegments;
+}
+
+inline RichRecPhotons * RichRecAlgBase::richPhotons()
+{
+  return *m_richPhotons;
+}
+
+inline TrStoredTracks * RichRecAlgBase::trTracks()
+{
+  return updateTrTracks();
+}
+
+inline RichRecStatus * RichRecAlgBase::richStatus()
+{
+  return updateRichStatus();
+}
+
+inline bool RichRecAlgBase::msgLevel( int mLevel )
+{
+  return ( m_msgLevel && m_msgLevel <= mLevel );
+}
+
+inline int RichRecAlgBase::msgLevel()
+{
+  return m_msgLevel;
+}
+
+inline ProcStatus * RichRecAlgBase::procStatus()
+{
+  return ( updateProcStatus() );
+}
+
+inline void RichRecAlgBase::releaseTool( std::string name ) {
+  m_toolList[name] = false;
+  m_toolReg->releaseTool(name);
 }
 
 #endif // RICHRECALGS_RICHRECALGBASE_H

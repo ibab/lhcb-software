@@ -4,7 +4,7 @@
     <package name="RichRecBase">
         <import name="Kernel/CLHEPStreams"/>
         <import name="RichKernel/SerializeStl"/>
-        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working track object." id="12421" keyedContTypeDef="TRUE" location="Rec/Rich/RecTracks" name="RichRecTrack" stdVectorTypeDef="TRUE">
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working track object." id="12421" keyedContTypeDef="TRUE" location="Rec/Rich/RecBase/Tracks" name="RichRecTrack" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
             <import name="RichKernel/RichParticleIDType"/>
             <import name="RichRecBase/RichRecTrackParentType"/>
@@ -17,55 +17,67 @@
             <import ignore="TRUE" name="Type"/>
             <import name="GaudiKernel/ContainedObject"/>
             <constructor desc="Default constructor" initList="m_vertexMomentum(0), m_parentType(Rich::RecTrack::Unknown), m_nEmittedPhotons(Rich::NParticleTypes,-1), m_nDetectablePhotons(Rich::NParticleTypes,-1), m_nSignalPhotons(Rich::NParticleTypes,-1), m_nObservableSignalPhotons(Rich::NParticleTypes,-1), m_nScatteredPhotons(Rich::NParticleTypes,-1),  m_nObservableScatteredPhotons(Rich::NParticleTypes,-1), m_currentHypothesis(Rich::Pion), m_inUse(false), m_trackType(Rich::Track::Unknown)">
-              <code/>        
+                <code/>
             </constructor>
-
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of emitted photons for a given particle type" name="setNEmittedPhotons">
+            <method const="FALSE" desc="Set the number of emitted photons for a given particle type" name="setNEmittedPhotons">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_nEmittedPhotons[(int)type] = photons;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of detectable photons for a given particle type" name="setNDetectablePhotons">
+            <method const="FALSE" desc="Set the number of detectable photons for a given particle type" name="setNDetectablePhotons">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_nDetectablePhotons[(int)type] = photons;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of signal photons for a given particle type" name="setNSignalPhotons">
+            <method const="FALSE" desc="Set the number of signal photons for a given particle type" name="setNSignalPhotons">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_nSignalPhotons[(int)type] = photons;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of observable signal photons for a given particle type" name="setNObservableSignalPhotons">
+            <method const="FALSE" desc="Set the number of observable signal photons for a given particle type" name="setNObservableSignalPhotons">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_nObservableSignalPhotons[(int)type] = photons;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of scattered photons for a given particle type" name="setNScatteredPhotons">
+            <method const="FALSE" desc="Set the number of scattered photons for a given particle type" name="setNScatteredPhotons">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_nScatteredPhotons[(int)type] = photons;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of observable scattered photons for a given particle type" name="setNObservableScatteredPhotons">
+            <method const="FALSE" desc="Set the number of observable scattered photons for a given particle type" name="setNObservableScatteredPhotons">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_nObservableScatteredPhotons[(int)type] = photons;</code>
             </method>
             <method const="TRUE" desc="Returns the number of emitted photons for a given particle type" name="nEmittedPhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nEmittedPhotons[(int)type];</code>
             </method>
             <method const="TRUE" desc="Returns the number of detectable photons for a given particle type" name="nDetectablePhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nDetectablePhotons[(int)type];</code>
             </method>
             <method const="TRUE" desc="Returns the number of signal photons for a given particle type" name="nSignalPhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nSignalPhotons[(int)type];</code>
             </method>
             <method const="TRUE" desc="Returns the number of observable signal photons for a given particle type" name="nObservableSignalPhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nObservableSignalPhotons[(int)type];</code>
             </method>
             <method const="TRUE" desc="Returns the number of scattered photons for a given particle type" name="nScatteredPhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nScatteredPhotons[(int)type];</code>
             </method>
             <method const="TRUE" desc="Returns the number of observable scattered photons for a given particle type" name="nObservableScatteredPhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nObservableScatteredPhotons[(int)type];</code>
             </method>
             <method const="TRUE" desc="Returns the number of photons for a given particle type" name="nTotalObservablePhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nSignalPhotons[(int)type] + m_nScatteredPhotons[(int)type];</code>
             </method>
+            <method desc="Reset information to force recalculation" name="reset" type="void"/>
             <attribute array="FALSE" compression="FALSE" desc="Reconstructed momentum at vertex" name="vertexMomentum" type="float"/>
             <attribute compression="TRUE" desc="Enumeration to Parent type" name="parentType" type="Rich::RecTrack::ParentType"/>
             <attribute array="FALSE" compression="TRUE" desc="The number of emitted photons expected for each particle hypothesis" name="nEmittedPhotons" type="std::vector&lt;float&gt;"/>
@@ -82,7 +94,7 @@
             <relation desc="SmartRefVector of RichRecPixels for which this track has valid photon associations" multiplicity="N" name="richRecPixels" type="RichRecPixel"/>
             <relation desc="SmartRefVector of associated RichRecPhotons" multiplicity="N" name="richRecPhotons" type="RichRecPhoton"/>
         </class>
-        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working pixel object" id="12422" keyedContTypeDef="TRUE" location="Rec/Rich/RecPixels" name="RichRecPixel" stdVectorTypeDef="TRUE">
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction working pixel object" id="12422" keyedContTypeDef="TRUE" location="Rec/Rich/Rec/Pixels" name="RichRecPixel" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
             <import name="RichRecBase/RichRecPixelParentType"/>
             <import name="RichKernel/RichDetectorType"/>
@@ -92,7 +104,7 @@
             <import ignore="TRUE" name="DetectorType"/>
             <import name="GaudiKernel/ContainedObject"/>
             <import name="RichKernel/RichSmartID"/>
-            <constructor desc="Default constructor" initList="m_parentType(Rich::RecPixel::Unknown)">
+            <constructor desc="Default constructor" initList="m_smartID(0), m_globalPosition(0), m_localPosition(0), m_currentBackground(0), m_parentType(Rich::RecPixel::Unknown)">
                 <code/>
             </constructor>
             <method const="TRUE" desc="Returns Rich Detector" name="detector" type="Rich::DetectorType">
@@ -113,78 +125,96 @@
             <relation desc="Parent Object this pixel was produced from" name="parentPixel" type="ContainedObject"/>
             <relation desc="SmartRefVector to associated RichRecPhotons" multiplicity="N" name="richRecPhotons" type="RichRecPhoton"/>
         </class>
-        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction object describing a continuous track segment in a single radiator" id="12423" keyedContTypeDef="TRUE" location="Rec/Rich/RecSegments" name="RichRecSegment" stdVectorTypeDef="TRUE">
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction object describing a continuous track segment in a single radiator" id="12423" keyedContTypeDef="TRUE" location="Rec/Rich/RecBase/Segments" name="RichRecSegment" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;int&gt;"/>
             <import name="RichKernel/RichParticleIDType"/>
             <import name="RichUtils/RichTrackSegment"/>
             <import name="RichRecBase/RichMap"/>
-            <constructor desc="Default Constructor" initList="m_nEmittedPhotons(Rich::NParticleTypes,-1), m_nDetectablePhotons(Rich::NParticleTypes,-1), m_nSignalPhotons(Rich::NParticleTypes,-1), m_nScatteredPhotons(Rich::NParticleTypes,-1), m_nEmitPhotsPerEnBin(Rich::NParticleTypes,std::vector&lt;float&gt;() ), m_geomEfficiencyPerHPD(Rich::NParticleTypes, RichMap&lt;int,float&gt;() ), m_geomEfficiency(Rich::NParticleTypes,-1), m_averageCKTheta(Rich::NParticleTypes,-1), m_hitDetectorRegions(0), m_geomEfficiencyScat(Rich::NParticleTypes,-1)" >
-               <code/>        
+            <constructor desc="Default Constructor" initList="m_nEmittedPhotons(Rich::NParticleTypes,-1), m_nDetectablePhotons(Rich::NParticleTypes,-1), m_nSignalPhotons(Rich::NParticleTypes,-1), m_nScatteredPhotons(Rich::NParticleTypes,-1), m_nEmitPhotsPerEnBin(Rich::NParticleTypes,std::vector&lt;float&gt;() ), m_geomEfficiencyPerHPD(Rich::NParticleTypes, RichMap&lt;int,float&gt;() ), m_geomEfficiency(Rich::NParticleTypes,-1), m_averageCKTheta(Rich::NParticleTypes,-1), m_hitDetectorRegions(0), m_geomEfficiencyScat(Rich::NParticleTypes,-1)">
+                <code/>
             </constructor>
-            <method argList="Rich::ParticleIDType type, float eff" const="FALSE" desc="Set the geometrical efficiency for a given particle type" name="setGeomEfficiency">
+            <method const="FALSE" desc="Set the geometrical efficiency for a given particle type" name="setGeomEfficiency">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="eff" type="float"/>
                 <code>m_geomEfficiency[(int)type] = eff;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float eff" const="FALSE" desc="Set the scattered geometrical efficiency for a given particle type" name="setGeomEfficiencyScat">
+            <method const="FALSE" desc="Set the scattered geometrical efficiency for a given particle type" name="setGeomEfficiencyScat">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="eff" type="float"/>
                 <code>m_geomEfficiencyScat[(int)type] = eff;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of emitted photons for a given particle type" name="setNEmittedPhotons">
+            <method const="FALSE" desc="Set the number of emitted photons for a given particle type" name="setNEmittedPhotons">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_nEmittedPhotons[(int)type] = photons;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of detectable photons for a given particle type" name="setNDetectablePhotons">
+            <method const="FALSE" desc="Set the number of detectable photons for a given particle type" name="setNDetectablePhotons">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_nDetectablePhotons[(int)type] = photons;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of signal photons for a given particle type" name="setNSignalPhotons">
+            <method const="FALSE" desc="Set the number of signal photons for a given particle type" name="setNSignalPhotons">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_nSignalPhotons[(int)type] = photons;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the number of scattered photons for a given particle type" name="setNScatteredPhotons">
+            <method const="FALSE" desc="Set the number of scattered photons for a given particle type" name="setNScatteredPhotons">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_nScatteredPhotons[(int)type] = photons;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float angle" const="FALSE" desc="Set the average Cherenkov angle for a given particle type" name="setAverageCKTheta">
+            <method const="FALSE" desc="Set the average Cherenkov angle for a given particle type" name="setAverageCKTheta">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="angle" type="float"/>
                 <code>m_averageCKTheta[(int)type] = angle;</code>
             </method>
-            <method argList="Rich::ParticleIDType id, int hpd, float signal" desc="Method to create the geometrical efficiencies per HPD" name="addToGeomEfficiencyPerHPD">
-                <code>(m_geomEfficiencyPerHPD[(int)id])[hpd] += signal;</code>
+            <method desc="Method to create the geometrical efficiencies per HPD" name="addToGeomEfficiencyPerHPD">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="hpd" type="int"/>
+                <arg const="TRUE" inout="BYVALUE" name="signal" type="float"/>
+                <code>(m_geomEfficiencyPerHPD[(int)type])[hpd] += signal;</code>
             </method>
             <method const="TRUE" desc="Returns the number of emitted photons for a given particle type" name="nEmittedPhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nEmittedPhotons[(int)type];</code>
             </method>
             <method const="TRUE" desc="Returns the number of detectable photons for a given particle type" name="nDetectablePhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nDetectablePhotons[(int)type];</code>
             </method>
             <method const="TRUE" desc="Returns the number of signal photons for a given particle type" name="nSignalPhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nSignalPhotons[(int)type];</code>
             </method>
             <method const="TRUE" desc="Returns the number of scattered photons for a given particle type" name="nScatteredPhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nScatteredPhotons[(int)type];</code>
             </method>
             <method const="TRUE" desc="Returns the number of photons for a given particle type" name="nTotalObservablePhotons" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nSignalPhotons[(int)type] + m_nScatteredPhotons[(int)type];</code>
             </method>
             <method const="FALSE" desc="Returns the number of emitted photons for a given particle type" name="nEmitPhotsPerEnBin" static="FALSE" type="std::vector&lt;float&gt;&amp;">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_nEmitPhotsPerEnBin[(int)type];</code>
             </method>
             <method const="TRUE" desc="Get the geometrical efficiency for a given particle type" name="geomEfficiency" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_geomEfficiency[(int)type];</code>
             </method>
             <method const="TRUE" desc="Get the scattered geometrical efficiency for a given particle type" name="geomEfficiencyScat" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_geomEfficiencyScat[(int)type];</code>
             </method>
             <method const="TRUE" desc="Get the average Cherenkov angle for a given particle type" name="averageCKTheta" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_averageCKTheta[(int)type];</code>
             </method>
             <method desc="Returns the geometrical efficiency per HPD for given hypothesis" name="geomEfficiencyPerHPD" type="RichMap&lt;int,float&gt;&amp;">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_geomEfficiencyPerHPD[(int)type];</code>
             </method>
+            <method desc="Reset information to force recalculation" name="reset" type="void"/>
             <attribute array="FALSE" compression="TRUE" desc="The number of emitted photons expected for each particle hypothesis" name="nEmittedPhotons" type="std::vector&lt;float&gt;"/>
             <attribute array="FALSE" compression="TRUE" desc="The number of detectable emitted photons expected for each particle hypothesis" name="nDetectablePhotons" type="std::vector&lt;float&gt;"/>
             <attribute array="FALSE" compression="TRUE" desc="The number of signal photons expected for each particle hypothesis" name="nSignalPhotons" type="std::vector&lt;float&gt;"/>
@@ -206,35 +236,58 @@
             <relation desc="SmartRefVector of RichRecPixels for which this track has valid photon associations" multiplicity="N" name="richRecPixels" type="RichRecPixel"/>
             <relation desc="SmartRef to associated RichRecPhotons" multiplicity="N" name="richRecPhotons" type="RichRecPhoton"/>
         </class>
-        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction photon candidate. The result of an association between a RichRecTrack and a RichRecPixel." id="12424" keyedContTypeDef="TRUE" location="Rec/Rich/RecPhotons" name="RichRecPhoton" stdVectorTypeDef="TRUE">
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich reconstruction photon candidate. The result of an association between a RichRecTrack and a RichRecPixel." id="12424" keyedContTypeDef="TRUE" location="Rec/Rich/RecBase/Photons" name="RichRecPhoton" stdVectorTypeDef="TRUE">
             <base name="KeyedObject&lt;RichRecPhotonKey&gt;"/>
             <import name="RichRecBase/RichRecPhotonKey"/>
             <import name="RichKernel/RichParticleIDType"/>
             <import name="RichUtils/RichGeomPhoton"/>
             <constructor desc="Default Constructor" initList="m_expPixelSignalPhots(Rich::NParticleTypes,-1), m_expPixelScattPhots(Rich::NParticleTypes,-1)">
-               <code/>
+                <code/>
             </constructor>
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the expected number of signal photons for a given particle hypothesis" name="setExpPixelSignalPhots">
+            <method const="FALSE" desc="Set the expected number of signal photons for a given particle hypothesis" name="setExpPixelSignalPhots">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_expPixelSignalPhots[type] = photons;</code>
             </method>
-            <method argList="Rich::ParticleIDType type, float photons" const="FALSE" desc="Set the expected number of scattered photons for a given particle hypothesis" name="setExpPixelScattPhots">
+            <method const="FALSE" desc="Set the expected number of scattered photons for a given particle hypothesis" name="setExpPixelScattPhots">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="float"/>
                 <code>m_expPixelScattPhots[type] = photons;</code>
             </method>
             <method const="TRUE" desc="Returns the expected number of signal photons for a given particle type" name="expPixelSignalPhots" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_expPixelSignalPhots[type];</code>
             </method>
             <method const="TRUE" desc="Returns the expected number of scattered photons for a given particle type" name="expPixelScattPhots" type="float">
-                <arg const="TRUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>return m_expPixelScattPhots[type];</code>
             </method>
+            <method desc="Reset information to force recalculation" name="reset" type="void"/>
             <attribute compression="FALSE" desc="The result of the Cherenkov angles reconstruction" name="geomPhoton" setMeth="TRUE" type="RichGeomPhoton"/>
             <attribute desc="Expected number of signal photons for each particle hypothesis" name="expPixelSignalPhots" type="std::vector&lt;float&gt;"/>
             <attribute desc="Expected number of scattered photons for each particle hypothesis" name="expPixelScattPhots" type="std::vector&lt;float&gt;"/>
-            <attribute compression="FALSE" desc="The fraction of the segment path length associated with this photon" name="sharedRingFract" type="float"/>
             <relation desc="Smart Reference to associated RichRecSegment" name="richRecSegment" type="RichRecSegment"/>
             <relation desc="Smart Reference to associated RichRecTrack" name="richRecTrack" type="RichRecTrack"/>
             <relation desc="Smart Reference to associated RichRecPixel" name="richRecPixel" type="RichRecPixel"/>
+        </class>
+        <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Status object for Rich Reconstruction" id="12425" location="Rec/Rich/RecBase/Status" name="RichRecStatus" templateList="FALSE" templateVector="FALSE">
+            <base name="DataObject"/>
+            <import name="RichKernel/RichDetectorType"/>
+            <import ignore="TRUE" name="Rich"/>
+            <constructor desc="Default Constructor" initList="m_eventOK(true), m_detOverallBkg(Rich::NRiches)">
+                <code/>
+            </constructor>
+            <method desc="Set the overall background for given RICH" name="setDetOverallBkg">
+                <arg inout="BYVALUE" name="rich" type="Rich::DetectorType"/>
+                <arg name="bkg" type="double"/>
+                <code>m_detOverallBkg[ (int)rich ] = bkg;</code>
+            </method>
+            <method const="TRUE" desc="Retrieve the overall background for given RICH" inline="TRUE" name="detOverallBkg" type="double">
+                <arg const="TRUE" inout="BYVALUE" name="rich" type="Rich::DetectorType"/>
+                <code>return m_detOverallBkg[ (int)rich ];</code>
+            </method>
+            <attribute desc="Boolean to indicate if the event was successfully processed" name="eventOK" type="bool"/>
+            <attribute desc="Overall background estimates for each RICH" name="detOverallBkg" type="std::vector&lt;double&gt;"/>
         </class>
     </package>
 </gdd>

@@ -7,7 +7,7 @@
 #============================================================================
 
 package   RichRecBase
-version   v1r1
+version   v1r2
 
 #============================================================================
 # Structure
@@ -17,7 +17,7 @@ branches xml doc src cmt Event RichRecBase
 #============================================================================
 # Used packages.
 #============================================================================
-use   RichEvent      v4r*  Event
+use   RichEvent      v5r*  Event
 use   RichKernel     v3r*  Rich
 use   RichUtils      v3r*  Rich
 use   RichDetTools   v2r*  Rich
@@ -28,29 +28,27 @@ use   GaudiObjDesc   v5r*  -no_auto_imports
 #============================================================================
 include_dirs $(RICHRECBASEROOT)
 
-#---- Produce Header-Files from XML description
-document obj2doth RichRecBase_CommonObj2Doth    ../xml/RichRecEvent_Common.xml
-document obj2doth RichRecBase_GlobalPIDObj2Doth ../xml/RichRecEvent_GlobalPID.xml
-document obj2doth RichRecBase_LocalPIDObj2Doth  ../xml/RichRecEvent_LocalPID.xml
+#============================================================================
+# Build GOD objects
+#============================================================================
 
-#---- dictionary
-document obj2dict RichRecBase_CommonObj2Dict    ../xml/RichRecEvent_Common.xml
-document obj2dict RichRecBase_GlobalPIDObj2Dict ../xml/RichRecEvent_GlobalPID.xml
-document obj2dict RichRecBase_LocalPIDObj2Dict  ../xml/RichRecEvent_LocalPID.xml
+# Common XML
+document obj2doth RichRecBase_CommonObj2Doth   ../xml/RichRecBase_Event.xml
+document obj2dict RichRecBase_CommonObj2Dict   ../xml/RichRecBase_Event.xml
 
 # Build libraries (including dictionary)
 #============================================================================
-library RichRecBase     ../src/event/*.cpp ../src/base/*.cpp
-library RichRecBaseDict ../dict/*.cpp -import=GaudiIntrospection
+library RichRecBase           ../src/event/*.cpp ../src/base/*.cpp
+library RichRecBaseEventDict  ../dict/*.cpp -import=GaudiIntrospection
 apply_pattern  package_linkopts
 apply_pattern  package_stamps
 apply_pattern  linker_path
-macro_append   RichRecBase_linkopts "" WIN32 " /include:_RichRecBase_loadRef"
+macro_append   RichRecBase_linkopts "" WIN32 " /include:_RichRecBaseEvent_loadRef"
 
 #============================================================================
 private
 apply_pattern package_shlibflags
 include_dirs $(RICHRECBASEROOT)/Event
-macro RichRecBaseDict_shlibflags  "$(GaudiIntrospection_linkopts) $(RichRecBase_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
+macro RichRecBaseEventDict_shlibflags  "$(GaudiIntrospection_linkopts) $(RichRecBase_linkopts) $(use_linkopts) $(libraryshr_linkopts)"
 
 #============================================================================

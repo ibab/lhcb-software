@@ -1,5 +1,5 @@
-// $Id: RichRecPixelParentType.h,v 1.1.1.1 2003-04-01 13:21:56 jonesc Exp $
-#ifndef RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H 
+// $Id: RichRecPixelParentType.h,v 1.2 2003-06-30 15:11:57 jonrob Exp $
+#ifndef RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H
 #define RICHRECKERNEL_RICHRECPIXELPARENTTYPE_H 1
 
 // Include files
@@ -10,18 +10,25 @@
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
 
-/** @class RichRecPixelParentType RichRecPixelParentType.h RichRecKernel/RichRecPixelParentType.h
- *  
- *  Enumeration for Rich reconstruction working pixel object
+/** @class RichRecPixelParentType RichRecPixelParentType.h RichRecBase/RichRecPixelParentType.h
+ *
+ *  Enumeration for RICH reconstruction working pixel object
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-12
  */
 
+/// namespace for RICH detector specifics
 namespace Rich {
-
-  /// Enumeration for RecPixel parent Type
+  
+  /// namespace for RichRecPixel objects
   namespace RecPixel {
+
+  /** Enumeration for RICH reconstruction working pixel object
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   2002-07-12
+   */
     enum ParentType {
       Unknown = -1,
       Digit,

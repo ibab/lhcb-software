@@ -1,22 +1,20 @@
-// $Id: RichRecToolBase.h,v 1.1.1.1 2003-04-01 13:21:56 jonesc Exp $
+// $Id: RichRecToolBase.h,v 1.2 2003-06-30 15:11:57 jonrob Exp $
 #ifndef RICHRECALGS_RICHRECTOOLBASE_H
 #define RICHRECALGS_RICHRECTOOLBASE_H 1
+
+#include <map>
+#include <string>
 
 // from Gaudi
 #include "GaudiKernel/AlgTool.h"
 
-// RichRecTools
-#include "RichRecBase/IRichRecTrackTool.h"
-#include "RichRecBase/IRichRecSegmentTool.h"
-#include "RichRecBase/IRichRecPixelTool.h"
-#include "RichRecBase/IRichRecPhotonTool.h"
+// Interfaces
+#include "RichRecBase/IRichToolRegistry.h"
 
-// Rich Detector
-#include "RichDetTools/IRichDetInterface.h"
-
-/** @class RichRecToolBase RichRecToolBase.h RichRecAlgs/RichRecToolBase.h
+/** @class RichRecToolBase RichRecToolBase.h RichRecBase/RichRecToolBase.h
  *
- *  base for RichRec tools
+ *  Abstract base class for RICH reconstruction tools providing
+ *  some basic functionality.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -40,29 +38,51 @@ public:
   /// Finalize method
   virtual StatusCode finalize();
 
-protected:
+protected:   // Protected methods
 
-  /// Pointer to event data service
-  IDataProviderSvc * m_evtDataSvc;
+  /// Test printout level
+  bool msgLevel( int mLevel ); 
 
-  /// Pointer to RichRecTrack tool
-  IRichRecTrackTool * m_richRecTrackTool;
+  /// Return message level setting
+  int msgLevel();
 
-  /// Pointer to RichRecSegment tool
-  IRichRecSegmentTool * m_richRecSegmentTool;
+  /// Acquire a tool from the RichToolRegistry
+  template <typename TOOL> inline
+  TOOL* acquireTool( std::string name, TOOL*& pTool) {
+    m_toolList[name] = true;
+    return (pTool=dynamic_cast<TOOL*>(m_toolReg->acquireTool(name)));
+  }
+  
+  /// Release a tool
+  void releaseTool( std::string name );
+  
+private:   // Private data
 
-  /// Pointer to RichRecPixel tool
-  IRichRecPixelTool * m_richRecPixelTool;
-
-  /// Pointer to RichRecPhoton tool
-  IRichRecPhotonTool * m_richRecPhotonTool;
-
-  /// Pointer to RichDetInterface tool
-  IRichDetInterface * m_richDetInterface;
+  /// Pointer to tool registry
+  IRichToolRegistry * m_toolReg;
 
   /// Message service printout level
   int m_msgLevel;
 
+  /// Vector of tool names currently in use
+  typedef std::map<std::string,bool> ToolList;
+  ToolList m_toolList;
+
 };
+
+inline int RichRecToolBase::msgLevel()
+{
+  return m_msgLevel;
+}
+
+inline bool RichRecToolBase::msgLevel( int mLevel ) 
+{ 
+  return ( m_msgLevel && m_msgLevel <= mLevel ); 
+}
+
+inline void RichRecToolBase::releaseTool( std::string name ) {
+  m_toolList[name] = false;
+  m_toolReg->releaseTool(name);
+}
 
 #endif // RICHRECALGS_RICHRECTOOLBASE_H

@@ -1,4 +1,4 @@
-// $Id: RichRecToolBase.cpp,v 1.2 2003-04-09 12:37:13 cattanem Exp $
+// $Id: RichRecToolBase.cpp,v 1.3 2003-06-30 15:11:58 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -19,50 +19,14 @@
 RichRecToolBase::RichRecToolBase( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : AlgTool ( type, name, parent ) {
-
+  : AlgTool ( type, name, parent ),
+    m_toolReg(0),
+    m_msgLevel(0),
+    m_toolList() {
+  
 }
 
 StatusCode RichRecToolBase::initialize() {
-
-  MsgStream msg( msgSvc(), name() );
-  StatusCode sc = StatusCode::SUCCESS;
-
-  // Get pointer to EDS
-  if ( !serviceLocator()->service( "EventDataSvc", m_evtDataSvc, true ) ) {
-    msg << MSG::ERROR << "EventDataSvc not found" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // Get pointer to RichRecTrack Tool
-  if ( !toolSvc()->retrieveTool( "RichRecTrackTool", m_richRecTrackTool) ) {
-    msg << MSG::ERROR << "RichRecTrackTool not found" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // Get pointer to RichRecSegment Tool
-  if ( !toolSvc()->retrieveTool( "RichRecSegmentTool", m_richRecSegmentTool) ) {
-    msg << MSG::ERROR << "RichRecSegmentTool not found" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // Get pointer to RichRecPixel Tool
-  if ( !toolSvc()->retrieveTool( "RichRecPixelTool", m_richRecPixelTool) ) {
-    msg << MSG::ERROR << "RichRecPixelTool not found" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // Get pointer to RichRecPhoton Tool
-  if ( !toolSvc()->retrieveTool( "RichRecPhotonTool", m_richRecPhotonTool) ) {
-    msg << MSG::ERROR << "RichRecPhotonTool not found" << endreq;
-    sc = StatusCode::FAILURE;
-  }
-
-  // Get pointer to RichDetInterface
-  if ( !toolSvc()->retrieveTool( "RichDetInterface", m_richDetInterface ) ) {
-    msg << MSG::ERROR << "RichDetInterface not found" << endreq;
-    sc = StatusCode::FAILURE;
-  }
 
   // Get the current message service printout level
   IntegerProperty msgLevel;
@@ -72,17 +36,24 @@ StatusCode RichRecToolBase::initialize() {
   m_msgLevel = msgLevel;
   algIProp->release();
 
-  return sc;
+  // Get pointer to Rich Tool Registry
+  if ( !toolSvc()->retrieveTool( "RichToolRegistry", m_toolReg) ) {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::ERROR << "RichToolRegistry not found" << endreq;
+    return StatusCode::FAILURE;
+  }
+  
+  return StatusCode::SUCCESS;
 }
 
 StatusCode RichRecToolBase::finalize() {
 
   // Release all tools
-  if ( m_richRecPhotonTool )  toolSvc()->releaseTool( m_richRecPhotonTool );
-  if ( m_richRecSegmentTool ) toolSvc()->releaseTool( m_richRecSegmentTool );
-  if ( m_richRecTrackTool )   toolSvc()->releaseTool( m_richRecTrackTool );
-  if ( m_richRecPixelTool )   toolSvc()->releaseTool( m_richRecPixelTool );
-  if ( m_richDetInterface )   toolSvc()->releaseTool( m_richDetInterface );
-  
-  return StatusCode::SUCCESS;  
+  for ( ToolList::iterator it = m_toolList.begin();
+        it != m_toolList.end(); ++it ) {
+    if ( (*it).second ) { releaseTool((*it).first); }
+  }
+  if ( m_toolReg ) { toolSvc()->releaseTool( m_toolReg ); m_toolReg = NULL; }
+
+  return StatusCode::SUCCESS;
 }
