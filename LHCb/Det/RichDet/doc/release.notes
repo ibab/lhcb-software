@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v8r3 2005-03-04 =========================
 ! 2005-02-22 - Chris Jones
  - Add fix to DeRichHPDPanel to protect against invalid pixel information 
    being set into RichSmartID
