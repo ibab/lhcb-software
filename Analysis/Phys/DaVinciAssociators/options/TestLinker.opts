@@ -2,7 +2,6 @@
 // Property file for TestAssociators
 // Default options for any DaVinci jobs
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
 
 // The test associator can fill histograms
 #include "$STDOPTS/Hbook.opts"
@@ -13,6 +12,7 @@ HistogramPersistencySvc.OutputFile = "TestDVAssociators.hbook";
 //
 // List of necessary algorithms for the test
 ApplicationMgr.TopAlg = {};
+#include "$DAVINCIROOT/options/DaVinciElectrons.opts"
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 #include "$DAVINCIROOT/options/PreLoadCombinedParticles.opts"
