@@ -1,4 +1,4 @@
-// $Id: MuonGetInfoTool.cpp,v 1.1 2003-06-18 15:38:28 asatta Exp $
+// $Id: MuonGetInfoTool.cpp,v 1.2 2003-06-19 07:28:35 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -283,10 +283,10 @@ MuonGetInfoTool::MuonGetInfoTool( const std::string& type,
 }
 
 int MuonGetInfoTool::getGlobalChamberNumber(unsigned int chamberIndex,
-                                                    int partition)
+                                                    int partitions)
 {
   int indexGlobal=0;
-  for (int iter=0;iter<partition;iter++){
+  for (int iter=0;iter<partitions;iter++){
     indexGlobal=indexGlobal+(int)getChamberPerRegion(iter);  
   }
   return indexGlobal+(int)chamberIndex;

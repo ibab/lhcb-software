@@ -1,4 +1,4 @@
-// $Id: MuonGetInfoTool.h,v 1.1 2003-06-18 15:38:30 asatta Exp $
+// $Id: MuonGetInfoTool.h,v 1.2 2003-06-19 07:28:35 cattanem Exp $
 #ifndef MUONGETINFOTOOL_H 
 #define MUONGETINFOTOOL_H 1
 
@@ -32,6 +32,12 @@
 #include "MuonDet/DeMuonGasGap.h"
 #include "MuonDet/MuonBasicGeometry.h"
 
+#define partition 20
+#define maxReadoutType 2
+#define numberChamber 1380
+#define numberGap 4
+#define nFE 2
+#define nLogMap 2	
 
 /** @class MuonGetInfoTool MuonGetInfoTool.h
  *  
@@ -99,19 +105,12 @@ public:
 	int getGapPerFE(int partitionNumber);
 	int getLayoutX( int map, int partitionNumber);
 	int getLayoutY( int map, int partitionNumber);
-  int getGlobalChamberNumber(unsigned int chamberIndex,
-                                      int partition);
+  int getGlobalChamberNumber(unsigned int chamberIndex, int partitions);
   
 
 protected:
 
 private:
-  static const int partition=20;
-  static const int maxReadoutType=2;
-  static const int numberChamber=1380;
-  static const int numberGap=4;
-  static	const int nFE=2;
-static	const int nLogMap=2;	
   int readoutNumber[partition];
   unsigned int chamberPerRegion[partition];
   unsigned int gapPerRegion[partition];
