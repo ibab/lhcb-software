@@ -1,4 +1,4 @@
-// $Id: Particle.cpp,v 1.3 2002-04-26 13:39:58 gcorti Exp $
+// $Id: Particle.cpp,v 1.4 2002-04-26 17:56:38 gcorti Exp $
 // Include files 
 
 // STD and STL
@@ -85,7 +85,7 @@ void Particle::setPosMomCorr(const HepMatrix& value)
   trMomToSlopes(3,3) = pz/p;           ///< dP/dPz 
 
   // Now obtain the new non diagonal elements: lower angle
-  m_posSlopesCorr = trMomToSlopes * (m_posMomCorr.sub(1,3,1,3));
+  m_posSlopesCorr = trMomToSlopes * m_posMomCorr;
   
 }
 
@@ -135,7 +135,7 @@ void Particle::setPosSlopesCorr(const HepMatrix& value)
   m_posSlopesCorr = value;
 
   // Propagate to posMomCorr
-  HepMatrix trSlopesToMom(4,3,0.0);
+  HepMatrix trSlopesToMom(3,3,0.0);
   double p = m_momentum.vect().mag();
   //double pz = fabs(m_momentum.pz());
   double pz = m_momentum.pz();
@@ -153,9 +153,6 @@ void Particle::setPosSlopesCorr(const HepMatrix& value)
   trSlopesToMom(3,1) = -a2*pz*sx;          ///< dPz/dSx
   trSlopesToMom(3,2) = -a2*pz*sy;          ///< dPz/dSy
   trSlopesToMom(3,3) = a;                  ///< dPz/dP  
-  trSlopesToMom(4,1) = 0.0;                ///< dE/dSx
-  trSlopesToMom(4,2) = 0.0;                ///< dE/dSy
-  trSlopesToMom(4,3) = p/m_momentum.e();   ///< dE/dP
  
   // Now obtain the new non diagonal elements: lower angle
   m_posMomCorr = trSlopesToMom * m_posSlopesCorr;
