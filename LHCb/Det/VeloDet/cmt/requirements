@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.27 2004-02-03 17:41:28 mtobin Exp $
+# $Id: requirements,v 1.28 2004-02-13 07:05:48 cattanem Exp $
 # =========================================================================
 
 package  VeloDet 
-version  v8r8
+version  v9r0
 
 # =============== structure ===============================================	
 branches         src cmt doc VeloDet 
@@ -12,7 +12,7 @@ include_dirs      $(VELODETROOT)
 
 # =============== used packages ===========================================
 use DetDescCnv   v2r*   Det 
-use VeloKernel   v1r*   Velo
+use VeloKernel   v1r*   Velo   -no_auto_imports
 use LHCbKernel	v4r*	Kernel
 
 # =============== link library (base classes) =============================

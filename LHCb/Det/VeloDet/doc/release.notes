@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.50 2004-02-03 17:41:41 mtobin Exp $
+! $Id: release.notes,v 1.51 2004-02-13 07:05:48 cattanem Exp $
 package VeloDet
 package manager : Velo Group
+
+!========================= VeloDet v9r0 2004-02-12 =========================
+! 2004-02-12 - Marco Cattaneo
+ - Requires XmlDDDB v22r0 or greater
+ - Remove unneccessary includes from public include files
 
 ! 2004-02-03 - Mark Tobin
  - Total redesign of DeVelo interface.
@@ -9,15 +14,12 @@ package manager : Velo Group
    Now have separate classes for R/Phi sensors.
    Local frame for sensors is +ve x, upstream stereo.
    Removed all rotations that were previously done by hand.
-   Removed PileUpType; too similar to RType to have separate
-   class.  
+   Removed PileUpType; too similar to RType to have separate class.  
    All member functions now called using VeloChannelIDs and fractional 
    distance between strips rather than using double strip.
    VeloChannelID is centre of strip, fraction is +/-0.5 pitch
    Sensor numbering scheme also changed.
    0-41 are +ve x, 50-91 -ve x, > 100 pile up.
-   Removed no_auto_imports for VeloKernel from requirements file (couldn't 
-   use VeloRound otherwise).
 
 !========================= VeloDet v8r8 2003-12-16 =========================
 ! 2003-12-16 - Marco Cattaneo

@@ -1,9 +1,22 @@
-// $Id: DeVeloPhiType.cpp,v 1.2 2004-02-03 16:55:56 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.3 2004-02-13 07:05:48 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
 // Include files 
+
+// from CLHEP
+#include "CLHEP/Units/SystemOfUnits.h"
+#include "CLHEP/Units/PhysicalConstants.h"
+
+// From Gaudi
+#include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/PropertyMgr.h"
+#include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/MsgStream.h"
+
+// From Velo
 #include "VeloDet/DeVeloPhiType.h"
+#include "VeloKernel/VeloRound.h"
 
 /** @file DeVeloPhiType.cpp
  *

@@ -1,30 +1,18 @@
-// $Id: DeVeloSensor.h,v 1.1 2004-02-03 16:54:10 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.2 2004-02-13 07:05:48 cattanem Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
 // Include files
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Units/PhysicalConstants.h"
 
 /// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"
-
 #include "DetDesc/IGeometryInfo.h"
-
 
 /// From LHCb Kernel
 #include "Kernel/VeloChannelID.h"
 
-/// From Gaudi
-#include "GaudiKernel/Bootstrap.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/PropertyMgr.h"
-#include "GaudiKernel/IJobOptionsSvc.h"
-#include "GaudiKernel/MsgStream.h"
-
-// Forward declaration
-class StreamBuffer;
 
 // Unique class identifier
 static const CLID& CLID_DeVeloSensor = 1008101 ;

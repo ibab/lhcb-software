@@ -1,19 +1,22 @@
-// $Id: DeVelo.cpp,v 1.34 2004-02-03 16:55:56 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.35 2004-02-13 07:05:48 cattanem Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
 // ============================================================================
-// from STL
+// from STL (for std::sort)
 #include <algorithm>
 
+// from CLHEP
+#include "CLHEP/Units/SystemOfUnits.h"
+#include "CLHEP/Units/PhysicalConstants.h"
+
 // From Gaudi
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Bootstrap.h"
-#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 
-// from Det/VeloDet
+// Local
 #include "VeloDet/DeVelo.h"
 
 /** @file DeVelo.cpp

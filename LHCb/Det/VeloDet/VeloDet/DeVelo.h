@@ -1,26 +1,14 @@
-// $Id: DeVelo.h,v 1.14 2004-02-03 16:54:10 mtobin Exp $
+// $Id: DeVelo.h,v 1.15 2004-02-13 07:05:47 cattanem Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
 /// from STL
-#include <iostream>
 #include <vector>
 
-/// from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-
-/// from Det/DetDesc
-#include "DetDesc/DetectorElement.h"
-
-/// From LHCbKernel
-#include "Kernel/VeloChannelID.h"
-#include "VeloKernel/VeloRound.h"
-
 /// Local
-#include "DeVeloSensor.h"
-#include "DeVeloRType.h"
-#include "DeVeloPhiType.h"
-//#include "DeVeloPileUpType.h"
+#include "VeloDet/DeVeloSensor.h"
+#include "VeloDet/DeVeloRType.h"
+#include "VeloDet/DeVeloPhiType.h"
 
 /** @class DeVelo DeVelo.h "VeloDet/DeVelo.h" 
  *

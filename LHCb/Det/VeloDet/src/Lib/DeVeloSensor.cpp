@@ -1,8 +1,19 @@
-// $Id: DeVeloSensor.cpp,v 1.1 2004-01-29 01:02:18 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.2 2004-02-13 07:05:48 cattanem Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
 // Include files 
+
+// From CLHEP
+#include "CLHEP/Units/PhysicalConstants.h"
+
+// From Gaudi
+#include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/PropertyMgr.h"
+#include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/MsgStream.h"
+
+// From Velo 
 #include "VeloDet/DeVeloSensor.h"
 
 /** @file DeVeloSensor.cpp

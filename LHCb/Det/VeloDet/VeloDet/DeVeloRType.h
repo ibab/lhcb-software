@@ -1,34 +1,18 @@
-// $Id: DeVeloRType.h,v 1.1 2004-02-03 16:54:10 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.2 2004-02-13 07:05:48 cattanem Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
 // Include files
-// from Gaudi
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/Bootstrap.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/PropertyMgr.h"
-#include "GaudiKernel/IJobOptionsSvc.h"
 
 // from CLHEP
 #include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Units/SystemOfUnits.h"
-#include "CLHEP/Units/PhysicalConstants.h"
 
-/// from Det/DetDesc
-#include "DetDesc/DetectorElement.h"
+/// from VeloDet
 #include "VeloDet/DeVeloSensor.h"
 
 /// From LHCb Kernel
 #include "Kernel/VeloChannelID.h"
-#include "VeloKernel/VeloRound.h"
 
-/// Declarations for math functions.
-#include <cmath>
-
-
-// Forward declaration
-class StreamBuffer;
 
 // Unique class identifier
 static const CLID& CLID_DeVeloRType = 1008102 ;
