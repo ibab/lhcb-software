@@ -104,7 +104,7 @@ EventSelector.PrintFreq = 1;
 //---------------------------------------------------------------
 // Input data
 //---------------------------------------------------------------
-EventSelector.Input = {"DATAFILE='/afs/cern.ch/lhcb/group/background/vol3/davincitmp/dst_v248r1.root' TYP='ROOT' OPT='READ'" };
+EventSelector.Input = {"DATAFILE='$LHCBDEV/Rec/Brunel/v11r1/job/dst_v248r2.root' TYP='ROOT' OPT='READ'" };
 
 //################################################################
 
