@@ -5,7 +5,9 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r2 2004-09-17 =======================
+!======================= LHCbSys v16r2 2004-09-21 =======================
+This version is built against Gaudi v15r2
+
 ! 2004-09-17 - Marco Cattaneo
  - New packages: MuonDAQ v1r2, VeloDAQ v1r0, STDAQ v1r3
                  (Moved here from application projects)
