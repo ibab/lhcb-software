@@ -8,7 +8,8 @@ ToolSvc.MCUtilityTool.PrintDepth = 999;
 
 // Follow example for MCDecayFinder
 //ToolSvc.DecayFinder.Decay = "(pi+)";
-ToolSvc.DecayFinder.Decay = "[mu+]cc";
+//ToolSvc.DecayFinder.Decay = "[mu+]cc";
+ToolSvc.DecayFinder.Decay = "[<Xs~u>]cc";
 
 //##############################################################
 // Default options for Algorithms available
