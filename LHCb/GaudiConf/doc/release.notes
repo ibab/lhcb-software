@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v7r6 2004-03-02 ========================
+! 2004-03-02 - Marco Cattaneo
+ - Remove SicbTestDataFile.opts, .py
+ - Add options/Gaudi.supp: valgrind errors suppression file 
+
 !======================== GaudiConf v7r5 2004-01-15 ========================
 ! 2004-01-15 - Marco Cattaneo
  - Remove SimContents.opts, DigiContent.opts, DstContent.opts, moved to
