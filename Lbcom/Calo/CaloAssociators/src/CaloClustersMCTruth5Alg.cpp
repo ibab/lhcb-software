@@ -1,4 +1,4 @@
-// $Id: CaloClustersMCTruth5Alg.cpp,v 1.3 2004-02-17 12:11:33 ibelyaev Exp $
+// $Id: CaloClustersMCTruth5Alg.cpp,v 1.4 2004-03-17 16:36:38 ibelyaev Exp $
 // ============================================================================
 // Include files
 // LHCbKernel 
@@ -86,9 +86,6 @@ StatusCode CaloClustersMCTruth5Alg::execute()
   typedef RelationWeighted1D<CaloCluster,MCParticle,float> Table     ;
   typedef std::vector<Clusters*>                           VClusters ;
   
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endreq;
-  
   // get the detector 
   Detector*   detector  = getDet<DeCalorimeter> ( detData () );
   if( 0 == detector  ) { return StatusCode::FAILURE ; }
@@ -108,8 +105,8 @@ StatusCode CaloClustersMCTruth5Alg::execute()
   
   // create relation table and register it in the event transient store 
   Table* table = new Table();
-  StatusCode sc = put( table , outputData () );
-  if( sc.isFailure() ) { return sc ; }
+  StatusCode sc = put ( table , outputData () );
+  if ( sc.isFailure() ) { return sc ; }
   
   typedef MCCaloHistory<CaloCluster> MCHistory ;
   
@@ -146,7 +143,7 @@ StatusCode CaloClustersMCTruth5Alg::execute()
         { 
           const MCParticle* particle = entry -> first  ;
           const double      energy   = entry -> second ;
-          updateCaloMCMap( particle , energy , map2 ) ; 
+          updateCaloMCMap ( particle , energy , map2 ) ; 
         }
       }
       
@@ -160,16 +157,22 @@ StatusCode CaloClustersMCTruth5Alg::execute()
         const MCParticle* particle =                 entry ->  first ;
         const double      energy   = activeToTotal * entry -> second ;
         
-        if( energy                   < cut  && 
-            particle->momentum().e() < m_threshold2 ) { continue ; }
+        if ( 0 == particle ) { continue ; }
+        
+        if ( energy                   < cut  && 
+             particle->momentum().e() < m_threshold2 ) { continue ; }
         
         // fill actual relations 
         table->relate( *cluster , particle , energy   ) ;
       }
       
     };
+    
   };
-
+  
+  if ( table->relations().empty() ) 
+  { Warning ( " The relations table '"+outputData() + "' is empty!") ; }
+  
   return StatusCode::SUCCESS;
 };
 // ============================================================================

@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.27 2004-02-26 10:26:39 cattanem Exp $
+! $Id: release.notes,v 1.28 2004-03-17 16:36:37 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! =============================================================================
+
+! 2004-03-17 - Vanya BELYAEV
+
+ - src/CaloClustersMCTruth5Alg.cpp 
+
+   add "warning" printout for 'empty' relation tables, 
+   which could be a signature of NULL MC links
+   (one need to run CaloReCreateMCLinks algorithm for 
+    the data with "RawBuffer")
+
 
 !===================== CaloAssociators v4r0 2004-02-26 =====================
 ! 2004-02-17 - Vanya BELYAEV
