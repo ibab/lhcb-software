@@ -1,4 +1,4 @@
-// $Id: L0mCrate.cpp,v 1.8 2002-05-07 07:29:09 atsareg Exp $
+// $Id: L0mCrate.cpp,v 1.9 2002-08-02 10:46:29 atsareg Exp $
 
 #ifdef WIN32
 // Disable warning C4786 identifier truncated to 255 characters in debug info.
@@ -31,10 +31,12 @@ L0mCrate::L0mCrate(int quarter, const L0mTrigger& ltp) :
 				      m_processor.m_extraM1, 
 				      m_processor.m_precision, 
 				      m_processor.m_bins, *iv);
-    lpu ->setStation(2);				      
+    lpu->setStation(2);
+    lpu->setSeedCleaningFlag(ltp.m_seedClustering);				      
     m_units.push_back(lpu );
 				      
   }
+  m_nActive = 0;
 }
 
 L0mCrate::~L0mCrate() {

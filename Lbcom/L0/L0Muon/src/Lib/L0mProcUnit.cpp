@@ -1,9 +1,11 @@
-// $Id: L0mProcUnit.cpp,v 1.8 2002-05-07 07:29:09 atsareg Exp $
+// $Id: L0mProcUnit.cpp,v 1.9 2002-08-02 10:46:30 atsareg Exp $
 
 #ifdef WIN32
 // Disable warning C4786 identifier truncated to 255 characters in debug info.
 #pragma warning ( disable : 4786 )
 #endif // WIN32
+
+#include <algorithm>
 
 #include "GaudiKernel/MsgStream.h"
 
@@ -26,7 +28,8 @@ L0mProcUnit::L0mProcUnit(const std::vector<double>& ptpara,
 			 m_foiY(foiY),
 			 m_extraM1(extM1),
 			 m_precision(precision),
-			 m_bins(bins) {} 
+			 m_bins(bins),
+			 m_seedClustering(false) {} 
 		
 L0mProcUnit::~L0mProcUnit() {}		
 	
@@ -38,6 +41,8 @@ L0Muon::StatusCode L0mProcUnit::execute(MsgStream& log) {
     std::vector<L0mTower*>::iterator it;
     L0MuonCandidate* lcd=0; 
     int nCandidate = 0;
+    
+    if(m_seedClustering) cleanAdjacentSeeds();
     
     if(m_towers.empty()) {
       m_status = L0Muon::PU_EMPTY;
@@ -132,3 +137,55 @@ void L0mProcUnit::addTower(L0mTower* lt) {
 // 	   pu1.nX()==pu2.nX() &&
 // 	   pu1.nY()==pu2.nY();
 // }
+
+void L0mProcUnit::cleanAdjacentSeeds() { 
+ 
+  int nsize = m_towers.size();
+  if(nsize<3) return;
+  
+  // cout << "========= Removing seed clusters " << endl;  
+  bool remove = false;
+  std::vector<bool> flag(nsize,true);
+  for ( int i = 0; i<nsize-1; i++) {
+    // cout << m_towers[i]->padM3() << endl;
+    int nx1 = m_towers[i]->padM3().nX();
+    int ny1 = m_towers[i]->padM3().nY();
+    for ( int j = i+1; j < nsize; j++) {
+      int nx2 = m_towers[j]->padM3().nX();
+      int ny2 = m_towers[j]->padM3().nY();
+      if(fabs(nx1-nx2)<2 && fabs(ny1-ny2)<2) {
+        remove = true;
+        if(nx1<nx2) {
+	  flag[j] = false;
+	} else if (nx1>nx2) {
+	  flag[i] = false;
+	} else if (ny1<ny2) {
+	  flag[j] = false;
+	} else if (ny1>ny2) {
+	  flag[i] = false;	  
+	} else {
+	  // std::cout << "Wrong selection logic !!!" << std::endl;
+	}
+      }
+    }
+  }
+  // cout << m_towers[nsize-1]->padM3() << endl;
+  
+  if (!remove) {
+    // cout << "===== Nothing removed" << endl;
+    return;
+  } else {
+    // cout << "===== Removed seeds:" << endl;
+  }
+  std::vector<L0mTower*> tmp;
+  
+  for ( int it = 0; it<nsize; it++) {
+    if (flag[it]) {
+      tmp.push_back(m_towers[it]);
+    } else {
+      // cout << m_towers[it]->padM3() << endl;
+    }  
+  }
+  m_towers.clear();
+  std::copy(tmp.begin(),tmp.end(),m_towers.begin());
+}

@@ -1,4 +1,4 @@
-// $Id: L0mTower.cpp,v 1.10 2002-05-07 07:29:09 atsareg Exp $
+// $Id: L0mTower.cpp,v 1.11 2002-08-02 10:46:30 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include <set>
@@ -190,37 +190,50 @@ MuonTileID L0mTower::findTrack() {
     
   if(!foundHit) return 0;
       
-  // extrapolate and find a hit in M1
-  
-  int indext;
-  int ind2 = abs(m_indices[1].first);
-  if(ind2<8) {
-    indext = m_procUnit->m_extraM1[ind2]; 
-  }  
-  else {
-    indext = 25;
-  }  
-  indext = (m_indices[1].first<0) ? -indext : indext;
-  m_extra1 = indext;
-  
-  m_indices[0] = searchStation(foundHit,0,m_procUnit->m_foiX[0],indext);
-  if(!foundHit) return 0;
-  
-  if(searchFailed) {
-    return 0; 
-  } else {
-    m_found = true;     
-    return m_bitmap[0].find(m_indices[0])->second;
-  }  
+  if ( !m_ignoreM1 ) {
+    // extrapolate and find a hit in M1
+    int indext;
+    int ind2 = abs(m_indices[1].first);
+    if(ind2<8) {
+      indext = m_procUnit->m_extraM1[ind2]; 
+    }  
+    else {
+      indext = 25;
+    }  
+    indext = (m_indices[1].first<0) ? -indext : indext;
+    m_extra1 = indext;
+
+    m_indices[0] = searchStation(foundHit,0,m_procUnit->m_foiX[0],indext);
+    if(!foundHit) return 0;
+
+    if(searchFailed) {
+      return 0; 
+    } else {
+      m_found = true;     
+      return m_bitmap[0].find(m_indices[0])->second;
+    } 
+  } else {   
+    if(searchFailed) {
+      return 0; 
+    } else {
+      m_found = true;     
+      return m_bitmap[0].find(m_indices[1])->second;
+    }
+  }
 }
 
 bool L0mTower::isFull() {
 
+  if(m_ignoreM1) {
+    return (m_bitmap[1].size() != 0) &&
+	   (m_bitmap[3].size() != 0) &&
+           (m_bitmap[4].size() != 0);
+  } else {
     return (m_bitmap[0].size() != 0) &&
            (m_bitmap[1].size() != 0) &&
 	   (m_bitmap[3].size() != 0) &&
            (m_bitmap[4].size() != 0);
-
+  }
 }
 
 bool L0mTower::trackFound() {
@@ -238,9 +251,15 @@ L0MuonCandidate* L0mTower::createCandidate() {
   if(trackFound()) {
     ptcalc();
     std::vector<MuonTileID> srmps;
-    for(int i = 0; i<5; i++) {
-      srmps.push_back(pad(i));
+    if ( !m_ignoreM1 ) {    
+      srmps.push_back(pad(0));
+    } else {
+      srmps.push_back(MuonTileID());
     }
+    srmps.push_back(pad(1));
+    srmps.push_back(pad(2));
+    srmps.push_back(pad(3));
+    srmps.push_back(pad(4));
 
     L0MuonCandidate* lmc = new L0MuonCandidate(pt(),
 					       theta(),
@@ -265,14 +284,22 @@ double L0mTower::ptcalc() {
   double x2;  
   double dx,dy,y,z,dz;
   
-  scode = m_iTileXYZTool->calcTilePos(pad(0),x1,dx,y1,dy,z,dz); 
-  scode = m_iTileXYZTool->calcTilePos(pad(1),x2,dx,y,dy,z,dz);   
+  if ( m_ignoreM1 ) {
+    scode = m_iTileXYZTool->calcTilePos(pad(1),x1,dx,y1,dy,z,dz); 
+    scode = m_iTileXYZTool->calcTilePos(pad(2),x2,dx,y,dy,z,dz); 
+    d2 = d2+d3;
+    d3 = m_procUnit->m_ptParameters[4] ;
+  } else {
+    scode = m_iTileXYZTool->calcTilePos(pad(0),x1,dx,y1,dy,z,dz); 
+    scode = m_iTileXYZTool->calcTilePos(pad(1),x2,dx,y,dy,z,dz); 
+  }    
+  
   
   x1 /= 10.;
   y1 /= 10.;
   x2 /= 10.;
-  //cout << "ptcalc: pad(cm) " << pad(0) << " " << x1 << " " << y1 << " " << x2 << endl;
-  //cout << d1 << " " << d2 << " " << d3 << " " << alpha << endl;
+  // cout << "ptcalc: pad(cm) " << pad(1) << " " << x1 << " " << y1 << " " << x2 << endl;
+  // cout << d1 << " " << d2 << " " << d3 << " " << alpha << endl;
   
   double x0 = x1 - d2*(x2-x1)/d3;
   double y0 = y1*d1/(d1+d2);
@@ -300,7 +327,7 @@ double L0mTower::ptcalc() {
   m_theta = v.theta();
   m_phi = v.phi();
   
-  //cout << m_pt << " " << m_theta << " " << m_phi << endl;
+  // cout << m_pt << " " << m_theta << " " << m_phi << endl;
   
   return m_pt;
 }
