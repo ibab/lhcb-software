@@ -1,15 +1,5 @@
-// $Id: LAssembly.cpp,v 1.3 2002-07-13 17:09:35 ocallot Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2002/07/03 08:15:37  ocallot
-// Add a cover to the LAssembly
-//
-// Revision 1.1  2001/11/18 15:32:44  ibelyaev
-//  update for Logical Assemblies
-// 
-// ============================================================================
+// $Id: LAssembly.cpp,v 1.4 2002-11-21 15:40:03 sponce Exp $
+
 // Include files
 // from Gaudi
 #include "GaudiKernel/StreamBuffer.h"
@@ -22,7 +12,7 @@
  *  Implementation file for class : LAssembly
  * 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date 18/11/2001 
+ *  @author Sebastien Ponce
  */
 // ============================================================================
 
@@ -345,7 +335,7 @@ void LAssembly::computeCover() {
 
   if ( m_coverComputed ) return;
 
-  MsgStream log ( DetDesc::msgSvc() , "TransportSvc" );
+  MsgStream log ( msgSvc() , "TransportSvc" );
 
   m_xMin = 1000000.;
   m_yMin = 1000000.;

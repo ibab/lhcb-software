@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.11 2002-11-05 08:06:07 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlGenericCnv.cpp,v 1.12 2002-11-21 15:40:04 sponce Exp $
 
 // Include files
 #include "DetDesc/XmlGenericCnv.h"
@@ -35,13 +35,6 @@ StatusCode XmlGenericCnv::initialize() {
   // Initializes the grand father
   StatusCode status = Converter::initialize();
 
-  // Locates the Detector Data Service 
-  IDataProviderSvc* dp;
-  serviceLocator()->getService ("DetectorDataSvc",
-                                IID_IDataProviderSvc,
-                                (IInterface*&)dp);
-  setDataProvider (dp);
-  
   // Locate the Xml Conversion Service
   serviceLocator()->getService ("XmlCnvSvc",
                                 IID_IXmlSvc,
@@ -56,6 +49,8 @@ StatusCode XmlGenericCnv::initialize() {
 // Finalize the converter
 // -----------------------------------------------------------------------
 StatusCode XmlGenericCnv::finalize() {
+  // release XmlCnvSvc
+  m_xmlSvc->release();
   // RIP dear grand father!
   return Converter::finalize();
 }

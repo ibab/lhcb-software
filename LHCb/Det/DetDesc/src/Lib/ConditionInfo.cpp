@@ -1,4 +1,4 @@
-//$Id: ConditionInfo.cpp,v 1.2 2002-04-24 12:41:27 mato Exp $
+//$Id: ConditionInfo.cpp,v 1.3 2002-11-21 15:40:02 sponce Exp $
 
 #include "ConditionInfo.h"
 
@@ -6,6 +6,7 @@
 #include "DetDesc/DetDesc.h"
 
 #include "GaudiKernel/SmartDataPtr.h" 
+#include "GaudiKernel/IDataProviderSvc.h" 
 
 //---------------------------------------------------------------------------
 
@@ -16,6 +17,7 @@ ConditionInfo::ConditionInfo( IDetectorElement* de,
   m_detElem = de;
   m_conditionName = condition;
   m_condition = 0;
+  m_services = DetDesc::services();
 }; 
 
 //---------------------------------------------------------------------------
@@ -23,13 +25,14 @@ ConditionInfo::ConditionInfo( IDetectorElement* de,
 /// Destructor
 ConditionInfo::~ConditionInfo() 
 {
+  m_services->release();
 };
 
 //----------------------------------------------------------------------------
 
 /// Get a pointer to the data service responsible for condition data
-IDataProviderSvc* ConditionInfo::dataSvc() { 
-  return DetDesc::detSvc(); 
+IDataProviderSvc* ConditionInfo::dataSvc() const { 
+  return m_services->detSvc();
 }
 
 //----------------------------------------------------------------------------

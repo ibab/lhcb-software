@@ -1,24 +1,4 @@
-// $Id: VolumeIntersectionIntervals.h,v 1.11 2002-07-03 12:19:32 ocallot Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.10  2002/06/22 15:58:35  ocallot
-// All prints via MsgStream, TransportSvc as control string
-//
-// Revision 1.9  2002/06/03 09:56:07  ocallot
-// fixes in the TransportService
-//
-// Revision 1.8  2002/06/03 09:52:36  ocallot
-// fixes in the TransportService
-//
-// Revision 1.7  2002/05/15 14:25:25  ibelyaev
-//  bug fix
-//
-// Revision 1.6  2002/05/11 18:25:47  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-//
-// ============================================================================
+// $Id: VolumeIntersectionIntervals.h,v 1.12 2002-11-21 15:39:56 sponce Exp $ 
 #ifndef       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H
 #define       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H 
 // STD & STL  
@@ -43,7 +23,7 @@
  *  @see ILVolume
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date 23 Apr 2002 
+ *  @author Sebastien Ponce
  */
 
 /// boolean operation for intervals  
@@ -204,13 +184,15 @@ namespace  VolumeIntersectionIntervals
           /** this situation means that something wrong
            *  with geometry description!!!
            */
-          MsgStream log( DetDesc::msgSvc() , "TransportSvc" );
+          DetDesc::Services* services = DetDesc::services();
+          MsgStream log (services->msgSvc() , "TransportSvc");
           log << MSG::ERROR
               << "VolumeIntersection:Merge error 15 : interval " 
               << intervalLoc.first << " "
               << intervalLoc.second << " master "
               << intervalTop.first << " " 
               << intervalTop.second << endreq;
+          services->release();
           return StatusCode(15) ;
         }
         // ? RETURN !!!
@@ -253,13 +235,15 @@ namespace  VolumeIntersectionIntervals
                                              matLocal ) ; 
           }
         } else {                                 // geometry error!!!
-          MsgStream log( DetDesc::msgSvc() , "TransportSvc" );
+          DetDesc::Services* services = DetDesc::services();
+          MsgStream log (services->msgSvc() , "TransportSvc");
           log << MSG::ERROR
               << "VolumeIntersection:Merge error 17 : interval " 
               << intervalLocal.first << " "
               << intervalLocal.second << " master "
               << leftTick << " " 
               << mostRightTick << endreq;
+          services->release();
           return StatusCode(17) ; 
         }         // RETURN !!!
         leftTick     = intervalLocal.second;

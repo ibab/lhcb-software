@@ -1,34 +1,4 @@
-// $Id: LogVolBase.h,v 1.5 2002-11-19 14:11:31 sponce Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2001/12/03 15:18:29  mato
-// Small changes to compile without warnings in Windows
-//
-// Revision 1.3  2001/11/20 15:22:20  sponce
-// Lots of changes here :
-//    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
-//    is the removal of the class XmlAddress
-//    - centralization of address creations in conversion services, as suggested
-//    by the new architecture
-//    - add a parseString method on the XMLParserSvc. This allows to parse XML
-//    directly from a string
-//    - use of the new Assembly objects in the XML converters
-//    - update of the converters to handle the definition of detelem inside
-//    detelems, without using detelemrefs
-//    - take care of a possible indexing of detelems and parametrized detelems.
-//    The numbering is given by adding :<digits> to the name of the element.
-//    - add support for polycones in the converters
-//    - add code convention compliance to many files
-//
-// Revision 1.2  2001/11/18 16:08:26  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.1  2001/11/18 15:32:44  ibelyaev
-//  update for Logical Assemblies
-//
-// ===========================================================================
+// $Id: LogVolBase.h,v 1.6 2002-11-21 15:39:56 sponce Exp $ 
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
 /// STD and STL includes
@@ -44,6 +14,7 @@
 #include "GaudiKernel/IRegistry.h"
 /// DetDesc  includes
 #include "DetDesc/ISolid.h" 
+#include "DetDesc/Services.h" 
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume_predicates.h" 
@@ -55,6 +26,7 @@ class HepVector3D;
 class HepRotation;
 class HepTransform3D;
 class IDataProviderSvc;
+class IMessageSvc;
 
 /** @class LogVolBase LogVolBase.h DetDesc/LogVolBase.h 
  *
@@ -63,7 +35,7 @@ class IDataProviderSvc;
  *    - LAssembly 
  * 
  *  @author  Vanya Belyaev Ivan.Belyaev 
- *  @date    17/11/2001
+ *  @author  Sebastien Ponce
  */
 
 class LogVolBase: 
@@ -496,11 +468,17 @@ protected:
 
 protected:
   
-  /** static accessor to 
-   *  data service used for retriving of the material 
+  /** 
+   *  accessor to data service used for retriving of the material 
    *  @return pointer to data service 
    */
-  static IDataProviderSvc* dataSvc()  ;
+  IDataProviderSvc* dataSvc() const;
+
+  /** 
+   *  accessor to massage service
+   *  @return pointer to message service 
+   */
+  IMessageSvc* msgSvc() const;
 
 private: 
   
@@ -523,6 +501,8 @@ private:
   IValidity*            m_validity      ;
   /// static  volume counter 
   static  unsigned long s_volumeCounter ;
+  /// reference to services
+  DetDesc::Services* m_services;
 };
 
 // ============================================================================
@@ -530,11 +510,3 @@ private:
 // ============================================================================
 #endif  ///< DETDESC_LVOLUME_H
 // ============================================================================
-
-
-
-
-
-
-
-

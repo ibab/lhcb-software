@@ -1,33 +1,5 @@
-// $Id: LVolume.cpp,v 1.25 2002-07-03 12:19:32 ocallot Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.24  2002/06/22 15:58:36  ocallot
-// All prints via MsgStream, TransportSvc as control string
-//
-// Revision 1.23  2002/06/21 13:43:43  ocallot
-// Fix findLocalGI for the transport service.
-//
-// Revision 1.22  2002/06/03 09:52:36  ocallot
-// fixes in the TransportService
-//
-// Revision 1.21  2002/05/15 14:56:29  cattanem
-// fix for windows
-//
-// Revision 1.20  2002/05/15 14:51:56  cattanem
-// fix for windows
-//
-// Revision 1.19  2002/05/15 14:25:25  ibelyaev
-//  bug fix
-//
-// Revision 1.18  2002/05/11 18:25:47  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-//
-// Revision 1.17  2002/05/04 13:13:24  ibelyaev
-//  see $DETDESCROOT/doc/release.notes ( 4 May 2002 )
-//
-// ===========================================================================
+// $Id: LVolume.cpp,v 1.26 2002-11-21 15:40:03 sponce Exp $ 
+
 /// STD & STL includes 
 #include <iostream> 
 #include <stdio.h> 
@@ -67,6 +39,7 @@
  *  implementation of class LVolume 
  *
  *  @author: Vanya Belyaev  Ivan.Belyaev@itep.ru 
+ *  @author: Sebastien Ponce
  */
 // ===========================================================================
 
@@ -686,7 +659,7 @@ unsigned int LVolume::intersectLine
           int level=100;
           PVolumePath volpath;
 
-          MsgStream log( DetDesc::msgSvc() , "TransportSvc" );
+          MsgStream log( msgSvc() , "TransportSvc" );
           log << MSG::ERROR
               << "===== Failure to merge " << name()
               << " type " << m_solid->typeName()
@@ -844,7 +817,7 @@ unsigned int LVolume::intersectLine
         ( own , childrens , std::back_inserter( intersections ) );
       // check the result !
       if( sc.isFailure() ) {
-          MsgStream log( DetDesc::msgSvc() , "TransportSvc" );
+          MsgStream log( msgSvc() , "TransportSvc" );
           char line[140];
           sprintf( line, 
                    " x %7.2f y %7.2f z %7.2f %d own, %d child, status ",

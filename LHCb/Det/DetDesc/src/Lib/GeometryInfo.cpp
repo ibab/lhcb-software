@@ -1,31 +1,5 @@
-// $Id: GeometryInfo.cpp,v 1.9 2002-01-17 17:02:19 sponce Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2001/11/20 15:22:23  sponce
-// Lots of changes here :
-//    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
-//    is the removal of the class XmlAddress
-//    - centralization of address creations in conversion services, as suggested
-//    by the new architecture
-//    - add a parseString method on the XMLParserSvc. This allows to parse XML
-//    directly from a string
-//    - use of the new Assembly objects in the XML converters
-//    - update of the converters to handle the definition of detelem inside
-//    detelems, without using detelemrefs
-//    - take care of a possible indexing of detelems and parametrized detelems.
-//    The numbering is given by adding :<digits> to the name of the element.
-//    - add support for polycones in the converters
-//    - add code convention compliance to many files
-//
-// Revision 1.7  2001/11/18 15:32:44  ibelyaev
-//  update for Logical Assemblies
-//
-// Revision 1.6  2001/08/10 14:59:02  ibelyaev
-// modifications in IGeometryInfo and related classes
-// 
-// ===========================================================================
+// $Id: GeometryInfo.cpp,v 1.10 2002-11-21 15:40:03 sponce Exp $ 
+
 // CLHEP 
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
@@ -51,20 +25,17 @@
 #include "GeometryInfo.h" 
 #include "GeometryInfoException.h" 
 
-// ============================================================================
 /** @file GeometryInfo.cpp
  *  implementation of class GeometryInfo 
  *  @see GeoemtryInfo.h 
  *  @see GeometryInfo.icpp
  *  @see IGeometryInfo 
+ *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @author Sebastien Ponce
  */
-// ============================================================================
 
-unsigned long GeometryInfo::m_count = 0;
-
-IDataProviderSvc* GeometryInfo::dataSvc() 
-{ return DetDesc::detSvc(); }
+IDataProviderSvc* GeometryInfo::dataSvc() const { return m_services->detSvc(); }
 
 // create "ghost" 
 GeometryInfo::GeometryInfo( IDetectorElement*            de      ) 
@@ -82,10 +53,11 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de      )
   , m_gi_childLoaded      (    false    ) 
   , m_gi_childrens        (             ) 
   , m_gi_childrensNames   (             )
+  , m_services            (      0      )
 {
   if( 0 == de  ) 
     { throw GeometryInfoException("IDetectorElement* points to NULL!") ; }
-  addRef();
+  m_services = DetDesc::services();
 };
 // create orphan 
 GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
@@ -106,10 +78,11 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
   , m_gi_childLoaded      (    false    ) 
   , m_gi_childrens        (             ) 
   , m_gi_childrensNames   (             )
+  , m_services            (      0      )
 {
   if( 0 == de  ) 
     { throw GeometryInfoException("IDetectorElement* points to NULL!"    ) ; }
-  addRef();
+  m_services = DetDesc::services();
 };
 /// create regular  with numeric replica path 
 GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
@@ -132,10 +105,11 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de          ,
   , m_gi_childLoaded      (    false    ) 
   , m_gi_childrens        (             ) 
   , m_gi_childrensNames   (             )
+  , m_services            (      0      )
 {
   if( 0 == de  ) 
     { throw GeometryInfoException("IDetectorElement* points to NULL!"    ) ; }
-  addRef();
+  m_services = DetDesc::services();
 };  
 /// create regular  with name path 
 GeometryInfo::GeometryInfo( IDetectorElement*            de              ,
@@ -158,10 +132,11 @@ GeometryInfo::GeometryInfo( IDetectorElement*            de              ,
   , m_gi_childLoaded      (    false        ) 
   , m_gi_childrens        (                 ) 
   , m_gi_childrensNames   (                 )
+  , m_services            (      0      )
 {
   if( 0 == de  ) 
     { throw GeometryInfoException("IDetectorElement* points to NULL!"    ) ; }
-  addRef();
+  m_services = DetDesc::services();
 };
 //
 StreamBuffer& GeometryInfo::serialize( StreamBuffer& sb ) 
@@ -221,7 +196,7 @@ bool GeometryInfo::acceptInspector( IInspector* pInspector ) const
 GeometryInfo::~GeometryInfo()
 {
   reset();
-  release();
+  m_services->release();
 };
 //
 StatusCode  GeometryInfo::reset( const int /*Level*/ )
@@ -255,7 +230,7 @@ std::ostream& GeometryInfo::printOut( std::ostream& os ) const
         if( !hasSupport() ) { os << "('orphan');"; } 
         else
           {
-            os << " supported by " << m_gi_supportName << " with ReplicaPath=("; 
+            os << " supported by " << m_gi_supportName << " with ReplicaPath=(";
             std::copy( m_gi_supportPath.begin() , 
                        m_gi_supportPath.end() , 
                        std::ostream_iterator<ILVolume::ReplicaType>(os,",") );
@@ -274,20 +249,20 @@ MsgStream& GeometryInfo::printOut( MsgStream& os ) const
 {
   try {
     os << "GeometryInfo::name=" << detElem()->name() << ";" ; 
-    if( !hasLVolume() ) { os << " no LVolume associated ('ghost');"; }
-    else 
-      { 
-        os << " LVolume=" << lvolumeName() << ";";
-        if( !hasSupport() ) { os << "('orphan');"; } 
-        else
-          {
-            os << " supported by " << m_gi_supportName << " with ReplicaPath=("; 
-            ILVolume::ReplicaPath::iterator ci = supportPath().begin(); 
-            while( supportPath().end() != ci ) { os << *ci++ << "," ; }
-            os << ") ";
-            os << "(" << m_gi_supportNamePath << ");";
-          }
+    if (!hasLVolume()) {
+      os << " no LVolume associated ('ghost');";
+    } else { 
+      os << " LVolume=" << lvolumeName() << ";";
+      if (!hasSupport()) {
+        os << "('orphan');";
+      } else {
+        os << " supported by " << m_gi_supportName << " with ReplicaPath=(";
+        ILVolume::ReplicaPath::iterator ci = supportPath().begin(); 
+        while( supportPath().end() != ci ) { os << *ci++ << "," ; }
+        os << ") ";
+        os << "(" << m_gi_supportNamePath << ");";
       }
+    }
   } catch (...) {
     os << " !!! Unable to print GeometryInfo out !!!";
   }
@@ -477,9 +452,11 @@ StatusCode GeometryInfo::queryInterface( const InterfaceID& ID , void** ppI )
   return StatusCode::SUCCESS; 
 };
 
-/// add reference
-unsigned long GeometryInfo::addRef () { return ++m_count ; }
-/// release 
-unsigned long GeometryInfo::release() { return  0 < m_count ? --m_count : 0 ;}
+// add reference -- This is not used in this object but mandatory due
+// to the inheritance from IInterface
+unsigned long GeometryInfo::addRef () { return 0; }
+/// release  -- This is not used in this object but mandatory due
+// to the inheritance from IInterface
+unsigned long GeometryInfo::release() { return 0; }
 
 

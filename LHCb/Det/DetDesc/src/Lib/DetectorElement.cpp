@@ -1,12 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.17 2002-11-19 14:11:31 sponce Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.16  2002/05/11 18:25:47  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-//
-// ===========================================================================
+// $Id: DetectorElement.cpp,v 1.18 2002-11-21 15:40:02 sponce Exp $ 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -28,15 +20,13 @@
 #include "SlowControlInfo.h"
 #include "FastControlInfo.h"
 
-// ============================================================================
 /** @file DetectorElement.cpp
  *  
  * Implementation of class DetectorElement
  *
  * @author Vanya Belyaev Ivan.Belyaev@itep.ru
- * @date xx/xx/xxxx
+ * @author Sebastien Ponce
  */
-// ============================================================================
 
 DetectorElement::DetectorElement( const std::string&   /*name*/    ,
                                   const ITime&         validSince  ,   
@@ -54,10 +44,12 @@ DetectorElement::DetectorElement( const std::string&   /*name*/    ,
   //
   , m_de_validSince      (    0    ) 
   , m_de_validTill       (    0    )
+  , m_services           (    0    )
 {
   ///
-  m_de_validSince = new(std::nothrow) TimePoint( validSince ) ;
-  m_de_validTill  = new(std::nothrow) TimePoint( validTill  ) ; 
+  m_de_validSince = new TimePoint( validSince ) ;
+  m_de_validTill  = new TimePoint( validTill  ) ; 
+  m_services = DetDesc::services();
 };
 ///
 DetectorElement::DetectorElement( const std::string&   /* name */ )
@@ -74,10 +66,12 @@ DetectorElement::DetectorElement( const std::string&   /* name */ )
   //
   , m_de_validSince      (    0    ) 
   , m_de_validTill       (    0    )
+  , m_services           (    0    )
 {
   ///
-  m_de_validSince = new(std::nothrow) TimePoint( time_absolutepast   ) ;
-  m_de_validTill  = new(std::nothrow) TimePoint( time_absolutefuture ) ; 
+  m_de_validSince = new TimePoint( time_absolutepast   ) ;
+  m_de_validTill  = new TimePoint( time_absolutefuture ) ; 
+  m_services = DetDesc::services();
 };
 ////
 DetectorElement::~DetectorElement()
@@ -92,26 +86,29 @@ DetectorElement::~DetectorElement()
   }
   if ( 0 != m_de_validTill ) {
     delete m_de_validTill; m_de_validTill = 0;
-  }  
+  }
+  // release services
+  m_services->release();
 };
-///
-IDataProviderSvc*  DetectorElement::dataSvc () { return DetDesc::detSvc() ; }
-///
-IMessageSvc*       DetectorElement::msgSvc  () { return DetDesc::msgSvc() ; } 
+
+IDataProviderSvc* DetectorElement::dataSvc() const {
+  return m_services->detSvc();
+} 
+
+IMessageSvc* DetectorElement::msgSvc() const {
+  return m_services->msgSvc();
+} 
 
 IDetectorElement*  DetectorElement::parentIDetectorElement() const {
-  IDataProviderSvc* dsvc = dataSvc();
-  if ( 0 != dsvc ) {
-    IDataManagerSvc* mgr = 0;
-    StatusCode sc =
-      dsvc->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
-    if ( sc.isSuccess() ) {
-      IRegistry* pRegParent = 0;      
-      sc = mgr->objectParent(this, pRegParent);
-      if ( sc.isSuccess() && 0 != pRegParent ) {
-        return dynamic_cast<IDetectorElement*>(pRegParent->object());
-      } 
-    }
+  IDataManagerSvc* mgr = 0;
+  StatusCode sc = dataSvc()->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
+  if ( sc.isSuccess() ) {
+    IRegistry* pRegParent = 0;      
+    sc = mgr->objectParent(this, pRegParent);
+    mgr->release();
+    if ( sc.isSuccess() && 0 != pRegParent ) {
+      return dynamic_cast<IDetectorElement*>(pRegParent->object());
+    } 
   }
   return 0;
 };
@@ -620,27 +617,24 @@ DetectorElement::childIDetectorElements() const {
   /// already loaded? 
   if( m_de_childrensLoaded ) { return m_de_childrens; } 
   /// load them! 
-  IDataProviderSvc* dsvc = dataSvc();
-  if ( 0 != dsvc ) {
-    IDataManagerSvc* mgr = 0;
-    StatusCode sc =
-      dsvc->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
+  IDataManagerSvc* mgr = 0;
+  StatusCode sc = dataSvc()->queryInterface(IID_IDataManagerSvc,(void**)&mgr);
+  if ( sc.isSuccess() ) {
+    typedef std::vector<IRegistry*> Leaves;
+    Leaves leaves;
+    sc = mgr->objectLeaves(this, leaves);
     if ( sc.isSuccess() ) {
-      typedef std::vector<IRegistry*> Leaves;
-      Leaves leaves;
-      sc = mgr->objectLeaves(this, leaves);
-      if ( sc.isSuccess() ) {
-        for ( Leaves::iterator it = leaves.begin(); it != leaves.end(); it++ ) {
-          Assert (0 != *it , "DirIterator points to NULL!" );
-          const std::string& nam = (*it)->identifier();
-          SmartDataPtr<IDetectorElement> de( dataSvc() , nam );
-          IDetectorElement* ide = de;
-          Assert (0 != ide , "Could not load child object="+nam );
-          m_de_childrens.push_back( ide  );
-        }
-        m_de_childrensLoaded = true; 
+      for ( Leaves::iterator it = leaves.begin(); it != leaves.end(); it++ ) {
+        Assert (0 != *it , "DirIterator points to NULL!" );
+        const std::string& nam = (*it)->identifier();
+        SmartDataPtr<IDetectorElement> de( dataSvc() , nam );
+        IDetectorElement* ide = de;
+        Assert (0 != ide , "Could not load child object="+nam );
+        m_de_childrens.push_back( ide  );
       }
+      m_de_childrensLoaded = true; 
     }
+    mgr->release();
   }
   return m_de_childrens;
 };

@@ -1,15 +1,4 @@
-// $Id: PVolume.h,v 1.8 2001-11-18 15:32:45 ibelyaev Exp $ 
-// ===========================================================================
-// CVS tag  $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2001/08/13 09:51:36  ibelyaev
-// bug fix in 'reset' method
-//
-// Revision 1.6  2001/08/09 16:48:01  ibelyaev
-// update in interfaces and redesign of solids
-// 
-// ===========================================================================
+// $Id: PVolume.h,v 1.9 2002-11-21 15:40:04 sponce Exp $ 
 #ifndef    DETDESC_PVOLUME_H
 #define    DETDESC_PVOLUME_H 1 
 /// STD & STL 
@@ -23,6 +12,7 @@
 ///  GaudiKernel includes   
 #include "GaudiKernel/DataObject.h" 
 /// DetDesc includes 
+#include "DetDesc/Services.h"
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/ILVolume.h"
 /// forward declarations
@@ -37,8 +27,8 @@ class PVolumeException;
  *  simple implementation of IPVolume interface
  *  @see IPVolume 
  * 
- *  @author: Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date xx/xx/xxx
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
+ *  @author Sebastien Ponce
  */ 
 
 class PVolume: public IPVolume
@@ -315,10 +305,11 @@ protected:
   
 protected:
   
-  /** the static accessor to the data service
-   *  @return pointer to data service 
+  /** 
+   * accessor to the data service
+   * @return pointer to data service 
    */
-  static IDataProviderSvc* dataSvc();
+  IDataProviderSvc* dataSvc() const;
   
 private:
   
@@ -343,6 +334,8 @@ private:
   mutable ILVolume*       m_lvolume       ;
   /// reference/object counter 
   static unsigned long    s_volumeCounter ;
+  /// reference to dataSvc
+  DetDesc::Services* m_services;
 };
 
 /// ===========================================================================

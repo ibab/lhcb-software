@@ -1,12 +1,4 @@
-// $Id: GeometryInfo.h,v 1.8 2001-11-18 15:32:44 ibelyaev Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2001/08/10 14:59:02  ibelyaev
-// modifications in IGeometryInfo and related classes
-// 
-// ===========================================================================
+// $Id: GeometryInfo.h,v 1.9 2002-11-21 15:40:03 sponce Exp $ 
 #ifndef     DETDESC_GEOMETRYINFO_H
 #define     DETDESC_GEOMETRYINFO_H 1 
 /** STD and STL includes */ 
@@ -22,15 +14,16 @@
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
 /** DetDesc includes */ 
+#include "DetDesc/Services.h"
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/IGeometryInfo.h" 
 #include "DetDesc/IDetectorElement.h" 
+
 /** forward declarations */
 class GaudiException   ;
 class IDataProviderSvc ;
 
-// ============================================================================
 /** @class GeometryInfo GeometryInfo.h DetDesc/GeometryInfo.h
  *
  *  The most trivial implementation of IGeometryInfo abstract  interface 
@@ -40,9 +33,8 @@ class IDataProviderSvc ;
  *         inherit from this class withour seriouse modifications! 
  *
  *  @author Vanya Belyaev 
+ *  @author Sebastien Ponce
  */
-// ============================================================================
-
 
 class GeometryInfo:   public IGeometryInfo
 {
@@ -328,8 +320,7 @@ public:
   
 private:
   
-  /// static !
-  static IDataProviderSvc* dataSvc ();
+  IDataProviderSvc* dataSvc () const;
   
 private:
   
@@ -382,6 +373,9 @@ private:
   
   /// object/reference counter  
   static unsigned long m_count;
+  
+  /// reference to services
+  DetDesc::Services* m_services;
   
 };
 ///

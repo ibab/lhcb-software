@@ -1,21 +1,5 @@
-// $Id: PVolume.cpp,v 1.12 2002-04-24 12:41:27 mato Exp $ 
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.11  2001/11/18 15:32:45  ibelyaev
-//  update for Logical Assemblies
-//
-// Revision 1.10  2001/08/25 16:57:43  ibelyaev
-// PVolume: bug fix for uninitialized pointer
-//
-// Revision 1.9  2001/08/10 16:41:29  ibelyaev
-// modifitcations in IDetectorElement and related classes
-//
-// Revision 1.8  2001/08/09 16:48:01  ibelyaev
-// update in interfaces and redesign of solids
-// 
-// ===========================================================================
+// $Id: PVolume.cpp,v 1.13 2002-11-21 15:40:03 sponce Exp $ 
+
 /// GaudiKernel includes 
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -43,7 +27,7 @@
  *  implementation of class PVolume 
  * 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date xx/xx/xxxx
+ *  @author Sebastien Ponce
  */
 // ============================================================================
 
@@ -67,10 +51,12 @@ PVolume::PVolume
   , m_matrix    (                )
   , m_imatrix   ( 0              )
   , m_lvolume   ( 0              )
+  , m_services  ( 0              )
 {
   // NB!!! transformaion is given by Translation and then Rotation!!!
   m_matrix = HepRotate3D(Rotation)*HepTranslate3D(Position) ;
   ///
+  m_services = DetDesc::services();
   ++s_volumeCounter ;
 };
 
@@ -90,14 +76,20 @@ PVolume::PVolume
   , m_matrix    ( Transform      )
   , m_imatrix   ( 0              )
   , m_lvolume   ( 0              )
+  , m_services  ( 0              )
 { 
-  ++s_volumeCounter ;
+   m_services = DetDesc::services();
+ ++s_volumeCounter ;
 };
 
 // ============================================================================
 // destructor 
 // ============================================================================
-PVolume::~PVolume() { reset(); --s_volumeCounter ; };
+PVolume::~PVolume() {
+  reset();
+  m_services->release();
+  --s_volumeCounter;
+};
 
 // ============================================================================
 /** find logical volume by name 
@@ -150,7 +142,7 @@ HepTransform3D* PVolume::findMatrix() const
  *  @return pointer to data service 
  */
 // ============================================================================
-IDataProviderSvc* PVolume::dataSvc() { return DetDesc::detSvc(); }
+IDataProviderSvc* PVolume::dataSvc() const { return m_services->detSvc(); }
 
 // ============================================================================
 /** query the interface

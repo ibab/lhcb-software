@@ -1,23 +1,25 @@
-//$Id: ConditionInfo.h,v 1.2 2002-04-24 12:41:27 mato Exp $
+//$Id: ConditionInfo.h,v 1.3 2002-11-21 15:40:02 sponce Exp $
 #ifndef DETDESC_CONDITIONINFO_H
 #define DETDESC_CONDITIONINFO_H 1
 
 #include <string>
 
 // Base class
+#include "DetDesc/Services.h"
 #include "DetDesc/IConditionInfo.h"
 
 // Forward declarations
 class IDataProviderSvc;
 
-///---------------------------------------------------------------------------
-/** @class ConditionInfo ConditionInfo.h Det/DetDesc/ConditionInfo.h
-
-    The simplest implementation of the IConditionInfo abstract interface.
-
-    @author Andrea Valassi 
-    @date December 2001
-*///--------------------------------------------------------------------------
+/**
+ *  @class ConditionInfo ConditionInfo.h Det/DetDesc/ConditionInfo.h
+ *
+ *  The simplest implementation of the IConditionInfo abstract interface.
+ *
+ *  @author Andrea Valassi 
+ *  @author Sebastien Ponce
+ *
+ */
 
 class ConditionInfo : virtual public IConditionInfo
 {
@@ -34,7 +36,7 @@ class ConditionInfo : virtual public IConditionInfo
  private:
   
   /// Get a pointer to the data service responsible for condition data
-  static IDataProviderSvc* dataSvc();
+  IDataProviderSvc* dataSvc() const;
 
  public:
 
@@ -72,6 +74,10 @@ class ConditionInfo : virtual public IConditionInfo
 
   /// reference count
   unsigned long m_count;
+
+  /// reference to dataSvc
+  DetDesc::Services* m_services;
+
 };
 
 #endif // DETDESC_CONDITIONINFO_H

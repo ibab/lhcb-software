@@ -1,25 +1,21 @@
-// $Id: SolidBase.h,v 1.5 2002-05-13 11:35:19 ibelyaev Exp $
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2002/05/11 18:25:46  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-//
-// ===========================================================================
+// $Id: SolidBase.h,v 1.6 2002-11-21 15:39:56 sponce Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
 // DetDesc 
+#include "DetDesc/Services.h"
 #include "DetDesc/ISolid.h"
+
+/// forward declarations 
+class IMessageSvc;
 
 /** @class SolidBase SolidBase.h DetDesc/SolidBase.h
  *  
  *  Useful intermediate class for implementation of all solids 
  *
  *  @author Vanya Belyaev
- *  @date   02/08/2001
+ *  @author Sebastien Ponce
  */
 
 class SolidBase: public virtual ISolid
@@ -409,6 +405,11 @@ protected:
    */
   StatusCode checkBP() const ;
   
+  /** 
+   *  accessor to massage service
+   *  @return pointer to message service 
+   */
+  IMessageSvc* msgSvc() const;
     
 protected:
   
@@ -423,7 +424,6 @@ protected:
 protected:
   
   std::string     m_name  ; ///< name of the solid
-  unsigned long   m_count ; ///< reference counter 
   mutable ISolid* m_cover ; ///< pointer to cover 
   
   double m_xmin   ;
@@ -437,6 +437,8 @@ protected:
   double m_rmax   ;
   double m_rhomax ;
   
+  /// reference to services
+  DetDesc::Services* m_services;
 };
 
 // ===========================================================================

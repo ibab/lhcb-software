@@ -1,42 +1,8 @@
-// $Id: LogVolBase.cpp,v 1.7 2002-11-19 14:11:31 sponce Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2002/11/19 09:31:39  sponce
-// fix in LogVolBase for missing initialization. Valgrind was complaining.
-//
-// Revision 1.5  2002/04/24 10:52:42  ibelyaev
-//  fix problems with TransportSvc ('LHCb Geane')
-//
-// Revision 1.4  2002/01/21 14:46:46  sponce
-// Remove all warnings + some bug fixes
-//
-// Revision 1.3  2001/11/20 15:22:23  sponce
-// Lots of changes here :
-//    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
-//    is the removal of the class XmlAddress
-//    - centralization of address creations in conversion services, as suggested
-//    by the new architecture
-//    - add a parseString method on the XMLParserSvc. This allows to parse XML
-//    directly from a string
-//    - use of the new Assembly objects in the XML converters
-//    - update of the converters to handle the definition of detelem inside
-//    detelems, without using detelemrefs
-//    - take care of a possible indexing of detelems and parametrized detelems.
-//    The numbering is given by adding :<digits> to the name of the element.
-//    - add support for polycones in the converters
-//    - add code convention compliance to many files
-//
-// Revision 1.2  2001/11/18 16:08:26  ibelyaev
-//  bug fix for Win2K
-//
-// Revision 1.1  2001/11/18 15:32:45  ibelyaev
-//  update for Logical Assemblies
-// 
-// ============================================================================
+// $Id: LogVolBase.cpp,v 1.8 2002-11-21 15:40:03 sponce Exp $
+
 // GaudiKernel
 #include "GaudiKernel/System.h"
+#include "GaudiKernel/IDataProviderSvc.h"
 // DetDesc 
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/LogVolBase.h"
@@ -51,7 +17,7 @@
  *  Implementation file for class : LogVolBase
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date 17/11/2001 
+ *  @author Sebastien Ponce
  */
 // ============================================================================
 
@@ -78,9 +44,12 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
   , m_sdName     ( sensitivity ) 
   , m_mfName     ( magnetic    )
   , m_validity   ( 0           )
+  , m_services   ( 0           )
 {
   /// create validity object 
   m_validity = new SimpleValidity();
+  // get services
+  m_services = DetDesc::services();
   /// add volume counter 
   ++s_volumeCounter ;  
 };
@@ -106,9 +75,12 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
   , m_sdName   ( sensitivity ) 
   , m_mfName   ( magnetic    )
   , m_validity ( 0           )
+  , m_services ( 0           )
 {
   /// create validity object 
   m_validity = new SimpleValidity( validSince , validTill );
+  // get services
+  m_services = DetDesc::services();
   /// add volume counter 
   ++s_volumeCounter ;  
 };
@@ -132,12 +104,15 @@ LogVolBase::LogVolBase( const std::string& /*name*/    ,
   , m_sdName   ( sensitivity ) 
   , m_mfName   ( magnetic    )
   , m_validity ( 0           )
+  , m_services ( 0           )
 {
   /// create validity object
   /// huh! ugly lines??? I think so .. 
   IValidity& val = const_cast<IValidity&> (validity) ;
   m_validity     = new SimpleValidity( val.validSince() , 
                                        val.validTill() );
+  // get services
+  m_services = DetDesc::services();
   /// add volume counter 
   ++s_volumeCounter ;  
 };
@@ -160,15 +135,21 @@ LogVolBase::~LogVolBase()
     delete *i;
   }
   m_pvolumes.clear();
+  // release services
+  m_services->release();
 };
 
-// ============================================================================
-/** static accessor to 
- *  data service used for retriving of the material 
+/** 
+ *  accessor to data service used for retriving of the material 
  *  @return pointer to data service 
  */
-// ============================================================================
-IDataProviderSvc* LogVolBase::dataSvc() { return DetDesc::detSvc(); }
+IDataProviderSvc* LogVolBase::dataSvc() const { return m_services->detSvc(); }
+
+/** 
+ *  accessor to message service
+ *  @return pointer to message service 
+ */
+IMessageSvc* LogVolBase::msgSvc() const { return m_services->msgSvc(); }
 
 // ============================================================================
 /** add the reference

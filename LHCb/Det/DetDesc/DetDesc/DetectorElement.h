@@ -1,34 +1,4 @@
-/// ===========================================================================
-/// CVS tag $Name: not supported by cvs2svn $
-/// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.18  2001/12/11 10:02:20  sponce
-/// Implementation of usage of the condition database. This includes new objects and associated converters (like condition and XmlConditionCnv).
-/// The condition object is extensible, as was detectorElement. Thus, there is a templated XmlUserConditionCnv that could be extended by users as it was the case for detector elements.
-///
-/// Revision 1.17  2001/12/03 15:18:29  mato
-/// Small changes to compile without warnings in Windows
-///
-/// Revision 1.16  2001/11/20 15:22:19  sponce
-/// Lots of changes here :
-///    - make use of the new version of GaudiKernel and GaudiSvc. One consequence
-///    is the removal of the class XmlAddress
-///    - centralization of address creations in conversion services, as suggested
-///    by the new architecture
-///    - add a parseString method on the XMLParserSvc. This allows to parse XML
-///    directly from a string
-///    - use of the new Assembly objects in the XML converters
-///    - update of the converters to handle the definition of detelem inside
-///    detelems, without using detelemrefs
-///    - take care of a possible indexing of detelems and parametrized detelems.
-///    The numbering is given by adding :<digits> to the name of the element.
-///    - add support for polycones in the converters
-///    - add code convention compliance to many files
-///
-/// Revision 1.15  2001/08/10 16:41:28  ibelyaev
-/// modifitcations in IDetectorElement and related classes
-/// 
-/// ===========================================================================
+// $Id: DetectorElement.h,v 1.20 2002-11-21 15:39:56 sponce Exp $ 
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -54,6 +24,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
+#include "DetDesc/Services.h"
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/IDetectorElement.h"
@@ -73,7 +44,7 @@ template <class T> class DataObjectFactory;
  *  @author Sebastien Ponce
  *  @author Rado Chytracek
  *  @author Ivan Belyaev
-*/
+ */
 class DetectorElement: public DataObject,
                        public IDetectorElement,
                        public IValidity {
@@ -557,8 +528,8 @@ protected:
   /// specific 
   void setGeometry( IGeometryInfo* geoInfo ) { m_de_iGeometry = geoInfo; }
   
-  static IDataProviderSvc*  dataSvc ();
-  static IMessageSvc*       msgSvc  ();
+  IDataProviderSvc*  dataSvc () const;
+  IMessageSvc*       msgSvc  () const;
   
 private:
 
@@ -621,6 +592,8 @@ private:
   /// this is the list of user defined parameter vectors
   UserParamVectorMap m_userParameterVectors;
 
+  /// reference to services
+  DetDesc::Services* m_services;
 };
 
 // implementation of the inlines functions

@@ -1,66 +1,45 @@
-// $Id: DetDesc.h,v 1.2 2002-05-11 18:25:45 ibelyaev Exp $
-// ===========================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// ===========================================================================
+// $Id: DetDesc.h,v 1.3 2002-11-21 15:39:56 sponce Exp $
 #ifndef DETDESC_DETDESC_H 
 #define DETDESC_DETDESC_H 1
-/// STD & STL 
+
+// includes files
 #include <string>
-/// GaudiKernel
-class IDataProviderSvc;
-class IMessageSvc;
+#include "DetDesc/Services.h"
 
-/** @namespace DetDesc DetDesc.h "DetDesc/DetDesc.h"
+/**
+ * @namespace DetDesc DetDesc.h "DetDesc/DetDesc.h"
  *  
- *  several general technical methods 
+ * single access point to several usefull methods and accessor.
+ * The main goal here is to cache references to very usefull services
+ * to avoid a call to Service::service from each small component or
+ * object.
  *
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
- *  @date   10/08/2001
+ * @author Vanya Belyaev Ivan.Belyaev@itep.ru 
+ * @author Sebastien Ponce
  */
+namespace DetDesc {
 
-namespace DetDesc
-{
-
-  /** print double value using format
-   *  @param value   value to be printed 
-   *  @param format  desirable format
-   *  @returnstring representation of the "value"
+  /**
+   * print double value using format
+   * @param value   value to be printed 
+   * @param format  desirable format
+   * @returnstring representation of the "value"
    */
-  const std::string print
-  ( const double value            , 
-    const char*  format = "%9.3g" );
+  const std::string print (const double value, const char* format = "%9.3g");
   
-  /** print  long value using format
-   *  @param value   value to be printed 
-   *  @param format  desirable format
-   *  @returnstring representation of the "value"
+  /**
+   * print  long value using format
+   * @param value   value to be printed 
+   * @param format  desirable format
+   * @returnstring representation of the "value"
    */
-  const std::string print
-  ( const long   value            , 
-    const char*  format = "%d"    );
-  
-  /// name of Detector Data service 
-  static const std::string s_DetDataSvcName("DetectorDataSvc");
-  /// name of Message  Service 
-  static const std::string s_MessageSvcName("MessageSvc");
-  
-  /** the accessor to Detector data provider 
-   *  @exception GaudiException the service could not be located 
-   *  @return pointer to detector data provider
+  const std::string print (const long value, const char* format = "%d");
+
+  /**
+   * Gets an instance of Services
    */
-  IDataProviderSvc*  detSvc ();
+  Services* services();
 
-  /** the accessor to Mesage Service 
-   *  @exception GaudiException the service could not be located 
-   *  @return pointer to message service
-   */
-  IMessageSvc*       msgSvc ();
+}
 
-}; /// end of namespace DetDesc 
- 
-
-/// ===========================================================================
 #endif ///< DETDESC_DETDESC_H
-/// ===========================================================================

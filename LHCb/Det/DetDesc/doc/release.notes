@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.121 2002-11-19 14:11:31 sponce Exp $ 
+! $Id: release.notes,v 1.122 2002-11-21 15:39:59 sponce Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
+
+! 2002-11-21 - Sebastien Ponce
+ - many modifications and fixes in order to remove all memory leaks from
+   this package.
+ - some optimization by caching of services references. Avoid to call
+   Service::service too often.
 
 ! 2002-11-19 - Sebastien Ponce
  - fix in LogVolBase for missing initialization. Valgrind was complaining.

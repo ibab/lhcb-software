@@ -1,9 +1,5 @@
-// $Id: SolidBase.cpp,v 1.8 2002-07-11 07:15:05 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $  
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// ============================================================================
+// $Id: SolidBase.cpp,v 1.9 2002-11-21 15:40:04 sponce Exp $
+
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
 // GaudiKernel
@@ -14,15 +10,13 @@
 #include "DetDesc/SolidTicks.h"
 #include "DetDesc/SolidException.h"
 
-// ============================================================================
 /** @file SolidBase.cpp  
  * 
  * Implementation file for class : SolidBase
  *
  * @author Vanya  Belyaev
- * @date 02/08/2001 
+ * @author Sebastien Ponce
  */
-// ============================================================================
 
 // ============================================================================
 /** standard constructor 
@@ -31,7 +25,6 @@
 // ============================================================================
 SolidBase::SolidBase( const std::string& Name )
   : m_name   ( Name     ) 
-  , m_count  ( 0        ) 
   , m_cover  ( 0        ) 
   , m_xmin   (  10 * km )
   , m_ymin   (  10 * km ) 
@@ -41,8 +34,10 @@ SolidBase::SolidBase( const std::string& Name )
   , m_zmax   ( -10 * km )
   , m_rmax   ( -10 * km ) 
   , m_rhomax ( -10 * km )
+  , m_services (0)
 {
-  addRef(); ///< add the reference 
+  // get message service
+  m_services = DetDesc::services();
 };
 
 // ============================================================================
@@ -50,8 +45,9 @@ SolidBase::SolidBase( const std::string& Name )
 // ============================================================================
 SolidBase::~SolidBase() 
 { 
-  reset   () ; 
-  release () ; 
+  reset() ; 
+  // release message service
+  m_services->release();
 };
 
 // ============================================================================
@@ -99,12 +95,12 @@ StatusCode SolidBase::queryInterface( const InterfaceID& ID , void** ppI )
 // ============================================================================
 /// Increment the reference count of Interface instance
 // ============================================================================
-unsigned long SolidBase::addRef  () { return ++m_count ; }
+unsigned long SolidBase::addRef  () { return 0; }
 
 // ============================================================================
 /// Release Interface instance
 // ============================================================================
-unsigned long SolidBase::release () { return 0 < m_count ? --m_count : 0 ; }
+unsigned long SolidBase::release () { return 0; }
 
 // ============================================================================
 /** retrieve the pointer to "the most simplified cover"
@@ -306,7 +302,7 @@ StatusCode SolidBase::checkBP() const
   const std::string msg("SolidBase("+m_name+")::checkBP(): ");
   if     ( xMax()   <= xMin() ) 
     { 
-      MsgStream log( DetDesc::msgSvc() , "Solid" );
+      MsgStream log( msgSvc() , "Solid" );
       log << MSG::FATAL
           << " SolidBase::checkPB "
           << m_name 
@@ -327,7 +323,7 @@ StatusCode SolidBase::checkBP() const
     }
   else if( yMax()   <= yMin() ) 
     { 
-      MsgStream log( DetDesc::msgSvc() , "Solid" );
+      MsgStream log( msgSvc() , "Solid" );
       log << MSG::FATAL
           << " SolidBase::checkPB "
           << m_name  
@@ -348,7 +344,7 @@ StatusCode SolidBase::checkBP() const
     }
   else if( zMax()   <= zMin() ) 
     {  
-      MsgStream log( DetDesc::msgSvc() , "Solid" );
+      MsgStream log( msgSvc() , "Solid" );
       log << MSG::FATAL
           << " SolidBase::checkPB "
           << m_name 
@@ -369,7 +365,7 @@ StatusCode SolidBase::checkBP() const
     }
   else if( rMax()   <= 0      ) 
     {
-      MsgStream log( DetDesc::msgSvc() , "Solid" );
+      MsgStream log( msgSvc() , "Solid" );
       log << MSG::FATAL
           << " SolidBase::checkPB "
           << m_name 
@@ -389,7 +385,7 @@ StatusCode SolidBase::checkBP() const
     }
   else if( rhoMax() <= 0      ) 
     {  
-      MsgStream log( DetDesc::msgSvc() , "Solid" );
+      MsgStream log( msgSvc() , "Solid" );
       log << MSG::FATAL
           << " SolidBase::checkPB "
           << m_name
@@ -412,7 +408,12 @@ StatusCode SolidBase::checkBP() const
 };
 // ============================================================================
   
-    
+/** 
+ *  accessor to message service
+ *  @return pointer to message service 
+ */
+IMessageSvc* SolidBase::msgSvc() const { return m_services->msgSvc(); }
+
 
 // ============================================================================
 // The End 
