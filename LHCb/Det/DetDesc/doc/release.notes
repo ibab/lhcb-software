@@ -1,10 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.122 2002-11-21 15:39:59 sponce Exp $ 
+! $Id: release.notes,v 1.123 2002-12-03 16:59:22 ranjard Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
+!===================== DetDesc v11r6 2002-12-03 =============================
+                version v11r5 was built on v10r5b branch
+                this version uses Gaudi project v11r*
 ! 2002-11-21 - Sebastien Ponce
  - many modifications and fixes in order to remove all memory leaks from
    this package.
