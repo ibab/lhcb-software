@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.30 2004-07-08 10:14:26 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.31 2004-07-08 16:24:41 pkoppenb Exp $
 // Include files 
 
 
@@ -25,18 +25,23 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
 
   DECLARE_TOOL( PhysDesktop );
 
-  DECLARE_TOOL( ChargedParticleMaker );
-  DECLARE_TOOL( ElectronParticleMaker );
-  DECLARE_TOOL( MuonParticleMaker );
-  DECLARE_TOOL( NeutralParticleMaker );
-  DECLARE_TOOL( RichParticleMaker );
-  DECLARE_TOOL( CombinedParticleMaker );
+  // Particle Makers
+  DECLARE_TOOL( ChargedParticleMaker );  // to be retired soon
+  //  DECLARE_TOOL( ElectronParticleMaker );
+  //  DECLARE_TOOL( MuonParticleMaker );
+  //  DECLARE_TOOL( NeutralParticleMaker );
+  //  DECLARE_TOOL( RichParticleMaker );
+  DECLARE_TOOL( CombinedParticleMaker ); // "the official one"
+  DECLARE_TOOL( PhotonParticleMaker    ) ;  
+  DECLARE_TOOL( CnvPhotonParticleMaker ) ;  
+  DECLARE_TOOL( PhotonFromMergedParticleMaker );
+  DECLARE_TOOL( NoPIDsParticleMaker );
+  DECLARE_TOOL( ParticleMakerSeq );     // Sequencer of Particle makers
 
-  DECLARE_TOOL( LagrangeDirectionFitter );
-  DECLARE_TOOL( LagrangeMassVertexFitter );
-  DECLARE_TOOL( UnconstVertexFitter );  
-  DECLARE_TOOL( LifetimeFitter );
-  DECLARE_TOOL( GeomDispCalculator );
+  DECLARE_TOOL( ParticleStuffer );
+
+  // Filter
+  DECLARE_TOOL( ParticleFilter );
 
   DECLARE_TOOL( PIDFilterCriterion );
   DECLARE_TOOL( KinFilterCriterion );
@@ -45,35 +50,36 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( VtxFilterCriterion );
   DECLARE_TOOL( PVIPFilterCriterion );
   DECLARE_TOOL( TrackTypeFilterCriterion );
+  DECLARE_TOOL( LifetimeSignificanceCriterion );
 
-  DECLARE_TOOL( ParticleFilter );
+  // Fitters
+  DECLARE_TOOL( LagrangeDirectionFitter );
+  DECLARE_TOOL( LagrangeMassVertexFitter );
+  DECLARE_TOOL( UnconstVertexFitter );  
+  DECLARE_TOOL( LifetimeFitter );
+  DECLARE_TOOL( GeomDispCalculator );
 
-  DECLARE_TOOL( ParticleStuffer );
-
+  // Transporters
   DECLARE_TOOL( CombinedTransporter );
   DECLARE_TOOL( LinearTransporter );
   DECLARE_TOOL( NsctVeloTransporter );
   DECLARE_TOOL( ParabolicTransporter );
   DECLARE_TOOL( TrTransporter );
-  DECLARE_TOOL( DecayFinder );
-  DECLARE_TOOL( CheckOverlap );  
 
+  // Miscellaneous
   DECLARE_TOOL( PhotonParameters       ) ;  
-  DECLARE_TOOL( PhotonParticleMaker    ) ;  
-  DECLARE_TOOL( CnvPhotonParticleMaker ) ;  
   DECLARE_TOOL( PhotonFromMergedParameters );
-  DECLARE_TOOL( PhotonFromMergedParticleMaker );
-  DECLARE_TOOL( ParticleMakerSeq );
-
   DECLARE_TOOL( DecodeSimpleDecayString );
-
-  DECLARE_TOOL( LifetimeSignificanceCriterion );
+  DECLARE_TOOL( DecayFinder );
+  DECLARE_TOOL( CheckOverlap );
   DECLARE_TOOL( Particle2VertexAsct );
+
   DECLARE_DATAOBJECT( Particle2VertexTable );
 
   DECLARE_ALGORITHM( Particle2VertexWithIPS );
   DECLARE_ALGORITHM( PreLoadParticles );
   DECLARE_ALGORITHM( PreDV );
+  //  DECLARE_ALGORITHM( ChangePID );
   
 }
 

@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.103 2004-07-08 10:14:26 pkoppenb Exp $
+! $Id: release.notes,v 1.104 2004-07-08 16:24:41 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
+
+! 2004-07-08 - P. Koppenburg
+  - src/ElectronParticleMaker.*
+  - src/MuonParticleMaker.*
+  - src/NeutralParticleMaker.*
+  - src/RichParticleMaker.*
+    . Removed obsolete particle makers
 
 ! 2004-07-08 - P. Koppenburg
   - src/NoPIDsParticleMaker.*
