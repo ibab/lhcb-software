@@ -1,4 +1,4 @@
-// $Id: MuonLayout.h,v 1.3 2002-02-18 09:22:53 atsareg Exp $
+// $Id: MuonLayout.h,v 1.4 2002-02-25 10:57:34 atsareg Exp $
 
 #ifndef MUONKERNEL_MUONLAYOUT_H
 #define MUONKERNEL_MUONLAYOUT_H 1   
@@ -41,6 +41,10 @@ public:
   
   /// Destructor
   virtual ~MuonLayout();
+  
+    /// Accessor to region layout
+  MuonLayout regionLayout(int reg) const { return *this ; }
+
     
   /// Accessor to MuonLayout grid corresponding to the given MuonTileID
   /// reimplemented from IMuonLayout
