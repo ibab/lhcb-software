@@ -65,9 +65,6 @@ StatusCode MCParticle2MCVeloHitAlg::execute()
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 
-  /// typedef
-  typedef Associator<MCParticle, MCVeloHit> MCVeloHitAsct;
-
   // get MCVeloHits
   SmartDataPtr<MCVeloHits> mcVeloHits (eventSvc(), m_inputData);
   if(mcVeloHits) {
@@ -79,8 +76,11 @@ StatusCode MCParticle2MCVeloHitAlg::execute()
     return StatusCode::FAILURE;
   }
 
+  /// typedef
+  typedef Relation1D<MCParticle, MCVeloHit> LocalDirectType;
+
   // create an association table
-  MCVeloHitAsct::LocalDirectType* table = new MCVeloHitAsct::LocalDirectType();
+  LocalDirectType* table = new LocalDirectType();
 
   // loop over MCVeloHits
   for(MCVeloHits::const_iterator itHit = mcVeloHits->begin();

@@ -65,9 +65,6 @@ StatusCode MCParticle2MCHitAlg::execute()
   MsgStream  log( msgSvc(), name() );
   log << MSG::DEBUG << "==> Execute" << endreq;
 
-  /// typedef
-  typedef Associator<MCParticle, MCHit> MCHitAsct;
-
   // get MCHits
   SmartDataPtr<MCHits> mcHits (eventSvc(), m_inputData);
   if(mcHits) {
@@ -79,8 +76,11 @@ StatusCode MCParticle2MCHitAlg::execute()
     return StatusCode::FAILURE;
   }
 
+  /// typedef
+  typedef Relation1D<MCParticle, MCHit> LocalDirectType;
+
   // create an association table
-  MCHitAsct::LocalDirectType* table = new MCHitAsct::LocalDirectType();
+  LocalDirectType* table = new LocalDirectType();
 
   // loop over MCHits
   for(MCHits::const_iterator itHit = mcHits->begin();
