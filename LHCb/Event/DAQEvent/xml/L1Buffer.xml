@@ -7,7 +7,6 @@
       name="L1Buffer"
       location="DAQ/L1Buffer"
       id="1003"
-      serializers="FALSE"
      >
        <enum
         desc="Define the bank types for L1 trigger buffer"
@@ -121,5 +120,26 @@
   delete [] m_buffer;
   m_buffer = newBuffer;
 	  </code>
+       </method>
+       <method type="StreamBuffer&amp;" 
+        name="serialize"
+        virtual="TRUE" 
+        const="TRUE"
+        desc="special serializer for writing">
+        <arg name = "s" type = "StreamBuffer" inout = "BOTH" /> 
+       </method>
+       <method type="StreamBuffer&amp;"
+        name="serialize"
+        virtual="TRUE"
+        desc="special serializer for reading">
+        <arg name = "s" type = "StreamBuffer" inout = "BOTH" /> 
+       </method>
+       <method
+        type="std::ostream&amp;"
+        name="fillStream"
+        virtual="TRUE"
+        const="TRUE"
+        desc="special serializer to ASCII stream">
+        <arg name = "s" type = "std::ostream" inout = "BOTH" /> 
        </method>
      </class>

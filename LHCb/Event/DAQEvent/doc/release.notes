@@ -3,6 +3,11 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, HLTBuffer, HLTEvent and 
          HLTBank classes.
 
+!=============== DAQEvent v2r1 2003-11-10 =============================
+! 2003-11-10 - Marco Cattaneo
+ - Add implementation files for L1Buffer and HltBuffer, to implement serializers
+ - Add an enum for Hlt bank types
+
 !=============== DAQEvent v2r0 2003-11-03 =============================
 ! 2003-10-30 - Jose Helder Lopes
 

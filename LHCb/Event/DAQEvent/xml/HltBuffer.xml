@@ -7,8 +7,13 @@
       name="HltBuffer"
       location="DAQ/HltBuffer"
       id="1001"
-      serializers="FALSE"
      >
+       <enum
+        desc="Define the bank types for Hlt buffer"
+        name="BankType"
+        value="L0Calo=0, L0DU, PrsE, EcalE, HcalE, PrsTrig, EcalTrig, HcalTrig, VeloR, VeloPhi, Rich, TT, IT, OT, Muon"
+        access="PUBLIC"
+       />
        <base name="DataObject"/>
        <import name="Event/DAQTypes" soft="FALSE"/>
        <import name="hlt_int" ignore="TRUE"/>
@@ -86,7 +91,7 @@
 
   for( long i =0; i&lt;dataSize;++i) m_buffer[size++] = *(data++);
   m_currentSize+=bankSize;
- </code>
+         </code>
        </method>
        <method
         desc="Add a new bank of data to the buffer"
@@ -107,7 +112,7 @@
 
   for( std::vector&lt;hlt_int&gt;::iterator i =data.begin(); i!=data.end();++i) m_buffer[size++] = *i;
   m_currentSize+=bankSize;
- </code>
+         </code>
        </method>
        <method
         desc="Reallocate buffer if more space is necessary"
@@ -117,8 +122,6 @@
        >
        <arg type="long" name="evtSize" />
          <code>
-// cout &lt;&lt; " Using reallocate method" &lt;&lt; endl;
-// To avoid many reallocations we are giving at least m_initialSize extra space
   long newSize = evtSize+m_initialSize;
   hlt_int * newBuffer = new hlt_int[newSize];
   for( long i =0; i&lt;m_currentSize;++i) newBuffer[i] = m_buffer[i];
@@ -126,5 +129,26 @@
   delete [] m_buffer;
   m_buffer = newBuffer;
 	  </code>
+       </method>
+       <method type="StreamBuffer&amp;" 
+        name="serialize"
+        virtual="TRUE" 
+        const="TRUE"
+        desc="special serializer for writing">
+        <arg name = "s" type = "StreamBuffer" inout = "BOTH" /> 
+       </method>
+       <method type="StreamBuffer&amp;"
+        name="serialize"
+        virtual="TRUE"
+        desc="special serializer for reading">
+        <arg name = "s" type = "StreamBuffer" inout = "BOTH" /> 
+       </method>
+       <method
+        type="std::ostream&amp;"
+        name="fillStream"
+        virtual="TRUE"
+        const="TRUE"
+        desc="special serializer to ASCII stream">
+        <arg name = "s" type = "std::ostream" inout = "BOTH" /> 
        </method>
      </class>
