@@ -34,6 +34,7 @@ Package manager : Stefan Roiser
 
 ! 20020402
  - branch created 
+ - necessary patches from v4r0 applied (const chars for sun-compiler, handling of fundamental types)
  - bugfix when compiling dictionary-information with unary operators
  - bugfix when using virtual selfdefined methods
 

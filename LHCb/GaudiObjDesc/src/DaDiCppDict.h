@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiCppDict.h,v 1.5 2002-04-08 13:03:43 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiCppDict.h,v 1.6 2002-04-08 14:01:55 mato Exp $
 #ifndef DADICPPDICT_H 
 #define DADICPPDICT_H 1
 
