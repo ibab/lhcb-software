@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!====================== GlobalReco v2r0 2002-10-30 ===========================
 ! 2002-10-18 - Gloria Corti
  - Remove use of clone in TrState and change interface in
 	 PrimaryVertexFitterTool to return StatusCode and pass vertex as return
