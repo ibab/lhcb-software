@@ -1,6 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
+! 2003-04-03 - Marco Cattaneo
+ - Use CaloEvent v11r5
+
 !======================== EventSys v13r4 2003-02-04 ========================
 ! 2003-02-03 - Marco Cattaneo
  - Use L1Event v11r6

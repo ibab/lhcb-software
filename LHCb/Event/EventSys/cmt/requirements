@@ -12,7 +12,7 @@ use ITEvent      v12r0   Event
 use OTEvent      v12r0   Event
 use TrEvent      v12r0   Event
 use RichEvent    v4r2    Event
-use CaloEvent    v11r4	 Event
+use CaloEvent    v11r5	 Event
 use MuonEvent    v2r2    Event
 use L0Event      v13r1   Event
 use L1Event      v11r6   Event
