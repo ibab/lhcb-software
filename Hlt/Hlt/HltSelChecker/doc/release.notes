@@ -4,6 +4,7 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v3r0 2005-03-22 ===================
 ! 2005-03-21 - Luis Fernandez
  - src/DecayChainNTuple.{h, cpp}
    . Removed, will be in DaVinciMCTools
