@@ -1,4 +1,3 @@
-
 #ifndef RICHMARKOV_ALTERATIONS_H
 #define RICHMARKOV_ALTERATIONS_H
 
@@ -114,8 +113,10 @@ namespace RichMarkov {
       virtual void printMyInnardsTo(std::ostream & os) const {
         os << "Created a cicle at the back.";
       };
-      virtual void modifyCacheVectorEtc(double & ans, std::vector<double> & cache, const Hep2Vector & hit, const Circs & circs) const {
-        const unsigned int i = cache.size(); // number of circle to be created!  This is a bit flakey too (see below) ... should really make more transparent.
+      virtual void modifyCacheVectorEtc(double & ans, std::vector<double> & cache, 
+                                        const Hep2Vector & hit, const Circs & circs) const {
+        // Number of circles to be created!  This is a bit flakey too (see below)
+        const unsigned int i = cache.size(); // Should really make more transparent...
         const CircleParamsT & circle = circs[i];
         const double thing = bitToBeCached(hit, circle);
         cache.push_back(thing);
@@ -131,10 +132,13 @@ namespace RichMarkov {
       virtual void printMyInnardsTo(std::ostream & os) const {
         os << "Altered circle number " << index << ".";
       };
-      virtual void modifyCacheVectorEtc(double & ans, std::vector<double> & cache, const Hep2Vector & hit, const Circs & circs) const {
+      virtual void modifyCacheVectorEtc(double & ans, std::vector<double> & cache, 
+                                        const Hep2Vector & hit, const Circs & circs) const {
         assert(cache.size()>index);
         ans -= cache[index];
-        const CircleParamsT & circle = circs[index]; // this is a bit flakey; it depends on no circles being exchanged in the same edit as this one ...
+        // this is a bit flakey; it depends on no circles being exchanged in the 
+        // same edit as this one ...
+        const CircleParamsT & circle = circs[index];
         const double thing = bitToBeCached(hit, circle);
         ans += (cache[index]=thing);
       };

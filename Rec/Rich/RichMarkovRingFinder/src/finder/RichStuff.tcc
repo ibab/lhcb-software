@@ -17,8 +17,10 @@ void RichMarkov::RichStuff<Mode, mode>::draw(Canvas & canvas,
 };
 
 template<class Mode, const Mode & mode>
-double RichMarkov::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, const DataT & d, const AlterationsT & alterations) {
-  
+double RichMarkov::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, 
+                                                       const DataT & d, 
+                                                       const AlterationsT & alterations) 
+{
   double logAns=0;
   {
     // expected number of total hits:
@@ -31,7 +33,9 @@ double RichMarkov::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, c
     //      ans *= RichMarkov::poissonProb(n,mu);
     // followed by the
     //      ans *= factorial(n)
-    // which occurs in the next block to account for a combinatorial factor for the hit probabilities that are about to arrive, so to save time I combine the two factors together into
+    // which occurs in the next block to account for a combinatorial factor for
+    // the hit probabilities that are about to arrive, so to save time I combine 
+    // the two factors together into
     const bool muIsTooSmall=!(RichMarkov::finite(log(mu)));
     if (mu==0 && n>0) {
       //std::cerr << "erm1 " <<mu<<" " <<n<<" " << muIsTooSmall<<std::endl;
@@ -81,11 +85,19 @@ double RichMarkov::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, c
       // const double sigmaMuGeometricallyCorrected = rp.sigmaMuGeometricallyCorrected();
       // const double p = rp.probTimesSigmaMuGeometricallyCorrected(*hit)/sigmaMuGeometricallyCorrected;
       // but I can factor the division out and do it outside the loop saving time ... so instead
-      const double p = rp.probTimesSigmaMuGeometricallyCorrected(*hit, alterationsNecessitateCompleteRecalculation, alterations);
+      const double p = 
+        rp.probTimesSigmaMuGeometricallyCorrected(*hit, alterationsNecessitateCompleteRecalculation, alterations);
       hit->pushCacheBack(p);
       const double lp = log(p);
       if ( p==0 ||!RichMarkov::finite(lp)) {
-        // ok .. we are going to throw this point, but before we do so. we must resolve the state of the Hit caches.  Now we can either do this by by throwing away the cache data already collected -- but then we will have to convince routines that come later that there is in this particular special case no cache information available (rejected points will expect to have their cache deleted .. and we won't want rouge things deleting non-existen caches) so although this solution will be the better in the long run, it will be hard to program initially.  For the moment we can do a slower "fill cache up cache with junk" solutin:
+        // ok .. we are going to throw this point, but before we do so. we must resolve 
+        // the state of the Hit caches.  Now we can either do this by by throwing away
+        // the cache data already collected -- but then we will have to convince routines
+        // that come later that there is in this particular special case no cache information 
+        // available (rejected points will expect to have their cache deleted .. and we 
+        // won't want rogue things deleting non-existent caches) so although this solution
+        // will be the better in the long run, it will be hard to program initially.  
+        // For the moment we can do a slower "fill cache up cache with junk" solution:
         static bool first = true;
         if (first) {
           std::cerr << "See inefficiency comment in RichStuff.cpp" << std::endl;
@@ -126,7 +138,11 @@ double RichMarkov::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, c
     // where n=rp.circs.size(), so instead I write the following faster combination
     // of the two:
     {
-    // actually I have just realised that contrary to the comments above, since in my case the order DOES count, as I don't always sort my circles into some order, I should NOT multiply by the factorial factor mentioned above, so I should just stick  to using the poisson factor.  As a result, I comment out the three lines below and replace them by the one four below!
+    // actually I have just realised that contrary to the comments above, since in my case
+    // the order DOES count, as I don't always sort my circles into some order, I should NOT
+    // multiply by the factorial factor mentioned above, so I should just stick to using the
+    // poisson factor.  As a result, I comment out the three lines below and replace them by
+    // the one four below!
     //const double n = static_cast<double>(rp.circs.size());
     //const double mu = meanNumberOfRings;
     //ans *= exp(n*log(mu)-mu);  // times n! divided by n!
@@ -151,9 +167,7 @@ double RichMarkov::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, c
     assert(RichMarkov::finite(logAns) && "step3");
 
   };
-
   return logAns;
 
 };
-
 #endif

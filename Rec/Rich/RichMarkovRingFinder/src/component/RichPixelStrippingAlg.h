@@ -1,4 +1,4 @@
-// $Id: RichPixelStrippingAlg.h,v 1.2 2004-10-08 19:00:40 abuckley Exp $
+// $Id: RichPixelStrippingAlg.h,v 1.3 2004-11-10 18:36:06 abuckley Exp $
 #ifndef RICHPIXELSTRIPPINGALG_H
 #define RICHPIXELSTRIPPINGALG_H 1
 
@@ -8,13 +8,9 @@
 // base
 #include "RichRecBase/RichRecAlgBase.h"
 
-/** @class RichPixelStrippingAlg RichPixelStrippingAlg.h
- *
- *  Empty Algorithm.
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   2004-04-01
- */
+/// Algorithm for stripping pixels which don't belong to rec-tracked rings
+/// @author Chris Jones  Christopher.Rob.Jones@cern.ch
+/// @date   2004-04-01
 class RichPixelStrippingAlg : public RichRecAlgBase {
 
 public:
