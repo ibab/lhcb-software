@@ -33,7 +33,7 @@ use OTAlgorithms        v13r4	OT
 use OTDAQ               v2r0    OT
 
 # Tracking
-use TrFitEvent		v4r4	Tr
+use TrFitEvent		v4r5	Tr
 use TrFitAssociators	v1r1	Tr
 use VeloTrack           v5r1  	Velo
 use TrCheck             v2r4	Tr
