@@ -1,6 +1,6 @@
-// $Id: BTagging.h,v 1.7 2005-01-06 10:51:47 pkoppenb Exp $
-#ifndef USER_BTagging_H 
-#define USER_BTagging_H 1
+// $Id: BTagging.h,v 1.8 2005-01-31 10:07:46 pkoppenb Exp $
+#ifndef USER_BTAGGING_H 
+#define USER_BTAGGING_H 1
 
 // from STL
 #include <fstream>
@@ -8,47 +8,25 @@
 #include <math.h>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/IHistogramSvc.h"
-#include "AIDA/IHistogram1D.h"
-#include "GaudiKernel/INTupleSvc.h"
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/NTuple.h"
-#include "GaudiKernel/SmartRef.h"
-#include "GaudiKernel/GenericAddress.h"
 #include "Kernel/DVAlgorithm.h"
 // from Event 
 #include "Event/EventHeader.h"
-#include "Event/Vertex.h"
-#include "Event/Particle.h"
-#include "Event/ProtoParticle.h"
 #include "Event/FlavourTag.h"
-#include "Event/GenMCLink.h"
+#include "Event/SelResult.h"
 #include "Event/TrgDecision.h"
+#include "Event/TamperingResults.h"
 // from RecoTools
 #include "RecoTools/ITrVeloCharge.h"
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Vector/LorentzVector.h"
+#include "ISecondaryVertexTool.h"
+#include "INNetTool.h"
 
 #define MAXSIZETAGS 100
 
 /** @class BTagging BTagging.h 
  *  
  *  @author Marco Musy
- *  @date   21/01/2004
+ *  @date   15/12/2004
  */
-
-
-// Forward declarations
-class DataObject;
-class IDebugTool;
-class IParticlePropertySvc;
 
 class BTagging : public DVAlgorithm {
 
@@ -57,7 +35,11 @@ class BTagging : public DVAlgorithm {
   void PileUpIP( Particle*, double&, double& ) ;
   std::vector<Particle*> toStdVector( SmartRefVector<Particle>& );
   ParticleVector FindDaughters( Particle* );
-  double VertexCharge( ParticleVector, int& );
+  double min(double, double);
+  double max(double, double);
+  double pol2(double, double, double );
+  double pol3(double, double, double, double );
+  double pol4(double, double, double, double, double );
 
 public: 
   /// Standard constructor
@@ -69,59 +51,23 @@ public:
 
 private:
 
-  //tagging variables
-  long      m_Run;
-  long      m_Event;
-  long      m_trig0;
-  long      m_trig1;
-  long      m_trigHLT;
-  float     m_B0the;
-  float     m_B0phi;
-  float     m_B0mass;
-  long      m_BID;
-  float     m_RVz;
-  long      m_knrec;
-
-  long      m_N;
-  long      m_AXID[MAXSIZETAGS];
-  float     m_AXP[MAXSIZETAGS];
-  float     m_AXPt[MAXSIZETAGS];
-  float     m_AXphi[MAXSIZETAGS];
-  long      m_ch[MAXSIZETAGS];
-  float     m_AXip[MAXSIZETAGS];
-  float     m_AXiperr[MAXSIZETAGS];
-  float     m_IPPU[MAXSIZETAGS];
-  long      m_trtyp[MAXSIZETAGS];
-  float     m_InvMss[MAXSIZETAGS];
-  float     m_ThBp[MAXSIZETAGS];
-  float     m_veloch[MAXSIZETAGS];
-  float     m_Emeas[MAXSIZETAGS];
-
-  Hep3Vector ipVec;
-  HepSymMatrix errMatrix;
-  IParticlePropertySvc* ppSvc;
-  Vertex* RecVert; 
   VertexVector PileUpVtx;
 
-  int nsele;
-  int nrt[50];
-  int nwt[50];
+  std::string m_veloChargeName, m_TagLocation;
+  std::string m_SVtype, m_CombinationTechnique;
+  ITrVeloCharge* m_veloCharge;
+  ISecondaryVertexTool* m_vtxtool;
+  INNetTool* m_nnet;
 
   //properties ----------------
-  bool m_UseVertexCharge, m_WriteToTES;
-
-  ///<  Name of TrVeloCharge Tool
-  std::string    m_veloChargeName;
-  ///<  TrVeloCharge Tool
-  ITrVeloCharge* m_veloCharge;
-
   double m_AXPt_cut_muon;
   double m_AXP_cut_muon;
-  double m_IP_cut_muon;
 
   double m_AXPt_cut_ele;
   double m_AXP_cut_ele;
-  double m_IP_cut_ele ;
+  long   m_VeloChMin;
+  long   m_VeloChMax;
+  double m_EoverP;
 
   double m_AXPt_cut_kaon;
   double m_AXP_cut_kaon ;
@@ -141,6 +87,10 @@ private:
   double m_dQcut_pionS;
   double m_dQ2cut_pionS;
 
+  double m_ProbMin;
+  double m_VchOmega;
+
+  bool m_RequireL0, m_RequireL1, m_RequireHLT;
 };
 //===========================================================================//
-#endif // USER_BTagging_H
+#endif // USER_BTAGGING_H

@@ -1,6 +1,6 @@
-// $Id: BTaggingMonitor.h,v 1.3 2005-01-06 10:51:47 pkoppenb Exp $
-#ifndef BTaggingMonitor_H 
-#define BTaggingMonitor_H 1
+// $Id: BTaggingMonitor.h,v 1.4 2005-01-31 10:07:46 pkoppenb Exp $
+#ifndef BTAGGINGMONITOR_H 
+#define BTAGGINGMONITOR_H 1
 
 // Include files
 // from STL
@@ -9,18 +9,13 @@
 #include <algorithm>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IToolSvc.h"
 
 #include "Event/EventHeader.h"
-#include "Event/Collision.h"
-#include "Event/Particle.h"
-#include "Event/MCParticle.h"
-#include "CLHEP/Units/PhysicalConstants.h"
 #include "Event/FlavourTag.h"
 #include "DaVinciMCTools/IDebugTool.h"
+#include "Event/GenMCLink.h"
+#include "Event/TrgDecision.h"
+#include "Event/SelResult.h"
 
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"
@@ -47,9 +42,9 @@ private:
   /// Vector of locations of the tags to monitor
   std::vector<std::string> m_tags_locations; 
   Particle2MCLinksAsct::IAsct* m_pAsctLinks; 
-  std::string m_nameMCAsct;  ///< Name of tool for Part to MCPart Association
   IDebugTool* m_debug;
-  IParticlePropertySvc* ppSvc;
+
+  int nsele,nrt[50],nwt[50];
 
 };
-#endif // BTaggingMonitor_H
+#endif // BTAGGINGMONITOR_H

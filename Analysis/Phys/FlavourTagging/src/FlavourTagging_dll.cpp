@@ -8,8 +8,8 @@
 //               The DLL initialisation must be done seperately for 
 //               each DLL. 
 //
-//  Author     : O. Dormond
-//  Created    : 15/06/2001
+//  Author     : M.Musy
+//  Created    : 19/01/2004
 //  Changes    : 
 //
 //====================================================================

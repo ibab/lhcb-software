@@ -1,9 +1,34 @@
-! $Id: release.notes,v 1.52 2005-01-18 08:42:28 pkoppenb Exp $
+! $Id: release.notes,v 1.53 2005-01-31 10:07:46 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2005-01-31- P. Koppenburg for Marco Musy
+Main changes/upgrades are the following:
+
+- tagging efficiencies and performance calculation are now moved
+to BTaggingMonitor so that no truth information is accessed at any stage.
+
+- BTagging.cpp still needs to rerun the trigger because it 
+makes use of the tampering info
+
+- SecondaryVertex is now a tool, and the user can choose whether
+to use the TDR definition or the revised version of it using
+NeuralNets (default is old tdr)
+
+- I implemented the new definition of tagging categories, obtained
+by using a NNet tuned for each taggers separately. 
+these NNets are accessed via a tool (this was asked for in a meeting).
+the user can still choose to stick to the old TDR categories via 
+BTagging.CombinationTechnique = "TDR";
+
+- summaryof.cpp is an additional standalone program to quickly get 
+useful numbers out of the logfiles. it contains the instructions on
+how to run it.
+
+- DVBTagging.opts is meant as an example option file. 
 
 !========================== FlavourTagging v5r3p1 2005-01-18 ===================
 ! 2005-01-04 - P. Koppenburg

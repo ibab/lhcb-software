@@ -1,9 +1,15 @@
-// This program reads the output text of BTagging
-// and gives tagging performances with statistical errors
-// To run it:
-// c++ summaryof.cpp -o summaryof; summaryof taginfo 3
-// (this command could be useful:
-//  grep -ih tagginginfo *txt | sed -e "s/BTagging //" | sed -e "s/INFO TAGGINGINFO  //" >! taginfo
+/*------------------------------------------------------------------
+ This program reads the output logfiles of 
+ YourSelection + BTagging + BTaggingMonitor
+ and gives tagging performances with correct statistical errors
+
+ To run it:
+> c++ summaryof.cpp -o summaryof
+> ./summaryof taginfo 3 N
+
+ To create the taginfo file, this command could be useful: 
+ grep -h BTAGGING *.txt | colrm 1 32 >! taginfo
+*///----------------------------------------------------------------
 
 #include <iostream>
 #include <fstream>
@@ -11,102 +17,98 @@
 #include <math.h>
 #include <iomanip>
 
-#define NCATEG 12
-
 using namespace std;
  
-int nrt[NCATEG+1], nwt[NCATEG+1];
+int nrt[20], nwt[20];
 int nrt_m=0, nwt_m=0;
 int nrt_e=0, nwt_e=0;
 int nrt_k=0, nwt_k=0;
-int nrt_ks=0, nwt_ks=0;
-int Run,Event,tag,truetag,categ,L0,L1,knrec,nsele=-1;
-string dummystring;
-bool mtag,etag,ktag,kstag;
+int nrt_s=0, nwt_s=0;
+int nrt_v=0, nwt_v=0;
+int Run,Event,tag,truetag,categ,Trig,L0,L1,HLT,nsele=0;
+string flagstring;
+int fe,fm,fk,fS,fV;
+double mass;
 
 int main(int argc, char **argv) {
 
   ifstream in(argv[1]);
   if(!in) { cout<<"File does not exist! \n\n"; return 0; }
-  if(argc<3){
-    cout << "Usage: summaryof tagfile.txt NR " << endl;
-    cout << "       NR=1 -> Before triggers  " << endl;
-    cout << "       NR=2 -> After L0 trigger " << endl;
-    cout << "       NR=3 -> After L0*L1 " << endl;
+  if(argc<4){
+    cout << "Usage: summaryof tagfile.txt NR TYPE" << endl;
+    cout << "       NR=1   -> Before triggers  " << endl;
+    cout << "       NR=2   -> After L0 trigger " << endl;
+    cout << "       NR=3   -> After L0*L1 " << endl;
+    cout << "       TYPE=T -> TDR categories " << endl;
+    cout << "       TYPE=N -> NNet categories " << endl;
     return 0;
   }
+  for(int it=1; it!=20; it++) nrt[it]=nwt[it]=0;
 
-  bool RequireOnly1ReconstrPV = false;
-
+  //LOOP ---
   while(!in.eof()) {
 
-    //in >> dummystring; in >> dummystring; in >> dummystring;
-    in >> Run;
-    in >> Event;
-    in >> tag;
-    in >> truetag;
-    in >> categ;
-    in >> L0; in >> L1;
-    in >> knrec;
+    in >> flagstring;
+    if(flagstring == "TAG") { //reads in tagging info from BTagging
+      in >> Run; in >> Event;
+      in >> Trig;
+      in >> tag;
+      in >> categ;
+      in >> fm; in >> fe; in >> fk; in >> fS; in >> fV;
+    } else continue;
 
-    //---------------------------------- cuts
+    in >> flagstring;
+    if(flagstring == "MON") { //reads in from BTaggingMonitor
+      in >> tag;
+      in >> categ;
+      in >> truetag;
+    } 
+
+    HLT= (int)  Trig/100;
+    L1 = (int) (Trig-100*HLT)/10;
+    L0 = (int) (Trig-100*HLT-10*L1)/1;
     if((*argv[2]=='2' || *argv[2]=='3') && L0 == 0 ) continue;
     if( *argv[2]=='3' && L1 == 0 ) continue;
-    if( RequireOnly1ReconstrPV && knrec != 1 ) continue; 
-    //----------------------------------
 
     nsele++;
 
-    mtag=etag=ktag=kstag=false;
-    if(categ==1 || categ==4 || categ==8 || categ==11) mtag=true;
-    if(categ==2 || categ==5 || categ==9 || categ==12) etag=true;
-    if(categ==3 || categ==4 || categ==5 || categ >9 ) ktag=true;
-    if(categ >6 && categ <13) kstag=true;
+    if(tag== truetag)  nrt[categ]++; 
+    if(fm == truetag)  nrt_m++;
+    if(fe == truetag)  nrt_e++;
+    if(fk == truetag)  nrt_k++;
+    if(fS == truetag)  nrt_s++;
+    if(fV == truetag)  nrt_v++;
 
-    if(tag == truetag) {
-      nrt[categ]++; 
-      if(mtag)  nrt_m++;
-      if(etag)  nrt_e++;
-      if(ktag)  nrt_k++;
-      if(kstag) nrt_ks++;
-    }
-    else if(tag ==-truetag) {
-      nwt[categ]++; 
-      if(mtag)  nwt_m++;
-      if(etag)  nwt_e++;
-      if(ktag)  nwt_k++;
-      if(kstag) nwt_ks++;
-    }
+    if(tag==-truetag)  nwt[categ]++; 
+    if(fm ==-truetag)  nwt_m++;
+    if(fe ==-truetag)  nwt_e++;
+    if(fk ==-truetag)  nwt_k++;
+    if(fS ==-truetag)  nwt_s++;
+    if(fV ==-truetag)  nwt_v++;
+
   }
 
   // calculate effective efficiency in various categories
-  double rtt=0,wtt=0;
+  double rtt=0, wtt=0;
   double rtag,wtag,utag;
-  double ef_tot=0,effe_tot=0;
+  double ef_tot=0, effe_tot=0;
   double epsilerr, epsilerrtot=0;
 
   cout << "\n======================================================="<<endl;
   cout << "Summary for: " << argv[1] <<endl;
-  if(*argv[2] == '1'){
-    cout << "Before triggers, " << endl;
-  }
-  else if(*argv[2] == '2'){
-    cout << "After L0 trigger only, "<< endl;
-  } 
-  else if(*argv[2] == '3') {
-    cout << "After L0 and L1 triggers, " <<endl;
-  }
+  if     (*argv[2] == '1') cout << "Before triggers, " << endl;
+  else if(*argv[2] == '2') cout << "After L0 trigger only, "<< endl;
+  else if(*argv[2] == '3') cout << "After L0 and L1 triggers, " <<endl;
   else { cout << "Wrong argument: " <<*argv[2]<<endl; return 0; }
-  if(!RequireOnly1ReconstrPV)  cout<<"any nr of primary vertices"<<endl;
-  else cout<< "Only one reconstructed Primary Vertex"<<endl;
   cout << "Total nr of events =  "<<setw(5) << nsele << endl;
   cout << "---------------------------------------------------------"<<endl;
 
   cout<< " Category            EFF.          Etag         Wrong TF"
-      << "      r       w       \n";
+      << "      r       w\n";
 
-  for( int it=1; it < (NCATEG+1)+4; it++ ) {
+  for( int it=1; it != 20; it++ ) {
 
+    rtag = wtag = 0; 
     string cats;
     if(it== 1) cats =  "   mu only";
     if(it== 2) cats =  "    e only";
@@ -120,16 +122,18 @@ int main(int argc, char **argv) {
     if(it==10) cats =  "    k + ks";
     if(it==11) cats =  "   mu+k+ks";
     if(it==12) cats =  "    e+k+ks";
-    if(it==13) 
-      cout << "---------------------------------------------------------"<<endl;
     if(it==13) { cats =  "     muons"; rtag = nrt_m; wtag = nwt_m; }
     if(it==14) { cats =  " electrons"; rtag = nrt_e; wtag = nwt_e; }
     if(it==15) { cats =  "  OS kaons"; rtag = nrt_k; wtag = nwt_k; }
-    if(it==16) { cats =  "  SS pi/k "; rtag = nrt_ks; wtag = nwt_ks; }
+    if(it==16) { cats =  "  SS pi/k "; rtag = nrt_s; wtag = nwt_s; }
+    if(it==17) { cats =  "  VertexCh"; rtag = nrt_v; wtag = nwt_v; }
+    if(*argv[3] != 'T' && it<13) cats = "  NNet    "; 
+    else if(it==13) 
+      cout<<"---------------------------------------------------------"<<endl;
 
-    if(it<NCATEG+1) { rtag = nrt[it]; wtag = nwt[it]; }
+    if(it<6) { rtag = nrt[it]; wtag = nwt[it]; }
 
-    if((rtag+wtag) == 0) continue; //empty category
+    if(rtag+wtag == 0) continue; //empty category
 
     utag = nsele-rtag-wtag;       // untagged
     double omtag = wtag/(rtag+wtag);
@@ -137,28 +141,26 @@ int main(int argc, char **argv) {
     double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
     if(rtag<wtag) epsil= -epsil;
 
-    if(it<NCATEG+1){
+    if(it<6){
       rtt      += rtag;
       wtt      += wtag;
       ef_tot   += eftag;
       effe_tot += epsil;
     }
 
-    //errors on efficiency and omega  
-    double eftag_err=
-      sqrt((rtag*utag + 2*rtag*wtag + utag*wtag)/nsele)/nsele;
-    double omtag_err=  
-      sqrt((rtag*wtag*(rtag*rtag + rtag*utag + wtag*(utag + wtag)))/
-	   ( pow(rtag + wtag,4) *(rtag + utag + wtag)));
+    //errors on efficiency and omega
+    double eftag_err= sqrt((rtag*utag + utag*wtag)/nsele)/nsele;
+    double omtag_err= sqrt( rtag*wtag /(rtag+wtag) ) / (rtag+wtag);
 
     epsilerr = sqrt((pow(rtag - wtag,2)*
-		     (-(pow(rtag - wtag,2)*(rtag +wtag))+nsele
-		      *(pow(rtag,2) +14*rtag*wtag+ pow(wtag,2))))
-		    /(pow(rtag+wtag+utag,3)*pow(rtag + wtag,3)));
-    epsilerrtot=sqrt(pow(epsilerrtot,2)+pow(epsilerr,2));
+                     (-(pow(rtag - wtag,2)*(rtag +wtag))+nsele
+                      *(pow(rtag,2) +14*rtag*wtag+ pow(wtag,2))))
+                    /(pow(rtag+wtag+utag,3)*pow(rtag + wtag,3)));
+    epsilerrtot = sqrt(pow(epsilerrtot,2)+pow(epsilerr,2));
 
+    //PRINT: ----------------------------------
     cout.setf(ios::fixed);
-    if(it<NCATEG+1) cout<<setw(2)<< it; else cout<<"**";
+    if(it<6) cout<<setw(2)<< it; else cout<<"**";
     cout<< cats
         <<" "<<setprecision(2)<<setw(8)<< epsil*100 << "+-" << epsilerr*100 
         <<" "<<setw(8)<< eftag*100 << "+-" <<eftag_err*100
@@ -174,11 +176,8 @@ int main(int argc, char **argv) {
   double avw_invert=(1-sqrt(fabs(effe_tot)/ef_tot))/2;
   if(effe_tot<0) avw_invert= 1-avw_invert;
   double utt = nsele-rtt-wtt;
-  double eftot_err=
-    sqrt((rtt*utt + 2*rtt*wtt + utt*wtt)/nsele)/nsele;
-  double avw_invert_err=  
-    sqrt((rtt*wtt*(rtt*rtt + rtt*utt + wtt*(utt + wtt)))/
-	 ( pow(rtt + wtt,4) *(rtt + utt + wtt)));
+  double eftot_err= sqrt((rtt*utt + utt*wtt)/nsele)/nsele;
+  double avw_invert_err= sqrt( rtt*wtt /(rtt+wtt) ) / (rtt+wtt);
 
   cout << "---------------------------------------------------------"<<endl;
   cout << "Tagging efficiency =  "<<setprecision(2)<<setw(5)
@@ -187,5 +186,5 @@ int main(int argc, char **argv) {
        << avw_invert*100 << " +/- " <<avw_invert_err*100 << " %"<< endl;
   cout << "EFFECTIVE COMB. TE =  "<<setprecision(2)<<setw(5)
        << effe_tot*100 << " +/- "<<epsilerrtot*100<< " %"<< endl;
-  cout << "========================================================="<<endl;
+  cout << "=========================================================\n"<<endl;
 }

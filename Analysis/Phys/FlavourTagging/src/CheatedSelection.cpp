@@ -26,19 +26,17 @@ CheatedSelection::~CheatedSelection() {};
 //=============================================================================
 StatusCode CheatedSelection::initialize() {
 
-  MsgStream req(msgSvc(), name());
-  StatusCode sc;
-
-  // Load all necessary tools via the base class
-  sc = toolSvc()->retrieveTool( "Particle2MCLinksAsct", m_pAsctLinks, this);
-  if( sc.isFailure() || 0 == m_pAsctLinks) {
-    req << MSG::FATAL << "Unable to retrieve Link Associator tool" << endreq;
-    return sc;
+  m_pAsctLinks = tool<Particle2MCLinksAsct::IAsct>
+                   ( "Particle2MCLinksAsct", "Cheating", this );
+  if(0 == m_pAsctLinks) {
+    fatal() << "Unable to retrieve Link Associator tool"<<endreq;
+    return StatusCode::FAILURE;
   }
-  sc = toolSvc()->retrieveTool( "DebugTool", m_debug, this );
-  if( sc.isFailure() ) {
-    req << MSG::FATAL << "Unable to retrieve Debug tool" << endreq;
-    return sc;
+
+  m_debug = tool<IDebugTool> ( "DebugTool", this );
+  if( ! m_debug ) {
+    fatal() << "Unable to retrieve Debug tool "<< endreq;
+    return StatusCode::FAILURE;
   }
 
   return StatusCode::SUCCESS;
@@ -51,86 +49,58 @@ StatusCode CheatedSelection::execute() {
   
   setFilterPassed( false );
 
-  MsgStream  req( msgSvc(), name() );
-  StatusCode sc = StatusCode::SUCCESS;  
-  
   // Retrieve informations about event
-  SmartDataPtr<EventHeader> evt( eventSvc(), EventHeaderLocation::Default );
-  if ( !evt ) {   
-    req << MSG::ERROR << "    Unable to retrieve event" << endreq;
+  EventHeader* evt = get<EventHeader> (EventHeaderLocation::Default);
+  if ( !evt ) {
+    err() << "Unable to Retrieve Event" << endreq;
     return StatusCode::FAILURE;
   }
-
-  req << MSG::DEBUG << ">>>>>  Processing Event Nr " << evt->evtNum()
-      << " Run " << evt->runNum() << "  <<<<<" << endreq;
-
+  debug() << ">>>>>  Processing Event Nr " << evt->evtNum()
+	  << " Run " << evt->runNum() << "  <<<<<" << endreq;
+  
+  ////////////////////////////////////////////////////
   //check what is the B forced to decay
-  MCParticle* mcSignal = 0;
-  SmartDataPtr<GenMCLinks> sigLinks(evtSvc(), GenMCLinkLocation::Default);
-  if( 0 == sigLinks ) {
-    req << MSG::DEBUG << "GenMCLinks not found at"
-        << GenMCLinkLocation::Default << endreq;
-    return StatusCode::SUCCESS;
-  } 
-  if( sigLinks->size() != 1 ) {
-    req << MSG::DEBUG << "More than one signal found:"
-	<< sigLinks->size()  << endreq;
-  }
-  for( GenMCLinks::iterator aLink = sigLinks->begin();
-       sigLinks->end() != aLink; ++aLink ) {
-    mcSignal = (*aLink)->signal();
-    req << MSG::DEBUG << "mcSignal:" << endreq;
-    m_debug -> printTree(mcSignal);
-  }
-  m_BID   = mcSignal->particleID().pid();
-  m_BHEPm = mcSignal->momentum().m()/GeV;
-
-  ////////////////////////////////////////////////////
-  if ( !mcSignal ) {
-    req << MSG::ERROR << "Missing Signal B in MC."<< endreq;
-    return StatusCode::FAILURE;                      
-  }
-  ////////////////////////////////////////////////////
-
-  const ParticleVector& Parts = desktop()->particles();
-  const VertexVector& Verts = desktop()->vertices();
-  req << MSG::DEBUG << "NParts=" << Parts.size()
-      << "  NVerts=" << Verts.size()<< endreq;
-
-  //----------------------------------------------------------------------
-  // Retrieve MCParticles
-  SmartDataPtr<MCParticles> mcpart (eventSvc(), MCParticleLocation::Default );
-  if ( ! mcpart ) { 
-    req << MSG::ERROR << "No MCParticles retrieved" << endreq;
+  MCParticle* mcSignal = NULL;
+  GenMCLinks* sigLinks = get<GenMCLinks> (GenMCLinkLocation::Default);
+  if( !sigLinks ) {
+    err() << "Unable to Retrieve GenMCLinks" << endreq;
     return StatusCode::FAILURE;
   }
-  req << MSG::DEBUG << "Nr of MCParticles retrieved="<< mcpart->size()<< endreq;
+  mcSignal = (*(sigLinks->begin()))->signal();    
+  if ( mcSignal == NULL ) {
+    err() << "No B was forced to decay in MC. "<< endreq;
+    return StatusCode::FAILURE;
+  }
+
+  ////////////////////////////////////////////////////
+  const ParticleVector& Parts = desktop()->particles();
+  const VertexVector&   Verts = desktop()->vertices();
+  debug()<< "Parts=" << Parts.size() << "  NVerts=" << Verts.size()<< endreq;
 
   //----------------------------------------------------------------------
-  // CheatedSelection ----------------------------
-  HepLorentzVector ptot=0;
-  HepLorentzVector ptotmc=0;
-  ParticleVector axdaughter;
-  axdaughter.clear();
+  // CheatedSelection 
+  ParticleVector axdaughter(0);
   MCParticleVector mcdaughter ;
-  SignalTree( mcdaughter, axdaughter ); //fills axdaughter
+  
+  m_BHEPm = mcSignal->momentum().m()/GeV;
+  m_debug -> printTree(mcSignal);
 
-  ParticleVector::const_iterator ipart;
+  SignalTree( mcSignal, mcdaughter, axdaughter ); //fills daughter vectors
+
+  HepLorentzVector ptotmc=0;
   MCParticleVector::const_iterator imcpart;
-  for ( ipart = axdaughter.begin(); ipart != axdaughter.end(); ipart++){
-    ptot += (*ipart)->momentum();
-  }
   for ( imcpart = mcdaughter.begin(); imcpart != mcdaughter.end(); imcpart++){
     ptotmc += (*imcpart)->momentum();
   }
-  req << MSG::DEBUG << "CheatedSelection: MCmass=" << ptotmc.m()/GeV
-      << "  RECmass=" << ptot.m()/GeV << endreq;
+  double MCmass = ptotmc.m()/GeV;
+  debug() << "MCmass= " << MCmass << endreq;
 
-  ///////////////////////////////////////////////////////////////////////////////
-  if( fabs(ptotmc.m()/GeV-m_BHEPm) > m_BMassWindow ) return StatusCode::SUCCESS;
-  //////////////////////////////////////////////////////////////////////////// 
+  if(MCmass == 0) return StatusCode::SUCCESS;
+  if( fabs(MCmass-m_BHEPm) > m_BMassWindow ) return StatusCode::SUCCESS;
 
-  // Create Particle candidate B 
+  //----------------------------------------------------------------------
+  // Create candidate B 
+
   Vertex VertB;
   VertB.clearProducts( );
   for( ParticleVector::const_iterator ip = axdaughter.begin();
@@ -142,81 +112,79 @@ StatusCode CheatedSelection::execute() {
   VertB.setPosition( (*((mcSignal->endVertices()).begin()))->position() );
 
   Particle candB;
-  ParticleID BPID(m_BID);
+  ParticleID BPID(mcSignal->particleID());
   StatusCode scStuff = particleStuffer()->fillParticle(VertB,candB,BPID); 
   if(scStuff.isFailure()) {
-    req << MSG::WARNING << "Failure in particleStuffer." << endreq;
+    warning() << "Failure in particleStuffer." << endreq;
     return StatusCode::SUCCESS;
   }
   // create selected B particle in desktop
   Particle* pDesktop = desktop()->createParticle(&candB);
   if(!pDesktop) {
-    req << MSG::ERROR 
-	<< "Unable to save selected B particle in desktop" << endreq;
-    return StatusCode::FAILURE;
+    err() << "Unable to save selected B particle in desktop" << endreq;
+    return StatusCode::SUCCESS;
   }
-
-  setFilterPassed( true );
-  req << MSG::DEBUG << "Reconstructed " << m_BID
-      << " with m=" << candB.momentum().m()/GeV 
-      << " p="      << candB.p()/GeV 
-      << " pt="     << candB.pt()/GeV <<endreq;
+  double massB = candB.momentum().m()/GeV;
+  debug() << "Reconstructed "<< candB.particleID().pid()
+	  << " with m="      << massB
+	  << " p="           << candB.p()/GeV 
+	  << " pt="          << candB.pt()/GeV <<endreq;
 
   // save desktop to TES in location specified by jobOptions
-  sc = desktop()->saveDesktop();
+  axdaughter.push_back(pDesktop);
+  StatusCode sc = desktop()->saveTrees(axdaughter);
   if (sc.isFailure()) {
-    req << MSG::ERROR << "Unable to save Desktop to TES" << endreq;
-    return StatusCode::FAILURE;
+    warning() << "Unable to save Tree to TES" << endreq;
+    return StatusCode::SUCCESS;
   }
-  req << MSG::DEBUG << "Event Saved to TES." <<endreq;
+  debug() << "Event Saved to TES." <<endreq;
 
+  info() << "Selected " << evt->runNum()
+	 << std::setw(4)<< evt->evtNum()
+	 << "  " << massB <<endreq;
+
+  setFilterPassed( true );
   return StatusCode::SUCCESS;
 }
 //=============================================================================
 StatusCode CheatedSelection::finalize() { return StatusCode::SUCCESS; }
 
 //============================================================================
-void CheatedSelection::SignalTree(MCParticleVector& mcsons, ParticleVector& sons){
-
-  MsgStream req( msgSvc(), name() );
+void CheatedSelection::SignalTree(const MCParticle* B0, 
+				  MCParticleVector& mcsons, 
+				  ParticleVector& sons) {
   sons.clear();
   mcsons.clear();
 
   // Get MCParticle container
-  SmartDataPtr<MCParticles> mcpart( eventSvc(), 
-				    MCParticleLocation::Default);
+  SmartDataPtr<MCParticles> mcpart( eventSvc(), MCParticleLocation::Default);
   MCParticles::const_iterator imc;
   for ( imc = mcpart->begin(); imc != mcpart->end(); imc++ ) {
-    const MCParticle* mcmother = originof(*imc);
 
-    if( mcmother ) {
-      if( mcmother->particleID().pid() == m_BID ) {
-	if( m_pAsctLinks->tableExists() ) {
-	  Particle* axp = m_pAsctLinks->associatedTo( *imc );
-	  if( axp ) {
-	    m_debug -> printAncestor(*imc);
-	    req << MSG::DEBUG<< " mcp=" << (*imc)->momentum().vect().mag()/GeV
-		<< " axp=" << axp->p()/GeV <<endreq;
-	    if((*imc)->particleID().abspid() != axp->particleID().abspid()) {
-	      req << MSG::DEBUG << "Mis-ID particle in signal:  " 
-		  << axp->particleID().pid() << endreq;
-	      double mcmass = (*imc)->momentum().m();
-	      HepLorentzVector pax = axp->momentum();
-	      HepLorentzVector newpax( pax.x(),
-				       pax.y(),
-				       pax.z(),
-				       sqrt(pax.vect().mag2()+mcmass*mcmass) );
-	      axp->setMomentum(newpax); //OVERWRITE mass and PID
-	      axp->setParticleID((*imc)->particleID());
-	    }
-	    mcsons.push_back(*imc);
-	    sons.push_back(axp);
+    if( originof(*imc) == B0 ) {
+      if( m_pAsctLinks->tableExists() ) {
+	Particle* axp = m_pAsctLinks->associatedTo( *imc );
+	if( axp ) {
+	  m_debug -> printAncestor(*imc);
+	  debug() << " mcp=" << (*imc)->momentum().vect().mag()/GeV
+		  << " axp=" << axp->p()/GeV <<endreq;
+	  if((*imc)->particleID().abspid() != axp->particleID().abspid()) {
+	    debug() << "Mis-ID true " << (*imc)->particleID().pid() 
+		    << " as " << axp->particleID().pid() << endreq;
+	    double mcmass = (*imc)->momentum().m();
+	    HepLorentzVector pax = axp->momentum();
+	    HepLorentzVector newpax( pax.x(), pax.y(), pax.z(),
+				     sqrt(pax.vect().mag2()+mcmass*mcmass) );
+	    axp->setMomentum(newpax); //OVERWRITE mass and PID
+	    axp->setParticleID((*imc)->particleID());
 	  }
+	  mcsons.push_back(*imc);
+	  sons.push_back(axp);
 	}
       }
     }
   }
-};
+}
 //============================================================================
 const MCParticle* CheatedSelection::originof( const MCParticle* product ) {
   const MCParticle* mother = product->mother();

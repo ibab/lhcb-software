@@ -1,0 +1,72 @@
+//##############################################################
+// Example of
+// DaVinci job Options to run BTagging with an event selection
+//##############################################################
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+//--------------------------------------------------------------
+// Re-run L0 and L1 Trigger with DC04 tuning
+//--------------------------------------------------------------
+#include "$DAVINCIROOT/options/L0.opts"
+#include "$TRGSYSROOT/options/L1.opts"
+
+///example Bd Channel Selection ----------------------------------
+//#include "$B2HHROOT/options/DoTDRselBd2PiPi.opts"
+//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBd2PiPi" };
+//TamperingL1Alg.SelectionName = "TDRselBd2PiPi";
+
+///example Bs Channel Selection ----------------------------------
+//#include "$B2HHROOT/options/DoTDRselBs2KK.opts"
+//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2KK" };
+//TamperingL1Alg.SelectionName = "TDRselBs2KK";
+
+//#include "$BS2DSHROOT/options/DoTDRselBs2DsPi.opts"
+//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsPi" };
+//TamperingL1Alg.SelectionName = "TDRselBs2DsPi";
+
+#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
+BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsK" };
+TamperingL1Alg.SelectionName = "TDRselBs2DsK";
+
+///or Cheated Selection ------------------------------------------
+#include "$FLAVOURTAGGINGROOT/options/CheatedSelection.opts"
+
+//----------------------------------------------------------------
+// includes upstream/downstream tracks (not mandatory) 
+ChargedProtoPAlg.VeloTTTracks     = true ;
+//ChargedProtoPAlg.DownStreamTracks = true ;
+
+//*************************************************************
+//   Options for L1 buffer tampering
+//*************************************************************
+#include "$TAMPERINGROOT/options/TamperingCommon.opts"
+TamperingL1Alg.InputType     = "Selection";
+//TamperingL1Alg.SelectionName = " ";
+TamperingL1Alg.OutputLevel   = 3;
+Tampering.OutputLevel        = 3;
+
+///---------------------------------------------------------------
+///               BTagging
+///---------------------------------------------------------------
+#include "$FLAVOURTAGGINGROOT/options/BTagging.opts"
+
+///---------------------------------------------------------------
+/// 		BTaggingMonitor
+///---------------------------------------------------------------
+///example of optional algorithm that reads in what is in TES
+#include "$FLAVOURTAGGINGROOT/options/BTaggingMonitor.opts"
+
+//---------------------------------------------------------------
+// Number of events to process, skip and printing frequency
+//---------------------------------------------------------------
+MessageSvc.Format = "% F%15W%S%7W%R%T %0W%M";
+ApplicationMgr.EvtMax    = 100;
+EventSelector.PrintFreq  = 1;
+
+//---------------------------------------------------------------
+// Input data 
+//---------------------------------------------------------------
+EventSelector.Input = {"DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bs2DsK01.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
+//---------------------------------------------------------------
+
+
