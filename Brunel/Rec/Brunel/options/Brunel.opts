@@ -70,8 +70,9 @@ BrunelDigiMUON.addBkg = false;
 // L0 trigger
 #include "$L0CALOROOT/options/Brunel.opts"
 #include "$L0MUONROOT/options/Brunel.opts"
+#include "$PUVETOROOT/options/Brunel.opts"
 #include "$L0DUROOT/options/Brunel.opts"
-ApplicationMgr.DLLs += { "L0SicbCnv", "MuonSicbCnv" };
+ApplicationMgr.DLLs += { "MuonSicbCnv" };
 
 // Calorimeter digitisation, and back conversion of digits to SICB bank
 #include "$CALOALGSROOT/options/Brunel.opts"

@@ -49,6 +49,7 @@ set current = $PWD
 if ($?LS_SUBCWD) then 
 # in BATCH, location of executable has to be given explicitly
   setenv MYJOBROOT $LHCBSOFT/Rec/Brunel/v9r0
+#  setenv MYJOBROOT ~/newmycmt/Rec/Brunel/v9r0
 else
 # in interactive, executable is under same root directory as this job
   cd `dirname $0` 

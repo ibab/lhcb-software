@@ -30,9 +30,9 @@ use HTL            v13r10
 use XERCES         v15r2
 use CERNLIB        v2001
 
-#---Gaudi libraries - Gaudi v9
-use GaudiKernel        v11r0
-use GaudiSvc           v7r1
+#---Gaudi libraries - Gaudi v9r1 + bug fixes
+use GaudiKernel        v11r1
+use GaudiSvc           v7r2
 use GaudiAud           v5r0
 use GaudiNagC          v6r0
 use GaudiDb            v5r0
@@ -41,8 +41,9 @@ use HbookCnv           v11r0
 
 #---LHCb common libraries
 use GaudiConf    v6r2
-#use GaudiObjDesc v2r0 -- Not needed, linked through LHCbEvent dependency 
+#use GaudiObjDesc v3r0 -- Not needed, linked through LHCbEvent dependency 
 use BookKeeping  v1r1   Tools
+use EventKernel  v1r0   Event
 use LHCbEvent    v12r1  Event
 use Finclude     v12r2  SICB
 use Futio        v11    SICB
@@ -58,9 +59,9 @@ use CaloDet      v3r0   Det
 use VeloDet      v3r0   Det
 
 # Event Model
-use L0Event      v4r0   Event
-use L1Event      v6r0   Event
+use L0Event     v10r0   Event
 use VeloEvent    v6r0   Event
+use L1Event      v6r0   Event
 use ITEvent      v7r0   Event
 use OTEvent      v7r0   Event
 use TrEvent      v7r1   Event
@@ -79,9 +80,10 @@ use BrunelKernel v3r0   Rec
 use BrunelSicb   v2r0   Rec
 
 # L0 trigger
-use L0Calo       v3r0   L0
+use L0Calo       v4r0   L0
 use L0Muon       v4r0   L0
-use L0DU         v3r0   L0
+use PuVeto       v1r0   L0
+use L0DU         v4r0   L0
 
 # Calorimeter
 use CaloInterfaces v1r0 Calo

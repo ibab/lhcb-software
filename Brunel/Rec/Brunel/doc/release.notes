@@ -22,6 +22,8 @@ Purpose: LHCb reconstruction program
    - Brunel.opts: suppress printout of options from included subdetector files
                   add BrunelSicbInit to TopAlg list
                   add Velo digitisation and tracking
+                  add PuVeto to L0 trigger
+                  Remove L0SicbCnv
    - Brunelv240.opts, v240r1.opts, v241.opts: 
                   database specific options for supported databases
 
@@ -32,8 +34,11 @@ Purpose: LHCb reconstruction program
                    at every event with run number and event number.
 
    In BrunelKernel
-   - BrunelInitialisation.cpp: Seed of Gaudi random number engine (RanLux)
-     initialised every event ( 100000*(event no. % 20000) + (Run no. % 100000) )
+   - BrunelInitialisation.cpp: 
+      . Seed of Gaudi random number engine (RanLux) initialised every event: 
+          100000*(event no. % 20000) + (Run no. % 100000)
+      . Create event data store directory nodes:
+         /Event/Raw, /Event/Rec, /Event/Trig, /Event/Trig/L0
 
    First version of forward tracking. Currently executing in parallel to
    standard tracking, output not saved. New packages:
@@ -42,10 +47,20 @@ Purpose: LHCb reconstruction program
      use Velo/VeloTrack v1r0
      use Tr/FwTrack     v1r0
    
+   Added C++ PileUp Veto code, uses Velo TDR geometry from XmlDDDB. 
+   Runs in parallel to old (obsolete) t0vertex,t0pileup code. 
+   Does *NOT* update TVPI0 and TPIL0 banks used by axtrigger
+     use L0/PuVeto      v1r0
 
+   C++ L0 decision available in new event model (not yet persistent)
+     use Event/EventKernel v1r0
+     use Event/L0Event     v10r0
+     use L0/L0Calo         v4r0
+     use L0/L0DU           v4r0
+     Removed SICB/L0SicbCnv
 
-   Changes for Gaudi v9 
-   --------------------
+   Additional changes for Gaudi v9 
+   -------------------------------
    In job
    - Brunel.job: pass job options path as argument to executable
 
@@ -61,7 +76,6 @@ Purpose: LHCb reconstruction program
     use XmlDDDB      v7r3  (was v6r1)
     use CaloDet      v3r0  (was v3r0)
     use LHCbEvent    v12r1 (was v11)
-    use L0Event      v4r0  (was v3)
     use VeloEvent    v6r0  (was v5)
     use ITEvent      v7r0  (was v6r1)
     use OTEvent      v7r0  (was v6r1)
@@ -69,13 +83,10 @@ Purpose: LHCb reconstruction program
     use CaloEvent    v7r0  (was v6)
     use SicbCnv      v15r0 (was v13r1)
     use CaloSicbCnv  v5r1  (was v4)
-    use L0SicbCnv    v4r0  (was v3)
     use MuonSicbCnv  v4r0  (was v3)
     use TrSicbCnv    v4r0  (was v3)
     use VSicbCnv     v6r0  (was v5)
-    use L0Calo       v3r0  (was v2)
     use L0Muon       v4r0  (was v3r1)
-    use L0DU         v3r0  (was v2r1)
     use CaloAlgs     v4r0  (was v3)
     use ITAlgorithms v7r0  (was v6)
     use OTAlgorithms v7r0	 (was v6)
