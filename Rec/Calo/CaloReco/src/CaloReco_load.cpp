@@ -1,8 +1,11 @@
-// $Id: CaloReco_load.cpp,v 1.15 2004-10-25 12:10:13 ibelyaev Exp $
+// $Id: CaloReco_load.cpp,v 1.16 2004-10-26 17:51:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2004/10/25 12:10:13  ibelyaev
+//  add new tool
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -37,6 +40,7 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_ALGORITHM   ( CaloMergedPi0Alg                    ) ;
   DECLARE_ALGORITHM   ( CaloElectronAlg                     ) ;
   
+  DECLARE_ALGORITHM   ( CaloCluster2TrgTrackAlg             ) ;
   DECLARE_ALGORITHM   ( CaloCluster2TrackAlg                ) ;
   DECLARE_ALGORITHM   ( CaloHypo2TrackAlg                   ) ;
   

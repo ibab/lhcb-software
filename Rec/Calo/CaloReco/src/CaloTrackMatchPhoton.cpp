@@ -1,11 +1,8 @@
-// $Id: CaloTrackMatchPhoton.cpp,v 1.4 2004-10-25 12:10:13 ibelyaev Exp $
+// $Id: CaloTrackMatchPhoton.cpp,v 1.5 2004-10-26 17:51:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2004/10/24 12:17:18  ibelyaev
-//  remove obsolete features
-//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -24,7 +21,11 @@
 // ============================================================================
 #include "Event/TrStoredTrack.h"
 #include "Event/TrStateP.h"
+// ============================================================================
 #include "TrKernel/ITrExtrapolator.h"
+// ============================================================================
+#include "Event/TrgTrack.h"
+#include "Event/TrgState.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -62,6 +63,11 @@ CaloTrackMatchPhoton::CaloTrackMatchPhoton
   const std::string &name,
   const IInterface  *parent )
   : CaloTrackMatchBase( type, name , parent )
+  // optimization variables 
+    , m_matchCalo ( HepVector( 2 , 0 ) , HepSymMatrix  ( 2 , 0 ) ) 
+  , m_matchTrk1 ( HepVector( 2 , 0 ) , HepSymMatrix  ( 2 , 0 ) ) 
+  , m_matchTrk2 ( HepVector( 2 , 0 ) , HepDiagMatrix ( 2 , 0 ) ) 
+  //
 {
   setProperty ( "Extrapolator" ,  "TrLinearExtrapolator" ) ;
   setProperty ( "ZMin"         ,  "7000"                 ) ; //  7 * meter
@@ -127,6 +133,60 @@ StatusCode CaloTrackMatchPhoton::match
   { return Error ( exc.message(), exc.code() ); }
   
   return StatusCode::SUCCESS;
+};
+// ============================================================================
+
+namespace 
+{
+  template <class STATE>
+  inline STATE findTrgState ( STATE               first , 
+                              STATE               last  , 
+                              TrgState::StateType type  )
+  {
+    for ( ; first != last ; ++first )
+    { if ( type == first->type() ) { return first ; } }
+    return last ;
+  };
+};
+
+// ============================================================================
+/** the main matching method  
+ *
+ *  @param caloObj  pointer to "calorimeter" object (position)
+ *  @param trObj    pointer to tracking object (track)
+ *  @param chi2res  returned value of chi2 of the matching
+ *  @return status code for matching procedure 
+ */
+// ============================================================================
+StatusCode CaloTrackMatchPhoton::match 
+( const CaloPosition* caloObj , 
+  const TrgTrack*     trObj   ,
+  double&             chi2res ) 
+{
+  if ( 0 == caloObj ) { return Error ( "match(): invalid CaloPosition " ) ; }
+  if ( 0 == trObj   ) { return Error ( "match(): invalid TrgTrack     " ) ; }
+  
+  typedef std::vector<TrgState> States ;
+  const States& states = trObj->otherStates() ;
+  States::const_iterator calo = findTrgState( states.begin ()  , 
+                                              states.end   ()  , 
+                                              TrgState::afterT ) ;
+  //States::const_iterator calo = states.begin () ;
+  
+  if ( states.end() == calo ) 
+  { return Error( "No state 'Calo' is found ") ; }
+  
+  // the resulting function can throw an exception in case of failure,
+  // catch it.
+  try
+  {
+    chi2res = chi2 ( prepareCluster ( caloObj              ) , 
+                     prepareTrack   ( *calo , caloObj->z() ) ) ;
+  }
+  catch ( const GaudiException& exc )
+  { return Error ( exc.message(), exc.code() ); }
+  
+  return StatusCode::SUCCESS ;
 };
 // ============================================================================
 

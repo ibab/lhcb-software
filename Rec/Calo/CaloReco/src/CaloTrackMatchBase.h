@@ -1,14 +1,18 @@
-// $Id: CaloTrackMatchBase.h,v 1.6 2004-10-25 12:10:13 ibelyaev Exp $
+// $Id: CaloTrackMatchBase.h,v 1.7 2004-10-26 17:51:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2004/10/25 12:10:13  ibelyaev
+//  add new tool
+//
 // ============================================================================
 #ifndef CALOTRACKTOOLS_CALOTRACKMATCHBASE_H 
 #define CALOTRACKTOOLS_CALOTRACKMATCHBASE_H 1
 // ============================================================================
 // Include files
 // ============================================================================
+// STD & SLT 
 // ============================================================================
 #include <functional>
 // ============================================================================
@@ -31,6 +35,10 @@
 // ============================================================================
 #include "CaloKernel/CaloTool.h"
 // ============================================================================
+// TrgEvent 
+// ============================================================================
+#include "Event/TrgState.h"
+// ============================================================================
 template <class TOOL>
 class ToolFactory     ; ///< from GaudiKernel
 class IIncidentSvc    ; ///< from GaudiKernel  
@@ -40,8 +48,8 @@ class CaloPosition  ;
 class TrStoredTrack ;
 class TrStateP      ;
 class TrgTrack      ;
+class TrgState      ;
 // ============================================================================
- 
 /** @class CaloTrackMatchBase CaloTrackMatchBase.h
  *  
  *  The base class for concrete implementtaions of matching utilities. \n
@@ -96,27 +104,14 @@ public:
    *  @return pair of status code/chi2  for matching procedure 
    */
   virtual MatchingPair    operator() 
-    ( const CaloPosition*  caloObj,
-      const TrStoredTrack* trObj    );
+    ( const CaloPosition*  caloObj  ,
+      const TrStoredTrack* trObj    )
+  {
+    double     c2 = m_bad ;
+    StatusCode sc = match ( caloObj , trObj , c2 ) ;
+    return MatchingPair( sc , c2 ) ;
+  };
   
-  /** access to the last used state 
-   *  @see ICaloTrackMatch 
-   *  @return the last used state 
-   */
-  virtual const TrState* state() const { return m_state; }
-  
-  /** the main matching method  
-   *
-   *  @param caloObj  pointer to "calorimeter" object (position)
-   *  @param trObj    pointer to tracking object (track)
-   *  @param chi2     returned value of chi2 of the matching
-   *  @return status code for matching procedure 
-   */
-  virtual StatusCode match 
-  ( const CaloPosition*   caloObj  , 
-    const TrgTrack*       trObj    ,
-    double&               chi2     ) ;
-
   /** The main matching method (Stl interface) 
    *  @param caloObj  pointer to "calorimeter" object (position)
    *  @param trObj    pointer to tracking object (track)
@@ -124,8 +119,19 @@ public:
    */
   virtual MatchingPair    operator() 
     ( const CaloPosition*   caloObj  , 
-      const TrgTrack*       trObj    ) ;
+      const TrgTrack*       trObj    )
+  {
+    double     c2 = m_bad ;
+    StatusCode sc = match ( caloObj , trObj , c2 ) ;
+    return MatchingPair( sc , c2 ) ;
+  };
 
+  /** access to the last used state 
+   *  @see ICaloTrackMatch 
+   *  @return the last used state 
+   */
+  virtual const TrState* state() const { return m_state; }
+  
   /** handle the incident
    *  @see IIncidentListener 
    *  @param incident incident to be handled 
@@ -159,22 +165,43 @@ protected:
     const double         zExtr , 
     const double         covX  ,
     const double         covY  ) const ;
+
+protected: 
   
   /// internal type type of parameters for mathematical functions
   struct MatchStruct1
   { 
     // parametrs x,y, (e) 
-    HepVector    params  ;
+    HepVector    params   ;
     // covarinace matrix x,y,(e)
-    HepSymMatrix cov     ;    
+    HepSymMatrix cov      ;    
     // error flag 
-    int          error   ;
+    int          error    ;
+    // inversion flag 
+    bool         inverted ;
     // constructor 
     MatchStruct1 
     ( const HepVector    & p , 
       const HepSymMatrix & m ) 
-      : params ( p )
-    { cov = m.inverse ( error ) ; } ;
+      : params   (   p   )
+      , cov      (   m   ) 
+      , error    (   0   ) 
+      , inverted ( false ) {} ;
+    // constructor 
+    MatchStruct1 () 
+      : params   (       ) 
+      , cov      (       ) 
+      , error    (   0   ) 
+      , inverted ( false ) {} ;
+    // inversion
+    int invert() 
+    {
+      if ( inverted ) { return error ; }
+      error    = 0 ;
+      cov.invert ( error ) ;
+      inverted = true ;
+      return error    ;
+    };
   };
   
   /// internal type for type of parameters for mathematical functions
@@ -186,13 +213,31 @@ protected:
     HepDiagMatrix cov     ;    
     // error flag 
     int           error   ;
-    
+    // inversion flag 
+    bool         inverted ;
     // constructor 
     MatchStruct2 
     ( const HepVector     & p , 
       const HepDiagMatrix & m ) 
-      : params ( p ) 
-    { cov = m.inverse( error ) ; }
+      : params   (   p   )
+      , cov      (   m   ) 
+      , error    (   0   ) 
+      , inverted ( false ) {} ;
+    // constructor 
+    MatchStruct2 () 
+      : params   (       ) 
+      , cov      (       ) 
+      , error    (   0   ) 
+      , inverted ( false ) {} ;
+    // inversion
+    int invert() 
+    {
+      if ( inverted ) { return error ; }
+      error    = 0 ;
+      cov.invert ( error ) ;
+      inverted = true ;
+      return error    ;
+    };
   };
   
   /// internal type for mathematical functions 
@@ -219,7 +264,8 @@ protected:
     const MatchType& mt2 ) const 
   {
     
-    Assert ( 0 == mt1.error  &&  0 == mt2.error && 
+    Assert ( mt1.inverted    && mt2.inverted                && 
+             0 == mt1.error  &&  0 == mt2.error             && 
              mt1.cov    .num_row() == mt2.cov    .num_row() && 
              mt1.params .num_row() == mt2.params .num_row() , 
              "Matrix/Vector mismatch!" ) ;
@@ -256,7 +302,8 @@ protected:
     const MatchType2& mt2 ) const 
   {
     
-    Assert ( 0 == mt1.error  &&  0 == mt2.error && 
+    Assert ( mt1.inverted          && mt1.inverted          && 
+             0 == mt1.error        &&  0 == mt2.error       && 
              mt1.cov    .num_row() == mt2.cov    .num_row() && 
              mt1.params .num_row() == mt2.params .num_row() , 
              "Matrix/Vector mismatch!" ) ;
@@ -290,9 +337,9 @@ protected:
   inline double chi2 
   ( const MatchType1& mt1 , 
     const MatchType2& mt2 ) const 
-  { 
-    
-    Assert ( 0 == mt1.error  &&  0 == mt2.error && 
+  {
+    Assert ( mt1.inverted          && mt2.inverted          && 
+             0 == mt1.error        &&  0 == mt2.error       && 
              mt1.cov    .num_row() == mt2.cov    .num_row() && 
              mt1.params .num_row() == mt2.params .num_row() , 
              "Matrix/Vector mismatch!" ) ;
@@ -300,7 +347,7 @@ protected:
     const HepSymMatrix&  icov1 = mt1.cov   ;
     const HepDiagMatrix& icov2 = mt2.cov   ;
     HepSymMatrix&        cov   = m_aux_sym ;
-
+    
     const int ifail = mtrxOp( cov , icov1 , icov2 ) ;
     Assert ( 0 == ifail  , "Can not invert the matrix !" );
     
@@ -309,7 +356,6 @@ protected:
     return 
       icov1.similarity ( vmean - mt1.params ) + 
       icov2.similarity ( vmean - mt2.params ) ;
-    
   };
   // ==========================================================================
   

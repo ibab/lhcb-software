@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchBremm.cpp,v 1.6 2004-10-25 12:10:13 ibelyaev Exp $
+// $Id: CaloTrackMatchBremm.cpp,v 1.7 2004-10-26 17:51:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -63,6 +63,11 @@ CaloTrackMatchBremm::CaloTrackMatchBremm
   const std::string &name,
   const IInterface  *parent )
   : CaloTrackMatchBase( type, name , parent )
+  //
+  , m_matchCalo ( HepVector ( 2 , 0 ) , HepSymMatrix  ( 2 , 0 ) ) 
+  , m_matchTrk1 ( HepVector ( 2 , 0 ) , HepSymMatrix  ( 2 , 0 ) ) 
+  , m_matchTrk2 ( HepVector ( 2 , 0 ) , HepDiagMatrix ( 2 , 0 ) )
+  //
   , m_bremZ  ( 2.165 * meter )
 {
   declareProperty ( "BremZ"       , m_bremZ  ) ;
@@ -132,6 +137,22 @@ StatusCode CaloTrackMatchBremm::match
   
   return StatusCode::SUCCESS;
 };
+// ============================================================================
+
+// ============================================================================
+/** the main matching method  
+ *
+ *  @param caloObj  pointer to "calorimeter" object (position)
+ *  @param trObj    pointer to tracking object (track)
+ *  @param chi2     returned value of chi2 of the matching
+ *  @return status code for matching procedure 
+ */
+// ============================================================================
+StatusCode CaloTrackMatchBremm::match 
+( const CaloPosition*   /* caloObj */  , 
+  const TrgTrack*       /* trObj   */  ,
+  double&               /* chi2    */  ) 
+{ return Error ( "match(TrgTrack*): not implemented(yet)!" ) ; } ;
 // ============================================================================
 
 // ============================================================================

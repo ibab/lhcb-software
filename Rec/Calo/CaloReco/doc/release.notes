@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.58 2004-10-25 12:10:13 ibelyaev Exp $
+! $Id: release.notes,v 1.59 2004-10-26 17:51:42 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,21 @@
 ! Responsible : Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2004-10-26 - Vanya BELYAEV
+ - introduce FAST "photon" matching of trigger track (TrgTrach) with 
+   Calotrimeter clusters. For a moment follow "off-line" phylosophy:
+   perfroam all-to-all mathcing and save result as a relation table 
+   in TES. The supporting algorithm CaloCluster2TrgTrackAlg does this job.
+   The execution is 5-6 times faster than the execution of 
+   "standard" photon matching. The efficiency need to be testes 
+   and studied.
+   In real environment one coudl gain addiitonal factor of 2
+   (since if one uses this "o nly" fo select neutral clusters - "photons")
+   one does not need all-to-all matching (and one does not need to 
+   register the table in TES!),  one just che the existence of 
+   tracks with chi2<cut, which should be "fast" procedure.  
+
 
 ! 2004-10-24 - Vanya BELYAEV
  - src/CaloTrackMatchBrem2.h

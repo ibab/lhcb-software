@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchElectron.cpp,v 1.5 2004-10-25 12:10:13 ibelyaev Exp $
+// $Id: CaloTrackMatchElectron.cpp,v 1.6 2004-10-26 17:51:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -61,15 +61,16 @@ const        IToolFactory&CaloTrackMatchElectronFactory = s_Factory;
 CaloTrackMatchElectron::CaloTrackMatchElectron( const std::string &type,
                                                 const std::string &name,
                                                 const IInterface  *parent )
-  : CaloTrackMatchBase( type, name , parent )
+  : CaloTrackMatchBase( type, name , parent ) 
+  , m_matchCalo ( HepVector ( 3 , 0 ) , HepSymMatrix  ( 3 , 0 ) ) 
+  , m_matchTrk1 ( HepVector ( 3 , 0 ) , HepSymMatrix  ( 3 , 0 ) ) 
+  , m_matchTrk2 ( HepVector ( 3 , 0 ) , HepDiagMatrix ( 3 , 0 ) ) 
 {
   setProperty ( "Extrapolator" ,  "TrLinearExtrapolator" ) ;
   setProperty ( "ZMin"         ,  "7000"                 ) ; //  7 * meter
   setProperty ( "ZMax"         ,  "30000"                ) ; // 30 * meter
   setProperty ( "PID"          ,  "211"                  ) ; // pion  
   setProperty ( "Tolerance"    ,  "5"                    ) ; //  5 * mm
-  // supress a little bit the output level 
-  setProperty ( "OutputLevel"  ,  "5"                    ) ; // MSG::ERROR
 };
 // ============================================================================
 /** destructor is protected and virtual
@@ -150,6 +151,22 @@ StatusCode CaloTrackMatchElectron::match
   return StatusCode::SUCCESS;
   
 };
+// ============================================================================
+
+// ============================================================================
+/** the main matching method  
+ *
+ *  @param caloObj  pointer to "calorimeter" object (position)
+ *  @param trObj    pointer to tracking object (track)
+ *  @param chi2     returned value of chi2 of the matching
+ *  @return status code for matching procedure 
+ */
+// ============================================================================
+StatusCode CaloTrackMatchElectron::match 
+( const CaloPosition*   /* caloObj */  , 
+  const TrgTrack*       /* trObj   */  ,
+  double&               /* chi2    */  ) 
+{ return Error ( "match(TrgTrack*): not implemented(yet)!" ) ; } ;
 // ============================================================================
 
 // ============================================================================

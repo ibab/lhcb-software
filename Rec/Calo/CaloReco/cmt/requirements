@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.31 2004-10-22 16:33:52 ibelyaev Exp $
+# $Id: requirements,v 1.32 2004-10-26 17:51:41 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -12,6 +12,7 @@ branches           cmt doc src options
 use CaloInterfaces v4r*	  Calo 
 use CaloUtils      v4r*   Calo 
 use Relations      v*     Kernel 
+use TrgEvent       v*     Event 
 
 # ================ environment ================================================
 set CALORECOOPTS   $(CALORECOROOT)/options
@@ -24,6 +25,9 @@ apply_pattern      component_library library=CaloReco
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.31  2004/10/22 16:33:52  ibelyaev
+#  update CellularAutomaton and remove obsolete algs
+#
 # =============================================================================
 # The END
 # =============================================================================

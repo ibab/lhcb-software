@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchBremm.h,v 1.4 2004-10-25 12:10:13 ibelyaev Exp $
+// $Id: CaloTrackMatchBremm.h,v 1.5 2004-10-26 17:51:42 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/10/25 12:10:13  ibelyaev
+//  add new tool
+//
 // ============================================================================
 #ifndef CALOTRACKTOOLS_CALOTRACKMATCHBremm_H
 #define CALOTRACKTOOLS_CALOTRACKMATCHBremm_H 1
@@ -58,6 +61,18 @@ public:
     const TrStoredTrack* trObj   ,
     double&              chi2    );
   
+  /** the main matching method  
+   *
+   *  @param caloObj  pointer to "calorimeter" object (position)
+   *  @param trObj    pointer to tracking object (track)
+   *  @param chi2     returned value of chi2 of the matching
+   *  @return status code for matching procedure 
+   */
+  StatusCode match 
+  ( const CaloPosition*   caloObj  , 
+    const TrgTrack*       trObj    ,
+    double&               chi2     ) ;
+  
 protected:
 
   /** standard constructor
@@ -97,22 +112,24 @@ private:
    * @param Cluster data object
    * @return internal type struct with data
    */
-  MatchType prepareCluster( const CaloPosition *cluster )
+  inline const MatchType1& 
+  prepareCluster ( const CaloPosition *cluster )
   { 
-    HepVector v(2);
-    v[0] = cluster->x();
-    v[1] = cluster->y();
-    
-    const HepSymMatrix& clCov = cluster->covariance();
-    
-    HepSymMatrix m(2);
-    m.fast(1, 1) = clCov(1, 1);
-    m.fast(2, 1) = clCov(2, 1);
-    m.fast(2, 2) = clCov(2, 2);
-    
-    return MatchType( v , m );
-  };
+    const HepVector&    center = cluster->parameters () ;
+    const HepSymMatrix& spread = cluster->covariance () ;
+    m_matchCalo.params  (1)   = center(1)              ;
+    m_matchCalo.params  (2)   = center(2)              ;
+    m_matchCalo.cov.fast(1,1) = spread.fast(1,1)       ;
+    m_matchCalo.cov.fast(2,1) = spread.fast(2,1)       ;
+    m_matchCalo.cov.fast(2,2) = spread.fast(2,2)       ;
 
+    m_matchCalo.error    =   0   ;
+    m_matchCalo.inverted = false ;
+    m_matchCalo.invert() ;
+
+    return m_matchCalo ;
+  };
+  
   /** Makes struct with vector and covariance
    * with Track data.
    * Returned format is the same as for Cluster.
@@ -121,23 +138,54 @@ private:
    * @param Track data object
    * @return internal type struct with data
    */
-  MatchType prepareTrack( TrState *trState )
+  inline const MatchType1& 
+  prepareTrack ( TrState *trState )
   { 
+    const HepSymMatrix &stCov = trState->stateCov();
+    m_matchTrk1.params  (1)   = trState->stateVector()[0];
+    m_matchTrk1.params  (2)   = trState->stateVector()[1];
+    m_matchTrk1.cov.fast(1,1) = stCov.fast(1, 1);
+    m_matchTrk1.cov.fast(2,1) = stCov.fast(2, 1);
+    m_matchTrk1.cov.fast(2,2) = stCov.fast(2, 2); 
+
+    m_matchTrk1.error    =   0   ;
+    m_matchTrk1.inverted = false ;
+    m_matchTrk1.invert() ;
     
-    const HepSymMatrix& stCov = trState->stateCov();
-    
-    HepVector v(2);
-    v[0] = trState->stateVector()[0];
-    v[1] = trState->stateVector()[1];
-    
-    HepSymMatrix m(2);
-    
-    m.fast(1, 1) = stCov.fast(1, 1);
-    m.fast(2, 1) = stCov.fast(2, 1);
-    m.fast(2, 2) = stCov.fast(2, 2);
-    
-    return MatchType(v, m);
+    return m_matchTrk1   ;
   };
+
+  /** Makes struct with vector and covariance
+   * with Track data.
+   * Returned format is the same as for Cluster.
+   * Input format of Track is quite different:
+   *   TrStateP: (x, y, tx, ty, q/p);
+   *   TrStateL: (x, y, tx, ty),
+   * so the function performs vector and matrix remake.
+   * @param Track data object
+   * @return internal type struct with data
+   */
+  inline const MatchType2& 
+  prepareTrack ( const TrgState* trgState ,
+                 const double    z        )
+  { 
+    m_matchTrk2.params  (1)   = trgState -> x     (z) ;
+    m_matchTrk2.params  (2)   = trgState -> y     (z) ;
+    m_matchTrk2.cov.fast(1,1) = trgState -> errX2 ( ) ;
+    m_matchTrk2.cov.fast(2,2) = trgState -> errY2 ( ) ; 
+
+    m_matchTrk2.error    =   0   ;
+    m_matchTrk2.inverted = false ;
+    m_matchTrk2.invert() ;
+
+    return m_matchTrk2   ;
+  };
+  
+private:
+  
+  MatchType1 m_matchCalo ;  
+  MatchType1 m_matchTrk1 ;  
+  MatchType2 m_matchTrk2 ;
 
 private:
   
