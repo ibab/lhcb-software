@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.6 2004-12-08 17:46:22 ibelyaev Exp $ 
+! $Id: release.notes,v 1.7 2004-12-09 09:49:07 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,7 @@
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+!====================== Relations v2r1 2004-12-09 ============================
 ! 2004-12-08 - Vanya BELYAEV
 
  - remove few obsolete tricks to unify GCC and Visual C++ 
