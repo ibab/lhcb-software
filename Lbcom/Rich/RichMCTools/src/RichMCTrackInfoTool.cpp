@@ -1,4 +1,4 @@
-// $Id: RichMCTrackInfoTool.cpp,v 1.1.1.1 2004-01-29 16:39:23 jonesc Exp $
+// $Id: RichMCTrackInfoTool.cpp,v 1.2 2004-02-02 14:22:33 jonesc Exp $
 
 // local
 #include "RichMCTrackInfoTool.h"
@@ -18,8 +18,9 @@ RichMCTrackInfoTool::RichMCTrackInfoTool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
   : RichToolBase( type, name, parent ),
-    m_richDetInt ( 0 ),
-    m_smartIDTool( 0 ) {
+    m_rayTrace    ( 0 ),
+    m_smartIDTool ( 0 )
+{
 
   declareInterface<IRichMCTrackInfoTool>(this);
 
@@ -34,7 +35,7 @@ StatusCode RichMCTrackInfoTool::initialize() {
   if ( !RichToolBase::initialize() ) return StatusCode::FAILURE;
 
   // Acquire instances of tools
-  acquireTool( "RichDetInterface", m_richDetInt  );
+  acquireTool( "RichRayTracing",   m_rayTrace    );
   acquireTool( "RichSmartIDTool",  m_smartIDTool );
 
   return StatusCode::SUCCESS;
@@ -46,7 +47,7 @@ StatusCode RichMCTrackInfoTool::finalize() {
   msg << MSG::DEBUG << "Finalize" << endreq;
 
   // release services and tools
-  releaseTool( m_richDetInt  );
+  releaseTool( m_rayTrace    );
   releaseTool( m_smartIDTool );
 
   // Execute base class method
@@ -56,13 +57,11 @@ StatusCode RichMCTrackInfoTool::finalize() {
 const bool RichMCTrackInfoTool::panelIntersectGlobal( const MCRichSegment * segment,
                                                       HepPoint3D & hitPoint ) const
 {
-  const HepVector3D trackDir  = segment->bestMomentum(0.5);
-  const HepPoint3D trackPoint = segment->bestPoint(0.5);
-  if ( !m_richDetInt->traceToDetectorWithoutEff( segment->rich(),
-                                                 trackPoint,
-                                                 trackDir,
-                                                 hitPoint,
-                                                 DeRichPDPanel::loose ) ) return false;
+  if ( !m_rayTrace->traceToDetectorWithoutEff( segment->rich(),
+                                               segment->bestPoint(0.5),
+                                               segment->bestMomentum(0.5),
+                                               hitPoint,
+                                               DeRichPDPanel::loose ) ) return false;
   return true; // all OK
 }
 
@@ -74,7 +73,7 @@ const bool RichMCTrackInfoTool::panelIntersectLocal( const MCRichSegment * segme
   HepPoint3D globalPoint;
   if ( !panelIntersectGlobal( segment, globalPoint ) ) return false;
   // convert global to local position
-  hitPoint = m_smartIDTool->globalToPDPanel(globalPoint); 
+  hitPoint = m_smartIDTool->globalToPDPanel(globalPoint);
 
   return true; // all OK
 }

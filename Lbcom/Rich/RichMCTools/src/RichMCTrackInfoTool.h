@@ -1,4 +1,4 @@
-// $Id: RichMCTrackInfoTool.h,v 1.1.1.1 2004-01-29 16:39:23 jonesc Exp $
+// $Id: RichMCTrackInfoTool.h,v 1.2 2004-02-02 14:22:33 jonesc Exp $
 #ifndef RICHMCTOOLS_RICHMCTRACKINFOTOOL_H
 #define RICHMCTOOLS_RICHMCTRACKINFOTOOL_H 1
 
@@ -20,7 +20,7 @@
 
 // Interfaces
 #include "RichMCTools/IRichMCTrackInfoTool.h"
-#include "RichDetTools/IRichDetInterface.h"
+#include "RichDetTools/IRichRayTracing.h"
 #include "RichDetTools/IRichSmartIDTool.h"
 
 // CLHEP
@@ -63,8 +63,8 @@ private: // private methods
 
 private: // private data
 
-  IRichDetInterface * m_richDetInt;   ///< Pointer to the RichDetInterface tool
-  IRichSmartIDTool * m_smartIDTool;   ///< Pointer to RichSmartID tool
+  IRichRayTracing * m_rayTrace;     ///< Pointer to ray tracing tool
+  IRichSmartIDTool * m_smartIDTool; ///< Pointer to RichSmartID tool
 
 };
 
