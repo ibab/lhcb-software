@@ -15,32 +15,32 @@
             <method const="FALSE" desc="Set the number of emitted photons for a given particle type" name="setNEmittedPhotons">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_nEmittedPhotons[type] = photons;</code>
+                <code>m_nEmittedPhotons.setData(type,photons);</code>
             </method>
             <method const="FALSE" desc="Set the number of detectable photons for a given particle type" name="setNDetectablePhotons">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_nDetectablePhotons[type] = photons;</code>
+                <code>m_nDetectablePhotons.setData(type,photons);</code>
             </method>
             <method const="FALSE" desc="Set the number of signal photons for a given particle type" name="setNSignalPhotons">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_nSignalPhotons[type] = photons;</code>
+                <code>m_nSignalPhotons.setData(type,photons);</code>
             </method>
             <method const="FALSE" desc="Set the number of observable signal photons for a given particle type" name="setNObservableSignalPhotons">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_nObservableSignalPhotons[type] = photons;</code>
+                <code>m_nObservableSignalPhotons.setData(type,photons);</code>
             </method>
             <method const="FALSE" desc="Set the number of scattered photons for a given particle type" name="setNScatteredPhotons">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_nScatteredPhotons[type] = photons;</code>
+                <code>m_nScatteredPhotons.setData(type,photons);</code>
             </method>
             <method const="FALSE" desc="Set the number of observable scattered photons for a given particle type" name="setNObservableScatteredPhotons">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_nObservableScatteredPhotons[type] = photons;</code>
+                <code>m_nObservableScatteredPhotons.setData(type,photons);</code>
             </method>
             <method const="TRUE" desc="Returns the number of emitted photons for a given particle type" name="nEmittedPhotons" type="double">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
@@ -177,37 +177,37 @@
             <method const="FALSE" desc="Set the geometrical efficiency for a given particle type" name="setGeomEfficiency">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="eff" type="double"/>
-                <code>m_geomEfficiency[type] = eff;</code>
+                <code>m_geomEfficiency.setData(type,eff);</code>
             </method>
             <method const="FALSE" desc="Set the scattered geometrical efficiency for a given particle type" name="setGeomEfficiencyScat">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="eff" type="double"/>
-                <code>m_geomEfficiencyScat[type] = eff;</code>
+                <code>m_geomEfficiencyScat.setData(type,eff);</code>
             </method>
             <method const="FALSE" desc="Set the number of emitted photons for a given particle type" name="setNEmittedPhotons">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_nEmittedPhotons[type] = photons;</code>
+                <code>m_nEmittedPhotons.setData(type,photons);</code>
             </method>
             <method const="FALSE" desc="Set the number of detectable photons for a given particle type" name="setNDetectablePhotons">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_nDetectablePhotons[type] = photons;</code>
+                <code>m_nDetectablePhotons.setData(type,photons);</code>
             </method>
             <method const="FALSE" desc="Set the number of signal photons for a given particle type" name="setNSignalPhotons">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_nSignalPhotons[type] = photons;</code>
+                <code>m_nSignalPhotons.setData(type,photons);</code>
             </method>
             <method const="FALSE" desc="Set the number of scattered photons for a given particle type" name="setNScatteredPhotons">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_nScatteredPhotons[type] = photons;</code>
+                <code>m_nScatteredPhotons.setData(type,photons);</code>
             </method>
             <method const="FALSE" desc="Set the average Cherenkov angle for a given particle type" name="setAverageCKTheta">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="angle" type="double"/>
-                <code>m_averageCKTheta[type] = angle;</code>
+                <code>m_averageCKTheta.setData(type,angle);</code>
             </method>
             <method desc="Method to create the geometrical efficiencies per PD" name="addToGeomEfficiencyPerPD">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
@@ -304,12 +304,12 @@
             <method const="FALSE" desc="Set the expected number of signal photons for a given particle hypothesis" name="setExpPixelSignalPhots">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_expPixelSignalPhots[type] = photons;</code>
+                <code>m_expPixelSignalPhots.setData(type,photons);</code>
             </method>
             <method const="FALSE" desc="Set the expected number of scattered photons for a given particle hypothesis" name="setExpPixelScattPhots">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="double"/>
-                <code>m_expPixelScattPhots[type] = photons;</code>
+                <code>m_expPixelScattPhots.setData(type,photons);</code>
             </method>
             <method const="TRUE" desc="Returns the expected number of signal photons for a given particle type" name="expPixelSignalPhots" type="double">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>

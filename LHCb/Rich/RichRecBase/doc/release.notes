@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2003-11-02 - Chris Jones
+ - Update due to changes to RichHypoData format
+ - Move some tool interfaces to detector package due to dependencies
+
 !======================= RichRecBase v1r3 2003-10-17 =======================
 ! 2003-07-31 - Chris Jones
  - Change from std::vector to boost::array for fixed-sized data arrays

@@ -1,10 +1,7 @@
-// $Id: RichRecAlgBase.cpp,v 1.9 2003-08-26 14:37:22 jonrob Exp $
+// $Id: RichRecAlgBase.cpp,v 1.10 2003-11-02 21:46:02 jonrob Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IToolSvc.h"
 
 // Event
 #include "Event/RichRecStatus.h"
@@ -21,15 +18,13 @@
 // Standard constructor
 RichRecAlgBase::RichRecAlgBase( const std::string& name,
                                 ISvcLocator* pSvcLocator )
-  : Algorithm ( name, pSvcLocator ),
-    m_richTracks(0),
-    m_richPixels(0),
-    m_richSegments(0),
-    m_richPhotons(0),
-    m_richStatus(0)
+  : RichAlgBase ( name, pSvcLocator ),
+    m_richTracks   ( 0 ),
+    m_richPixels   ( 0 ),
+    m_richSegments ( 0 ),
+    m_richPhotons  ( 0 ),
+    m_richStatus   ( 0 )
 {
-
-  declareProperty( "ToolRegistryName", m_regName = "RichToolRegistry" );
 
 }
 
@@ -39,20 +34,8 @@ RichRecAlgBase::~RichRecAlgBase() {};
 // Initialise
 StatusCode RichRecAlgBase::initialize() {
 
-  // Get the current message service printout level
-  IntegerProperty msgLevel;
-  IProperty* algIProp;
-  this->queryInterface( IID_IProperty, (void**)&algIProp );
-  msgLevel.assign( algIProp->getProperty( "OutputLevel" ) );
-  m_msgLevel = msgLevel;
-  algIProp->release();
-
-  // Get pointer to Rich Tool Registry
-  if ( !toolSvc()->retrieveTool( "RichToolRegistry",  m_regName, m_toolReg) ) {
-    MsgStream msg( msgSvc(), name() );
-    msg << MSG::ERROR << "RichToolRegistry not found" << endreq;
-    return StatusCode::FAILURE;
-  }
+  // Execute the base class initialize
+  if ( !RichAlgBase::initialize() ) return StatusCode::FAILURE;
 
   // initialise data pointers
   acquireTool("RichSegmentCreator", m_segTool);
@@ -73,12 +56,11 @@ StatusCode RichRecAlgBase::initialize() {
 StatusCode RichRecAlgBase::finalize() {
 
   // Release all tools
-  releaseTool( m_toolReg  );
   releaseTool( m_pixTool  );
   releaseTool( m_tkTool   );
   releaseTool( m_statTool );
   releaseTool( m_segTool  );
   releaseTool( m_photTool );
 
-  return StatusCode::SUCCESS;
+  return RichAlgBase::finalize();
 }
