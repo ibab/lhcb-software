@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.154 2004-08-05 09:01:55 pkoppenb Exp $
+# $Id: requirements,v 1.155 2004-08-06 08:15:48 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -95,7 +95,7 @@ use  RecoTools          v1r1     Rec
 # Utility tools
 use  TrExtrapolator     v2r12    Tr
 
-use  LoKi               v3r0     Tools  
+use  LoKi               v3r1     Tools  
 
 # Reconstruction tools 
 use  Utilities          v1r8     Tools
