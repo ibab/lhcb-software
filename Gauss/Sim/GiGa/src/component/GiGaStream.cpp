@@ -1,31 +1,42 @@
+// $Id: GiGaStream.cpp,v 1.6 2002-01-22 18:20:53 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/23 13:12:28  ibelyaev
-/// the package restructurisation(II)
-///
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2001/08/12 15:42:54  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.4  2001/07/23 13:12:28  ibelyaev
+// the package restructurisation(II)
+//
 // ============================================================================
 #include "GaudiKernel/IDataProviderSvc.h" 
 #include "GaudiKernel/IDataManagerSvc.h" 
 #include "GaudiKernel/IMessageSvc.h" 
+#include "GaudiKernel/IRegistry.h" 
 #include "GaudiKernel/IConversionSvc.h"
+#include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/SmartDataPtr.h"
 /// local 
 #include "GiGaStream.h" 
 
-/** Implemenation of class GiGaStream
+// ============================================================================
+/** @file GiGaStream.cpp 
+ *  
+ *  Implemenation of class GiGaStream
  *
- *  @author Vanya Belyaev
+ *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
+// ============================================================================
 
 // ============================================================================
+/** destructor 
+ */
 // ============================================================================
-static const   AlgFactory<GiGaStream>         s_Factory; 
-const         IAlgFactory&GiGaStreamFactory = s_Factory; 
-
+GiGaStream::~GiGaStream(){};
 
 // ============================================================================
 /// constructor
@@ -34,37 +45,32 @@ GiGaStream::GiGaStream( const std::string& StreamName     ,
                         ISvcLocator*       ServiceLocator )
   : Algorithm( StreamName , ServiceLocator ) 
   /// 
-  , m_ExecuteOnce           ( false            )     
-  , m_Execute               ( true             ) 
+  , m_executeOnce           ( false            )     
+  , m_execute               ( true             ) 
   ///
-  , m_NameOfConversionSvc   ( "GiGaKineCnvSvc" )  
-  , m_ConversionSvc         (  0               )  
+  , m_nameOfCnvSvc          ( "GiGaKineCnvSvc" )  
+  , m_cnvSvc                (  0               )  
   ///
-  , m_NameOfDataProviderSvc ( "EventDataSvc"   ) 
-  , m_DataProviderSvc       (  0               ) 
+  , m_nameOfDataSvc         ( "EventDataSvc"   ) 
+  , m_dataSvc               (  0               ) 
   ///
-  , m_NameOfDataManagerSvc  ( "EventDataSvc"   ) 
-  , m_DataManagerSvc        (  0               ) 
+  , m_namesOfItems          (                  )
+  , m_items                 (                  ) 
   ///
-  , m_NamesOfStreamItems    (                  )
-  , m_DataSelector          (                  )
-  , m_StreamItems           (                  ) 
+  , m_dataSelector          (                  )
+  , m_leaves                ()
   ///
-  , m_FillGiGaStream        ( true             ) 
 {
   ///
-  m_NameOfDataManagerSvc = m_NameOfDataProviderSvc; 
-  ///
-  declareProperty( "ExecuteOnce"         , m_ExecuteOnce           ) ; 
-  declareProperty( "ConversionSvcName"   , m_NameOfConversionSvc   ) ; 
-  declareProperty( "DataProviderSvcName" , m_NameOfDataProviderSvc ) ;
-  declareProperty( "DataManagerSvcName"  , m_NameOfDataManagerSvc  ) ;
-  declareProperty( "StreamItems"         , m_NamesOfStreamItems    ) ;   
-  declareProperty( "FillGiGaStream"      , m_FillGiGaStream        ) ; 
+  declareProperty( "ExecuteOnce"         , m_executeOnce    ) ; 
+  declareProperty( "ConversionSvcName"   , m_nameOfCnvSvc   ) ; 
+  declareProperty( "DataProviderSvcName" , m_nameOfDataSvc  ) ;
+  declareProperty( "StreamItems"         , m_namesOfItems   ) ;   
   ///
 };
 
 // ============================================================================
+// initialize method 
 // ============================================================================
 StatusCode GiGaStream::initialize()
 {
@@ -75,38 +81,29 @@ StatusCode GiGaStream::initialize()
   StatusCode status = StatusCode::SUCCESS; 
   ///
   {
-    status = service( m_NameOfDataProviderSvc , m_DataProviderSvc ) ;
+    status = service( m_nameOfDataSvc , m_dataSvc ) ;
     if( status.isFailure() )  
       { return Error("Unable to locate IDataProviderSvc* =" +
-                     m_NameOfDataProviderSvc,status);}
-    if( 0 == m_DataProviderSvc )
+                     m_nameOfDataSvc , status ) ; }
+    if( 0 == m_dataSvc )
       { return Error("IUnable to locate IDataProviderSvc* ="+
-                     m_NameOfDataProviderSvc       );}
+                     m_nameOfDataSvc          ) ; }
+    m_dataSvc -> addRef();
   }
   ///
   {
-    status = service( m_NameOfDataManagerSvc , m_DataManagerSvc ) ;
-    
-    if( status.isFailure() )  
-      { return Error("Unable to locate IDataManagerSvc ="+
-                     m_NameOfDataManagerSvc,status);}
-    if( 0 == m_DataManagerSvc )
-      { return Error("Unable to locate IDataManagerSvc ="+
-                     m_NameOfDataManagerSvc       );}
-  }
-  ///
-  {
-    status = service( m_NameOfConversionSvc , m_ConversionSvc ) ;
+    status = service( m_nameOfCnvSvc , m_cnvSvc ) ;
     if( status.isFailure() )  
       { return Error("Unable to locate IConversionSvc ="+
-                     m_NameOfConversionSvc,status);}
-    if( 0 == m_DataManagerSvc )
+                     m_nameOfCnvSvc,status);}
+    if( 0 == m_cnvSvc )
       { return Error("Unable to locate IConversionSvc ="+
-                     m_NameOfConversionSvc       );}
+                     m_nameOfCnvSvc       );}
+    m_cnvSvc -> addRef() ;
   }
   /// 
-  for( Names::const_iterator pName = m_NamesOfStreamItems.begin(); 
-       m_NamesOfStreamItems.end() != pName ; ++pName ) 
+  for( Names::const_iterator pName = m_namesOfItems.begin(); 
+       m_namesOfItems.end() != pName ; ++pName ) 
     { 
       std::string obj            = *pName ; 
       int depth                  = 1      ; 
@@ -115,11 +112,11 @@ StatusCode GiGaStream::initialize()
         { 
           obj.erase(pos);
           std::string levels((*pName).c_str(),pos+1);
-          if( "*" == levels ) { depth = 9999999              ;}
-          else                { depth = atoi(levels.c_str());}
+          if( "*" == levels ) { depth = 9999999                ; }
+          else                { depth = atoi( levels.c_str() ) ; }
         }    
       DataStoreItem item( obj , depth ); 
-      m_StreamItems.push_back(item); 
+      m_items.push_back( item ); 
     }   
   ///
   { MsgStream log( msgSvc() , name() ); 
@@ -127,77 +124,42 @@ StatusCode GiGaStream::initialize()
   ///
   return StatusCode::SUCCESS; 
   ///
-};  
+};
 
 // ============================================================================
-StatusCode GiGaStream::execute()
-{
-  ///
-  if( !m_Execute         ) { return StatusCode::SUCCESS; } 
-  ///
-  { MsgStream log( msgSvc() , name() ); 
-  log << MSG::VERBOSE << "Execute::start" << endreq; } 
-  ///
-  if( m_ExecuteOnce      ) { m_Execute  = false; }  
-  ///
-  Items::const_iterator item = m_StreamItems.begin() ; 
-  while( item != m_StreamItems.end() ) 
-    { m_DataProviderSvc->addPreLoadItem( *item++ ); } 
-  ///
-  m_DataProviderSvc->preLoad(); 
-  ///
-  m_DataSelector.clear();
-  ///
-  StatusCode status = StatusCode::SUCCESS; 
-  item = m_StreamItems.begin() ; 
-  while( item != m_StreamItems.end() && status.isSuccess() ) 
-    { status = LoadObject( *item++, &m_DataSelector) ; } 
-  ///  
-  if( status.isFailure() ) 
-    { return Error("Execute::Could not load Object="+item->path(), status); } 
-  ///
-  if( m_FillGiGaStream   ) 
-    { status = m_ConversionSvc->createReps( &m_DataSelector )             ; } 
-  ///
-  if( status.isFailure() ) 
-    { return Error("Execute::Could not convert the IDataSelector*", status);}
-  ///
-  m_DataSelector.clear(); 
-  ///
-  { MsgStream log( msgSvc() , name() ); 
-  log << MSG::VERBOSE << "Execute::end" << endreq; } 
-  ///
-  return status; 
-  ///
-}; 
-
+/** Load objects pointed by Item  and put it into Selector 
+ *  @param Item object tree 
+ *  @param Selector data selector 
+ *  @return statsu code 
+ */
 // ============================================================================
-// ============================================================================
-StatusCode GiGaStream::LoadObject( const DataStoreItem& item , 
-                                   IDataSelector* Selector ) 
+StatusCode GiGaStream::LoadObject( const DataStoreItem& item     , 
+                                   IDataSelector*       Selector ) 
 {
   ///
   if( item.depth() <=0   ) { return StatusCode::SUCCESS; } 
   ///
-  SmartDataPtr<DataObject> Object( m_DataProviderSvc , item.path() ); 
+  if( 0 == m_dataSvc     ) 
+    { return Error(" LoadObject::IDataProvoiderSvc points to NULL!" ) ; } 
   ///
-  if( 0 == Object        ) 
-    { return Error("LoadObjectItem::DataObject* points to NULL for Oject=" +
-                   item.path() ); } 
+  SmartDataPtr<DataObject> Object( m_dataSvc , item.path() ); 
+  ///
+  if( !Object            ) 
+    { return Error(" LoadObject::DataObject* points to NULL for Oject '" 
+                   + item.path() + "'" ) ; } 
   if( 0 == Selector      ) 
-    { return Error("LoadObjectItem::IDataSelector* points to NULL for Oject="+
-                   item.path() ); } 
+    { return Error(" LoadObject::IDataSelector* points to NULL for Object '"
+                   + item.path() + "'" ) ; } 
   ///
   Selector->push_back( Object ); 
-  ///
-  IDataDirectory* iDir = Object->directory(); 
-  if( 0 == iDir          ) 
-    { return Error("LoadObjectItem::IDataDirectory* points to NULL for Oject="
-                   +item.path() ); } 
+  const IRegistry* registry = Object->registry() ;
+  if( 0 == registry )
+    { return Error(" loadObject:: IRegistry* points to NUL for object '" 
+                   + item.path() + "'" ) ; }
   ///  
-  StatusCode status = LoadObject( iDir , item.depth() -1 , Selector ); 
+  StatusCode status = LoadObject( registry , item.depth()  , Selector ); 
   if( status.isFailure() ) 
-    { return Error("LoadObjectItem::Failure in loading of Directory", 
+    { return Error(" LoadObject::Failure in loading of Directory", 
                    status ); } 
   ///
   return StatusCode::SUCCESS; 
@@ -205,43 +167,52 @@ StatusCode GiGaStream::LoadObject( const DataStoreItem& item ,
 }; 
 
 // ============================================================================
-StatusCode GiGaStream::LoadObject( IDataDirectory* CurrentDir , 
-                                   const int Level , 
-                                   IDataSelector* Selector ) 
+/** Load objects pointed by Item  and put it into Selector 
+ *  @param registry object directory 
+ *  @param Level    number of levels  
+ *  @param Selector data selector 
+ *  @return statsu code 
+ */
+// ============================================================================
+StatusCode GiGaStream::LoadObject( const IRegistry*     registry ,
+                                   const int            Level    ,   
+                                   IDataSelector*       Selector ) 
 {
+  /// success? 
+  if( Level <= 0 ) { return StatusCode::SUCCESS ; }
   ///
-  if( Level <=0              ) { return StatusCode::SUCCESS; } 
+  if( 0 == registry            ) 
+    { return Error("LoadObject:: IRegistry* points to NULL "         ); } 
+  if( 0 == Selector            ) 
+    { return Error("LoadObject:: IDataSelector* points to NULL "     ); }
+  if( 0 == registry->dataSvc() ) 
+    { return Error("LoadObject:: IDataProviderSvc* points to NULL "  ); }
   ///
-  if( 0 == CurrentDir        ) 
-    { return Error("LoadObjectDirIDataDirectory* points to NULL " ); } 
-  if( 0 == Selector          ) 
-    { return Error("LoadObjectDirIDataSelector* points to NULL "  ); }
+  SmartIF<IDataManagerSvc> dataMgr( registry->dataSvc() );
+  if( !dataMgr ) 
+    { return Error(" LoadObject:: IDataManagerSvc* points to NULL for '"
+                   + registry->identifier() + "'" ); }
   ///
-  ///
-  for( IDataDirectory::DirIterator obj = CurrentDir->begin(); 
-       CurrentDir->end() != obj ; ++obj )
-    {     
-      DataObject* Object = 0 ; 
-      StatusCode status = 
-        m_DataProviderSvc->retrieveObject( CurrentDir , 
-                                           (*obj)->name() , 
-                                           Object )    ;
-      if( status.isFailure() ) 
-        { return Error("LoadObjectDir::Could not retrieve" + 
-                       (*obj)->name(), status )   ; } 
-      if( 0 == Object        ) 
-        { return Error("LoadObjectDir::Could not retrieve" + 
-                       (*obj)->name()         )   ; } 
-      ///
-      Selector->push_back( Object ); 
-      ///
-      IDataDirectory* SubDir = Object->directory(); 
-      if( 0 == SubDir        ) 
-        { return Error("LoadObjectDir::Could not retrieve directory" + 
-                       (*obj)->name() ) ; } 
-      status = LoadObject( SubDir , Level - 1 , Selector );
-      if( status.isFailure() ) 
-        { return Error("LoadObjectDir::Could not retrieve subdirectory") ; }    
+  m_leaves.clear();
+  StatusCode sc = dataMgr->objectLeaves( registry , m_leaves );
+  if( sc.isFailure() )
+    { return Error(" LoadObject:: Leaves could not be accessed for '" 
+                   + registry->identifier() + "'" ); }
+  /// loop over the leaves 
+  for( Leaves::iterator leaf = m_leaves.begin() ;
+       m_leaves.end() != leaf ; ++leaf )
+    {
+      if( 0 == *leaf ) { continue ; }           ///< CONTINUE!
+      DataObject*  Object = 0 ;
+      sc = registry->dataSvc()->retrieveObject( *leaf , "" , Object );
+      if ( sc.isFailure() ||  0 == Object ) 
+        { return Error(" LoadObject:: Leaf '" + (*leaf)->identifier() + "'" 
+                       + " could not be retrieved!" ); }
+      Selector->push_back( Object ) ;
+      sc = LoadObject( *leaf , Level - 1 , Selector );
+      if( sc.isFailure() ) 
+        { return Error(" LoadObject:: Could not process the leaf '" +
+                       (*leaf)->identifier() + "'" ); } 
     }
   ///
   return StatusCode::SUCCESS;
@@ -249,27 +220,40 @@ StatusCode GiGaStream::LoadObject( IDataDirectory* CurrentDir ,
 };
 
 // ============================================================================
+/** Miscellaneous function to simplify the typing 
+ *  @param message message to be printed 
+ *  @param status status code to be returned 
+ */
 // ============================================================================
 StatusCode GiGaStream::Error( const std::string& message , 
-                              const StatusCode& status ) 
+                              const StatusCode&  status  ) 
 {
-  MsgStream log( msgSvc() , name() ); log << MSG::ERROR << message << endreq; 
+  MsgStream log( msgSvc() , name() ); 
+  log <<  MSG::ERROR  <<  message  <<  endreq; 
   return status;  
 };  
 
 // ============================================================================
+/** standard finalization method 
+ *  @return status code 
+ */
 // ============================================================================
 StatusCode GiGaStream::finalize()
 {
   ///
-  m_NamesOfStreamItems.clear() ; 
-  m_DataSelector.clear      () ; 
-  m_StreamItems.clear       () ; 
+  if( 0 != m_dataSvc ) { m_dataSvc -> release() ; m_dataSvc = 0 ; }
+  if( 0 != m_cnvSvc  ) { m_cnvSvc  -> release() ; m_cnvSvc  = 0 ; }
+  ///
+  m_namesOfItems .clear () ; 
+  m_dataSelector .clear () ; 
+  m_items        .clear () ; 
   ///
   return StatusCode::SUCCESS;
   ///
 };
 
+// ============================================================================
+// The End 
 // ============================================================================
 
 

@@ -1,7 +1,11 @@
+// $Id: IGiGaGeoSrc.h,v 1.3 2002-01-22 18:20:52 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/08/12 13:25:22  ibelyaev
+// improvements in Doxygen documentation
+//
 // Revision 1.1  2001/07/25 17:18:08  ibelyaev
 // move all conversions from GiGa to GiGaCnv
 //
@@ -35,18 +39,26 @@ public:
   /// Retrieve unique interface ID
   static const InterfaceID& interfaceID() { return IID_IGiGaGeoSrc; }
   
-  /** 
-   * Retrieve the pointer to top-level "world" volume,
-   * needed for Geant4 - root for the whole Geant4 geometry tree 
-   * @return pointer to constructed(converted) geometry tree 
+  /** retrieve the pointer to top-level "world" volume,
+   *  needed for Geant4 - root for the whole Geant4 geometry tree 
+   *  @return pointer to constructed(converted) geometry tree 
    */  
-  virtual G4VPhysicalVolume*  G4WorldPV() = 0 ;
+  virtual G4VPhysicalVolume*  world     () = 0 ;
+  
+  /** retrieve the pointer to top-level "world" volume,
+   *  needed for Geant4 - root for the whole Geant4 geometry tree 
+   *  @att obsolete method!
+   *  @return pointer to constructed(converted) geometry tree 
+   */  
+  virtual G4VPhysicalVolume*  G4WorldPV () = 0 ;
   
   /// virtual destructor 
   virtual ~IGiGaGeoSrc(){};
-
+  
 };
 
+// ============================================================================
+// The End 
 // ============================================================================
 #endif // GIGA_IGIGAGEOSRC_H
 // ============================================================================

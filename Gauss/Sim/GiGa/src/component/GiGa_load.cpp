@@ -1,25 +1,29 @@
+// $Id: GiGa_load.cpp,v 1.10 2002-01-22 18:20:54 ibelyaev Exp $
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.8  2001/07/27 17:56:07  ibelyaev
-/// add new component GiGaSensDetPrint
-///
-/// Revision 1.7  2001/07/27 14:29:02  ibelyaev
-/// bug fix
-///
-/// Revision 1.6  2001/07/26 16:09:23  ibelyaev
-/// GiGaRunActions budiness
-///
-/// Revision 1.5  2001/07/25 18:13:39  ibelyaev
-/// add new component GiGaEventActionCommand
-///
-/// Revision 1.4  2001/07/24 09:48:15  ibelyaev
-/// new component GiGaEventActionSequence
-///
-/// Revision 1.3  2001/07/15 20:54:37  ibelyaev
-/// package restructurisation
-///
+// $Log: not supported by cvs2svn $
+// Revision 1.9  2001/08/12 15:42:55  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.8  2001/07/27 17:56:07  ibelyaev
+// add new component GiGaSensDetPrint
+//
+// Revision 1.7  2001/07/27 14:29:02  ibelyaev
+// bug fix
+//
+// Revision 1.6  2001/07/26 16:09:23  ibelyaev
+// GiGaRunActions budiness
+//
+// Revision 1.5  2001/07/25 18:13:39  ibelyaev
+// add new component GiGaEventActionCommand
+//
+// Revision 1.4  2001/07/24 09:48:15  ibelyaev
+// new component GiGaEventActionSequence
+//
+// Revision 1.3  2001/07/15 20:54:37  ibelyaev
+// package restructurisation
+//
 // ============================================================================
 #define GIGA_GIGA_LOAD_CPP 1 
 // ============================================================================
@@ -73,8 +77,10 @@ void GiGa_load()
 { 
   /// GiGa Service itself
   DLL_DECL_SERVICE      (    GiGaSvc                 ); 
-  /// Conversion services and their converters 
-  DLL_DECL_ALGORITHM    (    GiGaStream              );
+  /// Streams 
+  DLL_DECL_ALGORITHM    (    GiGaInputStream         );
+  DLL_DECL_ALGORITHM    (    GiGaOutputStream        );
+  DLL_DECL_ALGORITHM    (    GiGaFlushAlgorithm      );
   /// Physics List
   DLL_DECL_PLFACTORY    (    GiGaPhysListGeantino    );
   DLL_DECL_PLFACTORY    (    GiGaPhysListEm          );
@@ -108,6 +114,8 @@ void GiGa_load()
 // ============================================================================
 extern "C" void GiGa_loadRef() { GiGa_load(); } ; 
 
+// ============================================================================
+// The End 
 // ============================================================================
 
 

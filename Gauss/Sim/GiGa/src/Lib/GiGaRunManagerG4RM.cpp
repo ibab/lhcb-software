@@ -1,12 +1,16 @@
+// $Id: GiGaRunManagerG4RM.cpp,v 1.3 2002-01-22 18:20:53 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/08/01 09:42:24  ibelyaev
-/// redesign and reimplementation of GiGaRunManager class
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2001/08/12 15:42:49  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.1  2001/08/01 09:42:24  ibelyaev
+// redesign and reimplementation of GiGaRunManager class
+// 
 // ============================================================================
-/// GiGa 
+// GiGa 
 #include "GiGa/GiGaUtil.h"
 #include "GiGa/IGiGaGeoSrc.h"
 #include "GiGa/GiGaRunManager.h"
@@ -16,11 +20,10 @@
 // ============================================================================
 /** Implementation of virtual G4RunManager methods of class GiGaRunManager
  *
- * @author Vanya Belyaev
+ * @author Vanya Belyaev Ivan.Belyaev@itep.ru
  * @date 30/07/2001 
  */
 // ============================================================================
-
 
 // ============================================================================
 /** overriden method from G4RunManager
@@ -47,7 +50,7 @@ void GiGaRunManager::BeamOn( int         n_event       ,
 };
 
 // ============================================================================
-/// Initialize the geometry 
+// Initialize the geometry 
 // ============================================================================
 void GiGaRunManager::InitializeGeometry()
 {
@@ -62,7 +65,7 @@ void GiGaRunManager::InitializeGeometry()
     {
       Print(" Geometry will be exxtracted from " + 
             GiGaUtil::ObjTypeName( geoSrc() ) ); 
-      root = geoSrc()->G4WorldPV(); 
+      root = geoSrc()->world (); 
     }
   else if ( 0 != G4RunManager::userDetector )
     {
@@ -81,7 +84,7 @@ void GiGaRunManager::InitializeGeometry()
 };
 
 // ============================================================================
-/// Initialize 
+// Initialize 
 // ============================================================================
 void GiGaRunManager::Initialize()
 {
@@ -101,5 +104,7 @@ void GiGaRunManager::Initialize()
   ///
 };
 
+// ============================================================================
+// The End 
 // ============================================================================
 

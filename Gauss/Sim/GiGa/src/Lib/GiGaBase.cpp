@@ -1,7 +1,11 @@
+// $Id: GiGaBase.cpp,v 1.9 2002-01-22 18:20:53 ibelyaev Exp $
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.8  2001/08/12 15:42:48  ibelyaev
+/// improvements with Doxygen comments
+///
 /// Revision 1.7  2001/08/01 09:42:23  ibelyaev
 /// redesign and reimplementation of GiGaRunManager class
 ///
@@ -184,7 +188,7 @@ StatusCode GiGaBase::initialize()
   ///
   if( !m_msgName.empty() )
     {
-      StatusCode sc = svcLoc()->service( m_msgName , m_msgSvc );  
+      StatusCode sc = svcLoc()->service( m_msgName , m_msgSvc , true );  
       if( sc.isFailure() ) 
         { return Error("Could not locate IMessageSvc="+ m_msgName , sc ) ; }
       if( 0 == msgSvc () ) 
@@ -200,7 +204,7 @@ StatusCode GiGaBase::initialize()
   ///
   if( !m_chronoName.empty() )
     {
-      StatusCode sc = svcLoc()->service( m_chronoName , m_chronoSvc );  
+      StatusCode sc = svcLoc()->service( m_chronoName , m_chronoSvc , true );  
       if( sc.isFailure()    )
         { return Error("Couldn't locate IChronoStatSvc="+ m_chronoName , sc );}
       if( 0 == chronoSvc () ) 
@@ -211,7 +215,7 @@ StatusCode GiGaBase::initialize()
   ///
   if( !m_gigaName.empty() )
     {
-      StatusCode sc = svcLoc()->service( m_gigaName ,  m_gigaSvc  ); 
+      StatusCode sc = svcLoc()->service( m_gigaName ,  m_gigaSvc  , true ); 
       if( sc.isFailure () ) 
         { return Error("Could not locate IGiGaSvc="+ m_gigaName , sc ) ; }
       if( 0 == gigaSvc () ) 
@@ -233,7 +237,7 @@ StatusCode GiGaBase::initialize()
   ///
   if( !m_evtName.empty() )
     {
-      StatusCode sc = svcLoc()->service( m_evtName , m_evtSvc ); 
+      StatusCode sc = svcLoc()->service( m_evtName , m_evtSvc , true ); 
       if( sc.isFailure   () ) 
         { return Error("Could not locate IDataProviderSvc="+ m_evtName , sc );}
       if( 0 == evtSvc    () )
@@ -244,7 +248,7 @@ StatusCode GiGaBase::initialize()
   ///
   if( !m_detName.empty() )
     {
-      StatusCode sc = svcLoc()->service( m_detName , m_detSvc ); 
+      StatusCode sc = svcLoc()->service( m_detName , m_detSvc , true ); 
       if( sc.isFailure   () ) 
         { return Error("Couldn't locate IDataProviderSvc="+ m_detName , sc );}
       if( 0 == detSvc    () ) 
@@ -255,7 +259,7 @@ StatusCode GiGaBase::initialize()
   ///
   if( !m_incName.empty() )
     {
-      StatusCode sc = svcLoc()->service( m_incName , m_incSvc ); 
+      StatusCode sc = svcLoc()->service( m_incName , m_incSvc , true ); 
       if( sc.isFailure   () )
         { return Error("Could not locate IIncidentSvc="+ m_incName , sc ) ; }
       if( 0 == incSvc    () ) 

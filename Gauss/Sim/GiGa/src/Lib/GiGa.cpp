@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2001/08/12 13:25:23  ibelyaev
+// improvements in Doxygen documentation
+//
 // Revision 1.1  2001/08/01 09:42:23  ibelyaev
 // redesign and reimplementation of GiGaRunManager class
 // 
@@ -39,7 +42,7 @@
 #include "G4UItcsh.hh"             
 #include "G4UIcsh.hh"             
 #endif ///< G4UI_USE_TERMINAL 
-/// G4 
+/// G4
 #ifdef G4UI_USE
 #include "G4UIterminal.hh"             
 #include "G4UItcsh.hh"             
@@ -119,7 +122,7 @@ G4UIsession* GiGa::createUIsession( const std::string& session )
 #ifdef G4UI_USE_WO
       s_uiSession = new G4UIWo  ( System::argc() , System::argv() ) ; 
 #endif ///< G4UI_USE_WO
-    } 
+    }
   else if ( "GAG"       == session  )    
     {
 #ifdef G4UI_USE_GAG
@@ -140,22 +143,24 @@ G4UIsession* GiGa::createUIsession( const std::string& session )
     }
   else if ( "tcsh"  == session  ) 
     {
-#ifdef G4UI_USE_TERMINAL
+#ifdef G4UI_USE 
       s_uiSession = new G4UIterminal( new G4UIcsh ()  ) ;
-#endif ///< G4UI_USE_TERMINAL 
+#endif 
     }
   else if ( "csh"  == session  ) 
     {
-#ifdef G4UI_USE_TERMINAL
+#ifdef G4UI_USE 
       s_uiSession = new G4UIterminal( new G4UIcsh ()  ) ;
-#endif ///< G4UI_USE_TERMINAL 
+#endif
     }
   else if ( "terminal"  == session  ) 
     {
-#ifdef G4UI_USE_TERMINAL
+#ifdef G4UI_USE 
       s_uiSession = new G4UIterminal () ;           
-#endif ///< G4UI_USE_TERMINAL 
+#endif
     }
+  ///
+  /// #endif ///< G4UI_USE 
   ///
   return s_uiSession ;
   ///

@@ -1,25 +1,29 @@
+// $Id: GiGaSvc.cpp,v 1.12 2002-01-22 18:20:53 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.10  2001/08/12 15:42:54  ibelyaev
-/// improvements with Doxygen comments
-///
-/// Revision 1.9  2001/08/01 09:42:24  ibelyaev
-/// redesign and reimplementation of GiGaRunManager class
-///
-/// Revision 1.8  2001/07/27 14:29:01  ibelyaev
-/// bug fix
-///
-/// Revision 1.7  2001/07/25 17:18:09  ibelyaev
-/// move all conversions from GiGa to GiGaCnv
-///
-/// Revision 1.6  2001/07/23 20:53:47  ibelyaev
-/// reorganization of GiGaUtil namespace
-///
-/// Revision 1.5  2001/07/15 20:54:35  ibelyaev
-/// package restructurisation
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.11  2001/10/08 14:08:12  ranjard
+// v6r1 - some correction to please new compiler
+//
+// Revision 1.10  2001/08/12 15:42:54  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.9  2001/08/01 09:42:24  ibelyaev
+// redesign and reimplementation of GiGaRunManager class
+//
+// Revision 1.8  2001/07/27 14:29:01  ibelyaev
+// bug fix
+//
+// Revision 1.7  2001/07/25 17:18:09  ibelyaev
+// move all conversions from GiGa to GiGaCnv
+//
+// Revision 1.6  2001/07/23 20:53:47  ibelyaev
+// reorganization of GiGaUtil namespace
+//
+// Revision 1.5  2001/07/15 20:54:35  ibelyaev
+// package restructurisation
+// 
 // ============================================================================
 #define GIGA_GIGASVC_CPP 1 
 // ============================================================================
@@ -183,7 +187,8 @@ StatusCode GiGaSvc::initialize()
   
   /// locate  services, 
   {
-    StatusCode sc = svcLoc()->service( "ChronoStatSvc" , m_chronoSvc ); 
+    StatusCode sc = 
+      svcLoc()->service( "ChronoStatSvc" , m_chronoSvc , true ); 
     if( sc.isFailure()   ) 
       { return Error("Unable to locate Chrono & Stat Service", sc ); } 
     if( 0 == chronoSvc() ) 
@@ -192,7 +197,8 @@ StatusCode GiGaSvc::initialize()
   }
   ///
   {
-    StatusCode sc = svcLoc()->service( m_objMgrName , m_objMgr ); 
+    StatusCode sc = 
+      svcLoc()->service( m_objMgrName , m_objMgr ); 
     if( sc.isFailure() ) 
       { return Error("Unable to locate IObjManager="+m_objMgrName, sc ); } 
     if( 0 == objMgr () ) 
@@ -361,7 +367,7 @@ StatusCode GiGaSvc::initialize()
   /// try to locate GiGa Geometry source  and make it known for GiGa 
   if( !m_geoSrcName.empty() )
     {
-      StatusCode sc = svcLoc()->service( m_geoSrcName , m_geoSrc ); 
+      StatusCode sc = svcLoc()->service( m_geoSrcName , m_geoSrc , true ); 
       if( sc.isFailure()   ) 
         { return Error("Unable to locate GiGa Geometry Source='" + 
                        m_geoSrcName + "'", sc ); } 

@@ -1,27 +1,32 @@
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// $Id: GiGaStream.h,v 1.6 2002-01-22 18:20:53 ibelyaev Exp $
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.4  2001/07/23 13:12:28  ibelyaev
-/// the package restructurisation(II)
-///
+// CVS tag $Name: not supported by cvs2svn $ 
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2001/08/12 15:42:54  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.4  2001/07/23 13:12:28  ibelyaev
+// the package restructurisation(II)
+//
 // ============================================================================
 #ifndef          GIGA_GIGASTREAM_H
 #define          GIGA_GIGASTREAM_H  1 
 // ============================================================================
-/// from STL
+// from STL
 #include <string>
 #include <vector>
 /// base class from Gaudi 
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/IDataSelector.h" 
 #include "GaudiKernel/DataStoreItem.h"
-/// forward declarations 
-template <class ALGORITHM> class AlgFactory; 
-class IDataProviderSvc;
-class IDataManagerSvc;
-class IServiceLocator;
-class IConversionSvc; 
+// forward declarations 
+class IDataProviderSvc ;
+class IDataManagerSvc  ;
+class IServiceLocator  ;
+class IConversionSvc   ; 
+class IRegistry        ;
 
 /** @class GiGaStream  GiGaStream.h 
  *
@@ -30,65 +35,83 @@ class IConversionSvc;
  *  @author Vanya Belyaev
  */
 
-
 class GiGaStream: public Algorithm
 {
   ///  
-  friend class AlgFactory<GiGaStream>;
+public:
   ///
- public:
+  typedef std::vector<DataStoreItem>  Items  ; 
+  typedef std::vector<std::string>    Names  ; 
+  typedef std::vector<IRegistry*>     Leaves ;
   ///
-  typedef std::vector<DataStoreItem>  Items; 
-  typedef std::vector<std::string>    Names; 
-  ///
- protected:
+protected:
   
-  /// constructor 
-  GiGaStream( const std::string& StreamName    , 
-              ISvcLocator*       SericeLocator ) ;
-  /// virtual destructor 
-  virtual ~GiGaStream(){}; 
+  /** standard constructor 
+   *  @param StreamName name of the Stream 
+   *  @param ServiceLocator pointer to Service Locator 
+   */
+  GiGaStream( const std::string& StreamName     , 
+              ISvcLocator*       ServiceLocator ) ;
 
- public: 
-
-  /// Standard methods from Algorithm interface 
+  /** virtual destructor 
+   */
+  virtual ~GiGaStream();
+  
+public: 
+  
+  /** standard initialization method 
+   *  @return status code 
+   */ 
   virtual StatusCode initialize() ; 
-  virtual StatusCode execute   () ; 
+  
+  /** standard finalization method 
+   *  @return status code 
+   */ 
   virtual StatusCode finalize  () ; 
-
- protected: 
   
-  /// Load objects pointed by Item  and put it into Selector 
-  StatusCode LoadObject( const DataStoreItem& Item , 
-                         IDataSelector* Selector );
+protected: 
   
-  /// Load content of directory and put it into Selector 
-  StatusCode LoadObject( IDataDirectory* Object  , 
-                         const int Level , 
-                         IDataSelector* Selector );
-  /// Miscellaneous function to simplify the typing 
+  /** Load objects pointed by Item  and put it into Selector 
+   *  @param Item object tree 
+   *  @param Selector data selector 
+   *  @return statsu code 
+   */
+  StatusCode LoadObject( const DataStoreItem& Item     , 
+                         IDataSelector*       Selector );
+  
+  /** Load objects pointed by Item  and put it into Selector 
+   *  @param Object object directory 
+   *  @param Level number of levels  
+   *  @param Selector data selector 
+   *  @return statsu code 
+   */
+  StatusCode LoadObject( const IRegistry* Object   , 
+                         const int        Level , 
+                         IDataSelector*   Selector );
+  
+  /** Miscellaneous function to simplify the typing 
+   *  @param message message to be printed 
+   *  @param status status code to be returned 
+   */
   StatusCode Error( const std::string& message , 
                     const StatusCode& status  = StatusCode::FAILURE ); 
   
- private: 
-
-  bool                        m_ExecuteOnce            ; 
-  bool                        m_Execute                ;  
-
-  std::string                 m_NameOfConversionSvc    ; 
-  IConversionSvc*             m_ConversionSvc          ; 
+protected:
   
-  std::string                 m_NameOfDataProviderSvc  ; 
-  IDataProviderSvc*           m_DataProviderSvc        ;
-
-  std::string                 m_NameOfDataManagerSvc   ; 
-  IDataManagerSvc*            m_DataManagerSvc         ;
+  bool                        m_executeOnce         ; 
+  bool                        m_execute             ;  
   
-  Names                       m_NamesOfStreamItems     ;
-  IDataSelector               m_DataSelector           ;  
-  Items                       m_StreamItems            ;
-
-  bool m_FillGiGaStream ;  ///< flag to distinguish GiGa input and output 
+  std::string                 m_nameOfCnvSvc        ; 
+  IConversionSvc*             m_cnvSvc              ; 
+  
+  std::string                 m_nameOfDataSvc       ; 
+  IDataProviderSvc*           m_dataSvc             ;
+  
+  Names                       m_namesOfItems        ;
+  Items                       m_items               ;
+  
+  IDataSelector               m_dataSelector        ;  
+  Leaves                      m_leaves              ;
 
 };
 

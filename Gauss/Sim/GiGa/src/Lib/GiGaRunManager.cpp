@@ -1,25 +1,29 @@
+// $Id: GiGaRunManager.cpp,v 1.11 2002-01-22 18:20:53 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.9  2001/08/01 09:42:24  ibelyaev
-/// redesign and reimplementation of GiGaRunManager class
-///
-/// Revision 1.8  2001/07/27 18:50:17  ibelyaev
-///  bux fix
-///
-/// Revision 1.7  2001/07/27 14:28:59  ibelyaev
-/// bug fix
-///
-/// Revision 1.6  2001/07/25 17:18:09  ibelyaev
-/// move all conversions from GiGa to GiGaCnv
-///
-/// Revision 1.5  2001/07/23 13:12:12  ibelyaev
-/// the package restructurisation(II)
-///
-/// Revision 1.4  2001/07/15 20:54:26  ibelyaev
-/// package restructurisation
-///
+// $Log: not supported by cvs2svn $
+// Revision 1.10  2001/08/12 15:42:49  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.9  2001/08/01 09:42:24  ibelyaev
+// redesign and reimplementation of GiGaRunManager class
+//
+// Revision 1.8  2001/07/27 18:50:17  ibelyaev
+//  bux fix
+//
+// Revision 1.7  2001/07/27 14:28:59  ibelyaev
+// bug fix
+//
+// Revision 1.6  2001/07/25 17:18:09  ibelyaev
+// move all conversions from GiGa to GiGaCnv
+//
+// Revision 1.5  2001/07/23 13:12:12  ibelyaev
+// the package restructurisation(II)
+//
+// Revision 1.4  2001/07/15 20:54:26  ibelyaev
+// package restructurisation
+//
 // ============================================================================
 #define GIGA_GIGARUNMANAGER_CPP 1 
 // ============================================================================
@@ -364,6 +368,8 @@ StatusCode GiGaRunManager::finalizeRunManager()
   ///
 };
 
+// ============================================================================
+// The End 
 // ============================================================================
 
 

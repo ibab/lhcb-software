@@ -1,10 +1,14 @@
+// $Id: GiGaRunManagerInterface.cpp,v 1.3 2002-01-22 18:20:53 ibelyaev Exp $ 
 // ============================================================================
-/// CVS tag $Name: not supported by cvs2svn $ 
+// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/08/01 09:42:24  ibelyaev
-/// redesign and reimplementation of GiGaRunManager class
-/// 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2001/08/12 15:42:49  ibelyaev
+// improvements with Doxygen comments
+//
+// Revision 1.1  2001/08/01 09:42:24  ibelyaev
+// redesign and reimplementation of GiGaRunManager class
+// 
 // ============================================================================
 /// GiGa 
 #include "GiGa/GiGaUtil.h"
@@ -373,6 +377,6 @@ StatusCode GiGaRunManager::declare( G4UIsession                    * obj     )
   ///
 };
 
-
-
+// ============================================================================
+// The End 
 // ============================================================================
