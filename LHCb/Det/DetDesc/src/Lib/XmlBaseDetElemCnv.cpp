@@ -1,4 +1,4 @@
-//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.6 2001-06-22 12:44:15 sponce Exp $
+//  $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/src/Lib/XmlBaseDetElemCnv.cpp,v 1.7 2001-06-25 14:21:38 sponce Exp $
 
 // include files
 #include <cstdlib>
@@ -265,11 +265,18 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       log << MSG::DEBUG << "Adding user parameter " << name << " with value "
           << value << ", type " << type << " and comment \"" << comment
           << "\"" << endreq;
-      dataObj->addUserParameter (name,
-                                 type,
-                                 comment,
-                                 value,
-                                 xmlSvc()->eval(value, false));
+      if (type == "int" || type == "double") {
+        dataObj->addUserParameter (name,
+                                   type,
+                                   comment,
+                                   value,
+                                   xmlSvc()->eval(value, false));
+      } else {
+        dataObj->addUserParameter (name,
+                                   type,
+                                   comment,
+                                   value);
+      }
     } else if ("userParameterVector" == tagName) {
       // parses the value
       std::vector<std::string> vect;
@@ -279,15 +286,17 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
       while (cstr >> val) {
         vect.push_back (val);
       }
-      
-      // evaluates the value
+
+      // depending on the type, evaluates the value
+      bool is_numeric = (type == "int" || type == "double");
       std::vector<double> d_vect;
-      for (std::vector<std::string>::iterator it = vect.begin();
-           vect.end() != it;
-           ++it) {
-        d_vect.push_back (xmlSvc()->eval(*it, false));
+      if (is_numeric) {
+        for (std::vector<std::string>::iterator it = vect.begin();
+             vect.end() != it;
+             ++it) {
+          d_vect.push_back (xmlSvc()->eval(*it, false));
+        }
       }
-      
       // adds the new parameterVector to the detectorElement
       log << MSG::DEBUG << "Adding user parameter vector " << name
           << " with values ";
@@ -297,8 +306,12 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (DOM_Element childElement,
         log << *it << " ";
       }
       log << ", type " << type << " and comment \""
-          << comment << "\"" << endreq;
-      dataObj->addUserParameterVector (name, type, comment, vect, d_vect);
+          << comment << "\"." << endreq;
+      if (is_numeric) {
+        dataObj->addUserParameterVector (name, type, comment, vect, d_vect);
+      } else {
+        dataObj->addUserParameterVector (name, type, comment, vect);
+      }
     }
     
   } else {

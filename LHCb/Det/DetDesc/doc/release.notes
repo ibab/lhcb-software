@@ -1,6 +1,13 @@
 package DetDesc
 package manager : N.N 
 
+!===========================================================================
+! 20010625 - Sebastien Ponce
+  - added check on the type for userParameters and userParameterVectors.
+  You can no more retrieve the value of these as double if their type is
+  neither "int" nore "double"
+
+!===========================================================================
 ! 20010625 - DestDesc v7 (Flr)
   requirements - adapted to GaudiKernel v10, GaudiPolicy v5, CMT v1r8
 

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.icpp,v 1.4 2001-06-22 13:10:33 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.icpp,v 1.5 2001-06-25 14:21:32 sponce Exp $
 
 #ifndef       DETDESC_DETECTORELEMENT_ICPP 
 #define       DETDESC_DETECTORELEMENT_ICPP  1 
@@ -248,11 +248,28 @@ void DetectorElement::addUserParameter (std::string name,
   userParam.comment = comment;
   userParam.value = value;
   userParam.d_value = d_value;
+  userParam.is_numeric = true;
   m_userParameters[name] = userParam;
 }
   
 //////////////////////////////////////////////////////
 /// addUserParameter
+//////////////////////////////////////////////////////
+void DetectorElement::addUserParameter (std::string name,
+                                        std::string type,
+                                        std::string comment,
+                                        std::string value) {
+  UserParam userParam;
+  userParam.type = type;
+  userParam.comment = comment;
+  userParam.value = value;
+  userParam.d_value = 0.0; // this is never used
+  userParam.is_numeric = false;
+  m_userParameters[name] = userParam;
+}
+  
+//////////////////////////////////////////////////////
+/// addUserParameterVector
 //////////////////////////////////////////////////////
 void DetectorElement::addUserParameterVector (std::string name,
                                               std::string type,
@@ -264,6 +281,23 @@ void DetectorElement::addUserParameterVector (std::string name,
   userParamVector.comment = comment;
   userParamVector.value = value;
   userParamVector.d_value = d_value;
+  userParamVector.is_numeric = true;
+  m_userParameterVectors[name] = userParamVector;
+}
+
+//////////////////////////////////////////////////////
+/// addUserParameterVector
+//////////////////////////////////////////////////////
+void DetectorElement::addUserParameterVector (std::string name,
+                                              std::string type,
+                                              std::string comment,
+                                              std::vector<std::string> value) {
+  UserParamVector userParamVector;
+  userParamVector.type = type;
+  userParamVector.comment = comment;
+  userParamVector.value = value;
+  // userParamVector.d_value is is never used
+  userParamVector.is_numeric = false;
   m_userParameterVectors[name] = userParamVector;
 }
 
@@ -307,6 +341,10 @@ inline double DetectorElement::userParameter (std::string name) {
   if (m_userParameters.find(name) == m_userParameters.end()) {
     throw DetectorElementException("No userParameter with this name : \""
                                    + name + "\" !");
+  }
+  if (! m_userParameters[name].is_numeric) {
+    throw DetectorElementException("userParameter " + name +
+                                   " does not have a numerical value.");
   }
   return m_userParameters[name].d_value;
 }
@@ -354,6 +392,10 @@ DetectorElement::userParameterVector (std::string name) {
   if (m_userParameterVectors.find(name) == m_userParameterVectors.end()) {
     throw DetectorElementException("No userParameterVector with this name : \""
                                    + name + "\" !");
+  }
+  if (! m_userParameterVectors[name].is_numeric) {
+    throw DetectorElementException("userParameterVector " + name +
+                                   " does not have numerical values.");
   }
   return m_userParameterVectors[name].d_value;
 }

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IDetectorElement.h,v 1.4 2001-06-22 10:15:09 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IDetectorElement.h,v 1.5 2001-06-25 14:21:32 sponce Exp $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1 
 
@@ -141,72 +141,72 @@ class IDetectorElement: virtual public IInspectable
   virtual ~IDetectorElement(){};
 
   /**
-   * this gets the type of the parameter.
-   * If this parameter does not exist, it returns an empty string.
+   * this gets the type of a parameter.
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
    * @return its type
    */
-  virtual std::string userParameterType (std::string name) = 0;
+  inline virtual std::string userParameterType (std::string name) = 0;
   
   /**
-   * this gets the comment of the parameter
-   * If this parameter does not exist, it returns an empty string.
+   * this gets the comment of a parameter
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
    * @return its comment
    */
-  virtual std::string userParameterComment (std::string name) = 0;
+  inline virtual std::string userParameterComment (std::string name) = 0;
   
   /**
-   * this gets the value of the parameter, as a string
-   * If this parameter does not exist, it returns an empty string.
+   * this gets the value of a parameter, as a string
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
    * @return its value, as a string
    */
-  virtual std::string userParameterValue (std::string name) = 0;
+  inline virtual std::string userParameterValue (std::string name) = 0;
   
   /**
-   * this gets the value of the parameter as a double. If the value is not
-   * a double, it displays an error message and returns 0.
-   * If this parameter does not exist, it returns 0 too.
+   * this gets the value of the parameter as a double.
+   *  If the value is not a double, it raises a DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
    * @return its value, as a double
    */
-  virtual double userParameter (std::string name) = 0;
+  inline virtual double userParameter (std::string name) = 0;
   
   /**
-   * this gets the type of the parameter vector
-   * If this parameter does not exist, it returns an empty string.
+   * this gets the type of a parameter vector
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter vector
    * @return its type
    */
-  virtual std::string userParameterVectorType (std::string name) = 0;
+  inline virtual std::string userParameterVectorType (std::string name) = 0;
   
   /**
-   * this gets the comment of the parameter vector
-   * If this parameter does not exist, it returns an empty string.
+   * this gets the comment of a parameter vector
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter vector
    * @return its comment
    */
-  virtual std::string userParameterVectorComment (std::string name) = 0;
+  inline virtual std::string userParameterVectorComment (std::string name) = 0;
   
   /**
-   * this gets the value of the parameter vector, as a vector of string
-   * If this parameter does not exist, it returns an empty string.
+   * this gets the value of a parameter vector, as a vector of string
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter vector
    * @return its value, as a string
    */
-  virtual std::vector<std::string>
+  inline virtual std::vector<std::string>
   userParameterVectorValue (std::string name) = 0;
   
   /**
-   * this gets the value of the parameter as a vector of double.
-   * If one of the values is not a double, it displays an error message
-   * and puts a 0 in its place.
-   * If this parameter does not exist, it returns 0 too.
+   * this gets the value of a parameter as a vector of double.
+   * If the parameter vector is not made of doubles, it raises a
+   * DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
    * @return its value, as a vector of double
    */
-  virtual std::vector<double> userParameterVector (std::string name) = 0;
+  inline virtual std::vector<double> userParameterVector (std::string name) = 0;
 
   /**
    * this returns the list of existing userParameters as a vector of their
@@ -220,8 +220,7 @@ class IDetectorElement: virtual public IInspectable
    * their names
    * @return a list of userParameter names
    */
-  virtual std::vector<std::string> userParameterVectors() = 0;
-  
+  virtual std::vector<std::string> userParameterVectors() = 0;  
 
 };
 

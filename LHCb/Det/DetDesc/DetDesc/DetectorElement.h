@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.11 2001-06-22 10:15:09 sponce Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/DetectorElement.h,v 1.12 2001-06-25 14:21:32 sponce Exp $
 
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
@@ -263,9 +263,9 @@ public:
           const std::string& namePath);
 
   /**
-   * This adds a new userParameter to the detectorElement. This parameter has
-   * a name, a type, a comment and a value, given as a std::string and as a
-   * double.
+   * This adds a new numerical userParameter to the detectorElement.
+   * This parameter has a name, a type, a comment and a value, given both
+   * as a std::string and as a double.
    * If this parameter was already existing, it is replaced by the new one.
    * @param name the name of the parameter
    * @param type the type of the parameter. This is only a clue for the user, it
@@ -281,9 +281,26 @@ public:
                                         double d_value);
   
   /**
-   * This adds a new userParameterVector to the detectorElement. This parameter
-   * has a name, a type, a comment and a value, given as a
-   * std::vector<std::string>
+   * This adds a new non-numerical userParameter to the detectorElement.
+   * This parameter has a name, a type, a comment and a value,
+   * given as a std::string.
+   * If this parameter was already existing, it is replaced by the new one.
+   * @param name the name of the parameter
+   * @param type the type of the parameter. This is only a clue for the user, it
+   * is not used by the detector element itself
+   * @param comment a comment on this parameter use
+   * @param value the value of the parameter, as a string
+   * @param d_value the value of the parameter, as a double
+   */
+  inline virtual void addUserParameter (std::string name,
+                                        std::string type,
+                                        std::string comment,
+                                        std::string value);
+  
+  /**
+   * This adds a new numerical userParameterVector to the detectorElement.
+   * This parameter has a name, a type, a comment and a value, given both as a
+   * std::vector<std::string> and as a std::vector<double>
    * If this parameter vector was already existing, it is replaced by the new
    * one.
    * @param name the name of the parameter vector
@@ -301,57 +318,76 @@ public:
                                               std::vector<double> d_value);
   
   /**
-   * this gets the type of the parameter.
-   * If this parameter does not exist, it returns an empty string.
+   * This adds a new non-numerical userParameterVector to the detectorElement.
+   * This parameter has a name, a type, a comment and a value, given as a
+   * std::vector<std::string>.
+   * If this parameter vector was already existing, it is replaced by the new
+   * one.
+   * @param name the name of the parameter vector
+   * @param type the type of the parameter vector. This is only a clue for
+   * the user, it is not used by the detector element itself
+   * @param comment a comment on this parameter vector use
+   * @param value the value of the parameter vector, as a vector of strings
+   * @param d_value the value of the parameter vector, as a vector of doubles
+   * strings by default
+   */
+  inline virtual void addUserParameterVector (std::string name,
+                                              std::string type,
+                                              std::string comment,
+                                              std::vector<std::string> value);
+  
+  /**
+   * this gets the type of a parameter.
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
    * @return its type
    */
   inline virtual std::string userParameterType (std::string name);
   
   /**
-   * this gets the comment of the parameter
-   * If this parameter does not exist, it returns an empty string.
+   * this gets the comment of a parameter
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
    * @return its comment
    */
   inline virtual std::string userParameterComment (std::string name);
   
   /**
-   * this gets the value of the parameter, as a string
-   * If this parameter does not exist, it returns an empty string.
+   * this gets the value of a parameter, as a string
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
    * @return its value, as a string
    */
   inline virtual std::string userParameterValue (std::string name);
   
   /**
-   * this gets the value of the parameter as a double. If the value is not
-   * a double, it displays an error message and returns 0.
-   * If this parameter does not exist, it returns 0 too.
+   * this gets the value of the parameter as a double.
+   *  If the value is not a double, it raises a DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
    * @return its value, as a double
    */
   inline virtual double userParameter (std::string name);
   
   /**
-   * this gets the type of the parameter vector
-   * If this parameter does not exist, it returns an empty string.
+   * this gets the type of a parameter vector
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter vector
    * @return its type
    */
   inline virtual std::string userParameterVectorType (std::string name);
   
   /**
-   * this gets the comment of the parameter vector
-   * If this parameter does not exist, it returns an empty string.
+   * this gets the comment of a parameter vector
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter vector
    * @return its comment
    */
   inline virtual std::string userParameterVectorComment (std::string name);
   
   /**
-   * this gets the value of the parameter vector, as a vector of string
-   * If this parameter does not exist, it returns an empty string.
+   * this gets the value of a parameter vector, as a vector of string
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter vector
    * @return its value, as a string
    */
@@ -359,10 +395,10 @@ public:
   userParameterVectorValue (std::string name);
   
   /**
-   * this gets the value of the parameter as a vector of double.
-   * If one of the values is not a double, it displays an error message
-   * and puts a 0 in its place.
-   * If this parameter does not exist, it returns 0 too.
+   * this gets the value of a parameter as a vector of double.
+   * If the parameter vector is not made of doubles, it raises a
+   * DetectorElementException.
+   * If this parameter does not exist, it raises a DetectorElementException.
    * @param name the name of the parameter
    * @return its value, as a vector of double
    */
@@ -430,6 +466,7 @@ private:
     std::string comment;
     std::string value;
     double d_value;
+    bool is_numeric;
   } UserParam;
 
   /// this defines a map of UserParam
@@ -441,6 +478,7 @@ private:
     std::string comment;
     std::vector<std::string> value;
     std::vector<double> d_value;
+    bool is_numeric;
   } UserParamVector;
 
   /// this defines a map of UserParamVector
