@@ -1,11 +1,16 @@
-/** @file 
- * 
- *  Options for data file(s) for tests. 
- *  
- *  @author G.Corti
- *  @date   2004-02-03
- */
 
+//-- GAUDI data cards generated on May 12, 2004 10:14:59 AM
+//-- For Event Type = 10000000 / Data type = DST 1
+//--     Configuration = Gauss/Boole/Brunel field045 - v1r0
+//--     DST 1 datasets produced by Brunel - v23r6
+//--     From DIGI 1 datasets produced by Boole - v5r6
+//--     From SIM 1 datasets produced by Gauss - v15r5
+//--     Database version = v22r1
+//--     Cards content = physical
+//--     
+//-- Datasets replicated at CERN-Castor
+//-- 200 dataset(s) - NbEvents = 99505
+//-- 
 
 //-- POOL data
 EventSelector.Input   = {
@@ -216,4 +221,5 @@ PoolDbCacheSvc.Catalog = {
  ,"xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml"
  ,"xmlcatalog_http://gcorti.home.cern.ch/gcorti/POOL/MyCatalog.xml"
 };
+
 ApplicationMgr.EvtMax    = 5000;
