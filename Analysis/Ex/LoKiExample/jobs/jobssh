@@ -1,0 +1,40 @@
+#!/usr/local/bin/zsh
+# =============================================================================
+# $Id: jobssh,v 1.1 2004-08-15 13:18:18 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ 
+# =============================================================================
+
+# =============================================================================
+# @file 
+# helper file to submit batch jobs for Ex/LoKiExample packages using 
+# python-based batch script 
+#
+# @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+# @date   2004-08-15 
+# 
+# =============================================================================
+
+typeset OPTS=$PWD/../options
+bsub -q 8nh -J Demo1  LoKiExJob.py -o $OPTS/DV_LoKi_Demo1.opts         -n   1000 
+bjobs
+bsub -q 8nh -J Histos1 LoKiExJob.py -o $OPTS/DV_LoKi_Histos.opts        -n  10000 
+bjobs
+bsub -q 8nh -J Tuple1  LoKiExJob.py -o $OPTS/DV_LoKi_Tuple.opts         -n  10000 
+bjobs
+bsub -q 8nh -J KstGam1 LoKiExJob.py -o $OPTS/DV_LoKi_Bd2KStarGamma.opts -n  10000
+bjobs
+bsub -q 8nh -J PhiGam1 LoKiExJob.py -o $OPTS/DV_LoKi_Bs2PhiGamma.opts   -n  10000
+bjobs
+bsub -q 8nh -J PhiPhi1 LoKiExJob.py -o $OPTS/DV_LoKi_Bs2PhiPhi.opts     -n  10000
+bjobs
+bsub -q 8nh -J EvtTag1 LoKiExJob.py -o $OPTS/DV_LoKi_EventTagTuple.opts -n  10000 
+bjobs
+bsub -q 8nh -J MCMuon1 LoKiExJob.py -o $OPTS/DV_LoKi_MCMuon.opts        -n  10000 
+bjobs
+bsub -q 8nh -J MCEvt1  LoKiExJob.py -o $OPTS/DV_LoKi_MCEvent.opts       -n 100000 
+bjobs
+
+# =============================================================================
+# The END 
+# =============================================================================

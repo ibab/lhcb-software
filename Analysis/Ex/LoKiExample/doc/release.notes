@@ -4,6 +4,25 @@
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
 
+! 2004-08-15 - Vanya BELYAEV
+	update for usage with DaVinci v11r12 
+ - jobs/LoKiExJob.py 
+   new script to run examples and to submit them as batch jobs 
+
+    Usage:
+   interactive work:
+        LoKiExJob.py -o MyOptions.opts -n 1000
+   submit in batch:
+   bsub LoKiExJob.py -o MyOptions.opts -n 1000
+
+    Important: This script DOES not require all CMT/LHCB/DAVINCI/etc to be set. 
+
+ - jobs/jobpy
+   trivial script to submit all bartch jobs using LoKiExJob.py script 
+ 
+ - cmt/requirements  increment version to v3r2
+
+
 ! 2004-08-11 - Vanya BELYAEV
 
  - options/DV_LoKi_Bd2KStarGamma.opts
