@@ -1,4 +1,4 @@
-// $Id: EventHeaderFromRaw.cpp,v 1.1 2004-10-26 13:10:15 cattanem Exp $
+// $Id: EventHeaderFromRaw.cpp,v 1.2 2004-10-28 12:46:17 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -59,12 +59,12 @@ StatusCode EventHeaderFromRaw::execute() {
   const std::vector<RawBank>& data = rawEvt->banks( RawBuffer::Header );
 
   raw_int* evhData = (*(data.begin())).data();
-  long evtNum = (*evhData++);
   long runNum = (*evhData++);
+  long evtNum = (*evhData++);
   
   EventHeader* evtHeader = new EventHeader;
-  evtHeader->setEvtNum( evtNum );
   evtHeader->setRunNum( runNum );
+  evtHeader->setEvtNum( evtNum );
 
   return put( evtHeader, EventHeaderLocation::Default );
 };
