@@ -21,7 +21,7 @@
 #ifndef EVTVECTOR4R_HH
 #define EVTVECTOR4R_HH
 
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 
 class EvtVector3R;
@@ -55,7 +55,7 @@ public:
   inline EvtVector4R& operator-=(const EvtVector4R& v2);
   inline double get(int i) const;
   inline double cont(const EvtVector4R& v4) const;
-  friend ostream& operator<<(ostream& s, const EvtVector4R& v);  
+  friend std::ostream& operator<<(std::ostream& s, const EvtVector4R& v);  
   double mass2() const;     
   double mass() const;
   void applyRotateEuler(double alpha,double beta,double gamma);

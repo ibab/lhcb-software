@@ -21,7 +21,7 @@
 #ifndef EVTVECTORPARTICLE_HH
 #define EVTVECTORPARTICLE_HH
 
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtVector4C.hh"
 #include "EvtGen/EvtParticle.hh"
 #include "EvtGen/EvtId.hh"

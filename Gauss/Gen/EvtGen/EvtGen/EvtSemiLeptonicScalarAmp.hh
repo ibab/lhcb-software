@@ -21,7 +21,7 @@
 #ifndef EVTSEMILEPTONICSCALARAMP_HH
 #define EVTSEMILEPTONICSCALARAMP_HH
 
-#include <iostream.h>
+#include <iostream>
 #include <fstream.h>
 #include <stdlib.h>
 #include <ctype.h>

@@ -23,7 +23,7 @@
 #define EVTSPINTYPE_HH
 
 #include "EvtGen/EvtReport.hh"
-#include <iostream.h>
+#include <iostream>
 
 class EvtSpinType{
 
@@ -54,7 +54,7 @@ public:
     case SPIN4:
       return 8;
     default:
-      report(ERROR,"EvtGEn")<<"Unknown spintype in EvtSpinType!"<<endl;
+      report(ERROR,"EvtGEn")<<"Unknown spintype in EvtSpinType!"<<std::endl;
       return 0;
     }
 
@@ -84,7 +84,7 @@ public:
     case SPIN4:
       return 9;
     default:
-      report(ERROR,"EvtGEn")<<"Unknown spintype in EvtSpinType!"<<endl;
+      report(ERROR,"EvtGEn")<<"Unknown spintype in EvtSpinType!"<<std::endl;
       return 0;
     }
 

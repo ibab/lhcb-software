@@ -21,7 +21,7 @@
 #ifndef EVTSTDHEP_HH
 #define EVTSTDHEP_HH
 
-#include <iostream.h>
+#include <iostream>
 
 
 const int EVTSTDHEPLENGTH =1000;

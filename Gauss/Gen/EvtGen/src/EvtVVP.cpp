@@ -20,7 +20,7 @@
 //------------------------------------------------------------------------
 //
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtString.hh"
 #include "EvtGen/EvtVector3C.hh"
 #include "EvtGen/EvtParticle.hh"

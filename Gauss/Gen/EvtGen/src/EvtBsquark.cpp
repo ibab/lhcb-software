@@ -19,7 +19,7 @@
 //
 //------------------------------------------------------------------------
 //
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtString.hh"
 #include "EvtGen/EvtParticle.hh"
 #include "EvtGen/EvtDiracParticle.hh"

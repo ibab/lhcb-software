@@ -21,7 +21,7 @@
 #ifndef EVT3RANK3C_HH
 #define EVT3RANK3C_HH
 
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtComplex.hh"
 #include "EvtGen/EvtTensor3C.hh"
 #include "EvtGen/EvtVector3C.hh"

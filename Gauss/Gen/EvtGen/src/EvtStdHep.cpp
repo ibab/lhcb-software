@@ -18,7 +18,7 @@
 //
 //------------------------------------------------------------------------
 
-#include <iostream.h>
+#include <iostream>
 #include <iomanip.h>
 #include "EvtGen/EvtVector4R.hh"
 #include "EvtGen/EvtStdHep.hh"

@@ -31,7 +31,7 @@
 //---------------
 // C++ Headers --
 //---------------
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 
 double EvtBtoXsgammaFermiUtil::FermiExpFunc(double y, const HepVector &coeffs) {

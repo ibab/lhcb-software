@@ -24,7 +24,7 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtRandomEngine.hh"
 
 double EvtRandomEngine::random(){

@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------
 // 
 #include <stdlib.h>
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 #include "EvtGen/EvtComplex.hh"
 #include "EvtGen/EvtVector4R.hh"

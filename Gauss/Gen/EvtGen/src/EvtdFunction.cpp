@@ -20,7 +20,7 @@
 // 
 #include <stdlib.h>
 #include <math.h>
-#include <iostream.h>
+#include <iostream>
 #include <assert.h>
 #include "EvtGen/EvtdFunction.hh"
 #include "EvtGen/EvtdFunctionSingle.hh"

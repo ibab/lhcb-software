@@ -18,7 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
-#include <iostream.h>
+#include <iostream>
 #include <iomanip.h>
 #include <fstream.h>
 #include <ctype.h>

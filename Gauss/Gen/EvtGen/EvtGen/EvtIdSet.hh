@@ -22,7 +22,7 @@
 #define EVTIDSET_HH
 
 #include "EvtGen/EvtId.hh"
-#include <iostream.h>
+#include <iostream>
 
 class EvtString;
 class EvtId;

@@ -21,7 +21,7 @@
 #ifndef EVTPARTICLE_HH
 #define EVTPARTICLE_HH
 
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtVector4R.hh"
 #include "EvtGen/EvtSpinDensity.hh"
 #include "EvtGen/EvtId.hh"

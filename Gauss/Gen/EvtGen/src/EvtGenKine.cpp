@@ -19,7 +19,7 @@
 //
 //------------------------------------------------------------------------
 //
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtGenKine.hh"
 #include "EvtGen/EvtRandom.hh"
 #include "EvtGen/EvtVector4R.hh"

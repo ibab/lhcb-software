@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------------
 // File and Version Information:
-//      $Id: EvtRanFor.cpp,v 1.1.1.1 2002-04-11 13:17:08 witoldp Exp $
+//      $Id: EvtRanFor.cpp,v 1.2 2002-05-27 12:52:28 witoldp Exp $
 //
 // Description:
 //	subroutine emcranfor_.
@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtRandom.hh"
 extern "C" {
   void evtranfor_(float *rvec, int *len) 

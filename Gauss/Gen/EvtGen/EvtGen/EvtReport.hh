@@ -25,12 +25,12 @@
 #if !defined(FILENAME_ONLY) /* relative path includes */
 
 // system include files
-#include <iostream.h>
+#include <iostream>
 
 // user include files
 
 #else /* filename-only includes */
-#include <iostream.h>
+#include <iostream>
 #include <types.h>
 #endif /* filename-only includes */
 // system include files
@@ -54,7 +54,7 @@ enum Severity {
 };
 
 // function declaration
-ostream& report( Severity severity ,
+std::ostream& report( Severity severity ,
                  const char* facility = 0 ) ;
 
 // inline function definitions

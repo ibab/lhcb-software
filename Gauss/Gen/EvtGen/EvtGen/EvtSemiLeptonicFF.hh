@@ -22,7 +22,7 @@
 #ifndef EVTSEMILEPTONICFF_HH
 #define EVTSEMILEPTONICFF_HH
 
-#include <iostream.h>
+#include <iostream>
 #include <fstream.h>
 #include <stdlib.h>
 #include <ctype.h>

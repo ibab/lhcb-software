@@ -21,7 +21,7 @@
 #ifndef EVTCOMPLEX_HH
 #define EVTCOMPLEX_HH
 
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 
 class EvtComplex {
@@ -39,7 +39,7 @@ class EvtComplex {
   inline friend double real(const EvtComplex& c);
   inline friend double imag(const EvtComplex& c);
   inline friend EvtComplex exp(const EvtComplex& c);
-  friend ostream& operator<<(ostream& s, const EvtComplex& c);  
+  friend std::ostream& operator<<(std::ostream& s, const EvtComplex& c);  
 
 public:
   EvtComplex():_rpart(0.0),_ipart(0.0){}

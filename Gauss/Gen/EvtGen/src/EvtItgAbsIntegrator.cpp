@@ -28,7 +28,7 @@ extern "C" {
 }
 
 #include <math.h>
-#include <iostream.h>
+#include <iostream>
 
 #include "EvtGen/EvtReport.hh"
 #include "EvtGen/EvtItgAbsFunction.hh"

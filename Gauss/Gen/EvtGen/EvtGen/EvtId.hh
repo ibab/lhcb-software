@@ -21,7 +21,7 @@
 #ifndef EVTID_HH
 #define EVTID_HH
 
-#include <iostream.h>
+#include <iostream>
 
 class EvtId {
 
@@ -32,7 +32,7 @@ public:
 
   EvtId(int id,int alias):_id(id),_alias(alias){} 
 
-  friend ostream& operator<<(ostream& s, const EvtId& v);  
+  friend std::ostream& operator<<(std::ostream& s, const EvtId& v);  
 
   int operator==(const EvtId& id) const { return _id==id._id; }
   int operator!=(const EvtId& id) const { return _id!=id._id; }

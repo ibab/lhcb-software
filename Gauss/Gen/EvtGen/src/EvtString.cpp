@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------
 
 #include "EvtGen/EvtString.hh"
-#include <iostream.h>
+#include <iostream>
 #include <string.h>
 
 EvtString::EvtString(const char* cptr){

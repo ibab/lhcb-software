@@ -21,7 +21,7 @@
 #ifndef EVTSEMILEPTONICTENSORAMP_HH
 #define EVTSEMILEPTONICTENSORAMP_HH
 
-#include <iostream.h>
+#include <iostream>
 #include <fstream.h>
 #include <stdlib.h>
 #include <ctype.h>

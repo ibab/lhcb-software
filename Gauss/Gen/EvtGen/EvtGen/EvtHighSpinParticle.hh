@@ -21,7 +21,7 @@
 #ifndef EVTHIGHSPINPARTICLE_HH
 #define EVTHIGHSPINPARTICLE_HH
 
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtParticle.hh"
 #include "EvtGen/EvtId.hh"
 

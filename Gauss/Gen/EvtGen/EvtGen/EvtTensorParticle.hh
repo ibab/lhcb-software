@@ -21,7 +21,7 @@
 #ifndef EVTTENSORPARTICLE_HH
 #define EVTTENSORPARTICLE_HH
 
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtTensor4C.hh"
 #include "EvtGen/EvtParticle.hh"
 

@@ -21,7 +21,7 @@
 #ifndef EvtTensor4C_HH
 #define EvtTensor4C_HH
 
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtComplex.hh"
 #include "EvtGen/EvtVector4C.hh"
 #include "EvtGen/EvtVector4R.hh"

@@ -21,7 +21,7 @@
 #ifndef EVTPARTICLEFACTORY_HH
 #define EVTPARTICLEFACTORY_HH
 
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtVector4R.hh"
 #include "EvtGen/EvtId.hh"
 #include "EvtGen/EvtSpinType.hh"

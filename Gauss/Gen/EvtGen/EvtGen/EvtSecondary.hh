@@ -21,7 +21,7 @@
 #ifndef EVTSECONDARY_HH
 #define EVTSECONDARY_HH
 
-#include <iostream.h>
+#include <iostream>
 
 
 const int EVTSECONDARYLENGTH =100;

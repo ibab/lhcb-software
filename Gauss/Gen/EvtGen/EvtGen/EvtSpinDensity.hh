@@ -38,7 +38,7 @@ public:
   void Set(int i,int j,const EvtComplex& rhoij);
   const EvtComplex& Get(int i,int j) const;
   double NormalizedProb(const EvtSpinDensity& d);
-  friend ostream& operator<<(ostream& s,const EvtSpinDensity& d);
+  friend std::ostream& operator<<(std::ostream& s,const EvtSpinDensity& d);
   void SetDiag(int n);
 
   int Check();

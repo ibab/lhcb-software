@@ -21,7 +21,7 @@
 #ifndef EVTVECTOR3C_N
 #define EVTVECTOR3C_N
 
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtComplex.hh"
 #include "EvtGen/EvtVector3R.hh"
 

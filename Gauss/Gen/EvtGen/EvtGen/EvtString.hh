@@ -21,7 +21,7 @@
 #ifndef EVTSTRING_HH
 #define EVTSTRING_HH
 
-#include <iostream.h>
+#include <iostream>
 
 class EvtString {
 
@@ -34,8 +34,8 @@ public:
 
   EvtString(const EvtString& string);
 
-  friend ostream& operator<<(ostream& s, const EvtString& str);  
-  friend istream& operator>>(istream& s, EvtString& str);  
+  friend std::ostream& operator<<(std::ostream& s, const EvtString& str);  
+  friend std::istream& operator>>(std::istream& s, EvtString& str);  
 
   virtual ~EvtString();
 

@@ -18,7 +18,7 @@
 //
 //------------------------------------------------------------------------
 //
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtParticle.hh"
 #include "EvtGen/EvtPDL.hh"
 #include "EvtGen/EvtSecondary.hh"

@@ -20,7 +20,7 @@
 //
 
 #include "EvtGen/EvtId.hh"
-#include <iostream.h>
+#include <iostream>
 
 
 ostream& operator<<(ostream& s, const EvtId& id){

@@ -21,7 +21,7 @@
 #ifndef EVTTENSOR3C_HH
 #define EVTTENSOR3C_HH
 
-#include <iostream.h>
+#include <iostream>
 #include "EvtGen/EvtComplex.hh"
 #include "EvtGen/EvtVector3C.hh"
 #include "EvtGen/EvtVector3R.hh"

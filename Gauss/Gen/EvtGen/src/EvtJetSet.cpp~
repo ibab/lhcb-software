@@ -26,7 +26,7 @@
 #include "EvtGen/EvtReport.hh"
 #include "EvtGen/EvtString.hh"
 #include "EvtGen/EvtId.hh"
-#include <iostream.h>
+#include <iostream>
 #include <iomanip.h>
 #include <fstream.h>
 #include <string.h>

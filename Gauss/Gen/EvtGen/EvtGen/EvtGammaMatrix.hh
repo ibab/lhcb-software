@@ -23,7 +23,7 @@
 #define EVTGAMMAMATRIX_HH
 
 #include "EvtGen/EvtComplex.hh"
-#include <iostream.h>
+#include <iostream>
 
 class EvtDiracSpinor;
 class EvtGammaMatrix;

@@ -21,7 +21,7 @@
 // 
 #include <stdlib.h>
 #include <math.h>
-#include <iostream.h>
+#include <iostream>
 #include <assert.h>
 #include "EvtGen/EvtCGCoefSingle.hh"
 #include "EvtGen/EvtOrthogVector.hh"

@@ -22,7 +22,7 @@
 #define EVTCGVECTOR_HH
 
 #include <assert.h>
-#include <iostream.h>
+#include <iostream>
 template <class T>
 class EvtVectorT {
 

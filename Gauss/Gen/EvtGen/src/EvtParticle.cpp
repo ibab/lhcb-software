@@ -18,7 +18,7 @@
 //
 //------------------------------------------------------------------------
 // 
-#include <iostream.h>
+#include <iostream>
 #include <math.h>
 #include <fstream.h>
 #include <stdio.h>

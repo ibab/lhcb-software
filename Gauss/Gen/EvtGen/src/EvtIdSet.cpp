@@ -22,7 +22,7 @@
 #include "EvtGen/EvtIdSet.hh"
 #include "EvtGen/EvtString.hh"
 #include "EvtGen/EvtPDL.hh"
-#include <iostream.h>
+#include <iostream>
 
 EvtIdSet::EvtIdSet(const EvtId name1) {
   _numInList=1;
