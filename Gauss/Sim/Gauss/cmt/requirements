@@ -1,5 +1,5 @@
 package Gauss
-version v18r2
+version v18r3
 
 # =============================================================================
 # structure 
@@ -15,7 +15,7 @@ set AlwaysKillLeadingHadron 1
 
 #=========================================================================
 #get information from DBASE and PARAM 
-use XmlDDDB             v22r4   Det   -no_auto_imports
+use XmlDDDB             v23r0   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
 use DecFiles            v6r3    Gen   -no_auto_imports
 use ParamFiles          v3r8          -no_auto_imports

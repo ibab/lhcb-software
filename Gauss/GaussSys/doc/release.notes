@@ -4,10 +4,14 @@
 ! Purpose     : Gauss system
 !-----------------------------------------------------------------------------
 
+!===================== GaussSys v18r3 2004-11-29 ==========================
+! 2004-11-29 - Florence Ranjard
+ - requirements - use Geant4 v62r5, Pythia 6_226.2, LHCb v17r1, XmlDDDB v23r0 
+
 !====================== GaussSys v18r2 2004-11-22 =======================
             is built with LHCb v17r0, Geant4 v62r0p2, GENSER_0_3_0
 ! 2004-11-22 - Florence RANJARD
- - requirements - update /HepEvt/ common block length to fit Pythia 6_226.2
+ - requirements - update /HepEvt/ common block length to fit Pythia 6_224.2
                   from GENSER
 
 !======================= GaussSys v18r1 2004-10-29 =============
