@@ -4,7 +4,7 @@
 ! Purpose     : Analaysis program for LHCb
 !-----------------------------------------------------------------------------
 
-! 2004-09-01- P. Koppenburg
+! 2004-09-01- P. Koppenburg for Federica Legger
   - job/DaVinci.job, job/Stripping.job
     . Use cmtuser directory
     
