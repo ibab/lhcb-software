@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.9 2003-05-16 17:40:34 asatta Exp $
+// $Id: MuonBackground.cpp,v 1.10 2003-05-20 12:03:23 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -864,7 +864,7 @@ StatusCode MuonBackground::createHit(KeyedContainer<MCMuonHit>**
   //  partitionIndex=station*m_regionNumber+regionIndex;
   
   if(!hitInsideCha){
-    msg<<MSG::INFO<<" could not find a r.phi combination "<<endreq;
+    msg<<MSG::DEBUG<<" could not find a r.phi combination "<<endreq;
   }else{
     //define the chamber index in the total reference...
     int partition=station*m_regionNumber+regionIndex-1;    
