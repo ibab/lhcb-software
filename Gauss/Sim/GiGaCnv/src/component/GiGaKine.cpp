@@ -1,8 +1,11 @@
-// $Id: GiGaKine.cpp,v 1.1 2002-12-07 14:36:26 ibelyaev Exp $
+// $Id: GiGaKine.cpp,v 1.2 2002-12-13 14:25:22 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/07 14:36:26  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+//
 // ============================================================================
 
 /// from Gaudi 
@@ -46,11 +49,7 @@ GiGaKine::GiGaKine( const std::string&   ServiceName          ,
 // ============================================================================
 /// virtual destructor
 // ============================================================================
-GiGaKine::~GiGaKine()
-{ 
-  /// clear the reference table 
-  m_table.clear(); 
-};
+GiGaKine::~GiGaKine(){};
 
 // ============================================================================
 /** initialization 

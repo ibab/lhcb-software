@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.33 2002-12-07 21:13:48 ibelyaev Exp $
+! $Id: release.notes,v 1.34 2002-12-13 14:25:19 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2002-12-13 - Ivan Belyaev
+ - src/Lib/GiGaCnvBase.cpp           Trivial bug fixes 
+   src/Lib/GiGaCnvSvcBase.cpp
+   src/component/GiGaGeo.cpp
+   src/component/GiGaKine.cpp
 
 ! 2002-12-07 - Ivan Belyaev
  - GiGaCnv/GiGaCnvBase.h,GiGaCnvSvcBase.h   - fix trivial bugs/misprints 

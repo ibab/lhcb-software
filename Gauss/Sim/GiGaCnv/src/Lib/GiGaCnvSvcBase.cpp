@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.11 2002-12-07 14:36:25 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.12 2002-12-13 14:25:21 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/12/07 14:36:25  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+//
 // Revision 1.10  2002/12/04 16:25:18  ibelyaev
 //  remove extra calls for 'addRef'
 //
@@ -127,7 +130,6 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
 // ============================================================================
 GiGaCnvSvcBase::~GiGaCnvSvcBase()
 {
-  m_leaves.clear() ;
 #ifdef GIGA_DEBUG
   GiGaCnvSvcBaseLocal::s_Counter.decrement () ;
 #endif  
@@ -286,7 +288,11 @@ StatusCode GiGaCnvSvcBase::initialize()
   ///
   setAddressCreator( this );
   
-  return locateOwnCnvs(); 
+  StatusCode sc = locateOwnCnvs();
+  if( sc.isFailure() ) { return Error(" Cannot locate own converters ",sc);}
+  
+  return Print("GiGaCnvSvcBase initialized successfully" , 
+               MSG::VERBOSE , StatusCode::SUCCESS ) ;
   ///
 };
 
@@ -323,6 +329,8 @@ StatusCode GiGaCnvSvcBase::locateOwnCnvs()
 StatusCode GiGaCnvSvcBase::finalize()
 {
   ///
+  Print("GiGaCnvSvcBase Finalization" , MSG::VERBOSE , StatusCode::SUCCESS ) ;
+  
   if ( 0 != dpSvc     () ) { dpSvc     () -> release() ; m_dpSvc     = 0 ; } 
   if ( 0 != evtSvc    () ) { evtSvc    () -> release() ; m_evtSvc    = 0 ; } 
   if ( 0 != detSvc    () ) { detSvc    () -> release() ; m_detSvc    = 0 ; } 

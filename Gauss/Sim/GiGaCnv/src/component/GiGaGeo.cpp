@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.1 2002-12-07 14:36:26 ibelyaev Exp $ 
+// $Id: GiGaGeo.cpp,v 1.2 2002-12-13 14:25:22 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/07 14:36:26  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+//
 // ===========================================================================
 #define GIGACNV_GiGaGeo_CPP 1 
 // ============================================================================
@@ -477,7 +480,7 @@ StatusCode GiGaGeo::finalize()
   // clear store of assemblies!
   StatusCode sc = GiGaAssemblyStore::store()->clear();
   // delete of world volume
-  if( 0 != m_worldPV ) { delete m_worldPV ; }
+  // if( 0 != m_worldPV ) { delete m_worldPV ; }
   // finalize the base class 
   return GiGaCnvSvcBase::finalize(); 
 };

@@ -1,8 +1,11 @@
-// $Id: GiGaCnvBase.cpp,v 1.10 2002-12-07 14:36:25 ibelyaev Exp $ 
+// $Id: GiGaCnvBase.cpp,v 1.11 2002-12-13 14:25:21 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/12/07 14:36:25  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+//
 // Revision 1.9  2002/12/04 16:25:18  ibelyaev
 //  remove extra calls for 'addRef'
 //
@@ -227,7 +230,7 @@ StatusCode GiGaCnvBase::initialize ()
 {
   StatusCode st = Converter::initialize() ; 
   if( st.isFailure() ) 
-    { return Error("Initialize::uanle to initialize Converter base class"); } 
+    { return Error("Can not initialize Converter base class"); } 
   ///
   {
     StatusCode sc = 
