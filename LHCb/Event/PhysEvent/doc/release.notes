@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.21 2002-07-24 20:13:03 gcorti Exp $
+! $Id: release.notes,v 1.22 2002-07-25 14:22:14 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
 
+!========================= PhysEvent v6r0 2002-07-25 ========================
 ! 2002-07-24 - Gloria Corti
  - Introduce copy constructor, clone method and assignment operator to the
    ProtoParticle where in all cases original values are kept but keyed object
