@@ -1,5 +1,6 @@
 // Define DST content for Brunel
 
+DstWriter.Preload = false;
 DstWriter.OptItemList =
 {
   "/Event/Prev#1"
@@ -13,7 +14,6 @@ DstWriter.OptItemList =
 DstWriter.ItemList = 
 {
   "/Event#1"
-, "/Event/Header#1"
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"

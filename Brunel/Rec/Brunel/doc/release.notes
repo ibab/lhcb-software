@@ -3,9 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v25r0>2004-10-19 Brunel v25r0</A></H1><PRE>
-This version uses Gaudi v15r2, LHCb v17r0.
-Requires data produced by Boole v6r2p1 or later. It *cannot* process DC04 data
+</PRE><H1><A NAME=v25r0>2004-10-28 Brunel v25r0</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v17r0.
+Requires data produced by Boole v7r0 or later. It *cannot* process DC04 data
 
 - New or modified functionality
   . New OT Event model: OTTime replaces OTDigit and OTCluster, plus backward 
@@ -16,6 +16,20 @@ Requires data produced by Boole v6r2p1 or later. It *cannot* process DC04 data
 - DST changes
   . Link/Raw/OT/Times replaces Link/Raw/OT/Digits
   . Link/Rec/OT/Clusters and Rec/OT removed
+
+</PRE><H1><A NAME=v24r3>2004-10-27 Brunel v24r3</A></H1><PRE>
+This version uses Gaudi v15r3, LHCb v16r3 and is built on v24r2b branch.
+It can process DC04 data
+
+- New or modified functionality
+  . RawBuffer is decoded using DataOnDemandSvc (RawBuffer.opts)
+    Not all banks are decoded in this way yet, due to a problem in Gaudi when
+    finalising data on demand algorithms that use tools
+  . EventHeader is rebuilt from RawBuffer when not on input file
+  . New features for Calo Reco (CaloReco v2r6)
+
+- DST changes
+  . Event/Header removed (can be rebuilt from RawBuffer)
 
 </PRE><H1><A NAME=v24r2>2004-09-22 Brunel v24r2</A></H1><PRE>
 This version uses Gaudi v15r2, needs CMT v1r16. It can process DC04 data

@@ -12,12 +12,12 @@ use GaudiPolicy v5r19
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v15r2)
-use GaudiKernel		v16r2
-use GaudiSvc 		v12r3
-use GaudiAlg 		v8r0
+#-- Gaudi libraries (from GAUDI_v15r3)
+use GaudiKernel		v17r0
+use GaudiSvc 		v12r5
+use GaudiAlg 		v8r2
 use GaudiGSL		v6r1
-use GaudiPoolDb		v1r9
+use GaudiPoolDb		v1r10
 use GaudiObjDesc 	v6r3
 use RootHistCnv         v9r3
 
@@ -29,14 +29,14 @@ use ParamFiles          v3r8    -no_auto_imports
 #-- LHCb libraries (from LHCB_v17r0)
 use LHCb	v17r0
 
-#-- BrunelSys v24r2 packages
+#-- BrunelSys v25r0 packages
 
 # Tools
 use AsctToLinker        v1r3    Rec
 
 # Calorimeter
 use CaloMonitor         v2r2p1	Calo
-use CaloReco            v2r5	Calo
+use CaloReco            v2r6	Calo
 use CaloPIDs		v2r4	Calo
 
 # Inner Tracker
