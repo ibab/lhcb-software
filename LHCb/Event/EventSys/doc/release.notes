@@ -1,9 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v18r0 2004-06-16 ========================
-! 2004-06-16 - Marco Cattaneo
- - Use EventAssoc v1r2
+!======================== EventSys v18r0 2004-06-17 ========================
+! 2004-06-17 - Marco Cattaneo
+ - Use EventAssoc v1r2, RichEvent v7r4
  - Remove L1Event, completely superseded by TrgEvent
 
 !======================= EventSys v17r11 2004-06-16 ========================
