@@ -1,4 +1,4 @@
-// $Id: MuonSystemLayout.cpp,v 1.3 2002-02-18 09:23:32 atsareg Exp $
+// $Id: MuonSystemLayout.cpp,v 1.4 2002-02-25 10:57:44 atsareg Exp $
 // Include files
 #include <iostream>
 #include "MuonKernel/MuonSystemLayout.h"
@@ -108,21 +108,42 @@ std::vector<MuonTileID> MuonSystemLayout::tilesInRegion(const MuonTileID& pad,
                                                 int pregion) const {
     
   int st = pad.station();
-  return m_station_layouts[st].tilesInRegion(pad,pregion);
+  std::vector<MuonTileID> result;
+  std::vector<MuonTileID>::iterator it;
   
+  result=m_station_layouts[st].tilesInRegion(pad,pregion);
+  for(it = result.begin(); it != result.end(); it++ ) {
+    it->setStation(st);
+  }
+  return result;
 }  
 
 std::vector<MuonTileID> 
 MuonSystemLayout::neighbours(const MuonTileID& pad) const {
+
   int st = pad.station();
-  return m_station_layouts[st].neighbours(pad);
+  std::vector<MuonTileID> result;
+  std::vector<MuonTileID>::iterator it;
+  
+  result=m_station_layouts[st].neighbours(pad);
+  for(it = result.begin(); it != result.end(); it++ ) {
+    it->setStation(st);
+  }
+  return result;  
 }
 
 std::vector<MuonTileID> 
 MuonSystemLayout::neighbours(const MuonTileID& pad,
                              int dirX, int dirY, int depth) const {
   int st = pad.station();
-  return m_station_layouts[st].neighbours(pad,dirX,dirY,depth);
+  std::vector<MuonTileID> result;
+  std::vector<MuonTileID>::iterator it;
+  
+  result=m_station_layouts[st].neighbours(pad,dirX,dirY,depth);
+  for(it = result.begin(); it != result.end(); it++ ) {
+    it->setStation(st);
+  }
+  return result;    
 }
 
 bool MuonSystemLayout::isValidID(const MuonTileID& pad) const {
@@ -135,5 +156,7 @@ MuonTileID MuonSystemLayout::contains(const MuonTileID& pad) const {
   // It is responsibility of the user to assure that the pad
   // layout is finer than the containing layout
   int st = pad.station();
-  return m_station_layouts[st].contains(pad);
+  MuonTileID result = m_station_layouts[st].contains(pad);
+  result.setStation(st);
+  return result;
 } 

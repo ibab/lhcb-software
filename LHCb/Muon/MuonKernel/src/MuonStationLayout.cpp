@@ -1,6 +1,7 @@
-// $Id: MuonStationLayout.cpp,v 1.3 2002-02-18 09:23:32 atsareg Exp $
+// $Id: MuonStationLayout.cpp,v 1.4 2002-02-25 10:57:43 atsareg Exp $
 // Include files
 #include <iostream>
+#include <algorithm>
 #include "MuonKernel/MuonStationLayout.h"
 #include "MuonKernel/MuonTileID.h"
 
@@ -126,32 +127,61 @@ MuonStationLayout::neighbours(const MuonTileID& pad,
 			      int depth) const {
 			      
   std::vector<MuonTileID> result;			      
-  std::vector<MuonTileID> vtm;
-  std::vector<MuonTileID>::iterator it;
+  std::vector<MuonTileID> vreg;
+  std::vector<MuonTileID> vtmit;
+  std::vector<MuonTileID>::iterator it,itm,itf;
   			      
   unsigned int reg = pad.region();  
   
-  for(unsigned int i = 0; i<4; i++) {
-  
-    int factorX = 1;
-    int factorY = 1;
-    if(i != reg) {
-      factorX = m_layouts[i].xGrid()/m_layouts[reg].xGrid();
-      factorY = m_layouts[i].yGrid()/m_layouts[reg].yGrid();
-    }
-
-    vtm=m_layouts[i].neighboursInArea(pad,dirX,dirY,
-                                      depth*factorX,
-				      depth*factorY);
-    
-    if(!vtm.empty()) {
-      for(it = vtm.begin(); it != vtm.end(); it++) {
-        if(it->region() == i) result.push_back(*it);
+  vreg = m_layouts[reg].neighbours(pad,dirX,dirY,depth);
+  for(it = vreg.begin(); it != vreg.end(); it++) {
+    if(it->region() == reg) {
+      result.push_back(*it);
+    } else {
+      int itreg = it->region();
+      vtmit = m_layouts[itreg].tiles(*it);   
+      for(itm = vtmit.begin(); itm != vtmit.end(); itm++) {   
+        itf = std::find(result.begin(),result.end(),*itm);
+	if ( itf == result.end() ) result.push_back(*itm);
       }
-    }
-  } 			      
+    }  
+  }			      
   return result;
 }
+
+// std::vector<MuonTileID> 
+// MuonStationLayout::neighbours(const MuonTileID& pad,
+//                               int dirX,
+// 			      int dirY,
+// 			      int depth) const {
+// 			      
+//   std::vector<MuonTileID> result;			      
+//   std::vector<MuonTileID> vtm;
+//   std::vector<MuonTileID>::iterator it;
+//   			      
+//   unsigned int reg = pad.region();  
+//   
+//   for(unsigned int i = 0; i<4; i++) {
+//   
+//     int depthX = depth;
+//     int depthY = depth;
+//     if(i != reg) {
+//       depthX = depth*m_layouts[i].xGrid()/m_layouts[reg].xGrid();
+//       depthY = depth*m_layouts[i].yGrid()/m_layouts[reg].yGrid();
+//     }
+// 
+//     vtm=m_layouts[i].neighboursInArea(pad,dirX,dirY,
+//                                       depthX,
+// 				      depthY);
+//     
+//     if(!vtm.empty()) {
+//       for(it = vtm.begin(); it != vtm.end(); it++) {
+//         if(it->region() == i) result.push_back(*it);
+//       }
+//     }
+//   } 			      
+//   return result;
+// }
 
 bool MuonStationLayout::isValidID(const MuonTileID& pad) const {
 
