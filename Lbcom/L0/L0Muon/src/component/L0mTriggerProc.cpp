@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.6 2001-07-12 20:21:32 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.7 2001-07-26 13:24:37 cattanem Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -229,7 +229,7 @@ L0mTower* L0mTriggerProc::createTower(L0mPad* pad, ObjectVector<L0mPad>* pads) {
   vtiles[4] = m_layout[4].tiles( *pad , 12, 1 );
     
   // look through all the pads
-  int nbit = 0;
+//  int nbit = 0;
   for ( ind = pads->begin(); ind != pads->end(); ind++ ) {
     int st = (*ind)->station();
     if(st !=2 ) {   // for all the pads except those in M3

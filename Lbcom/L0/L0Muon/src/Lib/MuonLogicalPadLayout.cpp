@@ -1,4 +1,4 @@
-// $Id: MuonLogicalPadLayout.cpp,v 1.2 2001-07-13 17:03:05 ranjard Exp $
+// $Id: MuonLogicalPadLayout.cpp,v 1.3 2001-07-26 13:24:36 cattanem Exp $
 
 // Include files
 #include <strstream>
@@ -19,7 +19,7 @@
 //------------------------------------------------------------------------------
 
 
-MuonLogicalPadLayout::MuonLogicalPadLayout(IDataProviderSvc* detSvc, MsgStream& log) {
+MuonLogicalPadLayout::MuonLogicalPadLayout(IDataProviderSvc* /* detSvc */, MsgStream& /* log */) {
 }
 
 MuonLogicalPadLayout::MuonLogicalPadLayout(std::vector<double> zstation,
@@ -31,6 +31,7 @@ MuonLogicalPadLayout::MuonLogicalPadLayout(std::vector<double> zstation,
   int i;
 
   for (i=0; i<5; i++) {
+
       p = new Parameter();
       p->addParameter(zstation[i],"Zposition");
       p->addParameterVector(regions[i],"Regions");
@@ -195,11 +196,11 @@ MuonLogicalPadLayout::ID MuonLogicalPadLayout::getId(unsigned int id) {
   int segment =  (id << (33 - 24 - 4)) >> (32-4);
   int luc =      (id << (33 - 21 - 3)) >> (32-3);
   int lur =      (id << (33 - 18 - 3)) >> (32-3);
-  int lup =      (id << (33 - 16 - 2)) >> (32-2);
-  int map =      (id << (33 - 15 - 1)) >> (32-1);
+//  int lup =      (id << (33 - 16 - 2)) >> (32-2);
+//  int map =      (id << (33 - 15 - 1)) >> (32-1);
   int nx  =      (id << (33 - 8 - 7)) >> (32-7);
   int ny  =      (id << (33 - 3 - 5)) >> (32-5);
-  int type  =    (id << (33 - 1 - 2)) >> (32-2);
+//  int type  =    (id << (33 - 1 - 2)) >> (32-2);
   
   ID tt;
   // station

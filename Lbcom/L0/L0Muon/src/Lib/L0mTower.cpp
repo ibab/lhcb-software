@@ -1,4 +1,4 @@
-// $Id: L0mTower.cpp,v 1.8 2001-07-26 13:05:38 cattanem Exp $
+// $Id: L0mTower.cpp,v 1.9 2001-07-26 13:24:36 cattanem Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include <set>
@@ -158,7 +158,6 @@ L0mTower::HitIndex L0mTower::searchStation(bool& found,
 
 L0mPad* L0mTower::findTrack() {
 
-  L0mPad* lpd = 0;
   bool foundHit;
   bool searchFailed = false;
 

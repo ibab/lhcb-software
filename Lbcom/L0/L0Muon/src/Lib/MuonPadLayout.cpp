@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/MuonPadLayout.cpp,v 1.3 2001-06-26 18:42:10 atsareg Exp $
+// $Id: MuonPadLayout.cpp,v 1.4 2001-07-26 13:24:37 cattanem Exp $
 
 #define MUONPADLAYOUT_CPP
 
@@ -22,7 +22,7 @@
 //------------------------------------------------------------------------------
 
 
-MuonPadLayout::MuonPadLayout(IDataProviderSvc* detSvc, MsgStream& log) {
+MuonPadLayout::MuonPadLayout(IDataProviderSvc* /* detSvc */, MsgStream& /* log */) {
 
    // Get the layout data
 
