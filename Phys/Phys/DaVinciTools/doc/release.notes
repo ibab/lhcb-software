@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.71 2004-03-23 17:30:39 pkoppenb Exp $
+! $Id: release.notes,v 1.72 2004-03-25 16:46:00 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
+
+! 2004-03-25 - P. Koppenburg for Sandra Amato
+ - src/ParticleStuffer.*
+   . If the daughters of the particle to be stuffed is a resonance, do not 
+     transport it's parameters
+   . Calculated the momentum position correlation matrix.
 
 !========================== DaVinciTools v9r1 2004-03-23 ==================
 ! 2004-03-23 - P. Koppenburg for Gerhard Raven
