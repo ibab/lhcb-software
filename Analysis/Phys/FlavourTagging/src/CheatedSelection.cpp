@@ -98,12 +98,12 @@ StatusCode CheatedSelection::execute() {
   ////////////////////////////////////////////////////
   if ( !B0 ) {
     req << MSG::ERROR << "Missing Signal B in MC."<< endreq;
-    return StatusCode::FAILURE;                      
+    return StatusCode::SUCCESS;                      
   }
   ////////////////////////////////////////////////////
 
   req << MSG::DEBUG << "-------- Found B meson in MC: "<< m_SignalB << endreq;
-  m_debug -> printTree(B0);
+  //m_debug -> printTree(B0);
 
   // CheatedSelection ----------------------------
   HepLorentzVector ptot=0;
@@ -135,6 +135,7 @@ StatusCode CheatedSelection::execute() {
        ip != axdaughter.end(); ++ip ) {
     VertB.addToProducts( *ip );
   }
+
   //and set vertex position  
   VertB.setPosition( (*((B0->endVertices()).begin()))->position() );
 
@@ -156,8 +157,7 @@ StatusCode CheatedSelection::execute() {
   req << MSG::INFO << "Reconstructed " << m_SignalB
       << " with m=" << candB.momentum().m()/GeV 
       << " p="      << candB.p()/GeV 
-      << " pt="     << candB.pt()/GeV
-      << " phi="    << candB.momentum().vect().phi() <<endreq;
+      << " pt="     << candB.pt()/GeV <<endreq;
 
   // save desktop to TES in location specified by jobOptions
   sc = desktop()->saveDesktop();
@@ -194,8 +194,8 @@ void CheatedSelection::SignalTree(MCParticleVector& mcsons, ParticleVector& sons
 	    m_debug -> printAncestor(*imc);
 	    req << MSG::DEBUG<< " mcp=" << (*imc)->momentum().vect().mag()/GeV
 		<< " axp=" << axp->p()/GeV <<endreq;
-	    if((*imc)->particleID().pid() != axp->particleID().pid()) {
-	      req << MSG::INFO << "Mis-ID particle in signal:  " 
+	    if((*imc)->particleID().abspid() != axp->particleID().abspid()) {
+	      req << MSG::DEBUG << "Mis-ID particle in signal:  " 
 		  << axp->particleID().pid() << endreq;
 	      double mcmass = (*imc)->momentum().m();
 	      HepLorentzVector pax = axp->momentum();

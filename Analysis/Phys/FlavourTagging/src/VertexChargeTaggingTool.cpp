@@ -1,4 +1,4 @@
-// $Id: VertexChargeTaggingTool.cpp,v 1.3 2003-06-20 09:11:11 odie Exp $
+// $Id: VertexChargeTaggingTool.cpp,v 1.4 2004-03-11 10:48:05 pkoppenb Exp $
 #include <algorithm>
 #include <iomanip>
 
@@ -375,7 +375,7 @@ void VertexChargeTaggingTool::tagFromList( const Particle &theB,
     if( (pid != 321) && (pid != 211) && (pid != 11) ) continue;
     if( ((*c) == seed1) || ((*c) == seed2) ) continue;
     ProtoParticle *proto = dynamic_cast<ProtoParticle *>((*c)->origin());
-    if( proto->track()->upstream() ) continue;
+    if( proto->track()->isDownstream() ) continue;
     double impact, error;
     StatusCode sc = m_GeomDisp->calcImpactPar(**c,thePrimVtx,impact,error);
     if( sc.isFailure() ) continue;

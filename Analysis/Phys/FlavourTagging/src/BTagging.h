@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.1 2004-01-28 18:54:33 gcorti Exp $
+// $Id: BTagging.h,v 1.2 2004-03-11 10:48:05 pkoppenb Exp $
 #ifndef USER_BTagging_H 
 #define USER_BTagging_H 1
 
@@ -29,10 +29,13 @@
 #include "Event/ProtoParticle.h"
 #include "Event/L0DUReport.h"
 #include "Event/L1Report.h"
+#include "Event/FlavourTag.h"
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Vector/LorentzVector.h"
+
+#define MAXSIZE 100
 
 /** @class BTagging BTagging.h 
  *  
@@ -52,57 +55,59 @@ class BTagging : public DVAlgorithm {
   void printInfo( Particle* );
   void PileUpIP( Particle*, double&, double& ) ;
   std::vector<Particle*> toStdVector( SmartRefVector<Particle>& );
-  ParticleVector BTagging::FindDaughters( Particle* );
+  ParticleVector FindDaughters( Particle* );
+  double VertexCharge( ParticleVector, int& );
 
 public: 
   /// Standard constructor
   BTagging( const std::string& name, ISvcLocator* pSvcLocator );
-
   virtual ~BTagging( ); ///< Destructor
-
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
- 
-  //NTuples  
-  NTuple::Item<long>      m_Run;
-  NTuple::Item<long>      m_Event;
-  NTuple::Item<long>      m_Tag;
-  NTuple::Item<long>      m_TagCat;
-  NTuple::Item<long>      m_trig0;
-  NTuple::Item<long>      m_trig1;
-  NTuple::Item<float>     m_B0the;
-  NTuple::Item<float>     m_B0phi;
-  NTuple::Item<float>     m_B0mass;
-  NTuple::Item<long>      m_BID;
-  NTuple::Item<float>     m_RVz;
-  NTuple::Item<long>      m_K;
-  NTuple::Item<long>      m_knrec;
-  NTuple::Item<long>      m_kType;
 
-  NTuple::Item<long>      m_N;
-  NTuple::Array<long>      m_AXID;
-  NTuple::Array<float>     m_AXP;
-  NTuple::Array<float>     m_AXPt;
-  NTuple::Array<float>     m_AXphi;
-  NTuple::Array<long>      m_ch;
-  NTuple::Array<float>     m_AXip;
-  NTuple::Array<float>     m_AXiperr;
-  NTuple::Array<float>     m_IPPU;
-  NTuple::Array<long>      m_trtyp;
-  NTuple::Array<float>     m_InvMss;
-  NTuple::Array<float>     m_ThBp;
+  //tagging variables
+  long      m_Run;
+  long      m_Event;
+  long      m_trig0;
+  long      m_trig1;
+  float     m_B0the;
+  float     m_B0phi;
+  float     m_B0mass;
+  long      m_BID;
+  float     m_RVz;
+  long      m_K;
+  long      m_knrec;
 
+  long      m_N;
+  long      m_AXID[MAXSIZE];
+  float     m_AXP[MAXSIZE];
+  float     m_AXPt[MAXSIZE];
+  float     m_AXphi[MAXSIZE];
+  long      m_ch[MAXSIZE];
+  float     m_AXip[MAXSIZE];
+  float     m_AXiperr[MAXSIZE];
+  float     m_IPPU[MAXSIZE];
+  long      m_trtyp[MAXSIZE];
+  float     m_InvMss[MAXSIZE];
+  float     m_ThBp[MAXSIZE];
+
+  Hep3Vector ipVec;
+  HepSymMatrix errMatrix;
   IParticlePropertySvc* ppSvc;
   IVisPrimVertTool* m_visTool;
-
   Vertex* RecVert; 
   VertexVector PileUpVtx;
 
-  //properties
-  bool m_WriteNtpl;
+  int nsele, trueflavour;
+  int nrt[50];
+  int nwt[50];
+
+  //properties ----------------
+  std::string m_TagsLocation;
+
   double m_AXPt_cut_muon;
   double m_AXP_cut_muon;
   double m_IP_cut_muon;
@@ -114,14 +119,20 @@ private:
   double m_AXPt_cut_kaon;
   double m_AXP_cut_kaon ;
   double m_IP_cut_kaon ;
+  double m_IPPU_cut_kaon;
 
   double m_AXPt_cut_kaonS;
   double m_AXP_cut_kaonS;
   double m_IP_cut_kaonS;
-
   double m_phicut_kaonS;
   double m_etacut_kaonS;
   double m_dQcut_kaonS;
+
+  double m_AXPt_cut_pionS;
+  double m_AXP_cut_pionS;
+  double m_IP_cut_pionS;
+  double m_dQcut_pionS;
+  double m_dQ2cut_pionS;
 
 };
 //===========================================================================//

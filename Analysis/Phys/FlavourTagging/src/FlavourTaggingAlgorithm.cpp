@@ -1,4 +1,4 @@
-// $Id: FlavourTaggingAlgorithm.cpp,v 1.14 2003-07-04 12:14:54 odie Exp $
+// $Id: FlavourTaggingAlgorithm.cpp,v 1.15 2004-03-11 10:48:05 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -134,7 +134,8 @@ StatusCode FlavourTaggingAlgorithm::execute() {
     log << MSG::ERROR << "Unable to find the primary vertices at '"
         << m_primVertices_location << "'" << endreq;
     return StatusCode::SUCCESS;
-  }
+  } else log << MSG::VERBOSE << "Could find the primary vertices at '"
+        << m_primVertices_location << "'" << endreq;
   if( primvtxs->size() == 0 ) {
     log << MSG::WARNING
         << "No primary vertex reconstructed. Skipping the event." << endreq;

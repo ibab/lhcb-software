@@ -4,6 +4,22 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+!==================== FlavourTagging v4r8 2004-03-11 ===================
+! 2004-03-11 - P. Koppenburg for Odie and Marco
+ - CategoryTaggingTool.cpp (PK/Odie)
+   . Don't try to access L1 or L0 when they're not there.
+   . Avoid not assigning a B meson as the tagged particle 
+     in the case of opposing tag decisions. 
+ - BTagging class (Marco)
+   . pion same side tagging
+   . summary of tag performance at the end of run
+   . writing output to TES in FlavourTag class
+ - CheatedSelection (Marco)
+   . Don't stop when signal B is not found in event
+	(waiting for Gauss to provide flag of forced B).
+ - VertexChargeTaggingTool.cpp and BTagging.cpp
+   . upstream() -> isDownstream()
+
 !==================== FlavourTagging v4r7 2004-01-28 ===================
 ! 2004-01-28 - Gloria CORTI for Marco MUSY
  - New version of tagging code to substitute what used for TDR.

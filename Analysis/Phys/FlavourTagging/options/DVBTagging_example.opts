@@ -1,109 +1,124 @@
-/** @file 
- * 
- *  Configuration file to run example of how to use new B flavour
- *  tagging with either a real selection or cheated selection
- * 
- *  @author M.Musy
- *  @date 2004-01-28
- */
+//##############################################################
+//  DaVinci job Options to run a selection + BTagging
+
+//--------------------------------------------------------------
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#pragma print on
+
+// Default Database dependent configurations. The latest
+// compatible database is included from here.
+// If you need something different choose from vXXXX.opts when
+// more than one is available
+#include "$DAVINCIROOT/options/DaVinciDDDB.opts"
+
+//--------------------------------------------------------------
+// DaVinci Global Reconstruction Algorithms
+// VERY IMPORTANT:
+//   ChargedProtoPAlg and PrimVtxFinder are executed in
+//   DaVinciReco and MUST not be executed again
+// REMEMBER:
+//   to make Neutral ProtoParticles for channels with neutrals
+// REMEMBER:
+//   to make Kshorts with all type of tracks
+//--------------------------------------------------------------
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+//--- Neutral ProtoParticles (gammas and pi0) 
+// NOTE:: Not enough information in new GaudiRootDB files at the moment to 
+//        produce neutral protoparticles -> only works with POOL input
+//#include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 
 ///--------------------------------------------------------------
 ///              SELECTIONS
 ///--------------------------------------------------------------
-///Caveat: be careful not to use the new (or old) tagging code after
-///loose-cut selections, as this may imply that particles belonging
-///to the signal are left as possible taggers, which spoils the tag!
+
+//--- For merged and resolved pi0 the corresponding selection algorithm
+//    need to be executed. 
+//    Note that DaVinciNeutrals MUST be executed
+// ApplicationMgr.DLLs   += { "Bd2PiPiPi0" };
+// ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
+// #include "$BD2PIPIPI0ROOT/options/ResolvedPi0Alg.opts"
+// ApplicationMgr.TopAlg += { "MergedPi0Alg" };
+// #include "$BD2PIPIPI0ROOT/options/MergedPi0Alg.opts"
+
+//--- Ks->pi+pi- with all type of tracks loose selection + monitoring
+//#include "$DAVINCIROOT/options/DaVinciKshortLoose.opts"
+//--- Ks->pi+pi- with all type of tracks tight selection + monitoring
+//#include "$DAVINCIROOT/options/DaVinciKshortTight.opts"
 
 ///B0 Channel Selections ----------------------------------------
 
 //#include "$B2HHROOT/options/DVBd2PiPi.opts"
 //BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bd2pipi" };
-
 //#include "$B2HHROOT/options/DVBd2KPi.opts"
 //BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bd2Kpi" };
-
 //#include "$BD2JPSIKSTARROOT/options/DVBd2Jpsi2MuMu_Kstar2KPi.opts"
 //BTagging.PhysDesktop.InputLocations = { "/Event/Phys/B0" };
+//...
 
-
-///Bs Channel Selections -----------------------------------------
+///Bs Channel Selections ----------------------------------------
 
 //#include "$B2HHROOT/options/DVBs2PiK.opts"
 //BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bs2piK" };
-
 //#include "$B2HHROOT/options/DVBs2KK.opts"
 //BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bs2KK" };
-
 //#include "$BS2DSHOPTS/DVBs2Ds2KKPi_Pi.opts"
 //BTagging.PhysDesktop.InputLocations = { "/Event/Phys/Bs" };
+//...
 
+///Cheated Selection --------------------------------------------
 
-///Cheated Selection -----------------------------------------
-//define signal B to look for 
-//uncomment one of these to define your signal:
+//you must define the signal B to look for. Uncomment one of these:
 CheatedSelection.SignalB = "B0";
 //CheatedSelection.SignalB = "B~0";
 //CheatedSelection.SignalB = "B_s0";
 //CheatedSelection.SignalB = "B_s~0";
-#include "$FLAVOURTAGGINGROOT/options/DVCheatedSelection.opts"
-BTagging.PhysDesktop.InputLocations = { "/Event/Phys/CheatedB" };
+#include "$FLAVOURTAGGINGROOT/options/CheatedSelection.opts"
 
-///--------------------------------------------------------------
+// includes upstream  -------------------------------------------
+ChargedProtoPAlg.VeloTTTracks = true; //(not mandatory)
+
+///-----------------------------------------------------------///
 ///               BTagging
-///--------------------------------------------------------------
+///-----------------------------------------------------------///
 ApplicationMgr.TopAlg += { "BTagging" };
-BTagging.WriteNtpl    = false;
-BTagging.OutputLevel  = 3;
+BTagging.OutputLevel   = 3;
+
+BTagging.PhysDesktop.CombinedParticleMaker.UseVTTTracks  = true;
+BTagging.PhysDesktop.CombinedParticleMaker.AddBremPhoton = true;
+BTagging.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+BTagging.PhysDesktop.CombinedParticleMaker.MuonSelection = {
+    "det='MUON' mu-pi='-9.0'" };
+BTagging.PhysDesktop.CombinedParticleMaker.ElectronSelection = {
+    "det='CALO' e-pi='2.0'" };
+BTagging.PhysDesktop.CombinedParticleMaker.KaonSelection = {
+    "det='RICH' k-pi='2.0' k-p='3.0'" };
 BTagging.PhysDesktop.OutputLevel = 4;
+BTagging.UnconstVertexFitter.OutputLevel = 5;
 BTagging.PhysDesktop.OutputLocation = "/Event/Phys/BTagging" ;
 
-BTagging.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
-BTagging.PhysDesktop.CombinedParticleMaker.MuonSelection = 
-  { "det='MUON' mu-pi='-9.0'" };
-BTagging.PhysDesktop.CombinedParticleMaker.ElectronSelection = 
-  { "det='CALO' e-pi='2.0'" };
-BTagging.PhysDesktop.CombinedParticleMaker.KaonSelection = 
-  { "det='RICH' k-pi='2.0' k-p='3.0'" };
-
-
 //--------------------------------------------------------------
-// Histogram persistency
-#include "$STDOPTS/Hbook.opts"
-HistogramPersistencySvc.OutputFile = "histos.hbook";
-
+// Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL)
 //--------------------------------------------------------------
-// Ntuples available by default. Comment to switch off
-//--------------------------------------------------------------
-ApplicationMgr.ExtSvc += { "NTupleSvc" };
-NTupleSvc.Output={"FILE1 DATAFILE='ntuple.rz' TYP='HBOOK' OPT='NEW'"};
-
-//--------------------------------------------------------------
-Particle2MCLinks.OutputLevel   = 4;
-Particle2MCLinks.ChargedPP2MC.OutputLevel = 4;
-ChargedPP2MC.OutputLevel       = 4;
-
-//-----------------------------------------------------------------
-// Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
-//--------------------------------------------------------------
-MessageSvc.OutputLevel                  = 3;
-XmlParserSvc.OutputLevel                = 4;
-PrimaryVertexFinderAlg.OutputLevel      = 4;
-ChargedProtoPAlg.OutputLevel            = 4;
-BTagging.UnconstVertexFitter.OutputLevel= 5;
-
-// Modify Message Format to print algorithm name with 40 characters
-MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
+ChargedPP2MC.OutputLevel           = 4;
+NeutralPP2MC.OutputLevel           = 4;
+MessageSvc.OutputLevel             = 3;
+XmlParserSvc.OutputLevel           = 4;
+PrimaryVertexFinderAlg.OutputLevel = 4;
+ChargedProtoPAlg.OutputLevel       = 4;
+MessageSvc.Format = "% F%30W%S%7W%R%T %0W%M";
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax    = 10000000;
+ApplicationMgr.EvtMax    = 1000 ;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
-   
+
 //---------------------------------------------------------------
-// Input data: Note that the DV... of the selection already 
-//             include their dataset
+// Input data
 //---------------------------------------------------------------
-#include "$LHCBHOME/project/web/cards/412100.opts"  // B0->pipi
+#include "$LHCBHOME/project/web/cards/412100.opts"
+//#include "$DAVINCIROOT/options/DaVinciTestData.opts"
 //################################################################

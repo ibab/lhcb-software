@@ -1,4 +1,4 @@
-// $Id: CategoryTaggingTool.cpp,v 1.9 2003-07-01 09:37:33 odie Exp $
+// $Id: CategoryTaggingTool.cpp,v 1.10 2004-03-11 10:48:05 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -274,10 +274,13 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
     ts.kss = false;
 
   m_nUntrigEvents++;
-  if( l0 && l0->decision() ) {
-    m_nL0Events++;
-    if( l1 && l1->decision() )
-      m_nL0L1Events++;
+  if ( l0 ) {   
+    if ( l0->decision() ) {
+      m_nL0Events++;
+      if( l1 ){
+        if ( l1->decision() ) m_nL0L1Events++;
+      }
+    }
   }
   int comb = 0;
   unsigned int key = (ts.mu?1:0)+(ts.e?2:0)+(ts.kos?10:0)+(ts.kss?100:0);
@@ -332,9 +335,9 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
         else 
           theTag.setDecision(FlavourTag::b);
         theTag.setTagger(muon_tag.tagger());
-        theTag.setType(muon_tag.type());
-        theTag.setTaggedB(muon_tag.taggedB());
       } 
+      theTag.setType(muon_tag.type());
+      theTag.setTaggedB(muon_tag.taggedB());
       fillCategory( "mu + K OS", theTag );
       msg << 4;
       break;
@@ -348,9 +351,9 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
         else 
           theTag.setDecision(FlavourTag::b);
         theTag.setTagger(electron_tag.tagger());
-        theTag.setType(electron_tag.type());
-        theTag.setTaggedB(electron_tag.taggedB());
       } 
+      theTag.setType(electron_tag.type());
+      theTag.setTaggedB(electron_tag.taggedB());
       fillCategory( "e + K OS", theTag );
       msg << 5;
       break;
@@ -364,9 +367,9 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
         else 
           theTag.setDecision(FlavourTag::b);
         theTag.setTagger(muon_tag.tagger());
-        theTag.setType(muon_tag.type());
-        theTag.setTaggedB(muon_tag.taggedB());
       } 
+      theTag.setType(muon_tag.type());
+      theTag.setTaggedB(muon_tag.taggedB());
       fillCategory( "mu + K SS", theTag );
       msg << 8;
       break;
@@ -380,9 +383,9 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
         else 
           theTag.setDecision(FlavourTag::b);
         theTag.setTagger(electron_tag.tagger());
-        theTag.setType(electron_tag.type());
-        theTag.setTaggedB(electron_tag.taggedB());
       } 
+      theTag.setType(electron_tag.type());
+      theTag.setTaggedB(electron_tag.taggedB());
       fillCategory( "e + K SS", theTag );
       msg << 9;
       break;
@@ -396,9 +399,9 @@ void CategoryTaggingTool::combine( const FlavourTag &muon_tag,
         else 
           theTag.setDecision(FlavourTag::b);
         theTag.setTagger(kaonOS_tag.tagger());
-        theTag.setType(kaonOS_tag.type());
-        theTag.setTaggedB(kaonOS_tag.taggedB());
       } 
+      theTag.setType(kaonOS_tag.type());
+      theTag.setTaggedB(kaonOS_tag.taggedB());
       fillCategory( "K OS + K SS", theTag );
       msg << 10;
       break;
@@ -458,12 +461,16 @@ void CategoryTaggingTool::fillCategory( std::string categ,
   SmartDataPtr<L1Report> l1(m_eventSvc, L1ReportLocation::Default);
     
   m_untrigCateg[categ].add(theTag.decision());
-  if( l0 && l0->decision() ) {
-    m_L0Categ[categ].add(theTag.decision());
-    if( l1 && l1->decision() )
-      m_L0L1Categ[categ].add(theTag.decision());
+  if ( l0 ) {   
+    if ( l0->decision() ) {
+      m_L0Categ[categ].add(theTag.decision());
+      if( l1 ){
+        if ( l1->decision() ) m_L0L1Categ[categ].add(theTag.decision());
+      }
+    }
   }
 }
+
 
 StatusCode CategoryTaggingTool::finalize()
 {
