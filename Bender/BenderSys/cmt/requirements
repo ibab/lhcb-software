@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.42 2004-12-08 18:25:22 ibelyaev Exp $ 
+# $Id: requirements,v 1.43 2004-12-08 18:39:33 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -15,11 +15,11 @@ use           GaudiPython    v6r10
 use           Bender         v4r4   Phys 
 use           BenderGCC      v1r0   Tools 
 # =========== Bender Libraries ================================================
-use           BenderLibs     v4r5   Tools 
+use           BenderLibs     v4r4   Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDet      v4r5   Det 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDict     v4r4   Tools 
+use           BenderDict     v4r5   Tools 
 # =========== Bender & LoKi documentation =====================================
 use           BenderDoc      v4r4   Doc 
 use           LoKiDoc        v3r6   Doc 
@@ -41,9 +41,6 @@ use           LoKiHybrid     v4r5   Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.41  2004/11/23 17:21:52  ibelyaev
-#  v4r4
-#
 # =============================================================================
 # The END 
 # =============================================================================
