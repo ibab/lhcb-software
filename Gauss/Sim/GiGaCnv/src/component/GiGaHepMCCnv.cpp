@@ -1,8 +1,6 @@
-// 
 //  Converter from HepMC to G4
 //
-//  initial coding by W. Pokorski 15.02.2002 (based on GiGaMCVertexCnv by I. Belyaev)
-//
+//  W. Pokorski 15.02.2002 
 // 
 //  ===========================================================================
 #define GIGACNV_GIGAHEPMCCNV_CPP 1 
@@ -12,7 +10,6 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
-#include <functional>
 /// GaudiKernel
 #include "GaudiKernel/CnvFactory.h" 
 #include "GaudiKernel/IAddressCreator.h" 
@@ -28,12 +25,7 @@
 /// GiGa
 #include "GiGa/IGiGaSvc.h" 
 #include "GiGa/GiGaException.h" 
-#include "GiGa/GiGaTrajectoryPoint.h"
-#include "GiGa/GiGaTrajectory.h"
 #include "GiGa/GiGaUtil.h"
-/// GiGaCnv
-#include "GiGaCnv/GiGaKineRefTable.h"
-#include "GiGaCnv/GiGaCnvUtils.h"
 /// HepMC
 #include "HepMC/GenEvent.h"
 #include "HepMC/GenVertex.h"
@@ -43,26 +35,16 @@
 /// Geant4 includes
 #include "G4PrimaryParticle.hh"
 #include "G4PrimaryVertex.hh"
-#include "G4ParticleDefinition.hh"
-#include "G4ParticleTable.hh"
-#include "G4TrajectoryContainer.hh"
 /// Local
-#include "GiGaCnvFunctors.h"
-#include "GenPart2GenPart.h"
-///
 #include "GiGaHepMCCnv.h" 
 
 // ============================================================================
-/// factories 
-// ============================================================================
+
 static const  CnvFactory<GiGaHepMCCnv>         s_Factory ;
 const        ICnvFactory&GiGaHepMCCnvFactory = s_Factory ;
 
 // ============================================================================
-/** standard constructor
- *  @param Loc pointer to service locator 
- */ 
-// ============================================================================
+
 GiGaHepMCCnv::GiGaHepMCCnv( ISvcLocator* Locator ) 
   : GiGaCnvBase( storageType() , classID() , Locator ) 
   , m_leaf( "" , classID() )
@@ -75,31 +57,25 @@ GiGaHepMCCnv::GiGaHepMCCnv( ISvcLocator* Locator )
 }; 
 
 // ============================================================================
-// destructor 
-// ============================================================================
+
 GiGaHepMCCnv::~GiGaHepMCCnv(){}; 
 
 // ============================================================================
-// Class ID 
-// ============================================================================
+
 const CLID&         GiGaHepMCCnv::classID     () 
 {
   return HepMCEventVector::classID(); 
 }
 
 // ============================================================================
-// StorageType 
-// ============================================================================
+
 const unsigned char GiGaHepMCCnv::storageType ()
 { 
   return GiGaKine_StorageType; 
 }
 
 // ============================================================================
-/** initialize the converter
- *  @return status code 
- */
-// ============================================================================
+
 StatusCode GiGaHepMCCnv::initialize()
 {
 
@@ -115,23 +91,14 @@ StatusCode GiGaHepMCCnv::initialize()
 };
 
 // ============================================================================
-/** finalize  the converter
- *  @return status code 
- */
-// ============================================================================
+
 StatusCode GiGaHepMCCnv::finalize() 
 {
  return GiGaCnvBase::finalize() ; };
 
 
+// ============================================================================
 
-// ============================================================================
-/** create the representation of the object 
- *  @param  object  reference to the object 
- *  @param  address address of the object 
- *  @return status code
- */ 
-// ============================================================================
 StatusCode GiGaHepMCCnv::createRep
 ( DataObject*      object  , 
   IOpaqueAddress*& address ) 
@@ -169,12 +136,7 @@ StatusCode GiGaHepMCCnv::createRep
 }; 
 
 // ============================================================================
-/** update the representation of the object 
- *  @param  object  reference to the object 
- *  @param  address address of the object 
- *  @return status code
- */ 
-// ============================================================================
+
 StatusCode GiGaHepMCCnv::updateRep
 ( DataObject*      object  , 
   IOpaqueAddress*  address ) 
@@ -188,27 +150,20 @@ StatusCode GiGaHepMCCnv::updateRep
   HepMCEventVector* hepVect = dynamic_cast<HepMCEventVector*>( object ) ;
   if( 0 ==  hepVect ) { return Error("DataObject*(of type '"           + 
                                       GiGaUtil::ObjTypeName( object )   + 
-                                      "*') is not 'HepMCEventVector*'!") ; }  
-
+                                      "*') is not 'HepMCEventVector*'!") ; }
 
   /// loop over all events 
   HepMCEventVector::iterator it;
-
-
-  int nVertex=0;
-  int nPart=0;
-
 
   for(it=hepVect->begin(); it!=hepVect->end(); it++) {
 
   /// loop over all vertices in GenEvent 
 
-   for (HepMC::GenEvent::vertex_const_iterator pVertex= (*it)->pGenEvt()->vertices_begin();
-         pVertex!= (*it)->pGenEvt()->vertices_end();pVertex++){
-
-     nVertex++;
+   for (HepMC::GenEvent::vertex_const_iterator 
+          pVertex= (*it)->pGenEvt()->vertices_begin();
+        pVertex!= (*it)->pGenEvt()->vertices_end();pVertex++){
       
-      // loop over outgoing particles and find the ones with status=1
+      // loop over outgoing particles
 
       for (HepMC::GenVertex::particles_out_const_iterator pParticle = 
            (*pVertex)->particles_out_const_begin();
@@ -216,8 +171,6 @@ StatusCode GiGaHepMCCnv::updateRep
         {
           // skip particles with end vertices
           if((*pParticle)->status()==1){
-            
-            nPart++;
             
             G4PrimaryParticle* Particle=GenPartG4Part(*pParticle);
 
@@ -230,34 +183,16 @@ StatusCode GiGaHepMCCnv::updateRep
 
             OrigVertex->SetPrimary ( Particle );
 
-            *gigaSvc() << OrigVertex ;
-
-            MsgStream log( msgSvc(),  name() ) ;
-            log << MSG::INFO << 
-              "New G4PrimaryVertex created"<< endreq;
-            
-            
-            
+            *gigaSvc() << OrigVertex ;            
           }
         }      
 
       { MsgStream log( msgSvc(),  name() ) ;
       log << MSG::VERBOSE << "UpdateRep::Add Vertex to GiGa" << endreq; }
-   }
-   
-   //   *gigaSvc() << OrigVertex ;
-   
+   }   
   }
-  { MsgStream log( msgSvc(),  name() ) ;
-       log << MSG::INFO << 
-         "Number of vertices examined "<< nVertex << endreq;
-       log << MSG::INFO << 
-         "Number of Pythia particles converted "<< nPart << endreq;
-  }
-  
 
-  return StatusCode::SUCCESS; 
-  ///
+  return StatusCode::SUCCESS;
 }; 
 
 // ============================================================================
@@ -266,7 +201,7 @@ StatusCode GiGaHepMCCnv::updateRep
 G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
 {
   static const std::string 
-    ErrMsg1("GiGaCnv::GenPart2GenPart: GenParticle* points to NULL!");
+    ErrMsg1("GiGaCnv::GenPartG4Part: GenParticle* points to NULL!");
 
   if( 0 == particle ) { throw GiGaException( ErrMsg1 ) ; }
 
@@ -284,9 +219,7 @@ G4PrimaryParticle* GiGaHepMCCnv::GenPartG4Part(HepMC::GenParticle* particle)
                      outPart!=(particle->end_vertex())->particles_out_const_end();
                      ++outPart)
                   {
-
                     Particle->SetDaughter(GenPartG4Part(*outPart));
-
                   }
               
               }
