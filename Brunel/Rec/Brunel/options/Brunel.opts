@@ -48,8 +48,8 @@ BrunelReco.DetectorList = {"VELO","OT","IT","L1","Tr","RICH","CALO","MUON","Timi
 // L1 trigger
 ApplicationMgr.DLLs += { "L1VeloTrack" };
 BrunelTriggerTRIGGERSeq.Members += { "L1VeloTrackAlg" };
-ApplicationMgr.DLLs += { "L1Decision" };
-BrunelRecoL1Seq.Members += { "Level1" };
+//ApplicationMgr.DLLs += { "L1Decision" };
+//BrunelRecoL1Seq.Members += { "Level1" };
 
 // Trigger truth relation tables (used by monitoring and for DST)
 BrunelTriggerTRIGGERSeq.Members += { "L0CaloToMCParticleAsct" };

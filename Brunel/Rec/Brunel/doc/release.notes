@@ -30,12 +30,6 @@ Purpose: LHCb reconstruction program
    . Add VeloBack track type (for backwards going Velo tracks)
      (TrEvent v11r4,TrFitEvent v3r3,VeloTrack v4r2,TrCleanEx v2r3,CaloRec v2r5)
    . Skip "error" tracks in Calo reconstruction (CaloRec v2r5) 
-   . Add L1 Decision code. Currently in Brunel Reco phase, as it needs IT 
-     Clusters as input. (L1Decision v1r0, Brunel.opts)
-
- - DST changes:
-   . Add Trig/L1/Decision (BrunelDst.opts)
-   . Add Level1 to algorithms to be timed (BrunelAlgs v1r5)
 
  - Bug fixes:
    . Small fixes in TrFirstCleverExtrapolator (TrExtrapolator v2r3)
