@@ -1,8 +1,11 @@
-// $Id: Generator.opts,v 1.4 2002-05-02 11:57:24 ibelyaev Exp $ 
+// $Id: Generator.opts,v 1.5 2002-05-07 12:35:42 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/02 11:57:24  ibelyaev
+// *** empty log message ***
+//
 // Revision 1.3  2002/04/28 19:12:04  witoldp
 // *** empty log message ***
 //
@@ -25,13 +28,16 @@ ApplicationMgr.DLLs += { "GeneratorModules" } ;
 // Event Generator Phase 
 // ============================================================================
 Generator.Members += 
-{ "SingleParticleGun" ,"DumpMC" };
-
-/// add one more generator into the chain of generators 
-ApplicationMgr.DLLs += { "EvGen" };
-Generator.Members   += { "MCParticleGun" };
-#include "$EVGENOPTS/MCParticleGun.opts"
-MCParticleGun.OutputLevel = 1;
+{"SingleParticleGun"};
+Generator.Members +=
+{"EvtDecay"};
+Generator.Members +=
+{"DumpMC"};
+/// to add one more generator into the chain of generators uncomment the lines below 
+//ApplicationMgr.DLLs += { "EvGen" };
+//Generator.Members   += { "MCParticleGun" };
+//#include "$EVGENOPTS/MCParticleGun.opts"
+//MCParticleGun.OutputLevel = 1;
 
 // ============================================================================
 // Generator's options
@@ -44,7 +50,7 @@ SingleParticleGun.Eta     =  3.0 ;
 SingleParticleGun.ModePt  =   1 ;
 SingleParticleGun.ModeEta =   1 ; 
 SingleParticleGun.ModePhi =   1 ;
-SingleParticleGun.PdgCode = 2212 ;
+SingleParticleGun.PdgCode = 511 ;
 
 // ============================================================================
 // The end of Generator's options 
