@@ -13,9 +13,9 @@ use GaudiConf		v6r5
 use BookKeeping 	v1r1	Tools
 
 # External packages used by GenEvent
-use PYTHIA		v2r6205p1	Gen
-use HepMC		v3r121p0	Sim
-use GenEvent     	v2r3    	Event
+use PYTHIA		v2r6205p2 Gen
+use HepMC		v3r121p0  Sim
+use GenEvent     	v2r3      Event
 
 # Kernel packages
 use KernelSys   	v1r0    Kernel

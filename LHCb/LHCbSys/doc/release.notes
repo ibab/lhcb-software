@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !====================== LHCbSys v11r10 2003-02-04 ============================
+! 2003-03-11 - Florence Ranjard
+ - requirements :
+   use PYTHIA v2r6205p2 with a fix for WIN32
+
 ! 2003-02-04 - Marco Cattaneo
  - requirements:
    use EventSys v13r4
