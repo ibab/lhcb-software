@@ -103,9 +103,14 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
         {
           acut=m_hcut;  
         }
+
+      std::string pname=particle->GetParticleName();
       
-      G4ProcessManager* procMgr = particle->GetProcessManager();
-      procMgr->AddDiscreteProcess(new MinEkineCuts("MinEkineCut",acut) );
+      if(pname!="opticalphoton" && pname!="pe-")
+        {          
+          G4ProcessManager* procMgr = particle->GetProcessManager();
+          procMgr->AddDiscreteProcess(new MinEkineCuts("MinEkineCut",acut) );
+        }
       
     }
 };
