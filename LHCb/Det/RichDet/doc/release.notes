@@ -21,3 +21,12 @@
 
 ! 2002-07-16 - Antonis Papanestis
  - the package has now a completely new structure.
+
+!========================= RichDet v3r3 2003-01-16 ===========================
+! 2003-01-16 - Antonis Papanestis
+  class DeRichHPDPanel has been split in 3 different classes, with the original
+  class a common base class.
+  There are new classID numbers:
+  DeRich1HPDPanel = 12011
+  DeRich2HPDPanel = 12012
+  DeRich1CdfHPDPanel = 12013

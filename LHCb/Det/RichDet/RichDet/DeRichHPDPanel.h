@@ -1,4 +1,4 @@
-// $Id: DeRichHPDPanel.h,v 1.2 2002-10-30 11:36:56 papanest Exp $
+// $Id: DeRichHPDPanel.h,v 1.3 2003-01-16 17:46:05 papanest Exp $
 
 #ifndef DERICHHPDPANEL_H
 #define DERICHHPDPANEL_H 1
@@ -56,80 +56,39 @@ public:
    * This is where most of the geometry is read
    * @return StatusCode
    */
-  virtual StatusCode initialize();
+  virtual StatusCode initialize() = 0;
   
 
   /**
    * Returns a RichSmartID for a given point in global coordinates.
    * @return StatusCode
    */
-  StatusCode smartID(const HepPoint3D& globalPoint, RichSmartID& id);
+  virtual StatusCode smartID(const HepPoint3D& globalPoint, 
+                             RichSmartID& id) = 0;
 
   /**
    * Returns the detection point given a smartID
    * @return StatusCode
    */
-  StatusCode detectionPoint(const RichSmartID& smartID, 
-                            HepPoint3D& windowHitGlobal); // this is the HPD
-                                                          // window
+  virtual StatusCode detectionPoint(const RichSmartID& smartID, 
+                            HepPoint3D& windowHitGlobal) = 0; //this is the HPD
+                                                          // window point
   /**
    * Returns the intersection point with an HPD window given a vector 
    * and a point.
    * @return StatusCode
    */
 
-  StatusCode HPDWindowPoint(const HepVector3D& vGlobal, // vector and point
-                            const HepPoint3D& pGlobal,  // define direction
+  virtual StatusCode HPDWindowPoint(const HepVector3D& vGlobal, //vector and
+                            const HepPoint3D& pGlobal, //point define direction
                             HepPoint3D& windowPointGlobal, // return point
-                            RichSmartID& smartID );
+                            RichSmartID& smartID ) = 0;
   /**
    * Returns the detection plane of the HPD panel, defined at the top of the 
    * HPDs (a plane resting on the HPDs touching the window).
    * @return HepPlane3D
    */
-  inline HepPlane3D detectionPlane() const  {
-    return detectionPlane_m;
-  }
-  
-  
-  
-private:
-
-  ///
-  double pixelSize;
-  double siliconHalfLengthX;
-  double siliconHalfLengthY;
-
-  /// the Horizontal Edge of the HPD grid (beggining of numbers). Even rows 
-  /// are differenent from odd rows in Rich1
-  double panelHorizEdgeOdd;
-  double panelHorizEdgeEven;
-
-  /// the Vertical Edge of the HPD grid. Even columns are
-  /// different from odd columns in Rich2
-  double panelVerticalEdgeEven;
-  double panelVerticalEdgeOdd;
-
-  /// these are the inner-most points to ensure that a point 
-  /// is within HPD covered area 
-  double panelVerticalEdge;
-  double panelHorizEdge;
-  
-  double rowPitch;
-  double columnPitch;
-
-  /// number of HPD rows and columns
-  int HPDRows;
-  int HPDColumns;
-
-  /// the top of the HPD window in silicon coordinates
-  HepPoint3D HPDTop;
-  
-  /// 
-  HepPlane3D detectionPlane_m;
-
-  /// deferenciate between Rich1 and Rich2
-  bool m_Rich2;
+  virtual HepPlane3D detectionPlane() const = 0;  
   
 };
 

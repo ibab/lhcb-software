@@ -1,5 +1,5 @@
 package RichDet
-version v3r1p1
+version v3r3
 
 branches src RichDet doc cmt
 
@@ -20,5 +20,4 @@ apply_pattern package_Cshlibflags
 apply_pattern package_Lshlibflags   
 
 macro_append  RichDetLib_shlibflags " $(GaudiKernel_linkopts)  $(CLHEP_linkopts) $(XML_linkopts) $(DetDesc_linkopts)"
-
 
