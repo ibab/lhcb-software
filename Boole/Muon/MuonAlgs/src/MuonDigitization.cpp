@@ -71,9 +71,9 @@ StatusCode MuonDigitization::initialize()
     numNext.assign( spillProp->getProperty("SpillOverNext") );
     m_numberOfSpilloverEvents = numPrev + numNext;
     // Release the interfaces no longer needed
-    algmgr->release();
     spillAlg->release();
-   }
+  }
+  algmgr->release();
   log << MSG::INFO << "number of spillover events read from aux stream "
       << m_numberOfSpilloverEvents << endmsg;
   m_numberOfEvents=m_numberOfSpilloverEvents+1;

@@ -7,6 +7,7 @@
 
 ! 2003-04-04 - Marco Cattaneo
  - Brunel.opts: Take histograms from standard place ($LHCBHOME/sim/data)
+ - Fix some memory leaks
 
 ! 2003-03-24 - Alessia Satta
   - First release of the package

@@ -1,4 +1,4 @@
-// $Id: MuBgDistribution.cpp,v 1.1.1.1 2003-04-04 09:10:14 asatta Exp $
+// $Id: MuBgDistribution.cpp,v 1.2 2003-04-09 12:39:35 cattanem Exp $
 // Include files 
 #include <iostream>  
 
@@ -101,7 +101,7 @@ MuBgDistribution::~MuBgDistribution()
     
     Rndm::Numbers* pippo=m_pointerToDistributions.back();
     //cout<<" rnd "<< (*pippo)()<<endl;
-    
+    pippo->finalize();
     delete pippo;   
     //cout<<" size dopo "<< m_pointerToDistributions.size()<<endl;
  

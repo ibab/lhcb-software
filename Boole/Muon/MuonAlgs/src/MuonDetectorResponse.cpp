@@ -110,12 +110,14 @@ MuonDetectorResponse::~MuonDetectorResponse(){
   std::vector<Rndm::Numbers*>::iterator  iterJitter;
   for(iterJitter=m_timeJitter.begin();iterJitter<m_timeJitter.end();
       iterJitter++){
+    (*iterJitter)->finalize();
     delete *iterJitter;    
   }
  
   std::vector<Rndm::Numbers*>::iterator iterNoise;	
 	for(iterNoise=m_electronicNoise.begin();iterNoise<m_electronicNoise.end();
       iterNoise++){
+    (*iterNoise)->finalize();
     delete *iterNoise;
 	}
   delete usefullPointer;
