@@ -1,6 +1,6 @@
 ##----------------------------------------------------------------------##
 
-# Error suppression file Boole v5r0, gcc 3.2, valgrind 2.0.0
+# Error suppression file Boole v5r1, gcc 3.2, valgrind 2.0.0
 
 # Format of this file is:
 # {
@@ -15,7 +15,7 @@
 #     (optionally: caller3 name) - according to doc. But valgrind dies...
 # }
 
-# POOL_1_5_0-gamma (reported to Markus)
+# POOL_1_5_0 (reported to Markus)
 {
   Pool/1.5.0
   Memcheck:Free
@@ -24,7 +24,7 @@
   fun:_ZN4CINT4TypeD0Ev
 }
 
-# GaudiKernel v14r2 problem (Savannah bug 2066). Also in v15r0
+# GaudiKernel v14r2 - v15r1 (Savannah bug 2066)
 {
   Gaudi/2066
   Memcheck:Cond
@@ -34,7 +34,7 @@
 }
 
 
-# HbookCnv v14r0 (Reported to Grigori/Pere)
+# HbookCnv v14r0 - v14r1 (Reported to Grigori/Pere)
 {
   Gaudi/HbookCnv
   Memcheck:Cond
