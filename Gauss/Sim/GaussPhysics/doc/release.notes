@@ -4,6 +4,10 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!======================= GaussPhysics v2r3 2003-06-23 ======================= 
+! 2003-06-23 - Witek Pokorski 
+ - EMPhysics - added OpticalPhoton to the list of constructed particles
+
 !======================= GaussPhysics v2r2 2002-04-29 =======================
 ! 2003-04-29 - Witek Pokorski
  - requirements - user GaussTools v*

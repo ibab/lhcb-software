@@ -13,6 +13,7 @@
 #include "G4Positron.hh"
 #include "G4NeutrinoE.hh"
 #include "G4AntiNeutrinoE.hh"
+#include "G4OpticalPhoton.hh"
 
 // local
 #include "EMPhysics.h"
@@ -55,6 +56,7 @@ void EMPhysics::ConstructParticle()
   G4Positron::PositronDefinition();
   G4NeutrinoE::NeutrinoEDefinition();
   G4AntiNeutrinoE::AntiNeutrinoEDefinition();
+  G4OpticalPhoton::OpticalPhotonDefinition();
 };
 
 // ============================================================================
