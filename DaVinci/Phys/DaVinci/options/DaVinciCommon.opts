@@ -33,8 +33,9 @@ ApplicationMgr.DLLs += { "GlobalReco" };
 ApplicationMgr.DLLs += { "DaVinciTools" };
 ApplicationMgr.DLLs += { "DaVinciAssociators", "DaVinciMCTools" };
 ApplicationMgr.DLLs += { "DaVinciTest" };
-//ApplicationMgr.DLLs += { "PhysSelections", "FlavourTagging" };
-//ApplicationMgr.DLLs += { "DaVinciUser" };
+ApplicationMgr.DLLs += { "PhysSelections" };
+//ApplicationMgr.DLLs += {  "FlavourTagging" };
+ApplicationMgr.DLLs += { "DaVinciUser" };
 
 // No Histogram persistency chosen at this point
 ApplicationMgr.HistogramPersistency = "NONE";
