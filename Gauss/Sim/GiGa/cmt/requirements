@@ -1,47 +1,40 @@
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/cmt/requirements,v 1.12 2001-04-23 10:04:16 ibelyaev Exp $ 
+
 package  GiGa 
+version  v4
 
-version v4
-
+################ own options #############################################
 set GIGAOPTIONS "${GIGAROOT}/options/GiGaOptions.txt"
 
+################ structure ############################################### 
 branches cmt src doc GiGa 
 
-# GaudiKernel
+################ GaudiKernel #############################################
 use GaudiKernel   v9*
 
-# Geant4 tool kit 
+################ Geant4 tool kit ######################################### 
 use GEANT4        v3r0*	Sim
 
-
-###########################################################################
-# * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * GiGa * #
-###########################################################################
-
+################ own includes ############################################
 include_dirs                     $(GIGAROOT)
 
-# component library
+################ linker library ##########################################
 library        GiGaLib   Lib/*.cpp 	        
+
+################ component library #######################################
 library        GiGa      component/*.cpp 	        
 
 apply_pattern package_Llinkopts
 apply_pattern ld_library_path 
-#=====================================================================
 
+
+################ private stuff ###########################################
 private
 
 apply_pattern package_Cshlibflags
-macro_append GiGaLib_shlibflags "$(GaudiKernel_linkopts) $(GEANT4_linkopts)"
+macro_append GiGaLib_shlibflags "$(GaudiKernel_linkopts) $(GEANT4_linkopts) $(CLHEP_linkopts)"
 
-# to reduce number of warnings 
-macro_remove cppflags "-Wall "
-
-# to reduce number of warnings from G4 
-macro_append GiGa_cppflags   " " \ 
-          Linux           "-Wno-unused " 
-
-
-
-
+##########################################################################
 
 
 
