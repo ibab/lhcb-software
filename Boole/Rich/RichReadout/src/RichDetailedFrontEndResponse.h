@@ -16,6 +16,10 @@
 #include "Kernel/RichSmartID.h"
 #include "Kernel/RichDetectorType.h"
 
+// RichKernel
+#include "RichKernel/RichMap.h"
+#include "RichKernel/RichHashMap.h"
+
 // local
 #include "RichPixel.h"
 #include "RichTimeSample.h"
@@ -59,7 +63,7 @@ public:
   virtual StatusCode finalize();
   virtual StatusCode execute();
 
-  typedef std::map< MCRichSummedDeposit*, RichTimeSample > samplecache_t;
+  typedef RichMap< MCRichSummedDeposit*, RichTimeSample > samplecache_t;
 
 private: // methods
 
