@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.h,v 1.3 2004-03-16 13:41:45 jonesc Exp $
+// $Id: RichRecMCTruthTool.h,v 1.4 2004-04-19 23:01:24 jonesc Exp $
 #ifndef RICHRECTOOLS_RICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_RICHRECMCTRUTHTOOL_H 1
 
@@ -135,7 +135,7 @@ public:
 
   /// Is the hit due to Cherenkov radiation for given radiator medium ?
   const MCParticle * trueCherenkovRadiation( const RichRecPixel * pixel,
-                                             Rich::RadiatorType rad );
+                                             const Rich::RadiatorType rad );
 
   /// Returns the MCRichSegment associated to a given RichRecSegment
   const MCRichSegment * mcRichSegment( const RichRecSegment * segment );

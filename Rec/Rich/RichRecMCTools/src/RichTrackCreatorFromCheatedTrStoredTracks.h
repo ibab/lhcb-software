@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromCheatedTrStoredTracks.h,v 1.4 2004-03-16 13:41:45 jonesc Exp $
+// $Id: RichTrackCreatorFromCheatedTrStoredTracks.h,v 1.5 2004-04-19 23:01:24 jonesc Exp $
 #ifndef RICHRECTOOLS_RichTrackCreatorFromCheatedTrStoredTracks_H
 #define RICHRECTOOLS_RichTrackCreatorFromCheatedTrStoredTracks_H 1
 
@@ -122,9 +122,8 @@ private: // data
   // Momentum cut values for each track type
   std::vector<double> m_tkPcut;
 
-
-  // Initialise track count
-  typedef std::vector<unsigned> TrackTypeCount;
+  // Track count
+  typedef std::vector< std::pair<unsigned,unsigned> > TrackTypeCount;
   mutable TrackTypeCount m_nTracks;
 
 };
@@ -136,8 +135,10 @@ inline void RichTrackCreatorFromCheatedTrStoredTracks::InitNewEvent()
   m_allDone  = false;
   m_trTracks = 0;
   m_tracks   = 0;
-  for ( TrackTypeCount::iterator i = m_nTracks.begin(); 
-        i != m_nTracks.end(); ++i ) { *i = 0; }
+  if ( msgLevel(MSG::DEBUG) ) {
+    for ( TrackTypeCount::iterator i = m_nTracks.begin(); 
+          i != m_nTracks.end(); ++i ) { (*i).first = (*i).second = 0; }
+  }
 }
 
 #endif // RICHRECTOOLS_RichTrackCreatorFromCheatedTrStoredTracks_H

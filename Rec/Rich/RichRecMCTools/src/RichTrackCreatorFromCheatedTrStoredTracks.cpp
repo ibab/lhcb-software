@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromCheatedTrStoredTracks.cpp,v 1.4 2004-03-16 13:41:45 jonesc Exp $
+// $Id: RichTrackCreatorFromCheatedTrStoredTracks.cpp,v 1.5 2004-04-19 23:01:24 jonesc Exp $
 
 // local
 #include "RichTrackCreatorFromCheatedTrStoredTracks.h"
@@ -27,7 +27,7 @@ RichTrackCreatorFromCheatedTrStoredTracks::RichTrackCreatorFromCheatedTrStoredTr
     m_mcTruth     ( 0 ),
     m_allDone     ( false ),
     m_tkPcut      ( Rich::Track::NTrTypes, 0 ),
-    m_nTracks     ( Rich::Track::NTrTypes, 0 )
+    m_nTracks     ( Rich::Track::NTrTypes, std::pair<unsigned,unsigned>(0,0) )
 {
 
   declareInterface<IRichTrackCreator>(this);
@@ -58,7 +58,8 @@ StatusCode RichTrackCreatorFromCheatedTrStoredTracks::initialize() {
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+  incSvc->addListener( this, IncidentType::BeginEvent );
+  incSvc->addListener( this, IncidentType::EndEvent   );
 
   // Make sure we are ready for a new event
   InitNewEvent();
@@ -73,21 +74,20 @@ StatusCode RichTrackCreatorFromCheatedTrStoredTracks::initialize() {
 
 StatusCode RichTrackCreatorFromCheatedTrStoredTracks::finalize()
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 // Method that handles various Gaudi "software events"
-void RichTrackCreatorFromCheatedTrStoredTracks::handle ( const Incident& incident )
+void RichTrackCreatorFromCheatedTrStoredTracks::handle ( const Incident & incident )
 {
-  if      ( "BeginEvent" == incident.type() ) { InitNewEvent(); }
-  else if ( msgLevel(MSG::DEBUG) && "EndEvent" == incident.type() ) 
+  if      ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
+  else if ( msgLevel(MSG::DEBUG) && IncidentType::EndEvent == incident.type() ) 
     {
       debug() << "Selected " << richTracks()->size() << " TrStoredTracks :";
       for ( int iTk = 0; iTk < Rich::Track::NTrTypes; ++iTk ) {
-        debug() << " " << (Rich::Track::Type)iTk << "=" << m_nTracks[iTk];
+        debug() << " " << (Rich::Track::Type)iTk << "=(" << m_nTracks[iTk].second
+                << "/" << m_nTracks[iTk].first << ")";
       }
       debug() << endreq;
     }
@@ -103,6 +103,7 @@ RichTrackCreatorFromCheatedTrStoredTracks::newTracks() const {
     if ( !m_trTracks ) { if ( !loadTrStoredTracks() ) return StatusCode::FAILURE; }
 
     // Iterate over all reco tracks, and create new RichRecTracks
+    richTracks()->reserve( m_trTracks->size() );
     for ( TrStoredTracks::const_iterator track = m_trTracks->begin();
           track != m_trTracks->end();
           ++track) { newTrack( *track ); } // Make new RichRecTrack
@@ -150,9 +151,12 @@ RichTrackCreatorFromCheatedTrStoredTracks::newTrack ( const ContainedObject * ob
   // track type
   const Rich::Track::Type trType = Rich::Track::type(trTrack);
   if ( Rich::Track::Unknown == trType ) {
-    warning() << "TrStoredTrack " << trTrack->key() << " (history " << trTrack->history()
-              << ") is of an unknown type !" << endreq;
+    Warning( "TrStoredTrack of unknown algorithm type");
+    return NULL;
   }
+
+  // count tried tracks
+  if ( msgLevel(MSG::DEBUG) ) ++(m_nTracks[trType].first);
 
   // Is track a usable type
   if ( !Rich::Track::isUsable(trType) ) return NULL;
@@ -235,6 +239,9 @@ RichTrackCreatorFromCheatedTrStoredTracks::newTrack ( const ContainedObject * ob
             // Get PD panel hit point in local coordinates
             newSegment->pdPanelHitPointLocal() = m_smartIDTool->globalToPDPanel(hitPoint);
 
+            // Set the average photon energy (for Pion hypothesis)
+            newSegment->trackSegment().setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,Rich::Pion) );
+
           } else {
             verbose() << " TrackSegment in " << (*iSeg).radiator() << " rejected" << endreq;
             delete newSegment;
@@ -251,11 +258,15 @@ RichTrackCreatorFromCheatedTrStoredTracks::newTrack ( const ContainedObject * ob
           // Set vertex momentum
           newTrack->setVertexMomentum( trackPState->p() );
 
+          // track charge
+          newTrack->setCharge( trTrack->charge() );
+
           // Set parent information
           newTrack->setParentTrack( trTrack );
 
-          // Track count
-          ++m_nTracks[ newTrack->trackID().trackType() ];
+          // Count selected tracks 
+          if ( msgLevel(MSG::DEBUG) ) ++(m_nTracks[trType].second);
+   
 
         } else {
           delete newTrack;

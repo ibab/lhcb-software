@@ -1,4 +1,4 @@
-// $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.4 2004-03-16 13:41:43 jonesc Exp $
+// $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.5 2004-04-19 23:01:23 jonesc Exp $
 
 // local
 #include "RichPixelCreatorFromCheatedRichDigits.h"
@@ -36,7 +36,6 @@ RichPixelCreatorFromCheatedRichDigits::RichPixelCreatorFromCheatedRichDigits( co
 
 StatusCode RichPixelCreatorFromCheatedRichDigits::initialize()
 {
-  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
   StatusCode sc = RichRecToolBase::initialize();
@@ -48,21 +47,16 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::initialize()
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+  incSvc->addListener( this, IncidentType::BeginEvent );
 
   // Make sure we are ready for a new event
   InitNewEvent();
-
-  // Informational printout
-  debug() << " Using MCRichHits asscociated to RichDigits" << endreq;
 
   return StatusCode::SUCCESS;
 }
 
 StatusCode RichPixelCreatorFromCheatedRichDigits::finalize()
 {
-  debug() << "Finalize" << endreq;
-
   // Execute base class method
   return RichRecToolBase::finalize();
 }
@@ -70,7 +64,7 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::finalize()
 // Method that handles various Gaudi "software events"
 void RichPixelCreatorFromCheatedRichDigits::handle ( const Incident& incident )
 {
-  if ( "BeginEvent" == incident.type() ) InitNewEvent();
+  if ( IncidentType::BeginEvent == incident.type() ) InitNewEvent();
 }
 
 // Forms a new RichRecPixel object from a RichDigit
@@ -80,7 +74,7 @@ RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) c
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
   if ( !digit ) {
-    warning() << "Parent not of type RichDigit" << endreq;
+    Warning("Parent not of type RichDigit");
     return NULL;
   }
 

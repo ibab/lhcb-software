@@ -1,4 +1,4 @@
-// $Id: RichRecMCTruthTool.cpp,v 1.3 2004-03-16 13:41:44 jonesc Exp $
+// $Id: RichRecMCTruthTool.cpp,v 1.4 2004-04-19 23:01:24 jonesc Exp $
 
 // local
 #include "RichRecMCTruthTool.h"
@@ -38,7 +38,6 @@ RichRecMCTruthTool::RichRecMCTruthTool( const std::string& type,
 
 StatusCode RichRecMCTruthTool::initialize()
 {
-  debug() << "Initialize" << endreq;
 
   // Sets up various tools and services
   if ( !RichRecToolBase::initialize() ) return StatusCode::FAILURE;
@@ -60,16 +59,14 @@ StatusCode RichRecMCTruthTool::initialize()
 
   // Setup incident services
   IIncidentSvc * incSvc = svc<IIncidentSvc>( "IncidentSvc", true );
-  incSvc->addListener( this, "BeginEvent" ); // Informed of a new event
+  incSvc->addListener( this, IncidentType::BeginEvent );
   release(incSvc);
 
   return StatusCode::SUCCESS;
 }
 
-StatusCode RichRecMCTruthTool::finalize() {
-
-  debug() << "Finalize" << endreq;
-
+StatusCode RichRecMCTruthTool::finalize() 
+{
   // clean up linkers
   cleanUpLinkers();
 
@@ -80,7 +77,7 @@ StatusCode RichRecMCTruthTool::finalize() {
 // Method that handles various Gaudi "software events"
 void RichRecMCTruthTool::handle ( const Incident& incident ) {
 
-  if ( "BeginEvent" == incident.type() ) {
+  if ( IncidentType::BeginEvent == incident.type() ) {
 
     // New event
     m_mcRichDigitsDone   = false;
@@ -188,10 +185,7 @@ const MCRichDigit * RichRecMCTruthTool::mcRichDigit( const RichDigit * digit ) {
   // If failed, try accessing MCRichDigit container directly
   if ( !mcDigit && mcRichDigits() ) mcDigit = m_mcRichDigits->object(digit->key());
 
-  if ( !mcDigit ) {
-    warning() << "Failed to find MCRichDigit for RichDigit : "
-              << digit->key() << endreq;
-  }
+  if ( !mcDigit ) Warning("Failed to find MCRichDigit for RichDigit");
 
   return mcDigit;
 }
@@ -202,7 +196,7 @@ RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel )
   const RichDigit * digit =
     dynamic_cast<const RichDigit*>( richPixel->parentPixel() );
   if ( !digit ) {
-    warning() << "RichRecPixel has no associated RichDigit" << endreq;
+    Warning("RichRecPixel has no associated RichDigit");
     return NULL;
   }
 
@@ -275,7 +269,7 @@ RichRecMCTruthTool::trueCherenkovPhoton( const RichRecSegment * segment,
 
 const MCParticle *
 RichRecMCTruthTool::trueCherenkovRadiation( const RichRecPixel * pixel,
-                                            Rich::RadiatorType rad )
+                                            const Rich::RadiatorType rad )
 {
 
   // Loop over all MCRichHits for this pixel
@@ -284,7 +278,7 @@ RichRecMCTruthTool::trueCherenkovRadiation( const RichRecPixel * pixel,
         iHit != hits.end(); ++iHit ) {
     if ( !(*iHit) ) continue; // protect against bad hits
     // Experiment with different criteria.....
-    //if ( (unsigned int)rad == (*iHit)->radiator() ) return (*iHit)->mcParticle();
+    //if ( rad == (*iHit)->radiator() ) return (*iHit)->mcParticle();
     if ( rad == (*iHit)->radiator() &&
          !(*iHit)->scatteredPhoton() &&
          !(*iHit)->backgroundHit() ) return (*iHit)->mcParticle();
