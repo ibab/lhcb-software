@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.12 2002-04-04 06:04:12 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.13 2002-04-15 11:16:19 ocallot Exp $
 
 /// STL
 #include <stdio.h>
@@ -538,8 +538,8 @@ StatusCode L0CaloAlg::execute() {
   pi0Local.saveCandidate(  L0Calo::Pi0Local,  L0Calo );
   pi0Global.saveCandidate( L0Calo::Pi0Global, L0Calo );
 
+  HepPoint3D dummy( 0., 0., 0.);
   if ( 0 < sumEt ) {
-    HepPoint3D dummy( 0., 0., 0.);
     L0CaloCandidate* hsum = new L0CaloCandidate ( L0Calo::SumEt, CaloCellID(),
                                                   sumEt,
                                                   sumEt * m_etScale,
@@ -547,6 +547,15 @@ StatusCode L0CaloAlg::execute() {
                                                   0. );
     L0Calo->add( hsum );
   }
+
+  // Spd multiplicity counter
+
+  L0CaloCandidate* spdMult = new L0CaloCandidate ( L0Calo::SpdMult, 
+                                                   CaloCellID(),
+                                                   m_spdMult, 0.,
+                                                   dummy,
+                                                   0. );
+  L0Calo->add( spdMult);
 
   // Debug now the L0 candidates
 
@@ -709,12 +718,15 @@ void L0CaloAlg::addPrsData( MsgStream& log ) {
 void L0CaloAlg::addSpdData( MsgStream& log ) {
 
   SmartDataPtr<L0PrsSpdHitVector> spdHits ( eventSvc() ,
-                                       m_nameOfSpdDataContainer );
+                                            m_nameOfSpdDataContainer );
+  m_spdMult = 0;
+  
   if( 0 == spdHits ) {
     log << MSG::ERROR << "Unable to retrieve Spd data container="
         << m_nameOfSpdDataContainer << endreq;
     return;
   }
+  m_spdMult = spdHits->size();
 
   for( L0PrsSpdHitVector::const_iterator digit = spdHits->begin() ;
        spdHits->end() != digit ; ++digit ) {

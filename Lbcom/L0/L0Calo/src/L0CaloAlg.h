@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.5 2002-01-30 15:58:20 ocallot Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Calo/src/L0CaloAlg.h,v 1.6 2002-04-15 11:16:19 ocallot Exp $
 
 // from STL 
 #include <cmath>
@@ -85,6 +85,8 @@ private:
   double      m_gainCorrEcal[3]    ; ///< Gain correction in Ecal, per area
   double      m_gainCorrHcal[2]    ; ///< Gain correction in Hcal, per area
 
+  int         m_spdMult            ; ///< Multiplicity of Spd
+
 // Trigger cards
 
   std::vector<TriggerCard> ecalFe  ; ///< Ecal front-end card vector
@@ -95,8 +97,8 @@ private:
  *
  *  This is a local class for temporary candidates, ID and Et, with saturation.
  *  This is internal to the algorithm, and is a termporary storage of the 
- *  candidates, during th eprocess of selecting the highest.
- */ 
+ *  candidates, during the process of selecting the highest.
+ */
 
 class L0Candidate {
 public:
