@@ -1,12 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Kernel/LHCbAlgs
 ! Responsible : Marco Cattaneo
-! Purpose     : General purpose algorithms for LHCb
+! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
-!======================== LHCbAlgs v1r0 2004-06-28 ========================
-! 2004-06-28 - Marco Cattaneo
+!======================== LHCbAlgs v1r0 2004-07-14 ========================
+! 2004-07-14 - Marco Cattaneo
  - First version:
+ . TimingTool:   provides a timing normalization       (previously in LHCbTools)
  . ProcessPhase: phase for data processing application (previously in LHCbKernel)
  . TESFilter:    removes selected data from TES        (previously in BrunelAlgs)
  . StoreExplorer:navigates TES and prints leaves       (previously in IOExample)

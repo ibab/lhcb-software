@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.1 2004-06-28 11:35:06 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.2 2004-07-14 16:17:33 cattanem Exp $
 
 // Include files
 #include "LbAppInit.h"
@@ -12,7 +12,7 @@
 #include "AIDA/IHistogram1D.h"
 #include "Event/EventHeader.h"
 #include "Event/ProcStatus.h"
-#include "Tools/ITimingTool.h"
+#include "Tools/INormalizeTool.h"
 #include <vector>
 
 #include "boost/format.hpp"
@@ -49,7 +49,7 @@ StatusCode LbAppInit::initialize() {
   if( sc.isFailure() ) return Error( "Failed to initialize base class", sc );
   
   // Get the timing normalisation
-  ITimingTool* timingTool = tool<ITimingTool>( "TimingTool" );
+  INormalizeTool* timingTool = tool<INormalizeTool>( "TimingTool" );
   double timeNorm = timingTool->normalize() / 1.e+09;
   release( timingTool );
   

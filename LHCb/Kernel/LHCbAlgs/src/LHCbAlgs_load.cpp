@@ -1,4 +1,4 @@
-// $Id: LHCbAlgs_load.cpp,v 1.3 2004-06-28 11:35:06 cattanem Exp $
+// $Id: LHCbAlgs_load.cpp,v 1.4 2004-07-14 16:17:33 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -12,6 +12,8 @@
 // They should be inside the 'DECLARE_FACTORY_ENTRIES' body.
 
 DECLARE_FACTORY_ENTRIES( LHCbAlgs ) {
+  DECLARE_TOOL( TimingTool );
+
   DECLARE_ALGORITHM( LbAppInit );
   DECLARE_ALGORITHM( ProcessPhase );
   DECLARE_ALGORITHM( TESFilter );
