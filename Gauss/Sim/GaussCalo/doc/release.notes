@@ -7,6 +7,17 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2003-07-08 - Vanya BELYAEV
+ - src/CaloSensDet.h  
+     1) move histoSvc() accessor from 'private' to 'protected' part 
+         - according  to requests from Grigory and Carlos  
+     2) provide protected const and *non-const* access to vector of histograms 
+     3) provide protected accessor (const) to vector of histogram names 
+ - src/CaloSensDet.cpp
+     1) skip the 'invalid' cells from PRocessHit method 
+     2) change the comparion of doubles to comparison of 
+        integers in birkCorrection method 
+
 ! 2003-07-08 - Patrick Robbe
  - src/EcalSensDet.h,.cpp : Adaptation to the new interface
 

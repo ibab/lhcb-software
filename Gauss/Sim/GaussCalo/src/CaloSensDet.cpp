@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.cpp,v 1.8 2003-07-07 16:27:46 ibelyaev Exp $ 
+// $Id: CaloSensDet.cpp,v 1.9 2003-07-08 11:12:39 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2003/07/07 16:27:46  ibelyaev
+//  substitupe G4Material with G4MaterialCutsCouple
+//
 // Revision 1.7  2003/07/07 09:52:16  ibelyaev
 //  remove buf from birkCorrection - 3
 //
@@ -327,17 +330,19 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
     }
   
   if( path.empty() ) 
-    { Error("Replica Path is invalid!") ; return false ; }       // RETURN 
+    { Error("Replica Path is invalid!")      ; return false ; } // RETURN 
   
   // find the cellID 
   CaloCellID  cellID( m_table( path ) ) ;
   if( CaloCellID() == cellID ) 
     {
       cellID          = calo() -> Cell ( prePoint );
+      // skip the invalid cells 
+      if ( !( calo() -> valid( cellID ) ) ) { return false ; }  // RETURN 
       m_table( path ) = cellID ;
     }
   if( CaloCellID() == cellID ) 
-    { Error ("Invalid cell is found") ; return false ; }        // RETURN 
+    { Error ("Invalid cell is found") ;       return false ; }  // RETURN 
   
   // get the existing hit 
   CaloHit*&    hit = m_hitmap( cellID );                        // ATTENTION 
@@ -457,10 +462,10 @@ double CaloSensDet::birkCorrection
   const G4MaterialCutsCouple* material ) const 
 {
   if (  0 == particle || 0 == material ) 
-    { Error("birkCorrection(): invalid parameters " ) ; return 1. ; } // RETURN
+    { Error("birkCorrection(): invalid parameters " ) ; return 1.0 ; } // RETURN
   
   const double charge = particle -> GetPDGCharge() ;
-  if( 0 == charge ) 
+  if( 0 == int ( charge * 30 ) ) 
     { Warning("birkCorrection for neutral particle!") ; return 1.0 ; }
   
   // get the nominal dEdX 

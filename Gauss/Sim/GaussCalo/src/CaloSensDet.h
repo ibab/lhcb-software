@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.h,v 1.6 2003-07-07 16:27:46 ibelyaev Exp $ 
+// $Id: CaloSensDet.h,v 1.7 2003-07-08 11:12:40 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/07/07 16:27:46  ibelyaev
+//  substitupe G4Material with G4MaterialCutsCouple
+//
 // Revision 1.5  2003/07/07 15:40:26  ibelyaev
 //  inverse the sign of 'DeltaT'
 // ============================================================================
@@ -184,8 +187,15 @@ protected:
   inline double               birk_c1cor () const 
   { return m_birk_c1correction ; }
   
-  /// the accessor to all time-histograms 
-  inline const Histos&        histos     () const { return m_histos ; }
+  /// the accessor to all time-histograms      (const version)
+  inline const Histos&        histos     () const { return m_histos     ; }
+  /// the accessor to all time-histograms  (non-const version)
+  inline       Histos&        histos     ()       { return m_histos     ; }
+  /// the accessor to the names of  histograms 
+  inline const Names&         histoNames () const { return m_histoNames ; }
+  
+  /// accessor to histogram service 
+  inline IHistogramSvc*       histoSvc   () const { return m_histoSvc   ; }  
   
 protected:
   
@@ -277,8 +287,6 @@ protected:
   
 private: 
   
-  /// accessor to histogram service 
-  IHistogramSvc*       histoSvc   () const { return m_histoSvc  ; }  
   
 private:
   
