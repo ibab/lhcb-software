@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.51 2004-02-13 07:05:48 cattanem Exp $
+! $Id: release.notes,v 1.52 2004-02-13 13:44:15 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
-!========================= VeloDet v9r0 2004-02-12 =========================
-! 2004-02-12 - Marco Cattaneo
- - Requires XmlDDDB v22r0 or greater
+!========================= VeloDet v9r0 2004-02-13 =========================
+   >> Requires XmlDDDB v22r0 or greater <<
+
+! 2004-02-13 - Marco Cattaneo
  - Remove unneccessary includes from public include files
+ - Change INFO messages in DeVelo to DEBUG
+ - Add missing factories to VeloDet_load.cpp 
 
 ! 2004-02-03 - Mark Tobin
  - Total redesign of DeVelo interface.

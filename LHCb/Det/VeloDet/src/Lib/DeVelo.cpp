@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.35 2004-02-13 07:05:48 cattanem Exp $
+// $Id: DeVelo.cpp,v 1.36 2004-02-13 13:44:15 cattanem Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -77,7 +77,7 @@ StatusCode DeVelo::initialize() {
   // Childern of DeVelo (this) are the sensors
   std::vector<IDetectorElement*> veloSensors =
     this->childIDetectorElements();
-  msg << MSG::INFO << "Found " << veloSensors.size() 
+  msg << MSG::DEBUG << "Found " << veloSensors.size() 
       << " sensors in the XML" << endreq;
   
   IDetectorElement* testDetElem= veloSensors[1];
@@ -141,7 +141,7 @@ StatusCode DeVelo::initialize() {
   for(unsigned int iSensor=0; iSensor < m_vpSensor.size() ; ++iSensor){
     //m_sensorZ.push_back(m_vpSensor[iSensor]->z());
     unsigned int sensor = m_vpSensor[iSensor]->sensorNumber();
-    msg << MSG::INFO << "Index " << iSensor << " Sensor number " << sensor
+    msg << MSG::DEBUG << "Index " << iSensor << " Sensor number " << sensor
         << " is type " << m_vpSensor[iSensor]->type() 
         << " at z = " << m_vpSensor[iSensor]->z()
         << endreq;
@@ -175,7 +175,7 @@ StatusCode DeVelo::initialize() {
     if(this->isPileUpSensor(sensor)){
       m_indexPileUpType.push_back(sensor);
     }
-    msg << MSG::INFO << "Index " << iSensor << " Sensor number " << sensor
+    msg << MSG::DEBUG << "Index " << iSensor << " Sensor number " << sensor
         << " is type " << m_vpSensor[iSensor]->type() 
         << " at z = " << m_vpSensor[iSensor]->z()
         << endreq;
