@@ -1,12 +1,17 @@
-// $Id: SolidSphere.cpp,v 1.9 2002-05-21 17:02:58 ibelyaev Exp $ 
+// $Id: SolidSphere.cpp,v 1.10 2003-03-28 18:15:35 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/05/21 17:02:58  ibelyaev
+//  bug fix for SolidSphere
+//
 // Revision 1.8  2002/05/11 18:25:48  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 11 May 2002
 //
 // ===========================================================================
+// STD & STL 
+#include <algorithm>
 // CLHEP 
 #include "CLHEP/Units/PhysicalConstants.h" 
 #include "CLHEP/Geometry/Point3D.h" 
@@ -114,8 +119,20 @@ StatusCode SolidSphere::setBP()
 {
   // set bounding parameters of SolidBase class
   setRMax ( outerRadius() );
-  setZMax ( outerRadius() * cos( startThetaAngle()                     ) );
-  setZMin ( outerRadius() * cos( startThetaAngle() + deltaThetaAngle() ) );
+  
+  { /// evaluate ZMin and ZMax
+    typedef std::vector<double> TMP ;
+    TMP tmp;
+    tmp.push_back ( outerRadius  () * cos( startThetaAngle () ) ) ;
+    tmp.push_back ( insideRadius () * cos( startThetaAngle () ) ) ;
+    tmp.push_back ( outerRadius  () * cos( startThetaAngle () + 
+                                           deltaThetaAngle () ) ) ;
+    tmp.push_back ( insideRadius () * cos( startThetaAngle () + 
+                                           deltaThetaAngle () ) ) ;
+    //
+    setZMax ( *std::max_element( tmp.begin () , tmp.end () ) ) ;
+    setZMin ( *std::min_element( tmp.begin () , tmp.end () ) ) ;    
+  };
   
   // evaluate rho max 
   if(      startThetaAngle()                        <=   90.0 * degree 
