@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.54 2003-01-13 10:39:43 gcorti Exp $
+# $Id: requirements,v 1.55 2003-02-11 20:43:17 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -25,41 +25,42 @@ use  GaudiRootDb        v*
 use  HbookCnv           v*
 use  RootHistCnv    	v*
 
-#--- LHCb libraries (from LHCB_v11r5)
-use  LHCb               v11r5
+#--- LHCb libraries (from LHCB_v11r9)
+use  LHCb               v11r10
 
 #--- Geometry description (from DBASE)
-use  XmlDDDB		v14r4	Det
+use  XmlDDDB		v15r2	Det
 
-#--- DaVinciSys v7r2 packages 
+#--- DaVinciSys v7r3 packages 
 
 #    Enable Trigger reprocessing
-use  L0Calo             v6r4     L0
-use  L0Muon             v6r3     L0
-use  L1VeloTrack        v3r5     L1
-use  L0DU          	v6r2	 L0
-use  L1Decision         v1r4     L1
+use  L0DU          	v6r4	 L0
+use  L1Decision         v1r7     L1
 
 #    Enable neutral ProtoParticles production  
 use  CaloInterfaces     v2r4     Calo
 use  CaloUtils 	        v4r4     Calo
-use  CaloReco           v1r2     Calo
+use  CaloReco           v1r3p1   Calo
 
 #    Final Reconstruction
-use  GlobalReco         v2r3     Rec
-use  KsReco		v1r4	 Rec
+use  GlobalReco         v3r0     Rec
+use  KsReco		v1r4p1	 Rec
+use  PrimVtx            v2r0     Rec
 
 #    Utility tools
-use  TrExtrapolator     v2r4     Tr
+use  TrExtrapolator     v2r5     Tr
+
+#    Monte Carlo tools
+use  MCTools            v1r0     Phys
 
 #    Physics packages
-use  DaVinciTools       v7r2     Phys
+use  DaVinciTools       v7r3     Phys
 use  DaVinciAssociators v3r1     Phys
 use  DaVinciMCTools     v4r1     Phys
 use  DaVinciTest        v4r0     Phys
-use  PhysSelections     v4r2     Phys
+use  PhysSelections     v4r3     Phys
 use  FlavourTagging     v4r2     Phys
-use  DaVinciEff         v2r1     Phys
+use  DaVinciEff         v2r2     Phys
 use  DaVinciUser        v4r0     Phys
 
 # Build DaVinci Application with standard executable
