@@ -1,5 +1,5 @@
 package PhysEvent
-version v1
+version v1r1
 
 branches PhysEvent cmt doc src
 
