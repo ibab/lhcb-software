@@ -1,10 +1,11 @@
 #============================================================================
 # Created    : 2003-11-06
 # Maintainer : Chris Jones
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
+# $Id: requirements,v 1.12 2004-07-30 11:07:04 jonrob Exp $
+# $Log: not supported by cvs2svn $
+#============================================================================
+
 package           RichDAQ
 version           v1r5
 
