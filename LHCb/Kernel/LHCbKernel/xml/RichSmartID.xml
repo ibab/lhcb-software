@@ -1,17 +1,20 @@
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.8 2004-07-29 08:58:05 jonesc Exp $
+  * $Id: RichSmartID.xml,v 1.9 2004-10-30 19:06:32 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
   *****************************************************************************
   * $Log: not supported by cvs2svn $
+  * Revision 1.8  2004/07/29 08:58:05  jonesc
+  * Add CVS Log history information to RichSmartID.xml
+  *
   ************************************************************************* -->
 
      <class 
-        name   = "RichSmartID"
-        author = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
-        desc   = "Identifier for RICH detector objects">
+        name             = "RichSmartID"
+        author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+        desc             = "Identifier for RICH detector objects">
 
         &StlVector;
 
@@ -24,6 +27,7 @@
         <template name = "VectorDict" t1="THIS"/>
 
         <typedef access="PUBLIC" def="KeyType" desc="Type for internal key" type="unsigned long"/>
+        <typedef access="PUBLIC" def="Vector" desc="Container of RichSmartIDs" type="std::vector&lt;RichSmartID&gt;"/>
 
         <attribute 
             desc = "The internal data" name="key" 
