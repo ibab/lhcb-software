@@ -15,7 +15,7 @@ use LHCbEvent     v9*	Event
 use DetDesc       v6*	Det
 
 # Geant4 tool kit 
-use GEANT4        v3r0	Sim
+use GEANT4        v3r0*	Sim
 
 
 ###########################################################################
