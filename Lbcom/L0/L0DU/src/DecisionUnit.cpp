@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.7 2002-04-05 15:20:44 ocallot Exp $
+// $Id: DecisionUnit.cpp,v 1.8 2002-04-15 11:35:32 ocallot Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -49,9 +49,9 @@ DecisionUnit::DecisionUnit( const std::string& name,
                             ISvcLocator* pSvcLocator )
   : Algorithm      ( name, pSvcLocator )
   , m_nameOfInputL0CaloCandidate  ( L0CaloCandidateLocation::Default )
-  , m_nameOfInputL0MuonCandidate  ( "/Event/MC/L0MuonCandidates" )
-  , m_nameOfInputPileUpVeto       ( L0PuVetoLocation::Default    )
-  , m_nameOfOutputDecisionUnit    ( L0DUReportLocation::Default  ) 
+  , m_nameOfInputL0MuonCandidate  ( L0MuonCandidateLocation::Default )
+  , m_nameOfInputPileUpVeto       ( L0PuVetoLocation::Default        )
+  , m_nameOfOutputDecisionUnit    ( L0DUReportLocation::Default      ) 
 {  
 
   declareProperty( "L0CaloCandidateData" , m_nameOfInputL0CaloCandidate );
@@ -184,79 +184,65 @@ StatusCode DecisionUnit::execute() {
           << "Cand "
           << (*itCandCalo)->id() 
           << " "
-          << (*itCandCalo)->typeName() 
-          << " Et(GeV) = "
-          << (*itCandCalo)->et() / GeV 
-          << endreq;
+          << (*itCandCalo)->typeName() ;
+      if ( L0Calo::SpdMult == (*itCandCalo)->type() ) {
+        log << " Multiplicity " << (*itCandCalo)->etCode();
+      } else {
+        log << " Et(GeV) = "  << (*itCandCalo)->et() / GeV ;
+      }
+      
       if ( L0Calo::Electron == (*itCandCalo)->type() ) {
         m_Electron = (*itCandCalo);
-        log << MSG::DEBUG
-            <<"  eCut1(GeV) = "       
+        log <<"  eCut1(GeV) = "       
             << m_eElCut1 / GeV
             <<" eCut2(GeV) = "
             << m_eElCut2 / GeV
             << " scal = "
-            << m_scalEl 
-            << endreq;
-      }
-      if ( L0Calo::Photon == (*itCandCalo)->type() ) {
+            << m_scalEl;
+      } else if ( L0Calo::Photon == (*itCandCalo)->type() ) {
         m_Photon = (*itCandCalo);
-        log << MSG::DEBUG
-            <<"  eCut1(GeV) = " 
+        log <<"  eCut1(GeV) = " 
             << m_ePhCut1 / GeV
             <<" eCut2(GeV) = "
             << m_ePhCut2 / GeV
             << " scal = "
-            << m_scalPh
-            << endreq;
-      } 
-      if ( L0Calo::Hadron == (*itCandCalo)->type() ) {
+            << m_scalPh;
+      } else if ( L0Calo::Hadron == (*itCandCalo)->type() ) {
         m_Hadron = (*itCandCalo);
-        log << MSG::DEBUG
-            <<"  eCut1(GeV) = " 
+        log <<"  eCut1(GeV) = " 
             << m_eHaCut1 / GeV
             <<" eCut2(GeV) = "
             << m_eHaCut2 / GeV
             << " scal = "
-            << m_scalHa
-            << endreq;    
-      }
-      if ( L0Calo::SumEt == (*itCandCalo)->type() ) {
+            << m_scalHa;
+      } else if ( L0Calo::SumEt == (*itCandCalo)->type() ) {
         m_SumEt = (*itCandCalo);
-        log << MSG::DEBUG
-            <<"  eCut1(GeV) = " 
+        log <<"  eCut1(GeV) = " 
             << m_eSumEtCut1 / GeV
             <<" eCut2(GeV) = "
             << m_eSumEtCut2 / GeV
-            << " scal not used"
-            << endreq;
-      } 
-      if ( L0Calo::Pi0Local == (*itCandCalo)->type() ) {
+            << " scal not used";
+      } else if ( L0Calo::Pi0Local == (*itCandCalo)->type() ) {
         m_Pi0Local = (*itCandCalo);
-        log << MSG::DEBUG
-            <<"  eCut1(GeV) = " 
+        log <<"  eCut1(GeV) = " 
             << m_ePi0LCut1 / GeV
             <<" eCut2(GeV) = "
             << m_ePi0LCut2 / GeV
             << " scal = "
-            << m_scalPi0L
-            << endreq;
-      }
-      if ( L0Calo::Pi0Global == (*itCandCalo)->type() ) {
+            << m_scalPi0L;
+      } else if ( L0Calo::Pi0Global == (*itCandCalo)->type() ) {
         m_Pi0Global = (*itCandCalo);
-        log << MSG::DEBUG
-            <<"  eCut1(GeV) = "
+        log <<"  eCut1(GeV) = "
             << m_ePi0GCut1 / GeV
             <<" eCut2(GeV) = "
             << m_ePi0GCut2 / GeV
             << " scal = "
-            << m_scalPi0G
-            << endreq;
+            << m_scalPi0G;
       }
+      log << endreq;
       itCandCalo++;
     }
-  }
-  else { 
+  } else { 
     log << MSG::DEBUG
         << "Unable to retrieve L0CaloCandidate data container = "
         << m_nameOfInputL0CaloCandidate
@@ -275,8 +261,7 @@ StatusCode DecisionUnit::execute() {
       log << MSG::DEBUG
           << "No Muon candidates"
           << endreq;
-    }
-    else {
+    } else {
       std::vector<double> eMuons; 
       while ( itCandMuon != candMuon->end() ) {
         log << MSG::DEBUG 
@@ -313,8 +298,7 @@ StatusCode DecisionUnit::execute() {
         log << MSG::DEBUG 
             << "Data eCut1, eCut2, scal for the greater muon"
             << endreq;
-      }
-      else {
+      } else {
         log << MSG::DEBUG
             << "No Muons with status OK"
             << endreq;
@@ -355,8 +339,7 @@ StatusCode DecisionUnit::execute() {
           << eSumMuons / GeV
           << endreq;
     }
-  }
-  else { 
+  } else { 
     log << MSG::DEBUG
         << "Unable to retrieve L0MuonCandidates "
         << m_nameOfInputL0MuonCandidate
