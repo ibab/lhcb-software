@@ -1,0 +1,8 @@
+package VeloDet
+version v1
+
+branches doc cmt src VeloDet
+
+ignore_pattern package_stamps
+
+
