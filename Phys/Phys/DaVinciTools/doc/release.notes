@@ -1,7 +1,36 @@
-! $Id: release.notes,v 1.102 2004-07-06 08:48:14 pkoppenb Exp $
+! $Id: release.notes,v 1.103 2004-07-08 10:14:26 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-07-08 - P. Koppenburg
+  - src/NoPIDsParticleMaker.*
+    . Added
+         declareProperty ( "UseLongTracks",     m_longTracks );
+         declareProperty ( "UseDownstreamTracks", m_downstreamTracks );
+         declareProperty ( "UseUpstreamTracks",      m_vttTracks );
+      For HLT
+      
+  - src/PVIPFilterCriterion.*
+    . Made it a GaudiTool
+    
+  - src/TrackTypeFilterCriterion.*
+    . New filter criterion that filters particles according to track types.
+         declareProperty( "RequireLong",       m_reqLong         = false );
+         declareProperty( "VetoLong",          m_vetoLong        = false );
+         declareProperty( "RequireDownstream", m_reqDownstream   = false );
+         declareProperty( "VetoDownstream",    m_vetoDownstream  = false );
+         declareProperty( "RequireUpstream",   m_reqUpstream     = false );
+         declareProperty( "VetoUpstream",      m_vetoUpstream    = false );
+         declareProperty( "RequireVelo",       m_reqVeloTrack    = false );
+         declareProperty( "VetoVelo",          m_vetoVeloTrack   = false );
+         declareProperty( "RequireBackward",   m_reqBackward     = false );
+         declareProperty( "VetoBackward",      m_vetoBackward    = false );
+         declareProperty( "RequireTtrack",     m_reqTtrack       = false );
+         declareProperty( "VetoTtrack",        m_vetoTtrack      = false );
+      Switch this to true to keep neutrals or compisite particles,
+      or they get filtered out if any of the above is true...
+         declareProperty( "IgnoreNonTracks",   m_ignoreNonTracks = false );
+    
 ! 2004-07-06 - P. Koppenburg
   - DaVinciTools/DVAlgorithm.h
     . New getDecayString method

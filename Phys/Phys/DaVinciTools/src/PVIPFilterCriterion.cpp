@@ -1,11 +1,11 @@
-// $Id: PVIPFilterCriterion.cpp,v 1.1 2004-06-25 08:00:21 pkoppenb Exp $
+// $Id: PVIPFilterCriterion.cpp,v 1.2 2004-07-08 10:14:26 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
+//#include "GaudiKernel/MsgStream.h" 
+//#include "GaudiKernel/SmartDataPtr.h"
+//#include "GaudiKernel/IDataProviderSvc.h"
 
 // local
 #include "PVIPFilterCriterion.h"
@@ -27,7 +27,7 @@ const        IToolFactory& PVIPFilterCriterionFactory = s_factory ;
 PVIPFilterCriterion::PVIPFilterCriterion( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : AlgTool ( type, name , parent ) {
+  : GaudiTool ( type, name , parent ) {
 
   // declare additional interface
   declareInterface<IFilterCriterion>(this);
@@ -44,30 +44,26 @@ PVIPFilterCriterion::PVIPFilterCriterion( const std::string& type,
 //=============================================================================
 StatusCode PVIPFilterCriterion::initialize() {
 
-  MsgStream msg( msgSvc(), name() );
-
-  msg << MSG::DEBUG << ">>>   PVIPFilterCriterion::initialize() " 
-      << endreq;
+  debug() << ">>>   PVIPFilterCriterion::initialize() " << endreq;
   StatusCode sc = service( "EventDataSvc", m_EDS, true );
   if( sc.isFailure() ) {
-    msg << MSG::FATAL << " Unable to retrieve EventDataSvc " << endreq;
+    err() << " Unable to retrieve EventDataSvc " << endreq;
     return sc;
   }
   sc = toolSvc()->retrieveTool("GeomDispCalculator", m_ipTool, this);
   if(sc.isFailure()){
-    msg << MSG::FATAL << " Unable to retrieve GeomDispCalculator tool" 
-        << endreq;
+    err() << " Unable to retrieve GeomDispCalculator tool" << endreq;
     return sc;
   }
 
-  msg << MSG::DEBUG << ">>>   Cuts are " << endreq;
-  if (m_minIP>0.) msg << MSG::DEBUG << ">>>   Minimum IP: " << m_minIP 
+  debug() << ">>>   Cuts are " << endreq;
+  if (m_minIP>0.) debug() << ">>>   Minimum IP: " << m_minIP 
                       << " mm" << endreq;    
-  if (m_minIPsignif>0.) msg << MSG::DEBUG << ">>>   Minimum IP: " 
+  if (m_minIPsignif>0.) debug() << ">>>   Minimum IP: " 
                             << m_minIPsignif << " sigma" << endreq;    
-  if (m_maxIP>0.) msg << MSG::DEBUG << ">>>   Maximum IP: " << m_minIP 
+  if (m_maxIP>0.) debug() << ">>>   Maximum IP: " << m_minIP 
                       << " mm" << endreq;    
-  if (m_maxIPsignif>0.) msg << MSG::DEBUG << ">>>   Maximum IP: " 
+  if (m_maxIPsignif>0.) debug() << ">>>   Maximum IP: " 
                             << m_minIPsignif << " sigma" << endreq;    
   return StatusCode::SUCCESS;
 }
@@ -76,11 +72,9 @@ StatusCode PVIPFilterCriterion::initialize() {
 //=============================================================================
 bool PVIPFilterCriterion::isSatisfied( const Particle* const & part ) {
 
-  MsgStream msg( msgSvc(), name() );
-
   SmartDataPtr<Vertices> PV(m_EDS,VertexLocation::Primary);
 
-  msg << MSG::VERBOSE << ">>>> Looping on " << PV->size() << " PVs" << endreq;
+  verbose() << ">>>> Looping on " << PV->size() << " PVs" << endreq;
   VertexVector::const_iterator iv;
   bool min_happy = true;
   // set to false if needed, true if not
@@ -92,13 +86,13 @@ bool PVIPFilterCriterion::isSatisfied( const Particle* const & part ) {
     StatusCode sc = m_ipTool->calcImpactPar(*part, *v, ip, ipe);
     if (!sc.isSuccess()) continue;
     double ipr = fabs(ip/ipe);
-    msg << MSG::VERBOSE << "IP is " << ip << "+/-" << ipe << " mm (" << ipr 
+    verbose() << "IP is " << ip << "+/-" << ipe << " mm (" << ipr 
         << "sigma)" << endreq ;
     // MIN: special case when both are set -> both should be OK
     if ((( m_minIP > 0. ) && ( ip < m_minIP )) || 
         (( m_minIPsignif > 0. ) && ( ipr < m_minIPsignif ))) {
       min_happy = false ;
-      msg << MSG::VERBOSE << "Breaking because of bad min IP" << endreq ;
+      verbose() << "Breaking because of bad min IP" << endreq ;
       break ;    // found one bad PV
     }
     // MAX: special case when both are set -> both should be OK
@@ -109,14 +103,14 @@ bool PVIPFilterCriterion::isSatisfied( const Particle* const & part ) {
       if ((( m_maxIP > 0. ) && ( ip < m_maxIP )) ||
           (( m_maxIPsignif > 0. ) && ( ipr < m_maxIPsignif ))){
         max_happy = true ;
-        msg << MSG::VERBOSE << "Breaking because of good max IP" << endreq;
+        verbose() << "Breaking because of good max IP" << endreq;
         break ;
       }
     }   
   }
   
-  msg << MSG::VERBOSE << "Happy for min: " << min_happy << " and for max: " 
-      << max_happy << endreq ;
+  verbose() << "Happy for min: " << min_happy << " and for max: " 
+            << max_happy << endreq ;
   return ( min_happy && max_happy );
 }
 

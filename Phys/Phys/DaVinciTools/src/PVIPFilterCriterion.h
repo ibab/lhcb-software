@@ -1,4 +1,4 @@
-// $Id: PVIPFilterCriterion.h,v 1.1 2004-06-25 08:00:21 pkoppenb Exp $
+// $Id: PVIPFilterCriterion.h,v 1.2 2004-07-08 10:14:26 pkoppenb Exp $
 #ifndef PVIPFILTERCRITERION_H 
 #define PVIPFILTERCRITERION_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiTools/GaudiTool.h"
 
 // from DaVinciTools
 #include "DaVinciTools/IFilterCriterion.h"
@@ -23,7 +23,7 @@ class IDataProviderSvc;
  *  @author P. Koppenburg
  *  @date   24/06/2004
  */
-class PVIPFilterCriterion : public AlgTool, 
+class PVIPFilterCriterion : public GaudiTool, 
                            virtual public IFilterCriterion {
 
 public:

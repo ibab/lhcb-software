@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.29 2004-07-01 16:36:38 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.30 2004-07-08 10:14:26 pkoppenb Exp $
 // Include files 
 
 
@@ -44,6 +44,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( MassFilterCriterion );
   DECLARE_TOOL( VtxFilterCriterion );
   DECLARE_TOOL( PVIPFilterCriterion );
+  DECLARE_TOOL( TrackTypeFilterCriterion );
 
   DECLARE_TOOL( ParticleFilter );
 

@@ -1,8 +1,11 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.5 2004-05-11 16:01:25 pkoppenb Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.6 2004-07-08 10:14:26 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/05/11 16:01:25  pkoppenb
+// DVAlgorithm.cpp
+//
 // Revision 1.4  2004/04/22 02:55:13  ibelyaev
 //  fix a problem with release of some tools/services
 //
@@ -86,6 +89,9 @@ NoPIDsParticleMaker::NoPIDsParticleMaker
   , m_calls  ( 0 ) 
   , m_sum    ( 0 ) 
   , m_sum2   ( 0 )
+  , m_longTracks ( true )
+  , m_downstreamTracks ( true )  // set to false for HLT
+  , m_vttTracks ( true )         // set to false for HLT
 { 
   // declare interface 
   declareInterface<IParticleMaker> ( this ) ;
@@ -93,6 +99,9 @@ NoPIDsParticleMaker::NoPIDsParticleMaker
   declareProperty ( "Particle" , m_pid    ) ;
   declareProperty ( "Inputs"   , m_inputs ) ; 
   declareProperty ( "CL"       , m_CL     ) ; 
+  declareProperty ( "UseLongTracks",     m_longTracks );
+  declareProperty ( "UseDownstreamTracks", m_downstreamTracks );
+  declareProperty ( "UseUpstreamTracks",      m_vttTracks );
 };
 // ============================================================================
 
@@ -115,7 +124,7 @@ StatusCode NoPIDsParticleMaker::initialize    ()
   // initialize the base 
   StatusCode sc = CaloTool::initialize();
   if( sc.isFailure() ) 
-    { return Error ( "Unable to initilize tehbase class 'CaloTool'" , sc ) ; }
+    { return Error ( "Unable to initilize the base class 'CaloTool'" , sc ) ; }
   
   // locate services 
   
@@ -161,11 +170,17 @@ StatusCode NoPIDsParticleMaker::initialize    ()
   m_pid  = m_pp  -> particle () ;
   m_apid = m_app -> particle () ;
   
-  MsgStream log( msgSvc() , name () );
-  log << MSG::INFO 
+  MsgStream msg( msgSvc() , name () );
+  msg << MSG::INFO 
       << " Particle/AntiParticle to be created\t " 
       << "'"   << m_pid 
       << "'/'" << m_apid << endreq ;
+  if ( !m_longTracks ) msg << MSG::INFO << "Filtering out long tracks"<< endreq;
+  if ( !m_downstreamTracks ) msg <<  MSG::INFO << 
+                               "Filtering out downstream tracks" << endreq;
+  if ( !m_vttTracks ) msg <<  MSG::INFO << 
+                        "Filtering out upstream tracks" << endreq;
+  
   
   return StatusCode::SUCCESS ;
 };
@@ -250,6 +265,16 @@ StatusCode NoPIDsParticleMaker::makeParticles ( ParticleVector & particles )
           const ProtoParticle* pp = *ipp ;
           if ( 0 == pp                ) { continue ; }              // CONTINUE
           if ( 0 == pp -> charge ()   ) { continue ; }              // CONTINUE
+          
+          if (( !m_longTracks ) || ( !m_downstreamTracks) || ( !m_vttTracks)){
+            const TrStoredTrack* ptrack = pp->track();
+            if ( ptrack ) {
+              if (( !m_longTracks ) && ( ptrack->isLong())){ continue ;}
+              if (( !m_downstreamTracks ) && ( ptrack->isDownstream())){ 
+                continue ;}
+              if (( !m_vttTracks ) && ( ptrack->isUpstream())){ continue ;}
+            }            
+          }
           
           Particle* particle = new Particle();
           
