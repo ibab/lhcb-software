@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.18 2003-07-03 11:39:32 jonesc Exp $
+! $Id: release.notes,v 1.19 2003-07-03 12:58:01 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v3r1 2003-07-03 =======================
 ! 2003-06-30 - Chris Jones
  - Improvements to doxygen documentation comments
  - Remove unused RichPIDKey.h
