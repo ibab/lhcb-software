@@ -11,7 +11,7 @@ C.    Output Parameters:  Commons /PHOLUN/, /PHOPHO/, /PHOCOP/, /PHPICO/
 C.                                and /PHSEED/.
 C.
 C.    Author(s):  B. van Eijk                     Created at:  26/11/89
-C.                Z. Was                          Last Update: 10/08/93
+C.                Z. Was                          Last Update: 26/06/04
 C.
 C.----------------------------------------------------------------------
       IMPLICIT NONE
@@ -34,9 +34,9 @@ C.----------------------------------------------------------------------
       PARAMETER (PHOMES=10)
       INTEGER STATUS
       COMMON/PHOSTA/STATUS(PHOMES)
-      LOGICAL INTERF,ISEC,IFTOP,IFW
-      REAL*8 FINT,FSEC
-      COMMON /PHOKEY/ FSEC,FINT,INTERF,ISEC,IFTOP,IFW
+      LOGICAL INTERF,ISEC,ITRE,IEXP,IFTOP,IFW
+      REAL*8 FINT,FSEC,EXPEPS
+      COMMON /PHOKEY/ FSEC,FINT,EXPEPS,INTERF,ISEC,ITRE,IEXP,IFTOP,IFW
       INTEGER INIT,I
       SAVE INIT
       DATA INIT/ 0/
@@ -54,7 +54,7 @@ C--   Logical output unit for printing of PHOTOS error messages
       PHLUN=6
 C--
 C--   Set cut parameter for photon radiation
-      XPHCUT=0.01D0
+      XPHCUT=0.01 ! 0.00001D0
 C--
 C--   Define some constants
       ALPHA=0.00729735039D0
@@ -72,6 +72,19 @@ C--   Interference weight for two body symmetric channels only.
 C--   (2)
 C--   Second order - double photon switch
       ISEC=.TRUE.
+C--   Third/fourth order - triple (or quatric) photon switch, see dipswitch ifour
+      ISEC=.TRUE.
+      ITRE=.FALSE.
+C--   Exponentiation on:
+      IEXP=.FALSE.
+      IF (IEXP) THEN
+      ISEC=.FALSE.
+      ITRE=.FALSE.
+      CALL PHCORK(5)  ! in case of exponentiation correction of phase space 
+                      ! is a default mandatory
+      XPHCUT=0.000 000 1
+      EXPEPS=1D-4
+      ENDIF
 C--   (3)
 C--   Emision in the hard process g g (q qbar) --> t tbar 
 C--                                 t          --> W b
@@ -82,7 +95,7 @@ C--   further initialization done automatically
 C--   best choice is if FINT=2**N where N+1 is maximal number 
 C--   of charged daughters
 C--   see report on overweihted events
-        FINT=1.0D0
+        FINT=1.9D0
       ELSE
         FINT=0.0D0
       ENDIF
