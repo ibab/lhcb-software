@@ -1,0 +1,32 @@
+# $Id: requirements,v 1.1.1.1 2002-03-15 15:58:17 dhcroft Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $
+# =============================================================================
+# $Log: not supported by cvs2svn $
+
+package            MuonTools
+version            v1r0
+
+# ================ structure =================================================
+branches           cmt doc src options MuonTools
+
+include_dirs      $(MUONTOOLSROOT)
+
+# ================ environment ===============================================
+set MUONTOOLSOPTS  $(MUONTOOLSROOT)/options
+
+# ================ dependencies ==============================================
+use GaudiKernel    v11r* 
+use MuonDet        v1r*    Det 
+use MuonKernel     v1r*    Muon
+
+
+# ================ component library =========================================
+library            MuonTools   *.cpp
+
+apply_pattern      package_Clinkopts 
+apply_pattern      packageShr
+
+# ================ private stuff (btw, WHY it is private?)  ==================
+private
+apply_pattern      package_Cshlibflags
