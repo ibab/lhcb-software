@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.19 2002-06-19 06:32:05 cattanem Exp $
+! $Id: release.notes,v 1.20 2002-06-20 18:43:52 ocallot Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2002-06-20 - Olivier Callot
+ - Adapt to the new Velo structure with 42 half-stations, in place of 21 
+	 stations. Same for PuVeto. The functionality is unchanged.
 
 ! 2002-06-18 - Olivier Callot
  - Fix some bugs in the new method, implemented the methods used by the

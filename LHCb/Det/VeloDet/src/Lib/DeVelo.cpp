@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.17 2002-06-18 07:44:10 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.18 2002-06-20 18:43:52 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -184,13 +184,17 @@ StatusCode DeVelo::initialize() {
   bool inVeto = true;
   char line[80];
   
-  IDetectorElement* stations = *childBegin();
+  //  IDetectorElement* stations = *childBegin();
+  IDetectorElement* stations = this;
+  unsigned int firstInStation = 0 ;
+
+  loging << "PuVeto " ;
 
   for( IDetectorElement::IDEContainer::iterator child = stations->childBegin();
        stations->childEnd() != child ; ++child ) {
     number = child - stations->childBegin();
 
-    unsigned int firstInStation = m_sensor.size();
+    if ( 0 == number%2) { firstInStation = m_sensor.size(); }
 
     for(IDetectorElement::IDEContainer::iterator sens = (*child)->childBegin();
         (*child)->childEnd() != sens ; ++sens ) {
@@ -208,12 +212,13 @@ StatusCode DeVelo::initialize() {
         if( pars.end() != it ) {
           typeStr = (*sens)->userParameterAsString( *it ) ;
           if ( typeStr == "VetoL" ) {
-            type = 0;
-          } else if ( typeStr == "VetoR" ) {
             type = 1;
+          } else if ( typeStr == "VetoR" ) {
+            type = 0;
           } else {
             if ( inVeto ) {
               inVeto = false;
+              loging << endreq;
               index  = 0;
             }
             if ( typeStr == "RRigh" ) {
@@ -251,7 +256,7 @@ StatusCode DeVelo::initialize() {
           m_sensor.push_back( sensor );
         }
 
-        sprintf( line, "Sensor %2d ", sensor->number() );
+        sprintf( line, "S%2d ", sensor->number() );
         loging << line << typeStr;
         sprintf( line, "(%d) z=%7.2f ", sensor->type(), sensor->z() );
         loging << line;
@@ -260,19 +265,24 @@ StatusCode DeVelo::initialize() {
         loging << " no geometry !" << endreq;
       }
     }
-    loging << endreq;
 
-    // build the list of Phi associated to R, in principle both PHI of the 
-    // station due to the dog-leg shape.
+    if ( !inVeto && (0 != number%2) ) {
 
-    for ( unsigned int sR = firstInStation ; m_sensor.size() > sR ; sR++ ) {
-      if ( isRSensor( sR )  ) {
-        for ( unsigned int sP = firstInStation; m_sensor.size() > sP; sP++ ) {
-          if ( !isRSensor( sP )  ) {
-            m_sensor[sR]->associate( sP );
+      // build the list of Phi associated to R, in principle both PHI of the 
+      // station due to the dog-leg shape.
+
+      for ( unsigned int sR = firstInStation ; m_sensor.size() > sR ; sR++ ) {
+        if ( isRSensor( sR )  ) {
+          loging << " R:" << sR << "-Phi";
+          for ( unsigned int sP = firstInStation; m_sensor.size() > sP; sP++) {
+            if ( !isRSensor( sP )  ) {
+              m_sensor[sR]->associate( sP );
+              loging << sP << " ";
+            }
           }
         }
       }
+      loging << endreq;
     }
 
   }
@@ -678,11 +688,14 @@ VeloChannelID DeVelo::neighbour ( const VeloChannelID& chan,
   
   if ( isRSensor( chan.sensor() ) ) {
     if ( 0 < numAway ) {
-      if ( (m_nbRInner > strip) && (m_nbRInner <= newStrip) ) {
+      if ( (m_nbRInner >  strip) && 
+           (m_nbRInner <= newStrip) ) {
         newStrip += (int)m_nbRInner;
-      } else if ( ( 1024 > strip ) && (1024 <= newStrip ) ) {
+      } else if ( ( 1024 >  strip ) && 
+                  ( 1024 <= newStrip ) ) {
         valid = false;
-      } else if ( (m_nbRInner+1024 > strip) && (m_nbRInner+1024 < newStrip) ) {
+      } else if ( (m_nbRInner+1024 >  strip) && 
+                  (m_nbRInner+1024 <= newStrip) ) {
         newStrip += (int)m_nbRInner;
       } else if ( 2048 <= newStrip ) {
         valid = false;
@@ -690,12 +703,14 @@ VeloChannelID DeVelo::neighbour ( const VeloChannelID& chan,
     } else {
       if ( 0 > newStrip ) {
         valid = false;
-      } else if ( (m_nbRInner < strip) && (m_nbRInner >= newStrip) ) {
+      } else if ( (m_nbRInner <= strip) && 
+                  (m_nbRInner >  newStrip) ) {
         valid = false;
-      } else if ( ( 1024 <= strip ) && (1024 > newStrip ) ) {
+      } else if ( ( 1024 <= strip ) && 
+                  ( 1024 >  newStrip ) ) {
         valid = false;
-      } else if ( (m_nbRInner+1024 < strip) && 
-                  (m_nbRInner+1024 >= newStrip) ) {
+      } else if ( (m_nbRInner+1024 <= strip) && 
+                  (m_nbRInner+1024 >  newStrip) ) {
         valid = false;
       }
     }
