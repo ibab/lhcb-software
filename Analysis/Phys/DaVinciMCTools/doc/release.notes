@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.17 2002-12-19 20:55:56 gcorti Exp $
+! $Id: release.notes,v 1.18 2002-12-20 16:59:22 gcorti Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : Gloria Corti
 
+!========================== DaVinciMCTools v4r1 2002-12-20 =================
 ! 2002-12-19 - Gloria Corti
  - Fix bug similar to that of ChargedProtoPAlg of uninitilized bools.
  - In MCParticleMaker cannot use reset method of auto_ptr because does not
