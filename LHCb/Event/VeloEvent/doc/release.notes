@@ -5,6 +5,7 @@ package manager: C.Parkes
 ! 20020418 (M.Cattaneo)
   - Move to Gaudi v10
   - Build separate library for dictionaries
+  - Remove file VeloEvent_dll.cpp (not making a component library)
 
 ! 20020415 (Chris Parkes)
   clean up my first attempt at the release.
