@@ -1,4 +1,4 @@
-# $Id: README,v 1.27 2002-11-25 23:26:02 andreav Exp $
+# $Id: README,v 1.28 2002-11-26 00:12:51 andreav Exp $
 
 Three examples are distributed in this package: a test of condition data 
 stored in flat XML files, a test of condition data stored in the CondDB,
@@ -42,9 +42,11 @@ The Windows environment is presented in a shorter way at the end of this file.
 Version v1r12p20020412 of CMT is assumed as the default on all platforms.
 
 It is assumed that CMTPATH contains the release directory in ${HOME}/newmycmt
-(i.e. ~/newmycmt), as well as Gaudi v11r1. Put the following line in .cshrc 
-to achieve this:
-    setenv CMTPATH ${HOME}/newmycmt:${GAUDISOFT}/GAUDI_v11r1
+(i.e. ~/newmycmt), as well as Gaudi v11r2 and LHCb v11r2. 
+Put the following line in .cshrc to achieve this:
+    setenv CMTPATH ${HOME}/newmycmt
+    setenv CMTPATH ${CMTPATH}:${GAUDISOFT}/GAUDI_v11r2
+    setenv CMTPATH ${CMTPATH}:${LHCBSOFT}/LHCB_v11r2
 Check the result with
     printenv CMTPATH
 
