@@ -1,8 +1,11 @@
-// $Id: CaloPrsCorrection.cpp,v 1.1.1.1 2002-11-13 20:46:41 ibelyaev Exp $
+// $Id: CaloPrsCorrection.cpp,v 1.2 2002-11-14 14:28:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
+// new package 
+//
 // Revision 1.1  2002/09/04 14:46:16  ibelyaev
 // ============================================================================
 // Include files
@@ -171,7 +174,7 @@ StatusCode CaloPrsCorrection::operator() ( CaloHypo* hypo  ) const
   const Digits& digits = hypo->digits();
   for( Digits::const_iterator d = digits.begin() ; digits.end() != d ; ++d ) 
     { 
-      if     ( 0 ==   *d   ) { continue           ; }
+      if     ( *d == 0     ) { continue           ; }
       else if( m_prs( *d ) ) { eprs  += (*d)->e() ; } 
       else if( m_spd( *d ) ) { espd  += (*d)->e() ; } 
     }

@@ -1,8 +1,11 @@
-// $Id: CaloHyposMerge.cpp,v 1.1.1.1 2002-11-13 20:46:40 ibelyaev Exp $
+// $Id: CaloHyposMerge.cpp,v 1.2 2002-11-14 14:28:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:40  ibelyaev
+// new package 
+//
 // ============================================================================
 // Include files
 #include <map>
@@ -141,7 +144,7 @@ StatusCode CaloHyposMerge::execute()
           for( Hypo::Clusters::const_iterator cluster = clusters.begin() ; 
                clusters.end() != cluster ; ++cluster )
             {
-              if( 0 == *cluster ) { continue ; }
+              if( *cluster == 0 ) { continue ; }
               theMap.insert( std::make_pair( *cluster , *hypo ) );     
             }
         }
