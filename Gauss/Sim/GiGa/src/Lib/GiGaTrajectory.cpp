@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.cpp,v 1.12 2003-10-09 08:57:28 witoldp Exp $ 
+// $Id: GiGaTrajectory.cpp,v 1.13 2004-01-27 17:56:53 ibelyaev Exp $ 
 // ============================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2003/10/09 08:57:28  witoldp
+// added vertex types
+//
 // Revision 1.11  2003/03/11 09:34:55  ibelyaev
 //  remove invalid inline directives
 //
@@ -40,6 +43,29 @@
  *  @date    22/02/2001 
  */
 // ============================================================================
+
+
+// ============================================================================
+#if  defined (__GNUG__) || defined (__GNUC__)
+// Problem with -ansi option of g++: those prototypes are not taken.
+extern "C" {
+  int isnan  ( double );
+  int finite ( double );
+}
+#elif defined (WIN32)
+#include <float.h>
+#endif #endif
+// ============================================================================
+
+{
+#if defined (WIN32)
+  inline int lfin ( double x ) { return _finite( x ) ; }
+  inline int lnan ( double x ) { return _isnan ( x ) ; }
+#else
+  inline int lfin ( double x ) { return  finite( x ) ; }
+  inline int lnan ( double x ) { return  isnan ( x ) ; }
+#endif  
+};
 
 // ============================================================================
 namespace GiGaTrajectoryLocal
@@ -94,8 +120,12 @@ GiGaTrajectory::GiGaTrajectory   ( const G4Track* aTrack )
     , m_processname("undefined")
 {
   ///
-  GiGaTrajectoryPoint* firstPoint = 
-    new GiGaTrajectoryPoint( aTrack->GetPosition() , aTrack->GetGlobalTime() );
+  const double time = aTrack->GlobalTime() ;
+  if( !lfin( time ) ) 
+  { throw GiGaException ( "GiGaTrajectory(): Time is not finite ") ; }
+  ///
+  GiGaTrajectoryPoint* firstPoint =
+    new GiGaTrajectoryPoint( aTrack->GetPosition() , time );
   push_back( firstPoint );
   ///
 #ifdef GIGA_DEBUG
@@ -116,11 +146,11 @@ GiGaTrajectory::GiGaTrajectory ( const GiGaTrajectory & right )
   , m_parentID                        ( right.parentID      ()       )
   , m_partDef                         ( right.partDef       ()       )
   , m_4vect                           ( right.fourMomentum  ()       )
-    , m_processname(right.processName())
+  , m_processname                     ( right.processName   ()       )
 {
   clear();
   for( const_iterator it = right.begin() ; right.end() != it ; ++it ) 
-    {  push_back( (*it)->clone() ) ; }
+  {  push_back( (*it)->clone() ) ; }
 #ifdef GIGA_DEBUG
   GiGaTrajectoryLocal::s_Counter.increment () ;
 #endif
@@ -238,13 +268,18 @@ void GiGaTrajectory::AppendStep      ( const G4Step*  step )
       ( empty()                                                              || 
         step->GetPostStepPoint()->GetGlobalTime () != back()->GetTime     () ||
         step->GetPostStepPoint()->GetPosition() != back()->GetPosition () ) ) 
-    {
-      GiGaTrajectoryPoint* p = 
-        new GiGaTrajectoryPoint( step->GetPostStepPoint()->GetPosition   () ,
-                                 step->GetPostStepPoint()->GetGlobalTime () ) ; 
-      push_back( p );
-      ///
-    };
+  {
+    { ///
+      const double time = step->GetPostStepPoint()->GlobalTime() ;
+      if( !lfin( time ) ) 
+      { throw GiGaException ( "GiGaTrajectory::append: Time is not finite ") ; }
+    }
+    GiGaTrajectoryPoint* p = 
+      new GiGaTrajectoryPoint( step->GetPostStepPoint()->GetPosition   () ,
+                               step->GetPostStepPoint()->GetGlobalTime () ) ; 
+    push_back( p );
+    ///
+  };
   ///
 };
 ///

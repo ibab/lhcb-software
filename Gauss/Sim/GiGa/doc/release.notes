@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.87 2003-12-10 13:59:35 ranjard Exp $
+! $Id: release.notes,v 1.88 2004-01-27 17:56:53 ibelyaev Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2004-01-27 - Vanya BELYAEV
+
+ - src/Lib/GiGaTrajectory.cpp
+  add check for NaN/Infinity before the creation of GiGaTrajectoryPoint 
+  thrown GiGaException for NaN/Infinite
 
 !========================== GiGa v15r0 ====================================
 ! 2003-12-10 - Florence RANJARD
