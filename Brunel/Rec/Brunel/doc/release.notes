@@ -3,6 +3,20 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v15r1>2002-11-18 Brunel v15r1</A></H1><PRE>
+ - New tuning:
+   . Add OT straw inefficiency at y=0 (OTDet v3r2)
+   . Reoptimisation of Velo tracking (VeloTrack v4r3)
+
+ - DST changes:
+   . Updated list of algorithms in Trig/AlgUsedTimes and added elapsed time 
+     measurement. This last change is not backwards compatible: to read 
+     AlgUsedTimes from old DSTs must use Event/Event < v2r1
+     (Event v2r1, EventSys v12r9, BrunelAlgs v1r6)
+
+ - Bug fixes:
+   . Fix a memory leak in SicbMuonHitCnv (MuonSicbCnv v6r6)
+
 </PRE><H1><A NAME=v15r0>2002-11-11 Brunel v15r0</A></H1><PRE>
  - New tuning:
    . Change Silicon Tracker strip pitch from 238 to 198 microns

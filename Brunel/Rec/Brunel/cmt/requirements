@@ -1,5 +1,5 @@
 package Brunel
-version v15r0
+version v15r1
 
 branches doc cmt job options
 
@@ -50,26 +50,26 @@ use CaloDet       	v5r1  	Det
 use CaloDetXmlCnv	v2r0  	Det
 use ITDet         	v1r1  	Det
 use MuonDet       	v4r1  	Det
-use OTDet         	v3r1  	Det
+use OTDet         	v3r2  	Det
 use RichDet		v3r0	Det
 use VeloDet       	v8r0  	Det
 use Magnet        	v1r1  	Det
 
 # Event Model
-use EventSys     v12r8  Event
+use EventSys     v12r9  Event
 
 # SicB event data persistency
 use SicbCnv      v17r3  SICB
 use RiSicbGeom   v2r3   SICB
 use CaloSicbCnv  v7r1   SICB
-use MuonSicbCnv  v6r5   SICB
+use MuonSicbCnv  v6r6   SICB
 use RiSicbCnv    v4r6   SICB
 use VSicbCnv     v8r0   SICB
 
 # Brunel utilities
 use BrunelKernel v5r1   Rec
 use BrunelSicb   v4r0   Rec
-use BrunelAlgs   v1r5   Rec
+use BrunelAlgs   v1r6   Rec
 
 # L0 trigger
 use L0Calo              v6r1    L0
@@ -109,7 +109,7 @@ use OTAssociators  	v2r2  	OT
 # Tracking
 use TrKernel            v11r1   Tr
 use TrFitEvent          v3r3    Tr
-use VeloTrack           v4r2    Velo
+use VeloTrack           v4r3    Velo
 use TrAssociators       v3r2    Tr
 use LongTrack           v1r2    Tr
 use TrFitter            v3r5    Tr
@@ -154,7 +154,7 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=150000 " \
-           VisualC  " /DBrunelVersion=150000 "
+macro_append fflags " -DBrunelVersion=150100 " \
+           VisualC  " /DBrunelVersion=150100 "
 
 apply_pattern application_path
