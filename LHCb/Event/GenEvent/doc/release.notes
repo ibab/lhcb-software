@@ -1,8 +1,13 @@
 Package Event/GenEvent
+package coordinator: W.Pokorski
 
-! 20020423 - Vanya Belyaev
-    - change the version of GaudiKernel
 
-! 20020405 - Witek Pokorski
+! >>>>>>>>>>>>>>>>> GenEvent v1r0 <<<<<<<<<<<<<<<<<<<<<
+
+! 20020423 - GenEvent v1r0 - Vanya Belyaev
+    - use GaudiKernel v12
+
+! 20020405 - GenEvent v1r0 - Witek Pokorski
     - New Package 
 
+!>>>>>>>>>>>>>>>>>> GenEvent v0r0 <<<<<<<<<<<<<<<<<<<<

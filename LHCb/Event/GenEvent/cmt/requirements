@@ -4,15 +4,14 @@ version v1r0
 
 branches cmt src doc GenEvent
 
-use GaudiKernel v12*
+use GaudiKernel v12r*
 use HepMC       v1r2*	Sim
 
 include_dirs $(GENEVENTROOT)
 
-library GenEvent -no_share HepMCEvent.cpp GenEvent_load.cpp GenEvent_entries.cpp 
+library GenEvent -no_share ../src/*.cpp 
 
 apply_pattern package_linkopts
-apply_pattern linker_path
 
 
 
