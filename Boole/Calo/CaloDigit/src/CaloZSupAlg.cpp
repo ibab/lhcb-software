@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.3 2003-11-18 10:20:24 ocallot Exp $
+// $Id: CaloZSupAlg.cpp,v 1.4 2003-11-18 13:16:48 ocallot Exp $
 // STL
 #include <string>
 #include <stdio.h>
@@ -66,7 +66,7 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("NumberOfBanks"   , m_numberOfBanks   ) ;
   declareProperty("SpdInputData"    , m_spdInputData     = ""        ) ;
   declareProperty("TriggerEtScale"  , m_triggerEtScale   = 20. * MeV );
-  declareProperty("TriggerThreshold", m_triggerThreshold = 15. * MeV );
+  declareProperty("TriggerThreshold", m_triggerThreshold = 10. * MeV );
   declareProperty("TriggerBankType" , m_triggerBankType        ) ;
 
   //=== Default values according to the name of the algorithm !

@@ -11,7 +11,7 @@
     NumberOfBanks : number of banks in this detector.
     SpdInputData : Container with SPD digits, to create PrsSpd trigger banks
     TriggerEtScale : To digitise transverse energy (Ecal,Hcal), 20 MeV
-    TriggerThreshold : Threshold for Prs trigger bit, default 15 MeV
+    TriggerThreshold : Threshold for Prs trigger bit, default 10 MeV
     TriggerBankType : type of the HltBank produced.
  - Removed option TagData in CaloZSup: The Prs Z-sup is now independent of the 
    SPD
