@@ -1,5 +1,5 @@
 package DaVinci
-version v1
+version v1r1
 
 branches doc cmt src job options
 
@@ -19,8 +19,8 @@ use GaudiConf    v5
 use GaudiSys     v8
 
 # Histogram persistency ( choose the one you prefer )
-#use HbookCnv     v10
-#use RootHistCnv  v4
+#use HbookCnv     v10*
+#use RootHistCnv  v4*
 
 # Additional external libraries
 use CERNLIB      v2001
@@ -30,8 +30,8 @@ use CERNLIB      v2001
 #use XmlDDDB      v6    Det
 
 # Event Model ( add any other Event package you need )
-use LHCbEvent    v11    Event
-use PhysEvent    v1r1   Event
+use LHCbEvent    v11*    Event
+use PhysEvent    v1*   Event
 
 # SICB database : this has to be consistent with the file you are reading
 use dbase        v239   SICB 
@@ -42,13 +42,13 @@ use dbase        v239   SICB
 # reading old SICbDST files
 
 # the followings are the versions for reading Brunel data v4
-use Futio    v11     SICB
-use Futil    v10r3   SICB
-use detdes   v13     SICB
-use digvdet  v2r3    SICB
-use trivert  v5r2    SICB
-use axreclib v4r2    SICB
-use axsellib v6      SICB
+use Futio    v11*    SICB
+use Futil    v10*    SICB
+use detdes   v13*    SICB
+use digvdet  v2*     SICB
+use trivert  v5*     SICB
+use axreclib v4*     SICB
+use axsellib v6*     SICB
 
 # the following are the versions for reading SICBDST v235 files
 #use Futio    v6r7p3  SICB
@@ -57,13 +57,13 @@ use axsellib v6      SICB
 #use digvdet  v1r2    SICB
 #use trivert  v4      SICB
 #use axreclib v3r2    SICB
-#use axsellib v6      SICB
+#use axsellib v6*     SICB
 
 # SicB event data persistency ( add any other you need )
-use SicbCnv      v13   SICB
+use SicbCnv      v13*  SICB
 
 # DaVinci components
-use DaVinciTools  v1r1 Phys
+use DaVinciTools  v1*  Phys
 #
 #===== build DaVinci =========================
 application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp \
