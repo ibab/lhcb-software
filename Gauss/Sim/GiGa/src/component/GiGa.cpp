@@ -1,8 +1,11 @@
-// $Id: GiGa.cpp,v 1.9 2004-08-02 13:13:47 gcorti Exp $ 
+// $Id: GiGa.cpp,v 1.10 2005-02-28 12:56:56 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2004/08/02 13:13:47  gcorti
+// adapt to Gaudi v16r0
+//
 // Revision 1.8  2004/04/20 04:26:06  ibelyaev
 //  fix bad interference between tools and Geant4
 //
@@ -34,6 +37,7 @@
 /// G4 
 #include    "G4UIsession.hh"
 #include    "G4VVisManager.hh"
+#include    "G4ParticleTable.hh"
 // from GiGa
 #include    "GiGa/IGiGaPhysicsList.h"
 #include    "GiGa/IGiGaStackAction.h"
@@ -139,6 +143,8 @@ GiGa::GiGa( const std::string& name, ISvcLocator* svcloc )
   declareProperty( "VisManager"             , m_visManagerName       ) ;  
   /// Random Numbers Service   
   declareProperty( "RandomNumberService"    , m_rndmSvcName          ) ;  
+  /// Control print out of G4 particles list
+  declareProperty( "PrintG4Particles"       , m_printParticles       ) ;
 };
 
 // ============================================================================
@@ -382,7 +388,12 @@ GiGa::initialize()
         { return Error("Unable to locate Random Number service '"
                        + m_rndmSvcName + "'" , sc ) ; }
     }
-  ///
+  /// Dump all particles known to Geant4 
+  if( m_printParticles ) {
+    G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+    particleTable->DumpTable("all");
+  }
+  
   return StatusCode::SUCCESS ; 
 };
 

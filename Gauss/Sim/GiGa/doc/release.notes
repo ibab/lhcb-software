@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.105 2004-08-02 13:13:47 gcorti Exp $
+! $Id: release.notes,v 1.106 2005-02-28 12:56:56 gcorti Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+!======================= GiGa v17r2 =====================================
+! 2005-02-28 - Gloria Corti
+ - GiGa.{h,cpp}
+   . introduce option to print list of G4Particles defined with their
+     properties (to turn on set property GiGa.PrintG4Particles = true )
 
 !======================= GiGa v17r1 =====================================
 ! 2004-08-02 - Gloria CORTI

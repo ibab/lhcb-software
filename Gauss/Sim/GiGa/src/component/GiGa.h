@@ -1,8 +1,11 @@
-// $Id: GiGa.h,v 1.4 2003-04-06 18:49:48 ibelyaev Exp $ 
+// $Id: GiGa.h,v 1.5 2005-02-28 12:56:56 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/04/06 18:49:48  ibelyaev
+//  see $GIGAROOT/doc/release.notes
+//
 // Revision 1.3  2002/12/13 13:36:31  ibelyaev
 //  add RndmGenSvc, and delete the last G4Event
 //
@@ -652,6 +655,8 @@ private:
   
   std::string       m_rndmSvcName         ; ///< name for random number service 
   IRndmGenSvc*      m_rndmSvc             ; ///< Gaudi random number service 
+
+  bool              m_printParticles       ; ///< control print of G4Particles
   
   typedef std::map<std::string,unsigned int> Counter;
   /// counter of errors 
