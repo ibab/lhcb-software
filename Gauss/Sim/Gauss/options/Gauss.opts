@@ -1,4 +1,4 @@
-// $Id: Gauss.opts,v 1.50 2004-05-03 14:49:15 ranjard Exp $ 
+// $Id: Gauss.opts,v 1.51 2004-06-16 08:07:40 ranjard Exp $ 
 
 #include "$GAUSSOPTS/Common.opts"
 
@@ -24,11 +24,11 @@ GaussTape.Output = "DATAFILE='PFN:GaussPool_11144100.sim' TYP='POOL_ROOTTREE' OP
 PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
 ApplicationMgr.EvtMax      = 10;
-GaussInit.FirstEventNumber = 1;
-GaussInit.RunNumber = 1;
+GaussInit.FirstEventNumber = 110;
+GaussInit.RunNumber = 568812817;
 MessageSvc.OutputLevel    = 3;
  
 // to simulate <evttype> put a line similar to the following 
-#include "$DECFILESROOT/options/11144100.opts"  // Bd_JpsiKS,mm
-//#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
+//#include "$DECFILESROOT/options/13296200.opts"  // Bd_JpsiKS,mm
+#include "$DECFILESROOT/options/10000000.opts"  // Min Bias
 

@@ -8,6 +8,20 @@ the Gauss version v15r10 is a bug fix of Gauss v15r8
 ! 2004-05-12 - Gloria Corti
   Bug fix for writing extended RICH information (BUG#3367 , GaussPoolIO.opts)
 
+!====================== GiGaCnv v15r6 2004-06-15 ===========================
+! 2004-06-15 - Gloria CORTI
+ - src/component/GiGaMCVertexCnv.cpp
+   . temporarly issue a warning instead of an exception when a mother particle
+     has already ben set. Do do reset the parent. Most of this happens
+     for vertices z < -10m. Temporary until a better solution is found.
+
+!===================== GaussTools v10r6 2004-06-15 ========================
+! 2004-06-15 - Gloria CORTI
+ - src/Components/TrCutsRunAction.cpp
+   . as suggested by Witek apply killing of looping particles to gamma as
+     well as electrons to avoid ping-pong effect in volumes observed in
+     production jobs
+
 !================= EvtGen v5r4 ====================================
 ! 2004-06-08 - Patrick Robbe
  - EvtDDalitz.cpp : correct Complex amplitude for D0 -> Ks pi pi
