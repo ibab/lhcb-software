@@ -1,4 +1,4 @@
-// $Id: GetGiGaHitsAlg.cpp,v 1.1 2002-12-12 15:19:30 witoldp Exp $
+// $Id: GetGiGaHitsAlg.cpp,v 1.2 2003-02-14 18:14:48 witoldp Exp $
 // Include files 
 
 // from Gaudi
@@ -98,6 +98,18 @@ StatusCode GetGiGaHitsAlg::execute() {
                 << obj->size() 
                 << endreq ;
           Stat stat( chronoSvc() , "#hits" , obj->size() ) ; 
+ 
+          MCHits::const_iterator hiter;
+          for(hiter=obj->begin(); hiter!=obj->end(); hiter++)
+            {
+              log << MSG::VERBOSE << "Energy of OTHit: "
+                  << (*hiter)->energy() 
+                  << "     MCParticle: " << (*hiter)->mcParticle()
+                ->particleID().pid()
+                  << "     Energy: " << (*hiter)->mcParticle() 
+                -> momentum().e()
+                  << endreq;
+            }
         } 
       else 
         { 
@@ -124,7 +136,7 @@ StatusCode GetGiGaHitsAlg::execute() {
           MCHits::const_iterator hiter;
           for(hiter=obj->begin(); hiter!=obj->end(); hiter++)
             {
-              log << MSG::VERBOSE << "Energy of MCHit: "
+              log << MSG::VERBOSE << "Energy of ITHit: "
                   << (*hiter)->energy() 
                   << "     MCParticle: " << (*hiter)->mcParticle()
                 ->particleID().pid()
@@ -153,19 +165,19 @@ StatusCode GetGiGaHitsAlg::execute() {
                 << m_velohits << "'  \t" 
                 << obj->size() 
                 << endreq ;
-          Stat stat( chronoSvc() , "#hits" , obj->size() ) ; 
+          Stat stat( chronoSvc() , "#hits" , obj->size() ) ;          
 
           MCVeloHits::const_iterator vhiter;          
           for(vhiter=obj->begin(); vhiter!=obj->end(); vhiter++)
             {
-              log << MSG::VERBOSE << "Energy of MCVeloHit: "
+              log << MSG::VERBOSE << "E_MCVeloHit: "
                   << (*vhiter)->energy() 
-                  << "    Sensor: " << (*vhiter)-> sensor()
-                  << "     MCParticle: " << (*vhiter)->mcParticle()
+                  << "   Sensor: " << (*vhiter)-> sensor()
+                  << "   MCParticle: " << (*vhiter)->mcParticle()
                 ->particleID().pid()
                   << "     Energy: " << (*vhiter)->mcParticle() 
                 -> momentum().e()
-                  << endreq;
+                  <<  endreq;
             }
         } 
       else 

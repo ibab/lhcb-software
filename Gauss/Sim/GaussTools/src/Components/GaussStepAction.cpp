@@ -2,10 +2,10 @@
 #include "CLHEP/Geometry/Point3D.h"
 ///
 #include "G4Step.hh"
-//#include "G4TouchableHistory.hh"
-//#include "G4VPhysicalVolume.hh"
-//#include "G4LogicalVolume.hh"
 #include "G4OpticalPhoton.hh"
+#include "G4Electron.hh"
+#include "G4Positron.hh"
+#include "G4Gamma.hh"
 ///
 #include "GaudiKernel/MsgStream.h"
 /// GiGa 
@@ -48,11 +48,15 @@ GaussStepAction::GaussStepAction
   // points where a secondary was produced but not a delta-electron
   , m_storeNotDeltaE ( false )
   // points where hits where generated to be stored
-  , m_storeHitPoints ( false )
+    , m_storeHitPoints ( false )
+  // tracking cuts
+    , m_trcuteg (1.0), m_trcuthadr (10.0)
 {
   declareProperty ("StorePointsOfSecondaries", m_storePointsOfSecondaries);
   declareProperty ("StoreNotDeltaE", m_storeNotDeltaE);
   declareProperty ("StoreHitPoints", m_storeHitPoints);  
+  declareProperty ("TrCutElGamma", m_trcuteg);
+  declareProperty ("TrCutHadr", m_trcuthadr);
 };
 // ============================================================================
 
@@ -70,9 +74,12 @@ GaussStepAction::~GaussStepAction(){};
 // ============================================================================
 void GaussStepAction::UserSteppingAction ( const G4Step* step ) 
 {
-  G4VUserTrackInformation* uinf = step->GetTrack()->GetUserInformation(); 
+  G4Track* track = step->GetTrack();
+  G4VUserTrackInformation* uinf = track->GetUserInformation(); 
   GaussTrackInformation*    ginf = 
-    ( 0 == uinf )  ? 0 : dynamic_cast<GaussTrackInformation*> ( uinf );
+    ( 0 == uinf )  ? 0 : static_cast<GaussTrackInformation*> ( uinf );
+
+  G4ParticleDefinition* partdef=track->GetDefinition();
 
   /// if a hit created, append step
   if (m_storeHitPoints && ginf->createdHit()) 
@@ -85,8 +92,7 @@ void GaussStepAction::UserSteppingAction ( const G4Step* step )
   /// for optical photons also the reflection/refraction step must be appended  
   else if ( step->GetPostStepPoint()->GetStepStatus() == 
             fGeomBoundary &&
-            step->GetTrack()->GetDefinition        () == 
-            G4OpticalPhoton::OpticalPhoton         ()    )
+            partdef == G4OpticalPhoton::OpticalPhoton()    )
     { 
       ginf->setAppendStep(true); 
       return;
@@ -100,6 +106,18 @@ void GaussStepAction::UserSteppingAction ( const G4Step* step )
   //    ginf->setAppendStep(true); 
   //    return;
   //  }
+
+  if ( partdef == G4Electron::ElectronDefinition() ||
+       partdef == G4Positron::PositronDefinition() ||
+       partdef == G4Gamma::GammaDefinition() )
+    { 
+      if (track->GetKineticEnergy() <  m_trcuteg)
+        track->SetTrackStatus(fStopAndKill);
+   }
+  else if(track->GetKineticEnergy() < m_trcuthadr)
+    track->SetTrackStatus(fStopAndKill);
+
+
 };
 // ============================================================================
 

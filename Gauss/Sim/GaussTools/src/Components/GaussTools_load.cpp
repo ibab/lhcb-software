@@ -1,8 +1,11 @@
-// $Id: GaussTools_load.cpp,v 1.2 2002-12-17 14:55:45 witoldp Exp $
+// $Id: GaussTools_load.cpp,v 1.3 2003-02-14 18:14:48 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/12/17 14:55:45  witoldp
+// added GaussInitialisation, use new G4
+//
 // Revision 1.1  2002/12/12 15:19:30  witoldp
 // major repackaging
 //
@@ -61,6 +64,7 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    GiGaStepActionEmpty     );
   DECLARE_GiGaFactory     (    GiGaStepActionDraw      );
   DECLARE_GiGaFactory     (    GiGaStepActionSequence  );
+  DECLARE_GiGaFactory     (    GaussStepAction         );
 
   /// run action
   DECLARE_GiGaFactory     (    GiGaRunActionSequence   );

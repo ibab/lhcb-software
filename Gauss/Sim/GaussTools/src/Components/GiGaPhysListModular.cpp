@@ -47,10 +47,12 @@ GiGaPhysListModular::GiGaPhysListModular
   const std::string& name   ,
   const IInterface*  parent )
   : GiGaPhysListBase( type , name , parent ),G4VModularPhysicsList(), 
-  m_nuCut(5*m)
+    m_nuCut(5*m), m_electronCut(10.0*km), m_gammaCut(20*mm)
 {
   declareProperty( "PhysicsConstructors"  , m_physconstr);
   declareProperty( "NuCut", m_nuCut);
+  declareProperty( "ElectronCut", m_electronCut);
+  declareProperty( "GammaCut", m_gammaCut);
 };
 // ============================================================================
 
@@ -90,7 +92,6 @@ StatusCode GiGaPhysListModular::initialize()
           StatusCode scc= toolSvc->retrieveTool( *i , theconstr , this );
           if(!scc) {
             return Error("Physics constructor '"+(*i)+"i is not found!",scc);
-            // log << MSG::WARNING << "Could not find: " << (*i) << endreq;
           }
           else
             {
@@ -114,6 +115,8 @@ void GiGaPhysListModular::SetCuts()
   SetCutValue(m_nuCut,"anti_nu_e");
   SetCutValue(m_nuCut,"anti_nu_tau");
   SetCutValue(m_nuCut,"anti_nu_mu");
+  SetCutValue(m_gammaCut,"gamma");
+  SetCutValue(m_electronCut,"e-");
 
   SetCutsWithDefault();
   

@@ -54,7 +54,8 @@ private:
   bool m_storePointsOfSecondaries;
   bool m_storeNotDeltaE;
   bool m_storeHitPoints;
-
+  double m_trcuteg;
+  double m_trcuthadr;
 };
 // ============================================================================
 

@@ -25,7 +25,6 @@
 /// local 
 #include "PrintEventAlg.h"
 
-
 // ============================================================================
 /** @file PrintEventAlg.cpp
  *  
@@ -115,7 +114,7 @@ StatusCode PrintEventAlg::execute()
           Stat stat( chronoSvc() , "#particles" , obj->size() ) ; 
           MCParticles::const_iterator ipart;
           for ( ipart = obj->begin(); ipart != obj->end(); ipart++ )  {
-            if ( !((*ipart)->mother()))
+            if ( !((*ipart)->mother()))            
               {
                 licz++;
                 log << MSG::INFO << " "  << endreq;
@@ -184,7 +183,7 @@ void PrintEventAlg::printDecayTree
     {
       log << MSG::INFO << " Particle not found " << mother->particleID().pid() 
           << endreq;
-    name="AAA";
+    name="XXXX";
     }
   else
     {
@@ -207,7 +206,7 @@ void PrintEventAlg::printDecayTree
   log << MSG::INFO << depth << prefix.substr(0, prefix.length()-1)
       << "+--->" << std::setw(12) << std::setiosflags(std::ios::left) 
       << name 
-      << "    En:"   << std::setw(12) << mother->momentum().e()
+      << "    En(MeV):"   << std::setw(12) << mother->momentum().e()
       << " x:" << std::setw(12) << x
       << " y:" << std::setw(12) << y
       << " z:" << std::setw(12) << z 

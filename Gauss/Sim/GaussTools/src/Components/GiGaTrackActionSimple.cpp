@@ -1,8 +1,11 @@
-// $Id: GiGaTrackActionSimple.cpp,v 1.1 2002-12-12 15:19:33 witoldp Exp $ 
+// $Id: GiGaTrackActionSimple.cpp,v 1.2 2003-02-14 18:14:49 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/12/12 15:19:33  witoldp
+// major repackaging
+//
 // Revision 1.5  2002/12/07 21:19:14  ibelyaev
 //  few optimization updates
 //
@@ -25,7 +28,6 @@
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
 #include "GiGa/GiGaMACROs.h"
-//#include "GiGa/GiGaTrajectory.h"
 // GaussTools
 #include "GaussTools/GaussTrajectory.h"
 #include "GaussTools/GaussTrackInformation.h"
@@ -38,6 +40,7 @@
  *  Implementation of class GiGaTrackActionSimple
  *
  *  @author Vanya Belyaev
+ *  @author Witek Pokorski
  */
 
 // ============================================================================
@@ -96,7 +99,7 @@ GiGaTrackActionSimple::GiGaTrackActionSimple
   // declare own properties
   declareProperty( "StoreAll"              , m_storeAll              ) ; 
   declareProperty( "StorePrimaries"        , m_storePrimaries        ) ;
-  declareProperty( "StoreHitTracks"        , m_storeHitTracks        ) ;
+  //  declareProperty( "StoreHitTracks"        , m_storeHitTracks        ) ;
   declareProperty( "StoreByOwnEnergy"      , m_storeByOwnEnergy      ) ; 
   declareProperty( "StoreByOwnType"        , m_storeByOwnType        ) ; 
   declareProperty( "StoreByChildEnergy"    , m_storeByChildEnergy    ) ; 
@@ -118,6 +121,7 @@ GiGaTrackActionSimple::~GiGaTrackActionSimple()
   m_ownStoredTypesNames.clear() ; 
   m_childStoredTypes.clear() ; 
   m_childStoredTypesNames.clear() ; 
+
 };
 // ============================================================================
 
@@ -131,7 +135,7 @@ GiGaTrackActionSimple::~GiGaTrackActionSimple()
  */
 // ============================================================================
 StatusCode GiGaTrackActionSimple::initialize () 
-{ 
+{
   // initialize the base 
   StatusCode status = GiGaTrackActionBase::initialize() ; 
   if( status.isFailure() ) 
@@ -216,7 +220,7 @@ StatusCode GiGaTrackActionSimple::finalize   ()
  *   @param pointer to new track opbject 
  */
 // ============================================================================
-void GiGaTrackActionSimple::PreUserTrackingAction  ( const G4Track* track ) 
+void GiGaTrackActionSimple::PreUserTrackingAction  (const G4Track* track ) 
 {
   // Is the track valid? Is tracking manager valid? 
   // Does trajectory already exist?
@@ -230,7 +234,7 @@ void GiGaTrackActionSimple::PreUserTrackingAction  ( const G4Track* track )
         && ( track->GetKineticEnergy() > ownEnergyThreshold() ) ) 
       {  ti->setToBeStored( true ); } 
     //
-    trackMgr()->SetUserTrackInformation( ti ); 
+    trackMgr()->SetUserTrackInformation( ti );
   }
   //
   trackMgr()->SetStoreTrajectory( true ) ;  
@@ -252,7 +256,6 @@ void GiGaTrackActionSimple::PreUserTrackingAction  ( const G4Track* track )
 // ============================================================================
 void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track ) 
 {
-
   // Is the track valid? Is tracking manager valid?
   if( 0 == track || 0 == trackMgr()           )  { return ; } /// RETURN !!!
   // store trajectory?
@@ -315,7 +318,7 @@ void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track )
     {
       G4VUserTrackInformation* ui = track->GetUserInformation(); 
       GaussTrackInformation*    gi = 
-        ( 0 == ui )  ? 0 : dynamic_cast<GaussTrackInformation*> ( ui );
+        ( 0 == ui )  ? 0 : static_cast<GaussTrackInformation*> ( ui );
       if( 0 != gi && gi->toBeStored() ) 
         { trackMgr()->SetStoreTrajectory   ( true )  ;   return ; }  /// RETURN 
     }  
@@ -350,7 +353,7 @@ void GiGaTrackActionSimple::PostUserTrackingAction ( const G4Track* track )
   // also update the trackID in the hits
   G4VUserTrackInformation* uinf = track->GetUserInformation(); 
   GaussTrackInformation*    ginf = 
-    ( 0 == uinf )  ? 0 : dynamic_cast<GaussTrackInformation*> ( uinf );
+    ( 0 == uinf )  ? 0 : static_cast<GaussTrackInformation*> ( uinf );
   ginf->updateHitsTrackID( track->GetParentID() );
   
   // delete the trajectory by hand 
