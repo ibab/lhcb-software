@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.5 2004-02-24 18:26:46 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.6 2004-02-28 21:43:43 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -67,7 +67,6 @@ StatusCode DeVeloRType::initialize()
   }
 
   m_numberOfZones = 4;
-  m_numberOfStrips = this->numberOfStrips();
   m_stripsInZone = m_numberOfStrips / m_numberOfZones;
 
   m_innerPitch = this->userParameterAsDouble("InnerPitch");
@@ -106,7 +105,7 @@ StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
   unsigned int closestStrip=0;
   double logarithm, strip;
   double radius=localPoint.perp();
-  logarithm = (m_pitchSlope*(radius - m_innerRadius)+m_innerPitch) / 
+  logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) / 
     m_innerPitch;
   strip = log(logarithm)/m_pitchSlope;
   closestStrip = VeloRound::round(strip);
@@ -140,7 +139,7 @@ StatusCode DeVeloRType::isInside(const HepPoint3D& point)
   MsgStream msg(msgSvc(), "DeVeloRType");
   // check boundaries....  
   double radius=point.perp();
-  if(m_innerActiveArea > radius || m_outerActiveArea < radius) {
+  if(m_innerRadius > radius || m_outerRadius < radius) {
     msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
@@ -274,34 +273,17 @@ StatusCode DeVeloRType::residual(const HepPoint3D& /*point*/,
   return StatusCode::SUCCESS;
 }
 //==============================================================================
-/// The number of zones in the detector
-//==============================================================================
-/*unsigned int DeVeloRType::numberOfZones()
-{
-  return m_numberOfZones;
-}*/
-//==============================================================================
-/// The zone number for a given strip
-//==============================================================================
-/*unsigned int DeVeloRType::zoneOfStrip(const unsigned int strip)
-{
-  return static_cast<unsigned int>(strip/512);
-}*/
-
-//==============================================================================
 /// Store the local radius and phi limits for each strip in the sensor
 //==============================================================================
 void DeVeloRType::calcStripLimits()
 {
   MsgStream msg( msgSvc(), "DeVeloRType" );
   msg << MSG::VERBOSE << "calcStripLimits" << endreq;
-  m_innerActiveArea = this->innerRadius();
-  m_outerActiveArea = this->outerRadius();
-  m_innerRadius = m_innerActiveArea + m_innerPitch / 2;
-  m_outerRadius = m_outerActiveArea - m_outerPitch / 2;
+  m_innerR = m_innerRadius + m_innerPitch / 2;
+  m_outerR = m_outerRadius - m_outerPitch / 2;
 
   m_pitchSlope = (m_outerPitch - m_innerPitch) / 
-    (m_outerRadius - m_innerRadius);
+    (m_outerR - m_innerR);
 
   /// Dead region from bias line
   m_phiGap = this->userParameterAsDouble("RPhiGap") / 2;
@@ -319,7 +301,7 @@ void DeVeloRType::calcStripLimits()
   for(unsigned int zone=0; zone<m_numberOfZones; zone++) {
     for(unsigned int istrip=0; istrip<m_stripsInZone; istrip++){
       radius = (exp(m_pitchSlope*istrip)*m_innerPitch - 
-                (m_innerPitch-m_pitchSlope*m_innerRadius)) /
+                (m_innerPitch-m_pitchSlope*m_innerR)) /
       m_pitchSlope;
       m_rStrips.push_back(radius);
       pitch = exp(m_pitchSlope*istrip)*m_innerPitch;
@@ -365,14 +347,15 @@ void DeVeloRType::calcStripLimits()
           }
         }
       }
+      //      m_stripLimits.push_back(std::pair<double,double>(phiMin,phiMax));
       m_stripLimits.push_back(std::pair<double,double>(phiMin,phiMax));
     }
   }
   msg << MSG::DEBUG << "Radius of first strip is " << m_rStrips[0] 
       << " last strip " << m_rStrips[m_rStrips.size()-1] << endmsg;
   msg << MSG::DEBUG << "Pitch; inner " << m_rPitch[0] << " outer " 
-      << m_rPitch[m_rPitch.size()-1] << " Radius; inner " << m_innerRadius 
-      << " outer " << m_outerRadius 
+      << m_rPitch[m_rPitch.size()-1] << " Radius; inner " << m_innerR
+      << " outer " << m_outerR 
       << " slope " << m_pitchSlope << endmsg;
 }
 //==============================================================================

@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.41 2004-02-25 13:22:41 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.42 2004-02-28 21:43:43 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -74,7 +74,7 @@ StatusCode DeVelo::initialize() {
   }
 
   // get all of the pointers to the child detector elements
-  // Childern of DeVelo (this) are the sensors
+  // Children of DeVelo (this) are the sensors
   std::vector<IDetectorElement*> veloSensors =
     this->childIDetectorElements();
   msg << MSG::DEBUG << "Found " << veloSensors.size() 
@@ -533,33 +533,7 @@ double DeVelo::rMax(unsigned int sensor, unsigned int zone) {
   return m_vpSensor[sensorIndex(sensor)]->rMax(zone);
 }
 
-// Smallest Phi at R (local frame) of the phi strips at R
-StatusCode DeVelo::phiMin(unsigned int sensor, double radius, 
-			     double &phiMin) {
-  DeVeloPhiType * phiPtr = 
-     dynamic_cast<DeVeloPhiType*>(m_vpSensor[sensorIndex(sensor)]);
-  if(phiPtr){
-    phiMin = phiPtr->phiMin(radius);
-    return StatusCode::SUCCESS;
-  }else{
-    return StatusCode::FAILURE;
-  }
-}
-
-// Smallest Phi at R (local frame) of the phi strips at R
-StatusCode DeVelo::phiMax(unsigned int sensor, double r, 
-			     double &phiMax) {
-  DeVeloPhiType * phiPtr = 
-     dynamic_cast<DeVeloPhiType*>(m_vpSensor[sensorIndex(sensor)]);
-  if(phiPtr){
-    phiMax = phiPtr->phiMax(r);
-    return StatusCode::SUCCESS;
-  }else{
-    return StatusCode::FAILURE;
-  }
-}
-
-// Smallest Phi at R (local frame) of the r strips in the zone
+// Smallest Phi (local frame) of the r strips in the zone
 StatusCode DeVelo::phiMin(unsigned int sensor, unsigned int zone,
 			   double &phiMin) {
   if(this->isRSensor(sensor)){

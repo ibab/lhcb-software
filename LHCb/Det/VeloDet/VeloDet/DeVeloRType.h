@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.3 2004-02-17 21:36:50 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.4 2004-02-28 21:43:37 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -74,7 +74,7 @@ public:
   double stripCapacitance(unsigned int strip);
   
   /// The number of zones in the detector
-  inline unsigned int numberOfZones(){return m_numberOfZones;}
+  //  inline unsigned int numberOfZones(){return m_numberOfZones;}
  
   /// The zones number for a given strip
   inline unsigned int zoneOfStrip(const unsigned int strip){
@@ -82,30 +82,24 @@ public:
   }
 
   /// The number of strips in a zone
-  inline unsigned int stripsInZone(const unsigned int zone){
+  inline unsigned int stripsInZone(const unsigned int /*zone*/){
     return m_stripsInZone;
   }
 
   /// The minimum radius for a given zone of the sensor
-  double rMin(const unsigned int /*zone*/) {return 0.;}
+  double rMin(const unsigned int /*zone*/) {return m_innerRadius;}
   
   /// The maximum radius for a given zone of the sensor
-  double rMax(const unsigned int /*zone*/) {return 0.;}
+  double rMax(const unsigned int /*zone*/) {return m_outerRadius;}
 
-  /// The minimum phi for a given zone of the sensor
-  double phiMin(const unsigned int /*zone*/) {return 0;}
-  
-  /// The maximum phi for a given zone of the sensor
-  double phiMax(const unsigned int /*zone*/) {return 0;}
-
-  /// Determines if 3-d point is inside sensor
+  /// Determines if local 3-d point is inside sensor
   StatusCode isInside(const HepPoint3D& point);
 
-  /// Determine if point is in corner cut-offs
+  /// Determine if local point is in corner cut-offs
   bool isCutOff(double x, double y);
 
   /// Zone for a given local phi
-  unsigned int zoneOfPhi(double phi){
+  inline unsigned int zoneOfPhi(double phi){
     unsigned int zone=0;
     if(m_phiMin[0] >= fabs(phi) && m_phiMax[0] < fabs(phi)) {
       zone = 0;
@@ -200,8 +194,8 @@ private:
   /// Store the co-ordinates of the cut-offs
   void cornerLimits();
 
-  unsigned int m_numberOfStrips;
-  unsigned int m_numberOfZones;
+  //  unsigned int m_numberOfStrips;
+  //  unsigned int m_numberOfZones;
   unsigned int m_stripsInZone;
   std::vector<double> m_rStrips;
   std::vector<double> m_rPitch;
@@ -216,10 +210,10 @@ private:
   std::pair<double,double> m_resolution;//Resolution from LHCB??????
   double m_innerPitch;
   double m_outerPitch;
-  double m_innerRadius;
-  double m_outerRadius;
-  double m_innerActiveArea;
-  double m_outerActiveArea;
+  //  double m_innerRadius;
+  //  double m_outerRadius;
+  double m_innerR;//< Radius of first strip
+  double m_outerR;//< Radius of outer strip
   double m_overlapInX;
   double m_pitchSlope;
   double m_halfAngle;

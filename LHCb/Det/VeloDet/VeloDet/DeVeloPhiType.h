@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.5 2004-02-24 18:24:54 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.6 2004-02-28 21:43:37 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -105,10 +105,10 @@ public:
   double rMax(const unsigned int zone);
 
   /// The minimum phi for a given zone of the sensor
-  double phiMin(const unsigned int /*zone*/) {return 0.;}
+  //  double phiMin(const unsigned int /*zone*/) {return 0.;}
   
   /// The maximum phi for a given zone of the sensor
-  double phiMax(const unsigned int /*zone*/) {return 0.;}
+  //  double phiMax(const unsigned int /*zone*/) {return 0.;}
 
   /// Determines if 3-d point is inside sensor
   StatusCode isInside(const HepPoint3D& point);
@@ -192,12 +192,6 @@ public:
     return distance;
   }
 
-  /// The minimum phi of the sensor for a given radius
-  double phiMin(const double radius);
-  
-  /// The maximum phi of the sensor for a given radius
-  double phiMax(const double radius);
-  
   /// Return the strip geometry for panoramix
   inline StatusCode stripLimits(unsigned int strip, HepPoint3D& begin,
                                 HepPoint3D& end){
@@ -214,12 +208,7 @@ private:
   void calcStripLines();
   /// Calculate the equation of line for the corner cut-offs
   void cornerLimits();
-  unsigned int m_numberOfZones;
-  unsigned int m_numberOfStrips;
   unsigned int m_nbInner;
-  bool m_isDownstream;
-  double m_innerRadius;
-  double m_outerRadius;
   double m_middleRadius;
   double m_innerTilt;
   double m_innerDistToOrigin;
@@ -243,10 +232,8 @@ private:
   double m_corner2Y2;
 
   std::pair<double,double> m_resolution;
-  /// Define line of cutoffs (first is gradient, second is intercept)
+  /// Define line for cutoffs (first is gradient, second is intercept)
   std::vector<std::pair<double,double> > m_cutOffs;
-  //  std::vector<double> m_gradientCutOff;
-  //std::vector<double> m_interceptCutOff;
   std::vector<std::pair<HepPoint3D,HepPoint3D> > m_stripLimits;
   double m_innerCoverage;
   double m_outerCoverage;

@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.7 2004-02-27 16:56:11 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.8 2004-02-28 21:43:43 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -490,32 +490,6 @@ double DeVeloPhiType::rMax(const unsigned int zone)
     rMax = m_outerRadius;
   }
   return rMax;
-}
-//==============================================================================
-/// The minimum phi of the sensor for a given radius
-//==============================================================================
-double DeVeloPhiType::phiMin(const double radius)
-{
-  double minPhi; // [NEED] Put correct values in
-  if (m_middleRadius > radius) {
-    minPhi = 0;
-  } else {
-    minPhi = m_halfCoverage;
-  }
-  return minPhi;
-}
-//==============================================================================
-/// The maximum phi of the sensor for a given radius
-//==============================================================================
-double DeVeloPhiType::phiMax(const double radius)
-{
-  double maxPhi; // [NEED] Put correct values in
-  if (m_middleRadius > radius) {
-    maxPhi = 0;
-  } else {
-    maxPhi = m_halfCoverage;
-  }
-  return maxPhi;
 }
 //==============================================================================
 /// Return the capacitance of the strip

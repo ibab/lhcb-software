@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.4 2004-02-27 16:56:24 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.5 2004-02-28 21:43:43 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -68,6 +68,10 @@ StatusCode DeVeloSensor::initialize()
   IGeometryInfo* geom = this->geometry();
   m_geometry = geom;
   m_z = m_geometry->toGlobal(HepPoint3D(0,0,0)).z();
+  msg << MSG::DEBUG << "Sensor type " << m_type << " z= " << m_z
+      << " R " << m_isR << " Phi " << m_isPhi  << " PU " << m_isPileUp
+      << " Left " << m_isLeft
+      << " Right " << m_isRight << " Downstream " << m_isDownstream << endreq;
   return StatusCode::SUCCESS;
 }
 //==============================================================================
