@@ -3,6 +3,256 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r1>2004-09-16 DaVinci v12r2 - version for DC04 stripping</A></H1><PRE>
+
+ Release for stripping production
+ 
+ - Built on Gaudi v15r2 and LHCb v16r2
+
+ - Updated L1Decision to get 40.0 kHz
+ 
+ - Some updated physics selections
+ 
+ - Updated Stripping Tools
+
+ - New LoKiHlt package for HLT studies with Bender
+ 
+ - Small modifications in other packages for HLT studies.
+ 
+################################################################################
+#                               DAVINCI v12r2                                  #
+################################################################################
+##################################### CALO #####################################
+###################################### L0 ######################################
+##################################### PHYS #####################################
+!========================== DaVinci v12r1 2004-10-13 ===================
+! 2004-10-08 - P. Koppenburg
+  - src/Main/DaVinciMain.cpp
+    . Abort cleanly when APPVERSION is not defined
+! 2004-10-04 - P. Koppenburg
+  - options/L0Calo.opts
+  - options/L0.opts
+  - options/L0Muon.opts
+    . Put Calo L0 in new L0Calo.opts and now call L0Muon.opts from L0.opts    
+  - options/DVCheckTrigger.opts
+  - options/DVTriggerFilter.opts
+  - options/DaVinci.opts
+    . Changed accordingly  
+! 2004-10-04 - P. Koppenburg
+  - options/L0Muon.opts
+    . Removed temporary patch to overwrite change in Pt kick from 
+      1.12 to 1.39 GeV, since now L0DU is fixed.
+!========================== DaVinciMCTools v5r6 2004-10-13 ===================
+! 2004-09-26 - Luis Fernandez
+ - src/TrueMCFilterCriterion.cpp
+   .  Temporary fix to filter only the head (e.g the B) decay final states. 
+      Final states to consider must flagged in the decay string.
+!========================== PhysSelections v6r11 2004-10-13 ===================
+! 2004-10-07 - P. Koppenburg
+ - src/PIDFilter.*
+   . Small DVAlgorithm that implements the lost functionality of
+     the ExclusiveSelection in RefineSelection (see below). 
+        PIDFilter.PhysDesktop.InputLocations = { "Phys/Combined" } ;
+        PIDFilter.ParticleNames = { "mu+", "mu-" } ;
+        PIDFilter.Reject = false ; // default
+     will fish muons.   
+! 2004-10-07 - P. Koppenburg
+ - src/RefineSelection.*
+   . Remove ExclusiveSelection option that was incompatible
+     with the nice possibility of selecting a particle based on cuts
+     on its daughters.  
+#################################### PHYSSEL ###################################
+!========================== B2HH v2r4p1 2004-10-13 ===================
+! 2004-10-07 - P. Koppenburg
+  - options/DoTDRselB2HH.opts
+    . Does all TDR selections at once
+! 2004-10-04 - P. Koppenburg
+  - remove options/*Eff* that are using the obsolete PhysSelEff algorithm  
+!========================== B2XGamma v3r0 2004-10-13 ===================
+! 2004-10-12 - Vanya BELYAEV
+ - remove opts/DVPreselB2XGamma.opts,
+   which confuses the stripping tools 
+
+! 2004-10-10 - Vanya BELYAEV 
+
+ - src/B2XGamma_Tags.cpp 
+   new algorithm to write simple event tag collections 
+ - src/B2XGamma_load.cpp 
+   add new algorithm 
+ - src/Helicity.h 
+   remove the obsolete file 
+
+   ----------------------------------------
+ - reorganization of *ALL* '*'.opts files:
+   ----------------------------------------
+
+ (1) Bd -> K*(892)0 gamma
+
+ - DVTDRselBd2KstarGamma.opts 
+     the main file for TDR selection 
+ - DoTDRselBd2KstarGamma.opts 
+     helper file, useful for HLT studies (see Patrick's note)
+ - DV_TDRselBd2KstarGamma.opts 
+     the file, analogouse to DVTDRselBd2KstarGamma, but 
+     wit hthe *SIGNAL* data sample (DC04, 100k) 
+ - DVPreselBd2KstarGamma.opts 
+     the main fiel for TDR selection 
+ - DoPreselBd2KstarGamma.opts 
+ - DV_PreselBd2KstarGamma.opts 
+     the file, analogouse to DVTDRselBd2KstarGamma, but 
+     with the *SIGNAL* data sample (DC04, 100k) 
+ - DV_Bd2KstarGamma.opts 
+     The file (skeleton) useful for analysis 
+
+ - DVTDRselBs2PhiGamma.opts 
+     the main file for TDR selection 
+ - DoTDRselBs2PhiGamma.opts 
+     helper file, useful for HLT studies (see Patrick's note)
+ - DV_TDRselBs2PhiGamma.opts 
+     the file, analogouse to DVTDRselBd2KstarGamma, but 
+     wit hthe *SIGNAL* data sample (DC04, 100k) 
+ - DVPreselBs2PhiGamma.opts 
+     the main file for TDR selection 
+ - DoPreselBs2PhiGamma.opts 
+ - DV_PreselBs2PhiGamma.opts 
+     the file, analogouse to DVTDRselBs2PhiGamma, but 
+     with the *SIGNAL* data sample (DC04, 100k) 
+ - DV_Bs2PhiGamma.opts 
+     The file (skeleton) useful for analysis 
+ - DV_Bs2PhiGamma_WriteEvtCol.opts 
+     The file (skeleton) useful for writing event tag collections  
+ - DV_Bs2PhiGamma_WriteFullDst.opts 
+     The file (skeleton) useful for writing 'FULL' dst  
+ - DV_Bs2PhiGamma_WriteFullDst.opts 
+     The file (skeleton) useful for writing 'MINI/MICRO' dst  
+ - DV_Bs2PhiGamma_ReadEvtCol.opts 
+     The file (skeleton) useful for reading event tag collections  
+
+ - DVPreselBx2nHGamma.opts 
+    The main file for B->hh gamma and B->hhh gamma selections 
+ - DoPreselBx2nHGamma.opts 
+    The helper auxilalry file 
+ - DV_PreselBx2nHGamma.opts 
+     the file, analogouse to DVPreselBx2nHGamma, but 
+       with the *SIGNAL* data sample (DC04, 100k) 
+
+  And the similar structures for 
+  Bx2HHpi0Gamma ( Bx -> (H+ H- pi0 ) gamma ) 
+  and 
+  Bd2OmegaGamma ( Bd-> ( omega -> pi+ pi- pi0 ) gamma ) 
+
+ - cmt/requirements 
+   increment the version to v3r0 
+!========================== Bd2DstarPi v2r7p1 2004-10-13 ===================
+! 2004-10-04 - P. Koppenburg
+  - remove options/*Eff* that are using the obsolete PhysSelEff algorithm  
+!========================== Bd2a1Dstar v2r3p1 2004-10-13 ===================
+! 2004-10-04 - P. Koppenburg
+  - remove options/*Eff* that are using the obsolete PhysSelEff algorithm  
+  - remove options/*TDR* that are not used by anyone
+!========================== Bs2DsH v3r3p1 2004-10-13 ===================
+! 2004-10-07 - P. Koppenburg
+ - options/DoTDRselBs2DsH.opts
+   . Added an option file to execute both TDRselections at once. For HLT mainly.
+!========================== Bs2JpsiEta v3r3p1 2004-10-13 ===================
+! 2004-10-04 - P. Koppenburg
+  - remove options/*Eff* that are using the obsolete PhysSelEff algorithm  
+!========================== Bs2JpsiPhi v2r3p1 2004-10-13 ===================
+! 2004-10-04 - P. Koppenburg
+  - remove options/*Eff* that are using the obsolete PhysSelEff algorithm  
+!========================== Bs2MuMu v2r4p1 2004-10-13 ===================
+! 2004-10-04 - P. Koppenburg
+  - remove options/*Eff* that are using the obsolete PhysSelEff algorithm  
+!========================== Bs2PhiEtac v2r3p1 2004-10-13 ===================
+! 2004-10-04 - P. Koppenburg
+  - remove options/*Eff* that are using the obsolete PhysSelEff algorithm  
+  - remove obsolete options
+!========================== Bs2PhiPhi v2r3p1 2004-10-13 ===================
+! 2004-10-04 - P. Koppenburg
+  - remove options/*Eff* that are using the obsolete PhysSelEff algorithm  
+!========================== D02MuMu v2r0 2004-10-13 ===================
+! 2004-10-07 - P. Koppenburg
+ - options/{DV}PreselD02MuMu.ops
+   . Adapt to guidelines
+! 2004-10-05 - A. Sarti
+ - src/<someAlgorithms>.cpp
+   . Moved the code to the LoKi based structure
+ - options/*Presel*.cpp
+   . Moved the preselection options to the LoKi structure
+!========================== Muon v1r1 2004-10-13 ===================
+! 2004-10-07 - P. Koppenburg
+  - options/{DV}PreselMuon.opts
+    . Add an explicit muon filter.
+!========================== PhysSelSys v7r10 2004-10-13 ===================
+Updated packages (see DaVinci release notes for details):
+use  B2HH                      v2r4p1   PhysSel
+use  B2XGamma                  v3r0     PhysSel
+use  Bd2DstarPi                v2r7p1   PhysSel
+use  Bd2a1Dstar                v2r3p1   PhysSel
+use  Bs2DsH                    v3r3p1   PhysSel
+use  Bs2JpsiEta                v3r3p1   PhysSel
+use  Bs2JpsiPhi                v2r3p1   PhysSel
+use  Bs2MuMu                   v2r4p1   PhysSel
+use  Bs2PhiEtac                v2r3p1   PhysSel
+use  Bs2PhiPhi                 v2r3p1   PhysSel 
+use  D02MuMu                   v2r0     PhysSel 
+use  Muon                      v1r1     PhysSel
+#####################################  REC  ####################################
+##################################### TOOLS ####################################
+!========================== LoKi v3r5 2004-10-13 ===================
+! 2004-10-06 - Vanya BELYAEV
+ - update for new definition of L1Score 
+ - remove LOKI_OLD and LOKI_OLD_L1 macros 
+ - cmt/requirements  version increment to v3r5 
+!========================== LoKiHlt v1r1 2004-10-13 ===================
+! 2004-10-06 - Vanya BELYAEV
+ - LoKi/TrgTracks.h 
+     new namespace LoKi::TrgTracks with 
+     functions/predicates related to Hlt/Trg tracks.
+ - new predicate LoKi::TrgTracks::HasTrgTrack 
+     with evaluates to true for particels, created from TrgTrack
+ - new function LoKi::Extract::trgFromParticle whoich extracts 
+     the TrgTrack object from the Particle 
+ - src/TrgTracks.cpp  implementation of new functions/predicates 
+ - cmt/requirements version increment to v1r1 
+!========================== Stripping v1r5 2004-10-13 ===================
+! 2004-10-12 - P. Koppenburg
+ - python/strip.py
+   . Do ETC first and DST only after, or ETC would have links to 
+     temporary files.
+! 2004-10-11 - P. Koppenburg
+ - python/strip.py
+   . Do not print list of compliant packages, only non-compliant ones
+   . Immediately produce file DVComb.opts and not DVComb_[date].opts
+ - cmt/requirements
+   . Execute checkPrep     
+! 2004-10-11 - P. Koppenburg
+  - python/strip.py
+  - options/DVComb.opts 
+    . 'REPLACE' intstead of 'CREATE'
+! 2004-10-07 - P. Koppenburg
+  - options/DVComb.opts 
+    . Small change in D02MuMu
+!========================== Utilities v1r11 2004-10-13 ===================
+! 2004-10-06 - P. Koppenburg
+  - src/CheckSelResult.cpp
+    . Added method writeSelResult() that writes out the SelResult to TES if
+      required by AvoidSelResult = false (not default). 
+###################################### TR ######################################
+###################################### TRG #####################################
+!========================== L1Decision v3r1 2004-10-13 ===================
+! 2004-10-12 - Thomas Martin Schietinger
+ - New generic threshold based on 7M min. bias DC04 events.
+! 2004-10-04 - Thomas Martin Schietinger
+ - src/L1Decision.cpp
+   . Add calibration functions for all subtriggers, new thresholds corresponding
+     to corrected L0 (muon pt kick) (but L1Reco/L1Match[2d,3d]L0.cpp not yet
+     adapted!!)
+ - src/L1Check.cpp
+   . Bug fix.
+ - doc
+   . add new L1Eff tools (ROOT compiled), that replace the simpler L1Eff macro.
+ 
 </PRE><H1><A NAME=v12r1>2004-09-16 DaVinci v12r1 - version with updated L1 and more HLT</A></H1><PRE>
 
  Identical to DaVinci v11r13 except:

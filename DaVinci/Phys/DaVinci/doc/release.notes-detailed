@@ -4,10 +4,10 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v12r1 2004-10-13 ===================
 ! 2004-10-08 - P. Koppenburg
   - src/Main/DaVinciMain.cpp
     . Abort cleanly when APPVERSION is not defined
-
 ! 2004-10-04 - P. Koppenburg
   - options/L0Calo.opts
   - options/L0.opts
@@ -16,8 +16,7 @@
   - options/DVCheckTrigger.opts
   - options/DVTriggerFilter.opts
   - options/DaVinci.opts
-    . Changed accordingly
-    
+    . Changed accordingly  
 ! 2004-10-04 - P. Koppenburg
   - options/L0Muon.opts
     . Removed temporary patch to overwrite change in Pt kick from 
