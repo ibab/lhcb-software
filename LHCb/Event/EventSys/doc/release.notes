@@ -1,6 +1,12 @@
 package EventSys
 package manager: Marco Cattaneo
 
+! 2003-06-17 - Marco Cattaneo
+ - Use EventKernel v2r3, Event v3r3, VeloEvent v12r1, ITEvent v12r1, 
+       OTEvent v12r1, TrEvent v12r1, RichEvent v4r4, CaloEvent v11r6,
+       MuonEvent v2r4, L0Event v13r2, L1Event v11r7, PhysEvent v7r5,
+       HltEvent v3r0, DbCnv v7r1
+
 !======================== EventSys v13r6 2003-06-02 ========================
 ! 2003-05-28 - Marco Cattaneo
  - Add HltEvent v2r0, use MuonEvent v2r3, PhysEvent v7r4p1
