@@ -1,7 +1,8 @@
-$Id: release.notes,v 1.20 2003-01-30 11:01:10 ocallot Exp $
+$Id: release.notes,v 1.21 2003-01-30 13:04:31 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
 
+!========================== L0DU v6r3 2003-01-30 ==========================
 ! 2003-01-28 - Olivier Callot
  - Take the PuVeto decision on the sum of the second peak, not on the PuVeto
    internal decision. New jobOption SumPeak2Veto to control the threshold,
