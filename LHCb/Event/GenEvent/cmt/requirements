@@ -5,7 +5,7 @@ branches cmt dict doc src xml Event
 
 use HepMC        v3r121p*	Sim
 use EventKernel  v*		Event
-use GaudiObjDesc v* 	-no_auto_imports
+use GaudiObjDesc v*
 
 include_dirs $(GENEVENTROOT)
 
