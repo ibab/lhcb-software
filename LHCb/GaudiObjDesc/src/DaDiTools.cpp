@@ -1,4 +1,4 @@
-// $Id: DaDiTools.cpp,v 1.7 2002-02-13 15:34:02 mato Exp $
+// $Id: DaDiTools.cpp,v 1.8 2002-02-13 20:44:41 mato Exp $
 
 
 // Include files
@@ -42,10 +42,10 @@ bool DaDiTools::isSimple(std::string value)
     return true;
 //    value = value.substr(0, value.size()-1);
   }
-  if ((value == "bool")   || (value == "short")   ||
-      (value == "long")   || (value == "int")     || 
-      (value == "float")  || (value == "double")  || 
-      (value == "char")   || (value == "unsigned") ||
+  if ((value == "bool")  || (value == "short")    ||
+      (value == "long")  || (value == "int")      || 
+      (value == "float") || (value == "double")   || 
+      (value == "char")  || (value == "unsigned") ||
       (value == "signed"))
   {
     return true;

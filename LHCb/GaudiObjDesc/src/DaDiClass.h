@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.15 2002-02-04 10:06:59 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.16 2002-02-13 20:44:39 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -73,6 +73,10 @@ public:
 	int sizeImportList();
 	void remDblImportList();
   
+	std::string popNoImports();
+	void pushNoImports(std::string value);
+	int sizeNoImports();
+  
 	DaDiBaseClass* popDaDiBaseClass();
 	void pushDaDiBaseClass(DaDiBaseClass* value);
 	int sizeDaDiBaseClass();
@@ -124,7 +128,8 @@ private:
                               m_classTemplateList;
 	std::list<std::string>      m_impSoftList,
                               m_impStdList,
-                              m_importList;
+                              m_importList,
+                              m_noImports;
 	std::list<DaDiBaseClass*>	  m_daDiBaseClass;
 	std::list<DaDiAttribute*>	  m_daDiAttribute;
 	std::list<DaDiRelation*>    m_daDiRelation;
@@ -359,7 +364,7 @@ inline void DaDiClass::pushImportList(std::string value)
 			}
 			else
 			{
-        for (l=0; l<m_impSoftList.size(); ++l)
+         for (l=0; l<m_impSoftList.size(); ++l)
         {
           if (import == m_impSoftList.front())
           {
@@ -394,6 +399,23 @@ inline void DaDiClass::remDblImportList()
 	m_importList.unique();
 }
 
+inline std::string DaDiClass::popNoImports()
+{
+	std::string pt = m_noImports.front();
+	m_noImports.push_back(pt);
+	m_noImports.pop_front();
+	return pt;
+}
+
+inline void DaDiClass::pushNoImports(std::string value)
+{
+  m_noImports.push_back(value);
+}
+
+inline int DaDiClass::sizeNoImports()
+{
+	return m_noImports.size();
+}
 
 inline DaDiBaseClass* DaDiClass::popDaDiBaseClass()
 {

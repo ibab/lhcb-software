@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.42 2002-02-13 12:23:42 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.43 2002-02-13 20:44:40 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -678,18 +678,18 @@ template<class T> void printEnums(std::ofstream& xmlOut,
 
 
 //-----------------------------------------------------------------------------
-void printTypeDefs(std::ofstream& xmlOut,
-                   DaDiClass* gddClass,
+template<class T> void printTypeDefs(std::ofstream& xmlOut,
+                   T* gdd,
                    const std::string& accessor)
 //-----------------------------------------------------------------------------
 {
   int i;
-  for (i=0; i<gddClass->sizeDaDiTypeDef(); ++i)
+  for (i=0; i<gdd->sizeDaDiTypeDef(); ++i)
   {
-    DaDiTypeDef* gddTypeDef = gddClass->popDaDiTypeDef();
-    std::string gddTypeDefDesc = gddTypeDef->desc().transcode(),
-                gddTypeDefType = gddTypeDef->type().transcode(),
-                gddTypeDefDef = gddTypeDef->def().transcode(),
+    DaDiTypeDef* gddTypeDef      = gdd->popDaDiTypeDef();
+    std::string gddTypeDefDesc   = gddTypeDef->desc().transcode(),
+                gddTypeDefType   = gddTypeDef->type().transcode(),
+                gddTypeDefDef    = gddTypeDef->def().transcode(),
                 gddTypeDefAccess = gddTypeDef->access().transcode();
 
     if (accessor == "" || gddTypeDefAccess == accessor) 
@@ -948,9 +948,11 @@ void printClass(std::ofstream& xmlOut,
       << gddClassLongDesc;
   }
 
-  xmlOut << std::endl << " *" << std::endl
+  xmlOut << std::endl 
+    << " *" << std::endl
     << " *  @author " << gddClassAuthor << std::endl
-    << " *  created " << ctime(&ltime) << " *" << std::endl
+    << " *  created " << ctime(&ltime) 
+    << " *" << std::endl
     << " */" << std::endl 
     << std::endl;
 
@@ -1846,17 +1848,37 @@ void printNamespace(std::ofstream& xmlOut,
                     std::map<std::string,std::string> dbExportClass)
 //-----------------------------------------------------------------------------
 {
+  time_t ltime;
   int i;
   std::string gddNamespName = gddNamespace->name().transcode(),
-              gddNamespDesc = gddNamespace->desc().transcode();
+              gddNamespAuthor = gddNamespace->author().transcode(),
+              gddNamespDesc = gddNamespace->desc().transcode(),
+              gddNamespLongDesc = gddNamespace->longDesc().transcode();
 
   xmlOut << std::endl 
     << "/** @namespace " << gddNamespName << std::endl 
     << " *" << std::endl 
     << " *  " << gddNamespDesc << std::endl 
+    << " *" << std::endl;
+
+  if (gddNamespLongDesc != "")
+  {
+    xmlOut << " *  " << gddNamespLongDesc << std::endl;
+  }
+
+  xmlOut << " *" << std::endl
+    << " *" << std::endl
+    << " * @author " << gddNamespAuthor << std::endl
+    << " * created " << ctime(&ltime) 
+    << " *" << std::endl
     << " */" << std::endl 
+    << std::endl
     << "namespace " << gddNamespName << std::endl 
     << "{" << std::endl;
+
+  // print private typedefs
+  printTypeDefs(xmlOut, gddNamespace, "");
+
 
   printEnums(xmlOut, gddNamespace, "");
 
@@ -2065,6 +2087,13 @@ void printCppHeader(DaDiPackage* gddPackage,
 
     dbExportClass[gddNamespName] = "Event/" + gddNamespName;
 
+    std::vector<std::string> noImports;
+    noImports.clear();
+
+    for (i=0; i<gddNamespace->sizeNoImports(); ++i)
+    {
+      noImports.push_back(gddNamespace->popNoImports());
+    }
     
     char* fileName = new char[256];
     strcpy(fileName, envOut);
@@ -2128,45 +2157,8 @@ void printCppHeader(DaDiPackage* gddPackage,
     for(i=0; i<gddPackage->sizeImportList(); i++)
     {
       std::string impName = gddPackage->popImportList();
-      if(dbExportClass[impName] != "")
+      if (std::find(noImports.begin(), noImports.end(), impName) == noImports.end())
       {
-        impName = dbExportClass[impName];
-      }
-      else
-      {
-        std::cerr << std::endl 
-          << argV0 << ": No information found for type: " << impName << std::endl 
-          << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
-      }
-      xmlOut << "#include \"" << impName << ".h\"" << std::endl;
-    }
-
-    gddNamespace->remDblImportList();
-
-    for(i=0; i<gddNamespace->sizeImportList(); i++)
-    {
-      std::string impName = gddNamespace->popImportList();
-      if(dbExportClass[impName] != "")
-      {
-        impName = dbExportClass[impName];
-      }
-      else
-      {
-        std::cerr << std::endl 
-          << argV0 << ": No information found for type: " << impName << std::endl 
-          << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
-      }
-      xmlOut << "#include \"" << impName << ".h\"" << std::endl;
-    }
-
-
-    for (j=0; j<gddNamespace->sizeDaDiClass(); ++j)
-    {
-      DaDiClass* gddClass = gddNamespace->popDaDiClass();
-      gddClass->remDblImportList();
-      for(i=0; i<gddClass->sizeImportList(); i++)
-      {
-        std::string impName = gddClass->popImportList();
         if(dbExportClass[impName] != "")
         {
           impName = dbExportClass[impName];
@@ -2178,6 +2170,52 @@ void printCppHeader(DaDiPackage* gddPackage,
             << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
         }
         xmlOut << "#include \"" << impName << ".h\"" << std::endl;
+      }
+    }
+
+    gddNamespace->remDblImportList();
+
+    for(i=0; i<gddNamespace->sizeImportList(); i++)
+    {
+      std::string impName = gddNamespace->popImportList();
+      if (std::find(noImports.begin(), noImports.end(), impName) == noImports.end())
+      {
+        if(dbExportClass[impName] != "")
+        {
+          impName = dbExportClass[impName];
+        }
+        else
+        {
+          std::cerr << std::endl 
+            << argV0 << ": No information found for type: " << impName << std::endl 
+            << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
+        }
+        xmlOut << "#include \"" << impName << ".h\"" << std::endl;
+      }
+    }
+
+
+    for (j=0; j<gddNamespace->sizeDaDiClass(); ++j)
+    {
+      DaDiClass* gddClass = gddNamespace->popDaDiClass();
+      gddClass->remDblImportList();
+      for(i=0; i<gddClass->sizeImportList(); i++)
+      {
+        std::string impName = gddClass->popImportList();
+        if (std::find(noImports.begin(), noImports.end(), impName) == noImports.end())
+        {
+          if(dbExportClass[impName] != "")
+          {
+            impName = dbExportClass[impName];
+          }
+          else
+          {
+            std::cerr << std::endl 
+              << argV0 << ": No information found for type: " << impName << std::endl 
+              << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
+          }
+          xmlOut << "#include \"" << impName << ".h\"" << std::endl;
+        }
       }
     }
 
@@ -2250,6 +2288,13 @@ void printCppHeader(DaDiPackage* gddPackage,
     DaDiClass* gddClass = gddPackage->popDaDiClass();
     std::string gddClassName = gddClass->className().transcode();
 
+    std::vector<std::string> noImports;
+    noImports.clear();
+
+    for (i=0; i<gddClass->sizeNoImports(); ++i)
+    {
+      noImports.push_back(gddClass->popNoImports());
+    }
 
 /*    dbExportClass[std::string(gddClass->className().transcode())] =
       std::string(gddPackage->packageName().transcode()) + "/" 
@@ -2321,17 +2366,20 @@ void printCppHeader(DaDiPackage* gddPackage,
     for(i=0; i<gddPackage->sizeImportList(); i++)
     {
       std::string impName = gddPackage->popImportList();
-      if(dbExportClass[impName] != "")
+      if (std::find(noImports.begin(), noImports.end(), impName) == noImports.end())
       {
-        impName = dbExportClass[impName];
+        if(dbExportClass[impName] != "")
+        {
+          impName = dbExportClass[impName];
+        }
+        else
+        {
+          std::cerr << std::endl 
+            << argV0 << ": No information found for type: " << impName << std::endl 
+            << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
+        }
+        xmlOut << "#include \"" << impName << ".h\"" << std::endl;
       }
-      else
-      {
-        std::cerr << std::endl 
-          << argV0 << ": No information found for type: " << impName << std::endl 
-          << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
-      }
-      xmlOut << "#include \"" << impName << ".h\"" << std::endl;
     }
 
     gddClass->remDblImportList();
@@ -2339,17 +2387,20 @@ void printCppHeader(DaDiPackage* gddPackage,
     for(i=0; i<gddClass->sizeImportList(); i++)
     {
       std::string impName = gddClass->popImportList();
-      if(dbExportClass[impName] != "")
+      if (std::find(noImports.begin(), noImports.end(), impName) == noImports.end())
       {
-        impName = dbExportClass[impName];
+        if(dbExportClass[impName] != "")
+        {
+          impName = dbExportClass[impName];
+        }
+        else
+        {
+          std::cerr << std::endl 
+            << argV0 << ": No information found for type: " << impName << std::endl 
+            << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
+        }
+        xmlOut << "#include \"" << impName << ".h\"" << std::endl;
       }
-      else
-      {
-        std::cerr << std::endl 
-          << argV0 << ": No information found for type: " << impName << std::endl 
-          << argV0 << ": Line written: #include \"" << impName << ".h\"" << std::endl;
-      }
-      xmlOut << "#include \"" << impName << ".h\"" << std::endl;
     }
 
 

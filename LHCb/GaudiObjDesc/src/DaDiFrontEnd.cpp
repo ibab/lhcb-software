@@ -1,4 +1,4 @@
-// $Id: DaDiFrontEnd.cpp,v 1.25 2002-02-11 09:24:32 mato Exp $
+// $Id: DaDiFrontEnd.cpp,v 1.26 2002-02-13 20:44:40 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -195,10 +195,12 @@ void parseEnum(DOM_Node node,
 
 
 //-----------------------------------------------------------------------------
-void parseTypeDef(DOM_Node node,
-                  DaDiTypeDef* gddTypeDef)
+template<class T> void parseTypeDef(DOM_Node node,
+                                    DaDiTypeDef* gddTypeDef,
+                                    T* gdd)
 //-----------------------------------------------------------------------------
 {
+  DOMString gddDef;
 
   gddTypeDef->setDesc(node.getAttributes().
     getNamedItem(DOMString::transcode("desc")).getNodeValue().
@@ -208,13 +210,16 @@ void parseTypeDef(DOM_Node node,
     getNamedItem(DOMString::transcode("type")).getNodeValue().
     transcode());
 
-  gddTypeDef->setDef(node.getAttributes().
-    getNamedItem(DOMString::transcode("def")).getNodeValue().
-    transcode());
+  gddDef = node.getAttributes().
+    getNamedItem(DOMString::transcode("def")).getNodeValue();
+
+  gddTypeDef->setDef(gddDef);
+  gdd->pushNoImports(gddDef.transcode());
 
   gddTypeDef->setAccess(node.getAttributes().
     getNamedItem(DOMString::transcode("access")).getNodeValue().
     transcode());
+
 }
 
 
@@ -650,8 +655,9 @@ void parseDestructor(DOM_Node node,
 
 
 //-----------------------------------------------------------------------------
-void parseAttribute(DOM_Node node, 
-                    DaDiAttribute* gddAttribute)
+template<class T> void parseAttribute(DOM_Node node, 
+                                      DaDiAttribute* gddAttribute,
+                                      T* gdd)
 //-----------------------------------------------------------------------------
 {
   std::vector<DOMString> typeWords;
@@ -678,7 +684,7 @@ void parseAttribute(DOM_Node node,
     getNamedItem(DOMString::transcode("type")).
     getNodeValue());
 
-  gddClass->pushImportList(node.getAttributes().
+  gdd->pushImportList(node.getAttributes().
     getNamedItem(DOMString::transcode("type")).
     getNodeValue().transcode());
           
@@ -983,7 +989,7 @@ void parseClass(DOM_Node node,
         {
           DaDiTypeDef* gddTypeDef = new DaDiTypeDef();
           gddClass->pushDaDiTypeDef(gddTypeDef);
-          parseTypeDef(node, gddTypeDef);
+          parseTypeDef(node, gddTypeDef, gddClass);
         }
 
 //
@@ -1023,7 +1029,7 @@ void parseClass(DOM_Node node,
         {
           DaDiAttribute* gddAttribute = new DaDiAttribute();
           gddClass->pushDaDiAttribute(gddAttribute);
-          parseAttribute(node, gddAttribute);
+          parseAttribute(node, gddAttribute, gddClass);
         }
 
 //
@@ -1065,9 +1071,15 @@ void parseNamespace(DOM_Node node,
     getNamedItem(DOMString::transcode("name")).
     getNodeValue());
 
+  gddNamespace->setAuthor(node.getAttributes().
+    getNamedItem(DOMString::transcode("author")).
+    getNodeValue());
+  
   gddNamespace->setDesc(node.getAttributes().
     getNamedItem(DOMString::transcode("desc")).
     getNodeValue());
+
+  gddNamespace->setLongDesc(0);
   
   node = node.getFirstChild();
 
@@ -1077,6 +1089,27 @@ void parseNamespace(DOM_Node node,
     {    
     case DOM_Node::ELEMENT_NODE:
       {
+//
+// Parse description
+//
+        if(node.getNodeName().equals("desc"))
+        {
+          DOMString description;
+          if (!node.getFirstChild().isNull())
+          {
+            description = node.getFirstChild().getNodeValue();
+          }
+          else
+          {
+            description = "";
+          }
+          if (gddNamespace->longDesc() != NULL)
+          {
+            description = description + gddNamespace->longDesc();
+          }
+          gddNamespace->setLongDesc(description);
+        }
+
 //
 // Parse classes
 //
@@ -1102,7 +1135,7 @@ void parseNamespace(DOM_Node node,
         {
           DaDiAttribute* gddAttribute = new DaDiAttribute();
           gddNamespace->pushDaDiAttribute(gddAttribute);
-          parseAttribute(node, gddAttribute);
+          parseAttribute(node, gddAttribute, gddNamespace);
         }
 
 //
@@ -1113,6 +1146,16 @@ void parseNamespace(DOM_Node node,
           DaDiEnum* gddEnum = new DaDiEnum();
           gddNamespace->pushDaDiEnum(gddEnum);
           parseEnum(node, gddEnum);
+        }
+
+//
+// Parse typedefs
+//
+        else if(node.getNodeName().equals("typedef"))
+        {
+          DaDiTypeDef* gddTypeDef = new DaDiTypeDef();
+          gddNamespace->pushDaDiTypeDef(gddTypeDef);
+          parseTypeDef(node, gddTypeDef, gddNamespace);
         }
 
         else
