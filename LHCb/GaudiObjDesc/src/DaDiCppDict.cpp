@@ -1,4 +1,4 @@
-// $Id: DaDiCppDict.cpp,v 1.42 2004-02-06 19:08:18 mato Exp $
+// $Id: DaDiCppDict.cpp,v 1.43 2004-05-12 12:03:20 mato Exp $
 
 #include "DaDiTools.h"
 #include "DaDiCppDict.h"
@@ -600,7 +600,8 @@ void printCppDictionary(DaDiPackage* gddPackage,
     {
       metaOut << "      " << *strIter << "();" << std::endl;
     }
-    metaOut << "    }" << std::endl
+    metaOut << "      Class::resolvePending();" << std::endl
+            << "    }" << std::endl
             << "  };" << std::endl
             << std::endl
             << "  static _InitDict __init;" << std::endl
@@ -1142,14 +1143,6 @@ void printCppDictionary(DaDiPackage* gddPackage,
     }
 
     methodCounter = 0;
-
-    //
-    // Instance of class
-    //
-    metaOut << remLine << std::endl
-            << "static " << gddClassName << "_dict instance;" << std::endl
-            << remLine << std::endl
-            << std::endl;
 
 
     //
@@ -1768,12 +1761,19 @@ void printCppDictionary(DaDiPackage* gddPackage,
               << "  {" << std::endl
               << "    _InitDict()" << std::endl
               << "    {" << std::endl;
+
+    //
+    // Calling constructor of Dictionary
+    //
+      metaOut << "      " << gddClassName << "_dict();" << std::endl;
+
       std::vector<std::string>::const_iterator strIter;
       for (strIter = tmplvec.begin(); strIter != tmplvec.end(); ++strIter)
       {
         metaOut << "      " << *strIter << "();" << std::endl;
       }
-      metaOut << "    }" << std::endl
+      metaOut << "      Class::resolvePending();" << std::endl
+              << "    }" << std::endl
               << "  };" << std::endl
               << std::endl
               << "  static _InitDict __init;" << std::endl

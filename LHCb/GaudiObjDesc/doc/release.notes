@@ -2,6 +2,13 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+===============================GaudiObjDesc v6r2p3============================
+!20040512 - Stefan
+- bugfix: Class::resolvePending() now called at the end of the loading of 
+          each file
+- Constructor of the dictionary now called by the _InitDict() constructor, 
+  not static instance anymore
+
 !20040206 - Stefan
 - bugfix: errorReporter attached to Xerces parser was deleted too early
 
