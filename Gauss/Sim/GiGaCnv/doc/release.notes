@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.20 2002-05-10 09:48:21 ranjard Exp $
+! $Id: release.notes,v 1.21 2002-06-18 15:40:09 ranjard Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
-! >>>>>>>>>>>>>>>>>>>>>>>> GiGaCnv v5r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+!========================= GiGaCnv v5r1 =================================
+! 2002-06-18 - W.Pokorski
+  GiGaGeomSvc - implement converter for polycones
+
+! ======================== GiGaCnv v5r0 ==================================
 
 ! 20020507 - GiGaCnv v5r0
   requirements - use new library patterns
@@ -51,7 +55,7 @@ Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
  remove hash_map and map from public usage on WIN32 platform, 
  replace std::hash_map with GaudiKernel/HashTable.h
 
-! >>>>>>>>>>>>>>>>>>>>> GiGaCnv v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+! ===================== GiGaCnv v4r0 ========================================
 
 ! 20020304 - GiGaCnv v4r0 - Witek Pokorski 
  added new converter from HepMC to G4 
@@ -63,7 +67,7 @@ Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! 22/01/2002  Vanya Belyaev
 ! update for newer Gaudi and Geant4 
 
-!>>>>>>>>>>>>>>>>>>>>>>> GiGaCnv v3r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+!======================= GiGaCnv v3r0 ======================================
 
 ! 20011119  Vanya Belyaev
 	AddTabulatedProperties.h - bug fix (thanks to Sajan!)
@@ -77,7 +81,7 @@ Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! 20010724  Vanya Belyaev 
     restructurisation and the update due to changes in GiGa 
 
-! >>>>>>>>>>>>>>>>>>>>> GiGaCnv v2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+! ===================== GiGaCnv v2 ========================================
 
 ! 20010717 v2  Vanya Belyaev 
     use newer version of GiGa 
@@ -89,11 +93,11 @@ Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
 ! 20010715  Vanya Belyaev package restructurization 
 
-! >>>>>>>>>>>>>>>>>>>>>>>>> GiGaCnv v1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+! ========================= GiGaCnv v1 ==================================
 
 !20010423
     New package:
     It gets all conversion services from GiGa package
     and general(subdetector-neutral, but LHCb-specific) converters
 
-! >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+! ==========================================================================
