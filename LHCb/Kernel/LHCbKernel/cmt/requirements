@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2002-03-27 18:50:06 cattanem Exp $
+# $Id: requirements,v 1.6 2002-03-27 19:26:00 cattanem Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -24,10 +24,10 @@ use GaudiObjDesc       v3r*
 document obj2doth LHCbKernelObj2Doth ../xml/*.xml
 
 # Dictionary not working on ITChannelID
-#document obj2dict LHCbKernelObj2Dict ../xml/*.xml
+document obj2dict LHCbKernelObj2Dict ../xml/*.xml
 
-library LHCbKernel *.cpp
-#                   ../dict/*.cpp
+library LHCbKernel *.cpp \
+                   ../dict/*.cpp
 
 apply_pattern package_linkopts
 apply_pattern package_stamps
