@@ -1,4 +1,4 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.8 2004-08-20 09:59:24 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.h,v 1.9 2004-08-24 11:43:04 abuckley Exp $
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
@@ -131,7 +131,7 @@ private: // data
 /// @author Chris Jones   Christopher.Rob.Jones@cern.ch
 /// @date   2003-12-02
 ///////////////////////////////////////////////////////////////////////////
-typedef Lester::RichMarkovRingFinder<Lester::Rich1Configuration, Lester::globalRich1LConfiguration> Rich1LMarkovRingFinder;
+typedef RichMarkov::RichMarkovRingFinder<RichMarkov::Rich1Configuration, RichMarkov::globalRich1LConfiguration> Rich1LMarkovRingFinder;
 class Rich1LMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich1LMarkovRingFinder> {
 
 public:
@@ -152,7 +152,7 @@ public:
 /// @author Chris Jones   Christopher.Rob.Jones@cern.ch
 /// @date   2003-12-02
 ///////////////////////////////////////////////////////////////////////////
-typedef Lester::RichMarkovRingFinder<Lester::Rich1Configuration, Lester::globalRich1UConfiguration> Rich1UMarkovRingFinder;
+typedef RichMarkov::RichMarkovRingFinder<RichMarkov::Rich1Configuration, RichMarkov::globalRich1UConfiguration> Rich1UMarkovRingFinder;
 class Rich1UMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich1UMarkovRingFinder> {
 
 public:
@@ -174,7 +174,7 @@ public:
 /// @date   2003-12-02
 ///////////////////////////////////////////////////////////////////////////
 
-typedef Lester::RichMarkovRingFinder<Lester::Rich2Configuration, Lester::globalRich2LConfiguration> Rich2LMarkovRingFinder;
+typedef RichMarkov::RichMarkovRingFinder<RichMarkov::Rich2Configuration, RichMarkov::globalRich2LConfiguration> Rich2LMarkovRingFinder;
 class Rich2LMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich2LMarkovRingFinder> {
 
 public:
@@ -196,7 +196,7 @@ public:
 /// @date   2003-12-02
 ///////////////////////////////////////////////////////////////////////////
 
-typedef Lester::RichMarkovRingFinder<Lester::Rich2Configuration, Lester::globalRich2RConfiguration> Rich2RMarkovRingFinder;
+typedef RichMarkov::RichMarkovRingFinder<RichMarkov::Rich2Configuration, RichMarkov::globalRich2RConfiguration> Rich2RMarkovRingFinder;
 class Rich2RMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich2RMarkovRingFinder> {
 
 public:

@@ -1,12 +1,12 @@
 
-#ifndef LESTER_PROBABILITY_ABOVE_H
-#define LESTER_PROBABILITY_ABOVE_H
+#ifndef RICHMARKOV_PROBABILITY_ABOVE_H
+#define RICHMARKOV_PROBABILITY_ABOVE_H
 
 #include <map>
 #include <iostream>
 #include "CLHEP/Random/RandFlat.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Index>
   class ProbabilityAbove {

@@ -1,12 +1,12 @@
-#ifndef LESTER_RICH1_CONFIGURATION_H
-#define LESTER_RICH1_CONFIGURATION_H
+#ifndef RICHMARKOV_RICH1_CONFIGURATION_H
+#define RICHMARKOV_RICH1_CONFIGURATION_H
 
 #include <iostream>
 #include <string>
 
 #include "RichConfiguration.h"
 
-namespace Lester {
+namespace RichMarkov {
   
   class Rich1Configuration : public RichConfiguration {
 

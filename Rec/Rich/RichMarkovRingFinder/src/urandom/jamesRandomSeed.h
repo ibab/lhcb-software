@@ -1,11 +1,11 @@
 
-#ifndef LESTER_JAMES_RANDOM_SEED_H
-#define LESTER_JAMES_RANDOM_SEED_H
+#ifndef RICHMARKOV_JAMES_RANDOM_SEED_H
+#define RICHMARKOV_JAMES_RANDOM_SEED_H
 
 #include <cassert>
 #include "urandom/urandom.h"
 
-namespace Lester {
+namespace RichMarkov {
 	
   long jamesRandomSeed() {
     typedef unsigned long USI;

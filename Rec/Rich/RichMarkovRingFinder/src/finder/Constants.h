@@ -1,10 +1,10 @@
-#ifndef LESTER_CONSTANTS_H
-#define LESTER_CONSTANTS_H
+#ifndef RICHMARKOV_CONSTANTS_H
+#define RICHMARKOV_CONSTANTS_H
 
 #include "MathsConstants/MathsConstants.h"
 
 
-namespace Lester {
+namespace RichMarkov {
 
   namespace Constants {
 

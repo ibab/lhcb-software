@@ -1,6 +1,6 @@
 
-#ifndef LESTER_REGULAR_PROBABILITY_DISRIBUTION_1D_H
-#define LESTER_REGULAR_PROBABILITY_DISRIBUTION_1D_H
+#ifndef RICHMARKOV_REGULAR_PROBABILITY_DISRIBUTION_1D_H
+#define RICHMARKOV_REGULAR_PROBABILITY_DISRIBUTION_1D_H
 
 #include <vector>
 #include <iostream>
@@ -9,7 +9,7 @@
 #include "finder/FinderExternalException.h"
 #include "stringToNumber/stringToNumber.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Index>
 

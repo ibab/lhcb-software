@@ -1,6 +1,6 @@
 
-#ifndef LESTER_RICH_MARKOV_RING_FINDER_H
-#define LESTER_RICH_MARKOV_RING_FINDER_H
+#ifndef RICHMARKOV_RICH_MARKOV_RING_FINDER_H
+#define RICHMARKOV_RICH_MARKOV_RING_FINDER_H
 
 #include <iostream>
 #include <cassert>
@@ -9,7 +9,7 @@
 
 #include "Data.fwd"
 
-namespace Lester {
+namespace RichMarkov {
   class Hit;
 };
 #include "CircleParams.fwd"
@@ -17,7 +17,7 @@ namespace Lester {
 #include "Inferrer.fwd"
 #include "FinderExternalException.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Mode, const Mode & mode>
   class RichMarkovRingFinder {

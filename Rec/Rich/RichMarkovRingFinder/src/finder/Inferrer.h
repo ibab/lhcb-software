@@ -1,6 +1,6 @@
 
-#ifndef LESTER_INFERRER_H
-#define LESTER_INFERRER_H
+#ifndef RICHMARKOV_INFERRER_H
+#define RICHMARKOV_INFERRER_H
 
 //#include <set>
 #include <map>
@@ -8,7 +8,7 @@
 #include "RichPriors.h"
 #include "Data.h"
 
-namespace Lester {
+namespace RichMarkov {
   
   template <class Mode, const Mode & mode>
   class Inferrer {

@@ -1,6 +1,6 @@
 
-#ifndef LESTER_FINITE_RELATIVE_PROBABILITY_CHOOSER_H
-#define LESTER_FINITE_RELATIVE_PROBABILITY_CHOOSER_H
+#ifndef RICHMARKOV_FINITE_RELATIVE_PROBABILITY_CHOOSER_H
+#define RICHMARKOV_FINITE_RELATIVE_PROBABILITY_CHOOSER_H
 
 #include <map>
 #include <iostream>
@@ -10,7 +10,7 @@
 #include "CLHEP/Random/RandFlat.h"
 #include "finder/FinderExternalException.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Index>
   class FiniteRelativeProbabilityChooser {

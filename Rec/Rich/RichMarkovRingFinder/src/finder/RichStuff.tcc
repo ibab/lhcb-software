@@ -1,5 +1,5 @@
-#ifndef LESTER_RICH_STUFF_TCC
-#define LESTER_RICH_STUFF_TCC
+#ifndef RICHMARKOV_RICH_STUFF_TCC
+#define RICHMARKOV_RICH_STUFF_TCC
 
 #include "RichStuff.h"
 #include "RichParams.h"
@@ -8,7 +8,7 @@
 
 
 template<class Mode, const Mode & mode>
-void Lester::RichStuff<Mode, mode>::draw(Canvas & canvas,
+void RichMarkov::RichStuff<Mode, mode>::draw(Canvas & canvas,
                                          const RichParamsT & rp,
                                          const DataT & d,
                                          const bool showTruth) {
@@ -17,7 +17,7 @@ void Lester::RichStuff<Mode, mode>::draw(Canvas & canvas,
 };
 
 template<class Mode, const Mode & mode>
-double Lester::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, const DataT & d, const AlterationsT & alterations) {
+double RichMarkov::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, const DataT & d, const AlterationsT & alterations) {
   
   double logAns=0;
   {
@@ -28,11 +28,11 @@ double Lester::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, const
     const int n = d.hits.size();
 
     // should actually have
-    //      ans *= Lester::poissonProb(n,mu);
+    //      ans *= RichMarkov::poissonProb(n,mu);
     // followed by the
     //      ans *= factorial(n)
     // which occurs in the next block to account for a combinatorial factor for the hit probabilities that are about to arrive, so to save time I combine the two factors together into
-    const bool muIsTooSmall=!(Lester::finite(log(mu)));
+    const bool muIsTooSmall=!(RichMarkov::finite(log(mu)));
     if (mu==0 && n>0) {
       //std::cerr << "erm1 " <<mu<<" " <<n<<" " << muIsTooSmall<<std::endl;
       throw LogOfZero(); //return 0;  // infintely unlikely!
@@ -57,7 +57,7 @@ double Lester::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, const
   };
 
   assert("step0");
-  assert(Lester::finite(logAns) && "step1" );
+  assert(RichMarkov::finite(logAns) && "step1" );
 
   // decide what to do vis-a-vis speeded up recalculation:
   assert(!(alterations.empty())); // we expect at the very least a "didNothing!");
@@ -84,7 +84,7 @@ double Lester::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, const
       const double p = rp.probTimesSigmaMuGeometricallyCorrected(*hit, alterationsNecessitateCompleteRecalculation, alterations);
       hit->pushCacheBack(p);
       const double lp = log(p);
-      if ( p==0 ||!Lester::finite(lp)) {
+      if ( p==0 ||!RichMarkov::finite(lp)) {
         // ok .. we are going to throw this point, but before we do so. we must resolve the state of the Hit caches.  Now we can either do this by by throwing away the cache data already collected -- but then we will have to convince routines that come later that there is in this particular special case no cache information available (rejected points will expect to have their cache deleted .. and we won't want rouge things deleting non-existen caches) so although this solution will be the better in the long run, it will be hard to program initially.  For the moment we can do a slower "fill cache up cache with junk" solutin:
         static bool first = true;
         if (first) {
@@ -112,13 +112,13 @@ double Lester::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, const
     logAns -= numberOfDivisionsNotDoneMadeIntoADouble*logSigmaMuGeometricallyCorrected;
   };
 
-  assert(Lester::finite(logAns) && "step2");
+  assert(RichMarkov::finite(logAns) && "step2");
 
   // prior:
   if (Constants::usePrior) {
     /*
     // in principle I should have
-    //        ans *= Lester::poissonProb(rp.circs.size(),meanNumberOfRings);
+    //        ans *= RichMarkov::poissonProb(rp.circs.size(),meanNumberOfRings);
     // followed by
     //        ans *= factorial(rp.circs.size())
     // to accound for a combinatorial factor in what is about to follow.
@@ -144,11 +144,11 @@ double Lester::RichStuff<Mode, mode>::totalLogProb(const RichParamsT & rp, const
 
     const double pep=rp.priorProbability();
     const double lpep = log(pep);
-    if (pep==0 || !Lester::finite(lpep)) {
+    if (pep==0 || !RichMarkov::finite(lpep)) {
       throw LogOfZero();
     };
     logAns+=lpep; //ans *=  rp.priorProbability();
-    assert(Lester::finite(logAns) && "step3");
+    assert(RichMarkov::finite(logAns) && "step3");
 
   };
 

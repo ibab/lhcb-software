@@ -1,10 +1,10 @@
 
-#ifndef LESTER_CACHE_HANDLER_H
-#define LESTER_CACHE_HANDLER_H
+#ifndef RICHMARKOV_CACHE_HANDLER_H
+#define RICHMARKOV_CACHE_HANDLER_H
 
 #include <string>
 
-namespace Lester {
+namespace RichMarkov {
 
   class CacheHandler {
   public:

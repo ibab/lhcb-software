@@ -1,8 +1,8 @@
 
-#ifndef LESTER_FINDER_EXCEPTION_H
-#define LESTER_FINDER_EXCEPTION_H
+#ifndef RICHMARKOV_FINDER_EXCEPTION_H
+#define RICHMARKOV_FINDER_EXCEPTION_H
 
-namespace Lester {
+namespace RichMarkov {
 
   struct FinderException {
   };

@@ -1,13 +1,13 @@
 
-#ifndef LESTER_RICH_MODELS_H
-#define LESTER_RICH_MODELS_H
+#ifndef RICHMARKOV_RICH_MODELS_H
+#define RICHMARKOV_RICH_MODELS_H
 
 /*
 #include "probabilityUtilities/FiniteRelativeProbabilityChooser.h"
 #include "probabilityUtilities/RegularProbabilityDistribution1D.h"
 #include "probabilityUtilities/ProbabilityAbove.h"
 
-namespace Lester {
+namespace RichMarkov {
 
 
 

@@ -1,6 +1,6 @@
 
-#ifndef LESTER_DATA_H
-#define LESTER_DATA_H
+#ifndef RICHMARKOV_DATA_H
+#define RICHMARKOV_DATA_H
 
 #include <vector>
 #include <sstream>
@@ -12,11 +12,11 @@
 //fwd decs
 #include "CircleParams.fwd"
 #include "RichPriors.fwd"
-namespace Lester {
+namespace RichMarkov {
   class Canvas;
 }
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Mode, const Mode & mode>
   class Data {

@@ -1,6 +1,6 @@
 
-#ifndef LESTER_RICH_PRIORS_H
-#define LESTER_RICH_PRIORS_H
+#ifndef RICHMARKOV_RICH_PRIORS_H
+#define RICHMARKOV_RICH_PRIORS_H
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -14,7 +14,7 @@
 #include "Hit.h"
 #include "CircleParams.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Mode, const Mode & mode>
   class RichPriors {

@@ -1,11 +1,11 @@
-// $Id: RichMarkovRingFinderAlg.cpp,v 1.8 2004-08-20 09:59:24 abuckley Exp $
+// $Id: RichMarkovRingFinderAlg.cpp,v 1.9 2004-08-24 11:43:04 abuckley Exp $
 // Include files
 
 // local
 #include "RichMarkovRingFinderAlg.h"
 #include "finder/Inferrer.h"
 
-using namespace Lester;
+using namespace RichMarkov;
 using namespace std;
 
 //-----------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 
 #include "FragmentedCircle.h"
 
-std::ostream & Lester::FragmentedCircle::ArcPart::printMeTo(std::ostream & os) const {
+std::ostream & RichMarkov::FragmentedCircle::ArcPart::printMeTo(std::ostream & os) const {
   if (_whole) {
     os << "WholeCircleArcPart";
   } else {
@@ -10,7 +10,7 @@ std::ostream & Lester::FragmentedCircle::ArcPart::printMeTo(std::ostream & os) c
   return os;
 };
 
-inline std::ostream & Lester::FragmentedCircle::printMeTo(std::ostream & os) const {
+inline std::ostream & RichMarkov::FragmentedCircle::printMeTo(std::ostream & os) const {
   os << "FragmentedCircle[centre="<<_centre<<", radius="<<_radius<<", ArcPartList=";
   // now output arcpartlist.
   for (ArcPartList::const_iterator it=_arcPartList.begin();

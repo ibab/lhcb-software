@@ -1,6 +1,6 @@
 
-#ifndef LESTER_RICH_H
-#define LESTER_RICH_H
+#ifndef RICHMARKOV_RICH_H
+#define RICHMARKOV_RICH_H
 
 #include "RichStuff.fwd"
 #include "RichParams.fwd"
@@ -10,7 +10,7 @@
 #include "CircleParams.h"
 #include "CLHEP/Vector/TwoVector.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Mode, const Mode & mode>
   class RichStuff {

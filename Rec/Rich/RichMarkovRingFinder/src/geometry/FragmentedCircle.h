@@ -1,6 +1,6 @@
 
-#ifndef LESTER_FRAGMENTED_CIRCLE_H
-#define LESTER_FRAGMENTED_CIRCLE_H
+#ifndef RICHMARKOV_FRAGMENTED_CIRCLE_H
+#define RICHMARKOV_FRAGMENTED_CIRCLE_H
 
 #include <list>
 #include <cassert>
@@ -8,7 +8,7 @@
 #include "CLHEP/Vector/TwoVector.h"
 #include "MathsConstants/MathsConstants.h"
 
-namespace Lester {
+namespace RichMarkov {
   
   //fwd dec
   class Canvas;
@@ -308,11 +308,11 @@ namespace Lester {
     
 }
 
-inline std::ostream & operator << (std::ostream & os, const Lester::FragmentedCircle::ArcPart & ap) {
+inline std::ostream & operator << (std::ostream & os, const RichMarkov::FragmentedCircle::ArcPart & ap) {
   return ap.printMeTo(os);
 };
 
-inline std::ostream & operator << (std::ostream & os, const Lester::FragmentedCircle & fc) {
+inline std::ostream & operator << (std::ostream & os, const RichMarkov::FragmentedCircle & fc) {
   return fc.printMeTo(os);
 };
 

@@ -1,5 +1,5 @@
-#ifndef LESTER_CIRCLE_PARAMS_TCC
-#define LESTER_CIRCLE_PARAMS_TCC
+#ifndef RICHMARKOV_CIRCLE_PARAMS_TCC
+#define RICHMARKOV_CIRCLE_PARAMS_TCC
 
 #include "CircleParams.h"
 #include "CirclePriors.h"
@@ -7,10 +7,10 @@
 #include "geometry/FragmentedCircle.h"
 
 template<class Mode,const Mode & mode>
-int Lester::CircleParams<Mode,mode>::_creationCount = 0;
+int RichMarkov::CircleParams<Mode,mode>::_creationCount = 0;
 
 template<class Mode,const Mode & mode>
-double Lester::CircleParams<Mode,mode>::priorProbability() const {
+double RichMarkov::CircleParams<Mode,mode>::priorProbability() const {
   const Hep2Vector c=centre();
   const double r=radius();
   //const double mu=c.mu();
@@ -28,7 +28,7 @@ double Lester::CircleParams<Mode,mode>::priorProbability() const {
 };
 
 template<class Mode,const Mode & mode>
-void Lester::CircleParams<Mode,mode>::jokeSetRandom() {
+void RichMarkov::CircleParams<Mode,mode>::jokeSetRandom() {
   _centre = CirclePriorsT::sampleFromCircleCentreDistribution();
   //mu=RandExponential::shoot(circleMuMuParameter);
   _radius = CirclePriorsT::sampleFromCircleRadiusDistribution();
@@ -37,7 +37,7 @@ void Lester::CircleParams<Mode,mode>::jokeSetRandom() {
 
 
 template<class Mode,const Mode & mode>
-Lester::CircleParams<Mode,mode> Lester::CircleParams<Mode,mode>::jitterSymm1() const {
+RichMarkov::CircleParams<Mode,mode> RichMarkov::CircleParams<Mode,mode>::jitterSymm1() const {
   const Hep2Vector newcen = centre() + Hep2Vector(0.1 * mode.characteristicCircleRadius() * RandGauss::shoot(), 
                                                   0.1 * mode.characteristicCircleRadius() * RandGauss::shoot());
   const double trialnewrad( radius() + 0.1 * mode.characteristicCircleRadius() * RandGauss::shoot());
@@ -49,10 +49,10 @@ Lester::CircleParams<Mode,mode> Lester::CircleParams<Mode,mode>::jitterSymm1() c
 
 
 template<class Mode,const Mode & mode>
-void Lester::CircleParams<Mode,mode>::internallySetMeanNumberOfHitsGeometricallyCorrected() {
+void RichMarkov::CircleParams<Mode,mode>::internallySetMeanNumberOfHitsGeometricallyCorrected() {
   static bool first=true;
   if (first) {
-    std::cerr << "Could probably try to optimise access to AcceptanceClippedArcs in Lester::CircleParams as at the moment they are recalculated all over the place and never cached" << std::endl;
+    std::cerr << "Could probably try to optimise access to AcceptanceClippedArcs in RichMarkov::CircleParams as at the moment they are recalculated all over the place and never cached" << std::endl;
     first = false;
   };
   

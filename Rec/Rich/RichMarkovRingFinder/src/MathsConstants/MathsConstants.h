@@ -1,10 +1,10 @@
 
-#ifndef LESTER_MATHS_CONSTANTS_H
-#define LESTER_MATHS_CONSTANTS_H
+#ifndef RICHMARKOV_MATHS_CONSTANTS_H
+#define RICHMARKOV_MATHS_CONSTANTS_H
 
 #include "gsl/gsl_math.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   namespace MathsConstants {
 

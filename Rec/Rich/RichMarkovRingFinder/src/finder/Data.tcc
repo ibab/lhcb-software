@@ -1,12 +1,12 @@
 
-#ifndef LESTER_DATA_TCC
-#define LESTER_DATA_TCC
+#ifndef RICHMARKOV_DATA_TCC
+#define RICHMARKOV_DATA_TCC
 
 #include "Data.h"
 #include "RichPriors.h"
 
 /*
-void Lester::Data::jokeSetRandom() { // deprecated 
+void RichMarkov::Data::jokeSetRandom() { // deprecated 
   hits.clear();
   secretCircs.clear();
   if (!Constants::useRealData) {
@@ -49,7 +49,7 @@ void Lester::Data::jokeSetRandom() { // deprecated
 */
 
 template <class Mode, const Mode & mode>
-void Lester::Data<Mode, mode>::confirmHitLiesInAcceptance(const Hit & h) {
+void RichMarkov::Data<Mode, mode>::confirmHitLiesInAcceptance(const Hit & h) {
   if (!(RichPriorsT::hitLiesInAcceptanceCrude(h))) {
     std::ostringstream mess;
     mess << "Hit out of acceptance. Position = (" 

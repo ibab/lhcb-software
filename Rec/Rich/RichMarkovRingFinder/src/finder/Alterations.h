@@ -1,6 +1,6 @@
 
-#ifndef LESTER_ALTERATIONS_H
-#define LESTER_ALTERATIONS_H
+#ifndef RICHMARKOV_ALTERATIONS_H
+#define RICHMARKOV_ALTERATIONS_H
 
 #include <list>
 #include <map>
@@ -11,7 +11,7 @@
 
 #include "CircleParams.fwd"
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Mode, const Mode & mode>
   class Alterations {
@@ -238,7 +238,7 @@ namespace Lester {
 }
 
 template <class Mode, const Mode & mode>
-inline std::ostream & operator<<(std::ostream & os, const Lester::Alterations<Mode,mode> & a) {
+inline std::ostream & operator<<(std::ostream & os, const RichMarkov::Alterations<Mode,mode> & a) {
   a.printMeTo(os);
   return os;
 };

@@ -1,6 +1,6 @@
 
-#ifndef LESTER_HIT_H
-#define LESTER_HIT_H
+#ifndef RICHMARKOV_HIT_H
+#define RICHMARKOV_HIT_H
 
 #include "CLHEP/Vector/TwoVector.h"
 #include <list>
@@ -10,7 +10,7 @@
 // From RICH software
 class RichRecPixel;
 
-namespace Lester {
+namespace RichMarkov {
 
   class Hit : public Hep2Vector {
 

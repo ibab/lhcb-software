@@ -3,7 +3,7 @@
 #include <string>
 
 /*
-namespace Lester {
+namespace RichMarkov {
 
   const std::string thetaDirDeJour = getenv("PARAMFILESROOT");
   const std::string thetaFileR2DeJour = "/data/Rich2_MarkovRingFinder_thetaDist.txt";

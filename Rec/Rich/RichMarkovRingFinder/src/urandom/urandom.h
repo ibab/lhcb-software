@@ -1,10 +1,10 @@
 
-#ifndef LESTER_URANDOM_H
-#define LESTER_URANDOM_H
+#ifndef RICHMARKOV_URANDOM_H
+#define RICHMARKOV_URANDOM_H
 
 #include <fstream>
 
-namespace Lester {
+namespace RichMarkov {
 
   char urandchar() {
     static std::ifstream f("/dev/urandom");

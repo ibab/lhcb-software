@@ -1,6 +1,6 @@
 
-#ifndef LESTER_RICH_PARAMS_H
-#define LESTER_RICH_PARAMS_H
+#ifndef RICHMARKOV_RICH_PARAMS_H
+#define RICHMARKOV_RICH_PARAMS_H
 
 #include "RichParams.fwd"
 
@@ -16,7 +16,7 @@
 #include "RichPriors.h"
 #include "Alterations.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   // fwd dec
   class Canvas;
@@ -50,7 +50,7 @@ namespace Lester {
       double ans = 1;
       
       // in principle I should have
-      //        ans *= Lester::poissonProb(rp.circs.size(),meanNumberOfRings);
+      //        ans *= RichMarkov::poissonProb(rp.circs.size(),meanNumberOfRings);
       // followed by
       //        ans *= factorial(rp.circs.size())
       // to accound for a combinatorial factor in what is about to follow.
@@ -231,7 +231,7 @@ namespace Lester {
         return rp;
       } else {
         alterations.didNothing();
-        return *this; // LESTER STRANGE
+        return *this; // RICHMARKOV STRANGE
       };
     };
     void draw(Canvas & canvas) const;
@@ -241,7 +241,7 @@ namespace Lester {
 }
 
 template<class Mode, const Mode & mode>
-std::ostream & operator<<(std::ostream & os, const Lester::RichParams<Mode,mode> & rp);
+std::ostream & operator<<(std::ostream & os, const RichMarkov::RichParams<Mode,mode> & rp);
 
 #include "RichParams.tcc"
 

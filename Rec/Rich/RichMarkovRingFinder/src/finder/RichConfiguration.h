@@ -1,5 +1,5 @@
-#ifndef LESTER_RICH_CONFIGURATION_H
-#define LESTER_RICH_CONFIGURATION_H
+#ifndef RICHMARKOV_RICH_CONFIGURATION_H
+#define RICHMARKOV_RICH_CONFIGURATION_H
 
 #include "Configuration.h"
 #include "Constants.h"
@@ -8,7 +8,7 @@
 #include "probabilityUtilities/RegularProbabilityDistribution1D.h"
 #include "probabilityUtilities/ProbabilityAbove.h"
 
-namespace Lester {
+namespace RichMarkov {
   
   typedef FiniteRelativeProbabilityChooser<double> RichThetaSampler;
   typedef RegularProbabilityDistribution1D<double> RichThetaDistribution;

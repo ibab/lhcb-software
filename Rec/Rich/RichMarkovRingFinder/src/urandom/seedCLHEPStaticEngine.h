@@ -1,7 +1,7 @@
-#ifndef LESTER_SEED_CLHEP_STATIC_ENGINE_H
-#define LESTER_SEED_CLHEP_STATIC_ENGINE_H
+#ifndef RICHMARKOV_SEED_CLHEP_STATIC_ENGINE_H
+#define RICHMARKOV_SEED_CLHEP_STATIC_ENGINE_H
 
-namespace Lester {
+namespace RichMarkov {
   void seedCLHEPStaticEngine(); // FwdDec
 }
 
@@ -11,7 +11,7 @@ namespace Lester {
 #include <typeinfo>
 #include <string>
 
-namespace Lester {
+namespace RichMarkov {
 
   void seedCLHEPStaticEngine() {
     try {

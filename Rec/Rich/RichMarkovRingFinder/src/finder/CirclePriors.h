@@ -1,6 +1,6 @@
 
-#ifndef LESTER_CIRCLE_PRIORS_H
-#define LESTER_CIRCLE_PRIORS_H
+#ifndef RICHMARKOV_CIRCLE_PRIORS_H
+#define RICHMARKOV_CIRCLE_PRIORS_H
 
 #include <cmath>
 
@@ -17,7 +17,7 @@
 #include "CacheHandler.h"
 #include "FinderExternalException.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Mode, const Mode & mode>
   class CirclePriors {
@@ -230,7 +230,7 @@ namespace Lester {
             //std::cout<<"Calculated cop[ "<<deltaOnTwo<<" ] = " << avg<<std::endl;
             {
               std::ofstream cf(CacheHandler::approxCoPointSepCacheFileName().c_str(),std::ios::app);
-              if ( Lester::finite(deltaOnTwo) && Lester::finite(avg) ) {
+              if ( RichMarkov::finite(deltaOnTwo) && RichMarkov::finite(avg) ) {
                 cf << std::setprecision(25) << deltaOnTwo << " " << avg << std::endl;
               };
             };

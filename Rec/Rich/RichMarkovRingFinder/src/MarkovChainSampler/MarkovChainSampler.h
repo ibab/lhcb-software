@@ -4,7 +4,7 @@
 #include <iterator>
 #include "finder/FinderException.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   /// @class MarkovChainSampler 
   /// @brief The (most basic) sampler interface

@@ -1,12 +1,12 @@
-#ifndef LESTER_RICH_MARKOV_RING_FINDER_TCC
-#define LESTER_RICH_MARKOV_RING_FINDER_TCC
+#ifndef RICHMARKOV_RICH_MARKOV_RING_FINDER_TCC
+#define RICHMARKOV_RICH_MARKOV_RING_FINDER_TCC
 
 #include "RichMarkovRingFinder.h"
 #include "Data.h"
 #include "CircleParams.h"
 #include "RichParams.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   template<class Mode, const Mode & mode>
   RichMarkovRingFinder<Mode, mode>::~RichMarkovRingFinder() { };

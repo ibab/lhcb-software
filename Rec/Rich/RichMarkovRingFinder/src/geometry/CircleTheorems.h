@@ -1,11 +1,11 @@
 
-#ifndef LESTER_CIRCLE_THEOREMS_H
-#define LESTER_CIRCLE_THEOREMS_H
+#ifndef RICHMARKOV_CIRCLE_THEOREMS_H
+#define RICHMARKOV_CIRCLE_THEOREMS_H
 
 #include "CLHEP/Vector/ThreeVector.h"
 #include "finder/FinderException.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   class CircleTheorems {
   public:

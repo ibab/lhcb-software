@@ -1,8 +1,8 @@
 
-#ifndef LESTER_SPACE_H
-#define LESTER_SPACE_H
+#ifndef RICHMARKOV_SPACE_H
+#define RICHMARKOV_SPACE_H
 
-namespace Lester {
+namespace RichMarkov {
 
   template <typename ThePointType>
   class Space {

@@ -1,6 +1,6 @@
 
-#ifndef LESTER_CONFIGURATION_H
-#define LESTER_CONFIGURATION_H
+#ifndef RICHMARKOV_CONFIGURATION_H
+#define RICHMARKOV_CONFIGURATION_H
 
 /* There is one "Configuration" that tells the rest of the program
    how to work differently in Rich1 or Rich2 scenarios etc.
@@ -10,7 +10,7 @@
    base, so in case, here is a very simple base class that could grow
    later if desired. */
 
-namespace Lester {
+namespace RichMarkov {
   
   class Configuration { 
   protected:

@@ -1,9 +1,9 @@
-#ifndef LESTER_RICH2_CONFIGURATION_H
-#define LESTER_RICH2_CONFIGURATION_H
+#ifndef RICHMARKOV_RICH2_CONFIGURATION_H
+#define RICHMARKOV_RICH2_CONFIGURATION_H
 
 #include "RichConfiguration.h"
 
-namespace Lester {
+namespace RichMarkov {
   
   class Rich2Configuration : public RichConfiguration {
 

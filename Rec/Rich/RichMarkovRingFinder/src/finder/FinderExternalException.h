@@ -1,10 +1,10 @@
-#ifndef LESTER_FINDER_EXTERNAL_EXCEPTION_H
-#define LESTER_FINDER_EXTERNAL_EXCEPTION_H
+#ifndef RICHMARKOV_FINDER_EXTERNAL_EXCEPTION_H
+#define RICHMARKOV_FINDER_EXTERNAL_EXCEPTION_H
 
 #include <string>
 #include "FinderException.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   struct FinderExternalException : public FinderException {
     const std::string m_message;

@@ -1,6 +1,6 @@
 
-#ifndef LESTER_MY_RICH_METROPOLIS_SAMPLER_H
-#define LESTER_MY_RICH_METROPOLIS_SAMPLER_H
+#ifndef RICHMARKOV_MY_RICH_METROPOLIS_SAMPLER_H
+#define RICHMARKOV_MY_RICH_METROPOLIS_SAMPLER_H
 
 #include "MarkovChainSampler/MetropolisSampler.h"
 #include "CLHEP/Random/RandGauss.h"
@@ -18,7 +18,7 @@
 #include "Alterations.h"
 #include "FinderExternalException.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Mode, const Mode & mode>
   class MyRichMetropolisSampler : public MetropolisSampler<RichSpace<Mode,mode> > {
@@ -59,13 +59,13 @@ namespace Lester {
     double logTargetDistribution(const PointType & point) const {
       try {
         const double logProb = RichStuffT::totalLogProb(point, data, alterations);
-        if (Lester::finite(logProb)) {
+        if (RichMarkov::finite(logProb)) {
           return logProb;
         } else {
           std::cerr<< "Oh dear .. point is TOO LIKELY for the log of its probability to be represented as a double!  I will have to ignore it even though it is clearly good!" << std::endl;
           throw typename MetropolisSamplerT::LogOfZero();
         };
-      } catch (Lester::LogOfZero &) {
+      } catch (RichMarkov::LogOfZero &) {
         throw typename MetropolisSamplerT::LogOfZero();
       };
     };

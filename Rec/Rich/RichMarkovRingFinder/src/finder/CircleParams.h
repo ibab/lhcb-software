@@ -1,5 +1,5 @@
-#ifndef LESTER_CIRCLE_PARAMS_H
-#define LESTER_CIRCLE_PARAMS_H
+#ifndef RICHMARKOV_CIRCLE_PARAMS_H
+#define RICHMARKOV_CIRCLE_PARAMS_H
 
 #include <cassert>
 
@@ -9,12 +9,12 @@
 #include "CLHEP/Vector/TwoVector.h"
 #include <iostream>
 
-namespace Lester {
+namespace RichMarkov {
   class Canvas;  // fwd decs
 }
 #include "CirclePriors.fwd"
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Mode, const Mode & mode>
   class CircleParams {
@@ -114,7 +114,7 @@ namespace Lester {
 }
 
 template<class Mode, const Mode & mode>
-inline std::ostream & operator<<(std::ostream & os, const Lester::CircleParams<Mode, mode> & cp) {
+inline std::ostream & operator<<(std::ostream & os, const RichMarkov::CircleParams<Mode, mode> & cp) {
   return cp.printMeTo(os);
 };
 

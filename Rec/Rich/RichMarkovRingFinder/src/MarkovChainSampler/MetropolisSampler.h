@@ -1,11 +1,11 @@
-#ifndef LESTER_METROPOLIS_SAMPLER_H
-#define LESTER_METROPOLIS_SAMPLER_H
+#ifndef RICHMARKOV_METROPOLIS_SAMPLER_H
+#define RICHMARKOV_METROPOLIS_SAMPLER_H
 
 
 #include "CLHEP/Random/RandFlat.h"
 #include "MarkovChainSampler/MarkovChainSampler.h"
 
-namespace Lester {
+namespace RichMarkov {
 
   template <class Space>
   class MetropolisSampler :

@@ -1,6 +1,6 @@
 
-#ifndef LESTER_PROBABILITY_UTILS
-#define LESTER_PROBABILITY_UTILS
+#ifndef RICHMARKOV_PROBABILITY_UTILS
+#define RICHMARKOV_PROBABILITY_UTILS
 
 //#include "gmpxx.h"
 #include <vector>
@@ -9,7 +9,7 @@
 #include "MathsConstants/MathsConstants.h"
 #include <cassert>
 
-namespace Lester {
+namespace RichMarkov {
 
   class LogOfZero {
   };
@@ -158,7 +158,7 @@ namespace Lester {
     return exp(-x/mean);
   };
   inline double reciprocalSum(const int n) {
-    // Could speed up // LESTER
+    // Could speed up // RICHMARKOV
     if (n>=20&&n<40) {
       static bool first=true;
       if (first) {
@@ -183,7 +183,7 @@ namespace Lester {
     return ans;
   };
   inline double reciprocalSqSum(const int n) {
-    // Could speed up // LESTER
+    // Could speed up // RICHMARKOV
     if (n>=20&&n<40) {
       static bool first=true;
       if (first) {
