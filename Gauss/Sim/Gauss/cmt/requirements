@@ -1,5 +1,5 @@
 package Gauss
-version v14r0
+version v14r1
 
 # =============================================================================
 # structure 
@@ -45,9 +45,9 @@ use GaussPhysics        v2r6    Sim
 use GeneratorModules    v10r4    Gen
 
 #get information from DBASE and PARAM 
-use XmlDDDB             v20r0   Det   -no_auto_imports
+use XmlDDDB             v20r1   Det   -no_auto_imports
 use FieldMap            v4r3          -no_auto_imports
-use DecFiles            v4r0    Gen   -no_auto_imports
+use DecFiles            v4r1    Gen   -no_auto_imports
 use ParamFiles          v3r0          -no_auto_imports
 
 # =============================================================================
