@@ -27,17 +27,26 @@ class IParticleFilter;
 class DVAlgorithm : public Algorithm {
 public:
   /// Standard constructor
-  DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
+  DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
+    : Algorithm ( name , pSvcLocator ),
+      m_pDesktop(0),
+      m_pLagFit(0),
+      m_pVertexFit(0),
+      m_pGeomDispCalc(0),
+      m_pStuffer(0),
+      m_pFilter(0) {  
+
+    declareProperty("VertexFitter", m_typeVertexFit="UnconstVertexFitter");
+    declareProperty("MassVertexFitter", 
+                    m_typeLagFit="LagrangeMassVertexFitter");
+  
+  };
 
   virtual ~DVAlgorithm( ){ }; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization (DUMMY)
-  virtual StatusCode execute   ();    ///< Algorithm execution (DUMMY)
-  virtual StatusCode finalize  ();    ///< Algorithm finalization (DUMMY)
-
   /// Method to load all tools. 
   /// The base class provides an instance of all type of tools
-  virtual StatusCode loadTools();
+  StatusCode loadTools();
   
   /// Acessor for PhysDesktop Tool
   IPhysDesktop* desktop() const; 
@@ -89,7 +98,6 @@ private:
 // from Gaudi
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IToolSvc.h"
-#include "GaudiKernel/GaudiException.h"
 
 // from DaVinciTools
 #include "DaVinciTools/IPhysDesktop.h"
@@ -100,34 +108,9 @@ private:
 #include "DaVinciTools/IParticleFilter.h"
 
 //=============================================================================
-// Standard constructor, initializes variables
-//=============================================================================
-DVAlgorithm::DVAlgorithm( const std::string& name,
-                                ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator ),
-    m_pDesktop(0),
-    m_pLagFit(0),
-    m_pVertexFit(0),
-    m_pGeomDispCalc(0),
-    m_pStuffer(0),
-    m_pFilter(0) {  
-
-  declareProperty("VertexFitter", m_typeVertexFit="UnconstVertexFitter");
-  declareProperty("MassVertexFitter", m_typeLagFit="LagrangeMassVertexFitter");
-  
-}
-
-//=============================================================================
-// Initialisation. Check parameters
-//=============================================================================
-StatusCode DVAlgorithm::initialize() {
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
 // Load standard tools
 //=============================================================================
-StatusCode DVAlgorithm::loadTools() {
+inline StatusCode DVAlgorithm::loadTools() {
 
   MsgStream  log( msgSvc(), name() );
   log << MSG::INFO << ">>> Retriving tools" << endreq;
@@ -184,49 +167,33 @@ StatusCode DVAlgorithm::loadTools() {
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Main execution
-//=============================================================================
-StatusCode DVAlgorithm::execute() {
-
-  return StatusCode::SUCCESS;
-}
 
 //=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode DVAlgorithm::finalize() {
-
-  return StatusCode::SUCCESS;
-}
- 
-
-//=============================================================================
-IPhysDesktop* DVAlgorithm::desktop() const {
+inline IPhysDesktop* DVAlgorithm::desktop() const {
   return m_pDesktop;
 }  
 
 //=============================================================================
-IMassVertexFitter* DVAlgorithm::massVertexFitter() const {   
+inline IMassVertexFitter* DVAlgorithm::massVertexFitter() const {   
   return m_pLagFit;
 }  
 
 //=============================================================================
-IVertexFitter* DVAlgorithm::vertexFitter() const {
+inline IVertexFitter* DVAlgorithm::vertexFitter() const {
   return m_pVertexFit;
 }  
 
 //=============================================================================
-IGeomDispCalculator* DVAlgorithm::geomDispCalculator() const {  
+inline IGeomDispCalculator* DVAlgorithm::geomDispCalculator() const {  
   return m_pGeomDispCalc;
 }  
 
 //=============================================================================
-IParticleStuffer* DVAlgorithm::particleStuffer() const {
+inline IParticleStuffer* DVAlgorithm::particleStuffer() const {
   return m_pStuffer;
 }  
 //=============================================================================
-IParticleFilter* DVAlgorithm::particleFilter() const {
+inline IParticleFilter* DVAlgorithm::particleFilter() const {
   return m_pFilter;
 }
 
