@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.18 2005-02-15 07:46:08 pkoppenb Exp $
+! $Id: release.notes,v 1.19 2005-02-21 09:58:22 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie, P. Koppenburg
 
+! 2005-02-21 - P. Koppenburg fro Hugo Ruiz
+  - src/TrgVertexFitter.{cpp,h}
+    . Fixes for resonant states and photons.
 !========================== VertexFit v1r4 2005-02-15 ===================
 ! 2005-02-09 - P. Koppenburg
   - src/GeomDispCalculator.cpp

@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.h,v 1.2 2005-02-08 08:50:22 pkoppenb Exp $
+// $Id: TrgVertexFitter.h,v 1.3 2005-02-21 09:58:22 pkoppenb Exp $
 #ifndef TRGVERTEXFITTER_H 
 #define TRGVERTEXFITTER_H 1
 
@@ -40,6 +40,7 @@ public:
   virtual ~TrgVertexFitter( ); ///< Destructor
 
 protected:
+  StatusCode TrgVertexFitter::doFit( std::vector<const Particle*>& partsToFit,  Vertex& V);
   StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX, const double& BX, const double& CX,
                                                      const double& DX, const double& EX,
                                                      const double& AY, const double& BY, const double& CY,
@@ -47,6 +48,11 @@ protected:
                                                      double& vX, double& vY, double& vZ, Vertex &V);
 
 private:
+
+  /// Use daughers' tracks if composite is found
+  bool m_useDaughters;
+  
+  int m_photonID; // Photon particle ID
 
 };
 #endif // TRGVERTEXFITTER_H
