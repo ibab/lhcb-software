@@ -20,6 +20,9 @@ DigiWriter.ItemList =
 {
   "/Event#1"
 , "/Event/Header#1"
+, "/Event/DAQ#1"
+, "/Event/DAQ/L1Buffer#1"
+, "/Event/DAQ/HLTBuffer#1"
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
 , "/Event/Gen/Collisions#1"
@@ -91,8 +94,8 @@ DigiWriter.ItemList =
 , "/Event/Rec/Relations/OTDigits2MCHits#1"
 , "/Event/Rec/Relations/VeloClusters2MCHits#1"
 , "/Event/MC/Rich/Digits#1" // Single hop to MCHit, instead of relations
-, "/Event/MC/Prs/Digits#1" // Single hop to MCHit, instead of relations
-, "/Event/MC/Spd/Digits#1" // Single hop to MCHit, instead of relations
+, "/Event/MC/Prs/Digits#1"  // Single hop to MCHit, instead of relations
+, "/Event/MC/Spd/Digits#1"  // Single hop to MCHit, instead of relations
 , "/Event/MC/Ecal/Digits#1" // Single hop to MCHit, instead of relations
 , "/Event/MC/Hcal/Digits#1" // Single hop to MCHit, instead of relations
 , "/Event/MC/Muon/Digits#1" // Single hop to MCHit, instead of relations

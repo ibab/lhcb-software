@@ -1,9 +1,9 @@
-// Define RAWH content for Convertion from Zebra
+// Define SIM content for Gauss output (also for converted SICBMC output)
 
-// ApplicationMgr.OutStream += { "RawhWriter" };
+// ApplicationMgr.OutStream += { "SimWriter" };
 
-RawhWriter.PreLoad = false;
-RawhWriter.ItemList = 
+SimWriter.PreLoad = false;
+SimWriter.ItemList = 
 {
   "/Event#1"
   , "/Event/Header#1"
@@ -18,7 +18,8 @@ RawhWriter.ItemList =
   , "/Event/MC/OT#1"
   , "/Event/MC/OT/Hits#1"
   , "/Event/MC/Rich#1"
-  , "/Event/MC/Rich/HitsSICB#1" // Incompatible with G4 hits
+  , "/Event/MC/Rich/Hits#1"
+  //  , "/Event/MC/Rich/OpticalPhotons#1" // Only for special studies
   , "/Event/MC/Spd#1"
   , "/Event/MC/Spd/Hits#1"
   , "/Event/MC/Prs#1"

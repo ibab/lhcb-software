@@ -1,7 +1,12 @@
 package GaudiConf
 package manager: M.Cattaneo
 
-!======================== GaudiConf v7r1 2003-08-08 ========================
+!======================== GaudiConf v7r1 2003-10-01 ========================
+! 2003-10-01 - Marco Cattaneo
+ - RawhContent.opts renamed SimContent.opts, to describe SicbToOORawh output 
+   compatible with Gauss
+ - DigiContent.opts: add DAQ/L1Buffer, DAQ/HLTBuffer for raw data buffers
+
 ! 2003-08-08 - Marco Cattaneo
  - DigiContent.opts: add MC/Rich/Digits to preserve relation to Hits
 
