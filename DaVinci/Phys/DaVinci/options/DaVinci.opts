@@ -36,25 +36,20 @@ ChronoAuditor.Enable = true;
 MemoryAuditor.Enable = false;
 
 //--------------------------------------------------------------
-// DaVinci Algorithms to be always executed as the first one
+// DaVinci Algorithms to be always executed at the beginning
 //--------------------------------------------------------------
-ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
+ApplicationMgr.TopAlg = { "ChargedProtoPAlg" };
+//ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
 
 //--------------------------------------------------------------
 // Other additional algorithms to be executed, from public 
 // or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
-
-ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
-// Uncomment the following line to run Fortran AXSEL interface 
-// WARNING: this will no longer be supported once DaVinci is
-//          fully operational on OO-DST
-//ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
 // Algorithms for Bd->J/Psi(mu+mu-)Ks(pi+pi-) selection
-ApplicationMgr.TopAlg += { "SelectJPsiMuMu"  };
-ApplicationMgr.TopAlg += { "SelectKsPiPi" };
-ApplicationMgr.TopAlg += { "SelectB0JPsiKs" };
+//ApplicationMgr.TopAlg += { "SelectJPsiMuMu"  };
+//ApplicationMgr.TopAlg += { "SelectKsPiPi" };
+//ApplicationMgr.TopAlg += { "SelectB0JPsiKs" };
 // Algorithms for Bs->Ds(KKpi)K selection
 //ApplicationMgr.TopAlg += { "SelectDsKKPi" };
 //ApplicationMgr.TopAlg += { "SelectBs2DsK" };
@@ -62,14 +57,6 @@ ApplicationMgr.TopAlg += { "SelectB0JPsiKs" };
 //ApplicationMgr.TopAlg += { "FlavourTaggingAlgorithm" };
 // Uncomment the following line to run the example UserAlgorithm
 //ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
-
-//--------------------------------------------------------------
-// DaVinci Algorithms to be always executed as the last one,
-// the fortran suanal is called in here 
-// WARNING: this will no longer be supported once DaVinci is
-//          is fully operational on OO-DST
-//--------------------------------------------------------------
-ApplicationMgr.TopAlg += { "DaVinciFinalisation" };
 
 //--------------------------------------------------------------
 // Uncomment the following line if you want static version
@@ -81,15 +68,6 @@ ApplicationMgr.TopAlg += { "DaVinciFinalisation" };
 // you can overwrite any of the default options
 //-----------------------------------------------------------------
 #include "$DAVINCITOOLSROOT/options/DaVinciTools.opts"
-#include "$DAVINCISICBROOT/options/DaVinciSicb.opts"
-
-// The next lines are an example of changing the default behaviour
-// of algorithms in the library 
-//           Execute the PhysSelectAlgorithm for B0JM
-PhysSelectAlgorithm.DecayName    = "B0JM";
-PhysSelectAlgorithm.SelMode      = 0;
-PhysSelectAlgorithm.SelLevel     = 0;
-PhysSelectAlgorithm.Histograms   = 1;
 
 //-----------------------------------------------------------------
 // Private algorithms options
@@ -99,14 +77,14 @@ PhysSelectAlgorithm.Histograms   = 1;
 // If a relative path is used you need to copy them to the batch
 // area when running.
 //-----------------------------------------------------------------
-#include "$PHYSSELECTIONSROOT/options/SelectJPsiMuMu.opts"
-#include "$PHYSSELECTIONSROOT/options/SelectKsPiPi.opts"
-#include "$PHYSSELECTIONSROOT/options/SelectB0JPsiKs.opts"
-#include "$FLAVOURTAGGINGROOT/options/FlavourTagging.opts"
-FlavourTaggingAlgorithm.ParticlesLocation = "/Event/Phys/JPsi/Particles";
-FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/B0" };
-#include "$PHYSSELECTIONSROOT/options/SelectDsKKPi.opts"
-#include "$PHYSSELECTIONSROOT/options/SelectBs2DsK.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectJPsiMuMu.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectKsPiPi.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectB0JPsiKs.opts"
+//#include "$FLAVOURTAGGINGROOT/options/FlavourTagging.opts"
+//FlavourTaggingAlgorithm.ParticlesLocation = "/Event/Phys/JPsi/Particles";
+//FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/B0" };
+//#include "$PHYSSELECTIONSROOT/options/SelectDsKKPi.opts"
+//#include "$PHYSSELECTIONSROOT/options/SelectBs2DsK.opts"
 
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
@@ -114,53 +92,19 @@ FlavourTaggingAlgorithm.PhysDesktop.InputLocations = { "/Event/Phys/B0" };
 MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
-AxPrimaryVertexAlgorithm.OutputLevel    = 3;
-PhysSelectAlgorithm.OutputLevel         = 3;
-ToolSvc.GeomDispCalculator.OutputLevel  = 4;
-SelectJPsiMuMu.OutputLevel              = 3;
-SelectKsPiPi.OutputLevel                = 3;
-//SelectKsPiPi.UnconsVertexFitter.OutputLevel  = 3;
-//SelectKsPiPi..OutputLevel  = 3;
-
-SelectB0JPsiLs.OutputLevel              = 3;
+ChargedProtoPAlg.OutputLevel            = 2;
  
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax = 500;
+ApplicationMgr.EvtMax = 20;
 EventSelector.FirstEvent = 1;
-//EventSelector.PrintFreq = 1;
+EventSelector.PrintFreq = 1;
    
 //---------------------------------------------------------------
-// Examples of input data
+// Input data
 //---------------------------------------------------------------
-//-- B->J/Psi(mumu)Ks(pi+pi-) 
-//-- GAUDI data cards generated on 29-MAY-2002
-//-- For Event Type = 411300 / Data type = DST3 
-//--     DST Program = Brunel v9r1
-//--     Database version = v243r3
-//--     
-//-- 1 JobID(s) found - NbEvents = 500
-//-- 
-EventSelector.Input   = {
-"JOBID='94334'"
-};
-//-- End of Data cards 
-//---------------------------------------------------------------
-//-- GAUDI data cards generated on 11-JUN-2002
-//-- For Event Type = 613400 / Data type = ALL  
-//--     DST Program = Brunel v9r1
-//--     Database version = v243r3
-//--     
-//-- 1 JobID(s) found - NbEvents = 500
-//-- 
-//EventSelector.Input   = {
-//"JOBID='94369'"
-//};
-//---------------------------------------------------------------
-// Magnetic Field Map
-//   If you are reading dbase different from v243 or higher you must
-//   choose the correct field map
-MagneticFieldSvc.FieldMapFile = "$LHCBSOFT/SICB/dbase/v243r3/cdf/field043.cdf";
+EventSelector.Input = {"DATAFILE='/afs/cern.ch/lhcb/group/background/vol3/davincitmp/dst_v248r1.root' TYP='ROOT' OPT='READ'" };
+
 //################################################################
 

@@ -2,45 +2,40 @@
 // DaVinci standard services and DLLs
 //==============================================================
 
+// Framework
 ApplicationMgr.ExtSvc = { "ParticlePropertySvc",
-                          "SicbEventCnvSvc", 
-                          "EventSelector",
-                          "MagneticFieldSvc" };
+                          "EventSelector" };
+ApplicationMgr.DLLs  += { "GaudiAud", "GaudiAlg" };
 
-EventPersistencySvc.CnvServices = { "SicbEventCnvSvc" }; 
+// Detector Description & Magnetic Field
+#include "$STDOPTS/DetDesc.opts"
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v248r0.xml";
+ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
+ApplicationMgr.DLLs   += { "Magnet" };
+MagneticFieldSvc.FieldMapFile = "$LHCBDBASE/cdf/field044.cdf";
 
-EventDataSvc.ForceLeaves = true; 
+// Persistency setup
+EventDataSvc.ForceLeaves = true;
+EventDataSvc.RootCLID    =    1;
+ApplicationMgr.DLLs      += { "GaudiDb", "GaudiRootDb", "DbCnv" };
+ApplicationMgr.ExtSvc    += { "DbEventCnvSvc/RootEvtCnvSvc" };
+EventPersistencySvc.CnvServices = { "RootEvtCnvSvc" };
+RootEvtCnvSvc.DbType  = "ROOT";
 
-ApplicationMgr.DLLs =  { "SicbCnv", "PhysSicbCnv" };
-ApplicationMgr.DLLs += { "Magnet" };
-ApplicationMgr.DLLs += { "GaudiAud", "GaudiAlg" };
+// Associators
+ApplicationMgr.DLLs += { "ITAssociators", "OTAssociators" };
+ApplicationMgr.DLLs += { "VeloAssociators", "CaloEvent","MuonAssociators" };
+ApplicationMgr.DLLs += { "CaloAssociators", "CaloRec" };
+ApplicationMgr.DLLs += { "TrAssociators", "L0Calo", "L1VeloTrack" };
+
+// Physics packages
+ApplicationMgr.DLLs += { "GlobalReco" };
 ApplicationMgr.DLLs += { "DaVinciTools" };
-ApplicationMgr.DLLs += { "PhysSelections", "FlavourTagging" };
-ApplicationMgr.DLLs += { "DaVinciAssociators" };
-ApplicationMgr.DLLs += { "DaVinciMCTools" };
+//ApplicationMgr.DLLs += { "PhysSelections", "FlavourTagging" };
+ApplicationMgr.DLLs += { "DaVinciAssociators", "DaVinciMCTools" };
 ApplicationMgr.DLLs += { "DaVinciTest" };
-ApplicationMgr.DLLs += { "DaVinciUser" };
+//ApplicationMgr.DLLs += { "DaVinciUser" };
 
-//-------------------------------------------------------------
 // No Histogram persistency chosen at this point
-//-------------------------------------------------------------
 ApplicationMgr.HistogramPersistency = "NONE";
-
-//--------------------------------------------------------------
-// Detector description 
-// (see details for varius options in $STDOPTS/DetDesc.opts and
-//  in Gaudi User Guide)
-//--------------------------------------------------------------
-ApplicationMgr.ExtSvc += { "XmlCnvSvc" };
-ApplicationMgr.DLLs   += { "DetDesc" };
-
-DetectorDataSvc.UsePersistency = true;
-DetectorDataSvc.DetDbLocation  = "$XMLDDDBROOT/DDDB/dbase.xml";
-DetectorDataSvc.DetDbRootName  = "dd";
-DetectorDataSvc.DetStorageType = 7;
-
-DetectorPersistencySvc.CnvServices = { "XmlCnvSvc" };
-
-XmlCnvSvc.AllowGenericConversion = true;
-
 //**************************************************************
