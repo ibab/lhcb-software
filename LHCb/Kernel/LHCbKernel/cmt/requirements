@@ -1,4 +1,7 @@
-# $Id: requirements,v 1.1.1.1 2002-03-18 09:02:18 cattanem Exp $
+# $Id: requirements,v 1.2 2002-03-18 19:32:19 ibelyaev Exp $
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $
+# =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
@@ -17,7 +20,23 @@ apply_pattern package_linkopts
 apply_pattern package_stamps
 apply_pattern ld_library_path
 
-#==========================================================================
+# =============================================================================
+# Private stuff 
+# =============================================================================
 private
 apply_pattern package_shlibflags
 macro_append LHCbKernel_shlibflags "$(GaudiKernel_linkopts) $(CLHEP_linkopts)"
+
+# =============================================================================
+# Test application(s)
+# =============================================================================
+private
+use LHCbEvent v* Event 
+application   RelationsTest -check  RelationsTest/*.cpp 
+path_remove   PATH  LHCbKernel 
+path_append   PATH  ${LHCBKERNELROOT}/${BINDIR}
+apply_pattern application_path 
+
+# =============================================================================
+# The End 
+# =============================================================================

@@ -2,6 +2,13 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
+!==============================================================================
+! 18/03/2002 - Ivan Belyaev
+  - add new directory Relations with implementation of relations 
+  - ATTENTION! It works only on Linux now! 
+!==============================================================================
+
+
 
 !==============================================================================
 ! 18/03/2002 - Vanya Belyaev  Ivan.Belyaev@itep.ru
