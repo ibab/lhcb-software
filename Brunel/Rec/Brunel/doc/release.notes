@@ -30,6 +30,9 @@ Purpose: LHCb reconstruction program
    . Use TDR L0 threshold settings (L0DU v6r5)
    . New Muon ID tuning (MuonID v3r6)
 
+- Bug fixes:
+   . Release application manager in BrunelMain.cpp, to please valgrind
+
 </PRE><H1><A NAME=v18r1>2003-06-?? Brunel v18r1</A></H1><PRE>
 - New features:
    . New algorithm MCEvTypeFilter to allow different DST definitions depending

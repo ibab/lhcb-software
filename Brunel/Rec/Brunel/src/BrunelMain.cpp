@@ -1,10 +1,10 @@
-// $Id: BrunelMain.cpp,v 1.2 2002-01-31 13:08:11 cattanem Exp $
+// $Id: BrunelMain.cpp,v 1.3 2003-06-23 08:16:01 cattanem Exp $
 //------------------------------------------------------------------------------
 //
 //  Package    : Brunel
 //
 //  Description: Main Program for Brunel
-//               Based on GaudiConf/v6r2/src/GaudiMain.cpp
+//               Based on GaudiConf/v6r8/src/GaudiMain.cpp
 //
 //------------------------------------------------------------------------------
 // Include files
@@ -70,6 +70,9 @@ int main ( int argc, char** argv ) {
 
   // Run the application manager and process events
   appMgr->run();
+
+  // Release Application Manager
+  iface->release();
 
   // All done - exit
   return 0;
