@@ -1,4 +1,4 @@
-// $Id: DeRichPDPanel.cpp,v 1.1 2003-10-22 10:48:28 papanest Exp $
+// $Id: DeRichPDPanel.cpp,v 1.2 2003-11-21 22:27:40 jonesc Exp $
 // Include files 
 
 #include "DetDesc/IGeometryInfo.h"
@@ -25,11 +25,9 @@ bool DeRichPDPanel::detPlanePoint( const HepPoint3D& pGlobal,
   vLocal.transform( m_vectorTransf );
 
   double scalar1 = vLocal*m_localPlaneNormal;
-  double distance = 0.0;
-
   if ( scalar1 == 0.0 ) return false;
 
-  distance = -(m_localPlane.d() + pLocal*m_localPlaneNormal) / scalar1;
+  double distance = -(m_localPlane.d() + pLocal*m_localPlaneNormal) / scalar1;
   HepPoint3D hitInPanel( pLocal + distance*vLocal );
 
   hitPosition = geometry()->toGlobal( hitInPanel );

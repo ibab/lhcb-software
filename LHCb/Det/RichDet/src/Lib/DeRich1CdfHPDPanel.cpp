@@ -1,4 +1,4 @@
-// $Id: DeRich1CdfHPDPanel.cpp,v 1.12 2003-11-21 17:23:25 papanest Exp $
+// $Id: DeRich1CdfHPDPanel.cpp,v 1.13 2003-11-21 22:27:39 jonesc Exp $
 #define DERICH1CDFHPDPANEL_CPP
 
 // Include files
@@ -63,7 +63,7 @@ StatusCode DeRich1CdfHPDPanel::initialize() {
   log << MSG::DEBUG <<"columnPitch:"<< m_columnPitch << " rowPitch:"
       << m_rowPitch << endreq;
   
-  if (fabs(m_columnPitch) < m_activeRadius*2) {
+  if ( fabs(m_columnPitch) < m_activeRadius*2 ) {
     log << MSG::WARNING << "The active area is bigger by:" 
         << (m_activeRadius*2 - fabs(m_columnPitch))/mm
         << " mm than the column pitch.  There could be loss of photons" 
@@ -102,14 +102,15 @@ bool DeRich1CdfHPDPanel::findHPDRowCol ( const HepPoint3D& inPanel,
                                          RichSmartID& id ) {
 
   // find the correct HPD inside the panel
-  unsigned int HPDColumn, HPDRow;
 
-  HPDColumn = static_cast<unsigned int>(floor((inPanel.x() - m_panelHorizEdge)
-                                     / m_columnPitch));
+  unsigned int HPDColumn = 
+    static_cast<unsigned int>(floor((inPanel.x() - m_panelHorizEdge)
+                                    / m_columnPitch));
+
   if (HPDColumn >= m_HPDColumns)  return false;
-
   id.setPDCol(HPDColumn);  
 
+  unsigned int HPDRow = 0;
   if (0 == HPDColumn%2) {
     HPDRow=static_cast<unsigned int>
       (floor((inPanel.y() - m_panelVerticalEdgeEven)/m_rowPitch));

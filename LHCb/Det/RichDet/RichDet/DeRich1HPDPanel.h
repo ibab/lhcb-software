@@ -1,15 +1,13 @@
-// $Id: DeRich1HPDPanel.h,v 1.5 2003-11-21 17:23:24 papanest Exp $
-
-#ifndef DERICH1HPDPANEL_H
-#define DERICH1HPDPANEL_H 1
-
+// $Id: DeRich1HPDPanel.h,v 1.6 2003-11-21 22:27:37 jonesc Exp $
+#ifndef RICHDET_DERICH1HPDPANEL_H
+#define RICHDET_DERICH1HPDPANEL_H 1
 
 // Include files
+
 #include "RichDet/DeRichHPDPanel.h"
 
 // External declarations
 extern const CLID& CLID_DeRich1HPDPanel;
-
 
 /** @class DeRich1HPDPanel DeRich1HPDPanel.h
  *
@@ -17,6 +15,7 @@ extern const CLID& CLID_DeRich1HPDPanel;
  *
  * @author Antonis Papanestis
  */
+
 class DeRich1HPDPanel: public DeRichHPDPanel {
 
 public:

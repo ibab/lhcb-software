@@ -1,4 +1,4 @@
-// $Id: DeRich2HPDPanel.cpp,v 1.10 2003-11-21 17:23:26 papanest Exp $
+// $Id: DeRich2HPDPanel.cpp,v 1.11 2003-11-21 22:27:40 jonesc Exp $
 #define DERICH2HPDPANEL_CPP
 
 // Include files
@@ -93,15 +93,16 @@ StatusCode DeRich2HPDPanel::initialize() {
 bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
                                    RichSmartID& id) {
 
-  unsigned int HPDColumn, HPDRow;
-
   // find HPD row/column and check if the point is withing the covered area
-  HPDColumn = static_cast<unsigned int> (floor((inPanel.x()-m_panelHorizEdge)/
-                                   m_columnPitch));
+
+  unsigned int HPDColumn = 
+    static_cast<unsigned int> (floor((inPanel.x()-m_panelHorizEdge)/
+                                     m_columnPitch));
+
   if (HPDColumn >=  m_HPDColumns)  return false;
-  
   id.setPDCol(HPDColumn);
 
+  unsigned int HPDRow = 0;
   if (0 == HPDColumn%2) {
     HPDRow = static_cast<unsigned int> 
       (floor((inPanel.y() - m_panelVerticalEdgeEven)/m_rowPitch));

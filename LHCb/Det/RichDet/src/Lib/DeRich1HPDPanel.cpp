@@ -1,4 +1,4 @@
-// $Id: DeRich1HPDPanel.cpp,v 1.11 2003-11-21 17:23:25 papanest Exp $
+// $Id: DeRich1HPDPanel.cpp,v 1.12 2003-11-21 22:27:40 jonesc Exp $
 #define DERICH1HPDPANEL_CPP
 
 // Include files
@@ -91,20 +91,20 @@ bool DeRich1HPDPanel::findHPDRowCol (const HepPoint3D& inPanel,
                                           RichSmartID& id)
 {
 
-  unsigned int HPDColumn, HPDRow;
-
-  HPDRow = (unsigned int) floor((inPanel.y() - m_panelVerticalEdge) /
-                                m_rowPitch);
-
+  unsigned int HPDRow = 
+    static_cast<unsigned int>(floor((inPanel.y() - m_panelVerticalEdge) /
+                                    m_rowPitch));
+  
   if (HPDRow >= m_HPDRows) return false;
   id.setPDRow( HPDRow );
   
+  unsigned int HPDColumn = 0;
   if (0 == HPDRow%2) {
-    HPDColumn =  (unsigned int) floor((inPanel.x() - m_panelHorizEdgeEven)
-                                      / m_columnPitch);
+    HPDColumn = static_cast<unsigned int> (floor((inPanel.x() - m_panelHorizEdgeEven)
+                                                 / m_columnPitch));
   } else {
-    HPDColumn =  (unsigned int) floor((inPanel.x() - m_panelHorizEdgeOdd)
-                                      / m_columnPitch);
+    HPDColumn = static_cast<unsigned int> (floor((inPanel.x() - m_panelHorizEdgeOdd)
+                                                 / m_columnPitch));
   }
 
   if (HPDColumn >= m_HPDColumns) return false;

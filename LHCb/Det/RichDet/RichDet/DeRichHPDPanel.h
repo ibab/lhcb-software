@@ -1,12 +1,12 @@
-// $Id: DeRichHPDPanel.h,v 1.6 2003-11-21 17:23:24 papanest Exp $
+// $Id: DeRichHPDPanel.h,v 1.7 2003-11-21 22:27:39 jonesc Exp $
 
-#ifndef DERICHHPDPANEL_H
-#define DERICHHPDPANEL_H 1
+#ifndef RICHDET_DERICHHPDPANEL_H
+#define RICHDET_DERICHHPDPANEL_H 1
 
-
-// Include files
+// LHCbKernel
 #include "Kernel/CLHEPStreams.h"
 
+// Bse class
 #include "RichDet/DeRichPDPanel.h"
 
 /** @class DeRichHPDPanel DeRichHPDPanel.h
@@ -15,7 +15,8 @@
  *
  * @author Antonis Papanestis
  */
-class DeRichHPDPanel: public  DeRichPDPanel {
+
+class DeRichHPDPanel: public DeRichPDPanel {
 
 public:
 
@@ -72,7 +73,7 @@ public:
                                     const HepPoint3D& pGlobal, 
                                     HepPoint3D& windowPointGlobal, // return
                                     RichSmartID& smartID,
-                                    DeRichPDPanel::traceMode mode = window);
+                                    DeRichPDPanel::traceMode mode = circle );
   /**
    * Returns a list with all the available readout channels, in form of
    * RichSmartIDs.
@@ -149,6 +150,7 @@ protected:
 
   /// the active HPD window radius (photocathode coverage)
   double m_activeRadius;
+  double m_activeRadiusSq; // Squared
 
   /// the radius of the sphere of the HPD window
   double m_winR;
@@ -200,4 +202,4 @@ protected:
   */
 };
 
-#endif    // DERICHHPDPANEL_H
+#endif    // RICHDET_DERICHHPDPANEL_H

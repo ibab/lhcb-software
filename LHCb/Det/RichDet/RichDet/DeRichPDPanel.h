@@ -1,4 +1,4 @@
-// $Id: DeRichPDPanel.h,v 1.4 2003-11-21 17:23:25 papanest Exp $
+// $Id: DeRichPDPanel.h,v 1.5 2003-11-21 22:27:39 jonesc Exp $
 
 #ifndef DERICHPDPANEL_H
 #define DERICHPDPANEL_H 1
@@ -12,7 +12,7 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
 
-#include "RichKernel/RichSmartID.h"
+#include "Kernel/RichSmartID.h"
 
 /** @class DeRichPDPanel DeRichPDPanel.h
  *
@@ -68,7 +68,7 @@ public:
                                     const HepPoint3D& pGlobal,
                                     HepPoint3D& windowPointGlobal,
                                     RichSmartID& smartID,
-                                    traceMode mode = window ) = 0;
+                                    traceMode mode = circle ) = 0;
   /**
    * Returns the intersection point with the detector plane given a vector
    * and a point. If mode is tight, returns true only if point is within

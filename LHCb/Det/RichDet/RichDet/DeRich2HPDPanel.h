@@ -1,6 +1,6 @@
-// $Id: DeRich2HPDPanel.h,v 1.5 2003-11-21 17:23:24 papanest Exp $
-#ifndef RICHDET_DERICH2HPDPANEL_H
-#define RICHDET_DERICH2HPDPANEL_H 1
+// $Id: DeRich2HPDPanel.h,v 1.6 2003-11-21 22:27:39 jonesc Exp $
+#ifndef RICHDET_RICHDET_DERICH2HPDPANEL_H
+#define RICHDET_RICHDET_DERICH2HPDPANEL_H 1
 
 // Include files
 #include "RichDet/DeRichHPDPanel.h"
