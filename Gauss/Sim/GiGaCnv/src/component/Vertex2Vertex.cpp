@@ -1,8 +1,11 @@
-// $Id: Vertex2Vertex.cpp,v 1.3 2002-04-24 14:50:31 ibelyaev Exp $
+// $Id: Vertex2Vertex.cpp,v 1.4 2003-01-23 09:20:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/04/24 14:50:31  ibelyaev
+//  update for newer versions of Gaudi, LHCb and G4
+//
 // Revision 1.2  2001/08/12 17:24:55  ibelyaev
 // improvements with Doxygen comments
 //
@@ -71,8 +74,9 @@ G4PrimaryVertex* Vertex2Vertex::operator() ( const MCVertex* vertex ) const
   for( IT pParticle = vertex->products().begin() ;
        vertex->products().end() != pParticle ; ++pParticle )
     {
-      if( 0 == *pParticle ) { continue ; }              ///< CONTINUE!
-      G4PrimaryParticle* Particle = particle( *pParticle );
+      const MCParticle* mcp = *pParticle ;
+      if( 0 == mcp  ) { continue ; }              ///< CONTINUE!
+      G4PrimaryParticle* Particle = particle( mcp );
       if( 0 != Particle   ) { Vertex->SetPrimary( Particle ); }
     }
   /// remove empty vertices 

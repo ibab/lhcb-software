@@ -1,8 +1,11 @@
-// $Id: GiGaGeo.cpp,v 1.4 2002-12-16 18:09:36 ibelyaev Exp $ 
+// $Id: GiGaGeo.cpp,v 1.5 2003-01-23 09:20:37 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/12/16 18:09:36  ibelyaev
+//  update for new release of Geant4 (5.0)
+//
 // Revision 1.3  2002/12/15 17:17:45  ibelyaev
 //  clear static G4 geoemtry stores / temporary fix
 //
@@ -348,26 +351,30 @@ G4VSolid*    GiGaGeo::solid ( const ISolid*      Sd     )
     const SolidPolycone* sPolycone = dynamic_cast<const SolidPolycone*>(Sd);
     if (solidType == "SolidPolycone" && 0 != sPolycone ) 
       {      
-        int numberofz=sPolycone->number();
-        double ztemp[numberofz];
-        double rIntemp[numberofz];
-        double rOuttemp[numberofz];
+        const int numberofz = sPolycone->number();
+        double* ztemp    = new double[numberofz] ;
+        double* rIntemp  = new double[numberofz] ;
+        double* rOuttemp = new double[numberofz] ;
         
         for (int it=0;it<numberofz;it++)
           {
-            ztemp[it]=sPolycone->z(it);
-            rIntemp[it]=sPolycone->RMin(it);
-            rOuttemp[it]=sPolycone->RMax(it);              
+            ztemp    [it]=sPolycone->z(it);
+            rIntemp  [it]=sPolycone->RMin(it);
+            rOuttemp [it]=sPolycone->RMax(it);              
           }
-        return new G4Polycone( sPolycone->name          (),
-                               sPolycone->startPhiAngle (),
-                               sPolycone->deltaPhiAngle (),
-                               numberofz                  ,
-                               ztemp                      ,
-                               rIntemp                    ,
-                               rOuttemp);
+        G4VSolid* solid = new G4Polycone( sPolycone->name          (),
+                                          sPolycone->startPhiAngle (),
+                                          sPolycone->deltaPhiAngle (),
+                                          numberofz                  ,
+                                          ztemp                      ,
+                                          rIntemp                    ,
+                                          rOuttemp                   );
+        delete [] ztemp    ;
+        delete [] rIntemp  ;
+        delete [] rOuttemp ;
+        
+        return solid;
       }
-    
   }
   /// boolean ? 
   {

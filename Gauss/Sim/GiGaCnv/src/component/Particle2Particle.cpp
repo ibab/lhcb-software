@@ -1,8 +1,11 @@
-// $Id: Particle2Particle.cpp,v 1.4 2002-04-24 14:50:30 ibelyaev Exp $
+// $Id: Particle2Particle.cpp,v 1.5 2003-01-23 09:20:38 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/04/24 14:50:30  ibelyaev
+//  update for newer versions of Gaudi, LHCb and G4
+//
 // Revision 1.3  2001/08/12 17:24:55  ibelyaev
 // improvements with Doxygen comments
 //
@@ -104,10 +107,11 @@ Particle2Particle::operator()
       for( ITP pParticle = vertex->products().begin(); 
            vertex->products().end() != pParticle ; ++pParticle ) 
         {
-          if( 0 == *pParticle )     { continue ; } ///< continue !
+          const MCParticle* mcp = *pParticle ;
+          if( 0 == mcp )     { continue ; } ///< continue !
           /// recursion 
-          G4PrimaryParticle* p = (*this)( *pParticle ) ; 
-          if( 0 != p ) { Particle->SetDaughter( p ); } 
+          G4PrimaryParticle* p = (*this)( mcp ) ; 
+          if( 0 != p  ) { Particle->SetDaughter( p ); } 
         } 
     }  
   ///

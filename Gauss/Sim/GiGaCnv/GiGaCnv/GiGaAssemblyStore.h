@@ -1,8 +1,11 @@
-// $Id: GiGaAssemblyStore.h,v 1.1 2002-01-22 18:24:41 ibelyaev Exp $
+// $Id: GiGaAssemblyStore.h,v 1.2 2003-01-23 09:20:37 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:41  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+// 
 // ============================================================================
 #ifndef GIGACNV_GIGAASSEMBLYSTORE_H 
 #define GIGACNV_GIGAASSEMBLYSTORE_H 1
@@ -32,17 +35,19 @@ public:
   
   typedef std::vector<GiGaAssembly*> Assemblies;
   
-protected:
+ protected:
   
   /** Standard constructor
    */
   GiGaAssemblyStore(); 
   
+ public:
+
   /** destructor 
    */
   ~GiGaAssemblyStore();
   
-public:
+ public:
   
   /** get the instance of the store
    *  return pointer to the store 

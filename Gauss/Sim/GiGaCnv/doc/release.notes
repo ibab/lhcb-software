@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.38 2002-12-17 09:57:10 witoldp Exp $
+! $Id: release.notes,v 1.39 2003-01-23 09:20:37 ibelyaev Exp $
 ! =============================================================================
 Package         : GiGaCnv
 Package Manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2003-01-23 - Vanya Belyaev 
+  - few simple fixes for Win2K 
 
 !========================= GiGaCnv v11r0 ================================
 

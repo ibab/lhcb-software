@@ -1,8 +1,11 @@
-// $Id: GiGaCnvSvcBase.cpp,v 1.12 2002-12-13 14:25:21 ibelyaev Exp $ 
+// $Id: GiGaCnvSvcBase.cpp,v 1.13 2003-01-23 09:20:37 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2002/12/13 14:25:21  ibelyaev
+//  few trivial bug fixes
+//
 // Revision 1.11  2002/12/07 14:36:25  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes
 //
@@ -562,7 +565,7 @@ StatusCode GiGaCnvSvcBase::registerGiGaLeaves()
 {
   ///
   SmartIF<IDataManagerSvc> dataMgr( dataProvider() );
-  if( 0 == dataMgr )
+  if( !dataMgr )
     { return Error("Could not obtain IDataManagerSvc interface!");}
   ///
   StatusCode sc = StatusCode::SUCCESS ;

@@ -1,8 +1,11 @@
-// $Id: GiGaCatalogCnv.cpp,v 1.3 2002-12-07 14:36:25 ibelyaev Exp $
+// $Id: GiGaCatalogCnv.cpp,v 1.4 2003-01-23 09:20:37 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/12/07 14:36:25  ibelyaev
+//  see $GIGACNVROOT/doc/release.notes
+//
 // Revision 1.2  2002/01/22 18:24:43  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -141,7 +144,7 @@ StatusCode GiGaCatalogCnv::updateRep
   IRegistry* registry = Object->registry() ;
   if( 0 == registry  ) { return Error("IRegistry*       points to NULL!") ; }
   SmartIF<IDataManagerSvc> dataMgr( registry->dataSvc() );
-  if( 0 == dataMgr   ) { return Error("IDataManagersvc* points to NULL!") ; }
+  if( !dataMgr       ) { return Error("IDataManagersvc* points to NULL!") ; }
   typedef std::vector<IRegistry*> Leaves;
   IDataSelector dataSelector;
   Leaves leaves ;

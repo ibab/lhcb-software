@@ -1,8 +1,11 @@
-// $Id: GiGaInstall.cpp,v 1.1 2002-01-22 18:24:43 ibelyaev Exp $
+// $Id: GiGaInstall.cpp,v 1.2 2003-01-23 09:20:37 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:43  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // ============================================================================
 // Include files
 // STD & STL 
@@ -77,7 +80,10 @@ StatusCode GiGaInstall::installVolume
   {
     const std::string::size_type pos = name.find(':');
     if( std::string::npos != pos ) 
-      { ncopy = atoi( std::string( name , pos + 1 ).c_str() );}
+      {
+        std::string tmp( name , pos + 1 , std::string::npos );
+        ncopy = atoi( tmp.c_str() );
+      }
   };
   /// create the placement 
   G4VPhysicalVolume* pv = 
