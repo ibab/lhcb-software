@@ -1,6 +1,11 @@
 Package:          GiGa
 Package manager : Vanya Belyaev 
 
+!==============================================================
+! 20010205  GiGa v4 (Vanya Belyaev)
+   GiGaGeomCnvSvc.cpp - bug fix in the conversion of Boolean Solids 
+
+!==============================================================
 ! 20010130  GiGa v4 (Vanya Belyaev)
   a lot of major and minor modifications
    - GiGa/*.h  ONLY  interfaces and header files for "base" classes, 
