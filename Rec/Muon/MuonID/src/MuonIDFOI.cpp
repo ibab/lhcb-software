@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.cpp,v 1.6 2002-11-11 10:54:00 asatta Exp $
+// $Id: MuonIDFOI.cpp,v 1.7 2002-12-19 09:31:07 cattanem Exp $
 // Include files
 #include <cstdio>
 
@@ -274,6 +274,11 @@ StatusCode MuonIDFOI::finalize() {
 
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Finalize" << endreq;
+
+  // Release the tools
+  if( m_iTileTool ) toolSvc()->releaseTool( m_iTileTool );
+  if( m_iGeomTool ) toolSvc()->releaseTool( m_iGeomTool );
+  
 
   return StatusCode::SUCCESS;
 }
