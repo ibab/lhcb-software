@@ -2,36 +2,32 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes 
 
+>>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
+! 20020418 M.Cattaneo
+ - add MuonTileID.h
 
-! =============================================================================
-! 15 Apr 2002 : Chris Parkes
- add VeloChannelID.xml
-! =============================================================================
-! 9 Apr 2002:  Vanya Belyaev Ivan.Belyaev@itep.ru 
-! - AssociatorBase.cpp: AssociatorBase::locateAlgorithm() 
-!                       replace few clear and VALID lines with 
-!                       smaller number of less clear and potentially 
-!                       dangerouse lines to avoid misteriouse segmentation 
-!                       faults. The solution is temporary. One need to 
-!                       investigate it in detail later. 
-! =============================================================================
+! 20020415 Chris Parkes
+ - add VeloChannelID.xml
 
-! =============================================================================
-! 9 Apr 2002:  Vanya BElyaev Ivan.Belyaev@itep.ru 
-!   add "virtual" qualifier for public inheritance from "Relation*" - bases
-!   to following following classes:
-! - Relation1D.h, 
-! - Relation2D.h
-! - RelationWeighted1D.h
-! - RelationWeighted2D.h
-! =============================================================================
+! 20020409 Vanya Belyaev Ivan.Belyaev@itep.ru 
+ - AssociatorBase.cpp: AssociatorBase::locateAlgorithm() 
+                       replace few clear and VALID lines with 
+                       smaller number of less clear and potentially 
+                       dangerouse lines to avoid misteriouse segmentation 
+                       faults. The solution is temporary. One need to 
+                       investigate it in detail later. 
 
-! =============================================================================
-! 8 Apr 2002:  Vanya BElyaev Ivan.Belyaev@itep.ru 
-! - new version of "Relations"-subpackage
-! - rename *RelationTool*          into *Associator*
-! - rename *RelationWeightedTool*  into *AssociatorWeighted* 
-! =============================================================================
+ add "virtual" qualifier for public inheritance from "Relation*" - bases
+ to following following classes:
+ - Relation1D.h, 
+ - Relation2D.h
+ - RelationWeighted1D.h
+ - RelationWeighted2D.h
+
+! 20020408 Vanya BElyaev Ivan.Belyaev@itep.ru 
+ - new version of "Relations"-subpackage
+ - rename *RelationTool*          into *Associator*
+ - rename *RelationWeightedTool*  into *AssociatorWeighted* 
 
 ! 20020409 M. Needham
  - add uniqueLayer/uniqueWafer members to ITChannelID.h
@@ -40,7 +36,6 @@ Purpose: LHCb specific Kernel classes
  - operator-overloading for pairs added to SerializeStl.h
  - bugfix: ostream operator for vector
 
->>>>>>>>>>>>>>> LHCbKernel v1r0 <<<<<<<<<<<<<<<<<<<<<
 ! 20020403 M.Cattaneo
   - OTChannelID.xml added
 
