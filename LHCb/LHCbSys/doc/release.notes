@@ -8,8 +8,10 @@
 !======================= LHCbSys v18r2 2005-03-18 =======================
 ! 2005-03-18 - Marco Cattaneo
  - Packages modified: KernelSys v4r9, Relations v2r4, LHCbAlgs v1r4, 
-                      EventSys v20r2, PhysEvent v8r9,
-                      DetSys v6r4, XmlTools v3r4, DetDesc v14r4
+     EventSys v20r2, PhysEvent v8r9, Event v4r7, ITEvent v13r2p1,
+     DetSys v6r4, XmlTools v3r4, DetDesc v14r4, VeloDet v9r4,
+     AssociatorsSys v2r4, ITAssociators v2r11, OTAssociators v3r2, 
+                          VeloAssociators v1r14, TrAssociators v5r1p1
 
  - In Relations v2r4
    . Optimisation of constructors
@@ -17,6 +19,13 @@
 
  - In LHCbAlgs v1r4
    . Add "PreloadGeometry" option to LbAppInit. Default is false
+
+ - In Event v4r7
+   . Change internal representation of MCHit (data is backwards incompatible):
+     now store entry point and *displacement* to exit point
+   . Change internal representation of MCParticle (data is backwards compatible):
+     removed m_collision (still available via originVertex()), changed m_helicity
+     to int (was double)
 
  - In PhysEvent v8r9
    . Add Kernel directory for interfaces closely related to PhysEvent
@@ -27,6 +36,14 @@
 
  - In DetDesc v14r4
    . Add DataStoreLoadAgent to preload complete data store
+
+ - In VeloDet v9r4
+   . Enable DeVelo to cope with an arbitrary number of detector element
+     hierarchies between Velo and individual sensors.
+
+ - In AssociatorsSys v2r4
+   . IT, OT, Velo associators to MCHit also create and use Linker tables,
+     allows transparent removal of Relations from Boole persistent output
 
 !======================= LHCbSys v18r1 2005-03-08 =======================
 ! 2005-03-08 - Marco Cattaneo

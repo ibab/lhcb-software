@@ -26,7 +26,7 @@ use VeloKernel  	v1r5p1  Velo
 
 # Detector description
 use DetSys		v6r4	Det
-use VeloDet        	v9r3	Det
+use VeloDet        	v9r4	Det
 use DetDesc        	v14r4	Det
 use DetDescCnv        	v2r3	Det
 use XmlTools        	v3r4	Tools
@@ -41,9 +41,9 @@ use STDet          	v1r2	Det
 
 # Event data model
 use EventSys		v20r2	Event
-use Event        	v4r6	Event
+use Event        	v4r7	Event
 use VeloEvent    	v13r2	Event
-use ITEvent      	v13r2	Event
+use ITEvent      	v13r2p1	Event
 use OTEvent      	v14r0	Event
 use TrEvent      	v14r2	Event
 use RichEvent    	v8r2	Event
@@ -58,12 +58,12 @@ use LinkerEvent         v1r6    Event
 use TrgEvent            v5r4    Event
 
 # Associators
-use AssociatorsSys	v2r3	Associators
+use AssociatorsSys	v2r4	Associators
 use Associators		v2r4p1	Associators
-use ITAssociators      	v2r10	IT
-use OTAssociators      	v3r1	OT
-use VeloAssociators    	v1r13	Velo
-use TrAssociators      	v5r1	Tr
+use ITAssociators      	v2r11	IT
+use OTAssociators      	v3r2	OT
+use VeloAssociators    	v1r14	Velo
+use TrAssociators      	v5r1p1	Tr
 use CaloAssociators    	v4r4	Calo
 use MuonAssociators    	v1r5	Muon
 use AsctToLinker	v1r4	Rec
