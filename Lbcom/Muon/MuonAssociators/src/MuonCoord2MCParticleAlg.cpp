@@ -1,4 +1,4 @@
-// $Id: MuonCoord2MCParticleAlg.cpp,v 1.4 2002-07-03 09:32:11 dhcroft Exp $
+// $Id: MuonCoord2MCParticleAlg.cpp,v 1.5 2002-07-04 16:45:52 dhcroft Exp $
 // Include files 
 
 #include "Event/MuonCoord.h"
@@ -112,6 +112,15 @@ StatusCode
 MuonCoord2MCParticleAlg::associateToTruth(const MuonCoord * coord,
                                           MuonCoord2MCParticleAsct::Table 
                                                           *aTable){
+  // get the MCParticles for the event, do not make links to spillover
+  SmartDataPtr<MCParticles> mcParticles(eventSvc(),
+                                        MCParticleLocation::Default);
+  if(!mcParticles){
+    MsgStream log(msgSvc(), name());
+    log << MSG::ERROR << "Could not find MCParticles in " 
+        << MCParticleLocation::Default << endreq;
+    return StatusCode::FAILURE;
+  }
   
   // loop over referenced digits
   SmartRefVector<MuonDigit>::const_iterator iDigit;
@@ -143,9 +152,8 @@ MuonCoord2MCParticleAlg::associateToTruth(const MuonCoord * coord,
         const MCParticle * mcPart = mcHit->mcParticle();
         // check found mcParticle
         if(mcPart){
-          // do not make links to MCParticles with no parent vertex
-          // ("fake" ATMC entries added in FORTRAN to fix MURW-ATMC links)
-          if( 0 != mcPart->originVertex() ){
+        // check in the current event container
+          if( mcParticles == mcPart->parent() ){
             aTable->relate(coord,mcPart);
           }
         }
