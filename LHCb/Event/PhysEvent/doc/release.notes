@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.16 2002-07-04 10:05:28 mato Exp $
+! $Id: release.notes,v 1.17 2002-07-09 18:28:34 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : Gloria Corti
 
+!========================= PhysEvent v5r0 2002-07-09 =========================
 ! 2002-07-04 - Pere Mato
  - Added /include:_<package>_loadRef in <package>_linkopts for Windows
 

@@ -1,7 +1,8 @@
-$Id: release.notes,v 1.19 2002-07-04 10:02:26 mato Exp $
+$Id: release.notes,v 1.20 2002-07-09 18:27:01 cattanem Exp $
 Package : L0Event
 Package manager : Olivier Callot
 
+!========================= L0Event v12r0 2002-07-09 =========================
 ! 2002-07-04 - Pere Mato
  - Added /include:_<package>_loadRef in <package>_linkopts for Windows
 

@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.3 2002-06-15 10:36:43 ibelyaev Exp $
+! $Id: release.notes,v 1.4 2002-07-09 18:18:07 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloDetXmlCnv
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
 ! =============================================================================
 
+!===================== CaloDetXmlCnv v2r0 2002-07-09 ==========================
 ! 2002-06-15 - Ivan Belyaev
  - version update (to be build with ClaoDet v5r*)
 
@@ -11,14 +12,8 @@
  - version update (to be build with CaloDet v4r1)
 
 
-! =============================================================================
+!===================== CaloDetXmlCnv v1r0 2002-03-28 ==========================
 ! 28/03/2002  - v1r0  - Vanya Belyaev
-! New package, XML converters for Calorimeter Detector Model are moved 
-!              from CaloDet package    
-! =============================================================================
-
-
-! =============================================================================
-! The End 
-! =============================================================================
+  New package, XML converters for Calorimeter Detector Model are moved 
+               from CaloDet package    
 

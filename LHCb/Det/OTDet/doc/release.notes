@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.5 2002-06-10 15:58:12 cattanem Exp $
+! $Id: release.notes,v 1.6 2002-07-09 18:19:57 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg
 
+!========================= OTDet v2r0 2002-07-09 =========================
 ! 2002-06-07 - Marco Cattaneo
   - Change version to v2r0
 

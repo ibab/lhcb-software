@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.23 2002-06-15 10:33:19 ibelyaev Exp $ 
+! $Id: release.notes,v 1.24 2002-07-09 18:17:29 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!========================== CaloDet v5r0 2002-07-09 ==========================
 ! 2002-06-15 - v5r0 Vanya Belyaev
  - cmt/requirements: change version number to v5r0 to avoid seriouse problems
 
@@ -12,7 +13,7 @@ Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
    hole size.
  - Add the namespace DeCalorimeterLocation for detector location values.
 
-! >>>>>>>>>>>>>>>>>>>>>>>>>>> CaloDet v4r0 <<<<<<<<<<<<<<<<<<<<<<<<<<
+!========================== CaloDet v4r0 2002-04-19 ==========================
 ! 19/04/2002 - Marco Cattaneo
   - Use DetDesc v10r* (for Gaudi v10)
   
