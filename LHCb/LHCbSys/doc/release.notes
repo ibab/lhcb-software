@@ -47,6 +47,12 @@
  - In LinkerEvent v1r2
    . Add new method notFound()
 
+ - In PhysEvent v8r1
+   . Add constructor with key to Vertex
+
+-  In TrgEvent v2r1
+   . New class TrgL0Muon, plus various fixes 
+
 !======================= LHCbSys v15r1 2004-01-27 =======================
 ! 2004-01-27 - Marco Cattaneo
 
