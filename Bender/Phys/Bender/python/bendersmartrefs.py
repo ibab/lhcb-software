@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendersmartrefs.py,v 1.4 2005-01-24 17:44:39 ibelyaev Exp $ 
+# $Id: bendersmartrefs.py,v 1.5 2005-01-25 09:44:05 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# CVS tag $Name: not supported by cvs2svn $ version $Revison:$
 # =============================================================================
 # @file 
 # @author Vanya BeLYAEV Ivan.BElyaev@itep.ru
@@ -13,14 +13,26 @@ Helper module  to (re)define few sipmple methods for few useful event classes
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS: $Revision: 1.4 $; tag=$Name: not supported by cvs2svn $ "
+__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.5 $ "
 # =============================================================================
 
 import gaudimodule
 
 def vector2list( vct ) :
     """
-    Simple routine which converts 'SmartRefVector' into python list
+    Helper method which converts 'SmartRefVector' into python list
+
+    Usage:
+
+    mcparticle = ... 
+    evs = mcparticle.endVertices()   # of type SmartRefVector
+    evs = vector2list( evs )         # convert to list
+
+    for ev in evs : print ev         # explicit loop is possible 
+
+    This routine is used internally by other,
+    but also could be used explicitely
+
     """
     if vct.empty()         : return  []
     if list == type( vct ) : return vct
@@ -31,7 +43,19 @@ def vector2list( vct ) :
     
 def vector2tuple( vct ) :
     """
-    Simple routine which converts 'SmartRefVector' into python tuple
+    Helper method which converts 'SmartRefVector' into python tuple
+
+    Usage:
+
+    mcparticle = ... 
+    evs = mcparticle.endVertices()   # of type SmartRefVector
+    evs = vector2tuple( evs )         # convert to tuple
+
+    for ev in evs : print ev         # explicit loop is possible 
+
+    This routine is used internally by other,
+    but also could be used explicitely
+    
     """
     if vct.empty()          : return  () 
     if tuple == type( vct ) : return vct
@@ -52,6 +76,14 @@ def subSmartRefVector( klass , method , toList = True ) :
 
     the returned value is converted either to Python list (toList = True)
     or to Python tuple( toList=False)
+
+    Usage:
+
+    subSmartRefVector( 'MCParticle'  , 'endVertices' )
+
+    The method redefines the method 'endVertices' for class 'MCParticle'
+    to return python list ( toList = True) or Python tuple ( toList = False)
+    instead of SmartRefVector
     
     """
     # 'save' original method
@@ -91,13 +123,24 @@ for klass,method in _list_ :
 
 def indexSmartRefVector( klass ) :
     """
+    Helper method which allows iteration (and indexed access!) for
+    SmartRefVector<XXXX>
+
+    Usage:
+
+    indexSmartRefVector( 'MCParticle' )
+
+    The method instruments the class  SmartRefVecttor<MCParticle> with
+    proper __getitem__ method to allow the explicit looping
+    (and indexed access) to elements
+    
     """
-    cklass = gaudimodule.getClass( klass )
+    cklass = gaudimodule.getClass( "SmartRefVector<%s>" % klass )
     prefix  = '_yyy_'
     _n = prefix + '_SRV_' + klass + prefix 
     command  = "def %s( self, i ) :                                              \n"
     command += "\tif i < self.size() : return getattr( self , '[]' ) ( i ).ptr() \n"
-    command += "\traise StopIteration                                            \n"
+    command += "\traise IndexError                                               \n"
     command += "\nsetattr( cklass , '__getitem__' , %s )                         \n"
     command  = command % (_n,_n)
     exec(command)
@@ -113,6 +156,7 @@ _list_ = [ 'MCVertex'      ,
 for klass in _list_ : indexSmartRefVector( klass )
 
 class KeyedContainerIterator(object) :
+    """ Helper class: iterator over KeyedContainer<> class """
     def __init__ ( self , container ) :
         self._vector_ = container.containedObjects()
         self._index_  = 0
@@ -128,6 +172,21 @@ def _create_iterator_( self ) :
     return KeyedContainerIterator( self )
 
 def keyedContainerIteration( klass ) :
+    """
+    Helper method which allow the explicit iteration over KeyedContainer
+
+    Usage:
+
+    name   = 'MCParticle'
+    cnt    = 'KeyedContainer<%s,Containers::KeyedObjectManager<Containers::hashmap> > >' % name
+    klass  = gaudimodule.getClass( cnt )
+    keyedContainerIteration( klass )
+
+    The methos intruments the KeyedContainer class with proper __iter__ method
+    wich allows sequential iteration over the container 
+    (underlying conversion to vector of Container Objects is used )
+    
+    """
     setattr( klass , '__iter__' , _create_iterator_ )
 
 _list_  = [ 'MCVertex'      ,
