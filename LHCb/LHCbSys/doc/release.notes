@@ -4,16 +4,17 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v15r3 2004-02-12 =======================
-! 2004-02-12 - Marco Cattaneo
+!======================= LHCbSys v15r3 2004-02-26 =======================
+! 2004-02-26 - Marco Cattaneo
+  Built against Gaudi v14r2
 
- - Modified packages: KernelSys v3r3, LHCbKernel v4r3,
-                   DetSys v6r0, VeloDet v9r0,
-                   EventSys v18r0, VeloEvent v14r0, ITEvent v13r2, TrEvent v13r1,
-                   AssociatorsSys v1r11, VeloAssociators v1r8, Associators v2r3,
-                   MCTools v1r4, IOExample v1r1
+ - Modified packages: KernelSys v3r3, LHCbKernel v4r3, CaloKernel v3r0,
+     DetSys v6r0, VeloDet v9r0, STDet v8r1, CaloDet v6r8, EventSys v18r0,
+     VeloEvent v14r0, ITEvent v13r2, TrEvent v13r1, CaloEvent v13r1,
+     AssociatorsSys v1r11, VeloAssociators v1r8, Associators v2r3, 
+     TrAssociators v4r0, Caloassociators v4r0, MCTools v1r4, IOExample v1r1
 
- - Removed packages: TrAssociators, TrFitEvent (to be moved to BRUNEL, DAVINCI)
+ - Removed packages: TrFitEvent (to be moved to BRUNEL)
 
  - In LHCbKernel v4r3:
    . Change in bit assignment of VeloChannelID
@@ -28,15 +29,32 @@
  - In ITEvent v13r2:
    . Add STL1Cluster class
 
+ - In STDet v8r1:
+   . Add methods to return all Z positions of ladders
+
  - In TrEvent v13r1, VeloAssociators v1r9, Associators v2r3, MCTools v1r4
    . Change dependency to VeloEvent v14r* and/or VeloDet v9r*
 
  - In MCTools v1r4
-   . Add TrReconstructible (moved here from TrAssociators), remove dependency
-     on TrAssociators
+   . Fix infinite loop in BuildMCTrackInfo
+
+ - In TrAssociators v4r0
+   . TrFitTrackMCTruthAlg moved to TrFitAssociators (BRUNEL project)
+   . TrTrackMCTruthAlg reimplemented to use directly the Velo/IT/OT associators
+   . Above changes remove dependency on TrFitEvent
+
+ - In CaloInterfaces v4r0
+   . Fix ICaloHypoLikelihood and ICaloLikelihood interface names
+   . Add implementations of InterfaceID() and destructor methods
+
+ - In CaloKernel v3r0
+   . Use new base classes from GaudiAlg v7r0 and GaudiTools v8r0
+
+ - In CaloEvent v13r1, CaloDet v6r8, CaloAssociators v4r0
+   . Adapt to changes in CaloInterfaces and CaloKernel
 
  - In IOExample v1r1
-   . Update output file defintions to latest versions of Boole/Brunel
+   . Update output file definitions to latest versions of Boole/Brunel
 
 !======================= LHCbSys v15r2 2004-02-04 =======================
 ! 2004-02-04 - Marco Cattaneo
