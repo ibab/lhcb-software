@@ -14,7 +14,7 @@ ApplicationMgr.TopAlg += { "BrunelPhase/BrunelMoni" };
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-BrunelMoni.DetectorList = { "IT", "OT", "Tr", "TRACK", "CALO", "TRIGGER" };
+BrunelMoni.DetectorList = { "IT","OT","Tr","TRACK","RICH","CALO","TRIGGER" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
@@ -25,6 +25,7 @@ BrunelMoniITSeq.Members =
   { "MCITDepositChecker", "MCITDigitChecker", "ITDigitChecker" };
 
 // IT reconstruction
+ApplicationMgr.DLLs += { "ITAssociators" };
 BrunelMoniITSeq.Members += { "ITClusterChecker" };
 
 // OT digitisation
@@ -36,7 +37,14 @@ BrunelMoniOTSeq.Members += { "OTClusterMonitor" };
 BrunelMoniOTSeq.Members += { "OTClusterChecker" };
 
 // Forward tracking
-#include "$FWTRACKROOT/options/BrunelMoni.opts"
+#include "$TRASSOCIATORSROOT/options/Brunel.opts"
+ApplicationMgr.DLLs += { "VeloAssociators" };
+BrunelMoniTRACKSeq.Members += { "FwtAnalyse" };
+
+// Rich monitoring
+ApplicationMgr.DLLs += { "RichMonitor" };
+BrunelMoniRICHSeq.Members += { "RichPIDMonitor" };
+
 
 //BrunelMoniTrSeq.Members   = { "TrMonitor" };
 #pragma print off

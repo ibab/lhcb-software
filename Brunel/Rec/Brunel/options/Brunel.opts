@@ -22,7 +22,6 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
                            "BrunelPhase/BrunelDigi",
                            "BrunelPhase/BrunelTrigger",
                            "BrunelPhase/BrunelReco",
-//                           "BrunelPhase/BrunelTruth",
                            "BrunelFinalisation/BrunelFinish" };
 #pragma print off
 #include "$BRUNELOPTS/BrunelMoni.opts"
@@ -33,7 +32,6 @@ ApplicationMgr.TopAlg += { "BrunelSicbInit",
 BrunelDigi.DetectorList = { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 BrunelTrigger.DetectorList = { "TRIGGER" };
 BrunelReco.DetectorList = {"VELO","OT","IT","Tr","TRACK","RICH","CALO","MUON"};
-BrunelTruth.DetectorList = { "Relations" };
 
 //--------------------------------------------------------------
 // Subdetector algorithms
@@ -74,44 +72,58 @@ BrunelRecoOTSeq.Members += { "OTClusterCreator" };
 
 
 // Velo digitisation and tracking
-ApplicationMgr.DLLs += { "VSicbCnv", "VeloDet", "VeloTrack" };
-#include "$VELODIGITROOT/options/Brunel.opts"
+ApplicationMgr.DLLs += { "VSicbCnv", "VeloAlgorithms", "VeloDet" };
+BrunelDigiVELOSeq.Members += { "VeloSim", "VeloDataProcessor", "VeloClusterMaker" };
+
+// Velo digitisation for L1 and PuVeto
+ApplicationMgr.DLLs += { "VeloDigit" };
+BrunelDigiVELOSeq.Members += { "VeloFEToL1",
+                               "PuVetoDigitAlg" };
+// Location of the VeloCluster to MCParticle
+ToolSvc.VeloClusToMCP.Location = "/Event/MC/Velo/ClusterToParticle";
+
+// Velo Tracking
+ApplicationMgr.DLLs += { "VeloTrack" };
 BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
 
 // Forward tracking
 ApplicationMgr.DLLs += { "FwTrack", "TrFitter", "TrExtrapolator" };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
 BrunelRecoTRACKSeq.Members  = { "FwtFind" };
-// Track fit not yet working reliably
 BrunelRecoTRACKSeq.Members += { "TrEventTracksFitter/FitFw" };
-
-// Upstream tracking
-//#include "$TRALGORITHMSROOT/options/Brunel.opts"
-
-// Track selection for other detectors and for DST
 BrunelRecoTRACKSeq.Members += { "StoreTracks" };
+
+// Seeding
+ApplicationMgr.DLLs += { "Seeding" }; 
+BrunelRecoTrSeq.Members += { "TrSeedEvent/seedEvent",
+                             "TrEventTracksFitter/fitSeed" };
+#include "$SEEDINGROOT/options/Brunel.opts"
+// Seeds must be stored on DST (instance of StoreTracks?) 
+
+// Velo Matching
+ApplicationMgr.DLLs += { "TrMatching" }; 
+BrunelRecoTrSeq.Members += { "TrMatchVeloSeed/matchVeloSeed",
+                             "TrEventTracksFitter/reFit" };
+reFit.TrackContainer = "Rec/Track/Match";
+// Velo Matches must be stored on DST (instance of StoreTracks?) 
+
+// Track selection for other detectors and for DST (clone killer)
 
 // Back conversion of tracks for RICH reconstruction
 BrunelRecoRICHSeq.Members = { "TrStoredTrackToSicbCnv" };
 #include "$TRSICBCNVROOT/options/BackCnv.opts"
 
 // Rich Fortran reconstruction and OO Pid creator 
-//BrunelRecoRICHSeq.Members = { "BrunelRecoRICH", "RichPidCreator" };
+BrunelRecoRICHSeq.Members += { "RichMCRadHitsToSicbCnv" };
+BrunelRecoRICHSeq.Members += { "BrunelRecoRICH" };
+BrunelRecoRICHSeq.Members += { "RichPIDCnvVerifier" };
+
 
 // Muon Fortran digitisation, coordinate reconstruction, MuonID, cleaning
 ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet", "MuonRec", "MuonID" };
 BrunelDigiMUONSeq.Members = { "BrunelDigiMUON" };
-BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI", "MuonDSTPrepare" };
+BrunelRecoMUONSeq.Members = { "MuonRec", "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
-
-// Relations for the DST
-
-// ITCluster2MCParticle already created by MoniTrSeq
-//ApplicationMgr.DLLs += { "ITAssociators" };
-//BrunelTruthRelationsSeq.Members += { "ITCluster2MCParticleAlg" };
-
-// OTCluster2MCParticle table causes core dump on writing
-//BrunelTruthRelationsSeq.Members += { "OTCluster2MCParticleAlg" };
 
 // Modify printout defaults
 #include "$BRUNELOPTS/BrunelMessage.opts"

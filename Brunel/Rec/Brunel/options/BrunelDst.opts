@@ -6,11 +6,31 @@ ApplicationMgr.DLLs += { "GaudiDb", "GaudiRootDb", "DbCnv" };
 ApplicationMgr.ExtSvc += { "DbEventCnvSvc/RootEvtCnvSvc" };
 // Declare the persistency type for the conversion service 
 RootEvtCnvSvc.DbType = "ROOT" ;
-// Declare the conversion service to Persistency Service 
+// Declare the conversion service to the Persistency Service 
 EventPersistencySvc.CnvServices += { "RootEvtCnvSvc" };
 
-ApplicationMgr.OutStream += { "BrunelDstWriter" };
+// Instantiate Brunel phase to filter containers and create relations
+ApplicationMgr.TopAlg += { "BrunelPhase/BrunelOutput" };
+BrunelOutput.DetectorList = { "Relations", "Filters" };
 
+// Filter algorithms
+//ApplicationMgr.DLLs += { "EventAlgs" };
+//BrunelOutputFiltersSeq.Members += { "MuonDSTPrepare", "MCParticleFilter" };
+BrunelOutputFiltersSeq.Members += { "MuonDSTPrepare" };
+
+//MCParticleFilter.OutputLevel = 2;
+
+// Create relations
+
+// ITCluster2MCParticle already created by MoniTrSeq
+//ApplicationMgr.DLLs += { "ITAssociators" };
+//BrunelOutputRelationsSeq.Members += { "ITCluster2MCParticleAlg" };
+
+// OTCluster2MCParticle table causes core dump on writing
+//BrunelOutputRelationsSeq.Members += { "OTCluster2MCParticleAlg" };
+
+// Define DST content
+ApplicationMgr.OutStream += { "BrunelDstWriter" };
 BrunelDstWriter.ItemList = 
 {
   "/Event#1"
@@ -21,18 +41,25 @@ BrunelDstWriter.ItemList =
 , "/Event/MC#1"
 , "/Event/MC/Particles#1"  // To be filtered
 , "/Event/MC/Vertices#1"   // To be filtered
+  //, "/Event/Prev/Header#1"
+  //, "/Event/PrevPrev/Header#1"
+  //, "/Event/Next/Header#1"
 , "/Event/Trig#1"
 , "/Event/Trig/L0#1"
 , "/Event/Trig/L0/Calo#1"
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
 , "/Event/Trig/L0/Decision#1"
-  // L1 stuff?
+  // L1 stuff
 , "/Event/Raw#1"
 , "/Event/Raw/Velo#1"
-, "/Event/Raw/Velo/Clusters#1"
+, "/Event/Raw/Velo/Clusters#1" // To be filtered
 , "/Event/Raw/Rich#1"
-  //, "/Event/Raw/Rich/Digits#1" 
+  //, "/Event/Raw/Rich/Digits#1"
+, "/Event/Raw/Spd#1"
+  //, "/Event/Raw/Spd/Digits#1" // To be filtered
+, "/Event/Raw/Prs#1"
+  //, "/Event/Raw/Prs/Digits#1"  // To be filtered
 , "/Event/Rec#1"
 , "/Event/Rec/IT#1"
 , "/Event/Rec/IT/Summary#1"
@@ -41,15 +68,25 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/OT/Clusters#1"  // To be filtered
 , "/Event/Rec/Tr#1"
 , "/Event/Rec/Tr/StoredTracks#1"
+  // Velo tracks, track seeds and corresponding clusters+states
 , "/Event/Rec/Tr/ITClusters#1"
 , "/Event/Rec/Tr/OTClusters#1"
 , "/Event/Rec/Tr/VeloClusters#1"
 , "/Event/Rec/Tr/StatesP#1"
-  // Rich PID?
+  // Track selection by clone killer
+  // Rich digits if agreed by production meetings
+  // Rich PID
 , "/Event/Rec/Calo#1"
 , "/Event/Rec/Calo/EcalCelAutoClusters#1"
-, "/Event/Rec/Calo/EcalLocMaxClusters#1"
-  // CaloHypos, CaloParticles?
+  //, "/Event/Rec/Calo/Electrons#1"
+  //, "/Event/Rec/Calo/Photons#1"
+  //, "/Event/Rec/Calo/Pi0s#1"
+  //, "/Event/Rec/Calo/MergedPi0s#1"
+  //, "/Event/Rec/Calo/SplitPhotons#1"
+  //, "/Event/Rec/Calo/SplitClusters#1"
+  //, "/Event/Rec/Calo/PhotonMatch#1"
+  //, "/Event/Rec/Calo/ElectronMatch#1"
+  //, "/Event/Rec/Calo/BremMatch#1"
 , "/Event/Rec/Muon#1"
 , "/Event/Rec/Muon/M1#1"
 , "/Event/Rec/Muon/M2#1"
@@ -62,7 +99,16 @@ BrunelDstWriter.ItemList =
 , "/Event/Rec/Muon/M4/Coords#1" // Filtered (only if used by MuonID)
 , "/Event/Rec/Muon/M5/Coords#1" // Filtered (only if used by MuonID)
 , "/Event/Rec/Muon/MuonID#1"
-  // Relations
-, "/Event/Rec/Relations/ITClusters2MCParticles#1"
-  //, "/Event/Rec/Relations/OTClusters2MCParticles#1" core dumps on writing!
+, "/Event/Rec/Relations#1"
+, "/Event/Rec/Relations/ITClusters2MCParticles#1" // To be filtered
+, "/Event/Rec/Relations/OTClusters2MCParticles#1" // To be filtered
+  // "/Event/Rec/Relations/VeloClusters2MCParticles#1" // To be filtered
+  // "/Event/Rec/Relations/CaloClusters2MCParticles"
+  // MuonCoords2MCParticles (needed by L0 study)
+, "/Event/Rec/Relations/TrStoredTracks#1" // add 2MCP to name!
+  //, "/Event/Rec/Relations/FwTrack2MCP#1"
+  //, "/Event/Rec/Relations/SeedTrack2MCP#1"
+  //, "/Event/Rec/Relations/VeloFw2MCP#1"
+  //, "/Event/Rec/Relations/VeloTr2MCP#1"
+  // L1 truth
 };

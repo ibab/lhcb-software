@@ -25,8 +25,6 @@ BrunelDstWriter.Output = "DATAFILE='dst_v245.root' TYP='ROOT' OPT='NEW'";
 //--------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/v245r0.xml";
 #include "$FWTRACKROOT/options/Brunelv243r1.opts" // Forward tracking
-// Remove RICH digitisation until new code becomes available
-BrunelDigi.DetectorList = { "VELO" , "IT", "OT" ,  "CALO", "MUON" };
 
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options

@@ -21,12 +21,17 @@ MessageSvc.OutputLevel = 3;
 
 // Suppress excessive messages from some algorithms/components
 ApplicationMgr.OutputLevel = 4;
-RichMCDigitToDigitAlg.OutputLevel = 4;
-BrunelDigi.OutputLevel = 4;
-BrunelTrigger.OutputLevel = 4;
-BrunelReco.OutputLevel = 4;
-BrunelMoni.OutputLevel = 4;
 
-// Add some debug messages
-//ToolSvc.TrFirstCleverExtrapolator.OutputLevel = 2;
-//ToolSvc.TrKalmanFilter.OutputLevel = 2;
+ToolSvc.TrFirstCleverExtrapolator.OutputLevel = 5;
+ToolSvc.TrHerabExtrapolator.OutputLevel = 5;
+fitSeed.OutputLevel = 5;
+fitSeed.Fitter.OutputLevel = 5;
+matchVeloSeed.OutputLevel = 5;
+reFit.Fitter.OutputLevel = 5;
+
+SicbMCCaloHitCnv.OutputLevel = 5;
+RichPIDMonitor.OutputLevel = 4;
+RichPIDCnvVrifier.OutputLevel = 4;
+RichMCDigitToDigitAlg.OutputLevel = 4;
+
+DetectorDataSvc.OutputLevel = 6;
