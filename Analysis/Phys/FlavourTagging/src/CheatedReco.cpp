@@ -1,4 +1,4 @@
-// $Id: CheatedReco.cpp,v 1.2 2003-06-16 12:53:03 odie Exp $
+// $Id: CheatedReco.cpp,v 1.3 2003-06-20 11:59:49 odie Exp $
 // Include files 
 
 // from Gaudi
@@ -78,7 +78,7 @@ StatusCode CheatedReco::initialize() {
     return sc;
   }
 
-  sc = toolSvc()->retrieveTool( m_nameMCAsct, "LinkAsct", m_pAsctLinks);
+  sc = toolSvc()->retrieveTool( "Particle2MCLinksAsct", m_nameMCAsct, m_pAsctLinks, this);
   if( sc.isFailure() || 0 == m_pAsctLinks) {
     msg << MSG::FATAL << "Unable to retrieve Link Associator tool" << endreq;
     return sc;
@@ -232,7 +232,18 @@ StatusCode CheatedReco::execute() {
           reconstructed = false;
           continue;
         }
-        products.push_back(partsLinks.front().to());
+        Particle *ap = partsLinks.front().to();
+        if( (*mcpi)->particleID().pid() != ap->particleID().pid() ) {
+          msg << MSG::DEBUG << "Mis-ID particle in signal!  "
+              << ap->particleID().pid() << endreq;
+          double mcmass = (*mcpi)->momentum().m();
+          HepLorentzVector pap = ap->momentum();
+          HepLorentzVector newpap( pap.x(), pap.y(), pap.z(),
+                                   sqrt(pap.vect().mag2()+mcmass*mcmass) );
+          ap->setMomentum(newpap); //OVERWRITE mass and PID
+          ap->setParticleID((*mcpi)->particleID());
+        }
+        products.push_back(ap);
       }
       msg << MSG::DEBUG << "Number of products reconstructed: "
           << products.size() << endreq;
