@@ -1,4 +1,4 @@
-// $Id: MuonLayout.cpp,v 1.7 2002-05-07 06:59:38 atsareg Exp $
+// $Id: MuonLayout.cpp,v 1.8 2003-06-16 13:48:01 sponce Exp $
 // Include files
 #include <iostream>
 #include <algorithm>
@@ -132,7 +132,8 @@ std::vector<MuonTileID> MuonLayout::tilesInArea(const MuonTileID& pad,
   int ix = minX;
   int iy = minY;
   bool regleap = false;
-  int nr, nrx;
+  int nr = 0;
+  int nrx = 0;
   
   while ( ix <= maxX ) {
     nrx = fineGrid.region(ix,iy);
@@ -451,7 +452,8 @@ std::vector<MuonTileID> MuonLayout::neighboursInArea(const MuonTileID& pad,
   int ix = minX;
   int iy = minY;
   bool regleap = false;
-  int nr, nrx;
+  int nr = 0;
+  int nrx = 0;
   
   while ( ix <= maxX ) {
     nrx = fineGrid.region(ix,iy);
