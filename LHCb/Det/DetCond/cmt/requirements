@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2001-12-16 21:40:14 andreav Exp $
+# $Id: requirements,v 1.10 2001-12-17 16:00:26 andreav Exp $
 package DetCond
 version v2r0
 
@@ -26,20 +26,6 @@ library DetCond $(DetCond_sources)
 ignore_pattern package_stamps
 
 apply_pattern ld_library_path
-
-# This is the directory where you will build the dOxygen html doc
-# This is also the directory where you will find the dOxygen tagfile
-set DETCOND_DOXYGEN \
-  /afs/cern.ch/user/v/valassi/www/dOxygen/DetCond/html
-# ${DETCONDROOT}/doc/html
-
-# This is the URL prefix where you will access the dOxygen documentation
-set DETCOND_DOXYURL \
-  http://www.cern.ch/~valassi/dOxygen/DetCond/html
-# file:${DETCONDROOT}/doc/html
-
-# This is the package version number
-set DETCOND_DOXYVERSION $(DETCONDVERSION)
 
 #==================================================================
 private

@@ -1,9 +1,9 @@
-# $Id: release.notes,v 1.9 2001-12-16 16:00:45 andreav Exp $
+# $Id: release.notes,v 1.10 2001-12-17 15:56:09 andreav Exp $
 Package Det/DetCond
 Package manager : Andrea Valassi 
 
 ==============================================================================
-!20011216 - Andrea Valassi (v2r0)
+!20011216 - Andrea Valassi
 Major changes due to tighter coordination with DetDesc and XmlDDDB packages.
 - Update cannot be delegated to XmlCnvSvc until major changes in DetDes 
   > code creating and interpreting DOM trees in each Xml converter should be 
@@ -39,6 +39,7 @@ Major changes due to tighter coordination with DetDesc and XmlDDDB packages.
   > they must be overloaded because this CnvSvc has no converters
   > they are empty for the moment (not yet implemented)
 - Upgrade to CMT v1r10: remove scripts and hacks needed to cure a bug in CMT
+Requirements v2r0, private tag h20011216.
 
 ==============================================================================
 !20011130 - Andrea Valassi
@@ -82,15 +83,17 @@ A few changes before including my data service in GaudiSvc.
   > add bool method to check if the event time is defined in ConditionDataSvc
 
 ==============================================================================
-!20011123 - Andrea Valassi (v2)
+!20011123 - Andrea Valassi
 Upgrade to Gaudi v9
 - Addresses now inherit from GenericAddress (which has been simplified a lot)
 - There are no address factories any more
 - Adapt to changes in RegistryEntry (which now implements IRegistry)
 - Add dummy methods fillObjRefs and updateObjRefs in ConditionsDBCnvSvc
 - Notify (by flag "true") ServiceLocator to create services not existing yet
+Requirements v2, private tag h20011123.
 
 ==============================================================================
-!20010914 - Andrea Valassi (v1)
-New package
+!20010914 - Andrea Valassi
+New package.
+Requirements v1, private tag v1.
 
