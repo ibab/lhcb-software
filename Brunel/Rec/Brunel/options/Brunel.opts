@@ -90,7 +90,7 @@ BrunelRecoVELOSeq.Members  = { "DecodeVeloRawBuffer" };
 BrunelRecoVELOSeq.Members += { "VeloTrackAlg" };
 VeloTrackAlg.AbortNumTrack = 300;
 
-// Long (ex Forward) tracking
+// Forward tracking
 ApplicationMgr.DLLs += { "LongTrack", "TrFitter", "TrExtrapolator" };
 ApplicationMgr.ExtSvc += { "TransportSvc" };
 BrunelRecoTrSeq.Members += { "FindLongTrack" };

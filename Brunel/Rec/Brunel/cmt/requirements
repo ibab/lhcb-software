@@ -1,5 +1,5 @@
 package Brunel
-version v23r5
+version v23r6
 
 branches doc cmt job options
 
@@ -42,10 +42,10 @@ use XmlDDDB		v22r1	Det
 use FieldMap		v4r5
 use ParamFiles          v3r5    -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v15r6)
-use LHCb	v15r6
+#-- LHCb libraries (from LHCB_v15r7)
+use LHCb	v15r7
 
-#-- BrunelSys v23r4 packages
+#-- BrunelSys v23r6 packages
 
 # Tools
 use LHCbTools		v1r1	Kernel

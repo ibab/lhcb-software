@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v23r6>2004-04-16 Brunel v23r6</A></H1><PRE>
+
+- Persistency changes
+  . Removed Velo,IT,OT clusters and Muon coordinates from DST. If needed they 
+    can be recreated from RawBuffer by rerunning the clustering
+
 </PRE><H1><A NAME=v23r5>2004-04-15 Brunel v23r5</A></H1><PRE>
 
  Requires data produced by Boole v5r4 or later

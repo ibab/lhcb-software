@@ -49,7 +49,7 @@ PoolDbCacheSvc.Catalog = {
 //---------------------------------------------------------------------------
 
 // POOL
-EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r5/Pool411300.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 411300
+EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r6/Pool411300.digi' TYP='POOL_ROOT' OPT='READ'" }; // evtype 411300
 
 // GaudiDb
 //EventSelector.Input = { "DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Boole/v5r4/411300-Field045.oodigi' TYP='ROOT' opt='READ'" }; // evtype 411300
