@@ -1,8 +1,11 @@
-// $Id: SolidTicks.h,v 1.8 2002-05-11 18:25:46 ibelyaev Exp $ 
+// $Id: SolidTicks.h,v 1.9 2002-05-15 14:25:25 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2002/05/11 18:25:46  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ===========================================================================
 #ifndef     DETDESC_SOLIDTICKS_H
 #define     DETDESC_SOLIDTICKS_H 1 
@@ -197,20 +200,19 @@ namespace SolidTicks
     // first tick 
     if( ticks.front () != tickMin ) 
       { 
-        Tick middle  = 0.5 * ( tickMin + ticks.front() );
-        if( solid.isInside( point + middle * vect ) )
-          { ticks.insert( ticks.begin() , tickMin ) ; }
-      }
-
-    // last tick 
-    if( ticks.front () != tickMin ) 
-      { 
-        Tick middle  = 0.5 * ( tickMin + ticks.front() );
-        if( solid.isInside( point + middle * vect ) )
-          { ticks.insert( ticks.begin() , tickMin ) ; }
+        const Tick middle  = 0.5 * ( tickMin      + ticks.front() ) ;
+        if( solid.isInside   ( point + middle * vect ) )
+          { ticks.insert     ( ticks.begin() , tickMin ) ; }
       }
     
-    // remove adjancent 
+    // last tick 
+    if( ticks.back  () != tickMax ) 
+      { 
+        const Tick middle  = 0.5 * ( ticks.back() +  tickMax ) ;
+        if( solid.isInside   ( point + middle * vect ) )
+          { ticks.push_back  (                 tickMax ) ; }
+      }
+    // adjancent are already removed 
     return ticks.size () ;
   };
   

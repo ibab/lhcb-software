@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.88 2002-05-13 18:29:54 ibelyaev Exp $ 
+! $Id: release.notes,v 1.89 2002-05-15 14:25:25 ibelyaev Exp $ 
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 package DetDesc
 package manager : N.N 
+
+!=============================================================================
+!20020515 - Vanya Belyaev
+ DetDesc/SolidTicks.h                    - fix my stupid bug (thanks to Olivier)
+ DetDesc/VolumeIntersectionIntervals.h  - fix my stupid bug (thanks to Olivier)
+ src/Lib/LVolume.cpp  - add some "conflict resolving" - TEMPORARY! 
+
+!=============================================================================
+!20020515 - Vanya Belyaev
+ DetDesc/SolidTicks.h                    - fix my stupid bug (thanks to Olivier)
+ DetDesc/VolumeInytersectionIntervals.h  - fix my stupid bug (thanks to Olivier)
 
 !=============================================================================
 !20020513 - Vanya Belyaev

@@ -1,8 +1,11 @@
-// $Id: VolumeIntersectionIntervals.h,v 1.6 2002-05-11 18:25:47 ibelyaev Exp $ 
+// $Id: VolumeIntersectionIntervals.h,v 1.7 2002-05-15 14:25:25 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/05/11 18:25:47  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // ============================================================================
 #ifndef       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H
 #define       DETDESC_VOLUMEINTERSECTIONIINTERVALS_H 
@@ -82,9 +85,7 @@ inline bool operator==( const ILVolume::Intersection& Int , double RadLength )
 namespace  VolumeIntersectionIntervals
 {
   
-  /** @fn TicksToIntervals 
-   *
-   *  helpful method to decode the ticks sequence 
+  /** helpful method to decode the ticks sequence 
    *  into sequence of intervals 
    *  return the number of intervals 
    *
@@ -100,18 +101,18 @@ namespace  VolumeIntersectionIntervals
     // interval can be constructed from at least 2 ticks!
     if( ticks.size() < 2 ) { return 0 ; } // RETURN!
     
-    unsigned int res = 0 ; 
-    ISolid::Ticks::const_iterator it = ticks.begin(); 
-    ISolid::Tick  tickPrevious = *it; 
-    while( ticks.end() != it ) 
-      {
-        ISolid::Tick tickCurrent = *it++; 
-        if( tickCurrent > tickPrevious ) 
-          { ++res; *out++ = 
-                     ILVolume::Interval( tickPrevious , tickCurrent ) ; } 
-        if( ticks.end() != it ) { ++it ; }
-        tickPrevious = tickCurrent; 
+    unsigned int res = 0 ;
+    
+    ISolid::Ticks::const_iterator it = ticks.begin();
+    ISolid::Tick  tickPrevious = *it++;   // size tested. this is safe
+    while( ticks.end() != it ) {
+      ISolid::Tick tickCurrent = *it++;
+      if( tickCurrent > tickPrevious ) {
+        ++res;
+        *out++ = ILVolume::Interval( tickPrevious , tickCurrent ) ;
       }
+      if ( ticks.end() != it ) { tickPrevious = *it++; }
+    }
     ///
     return res; 
   };
@@ -148,8 +149,7 @@ namespace  VolumeIntersectionIntervals
     }
   };
 
-  /** @fn MergeOwnAndChildContainers
-   *  a helpful method of merging 2 containers 
+  /** helpful method of merging 2 containers 
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @param  own container of 'own' intersections
    *  @param  child container of 'child' intersections 
@@ -230,7 +230,9 @@ namespace  VolumeIntersectionIntervals
                 leftTick = intervalLocal.second;
               }
             else                                  // geometry error!!!
-              { return StatusCode(17) ; }         // RETURN !!!
+              {
+                return StatusCode(17) ; 
+              }         // RETURN !!!
           }  // end of loop over temporary index container 
         if( leftTick != mostRightTick ) 
           { *out++ = 

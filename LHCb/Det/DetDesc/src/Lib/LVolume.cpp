@@ -1,8 +1,11 @@
-// $Id: LVolume.cpp,v 1.18 2002-05-11 18:25:47 ibelyaev Exp $ 
+// $Id: LVolume.cpp,v 1.19 2002-05-15 14:25:25 ibelyaev Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.18  2002/05/11 18:25:47  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 11 May 2002
+//
 // Revision 1.17  2002/05/04 13:13:24  ibelyaev
 //  see $DETDESCROOT/doc/release.notes ( 4 May 2002 )
 //
@@ -652,7 +655,58 @@ unsigned int LVolume::intersectLine
         ( own , childrens , std::back_inserter( intersections ) );
       // check the result!!!
       if( sc.isFailure() )
-        { Assert( false , "LVolumeIntersectLine FATAL! " + name() , sc ); }
+        {
+          MsgStream log( DetDesc::msgSvc() , "DetectorDataSvc" );
+          log << MSG::ERROR
+              << "===== Failure to merge " << name()
+              << " type " << m_solid->typeName()
+              << " x " << Point.x()
+              << " y " << Point.y()
+              << " z " << Point.z()
+              << endreq ;
+          
+          for ( ILVolume::Intersections::const_iterator itI = own.begin();
+                own.end() != itI; itI++ ) {
+            double s = (*itI).first.first;
+            double t = (*itI).first.second;
+            log << MSG::INFO
+                << "Own : s " << s
+                << " x " << Point.x() + s * Vector.x()
+                << " y " << Point.y() + s * Vector.y()
+                << " z " << Point.z() + s * Vector.z()
+                << " to t " << t
+                << " x " << Point.x() + t * Vector.x()
+                << " y " << Point.y() + t * Vector.y()
+                << " z " << Point.z() + t * Vector.z()
+                << " radl " << (*itI).second->radiationLength()
+                << endreq ;
+          }
+          for ( ILVolume::Intersections::const_iterator itI = childrens.begin();
+                childrens.end() != itI; itI++ ) {
+            double s = (*itI).first.first;
+            double t = (*itI).first.second;
+            log << MSG::INFO 
+                << "Child : s " << s
+                << " x " << Point.x() + s * Vector.x()
+                << " y " << Point.y() + s * Vector.y()
+                << " z " << Point.z() + s * Vector.z()
+                << " to t " << t
+                << " x " << Point.x() + t * Vector.x()
+                << " y " << Point.y() + t * Vector.y()
+                << " z " << Point.z() + t * Vector.z()
+                << " radl " << (*itI).second->radiationLength()
+                << endreq;
+          }
+          
+          intersections.clear();          
+          std::copy( childrens.begin () , 
+                     childrens.end   () ,
+                     std::back_inserter( intersections ) ) ;
+          
+          return intersections.size();                          // RETURN!!!
+          // temporary
+          // Assert( false , "LVolumeIntersectLine FATAL! " + name() , sc ); 
+        }
     }
   ///  
   return intersections.size(); 
@@ -744,9 +798,62 @@ unsigned int LVolume::intersectLine
       StatusCode sc = 
         MergeOwnAndChildContainers
         ( own , childrens , std::back_inserter( intersections ) );
-      // check the result!!!
+      // check the result !
       if( sc.isFailure() )
-        { Assert( false , "LVolumeIntersectLine FATAL! " + name() , sc ); }
+        {
+          MsgStream log( DetDesc::msgSvc() , "DetectorDataSvc" );
+          log << MSG::ERROR
+              << "===== Failure to merge " << name()
+              << " type " << m_solid->typeName()
+              << " x " << Point.x()
+              << " y " << Point.y()
+              << " z " << Point.z()
+              << " #own   " << own.size() 
+              << " #child " << childrens.size()            
+              << endreq ;
+          
+          for ( ILVolume::Intersections::const_iterator itI = own.begin();
+                own.end() != itI; itI++ ) {
+            double s = (*itI).first.first;
+            double t = (*itI).first.second;
+            log << MSG::INFO 
+                << "Own : s " << s
+                << " x " << Point.x() + s * Vector.x()
+                << " y " << Point.y() + s * Vector.y()
+                << " z " << Point.z() + s * Vector.z()
+                << " to t " << t
+                << " x " << Point.x() + t * Vector.x()
+                << " y " << Point.y() + t * Vector.y()
+                << " z " << Point.z() + t * Vector.z()
+                << " radl " << (*itI).second->radiationLength()
+                << endreq ;
+          }
+          for ( ILVolume::Intersections::const_iterator itI = childrens.begin();
+                childrens.end() != itI; itI++ ) {
+            double s = (*itI).first.first;
+            double t = (*itI).first.second;
+            log << MSG::INFO
+                << "Child : s " << s
+                << " x " << Point.x() + s * Vector.x()
+                << " y " << Point.y() + s * Vector.y()
+                << " z " << Point.z() + s * Vector.z()
+                << " to t " << t
+                << " x " << Point.x() + t * Vector.x()
+                << " y " << Point.y() + t * Vector.y()
+                << " z " << Point.z() + t * Vector.z()
+                << " radl " << (*itI).second->radiationLength()
+                << endreq ;
+          }
+          
+          intersections.clear();          
+          std::copy( childrens.begin () , 
+                     childrens.end   () ,
+                     std::back_inserter( intersections ) ) ;
+          
+          return intersections.size();                          // RETURN!!!
+          // commented out as temporary solution.
+          // Assert( false , "LVolumeIntersectLine FATAL! " + name() , sc ); 
+        }
     }
   //  
   return intersections.size(); 
