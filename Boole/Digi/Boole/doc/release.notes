@@ -45,6 +45,9 @@ Requires XmlDDDB v22r0 or greater
 - New tuning
   - Adapt to changes in VeloDet and VeloChannelID (VeloAlgorithms v3r0)
 
+- New packaging
+  - Valgrind error suppression file for Gaudi and external package errors moved
+    to $STDOPTS/Gaudi.supp (GaudiConf v7r6, valgrind.job)
 
 </PRE><H1><A NAME=v5r2>2004-02-10 Boole v5r2</A></H1><PRE>
 
