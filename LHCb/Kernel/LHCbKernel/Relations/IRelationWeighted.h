@@ -1,8 +1,11 @@
-// $Id: IRelationWeighted.h,v 1.6 2004-01-14 15:13:02 ibelyaev Exp $
+// $Id: IRelationWeighted.h,v 1.7 2004-01-16 15:49:05 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2004/01/14 15:13:02  ibelyaev
+//  few tricks to make POOL/ROOT happy
+//
 // Revision 1.5  2003/01/17 14:07:01  sponce
 // support for gcc 3.2
 //
@@ -30,7 +33,7 @@
 
 template< class FROM , class TO , class WEIGHT>
 class IRelationWeighted :
-  public virtual IInterface
+  public virtual IRelationWeightedBase
 {
 
 public:
