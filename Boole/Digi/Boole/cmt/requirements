@@ -1,5 +1,5 @@
 package Boole
-version v3r2
+version v4r0
 
 branches doc cmt job options
 
@@ -11,39 +11,39 @@ pattern BooleVersion path_append BOOLEVERS <version>
 apply_pattern BooleVersion
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r11p2
+use GaudiPolicy v5r13
 
-#-- External libraries (as defined in GAUDI_v12r0)
-use ExternalLibs	v4r0p1
-use AIDA		v3r22p2		-no_auto_imports
-use BOOST		v2r1290p0	-no_auto_imports
-use CLHEP		v2r1800p0
-use HTL			v2r1321p0
-use XERCES		v2r220p0
+#-- External libraries (as defined in GAUDI_v13r0)
+use ExternalLibs	v4r4
+use AIDA		v3r300		-no_auto_imports
+use BOOST		v2r1302p0	-no_auto_imports
+use CLHEP		v2r1810p0
+use XERCES		v2r230p0
 use CERNLIB 		v2r2002p0
-use ROOT 		v2r30504p0
-use GSL			v2r13p0
+use ROOT 		v2r31001p1
+use GSL			v2r14p0
+use PI			v1r100
 
-#-- Gaudi libraries (from GAUDI_v12r0)
-use GaudiKernel		v13r4p1
-use GaudiSvc 		v10r2
+#-- Gaudi libraries (from GAUDI_v13r0)
+use GaudiKernel		v14r2
+use GaudiSvc 		v11r0
 use GaudiAlg 		v6r4
-use GaudiAud 		v6r2
-use GaudiDb 		v8r4
-use GaudiRootDb 	v9r2
-use GaudiIntrospection 	v4r6
-use HbookCnv 		v13r4
+use GaudiAud 		v6r3
+use GaudiDb 		v9r0
+use GaudiRootDb 	v9r3
+use GaudiIntrospection 	v4r7
+use HbookCnv 		v14r0
 
 #-- Databases
 use XmlDDDB	v20r0	Det
 use ParamFiles	v2r1	$(LHCb_release_area)/PARAM -no_auto_imports
 use FieldMap	v4r3
 
-#-- LHCb libraries (from LHCB_v13r5)
-use LHCb	v13r5
+#-- LHCb libraries (from LHCB_v14r0)
+use LHCb	v14r0
 
 #-> SICB libraries included to avoid dependency on SICBOO package
-use RiSicbGeom	v3r6	SICB
+use RiSicbGeom	v3r7	SICB
 
 #-- BooleSys v3r0 packages
 
@@ -52,25 +52,25 @@ use LHCbTools		v1r0	Kernel
 
 # L0 trigger
 use L0Calo              v7r1	L0
-use L0Muon              v6r5p1	L0
+use L0Muon              v6r6	L0
 use PuVeto              v5r4	L0
 use L0DU                v6r5    L0
 
 # L1 trigger
 use L1VeloTrack         v5r4	L1
-use L1Decision		v2r2	L1
+use L1Decision		v2r2p1	L1
 
 # Calorimeter
-use CaloInterfaces      v2r4  	Calo
+use CaloInterfaces      v3r0  	Calo
 use CaloUtils           v4r5	Calo
-use CaloMonitor         v1r4	Calo
+use CaloMonitor         v1r5	Calo
 use CaloDigit           v1r4p1	Calo
 
 # Velo
 use VeloAlgorithms      v2r8  	Velo
 
 # Inner Tracker
-use ITAlgorithms        v13r0	IT
+use ITAlgorithms        v13r0p1	IT
 use ITCheckers          v1r4	IT
 
 # Outer Tracker
@@ -78,13 +78,13 @@ use OTAlgorithms        v13r4	OT
 
 # Muon
 use MuonAlgs            v5r0    Muon
-use MuonBackground	v1r4	Muon
+use MuonBackground	v1r4p1	Muon
 
 # Rich
 use RichDigiQC	        v1r3  	Rich
-use RichUtils		v3r5  	Rich
-use RichDetTools	v3r3	Rich
-use RichReadout		v1r2p1	Rich
+use RichUtils		v3r6	Rich
+use RichDetTools	v3r4	Rich
+use RichReadout		v1r3	Rich
 use RichDAQ		v1r0	Rich
 
 #

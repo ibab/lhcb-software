@@ -4,6 +4,12 @@
 ! Purpose     : List of packages in Boole project
 !-----------------------------------------------------------------------------
 
+!======================== BooleSys v4r0 2003-12-12 ========================
+! 2003-12-09 - Marco Cattaneo
+ - Packages modified: RiSicbGeom v3r7, CaloInterfaces v3r0, CaloMonitor v1r5, 
+                      RichUtils v3r6, ITAlgorithms v13r0p1, RichDetTools v3r4,
+                      RichReadout v1r3, MuonBackground v1r4p1, L0Muon v6r6
+
 !======================== BooleSys v3r2 2003-12-03 ========================
 ! 2003-12-03 - Marco Cattaneo
  - Packages modified: CaloDigit v1r4p1, ITAlgorithms v13r0, ITCheckers v1r4,
