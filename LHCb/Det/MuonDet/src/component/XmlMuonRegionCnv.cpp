@@ -1,8 +1,11 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.7 2002-04-22 07:42:15 dhcroft Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.8 2002-04-25 10:16:31 dhcroft Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2002/04/22 07:42:15  dhcroft
+// Fixed a bug in setting the number of Anode and Cathoed FE channels per chamber
+//
 // Revision 1.6  2002/04/08 14:55:00  dhcroft
 // Changed code to calculate Gaps per FE channel rather than read from XML
 //
@@ -223,7 +226,7 @@ StatusCode XmlMuonRegionCnv::i_fillSpecificObj (DOM_Element childElement,
     const std::string MergeLogicalX2 = 
       dom2Std (childElement.getAttribute ("MergeLogicalX2"));
     const std::string MergeLogicalY2 = 
-      dom2Std (childElement.getAttribute ("MergeLogicalY1"));
+      dom2Std (childElement.getAttribute ("MergeLogicalY2"));
 
     if(!("Anode" == ReadoutType || "Cathode" == ReadoutType)){
       log << MSG::WARNING << "Was given a readout type :" 
