@@ -1,17 +1,23 @@
-// $Id: RichPIDSimpleMerge.cpp,v 1.7 2004-07-20 12:45:29 jonesc Exp $
-// Include files
+
+//------------------------------------------------------------------------
+/** @file RichPIDSimpleMerge.cpp
+ *
+ *  Implementation file for RICH algorithm : RichPIDSimpleMerge
+ *
+ *  CVS Log :-
+ *  $Id: RichPIDSimpleMerge.cpp,v 1.8 2004-07-26 17:56:24 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2002-07-10
+ */
+//------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichPIDSimpleMerge.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : RichPIDSimpleMerge
-//
-// 2002-07-10 : Chris Jones
-//-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<RichPIDSimpleMerge>          s_factory ;

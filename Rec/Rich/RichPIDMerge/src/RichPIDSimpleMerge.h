@@ -1,4 +1,16 @@
-// $Id: RichPIDSimpleMerge.h,v 1.4 2004-07-20 12:45:29 jonesc Exp $
+
+/** @file RichPIDSimpleMerge.h
+ *
+ *  Header file for RICH algorithm : RichPIDSimpleMerge
+ *
+ *  CVS Log :-
+ *  $Id: RichPIDSimpleMerge.h,v 1.5 2004-07-26 17:56:24 jonrob Exp $
+ *  $Log: not supported by cvs2svn $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2003-07-31
+ */
+
 #ifndef RICHPIDMERGE_RICHPIDSIMPLEMERGE_H
 #define RICHPIDMERGE_RICHPIDSIMPLEMERGE_H 1
 
@@ -17,10 +29,22 @@
 
 /** @class RichPIDSimpleMerge RichPIDSimpleMerge.h RichRecAlgs/RichPIDSimpleMerge.h
  *
- *  Prepares RichPIDs using results from all PID algorithms
+ *  Prepares RichPIDs using results from all individual PID algorithms.
+ *
+ *  The PID results are used with the follow order of precedence :-
+ *
+ *    1. For a given, if configured to do so, the Ring Refit PID result is used. 
+ *       By default, this feature is turned OFF.
+ * 
+ *    2. The global PID result for each track is used if available and if a Ring 
+ *       Refit result has not been used.
+ *
+ *    3. Finally, if no PID result is used and if a local PID result exists, it is used.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
+ *
+ *  @todo Rewrite this algorithm in a m more generic way
  */
 
 class RichPIDSimpleMerge : public RichAlgBase {
@@ -32,9 +56,9 @@ public:
 
   virtual ~RichPIDSimpleMerge( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  virtual StatusCode initialize();    // Algorithm initialization
+  virtual StatusCode execute   ();    // Algorithm execution
+  virtual StatusCode finalize  ();    // Algorithm finalization
 
 private:
 
