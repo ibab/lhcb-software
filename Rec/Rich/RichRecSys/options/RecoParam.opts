@@ -25,11 +25,11 @@ ToolSvc.RichToolRegistry.Tools += { "RichDetInterface/RichDetInterface" };
 // Photon Creator
 ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator",
                                     "RichPhotonPredictor/RichPhotonPredictor" };
-ToolSvc.RichPhotonPredictor.MinTrackROI          = { 130.0,  0.0,   0.0  };
-ToolSvc.RichPhotonPredictor.MaxTrackROI          = { 350.0, 90.0, 250.0  };
-ToolSvc.RichPhotonCreator.MinCherenkovTheta      = { 0.1,  0.005, 0.005  };
-ToolSvc.RichPhotonCreator.MaxCherenkovTheta      = { 0.29, 0.075, 0.045  };
-ToolSvc.RichPhotonCreator.MinPhotonProbability   = { 1e-15, 1e-15, 1e-15 };
+ToolSvc.RichPhotonPredictor.MinTrackROI          = { 130.0,   0.0,    0.0  };
+ToolSvc.RichPhotonPredictor.MaxTrackROI          = { 350.0,  90.0,  250.0  };
+ToolSvc.RichPhotonCreator.MinCherenkovTheta      = { 0.1,   0.005,  0.005  };
+ToolSvc.RichPhotonCreator.MaxCherenkovTheta      = { 0.29,  0.075,  0.045  };
+ToolSvc.RichPhotonCreator.MinPhotonProbability   = { 1e-15,  1e-15,  1e-15 };
 
 // Geometrical efficiency from full ray tracing
 ToolSvc.RichToolRegistry.Tools += { "RichGeomEffPhotonTracing/RichGeomEff" };
