@@ -1,4 +1,4 @@
-// $Id: L0Monitor.cpp,v 1.2 2002-09-12 11:53:29 ocallot Exp $
+// $Id: L0Monitor.cpp,v 1.3 2002-10-03 15:14:11 beneyton Exp $
 // Include files
 #include "stdio.h"
 // from Gaudi
@@ -62,23 +62,23 @@ StatusCode L0Monitor::initialize() {
       if ( nt1 ) {
         nt1->addItem( "Decision", m_decis );
         nt1->addItem( "Electron", m_elec );
-        nt1->addItem( "Photon  ", m_phot );
+        nt1->addItem( "Photon"  , m_phot );
         nt1->addItem( "Pi0Local", m_pi0l );
-        nt1->addItem( "Pi0Glob ", m_pi0g );
-        nt1->addItem( "Hadron  ", m_hadr );
-        nt1->addItem( "Hadron2 ", m_had2 );
-        nt1->addItem( "SumEt   ", m_sume );
-        nt1->addItem( "SpdMult ", m_spdm );
-        nt1->addItem( "Pileup  ", m_pile );
-        nt1->addItem( "Muon1   ", m_emu1 );
-        nt1->addItem( "Muon2   ", m_emu2 );
-        nt1->addItem( "Muon3   ", m_emu3 );
-        nt1->addItem( "SumMuon ", m_sumu );
-        nt1->addItem( "TruElec ", m_tElec );
-        nt1->addItem( "TruPhot ", m_tPhot );
-        nt1->addItem( "TruPi0  ", m_tPi0  );
-        nt1->addItem( "TruHadr ", m_tHadr );
-        nt1->addItem( "TruMuon ", m_tMuon );
+        nt1->addItem( "Pi0Glob" , m_pi0g );
+        nt1->addItem( "Hadron"  , m_hadr );
+        nt1->addItem( "Hadron2" , m_had2 );
+        nt1->addItem( "SumEt"   , m_sume );
+        nt1->addItem( "SpdMult" , m_spdm );
+        nt1->addItem( "Pileup"  , m_pile );
+        nt1->addItem( "Muon1"   , m_emu1 );
+        nt1->addItem( "Muon2"   , m_emu2 );
+        nt1->addItem( "Muon3"   , m_emu3 );
+        nt1->addItem( "SumMuon" , m_sumu );
+        nt1->addItem( "TruElec" , m_tElec );
+        nt1->addItem( "TruPhot" , m_tPhot );
+        nt1->addItem( "TruPi0"  , m_tPi0  );
+        nt1->addItem( "TruHadr" , m_tHadr );
+        nt1->addItem( "TruMuon" , m_tMuon );
         log << MSG::INFO << "Booking OK " << endreq;
       } else {
         log << MSG::ERROR << "Failure to book" << endreq;
@@ -326,6 +326,7 @@ StatusCode L0Monitor::execute() {
     m_pi0l  = pi0l;
     m_pi0g  = pi0g;
     m_hadr  = hadr;
+    m_had2  = had2;
     m_sume  = sume;
     m_spdm  = spdm;
 

@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.16 2002-09-21 16:41:19 ocallot Exp $
+$Id: release.notes,v 1.17 2002-10-03 15:14:11 beneyton Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+! 2002-10-03 - Richard Beneyton
+ - Supress blank in NTuple Items definition (root can't read them)
+ - add m_Hadr2 allocation
 
 ! 2002-09-21 - Olivier Callot
  - Change the photon threshold to 3.99 GeV to have some efficiency !
