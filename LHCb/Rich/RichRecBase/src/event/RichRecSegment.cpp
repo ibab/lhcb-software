@@ -1,4 +1,4 @@
-// $Id: RichRecSegment.cpp,v 1.4 2003-11-25 13:20:56 jonrob Exp $
+// $Id: RichRecSegment.cpp,v 1.5 2004-06-03 16:19:42 jonesc Exp $
 // Include files 
 
 // local
@@ -11,17 +11,17 @@
 //-----------------------------------------------------------------------------
 
 // Reset information to force recalculation
-void RichRecSegment::reset() {
+void RichRecSegment::reset() 
+{
+  setHitDetectorRegions(0);
 
-  setHitDetectorRegions( 0 );
-
-  m_nEmittedPhotons.resetData();
-  m_nDetectablePhotons.resetData();
-  m_nSignalPhotons.resetData();
-  m_nScatteredPhotons.resetData();
-  m_geomEfficiency.resetData();
-  m_averageCKTheta.resetData();
-  m_geomEfficiencyScat.resetData();
+  m_nEmittedPhotons.resetData(0);
+  m_nDetectablePhotons.resetData(0);
+  m_nSignalPhotons.resetData(0);
+  m_nScatteredPhotons.resetData(0);
+  m_geomEfficiency.resetData(0);
+  m_averageCKTheta.resetData(0);
+  m_geomEfficiencyScat.resetData(0);
 
   PDGeomEffsVector resetVector3( Rich::NParticleTypes );
   setGeomEfficiencyPerPD( resetVector3 );
@@ -30,7 +30,5 @@ void RichRecSegment::reset() {
   m_detectablePhotonSpectra.reset();
   m_signalPhotonSpectra.reset();
 
-  // reset parent RichRecTrack
   richRecTrack()->reset();
-
 }

@@ -1,4 +1,4 @@
-// $Id: RichRecTrack.cpp,v 1.3 2003-10-13 16:10:55 jonrob Exp $
+// $Id: RichRecTrack.cpp,v 1.4 2004-06-03 16:19:42 jonesc Exp $
 // Include files 
 
 // local
@@ -11,14 +11,13 @@
 //-----------------------------------------------------------------------------
 
 // Reset information to force recalculation
-void RichRecTrack::reset() {
- 
-  m_nEmittedPhotons.resetData();
-  m_nDetectablePhotons.resetData();
-  m_nSignalPhotons.resetData();
-  m_nObservableSignalPhotons.resetData();
-  m_nScatteredPhotons.resetData();
-  m_nObservableScatteredPhotons.resetData();
+void RichRecTrack::reset() 
+{ 
+  m_nEmittedPhotons.resetData(0);
+  m_nDetectablePhotons.resetData(0);
+  m_nSignalPhotons.resetData(0);
+  m_nObservableSignalPhotons.resetData(0);
+  m_nScatteredPhotons.resetData(0);
+  m_nObservableScatteredPhotons.resetData(0);
   setCurrentHypothesis( Rich::Pion );
-
 }

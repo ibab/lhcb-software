@@ -75,12 +75,12 @@
             <method desc="Reset information to force recalculation" name="reset" type="void"/>
             <attribute array="FALSE" compression="FALSE" desc="Reconstructed momentum at vertex" init="0" name="vertexMomentum" type="double"/>
             <attribute array="FALSE" compression="FALSE" desc="Track charge" init="0" name="charge" type="float"/>
-            <attribute array="FALSE" compression="TRUE" desc="The number of emitted photons expected for each particle hypothesis" name="nEmittedPhotons" type="RichHypoData&lt;double&gt;"/>
-            <attribute array="FALSE" compression="TRUE" desc="The number of detectable emitted photons expected for each particle hypothesis" name="nDetectablePhotons" type="RichHypoData&lt;double&gt;"/>
-            <attribute array="FALSE" compression="TRUE" desc="The number of signal photons expected for each particle hypothesis" name="nSignalPhotons" type="RichHypoData&lt;double&gt;"/>
-            <attribute array="FALSE" compression="TRUE" desc="The number of observable signal photons expected for each particle hypothesis" name="nObservableSignalPhotons" type="RichHypoData&lt;double&gt;"/>
-            <attribute array="FALSE" compression="TRUE" desc="The number of scattered photons expected for each particle hypothesis" name="nScatteredPhotons" type="RichHypoData&lt;double&gt;"/>
-            <attribute array="FALSE" compression="TRUE" desc="The number of observable scattered photons expected for each particle hypothesis" name="nObservableScatteredPhotons" type="RichHypoData&lt;double&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of emitted photons expected for each particle hypothesis" name="nEmittedPhotons" init="0" type="RichHypoData&lt;double&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of detectable emitted photons expected for each particle hypothesis" name="nDetectablePhotons" init="0" type="RichHypoData&lt;double&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of signal photons expected for each particle hypothesis" name="nSignalPhotons" init="0" type="RichHypoData&lt;double&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of observable signal photons expected for each particle hypothesis" name="nObservableSignalPhotons" init="0" type="RichHypoData&lt;double&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of scattered photons expected for each particle hypothesis" name="nScatteredPhotons" init="0" type="RichHypoData&lt;double&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of observable scattered photons expected for each particle hypothesis" name="nObservableScatteredPhotons" init="0" type="RichHypoData&lt;double&gt;"/>
             <attribute desc="The current working particle hypothesis for this track. Used by specific algorithms" init="Rich::Pion" name="currentHypothesis" type="Rich::ParticleIDType"/>
             <attribute desc="Flag for use by algorithms to tag in this track is in use or not" init="false" name="inUse" serialize="FALSE" type="bool"/>
             <attribute desc="track type identifier" name="trackID" type="RichTrackID"/>
@@ -177,7 +177,7 @@
             <import name="Event/RichRecRing"/>
             <typedef access="PUBLIC" def="PDGeomEffs" desc="Data containers for each hypothesis" type="RichMap&lt;RichSmartID::KeyType,double&gt;"/>
             <typedef access="PUBLIC" def="PDGeomEffsVector" desc="Data containers for each hypothesis" type="std::vector&lt; PDGeomEffs &gt;"/>
-            <constructor desc="Constructor from a RichTrackSegment" initList="m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_trackSegment(segment), m_hitDetectorRegions(0), m_hypothesisRings(NULL), m_richRecTrack(pTrk), m_allPhotonsDone(false)">
+            <constructor desc="Constructor from a RichTrackSegment" initList="m_nEmittedPhotons(0), m_nDetectablePhotons(0), m_nSignalPhotons(0), m_nScatteredPhotons(0), m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_geomEfficiency(0), m_geomEfficiencyScat(0), m_averageCKTheta(0), m_trackSegment(segment), m_hitDetectorRegions(0), m_hypothesisRings(NULL), m_richRecTrack(pTrk), m_allPhotonsDone(false)">
                 <arg const="TRUE" name="segment" type="RichTrackSegment"/>
                 <arg const="FALSE" inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
                 <arg const="TRUE" inout="BYVALUE" name="enBins" type="unsigned int"/>
@@ -263,17 +263,17 @@
                 <code>return m_geomEfficiencyPerPD[type];</code>
             </method>
             <method desc="Reset information to force recalculation" name="reset" type="void"/>
-            <attribute array="FALSE" compression="TRUE" desc="The number of emitted photons expected for each particle hypothesis" name="nEmittedPhotons" type="RichHypoData&lt;double&gt;"/>
-            <attribute array="FALSE" compression="TRUE" desc="The number of detectable emitted photons expected for each particle hypothesis" name="nDetectablePhotons" type="RichHypoData&lt;double&gt;"/>
-            <attribute array="FALSE" compression="TRUE" desc="The number of signal photons expected for each particle hypothesis" name="nSignalPhotons" type="RichHypoData&lt;double&gt;"/>
-            <attribute array="FALSE" compression="TRUE" desc="The number of scattered photons expected for each particle hypothesis" name="nScatteredPhotons" type="RichHypoData&lt;double&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of emitted photons expected for each particle hypothesis" name="nEmittedPhotons" init="0" type="RichHypoData&lt;double&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of detectable emitted photons expected for each particle hypothesis" name="nDetectablePhotons" init="0" type="RichHypoData&lt;double&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of signal photons expected for each particle hypothesis" name="nSignalPhotons" init="0" type="RichHypoData&lt;double&gt;"/>
+            <attribute array="FALSE" compression="TRUE" desc="The number of scattered photons expected for each particle hypothesis" name="nScatteredPhotons" init="0" type="RichHypoData&lt;double&gt;"/>
             <attribute desc="Photon energy spectra for emitted photons" name="emittedPhotonSpectra" type="RichPhotonSpectra"/>
             <attribute desc="Photon energy spectra for detectable photons" name="detectablePhotonSpectra" type="RichPhotonSpectra"/>
             <attribute desc="Photon energy spectra for signal photons" name="signalPhotonSpectra" type="RichPhotonSpectra"/>
             <attribute desc="The geometrical efficiency for a given hypothesis, binned per PD" init="Rich::NParticleTypes,PDGeomEffs() " name="geomEfficiencyPerPD" type="PDGeomEffsVector"/>
-            <attribute desc="Geometrical efficiencies for the each particle hypothesis" name="geomEfficiency" type="RichHypoData&lt;double&gt;"/>
-            <attribute desc="Geometrical efficiency for scattered component" name="geomEfficiencyScat" type="RichHypoData&lt;double&gt;"/>
-            <attribute desc="The average Cherenkov theta angle for given particle ID type" name="averageCKTheta" type="RichHypoData&lt;double&gt;"/>
+            <attribute desc="Geometrical efficiencies for the each particle hypothesis" name="geomEfficiency" init="0" type="RichHypoData&lt;double&gt;"/>
+            <attribute desc="Geometrical efficiency for scattered component" name="geomEfficiencyScat" init="0" type="RichHypoData&lt;double&gt;"/>
+            <attribute desc="The average Cherenkov theta angle for given particle ID type" name="averageCKTheta" init="0" type="RichHypoData&lt;double&gt;"/>
             <attribute desc="Track segment, the passage of a track through a Rich detector" name="trackSegment" type="RichTrackSegment"/>
             <attribute desc="Ray traced PD panel impact point in global coordinates" name="pdPanelHitPoint" type="HepPoint3D"/>
             <attribute desc="Ray traced PD panel impact point in local coordinates" name="pdPanelHitPointLocal" type="HepPoint3D"/>
@@ -311,7 +311,7 @@
             <import name="RichKernel/RichParticleIDType"/>
             <import name="RichUtils/RichGeomPhoton"/>
             &KeyedObject;
-            <constructor desc="Constructor from detailed information" initList="m_geomPhoton(photon), m_richRecSegment(pSeg), m_richRecTrack(pTrk), m_richRecPixel(pPix)">
+            <constructor desc="Constructor from detailed information" initList="m_geomPhoton(photon), m_expPixelSignalPhots(0), m_expPixelScattPhots(0), m_richRecSegment(pSeg), m_richRecTrack(pTrk), m_richRecPixel(pPix)">
                 <arg name="photon" type="RichGeomPhoton"/>
                 <arg inout="BYVALUE" name="pSeg" type="RichRecSegment*"/>
                 <arg inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
@@ -338,8 +338,8 @@
             </method>
             <method desc="Reset information to force recalculation" name="reset" type="void"/>
             <attribute compression="FALSE" desc="The result of the Cherenkov angles reconstruction" name="geomPhoton" setMeth="TRUE" type="RichGeomPhoton"/>
-            <attribute desc="Expected number of signal photons for each particle hypothesis" getMeth="TRUE" name="expPixelSignalPhots" serialize="TRUE" setMeth="TRUE" type="RichHypoData&lt;double&gt;"/>
-            <attribute desc="Expected number of scattered photons for each particle hypothesis" getMeth="TRUE" name="expPixelScattPhots" serialize="TRUE" setMeth="TRUE" type="RichHypoData&lt;double&gt;"/>
+            <attribute desc="Expected number of signal photons for each particle hypothesis" getMeth="TRUE" name="expPixelSignalPhots" serialize="TRUE" setMeth="TRUE" init="0" type="RichHypoData&lt;double&gt;"/>
+            <attribute desc="Expected number of scattered photons for each particle hypothesis" getMeth="TRUE" name="expPixelScattPhots" serialize="TRUE" setMeth="TRUE" init="0" type="RichHypoData&lt;double&gt;"/>
             <relation desc="Smart Reference to associated RichRecSegment" name="richRecSegmentSmartRef" type="RichRecSegment"/>
             <relation desc="Smart Reference to associated RichRecTrack" name="richRecTrackSmartRef" type="RichRecTrack"/>
             <relation desc="Smart Reference to associated RichRecPixel" name="richRecPixelSmartRef" type="RichRecPixel"/>

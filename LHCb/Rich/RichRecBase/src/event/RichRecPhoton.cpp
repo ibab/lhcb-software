@@ -1,4 +1,4 @@
-// $Id: RichRecPhoton.cpp,v 1.2 2003-08-06 09:55:31 jonrob Exp $
+// $Id: RichRecPhoton.cpp,v 1.3 2004-06-03 16:19:42 jonesc Exp $
 // Include files 
 
 // local
@@ -14,7 +14,8 @@
 // Reset information to force recalculation
 void RichRecPhoton::reset() {
 
-  m_expPixelSignalPhots.resetData();
-  m_expPixelScattPhots.resetData();
+  // reset the data values
+  m_expPixelSignalPhots.resetData(0);
+  m_expPixelScattPhots.resetData(0);
 
 }

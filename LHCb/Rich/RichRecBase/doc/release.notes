@@ -7,6 +7,7 @@
 ! 2004-05-30 - Chris Jones
  - Update RichRecRing event model objects
  - Add new interface for RichRayTraceCherenkovCone
+ - Minor changes related to changes in RichHypoData for windows
 
 !====================== RichRecBase v1r11 2004-04-20 =======================
 ! 2004-04-20 - Chris Jones
