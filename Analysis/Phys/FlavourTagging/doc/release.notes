@@ -4,6 +4,9 @@
 ! Purpose     : Provide tools and algorithm for tagging Bs
 !-----------------------------------------------------------------------------
 
+! 2002-10-21 - Gloria Corti
+ - Introduce some missing std:: to compile on windows
+
 ! 2002-10-19 - Olivier Dormond
  - Fixed a typo which caused the error on the effective efficiency to be wrong.
  - Added three options files to do tagging with only one kind a particle (Kaon,
