@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2002-04-05 09:26:02 ocallot Exp $
+# $Id: requirements,v 1.6 2002-04-05 15:25:46 ocallot Exp $
 # Created    : 11/01/2002
 # Maintainer : Olivier Callot
 #
@@ -19,7 +19,7 @@ branches          cmt doc src options
 #============================================================================
 use	L0Event		v11r*	Event
 use	L1Event		v10r*	Event
-use     VeloDet         v3r*    Det
+use     VeloDet         v4r*    Det
 
 # Component library building rule
 #============================================================================

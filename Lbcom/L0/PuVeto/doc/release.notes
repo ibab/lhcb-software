@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.3 2002-04-05 09:26:03 ocallot Exp $
+! $Id: release.notes,v 1.4 2002-04-05 15:25:46 ocallot Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Olivier Callot
 
 !=============================================================================
 ! 05/04/2002 - Olivier Callot  ** v2r0 **
   - Adapted to the L1 event model.
+	- Uses the fixed Det/VeloDet for PuVeto geometry.
 
 !=============================================================================
 ! 04/04/2002 - Olivier Callot
