@@ -1,8 +1,11 @@
-// $Id: SpdPrsSensDet.cpp,v 1.5 2003-07-17 11:56:32 rybkine Exp $ 
+// $Id: SpdPrsSensDet.cpp,v 1.6 2003-10-17 13:59:34 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2003/07/17 11:56:32  rybkine
+//  minor fix for Spd/Prs timing
+//
 // Revision 1.3  2003/07/09 17:01:44  ibelyaev
 //  Spd/Prs implemenattion by Grigory Rybkine
 //
@@ -36,6 +39,7 @@
 #include "G4LogicalVolume.hh"
 #include "G4SDManager.hh"
 #include "G4EnergyLossTables.hh"
+#include "G4MaterialCutsCouple.hh"
 // GiGaCnv 
 #include "GiGaCnv/GiGaVolumeUtils.h"
 // CaloDet

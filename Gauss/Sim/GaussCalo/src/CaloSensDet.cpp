@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.cpp,v 1.13 2003-10-10 16:17:44 witoldp Exp $ 
+// $Id: CaloSensDet.cpp,v 1.14 2003-10-17 13:59:34 ranjard Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2003/10/10 16:17:44  witoldp
+// changed version number
+//
 // Revision 1.12  2003/10/10 14:53:00  robbep
 // Temporary ix in CaloSensDet against bug in copy number. Use
 // directly geometry instead.
@@ -41,6 +44,7 @@
 #include "G4SDManager.hh"
 #include "G4EnergyLossTables.hh"
 #include "G4Material.hh"
+#include "G4MaterialCutsCouple.hh"
 // GiGaCnv 
 #include "GiGaCnv/GiGaVolumeUtils.h"
 // CaloDet

@@ -8,8 +8,11 @@
 !-----------------------------------------------------------------------------
 
 !=========================== GaussCalo v4r2 ===============================
-! 2003-10-18 - Witek Pokorski
- - src/CaloSensDet.cpp - changed output level of some messages
+! 2003-10-17 - Florence RANJARD
+ - src/CaloSensDet.cpp, src/SprPrsSensDet.cpp - fix code for geant4.5.2.ref04
+
+! 2003-10-16 - Witek Pokorski
+ - src/GaussSensPlaneDet.cpp - changed output level of some messages
 
 !=========================== GaussCalo v4r1 ===============================
 
