@@ -3,6 +3,7 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+!==================== GaussAlgs v1r4 2005-02-02 ===========================
 ! 2005-02-02 - Gloria Corti
  - src/GiGaGetEventAlg.cpp
    . introduce statistical count of particles and vertices multiplicity
