@@ -1,8 +1,11 @@
-// $Id: CaloTools.opts,v 1.3 2002-06-14 11:38:08 ibelyaev Exp $ 
+// $Id: CaloTools.opts,v 1.4 2002-06-18 18:06:27 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/06/14 11:38:08  ibelyaev
+//  update and version change
+//
 // Revision 1.2  2002/06/13 12:32:38  ibelyaev
 //  version update
 //
@@ -20,7 +23,7 @@ ApplicationMgr.DLLs += { "CaloTools" };
 
 /// "extra" Spd digits for Gammas
 ToolSvc.SpdExtraG.Input         = "Raw/Spd/Digits"         ;
-ToolSvc.SpdExtraG.Detector      = "/ddx/Structure/LHCb/Spd" ;
+ToolSvc.SpdExtraG.Detector      = "/dd/Structure/LHCb/Spd" ;
 ToolSvc.SpdExtraG.xTol          =  5. ;
 ToolSvc.SpdExtraG.yTol          =  5. ;
 
