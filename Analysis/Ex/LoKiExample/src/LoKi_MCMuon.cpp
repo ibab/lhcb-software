@@ -1,8 +1,11 @@
-// $Id: LoKi_MCMuon.cpp,v 1.1 2004-04-09 07:23:44 ibelyaev Exp $
+// $Id: LoKi_MCMuon.cpp,v 1.2 2004-06-27 14:34:13 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/04/09 07:23:44  ibelyaev
+//  add 3 new examples
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,14 +27,8 @@ LOKI_ALGORITHM( LoKi_MCMuon )
   // get all reconstructed muons
   Range muons = select( "Muons" , ABSID == 13 ) ;
   
-  // get all MC particles from TES 
-  typedef ::MCParticles MCPs ;
-  const MCPs* mcps = get<MCPs>( MCParticleLocation::Default );
-
-  // copy all MC muons into separate container 
-  MCContainer mcmuons;
-  LoKi::select( mcps->begin() , mcps->end() , 
-                std::back_inserter( mcmuons ) , MCABSID == 13 ) ;
+  // get all MC muons 
+  MCRange mcmuons = mcselect( "MCmu" , MCABSID == 13 ) ;
 
   // create the matching  object 
   MCMatch mc = mctruth();
@@ -60,7 +57,7 @@ LOKI_ALGORITHM( LoKi_MCMuon )
     tuple -> column ( "mc2"   , mccut2( muon )  ) ; // true muon with highest PT
   
     // find MC muon which 'matches' with the recontructed muon
-    MCContainer::iterator im = 
+    MCRange::iterator im = 
       mc->match( muon , mcmuons.begin() , mcmuons.end() ) ;
     if( mcmuons.end() != im &&  0 != *im ) 
     {

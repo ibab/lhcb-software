@@ -1,16 +1,8 @@
-// $Id: LoKi_Tuple.cpp,v 1.3 2004-03-11 21:41:04 ibelyaev Exp $
+// $Id: LoKi_Tuple.cpp,v 1.4 2004-06-27 14:34:13 ibelyaev Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.2  2004/03/03 14:17:29  ibelyaev
-//  update for LoKi v2r0
-//
-// Revision 1.1.1.1  2003/07/24 16:43:50  ibelyaev
-//  new package with LoKi examples 
-//
-// Revision 1.3  2003/05/12 13:21:33  ibelyaev
-//  add the options files for all examples
 //
 // ============================================================================
 // Include files
@@ -92,7 +84,7 @@ LOKI_ALGORITHM( LoKi_Tuple )
   const EventHeader* evt = get<EventHeader> ( EventHeaderLocation::Default );
   
   // add event header information to N-Tuple 
-  tuple2 -> column ( "" , evt );
+  tuple2 << Tuples::Column ( "" , evt ) ;
   
   // write N-Tuple 
   tuple2 -> write  () ;

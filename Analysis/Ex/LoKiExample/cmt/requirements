@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2004-04-09 07:23:43 ibelyaev Exp $ 
+# $Id: requirements,v 1.5 2004-06-27 14:34:13 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -14,7 +14,7 @@ set LOKIEXAMPLEDOC    $(LOKIEXAMPLEROOT)/doc
 set LOKIEXAMPLEOPTS   $(LOKIEXAMPLEROOT)/options
 
 # ============= dependencies  =================================================
-use LoKi  v2r* Tools
+use LoKi  v2r6 Tools
 
 # ============= constituents ==================================================
 library LoKiExample         *.cpp 

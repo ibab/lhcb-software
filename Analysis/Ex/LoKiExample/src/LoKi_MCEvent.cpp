@@ -1,8 +1,11 @@
-// $Id: LoKi_MCEvent.cpp,v 1.1 2004-04-09 07:23:44 ibelyaev Exp $
+// $Id: LoKi_MCEvent.cpp,v 1.2 2004-06-27 14:34:13 ibelyaev Exp $
 // ============================================================================
 // $CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2004/04/09 07:23:44  ibelyaev
+//  add 3 new examples
+// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,23 +27,21 @@ LOKI_ALGORITHM( LoKi_MCEvent )
 {
   using namespace LoKi ;
   using namespace LoKi::Cuts ;
-
+  
   // get GenHeader from TES 
-  const GenHeader* gen = get<GenHeader>( GenHeaderLocation::Default ) ;
-
+  const GenHeader*  gen = get<GenHeader>  ( GenHeaderLocation::Default ) ;
+  
   // get collisions object 
   const Collisions* cls = get<Collisions> ( CollisionLocation::Default ) ;
   
-  // get all Monte Carlo Particles from TES 
-  typedef ::MCParticles MCPs ;
-  const MCPs* mcps = get<MCPs>( MCParticleLocation::Default ) ;
-
-  // evaluate number of beauty hadrons in the event 
-  const size_t Nb = std::count_if ( mcps->begin () , mcps->end   () , BEAUTY ) ;
+  // select all MC beauty hadrons 
+  MCRange beauty  = mcselect ( "Beauty" , BEAUTY ) ;
+  const size_t Nb = beauty.size() ;
   
-  // evaluate number of charm hadrons in the event 
-  const size_t Nc = std::count_if ( mcps->begin () , mcps->end   () , CHARM  ) ;
-
+  // select all MC charm hadrons 
+  MCRange charm   = mcselect ( "Charm"  , CHARM  ) ;
+  const size_t Nc = charm.size() ;
+  
   // put information into NTUPLE 
   Tuple tuple = nTuple( "EventType tuple " ) ;
   
