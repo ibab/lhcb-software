@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.7 2001-11-09 08:37:10 mato Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/GaudiObjDesc/src/DaDiClass.h,v 1.8 2001-11-09 09:56:17 mato Exp $
 #ifndef DADICLASS_H 
 #define DADICLASS_H 1
 
@@ -205,6 +205,7 @@ inline std::string DaDiClass::popImpSoftList()
 inline void DaDiClass::pushImpSoftList(std::string value)
 {
   int i;
+  unsigned long l;
   bool inList = false;
   for (i=0; i<sizeImportList(); ++i)
   {
@@ -213,7 +214,7 @@ inline void DaDiClass::pushImpSoftList(std::string value)
       inList = true;
     }
   }
-  for (i=0; i<m_impSoftList.size(); ++i)
+  for (l=0; l<m_impSoftList.size(); ++l)
   {
     if (value == popImpSoftList())
     {
@@ -248,7 +249,7 @@ inline std::string DaDiClass::popImpStdList()
 inline void DaDiClass::pushImpStdList(std::string value)
 {
   bool inList = false;
-  for(int i=0; i<m_impStdList.size(); ++i)
+  for(unsigned long i=0; i<m_impStdList.size(); ++i)
   {
     if (value == popImpStdList())
     {
@@ -282,6 +283,7 @@ inline std::string DaDiClass::popImportList()
 
 inline void DaDiClass::pushImportList(std::string value)
 {
+  unsigned long l;
   int i;
 	std::string import;
 
@@ -332,7 +334,7 @@ inline void DaDiClass::pushImportList(std::string value)
           }
         }
         bool inList = false;
-        for (i=0; i<m_importList.size(); ++i)
+        for (l=0; l<m_importList.size(); ++l)
         {
           if (import == popImportList())
           {
