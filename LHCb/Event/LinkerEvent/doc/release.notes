@@ -4,6 +4,7 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v1r5 2004-11-25 ==========================
 ! 2004-11-24 - Olivier Callot
  - Define types 'LRange' and 'LRangeIt' for the std::vector<TARGET*> and 
    corresponding const_iterator type in LinkedTo, std::vector<SOURCE*> and
