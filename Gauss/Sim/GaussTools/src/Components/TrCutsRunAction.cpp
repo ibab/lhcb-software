@@ -42,6 +42,7 @@ TrCutsRunAction::TrCutsRunAction
     , m_phcut(1.0) //MeV
     , m_hcut(10.0) //MeV
     , m_ncut(10.0) //MeV
+    , m_nucut(0.0) //MeV
     , m_mcut(10.0) //MeV
     , m_killloops(true)
     , m_maxsteps(100)
@@ -53,6 +54,7 @@ TrCutsRunAction::TrCutsRunAction
   declareProperty("GammaTrCut", m_phcut);
   declareProperty("HadronTrCut", m_hcut);
   declareProperty("NeutronTrCut", m_ncut);
+  declareProperty("NeutrinoTrCut", m_nucut);
   declareProperty("MuonTrCut", m_mcut);
   declareProperty("KillLoops", m_killloops);
   declareProperty("MaxNumberSteps", m_maxsteps);
@@ -113,7 +115,8 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
               || abs(particleCode)==16)
         {
           // do not track neutrinos
-          acut=100000000.0;
+//    acut=100000000.0;
+          acut=m_nucut;
         }
       else 
         {

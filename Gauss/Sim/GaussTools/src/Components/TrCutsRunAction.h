@@ -64,6 +64,7 @@ private:
   double m_phcut;
   double m_hcut;
   double m_ncut;
+  double m_nucut;
   double m_mcut;
   bool m_killloops;
   int m_maxsteps;

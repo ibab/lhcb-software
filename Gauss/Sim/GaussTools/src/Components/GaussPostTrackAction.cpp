@@ -277,16 +277,17 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   // if only to a certain z, check z and set flag
   bool zstore = true;
   if( m_storeUpToZmax && (track->GetVertexPosition().z() > m_zMaxToStore) ) { 
-      zstore = false; 
+    zstore = false; 
   }
   if( m_rejectRICHphe ) {
     const G4VProcess* process  = track->GetCreatorProcess() ;
-    if ( 0 == process ) 
-    { Error ( "G4VProcess points to NULL!" ) ; } 
-    else if ( "RichHpdPhotoelectricProcess" == process->GetProcessName() ) {
-      Warning ( "RichHpdPhotoelectricProcess particles not kept" );
-      return;
-    } 
+    if ( 0 != process ) {
+      if ( "RichHpdPhotoelectricProcess" == process->GetProcessName() ) {
+        Warning ( "RichHpdPhotoelectricProcess particles not kept", 
+                  StatusCode::SUCCESS, 0 );
+        return;
+      } 
+    }
   }
   // if reject rich photoelectrons check and store
   // (3) store  all     particles ? 

@@ -4,6 +4,19 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!==================== GaussTools v10r5 2004-04-29 ============================
+! 2004-04-29 - Gloria CORTI
+ - src/Components/TrCutsRunAction.{h,cpp}
+   . introduce option to control cut on energy of neutrino for tracking
+     (NeutrinoTrCut). Default now set to zero to prevent neutrino to
+     deposit their energy where produced.
+ - src/Components/GaussPostTrackAction.cpp
+   . remove error counting when G4VProcess points to null that is legitimate
+     in a step
+   . set number of lines to print to zero in log file for warning about
+     particle produced by RichHpdPhotoelectricProcess not beeing kept, in
+     order to only have summary at the end of the job
+
 !========================= GaussTools v10r4 ==================================
 ! 2004-04-22 - Gloria CORTI
  - src/Components/GaussPostTrackAction.{h,cpp}
