@@ -143,7 +143,7 @@ void GaussTrajectory::AppendStep      ( const G4Step*  step )
     {    
       GiGaTrajectoryPoint* p = 
         new GiGaTrajectoryPoint( step->GetPostStepPoint()->GetPosition() ,
-                                 step->GetPostStepPoint()->GetGlobalTime()) ; 
+                                 step->GetPostStepPoint()->GetGlobalTime()) ;      
       
       push_back( p );
       ///

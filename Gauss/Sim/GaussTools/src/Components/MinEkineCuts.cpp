@@ -53,6 +53,11 @@ PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
   if (pUserLimits)
     {      
       eMin = pUserLimits->GetUserMinEkine(aTrack);
+
+//        cout << "User cut in " << aTrack.GetVolume()
+//          ->GetLogicalVolume()->GetName() 
+//             << " for particle " << aParticleDef->GetPDGEncoding()<< " is " 
+//             << eMin << endl;
     }
   
   if (eKine < eMin ) 
@@ -66,7 +71,7 @@ PostStepGetPhysicalInteractionLength(const G4Track& aTrack,
       G4double temp = DBL_MAX;
       G4double rangeNow = DBL_MAX;
       
-      G4Material* aMaterial = aTrack.GetMaterial();          
+      const G4MaterialCutsCouple* aMaterial= aTrack.GetMaterialCutsCouple();          
       rangeNow = G4EnergyLossTables::GetRange(aParticleDef,eKine,aMaterial);
       G4double rangeMin = 
         G4EnergyLossTables::GetRange(aParticleDef,eMin,aMaterial);

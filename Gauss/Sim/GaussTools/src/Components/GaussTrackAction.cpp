@@ -1,8 +1,11 @@
-// $Id: GaussTrackAction.cpp,v 1.2 2003-04-11 17:55:36 witoldp Exp $ 
+// $Id: GaussTrackAction.cpp,v 1.3 2003-05-05 13:51:27 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/04/11 17:55:36  witoldp
+// new handling of user limits
+//
 // Revision 1.1  2003/04/09 12:03:48  witoldp
 // GaussTrackAction allows GaussTrackInformation attached by process
 //
@@ -228,8 +231,8 @@ void GaussTrackAction::PreUserTrackingAction  (const G4Track* track )
   // Is the track valid? Is tracking manager valid? 
   // Does trajectory already exist?
   if( 0 == track || 0 == trackMgr() || 0 != trackMgr()->GimmeTrajectory()  ) 
-    { return ; } 
-  
+    { return ; }  
+
   // check if GaussTrackInformation already exists and if not
   // attach it to the track
   G4VUserTrackInformation* uinf = track->GetUserInformation();

@@ -4,6 +4,12 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================= GaussTools v7r1 2003-05-05 ========================
+
+! 2003-05-05 - Witek Pokorski
+ - change to MinEkineCuts required by G4.5.1
+ - GiGaSetSimAttributes - update for the new SimSvc to handle cuts per particle
+
 !======================== GaussTools v7r0 2003-04-28 =======================
 ! 2003-04-11 - Witek Pokorski
  - TrCutsRunAction - implemented new run action which handles the creation

@@ -1,8 +1,11 @@
-// $Id: GaussTrackAction.h,v 1.1 2003-04-10 08:51:06 witoldp Exp $ 
+// $Id: GaussTrackAction.h,v 1.2 2003-05-05 13:51:27 witoldp Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/10 08:51:06  witoldp
+// added missing header file
+//
 // Revision 1.1  2002/12/12 15:19:33  witoldp
 // major repackaging
 //
@@ -173,6 +176,7 @@ private:
   /// container of definitions  of child types 
   PartDefs        m_childStoredTypes      ; 
   ///
+
 };
 
 // ============================================================================

@@ -103,8 +103,9 @@ G4double GaussG4UserLimits::GetCut(const G4Track& aTrack, const mid& partCutMap,
     } 
   else 
     {
-      //---- Look if cut exists for all particles 
-      ite = partCutMap.find(0); 
+      //---- Look if cut exists for all particles (pid=0) 
+      ite = partCutMap.find(0);    
+      
       if( ite != partCutMap.end() ) {
         cutval = (*ite).second;
       } 

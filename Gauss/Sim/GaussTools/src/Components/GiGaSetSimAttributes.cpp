@@ -1,8 +1,11 @@
-// $Id: GiGaSetSimAttributes.cpp,v 1.3 2003-04-29 13:52:57 witoldp Exp $
+// $Id: GiGaSetSimAttributes.cpp,v 1.4 2003-05-05 13:51:27 witoldp Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/04/29 13:52:57  witoldp
+// added printing of one message
+//
 // Revision 1.2  2003/04/11 17:55:36  witoldp
 // new handling of user limits
 //
@@ -27,6 +30,7 @@
  * 
  *  Implementation file for class : GiGaSetSimAttributes
  * 
+ *  @author Witek Pokorski Witold.Pokorski@cern.ch
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   2003-04-06
  */
@@ -140,6 +144,7 @@ G4LogicalVolume* GiGaSetSimAttributes::g4volume
 // ============================================================================
 StatusCode GiGaSetSimAttributes::process ( const std::string& vol ) const 
 {
+
   if( 0 == simSvc () )
     { return Error( " process('" + vol + "'): simSvc () is NULL! " ) ; }
   
@@ -164,38 +169,48 @@ StatusCode GiGaSetSimAttributes::process ( const std::string& vol ) const
   if ( 0 == g4lv )  
     { return Error( " process('" + vol + "'): G4LogicalVolume* is invalid" ) ; }
   
+  typedef std::map<int, const SimAttribute*> Particles;
+  
   if(simSvc()->hasSimAttribute(vol)) 
     {
       Print("Setting SimAttributes for " + vol);
-
-      SimAttribute attr = simSvc() -> simAttribute( vol );
+      const Particles* partattr = simSvc() -> simAttribute( vol );
       
       // instanciate GaussG4UserLimits
-      GaussG4UserLimits* ulimit = new GaussG4UserLimits("GaussG4UserLimits");
+      GaussG4UserLimits* ulimit = 
+        new GaussG4UserLimits("GaussG4UserLimits");
+    
+      for(Particles::const_iterator it = partattr->begin();
+          it!=partattr->end();it++)
+        {
+          const SimAttribute* attr=it->second;
+          int pid=it->first;
       
-      // set max allowed step
-      if( -1 != attr.maxAllowedStep() ) 
-        { ulimit -> SetMaxAllowedStep(attr.maxAllowedStep(),0); }
-      
-      // set max track length
-      if( -1 != attr.maxTrackLength() )
-        { ulimit -> SetUserMaxTrackLength(attr.maxTrackLength(),0); }
-      
-      // set max time
-      if( -1 != attr.maxTime() )
-        { ulimit -> SetUserMaxTime(attr.maxTime(),0); }    
-      
-      // set minimum kinetic energy
-      if( -1 != attr.minEkine() )
-        { ulimit -> SetUserMinEkine(attr.minEkine(),0); }
-      
-      // set minimum range
-      if( -1 != attr.minRange() )
-        { ulimit -> SetUserMinRange(attr.minRange(),0); }
+          // set max allowed step
+          if( -1 != attr->maxAllowedStep() ) 
+            { ulimit -> SetMaxAllowedStep(attr->maxAllowedStep(),pid); }
+          
+          // set max track length
+          if( -1 != attr->maxTrackLength() )
+            { ulimit -> SetUserMaxTrackLength(attr->maxTrackLength(),pid); }
+          
+          // set max time
+          if( -1 != attr->maxTime() )
+            { ulimit -> SetUserMaxTime(attr->maxTime(),pid); }    
+          
+          // set minimum kinetic energy
+          if( -1 != attr->minEkine() )
+            { ulimit -> SetUserMinEkine(attr->minEkine(),pid); }
+          
+          // set minimum range
+          if( -1 != attr->minRange() )
+            { ulimit -> SetUserMinRange(attr->minRange(),pid); } 
+        }
       
       // attach user limits to the given G4 volume
       g4lv -> SetUserLimits(ulimit) ;
     }
+  
   return StatusCode::SUCCESS ;
 };
   
