@@ -1,4 +1,4 @@
-// $Id: VeloSim.cpp,v 1.18 2002-07-23 15:03:35 parkesb Exp $
+// $Id: VeloSim.cpp,v 1.19 2002-09-24 18:43:51 parkesb Exp $
 // Include files
 // STL
 #include <string>
@@ -163,7 +163,7 @@ StatusCode VeloSim::execute() {
     sc = simulation();
 
 
-    // pile-up simulation
+    // pile-up stations simulation
     if (m_pileUp){
       m_hits = m_pileUpHits;
       m_spillOverHits = m_pileUpSpillOverHits;
@@ -188,7 +188,8 @@ StatusCode VeloSim::simulation() {
   if (sc&&m_chargeSim&&m_spillOver) sc= chargeSim(true); 
   /// charge sharing from capacitive coupling of strips
   if (sc&&m_coupling) sc=coupling(); 
-  if (sc&&m_noiseSim) sc= noiseSim(); // add noise
+  // add noise
+  if (sc&&m_noiseSim) sc= noiseSim(); 
   // add pedestals - not yet implemented
   if (sc&&m_pedestalSim) sc= pedestalSim(); 
   // common mode - not yet implemented
@@ -340,7 +341,7 @@ StatusCode VeloSim::chargeSim(bool spillOver) {
         chargePerPoint(*hitIt,NPoints,sPoints,spillOver);
 
         // diffuse charge from points to strips
-        diffusion(*hitIt,NPoints,sPoints);
+        diffusion(*hitIt,NPoints,sPoints,spillOver);
       }
     }
   }
@@ -521,7 +522,7 @@ void VeloSim::deltaRayCharge(double charge, double tol,
 // allocate the charge to the collection strips
 //=========================================================================
 void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
-                        std::vector<double>& Spoints){
+                        std::vector<double>& Spoints,bool spillOver){
   MsgStream log(msgSvc(), name());
   log << MSG::VERBOSE << "diffusion of charge from simulation points"
       << endreq;
@@ -592,7 +593,8 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
         // update charge and MCHit list
         if (valid){
           MCVeloFE* myFE = findOrInsertFE(stripKey);
-          fillFE(myFE,hit,charge);
+          if (!spillOver) fillFE(myFE,hit,charge); // update and add MC link
+          else fillFE(myFE,charge); // update and add MC link
         }
       }
     } // neighbours loop
@@ -609,14 +611,29 @@ void VeloSim::diffusion(MCVeloHit* hit,int Npoints,
 // update signal and list of MCHits
 //=========================================================================
 void VeloSim::fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge){
+  MsgStream log(msgSvc(), name());
   myFE->setAddedSignal(myFE->addedSignal()+charge);
-  // add link to MC hit (if not already there and not for spillover)
-  if (m_simMode=="velo"){
-    SmartRefVector<MCVeloHit> hitlist = myFE->mcVeloHits();
-    bool present=false;
-    for(SmartRefVector<MCVeloHit>::const_iterator hitIt =hitlist.begin();
-        hitIt < hitlist.end(); hitIt++){if (hit==(*hitIt)) present=true;}
-    if (!present) myFE->addToMCVeloHits(hit);
+  // add link to MC hit / update with weight
+  log << MSG::VERBOSE << "fillFE " << myFE << endreq;
+  int size=myFE->NumberOfMCVeloHits();
+  int i=0;
+  MCVeloHit* hitChk=NULL;
+  while (hit!=hitChk && i<size) { 
+   log << MSG::VERBOSE << "hit number " << i << " / " << size << " charge " << charge << " hit " << hit << endl;
+    hitChk = myFE->mcVeloHit(i);  
+    i++; 
+  }; 
+  i--;
+  if (hit==hitChk){
+    double sig=myFE->mcVeloHitCharge(i);
+    log << MSG::VERBOSE << "hit exists has signal " << sig; 
+    sig+=charge;
+    myFE->setMCVeloHitCharge(i,sig);
+    log << MSG::VERBOSE << " new signal value " << sig << " for hit " << hit << " hit check " << hitChk << endreq;
+  }
+  else{
+    log << MSG::VERBOSE << "hit added" << endreq;
+    myFE->addToMCVeloHits(hit,charge);
   }
   return;
 }
@@ -876,6 +893,9 @@ StatusCode VeloSim::noiseSim(){
                 g01eac(Nag_UpperTail,
                        VeloSimParams::threshold/noiseSig ,
                        NAGERR_DEFAULT)*float(maxStrips)));
+    Rndm::Numbers poisson(randSvc(), Rndm::Poisson(hitNoiseTotal));
+    //    log <<  MSG::INFO << " poisson" << poisson() << endl;
+    hitNoiseTotal = int(poisson());
 
     log << MSG::VERBOSE << "Number of strips to add noise to "
         << hitNoiseTotal

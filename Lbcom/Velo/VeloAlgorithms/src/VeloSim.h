@@ -1,4 +1,4 @@
-#// $Id: VeloSim.h,v 1.6 2002-07-09 20:30:15 parkesb Exp $
+#// $Id: VeloSim.h,v 1.7 2002-09-24 18:43:52 parkesb Exp $
 #ifndef VELOSIM_H
 #define VELOSIM_H 1
 
@@ -55,7 +55,7 @@ private:
                       double tol,
                       int Npoints,
                       std::vector<double>& Spoints);
-  void diffusion(MCVeloHit* hit, int Npoints, std::vector<double>& Spoints);
+  void diffusion(MCVeloHit* hit, int Npoints, std::vector<double>& Spoints, bool SpillOver);
   void testSim(MCVeloHit* hit, bool SpillOver);
   void fillFE(MCVeloFE* myFE, MCVeloHit* hit, double charge);
   void fillFE(MCVeloFE* myFE, double charge);
