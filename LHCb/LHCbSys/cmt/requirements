@@ -1,48 +1,48 @@
 package LHCbSys
-version v13r5
+version v14r0
 
 branches doc cmt
  
 #===============================================================
 # LHCb packages used by all applications
 #===============================================================
-use LHCb		v13r5
+use LHCb		v14r0
 
 use GaudiConf		v7r4
 
 # External packages used by GenEvent
 use PYTHIA		v2r6205p2 Gen
-use HepMC		v3r121p1  Sim
+use HepMC	v3r121p2	Sim
 use GenEvent     	v2r4	Event
 
 # Kernel packages
-use KernelSys   	v1r9	Kernel
-use LHCbKernel  	v2r10	Kernel
-use CaloKernel  	v2r3p1	Calo
-use MuonKernel  	v2r3    Muon
+use KernelSys   	v2r0	Kernel
+use LHCbKernel  	v3r0	Kernel
+use CaloKernel  	v2r4	Calo
+use MuonKernel  	v2r4	Muon
 use TrKernel    	v11r2p1 Tr
-use RichKernel  	v4r1	Rich
+use RichKernel  	v4r2	Rich
 use VeloKernel  	v1r3    Velo
 
 # Detector description
-use DetSys		v3r3	Det
-use VeloDet        	v8r6	Det
-use DetDesc        	v13r0p1	Det
-use DetDescCnv        	v2r1p1	Det
-use XmlTools        	v2r0p1	Tools
-use ITDet          	v1r7	Det
-use OTDet          	v5r0	Det
-use CaloDet        	v6r6p1	Det
+use DetSys		v4r0	Det
+use VeloDet        	v8r7	Det
+use DetDesc        	v14r0	Det
+use DetDescCnv        	v2r2	Det
+use XmlTools        	v3r0	Tools
+use ITDet          	v1r8	Det
+use OTDet          	v5r1	Det
+use CaloDet        	v6r7	Det
 use CaloDetXmlCnv	v2r3p1	Det
 use MuonDet        	v4r4p1	Det
-use Magnet         	v2r2	Det
+use Magnet         	v2r3	Det
 use MuonTools      	v3r6	Muon
-use RichDet		v6r3	Det
+use RichDet		v6r4	Det
 
 # Event data model
-use EventSys		v15r3	Event
-use EventKernel  	v3r0	Event
-use Event        	v3r6	Event
+use EventSys		v16r0	Event
+use EventKernel  	v4r0	Event
+use Event        	v3r7	Event
 use VeloEvent    	v12r1   Event
 use ITEvent      	v12r1   Event
 use OTEvent      	v12r1   Event
@@ -50,12 +50,12 @@ use TrEvent      	v12r2	Event
 use RichEvent    	v6r1	Event
 use CaloEvent    	v12r1	Event
 use MuonEvent    	v2r4    Event
-use L0Event      	v13r3	Event
+use L0Event      	v13r4	Event
 use L1Event      	v11r7   Event
 use PhysEvent    	v7r8	Event
 use HltEvent		v4r0	Event
-use DAQEvent		v3r1	Event
-use DbCnv        	v7r2p1	Event
+use DAQEvent		v3r2	Event
+use DbCnv        	v8r0	Event
 
 # Associators
 use AssociatorsSys	v1r8	Associators

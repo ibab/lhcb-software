@@ -4,6 +4,32 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+!======================= LHCbSys v14r0 2003-12-08 =======================
+! 2003-12-08 - Marco Cattaneo
+
+ - Modified packages: HepMC v3r121p2,
+                      KernelSys v2r0, LHCbKernel v3r0, CaloKernel v2r4,
+                                      RichKernel v4r2, MuonKernel v2r4,
+                      EventSys v16r0, EventKernel v4r0, Event v3r7, DBCnv v8r0,
+                                      L0Event v13r4, DAQEvent v3r2,
+                      DetSys v4r0, DetDesc v14r0, XmlTools v3r0, DetDescCnv v2r2,
+                                   ITDet v1r8, OTDet v5r1, RichDet v6r4, 
+                                   VeloDet v8r7, CaloDet v6r7, Magnet v2r3
+
+ - In all modified packages:
+   .  Modifications to requirements to build against GAUDI_v13r0
+
+ - In LHCbKernel v3r0:
+   . SerializeStl.h: add serialisation methods for std::map from RichKernel
+   . Remove Kernel/MuonTileID.h (more recent version exists in MuonKernel)
+
+ - In RichKernel v4r2:
+   . Remove RichKernel/MessageSvcStl.h (now in GaudiKernel/MsgStream.h)
+   . Remove RichKernel/SerializeStl.h (methods moved to LHCbKernel)
+
+ - In EventKernel v4r0:
+   . Remove src/stl_hash (now in GaudiKernel)
+
 !======================= LHCbSys v13r5 2003-12-04 =======================
 ! 2003-12-04 - Marco Cattaneo
  - Modified packages: GaudiConf v7r4,
