@@ -86,11 +86,11 @@ private:
   double m_s2incoherent           ; ///< incoherent noise dispersion
   double m_s2coherent             ; ///< coherent noise dispersion
 
-  static const double         ResA    = 0.10 ;
-  static const double         GainS   = 0.01 ;
-  static const double         NoiseIn = 0.0  ;
-  static const double         NoiseCo = 0.0  ;
-  static const double         ResB    = 0.01 ;
+  double m_resA    ; // calorimeter resolution  (stochastic term) 
+  double m_resB    ; // calorimeter resolution  (constant term)
+  double m_gainS   ; // sigma on relative gain
+  double m_sigmaIn ; // sigma of incoherent noise 
+  double m_sigmaCo ; // sigma of incoherent noise 
 
 };
 #endif // CALOTOOLS_CALOSCORRECTIONSEQUENCE_H

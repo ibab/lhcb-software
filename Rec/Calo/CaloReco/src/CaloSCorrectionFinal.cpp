@@ -40,8 +40,13 @@ namespace std
 		inline const T& max( const T& a , const T& b )
 	{ return (a<b) ? b : a ;};
 
+   template <class T>
+		inline const T& min( const T& a , const T& b )
+	{ return (a<b) ? a : b ;};
+
 };
 #endif 
+
 
 // ============================================================================
 /** @var CaloSCorrectionFinalFactory
@@ -70,12 +75,20 @@ CaloSCorrectionFinal::CaloSCorrectionFinal(const std::string& type,
   , m_Coeff_area_1_X()
   , m_Coeff_area_1_Y()
   , m_Coeff_area_2_X()
-  , m_Coeff_area_2_Y() 
-  , m_a2GeV(ResA * ResA * GeV)
-  , m_b2(ResB * ResB)
-  , m_s2gain(GainS * GainS )
-  , m_s2incoherent(NoiseIn * NoiseIn)
-  , m_s2coherent(NoiseCo * NoiseCo) {
+  , m_Coeff_area_2_Y()
+  ///
+  , m_a2GeV        ()
+  , m_b2           () 
+  , m_s2gain       ()
+  , m_s2incoherent ()
+  , m_s2coherent   ()
+  ///
+  , m_resA         ( 0.10 ) // calorimeter resolution (stochastic term) 
+  , m_resB         ( 0.01 ) // calorimeter resolution (constant term)
+  , m_gainS        ( 0.01 ) // relative variantion of gain 
+  , m_sigmaIn      ( 1.30 ) // sigma of incoherent noise (in channels) 
+  , m_sigmaCo      ( 0.30 ) // sigma of coherent noise 
+{
   declareInterface<ICaloHypoTool>(this);
   declareProperty("Coeff0X"     ,m_Coeff_area_0_X);
   declareProperty("Coeff0Y"     ,m_Coeff_area_0_Y);
@@ -83,11 +96,13 @@ CaloSCorrectionFinal::CaloSCorrectionFinal(const std::string& type,
   declareProperty("Coeff1Y"     ,m_Coeff_area_1_Y);
   declareProperty("Coeff2X"     ,m_Coeff_area_2_X);
   declareProperty("Coeff2Y"     ,m_Coeff_area_2_Y);
-  declareProperty("a2GeV"       ,m_a2GeV         );
-  declareProperty("b2"          ,m_b2            );
-  declareProperty("s2gain"      ,m_s2gain        );
-  declareProperty("s2incoherent",m_s2incoherent  );
-  declareProperty("s2coherent"  ,m_s2coherent    );
+  //
+  declareProperty("ResolutionA"        , m_resA     ) ;
+  declareProperty("ResolutionB"        , m_resB     ) ;
+  declareProperty("RelativeGainError"  , m_gainS    ) ; 
+  declareProperty("NoiseIncoherent"    , m_sigmaIn  ) ;
+  declareProperty("NoiseCoherent"      , m_sigmaCo  ) ;
+
 }
 // ============================================================================
 
@@ -189,6 +204,14 @@ StatusCode CaloSCorrectionFinal::initialize()
       return StatusCode::FAILURE;
     }
   }
+
+	
+  m_a2GeV        = m_resA    * m_resA    * GeV  ;
+  m_b2           = m_resB    * m_resB           ;
+  m_s2gain       = m_gainS   * m_gainS          ;
+  m_s2incoherent = m_sigmaIn * m_sigmaIn        ;
+  m_s2coherent   = m_sigmaCo * m_sigmaCo        ;
+
   return StatusCode::SUCCESS;
 }
 // ============================================================================
