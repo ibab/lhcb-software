@@ -16,7 +16,7 @@ class STWafer {
     STWafer(double Pitch, int FirstStrip, unsigned int nWafers,
         unsigned int iStation, unsigned int iLayer, unsigned int iWafer,
         double UL, double UR, double VD, double VU, 
-        double DZ, double deadWidth);
+        double DZ, double deadWidth, double thickness);
 
     virtual ~STWafer() {}
 
@@ -44,7 +44,7 @@ class STWafer {
     /// Check if a point (u,v) is inside of this subdivision with tol
     bool isInside(const double u, const double v, const double tolerance) const;
 
-    bool isInsideFullDetail(const double u, const double v) const;
+    bool isInsideFullDetail(const double u, const double v, double zLocal = 0.) const;
 
     /// Get number of strips in this subdivision
     int numStrips() const;
@@ -116,6 +116,10 @@ class STWafer {
 
     // half size of dead regions
     double m_deadWidth;
+  
+    // wafer thickness
+    double m_waferThickness;
+
 };
 
 inline unsigned int STWafer::stationID() const{

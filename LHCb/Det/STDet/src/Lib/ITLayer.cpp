@@ -1,4 +1,4 @@
-// $Id: ITLayer.cpp,v 1.1.1.1 2004-01-29 15:57:39 mneedham Exp $
+// $Id: ITLayer.cpp,v 1.2 2004-05-19 06:49:55 mneedham Exp $
 //
 // This File contains the definition of the ITLayer-class
 //
@@ -64,7 +64,7 @@ ITLayer::ITLayer(int stationID, int layerID, double z,
                                             uWafer + sensWaferWidth/2.0, 
 			                    vWafer - sensLadderHeight/2.0, 
 			                    vWafer + sensLadderHeight/2.0, 
-                                            dz,guardRingSize);
+                                            dz,guardRingSize, waferThickness);
 
          currStrip += m_Wafers[currWafer-1]->lastStrip();
          currWafer++;      
@@ -103,7 +103,7 @@ ITLayer::ITLayer(int stationID, int layerID, double z,
                                             uWafer + sensWaferWidth/2.0, 
 			                    vWafer - sensLadderHeight/2.0, 
 			                    vWafer + sensLadderHeight/2.0, 
-                                            dz,guardRingSize);
+                                            dz,guardRingSize, waferThickness);
 
        currStrip += m_Wafers[waferId-1u]->lastStrip();        
       

@@ -50,6 +50,13 @@ public:
   bool isInside(const double x, const double y) const;
   bool isInside(const double x, const double y, const double tol) const;
   bool isInside(const double x, const double y, const ITChannelID aChan, const double tol) const;
+
+  void toUV(const double x, const double y,
+            double& u, double& v) const;
+
+  void toXY(const double u, const double v,
+            double& u, double& v) const;
+
   virtual ITChannelID stripID(const double u, const double v) const;
   virtual double U(const ITChannelID stripID) const;
   virtual double centerX(const ITChannelID stripID) const = 0;
@@ -132,6 +139,21 @@ inline double STDetectionLayer::sinAngle() const{
   //layer z position
   return m_Sin;
 }
+
+inline void STDetectionLayer::toUV(const double x, const double y,
+		 double& u, double& v) const{
+
+  u = x*m_Cos + y*m_Sin;
+  v = y*m_Cos - x*m_Sin;
+}
+
+inline void STDetectionLayer::toXY(const double u, const double v,
+		 double& x, double& y) const{
+
+  y = u*m_Sin + v*m_Cos;
+  x = u*m_Cos - v*m_Sin;
+}
+
 
 inline bool STDetectionLayer::isInside(const double z) const { 
   return (fabs(z - m_Z) < (0.5*(m_WaferThickness + m_zStagger) + SAFETY_BOUND)); 

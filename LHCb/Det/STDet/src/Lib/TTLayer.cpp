@@ -135,7 +135,7 @@ TTLayer::TTLayer(int stationID, int layerID, double z,
 	   		            v - 0.5*ladderHeight, 
 		 	            v + 0.5*ladderHeight, 
                                     dz,
-                                    vertGuardRing);
+                                    vertGuardRing, waferThickness);
        
        m_Wafers[aWafer->waferID()-1] = aWafer;
        currStrip += aWafer->lastStrip();
@@ -173,7 +173,8 @@ TTLayer::TTLayer(int stationID, int layerID, double z,
 	   		            v - 0.5*ladderHeight, 
 		 	            v + 0.5*ladderHeight, 
                                     dz,
-                                    vertGuardRing);
+                                    vertGuardRing,
+                                    waferThickness);
 
         m_Wafers[aWafer->waferID()-1] = aWafer;
         currStrip += aWafer->lastStrip();
@@ -249,7 +250,7 @@ TTLayer::TTLayer(int stationID, int layerID, double z,
 			v - 0.5*ladderHeight, 
 		        v + 0.5*ladderHeight, 
                         dz,
-                        vertGuardRing);
+                        vertGuardRing, waferThickness );
       m_Wafers[aWafer->waferID()-1] = aWafer;
       currStrip += aWafer->lastStrip();
  
@@ -294,7 +295,7 @@ TTLayer::TTLayer(int stationID, int layerID, double z,
 			v - 0.5*ladderHeight, 
 		        v + 0.5*ladderHeight, 
                         dz,
-                        vertGuardRing);
+                        vertGuardRing, waferThickness);
       m_Wafers[aWafer->waferID()-1] = aWafer;
       currStrip += aWafer->lastStrip();
       v += 0.5*(waferHeight*(double)(*startIter)); 
@@ -386,11 +387,14 @@ unsigned int TTLayer::columnID(const unsigned int iWafer) const {
 
     while ((iter != m_firstInColumn.end())&&(iWafer>*iter)){
       ++iter;
+      ++iC;
     } 
-  
+
+    /*
     std::vector<unsigned int>::difference_type n = 0;
     n = std::distance(m_firstInColumn.begin(),iter);
-    iC = (unsigned int)n;
+    iC = (unsigned int)n; */
+
   }  // valid wafer
 
   return iC;

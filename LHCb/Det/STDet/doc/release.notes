@@ -1,6 +1,10 @@
 !Package         : STDet
 !Package manager : M. Needham
 
+! 2004-05-19 - M.needham
+ - Add members to layer to convert u,v to x,y and vice versa
+ - Add (another) member to wafer for checking if hit is inside 
+
 !========================= STDet v1r1 2004-03-02 ========================
 ! 2004-03-02 - M.needham
  - Bug fixs in TTLayer

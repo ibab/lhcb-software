@@ -3,12 +3,11 @@
 #include "STDet/STWafer.h"
 #include "Kernel/ITChannelID.h"
 
-/// Standard constructor. Parameter iFixedEdge determines what edge 
-/// is not clipped if the number of strips is not integer
+/// Standard constructor.
 STWafer::STWafer(double pitch, int firstStrip, unsigned int nWafer, 
                  unsigned int iStation, unsigned int iLayer, unsigned int iWafer,
 		 double ul, double ur, double vd, double vu, double dz,
-                 double deadWidth): 
+                 double deadWidth, double thickness): 
   m_Pitch(pitch),
   m_FirstStrip(firstStrip),
   m_station(iStation),
@@ -19,7 +18,8 @@ STWafer::STWafer(double pitch, int firstStrip, unsigned int nWafer,
   m_VU(vu),
   m_VD(vd),
   m_DZ(dz),
-  m_deadWidth(deadWidth)
+  m_deadWidth(deadWidth),
+  m_waferThickness(thickness)
 {
   m_NumStrips = (int)((m_UR - m_UL)/m_Pitch);
 
@@ -71,17 +71,20 @@ bool STWafer::isInside(const double u, const double v, double tolerance) const
          && v<(m_VU+tolerance) && v>(m_VD-tolerance));
 }
 
-bool STWafer::isInsideFullDetail(const double u, const double v) const
+bool STWafer::isInsideFullDetail(const double u, const double v, 
+                                 const double zLocal) const
 {
+
+  /// detailed check in local coordinate system
   bool isInside = this->isInside(u,v); 
-  if (isInside == true){
+  if ((fabs(zLocal) < 0.5*m_waferThickness)&&(isInside == true)){
     // detailed check
     std::vector<double>::const_iterator iterD = m_deadRegions.begin();
     while ((iterD != m_deadRegions.end())&&(isInside == true)){
       if (fabs(v-*iterD)<m_deadWidth){
         isInside = false;
       }
-      iterD++;
+      ++iterD;
     } // iterD
   } 
 
@@ -103,9 +106,11 @@ double STWafer::U(const int strip) const
 std::ostream& STWafer::printOut( std::ostream& os ) const{
 
   os << " wafer: " << std::endl;
+  os << "  station " << m_station << " layer " << m_layer << " wafer " << m_wafer <<std::endl;  
   os << "      pitch " << m_Pitch << " # strips " << m_NumStrips <<std::endl;
   os << "      uR  " << m_UR << " uL " <<m_UL <<std::endl;
   os << "      vD  " << m_VD << " uL " <<m_VU <<std::endl;
+  os << "      dz   "<< m_DZ << std::endl;
 
   return os;
 }
@@ -114,9 +119,11 @@ std::ostream& STWafer::printOut( std::ostream& os ) const{
 MsgStream& STWafer::printOut( MsgStream& os ) const{
 
   os << " wafer: " << endreq;
+  os << " station " << m_station << " layer " << m_layer << " wafer " << m_wafer <<endreq;
   os << "      pitch " << m_Pitch << " # strips " << m_NumStrips <<endreq;
   os << "      uR  " << m_UR << " uL " <<m_UL << endreq;
   os << "      vD  " << m_VD << " uL " <<m_VU << endreq;
+  os << "      dz   "<< m_DZ << endreq;
 
   return os;
 }
