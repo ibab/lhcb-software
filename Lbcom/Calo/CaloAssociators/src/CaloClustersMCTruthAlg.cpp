@@ -1,8 +1,11 @@
-// $Id: CaloClustersMCTruthAlg.cpp,v 1.4 2002-06-13 12:28:48 ibelyaev Exp $
+// $Id: CaloClustersMCTruthAlg.cpp,v 1.5 2002-06-16 17:19:19 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/06/13 12:28:48  ibelyaev
+//  new options and new algorithm
+//
 // ============================================================================
 // Include files
 // LHCbKernel 
@@ -136,6 +139,7 @@ StatusCode CaloClustersMCTruthAlg::execute()
   Detector*   detector  = get ( detSvc   () , detData   () , detector );
   if( 0 == detector  ) { return StatusCode::FAILURE ; }
   
+  // scale factor for recalculation of Eactive into Etotal 
   const double activeToTotal = detector->activeToTotal() ;
   
   // create relation table and register it in the event transient store 
@@ -146,25 +150,29 @@ StatusCode CaloClustersMCTruthAlg::execute()
   // create the MCtruth evaluator 
   EnergyFromMCParticle<CaloCluster> evaluator;
   
-  for( Particles::const_iterator    particle = particles->begin() ; 
-       particles->end() != particle ; ++particle )
-    {    
-      if( 0 == *particle                    ) { continue ; } // Skip NULLS
-      // fill the relation data 
-      for( Clusters::const_iterator cluster = clusters->begin() ;
-           clusters->end() != cluster ; ++cluster ) 
-        {
-          if( 0 == *cluster                 ) { continue ; } // Skip NULLs
-          
-          // use the evaluator to extract MCTruth information 
-          const double energy =  
+  // loop over all clusters 
+  for( Clusters::const_iterator cluster = clusters->begin() ;
+       clusters->end() != cluster ; ++cluster ) 
+    {
+      // Skip NULLs
+      if( 0 == *cluster ) { continue ; }
+      // define "current cut" value 
+      const double  cut = m_threshold * (*cluster)->e() ;
+      // loop over all MC truth particles 
+      for( Particles::const_iterator    particle = particles->begin() ; 
+           particles->end() != particle ; ++particle )
+        {    
+          // Skip NULLS  
+          if( 0 == *particle ) { continue ; } 
+          // Skip low momentum particles  
+          if( (*particle)->momentum().e() < 0.90 * cut ) { continue ; }
+          // use the evaluator to extract exact MCTruth information 
+          const double  energy =  
             evaluator( *cluster , *particle ) * activeToTotal ;
-          // skip small energy depositions 
-          if(  m_threshold * (*cluster)->e() <= energy  ) 
-            {    
-              // put relation to relation table 
-              table->relate( *cluster , *particle , (float) energy );     
-            }
+          // skip small energy depositions
+          if(  cut > energy  ) { continue ; }
+          // put relation to relation table 
+          table->relate( *cluster , *particle , (float) energy );     
         };
     }
   
