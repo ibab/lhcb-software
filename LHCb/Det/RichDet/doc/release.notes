@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================= RichDet v6r2 2003-11-21 =========================
+
+! 2003-11-23 - Chris Jones
+ - Some improvements for efficiency
+
 ! 2003-11-21 - Antonis Papanestis
  - Added DeRich.h as a base class for DeRich1 and DeRich2 with a new function
    to return the side.
