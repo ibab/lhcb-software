@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.15 2003-11-02 21:47:22 jonrob Exp $
+// $Id: RichPIDQC.cpp,v 1.16 2003-11-03 16:56:48 jonrob Exp $
 // Include files
 
 // local
@@ -35,7 +35,7 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos",   m_extraHistos = true );
+  declareProperty( "ExtraHistos",   m_extraHistos = false );
 
 }
 
