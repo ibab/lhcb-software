@@ -1,6 +1,7 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+!==================== EvtGen v7r0 ================================
 ! 2004-11-15 - Patrick Robbe
  - change size of HEPEVT to 10000. (changes also requested in some
    photos subroutines located in subdirectory photos)
