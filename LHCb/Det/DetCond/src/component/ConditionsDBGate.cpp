@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.cpp,v 1.11 2002-07-23 17:10:17 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.12 2002-07-23 17:42:03 andreav Exp $
 #include <string>
 
 #ifdef __CondDBObjy__
@@ -416,7 +416,7 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
 
   // Create the full path to the boot file
   condDBInfo = m_condDBHost + "::" + m_condDBName;
-  log << MSG::INFO << "CondDB Objy full path is " << condDBInfo << endreq;
+  log << MSG::INFO << "CondDB Objy boot path is " << condDBInfo << endreq;
 
   return StatusCode::SUCCESS;
 
@@ -478,7 +478,7 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
   }
 
   if ( !m_showCondDBPswd ) {
-    // Create the full dummy path to the boot file
+    // Create a printable Oracle init string (without the password)
     condDBInfo  = "user="     + m_condDBUser; // Oracle user
     condDBInfo += ",passwd=********";         // Oracle password
     condDBInfo += ",db="      + m_condDBHost; // Oracle DB (tnsnames.ora)
@@ -487,7 +487,7 @@ ConditionsDBGate::i_buildCondDBInfo( std::string& condDBInfo )
 	<< condDBInfo << endreq;
   }
 
-  // Create the full path to the boot file
+  // Create the actual Oracle init string
   condDBInfo  = "user="     + m_condDBUser; // Oracle user
   condDBInfo += ",passwd="  + m_condDBPswd; // Oracle password
   condDBInfo += ",db="      + m_condDBHost; // Oracle DB (tnsnames.ora)
