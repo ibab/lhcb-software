@@ -22,15 +22,15 @@ class GiGaTrajectoryPoint: public G4TrajectoryPoint
   ///
 public:
   ///
-  GiGaTrajectoryPoint ();
-  GiGaTrajectoryPoint ( const Hep3Vector&  Pos  , const double& Time );
-  GiGaTrajectoryPoint ( const HepLorentzVector&    right );
-  GiGaTrajectoryPoint ( const GiGaTrajectoryPoint& right ); 
+  inline GiGaTrajectoryPoint ();
+  inline GiGaTrajectoryPoint ( const Hep3Vector&  Pos  , const double& Time );
+  inline GiGaTrajectoryPoint ( const HepLorentzVector&    right );
+  inline GiGaTrajectoryPoint ( const GiGaTrajectoryPoint& right ); 
   ///
   virtual ~GiGaTrajectoryPoint();
   ///
-  inline void* operator new    ( size_t );
-  inline void  operator delete ( void*  );
+  void* operator new    ( size_t );
+  void  operator delete ( void*  );
   ///
   bool operator==( const GiGaTrajectoryPoint& right ) { return (&right) == this ; } /// ?
   ///
