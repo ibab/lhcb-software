@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.5 2001-10-10 08:14:07 gcorti Exp $
+! $Id: release.notes,v 1.6 2002-02-08 19:00:12 gcorti Exp $
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
+
+! 08022002 - Gloria Corti
+  - use packages compatibles with Gaudi v9r0
+  - remove package ReadData (no longer support reading of SICBDST v235
+    files)
+  - use dedicated main program and introduce structure in src directory 
 
 ! ========================================================================
 

@@ -1,65 +1,125 @@
-package DaVinci
-version v1r2
+# $Id: requirements,v 1.9 2002-02-08 18:58:18 gcorti Exp $
+# Created    : 07/02/2002
+# Maintainer : Gloria Corti
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
-branches doc cmt src job options
+package           DaVinci
+version           v2r0
 
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src job options
+
+
+# Switch off automatic rebuild of application when a library is
+# modified
+# ignore_pattern package_stamps
+
+# Next line to get around SICB/detdes version clashes. 
+# Makes order of package use important
 version_strategy first_choice
 
-# Gaudi Configuration options
-use GaudiConf    v5
 
-# Gaudi Framework
-use GaudiSys     v8
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#============================================================================
+#--- CMT and Gaudi policy
+use GaudiPolicy  v5r4
 
-# Histogram persistency ( choose the one you prefer )
-#use HbookCnv     v10*
-#use RootHistCnv  v4*
+#--- To read data produced with Brunel >= v6 it is possible to 
+#    select the appropriate database version at running time
+#--- To read data produced with Brunel v5r* one MUST have a consistent
+#    SICB detdes package version and make a new executable
+#--- Reading of files produced with SICBDST is not supported in DaVinci v2r0
+#--- Uncomment and modify next line to select an appropriate database version
+use dbase v241 SICB
 
-# Additional external libraries
-use CERNLIB      v2001
+#--- External libraries - Gaudi v9
+use ExternalLibs   v3r4
+use AIDA           v1r0
+use CLHEP          v17r10
+use HTL            v13r10
+use XERCES         v15r2
+use CERNLIB        v2001
 
-# Subdetector Kernels ( add any other Kernel you need )
-use CaloGen      v2*    Calo
+#--- Gaudi libraries - Gaudi v9r1 + bug fixes
+use GaudiKernel        v11r1
+use GaudiSvc           v7r2
+use GaudiAud           v5r0
+use GaudiAlg           v5r0
+use GaudiTools         v5r0
+use GaudiNagC          v6r0
+use GaudiDb            v5r0
 
-# Detector description ( add any other Det package you need )
-use XmlDDDB      v6*    Det
-use DetDesc      v7*    Det
-use CaloDet      v2*    Det
+#--- Histogram persistency ( choose the one you prefer )
+use HbookCnv           v11r0
+#use RootHistCnv        v5r0
 
-# Event Model ( add any other Event package you need )
-use LHCbEvent    v11*   Event
-use PhysEvent    v1*    Event
-use CaloEvent    v6*    Event
-use L0Event      v3*    Event
+#---LHCb common libraries
+use GaudiConf      v6r2
+use BookKeeping    v1r1   Tools
+use Finclude       v12r2  SICB
+use Futio          v11    SICB
 
-# SICB components necessary for running Fortran selection routines
-# to ensure reading of correct database and use of correct libraries
-# for the data produce with specific version of Brunel/SICBDST
-use ReadData     v5     Phys 
-use axsellib     v6*    SICB
+#--- Subdetector Kernels ( add any other Kernel you need )
+use CaloKernel     v1r*   Calo
 
-# SicB event data persistency ( add any other you need )
-use SicbCnv      v13*   SICB
-use CaloSicbCnv  v4*    SICB
-use MuonSicbCnv  v3*    SICB
-use L0SicbCnv    v3*    SICB
+#--- Detector description ( add any other Det package you need )
+use XmlDDDB        v7r*   Det
+use DetDesc        v9r*   Det
+use CaloDet        v3r*   Det
+use VeloDet        v3r*   Det
 
-# Trigger components
-use L0Calo       v2*    L0
-use L0Muon       v3*    L0
-use L0DU         v2*    L0
+#--- Event Model ( add any other Event package you need )
+use EventKernel    v1r*   Event
+use LHCbEvent      v12r*  Event
+use CaloEvent      v7r*   Event
+use VeloEvent      v6r*   Event
+use L0Event        v10r*  Event
+use L1Event        v6r*   Event
 
-# DaVinci components
-use DaVinciTools  v1*   Phys
-#
-#===== build DaVinci =========================
+#--- SicB event data persistency
+use SicbCnv        v15r*  SICB
+use CaloSicbCnv    v5r*   SICB
+use MuonSicbCnv    v4r*   SICB
+use L0SicbCnv      v4r*   SICB
 
-application DaVinci $(GAUDICONFROOT)/src/GaudiMain.cpp \
-                    ../src/*.cpp \
-                    ../src/*.F 
+#--- L0 trigger
+use L0Calo         v4r*   L0
+use L0Muon         v4r*   L0
+use VeloDigit      v1r*   Velo
+use PuVeto         v1r*   L0
+use L0DU           v4r*   L0
 
-# ========================= set macros ============================
+#--- SICBDST necessary libraries
+#--- In order to read data produced with Brunel v5r* a consistent detdes
+#    package version has to be set
+#    == Brunel v5r* -> detdes v13
+#    == Brunel v8r* -> detdes v14
+#    == Brunel v9r* -> detdes v14
+use Futil          v10r3  SICB
+use detdes         v14    SICB
+use digvdet        v2r3   SICB
+use trivert        v5r3   SICB
+use axreclib       v4r*   SICB
+use axsellib       v6r*   SICB
 
+#--- DaVinci packages
+use DaVinciSicb    v1r*   Phys
+use DaVinciTools   v2r*   Phys
+
+# Build DaVinci Application with standard executable and user example code
+# Note that user code can also be located in a component library (see details
+# in Gaudi User Guide)
+#============================================================================
+application      DaVinci    ../src/Main/DaVinciMain.cpp \
+                            $(DAVINCISICBROOT)/src/Objs/*.F \
+                            ../src/User/*.cpp \
+                            ../src/User/*.F 
+
+# define link options
+#============================================================================
 apply_pattern application_path 
 
 macro DaVinci_linkopts    "${application_linkopts}"
@@ -67,4 +127,10 @@ macro DaVinci_linkopts    "${application_linkopts}"
 macro_append DaVinci_linkopts " "\
              Linux            " -g -Wl,--start-group "\
              Linuxdbx         " -g -Wl,--start-group "
+
+
+# set the DaVinci version = v * 100000 + r * 100 + p * 100
+#============================================================================
+macro_append fflags   " -DDaVinciVersion=200000 " \
+             VisualC  " /DDaVinciVersion=200000 "
 
