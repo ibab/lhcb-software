@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.cpp,v 1.8 2004-07-15 17:11:00 jonrob Exp $
+// $Id: RichRayTracing.cpp,v 1.9 2004-07-15 17:16:33 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -139,7 +139,7 @@ StatusCode RichRayTracing::finalize()
 // it hits the detector plane,
 // take into account the geometrical boundaries of mirrors and detector
 //=============================================================================
-StatusCode RichRayTracing::traceToDetector ( Rich::DetectorType rich,
+StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
                                              const HepPoint3D& startPoint,
                                              const HepVector3D& startDir,
                                              RichGeomPhoton& photon,
@@ -169,7 +169,7 @@ StatusCode RichRayTracing::traceToDetector ( Rich::DetectorType rich,
 }
 
 //============================================================================
-StatusCode RichRayTracing::intersectPDPanel ( Rich::DetectorType,
+StatusCode RichRayTracing::intersectPDPanel ( const Rich::DetectorType,
                                               const HepPoint3D&,
                                               const HepVector3D&,
                                               RichGeomPhoton& ) const {
@@ -182,7 +182,7 @@ StatusCode RichRayTracing::intersectPDPanel ( Rich::DetectorType,
 // geometrical boundaries checking depends on the traceMode variable
 //=============================================================================
 StatusCode
-RichRayTracing::traceToDetectorWithoutEff( Rich::DetectorType rich,
+RichRayTracing::traceToDetectorWithoutEff( const Rich::DetectorType rich,
                                            const HepPoint3D& position,
                                            const HepVector3D& direction,
                                            HepPoint3D& hitPosition,
@@ -210,7 +210,7 @@ RichRayTracing::traceToDetectorWithoutEff( Rich::DetectorType rich,
 //  reflect a photon on both mirrors and return the position and direction
 //  on the flat mirror.
 //=========================================================================
-StatusCode RichRayTracing::reflectBothMirrors( Rich::DetectorType rich,
+StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
                                                HepPoint3D& position,
                                                HepVector3D& direction,
                                                RichGeomPhoton& photon,

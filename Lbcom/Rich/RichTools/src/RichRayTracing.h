@@ -1,4 +1,4 @@
-// $Id: RichRayTracing.h,v 1.8 2004-07-15 17:11:00 jonrob Exp $
+// $Id: RichRayTracing.h,v 1.9 2004-07-15 17:16:33 jonrob Exp $
 #ifndef RICHTOOLS_RICHRAYTRACING_H
 #define RICHTOOLS_RICHRAYTRACING_H 1
 
@@ -65,7 +65,7 @@ public: // methods (and doxygen comments) inherited from interface
 
   // For a given detector, raytraces a given direction from a given point to
   // the photo detectors. Returns the result in the form of a RichGeomPhoton
-  StatusCode traceToDetector( Rich::DetectorType rich, 
+  StatusCode traceToDetector( const Rich::DetectorType rich, 
                               const HepPoint3D& startPoint,  
                               const HepVector3D& startDir,    
                               RichGeomPhoton& photon,         
@@ -75,7 +75,7 @@ public: // methods (and doxygen comments) inherited from interface
   // For a given detector, raytraces a given direction from a given point to
   // the average photon detector plane (no HPD acceptance). Result is a HepPoint3D
   StatusCode
-  traceToDetectorWithoutEff( Rich::DetectorType rich,  
+  traceToDetectorWithoutEff( const Rich::DetectorType rich,  
                              const HepPoint3D& startPoint,   
                              const HepVector3D& startDir, 
                              HepPoint3D& hitPosition,  
@@ -85,7 +85,7 @@ public: // methods (and doxygen comments) inherited from interface
   // For a given detector, ray traces a given direction from a given point
   // to the average photo detector plane. Returns the result in the form
   // of a RichGeomPhoton
-  StatusCode intersectPDPanel( Rich::DetectorType rich,
+  StatusCode intersectPDPanel( const Rich::DetectorType rich,
                                const HepPoint3D& point, 
                                const HepVector3D& dir, 
                                RichGeomPhoton& photon ) const;
@@ -104,7 +104,7 @@ public: // methods (and doxygen comments) inherited from interface
 
 private: // methods
 
-  StatusCode reflectBothMirrors ( Rich::DetectorType rich,
+  StatusCode reflectBothMirrors ( const Rich::DetectorType rich,
                                   HepPoint3D& position,
                                   HepVector3D& direction,
                                   RichGeomPhoton& photon,
