@@ -1,7 +1,10 @@
 package GaudiConf
 package manager: F.Ranjard
 
-!========================== GaudiConf v6r6 2003-03-20 ======================
+!========================== GaudiConf v6r6 2003-04-03 ======================
+! 2003-04-03 - Marco Cattaneo
+ - Add missing L1/OT,IT,TTClusters to DstContent.opts, and retag as v6r6
+
 ! 2003-03-20 - Gloria Corti
  - Add DstContent.opts with list of mandatory and optional items in
    OODST
