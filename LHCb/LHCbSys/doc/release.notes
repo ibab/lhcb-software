@@ -15,10 +15,12 @@
                  RichDAQ v1r5 (moved here from applications projects)
 
  - Removed  packages: L1Event. Obsolete, completely superseded by TrgEvent
+                      PYTHIA. No longer needed to compile HepMC - removes last
+                              Fortran dependency from LHCbSys
 
  - Modified packages: KernelSys v3r7, LHCbKernel v4r7, RichKernel v5r0
                       EventSys v18r0, EventAssoc v1r2, RichEvent v7r4,
-                      DetSys v5r7, STDet v1r2, RichDet v7r2
+                      HepMC v4r121p0, DetSys v5r7, STDet v1r2, RichDet v7r2
                       AssociatorsSys v1r14, ITAssociators v2r9, 
                       Associators v2r2p1, IOExample v1r2
 
@@ -46,6 +48,10 @@
 
  - In RichEvent v7r4
    . Fix bugs in MCRichSegment::bestMomentum and MCRichSegment::bestPoint
+
+ - In HepMC v4r121p0
+   . Remove files for managing HepEvt converters (moved to Gen/HepEvt package)
+     Removed dependency on PYTHIA and Fortran compiler
 
  - In IOExample v1r2
    . StoreBrowser Algorithm moved to LHCbAlgs, example is now just job options
