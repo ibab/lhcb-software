@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2004-07-29 - Chris Jones
+ - Add CVS Log information to RichSmartID.xml
+
 !====================== LHCbKernel v5r1 2004-07-28 ========================
 ! 2004-07-28 - Vanya BELYAEV
  - Kernel/CaloHash.h
