@@ -23,6 +23,9 @@ static const G4String C4F10MaterialName="/dd/Materials/RichMaterials/C4F10";
 static const G4String AgelMaterialName="/dd/Materials/RichMaterials/Aerogel";
 static const G4String FilterGenericMaterialName="/dd/Materials/RichMaterials/Rich1FilterGenericMaterial";
 static const G4String FilterD263MaterialName="/dd/Materials/RichMaterials/Rich1FilterD263Material";
+static const G4String Rich1GasQWindowMaterialName="/dd/Materials/RichMaterials/GasWindowQuartz";
+static const G4String Rich2GasQWindowMaterialName="/dd/Materials/RichMaterials/GasWindowQuartz";
+
 static const G4String LogVolAgelNameAnalysis= 
                               "/dd/Geometry/Rich1/lvRich1Aerogel";
 static const G4String LogVolC4F10NameAnalysis=
