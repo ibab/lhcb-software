@@ -5,7 +5,6 @@ Purpose: LHCb Digitization program
 
 </PRE><H1><A NAME=v3r2>2003-12-04 Boole v3r2</A></H1><PRE>
 ** Input data must be produced with:                                       **
-**   SICBMC v264r2 or greater + SicbToOORAWH v3r0,         v256r0 geometry **
 **   Gauss  v12r7  or greater, XmlDDDB v19r0 or greater,  v200311 geometry **
 ** Output data must be reconstructed with Brunel v21r2 or greater          **
 
@@ -37,6 +36,7 @@ Purpose: LHCb Digitization program
 - Removed features
   - Remove OTDigitToL1 as this is broken by new OT geometry and will in any
     case be replaced by new algorithm filling L1Buffer. (L1VeloTrack v5r4)
+  - Remove support for v256r0 geometry (not supported by OTDet v5r0)
 
 </PRE><H1><A NAME=v3r1>2003-11-28 Boole v3r1</A></H1><PRE>
 ** Input data must be produced with:                               **
