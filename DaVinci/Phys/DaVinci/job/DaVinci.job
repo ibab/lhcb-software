@@ -112,6 +112,8 @@ ApplicationMgr.TopAlg = { "DaVinciInitialisation" };
 // or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
+#include "$DAVINCIROOT/options/L0.opts"
+
 //ApplicationMgr.TopAlg += { "AxPrimVertexAlgorithm" };
 ApplicationMgr.TopAlg += { "PhysSelectAlgorithm" };
 ApplicationMgr.TopAlg += { "DaVinciTestAlgorithm" }; 
@@ -178,7 +180,8 @@ EOF
 # == run $EXEC.exe ============================================
 #
 if ($MODE == "Linuxdbx") then
-  ddd tmpjob.exe tmpjob.opts
+  setenv JOBOPTPATH tmpjob.opts
+  ddd tmpjob.exe
 else
   time tmpjob.exe tmpjob.opts
 endif
