@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.72 2003-03-14 14:02:48 ranjard Exp $
+! $Id: release.notes,v 1.73 2003-04-29 10:21:02 witoldp Exp $
 ! =============================================================================
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+!=============================== GiGa v14r0 2003-04-29 ======================
+! 2003-04-29 Witek Pokorski
+
+ - many changes by Vanya Belyaev
+  - possibility of choosing the stepper added
+  - GiGaToolBase added
+  - two conrete tools for setting the SimAttributes and deleting 
+    FieldMgr added
 
 !=============================== GiGa v13r1 2003-03-11 ======================
 ! 2003-03-10  Vanya Belyaev 
