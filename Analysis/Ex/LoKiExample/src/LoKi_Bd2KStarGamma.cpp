@@ -1,8 +1,11 @@
-// $Id: LoKi_Bd2KStarGamma.cpp,v 1.1.1.1 2003-07-24 16:43:49 ibelyaev Exp $
+// $Id: LoKi_Bd2KStarGamma.cpp,v 1.2 2003-11-30 16:37:52 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2003/07/24 16:43:49  ibelyaev
+//  new package with LoKi examples 
+//
 // Revision 1.2  2003/03/27 15:47:38  ibelyaev
 //  update the algorithm
 //
@@ -174,13 +177,13 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   
       tuple -> column ( "" , hdr ) ; // the event header 
       // the index of the combinations 
-      tuple -> column ( "comb" ,    combinations++    ) ; 
+      tuple -> column ( "comb" ,    (long) combinations++    ) ; 
       // number of selected primary vertices 
-      tuple -> column ( "nprims" ,  primaries.size () ) ; 
+      tuple -> column ( "nprims" ,  (long) primaries.size () ) ; 
       // number of selected photons 
-      tuple -> column ( "ngamma" ,      gamma.size () ) ; 
+      tuple -> column ( "ngamma" ,  (long)    gamma.size () ) ; 
       // the number of selected K*0s  
-      tuple -> column ( "nkstar" ,      kstar.size () ) ; 
+      tuple -> column ( "nkstar" ,  (long)    kstar.size () ) ; 
       
        // impact parameter, delta z , c*tau , angle B0 
       tuple -> fill ( "ipb,ipchi2d,dz,tof,dang" , 
@@ -232,7 +235,7 @@ LOKI_ALGORITHM( LoKi_Bd2KStarGamma )
   tags -> column ( "Address" , address );
   
   // primary vertices
-  tags -> column ( "nprims"  , primaries.size () ) ;
+  tags -> column ( "nprims"  , (long) primaries.size () ) ;
   
   // photons, array pf photon P/PT  
   tags -> farray ( "ptgamma"     , PT          ,
