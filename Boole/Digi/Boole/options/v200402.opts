@@ -39,7 +39,7 @@ ApplicationMgr.EvtMax = 500;
 // - If all the input files are GaudiDb, output file can be GaudiDb or POOL
 //---------------------------------------------------------------------------
 
-HistogramPersistencySvc.OutputFile = "411300.hbook";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "Pool411300.hbook";  // Monitoring histos
 
 // POOL file catalog. Uncomment if any input files are POOL
 //PoolDbCacheSvc.InputCatalog = "xmlcatalog_http://cattanem.home.cern.ch/cattanem/POOL/MyCatalog.xml";

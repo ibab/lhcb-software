@@ -1,10 +1,11 @@
 // Options to execute new L1 code in Boole, and to save the output.
 
-ApplicationMgr.DLLs += { "TrgVelo", 
-                         "TrgChecker",
-                         "L1Reco", 
-                         "TrgVeloTT",
-                         "MCTools" };
+ApplicationMgr.DLLs += { "TrgVelo"
+                         ,"TrgChecker"
+                         ,"L1Reco"
+                         ,"TrgVeloTT"
+                         ,"MCTools"
+                         ,"TrgMonitor"};
 
 TriggerTrgSeq.Members  = { "DecodeL1VeloR"
                            ,"VeloRTracking"
@@ -15,7 +16,7 @@ TriggerTrgSeq.Members  = { "DecodeL1VeloR"
                            ,"DecodeL1VeloPhi"
                            ,"VeloSpaceTracking"
                            ,"L1Match3dL0"
-                           //                           ,"TrgVeloTT"
+                           ,"TrgVeloTT"
                            ,"PrepareL1Tracks"
                          };
 RelationsTrgSeq.Members  = { "VeloTruthFromCluster",
@@ -27,4 +28,7 @@ RelationsTrgSeq.Members  = { "VeloTruthFromCluster",
 
 MoniTrgSeq.Members        = { "TrgChecker"
                              ,"L1RecoCheck"
+                             ,"TrgVertexMonit"
                             };
+
+TrgVertexMonit.Vertices3D = false;

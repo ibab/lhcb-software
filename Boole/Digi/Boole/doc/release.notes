@@ -16,15 +16,13 @@ Requires data produced by Gauss v14r3 or greater
     (STDAQ v1r0, ITAlgorithms v14r1, ITCheckers v2r1, ITAssociators v2r8)
   - New and repackaged Velo code to fill L1Buffer and RawBuffer
     (VeloDAQ v1r0, VeloAlgorithms v2r9p1)
-  >>> equivalent algorithms to be removed from TrgTools (Duplicate factories) 
-
+  - Updated Trg packages for L1, to use new ST and Velo buffers, and new tuning
+    (TrgTools v3r0, TrgVelo v3r0, TrgVeloTT v3r0, TrgVeloTT v3r0, L1Reco v3r0)
+  - New monitoring for Trg primary vertex (TrgMonitor v1r0)
   - Use new version of ParticlePropertySvc
     (GaudiSvc v11r4, ParamFiles v3r4)
   - Remove fix for Rich energy deposit, now fixed since Gauss v14r3
     (RichReadout v1r7)
-
->>> Temporarily disable TrgVeloTT in L1WithTrg.opts to allow porting to 
-    new ST L1Buffer
 
 - Persistency changes
   - Default output file is now POOL

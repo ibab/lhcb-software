@@ -62,11 +62,12 @@ use PuVeto              v5r5	L0
 use L0DU                v6r7	L0
 
 # L1 trigger
-use TrgTools		v2r2	Trg
-use TrgChecker		v2r0	Trg
-use TrgVelo		v2r0	Trg
-use TrgVeloTT		v2r0	Trg
-use L1Reco		v2r1	Trg
+use TrgTools		v3r0	Trg
+use TrgChecker		v3r0	Trg
+use TrgVelo		v3r0	Trg
+use TrgVeloTT		v3r0	Trg
+use L1Reco		v3r0	Trg
+use TrgMonitor		v1r0	Trg
 
 # Calorimeter
 use CaloMonitor         v2r1	Calo
