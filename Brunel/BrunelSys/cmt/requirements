@@ -12,8 +12,7 @@ use Brunel              v24r0	Rec
 
 # Brunel utilities
 use BrunelAlgs          v3r4p1	Rec
-use LHCbTools           v1r1    Kernel
-use AsctToLinker        v1r1    Rec
+use AsctToLinker        v1r2    Rec
 
 # Calorimeter
 use CaloMonitor         v2r2 	Calo
