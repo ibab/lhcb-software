@@ -6,15 +6,18 @@ MessageSvc.OutputLevel     = 1;
 ApplicationMgr.DLLs       += { "GeneratorModules" };
 ApplicationMgr.DLLs       += { "GaudiDb" };
 
-//ApplicationMgr.TopAlg     += {"SingleParticleGun","DumpMC","EvtDecay","DumpMC"};
-ApplicationMgr.TopAlg     += {"PythiaModule","DumpMC","EvtDecay","DumpMC"};
+ApplicationMgr.ExtSvc     += 
+{ "ParticlePropertySvc"}; 
+
+ApplicationMgr.TopAlg     += {"SingleParticleGun","DumpMC","EvtDecay","DumpMC"};
+//ApplicationMgr.TopAlg     += {"PythiaModule","DumpMC","EvtDecay","DumpMC"};
 
 
 ApplicationMgr.EvtSel      ="NONE";
 
 EventDataSvc.ForceLeaves = 1;
 
-ApplicationMgr.EvtMax      =1;
+ApplicationMgr.EvtMax      =3;
 
 SingleParticleGun.PdgCode=511;
 
