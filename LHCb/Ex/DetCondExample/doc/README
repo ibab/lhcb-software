@@ -1,7 +1,7 @@
-# $Id: README,v 1.8 2001-10-29 17:21:59 andreav Exp $
+# $Id: README,v 1.9 2001-11-23 18:16:36 andreav Exp $
 
 ------------------------------------------------------------------------------
-Packages needed to run DetCondExample v1
+Packages needed to run DetCondExample v2
 ------------------------------------------------------------------------------
 
 For general information on configuring the Gaudi environment, please refer 
@@ -14,18 +14,11 @@ Check the result with
         printenv CMTPATH
 
 To run the detector condition example, you need to getpack the HEAD versions 
-of three new packages and of two Gaudi packages from release Gaudi v8:
+of three new packages:
         cd ~/newmycmt
-        getpack GaudiKernel        v10    HEAD
-        getpack GaudiSvc           v6     HEAD
         getpack CONDDB             v3r01  HEAD
-        getpack Det/DetCond        v1     HEAD
-        getpack Ex/DetCondExample  v1     HEAD
-
-For the moment (until it is released in CVS), you also need to substitute 
-a GaudiSvc source file:
-        cp /afs/cern.ch/user/a/andreav/public/ApplicationMgr.cpp \
-           ~/newmycmt/GaudiSvc/v6/src/ApplicationMgr/ApplicationMgr.cpp
+        getpack Det/DetCond        v2     HEAD
+        getpack Ex/DetCondExample  v2     HEAD
 
 ------------------------------------------------------------------------------
 How to configure CMT
@@ -68,7 +61,7 @@ How to setup the environment and run DetCondExample on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v1/cmt
+cd Ex/DetCondExample/v2/cmt
 
 # Setup the environment
 # This also starts the lockserver and AMSserver and installs the databases
@@ -103,6 +96,7 @@ diff job_first.log ../job; /bin/rm -f job_first.log
 diff job_next.log  ../job; /bin/rm -f job_next.log 
 
 # Debug the application using gdb
+# (NB gdb "run" executes .cshrc: you can NOT change LD_LIBRARY_PATH in .cshrc!)
 # DetCondExample.gdb sets a breakpoint in SimpleAlgorithm::initialize
 gdb ../$CMTDEB/DetCondExample.exe
 (gdb) source DetCondExample.gdb
@@ -110,6 +104,9 @@ gdb ../$CMTDEB/DetCondExample.exe
 gdb ../$CMTDEB/DetCondExample.exe -x DetCondExample.gdb
 
 # Debug the application using gdb inside ddd (recommended!)
+ddd --tty --debugger "gdb ../$CMTDEB/DetCondExample.exe"
+(gdb) source DetCondExample.gdb
+# The same can be achieved by typing the following
 ddd --tty --debugger "gdb ../$CMTDEB/DetCondExample.exe -x DetCondExample.gdb"
 
 # To start again with an empty database:
@@ -145,7 +142,7 @@ How to cleanup the environment on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v1/cmt
+cd Ex/DetCondExample/v2/cmt
 
 # Remove old makefiles and dependencies
 cmt broadcast -select=newmycmt '/bin/rm -f *make*'
@@ -162,16 +159,6 @@ cmt broadcast -select=newmycmt -exclude='Gaudi' '/bin/rm -rf ../doc/tex'
 # [NB If AMS and lock servers are still running, you will be stuck at logout]
 source ../cmt/cleanup.csh -tag=$CMTDEB
 
-# NB The setup files replace three files to bypass a bug in CMT
-#       cp ${CONDDBROOT}/cmt/myCleanup.csh \
-#          ${CONDDBROOT}/cmt/cleanup.csh
-#       cp ${DETCONDROOT}/cmt/myCleanup.csh \
-#          ${DETCONDROOT}/cmt/cleanup.csh
-#       cp ${DETCONDEXAMPLEROOT}/cmt/myCleanup.csh \
-#          ${DETCONDEXAMPLEROOT}/cmt/cleanup.csh
-# However "cmt config" replaces them by the old (bugged) versions
-# Hence: if you cmt config, be sure to source setup before you source cleanup!
-
 ------------------------------------------------------------------------------
 How to check compliance to LHCb rules
 ------------------------------------------------------------------------------
@@ -184,7 +171,7 @@ How to check compliance to LHCb rules
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v1/cmt
+cd Ex/DetCondExample/v2/cmt
 
 # Setup the environment variables if you have not done so yet
 source ../cmt/setup.csh -tag=$CMTDEB
@@ -196,8 +183,8 @@ cmt broadcast -select=DetCondExample  gmake -i RuleChecker tag=$CMTDEB
 
 # This will create a ../Check directory in the checked package
 # You may then browse the documentation (under ~/newmycmt) in
-# 	Det/DetCond/v1/Check/DetCondChk.html
-# 	Ex/DetCondExample/v1/Check/DetCondExampleChk.html
+# 	Det/DetCond/v2/Check/DetCondChk.html
+# 	Ex/DetCondExample/v2/Check/DetCondExampleChk.html
 
 ------------------------------------------------------------------------------
 How to create the dOxygen documentation on lxplus
@@ -211,7 +198,7 @@ How to create the dOxygen documentation on lxplus
 cd ~/newmycmt
 
 # Go to the cmt directory
-cd Ex/DetCondExample/v1/cmt
+cd Ex/DetCondExample/v2/cmt
 
 # Setup the environment variables if you have not done so yet
 source ../cmt/setup.csh -tag=$CMTDEB
@@ -225,7 +212,7 @@ A useful bunch of CVS commands
 ------------------------------------------------------------------------------
 
 # To create a new package in CVS:
-cvs import directory vendortag releasetag
+cvs import -m "" directory vendortag releasetag
 
 # To compare the local directory to the HEAD repository:
 cvs diff
@@ -240,30 +227,34 @@ cvs update -A; cvs commit -m "" file
 # [NB cvs update -A is needed because getpack does not perform a cvs checkout]
 cvs update -A; cvs add file/directory; cvs commit -m "" file/directory
 
+# To delete and commit an old file or directory:
+# [NB cvs update -A is needed because getpack does not perform a cvs checkout]
+cvs update -A; cvs remove -f file/directory; cvs commit -m "" file/directory
+
 # To tag the HEAD files with a private tag (use private tags starting by "h")
-# [For instance, tag CONDDB v3r01 head version of 2001 Sep 17 by h20010917]
-cvs rtag h20010917 CONDDB
+# [For instance, tag CONDDB v3r01 head version of 2001 Sep 17 by h20011123]
+cvs rtag h20011123 CONDDB
 # To force the tag (e.g. if a previous file version already received that tag):
-cvs rtag -F h20010917 CONDDB
+cvs rtag -F h20011123 CONDDB
 
 # To view the tags attached to the files contained in the package:
 cvs status -v
 
 # To getpack a privately tagged version:
-# [For instance, get CONDDB v3r01 version tagged h20010917]
+# [For instance, get CONDDB v3r01 version tagged h20011123]
 # Either:
 	cd ~/newmycmt
-	getpack CONDDB h20010917
-	mv CONDDB/h20010917 CONDDB/v3r01
+	getpack CONDDB h20011123
+	mv CONDDB/h20011123 CONDDB/v3r01
 	cd CONDDB/v3r01/cmt
 	cmt config
 # Or:
 	cd ~/newmycmt
 	mkdir CONDDB
 	cd CONDDB
-	cvs co -d v3r01 -r h20010917 CONDDB
+	cvs co -d v3r01 -r h20011123 CONDDB
 	cd v3r01/cmt
 	cmt config
 
 # To compare a file to that from another version
-cvs diff -r h20010917 file
+cvs diff -r h20011123 file

@@ -1,5 +1,5 @@
 #! /bin/csh -f
-# $Id: makedoc.csh,v 1.2 2001-10-29 12:43:17 andreav Exp $
+# $Id: makedoc.csh,v 1.3 2001-11-23 18:16:36 andreav Exp $
 
 #------------------------------
 # Make Doxygen documentation
@@ -38,8 +38,13 @@ cat DoxyheaderSchema.html \
   | sed "s|GAUDI_DOXYURL|${GAUDI_DOXYURL}|g" \
   > Doxyheader.html
 
-/afs/cern.ch/user/a/andreav/public/doxygen-1.2.11.1/bin/doxygen DoxyFile.cfg
+# Version 1.2.11.1 in AV's public directory
+#/afs/cern.ch/user/a/andreav/public/doxygen-1.2.11.1/bin/doxygen DoxyFile.cfg
+# Version 1.2.10 in ASIS
+/afs/cern.ch/asis/i386_redhat61/usr.local/bin/doxygen DoxyFile.cfg
+# Version 1.2.5 in LHCb
 #${GAUDISOFT}/../extsoft/doxygen-1.2.5/bin/doxygen DoxyFile.cfg
+
 cp gaudiSF.gif ${DETCONDEXAMPLE_DOXYGEN}
 
 /bin/rm -f Doxyfooter.html

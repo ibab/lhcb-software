@@ -1,4 +1,4 @@
-# $Id: HISTORY,v 1.6 2001-11-23 18:16:36 andreav Exp $
+# $Id: HISTORY,v 1.7 2001-11-23 18:19:48 andreav Exp $
 
 ------------------------------------------------
 23.11.2001 Ex/DetCondExample v2 (LINUX only)
@@ -7,11 +7,11 @@ Upgrade to Gaudi v9 (i.e. default releases of GaudiKernel v11 and GaudiSys v7).
 Main changes include:
 -> addresses now inherit from GenericAddress (which has been simplified a lot)
 -> there are no address factories any more
+-> add method createAddress in XmlStringCnvSvc
 -> adapt to changes in RegistryEntry (which now implements IRegistry)
+-> do not overload methods createObj and updateObj in XmlStringCnvSvc
 -> add dummy methods fillObjRefs and updateObjRefs in ConditionsDBCnvSvc
 -> notify (by flag "true") ServiceLocator to create services not existing yet
--> do not overload methods createObj and updateObj in XmlStringCnvSvc
--> add method createAddress in XmlStringCnvSvc
 
 The full set of packages are: 
 - Ex/DetCondExample/v2      (the example)
