@@ -1,4 +1,4 @@
-// $Id: MuonTileIDXYZ.h,v 1.7 2002-10-21 20:43:54 asatta Exp $
+// $Id: MuonTileIDXYZ.h,v 1.8 2003-07-02 14:36:21 ocallot Exp $
 #ifndef MUONTILEIDXYZ_H 
 #define MUONTILEIDXYZ_H 1
 
@@ -250,5 +250,6 @@ private:
 
 private:
   IDataProviderSvc* m_DDS;
+  bool m_debug;
 };
 #endif // MUONTILEIDXYZ_H

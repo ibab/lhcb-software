@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.33 2003-06-19 07:28:35 cattanem Exp $
+! $Id: release.notes,v 1.34 2003-07-02 14:36:21 ocallot Exp $
 ! =============================================================================
 ! Package     : MuonTools
 ! Responsible : David Hutchcroft David.Hutchcroft@cern.ch
 ! =============================================================================
+
+! 2003-07-02 - Olivier Callot
+ - Improved the speed by initializing an MsgStream only when needed, i.e. debug
+   mode or error to report.
+   To turn ON the debug mode, one should specify the two options
+
+      ToolSvc.MuonTileIDXYZ.OutputLevel = 2;
+  	  MessageSvc.setDebug += { "ToolSvc.MuonTileIDXYZ" };
 
 !======================== MuonTools v3r5 2003-06-19 ========================
 ! 2003-06-18 - Alessia Satta
