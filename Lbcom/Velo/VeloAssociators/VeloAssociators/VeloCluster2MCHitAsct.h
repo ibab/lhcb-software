@@ -24,7 +24,8 @@ static const std::string& VeloCluster2MCHitAsctLocation =
 
 class VeloCluster2MCHitAsct: public AssociatorWeighted<VeloCluster,MCVeloHit,double>
 {
-  friend ToolFactory<VeloCluster2MCHitAsct>;
+
+  friend class ToolFactory<VeloCluster2MCHitAsct>;
   
 public:
   /// Define data types

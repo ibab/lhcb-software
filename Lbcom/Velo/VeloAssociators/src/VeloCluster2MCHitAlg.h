@@ -16,7 +16,8 @@ class DeVelo;
  *  @date   21/05/2002
  */
 class VeloCluster2MCHitAlg : public Algorithm {
-  friend AlgFactory<VeloCluster2MCHitAlg>;
+
+  friend class AlgFactory<VeloCluster2MCHitAlg>;
   
 public:
 
