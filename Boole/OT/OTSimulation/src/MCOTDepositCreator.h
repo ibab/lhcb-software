@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.h,v 1.2 2004-11-10 13:05:14 jnardull Exp $
+// $Id: MCOTDepositCreator.h,v 1.3 2004-12-10 08:09:13 jnardull Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
@@ -56,9 +56,6 @@ public:
   /// execute
   StatusCode execute();
 
-  /// finalize
-  StatusCode finalize();
-
 private:
 
   /// make initial list of digitizations
@@ -103,8 +100,8 @@ private:
   unsigned int m_numStations;              ///< number of stations
   unsigned int m_firstOTStation;           ///< first OT station
   std::vector<std::string> m_spillVector;  ///< spills to digitize  
-  std::vector<double>  m_spillTimes;       ///< spillTimes
-    std::vector<std::string> m_spillNames; ///< spillNames
+  std::vector<double>  m_spillTimes;       ///< spillTime
+  std::vector<std::string> m_spillNames;   ///< spillNames
 
   bool m_addCrossTalk;                     ///< flag to add Xtalk
   double m_crossTalkLevel;                 ///< level of crosstalk

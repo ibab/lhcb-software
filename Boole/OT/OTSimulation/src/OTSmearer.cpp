@@ -1,4 +1,4 @@
-// $Id: OTSmearer.cpp,v 1.3 2004-11-10 13:05:14 jnardull Exp $
+// $Id: OTSmearer.cpp,v 1.4 2004-12-10 08:09:13 jnardull Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -6,7 +6,6 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/IService.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 
 //CLHEP
 #include "CLHEP/Geometry/Vector3D.h"
@@ -52,14 +51,16 @@ StatusCode OTSmearer::finalize()
     m_magFieldSvc->release();
     m_magFieldSvc = 0;
   }
-  return StatusCode::SUCCESS;
+  return GaudiTool::finalize();  // must be called after all other actions   
 }
 
 StatusCode OTSmearer::initialize() 
 {
-  // retrieve pointer to random number service
+ StatusCode sc = GaudiTool::initialize();
+
+ // retrieve pointer to random number service
   IRndmGenSvc* randSvc = 0;
-  StatusCode sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
+  sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
   if( sc.isFailure() ) {
     return Error ("Failed to retrieve random number service",sc);
   }  
@@ -84,10 +85,7 @@ StatusCode OTSmearer::initialize()
     return Error ("Failed to retrieve magnetic field service",sc);
   }
 
-  SmartDataPtr<DeOTDetector> tracker( detSvc, "/dd/Structure/LHCb/OT" );
-  if ( !tracker ) {
-    return Error ("Unable to retrieve Tracker detector element from xml");
-  }
+  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
   m_tracker = tracker;
   detSvc->release();
   

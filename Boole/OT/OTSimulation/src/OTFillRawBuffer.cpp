@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.cpp,v 1.4 2004-11-10 13:05:14 jnardull Exp $
+// $Id: OTFillRawBuffer.cpp,v 1.5 2004-12-10 08:09:13 jnardull Exp $
 // Include files
 
 // local
@@ -42,11 +42,11 @@ OTFillRawBuffer::~OTFillRawBuffer(){};
 //=============================================================================
 StatusCode OTFillRawBuffer::initialize() {
  
-   SmartDataPtr<DeOTDetector> Otracker( detSvc(), m_otTrackerPath);
-   if( !Otracker){
-     return Error ( "Unable to retrieve OT detector element from XML");
-   }
-   m_otTracker = Otracker;
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  DeOTDetector* Otracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
+  m_otTracker = Otracker;
 
   //Fixed Numbers of Banks and of Gols
   numberOfBanks = 24;
@@ -67,20 +67,11 @@ StatusCode OTFillRawBuffer::initialize() {
 StatusCode OTFillRawBuffer::execute() 
 {
   // Retrieve the RawBuffer
-  SmartDataPtr<RawBuffer> rawBuffer( eventSvc(), m_RawBuffLoc );
-  if ( !rawBuffer ) {
-    warning () << "Unable to retrieve Raw buffer at " <<m_RawBuffLoc << endreq;
-    return StatusCode::FAILURE;
-  }
+  RawBuffer* rawBuffer = get<RawBuffer>( RawBufferLocation::Default );
   m_rawBuffer = rawBuffer;
 
   // Retrieve MCOTTime
-  SmartDataPtr<MCOTTimes>
-    mcTime ( eventDataService(), MCOTTimeLocation::Default);
-  if ( !mcTime ) {
-    warning () << "Unable to retrieve MCOTTime at " << m_MCOTTimeLoc << endreq;
-    return StatusCode::FAILURE;
-  }
+  MCOTTimes* mcTime = get<MCOTTimes>( MCOTTimeLocation::Default ); 
   m_mcTime = mcTime;
 
   // Sorting MCTimes into Banks
@@ -132,7 +123,7 @@ StatusCode OTFillRawBuffer::finalize()
   delete(dataContainer);
   delete(goldatacontainer);
   delete(finalBuf);
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions 
 }
 //-----------------------------------------------------------------------------
 StatusCode OTFillRawBuffer::sortMcTimesIntoBanks()

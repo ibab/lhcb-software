@@ -1,10 +1,9 @@
-// $Id: OTrtRelation.cpp,v 1.3 2004-11-10 13:05:14 jnardull Exp $
+// $Id: OTrtRelation.cpp,v 1.4 2004-12-10 08:09:13 jnardull Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/IService.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 
 // CLHEP
 #include "CLHEP/Geometry/Vector3D.h"
@@ -44,14 +43,15 @@ StatusCode OTrtRelation::finalize()
     m_magFieldSvc->release();
     m_magFieldSvc = 0;
   }
-  
-  return StatusCode::SUCCESS;
+  return GaudiTool::finalize(); 
 }
 
 StatusCode OTrtRelation::initialize() 
 {
+
+  StatusCode sc = GaudiTool::initialize();
   // retrieve pointer to magnetic field service
-  StatusCode sc = serviceLocator()->service( "MagneticFieldSvc", 
+  sc = serviceLocator()->service( "MagneticFieldSvc", 
                                              m_magFieldSvc, true ); 
   if( sc.isFailure() ) {
     return Error ("Failed to retrieve magnetic field service",sc);
@@ -64,10 +64,7 @@ StatusCode OTrtRelation::initialize()
     return Error ("Failed to retrieve DetectorDataSvc",sc);
   }
 
-  SmartDataPtr<DeOTDetector> tracker( detSvc, "/dd/Structure/LHCb/OT" );
-  if ( !tracker ) {
-    return Error ("Failed to retrieve OT detector element from DDDB");
-  }
+  DeOTDetector* tracker = getDet<DeOTDetector>(  DeOTDetectorLocation::Default );
   m_tracker = tracker;
   detSvc->release();
 

@@ -1,11 +1,10 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.3 2004-11-10 13:05:14 jnardull Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.4 2004-12-10 08:09:13 jnardull Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IService.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -54,9 +53,11 @@ OTRandomDepositCreator::~OTRandomDepositCreator()
 
 StatusCode OTRandomDepositCreator::initialize() 
 {
+  StatusCode sc = GaudiTool::initialize();
+
   // retrieve pointer to random number service
   IRndmGenSvc* randSvc = 0;
-  StatusCode sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
+  sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
   if( sc.isFailure() ) {
     return Error ("Failed to retrieve random number service",sc);
   }  
@@ -73,21 +74,15 @@ StatusCode OTRandomDepositCreator::initialize()
   if( sc.isFailure() ) {
     return Error ("Failed to retrieve magnetic field service",sc);
   }
-  
-  SmartDataPtr<DeOTDetector> tracker( detSvc, "/dd/Structure/LHCb/OT" );
-  if ( !tracker ) {
-    return Error ("Unable to retrieve Tracker detector element from xml");
-    return StatusCode::FAILURE;
-  }
-  detSvc->release();
 
+  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
+  detSvc->release();
   m_tracker = tracker;
 
   // pointer to OTReadoutWindow tool
   IOTReadOutWindow* readoutTool;
-  sc = toolSvc()->retrieveTool(m_readoutWindowToolName,
-                               m_readoutWindowToolName, readoutTool);
-
+  readoutTool = tool<IOTReadOutWindow>(m_readoutWindowToolName);
+ 
   // calculate window start and size
   std::vector<double> startGates = readoutTool->startReadOutGate();
   std::vector<double>::iterator iterG = startGates.begin();
@@ -100,7 +95,7 @@ StatusCode OTRandomDepositCreator::initialize()
 
 
   // release tool 
-  toolSvc()->releaseTool(readoutTool);
+  release(readoutTool);
 
   m_nMaxChanInModule = m_tracker->nMaxChanInModule();
   m_nNoise = this->nNoiseHits();

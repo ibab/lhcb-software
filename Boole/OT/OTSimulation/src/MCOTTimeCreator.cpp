@@ -1,4 +1,4 @@
-// $Id: MCOTTimeCreator.cpp,v 1.3 2004-11-10 13:05:14 jnardull Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.4 2004-12-10 08:09:13 jnardull Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -47,15 +47,15 @@ MCOTTimeCreator::~MCOTTimeCreator()
 
 StatusCode MCOTTimeCreator::initialize()
 {
+
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
   // Read out window tool
   IOTReadOutWindow* aReadOutWindow = 0;
-  StatusCode sc = toolSvc()->retrieveTool("OTReadOutWindow",aReadOutWindow);
-  if( !sc.isSuccess() ) {
-    return Error (" Unable to create OTReadOutWindow tool",sc);
-  }
+  aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
   m_startReadOutGate  = aReadOutWindow->startReadOutGate();
-  toolSvc()->releaseTool( aReadOutWindow );
-
+  release( aReadOutWindow );
   return StatusCode::SUCCESS;
 }
 
@@ -67,12 +67,7 @@ StatusCode MCOTTimeCreator::execute()
 
   // output container
   MCOTTimes* timeCont = new MCOTTimes();
-  sc = this->eventSvc()->registerObject(MCOTTimeLocation::Default, timeCont);
-  if (!sc.isSuccess()) {
-    msg () << "Unable to store MCOTTime container in EvDS (sc=" 
-              << sc.getCode() << ")" << endreq;
-    return sc;
-  }
+  put(timeCont, MCOTTimeLocation::Default);
 
   // create times
   msg () << "Time size before =" << timeCont->size() << endreq;
@@ -84,23 +79,12 @@ StatusCode MCOTTimeCreator::execute()
   return StatusCode::SUCCESS;
 }
 
-
-StatusCode MCOTTimeCreator::finalize() 
-{
-  return StatusCode::SUCCESS;
-}
-
-
 StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
 {
   // retrieve deposits
-  SmartDataPtr<MCOTDeposits>
-    depositCont(eventDataService(),MCOTDepositLocation::Default);
+  MCOTDeposits* depositCont = 
+    get<MCOTDeposits>(MCOTDepositLocation::Default);
 
-  if (!depositCont){
-    warning () << "Failed to find MCOTDeposits" << endreq;
-    return StatusCode::FAILURE;
-  }
   MCOTDeposits::const_iterator iterDep = depositCont->begin();
   MCOTDeposits::const_iterator jterDep = iterDep;
 

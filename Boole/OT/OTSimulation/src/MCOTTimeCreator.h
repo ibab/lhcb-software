@@ -1,11 +1,10 @@
-// $Id: MCOTTimeCreator.h,v 1.2 2004-11-10 13:05:14 jnardull Exp $
+// $Id: MCOTTimeCreator.h,v 1.3 2004-12-10 08:09:13 jnardull Exp $
 
 #ifndef OTSIMULATION_MCOTTIMECREATOR_H
 #define OTSIMULATION_MCOTTIMECREATOR_H 1
 
 // Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // Event
 #include "Event/MCOTTime.h"
@@ -35,9 +34,6 @@ public:
 
   /// execute
   StatusCode execute();
-
-  /// finalize
-  StatusCode finalize();
 
 private:
   typedef std::vector<MCOTTime*> MCOTTimeVector;

@@ -1,11 +1,8 @@
-// $Id: MCOTDepositCreator.cpp,v 1.3 2004-11-10 13:05:14 jnardull Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.4 2004-12-10 08:09:13 jnardull Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/IToolSvc.h"
 
 // Event
 #include "Event/MCHit.h"
@@ -81,8 +78,9 @@ MCOTDepositCreator::~MCOTDepositCreator()
 
 StatusCode MCOTDepositCreator::initialize()
 {
-  // initialization phase
-  StatusCode sc;
+
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // sanity checks
   if  (m_spillVector.size() == 0) {
@@ -90,58 +88,40 @@ StatusCode MCOTDepositCreator::initialize()
   }
   
   // Loading OT Geometry from XML
-  SmartDataPtr<DeOTDetector> tracker( detSvc(), "/dd/Structure/LHCb/OT" );
-  if ( !tracker ) {
-    return Error ( "Unable to retrieve Tracker detector element from xml");
-  }
+  DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
   m_tracker = tracker;
   m_numStations = m_tracker->numStations();
   m_firstOTStation = m_tracker->firstOTStation();  
 
-  // make/retrieve tools
-
   int numOTStations = m_numStations - m_firstOTStation + 1;
   // retrieve efficiency calculator tool
   for (int iEff = 0 ; iEff < numOTStations; ++iEff) {
-    // make name
+    // get tool
     IOTEffCalculator* aSingleCellEff = 0;
     std::string aName = toolName("effCalculator", iEff);
-    // get tool
-    sc = toolSvc()->retrieveTool("OTEffCalculator",aName,aSingleCellEff,this);
-    if( sc.isFailure() ) {
-      return Error (" Unable to create OTEffCalculator tool",sc);
-    }
+    aSingleCellEff = tool<IOTEffCalculator>("OTEffCalculator",
+                                            aName,this);
     // add tool to vector
     m_singleCellEffVector.push_back(aSingleCellEff);
   } //loop eff calculators
 
   // smearer
   for (int iSmearTool = 0; iSmearTool < numOTStations; ++iSmearTool){
-    // make name
+    // get tool
     IOTSmearer* aSmearer = 0;
     std::string aName = toolName("smearer", iSmearTool);
-    // get tool
-    sc = toolSvc()->retrieveTool("OTSmearer",aName,aSmearer,this);
-    if( sc.isFailure() ) {
-      return Error ( " Unable to create OTSmearer tool",sc);     
-    }
-    else {
-      // add tool to vector
-      m_smearerVector.push_back(aSmearer);
-    }
+    aSmearer = tool<IOTSmearer>("OTSmearer",aName,this);
+    // add tool to vector
+    m_smearerVector.push_back(aSmearer);
   } // loop smearing tools
 
   // make r-t calculators
   for(int iRT = 0; iRT < numOTStations; ++iRT){
-    // make name
+    // get tool
     IOTrtRelation* aRTrelation = 0;
     std::string aName = toolName("rtRelation", iRT);
-    // get tool
-    sc = toolSvc()->retrieveTool("OTrtRelation",aName,aRTrelation,this);
-    if( sc.isFailure() ) {
-      return Error ( " Unable to create  tool OTrtRelation");
-    }
-      // add tool to vector
+    aRTrelation = tool<IOTrtRelation>("OTrtRelation",aName,this);
+    // add tool to vector
     m_rtRelationVector.push_back(aRTrelation);   
   } //  loop r-t calculators
 
@@ -153,28 +133,22 @@ StatusCode MCOTDepositCreator::initialize()
 
   // Read out window tool
   IOTReadOutWindow* aReadOutWindow = 0;
-  sc = toolSvc()->retrieveTool("OTReadOutWindow",aReadOutWindow);
-  if( !sc.isSuccess() ) {
-    return Error (" Unable to create OTReadOutWindow tool",sc);
-  }
+  aReadOutWindow = tool<IOTReadOutWindow>("OTReadOutWindow");
+
   m_sizeOfReadOutGate = aReadOutWindow->sizeOfReadOutGate();
   m_startReadOutGate  = aReadOutWindow->startReadOutGate();
-  toolSvc()->releaseTool( aReadOutWindow );
+  release( aReadOutWindow );
 
   // construct container names once
-  std::vector<std::string>::const_iterator iSpillName = m_spillVector.begin();
+  std::vector<std::string>::const_iterator iSpillName 
+    = m_spillVector.begin();
   while (iSpillName!=m_spillVector.end()){
     // path in Transient data store
     std::string mcHitPath = "/Event"+(*iSpillName)+MCHitLocation::OTHits;
     m_spillNames.push_back(mcHitPath);
     ++iSpillName;
   } // iterSpillName
-
-  sc = toolSvc()->retrieveTool(m_noiseToolName,
-                               m_noiseToolName, m_noiseTool, this);
-  if( sc.isFailure() || 0 == m_noiseTool) {
-    return Error(" Unable to create noise tool",sc);
-  }
+  m_noiseTool = tool<IOTRandomDepositCreator>(m_noiseToolName);
   return StatusCode::SUCCESS;
 }
 
@@ -258,62 +232,23 @@ StatusCode MCOTDepositCreator::execute(){
   m_tempDeposits->clear();
 
   // store deposit container in EvDS
-  sc = this->eventSvc()->registerObject(MCOTDepositLocation::Default, deposits);
-  if (!sc.isSuccess()) {
-    msg () << "Unable to store deposit container in EvDS (sc=" 
-              << sc.getCode() 
-              << ")" << endreq;
-    return sc;
-  }
+  put(deposits,MCOTDepositLocation::Default);
   return StatusCode::SUCCESS;
 }
-
-
-StatusCode MCOTDepositCreator::finalize() 
-{
-  // Release all tools
-
-  for( std::vector<IOTEffCalculator*>::iterator 
-         itEff  = m_singleCellEffVector.begin();
-         itEff != m_singleCellEffVector.end(); itEff++ ) {
-    if( 0 != *itEff) toolSvc()->releaseTool(*itEff);
-  }
-  
-  for( std::vector<IOTSmearer*>::iterator itSmear = m_smearerVector.begin();
-                                itSmear != m_smearerVector.end(); itSmear++ ) {
-    if( 0 != *itSmear) toolSvc()->releaseTool(*itSmear);
-  }
-  
-  for( std::vector<IOTrtRelation*>::iterator itRt = m_rtRelationVector.begin();
-                                   itRt != m_rtRelationVector.end(); itRt++ ) {
-    if( 0 != *itRt) toolSvc()->releaseTool(*itRt);
-  }
-
-  if (0 != m_noiseTool) toolSvc()->releaseTool(m_noiseTool);
-
-  return StatusCode::SUCCESS;
-}
-
 
 StatusCode MCOTDepositCreator::makeDigitizations()
 {
-  // retrieve MCTrackinghits and make first list of deposits 
-
-  // init the message service
-
+  // retrieve MCTrackinghits and make first list of deposits
   for (unsigned int iSpill = 0; iSpill < m_spillNames.size(); ++iSpill){
-
     // retrieve a MCTrackingHits for this spill
     SmartDataPtr<MCHits> 
       monteCarloTrackerHits(eventSvc(),m_spillNames[iSpill]);
-
     if ( !monteCarloTrackerHits ) {
       // failed to find hits
       msg () <<"Unable to retrieve " +m_spillNames[iSpill] << endreq;
     }
     else {
-      // found spill - create some digitizations and 
-      // add them to deposits
+      // found spill - create some digitizations and add them to deposits
       MCHits::const_iterator iterHit;
       for ( iterHit = monteCarloTrackerHits->begin(); 
             iterHit != monteCarloTrackerHits->end(); ++iterHit) {
@@ -501,8 +436,9 @@ std::string MCOTDepositCreator::toolName(const std::string& aName,
                                          const int id) const
 {
   // convert id to station number
-  int iStation = id + m_firstOTStation;
- 
-  char buffer[32];
-  return  aName+ ::_itoa(iStation,buffer,10);
+   int iStation = id + m_firstOTStation;
+   
+   char buffer[32];
+   return  aName+ ::_itoa(iStation,buffer,10);
 }
+
