@@ -204,7 +204,7 @@ StatusCode GiGaMuonHitCnv::updateObj
 
              MCMuonHit* mchit =new MCMuonHit();
              mchit->setEntry(pentry);
-             mchit->setExit(pexit);
+             mchit->setDisplacement(pexit-pentry);
              mchit->setEnergy(edep);
              mchit->setTimeOfFlight(toffl);             
              mchit->setVolumeID(chamber,gap);
@@ -316,7 +316,7 @@ StatusCode GiGaMuonHitCnv::updateObjRefs
 
       if(table[traid].particle())
         {
-          (*iter)->setMcParticle(table[traid].particle());
+          (*iter)->setMCParticle(table[traid].particle());
         }
       else
         {
