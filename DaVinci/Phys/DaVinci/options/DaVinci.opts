@@ -17,24 +17,24 @@
 // all the C++ generated histograms, not those filled in Fortran
 //--------------------------------------------------------------
 #include "$STDOPTS/Hbook.opts"
-HistogramPersistencySvc.OutputFile = "Histos.hbook";
-//#include "$STDOPTS/RootHist.opts"
-//HistogramPersistencySvc.OutputFile = "Histos.rt";
+HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+//  #include "$STDOPTS/RootHist.opts"
+//  HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 //--------------------------------------------------------------
 // Ntuples available by default. Comment to switch off
 //--------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
-NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
-//NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.rt' TYP='ROOT' OPT='NEW'"};
+NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
+//  NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
 // DaVinci Algorithms
 //--------------------------------------------------------------
 // Redo L0 trigger decision (for data produced with Brunel v13r1) 
-#include "$DAVINCIROOT/options/L0.opts"
+//  #include "$DAVINCIROOT/options/L0.opts"
 // Recalibration for gammas (for data produced with Brunel v13r1)
-//  #include "$DAVINCIROOT/options/CaloReCalibration.opts";
+//  #include "$DAVINCIROOT/options/CaloReCalibration.opts"
 
 // Perfect ParticleID (switch off ChargedProtoPAlg when switching this on)
 //  ApplicationMgr.TopAlg = { "MCPIDProtoPAlg" };
@@ -56,28 +56,104 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 // The various selections algorithms are listed here 
 // EACH COMPLETE SELECTION HAS TO BE EXECUTED BY ITSELF
 //
-// Bd->J/Psi(mu+mu-)Ks(pi+pi-)
-//  ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
-//                             "SelectKs2pipi",
-//                             "SelectBd2JpsiKs" };
-//  #include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBd2JpsiKs.opts"
-//  #include "$PHYSSELECTIONSROOT/options/SelectKs2pipiForBd2JpsiKs.opts"
-//  #include "$PHYSSELECTIONSROOT/options/SelectBd2Jpsi2mumu_Ks2pipi.opts"
-// Data sets for this channel (Brunel v13r1)
-//  #include "$LHCBHOME/project/web/cards/411300.opts"
 
+// Bd->J/Psi(mu+mu-)Ks(pi+pi-)
+ApplicationMgr.TopAlg += { "SelectJpsi2mumu",
+                           "SelectKs2pipi",
+                           "SelectBd2JpsiKs" };
+#include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBd2JpsiKs.opts"
+#include "$PHYSSELECTIONSOPTS/SelectKs2pipiForBd2JpsiKs.opts"
+#include "$PHYSSELECTIONSOPTS/SelectBd2Jpsi2mumu_Ks2pipi.opts"
+// Data sets for this channel (Brunel v13r1)
+#include "$LHCBHOME/project/web/cards/411300.opts"
 
 // Bs -> J/Psi(mu+mu-) phi(KK)
-ApplicationMgr.TopAlg += { 
-  "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi",
-  "Select2ParticleDecay/Selectphi2KKForBs2Jpsiphi",
-  "Select2ParticleDecay/SelectBs2Jpsi2mumu_phi2KK"
-};
-//  #include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBs2Jpsiphi.opts"
-//  #include "$PHYSSELECTIONSROOT/options/Selectphi2KKForBs2Jpsiphi.opts"
-//  #include "$PHYSSELECTIONSROOT/options/SelectBs2Jpsi2mumu_phi2KK.opts"
-// Data sets for this channel (Brunel v13r1)
+//  ApplicationMgr.TopAlg += { 
+//    "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi",
+//    "Select2ParticleDecay/Selectphi2KKForBs2Jpsiphi",
+//    "Select2ParticleDecay/SelectBs2Jpsi2mumu_phi2KK"
+//  };
+//  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBs2Jpsiphi.opts"
+//  #include "$PHYSSELECTIONSOPTS/Selectphi2KKForBs2Jpsiphi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBs2Jpsi2mumu_phi2KK.opts"
+//  // Data sets for this channel (Brunel v13r1)
 //  #include "$LHCBHOME/project/web/cards/611300.opts"
+
+// Bs ->Ds(KKpi) K
+//  ApplicationMgr.TopAlg += {
+//    "SelectDs2KKpi",
+//    "SelectBs2DsK"
+//  };
+//  #include "$PHYSSELECTIONSOPTS/SelectDs2KKpi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBs2Ds2KKpi_K.opts"
+//  // Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/613400.opts"
+
+// Bs ->Ds(KKpi) pi
+//  ApplicationMgr.TopAlg += {
+//    "SelectDs2KKpiForBs2Dspi",
+//    "SelectBs2Dspi"
+//  };
+//  #include "$PHYSSELECTIONSOPTS/SelectDs2KKpiForBs2Dspi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBs2Ds2KKpi_pi.opts"
+//  // Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/613300.opts"
+
+// Bd -> mu mu Kstar(Kpi)
+//  ApplicationMgr.TopAlg += {
+//    "SelectMuMu",
+//    "SelectKstar2KPiForB02MuMuKstar",
+//    "SelectB02MuMuKstar"
+//  };
+//  #include "$PHYSSELECTIONSOPTS/SelectMuMu.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectKstar2KPiForB02MuMuKstar.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectB02MuMuKstar.opts"
+//  // Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/411800.opts"
+
+// Bs -> mu mu
+//  ApplicationMgr.TopAlg += {
+//    "SelectBs2mumu"
+//  };
+//  #include "$PHYSSELECTIONSOPTS/SelectBs2mumu.opts"
+//  // Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/612200.opts"
+
+// Bd -> D0(Kpi) Kstar(Kpi)
+//  ApplicationMgr.TopAlg += {
+//    "SelectD0andKstar2Kpi",
+//    "SelectBd2KstarD0"
+//  };                            
+//  #include "$PHYSSELECTIONSOPTS/SelectD0andKstar2Kpi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBd2Kstar2Kpi_D02Kpi.opts"
+//  // Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/414500.opts"
+
+// Bd -> J/Psi(mumu) K*(Kpi)
+//  ApplicationMgr.TopAlg += {
+//    "SelectJpsi2mumuForBd2JpsiKstar",
+//    "SelectKstar2Kpi",
+//    "SelectBd2JpsiKstar"
+//  };   
+//  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBd2JpsiKstar.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectKstar2Kpi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBd2Jpsi2mumu_Kstar2Kpi.opts"
+//  // Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/411500.opts"
+
+// Bd -> pi+pi-
+//  ApplicationMgr.TopAlg += {
+//    "SelectBd2pipi"
+//  };
+//  #include "$PHYSSELECTIONSOPTS/SelectBd2pipi.opts"
+//  // Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/412100.opts"
+
+// Resolved pi0
+//  ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
+//  #include "$PHYSSELECTIONSOPTS/ResolvedPi0Alg.opts"
+//  // Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/412800.opts"
 
 // Uncomment the following line to run the example UserAlgorithm
 //  ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
@@ -101,10 +177,8 @@ MessageSvc.OutputLevel                  = 3;
 ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
 PrimaryVertexFinderAlg.OutputLevel      = 4;
-ChargedProtoPAlg.OutputLevel            = 2;
-MCPIDProtoPAlg.OutputLevel              = 2;
-SelectKs2pipi.OutputLevel               = 3;
-SelectKs2pipi.PhysDesktop.OutputLevel   = 3;
+ChargedProtoPAlg.OutputLevel            = 3;
+MCPIDProtoPAlg.OutputLevel              = 3;
 
 // Modify Message Format to print algorithm name with 40 characters
 MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
@@ -112,9 +186,9 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax = 500;
+ApplicationMgr.EvtMax    = 500;
 EventSelector.FirstEvent = 1;
-EventSelector.PrintFreq = 1;
+EventSelector.PrintFreq  = 1;
    
 //################################################################
 

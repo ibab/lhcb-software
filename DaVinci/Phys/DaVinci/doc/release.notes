@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.30 2002-10-22 22:13:23 gcorti Exp $
+! $Id: release.notes,v 1.31 2002-10-29 22:11:14 gcorti Exp $
 <PRE>
 ! Package     : DaVinci 
 ! Responsible : Gloria Corti
 ! Purpose     : LHCb analysis program 
+
+! 2002-10-29 - Gloria Corti
+ - Introduce example for running efficiency for Bs->phiJpsi in DaVinciEff.opts
+ - Introduce options for running algorithms compatible with DaVinci v6r0 in
+   DaVinci.opts.
 
 ! 2002-10-23 - Gloria Corti
  - Modify DaVinci.opts to do some clean up

@@ -17,7 +17,7 @@
 // all the C++ generated histograms, not those filled in Fortran
 //--------------------------------------------------------------
 #include "$STDOPTS/Hbook.opts"
-HistogramPersistencySvc.OutputFile = "JpsiEffHistos.hbook";
+HistogramPersistencySvc.OutputFile = "DVEffHistos.hbook";
 
 //--------------------------------------------------------------
 // Ntuples available by default. Comment to switch off
@@ -39,11 +39,23 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //--------------------------------------------------------------
 // J/Psi(mu+mu-)
 ApplicationMgr.TopAlg += { 
-  "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi"
+  "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi"  
 };
 ApplicationMgr.TopAlg += { "PhysSelEff/EffJpsi2mumu" };
 #include "$PHYSSELECTIONSROOT/options/SelectJpsi2mumuForBs2Jpsiphi.opts"
 #include "$DAVINCIEFFROOT/options/EffJpsi2mumu.opts"
+
+// Bs -> J/Psi(mu+mu-) phi(KK)
+//  ApplicationMgr.TopAlg += { 
+//    "Select2ParticleDecay/SelectJpsi2mumuForBs2Jpsiphi",
+//    "Select2ParticleDecay/Selectphi2KKForBs2Jpsiphi",
+//    "Select2ParticleDecay/SelectBs2Jpsi2mumu_phi2KK"
+//  };
+//  ApplicationMgr.TopAlg += { "PhysSelEff/EffBs2Jpsi2mumu_phi2KK" };
+//  #include "$PHYSSELECTIONSOPTS/SelectJpsi2mumuForBs2Jpsiphi.opts"
+//  #include "$PHYSSELECTIONSOPTS/Selectphi2KKForBs2Jpsiphi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBs2Jpsi2mumu_phi2KK.opts"
+//  #include "$DAVINCIEFFOPTS/EffBs2Jpsi2mumu_phi2KK.opts"
 
 //-----------------------------------------------------------------
 // Input data
@@ -65,13 +77,16 @@ ToolSvc.OutputLevel                     = 3;
 XmlParserSvc.OutputLevel                = 4;
 PrimaryVertexFinderAlg.OutputLevel      = 4;
 EffJpsi2mumu.OutputLevel                = 3;
+EffBs2Jpsi2mumu_phi2KK.OutputLevel      = 2;
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
-ApplicationMgr.EvtMax = 1000;
+ApplicationMgr.EvtMax = 100;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq = 1;
    
+// Modify Message Format to print algorithm name with 40 characters
+//  MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 //################################################################
 
