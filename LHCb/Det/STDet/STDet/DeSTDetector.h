@@ -6,9 +6,9 @@
 
 #include "DetDesc/DetectorElement.h"
 
-/** @class DeITDetector DeITDetector.h "STDet/DeSTDetector.h"
+/** @class DeSTDetector DeSTDetector.h "STDet/DeSTDetector.h"
  *
- *  IT detector element class.
+ *  ST detector element class.
  *
  *  @author Yuehong Xie Yuehong.Xie@cern.ch
  */
