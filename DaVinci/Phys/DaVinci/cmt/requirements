@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.206 2004-11-18 09:24:38 pkoppenb Exp $
+# $Id: requirements,v 1.207 2004-11-19 10:34:19 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -36,9 +36,6 @@ use XmlDDDB             v22r3   Det
 use FieldMap            v4r5
 use ParamFiles          v3r8    -no_auto_imports
 
-#-- Trigger libraries 
-use TrgSys              v1r0  Trg
-
 #-- LHCb libraries 
 use LHCb                v16r4
 
@@ -53,6 +50,18 @@ use  L0Checker          	v3r0     L0
 use  L0MuonKernel 		v2r2     L0
 use  L0MuonTrigger 		v2r3     L0
 use  L0mConf            	v2r2p3   L0
+
+#-- L1 Trigger libraries 
+use TrgSys                      v1r1     Trg
+
+#-- RICH Trigger libraries 
+use RichHLTSys                  v1r0     Rich
+use RichRecQC                   v1r10    Rich
+
+#-- HLT trigger
+use HltGeneric                  v2r0     Hlt
+# use HltSelections               v1r8     Hlt
+# use HltSelChecker               v1r0     Hlt
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
