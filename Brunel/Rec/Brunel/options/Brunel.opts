@@ -70,11 +70,13 @@ BrunelDigiMUON.addBkg = false;
 #include "$L0DUROOT/options/Brunel.opts"
 ApplicationMgr.DLLs += { "MuonSicbCnv" };
 
-// Calorimeter digitisation, reconstruction
+// Calorimeter digitisation
 //   and back conversion of digits to SICB bank
 #include "$CALOTOOLSOPTS/Brunel.opts"
-#include "$CALOCAOPTS/Brunel.opts"
-#include "$CALOALGSOPTS/Brunel.opts"
+//#include "$CALOCAOPTS/Brunel.opts"
+//#include "$CALOALGSOPTS/Brunel.opts"
+#include "$CALOCAOPTS/CaloAlgs.opts"
+#include "$CALOCAOPTS/BrunelDigi.opts"
 #include "$CALOSICBCNVOPTS/Brunel.opts"
 
 // Tracking and back conversion of tracks to AXTK

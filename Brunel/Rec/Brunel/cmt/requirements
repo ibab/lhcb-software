@@ -9,9 +9,6 @@ ignore_pattern package_stamps
 set BRUNELOPTS ${BRUNELROOT}/options
 set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
 
-# Uncomment and modify next line to select an appropriate database version
-# use dbase v241 SICB
-
 # Next line to force static build to go into LinuxStatic directory
 ignore_pattern   package_tag
 
