@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2004-06-28 16:00:53 ibelyaev Exp $ 
+# $Id: requirements,v 1.11 2004-06-28 17:02:35 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -14,23 +14,23 @@ use HIPPODRAW   v1r133
 #use GaudiPython v6r4 
 
 # =========== Bender Application itself =======================================
-use           Bender         v3r2 Phys 
+use           Bender         v3r3 Phys 
 # =========== Bender Libraries ================================================
 use           BenderLibs     v3r0 Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDet      v1r0 Det 
 # =========== Detector Geometry Checks ========================================
-use           DetDescChecks  v2r0 Det 
+use           DetDescChecks  v2r1 Det 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDict     v3r0 Tools 
 # =========== Bender & LoKi documentation =====================================
 use           BenderDoc      v3r0 Doc 
-use           LoKiDoc        v2r2 Doc 
+use           LoKiDoc        v2r6 Doc 
 # =========== Test suit for Bender ============================================
 use           BenderTest     v3r0 Tests 
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v3r0 Ex  
-use           LoKiExample    v2r0 Ex 
+use           LoKiExample    v2r6 Ex 
 # =========== Test suit for Bender ============================================
 use           BenderVis      v1r0 Vis 
 # =========== Detector description related stuff ==============================
@@ -41,6 +41,9 @@ use           BenderUser     v3r0 Phys
 # The END 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2004/06/28 16:00:53  ibelyaev
+#  increment the version
+#
 # Revision 1.9  2004/04/05 07:22:38  ibelyaev
 #  v3r2
 #
