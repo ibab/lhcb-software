@@ -1,4 +1,4 @@
-// $Id: IMassVertexFitter.h,v 1.3 2002-05-15 23:10:17 gcorti Exp $
+// $Id: IMassVertexFitter.h,v 1.4 2002-10-22 20:03:13 gcorti Exp $
 #ifndef DAVINCITOOLS_IMASSVERTEXFITTER_H 
 #define DAVINCITOOLS_IMASSVERTEXFITTER_H 1
 
@@ -11,7 +11,7 @@ class Particle;
 class StatusCode;
 class IParticlePropertySvc;
 
-static const InterfaceID IID_IMassVertexFitter("IMassVertexFitter", 2 , 0); 
+static const InterfaceID IID_IMassVertexFitter("IMassVertexFitter", 2 , 1);
 
 /** @class IMassVertexFitter
  *  Interface Class for mass constrained vertex fit.
@@ -22,31 +22,51 @@ static const InterfaceID IID_IMassVertexFitter("IMassVertexFitter", 2 , 0);
  */
 
 class IMassVertexFitter : virtual public IAlgTool {
- public:
+  
+public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IMassVertexFitter; }
-
-  /// Perform mass contrains vertex fit.
-  /// inputs: string name of the mother particle to contrain to
-  ///         vector of particles to fit to a vertex
-  /// output: resulting Vertex and Particle
-  virtual StatusCode fitWithMass(const std::string&,const ParticleVector&,
-                                 Vertex&, Particle&) = 0; 
-
-  /// Perform mass contrains vertex fit.
-  /// inputs: string name of the mother particle to contrain to
-  ///         two Particles to fit to a vertex
-  /// output: resulting Vertex and Particle
+  
+	
+  /// Perform mass contrained vertex fit for 2 tracks.
+  /// inputs: string name of the mother particle to contrain to.
+  ///         two Particles. 
+  /// output: resulting Vertex and Particle  
+	
   virtual StatusCode fitWithMass(const std::string&, Particle&, Particle&,
                                  Vertex&, Particle&) = 0;
-
-  /// Perform mass contrains vertex fit.
-  /// inputs: string name of the mother particle to contrain to
-  ///         three Particles to fit to a vertex
-  /// output: resulting Vertex and Particle   
+	
+	
+  /// Perform mass contrained vertex fit for 3 tracks 
+  /// inputs: string name of the mother particle to contrain to.
+  ///         three Particles 
+  /// output: resulting Vertex and Particle 	
+	
   virtual StatusCode fitWithMass(const std::string&,
                                  Particle&, Particle&, Particle&,
+                                 Vertex&, Particle&) = 0; 	
+	
+  
+  /// Perform mass contrained vertex fit for 4 tracks 
+  /// inputs: string name of the mother particle to contrain to.
+  ///         three Particles 
+  /// output: resulting Vertex and Particle 	
+	
+  virtual StatusCode fitWithMass(const std::string&,
+                                 Particle&, Particle&, Particle&,
+                                 Particle&,Vertex&, Particle&) = 0;
+  
+  /// Perform mass contrained vertex fit for 2, 3 or 4 tracks 
+  /// inputs: string name of the mother particle to contrain to.
+  ///         vector of particles
+  /// output: resulting Vertex and Particle  	
+	
+  virtual StatusCode fitWithMass(const std::string&,const ParticleVector&,
                                  Vertex&, Particle&) = 0; 
+	
+	
+  
+  
 };
 
 #endif // DAVINCITOOLS_IMASSVERTEXFITTER_H
