@@ -1,0 +1,33 @@
+// $Id: MoniDigi.opts,v 1.1.1.1 2004-10-25 08:57:08 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+/** @file 
+ *  the configuration file ro tun Digi Motoring for Calo 
+ *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+ *  @date 2004-10-25 
+ */
+
+// Spd  digits Monitoring 
+SpdMoni.Detector                 = "Spd"  ;
+SpdMoni.MaxEnergy                =  5.    ;
+
+// Prs  digits Monitoring 
+PrsMoni.Detector                 = "Prs"  ;
+PrsMoni.MaxEnergy                =  10.   ;
+
+// Ecal digits Monitoring 
+EcalMoni.Detector                = "Ecal" ;
+EcalMoni.MaxMultiplicity         = 6000.  ;
+EcalMoni.ScaleHit                = 6.66   ;
+
+// Hcal digits Monitoring 
+HcalMoni.Detector                = "Hcal" ;
+HcalMoni.ScaleHit                =  50.   ;
+
+// ============================================================================
+// The END 
+// ============================================================================

@@ -1,0 +1,61 @@
+// $Id: CaloDigitMonitor.h,v 1.1.1.1 2004-10-25 08:57:08 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2002/11/13 20:49:11  ibelyaev
+//  small update of monitoring algorithms
+//
+// ============================================================================
+#ifndef CALODIGITMONITOR_H 
+#define CALODIGITMONITOR_H 1
+// Include files
+
+// from STL 
+#include <string>
+#include <vector>
+// from Gaudi 
+#include "GaudiKernel/Algorithm.h"
+
+class IHistogram1D;
+
+
+/** @class CaloDigitMonitor CaloDigitMonitor.h
+ *  Monitor the results of the Calo Digitisation. Histograms
+ *
+ *  @author Olivier Callot
+ *  @date   25/05/2001
+ */
+class CaloDigitMonitor : public Algorithm {
+public:
+  /// Standard constructor
+  CaloDigitMonitor( const std::string& name, ISvcLocator* pSvcLocator) ;
+  
+  /// Standard destructor
+  virtual ~CaloDigitMonitor( ); 
+
+  StatusCode initialize();   ///< Initialisation
+  StatusCode execute   ();   ///< Execution
+  StatusCode finalize  ();   ///< Finalization
+protected:
+
+private:
+
+  std::string              m_nameOfDetector      ; // Detector short name
+  std::string              m_nameOfHits          ; // Hits container
+  std::string              m_nameOfMCDigits      ; // MCDigit container
+  std::string              m_nameOfDigits        ; // Digit container
+
+  double                   m_maxMultiplicity     ; // histo limits
+  double                   m_maxEnergy           ;
+  double                   m_scaleHit            ;
+
+  // Histogram pointers
+  IHistogram1D*            m_histMultHit         ;
+  IHistogram1D*            m_histMultMCD         ;
+  IHistogram1D*            m_histMultDig         ;
+  IHistogram1D*            m_histEnergyHit       ;
+  IHistogram1D*            m_histEnergyMCD       ;
+  IHistogram1D*            m_histEnergyDig       ;
+};
+#endif // CALODIGITMONITOR_H

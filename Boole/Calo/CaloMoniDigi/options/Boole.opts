@@ -1,0 +1,29 @@
+// $Id: Boole.opts,v 1.1.1.1 2004-10-25 08:57:08 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+
+/** @file 
+ *  the configuration file ro tun Digi Motoring for Calo 
+ *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr
+ *  @date 2004-10-25 
+ */
+
+ApplicationMgr.DLLs += { "CaloMoniDigi" } ;
+
+MoniCALOSeq.Members += 
+  {
+    "CaloDigitMonitor/SpdMoni"  ,
+    "CaloDigitMonitor/PrsMoni"  ,
+    "CaloDigitMonitor/EcalMoni" ,
+    "CaloDigitMonitor/HcalMoni" ,
+  };
+
+#include "$CALOMONIDIGIOPTS/MoniDigi.opts"
+
+
+// ============================================================================
+// The END 
+// ============================================================================

@@ -1,0 +1,15 @@
+! $Id:E
+! -----------------------------------------------------------------------------
+! CVS tag $Name: not supported by cvs2svn $
+! -----------------------------------------------------------------------------
+! Package     : Calo/CaloMoniDigi
+! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr
+! Purpose     : monitoring of Calo content for Digi tape 
+! -----------------------------------------------------------------------------
+
+! 2004-10-25 - Vanya BELYAEV
+  - new package: the code is imported from Calo/CaloMonitor package
+
+! -----------------------------------------------------------------------------
+! The END 
+! -----------------------------------------------------------------------------
