@@ -1,8 +1,11 @@
-// $Id: CaloAlgorithm.cpp,v 1.5 2002-04-04 12:54:38 ibelyaev Exp $ 
+// $Id: CaloAlgorithm.cpp,v 1.6 2002-04-04 13:16:26 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/04/04 12:54:38  ibelyaev
+//  bug fix in CaloAlgorithm::put(...) method
+//
 // Revision 1.4  2002/04/01 12:50:24  ibelyaev
 //  add templated accesssors to tools and improve exceptions
 //
@@ -210,23 +213,25 @@ StatusCode CaloAlgorithm::put
   const std::string& address ) const 
 {
   // check arguments 
-  Assert( 0 != eventSvc() , " put(): Invalid 'eventSvc()'!"      );
-  Assert( 0 != object     , " put(): Invalid 'Object'!"          );
-  Assert( address.empty() , " put(): Invalid 'address' = '' "    );
+  Assert( 0 != eventSvc()  , " put(): Invalid 'eventSvc()'!"   );
+  Assert( 0 != object      , " put(): Invalid 'Object'!"       );
+  Assert( !address.empty() , " put(): Invalid 'address' = '' " );
   // register the object!
+  const std::string Address = 
+    '/' == address[0] ? address : "/Event/" + address ;
+  const std::string Type    = 
+    System::typeinfoName( typeid( *object ) );
   StatusCode sc = 
-    eventSvc()->
-    registerObject( ( '/' == address[0] ) ? 
-                    address : "/Event/" + address , object );
+    eventSvc()-> registerObject( Address , object );
   // check the result!
-  Assert( sc.isSuccess() , " put(): could not register '"
-          + System::typeinfoName( typeid( *object ) ) + "' at address '"
-          + address + "'" , sc );
+  Assert( sc.isSuccess() , 
+          " put(): could not register '"
+          + Type    + "' at address '"
+          + Address + "'"  , sc );
   //
-  Print( "The object of type '" + 
-         System::typeinfoName( typeid( *object ) ) +
+  Print( ":: The object of type '" + Type +
          "' is registered in TS at address '" 
-         + address + "'" , sc , MSG::DEBUG );
+         + Address + "'" , sc , MSG::DEBUG );
   //
   return sc ;
 };
