@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.64 2004-12-13 16:32:37 cattanem Exp $
+! $Id: release.notes,v 1.65 2005-02-17 13:37:54 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,14 @@
 ! Responsible : Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2005-02-17 - Vanya BELYAEV
+
+ - options/NeutralCluster.opts 
+ - options/ChargedCluster.opts 
+           fix for new associators 
+ - cmt/requirements 
+           version incement to v2r7p1 
 
 !========================== CaloReco v2r7 2004-12-13 ===================
 ! 2004-12-13 - Marco Cattaneo
