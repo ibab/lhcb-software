@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
-// Job options for Brunel when using $LHCBDBASE version v248r3
-//  (should also be used for data produced with dbase versions v248r0, v248r2) 
+// Job options for Brunel when using $LHCBDBASE version v248r4
+//  (should also be used for data produced with any dbase version v248r*) 
 // ------ "LHCb light detector for Summer 2002 production ------
 
 // --- Define input data. Spillover first (if required), then signal ---

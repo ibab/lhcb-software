@@ -6,11 +6,11 @@ Purpose: LHCb reconstruction program
 </PRE><H1><A NAME=v13r0>2002-07-25 Brunel v13r0</A></H1><PRE>
 Third release of Brunel for summer 2002 pre-production.
 
-Supported geometry: dbase v248r3 (can process data produced with dbase v248r*)
+Supported geometry: dbase v248r4 (can process data produced with dbase v248r*)
 Complete OO-Dst output.
 
  - Functionality changes:
-   . Needs dbase v248r3 (Brunelv248r3.opts added, *v248r2.opts removed)
+   . Needs dbase v248r4 (Brunelv248r4.opts added, *v248r2.opts removed)
      > Default input file changed (previous default had problem with PASS bank)
    . SpillOverAlg executes as first algorithm in Digi phase 
      (SicbCnv v17r1, Brunel.opts)
