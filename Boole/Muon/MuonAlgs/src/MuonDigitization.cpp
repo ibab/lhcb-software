@@ -319,14 +319,10 @@ MuonDigitization::addChamberNoise(){
                                       (chamber+chamberTillNow)+
                                       m_pGetInfo->getStartGapZ
                                       (gap,partitionNumber)));
-            pHit->setExit(HepPoint3D(x,y,m_pGetInfo->
-                                     getStartPositionFirstGapZ
-                                     (chamber+chamberTillNow)+
-                                     m_pGetInfo->
-                                     getStopGapZ(gap,partitionNumber)));
-            double tofOfLight=(sqrt(x*x+ y*y+(middlePosZ)*
-                                    (middlePosZ)))/300.0;
-            //            pHit->setTimeOfFlight(time+shiftOfTOF+tofOfLight); 
+            pHit->setDisplacement(HepGeom::BasicVector3D<double>(0.,0.,
+                           m_pGetInfo->getStopGapZ(gap,partitionNumber) -
+                           m_pGetInfo->getStartGapZ(gap,partitionNumber)) );
+            double tofOfLight=(sqrt(x*x+ y*y+(middlePosZ)*(middlePosZ)))/300.0;
             pHit->setTimeOfFlight(time+tofOfLight);
             pHit->setVolumeID(chamber+1,gap+1);
             hitsContainer->insert(pHit);
