@@ -1,6 +1,12 @@
-#$Id: release.notes,v 1.23 2002-11-26 18:03:25 andreav Exp $
+#$Id: release.notes,v 1.24 2002-12-02 11:37:05 andreav Exp $
 Package Ex/DetCondExample
 Package manager : Andrea Valassi 
+
+==============================================================================
+!20021201 - Andrea Valassi
+Added into options/ three useful scripts to compare output logfiles.
+- Also apply dos2unix to Windows ouput log files before committing them
+Requirements v4r1, private tag h20021201
 
 ==============================================================================
 !20021125 - Andrea Valassi
@@ -26,6 +32,7 @@ Modify CMT requirements to allow for runtime choice between Oracle and MySQL.
 - Remove reference to the Java browser until it's tested on Oracle
 - Updated sample job outputs
   > reorganized them into job/Xml, job/CondDBObjy and job/CondDBOracle
+Requirements v4r1, private tag h20021125
 
 ==============================================================================
 !20020725 - Andrea Valassi
