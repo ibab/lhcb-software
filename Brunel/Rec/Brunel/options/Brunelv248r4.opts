@@ -18,9 +18,9 @@ EventSelector.Input = {
 //--------------------------------------------------------------
 
 // Define outputs
-HistogramPersistencySvc.OutputFile = "brunel_v248r3.hbook";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "brunel_v248r4.hbook";  // Monitoring histos
 #include "$BRUNELOPTS/BrunelDst.opts" // Enable DST output and define DST content
-BrunelDstWriter.Output = "DATAFILE='dst_v248r3.root' TYP='ROOT' OPT='NEW'";
+BrunelDstWriter.Output = "DATAFILE='dst_v248r4.root' TYP='ROOT' OPT='NEW'";
 
 //--------------------------------------------------------------
 // Database specific options

@@ -66,7 +66,7 @@ use RiSicbCnv    v4r3   SICB
 use VSicbCnv     v8r0   SICB
 
 # Brunel utilities
-use BrunelKernel v5r0   Rec
+use BrunelKernel v5r1   Rec
 use BrunelSicb   v4r0   Rec
 use BrunelAlgs   v1r2   Rec
 
@@ -134,7 +134,7 @@ use RichMonitor         v1r2    Rich
 use Futil        v11r0  SICB
 use detdes       v17r0  SICB
 use recevt       v3r4   SICB
-use recrich      v7r0   SICB
+use recrich      v7r1   SICB
 
 #
 #===== build Brunel =========================

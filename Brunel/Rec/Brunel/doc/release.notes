@@ -3,7 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2002-07-29 - Marco Cattaneo
+</PRE><H1><A NAME=v13r1>2002-07-30 Brunel v13r1</A></H1><PRE>
+Release of Brunel for summer 2002 production.
+Supported geometry: dbase v248r4 (can process data produced with dbase v248r*)
+
  - DST changes:
    . MuonDigit::TimeStamp is now filled (MuonAlgs v2r2)
 
@@ -11,6 +14,10 @@ Purpose: LHCb reconstruction program
    . Modify jitter in Muon MWPC readout (XmlDDDB v12r4)
 
  - Fixes:
+   . Initialise random number once per job, using run number as seed
+     (BrunelKernel v5r1)
+   . Add protections against tracks with missing states
+     (RiSicbCnv v4r3, recrich v7r1)
    . Fix double deletion of Calo Relations
      (LHCbKernel v1r4, CaloAssociators v2r2, CaloRec v2r3)
    . Small fixes to Muon Digitisation
