@@ -1,4 +1,4 @@
-// $Id: RichPIDQC.cpp,v 1.9 2003-07-04 12:30:31 jonesc Exp $
+// $Id: RichPIDQC.cpp,v 1.10 2003-07-08 06:19:36 cattanem Exp $
 // Include files
 
 // local
@@ -88,6 +88,7 @@ StatusCode RichPIDQC::initialize() {
     m_localID[ abs(m_ppSvc->find("K+")->jetsetID()) ]  = 3;
     m_localID[ abs(m_ppSvc->find("p+")->jetsetID()) ]  = 4;
 
+    m_ppSvc->release();
   }
 
   // Book histograms
@@ -500,7 +501,7 @@ StatusCode RichPIDQC::finalize() {
         << "           |                                               |" << endreq;
     std::string type[6] = { " Electron  |", " Muon      |", " Pion      |",
                             " Kaon      |", " Proton    |", " X         |" };
-    for ( int iRec = 0; iRec < 6; iRec++ ) {
+    for ( iRec = 0; iRec < 6; iRec++ ) {
       msg << type[iRec] << format( "%7.2f%7.2f%7.2f%7.2f%7.2f%7.2f     |%7.2f",
                                    m_sumTab[0][iRec], m_sumTab[1][iRec],
                                    m_sumTab[2][iRec], m_sumTab[3][iRec],

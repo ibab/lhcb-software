@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================== RichRecQC v1r0 2003-07-07 ========================
+! 2003-07-08 - Marco Cattaneo
+ - RichPIDQC.cpp: release service after use, fix a windows compilation problem
+
 ! 2003-05-11 - Chris Jones
  - First version
  - Formerly contained in RichMonitor 
