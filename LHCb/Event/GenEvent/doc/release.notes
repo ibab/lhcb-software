@@ -1,6 +1,9 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski
 
+! 2003-06-16 - Sebastien Ponce
+ - fix version in requirement file
+
 !================== GenEvent v2r3 ==================
 ! 2002-11-11 - Florence Ranjard
   requirements - remove use GaudiKernel. It is given by EventKernel
