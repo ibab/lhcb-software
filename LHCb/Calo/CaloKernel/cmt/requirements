@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.21 2004-02-17 11:55:55 ibelyaev Exp $
+# $Id: requirements,v 1.22 2004-03-05 09:32:25 cattanem Exp $
 # =============================================================================
 # Created    : 25/11/2001
 # Maintainer : Vanya Belyaev Ivan.Belyaev@itep.ru 
@@ -16,8 +16,8 @@ include_dirs      $(CALOKERNELROOT)
 # =============== used packages ===============================================
 use LHCbKernel    v4r*  Kernel
 
-use GaudiAlg   v7r0 
-use GaudiTools v8r0 
+use GaudiAlg	v7r*
+use GaudiTools	v8r* 
         
 # =============== linker library ==============================================
 library           CaloKernel            *.cpp 
