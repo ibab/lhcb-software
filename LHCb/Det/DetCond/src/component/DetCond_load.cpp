@@ -1,3 +1,5 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/component/DetCond_load.cpp,v 1.1.1.1 2001-09-14 15:07:21 andreav Exp $
-#include "GaudiKernel/LoadFactoryEntries.h"
-LOAD_FACTORY_ENTRIES( DetCond )
+//$Id: DetCond_load.cpp,v 1.2 2002-03-01 11:19:37 andreav Exp $
+#include "GaudiKernel/DeclareFactoryEntries.h"
+DECLARE_FACTORY_ENTRIES( DetCond ) {
+  DECLARE_SERVICE  ( ConditionsDBCnvSvc );  
+}
