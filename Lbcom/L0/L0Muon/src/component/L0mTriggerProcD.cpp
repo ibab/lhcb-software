@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.5 2001-07-09 19:36:40 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProcD.cpp,v 1.6 2001-07-10 10:23:31 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -34,8 +34,6 @@ const IAlgFactory& L0mTriggerProcDFactory = Factory;
 /// This should be done in the constructor.
 L0mTriggerProcD::L0mTriggerProcD(const std::string& name, ISvcLocator* pSvcLocator)
 : L0mTriggerProc(name, pSvcLocator) {
-  declareProperty("PtPrecision", m_precision);
-  declareProperty("PtMaxBits", m_bits);
 }
 
 StatusCode L0mTriggerProcD::initialize()   { 
@@ -76,7 +74,7 @@ StatusCode L0mTriggerProcD::initialize()   {
     }
     log << endreq;
     log << MSG::DEBUG << "Pt precision: " << m_precision << endreq;
-    log << MSG::DEBUG << "bits for Pt encoding: " << m_bits << endreq;
+    log << MSG::DEBUG << "bins for Pt encoding: " << m_bins << endreq;
     return StatusCode::SUCCESS;
 }
 

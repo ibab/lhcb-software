@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.3 2001-07-09 19:34:26 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/component/L0mTriggerProc.cpp,v 1.4 2001-07-10 10:23:31 atsareg Exp $
 
 /// Include files
 /// Gaudi interfaces
@@ -47,6 +47,8 @@ L0mTriggerProc::L0mTriggerProc(const std::string& name, ISvcLocator* pSvcLocator
    m_mode = "Standard";
    declareProperty("Mode", m_mode);
    declareProperty("LimitedY", m_limitedY = true );
+   declareProperty("PtPrecision", m_precision=40.);
+   declareProperty("PtMaxBins", m_bins=128);
 }
 
 
@@ -175,8 +177,6 @@ StatusCode L0mTriggerProc::execute() {
   }
   
   // Make the final clean-up
-  
-  log << MSG::INFO << " Mode " << m_mode << endreq;
   
   if( m_mode != "Test" ) {
     for ( it=m_towers->begin(); it != m_towers->end(); it++ ) {
