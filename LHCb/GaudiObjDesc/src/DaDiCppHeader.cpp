@@ -1,4 +1,4 @@
-// $Id: DaDiCppHeader.cpp,v 1.23 2001-12-18 12:54:18 mato Exp $
+// $Id: DaDiCppHeader.cpp,v 1.24 2001-12-18 13:02:00 mato Exp $
 
 #include "GaudiKernel/Kernel.h"
 
@@ -961,7 +961,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
           << gddRelation->type().transcode() << "* value);" << std::endl
           << "void " << "removeFrom"
           << firstUp(gddRelation->name()).transcode()
-          << "(SmartRef<" << gddRelation->type().transcode() << ">& value); "
+          << "(const SmartRef<" << gddRelation->type().transcode() << ">& value); "
           << std::endl;
       }
       if (gddRelation->clrMeth())
@@ -1445,7 +1445,7 @@ void DDBEcpp::printCppHeader(DaDiPackage* gddPackage,
 		  
 		  << std::endl << "}" << std::endl << std::endl << "inline void " 
           << gddClass->className().transcode() << "::" << "removeFrom" 
-          << firstUp(gddRelation->name()).transcode() << "(SmartRef<"
+          << firstUp(gddRelation->name()).transcode() << "(const SmartRef<"
           << gddRelation->type().transcode() << ">& value)" << std::endl 
           << "{" << std::endl 
 		  
