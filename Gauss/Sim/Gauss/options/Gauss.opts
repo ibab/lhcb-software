@@ -1,101 +1,68 @@
-// $Id: Gauss.opts,v 1.7 2002-05-07 13:25:25 witoldp Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.6  2002/05/07 12:28:30  ibelyaev
-//  change ALL joboptions for newer GiGa
-//
-// ============================================================================
-/** @file 
- *  The main job-options file to run Gauss application in 3 steps 
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   7 May 2002 
- */
-// ============================================================================
+// $Id: Gauss.opts,v 1.8 2002-05-10 10:29:10 ranjard Exp $ 
 
-// ============================================================================
-// load "standard" options 
-// ============================================================================
 #include "$STDOPTIONS"
 
-// ============================================================================
 // remove SicbCnv 
-// ============================================================================
+
 ApplicationMgr.ExtSvc            = 
 { "ParticlePropertySvc" ,
   "EventSelector"       };
 EventPersistencySvc.CnvServices  = {};  
 
-// ============================================================================
-// activate detector description options 
-// ============================================================================
 #include "$STDOPTS/DetDesc.opts"
-// ============================================================================
+
 // allow automatic creation of subdirectories in Event Transient Store 
-// ============================================================================
+
 EventDataSvc.ForceLeaves = true ;
 
-// ============================================================================
 // load additional dynamic libraries needed to run Gauss
-// ============================================================================
+
 ApplicationMgr.DLLs += { "GaudiAlg"         } ;
 
-// ============================================================================
 // declare external services needed MAGNETIC FIELD (optional)
 // ATTENTION! to use MagneticFieldSvc ONE MUST to add also 'SicbEventCnvSvc'!
-// ============================================================================
+
 // ApplicationMgr.ExtSvc +=  
 // { "SicbEventCnvSvc" , 
 //   "MagneticFieldSvc"  };  
-ParticlePropertySvc.ParticlePropertiesFile = "$GAUSSDATA/particle.cdf" ;
+ParticlePropertySvc.ParticlePropertiesFile = "../options/particle.cdf" ;
 
-// ============================================================================
-// List of top algorithms : 3 separated phases:
-// ============================================================================
-//      1) Generator 
-//      2) Simulation 
-//      3) Digitisation
-// ============================================================================
+// 3 steps
+
 ApplicationMgr.TopAlg          =  
 { "Sequencer/Generator"    , 
   "Sequencer/Simulation"   ,
   "Sequencer/Digitisation" 
 } ;
 
-// ============================================================================
-// Load separate options for each step 
-// ============================================================================
+// read job options for various steps
+
 #include "$GAUSSOPTS/Generator.opts"
 #include "$GAUSSOPTS/Simulation.opts"
 #include "$GAUSSOPTS/Digitisation.opts"
 
-// ============================================================================
-/** Output the data to GaussTape (pre-"OO-RAWH")
- *  define the output stream, output file etc
- */
-// ============================================================================
+// write an output file
+
 #include "$GAUSSOPTS/GaussRootIO.opts"
 #include "$GAUSSOPTS/GaussTape.opts"
 GaussTape.Output = "DATAFILE='Gauss.root' TYP='ROOT' OPT='NEW'";
 
-// ============================================================================
-/** General global options,  
- *  like outpout level, number of events , event selector etc 
- */
-// ============================================================================
-MessageSvc.OutputLevel    = 2 ;
-XmlParserSvc.OutputLevel  = 5 ;
-RootEvtCnvSvc.OutputLevel = 1 ;
-ROOT.OutputLevel          = 1 ;
+// General global options  
 
+MessageSvc.OutputLevel    = 3 ;
+//XmlParserSvc.OutputLevel  = 5 ;
+//RootEvtCnvSvc.OutputLevel = 1 ;
+//ROOT.OutputLevel          = 1 ;
+//GiGaSvc.OutputLevel = 1 ;
+//EmptyStack.OutputLevel = 3 ;
+//DrawStep.OutputLevel = 6;
+//EventDraw.OutputLevel = 1 ;
+//MCParticleGun.OutputLevel = 1;
 
 ApplicationMgr.EvtSel     = "NONE" ;
-ApplicationMgr.EvtMax     = 1 ;
+ApplicationMgr.EvtMax     = 3 ;
 
-// ============================================================================
-// The end of main Gauss's job-options file 
-// ============================================================================
+
 
 
 

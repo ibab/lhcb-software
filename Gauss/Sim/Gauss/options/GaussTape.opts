@@ -1,20 +1,4 @@
-// $Id: GaussTape.opts,v 1.2 2002-05-07 12:45:57 witoldp Exp $ 
-// ============================================================================
-// CVS  tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2002/05/02 11:57:24  ibelyaev
-// *** empty log message ***
-// 
-// ============================================================================
-
-// ============================================================================
-/** @file 
- *  The content of "Gauss Tape" prototype for future OO-RAWH tape
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   2 May 2002 
- */ 
-// ============================================================================
+// $Id: GaussTape.opts,v 1.3 2002-05-10 10:29:10 ranjard Exp $ 
 
 /// create and add the output stream 
 ApplicationMgr.OutStream +=  { "GaussTape" };
@@ -38,6 +22,4 @@ GaussTape.ItemList =
 GaussTape.PreLoad     = false ; // ATTENTION ! it MUST be FALSE for GiGa! 
 GaussTape.OutputLevel = 1;
 
-// ============================================================================
-// The END of file $GAUSSOPTS/GaussTape.opts
-// ============================================================================
+

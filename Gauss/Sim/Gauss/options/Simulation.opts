@@ -1,38 +1,21 @@
-// $Id: Simulation.opts,v 1.8 2002-05-10 10:22:32 witoldp Exp $ 
+// $Id: Simulation.opts,v 1.9 2002-05-10 10:29:10 ranjard Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2002/05/07 12:28:31  ibelyaev
-//  change ALL joboptions for newer GiGa
-//
-// ============================================================================
-//  jobOptions to run Gauss program in 3 steps 
-// ============================================================================
+
 ApplicationMgr.DLLs += 
 { "GiGa"         , 
   "GiGaCnv"      , 
   "GaussImports" } ;
 
-// ============================================================================
-// declare external services needed for GiGa 
-// ============================================================================
 ApplicationMgr.ExtSvc += 
 { "GiGaSvc"         ,          
   "GiGaKineCnvSvc"  ,  
   "GiGaGeomCnvSvc"  ,   
   "GiGaHitsCnvSvc"  } ;
 
-// ============================================================================
-// Use GiGa Conversion services as event persistency conversion services 
-// ============================================================================
 EventPersistencySvc.CnvServices += 
 { "GiGaKineCnvSvc" ,  
   "GiGaHitsCnvSvc" } ;
 
-// ============================================================================
-// Detector Simulation (tracking os particles through apparatus) phase 
-// ============================================================================
 Simulation.Members += 
 {	"GiGaDataStoreAlgorithm/GiGaStore" ,   // data store configuration
   "GiGaInputStream/Geo"              ,   // load the geometry 
@@ -40,29 +23,25 @@ Simulation.Members +=
   "GiGaFlushAlgorithm/GiGaFlush"     ,   // flush the event 
   "GiGaMiscGetEventAlg/GetEvent"     } ; // convert MCParticles/MCVertices
 
-// ============================================================================
 // configuration of GiGa Data Store 
-// ============================================================================
+
 GiGaStore.ConversionServices   = 
 { "GiGaKineCnvSvc" , 
   "GiGaHitsCnvSvc" };
 
-GiGaSvc.OutputLevel = 3 ;
-// ============================================================================
 // configuration of kinematics event "Kine" data stream 
-// ============================================================================
+
 Kine.ConversionSvcName         = "GiGaKineCnvSvc" ; 
 Kine.DataProviderSvcName       = "EventDataSvc"   ; 
 Kine.StreamItems              += 
-{ 
-  "/Event/Gen/HepMCEvents" 
+{  "/Event/Gen/HepMCEvents" 
 // uncomment the line below if you want to use EvGen
 //  ,"/Event/Gen/Vertices"   
 };
 
-// ============================================================================
+
 // configuration of geometry "Geo" data stream 
-// ============================================================================
+
 Geo.ExecuteOnce          = true ;  
 Geo.ConversionSvcName    = "GiGaGeomCnvSvc"  ; 
 Geo.DataProviderSvcName  = "DetectorDataSvc" ; 
@@ -70,21 +49,18 @@ Geo.StreamItems         += { "/dd/Structure/LHCb/Pipe"   } ;
 Geo.StreamItems         += { "/dd/Structure/LHCb/Magnet" } ; 
 Geo.StreamItems         += { "/dd/Structure/LHCb/Velo"  } ; 
 
-// ============================================================================
 // Physics List  to be used and its configuration  
-// ============================================================================
+
 GiGaSvc.PhysicsList            = "GiGaPhysListEm/EmPhysList" ; 
 //GiGaSvc.PhysicsList = "GiGaExternalPhysList<ExN01PhysicsList>/EmPhysList" ; 
 GiGaSvc.EmPhysList.Cut         = 5.0                        ;
 
-// ============================================================================
 // Stacking action to be used and its configuration  
-// ============================================================================
+
 GiGaSvc.StackingAction         = "GiGaStackActionEmpty/EmptyStack" ;
 
-// ============================================================================
 // Tracking action to be used and its configuration  
-// ============================================================================
+
 GiGaSvc.TrackingAction         =   "GiGaTrackActionSequence/TrackSeq"    ;
 GiGaSvc.TrackSeq.Members      += { "GiGaTrackActionSimple/SimpleTrack" } ;
 GiGaSvc.SimpleTrack.StoreAll  = true                                    ; 
@@ -97,17 +73,13 @@ GiGaSvc.SimpleTrack.StoreAll  = true                                    ;
 // GiGaSvc.SimpleTrack.StoreByChildType     = true; 
 // GiGaSvc.SimpleTrack.StoredChildTypes     = { "e+"};
 
-
-// ============================================================================
 // Stepping action to be used and its configuration  
-// ============================================================================
+
 GiGaSvc.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
 GiGaSvc.StepSeq.Members             += { "GiGaStepActionDraw/DrawStep"   } ;
 
-
-// ============================================================================
 // Event action to be used and its configuration  
-// ============================================================================
+
 GiGaSvc.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
 GiGaSvc.EventSeq.Members     += { "GiGaEventActionDraw/EventDraw" } ;
 GiGaSvc.EventSeq.Members     += { "GiGaEventActionCommand/EventCommand" } ;
@@ -125,36 +97,32 @@ GiGaSvc.EventCommand.BeginOfEventCommands =
   "/vis/scene/notifyHandlers   "        } ;
 #else 
 GiGaSvc.EventCommand.BeginOfEventCommands = 
-{ 
-  "/vis/scene/create"                   , 
+{ "/vis/scene/create"                   , 
   "/vis/sceneHandler/create DAWNFILE"   ,
   "/vis/viewer/create"                  ,
   "/vis/scene/add/volume"               , 
   "/vis/scene/add/trajectories"         ,
-  "/vis/scene/notifyHandlers   "        
-} ;
+  "/vis/scene/notifyHandlers   "        } ;
 #endif 
 
-// ============================================================================
-// Run Action to be used and its consficgurations  
-// ============================================================================
+// Run Action to be used and its configurations  
+
 GiGaSvc.RunAction                 =   "GiGaRunActionSequence/RunSeq"      ;
-GiGaSvc.RunSeq.Members           += 
-{ "GiGaRunActionCommand/RunCommand" } ;
+GiGaSvc.RunSeq.Members           += { "GiGaRunActionCommand/RunCommand" } ;
 GiGaSvc.RunCommand.BeginOfRunCommands     = 
 { "/control/saveHistory "           ,
-  "/run/verbose -10 "                 ,
-  "/vis/verbose -10 "                  ,
+  "/run/verbose -10 "               ,
+  "/vis/verbose -10 "               ,
   "/tracking/storeTrajectory  1"    } ;
 
-// ============================================================================
 // List of user interface sessions (with priorities)
-// ============================================================================
-// GiGaSvc.UIsessions =  { "tcsh" , "Xm" , "Wo" , "GAG", "Xaw"  , "terminal" } ;
 
-// ============================================================================
-// Global(world) magnetic field 
-// ============================================================================
+// GiGaSvc.UIsessions =  { "tcsh" , "Xm" , "Wo" , "GAG", "Xaw" , "terminal" } ;
+
+// flag for instantiation and usage of visual manager 
+
+GiGaSvc.UseVisManager          = true;
+
 //   "Global Magnetifc field" (usisng Magnetic Field Service)
 // GiGaGeomCnvSvc.WorldMagneticField = "GiGaMagFieldGlobal/GlobalField";
 // GiGaGeomCnvSvc.GlobalField.MagneticFieldService = "MagneticFieldSvc" ;
@@ -165,19 +133,10 @@ GiGaSvc.RunCommand.BeginOfRunCommands     =
 // GiGaGeomCnvSvc.UniformField.Bz          = 0.     ; 
 // GiGaGeomCnvSvc.UniformField.OutputLevel = 1      ;
 
-// ============================================================================
 // Material Budget  
-// ============================================================================
+
 // GiGaGeomCnvSvc.GlobalSensitivity  = "GiGaSensDetBudget/Budget" ;
 // GiGaGeomCnvSvc.Budget.OutputLevel = 1 ;
 
 
-// ============================================================================
-// flag for instantiation and usage of visual manager 
-// ============================================================================
-GiGaSvc.UseVisManager          = true;
-
-// ============================================================================
-// The end of Simulation's job-options file 
-// ============================================================================
 

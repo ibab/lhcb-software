@@ -1,52 +1,149 @@
-! $Id: release.notes,v 1.5 2002-05-01 18:45:47 ibelyaev Exp $ 
-! =============================================================================
-! CVS tag $Name: not supported by cvs2svn $ 
+! $Id: release.notes,v 1.6 2002-05-10 10:29:10 ranjard Exp $ 
 ! =============================================================================
 Package : Gauss
 Package manager : Witek Pokorski
 
-! =============================================================================
-! 1 May 2002  Vanya Belyaev 
-!  update versions in requirements file 
-!  update simulation options 
-! =============================================================================
+! >>>>>>>>>>>>>>>>>>>>>>>>>> Gauss v2r2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-! =============================================================================
-! 13/03/2002  Vanya Belyaev 
-! - I do not know WHAT I HAVE DONE , but now EventActionDraw works properly
-! - Magnetic field: 
-!     - GiGaMagFieldUniform works nicely 
-!     - GiGaMagFieldGlobal  requires MagneticFieldSvc to be initialized, and 
-!                           depend on SicbEventCnvSvc, do not forget to 
-!                           include it into list of External Service, if you 
-!                           want to use standard ("gifld") implementation of 
-!                           MagneticFieldSvc (!!!)  
-! - job options updated accordingly
-! =============================================================================
+! 20020510 - Flr
+  release.notes - new format
+  options - remove unecessary and meaningless comment lines
+            remove CVS $Tag, $Log
+            try to reduce the length of these options files
+            move xxx.OutputLevel settings to Gauss.opts
+            update specific options files to accomodate new GiGa version.
+  
+! 20020508 - Gauss v2r2 Vanya
+  requirements - comment use of EvGen
+                 use GaussImports
 
+! 20020501 - Gauss v2r2  Vanya Belyaev 
+  update versions in requirements file 
+  update simulation options 
 
-! =============================================================================
-! 13/03/2002  Vanya Belyaev 
-! - reorganization of options file 
-! - minor changes in requirement-file
-! - definition of GAUSSOPTS variable 
-! - make "gauss" alias for executable 
-! - make $BINDIR "visible" for execution 
-! =============================================================================
+! 20020510 - GeneratorModules v2r1
+  GenModule, PythiaModule, EvtDecay - use Gaudi services 
+  for ParticleProperties and RandomEngine (Witek)
 
-! =============================================================================
+! 20020503 - GeneratorModules v2r1
+  requirements - use new component_library pattern (Flr)
+
+! 20020501 - GeneratorModules v2r1
+  creates src/Algorithms, src/Pythia_i, src/Utils to merge in one package
+  GeneratorModules, GeneratorUtils, GeneratorObjects, Pythia_i
+
+  use GaudiKernel v12, GenEvent v1 and EvtGen v1 (Witek)
+
+! 20020507 - GiGaCnv v5r0
+  requirements - use new library patterns
+
+! 20020507 - v5r0 Vanya  Belyaev
+ Update for changes in GiGa interfaces (see $GIGAROOT/doc/release.notes)
+ All sensitive detectors and magnetic field objects now are "Tools" owned
+ by GiGaGeomCnvSvc  
+
+! 20020504 - v5r0 Vanya  Belyaev
+ - GiGaCnv/GiGaKineRefTable.h
+   make usage of GiGa/GiGaHashMap.h instead of "home-made" implementation of 
+   map-like interface
+ - GiGaCnv/IGiGaGeomCnvSvc.h
+   add  new method createG4LV to the interface. This method shoudl be 
+   used instead of ordinary creation of G4LogicalVolume using  "new" operator.
+   For volumes, created manually, the automatized evaluation of material 
+   budget is not possible. 
+ - src/component/GiGaGeomCnv.h,.cpp
+   add new property "MaterialBudget". This property,being defined with 
+   "Type/Name" of sensitive detector implies the special run, when ALL 
+   Logical volumes get the conection to this special sensitive detector.
+   It is primary oriented for special material budget evaluation runs.
+ - src/component/GiGaLVolumeCnv.cpp
+   substitute manual call for "new G4LogicalVolume" by 
+   call to "IGiGaGeomCnvSvc::createG4LV" method.
+
+! 20020503 - v5r0 Vanya Belyaev
+ GiGaLVolumeCnv.cpp and GiGaLAssemblyCnv.cpp 
+ - reintroduce the creation of sensitive detectors
+   (somehow these lines disappeared from mainstream development) 
+
+! 20020501 -  v5r0 Vanya Belyaev
+1) GiGaMCParticleCnv and GiGaMCVertexCnv seems to beOK now 
+2) import errors/warnings/exception counting technique from LHCb Calo software
+
+! 20020423 - v5r0 Vanya Belyaev
+  update for newer Gaudi and Geant4 versions 
+
+! 20020313 - v5r0 Vanya Belyaev
+ change the version number 
+ remove several warnings 
+
+! 20020312 - v5r0  Vanya Belyaev
+ remove hash_map and map from public usage on WIN32 platform, 
+ replace std::hash_map with GaudiKernel/HashTable.h
+
+! 20020313  Vanya Belyaev 
+ - I do not know WHAT I HAVE DONE , but now EventActionDraw works properly
+ - Magnetic field: 
+     - GiGaMagFieldUniform works nicely 
+     - GiGaMagFieldGlobal  requires MagneticFieldSvc to be initialized, and 
+                           depend on SicbEventCnvSvc, do not forget to 
+                           include it into list of External Service, if you 
+                           want to use standard ("gifld") implementation of 
+                           MagneticFieldSvc (!!!)  
+ - job options updated accordingly and reorganized 
+ - minor changes in requirement :definition of GAUSSOPTS variable 
+                                 make "gauss" alias for executable 
+                                 make $BINDIR "visible" for execution 
+! 20020507 - GiGa v8r0 - Vanya
+  MAJOR redesing of ALL interfaces but it is still 100% "compatible" 
+  ALL objects, except GiGaSvc, converison services and converters are now 
+  "Tools", owned by GiGa Service
+  Thus ALL job otions must be changed like:
+   AAA.bb = "some value";          
+   GiGaSvc.AAA.bb = "some value" ;   // NOW
+
+! 20020503 - GiGa v8r0 Flr
+  - requirements - apply  new library patterns
+ 
+! 20020502 - GiGa v8r0 Vanya Belyaev
+ 1) Add errors/warnings/exceptions counters for major classes 
+    (imported from LHCb Calo software)
+ 2) Decrease teh dependency form Run and Vis Managers, remove classes 
+    form "public" places
+ 3) Fix some problems with user interafces   
+
+! 20020424 - GiGa v8r0 Vanya Belyaev
+  - add DEFINE_xxx and  IMPLEMENT_xxx macros to avoid notorious typing
+
+! 20020423 - GiGa v8r0 Vanya Belyaev
+  - update for newer Gaudi & Geant4 versions 
+
+! 20020409 - GiGa v8r0 Vanya Belyaev
+  - minor changes mainly to increase a little bit the printout level 
+
+! 20020313 - GiGa v8r0 Ivan Belyaev
+  - fix interface for GiGaMagnetic field object 
+
+! 20020503 - EvGen v3r0 - Flr
+  requirements - use new component_library pattern
+
+! 20020501  - v3r0 - Vanya Belyaev
+  1) update for new Gaudi and Event model
+  2) rename ParticleGun to MCParticleGun 
+
+! 20020423 - GenEvent v1r0 - Vanya Belyaev
+    - use GaudiKernel v12
+
+! 20020405 - GenEvent v1r0 - Witek Pokorski
+    - New Package 
+
+! >>>>>>>>>>>>>>>>>>>>>>>>> Gauss v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 ! 20020304 - Witek Pokorski
   - addaptation for GiGaCnv v4r0 (to use HepMC to G4 converter)
     ParticlesPropertiesSvc needs to use the local particle.cdf file 
     (located in /options)
-! =============================================================================
 
-! =============================================================================
 ! 20020131 - Witek Pokorski
   - New package
-! =============================================================================
 
-! =============================================================================
-! The End 
-! =============================================================================
 

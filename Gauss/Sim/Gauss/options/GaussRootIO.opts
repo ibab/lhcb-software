@@ -1,19 +1,5 @@
-// $Id: GaussRootIO.opts,v 1.1 2002-05-02 11:57:24 ibelyaev Exp $ 
-// ============================================================================
-// CVS  tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
-// ============================================================================
+// $Id: GaussRootIO.opts,v 1.2 2002-05-10 10:29:10 ranjard Exp $ 
 
-// ============================================================================
-/** @file 
- *  Options needed to perform Root/IO for Gauss
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date   2 May 2002 
- */ 
-// ============================================================================
-
-/// Load nesessary DLLs
 ApplicationMgr.DLLs             += 
 { "GaudiDb"     ,
   "GaudiRootDb" ,
@@ -21,11 +7,7 @@ ApplicationMgr.DLLs             +=
 
 /// Activate the conversion service 
 ApplicationMgr.ExtSvc           += { "DbEventCnvSvc/RootEvtCnvSvc" };
-/// Declare the persistency type for the conversion service 
 RootEvtCnvSvc.DbType             = "ROOT" ;
-/// Declare the conversion service to Persistency Service 
 EventPersistencySvc.CnvServices += { "RootEvtCnvSvc"               };
 
-// ============================================================================
-// The END of file $GAUSSOPTS/GaussRootIO.opts
-// ============================================================================
+

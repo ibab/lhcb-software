@@ -1,8 +1,4 @@
-//##############################################################
-//
 // Job options file - runs Pythia and serializes the output
-//
-//==============================================================
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 
@@ -21,8 +17,6 @@ RootEvtCnvSvc.DbType = "ROOT";
 
 GenDst.ItemList      = {"/Event#1","/Event/Gen#1","/Event/Gen/HepMCEvents#1"};
 GenDst.Output        = "DATAFILE='GenDst.root' TYP='ROOT'";
-
-
 
 //--------------------------------------------------------------
 // Private Application Configuration options
@@ -46,9 +40,3 @@ EventDataSvc.ForceLeaves = 1;
 //--------------------------------------------------------------
 PythiaModule.PythiaCommand = {"pysubs msel 5","pyinit pylistf 5" };
 
-
-//==============================================================
-//
-// End of job options file
-//
-//##############################################################
