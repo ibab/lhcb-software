@@ -1,4 +1,4 @@
-// $Id: RichPIDSimpleMerge.cpp,v 1.4 2004-03-16 13:43:57 jonesc Exp $
+// $Id: RichPIDSimpleMerge.cpp,v 1.5 2004-04-20 13:33:40 jonesc Exp $
 // Include files
 
 // from Gaudi
@@ -42,14 +42,11 @@ RichPIDSimpleMerge::RichPIDSimpleMerge( const std::string& name,
 RichPIDSimpleMerge::~RichPIDSimpleMerge() {};
 
 // Initialisation.
-StatusCode RichPIDSimpleMerge::initialize() {
-
+StatusCode RichPIDSimpleMerge::initialize() 
+{
   // initialise base classclean
   StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
-
-  debug() << "Initialize" << endreq
-          << " Output RichPIDs location     = " << m_richPIDLocation << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -149,19 +146,21 @@ StatusCode RichPIDSimpleMerge::execute() {
   procStat->addAlgorithmStatus( name()+":UsedLocalPIDs",  nUsedlocalPIDs  );
 
   // Final debug information
-  if ( !pidsExist ) {
-    debug() << "Successfully registered " << newPIDs->size()
-            << " RichPIDs at " << m_richPIDLocation
-            << " : Global=" << nUsedglobalPIDs
-            << " Local=" << nUsedlocalPIDs
-            << endreq;
-  } else {
-    debug() << "Replaced " << originalSize << " pre-existing RichPIDs at "
-            << m_richPIDLocation << " with " << newPIDs->size()
-            << " new RichPIDs"
-            << " : Global=" << nUsedglobalPIDs
-            << " Local=" << nUsedlocalPIDs
-            << endreq;
+  if ( msgLevel(MSG::DEBUG) ) {
+    if ( !pidsExist ) {
+      debug() << "Successfully registered " << newPIDs->size()
+              << " RichPIDs at " << m_richPIDLocation
+              << " : Global=" << nUsedglobalPIDs
+              << " Local=" << nUsedlocalPIDs
+              << endreq;
+    } else {
+      debug() << "Replaced " << originalSize << " pre-existing RichPIDs at "
+              << m_richPIDLocation << " with " << newPIDs->size()
+              << " new RichPIDs"
+              << " : Global=" << nUsedglobalPIDs
+              << " Local=" << nUsedlocalPIDs
+              << endreq;
+    }
   }
 
   return StatusCode::SUCCESS;

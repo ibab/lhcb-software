@@ -1,4 +1,4 @@
-// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.10 2004-04-19 23:06:16 jonesc Exp $
+// $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.11 2004-04-20 13:34:15 jonesc Exp $
 
 // local
 #include "RichTrackCreatorFromTrStoredTracks.h"
@@ -198,7 +198,8 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
                                                       hitPoint,
                                                       DeRichHPDPanel::loose )
                && m_signal->hasRichInfo(newSegment) ) {
-            verbose() << " TrackSegment in " << (*iSeg).radiator() << " selected" << endreq;
+            if ( msgLevel(MSG::VERBOSE) ) 
+              verbose() << " TrackSegment in " << (*iSeg).radiator() << " selected" << endreq;
 
             // keep track
             keepTrack = true;
@@ -226,7 +227,8 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
             newSegment->trackSegment().setAvPhotonEnergy( m_signal->avgSignalPhotEnergy(newSegment,Rich::Pion) );
 
           } else {
-            verbose() << " TrackSegment in " << (*iSeg).radiator() << " rejected" << endreq;
+            if ( msgLevel(MSG::VERBOSE) ) 
+              verbose() << " TrackSegment in " << (*iSeg).radiator() << " rejected" << endreq;
             delete newSegment;
             newSegment = NULL;
           }
