@@ -5,16 +5,11 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v16r0 2004-06-08 =======================
-! 2004-06-08 - Marco Cattaneo
+!======================= LHCbSys v16r0 2004-06-10 =======================
+! 2004-06-10 - Marco Cattaneo
  - New packages: GaudiAlg v7r3 added temporarily, until released with Gaudi
- - Modified packages: EventSys v17r11, Event v4r4,
-                      DetSys v5r7, STDet v1r2, MuonTools v3r7,
+ - Modified packages: DetSys v5r7, STDet v1r2, MuonTools v3r7,
                       AssociatorsSys v1r14, ITAssociators v2r9, MCTools v1r6
-
- - In Event v4r4:
-   . Fix a bug MCHit::dxdz and MCHit::dydz, slope was only returned if entry
-     and exit points were closer than 0.1 um
 
  - In STDet v1r2:
    . Add new members to layer and wafer. Make GSL dependency no_auto_imports
@@ -27,6 +22,23 @@
 
  - In MCTools v1r6:
    . Add IMCParticleSelector tool
+
+!====================== LHCbSys v15r12 2004-06-10 =======================
+Built on branch v15r11b
+
+! 2004-06-10 - Marco Cattaneo
+ - Modified packages: EventSys v17r11, Event v4r4, DAQEvent v4r3
+
+ - In EventSys v17r11:
+   . Add check on completeness of LCG dictionaries, executed when building
+     Linux debug version
+
+ - In Event v4r4:
+   . Fix a bug MCHit::dxdz and MCHit::dydz, slope was only returned if entry
+     and exit points were closer than 0.1 um
+
+ - In DAQEvent v4r3:
+   . Add missing LCG dictionaries for STL containers used in L1Event, RawEvent
 
 !====================== LHCbSys v15r11 2004-05-27 =======================
 ! 2004-05-27 - Marco Cattaneo
