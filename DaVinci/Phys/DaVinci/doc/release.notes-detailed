@@ -4,6 +4,7 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v12r3 2004-10-27 ===================
 ! 2004-10-26 - P. Koppenburg 
   - options/DVTriggerFilter.opts
   - options/DaVinciElectrons.opts
@@ -34,7 +35,7 @@
     . Do not clain that GaudiPython does not work with Pool data. 
       This is wrong for quite some time now.
     
-!========================== DaVinci v12r1 2004-10-13 ===================
+!========================== DaVinci v12r2 2004-10-13 ===================
 ! 2004-10-08 - P. Koppenburg
   - src/Main/DaVinciMain.cpp
     . Abort cleanly when APPVERSION is not defined

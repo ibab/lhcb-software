@@ -170,6 +170,7 @@ Purpose     : LHCb analysis program
     increment the version to v4r8 
 ###################################### L0 ######################################
 ##################################### PHYS #####################################
+!========================== DaVinci v12r3 2004-10-27 ===================
 ! 2004-10-26 - P. Koppenburg 
   - options/DVTriggerFilter.opts
   - options/DaVinciElectrons.opts
@@ -216,6 +217,10 @@ Purpose     : LHCb analysis program
  - src/DVAlgorithm.cpp
    . Let DVAlgorithm inherit from GaudiHistoAlg.    
 #################################### PHYSSEL ###################################
+!========================== Gamma2ee v1r4 2004-10-27 ===================
+! 2004-11-27 - R. Beneyton
+  - update PreselB2Pi0Pi02GammaGamma2ee.opts to have a rejection
+   factor of 5100 (DC04 data)
 !========================== Muon v1r2 2004-10-27 ===================
 ! 2004-10-20 - P. Koppenburg
   - options/PreselMuon.opts
@@ -223,6 +228,7 @@ Purpose     : LHCb analysis program
 !========================== PhysSelSys v7r11 2004-10-27 ===================
 Updated packages (see DaVinci release notes for details):
 use  Muon                      v1r2     PhysSel
+use  Gamma2ee                  v1r4     PhysSel
 #####################################  REC  ####################################
 ##################################### TOOLS ####################################
 !========================== LoKiHlt v1r1p1 2004-10-27 ===================
