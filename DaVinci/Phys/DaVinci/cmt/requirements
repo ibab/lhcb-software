@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.25 2002-06-07 08:00:20 cattanem Exp $
+# $Id: requirements,v 1.26 2002-06-17 07:38:20 gcorti Exp $
 # Created    : 07/02/2002
 # Maintainer : Gloria Corti
 #
@@ -8,7 +8,7 @@
 #--- Allows reading of data produced with Brunel >= v5
 #    Reading of files produced with SICBDST is not supported in DaVinci v2r0
 package           DaVinci
-version           v4r1p1
+version           v4r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -96,7 +96,7 @@ use DaVinciSicb          v3r0   Phys
 use DaVinciTools         v4r0   Phys
 use DaVinciAssociators   v1r0p1 Phys
 use DaVinciMCTools       v1r0   Phys
-use PhysSelections       v1r0   Phys
+use PhysSelections       v1r1   Phys
 use FlavourTagging       v1r0   Phys
 use DaVinciTest          v1r0   Phys
 use DaVinciUser          v1r0   Phys
@@ -122,8 +122,8 @@ macro_append DaVinci_linkopts " "\
 
 # set the DaVinci version = v * 100000 + r * 100 + p
 #============================================================================
-macro_append fflags   " -DDaVinciVersion=400101 " \
-             VisualC  " /DDaVinciVersion=400101 "
+macro_append fflags   " -DDaVinciVersion=400200 " \
+             VisualC  " /DDaVinciVersion=400200 "
 
-macro_append cppflags " -DDaVinciVersion=400101 " \
-             VisualC  " /DDaVinciVersion=400101 "
+macro_append cppflags " -DDaVinciVersion=400200 " \
+             VisualC  " /DDaVinciVersion=400200 "
