@@ -6,7 +6,7 @@ branches cmt src MuonKernel doc
 
 include_dirs $(MUONKERNELROOT)
 
-use GaudiKernel v13r* 
+use GaudiKernel v12r* 
 
 #----------------------------------------------
 library MuonKernelLib ../src/*.cpp
