@@ -1,9 +1,9 @@
-// $Id: Tower.h,v 1.5 2004-11-03 13:31:48 ltocco Exp $
+// $Id: Tower.h,v 1.6 2004-11-17 08:35:00 cattanem Exp $
 
 #ifndef L0MUONKERNEL_TOWER_H
 #define L0MUONKERNEL_TOWER_H     1
 
-/** @class Tower Tower L0MuonKernel/Tower.h
+/** @class Tower Tower.h L0MuonKernel/Tower.h
 
    Class representing a L0Muon Trigger uniform representation
    of data belonging to a PU for the hardware simulations

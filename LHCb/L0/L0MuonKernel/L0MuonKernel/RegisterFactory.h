@@ -1,9 +1,9 @@
-// $Id: RegisterFactory.h,v 1.2 2004-03-11 15:57:55 ltocco Exp $
+// $Id: RegisterFactory.h,v 1.3 2004-11-17 08:35:00 cattanem Exp $
 
 #ifndef L0MUONKERNEL_REGISTERFACTORY_H
 #define L0MUONKERNEL_REGISTERFACTORY_H     1
 
-/** @class RegisterFactory RegisterFactory L0MuonKernel/RegisterFactory.h
+/** @class RegisterFactory RegisterFactory.h L0MuonKernel/RegisterFactory.h
 
    Class representing factory for creating Registers
    of the L0Muon Trigger for hardware simulations

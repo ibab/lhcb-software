@@ -1,9 +1,9 @@
-// $Id: Register.h,v 1.3 2004-03-12 17:57:24 cattanem Exp $
+// $Id: Register.h,v 1.4 2004-11-17 08:35:00 cattanem Exp $
 
 #ifndef L0MUONKERNEL_REGISTER_H
 #define L0MUONKERNEL_REGISTER_H     1
 
-/** @class Register Register L0MuonKernel/Register.h
+/** @class Register Register.h L0MuonKernel/Register.h
 
    Class representing a L0Muon Trigger abstract unit of data
    processing for hardware simulations

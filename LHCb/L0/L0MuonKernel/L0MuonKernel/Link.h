@@ -1,9 +1,9 @@
-// $Id: Link.h,v 1.2 2004-03-11 15:57:55 ltocco Exp $
+// $Id: Link.h,v 1.3 2004-11-17 08:35:00 cattanem Exp $
 
 #ifndef L0MUONKERNEL_LINK_H
 #define L0MUONKERNEL_LINK_H     1
 
-/** @class Unit Unit L0MuonKernel/Unit.h
+/** @class Unit Unit.h L0MuonKernel/Unit.h
 
    Class representing a unit of data processing logic 
    of the L0Muon Trigger for hardware simulations
