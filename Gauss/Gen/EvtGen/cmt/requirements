@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.3 2002-05-10 08:11:29 ranjard Exp $
+# $Id: requirements,v 1.4 2002-05-28 16:25:55 witoldp Exp $
 # ==========================================================================
 package          EvtGen
 version  v1r0 
@@ -11,7 +11,7 @@ use GaudiPolicy  v5r*
 
 include_dirs     $(EVTGENROOT)
 
-library          EvtGen -no_share *.cpp *.F
+library          EvtGen *.cpp *.F
 
 macro CERNLIB_link "`cernlib photos mathlib jetset74`" 
 
