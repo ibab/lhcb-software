@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetDesc/DetDesc/IDetectorElement.h,v 1.6 2001-06-28 09:43:53 sponce Exp $
+// $Log: not supported by cvs2svn $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1 
 
@@ -153,7 +153,7 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter
    * @return its type
    */
-  inline virtual std::string userParameterType (std::string name) = 0;
+  virtual std::string userParameterType (std::string name) = 0;
   
   /**
    * this gets the comment of a parameter
@@ -161,7 +161,7 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter
    * @return its comment
    */
-  inline virtual std::string userParameterComment (std::string name) = 0;
+  virtual std::string userParameterComment (std::string name) = 0;
   
   /**
    * this gets the value of a parameter, as a string
@@ -169,7 +169,7 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter
    * @return its value, as a string
    */
-  inline virtual std::string userParameterAsString (std::string name) = 0;
+  virtual std::string userParameterAsString (std::string name) = 0;
   
   /**
    * this gets the value of a parameter, as an int
@@ -178,7 +178,7 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter
    * @return its value, as a string
    */
-  inline virtual int userParameterAsInt (std::string name) = 0;
+  virtual int userParameterAsInt (std::string name) = 0;
   
   /**
    * this gets the value of a parameter, as a double
@@ -187,7 +187,7 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter
    * @return its value, as a double
    */
-  inline virtual double userParameterAsDouble (std::string name) = 0;
+  virtual double userParameterAsDouble (std::string name) = 0;
   
   /**
    * this gets the value of the parameter as a double. This actually is an
@@ -197,7 +197,7 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter
    * @return its value, as a double
    */
-  inline virtual double userParameter (std::string name) = 0;
+  virtual double userParameter (std::string name) = 0;
   
   /**
    * this gets the type of a parameter vector
@@ -205,7 +205,7 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter vector
    * @return its type
    */
-  inline virtual std::string userParameterVectorType (std::string name) = 0;
+  virtual std::string userParameterVectorType (std::string name) = 0;
   
   /**
    * this gets the comment of a parameter vector
@@ -213,7 +213,7 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter vector
    * @return its comment
    */
-  inline virtual std::string userParameterVectorComment (std::string name) = 0;
+  virtual std::string userParameterVectorComment (std::string name) = 0;
   
   /**
    * this gets the value of a parameter vector, as a vector of string
@@ -221,7 +221,7 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter vector
    * @return its value, as a string
    */
-  inline virtual std::vector<std::string>
+  virtual std::vector<std::string>
   userParameterVectorAsString (std::string name) = 0;
   
   /**
@@ -232,7 +232,7 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter vector
    * @return its value, as a string
    */
-  inline virtual std::vector<int>
+  virtual std::vector<int>
   userParameterVectorAsInt (std::string name) = 0;
   
   /**
@@ -243,7 +243,7 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter
    * @return its value, as a vector of double
    */
-  inline virtual std::vector<double>
+  virtual std::vector<double>
   userParameterVectorAsDouble (std::string name) = 0;
   
   /**
@@ -255,8 +255,8 @@ class IDetectorElement: virtual public IInspectable
    * @param name the name of the parameter
    * @return its value, as a vector of double
    */
-  inline virtual std::vector<double> userParameterVector (std::string name) = 0;
-
+  virtual std::vector<double> userParameterVector (std::string name) = 0;
+  
   /**
    * this returns the list of existing userParameters as a vector of their
    * names
@@ -272,17 +272,19 @@ class IDetectorElement: virtual public IInspectable
   virtual std::vector<std::string> userParameterVectors() = 0;  
 
 };
-
-
-inline std::ostream& operator<<( std::ostream& os , 
-				 const IDetectorElement& de ) {
+///
+inline std::ostream& operator<<( std::ostream&           os , 
+                                 const IDetectorElement& de ) 
+{
   return de.printOut(os);
 };
-
-inline std::ostream& operator<<( std::ostream& os , 
+///
+inline std::ostream& operator<<( std::ostream&           os , 
 				 const IDetectorElement* de )
-{ return ( (0 == de) ? (os << "IDetectorElement* points to NULL") :
-           ( os << *de ) ) ; };
+{ 
+  return 
+    ( (0 == de) ? (os << "IDetectorElement* points to NULL") : (os << *de) ) ; 
+};
 
 #endif  //    GAUDIKERNEL_IDETECTORELEMENT_H
 

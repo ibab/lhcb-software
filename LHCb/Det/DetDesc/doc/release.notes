@@ -1,5 +1,12 @@
+! $Id: release.notes,v 1.43 2001-06-28 14:24:16 ibelyaev Exp $
+
 package DetDesc
 package manager : N.N 
+
+!===========================================================================
+! 20010628 - Vanya Belyaev
+   IDetectorElement.h - remove "inline" attribute from 
+                        pure abstract methods
 
 !===========================================================================
 ! 20010628 - Sebastien Ponce
