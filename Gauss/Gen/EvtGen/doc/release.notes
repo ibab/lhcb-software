@@ -1,6 +1,10 @@
 Package :EvtGen 
 Package manager : Patrick Robbe and Witek Pokorski
 
+!================ EvtGen v6r0 ===================================
+! 2004-08-31 - Florence RANJARD
+ - requirements - take photos from GENSER
+
 !================= EvtGen v5r6 ====================================
 ! 2004-08-02 - Gloria CORTI
  - requirements, adapt to LCG interfaces packages

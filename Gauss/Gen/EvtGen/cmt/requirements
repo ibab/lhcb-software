@@ -1,5 +1,5 @@
 package     EvtGen
-version     v5r6
+version     v6r0
  
 branches    cmt src doc EvtGen EvtGenModels EvtGenBase photos
 
@@ -21,5 +21,5 @@ macro_append EvtGen_pp_fflags "" WIN32 "/DWIN32"
 macro_prepend EvtGen_linkopts " -Wl,-u,phoene_ " \
               WIN32           " /include:_PHOENE "
 
-macro_append EvtGen_linkopts " -L$(cernlib_home)/lib -lphotos202" \
-             WIN32            " /libpath:$(cernlib_home)/lib photos202.lib"
+macro_append EvtGen_linkopts " -L$(GENSER_home)/lib -lphotos202" \
+             WIN32            " /libpath:$(GENSER_home)/lib photos202.lib"
