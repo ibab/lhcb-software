@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mProcUnit.cpp,v 1.3 2001-07-09 19:17:54 atsareg Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/L0/L0Muon/src/Lib/L0mProcUnit.cpp,v 1.4 2001-07-10 10:21:33 atsareg Exp $
 #include "GaudiKernel/MsgStream.h"
 
 #include "L0Muon/L0mProcUnit.h"
@@ -12,7 +12,7 @@ L0mProcUnit::L0mProcUnit(const std::vector<double>& ptpara,
                 	 const std::vector<int>& foiY,
 			 const std::vector<int>& extM1,
 			 double precision,
-			 int bits,
+			 int bins,
 			 const MuonTile& mt):
 			 MuonTile(mt),
 			 m_ptParameters(ptpara),
@@ -20,7 +20,7 @@ L0mProcUnit::L0mProcUnit(const std::vector<double>& ptpara,
 			 m_foiY(foiY),
 			 m_extraM1(extM1),
 			 m_precision(precision),
-			 m_bits(bits) {} 
+			 m_bins(bins) {} 
 		
 L0mProcUnit::~L0mProcUnit() {}		
 	
@@ -84,7 +84,7 @@ void L0mProcUnit::precisionPt() {
     for (ilmc = m_candidates.begin(); ilmc != m_candidates.end(); ilmc++) {
       double realPt = (*ilmc)->pt();
       int roundedPt = int((fabs(realPt)+m_precision/2.)/m_precision);
-      if ( roundedPt > m_bits ) roundedPt = m_bits;
+      if ( roundedPt > m_bins ) roundedPt = m_bins;
       double newPt = roundedPt*m_precision;
       if ( realPt < 0.) newPt = -newPt;
       (*ilmc)->setPt(newPt);
@@ -128,7 +128,7 @@ void L0mProcUnit::printParameters(MsgStream& log) {
   }
   log << endreq;
   log << "Pt precision: " << m_precision << endreq;
-  log << "bits for Pt encoding: " << m_bits << endreq;  		   
+  log << "bins for Pt encoding: " << m_bins << endreq;  		   
 }
 
 void L0mProcUnit::addTower(L0mTower* lt) { 

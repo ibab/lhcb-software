@@ -1,4 +1,4 @@
-// $Id: L0mCrate.cpp,v 1.4 2001-07-09 19:09:51 atsareg Exp $
+// $Id: L0mCrate.cpp,v 1.5 2001-07-10 10:21:33 atsareg Exp $
 
 #include <vector>
 #include <algorithm>
@@ -25,7 +25,7 @@ L0mCrate::L0mCrate(int quarter, const L0mTriggerProcD& ltp) :
 				      m_processor.m_foiYSize, 
 				      m_processor.m_extraM1, 
 				      m_processor.m_precision, 
-				      m_processor.m_bits, *iv) );
+				      m_processor.m_bins, *iv) );
   }
 }
 
