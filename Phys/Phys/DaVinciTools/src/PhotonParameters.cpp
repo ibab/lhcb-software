@@ -1,8 +1,11 @@
-// $Id: PhotonParameters.cpp,v 1.2 2003-02-12 19:34:04 gcorti Exp $
+// $Id: PhotonParameters.cpp,v 1.3 2004-03-11 13:02:14 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/02/12 19:34:04  gcorti
+// win compilation
+//
 // Revision 1.1  2003/01/22 16:43:23  ibelyaev
 //  new tools for Photons
 // 

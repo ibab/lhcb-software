@@ -1,8 +1,11 @@
-// $Id: NoPIDsParticleMaker.cpp,v 1.2 2004-01-14 19:00:06 gcorti Exp $
+// $Id: NoPIDsParticleMaker.cpp,v 1.3 2004-03-11 13:02:14 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/01/14 19:00:06  gcorti
+// compatible with LHCb v15r0
+//
 // Revision 1.1  2003/04/30 13:41:25  gcorti
 // new particlemaker for HLT studies
 // 

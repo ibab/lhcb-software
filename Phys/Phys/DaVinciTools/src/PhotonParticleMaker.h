@@ -1,8 +1,11 @@
-// $Id: PhotonParticleMaker.h,v 1.2 2003-04-08 17:22:28 ibelyaev Exp $
+// $Id: PhotonParticleMaker.h,v 1.3 2004-03-11 13:02:14 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/04/08 17:22:28  ibelyaev
+//  CnvPhotonParticleMaker: new creator of converted photons
+//
 // Revision 1.1  2003/01/22 16:43:24  ibelyaev
 //  new tools for Photons
 // 
@@ -81,9 +84,6 @@ protected:
    */
   const IPhotonParams* photPars  () const { return m_photPars ; }
   
-  /// acessor to event data provider service 
-  IDataProviderSvc*    evtSvc    () const { return m_evtSvc   ; }
-  
   /// input data location 
   const std::string&   inputData () const { return m_input    ; }  
   
@@ -108,9 +108,6 @@ private:
   
   // input data (ProtoParticles)  
   std::string                        m_input            ;
-  
-  // event data service 
-  IDataProviderSvc*                  m_evtSvc           ;
   
   // evaluator of photon parameters at some nominal vertex 
   std::string                        m_photParsName     ;

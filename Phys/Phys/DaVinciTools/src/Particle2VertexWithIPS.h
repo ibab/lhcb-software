@@ -1,4 +1,4 @@
-// $Id: Particle2VertexWithIPS.h,v 1.2 2004-01-14 19:00:06 gcorti Exp $
+// $Id: Particle2VertexWithIPS.h,v 1.3 2004-03-11 13:02:14 pkoppenb Exp $
 #ifndef Particle2VertexWithIPS_H 
 #define Particle2VertexWithIPS_H 1
 
@@ -12,7 +12,7 @@
 class IGeomDispCalculator;
 
 // local
-#include "DaVinciTools/Particle2VertexAsct.h"
+#include "Particle2VertexAsct.h"
 #include "GaudiKernel/Algorithm.h"
 
 /** @class Particle2VertexWithIPS Particle2VertexWithIPS.h

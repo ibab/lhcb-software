@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.22 2004-01-14 19:00:06 gcorti Exp $
+// $Id: DaVinciTools_load.cpp,v 1.23 2004-03-11 13:02:14 pkoppenb Exp $
 // Include files 
 
 
@@ -6,7 +6,7 @@
 #include "GaudiKernel/ObjectFactory.h"
 
 // Associator tool
-#include "DaVinciTools/Particle2VertexAsct.h"
+#include "Particle2VertexAsct.h"
 #include "Relations/RelationMACROs.h"
 #include "Relations/AssociatorMACROs.h"
 
@@ -65,8 +65,9 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( LifetimeSignificanceCriterion );
   DECLARE_TOOL( Particle2VertexAsct );
   DECLARE_DATAOBJECT( Particle2VertexTable );
-  DECLARE_ALGORITHM( Particle2VertexWithIPS );
 
+  DECLARE_ALGORITHM( Particle2VertexWithIPS );
   DECLARE_ALGORITHM( PreLoadParticles );
+  DECLARE_ALGORITHM( PreDV );
   
 }

@@ -1,4 +1,4 @@
-// $Id: LifetimeSignificanceCriterion.h,v 1.1 2003-12-04 13:40:28 graven Exp $
+// $Id: LifetimeSignificanceCriterion.h,v 1.2 2004-03-11 13:02:14 pkoppenb Exp $
 #ifndef LIFETIMESIGNIFICANCEFILTERCRITERION_H 
 #define LIFETIMESIGNIFICANCEFILTERCRITERION_H 1
 
@@ -11,7 +11,7 @@
 
 // from DaVinciTools
 #include "DaVinciTools/IFilterCriterion.h"
-#include "DaVinciTools/Particle2VertexAsct.h"
+#include "Particle2VertexAsct.h"
                                                                                                                                 
 
 

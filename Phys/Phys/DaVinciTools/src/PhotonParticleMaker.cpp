@@ -1,17 +1,8 @@
-// $Id: PhotonParticleMaker.cpp,v 1.4 2003-04-25 18:17:34 gcorti Exp $
+// $Id: PhotonParticleMaker.cpp,v 1.5 2004-03-11 13:02:14 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2003/04/08 17:22:28  ibelyaev
-//  CnvPhotonParticleMaker: new creator of converted photons
-//
-// Revision 1.2  2003/02/12 19:33:31  gcorti
-// remove std in front of endreq - win compilation
-//
-// Revision 1.1  2003/01/22 16:43:24  ibelyaev
-//  new tools for Photons
-// 
 // ============================================================================
 // Include files
 // from Gaudi
@@ -146,8 +137,6 @@ PhotonParticleMaker::PhotonParticleMaker
   //
   , m_input            ( ProtoParticleLocation::Neutrals )
   //
-  , m_evtSvc           ( 0     ) 
-  //
   , m_photParsName     ( "PhotonParameters/PhotPars" )
   , m_photPars         ( 0     ) 
   // 
@@ -212,15 +201,8 @@ StatusCode PhotonParticleMaker::initialize    ()
   StatusCode sc = CaloTool::initialize();
   if( sc.isFailure() ) { return Error(" Unable to initialize CaloTool",sc);}
   
-  // locate event data provider
-  if( 0 != m_evtSvc   ) { m_evtSvc   -> release () ; m_evtSvc   = 0 ; }
-  sc = service( "EventDataSvc", m_evtSvc , true ) ;
-  if( sc.isFailure()  ) { return Error(" Unable to locate EventDataSvc",sc);}
-  if( 0 == evtSvc()   ) { return Error(" Unable to locate EventDataSvc",sc);}
-  
   // locate photon parameters evaluator 
-  if( 0 != m_photPars ) { m_photPars -> release () ; m_photPars = 0 ; }
-  m_photPars = tool( m_photParsName , m_photPars , this );
+  m_photPars = tool<IPhotonParams>( m_photParsName , this );
   if( 0 == photPars() ) { return StatusCode::FAILURE ; }           // RETURN
   
   if( 3 != m_pointVector.size() ) 
@@ -313,8 +295,7 @@ StatusCode PhotonParticleMaker::initialize    ()
 StatusCode PhotonParticleMaker::finalize      () 
 {
   // release services and tools 
-  if( 0 != m_evtSvc   ) { m_evtSvc   -> release () ; m_evtSvc   = 0 ; }
-  if( 0 != m_photPars ) { m_photPars -> release () ; m_photPars = 0 ; }
+  m_photPars = 0 ;
   
   // finalize the base class 
   return CaloTool::finalize ();
@@ -374,7 +355,7 @@ StatusCode PhotonParticleMaker::makeParticles ( ParticleVector & particles )
     { Warning( "makeParticles(): extend non-empty vector of Particles" ) ; }
   
   // locate input data 
-  const ProtoParticles* pps = get( evtSvc() , inputData() , pps );
+  const ProtoParticles* pps = get< ProtoParticles > (inputData());
   if( 0 == pps ) { return StatusCode::FAILURE ; }
 
   unsigned long nAccepted = 0 ;

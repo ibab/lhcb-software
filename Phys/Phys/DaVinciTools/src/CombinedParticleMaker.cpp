@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.4 2003-08-05 17:25:19 gcorti Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.5 2004-03-11 13:02:14 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
@@ -47,7 +47,7 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   , m_exclusive(true)
   , m_addBremPhoton(false)
   , m_longTracks(true)
-  , m_upstreamTracks(false)
+  , m_downstreamTracks(false)
   , m_vttTracks(false)
 {
 
@@ -82,7 +82,7 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   declareProperty("AddBremPhoton", m_addBremPhoton );
 
   declareProperty("UseLongTracks",     m_longTracks );
-  declareProperty("UseUpstreamTracks", m_upstreamTracks );
+  declareProperty("UseDownstreamTracks", m_downstreamTracks );
   declareProperty("UseVTTTracks",      m_vttTracks );
 
 }
@@ -226,12 +226,12 @@ StatusCode CombinedParticleMaker::initialize() {
     msg << MSG::INFO << " Long";
     atLeastOneType = true;
   }
-  if( m_upstreamTracks ) {
-    msg << MSG::INFO << " Upstream";
+  if( m_downstreamTracks ) {
+    msg << MSG::INFO << " Downstream";
     atLeastOneType = true;
   }
   if( m_vttTracks ) {
-    msg << MSG::INFO << " VTT";
+    msg << MSG::INFO << " Upstream (VTT)";
     atLeastOneType = true;
   }
   msg << MSG::INFO << endreq;
@@ -411,16 +411,18 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
   StatusCode sc = StatusCode::SUCCESS;
   for( ProtoParticles::const_iterator iProto=protos->begin(); 
        protos->end()!=iProto; ++iProto ) {
+
     // check if the track type is to be used
     bool trkeep = false;
     const TrStoredTrack* ptrack = (*iProto)->track();
-    if( m_longTracks && ( ptrack->forward() || ptrack->match() ) ) {
+
+    if( m_longTracks && ( ptrack->isLong() ) ) {
       trkeep = true;
     }
-    if( m_upstreamTracks && ptrack->upstream() ) {
+    if( m_downstreamTracks && ptrack->isDownstream() ) {
       trkeep = true;
     }
-    if( m_vttTracks && ptrack->veloTT() ) {
+    if( m_vttTracks && ptrack->isUpstream() ) {
       trkeep = true;
     }
     if( !trkeep ) continue;
@@ -473,11 +475,16 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
 StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
                                                 const ParticleProperty* pprop, 
                                                 Particle* particle ) {
-  
-  // Check it is a Charged ProtoP hence TrStateP is accessible
+  // PK  
+  MsgStream msg( msgSvc(), name() );
+// Check it is a Charged ProtoP hence TrStateP is accessible
+
   const TrStateP* trackState = proto->trStateP();
   if( !trackState ) return StatusCode::FAILURE;
-
+  if ( proto->track()->isDownstream()) {
+//  New (PK): Use first measured point
+    trackState = proto->firstMeasured();
+  }
   // Start filling particle with orgininating ProtoParticle
   particle->setOrigin(proto);
 
@@ -513,6 +520,12 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
   HepPoint3D position( trackState->x(), trackState->y(), trackState->z() ) ;
   particle->setPointOnTrack( position );
 
+  msg << MSG::DEBUG << "PK:" ;
+  if (proto->track()->isLong())       msg << "long           " ;
+  if (proto->track()->isUpstream())   msg << "upstream (VTT) " ;
+  if (proto->track()->isDownstream()) msg << "downstream     " ;
+  msg << " position z=" << position[2] << endreq ;
+    
   // Calculate and set four momentum
   double momentum = trackState->p();
   double slopeX   = trackState->tx();
@@ -539,7 +552,7 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
   pointOnTrackErr(3,2) = 0.0;
   pointOnTrackErr(3,3) = 0.0;
   particle->setPointOnTrackErr(pointOnTrackErr);
-    
+
   // Set slope+Momentum error:
   HepSymMatrix slpMomErr(3, 0);
   slpMomErr = trkCov.sub(3,5);

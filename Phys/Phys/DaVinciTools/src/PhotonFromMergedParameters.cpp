@@ -1,8 +1,11 @@
-// $Id: PhotonFromMergedParameters.cpp,v 1.1 2003-04-25 18:17:33 gcorti Exp $
+// $Id: PhotonFromMergedParameters.cpp,v 1.2 2004-03-11 13:02:14 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2003/04/25 18:17:33  gcorti
+// tools for merged pi0
+//
 //
 //  new tools for Photons from Merged
 // 

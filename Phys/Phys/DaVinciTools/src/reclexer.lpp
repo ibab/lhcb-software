@@ -7,11 +7,11 @@
 #include <stdlib.h>
 %}
 
-P_NAME		[a-zA-Z][a-zA-Z/\']*
-Q_STATE		\*?(_[a-z]|_[0-9]|_[a-z][0-9])?
-P_MASS		(\([0-9]*[A-Z]?\))?
-P_CHARGE	~?(0|\-|\+|\-\-|\+\+)?
-PARTICLE	{P_NAME}{Q_STATE}{P_MASS}{P_CHARGE}
+P_NAME    [a-zA-Z][a-zA-Z/\']*
+Q_STATE   \*?(_[a-z]+|_[0-9]|_[a-z][0-9])?
+P_MASS    (\([0-9]*[A-Z]?\))?
+P_CHARGE  ~?(0|\-|\+|\-\-|\+\+)?
+PARTICLE  {P_NAME}{Q_STATE}{P_MASS}{P_CHARGE}
 
 %x PARTICLE_WC
 

@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.30 2004-02-11 19:41:45 gcorti Exp $
+# $Id: requirements,v 1.31 2004-03-11 13:02:14 pkoppenb Exp $
 # Created    : 05/02/2002
-# Maintainer : Gloria Corti
+# Maintainer : P. Koppenburg
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciTools
-version           v8r5
+version           v9r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -22,6 +22,7 @@ use  PhysEvent      v*     Event
 use  AIDA           v*
 use  CaloUtils      v*     Calo
 use  CaloInterfaces v*     Calo
+use  DaVinciKernel  v*     Phys
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are

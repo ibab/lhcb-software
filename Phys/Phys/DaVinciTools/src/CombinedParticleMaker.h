@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.h,v 1.2 2003-08-05 17:25:19 gcorti Exp $
+// $Id: CombinedParticleMaker.h,v 1.3 2004-03-11 13:02:14 pkoppenb Exp $
 #ifndef COMBINEDPARTICLEMAKER_H 
 #define COMBINEDPARTICLEMAKER_H 1
 
@@ -125,7 +125,7 @@ private:
   bool m_longTracks;
 
   // Job options to keep upstream tracks
-  bool m_upstreamTracks;
+  bool m_downstreamTracks;
   
   // Job options to keep VTT tracks
   bool m_vttTracks;

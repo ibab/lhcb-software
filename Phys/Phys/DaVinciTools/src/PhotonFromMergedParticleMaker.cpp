@@ -1,4 +1,4 @@
-// $Id: PhotonFromMergedParticleMaker.cpp,v 1.1 2003-04-25 18:17:34 gcorti Exp $
+// $Id: PhotonFromMergedParticleMaker.cpp,v 1.2 2004-03-11 13:02:14 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -123,7 +123,7 @@ StatusCode PhotonFromMergedParticleMaker::initialize    ()
   
   // locate photon parameters evaluator 
   if( 0 != m_photPars ) { m_photPars -> release () ; m_photPars = 0 ; }
-  m_photPars = tool( m_photParsName , m_photPars , this );
+  m_photPars = tool<IPhotonFromMergedParams>( m_photParsName , this );
   if( 0 == photPars() ) { return StatusCode::FAILURE ; }           // RETURN
   
   if( 3 != m_pointVector.size() ) 
@@ -272,7 +272,7 @@ StatusCode PhotonFromMergedParticleMaker::makeParticles
     { Warning( "makeParticles(): extend non-empty vector of Particles" ) ; }
   
   // locate input data 
-  const ProtoParticles* pps = get( evtSvc() , inputData() , pps );
+  const ProtoParticles* pps = get< ProtoParticles > ( inputData() );
   if( 0 == pps ) { return StatusCode::FAILURE ; }
 
   unsigned long nAccepted = 0 ;

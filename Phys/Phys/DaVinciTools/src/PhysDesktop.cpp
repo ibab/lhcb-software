@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.10 2003-08-05 17:25:19 gcorti Exp $
+// $Id: PhysDesktop.cpp,v 1.11 2004-03-11 13:02:14 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -9,6 +9,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IAlgorithm.h"
 
 // data
 #include "Event/EventHeader.h"
@@ -23,6 +24,7 @@
  * Implementation file for class : PhysDesktop base class 
  *
  * 18/02/2002 : Sandra Amato
+ * 04/03/2004 : Hugo Ruiz : automatized outputLocation = algorithm name
  *-----------------------------------------------------------------------------
  */
 
@@ -38,7 +40,8 @@ PhysDesktop::PhysDesktop( const std::string& type,
                           const IInterface* parent )
   : AlgTool ( type, name , parent ),
     m_EDS(0),
-    m_pMaker(0){
+    m_pMaker(0),
+    m_getInputWarned(false){
   
   // Declaring implemented interfaces
   declareInterface<IPhysDesktop>(this);
@@ -55,7 +58,20 @@ PhysDesktop::PhysDesktop( const std::string& type,
                    m_primVtxLocn = VertexLocation::Primary );
   m_inputLocn.clear();
   declareProperty( "InputLocations", m_inputLocn );
-  declareProperty( "OutputLocation", m_outputLocn = "/Event/Phys/User");
+
+  //  REMOVED TO KILL COMPATIBILITY WITH OLD INPUT FILES
+  //  declareProperty( "OutputLocation", m_outputLocn = "/Event/Phys/User");
+  
+  const IInterface* itemp = this->parent();
+  const IAlgorithm* ialg = dynamic_cast<const IAlgorithm*>(itemp);
+  if( !ialg ) {
+    StatusCode scExc;
+    throw GaudiException("Parent of PhysDesktop is not an algorithm",
+                         this->name(),scExc);
+  }
+  
+  m_outputLocn = "/Event/Phys/"+ialg->name();
+
   
 }
 
@@ -364,14 +380,6 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
   // Register the particles containers in the store
   Particles* particlesToSave = new Particles();
   
-  for( ParticleVector::const_iterator icand = pToSave.begin();
-       icand != pToSave.end(); icand++ ) {
-    // Check if this was already in a Gaudi container (hence in TES)
-    if( 0 == (*icand)->parent() ) {
-      particlesToSave->insert(*icand);
-    }
-  }
-  
   std::string location = m_outputLocn+"/Particles";
   
   msg << MSG::DEBUG << "Saving " << particlesToSave->size()
@@ -379,6 +387,14 @@ StatusCode PhysDesktop::saveDesktop( ParticleVector& pToSave,
       << " total particles in desktop " << endreq;
   
   StatusCode sc = eventSvc()->registerObject(location,particlesToSave);
+  
+  for( ParticleVector::const_iterator icand = pToSave.begin();
+       icand != pToSave.end(); icand++ ) {
+    // Check if this was already in a Gaudi container (hence in TES)
+    if( 0 == (*icand)->parent() ) {
+      particlesToSave->insert(*icand);
+    }
+  }
   
   if ( sc.isFailure() ) {
     delete particlesToSave;
@@ -535,13 +551,13 @@ StatusCode PhysDesktop::saveTrees( int partid ) {
 
 //=============================================================================
 // Method retrieving the data from the store.
-// Automatically called by the base class when notified that a new
-// event came along
+// Automatically called by DVAlgorithm::sysExecute()
 //=============================================================================
-StatusCode PhysDesktop::getInput(){
+StatusCode PhysDesktop::getEventInput(){
   
   MsgStream          msg( msgSvc(), name() );
-  msg << MSG::DEBUG << ">>> Hello from getInput " << endreq;
+
+  msg << MSG::DEBUG << ">>> Hello from getEventInput " << endreq;
   msg << MSG::DEBUG << "Initial size of local containers (P,V) = " 
       << m_parts.size() << ", " << m_verts.size() << endreq;
   
@@ -685,4 +701,28 @@ StatusCode PhysDesktop::getInput(){
   
 }
 
-//============================================================================
+//=============================================================================
+// Obsolete version of getEventInput, kept for backwards compatibility
+// To be removed in some months (now 02-2004)
+//=============================================================================
+StatusCode PhysDesktop::getInput(){
+  if (!m_getInputWarned){
+    MsgStream          msg( msgSvc(), name() );
+    msg << MSG::WARNING << "Obsolete function getInput() called ";
+    msg << MSG::WARNING << "This is now automatically called by DVAlgorithm ";
+    m_getInputWarned = true;
+  }
+  return StatusCode::SUCCESS;
+  }
+
+// Impose output location
+void PhysDesktop::imposeOutputLocation(std::string outputLocationString){
+  MsgStream          msg( msgSvc(), name() );
+  msg << MSG::WARNING << "Non-standard output location imposed: "
+      << outputLocationString << endreq;
+  m_outputLocn = outputLocationString;
+  return;
+}
+
+
+
