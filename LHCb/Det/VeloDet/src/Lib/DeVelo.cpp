@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.1 2001-10-25 06:13:26 ocallot Exp $
+// $Id: DeVelo.cpp,v 1.2 2001-11-26 07:00:56 ocallot Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -291,15 +291,19 @@ double DeVelo::stripNumber( unsigned int waferNumber,
       phi  -=  m_phiInnerTilt - asin( m_innerTiltRadius / radius );
       strip = phi / m_phiPitchInner;
       pitch = m_phiPitchInner * radius;
-      if ( (0 > strip) || (m_nbPhiInner < strip) ) {
-        strip = -1.;
+      if ( 0 > strip) {
+        strip = 2048 + m_nbPhiInner + strip;
+      } else if (m_nbPhiInner < strip) {
+        strip = 2048 + strip - m_nbPhiInner;
       }
     } else {
       phi  -=  m_phiOuterTilt - asin( m_outerTiltRadius / radius );
       strip = phi / m_phiPitchOuter + m_nbPhiInner;
       pitch = m_phiPitchOuter * radius;
-      if ( (m_nbPhiInner > strip) || (2048. < strip ) ) {
-        strip = -1.;
+      if ( m_nbPhiInner > strip) {
+        strip = 4096 - m_nbPhiInner + strip;
+      } else if (2048 < strip ) {
+        strip = m_nbPhiInner + strip;
       }
     }
   }
@@ -371,27 +375,44 @@ bool DeVelo::getSpacePoint( unsigned int RWaferNumber,
   double zRef = 0.;  // Should be a 'nominal' vertex.
   
   double rAtPhi = localR * ( zPhi - zRef ) / ( zR -zRef );
-
+  double myPhiStrip = PhiStripNumber;
+  if ( 2047 < myPhiStrip ) myPhiStrip -= 2048;
+ 
   // Coherence in the Phi detector region, with some tolerance of 1 strip
+
   if ( m_phiBoundRadius < rAtPhi - m_innerPitch ) {
-    if ( PhiStripNumber < m_nbPhiInner ) {
+   if ( myPhiStrip < m_nbPhiInner ) {
       return false;
     }
   } else if ( m_phiBoundRadius > rAtPhi + m_innerPitch ) {
-    if ( PhiStripNumber > m_nbPhiInner ) {
+    if ( myPhiStrip > m_nbPhiInner ) {
       return false;
     }
   }
+
   double phiLocal;
   
-  if ( PhiStripNumber < m_nbPhiInner ) {
-    phiLocal = (PhiStripNumber * m_phiPitchInner) + 
+  if ( myPhiStrip < m_nbPhiInner ) {
+    phiLocal = (myPhiStrip * m_phiPitchInner) + 
                m_phiInnerTilt - asin( m_innerTiltRadius / rAtPhi );
+    if ( 2047 < PhiStripNumber ) {
+        phiLocal = phiLocal-2*m_halfAngle;
+    }
   } else {
-    phiLocal = ((PhiStripNumber-m_nbPhiInner) * m_phiPitchOuter) + 
+    phiLocal = ((myPhiStrip-m_nbPhiInner) * m_phiPitchOuter) + 
                m_phiOuterTilt - asin( m_outerTiltRadius / rAtPhi );
+    if ( 2047 < PhiStripNumber ) {
+        phiLocal = phiLocal-2*m_halfAngle;
+    }
   }
   phiLocal -= halfpi;
+
+  if ( halfpi < phiLocal ) {
+    phiLocal -= pi;
+  } else if ( -halfpi > phiLocal ) {
+    phiLocal += pi;
+  }
+
   if ( 0 == phiType%2 ) {
     phiLocal = -phiLocal;
   }
