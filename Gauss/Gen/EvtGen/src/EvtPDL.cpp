@@ -153,7 +153,7 @@ void EvtPDL::readPDT(const std::string fname){
 	tmp.setStdHep(stdhepid);
 	tmp.setLundKC(lundkc);
 	tmp.setName(pname);
-        assert(_particleNameLookup.find(std::string(pname))==
+  assert(_particleNameLookup.find(std::string(pname))==
 	       _particleNameLookup.end());
 	_particleNameLookup[std::string(pname)]=_nentries;
 	tmp.setctau(ctau);
@@ -161,11 +161,11 @@ void EvtPDL::readPDT(const std::string fname){
 	//report(INFO,"EvtGen") << "particle,chg3:"<<i<<","<<chg3<<std::endl;
 	
 	tmp.initLineShape(mass,pwidth,pmaxwidth);
-
-
+  
+  
 	_partlist.push_back(tmp);
 	_nentries++;
-
+  
       }
 
       // if find a set read information and discard it
