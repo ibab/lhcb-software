@@ -9,12 +9,12 @@
  */
 
 
-#include "G4VHit.hh"
+#include "GaussTools/GaussHitBase.h"
 #include "G4THitsCollection.hh"
 #include "G4Allocator.hh"
 #include "G4ThreeVector.hh"
 
-class TrackerHit : public G4VHit
+class TrackerHit : public GaussHitBase
 {
 public:
 
@@ -35,7 +35,6 @@ public:
   G4ThreeVector entryPos;
   G4ThreeVector exitPos;
   G4double timeOfFlight;
-  G4int trackID;  
 
 public:
 
@@ -47,8 +46,6 @@ public:
   G4ThreeVector GetExitPos();
   void SetTimeOfFlight(G4double tof);
   G4double GetTimeOfFlight();
-  void SetTrackID(G4int tid);
-  G4int GetTrackID();
 };
 
 typedef G4THitsCollection<TrackerHit> TrackerHitsCollection;

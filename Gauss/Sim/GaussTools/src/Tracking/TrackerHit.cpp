@@ -21,7 +21,7 @@ TrackerHit::TrackerHit()
 TrackerHit::~TrackerHit()
 {;}
 
-TrackerHit::TrackerHit(const TrackerHit &right):G4VHit(right)
+TrackerHit::TrackerHit(const TrackerHit &right):GaussHitBase(right)
 {
   edep = right.edep;
   entryPos = right.entryPos;
@@ -77,14 +77,6 @@ int TrackerHit::operator==(const TrackerHit &right) const
 
   G4double TrackerHit::GetTimeOfFlight()
   { return timeOfFlight; }
-
-  void TrackerHit::SetTrackID(G4int tid)
-  { trackID = tid; }
-
-  G4int TrackerHit::GetTrackID()
-  { return trackID; }
-
-
 
 
 void TrackerHit::Draw()
