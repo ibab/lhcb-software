@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.39 2004-06-10 13:45:19 jonrob Exp $
+! $Id: release.notes,v 1.40 2004-06-17 12:00:48 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
-! 2004-06-10 - Chris Jones
+!======================= RichKernel v5r0 2004-06-16 =======================
+! 2004-06-16 - Marco Cattaneo
+ - Add interfaces previously in RichDetTools and RichMCTools
+ - Add base classes previously in RichUtils
+   Above changes introduce dependencies on GSL, GaudiAlg, DetDesc
+ - Remove dummy includes RichDetectorType.h, RichRadiatorType.h, RichSide.h,
+   to use directly the versions in LHCbKernel 
 
 ! 2004-06-03 - Chris Jones
  - Remove default initialisation value for RichHypoData, to fix windows problems.

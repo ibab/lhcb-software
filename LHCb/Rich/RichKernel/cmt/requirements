@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.25 2004-06-10 13:45:19 jonrob Exp $
+# $Id: requirements,v 1.26 2004-06-17 12:00:47 cattanem Exp $
 # Maintainer : Christopher Rob Jones
 
 package RichKernel
@@ -11,7 +11,10 @@ branches RichKernel cmt doc src
 include_dirs $(RICHKERNELROOT)
 
 # ================ dependencies ==============================================
-use LHCbKernel	v4r*  Kernel
+use DetDesc     v14r*   Det
+use LHCbKernel  v4r*    Kernel
+use GaudiAlg    v7r*
+use GSL         v*
 
 # ================ linker library ============================================
 library RichKernel ../src/*.cpp
