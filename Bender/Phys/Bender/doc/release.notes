@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.1.1.1 2004-01-22 22:29:45 ibelyaev Exp $ 
+! $Id: release.notes,v 1.2 2004-03-17 10:20:54 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -7,6 +7,14 @@
 ! Purpose     : The package is a result of "pythonization procedure" 
 !                of the LoKi package 
 ! -----------------------------------------------------------------------------
+
+
+! 2004-03-17 - Vanya BELYAEV
+ - python/benderPreLoad.py
+   new module with 3 simple functions which will simplify teh configuration of 
+   preloading algorihtms of type LoKiPreLoad, 
+   see the examples in BenderExample package 
+
 
 ! 2003-04-15 - Vanya BELYAEV
  - the second commit into CVS :-)
