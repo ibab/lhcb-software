@@ -113,7 +113,7 @@ StatusCode GiGaRichOpticalPhotonCnv::createObj( IOpaqueAddress*  address ,
   StatusCode sc = updateObj( address, object );
   if ( !sc ) {
     if ( 0 != object ) { delete object; object = 0; }
-    return Error( "Could not create and update Object", sc );
+    return Warning( "Could not create and update Object", sc );
   }
 
 
@@ -169,7 +169,7 @@ StatusCode GiGaRichOpticalPhotonCnv::updateObj ( IOpaqueAddress*  address ,
       // Get MCHits eventSvc()
       SmartDataPtr<MCHits> mcHits( evtSvc(), MCHitLocation::RiHits );
       if ( !mcHits ) {
-      return Error( "Could not locate Rich MCHits from GiGaRichOpticalPhoton" );
+      return Warning( "Could not locate Rich MCHits from GiGaRichOpticalPhoton" );
       }
       
       msg << MSG::INFO << "Located " << mcHits->size() << " MCHits at " 
