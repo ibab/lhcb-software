@@ -4,7 +4,6 @@
 
 // Job option to tell POOL to load  Event Model dictionaries
 
-PoolDbCacheSvc.Dlls += {"SealSTLDict" };
 PoolDbCacheSvc.Dlls += {"LHCbKernelDict", "MuonKernelDict" };
 PoolDbCacheSvc.Dlls += {"DAQEventDict" };
 PoolDbCacheSvc.Dlls += {"EventDict" };
@@ -16,5 +15,6 @@ PoolDbCacheSvc.Dlls += {"RichEventDict" };
 PoolDbCacheSvc.Dlls += {"CaloEventDict" };
 PoolDbCacheSvc.Dlls += {"VeloEventDict" };
 PoolDbCacheSvc.Dlls += {"MuonEventDict" };
+PoolDbCacheSvc.Dlls += {"SealSTLDict" };
 
 
