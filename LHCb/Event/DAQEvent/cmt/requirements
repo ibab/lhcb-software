@@ -1,12 +1,9 @@
 #============================================================================
 # Created    : 2003-07-22
 # Maintainer : Helder Lopes
-#
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           DAQEvent
-version           v4r3
+version           v4r4
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -18,7 +15,8 @@ include_dirs $(DAQEVENTROOT)
 
 # Used packages.
 #============================================================================
-use LHCbKernel   v4r*	Kernel
+use GaudiAlg    v7r*
+use Event       v4r*    Event
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
@@ -31,13 +29,14 @@ apply_pattern lcg_dictionary dictionary=DAQEvent                  \
                              selectionfile=$(DAQEVENTROOT)/xml/lcg_selection.xml \
                              options="--split"
 
-# Build libraries (including dictionary)
-#============================================================================
-library          DAQEvent      *.cpp
-library          DAQEventDict  ../dict/*.cpp ../$(tag)/dict/DAQEvent/*.cpp
+# ==================== linker library =======================================
+library DAQEventLib     *.cpp
 
-# Standard patterns (order is important!)
+# ==================== component libraries ==================================
+library DAQEvent        component/*.cpp
+library DAQEventDict    ../dict/*.cpp ../$(tag)/dict/DAQEvent/*.cpp
+
+# ==================== Standard patterns (order is important!) ==============
 apply_pattern component_library library=DAQEventDict
-apply_pattern linker_library    library=DAQEvent
-macro_append DAQEvent_linkopts "" \
-                         WIN32 "/include:_DAQEvent_loadRef"
+apply_pattern component_library library=DAQEvent
+apply_pattern linker_library    library=DAQEventLib
