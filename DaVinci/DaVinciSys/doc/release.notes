@@ -4,6 +4,19 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================  DaVinciSys v8r3p2 2003-07-08 ===========================
+! 2003-07-08 - Gloria CORTI
+ - use B2DD                v1r3
+       Bd2JpsiKstar        v1r2
+       Bs2JpsiEta          v1r1
+       Bs2PhiEtac          v1r3
+       Bs2PhiPhi           v1r1
+       Bu2KsPi             v1r0
+       PhysSelSys          v5r6
+       FlavourTagging      v4r6
+       DaVinci             v8r3p2
+       DecayPresel         v1r5p2
+
 !====================  DaVinciSys v8r3p1 2003-07-03 ===========================
 ! 2003-07-03 - Gloria CORTI
  - use B2HH                v1r4
