@@ -1,10 +1,7 @@
-// Tracking stations layout for database v243r2
+// Tracking stations layout for database v243r3
 // (three seeding stations, IT+OT split TT1)
-OTDigitize.startReadoutGate       = { 5. , 6. , 27. , 29.5, 32.  };
-OTDigitize.numOTStations = 5;
-OTDigitize.firstOTStation = 1;
+#include "$OTALGORITHMSROOT/options/Brunelv243r3.opts" // Outer tracker
+#include "$FWTRACKROOT/options/Brunelv243r1.opts" // Forward tracking
 trCreat.firstOTStation = 1;
 trCreat.firstStation = 1;
 trCreat.lastStation = 5;
-OTDigitChecker.numStations = 5;
-OTDigitChecker.firstOTStation = 1;

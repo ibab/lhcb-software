@@ -21,7 +21,7 @@ HistogramPersistencySvc.OutputFile = "brunel_v240r1.hbook";  // Monitoring histo
 #include "$BRUNELOPTS/BrunelTrCrossTT1.opts"  // Pre dbase v242r1 tracking layout
 ToolSvc.ITGeometry.newCDF    = false;  // old CDF format until dbase v242
 ToolSvc.ITGeometry.newLayout = false;  // old TT1 layout until dbase v242
-//#include "$FWTRACKROOT/options/BrunelMinus.opts" // Forward tracking
+#include "$FWTRACKROOT/options/BrunelMinus.opts" // Forward tracking
 
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options

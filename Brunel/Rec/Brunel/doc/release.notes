@@ -4,14 +4,21 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v10r0>20020430 Brunel v10r0</A></H1><PRE>
+</PRE><H1><A NAME=v10r0>20020506 Brunel v10r0</A></H1><PRE>
    >>>>>>>>>>>>>>>>>>>>>>>>>>> Beware!!! <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
-   >>>>>> Current head revision has very limited functionality!! <<<<<<<<<<
+   >>>>>>>>> Current head revision has limited functionality!! <<<<<<<<<<<<
 
    >>>>>> Currently supports:
-     - all dbase versions from v240 to v243r3
+     - LHCb-Light detector with split TT1:
+           dbase v243r1p1 (Silicon only split TT1)
+           dbase v243r3   (IT+OT split TT1)
+         Job options for other dbases from v240 to v242r1 are provided as is,
+         with no guarantee that they will work. Support will be provided if
+         requsted 
      - Inner Tracker digitisation and clustering
+     - Outer Tracker digitisation and clustering
      - Velo digitisation and standalone tracking
+     - Forward tracking (not in OT), including "StoredTracks" as output
      - RICH Digitisation (old SICB Fortran version)
      - Calo digitisation and reconstruction
      - MUON Digitisation (old SICB Fortran version) and reconstruction
@@ -37,8 +44,11 @@ Purpose: LHCb reconstruction program
    - remove all SICB dig*, tr*, rec* packages, except digmuon, recrich
 
    - use ITAlgorithms v10r0 IT
+   - use OTAlgorithms v10r0 OT
    - use VeloDigit     v2r0 Velo
    - use VeloTrack     v2r0 Velo 
+   - use TrAssociators v1r0   Tr
+   - use FwTrack       v2r0   Tr
    - use MuonTools     v2r0 Muon
    - use MuonRec       v1r0 Muon
    - use CaloInterfaces v2r0 Calo

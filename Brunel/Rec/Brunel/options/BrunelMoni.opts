@@ -27,17 +27,12 @@ BrunelMoniITSeq.Members =
 // IT reconstruction
 BrunelMoniITSeq.Members += { "ITClusterChecker" };
 
+// Forward tracking
+#include "$FWTRACKROOT/options/BrunelMoni.opts"
 
 //BrunelMoniOTSeq.Members   = { "OTDigitChecker" };
 //BrunelMoniTrSeq.Members   = { "TrMonitor" };
 #pragma print off
-
-//--------------------------------------------------------------
-// No Fwtrack monitoring by default (produces ntuple). Uncomment to switch on
-//--------------------------------------------------------------
-// ApplicationMgr.ExtSvc += { "NTupleSvc" };
-// NTupleSvc.Output={"TRACK DATAFILE='Track.hbook' TYP='HBOOK' OPT='NEW'"};
-// BrunelMoniTRACKSeq.Members = { "FwtAnalyse" };
 
 //--------------------------------------------------------------
 // Set up some profiling. Enable/Disable setting lines below to true/false

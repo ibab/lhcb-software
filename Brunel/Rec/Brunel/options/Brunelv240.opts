@@ -23,6 +23,9 @@ ToolSvc.ITGeometry.newLayout = false;  // old TT1 layout until dbase v242
 // 9 IT stations (default is 5 - split TT1)
 MCITDepositCreator.tofVector = {3.3,7.9,12.5,20.5,23.8,26.0,27.4,29.42,30.4};
 
+// Disable forward tracking (to over-ride default in Brunel.opts)
+BrunelReco.DetectorList = {"VELO","OT","IT","Tr","RICH","CALO","MUON"};
+
 //--------------------------------------------------------------
 // Add here your specific options. These over-ride previously defined options
 //EventSelector.FirstEvent = 6;

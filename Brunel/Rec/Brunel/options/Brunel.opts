@@ -82,16 +82,21 @@ ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
 // Inner tracker digitisation and reconstruction (clustering)
 #include "$ITALGORITHMSROOT/options/Brunel.opts"
 
-// Tracking and back conversion of tracks to AXTK
-//ApplicationMgr.ExtSvc += { "MagneticFieldSvc" };
-//#include "$OTALGORITHMSROOT/options/Brunel.opts"
-//#include "$TRALGORITHMSROOT/options/Brunel.opts"
-//#include "$TRSICBCNVROOT/options/Brunel.opts"
+// Outer tracker digitisation and reconstruction (clustering)
+#include "$OTALGORITHMSROOT/options/Brunel.opts"
 
 // Velo digitisation and tracking
 ApplicationMgr.DLLs += { "VSicbCnv", "VeloDet", "VeloTrack" };
 #include "$VELODIGITROOT/options/Brunel.opts"
 BrunelRecoVELOSeq.Members  = { "VeloTrackAlg" };
+
+// Forward tracking
+ApplicationMgr.DLLs += { "FwTrack" };
+BrunelRecoTRACKSeq.Members = { "FwtFind", "StoreTracks" };
+
+// Tracking and back conversion of tracks to AXTK
+//#include "$TRALGORITHMSROOT/options/Brunel.opts"
+//#include "$TRSICBCNVROOT/options/Brunel.opts"
 
 // Muon reconstruction
 ApplicationMgr.DLLs += { "MuonSicbCnv", "MuonDet", "MuonRec" };
