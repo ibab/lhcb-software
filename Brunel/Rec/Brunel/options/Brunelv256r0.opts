@@ -35,8 +35,8 @@ SpillOverSelector.Input = {
 }; // evtype 61 RAWH2
 //SpillOverSelector.FirstEvent = 10; // Skip corresponding spillover events
 LHCBkgSelector.Input = {
-  "DATAFILE='$LHCBHOME/group/davinci/vol1/testdata/OORawhProva.root' TYP='ROOT' OPT='READ'"
-}; // Test file for LHC background
+  "DATAFILE='rfio:/castor/cern.ch/lhcb/prod/00000310_00000001_5.oosim' TYP='ROOT' OPT='READ'"
+}; // "Maximal" LHC background
 //LHCBkgSelector.FirstEvent = 7; // Skip corresponding background events
 
 DstWriter.Output = "DATAFILE='v256r0.dst' TYP='ROOT' OPT='NEW'";
