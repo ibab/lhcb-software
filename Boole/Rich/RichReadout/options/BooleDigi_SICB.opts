@@ -15,3 +15,13 @@ RichPDResponse.DetectorMode = "SICB"; // tell alg to use old SICB tool
 // temporary. 
 //Tell the monitor what sort of digits we have
 RiDigiAlgMon.DetMode = "HPDSICB";
+
+// Refractive index using XML tabulation
+ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
+ToolSvc.RichRefractiveIndex.RefIndexLocations = {
+  "/dd/Materials/RichMaterialTabProperties/AerogelIdealRIndexPT",
+  "/dd/Materials/RichMaterialTabProperties/C4F10SellParamRIndexPT",
+  "/dd/Materials/RichMaterialTabProperties/CF4RIndexPT"
+};
+ToolSvc.RichRefractiveIndex.QETableLocation =
+  "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";

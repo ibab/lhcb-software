@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2003-12-03 - Chris Jones
+ - Add to options file configuration for refractive index tool
+
 !========================= RichReadout v1r2 2003-11-26 =======================
 ! 2003-11-25 - Chris Jones
  - Updates for new RichSmartID
