@@ -1,5 +1,8 @@
-// $Id: PrepareL0DUL1Buffer.cpp,v 1.2 2004-07-29 07:54:51 cattanem Exp $
+// $Id: PrepareL0DUL1Buffer.cpp,v 1.3 2005-01-31 16:29:12 cattanem Exp $
 // Include files 
+
+// from STL
+#include <math.h> // For pow() on Windows
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"

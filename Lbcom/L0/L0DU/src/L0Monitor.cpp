@@ -1,4 +1,4 @@
-// $Id: L0Monitor.cpp,v 1.4 2003-02-03 11:16:10 ocallot Exp $
+// $Id: L0Monitor.cpp,v 1.5 2005-01-31 16:29:12 cattanem Exp $
 // Include files
 #include "stdio.h"
 // from Gaudi
@@ -321,8 +321,8 @@ StatusCode L0Monitor::execute() {
       log << MSG::INFO << "No MCParticle container !" << endreq;
       return StatusCode::SUCCESS;
     }
-    float angle;
-    float Et;
+    double angle;
+    double Et;
     int   pID;
 
     double tElec = 0.;
@@ -355,26 +355,26 @@ StatusCode L0Monitor::execute() {
     /**
      * Fill the ntuple
      */
-    m_decis = decis;
-    m_elec  = elec;
-    m_phot  = phot;
-    m_pi0l  = pi0l;
-    m_pi0g  = pi0g;
-    m_hadr  = hadr;
-    m_had2  = had2;
-    m_sume  = sume;
-    m_spdm  = spdm;
+    m_decis = float(decis);
+    m_elec  = float(elec);
+    m_phot  = float(phot);
+    m_pi0l  = float(pi0l);
+    m_pi0g  = float(pi0g);
+    m_hadr  = float(hadr);
+    m_had2  = float(had2);
+    m_sume  = float(sume);
+    m_spdm  = float(spdm);
 
-    m_pile  = pile;
-    m_emu1  = emu1;
-    m_emu2  = emu2;
-    m_emu3  = emu3;
-    m_sumu  = sumu;
-    m_tElec = tElec;
-    m_tPhot = tPhot;
-    m_tPi0  = tPi0;
-    m_tHadr = tHadr;
-    m_tMuon = tMuon;
+    m_pile  = float(pile);
+    m_emu1  = float(emu1);
+    m_emu2  = float(emu2);
+    m_emu3  = float(emu3);
+    m_sumu  = float(sumu);
+    m_tElec = float(tElec);
+    m_tPhot = float(tPhot);
+    m_tPi0  = float(tPi0);
+    m_tHadr = float(tHadr);
+    m_tMuon = float(tMuon);
 
     NTuplePtr nt1( ntupleSvc(), m_tupleName );
     if ( nt1 ) {
