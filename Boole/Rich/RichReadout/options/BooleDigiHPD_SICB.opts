@@ -1,0 +1,41 @@
+
+// Rich OO digitisation for SICB data
+
+// Initialisation algorithms for SICB data
+DigiRICHSeq.Members += { "RichMCDigitToDigitAlg/RichInitSICBData" };
+RichInitSICBData.CopyHits    = true;
+RichInitSICBData.CopyPhotons = true;
+RichInitSICBData.CopyDigits  = false;
+RichInitSICBData.HitsToCopy  = {
+  "MC/Rich/HitsSICB:MC/Rich/Hits"
+  ,"PrevPrev/MC/Rich/HitsSICB:PrevPrev/MC/Rich/Hits"
+  ,"Prev/MC/Rich/HitsSICB:Prev/MC/Rich/Hits"
+  ,"Next/MC/Rich/HitsSICB:Next/MC/Rich/Hits"
+  ,"NextNext/MC/Rich/HitsSICB:NextNext/MC/Rich/Hits"
+};
+RichInitSICBData.PhotonsToCopy  = {
+   "MC/Rich/OpticalPhotonsSICB:MC/Rich/OpticalPhotons"
+//,"PrevPrev/MC/Rich/OpticalPhotonsSICB:PrevPrev/MC/Rich/OpticalPhotons" 
+//,"Prev/MC/Rich/OpticalPhotonsSICB:Prev/MC/Rich/OpticalPhotons"
+//,"Next/MC/Rich/OpticalPhotonsSICB:Next/MC/Rich/OpticalPhotons"
+//,"NextNext/MC/Rich/OpticalPhotonsSICB:NextNext/MC/Rich/OpticalPhotons"
+};
+
+// Process the raw SICB hit signals
+DigiRICHSeq.Members += { "RichHPDSignalSICB/RichPDSignal" };
+
+// Simple treatment of HPD response
+DigiRICHSeq.Members += { "RichSimpleHPDFrontEndResponse/RichPDResponse" };
+RichPDResponse.DetectorMode = "SICB"; // tell alg to use old SICB tool
+RichPDResponse.SimpleSigma = 1.0;
+
+// Detailed treatment of HPD response
+//DigiRICHSeq.Members += { "RichDetailedHPDFrontEndResponse/RichPDResponse" };
+
+// Create final container of digits
+DigiRICHSeq.Members += { "RichDigitCreator" };
+
+
+// temporary. 
+//Tell the monitor what sort of digits we have
+RiDigiAlgMon.DetMode = "HPDSICB";

@@ -1,5 +1,5 @@
 package RichReadout
-version v1r0
+version v1r1
 
 # ================ structure =================================================
 branches RichReadout cmt doc src
@@ -10,14 +10,13 @@ include_dirs $(RICHREADOUTROOT)
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
-
-use AIDA	 v*	-no_auto_imports
-use RichEvent    v4r*   Event
-use RiSicbGeom	 v3r*	SICB
-use RichDetTools v2r*	Rich
+use AIDA            v*   -no_auto_imports
+use RichEvent       v5r*   Event
+use RiSicbGeom	  v3r*	SICB
+use RichDetTools    v3r*	Rich
 
 # ================ component library =========================================
-library RichReadout ../src/*.cpp -import=AIDA
+library RichReadout ../src/*.cpp  -import=AIDA
 
 apply_pattern package_Clinkopts
 apply_pattern packageShr
