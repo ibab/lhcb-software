@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendertuple.py,v 1.2 2004-08-26 19:34:36 ibelyaev Exp $ 
+# $Id: bendertuple.py,v 1.3 2005-02-08 20:31:51 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2004/08/26 19:34:36  ibelyaev
+#  remove explict PyLCGDict
+#
 # Revision 1.1  2004/07/11 15:47:06  ibelyaev
 #  regular incrment
 #
@@ -47,7 +50,7 @@ class Tuple(BenderTuple):
         """
         BenderTuple.__init__ ( self , obj )
         
-    def column  ( self , **args ) : 
+    def column  ( self , name , value  , **args ) : 
         """
         Fill single N-Tuple column. The column can be primitive or specialized.
         Usage :
@@ -68,19 +71,17 @@ class Tuple(BenderTuple):
         - HepLorentzVector  (CLHEP)       CLHEP/Vector/LorentzVector.h
         - EventHeader       (Event/Event) $EVENTROOT/Event/EventHeader.h
         """
-        if not args.has_key('name') :
-            raise TypeError, " Column 'name'  is not specified "
-        if not args.has_key('value') :
-            raise TypeError, " Column 'value' is not specified "
-        name  = args.get ( 'name'  )
-        value = args.get ( 'value' )
-        if args.has_key('min') | args.has_key( 'max' ) :
+        if not args :
+            # ordinary-type column
+            return BenderTuple.column( self , name , value )
+        elif   args.has_key('max') or args.has_key( 'min' ) :
             # "size-like" column 
-            minv   = args.get( 'min' ,   0 )
-            maxv   = args.get( 'max' , 500 ) 
+            minv   = args.get( 'min' ,    0 )
+            maxv   = args.get( 'max' , 1000 ) 
             return BenderTuple.column( self , name , value , minv , maxv )
-        # ordinary-type column
-        return BenderTuple.column( self , name , value )
+        # invalid arguments 
+        raise TypeError, " Invalid arguments "
+    
     def write  ( self ) :
         """
         Commit the filled row into N-Tuple

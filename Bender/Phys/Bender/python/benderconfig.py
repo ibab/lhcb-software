@@ -1,6 +1,6 @@
-# $Id: benderconfig.py,v 1.8 2005-01-24 17:44:39 ibelyaev Exp $
+# $Id: benderconfig.py,v 1.9 2005-02-08 20:31:51 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.8 $ 
+# CVS version $Revision: 1.9 $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -40,6 +40,73 @@ def _optSvc_ ( self ) :
     return iJobOptSvc( self._optsvc )
 
 gaudimodule.AppMgr.optSvc = _optSvc_
+
+def _parse_( line , tokens = ('DATA','TYPE')) :
+    """
+    Trivial function to parse the line with semantics :
+    " token1='MyData' token2='MyType' " 
+    """
+    items   = line.split()
+    result = []
+    for token in tokens :
+        value = None 
+        for item in items :
+            if item.startswith( token + '=' ) : value = item[ len(token)+2:-1]
+        if not value  : return None
+        result += [ value ]
+    return tuple(result) 
+    
+class iDataOnDemandSvc(gaudimodule.iService) :
+    def __init__   ( self , name = 'DataOnDemandSvc' , svc = None ) :
+        gaudimodule.iService.__init__( self , name , svc )
+        
+    def getAlgorithms ( self ) :
+        _algs = self.Algorithms
+        print 'native:',_algs 
+        _dict = {}
+        for _alg in _algs :
+            item = _parse_ ( _alg )
+            if not item : continue
+            _dict [ item[0] ] = item[1]
+        return _dict
+    
+    def algorithms ( self , algs  = {} ) :
+        if algs :
+            _dict = self.getAlgorithms()
+            _dict.update ( algs )
+            _list = [] 
+            for key in _dict :
+                _list += [ "DATA='%s' TYPE='%s'" % ( key , _dict[key] ) ]
+            self.Algorithms = _list
+        return self.getAlgorithms()
+    
+    def getNodes   ( self ) :
+        _nodes = self.Nodes
+        _dict = {}
+        for _node in _nodes :
+            item = _parse_ ( _node )
+            if not item : continue
+            _dict [ item[0] ] = item[1]
+        return _dict
+    
+    def nodes      ( self , nodes = {} ) :
+        if nodes :
+            _dict = self.getNodes()
+            _dict.update ( nodes )
+            _list = [] 
+            for key in _dict :
+                _list += [ "DATA='%s' TYPE='%s'" % ( key , _dict[key] ) ]
+            self.Nodes = _list
+        return self.getNodes()
+        
+def _onDemandSvc_ ( self , name = 'DataOnDemandSvc' ) :
+    return iDataOnDemandSvc( name ) ;
+
+gaudimodule.AppMgr.onDemand        = _onDemandSvc_
+gaudimodule.AppMgr.onDemandSvc     = _onDemandSvc_
+gaudimodule.AppMgr.dataOnDemand    = _onDemandSvc_
+gaudimodule.AppMgr.dataOnDemandSvc = _onDemandSvc_
+
 
 def _dir_ ( self , node = None , level = -1 ) :
     """
@@ -166,6 +233,9 @@ gaudimodule.AppMgr.ntupSvc              = gaudimodule.AppMgr.ntuplesvc
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2005/01/24 17:44:39  ibelyaev
+#  v4r5
+#
 # =============================================================================
 # The END 
 # =============================================================================

@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.11 2005-02-08 12:37:36 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.12 2005-02-08 20:31:51 ibelyaev Exp $ 
 # =============================================================================
-# CVS version $Revision: 1.11 $ 
+# CVS version $Revision: 1.12 $ 
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.11  2005/02/08 12:37:36  ibelyaev
+#  minor polishing with geo/point
+#
 # Revision 1.10  2005/02/05 12:58:32  ibelyaev
 #  add Tools/BenderRels package
 #
@@ -126,7 +129,7 @@ class Algo(BenderAlgo):
         """
         return Algo.execute_(self)
     
-    def plot         ( self , **args ) :
+    def plot         ( self , value , title , **args ) :
         """
         Fill/book the histogram. The procedure is described in detail in
         'LoKi User Guide', always available in $LOKIDOC/doc directory
@@ -136,33 +139,24 @@ class Algo(BenderAlgo):
         self.plot( value = pt / GeV , ID = 1 , title = 'My Title' , high = 10 )
         
         -  'value'  is the value to be put into the histogram
+        -  'title'  is historam title                
         -  'ID'     is integer histogram identifier  ('semi-optional')
-        -  'title'  is historam title                ('semi-optional')
         -  'low'    is low  histogram edge         (optional,default is   0 ) 
         -  'high'   is high histogeram edge        (optional,default is 100 )
         -  'bins'   is number of bins in histogram (optional,default is 100 )
         -  'weight' is weight for the given fill   (optional,default is 1.0 )
         
-        Either 'ID' or 'title' *MUST* be supplied!
-        
         Return value:  AIDA::IHistogram1D object
         
         """
-        if not args.has_key ( 'value' ) :                    # mandatory argument 
-            raise TypeError, " 'value' for the histogram is not specified "
-        value  = args.get ( 'value'                        ) # value 
-        low    = args.get ( 'low'    ,   0.0               ) # low  limit 
-        high   = args.get ( 'high'   , 100.0               ) # high limit 
-        bins   = args.get ( 'bins'   , 100                 ) # number of bins
-        weight = args.get ( 'weight' ,   1.0               ) # weight
-        if args.has_key ( 'ID'    ) :
-            ID    = args.get ( 'ID' )
-            title = args.get ( 'title' , 'Plot #' + `ID` )
+        low    = args.get ( 'low'    ,   0.0  ) # low  limit 
+        high   = args.get ( 'high'   , 100.0  ) # high limit 
+        bins   = args.get ( 'bins'   , 100    ) # number of bins
+        weight = args.get ( 'weight' ,   1.0  ) # weight
+        if args.has_key   ( 'ID' ) :
+            ID = args.get ( 'ID' )
             return BenderAlgo.plot( self , value , ID , title , low , high , bins , weight )
-        if args.has_key ( 'title' ) :
-            title = args.get('title')
-            return BenderAlgo.plot( self , value ,      title , low , high , bins , weight )
-        raise TypeError, " Neither 'ID' no 'title' for the histogram are specified "
+        return BenderAlgo.plot( self , value ,      title , low , high , bins , weight )
     
     def select       ( self , **args   ) :
         """

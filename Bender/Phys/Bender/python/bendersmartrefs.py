@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendersmartrefs.py,v 1.6 2005-02-08 11:29:30 ibelyaev Exp $ 
+# $Id: bendersmartrefs.py,v 1.7 2005-02-08 20:31:51 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ version $Revison:$
 # =============================================================================
@@ -13,7 +13,7 @@ Helper module  to (re)define few sipmple methods for few useful event classes
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.6 $ "
+__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.7 $ "
 # =============================================================================
 
 import gaudimodule
@@ -151,6 +151,7 @@ _list_ = [ 'MCVertex'      ,
            'Particle'      ,
            'CaloHypo'      ,
            'CaloCluster'   ,
+           'VeloCluster'   ,
            'TrStoredTrack' ,
            'MCCaloHit'     ]
 
@@ -161,11 +162,14 @@ class KeyedContainerIterator(object) :
     def __init__ ( self , container ) :
         self._vector_ = container.containedObjects()
         self._index_  = 0
+        self._size_   = self._vector_.size()
+        print ' I am iterator: size=' , self._size_
     def next     ( self ) :
+        #print ' I am iterator: index/size=' , self._index_ , self._size_         
         index = self._index_ 
-        if index < self._vector_.size() :
-            obj = self._vector_[ index ]
-            self._index_ = index + 1
+        if index < self._size_ :
+            obj  = self._vector_[ index ]
+            self._index_ += 1
             return obj
         raise StopIteration
 
@@ -196,6 +200,7 @@ _list_  = [ 'MCVertex'      ,
             'Vertex'        ,
             'CaloCluster'   ,
             'ProtoParticle' ,
+            'VeloCluster'   ,
             'MCCaloHit'     ,
             'TrStoredTrack' ]
 
