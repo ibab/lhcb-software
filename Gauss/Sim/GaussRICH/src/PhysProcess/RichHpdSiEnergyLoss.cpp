@@ -43,8 +43,8 @@ RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName)
 
     if ( EnvelopeMaterialName == (*theMaterialTable)[iMatk]->GetName()){
       fMatIndexHpdEnvelopeKovar=(*theMaterialTable)[iMatk]->GetIndex();
-             G4cout<<"Hpd Si energy Loss construt Material "<<materialName
-          <<"   "<< fMatIndexHpdEnvelopeKovar<<G4endl;
+//              G4cout<<"Hpd Si energy Loss construt Material "<<materialName
+//           <<"   "<< fMatIndexHpdEnvelopeKovar<<G4endl;
       break;
     }
    
@@ -52,9 +52,7 @@ RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName)
   if(iMatk >= numberOfMat ) {
     G4Exception("Invalid material Name in RichHpdSiEnergyLoss constructor" );
   }
-
-
-     G4cout<<GetProcessName() <<" is created "<<G4endl;
+  //     G4cout<<GetProcessName() <<" is created "<<G4endl;
   
 }
 RichHpdSiEnergyLoss::~RichHpdSiEnergyLoss() {; }

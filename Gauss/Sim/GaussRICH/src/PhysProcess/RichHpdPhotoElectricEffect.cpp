@@ -40,7 +40,7 @@ RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect
 
   m_MaxAnyHpdQEff =   m_HpdProperty-> HpdMaxQuantumEff();
   
-  G4cout << GetProcessName() << " is created " << G4endl;
+  //  G4cout << GetProcessName() << " is created " << G4endl;
 }
 
 RichHpdPhotoElectricEffect::~RichHpdPhotoElectricEffect() {; }
