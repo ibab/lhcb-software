@@ -265,7 +265,7 @@ VeloCluster* VeloClusterMaker::makeClusterFromDigit(
   currentCluster->setSensor(m_sensor);
   log << MSG::VERBOSE << " cluster: sensor " <<  currentCluster->sensor() 
       << " first strip " << currentCluster->strip(0) 
-      << " ADC " <<  currentCluster->adcValue(0) << endl;
+      << " ADC " <<  currentCluster->adcValue(0) << endmsg;
 
   return currentCluster;
 }
