@@ -4,6 +4,10 @@
 ! Purpose          : GiGa visualisation and UI 
 !-----------------------------------------------------------------------------
 
+!========================= GiGaVisUI v2r0 2003-05-01 ========================
+! 2003-05-01 - Witek Pokorski
+ - requirements - move to GiGa v14r0
+
 !========================= GiGaVisUI v1r3 2003-03-14 ========================
 ! 2003-03-10 - Vanya Belyaev
   - src/GiGaUISession.cpp    fix a bug for Win32 platform 
