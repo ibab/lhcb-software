@@ -1,26 +1,31 @@
-# $Id: README.nonLHCb,v 1.1 2002-11-25 23:26:12 andreav Exp $
+# $Id: README.nonLHCb,v 1.2 2002-11-25 23:54:46 andreav Exp $
 
 ------------------------------------------------------------------------------
 How to install the code from a non-LHCb account
 ------------------------------------------------------------------------------
 
 The following is a short summary of what you should do from a non-LHCb 
-account if you want to use the CondDB example. 
+account if you want to use the CondDB example. Mind the order!
 I assume RedHat7.3 Linux (lxplus7) using the csh/tcsh shell.
-Mind the order!
+
+NB These instructions build everything in a directory I call ${CDBCMT}.
+I assume that this points to ~/newmycmt. If you want to use a different
+area (eg a scratch area for lack of quota...) change the first line!
+
+   setenv CDBCMT ${HOME}/newmycmt
    setenv LHCBHOME /afs/cern.ch/lhcb
    source /afs/cern.ch/lhcb/scripts/CMT.csh
    setenv PATH ${LHCBHOME}/bin:${LHCBHOME}/scripts:${PATH}
-   setenv CMTPATH ${HOME}/newmycmt:${GAUDISOFT}/GAUDI_v11r1
-   mkdir newmycmt
-   cd newmycmt
+   setenv CMTPATH ${CDBCMT}:${GAUDISOFT}/GAUDI_v11r1
+   mkdir ${CDBCMT}
+   cd ${CDBCMT}
    tar -xvzf /afs/cern.ch/user/a/andreav/public/DetCondExample_v4r1.tar.gz
    cd Ex/DetCondExample/v4r1/cmt
-   cmt broadcast -select=mycmt cmt config
+   cmt broadcast -select=${CDBCMT} cmt config
 
 You may then follow the rest of the instructions in the README file
 (from "How to set the environment and lnk..." onwards). In brief:
-   cmt broadcast -select=mycmt gmake tag=$CMTDEB
+   cmt broadcast -select=${CDBCMT} gmake tag=$CMTDEB
    source setup.csh -tag=$CMTDEB
    setenv DETCONDEXAMPLE_DBHOST <host> (e.g., DB9)
    setenv DETCONDEXAMPLE_DBUSER <user>
