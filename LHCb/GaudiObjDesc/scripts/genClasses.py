@@ -1,0 +1,572 @@
+import time, os, sys, string
+import genSrcUtils, gparser
+
+#================================================================================
+class genClasses(genSrcUtils.genSrcUtils):
+#--------------------------------------------------------------------------------
+  def __init__(self, cdb, godRoot):
+    genSrcUtils.genSrcUtils.__init__(self,cdb)
+    self.godRoot = godRoot
+    self.plurialExceptions = {'Vertex':'Vertices'}
+    self.bitfieldEnums = {'public':'', 'protected':'', 'private':''}
+    self.gKeyedContainerTypedef = 0
+    self.genOStream = 0
+    self.genFillStream = 0
+    self.isEventClass = 0
+#--------------------------------------------------------------------------------
+  def reset(self, package, godClass):
+    genSrcUtils.genSrcUtils.reset(self,godClass)
+    self.excludes    = list(package.excludes)
+    self.include     = list(package.include)
+    self.stdIncludes = list(package.stdIncludes)
+    self.forwardDecl = list(package.forwardDecl)
+    self.forwardIncl = list(package.forwardIncl)
+    self.bitfieldEnums = {'public':'', 'protected':'', 'private':''}
+    self.gKeyedContainerTypedef = 0
+    if godClass['attrs']['serializers'] == 'TRUE' :
+      self.genOStream = 1
+      self.genFillStream = 1
+    else:
+      self.genOStream = 0
+      self.genFillStream = 0
+    if godClass.has_key('id') : self.isEventClass = 1
+    else                      : self.isEventClass = 0
+#--------------------------------------------------------------------------------
+  def genClassnamePlurial(self, name):
+    for singular in self.plurialExceptions.keys():
+      pos = name.find(singular)
+      if pos != -1 and pos+len(singular) == len(name):
+        return name[:pos] + self.plurialExceptions[singular]
+    return name + 's'
+#--------------------------------------------------------------------------------
+  def genClassExcludes(self, dict) :
+    self.genExcludes(dict,self.excludes)
+#--------------------------------------------------------------------------------
+  def parseClassImport(self, dict):
+    self.parseImport(dict, self.include, self.stdIncludes, self.forwardDecl, self.forwardIncl)
+#--------------------------------------------------------------------------------
+  def genForwardIncludes(self):
+    s = ''
+    for imp in self.forwardIncl :
+      if imp not in self.include : s += '#include "%s.h"\n' % imp
+    return s
+#--------------------------------------------------------------------------------
+  def genClassID(self, godClass):
+    s = ''
+    classAtt = godClass['attrs']
+    if classAtt.has_key('id'):
+      s += '\n'
+      s += '// Class ID definition\n'
+      s += 'static const CLID& CLID_%s = %s;\n' % ( classAtt['name'], classAtt['id']) 
+    return s
+#--------------------------------------------------------------------------------
+  def genClassVersion(self, godClass):
+    s = ''
+    classAtt = godClass['attrs']
+    if classAtt.has_key('version'):
+      s += '\n// Class Version definition\n'
+      s += 'static const unsigned int Version_%s = %s;\n' % (classAtt['name'], classAtt['version'])
+    return s
+#--------------------------------------------------------------------------------
+  def genLocations(self, godClass):
+    s = ''
+    s2 = ''
+    classAtt = godClass['attrs']
+    if classAtt.has_key('location'):                                             # add class attribute location
+      s2 += '  static const std::string& Default = "%s";\n' % classAtt['location']
+    if godClass.has_key('location'):                                            # add elements location
+      for loc in godClass['location']:
+        locAtt = loc['attrs']
+        place = locAtt['place']
+        if locAtt['noQuote'] == 'FALSE': place = '"' + place + '"'
+        s2 += '  static const std::string& %s = %s;\n' % ( locAtt['name'], place )
+    if len(s2):                                                                  # if found something put namespace around it
+      s =  '// Namespace for locations in TDS\n'
+      s += 'namespace %sLocation {\n%s}\n' % ( classAtt['name'], s2 )
+    return s
+#--------------------------------------------------------------------------------
+  def genInheritance(self, godClass):
+    s = ''
+    if godClass.has_key('base'):
+      s += ': '
+      for base in godClass['base']:
+        baseAtt = base['attrs']
+        if baseAtt['name'][:12] == 'KeyedObject<' : self.gKeyedContainerTypedef = 1
+        self.addInclude(baseAtt['name'])
+        if baseAtt['virtual'] == 'TRUE': s += 'virtual '
+        s += '%s %s' % ( baseAtt['access'].lower(), baseAtt['name'] )
+    return s
+#--------------------------------------------------------------------------------
+  def genConstructor(self, godClass, const, scopeName=''):
+    s = ''
+    indent = 0
+    if (scopeName and
+        ((not const.has_key('code')) or
+         (not const['code'][0].has_key('cont')) or
+         (not const['code'][0]['cont'].strip()))): return s                         # if outside class body and no implementation
+    constAtt = const['attrs']                                                    # return immediately
+    if ( not scopeName ) :
+      s += '  /// %s\n  ' % constAtt['desc']
+      if constAtt['explicit'] == 'TRUE' : s += 'explicit '
+      indent += 2
+    else :
+      s += 'inline '
+      scopeName += '::'
+      indent += len(scopeName) + 7
+    s += scopeName + godClass['attrs']['name'] + '('
+    indent += len(godClass['attrs']['name'])
+    pList = []
+    if constAtt.has_key('argList') : pList = self.tools.genParamsFromStrg(constAtt['argList'])
+    if const.has_key('arg') :        pList = self.tools.genParamsFromElem(const['arg'])
+    pIndent = 0
+    if len(pList) :
+      if scopeName : s += pList[0].split('=')[0]                                # in implementation strip off default arguments
+      else         : s += pList[0]
+      pIndent = len(pList[0])
+      if len(pList[1:]) :
+        for p in pList[1:]:
+          if scopeName : s += ',\n%s %s' % (indent*' ', p.split('=')[0])        # in implementation strip off default arguments
+          else : s += ',\n%s %s' % (indent*' ', p)
+          pIndent = max(pIndent,len(p))
+    s += ')'
+    indent += pIndent+1
+    if ( not scopeName ) :                                                      
+      if (constAtt.has_key('initList') and not const.has_key('code')) or \
+           (const.has_key('code') and \
+             ((not const['code'][0].has_key('cont')) or \
+              (not const['code'][0]['cont'].strip()))):
+        if constAtt.has_key('initList') :
+          initList = constAtt['initList'].split(',')
+          s += ' : %s' % initList[0]                                             # print initialisation list if there is one
+          indent += 3
+          if len(initList) > 1 :
+            for init in initList[1:]:
+              s += ',\n%s%s' % (indent*' ', init)
+        s += ' {}\n\n'                                                           # and the empty implementation
+      else : s += ';\n\n'                                                        # implementation must be in cpp file
+    else :                                                                       # we are outside the class body 
+      if constAtt.has_key('initList') :
+        initList = constAtt['initList'].split(',')
+        s += ' : %s' % initList[0]                                               # print initlist if available
+        indent += 3
+        if len(initList) > 1:
+          for init in initList[1:]:
+            s += ',\n%s%s' % (indent*' ', init)
+      s += ' \n{\n%s\n}\n\n' % const['code'][0]['cont']                          # print code
+    return s
+#--------------------------------------------------------------------------------
+  def genConstructors(self,godClass,clname=''):
+    s = ''
+    hasDefaultConstructor = 0
+    if godClass.has_key('constructor'):                                         # are there any constrs defined
+      for const in godClass['constructor']:
+        if (not const['attrs'].has_key('argList')) and (not const.has_key('arg')):
+          hasDefaultConstructor = 1
+        s += self.genConstructor(godClass,const,clname)
+    if not (hasDefaultConstructor or clname):                                   # no constructors defined lets
+      s += '  /// Default Constructor\n'                                        # generate a default ctr
+      s2 = '  %s()' % godClass['attrs']['name']
+      indent = ' ' * (len(s2) + 3)
+      s += s2
+      if godClass.has_key('attribute') :                                        # if there are attributes
+        for att in godClass['attribute'] :                                      # loop over them
+          attAtt = att['attrs']
+          if ( attAtt.has_key('init') or \
+               self.tools.isIntegerT(attAtt['type']) or \
+               self.tools.isFloatingPointT(attAtt['type'])) :
+            if ( s[-1] != ',' ) : s += ' : '                                     # this is the first item
+            else : s += '\n' + indent
+            s += 'm_%s' % attAtt['name'] 
+            if attAtt.has_key('init') : s += '(%s),' % attAtt['init'] 
+            elif self.tools.isIntegerT(attAtt['type']) : s += '(0),'
+            elif self.tools.isFloatingPointT(attAtt['type']) : s += '(0.0),'
+        if s[-1] == ',' : s = s[:-1]                                             # strip off the last ','
+      s += ' {}\n\n'
+    return s[:-1]
+#--------------------------------------------------------------------------------
+  def genDestructor(self,godClass,dest,scopeName=''):
+    s = ''
+    if (scopeName and not dest.has_key('code')) : return s
+    if ( not scopeName ) : s += '  /// %s\n' % dest['attrs']['desc']
+    else :
+      s += 'inline '
+      scopeName += '::'
+    s += '%s~%s()' % (scopeName, godClass['attrs']['name'])
+    if ( not scopeName ) :
+      if dest.has_key('code') :
+        if dest['code'][0]['cont'].strip() : s += ';\n\n'
+        else : s += '{} \n\n'
+      else : s += ';\n\n'
+    else :
+      s += ' \n{\n%s\n}\n\n' % dest['code'][0]['cont']
+    return s
+#--------------------------------------------------------------------------------
+  def genDestructors(self,godClass,clname=''):
+    s = ''
+    if godClass.has_key('destructor'):                                          # there is a destructor defined
+      dest = godClass['destructor'][0]
+      s += self.genDestructor(godClass, dest,clname)
+    elif not clname:                                                             # no destructor defined let's
+      s += '  /// Default Destructor\n'
+      s += '  virtual ~%s() {}\n\n' % godClass['attrs']['name']
+    return s[:-1]
+#--------------------------------------------------------------------------------
+  def genGetSetAttMethod(self,att,what,scopeName=''):
+    desc = {'get':'Retrieve ', 'get_c':'Retrieve const ', 'set':'Update '}
+    s = ''
+    if ( what == 'get' and self.tools.isFundamentalT(att['type'])) : return s     # for attributes with fundamental types we 
+    if ( not scopeName ) : s += '  /// %s %s\n  ' % (desc[what], att['desc'])        # ... only generate the const getter 
+    else : 
+      s += 'inline '
+      scopeName += '::'
+    metName = self.tools.lowerGetterName(att['name'])
+    if what == 'set' : metName = att['name'][0].upper() + att['name'][1:]
+    ret = ''
+    param = ''
+    constF = ''
+    if what == 'get_c' : 
+      constF = ' const' 
+      if not self.tools.isFundamentalT(att['type']) : ret = 'const '
+    if what == 'set'  : 
+      ret = 'void '
+      param = self.tools.genParamFromStrg(att['type']) + ' value'
+    elif what in ['get','get_c'] : 
+      ret = self.tools.genReturnFromStrg(ret + att['type'], self.generatedTypedefs, scopeName)
+      if not self.tools.isFundamentalT(att['type']) and not self.tools.isPointerT(att['type']): ret += '&'
+      ret += ' '
+      what = ''
+    s += ret + scopeName + what + metName + '(' + param + ')' + constF
+    if ( not scopeName )        : s += ';\n\n'                                     # this is a declaration
+    else : 
+      if not what        : s += ' \n{\n  return m_%s;\n}\n\n' % att['name']        # what was set to '' if getter
+      elif what == 'set' : s += ' \n{\n  m_%s = value;\n}\n\n' % att['name'] 
+    return s
+#--------------------------------------------------------------------------------
+  def genGetSetRelMethod(self,rel,what,scopeName=''):
+    desc = {'get':'Retrieve ', 'get_c':'Retrieve (const) ', 'set':'Update ', \
+            'set_p':'Update (pointer) ', 'addTo':'Add to ', \
+            'addTo_p':'Att to (pointer) ', 'removeFrom':'Remove from ', \
+            'removeFrom_p':'Remove from (pointer)', 'clear':'Clear '}
+    s = ''
+    if ( not scopeName ) : s += '  /// %s %s\n  ' % (desc[what], rel['desc'])
+    else : 
+      s += 'inline '
+      scopeName += '::'
+    ret = 'void '
+    if what in ['get', 'get_c']:
+      if rel['multiplicity'] != '1' : 
+        ret = self.tools.genReturnFromStrg('SmartRefVector<'+rel['type']+'>&',self.generatedTypedefs,scopeName) + ' '
+      else : 
+        ret = self.tools.genReturnFromStrg(rel['type'] + '*',self.generatedTypedefs,scopeName) + ' '
+    metName = ''
+    if what in ['get', 'get_c'] :
+      metName = self.tools.lowerGetterName(rel['name'])
+    if what in ['set', 'set_p', 'addTo', 'addTo_p', 'removeFrom', 'removeFrom_p', 'clear'] :
+      metName = rel['name'][0].upper() + rel['name'][1:]
+    param = ''
+    if what == 'set' and rel['multiplicity'] != '1': 
+      param = self.tools.genParamFromStrg('SmartRefVector<'+rel['type']+'>') + ' value'
+    elif what in ['set','addTo', 'removeFrom'] : 
+      param = self.tools.genParamFromStrg('SmartRef<'+rel['type']+'>') + ' value'
+    elif what in ['set_p', 'addTo_p', 'removeFrom_p']:
+      param = self.tools.genParamFromStrg('const ' + rel['type'] + '*') + ' value'
+    constF = ''
+    if what == 'get_c' : 
+        constF = ' const'
+        ret = 'const ' + ret
+    if what[-2] == '_' : what = what[:-2]
+    if what == 'get' : what = ''
+    s += ret + scopeName + what + metName + '(' + param + ')' + constF
+    if ( not scopeName )       : s += ';\n\n'                                       # this is a declaration
+    else : 
+      if not what              : s += ' \n{\n  return m_%s;\n}\n\n' % rel['name'] # what was set to '' if getter
+      elif what == 'set'       : s += ' \n{\n  m_%s = value;\n}\n\n' % rel['name'] 
+      elif what == 'addTo'     : s += ' \n{\n  m_%s.push_back(value);\n}\n\n' % rel['name']
+      elif what == 'clear'     : s += ' \n{\n  m_%s.clear();\n}\n\n' % rel['name']
+      elif what == 'removeFrom': 
+        s += ' \n{\n  SmartRefVector<%s>::iterator iter =\n' % rel['type']
+        s += '    std::remove(m_%s.begin(), m_%s.end(), value);\n' % (rel['name'], rel['name'])
+        s += '  m_%s.erase(iter, m_%s.end());\n}\n\n' % (rel['name'], rel['name'])
+    return s
+#--------------------------------------------------------------------------------
+  def genGetSetBitfieldMethod(self, bf, what, attAtt, scopeName):
+    desc = {'get':'Retrieve', 'set':'Upate'}
+    s = ''
+    if not scopeName : s += '  /// %s %s\n  ' % (desc[what], bf['desc'])
+    else :
+      s += 'inline '
+      scopeName += '::'
+    metName = bf['name']
+    bfType = 'bool'
+    if bf.has_key('type')    : bfType = bf['type']
+    elif bf['length'] != '1' : bfType = attAtt['type']      
+    ret = 'void '
+    param = ''
+    constF = ''
+    if what == 'set' :
+      metName = bf['name'][0].upper() + bf['name'][1:]
+      param = self.tools.genParamFromStrg(bfType) + ' value'
+    if what == 'get':
+      what = ''
+      ret = self.tools.genReturnFromStrg(bfType,self.generatedTypedefs,scopeName) + ' '
+      constF = ' const'
+# fixme, lowering getter names for bitfields was not done in old GOD
+# should be done now to be consistent
+#   metName = self.tools.lowerGetterName(bfAtt['name'])
+    s += ret + scopeName + what + metName + '(' + param + ')' + constF
+    if not scopeName : s += ';\n\n'
+    else:
+      if bf['length'].isdigit() : bits = bf['name']
+      else : bits = bf['length'].split(',')[0]
+      if not what        :
+        s += '\n{\n  return (bool)((m_%s & %sMask) >> %sBits);\n}\n\n' % (attAtt['name'],bf['name'],bits)
+      elif what == 'set' :
+        s += '\n{\n  unsigned val = (unsigned)value;\n' 
+        s += '  m_%s &= ~%sMask;\n' % (attAtt['name'], bf['name']) 
+        s += '  m_%s != ((((unsigned)val) << %sBits) & %sMask);\n}\n\n' % (attAtt['name'],bits,bf['name'])
+    return s
+#--------------------------------------------------------------------------------
+  def genGetSetMethods(self,godClass,clname=''):
+    s = ''
+    if godClass.has_key('attribute'):
+      for att in godClass['attribute']:
+        attAtt = att['attrs']
+        if attAtt['getMeth'] == 'TRUE': 
+          s += self.genGetSetAttMethod(attAtt,'get_c',clname)
+          s += self.genGetSetAttMethod(attAtt,'get',clname)
+        if attAtt['setMeth'] == 'TRUE':
+          s += self.genGetSetAttMethod(attAtt,'set',clname)
+        if att.has_key('bitfield'):
+          for bf in att['bitfield']:
+            bfAtt = bf['attrs']
+            if bfAtt['getMeth'] == 'TRUE':
+              s += self.genGetSetBitfieldMethod(bfAtt,'get',attAtt,clname)
+            if bfAtt['setMeth'] == 'TRUE':
+              s += self.genGetSetBitfieldMethod(bfAtt,'set',attAtt,clname)
+    if godClass.has_key('relation'):
+      for rel in godClass['relation']:
+        relAtt = rel['attrs']
+        if relAtt['getMeth'] == 'TRUE': 
+          s += self.genGetSetRelMethod(relAtt,'get_c',clname)
+          s += self.genGetSetRelMethod(relAtt,'get',clname)
+        if relAtt['setMeth'] == 'TRUE':
+          s += self.genGetSetRelMethod(relAtt,'set',clname)
+        if relAtt['multiplicity'] != '1':
+          if relAtt['addMeth'] == 'TRUE':
+            s += self.genGetSetRelMethod(relAtt,'addTo',clname) 
+            s += self.genGetSetRelMethod(relAtt,'addTo_p',clname) 
+          if relAtt['remMeth'] == 'TRUE':
+            s += self.genGetSetRelMethod(relAtt,'removeFrom',clname)
+            #s += self.genGetSetRelMethod(relAtt,'removeFrom_p',clname) #fixme: ambigous operator== overloading
+          if relAtt['clrMeth'] == 'TRUE':
+            s += self.genGetSetRelMethod(relAtt,'clear',clname)
+        else:
+          if relAtt['setMeth'] == 'TRUE':
+            s += self.genGetSetRelMethod(relAtt,'set_p',clname)
+    return s[:-1]
+#--------------------------------------------------------------------------------
+  def genBitfield(self,att):
+    s = ''
+    attName = att['attrs']['name']
+    if att.has_key('bitfield'):
+      maxLenName = 0
+      for bf in att['bitfield'] : maxLenName = max(maxLenName,len(bf['attrs']['name']))
+      bf0Att = att['bitfield'][0]['attrs']
+      indent = (len(attName) + 11) * ' '
+      s += '  /// Offsets of bitfield %s\n' % attName
+      s += '  enum %sBits{%s = 0' % (attName, (bf0Att['name']+'Bits').ljust(maxLenName+4))
+      offset = string.atoi(bf0Att['length'])
+      for bf in att['bitfield'][1:]:
+        bfAtt = bf['attrs']
+        if bfAtt['length'].isdigit():
+          s += ',\n%s %s = %d' % (indent, (bfAtt['name']+'Bits').ljust(maxLenName+4), offset)
+          offset += string.atoi(bfAtt['length'])
+      s += '};\n\n'
+      s += '  /// Bitmasks for bitfield %s\n' % attName
+      offset = 0
+      indent += '  '
+      s += '  enum %sMasks{' % attName
+      for bf in att['bitfield']:
+        if s[-1] != '{' : s += ',\n%s' % indent
+        bfAtt = bf['attrs']
+        if bfAtt['length'].isdigit():
+          lInt = string.atoi(bfAtt['length'])
+          mask = 0
+          for j in range(offset,offset+lInt) : mask += (1L<<j)
+          offset += lInt
+          s += '%s = %s' % ((bfAtt['name']+'Mask').ljust(maxLenName+4), hex(mask))
+        else:
+          masks = bfAtt['length'].split(',')
+          mask = ''
+          for m in masks : mask += m.strip() + 'Mask + '
+          s += '%s = %s' % ((bfAtt['name']+'Mask').ljust(maxLenName+4), mask[:-3])
+      s += '};\n\n'
+    return s
+#--------------------------------------------------------------------------------
+  def genClassIDFun(self,godClass,scopeName='') :
+    s = ''
+    if godClass['attrs'].has_key('id') :                                        # then we know that it is an event class
+      if (not scopeName) :                                                       # we are inside the class (declaration)
+        s  = '  // Retrieve pointer to class definition structure\n'
+        s += '  virtual const CLID& clID() const;\n'
+        s += '  static const CLID& classID();\n'
+      else :                                                                     # we are outside the class (definition)
+        s  = 'inline const CLID& %s::clID() const\n{\n' % scopeName 
+        s += '  return %s::classID();\n}\n\n' % scopeName                        
+        s += 'inline const CLID& %s::classID()\n{\n' % scopeName 
+        s += '  return CLID_%s;\n}\n' % scopeName
+    return s                                                                    
+#--------------------------------------------------------------------------------
+  def genKeyedContainerTypedef(self,godClass):
+    s = ''
+    #if godClass['attrs']['keyedContTypeDef'] == 'FALSE': return s
+    if godClass['attrs'].has_key('id') or self.gKeyedContainerTypedef:
+      classname =  godClass['attrs']['name']
+      self.addInclude('KeyedContainer')
+      s += '// Definition of Keyed Container for %s\n' % classname
+      s += 'typedef KeyedContainer<%s, Containers::HashMap> %s;' \
+           % (classname, self.genClassnamePlurial(classname))
+    return s
+#--------------------------------------------------------------------------------
+  def genTemplateContainerTypedefs(self, godClass):
+    s = ''
+    godAtt = godClass['attrs']
+    if godAtt['templateVector'] == 'TRUE':
+      s += '// Definition of vector container type for %s\n' % godAtt['name']
+      s += 'template <class TYPE> class ObjectVector;\n'
+      s += 'typedef ObjectVector<%s> %sVector;\n\n' % (godAtt['name'], godAtt['name'])
+    if godAtt['templateList'] == 'TRUE':
+      s += '// Definition of all list container types for %s\n' % godAtt['name']
+      s += 'template <class TYPE> class ObjectList;\n'
+      s += 'typedef ObjectList<%s> %sList;\n\n' % (godAtt['name'], godAtt['name'])
+    return s
+#--------------------------------------------------------------------------------
+  def genStreamer(self, godClass, className=''):
+    s = ''
+    if not className and godClass['attrs']['serializers'] == 'TRUE':
+      if godClass.has_key('method'):
+        for met in godClass['method']:
+          metAtt = met['attrs']
+          metName = metAtt['name']
+          if metName in ('operator<<','fillStream'):
+            ret = ''
+            if metAtt.has_key('type')  :
+              ret = self.tools.genReturnFromStrg(metAtt['type'],self.generatedTypedefs,godClass['attrs']['name'])
+            elif met.has_key('return') :
+              ret = self.tools.genReturnFromElem(met['return'],self.generatedTypedefs,godClass['attrs']['name'])
+            if metName == 'operator<<' and ret == 'std::ostream&' : self.genOStream = 0
+            if metName == 'fillStream' and ret == 'std::ostream&' : self.genFillStream = 0
+    else :
+      className += '::'
+    if not self.isEventClass and self.genOStream:
+      if className :
+        s += 'inline '
+        indent = ''
+      else         :
+        s += '  /// Operator overloading for stringoutput\n  friend '
+        indent = 2*' '
+      s += 'std::ostream& operator<< (std::ostream& str,\n' 
+      s += '                                 %sconst %s& obj)' % ( indent, godClass['attrs']['name'])
+      if className : s += '\n{\n  return obj.fillStream(str);\n}\n\n'
+      else         : s += ';\n\n'
+    if self.genFillStream:
+      if className : s += 'inline '
+      else : s += '  /// Fill the ASCII output stream\n  virtual '
+      s += 'std::ostream& %sfillStream(std::ostream& s) const' % className
+      if not className : s += ';\n'
+      else:
+        s += '\n{\n'
+        if godClass.has_key('attribute'):
+          for att in godClass['attribute']:
+            attAtt = att['attrs']
+            if attAtt['type'] == 'bool':
+              s += "  char l_%s = (m_%s) ? 'T' : 'F';\n" % (attAtt['name'], attAtt['name'])
+        if godClass.has_key('base'):
+          for b in godClass['base']:
+            if b['attrs']['name'].split('<')[0] not in ('ContainedObject', 'DataObject', 'KeyedObject'):
+              s += '  %s::fillStream(s);\n' % b['attrs']['name']
+        if godClass.has_key('attribute'):
+          s += '  s << "{ "'
+          for att in godClass['attribute']:
+            attAtt = att['attrs']
+            if attAtt['type'][:5] == 'std::' and 'Kernel/SerializeStl' not in self.include:
+              self.include.append('Kernel/SerializeStl')
+            if s[-1] == '"' : s += ' << "%s :\t" ' % attAtt['name']
+            else            : s += '\n            << "%s :\t" ' % attAtt['name']
+            if   attAtt['type'] == 'bool'   : s += '<< l_'
+            elif attAtt['type'] == 'double' : s += '<< (float)m_'
+            else                            : s += '<< m_'
+            s += attAtt['name'] + ' << std::endl'
+          s += ' << " }";\n'
+        s += '  return s;\n'
+        s += '}\n\n'
+    return s
+#--------------------------------------------------------------------------------
+  def doit(self,package,godClasses,outputDir,lname,isDictHeader=0):
+
+    dictext = ''
+    if isDictHeader : dictext = '_dict'
+
+    for godClass in godClasses:
+
+      self.reset(package,godClass)
+      self.genClassExcludes(godClass)
+      self.parseClassImport(godClass)
+
+      classDict = package.dict
+      classname = godClass['attrs']['name']
+
+      fileName = '%s%s.h' % (classname, dictext)
+
+      print '    File %s' % fileName.ljust(lname),
+
+      classDict['dictFriend']                   = ''
+      if isDictHeader : classDict['dictFriend'] = '  friend class %s_dict;\n' % classname
+      classDict['classname']                    = classname
+      classDict['classID']                      = self.genClassID(godClass)
+      classDict['classVersion']                 = self.genClassVersion(godClass)
+      classDict['locations']                    = self.genLocations(godClass)
+      classDict['desc']                         = self.genDesc(godClass)
+      classDict['author']                       = godClass['attrs']['author']
+      classDict['today']                        = time.ctime()
+      classDict['inheritance']                  = self.genInheritance(godClass)
+      classDict['keyedContainerTypedef']        = self.genKeyedContainerTypedef(godClass)
+      classDict['templateContainerTypedefs']    = self.genTemplateContainerTypedefs(godClass)
+      classDict['constructorDecls']             = self.genConstructors(godClass)
+      classDict['destructorDecl']               = self.genDestructors(godClass)
+      classDict['classIDDecl']                  = self.genClassIDFun(godClass)
+      for modifier in ['public','protected','private']:
+        classDict[modifier+'Typedefs']          = self.genTypedefs(modifier,godClass)
+        classDict[modifier+'Attributes']        = self.genAttributes(modifier,godClass)
+        classDict[modifier+'BitfieldEnums']     = self.bitfieldEnums[modifier]
+        classDict[modifier+'Enums']             = self.genEnums(modifier,godClass)
+        classDict[modifier+'MethodDecls']       = self.genMethods(modifier,godClass)
+        classDict[modifier+'MethodDefs']        = self.genMethods(modifier,godClass,classname)
+      classDict['streamerDecl']                 = self.genStreamer(godClass)
+      classDict['streamerDef']                  = self.genStreamer(godClass,classname)
+      classDict['getSetMethodDecls']            = self.genGetSetMethods(godClass)
+      classDict['constructorDefs']              = self.genConstructors(godClass,classname)
+      classDict['destructorDef']                = self.genDestructors(godClass,classname)
+      classDict['classIDDef']                   = self.genClassIDFun(godClass,classname)
+      classDict['getSetMethodDefs']             = self.genGetSetMethods(godClass,classname)
+
+      classDict['includes']                     = self.genIncludes()
+      classDict['forwardDecls']                 = self.genForwardDecls()
+      classDict['forwardIncludes']              = self.genForwardIncludes()
+
+      g = gparser.gparser()
+      g.parse(self.godRoot+'templates/header.tpl',classDict)
+
+      file = open(outputDir+os.sep+fileName,'w')
+      file.write(g.stream)
+      file.close()
+
+      print ' - Done'
+      
+#================================================================================
+#import xparser
+#if __name__ == '__main__':
+#  x = xparser.xparser('xml_files/Event.xml','xml_files/GODsClassDB.xml')
+#  x.parse()
+#  g = genClasses(x.gdd,x.cdb)
+#  g.doit()

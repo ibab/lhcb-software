@@ -1,5 +1,5 @@
 $(dest)${NAME}.obj2doth : ${FULLNAME} 
 	@echo Producing Header files from ${FULLNAME}
 	@if !(test -d $(dest)); then mkdir $(dest); fi 
-	@cd $(dest); $(GAUDIOBJDESCROOT)/$(tag)/$(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -x $(GAUDIOBJDESCROOT)/xml_files/ ${FULLNAME}
+	@cd $(dest); python $(GAUDIOBJDESCROOT)/scripts/$(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -g src -r $(GAUDIOBJDESCROOT) ${FULLNAME}
 	@echo /dev/null > $@

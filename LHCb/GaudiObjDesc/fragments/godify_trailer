@@ -1,0 +1,11 @@
+ 
+clean :: ${CONSTITUENT}clean
+	@cd .
+
+${CONSTITUENT}clean ::
+	$(cleanup_echo) Removing GOD files
+	-$(cleanup_silent) rm *.godify
+
+	
+
+ 

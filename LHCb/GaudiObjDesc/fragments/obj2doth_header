@@ -1,5 +1,5 @@
 
-parsetool     = GODWriteCppHeader.exe
+parsetool     = godII.py
 dest          = ../Event/
 dtdfile       = ../$(xmlsrc)/gdd.dtd 
 
@@ -11,5 +11,3 @@ ${CONSTITUENT} :: $(dtdfile) ${OBJS}
 $(dtdfile) : $(GAUDIOBJDESCROOT)/xml_files/gdd.dtd
 	@echo "Copying global DTD to current package"
 	@cp $(GAUDIOBJDESCROOT)/xml_files/gdd.dtd $(dtdfile)
-
-

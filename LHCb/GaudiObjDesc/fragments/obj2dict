@@ -1,6 +1,5 @@
 $(dest)${NAME}.obj2dict :  ${FULLNAME}
-	@echo Producing Dictionary from ${FULLNAME}
+	@echo Producing Dictionary files from ${FULLNAME}
 	@if !(test -d $(dest)); then mkdir $(dest); fi 
-	@cd $(dest); $(GAUDIOBJDESCROOT)/$(tag)/$(headertool) -d $(GODflags) -x $(GAUDIOBJDESCROOT)/xml_files/ ${FULLNAME}
-	@cd $(dest); $(GAUDIOBJDESCROOT)/$(tag)/$(dicttool) $(GODflags) $(${CONSTITUENT}_GODflags) -x $(GAUDIOBJDESCROOT)/xml_files/ ${FULLNAME}
+	@cd $(dest); python $(GAUDIOBJDESCROOT)/scripts/$(parsetool) $(GODflags) $(${CONSTITUENT}_GODflags) -g dct -r $(GAUDIOBJDESCROOT) ${FULLNAME}
 	@echo /dev/null > $@

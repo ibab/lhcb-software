@@ -1,9 +1,8 @@
 
-parsetool     = godII.py
-dest          = ../dict/
-dtdfile       = ../$(xmlsrc)/gdd.dtd 
+parsetool = godII.py
+dtdfile   = ../$(xmlsrc)/gdd.dtd
 
-${CONSTITUENT}_output = $(dest)
+${CONSTITUENT}_output = 
 
 ${CONSTITUENT} :: $(dtdfile) ${OBJS}
 	@echo "-----> ${CONSTITUENT} ok"

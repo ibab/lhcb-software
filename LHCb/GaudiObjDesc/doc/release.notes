@@ -2,6 +2,23 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
  
+===============================GaudiObjDesc v7r0============================
+!20041205 - Stefan 
+- package rewritten in python
+- new features:
+  - explicit constructors (attribute 'explicit' (TRUE|FALSE) in <constructor>)
+  - printing of objects on MsgStream
+  - set,addTo,removeFrom methods also with relation type pointer as argument
+    (before only SmartRef<T>)
+  - set/get methods of bitfields with self defined types (att 'type' in <bitfield>)
+  - better alignment of produced code
+- backward compatible to cpp version of GOD
+- new cmt fragment 'godify' for generating headers and dictionaries 
+  (old fragments will also work)
+- some options are not used anymore (deprication warnings are printed) and will
+  be removed in a future version
+- new script genGODsClassDB.py for generating the class database used by GOD
+
 ===============================GaudiObjDesc v6r3p1==========================
 !20041117 - Stefan Roiser
 - fixed char* handling (has to be done through Xerces tools)
