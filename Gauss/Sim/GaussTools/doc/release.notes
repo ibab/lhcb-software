@@ -5,8 +5,9 @@
 ! Purpose       : G4 actions, and some miscealenous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v8r5 2003-09-25 ======================
 ! 2003-09-22 - Vanya BELYAEV
-  - cmt/requirements     - increase the version to v8r5 
+ - cmt/requirements     - increase the version to v8r5 
  - few fixes for unfinalized or undeleted tools.
    polishing of reference counting techniques.
    Now ALL tools have proper reference counters 
