@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v4r1 2003-04-15 =========================
 ! 2003-04-01 - Chris Jones
  - Various bug fixes and optimisations for speed
 
