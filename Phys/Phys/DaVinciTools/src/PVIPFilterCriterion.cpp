@@ -1,4 +1,4 @@
-// $Id: PVIPFilterCriterion.cpp,v 1.2 2004-07-08 10:14:26 pkoppenb Exp $
+// $Id: PVIPFilterCriterion.cpp,v 1.3 2004-07-09 13:23:51 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -44,8 +44,9 @@ PVIPFilterCriterion::PVIPFilterCriterion( const std::string& type,
 //=============================================================================
 StatusCode PVIPFilterCriterion::initialize() {
 
+  StatusCode sc = GaudiTool::initialize() ;
   debug() << ">>>   PVIPFilterCriterion::initialize() " << endreq;
-  StatusCode sc = service( "EventDataSvc", m_EDS, true );
+  sc = service( "EventDataSvc", m_EDS, true );
   if( sc.isFailure() ) {
     err() << " Unable to retrieve EventDataSvc " << endreq;
     return sc;

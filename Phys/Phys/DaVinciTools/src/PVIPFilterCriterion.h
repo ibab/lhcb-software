@@ -1,4 +1,4 @@
-// $Id: PVIPFilterCriterion.h,v 1.2 2004-07-08 10:14:26 pkoppenb Exp $
+// $Id: PVIPFilterCriterion.h,v 1.3 2004-07-09 13:23:51 pkoppenb Exp $
 #ifndef PVIPFILTERCRITERION_H 
 #define PVIPFILTERCRITERION_H 1
 
@@ -44,6 +44,8 @@ public:
 
   /// Test if impact parameter filter is satisfied.
   inline bool operator()( const Particle* const & part );
+
+  StatusCode finalize(){return GaudiTool::finalize () ;};
 
 private:
   

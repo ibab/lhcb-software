@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.106 2004-07-09 13:23:50 pkoppenb Exp $
+! $Id: release.notes,v 1.107 2004-07-09 13:27:08 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
@@ -6,9 +6,12 @@
   - src/PVIPFilterCriterion.*
     . Finalize cleanly
   - src/ChangePID.*
-    . DVAlgorithm that changes the PID of a particle and puts into
-      another location. Works for single (from protoparticle)
-      and composite particles (from vertex)
+    . DVAlgorithm that copies a particle into
+      another location and changes its PID. Works for single (from protoparticle)
+      and composite particles (from vertex). In the former case 
+      the energy is recalculated. Never apply this algorithm on particles
+      created by a mass-constrained vertex fitter (obviously).
+      Note that it is forbidden to change the PID of an existing particle.
     
 ! 2004-07-08 - P. Koppenburg
   - src/ChargedParticleMaker.*

@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.32 2004-07-08 16:46:25 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.33 2004-07-09 13:23:51 pkoppenb Exp $
 // Include files 
 
 
@@ -79,7 +79,7 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_ALGORITHM( Particle2VertexWithIPS );
   DECLARE_ALGORITHM( PreLoadParticles );
   DECLARE_ALGORITHM( PreDV );
-  //  DECLARE_ALGORITHM( ChangePID );
+  DECLARE_ALGORITHM( ChangePID );
   
 }
 
