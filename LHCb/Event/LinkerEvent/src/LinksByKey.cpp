@@ -1,4 +1,4 @@
-// $Id: LinksByKey.cpp,v 1.3 2004-01-26 14:04:48 ocallot Exp $
+// $Id: LinksByKey.cpp,v 1.4 2004-05-18 11:44:18 ocallot Exp $
 // Include files 
 
 #include "GaudiKernel/IRegistry.h"
@@ -172,18 +172,20 @@ int LinksByKey::firstSource ( LinkReference& reference,
 //=========================================================================
 int LinksByKey::nextSource ( LinkReference& reference, 
     std::vector<std::pair<int,int> >::const_iterator& iter ) {
-  LinkReference temp;
+  LinkReference* temp;
   int refNum = reference.nextIndex();  // next entry
   while ( iter != m_keyIndex.end() ) {
     if ( 0 > refNum ) refNum = (*iter).second;  // first of this iter
     while( 0 <= refNum ) {
-      temp = m_linkReference[ refNum ];
-      if ( temp.linkID()    == reference.linkID() &&
-           temp.objectKey() == reference.objectKey() ) {
-        reference = temp;              // keep track of where we stopped
-        return (*iter).first;
+      temp = &m_linkReference[ refNum ];
+      if ( temp->linkID()    == reference.linkID() &&
+           temp->objectKey() == reference.objectKey() ) {
+        reference = *temp;              // keep track of where we stopped
+        int key = (*iter).first;
+        if ( 0 > temp->nextIndex() ) iter++; // If last for entry, go to next
+        return key;
       }
-      refNum = temp.nextIndex();
+      refNum = temp->nextIndex();
     }
     iter++;
   }
