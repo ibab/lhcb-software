@@ -1,4 +1,4 @@
-//$Id: ConditionsDBGate.cpp,v 1.4 2001-12-16 15:22:05 andreav Exp $
+//$Id: ConditionsDBGate.cpp,v 1.5 2001-12-17 21:23:13 andreav Exp $
 #include <string>
 #include <unistd.h>
 #include <sys/param.h>
@@ -180,7 +180,7 @@ ConditionsDBGate::readCondDBObject      ( ITime&              refValidSince,
   log << MSG::VERBOSE 
       << "In absTime = [" << refValidSince.absoluteTime()
       << ","   << refValidTill.absoluteTime()
-      << "] :" << endl << data << endreq;
+      << "] :" << std::endl << data << endreq;
   return StatusCode::SUCCESS;
 
 }

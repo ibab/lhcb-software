@@ -1,8 +1,6 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.8 2001-12-16 15:58:24 andreav Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.9 2001-12-17 21:23:13 andreav Exp $
 #include <string>
 #include <stdio.h>
-#include <unistd.h>
-#include <sys/param.h>
 
 #include "ConditionsDBCnvSvc.h"
 #include "ConditionsDBGate.h"
@@ -58,6 +56,7 @@ StatusCode ConditionsDBCnvSvc::initialize()
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::INFO << "Specific initialization starting" << endreq;
 
+#ifdef __linux__
   // Create the ConditionsDBGate as a private service of ConditionsDBCnvSvc
   log << MSG::DEBUG << "Creating ConditionsDBGate" << endreq;
   m_conditionsDBGate = new ConditionsDBGate( "ConditionsDBGate",
@@ -70,6 +69,7 @@ StatusCode ConditionsDBCnvSvc::initialize()
     log << MSG::ERROR << "Could not initialize ConditionsDBGate" << endreq;
     return sc;
   }
+#endif
 
   // Locate the Detector Data Service
   IDataProviderSvc* pDDS = 0;
@@ -166,9 +166,11 @@ StatusCode ConditionsDBCnvSvc::finalize()
 {
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Finalizing" << endreq;
+#ifdef __linux__
   m_conditionsDBGate->finalize();
   delete m_conditionsDBGate;
   m_conditionsDBGate = 0;
+#endif
   return ConversionSvc::finalize();
 }
 
@@ -449,8 +451,12 @@ ConditionsDBCnvSvc::createConditionData( DataObject*&         refpObject,
   std::string stringData;
   TimePoint since;
   TimePoint till;
+#ifdef __linux__
   StatusCode status = m_conditionsDBGate->readCondDBObject
     ( since, till, stringData, folderName, tagName, time );
+#else
+  StatusCode status = StatusCode::FAILURE;
+#endif
   if ( !status.isSuccess() ) {
     log << MSG::ERROR << "Could not read CondDBObject data" << endreq;
     return status;
@@ -462,8 +468,12 @@ ConditionsDBCnvSvc::createConditionData( DataObject*&         refpObject,
   log << MSG::DEBUG 
       << "Read string storage type in the folder description" << endreq;
   std::string description;
+#ifdef __linux__
   status = m_conditionsDBGate->readCondDBFolder( description, 
 						 folderName );
+#else
+  status = StatusCode::FAILURE;
+#endif
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Could not read folder description in the CondDB" << endreq;
@@ -480,7 +490,8 @@ ConditionsDBCnvSvc::createConditionData( DataObject*&         refpObject,
       << "Delegate address creation to the persistency service" << endreq;
   log << MSG::DEBUG << "Creating an address of type " 
       << (int)theType << " for class " << classID << endreq;
-  log << MSG::VERBOSE << "String data is:" << endl << stringData << endreq;
+  log << MSG::VERBOSE << "String data is:" << std::endl 
+      << stringData << endreq;
   IOpaqueAddress* tmpAddress;
   const std::string par[2] = { stringData, entryName};
   status = addressCreator()->createAddress
@@ -559,8 +570,12 @@ ConditionsDBCnvSvc::updateConditionData( DataObject*          pObject,
   log << MSG::DEBUG 
       << "Read string storage type in the folder description" << endreq;
   std::string description;
+#ifdef __linux__
   status = m_conditionsDBGate->readCondDBFolder( description, 
 						 folderName );
+#else
+  status = StatusCode::FAILURE;
+#endif
   if ( !status.isSuccess() ) {
     log << MSG::ERROR 
 	<< "Could not read folder description in the CondDB" << endreq;
@@ -584,8 +599,12 @@ ConditionsDBCnvSvc::updateConditionData( DataObject*          pObject,
   std::string stringData;
   TimePoint since;
   TimePoint till;
+#ifdef __linux__
   status = m_conditionsDBGate->readCondDBObject
     ( since, till, stringData, folderName, tagName, time );
+#else
+  status = StatusCode::FAILURE;
+#endif
   if ( !status.isSuccess() ) {
     log << MSG::ERROR << "Could not read CondDBObject data" << endreq;
     return status;
@@ -597,7 +616,8 @@ ConditionsDBCnvSvc::updateConditionData( DataObject*          pObject,
       << "Delegate address creation to the persistency service" << endreq;
   log << MSG::DEBUG << "Creating an address of type " 
       << (int)theType << " for class " << classID << endreq;
-  log << MSG::VERBOSE << "String data is:" << endl << stringData << endreq;
+  log << MSG::VERBOSE << "String data is:" << std::endl 
+      << stringData << endreq;
   IOpaqueAddress* tmpAddress;
   const std::string par[2] = { stringData, entryName };
   status = addressCreator()->createAddress

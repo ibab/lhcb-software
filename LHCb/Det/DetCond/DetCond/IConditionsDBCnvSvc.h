@@ -1,4 +1,4 @@
-//$Id: IConditionsDBCnvSvc.h,v 1.5 2001-12-16 15:19:39 andreav Exp $
+//$Id: IConditionsDBCnvSvc.h,v 1.6 2001-12-17 21:22:46 andreav Exp $
 #ifndef DETCOND_ICONDITIONSDBCNVSVC_H
 #define DETCOND_ICONDITIONSDBCNVSVC_H 1
 
@@ -8,8 +8,8 @@
 // External constants
 #include "GaudiKernel/ClassID.h"
 
-// Type definitions
-#include "ConditionsDB/CondDBKey.h"
+// Type definition
+#include "DetCond/CondDBKey.h"
 
 // IConditionsDBCnvSvc service ID (interface id, major version, minor version) 
 static const InterfaceID IID_IConditionsDBCnvSvc ("IConditionsDBCnvSvc", 1, 0);

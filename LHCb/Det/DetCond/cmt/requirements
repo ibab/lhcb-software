@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2001-12-17 16:00:26 andreav Exp $
+# $Id: requirements,v 1.11 2001-12-17 21:22:07 andreav Exp $
 package DetCond
 version v2r0
 
@@ -20,7 +20,7 @@ include_dirs $(DETCONDROOT)
 
 # Build a component library (only on Linux)
 macro DetCond_sources "component/*.cpp" \
-      WIN32 ""
+      WIN32 "component/ConditionsDBCnvSvc.cpp"
 library DetCond $(DetCond_sources)
 
 ignore_pattern package_stamps
@@ -32,7 +32,9 @@ private
 
 apply_pattern package_Cshlibflags
 apply_pattern package_Lshlibflags
-macro_append DetCond_shlibflags "$(GaudiKernel_linkopts) $(CONDDB_linkopts)"
+macro_append DetCond_shlibflags " $(GaudiKernel_linkopts)"
+macro_append DetCond_shlibflags " $(CONDDB_linkopts)" \
+  WIN32 ""
 
 
 

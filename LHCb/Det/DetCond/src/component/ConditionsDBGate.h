@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/DetCond/src/component/ConditionsDBGate.h,v 1.1.1.1 2001-09-14 15:07:21 andreav Exp $
+//$Id: ConditionsDBGate.h,v 1.2 2001-12-17 21:23:13 andreav Exp $
 #ifndef DETCOND_CONDITIONSDBGATE_H
 #define DETCOND_CONDITIONSDBGATE_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiKernel/Service.h"
 
 // Type definition
-#include "ConditionsDB/CondDBKey.h"
+#include "DetCond/CondDBKey.h"
 
 // Forward and external declarations
 class ConditionsDBCnvSvc;
