@@ -33,8 +33,12 @@ else
   setenv LHCBDBASE $LHCBSOFT/SICB/dbase/$1
 endif
 #   
-
+set Bversion = "v16r4"
+#
 set MODE = $CMTCONFIG
+
+setenv MYJOBROOT ~/newmycmt/Rec/Brunel/$Bversion
+#setenv MYJOBROOT $LHCb_release_area/BRUNEL/BRUNEL_$Bversion/Rec/Brunel/$Bversion
 if ($?LS_SUBCWD) then 
 # in BATCH, WORKDIR is set by the system
 # in BATCH, location of executable has to be given explicitly
@@ -50,6 +54,7 @@ else
 endif
 
 # == set the program environment
+source $LHCb_release_area/BrunelEnv/$Bversion/cmt/setup.csh
 source $MYJOBROOT/cmt/setup.csh -tag=$CMTDEB
 
 # Go to working directory

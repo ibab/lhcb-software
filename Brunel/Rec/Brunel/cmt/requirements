@@ -1,150 +1,87 @@
 package Brunel
-version v15r4
+version v16r4
 
 branches doc cmt job options
 
-ignore_pattern package_stamps
+#-- Gaudi libraries (version v12r3 fixed by LHCbEnv)
+use GaudiSys	v*
+use HbookCnv	v*
+use GaudiRootDb v*
 
-# Set the default paths for Brunel options and SICBDST data cards.
-set BRUNELOPTS ${BRUNELROOT}/options
-set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
+#-- LHCb libraries (version v11r4 fixed by BrunelEnv)
+use LHCb	v*
+use SICBSys	v*	SICB
 
-# Next line to force static build to go into LinuxStatic directory
-#ignore_pattern   package_tag
+#-- Database
+use XmlDDDB	v14r3	Det
 
-#---CMT and Gaudi policy
-use GaudiPolicy  v5r5
-
-# External libraries - Gaudi v10r1
-use ExternalLibs   	v3r6
-use AIDA           	v2r2
-use CLHEP          	v17r10p1
-use HTL            	v13r10p1
-use NAGC           	v5r0
-use XERCES         	v16r0p1
-use CERNLIB        	v2001
-use ROOT		v2r303p0
-
-#---Gaudi libraries - Gaudi v10r4
-use GaudiKernel        v12r3
-use GaudiSvc           v8r4
-use GaudiAlg           v6r1
-use GaudiAud           v6r0
-use GaudiNagC          v7r0
-use GaudiDb            v8r1
-use GaudiRootDb        v9r0
-use HbookCnv           v12r0
-#use RootHistCnv        v8r0
-
-#---LHCb common libraries
-use GaudiConf    v6r5
-use BookKeeping  v1r1   Tools
-use LHCbKernel   v1r5   Kernel
-use Finclude     v13r0  SICB
-use Futio        v12r0  SICB
-
-# Detector description
-use DetDesc		v10r5	Det
-use XmlDDDB      	v14r3  	Det
-use CaloDet       	v5r2  	Det
-use CaloDetXmlCnv	v2r1  	Det
-use ITDet         	v1r2  	Det
-use MuonDet       	v4r2  	Det
-use OTDet         	v3r2  	Det
-use RichDet		v3r1	Det
-use VeloDet       	v8r1  	Det
-use Magnet        	v1r1  	Det
-
-# Event Model
-use EventSys     v12r10 Event
-
-# SicB event data persistency
-use SicbCnv      v17r3  SICB
-use RiSicbGeom   v3r0   SICB
-use CaloSicbCnv  v7r3   SICB
-use MuonSicbCnv  v6r6   SICB
-use RiSicbCnv    v5r2   SICB
-use VSicbCnv     v8r0   SICB
+#-- BrunelSys v16r4 packages
 
 # Brunel utilities
-use BrunelKernel v5r2   Rec
-use BrunelSicb   v4r0   Rec
-use BrunelAlgs   v1r6   Rec
-use KsReco       v1r2   Rec
+use BrunelKernel        v5r3	Rec
+use BrunelSicb          v4r0    Rec
+use BrunelAlgs          v1r7    Rec
+use KsReco              v1r3    Rec
 
 # L0 trigger
-use L0Calo              v6r3    L0
-use L0Muon              v6r2    L0
-use PuVeto              v5r1    L0
-use L0DU                v6r1    L0
+use L0Calo              v6r4    L0
+use L0Muon              v6r3    L0
+use PuVeto              v5r2    L0
+use L0DU                v6r2    L0
 
 # L1 trigger
-use L1VeloTrack         v3r4    L1
-use L1Decision          v1r3    L1
+use L1VeloTrack         v3r5    L1
+use L1Decision		v1r4	L1
 
 # Calorimeter
-use CaloKernel          v2r1    Calo
-use CaloInterfaces 	v2r3 	Calo
-use CaloUtils      	v4r3 	Calo
-use CaloMonitor         v1r2    Calo
-use CaloAssociators	v3r1	Calo
-use CaloDigit		v1r0	Calo
-use CaloReco		v1r1	Calo
+use CaloInterfaces      v2r4  	Calo
+use CaloUtils           v4r4  	Calo
+use CaloMonitor         v1r3  	Calo
+use CaloReco            v1r2  	Calo
+use CaloDigit           v1r1  	Calo
 
 # Velo
-use VeloKernel		v1r2	Velo
-use VeloAlgorithms	v2r4	Velo
-use VeloAssociators	v1r3	Velo
+use VeloAlgorithms      v2r5  	Velo
 
 # Inner Tracker
-use ITAlgorithms	v12r5  	IT
-use ITAssociators	v2r1	IT
-use ITCheckers		v1r1	IT
+use ITAlgorithms        v12r6 	IT
+use ITCheckers          v1r2  	IT
 
 # Outer Tracker
-use OTAlgorithms  	v12r1  	OT
-use OTAssociators  	v2r2  	OT
+use OTAlgorithms        v12r2 	OT
 
 # Tracking
-use TrKernel            v11r1   Tr
-use TrFitEvent          v3r4    Tr
-use VeloTrack           v4r3    Velo
-use TrAssociators       v3r3    Tr
-use LongTrack           v1r4    Tr
-use TrFitter            v3r5    Tr
-use TrExtrapolator      v2r3    Tr
-use TrTools             v2r2    Tr
-use Seeding	        v2r3    Tr
-use TrMatching          v2r4    Tr
-use TrCleanEx           v2r3    Tr
-use TrIntraPR		v2r2	Tr
-use UpstreamPR		v2r4	Tr
-use VeloTT		v1r4	Tr
-use TrCheck             v1r2    Tr
+use VeloTrack           v4r4  	Velo
+use TrCheck             v1r2  	Tr
+use LongTrack           v1r4  	Tr
+use TrFitter            v3r5  	Tr
+use TrExtrapolator      v2r4  	Tr
+use TrTools             v2r2  	Tr
+use Seeding             v2r4  	Tr 
+use TrMatching          v2r5  	Tr
+use TrCleanEx           v2r3  	Tr
+use TrIntraPR           v2r2  	Tr
+use UpstreamPR          v2r5  	Tr
+use VeloTT              v1r4  	Tr
 
 # Muon
-use MuonKernel          v2r1    Muon
-use MuonTools           v3r1    Muon
-use MuonAlgs		v3r0	Muon
-use MuonRec     	v2r3	Muon
-use MuonID      	v3r4	Muon
-use MuonAssociators	v1r0	Muon
+use MuonAlgs            v3r1    Muon
+use MuonRec             v2r3    Muon
+use MuonID              v3r4    Muon
 
 # Rich
-use RichKernel          v2r1    Rich
-use RichMonitor         v2r2    Rich
-use RichRecAlgs         v1r2    Rich
-use RichRecTools        v1r2    Rich
-use RichDetTools        v1r1    Rich
-use RichRecKernel       v1r1    Rich
-use RichRecEvent        v1r2    Rich
-use RichRecInterfaces	v1r1	Rich
+use RichMonitor         v2r3  	Rich
+use RichRecAlgs		v1r3  	Rich
+use RichRecTools	v1r3  	Rich
+use RichRecKernel	v1r1  	Rich
+use RichUtils		v2r1  	Rich
+use RichDetTools	v1r2  	Rich
+use RichRecEvent        v1r3  	Rich
+use RichRecInterfaces	v1r1  	Rich
 
 # SICBDST packages
-use Futil        v12r0  SICB
-use detdes       v19r0  SICB
-use recevt       v3r4   SICB
-use recrich      v7r3   SICB
+use recevt              v3r5  	SICB
+use recrich             v7r3  	SICB
 
 #
 #===== build Brunel =========================
@@ -159,7 +96,12 @@ macro_append Brunel_linkopts " "\
                 Linuxdbx     " -g -Wl,--start-group "
 
 #== Set the Brunel version = v*10000 + r*100 + p  ==
-macro_append fflags " -DBrunelVersion=150400 " \
-           VisualC  " /DBrunelVersion=150400 "
+macro_append fflags " -DBrunelVersion=160400 " \
+           VisualC  " /DBrunelVersion=160400 "
 
 apply_pattern application_path
+
+# Set the default paths for Brunel options and SICBDST data cards.
+set BRUNELOPTS ${BRUNELROOT}/options
+set SICBCARDS  ${BRUNELOPTS}/Brunel.cards
+
