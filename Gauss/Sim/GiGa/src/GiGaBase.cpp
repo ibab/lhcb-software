@@ -80,9 +80,7 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
 };
 ///
 GiGaBase::~GiGaBase()
-{
-  if( 0 != m_propMgr ) { delete m_propMgr ; m_propMgr = 0 ; } 
-}
+{ if( 0 != m_propMgr ) { delete m_propMgr ; m_propMgr = 0 ; } }
 ///
 StatusCode GiGaBase::initialize() 
 {

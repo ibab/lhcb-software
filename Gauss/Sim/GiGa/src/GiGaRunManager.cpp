@@ -358,12 +358,6 @@ StatusCode GiGaRunManager::initializeKernel()
   else
     { log << MSG::DEBUG   << " Geant4 Visualization Manager is NOT created " << endreq; }
   ////
-
-  std::cout << " check once more init=" << G4RunManager::geometryInitialized  << std::endl ; 
-  std::cout << " check once more usde=" << G4RunManager::userDetector         << std::endl ; 
-  std::cout << " check once more root=" << m_rootGeo                          << std::endl ; 
-  std::cout << " check once more cnvs=" << cnvSvc()                           << std::endl ; 
-
   Assert( ( PreInit == currentState  || Idle ==  currentState ) , Tag + " Wrong curent state (must be PreInit or Idle)" ) ; 
   Assert( ( G4RunManager::geometryInitialized || 
 	    ( 0 != G4RunManager::userDetector ) || ( 0 != m_rootGeo ) || ( 0 != cnvSvc() ) ) , 
@@ -374,11 +368,6 @@ StatusCode GiGaRunManager::initializeKernel()
 	  Tag + " It is not possible to initialize the CutOff!"     ) ; 
   ///
   if( 0 == m_g4UIsession ) { createUIsession() ; } 
-  ///
-  std::cout << " 2check once more init=" << G4RunManager::geometryInitialized  << std::endl ; 
-  std::cout << " 2check once more usde=" << G4RunManager::userDetector         << std::endl ; 
-  std::cout << " 2check once more root=" << m_rootGeo                          << std::endl ; 
-  std::cout << " 2check once more cnvs=" << cnvSvc()                           << std::endl ; 
   ///
   G4RunManager::Initialize();
   ///
@@ -789,18 +778,8 @@ void GiGaRunManager::InitializeGeometry()
   ///
   MsgStream log( msgSvc() , name()+"::initializeGeometry()" ) ; 
   ///
-  std::cout << " 3 check usde=" << G4RunManager::userDetector << std::endl; 
-  std::cout << " 3 check mroo=" << m_rootGeo                  << std::endl; 
-  std::cout << " 3 check cnvs=" << cnvSvc()                   << std::endl; 
-
-  ///
   Assert( 0 != G4RunManager::userDetector || 0 != m_rootGeo || 0 != cnvSvc() , 
 	  "::InitializeGeometry(), no any geometry souces are available!" );  
-
-  std::cout << " 4 check usde=" << G4RunManager::userDetector << std::endl; 
-  std::cout << " 4 check mroo=" << m_rootGeo                  << std::endl; 
-  std::cout << " 4 check cnvs=" << cnvSvc()                   << std::endl; 
-
   ///
   G4VPhysicalVolume* root = 0; 
   if      ( 0 != m_rootGeo                  ) 
@@ -810,18 +789,18 @@ void GiGaRunManager::InitializeGeometry()
     } 
   else if ( 0 != G4RunManager::userDetector )
     {
-      log << MSG::INFO << " Geometry will be constructed using " << objType( G4RunManager::userDetector ) << endreq;
+      log << MSG::INFO  << " Geometry will be constructed using " << objType( G4RunManager::userDetector ) << endreq;
       root = G4RunManager::userDetector->Construct() ;
+      log << MSG::DEBUG << " Geometry is      constructed using " << objType( G4RunManager::userDetector ) << endreq;
     }
   else if ( 0 != cnvSvc()                  )
     {
-      log << MSG::INFO << " Geometry will be converted using " << objType( cnvSvc() ) << endreq; 
+      log << MSG::INFO  << " Geometry will be converted using " << objType( cnvSvc() ) << endreq; 
       root = cnvSvc()->G4WorldPV(); 
+      log << MSG::DEBUG << " Geometry is      converted using " << objType( cnvSvc() ) << endreq; 
     }
   else   
-    {
-      log << MSG::FATAL << " There are NO ANY sources of Geometry information! "<< endreq; 
-    }
+    { log << MSG::FATAL << " There are NO ANY sources of Geometry information! "<< endreq; }
   //
   Assert( 0 != root , "::InitializeGeometry(): root is not created");
   ///

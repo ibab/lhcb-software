@@ -36,6 +36,8 @@
 #include "G4UnionSolid.hh"
 
 #include "G4VisAttributes.hh"
+#include "G4FieldManager.hh"
+#include "G4TransportationManager.hh"
 
 /// from GiGa 
 #include "GiGa/IGiGaSensDet.h"
@@ -80,6 +82,8 @@ GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          ,
   , m_worldY        ( 50. * m             )
   , m_worldZ        ( 50. * m             )
   ///
+  , m_worldMagField ( ""                  )
+  ///
   , m_SDs           ()
   , m_SDFs          ()
   , m_MFs           ()
@@ -98,7 +102,8 @@ GiGaGeomCnvSvc::GiGaGeomCnvSvc( const std::string&   ServiceName          ,
   declareProperty("YsizeOfWorldVolume"        , m_worldY        );
   declareProperty("XsizeOfWorldVolume"        , m_worldZ        );
   ///
-  /// declareProperty("GlobalMagneticField"       , m_magFieldName  );
+  declareProperty("WorldMagneticField"        , m_worldMagField );
+  ///
 };
 ///
 G4Material*    GiGaGeomCnvSvc::g4Material( const std::string& Name )
@@ -325,6 +330,27 @@ G4VPhysicalVolume* GiGaGeomCnvSvc::G4WorldPV()
   LV -> SetVisAttributes ( G4VisAttributes::Invisible );
   ///
   m_worldPV           = new G4PVPlacement( 0 , Hep3Vector() , m_worldNamePV , LV , 0 , false , 0 );
+  ///
+  /// create the magnetic field for world volume
+  if( !m_worldMagField.empty() )
+    {
+      ///
+      IGiGaMagField* mf = 0;
+      StatusCode sc = magField( m_worldMagField , mf );  
+      if( sc.isFailure() ) { Error("G4WorldPV:: could not construct Global Magnetic Field="+m_worldMagField, sc ) ; return 0 ; }  
+      if( 0 == mf        ) { Error("G4WorldPV:: could not construct Global Magnetic Field="+m_worldMagField, sc ) ; return 0 ; }  
+      ///
+      {
+        G4TransportationManager* trnspMgr = G4TransportationManager::GetTransportationManager() ;  /// ATTENTION !!!
+	if( 0 == trnspMgr  ) { Error("G4WorldPV:: could not locate G4TranspostationManager* object ") ; return 0 ; }         
+	G4FieldManager*          fieldMgr = trnspMgr->GetFieldManager();                           /// ATTENTION !!!
+	if( 0 == fieldMgr  ) { Error("G4WorldPV:: could not locate G4FieldManager* object "         ) ; return 0 ; }         
+	fieldMgr->SetDetectorField( mf );                                                           /// ATTENTION !!! 
+      }
+      ///
+      Print("G4WorlPV:: World Magnetic Field is set to be = "+ System::typeinfoName( typeid( *mf ) )+"/"+mf->name() );
+    }
+  else { Warning("G4WorldPV:: Global Magnetic Field is not requetsed to be loaded "); }
   ///
   return m_worldPV ; 
 }; 

@@ -131,7 +131,7 @@ class GiGaGeomCnvSvc:  virtual public  IGiGaGeomCnvSvc ,
   float                            m_worldY        ;
   float                            m_worldZ        ;
   ///
-
+  std::string                      m_worldMagField ; /// global magnetic field 
   ////
   SDobjects                        m_SDs           ; /// created sensitive detectors 
   SDfactories                      m_SDFs          ; /// factories for created sensitive detectors 
