@@ -1,20 +1,23 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaEventActionEmpty.h,v 1.3 2001-07-15 20:54:33 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef       GIGA_GiGaEventActionEmpty_H
 #define       GIGA_GiGaEventActionEmpty_H 1 
-
-
+/// ===========================================================================
 
 #include "GiGa/GiGaEventActionBase.h"
+template <class EA> 
+class GiGaEventActionFactory;
 
-template <class EA> class GiGaEventActionFactory;
-
-/** @class GiGaEventActionEmpty GiGaEventActionEmpty.h GiGaEventActionEmpty.h
-    
-    Example of "primitive" implementation of Event Action class
-    It is just empty!
- 
-    @author  Vanya Belyaev
-    @date    17/03/2001
+/** @class GiGaEventActionEmpty GiGaEventActionEmpty.h 
+ *    
+ *  Example of "primitive" implementation of Event Action class
+ *  It is just empty!
+ * 
+ *  @author  Vanya Belyaev
+ *  @date    17/03/2001
 */
 
 
@@ -39,16 +42,14 @@ class GiGaEventActionEmpty: virtual public GiGaEventActionBase
   /// 
  private:
   ///
-  GiGaEventActionEmpty()                                ; // no default constructor
-  GiGaEventActionEmpty( const GiGaEventActionEmpty& )            ; // no copy constructor 
-  GiGaEventActionEmpty& operator=( const GiGaEventActionEmpty& ) ; // no assignment 
+  GiGaEventActionEmpty() ; ///< no default constructor
+  GiGaEventActionEmpty( const GiGaEventActionEmpty& ) ; ///< no copy  
+  GiGaEventActionEmpty& operator=( const GiGaEventActionEmpty& ) ; ///< no = 
   ///
  private:
   ///
 };
-///
-///
 
-
-
-#endif  //    GIGA_GiGaEventActionEmpty_H
+/// ===========================================================================
+#endif  ///<  GIGA_GiGaEventActionEmpty_H
+/// ===========================================================================

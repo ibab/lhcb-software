@@ -1,7 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaStepAction.h,v 1.5 2001-07-15 20:53:57 ibelyaev Exp $ 
-
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// ===========================================================================
 #ifndef     GIGA_IGIGAStepACTION_H
 #define     GIGA_IGIGAStepACTION_H 1 
+/// ===========================================================================
 
 // STL 
 #include <string> 
@@ -14,15 +18,16 @@
 
 
 /** @class IGiGaStepAction IGiGaStepAction.h GiGa/IGiGaStepAction.h
+ *
+ *  Definition of "pseudo-abstract" pseudo-interface 
+ *                          for GiGa Stepping Action
+ *
+ *  @author  Vanya Belyaev
+ *  @date    21/02/2001
+ */
 
-    Definition of "pseudo-abstract" pseudo-interface for GiGa Stepping Action
-
-    @author  Vanya Belyaev
-    @date    21/02/2001
-*/
-
-class IGiGaStepAction: virtual public G4UserSteppingAction ,  /* "the main" class from Geant4      */ 
-                       virtual public IInterface              /* to allow easy Gaudi instantiation */
+class IGiGaStepAction: virtual public G4UserSteppingAction ,
+                       virtual public IInterface            
 {
   ///
  public:
@@ -42,4 +47,6 @@ class IGiGaStepAction: virtual public G4UserSteppingAction ,  /* "the main" clas
 };
 
 
-#endif  //  GIGA_IGIGAStepACTION_H
+/// ===========================================================================
+#endif  ///<  GIGA_IGIGAStepACTION_H
+/// ===========================================================================

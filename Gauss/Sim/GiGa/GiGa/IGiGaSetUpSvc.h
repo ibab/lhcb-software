@@ -1,5 +1,10 @@
 /// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/15 20:53:57  ibelyaev
+/// package restructurisation
+///
 /// ===========================================================================
 #ifndef GIGA_IGIGASETUPSVC_H
 #define GIGA_IGIGASETUPSVC_H
@@ -8,7 +13,9 @@
 #include  "GaudiKernel/Kernel.h"
 #include  "GaudiKernel/StatusCode.h"
 #include  "GaudiKernel/IService.h"
-// Forward declarations (from Geant4 ToolKit)
+/// GiGa 
+#include  "GiGa/IIDIGiGaSetUpSvc.h"
+/// Forward declarations (from Geant4)
 class       G4VUserDetectorConstruction   ;
 class       G4VUserPrimaryGeneratorAction ;
 class       G4VUserPhysicsList            ;
@@ -20,9 +27,6 @@ class       G4UserTrackingAction          ;
 class       G4VisManager                  ; 
 class       G4VPhysicalVolume             ; 
 
-/// Declaration of the interface ID ( interface id, major & minor versions) 
-static const InterfaceID IID_IGiGaSetUpSvc(212, 2 , 0); 
-   
 /** @class IGiGaSetUpSvc IGiGaSetUpSvc.h GiGa/IGiGaSetUpSvc.h
  *
  *  definition of abstract interface to Geant4 Service for 

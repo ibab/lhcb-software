@@ -1,16 +1,31 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/Lib/GiGaEventActionBase.cpp,v 1.3 2001-07-15 20:54:25 ibelyaev Exp $ 
-
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 // GiGa 
 #include "GiGa/GiGaEventActionBase.h"
 
+/** implementation fo class GiGaEventActionBase
+ * 
+ *  @author Vanya Belyaev 
+ */
 
-//////////////////////////////////////////////////////////////////////////////////////////
-GiGaEventActionBase::GiGaEventActionBase( const std::string& nick , ISvcLocator* svc )
+/// ===========================================================================
+/// ===========================================================================
+GiGaEventActionBase::GiGaEventActionBase( const std::string& nick , 
+                                          ISvcLocator* svc )
   : GiGaBase          ( nick , svc ) 
 {};
-/// virtual destructor ///////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// virtual destructor
+/// ===========================================================================
 GiGaEventActionBase::~GiGaEventActionBase(){};
-//////////////////////////////////////////////////////////////////////////////////////////
+
+
+/// ===========================================================================
+/// ===========================================================================
 StatusCode GiGaEventActionBase::initialize() 
 {
   StatusCode sc = GiGaBase::initialize() ; 
@@ -18,24 +33,35 @@ StatusCode GiGaEventActionBase::initialize()
   ///
   return StatusCode::SUCCESS;
 }; 
-/////////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 StatusCode GiGaEventActionBase::finalize() { return GiGaBase::finalize();  };
-/////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaEventActionBase::queryInterface( const InterfaceID& iid , void** ppI)
+
+/// ===========================================================================
+/// ===========================================================================
+StatusCode GiGaEventActionBase::queryInterface( const InterfaceID& iid , 
+                                                void** ppI)
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0; 
-  if   ( IGiGaEventAction::interfaceID() == iid ) { *ppI = static_cast<IGiGaEventAction*>        ( this ) ; } 
-  else                                            { return GiGaBase::queryInterface( iid , ppI ) ; } /// RETURN!!!
+  if   ( IGiGaEventAction::interfaceID() == iid ) 
+    { *ppI = static_cast<IGiGaEventAction*>        ( this ) ; } 
+  else { return GiGaBase::queryInterface( iid , ppI ) ; } /// RETURN!!!
   addRef();
   return StatusCode::SUCCESS;
 };
-//////////////////////////////////////////////////////////////////////////////////////////
-void GiGaEventActionBase::BeginOfEventAction ( const G4Event* /* event */ ) {};
-//////////////////////////////////////////////////////////////////////////////////////////
-void GiGaEventActionBase::EndOfEventAction   ( const G4Event* /* event */ ) {};
-//////////////////////////////////////////////////////////////////////////////////////////
 
+/// ===========================================================================
+/// ===========================================================================
+void GiGaEventActionBase::BeginOfEventAction ( const G4Event* /* event */ ) {};
+
+/// ===========================================================================
+/// ===========================================================================
+void GiGaEventActionBase::EndOfEventAction   ( const G4Event* /* event */ ) {};
+
+
+/// ===========================================================================
 
 
 

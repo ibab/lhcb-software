@@ -1,3 +1,8 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 // GiGa
@@ -25,20 +30,30 @@
 // local
 #include "GiGaPhysListFull.h"
 
+/** Implementation of class GiGaPhysListFull
+ *
+ *  @author Vanya Belyaev
+ */
 
-/// factory
-static const GiGaPhysListFactory<GiGaPhysListFull>             s_GiGaPhysListFullFactory;
-const       IGiGaPhysListFactory&    GiGaPhysListFullFactory = s_GiGaPhysListFullFactory;
-      
+/// ===========================================================================
+/// ===========================================================================
+static const GiGaPhysListFactory<GiGaPhysListFull>         s_Factory;
+const       IGiGaPhysListFactory&GiGaPhysListFullFactory = s_Factory;
 
-/// constructor 
-GiGaPhysListFull::GiGaPhysListFull( const std::string& nick , ISvcLocator* loc ) 
+/// ===========================================================================
+/// ===========================================================================
+GiGaPhysListFull::GiGaPhysListFull( const std::string& nick , 
+                                    ISvcLocator* loc ) 
   : GiGaPhysListBase( nick , loc )
 {};
-/// destructor 
+
+/// ===========================================================================
+/// ===========================================================================
 GiGaPhysListFull::~GiGaPhysListFull()
 {};
-//////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListFull::ConstructParticle()
 {
 
@@ -56,7 +71,9 @@ void GiGaPhysListFull::ConstructParticle()
   ConstructAllShortLiveds();
 
 };
-////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListFull::ConstructProcess()
 {
   AddTransportation();
@@ -64,9 +81,10 @@ void GiGaPhysListFull::ConstructProcess()
   ConstructEM();
   ConstructHad();
   ConstructGeneral();
-}
-;
-////////////////////////////////////////////////////////////////////////////////
+};
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListFull::SetCuts()
 {
   //  " G4VUserPhysicsList::SetCutsWithDefault" method sets 
@@ -75,9 +93,9 @@ void GiGaPhysListFull::SetCuts()
   SetVerboseLevel( 2 ) ;
   SetCutsWithDefault();   
 }
-///////////////////////////////////////////////////////////////////////////////
 
-
+/// ===========================================================================
+/// ===========================================================================
 
 #include "G4ComptonScattering.hh"
 #include "G4GammaConversion.hh"
@@ -97,6 +115,8 @@ void GiGaPhysListFull::SetCuts()
 
 
 
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListFull::ConstructEM()
 {
   theParticleIterator->reset();
@@ -128,7 +148,7 @@ void GiGaPhysListFull::ConstructEM()
       pmanager->AddProcess(theeminusIonisation);
       pmanager->AddProcess(theeminusBremsstrahlung);      
       // set ordering for AlongStepDoIt
-      pmanager->SetProcessOrdering(theeminusMultipleScattering, idxAlongStep,  1);
+      pmanager->SetProcessOrdering(theeminusMultipleScattering,idxAlongStep,1);
       pmanager->SetProcessOrdering(theeminusIonisation, idxAlongStep,  2);
       // set ordering for PostStepDoIt
       pmanager->SetProcessOrdering(theeminusMultipleScattering, idxPostStep, 1);
@@ -150,7 +170,7 @@ void GiGaPhysListFull::ConstructEM()
       // set ordering for AtRestDoIt
       pmanager->SetProcessOrderingToFirst(theeplusAnnihilation, idxAtRest);
       // set ordering for AlongStepDoIt
-      pmanager->SetProcessOrdering(theeplusMultipleScattering, idxAlongStep,  1);
+      pmanager->SetProcessOrdering(theeplusMultipleScattering,idxAlongStep,1);
       pmanager->SetProcessOrdering(theeplusIonisation, idxAlongStep,  2);
       // set ordering for PostStepDoIt
       pmanager->SetProcessOrdering(theeplusMultipleScattering, idxPostStep, 1);
@@ -212,8 +232,9 @@ void GiGaPhysListFull::ConstructEM()
 };
 
 
-
-// Hadron Processes
+/// ===========================================================================
+/// Hadron Processes
+/// ===========================================================================
 
 #include "G4HadronElasticProcess.hh"
 
@@ -243,10 +264,9 @@ void GiGaPhysListFull::ConstructEM()
 #include "G4OmegaMinusInelasticProcess.hh"
 #include "G4AntiOmegaMinusInelasticProcess.hh"
 
-// Low-energy Models
-
-
-// Low-energy Models
+/// ===========================================================================
+/// Low-energy Models
+/// ===========================================================================
 
 #include "G4LElastic.hh"
 
@@ -277,7 +297,9 @@ void GiGaPhysListFull::ConstructEM()
 #include "G4LEAntiOmegaMinusInelastic.hh"
 
 
-// High-energy Models
+/// ===========================================================================
+/// High-energy Models
+/// ===========================================================================
 
 #include "G4HEPionPlusInelastic.hh"
 #include "G4HEPionMinusInelastic.hh"
@@ -302,7 +324,9 @@ void GiGaPhysListFull::ConstructEM()
 #include "G4HEOmegaMinusInelastic.hh"
 #include "G4HEAntiOmegaMinusInelastic.hh"
 
-// Stopping processes
+/// ===========================================================================
+/// Stopping processes
+/// ===========================================================================
 
 #ifdef TRIUMF_STOP_PIMINUS
 #include "G4PionMinusAbsorptionAtRest.hh"
@@ -315,16 +339,19 @@ void GiGaPhysListFull::ConstructEM()
 #include "G4KaonMinusAbsorptionAtRest.hh"
 #endif
 
-//
-// ConstructHad()
-//
-// Makes discrete physics processes for the hadrons, at present limited
-// to those particles with GHEISHA interactions (INTRC > 0).
-// The processes are: Elastic scattering and Inelastic scattering.
-//
-// F.W.Jones  09-JUL-1998
-//
-
+/// ===========================================================================
+/** 
+    //
+    // ConstructHad()
+    //
+    // Makes discrete physics processes for the hadrons, at present limited
+    // to those particles with GHEISHA interactions (INTRC > 0).
+    // The processes are: Elastic scattering and Inelastic scattering.
+    //
+    // F.W.Jones  09-JUL-1998
+    //
+*/
+/// ===========================================================================
 void GiGaPhysListFull::ConstructHad()
 {
    G4HadronElasticProcess* theElasticProcess = 
@@ -653,6 +680,8 @@ void GiGaPhysListFull::ConstructHad()
 
 #include "G4Decay.hh"
 
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListFull::ConstructGeneral()
 {
   // Add Decay Process
@@ -669,50 +698,62 @@ void GiGaPhysListFull::ConstructGeneral()
     }
   }
 }
-///////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListFull::ConstructAllBosons()
 {
   // Construct all bosons
   G4BosonConstructor pConstructor;
   pConstructor.ConstructParticle();
 };
-///////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListFull::ConstructAllLeptons()
 {
   // Construct all leptons
   G4LeptonConstructor pConstructor;
   pConstructor.ConstructParticle();
 };
-///////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListFull::ConstructAllMesons()
 {
   //  Construct all mesons
   G4MesonConstructor pConstructor;
   pConstructor.ConstructParticle();
 };
-///////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListFull::ConstructAllBaryons()
 {
   //  Construct all barions
   G4BaryonConstructor pConstructor;
   pConstructor.ConstructParticle();
 };
-///////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListFull::ConstructAllIons()
 {
   //  Construct light ions
   G4IonConstructor pConstructor;
   pConstructor.ConstructParticle();  
 };
-///////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListFull::ConstructAllShortLiveds()
 {
   //  Construct  resonaces and quarks
   G4ShortLivedConstructor pConstructor;
   pConstructor.ConstructParticle();  
 };
-///////////////////////////////////////////////////////////////////////////////
 
+/// ===========================================================================
 
 
 

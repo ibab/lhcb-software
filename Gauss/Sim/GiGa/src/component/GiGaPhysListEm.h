@@ -1,23 +1,28 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef    GIGA_GiGaPhysListEM_H
 #define    GIGA_GiGaPhysListEM_H 1 
+/// ===========================================================================
 
+#include "GiGa/GiGaPhysListBase.h"
 
-#include "GiGa/GiGaPhysListBase.h" 
+template <class PL> 
+class GiGaPhysListFactory;
 
-
-template <class PL> class GiGaPhysListFactory;
-
-/** @class  GiGaPhysListEm        GiGaPhysListEm.h  GiGaPhysListEm.h
-    
-    "Real" implementation of "Physics List"                                            
-    it correspond("cut&paste") to novice example N02.
-    
-    In this example, all the so called 'electromagnetic processes' are
-    introduced for gamma, charged leptons, and charged hadrons (see the
-    method PhysicsList::ConstructEM()). 
-    
-    @author Vanya Belyaev
-*/
+/** @class  GiGaPhysListEm        GiGaPhysListEm.h  
+ *
+ *  "Real" implementation of "Physics List"         
+ *   it correspond("cut&paste") to novice example N02.
+ *   
+ *   In this example, all the so called 'electromagnetic processes' are
+ *  introduced for gamma, charged leptons, and charged hadrons (see the
+ *  method PhysicsList::ConstructEM()). 
+ *  
+ *   @author Vanya Belyaev
+ */
 
 
 class GiGaPhysListEm : public GiGaPhysListBase
@@ -57,7 +62,9 @@ private:
 };
 
 
-#endif     GIGA_GiGaPhysListEM_H
+/// ===========================================================================
+#endif   ///< GIGA_GiGaPhysListEM_H
+/// ===========================================================================
 
 
 

@@ -1,17 +1,28 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/Lib/GiGaStepActionBase.cpp,v 1.3 2001-07-15 20:54:26 ibelyaev Exp $ 
-
+/// ===========================================================================
+/// ===========================================================================
+/// ===========================================================================
 // GiGa
 #include "GiGa/GiGaStepActionBase.h"
-//
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-GiGaStepActionBase::GiGaStepActionBase( const std::string& nick , ISvcLocator* svc ) 
+/** implementation of class GiGaStepActionBase
+ *
+ *  @author Vanya Belyaev 
+ */
+
+/// ===========================================================================
+/// ===========================================================================
+GiGaStepActionBase::GiGaStepActionBase( const std::string& nick ,
+                                        ISvcLocator* svc ) 
   : G4UserSteppingAction() 
   , GiGaBase            ( nick     ,   svc     ) 
 { };
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 GiGaStepActionBase::~GiGaStepActionBase(){};
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 StatusCode GiGaStepActionBase::initialize() 
 {
   StatusCode sc = GiGaBase::initialize() ; 
@@ -19,20 +30,28 @@ StatusCode GiGaStepActionBase::initialize()
   ///
   return StatusCode::SUCCESS;
 }; 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 StatusCode GiGaStepActionBase::finalize() { return GiGaBase::finalize();  };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaStepActionBase::queryInterface( const InterfaceID& iid , void** ppI)
+
+/// ===========================================================================
+/// ===========================================================================
+StatusCode GiGaStepActionBase::queryInterface( const InterfaceID& iid , 
+                                               void** ppI)
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0; 
-  if  ( IGiGaStepAction::interfaceID() == iid ) { *ppI = static_cast<IGiGaStepAction*>        ( this ) ; } 
-  else                                          { return GiGaBase::queryInterface( iid , ppI ) ; } /// RETURN!!!
+  if  ( IGiGaStepAction::interfaceID() == iid ) 
+    { *ppI = static_cast<IGiGaStepAction*>        ( this ) ; } 
+  else { return GiGaBase::queryInterface( iid , ppI ) ; } /// RETURN!!!
   addRef();
   return StatusCode::SUCCESS;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-void GiGaStepActionBase::UserSteppingAction ( const G4Step* /* step */ ) {};
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/// ===========================================================================
+/// ===========================================================================
+void GiGaStepActionBase::UserSteppingAction ( const G4Step* /* step */ ) {};
+
+/// ===========================================================================
 

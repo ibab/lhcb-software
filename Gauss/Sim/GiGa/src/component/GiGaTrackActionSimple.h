@@ -1,4 +1,7 @@
 /// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
 /// ===========================================================================
 #ifndef       GIGA_GiGaTrackActionSimple_H
 #define       GIGA_GiGaTrackActionSimple_H 1 
@@ -15,17 +18,17 @@ class G4Track;
 class G4particleDefinition;
 ///
 
-/** @class GiGaTrackActionSimple GiGaTrackActionSimple.h GiGaTrackActionSimple.h
-    
-    Example of "simple" implementation of Tracking Action Class
-    It uses GiGaTrajectory, and thats why the results(trajectories) 
-    could be converted into Gaudi Transient Store.  
-    It is just "Simple"!
-    
- 
-    @author  Vanya Belyaev
-    @date    23/01/2001
-*/
+/** @class GiGaTrackActionSimple GiGaTrackActionSimple.h 
+ *
+ *  Example of "simple" implementation of Tracking Action Class
+ *  It uses GiGaTrajectory, and thats why the results(trajectories) 
+ *  could be converted into Gaudi Transient Store.  
+ *  It is just "Simple"!
+ *  
+ *
+ *  @author  Vanya Belyaev
+ *  @date    23/01/2001
+ */
 
 
 class GiGaTrackActionSimple: virtual public GiGaTrackActionBase

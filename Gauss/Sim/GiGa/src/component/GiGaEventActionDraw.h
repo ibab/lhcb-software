@@ -1,21 +1,25 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaEventActionDraw.h,v 1.3 2001-07-15 20:54:32 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef       GIGA_GiGaEventActionDraw_H
 #define       GIGA_GiGaEventActionDraw_H 1 
+/// ===========================================================================
 
 
 #include "GiGa/GiGaEventActionBase.h"
 
 template <class EA> class GiGaEventActionFactory;
 
-/** @class GiGaEventActionDraw GiGaEventActionDraw.h GiGaEventActionDraw.h
-    
-    Example of "primitive" implementation of Event Action class
-    It is just Draw!
- 
-    @author  Vanya Belyaev
-    @date    17/03/2001
-*/
-
+/** @class GiGaEventActionDraw GiGaEventActionDraw.h
+ *    
+ *  Example of "primitive" implementation of Event Action class
+ *  It is just Draw!
+ *   
+ *  @author  Vanya Belyaev
+ *  @date    17/03/2001
+ */
 
 class GiGaEventActionDraw: virtual public GiGaEventActionBase
 {
@@ -37,16 +41,14 @@ class GiGaEventActionDraw: virtual public GiGaEventActionBase
   /// 
  private:
   ///
-  GiGaEventActionDraw()                                ; // no default constructor
-  GiGaEventActionDraw( const GiGaEventActionDraw& )            ; // no copy constructor 
-  GiGaEventActionDraw& operator=( const GiGaEventActionDraw& ) ; // no assignment 
+  GiGaEventActionDraw(); ///< no default constructor
+  GiGaEventActionDraw( const GiGaEventActionDraw& ); ///< no copy  
+  GiGaEventActionDraw& operator=( const GiGaEventActionDraw& ) ; ///< no = 
   ///
  private:
   ///
 };
-///
-///
 
-
-
+/// ===========================================================================
 #endif  //    GIGA_GiGaEventActionDraw_H
+/// ===========================================================================

@@ -1,6 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaTrackAction.h,v 1.5 2001-07-15 20:53:58 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     GIGA_IGIGATrackACTION_H
 #define     GIGA_IGIGATrackACTION_H 1 
+/// ===========================================================================
 // STL 
 #include <string>
 // base classes from GaudiKernel  
@@ -13,18 +18,19 @@
 
 
 /** @class IGiGaTrackAction IGiGaTrackAction.h GiGa/IGiGaTrackAction.h
+ *
+ *  Definition of "pseudo-abstract" pseudo-interface 
+ *                          for GiGa Tracking Action
+ *
+ *  @author  Vanya Belyaev
+ *   @date    21/02/2001
+ */
 
-    Definition of "pseudo-abstract" pseudo-interface for GiGa Tracking Action
-
-    @author  Vanya Belyaev
-    @date    21/02/2001
-*/
-
-class IGiGaTrackAction: virtual public G4UserTrackingAction ,  /* "the main" class from Geant4      */ 
-                        virtual public IInterface              /* to allow easy Gaudi instantiation */
+class IGiGaTrackAction: virtual public G4UserTrackingAction , 
+                        virtual public IInterface             
 {
   ///
- public:
+public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID ()  { return IID_IGiGaTrackAction ; }
   ///
@@ -41,4 +47,6 @@ class IGiGaTrackAction: virtual public G4UserTrackingAction ,  /* "the main" cla
 };
 
 
-#endif  //  GIGA_IGIGATrackACTION_H
+/// ===========================================================================
+#endif  ///<  GIGA_IGIGATrackACTION_H
+/// ===========================================================================

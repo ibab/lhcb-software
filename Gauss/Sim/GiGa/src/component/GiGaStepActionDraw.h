@@ -1,8 +1,13 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/15 20:54:34  ibelyaev
+/// package restructurisation
+/// 
 /// ===========================================================================
 #ifndef       GIGA_GiGaStepActionDraw_H
-#define       GIGA_GiGaStepActionDraw_H 1 /
+#define       GIGA_GiGaStepActionDraw_H 1 
 /// ===========================================================================
 /// GiGa 
 #include "GiGa/GiGaStepActionBase.h"
@@ -11,14 +16,14 @@ template <class SA>
 class GiGaStepActionFactory;
 class G4Step;
 
-/** @class GiGaStepActionDraw GiGaStepActionDraw.h GiGaStepActionDraw.h
-    
-    Example of "primitive" implementation of Stepping action class
-    It performs visualization of steps!
- 
-    @author  Vanya Belyaev
-    @date    17/03/2001
-*/
+/** @class GiGaStepActionDraw GiGaStepActionDraw.h
+ *  
+ *  Example of "primitive" implementation of Stepping action class
+ *  It performs visualization of steps!
+ *
+ *  @author  Vanya Belyaev
+ *   @date    17/03/2001
+ */
 
 
 class GiGaStepActionDraw: virtual public GiGaStepActionBase

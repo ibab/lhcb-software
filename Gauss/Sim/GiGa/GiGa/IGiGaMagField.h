@@ -1,6 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaMagField.h,v 1.5 2001-07-15 20:53:56 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     GIGA_IGIGAMagField_H
 #define     GIGA_IGIGAMagField_H 1 
+/// ===========================================================================
 //
 #include <string>
 //
@@ -11,18 +16,19 @@
 #include "GiGa/IIDIGiGaMagField.h" 
 // 
 
-/** @class IGiGaMagField     IGiGaMagField.h GiGa/IGiGaMagField.h
-
-    definition of (pseudu)abstract (pseudo)interface to factory for Geant 4 Magnetic field class
-
-    @author Vanya Belyaev
-*/
+/** @class IGiGaMagField IGiGaMagField.h GiGa/IGiGaMagField.h
+ *
+ *  definition of (pseudo) abstract (pseudo) interface 
+ *  for Geant 4 Magnetic field class
+ *
+ *  @author Vanya Belyaev
+ */
 
 class IGiGaMagField: virtual public G4MagneticField , 
                      virtual public IInterface 
 {
   ///
- public:
+public:
   /// Retrieve interface ID
   static const InterfaceID&  interfaceID() { return IID_IGiGaMagField ; }
   ///
@@ -35,4 +41,6 @@ class IGiGaMagField: virtual public G4MagneticField ,
 };
 ///
 
-#endif      GIGA_IGIGAMagField_H
+/// ===========================================================================
+#endif   ///< GIGA_IGIGAMagField_H
+/// ===========================================================================

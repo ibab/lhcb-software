@@ -1,6 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaTrackActionBase.h,v 1.6 2001-07-15 20:53:54 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     GIGA_GiGaTrackActionBase_H
 #define     GIGA_GiGaTrackActionBase_H 1 
+/// ===========================================================================
 
 // from STL
 #include <vector> 
@@ -11,13 +16,13 @@
 class G4Track;
 //
 
-/** @class GiGaTrackActionBase GiGaTrackActionBase.h GiGa/GiGaTrackActionBase.h
-    
-    Base class for implementation of concrete Tracking Action for GiGa
-    
-    @author  Vanya Belyaev
-    @date    23/01/2001
-*/
+/** @class GiGaTrackActionBase GiGaTrackActionBase.h
+ *  
+ *  Base class for implementation of concrete Tracking Action for GiGa
+ *  
+ *  @author  Vanya Belyaev
+ *  @date    23/01/2001
+ */
 
 class GiGaTrackActionBase: virtual public IGiGaTrackAction   ,
                            public  GiGaBase
@@ -30,7 +35,7 @@ protected:
   ///
 public:
   /// ident 
-  virtual const std::string&  name       () const { return GiGaBase::name() ; }; 
+  virtual const std::string&  name () const { return GiGaBase::name() ; }; 
   /// initialize 
   virtual StatusCode   initialize () ; 
   /// finalize 
@@ -45,16 +50,18 @@ public:
   ///
 private:
   ///
-  GiGaTrackActionBase ();                                       /// no default constructor 
-  GiGaTrackActionBase           ( const GiGaTrackActionBase& ); /// no copy constructor!
-  GiGaTrackActionBase& operator=( const GiGaTrackActionBase& ); /// no assignment! 
+  GiGaTrackActionBase (); ///< no default constructor 
+  GiGaTrackActionBase           ( const GiGaTrackActionBase& ); ///< no copy
+  GiGaTrackActionBase& operator=( const GiGaTrackActionBase& ); ///< no =
   ///
 private:
   ///
 };
 ///
  
-#endif   // GIGA_GiGaTrackActionBase_H 
+/// ===========================================================================
+#endif   ///< GIGA_GiGaTrackActionBase_H 
+/// ===========================================================================
 
 
 

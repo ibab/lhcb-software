@@ -1,6 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaMagFieldFactory.h,v 1.4 2001-07-15 20:53:56 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef    GIGA_IGIGAMagFieldFACTORY_H
 #define    GIGA_IGIGAMagFieldFACTORY_H 1 
+/// ===========================================================================
 //
 #include <string>
 // 
@@ -13,29 +18,45 @@ class IGiGaMagField;
 // 
 
 
-/** @class IGiGaMagFieldFactory     IGiGaMagFieldFactory.h GiGa/IGiGaMagFieldFactory.h
-
-    definition of (pseudu)abstract (pseudo)interface to factory for creation of Geant 4 Magnetic field class
-
-    @author Vanya Belyaev
-*/
+/** @class IGiGaMagFieldFactory IGiGaMagFieldFactory.h 
+ *
+ *  definition of (pseudu)abstract (pseudo)interface 
+ *  for factory for creation of Geant 4 Magnetic field class
+ *
+ *  @author Vanya Belyaev
+ */
 
 
 class IGiGaMagFieldFactory: virtual public IFactory
 {
   ///
- public:
-  ///
+public:
+  
+  /** retrieve the unique interface identifier 
+   *  @return the unique interface identifier 
+   */
   static const InterfaceID& interfaceID() { return IID_IGiGaMagFieldFactory; }
-  ///
-  virtual IGiGaMagField* instantiate(const std::string& name, ISvcLocator *svcloc) const = 0;
-  /// Access to the magnetic field type
+  
+  /** instantiate concrete Mag Field Object
+   *  @param name object name
+   *  @param svc  pointer to service locator 
+   *  @return pointer to concrete Mag Field object 
+   */
+  virtual IGiGaMagField* instantiate( const std::string& name , 
+                                      ISvcLocator*       loc  ) const = 0;
+  
+  /** access to the magnetic field type
+   *  @return the magnetic field type
+   */
   virtual const std::string& magFieldType()    const  = 0;
-  ///
+  
+  /// destructor 
   virtual ~IGiGaMagFieldFactory(){};
-  ///
+
 };
 
 
 
-#endif  // GIGA_IGIGAMagFieldFACTORY_H
+/// ===========================================================================
+#endif  ///< GIGA_IGIGAMagFieldFACTORY_H
+/// ===========================================================================

@@ -1,6 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaCnvSvc.h,v 1.9 2001-07-15 20:53:56 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef           GIGA_IGIGACNVSVC_H 
 #define           GIGA_IGIGACNVSVC_H  1 
+/// ===========================================================================
 // STL 
 #include <vector> 
 // GaudiKernel
@@ -31,22 +36,29 @@ public:
   {
     ///
   public:
-    ///
+    /// constructor
     Leaf( const std::string&  Path  = "" , const CLID&         Clid  = CLID() ,
           const std::string&  Addr1 = "" , const std::string&  Addr2 = ""     ) 
-      : m_path( Path ) , m_clid ( Clid ) , m_addr1 ( Addr1 ) , m_addr2 ( Addr2 )
-    {};
+      : m_path  ( Path  ) 
+      , m_clid  ( Clid  ) 
+      , m_addr1 ( Addr1 ) 
+      , m_addr2 ( Addr2 ) {};
+    /// virtual destructor 
     virtual ~Leaf(){};
-    ///
+    //
     inline const std::string& path () const { return m_path  ; } 
     inline const CLID&        clid () const { return m_clid  ; } 
     inline const std::string& addr1() const { return m_addr1 ; } 
     inline const std::string& addr2() const { return m_addr2 ; } 
-    ///
-    inline Leaf& setPath ( const std::string& Path ) { m_path  = Path; return *this ; } 
-    inline Leaf& setClid ( const CLID&        Clid ) { m_clid  = Clid; return *this ; } 
-    inline Leaf& setAddr1( const std::string& Addr ) { m_addr1 = Addr; return *this ; } 
-    inline Leaf& setAddr2( const std::string& Addr ) { m_addr2 = Addr; return *this ; } 
+    //
+    inline Leaf& setPath ( const std::string& Path ) 
+    { m_path  = Path; return *this ; } 
+    inline Leaf& setClid ( const CLID&        Clid ) 
+    { m_clid  = Clid; return *this ; } 
+    inline Leaf& setAddr1( const std::string& Addr ) 
+    { m_addr1 = Addr; return *this ; } 
+    inline Leaf& setAddr2( const std::string& Addr ) 
+    { m_addr2 = Addr; return *this ; } 
     ///
   private:
     ///
@@ -68,8 +80,6 @@ public:
   ///
   virtual IGiGaSetUpSvc*         setupSvc ()  = 0 ; 
   ///
-  virtual IParticlePropertySvc*  ppSvc    ()  = 0 ;  
-  ///
   virtual StatusCode             declareObject( const Leaf & ) = 0 ;
   ///
   virtual ~IGiGaCnvSvc(){}; 
@@ -77,7 +87,9 @@ public:
 };
 ///
 
-#endif     //     __GIGA_CONVERSION_IGIGACNVSVC_H__ 
+/// ===========================================================================
+#endif ///<  GIGA_IGIGACNVSVC_H 
+/// ===========================================================================
 
 
 

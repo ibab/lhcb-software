@@ -1,18 +1,34 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa
 #include "GiGa/GiGaPhysListBase.h"
 
-///////////////////////////////////////////////////////////////////////////////////////
+/** imeplementation of class GiGaPhysListBase
+ *
+ *  @author Vanya Belyaev 
+ */
+
+/// ===========================================================================
+/// ===========================================================================
 GiGaPhysListBase::GiGaPhysListBase( const std::string& nick , ISvcLocator* loc) 
   : GiGaBase          ( nick , loc  )
   , m_DefaultCutValue ( 2.0 * mm    )
 { declareProperty( "Cut" , m_DefaultCutValue ); };
-///////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 GiGaPhysListBase::~GiGaPhysListBase(){};
-///////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaPhysListBase::queryInterface( const InterfaceID& id , void** ppI) 
+
+/// ===========================================================================
+/// ===========================================================================
+StatusCode GiGaPhysListBase::queryInterface( const InterfaceID& id , 
+                                             void** ppI) 
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0 ; 
@@ -23,16 +39,20 @@ StatusCode GiGaPhysListBase::queryInterface( const InterfaceID& id , void** ppI)
   addRef();
   return StatusCode::SUCCESS; 
 };
-///////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 StatusCode GiGaPhysListBase::initialize ()  
 {
   /// initialize base class
   StatusCode sc = GiGaBase::initialize (); 
-  if( sc.isFailure() ){ return Error("Could not initialize GiGaBase class!", sc); }
+  if( sc.isFailure() )
+    { return Error("Could not initialize GiGaBase class!", sc); }
   MsgStream log( msgSvc() , name() ); 
   if( defCut() != GetDefaultCutValue() )
     {
-      log << MSG::DEBUG                << " Value of Default Cut is changed from " 
+      log << MSG::DEBUG                
+          << " Value of Default Cut is changed from " 
           << GetDefaultCutValue() / mm << " [mm] to " 
           << defCut()             / mm << " [mm] " << endreq; 
       SetDefaultCutValue( defCut() );        
@@ -42,8 +62,11 @@ StatusCode GiGaPhysListBase::initialize ()
   ///
   return StatusCode::SUCCESS;
 };
-///////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaPhysListBase::finalize   ()  { return GiGaBase::finalize   (); };
-///////////////////////////////////////////////////////////////////////////////////////
 
+/// ===========================================================================
+/// ===========================================================================
+StatusCode GiGaPhysListBase::finalize   ()  { return GiGaBase::finalize   (); };
+
+
+/// ===========================================================================
 

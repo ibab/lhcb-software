@@ -1,5 +1,11 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     GIGA_GIGABASE_H
 #define     GIGA_GIGABASE_H 1 
+/// ===========================================================================
 /// STL
 #include <string>
 #include <exception>
@@ -13,9 +19,8 @@ class IMessageSvc          ;
 class ISvcLocator          ;
 class IChronoStatSvc       ;
 class IDataProviderSvc     ;
-class IParticlePropertySvc ;  
-class IMagneticFieldSvc    ;
 class IIncidentSvc         ;
+class IObjManager          ;
 class IGiGaSvc             ; 
 class IGiGaSetUpSvc        ; 
 ///
@@ -26,14 +31,14 @@ class GaudiException       ;
 ///
 
 /** @class GiGaBase GiGaBase.h GiGa/GiGaBase.h
-    
-    Helper class for implementation of some GiGa classes. 
-    It allows an easy configuration of properties and services location  
-    Implement almost all virtual "technical functions".
-
-    @author  Vanya Belyaev
-    @date    23/01/2001
-*/
+ *    
+ *  Helper class for implementation of some GiGa classes. 
+ *  It allows an easy configuration of properties and services location  
+ *  Implement almost all virtual "technical functions".
+ *
+ *  @author  Vanya Belyaev
+ *  @date    23/01/2001
+ */
 
 class  GiGaBase: virtual public IProperty         , 
                  virtual public ISerialize        , 
@@ -41,9 +46,13 @@ class  GiGaBase: virtual public IProperty         ,
 {
   ///
 protected:
-  ///
-  /// Constructor and (virtual) Destructor 
+
+  /** standard constructor 
+   *  @param name object name 
+   *  @param loc  pointer to servcie locator 
+   */
   GiGaBase( const std::string& , ISvcLocator* );
+  /// virtual destructor 
   virtual ~GiGaBase();
   ///
 public:
@@ -51,96 +60,227 @@ public:
   virtual const std::string&     name    () const { return m_name     ; };
   ///
   /// Increment the reference count of Interface instance
-  virtual unsigned long          addRef  ()        { return ++m_count                   ; }; 
+  virtual unsigned long          addRef  () ;
   /// Release Interface instance
-  virtual unsigned long          release ()        { return 0 < m_count ? --m_count : 0 ; };
-  /// query interface 
-  virtual StatusCode queryInterface(const InterfaceID& , void** );
-  /// initialize object 
+  virtual unsigned long          release () ;
+
+  /** query the interface
+   *  @param id unique interface identifier 
+   *  @param I  placeholder for returning interface 
+   *  @return status code 
+   */ 
+  virtual StatusCode queryInterface( const InterfaceID& id , 
+                                     void**             I  ) ;
+  /** initialize the object
+   *  @return status code 
+   */
   virtual StatusCode initialize() ;
-  /// finalize the obkject 
+
+  /** finalize the object 
+   *  @return status code 
+   */
   virtual StatusCode finalize  () ;
+
   /// serialize object for reading 
   virtual StreamBuffer& serialize( StreamBuffer& S )       ;
+
   /// serialize object for writing 
   virtual StreamBuffer& serialize( StreamBuffer& S ) const ; 
-  /// Set the property by property
-  virtual StatusCode                    setProperty   ( const Property& p       )       ;
-  /// Set the property by istream
-  virtual StatusCode                    setProperty   ( std::istream& s         )       ;
-  /// Get the property by std::string
-  virtual StatusCode                    setProperty   ( const std::string&      , 
-                                                        const std::string&      )       ;
-  /// Get the property by property
-  virtual StatusCode                    getProperty   ( Property* p             ) const ;
-  /// Get the property by name
-  virtual const Property&               getProperty   ( const std::string& name ) const ; 
-  /// Get the property by std::string
-  virtual StatusCode                    getProperty   ( const std::string&      , 
-                                                              std::string&      ) const ;
-  /// Get list of properties
-  virtual const std::vector<Property*>& getProperties ( )                         const ;
-  ///  handle the incident 
-  virtual void handle( const Incident& ) ;
+
+  /** set the property by property
+   *  @param p property 
+   *  @return status code 
+   */
+  virtual StatusCode      setProperty   ( const Property& p       )       ;
+
+  /** set the property from input stream
+   *  @param s reference to input stream 
+   *  @return status code 
+   */
+  virtual StatusCode      setProperty   ( std::istream& s         )       ;
+  
+  /** set the property from the string 
+   *  @param n property name 
+   *  @param s string property 
+   *  @return status code 
+   */
+  virtual StatusCode      setProperty   ( const std::string& n    , 
+                                          const std::string& s    )       ;
+
+  /** get the property by property
+   *  @param p pointer to property 
+   *  @return status code 
+   */
+  virtual StatusCode      getProperty   ( Property* p             ) const ;
+  
+  /** get the property by name
+   *  @param name property name 
+   *  @return status code 
+   */
+  virtual const Property& getProperty   ( const std::string& name ) const ; 
+
+  /** get the property by std::string
+   *  @param s property name 
+   *  @param n property string 
+   *  @return status code 
+   */
+  virtual StatusCode      getProperty   ( const std::string& n    , 
+                                          std::string&       s    ) const ;
+
+  /** get list of all properties 
+   *  @return list of all proeprties 
+   */
+  virtual const std::vector<Property*>& getProperties ( )  const ;
+
+  /** handle the incident
+   *  @param i reference to the incident
+   */ 
+  virtual void handle( const Incident& i ) ;
   /// 
 protected:
   ///
-  ///  Accesors to needed services and Service Locator 
-  inline bool                   init      () const { return m_init      ; };
-  inline ISvcLocator*           svcLoc    () const { return m_svcLoc    ; };  
-  inline IGiGaSvc*              gigaSvc   () const { return m_gigaSvc   ; }; 
-  inline IGiGaSetUpSvc*         setupSvc  () const { return m_setupSvc  ; }; 
-  inline IMessageSvc*           msgSvc    () const { return m_msgSvc    ; };
-  inline IChronoStatSvc*        chronoSvc () const { return m_chronoSvc ; };
-  inline IDataProviderSvc*      evtSvc    () const { return m_evtSvc    ; }; 
-  inline IDataProviderSvc*      detSvc    () const { return m_detSvc    ; }; 
-  inline IIncidentSvc*          incSvc    () const { return m_incSvc    ; }; 
-  inline IParticlePropertySvc*  ppSvc     () const { return m_ppSvc     ; }; 
-  inline IMagneticFieldSvc*     mfSvc     () const { return m_mfSvc     ; };
-  inline PropertyMgr*           propMgr   () const { return m_propMgr   ; };  
+  
+  /** is the base is initialized properly?
+   *  @return true if it is initialized 
+   */
+  inline bool              init      () const { return m_init      ; };
+
+  /** accessor to service locator 
+   *  @return pointer to service locator 
+   */
+  inline ISvcLocator*      svcLoc    () const { return m_svcLoc    ; };  
+
+  /** accessor to GiGa Service 
+   *  @return pointer to GiGa Service 
+   */
+  inline IGiGaSvc*         gigaSvc   () const { return m_gigaSvc   ; }; 
+
+  /** accessor to GiGa SetUp Service 
+   *  @return pointer to GiGa SetUp Service 
+   */
+  inline IGiGaSetUpSvc*    setupSvc  () const { return m_setupSvc  ; };
+
+  /** accessor to Message Service 
+   *  @return pointer to Message Service 
+   */
+  inline IMessageSvc*      msgSvc    () const { return m_msgSvc    ; };
+
+  /** accessor to Chrono & Stat Service 
+   *  @return pointer to Chrono & Stat Service 
+   */
+  inline IChronoStatSvc*   chronoSvc () const { return m_chronoSvc ; };
+
+  /** accessor to Event Data  Service 
+   *  @return pointer to Event Data  Service 
+   */
+  inline IDataProviderSvc* evtSvc    () const { return m_evtSvc    ; }; 
+
+  /** accessor to Detector Data Service 
+   *  @return pointer to Detector Data  Service 
+   */
+  inline IDataProviderSvc* detSvc    () const { return m_detSvc    ; }; 
+
+  /** accessor to Incident  Service 
+   *  @return pointer to Message Service 
+   */
+  inline IIncidentSvc*     incSvc    () const { return m_incSvc    ; }; 
+
+  /** accessor to Property Manager 
+   *  @return pointer to Property Manager  
+   */
+  inline PropertyMgr*      propMgr   () const { return m_propMgr   ; };  
+
+  /** accessor to Object Manager
+   *  @return pointer to Object Manager  
+   */
+  inline IObjManager*      objMgr    () const { return m_objMgr    ; };  
   ///
 protected: 
-  ///
-  /// Methods for declaring properties to the property manager
+  
+  /** Methods for declaring properties to the property manager
+   *  @param name property name 
+   *  @param reference property reference 
+   *  @return status code
+   */
   template <class TYPE>
   StatusCode declareProperty( const std::string& name , TYPE& reference )
   {
     if( 0 != propMgr() ) { propMgr()->declareProperty( name , reference ); } 
     return 0 != propMgr() ? StatusCode::SUCCESS : StatusCode::FAILURE ; 
   };
+
+  /** set own properties 
+   *  @return status code
+   */
   StatusCode setProperties  () ; 
   ///
 protected:
-  ///  Print the error    message and return status code 
-  StatusCode Error     ( const std::string& Message , 
-			 const StatusCode & Status  = StatusCode::FAILURE ) const ;  
-  ///  Print the warning  message and return status code 
-  StatusCode Warning   ( const std::string& Message , 
-			 const StatusCode & Status  = StatusCode::FAILURE ) const ;  
-  ///  Print the warning  message and return status code 
-  StatusCode Print     ( const std::string& Message , 
-			 const StatusCode & Status  = StatusCode::FAILURE ,
-                         const MSG::Level & level   = MSG::INFO           ) const ;  
-  ///
+  
+  /** Print the error    message and return status code 
+   *  @param mgs message to be printed 
+   *  @param sc  status code 
+   *  @return status code 
+   */
+  StatusCode Error   ( const std::string& msg , 
+                       const StatusCode & sc  = StatusCode::FAILURE ) const ;  
+
+  /** Print the warning  message and return status code 
+   *  @param mgs message to be printed 
+   *  @param sc  status code 
+   *  @return status code 
+   */
+  StatusCode Warning ( const std::string& msg , 
+                       const StatusCode & sc  = StatusCode::FAILURE ) const ;
+ 
+  /** Print the message and return status code 
+   *  @param mgs message to be printed 
+   *  @param sc  status code 
+   *  @param lvl print level  
+   *  @return status code 
+   */
+  StatusCode Print   ( const std::string& msg , 
+                       const StatusCode & sc  = StatusCode::FAILURE ,
+                       const MSG::Level & lvl = MSG::INFO           ) const ;  
+  
+  /** re-throw the exception and print 
+   *  @param msg exception message  
+   *  @param exc previous exception 
+   *  @param lvl print level 
+   *  @param status code
+   *  @return status code 
+   */
   StatusCode Exception ( const std::string    & msg                        ,  
                          const GaudiException & exc                        , 
                          const MSG::Level     & lvl = MSG::FATAL           ,
                          const StatusCode     & sc  = StatusCode::FAILURE );
-  ///
+  
+  /** re-throw the exception and print 
+   *  @param msg exception message  
+   *  @param exc previous exception 
+   *  @param lvl print level 
+   *  @param status code
+   *  @return status code 
+   */
   StatusCode Exception ( const std::string    & msg                        ,  
                          const std::exception & exc                        , 
                          const MSG::Level     & lvl = MSG::FATAL           ,
                          const StatusCode     & sc  = StatusCode::FAILURE );
-  ///
+  
+  /** re-throw the exception and print 
+   *  @param msg exception message  
+   *  @param lvl print level 
+   *  @param status code
+   *  @return status code 
+   */
   StatusCode Exception ( const std::string    & msg                        ,  
                          const MSG::Level     & lvl = MSG::FATAL           ,
                          const StatusCode     & sc  = StatusCode::FAILURE );
-  ///
+
 private: 
   ///
-  GiGaBase();                              /// no default 
-  GiGaBase           ( const GiGaBase& );  /// no copy 
-  GiGaBase& operator=( const GiGaBase& );  /// no assignment 
+  GiGaBase();                              ///< no default 
+  GiGaBase           ( const GiGaBase& );  ///< no copy 
+  GiGaBase& operator=( const GiGaBase& );  ///< no assignment 
   ///
 private:
   ///
@@ -157,8 +297,7 @@ private:
   std::string           m_evtName    ; 
   std::string           m_detName    ; 
   std::string           m_incName    ; 
-  std::string           m_ppName     ; 
-  std::string           m_mfName     ; 
+  std::string           m_omName     ; 
   ///
   int                   m_output     ; 
   ///
@@ -169,8 +308,7 @@ private:
   IDataProviderSvc*     m_evtSvc     ; 
   IDataProviderSvc*     m_detSvc     ; 
   IIncidentSvc*         m_incSvc     ; 
-  IParticlePropertySvc* m_ppSvc      ;
-  IMagneticFieldSvc*    m_mfSvc      ;
+  IObjManager*          m_objMgr     ;
   ///
 };
 ///

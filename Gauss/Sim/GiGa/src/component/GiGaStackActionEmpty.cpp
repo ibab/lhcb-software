@@ -1,5 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaStackActionEmpty.cpp,v 1.3 2001-07-15 20:54:34 ibelyaev Exp $ 
-
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 //
 #include "G4Step.hh"
 //
@@ -9,35 +12,57 @@
 // local
 #include "GiGaStackActionEmpty.h"
 
+/** Implementation fo class GiGaStackActionEmpty
+ *  
+ * @author Vanya Belyaev 
+ */
 
+/// ===========================================================================
+/// ===========================================================================
+static const GiGaStackActionFactory<GiGaStackActionEmpty>         s_Factory;
+const       IGiGaStackActionFactory&GiGaStackActionEmptyFactory = s_Factory;
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-static const GiGaStackActionFactory<GiGaStackActionEmpty>                      s_GiGaStackActionEmptyFactory;
-const       IGiGaStackActionFactory&             GiGaStackActionEmptyFactory = s_GiGaStackActionEmptyFactory;
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
-GiGaStackActionEmpty::GiGaStackActionEmpty( const std::string& Name , ISvcLocator* Loc ) 
+/// ===========================================================================
+/// ===========================================================================
+GiGaStackActionEmpty::GiGaStackActionEmpty( const std::string& Name , 
+                                            ISvcLocator* Loc ) 
   : GiGaStackActionBase( Name , Loc ) 
 {};
-/////////////////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 GiGaStackActionEmpty::~GiGaStackActionEmpty(){};
-/////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaStackActionEmpty::initialize () { return GiGaStackActionBase::initialize() ; } ;
-/////////////////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaStackActionEmpty::finalize   () { return GiGaStackActionBase::initialize() ; } ;
-/////////////////////////////////////////////////////////////////////////////////////////////////
-G4ClassificationOfNewTrack GiGaStackActionEmpty::ClassifyNewTrack ( const G4Track* /* track */ )
-{ 
-  Print("ClassifyNewTrack method in invoked", StatusCode::SUCCESS , MSG::DEBUG ) ;
+
+/// ===========================================================================
+/// ===========================================================================
+StatusCode GiGaStackActionEmpty::initialize () 
+{ return GiGaStackActionBase::initialize() ; } ;
+
+/// ===========================================================================
+/// ===========================================================================
+StatusCode GiGaStackActionEmpty::finalize   () 
+{ return GiGaStackActionBase::initialize() ; } ;
+
+/// ===========================================================================
+/// ===========================================================================
+G4ClassificationOfNewTrack 
+GiGaStackActionEmpty::ClassifyNewTrack ( const G4Track* /* track */ )
+{
+  Print("ClassifyNewTrack method in invoked", 
+        StatusCode::SUCCESS , MSG::DEBUG ) ;
   return fUrgent; 
 };
-////////////////////////////////////////////////////////////////////////////////////////////////
-void GiGaStackActionEmpty::NewStage         ()
-{ Print("New Stage method in invoked"       , StatusCode::SUCCESS , MSG::DEBUG ) ; }; 
-////////////////////////////////////////////////////////////////////////////////////////////////
-void GiGaStackActionEmpty::PrepareNewEvent  ()
-{ Print("PrepareNewEvent method is invoked" , StatusCode::SUCCESS , MSG::DEBUG ) ; };
-////////////////////////////////////////////////////////////////////////////////////////////////
 
+/// ===========================================================================
+/// ===========================================================================
+void GiGaStackActionEmpty::NewStage         ()
+{ Print("New Stage method in invoked"       , 
+        StatusCode::SUCCESS , MSG::DEBUG ) ; }; 
+
+/// ===========================================================================
+/// ===========================================================================
+void GiGaStackActionEmpty::PrepareNewEvent  ()
+{  Print("PrepareNewEvent method is invoked" , 
+         StatusCode::SUCCESS , MSG::DEBUG ) ; };
+
+/// ===========================================================================

@@ -1,15 +1,16 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log:
+/// $Log: not supported by cvs2svn $#
 /// ===========================================================================
-#ifndef    GIGA_IIDIGiGaEventActionFACTORY_H
-#define    GIGA_IIDIGiGaEventActionFACTORY_H 1 
+#ifndef GIGA_IIDIGIGAGEOCNVSVC_H 
+#define GIGA_IIDIGIGAGEOCNVSVC_H 
 /// ===========================================================================
 
-// Declaration of the interface ID ( interface id, major & minor version) 
-static const InterfaceID IID_IGiGaEventActionFactory( 231 , 1 , 0 );
+
+/// Unique interface identifier 
+static const InterfaceID IID_IGiGaGeoCnvSvc ( 235 , 1 , 0 );
 
 /// ===========================================================================
-#endif  ///< GIGA_IIDIGiGaEventActionFACTORY_H
+#endif ///< GIGA_IIDIGIGAGEOCNVSVC_H
 /// ===========================================================================

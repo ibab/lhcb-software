@@ -1,5 +1,8 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/src/component/GiGaPhysListEm.cpp,v 1.5 2001-07-15 20:54:33 ibelyaev Exp $
-
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 // GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
 // GiGa
@@ -18,17 +21,28 @@
 // local
 #include "GiGaPhysListEm.h"
 
+/** implementation of class GiGaPhysListEm
+ *
+ *  @author Vanya Belyaev
+ */
 
-/// factory ///////////////////////////////////////////////////////////////////////
-static const GiGaPhysListFactory<GiGaPhysListEm>          s_GiGaPhysListEmFactory;
-const       IGiGaPhysListFactory& GiGaPhysListEmFactory = s_GiGaPhysListEmFactory;
-/// constructor ///////////////////////////////////////////////////////////////////
+/// ===========================================================================
+/// ===========================================================================
+static const GiGaPhysListFactory<GiGaPhysListEm>         s_Factory;
+const       IGiGaPhysListFactory&GiGaPhysListEmFactory = s_Factory;
+
+/// ===========================================================================
+/// ===========================================================================
 GiGaPhysListEm::GiGaPhysListEm( const std::string& nick , ISvcLocator* loc ) 
   : GiGaPhysListBase( nick , loc )
 {};
-/// destructor ////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 GiGaPhysListEm::~GiGaPhysListEm(){};
-///////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListEm::ConstructParticle()
 {
   // In this method, static member functions should be called
@@ -42,14 +56,18 @@ void GiGaPhysListEm::ConstructParticle()
   ConstructBaryons();
 
 };
-////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListEm::ConstructProcess()
 {
   AddTransportation();
   ConstructEM();
   ConstructGeneral();
 };
-////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListEm::SetCuts()
 {
   //G4VUserPhysicsList::SetCutsWithDefault method sets 
@@ -61,9 +79,9 @@ void GiGaPhysListEm::SetCuts()
   if (verboseLevel>0) { DumpCutValuesTable(); } 
 
 };
-///////////////////////////////////////////////////////////////////////////////
 
-
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListEm::ConstructBosons()
 {
   // pseudo-particles
@@ -76,6 +94,8 @@ void GiGaPhysListEm::ConstructBosons()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListEm::ConstructLeptons()
 {
   // leptons
@@ -93,8 +113,8 @@ void GiGaPhysListEm::ConstructLeptons()
   G4AntiNeutrinoMu::AntiNeutrinoMuDefinition();
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListEm::ConstructMesons()
 {
   //  mesons
@@ -112,12 +132,8 @@ void GiGaPhysListEm::ConstructMesons()
   G4KaonZeroShort::KaonZeroShortDefinition();
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
-
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListEm::ConstructBaryons()
 {
   //  barions
@@ -128,10 +144,9 @@ void GiGaPhysListEm::ConstructBaryons()
   G4AntiNeutron::AntiNeutronDefinition();
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
+/// ===========================================================================
+/// ===========================================================================
 #include "G4ComptonScattering.hh"
 #include "G4GammaConversion.hh"
 #include "G4PhotoElectricEffect.hh"
@@ -148,10 +163,10 @@ void GiGaPhysListEm::ConstructBaryons()
 
 #include "G4hIonisation.hh"
 
-////#include "G4UserSpecialCuts.hh"
+///< #include "G4UserSpecialCuts.hh"
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListEm::ConstructEM()
 {
   theParticleIterator->reset();
@@ -289,5 +304,4 @@ void GiGaPhysListEm::ConstructGeneral()
   }
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo....
-
+/// ===========================================================================

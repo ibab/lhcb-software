@@ -1,6 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaEventAction.h,v 1.3 2001-07-15 20:53:56 ibelyaev Exp $
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     GIGA_IGIGAEventACTION_H
 #define     GIGA_IGIGAEventACTION_H 1 
+/// ===========================================================================
 // STL 
 #include <string>
 // base classes from GaudiKernel  
@@ -9,19 +14,18 @@
 #include "G4UserEventAction.hh"
 // unique IID 
 #include "GiGa/IIDIGiGaEventAction.h"
-// 
 
 
 /** @class IGiGaEventAction IGiGaEventAction.h GiGa/IGiGaEventAction.h
-
-    Definition of "pseudo-abstract" pseudo-interface for GiGa Event Action
-
-    @author  Vanya Belyaev
-    @date    17/03/2001
+ *
+ *  Definition of "pseudo-abstract" pseudo-interface for GiGa Event Action
+ *
+ *  @author  Vanya Belyaev
+ *  @date    17/03/2001
 */
 
-class IGiGaEventAction: virtual public G4UserEventAction ,  /* "the main" class from Geant4      */ 
-                        virtual public IInterface           /* to allow easy Gaudi instantiation */
+class IGiGaEventAction: virtual public G4UserEventAction ,  
+                        virtual public IInterface          
 {
   ///
  public:
@@ -41,4 +45,6 @@ class IGiGaEventAction: virtual public G4UserEventAction ,  /* "the main" class 
 };
 
 
-#endif  //  GIGA_IGIGAEventACTION_H
+/// ===========================================================================
+#endif  ///<  GIGA_IGIGAEventACTION_H
+/// ===========================================================================

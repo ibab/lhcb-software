@@ -1,7 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaStepActionBase.h,v 1.6 2001-07-15 20:53:54 ibelyaev Exp $ 
-
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     GIGA_GiGaStepActionBase_H
 #define     GIGA_GiGaStepActionBase_H 1 
+/// ===========================================================================
 // STL
 #include <vector> 
 // GiGa
@@ -11,13 +15,13 @@
 class G4Step;
 //
 
-/** @class GiGaStepActionBase GiGaStepActionBase.h GiGa/GiGaStepActionBase.h
-    
-    Base class for implementation of concrete Steping Action for GiGa
-    
-    @author  Vanya Belyaev
-    @date    23/01/2001
-*/
+/** @class GiGaStepActionBase GiGaStepActionBase.h
+ *
+ *  Base class for implementation of concrete Steping Action for GiGa
+ *  
+ *  @author  Vanya Belyaev
+ *   @date    23/01/2001
+ */
 
 class GiGaStepActionBase: virtual public IGiGaStepAction   ,
                           public  GiGaBase
@@ -30,7 +34,7 @@ protected:
   ///
 public:
   /// ident 
-  virtual const std::string&  name       () const { return GiGaBase::name() ; }; 
+  virtual const std::string&  name () const { return GiGaBase::name() ; }; 
   /// initialize 
   virtual StatusCode          initialize () ; 
   /// finalize 
@@ -44,16 +48,18 @@ public:
   ///
 protected:
   ///
-  GiGaStepActionBase ();                                      /// no default constructor!
-  GiGaStepActionBase           ( const GiGaStepActionBase& ); /// no copy constructor!
-  GiGaStepActionBase& operator=( const GiGaStepActionBase& ); /// no assignment! 
+  GiGaStepActionBase ();///< no default constructor!
+  GiGaStepActionBase           ( const GiGaStepActionBase& ); ///< no copy 
+  GiGaStepActionBase& operator=( const GiGaStepActionBase& ); ///< no = 
   ///
 private:
   ///
 };
 ///
 
+/// ===========================================================================
 #endif   // GIGA_GiGaStepActionBase_H
+/// ===========================================================================
 
 
 

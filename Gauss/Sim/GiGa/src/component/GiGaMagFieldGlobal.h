@@ -1,18 +1,24 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef    GIGA_GIGAMagFieldGLOBAL_H
 #define    GIGA_GIGAMagFieldGLOBAL_H 1 
+/// ===========================================================================
 
 #include "GiGa/GiGaMagFieldBase.h"
 
-template <class MagField> class GiGaMagFieldFactory;
+template <class MagField> 
+class GiGaMagFieldFactory;
 
-
-/** @class GiGaMagFieldGlobal     GiGaMagFieldGlobal.h GiGa/GiGaMagFieldGlobal.h
-
-    Implemenation of "Global Magnetic Field" object.
-    It is just the delegation to IMagneticSvc 
-
-    @author Vanya Belyaev
-*/
+/** @class GiGaMagFieldGlobal GiGaMagFieldGlobal.h
+ *
+ *   Implemenation of "Global Magnetic Field" object.
+ *  It is just the delegation to IMagneticSvc 
+ *
+ *  @author Vanya Belyaev
+ */
 
 class GiGaMagFieldGlobal: public GiGaMagFieldBase 
 {
@@ -31,9 +37,9 @@ class GiGaMagFieldGlobal: public GiGaMagFieldBase
   ///
  private:
   ///
-  GiGaMagFieldGlobal           ()                            ; /// no default constructor! 
-  GiGaMagFieldGlobal           ( const GiGaMagFieldGlobal& ) ; /// no copy constructor!
-  GiGaMagFieldGlobal& operator=( const GiGaMagFieldGlobal& ) ; /// no assignment! 
+  GiGaMagFieldGlobal(); ///< no default constructor! 
+  GiGaMagFieldGlobal( const GiGaMagFieldGlobal& ) ; ///< no copy constructor!
+  GiGaMagFieldGlobal& operator=( const GiGaMagFieldGlobal& ) ; ///< no =  
   ///
 private:
   ///
@@ -44,5 +50,6 @@ private:
 
 
 
-
-#endif  // GIGA_GIGAMagFieldGLOBAL_H
+/// ===========================================================================
+#endif  ///< GIGA_GIGAMagFieldGLOBAL_H
+/// ===========================================================================

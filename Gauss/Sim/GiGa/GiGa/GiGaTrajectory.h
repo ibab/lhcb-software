@@ -1,5 +1,11 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef    GIGA_GIGATRAJECTORY_H
 #define    GIGA_GIGATRAJECTORY_H 1 
+/// ===========================================================================
 /// STL
 #include <vector>
 /// base "interface" class
@@ -14,14 +20,14 @@ class G4SteppingManager;
 ///
 
 /** @class GiGaTrajectory GiGaTrajectory.h GiGa/GiGaTrajectory.h
-
-    Customisation of "standard" G4Trajectory to incorporate TimeOfFlight
-    of the each point. Overwise conversion to MCParticle/MCVertex structure is impossible.  
-    
-    @author  Vanya Belyaev
-    @date    22/02/2001
+ *
+ *  Customisation of "standard" G4Trajectory to incorporate TimeOfFlight
+ *   of the each point. Overwise conversion to MCParticle/MCVertex 
+ *    structure is impossible.  
+ *  
+ *  @author  Vanya Belyaev
+ *  @date    22/02/2001
 */
-
 
 class GiGaTrajectory: public G4VTrajectory                    , 
                       public std::vector<GiGaTrajectoryPoint*>
@@ -41,14 +47,21 @@ public:
   {return ( &right == this );} 
   ///
   /// accessors - a'la Gaudi and a'la Geant4 
-  inline const int&                  trackID     () const { return m_trackID      ; } 
-  inline const int&                  GetTrackID  () const { return trackID ()     ; }
-  inline const int&                  parentID    () const { return m_parentID     ; }  
-  inline const int&                  GetParentID () const { return parentID()     ; }
-  inline const HepLorentzVector&     fourMomentum() const { return m_4vect        ; } 
-  inline const HepLorentzVector&     Get4Momentum() const { return fourMomentum() ; } 
+  inline const int&                  trackID     () const 
+  { return m_trackID      ; } 
+  inline const int&                  GetTrackID  () const 
+  { return trackID ()     ; }
+  inline const int&                  parentID    () const 
+  { return m_parentID     ; }  
+  inline const int&                  GetParentID () const 
+  { return parentID()     ; }
+  inline const HepLorentzVector&     fourMomentum() const 
+  { return m_4vect        ; } 
+  inline const HepLorentzVector&     Get4Momentum() const 
+  { return fourMomentum() ; } 
   /// 
-  inline const G4ParticleDefinition* partDef     () const { return m_partDef ; } 
+  inline const G4ParticleDefinition* partDef     () const 
+  { return m_partDef ; } 
   ///
   virtual        void ShowTrajectory  ()                 const ;
   virtual        void DrawTrajectory  ( G4int i_mode=0 ) const ;
@@ -76,7 +89,9 @@ private:
 #include "GiGa/GiGaTrajectory.icpp"
 ///
 
-#endif  // GIGA_GIGATRAJECTORY_H
+/// ===========================================================================
+#endif  ///< GIGA_GIGATRAJECTORY_H
+/// ===========================================================================
 
 
 

@@ -1,16 +1,22 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef       GIGA_GiGaPhysListBase_H
 #define       GIGA_GiGaPhysListBase_H 1 
+/// ===========================================================================
 /// base classes 
 #include "GiGa/IGiGaPhysList.h"
 #include "GiGa/GiGaBase.h"
 
-/** @class  GiGaPhysListBase             GiGaPhysListBase.h GiGa/GiGaPhysListBase.h
-    
-    "implementation" of basis "Physics List"                                            
-    it still has 3 pure abstract methods from G4VUserPhysicsList! 
-
-    @author Vanya Belyaev
-*/
+/** @class GiGaPhysListBase GiGaPhysListBase.h GiGa/GiGaPhysListBase.h
+ * 
+ *  "implementation" of basis "Physics List"     
+ *  it still has 3 pure abstract methods from G4VUserPhysicsList! 
+ *
+ *  @author Vanya Belyaev
+ */
 
 class GiGaPhysListBase: virtual public IGiGaPhysList   , 
                         public          GiGaBase
@@ -37,9 +43,9 @@ protected:
   ///
 private:
   ///
-  GiGaPhysListBase()                                     ; // no default constructor 
-  GiGaPhysListBase           ( const GiGaPhysListBase& ) ; // no copy
-  GiGaPhysListBase& operator=( const GiGaPhysListBase& ) ; // no assignment  
+  GiGaPhysListBase() ; ///< no default constructor 
+  GiGaPhysListBase           ( const GiGaPhysListBase& ) ; //< no copy
+  GiGaPhysListBase& operator=( const GiGaPhysListBase& ) ; //< no assignment  
   ///
 private:
   ///
@@ -48,7 +54,9 @@ private:
 };
 ///
  
-#endif    //  GIGA_GiGaPhysListBase_H
+/// ===========================================================================
+#endif    ///<  GIGA_GiGaPhysListBase_H
+/// ===========================================================================
 
 
 

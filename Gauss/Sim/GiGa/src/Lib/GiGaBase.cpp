@@ -1,6 +1,11 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $
+/// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.3  2001/07/15 20:54:25  ibelyaev
+/// package restructurisation
+///
+// ===========================================================================
 #define GIGA_GIGABASE_CPP 1 
 /// ===========================================================================
 /// includes 
@@ -17,6 +22,7 @@
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/IMagneticFieldSvc.h" 
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IObjManager.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
 ///  GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
@@ -30,7 +36,12 @@
 #include "GiGa/GiGaException.h"
 #include "GiGa/GiGaBase.h" 
 
-///
+/// ===========================================================================
+/** standard constructor 
+ *  @param name object name 
+ *  @param loc  pointer to servcie locator 
+ */
+/// ===========================================================================
 GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   /// reference count
   : m_count      ( 0                     ) 
@@ -48,8 +59,7 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   , m_evtName    ( "EventDataSvc"        )
   , m_detName    ( "DetectorDataSvc"     )
   , m_incName    ( "IncidentSvc"         ) 
-  , m_ppName     ( "ParticlePropertySvc" )
-  , m_mfName     ( "MagneticFieldSvc"    ) 
+  , m_omName     ( "ApplicationMgr"      ) 
   , m_output     ( MSG::NIL              ) 
   ///
   , m_gigaSvc    ( 0                     ) 
@@ -59,8 +69,7 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   , m_evtSvc     ( 0                     )
   , m_detSvc     ( 0                     ) 
   , m_incSvc     ( 0                     ) 
-  , m_ppSvc      ( 0                     ) 
-  , m_mfSvc      ( 0                     ) 
+  , m_objMgr     ( 0                     ) 
   ///
 {
   ///
@@ -77,17 +86,26 @@ GiGaBase::GiGaBase( const std::string& Name , ISvcLocator* svc )
   declareProperty( "EventDataProvider"         ,  m_evtName     );
   declareProperty( "DetectorDataProvider"      ,  m_detName     );
   declareProperty( "IncidentService"           ,  m_incName     );
-  declareProperty( "ParticlePropertyService"   ,  m_ppName      );
-  declareProperty( "MagneticFieldService"      ,  m_mfName      );
+  declareProperty( "ObjectManager"             ,  m_omName      );
   ///
 };
-///
+
+/// ===========================================================================
+/// destructor 
+/// ===========================================================================
 GiGaBase::~GiGaBase() 
 { 
   if( m_init         ) { finalize() ; } 
   if( 0 != m_propMgr ) { delete m_propMgr ; m_propMgr = 0 ; } 
 } 
-///
+
+/// ===========================================================================
+/** query the interface
+ *  @param id unique interface identifier 
+ *  @param I  placeholder for returning interface 
+ *  @return status code 
+ */ 
+/// ===========================================================================
 StatusCode GiGaBase::queryInterface(const InterfaceID& riid , void** ppI )
 {
   if ( 0 == ppI ) { return StatusCode::FAILURE; }
@@ -105,7 +123,22 @@ StatusCode GiGaBase::queryInterface(const InterfaceID& riid , void** ppI )
   addRef();
   return StatusCode::SUCCESS;
 };
-///
+
+/// ===========================================================================
+/// Increment the reference count of Interface instance
+/// ===========================================================================
+unsigned long GiGaBase::addRef() { return ++m_count ; };
+
+/// ===========================================================================
+/// Release Interface instance
+/// ===============================x============================================
+unsigned long GiGaBase::release () { return 0 < m_count ? --m_count : 0 ; };
+
+/// ===========================================================================
+/** initialize the object
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaBase::initialize() 
 {
   ///
@@ -116,8 +149,7 @@ StatusCode GiGaBase::initialize()
   if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc    = 0 ; } 
   if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc    = 0 ; } 
   if( 0 != incSvc    () ) { incSvc    ()->release() ; m_incSvc    = 0 ; } 
-  if( 0 != ppSvc     () ) { ppSvc     ()->release() ; m_ppSvc     = 0 ; } 
-  if( 0 != mfSvc     () ) { mfSvc     ()->release() ; m_mfSvc     = 0 ; } 
+  if( 0 != objMgr    () ) { objMgr    ()->release() ; m_objMgr    = 0 ; } 
   ///
   if( 0 == svcLoc()     ) 
     { throw GiGaException("GiGaBase::ini ISvcLocator* points to NULL!");}
@@ -207,41 +239,34 @@ StatusCode GiGaBase::initialize()
         { return Error("Could not locate IIncidentSvc="+ m_incName      ) ; }
       incSvc()->addRef() ; 
     }
-  else { Warning("Incident Service is not requested to be located"); }
+  else { Print("Incident Service is not requested to be located"); }
   ///
-  if( !m_ppName.empty() )
+  if( !m_omName.empty() )
     {
-      StatusCode sc = svcLoc()->service( m_ppName , m_ppSvc ); 
-      if( sc.isFailure   () )
-        { return Error("Couldn't locate IParticlePropertySvc="+ m_ppName , sc);}
-      if( 0 == ppSvc     () )
-        { return Error("Couldn't locate IParticlePropertySvc="+ m_ppName );}
-      ppSvc()->addRef() ; 
-    }
-  else { Warning("Particle Properties Service is not required to be located"); }
-  ///
-  if( !m_mfName.empty() )
-    {
-      StatusCode sc = svcLoc()->service( m_mfName , m_mfSvc ); 
+      StatusCode sc = svcLoc()->service( m_omName , m_objMgr ); 
       if( sc.isFailure   () ) 
-        { return Error("Could not locate IMagneticFieldSvc="+ m_mfName , sc );}
-      if( 0 == mfSvc     () )
-        { return Error("Could not locate IMagneticFieldSvc="+ m_mfName      );}
-      mfSvc()->addRef() ; 
+        { return Error("Could not locate IObjManager="+ m_omName , sc );}
+      if( 0 == objMgr    () )
+        { return Error("Could not locate IObjManager="+ m_omName      );}
+      objMgr()->addRef() ; 
     }
-  else { Warning("Magnetic Field Service is not required to be located"); }
+  else { Print("IObjManager is not required to be located"); }
   ///
   return StatusCode::SUCCESS ; 
 };
-///
+
+/// ===========================================================================
+/** finalize the object 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaBase::finalize()
 {
   ///
   if ( m_init )
     {
       /// reverse order !!!
-      if( 0 != mfSvc     () ) { mfSvc     ()->release() ; m_mfSvc     = 0 ; } 
-      if( 0 != ppSvc     () ) { ppSvc     ()->release() ; m_ppSvc     = 0 ; } 
+      if( 0 != objMgr    () ) { objMgr    ()->release() ; m_objMgr    = 0 ; }
       if( 0 != incSvc    () ) { incSvc    ()->release() ; m_incSvc    = 0 ; } 
       if( 0 != detSvc    () ) { detSvc    ()->release() ; m_detSvc    = 0 ; } 
       if( 0 != evtSvc    () ) { evtSvc    ()->release() ; m_evtSvc    = 0 ; } 
@@ -257,7 +282,12 @@ StatusCode GiGaBase::finalize()
   return StatusCode::SUCCESS;
   ///
 };
-///
+
+/// ===========================================================================
+/** set own properties 
+ *  @return status code
+ */
+/// ===========================================================================
 StatusCode GiGaBase::setProperties() 
 {
   ///
@@ -281,21 +311,43 @@ StatusCode GiGaBase::setProperties()
   ///
   return StatusCode::SUCCESS;
 };
-/// Print message and return status code ///
+
+/// ===========================================================================
+/** Print the error    message and return status code 
+ *  @param mgs message to be printed 
+ *  @param sc  status code 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaBase::Error( const std::string& Message , 
 			    const StatusCode & Status ) const 
 {
   Stat stat( chronoSvc() , name()+":Error" ); 
   return Print( Message , Status , MSG::ERROR ); 
 };  
-/// Print message and return status code ///
+
+/// ===========================================================================
+/** Print the warning  message and return status code 
+ *  @param mgs message to be printed 
+ *  @param sc  status code 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaBase::Warning( const std::string& Message , 
 			      const StatusCode & Status ) const 
 {
   Stat stat( chronoSvc() , name()+":Warning" ); 
   return  Print( Message , Status , MSG::WARNING );
-};  
-/// Print message and return status code ///
+};
+  
+/// ===========================================================================
+/** Print the message and return status code 
+ *  @param mgs message to be printed 
+ *  @param sc  status code 
+ *  @param lvl print level  
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaBase::Print( const std::string& Message , 
 			    const StatusCode & Status  , 
 			    const MSG::Level & level   ) const 
@@ -305,35 +357,143 @@ StatusCode GiGaBase::Print( const std::string& Message ,
       << " " <<Message << endreq ; 
   return  Status;
 };  
-///
+
+/// ===========================================================================
+/** re-throw the exception and print 
+ *  @param msg exception message  
+ *  @param exc previous exception 
+ *  @param lvl print level 
+ *  @param status code
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaBase::Exception ( const std::string    & msg ,  
+                                 const GaudiException & exc , 
+                                 const MSG::Level     & lvl ,
+                                 const StatusCode     & sc  )
+{
+  Stat stat( chronoSvc() , exc.tag() );
+  MsgStream log( msgSvc() , name() ); 
+  log << lvl << "GaudiException: catch and re-throw:" << msg << endreq ; 
+  throw   GiGaException( msg , exc , sc );
+  return  sc;
+};
+
+/// ===========================================================================
+/** re-throw the exception and print 
+ *  @param msg exception message  
+ *  @param exc previous exception 
+ *  @param lvl print level 
+ *  @param status code
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaBase::Exception ( const std::string    & msg ,  
+                                 const std::exception & exc , 
+                                 const MSG::Level     & lvl ,
+                                 const StatusCode     & sc  )
+{
+  Stat stat( chronoSvc() , "std::exception" );
+  MsgStream log( msgSvc() , name() ); 
+  log << lvl << "std::exception: catch and throw:" << msg << endreq ; 
+  throw   GiGaException( msg , sc );
+  return  sc;
+};
+
+/// ===========================================================================
+/** throw the exception and print 
+ *  @param msg exception message  
+ *  @param lvl print level 
+ *  @param status code
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaBase::Exception ( const std::string    & msg ,  
+                                 const MSG::Level     & lvl ,
+                                 const StatusCode     & sc  )
+{
+  Stat stat( chronoSvc() , "GiGaException" );
+  MsgStream log( msgSvc() , name() ); 
+  log << lvl << "GiGaException throw:" << msg << endreq ; 
+  throw   GiGaException( msg , sc );
+  return  sc;
+};
+
+/// ===========================================================================
+/** set the property by property
+ *  @param p property 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaBase::setProperty  ( const Property    & p ) 
 { return m_propMgr->setProperty( p ) ; };
-///
+
+/// ===========================================================================
+/** set the property from input stream
+ *  @param s reference to input stream 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaBase::setProperty  ( std::istream      & s )  
 { return m_propMgr->setProperty( s ) ; }
-///
+
+/// ===========================================================================
+/** set the property from the string 
+ *  @param n property name 
+ *  @param s string property 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaBase::setProperty  ( const std::string & n ,
-                                                       const std::string & v )
+                                    const std::string & v )
 { return m_propMgr->setProperty( n , v ) ; } ;
-///
+
+/// ===========================================================================
+/** get the property by property
+ *  @param p pointer to property 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaBase::getProperty  (       Property    * p ) const 
 { return m_propMgr->getProperty( p ) ; };
-///
+
+/// ===========================================================================
+/** get the property by name
+ *  @param name property name 
+ *  @return status code 
+ */
+/// ===========================================================================
 const Property& GiGaBase::getProperty  ( const std::string & N ) const 
 { return m_propMgr->getProperty( N ) ; };
-///
+
+/// =========================================================================== 
+/** get the property by std::string
+ *  @param s property name 
+ *  @param n property string 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaBase::getProperty  ( const std::string & n ,
                                     std::string & v ) const 
 { return m_propMgr->getProperty( n , v ) ; } ;
-///
+
+/// ===========================================================================
+/** get list of all properties 
+ *  @return list of all proeprties 
+ */
+/// ===========================================================================
 const std::vector<Property*>& GiGaBase::getProperties() const 
 { return m_propMgr->getProperties()  ; };   
 ///
+
+/// ===========================================================================
+/// serialize object for reading 
+/// ===========================================================================
 StreamBuffer& GiGaBase::serialize( StreamBuffer& S )       
 { 
   ///
   if( 0 == m_propMgr ) { m_propMgr = new PropertyMgr() ;} 
-  ///x
+  ///
   S >> m_name  
     >> m_gigaName 
     >> m_setupName
@@ -341,8 +501,7 @@ StreamBuffer& GiGaBase::serialize( StreamBuffer& S )
     >> m_evtName   
     >> m_detName    
     >> m_incName    
-    >> m_ppName    
-    >> m_mfName    
+    >> m_omName    
     >> m_output ; 
   ///
   m_init = false; 
@@ -350,6 +509,9 @@ StreamBuffer& GiGaBase::serialize( StreamBuffer& S )
   return S;       
 };  
 
+/// ===========================================================================
+/// serialize object for writing 
+/// ===========================================================================
 StreamBuffer& GiGaBase::serialize( StreamBuffer& S ) const 
 {
   return S << m_name  
@@ -359,17 +521,22 @@ StreamBuffer& GiGaBase::serialize( StreamBuffer& S ) const
            << m_evtName   
            << m_detName    
            << m_incName    
-           << m_ppName    
-           << m_mfName    
+           << m_omName    
            << m_output ;   
-}; 
+};
 
+/// ===========================================================================
+/** handle the incident
+ *  @param i reference to the incident
+ */
+/// ===========================================================================
 void  GiGaBase::handle( const Incident& incident ) 
 { 
   Print("Incident='"+incident.type()+"'" + 
         " \tsource='"+incident.source()+"'" ); 
 };
 
+/// ===========================================================================
 
 
 

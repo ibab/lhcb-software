@@ -1,18 +1,23 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaStackActionBase.h,v 1.6 2001-07-15 20:53:54 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// ===========================================================================
 #ifndef     GIGA_GiGaStackActionBase_H
 #define     GIGA_GiGaStackActionBase_H 1 
+/// ===========================================================================
 // base class 
 #include "GiGa/IGiGaStackAction.h" 
 #include "GiGa/GiGaBase.h" 
 //
 
-/** @class GiGaStackActionBase GiGaStackActionBase.h GiGa/GiGaStackActionBase.h
-    
-    Base class for implementation of concrete Stacking Action for GiGa
-    
-    @author  Vanya Belyaev
-    @date    23/01/2001
-*/
+/** @class GiGaStackActionBase GiGaStackActionBase.h
+ *    
+ *  Base class for implementation of concrete Stacking Action for GiGa
+ *  
+ *  @author  Vanya Belyaev
+ *  @date    23/01/2001
+ */
 
 class GiGaStackActionBase: virtual public IGiGaStackAction   ,
                            public  GiGaBase
@@ -95,16 +100,18 @@ public:
   ///
 private:
   ///
-  GiGaStackActionBase ()                                      ; /// no default constructor!                   
-  GiGaStackActionBase           ( const GiGaStackActionBase& ); /// no copy constructor!
-  GiGaStackActionBase& operator=( const GiGaStackActionBase& ); /// no assignment! 
+  GiGaStackActionBase () ; ///< no default constructor!                   
+  GiGaStackActionBase           ( const GiGaStackActionBase& ); ///< no copy
+  GiGaStackActionBase& operator=( const GiGaStackActionBase& ); ///< no = ! 
   ///
 private:
   ///
 };
 ///
 
-#endif   // GIGA_GiGaStackActionBase_H
+/// ===========================================================================
+#endif   ///< GIGA_GiGaStackActionBase_H
+/// ===========================================================================
 
 
 

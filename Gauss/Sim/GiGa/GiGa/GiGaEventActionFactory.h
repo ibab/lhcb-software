@@ -1,7 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaEventActionFactory.h,v 1.3 2001-07-15 20:53:53 ibelyaev Exp $
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef    GIGA_GiGaEventActionFACTORY_H
 #define    GIGA_GiGaEventActionFACTORY_H 1 
-
+/// ===========================================================================
 
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/System.h"
@@ -10,17 +14,15 @@
 #include "GaudiKernel/ISvcLocator.h"
 
 ///
-#include "GiGa/IGiGaEventActionFactory.h" 
+#include "GiGa/IGiGaEventActionFactory.h"
 
-
-/** @class GiGaEventActionFactory     GiGaEventActionFactory.h GiGa/GiGaEventActionFactory.h
-    
-    implementation of factory to create "Event Action" factory class
-    
-    @author Vanya Belyaev
-    @date   17/03/2001 
-*/
-
+/** @class GiGaEventActionFactory GiGaEventActionFactory.h 
+ *
+ *  implementation of factory to create "Event Action" factory class
+ *  
+ *  @author Vanya Belyaev
+ *  @date   17/03/2001 
+ */
 
 template <class ConcreteEA>
 class GiGaEventActionFactory: public IGiGaEventActionFactory
@@ -47,30 +49,35 @@ class GiGaEventActionFactory: public IGiGaEventActionFactory
   virtual const std::string& eventActionType  () const { return m_eaType ; };  
   virtual const std::string& ident            () const { return m_ident  ; };
   /// create the instance 
-  virtual IGiGaEventAction*    instantiate( const std::string& name, ISvcLocator *svcloc) const 
+  virtual IGiGaEventAction*    instantiate( const std::string& name, 
+                                            ISvcLocator *svcloc) const 
     { return new ConcreteEA(name, svcloc); }
   /// a little bit funny 
-  virtual IInterface* instantiate( IInterface* parent                          ) const 
-    {
-      ISvcLocator* loc = 
-        0 == parent                              ? Gaudi::svcLocator() : 
-        0 == dynamic_cast<ISvcLocator*> (parent) ? Gaudi::svcLocator() : dynamic_cast<ISvcLocator*>(parent);
-      return new ConcreteEA( eventActionType() , loc ); 
-    }
+  virtual IInterface* instantiate( IInterface* parent ) const 
+  {
+    ISvcLocator* loc = 
+      0 == parent                              ? Gaudi::svcLocator() : 
+      0 == dynamic_cast<ISvcLocator*> (parent) ? Gaudi::svcLocator() : 
+      dynamic_cast<ISvcLocator*>(parent);
+    return new ConcreteEA( eventActionType() , loc ); 
+  }
   ///
   virtual StatusCode queryInterface(const InterfaceID& riid, void** ppI) 
-    {
-      if( 0 == ppI ) { return StatusCode::FAILURE; } 
+  {
+    if( 0 == ppI ) { return StatusCode::FAILURE; } 
       ppI = 0 ; 
-      if      ( IID_IGiGaEventActionFactory == riid ) { *ppI = static_cast<IGiGaEventActionFactory*> (this); }
-      else if ( IID_IFactory                == riid ) { *ppI = static_cast<IFactory*>       (this); }
-      else if ( IID_IInterface              == riid ) { *ppI = static_cast<IInterface*>     (this); }
-      else                                            { return   StatusCode::FAILURE; } /// RETURN!!!
+      if      ( IID_IGiGaEventActionFactory == riid ) 
+        { *ppI = static_cast<IGiGaEventActionFactory*> (this); }
+      else if ( IID_IFactory                == riid )
+        { *ppI = static_cast<IFactory*>       (this); }
+      else if ( IID_IInterface              == riid )
+        { *ppI = static_cast<IInterface*>     (this); }
+      else                { return   StatusCode::FAILURE; } /// RETURN!!!
       addRef();
       return StatusCode::SUCCESS;
-    }
+  }
   ///
- private:
+private:
   ///
   std::string m_eaType;
   std::string m_ident;

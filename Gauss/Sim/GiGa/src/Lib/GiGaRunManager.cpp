@@ -1,5 +1,10 @@
 /// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/15 20:54:26  ibelyaev
+/// package restructurisation
+///
 /// ===========================================================================
 #define GIGA_GIGARUNMANAGER_CPP 1 
 /// ===========================================================================
@@ -16,7 +21,7 @@
 #include  "GaudiKernel/Chrono.h" 
 /// GiGa 
 #include  "GiGa/GiGaException.h"
-#include  "GiGa/IGiGaGeomCnvSvc.h" 
+#include  "GiGa/IGiGaGeoCnvSvc.h" 
 #include  "GiGa/GiGaRunManager.h" 
 /// G4 
 #include  "G4Timer.hh"
@@ -66,25 +71,42 @@
  *   @date: xx/xx/xxxx
  */
 
-///
+/// ===========================================================================
+/// accessor to Geant4 User Interface Manager 
+/// ===========================================================================
 static inline G4UImanager*    g4UImanager   () 
 { return G4UImanager::GetUIpointer(); } ; 
-///
+
+/// ===========================================================================
+/// accessor to Geant4 State Manager 
+/// ===========================================================================
 static inline G4StateManager* g4StateManager() 
 { return G4StateManager::GetStateManager(); } ; 
-///
+
+/// ===========================================================================
+/**  useful utility to get the name of the object
+ *   @param type   pointer to object 
+ *   @return name of the object
+ */ 
+/// ===========================================================================
 template <class TYPE> inline const std::string objType( TYPE* type)
 { 
   if( 0 == type ) { return "NONE" ; } 
   return System::typeinfoName( typeid( *type ) ) ;
-};  
-///
+};
+  
+/// ===========================================================================
+/// useful operator to provide Geant4 user interface manager with commands
+/// ===========================================================================
 inline G4UImanager* operator<<( G4UImanager* ui , const std::string& cmd ) 
 { 
   if( 0 != ui ) { ui->ApplyCommand( cmd ) ; }  
   return  ui ; 
 }; 
-///
+
+/// ===========================================================================
+/// useful operator to provide Geant4 user interface manager with commands
+/// ===========================================================================
 inline G4UImanager* operator<<( G4UImanager* ui , 
                                 const GiGaRunManager::Strings& cmds ) 
 {
@@ -93,7 +115,14 @@ inline G4UImanager* operator<<( G4UImanager* ui ,
     { if( 0 != ui ) { ui << *ci; } }  
   return  ui ;  
 }; 
-///
+
+
+/// ===========================================================================
+/** standard onstructor 
+ *  @param name name of the run manager object
+ *  @param svc  pointer to service locator 
+ */
+/// ===========================================================================
 GiGaRunManager::GiGaRunManager( const std::string & Name   ,
                                 ISvcLocator*        svc    ) 
   : G4RunManager   (         )
@@ -121,39 +150,42 @@ GiGaRunManager::GiGaRunManager( const std::string & Name   ,
   ///
   StatusCode sc; 
   {
-    IService* iS = 0 ; 
-    sc = svcLoc()->getService("MessageSvc" , iS ) ;
-    if( sc.isSuccess() && 0 != iS ) 
-      { m_msgSvc = dynamic_cast<IMessageSvc*> ( iS ); }  
-    if( 0 != msgSvc() ) { msgSvc()->addRef() ; } 
+    sc = svcLoc()->service("MessageSvc" , m_msgSvc ) ;
+    if( sc.isSuccess() && 0 != msgSvc() ) 
+      { msgSvc()->addRef() ; } 
   };
   ///
   {
-    IService* iS = 0 ; 
-    sc = svcLoc()->getService("ChronoStatSvc" , iS ) ;
-    if( sc.isSuccess() && 0 != iS ) 
-      { m_chronoSvc = dynamic_cast<IChronoStatSvc*> ( iS ); }  
-    if( 0 != chronoSvc() ) { chronoSvc()->addRef() ; } 
+    sc = svcLoc()->service("ChronoStatSvc" , m_chronoSvc ) ;
+    if( sc.isSuccess() && 0 != chronoSvc() ) 
+      { chronoSvc()->addRef() ; } 
   };
   ///
   {
-    IService* iS = 0 ; 
-    sc = svcLoc()->getService("CiGaGeomCnvSvc" , iS ) ;
-    if( sc.isSuccess() && 0 != iS ) 
-      { m_cnvSvc = dynamic_cast<IGiGaGeomCnvSvc*> ( iS ); }  
-    if( 0 != m_cnvSvc ) { m_cnvSvc ->addRef() ; } 
+    sc = svcLoc()->service("CiGaGeomCnvSvc" , m_cnvSvc ) ;
+    if( sc.isSuccess() && 0 != m_cnvSvc ) 
+      { m_cnvSvc ->addRef() ; } 
   };
   ///
 };
-///
+
+/// ===========================================================================
+/// destructor 
+/// ===========================================================================
 GiGaRunManager::~GiGaRunManager()
 {
   /// release services
   if( 0 != m_cnvSvc     ) { m_cnvSvc    ->release() ;  m_cnvSvc    = 0 ; } 
   if( 0 != chronoSvc () ) { chronoSvc ()->release() ;  m_chronoSvc = 0 ; } 
   if( 0 != msgSvc    () ) { msgSvc    ()->release() ;  m_msgSvc    = 0 ; } 
-}
-///
+};
+
+/// ===========================================================================
+/** Retrieve the processed event 
+ *  @param  event pointer to processed event  
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::retrieveTheEvent( const G4Event*& event ) 
 {
   ///
@@ -177,7 +209,12 @@ StatusCode GiGaRunManager::retrieveTheEvent( const G4Event*& event )
   return StatusCode::SUCCESS;
   ///
 };
-///
+
+/// ===========================================================================
+/** Process the prepared event 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::processTheEvent()
 {
   ///
@@ -240,7 +277,13 @@ StatusCode GiGaRunManager::processTheEvent()
   return StatusCode::SUCCESS;
   ///
 };
-///
+
+/// ===========================================================================
+/** Prepare the event 
+ *  @param vertex pointer to (main) primary vertex 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
 {
   ///
@@ -295,10 +338,14 @@ StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
   return StatusCode::SUCCESS;
   ///
 }; 
-///
+
+/// ===========================================================================
+/** initialize the Geant4 Run
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode  GiGaRunManager::initializeRun()
 {
-  ///
   ///
   const std::string Tag( name() + ".initialiseRun()" ); 
   MsgStream log    ( msgSvc    () , Tag ) ;
@@ -343,7 +390,12 @@ StatusCode  GiGaRunManager::initializeRun()
   //
   return StatusCode::SUCCESS;
 };
-///
+
+/// ===========================================================================
+/** initialize the Geant4 kernel
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::initializeKernel() 
 {
   ///
@@ -420,7 +472,12 @@ StatusCode GiGaRunManager::initializeKernel()
   return StatusCode::SUCCESS; 
   ///
 };
-///
+
+/// ===========================================================================
+/** finalize run manager 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::finalizeRunManager()
 {
   ///
@@ -438,7 +495,13 @@ StatusCode GiGaRunManager::finalizeRunManager()
   return StatusCode::SUCCESS; 
   ///
 };
-///
+
+/// ===========================================================================
+/** declare the Geant4 Primary Generator Action 
+ *  @param obj pointer  to Geant4 Primary Generator Action 
+ *  @return  status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::declare( G4VUserPrimaryGeneratorAction  * obj )  
 { 
   ///
@@ -471,7 +534,13 @@ StatusCode GiGaRunManager::declare( G4VUserPrimaryGeneratorAction  * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
-///
+
+/// ===========================================================================
+/** declare the Geant4 Detector Construction Action
+ *  @param obj pointer  to Geant4 Detector Construction Action  
+ *  @return  status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::declare( G4VUserDetectorConstruction    * obj ) 
 {
   ///
@@ -507,7 +576,13 @@ StatusCode GiGaRunManager::declare( G4VUserDetectorConstruction    * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
-///
+
+/// ===========================================================================
+/** declare the top level ("world") physical volume 
+ *  @param obj pointer  to top level ("world") physical volume  
+ *  @return  status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::declare( G4VPhysicalVolume              * obj ) 
 {
   ///
@@ -543,7 +618,13 @@ StatusCode GiGaRunManager::declare( G4VPhysicalVolume              * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
-///
+
+/// ===========================================================================
+/** declare the Geant4 Physics List 
+ *  @param obj pointer  to Geant4 Physics List  
+ *  @return  status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
 {
   ///
@@ -571,7 +652,13 @@ StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
-///
+
+/// ===========================================================================
+/** declare the Geant4 Run Action 
+ *  @param obj pointer  to Geant4 Run action  
+ *  @return  status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::declare( G4UserRunAction                * obj )
 {
   ///
@@ -585,7 +672,13 @@ StatusCode GiGaRunManager::declare( G4UserRunAction                * obj )
   G4RunManager::SetUserAction( obj ); 
   return StatusCode::SUCCESS ; 
 };
-///
+
+/// ===========================================================================
+/** declare the Geant4 Event Action 
+ *  @param obj pointer  to Geant4 Event  
+ *  @return  status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::declare( G4UserEventAction              * obj )
 {
   ///
@@ -600,7 +693,13 @@ StatusCode GiGaRunManager::declare( G4UserEventAction              * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
-///
+
+/// ===========================================================================
+/** declare the Geant4 Stacking Action 
+ *  @param obj pointer  to Geant4 Stacking Action 
+ *  @return  status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::declare( G4UserStackingAction           * obj )
 {
   ///
@@ -615,7 +714,13 @@ StatusCode GiGaRunManager::declare( G4UserStackingAction           * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
-///
+
+/// ===========================================================================
+/** declare the Geant4 Stepping  Action 
+ *  @param obj pointer  to Geant4 Stepping Action 
+ *  @return  status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::declare( G4UserSteppingAction           * obj )
 {
   ///
@@ -630,7 +735,13 @@ StatusCode GiGaRunManager::declare( G4UserSteppingAction           * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
-///
+
+/// ===========================================================================
+/** declare the Geant4 Tracking Action 
+ *  @param obj pointer  to Geant4 Tracking Action 
+ *  @return  status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::declare( G4UserTrackingAction           * obj )
 {
   ///
@@ -645,13 +756,24 @@ StatusCode GiGaRunManager::declare( G4UserTrackingAction           * obj )
   ///
   return StatusCode::SUCCESS ; 
 };
-///
+
+/// ===========================================================================
+/** declare the Geant4 Visual Manager  
+ *  @param obj pointer  to Geant4 Visual Manager
+ *  @return  status code 
+ */
+/// ===========================================================================
 StatusCode GiGaRunManager::declare( G4VisManager                   * obj )
 {
   m_g4VisManager = obj ; 
   return StatusCode::SUCCESS ; 
 };
-///
+
+/// ===========================================================================
+/** create  user interface session 
+ *  @return  status code 
+ */
+/// ===========================================================================
 StatusCode  GiGaRunManager::createUIsession() 
 {
   ///
@@ -765,7 +887,12 @@ StatusCode  GiGaRunManager::createUIsession()
   return ( 0 != m_g4UIsession)  ? StatusCode::SUCCESS : StatusCode::FAILURE ;   
   ///
 }; 
-///
+
+/// ===========================================================================
+/** overriden method from G4RunManager
+ *  ONE SHOULD NOT USE IT!!!
+ */
+/// ===========================================================================
 void GiGaRunManager::BeamOn( int         n_event       ,                      
                              const char* macroFile ,                       
                              int         n_select      )
@@ -803,7 +930,9 @@ void GiGaRunManager::BeamOn( int         n_event       ,
   ___GIGA_CATCH_AND_THROW___(Tag,method); 
   ///
 };    
-///
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaRunManager::InitializeGeometry()
 {
   ///
@@ -847,7 +976,9 @@ void GiGaRunManager::InitializeGeometry()
   G4RunManager::geometryInitialized = true;
   ///
 };
-///
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaRunManager::Initialize()
 {
   ///
@@ -864,4 +995,32 @@ void GiGaRunManager::Initialize()
   ___GIGA_CATCH_AND_THROW___(Tag,method);  
   ///
 };
-///
+
+/// ===========================================================================
+/** retrieve the pointer minimal geometry conversion service 
+ *  @return pointer to minimal geometry conversion service 
+ */
+/// ===========================================================================
+IGiGaGeoCnvSvc*   GiGaRunManager::cnvSvc    () const 
+{
+  /// service is not located 
+  if( 0 != m_cnvSvc ) { return m_cnvSvc; }  /// RETURN!!
+  /// locate service
+  {
+    IService* iS = 0 ; 
+    const std::string tmp("GiGaGeomCnvSvc");
+    StatusCode sc = svcLoc()->getService( tmp , iS ) ;
+    if( sc.isSuccess() && 0 != iS ) 
+      { m_cnvSvc = dynamic_cast<IGiGaGeoCnvSvc*> ( iS ); }  
+    if( 0 != m_cnvSvc ) 
+      { m_cnvSvc->addRef() ;  return m_cnvSvc; }         /// RETURN   
+    ///
+    MsgStream log( msgSvc() , name() ) ; 
+    log << MSG::ERROR << " Couldn't locate ConversionService="+tmp << endreq; 
+  } 
+  ///
+  return 0;
+};
+
+/// ===========================================================================
+

@@ -1,15 +1,23 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.1  2001/07/15 20:53:57  ibelyaev
+/// package restructurisation
+/// 
 /// ===========================================================================
 #ifndef GIGA_IGIGASVC_H
 #define GIGA_IGIGASVC_H 1 
-// STD and STL 
+/// STD and STL 
 #include   <utility>
-// Include files from the Framework
+/// Include files from the Framework
 #include  "GaudiKernel/Kernel.h"
 #include  "GaudiKernel/StatusCode.h"
 #include  "GaudiKernel/IService.h"
-// Forward declaration from Geant4
+/// GiGa
+#include  "GiGa/IIDIGiGaSvc.h"
+
+// Forward declaration from G4
 class      G4Event               ;
 class      G4PrimaryVertex       ;
 class      G4HCofThisEvent       ;
@@ -17,16 +25,14 @@ class      G4VHitsCollection     ;
 class      G4VTrajectory         ; 
 class      G4TrajectoryContainer ;
 
-/// Declaration of the interface ID ( interface id, major and  minor versions) 
-static const InterfaceID IID_IGiGaSvc(211, 2 , 0); 
-
 /** @class IGiGaSvc IGiGaSvc.h GiGa/IGiGaSvc.h
+ *
+ *  definition of abstract interface to Geant4 Service 
+ *   for event-by-event communications with Geant4 
+ *
+ *  @author Vanya Belyaev
+ */
 
-    definition of abstract interface to Geant4 Service for event-by-event
-    communications with Geant4 
-
-    @author Vanya Belyaev
-*/
 class IGiGaSvc : virtual public IService
 {
 public:
@@ -148,7 +154,7 @@ public:
 };
 
 /// ===========================================================================
-#endif /// GIGA_GIGASVC_H
+#endif ///< GIGA_GIGASVC_H
 /// ===========================================================================
 
 

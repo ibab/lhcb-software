@@ -1,8 +1,17 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef    GIGA_IIDIGIGACNVSVC_H
 #define    GIGA_IIDIGIGACNVSVC_H 1 
+/// ===========================================================================
 
 
-static const InterfaceID IID_IGiGaCnvSvc( 213 , 1,  0 );
+/// unique interface identifier 
+static const InterfaceID IID_IGiGaCnvSvc( 213 , 2,  0 );
 
 
-#endif  // GIGA_IIDIGIGACNVSVC_H
+/// ===========================================================================
+#endif  ///< GIGA_IIDIGIGACNVSVC_H
+/// ===========================================================================

@@ -1,6 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaStackAction.h,v 1.5 2001-07-15 20:53:57 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name:
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     GIGA_IGIGASTACKACTION_H
 #define     GIGA_IGIGASTACKACTION_H 1 
+/// ===========================================================================
 // STL 
 #include <string> 
 // base classes from GaudiKernel  
@@ -13,18 +18,19 @@
 
 
 /** @class IGiGaStackAction IGiGaStackAction.h GiGa/IGiGaStackAction.h
+ *
+ *  Definition of "pseudo-abstract" pseudo-interface 
+ *                           for GiGa Stacking Action
+ *
+ *  @author  Vanya Belyaev
+ *   @date    21/02/2001
+ */
 
-    Definition of "pseudo-abstract" pseudo-interface for GiGa Stacking Action
-
-    @author  Vanya Belyaev
-    @date    21/02/2001
-*/
-
-class IGiGaStackAction: virtual public G4UserStackingAction ,  /* "the main" class from Geant4      */ 
-                        virtual public IInterface              /* to allow easy Gaudi instantiation */
+class IGiGaStackAction: virtual public G4UserStackingAction ,
+                        virtual public IInterface            
 {
   ///
- public:
+public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID ()  { return IID_IGiGaStackAction ; }
   ///
@@ -41,4 +47,6 @@ class IGiGaStackAction: virtual public G4UserStackingAction ,  /* "the main" cla
 };
 
 
-#endif  //  GIGA_IGIGASTACKACTION_H
+/// ===========================================================================
+#endif  ///<  GIGA_IGIGASTACKACTION_H
+/// ===========================================================================

@@ -1,6 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/IGiGaPhysList.h,v 1.4 2001-07-15 20:53:56 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef        GIGA_IGiGaPhysList_H
 #define        GIGA_IGiGaPhysList_H 1 
+/// ===========================================================================
 // GaudiKernel
 #include "GaudiKernel/IInterface.h"
 // Geant4 
@@ -9,20 +14,19 @@
 #include "GiGa/IIDIGiGaPhysList.h"
 // 
 
-/** @class IGiGaPhysList            IGiGaPhysList.h GiGa/IGiGaPhysList.h
-
-    definition of (pseudu)abstract (pseudo)interface to Geant 4 Physics List class
-
-    @author Vanya Belyaev
-*/
-
-
+/** @class IGiGaPhysList IGiGaPhysList.h GiGa/IGiGaPhysList.h
+ *
+ *  definition of (pseudo)abstract (pseudo)interface 
+ *    to Geant 4 Physics List class
+ *
+ *  @author Vanya Belyaev
+ */
 
 class IGiGaPhysList: virtual public G4VUserPhysicsList ,
-               virtual public IInterface         
+                     virtual public IInterface         
 {
   ///
- public:
+public:
   ///
   static const InterfaceID& interfaceID() { return IID_IGiGaPhysList; }
   /// ident 
@@ -36,6 +40,6 @@ class IGiGaPhysList: virtual public G4VUserPhysicsList ,
   ///
 };
 
-
-
-#endif    //   GIGA_IGiGaPhysList_H
+/// ===========================================================================
+#endif   ///<   GIGA_IGiGaPhysList_H
+/// ===========================================================================

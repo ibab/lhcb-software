@@ -1,28 +1,39 @@
-
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 // GiGa
 #include "GiGa/GiGaPhysListFactory.h"
-
 // G4 
 #include "G4ParticleTypes.hh"
-
-
 // local
 #include "GiGaPhysListGeantino.h"
 
+/** Implementation of class GiGaPjysListGeantino
+ *  
+ *  @author Vanya Belyaev
+ */
 
-/// factory
-static const GiGaPhysListFactory<GiGaPhysListGeantino>             s_GiGaPhysListGeantinoFactory;
-const       IGiGaPhysListFactory&    GiGaPhysListGeantinoFactory = s_GiGaPhysListGeantinoFactory;
+/// ===========================================================================
+/// ===========================================================================
+static const GiGaPhysListFactory<GiGaPhysListGeantino>         s_Factory;
+const       IGiGaPhysListFactory&GiGaPhysListGeantinoFactory = s_Factory;
       
-
-/// constructor 
-GiGaPhysListGeantino::GiGaPhysListGeantino( const std::string& nick , ISvcLocator* loc ) 
+/// ===========================================================================
+/// ===========================================================================
+GiGaPhysListGeantino::GiGaPhysListGeantino( const std::string& nick , 
+                                            ISvcLocator* loc ) 
   : GiGaPhysListBase( nick , loc )
 {};
-/// destructor 
+
+/// ===========================================================================
+/// ===========================================================================
 GiGaPhysListGeantino::~GiGaPhysListGeantino()
 {};
-//////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListGeantino::ConstructParticle()
 {
   // In this method, static member functions should be called
@@ -32,19 +43,23 @@ void GiGaPhysListGeantino::ConstructParticle()
 
   G4Geantino::GeantinoDefinition();
 };
-////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListGeantino::ConstructProcess()
 {
   // Define transportation process
 
   AddTransportation();
 }
-////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 void GiGaPhysListGeantino::SetCuts()
 {
   // uppress error messages even in case e/gamma/proton do not exist            
-  G4int temp = GetVerboseLevel(); SetVerboseLevel(0);                                         
-  
+  G4int temp = GetVerboseLevel(); SetVerboseLevel(0);
+
   //  " G4VUserPhysicsList::SetCutsWithDefault" method sets 
   //   the default cut value for all particle types 
   SetCutsWithDefault();   
@@ -52,7 +67,8 @@ void GiGaPhysListGeantino::SetCuts()
   // Retrieve verbose level
   SetVerboseLevel(temp);  
 };
-///////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
 
 
 

@@ -1,14 +1,17 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     GIGA_SPLITNAME_H
 #define     GIGA_SPLITNAME_H 1 
-
-
+/// ===========================================================================
+/// STD & STL 
 #include <string>
 #include <algorithm>
+/// GaudiKernle 
+#include "GaudiKernel/StatusCode.h"
 
-#include "GaudiKernel/StatusCode.h" 
-
-
-///
 /// split "Type/Name" into "Type" and "Name"
 static inline StatusCode SplitTypeAndName ( const std::string& TypeAndName ,
                                             std::string      & Type        , 
@@ -44,4 +47,6 @@ static inline StatusCode SplitTypeAndName ( const std::string& TypeAndName ,
 } 
 
 
-#endif  //  GIGA_SPLITNAME_H
+/// ===========================================================================
+#endif  ///<  GIGA_SPLITNAME_H
+/// ===========================================================================

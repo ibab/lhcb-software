@@ -1,6 +1,11 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Sim/GiGa/GiGa/GiGaEventActionBase.h,v 1.3 2001-07-15 20:53:52 ibelyaev Exp $ 
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef     GIGA_GiGaEventActionBase_H
 #define     GIGA_GiGaEventActionBase_H 1 
+/// ===========================================================================
 
 // base class 
 #include "GiGa/IGiGaEventAction.h" 
@@ -10,12 +15,12 @@ class G4EventManager;
 class G4Event; 
 
 /** @class GiGaEventActionBase GiGaEventActionBase.h GiGa/GiGaEventActionBase.h
-    
-    Base class for implementation of concrete Event Action for GiGa
-    
-    @author  Vanya Belyaev
-    @date    23/01/2001
-*/
+ *
+ *  Base class for implementation of concrete Event Action for GiGa
+ *  
+ *  @author  Vanya Belyaev
+ *  @date    23/01/2001
+ */
 
 class GiGaEventActionBase: virtual public IGiGaEventAction   ,
                            public  GiGaBase
@@ -48,9 +53,9 @@ protected:
   ///
 private:
   ///
-  GiGaEventActionBase ()                                      ; /// no default constructor!                   
-  GiGaEventActionBase           ( const GiGaEventActionBase& ); /// no copy constructor!
-  GiGaEventActionBase& operator=( const GiGaEventActionBase& ); /// no assignment! 
+  GiGaEventActionBase () ; ///< no default constructor!                   
+  GiGaEventActionBase ( const GiGaEventActionBase& ); ///< no copy!
+  GiGaEventActionBase& operator=( const GiGaEventActionBase& ); ///< no = ! 
   ///
 private:
   ///
@@ -59,7 +64,9 @@ private:
 #include "GiGa/GiGaEventActionBase.icpp"
 ///
 
+/// ===========================================================================
 #endif   // GIGA_GiGaEventActionBase_H
+/// ===========================================================================
 
 
 

@@ -1,15 +1,16 @@
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
-/// $Log:
+/// $Log: not supported by cvs2svn $
 /// ===========================================================================
-#ifndef    GIGA_IIDIGiGaEventActionFACTORY_H
-#define    GIGA_IIDIGiGaEventActionFACTORY_H 1 
+#ifndef GIGA_IIDIGIGASETUPSVC_H 
+#define GIGA_IIDIGIGASETUPSVC_H 1
 /// ===========================================================================
 
-// Declaration of the interface ID ( interface id, major & minor version) 
-static const InterfaceID IID_IGiGaEventActionFactory( 231 , 1 , 0 );
+/// Declaration of the interface ID ( interface id, major & minor versions) 
+static const InterfaceID IID_IGiGaSetUpSvc( 212, 2 , 0); 
+   
 
 /// ===========================================================================
-#endif  ///< GIGA_IIDIGiGaEventActionFACTORY_H
+#endif ///< GIGA_IIDIGIGASETUPSVC_H
 /// ===========================================================================

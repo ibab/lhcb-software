@@ -1,3 +1,8 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 /// GaudiKernel
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/MsgStream.h"
@@ -6,13 +11,21 @@
 #include "GiGa/GiGaMagFieldFactory.h"
 /// local 
 #include "GiGaMagFieldUniform.h"
-///
 
-///////////////////////////////////////////////////////////////////////////////////////
-static const  GiGaMagFieldFactory<GiGaMagFieldUniform>                              s_GiGaMagFieldUniformFactory ;
-const        IGiGaMagFieldFactory&                     GiGaMagFieldUniformFactory = s_GiGaMagFieldUniformFactory ; 
-///////////////////////////////////////////////////////////////////////////////////////
-GiGaMagFieldUniform::GiGaMagFieldUniform( const std::string& nick , ISvcLocator* loc) 
+/** implementation of class GiGaMagFieldUniform 
+ * 
+ *  @author Vanya Belyaev 
+ */
+
+/// ===========================================================================
+/// ===========================================================================
+static const  GiGaMagFieldFactory<GiGaMagFieldUniform>         s_Factory ;
+const        IGiGaMagFieldFactory&GiGaMagFieldUniformFactory = s_Factory ; 
+
+/// ===========================================================================
+/// ===========================================================================
+GiGaMagFieldUniform::GiGaMagFieldUniform( const std::string& nick , 
+                                          ISvcLocator* loc) 
   : GiGaMagFieldBase ( nick , loc )
   , m_Bx( 0 ) 
   , m_By( 0 ) 
@@ -22,10 +35,15 @@ GiGaMagFieldUniform::GiGaMagFieldUniform( const std::string& nick , ISvcLocator*
   declareProperty("By" , m_By );
   declareProperty("Bz" , m_Bz );
 };
-///////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 GiGaMagFieldUniform::~GiGaMagFieldUniform(){};
-///////////////////////////////////////////////////////////////////////////////////////
-void GiGaMagFieldUniform::GetFieldValue ( const double Point[3], double *B  ) const 
+
+/// ===========================================================================
+/// ===========================================================================
+void GiGaMagFieldUniform::GetFieldValue ( const double Point[3], 
+                                          double *B  ) const 
 {
   ///
   *(B+0) = (double) m_Bx ;
@@ -33,9 +51,8 @@ void GiGaMagFieldUniform::GetFieldValue ( const double Point[3], double *B  ) co
   *(B+2) = (double) m_Bz ;
   ///
 };
-///////////////////////////////////////////////////////////////////////////////////////
 
-
+/// ===========================================================================
 
 
 

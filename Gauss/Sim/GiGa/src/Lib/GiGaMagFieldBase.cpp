@@ -1,34 +1,104 @@
-///
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+//  ===========================================================================
+#define GIGA_GIGAMAGFIELDBASE_CPP 1 
+///  ===========================================================================
+/// Gaudi Kernel 
+#include "GaudiKernel/IMagneticFieldSvc.h" 
+#include "GaudiKernel/ISvcLocator.h" 
+/// GiGa  
 #include "GiGa/GiGaMagFieldBase.h"
 
-///////////////////////////////////////////////////////////////////////////////////////
-GiGaMagFieldBase::GiGaMagFieldBase( const std::string& nick , ISvcLocator* loc ) 
-  : GiGaBase( nick , loc ) {};
-/// virtual destructor ////////////////////////////////////////////////////////////////
-GiGaMagFieldBase::~GiGaMagFieldBase() {};
-///////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaMagFieldBase::queryInterface( const InterfaceID& id , void** ppI) 
+/** The implemenation of the class GiGaMagFieldBase 
+ *  @author Vanya Belyaev
+ */
+
+/// ===========================================================================
+/** standard constructor
+ *  @param name name of the object
+ *  @param loc  pointer to service locator 
+ */
+/// ===========================================================================
+GiGaMagFieldBase::GiGaMagFieldBase( const std::string& nick , 
+                                    ISvcLocator*       loc ) 
+  : GiGaBase( nick , loc ) 
+  , m_nameMFSvc ("" )
+  , m_mfSvc     ( 0 )
+{};
+
+/// ===========================================================================
+/// virtual destructor 
+/// ===========================================================================
+GiGaMagFieldBase::~GiGaMagFieldBase(){};
+
+/// ===========================================================================
+/** query the interface
+ *  @param id   uniqie interface identifier 
+ *  @param ppI  placeholder for returned interface 
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaMagFieldBase::queryInterface( const InterfaceID& id , 
+                                             void** ppI) 
 {
   if( 0 == ppI ) { return StatusCode::FAILURE; } 
   *ppI = 0 ; 
-  if   ( IGiGaMagField::interfaceID() == id ) { *ppI = static_cast<IGiGaMagField*> (this) ; } 
-  else                                        {  return GiGaBase::queryInterface( id , ppI ); } /// RETURN ;
+  if   ( IGiGaMagField::interfaceID() == id ) 
+    { *ppI = static_cast<IGiGaMagField*> (this) ; } 
+  else                                        
+    { return GiGaBase::queryInterface( id , ppI ); } /// RETURN ;
   addRef();
   return StatusCode::SUCCESS; 
 };
-///////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// identification  
+/// ===========================================================================
+const std::string& GiGaMagFieldBase::name () const 
+{ return GiGaBase::name() ; }; 
+
+/// ===========================================================================
+/** initialize the object 
+ *  @return status code 
+ */
+/// ===========================================================================
 StatusCode GiGaMagFieldBase::initialize ()  
 {
   /// initialize base class 
   StatusCode sc = GiGaBase::initialize (); 
-  if( sc.isFailure() ) { return Error("Could not initialize base class!", sc); }
-  /// check explicitely for IMagneticFieldSvc!
-  if( 0 == mfSvc  () ) { return Error("MagneticField Service is not located!"); } 
+  if( sc.isFailure() ) 
+    { return Error("Could not initialize base class!", sc); }
+  if( !m_nameMFSvc.empty() ) 
+    {
+      sc = svcLoc()->service( m_nameMFSvc, m_mfSvc );
+      if( sc.isFailure() ) 
+        { return Error("Could not locate MagneticField Service!", sc ) ; }
+      if( 0 == mfSvc()   ) 
+        { return Error("IMagneticFieldSvc* points to NULL") ; }
+      mfSvc()->addRef();
+    }
+  else { Warning("Magnetic Field Service is not requested") ; }
+  ///
   return StatusCode::SUCCESS;
 };
-///////////////////////////////////////////////////////////////////////////////////////
-StatusCode GiGaMagFieldBase::finalize   ()  { return GiGaBase::finalize   (); };
-///////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/** finalize the object  
+ *  @return status code 
+ */
+/// ===========================================================================
+StatusCode GiGaMagFieldBase::finalize   ()  
+{ 
+  /// relese magnetic field service 
+  if( 0 != mfSvc() ) { mfSvc() -> release() ; m_mfSvc = 0 ; }
+  ///
+  return GiGaBase::finalize   (); 
+};
+
+/// ===========================================================================
+
 
 
 

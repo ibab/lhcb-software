@@ -1,17 +1,23 @@
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #ifndef    GIGA_GIGAMagFieldUniform_H
 #define    GIGA_GIGAMagFieldUniform_H 1 
+/// ===========================================================================
 
 #include "GiGa/GiGaMagFieldBase.h"
 
 template <class MagField> class GiGaMagFieldFactory;
 
 
-/** @class GiGaMagFieldUniform     GiGaMagFieldUniform.h  GiGa/GiGaMagFieldUniform.h
-
-    Implemenation of "Uniform Magnetic Field" object.
-     
-
-    @author Vanya Belyaev
+/** @class GiGaMagFieldUniform  GiGaMagFieldUniform.h
+ *
+ *  Implemenation of "Uniform Magnetic Field" object.
+ *   
+ *
+ *  @author Vanya Belyaev
 */
 
 class GiGaMagFieldUniform: public GiGaMagFieldBase 
@@ -31,9 +37,9 @@ class GiGaMagFieldUniform: public GiGaMagFieldBase
   ///
  private:
   ///
-  GiGaMagFieldUniform           ()                             ; /// no default constructor! 
-  GiGaMagFieldUniform           ( const GiGaMagFieldUniform& ) ; /// no copy constructor!
-  GiGaMagFieldUniform& operator=( const GiGaMagFieldUniform& ) ; /// no assignment! 
+  GiGaMagFieldUniform(); ///< no default constructor! 
+  GiGaMagFieldUniform( const GiGaMagFieldUniform& ) ; ///< no copy 
+  GiGaMagFieldUniform& operator=( const GiGaMagFieldUniform& ) ; ///< no = 
   ///
  private:
   ///
@@ -44,7 +50,6 @@ class GiGaMagFieldUniform: public GiGaMagFieldBase
 };
 ///
 
-
-
-
+/// ===========================================================================
 #endif  // GIGA_GIGAMagFieldUniform_H
+/// ===========================================================================

@@ -1,5 +1,10 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $ 
+/// CVS tag $Name: not supported by cvs2svn $
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $
+/// Revision 1.4  2001/07/15 20:54:36  ibelyaev
+/// package restructurisation
+/// 
 /// ===========================================================================
 #define GIGA_GIGATRACKACKTIONSIMPLE_CPP 1 
 /// ===========================================================================
@@ -21,6 +26,11 @@
 /// local
 #include "GiGaTrackActionSimple.h"
 ///
+
+/** Implementation of class GiGaTrackActionSimple
+ *
+ *  @author Vanya Belyaev
+ */
 
 /// ===========================================================================
 /// factories business 

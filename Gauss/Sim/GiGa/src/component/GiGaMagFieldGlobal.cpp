@@ -1,34 +1,43 @@
-///
+/// ===========================================================================
+/// CVS tag $Name: not supported by cvs2svn $ 
+/// ===========================================================================
+/// $Log: not supported by cvs2svn $ 
+/// ===========================================================================
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Units/SystemOfUnits.h"
-
-
 ///
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/MsgStream.h"
-
-
 ///
 #include "GiGa/GiGaMagFieldFactory.h"
-
-
 /// local 
 #include "GiGaMagFieldGlobal.h"
 
+/** implementation of class GiGaMagFieldGlobal
+ *
+ *  @author Vanya Belyaev 
+ */
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-static const  GiGaMagFieldFactory<GiGaMagFieldGlobal>           s_GiGaMagFieldGlobalFactory ;
-const        IGiGaMagFieldFactory&  GiGaMagFieldGlobalFactory = s_GiGaMagFieldGlobalFactory ; 
-//////////////////////////////////////////////////////////////////////////////////////////////
+/// ===========================================================================
+/// ===========================================================================
+static const  GiGaMagFieldFactory<GiGaMagFieldGlobal>         s_Factory ;
+const        IGiGaMagFieldFactory&GiGaMagFieldGlobalFactory = s_Factory ; 
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-GiGaMagFieldGlobal::GiGaMagFieldGlobal( const std::string& nick , ISvcLocator* loc) 
+/// ===========================================================================
+/// ===========================================================================
+GiGaMagFieldGlobal::GiGaMagFieldGlobal( const std::string& nick , 
+                                        ISvcLocator* loc) 
   : GiGaMagFieldBase( nick , loc ) , m_field() {};
-//////////////////////////////////////////////////////////////////////////////////////////////
+
+/// ===========================================================================
+/// ===========================================================================
 GiGaMagFieldGlobal::~GiGaMagFieldGlobal(){};
-//////////////////////////////////////////////////////////////////////////////////////////////
-void GiGaMagFieldGlobal::GetFieldValue ( const double Point[3], double *B  ) const 
+
+/// ===========================================================================
+/// ===========================================================================
+void GiGaMagFieldGlobal::GetFieldValue ( const double Point[3], 
+                                         double *B  ) const 
 {
   ///
   HepPoint3D  point( Point[0] , Point[1] , Point[2] );
@@ -56,9 +65,8 @@ void GiGaMagFieldGlobal::GetFieldValue ( const double Point[3], double *B  ) con
   *(B+2) = m_field.z();
   ///
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+/// ===========================================================================
 
 
 
