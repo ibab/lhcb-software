@@ -4,12 +4,6 @@ version v11r0
 branches doc cmt
  
 #===============================================================
-# dependencies on Gaudi framework
-# the following line should be removed to build the tar file
-#===============================================================
-use GaudiSys "$(GAUDIVERS)"
-
-#===============================================================
 # LHCb packages used by all applications
 #===============================================================
 
@@ -21,7 +15,7 @@ use GaudiConf	v6r3
 
 use BookKeeping v1r1	Tools
 
-use XmlDDDB     v12r5	Det
+use XmlDDDB     v14r0	Det
 
 # External packages not delivered by Gaudi
 use PYTHIA	v2r6205p1	Gen
