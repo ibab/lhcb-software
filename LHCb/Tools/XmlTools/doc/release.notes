@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Tools/XmlTools
+! Responsible : Sebastien Ponce
+! Purpose     : Interface to XML Xerces Parser plus some extra services
+!-----------------------------------------------------------------------------
+
+! 2003-04-23 - Sebastien Ponce
+ - creation of this package. The code was residing in the package DetDesc until
+   now so please refer to it for earlier release notes.
