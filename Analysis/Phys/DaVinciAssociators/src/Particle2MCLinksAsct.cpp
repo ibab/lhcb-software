@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinksAsct.cpp,v 1.5 2004-06-11 15:26:17 phicharp Exp $
+// $Id: Particle2MCLinksAsct.cpp,v 1.6 2004-07-27 17:42:16 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -65,9 +65,10 @@ StatusCode Particle2MCLinksAsct::finalize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode Particle2MCLinksAsct::handle(){
+void Particle2MCLinksAsct::handle(const Incident& incident){
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::VERBOSE << "Entering handle()" << endreq;
   if( m_table ) m_table->clear();
-  return StatusCode::SUCCESS;
 }
 //=============================================================================
 // Interface implementation
@@ -138,8 +139,8 @@ void
 Particle2MCLinksAsct::insertRange( const From& part ) const
 {
   MCsFromParticleLinks r = m_table->relations(part);
+  MsgStream  msg( msgSvc(), name() );
   if( r.empty()) {
-    MsgStream  msg( msgSvc(), name() );
     Object2MCLink* link = 
       part->charge() ? m_chargedLink : m_neutralLink;
     // Local implementation...
@@ -163,6 +164,9 @@ Particle2MCLinksAsct::insertRange( const From& part ) const
     } else {
       msg << " not from a ProtoParticle" << endreq;
     }
+  } else {
+    msg << MSG::VERBOSE << "    Range already defined for Particle "
+        << (part->hasKey() ? part->key() : -1) << endreq;
   }
 }
 

@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinks.cpp,v 1.12 2004-06-11 15:26:17 phicharp Exp $
+// $Id: Particle2MCLinks.cpp,v 1.13 2004-07-27 17:42:16 phicharp Exp $
 // Include files 
 
 // from Gaudi
@@ -98,7 +98,11 @@ StatusCode Particle2MCLinks::execute() {
 
     // Get Particles
     SmartDataPtr<Particles> parts (eventSvc(), *inp);
-    if( 0 == parts ) continue;
+    if( 0 == parts ) {
+      ifMsg(MSG::VERBOSE) << "Could not find container "
+                          << *inp << endreq;
+      continue;
+    }
     int npp = parts->size();
     int nrel = 0;
     int nass = 0;

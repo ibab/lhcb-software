@@ -1,4 +1,4 @@
-// $Id: Particle2MCLinksAsct.h,v 1.5 2004-06-11 15:26:13 phicharp Exp $
+// $Id: Particle2MCLinksAsct.h,v 1.6 2004-07-27 17:42:16 phicharp Exp $
 #ifndef Particle2MCLinksASCT_H 
 #define Particle2MCLinksASCT_H 1
 
@@ -56,7 +56,7 @@ public:
   // from Particles not in the TES
   virtual StatusCode initialize();
   virtual StatusCode finalize();
-  virtual StatusCode handle();
+  virtual void handle(const Incident& incident);
   virtual bool tableExists() const;
   virtual ToRange rangeFrom( const From& part) const;
   virtual ToRange rangeWithLowCutFrom( const From& part, double cut) const;
