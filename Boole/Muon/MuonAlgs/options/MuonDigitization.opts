@@ -1,5 +1,4 @@
-// to be consistent with the number declared in the spillover algo. property file
-MuonDigitization.NmbOfSpilloverEvents = 3 ;
-MuonDigitization.BXTime= 25 ;
-MuonDigitization.VerboseDebug= false ;
+// Uncomment to change the defaults
+//MuonDigitization.BXTime= 25 ;
+//MuonDigitization.VerboseDebug= false ;
 

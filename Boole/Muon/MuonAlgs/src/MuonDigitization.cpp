@@ -3,6 +3,7 @@
 
 #include "GaudiKernel/AlgFactory.h"  
 #include "GaudiKernel/IToolSvc.h"  
+#include "GaudiKernel/IAlgManager.h"
 #include "MuonAlgs/MuonDigitization.h"
 #include "GaudiKernel/LinkManager.h" 
 #include "MuonAlgs/ComparePC.h"
@@ -32,7 +33,7 @@ MuonDigitization::MuonDigitization(const std::string& name,
                                    ISvcLocator* pSvcLocator)
 :  Algorithm(name, pSvcLocator)
 {
-declareProperty("NmbOfSpilloverEvents" , m_numberOfSpilloverEvents=3) ;
+  //declareProperty("NmbOfSpilloverEvents" , m_numberOfSpilloverEvents=3) ;
 declareProperty("BXTime" , m_BXTime=25) ;
 declareProperty("VerboseDebug" , m_verboseDebug=false) ;
 
@@ -42,12 +43,35 @@ declareProperty("VerboseDebug" , m_verboseDebug=false) ;
 
 StatusCode MuonDigitization::initialize()
 {
-  
- MsgStream log(msgSvc(), name()); 
- log<<MSG::INFO<<"number of spillover events read from aux stream "
-     <<m_numberOfSpilloverEvents<<endreq;
- m_numberOfEvents=m_numberOfSpilloverEvents+1;
- StatusCode sc=toolSvc()->retrieveTool("MuonTileIDXYZ",m_pMuonTileXYZ);
+  MsgStream log(msgSvc(), name()); 
+
+  // Get the number of spillover events from the SpillOverAlg
+  IAlgManager* algmgr;
+  StatusCode sc = service( "ApplicationMgr", algmgr );
+  if( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Failed to locate algManager i/f of AppMgr" << endmsg;
+    return sc;
+  }
+  IAlgorithm*  spillAlg;
+  sc = algmgr->getAlgorithm( "SpillOverAlg", spillAlg );
+  if( !sc.isSuccess() ) {
+    log << MSG::WARNING << "SpillOverAlg not found" << endmsg;
+    m_numberOfSpilloverEvents = 0;
+  }
+  else {
+    IProperty* spillProp;
+    spillAlg->queryInterface( IID_IProperty, (void**)&spillProp );
+    IntegerProperty numPrev = 0;
+    IntegerProperty numNext = 0;
+    numPrev.assign( spillProp->getProperty("SpillOverPrev") );
+    numNext.assign( spillProp->getProperty("SpillOverNext") );
+    m_numberOfSpilloverEvents = numPrev + numNext;
+  }
+  log << MSG::INFO << "number of spillover events read from aux stream "
+      << m_numberOfSpilloverEvents << endmsg;
+  m_numberOfEvents=m_numberOfSpilloverEvents+1;
+
+ sc = toolSvc()->retrieveTool( "MuonTileIDXYZ", m_pMuonTileXYZ );
  if( !sc.isSuccess() ) {
    log << MSG::ERROR << "Failed to retrieve MuonTileIDXYZ tool" << endmsg;
    return sc;

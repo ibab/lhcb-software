@@ -4,5 +4,9 @@
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
 
+! 2002-06-27 - Marco Cattaneo
+ - Remove NmbOfSpilloverEvents property and get the number directly from the
+   SpillOverAlg
+
 ! 2002-06-26 - Marco Cattaneo
  - First public version
