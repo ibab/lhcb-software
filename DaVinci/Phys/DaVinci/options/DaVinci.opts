@@ -1,14 +1,17 @@
 //##############################################################
-// Default DaVinci job Options
+// Default DaVinci job Options for user configuration
 //
 // This file defines, sequences and configures the algorithms 
 // to be executed
 //==============================================================
-// Standard Gaudi configuration and additional DLLs are in 
-// DaVinciCommon.opts
-//--------------------------------------------------------------
+// Standard Gaudi configuration and additional DLLs are in
+// DaVinciCommon while database dependent configurations are in
+// DaVinciXXX.opts. Choose the appropriate one.
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
-#include "$DAVINCIROOT/options/DaVinciv248r2.opts"
+// For data produced with Brunel v13r1 or v14r2
+#include "$DAVINCIROOT/options/DaVinciv248r4.opts"
+// For data produced with Brunel v16r4
+//  #include "$DAVINCIROOT/options/DaVinciv253r0.opts"
 
 //--------------------------------------------------------------
 // Histogram persistency 
@@ -16,25 +19,25 @@
 // Keep in mind that the hbook file referred to here contains 
 // all the C++ generated histograms, not those filled in Fortran
 //--------------------------------------------------------------
-#include "$STDOPTS/Hbook.opts"
-HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
-//  #include "$STDOPTS/RootHist.opts"
-//  HistogramPersistencySvc.OutputFile = "DVHistos.root";
+//  #include "$STDOPTS/Hbook.opts"
+//  HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+#include "$STDOPTS/RootHist.opts"
+HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 //--------------------------------------------------------------
 // Ntuples available by default. Comment to switch off
 //--------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
-NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
-//  NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
+//  NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
+NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
 // DaVinci Algorithms
 //--------------------------------------------------------------
-// Redo L0 trigger decision (for data produced with Brunel v13r1) 
+// Redo L0 trigger decision (August 2002 tuning, only for Brunel v13r1 data)
 //  #include "$DAVINCIROOT/options/L0.opts"
-// Recalibration for gammas (for data produced with Brunel v13r1)
-//  #include "$DAVINCIROOT/options/CaloReCalibration.opts"
+// Run L1 trigger decisions (only for Brunel v14r2 data, does not work for)
+//  #include "$DAVINCIROOT/options/L1Decision.opts"
 
 // Perfect ParticleID (switch off ChargedProtoPAlg when switching this on)
 //  ApplicationMgr.TopAlg += { "MCPIDProtoPAlg" };
@@ -42,8 +45,14 @@ NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
 // Charged ProtoParticles
 ApplicationMgr.TopAlg += { "ChargedProtoPAlg" };
 
+// Recalibration for gammas (only for Brunel v13r1 data)
+// does not work... #include "$DAVINCIROOT/options/CaloReCalibration.opts"
+
 // Neutral ProtoParticles
+// (when reading data produced with Brunel v13r1 or v14r2)
 //  ApplicationMgr.TopAlg += { "NeutralPPCreator/NeutralProtoPAlg" };
+// (when reading data produced with Brunel v16r4)
+//  ApplicationMgr.TopAlg += { "NeutralPPsFromCPsAlg" }
 
 // Primary Vertices
 ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
@@ -53,7 +62,8 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 // or private code.
 // >>>>>>>>>>>> To be customized for a specific job <<<<<<<<<<<<
 //--------------------------------------------------------------
-// The various selections algorithms are listed here 
+// The various selections algorithms compatible with OODST are 
+// listed here
 // EACH COMPLETE SELECTION HAS TO BE EXECUTED BY ITSELF
 //
 
@@ -149,12 +159,6 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  // Data sets for this channel (Brunel v14r2p1)
 //  #include "$LHCBHOME/project/web/cards/412100_4.opts"
 
-// Resolved pi0
-//  ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
-//  #include "$PHYSSELECTIONSOPTS/ResolvedPi0Alg.opts"
-//  // Data sets for this channel (Brunel v13r1)
-//  #include "$LHCBHOME/project/web/cards/412800.opts"
-
 // Bd -> phi(KK) Ks(pipi)
 //  ApplicationMgr.TopAlg += {
 //    "Selectphi2KKForBd2phiKs",
@@ -167,6 +171,52 @@ ApplicationMgr.TopAlg += { "PrimaryVertexFinderAlg" };
 //  // Data sets for this channel (Brunel v13r1)
 //  #include "$LHCBHOME/project/web/cards/412000.opts"
 
+// Bd -> D+(K- pi+ pi+) D-(K+ pi- pi-)
+//  ApplicationMgr.TopAlg += {
+//    "SelectD2Kpipi/SelectDPlus2Kpipi",
+//    "SelectD2Kpipi/SelectDMinus2Kpipi", 
+//    "SelectBd2DD"
+//  };
+//  #include "$PHYSSELECTIONSOPTS/SelectDPlus2Kpipi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectDMinus2Kpipi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBd2D2Kpipi_D2Kpipi.opts"
+// Data sets for this channel (Brunel v14r2)
+//  #include "$LHCBHOME/project/web/cards/416100_4.opts"
+
+// Bs -> Ds+(K+ K- pi+) Ds-(K+ K- pi-)
+//  ApplicationMgr.TopAlg += {
+//    "SelectDs2KKpiForBs2DsDs/SelectDsPlus2KKpi",
+//    "SelectDs2KKpiForBs2DsDs/SelectDsMinus2KKpi", 
+//    "SelectBs2DsDs"
+//  };
+//  #include "$PHYSSELECTIONSOPTS/SelectDsPlus2KKpi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectDsMinus2KKpi.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBs2Ds2KKpi_Ds2KKpi.opts"
+//  // Data sets for this channel (Brunel v14r2)
+//  #include "$LHCBHOME/project/web/cards/516100_4.opts"
+
+// Channels with Neutrals
+// REMEMBER TO MAKE NEUTRAL PROTOPARTICLES and calibrate the calorimeter
+// for Brunel v13r1 data
+//
+
+// Resolved pi0
+//  ApplicationMgr.TopAlg += { "ResolvedPi0Alg" };
+//  #include "$PHYSSELECTIONSOPTS/ResolvedPi0Alg.opts"
+//  // Data sets for this channel (Brunel v13r1)
+//  #include "$LHCBHOME/project/web/cards/412800.opts"
+
+// Bd -> Kstar(Kpi) gamma
+//  ApplicationMgr.TopAlg += { 
+//    "PreLoadParticles",
+//    "PreLoadParticles/PreLoadPhotons",
+//    "SelectBd2Kstar2Kpi_gamma"
+//  };
+//  #include "$PHYSSELECTIONSOPTS/PreLoadBd2Kstar2Kpi_gamma.opts"
+//  #include "$PHYSSELECTIONSOPTS/SelectBd2Kstar2Kpi_gamma.opts"
+//  // Data sets for this channel (Brunel v14r2)
+//  #include "$LHCBHOME/project/web/cards/412500_4.opts"
+//  //  #include "$LHCBHOME/project/web/cards/summer_412500.opts"
 
 // Uncomment the following line to run the example UserAlgorithm
 //  ApplicationMgr.TopAlg += { "UserAlgorithm" }; 
