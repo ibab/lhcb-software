@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.73 2004-03-29 08:15:42 pkoppenb Exp $
+! $Id: release.notes,v 1.74 2004-03-30 07:53:33 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg, Sandra Amato
 
+! 2004-03-30 - P. Koppenburg
+ - src/GeomDispCalculator.cpp
+  Bug fix by Miriam Gandelman
+  
 ! 2004-03-29 - P. Koppenburg
  - src/LifetimeSignificanceCriterion.cpp,  src/MassFilterCriterion.cpp
   Small modifications to allow compilation on Windows.

@@ -1,4 +1,4 @@
-// $Id: GeomDispCalculator.cpp,v 1.7 2004-01-14 19:00:06 gcorti Exp $
+// $Id: GeomDispCalculator.cpp,v 1.8 2004-03-30 07:53:34 pkoppenb Exp $
 
 // Include files
 // from Gaudi
@@ -122,8 +122,8 @@ StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
   Hep3Vector ipUnit = ipVector/ip;
   Hep3Vector derivPoint = pUnit.cross(ipUnit);
   Hep3Vector derivVtx = - pUnit.cross(ipUnit);
-  Hep3Vector derivP = (ipVector.cross(displacement) - 
-                      ip*ip*pUnit) / pmag; 
+  Hep3Vector derivP = (ipUnit.cross(displacement) - 
+                      ipUnit.dot(ipVector)*pUnit) / pmag; 
   HepSymMatrix pointErr = transParticle.pointOnTrackErr();
   HepSymMatrix momErr = transParticle.momentumErr().sub(1,3);
   HepMatrix errMatrix1 = dsum(pointErr,momErr);
@@ -212,8 +212,8 @@ StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
   Hep3Vector ipUnit = ipVector/ip;
   Hep3Vector derivPoint = pUnit.cross(ipUnit);
   Hep3Vector derivVtx = - pUnit.cross(ipUnit);
-  Hep3Vector derivP = (ipVector.cross(displacement) - 
-                      ip*ip*pUnit) / pmag; 
+  Hep3Vector derivP = (ipUnit.cross(displacement) -
+                       ipUnit.dot(ipVector)*pUnit) / pmag;
   HepSymMatrix pointErr = transParticle.pointOnTrackErr();
   HepSymMatrix momErr = transParticle.momentumErr().sub(1,3);
   HepMatrix errMatrix1 = dsum(pointErr,momErr);
@@ -355,8 +355,8 @@ StatusCode GeomDispCalculator::calcImpactPar( const Particle& particle,
   Hep3Vector ipUnit = ipVector/ip;
   Hep3Vector derivPoint = pUnit.cross(ipUnit);
   Hep3Vector derivVtx = - pUnit.cross(ipUnit);
-  Hep3Vector derivP = (ipVector.cross(displacement) -
-                      ip*ip*pUnit) / pmag;
+  Hep3Vector derivP = (ipUnit.cross(displacement) -
+                       ipUnit.dot(ipVector)*pUnit) / pmag;
   HepSymMatrix pointErr = transParticle.pointOnTrackErr();
   HepSymMatrix momErr = transParticle.momentumErr().sub(1,3);
   HepMatrix posMomCorr = transParticle.posMomCorr().sub(1,3,1,3);
