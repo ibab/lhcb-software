@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!===================== GlobalReco v3r1 2003-04-27 ===========================
 ! 2003-04-27 - Gloria Corti
  - cmt/requirements
    . remove unnecessary use of VeloDet
