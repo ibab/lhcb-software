@@ -1,59 +1,86 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/XmlVertexCnv.cpp,v 1.1.1.1 2001-03-13 15:11:14 cattaneb Exp $
-#include "DetDesc/XmlUserDeCnv.h"
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/XmlVertexCnv.cpp,v 1.2 2001-05-14 15:16:23 sponce Exp $
 
+// Include files
+#include "DetDesc/XmlUserDetElemCnv.h"
 #include "DeVertexDetector.h"
 
-class XmlVertexCnv : virtual public XmlUserDeCnv<DeVertexDetector>
-{
+
+/** @class XmlVertexCnv
+ *
+ * XML converter for Vertex Detector
+ *
+ * @author Sebastien Ponce
+ */
+class XmlVertexCnv : virtual public XmlUserDetElemCnv<DeVertexDetector> {
 
 public:
 
-  XmlVertexCnv( ISvcLocator* svc );
+  /**
+   * Constructor for this converter
+   * @param svc a ISvcLocator interface to find services
+   */
+  XmlVertexCnv (ISvcLocator* svc);
+  
+  /**
+   * Default destructor
+   */
   ~XmlVertexCnv(){}
-  virtual void uStartElement( const char* const name, XmlCnvAttributeList& attributes);
+
+  
+protected:
+
+  /** This fills the current object for specific child.
+   * Overrides the default implementation in XmlUserDetElemCnv.
+   * @param childElement the specific child processed here
+   * @param refpObject the object to be filled
+   * @return status depending on the completion of the call
+   */
+  virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
+                                        DeVertexDetector* dataObj);
+
 };
 
-/// Instantiation of a static factory class used by clients to create
-/// instances of this service
+
+// -----------------------------------------------------------------------
+// Instantiation of a static factory class used by clients to create
+// instances of this service
+// -----------------------------------------------------------------------
 static CnvFactory< XmlVertexCnv > vertexdecnv_factory;
 const ICnvFactory& XmlVertexCnvFactory = vertexdecnv_factory;
 
-XmlVertexCnv::XmlVertexCnv( ISvcLocator* svc )
-: XmlUserDeCnv<DeVertexDetector>( svc, "XmlVertexCnv" )
-{
+
+// -----------------------------------------------------------------------
+// Constructor
+// ------------------------------------------------------------------------
+XmlVertexCnv::XmlVertexCnv (ISvcLocator* svc) :
+  XmlUserDetElemCnv<DeVertexDetector> (svc) {
 }
 
-/// Start of the XML element callback
-void XmlVertexCnv::uStartElement( const char* const name, XmlCnvAttributeList& attributes)
-{
-  MsgStream log( msgSvc(), m_msId );
-  
-  std::string tagName( name );
-  
-  log << MSG::DEBUG << "<" << tagName << " ";
-  
-  for( unsigned int i = 0; i < attributes.getLength(); i++ ) {
-    log << MSG::DEBUG << attributes.getName(i)  << "=" 
-      << attributes.getValue(i) << " "
-      << attributes.getType(i) << " ";
-    ;
-  }
-  log << ">" << endreq;
 
+// -----------------------------------------------------------------------
+// Fill an object with a new specific child element
+// ------------------------------------------------------------------------
+StatusCode XmlVertexCnv::i_fillSpecificObj (DOM_Element childElement,
+                                            DeVertexDetector* dataObj) {
+  MsgStream log (msgSvc(), "XmlVertexCnv");
+  
+  // gets the element's name
+  std::string tagName = dom2Std (childElement.getNodeName());
+  
   // In the local DTD for vertex.xml file we have defined the elements:
   // <!ELEMENT stations>
   // <!ATTLIST stations n CDATA #REQUIRED>
 
-  if( "stations" == tagName ) {
-
+  if ("stations" == tagName) {
     // get a value of the 'n' attribute
-    std::string n = attributes.getValue( "n" );
+    const std::string n = dom2Std (childElement.getAttribute ("n"));
     
-    if( !n.empty() ) {
+    if (!n.empty()) {
       log << MSG::DEBUG << "n has value        : " << n << endreq;
       log << MSG::DEBUG << "n has atol value   : " << atol(n.c_str()) << endreq;
-      log << MSG::DEBUG << "n has parser value : " << xmlSvc()->eval(n.c_str()) << endreq;
-      m_dataObj->setStations( (unsigned int)atol( n.c_str() ) );
+      log << MSG::DEBUG << "n has parser value : "
+          << xmlSvc()->eval(n) << endreq;
+      dataObj->setStations ((unsigned int)atol (n.c_str()));
     }
   }
 }

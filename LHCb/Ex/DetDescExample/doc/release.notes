@@ -5,6 +5,11 @@ Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
 
+!20010514 Sebastien Ponce
+ - take into account changes in Det/DetDesc, so use DOM parsing.
+ - changes in the names of materials, following the new convention in the
+ xml code : no more underscore in element name, as in CO2 (was CO2).
+ 
 !20010222 Pere Mato
  - Changed SimpleAlgorithm.cpp to use Velo instead of Vertex.
 

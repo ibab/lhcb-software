@@ -1,50 +1,71 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/XmlMuonStationCnv.cpp,v 1.1.1.1 2001-03-13 15:11:14 cattaneb Exp $
-#include "DetDesc/XmlUserDeCnv.h"
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/XmlMuonStationCnv.cpp,v 1.2 2001-05-14 15:16:23 sponce Exp $
 
+// Include files
+#include "DetDesc/XmlUserDetElemCnv.h"
 #include "DeMuonStation.h"
 
-class XmlMuonStationCnv : public XmlUserDeCnv<DeMuonStation>
-{
+
+/** @class XmlMuonStationCnv
+ *
+ * XML converter for MuonStation
+ *
+ * @author Sebastien Ponce
+ */
+class XmlMuonStationCnv : public XmlUserDetElemCnv<DeMuonStation> {
+
 public:
 
-  XmlMuonStationCnv(ISvcLocator* svc);
+  /**
+   * Constructor for this converter
+   * @param svc a ISvcLocator interface to find services
+   */
+  XmlMuonStationCnv (ISvcLocator* svc);
   
-  ~XmlMuonStationCnv()  {
-  }
+  /**
+   * Default destructor
+   */
+  ~XmlMuonStationCnv() {}
+
   
-  /// Start of the XML element callback
-  virtual void uStartElement( const char* const name, XmlCnvAttributeList& attributes);
+protected:
+
+  /** This fills the current object for specific child.
+   * Overrides the default implementation in XmlUserDetElemCnv.
+   * @param childElement the specific child processed here
+   * @param refpObject the object to be filled
+   * @return status depending on the completion of the call
+   */
+  virtual StatusCode i_fillSpecificObj (DOM_Element childElement,
+                                        DeMuonStation* dataObj);
 
 };
 
 
-/// Instantiation of a static factory class used by clients to create
-/// instances of this service
+// -----------------------------------------------------------------------
+// Instantiation of a static factory class used by clients to create
+// instances of this service
+// -----------------------------------------------------------------------
 static CnvFactory<XmlMuonStationCnv> muonst_factory;
 const ICnvFactory& XmlMuonStationCnvFactory = muonst_factory;
 
-/// Constructor
-XmlMuonStationCnv::XmlMuonStationCnv(ISvcLocator* svc)
-: XmlUserDeCnv<DeMuonStation>( svc, "XmlMuonStationCnv" )
-{
+
+// -----------------------------------------------------------------------
+// Constructor
+// ------------------------------------------------------------------------
+XmlMuonStationCnv::XmlMuonStationCnv(ISvcLocator* svc) :
+  XmlUserDetElemCnv<DeMuonStation> (svc) {
 }
 
-/// Start of the XML element callback
-void XmlMuonStationCnv::uStartElement( const char* const name, XmlCnvAttributeList& attributes)
-{
-  MsgStream log( msgSvc(), m_msId );
+
+// -----------------------------------------------------------------------
+// Fill an object with a new specific child element
+// ------------------------------------------------------------------------
+StatusCode XmlMuonStationCnv::i_fillSpecificObj (DOM_Element childElement,
+                                                 DeMuonStation* dataObj) {
+  MsgStream log (msgSvc(), "XmlMuonStationCnv");
   
-  std::string tagName( name );
-  
-  log << MSG::DEBUG << "<" << tagName << " ";
-  
-  for( unsigned int i = 0; i < attributes.getLength(); i++ ) {
-    log << MSG::DEBUG << attributes.getName(i)  << "=" 
-      << attributes.getValue(i) << " "
-      << attributes.getType(i) << " ";
-    ;
-  }
-  log << ">" << endreq;
+  // gets the element's name
+  std::string tagName = dom2Std (childElement.getNodeName());
 
   /*
   <!-- Aluminium plate thickness -->
@@ -57,36 +78,36 @@ void XmlMuonStationCnv::uStartElement( const char* const name, XmlCnvAttributeLi
   <!ATTLIST pad_dimensions padY CDATA #REQUIRED>
   */
 
-  if( tagName == "Al_plate_thickness" ) {
-
+  if ("Al_plate_thickness" == tagName) {
     // get a value of the 'value' attribute
-    std::string value = attributes.getValue( "value" );
+    const std::string value = dom2Std (childElement.getAttribute ("value"));
     
-    if( !value.empty() ) {
-      log << MSG::DEBUG << "value has value           : " << value               << endreq;
-      log << MSG::DEBUG << "value has converted value : " << xmlSvc()->eval(value.c_str()) << endreq;
-      m_dataObj->setThickness( xmlSvc()->eval(value.c_str()) );
+    if (!value.empty()) {
+      log << MSG::DEBUG << "value has value           : " << value << endreq;
+      log << MSG::DEBUG << "value has converted value : " <<
+        xmlSvc()->eval(value.c_str()) << endreq;
+      dataObj->setThickness (xmlSvc()->eval(value));
     }
-  }
-  else if( tagName == "pad_dimensions" ) {
+  } else if ("pad_dimensions" == tagName) {
     // get a values of the 'padX' and 'padY' attributes
-    std::string padX = attributes.getValue( "padX" );
-    std::string padY = attributes.getValue( "padY" );
+    const std::string padX = dom2Std (childElement.getAttribute ("padX"));
+    const std::string padY = dom2Std (childElement.getAttribute ("padY"));
     
-    if( !padX.empty() && !padY.empty() ) {
-      log << MSG::DEBUG << "padX has value           : " << padX                   << endreq;
-      log << MSG::DEBUG << "padX has converted value : " << xmlSvc()->eval(padX.c_str(), false) << endreq;
-      log << MSG::DEBUG << "padY has value           : " << padY                   << endreq;
-      log << MSG::DEBUG << "padY has converted value : " << xmlSvc()->eval(padY.c_str(), false) << endreq;
+    if (!padX.empty() && !padY.empty()) {
+      log << MSG::DEBUG << "padX has value           : " << padX << endreq;
+      log << MSG::DEBUG << "padX has converted value : "
+          << xmlSvc()->eval(padX.c_str(), false) << endreq;
+      log << MSG::DEBUG << "padY has value           : " << padY << endreq;
+      log << MSG::DEBUG << "padY has converted value : "
+          << xmlSvc()->eval(padY.c_str(), false) << endreq;
       
-      // We don't want to evaluate units so we say it explicitly for eval(...) method
-      m_dataObj->setPadx( xmlSvc()->eval(padX.c_str(), false) );
-      m_dataObj->setPady( xmlSvc()->eval(padY.c_str(), false) );
+      // We don't want to evaluate units so we say it explicitly for
+      // eval(...) method
+      dataObj->setPadx (xmlSvc()->eval(padX, false));
+      dataObj->setPady (xmlSvc()->eval(padY, false));
     }
-  }
-  else {
-    // Unknown tag, a warning message can be issued here
-    ;
+  } else {
+    // Unknown tag, a warning message could be issued here
   }
 }
 

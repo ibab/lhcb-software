@@ -1,4 +1,4 @@
-# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/cmt/requirements,v 1.1.1.1 2001-03-13 15:11:13 cattaneb Exp $
+# $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/cmt/requirements,v 1.2 2001-05-14 15:16:18 sponce Exp $
 package DetDescExample
 version v1
 
@@ -18,7 +18,7 @@ use dbase         v234* SICB
 use LHCbEvent     v9*   Event
 
 # Detector Description package and database
-use DetDesc       v6*   Det
+use DetDesc       v7*   Det
 use XmlDDDB       v5*   Det
 
 #==> DetDesc example
