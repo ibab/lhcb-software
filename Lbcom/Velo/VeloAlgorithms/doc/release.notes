@@ -1,6 +1,10 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 
+!===================== VeloAlgorithms v2r9 2004-01-07 =====================
+! 2004-01-07 - Marco Cattaneo
+ - Move to Gaudi v14 9use VeloEvent v13r* in requirements)
+
 !===================== VeloAlgorithms v2r8 2003-10-08 =====================
 ! 2003-10-08 - Marco Cattaneo
  -VeloSim.cpp:  Replace NAGC calls by equivalent GSL ones

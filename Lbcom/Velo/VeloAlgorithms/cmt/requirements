@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes
 #
 package           VeloAlgorithms
-version           v2r8
+version           v2r9
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -12,23 +12,16 @@ include_dirs $(VELOALGORITHMSROOT)
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use  VeloEvent  v12r*   Event
+use  VeloEvent  v13r*   Event
 use  VeloDet    v8r*   	Det
 use  GSL 	v*
 use  AIDA 	v*	-no_auto_imports
 
 # Component library building rule
 #============================================================================
-library          VeloAlgorithms    ../src/*.cpp -import=AIDA
+library          VeloAlgorithms    ../src/*.cpp -import=AIDA -import=VeloKernel
 
-# define component library link options
-#============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
-
-#============================================================================
-private
-apply_pattern    package_Cshlibflags
+apply_pattern component_library library=VeloAlgorithms
 
 
 
